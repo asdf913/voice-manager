@@ -1,16 +1,23 @@
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.util.Objects;
 
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
 
+import org.apache.commons.lang3.StringUtils;
+
 import net.miginfocom.swing.MigLayout;
 
-public class VoiceManager extends JFrame {
+public class VoiceManager extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 6093437131552718994L;
 
@@ -29,6 +36,8 @@ public class VoiceManager extends JFrame {
 		//
 		add(tfFile = new JTextField(), WRAP);
 		//
+		tfFile.setEditable(false);
+		//
 		add(new JLabel("Text"));
 		//
 		add(tfText = new JTextField(), WRAP);
@@ -41,8 +50,34 @@ public class VoiceManager extends JFrame {
 		//
 		add(btnExecute = new JButton("Execute"));
 		//
+		btnExecute.addActionListener(this);
+		//
 		setPreferredWidth(97, tfFile, tfText, tfRomaji);
 		//
+	}
+
+	@Override
+	public void actionPerformed(final ActionEvent evt) {
+		//
+		final Object source = evt != null ? evt.getSource() : null;
+		//
+		if (Objects.equals(source, btnExecute)) {
+			//
+			final JFileChooser jfc = new JFileChooser();
+			//
+			jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+			//
+			if (jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+				//
+				final File selectedFile = jfc.getSelectedFile();
+				//
+				tfFile.setText(StringUtils.defaultString(selectedFile != null ? selectedFile.getAbsolutePath() : null,
+						tfFile.getText()));
+				//
+			} // if
+				//
+		} // if
+			//
 	}
 
 	private static void setPreferredWidth(final int width, final Component... cs) {
