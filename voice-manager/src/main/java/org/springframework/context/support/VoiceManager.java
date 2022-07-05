@@ -149,11 +149,12 @@ public class VoiceManager extends JFrame implements ActionListener {
 							//
 						} else {
 							//
-							final Matcher matcher = PATTERN_CONTENT_INFO_MP3 != null
-									? PATTERN_CONTENT_INFO_MP3.matcher(ci.getMessage())
-									: null;
-							//
-							if (!(matcher != null && matcher.matches() || Objects.equals("wav", ci.getName()))) {
+							if (!(matches(
+									PATTERN_CONTENT_INFO_MP3 != null ? PATTERN_CONTENT_INFO_MP3.matcher(ci.getMessage())
+											: null)// mp3
+									|| Objects.equals(ci.getName(), "wav")// wav
+									|| Objects.equals(ci.getMimeType(), "audio/x-hx-aac-adts")// aac
+							)) {
 								//
 								JOptionPane.showMessageDialog(null, String.format("File \"%1$s\" is not an audio File",
 										selectedFile.getAbsolutePath()));
@@ -202,6 +203,10 @@ public class VoiceManager extends JFrame implements ActionListener {
 				//
 		} // if
 			//
+	}
+
+	private static boolean matches(final Matcher instance) {
+		return instance != null && instance.matches();
 	}
 
 	private static String getText(final JTextComponent instance) {
