@@ -153,9 +153,9 @@ public class VoiceManager extends JFrame implements ActionListener {
 									? PATTERN_CONTENT_INFO_MP3.matcher(ci.getMessage())
 									: null;
 							//
-							if (matcher == null || !matcher.matches()) {
+							if (!(matcher != null && matcher.matches() || Objects.equals("wav", ci.getName()))) {
 								//
-								JOptionPane.showMessageDialog(null, String.format("File \"%1$s\" is not a MP3 File",
+								JOptionPane.showMessageDialog(null, String.format("File \"%1$s\" is not an audio File",
 										selectedFile.getAbsolutePath()));
 								//
 							} // if
