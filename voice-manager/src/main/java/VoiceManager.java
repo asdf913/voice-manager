@@ -1,5 +1,8 @@
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -40,7 +43,7 @@ public class VoiceManager extends JFrame implements ActionListener {
 
 	private JTextComponent tfFile, tfText, tfRomaji = null;
 
-	private AbstractButton btnConvertToRomaji, btnExecute = null;
+	private AbstractButton btnConvertToRomaji, btnCopyRomaji, btnExecute = null;
 
 	private VoiceManager() {
 	}
@@ -61,15 +64,17 @@ public class VoiceManager extends JFrame implements ActionListener {
 		//
 		add(new JLabel("Romaji"));
 		//
-		add(tfRomaji = new JTextField(), String.format("span %1$s,growx,%2$s", 2, WRAP));
+		add(tfRomaji = new JTextField());
+		//
+		add(btnCopyRomaji = new JButton("Copy"), WRAP);
 		//
 		add(new JLabel());
 		//
 		add(btnExecute = new JButton("Execute"));
 		//
-		addActionListener(this, btnExecute, btnConvertToRomaji);
+		addActionListener(this, btnExecute, btnConvertToRomaji, btnCopyRomaji);
 		//
-		setPreferredWidth(165 - intValue(getPreferredWidth(btnConvertToRomaji), 0), tfText);
+		setPreferredWidth(165 - intValue(getPreferredWidth(btnConvertToRomaji), 0), tfText, tfRomaji);
 		//
 	}
 
@@ -109,7 +114,7 @@ public class VoiceManager extends JFrame implements ActionListener {
 				final File selectedFile = jfc.getSelectedFile();
 				//
 				tfFile.setText(StringUtils.defaultString(selectedFile != null ? selectedFile.getAbsolutePath() : null,
-						tfFile.getText()));
+						getText(tfFile)));
 				//
 				if (selectedFile == null) {
 					//
@@ -177,12 +182,28 @@ public class VoiceManager extends JFrame implements ActionListener {
 			//
 			if (tfRomaji != null) {
 				//
-				tfRomaji.setText(new Jakaroma().convert(tfText != null ? tfText.getText() : null, false, false));
+				tfRomaji.setText(new Jakaroma().convert(getText(tfText), false, false));
+				//
+			} // if
+				//
+		} else if (Objects.equals(source, btnCopyRomaji)) {
+			//
+			final Toolkit toolkit = Toolkit.getDefaultToolkit();
+			//
+			final Clipboard clipboard = toolkit != null ? toolkit.getSystemClipboard() : null;
+			//
+			if (clipboard != null) {
+				//
+				clipboard.setContents(new StringSelection(getText(tfRomaji)), null);
 				//
 			} // if
 				//
 		} // if
 			//
+	}
+
+	private static String getText(final JTextComponent instance) {
+		return instance != null ? instance.getText() : null;
 	}
 
 	private static Object getSource(final EventObject instance) {
@@ -207,33 +228,11 @@ public class VoiceManager extends JFrame implements ActionListener {
 			//
 	}
 
-	private static Integer getPreferredWidth(final Component... cs) {
+	private static Double getPreferredWidth(final Component c) {
 		//
-		Integer preferredWidth = null;
+		final Dimension d = c != null ? c.getPreferredSize() : null;
 		//
-		Component c = null;
-		//
-		Dimension d = null;
-		//
-		for (int i = 0; cs != null && i < cs.length; i++) {
-			//
-			if ((c = cs[i]) == null || (d = c.getPreferredSize()) == null) {
-				continue;
-			} // if
-				//
-			if (preferredWidth == null) {
-				//
-				preferredWidth = Integer.valueOf((int) d.getWidth());
-				//
-			} else {
-				//
-				preferredWidth = Math.max(preferredWidth.intValue(), (int) d.getWidth());
-				//
-			} // if
-				//
-		} // for
-			//
-		return preferredWidth;
+		return d != null ? Double.valueOf(d.getWidth()) : null;
 		//
 	}
 
