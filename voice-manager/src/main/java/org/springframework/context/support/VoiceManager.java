@@ -26,6 +26,9 @@ import javax.swing.text.JTextComponent;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.EnvironmentAware;
+import org.springframework.core.env.Environment;
+import org.springframework.core.env.PropertyResolver;
 
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
@@ -33,7 +36,7 @@ import com.j256.simplemagic.ContentInfoUtil;
 import fr.free.nrw.jakaroma.Jakaroma;
 import net.miginfocom.swing.MigLayout;
 
-public class VoiceManager extends JFrame implements ActionListener {
+public class VoiceManager extends JFrame implements ActionListener, EnvironmentAware {
 
 	private static final long serialVersionUID = 6093437131552718994L;
 
@@ -43,11 +46,19 @@ public class VoiceManager extends JFrame implements ActionListener {
 
 	private static final String WRAP = "wrap";
 
+	private PropertyResolver propertyResolver = null;
+
 	private JTextComponent tfFile, tfText, tfRomaji = null;
 
 	private AbstractButton btnConvertToRomaji, btnCopyRomaji, btnExecute = null;
 
 	private VoiceManager() {
+	}
+
+	@Override
+	public void setEnvironment(final Environment environment) {
+		this.propertyResolver = environment;
+
 	}
 
 	private void init() {
@@ -60,13 +71,15 @@ public class VoiceManager extends JFrame implements ActionListener {
 		//
 		add(new JLabel("Text"));
 		//
-		add(tfText = new JTextField());
+		add(tfText = new JTextField(
+				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.text")));
 		//
 		add(btnConvertToRomaji = new JButton("Convert"), WRAP);
 		//
 		add(new JLabel("Romaji"));
 		//
-		add(tfRomaji = new JTextField());
+		add(tfRomaji = new JTextField(
+				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.romaji")));
 		//
 		add(btnCopyRomaji = new JButton("Copy"), WRAP);
 		//
@@ -98,6 +111,10 @@ public class VoiceManager extends JFrame implements ActionListener {
 			//
 		} // for
 			//
+	}
+
+	private static String getProperty(final PropertyResolver instance, final String key) {
+		return instance != null ? instance.getProperty(key) : null;
 	}
 
 	@Override
