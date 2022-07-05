@@ -69,8 +69,12 @@ public class VoiceManager extends JFrame implements ActionListener {
 		//
 		addActionListener(this, btnExecute, btnConvertToRomaji);
 		//
-		setPreferredWidth(97, tfFile, tfText, tfRomaji);
+		setPreferredWidth(165 - intValue(getPreferredWidth(btnConvertToRomaji), 0), tfText);
 		//
+	}
+
+	private static int intValue(final Number instance, final int defaultValue) {
+		return instance != null ? instance.intValue() : defaultValue;
 	}
 
 	private static void addActionListener(final ActionListener actionListener, final AbstractButton... abs) {
@@ -201,6 +205,36 @@ public class VoiceManager extends JFrame implements ActionListener {
 			//
 		} // for
 			//
+	}
+
+	private static Integer getPreferredWidth(final Component... cs) {
+		//
+		Integer preferredWidth = null;
+		//
+		Component c = null;
+		//
+		Dimension d = null;
+		//
+		for (int i = 0; cs != null && i < cs.length; i++) {
+			//
+			if ((c = cs[i]) == null || (d = c.getPreferredSize()) == null) {
+				continue;
+			} // if
+				//
+			if (preferredWidth == null) {
+				//
+				preferredWidth = Integer.valueOf((int) d.getWidth());
+				//
+			} else {
+				//
+				preferredWidth = Math.max(preferredWidth.intValue(), (int) d.getWidth());
+				//
+			} // if
+				//
+		} // for
+			//
+		return preferredWidth;
+		//
 	}
 
 	public static void main(final String[] args) {
