@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.EventObject;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -24,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
 
+import fr.free.nrw.jakaroma.Jakaroma;
 import net.miginfocom.swing.MigLayout;
 
 public class VoiceManager extends JFrame implements ActionListener {
@@ -38,7 +40,7 @@ public class VoiceManager extends JFrame implements ActionListener {
 
 	private JTextComponent tfFile, tfText, tfRomaji = null;
 
-	private AbstractButton btnExecute = null;
+	private AbstractButton btnConvertToRomaji, btnExecute = null;
 
 	private VoiceManager() {
 	}
@@ -47,32 +49,50 @@ public class VoiceManager extends JFrame implements ActionListener {
 		//
 		add(new JLabel("File"));
 		//
-		add(tfFile = new JTextField(), WRAP);
+		add(tfFile = new JTextField(), String.format("span %1$s,growx,%2$s", 2, WRAP));
 		//
 		tfFile.setEditable(false);
 		//
 		add(new JLabel("Text"));
 		//
-		add(tfText = new JTextField(), WRAP);
+		add(tfText = new JTextField());
+		//
+		add(btnConvertToRomaji = new JButton("Convert"), WRAP);
 		//
 		add(new JLabel("Romaji"));
 		//
-		add(tfRomaji = new JTextField(), WRAP);
+		add(tfRomaji = new JTextField(), String.format("span %1$s,growx,%2$s", 2, WRAP));
 		//
 		add(new JLabel());
 		//
 		add(btnExecute = new JButton("Execute"));
 		//
-		btnExecute.addActionListener(this);
+		addActionListener(this, btnExecute, btnConvertToRomaji);
 		//
 		setPreferredWidth(97, tfFile, tfText, tfRomaji);
 		//
 	}
 
+	private static void addActionListener(final ActionListener actionListener, final AbstractButton... abs) {
+		//
+		AbstractButton ab = null;
+		//
+		for (int i = 0; abs != null && i < abs.length; i++) {
+			//
+			if ((ab = abs[i]) == null) {
+				continue;
+			} // if
+				//
+			ab.addActionListener(actionListener);
+			//
+		} // for
+			//
+	}
+
 	@Override
 	public void actionPerformed(final ActionEvent evt) {
 		//
-		final Object source = evt != null ? evt.getSource() : null;
+		final Object source = getSource(evt);
 		//
 		if (Objects.equals(source, btnExecute)) {
 			//
@@ -123,8 +143,10 @@ public class VoiceManager extends JFrame implements ActionListener {
 									: null;
 							//
 							if (matcher == null || !matcher.matches()) {
+								//
 								JOptionPane.showMessageDialog(null, String.format("File \"%1$s\" is not a MP3 File",
 										selectedFile.getAbsolutePath()));
+								//
 							} // if
 								//
 						} // if
@@ -141,10 +163,26 @@ public class VoiceManager extends JFrame implements ActionListener {
 						//
 				} // if
 					//
+			} else {
+				//
+				JOptionPane.showMessageDialog(null, "No File Selected");
+				//
+			} // if
+				//
+		} else if (Objects.equals(source, btnConvertToRomaji)) {
+			//
+			if (tfRomaji != null) {
+				//
+				tfRomaji.setText(new Jakaroma().convert(tfText != null ? tfText.getText() : null, false, false));
+				//
 			} // if
 				//
 		} // if
 			//
+	}
+
+	private static Object getSource(final EventObject instance) {
+		return instance != null ? instance.getSource() : null;
 	}
 
 	private static void setPreferredWidth(final int width, final Component... cs) {
