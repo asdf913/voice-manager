@@ -207,33 +207,11 @@ public class VoiceManager extends JFrame implements ActionListener {
 			//
 	}
 
-	private static Integer getPreferredWidth(final Component... cs) {
+	private static Double getPreferredWidth(final Component c) {
 		//
-		Integer preferredWidth = null;
+		final Dimension d = c != null ? c.getPreferredSize() : null;
 		//
-		Component c = null;
-		//
-		Dimension d = null;
-		//
-		for (int i = 0; cs != null && i < cs.length; i++) {
-			//
-			if ((c = cs[i]) == null || (d = c.getPreferredSize()) == null) {
-				continue;
-			} // if
-				//
-			if (preferredWidth == null) {
-				//
-				preferredWidth = Integer.valueOf((int) d.getWidth());
-				//
-			} else {
-				//
-				preferredWidth = Math.max(preferredWidth.intValue(), (int) d.getWidth());
-				//
-			} // if
-				//
-		} // for
-			//
-		return preferredWidth;
+		return d != null ? Double.valueOf(d.getWidth()) : null;
 		//
 	}
 
