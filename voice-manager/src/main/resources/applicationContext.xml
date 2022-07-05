@@ -3,13 +3,24 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
 
+	<bean
+		class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
+		<property name="ignoreResourceNotFound" value="true" />
+		<property name="locations">
+			<list>
+				<value>classpath:configuration.properties</value>
+				<value>file:configuration.properties</value>
+			</list>
+		</property>
+	</bean>
+
 	<bean class="org.springframework.context.support.VoiceManager"
 		init-method="init">
 		<property name="layout"
 			value="#{new net.miginfocom.swing.MigLayout()}" />
 		<property name="defaultCloseOperation"
 			value="#{T(javax.swing.WindowConstants).EXIT_ON_CLOSE}" />
-		<property name="title" value="Voice Manager" />
+		<property name="title" value="${org.springframework.context.support.VoiceManager.title}" />
 	</bean>
 
 </beans>
