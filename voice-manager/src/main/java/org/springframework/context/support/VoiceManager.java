@@ -2,6 +2,7 @@ package org.springframework.context.support;
 
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
@@ -9,6 +10,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.EventObject;
 import java.util.Objects;
 import java.util.regex.Matcher;
@@ -23,6 +26,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
 
+import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +53,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 
 	private PropertyResolver propertyResolver = null;
 
-	private JTextComponent tfFile, tfText, tfRomaji = null;
+	private JTextComponent tfFile, tfFileLength, tfFileDigest, tfText, tfRomaji = null;
 
 	private AbstractButton btnConvertToRomaji, btnCopyRomaji, btnExecute = null;
 
@@ -58,16 +63,9 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	@Override
 	public void setEnvironment(final Environment environment) {
 		this.propertyResolver = environment;
-
 	}
 
 	private void init() {
-		//
-		add(new JLabel("File"));
-		//
-		add(tfFile = new JTextField(), String.format("span %1$s,growx,%2$s", 2, WRAP));
-		//
-		tfFile.setEditable(false);
 		//
 		add(new JLabel("Text"));
 		//
@@ -85,12 +83,44 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		add(new JLabel());
 		//
-		add(btnExecute = new JButton("Execute"));
+		add(btnExecute = new JButton("Execute"), WRAP);
+		//
+		final String wrap = String.format("span %1$s,growx,%2$s", 2, WRAP);
+		//
+		add(new JLabel("File"));
+		//
+		add(tfFile = new JTextField(), wrap);
+		//
+		add(new JLabel("File Length"));
+		//
+		add(tfFileLength = new JTextField(), wrap);
+		//
+		add(new JLabel("File Digest"));
+		//
+		add(tfFileDigest = new JTextField(), wrap);
+		//
+		setEditable(false, tfFile, tfFileLength, tfFileDigest);
 		//
 		addActionListener(this, btnExecute, btnConvertToRomaji, btnCopyRomaji);
 		//
 		setPreferredWidth(165 - intValue(getPreferredWidth(btnConvertToRomaji), 0), tfText, tfRomaji);
 		//
+	}
+
+	private static void setEditable(final boolean editable, final JTextComponent... jtcs) {
+		//
+		JTextComponent jtc = null;
+		//
+		for (int i = 0; jtcs != null && i < jtcs.length; i++) {
+			//
+			if ((jtc = jtcs[i]) == null) {
+				continue;
+			} // if
+				//
+			jtc.setEditable(editable);
+			//
+		} // for
+			//
 	}
 
 	private static int intValue(final Number instance, final int defaultValue) {
@@ -124,6 +154,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		if (Objects.equals(source, btnExecute)) {
 			//
+			setText(null, tfFile, tfFileLength, tfFileDigest);
+			//
 			final JFileChooser jfc = new JFileChooser();
 			//
 			jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -131,9 +163,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			if (jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
 				//
 				final File selectedFile = jfc.getSelectedFile();
-				//
-				tfFile.setText(StringUtils.defaultString(selectedFile != null ? selectedFile.getAbsolutePath() : null,
-						getText(tfFile)));
 				//
 				if (selectedFile == null) {
 					//
@@ -176,16 +205,42 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 								JOptionPane.showMessageDialog(null, String.format("File \"%1$s\" is not an audio File",
 										selectedFile.getAbsolutePath()));
 								//
+							} else {
+								//
+								setText(tfFile, StringUtils.defaultString(
+										selectedFile != null ? selectedFile.getAbsolutePath() : null, getText(tfFile)));
+								//
+								final Long length = selectedFile != null ? Long.valueOf(selectedFile.length()) : null;
+								//
+								setText(tfFileLength, length != null ? length.toString() : null);
+								//
+								final MessageDigest md = MessageDigest.getInstance("SHA-512");
+								//
+								if (md != null) {
+									//
+									setText(tfFileDigest, Hex
+											.encodeHexString(md.digest(FileUtils.readFileToByteArray(selectedFile))));
+									//
+								} // if
+									//
 							} // if
 								//
 						} // if
 							//
-					} catch (IOException e) {
+					} catch (IOException | NoSuchAlgorithmException e) {
 						//
-						if (LOG != null) {
-							LOG.error(e.getMessage(), e);
+						if (GraphicsEnvironment.isHeadless()) {
+							//
+							if (LOG != null) {
+								LOG.error(e.getMessage(), e);
+							} else {
+								e.printStackTrace();
+							} // if
+								//
 						} else {
-							e.printStackTrace();
+							//
+							JOptionPane.showMessageDialog(null, e.getMessage());
+							//
 						} // if
 							//
 					} // try
@@ -200,12 +255,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				//
 		} else if (Objects.equals(source, btnConvertToRomaji)) {
 			//
-			if (tfRomaji != null) {
-				//
-				tfRomaji.setText(new Jakaroma().convert(getText(tfText), false, false));
-				//
-			} // if
-				//
+			setText(tfRomaji, new Jakaroma().convert(getText(tfText), false, false));
+			//
 		} else if (Objects.equals(source, btnCopyRomaji)) {
 			//
 			final Toolkit toolkit = Toolkit.getDefaultToolkit();
@@ -219,6 +270,22 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			} // if
 				//
 		} // if
+			//
+	}
+
+	private static void setText(final JTextComponent instance, final String text) {
+		if (instance != null) {
+			instance.setText(text);
+		}
+	}
+
+	private static void setText(final String text, final JTextComponent... jtcs) {
+		//
+		for (int i = 0; jtcs != null && i < jtcs.length; i++) {
+			//
+			setText(jtcs[i], text);
+			//
+		} // for
 			//
 	}
 
