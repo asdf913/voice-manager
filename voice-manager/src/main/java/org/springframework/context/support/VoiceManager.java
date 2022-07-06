@@ -198,96 +198,94 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 					//
 				} else {
 					//
-					ContentInfo ci = null;
-					//
 					SqlSession sqlSession = null;
 					//
 					try {
 						//
-						if ((ci = new ContentInfoUtil().findMatch(selectedFile)) == null) {
+						final String fileExtension = getFileExtension(new ContentInfoUtil().findMatch(selectedFile));
+						//
+						if (fileExtension == null) {
 							//
-							JOptionPane.showMessageDialog(null, "com.j256.simplemagic.ContentInfo is null");
+							JOptionPane.showMessageDialog(null, "File Extension is null");
 							//
 							return;
 							//
-						} else {
+						} else if (StringUtils.isEmpty(fileExtension)) {
 							//
-							if (!(matches(
-									PATTERN_CONTENT_INFO_MP3 != null ? PATTERN_CONTENT_INFO_MP3.matcher(ci.getMessage())
-											: null)// mp3
-									|| Objects.equals(ci.getName(), "wav")// wav
-									|| Objects.equals(ci.getMimeType(), "audio/x-hx-aac-adts")// aac
-							)) {
+							JOptionPane.showMessageDialog(null, "File Extension is Empty");
+							//
+							return;
+							//
+						} else if (StringUtils.isBlank(fileExtension)) {
+							//
+							JOptionPane.showMessageDialog(null, "File Extension is Blank");
+							//
+							return;
+							//
+						} // if
+							//
+						final String filePath = selectedFile != null ? selectedFile.getAbsolutePath() : null;
+						//
+						setText(tfFile, StringUtils.defaultString(filePath, getText(tfFile)));
+						//
+						final Long length = selectedFile != null ? Long.valueOf(selectedFile.length()) : null;
+						//
+						setText(tfFileLength, length != null ? length.toString() : null);
+						//
+						final MessageDigest md = MessageDigest.getInstance("SHA-512");
+						//
+						String fileDigest = null;
+						//
+						if (md != null) {
+							//
+							setText(tfFileDigest, fileDigest = Hex
+									.encodeHexString(md.digest(FileUtils.readFileToByteArray(selectedFile))));
+							//
+						} // if
+							//
+						final Voice voice = new Voice();
+						//
+						final String text = getText(tfText);
+						//
+						voice.setText(text);
+						//
+						final String romaji = getText(tfRomaji);
+						//
+						voice.setRomaji(romaji);
+						//
+						voice.setFilePath(filePath);
+						//
+						voice.setFileDigestAlgorithm(md != null ? md.getAlgorithm() : null);
+						//
+						voice.setFileDigest(fileDigest);
+						//
+						voice.setFileExtension(fileExtension);
+						//
+						voice.setFileLength(length);
+						//
+						final Configuration configuration = sqlSessionFactory != null
+								? sqlSessionFactory.getConfiguration()
+								: null;
+						//
+						final VoiceMapper voiceMapper = configuration != null
+								? configuration.getMapper(VoiceMapper.class,
+										sqlSession = sqlSessionFactory != null ? sqlSessionFactory.openSession() : null)
+								: null;
+						//
+						if (voiceMapper != null) {
+							//
+							if (voiceMapper.exists(text, romaji)) {
 								//
-								JOptionPane.showMessageDialog(null, String.format("File \"%1$s\" is not an audio File",
-										selectedFile.getAbsolutePath()));
+								voice.setUpdateTs(new Date());
+								//
+								voiceMapper.update(voice);
 								//
 							} else {
 								//
-								final String filePath = selectedFile != null ? selectedFile.getAbsolutePath() : null;
+								voice.setCreateTs(new Date());
 								//
-								setText(tfFile, StringUtils.defaultString(filePath, getText(tfFile)));
+								voiceMapper.insert(voice);
 								//
-								final Long length = selectedFile != null ? Long.valueOf(selectedFile.length()) : null;
-								//
-								setText(tfFileLength, length != null ? length.toString() : null);
-								//
-								final MessageDigest md = MessageDigest.getInstance("SHA-512");
-								//
-								String fileDigest = null;
-								//
-								if (md != null) {
-									//
-									setText(tfFileDigest, fileDigest = Hex
-											.encodeHexString(md.digest(FileUtils.readFileToByteArray(selectedFile))));
-									//
-								} // if
-									//
-								final Voice voice = new Voice();
-								//
-								final String text = getText(tfText);
-								//
-								voice.setText(text);
-								//
-								final String romaji = getText(tfRomaji);
-								//
-								voice.setRomaji(romaji);
-								//
-								voice.setFilePath(filePath);
-								//
-								voice.setFileDigestAlgorithm(md != null ? md.getAlgorithm() : null);
-								//
-								voice.setFileDigest(fileDigest);
-								//
-								voice.setFileLength(length);
-								//
-								final Configuration configuration = sqlSessionFactory != null
-										? sqlSessionFactory.getConfiguration()
-										: null;
-								//
-								final VoiceMapper voiceMapper = configuration != null ? configuration.getMapper(
-										VoiceMapper.class,
-										sqlSession = sqlSessionFactory != null ? sqlSessionFactory.openSession() : null)
-										: null;
-								//
-								if (voiceMapper != null) {
-									//
-									if (voiceMapper.exists(text, romaji)) {
-										//
-										voice.setUpdateTs(new Date());
-										//
-										voiceMapper.update(voice);
-										//
-									} else {
-										//
-										voice.setCreateTs(new Date());
-										//
-										voiceMapper.insert(voice);
-										//
-									} // if
-										//
-								} // if
-									//
 							} // if
 								//
 						} // if
@@ -332,6 +330,39 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 		} // if
 			//
+	}
+
+	private static String getFileExtension(final ContentInfo ci) {
+		//
+		if (ci == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		final String messgae = ci.getMessage();
+		//
+		if (matches(PATTERN_CONTENT_INFO_MP3 != null && messgae != null ? PATTERN_CONTENT_INFO_MP3.matcher(messgae)
+				: null)) {
+			//
+			return "mp3";
+			//
+		} // if
+			//
+		final String name = ci.getName();
+		//
+		if (Objects.equals(name, "wav")) {
+			//
+			return name;
+			//
+		} else if (Objects.equals(ci.getMimeType(), "audio/x-hx-aac-adts")) {
+			//
+			return "aac";
+			//
+		} // if
+			//
+		return null;
+		//
 	}
 
 	private static Clipboard getSystemClipboard(final Toolkit instance) {

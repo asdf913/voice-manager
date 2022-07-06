@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class Voice {
 
-	private String text, romaji, filePath, fileDigestAlgorithm, fileDigest = null;
+	private String text, romaji, filePath, fileDigestAlgorithm, fileDigest, fileExtension = null;
 
 	private Long fileLength = null;
 
@@ -28,6 +28,10 @@ public class Voice {
 
 	public void setFileDigest(final String fileDigest) {
 		this.fileDigest = fileDigest;
+	}
+
+	public void setFileExtension(final String fileExtension) {
+		this.fileExtension = fileExtension;
 	}
 
 	public void setFileLength(final Long fileLength) {

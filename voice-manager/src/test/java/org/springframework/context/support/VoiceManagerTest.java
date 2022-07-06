@@ -20,11 +20,14 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.j256.simplemagic.ContentInfo;
+
 import net.miginfocom.swing.MigLayout;
 
 class VoiceManagerTest {
 
-	private static Method METHOD_INIT, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS = null;
+	private static Method METHOD_INIT, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS,
+			METHOD_GET_FILE_EXTENSION = null;
 
 	@BeforeAll
 	private static void beforeAll() throws NoSuchMethodException {
@@ -37,6 +40,8 @@ class VoiceManagerTest {
 		//
 		(METHOD_SET_CONTENTS = clz.getDeclaredMethod("setContents", Clipboard.class, Transferable.class,
 				ClipboardOwner.class)).setAccessible(true);
+		//
+		(METHOD_GET_FILE_EXTENSION = clz.getDeclaredMethod("getFileExtension", ContentInfo.class)).setAccessible(true);
 		//
 	}
 
@@ -145,6 +150,39 @@ class VoiceManagerTest {
 			throws Throwable {
 		try {
 			METHOD_SET_CONTENTS.invoke(null, instance, contents, owner);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetFileExtension() throws Throwable {
+		//
+		Assertions.assertNull(getFileExtension(null));
+		//
+		Assertions.assertNull(getFileExtension(new ContentInfo(null, null, null, false)));
+		//
+		Assertions.assertNull(getFileExtension(new ContentInfo(null, null, "", false)));
+		//
+		Assertions.assertEquals("mp3", getFileExtension(new ContentInfo(null, null, "MPEG ADTS, layer III.", false)));
+		//
+		final String name = "wav";
+		//
+		Assertions.assertEquals(name, getFileExtension(new ContentInfo(name, null, null, false)));
+		//
+		Assertions.assertEquals("aac", getFileExtension(new ContentInfo(null, "audio/x-hx-aac-adts", null, false)));
+		//
+	}
+
+	private static String getFileExtension(final ContentInfo ci) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_FILE_EXTENSION.invoke(null, ci);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
