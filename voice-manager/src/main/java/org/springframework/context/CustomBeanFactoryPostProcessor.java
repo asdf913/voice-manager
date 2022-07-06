@@ -24,9 +24,13 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 	@Override
 	public void postProcessBeanFactory(final ConfigurableListableBeanFactory beanFactory) throws BeansException {
 		//
-		final Map<?, PropertySourcesPlaceholderConfigurer> propertySourcesPlaceholderConfigurers = beanFactory != null
-				? beanFactory.getBeansOfType(PropertySourcesPlaceholderConfigurer.class)
-				: null;
+		addPropertySourceToPropertySourcesToLast(environment,
+				beanFactory != null ? beanFactory.getBeansOfType(PropertySourcesPlaceholderConfigurer.class) : null);
+		//
+	}
+
+	private static void addPropertySourceToPropertySourcesToLast(final Environment environment,
+			final Map<?, PropertySourcesPlaceholderConfigurer> propertySourcesPlaceholderConfigurers) {
 		//
 		if (propertySourcesPlaceholderConfigurers != null && propertySourcesPlaceholderConfigurers.values() != null) {
 			//
