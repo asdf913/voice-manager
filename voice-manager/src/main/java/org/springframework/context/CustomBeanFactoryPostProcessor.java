@@ -16,7 +16,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
@@ -51,15 +51,14 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 	}
 
 	@Override
-	public void postProcessBeanFactory(final ConfigurableListableBeanFactory beanFactory) throws BeansException {
+	public void postProcessBeanFactory(final ConfigurableListableBeanFactory beanFactory) {
 		//
 		addPropertySourceToPropertySourcesToLast(environment,
-				beanFactory != null ? beanFactory.getBeansOfType(PropertySourcesPlaceholderConfigurer.class) : null);
+				getBeansOfType(beanFactory, PropertySourcesPlaceholderConfigurer.class));
 		//
 		try {
 			//
-			postProcessDatasources(beanFactory != null ? beanFactory.getBeansOfType(DataSource.class) : null, tableSql,
-					tableSqlEncoding);
+			postProcessDatasources(getBeansOfType(beanFactory, DataSource.class), tableSql, tableSqlEncoding);
 			//
 		} catch (final SQLException | IOException e) {
 			//
@@ -79,6 +78,10 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 				//
 		} // try
 			//
+	}
+
+	private static <T> Map<String, T> getBeansOfType(final ListableBeanFactory instance, final Class<T> type) {
+		return instance != null ? instance.getBeansOfType(type) : null;
 	}
 
 	private static void addPropertySourceToPropertySourcesToLast(final Environment environment,
