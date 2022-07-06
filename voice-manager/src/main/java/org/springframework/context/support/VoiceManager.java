@@ -234,15 +234,11 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 						//
 						final MessageDigest md = MessageDigest.getInstance("SHA-512");
 						//
-						String fileDigest = null;
+						final String fileDigest = Hex
+								.encodeHexString(digest(md, FileUtils.readFileToByteArray(selectedFile)));
 						//
-						if (md != null) {
-							//
-							setText(tfFileDigest, fileDigest = Hex
-									.encodeHexString(md.digest(FileUtils.readFileToByteArray(selectedFile))));
-							//
-						} // if
-							//
+						setText(tfFileDigest, fileDigest);
+						//
 						final Voice voice = new Voice();
 						//
 						final String text = getText(tfText);
@@ -330,6 +326,10 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 		} // if
 			//
+	}
+
+	private static byte[] digest(final MessageDigest instance, final byte[] input) {
+		return instance != null && input != null ? instance.digest(input) : null;
 	}
 
 	private static String getFileExtension(final ContentInfo ci) {

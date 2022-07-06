@@ -10,10 +10,12 @@ import java.awt.event.ActionListener;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.security.MessageDigest;
 
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
 
+import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -26,8 +28,8 @@ import net.miginfocom.swing.MigLayout;
 
 class VoiceManagerTest {
 
-	private static Method METHOD_INIT, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS,
-			METHOD_GET_FILE_EXTENSION = null;
+	private static Method METHOD_INIT, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_GET_FILE_EXTENSION,
+			METHOD_DIGEST = null;
 
 	@BeforeAll
 	private static void beforeAll() throws NoSuchMethodException {
@@ -42,6 +44,8 @@ class VoiceManagerTest {
 				ClipboardOwner.class)).setAccessible(true);
 		//
 		(METHOD_GET_FILE_EXTENSION = clz.getDeclaredMethod("getFileExtension", ContentInfo.class)).setAccessible(true);
+		//
+		(METHOD_DIGEST = clz.getDeclaredMethod("digest", MessageDigest.class, byte[].class)).setAccessible(true);
 		//
 	}
 
@@ -181,6 +185,35 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof String) {
 				return (String) obj;
+			}
+			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testDigest() throws Throwable {
+		//
+		Assertions.assertNull(digest(null, null));
+		//
+		final MessageDigest md = MessageDigest.getInstance("SHA-512");
+		//
+		Assertions.assertNull(digest(md, null));
+		//
+		Assertions.assertEquals(
+				"cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e",
+				Hex.encodeHexString(digest(md, new byte[] {})));
+		//
+	}
+
+	private static byte[] digest(final MessageDigest instance, final byte[] input) throws Throwable {
+		try {
+			final Object obj = METHOD_DIGEST.invoke(null, instance, input);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof byte[]) {
+				return (byte[]) obj;
 			}
 			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
 		} catch (final InvocationTargetException e) {
