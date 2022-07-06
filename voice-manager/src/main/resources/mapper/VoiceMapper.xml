@@ -4,7 +4,7 @@
 	<insert id="insert">
 		<if test="voice!=null">
 			insert into
-			voice(text,romaji,file_path,file_length,file_digest_algorithm,file_digest)values(#{voice.text},#{voice.romaji},#{voice.filePath},#{voice.fileLength},#{voice.fileDigestAlgorithm},#{voice.fileDigest});
+			voice(text,romaji,file_path,file_length,file_digest_algorithm,file_digest,create_ts)values(#{voice.text},#{voice.romaji},#{voice.filePath},#{voice.fileLength},#{voice.fileDigestAlgorithm},#{voice.fileDigest},#{voice.createTs});
 		</if>
 	</insert>
 </mapper>

@@ -1,10 +1,14 @@
 package domain;
 
+import java.util.Date;
+
 public class Voice {
 
 	private String text, romaji, filePath, fileDigestAlgorithm, fileDigest = null;
 
 	private Long fileLength = null;
+
+	private Date createTs = null;
 
 	public void setText(final String text) {
 		this.text = text;
@@ -28,6 +32,10 @@ public class Voice {
 
 	public void setFileLength(final Long fileLength) {
 		this.fileLength = fileLength;
+	}
+
+	public void setCreateTs(final Date createTs) {
+		this.createTs = createTs;
 	}
 
 }

@@ -5,4 +5,5 @@ create table if not exists voice(
 	,file_length           integer
 	,file_digest_algorithm text
 	,file_digest           text
+	,create_ts			   timestamp WITH TIME ZONE
 )

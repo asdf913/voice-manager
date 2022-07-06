@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Date;
 import java.util.EventObject;
 import java.util.Objects;
 import java.util.regex.Matcher;
@@ -253,6 +254,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 								voice.setFileDigest(fileDigest);
 								//
 								voice.setFileLength(length);
+								//
+								voice.setCreateTs(new Date());
 								//
 								final Configuration configuration = sqlSessionFactory != null
 										? sqlSessionFactory.getConfiguration()
