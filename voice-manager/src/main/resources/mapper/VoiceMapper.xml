@@ -1,10 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mapper.VoiceMapper">
+
 	<insert id="insert">
 		<if test="voice!=null">
 			insert into
 			voice(text,romaji,file_path,file_length,file_digest_algorithm,file_digest,create_ts)values(#{voice.text},#{voice.romaji},#{voice.filePath},#{voice.fileLength},#{voice.fileDigestAlgorithm},#{voice.fileDigest},#{voice.createTs});
 		</if>
 	</insert>
+
+	<update id="update">
+		<if test="voice!=null">
+			update voice
+			<set>
+				text=#{voice.text}
+				,romaji=#{voice.romaji}
+				,file_path=#{voice.filePath}
+				,file_digest_algorithm=#{voice.fileDigestAlgorithm}
+				,file_digest=#{voice.fileDigest}
+				,update_ts=#{voice.updateTs}
+			</set>
+			<where>
+				true
+				<if test="voice.text==null">and text is null</if>
+				<if test="voice.text!=null">and text=#{voice.text}</if>
+				<if test="voice.romaji==null">and romaji is null</if>
+				<if test="voice.romaji!=null">and romaji=#{voice.romaji}</if>
+			</where>
+		</if>
+	</update>
+
+	<select id="exists" resultType="boolean">
+		select exists(select 1 from voice
+		<where>
+			true
+			<if test="text==null">and text is null</if>
+			<if test="text!=null">and text=#{text}</if>
+			<if test="romaji==null">and romaji is null</if>
+			<if test="romaji!=null">and romaji=#{romaji}</if>
+		</where>
+		)
+	</select>
+
 </mapper>

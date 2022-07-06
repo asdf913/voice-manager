@@ -8,7 +8,7 @@ public class Voice {
 
 	private Long fileLength = null;
 
-	private Date createTs = null;
+	private Date createTs, updateTs = null;
 
 	public void setText(final String text) {
 		this.text = text;
@@ -36,6 +36,10 @@ public class Voice {
 
 	public void setCreateTs(final Date createTs) {
 		this.createTs = createTs;
+	}
+
+	public void setUpdateTs(final Date updateTs) {
+		this.updateTs = updateTs;
 	}
 
 }

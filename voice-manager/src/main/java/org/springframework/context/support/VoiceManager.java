@@ -243,9 +243,13 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 									//
 								final Voice voice = new Voice();
 								//
-								voice.setText(getText(tfText));
+								final String text = getText(tfText);
 								//
-								voice.setRomaji(getText(tfRomaji));
+								voice.setText(text);
+								//
+								final String romaji = getText(tfRomaji);
+								//
+								voice.setRomaji(romaji);
 								//
 								voice.setFilePath(filePath);
 								//
@@ -254,8 +258,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 								voice.setFileDigest(fileDigest);
 								//
 								voice.setFileLength(length);
-								//
-								voice.setCreateTs(new Date());
 								//
 								final Configuration configuration = sqlSessionFactory != null
 										? sqlSessionFactory.getConfiguration()
@@ -268,8 +270,20 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 								//
 								if (voiceMapper != null) {
 									//
-									voiceMapper.insert(voice);
-									//
+									if (voiceMapper.exists(text, romaji)) {
+										//
+										voice.setUpdateTs(new Date());
+										//
+										voiceMapper.update(voice);
+										//
+									} else {
+										//
+										voice.setCreateTs(new Date());
+										//
+										voiceMapper.insert(voice);
+										//
+									} // if
+										//
 								} // if
 									//
 							} // if

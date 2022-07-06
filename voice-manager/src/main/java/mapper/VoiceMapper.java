@@ -8,4 +8,8 @@ public interface VoiceMapper {
 
 	void insert(@Param("voice") final Voice voice);
 
+	void update(@Param("voice") final Voice voice);
+
+	boolean exists(@Param("text") final String text, @Param("romaji") final String romaji);
+
 }
