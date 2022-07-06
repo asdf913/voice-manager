@@ -14,9 +14,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.EventObject;
 import java.util.Objects;
 import java.util.regex.Matcher;
@@ -34,7 +32,6 @@ import javax.swing.text.JTextComponent;
 
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -239,44 +236,14 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 									//
 								} // if
 									//
-								ResultSet rs = null;
-								//
 								try (final Connection connection = dataSource != null ? dataSource.getConnection()
-										: null;) {
+										: null) {
 									//
-									PreparedStatement ps = connection != null ? connection.prepareStatement(
-											"select exists(select 1 from information_schema.tables where upper(table_name)=?);")
+									final PreparedStatement ps = connection != null ? connection.prepareStatement(
+											"insert into voice(text,romaji,file_path,file_length,file_digest_algorithm,file_digest)values(?,?,?,?,?,?);")
 											: null;
 									//
 									if (ps != null) {
-										//
-										ps.setString(1, StringUtils.upperCase("voice"));
-										//
-									} // if
-										//
-									rs = ps != null ? ps.executeQuery() : null;
-									//
-									while (rs != null && rs.next()) {
-										//
-										if (Objects.equals(Boolean.FALSE, rs.getObject(1))) {
-											//
-											final Statement s = connection != null ? connection.createStatement()
-													: null;
-											//
-											if (s != null) {
-												//
-												s.execute(IOUtils.toString(VoiceManager.class.getResource("/table.sql"),
-														"utf-8"));
-												//
-											} // if
-												//
-										} // if
-											//
-									} // while
-										//
-									if ((ps = connection != null ? connection.prepareStatement(
-											"insert into voice(text,romaji,file_path,file_length,file_digest_algorithm,file_digest)values(?,?,?,?,?,?);")
-											: null) != null) {
 										//
 										ps.setString(1, getText(tfText));
 										//

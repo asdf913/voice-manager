@@ -1,4 +1,4 @@
-create table voice(
+create table if not exists voice(
 	 text                  text
 	,romaji                text
 	,file_path             text
