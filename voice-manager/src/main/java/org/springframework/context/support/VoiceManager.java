@@ -12,15 +12,11 @@ import java.io.File;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.EventObject;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.sql.DataSource;
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -32,7 +28,11 @@ import javax.swing.text.JTextComponent;
 
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.EnvironmentAware;
@@ -42,7 +42,9 @@ import org.springframework.core.env.PropertyResolver;
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
 
+import domain.Voice;
 import fr.free.nrw.jakaroma.Jakaroma;
+import mapper.VoiceMapper;
 import net.miginfocom.swing.MigLayout;
 
 public class VoiceManager extends JFrame implements ActionListener, EnvironmentAware {
@@ -61,7 +63,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 
 	private AbstractButton btnConvertToRomaji, btnCopyRomaji, btnExecute = null;
 
-	private DataSource dataSource = null;
+	private SqlSessionFactory sqlSessionFactory = null;
 
 	private VoiceManager() {
 	}
@@ -71,8 +73,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		this.propertyResolver = environment;
 	}
 
-	public void setDataSource(final DataSource dataSource) {
-		this.dataSource = dataSource;
+	public void setSqlSessionFactory(final SqlSessionFactory sqlSessionFactory) {
+		this.sqlSessionFactory = sqlSessionFactory;
 	}
 
 	private void init() {
@@ -195,6 +197,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 					//
 					ContentInfo ci = null;
 					//
+					SqlSession sqlSession = null;
+					//
 					try {
 						//
 						if ((ci = new ContentInfoUtil().findMatch(selectedFile)) == null) {
@@ -236,38 +240,40 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 									//
 								} // if
 									//
-								try (final Connection connection = dataSource != null ? dataSource.getConnection()
-										: null) {
+								final Voice voice = new Voice();
+								//
+								voice.setText(getText(tfText));
+								//
+								voice.setRomaji(getText(tfRomaji));
+								//
+								voice.setFilePath(filePath);
+								//
+								voice.setFileDigestAlgorithm(md != null ? md.getAlgorithm() : null);
+								//
+								voice.setFileDigest(fileDigest);
+								//
+								voice.setFileLength(length);
+								//
+								final Configuration configuration = sqlSessionFactory != null
+										? sqlSessionFactory.getConfiguration()
+										: null;
+								//
+								final VoiceMapper voiceMapper = configuration != null ? configuration.getMapper(
+										VoiceMapper.class,
+										sqlSession = sqlSessionFactory != null ? sqlSessionFactory.openSession() : null)
+										: null;
+								//
+								if (voiceMapper != null) {
 									//
-									final PreparedStatement ps = connection != null ? connection.prepareStatement(
-											"insert into voice(text,romaji,file_path,file_length,file_digest_algorithm,file_digest)values(?,?,?,?,?,?);")
-											: null;
+									voiceMapper.insert(voice);
 									//
-									if (ps != null) {
-										//
-										ps.setString(1, getText(tfText));
-										//
-										ps.setString(2, getText(tfRomaji));
-										//
-										ps.setString(3, filePath);
-										//
-										ps.setObject(4, length);
-										//
-										ps.setString(5, md != null ? md.getAlgorithm() : null);
-										//
-										ps.setString(6, fileDigest);
-										//
-										ps.execute();
-										//
-									} // if
-										//
-								} // try
+								} // if
 									//
 							} // if
 								//
 						} // if
 							//
-					} catch (IOException | NoSuchAlgorithmException | SQLException e) {
+					} catch (IOException | NoSuchAlgorithmException e) {
 						//
 						if (GraphicsEnvironment.isHeadless()) {
 							//
@@ -283,6 +289,10 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 							//
 						} // if
 							//
+					} finally {
+						//
+						IOUtils.closeQuietly(sqlSession);
+						//
 					} // try
 						//
 				} // if
