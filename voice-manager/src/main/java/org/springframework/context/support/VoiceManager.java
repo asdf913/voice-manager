@@ -259,14 +259,10 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 						//
 						voice.setFileLength(length);
 						//
-						final Configuration configuration = sqlSessionFactory != null
-								? sqlSessionFactory.getConfiguration()
-								: null;
-						//
-						final VoiceMapper voiceMapper = configuration != null
-								? configuration.getMapper(VoiceMapper.class,
-										sqlSession = sqlSessionFactory != null ? sqlSessionFactory.openSession() : null)
-								: null;
+						final VoiceMapper voiceMapper = getMapper(
+								sqlSessionFactory != null ? sqlSessionFactory.getConfiguration() : null,
+								VoiceMapper.class,
+								sqlSession = sqlSessionFactory != null ? sqlSessionFactory.openSession() : null);
 						//
 						if (voiceMapper != null) {
 							//
@@ -326,6 +322,10 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 		} // if
 			//
+	}
+
+	private static <T> T getMapper(final Configuration instance, final Class<T> type, final SqlSession sqlSession) {
+		return instance != null ? instance.getMapper(type, sqlSession) : null;
 	}
 
 	private static byte[] digest(final MessageDigest instance, final byte[] input) {

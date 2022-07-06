@@ -17,6 +17,9 @@ import javax.swing.JButton;
 
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.ibatis.binding.BindingException;
+import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.session.SqlSession;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,7 +32,7 @@ import net.miginfocom.swing.MigLayout;
 class VoiceManagerTest {
 
 	private static Method METHOD_INIT, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_GET_FILE_EXTENSION,
-			METHOD_DIGEST = null;
+			METHOD_DIGEST, METHOD_GET_MAPPER = null;
 
 	@BeforeAll
 	private static void beforeAll() throws NoSuchMethodException {
@@ -46,6 +49,9 @@ class VoiceManagerTest {
 		(METHOD_GET_FILE_EXTENSION = clz.getDeclaredMethod("getFileExtension", ContentInfo.class)).setAccessible(true);
 		//
 		(METHOD_DIGEST = clz.getDeclaredMethod("digest", MessageDigest.class, byte[].class)).setAccessible(true);
+		//
+		(METHOD_GET_MAPPER = clz.getDeclaredMethod("getMapper", Configuration.class, Class.class, SqlSession.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -221,4 +227,21 @@ class VoiceManagerTest {
 		}
 	}
 
+	@Test
+	void testGetMapper() throws Throwable {
+		//
+		Assertions.assertNull(getMapper(null, null, null));
+		//
+		Assertions.assertThrows(BindingException.class, () -> getMapper(new Configuration(), null, null));
+		//
+	}
+
+	private static <T> T getMapper(final Configuration instance, final Class<T> type, final SqlSession sqlSession)
+			throws Throwable {
+		try {
+			return (T) METHOD_GET_MAPPER.invoke(null, instance, type, sqlSession);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
 }
