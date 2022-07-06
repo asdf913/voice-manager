@@ -14,7 +14,8 @@
 		</property>
 	</bean>
 
-	<bean class="org.springframework.context.CustomBeanFactoryPostProcessor" />
+	<bean
+		class="org.springframework.context.CustomBeanFactoryPostProcessor" />
 
 	<bean class="org.springframework.context.support.VoiceManager"
 		init-method="init">
@@ -24,6 +25,13 @@
 			value="#{T(javax.swing.WindowConstants).EXIT_ON_CLOSE}" />
 		<property name="title"
 			value="${org.springframework.context.support.VoiceManager.title}" />
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<bean id="dataSource" class="org.h2.jdbcx.JdbcDataSource">
+		<property name="url" value="jdbc:h2:file:./voice_manager" />
+		<property name="user" value="sa" />
+		<property name="password" value="pwd" />
 	</bean>
 
 </beans>

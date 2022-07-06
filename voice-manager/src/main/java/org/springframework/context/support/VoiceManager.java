@@ -12,11 +12,17 @@ import java.io.File;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.EventObject;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.sql.DataSource;
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -28,6 +34,7 @@ import javax.swing.text.JTextComponent;
 
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,12 +64,18 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 
 	private AbstractButton btnConvertToRomaji, btnCopyRomaji, btnExecute = null;
 
+	private DataSource dataSource = null;
+
 	private VoiceManager() {
 	}
 
 	@Override
 	public void setEnvironment(final Environment environment) {
 		this.propertyResolver = environment;
+	}
+
+	public void setDataSource(final DataSource dataSource) {
+		this.dataSource = dataSource;
 	}
 
 	private void init() {
@@ -156,7 +169,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 			setText(null, tfFile, tfFileLength, tfFileDigest);
 			//
-			final JFileChooser jfc = new JFileChooser();
+			final JFileChooser jfc = new JFileChooser(".");
 			//
 			jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
 			//
@@ -207,8 +220,9 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 								//
 							} else {
 								//
-								setText(tfFile, StringUtils.defaultString(
-										selectedFile != null ? selectedFile.getAbsolutePath() : null, getText(tfFile)));
+								final String filePath = selectedFile != null ? selectedFile.getAbsolutePath() : null;
+								//
+								setText(tfFile, StringUtils.defaultString(filePath, getText(tfFile)));
 								//
 								final Long length = selectedFile != null ? Long.valueOf(selectedFile.length()) : null;
 								//
@@ -216,18 +230,77 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 								//
 								final MessageDigest md = MessageDigest.getInstance("SHA-512");
 								//
+								String fileDigest = null;
+								//
 								if (md != null) {
 									//
-									setText(tfFileDigest, Hex
+									setText(tfFileDigest, fileDigest = Hex
 											.encodeHexString(md.digest(FileUtils.readFileToByteArray(selectedFile))));
 									//
 								} // if
+									//
+								ResultSet rs = null;
+								//
+								try (final Connection connection = dataSource != null ? dataSource.getConnection()
+										: null;) {
+									//
+									PreparedStatement ps = connection != null ? connection.prepareStatement(
+											"select exists(select 1 from information_schema.tables where upper(table_name)=?);")
+											: null;
+									//
+									if (ps != null) {
+										//
+										ps.setString(1, StringUtils.upperCase("voice"));
+										//
+									} // if
+										//
+									rs = ps != null ? ps.executeQuery() : null;
+									//
+									while (rs != null && rs.next()) {
+										//
+										if (Objects.equals(Boolean.FALSE, rs.getObject(1))) {
+											//
+											final Statement s = connection != null ? connection.createStatement()
+													: null;
+											//
+											if (s != null) {
+												//
+												s.execute(IOUtils.toString(VoiceManager.class.getResource("/table.sql"),
+														"utf-8"));
+												//
+											} // if
+												//
+										} // if
+											//
+									} // while
+										//
+									if ((ps = connection != null ? connection.prepareStatement(
+											"insert into voice(text,romaji,file_path,file_length,file_digest_algorithm,file_digest)values(?,?,?,?,?,?);")
+											: null) != null) {
+										//
+										ps.setString(1, getText(tfText));
+										//
+										ps.setString(2, getText(tfRomaji));
+										//
+										ps.setString(3, filePath);
+										//
+										ps.setObject(4, length);
+										//
+										ps.setString(5, md != null ? md.getAlgorithm() : null);
+										//
+										ps.setString(6, fileDigest);
+										//
+										ps.execute();
+										//
+									} // if
+										//
+								} // try
 									//
 							} // if
 								//
 						} // if
 							//
-					} catch (IOException | NoSuchAlgorithmException e) {
+					} catch (IOException | NoSuchAlgorithmException | SQLException e) {
 						//
 						if (GraphicsEnvironment.isHeadless()) {
 							//
