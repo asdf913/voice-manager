@@ -6,23 +6,26 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Map;
+import java.util.Objects;
+import java.util.function.Predicate;
 
 import javax.sql.DataSource;
 import javax.swing.JOptionPane;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.function.FailableFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
-import org.springframework.context.support.VoiceManager;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.MutablePropertySources;
 import org.springframework.core.env.PropertySource;
 import org.springframework.core.env.PropertySources;
+import org.springframework.core.io.Resource;
 
 public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFactoryPostProcessor {
 
@@ -30,9 +33,21 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 
 	private Environment environment = null;
 
+	private Resource tableSql = null;
+
+	private String tableSqlEncoding = null;
+
 	@Override
 	public void setEnvironment(final Environment environment) {
 		this.environment = environment;
+	}
+
+	public void setTableSql(final Resource tableSql) {
+		this.tableSql = tableSql;
+	}
+
+	public void setTableSqlEncoding(final String tableSqlEncoding) {
+		this.tableSqlEncoding = tableSqlEncoding;
 	}
 
 	@Override
@@ -43,7 +58,8 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 		//
 		try {
 			//
-			postProcessDatasources(beanFactory != null ? beanFactory.getBeansOfType(DataSource.class) : null);
+			postProcessDatasources(beanFactory != null ? beanFactory.getBeansOfType(DataSource.class) : null, tableSql,
+					tableSqlEncoding);
 			//
 		} catch (final SQLException | IOException e) {
 			//
@@ -106,7 +122,8 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 		}
 	}
 
-	private static void postProcessDatasources(final Map<?, DataSource> dataSources) throws SQLException, IOException {
+	private static void postProcessDatasources(final Map<?, DataSource> dataSources, final Resource tableSql,
+			final String tableSqlEncoding) throws SQLException, IOException {
 		//
 		if (dataSources != null && dataSources.values() != null) {
 			//
@@ -122,7 +139,11 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 					//
 					if (s != null) {
 						//
-						s.execute(IOUtils.toString(VoiceManager.class.getResource("/table.sql"), "utf-8"));
+						testAndApply(Objects::nonNull,
+								testAndApply(Objects::nonNull,
+										tableSql != null && tableSql.exists() ? tableSql.getInputStream() : null,
+										x -> IOUtils.toString(x, tableSqlEncoding), null),
+								x -> s.execute(x), null);
 						//
 					} // if
 						//
@@ -132,6 +153,16 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 				//
 		} // if
 			//
+	}
+
+	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse) throws E {
+		return predicate != null && predicate.test(value) ? apply(functionTrue, value) : apply(functionFalse, value);
+	}
+
+	private static <T, R, E extends Throwable> R apply(final FailableFunction<T, R, E> instance, final T value)
+			throws E {
+		return instance != null ? instance.apply(value) : null;
 	}
 
 }
