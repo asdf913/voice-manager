@@ -8,9 +8,11 @@ import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.security.MessageDigest;
+import java.util.Objects;
 
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
@@ -25,14 +27,17 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.google.common.reflect.Reflection;
 import com.j256.simplemagic.ContentInfo;
 
+import domain.Voice;
+import mapper.VoiceMapper;
 import net.miginfocom.swing.MigLayout;
 
 class VoiceManagerTest {
 
 	private static Method METHOD_INIT, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_GET_FILE_EXTENSION,
-			METHOD_DIGEST, METHOD_GET_MAPPER = null;
+			METHOD_DIGEST, METHOD_GET_MAPPER, METHOD_INSERT_OR_UPDATE = null;
 
 	@BeforeAll
 	private static void beforeAll() throws NoSuchMethodException {
@@ -53,6 +58,40 @@ class VoiceManagerTest {
 		(METHOD_GET_MAPPER = clz.getDeclaredMethod("getMapper", Configuration.class, Class.class, SqlSession.class))
 				.setAccessible(true);
 		//
+		(METHOD_INSERT_OR_UPDATE = clz.getDeclaredMethod("insertOrUpdate", VoiceMapper.class, Voice.class))
+				.setAccessible(true);
+		//
+	}
+
+	private class IH implements InvocationHandler {
+
+		private Boolean exists = null;
+
+		@Override
+		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+			//
+			final String methodName = method != null ? method.getName() : null;
+			//
+			if (Objects.equals(Void.TYPE, method != null ? method.getReturnType() : null)) {
+				//
+				return null;
+				//
+			} // if
+				//
+			if (proxy instanceof VoiceMapper) {
+				//
+				if (Objects.equals(methodName, "exists")) {
+					//
+					return exists;
+					//
+				} // if
+					//
+			} // if
+				//
+			throw new Throwable(methodName);
+			//
+		}
+
 	}
 
 	private VoiceManager instance = null;
@@ -244,4 +283,38 @@ class VoiceManagerTest {
 			throw e.getTargetException();
 		}
 	}
+
+	@Test
+	void testInsertOrUpdate() {
+		//
+		Assertions.assertDoesNotThrow(() -> insertOrUpdate(null, null));
+		//
+		final IH ih = new IH();
+		//
+		final VoiceMapper voiceMapper = Reflection.newProxy(VoiceMapper.class, ih);
+		//
+		ih.exists = Boolean.FALSE;
+		//
+		Assertions.assertDoesNotThrow(() -> insertOrUpdate(voiceMapper, null));
+		//
+		final Voice voice = new Voice();
+		//
+		Assertions.assertDoesNotThrow(() -> insertOrUpdate(voiceMapper, voice));
+		//
+		ih.exists = Boolean.TRUE;
+		//
+		Assertions.assertDoesNotThrow(() -> insertOrUpdate(voiceMapper, null));
+		//
+		Assertions.assertDoesNotThrow(() -> insertOrUpdate(voiceMapper, voice));
+		//
+	}
+
+	private static void insertOrUpdate(final VoiceMapper instance, final Voice voice) throws Throwable {
+		try {
+			METHOD_INSERT_OR_UPDATE.invoke(null, instance, voice);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
 }
