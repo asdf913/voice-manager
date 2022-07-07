@@ -30,8 +30,16 @@ public class Voice {
 		this.hiragana = hiragana;
 	}
 
+	public String getHiragana() {
+		return hiragana;
+	}
+
 	public void setKatakana(final String katakana) {
 		this.katakana = katakana;
+	}
+
+	public String getKatakana() {
+		return katakana;
 	}
 
 	public void setFilePath(final String filePath) {
@@ -60,6 +68,10 @@ public class Voice {
 
 	public void setFileExtension(final String fileExtension) {
 		this.fileExtension = fileExtension;
+	}
+
+	public String getFileExtension() {
+		return fileExtension;
 	}
 
 	public void setFileLength(final Long fileLength) {

@@ -8,7 +8,14 @@
 		<result column="file_digest_algorithm"
 			property="fileDigestAlgorithm" />
 		<result column="file_digest" property="fileDigest" />
+		<result column="file_extension" property="fileExtension" />
 	</resultMap>
+
+	<select id="retrieveAll" resultMap="resultMapVoice">
+		select
+		text,romaji,hiragana,katakana,file_path,file_length,file_digest_algorithm,file_digest,file_extension,create_ts,update_ts
+		from voice
+	</select>
 
 	<select id="searchByTextAndRomaji" resultMap="resultMapVoice">
 		select

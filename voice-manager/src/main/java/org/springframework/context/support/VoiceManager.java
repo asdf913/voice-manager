@@ -14,10 +14,14 @@ import java.io.File;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Collections;
 import java.util.Date;
 import java.util.EventObject;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -36,6 +40,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -44,7 +49,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertyResolver;
+import org.springframework.expression.EvaluationContext;
+import org.springframework.expression.Expression;
+import org.springframework.expression.ExpressionParser;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
+import org.springframework.expression.spel.support.StandardEvaluationContext;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
 
@@ -68,11 +80,15 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	private JTextComponent tfFolder, tfFile, tfFileLength, tfFileDigest, tfText, tfHiragana, tfKatakana,
 			tfRomaji = null;
 
-	private AbstractButton btnConvertToRomaji, btnCopyRomaji, btnExecute = null;
+	private AbstractButton btnConvertToRomaji, btnCopyRomaji, btnExecute, btnExport = null;
 
 	private SqlSessionFactory sqlSessionFactory = null;
 
-	private String folder = null;
+	private String voiceFolder = null;
+
+	private String outputFolder = null;
+
+	private Map<String, String> outputFolderFileNameExpressions = null;
 
 	private VoiceManager() {
 	}
@@ -86,13 +102,64 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		this.sqlSessionFactory = sqlSessionFactory;
 	}
 
-	public void setFolder(final String folder) {
-		this.folder = folder;
+	public void setVoiceFolder(final String voiceFolder) {
+		this.voiceFolder = voiceFolder;
+	}
+
+	public void setOutputFolder(final String outputFolder) {
+		this.outputFolder = outputFolder;
+	}
+
+	public void setOutputFolderFileNameExpressions(final Object value) throws JsonProcessingException {
+		//
+		if (value == null) {
+			//
+			this.outputFolderFileNameExpressions = null;
+			//
+			return;
+			//
+		} // if
+			//
+		final Map<?, ?> map = cast(Map.class, value);
+		//
+		if (map != null && map.entrySet() != null) {
+			//
+			for (final Entry<?, ?> entry : map.entrySet()) {
+				//
+				if (entry == null || (outputFolderFileNameExpressions = ObjectUtils
+						.getIfNull(outputFolderFileNameExpressions, LinkedHashMap::new)) == null) {
+					continue;
+				} // if
+					//
+				outputFolderFileNameExpressions.put(toString(entry.getKey()), toString(entry.getValue()));
+				//
+			} // for
+				//
+			outputFolderFileNameExpressions = ObjectUtils.getIfNull(outputFolderFileNameExpressions,
+					Collections::emptyMap);
+			//
+			return;
+			//
+		} // if
+			//
+		final Object object = testAndApply(StringUtils::isNotEmpty, toString(value),
+				x -> new ObjectMapper().readValue(x, Object.class), null);
+		//
+		if (object instanceof Map || object == null) {
+			setOutputFolderFileNameExpressions(object);
+		} else {
+			throw new IllegalArgumentException(toString(object.getClass()));
+		} // if
+			//
+	}
+
+	private static <T> T cast(final Class<T> clz, final Object value) {
+		return clz != null && clz.isInstance(value) ? clz.cast(value) : null;
 	}
 
 	private void init() {
 		//
-		final File folder = testAndApply(StringUtils::isNotBlank, this.folder, File::new, null);
+		final File folder = testAndApply(StringUtils::isNotBlank, this.voiceFolder, File::new, null);
 		//
 		add(new JLabel("Text"));
 		//
@@ -122,7 +189,9 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		add(new JLabel());
 		//
-		add(btnExecute = new JButton("Execute"), WRAP);
+		add(btnExecute = new JButton("Execute"));
+		//
+		add(btnExport = new JButton("Export"), WRAP);
 		//
 		add(new JLabel("Folder"));
 		//
@@ -142,7 +211,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		setEditable(false, tfFolder, tfFile, tfFileLength, tfFileDigest);
 		//
-		addActionListener(this, btnExecute, btnConvertToRomaji, btnCopyRomaji);
+		addActionListener(this, btnExecute, btnConvertToRomaji, btnCopyRomaji, btnExport);
 		//
 		setPreferredWidth(
 				intValue(getMaxPreferredWidth(tfFolder, tfFile, tfFileLength, tfFileDigest, tfText, tfHiragana,
@@ -159,12 +228,13 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		}
 	}
 
-	private static <T, R> R testAndApply(final Predicate<T> predicate, final T value, final Function<T, R> functionTrue,
-			final Function<T, R> functionFalse) {
+	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse) throws E {
 		return predicate != null && predicate.test(value) ? apply(functionTrue, value) : apply(functionFalse, value);
 	}
 
-	private static <T, R> R apply(final Function<T, R> instance, final T value) {
+	private static <T, R, E extends Throwable> R apply(final FailableFunction<T, R, E> instance, final T value)
+			throws E {
 		return instance != null ? instance.apply(value) : null;
 	}
 
@@ -272,8 +342,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 							//
 						String filePath = null;
 						//
-						final VoiceMapper voiceMapper = getMapper(
-								sqlSessionFactory != null ? sqlSessionFactory.getConfiguration() : null,
+						final VoiceMapper voiceMapper = getMapper(getConfiguration(sqlSessionFactory),
 								VoiceMapper.class,
 								sqlSession = sqlSessionFactory != null ? sqlSessionFactory.openSession() : null);
 						//
@@ -299,7 +368,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 								|| !Objects.equals(voiceOld.getFileDigestAlgorithm(), messageDigestAlgorithm)
 								|| !Objects.equals(voiceOld.getFileDigest(), fileDigest)) {
 							//
-							final File file = new File(folder, filePath = String
+							final File file = new File(voiceFolder, filePath = String
 									.format("%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.%2$s", new Date(), fileExtension));
 							//
 							FileUtils.copyFile(selectedFile, file);
@@ -316,7 +385,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 							//
 						setText(tfFile, StringUtils.defaultString(filePath, getText(tfFile)));
 						//
-						setText(tfFileLength, length != null ? length.toString() : null);
+						setText(tfFileLength, toString(length));
 						//
 						setText(tfFileDigest, fileDigest);
 						//
@@ -380,8 +449,115 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 			setContents(getSystemClipboard(Toolkit.getDefaultToolkit()), new StringSelection(getText(tfRomaji)), null);
 			//
+		} else if (Objects.equals(source, btnExport)) {
+			//
+			SqlSession sqlSession = null;
+			//
+			try {
+				//
+				final VoiceMapper voiceMapper = getMapper(getConfiguration(sqlSessionFactory), VoiceMapper.class,
+						sqlSession = openSession(sqlSessionFactory));
+				//
+				final List<Voice> voices = voiceMapper != null ? voiceMapper.retrieveAll() : null;
+				//
+				Voice voice = null;
+				//
+				SpelExpressionParser spelExpressionParser = null;
+				//
+				EvaluationContext evaluationContext = null;
+				//
+				File folder = null;
+				//
+				for (int i = 0; voices != null && i < voices.size(); i++) {
+					//
+					if ((voice = voices.get(i)) == null || outputFolderFileNameExpressions == null
+							|| outputFolderFileNameExpressions.entrySet() == null) {
+						continue;
+					} // if
+						//
+					setVariable(evaluationContext = ObjectUtils.getIfNull(evaluationContext,
+							StandardEvaluationContext::new), "voice", voice);
+					//
+					for (final Entry<String, String> folderFileNamePattern : outputFolderFileNameExpressions
+							.entrySet()) {
+						//
+						if (folderFileNamePattern == null) {
+							continue;
+						} // if
+							//
+						FileUtils
+								.copyFile(new File("voice", voice.getFilePath()),
+										new File(
+												new File(
+														folder = ObjectUtils.getIfNull(folder,
+																() -> new File(outputFolder)),
+														folderFileNamePattern.getKey()),
+												toString(getValue(
+														spelExpressionParser = ObjectUtils.getIfNull(
+																spelExpressionParser, SpelExpressionParser::new),
+														evaluationContext, folderFileNamePattern.getValue()))));
+						//
+					} // for
+						//
+				} // for
+					//
+			} catch (final IOException e) {
+				//
+				if (GraphicsEnvironment.isHeadless()) {
+					//
+					if (LOG != null) {
+						LOG.error(e.getMessage(), e);
+					} else {
+						e.printStackTrace();
+					} // if
+						//
+				} else {
+					//
+					JOptionPane.showMessageDialog(null, e.getMessage());
+					//
+				} // if
+					//
+			} finally {
+				//
+				IOUtils.closeQuietly(sqlSession);
+				//
+			} // try
+				//
 		} // if
 			//
+	}
+
+	private static void setVariable(final EvaluationContext instance, final String name, final Object value) {
+		if (instance != null) {
+			instance.setVariable(name, value);
+		}
+	}
+
+	private static Object getValue(final ExpressionParser spelExpressionParser,
+			final EvaluationContext evaluationContext, final String expression) {
+		//
+		return getValue(parseExpression(spelExpressionParser, expression), evaluationContext);
+		//
+	}
+
+	private static Configuration getConfiguration(final SqlSessionFactory instance) {
+		return instance != null ? instance.getConfiguration() : null;
+	}
+
+	private static SqlSession openSession(final SqlSessionFactory instance) {
+		return instance != null ? instance.openSession() : null;
+	}
+
+	private static String toString(final Object instance) {
+		return instance != null ? instance.toString() : null;
+	}
+
+	private static Expression parseExpression(final ExpressionParser instance, final String expressionString) {
+		return instance != null ? instance.parseExpression(expressionString) : null;
+	}
+
+	private static Object getValue(final Expression instance, final EvaluationContext evaluationContext) {
+		return instance != null ? instance.getValue(evaluationContext) : null;
 	}
 
 	private static void insertOrUpdate(final VoiceMapper instance, final Voice voice) {

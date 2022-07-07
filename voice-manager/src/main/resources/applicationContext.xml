@@ -30,8 +30,12 @@
 		<property name="title"
 			value="${org.springframework.context.support.VoiceManager.title}" />
 		<property name="sqlSessionFactory" ref="SqlSessionFactory" />
-		<property name="folder"
-			value="${org.springframework.context.support.VoiceManager.folder}" />
+		<property name="voiceFolder"
+			value="${org.springframework.context.support.VoiceManager.voiceFolder}" />
+		<property name="outputFolder"
+			value="${org.springframework.context.support.VoiceManager.outputFolder}" />
+		<property name="outputFolderFileNameExpressions"
+			value="${org.springframework.context.support.VoiceManager.outputFolderFileNameExpressions}" />
 	</bean>
 
 	<bean id="DataSource" class="org.h2.jdbcx.JdbcDataSource">

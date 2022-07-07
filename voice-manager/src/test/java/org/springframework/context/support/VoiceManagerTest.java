@@ -9,28 +9,41 @@ import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.security.MessageDigest;
+import java.util.Collections;
+import java.util.EventObject;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.function.Function;
+import java.util.Set;
 import java.util.function.Predicate;
 
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
+import javax.swing.JTextField;
+import javax.swing.text.JTextComponent;
 
 import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.ibatis.binding.BindingException;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.core.env.PropertyResolver;
+import org.springframework.expression.EvaluationContext;
+import org.springframework.expression.Expression;
+import org.springframework.expression.ExpressionParser;
+import org.springframework.util.ReflectionUtils;
 
-import com.google.common.base.Functions;
 import com.google.common.base.Predicates;
 import com.google.common.reflect.Reflection;
 import com.j256.simplemagic.ContentInfo;
@@ -43,7 +56,9 @@ class VoiceManagerTest {
 
 	private static Method METHOD_INIT, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_GET_FILE_EXTENSION,
 			METHOD_DIGEST, METHOD_GET_MAPPER, METHOD_INSERT_OR_UPDATE, METHOD_SET_ENABLED, METHOD_TEST_AND_APPLY,
-			METHOD_GET_MAX_PREFERRED_WIDTH = null;
+			METHOD_GET_MAX_PREFERRED_WIDTH, METHOD_CAST, METHOD_INT_VALUE, METHOD_GET_PROPERTY, METHOD_SET_VARIABLE,
+			METHOD_GET_CONFIGURATION, METHOD_OPEN_SESSION, METHOD_PARSE_EXPRESSION, METHOD_GET_VALUE, METHOD_GET_TEXT,
+			METHOD_GET_SOURCE = null;
 
 	@BeforeAll
 	private static void beforeAll() throws NoSuchMethodException {
@@ -69,23 +84,66 @@ class VoiceManagerTest {
 		//
 		(METHOD_SET_ENABLED = clz.getDeclaredMethod("setEnabled", Component.class, Boolean.TYPE)).setAccessible(true);
 		//
-		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class, Function.class,
-				Function.class)).setAccessible(true);
+		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
+				FailableFunction.class, FailableFunction.class)).setAccessible(true);
 		//
 		(METHOD_GET_MAX_PREFERRED_WIDTH = clz.getDeclaredMethod("getMaxPreferredWidth", Component[].class))
 				.setAccessible(true);
+		//
+		(METHOD_CAST = clz.getDeclaredMethod("cast", Class.class, Object.class)).setAccessible(true);
+		//
+		(METHOD_INT_VALUE = clz.getDeclaredMethod("intValue", Number.class, Integer.TYPE)).setAccessible(true);
+		//
+		(METHOD_GET_PROPERTY = clz.getDeclaredMethod("getProperty", PropertyResolver.class, String.class))
+				.setAccessible(true);
+		//
+		(METHOD_SET_VARIABLE = clz.getDeclaredMethod("setVariable", EvaluationContext.class, String.class,
+				Object.class)).setAccessible(true);
+		//
+		(METHOD_GET_CONFIGURATION = clz.getDeclaredMethod("getConfiguration", SqlSessionFactory.class))
+				.setAccessible(true);
+		//
+		(METHOD_OPEN_SESSION = clz.getDeclaredMethod("openSession", SqlSessionFactory.class)).setAccessible(true);
+		//
+		(METHOD_PARSE_EXPRESSION = clz.getDeclaredMethod("parseExpression", ExpressionParser.class, String.class))
+				.setAccessible(true);
+		//
+		(METHOD_GET_VALUE = clz.getDeclaredMethod("getValue", Expression.class, EvaluationContext.class))
+				.setAccessible(true);
+		//
+		(METHOD_GET_TEXT = clz.getDeclaredMethod("getText", JTextComponent.class)).setAccessible(true);
+		//
+		(METHOD_GET_SOURCE = clz.getDeclaredMethod("getSource", EventObject.class)).setAccessible(true);
 		//
 	}
 
 	private class IH implements InvocationHandler {
 
-		private Boolean exists = null;
+		private Voice voice = null;
+
+		private Set<Entry<?, ?>> entrySet = null;
+
+		private String toString, property = null;
+
+		private Configuration configuration = null;
+
+		private SqlSession sqlSession = null;
+
+		private Expression expression = null;
+
+		private Object value = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
 			final String methodName = method != null ? method.getName() : null;
 			//
+			if (ReflectionUtils.isToStringMethod(method)) {
+				//
+				return toString;
+				//
+			} // if
+				//
 			if (Objects.equals(Void.TYPE, method != null ? method.getReturnType() : null)) {
 				//
 				return null;
@@ -94,9 +152,53 @@ class VoiceManagerTest {
 				//
 			if (proxy instanceof VoiceMapper) {
 				//
-				if (Objects.equals(methodName, "exists")) {
+				if (Objects.equals(methodName, "searchByTextAndRomaji")) {
 					//
-					return exists;
+					return voice;
+					//
+				} // if
+					//
+			} else if (proxy instanceof Map) {
+				//
+				if (Objects.equals(methodName, "entrySet")) {
+					//
+					return entrySet;
+					//
+				} // if
+					//
+			} else if (proxy instanceof PropertyResolver) {
+				//
+				if (Objects.equals(methodName, "getProperty")) {
+					//
+					return property;
+					//
+				} // if
+					//
+			} else if (proxy instanceof SqlSessionFactory) {
+				//
+				if (Objects.equals(methodName, "getConfiguration")) {
+					//
+					return configuration;
+					//
+				} else if (Objects.equals(methodName, "openSession")) {
+					//
+					return sqlSession;
+					//
+				} // if
+					//
+			} else if (proxy instanceof ExpressionParser) {
+				//
+				if (Objects.equals(methodName, "parseExpression")) {
+					//
+					return expression;
+					//
+				} // if
+					//
+			} else if (proxy instanceof Expression) {
+				//
+				if (Objects.equals(methodName, "getValue")) {
+					//
+					return value;
 					//
 				} // if
 					//
@@ -109,6 +211,10 @@ class VoiceManagerTest {
 	}
 
 	private VoiceManager instance = null;
+
+	private IH ih = null;
+
+	private SqlSessionFactory sqlSessionFactory = null;
 
 	@BeforeEach
 	private void beforeEach() throws ReflectiveOperationException {
@@ -123,6 +229,75 @@ class VoiceManagerTest {
 			//
 		instance = constructor != null && !GraphicsEnvironment.isHeadless() ? constructor.newInstance() : null;
 		//
+		sqlSessionFactory = Reflection.newProxy(SqlSessionFactory.class, ih = new IH());
+		//
+	}
+
+	@Test
+	void testSetOutputFolderFileNameExpressions() throws NoSuchFieldException, IllegalAccessException {
+		//
+		final Field outputFolderFileNameExpressions = VoiceManager.class
+				.getDeclaredField("outputFolderFileNameExpressions");
+		//
+		if (outputFolderFileNameExpressions != null) {
+			outputFolderFileNameExpressions.setAccessible(true);
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> instance.setOutputFolderFileNameExpressions(null));
+		//
+		Assertions.assertNull(get(outputFolderFileNameExpressions, instance));
+		//
+		Assertions.assertDoesNotThrow(() -> instance.setOutputFolderFileNameExpressions(""));
+		//
+		Assertions.assertNull(get(outputFolderFileNameExpressions, instance));
+		//
+		final Map<?, ?> emptyMap = Collections.emptyMap();
+		//
+		final Map<?, ?> map = Reflection.newProxy(Map.class, ih);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.setOutputFolderFileNameExpressions(map));
+		//
+		Assertions.assertNull(get(outputFolderFileNameExpressions, instance));
+		//
+		ih.entrySet = Collections.singleton(null);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.setOutputFolderFileNameExpressions(map));
+		//
+		Assertions.assertEquals(emptyMap, get(outputFolderFileNameExpressions, instance));
+		//
+		set(outputFolderFileNameExpressions, instance, null);
+		//
+		Assertions.assertDoesNotThrow(
+				() -> instance.setOutputFolderFileNameExpressions(Collections.singletonMap(null, null)));
+		//
+		Assertions.assertEquals(Collections.singletonMap(null, null), get(outputFolderFileNameExpressions, instance));
+		//
+		set(outputFolderFileNameExpressions, instance, null);
+		//
+		Assertions.assertDoesNotThrow(
+				() -> instance.setOutputFolderFileNameExpressions(Collections.singletonMap(null, null)));
+		//
+		Assertions.assertEquals(Collections.singletonMap(null, null), get(outputFolderFileNameExpressions, instance));
+		//
+		set(outputFolderFileNameExpressions, instance, null);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.setOutputFolderFileNameExpressions("{}"));
+		//
+		Assertions.assertEquals(emptyMap, get(outputFolderFileNameExpressions, instance));
+		//
+		Assertions.assertThrows(IllegalArgumentException.class, () -> instance.setOutputFolderFileNameExpressions("1"));
+		//
+	}
+
+	private static Object get(final Field field, final Object instance) throws IllegalAccessException {
+		return field != null ? field.get(instance) : null;
+	}
+
+	private static void set(final Field field, final Object instance, final Object value)
+			throws IllegalAccessException {
+		if (field != null) {
+			field.set(instance, value);
+		}
 	}
 
 	@Test
@@ -303,11 +478,7 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> insertOrUpdate(null, null));
 		//
-		final IH ih = new IH();
-		//
 		final VoiceMapper voiceMapper = Reflection.newProxy(VoiceMapper.class, ih);
-		//
-		ih.exists = Boolean.FALSE;
 		//
 		Assertions.assertDoesNotThrow(() -> insertOrUpdate(voiceMapper, null));
 		//
@@ -315,7 +486,7 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> insertOrUpdate(voiceMapper, voice));
 		//
-		ih.exists = Boolean.TRUE;
+		ih.voice = new Voice();
 		//
 		Assertions.assertDoesNotThrow(() -> insertOrUpdate(voiceMapper, null));
 		//
@@ -349,14 +520,15 @@ class VoiceManagerTest {
 	@Test
 	void testTestAndApply() throws Throwable {
 		//
-		Assertions.assertNull(testAndApply(null, null, null, Functions.identity()));
+		Assertions.assertNull(testAndApply(null, null, null, x -> x));
 		//
-		Assertions.assertNull(testAndApply(Predicates.alwaysTrue(), null, null, Functions.identity()));
+		Assertions.assertNull(testAndApply(Predicates.alwaysTrue(), null, null, x -> x));
 		//
 	}
 
-	private static <T, R> R testAndApply(final Predicate<T> predicate, final T value, final Function<T, R> functionTrue,
-			final Function<T, R> functionFalse) throws Throwable {
+	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse)
+			throws Throwable {
 		try {
 			return (R) METHOD_TEST_AND_APPLY.invoke(null, predicate, value, functionTrue, functionFalse);
 		} catch (final InvocationTargetException e) {
@@ -382,6 +554,205 @@ class VoiceManagerTest {
 				return (Double) obj;
 			}
 			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCast() throws Throwable {
+		//
+		Assertions.assertNull(cast(null, null));
+		//
+	}
+
+	private static <T> T cast(final Class<T> clz, final Object value) throws Throwable {
+		try {
+			return (T) METHOD_CAST.invoke(null, clz, value);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testIntValue() throws Throwable {
+		//
+		final int zero = 0;
+		//
+		Assertions.assertEquals(zero, intValue(null, zero));
+		//
+	}
+
+	private static int intValue(final Number instance, final int defaultValue) throws Throwable {
+		try {
+			final Object obj = METHOD_INT_VALUE.invoke(null, instance, defaultValue);
+			if (obj instanceof Integer) {
+				return ((Integer) obj).intValue();
+			}
+			throw new Throwable(obj != null && obj.getClass() != null ? obj.getClass().toString() : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetProperty() throws Throwable {
+		//
+		Assertions.assertNull(getProperty(Reflection.newProxy(PropertyResolver.class, ih), null));
+		//
+	}
+
+	private static String getProperty(final PropertyResolver instance, final String key) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_PROPERTY.invoke(null, instance, key);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetVariable() {
+		//
+		Assertions.assertDoesNotThrow(() -> setVariable(null, null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> setVariable(Reflection.newProxy(EvaluationContext.class, ih), null, null));
+		//
+	}
+
+	private static void setVariable(final EvaluationContext instance, final String name, final Object value)
+			throws Throwable {
+		try {
+			METHOD_SET_VARIABLE.invoke(null, instance, name, value);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetConfiguration() throws Throwable {
+		//
+		Assertions.assertNull(getConfiguration(null));
+		//
+		Assertions.assertNull(getConfiguration(sqlSessionFactory));
+		//
+	}
+
+	private static Configuration getConfiguration(final SqlSessionFactory instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_CONFIGURATION.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Configuration) {
+				return (Configuration) obj;
+			}
+			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testOpenSession() throws Throwable {
+		//
+		Assertions.assertNull(openSession(null));
+		//
+		Assertions.assertNull(openSession(sqlSessionFactory));
+		//
+	}
+
+	private static SqlSession openSession(final SqlSessionFactory instance) throws Throwable {
+		try {
+			final Object obj = METHOD_OPEN_SESSION.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof SqlSession) {
+				return (SqlSession) obj;
+			}
+			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testParseExpression() throws Throwable {
+		//
+		Assertions.assertNull(parseExpression(null, null));
+		//
+		Assertions.assertNull(parseExpression(Reflection.newProxy(ExpressionParser.class, ih), null));
+		//
+	}
+
+	private static Expression parseExpression(final ExpressionParser instance, final String expressionString)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_PARSE_EXPRESSION.invoke(null, instance, expressionString);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Expression) {
+				return (Expression) obj;
+			}
+			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetValue() throws Throwable {
+		//
+		Assertions.assertNull(getValue(null, null));
+		//
+		Assertions.assertNull(getValue(Reflection.newProxy(Expression.class, ih), null));
+		//
+	}
+
+	private static Object getValue(final Expression instance, final EvaluationContext evaluationContext)
+			throws Throwable {
+		try {
+			return METHOD_GET_VALUE.invoke(null, instance, evaluationContext);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetText() throws Throwable {
+		//
+		Assertions.assertEquals("", getText(new JTextField()));
+		//
+	}
+
+	private static String getText(final JTextComponent instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_TEXT.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetSource() throws Throwable {
+		//
+		Assertions.assertNull(getSource(null));
+		//
+	}
+
+	private static Object getSource(final EventObject instance) throws Throwable {
+		try {
+			return METHOD_GET_SOURCE.invoke(null, instance);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
