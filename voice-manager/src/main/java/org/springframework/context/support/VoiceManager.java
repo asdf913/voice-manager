@@ -17,6 +17,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.EventObject;
 import java.util.Objects;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,6 +34,7 @@ import javax.swing.text.JTextComponent;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
@@ -62,11 +65,14 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 
 	private PropertyResolver propertyResolver = null;
 
-	private JTextComponent tfFile, tfFileLength, tfFileDigest, tfText, tfHiragana, tfKatakana, tfRomaji = null;
+	private JTextComponent tfFolder, tfFile, tfFileLength, tfFileDigest, tfText, tfHiragana, tfKatakana,
+			tfRomaji = null;
 
 	private AbstractButton btnConvertToRomaji, btnCopyRomaji, btnExecute = null;
 
 	private SqlSessionFactory sqlSessionFactory = null;
+
+	private String folder = null;
 
 	private VoiceManager() {
 	}
@@ -80,7 +86,13 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		this.sqlSessionFactory = sqlSessionFactory;
 	}
 
+	public void setFolder(final String folder) {
+		this.folder = folder;
+	}
+
 	private void init() {
+		//
+		final File folder = testAndApply(StringUtils::isNotBlank, this.folder, File::new, null);
 		//
 		add(new JLabel("Text"));
 		//
@@ -112,6 +124,10 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		add(btnExecute = new JButton("Execute"), WRAP);
 		//
+		add(new JLabel("Folder"));
+		//
+		add(tfFolder = new JTextField(folder != null ? folder.getAbsolutePath() : null), wrap);
+		//
 		add(new JLabel("File"));
 		//
 		add(tfFile = new JTextField(), wrap);
@@ -124,12 +140,32 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		add(tfFileDigest = new JTextField(), wrap);
 		//
-		setEditable(false, tfFile, tfFileLength, tfFileDigest);
+		setEditable(false, tfFolder, tfFile, tfFileLength, tfFileDigest);
 		//
 		addActionListener(this, btnExecute, btnConvertToRomaji, btnCopyRomaji);
 		//
-		setPreferredWidth(165 - intValue(getPreferredWidth(btnConvertToRomaji), 0), tfText, tfRomaji);
+		setPreferredWidth(
+				intValue(getMaxPreferredWidth(tfFolder, tfFile, tfFileLength, tfFileDigest, tfText, tfHiragana,
+						tfKatakana, tfRomaji), 0) - intValue(getPreferredWidth(btnConvertToRomaji), 0),
+				tfText, tfRomaji);
 		//
+		setEnabled(btnExecute, folder != null && folder.exists() && folder.isDirectory());
+		//
+	}
+
+	private static void setEnabled(final Component instance, final boolean b) {
+		if (instance != null) {
+			instance.setEnabled(b);
+		}
+	}
+
+	private static <T, R> R testAndApply(final Predicate<T> predicate, final T value, final Function<T, R> functionTrue,
+			final Function<T, R> functionFalse) {
+		return predicate != null && predicate.test(value) ? apply(functionTrue, value) : apply(functionFalse, value);
+	}
+
+	private static <T, R> R apply(final Function<T, R> instance, final T value) {
+		return instance != null ? instance.apply(value) : null;
 	}
 
 	private static void setEditable(final boolean editable, final JTextComponent... jtcs) {
@@ -442,6 +478,28 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 		} // for
 			//
+	}
+
+	private static Double getMaxPreferredWidth(final Component... cs) {
+		//
+		Double result = null;
+		//
+		Double preferredWidth = null;
+		//
+		for (int i = 0; cs != null && i < cs.length; i++) {
+			//
+			preferredWidth = getPreferredWidth(cs[i]);
+			//
+			if (result == null) {
+				result = preferredWidth;
+			} else {
+				result = ObjectUtils.max(result, preferredWidth);
+			} // if
+				//
+		} // for
+			//
+		return result;
+		//
 	}
 
 	private static Double getPreferredWidth(final Component c) {

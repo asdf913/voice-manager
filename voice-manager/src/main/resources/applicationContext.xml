@@ -30,12 +30,16 @@
 		<property name="title"
 			value="${org.springframework.context.support.VoiceManager.title}" />
 		<property name="sqlSessionFactory" ref="SqlSessionFactory" />
+		<property name="folder"
+			value="${org.springframework.context.support.VoiceManager.folder}" />
 	</bean>
 
 	<bean id="DataSource" class="org.h2.jdbcx.JdbcDataSource">
 		<property name="url" value="jdbc:h2:file:./voice_manager" />
-		<property name="user" value="${org.h2.jdbcx.JdbcDataSource.user}" />
-		<property name="password" value="${org.h2.jdbcx.JdbcDataSource.password}" />
+		<property name="user"
+			value="${org.h2.jdbcx.JdbcDataSource.user}" />
+		<property name="password"
+			value="${org.h2.jdbcx.JdbcDataSource.password}" />
 	</bean>
 
 	<bean id="SqlSessionFactory"

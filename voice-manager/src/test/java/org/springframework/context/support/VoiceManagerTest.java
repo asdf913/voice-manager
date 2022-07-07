@@ -1,5 +1,6 @@
 package org.springframework.context.support;
 
+import java.awt.Component;
 import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -13,6 +14,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.security.MessageDigest;
 import java.util.Objects;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
@@ -27,6 +30,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.google.common.base.Functions;
+import com.google.common.base.Predicates;
 import com.google.common.reflect.Reflection;
 import com.j256.simplemagic.ContentInfo;
 
@@ -37,7 +42,8 @@ import net.miginfocom.swing.MigLayout;
 class VoiceManagerTest {
 
 	private static Method METHOD_INIT, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_GET_FILE_EXTENSION,
-			METHOD_DIGEST, METHOD_GET_MAPPER, METHOD_INSERT_OR_UPDATE = null;
+			METHOD_DIGEST, METHOD_GET_MAPPER, METHOD_INSERT_OR_UPDATE, METHOD_SET_ENABLED, METHOD_TEST_AND_APPLY,
+			METHOD_GET_MAX_PREFERRED_WIDTH = null;
 
 	@BeforeAll
 	private static void beforeAll() throws NoSuchMethodException {
@@ -59,6 +65,14 @@ class VoiceManagerTest {
 				.setAccessible(true);
 		//
 		(METHOD_INSERT_OR_UPDATE = clz.getDeclaredMethod("insertOrUpdate", VoiceMapper.class, Voice.class))
+				.setAccessible(true);
+		//
+		(METHOD_SET_ENABLED = clz.getDeclaredMethod("setEnabled", Component.class, Boolean.TYPE)).setAccessible(true);
+		//
+		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class, Function.class,
+				Function.class)).setAccessible(true);
+		//
+		(METHOD_GET_MAX_PREFERRED_WIDTH = clz.getDeclaredMethod("getMaxPreferredWidth", Component[].class))
 				.setAccessible(true);
 		//
 	}
@@ -312,6 +326,62 @@ class VoiceManagerTest {
 	private static void insertOrUpdate(final VoiceMapper instance, final Voice voice) throws Throwable {
 		try {
 			METHOD_INSERT_OR_UPDATE.invoke(null, instance, voice);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetEnabled() {
+		//
+		Assertions.assertDoesNotThrow((() -> setEnabled(null, false)));
+		//
+	}
+
+	private static void setEnabled(final Component instance, final boolean b) throws Throwable {
+		try {
+			METHOD_SET_ENABLED.invoke(null, instance, b);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testTestAndApply() throws Throwable {
+		//
+		Assertions.assertNull(testAndApply(null, null, null, Functions.identity()));
+		//
+		Assertions.assertNull(testAndApply(Predicates.alwaysTrue(), null, null, Functions.identity()));
+		//
+	}
+
+	private static <T, R> R testAndApply(final Predicate<T> predicate, final T value, final Function<T, R> functionTrue,
+			final Function<T, R> functionFalse) throws Throwable {
+		try {
+			return (R) METHOD_TEST_AND_APPLY.invoke(null, predicate, value, functionTrue, functionFalse);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testgetMaxPreferredWidth() throws Throwable {
+		//
+		Assertions.assertNull(getMaxPreferredWidth((Component[]) null));
+		//
+		Assertions.assertNull(getMaxPreferredWidth((Component) null));
+		//
+	}
+
+	private static Double getMaxPreferredWidth(final Component... cs) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_MAX_PREFERRED_WIDTH.invoke(null, (Object) cs);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Double) {
+				return (Double) obj;
+			}
+			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
