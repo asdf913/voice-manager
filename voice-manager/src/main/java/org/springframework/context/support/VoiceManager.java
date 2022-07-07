@@ -12,9 +12,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Proxy;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.EventObject;
 import java.util.LinkedHashMap;
@@ -22,9 +24,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
@@ -217,13 +222,32 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		addActionListener(this, btnExecute, btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji, btnExport);
 		//
-		setPreferredWidth(
-				intValue(getMaxPreferredWidth(tfFolder, tfFile, tfFileLength, tfFileDigest, tfText, tfHiragana,
-						tfKatakana, tfRomaji), 0) - intValue(getPreferredWidth(btnConvertToRomaji), 0),
-				tfText, tfRomaji, tfHiragana);
+		setPreferredWidth(intValue(
+				orElse(max(map(Stream.of(tfFolder, tfFile, tfFileLength, tfFileDigest, tfText, tfHiragana, tfKatakana,
+						tfRomaji), VoiceManager::getPreferredWidth), Comparator.comparing(x -> intValue(x, 0))), null),
+				0) - intValue(getPreferredWidth(btnConvertToRomaji), 0), tfText, tfRomaji, tfHiragana);
 		//
 		setEnabled(btnExecute, folder != null && folder.exists() && folder.isDirectory());
 		//
+	}
+
+	private static <T, R> Stream<R> map(final Stream<T> instance, final Function<? super T, ? extends R> mapper) {
+		//
+		return instance != null && (Proxy.isProxyClass(instance.getClass()) || mapper != null) ? instance.map(mapper)
+				: null;
+		//
+	}
+
+	private static <T> Optional<T> max(final Stream<T> instance, final Comparator<? super T> comparator) {
+		//
+		return instance != null && (Proxy.isProxyClass(instance.getClass()) || comparator != null)
+				? instance.max(comparator)
+				: null;
+		//
+	}
+
+	private static <T> T orElse(final Optional<T> instance, final T other) {
+		return instance != null ? instance.orElse(other) : null;
 	}
 
 	private static void setEnabled(final Component instance, final boolean b) {
@@ -705,28 +729,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 		} // for
 			//
-	}
-
-	private static Double getMaxPreferredWidth(final Component... cs) {
-		//
-		Double result = null;
-		//
-		Double preferredWidth = null;
-		//
-		for (int i = 0; cs != null && i < cs.length; i++) {
-			//
-			preferredWidth = getPreferredWidth(cs[i]);
-			//
-			if (result == null) {
-				result = preferredWidth;
-			} else {
-				result = ObjectUtils.max(result, preferredWidth);
-			} // if
-				//
-		} // for
-			//
-		return result;
-		//
 	}
 
 	private static Double getPreferredWidth(final Component c) {

@@ -15,13 +15,17 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.security.MessageDigest;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.EventObject;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
@@ -57,8 +61,9 @@ class VoiceManagerTest {
 
 	private static Method METHOD_INIT, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_GET_FILE_EXTENSION,
 			METHOD_DIGEST, METHOD_GET_MAPPER, METHOD_INSERT_OR_UPDATE, METHOD_SET_ENABLED, METHOD_TEST_AND_APPLY,
-			METHOD_GET_MAX_PREFERRED_WIDTH, METHOD_CAST, METHOD_INT_VALUE, METHOD_GET_PROPERTY, METHOD_SET_VARIABLE,
-			METHOD_PARSE_EXPRESSION, METHOD_GET_VALUE, METHOD_GET_TEXT, METHOD_GET_SOURCE, METHOD_EXPORT = null;
+			METHOD_CAST, METHOD_INT_VALUE, METHOD_GET_PROPERTY, METHOD_SET_VARIABLE, METHOD_PARSE_EXPRESSION,
+			METHOD_GET_VALUE, METHOD_GET_TEXT, METHOD_GET_SOURCE, METHOD_EXPORT, METHOD_MAP, METHOD_MAX,
+			METHOD_OR_ELSE = null;
 
 	@BeforeAll
 	private static void beforeAll() throws NoSuchMethodException {
@@ -87,9 +92,6 @@ class VoiceManagerTest {
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
 		//
-		(METHOD_GET_MAX_PREFERRED_WIDTH = clz.getDeclaredMethod("getMaxPreferredWidth", Component[].class))
-				.setAccessible(true);
-		//
 		(METHOD_CAST = clz.getDeclaredMethod("cast", Class.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_INT_VALUE = clz.getDeclaredMethod("intValue", Number.class, Integer.TYPE)).setAccessible(true);
@@ -113,6 +115,12 @@ class VoiceManagerTest {
 		(METHOD_EXPORT = clz.getDeclaredMethod("export", List.class, Map.class, String.class, String.class))
 				.setAccessible(true);
 		//
+		(METHOD_MAP = clz.getDeclaredMethod("map", Stream.class, Function.class)).setAccessible(true);
+		//
+		(METHOD_MAX = clz.getDeclaredMethod("max", Stream.class, Comparator.class)).setAccessible(true);
+		//
+		(METHOD_OR_ELSE = clz.getDeclaredMethod("orElse", Optional.class, Object.class)).setAccessible(true);
+		//
 	}
 
 	private class IH implements InvocationHandler {
@@ -129,7 +137,7 @@ class VoiceManagerTest {
 
 		private Expression expression = null;
 
-		private Object value = null;
+		private Object value, max = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -142,7 +150,9 @@ class VoiceManagerTest {
 				//
 			} // if
 				//
-			if (Objects.equals(Void.TYPE, method != null ? method.getReturnType() : null)) {
+			final Class<?> returnType = method != null ? method.getReturnType() : null;
+			//
+			if (Objects.equals(Void.TYPE, returnType)) {
 				//
 				return null;
 				//
@@ -200,6 +210,18 @@ class VoiceManagerTest {
 					//
 				} // if
 					//
+			} else if (proxy instanceof Stream) {
+				//
+				if (Objects.equals(Stream.class, returnType)) {
+					//
+					return proxy;
+					//
+				} else if (Objects.equals(methodName, "max")) {
+					//
+					return max;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(methodName);
@@ -213,6 +235,8 @@ class VoiceManagerTest {
 	private IH ih = null;
 
 	private SqlSessionFactory sqlSessionFactory = null;
+
+	private Stream<?> stream = null;
 
 	@BeforeEach
 	private void beforeEach() throws ReflectiveOperationException {
@@ -228,6 +252,8 @@ class VoiceManagerTest {
 		instance = constructor != null && !GraphicsEnvironment.isHeadless() ? constructor.newInstance() : null;
 		//
 		sqlSessionFactory = Reflection.newProxy(SqlSessionFactory.class, ih = new IH());
+		//
+		stream = Reflection.newProxy(Stream.class, ih);
 		//
 	}
 
@@ -571,29 +597,6 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testgetMaxPreferredWidth() throws Throwable {
-		//
-		Assertions.assertNull(getMaxPreferredWidth((Component[]) null));
-		//
-		Assertions.assertNull(getMaxPreferredWidth((Component) null));
-		//
-	}
-
-	private static Double getMaxPreferredWidth(final Component... cs) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_MAX_PREFERRED_WIDTH.invoke(null, (Object) cs);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Double) {
-				return (Double) obj;
-			}
-			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testCast() throws Throwable {
 		//
 		Assertions.assertNull(cast(null, null));
@@ -781,6 +784,73 @@ class VoiceManagerTest {
 			final String voiceFolder, final String outputFolder) throws Throwable {
 		try {
 			METHOD_EXPORT.invoke(null, voices, outputFolderFileNameExpressions, voiceFolder, outputFolder);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testMap() throws Throwable {
+		//
+		Assertions.assertNull(map(null, null));
+		//
+		Assertions.assertSame(stream, map(stream, null));
+		//
+		Assertions.assertNull(map(Stream.empty(), null));
+		//
+	}
+
+	private static <T, R> Stream<R> map(final Stream<T> instance, final Function<? super T, ? extends R> mapper)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_MAP.invoke(null, instance, mapper);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Stream) {
+				return (Stream) obj;
+			}
+			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testMax() throws Throwable {
+		//
+		Assertions.assertNull(max(null, null));
+		//
+		Assertions.assertNull(max(stream, null));
+		//
+		Assertions.assertNull(max(Stream.empty(), null));
+		//
+	}
+
+	private static <T> Optional<T> max(final Stream<T> instance, final Comparator<? super T> comparator)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_MAX.invoke(null, instance, comparator);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Optional) {
+				return (Optional) obj;
+			}
+			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testOrElse() throws Throwable {
+		//
+		Assertions.assertNull(orElse(null, null));
+		//
+	}
+
+	private static <T> T orElse(final Optional<T> instance, final T other) throws Throwable {
+		try {
+			return (T) METHOD_OR_ELSE.invoke(null, instance, other);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
