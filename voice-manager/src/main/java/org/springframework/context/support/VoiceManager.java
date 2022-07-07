@@ -343,8 +343,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 						String filePath = null;
 						//
 						final VoiceMapper voiceMapper = getMapper(getConfiguration(sqlSessionFactory),
-								VoiceMapper.class,
-								sqlSession = sqlSessionFactory != null ? sqlSessionFactory.openSession() : null);
+								VoiceMapper.class, sqlSession = openSession(sqlSessionFactory));
 						//
 						final String text = getText(tfText);
 						//
