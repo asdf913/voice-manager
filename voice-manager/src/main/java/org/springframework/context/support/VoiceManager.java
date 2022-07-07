@@ -620,6 +620,10 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		Field f = null;
 		//
+		Class<?> type = null;
+		//
+		Object value = null;
+		//
 		for (int i = 0; voices != null && i < voices.size(); i++) {
 			//
 			if ((voice = voices.get(i)) == null
@@ -631,12 +635,36 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				sheet = workbook.createSheet();
 			} // if
 				//
-			if ((row = sheet.createRow(i)) == null) {
+			fs = ObjectUtils.getIfNull(fs, () -> FieldUtils.getAllFields(Voice.class));
+			//
+			// header
+			//
+			if (sheet.getLastRowNum() < 0) {
+				//
+				if ((row = sheet.createRow(0)) == null) {
+					continue;
+				} // if
+					//
+				for (int j = 0; fs != null && j < fs.length; j++) {
+					//
+					if ((f = fs[j]) == null || (cell = row.createCell(j)) == null) {
+						continue;
+					} // if
+						//
+					f.setAccessible(true);
+					//
+					cell.setCellValue(f.getName());
+					//
+				} // for
+					//
+			} // if
+				//
+				// content
+				//
+			if ((row = sheet.createRow(sheet.getLastRowNum() + 1)) == null) {
 				continue;
 			} // if
 				//
-			fs = ObjectUtils.getIfNull(fs, () -> FieldUtils.getAllFields(Voice.class));
-			//
 			for (int j = 0; fs != null && j < fs.length; j++) {
 				//
 				if ((f = fs[j]) == null || (cell = row.createCell(j)) == null) {
@@ -645,8 +673,12 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 					//
 				f.setAccessible(true);
 				//
-				cell.setCellValue(toString(f.get(voice)));
-				//
+				if ((value = f.get(voice)) instanceof Number) {
+					cell.setCellValue(((Number) value).doubleValue());
+				} else {
+					cell.setCellValue(toString(value));
+				} // if
+					//
 			} // for
 				//
 		} // for

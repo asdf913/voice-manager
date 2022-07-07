@@ -889,7 +889,11 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(createWorkbook(Collections.singletonList(null)));
 		//
-		Assertions.assertNotNull(createWorkbook(Collections.nCopies(2, new Voice())));
+		final Voice voice = new Voice();
+		//
+		voice.setFileLength(Long.valueOf(0));
+		//
+		Assertions.assertNotNull(createWorkbook(Collections.nCopies(2, voice)));
 		//
 	}
 
