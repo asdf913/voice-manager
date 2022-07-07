@@ -11,7 +11,10 @@ import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.lang.reflect.Field;
 import java.lang.reflect.Proxy;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -47,9 +50,15 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.EnvironmentAware;
@@ -486,15 +495,29 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 			SqlSession sqlSession = null;
 			//
+			Workbook workbook = null;
+			//
 			try {
 				//
 				final VoiceMapper voiceMapper = getMapper(getConfiguration(sqlSessionFactory), VoiceMapper.class,
 						sqlSession = openSession(sqlSessionFactory));
 				//
-				export(voiceMapper != null ? voiceMapper.retrieveAll() : null, outputFolderFileNameExpressions,
-						voiceFolder, outputFolder);
+				final List<Voice> voices = voiceMapper != null ? voiceMapper.retrieveAll() : null;
 				//
-			} catch (final IOException e) {
+				export(voices, outputFolderFileNameExpressions, voiceFolder, outputFolder);
+				//
+				try (final OutputStream os = new FileOutputStream(
+						new File(String.format("voice_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.xlsx", new Date())))) {
+					//
+					if ((workbook = createWorkbook(voices)) != null) {
+						//
+						workbook.write(os);
+						//
+					} // if
+						//
+				} // try
+					//
+			} catch (final IOException | IllegalAccessException e) {
 				//
 				if (GraphicsEnvironment.isHeadless()) {
 					//
@@ -513,6 +536,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			} finally {
 				//
 				IOUtils.closeQuietly(sqlSession);
+				//
+				IOUtils.closeQuietly(workbook);
 				//
 			} // try
 				//
@@ -577,6 +602,57 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				//
 		} // for
 			//
+	}
+
+	private static Workbook createWorkbook(final List<Voice> voices) throws IllegalAccessException {
+		//
+		Voice voice = null;
+		//
+		Workbook workbook = null;
+		//
+		Sheet sheet = null;
+		//
+		Row row = null;
+		//
+		Cell cell = null;
+		//
+		Field[] fs = null;
+		//
+		Field f = null;
+		//
+		for (int i = 0; voices != null && i < voices.size(); i++) {
+			//
+			if ((voice = voices.get(i)) == null
+					|| (workbook = ObjectUtils.getIfNull(workbook, XSSFWorkbook::new)) == null) {
+				continue;
+			} // if
+				//
+			if (sheet == null) {
+				sheet = workbook.createSheet();
+			} // if
+				//
+			if ((row = sheet.createRow(i)) == null) {
+				continue;
+			} // if
+				//
+			fs = ObjectUtils.getIfNull(fs, () -> FieldUtils.getAllFields(Voice.class));
+			//
+			for (int j = 0; fs != null && j < fs.length; j++) {
+				//
+				if ((f = fs[j]) == null || (cell = row.createCell(j)) == null) {
+					continue;
+				} // if
+					//
+				f.setAccessible(true);
+				//
+				cell.setCellValue(toString(f.get(voice)));
+				//
+			} // for
+				//
+		} // for
+			//
+		return workbook;
+		//
 	}
 
 	private static void setVariable(final EvaluationContext instance, final String name, final Object value) {

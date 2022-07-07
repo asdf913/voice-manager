@@ -9,6 +9,8 @@
 			property="fileDigestAlgorithm" />
 		<result column="file_digest" property="fileDigest" />
 		<result column="file_extension" property="fileExtension" />
+		<result column="create_ts" property="createTs" />
+		<result column="update_ts" property="updateTs" />
 	</resultMap>
 
 	<select id="retrieveAll" resultMap="resultMapVoice">

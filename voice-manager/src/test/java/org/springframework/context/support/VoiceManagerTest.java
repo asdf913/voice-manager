@@ -40,6 +40,7 @@ import org.apache.ibatis.binding.BindingException;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -64,7 +65,7 @@ class VoiceManagerTest {
 			METHOD_DIGEST, METHOD_GET_MAPPER, METHOD_INSERT_OR_UPDATE, METHOD_SET_ENABLED, METHOD_TEST_AND_APPLY,
 			METHOD_CAST, METHOD_INT_VALUE, METHOD_GET_PROPERTY, METHOD_SET_VARIABLE, METHOD_PARSE_EXPRESSION,
 			METHOD_GET_VALUE, METHOD_GET_TEXT, METHOD_GET_SOURCE, METHOD_EXPORT, METHOD_MAP, METHOD_MAX, METHOD_OR_ELSE,
-			METHOD_FOR_EACH = null;
+			METHOD_FOR_EACH, METHOD_CREATE_WORK_BOOK = null;
 
 	@BeforeAll
 	private static void beforeAll() throws NoSuchMethodException {
@@ -123,6 +124,8 @@ class VoiceManagerTest {
 		(METHOD_OR_ELSE = clz.getDeclaredMethod("orElse", Optional.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_FOR_EACH = clz.getDeclaredMethod("forEach", Stream.class, Consumer.class)).setAccessible(true);
+		//
+		(METHOD_CREATE_WORK_BOOK = clz.getDeclaredMethod("createWorkbook", List.class)).setAccessible(true);
 		//
 	}
 
@@ -876,6 +879,29 @@ class VoiceManagerTest {
 	private static <T> void forEach(final Stream<T> instance, final Consumer<? super T> action) throws Throwable {
 		try {
 			METHOD_FOR_EACH.invoke(null, instance, action);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCreateWorkbook() throws Throwable {
+		//
+		Assertions.assertNull(createWorkbook(Collections.singletonList(null)));
+		//
+		Assertions.assertNotNull(createWorkbook(Collections.nCopies(2, new Voice())));
+		//
+	}
+
+	private static Workbook createWorkbook(final List<Voice> voices) throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_WORK_BOOK.invoke(null, voices);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Workbook) {
+				return (Workbook) obj;
+			}
+			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
