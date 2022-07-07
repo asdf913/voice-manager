@@ -270,7 +270,10 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 							//
 						} // if
 							//
-						final String filePath = selectedFile != null ? selectedFile.getAbsolutePath() : null;
+						final String filePath = String.format("%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.%2$s", new Date(),
+								fileExtension);
+						//
+						FileUtils.copyFile(selectedFile, new File(folder, filePath));
 						//
 						setText(tfFile, StringUtils.defaultString(filePath, getText(tfFile)));
 						//
