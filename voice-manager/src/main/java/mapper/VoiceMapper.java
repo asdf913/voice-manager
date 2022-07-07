@@ -10,8 +10,6 @@ public interface VoiceMapper {
 
 	void update(@Param("voice") final Voice voice);
 
-	boolean exists(@Param("text") final String text, @Param("romaji") final String romaji);
-
 	Voice searchByTextAndRomaji(@Param("text") final String text, @Param("romaji") final String romaji);
 
 }

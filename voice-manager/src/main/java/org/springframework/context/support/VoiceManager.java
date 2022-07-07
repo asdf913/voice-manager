@@ -288,6 +288,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 						//
 						final String messageDigestAlgorithm = md != null ? md.getAlgorithm() : null;
 						//
+						Long length = selectedFile != null ? Long.valueOf(selectedFile.length()) : null;
+						//
 						String fileDigest = Hex
 								.encodeHexString(digest(md, FileUtils.readFileToByteArray(selectedFile)));
 						//
@@ -302,6 +304,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 							//
 							FileUtils.copyFile(selectedFile, file);
 							//
+							length = Long.valueOf(file.length());
+							//
 							fileDigest = Hex.encodeHexString(digest(md, FileUtils.readFileToByteArray(file)));
 							//
 						} else {
@@ -311,8 +315,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 						} // if
 							//
 						setText(tfFile, StringUtils.defaultString(filePath, getText(tfFile)));
-						//
-						final Long length = selectedFile != null ? Long.valueOf(selectedFile.length()) : null;
 						//
 						setText(tfFileLength, length != null ? length.toString() : null);
 						//
@@ -386,7 +388,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		if (instance != null) {
 			//
-			if (instance.exists(voice != null ? voice.getText() : null, voice != null ? voice.getRomaji() : null)) {
+			if (instance.searchByTextAndRomaji(voice != null ? voice.getText() : null,
+					voice != null ? voice.getRomaji() : null) != null) {
 				//
 				if (voice != null) {
 					//

@@ -42,6 +42,7 @@
 				,file_digest_algorithm=#{voice.fileDigestAlgorithm}
 				,file_digest=#{voice.fileDigest}
 				,file_extension=#{voice.fileExtension}
+				,file_length=#{voice.fileLength}
 				,update_ts=#{voice.updateTs}
 			</set>
 			<where>
@@ -53,17 +54,5 @@
 			</where>
 		</if>
 	</update>
-
-	<select id="exists" resultType="boolean">
-		select exists(select 1 from voice
-		<where>
-			true
-			<if test="text==null">and text is null</if>
-			<if test="text!=null">and text=#{text}</if>
-			<if test="romaji==null">and romaji is null</if>
-			<if test="romaji!=null">and romaji=#{romaji}</if>
-		</where>
-		)
-	</select>
 
 </mapper>
