@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class Voice {
 
-	private String text, romaji, filePath, fileDigestAlgorithm, fileDigest, fileExtension = null;
+	private String text, romaji, hiragana, filePath, fileDigestAlgorithm, fileDigest, fileExtension = null;
 
 	private Long fileLength = null;
 
@@ -16,6 +16,10 @@ public class Voice {
 
 	public void setRomaji(final String romaji) {
 		this.romaji = romaji;
+	}
+
+	public void setHiragana(final String hiragana) {
+		this.hiragana = hiragana;
 	}
 
 	public void setFilePath(final String filePath) {
