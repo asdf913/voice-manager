@@ -62,7 +62,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 
 	private PropertyResolver propertyResolver = null;
 
-	private JTextComponent tfFile, tfFileLength, tfFileDigest, tfText, tfHiragana, tfRomaji = null;
+	private JTextComponent tfFile, tfFileLength, tfFileDigest, tfText, tfHiragana, tfKatakana, tfRomaji = null;
 
 	private AbstractButton btnConvertToRomaji, btnCopyRomaji, btnExecute = null;
 
@@ -102,6 +102,11 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		add(tfHiragana = new JTextField(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.hiragana")), wrap);
+		//
+		add(new JLabel("Katakana"));
+		//
+		add(tfKatakana = new JTextField(
+				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.katakana")), wrap);
 		//
 		add(new JLabel());
 		//
@@ -255,6 +260,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 						voice.setRomaji(romaji);
 						//
 						voice.setHiragana(getText(tfHiragana));
+						//
+						voice.setKatakana(getText(tfKatakana));
 						//
 						voice.setFilePath(filePath);
 						//
