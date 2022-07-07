@@ -498,6 +498,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 			Workbook workbook = null;
 			//
+			File file = null;
+			//
 			try {
 				//
 				final VoiceMapper voiceMapper = getMapper(getConfiguration(sqlSessionFactory), VoiceMapper.class,
@@ -508,7 +510,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				export(voices, outputFolderFileNameExpressions, voiceFolder, outputFolder);
 				//
 				try (final OutputStream os = new FileOutputStream(
-						new File(String.format("voice_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.xlsx", new Date())))) {
+						file = new File(String.format("voice_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.xlsx", new Date())))) {
 					//
 					if ((workbook = createWorkbook(voices)) != null) {
 						//
@@ -540,6 +542,12 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				//
 				IOUtils.closeQuietly(workbook);
 				//
+				if (file != null && file.exists() && file.isFile() && file.length() == 0) {
+					//
+					file.delete();
+					//
+				} // if
+					//
 			} // try
 				//
 		} // if
