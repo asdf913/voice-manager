@@ -14,8 +14,16 @@ public class Voice {
 		this.text = text;
 	}
 
+	public String getText() {
+		return text;
+	}
+
 	public void setRomaji(final String romaji) {
 		this.romaji = romaji;
+	}
+
+	public String getRomaji() {
+		return romaji;
 	}
 
 	public void setHiragana(final String hiragana) {

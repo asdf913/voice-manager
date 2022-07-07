@@ -251,13 +251,9 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 						//
 						final Voice voice = new Voice();
 						//
-						final String text = getText(tfText);
+						voice.setText(getText(tfText));
 						//
-						voice.setText(text);
-						//
-						final String romaji = getText(tfRomaji);
-						//
-						voice.setRomaji(romaji);
+						voice.setRomaji(getText(tfRomaji));
 						//
 						voice.setHiragana(getText(tfHiragana));
 						//
@@ -273,29 +269,12 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 						//
 						voice.setFileLength(length);
 						//
-						final VoiceMapper voiceMapper = getMapper(
+						insertOrUpdate(getMapper(
 								sqlSessionFactory != null ? sqlSessionFactory.getConfiguration() : null,
 								VoiceMapper.class,
-								sqlSession = sqlSessionFactory != null ? sqlSessionFactory.openSession() : null);
+								sqlSession = sqlSessionFactory != null ? sqlSessionFactory.openSession() : null),
+								voice);
 						//
-						if (voiceMapper != null) {
-							//
-							if (voiceMapper.exists(text, romaji)) {
-								//
-								voice.setUpdateTs(new Date());
-								//
-								voiceMapper.update(voice);
-								//
-							} else {
-								//
-								voice.setCreateTs(new Date());
-								//
-								voiceMapper.insert(voice);
-								//
-							} // if
-								//
-						} // if
-							//
 					} catch (IOException | NoSuchAlgorithmException e) {
 						//
 						if (GraphicsEnvironment.isHeadless()) {
@@ -334,6 +313,36 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 			setContents(getSystemClipboard(Toolkit.getDefaultToolkit()), new StringSelection(getText(tfRomaji)), null);
 			//
+		} // if
+			//
+	}
+
+	private static void insertOrUpdate(final VoiceMapper instance, final Voice voice) {
+		//
+		if (instance != null) {
+			//
+			if (instance.exists(voice != null ? voice.getText() : null, voice != null ? voice.getRomaji() : null)) {
+				//
+				if (voice != null) {
+					//
+					voice.setUpdateTs(new Date());
+					//
+				} // if
+					//
+				instance.update(voice);
+				//
+			} else {
+				//
+				if (voice != null) {
+					//
+					voice.setCreateTs(new Date());
+					//
+				} // if
+					//
+				instance.insert(voice);
+				//
+			} // if
+				//
 		} // if
 			//
 	}
