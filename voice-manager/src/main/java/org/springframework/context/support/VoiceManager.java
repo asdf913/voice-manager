@@ -457,49 +457,9 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				final VoiceMapper voiceMapper = getMapper(getConfiguration(sqlSessionFactory), VoiceMapper.class,
 						sqlSession = openSession(sqlSessionFactory));
 				//
-				final List<Voice> voices = voiceMapper != null ? voiceMapper.retrieveAll() : null;
+				export(voiceMapper != null ? voiceMapper.retrieveAll() : null, outputFolderFileNameExpressions,
+						voiceFolder, outputFolder);
 				//
-				Voice voice = null;
-				//
-				SpelExpressionParser spelExpressionParser = null;
-				//
-				EvaluationContext evaluationContext = null;
-				//
-				File folder = null;
-				//
-				for (int i = 0; voices != null && i < voices.size(); i++) {
-					//
-					if ((voice = voices.get(i)) == null || outputFolderFileNameExpressions == null
-							|| outputFolderFileNameExpressions.entrySet() == null) {
-						continue;
-					} // if
-						//
-					setVariable(evaluationContext = ObjectUtils.getIfNull(evaluationContext,
-							StandardEvaluationContext::new), "voice", voice);
-					//
-					for (final Entry<String, String> folderFileNamePattern : outputFolderFileNameExpressions
-							.entrySet()) {
-						//
-						if (folderFileNamePattern == null) {
-							continue;
-						} // if
-							//
-						FileUtils
-								.copyFile(new File("voice", voice.getFilePath()),
-										new File(
-												new File(
-														folder = ObjectUtils.getIfNull(folder,
-																() -> new File(outputFolder)),
-														folderFileNamePattern.getKey()),
-												toString(getValue(
-														spelExpressionParser = ObjectUtils.getIfNull(
-																spelExpressionParser, SpelExpressionParser::new),
-														evaluationContext, folderFileNamePattern.getValue()))));
-						//
-					} // for
-						//
-				} // for
-					//
 			} catch (final IOException e) {
 				//
 				if (GraphicsEnvironment.isHeadless()) {
@@ -523,6 +483,57 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			} // try
 				//
 		} // if
+			//
+	}
+
+	private static void export(final List<Voice> voices, final Map<String, String> outputFolderFileNameExpressions,
+			final String voiceFolder, final String outputFolder) throws IOException {
+		//
+		Voice voice = null;
+		//
+		EvaluationContext evaluationContext = null;
+		//
+		File folder = null;
+		//
+		ExpressionParser expressionParser = null;
+		//
+		String filePath = null;
+		//
+		String key = null;
+		//
+		String value = null;
+		//
+		File fileSource = null;
+		//
+		for (int i = 0; voices != null && i < voices.size(); i++) {
+			//
+			if ((voice = voices.get(i)) == null || (filePath = voice.getFilePath()) == null
+					|| outputFolderFileNameExpressions == null || outputFolderFileNameExpressions.entrySet() == null) {
+				continue;
+			} // if
+				//
+			setVariable(evaluationContext = ObjectUtils.getIfNull(evaluationContext, StandardEvaluationContext::new),
+					"voice", voice);
+			//
+			for (final Entry<String, String> folderFileNamePattern : outputFolderFileNameExpressions.entrySet()) {
+				//
+				if (folderFileNamePattern == null || (key = folderFileNamePattern.getKey()) == null
+						|| StringUtils.isBlank(value = folderFileNamePattern.getValue())
+						|| !(fileSource = voiceFolder != null ? new File(voiceFolder, filePath) : new File(filePath))
+								.exists()) {
+					continue;
+				} // if
+					// //
+				FileUtils.copyFile(fileSource,
+						new File((folder = ObjectUtils.getIfNull(folder,
+								() -> outputFolder != null ? new File(outputFolder) : null)) != null ? new File(folder,
+										key) : new File(key),
+								toString(getValue(expressionParser = ObjectUtils.getIfNull(expressionParser,
+										SpelExpressionParser::new), evaluationContext, value))));
+				//
+			} // for
+				//
+		} // for
 			//
 	}
 

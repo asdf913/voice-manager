@@ -16,6 +16,7 @@ import java.lang.reflect.Method;
 import java.security.MessageDigest;
 import java.util.Collections;
 import java.util.EventObject;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
@@ -57,8 +58,7 @@ class VoiceManagerTest {
 	private static Method METHOD_INIT, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_GET_FILE_EXTENSION,
 			METHOD_DIGEST, METHOD_GET_MAPPER, METHOD_INSERT_OR_UPDATE, METHOD_SET_ENABLED, METHOD_TEST_AND_APPLY,
 			METHOD_GET_MAX_PREFERRED_WIDTH, METHOD_CAST, METHOD_INT_VALUE, METHOD_GET_PROPERTY, METHOD_SET_VARIABLE,
-			METHOD_GET_CONFIGURATION, METHOD_OPEN_SESSION, METHOD_PARSE_EXPRESSION, METHOD_GET_VALUE, METHOD_GET_TEXT,
-			METHOD_GET_SOURCE = null;
+			METHOD_PARSE_EXPRESSION, METHOD_GET_VALUE, METHOD_GET_TEXT, METHOD_GET_SOURCE, METHOD_EXPORT = null;
 
 	@BeforeAll
 	private static void beforeAll() throws NoSuchMethodException {
@@ -100,11 +100,6 @@ class VoiceManagerTest {
 		(METHOD_SET_VARIABLE = clz.getDeclaredMethod("setVariable", EvaluationContext.class, String.class,
 				Object.class)).setAccessible(true);
 		//
-		(METHOD_GET_CONFIGURATION = clz.getDeclaredMethod("getConfiguration", SqlSessionFactory.class))
-				.setAccessible(true);
-		//
-		(METHOD_OPEN_SESSION = clz.getDeclaredMethod("openSession", SqlSessionFactory.class)).setAccessible(true);
-		//
 		(METHOD_PARSE_EXPRESSION = clz.getDeclaredMethod("parseExpression", ExpressionParser.class, String.class))
 				.setAccessible(true);
 		//
@@ -114,6 +109,9 @@ class VoiceManagerTest {
 		(METHOD_GET_TEXT = clz.getDeclaredMethod("getText", JTextComponent.class)).setAccessible(true);
 		//
 		(METHOD_GET_SOURCE = clz.getDeclaredMethod("getSource", EventObject.class)).setAccessible(true);
+		//
+		(METHOD_EXPORT = clz.getDeclaredMethod("export", List.class, Map.class, String.class, String.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -324,6 +322,22 @@ class VoiceManagerTest {
 		} // if
 			//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnCopyRomaji, 0, null)));
+		//
+		final AbstractButton btnExport = new JButton();
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "btnExport", btnExport, true);
+			//
+		} // if
+			//
+		final ActionEvent actionEvent = new ActionEvent(btnExport, 0, null);
+		//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEvent));
+		//
+		instance.setSqlSessionFactory(sqlSessionFactory);
+		//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEvent));
 		//
 	}
 
@@ -635,52 +649,6 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testGetConfiguration() throws Throwable {
-		//
-		Assertions.assertNull(getConfiguration(null));
-		//
-		Assertions.assertNull(getConfiguration(sqlSessionFactory));
-		//
-	}
-
-	private static Configuration getConfiguration(final SqlSessionFactory instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_CONFIGURATION.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Configuration) {
-				return (Configuration) obj;
-			}
-			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testOpenSession() throws Throwable {
-		//
-		Assertions.assertNull(openSession(null));
-		//
-		Assertions.assertNull(openSession(sqlSessionFactory));
-		//
-	}
-
-	private static SqlSession openSession(final SqlSessionFactory instance) throws Throwable {
-		try {
-			final Object obj = METHOD_OPEN_SESSION.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof SqlSession) {
-				return (SqlSession) obj;
-			}
-			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testParseExpression() throws Throwable {
 		//
 		Assertions.assertNull(parseExpression(null, null));
@@ -753,6 +721,46 @@ class VoiceManagerTest {
 	private static Object getSource(final EventObject instance) throws Throwable {
 		try {
 			return METHOD_GET_SOURCE.invoke(null, instance);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testExport() {
+		//
+		Assertions.assertDoesNotThrow(() -> export(Collections.singletonList(null), null, null, null));
+		//
+		final Voice voice = new Voice();
+		//
+		final List<Voice> voices = Collections.singletonList(voice);
+		//
+		Assertions.assertDoesNotThrow(() -> export(voices, null, null, null));
+		//
+		voice.setFilePath("");
+		//
+		Assertions.assertDoesNotThrow(() -> export(voices, null, null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> export(voices, Collections.emptyMap(), null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> export(voices, Reflection.newProxy(Map.class, ih), null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> export(voices, Collections.singletonMap(null, null), null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> export(voices, Collections.singletonMap("", null), null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> export(voices, Collections.singletonMap("", ""), null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> export(voices, Collections.singletonMap("", " "), null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> export(voices, Collections.singletonMap("", "true"), null, null));
+		//
+	}
+
+	private static void export(final List<Voice> voices, final Map<String, String> outputFolderFileNameExpressions,
+			final String voiceFolder, final String outputFolder) throws Throwable {
+		try {
+			METHOD_EXPORT.invoke(null, voices, outputFolderFileNameExpressions, voiceFolder, outputFolder);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
