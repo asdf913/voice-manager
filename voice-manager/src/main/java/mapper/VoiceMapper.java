@@ -12,4 +12,6 @@ public interface VoiceMapper {
 
 	boolean exists(@Param("text") final String text, @Param("romaji") final String romaji);
 
+	Voice searchByTextAndRomaji(@Param("text") final String text, @Param("romaji") final String romaji);
+
 }

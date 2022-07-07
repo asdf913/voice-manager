@@ -38,12 +38,24 @@ public class Voice {
 		this.filePath = filePath;
 	}
 
+	public String getFilePath() {
+		return filePath;
+	}
+
 	public void setFileDigestAlgorithm(final String fileDigestAlgorithm) {
 		this.fileDigestAlgorithm = fileDigestAlgorithm;
 	}
 
+	public String getFileDigestAlgorithm() {
+		return fileDigestAlgorithm;
+	}
+
 	public void setFileDigest(final String fileDigest) {
 		this.fileDigest = fileDigest;
+	}
+
+	public String getFileDigest() {
+		return fileDigest;
 	}
 
 	public void setFileExtension(final String fileExtension) {
@@ -52,6 +64,10 @@ public class Voice {
 
 	public void setFileLength(final Long fileLength) {
 		this.fileLength = fileLength;
+	}
+
+	public Long getFileLength() {
+		return fileLength;
 	}
 
 	public void setCreateTs(final Date createTs) {

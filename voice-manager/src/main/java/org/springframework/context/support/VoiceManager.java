@@ -270,49 +270,75 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 							//
 						} // if
 							//
-						final String filePath = String.format("%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.%2$s", new Date(),
-								fileExtension);
+						String filePath = null;
 						//
-						FileUtils.copyFile(selectedFile, new File(folder, filePath));
+						final VoiceMapper voiceMapper = getMapper(
+								sqlSessionFactory != null ? sqlSessionFactory.getConfiguration() : null,
+								VoiceMapper.class,
+								sqlSession = sqlSessionFactory != null ? sqlSessionFactory.openSession() : null);
 						//
+						final String text = getText(tfText);
+						//
+						final String romaji = getText(tfRomaji);
+						//
+						final Voice voiceOld = voiceMapper != null ? voiceMapper.searchByTextAndRomaji(text, romaji)
+								: null;
+						//
+						final MessageDigest md = MessageDigest.getInstance("SHA-512");
+						//
+						final String messageDigestAlgorithm = md != null ? md.getAlgorithm() : null;
+						//
+						String fileDigest = Hex
+								.encodeHexString(digest(md, FileUtils.readFileToByteArray(selectedFile)));
+						//
+						if (voiceOld == null
+								|| !Objects.equals(voiceOld.getFileLength(),
+										selectedFile != null ? Long.valueOf(selectedFile.length()) : null)
+								|| !Objects.equals(voiceOld.getFileDigestAlgorithm(), messageDigestAlgorithm)
+								|| !Objects.equals(voiceOld.getFileDigest(), fileDigest)) {
+							//
+							final File file = new File(folder, filePath = String
+									.format("%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.%2$s", new Date(), fileExtension));
+							//
+							FileUtils.copyFile(selectedFile, file);
+							//
+							fileDigest = Hex.encodeHexString(digest(md, FileUtils.readFileToByteArray(file)));
+							//
+						} else {
+							//
+							filePath = voiceOld.getFilePath();
+							//
+						} // if
+							//
 						setText(tfFile, StringUtils.defaultString(filePath, getText(tfFile)));
 						//
 						final Long length = selectedFile != null ? Long.valueOf(selectedFile.length()) : null;
 						//
 						setText(tfFileLength, length != null ? length.toString() : null);
 						//
-						final MessageDigest md = MessageDigest.getInstance("SHA-512");
-						//
-						final String fileDigest = Hex
-								.encodeHexString(digest(md, FileUtils.readFileToByteArray(selectedFile)));
-						//
 						setText(tfFileDigest, fileDigest);
 						//
-						final Voice voice = new Voice();
+						final Voice voiceNew = new Voice();
 						//
-						voice.setText(getText(tfText));
+						voiceNew.setText(text);
 						//
-						voice.setRomaji(getText(tfRomaji));
+						voiceNew.setRomaji(romaji);
 						//
-						voice.setHiragana(getText(tfHiragana));
+						voiceNew.setHiragana(getText(tfHiragana));
 						//
-						voice.setKatakana(getText(tfKatakana));
+						voiceNew.setKatakana(getText(tfKatakana));
 						//
-						voice.setFilePath(filePath);
+						voiceNew.setFilePath(filePath);
 						//
-						voice.setFileDigestAlgorithm(md != null ? md.getAlgorithm() : null);
+						voiceNew.setFileDigestAlgorithm(messageDigestAlgorithm);
 						//
-						voice.setFileDigest(fileDigest);
+						voiceNew.setFileDigest(fileDigest);
 						//
-						voice.setFileExtension(fileExtension);
+						voiceNew.setFileExtension(fileExtension);
 						//
-						voice.setFileLength(length);
+						voiceNew.setFileLength(length);
 						//
-						insertOrUpdate(getMapper(
-								sqlSessionFactory != null ? sqlSessionFactory.getConfiguration() : null,
-								VoiceMapper.class,
-								sqlSession = sqlSessionFactory != null ? sqlSessionFactory.openSession() : null),
-								voice);
+						insertOrUpdate(voiceMapper, voiceNew);
 						//
 					} catch (IOException | NoSuchAlgorithmException e) {
 						//
