@@ -59,6 +59,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
+import com.mariten.kanatools.KanaConverter;
 
 import domain.Voice;
 import fr.free.nrw.jakaroma.Jakaroma;
@@ -80,7 +81,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	private JTextComponent tfFolder, tfFile, tfFileLength, tfFileDigest, tfText, tfHiragana, tfKatakana,
 			tfRomaji = null;
 
-	private AbstractButton btnConvertToRomaji, btnCopyRomaji, btnExecute, btnExport = null;
+	private AbstractButton btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji, btnExecute, btnExport = null;
 
 	private SqlSessionFactory sqlSessionFactory = null;
 
@@ -180,7 +181,10 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		add(new JLabel("Hiragana"));
 		//
 		add(tfHiragana = new JTextField(
-				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.hiragana")), wrap);
+				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.hiragana")));
+		//
+		add(btnConvertToKatakana = new JButton("Convert"), WRAP);
+		//
 		//
 		add(new JLabel("Katakana"));
 		//
@@ -211,12 +215,12 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		setEditable(false, tfFolder, tfFile, tfFileLength, tfFileDigest);
 		//
-		addActionListener(this, btnExecute, btnConvertToRomaji, btnCopyRomaji, btnExport);
+		addActionListener(this, btnExecute, btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji, btnExport);
 		//
 		setPreferredWidth(
 				intValue(getMaxPreferredWidth(tfFolder, tfFile, tfFileLength, tfFileDigest, tfText, tfHiragana,
 						tfKatakana, tfRomaji), 0) - intValue(getPreferredWidth(btnConvertToRomaji), 0),
-				tfText, tfRomaji);
+				tfText, tfRomaji, tfHiragana);
 		//
 		setEnabled(btnExecute, folder != null && folder.exists() && folder.isDirectory());
 		//
@@ -443,6 +447,11 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		} else if (Objects.equals(source, btnConvertToRomaji)) {
 			//
 			setText(tfRomaji, new Jakaroma().convert(getText(tfText), false, false));
+			//
+		} else if (Objects.equals(source, btnConvertToKatakana)) {
+			//
+			setText(tfKatakana, testAndApply(Objects::nonNull, getText(tfHiragana),
+					x -> KanaConverter.convertKana(x, KanaConverter.OP_ZEN_HIRA_TO_ZEN_KATA), null));
 			//
 		} else if (Objects.equals(source, btnCopyRomaji)) {
 			//

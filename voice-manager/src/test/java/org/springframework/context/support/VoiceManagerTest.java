@@ -313,6 +313,26 @@ class VoiceManagerTest {
 			//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnConvertToRomaji, 0, null)));
 		//
+		final AbstractButton btnConvertToKatakana = new JButton();
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "btnConvertToKatakana", btnConvertToKatakana, true);
+			//
+		} // if
+			//
+		ActionEvent actionEventBtnConvertToKatakana = new ActionEvent(btnConvertToKatakana, 0, null);
+		//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnConvertToKatakana));
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "tfHiragana", new JTextField(), true);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnConvertToKatakana));
+		//
 		final AbstractButton btnCopyRomaji = new JButton();
 		//
 		if (instance != null) {
@@ -331,13 +351,13 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		final ActionEvent actionEvent = new ActionEvent(btnExport, 0, null);
+		final ActionEvent actionEventBtnExport = new ActionEvent(btnExport, 0, null);
 		//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEvent));
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnExport));
 		//
 		instance.setSqlSessionFactory(sqlSessionFactory);
 		//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEvent));
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnExport));
 		//
 	}
 
