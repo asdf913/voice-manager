@@ -58,6 +58,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -620,8 +621,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		Field f = null;
 		//
-		Class<?> type = null;
-		//
 		Object value = null;
 		//
 		for (int i = 0; voices != null && i < voices.size(); i++) {
@@ -682,6 +681,13 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			} // for
 				//
 		} // for
+			//
+		if (sheet != null && row != null) {
+			//
+			sheet.setAutoFilter(new CellRangeAddress(sheet.getFirstRowNum(), sheet.getLastRowNum() - 1,
+					row.getFirstCellNum(), row.getLastCellNum() - 1));
+			//
+		} // if
 			//
 		return workbook;
 		//
