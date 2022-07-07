@@ -23,6 +23,7 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -62,8 +63,8 @@ class VoiceManagerTest {
 	private static Method METHOD_INIT, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_GET_FILE_EXTENSION,
 			METHOD_DIGEST, METHOD_GET_MAPPER, METHOD_INSERT_OR_UPDATE, METHOD_SET_ENABLED, METHOD_TEST_AND_APPLY,
 			METHOD_CAST, METHOD_INT_VALUE, METHOD_GET_PROPERTY, METHOD_SET_VARIABLE, METHOD_PARSE_EXPRESSION,
-			METHOD_GET_VALUE, METHOD_GET_TEXT, METHOD_GET_SOURCE, METHOD_EXPORT, METHOD_MAP, METHOD_MAX,
-			METHOD_OR_ELSE = null;
+			METHOD_GET_VALUE, METHOD_GET_TEXT, METHOD_GET_SOURCE, METHOD_EXPORT, METHOD_MAP, METHOD_MAX, METHOD_OR_ELSE,
+			METHOD_FOR_EACH = null;
 
 	@BeforeAll
 	private static void beforeAll() throws NoSuchMethodException {
@@ -120,6 +121,8 @@ class VoiceManagerTest {
 		(METHOD_MAX = clz.getDeclaredMethod("max", Stream.class, Comparator.class)).setAccessible(true);
 		//
 		(METHOD_OR_ELSE = clz.getDeclaredMethod("orElse", Optional.class, Object.class)).setAccessible(true);
+		//
+		(METHOD_FOR_EACH = clz.getDeclaredMethod("forEach", Stream.class, Consumer.class)).setAccessible(true);
 		//
 	}
 
@@ -851,6 +854,28 @@ class VoiceManagerTest {
 	private static <T> T orElse(final Optional<T> instance, final T other) throws Throwable {
 		try {
 			return (T) METHOD_OR_ELSE.invoke(null, instance, other);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testForEach() {
+		//
+		Assertions.assertDoesNotThrow(() -> forEach(null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> forEach(Stream.empty(), null));
+		//
+		Assertions.assertDoesNotThrow(() -> forEach(Stream.empty(), x -> {
+		}));
+		//
+		Assertions.assertDoesNotThrow(() -> forEach(stream, null));
+		//
+	}
+
+	private static <T> void forEach(final Stream<T> instance, final Consumer<? super T> action) throws Throwable {
+		try {
+			METHOD_FOR_EACH.invoke(null, instance, action);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

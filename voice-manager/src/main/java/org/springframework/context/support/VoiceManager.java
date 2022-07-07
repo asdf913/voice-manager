@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
@@ -313,7 +314,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		if (Objects.equals(source, btnExecute)) {
 			//
-			setText(null, tfFile, tfFileLength, tfFileDigest);
+			forEach(Stream.of(tfFile, tfFileLength, tfFileDigest), x -> setText(x, null));
 			//
 			final JFileChooser jfc = new JFileChooser(".");
 			//
@@ -519,6 +520,14 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 	}
 
+	private static <T> void forEach(final Stream<T> instance, final Consumer<? super T> action) {
+		//
+		if (instance != null && (action != null || Proxy.isProxyClass(instance.getClass()))) {
+			instance.forEach(action);
+		} // if
+			//
+	}
+
 	private static void export(final List<Voice> voices, final Map<String, String> outputFolderFileNameExpressions,
 			final String voiceFolder, final String outputFolder) throws IOException {
 		//
@@ -689,16 +698,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		if (instance != null) {
 			instance.setText(text);
 		}
-	}
-
-	private static void setText(final String text, final JTextComponent... jtcs) {
-		//
-		for (int i = 0; jtcs != null && i < jtcs.length; i++) {
-			//
-			setText(jtcs[i], text);
-			//
-		} // for
-			//
 	}
 
 	private static boolean matches(final Matcher instance) {
