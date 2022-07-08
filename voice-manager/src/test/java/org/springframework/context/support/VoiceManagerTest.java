@@ -8,10 +8,12 @@ import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.security.MessageDigest;
 import java.util.Collections;
@@ -68,7 +70,9 @@ class VoiceManagerTest {
 			METHOD_DIGEST, METHOD_GET_MAPPER, METHOD_INSERT_OR_UPDATE, METHOD_SET_ENABLED, METHOD_TEST_AND_APPLY,
 			METHOD_CAST, METHOD_INT_VALUE, METHOD_GET_PROPERTY, METHOD_SET_VARIABLE, METHOD_PARSE_EXPRESSION,
 			METHOD_GET_VALUE, METHOD_GET_TEXT, METHOD_GET_SOURCE, METHOD_EXPORT, METHOD_MAP, METHOD_MAX, METHOD_OR_ELSE,
-			METHOD_FOR_EACH, METHOD_CREATE_WORK_BOOK, METHOD_CREATE_VOICE = null;
+			METHOD_FOR_EACH, METHOD_CREATE_WORK_BOOK, METHOD_CREATE_VOICE, METHOD_GET_MESSAGE, METHOD_INVOKE,
+			METHOD_ANNOTATION_TYPE, METHOD_GET_NAME, METHOD_FIND_FIRST, METHOD_GET_DECLARED_METHODS, METHOD_FOR_NAME,
+			METHOD_FILTER, METHOD_SET_TEXT, METHOD_GET_PREFERRED_WIDTH = null;
 
 	@BeforeAll
 	private static void beforeAll() throws ReflectiveOperationException {
@@ -133,6 +137,27 @@ class VoiceManagerTest {
 		(METHOD_CREATE_VOICE = clz.getDeclaredMethod("createVoice", VoiceManager.class,
 				CLASS_STRING_MAP = Class.forName("org.springframework.context.support.VoiceManager$StringMap"),
 				Long.class)).setAccessible(true);
+		//
+		(METHOD_GET_MESSAGE = clz.getDeclaredMethod("getMessage", Throwable.class)).setAccessible(true);
+		//
+		(METHOD_INVOKE = clz.getDeclaredMethod("invoke", Method.class, Object.class, Object[].class))
+				.setAccessible(true);
+		//
+		(METHOD_ANNOTATION_TYPE = clz.getDeclaredMethod("annotationType", Annotation.class)).setAccessible(true);
+		//
+		(METHOD_GET_NAME = clz.getDeclaredMethod("getName", Member.class)).setAccessible(true);
+		//
+		(METHOD_FIND_FIRST = clz.getDeclaredMethod("findFirst", Stream.class)).setAccessible(true);
+		//
+		(METHOD_GET_DECLARED_METHODS = clz.getDeclaredMethod("getDeclaredMethods", Class.class)).setAccessible(true);
+		//
+		(METHOD_FOR_NAME = clz.getDeclaredMethod("forName", String.class)).setAccessible(true);
+		//
+		(METHOD_FILTER = clz.getDeclaredMethod("filter", Stream.class, Predicate.class)).setAccessible(true);
+		//
+		(METHOD_SET_TEXT = clz.getDeclaredMethod("setText", JTextComponent.class, String.class)).setAccessible(true);
+		//
+		(METHOD_GET_PREFERRED_WIDTH = clz.getDeclaredMethod("getPreferredWidth", Component.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -963,6 +988,217 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof Voice) {
 				return (Voice) obj;
+			}
+			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetMessage() throws Throwable {
+		//
+		Assertions.assertNull(getMessage(null));
+		//
+		Assertions.assertNull(getMessage(new Throwable()));
+		//
+	}
+
+	private static String getMessage(final Throwable instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_MESSAGE.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testInvoke() throws Throwable {
+		//
+		Assertions.assertNull(invoke(null, null));
+		//
+	}
+
+	private static Object invoke(final Method method, final Object instance, Object... args) throws Throwable {
+		try {
+			return METHOD_INVOKE.invoke(null, method, instance, args);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testAnnotationType() throws Throwable {
+		//
+		Assertions.assertNull(annotationType(null));
+		//
+	}
+
+	private static Class<? extends Annotation> annotationType(final Annotation instance) throws Throwable {
+		try {
+			final Object obj = METHOD_ANNOTATION_TYPE.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Class) {
+				return (Class) obj;
+			}
+			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetName() throws Throwable {
+		//
+		Assertions.assertNull(getName(null));
+		//
+	}
+
+	private static String getName(final Member instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_NAME.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testFindFirst() throws Throwable {
+		//
+		Assertions.assertNull(findFirst(null));
+		//
+	}
+
+	private static <T> Optional<T> findFirst(final Stream<T> instance) throws Throwable {
+		try {
+			final Object obj = METHOD_FIND_FIRST.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Optional) {
+				return (Optional) obj;
+			}
+			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetDeclaredMethods() throws Throwable {
+		//
+		Assertions.assertNull(getDeclaredMethods(null));
+		//
+	}
+
+	private static Method[] getDeclaredMethods(final Class<?> instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_DECLARED_METHODS.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Method[]) {
+				return (Method[]) obj;
+			}
+			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testForName() throws Throwable {
+		//
+		Assertions.assertNull(forName(null));
+		//
+		Assertions.assertNull(forName(""));
+		//
+		Assertions.assertNull(forName(" "));
+		//
+		Assertions.assertNull(forName("A"));
+		//
+	}
+
+	private static Class<?> forName(final String className) throws Throwable {
+		try {
+			final Object obj = METHOD_FOR_NAME.invoke(null, className);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Class) {
+				return (Class<?>) obj;
+			}
+			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testFilter() throws Throwable {
+		//
+		Assertions.assertNull(filter(null, null));
+		//
+		Assertions.assertNull(filter(Stream.empty(), null));
+		//
+		Assertions.assertSame(stream, filter(stream, null));
+		//
+	}
+
+	private static <T> Stream<T> filter(final Stream<T> instance, final Predicate<? super T> predicate)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_FILTER.invoke(null, instance, predicate);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Stream) {
+				return (Stream) obj;
+			}
+			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetText() {
+		//
+		Assertions.assertDoesNotThrow(() -> setText(new JTextField(), null));
+		//
+	}
+
+	private static void setText(final JTextComponent instance, final String text) throws Throwable {
+		try {
+			METHOD_SET_TEXT.invoke(null, instance, text);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetPreferredWidth() throws Throwable {
+		//
+		Assertions.assertNull(getPreferredWidth(null));
+		//
+	}
+
+	private static Double getPreferredWidth(final Component c) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_PREFERRED_WIDTH.invoke(null, c);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Double) {
+				return (Double) obj;
 			}
 			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
 		} catch (final InvocationTargetException e) {

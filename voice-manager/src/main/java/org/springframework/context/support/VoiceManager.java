@@ -963,14 +963,18 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 
 	private static Class<?> forName(final String className) {
 		try {
-			return Class.forName(className);
+			return StringUtils.isNotBlank(className) ? Class.forName(className) : null;
 		} catch (final ClassNotFoundException e) {
 			return null;
 		}
 	}
 
 	private static <T> Stream<T> filter(final Stream<T> instance, final Predicate<? super T> predicate) {
-		return instance != null ? instance.filter(predicate) : null;
+		//
+		return instance != null && (predicate != null || Proxy.isProxyClass(instance.getClass()))
+				? instance.filter(predicate)
+				: null;
+		//
 	}
 
 	private static void setVariable(final EvaluationContext instance, final String name, final Object value) {
