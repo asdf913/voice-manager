@@ -723,12 +723,15 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 					//
 				} else if (value instanceof Date) {
 					//
-					if ((a = orElse(
-							findFirst(filter(Arrays.stream(f.getDeclaredAnnotations()),
-									x -> x != null && Objects.equals(x.annotationType(), dateFormatClass))),
-							null)) != null
-							&& (m = orElse(findFirst(filter(Arrays.stream(getDeclaredMethods(a.annotationType())),
-									x -> Objects.equals(getName(x), "value"))), null)) != null) {
+					if ((m = orElse(
+							findFirst(
+									filter(Arrays
+											.stream(getDeclaredMethods(annotationType(a = orElse(
+													findFirst(filter(Arrays.stream(f.getDeclaredAnnotations()),
+															x -> Objects.equals(annotationType(x), dateFormatClass))),
+													null)))),
+											x -> Objects.equals(getName(x), "value"))),
+							null)) != null) {
 						//
 						m.setAccessible(true);
 						//
@@ -759,6 +762,10 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 		return workbook;
 		//
+	}
+
+	private static Class<? extends Annotation> annotationType(final Annotation instance) {
+		return instance != null ? instance.annotationType() : null;
 	}
 
 	private static String getName(final Member instance) {
