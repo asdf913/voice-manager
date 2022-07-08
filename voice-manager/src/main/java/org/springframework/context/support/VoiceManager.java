@@ -14,10 +14,16 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Member;
+import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -49,6 +55,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.ibatis.session.Configuration;
@@ -454,14 +461,14 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 						if (GraphicsEnvironment.isHeadless()) {
 							//
 							if (LOG != null) {
-								LOG.error(e.getMessage(), e);
+								LOG.error(getMessage(e), e);
 							} else {
 								e.printStackTrace();
 							} // if
 								//
 						} else {
 							//
-							JOptionPane.showMessageDialog(null, e.getMessage());
+							JOptionPane.showMessageDialog(null, getMessage(e));
 							//
 						} // if
 							//
@@ -525,14 +532,35 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				if (GraphicsEnvironment.isHeadless()) {
 					//
 					if (LOG != null) {
-						LOG.error(e.getMessage(), e);
+						LOG.error(getMessage(e), e);
 					} else {
 						e.printStackTrace();
 					} // if
 						//
 				} else {
 					//
-					JOptionPane.showMessageDialog(null, e.getMessage());
+					JOptionPane.showMessageDialog(null, getMessage(e));
+					//
+				} // if
+					//
+			} catch (final InvocationTargetException e) {
+				//
+				final Throwable targetException = e.getTargetException();
+				//
+				final Throwable rootCause = ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException),
+						targetException, ExceptionUtils.getRootCause(e), e);
+				//
+				if (GraphicsEnvironment.isHeadless()) {
+					//
+					if (LOG != null) {
+						LOG.error(getMessage(rootCause), rootCause);
+					} else if (rootCause != null) {
+						rootCause.printStackTrace();
+					} // if
+						//
+				} else {
+					//
+					JOptionPane.showMessageDialog(null, getMessage(rootCause));
 					//
 				} // if
 					//
@@ -552,6 +580,10 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				//
 		} // if
 			//
+	}
+
+	private static String getMessage(final Throwable instance) {
+		return instance != null ? instance.getMessage() : null;
 	}
 
 	private static <T> void forEach(final Stream<T> instance, final Consumer<? super T> action) {
@@ -613,7 +645,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 	}
 
-	private static Workbook createWorkbook(final List<Voice> voices) throws IllegalAccessException {
+	private static Workbook createWorkbook(final List<Voice> voices)
+			throws IllegalAccessException, InvocationTargetException {
 		//
 		Voice voice = null;
 		//
@@ -630,6 +663,12 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		Field f = null;
 		//
 		Object value = null;
+		//
+		final Class<?> dateFormatClass = forName("domain.Voice$DateFormat");
+		//
+		Annotation a = null;
+		//
+		Method m = null;
 		//
 		for (int i = 0; voices != null && i < voices.size(); i++) {
 			//
@@ -654,13 +693,11 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 					//
 				for (int j = 0; fs != null && j < fs.length; j++) {
 					//
-					if ((f = fs[j]) == null || (cell = row.createCell(j)) == null) {
+					if ((cell = row.createCell(j)) == null) {
 						continue;
 					} // if
 						//
-					f.setAccessible(true);
-					//
-					cell.setCellValue(f.getName());
+					cell.setCellValue(getName(fs[j]));
 					//
 				} // for
 					//
@@ -681,9 +718,32 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				f.setAccessible(true);
 				//
 				if ((value = f.get(voice)) instanceof Number) {
+					//
 					cell.setCellValue(((Number) value).doubleValue());
+					//
+				} else if (value instanceof Date) {
+					//
+					if ((a = orElse(
+							findFirst(filter(Arrays.stream(f.getDeclaredAnnotations()),
+									x -> x != null && Objects.equals(x.annotationType(), dateFormatClass))),
+							null)) != null
+							&& (m = orElse(findFirst(filter(Arrays.stream(getDeclaredMethods(a.annotationType())),
+									x -> Objects.equals(getName(x), "value"))), null)) != null) {
+						//
+						m.setAccessible(true);
+						//
+						cell.setCellValue(new SimpleDateFormat(toString(m.invoke(a))).format(value));
+						//
+					} else {
+						//
+						cell.setCellValue(toString(value));
+						//
+					} // if
+						//
 				} else {
+					//
 					cell.setCellValue(toString(value));
+					//
 				} // if
 					//
 			} // for
@@ -699,6 +759,30 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 		return workbook;
 		//
+	}
+
+	private static String getName(final Member instance) {
+		return instance != null ? instance.getName() : null;
+	}
+
+	private static <T> Optional<T> findFirst(final Stream<T> instance) {
+		return instance != null ? instance.findFirst() : null;
+	}
+
+	private static Method[] getDeclaredMethods(final Class<?> instance) {
+		return instance != null ? instance.getDeclaredMethods() : null;
+	}
+
+	private static Class<?> forName(final String className) {
+		try {
+			return Class.forName(className);
+		} catch (final ClassNotFoundException e) {
+			return null;
+		}
+	}
+
+	private static <T> Stream<T> filter(final Stream<T> instance, final Predicate<? super T> predicate) {
+		return instance != null ? instance.filter(predicate) : null;
 	}
 
 	private static void setVariable(final EvaluationContext instance, final String name, final Object value) {

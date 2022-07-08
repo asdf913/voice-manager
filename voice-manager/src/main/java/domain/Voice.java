@@ -1,5 +1,9 @@
 package domain;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.util.Date;
 
 public class Voice {
@@ -8,7 +12,17 @@ public class Voice {
 
 	private Long fileLength = null;
 
-	private Date createTs, updateTs = null;
+	@Target(ElementType.FIELD)
+	@Retention(RetentionPolicy.RUNTIME)
+	private @interface DateFormat {
+		String value();
+	}
+
+	@DateFormat("yyyy-MM-dd HH:mm:ss Z")
+	private Date createTs = null;
+
+	@DateFormat("yyyy-MM-dd HH:mm:ss Z")
+	private Date updateTs = null;
 
 	public void setText(final String text) {
 		this.text = text;

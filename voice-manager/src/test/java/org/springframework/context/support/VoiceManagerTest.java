@@ -16,6 +16,7 @@ import java.lang.reflect.Method;
 import java.security.MessageDigest;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.EventObject;
 import java.util.List;
 import java.util.Map;
@@ -892,6 +893,8 @@ class VoiceManagerTest {
 		final Voice voice = new Voice();
 		//
 		voice.setFileLength(Long.valueOf(0));
+		//
+		voice.setCreateTs(new Date());
 		//
 		Assertions.assertNotNull(createWorkbook(Collections.nCopies(2, voice)));
 		//
