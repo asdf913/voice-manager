@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
@@ -82,6 +83,7 @@ import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.reflect.Reflection;
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
 import com.mariten.kanatools.KanaConverter;
@@ -436,27 +438,21 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 						//
 						setText(tfFileDigest, fileDigest);
 						//
-						final Voice voiceNew = new Voice();
+						final StringMap stringMap = Reflection.newProxy(StringMap.class, new IH());
 						//
-						voiceNew.setText(text);
-						//
-						voiceNew.setRomaji(romaji);
-						//
-						voiceNew.setHiragana(getText(tfHiragana));
-						//
-						voiceNew.setKatakana(getText(tfKatakana));
-						//
-						voiceNew.setFilePath(filePath);
-						//
-						voiceNew.setFileDigestAlgorithm(messageDigestAlgorithm);
-						//
-						voiceNew.setFileDigest(fileDigest);
-						//
-						voiceNew.setFileExtension(fileExtension);
-						//
-						voiceNew.setFileLength(length);
-						//
-						insertOrUpdate(voiceMapper, voiceNew);
+						if (stringMap != null) {
+							//
+							stringMap.setString("filePath", filePath);
+							//
+							stringMap.setString("messageDigestAlgorithm", messageDigestAlgorithm);
+							//
+							stringMap.setString("fileDigest", fileDigest);
+							//
+							stringMap.setString("fileExtension", fileExtension);
+							//
+						} // if
+							//
+						insertOrUpdate(voiceMapper, createVoice(this, stringMap, length));
 						//
 					} catch (IOException | NoSuchAlgorithmException e) {
 						//
@@ -582,6 +578,96 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				//
 		} // if
 			//
+	}
+
+	private class IH implements InvocationHandler {
+
+		private Map<Object, Object> strings = null;
+
+		private Map<Object, Object> getStrings() {
+			if (strings == null) {
+				strings = new LinkedHashMap<>();
+			}
+			return strings;
+		}
+
+		@Override
+		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+			//
+			final String methodName = method != null ? method.getName() : null;
+			//
+			if (proxy instanceof StringMap) {
+				//
+				if (Objects.equals(methodName, "getString") && args != null && args.length > 0) {
+					//
+					final Object key = args[0];
+					//
+					if (!getStrings().containsKey(key)) {
+						//
+						throw new IllegalStateException(String.format("Key [%1$s] Not Found", key));
+						//
+					} // if
+						//
+					return getStrings().get(key);
+					//
+				} else if (Objects.equals(methodName, "setString") && args != null && args.length > 1) {
+					//
+					getStrings().put(args[0], args[1]);
+					//
+					return null;
+					//
+				} // if
+					//
+			} // if
+				//
+			throw new Throwable(methodName);
+			//
+		}
+
+	}
+
+	private static interface StringMap {
+
+		String getString(final String key);
+
+		void setString(final String key, final String value);
+
+		static String getString(final StringMap instance, final String key) {
+			return instance != null ? instance.getString(key) : null;
+		}
+
+	}
+
+	private static Voice createVoice(final VoiceManager instance, final StringMap stringMap, final Long length) {
+		//
+		if (instance == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		final Voice Voice = new Voice();
+		//
+		Voice.setText(getText(instance.tfText));
+		//
+		Voice.setRomaji(getText(instance.tfRomaji));
+		//
+		Voice.setHiragana(getText(instance.tfHiragana));
+		//
+		Voice.setKatakana(getText(instance.tfKatakana));
+		//
+		Voice.setFilePath(StringMap.getString(stringMap, "filePath"));
+		//
+		Voice.setFileDigestAlgorithm(StringMap.getString(stringMap, "messageDigestAlgorithm"));
+		//
+		Voice.setFileDigest(StringMap.getString(stringMap, "fileDigest"));
+		//
+		Voice.setFileExtension(StringMap.getString(stringMap, "fileExtension"));
+		//
+		Voice.setFileLength(length);
+		//
+		return Voice;
+		//
 	}
 
 	private static String getMessage(final Throwable instance) {

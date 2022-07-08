@@ -62,14 +62,16 @@ import net.miginfocom.swing.MigLayout;
 
 class VoiceManagerTest {
 
+	private static Class<?> CLASS_STRING_MAP, CLASS_IH = null;
+
 	private static Method METHOD_INIT, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_GET_FILE_EXTENSION,
 			METHOD_DIGEST, METHOD_GET_MAPPER, METHOD_INSERT_OR_UPDATE, METHOD_SET_ENABLED, METHOD_TEST_AND_APPLY,
 			METHOD_CAST, METHOD_INT_VALUE, METHOD_GET_PROPERTY, METHOD_SET_VARIABLE, METHOD_PARSE_EXPRESSION,
 			METHOD_GET_VALUE, METHOD_GET_TEXT, METHOD_GET_SOURCE, METHOD_EXPORT, METHOD_MAP, METHOD_MAX, METHOD_OR_ELSE,
-			METHOD_FOR_EACH, METHOD_CREATE_WORK_BOOK = null;
+			METHOD_FOR_EACH, METHOD_CREATE_WORK_BOOK, METHOD_CREATE_VOICE = null;
 
 	@BeforeAll
-	private static void beforeAll() throws NoSuchMethodException {
+	private static void beforeAll() throws ReflectiveOperationException {
 		//
 		final Class<?> clz = VoiceManager.class;
 		//
@@ -127,6 +129,12 @@ class VoiceManagerTest {
 		(METHOD_FOR_EACH = clz.getDeclaredMethod("forEach", Stream.class, Consumer.class)).setAccessible(true);
 		//
 		(METHOD_CREATE_WORK_BOOK = clz.getDeclaredMethod("createWorkbook", List.class)).setAccessible(true);
+		//
+		(METHOD_CREATE_VOICE = clz.getDeclaredMethod("createVoice", VoiceManager.class,
+				CLASS_STRING_MAP = Class.forName("org.springframework.context.support.VoiceManager$StringMap"),
+				Long.class)).setAccessible(true);
+		//
+		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
 	}
 
@@ -912,6 +920,99 @@ class VoiceManagerTest {
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
+	}
+
+	@Test
+	void testCreateVoice() throws Throwable {
+		//
+		Assertions.assertNull(createVoice(null, null, null));
+		//
+		Assertions.assertNotNull(createVoice(instance, null, null));
+		//
+		final Constructor<?> constructor = CLASS_IH != null ? CLASS_IH.getDeclaredConstructor(VoiceManager.class)
+				: null;
+		//
+		if (constructor != null) {
+			constructor.setAccessible(true);
+		} // if
+			//
+		final InvocationHandler ih = cast(InvocationHandler.class,
+				constructor != null ? constructor.newInstance(instance) : null);
+		//
+		final Object stringMap = Reflection.newProxy(CLASS_STRING_MAP, ih);
+		//
+		Assertions.assertThrows(IllegalStateException.class, () -> createVoice(instance, stringMap, null));
+		//
+		final Map<?, ?> strings = cast(Map.class, FieldUtils.readDeclaredField(ih, "strings", true));
+		//
+		if (strings != null) {
+			//
+			((Map) strings).put("filePath", null);
+			//
+		} // if
+			//
+		Assertions.assertThrows(IllegalStateException.class, () -> createVoice(instance, stringMap, null));
+		//
+	}
+
+	private static Voice createVoice(final VoiceManager instance, final Object stringMap, final Long length)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_VOICE.invoke(null, instance, stringMap, length);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Voice) {
+				return (Voice) obj;
+			}
+			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testIh() throws Throwable {
+		//
+		final Constructor<?> constructor = CLASS_IH != null ? CLASS_IH.getDeclaredConstructor(VoiceManager.class)
+				: null;
+		//
+		if (constructor != null) {
+			constructor.setAccessible(true);
+		} // if
+			//
+		final InvocationHandler ih = cast(InvocationHandler.class,
+				constructor != null ? constructor.newInstance(instance) : null);
+		//
+		if (ih != null) {
+			//
+			Assertions.assertThrows(Throwable.class, () -> ih.invoke(null, null, null));
+			//
+			// getString
+			//
+			final Method methodGetString = CLASS_STRING_MAP != null
+					? CLASS_STRING_MAP.getDeclaredMethod("getString", String.class)
+					: null;
+			//
+			final Object stringMap = Reflection.newProxy(CLASS_STRING_MAP, ih);
+			//
+			Assertions.assertThrows(Throwable.class, () -> ih.invoke(stringMap, methodGetString, null));
+			//
+			Assertions.assertThrows(Throwable.class, () -> ih.invoke(stringMap, methodGetString, new Object[] {}));
+			//
+			// setString
+			//
+			final Method methodSetString = CLASS_STRING_MAP != null
+					? CLASS_STRING_MAP.getDeclaredMethod("setString", String.class, String.class)
+					: null;
+			//
+			Assertions.assertThrows(Throwable.class, () -> ih.invoke(stringMap, methodSetString, null));
+			//
+			Assertions.assertThrows(Throwable.class, () -> ih.invoke(stringMap, methodSetString, new Object[] {}));
+			//
+			Assertions.assertNull(ih.invoke(stringMap, methodSetString, new Object[] { null, null }));
+			//
+		} // if
+			//
 	}
 
 }
