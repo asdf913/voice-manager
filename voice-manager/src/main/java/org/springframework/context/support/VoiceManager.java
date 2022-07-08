@@ -39,6 +39,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.swing.AbstractButton;
@@ -53,6 +54,7 @@ import javax.swing.text.JTextComponent;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -670,6 +672,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		Method m = null;
 		//
+		String[] fieldOrder = getFieldOrder();
+		//
 		for (int i = 0; voices != null && i < voices.size(); i++) {
 			//
 			if ((voice = voices.get(i)) == null
@@ -681,10 +685,19 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				sheet = workbook.createSheet();
 			} // if
 				//
-			fs = ObjectUtils.getIfNull(fs, () -> FieldUtils.getAllFields(Voice.class));
-			//
-			// header
-			//
+			if ((fs = ObjectUtils.getIfNull(fs, () -> FieldUtils.getAllFields(Voice.class))) != null) {
+				//
+				Arrays.sort(fs, (x, y) -> {
+					//
+					return Integer.compare(ArrayUtils.indexOf(fieldOrder, getName(x)),
+							ArrayUtils.indexOf(fieldOrder, getName(y)));
+					//
+				});
+				//
+			} // if
+				//
+				// header
+				//
 			if (sheet.getLastRowNum() < 0) {
 				//
 				if ((row = sheet.createRow(0)) == null) {
@@ -735,7 +748,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 						//
 						m.setAccessible(true);
 						//
-						cell.setCellValue(new SimpleDateFormat(toString(m.invoke(a))).format(value));
+						cell.setCellValue(new SimpleDateFormat(toString(invoke(m, a))).format(value));
 						//
 					} else {
 						//
@@ -762,6 +775,88 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 		return workbook;
 		//
+	}
+
+	private static String[] getFieldOrder() {
+		//
+		final Annotation a = orElse(findFirst(filter(Arrays.stream(Voice.class.getDeclaredAnnotations()),
+				z -> Objects.equals(annotationType(z), forName("domain.FieldOrder")))), null);
+		//
+		final Method method = orElse(findFirst(
+				filter(Arrays.stream(getDeclaredMethods(annotationType(a))), z -> Objects.equals(getName(z), "value"))),
+				null);
+		//
+		if (method != null) {
+			method.setAccessible(true);
+		} // if
+			//
+		String[] orders = null;
+		//
+		try {
+			//
+			orders = cast(String[].class, invoke(method, a));
+			//
+		} catch (final IllegalAccessException e) {
+			// =
+			if (GraphicsEnvironment.isHeadless()) {
+				//
+				if (LOG != null) {
+					LOG.error(getMessage(e), e);
+				} else if (e != null) {
+					e.printStackTrace();
+				} // if
+					//
+			} else {
+				//
+				JOptionPane.showMessageDialog(null, getMessage(e));
+				//
+			} // if
+				//
+		} catch (final InvocationTargetException e) {
+			//
+			final Throwable targetException = e.getTargetException();
+			//
+			final Throwable rootCause = ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException),
+					targetException, ExceptionUtils.getRootCause(e), e);
+			//
+			if (GraphicsEnvironment.isHeadless()) {
+				//
+				if (LOG != null) {
+					LOG.error(getMessage(rootCause), rootCause);
+				} else if (rootCause != null) {
+					rootCause.printStackTrace();
+				} // if
+					//
+			} else {
+				//
+				JOptionPane.showMessageDialog(null, getMessage(rootCause));
+				//
+			} // if
+				//
+		} // try
+			//
+		final List<String> fieldNames = map(Arrays.stream(FieldUtils.getAllFields(Voice.class)), VoiceManager::getName)
+				.collect(Collectors.toList());
+		//
+		String fieldName = null;
+		//
+		for (int i = 0; fieldNames != null && i < fieldNames.size(); i++) {
+			//
+			if (!ArrayUtils.contains(orders, fieldName = fieldNames.get(i))) {
+				//
+				orders = ArrayUtils.add(orders, fieldName);
+				//
+			} // if
+				//
+		} // for
+			//
+		return orders;
+		//
+	}
+
+	private static Object invoke(final Method method, final Object instance, Object... args)
+			throws IllegalAccessException, InvocationTargetException {
+		return method != null ? method.invoke(instance, args) : null;
 	}
 
 	private static Class<? extends Annotation> annotationType(final Annotation instance) {

@@ -6,6 +6,13 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.Date;
 
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+@interface FieldOrder {
+	String[] value();
+}
+
+@FieldOrder({ "text", "romaji", "hiragana", "katakana", "filePath", "fileExtension", "fileLength" })
 public class Voice {
 
 	private String text, romaji, hiragana, katakana, filePath, fileDigestAlgorithm, fileDigest, fileExtension = null;
