@@ -17,6 +17,16 @@ public class Voice {
 
 	private String text, romaji, hiragana, katakana, filePath, fileDigestAlgorithm, fileDigest, fileExtension = null;
 
+	/**
+	 * @see org.apache.poi.ss.usermodel.BuiltinFormats
+	 */
+	@Target(ElementType.FIELD)
+	@Retention(RetentionPolicy.RUNTIME)
+	private @interface DataFormat {
+		String value();
+	}
+
+	@DataFormat("#,##0")
 	private Long fileLength = null;
 
 	@Target(ElementType.FIELD)

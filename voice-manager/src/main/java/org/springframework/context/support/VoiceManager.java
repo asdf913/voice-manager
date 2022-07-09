@@ -64,7 +64,9 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.poi.hssf.usermodel.HSSFDataFormat;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -754,11 +756,17 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		final Class<?> dateFormatClass = forName("domain.Voice$DateFormat");
 		//
+		final Class<?> dataFormatClass = forName("domain.Voice$DataFormat");
+		//
 		Annotation a = null;
 		//
 		Method m = null;
 		//
 		String[] fieldOrder = getFieldOrder();
+		//
+		CellStyle cellStyle = null;
+		//
+		short dataFormatIndex;
 		//
 		for (int i = 0; voices != null && i < voices.size(); i++) {
 			//
@@ -818,18 +826,42 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				//
 				if ((value = f.get(voice)) instanceof Number) {
 					//
+					if ((m = orElse(
+							findFirst(filter(
+									testAndApply(Objects::nonNull,
+											getDeclaredMethods(annotationType(a = orElse(
+													findFirst(filter(Arrays.stream(f.getDeclaredAnnotations()),
+															x -> Objects.equals(annotationType(x), dataFormatClass))),
+													null))),
+											Arrays::stream, null),
+									x -> Objects.equals(getName(x), "value"))),
+							null)) != null && (cellStyle = workbook.createCellStyle()) != null) {
+						//
+						m.setAccessible(true);
+						//
+						if ((dataFormatIndex = HSSFDataFormat.getBuiltinFormat(toString(invoke(m, a)))) >= 0) {
+							//
+							cellStyle.setDataFormat(dataFormatIndex);
+							//
+							cell.setCellStyle(cellStyle);
+							//
+						} // if
+							//
+					} // if
+						//
 					cell.setCellValue(((Number) value).doubleValue());
 					//
 				} else if (value instanceof Date) {
 					//
 					if ((m = orElse(
-							findFirst(
-									filter(Arrays
-											.stream(getDeclaredMethods(annotationType(a = orElse(
+							findFirst(filter(
+									testAndApply(Objects::nonNull,
+											getDeclaredMethods(annotationType(a = orElse(
 													findFirst(filter(Arrays.stream(f.getDeclaredAnnotations()),
 															x -> Objects.equals(annotationType(x), dateFormatClass))),
-													null)))),
-											x -> Objects.equals(getName(x), "value"))),
+													null))),
+											Arrays::stream, null),
+									x -> Objects.equals(getName(x), "value"))),
 							null)) != null) {
 						//
 						m.setAccessible(true);
