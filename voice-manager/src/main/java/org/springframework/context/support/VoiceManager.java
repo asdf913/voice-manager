@@ -25,7 +25,9 @@ import java.lang.reflect.Proxy;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -66,6 +68,7 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.poi.hssf.usermodel.HSSFDataFormat;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
@@ -111,7 +114,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	private JTextComponent tfFolder, tfFile, tfFileLength, tfFileDigest, tfText, tfHiragana, tfKatakana,
 			tfRomaji = null;
 
-	private AbstractButton btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji, btnExecute, btnExport = null;
+	private AbstractButton btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji, btnExecute, btnImport,
+			btnExport = null;
 
 	private SqlSessionFactory sqlSessionFactory = null;
 
@@ -194,24 +198,26 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		add(new JLabel("Text"));
 		//
+		final String span = String.format("span %1$s", 2);
+		//
 		add(tfText = new JTextField(
-				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.text")));
+				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.text")), span);
 		//
 		add(btnConvertToRomaji = new JButton("Convert"), WRAP);
 		//
 		add(new JLabel("Romaji"));
 		//
 		add(tfRomaji = new JTextField(
-				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.romaji")));
+				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.romaji")), span);
 		//
 		add(btnCopyRomaji = new JButton("Copy"), WRAP);
 		//
-		final String wrap = String.format("span %1$s,growx,%2$s", 2, WRAP);
+		final String wrap = String.format("span %1$s,growx,%2$s", 3, WRAP);
 		//
 		add(new JLabel("Hiragana"));
 		//
 		add(tfHiragana = new JTextField(
-				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.hiragana")));
+				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.hiragana")), span);
 		//
 		add(btnConvertToKatakana = new JButton("Convert"), WRAP);
 		//
@@ -224,6 +230,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		add(new JLabel());
 		//
 		add(btnExecute = new JButton("Execute"));
+		//
+		add(btnImport = new JButton("Import"), "right");
 		//
 		add(btnExport = new JButton("Export"), WRAP);
 		//
@@ -245,7 +253,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		setEditable(false, tfFolder, tfFile, tfFileLength, tfFileDigest);
 		//
-		addActionListener(this, btnExecute, btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji, btnExport);
+		addActionListener(this, btnExecute, btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji, btnImport,
+				btnExport);
 		//
 		setPreferredWidth(intValue(
 				orElse(max(map(Stream.of(tfFolder, tfFile, tfFileLength, tfFileDigest, tfText, tfHiragana, tfKatakana,
@@ -394,6 +403,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 						//
 						objectMap.setObject(VoiceManager.class, this);
 						//
+						objectMap.setObject(String.class, voiceFolder);
+						//
 					} // if
 						//
 					importVoice(objectMap, x -> {
@@ -534,6 +545,156 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 					//
 			} // try
 				//
+		} else if (Objects.equals(source, btnImport)) {
+			//
+			final JFileChooser jfc = new JFileChooser(".");
+			//
+			jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+			//
+			if (jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+				//
+				final File selectedFile = jfc.getSelectedFile();
+				//
+				ContentInfo ci = null;
+				try {
+					ci = new ContentInfoUtil().findMatch(selectedFile);
+				} catch (final IOException e) {
+					//
+					if (GraphicsEnvironment.isHeadless()) {
+						//
+						if (LOG != null) {
+							LOG.error(getMessage(e), e);
+						} else if (e != null) {
+							e.printStackTrace();
+						} // if
+							//
+					} else {
+						//
+						JOptionPane.showMessageDialog(null, getMessage(e));
+						//
+					} // if
+						//
+				} // try
+					//
+				if (ci == null) {
+					//
+					JOptionPane.showMessageDialog(null, "com.j256.simplemagic.ContentInfo is null");
+					//
+					return;
+					//
+				}
+				//
+				final String mimeType = ci.getMimeType();
+				//
+				if (!(Objects.equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", mimeType)
+						|| Objects.equals("application/vnd.openxmlformats-officedocument", mimeType))) {
+					//
+					JOptionPane.showMessageDialog(null,
+							String.format("File [%1$s] is not a XLSX File", selectedFile.getAbsolutePath()));
+					//
+					return;
+					//
+				} // if
+					//
+				SqlSession sqlSession = null;
+				//
+				try (final Workbook workbook = new XSSFWorkbook(selectedFile)) {
+					//
+					final ObjectMap objectMap = Reflection.newProxy(ObjectMap.class, new IH());
+					//
+					if (objectMap != null) {
+						//
+						objectMap.setObject(File.class, selectedFile);
+						//
+						objectMap.setObject(VoiceMapper.class, getMapper(getConfiguration(sqlSessionFactory),
+								VoiceMapper.class, sqlSession = openSession(sqlSessionFactory)));
+						//
+						objectMap.setObject(VoiceManager.class, this);
+						//
+						objectMap.setObject(String.class, voiceFolder);
+						//
+					} // if
+						//
+					final boolean headless = GraphicsEnvironment.isHeadless();
+					//
+					Consumer<String> errorMessageConsumer = null;
+					//
+					Consumer<Throwable> throwableConsumer = null;
+					//
+					for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
+						//
+						if (errorMessageConsumer == null) {
+							//
+							errorMessageConsumer = x -> {
+								//
+								if (headless) {
+									//
+									errorOrPrintln(LOG, System.err, x);
+									//
+								} else {
+									//
+									JOptionPane.showMessageDialog(null, x);
+									//
+								} // if
+									//
+							};
+							//
+						} // if
+							//
+						if (throwableConsumer == null) {
+							//
+							throwableConsumer = e -> {
+								//
+								if (headless) {
+									//
+									if (LOG != null) {
+										//
+										LOG.error(getMessage(e), e);
+										//
+									} else if (e != null) {
+										//
+										e.printStackTrace();
+										//
+									} // if
+										//
+								} else {
+									//
+									JOptionPane.showMessageDialog(null, getMessage(e));
+									//
+								} // if
+									//
+							};
+							//
+						} // if
+							//
+						importVoice(workbook.getSheetAt(i), objectMap, errorMessageConsumer, throwableConsumer);
+						//
+					} // for
+						//
+				} catch (final InvalidFormatException | IOException | IllegalAccessException e) {
+					//
+					if (GraphicsEnvironment.isHeadless()) {
+						//
+						if (LOG != null) {
+							LOG.error(getMessage(e), e);
+						} else if (e != null) {
+							e.printStackTrace();
+						} // if
+							//
+					} else {
+						//
+						JOptionPane.showMessageDialog(null, getMessage(e));
+						//
+					} // if
+						//
+				} finally {
+					//
+					IOUtils.closeQuietly(sqlSession);
+					//
+				} // try
+					//
+			} // if
+				//
 		} // if
 			//
 	}
@@ -562,6 +723,96 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			return instance != null ? instance.getObject(key) : null;
 		}
 
+	}
+
+	private static void importVoice(final Sheet sheet, final ObjectMap objectMap,
+			final Consumer<String> errorMessageConsumer, final Consumer<Throwable> throwableConsumer)
+			throws IllegalAccessException {
+		//
+		final File file = ObjectMap.getObject(objectMap, File.class);
+		//
+		final File folder = file != null ? file.getParentFile() : null;
+		//
+		List<Field> fieldOrder = null;
+		//
+		if (sheet != null && sheet.iterator() != null) {
+			//
+			boolean first = true;
+			//
+			Field[] fs = null;
+			//
+			Voice voice = null;
+			//
+			Field f = null;
+			//
+			int columnIndex;
+			//
+			for (final Row row : sheet) {
+				//
+				if (row == null || row.iterator() == null) {
+					continue;
+				} // if
+					//
+				voice = null;
+				//
+				for (final Cell cell : row) {
+					//
+					if (cell == null) {
+						continue;
+					} // if
+						//
+					if (first) {
+						//
+						if (fs == null) {
+							//
+							fs = FieldUtils.getAllFields(Voice.class);
+							//
+						} // if
+							//
+						add(fieldOrder = ObjectUtils.getIfNull(fieldOrder, ArrayList::new),
+								orElse(findFirst(testAndApply(Objects::nonNull, fs, Arrays::stream, null)
+										.filter(field -> Objects.equals(getName(field), cell.getStringCellValue()))),
+										null));
+						//
+					} else if (fieldOrder.size() > (columnIndex = cell.getColumnIndex())
+							&& (f = fieldOrder.get(columnIndex)) != null) {
+						//
+						f.setAccessible(true);
+						//
+						f.set(voice = ObjectUtils.getIfNull(voice, Voice::new), cell.getStringCellValue());
+						//
+					} // if
+						//
+				} // for
+					//
+				if (first) {
+					//
+					first = false;
+					//
+				} else {
+					//
+					if (objectMap != null) {
+						//
+						objectMap.setObject(Voice.class, voice);
+						//
+						objectMap.setObject(File.class, voice != null ? new File(folder, voice.getFilePath()) : folder);
+						//
+					} // if
+						//
+					importVoice(objectMap, errorMessageConsumer, throwableConsumer);
+					//
+				} // if
+					//
+			} // for
+				//
+		} // if
+			//
+	}
+
+	private static <E> void add(final Collection<E> items, final E item) {
+		if (items != null) {
+			items.add(item);
+		}
 	}
 
 	private static void importVoice(final ObjectMap objectMap, final Consumer<String> errorMessageConsumer,
@@ -641,13 +892,15 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 			String fileDigest = Hex.encodeHexString(digest(md, FileUtils.readFileToByteArray(selectedFile)));
 			//
+			final String voiceFolder = ObjectMap.getObject(objectMap, String.class);
+			//
 			if (voiceOld == null
 					|| !Objects.equals(voiceOld.getFileLength(),
 							selectedFile != null ? Long.valueOf(selectedFile.length()) : null)
 					|| !Objects.equals(voiceOld.getFileDigestAlgorithm(), messageDigestAlgorithm)
 					|| !Objects.equals(voiceOld.getFileDigest(), fileDigest)) {
 				//
-				final File file = new File(ObjectMap.getObject(objectMap, String.class),
+				final File file = new File(voiceFolder,
 						filePath = String.format("%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.%2$s", new Date(), fileExtension));
 				//
 				FileUtils.copyFile(selectedFile, file);
@@ -658,6 +911,14 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				//
 			} else {
 				//
+				final File file = new File(voiceFolder, voiceOld.getFilePath());
+				//
+				if (!file.exists()) {
+					//
+					FileUtils.copyFile(selectedFile, file);
+					//
+				} // if
+					//
 				filePath = voiceOld.getFilePath();
 				//
 			} // if
