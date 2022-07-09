@@ -900,8 +900,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 					|| !Objects.equals(voiceOld.getFileDigestAlgorithm(), messageDigestAlgorithm)
 					|| !Objects.equals(voiceOld.getFileDigest(), fileDigest)) {
 				//
-				final File file = new File(voiceFolder,
-						filePath = String.format("%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.%2$s", new Date(), fileExtension));
+				final File file = new File(voiceFolder, filePath = String
+						.format("%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS_%1$tL.%2$s", new Date(), fileExtension));
 				//
 				FileUtils.copyFile(selectedFile, file);
 				//
