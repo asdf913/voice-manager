@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PrintStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
@@ -351,119 +352,74 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 					//
 					JOptionPane.showMessageDialog(null, "No File Selected");
 					//
+					return;
+					//
 				} else if (!selectedFile.exists()) {
 					//
 					JOptionPane.showMessageDialog(null,
 							String.format("File \"%1$s\" does not exist", selectedFile.getAbsolutePath()));
 					//
+					return;
+					//
 				} else if (!selectedFile.isFile()) {
 					//
 					JOptionPane.showMessageDialog(null, "Not A Regular File Selected");
+					//
+					return;
 					//
 				} else if (selectedFile.length() == 0) {
 					//
 					JOptionPane.showMessageDialog(null, "Empty File Selected");
 					//
-				} else {
+					return;
 					//
-					SqlSession sqlSession = null;
+				} // if
 					//
-					try {
+				SqlSession sqlSession = null;
+				//
+				final boolean headless = GraphicsEnvironment.isHeadless();
+				//
+				try {
+					//
+					final ObjectMap objectMap = Reflection.newProxy(ObjectMap.class, new IH());
+					//
+					if (objectMap != null) {
 						//
-						final String fileExtension = getFileExtension(new ContentInfoUtil().findMatch(selectedFile));
+						objectMap.setObject(File.class, jfc.getSelectedFile());
 						//
-						if (fileExtension == null) {
-							//
-							JOptionPane.showMessageDialog(null, "File Extension is null");
-							//
-							return;
-							//
-						} else if (StringUtils.isEmpty(fileExtension)) {
-							//
-							JOptionPane.showMessageDialog(null, "File Extension is Empty");
-							//
-							return;
-							//
-						} else if (StringUtils.isBlank(fileExtension)) {
-							//
-							JOptionPane.showMessageDialog(null, "File Extension is Blank");
-							//
-							return;
-							//
-						} // if
-							//
-						String filePath = null;
+						objectMap.setObject(Voice.class, createVoice(this));
 						//
-						final VoiceMapper voiceMapper = getMapper(getConfiguration(sqlSessionFactory),
-								VoiceMapper.class, sqlSession = openSession(sqlSessionFactory));
+						objectMap.setObject(VoiceMapper.class, getMapper(getConfiguration(sqlSessionFactory),
+								VoiceMapper.class, sqlSession = openSession(sqlSessionFactory)));
 						//
-						final String text = getText(tfText);
+						objectMap.setObject(VoiceManager.class, this);
 						//
-						final String romaji = getText(tfRomaji);
+					} // if
 						//
-						final Voice voiceOld = voiceMapper != null ? voiceMapper.searchByTextAndRomaji(text, romaji)
-								: null;
+					importVoice(objectMap, x -> {
 						//
-						final MessageDigest md = MessageDigest.getInstance("SHA-512");
-						//
-						final String messageDigestAlgorithm = md != null ? md.getAlgorithm() : null;
-						//
-						Long length = selectedFile != null ? Long.valueOf(selectedFile.length()) : null;
-						//
-						String fileDigest = Hex
-								.encodeHexString(digest(md, FileUtils.readFileToByteArray(selectedFile)));
-						//
-						if (voiceOld == null
-								|| !Objects.equals(voiceOld.getFileLength(),
-										selectedFile != null ? Long.valueOf(selectedFile.length()) : null)
-								|| !Objects.equals(voiceOld.getFileDigestAlgorithm(), messageDigestAlgorithm)
-								|| !Objects.equals(voiceOld.getFileDigest(), fileDigest)) {
+						if (headless) {
 							//
-							final File file = new File(voiceFolder, filePath = String
-									.format("%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.%2$s", new Date(), fileExtension));
-							//
-							FileUtils.copyFile(selectedFile, file);
-							//
-							length = Long.valueOf(file.length());
-							//
-							fileDigest = Hex.encodeHexString(digest(md, FileUtils.readFileToByteArray(file)));
+							errorOrPrintln(LOG, System.err, x);
 							//
 						} else {
 							//
-							filePath = voiceOld.getFilePath();
+							JOptionPane.showMessageDialog(null, x);
 							//
 						} // if
 							//
-						setText(tfFile, StringUtils.defaultString(filePath, getText(tfFile)));
+					}, e -> {
 						//
-						setText(tfFileLength, toString(length));
-						//
-						setText(tfFileDigest, fileDigest);
-						//
-						final StringMap stringMap = Reflection.newProxy(StringMap.class, new IH());
-						//
-						if (stringMap != null) {
-							//
-							stringMap.setString("filePath", filePath);
-							//
-							stringMap.setString("messageDigestAlgorithm", messageDigestAlgorithm);
-							//
-							stringMap.setString("fileDigest", fileDigest);
-							//
-							stringMap.setString("fileExtension", fileExtension);
-							//
-						} // if
-							//
-						insertOrUpdate(voiceMapper, createVoice(this, stringMap, length));
-						//
-					} catch (IOException | NoSuchAlgorithmException e) {
-						//
-						if (GraphicsEnvironment.isHeadless()) {
+						if (headless) {
 							//
 							if (LOG != null) {
+								//
 								LOG.error(getMessage(e), e);
-							} else {
+								//
+							} else if (e != null) {
+								//
 								e.printStackTrace();
+								//
 							} // if
 								//
 						} else {
@@ -472,13 +428,13 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 							//
 						} // if
 							//
-					} finally {
-						//
-						IOUtils.closeQuietly(sqlSession);
-						//
-					} // try
-						//
-				} // if
+					});
+					//
+				} finally {
+					//
+					IOUtils.closeQuietly(sqlSession);
+					//
+				} // try
 					//
 			} else {
 				//
@@ -533,7 +489,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 					//
 					if (LOG != null) {
 						LOG.error(getMessage(e), e);
-					} else {
+					} else if (e != null) {
 						e.printStackTrace();
 					} // if
 						//
@@ -582,15 +538,183 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 	}
 
+	private static void errorOrPrintln(final Logger logger, final PrintStream ps, final String message) {
+		//
+		if (logger != null) {
+			//
+			logger.error(message);
+			//
+		} else if (ps != null) {
+			//
+			ps.println(message);
+			//
+		} // if
+			//
+	}
+
+	private static interface ObjectMap {
+
+		<T> T getObject(final Class<T> key);
+
+		<T> void setObject(final Class<T> key, final T value);
+
+		static <T> T getObject(final ObjectMap instance, final Class<T> key) {
+			return instance != null ? instance.getObject(key) : null;
+		}
+
+	}
+
+	private static void importVoice(final ObjectMap objectMap, final Consumer<String> errorMessageConsumer,
+			final Consumer<Throwable> throwableConsumer) {
+		//
+		final File selectedFile = ObjectMap.getObject(objectMap, File.class);
+		//
+		if (selectedFile == null) {
+			//
+			accept(errorMessageConsumer, "No File Selected");
+			//
+			return;
+			//
+		} else if (!selectedFile.exists()) {
+			//
+			accept(errorMessageConsumer, String.format("File \"%1$s\" does not exist", selectedFile.getAbsolutePath()));
+			//
+			return;
+			//
+		} else if (!selectedFile.isFile()) {
+			//
+			accept(errorMessageConsumer, "Not A Regular File Selected");
+			//
+			return;
+			//
+		} else if (selectedFile.length() == 0) {
+			//
+			accept(errorMessageConsumer, "Empty File Selected");
+			//
+			return;
+			//
+		} // if
+			//
+		SqlSession sqlSession = null;
+		//
+		try {
+			//
+			final String fileExtension = getFileExtension(new ContentInfoUtil().findMatch(selectedFile));
+			//
+			if (fileExtension == null) {
+				//
+				accept(errorMessageConsumer, "File Extension is null");
+				//
+				return;
+				//
+			} else if (StringUtils.isEmpty(fileExtension)) {
+				//
+				accept(errorMessageConsumer, "File Extension is Empty");
+				//
+				return;
+				//
+			} else if (StringUtils.isBlank(fileExtension)) {
+				//
+				accept(errorMessageConsumer, "File Extension is Blank");
+				//
+				return;
+				//
+			} // if
+				//
+			String filePath = null;
+			//
+			final Voice voice = ObjectMap.getObject(objectMap, Voice.class);
+			//
+			final String text = voice != null ? voice.getText() : null;
+			//
+			final String romaji = voice != null ? voice.getRomaji() : null;
+			//
+			final VoiceMapper voiceMapper = ObjectMap.getObject(objectMap, VoiceMapper.class);
+			//
+			final Voice voiceOld = voiceMapper != null ? voiceMapper.searchByTextAndRomaji(text, romaji) : null;
+			//
+			final MessageDigest md = MessageDigest.getInstance("SHA-512");
+			//
+			final String messageDigestAlgorithm = md != null ? md.getAlgorithm() : null;
+			//
+			Long length = selectedFile != null ? Long.valueOf(selectedFile.length()) : null;
+			//
+			String fileDigest = Hex.encodeHexString(digest(md, FileUtils.readFileToByteArray(selectedFile)));
+			//
+			if (voiceOld == null
+					|| !Objects.equals(voiceOld.getFileLength(),
+							selectedFile != null ? Long.valueOf(selectedFile.length()) : null)
+					|| !Objects.equals(voiceOld.getFileDigestAlgorithm(), messageDigestAlgorithm)
+					|| !Objects.equals(voiceOld.getFileDigest(), fileDigest)) {
+				//
+				final File file = new File(ObjectMap.getObject(objectMap, String.class),
+						filePath = String.format("%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.%2$s", new Date(), fileExtension));
+				//
+				FileUtils.copyFile(selectedFile, file);
+				//
+				length = Long.valueOf(file.length());
+				//
+				fileDigest = Hex.encodeHexString(digest(md, FileUtils.readFileToByteArray(file)));
+				//
+			} else {
+				//
+				filePath = voiceOld.getFilePath();
+				//
+			} // if
+				//
+			final VoiceManager voiceManager = ObjectMap.getObject(objectMap, VoiceManager.class);
+			//
+			if (voiceManager != null) {
+				//
+				setText(voiceManager.tfFile, StringUtils.defaultString(filePath, getText(voiceManager.tfFile)));
+				//
+				setText(voiceManager.tfFileLength, toString(length));
+				//
+				setText(voiceManager.tfFileDigest, fileDigest);
+				//
+			} // if
+				//
+			if (voice != null) {
+				//
+				voice.setFilePath(filePath);
+				//
+				voice.setFileLength(length);
+				//
+				voice.setFileDigestAlgorithm(messageDigestAlgorithm);
+				//
+				voice.setFileDigest(fileDigest);
+				//
+			} // if
+				//
+			insertOrUpdate(voiceMapper, voice);
+			//
+		} catch (IOException | NoSuchAlgorithmException e) {
+			//
+			accept(throwableConsumer, e);
+			//
+		} finally {
+			//
+			IOUtils.closeQuietly(sqlSession);
+			//
+		} // try
+			//
+	}
+
+	private static <T> void accept(final Consumer<T> instance, final T value) {
+		if (instance != null) {
+			instance.accept(value);
+		}
+	}
+
 	private class IH implements InvocationHandler {
 
-		private Map<Object, Object> strings = null;
+		private Map<Object, Object> objects = null;
 
-		private Map<Object, Object> getStrings() {
-			if (strings == null) {
-				strings = new LinkedHashMap<>();
+		private Map<Object, Object> getObjects() {
+			if (objects == null) {
+				objects = new LinkedHashMap<>();
 			}
-			return strings;
+			return objects;
 		}
 
 		@Override
@@ -598,23 +722,23 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 			final String methodName = method != null ? method.getName() : null;
 			//
-			if (proxy instanceof StringMap) {
+			if (proxy instanceof ObjectMap) {
 				//
-				if (Objects.equals(methodName, "getString") && args != null && args.length > 0) {
+				if (Objects.equals(methodName, "getObject") && args != null && args.length > 0) {
 					//
 					final Object key = args[0];
 					//
-					if (!getStrings().containsKey(key)) {
+					if (!getObjects().containsKey(key)) {
 						//
 						throw new IllegalStateException(String.format("Key [%1$s] Not Found", key));
 						//
 					} // if
 						//
-					return getStrings().get(key);
+					return getObjects().get(key);
 					//
-				} else if (Objects.equals(methodName, "setString") && args != null && args.length > 1) {
+				} else if (Objects.equals(methodName, "setObject") && args != null && args.length > 1) {
 					//
-					getStrings().put(args[0], args[1]);
+					getObjects().put(args[0], args[1]);
 					//
 					return null;
 					//
@@ -628,19 +752,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 
 	}
 
-	private static interface StringMap {
-
-		String getString(final String key);
-
-		void setString(final String key, final String value);
-
-		static String getString(final StringMap instance, final String key) {
-			return instance != null ? instance.getString(key) : null;
-		}
-
-	}
-
-	private static Voice createVoice(final VoiceManager instance, final StringMap stringMap, final Long length) {
+	private static Voice createVoice(final VoiceManager instance) {
 		//
 		if (instance == null) {
 			//
@@ -657,16 +769,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		Voice.setHiragana(getText(instance.tfHiragana));
 		//
 		Voice.setKatakana(getText(instance.tfKatakana));
-		//
-		Voice.setFilePath(StringMap.getString(stringMap, "filePath"));
-		//
-		Voice.setFileDigestAlgorithm(StringMap.getString(stringMap, "messageDigestAlgorithm"));
-		//
-		Voice.setFileDigest(StringMap.getString(stringMap, "fileDigest"));
-		//
-		Voice.setFileExtension(StringMap.getString(stringMap, "fileExtension"));
-		//
-		Voice.setFileLength(length);
 		//
 		return Voice;
 		//
