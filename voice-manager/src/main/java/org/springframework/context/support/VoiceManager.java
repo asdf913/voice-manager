@@ -684,6 +684,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				//
 				voice.setFileDigest(fileDigest);
 				//
+				voice.setFileExtension(fileExtension);
+				//
 			} // if
 				//
 			insertOrUpdate(voiceMapper, voice);
