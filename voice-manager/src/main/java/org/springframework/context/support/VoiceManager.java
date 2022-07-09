@@ -60,6 +60,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.function.FailableFunction;
@@ -900,9 +901,19 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 					|| !Objects.equals(voiceOld.getFileDigestAlgorithm(), messageDigestAlgorithm)
 					|| !Objects.equals(voiceOld.getFileDigest(), fileDigest)) {
 				//
-				final File file = new File(voiceFolder, filePath = String
-						.format("%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS_%1$tL.%2$s", new Date(), fileExtension));
+				final StringBuilder fileName = new StringBuilder(
+						String.format("%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS_%1$tL.%2$s", new Date(), fileExtension));
 				//
+				File file = new File(voiceFolder, filePath = toString(fileName));
+				//
+				if (file.exists()) {
+					//
+					file = new File(voiceFolder,
+							filePath = toString(fileName.insert(StringUtils.lastIndexOf(fileName, '.') + 1,
+									RandomStringUtils.randomAlphabetic(2) + ".")));
+					//
+				} // if
+					//
 				FileUtils.copyFile(selectedFile, file);
 				//
 				length = Long.valueOf(file.length());
