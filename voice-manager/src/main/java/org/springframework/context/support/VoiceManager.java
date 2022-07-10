@@ -50,7 +50,10 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.swing.AbstractButton;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -99,6 +102,7 @@ import com.j256.simplemagic.ContentInfoUtil;
 import com.mariten.kanatools.KanaConverter;
 
 import domain.Voice;
+import domain.Voice.Yomi;
 import fr.free.nrw.jakaroma.Jakaroma;
 import mapper.VoiceMapper;
 import net.miginfocom.swing.MigLayout;
@@ -117,6 +121,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 
 	private JTextComponent tfFolder, tfFile, tfFileLength, tfFileDigest, tfText, tfHiragana, tfKatakana,
 			tfRomaji = null;
+
+	private ComboBoxModel<Yomi> cbmYomi = null;
 
 	private AbstractButton btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji, btnExecute, btnImportFileTemplate,
 			btnImport, btnExport = null;
@@ -209,6 +215,37 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		add(btnConvertToRomaji = new JButton("Convert"), WRAP);
 		//
+		// yomi
+		//
+		add(new JLabel("Yomi"));
+		//
+		final Yomi[] yomis = Yomi.values();
+		//
+		add(new JComboBox<>(cbmYomi = new DefaultComboBoxModel<>(ArrayUtils.insert(0, yomis, (Yomi) null))), WRAP);
+		//
+		if (yomis != null) {
+			//
+			final List<Yomi> list = collect(
+					filter(Arrays.stream(yomis),
+							y -> Objects.equals(name(y),
+									getProperty(propertyResolver,
+											"org.springframework.context.support.VoiceManager.yomi"))),
+					Collectors.toList());
+			//
+			final int size = list != null ? list.size() : 0;
+			//
+			if (size == 1) {
+				//
+				cbmYomi.setSelectedItem(list.get(0));
+				//
+			} else if (size > 1) {
+				//
+				throw new IllegalStateException();
+				//
+			} // if
+				//
+		} // if)
+			//
 		add(new JLabel("Romaji"));
 		//
 		add(tfRomaji = new JTextField(
@@ -893,6 +930,10 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 			int columnIndex;
 			//
+			Class<?> type = null;
+			//
+			List<?> list = null;
+			//
 			for (final Row row : sheet) {
 				//
 				if (row == null || row.iterator() == null) {
@@ -925,8 +966,27 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 						//
 						f.setAccessible(true);
 						//
-						f.set(voice = ObjectUtils.getIfNull(voice, Voice::new), cell.getStringCellValue());
-						//
+						if (Objects.equals(type = f.getType(), String.class)) {
+							//
+							f.set(voice = ObjectUtils.getIfNull(voice, Voice::new), cell.getStringCellValue());
+							//
+						} else if (type != null && Enum.class.isAssignableFrom(type) && (list = collect(
+								filter(testAndApply(Objects::nonNull, type.getEnumConstants(), Arrays::stream, null),
+										e -> Objects.equals(name(cast(Enum.class, e)), cell.getStringCellValue())),
+								Collectors.toList())) != null && !list.isEmpty()) {
+							//
+							if (list.size() == 1) {
+								//
+								f.set(voice = ObjectUtils.getIfNull(voice, Voice::new), list.get(0));
+								//
+							} else {
+								//
+								throw new IllegalStateException("list.size()>1");
+								//
+							} // if
+								//
+						} // if
+							//
 					} // if
 						//
 				} // for
@@ -953,6 +1013,10 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				//
 		} // if
 			//
+	}
+
+	private static String name(final Enum<?> instance) {
+		return instance != null ? instance.name() : null;
 	}
 
 	private static <E> void add(final Collection<E> items, final E item) {
@@ -1189,8 +1253,14 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		Voice.setKatakana(getText(instance.tfKatakana));
 		//
+		Voice.setYomi(cast(Yomi.class, getSelectedItem(instance.cbmYomi)));
+		//
 		return Voice;
 		//
+	}
+
+	private static Object getSelectedItem(final ComboBoxModel<?> instance) {
+		return instance != null ? instance.getSelectedItem() : null;
 	}
 
 	private static String getMessage(final Throwable instance) {

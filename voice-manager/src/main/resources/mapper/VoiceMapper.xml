@@ -15,13 +15,13 @@
 
 	<select id="retrieveAll" resultMap="resultMapVoice">
 		select
-		text,romaji,hiragana,katakana,file_path,file_length,file_digest_algorithm,file_digest,file_extension,create_ts,update_ts
+		text,yomi,romaji,hiragana,katakana,file_path,file_length,file_digest_algorithm,file_digest,file_extension,create_ts,update_ts
 		from voice
 	</select>
 
 	<select id="searchByTextAndRomaji" resultMap="resultMapVoice">
 		select
-		text,romaji,hiragana,katakana,file_path,file_length,file_digest_algorithm,file_digest,file_extension,create_ts,update_ts
+		text,yomi,romaji,hiragana,katakana,file_path,file_length,file_digest_algorithm,file_digest,file_extension,create_ts,update_ts
 		from voice
 		<where>
 			true
@@ -35,7 +35,7 @@
 	<insert id="insert">
 		<if test="voice!=null">
 			insert into
-			voice(text,romaji,hiragana,katakana,file_path,file_length,file_digest_algorithm,file_digest,file_extension,create_ts)values(#{voice.text},#{voice.romaji},#{voice.hiragana},#{voice.katakana},#{voice.filePath},#{voice.fileLength},#{voice.fileDigestAlgorithm},#{voice.fileDigest},#{voice.fileExtension},#{voice.createTs});
+			voice(text,yomi,romaji,hiragana,katakana,file_path,file_length,file_digest_algorithm,file_digest,file_extension,create_ts)values(#{voice.text},#{voice.yomi},#{voice.romaji},#{voice.hiragana},#{voice.katakana},#{voice.filePath},#{voice.fileLength},#{voice.fileDigestAlgorithm},#{voice.fileDigest},#{voice.fileExtension},#{voice.createTs});
 		</if>
 	</insert>
 
@@ -44,6 +44,7 @@
 			update voice
 			<set>
 				text=#{voice.text}
+				,yomi=#{voice.yomi}
 				,romaji=#{voice.romaji}
 				,hiragana=#{voice.hiragana}
 				,katakana=#{voice.katakana}

@@ -15,7 +15,34 @@ import java.util.Date;
 @FieldOrder({ "text", "romaji", "hiragana", "katakana", "filePath", "fileExtension", "fileLength" })
 public class Voice {
 
-	private String text, romaji, hiragana, katakana, filePath, fileDigestAlgorithm, fileDigest, fileExtension = null;
+	@Target(ElementType.FIELD)
+	@Retention(RetentionPolicy.RUNTIME)
+	private @interface ImportField {
+	}
+
+	@ImportField
+	private String text = null;
+
+	public static enum Yomi {
+		KUN_YOMI, ON_YOMI
+	}
+
+	@ImportField
+	private Yomi yomi = null;
+
+	@ImportField
+	private String romaji = null;
+
+	@ImportField
+	private String hiragana = null;
+
+	@ImportField
+	private String katakana = null;
+
+	@ImportField
+	private String filePath = null;
+
+	private String fileDigestAlgorithm, fileDigest, fileExtension = null;
 
 	/**
 	 * @see org.apache.poi.ss.usermodel.BuiltinFormats
@@ -47,6 +74,10 @@ public class Voice {
 
 	public String getText() {
 		return text;
+	}
+
+	public void setYomi(final Yomi yomi) {
+		this.yomi = yomi;
 	}
 
 	public void setRomaji(final String romaji) {

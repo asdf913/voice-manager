@@ -41,6 +41,7 @@ import java.util.stream.Collector;
 import java.util.stream.Stream;
 
 import javax.swing.AbstractButton;
+import javax.swing.ComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
@@ -74,6 +75,7 @@ import com.google.common.reflect.Reflection;
 import com.j256.simplemagic.ContentInfo;
 
 import domain.Voice;
+import domain.Voice.Yomi;
 import mapper.VoiceMapper;
 import net.miginfocom.swing.MigLayout;
 
@@ -90,7 +92,7 @@ class VoiceManagerTest {
 			METHOD_FILTER, METHOD_SET_TEXT, METHOD_GET_PREFERRED_WIDTH, METHOD_IMPORT_VOICE3, METHOD_IMPORT_VOICE4,
 			METHOD_ERROR_OR_PRINT_LN, METHOD_ADD, METHOD_CREATE_IMPORT_FILE_TEMPLATE_BYTE_ARRAY,
 			METHOD_GET_DECLARED_ANNOTATIONS, METHOD_CREATE_CELL, METHOD_SET_CELL_VALUE, METHOD_ANY_MATCH,
-			METHOD_COLLECT = null;
+			METHOD_COLLECT, METHOD_NAME, METHOD_GET_SELECTED_ITEM = null;
 
 	@BeforeAll
 	private static void beforeAll() throws ReflectiveOperationException {
@@ -201,6 +203,10 @@ class VoiceManagerTest {
 		//
 		(METHOD_COLLECT = clz.getDeclaredMethod("collect", Stream.class, Collector.class)).setAccessible(true);
 		//
+		(METHOD_NAME = clz.getDeclaredMethod("name", Enum.class)).setAccessible(true);
+		//
+		(METHOD_GET_SELECTED_ITEM = clz.getDeclaredMethod("getSelectedItem", ComboBoxModel.class)).setAccessible(true);
+		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
 	}
@@ -219,7 +225,7 @@ class VoiceManagerTest {
 
 		private Expression expression = null;
 
-		private Object value, max = null;
+		private Object value, max, selectedItem = null;
 
 		private Iterator<Row> rows = null;
 
@@ -337,6 +343,14 @@ class VoiceManagerTest {
 				if (Objects.equals(methodName, "getStringCellValue")) {
 					//
 					return stringCellValue;
+					//
+				} // if
+					//
+			} else if (proxy instanceof ComboBoxModel) {
+				//
+				if (Objects.equals(methodName, "getSelectedItem")) {
+					//
+					return selectedItem;
 					//
 				} // if
 					//
@@ -1513,6 +1527,44 @@ class VoiceManagerTest {
 			throws Throwable {
 		try {
 			return (R) METHOD_COLLECT.invoke(null, instance, collector);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testName() throws Throwable {
+		//
+		Assertions.assertNull(name(null));
+		//
+		Assertions.assertNotNull(name(Yomi.KUN_YOMI));
+		//
+	}
+
+	private static String name(final Enum<?> instance) throws Throwable {
+		try {
+			final Object obj = METHOD_NAME.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetSelectedItem() throws Throwable {
+		//
+		Assertions.assertNull(getSelectedItem(Reflection.newProxy(ComboBoxModel.class, ih)));
+		//
+	}
+
+	private static Object getSelectedItem(final ComboBoxModel<?> instance) throws Throwable {
+		try {
+			return METHOD_GET_SELECTED_ITEM.invoke(null, instance);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
