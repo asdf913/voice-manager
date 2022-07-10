@@ -661,8 +661,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 					//
 					return;
 					//
-				}
-				//
+				} // if
+					//
 				final String mimeType = ci.getMimeType();
 				//
 				if (!(Objects.equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", mimeType)
@@ -1056,8 +1056,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 		} // if
 			//
-		SqlSession sqlSession = null;
-		//
 		try {
 			//
 			final String fileExtension = getFileExtension(new ContentInfoUtil().findMatch(selectedFile));
@@ -1174,10 +1172,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		} catch (IOException | NoSuchAlgorithmException e) {
 			//
 			accept(throwableConsumer, e);
-			//
-		} finally {
-			//
-			IOUtils.closeQuietly(sqlSession);
 			//
 		} // try
 			//
