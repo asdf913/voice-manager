@@ -531,12 +531,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				try (final OutputStream os = new FileOutputStream(
 						file = new File(String.format("voice_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.xlsx", new Date())))) {
 					//
-					if ((workbook = createWorkbook(voices)) != null) {
-						//
-						workbook.write(os);
-						//
-					} // if
-						//
+					write(workbook = createWorkbook(voices), os);
+					//
 				} // try
 					//
 			} catch (final IOException | IllegalAccessException e) {
@@ -792,6 +788,16 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 	}
 
+	private static void write(final Workbook instance, final OutputStream stream) throws IOException {
+		//
+		if (instance != null && (stream != null || Proxy.isProxyClass(instance.getClass()))) {
+			//
+			instance.write(stream);
+			//
+		} // if
+			//
+	}
+
 	private static Annotation[] getDeclaredAnnotations(final AnnotatedElement instance) {
 		return instance != null ? instance.getDeclaredAnnotations() : null;
 	}
@@ -837,12 +843,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				//
 			} // for
 				//
-			if (workbook != null) {
-				//
-				workbook.write(baos);
-				//
-			} // if
-				//
+			write(workbook, baos);
+			//
 			bs = baos.toByteArray();
 			//
 		} catch (final IOException e) {

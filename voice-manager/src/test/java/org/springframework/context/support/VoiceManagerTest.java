@@ -21,6 +21,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.security.MessageDigest;
 import java.util.Collection;
 import java.util.Collections;
@@ -58,6 +59,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -92,7 +94,7 @@ class VoiceManagerTest {
 			METHOD_FILTER, METHOD_SET_TEXT, METHOD_GET_PREFERRED_WIDTH, METHOD_IMPORT_VOICE3, METHOD_IMPORT_VOICE4,
 			METHOD_ERROR_OR_PRINT_LN, METHOD_ADD, METHOD_CREATE_IMPORT_FILE_TEMPLATE_BYTE_ARRAY,
 			METHOD_GET_DECLARED_ANNOTATIONS, METHOD_CREATE_CELL, METHOD_SET_CELL_VALUE, METHOD_ANY_MATCH,
-			METHOD_COLLECT, METHOD_NAME, METHOD_GET_SELECTED_ITEM = null;
+			METHOD_COLLECT, METHOD_NAME, METHOD_GET_SELECTED_ITEM, METHOD_WRITE = null;
 
 	@BeforeAll
 	private static void beforeAll() throws ReflectiveOperationException {
@@ -206,6 +208,8 @@ class VoiceManagerTest {
 		(METHOD_NAME = clz.getDeclaredMethod("name", Enum.class)).setAccessible(true);
 		//
 		(METHOD_GET_SELECTED_ITEM = clz.getDeclaredMethod("getSelectedItem", ComboBoxModel.class)).setAccessible(true);
+		//
+		(METHOD_WRITE = clz.getDeclaredMethod("write", Workbook.class, OutputStream.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -1565,6 +1569,27 @@ class VoiceManagerTest {
 	private static Object getSelectedItem(final ComboBoxModel<?> instance) throws Throwable {
 		try {
 			return METHOD_GET_SELECTED_ITEM.invoke(null, instance);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testWrite() throws IOException {
+		//
+		Assertions.assertDoesNotThrow(() -> write(Reflection.newProxy(Workbook.class, ih), null));
+		//
+		try (final Workbook workbook = new XSSFWorkbook()) {
+			//
+			Assertions.assertDoesNotThrow(() -> write(workbook, null));
+			//
+		} // try
+			//
+	}
+
+	private static void write(final Workbook instance, final OutputStream stream) throws Throwable {
+		try {
+			METHOD_WRITE.invoke(null, instance, stream);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
