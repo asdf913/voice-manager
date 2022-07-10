@@ -10,12 +10,14 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -43,6 +45,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -115,8 +118,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	private JTextComponent tfFolder, tfFile, tfFileLength, tfFileDigest, tfText, tfHiragana, tfKatakana,
 			tfRomaji = null;
 
-	private AbstractButton btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji, btnExecute, btnImport,
-			btnExport = null;
+	private AbstractButton btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji, btnExecute, btnImportFileTemplate,
+			btnImport, btnExport = null;
 
 	private SqlSessionFactory sqlSessionFactory = null;
 
@@ -230,11 +233,15 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		add(new JLabel());
 		//
-		add(btnExecute = new JButton("Execute"));
-		//
-		add(btnImport = new JButton("Import"), "right");
+		add(btnExecute = new JButton("Execute"), String.format("span %1$s", 2));
 		//
 		add(btnExport = new JButton("Export"), WRAP);
+		//
+		add(new JLabel("Import"));
+		//
+		add(btnImportFileTemplate = new JButton("Import File Template"));
+		//
+		add(btnImport = new JButton("Import"), WRAP);
 		//
 		add(new JLabel("Folder"));
 		//
@@ -254,8 +261,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		setEditable(false, tfFolder, tfFile, tfFileLength, tfFileDigest);
 		//
-		addActionListener(this, btnExecute, btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji, btnImport,
-				btnExport);
+		addActionListener(this, btnExecute, btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji,
+				btnImportFileTemplate, btnImport, btnExport);
 		//
 		setPreferredWidth(intValue(
 				orElse(max(map(Stream.of(tfFolder, tfFile, tfFileLength, tfFileDigest, tfText, tfHiragana, tfKatakana,
@@ -546,7 +553,41 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 					//
 			} // try
 				//
-		} else if (Objects.equals(source, btnImport)) {
+		} else if (Objects.equals(source, btnImportFileTemplate)) {
+			//
+			final JFileChooser jfc = new JFileChooser(".");
+			//
+			jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+			//
+			if (jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+				//
+				try {
+					//
+					FileUtils.writeByteArrayToFile(jfc.getSelectedFile(), createImportFileTemplateByteArray());
+					//
+				} catch (final IOException e) {
+					//
+					if (GraphicsEnvironment.isHeadless()) {
+						//
+						if (LOG != null) {
+							LOG.error(getMessage(e), e);
+						} else if (e != null) {
+							e.printStackTrace();
+						} // if
+							//
+					} else {
+						//
+						JOptionPane.showMessageDialog(null, getMessage(e));
+						//
+					} // if
+						//
+				} // try
+					//
+			} // if
+				//
+		} else if (Objects.equals(source, btnImport))
+
+		{
 			//
 			final JFileChooser jfc = new JFileChooser(".");
 			//
@@ -712,6 +753,110 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 		} // if
 			//
+	}
+
+	private static Annotation[] getDeclaredAnnotations(final AnnotatedElement instance) {
+		return instance != null ? instance.getDeclaredAnnotations() : null;
+	}
+
+	private static byte[] createImportFileTemplateByteArray() {
+		//
+		final Class<?> importFieldClass = forName("domain.Voice$ImportField");
+		//
+		final List<Field> fs = collect(
+				filter(testAndApply(Objects::nonNull, FieldUtils.getAllFields(Voice.class), Arrays::stream, null),
+						f -> anyMatch(testAndApply(Objects::nonNull, getDeclaredAnnotations(f), Arrays::stream, null),
+								a -> Objects.equals(annotationType(a), importFieldClass))),
+				Collectors.toList());
+		//
+		Field f = null;
+		//
+		Workbook workbook = null;
+		//
+		Sheet sheet = null;
+		//
+		Row row = null;
+		//
+		byte[] bs = null;
+		//
+		try (final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+			//
+			for (int i = 0; fs != null && i < fs.size(); i++) {
+				//
+				if ((f = fs.get(i)) == null
+						|| (workbook = ObjectUtils.getIfNull(workbook, XSSFWorkbook::new)) == null) {
+					continue;
+				} // if
+					//
+				if (sheet == null) {
+					sheet = workbook.createSheet();
+				} // if
+					//
+				if (row == null && sheet != null) {
+					row = sheet.createRow(0);
+				} // if
+					//
+				setCellValue(createCell(row, i), getName(f));
+				//
+			} // for
+				//
+			if (workbook != null) {
+				//
+				workbook.write(baos);
+				//
+			} // if
+				//
+			bs = baos.toByteArray();
+			//
+		} catch (final IOException e) {
+			//
+			if (GraphicsEnvironment.isHeadless()) {
+				//
+				if (LOG != null) {
+					LOG.error(getMessage(e), e);
+				} else if (e != null) {
+					e.printStackTrace();
+				} // if
+					//
+			} else {
+				//
+				JOptionPane.showMessageDialog(null, getMessage(e));
+				//
+			} // if
+				//
+		} finally {
+			//
+			IOUtils.closeQuietly(workbook);
+			//
+		} // try
+			//
+		return bs;
+		//
+	}
+
+	private static Cell createCell(final Row instance, final int column) {
+		return instance != null ? instance.createCell(column) : null;
+	}
+
+	private static void setCellValue(final Cell instance, final String value) {
+		if (instance != null) {
+			instance.setCellValue(value);
+		}
+	}
+
+	private static <T> boolean anyMatch(final Stream<T> instance, final Predicate<? super T> predicate) {
+		//
+		return instance != null && (predicate != null || Proxy.isProxyClass(instance.getClass()))
+				&& instance.anyMatch(predicate);
+		//
+	}
+
+	private static <T, R, A> R collect(final Stream<T> instance, final Collector<? super T, A, R> collector) {
+		//
+		return instance != null && (collector != null || Proxy.isProxyClass(instance.getClass()))
+				? instance.collect(collector)
+				: null;
+		//
 	}
 
 	private static interface ObjectMap {
@@ -1176,11 +1321,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 					//
 				for (int j = 0; fs != null && j < fs.length; j++) {
 					//
-					if ((cell = row.createCell(j)) == null) {
-						continue;
-					} // if
-						//
-					cell.setCellValue(getName(fs[j]));
+					setCellValue(createCell(row, j), getName(fs[j]));
 					//
 				} // for
 					//
@@ -1194,7 +1335,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				//
 			for (int j = 0; fs != null && j < fs.length; j++) {
 				//
-				if ((f = fs[j]) == null || (cell = row.createCell(j)) == null) {
+				if ((f = fs[j]) == null || (cell = createCell(row, j)) == null) {
 					continue;
 				} // if
 					//
@@ -1206,7 +1347,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 							findFirst(filter(
 									testAndApply(Objects::nonNull,
 											getDeclaredMethods(annotationType(a = orElse(
-													findFirst(filter(Arrays.stream(f.getDeclaredAnnotations()),
+													findFirst(filter(Arrays.stream(getDeclaredAnnotations(f)),
 															x -> Objects.equals(annotationType(x), dataFormatClass))),
 													null))),
 											Arrays::stream, null),
@@ -1233,7 +1374,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 							findFirst(filter(
 									testAndApply(Objects::nonNull,
 											getDeclaredMethods(annotationType(a = orElse(
-													findFirst(filter(Arrays.stream(f.getDeclaredAnnotations()),
+													findFirst(filter(Arrays.stream(getDeclaredAnnotations(f)),
 															x -> Objects.equals(annotationType(x), dateFormatClass))),
 													null))),
 											Arrays::stream, null),
@@ -1242,17 +1383,17 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 						//
 						m.setAccessible(true);
 						//
-						cell.setCellValue(new SimpleDateFormat(toString(invoke(m, a))).format(value));
+						setCellValue(cell, new SimpleDateFormat(toString(invoke(m, a))).format(value));
 						//
 					} else {
 						//
-						cell.setCellValue(toString(value));
+						setCellValue(cell, toString(value));
 						//
 					} // if
 						//
 				} else {
 					//
-					cell.setCellValue(toString(value));
+					setCellValue(cell, toString(value));
 					//
 				} // if
 					//
@@ -1273,8 +1414,10 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 
 	private static String[] getFieldOrder() {
 		//
-		final Annotation a = orElse(findFirst(filter(Arrays.stream(Voice.class.getDeclaredAnnotations()),
-				z -> Objects.equals(annotationType(z), forName("domain.FieldOrder")))), null);
+		final Annotation a = orElse(findFirst(
+				filter(testAndApply(Objects::nonNull, getDeclaredAnnotations(Voice.class), Arrays::stream, null),
+						z -> Objects.equals(annotationType(z), forName("domain.FieldOrder")))),
+				null);
 		//
 		final Method method = orElse(findFirst(
 				filter(Arrays.stream(getDeclaredMethods(annotationType(a))), z -> Objects.equals(getName(z), "value"))),
@@ -1329,8 +1472,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				//
 		} // try
 			//
-		final List<String> fieldNames = map(Arrays.stream(FieldUtils.getAllFields(Voice.class)), VoiceManager::getName)
-				.collect(Collectors.toList());
+		final List<String> fieldNames = collect(
+				map(Arrays.stream(FieldUtils.getAllFields(Voice.class)), VoiceManager::getName), Collectors.toList());
 		//
 		String fieldName = null;
 		//

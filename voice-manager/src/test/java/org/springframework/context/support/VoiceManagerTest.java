@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
@@ -36,6 +37,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collector;
 import java.util.stream.Stream;
 
 import javax.swing.AbstractButton;
@@ -86,7 +88,9 @@ class VoiceManagerTest {
 			METHOD_FOR_EACH, METHOD_CREATE_WORK_BOOK, METHOD_CREATE_VOICE, METHOD_GET_MESSAGE, METHOD_INVOKE,
 			METHOD_ANNOTATION_TYPE, METHOD_GET_NAME, METHOD_FIND_FIRST, METHOD_GET_DECLARED_METHODS, METHOD_FOR_NAME,
 			METHOD_FILTER, METHOD_SET_TEXT, METHOD_GET_PREFERRED_WIDTH, METHOD_IMPORT_VOICE3, METHOD_IMPORT_VOICE4,
-			METHOD_ERROR_OR_PRINT_LN, METHOD_ADD = null;
+			METHOD_ERROR_OR_PRINT_LN, METHOD_ADD, METHOD_CREATE_IMPORT_FILE_TEMPLATE_BYTE_ARRAY,
+			METHOD_GET_DECLARED_ANNOTATIONS, METHOD_CREATE_CELL, METHOD_SET_CELL_VALUE, METHOD_ANY_MATCH,
+			METHOD_COLLECT = null;
 
 	@BeforeAll
 	private static void beforeAll() throws ReflectiveOperationException {
@@ -183,6 +187,20 @@ class VoiceManagerTest {
 		//
 		(METHOD_ADD = clz.getDeclaredMethod("add", Collection.class, Object.class)).setAccessible(true);
 		//
+		(METHOD_CREATE_IMPORT_FILE_TEMPLATE_BYTE_ARRAY = clz.getDeclaredMethod("createImportFileTemplateByteArray"))
+				.setAccessible(true);
+		//
+		(METHOD_GET_DECLARED_ANNOTATIONS = clz.getDeclaredMethod("getDeclaredAnnotations", AnnotatedElement.class))
+				.setAccessible(true);
+		//
+		(METHOD_CREATE_CELL = clz.getDeclaredMethod("createCell", Row.class, Integer.TYPE)).setAccessible(true);
+		//
+		(METHOD_SET_CELL_VALUE = clz.getDeclaredMethod("setCellValue", Cell.class, String.class)).setAccessible(true);
+		//
+		(METHOD_ANY_MATCH = clz.getDeclaredMethod("anyMatch", Stream.class, Predicate.class)).setAccessible(true);
+		//
+		(METHOD_COLLECT = clz.getDeclaredMethod("collect", Stream.class, Collector.class)).setAccessible(true);
+		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
 	}
@@ -206,6 +224,8 @@ class VoiceManagerTest {
 		private Iterator<Row> rows = null;
 
 		private Iterator<Cell> cells = null;
+
+		private Boolean anyMatch = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -301,6 +321,14 @@ class VoiceManagerTest {
 				} else if (Objects.equals(methodName, "max")) {
 					//
 					return max;
+					//
+				} else if (Objects.equals(methodName, "collect")) {
+					//
+					return null;
+					//
+				} else if (Objects.equals(methodName, "anyMatch")) {
+					//
+					return anyMatch;
 					//
 				} // if
 					//
@@ -1363,6 +1391,128 @@ class VoiceManagerTest {
 	private static <E> void add(final Collection<E> items, final E item) throws Throwable {
 		try {
 			METHOD_ADD.invoke(null, items, item);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCreateImportFileTemplateByteArray() throws Throwable {
+		//
+		Assertions.assertNotNull(createImportFileTemplateByteArray());
+		//
+	}
+
+	private static byte[] createImportFileTemplateByteArray() throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_IMPORT_FILE_TEMPLATE_BYTE_ARRAY.invoke(null);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof byte[]) {
+				return (byte[]) obj;
+			}
+			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetDeclaredAnnotations() throws Throwable {
+		//
+		Assertions.assertNull(getDeclaredAnnotations(null));
+		//
+	}
+
+	private static Annotation[] getDeclaredAnnotations(final AnnotatedElement instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_DECLARED_ANNOTATIONS.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Annotation[]) {
+				return (Annotation[]) obj;
+			}
+			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCreateCell() throws Throwable {
+		//
+		Assertions.assertNull(createCell(null, 0));
+		//
+	}
+
+	private static Cell createCell(final Row instance, final int column) throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_CELL.invoke(null, instance, column);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Cell) {
+				return (Cell) obj;
+			}
+			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetCellValue() {
+		//
+		Assertions.assertDoesNotThrow(() -> setCellValue(null, null));
+		//
+	}
+
+	private static void setCellValue(final Cell instance, final String value) throws Throwable {
+		try {
+			METHOD_SET_CELL_VALUE.invoke(null, instance, value);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testAnyMatch() throws Throwable {
+		//
+		Assertions.assertFalse(anyMatch(null, null));
+		//
+		Assertions.assertFalse(anyMatch(Stream.empty(), null));
+		//
+		Assertions.assertSame(ih.anyMatch = Boolean.FALSE, Boolean.valueOf(anyMatch(stream, null)));
+		//
+	}
+
+	private static <T> boolean anyMatch(final Stream<T> instance, final Predicate<? super T> predicate)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_ANY_MATCH.invoke(null, instance, predicate);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(obj != null && obj.getClass() != null ? obj.getClass().toString() : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCollect() throws Throwable {
+		//
+		Assertions.assertNull(collect(null, null));
+		//
+		Assertions.assertNull(collect(Stream.empty(), null));
+		//
+		Assertions.assertNull(collect(stream, null));
+		//
+	}
+
+	private static <T, R, A> R collect(final Stream<T> instance, final Collector<? super T, A, R> collector)
+			throws Throwable {
+		try {
+			return (R) METHOD_COLLECT.invoke(null, instance, collector);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
