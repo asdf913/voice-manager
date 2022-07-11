@@ -23,8 +23,13 @@
 
 	<bean class="org.springframework.context.support.VoiceManager"
 		init-method="init">
-		<property name="layout"
-			value="#{new net.miginfocom.swing.MigLayout()}" />
+		<property name="layout">
+			<bean
+				class="org.springframework.beans.factory.MigLayoutFactoryBean">
+				<property name="arguments"
+					value="${org.springframework.beans.factory.MigLayoutFactoryBean.arguments}" />
+			</bean>
+		</property>
 		<property name="defaultCloseOperation"
 			value="#{T(javax.swing.WindowConstants).EXIT_ON_CLOSE}" />
 		<property name="title"
