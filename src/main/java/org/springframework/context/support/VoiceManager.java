@@ -26,6 +26,8 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -56,6 +58,7 @@ import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -927,6 +930,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 
 		private Integer counter = null;
 
+		private Integer count = null;
+
 		private ObjectMap objectMap = null;
 
 		private Consumer<String> errorMessageConsumer = null;
@@ -936,6 +941,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		private Voice voice = null;
 
 		private File file = null;
+
+		private NumberFormat percentNumberFormat = null;
 
 		@Override
 		public void run() {
@@ -961,8 +968,18 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				//
 				if (counter != null) {
 					//
-					setValue(ObjectMap.getObject(objectMap, JProgressBar.class), counter.intValue());
+					final JProgressBar progressBar = ObjectMap.getObject(objectMap, JProgressBar.class);
 					//
+					setValue(progressBar, counter.intValue());
+					//
+					if (count != null) {
+						//
+						setToolTipText(progressBar, String.format("%1$s/%2$s (%3$s)", counter, count,
+								format(percentNumberFormat, counter.intValue() * 1.0 / count.intValue())));
+						//
+					} // if
+						//
+						//
 				} // if
 					//
 			} finally {
@@ -973,6 +990,22 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				//
 		}
 
+	}
+
+	private static void setValue(final JProgressBar instance, final int n) {
+		if (instance != null) {
+			instance.setValue(n);
+		}
+	}
+
+	private static void setToolTipText(final JComponent instance, final String toolTipText) {
+		if (instance != null) {
+			instance.setToolTipText(toolTipText);
+		}
+	}
+
+	private static String format(final NumberFormat instance, final double number) {
+		return instance != null ? instance.format(number) : null;
 	}
 
 	private static void importVoice(final Sheet sheet, final ObjectMap objectMap,
@@ -1006,6 +1039,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				List<?> list = null;
 				//
 				ImportTask it = null;
+				//
+				NumberFormat percentNumberFormat = null;
 				//
 				for (final Row row : sheet) {
 					//
@@ -1076,6 +1111,11 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 						if ((es = ObjectUtils.getIfNull(es, () -> Executors.newFixedThreadPool(1))) != null) {
 							//
 							(it = new ImportTask()).counter = Integer.valueOf(row.getRowNum());
+							//
+							it.count = sheet.getPhysicalNumberOfRows();
+							//
+							it.percentNumberFormat = ObjectUtils.getIfNull(percentNumberFormat,
+									() -> new DecimalFormat("#%"));
 							//
 							it.voice = voice;
 							//
@@ -1382,6 +1422,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 
 		private Integer counter = null;
 
+		private Integer count = null;
+
 		private Voice voice = null;
 
 		private Map<String, String> outputFolderFileNameExpressions = null;
@@ -1395,6 +1437,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		private JProgressBar progressBar = null;
 
 		private ExpressionParser expressionParser = null;
+
+		private NumberFormat percentNumberFormat = null;
 
 		@Override
 		public void run() {
@@ -1439,6 +1483,13 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 					//
 					setValue(progressBar, counter.intValue());
 					//
+					if (count != null) {
+						//
+						setToolTipText(progressBar, String.format("%1$s/%2$s (%3$s)", counter, count,
+								format(percentNumberFormat, counter.intValue() * 1.0 / count.intValue())));
+						//
+					} // if
+						//
 				} // if
 					//
 			} catch (final IOException e) {
@@ -1463,12 +1514,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 
 	}
 
-	private static void setValue(final JProgressBar instance, final int n) {
-		if (instance != null) {
-			instance.setValue(n);
-		}
-	}
-
 	private static void export(final List<Voice> voices, final Map<String, String> outputFolderFileNameExpressions,
 			final String voiceFolder, final String outputFolder, final JProgressBar progressBar) throws IOException {
 		//
@@ -1486,9 +1531,13 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		ExportTask et = null;
 		//
+		NumberFormat percentNumberFormat = null;
+		//
 		try {
 			//
-			for (int i = 0; voices != null && i < voices.size(); i++) {
+			final int size = voices != null ? voices.size() : 0;
+			//
+			for (int i = 0; i < size; i++) {
 				//
 				if ((es = ObjectUtils.getIfNull(es, () -> Executors.newFixedThreadPool(1))) == null) {
 					//
@@ -1497,6 +1546,10 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				} // if
 					//
 				(et = new ExportTask()).counter = Integer.valueOf(i + 1);
+				//
+				et.count = size;
+				//
+				et.percentNumberFormat = ObjectUtils.getIfNull(percentNumberFormat, () -> new DecimalFormat("#%"));
 				//
 				et.evaluationContext = evaluationContext = ObjectUtils.getIfNull(evaluationContext,
 						StandardEvaluationContext::new);

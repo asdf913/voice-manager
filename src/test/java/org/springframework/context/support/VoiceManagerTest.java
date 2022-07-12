@@ -22,6 +22,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.security.MessageDigest;
+import java.text.NumberFormat;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -45,6 +46,7 @@ import java.util.stream.Stream;
 import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JProgressBar;
 import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
@@ -96,8 +98,8 @@ class VoiceManagerTest {
 			METHOD_FILTER, METHOD_SET_TEXT, METHOD_GET_PREFERRED_WIDTH, METHOD_IMPORT_VOICE3, METHOD_IMPORT_VOICE4,
 			METHOD_ERROR_OR_PRINT_LN, METHOD_ADD, METHOD_CREATE_IMPORT_FILE_TEMPLATE_BYTE_ARRAY,
 			METHOD_GET_DECLARED_ANNOTATIONS, METHOD_CREATE_CELL, METHOD_SET_CELL_VALUE, METHOD_ANY_MATCH,
-			METHOD_COLLECT, METHOD_NAME, METHOD_GET_SELECTED_ITEM, METHOD_WRITE, METHOD_MATCHER,
-			METHOD_SET_VALUE = null;
+			METHOD_COLLECT, METHOD_NAME, METHOD_GET_SELECTED_ITEM, METHOD_WRITE, METHOD_MATCHER, METHOD_SET_VALUE,
+			METHOD_SET_TOOL_TIP_TEXT, METHOD_FORMAT = null;
 
 	@BeforeAll
 	private static void beforeAll() throws ReflectiveOperationException {
@@ -217,6 +219,11 @@ class VoiceManagerTest {
 		(METHOD_MATCHER = clz.getDeclaredMethod("matcher", Pattern.class, CharSequence.class)).setAccessible(true);
 		//
 		(METHOD_SET_VALUE = clz.getDeclaredMethod("setValue", JProgressBar.class, Integer.TYPE)).setAccessible(true);
+		//
+		(METHOD_SET_TOOL_TIP_TEXT = clz.getDeclaredMethod("setToolTipText", JComponent.class, String.class))
+				.setAccessible(true);
+		//
+		(METHOD_FORMAT = clz.getDeclaredMethod("format", NumberFormat.class, Double.TYPE)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -1638,6 +1645,42 @@ class VoiceManagerTest {
 	private static void setValue(final JProgressBar instance, final int n) throws Throwable {
 		try {
 			METHOD_SET_VALUE.invoke(null, instance, n);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetToolTipText() {
+		//
+		Assertions.assertDoesNotThrow(() -> setToolTipText(new JTextField(), null));
+		//
+	}
+
+	private static void setToolTipText(final JComponent instance, final String toolTipText) throws Throwable {
+		try {
+			METHOD_SET_TOOL_TIP_TEXT.invoke(null, instance, toolTipText);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testFormat() throws Throwable {
+		//
+		Assertions.assertEquals(null, format(null, 0d));
+		//
+	}
+
+	private static String format(final NumberFormat instance, final double number) throws Throwable {
+		try {
+			final Object obj = METHOD_FORMAT.invoke(null, instance, number);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
