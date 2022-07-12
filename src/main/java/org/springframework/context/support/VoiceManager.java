@@ -113,7 +113,10 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 
 	private static Logger LOG = LoggerFactory.getLogger(VoiceManager.class);
 
-	private static Pattern PATTERN_CONTENT_INFO_MP3 = Pattern.compile("^MPEG ADTS, layer III.+$");
+	private static Pattern PATTERN_CONTENT_INFO_MESSAGE_MP3_1 = Pattern.compile("^MPEG ADTS, layer III.+$");
+
+	private static Pattern PATTERN_CONTENT_INFO_MESSAGE_MP3_2 = Pattern
+			.compile("^Audio file with ID3 version (\\d+(\\.\\d+)?), MP3 encoding$");
 
 	private static final String WRAP = "wrap";
 
@@ -1676,8 +1679,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 		final String messgae = ci.getMessage();
 		//
-		if (matches(PATTERN_CONTENT_INFO_MP3 != null && messgae != null ? PATTERN_CONTENT_INFO_MP3.matcher(messgae)
-				: null)) {
+		if (matches(matcher(PATTERN_CONTENT_INFO_MESSAGE_MP3_1, messgae))
+				|| matches(matcher(PATTERN_CONTENT_INFO_MESSAGE_MP3_2, messgae))) {
 			//
 			return "mp3";
 			//
@@ -1697,6 +1700,10 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 		return null;
 		//
+	}
+
+	private static Matcher matcher(final Pattern pattern, final CharSequence input) {
+		return pattern != null && input != null ? pattern.matcher(input) : null;
 	}
 
 	private static Clipboard getSystemClipboard(final Toolkit instance) {
