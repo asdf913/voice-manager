@@ -292,6 +292,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		add(progressBar = new JProgressBar(), String.format("span %1$s,growx,%2$s", 4, WRAP));
 		//
+		progressBar.setStringPainted(true);
+		//
 		add(new JLabel("Folder"));
 		//
 		add(tfFolder = new JTextField(folder != null ? folder.getAbsolutePath() : null), wrap);
@@ -974,11 +976,14 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 					//
 					if (count != null) {
 						//
-						setToolTipText(progressBar, String.format("%1$s/%2$s (%3$s)", counter, count,
-								format(percentNumberFormat, counter.intValue() * 1.0 / count.intValue())));
+						final String string = String.format("%1$s/%2$s (%3$s)", counter, count,
+								format(percentNumberFormat, counter.intValue() * 1.0 / count.intValue()));
+						//
+						setToolTipText(progressBar, string);
+						//
+						setString(progressBar, string);
 						//
 					} // if
-						//
 						//
 				} // if
 					//
@@ -995,6 +1000,12 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	private static void setValue(final JProgressBar instance, final int n) {
 		if (instance != null) {
 			instance.setValue(n);
+		}
+	}
+
+	private static void setString(final JProgressBar instance, final String string) {
+		if (instance != null) {
+			instance.setString(string);
 		}
 	}
 
@@ -1112,7 +1123,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 							//
 							(it = new ImportTask()).counter = Integer.valueOf(row.getRowNum());
 							//
-							it.count = sheet.getPhysicalNumberOfRows();
+							it.count = Integer.valueOf(sheet.getPhysicalNumberOfRows() - 1);
 							//
 							it.percentNumberFormat = ObjectUtils.getIfNull(percentNumberFormat,
 									() -> new DecimalFormat("#%"));
@@ -1485,8 +1496,12 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 					//
 					if (count != null) {
 						//
-						setToolTipText(progressBar, String.format("%1$s/%2$s (%3$s)", counter, count,
-								format(percentNumberFormat, counter.intValue() * 1.0 / count.intValue())));
+						final String string = String.format("%1$s/%2$s (%3$s)", counter, count,
+								format(percentNumberFormat, counter.intValue() * 1.0 / count.intValue()));
+						//
+						setToolTipText(progressBar, string);
+						//
+						setString(progressBar, string);
 						//
 					} // if
 						//

@@ -99,7 +99,7 @@ class VoiceManagerTest {
 			METHOD_ERROR_OR_PRINT_LN, METHOD_ADD, METHOD_CREATE_IMPORT_FILE_TEMPLATE_BYTE_ARRAY,
 			METHOD_GET_DECLARED_ANNOTATIONS, METHOD_CREATE_CELL, METHOD_SET_CELL_VALUE, METHOD_ANY_MATCH,
 			METHOD_COLLECT, METHOD_NAME, METHOD_GET_SELECTED_ITEM, METHOD_WRITE, METHOD_MATCHER, METHOD_SET_VALUE,
-			METHOD_SET_TOOL_TIP_TEXT, METHOD_FORMAT = null;
+			METHOD_SET_STRING, METHOD_SET_TOOL_TIP_TEXT, METHOD_FORMAT = null;
 
 	@BeforeAll
 	private static void beforeAll() throws ReflectiveOperationException {
@@ -219,6 +219,8 @@ class VoiceManagerTest {
 		(METHOD_MATCHER = clz.getDeclaredMethod("matcher", Pattern.class, CharSequence.class)).setAccessible(true);
 		//
 		(METHOD_SET_VALUE = clz.getDeclaredMethod("setValue", JProgressBar.class, Integer.TYPE)).setAccessible(true);
+		//
+		(METHOD_SET_STRING = clz.getDeclaredMethod("setString", JProgressBar.class, String.class)).setAccessible(true);
 		//
 		(METHOD_SET_TOOL_TIP_TEXT = clz.getDeclaredMethod("setToolTipText", JComponent.class, String.class))
 				.setAccessible(true);
@@ -1645,6 +1647,21 @@ class VoiceManagerTest {
 	private static void setValue(final JProgressBar instance, final int n) throws Throwable {
 		try {
 			METHOD_SET_VALUE.invoke(null, instance, n);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetString() {
+		//
+		Assertions.assertDoesNotThrow(() -> setString(new JProgressBar(), null));
+		//
+	}
+
+	private static void setString(final JProgressBar instance, final String string) throws Throwable {
+		try {
+			METHOD_SET_STRING.invoke(null, instance, string);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
