@@ -1,7 +1,5 @@
 package org.springframework.context.support;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import java.awt.Component;
 import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
@@ -47,6 +45,7 @@ import java.util.stream.Stream;
 import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JProgressBar;
 import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
 
@@ -146,8 +145,8 @@ class VoiceManagerTest {
 		//
 		(METHOD_GET_SOURCE = clz.getDeclaredMethod("getSource", EventObject.class)).setAccessible(true);
 		//
-		(METHOD_EXPORT = clz.getDeclaredMethod("export", List.class, Map.class, String.class, String.class))
-				.setAccessible(true);
+		(METHOD_EXPORT = clz.getDeclaredMethod("export", List.class, Map.class, String.class, String.class,
+				JProgressBar.class)).setAccessible(true);
 		//
 		(METHOD_MAP = clz.getDeclaredMethod("map", Stream.class, Function.class)).setAccessible(true);
 		//
@@ -891,38 +890,43 @@ class VoiceManagerTest {
 	@Test
 	void testExport() {
 		//
-		Assertions.assertDoesNotThrow(() -> export(Collections.singletonList(null), null, null, null));
+		final JProgressBar progressBar = new JProgressBar();
+		//
+		Assertions.assertDoesNotThrow(() -> export(null, null, null, null, progressBar));
+		//
+		//
+		Assertions.assertDoesNotThrow(() -> export(Collections.singletonList(null), null, null, null, progressBar));
 		//
 		final Voice voice = new Voice();
 		//
 		final List<Voice> voices = Collections.singletonList(voice);
 		//
-		Assertions.assertDoesNotThrow(() -> export(voices, null, null, null));
+		Assertions.assertDoesNotThrow(() -> export(voices, null, null, null, null));
 		//
 		voice.setFilePath("");
 		//
-		Assertions.assertDoesNotThrow(() -> export(voices, null, null, null));
+		Assertions.assertDoesNotThrow(() -> export(voices, null, null, null, null));
 		//
-		Assertions.assertDoesNotThrow(() -> export(voices, Collections.emptyMap(), null, null));
+		Assertions.assertDoesNotThrow(() -> export(voices, Collections.emptyMap(), null, null, null));
 		//
-		Assertions.assertDoesNotThrow(() -> export(voices, Reflection.newProxy(Map.class, ih), null, null));
+		Assertions.assertDoesNotThrow(() -> export(voices, Reflection.newProxy(Map.class, ih), null, null, null));
 		//
-		Assertions.assertDoesNotThrow(() -> export(voices, Collections.singletonMap(null, null), null, null));
+		Assertions.assertDoesNotThrow(() -> export(voices, Collections.singletonMap(null, null), null, null, null));
 		//
-		Assertions.assertDoesNotThrow(() -> export(voices, Collections.singletonMap("", null), null, null));
+		Assertions.assertDoesNotThrow(() -> export(voices, Collections.singletonMap("", null), null, null, null));
 		//
-		Assertions.assertDoesNotThrow(() -> export(voices, Collections.singletonMap("", ""), null, null));
+		Assertions.assertDoesNotThrow(() -> export(voices, Collections.singletonMap("", ""), null, null, null));
 		//
-		Assertions.assertDoesNotThrow(() -> export(voices, Collections.singletonMap("", " "), null, null));
+		Assertions.assertDoesNotThrow(() -> export(voices, Collections.singletonMap("", " "), null, null, null));
 		//
-		Assertions.assertDoesNotThrow(() -> export(voices, Collections.singletonMap("", "true"), null, null));
+		Assertions.assertDoesNotThrow(() -> export(voices, Collections.singletonMap("", "true"), null, null, null));
 		//
 	}
 
 	private static void export(final List<Voice> voices, final Map<String, String> outputFolderFileNameExpressions,
-			final String voiceFolder, final String outputFolder) throws Throwable {
+			final String voiceFolder, final String outputFolder, final JProgressBar progressBar) throws Throwable {
 		try {
-			METHOD_EXPORT.invoke(null, voices, outputFolderFileNameExpressions, voiceFolder, outputFolder);
+			METHOD_EXPORT.invoke(null, voices, outputFolderFileNameExpressions, voiceFolder, outputFolder, progressBar);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

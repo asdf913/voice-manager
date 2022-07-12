@@ -38,6 +38,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -58,6 +60,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JProgressBar;
 import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
 
@@ -129,6 +132,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 
 	private AbstractButton btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji, btnExecute, btnImportFileTemplate,
 			btnImport, btnExport = null;
+
+	private JProgressBar progressBar = null;
 
 	private SqlSessionFactory sqlSessionFactory = null;
 
@@ -265,7 +270,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		add(btnConvertToKatakana = new JButton("Convert"), WRAP);
 		//
-		//
 		add(new JLabel("Katakana"));
 		//
 		add(tfKatakana = new JTextField(
@@ -282,6 +286,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		add(btnImportFileTemplate = new JButton("Import File Template"));
 		//
 		add(btnImport = new JButton("Import"), WRAP);
+		//
+		add(progressBar = new JProgressBar(), String.format("span %1$s,growx,%2$s", 4, WRAP));
 		//
 		add(new JLabel("Folder"));
 		//
@@ -529,7 +535,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				//
 				final List<Voice> voices = voiceMapper != null ? voiceMapper.retrieveAll() : null;
 				//
-				export(voices, outputFolderFileNameExpressions, voiceFolder, outputFolder);
+				export(voices, outputFolderFileNameExpressions, voiceFolder, outputFolder, progressBar);
 				//
 				try (final OutputStream os = new FileOutputStream(
 						file = new File(String.format("voice_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.xlsx", new Date())))) {
@@ -621,9 +627,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 					//
 			} // if
 				//
-		} else if (Objects.equals(source, btnImport))
-
-		{
+		} else if (Objects.equals(source, btnImport)) {
 			//
 			final JFileChooser jfc = new JFileChooser(".");
 			//
@@ -1274,54 +1278,155 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 	}
 
+	private static class ExportTask implements Runnable {
+
+		private Integer counter = null;
+
+		private Voice voice = null;
+
+		private Map<String, String> outputFolderFileNameExpressions = null;
+
+		private EvaluationContext evaluationContext = null;
+
+		private String voiceFolder = null;
+
+		private String outputFolder = null;
+
+		private JProgressBar progressBar = null;
+
+		private ExpressionParser expressionParser = null;
+
+		@Override
+		public void run() {
+			//
+			try {
+				//
+				final String filePath = voice != null ? voice.getFilePath() : null;
+				//
+				if (filePath == null || outputFolderFileNameExpressions == null
+						|| outputFolderFileNameExpressions.entrySet() == null) {
+					//
+					return;
+					//
+				} // if
+					//
+				setVariable(evaluationContext, "voice", voice);
+				//
+				String key, value = null;
+				//
+				File fileSource, folder = null;
+				//
+				for (final Entry<String, String> folderFileNamePattern : outputFolderFileNameExpressions.entrySet()) {
+					//
+					if (folderFileNamePattern == null || (key = folderFileNamePattern.getKey()) == null
+							|| StringUtils.isBlank(value = folderFileNamePattern.getValue())
+							|| !(fileSource = voiceFolder != null ? new File(voiceFolder, filePath)
+									: new File(filePath)).exists()) {
+						continue;
+					} // if
+						//
+					FileUtils.copyFile(fileSource,
+							new File(
+									(folder = ObjectUtils.getIfNull(folder,
+											() -> outputFolder != null ? new File(outputFolder) : null)) != null
+													? new File(folder, key)
+													: new File(key),
+									VoiceManager.toString(getValue(expressionParser, evaluationContext, value))));
+					//
+				} // for
+					//
+				if (counter != null) {
+					//
+					setValue(progressBar, counter.intValue());
+					//
+				} // if
+					//
+			} catch (final IOException e) {
+				//
+				if (GraphicsEnvironment.isHeadless()) {
+					//
+					if (LOG != null) {
+						LOG.error(getMessage(e), e);
+					} else if (e != null) {
+						e.printStackTrace();
+					} // if
+						//
+				} else {
+					//
+					JOptionPane.showMessageDialog(null, getMessage(e));
+					//
+				} // if
+					//
+			} // try
+				//
+		}
+
+		private static void setValue(final JProgressBar instance, final int n) {
+			if (instance != null) {
+				instance.setValue(n);
+			}
+		}
+
+	}
+
 	private static void export(final List<Voice> voices, final Map<String, String> outputFolderFileNameExpressions,
-			final String voiceFolder, final String outputFolder) throws IOException {
+			final String voiceFolder, final String outputFolder, final JProgressBar progressBar) throws IOException {
 		//
-		Voice voice = null;
-		//
+		if (progressBar != null) {
+			//
+			progressBar.setMaximum(Math.max(0, voices != null ? voices.size() : 0));
+			//
+		} // if
+			//
 		EvaluationContext evaluationContext = null;
-		//
-		File folder = null;
 		//
 		ExpressionParser expressionParser = null;
 		//
-		String filePath = null;
+		ExecutorService es = null;
 		//
-		String key = null;
+		ExportTask et = null;
 		//
-		String value = null;
-		//
-		File fileSource = null;
-		//
-		for (int i = 0; voices != null && i < voices.size(); i++) {
+		try {
 			//
-			if ((voice = voices.get(i)) == null || (filePath = voice.getFilePath()) == null
-					|| outputFolderFileNameExpressions == null || outputFolderFileNameExpressions.entrySet() == null) {
-				continue;
-			} // if
+			for (int i = 0; voices != null && i < voices.size(); i++) {
 				//
-			setVariable(evaluationContext = ObjectUtils.getIfNull(evaluationContext, StandardEvaluationContext::new),
-					"voice", voice);
-			//
-			for (final Entry<String, String> folderFileNamePattern : outputFolderFileNameExpressions.entrySet()) {
-				//
-				if (folderFileNamePattern == null || (key = folderFileNamePattern.getKey()) == null
-						|| StringUtils.isBlank(value = folderFileNamePattern.getValue())
-						|| !(fileSource = voiceFolder != null ? new File(voiceFolder, filePath) : new File(filePath))
-								.exists()) {
+				if ((es = ObjectUtils.getIfNull(es, () -> Executors.newFixedThreadPool(1))) == null) {
+					//
 					continue;
+					//
 				} // if
-					// //
-				FileUtils.copyFile(fileSource,
-						new File((folder = ObjectUtils.getIfNull(folder,
-								() -> outputFolder != null ? new File(outputFolder) : null)) != null ? new File(folder,
-										key) : new File(key),
-								toString(getValue(expressionParser = ObjectUtils.getIfNull(expressionParser,
-										SpelExpressionParser::new), evaluationContext, value))));
+					//
+				(et = new ExportTask()).counter = Integer.valueOf(i + 1);
+				//
+				et.evaluationContext = evaluationContext = ObjectUtils.getIfNull(evaluationContext,
+						StandardEvaluationContext::new);
+				//
+				et.expressionParser = expressionParser = ObjectUtils.getIfNull(expressionParser,
+						SpelExpressionParser::new);
+				//
+				et.outputFolder = outputFolder;
+				//
+				et.outputFolderFileNameExpressions = outputFolderFileNameExpressions;
+				//
+				et.progressBar = progressBar;
+				//
+				et.voice = voices.get(i);
+				//
+				et.voiceFolder = voiceFolder;
+				//
+				es.submit(et);
 				//
 			} // for
 				//
-		} // for
+		} finally {
+			//
+			if (es != null) {
+				//
+				es.shutdown();
+				//
+			} // if
+				//
+		} // try
 			//
 	}
 
