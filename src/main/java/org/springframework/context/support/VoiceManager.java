@@ -678,8 +678,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 					//
 				} // if
 					//
-				SqlSession sqlSession = null;
-				//
 				try (final Workbook workbook = new XSSFWorkbook(selectedFile)) {
 					//
 					final ObjectMap objectMap = Reflection.newProxy(ObjectMap.class, new IH());
@@ -688,12 +686,13 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 						//
 						objectMap.setObject(File.class, selectedFile);
 						//
-						objectMap.setObject(VoiceMapper.class, getMapper(getConfiguration(sqlSessionFactory),
-								VoiceMapper.class, sqlSession = openSession(sqlSessionFactory)));
-						//
 						objectMap.setObject(VoiceManager.class, this);
 						//
 						objectMap.setObject(String.class, voiceFolder);
+						//
+						objectMap.setObject(SqlSessionFactory.class, sqlSessionFactory);
+						//
+						objectMap.setObject(JProgressBar.class, progressBar);
 						//
 					} // if
 						//
@@ -702,6 +701,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 					Consumer<String> errorMessageConsumer = null;
 					//
 					Consumer<Throwable> throwableConsumer = null;
+					//
+					Sheet sheet = null;
 					//
 					for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
 						//
@@ -749,7 +750,16 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 							//
 						} // if
 							//
-						importVoice(workbook.getSheetAt(i), objectMap, errorMessageConsumer, throwableConsumer);
+						sheet = workbook.getSheetAt(i);
+						//
+						if (progressBar != null) {
+							//
+							progressBar
+									.setMaximum(Math.max(0, (sheet != null ? sheet.getPhysicalNumberOfRows() : 0) - 1));
+							//
+						} // if
+							//
+						importVoice(sheet, objectMap, errorMessageConsumer, throwableConsumer);
 						//
 					} // for
 						//
@@ -769,10 +779,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 						//
 					} // if
 						//
-				} finally {
-					//
-					IOUtils.closeQuietly(sqlSession);
-					//
 				} // try
 					//
 			} // if
@@ -917,6 +923,58 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 
 	}
 
+	private static class ImportTask implements Runnable {
+
+		private Integer counter = null;
+
+		private ObjectMap objectMap = null;
+
+		private Consumer<String> errorMessageConsumer = null;
+
+		private Consumer<Throwable> throwableConsumer = null;
+
+		private Voice voice = null;
+
+		private File file = null;
+
+		@Override
+		public void run() {
+			//
+			SqlSession sqlSession = null;
+			//
+			try {
+				//
+				if (objectMap != null) {
+					//
+					final SqlSessionFactory sqlSessionFactory = ObjectMap.getObject(objectMap, SqlSessionFactory.class);
+					//
+					objectMap.setObject(VoiceMapper.class, getMapper(getConfiguration(sqlSessionFactory),
+							VoiceMapper.class, sqlSession = openSession(sqlSessionFactory)));
+					//
+					objectMap.setObject(Voice.class, voice);
+					//
+					objectMap.setObject(File.class, file);
+					//
+				} // if
+					//
+				importVoice(objectMap, errorMessageConsumer, throwableConsumer);
+				//
+				if (counter != null) {
+					//
+					setValue(ObjectMap.getObject(objectMap, JProgressBar.class), counter.intValue());
+					//
+				} // if
+					//
+			} finally {
+				//
+				IOUtils.closeQuietly(sqlSession);
+				//
+			} //
+				//
+		}
+
+	}
+
 	private static void importVoice(final Sheet sheet, final ObjectMap objectMap,
 			final Consumer<String> errorMessageConsumer, final Consumer<Throwable> throwableConsumer)
 			throws IllegalAccessException {
@@ -927,101 +985,143 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		List<Field> fieldOrder = null;
 		//
-		if (sheet != null && sheet.iterator() != null) {
+		ExecutorService es = null;
+		//
+		try {
 			//
-			boolean first = true;
-			//
-			Field[] fs = null;
-			//
-			Voice voice = null;
-			//
-			Field f = null;
-			//
-			int columnIndex;
-			//
-			Class<?> type = null;
-			//
-			List<?> list = null;
-			//
-			for (final Row row : sheet) {
+			if (sheet != null && sheet.iterator() != null) {
 				//
-				if (row == null || row.iterator() == null) {
-					continue;
-				} // if
-					//
-				voice = null;
+				boolean first = true;
 				//
-				for (final Cell cell : row) {
+				Field[] fs = null;
+				//
+				Voice voice = null;
+				//
+				Field f = null;
+				//
+				int columnIndex;
+				//
+				Class<?> type = null;
+				//
+				List<?> list = null;
+				//
+				ImportTask it = null;
+				//
+				for (final Row row : sheet) {
 					//
-					if (cell == null) {
+					if (row == null || row.iterator() == null) {
 						continue;
 					} // if
 						//
-					if (first) {
+					voice = null;
+					//
+					for (final Cell cell : row) {
 						//
-						if (fs == null) {
-							//
-							fs = FieldUtils.getAllFields(Voice.class);
-							//
+						if (cell == null) {
+							continue;
 						} // if
 							//
-						add(fieldOrder = ObjectUtils.getIfNull(fieldOrder, ArrayList::new),
-								orElse(findFirst(testAndApply(Objects::nonNull, fs, Arrays::stream, null)
-										.filter(field -> Objects.equals(getName(field), cell.getStringCellValue()))),
-										null));
-						//
-					} else if (fieldOrder.size() > (columnIndex = cell.getColumnIndex())
-							&& (f = fieldOrder.get(columnIndex)) != null) {
-						//
-						f.setAccessible(true);
-						//
-						if (Objects.equals(type = f.getType(), String.class)) {
+						if (first) {
 							//
-							f.set(voice = ObjectUtils.getIfNull(voice, Voice::new), cell.getStringCellValue());
-							//
-						} else if (type != null && Enum.class.isAssignableFrom(type) && (list = collect(
-								filter(testAndApply(Objects::nonNull, type.getEnumConstants(), Arrays::stream, null),
-										e -> Objects.equals(name(cast(Enum.class, e)), cell.getStringCellValue())),
-								Collectors.toList())) != null && !list.isEmpty()) {
-							//
-							if (list.size() == 1) {
+							if (fs == null) {
 								//
-								f.set(voice = ObjectUtils.getIfNull(voice, Voice::new), list.get(0));
-								//
-							} else {
-								//
-								throw new IllegalStateException("list.size()>1");
+								fs = FieldUtils.getAllFields(Voice.class);
 								//
 							} // if
 								//
+							add(fieldOrder = ObjectUtils.getIfNull(fieldOrder, ArrayList::new),
+									orElse(findFirst(testAndApply(Objects::nonNull, fs, Arrays::stream, null).filter(
+											field -> Objects.equals(getName(field), cell.getStringCellValue()))),
+											null));
+							//
+						} else if (fieldOrder.size() > (columnIndex = cell.getColumnIndex())
+								&& (f = fieldOrder.get(columnIndex)) != null) {
+							//
+							f.setAccessible(true);
+							//
+							if (Objects.equals(type = f.getType(), String.class)) {
+								//
+								f.set(voice = ObjectUtils.getIfNull(voice, Voice::new), cell.getStringCellValue());
+								//
+							} else if (type != null && Enum.class.isAssignableFrom(type)
+									&& (list = collect(filter(
+											testAndApply(Objects::nonNull, type.getEnumConstants(), Arrays::stream,
+													null),
+											e -> Objects.equals(name(cast(Enum.class, e)), cell.getStringCellValue())),
+											Collectors.toList())) != null
+									&& !list.isEmpty()) {
+								//
+								if (list.size() == 1) {
+									//
+									f.set(voice = ObjectUtils.getIfNull(voice, Voice::new), list.get(0));
+									//
+								} else {
+									//
+									throw new IllegalStateException("list.size()>1");
+									//
+								} // if
+									//
+							} // if
+								//
+						} // if
+							//
+					} // for
+						//
+					if (first) {
+						//
+						first = false;
+						//
+					} else {
+						//
+						if ((es = ObjectUtils.getIfNull(es, () -> Executors.newFixedThreadPool(1))) != null) {
+							//
+							(it = new ImportTask()).counter = Integer.valueOf(row.getRowNum());
+							//
+							it.voice = voice;
+							//
+							it.file = voice != null ? new File(folder, voice.getFilePath()) : folder;
+							//
+							it.objectMap = objectMap;
+							//
+							it.errorMessageConsumer = errorMessageConsumer;
+							//
+							it.throwableConsumer = throwableConsumer;
+							//
+							es.submit(it);
+							//
+						} else {
+							//
+							if (objectMap != null) {
+								//
+								objectMap.setObject(Voice.class, voice);
+								//
+								objectMap.setObject(File.class,
+										voice != null ? new File(folder, voice.getFilePath()) : folder);
+								//
+							} // if
+								//
+							importVoice(objectMap, errorMessageConsumer, throwableConsumer);
+							//
 						} // if
 							//
 					} // if
 						//
 				} // for
 					//
-				if (first) {
-					//
-					first = false;
-					//
-				} else {
-					//
-					if (objectMap != null) {
-						//
-						objectMap.setObject(Voice.class, voice);
-						//
-						objectMap.setObject(File.class, voice != null ? new File(folder, voice.getFilePath()) : folder);
-						//
-					} // if
-						//
-					importVoice(objectMap, errorMessageConsumer, throwableConsumer);
-					//
-				} // if
-					//
-			} // for
+			} // if
 				//
-		} // if
+		} finally {
 			//
+			shutdown(es);
+			//
+		} // try
+			//
+	}
+
+	private static void shutdown(final ExecutorService instance) {
+		if (instance != null) {
+			instance.shutdown();
+		}
 	}
 
 	private static String name(final Enum<?> instance) {
@@ -1361,12 +1461,12 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				//
 		}
 
-		private static void setValue(final JProgressBar instance, final int n) {
-			if (instance != null) {
-				instance.setValue(n);
-			}
-		}
+	}
 
+	private static void setValue(final JProgressBar instance, final int n) {
+		if (instance != null) {
+			instance.setValue(n);
+		}
 	}
 
 	private static void export(final List<Voice> voices, final Map<String, String> outputFolderFileNameExpressions,
@@ -1420,12 +1520,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				//
 		} finally {
 			//
-			if (es != null) {
-				//
-				es.shutdown();
-				//
-			} // if
-				//
+			shutdown(es);
+			//
 		} // try
 			//
 	}

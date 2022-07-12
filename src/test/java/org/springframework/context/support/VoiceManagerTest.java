@@ -96,7 +96,8 @@ class VoiceManagerTest {
 			METHOD_FILTER, METHOD_SET_TEXT, METHOD_GET_PREFERRED_WIDTH, METHOD_IMPORT_VOICE3, METHOD_IMPORT_VOICE4,
 			METHOD_ERROR_OR_PRINT_LN, METHOD_ADD, METHOD_CREATE_IMPORT_FILE_TEMPLATE_BYTE_ARRAY,
 			METHOD_GET_DECLARED_ANNOTATIONS, METHOD_CREATE_CELL, METHOD_SET_CELL_VALUE, METHOD_ANY_MATCH,
-			METHOD_COLLECT, METHOD_NAME, METHOD_GET_SELECTED_ITEM, METHOD_WRITE, METHOD_MATCHER = null;
+			METHOD_COLLECT, METHOD_NAME, METHOD_GET_SELECTED_ITEM, METHOD_WRITE, METHOD_MATCHER,
+			METHOD_SET_VALUE = null;
 
 	@BeforeAll
 	private static void beforeAll() throws ReflectiveOperationException {
@@ -214,6 +215,8 @@ class VoiceManagerTest {
 		(METHOD_WRITE = clz.getDeclaredMethod("write", Workbook.class, OutputStream.class)).setAccessible(true);
 		//
 		(METHOD_MATCHER = clz.getDeclaredMethod("matcher", Pattern.class, CharSequence.class)).setAccessible(true);
+		//
+		(METHOD_SET_VALUE = clz.getDeclaredMethod("setValue", JProgressBar.class, Integer.TYPE)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -1626,6 +1629,21 @@ class VoiceManagerTest {
 	}
 
 	@Test
+	void testSetValue() {
+		//
+		Assertions.assertDoesNotThrow(() -> setValue(new JProgressBar(), 0));
+		//
+	}
+
+	private static void setValue(final JProgressBar instance, final int n) throws Throwable {
+		try {
+			METHOD_SET_VALUE.invoke(null, instance, n);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
 	void testIh() throws Throwable {
 		//
 		final Constructor<?> constructor = CLASS_IH != null ? CLASS_IH.getDeclaredConstructor(VoiceManager.class)
@@ -1668,6 +1686,35 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
+	}
+
+	@Test
+	void testImportTask() throws Throwable {
+		//
+		final Class<?> clz = forName("org.springframework.context.support.VoiceManager$ImportTask");
+		//
+		final Constructor<?> constructor = clz != null ? clz.getDeclaredConstructor() : null;
+		//
+		if (constructor != null) {
+			//
+			constructor.setAccessible(true);
+			//
+		} // if
+			//
+		final Runnable runnable = cast(Runnable.class, constructor != null ? constructor.newInstance() : null);
+		//
+		Assertions.assertDoesNotThrow(() -> run(runnable));
+		//
+		FieldUtils.writeDeclaredField(runnable, "counter", Integer.valueOf(0), true);
+		//
+		Assertions.assertDoesNotThrow(() -> run(runnable));
+		//
+	}
+
+	private static void run(final Runnable instance) {
+		if (instance != null) {
+			instance.run();
+		}
 	}
 
 }
