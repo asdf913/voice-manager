@@ -249,7 +249,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		// Voice Id
 		//
-		add(new JLabel());
+		add(new JLabel("Voice Id"));
 		//
 		final String[] voiceIds = speechApi != null ? speechApi.getVoiceIds() : null;
 		//
