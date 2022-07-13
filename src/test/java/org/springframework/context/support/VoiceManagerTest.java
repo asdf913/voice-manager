@@ -29,6 +29,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.EventObject;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -55,6 +56,7 @@ import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
 
 import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -72,6 +74,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
+import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertyResolver;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
@@ -250,7 +253,7 @@ class VoiceManagerTest {
 
 		private Set<Entry<?, ?>> entrySet = null;
 
-		private String toString, property, stringCellValue = null;
+		private String toString, stringCellValue = null;
 
 		private Configuration configuration = null;
 
@@ -267,6 +270,15 @@ class VoiceManagerTest {
 		private Boolean anyMatch = null;
 
 		private String[] voiceIds = null;
+
+		private Map<Object, String> properties = null;
+
+		public Map<Object, String> getProperties() {
+			if (properties == null) {
+				properties = new LinkedHashMap<>();
+			}
+			return properties;
+		}
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -319,9 +331,9 @@ class VoiceManagerTest {
 					//
 			} else if (proxy instanceof PropertyResolver) {
 				//
-				if (Objects.equals(methodName, "getProperty")) {
+				if (Objects.equals(methodName, "getProperty") && args != null && args.length > 0) {
 					//
-					return property;
+					return MapUtils.getObject(getProperties(), args[0]);
 					//
 				} // if
 					//
@@ -624,6 +636,14 @@ class VoiceManagerTest {
 			ih.voiceIds = new String[] { null, null };
 			//
 			Assertions.assertThrows(IllegalStateException.class, () -> init());
+			//
+			ih.voiceIds = new String[] { null };
+			//
+			instance.setEnvironment(Reflection.newProxy(Environment.class, ih));
+			//
+			ih.getProperties().put("org.springframework.context.support.VoiceManager.speechVolume", "100");
+			//
+			Assertions.assertDoesNotThrow(() -> init());
 			//
 		} // if
 			//
@@ -1809,17 +1829,11 @@ class VoiceManagerTest {
 	@Test
 	void testValueOf() throws Throwable {
 		//
-		Assertions.assertNull(valueOf(null));
-		//
 		Assertions.assertNull(valueOf(""));
 		//
 		Assertions.assertNull(valueOf(" "));
 		//
 		Assertions.assertNull(valueOf("A"));
-		//
-		final int one = 1;
-		//
-		Assertions.assertSame(Integer.valueOf(one), valueOf(Integer.toString(one)));
 		//
 	}
 

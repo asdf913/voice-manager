@@ -297,7 +297,14 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 						: null,
 				0), intValue(upperEnpoint, 100)), String.format("span %1$s,growx", 5));
 		//
-		if (upperEnpoint != null) {
+		final Integer speechVolume = valueOf(
+				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.speechVolume"));
+		//
+		if (speechVolume != null) {
+			//
+			jsSpeechVolume.setValue(Integer.valueOf(Math.min(speechVolume.intValue(), intValue(upperEnpoint, 100))));
+			//
+		} else if (upperEnpoint != null) {
 			//
 			jsSpeechVolume.setValue(upperEnpoint.intValue());
 			//
