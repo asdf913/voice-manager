@@ -133,8 +133,10 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 
 	private ComboBoxModel<Yomi> cbmYomi = null;
 
-	private AbstractButton btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji, btnExecute, btnImportFileTemplate,
-			btnImport, btnExport = null;
+	private ComboBoxModel<String> cbmVoiceId = null;
+
+	private AbstractButton btnSpeak, btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji, btnExecute,
+			btnImportFileTemplate, btnImport, btnExport = null;
 
 	private JProgressBar progressBar = null;
 
@@ -145,6 +147,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	private String outputFolder = null;
 
 	private Map<String, String> outputFolderFileNameExpressions = null;
+
+	private SpeechApi speechApi = null;
 
 	private VoiceManager() {
 	}
@@ -164,6 +168,10 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 
 	public void setOutputFolder(final String outputFolder) {
 		this.outputFolder = outputFolder;
+	}
+
+	public void setSpeechApi(final SpeechApi speechApi) {
+		this.speechApi = speechApi;
 	}
 
 	public void setOutputFolderFileNameExpressions(final Object value) throws JsonProcessingException {
@@ -219,12 +227,50 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		add(new JLabel("Text"));
 		//
-		final String span = String.format("span %1$s", 2);
+		final String span = String.format("spanx %1$s,growx", 5);
 		//
 		add(tfText = new JTextField(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.text")), span);
 		//
-		add(btnConvertToRomaji = new JButton("Convert"), WRAP);
+		add(btnConvertToRomaji = new JButton("Convert To Romaji"), String.format("span %1$s,%2$s", 1, WRAP));
+		//
+		add(new JLabel());
+		//
+		final String[] voiceIds = speechApi != null ? speechApi.getVoiceIds() : null;
+		//
+		if ((cbmVoiceId = testAndApply(Objects::nonNull, voiceIds,
+				x -> new DefaultComboBoxModel<>(ArrayUtils.insert(0, x, (String) null)), null)) != null) {
+			//
+			add(new JComboBox<>(cbmVoiceId), String.format("span %1$s", 5));
+			//
+		} // if
+			//
+		if (voiceIds != null) {
+			//
+			final List<?> temp = collect(
+					filter(Arrays.stream(voiceIds),
+							x -> Objects.equals(x,
+									getProperty(propertyResolver,
+											"org.springframework.context.support.VoiceManager.voiceId"))),
+					Collectors.toList());
+			//
+			if (temp != null && !temp.isEmpty()) {
+				//
+				if (temp.size() == 1) {
+					//
+					cbmVoiceId.setSelectedItem(temp.get(0));
+					//
+				} else {
+					//
+					throw new IllegalStateException();
+					//
+				} // if
+					//
+			} // if
+				//
+		} // if
+			//
+		add(btnSpeak = new JButton("Speak"), WRAP);
 		//
 		// yomi
 		//
@@ -264,8 +310,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		add(btnCopyRomaji = new JButton("Copy"), WRAP);
 		//
-		final String wrap = String.format("span %1$s,growx,%2$s", 3, WRAP);
-		//
 		add(new JLabel("Hiragana"));
 		//
 		add(tfHiragana = new JTextField(
@@ -275,12 +319,16 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		add(new JLabel("Katakana"));
 		//
+		String wrap = String.format("span %1$s,growx,%2$s", 5, WRAP);
+		//
 		add(tfKatakana = new JTextField(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.katakana")), wrap);
 		//
 		add(new JLabel());
 		//
-		add(btnExecute = new JButton("Execute"), String.format("span %1$s", 2));
+		add(btnExecute = new JButton("Execute"), WRAP);
+		//
+		add(new JLabel("Export"));
 		//
 		add(btnExport = new JButton("Export"), WRAP);
 		//
@@ -290,13 +338,14 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		add(btnImport = new JButton("Import"), WRAP);
 		//
-		add(progressBar = new JProgressBar(), String.format("span %1$s,growx,%2$s", 4, WRAP));
+		add(progressBar = new JProgressBar(), String.format("span %1$s,growx,%2$s", 7, WRAP));
 		//
 		progressBar.setStringPainted(true);
 		//
 		add(new JLabel("Folder"));
 		//
-		add(tfFolder = new JTextField(folder != null ? folder.getAbsolutePath() : null), wrap);
+		add(tfFolder = new JTextField(folder != null ? folder.getAbsolutePath() : null),
+				wrap = String.format("span %1$s,growx,%2$s", 6, WRAP));
 		//
 		add(new JLabel("File"));
 		//
@@ -312,7 +361,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		setEditable(false, tfFolder, tfFile, tfFileLength, tfFileDigest);
 		//
-		addActionListener(this, btnExecute, btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji,
+		addActionListener(this, btnSpeak, btnExecute, btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji,
 				btnImportFileTemplate, btnImport, btnExport);
 		//
 		setPreferredWidth(intValue(
@@ -404,7 +453,15 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		final Object source = getSource(evt);
 		//
-		if (Objects.equals(source, btnExecute)) {
+		if (Objects.equals(source, btnSpeak)) {
+			//
+			if (speechApi != null) {
+				//
+				speechApi.speak(getText(tfText), toString(getSelectedItem(cbmVoiceId)), 0, 100);// TODO
+				//
+			} // if
+				//
+		} else if (Objects.equals(source, btnExecute)) {
 			//
 			forEach(Stream.of(tfFile, tfFileLength, tfFileDigest), x -> setText(x, null));
 			//

@@ -253,6 +253,8 @@ class VoiceManagerTest {
 
 		private Boolean anyMatch = null;
 
+		private String[] voiceIds = null;
+
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
@@ -374,6 +376,14 @@ class VoiceManagerTest {
 					//
 				} // if
 					//
+			} else if (proxy instanceof SpeechApi) {
+				//
+				if (Objects.equals(methodName, "getVoiceIds")) {
+					//
+					return voiceIds;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(methodName);
@@ -389,6 +399,8 @@ class VoiceManagerTest {
 	private SqlSessionFactory sqlSessionFactory = null;
 
 	private Stream<?> stream = null;
+
+	private SpeechApi speechApi = null;
 
 	@BeforeEach
 	private void beforeEach() throws ReflectiveOperationException {
@@ -406,6 +418,8 @@ class VoiceManagerTest {
 		sqlSessionFactory = Reflection.newProxy(SqlSessionFactory.class, ih = new IH());
 		//
 		stream = Reflection.newProxy(Stream.class, ih);
+		//
+		speechApi = Reflection.newProxy(SpeechApi.class, ih);
 		//
 	}
 
@@ -537,6 +551,26 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnExport));
 		//
+		final AbstractButton btnSpeak = new JButton();
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "btnSpeak", btnSpeak, true);
+			//
+		} // if
+			//
+		final ActionEvent actionEventBtnSpeak = new ActionEvent(btnSpeak, 0, null);
+		//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnSpeak));
+		//
+		if (instance != null) {
+			//
+			instance.setSpeechApi(speechApi);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnSpeak));
+		//
 	}
 
 	private static void actionPerformed(final ActionListener instance, final ActionEvent actionEvent) {
@@ -555,6 +589,20 @@ class VoiceManagerTest {
 			instance.setLayout(new MigLayout());
 			//
 			Assertions.assertDoesNotThrow(() -> init());
+			//
+			instance.setSpeechApi(speechApi);
+			//
+			ih.voiceIds = new String[] {};
+			//
+			Assertions.assertDoesNotThrow(() -> init());
+			//
+			ih.voiceIds = new String[] { null };
+			//
+			Assertions.assertDoesNotThrow(() -> init());
+			//
+			ih.voiceIds = new String[] { null, null };
+			//
+			Assertions.assertThrows(IllegalStateException.class, () -> init());
 			//
 		} // if
 			//
