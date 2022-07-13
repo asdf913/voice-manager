@@ -604,6 +604,18 @@ class VoiceManagerTest {
 			//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnSpeak));
 		//
+		final JTextComponent tfSpeechRate = new JTextField();
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "tfSpeechRate", tfSpeechRate, true);
+			//
+		} // if
+			//
+		tfSpeechRate.setText("MAX_VALUE");
+		//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnSpeak));
+		//
 	}
 
 	private static void actionPerformed(final ActionListener instance, final ActionEvent actionEvent) {
@@ -1832,8 +1844,6 @@ class VoiceManagerTest {
 		Assertions.assertNull(valueOf(""));
 		//
 		Assertions.assertNull(valueOf(" "));
-		//
-		Assertions.assertNull(valueOf("A"));
 		//
 	}
 

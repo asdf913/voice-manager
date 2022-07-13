@@ -24,6 +24,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -134,8 +135,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 
 	private PropertyResolver propertyResolver = null;
 
-	private JTextComponent tfFolder, tfFile, tfFileLength, tfFileDigest, tfText, tfHiragana, tfKatakana,
-			tfRomaji = null;
+	private JTextComponent tfFolder, tfFile, tfFileLength, tfFileDigest, tfText, tfHiragana, tfKatakana, tfRomaji,
+			tfSpeechRate = null;
 
 	private ComboBoxModel<Yomi> cbmYomi = null;
 
@@ -246,6 +247,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		add(btnConvertToRomaji = new JButton("Convert To Romaji"), String.format("span %1$s,%2$s", 1, WRAP));
 		//
+		// Voice Id
+		//
 		add(new JLabel());
 		//
 		final String[] voiceIds = speechApi != null ? speechApi.getVoiceIds() : null;
@@ -284,6 +287,14 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 			// Speech Rate
 			//
+		add(new JLabel("Speech Rate"));
+		//
+		add(tfSpeechRate = new JTextField(
+				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.speechRate")),
+				String.format("span %1$s,growx,%2$s", 5, WRAP));
+		//
+		// Speech Volume
+		//
 		add(new JLabel("Speech Volume"));
 		//
 		final Range<Integer> speechVolumeRange = getVolumnRange();
@@ -657,10 +668,81 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 			if (speechApi != null) {
 				//
-				speechApi.speak(getText(tfText), toString(getSelectedItem(cbmVoiceId)), 0// TODO rate
+				final String rateString = getText(tfSpeechRate);
+				//
+				Integer rate = valueOf(rateString);
+				//
+				if (rate == null) {
+					//
+					final List<Field> fs = collect(filter(
+							testAndApply(Objects::nonNull, Integer.class.getDeclaredFields(), Arrays::stream, null),
+							f -> f != null
+									&& (Number.class.isAssignableFrom(f.getType())
+											|| Objects.equals(Integer.TYPE, f.getType()))
+									&& Objects.equals(getName(f), rateString)),
+							Collectors.toList());
+					//
+					if (fs != null && !fs.isEmpty()) {
+						//
+						final int size = fs.size();
+						//
+						if (size > 1) {
+							//
+							throw new IllegalStateException();
+							//
+						} // if
+							//
+						final Field f = fs.get(0);
+						//
+						if (f != null) {
+							//
+							if (Modifier.isStatic(f.getModifiers())) {
+								//
+								try {
+									//
+									final Number number = cast(Number.class, f.get(null));
+									//
+									if (number != null) {
+										//
+										rate = number.intValue();
+										//
+									} // if
+										//
+								} catch (final IllegalAccessException e) {
+									//
+									if (GraphicsEnvironment.isHeadless()) {
+										//
+										if (LOG != null) {
+											LOG.error(getMessage(e), e);
+										} else if (e != null) {
+											e.printStackTrace();
+										} // if
+											//
+									} else {
+										//
+										JOptionPane.showMessageDialog(null, getMessage(e));
+										//
+									} // if
+										//
+								} // try
+									//
+							} // if
+								//
+						} // if
+							//
+					} // if
+						//
+				} // if
+					//
+				speechApi.speak(getText(tfText), toString(getSelectedItem(cbmVoiceId))
+				//
+						, intValue(rate, 0)// rate
+						//
 						,
 						Math.min(Math.max(intValue(jsSpeechVolume != null ? jsSpeechVolume.getValue() : null, 100), 0),
-								100));
+								100)// volume
+
+				);
 				//
 			} // if
 				//
