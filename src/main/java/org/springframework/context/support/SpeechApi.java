@@ -6,7 +6,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-public interface SpechApi {
+public interface SpeechApi {
 
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.TYPE_USE)
@@ -26,6 +26,6 @@ public interface SpechApi {
 	public void writeVoiceToFile(final String text, final String voiceId, final int rate,
 			@MinValue(0) @MaxValue(100) final int volume, final File file);
 
-	public String[] getVoiceIds(final String requiredAttributes, final String optionalAttributes);
+	public String[] getVoiceIds();
 
 }

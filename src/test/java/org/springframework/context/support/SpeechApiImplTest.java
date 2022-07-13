@@ -11,14 +11,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.OS;
 
-class SpechApiImplTest {
+class SpeechApiImplTest {
 
 	private static Method METHOD_CAST = null;
 
 	@BeforeAll
 	private static void beforeAll() throws ReflectiveOperationException {
 		//
-		final Class<?> clz = Class.forName("org.springframework.context.support.SpechApiImpl$Jna");
+		final Class<?> clz = Class.forName("org.springframework.context.support.SpeechApiImpl$Jna");
 		//
 		if ((METHOD_CAST = clz != null ? clz.getDeclaredMethod("cast", Class.class, Object.class) : null) != null) {
 			//
@@ -28,12 +28,12 @@ class SpechApiImplTest {
 			//
 	}
 
-	private SpechApiImpl instance = null;
+	private SpeechApiImpl instance = null;
 
 	@BeforeEach
 	private void beforeEach() {
 		//
-		instance = new SpechApiImpl();
+		instance = new SpeechApiImpl();
 		//
 	}
 

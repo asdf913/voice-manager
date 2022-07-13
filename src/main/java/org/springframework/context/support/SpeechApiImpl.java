@@ -5,12 +5,17 @@ import java.io.File;
 import org.apache.commons.lang3.StringUtils;
 
 import com.sun.jna.Library;
+import com.sun.jna.Native;
 
-public class SpechApiImpl implements SpechApi {
+public class SpeechApiImpl implements SpeechApi {
 
 	private interface Jna extends Library {
 
-		Jna INSTANCE = (Jna) com.sun.jna.Native.load("MicrosoftSpeechApi.dll", Jna.class);
+		Jna INSTANCE = cast(Jna.class, Native.load("MicrosoftSpeechApi.dll", Jna.class));
+
+		private static <T> T cast(final Class<T> clz, final Object value) {
+			return clz != null && clz.isInstance(value) ? clz.cast(value) : null;
+		}
 
 		public void speak(final int[] text, final int length, final String voiceId, final int rate,
 				@MinValue(0) @MaxValue(100) final int volume);
@@ -25,10 +30,14 @@ public class SpechApiImpl implements SpechApi {
 	@Override
 	public void speak(final String text, final String voiceId, final int rate, final int volume) {
 		//
-		final int[] ints = toIntArray(text);
-		//
-		Jna.INSTANCE.speak(ints, length(ints), voiceId, 0, volume);
-		//
+		if (Jna.INSTANCE != null) {
+			//
+			final int[] ints = toIntArray(text);
+			//
+			Jna.INSTANCE.speak(ints, length(ints), voiceId, 0, volume);
+			//
+		} // if
+			//
 	}
 
 	private static int[] toIntArray(final String text) {
@@ -55,17 +64,21 @@ public class SpechApiImpl implements SpechApi {
 	public void writeVoiceToFile(final String text, final String voiceId, final int rate, final int volume,
 			final File file) {
 		//
-		int[] ints = toIntArray(text);
-		//
-		Jna.INSTANCE.writeVoiceToFile(ints, length(ints), voiceId, 0, volume,
-				ints = toIntArray(file != null ? file.getAbsolutePath() : null), length(ints));
-		//
+		if (Jna.INSTANCE != null) {
+			//
+			int[] ints = toIntArray(text);
+			//
+			Jna.INSTANCE.writeVoiceToFile(ints, length(ints), voiceId, 0, volume,
+					ints = toIntArray(file != null ? file.getAbsolutePath() : null), length(ints));
+			//
+		} // if
+			//
 	}
 
 	@Override
 	public String[] getVoiceIds() {
 		//
-		return StringUtils.split(Jna.INSTANCE.getVoiceIds("", ""), ',');
+		return StringUtils.split(Jna.INSTANCE != null ? Jna.INSTANCE.getVoiceIds("", "") : null, ',');
 		//
 	}
 
