@@ -34,7 +34,7 @@ public class SpeechApiImpl implements SpeechApi {
 			//
 			final int[] ints = toIntArray(text);
 			//
-			Jna.INSTANCE.speak(ints, length(ints), voiceId, 0, volume);
+			Jna.INSTANCE.speak(ints, length(ints), voiceId, rate, volume);
 			//
 		} // if
 			//
