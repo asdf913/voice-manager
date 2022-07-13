@@ -10,21 +10,27 @@ public interface SpeechApi {
 
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.TYPE_USE)
-	public @interface MinValue {
+	@interface MinValue {
 		int value();
 	}
 
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.TYPE_USE)
-	public @interface MaxValue {
+	@interface MaxValue {
 		int value();
 	}
 
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target(ElementType.TYPE_USE)
+	@interface Name {
+		String value();
+	}
+
 	public void speak(final String text, final String voiceId, final int rate,
-			@MinValue(0) @MaxValue(100) final int volume);
+			@MinValue(0) @MaxValue(100) @Name("volume") final int volume);
 
 	public void writeVoiceToFile(final String text, final String voiceId, final int rate,
-			@MinValue(0) @MaxValue(100) final int volume, final File file);
+			@MinValue(0) @MaxValue(100) @Name("volume") final int volume, final File file);
 
 	public String[] getVoiceIds();
 

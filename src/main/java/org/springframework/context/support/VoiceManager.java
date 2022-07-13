@@ -18,6 +18,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -44,6 +45,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -64,10 +67,12 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JProgressBar;
+import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
 
 import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
@@ -102,6 +107,7 @@ import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Range;
 import com.google.common.reflect.Reflection;
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
@@ -139,6 +145,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			btnImportFileTemplate, btnImport, btnExport = null;
 
 	private JProgressBar progressBar = null;
+
+	private JSlider jsSpeechVolume = null;
 
 	private SqlSessionFactory sqlSessionFactory = null;
 
@@ -212,9 +220,13 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		if (object instanceof Map || object == null) {
 			setOutputFolderFileNameExpressions(object);
 		} else {
-			throw new IllegalArgumentException(toString(object.getClass()));
+			throw new IllegalArgumentException(toString(getClass(object)));
 		} // if
 			//
+	}
+
+	private static Class<?> getClass(final Object instance) {
+		return instance != null ? instance.getClass() : null;
 	}
 
 	private static <T> T cast(final Class<T> clz, final Object value) {
@@ -241,7 +253,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		if ((cbmVoiceId = testAndApply(Objects::nonNull, voiceIds,
 				x -> new DefaultComboBoxModel<>(ArrayUtils.insert(0, x, (String) null)), null)) != null) {
 			//
-			add(new JComboBox<>(cbmVoiceId), String.format("span %1$s", 5));
+			add(new JComboBox<>(cbmVoiceId), String.format("span %1$s,%2$s", 5, WRAP));
 			//
 		} // if
 			//
@@ -270,6 +282,31 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				//
 		} // if
 			//
+			// Speech Rate
+			//
+		add(new JLabel("Speech Volume"));
+		//
+		final Range<Integer> speechVolumeRange = getVolumnRange();
+		//
+		final Integer upperEnpoint = speechVolumeRange != null && speechVolumeRange.hasUpperBound()
+				? speechVolumeRange.upperEndpoint()
+				: null;
+		//
+		add(jsSpeechVolume = new JSlider(intValue(
+				speechVolumeRange != null && speechVolumeRange.hasLowerBound() ? speechVolumeRange.lowerEndpoint()
+						: null,
+				0), intValue(upperEnpoint, 100)), String.format("span %1$s,growx", 5));
+		//
+		if (upperEnpoint != null) {
+			//
+			jsSpeechVolume.setValue(upperEnpoint.intValue());
+			//
+		} // if
+			//
+		jsSpeechVolume.setMajorTickSpacing(10);
+		//
+		jsSpeechVolume.setPaintTicks(true);
+		//
 		add(btnSpeak = new JButton("Speak"), WRAP);
 		//
 		// yomi
@@ -373,16 +410,163 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 	}
 
+	private static Range<Integer> getVolumnRange() {
+		//
+		final List<Method> ms = collect(
+				filter(testAndApply(Objects::nonNull, getDeclaredMethods(SpeechApi.class), Arrays::stream, null),
+						m -> Objects.equals(getName(m), "speak")),
+				Collectors.toList());
+		//
+		Integer minValue = null;
+		//
+		Integer maxValue = null;
+		//
+		if (ms != null) {
+			//
+			AnnotatedType[] ats = null;
+			//
+			Map<String, Object> annotationValueMap = null;
+			//
+			Object object = null;
+			//
+			for (final Method m : ms) {
+				//
+				if (m == null || (ats = m.getAnnotatedParameterTypes()) == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				for (final AnnotatedType at : ats) {
+					//
+					if ((annotationValueMap = testAndApply(Objects::nonNull,
+							at != null ? at.getDeclaredAnnotations() : null, Arrays::stream, null)
+							.collect(Collectors.toMap(a -> getSimpleName(annotationType(a)), b -> {
+								//
+								final List<Method> temp = collect(
+										filter(testAndApply(Objects::nonNull, getDeclaredMethods(getClass(b)),
+												Arrays::stream, null), ma -> Objects.equals(getName(ma), "value")),
+										Collectors.toList());
+								//
+								if (temp == null || temp.isEmpty()) {
+									//
+									return null;
+									//
+								} else if (temp.size() == 1 && temp.get(0) != null) {
+									//
+									try {
+										//
+										return temp.get(0).invoke(b);
+										//
+									} catch (final IllegalAccessException e) {
+										//
+										if (GraphicsEnvironment.isHeadless()) {
+											//
+											if (LOG != null) {
+												LOG.error(getMessage(e), e);
+											} else if (e != null) {
+												e.printStackTrace();
+											} // if
+												//
+										} else {
+											//
+											JOptionPane.showMessageDialog(null, getMessage(e));
+											//
+										} // if
+											//
+									} catch (final InvocationTargetException e) {
+										//
+										final Throwable targetException = e.getTargetException();
+										//
+										final Throwable rootCause = ObjectUtils.firstNonNull(
+												ExceptionUtils.getRootCause(targetException), targetException,
+												ExceptionUtils.getRootCause(e), e);
+										//
+										if (GraphicsEnvironment.isHeadless()) {
+											//
+											if (LOG != null) {
+												LOG.error(getMessage(rootCause), rootCause);
+											} else if (rootCause != null) {
+												rootCause.printStackTrace();
+											} // if
+												//
+										} else {
+											//
+											JOptionPane.showMessageDialog(null, getMessage(rootCause));
+											//
+										} // if
+											//
+									} // try
+										//
+								} // if
+									//
+								throw new IllegalArgumentException();
+								//
+							}))) == null || annotationValueMap.isEmpty()
+							|| !Objects.equals(annotationValueMap.get("Name"), "volume")) {
+						//
+						continue;
+						//
+					} // if
+						//
+					if ((object = testAndApply(VoiceManager::containsKey, annotationValueMap, "MinValue",
+							MapUtils::getObject, null)) instanceof Integer) {
+						minValue = (Integer) object;
+					} else if (object instanceof Number) {
+						minValue = Integer.valueOf(((Number) object).intValue());
+					} else {
+						minValue = valueOf(toString(object));
+					} // if
+						//
+					if ((object = testAndApply(VoiceManager::containsKey, annotationValueMap, "MaxValue",
+							MapUtils::getObject, null)) instanceof Integer) {
+						maxValue = (Integer) object;
+					} else if (object instanceof Number) {
+						maxValue = Integer.valueOf(((Number) object).intValue());
+					} else {
+						maxValue = valueOf(toString(object));
+					} // if
+						//
+				} // for
+					//
+			} // for
+				//
+		} // if
+			//
+		if (minValue != null && maxValue != null) {
+			return Range.open(minValue.intValue(), maxValue.intValue());
+		} else if (minValue != null) {
+			return Range.atLeast(minValue.intValue());
+		} else if (maxValue != null) {
+			return Range.atMost(maxValue.intValue());
+		} // if
+			//
+		return null;
+		//
+	}
+
+	private static boolean containsKey(final Map<?, ?> instance, final Object key) {
+		return instance != null && instance.containsKey(key);
+	}
+
+	private static Integer valueOf(final String instance) {
+		try {
+			return StringUtils.isNotBlank(instance) ? Integer.valueOf(instance) : null;
+		} catch (final NumberFormatException e) {
+			return null;
+		}
+	}
+
 	private static <T, R> Stream<R> map(final Stream<T> instance, final Function<? super T, ? extends R> mapper) {
 		//
-		return instance != null && (Proxy.isProxyClass(instance.getClass()) || mapper != null) ? instance.map(mapper)
+		return instance != null && (Proxy.isProxyClass(getClass(instance)) || mapper != null) ? instance.map(mapper)
 				: null;
 		//
 	}
 
 	private static <T> Optional<T> max(final Stream<T> instance, final Comparator<? super T> comparator) {
 		//
-		return instance != null && (Proxy.isProxyClass(instance.getClass()) || comparator != null)
+		return instance != null && (Proxy.isProxyClass(getClass(instance)) || comparator != null)
 				? instance.max(comparator)
 				: null;
 		//
@@ -406,6 +590,15 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	private static <T, R, E extends Throwable> R apply(final FailableFunction<T, R, E> instance, final T value)
 			throws E {
 		return instance != null ? instance.apply(value) : null;
+	}
+
+	private static <T, U, R> R testAndApply(final BiPredicate<T, U> predicate, final T t, final U u,
+			final BiFunction<T, U, R> functionTrue, final BiFunction<T, U, R> functionFalse) {
+		return predicate != null && predicate.test(t, u) ? apply(functionTrue, t, u) : apply(functionFalse, t, u);
+	}
+
+	private static <T, U, R> R apply(final BiFunction<T, U, R> instance, final T t, final U u) {
+		return instance != null ? instance.apply(t, u) : null;
 	}
 
 	private static void setEditable(final boolean editable, final JTextComponent... jtcs) {
@@ -457,7 +650,10 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 			if (speechApi != null) {
 				//
-				speechApi.speak(getText(tfText), toString(getSelectedItem(cbmVoiceId)), 0, 100);// TODO
+				speechApi.speak(getText(tfText), toString(getSelectedItem(cbmVoiceId)), 0// TODO rate
+						,
+						Math.min(Math.max(intValue(jsSpeechVolume != null ? jsSpeechVolume.getValue() : null, 100), 0),
+								100));
 				//
 			} // if
 				//
@@ -865,7 +1061,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 
 	private static void write(final Workbook instance, final OutputStream stream) throws IOException {
 		//
-		if (instance != null && (stream != null || Proxy.isProxyClass(instance.getClass()))) {
+		if (instance != null && (stream != null || Proxy.isProxyClass(getClass(instance)))) {
 			//
 			instance.write(stream);
 			//
@@ -960,14 +1156,14 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 
 	private static <T> boolean anyMatch(final Stream<T> instance, final Predicate<? super T> predicate) {
 		//
-		return instance != null && (predicate != null || Proxy.isProxyClass(instance.getClass()))
+		return instance != null && (predicate != null || Proxy.isProxyClass(getClass(instance)))
 				&& instance.anyMatch(predicate);
 		//
 	}
 
 	private static <T, R, A> R collect(final Stream<T> instance, final Collector<? super T, A, R> collector) {
 		//
-		return instance != null && (collector != null || Proxy.isProxyClass(instance.getClass()))
+		return instance != null && (collector != null || Proxy.isProxyClass(getClass(instance)))
 				? instance.collect(collector)
 				: null;
 		//
@@ -1480,7 +1676,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 
 	private static <T> void forEach(final Stream<T> instance, final Consumer<? super T> action) {
 		//
-		if (instance != null && (action != null || Proxy.isProxyClass(instance.getClass()))) {
+		if (instance != null && (action != null || Proxy.isProxyClass(getClass(instance)))) {
 			instance.forEach(action);
 		} // if
 			//
@@ -1895,6 +2091,10 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		return instance != null ? instance.annotationType() : null;
 	}
 
+	private static String getSimpleName(final Class<?> instance) {
+		return instance != null ? instance.getSimpleName() : null;
+	}
+
 	private static String getName(final Member instance) {
 		return instance != null ? instance.getName() : null;
 	}
@@ -1917,7 +2117,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 
 	private static <T> Stream<T> filter(final Stream<T> instance, final Predicate<? super T> predicate) {
 		//
-		return instance != null && (predicate != null || Proxy.isProxyClass(instance.getClass()))
+		return instance != null && (predicate != null || Proxy.isProxyClass(getClass(instance)))
 				? instance.filter(predicate)
 				: null;
 		//
