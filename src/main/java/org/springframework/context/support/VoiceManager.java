@@ -38,13 +38,16 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.EventObject;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Semaphore;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
@@ -80,6 +83,8 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -744,7 +749,21 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 			if (jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
 				//
-				writeVoiceToFile(jfc.getSelectedFile());
+
+				final ObjectMap objectMap = Reflection.newProxy(ObjectMap.class, new IH());
+				//
+				if (objectMap != null) {
+					//
+				} // if
+					//
+				writeVoiceToFile(objectMap, getText(tfText), toString(getSelectedItem(cbmVoiceId))
+				//
+						, intValue(getRate(getText(tfSpeechRate)), 0)// rate
+						//
+						,
+						Math.min(Math.max(intValue(jsSpeechVolume != null ? jsSpeechVolume.getValue() : null, 100), 0),
+								100)// volume
+				);
 				//
 			} // if
 				//
@@ -1043,6 +1062,10 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 						//
 						objectMap.setObject(Provider.class, cast(Provider.class, speechApi));
 						//
+						objectMap.setObject(SpeechApi.class, speechApi);
+						//
+						objectMap.setObject(Semaphore.class, new Semaphore(1));
+						//
 					} // if
 						//
 					final boolean headless = GraphicsEnvironment.isHeadless();
@@ -1232,17 +1255,19 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 	}
 
-	private void writeVoiceToFile(final File file) {
+	private static void writeVoiceToFile(final ObjectMap objectMap, final String text, final String voiceId,
+			final Integer rate, final Integer volume) {
+		//
+		final SpeechApi speechApi = ObjectMap.getObject(objectMap, SpeechApi.class);
 		//
 		if (speechApi != null) {
 			//
-			speechApi.writeVoiceToFile(getText(tfText), toString(getSelectedItem(cbmVoiceId))
+			speechApi.writeVoiceToFile(text, voiceId
 			//
-					, intValue(getRate(getText(tfSpeechRate)), 0)// rate
+					, intValue(rate, 0)// rate
 					//
-					,
-					Math.min(Math.max(intValue(jsSpeechVolume != null ? jsSpeechVolume.getValue() : null, 100), 0), 100)// volume
-					, file);
+					, Math.min(Math.max(intValue(volume, 100), 0), 100)// volume
+					, ObjectMap.getObject(objectMap, File.class));
 			//
 		} // if
 			//
@@ -1462,8 +1487,16 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 			SqlSession sqlSession = null;
 			//
+			final Semaphore semaphore = ObjectMap.getObject(objectMap, Semaphore.class);
+			//
 			try {
 				//
+				if (semaphore != null) {
+					//
+					semaphore.acquire();
+					//
+				} // if
+					//
 				if (objectMap != null) {
 					//
 					final SqlSessionFactory sqlSessionFactory = ObjectMap.getObject(objectMap, SqlSessionFactory.class);
@@ -1498,10 +1531,20 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 						//
 				} // if
 					//
+			} catch (final InterruptedException e) {
+				//
+				accept(throwableConsumer, e);
+				//
 			} finally {
 				//
 				IOUtils.closeQuietly(sqlSession);
 				//
+				if (semaphore != null) {
+					//
+					semaphore.release();
+					//
+				} // if
+					//
 			} //
 				//
 		}
@@ -1571,6 +1614,10 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				VoiceManager voiceManager = null;
 				//
 				Provider provider = null;
+				//
+				JSlider jsSpeechVolume = null;
+				//
+				Semaphore semaphore = null;
 				//
 				for (final Row row : sheet) {
 					//
@@ -1650,51 +1697,117 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 						//
 						if ((es = ObjectUtils.getIfNull(es, () -> Executors.newFixedThreadPool(1))) != null) {
 							//
-							(it = new ImportTask()).counter = Integer.valueOf(row.getRowNum());
-							//
-							it.count = Integer.valueOf(sheet.getPhysicalNumberOfRows() - 1);
-							//
-							it.percentNumberFormat = ObjectUtils.getIfNull(percentNumberFormat,
-									() -> new DecimalFormat("#%"));
-							//
-							if ((it.voice = voice) != null) {
+							try {
 								//
-								if (StringUtils.isNotBlank(filePath = voice.getFilePath())) {
+								if (semaphore != null) {
 									//
-									it.file = new File(folder, filePath);
-									//
-								} else {
-									//
-									if ((it.file = File.createTempFile(RandomStringUtils.randomAlphabetic(3),
-											filePath)) != null) {
-										//
-										if ((voiceManager = ObjectUtils.getIfNull(voiceManager,
-												() -> ObjectMap.getObject(objectMap, VoiceManager.class))) != null) {
-											//
-											voiceManager.writeVoiceToFile(it.file);
-											//
-										} // if
-											//
-										it.file.deleteOnExit();
-										//
-									} // if
-										//
-									it.voice.setSource(StringUtils.defaultIfBlank(voice.getSource(),
-											getProviderName(provider = ObjectUtils.getIfNull(provider,
-													() -> ObjectMap.getObject(objectMap, Provider.class)))));
+									semaphore.acquire();
 									//
 								} // if
 									//
-							} // if
+								(it = new ImportTask()).counter = Integer.valueOf(row.getRowNum());
 								//
-							it.objectMap = objectMap;
-							//
-							it.errorMessageConsumer = errorMessageConsumer;
-							//
-							it.throwableConsumer = throwableConsumer;
-							//
-							es.submit(it);
-							//
+								it.count = Integer.valueOf(sheet.getPhysicalNumberOfRows() - 1);
+								//
+								it.percentNumberFormat = ObjectUtils.getIfNull(percentNumberFormat,
+										() -> new DecimalFormat("#%"));
+								//
+								if ((it.voice = voice) != null) {
+									//
+									if (StringUtils.isNotBlank(filePath = voice.getFilePath())) {
+										//
+										it.file = new File(folder, filePath);
+										//
+									} else {
+										// \
+										if ((it.file = File.createTempFile(RandomStringUtils.randomAlphabetic(3),
+												filePath)) != null) {
+											//
+											if (objectMap != null) {
+												//
+												objectMap.setObject(File.class, it.file);
+												//
+											} // if
+												//
+											if ((voiceManager = ObjectUtils.getIfNull(voiceManager, () -> ObjectMap
+													.getObject(objectMap, VoiceManager.class))) != null) {
+												//
+												if (jsSpeechVolume == null && voiceManager != null) {
+													jsSpeechVolume = voiceManager.jsSpeechVolume;
+												} // if
+													//
+												if (semaphore == null) {
+													semaphore = ObjectMap.getObject(objectMap, Semaphore.class);
+												} // if
+													//
+												writeVoiceToFile(objectMap, voice.getText(), toString(getSelectedItem(
+														voiceManager != null ? voiceManager.cbmVoiceId : null))
+												//
+														,
+														getRate(getText(voiceManager != null ? voiceManager.tfSpeechRate
+																: null))// rate
+														//
+														,
+														Math.min(Math.max(intValue(
+																jsSpeechVolume != null ? jsSpeechVolume.getValue()
+																		: null,
+																100), 0), 100)// volume
+												);
+												//
+											} // if
+												//
+											it.file.deleteOnExit();
+											//
+										} // if
+											//
+										it.voice.setSource(StringUtils.defaultIfBlank(voice.getSource(),
+												getProviderName(provider = ObjectUtils.getIfNull(provider,
+														() -> ObjectMap.getObject(objectMap, Provider.class)))));
+										//
+									} // if
+										//
+								} // if
+									//
+								if (objectMap != null && Proxy.isProxyClass(getClass(objectMap))) {
+									//
+									final IH ihOld = cast(IH.class, Proxy.getInvocationHandler(objectMap));
+									//
+									final IH ihNew = new IH();
+									//
+									if (ihOld != null) {
+										//
+										ihNew.objects = ObjectUtils.defaultIfNull(
+												testAndApply(Objects::nonNull, ihOld.objects, LinkedHashMap::new, null),
+												ihNew.objects);
+										//
+									} // if
+										//
+									it.objectMap = Reflection.newProxy(ObjectMap.class, ihNew);
+									//
+								} else {
+									//
+									it.objectMap = objectMap;
+									//
+								} // if
+									//
+								it.errorMessageConsumer = errorMessageConsumer;
+								//
+								it.throwableConsumer = throwableConsumer;
+								//
+								es.submit(it);
+								//
+							} catch (final InterruptedException e) {
+								//
+								accept(throwableConsumer, e);
+								//
+							} finally {
+								//
+								if (semaphore != null) {
+									semaphore.release();
+								} // if
+									//
+							} // try
+								//
 						} else {
 							//
 							if (objectMap != null) {
@@ -1739,6 +1852,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			items.add(item);
 		}
 	}
+
+	private static Set<String> FILE_DIGEST = null;
 
 	private static void importVoice(final ObjectMap objectMap, final Consumer<String> errorMessageConsumer,
 			final Consumer<Throwable> throwableConsumer) {
@@ -1856,6 +1971,24 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				//
 			} // if
 				//
+			if (FILE_DIGEST == null) {
+				//
+				FILE_DIGEST = new LinkedHashSet<>();
+				//
+			} // if
+				//
+			if (FILE_DIGEST.contains(fileDigest)) {
+				//
+				System.out.println(
+						voice != null ? ToStringBuilder.reflectionToString(voice, ToStringStyle.SHORT_PREFIX_STYLE)
+								: null);
+				//
+			} else {
+				//
+				FILE_DIGEST.add(fileDigest);
+				//
+			} // if
+				//
 			final VoiceManager voiceManager = ObjectMap.getObject(objectMap, VoiceManager.class);
 			//
 			if (voiceManager != null) {
@@ -1898,7 +2031,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		}
 	}
 
-	private class IH implements InvocationHandler {
+	private static class IH implements InvocationHandler {
 
 		private Map<Object, Object> objects = null;
 
