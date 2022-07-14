@@ -23,6 +23,9 @@ public class Voice {
 	@ImportField
 	private String text = null;
 
+	@ImportField
+	private String source = null;
+
 	public static enum Yomi {
 		KUN_YOMI, ON_YOMI
 	}
@@ -74,6 +77,10 @@ public class Voice {
 
 	public String getText() {
 		return text;
+	}
+
+	public void setSource(final String source) {
+		this.source = source;
 	}
 
 	public void setYomi(final Yomi yomi) {

@@ -90,6 +90,7 @@ import org.apache.poi.hssf.usermodel.HSSFDataFormat;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -136,7 +137,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	private PropertyResolver propertyResolver = null;
 
 	private JTextComponent tfFolder, tfFile, tfFileLength, tfFileDigest, tfText, tfHiragana, tfKatakana, tfRomaji,
-			tfSpeechRate = null;
+			tfSpeechRate, tfSource = null;
 
 	private ComboBoxModel<Yomi> cbmYomi = null;
 
@@ -246,6 +247,14 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.text")), span);
 		//
 		add(btnConvertToRomaji = new JButton("Convert To Romaji"), String.format("span %1$s,%2$s", 2, WRAP));
+		//
+		// source
+		//
+		add(new JLabel("Source"));
+		//
+		add(tfSource = new JTextField(
+				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.source")),
+				String.format("spanx %1$s,growx,%2$s", 5, WRAP));
 		//
 		// Voice Id
 		//
@@ -1535,6 +1544,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				//
 				NumberFormat percentNumberFormat = null;
 				//
+				String string = null;
+				//
 				for (final Row row : sheet) {
 					//
 					if (row == null || row.iterator() == null) {
@@ -1569,7 +1580,17 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 							//
 							if (Objects.equals(type = f.getType(), String.class)) {
 								//
-								f.set(voice = ObjectUtils.getIfNull(voice, Voice::new), cell.getStringCellValue());
+								if (Objects.equals(cell.getCellType(), CellType.NUMERIC)) {
+									//
+									string = Double.toString(cell.getNumericCellValue());
+									//
+								} else {
+									//
+									string = cell.getStringCellValue();
+									//
+								} // if
+									//
+								f.set(voice = ObjectUtils.getIfNull(voice, Voice::new), string);
 								//
 							} else if (type != null && Enum.class.isAssignableFrom(type)
 									&& (list = collect(filter(
@@ -1879,19 +1900,21 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 		} // if
 			//
-		final Voice Voice = new Voice();
+		final Voice voice = new Voice();
 		//
-		Voice.setText(getText(instance.tfText));
+		voice.setText(getText(instance.tfText));
 		//
-		Voice.setRomaji(getText(instance.tfRomaji));
+		voice.setSource(getText(instance.tfSource));
 		//
-		Voice.setHiragana(getText(instance.tfHiragana));
+		voice.setRomaji(getText(instance.tfRomaji));
 		//
-		Voice.setKatakana(getText(instance.tfKatakana));
+		voice.setHiragana(getText(instance.tfHiragana));
 		//
-		Voice.setYomi(cast(Yomi.class, getSelectedItem(instance.cbmYomi)));
+		voice.setKatakana(getText(instance.tfKatakana));
 		//
-		return Voice;
+		voice.setYomi(cast(Yomi.class, getSelectedItem(instance.cbmYomi)));
+		//
+		return voice;
 		//
 	}
 
