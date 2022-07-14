@@ -107,7 +107,8 @@ class VoiceManagerTest {
 			METHOD_CREATE_IMPORT_FILE_TEMPLATE_BYTE_ARRAY, METHOD_GET_DECLARED_ANNOTATIONS, METHOD_CREATE_CELL,
 			METHOD_SET_CELL_VALUE, METHOD_ANY_MATCH, METHOD_COLLECT, METHOD_NAME, METHOD_GET_SELECTED_ITEM,
 			METHOD_WRITE, METHOD_MATCHER, METHOD_SET_VALUE, METHOD_SET_STRING, METHOD_SET_TOOL_TIP_TEXT, METHOD_FORMAT,
-			METHOD_CONTAINS_KEY, METHOD_VALUE_OF, METHOD_GET_CLASS, METHOD_CREATE_RANGE = null;
+			METHOD_CONTAINS_KEY, METHOD_VALUE_OF, METHOD_GET_CLASS, METHOD_CREATE_RANGE, METHOD_GET_PROVIDER_NAME,
+			METHOD_WRITE_VOICE_TO_FILE = null;
 
 	@BeforeAll
 	private static void beforeAll() throws ReflectiveOperationException {
@@ -246,6 +247,10 @@ class VoiceManagerTest {
 		//
 		(METHOD_CREATE_RANGE = clz.getDeclaredMethod("createRange", Integer.class, Integer.class)).setAccessible(true);
 		//
+		(METHOD_GET_PROVIDER_NAME = clz.getDeclaredMethod("getProviderName", Provider.class)).setAccessible(true);
+		//
+		(METHOD_WRITE_VOICE_TO_FILE = clz.getDeclaredMethod("writeVoiceToFile", File.class)).setAccessible(true);
+		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
 	}
@@ -256,7 +261,7 @@ class VoiceManagerTest {
 
 		private Set<Entry<?, ?>> entrySet = null;
 
-		private String toString, stringCellValue = null;
+		private String toString, stringCellValue, providerName = null;
 
 		private Configuration configuration = null;
 
@@ -409,6 +414,14 @@ class VoiceManagerTest {
 				if (Objects.equals(methodName, "getVoiceIds")) {
 					//
 					return voiceIds;
+					//
+				} // if
+					//
+			} else if (proxy instanceof Provider) {
+				//
+				if (Objects.equals(methodName, "getProviderName")) {
+					//
+					return providerName;
 					//
 				} // if
 					//
@@ -1915,6 +1928,60 @@ class VoiceManagerTest {
 				return (Range) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetProviderName() throws Throwable {
+		//
+		Assertions.assertNull(getProviderName(null));
+		//
+		Assertions.assertNull(getProviderName(Reflection.newProxy(Provider.class, ih)));
+		//
+	}
+
+	private static String getProviderName(final Provider instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_PROVIDER_NAME.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testWriteVoiceToFile() throws IllegalAccessException {
+		//
+		Assertions.assertDoesNotThrow(() -> writeVoiceToFile(null));
+		//
+		if (instance != null) {
+			//
+			instance.setSpeechApi(speechApi);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> writeVoiceToFile(null));
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "jsSpeechVolume", new JSlider(), true);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> writeVoiceToFile(null));
+		//
+	}
+
+	private void writeVoiceToFile(final File file) throws Throwable {
+		try {
+			METHOD_WRITE_VOICE_TO_FILE.invoke(instance, file);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

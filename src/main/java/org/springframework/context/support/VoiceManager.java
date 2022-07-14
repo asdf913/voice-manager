@@ -744,19 +744,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 			if (jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
 				//
-				if (speechApi != null) {
-					//
-					speechApi.writeVoiceToFile(getText(tfText), toString(getSelectedItem(cbmVoiceId))
-					//
-							, intValue(getRate(getText(tfSpeechRate)), 0)// rate
-							//
-							,
-							Math.min(Math.max(intValue(jsSpeechVolume != null ? jsSpeechVolume.getValue() : null, 100),
-									0), 100)// volume
-							, jfc.getSelectedFile());
-					//
-				} // if
-					//
+				writeVoiceToFile(jfc.getSelectedFile());
+				//
 			} // if
 				//
 		} else if (Objects.equals(source, btnExecute)) {
@@ -808,7 +797,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				if (voice != null) {
 					//
 					voice.setSource(StringUtils.defaultIfBlank(voice.getSource(),
-							speechApi instanceof Provider ? ((Provider) speechApi).getProviderName() : null));
+							getProviderName(cast(Provider.class, speechApi))));
 					//
 				} // if
 					//
@@ -1052,6 +1041,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 						//
 						objectMap.setObject(JProgressBar.class, progressBar);
 						//
+						objectMap.setObject(Provider.class, cast(Provider.class, speechApi));
+						//
 					} // if
 						//
 					final boolean headless = GraphicsEnvironment.isHeadless();
@@ -1145,6 +1136,10 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 	}
 
+	private static String getProviderName(final Provider instance) {
+		return instance != null ? instance.getProviderName() : null;
+	}
+
 	private static void exeute(final ObjectMap objectMap) {
 		//
 		final File file = ObjectMap.getObject(objectMap, File.class);
@@ -1232,6 +1227,22 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		} else if (ps != null) {
 			//
 			ps.println(message);
+			//
+		} // if
+			//
+	}
+
+	private void writeVoiceToFile(final File file) {
+		//
+		if (speechApi != null) {
+			//
+			speechApi.writeVoiceToFile(getText(tfText), toString(getSelectedItem(cbmVoiceId))
+			//
+					, intValue(getRate(getText(tfSpeechRate)), 0)// rate
+					//
+					,
+					Math.min(Math.max(intValue(jsSpeechVolume != null ? jsSpeechVolume.getValue() : null, 100), 0), 100)// volume
+					, file);
 			//
 		} // if
 			//
@@ -1521,7 +1532,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 
 	private static void importVoice(final Sheet sheet, final ObjectMap objectMap,
 			final Consumer<String> errorMessageConsumer, final Consumer<Throwable> throwableConsumer)
-			throws IllegalAccessException {
+			throws IllegalAccessException, IOException {
 		//
 		final File file = ObjectMap.getObject(objectMap, File.class);
 		//
@@ -1554,6 +1565,12 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				NumberFormat percentNumberFormat = null;
 				//
 				String string = null;
+				//
+				String filePath = null;
+				//
+				VoiceManager voiceManager = null;
+				//
+				Provider provider = null;
 				//
 				for (final Row row : sheet) {
 					//
@@ -1640,10 +1657,36 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 							it.percentNumberFormat = ObjectUtils.getIfNull(percentNumberFormat,
 									() -> new DecimalFormat("#%"));
 							//
-							it.voice = voice;
-							//
-							it.file = voice != null ? new File(folder, voice.getFilePath()) : folder;
-							//
+							if ((it.voice = voice) != null) {
+								//
+								if (StringUtils.isNotBlank(filePath = voice.getFilePath())) {
+									//
+									it.file = new File(folder, filePath);
+									//
+								} else {
+									//
+									if ((it.file = File.createTempFile(RandomStringUtils.randomAlphabetic(3),
+											filePath)) != null) {
+										//
+										if ((voiceManager = ObjectUtils.getIfNull(voiceManager,
+												() -> ObjectMap.getObject(objectMap, VoiceManager.class))) != null) {
+											//
+											voiceManager.writeVoiceToFile(it.file);
+											//
+										} // if
+											//
+										it.file.deleteOnExit();
+										//
+									} // if
+										//
+									it.voice.setSource(StringUtils.defaultIfBlank(voice.getSource(),
+											getProviderName(provider = ObjectUtils.getIfNull(provider,
+													() -> ObjectMap.getObject(objectMap, Provider.class)))));
+									//
+								} // if
+									//
+							} // if
+								//
 							it.objectMap = objectMap;
 							//
 							it.errorMessageConsumer = errorMessageConsumer;
