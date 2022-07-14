@@ -60,6 +60,7 @@ import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
@@ -141,8 +142,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 
 	private ComboBoxModel<String> cbmVoiceId = null;
 
-	private AbstractButton btnSpeak, btnWriteVoice, btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji, btnExecute,
-			btnImportFileTemplate, btnImport, btnExport = null;
+	private AbstractButton btnSpeak, btnWriteVoice, btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji,
+			cbUseTtsVoice, btnExecute, btnImportFileTemplate, btnImport, btnExport = null;
 
 	private JProgressBar progressBar = null;
 
@@ -334,7 +335,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		final Yomi[] yomis = Yomi.values();
 		//
-		add(new JComboBox<>(cbmYomi = new DefaultComboBoxModel<>(ArrayUtils.insert(0, yomis, (Yomi) null))), WRAP);
+		add(new JComboBox<>(cbmYomi = new DefaultComboBoxModel<>(ArrayUtils.insert(0, yomis, (Yomi) null))),
+				String.format("span %1$s,%2$s", 4, WRAP));
 		//
 		if (yomis != null) {
 			//
@@ -362,7 +364,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		add(new JLabel("Romaji"));
 		//
 		add(tfRomaji = new JTextField(
-				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.romaji")), span = String.format("spanx %1$s,growx", 6));
+				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.romaji")),
+				span = String.format("spanx %1$s,growx", 6));
 		//
 		add(btnCopyRomaji = new JButton("Copy"), WRAP);
 		//
@@ -382,6 +385,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		add(new JLabel());
 		//
+		add(cbUseTtsVoice = new JCheckBox("TTS Voice"));
+		//
 		add(btnExecute = new JButton("Execute"), WRAP);
 		//
 		add(new JLabel("Export"));
@@ -390,7 +395,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		add(new JLabel("Import"));
 		//
-		add(btnImportFileTemplate = new JButton("Import File Template"));
+		add(btnImportFileTemplate = new JButton("Import File Template"), String.format("span %1$s", 3));
 		//
 		add(btnImport = new JButton("Import"), WRAP);
 		//
@@ -749,88 +754,34 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 			forEach(Stream.of(tfFile, tfFileLength, tfFileDigest), x -> setText(x, null));
 			//
-			final JFileChooser jfc = new JFileChooser(".");
+			File file = null;
 			//
-			jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-			//
-			if (jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+			if (cbUseTtsVoice != null && cbUseTtsVoice.isSelected()) {
 				//
-				final File selectedFile = jfc.getSelectedFile();
-				//
-				if (selectedFile == null) {
+				if (speechApi != null) {
 					//
-					JOptionPane.showMessageDialog(null, "No File Selected");
-					//
-					return;
-					//
-				} else if (!selectedFile.exists()) {
-					//
-					JOptionPane.showMessageDialog(null,
-							String.format("File \"%1$s\" does not exist", selectedFile.getAbsolutePath()));
-					//
-					return;
-					//
-				} else if (!selectedFile.isFile()) {
-					//
-					JOptionPane.showMessageDialog(null, "Not A Regular File Selected");
-					//
-					return;
-					//
-				} else if (selectedFile.length() == 0) {
-					//
-					JOptionPane.showMessageDialog(null, "Empty File Selected");
-					//
-					return;
-					//
-				} // if
-					//
-				SqlSession sqlSession = null;
-				//
-				final boolean headless = GraphicsEnvironment.isHeadless();
-				//
-				try {
-					//
-					final ObjectMap objectMap = Reflection.newProxy(ObjectMap.class, new IH());
-					//
-					if (objectMap != null) {
+					try {
 						//
-						objectMap.setObject(File.class, jfc.getSelectedFile());
+						speechApi.writeVoiceToFile(getText(tfText), toString(getSelectedItem(cbmVoiceId))
 						//
-						objectMap.setObject(Voice.class, createVoice(this));
+								, intValue(getRate(getText(tfSpeechRate)), 0)// rate
+								//
+								,
+								Math.min(Math.max(
+										intValue(jsSpeechVolume != null ? jsSpeechVolume.getValue() : null, 100), 0),
+										100)// volume
+								, file = File.createTempFile(RandomStringUtils.randomAlphabetic(3), null)
 						//
-						objectMap.setObject(VoiceMapper.class, getMapper(getConfiguration(sqlSessionFactory),
-								VoiceMapper.class, sqlSession = openSession(sqlSessionFactory)));
+						);
 						//
-						objectMap.setObject(VoiceManager.class, this);
+					} catch (final IOException e) {
 						//
-						objectMap.setObject(String.class, voiceFolder);
-						//
-					} // if
-						//
-					importVoice(objectMap, x -> {
-						//
-						if (headless) {
-							//
-							errorOrPrintln(LOG, System.err, x);
-							//
-						} else {
-							//
-							JOptionPane.showMessageDialog(null, x);
-							//
-						} // if
-							//
-					}, e -> {
-						//
-						if (headless) {
+						if (GraphicsEnvironment.isHeadless()) {
 							//
 							if (LOG != null) {
-								//
 								LOG.error(getMessage(e), e);
-								//
 							} else if (e != null) {
-								//
 								e.printStackTrace();
-								//
 							} // if
 								//
 						} else {
@@ -839,19 +790,62 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 							//
 						} // if
 							//
-					});
+					} // try
+						//
+				} // if
 					//
-				} finally {
+				if (file != null) {
 					//
-					IOUtils.closeQuietly(sqlSession);
+					file.deleteOnExit();
 					//
-				} // try
+				} // if
 					//
 			} else {
 				//
-				JOptionPane.showMessageDialog(null, "No File Selected");
+				final JFileChooser jfc = new JFileChooser(".");
 				//
+				jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				//
+				if (jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+					//
+					file = jfc.getSelectedFile();
+					//
+				} else {
+					//
+					JOptionPane.showMessageDialog(null, "No File Selected");
+					//
+				} // if
+					//
 			} // if
+				//
+			SqlSession sqlSession = null;
+			//
+			try {
+				//
+				final ObjectMap objectMap = Reflection.newProxy(ObjectMap.class, new IH());
+				//
+				if (objectMap != null) {
+					//
+					objectMap.setObject(File.class, file);
+					//
+					objectMap.setObject(Voice.class, createVoice(this));
+					//
+					objectMap.setObject(VoiceMapper.class, getMapper(getConfiguration(sqlSessionFactory),
+							VoiceMapper.class, sqlSession = openSession(sqlSessionFactory)));
+					//
+					objectMap.setObject(VoiceManager.class, this);
+					//
+					objectMap.setObject(String.class, voiceFolder);
+					//
+				} // if
+					//
+				exeute(objectMap);
+				//
+			} finally {
+				//
+				IOUtils.closeQuietly(sqlSession);
+				//
+			} // try
 				//
 		} else if (Objects.equals(source, btnConvertToRomaji)) {
 			//
@@ -1130,6 +1124,84 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			} // if
 				//
 		} // if
+			//
+	}
+
+	private static void exeute(final ObjectMap objectMap) {
+		//
+		final File file = ObjectMap.getObject(objectMap, File.class);
+		//
+		if (file == null) {
+			//
+			JOptionPane.showMessageDialog(null, "No File Selected");
+			//
+			return;
+			//
+		} else if (!file.exists()) {
+			//
+			JOptionPane.showMessageDialog(null, String.format("File \"%1$s\" does not exist", file.getAbsolutePath()));
+			//
+			return;
+			//
+		} else if (!file.isFile()) {
+			//
+			JOptionPane.showMessageDialog(null, "Not A Regular File Selected");
+			//
+			return;
+			//
+		} else if (file.length() == 0) {
+			//
+			JOptionPane.showMessageDialog(null, "Empty File Selected");
+			//
+			return;
+			//
+		} // if
+			//
+		SqlSession sqlSession = null;
+		//
+		final boolean headless = GraphicsEnvironment.isHeadless();
+		//
+		try {
+			//
+			importVoice(objectMap, x -> {
+				//
+				if (headless) {
+					//
+					errorOrPrintln(LOG, System.err, x);
+					//
+				} else {
+					//
+					JOptionPane.showMessageDialog(null, x);
+					//
+				} // if
+					//
+			}, e -> {
+				//
+				if (headless) {
+					//
+					if (LOG != null) {
+						//
+						LOG.error(getMessage(e), e);
+						//
+					} else if (e != null) {
+						//
+						e.printStackTrace();
+						//
+					} // if
+						//
+				} else {
+					//
+					JOptionPane.showMessageDialog(null, getMessage(e));
+					//
+				} // if
+					//
+			});
+			//
+		} finally {
+			//
+			IOUtils.closeQuietly(sqlSession);
+			//
+		} // try
 			//
 	}
 
