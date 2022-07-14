@@ -1,12 +1,38 @@
 package org.springframework.context.support;
 
 import java.io.File;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 import org.apache.commons.lang3.StringUtils;
 
 import com.sun.jna.Library;
 import com.sun.jna.Native;
 
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+@interface MinValue {
+
+	String name();
+
+	int value();
+
+}
+
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+@interface MaxValue {
+
+	String name();
+
+	int value();
+
+}
+
+@MinValue(name = "volume", value = 0)
+@MaxValue(name = "volume", value = 100)
 public class SpeechApiImpl implements SpeechApi {
 
 	private interface Jna extends Library {
@@ -17,11 +43,10 @@ public class SpeechApiImpl implements SpeechApi {
 			return clz != null && clz.isInstance(value) ? clz.cast(value) : null;
 		}
 
-		public void speak(final int[] text, final int length, final String voiceId, final int rate,
-				@MinValue(0) @MaxValue(100) final int volume);
+		public void speak(final int[] text, final int length, final String voiceId, final int rate, final int volume);
 
 		public void writeVoiceToFile(final int[] text, final int textLength, final String voiceId, final int rate,
-				@MinValue(0) @MaxValue(100) final int volume, final int[] fileName, final int fileNameLength);
+				final int volume, final int[] fileName, final int fileNameLength);
 
 		public String getVoiceIds(final String requiredAttributes, final String optionalAttributes);
 

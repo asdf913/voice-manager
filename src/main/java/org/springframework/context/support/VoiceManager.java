@@ -18,7 +18,6 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
-import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -42,10 +41,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
@@ -297,7 +296,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		add(new JLabel("Speech Volume"));
 		//
-		final Range<Integer> speechVolumeRange = getVolumnRange();
+		final Range<Integer> speechVolumeRange = createVolumnRange(getClass(speechApi));
 		//
 		final Integer upperEnpoint = speechVolumeRange != null && speechVolumeRange.hasUpperBound()
 				? speechVolumeRange.upperEndpoint()
@@ -428,129 +427,170 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 	}
 
-	private static Range<Integer> getVolumnRange() {
+	private static Range<Integer> createVolumnRange(final Class<?> clz) {
 		//
-		final List<Method> ms = collect(
-				filter(testAndApply(Objects::nonNull, getDeclaredMethods(SpeechApi.class), Arrays::stream, null),
-						m -> Objects.equals(getName(m), "speak")),
-				Collectors.toList());
+		final Map<String, Object> map = collect(
+				filter(testAndApply(Objects::nonNull, getDeclaredAnnotations(clz), Arrays::stream, null), a -> {
+					//
+					final String simpleName = getSimpleName(annotationType(a));
+					//
+					if (Objects.equals(simpleName, "MinValue") || Objects.equals(simpleName, "MaxValue")) {
+						//
+						final List<Method> temp = collect(
+								filter(testAndApply(Objects::nonNull, getDeclaredMethods(annotationType(a)),
+										Arrays::stream, null), ma -> Objects.equals(getName(ma), "name")),
+								Collectors.toList());
+						//
+						if (temp == null || temp.isEmpty()) {
+							//
+							return false;
+							//
+						} else if (temp.size() == 1 && temp.get(0) != null) {
+							//
+							try {
+								//
+								return Objects.equals("volume", temp.get(0).invoke(a));
+								//
+							} catch (final IllegalAccessException e) {
+								//
+								if (GraphicsEnvironment.isHeadless()) {
+									//
+									if (LOG != null) {
+										LOG.error(getMessage(e), e);
+									} else if (e != null) {
+										e.printStackTrace();
+									} // if
+										//
+								} else {
+									//
+									JOptionPane.showMessageDialog(null, getMessage(e));
+									//
+								} // if
+									//
+							} catch (final InvocationTargetException e) {
+								//
+								final Throwable targetException = e.getTargetException();
+								//
+								final Throwable rootCause = ObjectUtils.firstNonNull(
+										ExceptionUtils.getRootCause(targetException), targetException,
+										ExceptionUtils.getRootCause(e), e);
+								//
+								if (GraphicsEnvironment.isHeadless()) {
+									//
+									if (LOG != null) {
+										LOG.error(getMessage(rootCause), rootCause);
+									} else if (rootCause != null) {
+										rootCause.printStackTrace();
+									} // if
+										//
+								} else {
+									//
+									JOptionPane.showMessageDialog(null, getMessage(rootCause));
+									//
+								} // if
+									//
+							} // try
+								//
+						} // if
+							//
+						throw new IllegalArgumentException();
+						//
+					} // if
+						//
+					return false;
+					//
+				}), Collectors.toMap(a -> getSimpleName(annotationType(a)), a -> {
+					//
+					final List<Method> temp = collect(filter(
+							testAndApply(Objects::nonNull, getDeclaredMethods(annotationType(a)), Arrays::stream, null),
+							ma -> Objects.equals(getName(ma), "value")), Collectors.toList());
+					//
+					if (temp == null || temp.isEmpty()) {
+						//
+						return false;
+						//
+					} else if (temp.size() == 1 && temp.get(0) != null) {
+						//
+						try {
+							//
+							return temp.get(0).invoke(a);
+							//
+						} catch (final IllegalAccessException e) {
+							//
+							if (GraphicsEnvironment.isHeadless()) {
+								//
+								if (LOG != null) {
+									LOG.error(getMessage(e), e);
+								} else if (e != null) {
+									e.printStackTrace();
+								} // if
+									//
+							} else {
+								//
+								JOptionPane.showMessageDialog(null, getMessage(e));
+								//
+							} // if
+								//
+						} catch (final InvocationTargetException e) {
+							//
+							final Throwable targetException = e.getTargetException();
+							//
+							final Throwable rootCause = ObjectUtils.firstNonNull(
+									ExceptionUtils.getRootCause(targetException), targetException,
+									ExceptionUtils.getRootCause(e), e);
+							//
+							if (GraphicsEnvironment.isHeadless()) {
+								//
+								if (LOG != null) {
+									LOG.error(getMessage(rootCause), rootCause);
+								} else if (rootCause != null) {
+									rootCause.printStackTrace();
+								} // if
+									//
+							} else {
+								//
+								JOptionPane.showMessageDialog(null, getMessage(rootCause));
+								//
+							} // if
+								//
+						} // try
+							//
+					} // if
+						//
+					throw new IllegalArgumentException();
+					//
+				}));
+		//
+		Object object = null;
 		//
 		Integer minValue = null;
 		//
-		Integer maxValue = null;
-		//
-		if (ms != null) {
-			//
-			AnnotatedType[] ats = null;
-			//
-			Map<String, Object> annotationValueMap = null;
-			//
-			Object object = null;
-			//
-			for (final Method m : ms) {
-				//
-				if (m == null || (ats = m.getAnnotatedParameterTypes()) == null) {
-					//
-					continue;
-					//
-				} // if
-					//
-				for (final AnnotatedType at : ats) {
-					//
-					if ((annotationValueMap = testAndApply(Objects::nonNull,
-							at != null ? at.getDeclaredAnnotations() : null, Arrays::stream, null)
-							.collect(Collectors.toMap(a -> getSimpleName(annotationType(a)), b -> {
-								//
-								final List<Method> temp = collect(
-										filter(testAndApply(Objects::nonNull, getDeclaredMethods(getClass(b)),
-												Arrays::stream, null), ma -> Objects.equals(getName(ma), "value")),
-										Collectors.toList());
-								//
-								if (temp == null || temp.isEmpty()) {
-									//
-									return null;
-									//
-								} else if (temp.size() == 1 && temp.get(0) != null) {
-									//
-									try {
-										//
-										return temp.get(0).invoke(b);
-										//
-									} catch (final IllegalAccessException e) {
-										//
-										if (GraphicsEnvironment.isHeadless()) {
-											//
-											if (LOG != null) {
-												LOG.error(getMessage(e), e);
-											} else if (e != null) {
-												e.printStackTrace();
-											} // if
-												//
-										} else {
-											//
-											JOptionPane.showMessageDialog(null, getMessage(e));
-											//
-										} // if
-											//
-									} catch (final InvocationTargetException e) {
-										//
-										final Throwable targetException = e.getTargetException();
-										//
-										final Throwable rootCause = ObjectUtils.firstNonNull(
-												ExceptionUtils.getRootCause(targetException), targetException,
-												ExceptionUtils.getRootCause(e), e);
-										//
-										if (GraphicsEnvironment.isHeadless()) {
-											//
-											if (LOG != null) {
-												LOG.error(getMessage(rootCause), rootCause);
-											} else if (rootCause != null) {
-												rootCause.printStackTrace();
-											} // if
-												//
-										} else {
-											//
-											JOptionPane.showMessageDialog(null, getMessage(rootCause));
-											//
-										} // if
-											//
-									} // try
-										//
-								} // if
-									//
-								throw new IllegalArgumentException();
-								//
-							}))) == null || annotationValueMap.isEmpty()
-							|| !Objects.equals(annotationValueMap.get("Name"), "volume")) {
-						//
-						continue;
-						//
-					} // if
-						//
-					if ((object = testAndApply(VoiceManager::containsKey, annotationValueMap, "MinValue",
-							MapUtils::getObject, null)) instanceof Integer) {
-						minValue = (Integer) object;
-					} else if (object instanceof Number) {
-						minValue = Integer.valueOf(((Number) object).intValue());
-					} else {
-						minValue = valueOf(toString(object));
-					} // if
-						//
-					if ((object = testAndApply(VoiceManager::containsKey, annotationValueMap, "MaxValue",
-							MapUtils::getObject, null)) instanceof Integer) {
-						maxValue = (Integer) object;
-					} else if (object instanceof Number) {
-						maxValue = Integer.valueOf(((Number) object).intValue());
-					} else {
-						maxValue = valueOf(toString(object));
-					} // if
-						//
-				} // for
-					//
-			} // for
-				//
+		if ((object = testAndApply(VoiceManager::containsKey, map, "MinValue", MapUtils::getObject,
+				null)) instanceof Integer) {
+			minValue = (Integer) object;
+		} else if (object instanceof Number) {
+			minValue = Integer.valueOf(((Number) object).intValue());
+		} else {
+			minValue = valueOf(toString(object));
 		} // if
 			//
+		Integer maxValue = null;
+		//
+		if ((object = testAndApply(VoiceManager::containsKey, map, "MaxValue", MapUtils::getObject,
+				null)) instanceof Integer) {
+			maxValue = (Integer) object;
+		} else if (object instanceof Number) {
+			maxValue = Integer.valueOf(((Number) object).intValue());
+		} else {
+			maxValue = valueOf(toString(object));
+		} // if
+			//
+		return createRange(minValue, maxValue);
+		//
+	}
+
+	private static Range<Integer> createRange(final Integer minValue, final Integer maxValue) {
+		//
 		if (minValue != null && maxValue != null) {
 			return Range.open(minValue.intValue(), maxValue.intValue());
 		} else if (minValue != null) {
@@ -559,7 +599,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			return Range.atMost(maxValue.intValue());
 		} // if
 			//
-		return null;
+		return Range.all();
 		//
 	}
 

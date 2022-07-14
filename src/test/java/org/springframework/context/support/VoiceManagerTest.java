@@ -83,6 +83,7 @@ import org.springframework.util.ReflectionUtils;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterators;
+import com.google.common.collect.Range;
 import com.google.common.reflect.Reflection;
 import com.j256.simplemagic.ContentInfo;
 
@@ -106,7 +107,7 @@ class VoiceManagerTest {
 			METHOD_CREATE_IMPORT_FILE_TEMPLATE_BYTE_ARRAY, METHOD_GET_DECLARED_ANNOTATIONS, METHOD_CREATE_CELL,
 			METHOD_SET_CELL_VALUE, METHOD_ANY_MATCH, METHOD_COLLECT, METHOD_NAME, METHOD_GET_SELECTED_ITEM,
 			METHOD_WRITE, METHOD_MATCHER, METHOD_SET_VALUE, METHOD_SET_STRING, METHOD_SET_TOOL_TIP_TEXT, METHOD_FORMAT,
-			METHOD_CONTAINS_KEY, METHOD_VALUE_OF, METHOD_GET_CLASS = null;
+			METHOD_CONTAINS_KEY, METHOD_VALUE_OF, METHOD_GET_CLASS, METHOD_CREATE_RANGE = null;
 
 	@BeforeAll
 	private static void beforeAll() throws ReflectiveOperationException {
@@ -242,6 +243,8 @@ class VoiceManagerTest {
 		(METHOD_VALUE_OF = clz.getDeclaredMethod("valueOf", String.class)).setAccessible(true);
 		//
 		(METHOD_GET_CLASS = clz.getDeclaredMethod("getClass", Object.class)).setAccessible(true);
+		//
+		(METHOD_CREATE_RANGE = clz.getDeclaredMethod("createRange", Integer.class, Integer.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -1824,6 +1827,8 @@ class VoiceManagerTest {
 		//
 		Assertions.assertFalse(containsKey(Collections.emptyMap(), null));
 		//
+		Assertions.assertTrue(containsKey(Collections.singletonMap(null, null), null));
+		//
 	}
 
 	private static boolean containsKey(final Map<?, ?> instance, final Object key) throws Throwable {
@@ -1884,6 +1889,35 @@ class VoiceManagerTest {
 
 	private static String toString(final Object instance) {
 		return instance != null ? instance.toString() : null;
+	}
+
+	@Test
+	void testCreateRange() throws Throwable {
+		//
+		final Integer zero = Integer.valueOf(0);
+		//
+		Assertions.assertEquals(String.format("[%1$s..+∞)", zero), toString(createRange(zero, null)));
+		//
+		Assertions.assertEquals(String.format("(-∞..%1$s]", zero), toString(createRange(null, zero)));
+		//
+		final Integer one = Integer.valueOf(1);
+		//
+		Assertions.assertEquals(String.format("(%1$s..%2$s)", zero, one), toString(createRange(zero, one)));
+		//
+	}
+
+	private static Range<Integer> createRange(final Integer minValue, final Integer maxValue) throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_RANGE.invoke(null, minValue, maxValue);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Range) {
+				return (Range) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 	@Test
