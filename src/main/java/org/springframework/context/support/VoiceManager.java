@@ -765,6 +765,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 			File file = null;
 			//
+			final Voice voice = createVoice(this);
+			//
 			if (cbUseTtsVoice != null && cbUseTtsVoice.isSelected()) {
 				//
 				if (speechApi != null) {
@@ -803,6 +805,13 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 						//
 				} // if
 					//
+				if (voice != null) {
+					//
+					voice.setSource(StringUtils.defaultIfBlank(voice.getSource(),
+							speechApi instanceof Provider ? ((Provider) speechApi).getProviderName() : null));
+					//
+				} // if
+					//
 				if (file != null) {
 					//
 					file.deleteOnExit();
@@ -837,7 +846,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 					//
 					objectMap.setObject(File.class, file);
 					//
-					objectMap.setObject(Voice.class, createVoice(this));
+					objectMap.setObject(Voice.class, voice);
 					//
 					objectMap.setObject(VoiceMapper.class, getMapper(getConfiguration(sqlSessionFactory),
 							VoiceMapper.class, sqlSession = openSession(sqlSessionFactory)));

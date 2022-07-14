@@ -83,6 +83,10 @@ public class Voice {
 		this.source = source;
 	}
 
+	public String getSource() {
+		return source;
+	}
+
 	public void setYomi(final Yomi yomi) {
 		this.yomi = yomi;
 	}
