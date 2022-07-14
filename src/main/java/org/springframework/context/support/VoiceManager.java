@@ -141,7 +141,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 
 	private ComboBoxModel<String> cbmVoiceId = null;
 
-	private AbstractButton btnSpeak, btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji, btnExecute,
+	private AbstractButton btnSpeak, btnWriteVoice, btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji, btnExecute,
 			btnImportFileTemplate, btnImport, btnExport = null;
 
 	private JProgressBar progressBar = null;
@@ -239,12 +239,12 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		add(new JLabel("Text"));
 		//
-		final String span = String.format("spanx %1$s,growx", 5);
+		String span = String.format("spanx %1$s,growx", 5);
 		//
 		add(tfText = new JTextField(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.text")), span);
 		//
-		add(btnConvertToRomaji = new JButton("Convert To Romaji"), String.format("span %1$s,%2$s", 1, WRAP));
+		add(btnConvertToRomaji = new JButton("Convert To Romaji"), String.format("span %1$s,%2$s", 2, WRAP));
 		//
 		// Voice Id
 		//
@@ -324,7 +324,9 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		jsSpeechVolume.setPaintTicks(true);
 		//
-		add(btnSpeak = new JButton("Speak"), WRAP);
+		add(btnSpeak = new JButton("Speak"));
+		//
+		add(btnWriteVoice = new JButton("Write"), WRAP);
 		//
 		// yomi
 		//
@@ -360,7 +362,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		add(new JLabel("Romaji"));
 		//
 		add(tfRomaji = new JTextField(
-				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.romaji")), span);
+				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.romaji")), span = String.format("spanx %1$s,growx", 6));
 		//
 		add(btnCopyRomaji = new JButton("Copy"), WRAP);
 		//
@@ -373,7 +375,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		add(new JLabel("Katakana"));
 		//
-		String wrap = String.format("span %1$s,growx,%2$s", 5, WRAP);
+		String wrap = String.format("span %1$s,growx,%2$s", 6, WRAP);
 		//
 		add(tfKatakana = new JTextField(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.katakana")), wrap);
@@ -392,14 +394,14 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		add(btnImport = new JButton("Import"), WRAP);
 		//
-		add(progressBar = new JProgressBar(), String.format("span %1$s,growx,%2$s", 7, WRAP));
+		add(progressBar = new JProgressBar(), String.format("span %1$s,growx,%2$s", 8, WRAP));
 		//
 		progressBar.setStringPainted(true);
 		//
 		add(new JLabel("Folder"));
 		//
 		add(tfFolder = new JTextField(folder != null ? folder.getAbsolutePath() : null),
-				wrap = String.format("span %1$s,growx,%2$s", 6, WRAP));
+				wrap = String.format("span %1$s,growx,%2$s", 7, WRAP));
 		//
 		add(new JLabel("File"));
 		//
@@ -415,8 +417,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		setEditable(false, tfFolder, tfFile, tfFileLength, tfFileDigest);
 		//
-		addActionListener(this, btnSpeak, btnExecute, btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji,
-				btnImportFileTemplate, btnImport, btnExport);
+		addActionListener(this, btnSpeak, btnWriteVoice, btnExecute, btnConvertToRomaji, btnConvertToKatakana,
+				btnCopyRomaji, btnImportFileTemplate, btnImport, btnExport);
 		//
 		setPreferredWidth(intValue(
 				orElse(max(map(Stream.of(tfFolder, tfFile, tfFileLength, tfFileDigest, tfText, tfHiragana, tfKatakana,
@@ -708,75 +710,9 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 			if (speechApi != null) {
 				//
-				final String rateString = getText(tfSpeechRate);
-				//
-				Integer rate = valueOf(rateString);
-				//
-				if (rate == null) {
-					//
-					final List<Field> fs = collect(filter(
-							testAndApply(Objects::nonNull, Integer.class.getDeclaredFields(), Arrays::stream, null),
-							f -> f != null
-									&& (Number.class.isAssignableFrom(f.getType())
-											|| Objects.equals(Integer.TYPE, f.getType()))
-									&& Objects.equals(getName(f), rateString)),
-							Collectors.toList());
-					//
-					if (fs != null && !fs.isEmpty()) {
-						//
-						final int size = fs.size();
-						//
-						if (size > 1) {
-							//
-							throw new IllegalStateException();
-							//
-						} // if
-							//
-						final Field f = fs.get(0);
-						//
-						if (f != null) {
-							//
-							if (Modifier.isStatic(f.getModifiers())) {
-								//
-								try {
-									//
-									final Number number = cast(Number.class, f.get(null));
-									//
-									if (number != null) {
-										//
-										rate = number.intValue();
-										//
-									} // if
-										//
-								} catch (final IllegalAccessException e) {
-									//
-									if (GraphicsEnvironment.isHeadless()) {
-										//
-										if (LOG != null) {
-											LOG.error(getMessage(e), e);
-										} else if (e != null) {
-											e.printStackTrace();
-										} // if
-											//
-									} else {
-										//
-										JOptionPane.showMessageDialog(null, getMessage(e));
-										//
-									} // if
-										//
-								} // try
-									//
-							} // if
-								//
-						} // if
-							//
-					} // if
-						//
-				} // if
-					//
 				speechApi.speak(getText(tfText), toString(getSelectedItem(cbmVoiceId))
 				//
-						, intValue(rate, 0)// rate
+						, intValue(getRate(getText(tfSpeechRate)), 0)// rate
 						//
 						,
 						Math.min(Math.max(intValue(jsSpeechVolume != null ? jsSpeechVolume.getValue() : null, 100), 0),
@@ -784,6 +720,29 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 
 				);
 				//
+			} // if
+				//
+		} else if (Objects.equals(source, btnWriteVoice)) {
+			//
+			final JFileChooser jfc = new JFileChooser(".");
+			//
+			jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+			//
+			if (jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+				//
+				if (speechApi != null) {
+					//
+					speechApi.writeVoiceToFile(getText(tfText), toString(getSelectedItem(cbmVoiceId))
+					//
+							, intValue(getRate(getText(tfSpeechRate)), 0)// rate
+							//
+							,
+							Math.min(Math.max(intValue(jsSpeechVolume != null ? jsSpeechVolume.getValue() : null, 100),
+									0), 100)// volume
+							, jfc.getSelectedFile());
+					//
+				} // if
+					//
 			} // if
 				//
 		} else if (Objects.equals(source, btnExecute)) {
@@ -1186,6 +1145,75 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 		} // if
 			//
+	}
+
+	private static Integer getRate(final String string) {
+		//
+		Integer rate = valueOf(string);
+		//
+		if (rate == null) {
+			//
+			final List<Field> fs = collect(filter(
+					testAndApply(Objects::nonNull, Integer.class.getDeclaredFields(), Arrays::stream, null),
+					f -> f != null
+							&& (Number.class.isAssignableFrom(f.getType()) || Objects.equals(Integer.TYPE, f.getType()))
+							&& Objects.equals(getName(f), string)),
+					Collectors.toList());
+			//
+			if (fs != null && !fs.isEmpty()) {
+				//
+				final int size = fs.size();
+				//
+				if (size > 1) {
+					//
+					throw new IllegalStateException();
+					//
+				} // if
+					//
+				final Field f = fs.get(0);
+				//
+				if (f != null) {
+					//
+					if (Modifier.isStatic(f.getModifiers())) {
+						//
+						try {
+							//
+							final Number number = cast(Number.class, f.get(null));
+							//
+							if (number != null) {
+								//
+								rate = number.intValue();
+								//
+							} // if
+								//
+						} catch (final IllegalAccessException e) {
+							//
+							if (GraphicsEnvironment.isHeadless()) {
+								//
+								if (LOG != null) {
+									LOG.error(getMessage(e), e);
+								} else if (e != null) {
+									e.printStackTrace();
+								} // if
+									//
+							} else {
+								//
+								JOptionPane.showMessageDialog(null, getMessage(e));
+								//
+							} // if
+								//
+						} // try
+							//
+					} // if
+						//
+				} // if
+					//
+			} // if
+				//
+		} // if
+			//
+		return rate;
+		//
 	}
 
 	private static void write(final Workbook instance, final OutputStream stream) throws IOException {
