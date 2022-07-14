@@ -33,7 +33,7 @@ import com.sun.jna.Native;
 
 @MinValue(name = "volume", value = 0)
 @MaxValue(name = "volume", value = 100)
-public class SpeechApiImpl implements SpeechApi {
+public class SpeechApiImpl implements SpeechApi, Provider {
 
 	private interface Jna extends Library {
 
@@ -49,6 +49,8 @@ public class SpeechApiImpl implements SpeechApi {
 				final int volume, final int[] fileName, final int fileNameLength);
 
 		public String getVoiceIds(final String requiredAttributes, final String optionalAttributes);
+
+		public String getProviderName();
 
 	}
 
@@ -104,6 +106,13 @@ public class SpeechApiImpl implements SpeechApi {
 	public String[] getVoiceIds() {
 		//
 		return StringUtils.split(Jna.INSTANCE != null ? Jna.INSTANCE.getVoiceIds("", "") : null, ',');
+		//
+	}
+
+	@Override
+	public String getProviderName() {
+		//
+		return Jna.INSTANCE != null ? Jna.INSTANCE.getProviderName() : null;
 		//
 	}
 
