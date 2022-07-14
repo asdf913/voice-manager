@@ -47,7 +47,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Semaphore;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
@@ -1064,8 +1063,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 						//
 						objectMap.setObject(SpeechApi.class, speechApi);
 						//
-						objectMap.setObject(Semaphore.class, new Semaphore(1));
-						//
 					} // if
 						//
 					final boolean headless = GraphicsEnvironment.isHeadless();
@@ -1487,16 +1484,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 			SqlSession sqlSession = null;
 			//
-			final Semaphore semaphore = ObjectMap.getObject(objectMap, Semaphore.class);
-			//
 			try {
 				//
-				if (semaphore != null) {
-					//
-					semaphore.acquire();
-					//
-				} // if
-					//
 				if (objectMap != null) {
 					//
 					final SqlSessionFactory sqlSessionFactory = ObjectMap.getObject(objectMap, SqlSessionFactory.class);
@@ -1531,21 +1520,11 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 						//
 				} // if
 					//
-			} catch (final InterruptedException e) {
-				//
-				accept(throwableConsumer, e);
-				//
 			} finally {
 				//
 				IOUtils.closeQuietly(sqlSession);
 				//
-				if (semaphore != null) {
-					//
-					semaphore.release();
-					//
-				} // if
-					//
-			} //
+			} // try
 				//
 		}
 
@@ -1616,8 +1595,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				Provider provider = null;
 				//
 				JSlider jsSpeechVolume = null;
-				//
-				Semaphore semaphore = null;
 				//
 				for (final Row row : sheet) {
 					//
@@ -1697,117 +1674,93 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 						//
 						if ((es = ObjectUtils.getIfNull(es, () -> Executors.newFixedThreadPool(1))) != null) {
 							//
-							try {
+							(it = new ImportTask()).counter = Integer.valueOf(row.getRowNum());
+							//
+							it.count = Integer.valueOf(sheet.getPhysicalNumberOfRows() - 1);
+							//
+							it.percentNumberFormat = ObjectUtils.getIfNull(percentNumberFormat,
+									() -> new DecimalFormat("#%"));
+							//
+							if ((it.voice = voice) != null) {
 								//
-								if (semaphore != null) {
+								if (StringUtils.isNotBlank(filePath = voice.getFilePath())) {
 									//
-									semaphore.acquire();
-									//
-								} // if
-									//
-								(it = new ImportTask()).counter = Integer.valueOf(row.getRowNum());
-								//
-								it.count = Integer.valueOf(sheet.getPhysicalNumberOfRows() - 1);
-								//
-								it.percentNumberFormat = ObjectUtils.getIfNull(percentNumberFormat,
-										() -> new DecimalFormat("#%"));
-								//
-								if ((it.voice = voice) != null) {
-									//
-									if (StringUtils.isNotBlank(filePath = voice.getFilePath())) {
-										//
-										it.file = new File(folder, filePath);
-										//
-									} else {
-										// \
-										if ((it.file = File.createTempFile(RandomStringUtils.randomAlphabetic(3),
-												filePath)) != null) {
-											//
-											if (objectMap != null) {
-												//
-												objectMap.setObject(File.class, it.file);
-												//
-											} // if
-												//
-											if ((voiceManager = ObjectUtils.getIfNull(voiceManager, () -> ObjectMap
-													.getObject(objectMap, VoiceManager.class))) != null) {
-												//
-												if (jsSpeechVolume == null && voiceManager != null) {
-													jsSpeechVolume = voiceManager.jsSpeechVolume;
-												} // if
-													//
-												if (semaphore == null) {
-													semaphore = ObjectMap.getObject(objectMap, Semaphore.class);
-												} // if
-													//
-												writeVoiceToFile(objectMap, voice.getText(), toString(getSelectedItem(
-														voiceManager != null ? voiceManager.cbmVoiceId : null))
-												//
-														,
-														getRate(getText(voiceManager != null ? voiceManager.tfSpeechRate
-																: null))// rate
-														//
-														,
-														Math.min(Math.max(intValue(
-																jsSpeechVolume != null ? jsSpeechVolume.getValue()
-																		: null,
-																100), 0), 100)// volume
-												);
-												//
-											} // if
-												//
-											it.file.deleteOnExit();
-											//
-										} // if
-											//
-										it.voice.setSource(StringUtils.defaultIfBlank(voice.getSource(),
-												getProviderName(provider = ObjectUtils.getIfNull(provider,
-														() -> ObjectMap.getObject(objectMap, Provider.class)))));
-										//
-									} // if
-										//
-								} // if
-									//
-								if (objectMap != null && Proxy.isProxyClass(getClass(objectMap))) {
-									//
-									final IH ihOld = cast(IH.class, Proxy.getInvocationHandler(objectMap));
-									//
-									final IH ihNew = new IH();
-									//
-									if (ihOld != null) {
-										//
-										ihNew.objects = ObjectUtils.defaultIfNull(
-												testAndApply(Objects::nonNull, ihOld.objects, LinkedHashMap::new, null),
-												ihNew.objects);
-										//
-									} // if
-										//
-									it.objectMap = Reflection.newProxy(ObjectMap.class, ihNew);
+									it.file = new File(folder, filePath);
 									//
 								} else {
 									//
-									it.objectMap = objectMap;
+									if ((it.file = File.createTempFile(RandomStringUtils.randomAlphabetic(3),
+											filePath)) != null) {
+										//
+										if (objectMap != null) {
+											//
+											objectMap.setObject(File.class, it.file);
+											//
+										} // if
+											//
+										if ((voiceManager = ObjectUtils.getIfNull(voiceManager,
+												() -> ObjectMap.getObject(objectMap, VoiceManager.class))) != null) {
+											//
+											if (jsSpeechVolume == null && voiceManager != null) {
+												//
+												jsSpeechVolume = voiceManager.jsSpeechVolume;
+												//
+											} // if
+												//
+											writeVoiceToFile(objectMap, voice.getText(), toString(getSelectedItem(
+													voiceManager != null ? voiceManager.cbmVoiceId : null))
+											//
+													, getRate(getText(
+															voiceManager != null ? voiceManager.tfSpeechRate : null))// rate
+													//
+													,
+													Math.min(Math.max(intValue(
+															jsSpeechVolume != null ? jsSpeechVolume.getValue() : null,
+															100), 0), 100)// volume
+											);
+											//
+										} // if
+											//
+										it.file.deleteOnExit();
+										//
+									} // if
+										//
+									it.voice.setSource(StringUtils.defaultIfBlank(voice.getSource(),
+											getProviderName(provider = ObjectUtils.getIfNull(provider,
+													() -> ObjectMap.getObject(objectMap, Provider.class)))));
 									//
 								} // if
 									//
-								it.errorMessageConsumer = errorMessageConsumer;
+							} // if
 								//
-								it.throwableConsumer = throwableConsumer;
+							if (objectMap != null && Proxy.isProxyClass(getClass(objectMap))) {
 								//
-								es.submit(it);
+								final IH ihOld = cast(IH.class, Proxy.getInvocationHandler(objectMap));
 								//
-							} catch (final InterruptedException e) {
+								final IH ihNew = new IH();
 								//
-								accept(throwableConsumer, e);
-								//
-							} finally {
-								//
-								if (semaphore != null) {
-									semaphore.release();
+								if (ihOld != null) {
+									//
+									ihNew.objects = ObjectUtils.defaultIfNull(
+											testAndApply(Objects::nonNull, ihOld.objects, LinkedHashMap::new, null),
+											ihNew.objects);
+									//
 								} // if
 									//
-							} // try
+								it.objectMap = Reflection.newProxy(ObjectMap.class, ihNew);
 								//
+							} else {
+								//
+								it.objectMap = objectMap;
+								//
+							} // if
+								//
+							it.errorMessageConsumer = errorMessageConsumer;
+							//
+							it.throwableConsumer = throwableConsumer;
+							//
+							es.submit(it);
+							//
 						} else {
 							//
 							if (objectMap != null) {
