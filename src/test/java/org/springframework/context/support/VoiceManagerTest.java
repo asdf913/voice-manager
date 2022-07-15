@@ -1,5 +1,7 @@
 package org.springframework.context.support;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import java.awt.Component;
 import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
@@ -58,8 +60,10 @@ import javax.swing.text.JTextComponent;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.ibatis.binding.BindingException;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
@@ -81,11 +85,14 @@ import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.util.ReflectionUtils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Range;
 import com.google.common.reflect.Reflection;
 import com.j256.simplemagic.ContentInfo;
+import com.mpatric.mp3agic.ID3v1;
 
 import domain.Voice;
 import domain.Voice.Yomi;
@@ -93,6 +100,8 @@ import mapper.VoiceMapper;
 import net.miginfocom.swing.MigLayout;
 
 class VoiceManagerTest {
+
+	private static final String EMPTY = "";
 
 	private static Class<?> CLASS_OBJECT_MAP, CLASS_IH = null;
 
@@ -108,7 +117,8 @@ class VoiceManagerTest {
 			METHOD_SET_CELL_VALUE, METHOD_ANY_MATCH, METHOD_COLLECT, METHOD_NAME, METHOD_GET_SELECTED_ITEM,
 			METHOD_WRITE, METHOD_MATCHER, METHOD_SET_VALUE, METHOD_SET_STRING, METHOD_SET_TOOL_TIP_TEXT, METHOD_FORMAT,
 			METHOD_CONTAINS_KEY, METHOD_VALUE_OF, METHOD_GET_CLASS, METHOD_CREATE_RANGE, METHOD_GET_PROVIDER_NAME,
-			METHOD_WRITE_VOICE_TO_FILE = null;
+			METHOD_WRITE_VOICE_TO_FILE, METHOD_GET_MP3_TAG_PARIRS_FILE, METHOD_GET_MP3_TAG_PARIRS_ID3V1,
+			METHOD_GET_METHODS, METHOD_GET_SIMPLE_NAME = null;
 
 	@BeforeAll
 	private static void beforeAll() throws ReflectiveOperationException {
@@ -252,6 +262,16 @@ class VoiceManagerTest {
 		(METHOD_WRITE_VOICE_TO_FILE = clz.getDeclaredMethod("writeVoiceToFile", CLASS_OBJECT_MAP, String.class,
 				String.class, Integer.class, Integer.class)).setAccessible(true);
 		//
+		(METHOD_GET_MP3_TAG_PARIRS_FILE = clz.getDeclaredMethod("getMp3TagParirs", File.class, String[].class))
+				.setAccessible(true);
+		//
+		(METHOD_GET_MP3_TAG_PARIRS_ID3V1 = clz.getDeclaredMethod("getMp3TagParirs", ID3v1.class, String[].class))
+				.setAccessible(true);
+		//
+		(METHOD_GET_METHODS = clz.getDeclaredMethod("getMethods", Class.class)).setAccessible(true);
+		//
+		(METHOD_GET_SIMPLE_NAME = clz.getDeclaredMethod("getSimpleName", Class.class)).setAccessible(true);
+		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
 	}
@@ -262,7 +282,7 @@ class VoiceManagerTest {
 
 		private Set<Entry<?, ?>> entrySet = null;
 
-		private String toString, stringCellValue, providerName = null;
+		private String toString, stringCellValue, providerName, artist = null;
 
 		private Configuration configuration = null;
 
@@ -281,6 +301,8 @@ class VoiceManagerTest {
 		private String[] voiceIds = null;
 
 		private Map<Object, String> properties = null;
+
+		private Iterator<?> iterator = null;
 
 		public Map<Object, String> getProperties() {
 			if (properties == null) {
@@ -317,6 +339,10 @@ class VoiceManagerTest {
 				} else if (proxy instanceof Row) {
 					//
 					return cells;
+					//
+				} else if (Objects.equals("iterator", methodName)) {
+					//
+					return iterator;
 					//
 				} // if
 					//
@@ -426,6 +452,14 @@ class VoiceManagerTest {
 					//
 				} // if
 					//
+			} else if (proxy instanceof ID3v1) {
+				//
+				if (Objects.equals(methodName, "getArtist")) {
+					//
+					return artist;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(methodName);
@@ -479,7 +513,7 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(get(outputFolderFileNameExpressions, instance));
 		//
-		Assertions.assertDoesNotThrow(() -> instance.setOutputFolderFileNameExpressions(""));
+		Assertions.assertDoesNotThrow(() -> instance.setOutputFolderFileNameExpressions(EMPTY));
 		//
 		Assertions.assertNull(get(outputFolderFileNameExpressions, instance));
 		//
@@ -521,6 +555,75 @@ class VoiceManagerTest {
 		//
 	}
 
+	@Test
+	void testSetMp3Tags() throws NoSuchFieldException, IllegalAccessException, JsonProcessingException {
+		//
+		final Field mp3Tags = VoiceManager.class.getDeclaredField("mp3Tags");
+		//
+		if (mp3Tags != null) {
+			//
+			mp3Tags.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> instance.setMp3Tags(null));
+		//
+		Assertions.assertNull(get(mp3Tags, instance));
+		//
+		set(mp3Tags, instance, null);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.setMp3Tags(Reflection.newProxy(Iterable.class, ih)));
+		//
+		Assertions.assertNull(get(mp3Tags, instance));
+		//
+		set(mp3Tags, instance, null);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.setMp3Tags(Collections.emptySet()));
+		//
+		Assertions.assertTrue(Objects.deepEquals(new String[] {}, get(mp3Tags, instance)));
+		//
+		set(mp3Tags, instance, null);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.setMp3Tags(EMPTY));
+		//
+		Assertions.assertTrue(Objects.deepEquals(new String[] { EMPTY }, get(mp3Tags, instance)));
+		//
+		set(mp3Tags, instance, null);
+		//
+		final int one = 1;
+		//
+		Assertions.assertDoesNotThrow(() -> instance.setMp3Tags(Integer.toString(one)));
+		//
+		Assertions.assertTrue(Objects.deepEquals(new String[] { Integer.toString(one) }, get(mp3Tags, instance)));
+		//
+		set(mp3Tags, instance, null);
+		//
+		final boolean b = true;
+		//
+		Assertions.assertDoesNotThrow(() -> instance.setMp3Tags(Boolean.toString(b)));
+		//
+		Assertions.assertTrue(Objects.deepEquals(new String[] { Boolean.toString(b) }, get(mp3Tags, instance)));
+		//
+		set(mp3Tags, instance, null);
+		//
+		final String string = StringUtils.wrap(EMPTY, '"');
+		//
+		Assertions.assertDoesNotThrow(() -> instance.setMp3Tags(string));
+		//
+		Assertions.assertTrue(Objects.deepEquals(new String[] { EMPTY }, get(mp3Tags, instance)));
+		//
+		set(mp3Tags, instance, null);
+		//
+		final String json = new ObjectMapper().writeValueAsString(Collections.singleton(EMPTY));
+		//
+		Assertions.assertDoesNotThrow(() -> instance.setMp3Tags(json));
+		//
+		Assertions.assertTrue(Objects.deepEquals(new String[] { EMPTY }, get(mp3Tags, instance)));
+		//
+		Assertions.assertThrows(IllegalArgumentException.class, () -> instance.setMp3Tags("{}"));
+		//
+	}
+
 	private static Object get(final Field field, final Object instance) throws IllegalAccessException {
 		return field != null ? field.get(instance) : null;
 	}
@@ -535,7 +638,7 @@ class VoiceManagerTest {
 	@Test
 	void testActionPerformed() throws IllegalAccessException {
 		//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent("", 0, null)));
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(EMPTY, 0, null)));
 		//
 		final AbstractButton btnConvertToRomaji = new JButton();
 		//
@@ -726,9 +829,7 @@ class VoiceManagerTest {
 	@Test
 	void testGetFileExtension() throws Throwable {
 		//
-		Assertions.assertNull(getFileExtension(null));
-		//
-		Assertions.assertNull(getFileExtension(new ContentInfo(null, null, "", false)));
+		Assertions.assertNull(getFileExtension(new ContentInfo(null, null, EMPTY, false)));
 		//
 		Assertions.assertEquals("mp3", getFileExtension(new ContentInfo(null, null, "MPEG ADTS, layer III.", false)));
 		//
@@ -997,7 +1098,7 @@ class VoiceManagerTest {
 	@Test
 	void testGetText() throws Throwable {
 		//
-		Assertions.assertEquals("", getText(new JTextField()));
+		Assertions.assertEquals(EMPTY, getText(new JTextField()));
 		//
 	}
 
@@ -1046,7 +1147,7 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> export(voices, null, null, null, null));
 		//
-		voice.setFilePath("");
+		voice.setFilePath(EMPTY);
 		//
 		Assertions.assertDoesNotThrow(() -> export(voices, null, null, null, null));
 		//
@@ -1056,13 +1157,13 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> export(voices, Collections.singletonMap(null, null), null, null, null));
 		//
-		Assertions.assertDoesNotThrow(() -> export(voices, Collections.singletonMap("", null), null, null, null));
+		Assertions.assertDoesNotThrow(() -> export(voices, Collections.singletonMap(EMPTY, null), null, null, null));
 		//
-		Assertions.assertDoesNotThrow(() -> export(voices, Collections.singletonMap("", ""), null, null, null));
+		Assertions.assertDoesNotThrow(() -> export(voices, Collections.singletonMap(EMPTY, EMPTY), null, null, null));
 		//
-		Assertions.assertDoesNotThrow(() -> export(voices, Collections.singletonMap("", " "), null, null, null));
+		Assertions.assertDoesNotThrow(() -> export(voices, Collections.singletonMap(EMPTY, " "), null, null, null));
 		//
-		Assertions.assertDoesNotThrow(() -> export(voices, Collections.singletonMap("", "true"), null, null, null));
+		Assertions.assertDoesNotThrow(() -> export(voices, Collections.singletonMap(EMPTY, "true"), null, null, null));
 		//
 	}
 
@@ -1343,7 +1444,7 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(forName(null));
 		//
-		Assertions.assertNull(forName(""));
+		Assertions.assertNull(forName(EMPTY));
 		//
 		Assertions.assertNull(forName(" "));
 		//
@@ -1861,7 +1962,7 @@ class VoiceManagerTest {
 	@Test
 	void testValueOf() throws Throwable {
 		//
-		Assertions.assertNull(valueOf(""));
+		Assertions.assertNull(valueOf(EMPTY));
 		//
 		Assertions.assertNull(valueOf(" "));
 		//
@@ -1969,6 +2070,104 @@ class VoiceManagerTest {
 			final Integer rate, final Integer volume) throws Throwable {
 		try {
 			METHOD_WRITE_VOICE_TO_FILE.invoke(null, objectMap, text, voiceId, rate, volume);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetMp3TagParirs() throws Throwable {
+		//
+		Assertions.assertNull(getMp3TagParirs((File) null));
+		//
+		Assertions.assertNull(getMp3TagParirs((ID3v1) null));
+		//
+		Assertions.assertNull(getMp3TagParirs(new File("NON_EXISTS")));
+		//
+		Assertions.assertNull(getMp3TagParirs(new File(".")));
+		//
+		Assertions.assertNull(getMp3TagParirs(new File("pom.xml")));
+		//
+		final ID3v1 id3v1 = Reflection.newProxy(ID3v1.class, ih);
+		//
+		Assertions.assertNull(getMp3TagParirs(id3v1));
+		//
+		Assertions.assertNull(getMp3TagParirs(id3v1, (String[]) null));
+		//
+		Assertions.assertNull(getMp3TagParirs(id3v1, null, ""));
+		//
+		Assertions.assertEquals(Collections.singletonList(Pair.of("artist", null)), getMp3TagParirs(id3v1, "artist"));
+		//
+	}
+
+	private static List<Pair<String, ?>> getMp3TagParirs(final File file, final String... attributes) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_MP3_TAG_PARIRS_FILE.invoke(null, file, attributes);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof List) {
+				return (List) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static List<Pair<String, ?>> getMp3TagParirs(final ID3v1 id3v1, final String... attributes)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_GET_MP3_TAG_PARIRS_ID3V1.invoke(null, id3v1, attributes);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof List) {
+				return (List) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetMethods() throws Throwable {
+		//
+		Assertions.assertNull(getMethods(null));
+		//
+	}
+
+	private static Method[] getMethods(final Class<?> instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_METHODS.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Method[]) {
+				return (Method[]) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetSimpleName() throws Throwable {
+		//
+		Assertions.assertNull(getSimpleName(null));
+		//
+		Assertions.assertNotNull(getSimpleName(Object.class));
+		//
+	}
+
+	private static String getSimpleName(final Class<?> instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_SIMPLE_NAME.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

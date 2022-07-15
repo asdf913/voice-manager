@@ -83,6 +83,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -163,6 +164,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 
 	private SpeechApi speechApi = null;
 
+	private String[] mp3Tags = null;
+
 	private VoiceManager() {
 	}
 
@@ -227,6 +230,69 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		} else {
 			throw new IllegalArgumentException(toString(getClass(object)));
 		} // if
+			//
+	}
+
+	public void setMp3Tags(final Object value) {
+		//
+		if (value == null) {
+			//
+			mp3Tags = null;
+			//
+			return;
+			//
+		} // if
+			//
+		final Iterable<?> iterable = cast(Iterable.class, value);
+		//
+		if (iterable != null) {
+			//
+			if (iterable.iterator() == null) {
+				//
+				setMp3Tags(null);
+				//
+				return;
+				//
+			} //
+				//
+			for (final Object v : iterable) {
+				//
+				mp3Tags = ArrayUtils.add(mp3Tags = ObjectUtils.getIfNull(mp3Tags, () -> new String[] {}), toString(v));
+				//
+			} // for
+				//
+			if (mp3Tags == null) {
+				//
+				mp3Tags = new String[] {};
+				//
+			} // if
+				//
+			return;
+			//
+		} // if
+			//
+		try {
+			//
+			final Object object = new ObjectMapper().readValue(toString(value), Object.class);
+			//
+			if (object instanceof Iterable || object == null) {
+				//
+				setMp3Tags(object);
+				//
+			} else if (object instanceof String || object instanceof Boolean || object instanceof Number) {
+				//
+				setMp3Tags(Collections.singleton(object));
+				//
+			} else {
+				//
+				throw new IllegalArgumentException(toString(getClass(object)));
+				//
+			} // if
+		} catch (final JsonProcessingException e) {
+			//
+			setMp3Tags(Collections.singleton(value));
+			//
+		} // try
 			//
 	}
 
@@ -837,23 +903,33 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 						if (Objects.equals("mp3",
 								getFileExtension(new ContentInfoUtil().findMatch(file = jfc.getSelectedFile())))) {
 							//
-							final Mp3File mp3File = new Mp3File(file);
+							final List<Pair<String, ?>> pairs = getMp3TagParirs(file, mp3Tags);
 							//
-							final ID3v1 id3v1 = ObjectUtils.defaultIfNull(mp3File.getId3v1Tag(), mp3File.getId3v2Tag());
+							Pair<String, ?> pair = null;
 							//
-							if (id3v1 != null) {
+							String string = null;
+							//
+							for (int i = 0; pairs != null && i < pairs.size() && StringUtils.isBlank(string); i++) {
 								//
-								if (voice != null) {
+								if ((pair = pairs.get(i)) == null) {
 									//
-									voice.setSource(StringUtils.defaultIfBlank(voice.getSource(), id3v1.getArtist()));
+									continue;
 									//
 								} // if
 									//
+								string = toString(pair.getValue());
+								//
+							} // for
+								//
+							if (voice != null) {
+								//
+								voice.setSource(StringUtils.defaultIfBlank(voice.getSource(), string));
+								//
 							} // if
 								//
 						} // if
 							//
-					} catch (final IOException | BaseException e) {
+					} catch (final IOException | BaseException | IllegalAccessException e) {
 						//
 						if (GraphicsEnvironment.isHeadless()) {
 							//
@@ -866,6 +942,28 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 						} else {
 							//
 							JOptionPane.showMessageDialog(null, getMessage(e));
+							//
+						} // if
+							//
+					} catch (final InvocationTargetException e) {
+						//
+						final Throwable targetException = e.getTargetException();
+						//
+						final Throwable rootCause = ObjectUtils.firstNonNull(
+								ExceptionUtils.getRootCause(targetException), targetException,
+								ExceptionUtils.getRootCause(e), e);
+						//
+						if (GraphicsEnvironment.isHeadless()) {
+							//
+							if (LOG != null) {
+								LOG.error(getMessage(rootCause), rootCause);
+							} else if (rootCause != null) {
+								rootCause.printStackTrace();
+							} // if
+								//
+						} else {
+							//
+							JOptionPane.showMessageDialog(null, getMessage(rootCause));
 							//
 						} // if
 							//
@@ -1190,6 +1288,72 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				//
 		} // if
 			//
+	}
+
+	private static List<Pair<String, ?>> getMp3TagParirs(final File file, final String... attributes)
+			throws BaseException, IOException, IllegalAccessException, InvocationTargetException {
+		//
+		if (Objects.equals("mp3", getFileExtension(
+				testAndApply(f -> f != null && f.isFile(), file, new ContentInfoUtil()::findMatch, null)))) {
+			//
+			final Mp3File mp3File = new Mp3File(file);
+			//
+			return getMp3TagParirs(ObjectUtils.defaultIfNull(mp3File.getId3v2Tag(), mp3File.getId3v1Tag()), attributes);
+			//
+		} // if
+			//
+		return null;
+		//
+	}
+
+	private static List<Pair<String, ?>> getMp3TagParirs(final ID3v1 id3v1, final String... attributes)
+			throws BaseException, IOException, IllegalAccessException, InvocationTargetException {
+		//
+		List<Pair<String, ?>> pairs = null;
+		//
+		if (id3v1 != null && attributes != null) {
+			//
+			Method[] ms = null;
+			//
+			List<Method> methods = null;
+			//
+			Method m = null;
+			//
+			for (int i = 0; i < attributes.length; i++) {
+				//
+				final String attribute = attributes[i];
+				//
+				if ((methods = collect(filter(testAndApply(Objects::nonNull,
+						ms = ObjectUtils.getIfNull(ms, () -> getMethods(getClass(id3v1))), Arrays::stream, null),
+						a -> matches(
+								matcher(Pattern.compile(String.format("get%1$s", StringUtils.capitalize(attribute))),
+										getName(a)))),
+						Collectors.toList())) == null || methods.isEmpty()) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if (methods.size() == 1) {
+					//
+					if ((m = methods.get(0)) != null && m.getParameterCount() == 0) {
+						//
+						add(pairs = ObjectUtils.getIfNull(pairs, ArrayList::new), Pair.of(attribute, m.invoke(id3v1)));
+						//
+					} // if
+						//
+				} else {
+					//
+					throw new IllegalStateException();
+					//
+				} // if
+					//
+			} // for
+				//
+		} // if
+			//
+		return pairs;
+		//
 	}
 
 	private static String getProviderName(final Provider instance) {
@@ -2507,6 +2671,10 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 
 	private static <T> Optional<T> findFirst(final Stream<T> instance) {
 		return instance != null ? instance.findFirst() : null;
+	}
+
+	private static Method[] getMethods(final Class<?> instance) {
+		return instance != null ? instance.getMethods() : null;
 	}
 
 	private static Method[] getDeclaredMethods(final Class<?> instance) {
