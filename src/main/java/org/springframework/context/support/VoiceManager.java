@@ -38,13 +38,11 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.EventObject;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.BiFunction;
@@ -82,8 +80,6 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -118,6 +114,9 @@ import com.google.common.reflect.Reflection;
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
 import com.mariten.kanatools.KanaConverter;
+import com.mpatric.mp3agic.BaseException;
+import com.mpatric.mp3agic.ID3v1;
+import com.mpatric.mp3agic.Mp3File;
 
 import domain.Voice;
 import domain.Voice.Yomi;
@@ -833,8 +832,45 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				//
 				if (jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
 					//
-					file = jfc.getSelectedFile();
-					//
+					try {
+						//
+						if (Objects.equals("mp3",
+								getFileExtension(new ContentInfoUtil().findMatch(file = jfc.getSelectedFile())))) {
+							//
+							final Mp3File mp3File = new Mp3File(file);
+							//
+							final ID3v1 id3v1 = ObjectUtils.defaultIfNull(mp3File.getId3v1Tag(), mp3File.getId3v2Tag());
+							//
+							if (id3v1 != null) {
+								//
+								if (voice != null) {
+									//
+									voice.setSource(StringUtils.defaultIfBlank(voice.getSource(), id3v1.getArtist()));
+									//
+								} // if
+									//
+							} // if
+								//
+						} // if
+							//
+					} catch (final IOException | BaseException e) {
+						//
+						if (GraphicsEnvironment.isHeadless()) {
+							//
+							if (LOG != null) {
+								LOG.error(getMessage(e), e);
+							} else if (e != null) {
+								e.printStackTrace();
+							} // if
+								//
+						} else {
+							//
+							JOptionPane.showMessageDialog(null, getMessage(e));
+							//
+						} // if
+							//
+					} // try
+						//
 				} else {
 					//
 					JOptionPane.showMessageDialog(null, "No File Selected");
@@ -1806,8 +1842,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		}
 	}
 
-	private static Set<String> FILE_DIGEST = null;
-
 	private static void importVoice(final ObjectMap objectMap, final Consumer<String> errorMessageConsumer,
 			final Consumer<Throwable> throwableConsumer) {
 		//
@@ -1921,24 +1955,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				} // if
 					//
 				filePath = voiceOld.getFilePath();
-				//
-			} // if
-				//
-			if (FILE_DIGEST == null) {
-				//
-				FILE_DIGEST = new LinkedHashSet<>();
-				//
-			} // if
-				//
-			if (FILE_DIGEST.contains(fileDigest)) {
-				//
-				System.out.println(
-						voice != null ? ToStringBuilder.reflectionToString(voice, ToStringStyle.SHORT_PREFIX_STYLE)
-								: null);
-				//
-			} else {
-				//
-				FILE_DIGEST.add(fileDigest);
 				//
 			} // if
 				//
