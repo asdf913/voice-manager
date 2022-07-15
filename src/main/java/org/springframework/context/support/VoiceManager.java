@@ -66,10 +66,12 @@ import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JProgressBar;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
+import javax.swing.ListCellRenderer;
 import javax.swing.text.JTextComponent;
 
 import org.apache.commons.codec.binary.Hex;
@@ -345,7 +347,30 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		if ((cbmVoiceId = testAndApply(Objects::nonNull, voiceIds,
 				x -> new DefaultComboBoxModel<>(ArrayUtils.insert(0, x, (String) null)), null)) != null) {
 			//
-			add(new JComboBox<>(cbmVoiceId), String.format("span %1$s,%2$s", 5, WRAP));
+			final JComboBox<Object> jcb = new JComboBox(cbmVoiceId);
+			//
+			final ListCellRenderer<Object> listCellRenderer = jcb.getRenderer();
+			//
+			final String commonPrefix = String.join("",
+					StringUtils.substringBeforeLast(StringUtils.getCommonPrefix(voiceIds), "\\"), "\\");
+			//
+			jcb.setRenderer(new ListCellRenderer<Object>() {
+
+				@Override
+				public Component getListCellRendererComponent(final JList<? extends Object> list, final Object value,
+						final int index, final boolean isSelected, final boolean cellHasFocus) {
+					//
+					final String s = VoiceManager.toString(value);
+					//
+					return VoiceManager.getListCellRendererComponent(listCellRenderer, list,
+							StringUtils.startsWith(s, commonPrefix) ? StringUtils.substringAfter(s, commonPrefix)
+									: value,
+							index, isSelected, cellHasFocus);
+					//
+				}
+			});
+			//
+			add(jcb, String.format("span %1$s,growx,%2$s", 5, WRAP));
 			//
 		} // if
 			//
@@ -520,6 +545,15 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				0) - intValue(getPreferredWidth(btnConvertToRomaji), 0), tfText, tfRomaji, tfHiragana);
 		//
 		setEnabled(btnExecute, folder != null && folder.exists() && folder.isDirectory());
+		//
+	}
+
+	private static <E> Component getListCellRendererComponent(final ListCellRenderer<E> instance,
+			final JList<? extends E> list, final E value, final int index, final boolean isSelected,
+			final boolean cellHasFocus) {
+		//
+		return instance != null ? instance.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
+				: null;
 		//
 	}
 

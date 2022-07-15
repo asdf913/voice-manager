@@ -50,9 +50,11 @@ import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JList;
 import javax.swing.JProgressBar;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
+import javax.swing.ListCellRenderer;
 import javax.swing.text.JTextComponent;
 
 import org.apache.commons.codec.binary.Hex;
@@ -118,7 +120,7 @@ class VoiceManagerTest {
 			METHOD_CONTAINS_KEY, METHOD_VALUE_OF, METHOD_GET_CLASS, METHOD_CREATE_RANGE, METHOD_GET_PROVIDER_NAME,
 			METHOD_WRITE_VOICE_TO_FILE, METHOD_GET_MP3_TAG_VALUE_FILE, METHOD_GET_MP3_TAG_VALUE_LIST,
 			METHOD_GET_MP3_TAG_PARIRS_FILE, METHOD_GET_MP3_TAG_PARIRS_ID3V1, METHOD_GET_METHODS, METHOD_GET_SIMPLE_NAME,
-			METHOD_COPY_OBJECT_MAP, METHOD_DELETE_ON_EXIT = null;
+			METHOD_COPY_OBJECT_MAP, METHOD_DELETE_ON_EXIT, METHOD_GET_LIST_CELL_RENDERER_COMPONENT = null;
 
 	@BeforeAll
 	private static void beforeAll() throws ReflectiveOperationException {
@@ -281,6 +283,11 @@ class VoiceManagerTest {
 		(METHOD_COPY_OBJECT_MAP = clz.getDeclaredMethod("copyObjectMap", CLASS_OBJECT_MAP)).setAccessible(true);
 		//
 		(METHOD_DELETE_ON_EXIT = clz.getDeclaredMethod("deleteOnExit", File.class)).setAccessible(true);
+		//
+		(METHOD_GET_LIST_CELL_RENDERER_COMPONENT = clz.getDeclaredMethod("getListCellRendererComponent",
+				ListCellRenderer.class, JList.class, Object.class, Integer.TYPE, Boolean.TYPE, Boolean.TYPE))
+				.setAccessible(true);
+		//
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -467,6 +474,14 @@ class VoiceManagerTest {
 				if (Objects.equals(methodName, "getArtist")) {
 					//
 					return artist;
+					//
+				} // if
+					//
+			} else if (proxy instanceof ListCellRenderer) {
+				//
+				if (Objects.equals(methodName, "getListCellRendererComponent")) {
+					//
+					return null;
 					//
 				} // if
 					//
@@ -2314,6 +2329,33 @@ class VoiceManagerTest {
 	private static void deleteOnExit(final File instance) throws Throwable {
 		try {
 			METHOD_DELETE_ON_EXIT.invoke(null, instance);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testgetListCellRendererComponent() throws Throwable {
+		//
+		Assertions.assertNull(getListCellRendererComponent(null, null, null, 0, false, false));
+		//
+		Assertions.assertNull(getListCellRendererComponent(Reflection.newProxy(ListCellRenderer.class, ih), null, null,
+				0, false, false));
+		//
+	}
+
+	private static <E> Component getListCellRendererComponent(final ListCellRenderer<E> instance,
+			final JList<? extends E> list, final E value, final int index, final boolean isSelected,
+			final boolean cellHasFocus) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_LIST_CELL_RENDERER_COMPONENT.invoke(null, instance, list, value, index,
+					isSelected, cellHasFocus);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Component) {
+				return (Component) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
