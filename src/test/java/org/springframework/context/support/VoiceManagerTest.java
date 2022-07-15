@@ -1,7 +1,5 @@
 package org.springframework.context.support;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import java.awt.Component;
 import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
@@ -119,7 +117,7 @@ class VoiceManagerTest {
 			METHOD_CONTAINS_KEY, METHOD_VALUE_OF, METHOD_GET_CLASS, METHOD_CREATE_RANGE, METHOD_GET_PROVIDER_NAME,
 			METHOD_WRITE_VOICE_TO_FILE, METHOD_GET_MP3_TAG_VALUE_FILE, METHOD_GET_MP3_TAG_VALUE_LIST,
 			METHOD_GET_MP3_TAG_PARIRS_FILE, METHOD_GET_MP3_TAG_PARIRS_ID3V1, METHOD_GET_METHODS, METHOD_GET_SIMPLE_NAME,
-			METHOD_COPY_OBJECT_MAP = null;
+			METHOD_COPY_OBJECT_MAP, METHOD_DELETE_ON_EXIT = null;
 
 	@BeforeAll
 	private static void beforeAll() throws ReflectiveOperationException {
@@ -280,6 +278,8 @@ class VoiceManagerTest {
 		(METHOD_GET_SIMPLE_NAME = clz.getDeclaredMethod("getSimpleName", Class.class)).setAccessible(true);
 		//
 		(METHOD_COPY_OBJECT_MAP = clz.getDeclaredMethod("copyObjectMap", CLASS_OBJECT_MAP)).setAccessible(true);
+		//
+		(METHOD_DELETE_ON_EXIT = clz.getDeclaredMethod("deleteOnExit", File.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -2258,6 +2258,24 @@ class VoiceManagerTest {
 	private static Object copyObjectMap(final Object objectMap) throws Throwable {
 		try {
 			return METHOD_COPY_OBJECT_MAP.invoke(null, objectMap);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testDeleteOnExit() throws Exception {
+		//
+		Assertions.assertDoesNotThrow(() -> deleteOnExit(null));
+		//
+		Assertions.assertDoesNotThrow(
+				() -> deleteOnExit(File.createTempFile(RandomStringUtils.randomAlphabetic(3), null)));
+		//
+	}
+
+	private static void deleteOnExit(final File instance) throws Throwable {
+		try {
+			METHOD_DELETE_ON_EXIT.invoke(null, instance);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

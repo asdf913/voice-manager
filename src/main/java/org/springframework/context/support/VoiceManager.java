@@ -884,12 +884,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 					//
 				} // if
 					//
-				if (file != null) {
-					//
-					file.deleteOnExit();
-					//
-				} // if
-					//
+				deleteOnExit(file);
+				//
 			} else {
 				//
 				final JFileChooser jfc = new JFileChooser(".");
@@ -1287,6 +1283,12 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				//
 		} // if
 			//
+	}
+
+	private static void deleteOnExit(final File instance) {
+		if (instance != null) {
+			instance.deleteOnExit();
+		}
 	}
 
 	private static String getMp3TagValue(final File file, final Predicate<Object> predicate, final String... attributes)
@@ -1969,7 +1971,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 											//
 										} // if
 											//
-										it.file.deleteOnExit();
+										deleteOnExit(it.file);
 										//
 									} // if
 										//
