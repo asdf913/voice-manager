@@ -57,6 +57,7 @@ import javax.swing.text.JTextComponent;
 
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
@@ -2069,9 +2070,49 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testWriteVoiceToFile() throws IllegalAccessException {
+	void testWriteVoiceToFile() throws Throwable {
 		//
 		Assertions.assertDoesNotThrow(() -> writeVoiceToFile(null, null, null, null, null));
+		//
+		final Constructor<?> constructor = CLASS_IH != null ? CLASS_IH.getDeclaredConstructor() : null;
+		//
+		if (constructor != null) {
+			//
+			constructor.setAccessible(true);
+			//
+		} // if
+			//
+		final InvocationHandler ih = cast(InvocationHandler.class,
+				constructor != null ? constructor.newInstance() : null);
+		//
+		final Field fieldObjects = ih != null && ih.getClass() != null ? ih.getClass().getDeclaredField("objects")
+				: null;
+		//
+		if (fieldObjects != null) {
+			//
+			fieldObjects.setAccessible(true);
+			//
+		} // if
+			//
+		Map<Object, Object> objects = ObjectUtils
+				.getIfNull(cast(Map.class, fieldObjects != null ? fieldObjects.get(ih) : null), LinkedHashMap::new);
+		//
+		if (objects != null) {
+			//
+			objects.put(SpeechApi.class, speechApi);
+			//
+			objects.put(File.class, null);
+			//
+		} // if
+			//
+		if (fieldObjects != null) {
+			//
+			fieldObjects.set(ih, objects);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(
+				() -> writeVoiceToFile(Reflection.newProxy(CLASS_OBJECT_MAP, ih), null, null, null, null));
 		//
 	}
 
