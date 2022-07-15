@@ -2,12 +2,15 @@ package org.springframework.context.support;
 
 import java.awt.Component;
 import java.awt.GraphicsEnvironment;
+import java.awt.ItemSelectable;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -62,6 +65,7 @@ import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -73,6 +77,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.util.LocaleID;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -117,10 +122,11 @@ class VoiceManagerTest {
 			METHOD_CREATE_IMPORT_FILE_TEMPLATE_BYTE_ARRAY, METHOD_GET_DECLARED_ANNOTATIONS, METHOD_CREATE_CELL,
 			METHOD_SET_CELL_VALUE, METHOD_ANY_MATCH, METHOD_COLLECT, METHOD_NAME, METHOD_GET_SELECTED_ITEM,
 			METHOD_WRITE, METHOD_MATCHER, METHOD_SET_VALUE, METHOD_SET_STRING, METHOD_SET_TOOL_TIP_TEXT, METHOD_FORMAT,
-			METHOD_CONTAINS_KEY, METHOD_VALUE_OF, METHOD_GET_CLASS, METHOD_CREATE_RANGE, METHOD_GET_PROVIDER_NAME,
-			METHOD_WRITE_VOICE_TO_FILE, METHOD_GET_MP3_TAG_VALUE_FILE, METHOD_GET_MP3_TAG_VALUE_LIST,
-			METHOD_GET_MP3_TAG_PARIRS_FILE, METHOD_GET_MP3_TAG_PARIRS_ID3V1, METHOD_GET_METHODS, METHOD_GET_SIMPLE_NAME,
-			METHOD_COPY_OBJECT_MAP, METHOD_DELETE_ON_EXIT, METHOD_GET_LIST_CELL_RENDERER_COMPONENT = null;
+			METHOD_CONTAINS_KEY, METHOD_VALUE_OF1, METHOD_VALUE_OF2, METHOD_GET_CLASS, METHOD_CREATE_RANGE,
+			METHOD_GET_PROVIDER_NAME, METHOD_GET_PROVIDER_VERSION, METHOD_WRITE_VOICE_TO_FILE,
+			METHOD_GET_MP3_TAG_VALUE_FILE, METHOD_GET_MP3_TAG_VALUE_LIST, METHOD_GET_MP3_TAG_PARIRS_FILE,
+			METHOD_GET_MP3_TAG_PARIRS_ID3V1, METHOD_GET_METHODS, METHOD_GET_SIMPLE_NAME, METHOD_COPY_OBJECT_MAP,
+			METHOD_DELETE_ON_EXIT, METHOD_GET_LIST_CELL_RENDERER_COMPONENT = null;
 
 	@BeforeAll
 	private static void beforeAll() throws ReflectiveOperationException {
@@ -253,13 +259,17 @@ class VoiceManagerTest {
 		//
 		(METHOD_CONTAINS_KEY = clz.getDeclaredMethod("containsKey", Map.class, Object.class)).setAccessible(true);
 		//
-		(METHOD_VALUE_OF = clz.getDeclaredMethod("valueOf", String.class)).setAccessible(true);
+		(METHOD_VALUE_OF1 = clz.getDeclaredMethod("valueOf", String.class)).setAccessible(true);
+		//
+		(METHOD_VALUE_OF2 = clz.getDeclaredMethod("valueOf", String.class, Integer.TYPE)).setAccessible(true);
 		//
 		(METHOD_GET_CLASS = clz.getDeclaredMethod("getClass", Object.class)).setAccessible(true);
 		//
 		(METHOD_CREATE_RANGE = clz.getDeclaredMethod("createRange", Integer.class, Integer.class)).setAccessible(true);
 		//
 		(METHOD_GET_PROVIDER_NAME = clz.getDeclaredMethod("getProviderName", Provider.class)).setAccessible(true);
+		//
+		(METHOD_GET_PROVIDER_VERSION = clz.getDeclaredMethod("getProviderVersion", Provider.class)).setAccessible(true);
 		//
 		(METHOD_WRITE_VOICE_TO_FILE = clz.getDeclaredMethod("writeVoiceToFile", CLASS_OBJECT_MAP, String.class,
 				String.class, Integer.class, Integer.class)).setAccessible(true);
@@ -299,7 +309,7 @@ class VoiceManagerTest {
 
 		private Set<Entry<?, ?>> entrySet = null;
 
-		private String toString, stringCellValue, providerName, artist = null;
+		private String toString, stringCellValue, providerName, providerVersion, artist, voiceAttribute = null;
 
 		private Configuration configuration = null;
 
@@ -336,6 +346,10 @@ class VoiceManagerTest {
 			if (ReflectionUtils.isToStringMethod(method)) {
 				//
 				return toString;
+				//
+			} else if (ReflectionUtils.isEqualsMethod(method) && args != null && args.length > 0) {
+				//
+				return EqualsBuilder.reflectionEquals(this, args[0]);
 				//
 			} // if
 				//
@@ -459,6 +473,12 @@ class VoiceManagerTest {
 					//
 					return voiceIds;
 					//
+				} else
+				//
+				if (Objects.equals(methodName, "getVoiceAttribute")) {
+					//
+					return voiceAttribute;
+					//
 				} // if
 					//
 			} else if (proxy instanceof Provider) {
@@ -466,6 +486,10 @@ class VoiceManagerTest {
 				if (Objects.equals(methodName, "getProviderName")) {
 					//
 					return providerName;
+					//
+				} else if (Objects.equals(methodName, "getProviderVersion")) {
+					//
+					return providerVersion;
 					//
 				} // if
 					//
@@ -767,6 +791,33 @@ class VoiceManagerTest {
 		if (instance != null) {
 			instance.actionPerformed(actionEvent);
 		} // if
+	}
+
+	@Test
+	void testItemStateChanged() {
+		//
+		Assertions.assertDoesNotThrow(() -> instance.itemStateChanged(null));
+		//
+		final ItemSelectable itemSelectable = Reflection.newProxy(ItemSelectable.class, ih);
+		//
+		Assertions.assertDoesNotThrow(() -> itemStateChanged(instance, new ItemEvent(itemSelectable, 0, "", 0)));
+		//
+		if (instance != null) {
+			//
+			instance.setSpeechApi(speechApi);
+			//
+		} // if
+			//
+		ih.voiceAttribute = Integer.toString(LocaleID.AF.getLcid(), 16);
+		//
+		Assertions.assertDoesNotThrow(() -> itemStateChanged(instance, null));
+		//
+	}
+
+	private static void itemStateChanged(final ItemListener instance, final ItemEvent itemEvent) {
+		if (instance != null) {
+			instance.itemStateChanged(itemEvent);
+		}
 	}
 
 	@Test
@@ -1993,11 +2044,27 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(valueOf(" "));
 		//
+		Assertions.assertNull(valueOf("A", 10));
+		//
 	}
 
 	private static Integer valueOf(final String instance) throws Throwable {
 		try {
-			final Object obj = METHOD_VALUE_OF.invoke(null, instance);
+			final Object obj = METHOD_VALUE_OF1.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Integer) {
+				return (Integer) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static Integer valueOf(final String instance, final int base) throws Throwable {
+		try {
+			final Object obj = METHOD_VALUE_OF2.invoke(null, instance, base);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Integer) {
@@ -2066,10 +2133,29 @@ class VoiceManagerTest {
 	@Test
 	void testGetProviderName() throws Throwable {
 		//
-		Assertions.assertNull(getProviderName(null));
-		//
 		Assertions.assertNull(getProviderName(Reflection.newProxy(Provider.class, ih)));
 		//
+	}
+
+	@Test
+	void testGetProviderVersioni() throws Throwable {
+		//
+		Assertions.assertNull(getProviderVersion(Reflection.newProxy(Provider.class, ih)));
+		//
+	}
+
+	private static String getProviderVersion(final Provider instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_PROVIDER_VERSION.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 	private static String getProviderName(final Provider instance) throws Throwable {

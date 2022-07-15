@@ -10,6 +10,8 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -98,6 +100,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.util.LocaleID;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -127,7 +130,7 @@ import fr.free.nrw.jakaroma.Jakaroma;
 import mapper.VoiceMapper;
 import net.miginfocom.swing.MigLayout;
 
-public class VoiceManager extends JFrame implements ActionListener, EnvironmentAware {
+public class VoiceManager extends JFrame implements ActionListener, ItemListener, EnvironmentAware {
 
 	private static final long serialVersionUID = 6093437131552718994L;
 
@@ -143,7 +146,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	private PropertyResolver propertyResolver = null;
 
 	private JTextComponent tfFolder, tfFile, tfFileLength, tfFileDigest, tfText, tfHiragana, tfKatakana, tfRomaji,
-			tfSpeechRate, tfSource, tfProviderName, tfProviderVersion = null;
+			tfSpeechRate, tfSource, tfProviderName, tfProviderVersion, tfLanguage = null;
 
 	private ComboBoxModel<Yomi> cbmYomi = null;
 
@@ -155,6 +158,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	private JProgressBar progressBar = null;
 
 	private JSlider jsSpeechVolume = null;
+
+	private JComboBox<Object> jcbVoiceId = null;
 
 	private SqlSessionFactory sqlSessionFactory = null;
 
@@ -312,7 +317,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		add(new JLabel("Text"));
 		//
-		String span = String.format("spanx %1$s,growx", 5);
+		String span = String.format("spanx %1$s,growx", 6);
 		//
 		add(tfText = new JTextField(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.text")), span);
@@ -325,7 +330,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		add(tfSource = new JTextField(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.source")),
-				String.format("spanx %1$s,growx,%2$s", 5, WRAP));
+				String.format("spanx %1$s,growx,%2$s", 6, WRAP));
 		//
 		// Provider
 		//
@@ -333,10 +338,10 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		final Provider provider = cast(Provider.class, speechApi);
 		//
-		add(tfProviderName = new JTextField(getProviderName(provider)), String.format("spanx %1$s,growx", 4));
+		add(tfProviderName = new JTextField(getProviderName(provider)), String.format("spanx %1$s,growx", 5));
 		//
-		add(tfProviderVersion = new JTextField(provider != null ? provider.getProviderVersion() : null),
-				String.format("spanx %1$s,growx,%2$s", 1, WRAP));
+		add(tfProviderVersion = new JTextField(getProviderVersion(provider)),
+				String.format("width %1$s,growx,%2$s", 90, WRAP));
 		//
 		// Voice Id
 		//
@@ -347,14 +352,14 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		if ((cbmVoiceId = testAndApply(Objects::nonNull, voiceIds,
 				x -> new DefaultComboBoxModel<>(ArrayUtils.insert(0, x, (String) null)), null)) != null) {
 			//
-			final JComboBox<Object> jcb = new JComboBox(cbmVoiceId);
-			//
-			final ListCellRenderer<Object> listCellRenderer = jcb.getRenderer();
+			final ListCellRenderer<Object> listCellRenderer = (jcbVoiceId = new JComboBox(cbmVoiceId)).getRenderer();
 			//
 			final String commonPrefix = String.join("",
 					StringUtils.substringBeforeLast(StringUtils.getCommonPrefix(voiceIds), "\\"), "\\");
 			//
-			jcb.setRenderer(new ListCellRenderer<Object>() {
+			jcbVoiceId.addItemListener(this);
+			//
+			jcbVoiceId.setRenderer(new ListCellRenderer<Object>() {
 
 				@Override
 				public Component getListCellRendererComponent(final JList<? extends Object> list, final Object value,
@@ -364,7 +369,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 					//
 					try {
 						//
-						final String name = speechApi != null ? speechApi.getVoiceAttribute(s, "Name") : null;
+						final String name = getVoiceAttribute(speechApi, s, "Name");
 						//
 						if (StringUtils.isNotBlank(name)) {
 							//
@@ -399,7 +404,9 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				}
 			});
 			//
-			add(jcb, String.format("span %1$s,growx,%2$s", 5, WRAP));
+			add(jcbVoiceId, String.format("span %1$s,growx", 5));
+			//
+			add(tfLanguage = new JTextField(), String.format("width %1$s,%2$s", 160, WRAP));
 			//
 		} // if
 			//
@@ -434,7 +441,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		add(tfSpeechRate = new JTextField(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.speechRate")),
-				String.format("span %1$s,growx,%2$s", 5, WRAP));
+				String.format("span %1$s,growx,%2$s", 6, WRAP));
 		//
 		// Speech Volume
 		//
@@ -449,7 +456,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		add(jsSpeechVolume = new JSlider(intValue(
 				speechVolumeRange != null && speechVolumeRange.hasLowerBound() ? speechVolumeRange.lowerEndpoint()
 						: null,
-				0), intValue(upperEnpoint, 100)), String.format("span %1$s,growx", 5));
+				0), intValue(upperEnpoint, 100)), String.format("span %1$s,growx", 6));
 		//
 		final Integer speechVolume = valueOf(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.speechVolume"));
@@ -479,7 +486,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		final Yomi[] yomis = Yomi.values();
 		//
 		add(new JComboBox<>(cbmYomi = new DefaultComboBoxModel<>(ArrayUtils.insert(0, yomis, (Yomi) null))),
-				String.format("span %1$s,%2$s", 4, WRAP));
+				String.format("span %1$s,%2$s", 6, WRAP));
 		//
 		if (yomis != null) {
 			//
@@ -542,14 +549,14 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		add(btnImport = new JButton("Import"), WRAP);
 		//
-		add(progressBar = new JProgressBar(), String.format("span %1$s,growx,%2$s", 8, WRAP));
+		add(progressBar = new JProgressBar(), String.format("span %1$s,growx,%2$s", 9, WRAP));
 		//
 		progressBar.setStringPainted(true);
 		//
 		add(new JLabel("Folder"));
 		//
 		add(tfFolder = new JTextField(folder != null ? folder.getAbsolutePath() : null),
-				wrap = String.format("span %1$s,growx,%2$s", 7, WRAP));
+				wrap = String.format("span %1$s,growx,%2$s", 8, WRAP));
 		//
 		add(new JLabel("File"));
 		//
@@ -563,7 +570,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		add(tfFileDigest = new JTextField(), wrap);
 		//
-		setEditable(false, tfProviderName, tfProviderVersion, tfFolder, tfFile, tfFileLength, tfFileDigest);
+		setEditable(false, tfLanguage, tfProviderName, tfProviderVersion, tfFolder, tfFile, tfFileLength, tfFileDigest);
 		//
 		addActionListener(this, btnSpeak, btnWriteVoice, btnExecute, btnConvertToRomaji, btnConvertToKatakana,
 				btnCopyRomaji, btnImportFileTemplate, btnImport, btnExport);
@@ -575,6 +582,10 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		setEnabled(btnExecute, folder != null && folder.exists() && folder.isDirectory());
 		//
+	}
+
+	private static String getVoiceAttribute(final SpeechApi instance, final String voiceId, final String attribute) {
+		return instance != null ? instance.getVoiceAttribute(voiceId, attribute) : null;
 	}
 
 	private static <E> Component getListCellRendererComponent(final ListCellRenderer<E> instance,
@@ -769,6 +780,14 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	private static Integer valueOf(final String instance) {
 		try {
 			return StringUtils.isNotBlank(instance) ? Integer.valueOf(instance) : null;
+		} catch (final NumberFormatException e) {
+			return null;
+		}
+	}
+
+	private static Integer valueOf(final String instance, final int base) {
+		try {
+			return StringUtils.isNotBlank(instance) ? Integer.valueOf(instance, base) : null;
 		} catch (final NumberFormatException e) {
 			return null;
 		}
@@ -1359,6 +1378,63 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 	}
 
+	@Override
+	public void itemStateChanged(final ItemEvent evt) {
+		//
+		if (Objects.equals(getSource(evt), jcbVoiceId)) {
+			//
+			try {
+				//
+				final String language = getVoiceAttribute(speechApi, toString(getSelectedItem(cbmVoiceId)), "Language");
+				//
+				final List<LocaleID> localeIds = collect(
+						filter(testAndApply(Objects::nonNull, LocaleID.values(), Arrays::stream, null),
+								a -> a != null && Objects.equals(Integer.valueOf(a.getLcid()), valueOf(language, 16))),
+						Collectors.toList());
+				//
+				if (localeIds != null && !localeIds.isEmpty()) {
+					//
+					if (localeIds.size() == 1) {
+						//
+						final LocaleID localeId = localeIds.get(0);
+						//
+						setText(tfLanguage, localeId != null ? localeId.getDescription() : null);
+						//
+					} else {
+						//
+						throw new IllegalStateException();
+						//
+					} // if
+						//
+				} else {
+					//
+					setText(tfLanguage, language);
+					//
+				} // if
+					//
+			} catch (final Error e) {
+				//
+				if (GraphicsEnvironment.isHeadless()) {
+					//
+					if (LOG != null) {
+						LOG.error(getMessage(e), e);
+					} else if (e != null) {
+						e.printStackTrace();
+					} // if
+						//
+				} else {
+					//
+					JOptionPane.showMessageDialog(null, getMessage(e));
+					//
+				} // if
+					//
+			} // try
+				//
+				//
+		} // if
+			//
+	}
+
 	private static void deleteOnExit(final File instance) {
 		if (instance != null) {
 			instance.deleteOnExit();
@@ -1470,6 +1546,10 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 
 	private static String getProviderName(final Provider instance) {
 		return instance != null ? instance.getProviderName() : null;
+	}
+
+	private static String getProviderVersion(final Provider instance) {
+		return instance != null ? instance.getProviderVersion() : null;
 	}
 
 	private static void exeute(final ObjectMap objectMap) {
