@@ -967,6 +967,8 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(testAndApply((a, b) -> false, null, null, null, null));
 		//
+		Assertions.assertNull(testAndApply((a, b) -> true, null, null, (a, b) -> null, null));
+		//
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
@@ -2094,8 +2096,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Map<Object, Object> objects = ObjectUtils
-				.getIfNull(cast(Map.class, fieldObjects != null ? fieldObjects.get(ih) : null), LinkedHashMap::new);
+		Map<Object, Object> objects = ObjectUtils.getIfNull(cast(Map.class, get(fieldObjects, ih)), LinkedHashMap::new);
 		//
 		if (objects != null) {
 			//
@@ -2105,12 +2106,8 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		if (fieldObjects != null) {
-			//
-			fieldObjects.set(ih, objects);
-			//
-		} // if
-			//
+		set(fieldObjects, ih, objects);
+		//
 		Assertions.assertDoesNotThrow(
 				() -> writeVoiceToFile(Reflection.newProxy(CLASS_OBJECT_MAP, ih), null, null, null, null));
 		//
