@@ -1,7 +1,5 @@
 package org.springframework.context.support;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import java.awt.Component;
 import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
@@ -92,6 +90,7 @@ import com.google.common.collect.Iterators;
 import com.google.common.collect.Range;
 import com.google.common.reflect.Reflection;
 import com.j256.simplemagic.ContentInfo;
+import com.mpatric.mp3agic.BaseException;
 import com.mpatric.mp3agic.ID3v1;
 
 import domain.Voice;
@@ -117,8 +116,9 @@ class VoiceManagerTest {
 			METHOD_SET_CELL_VALUE, METHOD_ANY_MATCH, METHOD_COLLECT, METHOD_NAME, METHOD_GET_SELECTED_ITEM,
 			METHOD_WRITE, METHOD_MATCHER, METHOD_SET_VALUE, METHOD_SET_STRING, METHOD_SET_TOOL_TIP_TEXT, METHOD_FORMAT,
 			METHOD_CONTAINS_KEY, METHOD_VALUE_OF, METHOD_GET_CLASS, METHOD_CREATE_RANGE, METHOD_GET_PROVIDER_NAME,
-			METHOD_WRITE_VOICE_TO_FILE, METHOD_GET_MP3_TAG_PARIRS_FILE, METHOD_GET_MP3_TAG_PARIRS_ID3V1,
-			METHOD_GET_METHODS, METHOD_GET_SIMPLE_NAME = null;
+			METHOD_WRITE_VOICE_TO_FILE, METHOD_GET_MP3_TAG_VALUE_FILE, METHOD_GET_MP3_TAG_VALUE_LIST,
+			METHOD_GET_MP3_TAG_PARIRS_FILE, METHOD_GET_MP3_TAG_PARIRS_ID3V1, METHOD_GET_METHODS,
+			METHOD_GET_SIMPLE_NAME = null;
 
 	@BeforeAll
 	private static void beforeAll() throws ReflectiveOperationException {
@@ -261,6 +261,12 @@ class VoiceManagerTest {
 		//
 		(METHOD_WRITE_VOICE_TO_FILE = clz.getDeclaredMethod("writeVoiceToFile", CLASS_OBJECT_MAP, String.class,
 				String.class, Integer.class, Integer.class)).setAccessible(true);
+		//
+		(METHOD_GET_MP3_TAG_VALUE_FILE = clz.getDeclaredMethod("getMp3TagValue", File.class, Predicate.class,
+				String[].class)).setAccessible(true);
+		//
+		(METHOD_GET_MP3_TAG_VALUE_LIST = clz.getDeclaredMethod("getMp3TagValue", List.class, Predicate.class))
+				.setAccessible(true);
 		//
 		(METHOD_GET_MP3_TAG_PARIRS_FILE = clz.getDeclaredMethod("getMp3TagParirs", File.class, String[].class))
 				.setAccessible(true);
@@ -2076,17 +2082,64 @@ class VoiceManagerTest {
 	}
 
 	@Test
+	void testGetMp3TagValue() throws Throwable {
+		//
+		Assertions.assertNull(getMp3TagValue((File) null, null));
+		//
+		Assertions.assertNull(getMp3TagValue(new File("NON_EXISTS"), null));
+		//
+		Assertions.assertNull(getMp3TagValue(new File("."), null));
+		//
+		Assertions.assertNull(getMp3TagValue(new File("pom.xml"), null));
+		//
+		Assertions.assertNull(getMp3TagValue(Collections.singletonList(null), null));
+		//
+		final List<Pair<String, ?>> pairs = Collections.singletonList(Pair.of(null, null));
+		//
+		Assertions.assertNull(getMp3TagValue(pairs, null));
+		//
+		Assertions.assertNull(getMp3TagValue(pairs, Predicates.alwaysFalse()));
+		//
+		Assertions.assertNull(getMp3TagValue(pairs, Predicates.alwaysTrue()));
+		//
+	}
+
+	private static String getMp3TagValue(final File file, final Predicate<Object> predicate, final String... attributes)
+			throws Throwable {
+		//
+		try {
+			final Object obj = METHOD_GET_MP3_TAG_VALUE_FILE.invoke(null, file, predicate, attributes);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static String getMp3TagValue(final List<Pair<String, ?>> pairs, final Predicate<Object> predicate)
+			throws Throwable {
+		//
+		try {
+			final Object obj = METHOD_GET_MP3_TAG_VALUE_LIST.invoke(null, pairs, predicate);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
 	void testGetMp3TagParirs() throws Throwable {
 		//
-		Assertions.assertNull(getMp3TagParirs((File) null));
-		//
 		Assertions.assertNull(getMp3TagParirs((ID3v1) null));
-		//
-		Assertions.assertNull(getMp3TagParirs(new File("NON_EXISTS")));
-		//
-		Assertions.assertNull(getMp3TagParirs(new File(".")));
-		//
-		Assertions.assertNull(getMp3TagParirs(new File("pom.xml")));
 		//
 		final ID3v1 id3v1 = Reflection.newProxy(ID3v1.class, ih);
 		//

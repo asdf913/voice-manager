@@ -727,7 +727,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
 			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse) throws E {
-		return predicate != null && predicate.test(value) ? apply(functionTrue, value) : apply(functionFalse, value);
+		return test(predicate, value) ? apply(functionTrue, value) : apply(functionFalse, value);
 	}
 
 	private static <T, R, E extends Throwable> R apply(final FailableFunction<T, R, E> instance, final T value)
@@ -900,33 +900,11 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 					//
 					try {
 						//
-						if (Objects.equals("mp3",
-								getFileExtension(new ContentInfoUtil().findMatch(file = jfc.getSelectedFile())))) {
+						if (voice != null) {
 							//
-							final List<Pair<String, ?>> pairs = getMp3TagParirs(file, mp3Tags);
+							voice.setSource(StringUtils.defaultIfBlank(voice.getSource(),
+									getMp3TagValue(file, x -> StringUtils.isNotBlank(toString(x)), mp3Tags)));
 							//
-							Pair<String, ?> pair = null;
-							//
-							String string = null;
-							//
-							for (int i = 0; pairs != null && i < pairs.size() && StringUtils.isBlank(string); i++) {
-								//
-								if ((pair = pairs.get(i)) == null) {
-									//
-									continue;
-									//
-								} // if
-									//
-								string = toString(pair.getValue());
-								//
-							} // for
-								//
-							if (voice != null) {
-								//
-								voice.setSource(StringUtils.defaultIfBlank(voice.getSource(), string));
-								//
-							} // if
-								//
 						} // if
 							//
 					} catch (final IOException | BaseException | IllegalAccessException e) {
@@ -1266,7 +1244,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 						//
 					} // for
 						//
-				} catch (final InvalidFormatException | IOException | IllegalAccessException e) {
+				} catch (final InvalidFormatException | IOException | IllegalAccessException | BaseException e) {
 					//
 					if (GraphicsEnvironment.isHeadless()) {
 						//
@@ -1282,12 +1260,70 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 						//
 					} // if
 						//
+				} catch (final InvocationTargetException e) {
+					//
+					final Throwable targetException = e.getTargetException();
+					//
+					final Throwable rootCause = ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException),
+							targetException, ExceptionUtils.getRootCause(e), e);
+					//
+					if (GraphicsEnvironment.isHeadless()) {
+						//
+						if (LOG != null) {
+							LOG.error(getMessage(rootCause), rootCause);
+						} else if (rootCause != null) {
+							rootCause.printStackTrace();
+						} // if
+							//
+					} else {
+						//
+						JOptionPane.showMessageDialog(null, getMessage(rootCause));
+						//
+					} // if
+						//
 				} // try
 					//
 			} // if
 				//
 		} // if
 			//
+	}
+
+	private static String getMp3TagValue(final File file, final Predicate<Object> predicate, final String... attributes)
+			throws BaseException, IOException, IllegalAccessException, InvocationTargetException {
+		//
+		return getMp3TagValue(getMp3TagParirs(file, attributes), predicate);
+		//
+	}
+
+	private static String getMp3TagValue(final List<Pair<String, ?>> pairs, final Predicate<Object> predicate) {
+		//
+		String string = null;
+		//
+		Pair<String, ?> pair = null;
+		//
+		for (int i = 0; pairs != null && i < pairs.size(); i++) {
+			//
+			if ((pair = pairs.get(i)) == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			if (test(predicate, string = toString(pair.getValue())) || predicate == null) {
+				//
+				break;
+				//
+			} // if
+				//
+		} // for
+			//
+		return string;
+		//
+	}
+
+	private static final <T> boolean test(final Predicate<T> instance, final T value) {
+		return instance != null && instance.test(value);
 	}
 
 	private static List<Pair<String, ?>> getMp3TagParirs(final File file, final String... attributes)
@@ -1754,7 +1790,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 
 	private static void importVoice(final Sheet sheet, final ObjectMap objectMap,
 			final Consumer<String> errorMessageConsumer, final Consumer<Throwable> throwableConsumer)
-			throws IllegalAccessException, IOException {
+			throws IllegalAccessException, IOException, InvocationTargetException, BaseException {
 		//
 		final File file = ObjectMap.getObject(objectMap, File.class);
 		//
@@ -1795,6 +1831,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				Provider provider = null;
 				//
 				JSlider jsSpeechVolume = null;
+				//
+				String[] mp3Tags = null;
 				//
 				for (final Row row : sheet) {
 					//
@@ -1886,6 +1924,16 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 								if (StringUtils.isNotBlank(filePath = voice.getFilePath())) {
 									//
 									it.file = new File(folder, filePath);
+									//
+									if (mp3Tags == null && (voiceManager = ObjectUtils.getIfNull(voiceManager,
+											() -> ObjectMap.getObject(objectMap, VoiceManager.class))) != null) {
+										//
+										mp3Tags = voiceManager.mp3Tags;
+										//
+									} // if
+										//
+									it.voice.setSource(StringUtils.defaultIfBlank(voice.getSource(), getMp3TagValue(
+											it.file, x -> StringUtils.isNotBlank(toString(x)), mp3Tags)));
 									//
 								} else {
 									//
