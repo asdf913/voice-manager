@@ -141,7 +141,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	private PropertyResolver propertyResolver = null;
 
 	private JTextComponent tfFolder, tfFile, tfFileLength, tfFileDigest, tfText, tfHiragana, tfKatakana, tfRomaji,
-			tfSpeechRate, tfSource = null;
+			tfSpeechRate, tfSource, tfProviderName = null;
 
 	private ComboBoxModel<Yomi> cbmYomi = null;
 
@@ -325,6 +325,13 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.source")),
 				String.format("spanx %1$s,growx,%2$s", 5, WRAP));
 		//
+		// Provider
+		//
+		add(new JLabel("Provider"));
+		//
+		add(tfProviderName = new JTextField(getProviderName(cast(Provider.class, speechApi))),
+				String.format("spanx %1$s,growx,%2$s", 5, WRAP));
+		//
 		// Voice Id
 		//
 		add(new JLabel("Voice Id"));
@@ -498,7 +505,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		add(tfFileDigest = new JTextField(), wrap);
 		//
-		setEditable(false, tfFolder, tfFile, tfFileLength, tfFileDigest);
+		setEditable(false, tfProviderName, tfFolder, tfFile, tfFileLength, tfFileDigest);
 		//
 		addActionListener(this, btnSpeak, btnWriteVoice, btnExecute, btnConvertToRomaji, btnConvertToKatakana,
 				btnCopyRomaji, btnImportFileTemplate, btnImport, btnExport);
