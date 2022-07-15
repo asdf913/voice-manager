@@ -11,4 +11,6 @@ public interface SpeechApi {
 
 	public String[] getVoiceIds();
 
+	public String getVoiceAttribute(final String voiceId, final String attribute);
+
 }

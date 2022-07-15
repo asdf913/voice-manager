@@ -59,10 +59,24 @@ class SpeechApiImplTest {
 
 	@Test
 	@EnabledOnOs(OS.WINDOWS)
-	void testGetVoiceIds() {
+	void testGetVoiceAttribute() {
 		//
-		Assertions.assertNotNull(instance.getVoiceIds());
+		Assertions.assertNull(instance.getVoiceAttribute(null, null));
 		//
+		final String[] voiceIds = instance != null ? instance.getVoiceIds() : null;
+		//
+		String voiceId = null;
+		//
+		for (int i = 0; voiceIds != null && i < voiceIds.length; i++) {
+			//
+			Assertions.assertEquals("", instance.getVoiceAttribute(voiceId = voiceIds[i], null));
+			//
+			Assertions.assertEquals("", instance.getVoiceAttribute(voiceId, ""));
+			//
+			Assertions.assertNotNull(instance.getVoiceAttribute(voiceId, "Language"));
+			//
+		} // for
+			//
 	}
 
 	@Test

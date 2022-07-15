@@ -50,6 +50,8 @@ public class SpeechApiImpl implements SpeechApi, Provider {
 
 		public String getVoiceIds(final String requiredAttributes, final String optionalAttributes);
 
+		public String getVoiceAttribute(final String voiceId, final String attribute);
+
 		public String getProviderName();
 
 		public String getProviderVersion();
@@ -108,6 +110,13 @@ public class SpeechApiImpl implements SpeechApi, Provider {
 	public String[] getVoiceIds() {
 		//
 		return StringUtils.split(Jna.INSTANCE != null ? Jna.INSTANCE.getVoiceIds("", "") : null, ',');
+		//
+	}
+
+	@Override
+	public String getVoiceAttribute(final String voiceId, final String attribute) {
+		//
+		return Jna.INSTANCE != null ? Jna.INSTANCE.getVoiceAttribute(voiceId, attribute) : null;
 		//
 	}
 
