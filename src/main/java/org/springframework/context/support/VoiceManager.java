@@ -141,7 +141,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	private PropertyResolver propertyResolver = null;
 
 	private JTextComponent tfFolder, tfFile, tfFileLength, tfFileDigest, tfText, tfHiragana, tfKatakana, tfRomaji,
-			tfSpeechRate, tfSource, tfProviderName = null;
+			tfSpeechRate, tfSource, tfProviderName, tfProviderVersion = null;
 
 	private ComboBoxModel<Yomi> cbmYomi = null;
 
@@ -329,8 +329,12 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		add(new JLabel("Provider"));
 		//
-		add(tfProviderName = new JTextField(getProviderName(cast(Provider.class, speechApi))),
-				String.format("spanx %1$s,growx,%2$s", 5, WRAP));
+		final Provider provider = cast(Provider.class, speechApi);
+		//
+		add(tfProviderName = new JTextField(getProviderName(provider)), String.format("spanx %1$s,growx", 4));
+		//
+		add(tfProviderVersion = new JTextField(provider != null ? provider.getProviderVersion() : null),
+				String.format("spanx %1$s,growx,%2$s", 1, WRAP));
 		//
 		// Voice Id
 		//
@@ -505,7 +509,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		add(tfFileDigest = new JTextField(), wrap);
 		//
-		setEditable(false, tfProviderName, tfFolder, tfFile, tfFileLength, tfFileDigest);
+		setEditable(false, tfProviderName, tfProviderVersion, tfFolder, tfFile, tfFileLength, tfFileDigest);
 		//
 		addActionListener(this, btnSpeak, btnWriteVoice, btnExecute, btnConvertToRomaji, btnConvertToKatakana,
 				btnCopyRomaji, btnImportFileTemplate, btnImport, btnExport);
