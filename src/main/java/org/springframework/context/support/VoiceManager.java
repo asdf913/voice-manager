@@ -1981,28 +1981,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 									//
 							} // if
 								//
-							if (objectMap != null && Proxy.isProxyClass(getClass(objectMap))) {
-								//
-								final IH ihOld = cast(IH.class, Proxy.getInvocationHandler(objectMap));
-								//
-								final IH ihNew = new IH();
-								//
-								if (ihOld != null) {
-									//
-									ihNew.objects = ObjectUtils.defaultIfNull(
-											testAndApply(Objects::nonNull, ihOld.objects, LinkedHashMap::new, null),
-											ihNew.objects);
-									//
-								} // if
-									//
-								it.objectMap = Reflection.newProxy(ObjectMap.class, ihNew);
-								//
-							} else {
-								//
-								it.objectMap = objectMap;
-								//
-							} // if
-								//
+							it.objectMap = ObjectUtils.defaultIfNull(copyObjectMap(objectMap), objectMap);
+							//
 							it.errorMessageConsumer = errorMessageConsumer;
 							//
 							it.throwableConsumer = throwableConsumer;
@@ -2036,6 +2016,29 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 		} // try
 			//
+	}
+
+	private static ObjectMap copyObjectMap(final ObjectMap instance) {
+		//
+		if (instance != null && Proxy.isProxyClass(getClass(instance))) {
+			//
+			final IH ihOld = cast(IH.class, Proxy.getInvocationHandler(instance));
+			//
+			final IH ihNew = new IH();
+			//
+			if (ihOld != null) {
+				//
+				ihNew.objects = ObjectUtils.defaultIfNull(
+						testAndApply(Objects::nonNull, ihOld.objects, LinkedHashMap::new, null), ihNew.objects);
+				//
+			} // if
+				//
+			return Reflection.newProxy(ObjectMap.class, ihNew);
+			//
+		} // if
+			//
+		return null;
+		//
 	}
 
 	private static void shutdown(final ExecutorService instance) {

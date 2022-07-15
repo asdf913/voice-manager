@@ -1,5 +1,7 @@
 package org.springframework.context.support;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import java.awt.Component;
 import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
@@ -90,7 +92,6 @@ import com.google.common.collect.Iterators;
 import com.google.common.collect.Range;
 import com.google.common.reflect.Reflection;
 import com.j256.simplemagic.ContentInfo;
-import com.mpatric.mp3agic.BaseException;
 import com.mpatric.mp3agic.ID3v1;
 
 import domain.Voice;
@@ -117,8 +118,8 @@ class VoiceManagerTest {
 			METHOD_WRITE, METHOD_MATCHER, METHOD_SET_VALUE, METHOD_SET_STRING, METHOD_SET_TOOL_TIP_TEXT, METHOD_FORMAT,
 			METHOD_CONTAINS_KEY, METHOD_VALUE_OF, METHOD_GET_CLASS, METHOD_CREATE_RANGE, METHOD_GET_PROVIDER_NAME,
 			METHOD_WRITE_VOICE_TO_FILE, METHOD_GET_MP3_TAG_VALUE_FILE, METHOD_GET_MP3_TAG_VALUE_LIST,
-			METHOD_GET_MP3_TAG_PARIRS_FILE, METHOD_GET_MP3_TAG_PARIRS_ID3V1, METHOD_GET_METHODS,
-			METHOD_GET_SIMPLE_NAME = null;
+			METHOD_GET_MP3_TAG_PARIRS_FILE, METHOD_GET_MP3_TAG_PARIRS_ID3V1, METHOD_GET_METHODS, METHOD_GET_SIMPLE_NAME,
+			METHOD_COPY_OBJECT_MAP = null;
 
 	@BeforeAll
 	private static void beforeAll() throws ReflectiveOperationException {
@@ -277,6 +278,8 @@ class VoiceManagerTest {
 		(METHOD_GET_METHODS = clz.getDeclaredMethod("getMethods", Class.class)).setAccessible(true);
 		//
 		(METHOD_GET_SIMPLE_NAME = clz.getDeclaredMethod("getSimpleName", Class.class)).setAccessible(true);
+		//
+		(METHOD_COPY_OBJECT_MAP = clz.getDeclaredMethod("copyObjectMap", CLASS_OBJECT_MAP)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -2221,6 +2224,40 @@ class VoiceManagerTest {
 				return (String) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCopyObjectMap() throws Throwable {
+		//
+		Assertions.assertNull(copyObjectMap(null));
+		//
+		final Object objectMap1 = Reflection.newProxy(CLASS_OBJECT_MAP, ih);
+		//
+		Assertions.assertNotSame(objectMap1, copyObjectMap(objectMap1));
+		//
+		final Constructor<?> constructor = CLASS_IH != null ? CLASS_IH.getDeclaredConstructor() : null;
+		//
+		if (constructor != null) {
+			//
+			constructor.setAccessible(true);
+			//
+		} // if
+			//
+		final InvocationHandler ih = cast(InvocationHandler.class,
+				constructor != null ? constructor.newInstance() : null);
+		//
+		final Object objectMap2 = Reflection.newProxy(CLASS_OBJECT_MAP, ih);
+		//
+		Assertions.assertNotSame(objectMap2, copyObjectMap(objectMap2));
+		//
+	}
+
+	private static Object copyObjectMap(final Object objectMap) throws Throwable {
+		try {
+			return METHOD_COPY_OBJECT_MAP.invoke(null, objectMap);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
