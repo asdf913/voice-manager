@@ -52,6 +52,8 @@ public class SpeechApiImpl implements SpeechApi, Provider {
 
 		public String getProviderName();
 
+		public String getProviderVersion();
+
 	}
 
 	@Override
@@ -113,6 +115,13 @@ public class SpeechApiImpl implements SpeechApi, Provider {
 	public String getProviderName() {
 		//
 		return Jna.INSTANCE != null ? Jna.INSTANCE.getProviderName() : null;
+		//
+	}
+
+	@Override
+	public String getProviderVersion() {
+		//
+		return Jna.INSTANCE != null ? Jna.INSTANCE.getProviderVersion() : null;
 		//
 	}
 

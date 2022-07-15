@@ -4,4 +4,6 @@ public interface Provider {
 
 	String getProviderName();
 
+	String getProviderVersion();
+
 }

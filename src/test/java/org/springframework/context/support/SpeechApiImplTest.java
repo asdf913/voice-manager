@@ -74,6 +74,14 @@ class SpeechApiImplTest {
 	}
 
 	@Test
+	@EnabledOnOs(OS.WINDOWS)
+	void testGetProviderVersion() {
+		//
+		Assertions.assertNotNull(instance.getProviderVersion());
+		//
+	}
+
+	@Test
 	void testCast() throws Throwable {
 		//
 		Assertions.assertNull(cast(null, null));
