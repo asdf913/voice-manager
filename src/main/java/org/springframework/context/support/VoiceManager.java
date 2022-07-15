@@ -362,6 +362,35 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 					//
 					final String s = VoiceManager.toString(value);
 					//
+					try {
+						//
+						final String name = speechApi != null ? speechApi.getVoiceAttribute(s, "Name") : null;
+						//
+						if (StringUtils.isNotBlank(name)) {
+							//
+							return VoiceManager.getListCellRendererComponent(listCellRenderer, list, name, index,
+									isSelected, cellHasFocus);
+							//
+						} // if
+							//
+					} catch (final Error e) {
+						//
+						if (GraphicsEnvironment.isHeadless()) {
+							//
+							if (LOG != null) {
+								LOG.error(getMessage(e), e);
+							} else if (e != null) {
+								e.printStackTrace();
+							} // if
+								//
+						} else {
+							//
+							JOptionPane.showMessageDialog(null, getMessage(e));
+							//
+						} // if
+							//
+					} // try
+						//
 					return VoiceManager.getListCellRendererComponent(listCellRenderer, list,
 							StringUtils.startsWith(s, commonPrefix) ? StringUtils.substringAfter(s, commonPrefix)
 									: value,
