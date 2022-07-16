@@ -126,7 +126,7 @@ class VoiceManagerTest {
 			METHOD_GET_PROVIDER_NAME, METHOD_GET_PROVIDER_VERSION, METHOD_WRITE_VOICE_TO_FILE,
 			METHOD_GET_MP3_TAG_VALUE_FILE, METHOD_GET_MP3_TAG_VALUE_LIST, METHOD_GET_MP3_TAG_PARIRS_FILE,
 			METHOD_GET_MP3_TAG_PARIRS_ID3V1, METHOD_GET_METHODS, METHOD_GET_SIMPLE_NAME, METHOD_COPY_OBJECT_MAP,
-			METHOD_DELETE_ON_EXIT, METHOD_GET_LIST_CELL_RENDERER_COMPONENT = null;
+			METHOD_DELETE_ON_EXIT, METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_CONVERT_LANGUAGE_CODE_TO_TEXT = null;
 
 	@BeforeAll
 	private static void beforeAll() throws ReflectiveOperationException {
@@ -298,6 +298,8 @@ class VoiceManagerTest {
 				ListCellRenderer.class, JList.class, Object.class, Integer.TYPE, Boolean.TYPE, Boolean.TYPE))
 				.setAccessible(true);
 		//
+		(METHOD_CONVERT_LANGUAGE_CODE_TO_TEXT = clz.getDeclaredMethod("convertLanguageCodeToText", LocaleID[].class,
+				Integer.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -2440,6 +2442,33 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof Component) {
 				return (Component) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testConvertLanguageCodeToText() throws Throwable {
+		//
+		Assertions.assertNull(convertLanguageCodeToText(new LocaleID[] { null }, null));
+		//
+		final LocaleID localeId = LocaleID.JA_JP;
+		//
+		Assertions.assertThrows(IllegalStateException.class,
+				() -> convertLanguageCodeToText(new LocaleID[] { localeId, localeId },
+						localeId != null ? Integer.valueOf(localeId.getLcid()) : null));
+		//
+	}
+
+	private static String convertLanguageCodeToText(final LocaleID[] enums, final Integer value) throws Throwable {
+		try {
+			final Object obj = METHOD_CONVERT_LANGUAGE_CODE_TO_TEXT.invoke(null, enums, value);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

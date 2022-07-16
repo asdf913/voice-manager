@@ -12,13 +12,16 @@ import java.util.Date;
 	String[] value();
 }
 
-@FieldOrder({ "text", "romaji", "hiragana", "katakana", "filePath", "fileExtension", "fileLength" })
+@FieldOrder({ "language", "text", "romaji", "hiragana", "katakana", "filePath", "fileExtension", "fileLength" })
 public class Voice {
 
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
 	private @interface ImportField {
 	}
+
+	@ImportField
+	private String language = null;
 
 	@ImportField
 	private String text = null;
@@ -70,6 +73,14 @@ public class Voice {
 
 	@DateFormat("yyyy-MM-dd HH:mm:ss Z")
 	private Date updateTs = null;
+
+	public void setLanguage(final String language) {
+		this.language = language;
+	}
+
+	public String getLanguage() {
+		return language;
+	}
 
 	public void setText(final String text) {
 		this.text = text;

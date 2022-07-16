@@ -146,7 +146,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private PropertyResolver propertyResolver = null;
 
 	private JTextComponent tfFolder, tfFile, tfFileLength, tfFileDigest, tfText, tfHiragana, tfKatakana, tfRomaji,
-			tfSpeechRate, tfSource, tfProviderName, tfProviderVersion, tfLanguage = null;
+			tfSpeechRate, tfSource, tfProviderName, tfProviderVersion, tfSpeechLanguage, tfLanguage = null;
 
 	private ComboBoxModel<Yomi> cbmYomi = null;
 
@@ -315,6 +315,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final File folder = testAndApply(StringUtils::isNotBlank, this.voiceFolder, File::new, null);
 		//
+		add(new JLabel("Language"));
+		//
+		add(tfLanguage = new JTextField(
+				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.language")),
+				String.format("spanx %1$s,growx,%2$s", 6, WRAP));
+		//
 		add(new JLabel("Text"));
 		//
 		String span = String.format("spanx %1$s,growx", 6);
@@ -406,7 +412,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			add(jcbVoiceId, String.format("span %1$s,growx", 5));
 			//
-			add(tfLanguage = new JTextField(), String.format("width %1$s,%2$s", 160, WRAP));
+			add(tfSpeechLanguage = new JTextField(), String.format("width %1$s,%2$s", 160, WRAP));
 			//
 		} // if
 			//
@@ -570,7 +576,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(tfFileDigest = new JTextField(), wrap);
 		//
-		setEditable(false, tfLanguage, tfProviderName, tfProviderVersion, tfFolder, tfFile, tfFileLength, tfFileDigest);
+		setEditable(false, tfSpeechLanguage, tfProviderName, tfProviderVersion, tfFolder, tfFile, tfFileLength,
+				tfFileDigest);
 		//
 		addActionListener(this, btnSpeak, btnWriteVoice, btnExecute, btnConvertToRomaji, btnConvertToKatakana,
 				btnCopyRomaji, btnImportFileTemplate, btnImport, btnExport);
@@ -934,11 +941,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			if (cbUseTtsVoice != null && cbUseTtsVoice.isSelected()) {
 				//
+				final String voiceId = toString(getSelectedItem(cbmVoiceId));
+				//
 				if (speechApi != null) {
 					//
 					try {
 						//
-						speechApi.writeVoiceToFile(getText(tfText), toString(getSelectedItem(cbmVoiceId))
+						speechApi.writeVoiceToFile(getText(tfText), voiceId
 						//
 								, intValue(getRate(getText(tfSpeechRate)), 0)// rate
 								//
@@ -971,6 +980,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				} // if
 					//
 				if (voice != null) {
+					//
+					voice.setLanguage(StringUtils.defaultIfBlank(voice.getLanguage(),
+							convertLanguageCodeToText(getVoiceAttribute(speechApi, voiceId, "Language"), 16)));
 					//
 					voice.setSource(StringUtils.defaultIfBlank(voice.getSource(),
 							getProviderName(cast(Provider.class, speechApi))));
@@ -1387,31 +1399,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				final String language = getVoiceAttribute(speechApi, toString(getSelectedItem(cbmVoiceId)), "Language");
 				//
-				final List<LocaleID> localeIds = collect(
-						filter(testAndApply(Objects::nonNull, LocaleID.values(), Arrays::stream, null),
-								a -> a != null && Objects.equals(Integer.valueOf(a.getLcid()), valueOf(language, 16))),
-						Collectors.toList());
+				setText(tfSpeechLanguage,
+						StringUtils.defaultIfBlank(convertLanguageCodeToText(language, 16), language));
 				//
-				if (localeIds != null && !localeIds.isEmpty()) {
-					//
-					if (localeIds.size() == 1) {
-						//
-						final LocaleID localeId = localeIds.get(0);
-						//
-						setText(tfLanguage, localeId != null ? localeId.getDescription() : null);
-						//
-					} else {
-						//
-						throw new IllegalStateException();
-						//
-					} // if
-						//
-				} else {
-					//
-					setText(tfLanguage, language);
-					//
-				} // if
-					//
 			} catch (final Error e) {
 				//
 				if (GraphicsEnvironment.isHeadless()) {
@@ -1433,6 +1423,38 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
+	}
+
+	private static String convertLanguageCodeToText(final String instance, final int base) {
+		//
+		return StringUtils.defaultIfBlank(convertLanguageCodeToText(LocaleID.values(), valueOf(instance, base)),
+				instance);
+		//
+	}
+
+	private static String convertLanguageCodeToText(final LocaleID[] enums, final Integer value) {
+		//
+		final List<LocaleID> localeIds = collect(filter(testAndApply(Objects::nonNull, enums, Arrays::stream, null),
+				a -> a != null && Objects.equals(Integer.valueOf(a.getLcid()), value)), Collectors.toList());
+		//
+		if (localeIds != null && !localeIds.isEmpty()) {
+			//
+			if (localeIds.size() == 1) {
+				//
+				final LocaleID localeId = localeIds.get(0);
+				//
+				return localeId != null ? localeId.getDescription() : null;
+				//
+			} else {
+				//
+				throw new IllegalStateException();
+				//
+			} // if
+				//
+		} // if
+			//
+		return null;
+		//
 	}
 
 	private static void deleteOnExit(final File instance) {
@@ -1990,6 +2012,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				String[] mp3Tags = null;
 				//
+				SpeechApi speechApi = null;
+				//
+				String voiceId = null;
+				//
 				for (final Row row : sheet) {
 					//
 					if (row == null || row.iterator() == null) {
@@ -2111,8 +2137,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 												//
 											} // if
 												//
-											writeVoiceToFile(objectMap, voice.getText(), toString(getSelectedItem(
-													voiceManager != null ? voiceManager.cbmVoiceId : null))
+											if (voiceId == null && voiceManager != null) {
+												//
+												voiceId = toString(getSelectedItem(
+														voiceManager != null ? voiceManager.cbmVoiceId : null));
+												//
+											} // if
+												//
+											writeVoiceToFile(objectMap, voice.getText(), voiceId
 											//
 													, getRate(getText(
 															voiceManager != null ? voiceManager.tfSpeechRate : null))// rate
@@ -2133,6 +2165,35 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 											getProviderName(provider = ObjectUtils.getIfNull(provider,
 													() -> ObjectMap.getObject(objectMap, Provider.class)))));
 									//
+									try {
+										//
+										it.voice.setLanguage(
+												StringUtils
+														.defaultIfBlank(it.voice.getLanguage(),
+																convertLanguageCodeToText(getVoiceAttribute(
+																		speechApi = ObjectUtils.getIfNull(speechApi,
+																				() -> ObjectMap.getObject(objectMap,
+																						SpeechApi.class)),
+																		voiceId, "Language"), 16)));
+										//
+									} catch (final Error e) {
+										//
+										if (GraphicsEnvironment.isHeadless()) {
+											//
+											if (LOG != null) {
+												LOG.error(getMessage(e), e);
+											} else if (e != null) {
+												e.printStackTrace();
+											} // if
+												//
+										} else {
+											//
+											JOptionPane.showMessageDialog(null, getMessage(e));
+											//
+										} // if
+											//
+									} // try
+										//
 								} // if
 									//
 							} // if
@@ -2426,6 +2487,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		} // if
 			//
 		final Voice voice = new Voice();
+		//
+		voice.setLanguage(getText(instance.tfLanguage));
 		//
 		voice.setText(getText(instance.tfText));
 		//
