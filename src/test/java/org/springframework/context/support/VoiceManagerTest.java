@@ -1,7 +1,5 @@
 package org.springframework.context.support;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import java.awt.Component;
 import java.awt.GraphicsEnvironment;
 import java.awt.ItemSelectable;
@@ -127,10 +125,9 @@ class VoiceManagerTest {
 			METHOD_WRITE, METHOD_MATCHER, METHOD_SET_VALUE, METHOD_SET_STRING, METHOD_SET_TOOL_TIP_TEXT, METHOD_FORMAT,
 			METHOD_CONTAINS_KEY, METHOD_VALUE_OF1, METHOD_VALUE_OF2, METHOD_GET_CLASS, METHOD_CREATE_RANGE,
 			METHOD_GET_PROVIDER_NAME, METHOD_GET_PROVIDER_VERSION, METHOD_WRITE_VOICE_TO_FILE,
-			METHOD_GET_MP3_TAG_VALUE_FILE, METHOD_GET_MP3_TAG_VALUE_LIST, METHOD_GET_MP3_TAG_PARIRS_FILE,
-			METHOD_GET_MP3_TAG_PARIRS_ID3V1, METHOD_GET_METHODS, METHOD_GET_SIMPLE_NAME, METHOD_COPY_OBJECT_MAP,
-			METHOD_DELETE_ON_EXIT, METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_CONVERT_LANGUAGE_CODE_TO_TEXT,
-			METHOD_IS_SELECTED = null;
+			METHOD_GET_MP3_TAG_VALUE_FILE, METHOD_GET_MP3_TAG_VALUE_LIST, METHOD_GET_MP3_TAG_PARIRS_ID3V1,
+			METHOD_GET_METHODS, METHOD_GET_SIMPLE_NAME, METHOD_COPY_OBJECT_MAP, METHOD_DELETE_ON_EXIT,
+			METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_CONVERT_LANGUAGE_CODE_TO_TEXT, METHOD_IS_SELECTED = null;
 
 	@BeforeAll
 	private static void beforeAll() throws ReflectiveOperationException {
@@ -282,9 +279,6 @@ class VoiceManagerTest {
 				String[].class)).setAccessible(true);
 		//
 		(METHOD_GET_MP3_TAG_VALUE_LIST = clz.getDeclaredMethod("getMp3TagValue", List.class, Predicate.class))
-				.setAccessible(true);
-		//
-		(METHOD_GET_MP3_TAG_PARIRS_FILE = clz.getDeclaredMethod("getMp3TagParirs", File.class, String[].class))
 				.setAccessible(true);
 		//
 		(METHOD_GET_MP3_TAG_PARIRS_ID3V1 = clz.getDeclaredMethod("getMp3TagParirs", ID3v1.class, String[].class))
@@ -2301,20 +2295,6 @@ class VoiceManagerTest {
 		//
 		Assertions.assertEquals(Collections.singletonList(Pair.of("artist", null)), getMp3TagParirs(id3v1, "artist"));
 		//
-	}
-
-	private static List<Pair<String, ?>> getMp3TagParirs(final File file, final String... attributes) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_MP3_TAG_PARIRS_FILE.invoke(null, file, attributes);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof List) {
-				return (List) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	private static List<Pair<String, ?>> getMp3TagParirs(final ID3v1 id3v1, final String... attributes)
