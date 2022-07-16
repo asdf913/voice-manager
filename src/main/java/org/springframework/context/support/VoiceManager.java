@@ -153,7 +153,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private ComboBoxModel<String> cbmVoiceId = null;
 
 	private AbstractButton btnSpeak, btnWriteVoice, btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji,
-			cbUseTtsVoice, btnExecute, btnImportFileTemplate, btnImport, btnExport = null;
+			cbUseTtsVoice, btnExecute, btnImportFileTemplate, cbHiraganaKatakanaConversion, btnImport, btnExport = null;
 
 	private JProgressBar progressBar = null;
 
@@ -554,9 +554,17 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(new JLabel("Import"));
 		//
-		add(btnImportFileTemplate = new JButton("Import File Template"), String.format("span %1$s", 3));
+		add(cbHiraganaKatakanaConversion = new JCheckBox("Hiragana / Katakana Conversion"),
+				String.format("span %1$s", 2));
+		//
+		cbHiraganaKatakanaConversion.setSelected(Boolean.parseBoolean(getProperty(propertyResolver,
+				"org.springframework.context.support.VoiceManager.hiraganaKatakanaConversion")));
 		//
 		add(btnImport = new JButton("Import"), WRAP);
+		//
+		add(new JLabel(""));
+		//
+		add(btnImportFileTemplate = new JButton("Import File Template"), String.format("span %1$s,%2$s", 3, WRAP));
 		//
 		add(progressBar = new JProgressBar(), String.format("span %1$s,growx,%2$s", 9, WRAP));
 		//
@@ -1344,7 +1352,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 						} // if
 							//
-						importVoice(sheet, objectMap, errorMessageConsumer, throwableConsumer);
+						importVoice(sheet, objectMap, isSelected(cbHiraganaKatakanaConversion), errorMessageConsumer,
+								throwableConsumer);
 						//
 					} // for
 						//
@@ -1974,7 +1983,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	private static void importVoice(final Sheet sheet, final ObjectMap objectMap,
-			final Consumer<String> errorMessageConsumer, final Consumer<Throwable> throwableConsumer)
+			final boolean hiraganaKatakanaConversion, final Consumer<String> errorMessageConsumer,
+			final Consumer<Throwable> throwableConsumer)
 			throws IllegalAccessException, IOException, InvocationTargetException, BaseException {
 		//
 		final File file = ObjectMap.getObject(objectMap, File.class);
@@ -2007,9 +2017,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				NumberFormat percentNumberFormat = null;
 				//
-				String string = null;
-				//
-				String filePath = null;
+				String string, filePath, hiragana, katakana = null;
 				//
 				VoiceManager voiceManager = null;
 				//
@@ -2092,6 +2100,32 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						} // if
 							//
 					} // for
+						//
+					if (voice != null && hiraganaKatakanaConversion) {
+						//
+						final boolean isHiraganaBlank = StringUtils.isBlank(hiragana = voice.getHiragana());
+						//
+						final boolean isKatakanaBlank = StringUtils.isBlank(katakana = voice.getKatakana());
+						//
+						if ((isHiraganaBlank || isKatakanaBlank) && !(isHiraganaBlank && isKatakanaBlank)) {
+							//
+							if (isHiraganaBlank) {
+								//
+								voice.setHiragana(testAndApply(Objects::nonNull, katakana,
+										x -> KanaConverter.convertKana(x, KanaConverter.OP_ZEN_KATA_TO_ZEN_HIRA),
+										null));
+								//
+							} else {
+								//
+								voice.setKatakana(testAndApply(Objects::nonNull, hiragana,
+										x -> KanaConverter.convertKana(x, KanaConverter.OP_ZEN_HIRA_TO_ZEN_KATA),
+										null));
+								//
+							} // if
+								//
+						} // if
+							//
+					} // if
 						//
 					if (first) {
 						//

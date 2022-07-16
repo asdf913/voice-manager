@@ -119,7 +119,7 @@ class VoiceManagerTest {
 			METHOD_MAX, METHOD_OR_ELSE, METHOD_FOR_EACH, METHOD_CREATE_WORK_BOOK, METHOD_CREATE_VOICE,
 			METHOD_GET_MESSAGE, METHOD_INVOKE, METHOD_ANNOTATION_TYPE, METHOD_GET_NAME, METHOD_FIND_FIRST,
 			METHOD_GET_DECLARED_METHODS, METHOD_FOR_NAME, METHOD_FILTER, METHOD_SET_TEXT, METHOD_GET_PREFERRED_WIDTH,
-			METHOD_IMPORT_VOICE3, METHOD_IMPORT_VOICE4, METHOD_ERROR_OR_PRINT_LN, METHOD_ADD,
+			METHOD_IMPORT_VOICE3, METHOD_IMPORT_VOICE5, METHOD_ERROR_OR_PRINT_LN, METHOD_ADD,
 			METHOD_CREATE_IMPORT_FILE_TEMPLATE_BYTE_ARRAY, METHOD_GET_DECLARED_ANNOTATIONS, METHOD_CREATE_CELL,
 			METHOD_SET_CELL_VALUE, METHOD_ANY_MATCH, METHOD_COLLECT, METHOD_NAME, METHOD_GET_SELECTED_ITEM,
 			METHOD_WRITE, METHOD_MATCHER, METHOD_SET_VALUE, METHOD_SET_STRING, METHOD_SET_TOOL_TIP_TEXT, METHOD_FORMAT,
@@ -219,8 +219,8 @@ class VoiceManagerTest {
 				CLASS_OBJECT_MAP = Class.forName("org.springframework.context.support.VoiceManager$ObjectMap"),
 				Consumer.class, Consumer.class)).setAccessible(true);
 		//
-		(METHOD_IMPORT_VOICE4 = clz.getDeclaredMethod("importVoice", Sheet.class, CLASS_OBJECT_MAP, Consumer.class,
-				Consumer.class)).setAccessible(true);
+		(METHOD_IMPORT_VOICE5 = clz.getDeclaredMethod("importVoice", Sheet.class, CLASS_OBJECT_MAP, Boolean.TYPE,
+				Consumer.class, Consumer.class)).setAccessible(true);
 		//
 		(METHOD_ERROR_OR_PRINT_LN = clz.getDeclaredMethod("errorOrPrintln", Logger.class, PrintStream.class,
 				String.class)).setAccessible(true);
@@ -1613,7 +1613,7 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> importVoice(null, null, null));
 		//
-		Assertions.assertDoesNotThrow(() -> importVoice(null, null, null, null));
+		Assertions.assertDoesNotThrow(() -> importVoice(null, null,false, null, null));
 		//
 		final Constructor<?> constructor = CLASS_IH != null ? CLASS_IH.getDeclaredConstructor() : null;
 		//
@@ -1675,19 +1675,19 @@ class VoiceManagerTest {
 		//
 		final Sheet sheet = Reflection.newProxy(Sheet.class, this.ih);
 		//
-		Assertions.assertDoesNotThrow(() -> importVoice(sheet, null, null, null));
+		Assertions.assertDoesNotThrow(() -> importVoice(sheet, null, false, null, null));
 		//
 		final Row row = Reflection.newProxy(Row.class, this.ih);
 		//
 		this.ih.rows = Iterators.forArray(null, row);
 		//
-		Assertions.assertDoesNotThrow(() -> importVoice(sheet, null, null, null));
+		Assertions.assertDoesNotThrow(() -> importVoice(sheet, null, false, null, null));
 		//
 		this.ih.rows = Iterators.forArray(null, row);
 		//
 		this.ih.cells = Iterators.forArray(null, Reflection.newProxy(Cell.class, this.ih));
 		//
-		Assertions.assertDoesNotThrow(() -> importVoice(sheet, null, null, null));
+		Assertions.assertDoesNotThrow(() -> importVoice(sheet, null, false, null, null));
 		//
 	}
 
@@ -1700,10 +1700,11 @@ class VoiceManagerTest {
 		}
 	}
 
-	private static void importVoice(final Sheet sheet, final Object objectMap,
+	private static void importVoice(final Sheet sheet, final Object objectMap, final boolean hiraganaKatakanaConversion,
 			final Consumer<String> errorMessageConsumer, final Consumer<Throwable> throwableConsumer) throws Throwable {
 		try {
-			METHOD_IMPORT_VOICE4.invoke(null, sheet, objectMap, errorMessageConsumer, throwableConsumer);
+			METHOD_IMPORT_VOICE5.invoke(null, sheet, objectMap, hiraganaKatakanaConversion, errorMessageConsumer,
+					throwableConsumer);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
