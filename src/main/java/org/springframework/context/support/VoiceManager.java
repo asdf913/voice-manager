@@ -153,7 +153,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private ComboBoxModel<String> cbmVoiceId = null;
 
 	private AbstractButton btnSpeak, btnWriteVoice, btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji,
-			cbUseTtsVoice, btnExecute, btnImportFileTemplate, cbHiraganaKatakanaConversion, btnImport, btnExport = null;
+			cbUseTtsVoice, btnExecute, btnImportFileTemplate, cbHiraganaKatakanaConversion, btnImport, cbOverMp3Title,
+			btnExport = null;
 
 	private JProgressBar progressBar = null;
 
@@ -549,6 +550,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		add(btnExecute = new JButton("Execute"), WRAP);
 		//
 		add(new JLabel("Export"));
+		//
+		add(cbOverMp3Title = new JCheckBox("Over Mp3 Title"));
+		//
+		cbOverMp3Title.setSelected(Boolean.parseBoolean(
+				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.overMp3Title")));
 		//
 		add(btnExport = new JButton("Export"), WRAP);
 		//
@@ -1124,7 +1130,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				final List<Voice> voices = voiceMapper != null ? voiceMapper.retrieveAll() : null;
 				//
-				export(voices, outputFolderFileNameExpressions, voiceFolder, outputFolder, progressBar);
+				export(voices, outputFolderFileNameExpressions, voiceFolder, outputFolder, progressBar,
+						isSelected(cbOverMp3Title));
 				//
 				try (final OutputStream os = new FileOutputStream(
 						file = new File(String.format("voice_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.xlsx", new Date())))) {
@@ -2585,6 +2592,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 		private NumberFormat percentNumberFormat = null;
 
+		private boolean overMp3Title = false;
+
 		@Override
 		public void run() {
 			//
@@ -2603,7 +2612,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				String key, value = null;
 				//
-				File fileSource, folder = null;
+				File fileSource, fileDestination, folder = null;
 				//
 				for (final Entry<String, String> folderFileNamePattern : outputFolderFileNameExpressions.entrySet()) {
 					//
@@ -2615,13 +2624,19 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					} // if
 						//
 					FileUtils.copyFile(fileSource,
-							new File(
+							fileDestination = new File(
 									(folder = ObjectUtils.getIfNull(folder,
 											() -> outputFolder != null ? new File(outputFolder) : null)) != null
 													? new File(folder, key)
 													: new File(key),
 									VoiceManager.toString(getValue(expressionParser, evaluationContext, value))));
 					//
+					if (overMp3Title) {
+						//
+						setMp3Title(fileDestination);
+						//
+					} // if
+						//
 				} // for
 					//
 				if (counter != null) {
@@ -2641,7 +2656,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 				} // if
 					//
-			} catch (final IOException e) {
+			} catch (final IOException | BaseException e) {
 				//
 				if (GraphicsEnvironment.isHeadless()) {
 					//
@@ -2661,10 +2676,61 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		}
 
+		private static void setMp3Title(final File file) throws IOException, BaseException {
+			//
+			final String fileExtension = getFileExtension(
+					testAndApply(f -> f != null && f.isFile(), file, new ContentInfoUtil()::findMatch, null));
+			//
+			if (Objects.equals("mp3", fileExtension)) {
+				//
+				final File tempFile = File.createTempFile(RandomStringUtils.randomAlphabetic(3), null);
+				//
+				deleteOnExit(tempFile);
+				//
+				FileUtils.copyFile(file, tempFile);
+				//
+				final Mp3File mp3File = new Mp3File(tempFile);
+				//
+				final ID3v1 id3v1 = ObjectUtils.defaultIfNull(mp3File.getId3v2Tag(), mp3File.getId3v1Tag());
+				//
+				final String titleOld = id3v1 != null ? id3v1.getTitle() : null;
+				//
+				String titleNew = titleOld;
+				//
+				if (StringUtils.isNotEmpty(titleNew)) {
+					//
+					final String fileName = file.getName();
+					//
+					if (StringUtils.isNotBlank(fileName)) {
+						//
+						if (StringUtils.endsWith(titleNew = StringUtils.substringBeforeLast(fileName, fileExtension),
+								".")) {
+							//
+							titleNew = StringUtils.substringBeforeLast(titleNew, ".");
+							//
+						} // if
+							//
+					} // if
+						//
+					if (!Objects.equals(titleOld, titleNew)) {
+						//
+						id3v1.setTitle(titleNew);
+						//
+						mp3File.save(file.getAbsolutePath());
+						//
+					} // if
+						//
+				} // if
+					//
+			} // if
+				//
+		}
+
 	}
 
 	private static void export(final List<Voice> voices, final Map<String, String> outputFolderFileNameExpressions,
-			final String voiceFolder, final String outputFolder, final JProgressBar progressBar) throws IOException {
+			final String voiceFolder, final String outputFolder, final JProgressBar progressBar,
+			final boolean overMp3Title) throws IOException {
 		//
 		if (progressBar != null) {
 			//
@@ -2715,6 +2781,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				et.voice = voices.get(i);
 				//
 				et.voiceFolder = voiceFolder;
+				//
+				et.overMp3Title = overMp3Title;
 				//
 				es.submit(et);
 				//

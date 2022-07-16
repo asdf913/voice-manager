@@ -180,7 +180,7 @@ class VoiceManagerTest {
 		(METHOD_GET_SOURCE = clz.getDeclaredMethod("getSource", EventObject.class)).setAccessible(true);
 		//
 		(METHOD_EXPORT = clz.getDeclaredMethod("export", List.class, Map.class, String.class, String.class,
-				JProgressBar.class)).setAccessible(true);
+				JProgressBar.class, Boolean.TYPE)).setAccessible(true);
 		//
 		(METHOD_MAP = clz.getDeclaredMethod("map", Stream.class, Function.class)).setAccessible(true);
 		//
@@ -1216,41 +1216,49 @@ class VoiceManagerTest {
 		//
 		final JProgressBar progressBar = new JProgressBar();
 		//
-		Assertions.assertDoesNotThrow(() -> export(null, null, null, null, progressBar));
+		Assertions.assertDoesNotThrow(() -> export(null, null, null, null, progressBar, false));
 		//
-		//
-		Assertions.assertDoesNotThrow(() -> export(Collections.singletonList(null), null, null, null, progressBar));
+		Assertions.assertDoesNotThrow(
+				() -> export(Collections.singletonList(null), null, null, null, progressBar, false));
 		//
 		final Voice voice = new Voice();
 		//
 		final List<Voice> voices = Collections.singletonList(voice);
 		//
-		Assertions.assertDoesNotThrow(() -> export(voices, null, null, null, null));
+		Assertions.assertDoesNotThrow(() -> export(voices, null, null, null, null, false));
 		//
 		voice.setFilePath(EMPTY);
 		//
-		Assertions.assertDoesNotThrow(() -> export(voices, null, null, null, null));
+		Assertions.assertDoesNotThrow(() -> export(voices, null, null, null, null, false));
 		//
-		Assertions.assertDoesNotThrow(() -> export(voices, Collections.emptyMap(), null, null, null));
+		Assertions.assertDoesNotThrow(() -> export(voices, Collections.emptyMap(), null, null, null, false));
 		//
-		Assertions.assertDoesNotThrow(() -> export(voices, Reflection.newProxy(Map.class, ih), null, null, null));
+		Assertions
+				.assertDoesNotThrow(() -> export(voices, Reflection.newProxy(Map.class, ih), null, null, null, false));
 		//
-		Assertions.assertDoesNotThrow(() -> export(voices, Collections.singletonMap(null, null), null, null, null));
+		Assertions.assertDoesNotThrow(
+				() -> export(voices, Collections.singletonMap(null, null), null, null, null, false));
 		//
-		Assertions.assertDoesNotThrow(() -> export(voices, Collections.singletonMap(EMPTY, null), null, null, null));
+		Assertions.assertDoesNotThrow(
+				() -> export(voices, Collections.singletonMap(EMPTY, null), null, null, null, false));
 		//
-		Assertions.assertDoesNotThrow(() -> export(voices, Collections.singletonMap(EMPTY, EMPTY), null, null, null));
+		Assertions.assertDoesNotThrow(
+				() -> export(voices, Collections.singletonMap(EMPTY, EMPTY), null, null, null, false));
 		//
-		Assertions.assertDoesNotThrow(() -> export(voices, Collections.singletonMap(EMPTY, " "), null, null, null));
+		Assertions.assertDoesNotThrow(
+				() -> export(voices, Collections.singletonMap(EMPTY, " "), null, null, null, false));
 		//
-		Assertions.assertDoesNotThrow(() -> export(voices, Collections.singletonMap(EMPTY, "true"), null, null, null));
+		Assertions.assertDoesNotThrow(
+				() -> export(voices, Collections.singletonMap(EMPTY, "true"), null, null, null, false));
 		//
 	}
 
 	private static void export(final List<Voice> voices, final Map<String, String> outputFolderFileNameExpressions,
-			final String voiceFolder, final String outputFolder, final JProgressBar progressBar) throws Throwable {
+			final String voiceFolder, final String outputFolder, final JProgressBar progressBar,
+			final boolean overMp3Title) throws Throwable {
 		try {
-			METHOD_EXPORT.invoke(null, voices, outputFolderFileNameExpressions, voiceFolder, outputFolder, progressBar);
+			METHOD_EXPORT.invoke(null, voices, outputFolderFileNameExpressions, voiceFolder, outputFolder, progressBar,
+					overMp3Title);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1613,7 +1621,7 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> importVoice(null, null, null));
 		//
-		Assertions.assertDoesNotThrow(() -> importVoice(null, null,false, null, null));
+		Assertions.assertDoesNotThrow(() -> importVoice(null, null, false, null, null));
 		//
 		final Constructor<?> constructor = CLASS_IH != null ? CLASS_IH.getDeclaredConstructor() : null;
 		//
@@ -2556,6 +2564,37 @@ class VoiceManagerTest {
 		FieldUtils.writeDeclaredField(runnable, "counter", Integer.valueOf(0), true);
 		//
 		Assertions.assertDoesNotThrow(() -> run(runnable));
+		//
+	}
+
+	@Test
+	void testExportTask() throws Throwable {
+		//
+		final Class<?> clz = forName("org.springframework.context.support.VoiceManager$ExportTask");
+		//
+		final Constructor<?> constructor = clz != null ? clz.getDeclaredConstructor() : null;
+		//
+		if (constructor != null) {
+			//
+			constructor.setAccessible(true);
+			//
+		} // if
+			//
+		final Object instance = constructor != null ? constructor.newInstance() : null;
+		//
+		final Method methodSetMp3Title = clz != null ? clz.getDeclaredMethod("setMp3Title", File.class) : null;
+		//
+		if (methodSetMp3Title != null) {
+			//
+			methodSetMp3Title.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertNull(invoke(methodSetMp3Title, instance, (Object) null));
+		//
+		Assertions.assertNull(invoke(methodSetMp3Title, instance, new File(".")));
+		//
+		Assertions.assertNull(invoke(methodSetMp3Title, instance, new File("pom.xml")));
 		//
 	}
 
