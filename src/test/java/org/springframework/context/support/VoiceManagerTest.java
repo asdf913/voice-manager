@@ -1,5 +1,7 @@
 package org.springframework.context.support;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import java.awt.Component;
 import java.awt.GraphicsEnvironment;
 import java.awt.ItemSelectable;
@@ -52,6 +54,7 @@ import java.util.stream.Stream;
 import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JList;
 import javax.swing.JProgressBar;
@@ -126,7 +129,8 @@ class VoiceManagerTest {
 			METHOD_GET_PROVIDER_NAME, METHOD_GET_PROVIDER_VERSION, METHOD_WRITE_VOICE_TO_FILE,
 			METHOD_GET_MP3_TAG_VALUE_FILE, METHOD_GET_MP3_TAG_VALUE_LIST, METHOD_GET_MP3_TAG_PARIRS_FILE,
 			METHOD_GET_MP3_TAG_PARIRS_ID3V1, METHOD_GET_METHODS, METHOD_GET_SIMPLE_NAME, METHOD_COPY_OBJECT_MAP,
-			METHOD_DELETE_ON_EXIT, METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_CONVERT_LANGUAGE_CODE_TO_TEXT = null;
+			METHOD_DELETE_ON_EXIT, METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_CONVERT_LANGUAGE_CODE_TO_TEXT,
+			METHOD_IS_SELECTED = null;
 
 	@BeforeAll
 	private static void beforeAll() throws ReflectiveOperationException {
@@ -300,6 +304,8 @@ class VoiceManagerTest {
 		//
 		(METHOD_CONVERT_LANGUAGE_CODE_TO_TEXT = clz.getDeclaredMethod("convertLanguageCodeToText", LocaleID[].class,
 				Integer.class)).setAccessible(true);
+		//
+		(METHOD_IS_SELECTED = clz.getDeclaredMethod("isSelected", AbstractButton.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -2469,6 +2475,33 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof String) {
 				return (String) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testIsSelected() throws Throwable {
+		//
+		Assertions.assertFalse(isSelected(null));
+		//
+		final AbstractButton ab = new JCheckBox();
+		//
+		Assertions.assertFalse(isSelected(ab));
+		//
+		ab.setSelected(true);
+		//
+		Assertions.assertTrue(isSelected(ab));
+		//
+	}
+
+	private static boolean isSelected(final AbstractButton instance) throws Throwable {
+		try {
+			final Object obj = METHOD_IS_SELECTED.invoke(null, instance);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

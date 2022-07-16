@@ -543,6 +543,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(cbUseTtsVoice = new JCheckBox("TTS Voice"));
 		//
+		cbUseTtsVoice.setSelected(Boolean.parseBoolean(
+				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.useTtsVoice")));
+		//
 		add(btnExecute = new JButton("Execute"), WRAP);
 		//
 		add(new JLabel("Export"));
@@ -939,7 +942,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			final Voice voice = createVoice(this);
 			//
-			if (cbUseTtsVoice != null && cbUseTtsVoice.isSelected()) {
+			if (isSelected(cbUseTtsVoice)) {
 				//
 				final String voiceId = toString(getSelectedItem(cbmVoiceId));
 				//
@@ -1423,6 +1426,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
+	}
+
+	private static boolean isSelected(final AbstractButton instance) {
+		return instance != null && instance.isSelected();
 	}
 
 	private static String convertLanguageCodeToText(final String instance, final int base) {
