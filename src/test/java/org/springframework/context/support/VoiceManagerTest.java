@@ -39,6 +39,7 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
@@ -59,6 +60,7 @@ import javax.swing.JProgressBar;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.text.JTextComponent;
 
 import org.apache.commons.codec.binary.Hex;
@@ -128,7 +130,7 @@ class VoiceManagerTest {
 			METHOD_GET_MP3_TAG_VALUE_FILE, METHOD_GET_MP3_TAG_VALUE_LIST, METHOD_GET_MP3_TAG_PARIRS_ID3V1,
 			METHOD_GET_METHODS, METHOD_GET_SIMPLE_NAME, METHOD_COPY_OBJECT_MAP, METHOD_DELETE_ON_EXIT,
 			METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_CONVERT_LANGUAGE_CODE_TO_TEXT, METHOD_IS_SELECTED,
-			METHOD_SET_HIRAGANA_OR_KATAKANA, METHOD_OR = null;
+			METHOD_SET_HIRAGANA_OR_KATAKANA, METHOD_OR, METHOD_CLEAR = null;
 
 	@BeforeAll
 	private static void beforeAll() throws ReflectiveOperationException {
@@ -218,10 +220,10 @@ class VoiceManagerTest {
 		//
 		(METHOD_IMPORT_VOICE3 = clz.getDeclaredMethod("importVoice",
 				CLASS_OBJECT_MAP = Class.forName("org.springframework.context.support.VoiceManager$ObjectMap"),
-				Consumer.class, Consumer.class)).setAccessible(true);
+				BiConsumer.class, BiConsumer.class)).setAccessible(true);
 		//
 		(METHOD_IMPORT_VOICE5 = clz.getDeclaredMethod("importVoice", Sheet.class, CLASS_OBJECT_MAP, Boolean.TYPE,
-				Consumer.class, Consumer.class)).setAccessible(true);
+				BiConsumer.class, BiConsumer.class)).setAccessible(true);
 		//
 		(METHOD_ERROR_OR_PRINT_LN = clz.getDeclaredMethod("errorOrPrintln", Logger.class, PrintStream.class,
 				String.class)).setAccessible(true);
@@ -307,6 +309,8 @@ class VoiceManagerTest {
 		//
 		(METHOD_OR = clz.getDeclaredMethod("or", Predicate.class, Object.class, Object.class, Object[].class))
 				.setAccessible(true);
+		//
+		(METHOD_CLEAR = clz.getDeclaredMethod("clear", DefaultTableModel.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -1651,6 +1655,8 @@ class VoiceManagerTest {
 			//
 			((Map) objects).put(File.class, new File("."));
 			//
+			((Map) objects).put(Voice.class, null);
+			//
 		} // if
 			//
 		Assertions.assertDoesNotThrow(() -> importVoice(objectMap, null, null));
@@ -1669,7 +1675,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> importVoice(objectMap, x -> {
+		Assertions.assertDoesNotThrow(() -> importVoice(objectMap, (v, m) -> {
 		}, null));
 		//
 		final File file = File.createTempFile(RandomStringUtils.randomAlphabetic(3), null);
@@ -1706,8 +1712,8 @@ class VoiceManagerTest {
 		//
 	}
 
-	private static void importVoice(final Object objectMap, final Consumer<String> errorMessageConsumer,
-			final Consumer<Throwable> throwableConsumer) throws Throwable {
+	private static void importVoice(final Object objectMap, final BiConsumer<Voice, String> errorMessageConsumer,
+			final BiConsumer<Voice, Throwable> throwableConsumer) throws Throwable {
 		try {
 			METHOD_IMPORT_VOICE3.invoke(null, objectMap, errorMessageConsumer, throwableConsumer);
 		} catch (final InvocationTargetException e) {
@@ -1716,7 +1722,8 @@ class VoiceManagerTest {
 	}
 
 	private static void importVoice(final Sheet sheet, final Object objectMap, final boolean hiraganaKatakanaConversion,
-			final Consumer<String> errorMessageConsumer, final Consumer<Throwable> throwableConsumer) throws Throwable {
+			final BiConsumer<Voice, String> errorMessageConsumer, final BiConsumer<Voice, Throwable> throwableConsumer)
+			throws Throwable {
 		try {
 			METHOD_IMPORT_VOICE5.invoke(null, sheet, objectMap, hiraganaKatakanaConversion, errorMessageConsumer,
 					throwableConsumer);
@@ -2543,7 +2550,7 @@ class VoiceManagerTest {
 		//
 		Assertions.assertTrue(or(x -> Objects.equals(x, EMPTY), null, EMPTY));
 		//
-		Assertions.assertTrue(or(Predicates.alwaysFalse(), null, null, (Object[]) null));
+		Assertions.assertFalse(or(Predicates.alwaysFalse(), null, null, (Object[]) null));
 		//
 	}
 
@@ -2555,6 +2562,25 @@ class VoiceManagerTest {
 				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testClear() {
+		//
+		Assertions.assertDoesNotThrow(() -> clear(null));
+		//
+		final DefaultTableModel defaultTableModel = new DefaultTableModel();
+		//
+		Assertions.assertDoesNotThrow(() -> clear(defaultTableModel));
+		//
+	}
+
+	private static void clear(final DefaultTableModel instance) throws Throwable {
+		try {
+			METHOD_CLEAR.invoke(null, instance);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

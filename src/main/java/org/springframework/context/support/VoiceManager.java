@@ -47,6 +47,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
@@ -71,9 +72,12 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JProgressBar;
+import javax.swing.JScrollPane;
 import javax.swing.JSlider;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.text.JTextComponent;
 
 import org.apache.commons.codec.binary.Hex;
@@ -164,6 +168,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private JSlider jsSpeechVolume = null;
 
 	private JComboBox<Object> jcbVoiceId = null;
+
+	private DefaultTableModel tmImportException = null;
 
 	private SqlSessionFactory sqlSessionFactory = null;
 
@@ -595,6 +601,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		add(new JLabel("File Digest"));
 		//
 		add(tfFileDigest = new JTextField(), wrap);
+		//
+		add(new JLabel("Import Exception"));
+		//
+		add(new JScrollPane(new JTable(
+				tmImportException = new DefaultTableModel(new Object[] { "Text", "Romaji", "Exception" }, 0))), wrap);
 		//
 		setEditable(false, tfSpeechLanguage, tfProviderName, tfProviderVersion, tfFolder, tfFile, tfFileLength,
 				tfFileDigest);
@@ -1070,7 +1081,21 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 				} else {
 					//
-					JOptionPane.showMessageDialog(null, "No File Selected");
+					clear(tmImportException);
+					//
+					final String message = "No File Selected";
+					//
+					if (tmImportException != null) {
+						//
+						tmImportException.addRow(new Object[] { getText(voice), getRomaji(voice), message });
+						//
+					} else {
+						//
+						JOptionPane.showMessageDialog(null, message);
+						//
+					} // if
+						//
+					return;
 					//
 				} // if
 					//
@@ -1097,7 +1122,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
-				exeute(objectMap);
+				execute(objectMap);
 				//
 			} finally {
 				//
@@ -1301,26 +1326,36 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					final boolean headless = GraphicsEnvironment.isHeadless();
 					//
-					Consumer<String> errorMessageConsumer = null;
+					BiConsumer<Voice, String> errorMessageConsumer = null;
 					//
-					Consumer<Throwable> throwableConsumer = null;
+					BiConsumer<Voice, Throwable> throwableConsumer = null;
 					//
 					Sheet sheet = null;
+					//
+					clear(tmImportException);
 					//
 					for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
 						//
 						if (errorMessageConsumer == null) {
 							//
-							errorMessageConsumer = x -> {
+							errorMessageConsumer = (v, m) -> {
 								//
 								if (headless) {
 									//
-									errorOrPrintln(LOG, System.err, x);
+									errorOrPrintln(LOG, System.err, m);
 									//
 								} else {
 									//
-									JOptionPane.showMessageDialog(null, x);
-									//
+									if (tmImportException != null) {
+										//
+										tmImportException.addRow(new Object[] { getText(v), getRomaji(v), m });
+										//
+									} else {
+										//
+										JOptionPane.showMessageDialog(null, m);
+										//
+									} // if
+										//
 								} // if
 									//
 							};
@@ -1329,7 +1364,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 						if (throwableConsumer == null) {
 							//
-							throwableConsumer = e -> {
+							throwableConsumer = (v, e) -> {
 								//
 								if (headless) {
 									//
@@ -1345,8 +1380,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 										//
 								} else {
 									//
-									JOptionPane.showMessageDialog(null, getMessage(e));
-									//
+									if (tmImportException != null) {
+										//
+										tmImportException.addRow(new Object[] { getText(v), getRomaji(v), e });
+										//
+									} else {
+										//
+										JOptionPane.showMessageDialog(null, e);
+										//
+									} // if
+										//
 								} // if
 									//
 							};
@@ -1483,6 +1526,18 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
+	private static void clear(final DefaultTableModel instance) {
+		//
+		final Collection<?> dataVector = instance != null ? instance.getDataVector() : null;
+		//
+		if (dataVector != null) {
+			//
+			dataVector.clear();
+			//
+		} // if
+			//
+	}
+
 	private static void deleteOnExit(final File instance) {
 		if (instance != null) {
 			instance.deleteOnExit();
@@ -1600,32 +1655,82 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.getProviderVersion() : null;
 	}
 
-	private static void exeute(final ObjectMap objectMap) {
+	private static void execute(final ObjectMap objectMap) {
 		//
 		final File file = ObjectMap.getObject(objectMap, File.class);
 		//
+		final VoiceManager voiceManager = ObjectMap.getObject(objectMap, VoiceManager.class);
+		//
+		final DefaultTableModel tmImportException = voiceManager != null ? voiceManager.tmImportException : null;
+		//
+		final Voice voice = ObjectMap.getObject(objectMap, Voice.class);
+		//
+		String message = null;
+		//
+		clear(tmImportException);
+		//
 		if (file == null) {
 			//
-			JOptionPane.showMessageDialog(null, "No File Selected");
+			message = "No File Selected";
 			//
+			if (tmImportException != null) {
+				//
+				tmImportException.addRow(new Object[] { getText(voice), getRomaji(voice), message });
+				//
+			} else {
+				//
+				JOptionPane.showMessageDialog(null, message);
+				//
+			} // if
+				//
 			return;
 			//
 		} else if (!file.exists()) {
 			//
-			JOptionPane.showMessageDialog(null, String.format("File \"%1$s\" does not exist", file.getAbsolutePath()));
+			message = String.format("File \"%1$s\" does not exist", file.getAbsolutePath());
 			//
+			if (tmImportException != null) {
+				//
+				tmImportException.addRow(new Object[] { getText(voice), getRomaji(voice), message });
+				//
+			} else {
+				//
+				JOptionPane.showMessageDialog(null, message);
+				//
+			} // if
+				//
 			return;
 			//
 		} else if (!file.isFile()) {
 			//
-			JOptionPane.showMessageDialog(null, "Not A Regular File Selected");
+			message = "Not A Regular File Selected";
 			//
+			if (tmImportException != null) {
+				//
+				tmImportException.addRow(new Object[] { getText(voice), getRomaji(voice), message });
+				//
+			} else {
+				//
+				JOptionPane.showMessageDialog(null, message);
+				//
+			} // if
+				//
 			return;
 			//
 		} else if (file.length() == 0) {
 			//
-			JOptionPane.showMessageDialog(null, "Empty File Selected");
+			message = "Empty File Selected";
 			//
+			if (tmImportException != null) {
+				//
+				tmImportException.addRow(new Object[] { getText(voice), getRomaji(voice), message });
+				//
+			} else {
+				//
+				JOptionPane.showMessageDialog(null, message);
+				//
+			} // if
+				//
 			return;
 			//
 		} // if
@@ -1636,19 +1741,27 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		try {
 			//
-			importVoice(objectMap, x -> {
+			importVoice(objectMap, (v, m) -> {
 				//
 				if (headless) {
 					//
-					errorOrPrintln(LOG, System.err, x);
+					errorOrPrintln(LOG, System.err, m);
 					//
 				} else {
 					//
-					JOptionPane.showMessageDialog(null, x);
-					//
+					if (tmImportException != null) {
+						//
+						tmImportException.addRow(new Object[] { getText(v), getRomaji(v), m });
+						//
+					} else {
+						//
+						JOptionPane.showMessageDialog(null, m);
+						//
+					} // if
+						//
 				} // if
 					//
-			}, e -> {
+			}, (v, e) -> {
 				//
 				if (headless) {
 					//
@@ -1664,8 +1777,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 				} else {
 					//
-					JOptionPane.showMessageDialog(null, getMessage(e));
-					//
+					if (tmImportException != null) {
+						//
+						tmImportException.addRow(new Object[] { getText(v), getRomaji(v), e });
+						//
+					} else {
+						//
+						JOptionPane.showMessageDialog(null, e);
+						//
+					} // if
+						//
 				} // if
 					//
 			});
@@ -1909,9 +2030,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 		private ObjectMap objectMap = null;
 
-		private Consumer<String> errorMessageConsumer = null;
+		private BiConsumer<Voice, String> errorMessageConsumer = null;
 
-		private Consumer<Throwable> throwableConsumer = null;
+		private BiConsumer<Voice, Throwable> throwableConsumer = null;
 
 		private Voice voice = null;
 
@@ -1993,8 +2114,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	private static void importVoice(final Sheet sheet, final ObjectMap objectMap,
-			final boolean hiraganaKatakanaConversion, final Consumer<String> errorMessageConsumer,
-			final Consumer<Throwable> throwableConsumer)
+			final boolean hiraganaKatakanaConversion, final BiConsumer<Voice, String> errorMessageConsumer,
+			final BiConsumer<Voice, Throwable> throwableConsumer)
 			throws IllegalAccessException, IOException, InvocationTargetException, BaseException {
 		//
 		final File file = ObjectMap.getObject(objectMap, File.class);
@@ -2027,7 +2148,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				NumberFormat percentNumberFormat = null;
 				//
-				String string, filePath, hiragana, katakana = null;
+				String string, filePath = null;
 				//
 				VoiceManager voiceManager = null;
 				//
@@ -2175,7 +2296,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 												//
 											} // if
 												//
-											writeVoiceToFile(objectMap, voice.getText(), voiceId
+											writeVoiceToFile(objectMap, getText(voice), voiceId
 											//
 													, getRate(getText(
 															voiceManager != null ? voiceManager.tfSpeechRate : null))// rate
@@ -2266,6 +2387,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
+	private static String getText(final Voice instance) {
+		return instance != null ? instance.getText() : null;
+	}
+
+	private static String getRomaji(final Voice instance) {
+		return instance != null ? instance.getRomaji() : null;
+	}
+
 	private static void setHiraganaOrKatakana(final Voice voice) {
 		//
 		final String hiragana = voice != null ? voice.getHiragana() : null;
@@ -2333,32 +2462,35 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		}
 	}
 
-	private static void importVoice(final ObjectMap objectMap, final Consumer<String> errorMessageConsumer,
-			final Consumer<Throwable> throwableConsumer) {
+	private static void importVoice(final ObjectMap objectMap, final BiConsumer<Voice, String> errorMessageConsumer,
+			final BiConsumer<Voice, Throwable> throwableConsumer) {
 		//
 		final File selectedFile = ObjectMap.getObject(objectMap, File.class);
 		//
+		final Voice voice = ObjectMap.getObject(objectMap, Voice.class);
+		//
 		if (selectedFile == null) {
 			//
-			accept(errorMessageConsumer, "No File Selected");
+			accept(errorMessageConsumer, voice, "No File Selected");
 			//
 			return;
 			//
 		} else if (!selectedFile.exists()) {
 			//
-			accept(errorMessageConsumer, String.format("File \"%1$s\" does not exist", selectedFile.getAbsolutePath()));
+			accept(errorMessageConsumer, voice,
+					String.format("File \"%1$s\" does not exist", selectedFile.getAbsolutePath()));
 			//
 			return;
 			//
 		} else if (!selectedFile.isFile()) {
 			//
-			accept(errorMessageConsumer, "Not A Regular File Selected");
+			accept(errorMessageConsumer, voice, "Not A Regular File Selected");
 			//
 			return;
 			//
 		} else if (selectedFile.length() == 0) {
 			//
-			accept(errorMessageConsumer, "Empty File Selected");
+			accept(errorMessageConsumer, voice, "Empty File Selected");
 			//
 			return;
 			//
@@ -2370,19 +2502,19 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			if (fileExtension == null) {
 				//
-				accept(errorMessageConsumer, "File Extension is null");
+				accept(errorMessageConsumer, voice, "File Extension is null");
 				//
 				return;
 				//
 			} else if (StringUtils.isEmpty(fileExtension)) {
 				//
-				accept(errorMessageConsumer, "File Extension is Empty");
+				accept(errorMessageConsumer, voice, "File Extension is Empty");
 				//
 				return;
 				//
 			} else if (StringUtils.isBlank(fileExtension)) {
 				//
-				accept(errorMessageConsumer, "File Extension is Blank");
+				accept(errorMessageConsumer, voice, "File Extension is Blank");
 				//
 				return;
 				//
@@ -2390,11 +2522,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			String filePath = null;
 			//
-			final Voice voice = ObjectMap.getObject(objectMap, Voice.class);
+			final String text = getText(voice);
 			//
-			final String text = voice != null ? voice.getText() : null;
-			//
-			final String romaji = voice != null ? voice.getRomaji() : null;
+			final String romaji = getRomaji(voice);
 			//
 			final VoiceMapper voiceMapper = ObjectMap.getObject(objectMap, VoiceMapper.class);
 			//
@@ -2479,15 +2609,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} catch (IOException | NoSuchAlgorithmException e) {
 			//
-			accept(throwableConsumer, e);
+			accept(throwableConsumer, voice, e);
 			//
 		} // try
 			//
 	}
 
-	private static <T> void accept(final Consumer<T> instance, final T value) {
+	private static <T, U> void accept(final BiConsumer<T, U> instance, final T t, final U u) {
 		if (instance != null) {
-			instance.accept(value);
+			instance.accept(t, u);
 		}
 	}
 
@@ -3124,8 +3254,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		if (instance != null) {
 			//
-			if (instance.searchByTextAndRomaji(voice != null ? voice.getText() : null,
-					voice != null ? voice.getRomaji() : null) != null) {
+			if (instance.searchByTextAndRomaji(getText(voice), getRomaji(voice)) != null) {
 				//
 				if (voice != null) {
 					//
