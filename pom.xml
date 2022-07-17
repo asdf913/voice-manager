@@ -9,7 +9,7 @@
 		<maven.compiler.source>17</maven.compiler.source>
 		<maven.compiler.target>17</maven.compiler.target>
 		<junit.version>5.8.2</junit.version>
-		<spring.version>5.3.21</spring.version>
+		<spring.version>5.3.22</spring.version>
 	</properties>
 	<dependencies>
 		<!-- https://mvnrepository.com/artifact/com.miglayout/miglayout-swing -->
