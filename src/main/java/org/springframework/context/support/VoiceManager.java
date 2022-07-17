@@ -141,6 +141,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static Pattern PATTERN_CONTENT_INFO_MESSAGE_MP3_2 = Pattern
 			.compile("^Audio file with ID3 version (\\d+(\\.\\d+)?), MP3 encoding$");
 
+	private static Pattern PATTERN_CONTENT_INFO_MESSAGE_MP3_3 = Pattern
+			.compile("^Audio file with ID3 version \\d+(\\.\\d+)?$");
+
 	private static final String WRAP = "wrap";
 
 	private PropertyResolver propertyResolver = null;
@@ -1020,8 +1023,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 						if (voice != null) {
 							//
-							voice.setSource(StringUtils.defaultIfBlank(voice.getSource(),
-									getMp3TagValue(file, x -> StringUtils.isNotBlank(toString(x)), mp3Tags)));
+							voice.setSource(StringUtils.defaultIfBlank(voice.getSource(), getMp3TagValue(
+									file = jfc.getSelectedFile(), x -> StringUtils.isNotBlank(toString(x)), mp3Tags)));
 							//
 						} // if
 							//
@@ -3164,10 +3167,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
-		final String messgae = ci.getMessage();
+		final String message = ci.getMessage();
 		//
-		if (matches(matcher(PATTERN_CONTENT_INFO_MESSAGE_MP3_1, messgae))
-				|| matches(matcher(PATTERN_CONTENT_INFO_MESSAGE_MP3_2, messgae))) {
+		if (or(x -> matches(matcher(x, message)), PATTERN_CONTENT_INFO_MESSAGE_MP3_1,
+				PATTERN_CONTENT_INFO_MESSAGE_MP3_2, PATTERN_CONTENT_INFO_MESSAGE_MP3_3)) {
 			//
 			return "mp3";
 			//
@@ -3186,6 +3189,26 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		} // if
 			//
 		return null;
+		//
+	}
+
+	private static <T> boolean or(final Predicate<T> predicate, final T a, final T b, final T... values) {
+		//
+		boolean result = test(predicate, a) || test(predicate, b);
+		//
+		if (result) {
+			//
+			return result;
+			//
+		} // if
+			//
+		for (int i = 0; values != null && i < values.length; i++) {
+			//
+			result |= test(predicate, values[i]);
+			//
+		} // for
+			//
+		return result;
 		//
 	}
 

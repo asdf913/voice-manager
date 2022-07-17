@@ -1,7 +1,5 @@
 package org.springframework.context.support;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import java.awt.Component;
 import java.awt.GraphicsEnvironment;
 import java.awt.ItemSelectable;
@@ -130,7 +128,7 @@ class VoiceManagerTest {
 			METHOD_GET_MP3_TAG_VALUE_FILE, METHOD_GET_MP3_TAG_VALUE_LIST, METHOD_GET_MP3_TAG_PARIRS_ID3V1,
 			METHOD_GET_METHODS, METHOD_GET_SIMPLE_NAME, METHOD_COPY_OBJECT_MAP, METHOD_DELETE_ON_EXIT,
 			METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_CONVERT_LANGUAGE_CODE_TO_TEXT, METHOD_IS_SELECTED,
-			METHOD_SET_HIRAGANA_OR_KATAKANA = null;
+			METHOD_SET_HIRAGANA_OR_KATAKANA, METHOD_OR = null;
 
 	@BeforeAll
 	private static void beforeAll() throws ReflectiveOperationException {
@@ -305,6 +303,9 @@ class VoiceManagerTest {
 		(METHOD_IS_SELECTED = clz.getDeclaredMethod("isSelected", AbstractButton.class)).setAccessible(true);
 		//
 		(METHOD_SET_HIRAGANA_OR_KATAKANA = clz.getDeclaredMethod("setHiraganaOrKatakana", Voice.class))
+				.setAccessible(true);
+		//
+		(METHOD_OR = clz.getDeclaredMethod("or", Predicate.class, Object.class, Object.class, Object[].class))
 				.setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
@@ -2532,6 +2533,28 @@ class VoiceManagerTest {
 	private static void setHiraganaOrKatakana(final Voice voice) throws Throwable {
 		try {
 			METHOD_SET_HIRAGANA_OR_KATAKANA.invoke(null, voice);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testOr() throws Throwable {
+		//
+		Assertions.assertTrue(or(x -> Objects.equals(x, EMPTY), null, EMPTY));
+		//
+		Assertions.assertTrue(or(Predicates.alwaysFalse(), null, null, (Object[]) null));
+		//
+	}
+
+	private static <T> boolean or(final Predicate<T> predicate, final T a, final T b, final T... values)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_OR.invoke(null, predicate, a, b, values);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
