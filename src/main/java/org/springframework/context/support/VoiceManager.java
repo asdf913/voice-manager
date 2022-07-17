@@ -2110,28 +2110,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					if (voice != null && hiraganaKatakanaConversion) {
 						//
-						final boolean isHiraganaBlank = StringUtils.isBlank(hiragana = voice.getHiragana());
+						setHiraganaOrKatakana(voice);
 						//
-						final boolean isKatakanaBlank = StringUtils.isBlank(katakana = voice.getKatakana());
-						//
-						if ((isHiraganaBlank || isKatakanaBlank) && !(isHiraganaBlank && isKatakanaBlank)) {
-							//
-							if (isHiraganaBlank) {
-								//
-								voice.setHiragana(testAndApply(Objects::nonNull, katakana,
-										x -> KanaConverter.convertKana(x, KanaConverter.OP_ZEN_KATA_TO_ZEN_HIRA),
-										null));
-								//
-							} else {
-								//
-								voice.setKatakana(testAndApply(Objects::nonNull, hiragana,
-										x -> KanaConverter.convertKana(x, KanaConverter.OP_ZEN_HIRA_TO_ZEN_KATA),
-										null));
-								//
-							} // if
-								//
-						} // if
-							//
 					} // if
 						//
 					if (first) {
@@ -2280,6 +2260,34 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			shutdown(es);
 			//
 		} // try
+			//
+	}
+
+	private static void setHiraganaOrKatakana(final Voice voice) {
+		//
+		final String hiragana = voice != null ? voice.getHiragana() : null;
+		//
+		final String katakana = voice != null ? voice.getKatakana() : null;
+		//
+		final boolean isHiraganaBlank = StringUtils.isBlank(hiragana);
+		//
+		final boolean isKatakanaBlank = StringUtils.isBlank(katakana);
+		//
+		if ((isHiraganaBlank || isKatakanaBlank) && !(isHiraganaBlank && isKatakanaBlank)) {
+			//
+			if (isHiraganaBlank) {
+				//
+				voice.setHiragana(testAndApply(Objects::nonNull, katakana,
+						x -> KanaConverter.convertKana(x, KanaConverter.OP_ZEN_KATA_TO_ZEN_HIRA), null));
+				//
+			} else {
+				//
+				voice.setKatakana(testAndApply(Objects::nonNull, hiragana,
+						x -> KanaConverter.convertKana(x, KanaConverter.OP_ZEN_HIRA_TO_ZEN_KATA), null));
+				//
+			} // if
+				//
+		} // if
 			//
 	}
 

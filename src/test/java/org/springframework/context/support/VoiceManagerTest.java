@@ -1,5 +1,7 @@
 package org.springframework.context.support;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import java.awt.Component;
 import java.awt.GraphicsEnvironment;
 import java.awt.ItemSelectable;
@@ -127,7 +129,8 @@ class VoiceManagerTest {
 			METHOD_GET_PROVIDER_NAME, METHOD_GET_PROVIDER_VERSION, METHOD_WRITE_VOICE_TO_FILE,
 			METHOD_GET_MP3_TAG_VALUE_FILE, METHOD_GET_MP3_TAG_VALUE_LIST, METHOD_GET_MP3_TAG_PARIRS_ID3V1,
 			METHOD_GET_METHODS, METHOD_GET_SIMPLE_NAME, METHOD_COPY_OBJECT_MAP, METHOD_DELETE_ON_EXIT,
-			METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_CONVERT_LANGUAGE_CODE_TO_TEXT, METHOD_IS_SELECTED = null;
+			METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_CONVERT_LANGUAGE_CODE_TO_TEXT, METHOD_IS_SELECTED,
+			METHOD_SET_HIRAGANA_OR_KATAKANA = null;
 
 	@BeforeAll
 	private static void beforeAll() throws ReflectiveOperationException {
@@ -300,6 +303,9 @@ class VoiceManagerTest {
 				Integer.class)).setAccessible(true);
 		//
 		(METHOD_IS_SELECTED = clz.getDeclaredMethod("isSelected", AbstractButton.class)).setAccessible(true);
+		//
+		(METHOD_SET_HIRAGANA_OR_KATAKANA = clz.getDeclaredMethod("setHiraganaOrKatakana", Voice.class))
+				.setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -2493,6 +2499,39 @@ class VoiceManagerTest {
 				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetHiraganaOrKatakana() {
+		//
+		Assertions.assertDoesNotThrow(() -> setHiraganaOrKatakana(null));
+		//
+		final Voice voice = new Voice();
+		//
+		Assertions.assertDoesNotThrow(() -> setHiraganaOrKatakana(voice));
+		//
+		voice.setHiragana("あ");
+		//
+		Assertions.assertDoesNotThrow(() -> setHiraganaOrKatakana(voice));
+		//
+		Assertions.assertEquals("ア", voice.getKatakana());
+		//
+		voice.setHiragana(null);
+		//
+		Assertions.assertDoesNotThrow(() -> setHiraganaOrKatakana(voice));
+		//
+		Assertions.assertEquals("あ", voice.getHiragana());
+		//
+		Assertions.assertDoesNotThrow(() -> setHiraganaOrKatakana(voice));
+		//
+	}
+
+	private static void setHiraganaOrKatakana(final Voice voice) throws Throwable {
+		try {
+			METHOD_SET_HIRAGANA_OR_KATAKANA.invoke(null, voice);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
