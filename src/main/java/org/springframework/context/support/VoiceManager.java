@@ -108,6 +108,7 @@ import org.apache.poi.util.LocaleID;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.LoggerUtil;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertyResolver;
@@ -398,7 +399,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 						if (GraphicsEnvironment.isHeadless()) {
 							//
-							if (LOG != null) {
+							if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
 								LOG.error(getMessage(e), e);
 							} else if (e != null) {
 								e.printStackTrace();
@@ -663,7 +664,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 								//
 								if (GraphicsEnvironment.isHeadless()) {
 									//
-									if (LOG != null) {
+									if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
 										LOG.error(getMessage(e), e);
 									} else if (e != null) {
 										e.printStackTrace();
@@ -685,7 +686,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 								//
 								if (GraphicsEnvironment.isHeadless()) {
 									//
-									if (LOG != null) {
+									if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
 										LOG.error(getMessage(rootCause), rootCause);
 									} else if (rootCause != null) {
 										rootCause.printStackTrace();
@@ -727,7 +728,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 							if (GraphicsEnvironment.isHeadless()) {
 								//
-								if (LOG != null) {
+								if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
 									LOG.error(getMessage(e), e);
 								} else if (e != null) {
 									e.printStackTrace();
@@ -749,7 +750,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 							if (GraphicsEnvironment.isHeadless()) {
 								//
-								if (LOG != null) {
+								if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
 									LOG.error(getMessage(rootCause), rootCause);
 								} else if (rootCause != null) {
 									rootCause.printStackTrace();
@@ -994,7 +995,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 						if (GraphicsEnvironment.isHeadless()) {
 							//
-							if (LOG != null) {
+							if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
 								LOG.error(getMessage(e), e);
 							} else if (e != null) {
 								e.printStackTrace();
@@ -1043,7 +1044,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 						if (GraphicsEnvironment.isHeadless()) {
 							//
-							if (LOG != null) {
+							if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
 								LOG.error(getMessage(e), e);
 							} else if (e != null) {
 								e.printStackTrace();
@@ -1065,7 +1066,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 						if (GraphicsEnvironment.isHeadless()) {
 							//
-							if (LOG != null) {
+							if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
 								LOG.error(getMessage(rootCause), rootCause);
 							} else if (rootCause != null) {
 								rootCause.printStackTrace();
@@ -1172,7 +1173,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				if (GraphicsEnvironment.isHeadless()) {
 					//
-					if (LOG != null) {
+					if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
 						LOG.error(getMessage(e), e);
 					} else if (e != null) {
 						e.printStackTrace();
@@ -1193,7 +1194,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				if (GraphicsEnvironment.isHeadless()) {
 					//
-					if (LOG != null) {
+					if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
 						LOG.error(getMessage(rootCause), rootCause);
 					} else if (rootCause != null) {
 						rootCause.printStackTrace();
@@ -1235,7 +1236,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					if (GraphicsEnvironment.isHeadless()) {
 						//
-						if (LOG != null) {
+						if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
 							LOG.error(getMessage(e), e);
 						} else if (e != null) {
 							e.printStackTrace();
@@ -1268,7 +1269,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					if (GraphicsEnvironment.isHeadless()) {
 						//
-						if (LOG != null) {
+						if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
 							LOG.error(getMessage(e), e);
 						} else if (e != null) {
 							e.printStackTrace();
@@ -1368,7 +1369,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 								//
 								if (headless) {
 									//
-									if (LOG != null) {
+									if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
 										//
 										LOG.error(getMessage(e), e);
 										//
@@ -1414,7 +1415,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					if (GraphicsEnvironment.isHeadless()) {
 						//
-						if (LOG != null) {
+						if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
 							LOG.error(getMessage(e), e);
 						} else if (e != null) {
 							e.printStackTrace();
@@ -1435,7 +1436,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					if (GraphicsEnvironment.isHeadless()) {
 						//
-						if (LOG != null) {
+						if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
 							LOG.error(getMessage(rootCause), rootCause);
 						} else if (rootCause != null) {
 							rootCause.printStackTrace();
@@ -1471,7 +1472,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				if (GraphicsEnvironment.isHeadless()) {
 					//
-					if (LOG != null) {
+					if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
 						LOG.error(getMessage(e), e);
 					} else if (e != null) {
 						e.printStackTrace();
@@ -1765,7 +1766,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				if (headless) {
 					//
-					if (LOG != null) {
+					if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
 						//
 						LOG.error(getMessage(e), e);
 						//
@@ -1874,7 +1875,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 							if (GraphicsEnvironment.isHeadless()) {
 								//
-								if (LOG != null) {
+								if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
 									LOG.error(getMessage(e), e);
 								} else if (e != null) {
 									e.printStackTrace();
@@ -1963,7 +1964,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			if (GraphicsEnvironment.isHeadless()) {
 				//
-				if (LOG != null) {
+				if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
 					LOG.error(getMessage(e), e);
 				} else if (e != null) {
 					e.printStackTrace();
@@ -2332,7 +2333,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 										//
 										if (GraphicsEnvironment.isHeadless()) {
 											//
-											if (LOG != null) {
+											if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
 												LOG.error(getMessage(e), e);
 											} else if (e != null) {
 												e.printStackTrace();
@@ -2801,7 +2802,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				if (GraphicsEnvironment.isHeadless()) {
 					//
-					if (LOG != null) {
+					if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
 						LOG.error(getMessage(e), e);
 					} else if (e != null) {
 						e.printStackTrace();
@@ -3118,7 +3119,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			// =
 			if (GraphicsEnvironment.isHeadless()) {
 				//
-				if (LOG != null) {
+				if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
 					LOG.error(getMessage(e), e);
 				} else if (e != null) {
 					e.printStackTrace();
@@ -3139,7 +3140,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			if (GraphicsEnvironment.isHeadless()) {
 				//
-				if (LOG != null) {
+				if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
 					LOG.error(getMessage(rootCause), rootCause);
 				} else if (rootCause != null) {
 					rootCause.printStackTrace();

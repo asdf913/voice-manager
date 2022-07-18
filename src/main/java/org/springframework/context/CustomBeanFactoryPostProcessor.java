@@ -16,6 +16,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.LoggerUtil;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -64,7 +65,7 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 			//
 			if (GraphicsEnvironment.isHeadless()) {
 				//
-				if (LOG != null) {
+				if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
 					LOG.error(e.getMessage(), e);
 				} else {
 					e.printStackTrace();
