@@ -130,7 +130,7 @@ class VoiceManagerTest {
 			METHOD_GET_MP3_TAG_VALUE_FILE, METHOD_GET_MP3_TAG_VALUE_LIST, METHOD_GET_MP3_TAG_PARIRS_ID3V1,
 			METHOD_GET_METHODS, METHOD_GET_SIMPLE_NAME, METHOD_COPY_OBJECT_MAP, METHOD_DELETE_ON_EXIT,
 			METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_CONVERT_LANGUAGE_CODE_TO_TEXT, METHOD_IS_SELECTED,
-			METHOD_SET_HIRAGANA_OR_KATAKANA, METHOD_OR, METHOD_CLEAR = null;
+			METHOD_SET_HIRAGANA_OR_KATAKANA, METHOD_OR, METHOD_CLEAR, METHOD_EXECUTE = null;
 
 	@BeforeAll
 	private static void beforeAll() throws ReflectiveOperationException {
@@ -311,6 +311,8 @@ class VoiceManagerTest {
 				.setAccessible(true);
 		//
 		(METHOD_CLEAR = clz.getDeclaredMethod("clear", DefaultTableModel.class)).setAccessible(true);
+		//
+		(METHOD_EXECUTE = clz.getDeclaredMethod("execute", CLASS_OBJECT_MAP)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -2581,6 +2583,79 @@ class VoiceManagerTest {
 	private static void clear(final DefaultTableModel instance) throws Throwable {
 		try {
 			METHOD_CLEAR.invoke(null, instance);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testExecute() throws Throwable {
+		//
+		final Constructor<?> constructor = CLASS_IH != null ? CLASS_IH.getDeclaredConstructor() : null;
+		//
+		if (constructor != null) {
+			//
+			constructor.setAccessible(true);
+			//
+		} // if
+			//
+		final InvocationHandler ih = cast(InvocationHandler.class,
+				constructor != null ? constructor.newInstance() : null);
+		//
+		final Object objectMap = Reflection.newProxy(CLASS_OBJECT_MAP, ih);
+		//
+		final Field fieldObjects = ih != null && ih.getClass() != null ? ih.getClass().getDeclaredField("objects")
+				: null;
+		//
+		if (fieldObjects != null) {
+			//
+			fieldObjects.setAccessible(true);
+			//
+		} // if
+			//
+		Map<Object, Object> objects = ObjectUtils.getIfNull(cast(Map.class, get(fieldObjects, ih)), LinkedHashMap::new);
+		//
+		if (objects != null) {
+			//
+			objects.put(File.class, null);
+			//
+			objects.put(VoiceManager.class, instance);
+			//
+			objects.put(Voice.class, null);
+			//
+		} // if
+			//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "tmImportException", new DefaultTableModel(), true);
+			//
+		} // if
+			//
+		set(fieldObjects, ih, objects);
+		//
+		Assertions.assertDoesNotThrow(() -> execute(objectMap));
+		//
+		if (objects != null) {
+			//
+			objects.put(File.class, new File("NON_EXISTS"));
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> execute(objectMap));
+		//
+		if (objects != null) {
+			//
+			objects.put(File.class, new File("."));
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> execute(objectMap));
+		//
+	}
+
+	private static void execute(final Object objectMap) throws Throwable {
+		try {
+			METHOD_EXECUTE.invoke(null, objectMap);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
