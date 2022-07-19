@@ -476,10 +476,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				final String name = name(cast(Enum.class, value));
 				//
-				if (yomiNameMap != null && yomiNameMap.containsKey(name)) {
+				if (containsKey(yomiNameMap, name)) {
 					//
-					return VoiceManager.getListCellRendererComponent(listCellRenderer, list, yomiNameMap.get(name),
-							index, isSelected, cellHasFocus);
+					return VoiceManager.getListCellRendererComponent(listCellRenderer, list,
+							MapUtils.getObject(yomiNameMap, name), index, isSelected, cellHasFocus);
 					//
 				} // if
 					//
