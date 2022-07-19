@@ -2266,7 +2266,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 								//
 								if (StringUtils.isNotBlank(filePath = voice.getFilePath())) {
 									//
-									it.file = new File(folder, filePath);
+									if(!(it.file=new File(filePath)).exists()) {
+										//
+										it.file = new File(folder, filePath);
+										//
+									}//if
 									//
 									if (mp3Tags == null && (voiceManager = ObjectUtils.getIfNull(voiceManager,
 											() -> ObjectMap.getObject(objectMap, VoiceManager.class))) != null) {
