@@ -29,8 +29,20 @@ public class Voice {
 	@ImportField
 	private String source = null;
 
+	@Target(ElementType.FIELD)
+	@Retention(RetentionPolicy.RUNTIME)
+	private @interface Name {
+		String value();
+	}
+
 	public static enum Yomi {
-		KUN_YOMI, ON_YOMI
+
+		@Name("訓読み")
+		KUN_YOMI
+
+		, @Name("音読み")
+		ON_YOMI
+
 	}
 
 	@ImportField

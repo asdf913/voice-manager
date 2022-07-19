@@ -461,31 +461,54 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final Yomi[] yomis = Yomi.values();
 		//
-		add(new JComboBox<>(cbmYomi = new DefaultComboBoxModel<>(ArrayUtils.insert(0, yomis, (Yomi) null))),
-				String.format("span %1$s,%2$s", 6, WRAP));
+		final JComboBox<Object> jcbYomi = new JComboBox(
+				cbmYomi = new DefaultComboBoxModel<>(ArrayUtils.insert(0, yomis, (Yomi) null)));
 		//
-		if (yomis != null) {
+		final ListCellRenderer<Object> listCellRenderer = jcbYomi.getRenderer();
+		//
+		final Map<String, String> yomiNameMap = createYomiNameMap();
+		//
+		jcbYomi.setRenderer(new ListCellRenderer<Object>() {
+
+			@Override
+			public Component getListCellRendererComponent(final JList<?> list, final Object value, final int index,
+					final boolean isSelected, final boolean cellHasFocus) {
+				//
+				final String name = name(cast(Enum.class, value));
+				//
+				if (yomiNameMap != null && yomiNameMap.containsKey(name)) {
+					//
+					return VoiceManager.getListCellRendererComponent(listCellRenderer, list, yomiNameMap.get(name),
+							index, isSelected, cellHasFocus);
+					//
+				} // if
+					//
+				return VoiceManager.getListCellRendererComponent(listCellRenderer, list, value, index, isSelected,
+						cellHasFocus);
+				//
+			}
+		});
+		//
+		add(jcbYomi, String.format("span %1$s,%2$s", 6, WRAP));
+		//
+		final List<Yomi> yomiList = collect(
+				filter(testAndApply(Objects::nonNull, yomis, Arrays::stream, null),
+						y -> Objects.equals(name(y),
+								getProperty(propertyResolver,
+										"org.springframework.context.support.VoiceManager.yomi"))),
+				Collectors.toList());
+		//
+		final int size = yomiList != null ? yomiList.size() : 0;
+		//
+		if (size == 1) {
 			//
-			final List<Yomi> list = collect(
-					filter(Arrays.stream(yomis),
-							y -> Objects.equals(name(y),
-									getProperty(propertyResolver,
-											"org.springframework.context.support.VoiceManager.yomi"))),
-					Collectors.toList());
+			cbmYomi.setSelectedItem(yomiList.get(0));
 			//
-			final int size = list != null ? list.size() : 0;
+		} else if (size > 1) {
 			//
-			if (size == 1) {
-				//
-				cbmYomi.setSelectedItem(list.get(0));
-				//
-			} else if (size > 1) {
-				//
-				throw new IllegalStateException();
-				//
-			} // if
-				//
-		} // if)
+			throw new IllegalStateException();
+			//
+		} // if
 			//
 		add(new JLabel("Romaji"));
 		//
@@ -582,6 +605,132 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
+	private static <E> Component getListCellRendererComponent(final ListCellRenderer<E> instance,
+			final JList<? extends E> list, final E value, final int index, final boolean isSelected,
+			final boolean cellHasFocus) {
+		//
+		return instance != null ? instance.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
+				: null;
+		//
+	}
+
+	private static Map<String, String> createYomiNameMap() {
+		//
+		final Class<?> nameClass = forName("domain.Voice$Name");
+		//
+		final List<Pair<String, String>> pairs = collect(
+				//
+				filter(map(testAndApply(Objects::nonNull, Yomi.class.getDeclaredFields(), Arrays::stream, null), f -> {
+					//
+					final List<Object> objects = collect(
+							map(filter(testAndApply(Objects::nonNull, getDeclaredAnnotations(f), Arrays::stream, null),
+									a -> Objects.equals(annotationType(a), nameClass)), a -> {
+										//
+										final List<Method> ms = collect(
+												filter(testAndApply(Objects::nonNull,
+														getDeclaredMethods(annotationType(a)), Arrays::stream, null),
+														ma -> Objects.equals(getName(ma), "value")),
+												Collectors.toList());
+										//
+										if (ms == null || ms.isEmpty()) {
+											//
+											return false;
+											//
+										} // if
+											//
+										Method m = ms.get(0);
+										//
+										if (ms.size() == 1 && m != null) {
+											//
+											m.setAccessible(true);
+											//
+											try {
+												//
+												return m.invoke(a);
+												//
+											} catch (final IllegalAccessException e) {
+												//
+												if (GraphicsEnvironment.isHeadless()) {
+													//
+													if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
+														LOG.error(getMessage(e), e);
+													} else if (e != null) {
+														e.printStackTrace();
+													} // if
+														//
+												} else {
+													//
+													JOptionPane.showMessageDialog(null, getMessage(e));
+													//
+												} // if
+													//
+											} catch (final InvocationTargetException e) {
+												//
+												final Throwable targetException = e.getTargetException();
+												//
+												final Throwable rootCause = ObjectUtils.firstNonNull(
+														ExceptionUtils.getRootCause(targetException), targetException,
+														ExceptionUtils.getRootCause(e), e);
+												//
+												if (GraphicsEnvironment.isHeadless()) {
+													//
+													if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
+														LOG.error(getMessage(rootCause), rootCause);
+													} else if (rootCause != null) {
+														rootCause.printStackTrace();
+													} // if
+														//
+												} else {
+													//
+													JOptionPane.showMessageDialog(null, getMessage(rootCause));
+													//
+												} // if
+													//
+											} // try
+												//
+										} // if
+											//
+										throw new IllegalStateException();
+										//
+									}),
+							Collectors.toList());
+					//
+					if (objects == null || objects.isEmpty()) {
+						//
+						return null;
+						//
+					} // if
+						//
+					if (objects.size() == 1) {
+						//
+						return Pair.of(getName(f), toString(objects.get(0)));
+						//
+					} // if
+						//
+					throw new IllegalStateException();
+					//
+				}), Objects::nonNull), Collectors.toList());
+		//
+		Pair<String, String> pair = null;
+		//
+		Map<String, String> map = null;
+		//
+		for (int i = 0; pairs != null && i < pairs.size(); i++) {
+			//
+			if ((pair = pairs.get(i)) == null || (map = ObjectUtils.getIfNull(map, LinkedHashMap::new)) == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			map.put(pair.getKey(), pair.getValue());
+			//
+		} // for
+			//
+		return map;
+		//
+	}
+
 	private class VoiceIdListCellRenderer implements ListCellRenderer<Object> {
 
 		private ListCellRenderer<Object> listCellRenderer = null;
@@ -600,7 +749,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				if (StringUtils.isNotBlank(name)) {
 					//
-					return getListCellRendererComponent(listCellRenderer, list, name, index, isSelected, cellHasFocus);
+					return VoiceManager.getListCellRendererComponent(listCellRenderer, list, name, index, isSelected,
+							cellHasFocus);
 					//
 				} // if
 					//
@@ -622,19 +772,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 			} // try
 				//
-			return getListCellRendererComponent(listCellRenderer, list,
+			return VoiceManager.getListCellRendererComponent(listCellRenderer, list,
 					StringUtils.startsWith(s, commonPrefix) ? StringUtils.substringAfter(s, commonPrefix) : value,
 					index, isSelected, cellHasFocus);
-			//
-		}
-
-		private static <E> Component getListCellRendererComponent(final ListCellRenderer<E> instance,
-				final JList<? extends E> list, final E value, final int index, final boolean isSelected,
-				final boolean cellHasFocus) {
-			//
-			return instance != null
-					? instance.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
-					: null;
 			//
 		}
 
@@ -2266,12 +2406,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 								//
 								if (StringUtils.isNotBlank(filePath = voice.getFilePath())) {
 									//
-									if(!(it.file=new File(filePath)).exists()) {
+									if (!(it.file = new File(filePath)).exists()) {
 										//
 										it.file = new File(folder, filePath);
 										//
-									}//if
-									//
+									} // if
+										//
 									if (mp3Tags == null && (voiceManager = ObjectUtils.getIfNull(voiceManager,
 											() -> ObjectMap.getObject(objectMap, VoiceManager.class))) != null) {
 										//
