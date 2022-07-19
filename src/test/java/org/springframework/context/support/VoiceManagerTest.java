@@ -55,7 +55,6 @@ import javax.swing.ComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
-import javax.swing.JList;
 import javax.swing.JProgressBar;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
@@ -129,8 +128,8 @@ class VoiceManagerTest {
 			METHOD_GET_PROVIDER_NAME, METHOD_GET_PROVIDER_VERSION, METHOD_WRITE_VOICE_TO_FILE,
 			METHOD_GET_MP3_TAG_VALUE_FILE, METHOD_GET_MP3_TAG_VALUE_LIST, METHOD_GET_MP3_TAG_PARIRS_ID3V1,
 			METHOD_GET_METHODS, METHOD_GET_SIMPLE_NAME, METHOD_COPY_OBJECT_MAP, METHOD_DELETE_ON_EXIT,
-			METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_CONVERT_LANGUAGE_CODE_TO_TEXT, METHOD_IS_SELECTED,
-			METHOD_SET_HIRAGANA_OR_KATAKANA, METHOD_OR, METHOD_CLEAR, METHOD_EXECUTE = null;
+			METHOD_CONVERT_LANGUAGE_CODE_TO_TEXT, METHOD_IS_SELECTED, METHOD_SET_HIRAGANA_OR_KATAKANA, METHOD_OR,
+			METHOD_CLEAR, METHOD_EXECUTE = null;
 
 	@BeforeAll
 	private static void beforeAll() throws ReflectiveOperationException {
@@ -294,10 +293,6 @@ class VoiceManagerTest {
 		(METHOD_COPY_OBJECT_MAP = clz.getDeclaredMethod("copyObjectMap", CLASS_OBJECT_MAP)).setAccessible(true);
 		//
 		(METHOD_DELETE_ON_EXIT = clz.getDeclaredMethod("deleteOnExit", File.class)).setAccessible(true);
-		//
-		(METHOD_GET_LIST_CELL_RENDERER_COMPONENT = clz.getDeclaredMethod("getListCellRendererComponent",
-				ListCellRenderer.class, JList.class, Object.class, Integer.TYPE, Boolean.TYPE, Boolean.TYPE))
-				.setAccessible(true);
 		//
 		(METHOD_CONVERT_LANGUAGE_CODE_TO_TEXT = clz.getDeclaredMethod("convertLanguageCodeToText", LocaleID[].class,
 				Integer.class)).setAccessible(true);
@@ -2434,33 +2429,6 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testgetListCellRendererComponent() throws Throwable {
-		//
-		Assertions.assertNull(getListCellRendererComponent(null, null, null, 0, false, false));
-		//
-		Assertions.assertNull(getListCellRendererComponent(Reflection.newProxy(ListCellRenderer.class, ih), null, null,
-				0, false, false));
-		//
-	}
-
-	private static <E> Component getListCellRendererComponent(final ListCellRenderer<E> instance,
-			final JList<? extends E> list, final E value, final int index, final boolean isSelected,
-			final boolean cellHasFocus) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_LIST_CELL_RENDERER_COMPONENT.invoke(null, instance, list, value, index,
-					isSelected, cellHasFocus);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Component) {
-				return (Component) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testConvertLanguageCodeToText() throws Throwable {
 		//
 		Assertions.assertNull(convertLanguageCodeToText(new LocaleID[] { null }, null));
@@ -2765,6 +2733,43 @@ class VoiceManagerTest {
 		if (instance != null) {
 			instance.run();
 		}
+	}
+
+	@Test
+	void testVoiceIdListCellRenderer() throws Throwable {
+		//
+		final Class<?> clz = forName("org.springframework.context.support.VoiceManager$VoiceIdListCellRenderer");
+		//
+		final Constructor<?> constructor = clz != null ? clz.getDeclaredConstructor(VoiceManager.class) : null;
+		//
+		if (constructor != null) {
+			//
+			constructor.setAccessible(true);
+			//
+		} // if
+			//
+		final ListCellRenderer<?> listCellRenderer1 = cast(ListCellRenderer.class,
+				constructor != null ? constructor.newInstance(this.instance) : null);
+		//
+		if (listCellRenderer1 != null) {
+			//
+			Assertions.assertNull(listCellRenderer1.getListCellRendererComponent(null, null, 0, false, false));
+			//
+			FieldUtils.writeDeclaredField(instance, "speechApi", speechApi, true);
+			//
+			ih.voiceAttribute = "A";
+			//
+			Assertions.assertNull(listCellRenderer1.getListCellRendererComponent(null, null, 0, false, false));
+			//
+			FieldUtils.writeDeclaredField(instance, "speechApi", null, true);
+			//
+			FieldUtils.writeDeclaredField(listCellRenderer1, "listCellRenderer",
+					Reflection.newProxy(ListCellRenderer.class, ih), true);
+			//
+			Assertions.assertNull(listCellRenderer1.getListCellRendererComponent(null, null, 0, false, false));
+			//
+		} // if
+			//
 	}
 
 }

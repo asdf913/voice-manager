@@ -369,57 +369,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		if ((cbmVoiceId = testAndApply(Objects::nonNull, voiceIds,
 				x -> new DefaultComboBoxModel<>(ArrayUtils.insert(0, x, (String) null)), null)) != null) {
 			//
-			final ListCellRenderer<Object> listCellRenderer = (jcbVoiceId = new JComboBox(cbmVoiceId)).getRenderer();
+			final VoiceIdListCellRenderer voiceIdListCellRenderer = new VoiceIdListCellRenderer();
 			//
-			final String commonPrefix = String.join("",
-					StringUtils.substringBeforeLast(StringUtils.getCommonPrefix(voiceIds), "\\"), "\\");
+			voiceIdListCellRenderer.listCellRenderer = (jcbVoiceId = new JComboBox(cbmVoiceId)).getRenderer();
 			//
 			jcbVoiceId.addItemListener(this);
 			//
-			jcbVoiceId.setRenderer(new ListCellRenderer<Object>() {
-
-				@Override
-				public Component getListCellRendererComponent(final JList<? extends Object> list, final Object value,
-						final int index, final boolean isSelected, final boolean cellHasFocus) {
-					//
-					final String s = VoiceManager.toString(value);
-					//
-					try {
-						//
-						final String name = getVoiceAttribute(speechApi, s, "Name");
-						//
-						if (StringUtils.isNotBlank(name)) {
-							//
-							return VoiceManager.getListCellRendererComponent(listCellRenderer, list, name, index,
-									isSelected, cellHasFocus);
-							//
-						} // if
-							//
-					} catch (final Error e) {
-						//
-						if (GraphicsEnvironment.isHeadless()) {
-							//
-							if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-								LOG.error(getMessage(e), e);
-							} else if (e != null) {
-								e.printStackTrace();
-							} // if
-								//
-						} else {
-							//
-							JOptionPane.showMessageDialog(null, getMessage(e));
-							//
-						} // if
-							//
-					} // try
-						//
-					return VoiceManager.getListCellRendererComponent(listCellRenderer, list,
-							StringUtils.startsWith(s, commonPrefix) ? StringUtils.substringAfter(s, commonPrefix)
-									: value,
-							index, isSelected, cellHasFocus);
-					//
-				}
-			});
+			voiceIdListCellRenderer.commonPrefix = String.join("",
+					StringUtils.substringBeforeLast(StringUtils.getCommonPrefix(voiceIds), "\\"), "\\");
+			//
+			jcbVoiceId.setRenderer(voiceIdListCellRenderer);
 			//
 			add(jcbVoiceId, String.format("span %1$s,growx", 5));
 			//
@@ -623,17 +582,66 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static String getVoiceAttribute(final SpeechApi instance, final String voiceId, final String attribute) {
-		return instance != null ? instance.getVoiceAttribute(voiceId, attribute) : null;
+	private class VoiceIdListCellRenderer implements ListCellRenderer<Object> {
+
+		private ListCellRenderer<Object> listCellRenderer = null;
+
+		private String commonPrefix = null;
+
+		@Override
+		public Component getListCellRendererComponent(final JList<? extends Object> list, final Object value,
+				final int index, final boolean isSelected, final boolean cellHasFocus) {
+			//
+			final String s = VoiceManager.toString(value);
+			//
+			try {
+				//
+				final String name = getVoiceAttribute(speechApi, s, "Name");
+				//
+				if (StringUtils.isNotBlank(name)) {
+					//
+					return getListCellRendererComponent(listCellRenderer, list, name, index, isSelected, cellHasFocus);
+					//
+				} // if
+					//
+			} catch (final Error e) {
+				//
+				if (GraphicsEnvironment.isHeadless()) {
+					//
+					if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
+						LOG.error(getMessage(e), e);
+					} else if (e != null) {
+						e.printStackTrace();
+					} // if
+						//
+				} else {
+					//
+					JOptionPane.showMessageDialog(null, getMessage(e));
+					//
+				} // if
+					//
+			} // try
+				//
+			return getListCellRendererComponent(listCellRenderer, list,
+					StringUtils.startsWith(s, commonPrefix) ? StringUtils.substringAfter(s, commonPrefix) : value,
+					index, isSelected, cellHasFocus);
+			//
+		}
+
+		private static <E> Component getListCellRendererComponent(final ListCellRenderer<E> instance,
+				final JList<? extends E> list, final E value, final int index, final boolean isSelected,
+				final boolean cellHasFocus) {
+			//
+			return instance != null
+					? instance.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
+					: null;
+			//
+		}
+
 	}
 
-	private static <E> Component getListCellRendererComponent(final ListCellRenderer<E> instance,
-			final JList<? extends E> list, final E value, final int index, final boolean isSelected,
-			final boolean cellHasFocus) {
-		//
-		return instance != null ? instance.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
-				: null;
-		//
+	private static String getVoiceAttribute(final SpeechApi instance, final String voiceId, final String attribute) {
+		return instance != null ? instance.getVoiceAttribute(voiceId, attribute) : null;
 	}
 
 	private static Range<Integer> createVolumnRange(final Class<?> clz) {
