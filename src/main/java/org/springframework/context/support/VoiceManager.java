@@ -459,6 +459,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		jsSpeechVolume.setPaintTicks(true);
 		//
+		jsSpeechVolume.setPaintLabels(true);
+		//
 		add(btnSpeak = new JButton("Speak"));
 		//
 		add(btnWriteVoice = new JButton("Write"), WRAP);
