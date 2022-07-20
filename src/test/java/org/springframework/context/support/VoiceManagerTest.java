@@ -129,7 +129,7 @@ class VoiceManagerTest {
 			METHOD_GET_MP3_TAG_VALUE_FILE, METHOD_GET_MP3_TAG_VALUE_LIST, METHOD_GET_MP3_TAG_PARIRS_ID3V1,
 			METHOD_GET_METHODS, METHOD_GET_SIMPLE_NAME, METHOD_COPY_OBJECT_MAP, METHOD_DELETE_ON_EXIT,
 			METHOD_CONVERT_LANGUAGE_CODE_TO_TEXT, METHOD_IS_SELECTED, METHOD_SET_HIRAGANA_OR_KATAKANA, METHOD_OR,
-			METHOD_CLEAR, METHOD_EXECUTE = null;
+			METHOD_CLEAR, METHOD_EXECUTE, METHOD_PUT = null;
 
 	@BeforeAll
 	private static void beforeAll() throws ReflectiveOperationException {
@@ -308,6 +308,8 @@ class VoiceManagerTest {
 		(METHOD_CLEAR = clz.getDeclaredMethod("clear", DefaultTableModel.class)).setAccessible(true);
 		//
 		(METHOD_EXECUTE = clz.getDeclaredMethod("execute", CLASS_OBJECT_MAP)).setAccessible(true);
+		//
+		(METHOD_PUT = clz.getDeclaredMethod("put", Map.class, Object.class, Object.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -2624,6 +2626,21 @@ class VoiceManagerTest {
 	private static void execute(final Object objectMap) throws Throwable {
 		try {
 			METHOD_EXECUTE.invoke(null, objectMap);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testPut() {
+		//
+		Assertions.assertDoesNotThrow(() -> put(null, null, null));
+		//
+	}
+
+	private static <K, V> void put(final Map<K, V> instance, final K key, final V value) throws Throwable {
+		try {
+			METHOD_PUT.invoke(null, instance, key, value);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

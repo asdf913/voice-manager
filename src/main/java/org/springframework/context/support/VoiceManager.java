@@ -224,12 +224,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			for (final Entry<?, ?> entry : map.entrySet()) {
 				//
-				if (entry == null || (outputFolderFileNameExpressions = ObjectUtils
-						.getIfNull(outputFolderFileNameExpressions, LinkedHashMap::new)) == null) {
+				if (entry == null) {
+					//
 					continue;
+					//
 				} // if
 					//
-				outputFolderFileNameExpressions.put(toString(entry.getKey()), toString(entry.getValue()));
+				put(outputFolderFileNameExpressions = ObjectUtils.getIfNull(outputFolderFileNameExpressions,
+						LinkedHashMap::new), toString(entry.getKey()), toString(entry.getValue()));
 				//
 			} // for
 				//
@@ -249,6 +251,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			throw new IllegalArgumentException(toString(getClass(object)));
 		} // if
 			//
+	}
+
+	private static <K, V> void put(final Map<K, V> instance, final K key, final V value) {
+		if (instance != null) {
+			instance.put(key, value);
+		}
 	}
 
 	public void setMp3Tags(final Object value) {
@@ -717,13 +725,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		for (int i = 0; pairs != null && i < pairs.size(); i++) {
 			//
-			if ((pair = pairs.get(i)) == null || (map = ObjectUtils.getIfNull(map, LinkedHashMap::new)) == null) {
+			if ((pair = pairs.get(i)) == null) {
 				//
 				continue;
 				//
 			} // if
 				//
-			map.put(pair.getKey(), pair.getValue());
+			put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), pair.getKey(), pair.getValue());
 			//
 		} // for
 			//
@@ -2806,7 +2814,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} else if (Objects.equals(methodName, "setObject") && args != null && args.length > 1) {
 					//
-					getObjects().put(args[0], args[1]);
+					put(getObjects(), args[0], args[1]);
 					//
 					return null;
 					//
