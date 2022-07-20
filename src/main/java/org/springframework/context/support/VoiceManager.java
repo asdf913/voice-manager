@@ -77,6 +77,8 @@ import javax.swing.JSlider;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.JTextComponent;
 
@@ -135,7 +137,7 @@ import fr.free.nrw.jakaroma.Jakaroma;
 import mapper.VoiceMapper;
 import net.miginfocom.swing.MigLayout;
 
-public class VoiceManager extends JFrame implements ActionListener, ItemListener, EnvironmentAware {
+public class VoiceManager extends JFrame implements ActionListener, ItemListener, ChangeListener, EnvironmentAware {
 
 	private static final long serialVersionUID = 6093437131552718994L;
 
@@ -154,7 +156,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private PropertyResolver propertyResolver = null;
 
 	private JTextComponent tfFolder, tfFile, tfFileLength, tfFileDigest, tfText, tfHiragana, tfKatakana, tfRomaji,
-			tfSpeechRate, tfSource, tfProviderName, tfProviderVersion, tfSpeechLanguage, tfLanguage = null;
+			tfSpeechRate, tfSource, tfProviderName, tfProviderVersion, tfSpeechLanguage, tfLanguage,
+			tfSpeechVolume = null;
 
 	private ComboBoxModel<Yomi> cbmYomi = null;
 
@@ -338,11 +341,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(tfLanguage = new JTextField(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.language")),
-				String.format("spanx %1$s,growx,%2$s", 6, WRAP));
+				String.format("spanx %1$s,growx,%2$s", 11, WRAP));
 		//
 		add(new JLabel("Text"));
 		//
-		String span = String.format("spanx %1$s,growx", 6);
+		String span = String.format("spanx %1$s,growx", 11);
 		//
 		add(tfText = new JTextField(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.text")), span);
@@ -355,7 +358,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(tfSource = new JTextField(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.source")),
-				String.format("spanx %1$s,growx,%2$s", 6, WRAP));
+				String.format("spanx %1$s,growx,%2$s", 11, WRAP));
 		//
 		// Provider
 		//
@@ -363,10 +366,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final Provider provider = cast(Provider.class, speechApi);
 		//
-		add(tfProviderName = new JTextField(getProviderName(provider)), String.format("spanx %1$s,growx", 5));
+		add(tfProviderName = new JTextField(getProviderName(provider)), String.format("spanx %1$s,growx", 8));
 		//
 		add(tfProviderVersion = new JTextField(getProviderVersion(provider)),
-				String.format("width %1$s,growx,%2$s", 90, WRAP));
+				String.format("width %1$s,span %2$s,%3$s", 160, 3, WRAP));
 		//
 		// Voice Id
 		//
@@ -388,9 +391,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			jcbVoiceId.setRenderer(voiceIdListCellRenderer);
 			//
-			add(jcbVoiceId, String.format("span %1$s,growx", 5));
+			add(jcbVoiceId, String.format("span %1$s,growx", 8));
 			//
-			add(tfSpeechLanguage = new JTextField(), String.format("width %1$s,%2$s", 160, WRAP));
+			add(tfSpeechLanguage = new JTextField(), String.format("width %1$s,span %2$s,%3$s", 160, 3, WRAP));
 			//
 		} // if
 			//
@@ -425,7 +428,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(tfSpeechRate = new JTextField(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.speechRate")),
-				String.format("span %1$s,growx,%2$s", 6, WRAP));
+				String.format("span %1$s,growx,%2$s", 11, WRAP));
 		//
 		// Speech Volume
 		//
@@ -440,7 +443,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		add(jsSpeechVolume = new JSlider(intValue(
 				speechVolumeRange != null && speechVolumeRange.hasLowerBound() ? speechVolumeRange.lowerEndpoint()
 						: null,
-				0), intValue(upperEnpoint, 100)), String.format("span %1$s,growx", 6));
+				0), intValue(upperEnpoint, 100)), String.format("span %1$s,growx", 10));
+		//
+		jsSpeechVolume.addChangeListener(this);
 		//
 		final Integer speechVolume = valueOf(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.speechVolume"));
@@ -460,6 +465,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		jsSpeechVolume.setPaintTicks(true);
 		//
 		jsSpeechVolume.setPaintLabels(true);
+		//
+		add(tfSpeechVolume = new JTextField(), String.format("width %1$s", 90));
 		//
 		add(btnSpeak = new JButton("Speak"));
 		//
@@ -499,7 +506,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			}
 		});
 		//
-		add(jcbYomi, String.format("span %1$s,%2$s", 6, WRAP));
+		add(jcbYomi, String.format("span %1$s,%2$s", 9, WRAP));
 		//
 		final List<Yomi> yomiList = collect(
 				filter(testAndApply(Objects::nonNull, yomis, Arrays::stream, null),
@@ -524,7 +531,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(tfRomaji = new JTextField(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.romaji")),
-				span = String.format("spanx %1$s,growx", 6));
+				span = String.format("spanx %1$s,growx", 11));
 		//
 		add(btnCopyRomaji = new JButton("Copy"), WRAP);
 		//
@@ -537,7 +544,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(new JLabel("Katakana"));
 		//
-		String wrap = String.format("span %1$s,growx,%2$s", 6, WRAP);
+		String wrap = String.format("span %1$s,growx,%2$s", 11, WRAP);
 		//
 		add(tfKatakana = new JTextField(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.katakana")), wrap);
@@ -574,14 +581,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(btnImportFileTemplate = new JButton("Import File Template"), String.format("span %1$s,%2$s", 3, WRAP));
 		//
-		add(progressBar = new JProgressBar(), String.format("span %1$s,growx,%2$s", 9, WRAP));
+		add(progressBar = new JProgressBar(), String.format("span %1$s,growx,%2$s", 13, WRAP));
 		//
 		progressBar.setStringPainted(true);
 		//
 		add(new JLabel("Folder"));
 		//
 		add(tfFolder = new JTextField(folder != null ? folder.getAbsolutePath() : null),
-				wrap = String.format("span %1$s,growx,%2$s", 8, WRAP));
+				wrap = String.format("span %1$s,growx,%2$s", 12, WRAP));
 		//
 		add(new JLabel("File"));
 		//
@@ -601,7 +608,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				tmImportException = new DefaultTableModel(new Object[] { "Text", "Romaji", "Exception" }, 0))), wrap);
 		//
 		setEditable(false, tfSpeechLanguage, tfProviderName, tfProviderVersion, tfFolder, tfFile, tfFileLength,
-				tfFileDigest);
+				tfFileDigest, tfSpeechVolume);
 		//
 		addActionListener(this, btnSpeak, btnWriteVoice, btnExecute, btnConvertToRomaji, btnConvertToKatakana,
 				btnCopyRomaji, btnImportFileTemplate, btnImport, btnExport);
@@ -1645,6 +1652,17 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			} // try
 				//
 				//
+		} // if
+			//
+	}
+
+	@Override
+	public void stateChanged(final ChangeEvent evt) {
+		//
+		if (Objects.equals(getSource(evt), jsSpeechVolume)) {
+			//
+			setText(tfSpeechVolume, jsSpeechVolume != null ? Integer.toString(jsSpeechVolume.getValue()) : null);
+			//
 		} // if
 			//
 	}

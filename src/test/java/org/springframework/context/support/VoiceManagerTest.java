@@ -59,6 +59,8 @@ import javax.swing.JProgressBar;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.JTextComponent;
 
@@ -829,6 +831,21 @@ class VoiceManagerTest {
 	private static void itemStateChanged(final ItemListener instance, final ItemEvent itemEvent) {
 		if (instance != null) {
 			instance.itemStateChanged(itemEvent);
+		}
+	}
+
+	@Test
+	void testStateChanged() {
+		//
+		Assertions.assertDoesNotThrow(() -> stateChanged(instance, null));
+		//
+		Assertions.assertDoesNotThrow(() -> stateChanged(instance, new ChangeEvent("")));
+		//
+	}
+
+	private static void stateChanged(final ChangeListener instance, final ChangeEvent evt) {
+		if (instance != null) {
+			instance.stateChanged(evt);
 		}
 	}
 
