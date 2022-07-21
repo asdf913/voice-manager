@@ -181,9 +181,9 @@ public class VoiceManager extends JFrame
 
 	private ComboBoxModel<String> cbmVoiceId = null;
 
-	private AbstractButton btnSpeak, btnWriteVoice, btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji,
-			cbUseTtsVoice, cbConvertToFlac, btnExecute, btnImportFileTemplate, cbHiraganaKatakanaConversion, btnImport,
-			cbOverMp3Title, btnExport = null;
+	private AbstractButton btnSpeak, cbWriteVoiceAsFlac, btnWriteVoice, btnConvertToRomaji, btnConvertToKatakana,
+			btnCopyRomaji, cbUseTtsVoice, cbConvertToFlac, btnExecute, btnImportFileTemplate,
+			cbHiraganaKatakanaConversion, btnImport, cbOverMp3Title, btnExport = null;
 
 	private JProgressBar progressBar = null;
 
@@ -375,7 +375,7 @@ public class VoiceManager extends JFrame
 		add(tfText = new JTextField(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.text")), span);
 		//
-		add(btnConvertToRomaji = new JButton("Convert To Romaji"), String.format("span %1$s,%2$s", 2, WRAP));
+		add(btnConvertToRomaji = new JButton("Convert To Romaji"), String.format("span %1$s,%2$s", 3, WRAP));
 		//
 		// source
 		//
@@ -494,6 +494,11 @@ public class VoiceManager extends JFrame
 		add(tfSpeechVolume = new JTextField(), String.format("width %1$s", 90));
 		//
 		add(btnSpeak = new JButton("Speak"));
+		//
+		add(cbWriteVoiceAsFlac = new JCheckBox("Flac"));
+		//
+		cbWriteVoiceAsFlac.setSelected(Boolean.parseBoolean(
+				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.writeVoiceAsFlac")));
 		//
 		add(btnWriteVoice = new JButton("Write"), WRAP);
 		//
@@ -1141,10 +1146,15 @@ public class VoiceManager extends JFrame
 			//
 			if (jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
 				//
-
 				final ObjectMap objectMap = Reflection.newProxy(ObjectMap.class, new IH());
 				//
+				final File file = jfc.getSelectedFile();
+				//
 				if (objectMap != null) {
+					//
+					objectMap.setObject(SpeechApi.class, speechApi);
+					//
+					objectMap.setObject(File.class, file);
 					//
 				} // if
 					//
@@ -1157,6 +1167,37 @@ public class VoiceManager extends JFrame
 								100)// volume
 				);
 				//
+				final ByteConverter byteConverter = isSelected(cbWriteVoiceAsFlac)
+						? getByteConverter(configurableListableBeanFactory, "flac")
+						: null;
+				//
+				if (byteConverter != null) {
+					//
+					try {
+						//
+						FileUtils.writeByteArrayToFile(file,
+								byteConverter.convert(FileUtils.readFileToByteArray(file)));
+						//
+					} catch (final IOException e) {
+						//
+						if (GraphicsEnvironment.isHeadless()) {
+							//
+							if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
+								LOG.error(getMessage(e), e);
+							} else if (e != null) {
+								e.printStackTrace();
+							} // if
+								//
+						} else {
+							//
+							JOptionPane.showMessageDialog(null, getMessage(e));
+							//
+						} // if
+							//
+					} // try
+						//
+				} // if
+					//
 			} // if
 				//
 		} else if (Objects.equals(source, btnExecute)) {
