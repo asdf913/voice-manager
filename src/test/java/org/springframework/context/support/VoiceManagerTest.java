@@ -50,6 +50,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collector;
 import java.util.stream.Stream;
 
+import javax.sound.sampled.AudioFormat;
 import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
 import javax.swing.JButton;
@@ -70,6 +71,8 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -108,6 +111,7 @@ import domain.Voice;
 import domain.Voice.Yomi;
 import mapper.VoiceMapper;
 import net.miginfocom.swing.MigLayout;
+import net.sourceforge.javaflacencoder.StreamConfiguration;
 
 class VoiceManagerTest {
 
@@ -131,7 +135,7 @@ class VoiceManagerTest {
 			METHOD_GET_MP3_TAG_VALUE_FILE, METHOD_GET_MP3_TAG_VALUE_LIST, METHOD_GET_MP3_TAG_PARIRS_ID3V1,
 			METHOD_GET_METHODS, METHOD_GET_SIMPLE_NAME, METHOD_COPY_OBJECT_MAP, METHOD_DELETE_ON_EXIT,
 			METHOD_CONVERT_LANGUAGE_CODE_TO_TEXT, METHOD_IS_SELECTED, METHOD_SET_HIRAGANA_OR_KATAKANA, METHOD_OR,
-			METHOD_CLEAR, METHOD_EXECUTE, METHOD_PUT = null;
+			METHOD_CLEAR, METHOD_EXECUTE, METHOD_PUT, METHOD_CONVERT_TO_FLAC, METHOD_CREATE_STREAM_CONFIGURATION = null;
 
 	@BeforeAll
 	private static void beforeAll() throws ReflectiveOperationException {
@@ -312,6 +316,11 @@ class VoiceManagerTest {
 		(METHOD_EXECUTE = clz.getDeclaredMethod("execute", CLASS_OBJECT_MAP)).setAccessible(true);
 		//
 		(METHOD_PUT = clz.getDeclaredMethod("put", Map.class, Object.class, Object.class)).setAccessible(true);
+		//
+		(METHOD_CONVERT_TO_FLAC = clz.getDeclaredMethod("convertToFlac", File.class)).setAccessible(true);
+		//
+		(METHOD_CREATE_STREAM_CONFIGURATION = clz.getDeclaredMethod("createStreamConfiguration", AudioFormat.class))
+				.setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -2658,6 +2667,55 @@ class VoiceManagerTest {
 	private static <K, V> void put(final Map<K, V> instance, final K key, final V value) throws Throwable {
 		try {
 			METHOD_PUT.invoke(null, instance, key, value);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testConvertToFlac() throws Throwable {
+		//
+		Assertions.assertArrayEquals(new byte[] {}, convertToFlac(null));
+		//
+		Assertions.assertArrayEquals(new byte[] {}, convertToFlac(new File(".")));
+		//
+		Assertions.assertArrayEquals(new byte[] {}, convertToFlac(new File("NON_EXISTS")));
+		//
+	}
+
+	private static byte[] convertToFlac(final File file) throws Throwable {
+		try {
+			final Object obj = METHOD_CONVERT_TO_FLAC.invoke(null, file);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof byte[]) {
+				return (byte[]) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCreateStreamConfiguration() throws Throwable {
+		//
+		Assertions.assertEquals(
+				"StreamConfiguration[bitsPerSample=1,channelCount=2,maxBlockSize=4096,minBlockSize=4096,sampleRate=0,validConfig=true]",
+				ToStringBuilder.reflectionToString(createStreamConfiguration(new AudioFormat(0, 1, 2, true, false)),
+						ToStringStyle.SHORT_PREFIX_STYLE));
+		//
+	}
+
+	private static StreamConfiguration createStreamConfiguration(final AudioFormat format) throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_STREAM_CONFIGURATION.invoke(null, format);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof StreamConfiguration) {
+				return (StreamConfiguration) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

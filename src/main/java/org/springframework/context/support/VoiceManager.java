@@ -12,6 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -59,6 +60,10 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
@@ -136,6 +141,10 @@ import domain.Voice.Yomi;
 import fr.free.nrw.jakaroma.Jakaroma;
 import mapper.VoiceMapper;
 import net.miginfocom.swing.MigLayout;
+import net.sourceforge.javaflacencoder.AudioStreamEncoder;
+import net.sourceforge.javaflacencoder.FLACEncoder;
+import net.sourceforge.javaflacencoder.FLACStreamOutputStream;
+import net.sourceforge.javaflacencoder.StreamConfiguration;
 
 public class VoiceManager extends JFrame implements ActionListener, ItemListener, ChangeListener, EnvironmentAware {
 
@@ -164,8 +173,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private ComboBoxModel<String> cbmVoiceId = null;
 
 	private AbstractButton btnSpeak, btnWriteVoice, btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji,
-			cbUseTtsVoice, btnExecute, btnImportFileTemplate, cbHiraganaKatakanaConversion, btnImport, cbOverMp3Title,
-			btnExport = null;
+			cbUseTtsVoice, cbConvertToFlac, btnExecute, btnImportFileTemplate, cbHiraganaKatakanaConversion, btnImport,
+			cbOverMp3Title, btnExport = null;
 
 	private JProgressBar progressBar = null;
 
@@ -555,6 +564,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		cbUseTtsVoice.setSelected(Boolean.parseBoolean(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.useTtsVoice")));
+		//
+		add(cbConvertToFlac = new JCheckBox("Convert To Flac"));
+		//
+		cbConvertToFlac.setSelected(Boolean.parseBoolean(
+				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.convertToFlac")));
 		//
 		add(btnExecute = new JButton("Execute"), WRAP);
 		//
@@ -1156,7 +1170,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 						);
 						//
-					} catch (final IOException e) {
+						if (isSelected(cbConvertToFlac) && Objects.equals("wav", getFileExtension(
+								testAndApply(Objects::nonNull, file, new ContentInfoUtil()::findMatch, null)))) {
+							//
+							FileUtils.writeByteArrayToFile(file, convertToFlac(file));
+							//
+						} // if
+							//
+					} catch (final IOException | UnsupportedAudioFileException e) {
 						//
 						if (GraphicsEnvironment.isHeadless()) {
 							//
@@ -1665,6 +1686,57 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
+	}
+
+	private static byte[] convertToFlac(final File file) throws IOException, UnsupportedAudioFileException {
+		//
+		try (final ByteArrayInputStream bais = testAndApply(f -> f != null && f.isFile(), file,
+				f -> new ByteArrayInputStream(FileUtils.readFileToByteArray(file)), null);
+				final AudioInputStream ais = bais != null ? AudioSystem.getAudioInputStream(bais) : null;
+				final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+			//
+			final AudioFormat format = ais != null ? ais.getFormat() : null;
+			//
+			final FLACEncoder flac = new FLACEncoder();
+			//
+			final StreamConfiguration streamConfiguration = createStreamConfiguration(format);
+			//
+			if (streamConfiguration != null) {
+				//
+				flac.setStreamConfiguration(streamConfiguration);
+				//
+			} // if
+				//
+			if (ais != null) {
+				//
+				flac.setOutputStream(new FLACStreamOutputStream(baos));
+				//
+				flac.openFLACStream();
+				//
+				AudioStreamEncoder.encodeAudioInputStream(ais, 16384, flac, true);
+				//
+			} // if
+				//
+			return baos.toByteArray();
+			//
+		} // try
+			//
+	}
+
+	private static StreamConfiguration createStreamConfiguration(final AudioFormat format) {
+		//
+		if (format == null) {
+			return null;
+		} // if
+			//
+		final StreamConfiguration sc = new StreamConfiguration();
+		//
+		sc.setSampleRate((int) format.getSampleRate());
+		sc.setBitsPerSample(format.getSampleSizeInBits());
+		sc.setChannelCount(format.getChannels());
+		//
+		return sc;
+		//
 	}
 
 	private static boolean isSelected(final AbstractButton instance) {
@@ -3488,7 +3560,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		final String name = ci.getName();
 		//
-		if (Objects.equals(name, "wav")) {
+		if (Objects.equals(name, "wav") || Objects.equals(name, "flac")) {
 			//
 			return name;
 			//

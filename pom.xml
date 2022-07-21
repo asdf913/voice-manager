@@ -126,6 +126,12 @@
 			<artifactId>bcel</artifactId>
 			<version>6.5.0</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/net.sourceforge.javaflacencoder/java-flac-encoder -->
+		<dependency>
+		    <groupId>net.sourceforge.javaflacencoder</groupId>
+		    <artifactId>java-flac-encoder</artifactId>
+		    <version>0.3.7</version>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
