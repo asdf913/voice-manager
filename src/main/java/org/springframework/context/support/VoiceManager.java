@@ -113,9 +113,13 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.util.LocaleID;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.javatuples.Unit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertyResolver;
@@ -146,7 +150,8 @@ import net.sourceforge.javaflacencoder.FLACEncoder;
 import net.sourceforge.javaflacencoder.FLACStreamOutputStream;
 import net.sourceforge.javaflacencoder.StreamConfiguration;
 
-public class VoiceManager extends JFrame implements ActionListener, ItemListener, ChangeListener, EnvironmentAware {
+public class VoiceManager extends JFrame
+		implements ActionListener, ItemListener, ChangeListener, EnvironmentAware, BeanFactoryPostProcessor {
 
 	private static final long serialVersionUID = 6093437131552718994L;
 
@@ -196,12 +201,19 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private String[] mp3Tags = null;
 
+	private ConfigurableListableBeanFactory configurableListableBeanFactory = null;
+
 	private VoiceManager() {
 	}
 
 	@Override
 	public void setEnvironment(final Environment environment) {
 		this.propertyResolver = environment;
+	}
+
+	@Override
+	public void postProcessBeanFactory(final ConfigurableListableBeanFactory configurableListableBeanFactory) {
+		this.configurableListableBeanFactory = configurableListableBeanFactory;
 	}
 
 	public void setSqlSessionFactory(final SqlSessionFactory sqlSessionFactory) {
@@ -741,6 +753,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					throw new IllegalStateException();
 					//
 				}), Objects::nonNull), Collectors.toList());
+
 		//
 		Pair<String, String> pair = null;
 		//
@@ -1173,13 +1186,19 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						if (isSelected(cbConvertToFlac) && Objects.equals("wav", getFileExtension(
 								testAndApply(Objects::nonNull, file, new ContentInfoUtil()::findMatch, null)))) {
 							//
-							FileUtils.writeByteArrayToFile(file,
-									convertToFlac(file, valueOf(getProperty(propertyResolver,
-											"net.sourceforge.javaflacencoder.FLACEncoder.byteArrayLength"))));
+							final ByteConverter byteConverter = getByteConverter(configurableListableBeanFactory,
+									"flac");
 							//
+							if (byteConverter != null) {
+								//
+								FileUtils.writeByteArrayToFile(file,
+										byteConverter.convert(FileUtils.readFileToByteArray(file)));
+								//
+							} // if
+								//
 						} // if
 							//
-					} catch (final IOException | UnsupportedAudioFileException e) {
+					} catch (final IOException e) {
 						//
 						if (GraphicsEnvironment.isHeadless()) {
 							//
@@ -1679,6 +1698,44 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
+	private static ByteConverter getByteConverter(final ConfigurableListableBeanFactory configurableListableBeanFactory,
+			final String format) {
+		//
+		Unit<ByteConverter> byteConverter = null;
+		//
+		final Map<String, ByteConverter> byteConverters = configurableListableBeanFactory != null
+				? configurableListableBeanFactory.getBeansOfType(ByteConverter.class)
+				: null;
+		//
+		if (byteConverters != null && byteConverters.entrySet() != null) {
+			//
+			BeanDefinition bd = null;
+			//
+			for (final Entry<String, ByteConverter> en : byteConverters.entrySet()) {
+				//
+				if (en == null || (bd = configurableListableBeanFactory.getBeanDefinition(en.getKey())) == null
+						|| !Objects.equals(format, testAndApply(bd::hasAttribute, "format", bd::getAttribute, null))) {
+					continue;
+				} // if
+					//
+				if (byteConverter == null) {
+					//
+					byteConverter = Unit.with(en.getValue());
+					//
+				} else {
+					//
+					throw new IllegalStateException();
+					//
+				} // if
+					//
+			} // for
+				//
+		} // if
+			//
+		return byteConverter != null ? byteConverter.getValue0() : null;
+		//
+	}
+
 	@Override
 	public void stateChanged(final ChangeEvent evt) {
 		//
@@ -1690,67 +1747,97 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	private static byte[] convertToFlac(final File file, final Integer audioStreamEncoderByteArrayLength)
-			throws IOException, UnsupportedAudioFileException {
-		//
-		FLACStreamOutputStream flacStreamOutputStream = null;
-		//
-		try (final ByteArrayInputStream bais = testAndApply(f -> f != null && f.isFile(), file,
-				f -> new ByteArrayInputStream(FileUtils.readFileToByteArray(file)), null);
-				final AudioInputStream ais = bais != null ? AudioSystem.getAudioInputStream(bais) : null;
-				final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-			//
-			final AudioFormat format = getFormat(ais);
-			//
-			final FLACEncoder flac = new FLACEncoder();
-			//
-			final StreamConfiguration streamConfiguration = createStreamConfiguration(format);
-			//
-			if (streamConfiguration != null) {
-				//
-				flac.setStreamConfiguration(streamConfiguration);
-				//
-			} // if
-				//
-			if (format != null) {
-				//
-				flac.setOutputStream(flacStreamOutputStream = new FLACStreamOutputStream(baos));
-				//
-				flac.openFLACStream();
-				//
-				AudioStreamEncoder.encodeAudioInputStream(ais,
-						Math.max(intValue(audioStreamEncoderByteArrayLength, 0), 2), flac, true);
-				//
-			} // if
-				//
-			return baos.toByteArray();
-			//
-		} finally {
-			//
-			IOUtils.closeQuietly(flacStreamOutputStream);
-			//
-		} // try
-			//
+	private static interface ByteConverter {
+
+		byte[] convert(final byte[] source);
+
 	}
 
-	private static AudioFormat getFormat(final AudioInputStream instance) {
-		return instance != null ? instance.getFormat() : null;
-	}
+	private static class AudioToFlacByteConverter implements ByteConverter {
 
-	private static StreamConfiguration createStreamConfiguration(final AudioFormat format) {
-		//
-		if (format == null) {
-			return null;
-		} // if
+		private Integer audioStreamEncoderByteArrayLength = null;
+
+		public void setAudioStreamEncoderByteArrayLength(final Object audioStreamEncoderByteArrayLength) {
 			//
-		final StreamConfiguration sc = new StreamConfiguration();
-		//
-		sc.setSampleRate((int) format.getSampleRate());
-		sc.setBitsPerSample(format.getSampleSizeInBits());
-		sc.setChannelCount(format.getChannels());
-		//
-		return sc;
-		//
+			if (audioStreamEncoderByteArrayLength instanceof Integer) {
+				this.audioStreamEncoderByteArrayLength = (Integer) audioStreamEncoderByteArrayLength;
+			} else if (audioStreamEncoderByteArrayLength instanceof Number) {
+				this.audioStreamEncoderByteArrayLength = Integer
+						.valueOf(((Number) audioStreamEncoderByteArrayLength).intValue());
+			} else {
+				this.audioStreamEncoderByteArrayLength = valueOf(
+						VoiceManager.toString(audioStreamEncoderByteArrayLength));
+			} // if
+				//
+		}
+
+		@Override
+		public byte[] convert(final byte[] source) {
+			//
+			FLACStreamOutputStream flacStreamOutputStream = null;
+			//
+			try (final ByteArrayInputStream bais = testAndApply(x -> x != null && x.length > 0, source,
+					ByteArrayInputStream::new, null);
+					final AudioInputStream ais = bais != null ? AudioSystem.getAudioInputStream(bais) : null;
+					final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+				//
+				final AudioFormat format = getFormat(ais);
+				//
+				final FLACEncoder flac = new FLACEncoder();
+				//
+				final StreamConfiguration streamConfiguration = createStreamConfiguration(format);
+				//
+				if (streamConfiguration != null) {
+					//
+					flac.setStreamConfiguration(streamConfiguration);
+					//
+				} // if
+					//
+				if (format != null) {
+					//
+					flac.setOutputStream(flacStreamOutputStream = new FLACStreamOutputStream(baos));
+					//
+					flac.openFLACStream();
+					//
+					AudioStreamEncoder.encodeAudioInputStream(ais,
+							Math.max(intValue(audioStreamEncoderByteArrayLength, 0), 2), flac, false);
+					//
+				} // if
+					//
+				return baos.toByteArray();
+				//
+			} catch (final IOException | UnsupportedAudioFileException e) {
+				//
+				throw new RuntimeException(e);
+				//
+			} finally {
+				//
+				IOUtils.closeQuietly(flacStreamOutputStream);
+				//
+			} // try
+				//
+		}
+
+		private static AudioFormat getFormat(final AudioInputStream instance) {
+			return instance != null ? instance.getFormat() : null;
+		}
+
+		private static StreamConfiguration createStreamConfiguration(final AudioFormat format) {
+			//
+			if (format == null) {
+				return null;
+			} // if
+				//
+			final StreamConfiguration sc = new StreamConfiguration();
+			//
+			sc.setSampleRate((int) format.getSampleRate());
+			sc.setBitsPerSample(format.getSampleSizeInBits());
+			sc.setChannelCount(format.getChannels());
+			//
+			return sc;
+			//
+		}
+
 	}
 
 	private static boolean isSelected(final AbstractButton instance) {

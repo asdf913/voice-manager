@@ -91,6 +91,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
+import org.springframework.beans.factory.ListableBeanFactory;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertyResolver;
 import org.springframework.expression.EvaluationContext;
@@ -111,7 +114,6 @@ import domain.Voice;
 import domain.Voice.Yomi;
 import mapper.VoiceMapper;
 import net.miginfocom.swing.MigLayout;
-import net.sourceforge.javaflacencoder.StreamConfiguration;
 
 class VoiceManagerTest {
 
@@ -135,7 +137,7 @@ class VoiceManagerTest {
 			METHOD_GET_MP3_TAG_VALUE_FILE, METHOD_GET_MP3_TAG_VALUE_LIST, METHOD_GET_MP3_TAG_PARIRS_ID3V1,
 			METHOD_GET_METHODS, METHOD_GET_SIMPLE_NAME, METHOD_COPY_OBJECT_MAP, METHOD_DELETE_ON_EXIT,
 			METHOD_CONVERT_LANGUAGE_CODE_TO_TEXT, METHOD_IS_SELECTED, METHOD_SET_HIRAGANA_OR_KATAKANA, METHOD_OR,
-			METHOD_CLEAR, METHOD_EXECUTE, METHOD_PUT, METHOD_CONVERT_TO_FLAC, METHOD_CREATE_STREAM_CONFIGURATION = null;
+			METHOD_CLEAR, METHOD_EXECUTE, METHOD_PUT, METHOD_GET_BYTE_CONVERTER = null;
 
 	@BeforeAll
 	private static void beforeAll() throws ReflectiveOperationException {
@@ -317,11 +319,8 @@ class VoiceManagerTest {
 		//
 		(METHOD_PUT = clz.getDeclaredMethod("put", Map.class, Object.class, Object.class)).setAccessible(true);
 		//
-		(METHOD_CONVERT_TO_FLAC = clz.getDeclaredMethod("convertToFlac", File.class, Integer.class))
-				.setAccessible(true);
-		//
-		(METHOD_CREATE_STREAM_CONFIGURATION = clz.getDeclaredMethod("createStreamConfiguration", AudioFormat.class))
-				.setAccessible(true);
+		(METHOD_GET_BYTE_CONVERTER = clz.getDeclaredMethod("getByteConverter", ConfigurableListableBeanFactory.class,
+				String.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -355,11 +354,31 @@ class VoiceManagerTest {
 
 		private Iterator<?> iterator = null;
 
-		public Map<Object, String> getProperties() {
+		private Map<Object, Object> beansOfType = null;
+
+		private Map<Object, BeanDefinition> beanDefinitions = null;
+
+		private Map<Object, Object> beanDefinitionAttributes = null;
+
+		private Map<Object, String> getProperties() {
 			if (properties == null) {
 				properties = new LinkedHashMap<>();
 			}
 			return properties;
+		}
+
+		private Map<Object, BeanDefinition> getBeanDefinitions() {
+			if (beanDefinitions == null) {
+				beanDefinitions = new LinkedHashMap<>();
+			}
+			return beanDefinitions;
+		}
+
+		private Map<Object, Object> getBeanDefinitionAttributes() {
+			if (beanDefinitionAttributes == null) {
+				beanDefinitionAttributes = new LinkedHashMap<>();
+			}
+			return beanDefinitionAttributes;
 		}
 
 		@Override
@@ -383,6 +402,16 @@ class VoiceManagerTest {
 				//
 				return null;
 				//
+			} // if
+				//
+			if (proxy instanceof ListableBeanFactory) {
+				//
+				if (Objects.equals(methodName, "getBeansOfType")) {
+					//
+					return beansOfType;
+					//
+				} // if
+					//
 			} // if
 				//
 			if (proxy instanceof Iterable) {
@@ -530,6 +559,26 @@ class VoiceManagerTest {
 				if (Objects.equals(methodName, "getListCellRendererComponent")) {
 					//
 					return null;
+					//
+				} // if
+					//
+			} else if (proxy instanceof ConfigurableListableBeanFactory) {
+				//
+				if (Objects.equals(methodName, "getBeanDefinition") && args != null && args.length > 0) {
+					//
+					return MapUtils.getObject(getBeanDefinitions(), args[0]);
+					//
+				} // if
+					//
+			} else if (proxy instanceof BeanDefinition) {
+				//
+				if (Objects.equals(methodName, "hasAttribute") && args != null && args.length > 0) {
+					//
+					return containsKey(getBeanDefinitionAttributes(), args[0]);
+					//
+				} else if (Objects.equals(methodName, "getAttribute") && args != null && args.length > 0) {
+					//
+					return MapUtils.getObject(getBeanDefinitionAttributes(), args[0]);
 					//
 				} // if
 					//
@@ -2674,50 +2723,56 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testConvertToFlac() throws Throwable {
+	void testGetByteConverter() throws Throwable {
 		//
-		Assertions.assertArrayEquals(new byte[] {}, convertToFlac(null, null));
+		Assertions.assertNull(getByteConverter(null, null));
 		//
-		Assertions.assertArrayEquals(new byte[] {}, convertToFlac(new File("."), null));
+		final ConfigurableListableBeanFactory configurableListableBeanFactory = Reflection
+				.newProxy(ConfigurableListableBeanFactory.class, ih);
 		//
-		Assertions.assertArrayEquals(new byte[] {}, convertToFlac(new File("NON_EXISTS"), null));
+		Assertions.assertNull(getByteConverter(configurableListableBeanFactory, null));
+		//
+		ih.beansOfType = Reflection.newProxy(Map.class, ih);
+		//
+		Assertions.assertNull(getByteConverter(configurableListableBeanFactory, null));
+		//
+		ih.entrySet = Collections.singleton(null);
+		//
+		Assertions.assertNull(getByteConverter(configurableListableBeanFactory, null));
+		//
+		ih.beansOfType = Collections.singletonMap(null, null);
+		//
+		Assertions.assertNull(getByteConverter(configurableListableBeanFactory, null));
+		//
+		final BeanDefinition beanDefinition = Reflection.newProxy(BeanDefinition.class, ih);
+		//
+		ih.getBeanDefinitions().put(null, beanDefinition);
+		//
+		Assertions.assertNull(getByteConverter(configurableListableBeanFactory, null));
+		//
+		ih.getBeanDefinitionAttributes().put("format", null);
+		//
+		Assertions.assertNull(getByteConverter(configurableListableBeanFactory, null));
+		//
+		ih.getBeanDefinitionAttributes().put("format", "");
+		//
+		Assertions.assertNull(getByteConverter(configurableListableBeanFactory, null));
+		//
+		(ih.beansOfType = new LinkedHashMap<Object, Object>(Collections.singletonMap(null, null))).put("", null);
+		//
+		ih.getBeanDefinitions().put("", beanDefinition);
+		//
+		ih.getBeanDefinitionAttributes().put("format", null);
+		//
+		Assertions.assertThrows(IllegalStateException.class,
+				() -> getByteConverter(configurableListableBeanFactory, null));
 		//
 	}
 
-	private static byte[] convertToFlac(final File file, final Integer audioStreamEncoderByteArrayLength)
-			throws Throwable {
+	private static Object getByteConverter(final ConfigurableListableBeanFactory configurableListableBeanFactory,
+			final String format) throws Throwable {
 		try {
-			final Object obj = METHOD_CONVERT_TO_FLAC.invoke(null, file, audioStreamEncoderByteArrayLength);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof byte[]) {
-				return (byte[]) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testCreateStreamConfiguration() throws Throwable {
-		//
-		Assertions.assertEquals(
-				"StreamConfiguration[bitsPerSample=1,channelCount=2,maxBlockSize=4096,minBlockSize=4096,sampleRate=0,validConfig=true]",
-				ToStringBuilder.reflectionToString(createStreamConfiguration(new AudioFormat(0, 1, 2, true, false)),
-						ToStringStyle.SHORT_PREFIX_STYLE));
-		//
-	}
-
-	private static StreamConfiguration createStreamConfiguration(final AudioFormat format) throws Throwable {
-		try {
-			final Object obj = METHOD_CREATE_STREAM_CONFIGURATION.invoke(null, format);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof StreamConfiguration) {
-				return (StreamConfiguration) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
+			return METHOD_GET_BYTE_CONVERTER.invoke(null, configurableListableBeanFactory, format);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -2864,6 +2919,71 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
+	}
+
+	@Test
+	void testAudioToFlacByteConverter() throws Throwable {
+		//
+		final Class<?> clz = forName("org.springframework.context.support.VoiceManager$AudioToFlacByteConverter");
+		//
+		final Constructor<?> constructor = clz != null ? clz.getDeclaredConstructor() : null;
+		//
+		if (constructor != null) {
+			//
+			constructor.setAccessible(true);
+			//
+		} // if
+			//
+		final Object instance = constructor != null ? constructor.newInstance() : null;
+		//
+		// setAudioStreamEncoderByteArrayLength(java.lang.Object)
+		//
+		final Method setAudioStreamEncoderByteArrayLength = clz != null
+				? clz.getDeclaredMethod("setAudioStreamEncoderByteArrayLength", Object.class)
+				: null;
+		//
+		final Field audioStreamEncoderByteArrayLength = clz != null
+				? clz.getDeclaredField("audioStreamEncoderByteArrayLength")
+				: null;
+		//
+		if (audioStreamEncoderByteArrayLength != null) {
+			//
+			audioStreamEncoderByteArrayLength.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> invoke(setAudioStreamEncoderByteArrayLength, instance, (Object) null));
+		//
+		Assertions.assertNull(get(audioStreamEncoderByteArrayLength, instance));
+		//
+		final Integer one = Integer.valueOf(1);
+		//
+		Assertions.assertDoesNotThrow(() -> invoke(setAudioStreamEncoderByteArrayLength, instance, one));
+		//
+		Assertions.assertSame(one, get(audioStreamEncoderByteArrayLength, instance));
+		//
+		Assertions.assertDoesNotThrow(
+				() -> invoke(setAudioStreamEncoderByteArrayLength, instance, Long.valueOf(one.longValue())));
+		//
+		Assertions.assertSame(one, get(audioStreamEncoderByteArrayLength, instance));
+		//
+		// convert(byte[])
+		//
+		final Method convert = clz != null ? clz.getDeclaredMethod("convert", byte[].class) : null;
+		//
+		Assertions.assertTrue(Objects.deepEquals(new byte[] {}, invoke(convert, instance, (Object) null)));
+		//
+		Assertions.assertTrue(Objects.deepEquals(new byte[] {}, invoke(convert, instance, new byte[] {})));
+		//
+		// createStreamConfiguration(javax.sound.sampled.AudioFormat)
+		//
+		Assertions.assertEquals(
+				"StreamConfiguration[bitsPerSample=1,channelCount=2,maxBlockSize=4096,minBlockSize=4096,sampleRate=0,validConfig=true]",
+				ToStringBuilder.reflectionToString(
+						invoke(clz != null ? clz.getDeclaredMethod("createStreamConfiguration", AudioFormat.class)
+								: null, null, new AudioFormat(0, 1, 2, true, false)),
+						ToStringStyle.SHORT_PREFIX_STYLE));
+		//
 	}
 
 }

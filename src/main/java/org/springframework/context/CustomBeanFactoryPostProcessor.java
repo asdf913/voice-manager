@@ -21,6 +21,7 @@ import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.core.Ordered;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.MutablePropertySources;
@@ -28,7 +29,7 @@ import org.springframework.core.env.PropertySource;
 import org.springframework.core.env.PropertySources;
 import org.springframework.core.io.Resource;
 
-public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFactoryPostProcessor {
+public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFactoryPostProcessor, Ordered {
 
 	private static Logger LOG = LoggerFactory.getLogger(CustomBeanFactoryPostProcessor.class);
 
@@ -37,6 +38,11 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 	private Resource tableSql = null;
 
 	private String tableSqlEncoding = null;
+
+	@Override
+	public int getOrder() {
+		return HIGHEST_PRECEDENCE;
+	}
 
 	@Override
 	public void setEnvironment(final Environment environment) {
