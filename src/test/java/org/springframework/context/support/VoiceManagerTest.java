@@ -317,7 +317,8 @@ class VoiceManagerTest {
 		//
 		(METHOD_PUT = clz.getDeclaredMethod("put", Map.class, Object.class, Object.class)).setAccessible(true);
 		//
-		(METHOD_CONVERT_TO_FLAC = clz.getDeclaredMethod("convertToFlac", File.class)).setAccessible(true);
+		(METHOD_CONVERT_TO_FLAC = clz.getDeclaredMethod("convertToFlac", File.class, Integer.class))
+				.setAccessible(true);
 		//
 		(METHOD_CREATE_STREAM_CONFIGURATION = clz.getDeclaredMethod("createStreamConfiguration", AudioFormat.class))
 				.setAccessible(true);
@@ -2675,17 +2676,18 @@ class VoiceManagerTest {
 	@Test
 	void testConvertToFlac() throws Throwable {
 		//
-		Assertions.assertArrayEquals(new byte[] {}, convertToFlac(null));
+		Assertions.assertArrayEquals(new byte[] {}, convertToFlac(null, null));
 		//
-		Assertions.assertArrayEquals(new byte[] {}, convertToFlac(new File(".")));
+		Assertions.assertArrayEquals(new byte[] {}, convertToFlac(new File("."), null));
 		//
-		Assertions.assertArrayEquals(new byte[] {}, convertToFlac(new File("NON_EXISTS")));
+		Assertions.assertArrayEquals(new byte[] {}, convertToFlac(new File("NON_EXISTS"), null));
 		//
 	}
 
-	private static byte[] convertToFlac(final File file) throws Throwable {
+	private static byte[] convertToFlac(final File file, final Integer audioStreamEncoderByteArrayLength)
+			throws Throwable {
 		try {
-			final Object obj = METHOD_CONVERT_TO_FLAC.invoke(null, file);
+			final Object obj = METHOD_CONVERT_TO_FLAC.invoke(null, file, audioStreamEncoderByteArrayLength);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof byte[]) {

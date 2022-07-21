@@ -1173,7 +1173,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						if (isSelected(cbConvertToFlac) && Objects.equals("wav", getFileExtension(
 								testAndApply(Objects::nonNull, file, new ContentInfoUtil()::findMatch, null)))) {
 							//
-							FileUtils.writeByteArrayToFile(file, convertToFlac(file));
+							FileUtils.writeByteArrayToFile(file,
+									convertToFlac(file, valueOf(getProperty(propertyResolver,
+											"net.sourceforge.javaflacencoder.FLACEncoder.byteArrayLength"))));
 							//
 						} // if
 							//
@@ -1688,7 +1690,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	private static byte[] convertToFlac(final File file) throws IOException, UnsupportedAudioFileException {
+	private static byte[] convertToFlac(final File file, final Integer audioStreamEncoderByteArrayLength)
+			throws IOException, UnsupportedAudioFileException {
 		//
 		try (final ByteArrayInputStream bais = testAndApply(f -> f != null && f.isFile(), file,
 				f -> new ByteArrayInputStream(FileUtils.readFileToByteArray(file)), null);
@@ -1713,7 +1716,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				flac.openFLACStream();
 				//
-				AudioStreamEncoder.encodeAudioInputStream(ais, 16384, flac, true);
+				AudioStreamEncoder.encodeAudioInputStream(ais,
+						Math.max(intValue(audioStreamEncoderByteArrayLength, 0), 2), flac, false);
 				//
 			} // if
 				//
