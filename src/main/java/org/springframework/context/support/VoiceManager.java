@@ -1693,6 +1693,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static byte[] convertToFlac(final File file, final Integer audioStreamEncoderByteArrayLength)
 			throws IOException, UnsupportedAudioFileException {
 		//
+		FLACStreamOutputStream flacStreamOutputStream = null;
+		//
 		try (final ByteArrayInputStream bais = testAndApply(f -> f != null && f.isFile(), file,
 				f -> new ByteArrayInputStream(FileUtils.readFileToByteArray(file)), null);
 				final AudioInputStream ais = bais != null ? AudioSystem.getAudioInputStream(bais) : null;
@@ -1710,18 +1712,22 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-			if (getFormat(ais) != null) {
+			if (format != null) {
 				//
-				flac.setOutputStream(new FLACStreamOutputStream(baos));
+				flac.setOutputStream(flacStreamOutputStream = new FLACStreamOutputStream(baos));
 				//
 				flac.openFLACStream();
 				//
 				AudioStreamEncoder.encodeAudioInputStream(ais,
-						Math.max(intValue(audioStreamEncoderByteArrayLength, 0), 2), flac, false);
+						Math.max(intValue(audioStreamEncoderByteArrayLength, 0), 2), flac, true);
 				//
 			} // if
 				//
 			return baos.toByteArray();
+			//
+		} finally {
+			//
+			IOUtils.closeQuietly(flacStreamOutputStream);
 			//
 		} // try
 			//
