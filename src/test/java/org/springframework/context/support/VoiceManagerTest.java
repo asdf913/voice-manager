@@ -80,6 +80,9 @@ import org.apache.ibatis.binding.BindingException;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.poi.ooxml.POIXMLDocument;
+import org.apache.poi.ooxml.POIXMLProperties;
+import org.apache.poi.ooxml.POIXMLProperties.CustomProperties;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -90,6 +93,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.openxmlformats.schemas.officeDocument.x2006.customProperties.CTProperty;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -123,21 +127,23 @@ class VoiceManagerTest {
 
 	private static Method METHOD_INIT, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_GET_FILE_EXTENSION,
 			METHOD_DIGEST, METHOD_GET_MAPPER, METHOD_INSERT_OR_UPDATE, METHOD_SET_ENABLED, METHOD_TEST_AND_APPLY4,
-			METHOD_TEST_AND_APPLY5, METHOD_CAST, METHOD_INT_VALUE, METHOD_GET_PROPERTY, METHOD_SET_VARIABLE,
-			METHOD_PARSE_EXPRESSION, METHOD_GET_VALUE, METHOD_GET_TEXT, METHOD_GET_SOURCE, METHOD_EXPORT, METHOD_MAP,
-			METHOD_MAX, METHOD_OR_ELSE, METHOD_FOR_EACH, METHOD_CREATE_WORK_BOOK, METHOD_CREATE_VOICE,
-			METHOD_GET_MESSAGE, METHOD_INVOKE, METHOD_ANNOTATION_TYPE, METHOD_GET_NAME, METHOD_FIND_FIRST,
-			METHOD_GET_DECLARED_METHODS, METHOD_FOR_NAME, METHOD_FILTER, METHOD_SET_TEXT, METHOD_GET_PREFERRED_WIDTH,
-			METHOD_IMPORT_VOICE3, METHOD_IMPORT_VOICE5, METHOD_ERROR_OR_PRINT_LN, METHOD_ADD,
-			METHOD_CREATE_IMPORT_FILE_TEMPLATE_BYTE_ARRAY, METHOD_GET_DECLARED_ANNOTATIONS, METHOD_CREATE_CELL,
-			METHOD_SET_CELL_VALUE, METHOD_ANY_MATCH, METHOD_COLLECT, METHOD_NAME, METHOD_GET_SELECTED_ITEM,
-			METHOD_WRITE, METHOD_MATCHER, METHOD_SET_VALUE, METHOD_SET_STRING, METHOD_SET_TOOL_TIP_TEXT, METHOD_FORMAT,
-			METHOD_CONTAINS_KEY, METHOD_VALUE_OF1, METHOD_VALUE_OF2, METHOD_GET_CLASS, METHOD_CREATE_RANGE,
-			METHOD_GET_PROVIDER_NAME, METHOD_GET_PROVIDER_VERSION, METHOD_WRITE_VOICE_TO_FILE,
-			METHOD_GET_MP3_TAG_VALUE_FILE, METHOD_GET_MP3_TAG_VALUE_LIST, METHOD_GET_MP3_TAG_PARIRS_ID3V1,
-			METHOD_GET_METHODS, METHOD_GET_SIMPLE_NAME, METHOD_COPY_OBJECT_MAP, METHOD_DELETE_ON_EXIT,
-			METHOD_CONVERT_LANGUAGE_CODE_TO_TEXT, METHOD_IS_SELECTED, METHOD_SET_HIRAGANA_OR_KATAKANA, METHOD_OR,
-			METHOD_CLEAR, METHOD_EXECUTE, METHOD_PUT, METHOD_GET_BYTE_CONVERTER = null;
+			METHOD_TEST_AND_APPLY5, METHOD_CAST, METHOD_INT_VALUE, METHOD_GET_PROPERTY_PROPERTY_RESOLVER,
+			METHOD_GET_PROPERTY_CUSTOM_PROPERTIES, METHOD_SET_VARIABLE, METHOD_PARSE_EXPRESSION, METHOD_GET_VALUE,
+			METHOD_GET_TEXT, METHOD_GET_SOURCE, METHOD_EXPORT, METHOD_MAP, METHOD_MAX, METHOD_OR_ELSE, METHOD_FOR_EACH,
+			METHOD_CREATE_WORK_BOOK, METHOD_CREATE_VOICE, METHOD_GET_MESSAGE, METHOD_INVOKE, METHOD_ANNOTATION_TYPE,
+			METHOD_GET_NAME, METHOD_FIND_FIRST, METHOD_GET_DECLARED_METHODS, METHOD_FOR_NAME, METHOD_FILTER,
+			METHOD_SET_TEXT, METHOD_GET_PREFERRED_WIDTH, METHOD_IMPORT_VOICE3, METHOD_IMPORT_VOICE5,
+			METHOD_ERROR_OR_PRINT_LN, METHOD_ADD, METHOD_CREATE_IMPORT_FILE_TEMPLATE_BYTE_ARRAY,
+			METHOD_GET_DECLARED_ANNOTATIONS, METHOD_CREATE_CELL, METHOD_SET_CELL_VALUE, METHOD_ANY_MATCH,
+			METHOD_COLLECT, METHOD_NAME, METHOD_GET_SELECTED_ITEM, METHOD_WRITE, METHOD_MATCHER, METHOD_SET_VALUE,
+			METHOD_SET_STRING, METHOD_SET_TOOL_TIP_TEXT, METHOD_FORMAT, METHOD_CONTAINS_KEY, METHOD_VALUE_OF1,
+			METHOD_VALUE_OF2, METHOD_GET_CLASS, METHOD_CREATE_RANGE, METHOD_GET_PROVIDER_NAME,
+			METHOD_GET_PROVIDER_VERSION, METHOD_WRITE_VOICE_TO_FILE, METHOD_GET_MP3_TAG_VALUE_FILE,
+			METHOD_GET_MP3_TAG_VALUE_LIST, METHOD_GET_MP3_TAG_PARIRS_ID3V1, METHOD_GET_METHODS, METHOD_GET_SIMPLE_NAME,
+			METHOD_COPY_OBJECT_MAP, METHOD_DELETE_ON_EXIT, METHOD_CONVERT_LANGUAGE_CODE_TO_TEXT, METHOD_IS_SELECTED,
+			METHOD_SET_HIRAGANA_OR_KATAKANA, METHOD_OR, METHOD_CLEAR, METHOD_EXECUTE, METHOD_PUT,
+			METHOD_GET_BYTE_CONVERTER, METHOD_GET_PROPERTIES, METHOD_GET_CUSTOM_PROPERTIES, METHOD_CONTAINS,
+			METHOD_GET_LPW_STR = null;
 
 	@BeforeAll
 	private static void beforeAll() throws ReflectiveOperationException {
@@ -173,8 +179,11 @@ class VoiceManagerTest {
 		//
 		(METHOD_INT_VALUE = clz.getDeclaredMethod("intValue", Number.class, Integer.TYPE)).setAccessible(true);
 		//
-		(METHOD_GET_PROPERTY = clz.getDeclaredMethod("getProperty", PropertyResolver.class, String.class))
-				.setAccessible(true);
+		(METHOD_GET_PROPERTY_PROPERTY_RESOLVER = clz.getDeclaredMethod("getProperty", PropertyResolver.class,
+				String.class)).setAccessible(true);
+		//
+		(METHOD_GET_PROPERTY_CUSTOM_PROPERTIES = clz.getDeclaredMethod("getProperty", CustomProperties.class,
+				String.class)).setAccessible(true);
 		//
 		(METHOD_SET_VARIABLE = clz.getDeclaredMethod("setVariable", EvaluationContext.class, String.class,
 				Object.class)).setAccessible(true);
@@ -322,6 +331,15 @@ class VoiceManagerTest {
 		(METHOD_GET_BYTE_CONVERTER = clz.getDeclaredMethod("getByteConverter", ConfigurableListableBeanFactory.class,
 				String.class)).setAccessible(true);
 		//
+		(METHOD_GET_PROPERTIES = clz.getDeclaredMethod("getProperties", POIXMLDocument.class)).setAccessible(true);
+		//
+		(METHOD_GET_CUSTOM_PROPERTIES = clz.getDeclaredMethod("getCustomProperties", POIXMLProperties.class))
+				.setAccessible(true);
+		//
+		(METHOD_CONTAINS = clz.getDeclaredMethod("contains", CustomProperties.class, String.class)).setAccessible(true);
+		//
+		(METHOD_GET_LPW_STR = clz.getDeclaredMethod("getLpwstr", CTProperty.class)).setAccessible(true);
+		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
 	}
@@ -332,7 +350,7 @@ class VoiceManagerTest {
 
 		private Set<Entry<?, ?>> entrySet = null;
 
-		private String toString, stringCellValue, providerName, providerVersion, artist, voiceAttribute = null;
+		private String toString, stringCellValue, providerName, providerVersion, artist, voiceAttribute, lpwstr = null;
 
 		private Configuration configuration = null;
 
@@ -579,6 +597,14 @@ class VoiceManagerTest {
 				} else if (Objects.equals(methodName, "getAttribute") && args != null && args.length > 0) {
 					//
 					return MapUtils.getObject(getBeanDefinitionAttributes(), args[0]);
+					//
+				} // if
+					//
+			} else if (proxy instanceof CTProperty) {
+				//
+				if (Objects.equals(methodName, "getLpwstr")) {
+					//
+					return lpwstr;
 					//
 				} // if
 					//
@@ -1183,13 +1209,37 @@ class VoiceManagerTest {
 	@Test
 	void testGetProperty() throws Throwable {
 		//
+		Assertions.assertNull(getProperty((CustomProperties) null, null));
+		//
 		Assertions.assertNull(getProperty(Reflection.newProxy(PropertyResolver.class, ih), null));
 		//
+		Assertions.assertNull(getProperty(getCustomProperties(getProperties(null)), null));
+		//
+		try (final XSSFWorkbook wb = new XSSFWorkbook()) {
+			//
+			Assertions.assertNull(getProperty(getCustomProperties(getProperties(wb)), null));
+			//
+		} // try
+			//
 	}
 
 	private static String getProperty(final PropertyResolver instance, final String key) throws Throwable {
 		try {
-			final Object obj = METHOD_GET_PROPERTY.invoke(null, instance, key);
+			final Object obj = METHOD_GET_PROPERTY_PROPERTY_RESOLVER.invoke(null, instance, key);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static String getProperty(final CustomProperties instance, final String key) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_PROPERTY_CUSTOM_PROPERTIES.invoke(null, instance, key);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof String) {
@@ -2773,6 +2823,82 @@ class VoiceManagerTest {
 			final String format) throws Throwable {
 		try {
 			return METHOD_GET_BYTE_CONVERTER.invoke(null, configurableListableBeanFactory, format);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static POIXMLProperties getProperties(final POIXMLDocument instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_PROPERTIES.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof POIXMLProperties) {
+				return (POIXMLProperties) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static CustomProperties getCustomProperties(final POIXMLProperties instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_CUSTOM_PROPERTIES.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof CustomProperties) {
+				return (CustomProperties) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testContains() throws Throwable {
+		//
+		Assertions.assertFalse(contains(getCustomProperties(getProperties(null)), null));
+		//
+		try (final XSSFWorkbook wb = new XSSFWorkbook()) {
+			//
+			Assertions.assertFalse(contains(getCustomProperties(getProperties(wb)), null));
+			//
+		} // try
+			//
+	}
+
+	private static boolean contains(final CustomProperties instance, final String name) throws Throwable {
+		try {
+			final Object obj = METHOD_CONTAINS.invoke(null, instance, name);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetLpwstr() throws Throwable {
+		//
+		Assertions.assertNull(getLpwstr(null));
+		//
+		Assertions.assertNull(getLpwstr(Reflection.newProxy(CTProperty.class, ih)));
+		//
+	}
+
+	private static String getLpwstr(final CTProperty instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_LPW_STR.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

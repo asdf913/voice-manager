@@ -103,6 +103,9 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.poi.hssf.usermodel.HSSFDataFormat;
+import org.apache.poi.ooxml.POIXMLDocument;
+import org.apache.poi.ooxml.POIXMLProperties;
+import org.apache.poi.ooxml.POIXMLProperties.CustomProperties;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -114,6 +117,7 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.util.LocaleID;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.javatuples.Unit;
+import org.openxmlformats.schemas.officeDocument.x2006.customProperties.CTProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
@@ -1613,6 +1617,15 @@ public class VoiceManager extends JFrame
 							//
 						} // if
 							//
+						if (objectMap != null) {
+							//
+							objectMap.setObject(ByteConverter.class, getByteConverter(configurableListableBeanFactory,
+									getLpwstr(testAndApply(VoiceManager::contains,
+											getCustomProperties(getProperties(cast(POIXMLDocument.class, workbook))),
+											"audioFormat", VoiceManager::getProperty, null))));
+							//
+						} // if
+							//
 						importVoice(sheet, objectMap, isSelected(cbHiraganaKatakanaConversion), errorMessageConsumer,
 								throwableConsumer);
 						//
@@ -1661,6 +1674,26 @@ public class VoiceManager extends JFrame
 				//
 		} // if
 			//
+	}
+
+	private static POIXMLProperties getProperties(final POIXMLDocument instance) {
+		return instance != null ? instance.getProperties() : null;
+	}
+
+	private static CustomProperties getCustomProperties(final POIXMLProperties instance) {
+		return instance != null ? instance.getCustomProperties() : null;
+	}
+
+	private static boolean contains(final CustomProperties instance, final String name) {
+		return instance != null && instance.contains(name);
+	}
+
+	private static CTProperty getProperty(final CustomProperties instance, final String name) {
+		return instance != null ? instance.getProperty(name) : null;
+	}
+
+	private static String getLpwstr(final CTProperty instance) {
+		return instance != null ? instance.getLpwstr() : null;
 	}
 
 	@Override
@@ -2512,6 +2545,8 @@ public class VoiceManager extends JFrame
 				//
 				String voiceId = null;
 				//
+				ByteConverter byteConverter = null;
+				//
 				for (final Row row : sheet) {
 					//
 					if (row == null || row.iterator() == null) {
@@ -2661,6 +2696,14 @@ public class VoiceManager extends JFrame
 															100), 0), 100)// volume
 											);
 											//
+											if ((byteConverter = ObjectUtils.getIfNull(byteConverter, () -> ObjectMap
+													.getObject(objectMap, ByteConverter.class))) != null) {
+												//
+												FileUtils.writeByteArrayToFile(it.file,
+														byteConverter.convert(FileUtils.readFileToByteArray(it.file)));
+												//
+											} // if
+												//
 										} // if
 											//
 										deleteOnExit(it.file);

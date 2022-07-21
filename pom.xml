@@ -102,6 +102,12 @@
 			<artifactId>poi-ooxml</artifactId>
 			<version>5.2.2</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.poi/ooxml-schemas -->
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>ooxml-schemas</artifactId>
+			<version>1.4</version>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
 		<dependency>
 			<groupId>com.google.guava</groupId>
@@ -128,15 +134,15 @@
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/net.sourceforge.javaflacencoder/java-flac-encoder -->
 		<dependency>
-		    <groupId>net.sourceforge.javaflacencoder</groupId>
-		    <artifactId>java-flac-encoder</artifactId>
-		    <version>0.3.7</version>
+			<groupId>net.sourceforge.javaflacencoder</groupId>
+			<artifactId>java-flac-encoder</artifactId>
+			<version>0.3.7</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.javatuples/javatuples -->
 		<dependency>
-		    <groupId>org.javatuples</groupId>
-		    <artifactId>javatuples</artifactId>
-		    <version>1.2</version>
+			<groupId>org.javatuples</groupId>
+			<artifactId>javatuples</artifactId>
+			<version>1.2</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
 		<dependency>
