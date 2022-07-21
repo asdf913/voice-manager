@@ -1695,7 +1695,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				final AudioInputStream ais = bais != null ? AudioSystem.getAudioInputStream(bais) : null;
 				final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
 			//
-			final AudioFormat format = ais != null ? ais.getFormat() : null;
+			final AudioFormat format = getFormat(ais);
 			//
 			final FLACEncoder flac = new FLACEncoder();
 			//
@@ -1707,7 +1707,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-			if (ais != null) {
+			if (getFormat(ais) != null) {
 				//
 				flac.setOutputStream(new FLACStreamOutputStream(baos));
 				//
@@ -1721,6 +1721,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // try
 			//
+	}
+
+	private static AudioFormat getFormat(final AudioInputStream instance) {
+		return instance != null ? instance.getFormat() : null;
 	}
 
 	private static StreamConfiguration createStreamConfiguration(final AudioFormat format) {
