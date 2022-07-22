@@ -174,7 +174,7 @@ public class VoiceManager extends JFrame
 	private PropertyResolver propertyResolver = null;
 
 	private JTextComponent tfFolder, tfFile, tfFileLength, tfFileDigest, tfText, tfHiragana, tfKatakana, tfRomaji,
-			tfSpeechRate, tfSource, tfProviderName, tfProviderVersion, tfSpeechLanguage, tfLanguage,
+			tfSpeechRate, tfSource, tfProviderName, tfProviderVersion, tfProviderPlatform, tfSpeechLanguage, tfLanguage,
 			tfSpeechVolume = null;
 
 	private ComboBoxModel<Yomi> cbmYomi = null;
@@ -391,13 +391,36 @@ public class VoiceManager extends JFrame
 		//
 		final Provider provider = cast(Provider.class, speechApi);
 		//
-		add(tfProviderName = new JTextField(getProviderName(provider)), String.format("spanx %1$s,growx", 8));
+		add(tfProviderName = new JTextField(getProviderName(provider)), String.format("spanx %1$s,growx", 9));
 		//
-		add(tfProviderVersion = new JTextField(getProviderVersion(provider)),
-				String.format("width %1$s,span %2$s,%3$s", 160, 3, WRAP));
+		add(tfProviderVersion = new JTextField(getProviderVersion(provider)), String.format("width %1$s", 90));
 		//
-		// Voice Id
-		//
+		try {
+			//
+			add(tfProviderPlatform = new JTextField(provider != null ? provider.getProviderPlatform() : null),
+					String.format("width %1$s,%2$s", 50, WRAP));
+			//
+		} catch (final Error e) {
+			//
+			if (GraphicsEnvironment.isHeadless()) {
+				//
+				if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
+					LOG.error(getMessage(e), e);
+				} else if (e != null) {
+					e.printStackTrace();
+				} // if
+					//
+			} else {
+				//
+				JOptionPane.showMessageDialog(null, getMessage(e));
+				//
+			} // if
+				//
+		} // try
+			//
+			//
+			// Voice Id
+			//
 		add(new JLabel("Voice Id"));
 		//
 		final String[] voiceIds = speechApi != null ? speechApi.getVoiceIds() : null;
@@ -416,9 +439,9 @@ public class VoiceManager extends JFrame
 			//
 			jcbVoiceId.setRenderer(voiceIdListCellRenderer);
 			//
-			add(jcbVoiceId, String.format("span %1$s,growx", 8));
+			add(jcbVoiceId, String.format("span %1$s,growx", 9));
 			//
-			add(tfSpeechLanguage = new JTextField(), String.format("width %1$s,span %2$s,%3$s", 160, 3, WRAP));
+			add(tfSpeechLanguage = new JTextField(), String.format("width %1$s,span %2$s,%3$s", 147, 2, WRAP));
 			//
 		} // if
 			//
@@ -642,8 +665,8 @@ public class VoiceManager extends JFrame
 		add(new JScrollPane(new JTable(
 				tmImportException = new DefaultTableModel(new Object[] { "Text", "Romaji", "Exception" }, 0))), wrap);
 		//
-		setEditable(false, tfSpeechLanguage, tfProviderName, tfProviderVersion, tfFolder, tfFile, tfFileLength,
-				tfFileDigest, tfSpeechVolume);
+		setEditable(false, tfSpeechLanguage, tfProviderName, tfProviderVersion, tfProviderPlatform, tfFolder, tfFile,
+				tfFileLength, tfFileDigest, tfSpeechVolume);
 		//
 		addActionListener(this, btnSpeak, btnWriteVoice, btnExecute, btnConvertToRomaji, btnConvertToKatakana,
 				btnCopyRomaji, btnImportFileTemplate, btnImport, btnExport);
