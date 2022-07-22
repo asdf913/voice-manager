@@ -616,14 +616,14 @@ public class VoiceManager extends JFrame
 		//
 		add(btnImportFileTemplate = new JButton("Import File Template"), String.format("span %1$s,%2$s", 3, WRAP));
 		//
-		add(progressBar = new JProgressBar(), String.format("span %1$s,growx,%2$s", 14, WRAP));
+		add(progressBar = new JProgressBar(), String.format("span %1$s,growx,%2$s", 15, WRAP));
 		//
 		progressBar.setStringPainted(true);
 		//
 		add(new JLabel("Folder"));
 		//
 		add(tfFolder = new JTextField(folder != null ? folder.getAbsolutePath() : null),
-				wrap = String.format("span %1$s,growx,%2$s", 13, WRAP));
+				wrap = String.format("span %1$s,growx,%2$s", 14, WRAP));
 		//
 		add(new JLabel("File"));
 		//
