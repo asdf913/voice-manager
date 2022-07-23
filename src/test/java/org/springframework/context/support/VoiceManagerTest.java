@@ -143,7 +143,7 @@ class VoiceManagerTest {
 			METHOD_COPY_OBJECT_MAP, METHOD_DELETE_ON_EXIT, METHOD_CONVERT_LANGUAGE_CODE_TO_TEXT, METHOD_IS_SELECTED,
 			METHOD_SET_HIRAGANA_OR_KATAKANA, METHOD_OR, METHOD_CLEAR, METHOD_EXECUTE, METHOD_PUT,
 			METHOD_GET_BYTE_CONVERTER, METHOD_GET_PROPERTIES, METHOD_GET_CUSTOM_PROPERTIES, METHOD_CONTAINS,
-			METHOD_GET_LPW_STR, METHOD_GET_SHEET_NAME = null;
+			METHOD_GET_LPW_STR, METHOD_GET_SHEET_NAME, METHOD_ACCEPT = null;
 
 	@BeforeAll
 	private static void beforeAll() throws ReflectiveOperationException {
@@ -341,6 +341,9 @@ class VoiceManagerTest {
 		(METHOD_GET_LPW_STR = clz.getDeclaredMethod("getLpwstr", CTProperty.class)).setAccessible(true);
 		//
 		(METHOD_GET_SHEET_NAME = clz.getDeclaredMethod("getSheetName", Sheet.class)).setAccessible(true);
+		//
+		(METHOD_ACCEPT = clz.getDeclaredMethod("accept", Consumer.class, Object.class, Object.class, Object[].class))
+				.setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -2939,6 +2942,22 @@ class VoiceManagerTest {
 	}
 
 	@Test
+	void testAccept() {
+		//
+		Assertions.assertDoesNotThrow(() -> accept(null, null, null, (Object[]) null));
+		//
+	}
+
+	private static <T> void accept(final Consumer<? super T> action, final T a, final T b, final T... values)
+			throws Throwable {
+		try {
+			METHOD_ACCEPT.invoke(null, action, a, b, values);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
 	void testIh() throws Throwable {
 		//
 		final Constructor<?> constructor = CLASS_IH != null ? CLASS_IH.getDeclaredConstructor() : null;
@@ -3004,18 +3023,6 @@ class VoiceManagerTest {
 		FieldUtils.writeDeclaredField(runnable, "counter", Integer.valueOf(0), true);
 		//
 		Assertions.assertDoesNotThrow(() -> run(runnable));
-		//
-		// accept(java.util.function.Consumer,java.lang.Object)
-		//
-		final Method methodAccept = clz != null ? clz.getDeclaredMethod("accept", Consumer.class, Object.class) : null;
-		//
-		if (methodAccept != null) {
-			//
-			methodAccept.setAccessible(true);
-			//
-		} // if
-			//
-		Assertions.assertDoesNotThrow(() -> invoke(methodAccept, null, Reflection.newProxy(Consumer.class, ih), null));
 		//
 	}
 

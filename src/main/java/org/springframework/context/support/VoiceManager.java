@@ -175,7 +175,7 @@ public class VoiceManager extends JFrame
 
 	private JTextComponent tfFolder, tfFile, tfFileLength, tfFileDigest, tfText, tfHiragana, tfKatakana, tfRomaji,
 			tfSpeechRate, tfSource, tfProviderName, tfProviderVersion, tfProviderPlatform, tfSpeechLanguage, tfLanguage,
-			tfSpeechVolume, tfCurrentProcessingSheetName, tfCurrentProcessingVoice = null;
+			tfSpeechVolume, tfCurrentProcessingSheetName, tfCurrentProcessingVoice, tfNumberOfSheetProceeded = null;
 
 	private ComboBoxModel<Yomi> cbmYomi = null;
 
@@ -645,11 +645,15 @@ public class VoiceManager extends JFrame
 		//
 		add(new JLabel("Current Processing Sheet"), String.format("span %1$s", 2));
 		//
-		add(tfCurrentProcessingSheetName = new JTextField(), String.format("span %1$s,growx,%2$s", 13, WRAP));
+		add(tfCurrentProcessingSheetName = new JTextField(), wrap = String.format("span %1$s,growx,%2$s", 13, WRAP));
 		//
 		add(new JLabel("Current Processing Voice"), String.format("span %1$s", 2));
 		//
-		add(tfCurrentProcessingVoice = new JTextField(), String.format("span %1$s,growx,%2$s", 13, WRAP));
+		add(tfCurrentProcessingVoice = new JTextField(), wrap);
+		//
+		add(new JLabel("Number of Sheet Processed"), String.format("span %1$s", 2));
+		//
+		add(tfNumberOfSheetProceeded = new JTextField(), wrap);
 		//
 		add(new JLabel("Folder"));
 		//
@@ -674,7 +678,8 @@ public class VoiceManager extends JFrame
 				tmImportException = new DefaultTableModel(new Object[] { "Text", "Romaji", "Exception" }, 0))), wrap);
 		//
 		setEditable(false, tfSpeechLanguage, tfProviderName, tfProviderVersion, tfProviderPlatform, tfFolder, tfFile,
-				tfFileLength, tfFileDigest, tfSpeechVolume, tfCurrentProcessingSheetName, tfCurrentProcessingVoice);
+				tfFileLength, tfFileDigest, tfSpeechVolume, tfCurrentProcessingSheetName, tfCurrentProcessingVoice,
+				tfNumberOfSheetProceeded);
 		//
 		addActionListener(this, btnSpeak, btnWriteVoice, btnExecute, btnConvertToRomaji, btnConvertToKatakana,
 				btnCopyRomaji, btnImportFileTemplate, btnImport, btnExport);
@@ -1151,9 +1156,7 @@ public class VoiceManager extends JFrame
 	@Override
 	public void actionPerformed(final ActionEvent evt) {
 		//
-		setText(tfCurrentProcessingSheetName, null);
-		//
-		setText(tfCurrentProcessingVoice, null);
+		accept(x -> setText(x, null), tfCurrentProcessingSheetName, tfCurrentProcessingVoice, tfNumberOfSheetProceeded);
 		//
 		final Object source = getSource(evt);
 		//
@@ -1624,6 +1627,8 @@ public class VoiceManager extends JFrame
 					//
 					clear(tmImportException);
 					//
+					Integer numberOfSheetProcessed = null;
+					//
 					for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
 						//
 						if (errorMessageConsumer == null) {
@@ -1719,8 +1724,12 @@ public class VoiceManager extends JFrame
 						//
 						setText(tfCurrentProcessingSheetName, getSheetName(sheet));
 						//
+						numberOfSheetProcessed = Integer.valueOf(intValue(numberOfSheetProcessed, 0) + 1);
+						//
 					} // for
 						//
+					setText(tfNumberOfSheetProceeded, toString(numberOfSheetProcessed));
+					//
 				} catch (final InvalidFormatException | IOException | IllegalAccessException | BaseException e) {
 					//
 					if (GraphicsEnvironment.isHeadless()) {
@@ -1764,6 +1773,26 @@ public class VoiceManager extends JFrame
 				//
 		} // if
 			//
+	}
+
+	private static <T> void accept(final Consumer<? super T> action, final T a, final T b, final T... values) {
+		//
+		accept(action, a);
+		//
+		accept(action, b);
+		//
+		for (int i = 0; values != null && i < values.length; i++) {
+			//
+			accept(action, values[i]);
+			//
+		} // for
+			//
+	}
+
+	private static <T> void accept(final Consumer<T> instance, final T value) {
+		if (instance != null) {
+			instance.accept(value);
+		}
 	}
 
 	private static String getSheetName(final Sheet instance) {
@@ -2570,12 +2599,6 @@ public class VoiceManager extends JFrame
 				//
 		}
 
-		private static <T> void accept(final Consumer<T> instance, final T value) {
-			if (instance != null) {
-				instance.accept(value);
-			}
-		}
-
 	}
 
 	private static void setValue(final JProgressBar instance, final int n) {
@@ -2878,11 +2901,7 @@ public class VoiceManager extends JFrame
 							//
 					} // if
 						//
-					if (voiceConsumer != null) {
-						//
-						voiceConsumer.accept(voice);
-						//
-					} // if
+						accept(voiceConsumer,voice);
 						//
 				} // for
 					//
