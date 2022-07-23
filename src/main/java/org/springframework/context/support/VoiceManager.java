@@ -2659,12 +2659,12 @@ public class VoiceManager extends JFrame
 		return instance != null ? instance.format(number) : null;
 	}
 
-	private static void importVoice(final Sheet sheet, final ObjectMap objectMap,
+	private static void importVoice(final Sheet sheet, final ObjectMap _objectMap,
 			final BiConsumer<Voice, String> errorMessageConsumer, final BiConsumer<Voice, Throwable> throwableConsumer,
 			final Consumer<Voice> voiceConsumer)
 			throws IllegalAccessException, IOException, InvocationTargetException, BaseException {
 		//
-		final File file = ObjectMap.getObject(objectMap, File.class);
+		final File file = ObjectMap.getObject(_objectMap, File.class);
 		//
 		final File folder = file != null ? file.getParentFile() : null;
 		//
@@ -2713,13 +2713,15 @@ public class VoiceManager extends JFrame
 				Jakaroma jakaroma = null;
 				//
 				final CustomProperties customProperties = getCustomProperties(
-						getProperties(ObjectMap.getObject(objectMap, POIXMLDocument.class)));
+						getProperties(ObjectMap.getObject(_objectMap, POIXMLDocument.class)));
 				//
 				final boolean hiraganaKatakanaConversion = BooleanUtils
 						.toBooleanDefaultIfNull(getBoolean(customProperties, "hiraganaKatakanaConversion"), false);
 				//
 				final boolean hiraganaRomajiConversion = BooleanUtils
 						.toBooleanDefaultIfNull(getBoolean(customProperties, "hiraganaRomajiConversion"), false);
+				//
+				ObjectMap objectMap = null;
 				//
 				for (final Row row : sheet) {
 					//
@@ -2791,6 +2793,8 @@ public class VoiceManager extends JFrame
 							//
 					} // for
 						//
+					objectMap = ObjectUtils.defaultIfNull(copyObjectMap(_objectMap), _objectMap);
+					//
 					if (voice != null) {
 						//
 						if (hiraganaKatakanaConversion) {
@@ -2801,8 +2805,13 @@ public class VoiceManager extends JFrame
 							//
 						if (hiraganaRomajiConversion) {
 							//
-							setRomaji(voice, jakaroma = ObjectUtils.getIfNull(jakaroma,
-									() -> ObjectMap.getObject(objectMap, Jakaroma.class)));
+							if (jakaroma == null) {
+								//
+								jakaroma = ObjectMap.getObject(objectMap, Jakaroma.class);
+								//
+							} // if
+								//
+							setRomaji(voice, jakaroma);
 							//
 						} // if
 							//
@@ -2833,8 +2842,13 @@ public class VoiceManager extends JFrame
 										//
 									} // if
 										//
-									if (mp3Tags == null && (voiceManager = ObjectUtils.getIfNull(voiceManager,
-											() -> ObjectMap.getObject(objectMap, VoiceManager.class))) != null) {
+									if (voiceManager == null) {
+										//
+										voiceManager = ObjectMap.getObject(objectMap, VoiceManager.class);
+										//
+									} // if
+										//
+									if (mp3Tags == null && voiceManager != null) {
 										//
 										mp3Tags = voiceManager.mp3Tags;
 										//
@@ -2854,8 +2868,13 @@ public class VoiceManager extends JFrame
 											//
 										} // if
 											//
-										if ((voiceManager = ObjectUtils.getIfNull(voiceManager,
-												() -> ObjectMap.getObject(objectMap, VoiceManager.class))) != null) {
+										if (voiceManager == null) {
+											//
+											voiceManager = ObjectMap.getObject(objectMap, VoiceManager.class);
+											//
+										} // if
+											//
+										if (voiceManager != null) {
 											//
 											if (jsSpeechVolume == null && voiceManager != null) {
 												//
@@ -2881,8 +2900,13 @@ public class VoiceManager extends JFrame
 															100), 0), 100)// volume
 											);
 											//
-											if ((byteConverter = ObjectUtils.getIfNull(byteConverter, () -> ObjectMap
-													.getObject(objectMap, ByteConverter.class))) != null) {
+											if (byteConverter == null) {
+												//
+												byteConverter = ObjectMap.getObject(objectMap, ByteConverter.class);
+												//
+											} // if
+												//
+											if (byteConverter != null) {
 												//
 												FileUtils.writeByteArrayToFile(it.file,
 														byteConverter.convert(FileUtils.readFileToByteArray(it.file)));
@@ -2895,20 +2919,26 @@ public class VoiceManager extends JFrame
 										//
 									} // if
 										//
-									it.voice.setSource(StringUtils.defaultIfBlank(voice.getSource(),
-											getProviderName(provider = ObjectUtils.getIfNull(provider,
-													() -> ObjectMap.getObject(objectMap, Provider.class)))));
+									if (provider == null) {
+										//
+										provider = ObjectMap.getObject(objectMap, Provider.class);
+										//
+									} // if
+										//
+									it.voice.setSource(
+											StringUtils.defaultIfBlank(voice.getSource(), getProviderName(provider)));
 									//
 									try {
 										//
-										it.voice.setLanguage(
-												StringUtils
-														.defaultIfBlank(it.voice.getLanguage(),
-																convertLanguageCodeToText(getVoiceAttribute(
-																		speechApi = ObjectUtils.getIfNull(speechApi,
-																				() -> ObjectMap.getObject(objectMap,
-																						SpeechApi.class)),
-																		voiceId, "Language"), 16)));
+										if (speechApi == null) {
+											//
+											speechApi = ObjectMap.getObject(objectMap, SpeechApi.class);
+											//
+										} // if
+											//
+										it.voice.setLanguage(StringUtils.defaultIfBlank(it.voice.getLanguage(),
+												convertLanguageCodeToText(
+														getVoiceAttribute(speechApi, voiceId, "Language"), 16)));
 										//
 									} catch (final Error e) {
 										//
