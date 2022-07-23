@@ -11,6 +11,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -56,6 +58,7 @@ import javax.swing.ComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JProgressBar;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
@@ -130,7 +133,7 @@ class VoiceManagerTest {
 			METHOD_DIGEST, METHOD_GET_MAPPER, METHOD_INSERT_OR_UPDATE, METHOD_SET_ENABLED, METHOD_TEST_AND_APPLY4,
 			METHOD_TEST_AND_APPLY5, METHOD_CAST, METHOD_INT_VALUE, METHOD_GET_PROPERTY_PROPERTY_RESOLVER,
 			METHOD_GET_PROPERTY_CUSTOM_PROPERTIES, METHOD_SET_VARIABLE, METHOD_PARSE_EXPRESSION, METHOD_GET_VALUE,
-			METHOD_GET_TEXT, METHOD_GET_SOURCE, METHOD_EXPORT, METHOD_MAP, METHOD_MAX, METHOD_OR_ELSE, METHOD_FOR_EACH,
+			METHOD_GET_SOURCE, METHOD_EXPORT, METHOD_MAP, METHOD_MAX, METHOD_OR_ELSE, METHOD_FOR_EACH,
 			METHOD_CREATE_WORK_BOOK, METHOD_CREATE_VOICE, METHOD_GET_MESSAGE, METHOD_INVOKE, METHOD_ANNOTATION_TYPE,
 			METHOD_GET_NAME, METHOD_FIND_FIRST, METHOD_GET_DECLARED_METHODS, METHOD_FOR_NAME, METHOD_FILTER,
 			METHOD_SET_TEXT, METHOD_GET_PREFERRED_WIDTH, METHOD_IMPORT_VOICE3, METHOD_IMPORT_VOICE5,
@@ -194,8 +197,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_GET_VALUE = clz.getDeclaredMethod("getValue", Expression.class, EvaluationContext.class))
 				.setAccessible(true);
-		//
-		(METHOD_GET_TEXT = clz.getDeclaredMethod("getText", JTextComponent.class)).setAccessible(true);
 		//
 		(METHOD_GET_SOURCE = clz.getDeclaredMethod("getSource", EventObject.class)).setAccessible(true);
 		//
@@ -988,6 +989,71 @@ class VoiceManagerTest {
 	}
 
 	@Test
+	void testKeyTyped() {
+		//
+		Assertions.assertDoesNotThrow(() -> {
+			//
+			if (instance != null) {
+				//
+				instance.keyTyped(null);
+				//
+			} // if
+				//
+		});
+		//
+	}
+
+	@Test
+	void testKeyPressed() {
+		//
+		Assertions.assertDoesNotThrow(() -> {
+			//
+			if (instance != null) {
+				//
+				instance.keyPressed(null);
+				//
+			} // if
+				//
+		});
+		//
+	}
+
+	@Test
+	void testKeyReleased() throws Throwable {
+		//
+		Assertions.assertDoesNotThrow(() -> keyReleased(instance, null));
+		//
+		final JLabel jLabel = new JLabel();
+		//
+		Assertions.assertDoesNotThrow(() -> keyReleased(instance, new KeyEvent(jLabel, 0, 0, 0, 0, ' ')));
+		//
+		final JTextComponent tfTags = new JTextField();
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "tfTags", tfTags, true);
+			//
+			FieldUtils.writeDeclaredField(instance, "jlTags", jLabel, true);
+			//
+		} // if
+			//
+		final KeyEvent keyEvent = new KeyEvent(tfTags, 0, 0, 0, 0, ' ');
+		//
+		Assertions.assertDoesNotThrow(() -> keyReleased(instance, keyEvent));
+		//
+		setText(tfTags, "{}");
+		//
+		Assertions.assertDoesNotThrow(() -> keyReleased(instance, keyEvent));
+		//
+	}
+
+	private static void keyReleased(final KeyListener instance, final KeyEvent keyEvent) {
+		if (instance != null) {
+			instance.keyReleased(keyEvent);
+		}
+	}
+
+	@Test
 	void testInit() {
 		//
 		if (instance != null) {
@@ -1359,27 +1425,6 @@ class VoiceManagerTest {
 			throws Throwable {
 		try {
 			return METHOD_GET_VALUE.invoke(null, instance, evaluationContext);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetText() throws Throwable {
-		//
-		Assertions.assertEquals(EMPTY, getText(new JTextField()));
-		//
-	}
-
-	private static String getText(final JTextComponent instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_TEXT.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

@@ -1,5 +1,6 @@
 package org.springframework.context.support;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
@@ -12,6 +13,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -156,8 +159,8 @@ import net.sourceforge.javaflacencoder.FLACEncoder;
 import net.sourceforge.javaflacencoder.FLACStreamOutputStream;
 import net.sourceforge.javaflacencoder.StreamConfiguration;
 
-public class VoiceManager extends JFrame
-		implements ActionListener, ItemListener, ChangeListener, EnvironmentAware, BeanFactoryPostProcessor {
+public class VoiceManager extends JFrame implements ActionListener, ItemListener, ChangeListener, KeyListener,
+		EnvironmentAware, BeanFactoryPostProcessor {
 
 	private static final long serialVersionUID = 6093437131552718994L;
 
@@ -177,7 +180,7 @@ public class VoiceManager extends JFrame
 
 	private JTextComponent tfFolder, tfFile, tfFileLength, tfFileDigest, tfText, tfHiragana, tfKatakana, tfRomaji,
 			tfSpeechRate, tfSource, tfProviderName, tfProviderVersion, tfProviderPlatform, tfSpeechLanguage, tfLanguage,
-			tfSpeechVolume, tfCurrentProcessingSheetName, tfCurrentProcessingVoice = null;
+			tfSpeechVolume, tfCurrentProcessingSheetName, tfCurrentProcessingVoice, tfTags = null;
 
 	private ComboBoxModel<Yomi> cbmYomi = null;
 
@@ -192,6 +195,8 @@ public class VoiceManager extends JFrame
 	private JSlider jsSpeechVolume = null;
 
 	private JComboBox<Object> jcbVoiceId = null;
+
+	private JLabel jlTags, jlTagCount = null;
 
 	private DefaultTableModel tmImportException, tmImportResult = null;
 
@@ -212,6 +217,8 @@ public class VoiceManager extends JFrame
 	private Jakaroma jakaroma = null;
 
 	private Toolkit toolkit = null;
+
+	private ObjectMapper objectMapper = null;
 
 	private VoiceManager() {
 	}
@@ -276,8 +283,10 @@ public class VoiceManager extends JFrame
 			//
 		} // if
 			//
+		objectMapper = ObjectUtils.getIfNull(objectMapper, ObjectMapper::new);
+		//
 		final Object object = testAndApply(StringUtils::isNotEmpty, toString(value),
-				x -> new ObjectMapper().readValue(x, Object.class), null);
+				x -> objectMapper != null ? objectMapper.readValue(x, Object.class) : null, null);
 		//
 		if (object instanceof Map || object == null) {
 			setOutputFolderFileNameExpressions(object);
@@ -576,8 +585,26 @@ public class VoiceManager extends JFrame
 			}
 		});
 		//
-		add(jcbYomi, String.format("span %1$s,%2$s", 9, WRAP));
+		add(jcbYomi);
 		//
+		add(new JLabel("Tag(s)"));
+		//
+		final String tags = getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.tags");
+		//
+		add(tfTags = new JTextField(tags), String.format("growx,span %1$s", 3));
+		//
+		tfTags.addKeyListener(this);
+		//
+		add(jlTags = new JLabel(), String.format("growx,span %1$s", 5));
+		//
+		add(jlTagCount = new JLabel(), String.format("growx,%1$s", WRAP));
+		//
+		if (StringUtils.isNotBlank(tags)) {
+			//
+			keyReleased(new KeyEvent(tfTags, 0, 0, 0, 0, ' '));
+			//
+		} // if
+			//
 		final List<Yomi> yomiList = toList(
 				filter(testAndApply(Objects::nonNull, yomis, Arrays::stream, null), y -> Objects.equals(name(y),
 						getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.yomi"))));
@@ -627,7 +654,7 @@ public class VoiceManager extends JFrame
 		cbUseTtsVoice.setSelected(Boolean.parseBoolean(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.useTtsVoice")));
 		//
-		add(cbConvertToFlac = new JCheckBox("Convert To Flac"));
+		add(cbConvertToFlac = new JCheckBox("Convert To Flac"), String.format("span %1$s", 2));
 		//
 		cbConvertToFlac.setSelected(Boolean.parseBoolean(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.convertToFlac")));
@@ -1961,6 +1988,61 @@ public class VoiceManager extends JFrame
 			//
 		} // if
 			//
+	}
+
+	@Override
+	public void keyTyped(final KeyEvent evt) {
+	}
+
+	@Override
+	public void keyPressed(final KeyEvent evt) {
+	}
+
+	@Override
+	public void keyReleased(final KeyEvent evt) {
+		//
+		final Object source = getSource(evt);
+		//
+		if (Objects.equals(source, tfTags)) {
+			//
+			final JTextComponent jtf = cast(JTextComponent.class, source);
+			//
+			try {
+				//
+				setBackground(jtf, Color.WHITE);
+				//
+				final List<?> list = getObjectList(getText(jtf));
+				//
+				if ((objectMapper = ObjectUtils.getIfNull(objectMapper, ObjectMapper::new)) != null) {
+					//
+					setText(jlTags, objectMapper.writeValueAsString(list));
+					//
+				} // if
+					//
+				setText(jlTagCount, list != null ? Integer.toString(list.size()) : null);
+				//
+			} catch (final Exception e) {
+				//
+				accept(x -> setText(x, null), jlTags, jlTagCount);
+				//
+				setBackground(jtf, Color.RED);
+				//
+			} // try
+				//
+		} // if
+			//
+	}
+
+	private static void setBackground(final Component instance, final Color color) {
+		if (instance != null) {
+			instance.setBackground(color);
+		}
+	}
+
+	private static void setText(final JLabel instance, final String text) {
+		if (instance != null) {
+			instance.setText(text);
+		}
 	}
 
 	private static interface ByteConverter {
