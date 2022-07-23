@@ -87,4 +87,19 @@
 		</if>
 	</insert>
 
+	<insert id="insertVoiceListId">
+		insert into voice_list_id(voice_list_id,voice_id)
+		values(#{voiceListId},#{voiceId});
+	</insert>
+
+	<delete id="deleteVoiceListByVoiceId">
+		delete from voice_list_id
+		<where>
+			true
+			<if test="voiceId!=null"> and voice_id=#{voiceId}</if>
+			<if test="voiceId==null"> and voice_id is null</if>
+		</where>
+		;
+	</delete>
+
 </mapper>

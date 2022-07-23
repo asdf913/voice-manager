@@ -21,4 +21,8 @@ public interface VoiceMapper {
 
 	void insertVoiceList(@Param("voiceList") final VoiceList voiceList);
 
+	void insertVoiceListId(@Param("voiceListId") final Integer voiceListId, @Param("voiceId") final Integer voiceId);
+
+	void deleteVoiceListByVoiceId(@Param("voiceId") final Integer voiceId);
+
 }

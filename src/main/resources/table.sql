@@ -20,3 +20,8 @@ CREATE TABLE IF NOT EXISTS voice_list(
 	id    IDENTITY
 	,name TEXT
 );
+
+CREATE TABLE IF NOT EXISTS voice_list_id(
+	voice_list_id INTEGER
+	,voice_id     INTEGER
+);

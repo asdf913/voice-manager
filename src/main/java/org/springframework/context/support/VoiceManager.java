@@ -4025,6 +4025,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		if (instance != null) {
 			//
+			// voice
+			//
 			final Voice voiceOld = instance.searchByTextAndRomaji(getText(voice), getRomaji(voice));
 			//
 			if (voiceOld != null) {
@@ -4051,15 +4053,23 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
+				// voice_list
+				//
+			final Integer voiceId = voice != null ? voice.getId() : null;
+			//
+			instance.deleteVoiceListByVoiceId(voiceId);
+			//
 			final Iterable<String> listNames = voice != null ? voice.getListNames() : null;
 			//
 			if (listNames != null && listNames.iterator() != null) {
+				//
+				VoiceList voiceListOld = null;
 				//
 				VoiceList voiceList = null;
 				//
 				for (final String listName : listNames) {
 					//
-					if ((instance.searchVoiceListByName(listName)) == null) {
+					if ((voiceListOld = instance.searchVoiceListByName(listName)) == null) {
 						//
 						(voiceList = new VoiceList()).setName(listName);
 						//
@@ -4067,12 +4077,18 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					} // if
 						//
+					instance.insertVoiceListId(getId(ObjectUtils.defaultIfNull(voiceListOld, voiceList)), voiceId);
+					//
 				} // for
 					//
 			} // if
 				//
 		} // if
 			//
+	}
+
+	private static Integer getId(final VoiceList instance) {
+		return instance != null ? instance.getId() : null;
 	}
 
 	private static <T> T getMapper(final Configuration instance, final Class<T> type, final SqlSession sqlSession) {
