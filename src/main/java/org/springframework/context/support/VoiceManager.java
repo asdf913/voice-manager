@@ -175,7 +175,7 @@ public class VoiceManager extends JFrame
 
 	private JTextComponent tfFolder, tfFile, tfFileLength, tfFileDigest, tfText, tfHiragana, tfKatakana, tfRomaji,
 			tfSpeechRate, tfSource, tfProviderName, tfProviderVersion, tfProviderPlatform, tfSpeechLanguage, tfLanguage,
-			tfSpeechVolume = null;
+			tfSpeechVolume, tfCurrentProcessingSheetName = null;
 
 	private ComboBoxModel<Yomi> cbmYomi = null;
 
@@ -643,6 +643,10 @@ public class VoiceManager extends JFrame
 		//
 		progressBar.setStringPainted(true);
 		//
+		add(new JLabel("Current Processing Sheet"), String.format("span %1$s", 2));
+		//
+		add(tfCurrentProcessingSheetName = new JTextField(), String.format("span %1$s,growx,%2$s", 13, WRAP));
+		//
 		add(new JLabel("Folder"));
 		//
 		add(tfFolder = new JTextField(folder != null ? folder.getAbsolutePath() : null),
@@ -666,7 +670,7 @@ public class VoiceManager extends JFrame
 				tmImportException = new DefaultTableModel(new Object[] { "Text", "Romaji", "Exception" }, 0))), wrap);
 		//
 		setEditable(false, tfSpeechLanguage, tfProviderName, tfProviderVersion, tfProviderPlatform, tfFolder, tfFile,
-				tfFileLength, tfFileDigest, tfSpeechVolume);
+				tfFileLength, tfFileDigest, tfSpeechVolume, tfCurrentProcessingSheetName);
 		//
 		addActionListener(this, btnSpeak, btnWriteVoice, btnExecute, btnConvertToRomaji, btnConvertToKatakana,
 				btnCopyRomaji, btnImportFileTemplate, btnImport, btnExport);
@@ -1144,6 +1148,8 @@ public class VoiceManager extends JFrame
 	public void actionPerformed(final ActionEvent evt) {
 		//
 		final Object source = getSource(evt);
+		//
+		setText(tfCurrentProcessingSheetName, null);
 		//
 		if (Objects.equals(source, btnSpeak)) {
 			//
@@ -1693,6 +1699,8 @@ public class VoiceManager extends JFrame
 						importVoice(sheet, objectMap, isSelected(cbHiraganaKatakanaConversion), errorMessageConsumer,
 								throwableConsumer);
 						//
+						setText(tfCurrentProcessingSheetName, getSheetName(sheet));
+						//
 					} // for
 						//
 				} catch (final InvalidFormatException | IOException | IllegalAccessException | BaseException e) {
@@ -1738,6 +1746,10 @@ public class VoiceManager extends JFrame
 				//
 		} // if
 			//
+	}
+
+	private static String getSheetName(final Sheet instance) {
+		return instance != null ? instance.getSheetName() : null;
 	}
 
 	private static POIXMLProperties getProperties(final POIXMLDocument instance) {

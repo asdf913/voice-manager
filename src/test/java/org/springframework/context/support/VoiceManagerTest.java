@@ -143,7 +143,7 @@ class VoiceManagerTest {
 			METHOD_COPY_OBJECT_MAP, METHOD_DELETE_ON_EXIT, METHOD_CONVERT_LANGUAGE_CODE_TO_TEXT, METHOD_IS_SELECTED,
 			METHOD_SET_HIRAGANA_OR_KATAKANA, METHOD_OR, METHOD_CLEAR, METHOD_EXECUTE, METHOD_PUT,
 			METHOD_GET_BYTE_CONVERTER, METHOD_GET_PROPERTIES, METHOD_GET_CUSTOM_PROPERTIES, METHOD_CONTAINS,
-			METHOD_GET_LPW_STR = null;
+			METHOD_GET_LPW_STR, METHOD_GET_SHEET_NAME = null;
 
 	@BeforeAll
 	private static void beforeAll() throws ReflectiveOperationException {
@@ -340,6 +340,8 @@ class VoiceManagerTest {
 		//
 		(METHOD_GET_LPW_STR = clz.getDeclaredMethod("getLpwstr", CTProperty.class)).setAccessible(true);
 		//
+		(METHOD_GET_SHEET_NAME = clz.getDeclaredMethod("getSheetName", Sheet.class)).setAccessible(true);
+		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
 	}
@@ -350,7 +352,8 @@ class VoiceManagerTest {
 
 		private Set<Entry<?, ?>> entrySet = null;
 
-		private String toString, stringCellValue, providerName, providerVersion, artist, voiceAttribute, lpwstr = null;
+		private String toString, stringCellValue, providerName, providerVersion, artist, voiceAttribute, lpwstr,
+				sheetName = null;
 
 		private Configuration configuration = null;
 
@@ -436,13 +439,19 @@ class VoiceManagerTest {
 				//
 				if (proxy instanceof Sheet) {
 					//
+					if (Objects.equals(methodName, "getSheetName")) {
+						//
+						return sheetName;
+						//
+					} // if
+						//
 					return rows;
 					//
 				} else if (proxy instanceof Row) {
 					//
 					return cells;
 					//
-				} else if (Objects.equals("iterator", methodName)) {
+				} else if (Objects.equals(methodName, "iterator")) {
 					//
 					return iterator;
 					//
@@ -626,6 +635,8 @@ class VoiceManagerTest {
 
 	private SpeechApi speechApi = null;
 
+	private Sheet sheet = null;
+
 	@BeforeEach
 	private void beforeEach() throws ReflectiveOperationException {
 		//
@@ -644,6 +655,8 @@ class VoiceManagerTest {
 		stream = Reflection.newProxy(Stream.class, ih);
 		//
 		speechApi = Reflection.newProxy(SpeechApi.class, ih);
+		//
+		sheet = Reflection.newProxy(Sheet.class, ih);
 		//
 	}
 
@@ -1819,8 +1832,6 @@ class VoiceManagerTest {
 			//
 		Assertions.assertDoesNotThrow(() -> importVoice(objectMap, null, null));
 		//
-		final Sheet sheet = Reflection.newProxy(Sheet.class, this.ih);
-		//
 		Assertions.assertDoesNotThrow(() -> importVoice(sheet, null, false, null, null));
 		//
 		final Row row = Reflection.newProxy(Row.class, this.ih);
@@ -2893,6 +2904,29 @@ class VoiceManagerTest {
 	private static String getLpwstr(final CTProperty instance) throws Throwable {
 		try {
 			final Object obj = METHOD_GET_LPW_STR.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetSheetName() throws Throwable {
+		//
+		Assertions.assertNull(getSheetName(null));
+		//
+		Assertions.assertNull(getSheetName(sheet));
+		//
+	}
+
+	private static String getSheetName(final Sheet instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_SHEET_NAME.invoke(null, instance);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof String) {
