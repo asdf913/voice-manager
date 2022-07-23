@@ -305,18 +305,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	public void setMp3Tags(final Object value) {
 		//
-		final List<?> list = getObjectList(value);
+		mp3Tags = toArray(toList(map(stream(getObjectList(value)), VoiceManager::toString)), new String[] {});
 		//
-		if (list == null) {
-			//
-			mp3Tags = null;
-			//
-		} else {
-			//
-			mp3Tags = toArray(toList(map(list.stream(), VoiceManager::toString)), new String[] {});
-			//
-		} // if
-			//
+	}
+
+	private static <E> Stream<E> stream(final Collection<E> instance) {
+		return instance != null ? instance.stream() : null;
 	}
 
 	private static <T> T[] toArray(final Collection<T> instance, final T[] array) {
@@ -2895,6 +2889,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 									//
 								} // if
 									//
+							} else if (Objects.equals(type, Iterable.class)) {
+								//
+								f.set(voice = ObjectUtils.getIfNull(voice, Voice::new), toList(
+										map(stream(getObjectList(cell.getStringCellValue())), VoiceManager::toString)));
+								//
 							} // if
 								//
 						} // if
@@ -3458,9 +3457,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		voice.setYomi(cast(Yomi.class, getSelectedItem(instance.cbmYomi)));
 		//
-		final List<Object> listNames = getObjectList(getText(instance.tfListNames));
-		//
-		voice.setListNames(listNames != null ? toList(map(listNames.stream(), VoiceManager::toString)) : null);
+		voice.setListNames(toList(map(stream(getObjectList(getText(instance.tfListNames))), VoiceManager::toString)));
 		//
 		return voice;
 		//
