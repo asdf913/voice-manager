@@ -1507,7 +1507,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				final VoiceMapper voiceMapper = getMapper(getConfiguration(sqlSessionFactory), VoiceMapper.class,
 						sqlSession = openSession(sqlSessionFactory));
 				//
-				final List<Voice> voices = voiceMapper != null ? voiceMapper.retrieveAll() : null;
+				final List<Voice> voices = voiceMapper != null ? voiceMapper.retrieveAllVoices() : null;
 				//
 				export(voices, outputFolderFileNameExpressions, voiceFolder, outputFolder, progressBar,
 						isSelected(cbOverMp3Title));

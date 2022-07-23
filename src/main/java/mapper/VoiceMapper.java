@@ -14,6 +14,6 @@ public interface VoiceMapper {
 
 	Voice searchByTextAndRomaji(@Param("text") final String text, @Param("romaji") final String romaji);
 
-	List<Voice> retrieveAll();
+	List<Voice> retrieveAllVoices();
 
 }
