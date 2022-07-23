@@ -8,7 +8,7 @@ import domain.Voice;
 
 public interface VoiceMapper {
 
-	void insert(@Param("voice") final Voice voice);
+	void insertVoice(@Param("voice") final Voice voice);
 
 	void update(@Param("voice") final Voice voice);
 

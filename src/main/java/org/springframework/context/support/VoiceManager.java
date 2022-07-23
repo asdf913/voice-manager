@@ -4046,7 +4046,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
-				instance.insert(voice);
+				instance.insertVoice(voice);
 				//
 			} // if
 				//
