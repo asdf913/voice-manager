@@ -15,6 +15,8 @@ import java.util.Date;
 @FieldOrder({ "language", "text", "romaji", "hiragana", "katakana", "filePath", "fileExtension", "fileLength" })
 public class Voice {
 
+	private Integer id = null;
+
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
 	private @interface ImportField {
