@@ -116,6 +116,7 @@ import com.mpatric.mp3agic.ID3v1;
 
 import domain.Voice;
 import domain.Voice.Yomi;
+import fr.free.nrw.jakaroma.Jakaroma;
 import mapper.VoiceMapper;
 import net.miginfocom.swing.MigLayout;
 
@@ -141,7 +142,7 @@ class VoiceManagerTest {
 			METHOD_GET_PROVIDER_VERSION, METHOD_WRITE_VOICE_TO_FILE, METHOD_GET_MP3_TAG_VALUE_FILE,
 			METHOD_GET_MP3_TAG_VALUE_LIST, METHOD_GET_MP3_TAG_PARIRS_ID3V1, METHOD_GET_METHODS, METHOD_GET_SIMPLE_NAME,
 			METHOD_COPY_OBJECT_MAP, METHOD_DELETE_ON_EXIT, METHOD_CONVERT_LANGUAGE_CODE_TO_TEXT, METHOD_IS_SELECTED,
-			METHOD_SET_HIRAGANA_OR_KATAKANA, METHOD_OR, METHOD_CLEAR, METHOD_EXECUTE, METHOD_PUT,
+			METHOD_SET_HIRAGANA_OR_KATAKANA, METHOD_SET_ROMAJI, METHOD_OR, METHOD_CLEAR, METHOD_EXECUTE, METHOD_PUT,
 			METHOD_GET_BYTE_CONVERTER, METHOD_GET_PROPERTIES, METHOD_GET_CUSTOM_PROPERTIES, METHOD_CONTAINS,
 			METHOD_GET_LPW_STR, METHOD_GET_SHEET_NAME, METHOD_ACCEPT = null;
 
@@ -318,6 +319,8 @@ class VoiceManagerTest {
 		//
 		(METHOD_SET_HIRAGANA_OR_KATAKANA = clz.getDeclaredMethod("setHiraganaOrKatakana", Voice.class))
 				.setAccessible(true);
+		//
+		(METHOD_SET_ROMAJI = clz.getDeclaredMethod("setRomaji", Voice.class, Jakaroma.class)).setAccessible(true);
 		//
 		(METHOD_OR = clz.getDeclaredMethod("or", Predicate.class, Object.class, Object.class, Object[].class))
 				.setAccessible(true);
@@ -2657,6 +2660,41 @@ class VoiceManagerTest {
 	}
 
 	@Test
+	void testSetRomaji() {
+		//
+		Assertions.assertDoesNotThrow(() -> setRomaji(null, null));
+		//
+		final Voice voice = new Voice();
+		//
+		voice.setRomaji("a");
+		//
+		voice.setHiragana("あ");
+		//
+		Assertions.assertDoesNotThrow(() -> setRomaji(voice, null));
+		//
+		voice.setRomaji(null);
+		//
+		voice.setHiragana("い");
+		//
+		Assertions.assertDoesNotThrow(() -> setRomaji(voice, null));
+		//
+		Assertions.assertNull(voice.getRomaji());
+		//
+		Assertions.assertDoesNotThrow(() -> setRomaji(voice, new Jakaroma()));
+		//
+		Assertions.assertEquals("i", voice.getRomaji());
+		//
+	}
+
+	private static void setRomaji(final Voice voice, final Jakaroma jakaroma) throws Throwable {
+		try {
+			METHOD_SET_ROMAJI.invoke(null, voice, jakaroma);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
 	void testOr() throws Throwable {
 		//
 		Assertions.assertTrue(or(x -> Objects.equals(x, EMPTY), null, EMPTY));
@@ -2944,6 +2982,8 @@ class VoiceManagerTest {
 	void testAccept() {
 		//
 		Assertions.assertDoesNotThrow(() -> accept(null, null, null, (Object[]) null));
+		//
+		Assertions.assertDoesNotThrow(() -> accept(null, null, null, (Object) null));
 		//
 	}
 

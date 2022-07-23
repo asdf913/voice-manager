@@ -93,6 +93,7 @@ import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -207,6 +208,8 @@ public class VoiceManager extends JFrame
 	private String[] mp3Tags = null;
 
 	private ConfigurableListableBeanFactory configurableListableBeanFactory = null;
+
+	private Jakaroma jakaroma = null;
 
 	private VoiceManager() {
 	}
@@ -1428,7 +1431,8 @@ public class VoiceManager extends JFrame
 				//
 		} else if (Objects.equals(source, btnConvertToRomaji)) {
 			//
-			setText(tfRomaji, new Jakaroma().convert(getText(tfText), false, false));
+			setText(tfRomaji,
+					convert(jakaroma = ObjectUtils.getIfNull(jakaroma, Jakaroma::new), getText(tfText), false, false));
 			//
 		} else if (Objects.equals(source, btnConvertToKatakana)) {
 			//
@@ -1621,6 +1625,8 @@ public class VoiceManager extends JFrame
 						objectMap.setObject(SpeechApi.class, speechApi);
 						//
 						objectMap.setObject(POIXMLDocument.class, poiXmlDocument);
+						//
+						objectMap.setObject(Jakaroma.class, jakaroma = ObjectUtils.getIfNull(jakaroma, Jakaroma::new));
 						//
 					} // if
 						//
@@ -1877,6 +1883,11 @@ public class VoiceManager extends JFrame
 				//
 		} // if
 			//
+	}
+
+	private static String convert(final Jakaroma instance, final String input, final boolean trailingSpace,
+			final boolean capitalizeWords) {
+		return instance != null ? instance.convert(input, trailingSpace, capitalizeWords) : null;
 	}
 
 	private static ByteConverter getByteConverter(final ConfigurableListableBeanFactory configurableListableBeanFactory,
@@ -2699,26 +2710,17 @@ public class VoiceManager extends JFrame
 				//
 				ByteConverter byteConverter = null;
 				//
-				final CTProperty ctProperty = testAndApply(VoiceManager::contains,
-						getCustomProperties(getProperties(ObjectMap.getObject(objectMap, POIXMLDocument.class))),
-						"hiraganaKatakanaConversion", VoiceManager::getProperty, null);
+				Jakaroma jakaroma = null;
 				//
-				final Boolean B = ctProperty != null ? ctProperty.getBool() : null;
+				final CustomProperties customProperties = getCustomProperties(
+						getProperties(ObjectMap.getObject(objectMap, POIXMLDocument.class)));
 				//
-				boolean hiraganaKatakanaConversion = false;
+				final boolean hiraganaKatakanaConversion = BooleanUtils
+						.toBooleanDefaultIfNull(getBoolean(customProperties, "hiraganaKatakanaConversion"), false);
 				//
-				final String lLpwstr = getLpwstr(ctProperty);
+				final boolean hiraganaRomajiConversion = BooleanUtils
+						.toBooleanDefaultIfNull(getBoolean(customProperties, "hiraganaRomajiConversion"), false);
 				//
-				if (StringUtils.isNotBlank(lLpwstr)) {
-					//
-					hiraganaKatakanaConversion = Boolean.valueOf(lLpwstr);
-					//
-				} else if (B != null) {
-					//
-					hiraganaKatakanaConversion = B.booleanValue();
-					//
-				} // if
-					//
 				for (final Row row : sheet) {
 					//
 					if (row == null || row.iterator() == null) {
@@ -2789,10 +2791,21 @@ public class VoiceManager extends JFrame
 							//
 					} // for
 						//
-					if (voice != null && hiraganaKatakanaConversion) {
+					if (voice != null) {
 						//
-						setHiraganaOrKatakana(voice);
-						//
+						if (hiraganaKatakanaConversion) {
+							//
+							setHiraganaOrKatakana(voice);
+							//
+						} // if
+							//
+						if (hiraganaRomajiConversion) {
+							//
+							setRomaji(voice, jakaroma = ObjectUtils.getIfNull(jakaroma,
+									() -> ObjectMap.getObject(objectMap, Jakaroma.class)));
+							//
+						} // if
+							//
 					} // if
 						//
 					if (first) {
@@ -2960,6 +2973,31 @@ public class VoiceManager extends JFrame
 			//
 	}
 
+	private static Boolean getBoolean(final CustomProperties instance, final String name) {
+		//
+		final CTProperty ctProperty = testAndApply(VoiceManager::contains, instance, name, VoiceManager::getProperty,
+				null);
+		//
+		final Boolean B = ctProperty != null ? ctProperty.getBool() : null;
+		//
+		Boolean result = null;
+		//
+		final String lLpwstr = getLpwstr(ctProperty);
+		//
+		if (StringUtils.isNotBlank(lLpwstr)) {
+			//
+			result = Boolean.valueOf(lLpwstr);
+			//
+		} else if (B != null) {
+			//
+			result = B.booleanValue();
+			//
+		} // if
+			//
+		return result;
+		//
+	}
+
 	private static String getText(final Voice instance) {
 		return instance != null ? instance.getText() : null;
 	}
@@ -2968,9 +3006,13 @@ public class VoiceManager extends JFrame
 		return instance != null ? instance.getRomaji() : null;
 	}
 
+	private static String getHiragana(final Voice instance) {
+		return instance != null ? instance.getHiragana() : null;
+	}
+
 	private static void setHiraganaOrKatakana(final Voice voice) {
 		//
-		final String hiragana = voice != null ? voice.getHiragana() : null;
+		final String hiragana = getHiragana(voice);
 		//
 		final String katakana = voice != null ? voice.getKatakana() : null;
 		//
@@ -2992,6 +3034,20 @@ public class VoiceManager extends JFrame
 				//
 			} // if
 				//
+		} // if
+			//
+	}
+
+	private static void setRomaji(final Voice voice, final Jakaroma jakaroma) {
+		//
+		final String romaji = getRomaji(voice);
+		//
+		final String hiragana = getHiragana(voice);
+		//
+		if (StringUtils.isBlank(romaji) && StringUtils.isNotBlank(hiragana)) {
+			//
+			voice.setRomaji(convert(jakaroma, hiragana, false, false));
+			//
 		} // if
 			//
 	}
