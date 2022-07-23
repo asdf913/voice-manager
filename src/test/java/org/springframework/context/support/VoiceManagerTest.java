@@ -847,6 +847,26 @@ class VoiceManagerTest {
 			//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnCopyRomaji, 0, null)));
 		//
+		final AbstractButton btnCopyHiragana = new JButton();
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "btnCopyHiragana", btnCopyHiragana, true);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnCopyHiragana, 0, null)));
+		//
+		final AbstractButton btnCopyKatakana = new JButton();
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "btnCopyKatakana", btnCopyKatakana, true);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnCopyKatakana, 0, null)));
+		//
 		final AbstractButton btnExport = new JButton();
 		//
 		if (instance != null) {

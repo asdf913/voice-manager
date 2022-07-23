@@ -184,8 +184,8 @@ public class VoiceManager extends JFrame
 	private ComboBoxModel<String> cbmVoiceId = null;
 
 	private AbstractButton btnSpeak, cbWriteVoiceAsFlac, btnWriteVoice, btnConvertToRomaji, btnConvertToKatakana,
-			btnCopyRomaji, cbUseTtsVoice, cbConvertToFlac, btnExecute, btnImportFileTemplate,
-			cbHiraganaKatakanaConversion, btnImport, cbOverMp3Title, btnExport = null;
+			btnCopyRomaji, btnCopyHiragana, btnCopyKatakana, cbUseTtsVoice, cbConvertToFlac, btnExecute,
+			btnImportFileTemplate, cbHiraganaKatakanaConversion, btnImport, cbOverMp3Title, btnExport = null;
 
 	private JProgressBar progressBar = null;
 
@@ -210,6 +210,8 @@ public class VoiceManager extends JFrame
 	private ConfigurableListableBeanFactory configurableListableBeanFactory = null;
 
 	private Jakaroma jakaroma = null;
+
+	private Toolkit toolkit = null;
 
 	private VoiceManager() {
 	}
@@ -588,7 +590,7 @@ public class VoiceManager extends JFrame
 		//
 		add(tfRomaji = new JTextField(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.romaji")),
-				span = String.format("spanx %1$s,growx", 11));
+				span = String.format("spanx %1$s,growx", 10));
 		//
 		add(btnCopyRomaji = new JButton("Copy"), WRAP);
 		//
@@ -596,7 +598,9 @@ public class VoiceManager extends JFrame
 		//
 		add(tfHiragana = new JTextField(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.hiragana")),
-				String.format("spanx %1$s,growx", 5));
+				String.format("spanx %1$s,growx", 2));
+		//
+		add(btnCopyHiragana = new JButton("Copy"));
 		//
 		add(btnConvertToKatakana = new JButton("Convert"));
 		//
@@ -604,7 +608,9 @@ public class VoiceManager extends JFrame
 		//
 		add(tfKatakana = new JTextField(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.katakana")),
-				String.format("spanx %1$s,growx,%2$s", 5, WRAP));
+				String.format("spanx %1$s,growx", 5));
+		//
+		add(btnCopyKatakana = new JButton("Copy"), WRAP);
 		//
 		add(new JLabel());
 		//
@@ -690,7 +696,7 @@ public class VoiceManager extends JFrame
 				tfFileLength, tfFileDigest, tfSpeechVolume, tfCurrentProcessingSheetName, tfCurrentProcessingVoice);
 		//
 		addActionListener(this, btnSpeak, btnWriteVoice, btnExecute, btnConvertToRomaji, btnConvertToKatakana,
-				btnCopyRomaji, btnImportFileTemplate, btnImport, btnExport);
+				btnCopyRomaji, btnCopyHiragana, btnCopyKatakana, btnImportFileTemplate, btnImport, btnExport);
 		//
 		setPreferredWidth(intValue(
 				orElse(max(map(Stream.of(tfFolder, tfFile, tfFileLength, tfFileDigest, tfText, tfHiragana, tfKatakana,
@@ -1443,7 +1449,18 @@ public class VoiceManager extends JFrame
 			//
 		} else if (Objects.equals(source, btnCopyRomaji)) {
 			//
-			setContents(getSystemClipboard(Toolkit.getDefaultToolkit()), new StringSelection(getText(tfRomaji)), null);
+			setContents(getSystemClipboard(toolkit = ObjectUtils.getIfNull(toolkit, Toolkit::getDefaultToolkit)),
+					new StringSelection(getText(tfRomaji)), null);
+			//
+		} else if (Objects.equals(source, btnCopyHiragana)) {
+			//
+			setContents(getSystemClipboard(toolkit = ObjectUtils.getIfNull(toolkit, Toolkit::getDefaultToolkit)),
+					new StringSelection(getText(tfHiragana)), null);
+			//
+		} else if (Objects.equals(source, btnCopyKatakana)) {
+			//
+			setContents(getSystemClipboard(toolkit = ObjectUtils.getIfNull(toolkit, Toolkit::getDefaultToolkit)),
+					new StringSelection(getText(tfKatakana)), null);
 			//
 		} else if (Objects.equals(source, btnExport)) {
 			//
