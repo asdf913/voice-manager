@@ -62,6 +62,8 @@ public class Voice {
 
 	private String fileDigestAlgorithm, fileDigest, fileExtension = null;
 
+	private Iterable<String> listNames = null;
+
 	/**
 	 * @see org.apache.poi.ss.usermodel.BuiltinFormats
 	 */
@@ -184,6 +186,10 @@ public class Voice {
 
 	public void setUpdateTs(final Date updateTs) {
 		this.updateTs = updateTs;
+	}
+
+	public void setListNames(final Iterable<String> listNames) {
+		this.listNames = listNames;
 	}
 
 }

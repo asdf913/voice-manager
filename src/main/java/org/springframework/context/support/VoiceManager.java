@@ -180,7 +180,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private JTextComponent tfFolder, tfFile, tfFileLength, tfFileDigest, tfText, tfHiragana, tfKatakana, tfRomaji,
 			tfSpeechRate, tfSource, tfProviderName, tfProviderVersion, tfProviderPlatform, tfSpeechLanguage, tfLanguage,
-			tfSpeechVolume, tfCurrentProcessingSheetName, tfCurrentProcessingVoice, tfTags = null;
+			tfSpeechVolume, tfCurrentProcessingSheetName, tfCurrentProcessingVoice, tfListNames = null;
 
 	private ComboBoxModel<Yomi> cbmYomi = null;
 
@@ -196,7 +196,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private JComboBox<Object> jcbVoiceId = null;
 
-	private JLabel jlTags, jlTagCount = null;
+	private JLabel jlListNames, jlListNameCount = null;
 
 	private DefaultTableModel tmImportException, tmImportResult = null;
 
@@ -587,21 +587,21 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(jcbYomi);
 		//
-		add(new JLabel("Tag(s)"));
+		add(new JLabel("List(s)"));
 		//
-		final String tags = getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.tags");
+		final String tags = getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.listNames");
 		//
-		add(tfTags = new JTextField(tags), String.format("growx,span %1$s", 3));
+		add(tfListNames = new JTextField(tags), String.format("growx,span %1$s", 3));
 		//
-		tfTags.addKeyListener(this);
+		tfListNames.addKeyListener(this);
 		//
-		add(jlTags = new JLabel(), String.format("growx,span %1$s", 5));
+		add(jlListNames = new JLabel(), String.format("growx,span %1$s", 5));
 		//
-		add(jlTagCount = new JLabel(), String.format("growx,%1$s", WRAP));
+		add(jlListNameCount = new JLabel(), String.format("growx,%1$s", WRAP));
 		//
 		if (StringUtils.isNotBlank(tags)) {
 			//
-			keyReleased(new KeyEvent(tfTags, 0, 0, 0, 0, ' '));
+			keyReleased(new KeyEvent(tfListNames, 0, 0, 0, 0, ' '));
 			//
 		} // if
 			//
@@ -2003,7 +2003,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final Object source = getSource(evt);
 		//
-		if (Objects.equals(source, tfTags)) {
+		if (Objects.equals(source, tfListNames)) {
 			//
 			final JTextComponent jtf = cast(JTextComponent.class, source);
 			//
@@ -2015,15 +2015,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				if ((objectMapper = ObjectUtils.getIfNull(objectMapper, ObjectMapper::new)) != null) {
 					//
-					setText(jlTags, objectMapper.writeValueAsString(list));
+					setText(jlListNames, objectMapper.writeValueAsString(list));
 					//
 				} // if
 					//
-				setText(jlTagCount, list != null ? Integer.toString(list.size()) : null);
+				setText(jlListNameCount, list != null ? Integer.toString(list.size()) : null);
 				//
 			} catch (final Exception e) {
 				//
-				accept(x -> setText(x, null), jlTags, jlTagCount);
+				accept(x -> setText(x, null), jlListNames, jlListNameCount);
 				//
 				setBackground(jtf, Color.RED);
 				//
@@ -3456,6 +3456,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		voice.setKatakana(getText(instance.tfKatakana));
 		//
 		voice.setYomi(cast(Yomi.class, getSelectedItem(instance.cbmYomi)));
+		//
+		final List<Object> listNames = getObjectList(getText(instance.tfListNames));
+		//
+		voice.setListNames(listNames != null ? toList(map(listNames.stream(), VoiceManager::toString)) : null);
 		//
 		return voice;
 		//
