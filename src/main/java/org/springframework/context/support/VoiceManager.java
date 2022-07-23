@@ -175,7 +175,7 @@ public class VoiceManager extends JFrame
 
 	private JTextComponent tfFolder, tfFile, tfFileLength, tfFileDigest, tfText, tfHiragana, tfKatakana, tfRomaji,
 			tfSpeechRate, tfSource, tfProviderName, tfProviderVersion, tfProviderPlatform, tfSpeechLanguage, tfLanguage,
-			tfSpeechVolume, tfCurrentProcessingSheetName = null;
+			tfSpeechVolume, tfCurrentProcessingSheetName, tfCurrentProcessingVoice = null;
 
 	private ComboBoxModel<Yomi> cbmYomi = null;
 
@@ -647,6 +647,10 @@ public class VoiceManager extends JFrame
 		//
 		add(tfCurrentProcessingSheetName = new JTextField(), String.format("span %1$s,growx,%2$s", 13, WRAP));
 		//
+		add(new JLabel("Current Processing Voice"), String.format("span %1$s", 2));
+		//
+		add(tfCurrentProcessingVoice = new JTextField(), String.format("span %1$s,growx,%2$s", 13, WRAP));
+		//
 		add(new JLabel("Folder"));
 		//
 		add(tfFolder = new JTextField(folder != null ? folder.getAbsolutePath() : null),
@@ -670,7 +674,7 @@ public class VoiceManager extends JFrame
 				tmImportException = new DefaultTableModel(new Object[] { "Text", "Romaji", "Exception" }, 0))), wrap);
 		//
 		setEditable(false, tfSpeechLanguage, tfProviderName, tfProviderVersion, tfProviderPlatform, tfFolder, tfFile,
-				tfFileLength, tfFileDigest, tfSpeechVolume, tfCurrentProcessingSheetName);
+				tfFileLength, tfFileDigest, tfSpeechVolume, tfCurrentProcessingSheetName, tfCurrentProcessingVoice);
 		//
 		addActionListener(this, btnSpeak, btnWriteVoice, btnExecute, btnConvertToRomaji, btnConvertToKatakana,
 				btnCopyRomaji, btnImportFileTemplate, btnImport, btnExport);
@@ -1147,9 +1151,11 @@ public class VoiceManager extends JFrame
 	@Override
 	public void actionPerformed(final ActionEvent evt) {
 		//
-		final Object source = getSource(evt);
-		//
 		setText(tfCurrentProcessingSheetName, null);
+		//
+		setText(tfCurrentProcessingVoice, null);
+		//
+		final Object source = getSource(evt);
 		//
 		if (Objects.equals(source, btnSpeak)) {
 			//
@@ -1612,6 +1618,8 @@ public class VoiceManager extends JFrame
 					//
 					BiConsumer<Voice, Throwable> throwableConsumer = null;
 					//
+					Consumer<Voice> voiceConsumer = null;
+					//
 					Sheet sheet = null;
 					//
 					clear(tmImportException);
@@ -1678,6 +1686,16 @@ public class VoiceManager extends JFrame
 							//
 						} // if
 							//
+						if (voiceConsumer == null) {
+							//
+							voiceConsumer = v -> {
+								//
+								setText(tfCurrentProcessingVoice, getText(v));
+								//
+							};
+							//
+						} // if
+							//
 						sheet = workbook.getSheetAt(i);
 						//
 						if (progressBar != null) {
@@ -1697,7 +1715,7 @@ public class VoiceManager extends JFrame
 						} // if
 							//
 						importVoice(sheet, objectMap, isSelected(cbHiraganaKatakanaConversion), errorMessageConsumer,
-								throwableConsumer);
+								throwableConsumer, voiceConsumer);
 						//
 						setText(tfCurrentProcessingSheetName, getSheetName(sheet));
 						//
@@ -2493,6 +2511,8 @@ public class VoiceManager extends JFrame
 
 		private BiConsumer<Voice, Throwable> throwableConsumer = null;
 
+		private Consumer<Voice> voiceConsumer = null;
+
 		private Voice voice = null;
 
 		private File file = null;
@@ -2538,6 +2558,8 @@ public class VoiceManager extends JFrame
 						//
 					} // if
 						//
+					accept(voiceConsumer, voice);
+					//
 				} // if
 					//
 			} finally {
@@ -2546,6 +2568,12 @@ public class VoiceManager extends JFrame
 				//
 			} // try
 				//
+		}
+
+		private static <T> void accept(final Consumer<T> instance, final T value) {
+			if (instance != null) {
+				instance.accept(value);
+			}
 		}
 
 	}
@@ -2574,7 +2602,7 @@ public class VoiceManager extends JFrame
 
 	private static void importVoice(final Sheet sheet, final ObjectMap objectMap,
 			final boolean hiraganaKatakanaConversion, final BiConsumer<Voice, String> errorMessageConsumer,
-			final BiConsumer<Voice, Throwable> throwableConsumer)
+			final BiConsumer<Voice, Throwable> throwableConsumer, final Consumer<Voice> voiceConsumer)
 			throws IllegalAccessException, IOException, InvocationTargetException, BaseException {
 		//
 		final File file = ObjectMap.getObject(objectMap, File.class);
@@ -2829,6 +2857,8 @@ public class VoiceManager extends JFrame
 							//
 							it.throwableConsumer = throwableConsumer;
 							//
+							it.voiceConsumer = voiceConsumer;
+							//
 							es.submit(it);
 							//
 						} else {
@@ -2846,6 +2876,12 @@ public class VoiceManager extends JFrame
 							//
 						} // if
 							//
+					} // if
+						//
+					if (voiceConsumer != null) {
+						//
+						voiceConsumer.accept(voice);
+						//
 					} // if
 						//
 				} // for
