@@ -144,7 +144,7 @@ class VoiceManagerTest {
 			METHOD_COPY_OBJECT_MAP, METHOD_DELETE_ON_EXIT, METHOD_CONVERT_LANGUAGE_CODE_TO_TEXT, METHOD_IS_SELECTED,
 			METHOD_SET_HIRAGANA_OR_KATAKANA, METHOD_SET_ROMAJI, METHOD_OR, METHOD_CLEAR, METHOD_EXECUTE, METHOD_PUT,
 			METHOD_GET_BYTE_CONVERTER, METHOD_GET_PROPERTIES, METHOD_GET_CUSTOM_PROPERTIES, METHOD_CONTAINS,
-			METHOD_GET_LPW_STR, METHOD_GET_SHEET_NAME, METHOD_ACCEPT = null;
+			METHOD_GET_LPW_STR, METHOD_GET_SHEET_NAME, METHOD_ACCEPT, METHOD_TO_ARRAY, METHOD_TO_LIST = null;
 
 	@BeforeAll
 	private static void beforeAll() throws ReflectiveOperationException {
@@ -348,6 +348,10 @@ class VoiceManagerTest {
 		(METHOD_ACCEPT = clz.getDeclaredMethod("accept", Consumer.class, Object.class, Object.class, Object[].class))
 				.setAccessible(true);
 		//
+		(METHOD_TO_ARRAY = clz.getDeclaredMethod("toArray", Collection.class, Object[].class)).setAccessible(true);
+		//
+		(METHOD_TO_LIST = clz.getDeclaredMethod("toList", Stream.class)).setAccessible(true);
+		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
 	}
@@ -386,6 +390,8 @@ class VoiceManagerTest {
 		private Map<Object, BeanDefinition> beanDefinitions = null;
 
 		private Map<Object, Object> beanDefinitionAttributes = null;
+
+		private Object[] toArray = null;
 
 		private Map<Object, String> getProperties() {
 			if (properties == null) {
@@ -470,6 +476,14 @@ class VoiceManagerTest {
 				if (Objects.equals(methodName, "searchByTextAndRomaji")) {
 					//
 					return voice;
+					//
+				} // if
+					//
+			} else if (proxy instanceof Collection) {
+				//
+				if (Objects.equals(methodName, "toArray")) {
+					//
+					return toArray;
 					//
 				} // if
 					//
@@ -3011,6 +3025,46 @@ class VoiceManagerTest {
 			throws Throwable {
 		try {
 			METHOD_ACCEPT.invoke(null, action, a, b, values);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testToArray() throws Throwable {
+		//
+		Assertions.assertNull(toArray(null, null));
+		//
+		Assertions.assertNull(toArray(Collections.emptyList(), null));
+		//
+		Assertions.assertNull(toArray(Reflection.newProxy(Collection.class, ih), null));
+		//
+	}
+
+	private static <T> T[] toArray(final Collection<T> instance, final T[] array) throws Throwable {
+		try {
+			return (T[]) METHOD_TO_ARRAY.invoke(null, instance, array);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testToList() throws Throwable {
+		//
+		Assertions.assertNull(toList(null));
+		//
+	}
+
+	private static <T> List<T> toList(final Stream<T> instance) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_LIST.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof List) {
+				return (List) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

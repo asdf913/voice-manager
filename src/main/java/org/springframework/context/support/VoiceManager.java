@@ -295,11 +295,32 @@ public class VoiceManager extends JFrame
 
 	public void setMp3Tags(final Object value) {
 		//
-		if (value == null) {
+		final List<?> list = getObjectList(value);
+		//
+		if (list == null) {
 			//
 			mp3Tags = null;
 			//
-			return;
+		} else {
+			//
+			mp3Tags = toArray(toList(map(list.stream(), VoiceManager::toString)), new String[] {});
+			//
+		} // if
+			//
+	}
+
+	private static <T> T[] toArray(final Collection<T> instance, final T[] array) {
+		//
+		return instance != null && (array != null || Proxy.isProxyClass(getClass(instance))) ? instance.toArray(array)
+				: null;
+		//
+	}
+
+	private static List<Object> getObjectList(final Object value) {
+		//
+		if (value == null) {
+			//
+			return null;
 			//
 		} // if
 			//
@@ -309,25 +330,19 @@ public class VoiceManager extends JFrame
 			//
 			if (iterable.iterator() == null) {
 				//
-				setMp3Tags(null);
-				//
-				return;
+				return null;
 				//
 			} //
 				//
+			List<Object> list = null;
+			//
 			for (final Object v : iterable) {
 				//
-				mp3Tags = ArrayUtils.add(mp3Tags = ObjectUtils.getIfNull(mp3Tags, () -> new String[] {}), toString(v));
+				add(list = ObjectUtils.getIfNull(list, ArrayList::new), v);
 				//
 			} // for
 				//
-			if (mp3Tags == null) {
-				//
-				mp3Tags = new String[] {};
-				//
-			} // if
-				//
-			return;
+			return ObjectUtils.getIfNull(list, ArrayList::new);
 			//
 		} // if
 			//
@@ -337,11 +352,11 @@ public class VoiceManager extends JFrame
 			//
 			if (object instanceof Iterable || object == null) {
 				//
-				setMp3Tags(object);
+				return getObjectList(object);
 				//
 			} else if (object instanceof String || object instanceof Boolean || object instanceof Number) {
 				//
-				setMp3Tags(Collections.singleton(object));
+				return getObjectList(Collections.singleton(object));
 				//
 			} else {
 				//
@@ -350,7 +365,7 @@ public class VoiceManager extends JFrame
 			} // if
 		} catch (final JsonProcessingException e) {
 			//
-			setMp3Tags(Collections.singleton(value));
+			return getObjectList(Collections.singleton(value));
 			//
 		} // try
 			//
@@ -453,12 +468,8 @@ public class VoiceManager extends JFrame
 			//
 		if (voiceIds != null) {
 			//
-			final List<?> temp = collect(
-					filter(Arrays.stream(voiceIds),
-							x -> Objects.equals(x,
-									getProperty(propertyResolver,
-											"org.springframework.context.support.VoiceManager.voiceId"))),
-					Collectors.toList());
+			final List<?> temp = toList(filter(Arrays.stream(voiceIds), x -> Objects.equals(x,
+					getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.voiceId"))));
 			//
 			if (temp != null && !temp.isEmpty()) {
 				//
@@ -567,12 +578,9 @@ public class VoiceManager extends JFrame
 		//
 		add(jcbYomi, String.format("span %1$s,%2$s", 9, WRAP));
 		//
-		final List<Yomi> yomiList = collect(
-				filter(testAndApply(Objects::nonNull, yomis, Arrays::stream, null),
-						y -> Objects.equals(name(y),
-								getProperty(propertyResolver,
-										"org.springframework.context.support.VoiceManager.yomi"))),
-				Collectors.toList());
+		final List<Yomi> yomiList = toList(
+				filter(testAndApply(Objects::nonNull, yomis, Arrays::stream, null), y -> Objects.equals(name(y),
+						getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.yomi"))));
 		//
 		final int size = yomiList != null ? yomiList.size() : 0;
 		//
@@ -720,19 +728,18 @@ public class VoiceManager extends JFrame
 		//
 		final Class<?> nameClass = forName("domain.Voice$Name");
 		//
-		final List<Pair<String, String>> pairs = collect(
+		final List<Pair<String, String>> pairs = toList(
 				//
 				filter(map(testAndApply(Objects::nonNull, Yomi.class.getDeclaredFields(), Arrays::stream, null), f -> {
 					//
-					final List<Object> objects = collect(
+					final List<Object> objects = toList(
 							map(filter(testAndApply(Objects::nonNull, getDeclaredAnnotations(f), Arrays::stream, null),
 									a -> Objects.equals(annotationType(a), nameClass)), a -> {
 										//
-										final List<Method> ms = collect(
-												filter(testAndApply(Objects::nonNull,
-														getDeclaredMethods(annotationType(a)), Arrays::stream, null),
-														ma -> Objects.equals(getName(ma), "value")),
-												Collectors.toList());
+										final List<Method> ms = toList(filter(
+												testAndApply(Objects::nonNull, getDeclaredMethods(annotationType(a)),
+														Arrays::stream, null),
+												ma -> Objects.equals(getName(ma), "value")));
 										//
 										if (ms == null || ms.isEmpty()) {
 											//
@@ -794,8 +801,7 @@ public class VoiceManager extends JFrame
 											//
 										throw new IllegalStateException();
 										//
-									}),
-							Collectors.toList());
+									}));
 					//
 					if (objects == null || objects.isEmpty()) {
 						//
@@ -811,7 +817,7 @@ public class VoiceManager extends JFrame
 						//
 					throw new IllegalStateException();
 					//
-				}), Objects::nonNull), Collectors.toList());
+				}), Objects::nonNull));
 
 		//
 		Pair<String, String> pair = null;
@@ -896,10 +902,9 @@ public class VoiceManager extends JFrame
 					//
 					if (Objects.equals(simpleName, "MinValue") || Objects.equals(simpleName, "MaxValue")) {
 						//
-						final List<Method> temp = collect(
+						final List<Method> temp = toList(
 								filter(testAndApply(Objects::nonNull, getDeclaredMethods(annotationType(a)),
-										Arrays::stream, null), ma -> Objects.equals(getName(ma), "name")),
-								Collectors.toList());
+										Arrays::stream, null), ma -> Objects.equals(getName(ma), "name")));
 						//
 						if (temp == null || temp.isEmpty()) {
 							//
@@ -961,9 +966,9 @@ public class VoiceManager extends JFrame
 					//
 				}), Collectors.toMap(a -> getSimpleName(annotationType(a)), a -> {
 					//
-					final List<Method> temp = collect(filter(
+					final List<Method> temp = toList(filter(
 							testAndApply(Objects::nonNull, getDeclaredMethods(annotationType(a)), Arrays::stream, null),
-							ma -> Objects.equals(getName(ma), "value")), Collectors.toList());
+							ma -> Objects.equals(getName(ma), "value")));
 					//
 					if (temp == null || temp.isEmpty()) {
 						//
@@ -2064,8 +2069,8 @@ public class VoiceManager extends JFrame
 
 	private static String convertLanguageCodeToText(final LocaleID[] enums, final Integer value) {
 		//
-		final List<LocaleID> localeIds = collect(filter(testAndApply(Objects::nonNull, enums, Arrays::stream, null),
-				a -> a != null && Objects.equals(Integer.valueOf(a.getLcid()), value)), Collectors.toList());
+		final List<LocaleID> localeIds = toList(filter(testAndApply(Objects::nonNull, enums, Arrays::stream, null),
+				a -> a != null && Objects.equals(Integer.valueOf(a.getLcid()), value)));
 		//
 		if (localeIds != null && !localeIds.isEmpty()) {
 			//
@@ -2175,12 +2180,12 @@ public class VoiceManager extends JFrame
 				//
 				final String attribute = attributes[i];
 				//
-				if ((methods = collect(filter(testAndApply(Objects::nonNull,
+				if ((methods = toList(filter(testAndApply(Objects::nonNull,
 						ms = ObjectUtils.getIfNull(ms, () -> getMethods(getClass(id3v1))), Arrays::stream, null),
 						a -> matches(
 								matcher(Pattern.compile(String.format("get%1$s", StringUtils.capitalize(attribute))),
-										getName(a)))),
-						Collectors.toList())) == null || methods.isEmpty()) {
+										getName(a)))))) == null
+						|| methods.isEmpty()) {
 					//
 					continue;
 					//
@@ -2398,12 +2403,11 @@ public class VoiceManager extends JFrame
 		//
 		if (rate == null) {
 			//
-			final List<Field> fs = collect(filter(
+			final List<Field> fs = toList(filter(
 					testAndApply(Objects::nonNull, Integer.class.getDeclaredFields(), Arrays::stream, null),
 					f -> f != null
 							&& (Number.class.isAssignableFrom(f.getType()) || Objects.equals(Integer.TYPE, f.getType()))
-							&& Objects.equals(getName(f), string)),
-					Collectors.toList());
+							&& Objects.equals(getName(f), string)));
 			//
 			if (fs != null && !fs.isEmpty()) {
 				//
@@ -2479,11 +2483,10 @@ public class VoiceManager extends JFrame
 		//
 		final Class<?> importFieldClass = forName("domain.Voice$ImportField");
 		//
-		final List<Field> fs = collect(
+		final List<Field> fs = toList(
 				filter(testAndApply(Objects::nonNull, FieldUtils.getAllFields(Voice.class), Arrays::stream, null),
 						f -> anyMatch(testAndApply(Objects::nonNull, getDeclaredAnnotations(f), Arrays::stream, null),
-								a -> Objects.equals(annotationType(a), importFieldClass))),
-				Collectors.toList());
+								a -> Objects.equals(annotationType(a), importFieldClass))));
 		//
 		Field f = null;
 		//
@@ -2568,6 +2571,12 @@ public class VoiceManager extends JFrame
 		return instance != null && (collector != null || Proxy.isProxyClass(getClass(instance)))
 				? instance.collect(collector)
 				: null;
+		//
+	}
+
+	private static <T> List<T> toList(final Stream<T> instance) {
+		//
+		return instance != null ? instance.toList() : null;
 		//
 	}
 
@@ -2788,12 +2797,9 @@ public class VoiceManager extends JFrame
 									//
 								f.set(voice = ObjectUtils.getIfNull(voice, Voice::new), string);
 								//
-							} else if (type != null && Enum.class.isAssignableFrom(type)
-									&& (list = collect(filter(
-											testAndApply(Objects::nonNull, type.getEnumConstants(), Arrays::stream,
-													null),
-											e -> Objects.equals(name(cast(Enum.class, e)), cell.getStringCellValue())),
-											Collectors.toList())) != null
+							} else if (type != null && Enum.class.isAssignableFrom(type) && (list = toList(filter(
+									testAndApply(Objects::nonNull, type.getEnumConstants(), Arrays::stream, null),
+									e -> Objects.equals(name(cast(Enum.class, e)), cell.getStringCellValue())))) != null
 									&& !list.isEmpty()) {
 								//
 								if (list.size() == 1) {
@@ -3831,8 +3837,8 @@ public class VoiceManager extends JFrame
 				//
 		} // try
 			//
-		final List<String> fieldNames = collect(
-				map(Arrays.stream(FieldUtils.getAllFields(Voice.class)), VoiceManager::getName), Collectors.toList());
+		final List<String> fieldNames = toList(
+				map(Arrays.stream(FieldUtils.getAllFields(Voice.class)), VoiceManager::getName));
 		//
 		String fieldName = null;
 		//
