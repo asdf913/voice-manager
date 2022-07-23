@@ -595,16 +595,16 @@ public class VoiceManager extends JFrame
 		add(new JLabel("Hiragana"));
 		//
 		add(tfHiragana = new JTextField(
-				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.hiragana")), span);
+				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.hiragana")),
+				String.format("spanx %1$s,growx", 5));
 		//
-		add(btnConvertToKatakana = new JButton("Convert"), WRAP);
+		add(btnConvertToKatakana = new JButton("Convert"));
 		//
 		add(new JLabel("Katakana"));
 		//
-		String wrap = String.format("span %1$s,growx,%2$s", 11, WRAP);
-		//
 		add(tfKatakana = new JTextField(
-				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.katakana")), wrap);
+				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.katakana")),
+				String.format("spanx %1$s,growx,%2$s", 5, WRAP));
 		//
 		add(new JLabel());
 		//
@@ -658,6 +658,8 @@ public class VoiceManager extends JFrame
 		final File folder = testAndApply(StringUtils::isNotBlank, this.voiceFolder, File::new, null);
 		//
 		add(new JLabel("Folder"));
+		//
+		String wrap = String.format("span %1$s,growx,%2$s", 11, WRAP);
 		//
 		add(tfFolder = new JTextField(folder != null ? folder.getAbsolutePath() : null),
 				wrap = String.format("span %1$s,growx,%2$s", 14, WRAP));
