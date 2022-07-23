@@ -48,6 +48,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
@@ -175,7 +176,7 @@ public class VoiceManager extends JFrame
 
 	private JTextComponent tfFolder, tfFile, tfFileLength, tfFileDigest, tfText, tfHiragana, tfKatakana, tfRomaji,
 			tfSpeechRate, tfSource, tfProviderName, tfProviderVersion, tfProviderPlatform, tfSpeechLanguage, tfLanguage,
-			tfSpeechVolume, tfCurrentProcessingSheetName, tfCurrentProcessingVoice, tfNumberOfSheetProceeded = null;
+			tfSpeechVolume, tfCurrentProcessingSheetName, tfCurrentProcessingVoice = null;
 
 	private ComboBoxModel<Yomi> cbmYomi = null;
 
@@ -191,7 +192,7 @@ public class VoiceManager extends JFrame
 
 	private JComboBox<Object> jcbVoiceId = null;
 
-	private DefaultTableModel tmImportException = null;
+	private DefaultTableModel tmImportException, tmImportResult = null;
 
 	private SqlSessionFactory sqlSessionFactory = null;
 
@@ -360,13 +361,21 @@ public class VoiceManager extends JFrame
 
 	private void init() {
 		//
-		final File folder = testAndApply(StringUtils::isNotBlank, this.voiceFolder, File::new, null);
+		// Language
 		//
 		add(new JLabel("Language"));
 		//
 		add(tfLanguage = new JTextField(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.language")),
-				String.format("spanx %1$s,growx,%2$s", 11, WRAP));
+				String.format("spanx %1$s,growx", 5));
+		//
+		// source
+		//
+		add(new JLabel("Source"));
+		//
+		add(tfSource = new JTextField(
+				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.source")),
+				String.format("spanx %1$s,growx,%2$s", 5, WRAP));
 		//
 		add(new JLabel("Text"));
 		//
@@ -376,14 +385,6 @@ public class VoiceManager extends JFrame
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.text")), span);
 		//
 		add(btnConvertToRomaji = new JButton("Convert To Romaji"), String.format("span %1$s,%2$s", 3, WRAP));
-		//
-		// source
-		//
-		add(new JLabel("Source"));
-		//
-		add(tfSource = new JTextField(
-				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.source")),
-				String.format("spanx %1$s,growx,%2$s", 11, WRAP));
 		//
 		// Provider
 		//
@@ -645,15 +646,13 @@ public class VoiceManager extends JFrame
 		//
 		add(new JLabel("Current Processing Sheet"), String.format("span %1$s", 2));
 		//
-		add(tfCurrentProcessingSheetName = new JTextField(), wrap = String.format("span %1$s,growx,%2$s", 13, WRAP));
+		add(tfCurrentProcessingSheetName = new JTextField(), String.format("span %1$s,growx", 6));
 		//
-		add(new JLabel("Current Processing Voice"), String.format("span %1$s", 2));
+		add(new JLabel("Voice"));
 		//
-		add(tfCurrentProcessingVoice = new JTextField(), wrap);
+		add(tfCurrentProcessingVoice = new JTextField(), String.format("span %1$s,growx,%2$s", 6, WRAP));
 		//
-		add(new JLabel("Number of Sheet Processed"), String.format("span %1$s", 2));
-		//
-		add(tfNumberOfSheetProceeded = new JTextField(), wrap);
+		final File folder = testAndApply(StringUtils::isNotBlank, this.voiceFolder, File::new, null);
 		//
 		add(new JLabel("Folder"));
 		//
@@ -662,15 +661,20 @@ public class VoiceManager extends JFrame
 		//
 		add(new JLabel("File"));
 		//
-		add(tfFile = new JTextField(), wrap);
+		add(tfFile = new JTextField(), String.format("span %1$s,growx", 7));
 		//
-		add(new JLabel("File Length"));
+		add(new JLabel("Length"));
 		//
-		add(tfFileLength = new JTextField(), wrap);
+		add(tfFileLength = new JTextField(), String.format("span %1$s,growx,%2$s", 6, WRAP));
 		//
 		add(new JLabel("File Digest"));
 		//
 		add(tfFileDigest = new JTextField(), wrap);
+		//
+		add(new JLabel("Import Result"));
+		//
+		add(new JScrollPane(new JTable(tmImportResult = new DefaultTableModel(
+				new Object[] { "Number Of Sheet Processed", "Number of Voice Processed" }, 0))), wrap);
 		//
 		add(new JLabel("Import Exception"));
 		//
@@ -678,8 +682,7 @@ public class VoiceManager extends JFrame
 				tmImportException = new DefaultTableModel(new Object[] { "Text", "Romaji", "Exception" }, 0))), wrap);
 		//
 		setEditable(false, tfSpeechLanguage, tfProviderName, tfProviderVersion, tfProviderPlatform, tfFolder, tfFile,
-				tfFileLength, tfFileDigest, tfSpeechVolume, tfCurrentProcessingSheetName, tfCurrentProcessingVoice,
-				tfNumberOfSheetProceeded);
+				tfFileLength, tfFileDigest, tfSpeechVolume, tfCurrentProcessingSheetName, tfCurrentProcessingVoice);
 		//
 		addActionListener(this, btnSpeak, btnWriteVoice, btnExecute, btnConvertToRomaji, btnConvertToKatakana,
 				btnCopyRomaji, btnImportFileTemplate, btnImport, btnExport);
@@ -1156,7 +1159,9 @@ public class VoiceManager extends JFrame
 	@Override
 	public void actionPerformed(final ActionEvent evt) {
 		//
-		accept(x -> setText(x, null), tfCurrentProcessingSheetName, tfCurrentProcessingVoice, tfNumberOfSheetProceeded);
+		accept(x -> setText(x, null), tfCurrentProcessingSheetName, tfCurrentProcessingVoice);
+		//
+		clear(tmImportResult);
 		//
 		final Object source = getSource(evt);
 		//
@@ -1625,9 +1630,11 @@ public class VoiceManager extends JFrame
 					//
 					Sheet sheet = null;
 					//
-					clear(tmImportException);
+					accept(VoiceManager::clear, tmImportResult, tmImportException);
 					//
 					Integer numberOfSheetProcessed = null;
+					//
+					final AtomicInteger numberOfVoiceProcessed = new AtomicInteger();
 					//
 					for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
 						//
@@ -1697,6 +1704,12 @@ public class VoiceManager extends JFrame
 								//
 								setText(tfCurrentProcessingVoice, getText(v));
 								//
+								if (numberOfVoiceProcessed != null) {
+									//
+									numberOfVoiceProcessed.incrementAndGet();
+									//
+								} // if
+									//
 							};
 							//
 						} // if
@@ -1728,8 +1741,12 @@ public class VoiceManager extends JFrame
 						//
 					} // for
 						//
-					setText(tfNumberOfSheetProceeded, toString(numberOfSheetProcessed));
-					//
+					if (tmImportResult != null) {
+						//
+						tmImportResult.addRow(new Object[] { numberOfSheetProcessed, numberOfVoiceProcessed });
+						//
+					} // if
+						//
 				} catch (final InvalidFormatException | IOException | IllegalAccessException | BaseException e) {
 					//
 					if (GraphicsEnvironment.isHeadless()) {
@@ -1773,6 +1790,10 @@ public class VoiceManager extends JFrame
 				//
 		} // if
 			//
+	}
+
+	private static <A> A getValue0(final Unit<A> instance) {
+		return instance != null ? instance.getValue0() : null;
 	}
 
 	private static <T> void accept(final Consumer<? super T> action, final T a, final T b, final T... values) {
@@ -1888,7 +1909,7 @@ public class VoiceManager extends JFrame
 				//
 		} // if
 			//
-		return byteConverter != null ? byteConverter.getValue0() : null;
+		return getValue0(byteConverter);
 		//
 	}
 
@@ -2897,11 +2918,11 @@ public class VoiceManager extends JFrame
 								//
 							importVoice(objectMap, errorMessageConsumer, throwableConsumer);
 							//
+							accept(voiceConsumer, voice);
+							//
 						} // if
 							//
 					} // if
-						//
-						accept(voiceConsumer,voice);
 						//
 				} // for
 					//
