@@ -90,6 +90,14 @@ public class Voice {
 	@DateFormat("yyyy-MM-dd HH:mm:ss Z")
 	private Date updateTs = null;
 
+	public void setId(final Integer id) {
+		this.id = id;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
 	public void setLanguage(final String language) {
 		this.language = language;
 	}

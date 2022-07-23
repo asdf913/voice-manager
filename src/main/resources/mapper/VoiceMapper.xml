@@ -15,13 +15,13 @@
 
 	<select id="retrieveAll" resultMap="resultMapVoice">
 		select
-		language,text,source,yomi,romaji,hiragana,katakana,file_path,file_length,file_digest_algorithm,file_digest,file_extension,create_ts,update_ts
+		id,language,text,source,yomi,romaji,hiragana,katakana,file_path,file_length,file_digest_algorithm,file_digest,file_extension,create_ts,update_ts
 		from voice
 	</select>
 
 	<select id="searchByTextAndRomaji" resultMap="resultMapVoice">
 		select
-		language,text,source,yomi,romaji,hiragana,katakana,file_path,file_length,file_digest_algorithm,file_digest,file_extension,create_ts,update_ts
+		id,language,text,source,yomi,romaji,hiragana,katakana,file_path,file_length,file_digest_algorithm,file_digest,file_extension,create_ts,update_ts
 		from voice
 		<where>
 			true
@@ -59,6 +59,7 @@
 			</set>
 			<where>
 				true
+				<if test="voice.id==null">and id=#{voice.id}</if>
 				<if test="voice.text==null">and text is null</if>
 				<if test="voice.text!=null">and text=#{voice.text}</if>
 				<if test="voice.romaji==null">and romaji is null</if>

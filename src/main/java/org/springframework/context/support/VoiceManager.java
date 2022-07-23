@@ -4024,9 +4024,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		if (instance != null) {
 			//
-			if (instance.searchByTextAndRomaji(getText(voice), getRomaji(voice)) != null) {
+			final Voice voiceOld = instance.searchByTextAndRomaji(getText(voice), getRomaji(voice));
+			//
+			if (voiceOld != null) {
 				//
 				if (voice != null) {
+					//
+					voice.setId(voiceOld.getId());
 					//
 					voice.setUpdateTs(new Date());
 					//
