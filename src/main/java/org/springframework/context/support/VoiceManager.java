@@ -1602,6 +1602,8 @@ public class VoiceManager extends JFrame
 					//
 					final ObjectMap objectMap = Reflection.newProxy(ObjectMap.class, new IH());
 					//
+					final POIXMLDocument poiXmlDocument = cast(POIXMLDocument.class, workbook);
+					//
 					if (objectMap != null) {
 						//
 						objectMap.setObject(File.class, selectedFile);
@@ -1617,6 +1619,8 @@ public class VoiceManager extends JFrame
 						objectMap.setObject(Provider.class, cast(Provider.class, speechApi));
 						//
 						objectMap.setObject(SpeechApi.class, speechApi);
+						//
+						objectMap.setObject(POIXMLDocument.class, poiXmlDocument);
 						//
 					} // if
 						//
@@ -1725,15 +1729,15 @@ public class VoiceManager extends JFrame
 							//
 						if (objectMap != null) {
 							//
-							objectMap.setObject(ByteConverter.class, getByteConverter(configurableListableBeanFactory,
-									getLpwstr(testAndApply(VoiceManager::contains,
-											getCustomProperties(getProperties(cast(POIXMLDocument.class, workbook))),
-											"audioFormat", VoiceManager::getProperty, null))));
+							objectMap.setObject(ByteConverter.class,
+									getByteConverter(configurableListableBeanFactory,
+											getLpwstr(testAndApply(VoiceManager::contains,
+													getCustomProperties(getProperties(poiXmlDocument)), "audioFormat",
+													VoiceManager::getProperty, null))));
 							//
 						} // if
 							//
-						importVoice(sheet, objectMap, isSelected(cbHiraganaKatakanaConversion), errorMessageConsumer,
-								throwableConsumer, voiceConsumer);
+						importVoice(sheet, objectMap, errorMessageConsumer, throwableConsumer, voiceConsumer);
 						//
 						setText(tfCurrentProcessingSheetName, getSheetName(sheet));
 						//
@@ -2645,8 +2649,8 @@ public class VoiceManager extends JFrame
 	}
 
 	private static void importVoice(final Sheet sheet, final ObjectMap objectMap,
-			final boolean hiraganaKatakanaConversion, final BiConsumer<Voice, String> errorMessageConsumer,
-			final BiConsumer<Voice, Throwable> throwableConsumer, final Consumer<Voice> voiceConsumer)
+			final BiConsumer<Voice, String> errorMessageConsumer, final BiConsumer<Voice, Throwable> throwableConsumer,
+			final Consumer<Voice> voiceConsumer)
 			throws IllegalAccessException, IOException, InvocationTargetException, BaseException {
 		//
 		final File file = ObjectMap.getObject(objectMap, File.class);
@@ -2695,6 +2699,26 @@ public class VoiceManager extends JFrame
 				//
 				ByteConverter byteConverter = null;
 				//
+				final CTProperty ctProperty = testAndApply(VoiceManager::contains,
+						getCustomProperties(getProperties(ObjectMap.getObject(objectMap, POIXMLDocument.class))),
+						"hiraganaKatakanaConversion", VoiceManager::getProperty, null);
+				//
+				final Boolean B = ctProperty != null ? ctProperty.getBool() : null;
+				//
+				boolean hiraganaKatakanaConversion = false;
+				//
+				final String lLpwstr = getLpwstr(ctProperty);
+				//
+				if (StringUtils.isNotBlank(lLpwstr)) {
+					//
+					hiraganaKatakanaConversion = Boolean.valueOf(lLpwstr);
+					//
+				} else if (B != null) {
+					//
+					hiraganaKatakanaConversion = B.booleanValue();
+					//
+				} // if
+					//
 				for (final Row row : sheet) {
 					//
 					if (row == null || row.iterator() == null) {
