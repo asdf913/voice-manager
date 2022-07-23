@@ -202,4 +202,8 @@ public class Voice {
 		this.listNames = listNames;
 	}
 
+	public Iterable<String> getListNames() {
+		return listNames;
+	}
+
 }

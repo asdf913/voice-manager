@@ -151,6 +151,7 @@ import com.mpatric.mp3agic.Mp3File;
 
 import domain.Voice;
 import domain.Voice.Yomi;
+import domain.VoiceList;
 import fr.free.nrw.jakaroma.Jakaroma;
 import mapper.VoiceMapper;
 import net.miginfocom.swing.MigLayout;
@@ -4048,6 +4049,26 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				instance.insertVoice(voice);
 				//
+			} // if
+				//
+			final Iterable<String> listNames = voice != null ? voice.getListNames() : null;
+			//
+			if (listNames != null && listNames.iterator() != null) {
+				//
+				VoiceList voiceList = null;
+				//
+				for (final String listName : listNames) {
+					//
+					if ((instance.searchVoiceListByName(listName)) == null) {
+						//
+						(voiceList = new VoiceList()).setName(listName);
+						//
+						instance.insertVoiceList(voiceList);
+						//
+					} // if
+						//
+				} // for
+					//
 			} // if
 				//
 		} // if

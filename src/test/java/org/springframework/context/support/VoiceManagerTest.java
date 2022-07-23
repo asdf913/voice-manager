@@ -119,6 +119,7 @@ import com.mpatric.mp3agic.ID3v1;
 
 import domain.Voice;
 import domain.Voice.Yomi;
+import domain.VoiceList;
 import fr.free.nrw.jakaroma.Jakaroma;
 import mapper.VoiceMapper;
 import net.miginfocom.swing.MigLayout;
@@ -394,6 +395,8 @@ class VoiceManagerTest {
 
 		private Object[] toArray = null;
 
+		private VoiceList voiceList = null;
+
 		private Map<Object, String> getProperties() {
 			if (properties == null) {
 				properties = new LinkedHashMap<>();
@@ -477,6 +480,10 @@ class VoiceManagerTest {
 				if (Objects.equals(methodName, "searchByTextAndRomaji")) {
 					//
 					return voice;
+					//
+				} else if (Objects.equals(methodName, "searchVoiceListByName")) {
+					//
+					return voiceList;
 					//
 				} // if
 					//
@@ -1227,6 +1234,18 @@ class VoiceManagerTest {
 		ih.voice = new Voice();
 		//
 		Assertions.assertDoesNotThrow(() -> insertOrUpdate(voiceMapper, null));
+		//
+		Assertions.assertDoesNotThrow(() -> insertOrUpdate(voiceMapper, voice));
+		//
+		voice.setListNames(Reflection.newProxy(Iterable.class, ih));
+		//
+		Assertions.assertDoesNotThrow(() -> insertOrUpdate(voiceMapper, voice));
+		//
+		voice.setListNames(Collections.singleton(null));
+		//
+		Assertions.assertDoesNotThrow(() -> insertOrUpdate(voiceMapper, voice));
+		//
+		ih.voiceList = new VoiceList();
 		//
 		Assertions.assertDoesNotThrow(() -> insertOrUpdate(voiceMapper, voice));
 		//

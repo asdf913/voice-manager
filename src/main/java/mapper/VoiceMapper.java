@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import domain.Voice;
+import domain.VoiceList;
 
 public interface VoiceMapper {
 
@@ -15,5 +16,9 @@ public interface VoiceMapper {
 	Voice searchByTextAndRomaji(@Param("text") final String text, @Param("romaji") final String romaji);
 
 	List<Voice> retrieveAllVoices();
+
+	VoiceList searchVoiceListByName(final String name);
+
+	void insertVoiceList(@Param("voiceList") final VoiceList voiceList);
 
 }
