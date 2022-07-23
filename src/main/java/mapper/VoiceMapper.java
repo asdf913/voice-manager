@@ -10,7 +10,7 @@ public interface VoiceMapper {
 
 	void insertVoice(@Param("voice") final Voice voice);
 
-	void update(@Param("voice") final Voice voice);
+	void updateVoice(@Param("voice") final Voice voice);
 
 	Voice searchByTextAndRomaji(@Param("text") final String text, @Param("romaji") final String romaji);
 

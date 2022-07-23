@@ -39,7 +39,7 @@
 		</if>
 	</insert>
 
-	<update id="update">
+	<update id="updateVoice">
 		<if test="voice!=null">
 			update voice
 			<set>
