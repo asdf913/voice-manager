@@ -1659,6 +1659,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					final POIXMLDocument poiXmlDocument = cast(POIXMLDocument.class, workbook);
 					//
+					final List<String> sheetExclued = toList(map(
+							stream(getObjectList(objectMapper = ObjectUtils.getIfNull(objectMapper, ObjectMapper::new),
+									getLpwstr(testAndApply(VoiceManager::contains,
+											getCustomProperties(getProperties(poiXmlDocument)), "sheetExcluded",
+											VoiceManager::getProperty, null)))),
+							VoiceManager::toString));
+					//
 					if (objectMap != null) {
 						//
 						objectMap.setObject(File.class, selectedFile);
@@ -1775,8 +1782,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 						} // if
 							//
-						sheet = workbook.getSheetAt(i);
-						//
+						if (contains(sheetExclued, getSheetName(sheet = workbook.getSheetAt(i)))) {
+							//
+							continue;
+							//
+						} // if
+							//
 						if (progressBar != null) {
 							//
 							progressBar
@@ -1851,6 +1862,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
+	}
+
+	private static boolean contains(final Collection<?> items, final Object item) {
+		return items != null && items.contains(item);
 	}
 
 	private static <A> A getValue0(final Unit<A> instance) {

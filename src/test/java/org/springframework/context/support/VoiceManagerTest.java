@@ -147,9 +147,9 @@ class VoiceManagerTest {
 			METHOD_GET_MP3_TAG_VALUE_LIST, METHOD_GET_MP3_TAG_PARIRS_ID3V1, METHOD_GET_METHODS, METHOD_GET_SIMPLE_NAME,
 			METHOD_COPY_OBJECT_MAP, METHOD_DELETE_ON_EXIT, METHOD_CONVERT_LANGUAGE_CODE_TO_TEXT, METHOD_IS_SELECTED,
 			METHOD_SET_HIRAGANA_OR_KATAKANA, METHOD_SET_ROMAJI, METHOD_OR, METHOD_CLEAR, METHOD_EXECUTE, METHOD_PUT,
-			METHOD_GET_BYTE_CONVERTER, METHOD_GET_PROPERTIES, METHOD_GET_CUSTOM_PROPERTIES, METHOD_CONTAINS,
-			METHOD_GET_LPW_STR, METHOD_GET_SHEET_NAME, METHOD_ACCEPT, METHOD_TO_ARRAY, METHOD_TO_LIST,
-			METHOD_GET_ID = null;
+			METHOD_GET_BYTE_CONVERTER, METHOD_GET_PROPERTIES, METHOD_GET_CUSTOM_PROPERTIES,
+			METHOD_CONTAINS_CUSTOM_PROPERTIES, METHOD_CONTAINS_COLLECTION, METHOD_GET_LPW_STR, METHOD_GET_SHEET_NAME,
+			METHOD_ACCEPT, METHOD_TO_ARRAY, METHOD_TO_LIST, METHOD_GET_ID = null;
 
 	@BeforeAll
 	private static void beforeAll() throws ReflectiveOperationException {
@@ -343,7 +343,11 @@ class VoiceManagerTest {
 		(METHOD_GET_CUSTOM_PROPERTIES = clz.getDeclaredMethod("getCustomProperties", POIXMLProperties.class))
 				.setAccessible(true);
 		//
-		(METHOD_CONTAINS = clz.getDeclaredMethod("contains", CustomProperties.class, String.class)).setAccessible(true);
+		(METHOD_CONTAINS_CUSTOM_PROPERTIES = clz.getDeclaredMethod("contains", CustomProperties.class, String.class))
+				.setAccessible(true);
+		//
+		(METHOD_CONTAINS_COLLECTION = clz.getDeclaredMethod("contains", Collection.class, Object.class))
+				.setAccessible(true);
 		//
 		(METHOD_GET_LPW_STR = clz.getDeclaredMethod("getLpwstr", CTProperty.class)).setAccessible(true);
 		//
@@ -383,7 +387,7 @@ class VoiceManagerTest {
 
 		private Iterator<Cell> cells = null;
 
-		private Boolean anyMatch = null;
+		private Boolean anyMatch, contains = null;
 
 		private String[] voiceIds = null;
 
@@ -496,6 +500,10 @@ class VoiceManagerTest {
 				if (Objects.equals(methodName, "toArray")) {
 					//
 					return toArray;
+					//
+				} else if (Objects.equals(methodName, "contains")) {
+					//
+					return contains;
 					//
 				} // if
 					//
@@ -3020,11 +3028,31 @@ class VoiceManagerTest {
 			//
 		} // try
 			//
+		Assertions.assertFalse(contains((Collection<?>) null, null));
+		//
+		final Collection<?> collection = Reflection.newProxy(Collection.class, ih);
+		//
+		Assertions.assertEquals(ih.contains = Boolean.FALSE, Boolean.valueOf(contains(collection, null)));
+		//
+		Assertions.assertEquals(ih.contains = Boolean.TRUE, Boolean.valueOf(contains(collection, null)));
+		//
 	}
 
 	private static boolean contains(final CustomProperties instance, final String name) throws Throwable {
 		try {
-			final Object obj = METHOD_CONTAINS.invoke(null, instance, name);
+			final Object obj = METHOD_CONTAINS_CUSTOM_PROPERTIES.invoke(null, instance, name);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static boolean contains(final Collection<?> items, final Object item) throws Throwable {
+		try {
+			final Object obj = METHOD_CONTAINS_COLLECTION.invoke(null, items, item);
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
