@@ -189,7 +189,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private AbstractButton btnSpeak, cbWriteVoiceAsFlac, btnWriteVoice, btnConvertToRomaji, btnConvertToKatakana,
 			btnCopyRomaji, btnCopyHiragana, btnCopyKatakana, cbUseTtsVoice, cbConvertToFlac, btnExecute,
-			btnImportFileTemplate, cbHiraganaKatakanaConversion, btnImport, cbOverMp3Title, btnExport = null;
+			btnImportFileTemplate, btnImport, cbOverMp3Title, btnExport = null;
 
 	private JProgressBar progressBar = null;
 
@@ -670,12 +670,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		add(btnExport = new JButton("Export"), WRAP);
 		//
 		add(new JLabel("Import"));
-		//
-		add(cbHiraganaKatakanaConversion = new JCheckBox("Hiragana / Katakana Conversion"),
-				String.format("span %1$s", 2));
-		//
-		cbHiraganaKatakanaConversion.setSelected(Boolean.parseBoolean(getProperty(propertyResolver,
-				"org.springframework.context.support.VoiceManager.hiraganaKatakanaConversion")));
 		//
 		add(btnImport = new JButton("Import"), WRAP);
 		//
