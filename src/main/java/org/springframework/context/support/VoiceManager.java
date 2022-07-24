@@ -284,10 +284,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
-		objectMapper = ObjectUtils.getIfNull(objectMapper, ObjectMapper::new);
-		//
 		final Object object = testAndApply(StringUtils::isNotEmpty, toString(value),
-				x -> objectMapper != null ? objectMapper.readValue(x, Object.class) : null, null);
+				x -> (objectMapper = ObjectUtils.getIfNull(objectMapper, ObjectMapper::new)) != null
+						? objectMapper.readValue(x, Object.class)
+						: null,
+				null);
 		//
 		if (object instanceof Map || object == null) {
 			setOutputFolderFileNameExpressions(object);
@@ -305,7 +306,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	public void setMp3Tags(final Object value) {
 		//
-		mp3Tags = toArray(toList(map(stream(getObjectList(value)), VoiceManager::toString)), new String[] {});
+		mp3Tags = toArray(toList(
+				map(stream(getObjectList(objectMapper = ObjectUtils.getIfNull(objectMapper, ObjectMapper::new), value)),
+						VoiceManager::toString)),
+				new String[] {});
 		//
 	}
 
@@ -320,7 +324,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static List<Object> getObjectList(final Object value) {
+	private static List<Object> getObjectList(final ObjectMapper objectMapper, final Object value) {
 		//
 		if (value == null) {
 			//
@@ -352,15 +356,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		try {
 			//
-			final Object object = new ObjectMapper().readValue(toString(value), Object.class);
+			final Object object = objectMapper != null ? objectMapper.readValue(toString(value), Object.class) : null;
 			//
 			if (object instanceof Iterable || object == null) {
 				//
-				return getObjectList(object);
+				return getObjectList(objectMapper, object);
 				//
 			} else if (object instanceof String || object instanceof Boolean || object instanceof Number) {
 				//
-				return getObjectList(Collections.singleton(object));
+				return getObjectList(objectMapper, Collections.singleton(object));
 				//
 			} else {
 				//
@@ -369,7 +373,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			} // if
 		} catch (final JsonProcessingException e) {
 			//
-			return getObjectList(Collections.singleton(value));
+			return getObjectList(objectMapper, Collections.singleton(value));
 			//
 		} // try
 			//
@@ -1287,7 +1291,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			File file = null;
 			//
-			final Voice voice = createVoice(this);
+			final Voice voice = createVoice(objectMapper = ObjectUtils.getIfNull(objectMapper, ObjectMapper::new),
+					this);
 			//
 			if (isSelected(cbUseTtsVoice)) {
 				//
@@ -2006,7 +2011,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				setBackground(jtf, Color.WHITE);
 				//
-				final List<?> list = getObjectList(getText(jtf));
+				final List<?> list = getObjectList(
+						objectMapper = ObjectUtils.getIfNull(objectMapper, ObjectMapper::new), getText(jtf));
 				//
 				if ((objectMapper = ObjectUtils.getIfNull(objectMapper, ObjectMapper::new)) != null) {
 					//
@@ -2828,6 +2834,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				ObjectMap objectMap = null;
 				//
+				ObjectMapper objectMapper = null;
+				//
 				for (final Row row : sheet) {
 					//
 					if (row == null || row.iterator() == null) {
@@ -2891,8 +2899,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 									//
 							} else if (Objects.equals(type, Iterable.class)) {
 								//
-								f.set(voice = ObjectUtils.getIfNull(voice, Voice::new), toList(
-										map(stream(getObjectList(cell.getStringCellValue())), VoiceManager::toString)));
+								f.set(voice = ObjectUtils.getIfNull(voice, Voice::new),
+										toList(map(
+												stream(getObjectList(objectMapper = ObjectUtils.getIfNull(objectMapper,
+														ObjectMapper::new), cell.getStringCellValue())),
+												VoiceManager::toString)));
 								//
 							} // if
 								//
@@ -3433,7 +3444,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	}
 
-	private static Voice createVoice(final VoiceManager instance) {
+	private static Voice createVoice(final ObjectMapper objectMapper, final VoiceManager instance) {
 		//
 		if (instance == null) {
 			//
@@ -3457,7 +3468,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		voice.setYomi(cast(Yomi.class, getSelectedItem(instance.cbmYomi)));
 		//
-		voice.setListNames(toList(map(stream(getObjectList(getText(instance.tfListNames))), VoiceManager::toString)));
+		voice.setListNames(toList(
+				map(stream(getObjectList(objectMapper, getText(instance.tfListNames))), VoiceManager::toString)));
 		//
 		return voice;
 		//

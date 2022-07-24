@@ -215,7 +215,8 @@ class VoiceManagerTest {
 		//
 		(METHOD_CREATE_WORK_BOOK = clz.getDeclaredMethod("createWorkbook", List.class)).setAccessible(true);
 		//
-		(METHOD_CREATE_VOICE = clz.getDeclaredMethod("createVoice", VoiceManager.class)).setAccessible(true);
+		(METHOD_CREATE_VOICE = clz.getDeclaredMethod("createVoice", ObjectMapper.class, VoiceManager.class))
+				.setAccessible(true);
 		//
 		(METHOD_GET_MESSAGE = clz.getDeclaredMethod("getMessage", Throwable.class)).setAccessible(true);
 		//
@@ -1641,15 +1642,15 @@ class VoiceManagerTest {
 	@Test
 	void testCreateVoice() throws Throwable {
 		//
-		Assertions.assertNull(createVoice(null));
+		Assertions.assertNull(createVoice(null, null));
 		//
-		Assertions.assertNotNull(createVoice(instance));
+		Assertions.assertNotNull(createVoice(null, instance));
 		//
 	}
 
-	private static Voice createVoice(final VoiceManager instance) throws Throwable {
+	private static Voice createVoice(final ObjectMapper objectMapper, final VoiceManager instance) throws Throwable {
 		try {
-			final Object obj = METHOD_CREATE_VOICE.invoke(null, instance);
+			final Object obj = METHOD_CREATE_VOICE.invoke(null, objectMapper, instance);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Voice) {
