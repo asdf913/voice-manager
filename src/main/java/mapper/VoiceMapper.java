@@ -25,4 +25,6 @@ public interface VoiceMapper {
 
 	void deleteVoiceListByVoiceId(@Param("voiceId") final Integer voiceId);
 
+	void deleteUnusedVoiceList();
+
 }

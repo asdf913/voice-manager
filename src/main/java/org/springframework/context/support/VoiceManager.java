@@ -4043,6 +4043,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		if (instance != null) {
 			//
+			instance.deleteUnusedVoiceList();
+			//
 			// voice
 			//
 			final Voice voiceOld = instance.searchByTextAndRomaji(getText(voice), getRomaji(voice));

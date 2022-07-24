@@ -102,4 +102,10 @@
 		;
 	</delete>
 
+	<delete id="deleteUnusedVoiceList">
+		delete FROM VOICE_LIST where id not in (select
+		distinct voice_list_id from
+		voice_list_id)
+	</delete>
+
 </mapper>
