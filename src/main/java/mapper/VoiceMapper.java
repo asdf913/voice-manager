@@ -17,6 +17,8 @@ public interface VoiceMapper {
 
 	List<Voice> retrieveAllVoices();
 
+	List<String> searchVoiceListNamesByVoiceId(@Param("voiceId") final Integer voiceId);
+
 	VoiceList searchVoiceListByName(final String name);
 
 	void insertVoiceList(@Param("voiceList") final VoiceList voiceList);

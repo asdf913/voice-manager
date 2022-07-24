@@ -134,10 +134,10 @@ class VoiceManagerTest {
 			METHOD_DIGEST, METHOD_GET_MAPPER, METHOD_INSERT_OR_UPDATE, METHOD_SET_ENABLED, METHOD_TEST_AND_APPLY4,
 			METHOD_TEST_AND_APPLY5, METHOD_CAST, METHOD_INT_VALUE, METHOD_GET_PROPERTY_PROPERTY_RESOLVER,
 			METHOD_GET_PROPERTY_CUSTOM_PROPERTIES, METHOD_SET_VARIABLE, METHOD_PARSE_EXPRESSION, METHOD_GET_VALUE,
-			METHOD_GET_SOURCE, METHOD_EXPORT, METHOD_MAP, METHOD_MAX, METHOD_OR_ELSE, METHOD_FOR_EACH,
-			METHOD_CREATE_WORK_BOOK, METHOD_CREATE_VOICE, METHOD_GET_MESSAGE, METHOD_INVOKE, METHOD_ANNOTATION_TYPE,
-			METHOD_GET_NAME, METHOD_FIND_FIRST, METHOD_GET_DECLARED_METHODS, METHOD_FOR_NAME, METHOD_FILTER,
-			METHOD_SET_TEXT, METHOD_GET_PREFERRED_WIDTH, METHOD_IMPORT_VOICE3, METHOD_IMPORT_VOICE5,
+			METHOD_GET_SOURCE, METHOD_EXPORT, METHOD_MAP, METHOD_MAX, METHOD_OR_ELSE, METHOD_FOR_EACH_STREAM,
+			METHOD_FOR_EACH_ITERABLE, METHOD_CREATE_WORK_BOOK, METHOD_CREATE_VOICE, METHOD_GET_MESSAGE, METHOD_INVOKE,
+			METHOD_ANNOTATION_TYPE, METHOD_GET_NAME, METHOD_FIND_FIRST, METHOD_GET_DECLARED_METHODS, METHOD_FOR_NAME,
+			METHOD_FILTER, METHOD_SET_TEXT, METHOD_GET_PREFERRED_WIDTH, METHOD_IMPORT_VOICE3, METHOD_IMPORT_VOICE5,
 			METHOD_ERROR_OR_PRINT_LN, METHOD_ADD, METHOD_CREATE_IMPORT_FILE_TEMPLATE_BYTE_ARRAY,
 			METHOD_GET_DECLARED_ANNOTATIONS, METHOD_CREATE_CELL, METHOD_SET_CELL_VALUE, METHOD_ANY_MATCH,
 			METHOD_COLLECT, METHOD_NAME, METHOD_GET_SELECTED_ITEM, METHOD_WRITE, METHOD_MATCHER, METHOD_SET_VALUE,
@@ -211,7 +211,10 @@ class VoiceManagerTest {
 		//
 		(METHOD_OR_ELSE = clz.getDeclaredMethod("orElse", Optional.class, Object.class)).setAccessible(true);
 		//
-		(METHOD_FOR_EACH = clz.getDeclaredMethod("forEach", Stream.class, Consumer.class)).setAccessible(true);
+		(METHOD_FOR_EACH_STREAM = clz.getDeclaredMethod("forEach", Stream.class, Consumer.class)).setAccessible(true);
+		//
+		(METHOD_FOR_EACH_ITERABLE = clz.getDeclaredMethod("forEach", Iterable.class, Consumer.class))
+				.setAccessible(true);
 		//
 		(METHOD_CREATE_WORK_BOOK = clz.getDeclaredMethod("createWorkbook", List.class)).setAccessible(true);
 		//
@@ -1599,7 +1602,7 @@ class VoiceManagerTest {
 	@Test
 	void testForEach() {
 		//
-		Assertions.assertDoesNotThrow(() -> forEach(null, null));
+		Assertions.assertDoesNotThrow(() -> forEach((Stream<?>) null, null));
 		//
 		Assertions.assertDoesNotThrow(() -> forEach(Stream.empty(), null));
 		//
@@ -1608,11 +1611,30 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> forEach(stream, null));
 		//
+		final Collection<?> collection = Collections.emptySet();
+		//
+		Assertions.assertDoesNotThrow(() -> forEach(collection, null));
+		//
+		Assertions.assertDoesNotThrow(() -> forEach(collection, x -> {
+		}));
+		//
+		final Iterable<?> iterable = Reflection.newProxy(Iterable.class, ih);
+		//
+		Assertions.assertDoesNotThrow(() -> forEach(iterable, null));
+		//
 	}
 
 	private static <T> void forEach(final Stream<T> instance, final Consumer<? super T> action) throws Throwable {
 		try {
-			METHOD_FOR_EACH.invoke(null, instance, action);
+			METHOD_FOR_EACH_STREAM.invoke(null, instance, action);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static <T> void forEach(final Iterable<T> instance, final Consumer<? super T> action) throws Throwable {
+		try {
+			METHOD_FOR_EACH_ITERABLE.invoke(null, instance, action);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

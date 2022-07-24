@@ -21,6 +21,19 @@
 		from voice
 	</select>
 
+	<select id="searchVoiceListNamesByVoiceId"
+		resultType="java.lang.String">
+		select distinct name
+		from voice_list_id vli
+		left outer join voice_list
+		vl on vl.id=vli.voice_list_id
+		<where>
+			true
+			<if test="voiceId==null">and voice_id is null</if>
+			<if test="voiceId!=null">and voice_id=#{voiceId}</if>
+		</where>
+	</select>
+
 	<select id="searchByTextAndRomaji" resultMap="resultMapVoice">
 		select
 		id,language,text,source,yomi,romaji,hiragana,katakana,file_path,file_length,file_digest_algorithm,file_digest,file_extension,create_ts,update_ts

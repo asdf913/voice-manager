@@ -1503,6 +1503,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				final List<Voice> voices = voiceMapper != null ? voiceMapper.retrieveAllVoices() : null;
 				//
+				forEach(voices, v -> {
+					//
+					if (v != null && voiceMapper != null) {
+						//
+						v.setListNames(voiceMapper.searchVoiceListNamesByVoiceId(v.getId()));
+						//
+					} // if
+						//
+				});
+				//
 				export(voices, outputFolderFileNameExpressions, voiceFolder, outputFolder, progressBar,
 						isSelected(cbOverMp3Title));
 				//
@@ -3493,6 +3503,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	private static <T> void forEach(final Stream<T> instance, final Consumer<? super T> action) {
+		//
+		if (instance != null && (action != null || Proxy.isProxyClass(getClass(instance)))) {
+			instance.forEach(action);
+		} // if
+			//
+	}
+
+	private static <T> void forEach(final Iterable<T> instance, final Consumer<? super T> action) {
 		//
 		if (instance != null && (action != null || Proxy.isProxyClass(getClass(instance)))) {
 			instance.forEach(action);
