@@ -140,6 +140,8 @@ import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.LinkedListMultimap;
+import com.google.common.collect.Multimap;
 import com.google.common.collect.Range;
 import com.google.common.reflect.Reflection;
 import com.j256.simplemagic.ContentInfo;
@@ -1792,13 +1794,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 						} // if
 							//
-						if (progressBar != null) {
-							//
-							progressBar
-									.setMaximum(Math.max(0, (sheet != null ? sheet.getPhysicalNumberOfRows() : 0) - 1));
-							//
-						} // if
-							//
+						setMaximum(progressBar, Math.max(0, (sheet != null ? sheet.getPhysicalNumberOfRows() : 0) - 1));
+						//
 						if (objectMap != null) {
 							//
 							objectMap.setObject(ByteConverter.class,
@@ -1866,6 +1863,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
+	}
+
+	private static void setMaximum(final JProgressBar instance, final int n) {
+		if (instance != null) {
+			instance.setMaximum(n);
+		}
 	}
 
 	private static boolean contains(final Collection<?> items, final Object item) {
@@ -3593,6 +3596,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					if (count != null) {
 						//
+						setMaximum(progressBar, count.intValue());
+						//
 						final String string = String.format("%1$s/%2$s (%3$s)", counter, count,
 								format(percentNumberFormat, counter.intValue() * 1.0 / count.intValue()));
 						//
@@ -3680,12 +3685,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			final String voiceFolder, final String outputFolder, final JProgressBar progressBar,
 			final boolean overMp3Title) throws IOException {
 		//
-		if (progressBar != null) {
-			//
-			progressBar.setMaximum(Math.max(0, voices != null ? voices.size() : 0));
-			//
-		} // if
-			//
 		EvaluationContext evaluationContext = null;
 		//
 		ExpressionParser expressionParser = null;
@@ -3698,7 +3697,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		try {
 			//
-			final int size = voices != null ? voices.size() : 0;
+			int size = voices != null ? voices.size() : 0;
 			//
 			for (int i = 0; i < size; i++) {
 				//
@@ -3735,6 +3734,82 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				es.submit(et);
 				//
 			} // for
+				//
+			Voice v = null;
+			//
+			Iterable<String> listNames = null;
+			//
+			Multimap<String, Voice> multimap = null;
+			//
+			for (int i = 0; voices != null && i < voices.size(); i++) {
+				//
+				if ((v = voices.get(i)) == null || (listNames = v.getListNames()) == null) {
+					continue;
+				} // if
+					//
+				for (final String listName : listNames) {
+					//
+					if (StringUtils.isEmpty(listName)
+							|| (multimap = ObjectUtils.getIfNull(multimap, LinkedListMultimap::create)) == null) {
+						continue;
+					} // if
+						//
+					multimap.put(listName, v);
+					//
+				} // for
+					//
+			} // for
+				//
+			if (multimap != null && multimap.entries() != null) {
+				//
+				int coutner = 0;
+				//
+				size = multimap.size();
+				//
+				for (final Entry<String, Voice> en : multimap.entries()) {
+					//
+					if (en == null) {
+						//
+						continue;
+						//
+					} // if
+						//
+					if ((es = ObjectUtils.getIfNull(es, () -> Executors.newFixedThreadPool(1))) == null) {
+						//
+						continue;
+						//
+					} // if
+						//
+					(et = new ExportTask()).counter = Integer.valueOf(++coutner);
+					//
+					et.count = size;
+					//
+					et.percentNumberFormat = ObjectUtils.getIfNull(percentNumberFormat, () -> new DecimalFormat("#%"));
+					//
+					et.evaluationContext = evaluationContext = ObjectUtils.getIfNull(evaluationContext,
+							StandardEvaluationContext::new);
+					//
+					et.expressionParser = expressionParser = ObjectUtils.getIfNull(expressionParser,
+							SpelExpressionParser::new);
+					//
+					et.outputFolder = outputFolder;
+					//
+					et.outputFolderFileNameExpressions = Collections.singletonMap(en.getKey(),
+							"(#voice.text+'('+#voice.romaji+').'+#voice.fileExtension)");
+					//
+					et.progressBar = progressBar;
+					//
+					et.voice = en.getValue();
+					//
+					et.voiceFolder = voiceFolder;
+					//
+					et.overMp3Title = overMp3Title;
+					//
+					es.submit(et);
+					//
+				} // for
+					//
+			} // if
 				//
 		} finally {
 			//

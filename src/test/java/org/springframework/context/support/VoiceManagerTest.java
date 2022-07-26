@@ -149,7 +149,7 @@ class VoiceManagerTest {
 			METHOD_SET_HIRAGANA_OR_KATAKANA, METHOD_SET_ROMAJI, METHOD_OR, METHOD_CLEAR, METHOD_EXECUTE, METHOD_PUT,
 			METHOD_GET_BYTE_CONVERTER, METHOD_GET_PROPERTIES, METHOD_GET_CUSTOM_PROPERTIES,
 			METHOD_CONTAINS_CUSTOM_PROPERTIES, METHOD_CONTAINS_COLLECTION, METHOD_GET_LPW_STR, METHOD_GET_SHEET_NAME,
-			METHOD_ACCEPT, METHOD_TO_ARRAY, METHOD_TO_LIST, METHOD_GET_ID = null;
+			METHOD_ACCEPT, METHOD_TO_ARRAY, METHOD_TO_LIST, METHOD_GET_ID, METHOD_SET_MAXIMUM = null;
 
 	@BeforeAll
 	private static void beforeAll() throws ReflectiveOperationException {
@@ -364,6 +364,9 @@ class VoiceManagerTest {
 		(METHOD_TO_LIST = clz.getDeclaredMethod("toList", Stream.class)).setAccessible(true);
 		//
 		(METHOD_GET_ID = clz.getDeclaredMethod("getId", VoiceList.class)).setAccessible(true);
+		//
+		(METHOD_SET_MAXIMUM = clz.getDeclaredMethod("setMaximum", JProgressBar.class, Integer.TYPE))
+				.setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -3204,6 +3207,21 @@ class VoiceManagerTest {
 				return (Integer) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetMaximum() {
+		//
+		Assertions.assertDoesNotThrow(() -> setMaximum(new JProgressBar(), 0));
+		//
+	}
+
+	private static void setMaximum(final JProgressBar instance, final int n) throws Throwable {
+		try {
+			METHOD_SET_MAXIMUM.invoke(null, instance, n);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
