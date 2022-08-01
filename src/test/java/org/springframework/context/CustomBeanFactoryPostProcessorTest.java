@@ -9,7 +9,7 @@ class CustomBeanFactoryPostProcessorTest {
 	private CustomBeanFactoryPostProcessor instance = null;
 
 	@BeforeEach
-	private void beforeEach() {
+	void beforeEach() {
 		//
 		instance = new CustomBeanFactoryPostProcessor();
 		//

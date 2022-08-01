@@ -16,7 +16,7 @@ class SpeechApiImplTest {
 	private static Method METHOD_CAST = null;
 
 	@BeforeAll
-	private static void beforeAll() throws ReflectiveOperationException {
+	static void beforeAll() throws ReflectiveOperationException {
 		//
 		final Class<?> clz = Class.forName("org.springframework.context.support.SpeechApiImpl$Jna");
 		//
@@ -31,7 +31,7 @@ class SpeechApiImplTest {
 	private SpeechApiImpl instance = null;
 
 	@BeforeEach
-	private void beforeEach() {
+	void beforeEach() {
 		//
 		instance = new SpeechApiImpl();
 		//

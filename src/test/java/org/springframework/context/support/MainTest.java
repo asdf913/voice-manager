@@ -46,7 +46,7 @@ class MainTest {
 	}
 
 	@BeforeAll
-	private static void beforeAll() throws ReflectiveOperationException {
+	static void beforeAll() throws ReflectiveOperationException {
 		//
 		final Class<?> clz = Main.class;
 		//

@@ -21,7 +21,7 @@ class MigLayoutFactoryBeanTest {
 	private static Method METHOD_TEST_AND_APPLY, METHOD_CAST = null;
 
 	@BeforeAll
-	private static void beforeAll() throws ReflectiveOperationException {
+	static void beforeAll() throws ReflectiveOperationException {
 		//
 		final Class<?> clz = MigLayoutFactoryBean.class;
 		//
@@ -35,7 +35,7 @@ class MigLayoutFactoryBeanTest {
 	private MigLayoutFactoryBean instance = null;
 
 	@BeforeEach
-	private void beforeEach() {
+	void beforeEach() {
 		//
 		instance = new MigLayoutFactoryBean();
 		//

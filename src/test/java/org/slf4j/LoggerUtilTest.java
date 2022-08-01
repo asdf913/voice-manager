@@ -32,7 +32,7 @@ class LoggerUtilTest {
 			METHOD_FILTER, METHOD_PARSE, METHOD_TEST_AND_APPLY = null;
 
 	@BeforeAll
-	private static void beforeAll() throws NoSuchMethodException {
+	static void beforeAll() throws NoSuchMethodException {
 		//
 		final Class<?> clz = LoggerUtil.class;
 		//
@@ -87,7 +87,7 @@ class LoggerUtilTest {
 	private Stream<?> stream = null;
 
 	@BeforeEach
-	private void beforeEach() {
+	void beforeEach() {
 		//
 		stream = Reflection.newProxy(Stream.class, new IH());
 		//

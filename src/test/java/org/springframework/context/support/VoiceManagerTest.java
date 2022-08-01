@@ -152,7 +152,7 @@ class VoiceManagerTest {
 			METHOD_ACCEPT, METHOD_TO_ARRAY, METHOD_TO_LIST, METHOD_GET_ID, METHOD_SET_MAXIMUM = null;
 
 	@BeforeAll
-	private static void beforeAll() throws ReflectiveOperationException {
+	static void beforeAll() throws ReflectiveOperationException {
 		//
 		final Class<?> clz = VoiceManager.class;
 		//
@@ -684,7 +684,7 @@ class VoiceManagerTest {
 	private Sheet sheet = null;
 
 	@BeforeEach
-	private void beforeEach() throws ReflectiveOperationException {
+	void beforeEach() throws ReflectiveOperationException {
 		//
 		final Constructor<VoiceManager> constructor = VoiceManager.class.getDeclaredConstructor();
 		//
