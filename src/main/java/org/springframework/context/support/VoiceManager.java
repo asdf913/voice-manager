@@ -20,6 +20,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.lang.annotation.Annotation;
@@ -92,6 +93,10 @@ import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.JTextComponent;
 
+import org.apache.bcel.classfile.ClassParser;
+import org.apache.bcel.classfile.Code;
+import org.apache.bcel.classfile.JavaClass;
+import org.apache.bcel.classfile.Utility;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.io.FileUtils;
@@ -127,6 +132,7 @@ import org.openxmlformats.schemas.officeDocument.x2006.customProperties.CTProper
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
@@ -154,6 +160,7 @@ import com.mpatric.mp3agic.ID3v1;
 import com.mpatric.mp3agic.Mp3File;
 
 import de.sciss.jump3r.lowlevel.LameEncoder;
+import de.sciss.jump3r.mp3.Lame;
 import domain.Voice;
 import domain.Voice.Yomi;
 import domain.VoiceList;
@@ -2218,14 +2225,34 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.toByteArray() : null;
 	}
 
-	private static class AudioToMp3ByteConverter implements ByteConverter {
+	private static class AudioToMp3ByteConverter implements ByteConverter, InitializingBean {
 
-		private Integer bitRate = null;
+		private Integer bitRate, quality = null;
 
 		private Boolean vbr = null;
 
 		public void setBitRate(final Object bitRate) {
 			this.bitRate = toInteger(bitRate);
+		}
+
+		public void setQuality(final Object quality) {
+			this.quality = toInteger(quality);
+		}
+
+		private Integer getQuality() throws IllegalAccessException {
+			//
+			if (quality != null) {
+				return quality;
+			} // if
+				//
+			final Object object = FieldUtils.readDeclaredStaticField(LameEncoder.class, "DEFAULT_QUALITY", true);
+			//
+			if (object instanceof Integer) {
+				return (Integer) object;
+			} // if
+				//
+			return null;
+			//
 		}
 
 		public void setVbr(final Object vbr) {
@@ -2248,6 +2275,123 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		}
 
+		private Boolean getVbr() throws IllegalAccessException {
+			//
+			if (vbr != null) {
+				return vbr;
+			} // if
+				//
+			final Object object = FieldUtils.readDeclaredStaticField(LameEncoder.class, "DEFAULT_VBR", true);
+			//
+			if (object instanceof Boolean) {
+				return (Boolean) object;
+			} // if
+				//
+			return null;
+			//
+		}
+
+		@Override
+		public void afterPropertiesSet() throws IOException, IllegalAccessException {
+			//
+			if (Objects.equals(Boolean.TRUE, getVbr())) {
+				//
+				final Range<Integer> range = createQualityRange();
+				//
+				final Integer quality = getQuality();
+				//
+				if (range != null && !range.contains(quality)) {
+					//
+					throw new IllegalStateException(String.format("Under VBR,\"quality\" cound be with in %1$s to %2$s",
+							range.lowerEndpoint(), range.upperEndpoint()));
+					//
+				} // if
+					//
+			} // if
+				//
+		}
+
+		private static Range<Integer> createQualityRange() throws IOException {
+			//
+			final Class<?> clz = Lame.class;
+			//
+			try (final InputStream is = clz != null
+					? clz.getResourceAsStream(
+							String.format("/%1$s.class", StringUtils.replace(clz.getName(), ".", "/")))
+					: null) {
+				//
+				final JavaClass javaClass = parse(
+						testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null));
+				//
+				final org.apache.bcel.classfile.Method[] ms = getMethods(javaClass);
+				//
+				org.apache.bcel.classfile.Method m = null;
+				//
+				byte[] bs = null;
+				//
+				String line = null;
+				//
+				String[] lines = null;
+				//
+				Integer index1 = null, index2 = null, count = null;
+				//
+				for (int i = 0; ms != null && i < ms.length; i++) {
+					//
+					if ((m = ms[i]) == null) {
+						//
+						continue;
+						//
+					} // if
+						//
+					lines = StringUtils.split(StringUtils.trim(Utility.codeToString(bs = getCode(m.getCode()),
+							m.getConstantPool(), 0, bs != null ? bs.length : 0)), '\n');
+					//
+					index1 = index2 = count = null;
+					//
+					for (int j = 0; lines != null && j < lines.length; j++) {
+						//
+						if ((line = lines[j]) == null) {
+							continue;
+						} // if
+							//
+						if (index1 == null && line.matches("^\\d+:\\s+newarray\\s+<float>$")) {
+							index1 = Integer.valueOf(j);
+						} else if (index2 == null && line.matches(
+								"^\\d+:\\s?getfield\\s+de.sciss.jump3r.mp3.LameGlobalFlags.VBR_q\\s+I\\s+\\(\\d+\\)$")) {
+							index2 = Integer.valueOf(j);
+							break;
+						} // if
+							//
+						if (index1 != null && line.matches("^\\d+:\\s?ldc\\s+[^\\s]+\\s+\\(\\d+\\)?")) {
+							count = Integer.valueOf(intValue(count, 0) + 1);
+						} // if
+							//
+					} // for
+						//
+					if (index1 != null && index2 != null) {
+						break;
+					} // if
+						//
+				} // for
+					//
+				return count != null ? Range.closed(0, count.intValue() - 1) : null;
+				//
+			} // try
+				//
+		}
+
+		private static JavaClass parse(final ClassParser instance) throws IOException {
+			return instance != null ? instance.parse() : null;
+		}
+
+		private static org.apache.bcel.classfile.Method[] getMethods(final JavaClass instance) {
+			return instance != null ? instance.getMethods() : null;
+		}
+
+		private static byte[] getCode(final Code instance) {
+			return instance != null ? instance.getCode() : null;
+		}
+
 		@Override
 		public byte[] convert(final byte[] source) {
 			//
@@ -2259,25 +2403,21 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					ByteArrayInputStream::new, null);
 					final AudioInputStream ais = bais != null ? AudioSystem.getAudioInputStream(bais) : null) {
 				//
-				final byte[] inputBuffer = new byte[(encoder = ais != null ? new LameEncoder(ais.getFormat(),
-						//
-						// bitRate
-						//
+				final byte[] inputBuffer = new byte[(encoder = ais != null ? new LameEncoder(ais.getFormat()
+				//
+				// bitRate
+				//
+						,
 						ObjectUtils.defaultIfNull(bitRate,
 								cast(Integer.class,
 										FieldUtils.readDeclaredStaticField(LameEncoder.class, "DEFAULT_BITRATE",
 												true))),
 						cast(Integer.class,
-								FieldUtils.readDeclaredStaticField(LameEncoder.class, "DEFAULT_CHANNEL_MODE", true)),
-						cast(Integer.class,
-								FieldUtils.readDeclaredStaticField(LameEncoder.class, "DEFAULT_QUALITY", true)),
+								FieldUtils.readDeclaredStaticField(LameEncoder.class, "DEFAULT_CHANNEL_MODE", true))
 						//
-						// vbr
-						//
-						ObjectUtils.defaultIfNull(vbr,
-								cast(Boolean.class,
-										FieldUtils.readDeclaredStaticField(LameEncoder.class, "DEFAULT_VBR", true))))
-						: new LameEncoder()).getPCMBufferSize()];
+						, getQuality()// quality
+						, getVbr()// vbr
+				) : new LameEncoder()).getPCMBufferSize()];
 				//
 				final byte[] outputBuffer = new byte[encoder.getPCMBufferSize()];
 				//

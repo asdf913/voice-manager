@@ -3519,13 +3519,43 @@ class VoiceManagerTest {
 		Assertions.assertNull(invoke(clz != null ? clz.getDeclaredMethod("setBitRate", Object.class) : null, instance,
 				(Object) null));
 		//
+		// setQuality(java.lang.Object)
+		//
+		final Method setQuality = clz != null ? clz.getDeclaredMethod("setQuality", Object.class) : null;
+		//
+		Assertions.assertNull(invoke(setQuality, instance, (Object) null));
+		//
 		// setVbr(java.lang.Object)
 		//
 		final Method setVbr = clz != null ? clz.getDeclaredMethod("setVbr", Object.class) : null;
 		//
 		Assertions.assertNull(invoke(setVbr, instance, ""));
 		//
+		// afterPropertiesSet()
+		//
+		final Method afterPropertiesSet = clz != null ? clz.getDeclaredMethod("afterPropertiesSet") : null;
+		//
+		Assertions.assertNull(invoke(afterPropertiesSet, instance));
+		//
 		Assertions.assertNull(invoke(setVbr, instance, "true"));
+		//
+		Assertions.assertNull(invoke(afterPropertiesSet, instance));
+		//
+		Assertions.assertNull(invoke(setQuality, instance, "-1"));
+		//
+		Assertions.assertThrows(IllegalStateException.class, () -> {
+			//
+			try {
+				//
+				invoke(afterPropertiesSet, instance);
+				//
+			} catch (final InvocationTargetException e) {
+				//
+				throw e.getTargetException();
+				//
+			} // try
+				//
+		});
 		//
 	}
 
