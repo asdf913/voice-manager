@@ -15,7 +15,7 @@ import java.util.stream.Stream;
 
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.ClassParserUtil;
-import org.apache.bcel.classfile.Code;
+import org.apache.bcel.classfile.CodeUtil;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.classfile.Utility;
@@ -60,7 +60,7 @@ public class LoggerUtil {
 				//
 			} // if
 				//
-			final byte[] bs = getCode(m.getCode());
+			final byte[] bs = CodeUtil.getCode(m.getCode());
 			//
 			return !Objects.equals(
 					StringUtils.trim(Utility.codeToString(bs, m.getConstantPool(), 0, bs != null ? bs.length : 0)),
@@ -68,10 +68,6 @@ public class LoggerUtil {
 			//
 		})));
 		//
-	}
-
-	private static byte[] getCode(final Code instance) {
-		return instance != null ? instance.getCode() : null;
 	}
 
 	private static Matcher matcher(final Pattern pattern, final CharSequence input) {

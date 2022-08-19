@@ -13,7 +13,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-import org.apache.bcel.classfile.Code;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,15 +23,13 @@ import com.google.common.reflect.Reflection;
 
 class LoggerUtilTest {
 
-	private static Method METHOD_GET_CODE, METHOD_MATCHER, METHOD_MATCHES, METHOD_TO_LIST, METHOD_IS_EMPTY,
-			METHOD_FILTER, METHOD_TEST_AND_APPLY = null;
+	private static Method METHOD_MATCHER, METHOD_MATCHES, METHOD_TO_LIST, METHOD_IS_EMPTY, METHOD_FILTER,
+			METHOD_TEST_AND_APPLY = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
 		//
 		final Class<?> clz = LoggerUtil.class;
-		//
-		(METHOD_GET_CODE = clz.getDeclaredMethod("getCode", Code.class)).setAccessible(true);
 		//
 		(METHOD_MATCHER = clz.getDeclaredMethod("matcher", Pattern.class, CharSequence.class)).setAccessible(true);
 		//
@@ -92,27 +89,6 @@ class LoggerUtilTest {
 		//
 		Assertions.assertFalse(LoggerUtil.isNOPLogger(null));
 		//
-	}
-
-	@Test
-	void testGetCode() throws Throwable {
-		//
-		Assertions.assertNull(getCode(null));
-		//
-	}
-
-	private static byte[] getCode(final Code instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_CODE.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof byte[]) {
-				return (byte[]) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	private static Class<?> getClass(final Object instance) {

@@ -96,6 +96,7 @@ import javax.swing.text.JTextComponent;
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.ClassParserUtil;
 import org.apache.bcel.classfile.Code;
+import org.apache.bcel.classfile.CodeUtil;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Utility;
 import org.apache.commons.codec.binary.Hex;
@@ -2351,7 +2352,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					} // if
 						//
-					lines = StringUtils.split(StringUtils.trim(Utility.codeToString(bs = getCode(m.getCode()),
+					lines = StringUtils.split(StringUtils.trim(Utility.codeToString(bs = CodeUtil.getCode(m.getCode()),
 							m.getConstantPool(), 0, bs != null ? bs.length : 0)), '\n');
 					//
 					index1 = index2 = count = null;
@@ -2389,10 +2390,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 		private static org.apache.bcel.classfile.Method[] getMethods(final JavaClass instance) {
 			return instance != null ? instance.getMethods() : null;
-		}
-
-		private static byte[] getCode(final Code instance) {
-			return instance != null ? instance.getCode() : null;
 		}
 
 		@Override
