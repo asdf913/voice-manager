@@ -340,7 +340,7 @@ class VoiceManagerTest {
 		(METHOD_PUT = clz.getDeclaredMethod("put", Map.class, Object.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_GET_BYTE_CONVERTER = clz.getDeclaredMethod("getByteConverter", ConfigurableListableBeanFactory.class,
-				Object.class)).setAccessible(true);
+				String.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_GET_PROPERTIES = clz.getDeclaredMethod("getProperties", POIXMLDocument.class)).setAccessible(true);
 		//
@@ -3003,52 +3003,54 @@ class VoiceManagerTest {
 	@Test
 	void testGetByteConverter() throws Throwable {
 		//
-		Assertions.assertNull(getByteConverter(null, null));
+		Assertions.assertNull(getByteConverter(null, null, null));
 		//
 		final ConfigurableListableBeanFactory configurableListableBeanFactory = Reflection
 				.newProxy(ConfigurableListableBeanFactory.class, ih);
 		//
-		Assertions.assertNull(getByteConverter(configurableListableBeanFactory, null));
+		Assertions.assertNull(getByteConverter(configurableListableBeanFactory, null, null));
 		//
 		ih.beansOfType = Reflection.newProxy(Map.class, ih);
 		//
-		Assertions.assertNull(getByteConverter(configurableListableBeanFactory, null));
+		Assertions.assertNull(getByteConverter(configurableListableBeanFactory, null, null));
 		//
 		ih.entrySet = Collections.singleton(null);
 		//
-		Assertions.assertNull(getByteConverter(configurableListableBeanFactory, null));
+		Assertions.assertNull(getByteConverter(configurableListableBeanFactory, null, null));
 		//
 		ih.beansOfType = Collections.singletonMap(null, null);
 		//
-		Assertions.assertNull(getByteConverter(configurableListableBeanFactory, null));
+		Assertions.assertNull(getByteConverter(configurableListableBeanFactory, null, null));
 		//
 		ih.getBeanDefinitions().put(null, beanDefinition);
 		//
-		Assertions.assertNull(getByteConverter(configurableListableBeanFactory, null));
+		Assertions.assertNull(getByteConverter(configurableListableBeanFactory, null, null));
 		//
-		ih.getBeanDefinitionAttributes().put("format", null);
+		final String format = toString(FieldUtils.readDeclaredStaticField(VoiceManager.class, "FORMAT", true));
 		//
-		Assertions.assertNull(getByteConverter(configurableListableBeanFactory, null));
+		ih.getBeanDefinitionAttributes().put(format, null);
 		//
-		ih.getBeanDefinitionAttributes().put("format", "");
+		Assertions.assertNull(getByteConverter(configurableListableBeanFactory, format, null));
 		//
-		Assertions.assertNull(getByteConverter(configurableListableBeanFactory, null));
+		ih.getBeanDefinitionAttributes().put(format, "");
+		//
+		Assertions.assertNull(getByteConverter(configurableListableBeanFactory, format, null));
 		//
 		(ih.beansOfType = new LinkedHashMap<Object, Object>(Collections.singletonMap(null, null))).put("", null);
 		//
 		ih.getBeanDefinitions().put("", beanDefinition);
 		//
-		ih.getBeanDefinitionAttributes().put("format", null);
+		ih.getBeanDefinitionAttributes().put(format, null);
 		//
 		Assertions.assertThrows(IllegalStateException.class,
-				() -> getByteConverter(configurableListableBeanFactory, null));
+				() -> getByteConverter(configurableListableBeanFactory, format, null));
 		//
 	}
 
 	private static Object getByteConverter(final ConfigurableListableBeanFactory configurableListableBeanFactory,
-			final String format) throws Throwable {
+			final String attribute, final Object value) throws Throwable {
 		try {
-			return METHOD_GET_BYTE_CONVERTER.invoke(null, configurableListableBeanFactory, format);
+			return METHOD_GET_BYTE_CONVERTER.invoke(null, configurableListableBeanFactory, attribute, value);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

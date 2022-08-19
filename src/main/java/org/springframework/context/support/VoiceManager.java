@@ -182,6 +182,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static final String WRAP = "wrap";
 
+	private static final String FORMAT = "format";
+
 	private PropertyResolver propertyResolver = null;
 
 	private JTextComponent tfFolder, tfFile, tfFileLength, tfFileDigest, tfText, tfHiragana, tfKatakana, tfRomaji,
@@ -247,7 +249,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			mcbm.addElement(null);
 			//
-			forEach(getByteConverterAttributeValues(configurableListableBeanFactory, "format"), mcbm::addElement);
+			forEach(getByteConverterAttributeValues(configurableListableBeanFactory, FORMAT), mcbm::addElement);
 			//
 		} // if
 			//
@@ -1266,7 +1268,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 
 				//
-				final ByteConverter byteConverter = getByteConverter(configurableListableBeanFactory,
+				final ByteConverter byteConverter = getByteConverter(configurableListableBeanFactory, FORMAT,
 						getSelectedItem(cbmAudioFormat));
 				//
 				if (byteConverter != null) {
@@ -1331,7 +1333,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 								testAndApply(Objects::nonNull, file, new ContentInfoUtil()::findMatch, null)))) {
 							//
 							final ByteConverter byteConverter = getByteConverter(configurableListableBeanFactory,
-									"flac");
+									FORMAT, "flac");
 							//
 							if (byteConverter != null) {
 								//
@@ -1816,7 +1818,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						if (objectMap != null) {
 							//
 							objectMap.setObject(ByteConverter.class,
-									getByteConverter(configurableListableBeanFactory,
+									getByteConverter(configurableListableBeanFactory, FORMAT,
 											getLpwstr(testAndApply(VoiceManager::contains,
 													getCustomProperties(getProperties(poiXmlDocument)), "audioFormat",
 													VoiceManager::getProperty, null))));
@@ -2014,7 +2016,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	private static ByteConverter getByteConverter(final ConfigurableListableBeanFactory configurableListableBeanFactory,
-			final Object format) {
+			final String attribute, final Object value) {
 		//
 		Unit<ByteConverter> byteConverter = null;
 		//
@@ -2028,8 +2030,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			for (final Entry<String, ByteConverter> en : byteConverters.entrySet()) {
 				//
 				if (en == null || (bd = configurableListableBeanFactory.getBeanDefinition(en.getKey())) == null
-						|| !Objects.equals(format, testAndApply(bd::hasAttribute, "format", bd::getAttribute, null))) {
+						|| !bd.hasAttribute(attribute)
+						|| !Objects.equals(value, testAndApply(bd::hasAttribute, attribute, bd::getAttribute, null))) {
+					//
 					continue;
+					//
 				} // if
 					//
 				if (byteConverter == null) {
