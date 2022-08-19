@@ -202,11 +202,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private ComboBoxModel<String> cbmVoiceId = null;
 
-	private ComboBoxModel<?> cbmAudioFormat = null;
+	private ComboBoxModel<?> cbmAudioFormatWrite, cbmAudioFormatExecute = null;
 
 	private AbstractButton btnSpeak, btnWriteVoice, btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji,
-			btnCopyHiragana, btnCopyKatakana, cbUseTtsVoice, cbConvertToFlac, btnExecute, btnImportFileTemplate,
-			btnImport, cbOverMp3Title, btnExport = null;
+			btnCopyHiragana, btnCopyKatakana, cbUseTtsVoice, btnExecute, btnImportFileTemplate, btnImport,
+			cbOverMp3Title, btnExport = null;
 
 	private JProgressBar progressBar = null;
 
@@ -251,18 +251,36 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		this.configurableListableBeanFactory = configurableListableBeanFactory;
 		//
-		final MutableComboBoxModel<Object> mcbm = cast(MutableComboBoxModel.class, cbmAudioFormat);
+		// cbmAudioFormatWrite
+		//
+		MutableComboBoxModel<Object> mcbm = cast(MutableComboBoxModel.class, cbmAudioFormatWrite);
+		//
+		final Collection<?> formats = getByteConverterAttributeValues(configurableListableBeanFactory, FORMAT);
 		//
 		if (mcbm != null) {
 			//
 			mcbm.addElement(null);
 			//
-			forEach(getByteConverterAttributeValues(configurableListableBeanFactory, FORMAT), mcbm::addElement);
+			forEach(formats, mcbm::addElement);
 			//
 		} // if
 			//
-		setSelectedItem(cbmAudioFormat,
-				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.audioFormat"));
+			// cbmAudioFormatExecute
+			//
+		if ((mcbm = cast(MutableComboBoxModel.class, cbmAudioFormatExecute)) != null) {
+			//
+			mcbm.addElement(null);
+			//
+			forEach(formats, mcbm::addElement);
+			//
+		} // if
+			//
+		final String audioFormat = getProperty(propertyResolver,
+				"org.springframework.context.support.VoiceManager.audioFormat");
+		//
+		setSelectedItem(cbmAudioFormatWrite, audioFormat);
+		//
+		setSelectedItem(cbmAudioFormatExecute, audioFormat);
 		//
 	}
 
@@ -583,7 +601,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		// Audio Format
 		//
-		add(new JComboBox(cbmAudioFormat = new DefaultComboBoxModel<Object>()));
+		add(new JComboBox(cbmAudioFormatWrite = new DefaultComboBoxModel<Object>()));
 		//
 		add(btnWriteVoice = new JButton("Write"), WRAP);
 		//
@@ -690,10 +708,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		cbUseTtsVoice.setSelected(Boolean.parseBoolean(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.useTtsVoice")));
 		//
-		add(cbConvertToFlac = new JCheckBox("Convert To Flac"), String.format("span %1$s", 2));
+		// Audio Format
 		//
-		cbConvertToFlac.setSelected(Boolean.parseBoolean(
-				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.convertToFlac")));
+		add(new JComboBox(cbmAudioFormatExecute = new DefaultComboBoxModel<Object>()));
 		//
 		add(btnExecute = new JButton("Execute"), WRAP);
 		//
@@ -1286,7 +1303,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 				//
 				final ByteConverter byteConverter = getByteConverter(configurableListableBeanFactory, FORMAT,
-						getSelectedItem(cbmAudioFormat));
+						getSelectedItem(cbmAudioFormatWrite));
 				//
 				if (byteConverter != null) {
 					//
@@ -1346,11 +1363,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 						);
 						//
-						if (isSelected(cbConvertToFlac) && Objects.equals("wav", getFileExtension(
+						if (Objects.equals("wav", getFileExtension(
 								testAndApply(Objects::nonNull, file, new ContentInfoUtil()::findMatch, null)))) {
 							//
 							final ByteConverter byteConverter = getByteConverter(configurableListableBeanFactory,
-									FORMAT, "flac");
+									FORMAT, getSelectedItem(cbmAudioFormatExecute));
 							//
 							if (byteConverter != null) {
 								//

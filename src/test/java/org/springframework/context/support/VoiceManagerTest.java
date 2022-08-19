@@ -716,8 +716,13 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> instance.postProcessBeanFactory(null));
 		//
-		FieldUtils.writeDeclaredField(instance, "cbmAudioFormat", Reflection.newProxy(MutableComboBoxModel.class, ih),
-				true);
+		final MutableComboBoxModel<?> mcbm = Reflection.newProxy(MutableComboBoxModel.class, ih);
+		//
+		FieldUtils.writeDeclaredField(instance, "cbmAudioFormatWrite", mcbm, true);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.postProcessBeanFactory(null));
+		//
+		FieldUtils.writeDeclaredField(instance, "cbmAudioFormatExecute", mcbm, true);
 		//
 		Assertions.assertDoesNotThrow(() -> instance.postProcessBeanFactory(null));
 		//
