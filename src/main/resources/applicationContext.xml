@@ -78,6 +78,8 @@
 		<meta key="format" value="mp3" />
 		<property name="bitRate"
 			value="${de.sciss.jump3r.lowlevel.LameEncoder.bitRate}" />
+		<property name="vbr"
+			value="${de.sciss.jump3r.lowlevel.LameEncoder.vbr}" />
 	</bean>
 
 </beans>

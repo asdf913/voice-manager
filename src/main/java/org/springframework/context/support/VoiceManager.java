@@ -2222,8 +2222,30 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 		private Integer bitRate = null;
 
+		private Boolean vbr = null;
+
 		public void setBitRate(final Object bitRate) {
 			this.bitRate = toInteger(bitRate);
+		}
+
+		public void setVbr(final Object vbr) {
+			//
+			if (vbr == null) {
+				//
+				this.vbr = null;
+				//
+			} else if (vbr instanceof Boolean) {
+				//
+				this.vbr = (Boolean) vbr;
+				//
+			} else {
+				//
+				final String string = VoiceManager.toString(vbr);
+				//
+				setVbr(StringUtils.isNotBlank(string) ? Boolean.valueOf(string) : null);
+				//
+			} // if
+				//
 		}
 
 		@Override
@@ -2237,20 +2259,24 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					ByteArrayInputStream::new, null);
 					final AudioInputStream ais = bais != null ? AudioSystem.getAudioInputStream(bais) : null) {
 				//
-				final byte[] inputBuffer = new byte[(encoder = ais != null
-						? new LameEncoder(ais.getFormat(),
-								ObjectUtils.defaultIfNull(
-										bitRate,
-										cast(Integer.class,
-												FieldUtils.readDeclaredStaticField(LameEncoder.class, "DEFAULT_BITRATE",
-														true))),
+				final byte[] inputBuffer = new byte[(encoder = ais != null ? new LameEncoder(ais.getFormat(),
+						//
+						// bitRate
+						//
+						ObjectUtils.defaultIfNull(bitRate,
 								cast(Integer.class,
-										FieldUtils.readDeclaredStaticField(LameEncoder.class, "DEFAULT_CHANNEL_MODE",
-												true)),
-								cast(Integer.class,
-										FieldUtils.readDeclaredStaticField(LameEncoder.class, "DEFAULT_QUALITY", true)),
+										FieldUtils.readDeclaredStaticField(LameEncoder.class, "DEFAULT_BITRATE",
+												true))),
+						cast(Integer.class,
+								FieldUtils.readDeclaredStaticField(LameEncoder.class, "DEFAULT_CHANNEL_MODE", true)),
+						cast(Integer.class,
+								FieldUtils.readDeclaredStaticField(LameEncoder.class, "DEFAULT_QUALITY", true)),
+						//
+						// vbr
+						//
+						ObjectUtils.defaultIfNull(vbr,
 								cast(Boolean.class,
-										FieldUtils.readDeclaredStaticField(LameEncoder.class, "DEFAULT_VBR", true)))
+										FieldUtils.readDeclaredStaticField(LameEncoder.class, "DEFAULT_VBR", true))))
 						: new LameEncoder()).getPCMBufferSize()];
 				//
 				final byte[] outputBuffer = new byte[encoder.getPCMBufferSize()];

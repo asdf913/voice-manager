@@ -3498,13 +3498,7 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(invoke(convert, instance, (Object) null));
 		//
-		final byte[] bs = new byte[] {};
-		//
-		Assertions.assertNull(invoke(convert, instance, bs));
-		//
-		FieldUtils.writeField(instance, "bitRate", Integer.valueOf(-1), true);
-		//
-		Assertions.assertNull(invoke(convert, instance, bs));
+		Assertions.assertNull(invoke(convert, instance, new byte[] {}));
 		//
 		Assertions.assertThrows(RuntimeException.class, () -> {
 			//
@@ -3519,6 +3513,19 @@ class VoiceManagerTest {
 			} // try
 				//
 		});
+		//
+		// setBitRate(java.lang.Object)
+		//
+		Assertions.assertNull(invoke(clz != null ? clz.getDeclaredMethod("setBitRate", Object.class) : null, instance,
+				(Object) null));
+		//
+		// setVbr(java.lang.Object)
+		//
+		final Method setVbr = clz != null ? clz.getDeclaredMethod("setVbr", Object.class) : null;
+		//
+		Assertions.assertNull(invoke(setVbr, instance, ""));
+		//
+		Assertions.assertNull(invoke(setVbr, instance, "true"));
 		//
 	}
 
