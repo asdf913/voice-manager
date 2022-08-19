@@ -64,11 +64,18 @@
 			value="classpath*:mapper/**/*.xml" />
 	</bean>
 
+	<!-- FLAC -->
 	<bean
 		class="org.springframework.context.support.VoiceManager$AudioToFlacByteConverter">
 		<meta key="format" value="flac" />
 		<property name="audioStreamEncoderByteArrayLength"
 			value="${net.sourceforge.javaflacencoder.FLACEncoder.byteArrayLength}" />
+	</bean>
+
+	<!-- MP3 -->
+	<bean
+		class="org.springframework.context.support.VoiceManager.AudioToMp3ByteConverter">
+		<meta key="format" value="mp3" />
 	</bean>
 
 </beans>

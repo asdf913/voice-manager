@@ -151,6 +151,7 @@ import com.mpatric.mp3agic.BaseException;
 import com.mpatric.mp3agic.ID3v1;
 import com.mpatric.mp3agic.Mp3File;
 
+import de.sciss.jump3r.lowlevel.LameEncoder;
 import domain.Voice;
 import domain.Voice.Yomi;
 import domain.VoiceList;
@@ -2125,7 +2126,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
-				return baos.toByteArray();
+				return toByteArray(baos);
 				//
 			} catch (final IOException | UnsupportedAudioFileException e) {
 				//
@@ -2156,6 +2157,70 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			sc.setChannelCount(format.getChannels());
 			//
 			return sc;
+			//
+		}
+
+	}
+
+	private static byte[] toByteArray(final ByteArrayOutputStream instance) {
+		return instance != null ? instance.toByteArray() : null;
+	}
+
+	private static class AudioToMp3ByteConverter implements ByteConverter {
+
+		@Override
+		public byte[] convert(final byte[] source) {
+			//
+			LameEncoder encoder = null;
+			//
+			ByteArrayOutputStream baos = null;
+			//
+			try (final ByteArrayInputStream bais = testAndApply(x -> x != null && x.length > 0, source,
+					ByteArrayInputStream::new, null);
+					final AudioInputStream ais = bais != null ? AudioSystem.getAudioInputStream(bais) : null) {
+				//
+				final byte[] inputBuffer = new byte[(encoder = ais != null ? new LameEncoder(ais.getFormat())
+						: new LameEncoder()).getPCMBufferSize()];
+				//
+				final byte[] outputBuffer = new byte[encoder.getPCMBufferSize()];
+				//
+				int bytesRead;
+				//
+				int bytesWritten;
+				//
+				while (ais != null && 0 < (bytesRead = ais.read(inputBuffer))) {
+					//
+					bytesWritten = encoder.encodeBuffer(inputBuffer, 0, bytesRead, outputBuffer);
+					//
+					if ((baos = ObjectUtils.getIfNull(baos, ByteArrayOutputStream::new)) != null) {
+						//
+						baos.write(outputBuffer, 0, bytesWritten);
+						//
+					} // if
+						//
+				} // while
+					//
+			} catch (final IOException | UnsupportedAudioFileException e) {
+				//
+				throw new RuntimeException(e);
+				//
+			} finally {
+				//
+				try {
+					if (encoder != null && FieldUtils.readDeclaredField(encoder, "lame", true) != null) {
+						//
+						encoder.close();
+						//
+					} // if
+				} catch (final IllegalAccessException e) {
+					//
+					throw new RuntimeException(e);
+					//
+				} // try
+					//
+			} // try
+				//
+			return toByteArray(baos);
 			//
 		}
 
@@ -2626,7 +2691,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			write(workbook, baos);
 			//
-			bs = baos.toByteArray();
+			bs = toByteArray(baos);
 			//
 		} catch (final IOException e) {
 			//

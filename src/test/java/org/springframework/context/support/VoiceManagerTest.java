@@ -3435,4 +3435,43 @@ class VoiceManagerTest {
 		//
 	}
 
+	@Test
+	void testAudioToMp3ByteConverter() throws Throwable {
+		//
+		final Class<?> clz = forName("org.springframework.context.support.VoiceManager$AudioToMp3ByteConverter");
+		//
+		final Constructor<?> constructor = clz != null ? clz.getDeclaredConstructor() : null;
+		//
+		if (constructor != null) {
+			//
+			constructor.setAccessible(true);
+			//
+		} // if
+			//
+		final Object instance = constructor != null ? constructor.newInstance() : null;
+		//
+		// convert(byte[])
+		//
+		final Method convert = clz != null ? clz.getDeclaredMethod("convert", byte[].class) : null;
+		//
+		Assertions.assertNull(invoke(convert, instance, (Object) null));
+		//
+		Assertions.assertNull(invoke(convert, instance, new byte[] {}));
+		//
+		Assertions.assertThrows(RuntimeException.class, () -> {
+			//
+			try {
+				//
+				invoke(convert, instance, new byte[] { 0 });
+				//
+			} catch (final InvocationTargetException e) {
+				//
+				throw e.getTargetException();
+				//
+			} // try
+				//
+		});
+		//
+	}
+
 }

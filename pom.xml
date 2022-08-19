@@ -144,6 +144,12 @@
 			<artifactId>javatuples</artifactId>
 			<version>1.2</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/de.sciss/jump3r -->
+		<dependency>
+		    <groupId>de.sciss</groupId>
+		    <artifactId>jump3r</artifactId>
+		    <version>1.0.5</version>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
