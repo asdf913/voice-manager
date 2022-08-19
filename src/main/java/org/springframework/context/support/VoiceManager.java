@@ -1075,31 +1075,31 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				}));
 		//
-		Object object = null;
+		return createRange(
+				toInteger(testAndApply(VoiceManager::containsKey, map, "MinValue", MapUtils::getObject, null)),
+				toInteger(testAndApply(VoiceManager::containsKey, map, "MaxValue", MapUtils::getObject, null)));
 		//
-		Integer minValue = null;
+	}
+
+	private static Integer toInteger(final Object object) {
 		//
-		if ((object = testAndApply(VoiceManager::containsKey, map, "MinValue", MapUtils::getObject,
-				null)) instanceof Integer) {
-			minValue = (Integer) object;
+		Integer integer = null;
+		//
+		if (object instanceof Integer) {
+			//
+			integer = (Integer) object;
+			//
 		} else if (object instanceof Number) {
-			minValue = Integer.valueOf(((Number) object).intValue());
+			//
+			integer = Integer.valueOf(((Number) object).intValue());
+			//
 		} else {
-			minValue = valueOf(toString(object));
+			//
+			integer = valueOf(toString(object));
+			//
 		} // if
 			//
-		Integer maxValue = null;
-		//
-		if ((object = testAndApply(VoiceManager::containsKey, map, "MaxValue", MapUtils::getObject,
-				null)) instanceof Integer) {
-			maxValue = (Integer) object;
-		} else if (object instanceof Number) {
-			maxValue = Integer.valueOf(((Number) object).intValue());
-		} else {
-			maxValue = valueOf(toString(object));
-		} // if
-			//
-		return createRange(minValue, maxValue);
+		return integer;
 		//
 	}
 
@@ -2143,16 +2143,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 		public void setAudioStreamEncoderByteArrayLength(final Object audioStreamEncoderByteArrayLength) {
 			//
-			if (audioStreamEncoderByteArrayLength instanceof Integer) {
-				this.audioStreamEncoderByteArrayLength = (Integer) audioStreamEncoderByteArrayLength;
-			} else if (audioStreamEncoderByteArrayLength instanceof Number) {
-				this.audioStreamEncoderByteArrayLength = Integer
-						.valueOf(((Number) audioStreamEncoderByteArrayLength).intValue());
-			} else {
-				this.audioStreamEncoderByteArrayLength = valueOf(
-						VoiceManager.toString(audioStreamEncoderByteArrayLength));
-			} // if
-				//
+			this.audioStreamEncoderByteArrayLength = toInteger(audioStreamEncoderByteArrayLength);
+			//
 		}
 
 		@Override
