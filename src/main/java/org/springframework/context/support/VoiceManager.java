@@ -2142,9 +2142,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		private Integer audioStreamEncoderByteArrayLength = null;
 
 		public void setAudioStreamEncoderByteArrayLength(final Object audioStreamEncoderByteArrayLength) {
-			//
 			this.audioStreamEncoderByteArrayLength = toInteger(audioStreamEncoderByteArrayLength);
-			//
 		}
 
 		@Override
@@ -2222,6 +2220,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static class AudioToMp3ByteConverter implements ByteConverter {
 
+		private Integer bitRate = null;
+
+		public void setBitRate(final Object bitRate) {
+			this.bitRate = toInteger(bitRate);
+		}
+
 		@Override
 		public byte[] convert(final byte[] source) {
 			//
@@ -2233,7 +2237,20 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					ByteArrayInputStream::new, null);
 					final AudioInputStream ais = bais != null ? AudioSystem.getAudioInputStream(bais) : null) {
 				//
-				final byte[] inputBuffer = new byte[(encoder = ais != null ? new LameEncoder(ais.getFormat())
+				final byte[] inputBuffer = new byte[(encoder = ais != null
+						? new LameEncoder(ais.getFormat(),
+								ObjectUtils.defaultIfNull(
+										bitRate,
+										cast(Integer.class,
+												FieldUtils.readDeclaredStaticField(LameEncoder.class, "DEFAULT_BITRATE",
+														true))),
+								cast(Integer.class,
+										FieldUtils.readDeclaredStaticField(LameEncoder.class, "DEFAULT_CHANNEL_MODE",
+												true)),
+								cast(Integer.class,
+										FieldUtils.readDeclaredStaticField(LameEncoder.class, "DEFAULT_QUALITY", true)),
+								cast(Boolean.class,
+										FieldUtils.readDeclaredStaticField(LameEncoder.class, "DEFAULT_VBR", true)))
 						: new LameEncoder()).getPCMBufferSize()];
 				//
 				final byte[] outputBuffer = new byte[encoder.getPCMBufferSize()];
@@ -2254,7 +2271,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 				} // while
 					//
-			} catch (final IOException | UnsupportedAudioFileException e) {
+			} catch (final IOException | UnsupportedAudioFileException | IllegalAccessException e) {
 				//
 				throw new RuntimeException(e);
 				//

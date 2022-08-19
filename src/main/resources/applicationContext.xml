@@ -76,6 +76,8 @@
 	<bean
 		class="org.springframework.context.support.VoiceManager.AudioToMp3ByteConverter">
 		<meta key="format" value="mp3" />
+		<property name="bitRate"
+			value="${de.sciss.jump3r.lowlevel.LameEncoder.bitRate}" />
 	</bean>
 
 </beans>

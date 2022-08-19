@@ -3498,7 +3498,13 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(invoke(convert, instance, (Object) null));
 		//
-		Assertions.assertNull(invoke(convert, instance, new byte[] {}));
+		final byte[] bs = new byte[] {};
+		//
+		Assertions.assertNull(invoke(convert, instance, bs));
+		//
+		FieldUtils.writeField(instance, "bitRate", Integer.valueOf(-1), true);
+		//
+		Assertions.assertNull(invoke(convert, instance, bs));
 		//
 		Assertions.assertThrows(RuntimeException.class, () -> {
 			//
