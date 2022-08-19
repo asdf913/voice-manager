@@ -3514,6 +3514,11 @@ class VoiceManagerTest {
 				//
 		});
 		//
+		// get(java.util.Map,java.lang.Object)
+		//
+		Assertions.assertNull(invoke(clz != null ? clz.getDeclaredMethod("get", Map.class, Object.class) : null,
+				instance, null, null));
+		//
 		// setBitRate(java.lang.Object)
 		//
 		Assertions.assertNull(invoke(clz != null ? clz.getDeclaredMethod("setBitRate", Object.class) : null, instance,
@@ -3524,6 +3529,10 @@ class VoiceManagerTest {
 		final Method setQuality = clz != null ? clz.getDeclaredMethod("setQuality", Object.class) : null;
 		//
 		Assertions.assertNull(invoke(setQuality, instance, (Object) null));
+		//
+		Assertions.assertNull(invoke(setQuality, instance, "lowest"));
+		//
+		Assertions.assertNull(invoke(setQuality, instance, "Lowest"));
 		//
 		// setVbr(java.lang.Object)
 		//

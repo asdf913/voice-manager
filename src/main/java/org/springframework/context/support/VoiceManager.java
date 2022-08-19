@@ -2233,7 +2233,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		private static final Pattern PATTERN_VBR_Q = Pattern
 				.compile("^\\d+:\\s?getfield\\s+de.sciss.jump3r.mp3.LameGlobalFlags.VBR_q\\s+I\\s+\\(\\d+\\)$");
 
-		private static final Pattern PATTERN_LDC = Pattern.compile("^\\d+:\\s?ldc\\s+[^\\s]+\\s+\\(\\d+\\)?");
+		private static final Pattern PATTERN_LDC_NUMBER = Pattern.compile("^\\d+:\\s+ldc\\s+[^\\s]+\\s+\\(\\d+\\)?");
+
+		private static final Pattern PATTERN_LDC_STRING = Pattern
+				.compile("^\\d+:\\s+ldc\\s+\"([^\"]+)\"\\s+\\(\\d+\\)$");
+
+		private static final Pattern PATTERN_BI_PUSH = Pattern.compile("^\\d+:\\s+bipush\\s+(\\d+)$");
+
+		private static final Pattern PATTERN_ICONST = Pattern.compile("^\\d+:\\s+iconst_(\\d+)$");
 
 		private Integer bitRate, quality = null;
 
@@ -2243,8 +2250,30 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			this.bitRate = toInteger(bitRate);
 		}
 
-		public void setQuality(final Object quality) {
-			this.quality = toInteger(quality);
+		public void setQuality(final Object quality) throws IOException {
+			//
+			if ((this.quality = toInteger(quality)) == null) {
+				//
+				final Map<String, Integer> map = createQualityMap();
+				//
+				String string = VoiceManager.toString(quality);
+				//
+				if (containsKey(map, string)) {
+					//
+					setQuality(get(map, string));
+					//
+				} else if (containsKey(map, string = StringUtils.lowerCase(string))) {
+					//
+					setQuality(get(map, string));
+					//
+				} // if
+					//
+			} // if
+				//
+		}
+
+		private static <V> V get(final Map<?, V> instance, final Object key) {
+			return instance != null ? instance.get(key) : null;
 		}
 
 		private Integer getQuality() throws IllegalAccessException {
@@ -2369,7 +2398,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							break;
 						} // if
 							//
-						if (index1 != null && matches(matcher(PATTERN_LDC, line))) {
+						if (index1 != null && matches(matcher(PATTERN_LDC_NUMBER, line))) {
 							count = Integer.valueOf(intValue(count, 0) + 1);
 						} // if
 							//
@@ -2382,6 +2411,66 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				} // for
 					//
 				return count != null ? Range.closed(0, count.intValue() - 1) : null;
+				//
+			} // try
+				//
+		}
+
+		private static Map<String, Integer> createQualityMap() throws IOException {
+			//
+			Map<String, Integer> map = null;
+			//
+			final Class<?> clz = LameEncoder.class;
+			//
+			try (final InputStream is = clz != null
+					? clz.getResourceAsStream(
+							String.format("/%1$s.class", StringUtils.replace(clz.getName(), ".", "/")))
+					: null) {
+				//
+				final JavaClass javaClass = ClassParserUtil
+						.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null));
+				//
+				final List<org.apache.bcel.classfile.Method> ms = toList(
+						filter(testAndApply(Objects::nonNull, getMethods(javaClass), Arrays::stream, null),
+								x -> x != null && Objects.equals(x.getName(), "string2quality")));
+				//
+				org.apache.bcel.classfile.Method m = null;
+				//
+				byte[] bs = null;
+				//
+				String line, key = null;
+				//
+				String[] lines = null;
+				//
+				Matcher matcher = null;
+				//
+				for (int i = 0; ms != null && i < ms.size(); i++) {
+					//
+					if ((m = ms.get(i)) == null) {
+						//
+						continue;
+						//
+					} // if
+						//
+					lines = StringUtils.split(StringUtils.trim(Utility.codeToString(bs = CodeUtil.getCode(m.getCode()),
+							m.getConstantPool(), 0, bs != null ? bs.length : 0)), '\n');
+					//
+					for (int j = 0; lines != null && j < lines.length; j++) {
+						//
+						if (matches(matcher = matcher(PATTERN_LDC_STRING, line = lines[j]))
+								&& matcher.groupCount() > 0) {
+							key = matcher.group(1);
+						} else if (matches(matcher = matcher(PATTERN_BI_PUSH, line)) && matcher.groupCount() > 0) {
+							put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), key, valueOf(matcher.group(1)));
+						} else if (matches(matcher = matcher(PATTERN_ICONST, line)) && matcher.groupCount() > 0) {
+							put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), key, valueOf(matcher.group(1)));
+						} // if
+							//
+					} // for
+						//
+				} // for
+					//
+				return map;
 				//
 			} // try
 				//
