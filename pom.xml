@@ -146,9 +146,15 @@
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/de.sciss/jump3r -->
 		<dependency>
-		    <groupId>de.sciss</groupId>
-		    <artifactId>jump3r</artifactId>
-		    <version>1.0.5</version>
+			<groupId>de.sciss</groupId>
+			<artifactId>jump3r</artifactId>
+			<version>1.0.5</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.logevents/logevents -->
+		<dependency>
+			<groupId>org.logevents</groupId>
+			<artifactId>logevents</artifactId>
+			<version>0.3.4</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
 		<dependency>
