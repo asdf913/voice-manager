@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import org.apache.bcel.classfile.ClassParser;
+import org.apache.bcel.classfile.ClassParserUtil;
 import org.apache.bcel.classfile.Code;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
@@ -40,9 +41,10 @@ public class LoggerUtil {
 				? clz.getResourceAsStream(String.format("/%1$s.class", StringUtils.replace(clz.getName(), ".", "/")))
 				: null) {
 			//
-			ms = (javaClass = parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null))) != null
-					? javaClass.getMethods()
-					: null;
+			ms = (javaClass = ClassParserUtil
+					.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null))) != null
+							? javaClass.getMethods()
+							: null;
 			//
 		} catch (final IOException e) {
 			//
@@ -99,10 +101,6 @@ public class LoggerUtil {
 
 	private static Class<?> getClass(final Object instance) {
 		return instance != null ? instance.getClass() : null;
-	}
-
-	private static JavaClass parse(final ClassParser instance) throws IOException {
-		return instance != null ? instance.parse() : null;
 	}
 
 	private static <T, R> R testAndApply(final Predicate<T> predicate, final T value, final Function<T, R> functionTrue,

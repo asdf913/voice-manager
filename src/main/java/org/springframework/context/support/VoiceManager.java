@@ -94,6 +94,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.text.JTextComponent;
 
 import org.apache.bcel.classfile.ClassParser;
+import org.apache.bcel.classfile.ClassParserUtil;
 import org.apache.bcel.classfile.Code;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Utility;
@@ -2327,8 +2328,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							String.format("/%1$s.class", StringUtils.replace(clz.getName(), ".", "/")))
 					: null) {
 				//
-				final JavaClass javaClass = parse(
-						testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null));
+				final JavaClass javaClass = ClassParserUtil
+						.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null));
 				//
 				final org.apache.bcel.classfile.Method[] ms = getMethods(javaClass);
 				//
@@ -2384,10 +2385,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // try
 				//
-		}
-
-		private static JavaClass parse(final ClassParser instance) throws IOException {
-			return instance != null ? instance.parse() : null;
 		}
 
 		private static org.apache.bcel.classfile.Method[] getMethods(final JavaClass instance) {

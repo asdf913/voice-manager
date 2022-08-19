@@ -1,6 +1,5 @@
 package org.slf4j;
 
-import java.io.InputStream;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -14,10 +13,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.Code;
-import org.apache.bcel.classfile.JavaClass;
-import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,7 +25,7 @@ import com.google.common.reflect.Reflection;
 class LoggerUtilTest {
 
 	private static Method METHOD_GET_CODE, METHOD_MATCHER, METHOD_MATCHES, METHOD_TO_LIST, METHOD_IS_EMPTY,
-			METHOD_FILTER, METHOD_PARSE, METHOD_TEST_AND_APPLY = null;
+			METHOD_FILTER, METHOD_TEST_AND_APPLY = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -47,8 +43,6 @@ class LoggerUtilTest {
 		(METHOD_IS_EMPTY = clz.getDeclaredMethod("isEmpty", Collection.class)).setAccessible(true);
 		//
 		(METHOD_FILTER = clz.getDeclaredMethod("filter", Stream.class, Predicate.class)).setAccessible(true);
-		//
-		(METHOD_PARSE = clz.getDeclaredMethod("parse", ClassParser.class)).setAccessible(true);
 		//
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class, Function.class,
 				Function.class)).setAccessible(true);
@@ -240,35 +234,6 @@ class LoggerUtilTest {
 				return null;
 			} else if (obj instanceof Stream) {
 				return (Stream) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testParse() throws Throwable {
-		//
-		final Class<?> clz = String.class;
-		//
-		try (final InputStream is = clz != null
-				? clz.getResourceAsStream(String.format("/%1$s.class", StringUtils.replace(clz.getName(), ".", "/")))
-				: null) {
-			//
-			Assertions.assertNotNull(parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null)));
-			//
-		} // try
-			//
-	}
-
-	private static JavaClass parse(final ClassParser instance) throws Throwable {
-		try {
-			final Object obj = METHOD_PARSE.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof JavaClass) {
-				return (JavaClass) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
