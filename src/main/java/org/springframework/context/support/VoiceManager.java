@@ -86,6 +86,7 @@ import javax.swing.JSlider;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
+import javax.swing.MutableComboBoxModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
@@ -126,6 +127,7 @@ import org.openxmlformats.schemas.officeDocument.x2006.customProperties.CTProper
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
+import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -190,9 +192,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private ComboBoxModel<String> cbmVoiceId = null;
 
-	private AbstractButton btnSpeak, cbWriteVoiceAsFlac, btnWriteVoice, btnConvertToRomaji, btnConvertToKatakana,
-			btnCopyRomaji, btnCopyHiragana, btnCopyKatakana, cbUseTtsVoice, cbConvertToFlac, btnExecute,
-			btnImportFileTemplate, btnImport, cbOverMp3Title, btnExport = null;
+	private ComboBoxModel<?> cbmAudioFormat = null;
+
+	private AbstractButton btnSpeak, btnWriteVoice, btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji,
+			btnCopyHiragana, btnCopyKatakana, cbUseTtsVoice, cbConvertToFlac, btnExecute, btnImportFileTemplate,
+			btnImport, cbOverMp3Title, btnExport = null;
 
 	private JProgressBar progressBar = null;
 
@@ -234,7 +238,19 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	@Override
 	public void postProcessBeanFactory(final ConfigurableListableBeanFactory configurableListableBeanFactory) {
+		//
 		this.configurableListableBeanFactory = configurableListableBeanFactory;
+		//
+		final MutableComboBoxModel<Object> mcbm = cast(MutableComboBoxModel.class, cbmAudioFormat);
+		//
+		if (mcbm != null) {
+			//
+			mcbm.addElement(null);
+			//
+			forEach(getByteConverterAttributeValues(configurableListableBeanFactory, "format"), mcbm::addElement);
+			//
+		} // if
+			//
 	}
 
 	public void setSqlSessionFactory(final SqlSessionFactory sqlSessionFactory) {
@@ -546,10 +562,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(btnSpeak = new JButton("Speak"));
 		//
-		add(cbWriteVoiceAsFlac = new JCheckBox("Flac"));
+		// Audio Format
 		//
-		cbWriteVoiceAsFlac.setSelected(Boolean.parseBoolean(
-				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.writeVoiceAsFlac")));
+		add(new JComboBox(cbmAudioFormat = new DefaultComboBoxModel<Object>()));
 		//
 		add(btnWriteVoice = new JButton("Write"), WRAP);
 		//
@@ -1249,9 +1264,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 								100)// volume
 				);
 				//
-				final ByteConverter byteConverter = isSelected(cbWriteVoiceAsFlac)
-						? getByteConverter(configurableListableBeanFactory, "flac")
-						: null;
+
+				//
+				final ByteConverter byteConverter = getByteConverter(configurableListableBeanFactory,
+						getSelectedItem(cbmAudioFormat));
 				//
 				if (byteConverter != null) {
 					//
@@ -1964,14 +1980,46 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.convert(input, trailingSpace, capitalizeWords) : null;
 	}
 
+	private static Collection<Object> getByteConverterAttributeValues(
+			final ConfigurableListableBeanFactory configurableListableBeanFactory, final String attribute) {
+		//
+		List<Object> list = null;
+		//
+		final Map<String, ByteConverter> byteConverters = getBeansOfType(configurableListableBeanFactory,
+				ByteConverter.class);
+		//
+		if (byteConverters != null && byteConverters.entrySet() != null) {
+			//
+			BeanDefinition bd = null;
+			//
+			for (final Entry<String, ByteConverter> en : byteConverters.entrySet()) {
+				//
+				if (en == null || (bd = configurableListableBeanFactory.getBeanDefinition(en.getKey())) == null
+						|| !bd.hasAttribute(attribute)) {
+					continue;
+				} // if
+					//
+				add(list = ObjectUtils.getIfNull(list, ArrayList::new), bd.getAttribute(attribute));
+				//
+			} // for
+				//
+		} // if
+			//
+		return list;
+		//
+	}
+
+	private static <T> Map<String, T> getBeansOfType(final ListableBeanFactory instance, final Class<T> type) {
+		return instance != null ? instance.getBeansOfType(type) : null;
+	}
+
 	private static ByteConverter getByteConverter(final ConfigurableListableBeanFactory configurableListableBeanFactory,
-			final String format) {
+			final Object format) {
 		//
 		Unit<ByteConverter> byteConverter = null;
 		//
-		final Map<String, ByteConverter> byteConverters = configurableListableBeanFactory != null
-				? configurableListableBeanFactory.getBeansOfType(ByteConverter.class)
-				: null;
+		final Map<String, ByteConverter> byteConverters = getBeansOfType(configurableListableBeanFactory,
+				ByteConverter.class);
 		//
 		if (byteConverters != null && byteConverters.entrySet() != null) {
 			//

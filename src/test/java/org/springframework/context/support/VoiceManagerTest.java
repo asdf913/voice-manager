@@ -63,6 +63,7 @@ import javax.swing.JProgressBar;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
+import javax.swing.MutableComboBoxModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
@@ -339,7 +340,7 @@ class VoiceManagerTest {
 		(METHOD_PUT = clz.getDeclaredMethod("put", Map.class, Object.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_GET_BYTE_CONVERTER = clz.getDeclaredMethod("getByteConverter", ConfigurableListableBeanFactory.class,
-				String.class)).setAccessible(true);
+				Object.class)).setAccessible(true);
 		//
 		(METHOD_GET_PROPERTIES = clz.getDeclaredMethod("getProperties", POIXMLDocument.class)).setAccessible(true);
 		//
@@ -683,6 +684,8 @@ class VoiceManagerTest {
 
 	private Sheet sheet = null;
 
+	private BeanDefinition beanDefinition = null;
+
 	@BeforeEach
 	void beforeEach() throws ReflectiveOperationException {
 		//
@@ -703,6 +706,45 @@ class VoiceManagerTest {
 		speechApi = Reflection.newProxy(SpeechApi.class, ih);
 		//
 		sheet = Reflection.newProxy(Sheet.class, ih);
+		//
+		beanDefinition = Reflection.newProxy(BeanDefinition.class, ih);
+		//
+	}
+
+	@Test
+	void testPostProcessBeanFactory() throws IllegalAccessException {
+		//
+		Assertions.assertDoesNotThrow(() -> instance.postProcessBeanFactory(null));
+		//
+		FieldUtils.writeDeclaredField(instance, "cbmAudioFormat", Reflection.newProxy(MutableComboBoxModel.class, ih),
+				true);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.postProcessBeanFactory(null));
+		//
+		final ConfigurableListableBeanFactory configurableListableBeanFactory = Reflection
+				.newProxy(ConfigurableListableBeanFactory.class, ih);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.postProcessBeanFactory(configurableListableBeanFactory));
+		//
+		ih.beansOfType = Reflection.newProxy(Map.class, ih);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.postProcessBeanFactory(configurableListableBeanFactory));
+		//
+		ih.entrySet = Collections.singleton(null);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.postProcessBeanFactory(configurableListableBeanFactory));
+		//
+		ih.beansOfType = Collections.singletonMap(null, null);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.postProcessBeanFactory(configurableListableBeanFactory));
+		//
+		ih.getBeanDefinitions().put(null, beanDefinition);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.postProcessBeanFactory(configurableListableBeanFactory));
+		//
+		ih.getBeanDefinitionAttributes().put("format", null);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.postProcessBeanFactory(configurableListableBeanFactory));
 		//
 	}
 
@@ -2979,8 +3021,6 @@ class VoiceManagerTest {
 		ih.beansOfType = Collections.singletonMap(null, null);
 		//
 		Assertions.assertNull(getByteConverter(configurableListableBeanFactory, null));
-		//
-		final BeanDefinition beanDefinition = Reflection.newProxy(BeanDefinition.class, ih);
 		//
 		ih.getBeanDefinitions().put(null, beanDefinition);
 		//
