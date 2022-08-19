@@ -95,7 +95,6 @@ import javax.swing.text.JTextComponent;
 
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.ClassParserUtil;
-import org.apache.bcel.classfile.Code;
 import org.apache.bcel.classfile.CodeUtil;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Utility;
