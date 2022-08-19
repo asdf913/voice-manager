@@ -253,6 +253,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
+		setSelectedItem(cbmAudioFormat,
+				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.audioFormat"));
+		//
+	}
+
+	private static void setSelectedItem(final ComboBoxModel<?> instance, final Object selectedItem) {
+		if (instance != null) {
+			instance.setSelectedItem(selectedItem);
+		}
 	}
 
 	public void setSqlSessionFactory(final SqlSessionFactory sqlSessionFactory) {
@@ -504,7 +513,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				if (temp.size() == 1) {
 					//
-					cbmVoiceId.setSelectedItem(temp.get(0));
+					setSelectedItem(cbmVoiceId, temp.get(0));
 					//
 				} else {
 					//
@@ -632,7 +641,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		if (size == 1) {
 			//
-			cbmYomi.setSelectedItem(yomiList.get(0));
+			setSelectedItem(cbmYomi, yomiList.get(0));
 			//
 		} else if (size > 1) {
 			//
