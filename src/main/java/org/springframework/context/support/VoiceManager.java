@@ -2227,6 +2227,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static class AudioToMp3ByteConverter implements ByteConverter, InitializingBean {
 
+		private static final Pattern PATTERN_NEW_ARRAY_FLOAT = Pattern.compile("^\\d+:\\s+newarray\\s+<float>$");
+
+		private static final Pattern PATTERN_VBR_Q = Pattern
+				.compile("^\\d+:\\s?getfield\\s+de.sciss.jump3r.mp3.LameGlobalFlags.VBR_q\\s+I\\s+\\(\\d+\\)$");
+
+		private static final Pattern PATTERN_LDC = Pattern.compile("^\\d+:\\s?ldc\\s+[^\\s]+\\s+\\(\\d+\\)?");
+
 		private Integer bitRate, quality = null;
 
 		private Boolean vbr = null;
@@ -2354,15 +2361,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							continue;
 						} // if
 							//
-						if (index1 == null && line.matches("^\\d+:\\s+newarray\\s+<float>$")) {
+						if (index1 == null && matches(matcher(PATTERN_NEW_ARRAY_FLOAT, line))) {
 							index1 = Integer.valueOf(j);
-						} else if (index2 == null && line.matches(
-								"^\\d+:\\s?getfield\\s+de.sciss.jump3r.mp3.LameGlobalFlags.VBR_q\\s+I\\s+\\(\\d+\\)$")) {
+						} else if (index2 == null && matches(matcher(PATTERN_VBR_Q, line))) {
 							index2 = Integer.valueOf(j);
 							break;
 						} // if
 							//
-						if (index1 != null && line.matches("^\\d+:\\s?ldc\\s+[^\\s]+\\s+\\(\\d+\\)?")) {
+						if (index1 != null && matches(matcher(PATTERN_LDC, line))) {
 							count = Integer.valueOf(intValue(count, 0) + 1);
 						} // if
 							//
