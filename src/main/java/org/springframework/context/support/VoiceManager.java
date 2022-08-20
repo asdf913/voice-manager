@@ -3356,7 +3356,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				Double D = null;
 				//
-				Integer integer, currentSheetIndex, numberOfSheets = null;
+				Integer integer = null;
 				//
 				Workbook workbook = null;
 				//
@@ -3482,29 +3482,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 						if ((es = ObjectUtils.getIfNull(es, () -> Executors.newFixedThreadPool(1))) != null) {
 							//
-							currentSheetIndex = null;
-							//
-							if ((workbook = sheet != null ? sheet.getWorkbook() : null) != null) {
-								//
-								numberOfSheets = Integer.valueOf(workbook.getNumberOfSheets());
-								//
-								for (int i = 0; i < intValue(numberOfSheets, 0); i++) {
-									//
-									if (!Objects.equals(workbook.getSheetName(i), getSheetName(sheet))) {
-										continue;
-									} // if
-										//
-									if (currentSheetIndex == null) {
-										currentSheetIndex = Integer.valueOf(i);
-									} else {
-										throw new IllegalStateException();
-									} // if
-										//
-								} // for
-									//
-							} // if
-								//
-							(it = new ImportTask()).sheetCurrentAndTotal = Pair.of(currentSheetIndex, numberOfSheets);
+							(it = new ImportTask()).sheetCurrentAndTotal = Pair.of(getCurrentSheetIndex(sheet),
+									(workbook = sheet != null ? sheet.getWorkbook() : null) != null
+											? Integer.valueOf(workbook.getNumberOfSheets())
+											: null);
 							//
 							it.counter = Integer.valueOf(row.getRowNum());
 							//
@@ -3682,6 +3663,36 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // try
 			//
+	}
+
+	private static Integer getCurrentSheetIndex(final Sheet sheet) {
+		//
+		Integer currentSheetIndex = null;
+		//
+		final Workbook workbook = sheet != null ? sheet.getWorkbook() : null;
+		//
+		if (workbook != null) {
+			//
+			final int numberOfSheets = workbook.getNumberOfSheets();
+			//
+			for (int i = 0; i < numberOfSheets; i++) {
+				//
+				if (!Objects.equals(workbook.getSheetName(i), getSheetName(sheet))) {
+					continue;
+				} // if
+					//
+				if (currentSheetIndex == null) {
+					currentSheetIndex = Integer.valueOf(i);
+				} else {
+					throw new IllegalStateException();
+				} // if
+					//
+			} // for
+				//
+		} // if
+			//
+		return currentSheetIndex;
+		//
 	}
 
 	private static Boolean getBoolean(final CustomProperties instance, final String name) {

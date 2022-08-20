@@ -151,7 +151,8 @@ class VoiceManagerTest {
 			METHOD_SET_HIRAGANA_OR_KATAKANA, METHOD_SET_ROMAJI, METHOD_OR, METHOD_CLEAR, METHOD_EXECUTE, METHOD_PUT,
 			METHOD_GET_BYTE_CONVERTER, METHOD_GET_PROPERTIES, METHOD_GET_CUSTOM_PROPERTIES,
 			METHOD_CONTAINS_CUSTOM_PROPERTIES, METHOD_CONTAINS_COLLECTION, METHOD_GET_LPW_STR, METHOD_GET_SHEET_NAME,
-			METHOD_ACCEPT, METHOD_TO_ARRAY, METHOD_TO_LIST, METHOD_GET_ID, METHOD_SET_MAXIMUM = null;
+			METHOD_ACCEPT, METHOD_TO_ARRAY, METHOD_TO_LIST, METHOD_GET_ID, METHOD_SET_MAXIMUM,
+			METHOD_GET_CURRENT_SHEET_INDEX = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -370,6 +371,9 @@ class VoiceManagerTest {
 		(METHOD_SET_MAXIMUM = clz.getDeclaredMethod("setMaximum", JProgressBar.class, Integer.TYPE))
 				.setAccessible(true);
 		//
+		(METHOD_GET_CURRENT_SHEET_INDEX = clz.getDeclaredMethod("getCurrentSheetIndex", Sheet.class))
+				.setAccessible(true);
+		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
 		CLASS_BOOLEAN_MAP = Class.forName("org.springframework.context.support.VoiceManager$BooleanMap");
@@ -414,6 +418,10 @@ class VoiceManagerTest {
 		private Object[] toArray = null;
 
 		private VoiceList voiceList = null;
+
+		private Workbook workbook = null;
+
+		private Integer numberOfSheets = null;
 
 		private Map<Object, String> getProperties() {
 			if (properties == null) {
@@ -476,6 +484,10 @@ class VoiceManagerTest {
 					if (Objects.equals(methodName, "getSheetName")) {
 						//
 						return sheetName;
+						//
+					} else if (Objects.equals(methodName, "getWorkbook")) {
+						//
+						return workbook;
 						//
 					} // if
 						//
@@ -668,6 +680,18 @@ class VoiceManagerTest {
 				if (Objects.equals(methodName, "getLpwstr")) {
 					//
 					return lpwstr;
+					//
+				} // if
+					//
+			} else if (proxy instanceof Workbook) {
+				//
+				if (Objects.equals(methodName, "getNumberOfSheets")) {
+					//
+					return numberOfSheets;
+					//
+				} else if (Objects.equals(methodName, "getSheetName")) {
+					//
+					return sheetName;
 					//
 				} // if
 					//
@@ -3281,6 +3305,39 @@ class VoiceManagerTest {
 	private static void setMaximum(final JProgressBar instance, final int n) throws Throwable {
 		try {
 			METHOD_SET_MAXIMUM.invoke(null, instance, n);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetCurrentSheetIndex() throws Throwable {
+		//
+		Assertions.assertNull(getCurrentSheetIndex(null));
+		//
+		Assertions.assertNull(getCurrentSheetIndex(sheet));
+		//
+		ih.workbook = Reflection.newProxy(Workbook.class, ih);
+		//
+		ih.numberOfSheets = Integer.valueOf(1);
+		//
+		Assertions.assertEquals(Integer.valueOf(0), getCurrentSheetIndex(sheet));
+		//
+		ih.numberOfSheets = Integer.valueOf(2);
+		//
+		Assertions.assertThrows(IllegalStateException.class, () -> getCurrentSheetIndex(sheet));
+		//
+	}
+
+	private static Integer getCurrentSheetIndex(final Sheet sheet) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_CURRENT_SHEET_INDEX.invoke(null, sheet);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Integer) {
+				return (Integer) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
