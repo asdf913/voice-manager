@@ -3140,6 +3140,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static class ImportTask implements Runnable {
 
+		private static final Logger LOG = LoggerFactory.getLogger(ImportTask.class);
+
 		private Integer counter = null;
 
 		private Integer count = null;
@@ -3160,6 +3162,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 		@Override
 		public void run() {
+			//
+			infoOrPrintln(LOG, System.out, String.format("%1$s/%2$s", StringUtils
+					.leftPad(VoiceManager.toString(counter), StringUtils.length(VoiceManager.toString(count))), count));
 			//
 			SqlSession sqlSession = null;
 			//
@@ -3206,6 +3211,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				IOUtils.closeQuietly(sqlSession);
 				//
 			} // try
+				//
+		}
+
+		private static void infoOrPrintln(final Logger logger, final PrintStream ps, final String value) {
+			//
+			if (logger != null && !LoggerUtil.isNOPLogger(logger)) {
+				logger.info(value);
+			} else if (ps != null) {
+				ps.println(value);
+			} // if
 				//
 		}
 

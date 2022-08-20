@@ -3366,6 +3366,20 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> run(runnable));
 		//
+		// org.springframework.context.support.VoiceManager.ImportTask.infoOrPrintln(org.slf4j.Logger,java.io.PrintStream,java.lang.String)
+		//
+		final Method infoOrPrintln = clz != null
+				? clz.getDeclaredMethod("infoOrPrintln", Logger.class, PrintStream.class, String.class)
+				: null;
+		//
+		invoke(infoOrPrintln, instance, null, null, null);
+		//
+		try (final PrintStream ps = new PrintStream(new ByteArrayOutputStream())) {
+			//
+			invoke(infoOrPrintln, instance, null, ps, null);
+			//
+		} // try
+			//
 	}
 
 	@Test
