@@ -1621,7 +1621,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				IOUtils.closeQuietly(workbook);
 				//
-				if (file != null && file.exists() && file.isFile() && file.length() == 0) {
+				if (file != null && file.exists() && isFile(file) && file.length() == 0) {
 					//
 					file.delete();
 					//
@@ -1916,6 +1916,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
+	}
+
+	private static boolean isFile(final File instance) {
+		return instance != null && instance.isFile();
 	}
 
 	private static void setMaximum(final JProgressBar instance, final int n) {
@@ -2662,8 +2666,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static List<Pair<String, ?>> getMp3TagParirs(final File file, final String... attributes)
 			throws BaseException, IOException, IllegalAccessException, InvocationTargetException {
 		//
-		if (Objects.equals("mp3", getFileExtension(
-				testAndApply(f -> f != null && f.isFile(), file, new ContentInfoUtil()::findMatch, null)))) {
+		if (Objects.equals("mp3",
+				getFileExtension(testAndApply(VoiceManager::isFile, file, new ContentInfoUtil()::findMatch, null)))) {
 			//
 			final Mp3File mp3File = new Mp3File(file);
 			//
@@ -2779,7 +2783,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			return;
 			//
-		} else if (!file.isFile()) {
+		} else if (!isFile(file)) {
 			//
 			message = "Not A Regular File Selected";
 			//
@@ -3707,7 +3711,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			return;
 			//
-		} else if (!selectedFile.isFile()) {
+		} else if (!isFile(selectedFile)) {
 			//
 			accept(errorMessageConsumer, voice, "Not A Regular File Selected");
 			//
@@ -4058,7 +4062,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		private static void setMp3Title(final File file) throws IOException, BaseException {
 			//
 			final String fileExtension = getFileExtension(
-					testAndApply(f -> f != null && f.isFile(), file, new ContentInfoUtil()::findMatch, null));
+					testAndApply(VoiceManager::isFile, file, new ContentInfoUtil()::findMatch, null));
 			//
 			if (Objects.equals("mp3", fileExtension)) {
 				//
