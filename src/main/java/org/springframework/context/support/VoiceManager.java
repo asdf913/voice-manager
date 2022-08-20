@@ -99,6 +99,7 @@ import org.apache.bcel.classfile.CodeUtil;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Utility;
 import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.collections4.IteratorUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -149,6 +150,7 @@ import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.curiousoddman.rgxgen.RgxGen;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Range;
@@ -3959,6 +3961,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static class ExportTask implements Runnable {
 
+		private static String FILE_NAME_PREFIX_PADDING = orElse(
+				min(stream(IteratorUtils.toList(new RgxGen("\\d").iterateUnique())), StringUtils::compare), null);
+
 		private Integer counter, count, ordinalPositionDigit;
 
 		private Voice voice = null;
@@ -4016,7 +4021,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 								ordinalPositionString = VoiceManager.toString(voice.getOrdinalPosition()))) {
 							//
 							fileName.append(ordinalPositionDigit != null
-									? StringUtils.leftPad(ordinalPositionString, ordinalPositionDigit.intValue(), '0')
+									? StringUtils.leftPad(ordinalPositionString, ordinalPositionDigit.intValue(),
+											StringUtils.defaultString(FILE_NAME_PREFIX_PADDING))
 									: ordinalPositionString);
 							//
 							fileName.append('_');
@@ -4079,6 +4085,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 			} // try
 				//
+		}
+
+		private static <T> Optional<T> min(final Stream<T> instance, final Comparator<? super T> comparator) {
+			//
+			return instance != null && (Proxy.isProxyClass(VoiceManager.getClass(instance)) || comparator != null)
+					? instance.min(comparator)
+					: null;
+			//
 		}
 
 		private static void clear(final StringBuilder instance) {

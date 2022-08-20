@@ -380,7 +380,7 @@ class VoiceManagerTest {
 		private Set<Entry<?, ?>> entrySet = null;
 
 		private String toString, stringCellValue, providerName, providerVersion, artist, voiceAttribute, lpwstr,
-				sheetName, title = null;
+				sheetName = null;
 
 		private Configuration configuration = null;
 
@@ -388,7 +388,7 @@ class VoiceManagerTest {
 
 		private Expression expression = null;
 
-		private Object value, max, selectedItem = null;
+		private Object value, min, max, selectedItem = null;
 
 		private Iterator<Row> rows = null;
 
@@ -564,6 +564,10 @@ class VoiceManagerTest {
 					//
 					return proxy;
 					//
+				} else if (Objects.equals(methodName, "min")) {
+					//
+					return min;
+					//
 				} else if (Objects.equals(methodName, "max")) {
 					//
 					return max;
@@ -625,10 +629,6 @@ class VoiceManagerTest {
 				if (Objects.equals(methodName, "getArtist")) {
 					//
 					return artist;
-					//
-				} else if (Objects.equals(methodName, "getTitle")) {
-					//
-					return title;
 					//
 				} // if
 					//
@@ -3390,9 +3390,23 @@ class VoiceManagerTest {
 			//
 		Assertions.assertNull(invoke(clear, instance, (Object) null));
 		//
-		final StringBuilder stringBuilder = new StringBuilder();
+		Assertions.assertNull(invoke(clear, instance, new StringBuilder()));
 		//
-		Assertions.assertNull(invoke(clear, instance, stringBuilder));
+		// org.springframework.context.support.VoiceManager.ExportTask.min(java.util.stream.Stream,java.util.Comparator)
+		//
+		final Method min = clz != null ? clz.getDeclaredMethod("min", Stream.class, Comparator.class) : null;
+		//
+		if (min != null) {
+			//
+			min.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertNull(invoke(min, instance, null, null));
+		//
+		Assertions.assertNull(invoke(min, instance, Stream.empty(), null));
+		//
+		Assertions.assertNull(invoke(min, instance, stream, null));
 		//
 	}
 
