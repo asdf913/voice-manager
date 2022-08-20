@@ -110,6 +110,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.math.Fraction;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.ibatis.session.Configuration;
@@ -331,7 +332,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				} // if
 					//
 				put(outputFolderFileNameExpressions = ObjectUtils.getIfNull(outputFolderFileNameExpressions,
-						LinkedHashMap::new), toString(entry.getKey()), toString(entry.getValue()));
+						LinkedHashMap::new), toString(getKey(entry)), toString(getValue(entry)));
 				//
 			} // for
 				//
@@ -354,6 +355,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			throw new IllegalArgumentException(toString(getClass(object)));
 		} // if
 			//
+	}
+
+	private static <K> K getKey(final Entry<K, ?> instance) {
+		return instance != null ? instance.getKey() : null;
+	}
+
+	private static <V> V getValue(final Entry<?, V> instance) {
+		return instance != null ? instance.getValue() : null;
 	}
 
 	private static <K, V> void put(final Map<K, V> instance, final K key, final V value) {
@@ -914,7 +923,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-			put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), pair.getKey(), pair.getValue());
+			put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), getKey(pair), getValue(pair));
 			//
 		} // for
 			//
@@ -2064,7 +2073,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			for (final Entry<String, ByteConverter> en : byteConverters.entrySet()) {
 				//
-				if (en == null || (bd = configurableListableBeanFactory.getBeanDefinition(en.getKey())) == null
+				if (en == null || (bd = configurableListableBeanFactory.getBeanDefinition(getKey(en))) == null
 						|| !bd.hasAttribute(attribute)) {
 					continue;
 				} // if
@@ -2097,7 +2106,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			for (final Entry<String, ByteConverter> en : byteConverters.entrySet()) {
 				//
-				if (en == null || (bd = configurableListableBeanFactory.getBeanDefinition(en.getKey())) == null
+				if (en == null || (bd = configurableListableBeanFactory.getBeanDefinition(getKey(en))) == null
 						|| !bd.hasAttribute(attribute)
 						|| !Objects.equals(value, testAndApply(bd::hasAttribute, attribute, bd::getAttribute, null))) {
 					//
@@ -2107,7 +2116,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				if (byteConverter == null) {
 					//
-					byteConverter = Unit.with(en.getValue());
+					byteConverter = Unit.with(getValue(en));
 					//
 				} else {
 					//
@@ -2677,7 +2686,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-			if (test(predicate, string = toString(pair.getValue())) || predicate == null) {
+			if (test(predicate, string = toString(getValue(pair))) || predicate == null) {
 				//
 				break;
 				//
@@ -3142,6 +3151,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 		private static final Logger LOG = LoggerFactory.getLogger(ImportTask.class);
 
+		private Pair<Integer, Integer> sheetCurrentAndTotal = null;
+
 		private Integer counter = null;
 
 		private Integer count = null;
@@ -3163,8 +3174,32 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		@Override
 		public void run() {
 			//
-			infoOrPrintln(LOG, System.out, String.format("%1$s/%2$s", StringUtils
-					.leftPad(VoiceManager.toString(counter), StringUtils.length(VoiceManager.toString(count))), count));
+			final Integer sheetCurrent = getKey(sheetCurrentAndTotal);
+			//
+			final Integer sheetTotal = getValue(sheetCurrentAndTotal);
+			//
+			final Fraction fraction1 = sheetTotal != null && sheetTotal.intValue() != 0
+					? Fraction.getFraction(intValue(sheetCurrent, 0), sheetTotal.intValue())
+					: null;
+			//
+			Fraction fraction2 = sheetTotal != null ? Fraction.getFraction(1, sheetTotal) : null;
+			//
+			if (fraction2 != null && count != null) {
+				//
+				fraction2 = fraction2.multiplyBy(Fraction.getFraction(intValue(counter, 0), count.intValue()));
+				//
+			} // if
+				//
+			final Fraction percentage = add(fraction1, fraction2);
+			//
+			infoOrPrintln(LOG, System.out,
+					String.format("%1$s %2$s/%3$s",
+							percentage != null
+									? StringUtils.leftPad(format(percentNumberFormat, percentage.doubleValue()), 5, ' ')
+									: null,
+							StringUtils.leftPad(VoiceManager.toString(counter),
+									StringUtils.length(VoiceManager.toString(count))),
+							count));
 			//
 			SqlSession sqlSession = null;
 			//
@@ -3212,6 +3247,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // try
 				//
+		}
+
+		private static Fraction add(final Fraction a, final Fraction b) {
+			return a != null && b != null ? a.add(b) : a;
 		}
 
 		private static void infoOrPrintln(final Logger logger, final PrintStream ps, final String value) {
@@ -3316,7 +3355,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				Double D = null;
 				//
-				Integer integer = null;
+				Integer integer, currentSheetIndex, numberOfSheets = null;
+				//
+				Workbook workbook = null;
 				//
 				for (final Row row : sheet) {
 					//
@@ -3440,7 +3481,32 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 						if ((es = ObjectUtils.getIfNull(es, () -> Executors.newFixedThreadPool(1))) != null) {
 							//
-							(it = new ImportTask()).counter = Integer.valueOf(row.getRowNum());
+							currentSheetIndex = null;
+							//
+							if ((workbook = sheet != null ? sheet.getWorkbook() : null) != null) {
+								//
+								numberOfSheets = Integer.valueOf(workbook.getNumberOfSheets());
+								//
+								for (int i = 0; i < intValue(numberOfSheets, 0); i++) {
+									//
+									if (!Objects.equals(workbook.getSheetName(i),
+											sheet != null ? sheet.getSheetName() : null)) {
+										continue;
+									} // if
+										//
+									if (currentSheetIndex == null) {
+										currentSheetIndex = Integer.valueOf(i);
+									} else {
+										throw new IllegalStateException();
+									} // if
+										//
+								} // for
+									//
+							} // if
+								//
+							(it = new ImportTask()).sheetCurrentAndTotal = Pair.of(currentSheetIndex, numberOfSheets);
+							//
+							it.counter = Integer.valueOf(row.getRowNum());
 							//
 							it.count = Integer.valueOf(sheet.getPhysicalNumberOfRows() - 1);
 							//
@@ -4074,8 +4140,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				for (final Entry<String, String> folderFileNamePattern : outputFolderFileNameExpressions.entrySet()) {
 					//
-					if (folderFileNamePattern == null || (key = folderFileNamePattern.getKey()) == null
-							|| StringUtils.isBlank(value = folderFileNamePattern.getValue())
+					if (folderFileNamePattern == null || (key = getKey(folderFileNamePattern)) == null
+							|| StringUtils.isBlank(value = getValue(folderFileNamePattern))
 							|| !(fileSource = voiceFolder != null ? new File(voiceFolder, filePath)
 									: new File(filePath)).exists()) {
 						continue;
@@ -4365,12 +4431,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					et.outputFolder = outputFolder;
 					//
-					et.outputFolderFileNameExpressions = Collections.singletonMap(en.getKey(),
+					et.outputFolderFileNameExpressions = Collections.singletonMap(getKey(en),
 							"(#voice.text+'('+#voice.romaji+').'+#voice.fileExtension)");
 					//
 					et.progressBar = progressBar;
 					//
-					et.voice = en.getValue();
+					et.voice = getValue(en);
 					//
 					et.voiceFolder = voiceFolder;
 					//

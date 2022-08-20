@@ -78,6 +78,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.math.Fraction;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.ibatis.binding.BindingException;
@@ -3372,7 +3373,7 @@ class VoiceManagerTest {
 				? clz.getDeclaredMethod("infoOrPrintln", Logger.class, PrintStream.class, String.class)
 				: null;
 		//
-		invoke(infoOrPrintln, instance, null, null, null);
+		Assertions.assertNull(invoke(infoOrPrintln, instance, null, null, null));
 		//
 		try (final PrintStream ps = new PrintStream(new ByteArrayOutputStream())) {
 			//
@@ -3380,6 +3381,18 @@ class VoiceManagerTest {
 			//
 		} // try
 			//
+			// org.springframework.context.support.VoiceManager.ImportTask.add(org.apache.commons.lang3.math.Fraction,org.apache.commons.lang3.math.Fraction)
+			//
+		final Method add = clz != null ? clz.getDeclaredMethod("add", Fraction.class, Fraction.class) : null;
+		//
+		Assertions.assertNull(invoke(add, instance, null, null));
+		//
+		final Fraction a = Fraction.getFraction(1);
+		//
+		Assertions.assertSame(a, invoke(add, instance, a, null));
+		//
+		Assertions.assertSame(a, invoke(add, instance, a, Fraction.ZERO));
+		//
 	}
 
 	@Test
