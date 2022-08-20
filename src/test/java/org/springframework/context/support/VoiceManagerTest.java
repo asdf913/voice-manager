@@ -3362,19 +3362,37 @@ class VoiceManagerTest {
 			//
 		final Object instance = constructor != null ? constructor.newInstance() : null;
 		//
-		final Method methodSetMp3Title = clz != null ? clz.getDeclaredMethod("setMp3Title", File.class) : null;
+		// org.springframework.context.support.VoiceManager.ExportTask.setMp3Title(java.io.File)
 		//
-		if (methodSetMp3Title != null) {
+		final Method setMp3Title = clz != null ? clz.getDeclaredMethod("setMp3Title", File.class) : null;
+		//
+		if (setMp3Title != null) {
 			//
-			methodSetMp3Title.setAccessible(true);
+			setMp3Title.setAccessible(true);
 			//
 		} // if
 			//
-		Assertions.assertNull(invoke(methodSetMp3Title, instance, (Object) null));
+		Assertions.assertNull(invoke(setMp3Title, instance, (Object) null));
 		//
-		Assertions.assertNull(invoke(methodSetMp3Title, instance, new File(".")));
+		Assertions.assertNull(invoke(setMp3Title, instance, new File(".")));
 		//
-		Assertions.assertNull(invoke(methodSetMp3Title, instance, new File("pom.xml")));
+		Assertions.assertNull(invoke(setMp3Title, instance, new File("pom.xml")));
+		//
+		// org.springframework.context.support.VoiceManager.ExportTask.setMp3Title(java.io.File)
+		//
+		final Method clear = clz != null ? clz.getDeclaredMethod("clear", StringBuilder.class) : null;
+		//
+		if (clear != null) {
+			//
+			clear.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertNull(invoke(clear, instance, (Object) null));
+		//
+		final StringBuilder stringBuilder = new StringBuilder();
+		//
+		Assertions.assertNull(invoke(clear, instance, stringBuilder));
 		//
 	}
 

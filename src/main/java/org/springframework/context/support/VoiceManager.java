@@ -4008,12 +4008,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						continue;
 					} // if
 						//
-					if ((fileName = ObjectUtils.getIfNull(fileName, StringBuilder::new)) != null) {
-						//
-						fileName.delete(0, fileName.length());
-						//
-					} // if
-						//
+					clear(fileName = ObjectUtils.getIfNull(fileName, StringBuilder::new));
+					//
 					if (fileName != null) {
 						//
 						if (ordinalPositionAsFileNamePrefix && StringUtils.isNotBlank(
@@ -4083,6 +4079,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 			} // try
 				//
+		}
+
+		private static void clear(final StringBuilder instance) {
+			if (instance != null) {
+				instance.delete(0, instance.length());
+			}
 		}
 
 		private static void setMp3Title(final File file) throws IOException, BaseException {
