@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS voice(
 	,yomi                  TEXT
 	,source                TEXT
 	,language              TEXT
+	,ordinal_position      INTEGER
 	,create_ts			   TIMESTAMP WITH TIME ZONE
 	,update_ts			   TIMESTAMP WITH TIME ZONE
 );

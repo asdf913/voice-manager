@@ -15,7 +15,7 @@ import java.util.Date;
 @FieldOrder({ "language", "text", "romaji", "hiragana", "katakana", "filePath", "fileExtension", "fileLength" })
 public class Voice {
 
-	private Integer id = null;
+	private Integer id, ordinalPosition = null;
 
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)

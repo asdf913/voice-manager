@@ -3265,6 +3265,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				ObjectMapper objectMapper = null;
 				//
+				Double D = null;
+				//
+				Integer integer = null;
+				//
 				for (final Row row : sheet) {
 					//
 					if (row == null || row.iterator() == null) {
@@ -3333,6 +3337,21 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 												stream(getObjectList(objectMapper = ObjectUtils.getIfNull(objectMapper,
 														ObjectMapper::new), cell.getStringCellValue())),
 												VoiceManager::toString)));
+								//
+							} else if (Objects.equals(type, Integer.class)) {
+								//
+								if (Objects.equals(cell.getCellType(), CellType.NUMERIC)
+										&& (D = Double.valueOf(cell.getNumericCellValue())) != null) {
+									//
+									integer = Integer.valueOf(D.intValue());
+									//
+								} else {
+									//
+									integer = valueOf(cell.getStringCellValue());
+									//
+								} // if
+									//
+								f.set(voice = ObjectUtils.getIfNull(voice, Voice::new), integer);
 								//
 							} // if
 								//
