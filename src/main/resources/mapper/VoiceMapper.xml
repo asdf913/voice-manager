@@ -11,13 +11,14 @@
 		<result column="file_extension" property="fileExtension" />
 		<result column="create_ts" property="createTs" />
 		<result column="update_ts" property="updateTs" />
+		<result column="ordinal_position" property="ordinalPosition" />
 	</resultMap>
 
 	<resultMap id="resultMapVoiceList" type="domain.VoiceList" />
 
 	<select id="retrieveAllVoices" resultMap="resultMapVoice">
 		select
-		id,language,text,source,yomi,romaji,hiragana,katakana,file_path,file_length,file_digest_algorithm,file_digest,file_extension,create_ts,update_ts
+		id,language,text,source,yomi,romaji,hiragana,katakana,file_path,file_length,file_digest_algorithm,file_digest,file_extension,create_ts,update_ts,ordinal_position
 		from voice
 	</select>
 
@@ -36,7 +37,7 @@
 
 	<select id="searchByTextAndRomaji" resultMap="resultMapVoice">
 		select
-		id,language,text,source,yomi,romaji,hiragana,katakana,file_path,file_length,file_digest_algorithm,file_digest,file_extension,create_ts,update_ts
+		id,language,text,source,yomi,romaji,hiragana,katakana,file_path,file_length,file_digest_algorithm,file_digest,file_extension,create_ts,update_ts,ordinal_position
 		from voice
 		<where>
 			true

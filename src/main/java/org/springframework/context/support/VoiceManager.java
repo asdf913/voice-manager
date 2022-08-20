@@ -206,7 +206,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private AbstractButton btnSpeak, btnWriteVoice, btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji,
 			btnCopyHiragana, btnCopyKatakana, cbUseTtsVoice, btnExecute, btnImportFileTemplate, btnImport,
-			cbOverMp3Title, btnExport = null;
+			cbOverMp3Title, cbOrdinalPositionAsFileNamePrefix, btnExport = null;
 
 	private JProgressBar progressBar = null;
 
@@ -687,7 +687,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(tfHiragana = new JTextField(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.hiragana")),
-				String.format("spanx %1$s,growx", 2));
+				String.format("spanx %1$s,growx", 3));
 		//
 		add(btnCopyHiragana = new JButton("Copy"));
 		//
@@ -720,6 +720,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		cbOverMp3Title.setSelected(Boolean.parseBoolean(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.overMp3Title")));
+		//
+		add(cbOrdinalPositionAsFileNamePrefix = new JCheckBox("Ordinal Position As Track Number"),
+				String.format("span %1$s", 2));
+		//
+		cbOrdinalPositionAsFileNamePrefix.setSelected(Boolean.parseBoolean(getProperty(propertyResolver,
+				"org.springframework.context.support.VoiceManager.ordinalPositionAsFileNamePrefix")));
 		//
 		add(btnExport = new JButton("Export"), WRAP);
 		//
@@ -1569,7 +1575,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				});
 				//
 				export(voices, outputFolderFileNameExpressions, voiceFolder, outputFolder, progressBar,
-						isSelected(cbOverMp3Title));
+						isSelected(cbOverMp3Title), isSelected(cbOrdinalPositionAsFileNamePrefix));
 				//
 				try (final OutputStream os = new FileOutputStream(
 						file = new File(String.format("voice_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.xlsx", new Date())))) {
@@ -3953,9 +3959,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static class ExportTask implements Runnable {
 
-		private Integer counter = null;
-
-		private Integer count = null;
+		private Integer counter, count, ordinalPositionDigit;
 
 		private Voice voice = null;
 
@@ -3963,9 +3967,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 		private EvaluationContext evaluationContext = null;
 
-		private String voiceFolder = null;
-
-		private String outputFolder = null;
+		private String voiceFolder, outputFolder = null;
 
 		private JProgressBar progressBar = null;
 
@@ -3973,7 +3975,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 		private NumberFormat percentNumberFormat = null;
 
-		private boolean overMp3Title = false;
+		private boolean overMp3Title = false, ordinalPositionAsFileNamePrefix = false;
 
 		@Override
 		public void run() {
@@ -3991,7 +3993,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				setVariable(evaluationContext, "voice", voice);
 				//
-				String key, value = null;
+				String key, value, ordinalPositionString = null;
+				//
+				StringBuilder fileName = null;
 				//
 				File fileSource, fileDestination, folder = null;
 				//
@@ -4004,13 +4008,35 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						continue;
 					} // if
 						//
+					if ((fileName = ObjectUtils.getIfNull(fileName, StringBuilder::new)) != null) {
+						//
+						fileName.delete(0, fileName.length());
+						//
+					} // if
+						//
+					if (fileName != null) {
+						//
+						if (ordinalPositionAsFileNamePrefix && StringUtils.isNotBlank(
+								ordinalPositionString = VoiceManager.toString(voice.getOrdinalPosition()))) {
+							//
+							fileName.append(ordinalPositionDigit != null
+									? StringUtils.leftPad(ordinalPositionString, ordinalPositionDigit.intValue(), '0')
+									: ordinalPositionString);
+							//
+							fileName.append('_');
+							//
+						} // if
+							//
+						fileName.append(VoiceManager.toString(getValue(expressionParser, evaluationContext, value)));
+						//
+					} // if
+						//
 					FileUtils.copyFile(fileSource,
-							fileDestination = new File(
-									(folder = ObjectUtils.getIfNull(folder,
-											() -> outputFolder != null ? new File(outputFolder) : null)) != null
-													? new File(folder, key)
-													: new File(key),
-									VoiceManager.toString(getValue(expressionParser, evaluationContext, value))));
+							fileDestination = new File((folder = ObjectUtils.getIfNull(folder,
+									() -> outputFolder != null ? new File(outputFolder) : null)) != null
+											? new File(folder, key)
+											: new File(key),
+									VoiceManager.toString(fileName)));
 					//
 					if (overMp3Title) {
 						//
@@ -4113,7 +4139,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static void export(final List<Voice> voices, final Map<String, String> outputFolderFileNameExpressions,
 			final String voiceFolder, final String outputFolder, final JProgressBar progressBar,
-			final boolean overMp3Title) throws IOException {
+			final boolean overMp3Title, final boolean ordinalPositionAsFileNamePrefix) throws IOException {
 		//
 		EvaluationContext evaluationContext = null;
 		//
@@ -4128,6 +4154,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		try {
 			//
 			int size = voices != null ? voices.size() : 0;
+			//
+			Integer numberOfOrdinalPositionDigit = Integer.valueOf(StringUtils.length(toString(orElse(
+					max(filter(map(stream(voices), x -> x != null ? x.getOrdinalPosition() : null), Objects::nonNull),
+							ObjectUtils::compare),
+					null))));
 			//
 			for (int i = 0; i < size; i++) {
 				//
@@ -4160,6 +4191,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				et.voiceFolder = voiceFolder;
 				//
 				et.overMp3Title = overMp3Title;
+				//
+				et.ordinalPositionAsFileNamePrefix = ordinalPositionAsFileNamePrefix;
+				//
+				et.ordinalPositionDigit = numberOfOrdinalPositionDigit;
 				//
 				es.submit(et);
 				//
@@ -4195,6 +4230,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				int coutner = 0;
 				//
 				size = multimap.size();
+				//
+				numberOfOrdinalPositionDigit = Integer.valueOf(StringUtils.length(toString(
+						orElse(max(map(stream(multimap.values()), x -> x != null ? x.getOrdinalPosition() : null),
+								ObjectUtils::compare), null))));
 				//
 				for (final Entry<String, Voice> en : multimap.entries()) {
 					//
@@ -4234,6 +4273,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					et.voiceFolder = voiceFolder;
 					//
 					et.overMp3Title = overMp3Title;
+					//
+					et.ordinalPositionAsFileNamePrefix = ordinalPositionAsFileNamePrefix;
+					//
+					et.ordinalPositionDigit = numberOfOrdinalPositionDigit;
 					//
 					es.submit(et);
 					//

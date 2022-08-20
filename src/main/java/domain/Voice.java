@@ -206,4 +206,8 @@ public class Voice {
 		return listNames;
 	}
 
+	public Integer getOrdinalPosition() {
+		return ordinalPosition;
+	}
+
 }

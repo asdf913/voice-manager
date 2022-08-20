@@ -204,7 +204,7 @@ class VoiceManagerTest {
 		(METHOD_GET_SOURCE = clz.getDeclaredMethod("getSource", EventObject.class)).setAccessible(true);
 		//
 		(METHOD_EXPORT = clz.getDeclaredMethod("export", List.class, Map.class, String.class, String.class,
-				JProgressBar.class, Boolean.TYPE)).setAccessible(true);
+				JProgressBar.class, Boolean.TYPE, Boolean.TYPE)).setAccessible(true);
 		//
 		(METHOD_MAP = clz.getDeclaredMethod("map", Stream.class, Function.class)).setAccessible(true);
 		//
@@ -380,7 +380,7 @@ class VoiceManagerTest {
 		private Set<Entry<?, ?>> entrySet = null;
 
 		private String toString, stringCellValue, providerName, providerVersion, artist, voiceAttribute, lpwstr,
-				sheetName = null;
+				sheetName, title = null;
 
 		private Configuration configuration = null;
 
@@ -625,6 +625,10 @@ class VoiceManagerTest {
 				if (Objects.equals(methodName, "getArtist")) {
 					//
 					return artist;
+					//
+				} else if (Objects.equals(methodName, "getTitle")) {
+					//
+					return title;
 					//
 				} // if
 					//
@@ -1534,49 +1538,49 @@ class VoiceManagerTest {
 		//
 		final JProgressBar progressBar = new JProgressBar();
 		//
-		Assertions.assertDoesNotThrow(() -> export(null, null, null, null, progressBar, false));
+		Assertions.assertDoesNotThrow(() -> export(null, null, null, null, progressBar, false, false));
 		//
 		Assertions.assertDoesNotThrow(
-				() -> export(Collections.singletonList(null), null, null, null, progressBar, false));
+				() -> export(Collections.singletonList(null), null, null, null, progressBar, false, false));
 		//
 		final Voice voice = new Voice();
 		//
 		final List<Voice> voices = Collections.singletonList(voice);
 		//
-		Assertions.assertDoesNotThrow(() -> export(voices, null, null, null, null, false));
+		Assertions.assertDoesNotThrow(() -> export(voices, null, null, null, null, false, false));
 		//
 		voice.setFilePath(EMPTY);
 		//
-		Assertions.assertDoesNotThrow(() -> export(voices, null, null, null, null, false));
+		Assertions.assertDoesNotThrow(() -> export(voices, null, null, null, null, false, false));
 		//
-		Assertions.assertDoesNotThrow(() -> export(voices, Collections.emptyMap(), null, null, null, false));
-		//
-		Assertions
-				.assertDoesNotThrow(() -> export(voices, Reflection.newProxy(Map.class, ih), null, null, null, false));
+		Assertions.assertDoesNotThrow(() -> export(voices, Collections.emptyMap(), null, null, null, false, false));
 		//
 		Assertions.assertDoesNotThrow(
-				() -> export(voices, Collections.singletonMap(null, null), null, null, null, false));
+				() -> export(voices, Reflection.newProxy(Map.class, ih), null, null, null, false, false));
 		//
 		Assertions.assertDoesNotThrow(
-				() -> export(voices, Collections.singletonMap(EMPTY, null), null, null, null, false));
+				() -> export(voices, Collections.singletonMap(null, null), null, null, null, false, false));
 		//
 		Assertions.assertDoesNotThrow(
-				() -> export(voices, Collections.singletonMap(EMPTY, EMPTY), null, null, null, false));
+				() -> export(voices, Collections.singletonMap(EMPTY, null), null, null, null, false, false));
 		//
 		Assertions.assertDoesNotThrow(
-				() -> export(voices, Collections.singletonMap(EMPTY, " "), null, null, null, false));
+				() -> export(voices, Collections.singletonMap(EMPTY, EMPTY), null, null, null, false, false));
 		//
 		Assertions.assertDoesNotThrow(
-				() -> export(voices, Collections.singletonMap(EMPTY, "true"), null, null, null, false));
+				() -> export(voices, Collections.singletonMap(EMPTY, " "), null, null, null, false, false));
+		//
+		Assertions.assertDoesNotThrow(
+				() -> export(voices, Collections.singletonMap(EMPTY, "true"), null, null, null, false, false));
 		//
 	}
 
 	private static void export(final List<Voice> voices, final Map<String, String> outputFolderFileNameExpressions,
 			final String voiceFolder, final String outputFolder, final JProgressBar progressBar,
-			final boolean overMp3Title) throws Throwable {
+			final boolean overMp3Title, final boolean ordinalPositionAsFileNamePrefix) throws Throwable {
 		try {
 			METHOD_EXPORT.invoke(null, voices, outputFolderFileNameExpressions, voiceFolder, outputFolder, progressBar,
-					overMp3Title);
+					overMp3Title, ordinalPositionAsFileNamePrefix);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
