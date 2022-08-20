@@ -1576,8 +1576,18 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 				});
 				//
-				export(voices, outputFolderFileNameExpressions, voiceFolder, outputFolder, progressBar,
-						isSelected(cbOverMp3Title), isSelected(cbOrdinalPositionAsFileNamePrefix));
+				final BooleanMap booleanMap = Reflection.newProxy(BooleanMap.class, new IH());
+				//
+				if (booleanMap != null) {
+					//
+					booleanMap.setBoolean("overMp3Title", isSelected(cbOverMp3Title));
+					//
+					booleanMap.setBoolean("ordinalPositionAsFileNamePrefix",
+							isSelected(cbOrdinalPositionAsFileNamePrefix));
+					//
+				} // if
+					//
+				export(voices, outputFolderFileNameExpressions, voiceFolder, outputFolder, progressBar, booleanMap);
 				//
 				try (final OutputStream os = new FileOutputStream(
 						file = new File(String.format("voice_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.xlsx", new Date())))) {
@@ -3862,11 +3872,20 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 		private Map<Object, Object> objects = null;
 
+		private Map<Object, Object> booleans = null;
+
 		private Map<Object, Object> getObjects() {
 			if (objects == null) {
 				objects = new LinkedHashMap<>();
 			}
 			return objects;
+		}
+
+		private Map<Object, Object> getBooleans() {
+			if (booleans == null) {
+				booleans = new LinkedHashMap<>();
+			}
+			return booleans;
 		}
 
 		@Override
@@ -3891,6 +3910,28 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				} else if (Objects.equals(methodName, "setObject") && args != null && args.length > 1) {
 					//
 					put(getObjects(), args[0], args[1]);
+					//
+					return null;
+					//
+				} // if
+					//
+			} else if (proxy instanceof BooleanMap) {
+				//
+				if (Objects.equals(methodName, "getBoolean") && args != null && args.length > 0) {
+					//
+					final Object key = args[0];
+					//
+					if (!getBooleans().containsKey(key)) {
+						//
+						throw new IllegalStateException(String.format("Key [%1$s] Not Found", key));
+						//
+					} // if
+						//
+					return getBooleans().get(key);
+					//
+				} else if (Objects.equals(methodName, "setBoolean") && args != null && args.length > 1) {
+					//
+					put(getBooleans(), args[0], args[1]);
 					//
 					return null;
 					//
@@ -4153,9 +4194,17 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	}
 
+	private static interface BooleanMap {
+
+		boolean getBoolean(final String key);
+
+		void setBoolean(final String key, final boolean value);
+
+	}
+
 	private static void export(final List<Voice> voices, final Map<String, String> outputFolderFileNameExpressions,
 			final String voiceFolder, final String outputFolder, final JProgressBar progressBar,
-			final boolean overMp3Title, final boolean ordinalPositionAsFileNamePrefix) throws IOException {
+			final BooleanMap booleanMap) throws IOException {
 		//
 		EvaluationContext evaluationContext = null;
 		//
@@ -4206,12 +4255,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				et.voiceFolder = voiceFolder;
 				//
-				et.overMp3Title = overMp3Title;
-				//
-				et.ordinalPositionAsFileNamePrefix = ordinalPositionAsFileNamePrefix;
-				//
 				et.ordinalPositionDigit = numberOfOrdinalPositionDigit;
 				//
+				if (booleanMap != null) {
+					//
+					et.overMp3Title = booleanMap.getBoolean("overMp3Title");
+					//
+					et.ordinalPositionAsFileNamePrefix = booleanMap.getBoolean("ordinalPositionAsFileNamePrefix");
+					//
+				} // if
+					//
 				es.submit(et);
 				//
 			} // for
@@ -4288,12 +4341,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					et.voiceFolder = voiceFolder;
 					//
-					et.overMp3Title = overMp3Title;
-					//
-					et.ordinalPositionAsFileNamePrefix = ordinalPositionAsFileNamePrefix;
-					//
 					et.ordinalPositionDigit = numberOfOrdinalPositionDigit;
 					//
+					if (booleanMap != null) {
+						//
+						et.overMp3Title = booleanMap.getBoolean("overMp3Title");
+						//
+						et.ordinalPositionAsFileNamePrefix = booleanMap.getBoolean("ordinalPositionAsFileNamePrefix");
+						//
+					} // if
+						//
 					es.submit(et);
 					//
 				} // for
