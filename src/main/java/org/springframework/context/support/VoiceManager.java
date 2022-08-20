@@ -3490,8 +3490,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 								//
 								for (int i = 0; i < intValue(numberOfSheets, 0); i++) {
 									//
-									if (!Objects.equals(workbook.getSheetName(i),
-											sheet != null ? sheet.getSheetName() : null)) {
+									if (!Objects.equals(workbook.getSheetName(i), getSheetName(sheet))) {
 										continue;
 									} // if
 										//
