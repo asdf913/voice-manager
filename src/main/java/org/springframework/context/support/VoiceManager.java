@@ -1576,18 +1576,30 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 				});
 				//
-				final BooleanMap booleanMap = Reflection.newProxy(BooleanMap.class, new IH());
+				final IH ih = new IH();
 				//
-				if (booleanMap != null) {
+				final ObjectMap objectMap = Reflection.newProxy(ObjectMap.class, ih);
+				//
+				if (objectMap != null) {
 					//
-					booleanMap.setBoolean("overMp3Title", isSelected(cbOverMp3Title));
+					objectMap.setObject(JProgressBar.class, progressBar);
 					//
-					booleanMap.setBoolean("ordinalPositionAsFileNamePrefix",
-							isSelected(cbOrdinalPositionAsFileNamePrefix));
+					final BooleanMap booleanMap = Reflection.newProxy(BooleanMap.class, ih);
+					//
+					if (booleanMap != null) {
+						//
+						booleanMap.setBoolean("overMp3Title", isSelected(cbOverMp3Title));
+						//
+						booleanMap.setBoolean("ordinalPositionAsFileNamePrefix",
+								isSelected(cbOrdinalPositionAsFileNamePrefix));
+						//
+					} // if
+						//
+					objectMap.setObject(BooleanMap.class, booleanMap);
 					//
 				} // if
 					//
-				export(voices, outputFolderFileNameExpressions, voiceFolder, outputFolder, progressBar, booleanMap);
+				export(voices, outputFolderFileNameExpressions, voiceFolder, outputFolder, objectMap);
 				//
 				try (final OutputStream os = new FileOutputStream(
 						file = new File(String.format("voice_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.xlsx", new Date())))) {
@@ -4203,8 +4215,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	private static void export(final List<Voice> voices, final Map<String, String> outputFolderFileNameExpressions,
-			final String voiceFolder, final String outputFolder, final JProgressBar progressBar,
-			final BooleanMap booleanMap) throws IOException {
+			final String voiceFolder, final String outputFolder, final ObjectMap objectMap) throws IOException {
 		//
 		EvaluationContext evaluationContext = null;
 		//
@@ -4215,6 +4226,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		ExportTask et = null;
 		//
 		NumberFormat percentNumberFormat = null;
+		//
+		final JProgressBar progressBar = ObjectMap.getObject(objectMap, JProgressBar.class);
+		//
+		final BooleanMap booleanMap = ObjectMap.getObject(objectMap, BooleanMap.class);
 		//
 		try {
 			//
@@ -4300,9 +4315,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				size = multimap.size();
 				//
-				numberOfOrdinalPositionDigit = Integer.valueOf(StringUtils.length(toString(
-						orElse(max(map(stream(multimap.values()), x -> x != null ? x.getOrdinalPosition() : null),
-								ObjectUtils::compare), null))));
+				numberOfOrdinalPositionDigit = Integer
+						.valueOf(
+								StringUtils.length(toString(orElse(max(
+										filter(map(stream(multimap.values()),
+												x -> x != null ? x.getOrdinalPosition() : null), Objects::nonNull),
+										ObjectUtils::compare), null))));
 				//
 				for (final Entry<String, Voice> en : multimap.entries()) {
 					//
