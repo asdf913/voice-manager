@@ -3192,14 +3192,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			final Fraction percentage = add(fraction1, fraction2);
 			//
-			infoOrPrintln(LOG, System.out,
-					String.format("%1$s %2$s/%3$s",
-							percentage != null
-									? StringUtils.leftPad(format(percentNumberFormat, percentage.doubleValue()), 5, ' ')
-									: null,
-							StringUtils.leftPad(VoiceManager.toString(counter),
-									StringUtils.length(VoiceManager.toString(count))),
-							count));
+			infoOrPrintln(LOG, System.out, String.format("%1$s %2$s/%3$s %4$s/%5$s",
+					percentage != null
+							? StringUtils.leftPad(format(percentNumberFormat, percentage.doubleValue()), 5, ' ')
+							: null,
+					StringUtils.leftPad(VoiceManager.toString(sheetCurrent),
+							StringUtils.length(VoiceManager.toString(ObjectUtils.max(sheetCurrent, sheetTotal))), ' '),
+					sheetTotal, StringUtils.leftPad(VoiceManager.toString(counter),
+							StringUtils.length(VoiceManager.toString(count))),
+					count));
 			//
 			SqlSession sqlSession = null;
 			//
