@@ -72,6 +72,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.JTextComponent;
 
+import org.apache.bcel.classfile.JavaClass;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.ObjectUtils;
@@ -152,13 +153,13 @@ class VoiceManagerTest {
 			METHOD_SET_STRING, METHOD_SET_TOOL_TIP_TEXT, METHOD_FORMAT, METHOD_CONTAINS_KEY, METHOD_VALUE_OF1,
 			METHOD_VALUE_OF2, METHOD_GET_CLASS, METHOD_CREATE_RANGE, METHOD_GET_PROVIDER_NAME,
 			METHOD_GET_PROVIDER_VERSION, METHOD_WRITE_VOICE_TO_FILE, METHOD_GET_MP3_TAG_VALUE_FILE,
-			METHOD_GET_MP3_TAG_VALUE_LIST, METHOD_GET_MP3_TAG_PARIRS_ID3V1, METHOD_GET_METHODS, METHOD_GET_SIMPLE_NAME,
-			METHOD_COPY_OBJECT_MAP, METHOD_DELETE_ON_EXIT, METHOD_CONVERT_LANGUAGE_CODE_TO_TEXT, METHOD_IS_SELECTED,
-			METHOD_SET_HIRAGANA_OR_KATAKANA, METHOD_SET_ROMAJI, METHOD_OR, METHOD_CLEAR, METHOD_EXECUTE, METHOD_PUT,
-			METHOD_GET_BYTE_CONVERTER, METHOD_GET_PROPERTIES, METHOD_GET_CUSTOM_PROPERTIES,
-			METHOD_CONTAINS_CUSTOM_PROPERTIES, METHOD_CONTAINS_COLLECTION, METHOD_GET_LPW_STR, METHOD_GET_SHEET_NAME,
-			METHOD_ACCEPT, METHOD_TO_ARRAY, METHOD_TO_LIST, METHOD_GET_ID, METHOD_SET_MAXIMUM,
-			METHOD_GET_CURRENT_SHEET_INDEX = null;
+			METHOD_GET_MP3_TAG_VALUE_LIST, METHOD_GET_MP3_TAG_PARIRS_ID3V1, METHOD_GET_METHODS_CLASS,
+			METHOD_GET_METHODS_JAVA_CLASS, METHOD_GET_SIMPLE_NAME, METHOD_COPY_OBJECT_MAP, METHOD_DELETE_ON_EXIT,
+			METHOD_CONVERT_LANGUAGE_CODE_TO_TEXT, METHOD_IS_SELECTED, METHOD_SET_HIRAGANA_OR_KATAKANA,
+			METHOD_SET_ROMAJI, METHOD_OR, METHOD_CLEAR, METHOD_EXECUTE, METHOD_PUT, METHOD_GET_BYTE_CONVERTER,
+			METHOD_GET_PROPERTIES, METHOD_GET_CUSTOM_PROPERTIES, METHOD_CONTAINS_CUSTOM_PROPERTIES,
+			METHOD_CONTAINS_COLLECTION, METHOD_GET_LPW_STR, METHOD_GET_SHEET_NAME, METHOD_ACCEPT, METHOD_TO_ARRAY,
+			METHOD_TO_LIST, METHOD_GET_ID, METHOD_SET_MAXIMUM, METHOD_GET_CURRENT_SHEET_INDEX = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -327,7 +328,9 @@ class VoiceManagerTest {
 		(METHOD_GET_MP3_TAG_PARIRS_ID3V1 = clz.getDeclaredMethod("getMp3TagParirs", ID3v1.class, String[].class))
 				.setAccessible(true);
 		//
-		(METHOD_GET_METHODS = clz.getDeclaredMethod("getMethods", Class.class)).setAccessible(true);
+		(METHOD_GET_METHODS_CLASS = clz.getDeclaredMethod("getMethods", Class.class)).setAccessible(true);
+		//
+		(METHOD_GET_METHODS_JAVA_CLASS = clz.getDeclaredMethod("getMethods", JavaClass.class)).setAccessible(true);
 		//
 		(METHOD_GET_SIMPLE_NAME = clz.getDeclaredMethod("getSimpleName", Class.class)).setAccessible(true);
 		//
@@ -2771,17 +2774,33 @@ class VoiceManagerTest {
 	@Test
 	void testGetMethods() throws Throwable {
 		//
-		Assertions.assertNull(getMethods(null));
+		Assertions.assertNull(getMethods((Class<?>) null));
+		//
+		Assertions.assertNull(getMethods((JavaClass) null));
 		//
 	}
 
 	private static Method[] getMethods(final Class<?> instance) throws Throwable {
 		try {
-			final Object obj = METHOD_GET_METHODS.invoke(null, instance);
+			final Object obj = METHOD_GET_METHODS_CLASS.invoke(null, instance);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Method[]) {
 				return (Method[]) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static org.apache.bcel.classfile.Method[] getMethods(final JavaClass instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_METHODS_JAVA_CLASS.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof org.apache.bcel.classfile.Method[]) {
+				return (org.apache.bcel.classfile.Method[]) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

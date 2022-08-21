@@ -102,6 +102,7 @@ import org.apache.bcel.classfile.ClassParserUtil;
 import org.apache.bcel.classfile.CodeUtil;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Utility;
+import org.apache.bcel.generic.ObjectType;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.collections4.IteratorUtils;
 import org.apache.commons.collections4.MapUtils;
@@ -187,12 +188,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static Logger LOG = LoggerFactory.getLogger(VoiceManager.class);
 
-	private static Pattern PATTERN_CONTENT_INFO_MESSAGE_MP3_1 = Pattern.compile("^MPEG ADTS, layer III.+$");
+	private static final int TEMP_FILE_MINIMUM_PREFIX_LENGTH = intValue(getTempFileMinimumPrefixLength(), 3);
 
-	private static Pattern PATTERN_CONTENT_INFO_MESSAGE_MP3_2 = Pattern
+	private static final Pattern PATTERN_CONTENT_INFO_MESSAGE_MP3_1 = Pattern.compile("^MPEG ADTS, layer III.+$");
+
+	private static final Pattern PATTERN_CONTENT_INFO_MESSAGE_MP3_2 = Pattern
 			.compile("^Audio file with ID3 version (\\d+(\\.\\d+)?), MP3 encoding$");
 
-	private static Pattern PATTERN_CONTENT_INFO_MESSAGE_MP3_3 = Pattern
+	private static final Pattern PATTERN_CONTENT_INFO_MESSAGE_MP3_3 = Pattern
 			.compile("^Audio file with ID3 version \\d+(\\.\\d+)?$");
 
 	private static final String WRAP = "wrap";
@@ -289,6 +292,101 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		setSelectedItem(cbmAudioFormatExecute, audioFormat);
 		//
+	}
+
+	private static Integer getTempFileMinimumPrefixLength() {
+		//
+		Integer result = null;
+		//
+		final Class<?> clz = File.class;
+		//
+		try (final InputStream is = clz != null
+				? clz.getResourceAsStream(String.format("/%1$s.class", StringUtils.replace(clz.getName(), ".", "/")))
+				: null) {
+			//
+			final Object[] objectTypes = map(Stream.of("java.lang.String", "java.lang.String", "java.io.File"),
+					ObjectType::getInstance).toArray();
+			//
+			final List<org.apache.bcel.classfile.Method> ms = toList(filter(
+					testAndApply(Objects::nonNull,
+							getMethods(ClassParserUtil
+									.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null))),
+							Arrays::stream, null),
+					m -> m != null && Objects.equals(m.getName(), "createTempFile")
+							&& Objects.deepEquals(m.getArgumentTypes(), objectTypes)));
+			//
+			org.apache.bcel.classfile.Method method = null;
+			//
+			if (ms != null && !ms.isEmpty()) {
+				//
+				if (ms.size() > 1) {
+					//
+					throw new IllegalStateException();
+					//
+				} // if
+					//
+				method = ms.get(0);
+				//
+			} // if
+				//
+			if (method != null) {
+				//
+				final byte[] bs = CodeUtil.getCode(method.getCode());
+				// )
+				final String[] lines = StringUtils.split(
+						StringUtils.trim(
+								Utility.codeToString(bs, method.getConstantPool(), 0, bs != null ? bs.length : 0)),
+						'\n');
+				//
+				String line = null;
+				//
+				Pattern pattern = null;
+				//
+				Matcher matcher = null;
+				//
+				for (int i = 0; lines != null && i < lines.length; i++) {
+					//
+					if ((line = lines[i]) == null) {
+						continue;
+					} // if
+						//
+					if (line.matches("^\\d+:\\s+if_icmpge\\s+#\\d+$")
+							&& matches((matcher = matcher(pattern = ObjectUtils.getIfNull(pattern,
+									() -> Pattern.compile("^\\d+:\\s+iconst_(\\d+)$")), lines[i - 1])))
+							&& matcher.groupCount() > 0 && (result = valueOf(matcher.group(1))) != null) {
+						//
+						break;
+						//
+					} // if
+						//
+				} // for
+					//
+			} // if
+				//
+		} catch (final IOException e) {
+			//
+			if (GraphicsEnvironment.isHeadless()) {
+				//
+				if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
+					LOG.error(getMessage(e), e);
+				} else if (e != null) {
+					e.printStackTrace();
+				} // if
+					//
+			} else {
+				//
+				JOptionPane.showMessageDialog(null, getMessage(e));
+				//
+			} // if
+				//
+		} // try
+			//
+		return result;
+		//
+	}
+
+	private static org.apache.bcel.classfile.Method[] getMethods(final JavaClass instance) {
+		return instance != null ? instance.getMethods() : null;
 	}
 
 	private static void setSelectedItem(final ComboBoxModel<?> instance, final Object selectedItem) {
@@ -1396,7 +1494,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 								Math.min(Math.max(
 										intValue(jsSpeechVolume != null ? jsSpeechVolume.getValue() : null, 100), 0),
 										100)// volume
-								, file = File.createTempFile(RandomStringUtils.randomAlphabetic(3), null)
+								, file = File.createTempFile(
+										RandomStringUtils.randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH), null)
 						//
 						);
 						//
@@ -3546,7 +3645,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 									//
 								} else {
 									//
-									if ((it.file = File.createTempFile(RandomStringUtils.randomAlphabetic(3),
+									if ((it.file = File.createTempFile(
+											RandomStringUtils.randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH),
 											filePath)) != null) {
 										//
 										if (objectMap != null) {
@@ -4278,7 +4378,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			if (Objects.equals("mp3", fileExtension)) {
 				//
-				final File tempFile = File.createTempFile(RandomStringUtils.randomAlphabetic(3), null);
+				final File tempFile = File
+						.createTempFile(RandomStringUtils.randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH), null);
 				//
 				deleteOnExit(tempFile);
 				//
