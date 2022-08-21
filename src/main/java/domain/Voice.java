@@ -12,7 +12,8 @@ import java.util.Date;
 	String[] value();
 }
 
-@FieldOrder({ "language", "text", "romaji", "hiragana", "katakana", "filePath", "fileExtension", "fileLength" })
+@FieldOrder({ "language", "text", "romaji", "hiragana", "katakana", "filePath", "fileExtension", "fileLength",
+		"jlptLevel" })
 public class Voice {
 
 	private Integer id, ordinalPosition = null;
@@ -62,7 +63,7 @@ public class Voice {
 	@ImportField
 	private String filePath = null;
 
-	private String fileDigestAlgorithm, fileDigest, fileExtension = null;
+	private String fileDigestAlgorithm, fileDigest, fileExtension, jlptLevel = null;
 
 	private Iterable<String> listNames = null;
 
@@ -208,6 +209,10 @@ public class Voice {
 
 	public Integer getOrdinalPosition() {
 		return ordinalPosition;
+	}
+
+	public void setJlptLevel(final String jlptLevel) {
+		this.jlptLevel = jlptLevel;
 	}
 
 }

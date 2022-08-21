@@ -12,13 +12,14 @@
 		<result column="create_ts" property="createTs" />
 		<result column="update_ts" property="updateTs" />
 		<result column="ordinal_position" property="ordinalPosition" />
+		<result column="jlpt_level" property="jlptLevel" />
 	</resultMap>
 
 	<resultMap id="resultMapVoiceList" type="domain.VoiceList" />
 
 	<select id="retrieveAllVoices" resultMap="resultMapVoice">
 		select
-		id,language,text,source,yomi,romaji,hiragana,katakana,file_path,file_length,file_digest_algorithm,file_digest,file_extension,create_ts,update_ts,ordinal_position
+		id,language,text,source,yomi,romaji,hiragana,katakana,file_path,file_length,file_digest_algorithm,file_digest,file_extension,create_ts,update_ts,ordinal_position,jlpt_level
 		from voice
 	</select>
 
@@ -37,7 +38,7 @@
 
 	<select id="searchByTextAndRomaji" resultMap="resultMapVoice">
 		select
-		id,language,text,source,yomi,romaji,hiragana,katakana,file_path,file_length,file_digest_algorithm,file_digest,file_extension,create_ts,update_ts,ordinal_position
+		id,language,text,source,yomi,romaji,hiragana,katakana,file_path,file_length,file_digest_algorithm,file_digest,file_extension,create_ts,update_ts,ordinal_position,jlpt_level
 		from voice
 		<where>
 			true
@@ -52,7 +53,7 @@
 		keyProperty="id">
 		<if test="voice!=null">
 			insert into
-			voice(language,text,source,yomi,romaji,hiragana,katakana,file_path,file_length,file_digest_algorithm,file_digest,file_extension,create_ts,ordinal_position)values(#{voice.language},#{voice.text},#{voice.source},#{voice.yomi},#{voice.romaji},#{voice.hiragana},#{voice.katakana},#{voice.filePath},#{voice.fileLength},#{voice.fileDigestAlgorithm},#{voice.fileDigest},#{voice.fileExtension},#{voice.createTs},#{voice.ordinalPosition});
+			voice(language,text,source,yomi,romaji,hiragana,katakana,file_path,file_length,file_digest_algorithm,file_digest,file_extension,create_ts,ordinal_position,jlpt_level)values(#{voice.language},#{voice.text},#{voice.source},#{voice.yomi},#{voice.romaji},#{voice.hiragana},#{voice.katakana},#{voice.filePath},#{voice.fileLength},#{voice.fileDigestAlgorithm},#{voice.fileDigest},#{voice.fileExtension},#{voice.createTs},#{voice.ordinalPosition},#{voice.jlptLevel});
 		</if>
 	</insert>
 
@@ -74,6 +75,7 @@
 				,file_length=#{voice.fileLength}
 				,update_ts=#{voice.updateTs}
 				,ordinal_position=#{voice.ordinalPosition}
+				,jlpt_level=#{voice.jlptLevel}
 			</set>
 			<where>
 				true

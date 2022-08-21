@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS voice(
 	,source                TEXT
 	,language              TEXT
 	,ordinal_position      INTEGER
+	,jlpt_level            TEXT
 	,create_ts			   TIMESTAMP WITH TIME ZONE
 	,update_ts			   TIMESTAMP WITH TIME ZONE
 );

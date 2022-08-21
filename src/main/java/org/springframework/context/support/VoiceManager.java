@@ -206,7 +206,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private JTextComponent tfFolder, tfFile, tfFileLength, tfFileDigest, tfText, tfHiragana, tfKatakana, tfRomaji,
 			tfSpeechRate, tfSource, tfProviderName, tfProviderVersion, tfProviderPlatform, tfSpeechLanguage, tfLanguage,
-			tfSpeechVolume, tfCurrentProcessingSheetName, tfCurrentProcessingVoice, tfListNames = null;
+			tfSpeechVolume, tfCurrentProcessingSheetName, tfCurrentProcessingVoice, tfListNames, tfJlptLevel = null;
 
 	private ComboBoxModel<Yomi> cbmYomi = null;
 
@@ -581,7 +581,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		add(tfText = new JTextField(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.text")), span);
 		//
-		add(btnConvertToRomaji = new JButton("Convert To Romaji"), String.format("span %1$s,%2$s", 3, WRAP));
+		add(btnConvertToRomaji = new JButton("Convert To Romaji"), String.format("span %1$s,%2$s", 4, WRAP));
 		//
 		// Provider
 		//
@@ -596,7 +596,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		try {
 			//
 			add(tfProviderPlatform = new JTextField(provider != null ? provider.getProviderPlatform() : null),
-					String.format("width %1$s,%2$s", 50, WRAP));
+					String.format("width %1$s,span %2$s,%3$s", 50, 2, WRAP));
 			//
 		} catch (final Error e) {
 			//
@@ -639,7 +639,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			add(jcbVoiceId, String.format("span %1$s,growx", 9));
 			//
-			add(tfSpeechLanguage = new JTextField(), String.format("width %1$s,span %2$s,%3$s", 147, 2, WRAP));
+			add(tfSpeechLanguage = new JTextField(), String.format("width %1$s,span %2$s,%3$s", 147, 3, WRAP));
 			//
 		} // if
 			//
@@ -708,7 +708,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		jsSpeechVolume.setPaintLabels(true);
 		//
-		add(tfSpeechVolume = new JTextField(), String.format("width %1$s", 90));
+		add(tfSpeechVolume = new JTextField(), String.format("width %1$s,growx", 30));
 		//
 		add(btnSpeak = new JButton("Speak"));
 		//
@@ -758,13 +758,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final String tags = getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.listNames");
 		//
-		add(tfListNames = new JTextField(tags), String.format("growx,span %1$s", 3));
+		add(tfListNames = new JTextField(tags), String.format("growx,span %1$s", 2));
 		//
 		tfListNames.addKeyListener(this);
 		//
-		add(jlListNames = new JLabel(), String.format("growx,span %1$s", 5));
+		add(jlListNames = new JLabel(), String.format("growx,span %1$s", 4));
 		//
-		add(jlListNameCount = new JLabel(), String.format("growx,%1$s", WRAP));
+		add(jlListNameCount = new JLabel(), String.format("width %1$s,growx", 20));
 		//
 		if (StringUtils.isNotBlank(tags)) {
 			//
@@ -772,6 +772,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
+			// JLPT level
+			//
+		add(new JLabel("JLPT Level"));
+		//
+		add(tfJlptLevel = new JTextField(), String.format("width %1$s,growx,%2$s", 20, WRAP));
+		//
 		final List<Yomi> yomiList = toList(
 				filter(testAndApply(Objects::nonNull, yomis, Arrays::stream, null), y -> Objects.equals(name(y),
 						getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.yomi"))));
@@ -792,7 +798,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(tfRomaji = new JTextField(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.romaji")),
-				span = String.format("spanx %1$s,growx", 10));
+				span = String.format("spanx %1$s,growx", 11));
 		//
 		add(btnCopyRomaji = new JButton("Copy"), WRAP);
 		//
@@ -4200,6 +4206,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		voice.setListNames(toList(
 				map(stream(getObjectList(objectMapper, getText(instance.tfListNames))), VoiceManager::toString)));
+		//
+		voice.setJlptLevel(getText(instance.tfJlptLevel));
 		//
 		return voice;
 		//
