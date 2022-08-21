@@ -32,6 +32,8 @@ import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
@@ -206,11 +208,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private JTextComponent tfFolder, tfFile, tfFileLength, tfFileDigest, tfText, tfHiragana, tfKatakana, tfRomaji,
 			tfSpeechRate, tfSource, tfProviderName, tfProviderVersion, tfProviderPlatform, tfSpeechLanguage, tfLanguage,
-			tfSpeechVolume, tfCurrentProcessingSheetName, tfCurrentProcessingVoice, tfListNames, tfJlptLevel = null;
+			tfSpeechVolume, tfCurrentProcessingSheetName, tfCurrentProcessingVoice, tfListNames = null;
 
 	private ComboBoxModel<Yomi> cbmYomi = null;
 
-	private ComboBoxModel<String> cbmVoiceId = null;
+	private ComboBoxModel<String> cbmVoiceId, cbmJlptLevel = null;
 
 	private ComboBoxModel<?> cbmAudioFormatWrite, cbmAudioFormatExecute = null;
 
@@ -247,6 +249,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private Toolkit toolkit = null;
 
 	private ObjectMapper objectMapper = null;
+
+	private String jlptLevelPageUrl = null;
 
 	private VoiceManager() {
 	}
@@ -480,6 +484,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						VoiceManager::toString)),
 				new String[] {});
 		//
+	}
+
+	public void setJlptLevelPageUrl(final String jlptLevelPageUrl) {
+		this.jlptLevelPageUrl = jlptLevelPageUrl;
 	}
 
 	private static <E> Stream<E> stream(final Collection<E> instance) {
@@ -776,7 +784,20 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		add(new JLabel("JLPT Level"));
 		//
-		add(tfJlptLevel = new JTextField(), String.format("width %1$s,growx,%2$s", 20, WRAP));
+		final List<String> jlptLevels = getJlptLevels(jlptLevelPageUrl);
+		//
+		if (jlptLevels != null && !jlptLevels.isEmpty()) {
+			//
+			jlptLevels.add(0, null);
+			//
+		} // if
+			//
+		add(new JComboBox<String>(cbmJlptLevel = testAndApply(Objects::nonNull, toArray(jlptLevels, new String[] {}),
+				DefaultComboBoxModel::new, x -> new DefaultComboBoxModel<String>())),
+				String.format("width %1$s,growx,%2$s", 20, WRAP));
+		//
+		setSelectedItem(cbmJlptLevel,
+				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.jlptLevel"));
 		//
 		final List<Yomi> yomiList = toList(
 				filter(testAndApply(Objects::nonNull, yomis, Arrays::stream, null), y -> Objects.equals(name(y),
@@ -911,6 +932,78 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				0) - intValue(getPreferredWidth(btnConvertToRomaji), 0), tfText, tfRomaji, tfHiragana);
 		//
 		setEnabled(btnExecute, folder != null && folder.exists() && folder.isDirectory());
+		//
+	}
+
+	private static List<String> getJlptLevels(final String urlString) {
+		//
+		HttpURLConnection httpURLConnection = null;
+		//
+		try {
+			//
+			final URL url = testAndApply(StringUtils::isNotBlank, urlString, URL::new, null);
+			//
+			httpURLConnection = cast(HttpURLConnection.class, url != null ? url.openConnection() : null);
+			//
+		} catch (final IOException e) {
+			//
+			if (GraphicsEnvironment.isHeadless()) {
+				//
+				if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
+					LOG.error(getMessage(e), e);
+				} else if (e != null) {
+					e.printStackTrace();
+				} // if
+					//
+			} else {
+				//
+				JOptionPane.showMessageDialog(null, getMessage(e));
+				//
+			} // if
+				//
+		} // try
+			//
+		String html = null;
+		//
+		try (final InputStream is = httpURLConnection != null ? httpURLConnection.getInputStream() : null) {
+			//
+			html = testAndApply(Objects::nonNull, is, x -> IOUtils.toString(x, "utf-8"), null);
+			//
+		} catch (final IOException e) {
+			//
+			if (GraphicsEnvironment.isHeadless()) {
+				//
+				if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
+					LOG.error(getMessage(e), e);
+				} else if (e != null) {
+					e.printStackTrace();
+				} // if
+					//
+			} else {
+				//
+				JOptionPane.showMessageDialog(null, getMessage(e));
+				//
+			} // if
+				//
+		} // try
+			//
+		return parseJlptPageHtml(html);
+		//
+	}
+
+	private static List<String> parseJlptPageHtml(final String html) {
+		//
+		List<String> result = null;
+		//
+		final Matcher matcher = matcher(Pattern.compile("<th scope=\"col\" class=\"thLeft\">(\\w+)</th>"), html);
+		//
+		while (matcher != null && matcher.find() && matcher.groupCount() > 0) {
+			//
+			add(result = ObjectUtils.getIfNull(result, ArrayList::new), matcher.group(1));
+			//
+		} // while
+			//
+		return result;
 		//
 	}
 
@@ -4207,7 +4300,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		voice.setListNames(toList(
 				map(stream(getObjectList(objectMapper, getText(instance.tfListNames))), VoiceManager::toString)));
 		//
-		voice.setJlptLevel(getText(instance.tfJlptLevel));
+		voice.setJlptLevel(toString(getSelectedItem(instance.cbmJlptLevel)));
 		//
 		return voice;
 		//

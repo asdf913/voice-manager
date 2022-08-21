@@ -28,6 +28,7 @@ import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.security.MessageDigest;
 import java.text.NumberFormat;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -159,7 +160,8 @@ class VoiceManagerTest {
 			METHOD_SET_ROMAJI, METHOD_OR, METHOD_CLEAR, METHOD_EXECUTE, METHOD_PUT, METHOD_GET_BYTE_CONVERTER,
 			METHOD_GET_PROPERTIES, METHOD_GET_CUSTOM_PROPERTIES, METHOD_CONTAINS_CUSTOM_PROPERTIES,
 			METHOD_CONTAINS_COLLECTION, METHOD_GET_LPW_STR, METHOD_GET_SHEET_NAME, METHOD_ACCEPT, METHOD_TO_ARRAY,
-			METHOD_TO_LIST, METHOD_GET_ID, METHOD_SET_MAXIMUM, METHOD_GET_CURRENT_SHEET_INDEX = null;
+			METHOD_TO_LIST, METHOD_GET_ID, METHOD_SET_MAXIMUM, METHOD_GET_CURRENT_SHEET_INDEX, METHOD_GET_JLPT_LEVELS,
+			METHOD_PARSE_JLPT_PAGE_HTML = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -389,6 +391,10 @@ class VoiceManagerTest {
 		//
 		(METHOD_GET_CURRENT_SHEET_INDEX = clz.getDeclaredMethod("getCurrentSheetIndex", Sheet.class))
 				.setAccessible(true);
+		//
+		(METHOD_GET_JLPT_LEVELS = clz.getDeclaredMethod("getJlptLevels", String.class)).setAccessible(true);
+		//
+		(METHOD_PARSE_JLPT_PAGE_HTML = clz.getDeclaredMethod("parseJlptPageHtml", String.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -3429,6 +3435,53 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof Integer) {
 				return (Integer) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetJlptLevels() throws Throwable {
+		//
+		Assertions.assertNull(getJlptLevels(""));
+		//
+		Assertions.assertNull(getJlptLevels(" "));
+		//
+	}
+
+	private static List<String> getJlptLevels(final String urlString) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_JLPT_LEVELS.invoke(null, urlString);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof List) {
+				return (List) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testParseJlptPageHtml() throws Throwable {
+		//
+		Assertions.assertNull(parseJlptPageHtml(""));
+		//
+		Assertions.assertEquals(Arrays.asList(Integer.toString(ZERO)),
+				parseJlptPageHtml(String.format("<th scope=\"col\" class=\"thLeft\">%1$s</th>", ZERO)));
+		//
+	}
+
+	private static List<String> parseJlptPageHtml(final String html) throws Throwable {
+		try {
+			final Object obj = METHOD_PARSE_JLPT_PAGE_HTML.invoke(null, html);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof List) {
+				return (List) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

@@ -45,6 +45,8 @@
 			value="#{new org.springframework.context.support.SpeechApiImpl()}" />
 		<property name="mp3Tags"
 			value="${org.springframework.context.support.VoiceManager.mp3Tags}" />
+		<property name="jlptLevelPageUrl"
+			value="${org.springframework.context.support.VoiceManager.jlptLevelPageUrl}" />
 	</bean>
 
 	<bean id="DataSource" class="org.h2.jdbcx.JdbcConnectionPool"
