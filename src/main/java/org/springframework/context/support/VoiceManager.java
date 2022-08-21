@@ -834,8 +834,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		cbOverMp3Title.setSelected(Boolean.parseBoolean(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.overMp3Title")));
 		//
-		add(cbOrdinalPositionAsFileNamePrefix = new JCheckBox("Ordinal Position As Track Number"),
-				String.format("span %1$s", 2));
+		add(cbOrdinalPositionAsFileNamePrefix = new JCheckBox("Ordinal Position As File Name Prefix"),
+				String.format("span %1$s", 3));
 		//
 		cbOrdinalPositionAsFileNamePrefix.setSelected(Boolean.parseBoolean(getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.ordinalPositionAsFileNamePrefix")));
