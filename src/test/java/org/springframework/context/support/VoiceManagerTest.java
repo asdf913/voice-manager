@@ -40,6 +40,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.OptionalInt;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
@@ -47,9 +48,11 @@ import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.ToIntFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collector;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import javax.sound.sampled.AudioFormat;
@@ -130,16 +133,19 @@ class VoiceManagerTest {
 
 	private static final String EMPTY = "";
 
+	private static final int ZERO = 0;
+
 	private static Class<?> CLASS_OBJECT_MAP, CLASS_BOOLEAN_MAP, CLASS_IH = null;
 
 	private static Method METHOD_INIT, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_GET_FILE_EXTENSION,
 			METHOD_DIGEST, METHOD_GET_MAPPER, METHOD_INSERT_OR_UPDATE, METHOD_SET_ENABLED, METHOD_TEST_AND_APPLY4,
 			METHOD_TEST_AND_APPLY5, METHOD_CAST, METHOD_INT_VALUE, METHOD_GET_PROPERTY_PROPERTY_RESOLVER,
 			METHOD_GET_PROPERTY_CUSTOM_PROPERTIES, METHOD_SET_VARIABLE, METHOD_PARSE_EXPRESSION, METHOD_GET_VALUE,
-			METHOD_GET_SOURCE, METHOD_EXPORT, METHOD_MAP, METHOD_MAX, METHOD_OR_ELSE, METHOD_FOR_EACH_STREAM,
-			METHOD_FOR_EACH_ITERABLE, METHOD_CREATE_WORK_BOOK, METHOD_CREATE_VOICE, METHOD_GET_MESSAGE, METHOD_INVOKE,
-			METHOD_ANNOTATION_TYPE, METHOD_GET_NAME, METHOD_FIND_FIRST, METHOD_GET_DECLARED_METHODS, METHOD_FOR_NAME,
-			METHOD_FILTER, METHOD_SET_TEXT, METHOD_GET_PREFERRED_WIDTH, METHOD_IMPORT_VOICE3, METHOD_IMPORT_VOICE5,
+			METHOD_GET_SOURCE, METHOD_EXPORT, METHOD_MAP, METHOD_MAP_TO_INT, METHOD_MAX_STREAM, METHOD_MAX_INT_STREAM,
+			METHOD_OR_ELSE_OPTIONAL, METHOD_OR_ELSE_OPTIONAL_INT, METHOD_FOR_EACH_STREAM, METHOD_FOR_EACH_ITERABLE,
+			METHOD_CREATE_WORK_BOOK, METHOD_CREATE_VOICE, METHOD_GET_MESSAGE, METHOD_INVOKE, METHOD_ANNOTATION_TYPE,
+			METHOD_GET_NAME, METHOD_FIND_FIRST, METHOD_GET_DECLARED_METHODS, METHOD_FOR_NAME, METHOD_FILTER,
+			METHOD_SET_TEXT, METHOD_GET_PREFERRED_WIDTH, METHOD_IMPORT_VOICE3, METHOD_IMPORT_VOICE5,
 			METHOD_ERROR_OR_PRINT_LN, METHOD_ADD, METHOD_CREATE_IMPORT_FILE_TEMPLATE_BYTE_ARRAY,
 			METHOD_GET_DECLARED_ANNOTATIONS, METHOD_CREATE_CELL, METHOD_SET_CELL_VALUE, METHOD_ANY_MATCH,
 			METHOD_COLLECT, METHOD_NAME, METHOD_GET_SELECTED_ITEM, METHOD_WRITE, METHOD_MATCHER, METHOD_SET_VALUE,
@@ -211,9 +217,16 @@ class VoiceManagerTest {
 		//
 		(METHOD_MAP = clz.getDeclaredMethod("map", Stream.class, Function.class)).setAccessible(true);
 		//
-		(METHOD_MAX = clz.getDeclaredMethod("max", Stream.class, Comparator.class)).setAccessible(true);
+		(METHOD_MAP_TO_INT = clz.getDeclaredMethod("mapToInt", Stream.class, ToIntFunction.class)).setAccessible(true);
 		//
-		(METHOD_OR_ELSE = clz.getDeclaredMethod("orElse", Optional.class, Object.class)).setAccessible(true);
+		(METHOD_MAX_STREAM = clz.getDeclaredMethod("max", Stream.class, Comparator.class)).setAccessible(true);
+		//
+		(METHOD_MAX_INT_STREAM = clz.getDeclaredMethod("max", IntStream.class)).setAccessible(true);
+		//
+		(METHOD_OR_ELSE_OPTIONAL = clz.getDeclaredMethod("orElse", Optional.class, Object.class)).setAccessible(true);
+		//
+		(METHOD_OR_ELSE_OPTIONAL_INT = clz.getDeclaredMethod("orElse", OptionalInt.class, Integer.TYPE))
+				.setAccessible(true);
 		//
 		(METHOD_FOR_EACH_STREAM = clz.getDeclaredMethod("forEach", Stream.class, Consumer.class)).setAccessible(true);
 		//
@@ -423,6 +436,8 @@ class VoiceManagerTest {
 
 		private Integer numberOfSheets = null;
 
+		private IntStream intStream = null;
+
 		private Map<Object, String> getProperties() {
 			if (properties == null) {
 				properties = new LinkedHashMap<>();
@@ -594,6 +609,10 @@ class VoiceManagerTest {
 				} else if (Objects.equals(methodName, "anyMatch")) {
 					//
 					return anyMatch;
+					//
+				} else if (Objects.equals(methodName, "mapToInt")) {
+					//
+					return intStream;
 					//
 				} // if
 					//
@@ -1422,9 +1441,7 @@ class VoiceManagerTest {
 	@Test
 	void testIntValue() throws Throwable {
 		//
-		final int zero = 0;
-		//
-		Assertions.assertEquals(zero, intValue(null, zero));
+		Assertions.assertEquals(ZERO, intValue(null, ZERO));
 		//
 	}
 
@@ -1645,6 +1662,34 @@ class VoiceManagerTest {
 	}
 
 	@Test
+	void testMapToInt() throws Throwable {
+		//
+		Assertions.assertNull(mapToInt(stream, null));
+		//
+		final Stream<?> empty = Stream.empty();
+		//
+		Assertions.assertNull(mapToInt(empty, null));
+		//
+		Assertions.assertNotNull(mapToInt(empty, x -> 0));
+		//
+	}
+
+	private static <T> IntStream mapToInt(final Stream<T> instance, final ToIntFunction<? super T> mapper)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_MAP_TO_INT.invoke(null, instance, mapper);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof IntStream) {
+				return (IntStream) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
 	void testMax() throws Throwable {
 		//
 		Assertions.assertNull(max(null, null));
@@ -1653,16 +1698,31 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(max(Stream.empty(), null));
 		//
+		Assertions.assertNotNull(max(IntStream.empty()));
 	}
 
 	private static <T> Optional<T> max(final Stream<T> instance, final Comparator<? super T> comparator)
 			throws Throwable {
 		try {
-			final Object obj = METHOD_MAX.invoke(null, instance, comparator);
+			final Object obj = METHOD_MAX_STREAM.invoke(null, instance, comparator);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Optional) {
 				return (Optional) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static OptionalInt max(final IntStream instance) throws Throwable {
+		try {
+			final Object obj = METHOD_MAX_INT_STREAM.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof OptionalInt) {
+				return (OptionalInt) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
@@ -1675,11 +1735,25 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(orElse(null, null));
 		//
+		Assertions.assertEquals(ZERO, orElse(null, ZERO));
+		//
 	}
 
 	private static <T> T orElse(final Optional<T> instance, final T other) throws Throwable {
 		try {
-			return (T) METHOD_OR_ELSE.invoke(null, instance, other);
+			return (T) METHOD_OR_ELSE_OPTIONAL.invoke(null, instance, other);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static int orElse(final OptionalInt instance, final int other) throws Throwable {
+		try {
+			final Object obj = METHOD_OR_ELSE_OPTIONAL_INT.invoke(null, instance);
+			if (obj instanceof Integer) {
+				return ((Integer) obj).intValue();
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

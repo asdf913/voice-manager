@@ -50,6 +50,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.OptionalInt;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -59,11 +60,14 @@ import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.ToIntFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -1186,6 +1190,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
+	private static <T> IntStream mapToInt(final Stream<T> instance, final ToIntFunction<? super T> mapper) {
+		//
+		return instance != null && (Proxy.isProxyClass(getClass(instance)) || mapper != null)
+				? instance.mapToInt(mapper)
+				: null;
+		//
+	}
+
 	private static <T> Optional<T> max(final Stream<T> instance, final Comparator<? super T> comparator) {
 		//
 		return instance != null && (Proxy.isProxyClass(getClass(instance)) || comparator != null)
@@ -1194,8 +1206,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
+	private static OptionalInt max(final IntStream instance) {
+		return instance != null ? instance.max() : null;
+	}
+
 	private static <T> T orElse(final Optional<T> instance, final T other) {
 		return instance != null ? instance.orElse(other) : null;
+	}
+
+	private static int orElse(final OptionalInt instance, final int other) {
+		return instance != null ? instance.orElse(other) : other;
 	}
 
 	private static void setEnabled(final Component instance, final boolean b) {
@@ -2417,10 +2437,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							String.format("/%1$s.class", StringUtils.replace(clz.getName(), ".", "/")))
 					: null) {
 				//
-				final JavaClass javaClass = ClassParserUtil
-						.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null));
-				//
-				final org.apache.bcel.classfile.Method[] ms = getMethods(javaClass);
+				final org.apache.bcel.classfile.Method[] ms = getMethods(
+						ClassParserUtil.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null)));
 				//
 				org.apache.bcel.classfile.Method m = null;
 				//
@@ -2487,12 +2505,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							String.format("/%1$s.class", StringUtils.replace(clz.getName(), ".", "/")))
 					: null) {
 				//
-				final JavaClass javaClass = ClassParserUtil
-						.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null));
-				//
-				final List<org.apache.bcel.classfile.Method> ms = toList(
-						filter(testAndApply(Objects::nonNull, getMethods(javaClass), Arrays::stream, null),
-								x -> x != null && Objects.equals(x.getName(), "string2quality")));
+				final List<org.apache.bcel.classfile.Method> ms = toList(filter(testAndApply(Objects::nonNull,
+						getMethods(ClassParserUtil
+								.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null))),
+						Arrays::stream, null), x -> x != null && Objects.equals(x.getName(), "string2quality")));
 				//
 				org.apache.bcel.classfile.Method m = null;
 				//
@@ -3171,6 +3187,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 		private NumberFormat percentNumberFormat = null;
 
+		private String currentSheetName = null;
+
 		@Override
 		public void run() {
 			//
@@ -3192,13 +3210,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			final Fraction percentage = add(fraction1, fraction2);
 			//
-			infoOrPrintln(LOG, System.out, String.format("%1$s %2$s/%3$s %4$s/%5$s",
+			infoOrPrintln(LOG, System.out, String.format("%1$s %2$s/%3$s (%4$s) %5$s/%6$s",
 					percentage != null
 							? StringUtils.leftPad(format(percentNumberFormat, percentage.doubleValue()), 5, ' ')
 							: null,
 					StringUtils.leftPad(VoiceManager.toString(sheetCurrent),
 							StringUtils.length(VoiceManager.toString(ObjectUtils.max(sheetCurrent, sheetTotal))), ' '),
-					sheetTotal, StringUtils.leftPad(VoiceManager.toString(counter),
+					sheetTotal, currentSheetName, StringUtils.leftPad(VoiceManager.toString(counter),
 							StringUtils.length(VoiceManager.toString(count))),
 					count));
 			//
@@ -3358,7 +3376,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				Integer integer = null;
 				//
-				Workbook workbook = null;
+				final Workbook workbook = sheet.getWorkbook();
+				//
+				final Integer numberOfSheets = workbook != null ? Integer.valueOf(workbook.getNumberOfSheets()) : null;
+				//
+				final int maxSheetNameLength = orElse(max(mapToInt(
+						map(testAndApply(Objects::nonNull, workbook != null ? workbook.spliterator() : null,
+								x -> StreamSupport.stream(x, false), null), VoiceManager::getSheetName),
+						StringUtils::length)), 0);
 				//
 				for (final Row row : sheet) {
 					//
@@ -3483,9 +3508,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						if ((es = ObjectUtils.getIfNull(es, () -> Executors.newFixedThreadPool(1))) != null) {
 							//
 							(it = new ImportTask()).sheetCurrentAndTotal = Pair.of(getCurrentSheetIndex(sheet),
-									(workbook = sheet != null ? sheet.getWorkbook() : null) != null
-											? Integer.valueOf(workbook.getNumberOfSheets())
-											: null);
+									numberOfSheets);
+							//
+							it.currentSheetName = StringUtils.leftPad(getSheetName(sheet), maxSheetNameLength);
 							//
 							it.counter = Integer.valueOf(row.getRowNum());
 							//
