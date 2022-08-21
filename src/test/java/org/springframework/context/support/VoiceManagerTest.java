@@ -1749,7 +1749,7 @@ class VoiceManagerTest {
 
 	private static int orElse(final OptionalInt instance, final int other) throws Throwable {
 		try {
-			final Object obj = METHOD_OR_ELSE_OPTIONAL_INT.invoke(null, instance);
+			final Object obj = METHOD_OR_ELSE_OPTIONAL_INT.invoke(null, instance, other);
 			if (obj instanceof Integer) {
 				return ((Integer) obj).intValue();
 			}
