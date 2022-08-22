@@ -273,8 +273,8 @@ class VoiceManagerTest {
 		//
 		(METHOD_ADD = clz.getDeclaredMethod("add", Collection.class, Object.class)).setAccessible(true);
 		//
-		(METHOD_CREATE_IMPORT_FILE_TEMPLATE_BYTE_ARRAY = clz.getDeclaredMethod("createImportFileTemplateByteArray"))
-				.setAccessible(true);
+		(METHOD_CREATE_IMPORT_FILE_TEMPLATE_BYTE_ARRAY = clz.getDeclaredMethod("createImportFileTemplateByteArray",
+				Boolean.TYPE)).setAccessible(true);
 		//
 		(METHOD_GET_DECLARED_ANNOTATIONS = clz.getDeclaredMethod("getDeclaredAnnotations", AnnotatedElement.class))
 				.setAccessible(true);
@@ -2216,13 +2216,15 @@ class VoiceManagerTest {
 	@Test
 	void testCreateImportFileTemplateByteArray() throws Throwable {
 		//
-		Assertions.assertNotNull(createImportFileTemplateByteArray());
+		Assertions.assertNotNull(createImportFileTemplateByteArray(false));
+		//
+		Assertions.assertNotNull(createImportFileTemplateByteArray(true));
 		//
 	}
 
-	private static byte[] createImportFileTemplateByteArray() throws Throwable {
+	private static byte[] createImportFileTemplateByteArray(final boolean generateBlankRow) throws Throwable {
 		try {
-			final Object obj = METHOD_CREATE_IMPORT_FILE_TEMPLATE_BYTE_ARRAY.invoke(null);
+			final Object obj = METHOD_CREATE_IMPORT_FILE_TEMPLATE_BYTE_ARRAY.invoke(null, generateBlankRow);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof byte[]) {

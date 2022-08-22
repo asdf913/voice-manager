@@ -218,7 +218,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private AbstractButton btnSpeak, btnWriteVoice, btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji,
 			btnCopyHiragana, btnCopyKatakana, cbUseTtsVoice, btnExecute, btnImportFileTemplate, btnImport,
-			cbOverMp3Title, cbOrdinalPositionAsFileNamePrefix, btnExport = null;
+			cbOverMp3Title, cbOrdinalPositionAsFileNamePrefix, btnExport, cbImportFileTemplateGenerateBlankRow = null;
 
 	private JProgressBar progressBar = null;
 
@@ -874,6 +874,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		add(btnImport = new JButton("Import"), WRAP);
 		//
 		add(new JLabel(""));
+		//
+		add(cbImportFileTemplateGenerateBlankRow = new JCheckBox("Generate A Blank Row"),
+				String.format("span %1$s", 2));
+		//
+		cbImportFileTemplateGenerateBlankRow.setSelected(Boolean.parseBoolean(getProperty(propertyResolver,
+				"org.springframework.context.support.VoiceManager.importFileTemplateGenerateBlankRow")));
 		//
 		add(btnImportFileTemplate = new JButton("Import File Template"), String.format("span %1$s,%2$s", 3, WRAP));
 		//
@@ -1896,7 +1902,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				try {
 					//
-					FileUtils.writeByteArrayToFile(jfc.getSelectedFile(), createImportFileTemplateByteArray());
+					FileUtils.writeByteArrayToFile(jfc.getSelectedFile(),
+							createImportFileTemplateByteArray(isSelected(cbImportFileTemplateGenerateBlankRow)));
 					//
 				} catch (final IOException e) {
 					//
@@ -3248,7 +3255,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.getDeclaredAnnotations() : null;
 	}
 
-	private static byte[] createImportFileTemplateByteArray() {
+	private static byte[] createImportFileTemplateByteArray(final boolean generateBlankRow) {
 		//
 		final Class<?> importFieldClass = forName("domain.Voice$ImportField");
 		//
@@ -3277,16 +3284,36 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				} // if
 					//
 				if (sheet == null) {
+					//
 					sheet = workbook.createSheet();
+					//
 				} // if
 					//
 				if (row == null && sheet != null) {
+					//
 					row = sheet.createRow(0);
+					//
 				} // if
 					//
 				setCellValue(createCell(row, i), getName(f));
 				//
 			} // for
+				//
+			if (generateBlankRow && fs != null) {
+				//
+				if (sheet != null) {
+					//
+					row = sheet.createRow(sheet.getPhysicalNumberOfRows());
+					//
+				} // if
+					//
+				for (int i = 0; i < fs.size(); i++) {
+					//
+					setCellValue(createCell(row, i), null);
+					//
+				} // for
+					//
+			} // if
 				//
 			write(workbook, baos);
 			//
