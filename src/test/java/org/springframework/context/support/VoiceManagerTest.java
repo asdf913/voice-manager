@@ -94,9 +94,13 @@ import org.apache.poi.ooxml.POIXMLDocument;
 import org.apache.poi.ooxml.POIXMLProperties;
 import org.apache.poi.ooxml.POIXMLProperties.CustomProperties;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DataValidation;
+import org.apache.poi.ss.usermodel.DataValidationConstraint;
+import org.apache.poi.ss.usermodel.DataValidationHelper;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.util.LocaleID;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.jupiter.api.Assertions;
@@ -161,7 +165,8 @@ class VoiceManagerTest {
 			METHOD_GET_PROPERTIES, METHOD_GET_CUSTOM_PROPERTIES, METHOD_CONTAINS_CUSTOM_PROPERTIES,
 			METHOD_CONTAINS_COLLECTION, METHOD_GET_LPW_STR, METHOD_GET_SHEET_NAME, METHOD_ACCEPT, METHOD_TO_ARRAY,
 			METHOD_TO_LIST, METHOD_GET_ID, METHOD_SET_MAXIMUM, METHOD_GET_CURRENT_SHEET_INDEX, METHOD_GET_JLPT_LEVELS,
-			METHOD_PARSE_JLPT_PAGE_HTML = null;
+			METHOD_PARSE_JLPT_PAGE_HTML, METHOD_GET_DATA_VALIDATION_HELPER, METHOD_CREATE_EXPLICIT_LIST_CONSTRAINT,
+			METHOD_CREATE_VALIDATION = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -274,7 +279,7 @@ class VoiceManagerTest {
 		(METHOD_ADD = clz.getDeclaredMethod("add", Collection.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_CREATE_IMPORT_FILE_TEMPLATE_BYTE_ARRAY = clz.getDeclaredMethod("createImportFileTemplateByteArray",
-				Boolean.TYPE)).setAccessible(true);
+				Boolean.TYPE, Collection.class)).setAccessible(true);
 		//
 		(METHOD_GET_DECLARED_ANNOTATIONS = clz.getDeclaredMethod("getDeclaredAnnotations", AnnotatedElement.class))
 				.setAccessible(true);
@@ -395,6 +400,15 @@ class VoiceManagerTest {
 		(METHOD_GET_JLPT_LEVELS = clz.getDeclaredMethod("getJlptLevels", String.class)).setAccessible(true);
 		//
 		(METHOD_PARSE_JLPT_PAGE_HTML = clz.getDeclaredMethod("parseJlptPageHtml", String.class)).setAccessible(true);
+		//
+		(METHOD_GET_DATA_VALIDATION_HELPER = clz.getDeclaredMethod("getDataValidationHelper", Sheet.class))
+				.setAccessible(true);
+		//
+		(METHOD_CREATE_EXPLICIT_LIST_CONSTRAINT = clz.getDeclaredMethod("createExplicitListConstraint",
+				DataValidationHelper.class, String[].class)).setAccessible(true);
+		//
+		(METHOD_CREATE_VALIDATION = clz.getDeclaredMethod("createValidation", DataValidationHelper.class,
+				DataValidationConstraint.class, CellRangeAddressList.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -2216,15 +2230,18 @@ class VoiceManagerTest {
 	@Test
 	void testCreateImportFileTemplateByteArray() throws Throwable {
 		//
-		Assertions.assertNotNull(createImportFileTemplateByteArray(false));
+		Assertions.assertNotNull(createImportFileTemplateByteArray(false, null));
 		//
-		Assertions.assertNotNull(createImportFileTemplateByteArray(true));
+		Assertions.assertNotNull(createImportFileTemplateByteArray(true, null));
+		//
+		Assertions.assertNotNull(createImportFileTemplateByteArray(true, Collections.singleton(null)));
 		//
 	}
 
-	private static byte[] createImportFileTemplateByteArray(final boolean generateBlankRow) throws Throwable {
+	private static byte[] createImportFileTemplateByteArray(final boolean generateBlankRow,
+			final Collection<String> jlptValues) throws Throwable {
 		try {
-			final Object obj = METHOD_CREATE_IMPORT_FILE_TEMPLATE_BYTE_ARRAY.invoke(null, generateBlankRow);
+			final Object obj = METHOD_CREATE_IMPORT_FILE_TEMPLATE_BYTE_ARRAY.invoke(null, generateBlankRow, jlptValues);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof byte[]) {
@@ -3484,6 +3501,72 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof List) {
 				return (List) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetDataValidationHelper() throws Throwable {
+		//
+		Assertions.assertNull(getDataValidationHelper(null));
+		//
+	}
+
+	private static DataValidationHelper getDataValidationHelper(final Sheet instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_DATA_VALIDATION_HELPER.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof DataValidationHelper) {
+				return (DataValidationHelper) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCreateExplicitListConstraint() throws Throwable {
+		//
+		Assertions.assertNull(createExplicitListConstraint(null, null));
+		//
+	}
+
+	private static DataValidationConstraint createExplicitListConstraint(final DataValidationHelper instance,
+			final String[] listOfValues) throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_EXPLICIT_LIST_CONSTRAINT.invoke(null, instance, listOfValues);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof DataValidationConstraint) {
+				return (DataValidationConstraint) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCreateValidation() throws Throwable {
+		//
+		Assertions.assertNull(createValidation(null, null, null));
+		//
+	}
+
+	private static DataValidation createValidation(final DataValidationHelper instance,
+			final DataValidationConstraint constraint, final CellRangeAddressList cellRangeAddressList)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_VALIDATION.invoke(null, instance, constraint, cellRangeAddressList);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof DataValidation) {
+				return (DataValidation) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

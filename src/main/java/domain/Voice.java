@@ -63,7 +63,13 @@ public class Voice {
 	@ImportField
 	private String filePath = null;
 
+	@Target(ElementType.FIELD)
+	@Retention(RetentionPolicy.RUNTIME)
+	private @interface JLPT {
+	}
+
 	@ImportField
+	@JLPT
 	private String jlptLevel = null;
 
 	private String fileDigestAlgorithm, fileDigest, fileExtension = null;

@@ -106,6 +106,7 @@ import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Utility;
 import org.apache.bcel.generic.ObjectType;
 import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IteratorUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.io.FileUtils;
@@ -131,11 +132,16 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.DataValidation;
+import org.apache.poi.ss.usermodel.DataValidationConstraint;
+import org.apache.poi.ss.usermodel.DataValidationHelper;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.util.LocaleID;
+import org.apache.poi.xssf.usermodel.XSSFDataValidationHelper;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.javatuples.Unit;
 import org.openxmlformats.schemas.officeDocument.x2006.customProperties.CTProperty;
@@ -251,6 +257,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private ObjectMapper objectMapper = null;
 
 	private String jlptLevelPageUrl = null;
+
+	private Unit<List<String>> jlptLevels = null;
 
 	private VoiceManager() {
 	}
@@ -784,7 +792,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		add(new JLabel("JLPT Level"));
 		//
-		final List<String> jlptLevels = getJlptLevels(jlptLevelPageUrl);
+		final List<String> jlptLevels = testAndApply(Objects::nonNull, getJlptLevels(), ArrayList::new, null);
 		//
 		if (jlptLevels != null && !jlptLevels.isEmpty()) {
 			//
@@ -938,6 +946,18 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				0) - intValue(getPreferredWidth(btnConvertToRomaji), 0), tfText, tfRomaji, tfHiragana);
 		//
 		setEnabled(btnExecute, folder != null && folder.exists() && folder.isDirectory());
+		//
+	}
+
+	private List<String> getJlptLevels() {
+		//
+		if (jlptLevels == null) {
+			//
+			jlptLevels = Unit.with(getJlptLevels(jlptLevelPageUrl));
+			//
+		} // if
+			//
+		return getValue0(jlptLevels);
 		//
 	}
 
@@ -1902,8 +1922,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				try {
 					//
-					FileUtils.writeByteArrayToFile(jfc.getSelectedFile(),
-							createImportFileTemplateByteArray(isSelected(cbImportFileTemplateGenerateBlankRow)));
+					FileUtils.writeByteArrayToFile(jfc.getSelectedFile(), createImportFileTemplateByteArray(
+							isSelected(cbImportFileTemplateGenerateBlankRow), getJlptLevels()));
 					//
 				} catch (final IOException e) {
 					//
@@ -3255,7 +3275,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.getDeclaredAnnotations() : null;
 	}
 
-	private static byte[] createImportFileTemplateByteArray(final boolean generateBlankRow) {
+	private static byte[] createImportFileTemplateByteArray(final boolean generateBlankRow,
+			final Collection<String> jlptValues) {
 		//
 		final Class<?> importFieldClass = forName("domain.Voice$ImportField");
 		//
@@ -3273,6 +3294,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		Row row = null;
 		//
 		byte[] bs = null;
+		//
+		final Class<?> classJlpt = forName("domain.Voice$JLPT");
+		//
+		DataValidationHelper dvh = null;
 		//
 		try (final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
 			//
@@ -3311,6 +3336,26 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					setCellValue(createCell(row, i), null);
 					//
+					if (anyMatch(
+							testAndApply(Objects::nonNull, getDeclaredAnnotations(fs.get(i)), Arrays::stream, null),
+							a -> Objects.equals(annotationType(a), classJlpt))) {
+						//
+						if (dvh == null) {
+							//
+							dvh = getDataValidationHelper(sheet);
+							//
+						} // if
+							//
+						if (!(dvh instanceof XSSFDataValidationHelper) || CollectionUtils.isNotEmpty(jlptValues)) {
+							//
+							sheet.addValidationData(createValidation(dvh,
+									createExplicitListConstraint(dvh, toArray(jlptValues, new String[] {})),
+									new CellRangeAddressList(row.getRowNum(), row.getRowNum(), i, i)));
+							//
+						} // if
+							//
+					} // if
+						//
 				} // for
 					//
 			} // if
@@ -3343,6 +3388,20 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return bs;
 		//
+	}
+
+	private static DataValidationHelper getDataValidationHelper(final Sheet instance) {
+		return instance != null ? instance.getDataValidationHelper() : null;
+	}
+
+	private static DataValidationConstraint createExplicitListConstraint(final DataValidationHelper instance,
+			final String[] listOfValues) {
+		return instance != null ? instance.createExplicitListConstraint(listOfValues) : null;
+	}
+
+	private static DataValidation createValidation(final DataValidationHelper instance,
+			final DataValidationConstraint constraint, final CellRangeAddressList cellRangeAddressList) {
+		return instance != null ? instance.createValidation(constraint, cellRangeAddressList) : null;
 	}
 
 	private static Cell createCell(final Row instance, final int column) {
