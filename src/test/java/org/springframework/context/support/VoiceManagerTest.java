@@ -3623,7 +3623,21 @@ class VoiceManagerTest {
 			//
 			Assertions.assertThrows(Throwable.class, () -> ih.invoke(objectMap, getObject, null));
 			//
-			Assertions.assertThrows(Throwable.class, () -> ih.invoke(objectMap, getObject, new Object[] {}));
+			final Object[] empty = new Object[] {};
+			//
+			Assertions.assertThrows(Throwable.class, () -> ih.invoke(objectMap, getObject, empty));
+			//
+			// org.springframework.context.support.VoiceManager.ObjectMap.containsObject(java.lang.Class)
+			//
+			final Method containsObject = CLASS_OBJECT_MAP != null
+					? CLASS_OBJECT_MAP.getDeclaredMethod("containsObject", Class.class)
+					: null;
+			//
+			Assertions.assertThrows(Throwable.class, () -> ih.invoke(objectMap, containsObject, null));
+			//
+			Assertions.assertThrows(Throwable.class, () -> ih.invoke(objectMap, containsObject, empty));
+			//
+			Assertions.assertEquals(Boolean.FALSE, ih.invoke(objectMap, containsObject, new Object[] { null }));
 			//
 			// org.springframework.context.support.VoiceManager.ObjectMap.setObject(java.lang.Class,java.lang.Object)
 			//
@@ -3633,7 +3647,7 @@ class VoiceManagerTest {
 			//
 			Assertions.assertThrows(Throwable.class, () -> ih.invoke(objectMap, setObject, null));
 			//
-			Assertions.assertThrows(Throwable.class, () -> ih.invoke(objectMap, setObject, new Object[] {}));
+			Assertions.assertThrows(Throwable.class, () -> ih.invoke(objectMap, setObject, empty));
 			//
 			Assertions.assertNull(ih.invoke(objectMap, setObject, new Object[] { null, null }));
 			//
@@ -3647,7 +3661,7 @@ class VoiceManagerTest {
 			//
 			Assertions.assertThrows(Throwable.class, () -> ih.invoke(booleanMap, setBoolean, null));
 			//
-			Assertions.assertThrows(Throwable.class, () -> ih.invoke(booleanMap, setBoolean, new Object[] {}));
+			Assertions.assertThrows(Throwable.class, () -> ih.invoke(booleanMap, setBoolean, empty));
 			//
 			Assertions.assertDoesNotThrow(() -> ih.invoke(booleanMap, setBoolean, new Object[] { null, null }));
 			//

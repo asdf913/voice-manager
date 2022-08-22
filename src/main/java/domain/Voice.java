@@ -224,4 +224,8 @@ public class Voice {
 		this.jlptLevel = jlptLevel;
 	}
 
+	public String getJlptLevel() {
+		return jlptLevel;
+	}
+
 }

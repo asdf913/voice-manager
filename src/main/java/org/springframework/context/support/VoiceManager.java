@@ -224,7 +224,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private AbstractButton btnSpeak, btnWriteVoice, btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji,
 			btnCopyHiragana, btnCopyKatakana, cbUseTtsVoice, btnExecute, btnImportFileTemplate, btnImport,
-			cbOverMp3Title, cbOrdinalPositionAsFileNamePrefix, btnExport, cbImportFileTemplateGenerateBlankRow = null;
+			cbOverMp3Title, cbOrdinalPositionAsFileNamePrefix, btnExport, cbImportFileTemplateGenerateBlankRow,
+			cbJlptAsFolder = null;
 
 	private JProgressBar progressBar = null;
 
@@ -874,6 +875,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		cbOrdinalPositionAsFileNamePrefix.setSelected(Boolean.parseBoolean(getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.ordinalPositionAsFileNamePrefix")));
+		//
+		add(cbJlptAsFolder = new JCheckBox("JLPT As Folder"), String.format("span %1$s", 2));
+		//
+		cbJlptAsFolder.setSelected(Boolean.parseBoolean(
+				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.jlptAsFolder")));
 		//
 		add(btnExport = new JButton("Export"), WRAP);
 		//
@@ -1845,6 +1851,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 						booleanMap.setBoolean("ordinalPositionAsFileNamePrefix",
 								isSelected(cbOrdinalPositionAsFileNamePrefix));
+						//
+						booleanMap.setBoolean("jlptAsFolder", isSelected(cbJlptAsFolder));
 						//
 					} // if
 						//
@@ -4779,6 +4787,94 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 									getKey(en), "(#voice.text+'('+#voice.romaji+').'+#voice.fileExtension)")));
 					//
 				} // for
+					//
+			} // if
+				//
+				// JLPT
+				//
+			if (booleanMap != null && booleanMap.getBoolean("jlptAsFolder")) {
+				//
+				if (multimap != null) {
+					//
+					multimap.clear();
+					//
+				} // if
+					//
+				String jlptLevel = null;
+				//
+				for (int i = 0; voices != null && i < voices.size(); i++) {
+					//
+					if ((v = voices.get(i)) == null || (jlptLevel = v.getJlptLevel()) == null
+							|| (multimap = ObjectUtils.getIfNull(multimap, LinkedListMultimap::create)) == null) {
+						//
+						continue;
+						//
+					} // if
+						//
+					multimap.put(jlptLevel, v);
+					//
+				} // for
+					//
+				if (multimap != null && multimap.entries() != null) {
+					//
+					int coutner = 0;
+					//
+					size = multimap.size();
+					//
+					numberOfOrdinalPositionDigit = Integer
+							.valueOf(StringUtils.length(toString(orElse(max(
+									filter(map(stream(multimap.values()),
+											x -> x != null ? x.getOrdinalPosition() : null), Objects::nonNull),
+									ObjectUtils::compare), null))));
+					//
+					for (final Entry<String, Voice> en : multimap.entries()) {
+						//
+						if (en == null) {
+							//
+							continue;
+							//
+						} // if
+							//
+						if ((es = ObjectUtils.getIfNull(es, () -> Executors.newFixedThreadPool(1))) == null) {
+							//
+							continue;
+							//
+						} // if
+							//
+						if (objectMap != null) {
+							//
+							if (!objectMap.containsObject(NumberFormat.class)) {
+								//
+								objectMap.setObject(NumberFormat.class, percentNumberFormat = ObjectUtils
+										.getIfNull(percentNumberFormat, () -> new DecimalFormat("#%")));
+								//
+							} // if
+								//
+							if (!objectMap.containsObject(EvaluationContext.class)) {
+								//
+								objectMap.setObject(EvaluationContext.class, evaluationContext = ObjectUtils
+										.getIfNull(evaluationContext, StandardEvaluationContext::new));
+								//
+							} // if
+								//
+							if (!objectMap.containsObject(ExpressionParser.class)) {
+								//
+								objectMap.setObject(ExpressionParser.class, expressionParser = ObjectUtils
+										.getIfNull(expressionParser, SpelExpressionParser::new));
+								//
+							} // if
+								//
+							objectMap.setObject(Voice.class, getValue(en));
+							//
+						} // if
+							//
+						es.submit(createExportTask(objectMap, size, Integer.valueOf(++coutner),
+								numberOfOrdinalPositionDigit, outputFolder, voiceFolder, Collections.singletonMap(
+										getKey(en), "(#voice.text+'('+#voice.romaji+').'+#voice.fileExtension)")));
+						//
+					} // for
+						//
+				} // if
 					//
 			} // if
 				//
