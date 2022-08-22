@@ -63,7 +63,10 @@ public class Voice {
 	@ImportField
 	private String filePath = null;
 
-	private String fileDigestAlgorithm, fileDigest, fileExtension, jlptLevel = null;
+	@ImportField
+	private String jlptLevel = null;
+
+	private String fileDigestAlgorithm, fileDigest, fileExtension = null;
 
 	private Iterable<String> listNames = null;
 
