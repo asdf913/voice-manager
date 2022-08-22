@@ -3439,6 +3439,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 		<T> T getObject(final Class<T> key);
 
+		boolean containsObject(final Class<?> key);
+
 		<T> void setObject(final Class<T> key, final T value);
 
 		static <T> T getObject(final ObjectMap instance, final Class<T> key) {
@@ -4313,13 +4315,17 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					final Object key = args[0];
 					//
-					if (!getObjects().containsKey(key)) {
+					if (!containsKey(getObjects(), key)) {
 						//
 						throw new IllegalStateException(String.format("Key [%1$s] Not Found", key));
 						//
 					} // if
 						//
 					return getObjects().get(key);
+					//
+				} else if (Objects.equals(methodName, "containsObject") && args != null && args.length > 0) {
+					//
+					return Boolean.valueOf(containsKey(getObjects(), args[0]));
 					//
 				} else if (Objects.equals(methodName, "setObject") && args != null && args.length > 1) {
 					//
@@ -4335,7 +4341,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					final Object key = args[0];
 					//
-					if (!getBooleans().containsKey(key)) {
+					if (!containsKey(getBooleans(), key)) {
 						//
 						throw new IllegalStateException(String.format("Key [%1$s] Not Found", key));
 						//
@@ -4741,40 +4747,36 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					} // if
 						//
-					(et = new ExportTask()).counter = Integer.valueOf(++coutner);
-					//
-					et.count = size;
-					//
-					et.percentNumberFormat = ObjectUtils.getIfNull(percentNumberFormat, () -> new DecimalFormat("#%"));
-					//
-					et.evaluationContext = evaluationContext = ObjectUtils.getIfNull(evaluationContext,
-							StandardEvaluationContext::new);
-					//
-					et.expressionParser = expressionParser = ObjectUtils.getIfNull(expressionParser,
-							SpelExpressionParser::new);
-					//
-					et.outputFolder = outputFolder;
-					//
-					et.outputFolderFileNameExpressions = Collections.singletonMap(getKey(en),
-							"(#voice.text+'('+#voice.romaji+').'+#voice.fileExtension)");
-					//
-					et.progressBar = progressBar;
-					//
-					et.voice = getValue(en);
-					//
-					et.voiceFolder = voiceFolder;
-					//
-					et.ordinalPositionDigit = numberOfOrdinalPositionDigit;
-					//
-					if (booleanMap != null) {
+					if (objectMap != null) {
 						//
-						et.overMp3Title = booleanMap.getBoolean("overMp3Title");
-						//
-						et.ordinalPositionAsFileNamePrefix = booleanMap.getBoolean("ordinalPositionAsFileNamePrefix");
+						if (!objectMap.containsObject(NumberFormat.class)) {
+							//
+							objectMap.setObject(NumberFormat.class, percentNumberFormat = ObjectUtils
+									.getIfNull(percentNumberFormat, () -> new DecimalFormat("#%")));
+							//
+						} // if
+							//
+						if (!objectMap.containsObject(EvaluationContext.class)) {
+							//
+							objectMap.setObject(EvaluationContext.class, evaluationContext = ObjectUtils
+									.getIfNull(evaluationContext, StandardEvaluationContext::new));
+							//
+						} // if
+							//
+						if (!objectMap.containsObject(ExpressionParser.class)) {
+							//
+							objectMap.setObject(ExpressionParser.class, expressionParser = ObjectUtils
+									.getIfNull(expressionParser, SpelExpressionParser::new));
+							//
+						} // if
+							//
+						objectMap.setObject(Voice.class, getValue(en));
 						//
 					} // if
 						//
-					es.submit(et);
+					es.submit(createExportTask(objectMap, size, Integer.valueOf(++coutner),
+							numberOfOrdinalPositionDigit, outputFolder, voiceFolder, Collections.singletonMap(
+									getKey(en), "(#voice.text+'('+#voice.romaji+').'+#voice.fileExtension)")));
 					//
 				} // for
 					//
@@ -4786,6 +4788,48 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // try
 			//
+	}
+
+	private static ExportTask createExportTask(final ObjectMap objectMap, final Integer size, final Integer counter,
+			final Integer numberOfOrdinalPositionDigit, final String outputFolder, final String voiceFolder,
+			final Map<String, String> outputFolderFileNameExpressions) {
+		//
+		final ExportTask et = new ExportTask();
+		//
+		et.counter = counter;
+		//
+		et.count = size;
+		//
+		et.percentNumberFormat = ObjectMap.getObject(objectMap, NumberFormat.class);
+		//
+		et.evaluationContext = ObjectMap.getObject(objectMap, EvaluationContext.class);
+		//
+		et.expressionParser = ObjectMap.getObject(objectMap, ExpressionParser.class);
+		//
+		et.outputFolder = outputFolder;
+		//
+		et.outputFolderFileNameExpressions = outputFolderFileNameExpressions;
+		//
+		et.progressBar = ObjectMap.getObject(objectMap, JProgressBar.class);
+		//
+		et.voice = ObjectMap.getObject(objectMap, Voice.class);
+		//
+		et.voiceFolder = voiceFolder;
+		//
+		et.ordinalPositionDigit = numberOfOrdinalPositionDigit;
+		//
+		final BooleanMap booleanMap = ObjectMap.getObject(objectMap, BooleanMap.class);
+		//
+		if (booleanMap != null) {
+			//
+			et.overMp3Title = booleanMap.getBoolean("overMp3Title");
+			//
+			et.ordinalPositionAsFileNamePrefix = booleanMap.getBoolean("ordinalPositionAsFileNamePrefix");
+			//
+		} // if
+			//
+		return et;
+		//
 	}
 
 	private static Workbook createWorkbook(final List<Voice> voices)

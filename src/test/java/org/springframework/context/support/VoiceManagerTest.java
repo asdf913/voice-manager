@@ -166,7 +166,7 @@ class VoiceManagerTest {
 			METHOD_CONTAINS_COLLECTION, METHOD_GET_LPW_STR, METHOD_GET_SHEET_NAME, METHOD_ACCEPT, METHOD_TO_ARRAY,
 			METHOD_TO_LIST, METHOD_GET_ID, METHOD_SET_MAXIMUM, METHOD_GET_CURRENT_SHEET_INDEX, METHOD_GET_JLPT_LEVELS,
 			METHOD_PARSE_JLPT_PAGE_HTML, METHOD_GET_DATA_VALIDATION_HELPER, METHOD_CREATE_EXPLICIT_LIST_CONSTRAINT,
-			METHOD_CREATE_VALIDATION = null;
+			METHOD_CREATE_VALIDATION, METHOD_CREATE_EXPORT_TASK = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -409,6 +409,9 @@ class VoiceManagerTest {
 		//
 		(METHOD_CREATE_VALIDATION = clz.getDeclaredMethod("createValidation", DataValidationHelper.class,
 				DataValidationConstraint.class, CellRangeAddressList.class)).setAccessible(true);
+		//
+		(METHOD_CREATE_EXPORT_TASK = clz.getDeclaredMethod("createExportTask", CLASS_OBJECT_MAP, Integer.class,
+				Integer.class, Integer.class, String.class, String.class, Map.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -3569,6 +3572,24 @@ class VoiceManagerTest {
 				return (DataValidation) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCreateExportTask() throws Throwable {
+		//
+		Assertions.assertNotNull(createExportTask(null, null, null, null, null, null, null));
+		//
+	}
+
+	private static Object createExportTask(final Object objectMap, final Integer size, final Integer counter,
+			final Integer numberOfOrdinalPositionDigit, final String outputFolder, final String voiceFolder,
+			final Map<String, String> outputFolderFileNameExpressions) throws Throwable {
+		try {
+			return METHOD_CREATE_EXPORT_TASK.invoke(null, objectMap, size, counter, numberOfOrdinalPositionDigit,
+					outputFolder, voiceFolder, outputFolderFileNameExpressions);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
