@@ -4794,12 +4794,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			if (booleanMap != null && booleanMap.getBoolean("jlptAsFolder")) {
 				//
-				if (multimap != null) {
-					//
-					multimap.clear();
-					//
-				} // if
-					//
+				clear(multimap = ObjectUtils.getIfNull(multimap, LinkedListMultimap::create));
+				//
 				String jlptLevel = null;
 				//
 				for (int i = 0; voices != null && i < voices.size(); i++) {
@@ -4884,6 +4880,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // try
 			//
+	}
+
+	private static void clear(final Multimap<?, ?> instance) {
+		if (instance != null) {
+			instance.clear();
+		}
 	}
 
 	private static ExportTask createExportTask(final ObjectMap objectMap, final Integer size, final Integer counter,
