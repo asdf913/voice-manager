@@ -163,10 +163,10 @@ class VoiceManagerTest {
 			METHOD_GET_METHODS_JAVA_CLASS, METHOD_GET_SIMPLE_NAME, METHOD_COPY_OBJECT_MAP, METHOD_DELETE_ON_EXIT,
 			METHOD_CONVERT_LANGUAGE_CODE_TO_TEXT, METHOD_IS_SELECTED, METHOD_SET_HIRAGANA_OR_KATAKANA,
 			METHOD_SET_ROMAJI, METHOD_OR, METHOD_CLEAR_DEFAULT_TABLE_MODEL, METHOD_CLEAR_MULTI_MAP, METHOD_EXECUTE,
-			METHOD_PUT, METHOD_GET_BYTE_CONVERTER, METHOD_GET_PROPERTIES, METHOD_GET_CUSTOM_PROPERTIES,
-			METHOD_CONTAINS_CUSTOM_PROPERTIES, METHOD_CONTAINS_COLLECTION, METHOD_GET_LPW_STR, METHOD_GET_SHEET_NAME,
-			METHOD_ACCEPT, METHOD_TO_ARRAY, METHOD_TO_LIST, METHOD_GET_ID, METHOD_SET_MAXIMUM,
-			METHOD_GET_CURRENT_SHEET_INDEX, METHOD_GET_JLPT_LEVELS, METHOD_PARSE_JLPT_PAGE_HTML,
+			METHOD_PUT_MAP, METHOD_PUT_MULTI_MAP, METHOD_GET_BYTE_CONVERTER, METHOD_GET_PROPERTIES,
+			METHOD_GET_CUSTOM_PROPERTIES, METHOD_CONTAINS_CUSTOM_PROPERTIES, METHOD_CONTAINS_COLLECTION,
+			METHOD_GET_LPW_STR, METHOD_GET_SHEET_NAME, METHOD_ACCEPT, METHOD_TO_ARRAY, METHOD_TO_LIST, METHOD_GET_ID,
+			METHOD_SET_MAXIMUM, METHOD_GET_CURRENT_SHEET_INDEX, METHOD_GET_JLPT_LEVELS, METHOD_PARSE_JLPT_PAGE_HTML,
 			METHOD_GET_DATA_VALIDATION_HELPER, METHOD_CREATE_EXPLICIT_LIST_CONSTRAINT, METHOD_CREATE_VALIDATION,
 			METHOD_CREATE_EXPORT_TASK = null;
 
@@ -367,7 +367,10 @@ class VoiceManagerTest {
 		//
 		(METHOD_EXECUTE = clz.getDeclaredMethod("execute", CLASS_OBJECT_MAP)).setAccessible(true);
 		//
-		(METHOD_PUT = clz.getDeclaredMethod("put", Map.class, Object.class, Object.class)).setAccessible(true);
+		(METHOD_PUT_MAP = clz.getDeclaredMethod("put", Map.class, Object.class, Object.class)).setAccessible(true);
+		//
+		(METHOD_PUT_MULTI_MAP = clz.getDeclaredMethod("put", Multimap.class, Object.class, Object.class))
+				.setAccessible(true);
 		//
 		(METHOD_GET_BYTE_CONVERTER = clz.getDeclaredMethod("getByteConverter", ConfigurableListableBeanFactory.class,
 				String.class, Object.class)).setAccessible(true);
@@ -445,7 +448,7 @@ class VoiceManagerTest {
 
 		private Iterator<Cell> cells = null;
 
-		private Boolean anyMatch, contains = null;
+		private Boolean anyMatch, contains, multiMapPut = null;
 
 		private String[] voiceIds = null;
 
@@ -745,6 +748,14 @@ class VoiceManagerTest {
 					//
 				} // if
 					//
+			} else if (proxy instanceof Multimap) {
+				//
+				if (Objects.equals(methodName, "put")) {
+					//
+					return multiMapPut;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(methodName);
@@ -766,6 +777,8 @@ class VoiceManagerTest {
 	private Sheet sheet = null;
 
 	private BeanDefinition beanDefinition = null;
+
+	private Multimap<?, ?> multimap = null;
 
 	@BeforeEach
 	void beforeEach() throws ReflectiveOperationException {
@@ -789,6 +802,8 @@ class VoiceManagerTest {
 		sheet = Reflection.newProxy(Sheet.class, ih);
 		//
 		beanDefinition = Reflection.newProxy(BeanDefinition.class, ih);
+		//
+		multimap = Reflection.newProxy(Multimap.class, ih);
 		//
 	}
 
@@ -3068,7 +3083,7 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> clear(defaultTableModel));
 		//
-		Assertions.assertDoesNotThrow(() -> clear(Reflection.newProxy(Multimap.class, ih)));
+		Assertions.assertDoesNotThrow(() -> clear(multimap));
 		//
 	}
 
@@ -3164,13 +3179,31 @@ class VoiceManagerTest {
 	@Test
 	void testPut() {
 		//
-		Assertions.assertDoesNotThrow(() -> put(null, null, null));
+		Assertions.assertDoesNotThrow(() -> put((Map<?, ?>) null, null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> put((Multimap<?, ?>) null, null, null));
+		//
+		if (ih != null) {
+			//
+			ih.multiMapPut = Boolean.FALSE;
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> put(multimap, null, null));
 		//
 	}
 
 	private static <K, V> void put(final Map<K, V> instance, final K key, final V value) throws Throwable {
 		try {
-			METHOD_PUT.invoke(null, instance, key, value);
+			METHOD_PUT_MAP.invoke(null, instance, key, value);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static <K, V> void put(final Multimap<K, V> instance, final K key, final V value) throws Throwable {
+		try {
+			METHOD_PUT_MULTI_MAP.invoke(null, instance, key, value);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

@@ -4780,12 +4780,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				for (final String listName : listNames) {
 					//
-					if (StringUtils.isEmpty(listName)
-							|| (multimap = ObjectUtils.getIfNull(multimap, LinkedListMultimap::create)) == null) {
+					if (StringUtils.isEmpty(listName)) {
 						continue;
 					} // if
 						//
-					multimap.put(listName, v);
+					put(multimap = ObjectUtils.getIfNull(multimap, LinkedListMultimap::create), listName, v);
 					//
 				} // for
 					//
@@ -4863,14 +4862,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				for (int i = 0; voices != null && i < voices.size(); i++) {
 					//
-					if ((v = voices.get(i)) == null || (jlptLevel = v.getJlptLevel()) == null
-							|| (multimap = ObjectUtils.getIfNull(multimap, LinkedListMultimap::create)) == null) {
+					if ((v = voices.get(i)) == null || (jlptLevel = v.getJlptLevel()) == null) {
 						//
 						continue;
 						//
 					} // if
 						//
-					multimap.put(jlptLevel, v);
+					put(multimap = ObjectUtils.getIfNull(multimap, LinkedListMultimap::create), jlptLevel, v);
 					//
 				} // for
 					//
@@ -4948,6 +4946,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static void clear(final Multimap<?, ?> instance) {
 		if (instance != null) {
 			instance.clear();
+		}
+	}
+
+	private static <K, V> void put(final Multimap<K, V> instance, final K key, final V value) {
+		if (instance != null) {
+			instance.put(key, value);
 		}
 	}
 
