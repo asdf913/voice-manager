@@ -585,7 +585,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		// source
 		//
-		add(new JLabel("Source"));
+		add(new JLabel("Source"), String.format("span %1$s", 2));
 		//
 		add(tfSource = new JTextField(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.source")),
@@ -593,7 +593,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(new JLabel("Text"));
 		//
-		String span = String.format("spanx %1$s,growx", 20);
+		String span = String.format("spanx %1$s,growx", 21);
 		//
 		add(tfText = new JTextField(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.text")), span);
@@ -657,8 +657,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			add(jcbVoiceId, String.format("span %1$s,growx", 18));
 			//
-			add(tfSpeechLanguage = new JTextField(),
-					String.format("width %1$s,span %2$s,%3$s", 147, 7, WRAP));
+			add(tfSpeechLanguage = new JTextField(), String.format("width %1$s,span %2$s,%3$s", 147, 7, WRAP));
 			//
 		} // if
 			//
@@ -777,7 +776,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final String tags = getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.listNames");
 		//
-		add(tfListNames = new JTextField(tags), String.format("growx,span %1$s", 2));
+		add(tfListNames = new JTextField(tags), String.format("growx,span %1$s", 3));
 		//
 		tfListNames.addKeyListener(this);
 		//
@@ -844,7 +843,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(btnConvertToKatakana = new JButton("Convert"));
 		//
-		add(new JLabel("Katakana"), String.format("span %1$s", 2));
+		add(new JLabel("Katakana"), String.format("span %1$s", 3));
 		//
 		add(tfKatakana = new JTextField(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.katakana")),
@@ -883,7 +882,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		cbJlptAsFolder.setSelected(Boolean.parseBoolean(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.jlptAsFolder")));
 		//
-		add(btnExport = new JButton("Export"), String.format("%1$s,span %2$s", WRAP, 2));
+		add(btnExport = new JButton("Export"), String.format("%1$s,span %2$s", WRAP, 4));
 		//
 		add(new JLabel("Import"));
 		//
