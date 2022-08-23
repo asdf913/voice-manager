@@ -221,7 +221,7 @@ class VoiceManagerTest {
 		//
 		(METHOD_GET_SOURCE = clz.getDeclaredMethod("getSource", EventObject.class)).setAccessible(true);
 		//
-		(METHOD_EXPORT = clz.getDeclaredMethod("export", List.class, Map.class, String.class, String.class,
+		(METHOD_EXPORT = clz.getDeclaredMethod("export", List.class, Map.class,
 				CLASS_OBJECT_MAP = Class.forName("org.springframework.context.support.VoiceManager$ObjectMap")))
 				.setAccessible(true);
 		//
@@ -416,7 +416,7 @@ class VoiceManagerTest {
 				DataValidationConstraint.class, CellRangeAddressList.class)).setAccessible(true);
 		//
 		(METHOD_CREATE_EXPORT_TASK = clz.getDeclaredMethod("createExportTask", CLASS_OBJECT_MAP, Integer.class,
-				Integer.class, Integer.class, String.class, String.class, Map.class)).setAccessible(true);
+				Integer.class, Integer.class, Map.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -1611,35 +1611,33 @@ class VoiceManagerTest {
 	@Test
 	void testExport() throws Throwable {
 		//
-		final JProgressBar progressBar = new JProgressBar();
+		Assertions.assertDoesNotThrow(() -> export(null, null, null));
 		//
-		Assertions.assertDoesNotThrow(() -> export(null, null, null, null, null));
-		//
-		Assertions.assertDoesNotThrow(() -> export(Collections.singletonList(null), null, null, null, null));
+		Assertions.assertDoesNotThrow(() -> export(Collections.singletonList(null), null, null));
 		//
 		final Voice voice = new Voice();
 		//
 		final List<Voice> voices = Collections.singletonList(voice);
 		//
-		Assertions.assertDoesNotThrow(() -> export(voices, null, null, null, null));
+		Assertions.assertDoesNotThrow(() -> export(voices, null, null));
 		//
 		voice.setFilePath(EMPTY);
 		//
-		Assertions.assertDoesNotThrow(() -> export(voices, null, null, null, null));
+		Assertions.assertDoesNotThrow(() -> export(voices, null, null));
 		//
-		Assertions.assertDoesNotThrow(() -> export(voices, Collections.emptyMap(), null, null, null));
+		Assertions.assertDoesNotThrow(() -> export(voices, Collections.emptyMap(), null));
 		//
-		Assertions.assertDoesNotThrow(() -> export(voices, Reflection.newProxy(Map.class, ih), null, null, null));
+		Assertions.assertDoesNotThrow(() -> export(voices, Reflection.newProxy(Map.class, ih), null));
 		//
-		Assertions.assertDoesNotThrow(() -> export(voices, Collections.singletonMap(null, null), null, null, null));
+		Assertions.assertDoesNotThrow(() -> export(voices, Collections.singletonMap(null, null), null));
 		//
-		Assertions.assertDoesNotThrow(() -> export(voices, Collections.singletonMap(EMPTY, null), null, null, null));
+		Assertions.assertDoesNotThrow(() -> export(voices, Collections.singletonMap(EMPTY, null), null));
 		//
-		Assertions.assertDoesNotThrow(() -> export(voices, Collections.singletonMap(EMPTY, EMPTY), null, null, null));
+		Assertions.assertDoesNotThrow(() -> export(voices, Collections.singletonMap(EMPTY, EMPTY), null));
 		//
-		Assertions.assertDoesNotThrow(() -> export(voices, Collections.singletonMap(EMPTY, " "), null, null, null));
+		Assertions.assertDoesNotThrow(() -> export(voices, Collections.singletonMap(EMPTY, " "), null));
 		//
-		Assertions.assertDoesNotThrow(() -> export(voices, Collections.singletonMap(EMPTY, "true"), null, null, null));
+		Assertions.assertDoesNotThrow(() -> export(voices, Collections.singletonMap(EMPTY, "true"), null));
 		//
 		final Constructor<?> constructor = CLASS_IH != null ? CLASS_IH.getDeclaredConstructor() : null;
 		//
@@ -1650,17 +1648,16 @@ class VoiceManagerTest {
 		} // if
 			//
 		Assertions.assertThrows(IllegalStateException.class,
-				() -> export(voices, Collections.singletonMap(EMPTY, "true"), null, null, Reflection.newProxy(
-						CLASS_OBJECT_MAP,
+				() -> export(voices, Collections.singletonMap(EMPTY, "true"), Reflection.newProxy(CLASS_OBJECT_MAP,
 						cast(InvocationHandler.class, constructor != null ? constructor.newInstance() : null))));
 		//
 
 	}
 
 	private static void export(final List<Voice> voices, final Map<String, String> outputFolderFileNameExpressions,
-			final String voiceFolder, final String outputFolder, final Object objectMap) throws Throwable {
+			final Object objectMap) throws Throwable {
 		try {
-			METHOD_EXPORT.invoke(null, voices, outputFolderFileNameExpressions, voiceFolder, outputFolder, objectMap);
+			METHOD_EXPORT.invoke(null, voices, outputFolderFileNameExpressions, objectMap);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -3597,16 +3594,16 @@ class VoiceManagerTest {
 	@Test
 	void testCreateExportTask() throws Throwable {
 		//
-		Assertions.assertNotNull(createExportTask(null, null, null, null, null, null, null));
+		Assertions.assertNotNull(createExportTask(null, null, null, null, null));
 		//
 	}
 
 	private static Object createExportTask(final Object objectMap, final Integer size, final Integer counter,
-			final Integer numberOfOrdinalPositionDigit, final String outputFolder, final String voiceFolder,
-			final Map<String, String> outputFolderFileNameExpressions) throws Throwable {
+			final Integer numberOfOrdinalPositionDigit, final Map<String, String> outputFolderFileNameExpressions)
+			throws Throwable {
 		try {
 			return METHOD_CREATE_EXPORT_TASK.invoke(null, objectMap, size, counter, numberOfOrdinalPositionDigit,
-					outputFolder, voiceFolder, outputFolderFileNameExpressions);
+					outputFolderFileNameExpressions);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -3630,7 +3627,7 @@ class VoiceManagerTest {
 			//
 			Assertions.assertThrows(Throwable.class, () -> ih.invoke(null, null, null));
 			//
-			// org.springframework.context.support.VoiceManager.ObjectMap.getObject(java.lang.Class)
+			// org.springframework.context.support.VoiceManager$ObjectMap.getObject(java.lang.Class)
 			//
 			final Method getObject = CLASS_OBJECT_MAP != null
 					? CLASS_OBJECT_MAP.getDeclaredMethod("getObject", Class.class)
@@ -3644,7 +3641,7 @@ class VoiceManagerTest {
 			//
 			Assertions.assertThrows(Throwable.class, () -> ih.invoke(objectMap, getObject, empty));
 			//
-			// org.springframework.context.support.VoiceManager.ObjectMap.containsObject(java.lang.Class)
+			// org.springframework.context.support.VoiceManager$ObjectMap.containsObject(java.lang.Class)
 			//
 			final Method containsObject = CLASS_OBJECT_MAP != null
 					? CLASS_OBJECT_MAP.getDeclaredMethod("containsObject", Class.class)
@@ -3656,7 +3653,7 @@ class VoiceManagerTest {
 			//
 			Assertions.assertEquals(Boolean.FALSE, ih.invoke(objectMap, containsObject, new Object[] { null }));
 			//
-			// org.springframework.context.support.VoiceManager.ObjectMap.setObject(java.lang.Class,java.lang.Object)
+			// org.springframework.context.support.VoiceManager$ObjectMap.setObject(java.lang.Class,java.lang.Object)
 			//
 			final Method setObject = CLASS_OBJECT_MAP != null
 					? CLASS_OBJECT_MAP.getDeclaredMethod("setObject", Class.class, Object.class)
@@ -3668,7 +3665,7 @@ class VoiceManagerTest {
 			//
 			Assertions.assertNull(ih.invoke(objectMap, setObject, new Object[] { null, null }));
 			//
-			// org.springframework.context.support.VoiceManager.BooleanMap.setBoolean(java.lang.String,boolean)
+			// org.springframework.context.support.VoiceManager$BooleanMap.setBoolean(java.lang.String,boolean)
 			//
 			final Object booleanMap = Reflection.newProxy(CLASS_BOOLEAN_MAP, ih);
 			//
@@ -3681,6 +3678,38 @@ class VoiceManagerTest {
 			Assertions.assertThrows(Throwable.class, () -> ih.invoke(booleanMap, setBoolean, empty));
 			//
 			Assertions.assertDoesNotThrow(() -> ih.invoke(booleanMap, setBoolean, new Object[] { null, null }));
+			//
+			// org.springframework.context.support.VoiceManager$StringMap
+			//
+			final Class<?> classStringMap = forName("org.springframework.context.support.VoiceManager$StringMap");
+			//
+			final Object stringMap = Reflection.newProxy(classStringMap, ih);
+			//
+			// org.springframework.context.support.VoiceManager$StringMap.getString(java.lang.String)
+			//
+			final Method getString = classStringMap != null
+					? classStringMap.getDeclaredMethod("getString", String.class)
+					: null;
+			//
+			Assertions.assertThrows(Throwable.class, () -> ih.invoke(stringMap, getString, null));
+			//
+			Assertions.assertThrows(Throwable.class, () -> ih.invoke(stringMap, getString, empty));
+			//
+			Assertions.assertThrows(Throwable.class, () -> ih.invoke(stringMap, getString, new String[] { null }));
+			//
+			// org.springframework.context.support.VoiceManager$StringMap.setString(java.lang.String,java.lang.String)
+			//
+			final Method setString = classStringMap != null
+					? classStringMap.getDeclaredMethod("setString", String.class, String.class)
+					: null;
+			//
+			Assertions.assertThrows(Throwable.class, () -> ih.invoke(stringMap, setString, null));
+			//
+			Assertions.assertThrows(Throwable.class, () -> ih.invoke(stringMap, setString, empty));
+			//
+			Assertions.assertDoesNotThrow(() -> ih.invoke(stringMap, setString, new String[] { null, null }));
+			//
+			Assertions.assertNull(ih.invoke(stringMap, getString, new String[] { null }));
 			//
 		} // if
 			//

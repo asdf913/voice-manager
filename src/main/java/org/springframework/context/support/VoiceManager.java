@@ -1843,6 +1843,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					objectMap.setObject(JProgressBar.class, progressBar);
 					//
+					// org.springframework.context.support.VoiceManager$BooleanMap
+					//
 					final BooleanMap booleanMap = Reflection.newProxy(BooleanMap.class, ih);
 					//
 					if (booleanMap != null) {
@@ -1858,9 +1860,23 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					objectMap.setObject(BooleanMap.class, booleanMap);
 					//
+					// org.springframework.context.support.VoiceManager.StringMap
+					//
+					final StringMap stringMap = Reflection.newProxy(StringMap.class, ih);
+					//
+					if (stringMap != null) {
+						//
+						stringMap.setString("outputFolder", outputFolder);
+						//
+						stringMap.setString("voiceFolder", voiceFolder);
+						//
+					} // if
+						//
+					objectMap.setObject(StringMap.class, stringMap);
+					//
 				} // if
 					//
-				export(voices, outputFolderFileNameExpressions, voiceFolder, outputFolder, objectMap);
+				export(voices, outputFolderFileNameExpressions, objectMap);
 				//
 				try (final OutputStream os = new FileOutputStream(
 						file = new File(String.format("voice_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.xlsx", new Date())))) {
@@ -4298,6 +4314,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 		private Map<Object, Object> booleans = null;
 
+		private Map<Object, Object> strings = null;
+
 		private Map<Object, Object> getObjects() {
 			if (objects == null) {
 				objects = new LinkedHashMap<>();
@@ -4310,6 +4328,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				booleans = new LinkedHashMap<>();
 			}
 			return booleans;
+		}
+
+		private Map<Object, Object> getStrings() {
+			if (strings == null) {
+				strings = new LinkedHashMap<>();
+			}
+			return strings;
 		}
 
 		@Override
@@ -4360,6 +4385,28 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				} else if (Objects.equals(methodName, "setBoolean") && args != null && args.length > 1) {
 					//
 					put(getBooleans(), args[0], args[1]);
+					//
+					return null;
+					//
+				} // if
+					//
+			} else if (proxy instanceof StringMap) {
+				//
+				if (Objects.equals(methodName, "getString") && args != null && args.length > 0) {
+					//
+					final Object key = args[0];
+					//
+					if (!containsKey(getStrings(), key)) {
+						//
+						throw new IllegalStateException(String.format("Key [%1$s] Not Found", key));
+						//
+					} // if
+						//
+					return getStrings().get(key);
+					//
+				} else if (Objects.equals(methodName, "setString") && args != null && args.length > 1) {
+					//
+					put(getStrings(), args[0], args[1]);
 					//
 					return null;
 					//
@@ -4633,8 +4680,17 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	}
 
-	private static void export(final List<Voice> voices, final Map<String, String> outputFolderFileNameExpressions,
-			final String voiceFolder, final String outputFolder, final ObjectMap objectMap) throws IOException {
+	private static interface StringMap {
+
+		String getString(final String key);
+
+		void setString(final String key, final String value);
+
+	}
+
+	private static void export(final List<Voice> voices, final Map<String, String> outputFolderFileNameExpressions
+	// ,final String voiceFolder, final String outputFolder
+			, final ObjectMap objectMap) throws IOException {
 		//
 		EvaluationContext evaluationContext = null;
 		//
@@ -4659,6 +4715,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							ObjectUtils::compare),
 					null))));
 			//
+			StringMap stringMap = null;
+			//
 			for (int i = 0; i < size; i++) {
 				//
 				if ((es = ObjectUtils.getIfNull(es, () -> Executors.newFixedThreadPool(1))) == null) {
@@ -4679,18 +4737,23 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				et.expressionParser = expressionParser = ObjectUtils.getIfNull(expressionParser,
 						SpelExpressionParser::new);
 				//
-				et.outputFolder = outputFolder;
-				//
 				et.outputFolderFileNameExpressions = outputFolderFileNameExpressions;
 				//
 				et.progressBar = progressBar;
 				//
 				et.voice = voices.get(i);
 				//
-				et.voiceFolder = voiceFolder;
-				//
 				et.ordinalPositionDigit = numberOfOrdinalPositionDigit;
 				//
+				if ((stringMap = ObjectUtils.getIfNull(stringMap,
+						() -> ObjectMap.getObject(objectMap, StringMap.class))) != null) {
+					//
+					et.outputFolder = stringMap.getString("outputFolder");
+					//
+					et.voiceFolder = stringMap.getString("voiceFolder");
+					//
+				} // if
+					//
 				if (booleanMap != null) {
 					//
 					et.overMp3Title = booleanMap.getBoolean("overMp3Title");
@@ -4783,8 +4846,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					} // if
 						//
 					es.submit(createExportTask(objectMap, size, Integer.valueOf(++coutner),
-							numberOfOrdinalPositionDigit, outputFolder, voiceFolder, Collections.singletonMap(
-									getKey(en), "(#voice.text+'('+#voice.romaji+').'+#voice.fileExtension)")));
+							numberOfOrdinalPositionDigit, Collections.singletonMap(getKey(en),
+									"(#voice.text+'('+#voice.romaji+').'+#voice.fileExtension)")));
 					//
 				} // for
 					//
@@ -4865,8 +4928,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						} // if
 							//
 						es.submit(createExportTask(objectMap, size, Integer.valueOf(++coutner),
-								numberOfOrdinalPositionDigit, outputFolder, voiceFolder, Collections.singletonMap(
-										getKey(en), "(#voice.text+'('+#voice.romaji+').'+#voice.fileExtension)")));
+								numberOfOrdinalPositionDigit, Collections.singletonMap(getKey(en),
+										"(#voice.text+'('+#voice.romaji+').'+#voice.fileExtension)")));
 						//
 					} // for
 						//
@@ -4889,8 +4952,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	private static ExportTask createExportTask(final ObjectMap objectMap, final Integer size, final Integer counter,
-			final Integer numberOfOrdinalPositionDigit, final String outputFolder, final String voiceFolder,
-			final Map<String, String> outputFolderFileNameExpressions) {
+			final Integer numberOfOrdinalPositionDigit, final Map<String, String> outputFolderFileNameExpressions) {
 		//
 		final ExportTask et = new ExportTask();
 		//
@@ -4904,16 +4966,22 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		et.expressionParser = ObjectMap.getObject(objectMap, ExpressionParser.class);
 		//
-		et.outputFolder = outputFolder;
-		//
 		et.outputFolderFileNameExpressions = outputFolderFileNameExpressions;
 		//
 		et.progressBar = ObjectMap.getObject(objectMap, JProgressBar.class);
 		//
 		et.voice = ObjectMap.getObject(objectMap, Voice.class);
 		//
-		et.voiceFolder = voiceFolder;
+		final StringMap stringMap = ObjectMap.getObject(objectMap, StringMap.class);
 		//
+		if (stringMap != null) {
+			//
+			et.outputFolder = stringMap.getString("outputFolder");
+			//
+			et.voiceFolder = stringMap.getString("voiceFolder");
+			//
+		} // if
+			//
 		et.ordinalPositionDigit = numberOfOrdinalPositionDigit;
 		//
 		final BooleanMap booleanMap = ObjectMap.getObject(objectMap, BooleanMap.class);
