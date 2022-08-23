@@ -4688,9 +4688,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	}
 
-	private static void export(final List<Voice> voices, final Map<String, String> outputFolderFileNameExpressions
-	// ,final String voiceFolder, final String outputFolder
-			, final ObjectMap objectMap) throws IOException {
+	private static void export(final List<Voice> voices, final Map<String, String> outputFolderFileNameExpressions,
+			final ObjectMap objectMap) throws IOException {
 		//
 		EvaluationContext evaluationContext = null;
 		//
