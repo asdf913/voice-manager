@@ -920,11 +920,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(new JLabel("File"), String.format("span %1$s", 2));
 		//
-		add(tfFile = new JTextField(), String.format("span %1$s,growx", 27));
+		add(tfFile = new JTextField(), String.format("span %1$s,growx", 28));
 		//
 		add(new JLabel("Length"), String.format("span %1$s", 2));
 		//
-		add(tfFileLength = new JTextField(), String.format("span %1$s,growx,%2$s", 13, WRAP));
+		add(tfFileLength = new JTextField(), String.format("span %1$s,growx,%2$s", 12, WRAP));
 		//
 		add(new JLabel("File Digest"), String.format("span %1$s", 4));
 		//
