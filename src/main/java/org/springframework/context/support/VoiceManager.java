@@ -770,7 +770,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			}
 		});
 		//
-		add(jcbYomi, String.format("span %1$s", 2));
+		add(jcbYomi, String.format("span %1$s", 3));
 		//
 		add(new JLabel("List(s)"), String.format("span %1$s", 4));
 		//
