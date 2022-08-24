@@ -581,11 +581,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(tfLanguage = new JTextField(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.language")),
-				String.format("spanx %1$s,growx", 11));
+				String.format("spanx %1$s,growx", 11 + 1));
 		//
 		// source
 		//
-		add(new JLabel("Source"), String.format("span %1$s", 3));
+		add(new JLabel("Source"), String.format("span %1$s", 3 - 1));
 		//
 		add(tfSource = new JTextField(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.source")),
