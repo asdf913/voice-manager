@@ -862,7 +862,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(new JComboBox(cbmAudioFormatExecute = new DefaultComboBoxModel<Object>()), String.format("span %1$s", 2));
 		//
-		add(btnExecute = new JButton("Execute"), WRAP);
+		add(btnExecute = new JButton("Execute"), String.format("%1$s,span %2$s", WRAP, 2));
 		//
 		add(new JLabel("Export"));
 		//
@@ -886,7 +886,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(new JLabel("Import"));
 		//
-		add(btnImport = new JButton("Import"), String.format("%1$s,span %2$s", WRAP,6));
+		add(btnImport = new JButton("Import"), String.format("%1$s,span %2$s", WRAP, 6));
 		//
 		add(new JLabel(""));
 		//
@@ -908,8 +908,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(new JLabel("Voice"));
 		//
-		add(tfCurrentProcessingVoice = new JTextField(),
-				String.format("span %1$s,growx,%2$s", 10, WRAP));
+		add(tfCurrentProcessingVoice = new JTextField(), String.format("span %1$s,growx,%2$s", 10, WRAP));
 		//
 		final File folder = testAndApply(StringUtils::isNotBlank, this.voiceFolder, File::new, null);
 		//
