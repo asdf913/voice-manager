@@ -578,7 +578,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		// Language
 		//
-		add(new JLabel("Language"), String.format("span %1$s", 4));
+		add(new JLabel("Language"), String.format("span %1$s", 4 + 1));
 		//
 		add(tfLanguage = new JTextField(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.language")),
@@ -592,7 +592,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.source")),
 				String.format("spanx %1$s,growx,%2$s", 12, WRAP));
 		//
-		add(new JLabel("Text"), String.format("span %1$s", 2));
+		add(new JLabel("Text"), String.format("span %1$s", 2 + 1));
 		//
 		String span = String.format("spanx %1$s,growx", 37);
 		//
@@ -603,7 +603,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		// Provider
 		//
-		add(new JLabel("Provider"), String.format("span %1$s", 3));
+		add(new JLabel("Provider"), String.format("span %1$s", 3 + 1));
 		//
 		final Provider provider = cast(Provider.class, speechApi);
 		//
@@ -637,7 +637,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			// Voice Id
 			//
-		add(new JLabel("Voice Id"), String.format("span %1$s", 3));
+		add(new JLabel("Voice Id"), String.format("span %1$s", 3 + 1));
 		//
 		final String[] voiceIds = speechApi != null ? speechApi.getVoiceIds() : null;
 		//
@@ -684,7 +684,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			// Speech Rate
 			//
-		add(new JLabel("Speech Rate"), String.format("span %1$s", 6));
+		add(new JLabel("Speech Rate"), String.format("span %1$s", 6 + 1));
 		//
 		add(tfSpeechRate = new JTextField(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.speechRate")),
@@ -692,7 +692,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		// Speech Volume
 		//
-		add(new JLabel("Speech Volume"), String.format("span %1$s", 8));
+		add(new JLabel("Speech Volume"), String.format("span %1$s", 8 + 1));
 		//
 		final Range<Integer> speechVolumeRange = createVolumnRange(getClass(speechApi));
 		//
@@ -738,7 +738,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		// yomi
 		//
-		add(new JLabel("Yomi"), String.format("span %1$s", 2));
+		add(new JLabel("Yomi"), String.format("span %1$s", 2 + 1));
 		//
 		final Yomi[] yomis = Yomi.values();
 		//
@@ -825,7 +825,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
-		add(new JLabel("Romaji"), String.format("span %1$s", 2));
+		add(new JLabel("Romaji"), String.format("span %1$s", 2 + 1));
 		//
 		add(tfRomaji = new JTextField(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.romaji")),
@@ -833,7 +833,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(btnCopyRomaji = new JButton("Copy"), String.format("%1$s,span %2$s", WRAP, 4));
 		//
-		add(new JLabel("Hiragana"), String.format("span %1$s", 3));
+		add(new JLabel("Hiragana"), String.format("span %1$s", 3 + 1));
 		//
 		add(tfHiragana = new JTextField(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.hiragana")),
@@ -851,7 +851,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(btnCopyKatakana = new JButton("Copy"), String.format("%1$s,span %2$s", WRAP, 4));
 		//
-		add(new JLabel(), String.format("span %1$s", 2));
+		add(new JLabel(), String.format("span %1$s", 2 + 1));
 		//
 		add(cbUseTtsVoice = new JCheckBox("TTS Voice"), String.format("span %1$s", 9));
 		//
@@ -864,7 +864,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(btnExecute = new JButton("Execute"), String.format("%1$s,span %2$s", WRAP, 5));
 		//
-		add(new JLabel("Export"), String.format("span %1$s", 2));
+		add(new JLabel("Export"), String.format("span %1$s", 2 + 1));
 		//
 		add(cbOverMp3Title = new JCheckBox("Over Mp3 Title"), String.format("span %1$s", 9));
 		//
@@ -890,11 +890,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(btnExport = new JButton("Export"), String.format("%1$s,span %2$s", WRAP, 7));
 		//
-		add(new JLabel("Import"), String.format("span %1$s", 2));
+		add(new JLabel("Import"), String.format("span %1$s", 2 + 1));
 		//
 		add(btnImport = new JButton("Import"), String.format("%1$s,span %2$s", WRAP, 11));
 		//
-		add(new JLabel(""), String.format("span %1$s", 2));
+		add(new JLabel(""), String.format("span %1$s", 2 + 1));
 		//
 		add(cbImportFileTemplateGenerateBlankRow = new JCheckBox("Generate A Blank Row"),
 				String.format("span %1$s", 10));
@@ -912,11 +912,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(tfPhraseTotal = new JTextField("0"));
 		//
-		add(progressBar = new JProgressBar(), String.format("span %1$s,growx,%2$s", 42, WRAP));
+		add(progressBar = new JProgressBar(), String.format("span %1$s,growx,%2$s", 42 + 1, WRAP));
 		//
 		progressBar.setStringPainted(true);
 		//
-		add(new JLabel("Current Processing Sheet"), String.format("span %1$s", 10));
+		add(new JLabel("Current Processing Sheet"), String.format("span %1$s", 10 + 1));
 		//
 		add(tfCurrentProcessingSheetName = new JTextField(), String.format("span %1$s,growx", 25));
 		//
@@ -926,14 +926,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final File folder = testAndApply(StringUtils::isNotBlank, this.voiceFolder, File::new, null);
 		//
-		add(new JLabel("Folder"), String.format("span %1$s", 2));
+		add(new JLabel("Folder"), String.format("span %1$s", 2 + 1));
 		//
 		String wrap = String.format("span %1$s,growx,%2$s", 43, WRAP);
 		//
 		add(tfFolder = new JTextField(folder != null ? folder.getAbsolutePath() : null),
 				wrap = String.format("span %1$s,growx,%2$s", 43, WRAP));
 		//
-		add(new JLabel("File"), String.format("span %1$s", 2));
+		add(new JLabel("File"), String.format("span %1$s", 2 + 1));
 		//
 		add(tfFile = new JTextField(), String.format("span %1$s,growx", 33));
 		//
@@ -941,16 +941,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(tfFileLength = new JTextField(), String.format("span %1$s,growx,%2$s", 8, WRAP));
 		//
-		add(new JLabel("File Digest"), String.format("span %1$s", 4));
+		add(new JLabel("File Digest"), String.format("span %1$s", 4 + 1));
 		//
 		add(tfFileDigest = new JTextField(), wrap);
 		//
-		add(new JLabel("Import Result"), String.format("span %1$s", 6));
+		add(new JLabel("Import Result"), String.format("span %1$s", 6 + 1));
 		//
 		add(new JScrollPane(new JTable(tmImportResult = new DefaultTableModel(
 				new Object[] { "Number Of Sheet Processed", "Number of Voice Processed" }, 0))), wrap);
 		//
-		add(new JLabel("Import Exception"), String.format("span %1$s", 8));
+		add(new JLabel("Import Exception"), String.format("span %1$s", 8 + 1));
 		//
 		add(new JScrollPane(new JTable(
 				tmImportException = new DefaultTableModel(new Object[] { "Text", "Romaji", "Exception" }, 0))), wrap);
