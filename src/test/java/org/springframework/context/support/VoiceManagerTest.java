@@ -3712,38 +3712,6 @@ class VoiceManagerTest {
 			//
 			Assertions.assertDoesNotThrow(() -> ih.invoke(booleanMap, setBoolean, new Object[] { null, null }));
 			//
-			// org.springframework.context.support.VoiceManager$StringMap
-			//
-			final Class<?> classStringMap = forName("org.springframework.context.support.VoiceManager$StringMap");
-			//
-			final Object stringMap = Reflection.newProxy(classStringMap, ih);
-			//
-			// org.springframework.context.support.VoiceManager$StringMap.getString(java.lang.String)
-			//
-			final Method getString = classStringMap != null
-					? classStringMap.getDeclaredMethod("getString", String.class)
-					: null;
-			//
-			Assertions.assertThrows(Throwable.class, () -> ih.invoke(stringMap, getString, null));
-			//
-			Assertions.assertThrows(Throwable.class, () -> ih.invoke(stringMap, getString, empty));
-			//
-			Assertions.assertThrows(Throwable.class, () -> ih.invoke(stringMap, getString, new String[] { null }));
-			//
-			// org.springframework.context.support.VoiceManager$StringMap.setString(java.lang.String,java.lang.String)
-			//
-			final Method setString = classStringMap != null
-					? classStringMap.getDeclaredMethod("setString", String.class, String.class)
-					: null;
-			//
-			Assertions.assertThrows(Throwable.class, () -> ih.invoke(stringMap, setString, null));
-			//
-			Assertions.assertThrows(Throwable.class, () -> ih.invoke(stringMap, setString, empty));
-			//
-			Assertions.assertDoesNotThrow(() -> ih.invoke(stringMap, setString, new String[] { null, null }));
-			//
-			Assertions.assertNull(ih.invoke(stringMap, getString, new String[] { null }));
-			//
 		} // if
 			//
 	}
