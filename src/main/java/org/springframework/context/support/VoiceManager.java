@@ -1853,8 +1853,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					objectMap.setObject(VoiceManager.class, this);
 					//
-					objectMap.setObject(JProgressBar.class, progressBar);
-					//
 					// org.springframework.context.support.VoiceManager$BooleanMap
 					//
 					final BooleanMap booleanMap = Reflection.newProxy(BooleanMap.class, ih);
@@ -4504,8 +4502,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 		private String voiceFolder, outputFolder = null;
 
-		private JProgressBar progressBar = null;
-
 		private ExpressionParser expressionParser = null;
 
 		private NumberFormat percentNumberFormat = null;
@@ -4537,6 +4533,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				StringBuilder fileName = null;
 				//
 				File fileSource, fileDestination, folder = null;
+				//
+				JProgressBar progressBar = null;
 				//
 				for (final Entry<String, String> folderFileNamePattern : outputFolderFileNameExpressions.entrySet()) {
 					//
@@ -4584,6 +4582,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				if (counter != null) {
 					//
+					if (progressBar == null && voiceManager != null) {
+						//
+						progressBar = voiceManager.progressBar;
+						//
+					} // if
+						//
 					setValue(progressBar, counter.intValue());
 					//
 					if (count != null) {
@@ -4731,8 +4735,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		NumberFormat percentNumberFormat = null;
 		//
-		final JProgressBar progressBar = ObjectMap.getObject(objectMap, JProgressBar.class);
-		//
 		final BooleanMap booleanMap = ObjectMap.getObject(objectMap, BooleanMap.class);
 		//
 		final VoiceManager voiceManager = ObjectMap.getObject(objectMap, VoiceManager.class);
@@ -4775,8 +4777,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						SpelExpressionParser::new);
 				//
 				et.outputFolderFileNameExpressions = outputFolderFileNameExpressions;
-				//
-				et.progressBar = progressBar;
 				//
 				et.voice = voices.get(i);
 				//
@@ -5038,8 +5038,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		et.expressionParser = ObjectMap.getObject(objectMap, ExpressionParser.class);
 		//
 		et.outputFolderFileNameExpressions = outputFolderFileNameExpressions;
-		//
-		et.progressBar = ObjectMap.getObject(objectMap, JProgressBar.class);
 		//
 		et.voice = ObjectMap.getObject(objectMap, Voice.class);
 		//
