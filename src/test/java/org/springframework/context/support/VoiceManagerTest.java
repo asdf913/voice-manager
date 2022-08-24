@@ -3858,6 +3858,23 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(invoke(min, instance, stream, null));
 		//
+		// org.springframework.context.support.VoiceManager$ExportTask.showPharse(org.springframework.context.support.VoiceManager,org.apache.commons.lang3.math.Fraction)
+		//
+		final Method showPharse = clz != null ? clz.getDeclaredMethod("showPharse", VoiceManager.class, Fraction.class)
+				: null;
+		//
+		if (showPharse != null) {
+			//
+			showPharse.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertNull(invoke(showPharse, instance, null, null));
+		//
+		Assertions.assertNull(invoke(showPharse, instance, this.instance, null));
+		//
+		Assertions.assertNull(invoke(showPharse, instance, this.instance, Fraction.ZERO));
+		//
 	}
 
 	private static void run(final Runnable instance) {

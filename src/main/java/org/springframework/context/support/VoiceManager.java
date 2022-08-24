@@ -214,7 +214,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private JTextComponent tfFolder, tfFile, tfFileLength, tfFileDigest, tfText, tfHiragana, tfKatakana, tfRomaji,
 			tfSpeechRate, tfSource, tfProviderName, tfProviderVersion, tfProviderPlatform, tfSpeechLanguage, tfLanguage,
-			tfSpeechVolume, tfCurrentProcessingSheetName, tfCurrentProcessingVoice, tfListNames = null;
+			tfSpeechVolume, tfCurrentProcessingSheetName, tfCurrentProcessingVoice, tfListNames, tfPhraseCounter,
+			tfPhraseTotal = null;
 
 	private ComboBoxModel<Yomi> cbmYomi = null;
 
@@ -897,7 +898,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(btnImportFileTemplate = new JButton("Import File Template"), String.format("span %1$s,%2$s", 4, WRAP));
 		//
-		add(progressBar = new JProgressBar(), String.format("span %1$s,growx,%2$s", 45, WRAP));
+		// progress
+		//
+		add(tfPhraseCounter = new JTextField("0"));
+		//
+		add(new JLabel("/"), "align center");
+		//
+		add(tfPhraseTotal = new JTextField("0"));
+		//
+		add(progressBar = new JProgressBar(), String.format("span %1$s,growx,%2$s", 45 - 3, WRAP));
 		//
 		progressBar.setStringPainted(true);
 		//
@@ -941,7 +950,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				tmImportException = new DefaultTableModel(new Object[] { "Text", "Romaji", "Exception" }, 0))), wrap);
 		//
 		setEditable(false, tfSpeechLanguage, tfProviderName, tfProviderVersion, tfProviderPlatform, tfFolder, tfFile,
-				tfFileLength, tfFileDigest, tfSpeechVolume, tfCurrentProcessingSheetName, tfCurrentProcessingVoice);
+				tfFileLength, tfFileDigest, tfSpeechVolume, tfCurrentProcessingSheetName, tfCurrentProcessingVoice,
+				tfPhraseCounter, tfPhraseTotal);
 		//
 		addActionListener(this, btnSpeak, btnWriteVoice, btnExecute, btnConvertToRomaji, btnConvertToKatakana,
 				btnCopyRomaji, btnCopyHiragana, btnCopyKatakana, btnImportFileTemplate, btnImport, btnExport);
@@ -1840,6 +1850,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				final ObjectMap objectMap = Reflection.newProxy(ObjectMap.class, ih);
 				//
 				if (objectMap != null) {
+					//
+					objectMap.setObject(VoiceManager.class, this);
 					//
 					objectMap.setObject(JProgressBar.class, progressBar);
 					//
@@ -4500,6 +4512,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 		private boolean overMp3Title = false, ordinalPositionAsFileNamePrefix = false;
 
+		private VoiceManager voiceManager = null;
+
+		private Fraction pharse = null;
+
 		@Override
 		public void run() {
 			//
@@ -4585,6 +4601,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 				} // if
 					//
+				showPharse(voiceManager, pharse);
+				//
 			} catch (final IOException | BaseException e) {
 				//
 				if (GraphicsEnvironment.isHeadless()) {
@@ -4602,6 +4620,18 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				} // if
 					//
 			} // try
+				//
+		}
+
+		private static void showPharse(final VoiceManager voiceManager, final Fraction pharse) {
+			//
+			if (voiceManager != null && pharse != null) {
+				//
+				setText(voiceManager.tfPhraseCounter, VoiceManager.toString(pharse.getNumerator()));
+				//
+				setText(voiceManager.tfPhraseTotal, VoiceManager.toString(pharse.getDenominator()));
+				//
+			} //
 				//
 		}
 
@@ -4705,6 +4735,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final BooleanMap booleanMap = ObjectMap.getObject(objectMap, BooleanMap.class);
 		//
+		final VoiceManager voiceManager = ObjectMap.getObject(objectMap, VoiceManager.class);
+		//
 		try {
 			//
 			int size = voices != null ? voices.size() : 0;
@@ -4716,6 +4748,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			StringMap stringMap = null;
 			//
+			Fraction pharse = null;
+			//
 			for (int i = 0; i < size; i++) {
 				//
 				if ((es = ObjectUtils.getIfNull(es, () -> Executors.newFixedThreadPool(1))) == null) {
@@ -4724,7 +4758,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
-				(et = new ExportTask()).counter = Integer.valueOf(i + 1);
+				(et = new ExportTask()).voiceManager = voiceManager;
+				//
+				et.counter = Integer.valueOf(i + 1);
+				//
+				et.pharse = ObjectUtils.getIfNull(pharse, () -> Fraction.getFraction(1, 3));
 				//
 				et.count = size;
 				//
@@ -4802,6 +4840,19 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 												x -> x != null ? x.getOrdinalPosition() : null), Objects::nonNull),
 										ObjectUtils::compare), null))));
 				//
+				if (pharse != null) {
+					//
+					pharse = Fraction.getFraction(pharse.getNumerator() + 1, pharse.getDenominator());
+					//
+				} // if
+					//
+				if (objectMap != null) {
+					//
+					objectMap.setObject(Fraction.class,
+							pharse = ObjectUtils.getIfNull(pharse, () -> Fraction.getFraction(2, 3)));
+					//
+				} // if
+					//
 				for (final Entry<String, Voice> en : multimap.entries()) {
 					//
 					if (en == null) {
@@ -4870,6 +4921,19 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					put(multimap = ObjectUtils.getIfNull(multimap, LinkedListMultimap::create), jlptLevel, v);
 					//
 				} // for
+					//
+				if (pharse != null) {
+					//
+					pharse = Fraction.getFraction(pharse.getNumerator() + 1, pharse.getDenominator());
+					//
+				} // if
+					//
+				if (objectMap != null) {
+					//
+					objectMap.setObject(Fraction.class,
+							pharse = ObjectUtils.getIfNull(pharse, () -> Fraction.getFraction(3, 3)));
+					//
+				} // if
 					//
 				if (multimap != null && multimap.entries() != null) {
 					//
@@ -4958,6 +5022,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			final Integer numberOfOrdinalPositionDigit, final Map<String, String> outputFolderFileNameExpressions) {
 		//
 		final ExportTask et = new ExportTask();
+		//
+		et.voiceManager = ObjectMap.getObject(objectMap, VoiceManager.class);
+		//
+		et.pharse = ObjectMap.getObject(objectMap, Fraction.class);
 		//
 		et.counter = counter;
 		//
