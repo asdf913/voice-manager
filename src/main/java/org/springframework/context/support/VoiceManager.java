@@ -912,17 +912,17 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(tfPhraseTotal = new JTextField("0"));
 		//
-		add(progressBar = new JProgressBar(), String.format("span %1$s,growx,%2$s", 45 - 3, WRAP));
+		add(progressBar = new JProgressBar(), String.format("span %1$s,growx,%2$s", 42, WRAP));
 		//
 		progressBar.setStringPainted(true);
 		//
 		add(new JLabel("Current Processing Sheet"), String.format("span %1$s", 10));
 		//
-		add(tfCurrentProcessingSheetName = new JTextField(), String.format("span %1$s,growx", 22));
+		add(tfCurrentProcessingSheetName = new JTextField(), String.format("span %1$s,growx", 25));
 		//
 		add(new JLabel("Voice"), String.format("span %1$s", 2));
 		//
-		add(tfCurrentProcessingVoice = new JTextField(), String.format("span %1$s,growx,%2$s", 11, WRAP));
+		add(tfCurrentProcessingVoice = new JTextField(), String.format("span %1$s,growx,%2$s", 8, WRAP));
 		//
 		final File folder = testAndApply(StringUtils::isNotBlank, this.voiceFolder, File::new, null);
 		//
@@ -935,11 +935,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(new JLabel("File"), String.format("span %1$s", 2));
 		//
-		add(tfFile = new JTextField(), String.format("span %1$s,growx", 30));
+		add(tfFile = new JTextField(), String.format("span %1$s,growx", 33));
 		//
 		add(new JLabel("Length"), String.format("span %1$s", 2));
 		//
-		add(tfFileLength = new JTextField(), String.format("span %1$s,growx,%2$s", 11, WRAP));
+		add(tfFileLength = new JTextField(), String.format("span %1$s,growx,%2$s", 8, WRAP));
 		//
 		add(new JLabel("File Digest"), String.format("span %1$s", 4));
 		//
