@@ -606,7 +606,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final Provider provider = cast(Provider.class, speechApi);
 		//
-		add(tfProviderName = new JTextField(getProviderName(provider)), String.format("spanx %1$s,growx", 21));
+		add(tfProviderName = new JTextField(getProviderName(provider)), String.format("spanx %1$s,growx", 20));
 		//
 		add(tfProviderVersion = new JTextField(getProviderVersion(provider)),
 				String.format("width %1$s,span %2$s", 90, 2));
@@ -655,9 +655,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			jcbVoiceId.setRenderer(voiceIdListCellRenderer);
 			//
-			add(jcbVoiceId, String.format("span %1$s,growx", 21));
+			add(jcbVoiceId, String.format("span %1$s,growx", 20));
 			//
-			add(tfSpeechLanguage = new JTextField(), String.format("width %1$s,span %2$s,%3$s", 147, 7, WRAP));
+			add(tfSpeechLanguage = new JTextField(), String.format("width %1$s,span %2$s,%3$s", 147, 8, WRAP));
 			//
 		} // if
 			//
@@ -853,7 +853,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(new JLabel(), String.format("span %1$s", 2));
 		//
-		add(cbUseTtsVoice = new JCheckBox("TTS Voice"), String.format("span %1$s", 4+1));
+		add(cbUseTtsVoice = new JCheckBox("TTS Voice"), String.format("span %1$s", 5));
 		//
 		cbUseTtsVoice.setSelected(Boolean.parseBoolean(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.useTtsVoice")));
