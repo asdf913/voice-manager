@@ -853,7 +853,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(new JLabel(), String.format("span %1$s", 2));
 		//
-		add(cbUseTtsVoice = new JCheckBox("TTS Voice"), String.format("span %1$s", 4));
+		add(cbUseTtsVoice = new JCheckBox("TTS Voice"), String.format("span %1$s", 4+1));
 		//
 		cbUseTtsVoice.setSelected(Boolean.parseBoolean(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.useTtsVoice")));
