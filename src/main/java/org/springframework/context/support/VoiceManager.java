@@ -775,11 +775,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final String tags = getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.listNames");
 		//
-		add(tfListNames = new JTextField(tags), String.format("growx,span %1$s", 6));
+		add(tfListNames = new JTextField(tags), String.format("growx,span %1$s", 5));
 		//
 		tfListNames.addKeyListener(this);
 		//
-		add(jlListNames = new JLabel(), String.format("growx,span %1$s", 16));
+		add(jlListNames = new JLabel(), String.format("growx,span %1$s", 17));
 		//
 		add(jlListNameCount = new JLabel(), String.format("width %1$s,growx", 20));
 		//
@@ -903,11 +903,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(new JLabel("Current Processing Sheet"), String.format("span %1$s", 9));
 		//
-		add(tfCurrentProcessingSheetName = new JTextField(), String.format("span %1$s,growx", 18));
+		add(tfCurrentProcessingSheetName = new JTextField(), String.format("span %1$s,growx", 19));
 		//
 		add(new JLabel("Voice"), String.format("span %1$s", 2));
 		//
-		add(tfCurrentProcessingVoice = new JTextField(), String.format("span %1$s,growx,%2$s", 12, WRAP));
+		add(tfCurrentProcessingVoice = new JTextField(), String.format("span %1$s,growx,%2$s", 11, WRAP));
 		//
 		final File folder = testAndApply(StringUtils::isNotBlank, this.voiceFolder, File::new, null);
 		//
@@ -920,11 +920,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(new JLabel("File"), String.format("span %1$s", 2));
 		//
-		add(tfFile = new JTextField(), String.format("span %1$s,growx", 24 + 1));
+		add(tfFile = new JTextField(), String.format("span %1$s,growx", 26));
 		//
 		add(new JLabel("Length"), String.format("span %1$s", 2));
 		//
-		add(tfFileLength = new JTextField(), String.format("span %1$s,growx,%2$s", 15 - 1, WRAP));
+		add(tfFileLength = new JTextField(), String.format("span %1$s,growx,%2$s", 14, WRAP));
 		//
 		add(new JLabel("File Digest"), String.format("span %1$s", 3));
 		//
