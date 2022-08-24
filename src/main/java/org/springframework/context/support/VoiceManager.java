@@ -1876,8 +1876,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					if (stringMap != null) {
 						//
-						stringMap.setString("outputFolder", outputFolder);
-						//
 						stringMap.setString("voiceFolder", voiceFolder);
 						//
 					} // if
@@ -4500,7 +4498,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 		private EvaluationContext evaluationContext = null;
 
-		private String voiceFolder, outputFolder = null;
+		private String voiceFolder = null;
 
 		private ExpressionParser expressionParser = null;
 
@@ -4535,6 +4533,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				File fileSource, fileDestination, folder = null;
 				//
 				JProgressBar progressBar = null;
+				//
+				final String outputFolder = voiceManager != null ? voiceManager.outputFolder : null;
 				//
 				for (final Entry<String, String> folderFileNamePattern : outputFolderFileNameExpressions.entrySet()) {
 					//
@@ -4784,8 +4784,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				if ((stringMap = ObjectUtils.getIfNull(stringMap,
 						() -> ObjectMap.getObject(objectMap, StringMap.class))) != null) {
-					//
-					et.outputFolder = stringMap.getString("outputFolder");
 					//
 					et.voiceFolder = stringMap.getString("voiceFolder");
 					//
@@ -5044,8 +5042,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		final StringMap stringMap = ObjectMap.getObject(objectMap, StringMap.class);
 		//
 		if (stringMap != null) {
-			//
-			et.outputFolder = stringMap.getString("outputFolder");
 			//
 			et.voiceFolder = stringMap.getString("voiceFolder");
 			//
