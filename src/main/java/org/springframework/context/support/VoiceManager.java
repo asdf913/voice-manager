@@ -931,7 +931,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(tfFileDigest = new JTextField(), wrap);
 		//
-		add(new JLabel("Import Result"), String.format("span %1$s", 2));
+		add(new JLabel("Import Result"), String.format("span %1$s", 3));
 		//
 		add(new JScrollPane(new JTable(tmImportResult = new DefaultTableModel(
 				new Object[] { "Number Of Sheet Processed", "Number of Voice Processed" }, 0))), wrap);
