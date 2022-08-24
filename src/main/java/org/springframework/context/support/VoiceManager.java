@@ -692,7 +692,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		// Speech Volume
 		//
-		add(new JLabel("Speech Volume"), String.format("span %1$s", 2));
+		add(new JLabel("Speech Volume"), String.format("span %1$s", 3));
 		//
 		final Range<Integer> speechVolumeRange = createVolumnRange(getClass(speechApi));
 		//
@@ -703,7 +703,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		add(jsSpeechVolume = new JSlider(intValue(
 				speechVolumeRange != null && speechVolumeRange.hasLowerBound() ? speechVolumeRange.lowerEndpoint()
 						: null,
-				0), intValue(upperEnpoint, 100)), String.format("span %1$s,growx", 23));
+				0), intValue(upperEnpoint, 100)), String.format("span %1$s,growx", 23 - 1));
 		//
 		jsSpeechVolume.addChangeListener(this);
 		//
@@ -902,9 +902,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		progressBar.setStringPainted(true);
 		//
-		add(new JLabel("Current Processing Sheet"), String.format("span %1$s", 4));
+		add(new JLabel("Current Processing Sheet"), String.format("span %1$s", 5));
 		//
-		add(tfCurrentProcessingSheetName = new JTextField(), String.format("span %1$s,growx", 15));
+		add(tfCurrentProcessingSheetName = new JTextField(), String.format("span %1$s,growx", 14));
 		//
 		add(new JLabel("Voice"));
 		//
@@ -931,12 +931,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(tfFileDigest = new JTextField(), wrap);
 		//
-		add(new JLabel("Import Result"), String.format("span %1$s", 3));
+		add(new JLabel("Import Result"), String.format("span %1$s", 2));
 		//
 		add(new JScrollPane(new JTable(tmImportResult = new DefaultTableModel(
 				new Object[] { "Number Of Sheet Processed", "Number of Voice Processed" }, 0))), wrap);
 		//
-		add(new JLabel("Import Exception"), String.format("span %1$s", 3));
+		add(new JLabel("Import Exception"), String.format("span %1$s", 4));
 		//
 		add(new JScrollPane(new JTable(
 				tmImportException = new DefaultTableModel(new Object[] { "Text", "Romaji", "Exception" }, 0))), wrap);
