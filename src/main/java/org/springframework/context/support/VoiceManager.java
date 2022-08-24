@@ -852,7 +852,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(new JLabel(), String.format("span %1$s", 2));
 		//
-		add(cbUseTtsVoice = new JCheckBox("TTS Voice"), String.format("span %1$s", 7));
+		add(cbUseTtsVoice = new JCheckBox("TTS Voice"), String.format("span %1$s", 8));
 		//
 		cbUseTtsVoice.setSelected(Boolean.parseBoolean(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.useTtsVoice")));
@@ -865,7 +865,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(new JLabel("Export"), String.format("span %1$s", 2));
 		//
-		add(cbOverMp3Title = new JCheckBox("Over Mp3 Title"), String.format("span %1$s", 7));
+		add(cbOverMp3Title = new JCheckBox("Over Mp3 Title"), String.format("span %1$s", 8));
 		//
 		cbOverMp3Title.setSelected(Boolean.parseBoolean(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.overMp3Title")));
@@ -885,12 +885,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(new JLabel("Import"), String.format("span %1$s", 2));
 		//
-		add(btnImport = new JButton("Import"), String.format("%1$s,span %2$s", WRAP, 7));
+		add(btnImport = new JButton("Import"), String.format("%1$s,span %2$s", WRAP, 8));
 		//
 		add(new JLabel(""), String.format("span %1$s", 2));
 		//
 		add(cbImportFileTemplateGenerateBlankRow = new JCheckBox("Generate A Blank Row"),
-				String.format("span %1$s", 9));
+				String.format("span %1$s", 10));
 		//
 		cbImportFileTemplateGenerateBlankRow.setSelected(Boolean.parseBoolean(getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.importFileTemplateGenerateBlankRow")));
