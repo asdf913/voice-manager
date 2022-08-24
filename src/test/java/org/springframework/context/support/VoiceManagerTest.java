@@ -162,11 +162,12 @@ class VoiceManagerTest {
 			METHOD_GET_MP3_TAG_VALUE_LIST, METHOD_GET_MP3_TAG_PARIRS_ID3V1, METHOD_GET_METHODS_CLASS,
 			METHOD_GET_METHODS_JAVA_CLASS, METHOD_GET_SIMPLE_NAME, METHOD_COPY_OBJECT_MAP, METHOD_DELETE_ON_EXIT,
 			METHOD_CONVERT_LANGUAGE_CODE_TO_TEXT, METHOD_IS_SELECTED, METHOD_SET_HIRAGANA_OR_KATAKANA,
-			METHOD_SET_ROMAJI, METHOD_OR, METHOD_CLEAR_DEFAULT_TABLE_MODEL, METHOD_CLEAR_MULTI_MAP, METHOD_EXECUTE,
-			METHOD_PUT_MAP, METHOD_PUT_MULTI_MAP, METHOD_GET_BYTE_CONVERTER, METHOD_GET_PROPERTIES,
-			METHOD_GET_CUSTOM_PROPERTIES, METHOD_CONTAINS_CUSTOM_PROPERTIES, METHOD_CONTAINS_COLLECTION,
-			METHOD_GET_LPW_STR, METHOD_GET_SHEET_NAME, METHOD_ACCEPT, METHOD_TO_ARRAY, METHOD_TO_LIST, METHOD_GET_ID,
-			METHOD_SET_MAXIMUM, METHOD_GET_CURRENT_SHEET_INDEX, METHOD_GET_JLPT_LEVELS, METHOD_PARSE_JLPT_PAGE_HTML,
+			METHOD_SET_ROMAJI, METHOD_OR, METHOD_CLEAR_DEFAULT_TABLE_MODEL, METHOD_CLEAR_MULTI_MAP,
+			METHOD_CLEAR_STRING_BUILDER, METHOD_EXECUTE, METHOD_PUT_MAP, METHOD_PUT_MULTI_MAP,
+			METHOD_GET_BYTE_CONVERTER, METHOD_GET_PROPERTIES, METHOD_GET_CUSTOM_PROPERTIES,
+			METHOD_CONTAINS_CUSTOM_PROPERTIES, METHOD_CONTAINS_COLLECTION, METHOD_GET_LPW_STR, METHOD_GET_SHEET_NAME,
+			METHOD_ACCEPT, METHOD_TO_ARRAY, METHOD_TO_LIST, METHOD_GET_ID, METHOD_SET_MAXIMUM,
+			METHOD_GET_CURRENT_SHEET_INDEX, METHOD_GET_JLPT_LEVELS, METHOD_PARSE_JLPT_PAGE_HTML,
 			METHOD_GET_DATA_VALIDATION_HELPER, METHOD_CREATE_EXPLICIT_LIST_CONSTRAINT, METHOD_CREATE_VALIDATION,
 			METHOD_CREATE_EXPORT_TASK = null;
 
@@ -364,6 +365,8 @@ class VoiceManagerTest {
 				.setAccessible(true);
 		//
 		(METHOD_CLEAR_MULTI_MAP = clz.getDeclaredMethod("clear", Multimap.class)).setAccessible(true);
+		//
+		(METHOD_CLEAR_STRING_BUILDER = clz.getDeclaredMethod("clear", StringBuilder.class)).setAccessible(true);
 		//
 		(METHOD_EXECUTE = clz.getDeclaredMethod("execute", CLASS_OBJECT_MAP)).setAccessible(true);
 		//
@@ -3079,11 +3082,13 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> clear((Multimap<?, ?>) null));
 		//
-		final DefaultTableModel defaultTableModel = new DefaultTableModel();
+		Assertions.assertDoesNotThrow(() -> clear((StringBuilder) null));
 		//
-		Assertions.assertDoesNotThrow(() -> clear(defaultTableModel));
+		Assertions.assertDoesNotThrow(() -> clear(new DefaultTableModel()));
 		//
 		Assertions.assertDoesNotThrow(() -> clear(multimap));
+		//
+		Assertions.assertDoesNotThrow(() -> clear(new StringBuilder()));
 		//
 	}
 
@@ -3098,6 +3103,14 @@ class VoiceManagerTest {
 	private static void clear(final Multimap<?, ?> instance) throws Throwable {
 		try {
 			METHOD_CLEAR_MULTI_MAP.invoke(null, instance);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static void clear(final StringBuilder instance) throws Throwable {
+		try {
+			METHOD_CLEAR_STRING_BUILDER.invoke(null, instance);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -3795,20 +3808,6 @@ class VoiceManagerTest {
 		Assertions.assertNull(invoke(setMp3Title, instance, new File(".")));
 		//
 		Assertions.assertNull(invoke(setMp3Title, instance, new File("pom.xml")));
-		//
-		// org.springframework.context.support.VoiceManager.ExportTask.setMp3Title(java.io.File)
-		//
-		final Method clear = clz != null ? clz.getDeclaredMethod("clear", StringBuilder.class) : null;
-		//
-		if (clear != null) {
-			//
-			clear.setAccessible(true);
-			//
-		} // if
-			//
-		Assertions.assertNull(invoke(clear, instance, (Object) null));
-		//
-		Assertions.assertNull(invoke(clear, instance, new StringBuilder()));
 		//
 		// org.springframework.context.support.VoiceManager.ExportTask.min(java.util.stream.Stream,java.util.Comparator)
 		//

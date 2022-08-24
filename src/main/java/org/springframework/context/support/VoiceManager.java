@@ -215,7 +215,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private JTextComponent tfFolder, tfFile, tfFileLength, tfFileDigest, tfText, tfHiragana, tfKatakana, tfRomaji,
 			tfSpeechRate, tfSource, tfProviderName, tfProviderVersion, tfProviderPlatform, tfSpeechLanguage, tfLanguage,
 			tfSpeechVolume, tfCurrentProcessingSheetName, tfCurrentProcessingVoice, tfListNames, tfPhraseCounter,
-			tfPhraseTotal = null;
+			tfPhraseTotal, tfJlptFolderNamePrefix = null;
 
 	private ComboBoxModel<Yomi> cbmYomi = null;
 
@@ -881,6 +881,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		cbJlptAsFolder.setSelected(Boolean.parseBoolean(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.jlptAsFolder")));
+		//
+		add(new JLabel("Folder Name Prefix"), String.format("span %1$s", 3));
+		//
+		add(tfJlptFolderNamePrefix = new JTextField(
+				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.jlptFolderNamePrefix")),
+				String.format("width %1$s,span %2$s", 50, 2));
 		//
 		add(btnExport = new JButton("Export"), String.format("%1$s,span %2$s", WRAP, 7));
 		//
@@ -4608,12 +4614,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		}
 
-		private static void clear(final StringBuilder instance) {
-			if (instance != null) {
-				instance.delete(0, instance.length());
-			}
-		}
-
 		private static void setMp3Title(final File file) throws IOException, BaseException {
 			//
 			final String fileExtension = getFileExtension(
@@ -4877,6 +4877,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
+				String jlptFolderNamePrefix = null;
+				//
+				StringBuilder folder = null;
+				//
 				if (multimap != null && multimap.entries() != null) {
 					//
 					int coutner = 0;
@@ -4930,8 +4934,24 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 						} // if
 							//
+						if (jlptFolderNamePrefix == null && voiceManager != null) {
+							//
+							jlptFolderNamePrefix = getText(voiceManager.tfJlptFolderNamePrefix);
+							//
+						} // if
+							//
+						clear(folder = ObjectUtils.getIfNull(folder, StringBuilder::new));
+						//
+						if (folder != null) {
+							//
+							folder.append(StringUtils.defaultIfBlank(jlptFolderNamePrefix, ""));
+							//
+							folder.append(getKey(en));
+							//
+						} // if
+							//
 						es.submit(createExportTask(objectMap, size, Integer.valueOf(++coutner),
-								numberOfOrdinalPositionDigit, Collections.singletonMap(getKey(en),
+								numberOfOrdinalPositionDigit, Collections.singletonMap(toString(folder),
 										"(#voice.text+'('+#voice.romaji+').'+#voice.fileExtension)")));
 						//
 					} // for
@@ -4951,6 +4971,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static void clear(final Multimap<?, ?> instance) {
 		if (instance != null) {
 			instance.clear();
+		}
+	}
+
+	private static void clear(final StringBuilder instance) {
+		if (instance != null) {
+			instance.delete(0, instance.length());
 		}
 	}
 
