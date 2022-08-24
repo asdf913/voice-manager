@@ -581,11 +581,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(tfLanguage = new JTextField(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.language")),
-				String.format("spanx %1$s,growx", 11 + 1));
+				String.format("spanx %1$s,growx", 13));
 		//
 		// source
 		//
-		add(new JLabel("Source"), String.format("span %1$s", 3 - 1));
+		add(new JLabel("Source"), String.format("span %1$s", 2));
 		//
 		add(tfSource = new JTextField(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.source")),
@@ -593,7 +593,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(new JLabel("Text"), String.format("span %1$s", 2));
 		//
-		String span = String.format("spanx %1$s,growx", 27);
+		String span = String.format("spanx %1$s,growx", 28);
 		//
 		add(tfText = new JTextField(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.text")), span);
@@ -606,7 +606,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final Provider provider = cast(Provider.class, speechApi);
 		//
-		add(tfProviderName = new JTextField(getProviderName(provider)), String.format("spanx %1$s,growx", 25));
+		add(tfProviderName = new JTextField(getProviderName(provider)), String.format("spanx %1$s,growx", 26));
 		//
 		add(tfProviderVersion = new JTextField(getProviderVersion(provider)),
 				String.format("width %1$s,span %2$s", 90, 2));
@@ -654,7 +654,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			jcbVoiceId.setRenderer(voiceIdListCellRenderer);
 			//
-			add(jcbVoiceId, String.format("span %1$s,growx", 25));
+			add(jcbVoiceId, String.format("span %1$s,growx", 26));
 			//
 			add(tfSpeechLanguage = new JTextField(), String.format("width %1$s,span %2$s,%3$s", 147, 8, WRAP));
 			//
@@ -687,7 +687,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(tfSpeechRate = new JTextField(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.speechRate")),
-				String.format("span %1$s,growx,%2$s", 23, WRAP));
+				String.format("span %1$s,growx,%2$s", 24, WRAP));
 		//
 		// Speech Volume
 		//
@@ -702,7 +702,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		add(jsSpeechVolume = new JSlider(intValue(
 				speechVolumeRange != null && speechVolumeRange.hasLowerBound() ? speechVolumeRange.lowerEndpoint()
 						: null,
-				0), intValue(upperEnpoint, 100)), String.format("span %1$s,growx", 22));
+				0), intValue(upperEnpoint, 100)), String.format("span %1$s,growx", 23));
 		//
 		jsSpeechVolume.addChangeListener(this);
 		//
@@ -828,7 +828,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(tfRomaji = new JTextField(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.romaji")),
-				span = String.format("spanx %1$s,growx", 27));
+				span = String.format("spanx %1$s,growx", 28));
 		//
 		add(btnCopyRomaji = new JButton("Copy"), String.format("%1$s,span %2$s", WRAP, 2));
 		//
@@ -836,7 +836,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(tfHiragana = new JTextField(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.hiragana")),
-				String.format("spanx %1$s,growx", 9));
+				String.format("spanx %1$s,growx", 10));
 		//
 		add(btnCopyHiragana = new JButton("Copy"), String.format("span %1$s", 2));
 		//
