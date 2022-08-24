@@ -606,8 +606,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final Provider provider = cast(Provider.class, speechApi);
 		//
-		add(tfProviderName = new JTextField(getProviderName(provider)),
-				String.format("spanx %1$s,growx", 30));
+		add(tfProviderName = new JTextField(getProviderName(provider)), String.format("spanx %1$s,growx", 30));
 		//
 		add(tfProviderVersion = new JTextField(getProviderVersion(provider)),
 				String.format("width %1$s,span %2$s", 90, 2));
@@ -921,11 +920,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(new JLabel("File"), String.format("span %1$s", 2));
 		//
-		add(tfFile = new JTextField(), String.format("span %1$s,growx", 24));
+		add(tfFile = new JTextField(), String.format("span %1$s,growx", 24 + 1));
 		//
 		add(new JLabel("Length"), String.format("span %1$s", 2));
 		//
-		add(tfFileLength = new JTextField(), String.format("span %1$s,growx,%2$s", 15, WRAP));
+		add(tfFileLength = new JTextField(), String.format("span %1$s,growx,%2$s", 15 - 1, WRAP));
 		//
 		add(new JLabel("File Digest"), String.format("span %1$s", 3));
 		//
