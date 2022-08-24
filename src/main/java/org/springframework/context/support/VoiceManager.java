@@ -770,7 +770,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			}
 		});
 		//
-		add(jcbYomi);
+		add(jcbYomi, String.format("span %1$s", 2));
 		//
 		add(new JLabel("List(s)"), String.format("span %1$s", 4));
 		//
@@ -898,17 +898,17 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(btnImportFileTemplate = new JButton("Import File Template"), String.format("span %1$s,%2$s", 3, WRAP));
 		//
-		add(progressBar = new JProgressBar(), String.format("span %1$s,growx,%2$s", 29, WRAP));
+		add(progressBar = new JProgressBar(), String.format("span %1$s,growx,%2$s", 30, WRAP));
 		//
 		progressBar.setStringPainted(true);
 		//
-		add(new JLabel("Current Processing Sheet"), String.format("span %1$s", 3));
+		add(new JLabel("Current Processing Sheet"), String.format("span %1$s", 4));
 		//
-		add(tfCurrentProcessingSheetName = new JTextField(), String.format("span %1$s,growx", 16));
+		add(tfCurrentProcessingSheetName = new JTextField(), String.format("span %1$s,growx", 15));
 		//
 		add(new JLabel("Voice"));
 		//
-		add(tfCurrentProcessingVoice = new JTextField(), String.format("span %1$s,growx,%2$s", 10, WRAP));
+		add(tfCurrentProcessingVoice = new JTextField(), String.format("span %1$s,growx,%2$s", 11, WRAP));
 		//
 		final File folder = testAndApply(StringUtils::isNotBlank, this.voiceFolder, File::new, null);
 		//
@@ -936,7 +936,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		add(new JScrollPane(new JTable(tmImportResult = new DefaultTableModel(
 				new Object[] { "Number Of Sheet Processed", "Number of Voice Processed" }, 0))), wrap);
 		//
-		add(new JLabel("Import Exception"), String.format("span %1$s", 2));
+		add(new JLabel("Import Exception"), String.format("span %1$s", 3));
 		//
 		add(new JScrollPane(new JTable(
 				tmImportException = new DefaultTableModel(new Object[] { "Text", "Romaji", "Exception" }, 0))), wrap);
