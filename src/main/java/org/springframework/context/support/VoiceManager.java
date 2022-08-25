@@ -1113,28 +1113,28 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.add(new JLabel("Import"));
 		//
-		panel.add(btnImport = new JButton("Import"), WRAP);
+		panel.add(btnImport = new JButton("Import"), String.format("%1$s,span %2$s", WRAP, 2));
 		//
-		panel.add(new JLabel("Import Template")
-		// , String.format("span %1$s", 3)
-		);
+		panel.add(new JLabel("Import Template"));
 		//
-		panel.add(cbImportFileTemplateGenerateBlankRow = new JCheckBox("Generate a Blank Row"));
+		panel.add(cbImportFileTemplateGenerateBlankRow = new JCheckBox("Generate a Blank Row"),
+				String.format("span %1$s", 2));
 		//
 		cbImportFileTemplateGenerateBlankRow.setSelected(Boolean.parseBoolean(getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.importFileTemplateGenerateBlankRow")));
 		//
-		panel.add(btnImportFileTemplate = new JButton("Generate"), String.format("%1$s,span %2$s", WRAP, 2 + 1));
+		panel.add(btnImportFileTemplate = new JButton("Generate"), String.format("%1$s,span %2$s", WRAP, 4));
 		//
 		// Progress
 		//
-		panel.add(progressBarImport = new JProgressBar(), String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, 5 + 1));
+		panel.add(progressBarImport = new JProgressBar(),
+				String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, 9));
 		//
 		progressBarImport.setStringPainted(true);
 		//
-		panel.add(new JLabel("Current Processing Sheet"));
+		panel.add(new JLabel("Current Processing Sheet"), String.format("span %1$s", 2));
 		//
-		final String span = String.format("%1$s,span %2$s,wmin %2$s", GROWX, 2, 200);
+		final String span = String.format("%1$s,span %2$s", GROWX, 5);
 		//
 		panel.add(tfCurrentProcessingSheetName = new JTextField(), span);
 		//
@@ -1146,13 +1146,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.add(new JLabel("Folder"));
 		//
-		final String wrap = String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, 4 + 1);
+		final String wrap = String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, 8);
 		//
 		panel.add(tfFolder = new JTextField(folder != null ? folder.getAbsolutePath() : null), wrap);
 		//
 		panel.add(new JLabel("File"));
 		//
-		panel.add(tfFile = new JTextField(), span);
+		panel.add(tfFile = new JTextField(), String.format("%1$s,span %2$s", GROWX, 6));
 		//
 		panel.add(new JLabel("Length"));
 		//
