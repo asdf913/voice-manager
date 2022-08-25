@@ -1127,7 +1127,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		// Progress
 		//
-		panel.add(progressBarImport = new JProgressBar(), String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, 14));
+		panel.add(progressBarImport = new JProgressBar(), String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, 15));
 		//
 		progressBarImport.setStringPainted(true);
 		//
@@ -1139,13 +1139,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.add(new JLabel("Voice"));
 		//
-		panel.add(tfCurrentProcessingVoice = new JTextField(), String.format("%1$s,%2$s", GROWX, WRAP));
+		panel.add(tfCurrentProcessingVoice = new JTextField(), String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, 2));
 		//
 		final File folder = testAndApply(StringUtils::isNotBlank, this.voiceFolder, File::new, null);
 		//
 		panel.add(new JLabel("Folder"));
 		//
-		final String wrap = String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, 13);
+		final String wrap = String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, 14);
 		//
 		panel.add(tfFolder = new JTextField(folder != null ? folder.getAbsolutePath() : null), wrap);
 		//
@@ -1153,7 +1153,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.add(tfFile = new JTextField(), String.format("%1$s,span %2$s", GROWX, 11));
 		//
-		panel.add(new JLabel("Length"));
+		panel.add(new JLabel("Length"), String.format("span %1$s", 2));
 		//
 		panel.add(tfFileLength = new JTextField(), String.format("%1$s,%2$s", GROWX, WRAP));
 		//
