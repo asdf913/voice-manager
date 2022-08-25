@@ -21,8 +21,7 @@
 			value="${org.springframework.context.CustomBeanFactoryPostProcessor.tableSqlEncoding}" />
 	</bean>
 
-	<bean class="org.springframework.context.support.VoiceManager"
-		init-method="init">
+	<bean class="org.springframework.context.support.VoiceManager">
 		<property name="layout">
 			<bean
 				class="org.springframework.beans.factory.MigLayoutFactoryBean">

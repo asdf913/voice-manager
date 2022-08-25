@@ -65,6 +65,7 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JProgressBar;
 import javax.swing.JSlider;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
 import javax.swing.MutableComboBoxModel;
@@ -112,14 +113,12 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
-import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertyResolver;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.util.ReflectionUtils;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterators;
@@ -133,8 +132,8 @@ import domain.Voice;
 import domain.Voice.Yomi;
 import domain.VoiceList;
 import fr.free.nrw.jakaroma.Jakaroma;
+import io.github.toolfactory.narcissus.Narcissus;
 import mapper.VoiceMapper;
-import net.miginfocom.swing.MigLayout;
 
 class VoiceManagerTest {
 
@@ -144,8 +143,8 @@ class VoiceManagerTest {
 
 	private static Class<?> CLASS_OBJECT_MAP, CLASS_BOOLEAN_MAP, CLASS_IH = null;
 
-	private static Method METHOD_INIT, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_GET_FILE_EXTENSION,
-			METHOD_DIGEST, METHOD_GET_MAPPER, METHOD_INSERT_OR_UPDATE, METHOD_SET_ENABLED, METHOD_TEST_AND_APPLY4,
+	private static Method METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_GET_FILE_EXTENSION, METHOD_DIGEST,
+			METHOD_GET_MAPPER, METHOD_INSERT_OR_UPDATE, METHOD_SET_ENABLED, METHOD_TEST_AND_APPLY4,
 			METHOD_TEST_AND_APPLY5, METHOD_CAST, METHOD_INT_VALUE, METHOD_GET_PROPERTY_PROPERTY_RESOLVER,
 			METHOD_GET_PROPERTY_CUSTOM_PROPERTIES, METHOD_SET_VARIABLE, METHOD_PARSE_EXPRESSION, METHOD_GET_VALUE,
 			METHOD_GET_SOURCE, METHOD_EXPORT, METHOD_MAP, METHOD_MAP_TO_INT, METHOD_MAX_STREAM, METHOD_MAX_INT_STREAM,
@@ -169,14 +168,12 @@ class VoiceManagerTest {
 			METHOD_ACCEPT, METHOD_TO_ARRAY, METHOD_TO_LIST, METHOD_GET_ID, METHOD_SET_MAXIMUM,
 			METHOD_GET_CURRENT_SHEET_INDEX, METHOD_GET_JLPT_LEVELS, METHOD_PARSE_JLPT_PAGE_HTML,
 			METHOD_GET_DATA_VALIDATION_HELPER, METHOD_CREATE_EXPLICIT_LIST_CONSTRAINT, METHOD_CREATE_VALIDATION,
-			METHOD_CREATE_EXPORT_TASK = null;
+			METHOD_CREATE_EXPORT_TASK, METHOD_GET_TAB_INDEX_BY_TITLE, METHOD_GET_DECLARED_FIELD = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
 		//
 		final Class<?> clz = VoiceManager.class;
-		//
-		(METHOD_INIT = clz.getDeclaredMethod("init")).setAccessible(true);
 		//
 		(METHOD_GET_SYSTEM_CLIP_BOARD = clz.getDeclaredMethod("getSystemClipboard", Toolkit.class)).setAccessible(true);
 		//
@@ -423,6 +420,12 @@ class VoiceManagerTest {
 		//
 		(METHOD_CREATE_EXPORT_TASK = clz.getDeclaredMethod("createExportTask", CLASS_OBJECT_MAP, Integer.class,
 				Integer.class, Integer.class, Map.class)).setAccessible(true);
+		//
+		(METHOD_GET_TAB_INDEX_BY_TITLE = clz.getDeclaredMethod("getTabIndexByTitle", Object.class, Object.class))
+				.setAccessible(true);
+		//
+		(METHOD_GET_DECLARED_FIELD = clz.getDeclaredMethod("getDeclaredField", Class.class, String.class))
+				.setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -853,10 +856,10 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testSetOutputFolderFileNameExpressions() throws NoSuchFieldException, IllegalAccessException {
+	void testSetOutputFolderFileNameExpressions() throws Throwable {
 		//
-		final Field outputFolderFileNameExpressions = VoiceManager.class
-				.getDeclaredField("outputFolderFileNameExpressions");
+		final Field outputFolderFileNameExpressions = getDeclaredField(VoiceManager.class,
+				"outputFolderFileNameExpressions");
 		//
 		if (outputFolderFileNameExpressions != null) {
 			outputFolderFileNameExpressions.setAccessible(true);
@@ -909,9 +912,22 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testSetMp3Tags() throws NoSuchFieldException, IllegalAccessException, JsonProcessingException {
+	void testAfterPropertiesSet() {
 		//
-		final Field mp3Tags = VoiceManager.class.getDeclaredField("mp3Tags");
+		Assertions.assertDoesNotThrow(() -> instance.afterPropertiesSet());
+		//
+		instance.setSpeechApi(speechApi);
+		//
+		ih.voiceIds = new String[] {};
+		//
+		Assertions.assertDoesNotThrow(() -> instance.afterPropertiesSet());
+		//
+	}
+
+	@Test
+	void testSetMp3Tags() throws Throwable {
+		//
+		final Field mp3Tags = getDeclaredField(VoiceManager.class, "mp3Tags");
 		//
 		if (mp3Tags != null) {
 			//
@@ -1221,51 +1237,6 @@ class VoiceManagerTest {
 	private static void keyReleased(final KeyListener instance, final KeyEvent keyEvent) {
 		if (instance != null) {
 			instance.keyReleased(keyEvent);
-		}
-	}
-
-	@Test
-	void testInit() {
-		//
-		if (instance != null) {
-			//
-			Assertions.assertThrows(IllegalArgumentException.class, () -> init());
-			//
-			instance.setLayout(new MigLayout());
-			//
-			Assertions.assertDoesNotThrow(() -> init());
-			//
-			instance.setSpeechApi(speechApi);
-			//
-			ih.voiceIds = new String[] {};
-			//
-			Assertions.assertDoesNotThrow(() -> init());
-			//
-			ih.voiceIds = new String[] { null };
-			//
-			Assertions.assertDoesNotThrow(() -> init());
-			//
-			ih.voiceIds = new String[] { null, null };
-			//
-			Assertions.assertThrows(IllegalStateException.class, () -> init());
-			//
-			ih.voiceIds = new String[] { null };
-			//
-			instance.setEnvironment(Reflection.newProxy(Environment.class, ih));
-			//
-			ih.getProperties().put("org.springframework.context.support.VoiceManager.speechVolume", "100");
-			//
-			Assertions.assertDoesNotThrow(() -> init());
-			//
-		} // if
-			//
-	}
-
-	private void init() throws Throwable {
-		try {
-			METHOD_INIT.invoke(instance);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
 		}
 	}
 
@@ -2697,8 +2668,7 @@ class VoiceManagerTest {
 		final InvocationHandler ih = cast(InvocationHandler.class,
 				constructor != null ? constructor.newInstance() : null);
 		//
-		final Field fieldObjects = ih != null && ih.getClass() != null ? ih.getClass().getDeclaredField("objects")
-				: null;
+		final Field fieldObjects = ih != null ? getDeclaredField(ih.getClass(), "objects") : null;
 		//
 		if (fieldObjects != null) {
 			//
@@ -3132,8 +3102,7 @@ class VoiceManagerTest {
 		//
 		final Object objectMap = Reflection.newProxy(CLASS_OBJECT_MAP, ih);
 		//
-		final Field fieldObjects = ih != null && ih.getClass() != null ? ih.getClass().getDeclaredField("objects")
-				: null;
+		final Field fieldObjects = ih != null ? getDeclaredField(ih.getClass(), "objects") : null;
 		//
 		if (fieldObjects != null) {
 			//
@@ -3656,6 +3625,75 @@ class VoiceManagerTest {
 	}
 
 	@Test
+	void testGetTabIndexByTitle() throws Throwable {
+		//
+		Assertions.assertNull(getTabIndexByTitle(null, null));
+		//
+		final JTabbedPane jTabbedPane = new JTabbedPane();
+		//
+		final Collection<Object> pages = cast(Collection.class, testAndApply(Objects::nonNull, jTabbedPane,
+				x -> Narcissus.getField(x, getDeclaredField(getClass(x), "pages")), null));
+		//
+		add(pages, null);
+		//
+		Assertions.assertNull(getTabIndexByTitle(jTabbedPane, null));
+		//
+		add(pages, "");
+		//
+		Assertions.assertNull(getTabIndexByTitle(jTabbedPane, null));
+		//
+		if (pages != null) {
+			//
+			pages.clear();
+			//
+		} // if
+			//
+		jTabbedPane.addTab(EMPTY, null);
+		//
+		Assertions.assertEquals(Integer.valueOf(0), getTabIndexByTitle(jTabbedPane, EMPTY));
+		//
+		jTabbedPane.addTab(EMPTY, null);
+		//
+		Assertions.assertThrows(IllegalStateException.class, () -> getTabIndexByTitle(jTabbedPane, EMPTY));
+		//
+	}
+
+	private static Integer getTabIndexByTitle(final Object jTabbedPane, final Object title) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_TAB_INDEX_BY_TITLE.invoke(null, jTabbedPane, title);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Integer) {
+				return (Integer) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetDeclaredField() throws Throwable {
+		//
+		Assertions.assertNull(getDeclaredField(null, null));
+		//
+	}
+
+	private static Field getDeclaredField(final Class<?> instance, final String name) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_DECLARED_FIELD.invoke(null, instance, name);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Field) {
+				return (Field) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
 	void testIh() throws Throwable {
 		//
 		final Constructor<?> constructor = CLASS_IH != null ? CLASS_IH.getDeclaredConstructor() : null;
@@ -3908,9 +3946,7 @@ class VoiceManagerTest {
 				? clz.getDeclaredMethod("setAudioStreamEncoderByteArrayLength", Object.class)
 				: null;
 		//
-		final Field audioStreamEncoderByteArrayLength = clz != null
-				? clz.getDeclaredField("audioStreamEncoderByteArrayLength")
-				: null;
+		final Field audioStreamEncoderByteArrayLength = getDeclaredField(clz, "audioStreamEncoderByteArrayLength");
 		//
 		if (audioStreamEncoderByteArrayLength != null) {
 			//
