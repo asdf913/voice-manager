@@ -1111,11 +1111,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.setLayout(layoutManager);
 		//
-		panel.add(new JLabel("Import"));
+		panel.add(new JLabel("Import"), String.format("span %1$s", 2));
 		//
-		panel.add(btnImport = new JButton("Import"), String.format("%1$s,span %2$s", WRAP, 5));
+		panel.add(btnImport = new JButton("Import"), String.format("%1$s,span %2$s", WRAP, 6));
 		//
-		panel.add(new JLabel("Import Template"), String.format("span %1$s", 4));
+		panel.add(new JLabel("Import Template"), String.format("span %1$s", 5));
 		//
 		panel.add(cbImportFileTemplateGenerateBlankRow = new JCheckBox("Generate a Blank Row"),
 				String.format("span %1$s", 2));
@@ -1127,11 +1127,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		// Progress
 		//
-		panel.add(progressBarImport = new JProgressBar(), String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, 13));
+		panel.add(progressBarImport = new JProgressBar(), String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, 14));
 		//
 		progressBarImport.setStringPainted(true);
 		//
-		panel.add(new JLabel("Current Processing Sheet"), String.format("span %1$s", 5));
+		panel.add(new JLabel("Current Processing Sheet"), String.format("span %1$s", 6));
 		//
 		final String span = String.format("%1$s,span %2$s", GROWX, 6);
 		//
@@ -1145,23 +1145,23 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.add(new JLabel("Folder"));
 		//
-		final String wrap = String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, 12);
+		final String wrap = String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, 13);
 		//
 		panel.add(tfFolder = new JTextField(folder != null ? folder.getAbsolutePath() : null), wrap);
 		//
 		panel.add(new JLabel("File"));
 		//
-		panel.add(tfFile = new JTextField(), String.format("%1$s,span %2$s", GROWX, 10));
+		panel.add(tfFile = new JTextField(), String.format("%1$s,span %2$s", GROWX, 11));
 		//
 		panel.add(new JLabel("Length"));
 		//
 		panel.add(tfFileLength = new JTextField(), String.format("%1$s,%2$s", GROWX, WRAP));
 		//
-		panel.add(new JLabel("File Digest"), String.format("span %1$s", 2));
+		panel.add(new JLabel("File Digest"), String.format("span %1$s", 3));
 		//
 		panel.add(tfFileDigest = new JTextField(), wrap);
 		//
-		panel.add(new JLabel("Import Result"), String.format("span %1$s", 3));
+		panel.add(new JLabel("Import Result"), String.format("span %1$s", 4));
 		//
 		JScrollPane scp = new JScrollPane(new JTable(tmImportResult = new DefaultTableModel(
 				new Object[] { "Number Of Sheet Processed", "Number of Voice Processed" }, 0)));
@@ -1178,7 +1178,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		panel.add(scp, wrap);
 		//
-		panel.add(new JLabel("Import Exception"), String.format("span %1$s", 4));
+		panel.add(new JLabel("Import Exception"), String.format("span %1$s", 5));
 		//
 		panel.add(
 				scp = new JScrollPane(new JTable(
