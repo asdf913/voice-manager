@@ -223,7 +223,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private JTextComponent tfFolder, tfFile, tfFileLength, tfFileDigest, tfTextTts, tfTextImport, tfHiragana,
 			tfKatakana, tfRomaji, tfSpeechRate, tfSource, tfProviderName, tfProviderVersion, tfProviderPlatform,
 			tfSpeechLanguage, tfLanguage, tfSpeechVolume, tfCurrentProcessingSheetName, tfCurrentProcessingVoice,
-			tfListNames, tfPhraseCounter, tfPhraseTotal, tfJlptFolderNamePrefix = null;
+			tfListNames, tfPhraseCounter, tfPhraseTotal, tfJlptFolderNamePrefix, tfOrdinalPositionFileNamePrefix = null;
 
 	private ComboBoxModel<Yomi> cbmYomi = null;
 
@@ -1030,7 +1030,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(
 				tfHiragana = new JTextField(
 						getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.hiragana")),
-				String.format("%1$s,span %2$s", GROWX, 2 - 1));
+				String.format("%1$s,span %2$s", GROWX, 3));
 		//
 		panel.add(btnCopyHiragana = new JButton("Copy"), String.format("span %1$s", 2));
 		//
@@ -1220,10 +1220,17 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(new JLabel(), String.format("span %1$s", 4));
 		//
 		panel.add(cbOrdinalPositionAsFileNamePrefix = new JCheckBox("Ordinal Position As File Name Prefix"),
-				String.format("%1$s,span %2$s", WRAP, 5));
+				String.format("span %1$s", 4));
 		//
 		cbOrdinalPositionAsFileNamePrefix.setSelected(Boolean.parseBoolean(getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.ordinalPositionAsFileNamePrefix")));
+		//
+		panel.add(new JLabel("Prefix"));
+		//
+		panel.add(
+				tfOrdinalPositionFileNamePrefix = new JTextField(getProperty(propertyResolver,
+						"org.springframework.context.support.VoiceManager.ordinalPositionFileNamePrefix")),
+				String.format("%1$s,%2$s", GROWX, WRAP));
 		//
 		panel.add(new JLabel(), String.format("span %1$s", 4));
 		//
@@ -1237,7 +1244,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(
 				tfJlptFolderNamePrefix = new JTextField(getProperty(propertyResolver,
 						"org.springframework.context.support.VoiceManager.jlptFolderNamePrefix")),
-				String.format("%1$s,wmin %2$s", WRAP, 100));
+				String.format("%1$s,wmin %2$s,span %3$s", WRAP, 100, 2));
 		//
 		panel.add(new JLabel(), String.format("span %1$s", 4));
 		//
@@ -4764,6 +4771,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 		private Fraction pharse = null;
 
+		private String ordinalPositionFileNamePrefix = null;
+
 		@Override
 		public void run() {
 			//
@@ -4817,7 +4826,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 											StringUtils.defaultString(FILE_NAME_PREFIX_PADDING))
 									: ordinalPositionString);
 							//
-							fileName.append('_');
+							fileName.append(StringUtils.defaultIfBlank(ordinalPositionFileNamePrefix, ""));
 							//
 						} // if
 							//
@@ -4996,6 +5005,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			Fraction pharse = null;
 			//
+			String ordinalPositionFileNamePrefix = null;
+			//
 			for (int i = 0; i < size; i++) {
 				//
 				if ((es = ObjectUtils.getIfNull(es, () -> Executors.newFixedThreadPool(1))) == null) {
@@ -5025,6 +5036,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				et.voice = voices.get(i);
 				//
 				et.ordinalPositionDigit = numberOfOrdinalPositionDigit;
+				//
+				et.ordinalPositionFileNamePrefix = ordinalPositionFileNamePrefix = ObjectUtils.getIfNull(
+						ordinalPositionFileNamePrefix,
+						() -> getText(voiceManager != null ? voiceManager.tfOrdinalPositionFileNamePrefix : null));
 				//
 				if (booleanMap != null) {
 					//
@@ -5284,8 +5299,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final ExportTask et = new ExportTask();
 		//
-		et.voiceManager = ObjectMap.getObject(objectMap, VoiceManager.class);
-		//
 		et.pharse = ObjectMap.getObject(objectMap, Fraction.class);
 		//
 		et.counter = counter;
@@ -5303,6 +5316,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		et.voice = ObjectMap.getObject(objectMap, Voice.class);
 		//
 		et.ordinalPositionDigit = numberOfOrdinalPositionDigit;
+		//
+		final VoiceManager voiceManager = ObjectMap.getObject(objectMap, VoiceManager.class);
+		//
+		et.ordinalPositionFileNamePrefix = getText(
+				(et.voiceManager = voiceManager) != null ? voiceManager.tfOrdinalPositionFileNamePrefix : null);
 		//
 		final BooleanMap booleanMap = ObjectMap.getObject(objectMap, BooleanMap.class);
 		//
