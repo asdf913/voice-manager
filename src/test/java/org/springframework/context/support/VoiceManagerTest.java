@@ -914,13 +914,13 @@ class VoiceManagerTest {
 	@Test
 	void testAfterPropertiesSet() {
 		//
-		Assertions.assertDoesNotThrow(() -> instance.afterPropertiesSet());
+		Assertions.assertThrows(IllegalArgumentException.class, () -> instance.afterPropertiesSet());
 		//
 		instance.setSpeechApi(speechApi);
 		//
 		ih.voiceIds = new String[] {};
 		//
-		Assertions.assertDoesNotThrow(() -> instance.afterPropertiesSet());
+		Assertions.assertThrows(IllegalArgumentException.class, () -> instance.afterPropertiesSet());
 		//
 	}
 

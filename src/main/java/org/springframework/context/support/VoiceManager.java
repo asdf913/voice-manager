@@ -78,6 +78,7 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.AbstractButton;
+import javax.swing.BorderFactory;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -272,6 +273,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private Unit<List<String>> jlptLevels = null;
 
 	private LayoutManager layoutManager = null;
+
+	private JPanel jPanelImportResult = null;
 
 	private VoiceManager() {
 	}
@@ -603,11 +606,34 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final JTabbedPane jTabbedPane = new JTabbedPane();
 		//
+		final String TAB_TITLE_IMPORT_SINGLE = "Import(Single)";
+		//
+		final String TAB_TITLE_IMPORT_BATCH = "Import(Batch)";
+		//
+		final String[] TAB_TITLE_IMPORTS = new String[] { TAB_TITLE_IMPORT_SINGLE, TAB_TITLE_IMPORT_BATCH };
+		//
+		jTabbedPane.addChangeListener(new ChangeListener() {
+
+			@Override
+			public void stateChanged(final ChangeEvent evt) {
+				//
+				final JTabbedPane jtp = cast(JTabbedPane.class, getSource(evt));
+				//
+				if (jtp != null && jPanelImportResult != null) {
+					//
+					jPanelImportResult
+							.setVisible(ArrayUtils.contains(TAB_TITLE_IMPORTS, jtp.getTitleAt(jtp.getSelectedIndex())));
+					//
+				} // if
+					//
+			}
+		});
+		//
 		jTabbedPane.addTab("TTS", createTtsPanel(cloneLayoutManager()));
 		//
-		jTabbedPane.addTab("Import(Single)", createSingleImportPanel(cloneLayoutManager()));
+		jTabbedPane.addTab(TAB_TITLE_IMPORT_SINGLE, createSingleImportPanel(cloneLayoutManager()));
 		//
-		jTabbedPane.addTab("Import(Batch)", createBatchImportPanel(cloneLayoutManager()));
+		jTabbedPane.addTab(TAB_TITLE_IMPORT_BATCH, createBatchImportPanel(cloneLayoutManager()));
 		//
 		jTabbedPane.addTab("Export", createExportPanel(cloneLayoutManager()));
 		//
@@ -640,7 +666,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // try
 			//
-		add(jTabbedPane);
+		add(jTabbedPane, WRAP);
+		//
+		add(jPanelImportResult = createImportResultPanel(cloneLayoutManager()), GROWX);
 		//
 	}
 
@@ -901,7 +929,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(
 				tfLanguage = new JTextField(
 						getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.language")),
-				String.format("%1$s,span %2$s", GROWX, 9 + 2));
+				String.format("%1$s,span %2$s", GROWX, 11));
 		//
 		// Source
 		//
@@ -919,7 +947,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(
 				tfTextImport = new JTextField(
 						getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.text")),
-				String.format("%1$s,span %2$s", GROWX, 12 + 2));
+				String.format("%1$s,span %2$s", GROWX, 14));
 		//
 		panel.add(btnConvertToRomaji = new JButton("Convert To Romaji"), String.format("%1$s", WRAP));
 		//
@@ -982,7 +1010,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
-		panel.add(new JLabel("List(s)"), String.format("span %1$s", 2 - 1));
+		panel.add(new JLabel("List(s)"));
 		//
 		final String tags = getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.listNames");
 		//
@@ -1027,7 +1055,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(
 				tfRomaji = new JTextField(
 						getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.romaji")),
-				String.format("%1$s,span %2$s", GROWX, 12 + 2));
+				String.format("%1$s,span %2$s", GROWX, 14));
 		//
 		panel.add(btnCopyRomaji = new JButton("Copy"), WRAP);
 		//
@@ -1038,7 +1066,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(
 				tfHiragana = new JTextField(
 						getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.hiragana")),
-				String.format("%1$s,span %2$s", GROWX, 3 + 1));
+				String.format("%1$s,span %2$s", GROWX, 4));
 		//
 		panel.add(btnCopyHiragana = new JButton("Copy"), String.format("span %1$s", 2));
 		//
@@ -1051,13 +1079,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(
 				tfKatakana = new JTextField(
 						getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.katakana")),
-				String.format("%1$s,span %2$s", GROWX, 3 + 1 + 1));
-		//
-//		panel.add(new JLabel());
-		//
-//		panel.add(new JLabel());
-		//
-//		panel.add(new JLabel());
+				String.format("%1$s,span %2$s", GROWX, 5));
 		//
 		panel.add(btnCopyKatakana = new JButton("Copy"), WRAP);
 		//
@@ -1119,57 +1141,39 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.setLayout(layoutManager);
 		//
-		panel.add(new JLabel("Import"), String.format("span %1$s", 3));
+		panel.add(new JLabel("Import"));
 		//
-		panel.add(btnImport = new JButton("Import"), String.format("%1$s,span %2$s", WRAP, 6));
+		panel.add(btnImport = new JButton("Import"), WRAP);
 		//
-		panel.add(new JLabel("Import Template"), String.format("span %1$s", 6));
+		panel.add(new JLabel("Import Template"));
 		//
-		panel.add(cbImportFileTemplateGenerateBlankRow = new JCheckBox("Generate a Blank Row"),
-				String.format("span %1$s", 2));
+		panel.add(cbImportFileTemplateGenerateBlankRow = new JCheckBox("Generate a Blank Row"));
 		//
 		cbImportFileTemplateGenerateBlankRow.setSelected(Boolean.parseBoolean(getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.importFileTemplateGenerateBlankRow")));
 		//
-		panel.add(btnImportFileTemplate = new JButton("Generate"), String.format("%1$s,span %2$s", WRAP, 4));
+		panel.add(btnImportFileTemplate = new JButton("Generate"), String.format("%1$s,span %2$s", WRAP, 3));
 		//
 		// Progress
 		//
-		panel.add(progressBarImport = new JProgressBar(), String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, 16));
+		panel.add(progressBarImport = new JProgressBar(), String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, 5));
 		//
 		progressBarImport.setStringPainted(true);
 		//
-		panel.add(new JLabel("Current Processing Sheet"), String.format("span %1$s", 7));
+		panel.add(new JLabel("Current Processing Sheet"));
 		//
-		final String span = String.format("%1$s,span %2$s", GROWX, 6);
-		//
-		panel.add(tfCurrentProcessingSheetName = new JTextField(), span);
+		panel.add(tfCurrentProcessingSheetName = new JTextField(),
+				String.format("%1$s,wmin %2$s,span %3$s", GROWX, 300, 2));
 		//
 		panel.add(new JLabel("Voice"));
 		//
-		panel.add(tfCurrentProcessingVoice = new JTextField(), String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, 2));
+		panel.add(tfCurrentProcessingVoice = new JTextField(), String.format("%1$s,%2$s", GROWX, WRAP));
 		//
 		final File folder = testAndApply(StringUtils::isNotBlank, this.voiceFolder, File::new, null);
 		//
-		panel.add(new JLabel("Folder"), String.format("span %1$s", 2));
+		final String wrap = String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, 4);
 		//
-		final String wrap = String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, 15);
-		//
-		panel.add(tfFolder = new JTextField(folder != null ? folder.getAbsolutePath() : null), wrap);
-		//
-		panel.add(new JLabel("File"));
-		//
-		panel.add(tfFile = new JTextField(), String.format("%1$s,span %2$s", GROWX, 11));
-		//
-		panel.add(new JLabel("Length"), String.format("span %1$s", 2));
-		//
-		panel.add(tfFileLength = new JTextField(), String.format("%1$s,%2$s", GROWX, WRAP));
-		//
-		panel.add(new JLabel("File Digest"), String.format("span %1$s", 4));
-		//
-		panel.add(tfFileDigest = new JTextField(), wrap);
-		//
-		panel.add(new JLabel("Import Result"), String.format("span %1$s", 5));
+		panel.add(new JLabel("Import Result"));
 		//
 		JScrollPane scp = new JScrollPane(new JTable(tmImportResult = new DefaultTableModel(
 				new Object[] { "Number Of Sheet Processed", "Number of Voice Processed" }, 0)));
@@ -1186,7 +1190,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		panel.add(scp, wrap);
 		//
-		panel.add(new JLabel("Import Exception"), String.format("span %1$s", 6));
+		panel.add(new JLabel("Import Exception"));
 		//
 		panel.add(
 				scp = new JScrollPane(new JTable(
@@ -1207,6 +1211,37 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				tfFileDigest);
 		//
 		setEnabled(btnExecute, folder != null && folder.exists() && folder.isDirectory());
+		//
+		return panel;
+		//
+	}
+
+	private JPanel createImportResultPanel(final LayoutManager layoutManager) {
+		//
+		final JPanel panel = new JPanel();
+		//
+		panel.setLayout(layoutManager);
+		//
+		panel.setBorder(BorderFactory.createTitledBorder("Import Result"));
+		//
+		final File folder = testAndApply(StringUtils::isNotBlank, this.voiceFolder, File::new, null);
+		//
+		panel.add(new JLabel("Folder"));
+		//
+		panel.add(tfFolder = new JTextField(folder != null ? folder.getAbsolutePath() : null),
+				String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, 3));
+		//
+		panel.add(new JLabel("File"));
+		//
+		panel.add(tfFile = new JTextField(), GROWX);
+		//
+		panel.add(new JLabel("Length"));
+		//
+		panel.add(tfFileLength = new JTextField(), String.format("%1$s,%2$s", GROWX, WRAP));
+		//
+		panel.add(new JLabel("File Digest"));
+		//
+		panel.add(tfFileDigest = new JTextField(), String.format("%1$s,span %2$s", GROWX, 3));
 		//
 		return panel;
 		//
