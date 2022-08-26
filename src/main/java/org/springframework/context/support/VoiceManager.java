@@ -1207,8 +1207,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		addActionListener(this, btnImport, btnImportFileTemplate);
 		//
-		setEditable(false, tfCurrentProcessingSheetName, tfCurrentProcessingVoice, tfFolder, tfFile, tfFileLength,
-				tfFileDigest);
+		setEditable(false, tfCurrentProcessingSheetName, tfCurrentProcessingVoice);
 		//
 		setEnabled(btnExecute, folder != null && folder.exists() && folder.isDirectory());
 		//
@@ -1242,6 +1241,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(new JLabel("File Digest"));
 		//
 		panel.add(tfFileDigest = new JTextField(), String.format("%1$s,span %2$s", GROWX, 3));
+		//
+		setEditable(false, tfFolder, tfFile, tfFileLength, tfFileDigest);
 		//
 		return panel;
 		//
