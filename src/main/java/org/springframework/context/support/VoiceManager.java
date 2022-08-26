@@ -4096,8 +4096,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 									//
 								f.set(voice = ObjectUtils.getIfNull(voice, Voice::new), string);
 								//
-							} else if (type != null && isAssignableFrom(Enum.class, type) && (list = toList(filter(
-									testAndApply(Objects::nonNull, type.getEnumConstants(), Arrays::stream, null),
+							} else if (isAssignableFrom(Enum.class, type) && (list = toList(filter(
+									testAndApply(Objects::nonNull, getEnumConstants(type), Arrays::stream, null),
 									e -> Objects.equals(name(cast(Enum.class, e)), cell.getStringCellValue())))) != null
 									&& !list.isEmpty()) {
 								//
@@ -4384,6 +4384,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return currentSheetIndex;
 		//
+	}
+
+	private static <T> T[] getEnumConstants(final Class<T> instance) {
+		return instance != null ? instance.getEnumConstants() : null;
 	}
 
 	private static Boolean getBoolean(final CustomProperties instance, final String name) {
