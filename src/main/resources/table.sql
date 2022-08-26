@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS voice(
 	,language              TEXT
 	,ordinal_position      INTEGER
 	,jlpt_level            TEXT
+	,ipa_symbol            TEXT
 	,create_ts			   TIMESTAMP WITH TIME ZONE
 	,update_ts			   TIMESTAMP WITH TIME ZONE
 );

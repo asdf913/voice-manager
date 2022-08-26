@@ -63,6 +63,8 @@ public class Voice {
 	@ImportField
 	private String filePath = null;
 
+	private String ipaSymbol = null;
+
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
 	private @interface JLPT {
@@ -226,6 +228,10 @@ public class Voice {
 
 	public String getJlptLevel() {
 		return jlptLevel;
+	}
+
+	public void setIpaSymbol(final String ipaSymbol) {
+		this.ipaSymbol = ipaSymbol;
 	}
 
 }

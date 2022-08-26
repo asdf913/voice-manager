@@ -223,7 +223,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private JTextComponent tfFolder, tfFile, tfFileLength, tfFileDigest, tfTextTts, tfTextImport, tfHiragana,
 			tfKatakana, tfRomaji, tfSpeechRate, tfSource, tfProviderName, tfProviderVersion, tfProviderPlatform,
 			tfSpeechLanguage, tfLanguage, tfSpeechVolume, tfCurrentProcessingSheetName, tfCurrentProcessingVoice,
-			tfListNames, tfPhraseCounter, tfPhraseTotal, tfJlptFolderNamePrefix, tfOrdinalPositionFileNamePrefix = null;
+			tfListNames, tfPhraseCounter, tfPhraseTotal, tfJlptFolderNamePrefix, tfOrdinalPositionFileNamePrefix,
+			tfIpaSymbol = null;
 
 	private ComboBoxModel<Yomi> cbmYomi = null;
 
@@ -900,7 +901,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(
 				tfLanguage = new JTextField(
 						getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.language")),
-				String.format("%1$s,span %2$s", GROWX, 9));
+				String.format("%1$s,span %2$s", GROWX, 9 + 2));
 		//
 		// Source
 		//
@@ -918,7 +919,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(
 				tfTextImport = new JTextField(
 						getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.text")),
-				String.format("%1$s,span %2$s", GROWX, 12));
+				String.format("%1$s,span %2$s", GROWX, 12 + 2));
 		//
 		panel.add(btnConvertToRomaji = new JButton("Convert To Romaji"), String.format("%1$s", WRAP));
 		//
@@ -958,6 +959,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.add(jcbYomi);
 		//
+		panel.add(new JLabel("IPA"));
+		//
+		panel.add(
+				tfIpaSymbol = new JTextField(
+						getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.ipaSymbol")),
+				GROWX);
+		//
 		final List<Yomi> yomiList = toList(
 				filter(testAndApply(Objects::nonNull, yomis, Arrays::stream, null), y -> Objects.equals(name(y),
 						getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.yomi"))));
@@ -974,7 +982,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
-		panel.add(new JLabel("List(s)"), String.format("span %1$s", 2));
+		panel.add(new JLabel("List(s)"), String.format("span %1$s", 2 - 1));
 		//
 		final String tags = getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.listNames");
 		//
@@ -1019,7 +1027,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(
 				tfRomaji = new JTextField(
 						getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.romaji")),
-				String.format("%1$s,span %2$s", GROWX, 12));
+				String.format("%1$s,span %2$s", GROWX, 12 + 2));
 		//
 		panel.add(btnCopyRomaji = new JButton("Copy"), WRAP);
 		//
@@ -1030,7 +1038,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(
 				tfHiragana = new JTextField(
 						getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.hiragana")),
-				String.format("%1$s,span %2$s", GROWX, 3));
+				String.format("%1$s,span %2$s", GROWX, 3 + 1));
 		//
 		panel.add(btnCopyHiragana = new JButton("Copy"), String.format("span %1$s", 2));
 		//
@@ -1043,13 +1051,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(
 				tfKatakana = new JTextField(
 						getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.katakana")),
-				String.format("%1$s,span %2$s", GROWX, 3));
+				String.format("%1$s,span %2$s", GROWX, 3 + 1 + 1));
 		//
-		panel.add(new JLabel());
+//		panel.add(new JLabel());
 		//
-		panel.add(new JLabel());
+//		panel.add(new JLabel());
 		//
-		panel.add(new JLabel());
+//		panel.add(new JLabel());
 		//
 		panel.add(btnCopyKatakana = new JButton("Copy"), WRAP);
 		//
@@ -1064,7 +1072,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.add(new JComboBox(cbmAudioFormatExecute = new DefaultComboBoxModel<Object>()));
 		//
-		panel.add(btnExecute = new JButton("Execute"));
+		panel.add(btnExecute = new JButton("Execute"), String.format("span %1$s", 2));
 		//
 		addActionListener(this, btnExecute, btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji, btnCopyHiragana,
 				btnCopyKatakana);
@@ -4719,6 +4727,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				map(stream(getObjectList(objectMapper, getText(instance.tfListNames))), VoiceManager::toString)));
 		//
 		voice.setJlptLevel(toString(getSelectedItem(instance.cbmJlptLevel)));
+		//
+		voice.setIpaSymbol(getText(instance.tfIpaSymbol));
 		//
 		return voice;
 		//
