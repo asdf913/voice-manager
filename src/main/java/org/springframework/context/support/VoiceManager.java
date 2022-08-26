@@ -1,5 +1,6 @@
 package org.springframework.context.support;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -666,10 +667,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // try
 			//
-		add(jTabbedPane, WRAP);
-		//
-		add(jPanelImportResult = createImportResultPanel(cloneLayoutManager()), GROWX);
-		//
+		if (layoutManager instanceof MigLayout) {
+			//
+			add(jTabbedPane, WRAP);
+			//
+			add(jPanelImportResult = createImportResultPanel(cloneLayoutManager()), GROWX);
+			//
+		} // if
+			//
 	}
 
 	private static Integer getTabIndexByTitle(final Object jTabbedPane, final Object title)

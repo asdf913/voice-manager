@@ -922,13 +922,13 @@ class VoiceManagerTest {
 	@Test
 	void testAfterPropertiesSet() {
 		//
-		Assertions.assertThrows(IllegalArgumentException.class, () -> instance.afterPropertiesSet());
+		Assertions.assertDoesNotThrow(() -> instance.afterPropertiesSet());
 		//
 		instance.setSpeechApi(speechApi);
 		//
 		ih.voiceIds = new String[] {};
 		//
-		Assertions.assertThrows(IllegalArgumentException.class, () -> instance.afterPropertiesSet());
+		Assertions.assertDoesNotThrow(() -> instance.afterPropertiesSet());
 		//
 	}
 
@@ -3746,7 +3746,7 @@ class VoiceManagerTest {
 			throw e.getTargetException();
 		}
 	}
-	
+
 	@Test
 	void testGetEnumConstants() throws Throwable {
 		//
