@@ -1224,11 +1224,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.setBorder(BorderFactory.createTitledBorder("Import Result"));
 		//
-		final File folder = testAndApply(StringUtils::isNotBlank, this.voiceFolder, File::new, null);
-		//
 		panel.add(new JLabel("Folder"));
 		//
-		panel.add(tfFolder = new JTextField(folder != null ? folder.getAbsolutePath() : null),
+		panel.add(
+				tfFolder = new JTextField(
+						getAbsolutePath(testAndApply(StringUtils::isNotBlank, this.voiceFolder, File::new, null))),
 				String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, 3));
 		//
 		panel.add(new JLabel("File"));
@@ -1245,6 +1245,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		return panel;
 		//
+	}
+
+	private static String getAbsolutePath(final File instance) {
+		return instance != null ? instance.getAbsolutePath() : null;
 	}
 
 	private JPanel createExportPanel(final LayoutManager layoutManager) {
@@ -2358,7 +2362,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						|| Objects.equals("application/vnd.openxmlformats-officedocument", mimeType))) {
 					//
 					JOptionPane.showMessageDialog(null,
-							String.format("File [%1$s] is not a XLSX File", selectedFile.getAbsolutePath()));
+							String.format("File [%1$s] is not a XLSX File", getAbsolutePath(selectedFile)));
 					//
 					return;
 					//
@@ -3418,7 +3422,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} else if (!file.exists()) {
 			//
-			message = String.format("File \"%1$s\" does not exist", file.getAbsolutePath());
+			message = String.format("File \"%1$s\" does not exist", getAbsolutePath(file));
 			//
 			if (tmImportException != null) {
 				//
@@ -4510,7 +4514,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		} else if (!selectedFile.exists()) {
 			//
 			accept(errorMessageConsumer, voice,
-					String.format("File \"%1$s\" does not exist", selectedFile.getAbsolutePath()));
+					String.format("File \"%1$s\" does not exist", getAbsolutePath(selectedFile)));
 			//
 			return;
 			//
@@ -5002,7 +5006,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 						id3v1.setTitle(titleNew);
 						//
-						mp3File.save(file.getAbsolutePath());
+						mp3File.save(getAbsolutePath(file));
 						//
 					} // if
 						//
