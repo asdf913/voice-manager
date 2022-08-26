@@ -4097,9 +4097,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 								f.set(voice = ObjectUtils.getIfNull(voice, Voice::new), string);
 								//
 							} else if (isAssignableFrom(Enum.class, type) && (list = toList(filter(
-									testAndApply(Objects::nonNull, getEnumConstants(type), Arrays::stream, null),
-									e -> Objects.equals(name(cast(Enum.class, e)), cell.getStringCellValue())))) != null
-									&& !list.isEmpty()) {
+									testAndApply(Objects::nonNull, getEnumConstants(type), Arrays::stream, null), e -> {
+										//
+										final String name = name(cast(Enum.class, e));
+										//
+										final String stringCellValue = cell.getStringCellValue();
+										//
+										return Objects.equals(name, stringCellValue)
+												|| StringUtils.startsWithIgnoreCase(name, stringCellValue);
+										//
+									}))) != null && !list.isEmpty()) {
 								//
 								if (list.size() == 1) {
 									//
