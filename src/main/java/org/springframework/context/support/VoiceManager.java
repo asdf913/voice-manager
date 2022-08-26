@@ -3573,11 +3573,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		if (rate == null) {
 			//
-			final List<Field> fs = toList(filter(
-					testAndApply(Objects::nonNull, Integer.class.getDeclaredFields(), Arrays::stream, null),
-					f -> f != null
-							&& (Number.class.isAssignableFrom(f.getType()) || Objects.equals(Integer.TYPE, f.getType()))
-							&& Objects.equals(getName(f), string)));
+			final List<Field> fs = toList(
+					filter(testAndApply(Objects::nonNull, Integer.class.getDeclaredFields(), Arrays::stream, null),
+							f -> f != null
+									&& (isAssignableFrom(Number.class, f.getType())
+											|| Objects.equals(Integer.TYPE, f.getType()))
+									&& Objects.equals(getName(f), string)));
 			//
 			if (fs != null && !fs.isEmpty()) {
 				//
@@ -3633,6 +3634,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return rate;
 		//
+	}
+
+	private static boolean isAssignableFrom(final Class<?> a, final Class<?> b) {
+		return a != null && b != null && a.isAssignableFrom(b);
 	}
 
 	private static void write(final Workbook instance, final OutputStream stream) throws IOException {
@@ -4091,7 +4096,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 									//
 								f.set(voice = ObjectUtils.getIfNull(voice, Voice::new), string);
 								//
-							} else if (type != null && Enum.class.isAssignableFrom(type) && (list = toList(filter(
+							} else if (type != null && isAssignableFrom(Enum.class, type) && (list = toList(filter(
 									testAndApply(Objects::nonNull, type.getEnumConstants(), Arrays::stream, null),
 									e -> Objects.equals(name(cast(Enum.class, e)), cell.getStringCellValue())))) != null
 									&& !list.isEmpty()) {
