@@ -235,8 +235,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private AbstractButton btnSpeak, btnWriteVoice, btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji,
 			btnCopyHiragana, btnCopyKatakana, cbUseTtsVoice, btnExecute, btnImportFileTemplate, btnImport,
-			cbOverMp3Title, cbOrdinalPositionAsFileNamePrefix, btnExport, cbImportFileTemplateGenerateBlankRow,
-			cbJlptAsFolder = null;
+			btnImportWithinFolder, cbOverMp3Title, cbOrdinalPositionAsFileNamePrefix, btnExport,
+			cbImportFileTemplateGenerateBlankRow, cbJlptAsFolder = null;
 
 	private JProgressBar progressBarImport, progressBarExport = null;
 
@@ -1147,7 +1147,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.add(new JLabel("Import"));
 		//
-		panel.add(btnImport = new JButton("Import"), WRAP);
+		panel.add(btnImport = new JButton("Import a Single Spreadsheet"), String.format("span %1$s", 2));
+		//
+		panel.add(btnImportWithinFolder = new JButton("Import SpreadSheet(s) Within a Folder"),
+				String.format("%1$s,span %2$s", WRAP, 2));
 		//
 		panel.add(new JLabel("Import Template"));
 		//
@@ -1171,11 +1174,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.add(new JLabel("Voice"));
 		//
-		panel.add(tfCurrentProcessingVoice = new JTextField(), String.format("%1$s,%2$s", GROWX, WRAP));
+		panel.add(tfCurrentProcessingVoice = new JTextField(), String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, 2));
 		//
 		final File folder = testAndApply(StringUtils::isNotBlank, this.voiceFolder, File::new, null);
 		//
-		final String wrap = String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, 4);
+		final String wrap = String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, 4 + 1);
 		//
 		panel.add(new JLabel("Import Result"));
 		//
@@ -1209,7 +1212,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
-		addActionListener(this, btnImport, btnImportFileTemplate);
+		addActionListener(this, btnImport, btnImportWithinFolder, btnImportFileTemplate);
 		//
 		setEditable(false, tfCurrentProcessingSheetName, tfCurrentProcessingVoice);
 		//
@@ -2334,8 +2337,23 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
+		} else if (Objects.equals(source, btnImportWithinFolder)) {
+			//
+			final File[] fs = listFiles(
+					testAndApply(Objects::nonNull, JOptionPane.showInputDialog("Folder"), File::new, null));
+			//
+			for (int i = 0; fs != null && i < fs.length; i++) {
+				//
+				importVoice(fs[i]);
+				//
+			} // for;
+				//
 		} // if
 			//
+	}
+
+	private static File[] listFiles(final File instance) {
+		return instance != null ? instance.listFiles() : null;
 	}
 
 	private void importVoice(final File file) {
