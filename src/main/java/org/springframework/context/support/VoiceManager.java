@@ -2349,9 +2349,37 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 									"org.springframework.context.support.VoiceManager.importFolder")),
 					File::new, null));
 			//
+			File f = null;
+			//
 			for (int i = 0; fs != null && i < fs.length; i++) {
 				//
-				importVoice(fs[i]);
+				try {
+					//
+					if ((f = fs[i]) == null || !isXlsxFile(f)) {
+						//
+						continue;
+						//
+					} // if
+						//
+				} catch (final IOException e) {
+					//
+					if (GraphicsEnvironment.isHeadless()) {
+						//
+						if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
+							LOG.error(getMessage(e), e);
+						} else if (e != null) {
+							e.printStackTrace();
+						} // if
+							//
+					} else {
+						//
+						JOptionPane.showMessageDialog(null, getMessage(e));
+						//
+					} // if
+						//
+				} // try
+					//
+				importVoice(f);
 				//
 			} // for;
 				//
@@ -2369,7 +2397,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			if (workbook != null) {
 				//
-				setText(tfCurrentProcessingSheetName, getName(file));
+				setText(tfCurrentProcessingFile, getName(file));
 				//
 			} // if
 				//
