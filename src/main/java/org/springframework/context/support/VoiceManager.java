@@ -2332,12 +2332,17 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				final File selectedFile = jfc.getSelectedFile();
 				//
-				ContentInfo ci = null;
-				//
 				try {
 					//
-					ci = new ContentInfoUtil().findMatch(selectedFile);
-					//
+					if (!(isXlsxFile(selectedFile))) {
+						//
+						JOptionPane.showMessageDialog(null,
+								String.format("File [%1$s] is not a XLSX File", getAbsolutePath(selectedFile)));
+						//
+						return;
+						//
+					} // if
+						//
 				} catch (final IOException e) {
 					//
 					if (GraphicsEnvironment.isHeadless()) {
@@ -2355,26 +2360,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					} // if
 						//
 				} // try
-					//
-				if (ci == null) {
-					//
-					JOptionPane.showMessageDialog(null, "com.j256.simplemagic.ContentInfo is null");
-					//
-					return;
-					//
-				} // if
-					//
-				final String mimeType = ci.getMimeType();
-				//
-				if (!(Objects.equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", mimeType)
-						|| Objects.equals("application/vnd.openxmlformats-officedocument", mimeType))) {
-					//
-					JOptionPane.showMessageDialog(null,
-							String.format("File [%1$s] is not a XLSX File", getAbsolutePath(selectedFile)));
-					//
-					return;
-					//
-				} // if
 					//
 				try (final Workbook workbook = new XSSFWorkbook(selectedFile)) {
 					//
@@ -2581,6 +2566,20 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
+	}
+
+	private static boolean isXlsxFile(final File file) throws IOException {
+		//
+		final String mimeType = getMimeType(
+				testAndApply(VoiceManager::isFile, file, new ContentInfoUtil()::findMatch, null));
+		//
+		return or(x -> Objects.equals(mimeType, x), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+				"application/vnd.openxmlformats-officedocument");
+		//
+	}
+
+	private static String getMimeType(final ContentInfo instance) {
+		return instance != null ? instance.getMimeType() : null;
 	}
 
 	private static boolean isFile(final File instance) {
@@ -5875,7 +5874,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			return name;
 			//
-		} else if (Objects.equals(ci.getMimeType(), "audio/x-hx-aac-adts")) {
+		} else if (Objects.equals(getMimeType(ci), "audio/x-hx-aac-adts")) {
 			//
 			return "aac";
 			//

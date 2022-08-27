@@ -169,7 +169,7 @@ class VoiceManagerTest {
 			METHOD_GET_CURRENT_SHEET_INDEX, METHOD_GET_JLPT_LEVELS, METHOD_PARSE_JLPT_PAGE_HTML,
 			METHOD_GET_DATA_VALIDATION_HELPER, METHOD_CREATE_EXPLICIT_LIST_CONSTRAINT, METHOD_CREATE_VALIDATION,
 			METHOD_CREATE_EXPORT_TASK, METHOD_GET_TAB_INDEX_BY_TITLE, METHOD_GET_DECLARED_FIELD,
-			METHOD_GET_ABSOLUTE_PATH, METHOD_IS_ASSIGNABLE_FROM, METHOD_GET_ENUM_CONSTANTS = null;
+			METHOD_GET_ABSOLUTE_PATH, METHOD_IS_ASSIGNABLE_FROM, METHOD_GET_ENUM_CONSTANTS, METHOD_IS_XLSX_FILE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -434,6 +434,8 @@ class VoiceManagerTest {
 				.setAccessible(true);
 		//
 		(METHOD_GET_ENUM_CONSTANTS = clz.getDeclaredMethod("getEnumConstants", Class.class)).setAccessible(true);
+		//
+		(METHOD_IS_XLSX_FILE = clz.getDeclaredMethod("isXlsxFile", File.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -3767,6 +3769,27 @@ class VoiceManagerTest {
 	private static <T> T[] getEnumConstants(final Class<T> instance) throws Throwable {
 		try {
 			return (T[]) METHOD_GET_ENUM_CONSTANTS.invoke(null, instance);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testIsXlsxFile() throws Throwable {
+		//
+		Assertions.assertFalse(isXlsxFile(null));
+		//
+		Assertions.assertFalse(isXlsxFile(new File(".")));
+		//
+	}
+
+	private static boolean isXlsxFile(final File file) throws Throwable {
+		try {
+			final Object obj = METHOD_IS_XLSX_FILE.invoke(null, file);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
