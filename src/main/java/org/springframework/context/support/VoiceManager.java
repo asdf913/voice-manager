@@ -2050,7 +2050,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
 				//
-				if (jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+				if (jfc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 					//
 					try {
 						//
@@ -2328,13 +2328,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
 			//
-			if (jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+			if (jfc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 				//
 				final File selectedFile = jfc.getSelectedFile();
 				//
 				ContentInfo ci = null;
+				//
 				try {
+					//
 					ci = new ContentInfoUtil().findMatch(selectedFile);
+					//
 				} catch (final IOException e) {
 					//
 					if (GraphicsEnvironment.isHeadless()) {
