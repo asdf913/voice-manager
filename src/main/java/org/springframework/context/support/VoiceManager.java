@@ -223,9 +223,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private JTextComponent tfFolder, tfFile, tfFileLength, tfFileDigest, tfTextTts, tfTextImport, tfHiragana,
 			tfKatakana, tfRomaji, tfSpeechRate, tfSource, tfProviderName, tfProviderVersion, tfProviderPlatform,
-			tfSpeechLanguage, tfLanguage, tfSpeechVolume, tfCurrentProcessingSheetName, tfCurrentProcessingVoice,
-			tfListNames, tfPhraseCounter, tfPhraseTotal, tfJlptFolderNamePrefix, tfOrdinalPositionFileNamePrefix,
-			tfIpaSymbol = null;
+			tfSpeechLanguage, tfLanguage, tfSpeechVolume, tfCurrentProcessingFile, tfCurrentProcessingSheetName,
+			tfCurrentProcessingVoice, tfListNames, tfPhraseCounter, tfPhraseTotal, tfJlptFolderNamePrefix,
+			tfOrdinalPositionFileNamePrefix, tfIpaSymbol = null;
 
 	private ComboBoxModel<Yomi> cbmYomi = null;
 
@@ -1167,6 +1167,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		progressBarImport.setStringPainted(true);
 		//
+		panel.add(new JLabel("Current Processing File"));
+		//
+		final String wrap = String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, 5);
+		//
+		panel.add(tfCurrentProcessingFile = new JTextField(), wrap);
+		//
 		panel.add(new JLabel("Current Processing Sheet"));
 		//
 		panel.add(tfCurrentProcessingSheetName = new JTextField(),
@@ -1177,8 +1183,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(tfCurrentProcessingVoice = new JTextField(), String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, 2));
 		//
 		final File folder = testAndApply(StringUtils::isNotBlank, this.voiceFolder, File::new, null);
-		//
-		final String wrap = String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, 4 + 1);
 		//
 		panel.add(new JLabel("Import Result"));
 		//
@@ -1214,7 +1218,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		addActionListener(this, btnImport, btnImportWithinFolder, btnImportFileTemplate);
 		//
-		setEditable(false, tfCurrentProcessingSheetName, tfCurrentProcessingVoice);
+		setEditable(false, tfCurrentProcessingFile, tfCurrentProcessingSheetName, tfCurrentProcessingVoice);
 		//
 		setEnabled(btnExecute, folder != null && folder.exists() && folder.isDirectory());
 		//
@@ -2363,6 +2367,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		try (final Workbook workbook = isXlsxFile(file) ? new XSSFWorkbook(file) : null) {
 			//
+			if (workbook != null) {
+				//
+				setText(tfCurrentProcessingSheetName, getName(file));
+				//
+			} // if
+				//
 			final ObjectMap objectMap = Reflection.newProxy(ObjectMap.class, new IH());
 			//
 			final POIXMLDocument poiXmlDocument = cast(POIXMLDocument.class, workbook);
@@ -2561,6 +2571,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // try
 			//
+	}
+
+	private static String getName(final File instance) {
+		return instance != null ? instance.getName() : null;
 	}
 
 	private static boolean isXlsxFile(final File file) throws IOException {
@@ -4723,7 +4737,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
-			final String methodName = method != null ? method.getName() : null;
+			final String methodName = getName(method);
 			//
 			if (proxy instanceof ObjectMap) {
 				//
@@ -5058,7 +5072,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				if (StringUtils.isNotEmpty(titleNew)) {
 					//
-					final String fileName = file.getName();
+					final String fileName = getName(file);
 					//
 					if (StringUtils.isNotBlank(fileName)) {
 						//
