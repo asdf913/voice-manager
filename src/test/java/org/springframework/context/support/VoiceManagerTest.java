@@ -3813,7 +3813,7 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(listFiles(null));
 		//
-		Assertions.assertNull(listFiles(new File(".")));
+		Assertions.assertNull(listFiles(new File("pom.xml")));
 		//
 	}
 
