@@ -486,6 +486,8 @@ class VoiceManagerTest {
 
 		private IntStream intStream = null;
 
+		private Integer columnIndex = null;
+
 		private Map<Object, String> getProperties() {
 			if (properties == null) {
 				properties = new LinkedHashMap<>();
@@ -669,6 +671,10 @@ class VoiceManagerTest {
 				if (Objects.equals(methodName, "getStringCellValue")) {
 					//
 					return stringCellValue;
+					//
+				} else if (Objects.equals(methodName, "getColumnIndex")) {
+					//
+					return columnIndex;
 					//
 				} // if
 					//
@@ -2166,6 +2172,8 @@ class VoiceManagerTest {
 		this.ih.rows = Iterators.forArray(null, row);
 		//
 		this.ih.cells = Iterators.forArray(null, Reflection.newProxy(Cell.class, this.ih));
+		//
+		this.ih.columnIndex = Integer.valueOf(0);
 		//
 		Assertions.assertDoesNotThrow(() -> importVoice(sheet, null, null, null, null));
 		//
@@ -3833,6 +3841,44 @@ class VoiceManagerTest {
 			Assertions.assertThrows(Throwable.class, () -> ih.invoke(booleanMap, setBoolean, empty));
 			//
 			Assertions.assertDoesNotThrow(() -> ih.invoke(booleanMap, setBoolean, new Object[] { null, null }));
+			//
+			// org.springframework.context.support.VoiceManager$IntMap.getObject(int)
+			//
+			final Class<?> classIntMap = forName("org.springframework.context.support.VoiceManager$IntMap");
+			//
+			final Object intMap = Reflection.newProxy(classIntMap, ih);
+			//
+			final Method intMapGetObject = classIntMap != null
+					? classIntMap.getDeclaredMethod("getObject", Integer.TYPE)
+					: null;
+			//
+			Assertions.assertThrows(Throwable.class, () -> ih.invoke(intMap, intMapGetObject, null));
+			//
+			Assertions.assertThrows(Throwable.class, () -> ih.invoke(intMap, intMapGetObject, empty));
+			//
+			Assertions.assertThrows(Throwable.class, () -> ih.invoke(intMap, intMapGetObject, new String[] { null }));
+			//
+			// org.springframework.context.support.VoiceManager$IntMap.containsKey(int)
+			//
+			final Method intMapContainsKey = classIntMap != null
+					? classIntMap.getDeclaredMethod("containsKey", Integer.TYPE)
+					: null;
+			//
+			Assertions.assertThrows(Throwable.class, () -> ih.invoke(intMap, intMapContainsKey, null));
+			//
+			Assertions.assertThrows(Throwable.class, () -> ih.invoke(intMap, intMapContainsKey, empty));
+			//
+			Assertions.assertEquals(Boolean.FALSE, ih.invoke(intMap, intMapContainsKey, new String[] { null }));
+			//
+			// org.springframework.context.support.VoiceManager$IntMap.setObject(int,java.lang.Object)
+			//
+			final Method intMapSetObject = classIntMap != null
+					? classIntMap.getDeclaredMethod("setObject", Integer.TYPE, Object.class)
+					: null;
+			//
+			Assertions.assertThrows(Throwable.class, () -> ih.invoke(intMap, intMapSetObject, null));
+			//
+			Assertions.assertThrows(Throwable.class, () -> ih.invoke(intMap, intMapSetObject, empty));
 			//
 		} // if
 			//

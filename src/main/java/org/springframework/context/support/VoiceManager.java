@@ -1,6 +1,5 @@
 package org.springframework.context.support;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -3976,6 +3975,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.format(number) : null;
 	}
 
+	private static interface IntMap<T> {
+
+		T getObject(final int key);
+
+		boolean containsKey(final int key);
+
+		void setObject(final int key, final T value);
+
+	}
+
 	private static void importVoice(final Sheet sheet, final ObjectMap _objectMap,
 			final BiConsumer<Voice, String> errorMessageConsumer, final BiConsumer<Voice, Throwable> throwableConsumer,
 			final Consumer<Voice> voiceConsumer)
@@ -3985,7 +3994,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final File folder = file != null ? file.getParentFile() : null;
 		//
-		List<Field> fieldOrder = null;
+		IntMap<Field> intMap = null;
 		//
 		ExecutorService es = null;
 		//
@@ -4077,13 +4086,18 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 								//
 							} // if
 								//
-							add(fieldOrder = ObjectUtils.getIfNull(fieldOrder, ArrayList::new),
-									orElse(findFirst(testAndApply(Objects::nonNull, fs, Arrays::stream, null).filter(
-											field -> Objects.equals(getName(field), cell.getStringCellValue()))),
-											null));
-							//
-						} else if (fieldOrder.size() > (columnIndex = cell.getColumnIndex())
-								&& (f = fieldOrder.get(columnIndex)) != null) {
+							if ((intMap = ObjectUtils.getIfNull(intMap,
+									() -> Reflection.newProxy(IntMap.class, new IH()))) != null) {
+								//
+								intMap.setObject(cell.getColumnIndex(), orElse(
+										findFirst(testAndApply(Objects::nonNull, fs, Arrays::stream, null).filter(
+												field -> Objects.equals(getName(field), cell.getStringCellValue()))),
+										null));
+								//
+							} // if
+								//
+						} else if (intMap != null && intMap.containsKey(columnIndex = cell.getColumnIndex())
+								&& (f = intMap.getObject(columnIndex)) != null) {
 							//
 							f.setAccessible(true);
 							//
@@ -4685,6 +4699,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 		private Map<Object, Object> booleans = null;
 
+		private Map<Object, Object> intMapObjects = null;
+
 		private Map<Object, Object> getObjects() {
 			if (objects == null) {
 				objects = new LinkedHashMap<>();
@@ -4697,6 +4713,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				booleans = new LinkedHashMap<>();
 			}
 			return booleans;
+		}
+
+		public Map<Object, Object> getIntMapObjects() {
+			if (intMapObjects == null) {
+				intMapObjects = new LinkedHashMap<>();
+			}
+			return intMapObjects;
 		}
 
 		@Override
@@ -4747,6 +4770,32 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				} else if (Objects.equals(methodName, "setBoolean") && args != null && args.length > 1) {
 					//
 					put(getBooleans(), args[0], args[1]);
+					//
+					return null;
+					//
+				} // if
+					//
+			} else if (proxy instanceof IntMap) {
+				//
+				if (Objects.equals(methodName, "getObject") && args != null && args.length > 0) {
+					//
+					final Object key = args[0];
+					//
+					if (!containsKey(getIntMapObjects(), key)) {
+						//
+						throw new IllegalStateException(String.format("Key [%1$s] Not Found", key));
+						//
+					} // if
+						//
+					return getIntMapObjects().get(key);
+					//
+				} else if (Objects.equals(methodName, "containsKey") && args != null && args.length > 0) {
+					//
+					return containsKey(getIntMapObjects(), args[0]);
+					//
+				} else if (Objects.equals(methodName, "setObject") && args != null && args.length > 1) {
+					//
+					put(getIntMapObjects(), args[0], args[1]);
 					//
 					return null;
 					//
