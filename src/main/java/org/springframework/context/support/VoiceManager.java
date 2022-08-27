@@ -2339,8 +2339,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} else if (Objects.equals(source, btnImportWithinFolder)) {
 			//
-			final File[] fs = listFiles(
-					testAndApply(Objects::nonNull, JOptionPane.showInputDialog("Folder"), File::new, null));
+			final File[] fs = listFiles(testAndApply(Objects::nonNull,
+					JOptionPane.showInputDialog("Folder",
+							getProperty(propertyResolver,
+									"org.springframework.context.support.VoiceManager.importFolder")),
+					File::new, null));
 			//
 			for (int i = 0; fs != null && i < fs.length; i++) {
 				//
