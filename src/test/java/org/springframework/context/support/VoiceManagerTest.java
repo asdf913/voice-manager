@@ -151,8 +151,8 @@ class VoiceManagerTest {
 			METHOD_OR_ELSE_OPTIONAL, METHOD_OR_ELSE_OPTIONAL_INT, METHOD_FOR_EACH_STREAM, METHOD_FOR_EACH_ITERABLE,
 			METHOD_CREATE_WORK_BOOK, METHOD_CREATE_VOICE, METHOD_GET_MESSAGE, METHOD_INVOKE, METHOD_ANNOTATION_TYPE,
 			METHOD_GET_NAME, METHOD_FIND_FIRST, METHOD_GET_DECLARED_METHODS, METHOD_FOR_NAME, METHOD_FILTER,
-			METHOD_SET_TEXT, METHOD_GET_PREFERRED_WIDTH, METHOD_IMPORT_VOICE3, METHOD_IMPORT_VOICE5,
-			METHOD_ERROR_OR_PRINT_LN, METHOD_ADD, METHOD_CREATE_IMPORT_FILE_TEMPLATE_BYTE_ARRAY,
+			METHOD_SET_TEXT, METHOD_GET_PREFERRED_WIDTH, METHOD_IMPORT_VOICE1, METHOD_IMPORT_VOICE3,
+			METHOD_IMPORT_VOICE5, METHOD_ERROR_OR_PRINT_LN, METHOD_ADD, METHOD_CREATE_IMPORT_FILE_TEMPLATE_BYTE_ARRAY,
 			METHOD_GET_DECLARED_ANNOTATIONS, METHOD_CREATE_CELL, METHOD_SET_CELL_VALUE, METHOD_ANY_MATCH,
 			METHOD_COLLECT, METHOD_NAME, METHOD_GET_SELECTED_ITEM, METHOD_WRITE, METHOD_MATCHER, METHOD_SET_VALUE,
 			METHOD_SET_STRING, METHOD_SET_TOOL_TIP_TEXT, METHOD_FORMAT, METHOD_CONTAINS_KEY, METHOD_VALUE_OF1,
@@ -267,6 +267,8 @@ class VoiceManagerTest {
 		(METHOD_SET_TEXT = clz.getDeclaredMethod("setText", JTextComponent.class, String.class)).setAccessible(true);
 		//
 		(METHOD_GET_PREFERRED_WIDTH = clz.getDeclaredMethod("getPreferredWidth", Component.class)).setAccessible(true);
+		//
+		(METHOD_IMPORT_VOICE1 = clz.getDeclaredMethod("importVoice", File.class)).setAccessible(true);
 		//
 		(METHOD_IMPORT_VOICE3 = clz.getDeclaredMethod("importVoice", CLASS_OBJECT_MAP, BiConsumer.class,
 				BiConsumer.class)).setAccessible(true);
@@ -2099,6 +2101,8 @@ class VoiceManagerTest {
 	@Test
 	void testImportVoice() throws Throwable {
 		//
+		Assertions.assertDoesNotThrow(() -> importVoice(null));
+		//
 		Assertions.assertDoesNotThrow(() -> importVoice(null, null, null));
 		//
 		Assertions.assertDoesNotThrow(() -> importVoice(null, null, null, null, null));
@@ -2179,6 +2183,14 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> importVoice(sheet, null, null, null, null));
 		//
+	}
+
+	private void importVoice(final File file) throws Throwable {
+		try {
+			METHOD_IMPORT_VOICE1.invoke(instance, file);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 	private static void importVoice(final Object objectMap, final BiConsumer<Voice, String> errorMessageConsumer,
@@ -3777,8 +3789,6 @@ class VoiceManagerTest {
 	@Test
 	void testIsXlsxFile() throws Throwable {
 		//
-		Assertions.assertFalse(isXlsxFile(null));
-		//
 		Assertions.assertFalse(isXlsxFile(new File(".")));
 		//
 	}
@@ -3848,8 +3858,6 @@ class VoiceManagerTest {
 			Assertions.assertThrows(Throwable.class, () -> ih.invoke(objectMap, setObject, null));
 			//
 			Assertions.assertThrows(Throwable.class, () -> ih.invoke(objectMap, setObject, empty));
-			//
-			Assertions.assertNull(ih.invoke(objectMap, setObject, new Object[] { null, null }));
 			//
 			// org.springframework.context.support.VoiceManager$BooleanMap.setBoolean(java.lang.String,boolean)
 			//

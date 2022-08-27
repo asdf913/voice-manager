@@ -2330,241 +2330,215 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			if (jfc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 				//
-				final File selectedFile = jfc.getSelectedFile();
+				importVoice(jfc.getSelectedFile());
 				//
-				try {
-					//
-					if (!(isXlsxFile(selectedFile))) {
-						//
-						JOptionPane.showMessageDialog(null,
-								String.format("File [%1$s] is not a XLSX File", getAbsolutePath(selectedFile)));
-						//
-						return;
-						//
-					} // if
-						//
-				} catch (final IOException e) {
-					//
-					if (GraphicsEnvironment.isHeadless()) {
-						//
-						if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-							LOG.error(getMessage(e), e);
-						} else if (e != null) {
-							e.printStackTrace();
-						} // if
-							//
-					} else {
-						//
-						JOptionPane.showMessageDialog(null, getMessage(e));
-						//
-					} // if
-						//
-				} // try
-					//
-				try (final Workbook workbook = new XSSFWorkbook(selectedFile)) {
-					//
-					final ObjectMap objectMap = Reflection.newProxy(ObjectMap.class, new IH());
-					//
-					final POIXMLDocument poiXmlDocument = cast(POIXMLDocument.class, workbook);
-					//
-					final List<String> sheetExclued = toList(map(
-							stream(getObjectList(objectMapper = ObjectUtils.getIfNull(objectMapper, ObjectMapper::new),
-									getLpwstr(testAndApply(VoiceManager::contains,
-											getCustomProperties(getProperties(poiXmlDocument)), "sheetExcluded",
-											VoiceManager::getProperty, null)))),
-							VoiceManager::toString));
-					//
-					if (objectMap != null) {
-						//
-						objectMap.setObject(File.class, selectedFile);
-						//
-						objectMap.setObject(VoiceManager.class, this);
-						//
-						objectMap.setObject(String.class, voiceFolder);
-						//
-						objectMap.setObject(SqlSessionFactory.class, sqlSessionFactory);
-						//
-						objectMap.setObject(JProgressBar.class, progressBarImport);
-						//
-						objectMap.setObject(Provider.class, cast(Provider.class, speechApi));
-						//
-						objectMap.setObject(SpeechApi.class, speechApi);
-						//
-						objectMap.setObject(POIXMLDocument.class, poiXmlDocument);
-						//
-						objectMap.setObject(Jakaroma.class, jakaroma = ObjectUtils.getIfNull(jakaroma, Jakaroma::new));
-						//
-					} // if
-						//
-					final boolean headless = GraphicsEnvironment.isHeadless();
-					//
-					BiConsumer<Voice, String> errorMessageConsumer = null;
-					//
-					BiConsumer<Voice, Throwable> throwableConsumer = null;
-					//
-					Consumer<Voice> voiceConsumer = null;
-					//
-					Sheet sheet = null;
-					//
-					accept(VoiceManager::clear, tmImportResult, tmImportException);
-					//
-					Integer numberOfSheetProcessed = null;
-					//
-					final AtomicInteger numberOfVoiceProcessed = new AtomicInteger();
-					//
-					for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
-						//
-						if (errorMessageConsumer == null) {
-							//
-							errorMessageConsumer = (v, m) -> {
-								//
-								if (headless) {
-									//
-									errorOrPrintln(LOG, System.err, m);
-									//
-								} else {
-									//
-									if (tmImportException != null) {
-										//
-										tmImportException.addRow(new Object[] { getText(v), getRomaji(v), m });
-										//
-									} else {
-										//
-										JOptionPane.showMessageDialog(null, m);
-										//
-									} // if
-										//
-								} // if
-									//
-							};
-							//
-						} // if
-							//
-						if (throwableConsumer == null) {
-							//
-							throwableConsumer = (v, e) -> {
-								//
-								if (headless) {
-									//
-									if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-										//
-										LOG.error(getMessage(e), e);
-										//
-									} else if (e != null) {
-										//
-										e.printStackTrace();
-										//
-									} // if
-										//
-								} else {
-									//
-									if (tmImportException != null) {
-										//
-										tmImportException.addRow(new Object[] { getText(v), getRomaji(v), e });
-										//
-									} else {
-										//
-										JOptionPane.showMessageDialog(null, e);
-										//
-									} // if
-										//
-								} // if
-									//
-							};
-							//
-						} // if
-							//
-						if (voiceConsumer == null) {
-							//
-							voiceConsumer = v -> {
-								//
-								setText(tfCurrentProcessingVoice, getText(v));
-								//
-								if (numberOfVoiceProcessed != null) {
-									//
-									numberOfVoiceProcessed.incrementAndGet();
-									//
-								} // if
-									//
-							};
-							//
-						} // if
-							//
-						if (contains(sheetExclued, getSheetName(sheet = workbook.getSheetAt(i)))) {
-							//
-							continue;
-							//
-						} // if
-							//
-						setMaximum(progressBarImport,
-								Math.max(0, (sheet != null ? sheet.getPhysicalNumberOfRows() : 0) - 1));
-						//
-						if (objectMap != null) {
-							//
-							objectMap.setObject(ByteConverter.class,
-									getByteConverter(configurableListableBeanFactory, FORMAT,
-											getLpwstr(testAndApply(VoiceManager::contains,
-													getCustomProperties(getProperties(poiXmlDocument)), "audioFormat",
-													VoiceManager::getProperty, null))));
-							//
-						} // if
-							//
-						importVoice(sheet, objectMap, errorMessageConsumer, throwableConsumer, voiceConsumer);
-						//
-						setText(tfCurrentProcessingSheetName, getSheetName(sheet));
-						//
-						numberOfSheetProcessed = Integer.valueOf(intValue(numberOfSheetProcessed, 0) + 1);
-						//
-					} // for
-						//
-					if (tmImportResult != null) {
-						//
-						tmImportResult.addRow(new Object[] { numberOfSheetProcessed, numberOfVoiceProcessed });
-						//
-					} // if
-						//
-				} catch (final InvalidFormatException | IOException | IllegalAccessException | BaseException e) {
-					//
-					if (GraphicsEnvironment.isHeadless()) {
-						//
-						if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-							LOG.error(getMessage(e), e);
-						} else if (e != null) {
-							e.printStackTrace();
-						} // if
-							//
-					} else {
-						//
-						JOptionPane.showMessageDialog(null, getMessage(e));
-						//
-					} // if
-						//
-				} catch (final InvocationTargetException e) {
-					//
-					final Throwable targetException = e.getTargetException();
-					//
-					final Throwable rootCause = ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException),
-							targetException, ExceptionUtils.getRootCause(e), e);
-					//
-					if (GraphicsEnvironment.isHeadless()) {
-						//
-						if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-							LOG.error(getMessage(rootCause), rootCause);
-						} else if (rootCause != null) {
-							rootCause.printStackTrace();
-						} // if
-							//
-					} else {
-						//
-						JOptionPane.showMessageDialog(null, getMessage(rootCause));
-						//
-					} // if
-						//
-				} // try
-					//
 			} // if
 				//
 		} // if
+			//
+	}
+
+	private void importVoice(final File file) {
+		//
+		try (final Workbook workbook = isXlsxFile(file) ? new XSSFWorkbook(file) : null) {
+			//
+			final ObjectMap objectMap = Reflection.newProxy(ObjectMap.class, new IH());
+			//
+			final POIXMLDocument poiXmlDocument = cast(POIXMLDocument.class, workbook);
+			//
+			final List<String> sheetExclued = toList(
+					map(stream(getObjectList(objectMapper = ObjectUtils.getIfNull(objectMapper, ObjectMapper::new),
+							getLpwstr(testAndApply(VoiceManager::contains,
+									getCustomProperties(getProperties(poiXmlDocument)), "sheetExcluded",
+									VoiceManager::getProperty, null)))),
+							VoiceManager::toString));
+			//
+			if (objectMap != null) {
+				//
+				objectMap.setObject(File.class, file);
+				//
+				objectMap.setObject(VoiceManager.class, this);
+				//
+				objectMap.setObject(String.class, voiceFolder);
+				//
+				objectMap.setObject(SqlSessionFactory.class, sqlSessionFactory);
+				//
+				objectMap.setObject(JProgressBar.class, progressBarImport);
+				//
+				objectMap.setObject(Provider.class, cast(Provider.class, speechApi));
+				//
+				objectMap.setObject(SpeechApi.class, speechApi);
+				//
+				objectMap.setObject(POIXMLDocument.class, poiXmlDocument);
+				//
+				objectMap.setObject(Jakaroma.class, jakaroma = ObjectUtils.getIfNull(jakaroma, Jakaroma::new));
+				//
+			} // if
+				//
+			final boolean headless = GraphicsEnvironment.isHeadless();
+			//
+			BiConsumer<Voice, String> errorMessageConsumer = null;
+			//
+			BiConsumer<Voice, Throwable> throwableConsumer = null;
+			//
+			Consumer<Voice> voiceConsumer = null;
+			//
+			Sheet sheet = null;
+			//
+			accept(VoiceManager::clear, tmImportResult, tmImportException);
+			//
+			Integer numberOfSheetProcessed = null;
+			//
+			final AtomicInteger numberOfVoiceProcessed = new AtomicInteger();
+			//
+			for (int i = 0; workbook != null && i < workbook.getNumberOfSheets(); i++) {
+				//
+				if (errorMessageConsumer == null) {
+					//
+					errorMessageConsumer = (v, m) -> {
+						//
+						if (headless) {
+							//
+							errorOrPrintln(LOG, System.err, m);
+							//
+						} else {
+							//
+							if (tmImportException != null) {
+								//
+								tmImportException.addRow(new Object[] { getText(v), getRomaji(v), m });
+								//
+							} else {
+								//
+								JOptionPane.showMessageDialog(null, m);
+								//
+							} // if
+								//
+						} // if
+							//
+					};
+					//
+				} // if
+					//
+				if (throwableConsumer == null) {
+					//
+					throwableConsumer = (v, e) -> {
+						//
+						if (headless) {
+							//
+							if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
+								//
+								LOG.error(getMessage(e), e);
+								//
+							} else if (e != null) {
+								//
+								e.printStackTrace();
+								//
+							} // if
+								//
+						} else {
+							//
+							if (tmImportException != null) {
+								//
+								tmImportException.addRow(new Object[] { getText(v), getRomaji(v), e });
+								//
+							} else {
+								//
+								JOptionPane.showMessageDialog(null, e);
+								//
+							} // if
+								//
+						} // if
+							//
+					};
+					//
+				} // if
+					//
+				if (voiceConsumer == null) {
+					//
+					voiceConsumer = v -> {
+						//
+						setText(tfCurrentProcessingVoice, getText(v));
+						//
+						if (numberOfVoiceProcessed != null) {
+							//
+							numberOfVoiceProcessed.incrementAndGet();
+							//
+						} // if
+							//
+					};
+					//
+				} // if
+					//
+				if (contains(sheetExclued, getSheetName(sheet = workbook.getSheetAt(i)))) {
+					//
+					continue;
+					//
+				} // if
+					//
+				setMaximum(progressBarImport, Math.max(0, (sheet != null ? sheet.getPhysicalNumberOfRows() : 0) - 1));
+				//
+				if (objectMap != null) {
+					//
+					objectMap.setObject(ByteConverter.class,
+							getByteConverter(configurableListableBeanFactory, FORMAT,
+									getLpwstr(testAndApply(VoiceManager::contains,
+											getCustomProperties(getProperties(poiXmlDocument)), "audioFormat",
+											VoiceManager::getProperty, null))));
+					//
+				} // if
+					//
+				importVoice(sheet, objectMap, errorMessageConsumer, throwableConsumer, voiceConsumer);
+				//
+				setText(tfCurrentProcessingSheetName, getSheetName(sheet));
+				//
+				numberOfSheetProcessed = Integer.valueOf(intValue(numberOfSheetProcessed, 0) + 1);
+				//
+			} // for
+				//
+			if (tmImportResult != null) {
+				//
+				tmImportResult.addRow(new Object[] { numberOfSheetProcessed, numberOfVoiceProcessed });
+				//
+			} // if
+				//
+		} catch (final InvalidFormatException | IOException | IllegalAccessException | BaseException e) {
+			//
+			if (GraphicsEnvironment.isHeadless()) {
+				//
+				if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
+					LOG.error(getMessage(e), e);
+				} else if (e != null) {
+					e.printStackTrace();
+				} // if
+					//
+			} else {
+				//
+				JOptionPane.showMessageDialog(null, getMessage(e));
+				//
+			} // if
+				//
+		} catch (final InvocationTargetException e) {
+			//
+			final Throwable targetException = e.getTargetException();
+			//
+			final Throwable rootCause = ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException),
+					targetException, ExceptionUtils.getRootCause(e), e);
+			//
+			if (GraphicsEnvironment.isHeadless()) {
+				//
+				if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
+					LOG.error(getMessage(rootCause), rootCause);
+				} else if (rootCause != null) {
+					rootCause.printStackTrace();
+				} // if
+					//
+			} else {
+				//
+				JOptionPane.showMessageDialog(null, getMessage(rootCause));
+				//
+			} // if
+				//
+		} // try
 			//
 	}
 
@@ -4125,7 +4099,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 										final String stringCellValue = cell.getStringCellValue();
 										//
 										return Objects.equals(name, stringCellValue)
-												|| StringUtils.startsWithIgnoreCase(name, stringCellValue);
+												|| (StringUtils.isNotEmpty(stringCellValue)
+														&& StringUtils.startsWithIgnoreCase(name, stringCellValue));
 										//
 									}))) != null && !list.isEmpty()) {
 								//
