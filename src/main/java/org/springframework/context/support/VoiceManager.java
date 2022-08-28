@@ -944,7 +944,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(
 				tfSource = new JTextField(
 						getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.source")),
-				String.format("%1$s,span %2$s", GROWX, 2));
+				String.format("%1$s,span %2$s,wmin %3$s", GROWX, 2, 50));
 		//
 		// Kanji
 		//
@@ -999,7 +999,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(new JComboBox<>(
 				cbmIsKanji = booleans != null ? new DefaultComboBoxModel<>(toArray(booleans, new Boolean[] {}))
 						: new DefaultComboBoxModel<>()),
-				WRAP);
+				String.format("%1$s,span %2$s", WRAP, 2));
 		//
 		if (cbmIsKanji != null) {
 			//
@@ -1016,7 +1016,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(
 				tfTextImport = new JTextField(
 						getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.text")),
-				String.format("%1$s,span %2$s", GROWX, 16));
+				String.format("%1$s,span %2$s", GROWX, 17));
 		//
 		panel.add(btnConvertToRomaji = new JButton("Convert To Romaji"), String.format("%1$s", WRAP));
 		//
@@ -1083,7 +1083,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final String tags = getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.listNames");
 		//
-		panel.add(tfListNames = new JTextField(tags), String.format("%1$s,span %2$s", GROWX, 3));
+		panel.add(tfListNames = new JTextField(tags), String.format("%1$s,span %2$s", GROWX, 4));
 		//
 		tfListNames.addKeyListener(this);
 		//
@@ -1124,7 +1124,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(
 				tfRomaji = new JTextField(
 						getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.romaji")),
-				String.format("%1$s,span %2$s", GROWX, 16));
+				String.format("%1$s,span %2$s", GROWX, 17));
 		//
 		panel.add(btnCopyRomaji = new JButton("Copy"), WRAP);
 		//
@@ -1135,7 +1135,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(
 				tfHiragana = new JTextField(
 						getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.hiragana")),
-				String.format("%1$s,span %2$s", GROWX, 4));
+				String.format("%1$s,span %2$s", GROWX, 5));
 		//
 		panel.add(btnCopyHiragana = new JButton("Copy"), String.format("span %1$s", 2));
 		//
