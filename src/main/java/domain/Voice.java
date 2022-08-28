@@ -65,6 +65,8 @@ public class Voice {
 
 	private String ipaSymbol = null;
 
+	private Boolean isKanji = null;
+
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
 	private @interface JLPT {
@@ -232,6 +234,10 @@ public class Voice {
 
 	public void setIpaSymbol(final String ipaSymbol) {
 		this.ipaSymbol = ipaSymbol;
+	}
+
+	public void setIsKanji(final Boolean isKanji) {
+		this.isKanji = isKanji;
 	}
 
 }

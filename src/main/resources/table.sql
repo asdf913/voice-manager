@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS voice(
 	,ordinal_position      INTEGER
 	,jlpt_level            TEXT
 	,ipa_symbol            TEXT
+	,is_kanji              BOOLEAN
 	,create_ts			   TIMESTAMP WITH TIME ZONE
 	,update_ts			   TIMESTAMP WITH TIME ZONE
 );

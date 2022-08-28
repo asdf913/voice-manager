@@ -14,13 +14,14 @@
 		<result column="ordinal_position" property="ordinalPosition" />
 		<result column="jlpt_level" property="jlptLevel" />
 		<result column="ipa_symbol" property="ipaSymbol" />
+		<result column="is_kanji" property="isKanji" />
 	</resultMap>
 
 	<resultMap id="resultMapVoiceList" type="domain.VoiceList" />
 
 	<select id="retrieveAllVoices" resultMap="resultMapVoice">
 		select
-		id,language,text,source,yomi,romaji,hiragana,katakana,file_path,file_length,file_digest_algorithm,file_digest,file_extension,create_ts,update_ts,ordinal_position,jlpt_level,ipa_symbol
+		id,language,text,source,yomi,romaji,hiragana,katakana,file_path,file_length,file_digest_algorithm,file_digest,file_extension,create_ts,update_ts,ordinal_position,jlpt_level,ipa_symbol,is_kanji
 		from voice
 	</select>
 
@@ -39,7 +40,7 @@
 
 	<select id="searchByTextAndRomaji" resultMap="resultMapVoice">
 		select
-		id,language,text,source,yomi,romaji,hiragana,katakana,file_path,file_length,file_digest_algorithm,file_digest,file_extension,create_ts,update_ts,ordinal_position,jlpt_level,ipa_symbol
+		id,language,text,source,yomi,romaji,hiragana,katakana,file_path,file_length,file_digest_algorithm,file_digest,file_extension,create_ts,update_ts,ordinal_position,jlpt_level,ipa_symbol,is_kanji
 		from voice
 		<where>
 			true
@@ -54,7 +55,7 @@
 		keyProperty="id">
 		<if test="voice!=null">
 			insert into
-			voice(language,text,source,yomi,romaji,hiragana,katakana,file_path,file_length,file_digest_algorithm,file_digest,file_extension,create_ts,ordinal_position,jlpt_level,ipa_symbol)values(#{voice.language},#{voice.text},#{voice.source},#{voice.yomi},#{voice.romaji},#{voice.hiragana},#{voice.katakana},#{voice.filePath},#{voice.fileLength},#{voice.fileDigestAlgorithm},#{voice.fileDigest},#{voice.fileExtension},#{voice.createTs},#{voice.ordinalPosition},#{voice.jlptLevel},#{voice.ipaSymbol});
+			voice(language,text,source,yomi,romaji,hiragana,katakana,file_path,file_length,file_digest_algorithm,file_digest,file_extension,create_ts,ordinal_position,jlpt_level,ipa_symbol,is_kanji)values(#{voice.language},#{voice.text},#{voice.source},#{voice.yomi},#{voice.romaji},#{voice.hiragana},#{voice.katakana},#{voice.filePath},#{voice.fileLength},#{voice.fileDigestAlgorithm},#{voice.fileDigest},#{voice.fileExtension},#{voice.createTs},#{voice.ordinalPosition},#{voice.jlptLevel},#{voice.ipaSymbol},#{voice.isKanji});
 		</if>
 	</insert>
 
@@ -78,6 +79,7 @@
 				,ordinal_position=#{voice.ordinalPosition}
 				,jlpt_level=#{voice.jlptLevel}
 				,ipa_symbol=#{voice.ipaSymbol}
+				,is_kanji=#{voice.isKanji}
 			</set>
 			<where>
 				true

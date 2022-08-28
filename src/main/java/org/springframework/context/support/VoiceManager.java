@@ -233,6 +233,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private ComboBoxModel<?> cbmAudioFormatWrite, cbmAudioFormatExecute = null;
 
+	private ComboBoxModel<Boolean> cbmIsKanji = null;
+
 	private AbstractButton btnSpeak, btnWriteVoice, btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji,
 			btnCopyHiragana, btnCopyKatakana, cbUseTtsVoice, btnExecute, btnImportFileTemplate, btnImport,
 			btnImportWithinFolder, cbOverMp3Title, cbOrdinalPositionAsFileNamePrefix, btnExport,
@@ -942,16 +944,79 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(
 				tfSource = new JTextField(
 						getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.source")),
-				String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, 2));
+				String.format("%1$s,span %2$s", GROWX, 2));
 		//
-		// Text
+		// Kanji
 		//
+		panel.add(new JLabel("Kanji"));
+		//
+		final List<Field> fs = toList(
+				filter(testAndApply(Objects::nonNull, Boolean.class.getDeclaredFields(), Arrays::stream, null),
+						f -> Objects.equals(getType(f), Boolean.class)));
+		//
+		List<Boolean> booleans = null;
+		//
+		Field f = null;
+		//
+		for (int i = 0; fs != null && i < fs.size(); i++) {
+			//
+			if (!Objects.equals(Boolean.class, getType(f = fs.get(i)))) {
+				//
+				continue;
+				//
+			} // if
+				//
+			try {
+				//
+				add(booleans = ObjectUtils.getIfNull(booleans, ArrayList::new), cast(Boolean.class, f.get(null)));
+				//
+			} catch (final IllegalAccessException e) {
+				//
+				if (GraphicsEnvironment.isHeadless()) {
+					//
+					if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
+						LOG.error(getMessage(e), e);
+					} else if (e != null) {
+						e.printStackTrace();
+					} // if
+						//
+				} else {
+					//
+					JOptionPane.showMessageDialog(null, getMessage(e));
+					//
+				} // if
+					//
+			} // try
+				//
+		} // for
+			//
+		if (booleans != null) {
+			//
+			booleans.add(0, null);
+			//
+		} // if
+			//
+		panel.add(new JComboBox<>(
+				cbmIsKanji = booleans != null ? new DefaultComboBoxModel<>(toArray(booleans, new Boolean[] {}))
+						: new DefaultComboBoxModel<>()),
+				WRAP);
+		//
+		if (cbmIsKanji != null) {
+			//
+			cbmIsKanji.setSelectedItem(testAndApply(StringUtils::isNotEmpty,
+					getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.isKanji"),
+					Boolean::valueOf, null));
+			//
+		} // if
+			//
+			// Text
+			//
 		panel.add(new JLabel("Text"));
 		//
 		panel.add(
 				tfTextImport = new JTextField(
 						getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.text")),
-				String.format("%1$s,span %2$s", GROWX, 14));
+				String.format("%1$s,span %2$s", GROWX, 16));
 		//
 		panel.add(btnConvertToRomaji = new JButton("Convert To Romaji"), String.format("%1$s", WRAP));
 		//
@@ -1059,7 +1124,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(
 				tfRomaji = new JTextField(
 						getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.romaji")),
-				String.format("%1$s,span %2$s", GROWX, 14));
+				String.format("%1$s,span %2$s", GROWX, 16));
 		//
 		panel.add(btnCopyRomaji = new JButton("Copy"), WRAP);
 		//
@@ -1083,7 +1148,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(
 				tfKatakana = new JTextField(
 						getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.katakana")),
-				String.format("%1$s,span %2$s", GROWX, 5));
+				String.format("%1$s,span %2$s", GROWX, 7));
 		//
 		panel.add(btnCopyKatakana = new JButton("Copy"), WRAP);
 		//
@@ -1257,6 +1322,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		return panel;
 		//
+	}
+
+	private static Class<?> getType(final Field instance) {
+		return instance != null ? instance.getType() : null;
 	}
 
 	private static String getAbsolutePath(final File instance) {
@@ -3616,12 +3685,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		if (rate == null) {
 			//
-			final List<Field> fs = toList(
-					filter(testAndApply(Objects::nonNull, Integer.class.getDeclaredFields(), Arrays::stream, null),
-							f -> f != null
-									&& (isAssignableFrom(Number.class, f.getType())
-											|| Objects.equals(Integer.TYPE, f.getType()))
-									&& Objects.equals(getName(f), string)));
+			final List<Field> fs = toList(filter(
+					testAndApply(Objects::nonNull, Integer.class.getDeclaredFields(), Arrays::stream, null),
+					f -> f != null
+							&& (isAssignableFrom(Number.class, getType(f)) || Objects.equals(Integer.TYPE, getType(f)))
+							&& Objects.equals(getName(f), string)));
 			//
 			if (fs != null && !fs.isEmpty()) {
 				//
@@ -4094,6 +4162,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				Integer integer = null;
 				//
+				Boolean b = null;
+				//
 				final Workbook workbook = sheet.getWorkbook();
 				//
 				final Integer numberOfSheets = workbook != null ? Integer.valueOf(workbook.getNumberOfSheets()) : null;
@@ -4140,7 +4210,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 							f.setAccessible(true);
 							//
-							if (Objects.equals(type = f.getType(), String.class)) {
+							if (Objects.equals(type = getType(f), String.class)) {
 								//
 								if (Objects.equals(cell.getCellType(), CellType.NUMERIC)) {
 									//
@@ -4199,6 +4269,20 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 								} // if
 									//
 								f.set(voice = ObjectUtils.getIfNull(voice, Voice::new), integer);
+								//
+							} else if (Objects.equals(type, Boolean.class)) {
+								//
+								if (Objects.equals(cell.getCellType(), CellType.BOOLEAN)) {
+									//
+									b = cell.getBooleanCellValue();
+									//
+								} else {
+									//
+									b = Boolean.valueOf(cell.getStringCellValue());
+									//
+								} // if
+									//
+								f.set(voice = ObjectUtils.getIfNull(voice, Voice::new), b);
 								//
 							} // if
 								//
@@ -4879,6 +4963,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		voice.setJlptLevel(toString(getSelectedItem(instance.cbmJlptLevel)));
 		//
 		voice.setIpaSymbol(getText(instance.tfIpaSymbol));
+		//
+		voice.setIsKanji(cast(Boolean.class, getSelectedItem(instance.cbmIsKanji)));
 		//
 		return voice;
 		//
