@@ -1083,11 +1083,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final String tags = getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.listNames");
 		//
-		panel.add(tfListNames = new JTextField(tags));
+		panel.add(tfListNames = new JTextField(tags), String.format("%1$s,span %2$s", GROWX, 3));
 		//
 		tfListNames.addKeyListener(this);
 		//
-		panel.add(jlListNames = new JLabel(), String.format("span %1$s", 4));
+		panel.add(jlListNames = new JLabel(), String.format("span %1$s", 5));
 		//
 		panel.add(jlListNameCount = new JLabel(), String.format("wmax %1$s", 20));
 		//
