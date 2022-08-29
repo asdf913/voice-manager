@@ -153,23 +153,23 @@ class VoiceManagerTest {
 			METHOD_GET_PROPERTY_CUSTOM_PROPERTIES, METHOD_SET_VARIABLE, METHOD_PARSE_EXPRESSION, METHOD_GET_VALUE,
 			METHOD_GET_SOURCE, METHOD_EXPORT, METHOD_MAP, METHOD_MAP_TO_INT, METHOD_MAX_STREAM, METHOD_MAX_INT_STREAM,
 			METHOD_OR_ELSE_OPTIONAL, METHOD_OR_ELSE_OPTIONAL_INT, METHOD_FOR_EACH_STREAM, METHOD_FOR_EACH_ITERABLE,
-			METHOD_CREATE_WORK_BOOK, METHOD_CREATE_VOICE, METHOD_GET_MESSAGE, METHOD_INVOKE, METHOD_ANNOTATION_TYPE,
-			METHOD_FIND_FIRST, METHOD_GET_DECLARED_METHODS, METHOD_FOR_NAME, METHOD_FILTER, METHOD_SET_TEXT,
-			METHOD_GET_PREFERRED_WIDTH, METHOD_IMPORT_VOICE1, METHOD_IMPORT_VOICE3, METHOD_IMPORT_VOICE5,
-			METHOD_ERROR_OR_PRINT_LN, METHOD_ADD, METHOD_CREATE_IMPORT_FILE_TEMPLATE_BYTE_ARRAY, METHOD_CREATE_CELL,
-			METHOD_SET_CELL_VALUE, METHOD_ANY_MATCH, METHOD_COLLECT, METHOD_NAME, METHOD_GET_SELECTED_ITEM,
-			METHOD_WRITE, METHOD_MATCHER, METHOD_SET_VALUE, METHOD_SET_STRING, METHOD_SET_TOOL_TIP_TEXT, METHOD_FORMAT,
-			METHOD_CONTAINS_KEY, METHOD_VALUE_OF1, METHOD_VALUE_OF2, METHOD_GET_CLASS, METHOD_CREATE_RANGE,
-			METHOD_GET_PROVIDER_NAME, METHOD_GET_PROVIDER_VERSION, METHOD_WRITE_VOICE_TO_FILE,
-			METHOD_GET_MP3_TAG_VALUE_FILE, METHOD_GET_MP3_TAG_VALUE_LIST, METHOD_GET_MP3_TAG_PARIRS_ID3V1,
-			METHOD_GET_METHODS_CLASS, METHOD_GET_METHODS_JAVA_CLASS, METHOD_GET_SIMPLE_NAME, METHOD_COPY_OBJECT_MAP,
-			METHOD_DELETE_ON_EXIT, METHOD_CONVERT_LANGUAGE_CODE_TO_TEXT, METHOD_IS_SELECTED,
-			METHOD_SET_HIRAGANA_OR_KATAKANA, METHOD_SET_ROMAJI, METHOD_OR, METHOD_CLEAR_DEFAULT_TABLE_MODEL,
-			METHOD_CLEAR_MULTI_MAP, METHOD_CLEAR_STRING_BUILDER, METHOD_EXECUTE, METHOD_PUT_MAP, METHOD_PUT_MULTI_MAP,
-			METHOD_GET_BYTE_CONVERTER, METHOD_GET_PROPERTIES, METHOD_GET_CUSTOM_PROPERTIES,
-			METHOD_CONTAINS_CUSTOM_PROPERTIES, METHOD_CONTAINS_COLLECTION, METHOD_GET_LPW_STR, METHOD_GET_SHEET_NAME,
-			METHOD_ACCEPT, METHOD_TO_ARRAY, METHOD_TO_LIST, METHOD_GET_ID, METHOD_SET_MAXIMUM,
-			METHOD_GET_CURRENT_SHEET_INDEX, METHOD_GET_JLPT_LEVELS, METHOD_PARSE_JLPT_PAGE_HTML,
+			METHOD_CREATE_WORK_BOOK_LIST, METHOD_CREATE_WORK_BOOK_MULTI_MAP, METHOD_CREATE_VOICE, METHOD_GET_MESSAGE,
+			METHOD_INVOKE, METHOD_ANNOTATION_TYPE, METHOD_FIND_FIRST, METHOD_GET_DECLARED_METHODS, METHOD_FOR_NAME,
+			METHOD_FILTER, METHOD_SET_TEXT, METHOD_GET_PREFERRED_WIDTH, METHOD_IMPORT_VOICE1, METHOD_IMPORT_VOICE3,
+			METHOD_IMPORT_VOICE5, METHOD_ERROR_OR_PRINT_LN, METHOD_ADD, METHOD_CREATE_IMPORT_FILE_TEMPLATE_BYTE_ARRAY,
+			METHOD_CREATE_CELL, METHOD_SET_CELL_VALUE, METHOD_ANY_MATCH, METHOD_COLLECT, METHOD_NAME,
+			METHOD_GET_SELECTED_ITEM, METHOD_WRITE, METHOD_MATCHER, METHOD_SET_VALUE, METHOD_SET_STRING,
+			METHOD_SET_TOOL_TIP_TEXT, METHOD_FORMAT, METHOD_CONTAINS_KEY, METHOD_VALUE_OF1, METHOD_VALUE_OF2,
+			METHOD_GET_CLASS, METHOD_CREATE_RANGE, METHOD_GET_PROVIDER_NAME, METHOD_GET_PROVIDER_VERSION,
+			METHOD_WRITE_VOICE_TO_FILE, METHOD_GET_MP3_TAG_VALUE_FILE, METHOD_GET_MP3_TAG_VALUE_LIST,
+			METHOD_GET_MP3_TAG_PARIRS_ID3V1, METHOD_GET_METHODS_CLASS, METHOD_GET_METHODS_JAVA_CLASS,
+			METHOD_GET_SIMPLE_NAME, METHOD_COPY_OBJECT_MAP, METHOD_DELETE_ON_EXIT, METHOD_CONVERT_LANGUAGE_CODE_TO_TEXT,
+			METHOD_IS_SELECTED, METHOD_SET_HIRAGANA_OR_KATAKANA, METHOD_SET_ROMAJI, METHOD_OR,
+			METHOD_CLEAR_DEFAULT_TABLE_MODEL, METHOD_CLEAR_MULTI_MAP, METHOD_CLEAR_STRING_BUILDER, METHOD_EXECUTE,
+			METHOD_PUT_MAP, METHOD_PUT_MULTI_MAP, METHOD_GET_BYTE_CONVERTER, METHOD_GET_PROPERTIES,
+			METHOD_GET_CUSTOM_PROPERTIES, METHOD_CONTAINS_CUSTOM_PROPERTIES, METHOD_CONTAINS_COLLECTION,
+			METHOD_GET_LPW_STR, METHOD_GET_SHEET_NAME, METHOD_ACCEPT, METHOD_TO_ARRAY, METHOD_TO_LIST, METHOD_GET_ID,
+			METHOD_SET_MAXIMUM, METHOD_GET_CURRENT_SHEET_INDEX, METHOD_GET_JLPT_LEVELS, METHOD_PARSE_JLPT_PAGE_HTML,
 			METHOD_GET_DATA_VALIDATION_HELPER, METHOD_CREATE_EXPLICIT_LIST_CONSTRAINT, METHOD_CREATE_VALIDATION,
 			METHOD_CREATE_EXPORT_TASK, METHOD_GET_TAB_INDEX_BY_TITLE, METHOD_GET_DECLARED_FIELD,
 			METHOD_GET_ABSOLUTE_PATH, METHOD_IS_ASSIGNABLE_FROM, METHOD_GET_ENUM_CONSTANTS, METHOD_IS_XLSX_FILE,
@@ -248,7 +248,10 @@ class VoiceManagerTest {
 		(METHOD_FOR_EACH_ITERABLE = clz.getDeclaredMethod("forEach", Iterable.class, Consumer.class))
 				.setAccessible(true);
 		//
-		(METHOD_CREATE_WORK_BOOK = clz.getDeclaredMethod("createWorkbook", List.class)).setAccessible(true);
+		(METHOD_CREATE_WORK_BOOK_LIST = clz.getDeclaredMethod("createWorkbook", List.class)).setAccessible(true);
+		//
+		(METHOD_CREATE_WORK_BOOK_MULTI_MAP = clz.getDeclaredMethod("createWorkbook", Pair.class, Multimap.class))
+				.setAccessible(true);
 		//
 		(METHOD_CREATE_VOICE = clz.getDeclaredMethod("createVoice", ObjectMapper.class, VoiceManager.class))
 				.setAccessible(true);
@@ -509,6 +512,8 @@ class VoiceManagerTest {
 		private IntStream intStream = null;
 
 		private Integer columnIndex = null;
+
+		private Collection<Entry<?, ?>> multiMapEntries = null;
 
 		private Map<Object, String> getProperties() {
 			if (properties == null) {
@@ -803,6 +808,10 @@ class VoiceManagerTest {
 				} else if (Objects.equals(methodName, "putAll")) {
 					//
 					return multiMapPutAll;
+					//
+				} else if (Objects.equals(methodName, "entries")) {
+					//
+					return multiMapEntries;
 					//
 				} // if
 					//
@@ -1187,7 +1196,6 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnSpeak));
 		//
-		//
 		// btnCheckGaKuNenBeTsuKanJi
 		//
 		final AbstractButton btnCheckGaKuNenBeTsuKanJi = new JButton();
@@ -1198,9 +1206,21 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		final ActionEvent actionEventBtnCheckGaKuNenBeTsuKanJi = new ActionEvent(btnCheckGaKuNenBeTsuKanJi, 0, null);
+		Assertions.assertDoesNotThrow(
+				() -> actionPerformed(instance, new ActionEvent(btnCheckGaKuNenBeTsuKanJi, 0, null)));
 		//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnCheckGaKuNenBeTsuKanJi));
+		// btnExportGaKuNenBeTsuKanJi
+		//
+		final AbstractButton btnExportGaKuNenBeTsuKanJi = new JButton();
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "btnExportGaKuNenBeTsuKanJi", btnExportGaKuNenBeTsuKanJi, true);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(
+				() -> actionPerformed(instance, new ActionEvent(btnExportGaKuNenBeTsuKanJi, 0, null)));
 		//
 	}
 
@@ -1897,6 +1917,8 @@ class VoiceManagerTest {
 	@Test
 	void testCreateWorkbook() throws Throwable {
 		//
+		// java.util.List
+		//
 		Assertions.assertNull(createWorkbook(Collections.singletonList(null)));
 		//
 		final Voice voice = new Voice();
@@ -1907,11 +1929,38 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNotNull(createWorkbook(Collections.nCopies(2, voice)));
 		//
+		// org.apache.commons.lang3.tuple.Pair,com.google.common.collect.Multimap
+		//
+		Assertions.assertNull(createWorkbook(null, multimap));
+		//
+		ih.multiMapEntries = Collections.singleton(null);
+		//
+		Assertions.assertNull(createWorkbook(null, multimap));
+		//
+		ih.multiMapEntries = Collections.singleton(Pair.of(null, null));
+		//
+		Assertions.assertNotNull(createWorkbook(null, multimap));
+		//
 	}
 
 	private static Workbook createWorkbook(final List<Voice> voices) throws Throwable {
 		try {
-			final Object obj = METHOD_CREATE_WORK_BOOK.invoke(null, voices);
+			final Object obj = METHOD_CREATE_WORK_BOOK_LIST.invoke(null, voices);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Workbook) {
+				return (Workbook) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static Workbook createWorkbook(final Pair<String, String> columnNames, final Multimap<?, ?> multimap)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_WORK_BOOK_MULTI_MAP.invoke(null, columnNames, multimap);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Workbook) {

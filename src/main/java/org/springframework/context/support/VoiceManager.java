@@ -245,7 +245,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private AbstractButton btnSpeak, btnWriteVoice, btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji,
 			btnCopyHiragana, btnCopyKatakana, cbUseTtsVoice, btnExecute, btnImportFileTemplate, btnImport,
 			btnImportWithinFolder, cbOverMp3Title, cbOrdinalPositionAsFileNamePrefix, btnExport,
-			cbImportFileTemplateGenerateBlankRow, cbJlptAsFolder, btnCheckGaKuNenBeTsuKanJi = null;
+			cbImportFileTemplateGenerateBlankRow, cbJlptAsFolder, btnCheckGaKuNenBeTsuKanJi,
+			btnExportGaKuNenBeTsuKanJi = null;
 
 	private JProgressBar progressBarImport, progressBarExport = null;
 
@@ -651,6 +652,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		jTabbedPane.addTab(TAB_TITLE_IMPORT_BATCH, createBatchImportPanel(cloneLayoutManager()));
 		//
 		jTabbedPane.addTab("Export", createExportPanel(cloneLayoutManager()));
+		//
+		jTabbedPane.addTab("Misc", createMiscellaneousPanel(cloneLayoutManager()));
 		//
 		try {
 			//
@@ -1519,6 +1522,20 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		addActionListener(this, btnExport);
 		//
 		setEditable(false, tfPhraseCounter, tfPhraseTotal);
+		//
+		return panel;
+		//
+	}
+
+	private JPanel createMiscellaneousPanel(final LayoutManager layoutManager) {
+		//
+		final JPanel panel = new JPanel();
+		//
+		panel.setLayout(layoutManager);
+		//
+		panel.add(btnExportGaKuNenBeTsuKanJi = new JButton("Export 学年別漢字"));
+		//
+		addActionListener(this, btnExportGaKuNenBeTsuKanJi);
 		//
 		return panel;
 		//
@@ -2645,6 +2662,45 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				} // if
 					//
 			} // if
+				//
+		} else if (Objects.equals(source, btnExportGaKuNenBeTsuKanJi)) {
+			//
+			File file = null;
+			//
+			Workbook workbook = null;
+			//
+			try (final OutputStream os = new FileOutputStream(
+					file = new File(String.format("学年別漢字_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.xlsx", new Date())))) {
+				//
+				write(workbook = createWorkbook(Pair.of("学年", "漢字"), getGaKuNenBeTsuKanJiMultimap()), os);
+				//
+			} catch (final IOException e) {
+				//
+				if (GraphicsEnvironment.isHeadless()) {
+					//
+					if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
+						LOG.error(getMessage(e), e);
+					} else if (e != null) {
+						e.printStackTrace();
+					} // if
+						//
+				} else {
+					//
+					JOptionPane.showMessageDialog(null, getMessage(e));
+					//
+				} // if
+					//
+			} finally {
+				//
+				IOUtils.closeQuietly(workbook);
+				//
+				if (file != null && file.exists() && isFile(file) && file.length() == 0) {
+					//
+					file.delete();
+					//
+				} // if
+					//
+			} // try
 				//
 		} // if
 			//
@@ -5775,6 +5831,73 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		} // if
 			//
 		return et;
+		//
+	}
+
+	private static Workbook createWorkbook(final Pair<String, String> columnNames, final Multimap<?, ?> multimap) {
+		//
+		Workbook workbook = null;
+		//
+		Sheet sheet = null;
+		//
+		Row row = null;
+		//
+		if (multimap != null && multimap.entries() != null) {
+			//
+			for (final Entry<?, ?> en : multimap.entries()) {
+				//
+				if (en == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if (sheet == null && (workbook = ObjectUtils.getIfNull(workbook, XSSFWorkbook::new)) != null) {
+					//
+					sheet = workbook.createSheet();
+					//
+				} // if
+					//
+					// header
+					//
+				if (sheet != null && sheet.getLastRowNum() < 0) {
+					//
+					if ((row = sheet.createRow(sheet.getLastRowNum() + 1)) == null) {
+						//
+						continue;
+						//
+					} // if
+						//
+					setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)), getKey(columnNames));
+					//
+					setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)), getValue(columnNames));
+					//
+				} // if
+					//
+					// content
+					//
+				if ((row = sheet.createRow(sheet.getLastRowNum() + 1)) == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)), toString(getKey(en)));
+				//
+				setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)), toString(getValue(en)));
+				//
+			} // for
+				//
+		} // if
+			//
+		if (sheet != null && row != null) {
+			//
+			sheet.setAutoFilter(new CellRangeAddress(sheet.getFirstRowNum(), sheet.getLastRowNum() - 1,
+					row.getFirstCellNum(), row.getLastCellNum() - 1));
+			//
+		} // if
+			//
+		return workbook;
 		//
 	}
 
