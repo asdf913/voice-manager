@@ -67,6 +67,13 @@ public class Voice {
 
 	private Boolean isKanji = null;
 
+	@Target(ElementType.FIELD)
+	@Retention(RetentionPolicy.RUNTIME)
+	private @interface SpreadsheetColumn {
+		String value();
+	}
+
+	@SpreadsheetColumn("学年別漢字")
 	private String gaKuNenBeTsuKanJi = null;
 
 	@Target(ElementType.FIELD)

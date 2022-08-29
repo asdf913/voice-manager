@@ -5705,6 +5705,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final Class<?> dataFormatClass = forName("domain.Voice$DataFormat");
 		//
+		final Class<?> spreadsheetColumnClass = forName("domain.Voice$SpreadsheetColumn");
+		//
 		Annotation a = null;
 		//
 		Method m = null;
@@ -5747,7 +5749,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				for (int j = 0; fs != null && j < fs.length; j++) {
 					//
-					setCellValue(createCell(row, j), getName(fs[j]));
+					setCellValue(createCell(row, j), getColumnName(spreadsheetColumnClass, fs[j]));
 					//
 				} // for
 					//
@@ -5770,14 +5772,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				if ((value = f.get(voice)) instanceof Number) {
 					//
 					if ((m = orElse(
-							findFirst(filter(
-									testAndApply(Objects::nonNull,
-											getDeclaredMethods(annotationType(a = orElse(
-													findFirst(filter(Arrays.stream(getDeclaredAnnotations(f)),
-															x -> Objects.equals(annotationType(x), dataFormatClass))),
-													null))),
-											Arrays::stream, null),
-									x -> Objects.equals(getName(x), "value"))),
+							findFirst(
+									filter(testAndApply(Objects::nonNull,
+											getDeclaredMethods(annotationType(a = orElse(findFirst(filter(
+													testAndApply(Objects::nonNull, getDeclaredAnnotations(f),
+															Arrays::stream, null),
+													x -> Objects.equals(annotationType(x), dataFormatClass))), null))),
+											Arrays::stream, null), x -> Objects.equals(getName(x), "value"))),
 							null)) != null && (cellStyle = workbook.createCellStyle()) != null) {
 						//
 						m.setAccessible(true);
@@ -5797,14 +5798,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				} else if (value instanceof Date) {
 					//
 					if ((m = orElse(
-							findFirst(filter(
-									testAndApply(Objects::nonNull,
-											getDeclaredMethods(annotationType(a = orElse(
-													findFirst(filter(Arrays.stream(getDeclaredAnnotations(f)),
-															x -> Objects.equals(annotationType(x), dateFormatClass))),
-													null))),
-											Arrays::stream, null),
-									x -> Objects.equals(getName(x), "value"))),
+							findFirst(
+									filter(testAndApply(Objects::nonNull,
+											getDeclaredMethods(annotationType(a = orElse(findFirst(filter(
+													testAndApply(Objects::nonNull, getDeclaredAnnotations(f),
+															Arrays::stream, null),
+													x -> Objects.equals(annotationType(x), dateFormatClass))), null))),
+											Arrays::stream, null), x -> Objects.equals(getName(x), "value"))),
 							null)) != null) {
 						//
 						m.setAccessible(true);
@@ -5835,6 +5835,53 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		} // if
 			//
 		return workbook;
+		//
+	}
+
+	private static String getColumnName(final Class<?> spreadsheetColumnClass, final Field f)
+			throws IllegalAccessException, InvocationTargetException {
+		//
+		final String name = getName(f);
+		//
+		final List<Annotation> annotations = toList(
+				filter(testAndApply(Objects::nonNull, getDeclaredAnnotations(f), Arrays::stream, null),
+						a -> Objects.equals(annotationType(a), spreadsheetColumnClass)));
+		//
+		if (annotations != null) {
+			//
+			int size = CollectionUtils.size(annotations);
+			//
+			final Annotation annotation = size == 1 ? annotations.get(0) : null;
+			//
+			if (size == 1) {
+				//
+				final List<Method> ms = toList(filter(
+						testAndApply(Objects::nonNull, getDeclaredMethods(getClass(annotation)), Arrays::stream, null),
+						m -> Objects.equals(getName(m), "value")));
+				//
+				final Method m = (size = CollectionUtils.size(ms)) == 1 ? ms.get(0) : null;
+				//
+				if (m != null) {
+					//
+					m.setAccessible(true);
+					//
+					return StringUtils.defaultIfBlank(toString(invoke(m, annotation)), name);
+					//
+				} else if (size > 1) {
+					//
+					throw new IllegalStateException();
+					//
+				} // if
+					//
+			} else if (size > 1) {
+				//
+				throw new IllegalStateException();
+				//
+			} // if
+				//
+		} // if
+			//
+		return name;
 		//
 	}
 
