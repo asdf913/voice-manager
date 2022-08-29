@@ -174,7 +174,8 @@ class VoiceManagerTest {
 			METHOD_CREATE_EXPORT_TASK, METHOD_GET_TAB_INDEX_BY_TITLE, METHOD_GET_DECLARED_FIELD,
 			METHOD_GET_ABSOLUTE_PATH, METHOD_IS_ASSIGNABLE_FROM, METHOD_GET_ENUM_CONSTANTS, METHOD_IS_XLSX_FILE,
 			METHOD_LIST_FILES, METHOD_GET_TYPE, METHOD_GET_ELEMENTS_BY_TAG_NAME_SGML_PAGE,
-			METHOD_GET_ELEMENTS_BY_TAG_NAME_DOM_ELEMENT, METHOD_GET_COLUMN_NAME, METHOD_GET_KEY_SET = null;
+			METHOD_GET_ELEMENTS_BY_TAG_NAME_DOM_ELEMENT, METHOD_GET_COLUMN_NAME, METHOD_GET_KEY_SET,
+			METHOD_PUT_ALL = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -453,6 +454,9 @@ class VoiceManagerTest {
 		//
 		(METHOD_GET_KEY_SET = clz.getDeclaredMethod("keySet", Multimap.class)).setAccessible(true);
 		//
+		(METHOD_PUT_ALL = clz.getDeclaredMethod("putAll", Multimap.class, Object.class, Iterable.class))
+				.setAccessible(true);
+		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
 		CLASS_BOOLEAN_MAP = Class.forName("org.springframework.context.support.VoiceManager$BooleanMap");
@@ -480,7 +484,7 @@ class VoiceManagerTest {
 
 		private Iterator<Cell> cells = null;
 
-		private Boolean anyMatch, contains, multiMapPut = null;
+		private Boolean anyMatch, contains, multiMapPut, multiMapPutAll = null;
 
 		private String[] voiceIds = null;
 
@@ -795,6 +799,10 @@ class VoiceManagerTest {
 				} else if (Objects.equals(methodName, "keySet")) {
 					//
 					return null;
+					//
+				} else if (Objects.equals(methodName, "putAll")) {
+					//
+					return multiMapPutAll;
 					//
 				} // if
 					//
@@ -3930,6 +3938,26 @@ class VoiceManagerTest {
 				return (Set) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testPutAll() {
+		//
+		Assertions.assertDoesNotThrow(() -> putAll(null, null, null));
+		//
+		ih.multiMapPutAll = Boolean.FALSE;
+		//
+		Assertions.assertDoesNotThrow(() -> putAll(multimap, null, null));
+		//
+	}
+
+	private static <K, V> void putAll(final Multimap<K, V> instance, final K key, final Iterable<? extends V> values)
+			throws Throwable {
+		try {
+			METHOD_PUT_ALL.invoke(null, instance, key, values);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

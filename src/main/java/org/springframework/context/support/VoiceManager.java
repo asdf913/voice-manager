@@ -1292,19 +1292,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			for (int i = 0; domElements != null && i < domElements.getLength(); i++) {
 				//
-				if ((domElement = domElements.get(i)) == null
-						|| !matches(matcher = matcher(
-								pattern = ObjectUtils.getIfNull(pattern,
-										() -> Pattern.compile("(第(\\d+)学年)（\\d+字）\\[編集]")),
-								domElement.getTextContent()))
-						|| matcher == null || matcher.groupCount() <= 0
-						|| (multimap = ObjectUtils.getIfNull(multimap, LinkedListMultimap::create)) == null) {
+				if ((domElement = domElements.get(i)) == null || !matches(matcher = matcher(
+						pattern = ObjectUtils.getIfNull(pattern, () -> Pattern.compile("(第(\\d+)学年)（\\d+字）\\[編集]")),
+						domElement.getTextContent())) || matcher == null || matcher.groupCount() <= 0) {
 					//
 					continue;
 					//
 				} // if
 					//
-				multimap.putAll(matcher.group(1),
+				putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedListMultimap::create), matcher.group(1),
 						toList(map(stream(getElementsByTagName(domElement.getNextElementSibling(), "a")),
 								a -> a != null ? a.getTextContent() : null)));
 				//
@@ -1318,6 +1314,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static <K> Set<K> keySet(final Multimap<K, ?> instance) {
 		return instance != null ? instance.keySet() : null;
+	}
+
+	private static <K, V> void putAll(final Multimap<K, V> instance, final K key, final Iterable<? extends V> values) {
+		if (instance != null) {
+			instance.putAll(key, values);
+		}
 	}
 
 	private static DomNodeList<DomElement> getElementsByTagName(final SgmlPage instance, final String tagName) {
