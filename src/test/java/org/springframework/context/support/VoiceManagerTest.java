@@ -120,6 +120,11 @@ import org.springframework.expression.ExpressionParser;
 import org.springframework.util.ReflectionUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gargoylesoftware.htmlunit.SgmlPage;
+import com.gargoylesoftware.htmlunit.WebWindow;
+import com.gargoylesoftware.htmlunit.html.DomElement;
+import com.gargoylesoftware.htmlunit.html.DomNodeList;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Multimap;
@@ -170,7 +175,7 @@ class VoiceManagerTest {
 			METHOD_GET_DATA_VALIDATION_HELPER, METHOD_CREATE_EXPLICIT_LIST_CONSTRAINT, METHOD_CREATE_VALIDATION,
 			METHOD_CREATE_EXPORT_TASK, METHOD_GET_TAB_INDEX_BY_TITLE, METHOD_GET_DECLARED_FIELD,
 			METHOD_GET_ABSOLUTE_PATH, METHOD_IS_ASSIGNABLE_FROM, METHOD_GET_ENUM_CONSTANTS, METHOD_IS_XLSX_FILE,
-			METHOD_LIST_FILES, METHOD_GET_TYPE = null;
+			METHOD_LIST_FILES, METHOD_GET_TYPE, METHOD_GET_ELEMENTS_BY_TAG_NAME = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -443,6 +448,9 @@ class VoiceManagerTest {
 		(METHOD_LIST_FILES = clz.getDeclaredMethod("listFiles", File.class)).setAccessible(true);
 		//
 		(METHOD_GET_TYPE = clz.getDeclaredMethod("getType", Field.class)).setAccessible(true);
+		//
+		(METHOD_GET_ELEMENTS_BY_TAG_NAME = clz.getDeclaredMethod("getElementsByTagName", SgmlPage.class, String.class))
+				.setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -785,6 +793,14 @@ class VoiceManagerTest {
 					//
 				} // if
 					//
+			} else if (proxy instanceof WebWindow) {
+				//
+				if (Objects.equals(methodName, "getWebClient")) {
+					//
+					return null;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(methodName);
@@ -942,6 +958,14 @@ class VoiceManagerTest {
 		instance.setSpeechApi(speechApi);
 		//
 		ih.voiceIds = new String[] {};
+		//
+		Assertions.assertDoesNotThrow(() -> instance.afterPropertiesSet());
+		//
+		instance.setGaKuNenBeTsuKanJiListPageUrl(EMPTY);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.afterPropertiesSet());
+		//
+		instance.setGaKuNenBeTsuKanJiListPageUrl(" ");
 		//
 		Assertions.assertDoesNotThrow(() -> instance.afterPropertiesSet());
 		//
@@ -3847,6 +3871,29 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof Class<?>) {
 				return (Class<?>) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void tsetGetElementsByTagName() throws Throwable {
+		//
+		Assertions
+				.assertNotNull(getElementsByTagName(new HtmlPage(null, Reflection.newProxy(WebWindow.class, ih)), null));
+		//
+	}
+
+	private DomNodeList<DomElement> getElementsByTagName(final SgmlPage instance, final String tagName)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_GET_ELEMENTS_BY_TAG_NAME.invoke(null, instance, tagName);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof DomNodeList) {
+				return (DomNodeList) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

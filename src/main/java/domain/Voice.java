@@ -67,6 +67,8 @@ public class Voice {
 
 	private Boolean isKanji = null;
 
+	private String gaKuNenBeTsuKanJi = null;
+
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
 	private @interface JLPT {
@@ -238,6 +240,10 @@ public class Voice {
 
 	public void setIsKanji(final Boolean isKanji) {
 		this.isKanji = isKanji;
+	}
+
+	public void setGaKuNenBeTsuKanJi(final String gaKuNenBeTsuKanJi) {
+		this.gaKuNenBeTsuKanJi = gaKuNenBeTsuKanJi;
 	}
 
 }

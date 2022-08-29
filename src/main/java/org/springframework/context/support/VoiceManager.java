@@ -170,6 +170,10 @@ import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gargoylesoftware.htmlunit.SgmlPage;
+import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.html.DomElement;
+import com.gargoylesoftware.htmlunit.html.DomNodeList;
 import com.github.curiousoddman.rgxgen.RgxGen;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
@@ -229,7 +233,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private ComboBoxModel<Yomi> cbmYomi = null;
 
-	private ComboBoxModel<String> cbmVoiceId, cbmJlptLevel = null;
+	private ComboBoxModel<String> cbmVoiceId, cbmJlptLevel, cbmGaKuNenBeTsuKanJi = null;
 
 	private ComboBoxModel<?> cbmAudioFormatWrite, cbmAudioFormatExecute = null;
 
@@ -270,7 +274,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private ObjectMapper objectMapper = null;
 
-	private String jlptLevelPageUrl = null;
+	private String jlptLevelPageUrl, gaKuNenBeTsuKanJiListPageUrl = null;
 
 	private Unit<List<String>> jlptLevels = null;
 
@@ -528,6 +532,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	public void setJlptLevelPageUrl(final String jlptLevelPageUrl) {
 		this.jlptLevelPageUrl = jlptLevelPageUrl;
+	}
+
+	public void setGaKuNenBeTsuKanJiListPageUrl(final String gaKuNenBeTsuKanJiListPageUrl) {
+		this.gaKuNenBeTsuKanJiListPageUrl = gaKuNenBeTsuKanJiListPageUrl;
 	}
 
 	private static <E> Stream<E> stream(final Collection<E> instance) {
@@ -998,8 +1006,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		panel.add(new JComboBox<>(
 				cbmIsKanji = booleans != null ? new DefaultComboBoxModel<>(toArray(booleans, new Boolean[] {}))
-						: new DefaultComboBoxModel<>()),
-				String.format("%1$s,span %2$s", WRAP, 2));
+						: new DefaultComboBoxModel<>()));
 		//
 		if (cbmIsKanji != null) {
 			//
@@ -1009,6 +1016,53 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
+			// 学年別漢字 GaKuNenBeTsuKanJi
+			//
+		panel.add(new JLabel("学年別漢字"));
+		//
+		List<String> gaKuNenBeTsuKanJiList = null;
+		//
+		try {
+			//
+			gaKuNenBeTsuKanJiList = getGaKuNenBeTsuKanJiList();
+			//
+		} catch (IOException e) {
+			//
+			if (GraphicsEnvironment.isHeadless()) {
+				//
+				if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
+					LOG.error(getMessage(e), e);
+				} else if (e != null) {
+					e.printStackTrace();
+				} // if
+					//
+			} else {
+				//
+				JOptionPane.showMessageDialog(null, getMessage(e));
+				//
+			} // if
+				//
+		} // try
+			//
+		panel.add(
+				new JComboBox<>(cbmGaKuNenBeTsuKanJi = testAndApply(Objects::nonNull,
+						ArrayUtils.insert(0, toArray(gaKuNenBeTsuKanJiList, new String[] {}), (String) null),
+						DefaultComboBoxModel::new, x -> new DefaultComboBoxModel<>())),
+				String.format("%1$s,span %2$s", WRAP, 2));
+		//
+		if (cbmGaKuNenBeTsuKanJi != null) {
+			//
+			final String string = getProperty(propertyResolver,
+					"org.springframework.context.support.VoiceManager.gaKuNenBeTsuKanJi");
+			//
+			if (StringUtils.isNotEmpty(string)) {
+				//
+				cbmGaKuNenBeTsuKanJi.setSelectedItem(string);
+				//
+			} // if
+				//
+		} // if
+			//
 			// Text
 			//
 		panel.add(new JLabel("Text"));
@@ -1016,7 +1070,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(
 				tfTextImport = new JTextField(
 						getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.text")),
-				String.format("%1$s,span %2$s", GROWX, 17));
+				String.format("%1$s,span %2$s", GROWX, 17 + 1 + 1));
 		//
 		panel.add(btnConvertToRomaji = new JButton("Convert To Romaji"), String.format("%1$s", WRAP));
 		//
@@ -1083,11 +1137,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final String tags = getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.listNames");
 		//
-		panel.add(tfListNames = new JTextField(tags), String.format("%1$s,span %2$s", GROWX, 4));
+		panel.add(tfListNames = new JTextField(tags), String.format("%1$s,span %2$s", GROWX, 4 + 1));
 		//
 		tfListNames.addKeyListener(this);
 		//
-		panel.add(jlListNames = new JLabel(), String.format("span %1$s", 5));
+		panel.add(jlListNames = new JLabel(), String.format("span %1$s", 5 + 1));
 		//
 		panel.add(jlListNameCount = new JLabel(), String.format("wmax %1$s", 20));
 		//
@@ -1124,7 +1178,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(
 				tfRomaji = new JTextField(
 						getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.romaji")),
-				String.format("%1$s,span %2$s", GROWX, 17));
+				String.format("%1$s,span %2$s", GROWX, 17 + 1 + 1));
 		//
 		panel.add(btnCopyRomaji = new JButton("Copy"), WRAP);
 		//
@@ -1135,7 +1189,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(
 				tfHiragana = new JTextField(
 						getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.hiragana")),
-				String.format("%1$s,span %2$s", GROWX, 5));
+				String.format("%1$s,span %2$s", GROWX, 5 + 1 + 1));
 		//
 		panel.add(btnCopyHiragana = new JButton("Copy"), String.format("span %1$s", 2));
 		//
@@ -1202,6 +1256,50 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return panel;
 		//
+	}
+
+	private List<String> getGaKuNenBeTsuKanJiList() throws IOException {
+		//
+		List<String> list = null;
+		//
+		try (final WebClient webClient = new WebClient()) {
+			//
+			final DomNodeList<DomElement> domElements = getElementsByTagName(cast(SgmlPage.class,
+					testAndApply(StringUtils::isNotBlank, gaKuNenBeTsuKanJiListPageUrl, webClient::getPage, null)),
+					"h2");
+			//
+			DomElement domElement = null;
+			//
+			Pattern pattern = null;
+			//
+			Matcher matcher = null;
+			//
+			for (int i = 0; domElements != null && i < domElements.getLength(); i++) {
+				//
+				if ((domElement = domElements.get(i)) == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if (matches(matcher = matcher(
+						pattern = ObjectUtils.getIfNull(pattern, () -> Pattern.compile("(第(\\d+)学年)（\\d+字）\\[編集]")),
+						domElement.getTextContent())) && matcher != null && matcher.groupCount() > 0) {
+					//
+					add(list = ObjectUtils.getIfNull(list, ArrayList::new), matcher.group(1));
+					//
+				} // if
+					//
+			} // for
+				//
+		} // try
+			//
+		return list;
+		//
+	}
+
+	private static DomNodeList<DomElement> getElementsByTagName(final SgmlPage instance, final String tagName) {
+		return instance != null ? instance.getElementsByTagName(tagName) : null;
 	}
 
 	private JPanel createBatchImportPanel(final LayoutManager layoutManager) {
@@ -4965,6 +5063,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		voice.setIpaSymbol(getText(instance.tfIpaSymbol));
 		//
 		voice.setIsKanji(cast(Boolean.class, getSelectedItem(instance.cbmIsKanji)));
+		//
+		voice.setGaKuNenBeTsuKanJi(toString(getSelectedItem(instance.cbmGaKuNenBeTsuKanJi)));
 		//
 		return voice;
 		//
