@@ -1290,8 +1290,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			Matcher matcher = null;
 			//
-			DomNodeList<HtmlElement> as = null;
-			//
 			for (int i = 0; domElements != null && i < domElements.getLength(); i++) {
 				//
 				if ((domElement = domElements.get(i)) == null
@@ -1300,14 +1298,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 										() -> Pattern.compile("(第(\\d+)学年)（\\d+字）\\[編集]")),
 								domElement.getTextContent()))
 						|| matcher == null || matcher.groupCount() <= 0
-						|| (as = getElementsByTagName(domElement.getNextElementSibling(), "a")) == null
 						|| (multimap = ObjectUtils.getIfNull(multimap, LinkedListMultimap::create)) == null) {
 					//
 					continue;
 					//
 				} // if
 					//
-				multimap.putAll(matcher.group(1), toList(map(as.stream(), a -> a != null ? a.getTextContent() : null)));
+				multimap.putAll(matcher.group(1),
+						toList(map(stream(getElementsByTagName(domElement.getNextElementSibling(), "a")),
+								a -> a != null ? a.getTextContent() : null)));
 				//
 			} // for
 				//
