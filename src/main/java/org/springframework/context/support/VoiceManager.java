@@ -4043,14 +4043,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			for (int i = 0; fs != null && i < fs.size(); i++) {
 				//
-				if ((f = fs.get(i)) == null
-						|| (workbook = ObjectUtils.getIfNull(workbook, XSSFWorkbook::new)) == null) {
+				if ((f = fs.get(i)) == null) {
+					//
 					continue;
+					//
 				} // if
 					//
 				if (sheet == null) {
 					//
-					sheet = workbook.createSheet();
+					sheet = createSheet(workbook = ObjectUtils.getIfNull(workbook, XSSFWorkbook::new));
 					//
 				} // if
 					//
@@ -4128,6 +4129,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return bs;
 		//
+	}
+
+	private static Sheet createSheet(final Workbook instance) {
+		return instance != null ? instance.createSheet() : null;
 	}
 
 	private static DataValidationHelper getDataValidationHelper(final Sheet instance) {
@@ -5852,9 +5857,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
-				if (sheet == null && (workbook = ObjectUtils.getIfNull(workbook, XSSFWorkbook::new)) != null) {
+				if (sheet == null) {
 					//
-					sheet = workbook.createSheet();
+					sheet = createSheet(workbook = ObjectUtils.getIfNull(workbook, XSSFWorkbook::new));
 					//
 				} // if
 					//
@@ -5938,13 +5943,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		for (int i = 0; voices != null && i < voices.size(); i++) {
 			//
-			if ((voice = voices.get(i)) == null
-					|| (workbook = ObjectUtils.getIfNull(workbook, XSSFWorkbook::new)) == null) {
+			if ((voice = voices.get(i)) == null) {
+				//
 				continue;
+				//
 			} // if
 				//
 			if (sheet == null) {
-				sheet = workbook.createSheet();
+				//
+				sheet = createSheet(workbook = ObjectUtils.getIfNull(workbook, XSSFWorkbook::new));
+				//
 			} // if
 				//
 			if ((fs = ObjectUtils.getIfNull(fs, () -> FieldUtils.getAllFields(Voice.class))) != null) {
