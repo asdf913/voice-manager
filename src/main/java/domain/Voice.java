@@ -63,6 +63,7 @@ public class Voice {
 	@ImportField
 	private String filePath = null;
 
+	@ImportField
 	private String ipaSymbol = null;
 
 	private Boolean isKanji = null;
