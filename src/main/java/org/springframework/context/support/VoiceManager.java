@@ -966,45 +966,29 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.add(new JLabel("Kanji"));
 		//
-		final List<Field> fs = toList(
-				filter(testAndApply(Objects::nonNull, Boolean.class.getDeclaredFields(), Arrays::stream, null),
-						f -> Objects.equals(getType(f), Boolean.class)));
-		//
 		List<Boolean> booleans = null;
 		//
-		Field f = null;
-		//
-		for (int i = 0; fs != null && i < fs.size(); i++) {
+		try {
 			//
-			if (!Objects.equals(Boolean.class, getType(f = fs.get(i)))) {
+			booleans = getBooleanValues();
+			//
+		} catch (final IllegalAccessException e) {
+			//
+			if (GraphicsEnvironment.isHeadless()) {
 				//
-				continue;
+				if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
+					LOG.error(getMessage(e), e);
+				} else if (e != null) {
+					e.printStackTrace();
+				} // if
+					//
+			} else {
+				//
+				JOptionPane.showMessageDialog(null, getMessage(e));
 				//
 			} // if
 				//
-			try {
-				//
-				add(booleans = ObjectUtils.getIfNull(booleans, ArrayList::new), cast(Boolean.class, f.get(null)));
-				//
-			} catch (final IllegalAccessException e) {
-				//
-				if (GraphicsEnvironment.isHeadless()) {
-					//
-					if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-						LOG.error(getMessage(e), e);
-					} else if (e != null) {
-						e.printStackTrace();
-					} // if
-						//
-				} else {
-					//
-					JOptionPane.showMessageDialog(null, getMessage(e));
-					//
-				} // if
-					//
-			} // try
-				//
-		} // for
+		} // try
 			//
 		if (booleans != null) {
 			//
@@ -1312,6 +1296,32 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		} // try
 			//
 		return multimap;
+		//
+	}
+
+	private static List<Boolean> getBooleanValues() throws IllegalAccessException {
+		//
+		List<Boolean> list = null;
+		//
+		final List<Field> fs = toList(
+				filter(testAndApply(Objects::nonNull, Boolean.class.getDeclaredFields(), Arrays::stream, null),
+						f -> Objects.equals(getType(f), Boolean.class)));
+		//
+		Field f = null;
+		//
+		for (int i = 0; fs != null && i < fs.size(); i++) {
+			//
+			if (!Objects.equals(Boolean.class, getType(f = fs.get(i)))) {
+				//
+				continue;
+				//
+			} // if
+				//
+			add(list = ObjectUtils.getIfNull(list, ArrayList::new), cast(Boolean.class, f.get(null)));
+			//
+		} // for
+			//
+		return list;
 		//
 	}
 
@@ -4039,6 +4049,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		DataValidationHelper dvh = null;
 		//
+		Unit<List<Boolean>> booleans = null;
+		//
 		try (final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
 			//
 			for (int i = 0; fs != null && i < fs.size(); i++) {
@@ -4077,9 +4089,53 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					setCellValue(createCell(row, i), null);
 					//
-					if (anyMatch(
-							testAndApply(Objects::nonNull, getDeclaredAnnotations(fs.get(i)), Arrays::stream, null),
-							a -> Objects.equals(annotationType(a), classJlpt))) {
+					if (Objects.equals(Boolean.class, getType(f = fs.get(i)))) {// java.lang.Boolean
+						//
+						if (dvh == null) {
+							//
+							dvh = getDataValidationHelper(sheet);
+							//
+						} // if
+							//
+						if (booleans == null) {
+							//
+							try {
+								//
+								booleans = Unit.with(getBooleanValues());
+								//
+							} catch (final IllegalAccessException e) {
+								//
+								if (GraphicsEnvironment.isHeadless()) {
+									//
+									if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
+										LOG.error(getMessage(e), e);
+									} else if (e != null) {
+										e.printStackTrace();
+									} // if
+										//
+								} else {
+									//
+									JOptionPane.showMessageDialog(null, getMessage(e));
+									//
+								} // if
+									//
+							} // try
+								//
+						} // if
+							//
+						if (!(dvh instanceof XSSFDataValidationHelper)
+								|| CollectionUtils.isNotEmpty(getValue0(booleans))) {
+							//
+							sheet.addValidationData(createValidation(dvh,
+									createExplicitListConstraint(dvh,
+											toArray(toList(map(stream(getValue0(booleans)), VoiceManager::toString)),
+													new String[] {})),
+									new CellRangeAddressList(row.getRowNum(), row.getRowNum(), i, i)));
+							//
+						} // if
+							//
+					} else if (anyMatch(testAndApply(Objects::nonNull, getDeclaredAnnotations(f), Arrays::stream, null),
+							a -> Objects.equals(annotationType(a), classJlpt))) {// domain.Voice.JLPT
 						//
 						if (dvh == null) {
 							//

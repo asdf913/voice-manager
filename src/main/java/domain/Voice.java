@@ -66,6 +66,7 @@ public class Voice {
 	@ImportField
 	private String ipaSymbol = null;
 
+	@ImportField
 	private Boolean isKanji = null;
 
 	@Target(ElementType.FIELD)
