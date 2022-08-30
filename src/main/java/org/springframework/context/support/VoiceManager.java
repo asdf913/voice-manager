@@ -4029,32 +4029,37 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static byte[] createImportFileTemplateByteArray(final boolean generateBlankRow,
 			final Collection<String> jlptValues, final Collection<String> gaKuNenBeTsuKanJiValues) {
 		//
-		final Class<?> importFieldClass = forName("domain.Voice$ImportField");
-		//
-		final List<Field> fs = toList(
-				filter(testAndApply(Objects::nonNull, FieldUtils.getAllFields(Voice.class), Arrays::stream, null),
-						f -> anyMatch(testAndApply(Objects::nonNull, getDeclaredAnnotations(f), Arrays::stream, null),
-								a -> Objects.equals(annotationType(a), importFieldClass))));
-		//
-		Field f = null;
-		//
 		Workbook workbook = null;
-		//
-		Sheet sheet = null;
-		//
-		Row row = null;
 		//
 		byte[] bs = null;
 		//
-		final Class<?> classJlpt = forName("domain.Voice$JLPT");
-		//
-		final Class<?> classGaKuNenBeTsuKanJi = forName("domain.Voice$GaKuNenBeTsuKanJi");
-		//
-		DataValidationHelper dvh = null;
-		//
-		Unit<List<Boolean>> booleans = null;
-		//
 		try (final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+			//
+			final Class<?> importFieldClass = forName("domain.Voice$ImportField");
+			//
+			final List<Field> fs = toList(
+					filter(testAndApply(Objects::nonNull, FieldUtils.getAllFields(Voice.class), Arrays::stream, null),
+							f -> anyMatch(
+									testAndApply(Objects::nonNull, getDeclaredAnnotations(f), Arrays::stream, null),
+									a -> Objects.equals(annotationType(a), importFieldClass))));
+			//
+			Field f = null;
+			//
+			Sheet sheet = null;
+			//
+			Row row = null;
+			//
+			final Class<?> classJlpt = forName("domain.Voice$JLPT");
+			//
+			final Class<?> classGaKuNenBeTsuKanJi = forName("domain.Voice$GaKuNenBeTsuKanJi");
+			//
+			DataValidationHelper dvh = null;
+			//
+			Unit<List<Boolean>> booleans = null;
+			//
+			Class<?> type = null;
+			//
+			List<String> strings = null;
 			//
 			for (int i = 0; fs != null && i < fs.size(); i++) {
 				//
@@ -4092,7 +4097,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					setCellValue(createCell(row, i), null);
 					//
-					if (Objects.equals(Boolean.class, getType(f = fs.get(i)))) {// java.lang.Boolean
+					if (Objects.equals(Boolean.class, type = getType(f = fs.get(i)))) {// java.lang.Boolean
 						//
 						if (dvh == null) {
 							//
@@ -4133,6 +4138,24 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 									createExplicitListConstraint(dvh,
 											toArray(toList(map(stream(getValue0(booleans)), VoiceManager::toString)),
 													new String[] {})),
+									new CellRangeAddressList(row.getRowNum(), row.getRowNum(), i, i)));
+							//
+						} // if
+							//
+					} else if (isAssignableFrom(Enum.class, type)) {// java.lang.Enum
+						//
+						if (dvh == null) {
+							//
+							dvh = getDataValidationHelper(sheet);
+							//
+						} // if
+							//
+						if (!(dvh instanceof XSSFDataValidationHelper) || CollectionUtils.isNotEmpty(strings = toList(
+								map(testAndApply(Objects::nonNull, type.getEnumConstants(), Arrays::stream, null),
+										x -> x instanceof Enum ? name((Enum<?>) x) : toString(x))))) {
+							//
+							sheet.addValidationData(createValidation(dvh,
+									createExplicitListConstraint(dvh, toArray(strings, new String[] {})),
 									new CellRangeAddressList(row.getRowNum(), row.getRowNum(), i, i)));
 							//
 						} // if
