@@ -1,7 +1,5 @@
 package org.springframework.context.support;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import java.awt.Component;
 import java.awt.GraphicsEnvironment;
 import java.awt.ItemSelectable;
@@ -291,7 +289,7 @@ class VoiceManagerTest {
 		(METHOD_ADD = clz.getDeclaredMethod("add", Collection.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_CREATE_IMPORT_FILE_TEMPLATE_BYTE_ARRAY = clz.getDeclaredMethod("createImportFileTemplateByteArray",
-				Boolean.TYPE, Collection.class)).setAccessible(true);
+				Boolean.TYPE, Collection.class, Collection.class)).setAccessible(true);
 		//
 		(METHOD_CREATE_CELL = clz.getDeclaredMethod("createCell", Row.class, Integer.TYPE)).setAccessible(true);
 		//
@@ -2345,18 +2343,20 @@ class VoiceManagerTest {
 	@Test
 	void testCreateImportFileTemplateByteArray() throws Throwable {
 		//
-		Assertions.assertNotNull(createImportFileTemplateByteArray(false, null));
+		Assertions.assertNotNull(createImportFileTemplateByteArray(false, null, null));
 		//
-		Assertions.assertNotNull(createImportFileTemplateByteArray(true, null));
+		Assertions.assertNotNull(createImportFileTemplateByteArray(true, null, null));
 		//
-		Assertions.assertNotNull(createImportFileTemplateByteArray(true, Collections.singleton(null)));
+		Assertions.assertNotNull(
+				createImportFileTemplateByteArray(true, Collections.singleton(null), Collections.singleton(null)));
 		//
 	}
 
 	private static byte[] createImportFileTemplateByteArray(final boolean generateBlankRow,
-			final Collection<String> jlptValues) throws Throwable {
+			final Collection<String> jlptValues, final Collection<String> gaKuNenBeTsuKanJiValues) throws Throwable {
 		try {
-			final Object obj = METHOD_CREATE_IMPORT_FILE_TEMPLATE_BYTE_ARRAY.invoke(null, generateBlankRow, jlptValues);
+			final Object obj = METHOD_CREATE_IMPORT_FILE_TEMPLATE_BYTE_ARRAY.invoke(null, generateBlankRow, jlptValues,
+					gaKuNenBeTsuKanJiValues);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof byte[]) {

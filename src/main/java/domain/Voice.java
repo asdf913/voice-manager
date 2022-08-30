@@ -75,7 +75,14 @@ public class Voice {
 		String value();
 	}
 
+	@Target(ElementType.FIELD)
+	@Retention(RetentionPolicy.RUNTIME)
+	private @interface GaKuNenBeTsuKanJi {
+	}
+
 	@SpreadsheetColumn("学年別漢字")
+	@ImportField
+	@GaKuNenBeTsuKanJi
 	private String gaKuNenBeTsuKanJi = null;
 
 	@Target(ElementType.FIELD)

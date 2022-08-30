@@ -2528,8 +2528,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				try {
 					//
-					FileUtils.writeByteArrayToFile(jfc.getSelectedFile(), createImportFileTemplateByteArray(
-							isSelected(cbImportFileTemplateGenerateBlankRow), getJlptLevels()));
+					FileUtils.writeByteArrayToFile(jfc.getSelectedFile(),
+							createImportFileTemplateByteArray(isSelected(cbImportFileTemplateGenerateBlankRow),
+									getJlptLevels(), keySet(getGaKuNenBeTsuKanJiMultimap())));
 					//
 				} catch (final IOException e) {
 					//
@@ -4026,7 +4027,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	private static byte[] createImportFileTemplateByteArray(final boolean generateBlankRow,
-			final Collection<String> jlptValues) {
+			final Collection<String> jlptValues, final Collection<String> gaKuNenBeTsuKanJiValues) {
 		//
 		final Class<?> importFieldClass = forName("domain.Voice$ImportField");
 		//
@@ -4046,6 +4047,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		byte[] bs = null;
 		//
 		final Class<?> classJlpt = forName("domain.Voice$JLPT");
+		//
+		final Class<?> classGaKuNenBeTsuKanJi = forName("domain.Voice$GaKuNenBeTsuKanJi");
 		//
 		DataValidationHelper dvh = null;
 		//
@@ -4147,6 +4150,25 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 							sheet.addValidationData(createValidation(dvh,
 									createExplicitListConstraint(dvh, toArray(jlptValues, new String[] {})),
+									new CellRangeAddressList(row.getRowNum(), row.getRowNum(), i, i)));
+							//
+						} // if
+							//
+					} else if (anyMatch(testAndApply(Objects::nonNull, getDeclaredAnnotations(f), Arrays::stream, null),
+							a -> Objects.equals(annotationType(a), classGaKuNenBeTsuKanJi))) {// domain.Voice.GaKuNenBeTsuKanJi
+						//
+						if (dvh == null) {
+							//
+							dvh = getDataValidationHelper(sheet);
+							//
+						} // if
+							//
+						if (!(dvh instanceof XSSFDataValidationHelper)
+								|| CollectionUtils.isNotEmpty(gaKuNenBeTsuKanJiValues)) {
+							//
+							sheet.addValidationData(createValidation(dvh,
+									createExplicitListConstraint(dvh,
+											toArray(gaKuNenBeTsuKanJiValues, new String[] {})),
 									new CellRangeAddressList(row.getRowNum(), row.getRowNum(), i, i)));
 							//
 						} // if
