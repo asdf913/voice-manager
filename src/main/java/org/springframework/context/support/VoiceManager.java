@@ -245,8 +245,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private AbstractButton btnSpeak, btnWriteVoice, btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji,
 			btnCopyHiragana, btnCopyKatakana, cbUseTtsVoice, btnExecute, btnImportFileTemplate, btnImport,
 			btnImportWithinFolder, cbOverMp3Title, cbOrdinalPositionAsFileNamePrefix, btnExport,
-			cbImportFileTemplateGenerateBlankRow, cbJlptAsFolder, btnCheckGaKuNenBeTsuKanJi,
-			btnExportGaKuNenBeTsuKanJi = null;
+			cbImportFileTemplateGenerateBlankRow, cbJlptAsFolder, btnExportGaKuNenBeTsuKanJi = null;
 
 	private JProgressBar progressBarImport, progressBarExport = null;
 
@@ -1036,9 +1035,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // try
 			//
-		panel.add(new JComboBox<>(cbmGaKuNenBeTsuKanJi = testAndApply(Objects::nonNull,
-				ArrayUtils.insert(0, toArray(gaKuNenBeTsuKanJiList, new String[] {}), (String) null),
-				DefaultComboBoxModel::new, x -> new DefaultComboBoxModel<>())), String.format("span %1$s", 2));
+		panel.add(
+				new JComboBox<>(cbmGaKuNenBeTsuKanJi = testAndApply(Objects::nonNull,
+						ArrayUtils.insert(0, toArray(gaKuNenBeTsuKanJiList, new String[] {}), (String) null),
+						DefaultComboBoxModel::new, x -> new DefaultComboBoxModel<>())),
+				String.format("%1$s,span %2$s", WRAP, 2));
 		//
 		if (cbmGaKuNenBeTsuKanJi != null) {
 			//
@@ -1053,16 +1054,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
-		panel.add(btnCheckGaKuNenBeTsuKanJi = new JButton("Check 学年別漢字"), WRAP);
-		//
-		// Text
-		//
+			// Text
+			//
 		panel.add(new JLabel("Text"));
 		//
 		panel.add(
 				tfTextImport = new JTextField(
 						getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.text")),
 				String.format("%1$s,span %2$s", GROWX, 19));
+		//
+		tfTextImport.addKeyListener(this);
 		//
 		panel.add(btnConvertToRomaji = new JButton("Convert To Romaji"), String.format("%1$s", WRAP));
 		//
@@ -1244,7 +1245,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		} // if
 			//
 		addActionListener(this, btnExecute, btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji, btnCopyHiragana,
-				btnCopyKatakana, btnCheckGaKuNenBeTsuKanJi);
+				btnCopyKatakana);
 		//
 		return panel;
 		//
@@ -2606,74 +2607,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // for;
 				//
-		} else if (Objects.equals(source, btnCheckGaKuNenBeTsuKanJi)) {
-			//
-			Multimap<String, String> gaKuNenBeTsuKanJiMultimap = null;
-			//
-			try {
-				//
-				gaKuNenBeTsuKanJiMultimap = getGaKuNenBeTsuKanJiMultimap();
-				//
-			} catch (final IOException e) {
-				//
-				if (GraphicsEnvironment.isHeadless()) {
-					//
-					if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-						LOG.error(getMessage(e), e);
-					} else if (e != null) {
-						e.printStackTrace();
-					} // if
-						//
-				} else {
-					//
-					JOptionPane.showMessageDialog(null, getMessage(e));
-					//
-				} // if
-					//
-			} // try
-				//
-			if (gaKuNenBeTsuKanJiMultimap != null && gaKuNenBeTsuKanJiMultimap.entries() != null) {
-				//
-				List<String> list = null;
-				//
-				String key = null;
-				//
-				for (final Entry<String, String> en : gaKuNenBeTsuKanJiMultimap.entries()) {
-					//
-					if (en == null || !StringUtils.equals(getValue(en), getText(tfTextImport))) {
-						continue;
-					} // if
-						//
-					if (!contains(list = ObjectUtils.getIfNull(list, ArrayList::new), key = getKey(en))) {
-						//
-						add(list = ObjectUtils.getIfNull(list, ArrayList::new), key);
-						//
-					} else {
-						//
-						throw new IllegalStateException();
-						//
-					} // if
-						//
-				} // for
-					//
-				final int size = CollectionUtils.size(list);
-				//
-				if (size == 1) {
-					//
-					setSelectedItem(cbmGaKuNenBeTsuKanJi, IterableUtils.get(list, 0));
-					//
-				} else if (size < 1) {
-					//
-					setSelectedItem(cbmGaKuNenBeTsuKanJi, null);
-					//
-				} else {
-					//
-					throw new IllegalStateException();
-					//
-				} // if
-					//
-			} // if
-				//
 		} else if (Objects.equals(source, btnExportGaKuNenBeTsuKanJi)) {
 			//
 			File file = null;
@@ -3148,9 +3081,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final Object source = getSource(evt);
 		//
+		final JTextComponent jtf = cast(JTextComponent.class, source);
+		//
 		if (Objects.equals(source, tfListNames)) {
-			//
-			final JTextComponent jtf = cast(JTextComponent.class, source);
 			//
 			try {
 				//
@@ -3174,6 +3107,74 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				setBackground(jtf, Color.RED);
 				//
 			} // try
+				//
+		} else if (Objects.equals(source, tfTextImport)) {
+			//
+			Multimap<String, String> gaKuNenBeTsuKanJiMultimap = null;
+			//
+			try {
+				//
+				gaKuNenBeTsuKanJiMultimap = getGaKuNenBeTsuKanJiMultimap();
+				//
+			} catch (final IOException e) {
+				//
+				if (GraphicsEnvironment.isHeadless()) {
+					//
+					if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
+						LOG.error(getMessage(e), e);
+					} else if (e != null) {
+						e.printStackTrace();
+					} // if
+						//
+				} else {
+					//
+					JOptionPane.showMessageDialog(null, getMessage(e));
+					//
+				} // if
+					//
+			} // try
+				//
+			if (gaKuNenBeTsuKanJiMultimap != null && gaKuNenBeTsuKanJiMultimap.entries() != null) {
+				//
+				List<String> list = null;
+				//
+				String key = null;
+				//
+				for (final Entry<String, String> en : gaKuNenBeTsuKanJiMultimap.entries()) {
+					//
+					if (en == null || !StringUtils.equals(getValue(en), getText(jtf))) {
+						continue;
+					} // if
+						//
+					if (!contains(list = ObjectUtils.getIfNull(list, ArrayList::new), key = getKey(en))) {
+						//
+						add(list = ObjectUtils.getIfNull(list, ArrayList::new), key);
+						//
+					} else {
+						//
+						throw new IllegalStateException();
+						//
+					} // if
+						//
+				} // for
+					//
+				final int size = CollectionUtils.size(list);
+				//
+				if (size == 1) {
+					//
+					setSelectedItem(cbmGaKuNenBeTsuKanJi, IterableUtils.get(list, 0));
+					//
+				} else if (size < 1) {
+					//
+					setSelectedItem(cbmGaKuNenBeTsuKanJi, null);
+					//
+				} else {
+					//
+					throw new IllegalStateException();
+					//
+				} // if
+					//
+			} // if
 				//
 		} // if
 			//

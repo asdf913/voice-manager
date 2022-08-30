@@ -1198,19 +1198,6 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnSpeak));
 		//
-		// btnCheckGaKuNenBeTsuKanJi
-		//
-		final AbstractButton btnCheckGaKuNenBeTsuKanJi = new JButton();
-		//
-		if (instance != null) {
-			//
-			FieldUtils.writeDeclaredField(instance, "btnCheckGaKuNenBeTsuKanJi", btnCheckGaKuNenBeTsuKanJi, true);
-			//
-		} // if
-			//
-		Assertions.assertDoesNotThrow(
-				() -> actionPerformed(instance, new ActionEvent(btnCheckGaKuNenBeTsuKanJi, 0, null)));
-		//
 		// btnExportGaKuNenBeTsuKanJi
 		//
 		final AbstractButton btnExportGaKuNenBeTsuKanJi = new JButton();
@@ -1323,13 +1310,27 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		final KeyEvent keyEvent = new KeyEvent(tfListNames, 0, 0, 0, 0, ' ');
+		final KeyEvent keyEventTfListNames = new KeyEvent(tfListNames, 0, 0, 0, 0, ' ');
 		//
-		Assertions.assertDoesNotThrow(() -> keyReleased(instance, keyEvent));
+		Assertions.assertDoesNotThrow(() -> keyReleased(instance, keyEventTfListNames));
 		//
 		setText(tfListNames, "{}");
 		//
-		Assertions.assertDoesNotThrow(() -> keyReleased(instance, keyEvent));
+		Assertions.assertDoesNotThrow(() -> keyReleased(instance, keyEventTfListNames));
+		//
+		// btnCheckGaKuNenBeTsuKanJi
+		//
+		final JTextComponent tfTextImport = new JTextField();
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "tfTextImport", tfTextImport, true);
+			//
+		} // if
+			//
+		final KeyEvent keyEventTfTextImport = new KeyEvent(tfTextImport, 0, 0, 0, 0, ' ');
+		//
+		Assertions.assertDoesNotThrow(() -> keyReleased(instance, keyEventTfTextImport));
 		//
 	}
 
