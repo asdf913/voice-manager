@@ -175,7 +175,7 @@ class VoiceManagerTest {
 			METHOD_GET_ABSOLUTE_PATH, METHOD_IS_ASSIGNABLE_FROM, METHOD_GET_ENUM_CONSTANTS, METHOD_IS_XLSX_FILE,
 			METHOD_LIST_FILES, METHOD_GET_TYPE, METHOD_GET_ELEMENTS_BY_TAG_NAME_SGML_PAGE,
 			METHOD_GET_ELEMENTS_BY_TAG_NAME_DOM_ELEMENT, METHOD_GET_COLUMN_NAME, METHOD_GET_KEY_SET, METHOD_PUT_ALL,
-			METHOD_CREATE_SHEET = null;
+			METHOD_CREATE_SHEET, METHOD_ENTRIES = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -461,6 +461,8 @@ class VoiceManagerTest {
 				.setAccessible(true);
 		//
 		(METHOD_CREATE_SHEET = clz.getDeclaredMethod("createSheet", Workbook.class)).setAccessible(true);
+		//
+		(METHOD_ENTRIES = clz.getDeclaredMethod("entries", Multimap.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -4031,6 +4033,27 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof Sheet) {
 				return (Sheet) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testEntries() throws Throwable {
+		//
+		Assertions.assertNull(entries(multimap));
+		//
+	}
+
+	private static <K, V> Collection<Entry<K, V>> entries(final Multimap<K, V> instance) throws Throwable {
+		try {
+			final Object obj = METHOD_ENTRIES.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Collection) {
+				return (Collection) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

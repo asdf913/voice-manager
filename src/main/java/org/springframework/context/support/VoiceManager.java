@@ -3134,13 +3134,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 			} // try
 				//
-			if (gaKuNenBeTsuKanJiMultimap != null && gaKuNenBeTsuKanJiMultimap.entries() != null) {
+			final Collection<Entry<String, String>> entries = entries(gaKuNenBeTsuKanJiMultimap);
+			//
+			if (entries != null) {
 				//
 				List<String> list = null;
 				//
 				String key = null;
 				//
-				for (final Entry<String, String> en : gaKuNenBeTsuKanJiMultimap.entries()) {
+				for (final Entry<String, String> en : entries) {
 					//
 					if (en == null || !StringUtils.equals(getValue(en), getText(jtf))) {
 						continue;
@@ -3178,6 +3180,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
+	}
+
+	private static <K, V> Collection<Entry<K, V>> entries(final Multimap<K, V> instance) {
+		return instance != null ? instance.entries() : null;
 	}
 
 	private static void setBackground(final Component instance, final Color color) {
@@ -5682,7 +5688,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 			} // for
 				//
-			if (multimap != null && multimap.entries() != null) {
+			Collection<Entry<String, Voice>> entries = entries(multimap);
+			//
+			if (entries != null) {
 				//
 				int coutner = 0;
 				//
@@ -5708,7 +5716,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
-				for (final Entry<String, Voice> en : multimap.entries()) {
+				for (final Entry<String, Voice> en : entries) {
 					//
 					if (en == null) {
 						//
@@ -5794,7 +5802,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				StringBuilder folder = null;
 				//
-				if (multimap != null && multimap.entries() != null) {
+				if ((entries = entries(multimap)) != null) {
 					//
 					int coutner = 0;
 					//
