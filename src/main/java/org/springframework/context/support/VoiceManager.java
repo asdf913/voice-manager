@@ -2877,7 +2877,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			final Throwable rootCause = ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException),
 					targetException, ExceptionUtils.getRootCause(e), e);
 			//
-			if (headlesss) {
+			if (GraphicsEnvironment.isHeadless()) {
 				//
 				if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
 					LOG.error(getMessage(rootCause), rootCause);
