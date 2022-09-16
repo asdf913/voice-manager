@@ -13,9 +13,13 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.Console;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.lang.annotation.Annotation;
@@ -71,6 +75,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.JTextComponent;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.commons.codec.binary.Hex;
@@ -89,9 +95,11 @@ import org.apache.ibatis.binding.BindingException;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ooxml.POIXMLDocument;
 import org.apache.poi.ooxml.POIXMLProperties;
 import org.apache.poi.ooxml.POIXMLProperties.CustomProperties;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DataValidation;
 import org.apache.poi.ss.usermodel.DataValidationConstraint;
@@ -116,6 +124,12 @@ import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.util.ReflectionUtils;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.zeroturnaround.zip.ZipUtil;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gargoylesoftware.htmlunit.SgmlPage;
@@ -172,10 +186,12 @@ class VoiceManagerTest {
 			METHOD_SET_MAXIMUM, METHOD_GET_CURRENT_SHEET_INDEX, METHOD_GET_JLPT_LEVELS, METHOD_PARSE_JLPT_PAGE_HTML,
 			METHOD_GET_DATA_VALIDATION_HELPER, METHOD_CREATE_EXPLICIT_LIST_CONSTRAINT, METHOD_CREATE_VALIDATION,
 			METHOD_CREATE_EXPORT_TASK, METHOD_GET_TAB_INDEX_BY_TITLE, METHOD_GET_DECLARED_FIELD,
-			METHOD_GET_ABSOLUTE_PATH, METHOD_IS_ASSIGNABLE_FROM, METHOD_GET_ENUM_CONSTANTS, METHOD_IS_XLSX_FILE,
-			METHOD_LIST_FILES, METHOD_GET_TYPE, METHOD_GET_ELEMENTS_BY_TAG_NAME_SGML_PAGE,
-			METHOD_GET_ELEMENTS_BY_TAG_NAME_DOM_ELEMENT, METHOD_GET_COLUMN_NAME, METHOD_GET_KEY_SET, METHOD_PUT_ALL,
-			METHOD_CREATE_SHEET, METHOD_ENTRIES = null;
+			METHOD_GET_ABSOLUTE_PATH, METHOD_IS_ASSIGNABLE_FROM, METHOD_GET_ENUM_CONSTANTS, METHOD_LIST_FILES,
+			METHOD_GET_TYPE, METHOD_GET_ELEMENTS_BY_TAG_NAME_SGML_PAGE, METHOD_GET_ELEMENTS_BY_TAG_NAME_DOM_ELEMENT,
+			METHOD_GET_COLUMN_NAME, METHOD_GET_KEY_SET, METHOD_PUT_ALL, METHOD_CREATE_SHEET, METHOD_ENTRIES,
+			METHOD_GET_WORK_BOOK, METHOD_GET_OLE_ENTRY_NAMES, METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE,
+			METHOD_GET_DOCUMENT_ELEMENT, METHOD_GET_CHILD_NODES, METHOD_GET_NAMED_ITEM, METHOD_GET_TEXT_CONTENT,
+			METHOD_GET_NAME, METHOD_GET_PASS_WORD = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -441,8 +457,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_GET_ENUM_CONSTANTS = clz.getDeclaredMethod("getEnumConstants", Class.class)).setAccessible(true);
 		//
-		(METHOD_IS_XLSX_FILE = clz.getDeclaredMethod("isXlsxFile", File.class)).setAccessible(true);
-		//
 		(METHOD_LIST_FILES = clz.getDeclaredMethod("listFiles", File.class)).setAccessible(true);
 		//
 		(METHOD_GET_TYPE = clz.getDeclaredMethod("getType", Field.class)).setAccessible(true);
@@ -464,6 +478,29 @@ class VoiceManagerTest {
 		//
 		(METHOD_ENTRIES = clz.getDeclaredMethod("entries", Multimap.class)).setAccessible(true);
 		//
+		(METHOD_GET_WORK_BOOK = clz.getDeclaredMethod("getWorkbook", File.class)).setAccessible(true);
+		//
+		(METHOD_GET_OLE_ENTRY_NAMES = clz.getDeclaredMethod("getOleEntryNames", POIFSFileSystem.class))
+				.setAccessible(true);
+		//
+		(METHOD_NEW_DOCUMENT_BUILDER = clz.getDeclaredMethod("newDocumentBuilder", DocumentBuilderFactory.class))
+				.setAccessible(true);
+		//
+		(METHOD_PARSE = clz.getDeclaredMethod("parse", DocumentBuilder.class, InputStream.class)).setAccessible(true);
+		//
+		(METHOD_GET_DOCUMENT_ELEMENT = clz.getDeclaredMethod("getDocumentElement", Document.class)).setAccessible(true);
+		//
+		(METHOD_GET_CHILD_NODES = clz.getDeclaredMethod("getChildNodes", Node.class)).setAccessible(true);
+		//
+		(METHOD_GET_NAMED_ITEM = clz.getDeclaredMethod("getNamedItem", NamedNodeMap.class, String.class))
+				.setAccessible(true);
+		//
+		(METHOD_GET_TEXT_CONTENT = clz.getDeclaredMethod("getTextContent", Node.class)).setAccessible(true);
+		//
+		(METHOD_GET_NAME = clz.getDeclaredMethod("getName", File.class)).setAccessible(true);
+		//
+		(METHOD_GET_PASS_WORD = clz.getDeclaredMethod("getPassword", Console.class)).setAccessible(true);
+		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
 		CLASS_BOOLEAN_MAP = Class.forName("org.springframework.context.support.VoiceManager$BooleanMap");
@@ -477,7 +514,7 @@ class VoiceManagerTest {
 		private Set<Entry<?, ?>> entrySet = null;
 
 		private String toString, stringCellValue, providerName, providerVersion, artist, voiceAttribute, lpwstr,
-				sheetName = null;
+				sheetName, textContent = null;
 
 		private Configuration configuration = null;
 
@@ -518,6 +555,8 @@ class VoiceManagerTest {
 		private Integer columnIndex = null;
 
 		private Collection<Entry<?, ?>> multiMapEntries = null;
+
+		private Node namedItem = null;
 
 		private Map<Object, String> getProperties() {
 			if (properties == null) {
@@ -824,6 +863,22 @@ class VoiceManagerTest {
 				if (Objects.equals(methodName, "getWebClient")) {
 					//
 					return null;
+					//
+				} // if
+					//
+			} else if (proxy instanceof NamedNodeMap) {
+				//
+				if (Objects.equals(methodName, "getNamedItem")) {
+					//
+					return namedItem;
+					//
+				} // if
+					//
+			} else if (proxy instanceof Node) {
+				//
+				if (Objects.equals(methodName, "getTextContent")) {
+					//
+					return textContent;
 					//
 				} // if
 					//
@@ -3853,25 +3908,6 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testIsXlsxFile() throws Throwable {
-		//
-		Assertions.assertFalse(isXlsxFile(new File(".")));
-		//
-	}
-
-	private static boolean isXlsxFile(final File file) throws Throwable {
-		try {
-			final Object obj = METHOD_IS_XLSX_FILE.invoke(null, file);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testListFiles() throws Throwable {
 		//
 		Assertions.assertNull(listFiles(null));
@@ -4054,6 +4090,246 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof Collection) {
 				return (Collection) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetWorkbook() throws Throwable {
+		//
+		final int tempFileMinimumPrefixLength = intValue(cast(Number.class,
+				FieldUtils.readDeclaredStaticField(VoiceManager.class, "TEMP_FILE_MINIMUM_PREFIX_LENGTH", true)), 3);
+		//
+		final File folder = new File(".");
+		//
+		File file = File.createTempFile(RandomStringUtils.randomAlphanumeric(tempFileMinimumPrefixLength), null,
+				folder);
+		//
+		deleteOnExit(file);
+		//
+		try (final Workbook workbook = new HSSFWorkbook(); final OutputStream os = new FileOutputStream(file)) {
+			//
+			workbook.write(os);
+			//
+			Assertions.assertNotNull(getWorkbook(file));
+			//
+		} // try
+			//
+		try (final Workbook workbook = new XSSFWorkbook(); final OutputStream os = new FileOutputStream(file)) {
+			//
+			workbook.write(os);
+			//
+			Assertions.assertNotNull(getWorkbook(file));
+			//
+		} // try
+			//
+		ZipUtil.removeEntry(file, "[Content_Types].xml", file = File
+				.createTempFile(RandomStringUtils.randomAlphanumeric(tempFileMinimumPrefixLength), null, folder));
+		//
+		deleteOnExit(file);
+		//
+		Assertions.assertNull(getWorkbook(file));
+		//
+	}
+
+	private static Workbook getWorkbook(final File file) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_WORK_BOOK.invoke(null, file);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Workbook) {
+				return (Workbook) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetOleEntryNames() throws Throwable {
+		//
+		Assertions.assertNull(getOleEntryNames(null));
+		//
+	}
+
+	private static List<String> getOleEntryNames(final POIFSFileSystem poifs) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_OLE_ENTRY_NAMES.invoke(null, poifs);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof List) {
+				return (List) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testParse() throws Throwable {
+		//
+		Assertions.assertNull(parse(newDocumentBuilder(null), null));
+		//
+	}
+
+	private static DocumentBuilder newDocumentBuilder(final DocumentBuilderFactory instance) throws Throwable {
+		try {
+			final Object obj = METHOD_NEW_DOCUMENT_BUILDER.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof DocumentBuilder) {
+				return (DocumentBuilder) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static Document parse(final DocumentBuilder instance, final InputStream is) throws Throwable {
+		try {
+			final Object obj = METHOD_PARSE.invoke(null, instance, is);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Document) {
+				return (Document) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetChildNodes() throws Throwable {
+		//
+		try (final InputStream is = new ByteArrayInputStream(
+				"<?xml version=\"1.0\" encoding=\"UTF-8\"?><a/>".getBytes())) {
+			//
+			Assertions.assertNotNull(getChildNodes(
+					getDocumentElement(parse(newDocumentBuilder(DocumentBuilderFactory.newDefaultInstance()), is))));
+			//
+		} // try
+			//
+	}
+
+	private static Element getDocumentElement(final Document instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_DOCUMENT_ELEMENT.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Element) {
+				return (Element) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static NodeList getChildNodes(final Node instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_CHILD_NODES.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof NodeList) {
+				return (NodeList) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetTextContent() throws Throwable {
+		//
+		Assertions.assertNull(getTextContent(getNamedItem(null, null)));
+		//
+		final NamedNodeMap namedNodeMap = Reflection.newProxy(NamedNodeMap.class, ih);
+		//
+		Assertions.assertNull(getTextContent(getNamedItem(namedNodeMap, null)));
+		//
+		ih.namedItem = Reflection.newProxy(Node.class, ih);
+		//
+		Assertions.assertNull(getTextContent(getNamedItem(namedNodeMap, null)));
+		//
+	}
+
+	private static Node getNamedItem(final NamedNodeMap instance, final String name) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_NAMED_ITEM.invoke(null, instance, name);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Node) {
+				return (Node) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static String getTextContent(final Node instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_TEXT_CONTENT.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetName() throws Throwable {
+		//
+		Assertions.assertNull(getName(null));
+		//
+		Assertions.assertNotNull(getName(new File(".")));
+		//
+	}
+
+	private static String getName(final File instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_NAME.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetPassword() throws Throwable {
+		//
+		if (GraphicsEnvironment.isHeadless()) {
+			//
+			Assertions.assertNull(getPassword(null));
+			//
+		} // if
+			//
+	}
+
+	private static String getPassword(final Console console) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_PASS_WORD.invoke(null, console);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

@@ -18,6 +18,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.Console;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -36,6 +37,7 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
@@ -48,6 +50,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.EventObject;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,6 +76,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
+import java.util.zip.ZipFile;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -92,6 +96,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
@@ -104,6 +109,9 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.JTextComponent;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.ClassParserUtil;
@@ -132,11 +140,18 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.poi.EncryptedDocumentException;
+import org.apache.poi.hssf.record.crypto.Biff8EncryptionKey;
 import org.apache.poi.hssf.usermodel.HSSFDataFormat;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ooxml.POIXMLDocument;
 import org.apache.poi.ooxml.POIXMLProperties;
 import org.apache.poi.ooxml.POIXMLProperties.CustomProperties;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.poifs.crypt.Decryptor;
+import org.apache.poi.poifs.crypt.EncryptionInfo;
+import org.apache.poi.poifs.filesystem.DirectoryNode;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
@@ -169,6 +184,12 @@ import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -2579,13 +2600,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				try {
 					//
-					if ((f = fs[i]) == null || !isXlsxFile(f)) {
+					if (getWorkbook(f = fs[i]) == null) {
 						//
 						continue;
 						//
 					} // if
 						//
-				} catch (final IOException e) {
+				} catch (final IOException | InvalidFormatException | GeneralSecurityException e) {
 					//
 					if (GraphicsEnvironment.isHeadless()) {
 						//
@@ -2656,7 +2677,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private void importVoice(final File file) {
 		//
-		try (final Workbook workbook = isXlsxFile(file) ? new XSSFWorkbook(file) : null) {
+		try (final Workbook workbook = getWorkbook(file)) {
 			//
 			if (workbook != null) {
 				//
@@ -2823,7 +2844,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-		} catch (final InvalidFormatException | IOException | IllegalAccessException | BaseException e) {
+		} catch (final InvalidFormatException | IOException | IllegalAccessException | BaseException
+				| GeneralSecurityException e) {
 			//
 			if (GraphicsEnvironment.isHeadless()) {
 				//
@@ -2864,22 +2886,213 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
+	private static Workbook getWorkbook(final File file)
+			throws IOException, GeneralSecurityException, InvalidFormatException {
+		//
+		final ContentInfo ci = testAndApply(Objects::nonNull, file, new ContentInfoUtil()::findMatch, null);
+		//
+		final String message = getMessage(ci);
+		//
+		final String mimeType = getMimeType(ci);
+		//
+		if (Objects.equals(message, "OLE 2 Compound Document")) {
+			//
+			try (final POIFSFileSystem poifs = new POIFSFileSystem(file)) {
+				//
+				final List<String> oleEntryNames = getOleEntryNames(poifs);
+				//
+				if (Objects.equals(oleEntryNames,
+						Arrays.asList(Decryptor.DEFAULT_POIFS_ENTRY, EncryptionInfo.ENCRYPTION_INFO_ENTRY))) {
+					//
+					final Decryptor decryptor = Decryptor.getInstance(new EncryptionInfo(poifs));
+					//
+					if (decryptor != null && decryptor.verifyPassword(getPassword(System.console()))) {
+						//
+						try (final InputStream is = decryptor.getDataStream(poifs)) {
+							//
+							return new XSSFWorkbook(is);
+							//
+						} // try
+							//
+					} // if
+						//
+				} else if (contains(oleEntryNames, "Workbook")) {
+					//
+					try {
+						//
+						return new HSSFWorkbook(poifs);
+						//
+					} catch (final EncryptedDocumentException e) {
+						//
+						Biff8EncryptionKey.setCurrentUserPassword(getPassword(System.console()));
+						//
+						try {
+							//
+							return new HSSFWorkbook(poifs);
+							//
+						} finally {
+							//
+							Biff8EncryptionKey.setCurrentUserPassword(null);
+							//
+						} // try
+							//
+					} // try
+						//
+				} // if
+					//
+			} // try
+				//
+		} else if (Objects.equals(message, "Microsoft Office Open XML")
+				|| Objects.equals(mimeType, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")) {
+			//
+			return new XSSFWorkbook(file);
+			//
+		} else if (Objects.equals(mimeType, "application/zip")) {
+			//
+			try (final ZipFile zf = new ZipFile(file)) {
+				//
+				try (final InputStream is = testAndApply(Objects::nonNull,
+						testAndApply(Objects::nonNull, "[Content_Types].xml", zf::getEntry, null), zf::getInputStream,
+						null)) {
+					//
+					final NodeList childNodes = getChildNodes(getDocumentElement(
+							is != null ? parse(newDocumentBuilder(DocumentBuilderFactory.newDefaultInstance()), is)
+									: null));
+					//
+					Node node = null;
+					//
+					boolean isXlsx = false;
+					//
+					for (int i = 0; childNodes != null && i < childNodes.getLength(); i++) {
+						//
+						if ((node = childNodes.item(i)) == null) {
+							//
+							continue;
+							//
+						} // if
+							//
+						if (Objects.equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml",
+								getTextContent(getNamedItem(node.getAttributes(), "ContentType"))) && (isXlsx = true)) {
+							//
+							break;
+							//
+						} // if
+							//
+					} // for
+						//
+					if (isXlsx) {
+						//
+						return new XSSFWorkbook(file);
+						//
+					} // if
+						//
+				} catch (final ParserConfigurationException | SAXException e) {
+					//
+					final Throwable rootCause = ObjectUtils.defaultIfNull(ExceptionUtils.getRootCause(e), e);
+					//
+					if (GraphicsEnvironment.isHeadless()) {
+						//
+						if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
+							LOG.error(getMessage(rootCause), rootCause);
+						} else if (rootCause != null) {
+							rootCause.printStackTrace();
+						} // if
+							//
+					} else {
+						//
+						JOptionPane.showMessageDialog(null, getMessage(rootCause));
+						//
+					} // if
+						//
+				} // try
+					//
+			} // try
+				//
+		} // if
+			//
+		return null;
+		//
+	}
+
+	private static List<String> getOleEntryNames(final POIFSFileSystem poifs) {
+		//
+		List<String> list = null;
+		//
+		final DirectoryNode root = poifs != null ? poifs.getRoot() : null;
+		//
+		final Iterator<org.apache.poi.poifs.filesystem.Entry> entries = root != null ? root.getEntries() : null;
+		//
+		org.apache.poi.poifs.filesystem.Entry entry = null;
+		//
+		while (entries != null && entries.hasNext()) {
+			//
+			if ((entry = entries.next()) == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			add(list = ObjectUtils.getIfNull(list, ArrayList::new), entry.getName());
+			//
+		} // while
+			//
+		return list;
+		//
+	}
+
+	private static String getPassword(final Console console) {
+		//
+		if (GraphicsEnvironment.isHeadless()) {
+			//
+			return testAndApply(Objects::nonNull, console != null ? console.readPassword("Password") : null,
+					String::new, null);
+			//
+		} // if
+			//
+		final JTextComponent jtc = new JPasswordField();
+		//
+		return JOptionPane.showConfirmDialog(null, jtc, "Password", JOptionPane.PLAIN_MESSAGE) == JOptionPane.OK_OPTION
+				? getText(jtc)
+				: null;
+		//
+	}
+
+	private static DocumentBuilder newDocumentBuilder(final DocumentBuilderFactory instance)
+			throws ParserConfigurationException {
+		return instance != null ? instance.newDocumentBuilder() : null;
+	}
+
+	private static Document parse(final DocumentBuilder instance, final InputStream is)
+			throws SAXException, IOException {
+		return instance != null ? instance.parse(is) : null;
+	}
+
+	private static Element getDocumentElement(final Document instance) {
+		return instance != null ? instance.getDocumentElement() : null;
+	}
+
+	private static NodeList getChildNodes(final Node instance) {
+		return instance != null ? instance.getChildNodes() : null;
+	}
+
+	private static Node getNamedItem(final NamedNodeMap instance, final String name) {
+		return instance != null ? instance.getNamedItem(name) : null;
+	}
+
+	private static String getTextContent(final Node instance) {
+		return instance != null ? instance.getTextContent() : null;
+	}
+
 	private static String getName(final File instance) {
 		return instance != null ? instance.getName() : null;
 	}
 
-	private static boolean isXlsxFile(final File file) throws IOException {
-		//
-		final String mimeType = getMimeType(
-				testAndApply(VoiceManager::isFile, file, new ContentInfoUtil()::findMatch, null));
-		//
-		return or(x -> Objects.equals(mimeType, x), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-				"application/vnd.openxmlformats-officedocument");
-		//
-	}
-
 	private static String getMimeType(final ContentInfo instance) {
 		return instance != null ? instance.getMimeType() : null;
+	}
+
+	private static String getMessage(final ContentInfo instance) {
+		return instance != null ? instance.getMessage() : null;
 	}
 
 	private static boolean isFile(final File instance) {
@@ -6461,13 +6674,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static String getFileExtension(final ContentInfo ci) {
 		//
-		if (ci == null) {
-			//
-			return null;
-			//
-		} // if
-			//
-		final String message = ci.getMessage();
+		final String message = getMessage(ci);
 		//
 		if (or(x -> matches(matcher(x, message)), PATTERN_CONTENT_INFO_MESSAGE_MP3_1,
 				PATTERN_CONTENT_INFO_MESSAGE_MP3_2, PATTERN_CONTENT_INFO_MESSAGE_MP3_3)) {
@@ -6476,7 +6683,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
-		final String name = ci.getName();
+		final String name = ci != null ? ci.getName() : null;
 		//
 		if (Objects.equals(name, "wav") || Objects.equals(name, "flac")) {
 			//
