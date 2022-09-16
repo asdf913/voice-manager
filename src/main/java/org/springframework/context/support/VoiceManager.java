@@ -251,9 +251,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private JTextComponent tfFolder, tfFile, tfFileLength, tfFileDigest, tfTextTts, tfTextImport, tfHiragana,
 			tfKatakana, tfRomaji, tfSpeechRate, tfSource, tfProviderName, tfProviderVersion, tfProviderPlatform,
-			tfSpeechLanguage, tfLanguage, tfSpeechVolume, tfCurrentProcessingFile, tfCurrentProcessingSheetName,
-			tfCurrentProcessingVoice, tfListNames, tfPhraseCounter, tfPhraseTotal, tfJlptFolderNamePrefix,
-			tfOrdinalPositionFileNamePrefix, tfIpaSymbol = null;
+			tfSpeechLanguageCode, tfSpeechLanguageName, tfLanguage, tfSpeechVolume, tfCurrentProcessingFile,
+			tfCurrentProcessingSheetName, tfCurrentProcessingVoice, tfListNames, tfPhraseCounter, tfPhraseTotal,
+			tfJlptFolderNamePrefix, tfOrdinalPositionFileNamePrefix, tfIpaSymbol = null;
 
 	private ComboBoxModel<Yomi> cbmYomi = null;
 
@@ -819,7 +819,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(tfProviderName = new JTextField(getProviderName(provider)),
 				String.format("%1$s,span %2$s", GROWX, 3));
 		//
-		panel.add(tfProviderVersion = new JTextField(getProviderVersion(provider)), String.format("span %1$s", 2));
+		panel.add(tfProviderVersion = new JTextField(getProviderVersion(provider)), String.format("span %1$s", 3));
 		//
 		try {
 			//
@@ -866,7 +866,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			panel.add(jcbVoiceId, String.format("span %1$s", 3));
 			//
-			panel.add(tfSpeechLanguage = new JTextField(), String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, 3));
+			panel.add(tfSpeechLanguageCode = new JTextField(), String.format("width %1$s,span %2$s", 30, 2));
+			//
+			panel.add(tfSpeechLanguageName = new JTextField(),
+					String.format("%1$s,span %2$s,width %3$s", WRAP, 2, 230));
 			//
 		} // if
 			//
@@ -950,7 +953,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.add(btnWriteVoice = new JButton("Write"));
 		//
-		setEditable(false, tfSpeechLanguage, tfProviderName, tfProviderVersion, tfProviderPlatform, tfSpeechVolume);
+		setEditable(false, tfSpeechLanguageCode, tfSpeechLanguageName, tfProviderName, tfProviderVersion,
+				tfProviderPlatform, tfSpeechVolume);
 		//
 		addActionListener(this, btnSpeak, btnWriteVoice);
 		//
@@ -3175,7 +3179,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				final String language = getVoiceAttribute(speechApi, toString(getSelectedItem(cbmVoiceId)), "Language");
 				//
-				setText(tfSpeechLanguage,
+				setText(tfSpeechLanguageCode, language);
+				//
+				setText(tfSpeechLanguageName,
 						StringUtils.defaultIfBlank(convertLanguageCodeToText(language, 16), language));
 				//
 			} catch (final Error e) {
