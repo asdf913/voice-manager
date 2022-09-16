@@ -1670,6 +1670,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final Class<?> nameClass = forName("domain.Voice$Name");
 		//
+		final boolean headless = GraphicsEnvironment.isHeadless();
+		//
 		final List<Pair<String, String>> pairs = toList(
 				//
 				filter(map(testAndApply(Objects::nonNull, Yomi.class.getDeclaredFields(), Arrays::stream, null), f -> {
@@ -1701,7 +1703,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 												//
 											} catch (final IllegalAccessException e) {
 												//
-												if (GraphicsEnvironment.isHeadless()) {
+												if (headless) {
 													//
 													if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
 														LOG.error(getMessage(e), e);
@@ -1723,7 +1725,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 														ExceptionUtils.getRootCause(targetException), targetException,
 														ExceptionUtils.getRootCause(e), e);
 												//
-												if (GraphicsEnvironment.isHeadless()) {
+												if (headless) {
 													//
 													if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
 														LOG.error(getMessage(rootCause), rootCause);
@@ -1848,6 +1850,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 								filter(testAndApply(Objects::nonNull, getDeclaredMethods(annotationType(a)),
 										Arrays::stream, null), ma -> Objects.equals(getName(ma), "name")));
 						//
+						final boolean headless = GraphicsEnvironment.isHeadless();
+						//
 						if (temp == null || temp.isEmpty()) {
 							//
 							return false;
@@ -1860,7 +1864,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 								//
 							} catch (final IllegalAccessException e) {
 								//
-								if (GraphicsEnvironment.isHeadless()) {
+								if (headless) {
 									//
 									if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
 										LOG.error(getMessage(e), e);
@@ -1882,7 +1886,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 										ExceptionUtils.getRootCause(targetException), targetException,
 										ExceptionUtils.getRootCause(e), e);
 								//
-								if (GraphicsEnvironment.isHeadless()) {
+								if (headless) {
 									//
 									if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
 										LOG.error(getMessage(rootCause), rootCause);
@@ -1918,13 +1922,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					} else if (temp.size() == 1 && temp.get(0) != null) {
 						//
+						final boolean headless = GraphicsEnvironment.isHeadless();
+						//
 						try {
 							//
 							return temp.get(0).invoke(a);
 							//
 						} catch (final IllegalAccessException e) {
 							//
-							if (GraphicsEnvironment.isHeadless()) {
+							if (headless) {
 								//
 								if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
 									LOG.error(getMessage(e), e);
@@ -1946,7 +1952,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 									ExceptionUtils.getRootCause(targetException), targetException,
 									ExceptionUtils.getRootCause(e), e);
 							//
-							if (GraphicsEnvironment.isHeadless()) {
+							if (headless) {
 								//
 								if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
 									LOG.error(getMessage(rootCause), rootCause);
@@ -2139,6 +2145,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final Object source = getSource(evt);
 		//
+		final boolean headless = GraphicsEnvironment.isHeadless();
+		;
+		//
 		if (Objects.equals(source, btnSpeak)) {
 			//
 			if (speechApi != null) {
@@ -2198,7 +2207,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					} catch (final IOException e) {
 						//
-						if (GraphicsEnvironment.isHeadless()) {
+						if (headless) {
 							//
 							if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
 								LOG.error(getMessage(e), e);
@@ -2265,7 +2274,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 					} catch (final IOException e) {
 						//
-						if (GraphicsEnvironment.isHeadless()) {
+						if (headless) {
 							//
 							if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
 								LOG.error(getMessage(e), e);
@@ -2314,7 +2323,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 					} catch (final IOException | BaseException | IllegalAccessException e) {
 						//
-						if (GraphicsEnvironment.isHeadless()) {
+						if (headless) {
 							//
 							if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
 								LOG.error(getMessage(e), e);
@@ -2336,7 +2345,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 								ExceptionUtils.getRootCause(targetException), targetException,
 								ExceptionUtils.getRootCause(e), e);
 						//
-						if (GraphicsEnvironment.isHeadless()) {
+						if (headless) {
 							//
 							if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
 								LOG.error(getMessage(rootCause), rootCause);
@@ -2491,7 +2500,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 			} catch (final IOException | IllegalAccessException e) {
 				//
-				if (GraphicsEnvironment.isHeadless()) {
+				if (headless) {
 					//
 					if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
 						LOG.error(getMessage(e), e);
@@ -2512,7 +2521,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				final Throwable rootCause = ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException),
 						targetException, ExceptionUtils.getRootCause(e), e);
 				//
-				if (GraphicsEnvironment.isHeadless()) {
+				if (headless) {
 					//
 					if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
 						LOG.error(getMessage(rootCause), rootCause);
@@ -2556,7 +2565,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} catch (final IOException e) {
 					//
-					if (GraphicsEnvironment.isHeadless()) {
+					if (headless) {
 						//
 						if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
 							LOG.error(getMessage(e), e);
@@ -2608,7 +2617,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 				} catch (final IOException | InvalidFormatException | GeneralSecurityException e) {
 					//
-					if (GraphicsEnvironment.isHeadless()) {
+					if (headless) {
 						//
 						if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
 							LOG.error(getMessage(e), e);
@@ -2641,7 +2650,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} catch (final IOException e) {
 				//
-				if (GraphicsEnvironment.isHeadless()) {
+				if (headless) {
 					//
 					if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
 						LOG.error(getMessage(e), e);
@@ -2676,6 +2685,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	private void importVoice(final File file) {
+		//
+		final boolean headless = GraphicsEnvironment.isHeadless();
 		//
 		try (final Workbook workbook = getWorkbook(file)) {
 			//
@@ -2718,8 +2729,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-			final boolean headless = GraphicsEnvironment.isHeadless();
-			//
 			BiConsumer<Voice, String> errorMessageConsumer = null;
 			//
 			BiConsumer<Voice, Throwable> throwableConsumer = null;
@@ -2847,7 +2856,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		} catch (final InvalidFormatException | IOException | IllegalAccessException | BaseException
 				| GeneralSecurityException e) {
 			//
-			if (GraphicsEnvironment.isHeadless()) {
+			if (headless) {
 				//
 				if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
 					LOG.error(getMessage(e), e);
@@ -2868,7 +2877,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			final Throwable rootCause = ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException),
 					targetException, ExceptionUtils.getRootCause(e), e);
 			//
-			if (GraphicsEnvironment.isHeadless()) {
+			if (headlesss) {
 				//
 				if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
 					LOG.error(getMessage(rootCause), rootCause);
@@ -3998,6 +4007,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		clear(tmImportException);
 		//
+		final boolean headless = GraphicsEnvironment.isHeadless();
+		//
 		if (file == null) {
 			//
 			message = "No File Selected";
@@ -4006,7 +4017,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				tmImportException.addRow(new Object[] { getText(voice), getRomaji(voice), message });
 				//
-			} else {
+			} else if (!headless) {
 				//
 				JOptionPane.showMessageDialog(null, message);
 				//
@@ -4022,7 +4033,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				tmImportException.addRow(new Object[] { getText(voice), getRomaji(voice), message });
 				//
-			} else {
+			} else if (!headless) {
 				//
 				JOptionPane.showMessageDialog(null, message);
 				//
@@ -4038,7 +4049,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				tmImportException.addRow(new Object[] { getText(voice), getRomaji(voice), message });
 				//
-			} else {
+			} else if (!headless) {
 				//
 				JOptionPane.showMessageDialog(null, message);
 				//
@@ -4065,8 +4076,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		} // if
 			//
 		SqlSession sqlSession = null;
-		//
-		final boolean headless = GraphicsEnvironment.isHeadless();
 		//
 		try {
 			//
@@ -4253,6 +4262,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		byte[] bs = null;
 		//
+		final boolean headless = GraphicsEnvironment.isHeadless();
+		//
 		try (final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
 			//
 			final Class<?> importFieldClass = forName("domain.Voice$ImportField");
@@ -4333,7 +4344,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 								//
 							} catch (final IllegalAccessException e) {
 								//
-								if (GraphicsEnvironment.isHeadless()) {
+								if (headless) {
 									//
 									if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
 										LOG.error(getMessage(e), e);
@@ -4428,7 +4439,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} catch (final IOException e) {
 			//
-			if (GraphicsEnvironment.isHeadless()) {
+			if (headless) {
 				//
 				if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
 					LOG.error(getMessage(e), e);
@@ -6452,13 +6463,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		String[] orders = null;
 		//
+		final boolean headless = GraphicsEnvironment.isHeadless();
+		//
 		try {
 			//
 			orders = cast(String[].class, invoke(method, a));
 			//
 		} catch (final IllegalAccessException e) {
 			// =
-			if (GraphicsEnvironment.isHeadless()) {
+			if (headless) {
 				//
 				if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
 					LOG.error(getMessage(e), e);
@@ -6479,7 +6492,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			final Throwable rootCause = ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException),
 					targetException, ExceptionUtils.getRootCause(e), e);
 			//
-			if (GraphicsEnvironment.isHeadless()) {
+			if (headless) {
 				//
 				if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
 					LOG.error(getMessage(rootCause), rootCause);

@@ -936,6 +936,12 @@ class VoiceManagerTest {
 	@Test
 	void testPostProcessBeanFactory() throws IllegalAccessException {
 		//
+		if (instance == null) {
+			//
+			return;
+			//
+		} // if
+			//
 		Assertions.assertDoesNotThrow(() -> instance.postProcessBeanFactory(null));
 		//
 		final MutableComboBoxModel<?> mcbm = Reflection.newProxy(MutableComboBoxModel.class, ih);
@@ -983,6 +989,12 @@ class VoiceManagerTest {
 		//
 		if (outputFolderFileNameExpressions != null) {
 			outputFolderFileNameExpressions.setAccessible(true);
+		} // if
+			//
+		if (instance == null) {
+			//
+			return;
+			//
 		} // if
 			//
 		Assertions.assertDoesNotThrow(() -> instance.setOutputFolderFileNameExpressions(null));
@@ -1034,6 +1046,12 @@ class VoiceManagerTest {
 	@Test
 	void testAfterPropertiesSet() {
 		//
+		if (instance == null) {
+			//
+			return;
+			//
+		} // if
+			//
 		Assertions.assertDoesNotThrow(() -> instance.afterPropertiesSet());
 		//
 		instance.setSpeechApi(speechApi);
@@ -1060,6 +1078,12 @@ class VoiceManagerTest {
 		if (mp3Tags != null) {
 			//
 			mp3Tags.setAccessible(true);
+			//
+		} // if
+			//
+		if (instance == null) {
+			//
+			return;
 			//
 		} // if
 			//
@@ -1211,8 +1235,12 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnExport));
 		//
-		instance.setSqlSessionFactory(sqlSessionFactory);
-		//
+		if (instance != null) {
+			//
+			instance.setSqlSessionFactory(sqlSessionFactory);
+			//
+		} // if
+			//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnExport));
 		//
 		final AbstractButton btnSpeak = new JButton();
@@ -1279,8 +1307,12 @@ class VoiceManagerTest {
 	@Test
 	void testItemStateChanged() {
 		//
-		Assertions.assertDoesNotThrow(() -> instance.itemStateChanged(null));
-		//
+		if (instance != null) {
+			//
+			Assertions.assertDoesNotThrow(() -> instance.itemStateChanged(null));
+			//
+		} // if
+			//
 		final ItemSelectable itemSelectable = Reflection.newProxy(ItemSelectable.class, ih);
 		//
 		Assertions.assertDoesNotThrow(() -> itemStateChanged(instance, new ItemEvent(itemSelectable, 0, "", 0)));
@@ -2037,8 +2069,16 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(createVoice(null, null));
 		//
-		Assertions.assertNotNull(createVoice(null, instance));
-		//
+		if (GraphicsEnvironment.isHeadless()) {
+			//
+			Assertions.assertNull(createVoice(null, instance));
+			//
+		} else {
+			//
+			Assertions.assertNotNull(createVoice(null, instance));
+			//
+		} // if
+			//
 	}
 
 	private static Voice createVoice(final ObjectMapper objectMapper, final VoiceManager instance) throws Throwable {
