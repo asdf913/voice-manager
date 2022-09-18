@@ -6564,7 +6564,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 							for (int k = 0; k < intIntMap.getInt(j); k++) {
 								//
-								setCellValue(row.createCell(Math.max(row.getLastCellNum(), 0)), textContent);
+								setCellValue(row.createCell(Math.max(row.getLastCellNum(), 0)),
+										StringUtils.trim(textContent));
 								//
 							} // for
 								//
@@ -6592,7 +6593,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 					} else {
 						//
-						setCellValue(row.createCell(Math.max(row.getLastCellNum(), 0)), textContent);
+						setCellValue(row.createCell(Math.max(row.getLastCellNum(), 0)), StringUtils.trim(textContent));
 						//
 					} // if
 						//
