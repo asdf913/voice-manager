@@ -69,6 +69,9 @@ public class Voice {
 	@ImportField
 	private Boolean isKanji = null;
 
+	@ImportField
+	private Boolean joYoKanji = null;
+
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
 	private @interface SpreadsheetColumn {
@@ -256,6 +259,10 @@ public class Voice {
 
 	public void setIsKanji(final Boolean isKanji) {
 		this.isKanji = isKanji;
+	}
+
+	public void setJoYoKanji(final Boolean joYoKanji) {
+		this.joYoKanji = joYoKanji;
 	}
 
 	public void setGaKuNenBeTsuKanJi(final String gaKuNenBeTsuKanJi) {

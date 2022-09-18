@@ -51,6 +51,7 @@ import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.function.ToIntFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -193,7 +194,8 @@ class VoiceManagerTest {
 			METHOD_GET_COLUMN_NAME, METHOD_GET_KEY_SET, METHOD_PUT_ALL, METHOD_CREATE_SHEET, METHOD_ENTRIES,
 			METHOD_GET_WORK_BOOK, METHOD_GET_OLE_ENTRY_NAMES, METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE,
 			METHOD_GET_DOCUMENT_ELEMENT, METHOD_GET_CHILD_NODES, METHOD_GET_NAMED_ITEM, METHOD_GET_TEXT_CONTENT,
-			METHOD_GET_NODE_NAME, METHOD_GET_NAME, METHOD_GET_PASS_WORD, METHOD_CREATE_JO_YO_KAN_JI_WORK_BOOK = null;
+			METHOD_GET_NODE_NAME, METHOD_GET_NAME, METHOD_GET_PASS_WORD, METHOD_CREATE_JO_YO_KAN_JI_WORK_BOOK,
+			METHOD_GET = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -507,6 +509,8 @@ class VoiceManagerTest {
 		//
 		(METHOD_CREATE_JO_YO_KAN_JI_WORK_BOOK = clz.getDeclaredMethod("createJoYoKanJiWorkbook", String.class))
 				.setAccessible(true);
+		//
+		(METHOD_GET = clz.getDeclaredMethod("get", Supplier.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -4428,6 +4432,21 @@ class VoiceManagerTest {
 				return (Workbook) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGet() throws Throwable {
+		//
+		Assertions.assertNull(get(null));
+		//
+	}
+
+	private static <T> T get(final Supplier<T> instance) throws Throwable {
+		try {
+			return (T) METHOD_GET.invoke(null, instance);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

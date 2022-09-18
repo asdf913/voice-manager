@@ -68,6 +68,7 @@ import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.function.ToIntFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -263,7 +264,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private ComboBoxModel<?> cbmAudioFormatWrite, cbmAudioFormatExecute = null;
 
-	private ComboBoxModel<Boolean> cbmIsKanji = null;
+	private ComboBoxModel<Boolean> cbmIsKanji, cbmJoYoKanJi = null;
 
 	private AbstractButton btnSpeak, btnWriteVoice, btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji,
 			btnCopyHiragana, btnCopyKatakana, cbUseTtsVoice, btnExecute, btnImportFileTemplate, btnImport,
@@ -986,7 +987,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(
 				tfSource = new JTextField(
 						getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.source")),
-				String.format("%1$s,span %2$s,wmin %3$s", GROWX, 2, 50));
+				String.format("%1$s,span %2$s,wmin %3$s", GROWX, 3, 50));
 		//
 		// Kanji
 		//
@@ -1022,9 +1023,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
-		panel.add(new JComboBox<>(
-				cbmIsKanji = booleans != null ? new DefaultComboBoxModel<>(toArray(booleans, new Boolean[] {}))
-						: new DefaultComboBoxModel<>()));
+		final Supplier<ComboBoxModel<Boolean>> booleanComboBoxModelSupplier = new BooleanComboBoxModelSupplier(
+				booleans);
+		//
+		panel.add(new JComboBox<>(cbmIsKanji = get(booleanComboBoxModelSupplier)));
 		//
 		if (cbmIsKanji != null) {
 			//
@@ -1062,11 +1064,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // try
 			//
-		panel.add(
-				new JComboBox<>(cbmGaKuNenBeTsuKanJi = testAndApply(Objects::nonNull,
-						ArrayUtils.insert(0, toArray(gaKuNenBeTsuKanJiList, new String[] {}), (String) null),
-						DefaultComboBoxModel::new, x -> new DefaultComboBoxModel<>())),
-				String.format("%1$s,span %2$s", WRAP, 2));
+		panel.add(new JComboBox<>(cbmGaKuNenBeTsuKanJi = testAndApply(Objects::nonNull,
+				ArrayUtils.insert(0, toArray(gaKuNenBeTsuKanJiList, new String[] {}), (String) null),
+				DefaultComboBoxModel::new, x -> new DefaultComboBoxModel<>())), String.format("span %1$s", 2));
 		//
 		if (cbmGaKuNenBeTsuKanJi != null) {
 			//
@@ -1081,6 +1081,21 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
+			// 常用漢字 JoYoKanJi
+			//
+		panel.add(new JLabel("常用漢字"));
+		//
+		panel.add(new JComboBox<>(cbmJoYoKanJi = get(booleanComboBoxModelSupplier)),
+				String.format("%1$s,span %2$s", WRAP, 1));
+		//
+		if (cbmJoYoKanJi != null) {
+			//
+			cbmJoYoKanJi.setSelectedItem(testAndApply(StringUtils::isNotEmpty,
+					getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.yoKoKanJi"),
+					Boolean::valueOf, null));
+			//
+		} // if
+			//
 			// Text
 			//
 		panel.add(new JLabel("Text"));
@@ -1088,7 +1103,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(
 				tfTextImport = new JTextField(
 						getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.text")),
-				String.format("%1$s,span %2$s", GROWX, 19));
+				String.format("%1$s,span %2$s", GROWX, 22));
 		//
 		tfTextImport.addKeyListener(this);
 		//
@@ -1135,7 +1150,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(
 				tfIpaSymbol = new JTextField(
 						getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.ipaSymbol")),
-				GROWX);
+				String.format("%1$s,span %2$s", GROWX, 2));
 		//
 		final List<Yomi> yomiList = toList(
 				filter(testAndApply(Objects::nonNull, yomis, Arrays::stream, null), y -> Objects.equals(name(y),
@@ -1157,7 +1172,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final String tags = getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.listNames");
 		//
-		panel.add(tfListNames = new JTextField(tags), String.format("%1$s,span %2$s", GROWX, 5));
+		panel.add(tfListNames = new JTextField(tags), String.format("%1$s,span %2$s", GROWX, 8));
 		//
 		tfListNames.addKeyListener(this);
 		//
@@ -1173,7 +1188,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			// JLPT level
 			//
-		panel.add(new JLabel("JLPT Level"), String.format("span %1$s", 2));
+		panel.add(new JLabel("JLPT Level"));
 		//
 		final List<String> jlptLevels = testAndApply(Objects::nonNull, getJlptLevels(), ArrayList::new, null);
 		//
@@ -1198,7 +1213,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(
 				tfRomaji = new JTextField(
 						getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.romaji")),
-				String.format("%1$s,span %2$s", GROWX, 19));
+				String.format("%1$s,span %2$s", GROWX, 22));
 		//
 		panel.add(btnCopyRomaji = new JButton("Copy"), WRAP);
 		//
@@ -1209,11 +1224,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(
 				tfHiragana = new JTextField(
 						getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.hiragana")),
-				String.format("%1$s,span %2$s", GROWX, 7));
+				String.format("%1$s,span %2$s", GROWX, 9));
 		//
 		panel.add(btnCopyHiragana = new JButton("Copy"), String.format("span %1$s", 2));
 		//
-		panel.add(btnConvertToKatakana = new JButton("Convert"));
+		panel.add(btnConvertToKatakana = new JButton("Convert"), String.format("span %1$s", 2));
 		//
 		// Katakana
 		//
@@ -1237,7 +1252,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.add(new JComboBox(cbmAudioFormatExecute = new DefaultComboBoxModel<Object>()));
 		//
-		panel.add(btnExecute = new JButton("Execute"), String.format("span %1$s", 2));
+		panel.add(btnExecute = new JButton("Execute"), String.format("span %1$s", 3));
 		//
 		Double maxPreferredWidth = ObjectUtils.max(getPreferredWidth(tfListNames),
 				getPreferredWidth(btnConvertToKatakana));
@@ -1290,6 +1305,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
+	private static <T> T get(final Supplier<T> instance) {
+		return instance != null ? instance.get() : null;
+	}
+
 	private static Multimap<String, String> getGaKuNenBeTsuKanJiMultimap(final String url) throws IOException {
 		//
 		Multimap<String, String> multimap = null;
@@ -1325,6 +1344,26 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return multimap;
 		//
+	}
+
+	private static class BooleanComboBoxModelSupplier implements Supplier<ComboBoxModel<Boolean>> {
+
+		private Collection<Boolean> booleans = null;
+
+		private BooleanComboBoxModelSupplier(final Collection<Boolean> booleans) {
+			//
+			this.booleans = booleans;
+			//
+		}
+
+		@Override
+		public ComboBoxModel<Boolean> get() {
+			//
+			return booleans != null ? new DefaultComboBoxModel<>(toArray(booleans, new Boolean[] {}))
+					: new DefaultComboBoxModel<>();
+			//
+		}
+
 	}
 
 	private static List<Boolean> getBooleanValues() throws IllegalAccessException {
@@ -5651,6 +5690,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		voice.setIpaSymbol(getText(instance.tfIpaSymbol));
 		//
 		voice.setIsKanji(cast(Boolean.class, getSelectedItem(instance.cbmIsKanji)));
+		//
+		voice.setJoYoKanji(cast(Boolean.class, getSelectedItem(instance.cbmJoYoKanJi)));
 		//
 		voice.setGaKuNenBeTsuKanJi(toString(getSelectedItem(instance.cbmGaKuNenBeTsuKanJi)));
 		//
