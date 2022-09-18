@@ -1224,20 +1224,20 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(
 				tfHiragana = new JTextField(
 						getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.hiragana")),
-				String.format("%1$s,span %2$s", GROWX, 9));
+				String.format("%1$s,span %2$s", GROWX, 13));
 		//
-		panel.add(btnCopyHiragana = new JButton("Copy"), String.format("span %1$s", 2));
+		panel.add(btnCopyHiragana = new JButton("Copy"));
 		//
-		panel.add(btnConvertToKatakana = new JButton("Convert"), String.format("span %1$s", 2));
+		panel.add(btnConvertToKatakana = new JButton("Convert"));
 		//
 		// Katakana
 		//
-		panel.add(new JLabel("Katakana"), String.format("span %1$s", 2));
+		panel.add(new JLabel("Katakana"));
 		//
 		panel.add(
 				tfKatakana = new JTextField(
 						getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.katakana")),
-				String.format("%1$s,span %2$s", GROWX, 7));
+				String.format("%1$s,span %2$s", GROWX, 6));
 		//
 		panel.add(btnCopyKatakana = new JButton("Copy"), WRAP);
 		//
