@@ -790,7 +790,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		LayoutManager layoutManager = ObjectUtils.defaultIfNull(this.layoutManager, layoutManagerDefault);
 		//
-		if (layoutManager instanceof Serializable) {
+		if (layoutManager instanceof MigLayout) {
+			//
+			layoutManager = new MigLayout();
+			//
+		} else if (layoutManager instanceof Serializable) {
 			//
 			layoutManager = cast(LayoutManager.class, SerializationUtils.clone((Serializable) layoutManager));
 			//
