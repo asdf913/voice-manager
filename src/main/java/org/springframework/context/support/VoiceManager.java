@@ -195,7 +195,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gargoylesoftware.htmlunit.SgmlPage;
 import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.WebClientOptions;
 import com.gargoylesoftware.htmlunit.html.DomElement;
+import com.gargoylesoftware.htmlunit.html.DomNode;
 import com.gargoylesoftware.htmlunit.html.DomNodeList;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.github.curiousoddman.rgxgen.RgxGen;
@@ -266,7 +268,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private AbstractButton btnSpeak, btnWriteVoice, btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji,
 			btnCopyHiragana, btnCopyKatakana, cbUseTtsVoice, btnExecute, btnImportFileTemplate, btnImport,
 			btnImportWithinFolder, cbOverMp3Title, cbOrdinalPositionAsFileNamePrefix, btnExport,
-			cbImportFileTemplateGenerateBlankRow, cbJlptAsFolder, btnExportGaKuNenBeTsuKanJi = null;
+			cbImportFileTemplateGenerateBlankRow, cbJlptAsFolder, btnExportGaKuNenBeTsuKanJi, btnExportJoYoKanJi = null;
 
 	private JProgressBar progressBarImport, progressBarExport = null;
 
@@ -1569,9 +1571,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.setLayout(layoutManager);
 		//
-		panel.add(btnExportGaKuNenBeTsuKanJi = new JButton("Export 学年別漢字"));
+		panel.add(btnExportGaKuNenBeTsuKanJi = new JButton("Export 学年別漢字"), WRAP);
 		//
-		addActionListener(this, btnExportGaKuNenBeTsuKanJi);
+		panel.add(btnExportJoYoKanJi = new JButton("Export 常用漢字"));
+		//
+		addActionListener(this, btnExportGaKuNenBeTsuKanJi, btnExportJoYoKanJi);
 		//
 		return panel;
 		//
@@ -2651,6 +2655,46 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					file = new File(String.format("学年別漢字_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.xlsx", new Date())))) {
 				//
 				write(workbook = createWorkbook(Pair.of("学年", "漢字"), getGaKuNenBeTsuKanJiMultimap()), os);
+				//
+			} catch (final IOException e) {
+				//
+				if (headless) {
+					//
+					if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
+						LOG.error(getMessage(e), e);
+					} else if (e != null) {
+						e.printStackTrace();
+					} // if
+						//
+				} else {
+					//
+					JOptionPane.showMessageDialog(null, getMessage(e));
+					//
+				} // if
+					//
+			} finally {
+				//
+				IOUtils.closeQuietly(workbook);
+				//
+				if (file != null && file.exists() && isFile(file) && file.length() == 0) {
+					//
+					file.delete();
+					//
+				} // if
+					//
+			} // try
+				//
+		} else if (Objects.equals(source, btnExportJoYoKanJi)) {
+			//
+			File file = null;
+			//
+			Workbook workbook = null;
+			//
+			try (final OutputStream os = new FileOutputStream(
+					file = new File(String.format("常用漢字_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.xlsx", new Date())))) {
+				//
+				write(workbook = createJoYoKanJiWorkbook(
+						"https://ja.wikipedia.org/wiki/%E5%B8%B8%E7%94%A8%E6%BC%A2%E5%AD%97%E4%B8%80%E8%A6%A7"), os);
 				//
 			} catch (final IOException e) {
 				//
@@ -6246,6 +6290,167 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
+	private static Workbook createJoYoKanJiWorkbook(final String url) {
+		//
+		Workbook workbook = null;
+		//
+		Sheet sheet = null;
+		//
+		Row row = null;
+		//
+		try (final WebClient webClient = new WebClient()) {
+			//
+			final WebClientOptions webClientOptions = webClient.getOptions();
+			//
+			if (webClientOptions != null) {
+				//
+				webClientOptions.setJavaScriptEnabled(false);
+				//
+			} // if
+				//
+			final DomNodeList<DomElement> h3s = getElementsByTagName(
+					cast(SgmlPage.class, testAndApply(StringUtils::isNotBlank, url, webClient::getPage, null)), "h3");
+			//
+			DomElement domElement = null;
+			//
+			DomElement h3 = null;
+			//
+			for (int i = 0; h3s != null && i < h3s.size(); i++) {
+				//
+				if ((domElement = h3s.get(i)) == null || !Objects.equals(getTextContent(domElement), "本表[編集]")) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if (h3 == null) {
+					//
+					h3 = domElement;
+					//
+				} else {
+					//
+					throw new IllegalStateException();
+					//
+				} // if
+					//
+			} // for
+				//
+			domElement = h3;
+			//
+			DomElement table = null;
+			//
+			while ((domElement = domElement != null ? domElement.getNextElementSibling() : null) != null) {
+				//
+				if (Objects.equals(domElement.getNodeName(), "table")) {
+					//
+					table = domElement;
+					//
+					break;
+					//
+				} // if
+					//
+			} // while
+				//
+				// tbody
+				//
+			DomNodeList<DomNode> domNodes = table != null ? table.querySelectorAll("tbody") : null;
+			//
+			DomNode domNode = null;
+			//
+			DomNode tbody = null;
+			//
+			for (int i = 0; domNodes != null && i < domNodes.size(); i++) {
+				//
+				if ((domNode = domNodes.get(i)) == null || !Objects.equals(domNode.getNodeName(), "tbody")) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if (tbody == null) {
+					//
+					tbody = domNode;
+					//
+				} else {
+					//
+					throw new IllegalStateException();
+					//
+				} // if
+					//
+			} // for
+				//
+			domNodes = getChildNodes(tbody);
+			//
+			DomNodeList<DomNode> tds = null;
+			//
+			for (int i = 0; domNodes != null && i < domNodes.size(); i++) {
+				//
+				if ((domNode = domNodes.get(i)) == null || domNode.getNodeType() != Node.ELEMENT_NODE
+						|| (tds = getChildNodes(domNode)) == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if (sheet == null) {
+					//
+					sheet = createSheet(workbook = ObjectUtils.getIfNull(workbook, XSSFWorkbook::new));
+					//
+				} // if
+					//
+				if (sheet != null && (row = sheet.createRow(sheet.getLastRowNum() + 1)) == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				for (int j = 0; j < tds.size(); j++) {
+					//
+					if ((domNode = tds.get(j)) == null || domNode.getNodeType() != Node.ELEMENT_NODE) {
+						//
+						continue;
+						//
+					} // if
+						//
+					setCellValue(row.createCell(Math.max(row.getLastCellNum(), 0)), getTextContent(domNode));
+					//
+				} // for
+					//
+			} // for
+				//
+		} catch (final IOException e) {
+			//
+			if (GraphicsEnvironment.isHeadless()) {
+				//
+				if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
+					LOG.error(getMessage(e), e);
+				} else if (e != null) {
+					e.printStackTrace();
+				} // if
+					//
+			} else {
+				//
+				JOptionPane.showMessageDialog(null, getMessage(e));
+				//
+			} // if
+				//
+		} // try
+			//
+		if (sheet != null && row != null) {
+			//
+			sheet.setAutoFilter(new CellRangeAddress(sheet.getFirstRowNum(), sheet.getLastRowNum() - 1,
+					row.getFirstCellNum(), row.getLastCellNum() - 1));
+			//
+		} // if
+			//
+		return workbook;
+		//
+	}
+
+	private static DomNodeList<DomNode> getChildNodes(final DomNode instance) {
+		return instance != null ? instance.getChildNodes() : null;
+	}
+
 	private static Workbook createWorkbook(final List<Voice> voices)
 			throws IllegalAccessException, InvocationTargetException {
 		//
@@ -6476,7 +6681,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			orders = cast(String[].class, invoke(method, a));
 			//
 		} catch (final IllegalAccessException e) {
-			// =
+			//
 			if (headless) {
 				//
 				if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
