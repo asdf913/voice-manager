@@ -987,7 +987,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(
 				tfSource = new JTextField(
 						getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.source")),
-				String.format("%1$s,span %2$s,wmin %3$s", GROWX, 3, 50));
+				String.format("%1$s,span %2$s,wmin %3$s", GROWX, 4, 50));
 		//
 		// Kanji
 		//
@@ -1103,7 +1103,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(
 				tfTextImport = new JTextField(
 						getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.text")),
-				String.format("%1$s,span %2$s", GROWX, 22));
+				String.format("%1$s,span %2$s", GROWX, 23));
 		//
 		tfTextImport.addKeyListener(this);
 		//
@@ -1172,7 +1172,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final String tags = getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.listNames");
 		//
-		panel.add(tfListNames = new JTextField(tags), String.format("%1$s,span %2$s", GROWX, 8));
+		panel.add(tfListNames = new JTextField(tags), String.format("%1$s,span %2$s", GROWX, 9));
 		//
 		tfListNames.addKeyListener(this);
 		//
@@ -1213,7 +1213,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(
 				tfRomaji = new JTextField(
 						getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.romaji")),
-				String.format("%1$s,span %2$s", GROWX, 22));
+				String.format("%1$s,span %2$s", GROWX, 23));
 		//
 		panel.add(btnCopyRomaji = new JButton("Copy"), WRAP);
 		//
@@ -1232,7 +1232,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		// Katakana
 		//
-		panel.add(new JLabel("Katakana"));
+		panel.add(new JLabel("Katakana"), String.format("span %1$s", 2));
 		//
 		panel.add(
 				tfKatakana = new JTextField(
