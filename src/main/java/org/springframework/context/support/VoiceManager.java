@@ -6383,6 +6383,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			DomNodeList<DomNode> tds = null;
 			//
+			String textContent = null;
+			//
+			Pattern pattern = null;
+			//
+			Matcher matcher = null;
+			//
 			for (int i = 0; domNodes != null && i < domNodes.size(); i++) {
 				//
 				if ((domNode = domNodes.get(i)) == null || domNode.getNodeType() != Node.ELEMENT_NODE
@@ -6412,7 +6418,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					} // if
 						//
-					setCellValue(row.createCell(Math.max(row.getLastCellNum(), 0)), getTextContent(domNode));
+					if ((matcher = matcher(pattern = ObjectUtils.getIfNull(pattern, () -> Pattern.compile("\\[\\d+]")),
+							textContent = getTextContent(domNode))) != null) {
+						//
+						textContent = matcher.replaceAll("");
+						//
+					} // if
+						//
+					setCellValue(row.createCell(Math.max(row.getLastCellNum(), 0)), textContent);
 					//
 				} // for
 					//
