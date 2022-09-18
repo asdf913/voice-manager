@@ -159,6 +159,8 @@ class VoiceManagerTest {
 
 	private static final int ZERO = 0;
 
+	private static final int ONE = 1;
+
 	private static Class<?> CLASS_OBJECT_MAP, CLASS_BOOLEAN_MAP, CLASS_IH = null;
 
 	private static Method METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_GET_FILE_EXTENSION, METHOD_DIGEST,
@@ -191,7 +193,7 @@ class VoiceManagerTest {
 			METHOD_GET_COLUMN_NAME, METHOD_GET_KEY_SET, METHOD_PUT_ALL, METHOD_CREATE_SHEET, METHOD_ENTRIES,
 			METHOD_GET_WORK_BOOK, METHOD_GET_OLE_ENTRY_NAMES, METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE,
 			METHOD_GET_DOCUMENT_ELEMENT, METHOD_GET_CHILD_NODES, METHOD_GET_NAMED_ITEM, METHOD_GET_TEXT_CONTENT,
-			METHOD_GET_NAME, METHOD_GET_PASS_WORD, METHOD_CREATE_JO_YO_KAN_JI_WORK_BOOK = null;
+			METHOD_GET_NODE_NAME, METHOD_GET_NAME, METHOD_GET_PASS_WORD, METHOD_CREATE_JO_YO_KAN_JI_WORK_BOOK = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -497,6 +499,8 @@ class VoiceManagerTest {
 		//
 		(METHOD_GET_TEXT_CONTENT = clz.getDeclaredMethod("getTextContent", Node.class)).setAccessible(true);
 		//
+		(METHOD_GET_NODE_NAME = clz.getDeclaredMethod("getNodeName", Node.class)).setAccessible(true);
+		//
 		(METHOD_GET_NAME = clz.getDeclaredMethod("getName", File.class)).setAccessible(true);
 		//
 		(METHOD_GET_PASS_WORD = clz.getDeclaredMethod("getPassword", Console.class)).setAccessible(true);
@@ -517,7 +521,7 @@ class VoiceManagerTest {
 		private Set<Entry<?, ?>> entrySet = null;
 
 		private String toString, stringCellValue, providerName, providerVersion, artist, voiceAttribute, lpwstr,
-				sheetName, textContent = null;
+				sheetName, textContent, nodeName = null;
 
 		private Configuration configuration = null;
 
@@ -883,8 +887,14 @@ class VoiceManagerTest {
 					//
 					return textContent;
 					//
+				} else if (Objects.equals(methodName, "getNodeName")) {
+					//
+					return nodeName;
+					//
 				} // if
 					//
+
+				//
 			} // if
 				//
 			throw new Throwable(methodName);
@@ -908,6 +918,8 @@ class VoiceManagerTest {
 	private BeanDefinition beanDefinition = null;
 
 	private Multimap<?, ?> multimap = null;
+
+	private Node node = null;
 
 	@BeforeEach
 	void beforeEach() throws ReflectiveOperationException {
@@ -933,6 +945,8 @@ class VoiceManagerTest {
 		beanDefinition = Reflection.newProxy(BeanDefinition.class, ih);
 		//
 		multimap = Reflection.newProxy(Multimap.class, ih);
+		//
+		node = Reflection.newProxy(Node.class, ih);
 		//
 	}
 
@@ -1042,7 +1056,8 @@ class VoiceManagerTest {
 		//
 		Assertions.assertEquals(emptyMap, get(outputFolderFileNameExpressions, instance));
 		//
-		Assertions.assertThrows(IllegalArgumentException.class, () -> instance.setOutputFolderFileNameExpressions("1"));
+		Assertions.assertThrows(IllegalArgumentException.class,
+				() -> instance.setOutputFolderFileNameExpressions(Integer.toString(ONE)));
 		//
 	}
 
@@ -1114,11 +1129,9 @@ class VoiceManagerTest {
 		//
 		set(mp3Tags, instance, null);
 		//
-		final int one = 1;
+		Assertions.assertDoesNotThrow(() -> instance.setMp3Tags(Integer.toString(ONE)));
 		//
-		Assertions.assertDoesNotThrow(() -> instance.setMp3Tags(Integer.toString(one)));
-		//
-		Assertions.assertTrue(Objects.deepEquals(new String[] { Integer.toString(one) }, get(mp3Tags, instance)));
+		Assertions.assertTrue(Objects.deepEquals(new String[] { Integer.toString(ONE) }, get(mp3Tags, instance)));
 		//
 		set(mp3Tags, instance, null);
 		//
@@ -2778,15 +2791,11 @@ class VoiceManagerTest {
 	@Test
 	void testCreateRange() throws Throwable {
 		//
-		final Integer zero = Integer.valueOf(0);
+		Assertions.assertEquals(String.format("[%1$s..+∞)", ZERO), toString(createRange(ZERO, null)));
 		//
-		Assertions.assertEquals(String.format("[%1$s..+∞)", zero), toString(createRange(zero, null)));
+		Assertions.assertEquals(String.format("(-∞..%1$s]", ZERO), toString(createRange(null, ZERO)));
 		//
-		Assertions.assertEquals(String.format("(-∞..%1$s]", zero), toString(createRange(null, zero)));
-		//
-		final Integer one = Integer.valueOf(1);
-		//
-		Assertions.assertEquals(String.format("(%1$s..%2$s)", zero, one), toString(createRange(zero, one)));
+		Assertions.assertEquals(String.format("(%1$s..%2$s)", ZERO, ONE), toString(createRange(ZERO, ONE)));
 		//
 	}
 
@@ -3663,9 +3672,9 @@ class VoiceManagerTest {
 		//
 		ih.workbook = Reflection.newProxy(Workbook.class, ih);
 		//
-		ih.numberOfSheets = Integer.valueOf(1);
+		ih.numberOfSheets = Integer.valueOf(ONE);
 		//
-		Assertions.assertEquals(Integer.valueOf(0), getCurrentSheetIndex(sheet));
+		Assertions.assertEquals(Integer.valueOf(ZERO), getCurrentSheetIndex(sheet));
 		//
 		ih.numberOfSheets = Integer.valueOf(2);
 		//
@@ -4298,7 +4307,7 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(getTextContent(getNamedItem(namedNodeMap, null)));
 		//
-		ih.namedItem = Reflection.newProxy(Node.class, ih);
+		ih.namedItem = node;
 		//
 		Assertions.assertNull(getTextContent(getNamedItem(namedNodeMap, null)));
 		//
@@ -4321,6 +4330,29 @@ class VoiceManagerTest {
 	private static String getTextContent(final Node instance) throws Throwable {
 		try {
 			final Object obj = METHOD_GET_TEXT_CONTENT.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetNodeName() throws Throwable {
+		//
+		Assertions.assertNull(getNodeName(null));
+		//
+		Assertions.assertEquals(ih.nodeName = EMPTY, getNodeName(node));
+		//
+	}
+
+	private static String getNodeName(final Node instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_NODE_NAME.invoke(null, instance);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof String) {
@@ -4381,7 +4413,7 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testGreateJoYoKanJiWorkbook() throws Throwable {
+	void testCreateJoYoKanJiWorkbook() throws Throwable {
 		//
 		Assertions.assertNull(createJoYoKanJiWorkbook(null));
 		//
@@ -4506,6 +4538,50 @@ class VoiceManagerTest {
 			Assertions.assertThrows(Throwable.class, () -> ih.invoke(intMap, intMapSetObject, null));
 			//
 			Assertions.assertThrows(Throwable.class, () -> ih.invoke(intMap, intMapSetObject, empty));
+			//
+			// org.springframework.context.support.VoiceManager$IntIntMap.setInt(int,int)
+			//
+			final Class<?> classIntIntMap = forName("org.springframework.context.support.VoiceManager$IntIntMap");
+			//
+			final Method intIntMapSetInt = classIntIntMap != null
+					? classIntIntMap.getDeclaredMethod("setInt", Integer.TYPE, Integer.TYPE)
+					: null;
+			//
+			final Object intIntMap = Reflection.newProxy(classIntIntMap, ih);
+			//
+			Assertions.assertThrows(Throwable.class, () -> ih.invoke(intIntMap, intIntMapSetInt, null));
+			//
+			Assertions.assertThrows(Throwable.class, () -> ih.invoke(intIntMap, intIntMapSetInt, empty));
+			//
+			final Integer two = Integer.valueOf(2);
+			//
+			Assertions.assertDoesNotThrow(
+					() -> ih.invoke(intIntMap, intIntMapSetInt, new Object[] { Integer.valueOf(ONE), two }));
+			//
+			// org.springframework.context.support.VoiceManager$IntIntMap.containsKey(int)
+			//
+			final Method intIntMapContainsKey = classIntIntMap != null
+					? classIntIntMap.getDeclaredMethod("containsKey", Integer.TYPE)
+					: null;
+			//
+			Assertions.assertThrows(Throwable.class, () -> ih.invoke(intIntMap, intIntMapContainsKey, null));
+			//
+			Assertions.assertThrows(Throwable.class, () -> ih.invoke(intIntMap, intIntMapContainsKey, empty));
+			//
+			Assertions.assertEquals(Boolean.TRUE,
+					ih.invoke(intIntMap, intIntMapContainsKey, new Object[] { Integer.valueOf(ONE) }));
+			//
+			// org.springframework.context.support.VoiceManager$IntIntMap.getInt(int)
+			//
+			final Method intIntMapGetInt = classIntIntMap != null
+					? classIntIntMap.getDeclaredMethod("getInt", Integer.TYPE)
+					: null;
+			//
+			Assertions.assertThrows(Throwable.class, () -> ih.invoke(intIntMap, intIntMapGetInt, null));
+			//
+			Assertions.assertThrows(Throwable.class, () -> ih.invoke(intIntMap, intIntMapGetInt, empty));
+			//
+			Assertions.assertEquals(two, ih.invoke(intIntMap, intIntMapGetInt, new Object[] { Integer.valueOf(ONE) }));
 			//
 		} // if
 			//

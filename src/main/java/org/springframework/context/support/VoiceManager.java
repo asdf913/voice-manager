@@ -3140,6 +3140,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.getTextContent() : null;
 	}
 
+	private static String getNodeName(final Node instance) {
+		return instance != null ? instance.getNodeName() : null;
+	}
+
 	private static String getName(final File instance) {
 		return instance != null ? instance.getName() : null;
 	}
@@ -4729,6 +4733,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	}
 
+	private static interface IntIntMap {
+
+		int getInt(final int key);
+
+		boolean containsKey(final int key);
+
+		void setInt(final int key, final int value);
+
+	}
+
 	private static void importVoice(final Sheet sheet, final ObjectMap _objectMap,
 			final BiConsumer<Voice, String> errorMessageConsumer, final BiConsumer<Voice, Throwable> throwableConsumer,
 			final Consumer<Voice> voiceConsumer)
@@ -5462,6 +5476,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 		private Map<Object, Object> intMapObjects = null;
 
+		private Map<Object, Object> intIntMapObjects = null;
+
 		private Map<Object, Object> getObjects() {
 			if (objects == null) {
 				objects = new LinkedHashMap<>();
@@ -5476,11 +5492,18 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			return booleans;
 		}
 
-		public Map<Object, Object> getIntMapObjects() {
+		private Map<Object, Object> getIntMapObjects() {
 			if (intMapObjects == null) {
 				intMapObjects = new LinkedHashMap<>();
 			}
 			return intMapObjects;
+		}
+
+		private Map<Object, Object> getIntIntMapObjects() {
+			if (intIntMapObjects == null) {
+				intIntMapObjects = new LinkedHashMap<>();
+			}
+			return intIntMapObjects;
 		}
 
 		@Override
@@ -5557,6 +5580,32 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				} else if (Objects.equals(methodName, "setObject") && args != null && args.length > 1) {
 					//
 					put(getIntMapObjects(), args[0], args[1]);
+					//
+					return null;
+					//
+				} // if
+					//
+			} else if (proxy instanceof IntIntMap) {
+				//
+				if (Objects.equals(methodName, "getInt") && args != null && args.length > 0) {
+					//
+					final Object key = args[0];
+					//
+					if (!containsKey(getIntIntMapObjects(), key)) {
+						//
+						throw new IllegalStateException(String.format("Key [%1$s] Not Found", key));
+						//
+					} // if
+						//
+					return getIntIntMapObjects().get(key);
+					//
+				} else if (Objects.equals(methodName, "containsKey") && args != null && args.length > 0) {
+					//
+					return containsKey(getIntIntMapObjects(), args[0]);
+					//
+				} else if (Objects.equals(methodName, "setInt") && args != null && args.length > 1) {
+					//
+					put(getIntIntMapObjects(), args[0], args[1]);
 					//
 					return null;
 					//
@@ -6341,7 +6390,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			while ((domElement = domElement != null ? domElement.getNextElementSibling() : null) != null) {
 				//
-				if (Objects.equals(domElement.getNodeName(), "table")) {
+				if (Objects.equals(getNodeName(domElement), "table")) {
 					//
 					table = domElement;
 					//
@@ -6361,7 +6410,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			for (int i = 0; domNodes != null && i < domNodes.size(); i++) {
 				//
-				if ((domNode = domNodes.get(i)) == null || !Objects.equals(domNode.getNodeName(), "tbody")) {
+				if (!Objects.equals(getNodeName(domNode = domNodes.get(i)), "tbody")) {
 					//
 					continue;
 					//
@@ -6385,9 +6434,47 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			String textContent = null;
 			//
-			Pattern pattern = null;
+			IntIntMap intIntMap = null;
+			//
+			final Pattern pattern1 = Pattern.compile("(\\d+)([^\\d]+)");
 			//
 			Matcher matcher = null;
+			//
+			final IH ih = new IH();
+			//
+			for (int i = 0; domNodes != null && i < domNodes.size(); i++) {
+				//
+				if ((domNode = domNodes.get(i)) == null || domNode.getNodeType() != Node.ELEMENT_NODE
+						|| (tds = getChildNodes(domNode)) == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				for (int j = 0; j < tds.size(); j++) {
+					//
+					if ((domNode = tds.get(j)) == null || domNode.getNodeType() != Node.ELEMENT_NODE) {
+						//
+						continue;
+						//
+					} // if
+						//
+					if (matches(matcher = matcher(pattern1, textContent = getTextContent(domNode)))
+							&& (intIntMap = ObjectUtils.getIfNull(intIntMap,
+									() -> Reflection.newProxy(IntIntMap.class, ih))) != null
+							&& !intIntMap.containsKey(j)) {
+						//
+						intIntMap.setInt(j, matcher.groupCount());
+						//
+					} // if
+						//
+				} // for
+					//
+			} // for
+				//
+			Pattern pattern2 = null;
+			//
+			int groupCount = 0;
 			//
 			for (int i = 0; domNodes != null && i < domNodes.size(); i++) {
 				//
@@ -6418,15 +6505,52 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					} // if
 						//
-					if ((matcher = matcher(pattern = ObjectUtils.getIfNull(pattern, () -> Pattern.compile("\\[\\d+]")),
+					if ((matcher = matcher(
+							pattern2 = ObjectUtils.getIfNull(pattern2, () -> Pattern.compile("\\[\\d+]")),
 							textContent = getTextContent(domNode))) != null) {
 						//
 						textContent = matcher.replaceAll("");
 						//
 					} // if
 						//
-					setCellValue(row.createCell(Math.max(row.getLastCellNum(), 0)), textContent);
-					//
+					if (intIntMap != null && intIntMap.containsKey(j)) {
+						//
+						if (Objects.equals("th", getNodeName(domNode))) {
+							//
+							for (int k = 0; k < intIntMap.getInt(j); k++) {
+								//
+								setCellValue(row.createCell(Math.max(row.getLastCellNum(), 0)), textContent);
+								//
+							} // for
+								//
+						} else if (intIntMap.getInt(j) > 0
+								&& matches(matcher = matcher(pattern1, textContent = getTextContent(domNode)))
+								&& (groupCount = matcher.groupCount()) > 0) {
+							//
+							for (int k = 1; k <= groupCount; k++) {
+								//
+								setCellValue(row.createCell(Math.max(row.getLastCellNum(), 0)), matcher.group(k));
+								//
+							} // for
+								//
+						} else {
+							//
+							setCellValue(row.createCell(Math.max(row.getLastCellNum(), 0)), textContent);
+							//
+							for (int k = 1; k < intIntMap.getInt(j); k++) {
+								//
+								setCellValue(row.createCell(Math.max(row.getLastCellNum(), 0)), "");
+								//
+							} // for
+								//
+						} // if
+							//
+					} else {
+						//
+						setCellValue(row.createCell(Math.max(row.getLastCellNum(), 0)), textContent);
+						//
+					} // if
+						//
 				} // for
 					//
 			} // for
