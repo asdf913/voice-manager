@@ -6760,9 +6760,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					if (cell != null) {
 						//
-						if (drawing == null && sheet != null) {
+						if (drawing == null) {
 							//
-							drawing = sheet.createDrawingPatriarch();
+							drawing = createDrawingPatriarch(sheet);
 							//
 						} // if
 							//
@@ -6802,6 +6802,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return workbook;
 		//
+	}
+
+	private static Drawing<?> createDrawingPatriarch(final Sheet instance) {
+		return instance != null ? instance.createDrawingPatriarch() : null;
 	}
 
 	private static Workbook createWorkbook(final List<Voice> voices)
