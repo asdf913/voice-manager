@@ -163,6 +163,7 @@ import org.apache.poi.ss.usermodel.DataValidation;
 import org.apache.poi.ss.usermodel.DataValidationConstraint;
 import org.apache.poi.ss.usermodel.DataValidationHelper;
 import org.apache.poi.ss.usermodel.Drawing;
+import org.apache.poi.ss.usermodel.RichTextString;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -6775,9 +6776,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 						if ((comment = createCellComment(drawing, createClientAnchor(creationHelper))) != null) {
 							//
-							comment.setString(
-									creationHelper != null ? creationHelper.createRichTextString(e.getMessage())
-											: null);
+							comment.setString(createRichTextString(creationHelper, e.getMessage()));
 							//
 						} // if
 							//
@@ -6816,6 +6815,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static ClientAnchor createClientAnchor(final CreationHelper instance) {
 		return instance != null ? instance.createClientAnchor() : null;
+	}
+
+	private static RichTextString createRichTextString(final CreationHelper instance, final String text) {
+		return instance != null ? instance.createRichTextString(text) : null;
 	}
 
 	private static Workbook createWorkbook(final List<Voice> voices)

@@ -109,6 +109,7 @@ import org.apache.poi.ss.usermodel.DataValidation;
 import org.apache.poi.ss.usermodel.DataValidationConstraint;
 import org.apache.poi.ss.usermodel.DataValidationHelper;
 import org.apache.poi.ss.usermodel.Drawing;
+import org.apache.poi.ss.usermodel.RichTextString;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -201,7 +202,7 @@ class VoiceManagerTest {
 			METHOD_GET_NODE_NAME, METHOD_GET_NAME, METHOD_GET_PASS_WORD, METHOD_GET,
 			METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK, METHOD_READ_VALUE, METHOD_WRITE_VALUE_AS_STRING,
 			METHOD_CREATE_DRAWING_PATRIARCH, METHOD_GET_CREATION_HELPER, METHOD_CREATE_CELL_COMMENT,
-			METHOD_CREATE_CLIENT_ANCHOR = null;
+			METHOD_CREATE_CLIENT_ANCHOR, METHOD_CREATE_RICH_TEXT_STRING = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -535,6 +536,9 @@ class VoiceManagerTest {
 		//
 		(METHOD_CREATE_CLIENT_ANCHOR = clz.getDeclaredMethod("createClientAnchor", CreationHelper.class))
 				.setAccessible(true);
+		//
+		(METHOD_CREATE_RICH_TEXT_STRING = clz.getDeclaredMethod("createRichTextString", CreationHelper.class,
+				String.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -4650,6 +4654,28 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof ClientAnchor) {
 				return (ClientAnchor) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCreateRichTextString() throws Throwable {
+		//
+		Assertions.assertNull(createRichTextString(null, null));
+		//
+	}
+
+	private static RichTextString createRichTextString(final CreationHelper instance, final String text)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_RICH_TEXT_STRING.invoke(null, instance, text);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof RichTextString) {
+				return (RichTextString) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
