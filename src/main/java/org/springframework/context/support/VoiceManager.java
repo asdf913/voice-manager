@@ -2,6 +2,7 @@ package org.springframework.context.support;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
 import java.awt.LayoutManager;
@@ -41,6 +42,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
@@ -139,6 +141,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.math.Fraction;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -282,7 +285,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private AbstractButton btnSpeak, btnWriteVoice, btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji,
 			btnCopyHiragana, btnCopyKatakana, cbUseTtsVoice, btnExecute, btnImportFileTemplate, btnImport,
 			btnImportWithinFolder, cbOverMp3Title, cbOrdinalPositionAsFileNamePrefix, btnExport,
-			cbImportFileTemplateGenerateBlankRow, cbJlptAsFolder, btnExportCopy = null;
+			cbImportFileTemplateGenerateBlankRow, cbJlptAsFolder, btnExportCopy, btnExportBrowse = null;
 
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
@@ -1676,12 +1679,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel1.add(btnExportCopy = new JButton("Copy"));
 		//
+		panel1.add(btnExportBrowse = new JButton("Browse"));
+		//
 		panel.add(panel1);
 		//
 		setEditable(false, tfExportFile);
 		//
 		addActionListener(this, btnExportGaKuNenBeTsuKanJi, btnExportJoYoKanJi,
-				btnExportMicrosoftSpeechObjectLibraryInformation, btnExportCopy);
+				btnExportMicrosoftSpeechObjectLibraryInformation, btnExportCopy, btnExportBrowse);
 		//
 		return panel;
 		//
@@ -2577,6 +2582,32 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			setContents(getSystemClipboard(getToolkit()), new StringSelection(getText(tfExportFile)), null);
 			//
+		} else if (Objects.equals(source, btnExportBrowse)) {
+			//
+			try {
+				//
+				testAndAccept(Objects::nonNull,
+						toURI(testAndApply(Objects::nonNull, getText(tfExportFile), File::new, null)),
+						x -> browse(Desktop.getDesktop(), x));
+				//
+			} catch (final IOException e) {
+				//
+				if (headless) {
+					//
+					if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
+						LOG.error(getMessage(e), e);
+					} else if (e != null) {
+						e.printStackTrace();
+					} // if
+						//
+				} else {
+					//
+					JOptionPane.showMessageDialog(null, getMessage(e));
+					//
+				} // if
+					//
+			} // try
+				//
 		} else if (Objects.equals(source, btnExport)) {
 			//
 			SqlSession sqlSession = null;
@@ -2947,6 +2978,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
+	private static void browse(final Desktop instance, final URI uri) throws IOException {
+		if (instance != null) {
+			instance.browse(uri);
+		}
+	}
+
+	private static URI toURI(final File instance) {
+		return instance != null ? instance.toURI() : null;
+	}
+
 	private static Class<?> getDeclaringClass(final Member instance) {
 		return instance != null ? instance.getDeclaringClass() : null;
 	}
@@ -2967,7 +3008,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static <T> void testAndAccept(final Predicate<T> predicate, final T value, final Consumer<T> consumer) {
+	private static <T, E extends Throwable> void testAndAccept(final Predicate<T> predicate, final T value,
+			final FailableConsumer<T, E> consumer) throws E {
 		if (test(predicate, value) && consumer != null) {
 			consumer.accept(value);
 		}

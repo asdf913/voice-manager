@@ -1,6 +1,7 @@
 package org.springframework.context.support;
 
 import java.awt.Component;
+import java.awt.Desktop;
 import java.awt.GraphicsEnvironment;
 import java.awt.ItemSelectable;
 import java.awt.Toolkit;
@@ -29,6 +30,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
+import java.net.URI;
 import java.security.MessageDigest;
 import java.text.NumberFormat;
 import java.util.Arrays;
@@ -89,6 +91,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.math.Fraction;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -206,7 +209,7 @@ class VoiceManagerTest {
 			METHOD_CREATE_DRAWING_PATRIARCH, METHOD_GET_CREATION_HELPER, METHOD_CREATE_CELL_COMMENT,
 			METHOD_CREATE_CLIENT_ANCHOR, METHOD_CREATE_RICH_TEXT_STRING, METHOD_SET_CELL_COMMENT, METHOD_SET_AUTHOR,
 			METHOD_TEST_AND_ACCEPT, METHOD_FIND_FIELDS_BY_VALUE, METHOD_GET_DECLARED_FIELDS, METHOD_GET_DECLARING_CLASS,
-			METHOD_GET_PACKAGE = null;
+			METHOD_GET_PACKAGE, METHOD_BROWSE, METHOD_TO_URI = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -555,8 +558,8 @@ class VoiceManagerTest {
 		//
 		(METHOD_SET_AUTHOR = clz.getDeclaredMethod("setAuthor", Comment.class, String.class)).setAccessible(true);
 		//
-		(METHOD_TEST_AND_ACCEPT = clz.getDeclaredMethod("testAndAccept", Predicate.class, Object.class, Consumer.class))
-				.setAccessible(true);
+		(METHOD_TEST_AND_ACCEPT = clz.getDeclaredMethod("testAndAccept", Predicate.class, Object.class,
+				FailableConsumer.class)).setAccessible(true);
 		//
 		(METHOD_FIND_FIELDS_BY_VALUE = clz.getDeclaredMethod("findFieldsByValue", Field[].class, Object.class,
 				Object.class)).setAccessible(true);
@@ -566,6 +569,10 @@ class VoiceManagerTest {
 		(METHOD_GET_DECLARING_CLASS = clz.getDeclaredMethod("getDeclaringClass", Member.class)).setAccessible(true);
 		//
 		(METHOD_GET_PACKAGE = clz.getDeclaredMethod("getPackage", Class.class)).setAccessible(true);
+		//
+		(METHOD_BROWSE = clz.getDeclaredMethod("browse", Desktop.class, URI.class)).setAccessible(true);
+		//
+		(METHOD_TO_URI = clz.getDeclaredMethod("toURI", File.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -1414,6 +1421,30 @@ class VoiceManagerTest {
 			//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance,
 				new ActionEvent(btnExportMicrosoftSpeechObjectLibraryInformation, 0, null)));
+		//
+		// btnExportCopy
+		//
+		final AbstractButton btnExportCopy = new JButton();
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "btnExportCopy", btnExportCopy, true);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnExportCopy, 0, null)));
+		//
+		// btnExportBrowse
+		//
+		final AbstractButton btnExportBrowse = new JButton();
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "btnExportBrowse", btnExportBrowse, true);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnExportBrowse, 0, null)));
 		//
 	}
 
@@ -4748,8 +4779,8 @@ class VoiceManagerTest {
 		//
 	}
 
-	private static <T> void testAndAccept(final Predicate<T> predicate, final T value, final Consumer<T> consumer)
-			throws Throwable {
+	private static <T, E extends Throwable> void testAndAccept(final Predicate<T> predicate, final T value,
+			final FailableConsumer<T, E> consumer) throws Throwable {
 		try {
 			METHOD_TEST_AND_ACCEPT.invoke(null, predicate, value, consumer);
 		} catch (final InvocationTargetException e) {
@@ -4839,6 +4870,42 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof Package) {
 				return (Package) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testBrowse() {
+		//
+		Assertions.assertDoesNotThrow(() -> browse(null, null));
+		//
+	}
+
+	private static void browse(final Desktop instance, final URI uri) throws Throwable {
+		try {
+			METHOD_BROWSE.invoke(null, instance, uri);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testToURI() throws Throwable {
+		//
+		Assertions.assertNotNull(toURI(new File("")));
+		//
+	}
+
+	private static URI toURI(final File instance) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_URI.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof URI) {
+				return (URI) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
