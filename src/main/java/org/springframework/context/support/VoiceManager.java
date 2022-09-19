@@ -6718,6 +6718,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final String[] voiceIds = speechApi != null ? speechApi.getVoiceIds() : null;
 		//
+		final String commonPrefix = String.join("",
+				StringUtils.substringBeforeLast(StringUtils.getCommonPrefix(voiceIds), "\\"), "\\");
+		//
 		String voiceId = null;
 		//
 		final String[] as = toArray(toList(
@@ -6730,6 +6733,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				if ((sheet = createSheet(workbook = ObjectUtils.getIfNull(workbook, XSSFWorkbook::new))) != null
 						&& (row = sheet.createRow(sheet.getLastRowNum() + 1)) != null) {
+					//
+					setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)), "Common Prefix");
 					//
 					setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)), "ID");
 					//
@@ -6749,7 +6754,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-			setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)), voiceId = voiceIds[i]);
+			setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)), commonPrefix);
+			//
+			setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)),
+					StringUtils.substringAfter(voiceId = voiceIds[i], commonPrefix));
 			//
 			for (int j = 0; j < as.length; j++) {
 				//
