@@ -194,7 +194,8 @@ class VoiceManagerTest {
 			METHOD_GET_COLUMN_NAME, METHOD_GET_KEY_SET, METHOD_PUT_ALL, METHOD_CREATE_SHEET, METHOD_ENTRIES,
 			METHOD_GET_WORK_BOOK, METHOD_GET_OLE_ENTRY_NAMES, METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE,
 			METHOD_GET_DOCUMENT_ELEMENT, METHOD_GET_CHILD_NODES, METHOD_GET_NAMED_ITEM, METHOD_GET_TEXT_CONTENT,
-			METHOD_GET_NODE_NAME, METHOD_GET_NAME, METHOD_GET_PASS_WORD, METHOD_GET = null;
+			METHOD_GET_NODE_NAME, METHOD_GET_NAME, METHOD_GET_PASS_WORD, METHOD_GET,
+			METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -507,6 +508,10 @@ class VoiceManagerTest {
 		(METHOD_GET_PASS_WORD = clz.getDeclaredMethod("getPassword", Console.class)).setAccessible(true);
 		//
 		(METHOD_GET = clz.getDeclaredMethod("get", Supplier.class)).setAccessible(true);
+		//
+		(METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK = clz
+				.getDeclaredMethod("createMicrosoftSpeechObjectLibraryWorkbook", SpeechApi.class, String[].class))
+				.setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -1323,6 +1328,20 @@ class VoiceManagerTest {
 		} // if
 			//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnExportJoYoKanJi, 0, null)));
+		//
+		// btnExportMicrosoftSpeechObjectLibraryInformation
+		//
+		final AbstractButton btnExportMicrosoftSpeechObjectLibraryInformation = new JButton();
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "btnExportMicrosoftSpeechObjectLibraryInformation",
+					btnExportMicrosoftSpeechObjectLibraryInformation, true);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance,
+				new ActionEvent(btnExportMicrosoftSpeechObjectLibraryInformation, 0, null)));
 		//
 	}
 
@@ -4434,6 +4453,37 @@ class VoiceManagerTest {
 	private static <T> T get(final Supplier<T> instance) throws Throwable {
 		try {
 			return (T) METHOD_GET.invoke(null, instance);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCreateMicrosoftSpeechObjectLibraryWorkbook() throws Throwable {
+		//
+		Assertions.assertNull(createMicrosoftSpeechObjectLibraryWorkbook(null, (String[]) null));
+		//
+		ih.voiceIds = new String[] {};
+		//
+		Assertions.assertNull(createMicrosoftSpeechObjectLibraryWorkbook(speechApi, (String[]) null));
+		//
+		ih.voiceIds = new String[] { null };
+		//
+		Assertions.assertNotNull(createMicrosoftSpeechObjectLibraryWorkbook(speechApi, (String) null));
+		//
+	}
+
+	private static Workbook createMicrosoftSpeechObjectLibraryWorkbook(final SpeechApi speechApi,
+			final String... attributes) throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK.invoke(null, speechApi,
+					attributes);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Workbook) {
+				return (Workbook) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

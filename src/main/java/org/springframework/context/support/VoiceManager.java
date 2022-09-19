@@ -269,7 +269,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private AbstractButton btnSpeak, btnWriteVoice, btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji,
 			btnCopyHiragana, btnCopyKatakana, cbUseTtsVoice, btnExecute, btnImportFileTemplate, btnImport,
 			btnImportWithinFolder, cbOverMp3Title, cbOrdinalPositionAsFileNamePrefix, btnExport,
-			cbImportFileTemplateGenerateBlankRow, cbJlptAsFolder, btnExportGaKuNenBeTsuKanJi, btnExportJoYoKanJi = null;
+			cbImportFileTemplateGenerateBlankRow, cbJlptAsFolder, btnExportGaKuNenBeTsuKanJi, btnExportJoYoKanJi,
+			btnExportMicrosoftSpeechObjectLibraryInformation = null;
 
 	private JProgressBar progressBarImport, progressBarExport = null;
 
@@ -1616,9 +1617,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.add(btnExportGaKuNenBeTsuKanJi = new JButton("Export 学年別漢字"), WRAP);
 		//
-		panel.add(btnExportJoYoKanJi = new JButton("Export 常用漢字"));
+		panel.add(btnExportJoYoKanJi = new JButton("Export 常用漢字"), WRAP);
 		//
-		addActionListener(this, btnExportGaKuNenBeTsuKanJi, btnExportJoYoKanJi);
+		panel.add(btnExportMicrosoftSpeechObjectLibraryInformation = new JButton(
+				"Export Microsoft Speech Object Library Information"));
+		//
+		addActionListener(this, btnExportGaKuNenBeTsuKanJi, btnExportJoYoKanJi,
+				btnExportMicrosoftSpeechObjectLibraryInformation);
 		//
 		return panel;
 		//
@@ -2738,6 +2743,46 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				write(workbook = createJoYoKanJiWorkbook(getProperty(propertyResolver,
 						"org.springframework.context.support.VoiceManager.joYoKanJiPageUrl")), os);
+				//
+			} catch (final IOException e) {
+				//
+				if (headless) {
+					//
+					if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
+						LOG.error(getMessage(e), e);
+					} else if (e != null) {
+						e.printStackTrace();
+					} // if
+						//
+				} else {
+					//
+					JOptionPane.showMessageDialog(null, getMessage(e));
+					//
+				} // if
+					//
+			} finally {
+				//
+				IOUtils.closeQuietly(workbook);
+				//
+				if (file != null && file.exists() && isFile(file) && file.length() == 0) {
+					//
+					file.delete();
+					//
+				} // if
+					//
+			} // try
+				//
+		} else if (Objects.equals(source, btnExportMicrosoftSpeechObjectLibraryInformation)) {
+			//
+			File file = null;
+			//
+			Workbook workbook = null;
+			//
+			try (final OutputStream os = new FileOutputStream(file = new File(
+					String.format("MicrosoftSpeechObjectLibrary_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.xlsx", new Date())))) {
+				//
+				write(workbook = createMicrosoftSpeechObjectLibraryWorkbook(speechApi, "Age", "AudioFormats", "Gender",
+						"Language", "Name", "Vendor", "Version"), os);
 				//
 			} catch (final IOException e) {
 				//
@@ -6632,6 +6677,70 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static DomNodeList<DomNode> getChildNodes(final DomNode instance) {
 		return instance != null ? instance.getChildNodes() : null;
+	}
+
+	private static Workbook createMicrosoftSpeechObjectLibraryWorkbook(final SpeechApi speechApi,
+			final String... attributes) {
+		//
+		Workbook workbook = null;
+		//
+		Sheet sheet = null;
+		//
+		Row row = null;
+		//
+		final String[] voiceIds = speechApi != null 
+				? speechApi.getVoiceIds()
+						: null;
+		//
+		String voiceId = null;
+		//
+		for (int i = 0; voiceIds != null
+				&& attributes != null
+				&& i < voiceIds.length; i++) {
+			//
+			if (sheet == null) {
+				//
+				if ((sheet = createSheet(workbook = ObjectUtils.getIfNull(workbook, XSSFWorkbook::new))) != null
+						&& (row = sheet.createRow(sheet.getLastRowNum() + 1)) != null) {
+					//
+					setCellValue(row.createCell(Math.max(row.getLastCellNum(), 0)), "ID");
+					//
+					for (int j = 0; j < attributes.length; j++) {
+						//
+						setCellValue(row.createCell(Math.max(row.getLastCellNum(), 0)), attributes[j]);
+						//
+					} // for
+						//
+				} // if
+					//
+			} // if
+				//
+			if (sheet != null && (row = sheet.createRow(sheet.getLastRowNum() + 1)) == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			setCellValue(row.createCell(Math.max(row.getLastCellNum(), 0)), voiceId = voiceIds[i]);
+			//
+			for (int j = 0; j < attributes.length; j++) {
+				//
+				setCellValue(row.createCell(Math.max(row.getLastCellNum(), 0)),
+						speechApi.getVoiceAttribute(voiceId, attributes[j]));
+				//
+			} // for
+				//
+		} // for
+			//
+		if (sheet != null && row != null) {
+			//
+			sheet.setAutoFilter(new CellRangeAddress(sheet.getFirstRowNum(), sheet.getLastRowNum() - 1,
+					row.getFirstCellNum(), row.getLastCellNum() - 1));
+			//
+		} // if
+			//
+		return workbook;
+		//
 	}
 
 	private static Workbook createWorkbook(final List<Voice> voices)
