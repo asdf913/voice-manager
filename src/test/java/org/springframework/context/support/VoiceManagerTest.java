@@ -102,6 +102,8 @@ import org.apache.poi.ooxml.POIXMLProperties;
 import org.apache.poi.ooxml.POIXMLProperties.CustomProperties;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.ClientAnchor;
+import org.apache.poi.ss.usermodel.Comment;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.DataValidation;
 import org.apache.poi.ss.usermodel.DataValidationConstraint;
@@ -198,7 +200,7 @@ class VoiceManagerTest {
 			METHOD_GET_DOCUMENT_ELEMENT, METHOD_GET_CHILD_NODES, METHOD_GET_NAMED_ITEM, METHOD_GET_TEXT_CONTENT,
 			METHOD_GET_NODE_NAME, METHOD_GET_NAME, METHOD_GET_PASS_WORD, METHOD_GET,
 			METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK, METHOD_READ_VALUE, METHOD_WRITE_VALUE_AS_STRING,
-			METHOD_CREATE_DRAWING_PATRIARCH, METHOD_GET_CREATION_HELPER = null;
+			METHOD_CREATE_DRAWING_PATRIARCH, METHOD_GET_CREATION_HELPER, METHOD_CREATE_CELL_COMMENT = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -526,6 +528,9 @@ class VoiceManagerTest {
 				.setAccessible(true);
 		//
 		(METHOD_GET_CREATION_HELPER = clz.getDeclaredMethod("getCreationHelper", Workbook.class)).setAccessible(true);
+		//
+		(METHOD_CREATE_CELL_COMMENT = clz.getDeclaredMethod("createCellComment", Drawing.class, ClientAnchor.class))
+				.setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -4599,6 +4604,27 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof CreationHelper) {
 				return (CreationHelper) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCreateCellComment() throws Throwable {
+		//
+		Assertions.assertNull(createCellComment(null, null));
+		//
+	}
+
+	private static Comment createCellComment(final Drawing<?> instance, final ClientAnchor anchor) throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_CELL_COMMENT.invoke(null, instance, anchor);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Comment) {
+				return (Comment) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

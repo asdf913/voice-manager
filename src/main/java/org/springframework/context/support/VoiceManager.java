@@ -156,6 +156,7 @@ import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.ClientAnchor;
 import org.apache.poi.ss.usermodel.Comment;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.DataValidation;
@@ -6772,10 +6773,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 						} // if
 							//
-						if ((comment = drawing != null
-								? drawing.createCellComment(
-										creationHelper != null ? creationHelper.createClientAnchor() : null)
-								: null) != null) {
+						if ((comment = createCellComment(drawing,
+								creationHelper != null ? creationHelper.createClientAnchor() : null)) != null) {
 							//
 							comment.setString(
 									creationHelper != null ? creationHelper.createRichTextString(e.getMessage())
@@ -6810,6 +6809,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static CreationHelper getCreationHelper(final Workbook instance) {
 		return instance != null ? instance.getCreationHelper() : null;
+	}
+
+	private static Comment createCellComment(final Drawing<?> instance, final ClientAnchor anchor) {
+		return instance != null ? instance.createCellComment(anchor) : null;
 	}
 
 	private static Workbook createWorkbook(final List<Voice> voices)
