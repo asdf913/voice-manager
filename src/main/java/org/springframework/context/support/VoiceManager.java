@@ -6773,8 +6773,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 						} // if
 							//
-						if ((comment = createCellComment(drawing,
-								creationHelper != null ? creationHelper.createClientAnchor() : null)) != null) {
+						if ((comment = createCellComment(drawing, createClientAnchor(creationHelper))) != null) {
 							//
 							comment.setString(
 									creationHelper != null ? creationHelper.createRichTextString(e.getMessage())
@@ -6813,6 +6812,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static Comment createCellComment(final Drawing<?> instance, final ClientAnchor anchor) {
 		return instance != null ? instance.createCellComment(anchor) : null;
+	}
+
+	private static ClientAnchor createClientAnchor(final CreationHelper instance) {
+		return instance != null ? instance.createClientAnchor() : null;
 	}
 
 	private static Workbook createWorkbook(final List<Voice> voices)

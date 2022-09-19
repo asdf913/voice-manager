@@ -200,7 +200,8 @@ class VoiceManagerTest {
 			METHOD_GET_DOCUMENT_ELEMENT, METHOD_GET_CHILD_NODES, METHOD_GET_NAMED_ITEM, METHOD_GET_TEXT_CONTENT,
 			METHOD_GET_NODE_NAME, METHOD_GET_NAME, METHOD_GET_PASS_WORD, METHOD_GET,
 			METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK, METHOD_READ_VALUE, METHOD_WRITE_VALUE_AS_STRING,
-			METHOD_CREATE_DRAWING_PATRIARCH, METHOD_GET_CREATION_HELPER, METHOD_CREATE_CELL_COMMENT = null;
+			METHOD_CREATE_DRAWING_PATRIARCH, METHOD_GET_CREATION_HELPER, METHOD_CREATE_CELL_COMMENT,
+			METHOD_CREATE_CLIENT_ANCHOR = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -530,6 +531,9 @@ class VoiceManagerTest {
 		(METHOD_GET_CREATION_HELPER = clz.getDeclaredMethod("getCreationHelper", Workbook.class)).setAccessible(true);
 		//
 		(METHOD_CREATE_CELL_COMMENT = clz.getDeclaredMethod("createCellComment", Drawing.class, ClientAnchor.class))
+				.setAccessible(true);
+		//
+		(METHOD_CREATE_CLIENT_ANCHOR = clz.getDeclaredMethod("createClientAnchor", CreationHelper.class))
 				.setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
@@ -4625,6 +4629,27 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof Comment) {
 				return (Comment) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCreateClientAnchor() throws Throwable {
+		//
+		Assertions.assertNull(createClientAnchor(null));
+		//
+	}
+
+	private static ClientAnchor createClientAnchor(final CreationHelper instance) throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_CLIENT_ANCHOR.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof ClientAnchor) {
+				return (ClientAnchor) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
