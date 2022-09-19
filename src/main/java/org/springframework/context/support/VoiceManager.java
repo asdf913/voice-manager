@@ -537,6 +537,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
+	private ObjectMapper getObjectMapper() {
+		if (objectMapper == null) {
+			objectMapper = new ObjectMapper();
+		}
+		return objectMapper;
+	}
+
 	private static <K> K getKey(final Entry<K, ?> instance) {
 		return instance != null ? instance.getKey() : null;
 	}
@@ -553,19 +560,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	public void setMp3Tags(final Object value) {
 		//
-		mp3Tags = toArray(toList(
-				map(stream(getObjectList(objectMapper = ObjectUtils.getIfNull(objectMapper, ObjectMapper::new), value)),
-						VoiceManager::toString)),
+		mp3Tags = toArray(toList(map(stream(getObjectList(getObjectMapper(), value)), VoiceManager::toString)),
 				new String[] {});
 		//
 	}
 
 	public void setMicrosoftSpeechObjectLibraryAttributeNames(final Object value) {
 		//
-		this.microsoftSpeechObjectLibraryAttributeNames = toArray(toList(
-				map(stream(getObjectList(objectMapper = ObjectUtils.getIfNull(objectMapper, ObjectMapper::new), value)),
-						VoiceManager::toString)),
-				new String[] {});
+		this.microsoftSpeechObjectLibraryAttributeNames = toArray(
+				toList(map(stream(getObjectList(getObjectMapper(), value)), VoiceManager::toString)), new String[] {});
 		//
 	}
 
@@ -2298,8 +2301,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			File file = null;
 			//
-			final Voice voice = createVoice(objectMapper = ObjectUtils.getIfNull(objectMapper, ObjectMapper::new),
-					this);
+			final Voice voice = createVoice(getObjectMapper(), this);
 			//
 			if (isSelected(cbUseTtsVoice)) {
 				//
@@ -2846,7 +2848,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			final POIXMLDocument poiXmlDocument = cast(POIXMLDocument.class, workbook);
 			//
 			final List<String> sheetExclued = toList(
-					map(stream(getObjectList(objectMapper = ObjectUtils.getIfNull(objectMapper, ObjectMapper::new),
+					map(stream(getObjectList(getObjectMapper(),
 							getLpwstr(testAndApply(VoiceManager::contains,
 									getCustomProperties(getProperties(poiXmlDocument)), "sheetExcluded",
 									VoiceManager::getProperty, null)))),
@@ -3462,8 +3464,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				setBackground(jtf, Color.WHITE);
 				//
-				final List<?> list = getObjectList(
-						objectMapper = ObjectUtils.getIfNull(objectMapper, ObjectMapper::new), getText(jtf));
+				final List<?> list = getObjectList(getObjectMapper(), getText(jtf));
 				//
 				if ((objectMapper = ObjectUtils.getIfNull(objectMapper, ObjectMapper::new)) != null) {
 					//
