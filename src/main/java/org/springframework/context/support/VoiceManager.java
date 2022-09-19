@@ -524,10 +524,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		} // if
 			//
 		final Object object = testAndApply(StringUtils::isNotEmpty, toString(value),
-				x -> (objectMapper = ObjectUtils.getIfNull(objectMapper, ObjectMapper::new)) != null
-						? objectMapper.readValue(x, Object.class)
-						: null,
-				null);
+				x -> readValue(getObjectMapper(), x, Object.class), null);
 		//
 		if (object instanceof Map || object == null) {
 			setOutputFolderFileNameExpressions(object);
@@ -542,6 +539,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			objectMapper = new ObjectMapper();
 		}
 		return objectMapper;
+	}
+
+	private static <T> T readValue(final ObjectMapper instance, final String content, final Class<T> valueType)
+			throws JsonProcessingException {
+		return instance != null ? instance.readValue(content, valueType) : null;
 	}
 
 	private static <K> K getKey(final Entry<K, ?> instance) {
