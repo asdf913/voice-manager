@@ -194,8 +194,7 @@ class VoiceManagerTest {
 			METHOD_GET_COLUMN_NAME, METHOD_GET_KEY_SET, METHOD_PUT_ALL, METHOD_CREATE_SHEET, METHOD_ENTRIES,
 			METHOD_GET_WORK_BOOK, METHOD_GET_OLE_ENTRY_NAMES, METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE,
 			METHOD_GET_DOCUMENT_ELEMENT, METHOD_GET_CHILD_NODES, METHOD_GET_NAMED_ITEM, METHOD_GET_TEXT_CONTENT,
-			METHOD_GET_NODE_NAME, METHOD_GET_NAME, METHOD_GET_PASS_WORD, METHOD_CREATE_JO_YO_KAN_JI_WORK_BOOK,
-			METHOD_GET = null;
+			METHOD_GET_NODE_NAME, METHOD_GET_NAME, METHOD_GET_PASS_WORD, METHOD_GET = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -506,9 +505,6 @@ class VoiceManagerTest {
 		(METHOD_GET_NAME = clz.getDeclaredMethod("getName", File.class)).setAccessible(true);
 		//
 		(METHOD_GET_PASS_WORD = clz.getDeclaredMethod("getPassword", Console.class)).setAccessible(true);
-		//
-		(METHOD_CREATE_JO_YO_KAN_JI_WORK_BOOK = clz.getDeclaredMethod("createJoYoKanJiWorkbook", String.class))
-				.setAccessible(true);
 		//
 		(METHOD_GET = clz.getDeclaredMethod("get", Supplier.class)).setAccessible(true);
 		//
@@ -1315,6 +1311,18 @@ class VoiceManagerTest {
 			//
 		Assertions.assertDoesNotThrow(
 				() -> actionPerformed(instance, new ActionEvent(btnExportGaKuNenBeTsuKanJi, 0, null)));
+		//
+		// btnExportJoYoKanJi
+		//
+		final AbstractButton btnExportJoYoKanJi = new JButton();
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "btnExportJoYoKanJi", btnExportJoYoKanJi, true);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnExportJoYoKanJi, 0, null)));
 		//
 	}
 
@@ -4409,27 +4417,6 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof String) {
 				return (String) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testCreateJoYoKanJiWorkbook() throws Throwable {
-		//
-		Assertions.assertNull(createJoYoKanJiWorkbook(null));
-		//
-	}
-
-	private static Workbook createJoYoKanJiWorkbook(final String url) throws Throwable {
-		try {
-			final Object obj = METHOD_CREATE_JO_YO_KAN_JI_WORK_BOOK.invoke(null, url);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Workbook) {
-				return (Workbook) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
