@@ -255,6 +255,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static final String FORMAT = "format";
 
+	private static final Predicate<File> EMPTY_FILE_PREDICATE = f -> f != null && f.exists() && isFile(f)
+			&& f.length() == 0;
+
 	private PropertyResolver propertyResolver = null;
 
 	private JTextComponent tfFolder, tfFile, tfFileLength, tfFileDigest, tfTextTts, tfTextImport, tfHiragana,
@@ -2615,12 +2618,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				IOUtils.closeQuietly(workbook);
 				//
-				if (file != null && file.exists() && isFile(file) && file.length() == 0) {
-					//
-					file.delete();
-					//
-				} // if
-					//
+				testAndAccept(EMPTY_FILE_PREDICATE, file, FileUtils::deleteQuietly);
+				//
 			} // try
 				//
 		} else if (Objects.equals(source, btnImportFileTemplate)) {
@@ -2742,12 +2741,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				IOUtils.closeQuietly(workbook);
 				//
-				if (file != null && file.exists() && isFile(file) && file.length() == 0) {
-					//
-					file.delete();
-					//
-				} // if
-					//
+				testAndAccept(EMPTY_FILE_PREDICATE, file, FileUtils::deleteQuietly);
+				//
 			} // try
 				//
 		} else if (Objects.equals(source, btnExportJoYoKanJi)) {
@@ -2782,12 +2777,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				IOUtils.closeQuietly(workbook);
 				//
-				if (file != null && file.exists() && isFile(file) && file.length() == 0) {
-					//
-					file.delete();
-					//
-				} // if
-					//
+				testAndAccept(EMPTY_FILE_PREDICATE, file, FileUtils::deleteQuietly);
+				//
 			} // try
 				//
 		} else if (Objects.equals(source, btnExportMicrosoftSpeechObjectLibraryInformation)) {
@@ -2822,16 +2813,18 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				IOUtils.closeQuietly(workbook);
 				//
-				if (file != null && file.exists() && isFile(file) && file.length() == 0) {
-					//
-					file.delete();
-					//
-				} // if
-					//
+				testAndAccept(EMPTY_FILE_PREDICATE, file, FileUtils::deleteQuietly);
+				//
 			} // try
 				//
 		} // if
 			//
+	}
+
+	private static <T> void testAndAccept(final Predicate<T> predicate, final T value, final Consumer<T> consumer) {
+		if (test(predicate, value) && consumer != null) {
+			consumer.accept(value);
+		}
 	}
 
 	private static File[] listFiles(final File instance) {

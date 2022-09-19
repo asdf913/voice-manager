@@ -203,8 +203,8 @@ class VoiceManagerTest {
 			METHOD_GET_NODE_NAME, METHOD_GET_NAME_FILE, METHOD_GET_NAME_CLASS, METHOD_GET_PASS_WORD, METHOD_GET,
 			METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK, METHOD_READ_VALUE, METHOD_WRITE_VALUE_AS_STRING,
 			METHOD_CREATE_DRAWING_PATRIARCH, METHOD_GET_CREATION_HELPER, METHOD_CREATE_CELL_COMMENT,
-			METHOD_CREATE_CLIENT_ANCHOR, METHOD_CREATE_RICH_TEXT_STRING, METHOD_SET_CELL_COMMENT,
-			METHOD_SET_AUTHOR = null;
+			METHOD_CREATE_CLIENT_ANCHOR, METHOD_CREATE_RICH_TEXT_STRING, METHOD_SET_CELL_COMMENT, METHOD_SET_AUTHOR,
+			METHOD_TEST_AND_ACCEPT = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -552,6 +552,9 @@ class VoiceManagerTest {
 				.setAccessible(true);
 		//
 		(METHOD_SET_AUTHOR = clz.getDeclaredMethod("setAuthor", Comment.class, String.class)).setAccessible(true);
+		//
+		(METHOD_TEST_AND_ACCEPT = clz.getDeclaredMethod("testAndAccept", Predicate.class, Object.class, Consumer.class))
+				.setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -4726,6 +4729,24 @@ class VoiceManagerTest {
 	}
 
 	@Test
+	void testTestAndAccept() {
+		//
+		Assertions.assertDoesNotThrow(() -> testAndAccept(Predicates.alwaysFalse(), null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> testAndAccept(Predicates.alwaysTrue(), null, null));
+		//
+	}
+
+	private static <T> void testAndAccept(final Predicate<T> predicate, final T value, final Consumer<T> consumer)
+			throws Throwable {
+		try {
+			METHOD_TEST_AND_ACCEPT.invoke(null, predicate, value, consumer);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
 	void testIh() throws Throwable {
 		//
 		final Constructor<?> constructor = CLASS_IH != null ? CLASS_IH.getDeclaredConstructor() : null;
@@ -5189,6 +5210,26 @@ class VoiceManagerTest {
 				//
 		});
 		//
+	}
+
+	@Test
+	void testEmptyFilePredicate() throws Throwable {
+		//
+		final Predicate<Object> predicate = cast(Predicate.class,
+				FieldUtils.readDeclaredStaticField(VoiceManager.class, "EMPTY_FILE_PREDICATE", true));
+		//
+		if (predicate != null) {
+			//
+			Assertions.assertFalse(predicate.test(null));
+			//
+			Assertions.assertFalse(predicate.test(new File("non_exixts")));
+			//
+			Assertions.assertFalse(predicate.test(new File(".")));
+			//
+			Assertions.assertFalse(predicate.test(new File("pom.xml")));
+			//
+		} // if
+			//
 	}
 
 }
