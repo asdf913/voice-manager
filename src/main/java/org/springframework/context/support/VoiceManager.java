@@ -6760,27 +6760,23 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} catch (final Error e) {
 					//
-					if (cell != null) {
+					if (drawing == null) {
 						//
-						if (drawing == null) {
-							//
-							drawing = createDrawingPatriarch(sheet);
-							//
-						} // if
-							//
-						if (creationHelper == null) {
-							//
-							creationHelper = getCreationHelper(workbook);
-							//
-						} // if
-							//
-						setString(comment = createCellComment(drawing, createClientAnchor(creationHelper)),
-								createRichTextString(creationHelper, e.getMessage()));
-						//
-						cell.setCellComment(comment);
+						drawing = createDrawingPatriarch(sheet);
 						//
 					} // if
 						//
+					if (creationHelper == null) {
+						//
+						creationHelper = getCreationHelper(workbook);
+						//
+					} // if
+						//
+					setString(comment = createCellComment(drawing, createClientAnchor(creationHelper)),
+							createRichTextString(creationHelper, e.getMessage()));
+					//
+					setCellComment(cell, comment);
+					//
 				} // try
 					//
 			} // for
@@ -6821,6 +6817,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static void setString(final Comment instance, final RichTextString string) {
 		if (instance != null) {
 			instance.setString(string);
+		}
+	}
+
+	private static void setCellComment(final Cell instance, final Comment comment) {
+		if (instance != null) {
+			instance.setCellComment(comment);
 		}
 	}
 

@@ -203,7 +203,7 @@ class VoiceManagerTest {
 			METHOD_GET_NODE_NAME, METHOD_GET_NAME, METHOD_GET_PASS_WORD, METHOD_GET,
 			METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK, METHOD_READ_VALUE, METHOD_WRITE_VALUE_AS_STRING,
 			METHOD_CREATE_DRAWING_PATRIARCH, METHOD_GET_CREATION_HELPER, METHOD_CREATE_CELL_COMMENT,
-			METHOD_CREATE_CLIENT_ANCHOR, METHOD_CREATE_RICH_TEXT_STRING = null;
+			METHOD_CREATE_CLIENT_ANCHOR, METHOD_CREATE_RICH_TEXT_STRING, METHOD_SET_CELL_COMMENT = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -544,6 +544,9 @@ class VoiceManagerTest {
 		//
 		(METHOD_CREATE_RICH_TEXT_STRING = clz.getDeclaredMethod("createRichTextString", CreationHelper.class,
 				String.class)).setAccessible(true);
+		//
+		(METHOD_SET_CELL_COMMENT = clz.getDeclaredMethod("setCellComment", Cell.class, Comment.class))
+				.setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -4693,6 +4696,21 @@ class VoiceManagerTest {
 				return (RichTextString) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetCellComment() {
+		//
+		Assertions.assertDoesNotThrow(() -> setCellComment(null, null));
+		//
+	}
+
+	private static void setCellComment(final Cell instance, final Comment comment) throws Throwable {
+		try {
+			METHOD_SET_CELL_COMMENT.invoke(null, instance, comment);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
