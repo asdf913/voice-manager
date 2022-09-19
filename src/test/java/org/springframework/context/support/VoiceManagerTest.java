@@ -528,6 +528,8 @@ class VoiceManagerTest {
 
 	private class IH implements InvocationHandler {
 
+		private Error errorGetVoiceAttribute = null;
+
 		private Voice voice = null;
 
 		private Set<Entry<?, ?>> entrySet = null;
@@ -781,10 +783,15 @@ class VoiceManagerTest {
 					//
 					return voiceIds;
 					//
-				} else
-				//
-				if (Objects.equals(methodName, "getVoiceAttribute")) {
+				} else if (Objects.equals(methodName, "getVoiceAttribute")) {
 					//
+					if (errorGetVoiceAttribute != null) {
+						//
+						throw errorGetVoiceAttribute;
+						//
+					} // if
+						//
+						//
 					return voiceAttribute;
 					//
 				} // if
@@ -4489,6 +4496,12 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNotNull(createMicrosoftSpeechObjectLibraryWorkbook(speechApi, (String) null));
 		//
+		Assertions.assertNotNull(createMicrosoftSpeechObjectLibraryWorkbook(speechApi, " "));
+		//
+		ih.errorGetVoiceAttribute = new Error();
+		//
+		Assertions.assertNotNull(createMicrosoftSpeechObjectLibraryWorkbook(speechApi, " "));
+		//
 	}
 
 	private static Workbook createMicrosoftSpeechObjectLibraryWorkbook(final SpeechApi speechApi,
@@ -4530,8 +4543,7 @@ class VoiceManagerTest {
 		//
 	}
 
-	private static String writeValueAsString(final ObjectMapper instance, final Object value)
-			throws Throwable {
+	private static String writeValueAsString(final ObjectMapper instance, final Object value) throws Throwable {
 		try {
 			final Object obj = METHOD_WRITE_VALUE_AS_STRING.invoke(null, instance, value);
 			if (obj == null) {

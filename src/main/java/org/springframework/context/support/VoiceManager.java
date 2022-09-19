@@ -156,9 +156,12 @@ import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.Comment;
+import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.DataValidation;
 import org.apache.poi.ss.usermodel.DataValidationConstraint;
 import org.apache.poi.ss.usermodel.DataValidationHelper;
+import org.apache.poi.ss.usermodel.Drawing;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -6703,11 +6706,23 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		Row row = null;
 		//
+		Cell cell = null;
+		//
+		Drawing<?> drawing = null;
+		//
+		CreationHelper creationHelper = null;
+		//
+		Comment comment = null;
+		//
 		final String[] voiceIds = speechApi != null ? speechApi.getVoiceIds() : null;
 		//
 		String voiceId = null;
 		//
-		for (int i = 0; voiceIds != null && attributes != null && i < voiceIds.length; i++) {
+		final String[] as = toArray(toList(
+				filter(testAndApply(Objects::nonNull, attributes, Arrays::stream, null), StringUtils::isNotEmpty)),
+				new String[] {});
+		//
+		for (int i = 0; voiceIds != null && as != null && i < voiceIds.length; i++) {
 			//
 			if (sheet == null) {
 				//
@@ -6716,9 +6731,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					setCellValue(row.createCell(Math.max(row.getLastCellNum(), 0)), "ID");
 					//
-					for (int j = 0; j < attributes.length; j++) {
+					for (int j = 0; j < as.length; j++) {
 						//
-						setCellValue(row.createCell(Math.max(row.getLastCellNum(), 0)), attributes[j]);
+						setCellValue(row.createCell(Math.max(row.getLastCellNum(), 0)), as[j]);
 						//
 					} // for
 						//
@@ -6734,11 +6749,46 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			setCellValue(row.createCell(Math.max(row.getLastCellNum(), 0)), voiceId = voiceIds[i]);
 			//
-			for (int j = 0; j < attributes.length; j++) {
+			for (int j = 0; j < as.length; j++) {
 				//
-				setCellValue(row.createCell(Math.max(row.getLastCellNum(), 0)),
-						speechApi.getVoiceAttribute(voiceId, attributes[j]));
-				//
+				try {
+					//
+					setCellValue(cell = row.createCell(Math.max(row.getLastCellNum(), 0)),
+							speechApi.getVoiceAttribute(voiceId, as[j]));
+					//
+				} catch (final Error e) {
+					//
+					if (cell != null) {
+						//
+						if (drawing == null && sheet != null) {
+							//
+							drawing = sheet.createDrawingPatriarch();
+							//
+						} // if
+							//
+						if (creationHelper == null && workbook != null) {
+							//
+							creationHelper = workbook.getCreationHelper();
+							//
+						} // if
+							//
+						if ((comment = drawing != null
+								? drawing.createCellComment(
+										creationHelper != null ? creationHelper.createClientAnchor() : null)
+								: null) != null) {
+							//
+							comment.setString(
+									creationHelper != null ? creationHelper.createRichTextString(e.getMessage())
+											: null);
+							//
+						} // if
+							//
+						cell.setCellComment(comment);
+						//
+					} // if
+						//
+				} // try
+					//
 			} // for
 				//
 		} // for
