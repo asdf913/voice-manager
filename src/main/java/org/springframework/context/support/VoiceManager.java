@@ -6783,6 +6783,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					setString(comment = createCellComment(drawing, createClientAnchor(creationHelper)),
 							createRichTextString(creationHelper, e.getMessage()));
 					//
+					setAuthor(comment, getName(getClass(e)));
+					//
 					setCellComment(cell, comment);
 					//
 				} // try
@@ -6800,6 +6802,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return workbook;
 		//
+	}
+
+	private static String getName(final Class<?> instance) {
+		return instance != null ? instance.getName() : null;
 	}
 
 	private static Drawing<?> createDrawingPatriarch(final Sheet instance) {
@@ -6825,6 +6831,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static void setString(final Comment instance, final RichTextString string) {
 		if (instance != null) {
 			instance.setString(string);
+		}
+	}
+
+	private static void setAuthor(final Comment instance, final String string) {
+		if (instance != null) {
+			instance.setAuthor(string);
 		}
 	}
 

@@ -200,10 +200,11 @@ class VoiceManagerTest {
 			METHOD_GET_COLUMN_NAME, METHOD_GET_KEY_SET, METHOD_PUT_ALL, METHOD_CREATE_SHEET, METHOD_ENTRIES,
 			METHOD_GET_WORK_BOOK, METHOD_GET_OLE_ENTRY_NAMES, METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE,
 			METHOD_GET_DOCUMENT_ELEMENT, METHOD_GET_CHILD_NODES, METHOD_GET_NAMED_ITEM, METHOD_GET_TEXT_CONTENT,
-			METHOD_GET_NODE_NAME, METHOD_GET_NAME, METHOD_GET_PASS_WORD, METHOD_GET,
+			METHOD_GET_NODE_NAME, METHOD_GET_NAME_FILE, METHOD_GET_NAME_CLASS, METHOD_GET_PASS_WORD, METHOD_GET,
 			METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK, METHOD_READ_VALUE, METHOD_WRITE_VALUE_AS_STRING,
 			METHOD_CREATE_DRAWING_PATRIARCH, METHOD_GET_CREATION_HELPER, METHOD_CREATE_CELL_COMMENT,
-			METHOD_CREATE_CLIENT_ANCHOR, METHOD_CREATE_RICH_TEXT_STRING, METHOD_SET_CELL_COMMENT = null;
+			METHOD_CREATE_CLIENT_ANCHOR, METHOD_CREATE_RICH_TEXT_STRING, METHOD_SET_CELL_COMMENT,
+			METHOD_SET_AUTHOR = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -515,7 +516,9 @@ class VoiceManagerTest {
 		//
 		(METHOD_GET_NODE_NAME = clz.getDeclaredMethod("getNodeName", Node.class)).setAccessible(true);
 		//
-		(METHOD_GET_NAME = clz.getDeclaredMethod("getName", File.class)).setAccessible(true);
+		(METHOD_GET_NAME_FILE = clz.getDeclaredMethod("getName", File.class)).setAccessible(true);
+		//
+		(METHOD_GET_NAME_CLASS = clz.getDeclaredMethod("getName", Class.class)).setAccessible(true);
 		//
 		(METHOD_GET_PASS_WORD = clz.getDeclaredMethod("getPassword", Console.class)).setAccessible(true);
 		//
@@ -547,6 +550,8 @@ class VoiceManagerTest {
 		//
 		(METHOD_SET_CELL_COMMENT = clz.getDeclaredMethod("setCellComment", Cell.class, Comment.class))
 				.setAccessible(true);
+		//
+		(METHOD_SET_AUTHOR = clz.getDeclaredMethod("setAuthor", Comment.class, String.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -4461,7 +4466,9 @@ class VoiceManagerTest {
 	@Test
 	void testGetName() throws Throwable {
 		//
-		Assertions.assertNull(getName(null));
+		Assertions.assertNull(getName((File) null));
+		//
+		Assertions.assertNull(getName((Class<?>) null));
 		//
 		Assertions.assertNotNull(getName(new File(".")));
 		//
@@ -4469,7 +4476,21 @@ class VoiceManagerTest {
 
 	private static String getName(final File instance) throws Throwable {
 		try {
-			final Object obj = METHOD_GET_NAME.invoke(null, instance);
+			final Object obj = METHOD_GET_NAME_FILE.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static String getName(final Class<?> instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_NAME_CLASS.invoke(null, instance);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof String) {
@@ -4684,6 +4705,21 @@ class VoiceManagerTest {
 	private static void setCellComment(final Cell instance, final Comment comment) throws Throwable {
 		try {
 			METHOD_SET_CELL_COMMENT.invoke(null, instance, comment);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetAuthor() {
+		//
+		Assertions.assertDoesNotThrow(() -> setAuthor(null, null));
+		//
+	}
+
+	private static void setAuthor(final Comment instance, final String string) throws Throwable {
+		try {
+			METHOD_SET_AUTHOR.invoke(null, instance, string);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
