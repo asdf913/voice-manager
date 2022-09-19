@@ -3466,14 +3466,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				setBackground(jtf, Color.WHITE);
 				//
-				final List<?> list = getObjectList(getObjectMapper(), getText(jtf));
+				final ObjectMapper objectMapper = getObjectMapper();
 				//
-				if ((objectMapper = ObjectUtils.getIfNull(objectMapper, ObjectMapper::new)) != null) {
-					//
-					setText(jlListNames, objectMapper.writeValueAsString(list));
-					//
-				} // if
-					//
+				final List<?> list = getObjectList(objectMapper, getText(jtf));
+				//
+				setText(jlListNames, writeValueAsString(objectMapper, list));
+				//
 				setText(jlListNameCount, list != null ? Integer.toString(list.size()) : null);
 				//
 			} catch (final Exception e) {
@@ -3556,6 +3554,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
+	}
+
+	private static String writeValueAsString(final ObjectMapper instance, final Object value)
+			throws JsonProcessingException {
+		return instance != null ? instance.writeValueAsString(value) : null;
 	}
 
 	private static <K, V> Collection<Entry<K, V>> entries(final Multimap<K, V> instance) {

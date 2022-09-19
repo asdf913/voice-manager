@@ -195,7 +195,8 @@ class VoiceManagerTest {
 			METHOD_GET_WORK_BOOK, METHOD_GET_OLE_ENTRY_NAMES, METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE,
 			METHOD_GET_DOCUMENT_ELEMENT, METHOD_GET_CHILD_NODES, METHOD_GET_NAMED_ITEM, METHOD_GET_TEXT_CONTENT,
 			METHOD_GET_NODE_NAME, METHOD_GET_NAME, METHOD_GET_PASS_WORD, METHOD_GET,
-			METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK, METHOD_READ_VALUE = null;
+			METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK, METHOD_READ_VALUE,
+			METHOD_WRITE_VALUE_AS_STRING = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -514,6 +515,9 @@ class VoiceManagerTest {
 				.setAccessible(true);
 		//
 		(METHOD_READ_VALUE = clz.getDeclaredMethod("readValue", ObjectMapper.class, String.class, Class.class))
+				.setAccessible(true);
+		//
+		(METHOD_WRITE_VALUE_AS_STRING = clz.getDeclaredMethod("writeValueAsString", ObjectMapper.class, Object.class))
 				.setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
@@ -4514,6 +4518,28 @@ class VoiceManagerTest {
 			throws Throwable {
 		try {
 			return (T) METHOD_READ_VALUE.invoke(null, instance, content, valueType);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testWriteValueAsString() throws Throwable {
+		//
+		Assertions.assertNull(writeValueAsString(null, null));
+		//
+	}
+
+	private static String writeValueAsString(final ObjectMapper instance, final Object value)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_WRITE_VALUE_AS_STRING.invoke(null, instance, value);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
