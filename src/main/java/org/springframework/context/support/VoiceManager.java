@@ -2501,18 +2501,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} else if (Objects.equals(source, btnCopyRomaji)) {
 			//
-			setContents(getSystemClipboard(toolkit = ObjectUtils.getIfNull(toolkit, Toolkit::getDefaultToolkit)),
-					new StringSelection(getText(tfRomaji)), null);
+			setContents(getSystemClipboard(getToolkit()), new StringSelection(getText(tfRomaji)), null);
 			//
 		} else if (Objects.equals(source, btnCopyHiragana)) {
 			//
-			setContents(getSystemClipboard(toolkit = ObjectUtils.getIfNull(toolkit, Toolkit::getDefaultToolkit)),
-					new StringSelection(getText(tfHiragana)), null);
+			setContents(getSystemClipboard(getToolkit()), new StringSelection(getText(tfHiragana)), null);
 			//
 		} else if (Objects.equals(source, btnCopyKatakana)) {
 			//
-			setContents(getSystemClipboard(toolkit = ObjectUtils.getIfNull(toolkit, Toolkit::getDefaultToolkit)),
-					new StringSelection(getText(tfKatakana)), null);
+			setContents(getSystemClipboard(getToolkit()), new StringSelection(getText(tfKatakana)), null);
 			//
 		} else if (Objects.equals(source, btnExport)) {
 			//
@@ -2819,6 +2816,18 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
+	}
+
+	public Toolkit getToolkit() {
+		//
+		if (toolkit == null) {
+			//
+			toolkit = Toolkit.getDefaultToolkit();
+			//
+		} // if
+			//
+		return ObjectUtils.getIfNull(toolkit, super::getToolkit);
+		//
 	}
 
 	private static <T> void testAndAccept(final Predicate<T> predicate, final T value, final Consumer<T> consumer) {
