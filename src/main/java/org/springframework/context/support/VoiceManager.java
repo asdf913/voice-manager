@@ -6629,7 +6629,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 							for (int k = 0; k < intIntMap.getInt(j); k++) {
 								//
-								setCellValue(row.createCell(Math.max(row.getLastCellNum(), 0)),
+								setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)),
 										StringUtils.trim(textContent));
 								//
 							} // for
@@ -6640,17 +6640,17 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 							for (int k = 1; k <= groupCount; k++) {
 								//
-								setCellValue(row.createCell(Math.max(row.getLastCellNum(), 0)), matcher.group(k));
+								setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)), matcher.group(k));
 								//
 							} // for
 								//
 						} else {
 							//
-							setCellValue(row.createCell(Math.max(row.getLastCellNum(), 0)), textContent);
+							setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)), textContent);
 							//
 							for (int k = 1; k < intIntMap.getInt(j); k++) {
 								//
-								setCellValue(row.createCell(Math.max(row.getLastCellNum(), 0)), "");
+								setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)), "");
 								//
 							} // for
 								//
@@ -6658,7 +6658,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 					} else {
 						//
-						setCellValue(row.createCell(Math.max(row.getLastCellNum(), 0)), StringUtils.trim(textContent));
+						setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)), StringUtils.trim(textContent));
 						//
 					} // if
 						//
@@ -6731,11 +6731,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				if ((sheet = createSheet(workbook = ObjectUtils.getIfNull(workbook, XSSFWorkbook::new))) != null
 						&& (row = sheet.createRow(sheet.getLastRowNum() + 1)) != null) {
 					//
-					setCellValue(row.createCell(Math.max(row.getLastCellNum(), 0)), "ID");
+					setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)), "ID");
 					//
 					for (int j = 0; j < as.length; j++) {
 						//
-						setCellValue(row.createCell(Math.max(row.getLastCellNum(), 0)), as[j]);
+						setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)), as[j]);
 						//
 					} // for
 						//
@@ -6749,13 +6749,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-			setCellValue(row.createCell(Math.max(row.getLastCellNum(), 0)), voiceId = voiceIds[i]);
+			setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)), voiceId = voiceIds[i]);
 			//
 			for (int j = 0; j < as.length; j++) {
 				//
 				try {
 					//
-					setCellValue(cell = row.createCell(Math.max(row.getLastCellNum(), 0)),
+					setCellValue(cell = createCell(row, Math.max(row.getLastCellNum(), 0)),
 							speechApi.getVoiceAttribute(voiceId, as[j]));
 					//
 				} catch (final Error e) {
