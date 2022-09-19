@@ -4596,90 +4596,6 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testCreateDrawingPatriarch() throws Throwable {
-		//
-		Assertions.assertNull(createDrawingPatriarch(null));
-		//
-	}
-
-	private static Drawing<?> createDrawingPatriarch(final Sheet instance) throws Throwable {
-		try {
-			final Object obj = METHOD_CREATE_DRAWING_PATRIARCH.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Drawing) {
-				return (Drawing) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetCreationHelper() throws Throwable {
-		//
-		Assertions.assertNull(getCreationHelper(null));
-		//
-	}
-
-	private static CreationHelper getCreationHelper(final Workbook instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_CREATION_HELPER.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof CreationHelper) {
-				return (CreationHelper) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testCreateCellComment() throws Throwable {
-		//
-		Assertions.assertNull(createCellComment(null, null));
-		//
-	}
-
-	private static Comment createCellComment(final Drawing<?> instance, final ClientAnchor anchor) throws Throwable {
-		try {
-			final Object obj = METHOD_CREATE_CELL_COMMENT.invoke(null, instance, anchor);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Comment) {
-				return (Comment) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testCreateClientAnchor() throws Throwable {
-		//
-		Assertions.assertNull(createClientAnchor(null));
-		//
-	}
-
-	private static ClientAnchor createClientAnchor(final CreationHelper instance) throws Throwable {
-		try {
-			final Object obj = METHOD_CREATE_CLIENT_ANCHOR.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof ClientAnchor) {
-				return (ClientAnchor) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testCreateRichTextString() throws Throwable {
 		//
 		Assertions.assertNull(createRichTextString(null, null));
@@ -4704,8 +4620,65 @@ class VoiceManagerTest {
 	@Test
 	void testSetCellComment() {
 		//
-		Assertions.assertDoesNotThrow(() -> setCellComment(null, null));
+		Assertions.assertDoesNotThrow(() -> setCellComment(null,
+				createCellComment(createDrawingPatriarch(null), createClientAnchor(getCreationHelper(null)))));
 		//
+	}
+
+	private static Drawing<?> createDrawingPatriarch(final Sheet instance) throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_DRAWING_PATRIARCH.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Drawing) {
+				return (Drawing) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static CreationHelper getCreationHelper(final Workbook instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_CREATION_HELPER.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof CreationHelper) {
+				return (CreationHelper) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static Comment createCellComment(final Drawing<?> instance, final ClientAnchor anchor) throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_CELL_COMMENT.invoke(null, instance, anchor);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Comment) {
+				return (Comment) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static ClientAnchor createClientAnchor(final CreationHelper instance) throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_CLIENT_ANCHOR.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof ClientAnchor) {
+				return (ClientAnchor) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 	private static void setCellComment(final Cell instance, final Comment comment) throws Throwable {
