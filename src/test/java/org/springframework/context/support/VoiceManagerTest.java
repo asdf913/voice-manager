@@ -1166,6 +1166,17 @@ class VoiceManagerTest {
 		//
 	}
 
+	@Test
+	void testSetMicrosoftSpeechObjectLibraryAttributeNames() {
+		//
+		if (instance != null) {
+			//
+			Assertions.assertDoesNotThrow(() -> instance.setMicrosoftSpeechObjectLibraryAttributeNames(null));
+			//
+		} // if
+			//
+	}
+
 	private static Object get(final Field field, final Object instance) throws IllegalAccessException {
 		return field != null ? field.get(instance) : null;
 	}

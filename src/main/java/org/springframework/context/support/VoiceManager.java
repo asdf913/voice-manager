@@ -292,7 +292,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private SpeechApi speechApi = null;
 
-	private String[] mp3Tags = null;
+	private String[] mp3Tags, microsoftSpeechObjectLibraryAttributeNames = null;
 
 	private ConfigurableListableBeanFactory configurableListableBeanFactory = null;
 
@@ -554,6 +554,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	public void setMp3Tags(final Object value) {
 		//
 		mp3Tags = toArray(toList(
+				map(stream(getObjectList(objectMapper = ObjectUtils.getIfNull(objectMapper, ObjectMapper::new), value)),
+						VoiceManager::toString)),
+				new String[] {});
+		//
+	}
+
+	public void setMicrosoftSpeechObjectLibraryAttributeNames(final Object value) {
+		//
+		this.microsoftSpeechObjectLibraryAttributeNames = toArray(toList(
 				map(stream(getObjectList(objectMapper = ObjectUtils.getIfNull(objectMapper, ObjectMapper::new), value)),
 						VoiceManager::toString)),
 				new String[] {});
@@ -2781,8 +2790,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			try (final OutputStream os = new FileOutputStream(file = new File(
 					String.format("MicrosoftSpeechObjectLibrary_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.xlsx", new Date())))) {
 				//
-				write(workbook = createMicrosoftSpeechObjectLibraryWorkbook(speechApi, "Age", "AudioFormats", "Gender",
-						"Language", "Name", "Vendor", "Version"), os);
+				write(workbook = createMicrosoftSpeechObjectLibraryWorkbook(speechApi,
+						microsoftSpeechObjectLibraryAttributeNames), os);
 				//
 			} catch (final IOException e) {
 				//
@@ -6688,15 +6697,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		Row row = null;
 		//
-		final String[] voiceIds = speechApi != null 
-				? speechApi.getVoiceIds()
-						: null;
+		final String[] voiceIds = speechApi != null ? speechApi.getVoiceIds() : null;
 		//
 		String voiceId = null;
 		//
-		for (int i = 0; voiceIds != null
-				&& attributes != null
-				&& i < voiceIds.length; i++) {
+		for (int i = 0; voiceIds != null && attributes != null && i < voiceIds.length; i++) {
 			//
 			if (sheet == null) {
 				//

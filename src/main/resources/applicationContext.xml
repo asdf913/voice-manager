@@ -44,6 +44,8 @@
 			value="#{new org.springframework.context.support.SpeechApiImpl()}" />
 		<property name="mp3Tags"
 			value="${org.springframework.context.support.VoiceManager.mp3Tags}" />
+		<property name="microsoftSpeechObjectLibraryAttributeNames"
+			value="${org.springframework.context.support.VoiceManager.microsoftSpeechObjectLibraryAttributeNames}" />
 		<property name="jlptLevelPageUrl"
 			value="${org.springframework.context.support.VoiceManager.jlptLevelPageUrl}" />
 		<property name="gaKuNenBeTsuKanJiListPageUrl"
