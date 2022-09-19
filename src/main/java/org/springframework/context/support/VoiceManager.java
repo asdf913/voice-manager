@@ -6766,9 +6766,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 						} // if
 							//
-						if (creationHelper == null && workbook != null) {
+						if (creationHelper == null) {
 							//
-							creationHelper = workbook.getCreationHelper();
+							creationHelper = getCreationHelper(workbook);
 							//
 						} // if
 							//
@@ -6806,6 +6806,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static Drawing<?> createDrawingPatriarch(final Sheet instance) {
 		return instance != null ? instance.createDrawingPatriarch() : null;
+	}
+
+	private static CreationHelper getCreationHelper(final Workbook instance) {
+		return instance != null ? instance.getCreationHelper() : null;
 	}
 
 	private static Workbook createWorkbook(final List<Voice> voices)

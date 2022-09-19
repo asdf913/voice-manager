@@ -102,6 +102,7 @@ import org.apache.poi.ooxml.POIXMLProperties;
 import org.apache.poi.ooxml.POIXMLProperties.CustomProperties;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.DataValidation;
 import org.apache.poi.ss.usermodel.DataValidationConstraint;
 import org.apache.poi.ss.usermodel.DataValidationHelper;
@@ -197,7 +198,7 @@ class VoiceManagerTest {
 			METHOD_GET_DOCUMENT_ELEMENT, METHOD_GET_CHILD_NODES, METHOD_GET_NAMED_ITEM, METHOD_GET_TEXT_CONTENT,
 			METHOD_GET_NODE_NAME, METHOD_GET_NAME, METHOD_GET_PASS_WORD, METHOD_GET,
 			METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK, METHOD_READ_VALUE, METHOD_WRITE_VALUE_AS_STRING,
-			METHOD_CREATE_DRAWING_PATRIARCH = null;
+			METHOD_CREATE_DRAWING_PATRIARCH, METHOD_GET_CREATION_HELPER = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -523,6 +524,8 @@ class VoiceManagerTest {
 		//
 		(METHOD_CREATE_DRAWING_PATRIARCH = clz.getDeclaredMethod("createDrawingPatriarch", Sheet.class))
 				.setAccessible(true);
+		//
+		(METHOD_GET_CREATION_HELPER = clz.getDeclaredMethod("getCreationHelper", Workbook.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -4575,6 +4578,27 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof Drawing) {
 				return (Drawing) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetCreationHelper() throws Throwable {
+		//
+		Assertions.assertNull(getCreationHelper(null));
+		//
+	}
+
+	private static CreationHelper getCreationHelper(final Workbook instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_CREATION_HELPER.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof CreationHelper) {
+				return (CreationHelper) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
