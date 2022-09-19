@@ -27,6 +27,11 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
@@ -264,7 +269,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			tfKatakana, tfRomaji, tfSpeechRate, tfSource, tfProviderName, tfProviderVersion, tfProviderPlatform,
 			tfSpeechLanguageCode, tfSpeechLanguageName, tfLanguage, tfSpeechVolume, tfCurrentProcessingFile,
 			tfCurrentProcessingSheetName, tfCurrentProcessingVoice, tfListNames, tfPhraseCounter, tfPhraseTotal,
-			tfJlptFolderNamePrefix, tfOrdinalPositionFileNamePrefix, tfIpaSymbol = null;
+			tfJlptFolderNamePrefix, tfOrdinalPositionFileNamePrefix, tfIpaSymbol, tfExportFile = null;
 
 	private ComboBoxModel<Yomi> cbmYomi = null;
 
@@ -277,8 +282,21 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private AbstractButton btnSpeak, btnWriteVoice, btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji,
 			btnCopyHiragana, btnCopyKatakana, cbUseTtsVoice, btnExecute, btnImportFileTemplate, btnImport,
 			btnImportWithinFolder, cbOverMp3Title, cbOrdinalPositionAsFileNamePrefix, btnExport,
-			cbImportFileTemplateGenerateBlankRow, cbJlptAsFolder, btnExportGaKuNenBeTsuKanJi, btnExportJoYoKanJi,
-			btnExportMicrosoftSpeechObjectLibraryInformation = null;
+			cbImportFileTemplateGenerateBlankRow, cbJlptAsFolder, btnExportCopy = null;
+
+	@Target(ElementType.FIELD)
+	@Retention(RetentionPolicy.RUNTIME)
+	private @interface ExportButton {
+	}
+
+	@ExportButton
+	private AbstractButton btnExportGaKuNenBeTsuKanJi = null;
+
+	@ExportButton
+	private AbstractButton btnExportJoYoKanJi = null;
+
+	@ExportButton
+	private AbstractButton btnExportMicrosoftSpeechObjectLibraryInformation = null;
 
 	private JProgressBar progressBarImport, progressBarExport = null;
 
@@ -1398,7 +1416,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		List<Boolean> list = null;
 		//
 		final List<Field> fs = toList(
-				filter(testAndApply(Objects::nonNull, Boolean.class.getDeclaredFields(), Arrays::stream, null),
+				filter(testAndApply(Objects::nonNull, getDeclaredFields(Boolean.class), Arrays::stream, null),
 						f -> Objects.equals(getType(f), Boolean.class)));
 		//
 		Field f = null;
@@ -1417,6 +1435,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return list;
 		//
+	}
+
+	private static Field[] getDeclaredFields(final Class<?> instance) {
+		return instance != null ? instance.getDeclaredFields() : null;
 	}
 
 	private static <K> Set<K> keySet(final Multimap<K, ?> instance) {
@@ -1642,10 +1664,24 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(btnExportJoYoKanJi = new JButton("Export 常用漢字"), WRAP);
 		//
 		panel.add(btnExportMicrosoftSpeechObjectLibraryInformation = new JButton(
-				"Export Microsoft Speech Object Library Information"));
+				"Export Microsoft Speech Object Library Information"), WRAP);
+		//
+		final JPanel panel1 = new JPanel();
+		//
+		panel1.setLayout(cloneLayoutManager());
+		//
+		panel1.setBorder(BorderFactory.createTitledBorder("File"));
+		//
+		panel1.add(tfExportFile = new JTextField(), String.format("wmin %1$s", 300));
+		//
+		panel1.add(btnExportCopy = new JButton("Copy"));
+		//
+		panel.add(panel1);
+		//
+		setEditable(false, tfExportFile);
 		//
 		addActionListener(this, btnExportGaKuNenBeTsuKanJi, btnExportJoYoKanJi,
-				btnExportMicrosoftSpeechObjectLibraryInformation);
+				btnExportMicrosoftSpeechObjectLibraryInformation, btnExportCopy);
 		//
 		return panel;
 		//
@@ -1752,7 +1788,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final List<Pair<String, String>> pairs = toList(
 				//
-				filter(map(testAndApply(Objects::nonNull, Yomi.class.getDeclaredFields(), Arrays::stream, null), f -> {
+				filter(map(testAndApply(Objects::nonNull, getDeclaredFields(Yomi.class), Arrays::stream, null), f -> {
 					//
 					final List<Object> objects = toList(
 							map(filter(testAndApply(Objects::nonNull, getDeclaredAnnotations(f), Arrays::stream, null),
@@ -2224,8 +2260,34 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		final Object source = getSource(evt);
 		//
 		final boolean headless = GraphicsEnvironment.isHeadless();
-		;
 		//
+		try {
+			//
+			if (anyMatch(stream(findFieldsByValue(getDeclaredFields(getClass()), this, source)),
+					f -> f != null && f.isAnnotationPresent(ExportButton.class))) {
+				//
+				setText(tfExportFile, null);
+				//
+			} // if
+				//
+		} catch (final IllegalAccessException | NoSuchMethodException e) {
+			//
+			if (headless) {
+				//
+				if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
+					LOG.error(getMessage(e), e);
+				} else if (e != null) {
+					e.printStackTrace();
+				} // if
+					//
+			} else {
+				//
+				JOptionPane.showMessageDialog(null, getMessage(e));
+				//
+			} // if
+				//
+		} // try
+			//
 		if (Objects.equals(source, btnSpeak)) {
 			//
 			if (speechApi != null) {
@@ -2511,6 +2573,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			setContents(getSystemClipboard(getToolkit()), new StringSelection(getText(tfKatakana)), null);
 			//
+		} else if (Objects.equals(source, btnExportCopy)) {
+			//
+			setContents(getSystemClipboard(getToolkit()), new StringSelection(getText(tfExportFile)), null);
+			//
 		} else if (Objects.equals(source, btnExport)) {
 			//
 			SqlSession sqlSession = null;
@@ -2718,6 +2784,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				write(workbook = createWorkbook(Pair.of("学年", "漢字"), getGaKuNenBeTsuKanJiMultimap()), os);
 				//
+				setText(tfExportFile, getAbsolutePath(file));
+				//
 			} catch (final IOException e) {
 				//
 				if (headless) {
@@ -2753,6 +2821,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				write(workbook = createJoYoKanJiWorkbook(getProperty(propertyResolver,
 						"org.springframework.context.support.VoiceManager.joYoKanJiPageUrl")), os);
+				//
+				setText(tfExportFile, getAbsolutePath(file));
 				//
 			} catch (final IOException e) {
 				//
@@ -2790,6 +2860,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				write(workbook = createMicrosoftSpeechObjectLibraryWorkbook(speechApi,
 						microsoftSpeechObjectLibraryAttributeNames), os);
 				//
+				setText(tfExportFile, getAbsolutePath(file));
+				//
 			} catch (final IOException e) {
 				//
 				if (headless) {
@@ -2816,6 +2888,71 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
+	}
+
+	private static List<Field> findFieldsByValue(final Field[] fs, final Object instance, final Object value)
+			throws IllegalAccessException, NoSuchMethodException {
+		//
+		Field f = null;
+		//
+		Object fieldValue = null;
+		//
+		List<Field> list = null;
+		//
+		Method methodIsAccessible = null;
+		//
+		for (int i = 0; fs != null && i < fs.length; i++) {
+			//
+			if ((f = fs[i]) == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			if (methodIsAccessible == null) {
+				//
+				methodIsAccessible = AccessibleObject.class.getDeclaredMethod("isAccessible");
+				//
+			} // if
+				//
+			if (!Narcissus.invokeBooleanMethod(f, methodIsAccessible)) {
+				//
+				if (ArrayUtils.contains(new String[] { "javax.swing", "java.awt" },
+						getName(getPackage(getDeclaringClass(f))))) {
+					//
+					continue;
+					//
+				} // if
+					//
+				f.setAccessible(true);
+				//
+			} // if
+				//
+			if ((fieldValue = Modifier.isStatic(f.getModifiers()) ? f.get(null)
+					: instance != null ? f.get(instance) : null) != value || !Objects.equals(fieldValue, value)) {
+				//
+				continue;
+				//
+			} // if
+				//
+			if (!contains(list = ObjectUtils.getIfNull(list, ArrayList::new), f)) {
+				//
+				add(list = ObjectUtils.getIfNull(list, ArrayList::new), f);
+				//
+			} // if
+				//
+		} // for
+			//
+		return list;
+		//
+	}
+
+	private static Class<?> getDeclaringClass(final Member instance) {
+		return instance != null ? instance.getDeclaringClass() : null;
+	}
+
+	private static Package getPackage(final Class<?> instance) {
+		return instance != null ? instance.getPackage() : null;
 	}
 
 	public Toolkit getToolkit() {
@@ -4340,7 +4477,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		if (rate == null) {
 			//
 			final List<Field> fs = toList(filter(
-					testAndApply(Objects::nonNull, Integer.class.getDeclaredFields(), Arrays::stream, null),
+					testAndApply(Objects::nonNull, getDeclaredFields(Integer.class), Arrays::stream, null),
 					f -> f != null
 							&& (isAssignableFrom(Number.class, getType(f)) || Objects.equals(Integer.TYPE, getType(f)))
 							&& Objects.equals(getName(f), string)));
@@ -7149,6 +7286,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	private static String getName(final Member instance) {
+		return instance != null ? instance.getName() : null;
+	}
+
+	private static String getName(final Package instance) {
 		return instance != null ? instance.getName() : null;
 	}
 

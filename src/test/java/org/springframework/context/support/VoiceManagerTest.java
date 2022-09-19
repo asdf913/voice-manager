@@ -27,6 +27,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.security.MessageDigest;
 import java.text.NumberFormat;
@@ -204,7 +205,8 @@ class VoiceManagerTest {
 			METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK, METHOD_READ_VALUE, METHOD_WRITE_VALUE_AS_STRING,
 			METHOD_CREATE_DRAWING_PATRIARCH, METHOD_GET_CREATION_HELPER, METHOD_CREATE_CELL_COMMENT,
 			METHOD_CREATE_CLIENT_ANCHOR, METHOD_CREATE_RICH_TEXT_STRING, METHOD_SET_CELL_COMMENT, METHOD_SET_AUTHOR,
-			METHOD_TEST_AND_ACCEPT = null;
+			METHOD_TEST_AND_ACCEPT, METHOD_FIND_FIELDS_BY_VALUE, METHOD_GET_DECLARED_FIELDS, METHOD_GET_DECLARING_CLASS,
+			METHOD_GET_PACKAGE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -555,6 +557,15 @@ class VoiceManagerTest {
 		//
 		(METHOD_TEST_AND_ACCEPT = clz.getDeclaredMethod("testAndAccept", Predicate.class, Object.class, Consumer.class))
 				.setAccessible(true);
+		//
+		(METHOD_FIND_FIELDS_BY_VALUE = clz.getDeclaredMethod("findFieldsByValue", Field[].class, Object.class,
+				Object.class)).setAccessible(true);
+		//
+		(METHOD_GET_DECLARED_FIELDS = clz.getDeclaredMethod("getDeclaredFields", Class.class)).setAccessible(true);
+		//
+		(METHOD_GET_DECLARING_CLASS = clz.getDeclaredMethod("getDeclaringClass", Member.class)).setAccessible(true);
+		//
+		(METHOD_GET_PACKAGE = clz.getDeclaredMethod("getPackage", Class.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -4741,6 +4752,95 @@ class VoiceManagerTest {
 			throws Throwable {
 		try {
 			METHOD_TEST_AND_ACCEPT.invoke(null, predicate, value, consumer);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testFindFieldsByValue() throws Throwable {
+		//
+		Assertions.assertNull(findFieldsByValue(null, null, null));
+		//
+		Assertions.assertNull(findFieldsByValue(new Field[] { null }, null, null));
+		//
+		Assertions.assertNotNull(findFieldsByValue(FieldUtils.getAllFields(VoiceManager.class), null, null));
+		//
+	}
+
+	private static List<Field> findFieldsByValue(final Field[] fs, final Object instance, final Object value)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_FIND_FIELDS_BY_VALUE.invoke(null, fs, instance, value);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof List) {
+				return (List) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetDeclaredFields() throws Throwable {
+		//
+		Assertions.assertNull(getDeclaredFields(null));
+		//
+	}
+
+	private static Field[] getDeclaredFields(final Class<?> instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_DECLARED_FIELDS.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Field[]) {
+				return (Field[]) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetDeclaringClass() throws Throwable {
+		//
+		Assertions.assertNull(getDeclaringClass(null));
+		//
+	}
+
+	private static Class<?> getDeclaringClass(final Member instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_DECLARING_CLASS.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Class[]) {
+				return (Class<?>) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetPackage() throws Throwable {
+		//
+		Assertions.assertNull(getPackage(null));
+		//
+	}
+
+	private static Package getPackage(final Class<?> instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_PACKAGE.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Package) {
+				return (Package) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
