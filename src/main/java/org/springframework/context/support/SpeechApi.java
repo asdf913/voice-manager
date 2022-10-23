@@ -4,6 +4,8 @@ import java.io.File;
 
 public interface SpeechApi {
 
+	public boolean isInstalled();
+
 	public void speak(final String text, final String voiceId, final int rate, final int volume);
 
 	public void writeVoiceToFile(final String text, final String voiceId, final int rate, final int volume,

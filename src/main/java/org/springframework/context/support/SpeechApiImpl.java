@@ -43,6 +43,8 @@ public class SpeechApiImpl implements SpeechApi, Provider {
 			return clz != null && clz.isInstance(value) ? clz.cast(value) : null;
 		}
 
+		public boolean isInstalled();
+
 		public void speak(final int[] text, final int length, final String voiceId, final int rate, final int volume);
 
 		public void writeVoiceToFile(final int[] text, final int textLength, final String voiceId, final int rate,
@@ -58,6 +60,13 @@ public class SpeechApiImpl implements SpeechApi, Provider {
 
 		public String getProviderPlatform();
 
+	}
+
+	@Override
+	public boolean isInstalled() {
+		//
+		return Jna.INSTANCE != null && Jna.INSTANCE.isInstalled();
+		//
 	}
 
 	@Override
