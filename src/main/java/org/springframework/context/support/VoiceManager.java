@@ -903,7 +903,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		panel.add(new JLabel("Voice Id"));
 		//
-		final String[] voiceIds = isInstalled && speechApi != null ? speechApi.getVoiceIds() : null;
+		final String[] voiceIds = isInstalled ? getVoiceIds(speechApi) : null;
 		//
 		if ((cbmVoiceId = testAndApply(Objects::nonNull, voiceIds,
 				x -> new DefaultComboBoxModel<>(ArrayUtils.insert(0, x, (String) null)), null)) != null) {
@@ -1958,6 +1958,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static String getVoiceAttribute(final SpeechApi instance, final String voiceId, final String attribute) {
 		return instance != null ? instance.getVoiceAttribute(voiceId, attribute) : null;
+	}
+
+	private static String[] getVoiceIds(final SpeechApi instance) {
+		return instance != null ? instance.getVoiceIds() : null;
 	}
 
 	private static Range<Integer> createVolumnRange(final Class<?> clz) {
@@ -6901,7 +6905,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		Comment comment = null;
 		//
-		final String[] voiceIds = speechApi != null ? speechApi.getVoiceIds() : null;
+		final String[] voiceIds = getVoiceIds(speechApi);
 		//
 		final String commonPrefix = String.join("",
 				StringUtils.substringBeforeLast(StringUtils.getCommonPrefix(voiceIds), "\\"), "\\");
