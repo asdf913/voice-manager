@@ -603,7 +603,7 @@ class VoiceManagerTest {
 
 		private Iterator<Cell> cells = null;
 
-		private Boolean anyMatch, contains, multiMapPut, multiMapPutAll = null;
+		private Boolean anyMatch, contains, multiMapPut, multiMapPutAll, isInstalled = null;
 
 		private String[] voiceIds = null;
 
@@ -845,8 +845,11 @@ class VoiceManagerTest {
 						//
 					} // if
 						//
-						//
 					return voiceAttribute;
+					//
+				} else if (Objects.equals(methodName, "isInstalled")) {
+					//
+					return isInstalled;
 					//
 				} // if
 					//
@@ -966,8 +969,6 @@ class VoiceManagerTest {
 					//
 				} // if
 					//
-
-				//
 			} // if
 				//
 			throw new Throwable(methodName);
@@ -1148,6 +1149,12 @@ class VoiceManagerTest {
 		instance.setSpeechApi(speechApi);
 		//
 		ih.voiceIds = new String[] {};
+		//
+		ih.isInstalled = Boolean.FALSE;
+		//
+		Assertions.assertDoesNotThrow(() -> instance.afterPropertiesSet());
+		//
+		ih.isInstalled = Boolean.TRUE;
 		//
 		Assertions.assertDoesNotThrow(() -> instance.afterPropertiesSet());
 		//

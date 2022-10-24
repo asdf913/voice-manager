@@ -870,12 +870,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(tfProviderName = new JTextField(getProviderName(provider)),
 				String.format("%1$s,span %2$s", GROWX, 3));
 		//
-		panel.add(tfProviderVersion = new JTextField(getProviderVersion(provider)), String.format("span %1$s", 3));
+		final boolean isInstalled = speechApi != null && speechApi.isInstalled();
+		//
+		panel.add(tfProviderVersion = isInstalled ? new JTextField(getProviderVersion(provider)) : new JTextField(),
+				String.format("span %1$s", 3));
 		//
 		try {
 			//
-			panel.add(tfProviderPlatform = new JTextField(provider != null ? provider.getProviderPlatform() : null),
-					WRAP);
+			panel.add(tfProviderPlatform = isInstalled
+					? new JTextField(provider != null ? provider.getProviderPlatform() : null)
+					: new JTextField(), WRAP);
 			//
 		} catch (final Error e) {
 			//
@@ -899,7 +903,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		panel.add(new JLabel("Voice Id"));
 		//
-		final String[] voiceIds = speechApi != null ? speechApi.getVoiceIds() : null;
+		final String[] voiceIds = isInstalled && speechApi != null ? speechApi.getVoiceIds() : null;
 		//
 		if ((cbmVoiceId = testAndApply(Objects::nonNull, voiceIds,
 				x -> new DefaultComboBoxModel<>(ArrayUtils.insert(0, x, (String) null)), null)) != null) {
