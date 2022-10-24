@@ -5323,7 +5323,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 									it.voice.setSource(StringUtils.defaultIfBlank(voice.getSource(), getMp3TagValue(
 											it.file, x -> StringUtils.isNotBlank(toString(x)), mp3Tags)));
 									//
-								} else {
+								} else if (speechApi != null && speechApi.isInstalled()) {
 									//
 									if ((it.file = File.createTempFile(
 											RandomStringUtils.randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH),
