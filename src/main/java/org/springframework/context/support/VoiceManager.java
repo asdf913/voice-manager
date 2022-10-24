@@ -870,7 +870,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(tfProviderName = new JTextField(getProviderName(provider)),
 				String.format("%1$s,span %2$s", GROWX, 3));
 		//
-		final boolean isInstalled = speechApi != null && speechApi.isInstalled();
+		final boolean isInstalled = isInstalled(speechApi);
 		//
 		panel.add(tfProviderVersion = isInstalled ? new JTextField(getProviderVersion(provider)) : new JTextField(),
 				String.format("span %1$s", 3));
@@ -1694,7 +1694,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		addActionListener(this, btnExportGaKuNenBeTsuKanJi, btnExportJoYoKanJi,
 				btnExportMicrosoftSpeechObjectLibraryInformation, btnExportCopy, btnExportBrowse);
 		//
-		setEnabled(speechApi != null && speechApi.isInstalled(), btnExportMicrosoftSpeechObjectLibraryInformation);
+		setEnabled(isInstalled(speechApi), btnExportMicrosoftSpeechObjectLibraryInformation);
 		//
 		return panel;
 		//
@@ -1958,6 +1958,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		}
 
+	}
+
+	private static boolean isInstalled(final SpeechApi instance) {
+		return instance != null && instance.isInstalled();
 	}
 
 	private static String getVoiceAttribute(final SpeechApi instance, final String voiceId, final String attribute) {
@@ -5323,7 +5327,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 									it.voice.setSource(StringUtils.defaultIfBlank(voice.getSource(), getMp3TagValue(
 											it.file, x -> StringUtils.isNotBlank(toString(x)), mp3Tags)));
 									//
-								} else if (speechApi != null && speechApi.isInstalled()) {
+								} else if (isInstalled(speechApi)) {
 									//
 									if ((it.file = File.createTempFile(
 											RandomStringUtils.randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH),
