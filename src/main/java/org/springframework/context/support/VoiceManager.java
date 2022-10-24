@@ -1013,6 +1013,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		addActionListener(this, btnSpeak, btnWriteVoice);
 		//
+		setEnabled(isInstalled, btnSpeak, btnWriteVoice);
+		//
 		return panel;
 		//
 	}
@@ -1692,6 +1694,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		addActionListener(this, btnExportGaKuNenBeTsuKanJi, btnExportJoYoKanJi,
 				btnExportMicrosoftSpeechObjectLibraryInformation, btnExportCopy, btnExportBrowse);
 		//
+		setEnabled(speechApi != null && speechApi.isInstalled(), btnExportMicrosoftSpeechObjectLibraryInformation);
+		//
 		return panel;
 		//
 	}
@@ -2196,6 +2200,18 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static int orElse(final OptionalInt instance, final int other) {
 		return instance != null ? instance.orElse(other) : other;
+	}
+
+	private static void setEnabled(final boolean b, final Component instance, final Component... cs) {
+		//
+		setEnabled(instance, b);
+		//
+		for (int i = 0; cs != null && i < cs.length; i++) {
+			//
+			setEnabled(cs[i], b);
+			//
+		} // for
+			//
 	}
 
 	private static void setEnabled(final Component instance, final boolean b) {
