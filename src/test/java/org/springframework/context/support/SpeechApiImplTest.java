@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledIf;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.OS;
 
@@ -37,8 +38,15 @@ class SpeechApiImplTest {
 		//
 	}
 
+	private boolean isInstalled() {
+		//
+		return instance != null && instance.isInstalled();
+		//
+	}
+
 	@Test
 	@EnabledOnOs(OS.WINDOWS)
+	@EnabledIf("isInstalled")
 	void testSpeak() {
 		//
 		Assertions.assertThrows(Error.class, () -> instance.speak(null, null, 0, 0));
@@ -59,6 +67,7 @@ class SpeechApiImplTest {
 
 	@Test
 	@EnabledOnOs(OS.WINDOWS)
+	@EnabledIf("isInstalled")
 	void testGetVoiceAttribute() {
 		//
 		Assertions.assertNull(instance.getVoiceAttribute(null, null));
@@ -81,6 +90,7 @@ class SpeechApiImplTest {
 
 	@Test
 	@EnabledOnOs(OS.WINDOWS)
+	@EnabledIf("isInstalled")
 	void testGetProviderName() {
 		//
 		Assertions.assertNotNull(instance.getProviderName());
@@ -89,6 +99,7 @@ class SpeechApiImplTest {
 
 	@Test
 	@EnabledOnOs(OS.WINDOWS)
+	@EnabledIf("isInstalled")
 	void testGetProviderVersion() {
 		//
 		Assertions.assertNotNull(instance.getProviderVersion());
