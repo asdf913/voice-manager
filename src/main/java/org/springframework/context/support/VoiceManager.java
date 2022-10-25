@@ -917,7 +917,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			addMouseListener(new MouseAdapter() {
 
 				@Override
-				public void mouseClicked(final MouseEvent e) {
+				public void mouseClicked(final MouseEvent evt) {
 					//
 					try {
 						//
@@ -927,19 +927,19 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 						});
 						//
-					} catch (final IOException | URISyntaxException e1) {
+					} catch (final IOException | URISyntaxException e) {
 						//
 						if (GraphicsEnvironment.isHeadless()) {
 							//
 							if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-								LOG.error(getMessage(e1), e);
-							} else if (e1 != null) {
-								e1.printStackTrace();
+								LOG.error(getMessage(e), e);
+							} else if (e != null) {
+								e.printStackTrace();
 							} // if
 								//
 						} else {
 							//
-							JOptionPane.showMessageDialog(null, getMessage(e1));
+							JOptionPane.showMessageDialog(null, getMessage(e));
 							//
 						} // if
 							//
