@@ -211,7 +211,7 @@ class VoiceManagerTest {
 			METHOD_CREATE_DRAWING_PATRIARCH, METHOD_GET_CREATION_HELPER, METHOD_CREATE_CELL_COMMENT,
 			METHOD_CREATE_CLIENT_ANCHOR, METHOD_CREATE_RICH_TEXT_STRING, METHOD_SET_CELL_COMMENT, METHOD_SET_AUTHOR,
 			METHOD_TEST_AND_ACCEPT, METHOD_FIND_FIELDS_BY_VALUE, METHOD_GET_DECLARED_FIELDS, METHOD_GET_DECLARING_CLASS,
-			METHOD_GET_PACKAGE, METHOD_BROWSE, METHOD_TO_URI, METHOD_DARKER = null;
+			METHOD_GET_PACKAGE, METHOD_BROWSE, METHOD_TO_URI, METHOD_DARKER, METHOD_GET_TITLE_TEXT = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -580,6 +580,8 @@ class VoiceManagerTest {
 		(METHOD_TO_URI = clz.getDeclaredMethod("toURI", File.class)).setAccessible(true);
 		//
 		(METHOD_DARKER = clz.getDeclaredMethod("darker", Color.class)).setAccessible(true);
+		//
+		(METHOD_GET_TITLE_TEXT = clz.getDeclaredMethod("getTitleText", HtmlPage.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -4955,6 +4957,27 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof Color) {
 				return (Color) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetTitleText() throws Throwable {
+		//
+		Assertions.assertNull(getTitleText(null));
+		//
+	}
+
+	private static String getTitleText(final HtmlPage instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_TITLE_TEXT.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

@@ -211,6 +211,7 @@ import org.xml.sax.SAXException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.SgmlPage;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.WebClientOptions;
@@ -218,6 +219,7 @@ import com.gargoylesoftware.htmlunit.html.DomElement;
 import com.gargoylesoftware.htmlunit.html.DomNode;
 import com.gargoylesoftware.htmlunit.html.DomNodeList;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.github.curiousoddman.rgxgen.RgxGen;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
@@ -745,47 +747,78 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				(jPanelWarning = new JPanel()).setBorder(BorderFactory.createTitledBorder("Warning"));
 				//
-				// TODO
+				String title = null;
 				//
-				final JLabel jLabel = new JLabel(
-						"Download Microsoft Speech Platform - Runtime Languages (Version 11) from Official Microsoft Download Center");
+				boolean pageAvailable = false;
 				//
-				jLabel.setForeground(darker(Color.BLUE));
-				//
-				jLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-				//
-				jLabel.addMouseListener(new MouseAdapter() {
-
-					@Override
-					public void mouseClicked(final MouseEvent e) {
+				try (final WebClient webClient = new WebClient()) {
+					//
+					title = getTitleText(cast(HtmlPage.class,
+							webClient.getPage(microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl)));
+					//
+					pageAvailable = true;
+					//
+				} catch (final FailingHttpStatusCodeException | IOException e1) {
+					//
+					if (GraphicsEnvironment.isHeadless()) {
 						//
-						try {
+						if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
+							LOG.error(getMessage(e1), e1);
+						} else if (e1 != null) {
+							e1.printStackTrace();
+						} // if
 							//
-							browse(Desktop.getDesktop(),
-									new URI(microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl));
+					} else {
+						//
+						JOptionPane.showMessageDialog(null, getMessage(e1));
+						//
+					} // if
+						//
+				} // try
+					//
+				final JLabel jLabel = new JLabel(StringUtils.defaultIfBlank(title,
+						"Download Microsoft Speech Platform - Runtime Languages (Version 11) from Official Microsoft Download Center"));
+				//
+				if (pageAvailable) {
+					//
+					jLabel.setForeground(darker(Color.BLUE));
+					//
+					jLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+					//
+					jLabel.addMouseListener(new MouseAdapter() {
+
+						@Override
+						public void mouseClicked(final MouseEvent e) {
 							//
-						} catch (final IOException | URISyntaxException e1) {
-							//
-							if (GraphicsEnvironment.isHeadless()) {
+							try {
 								//
-								if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-									LOG.error(getMessage(e1), e);
-								} else if (e1 != null) {
-									e1.printStackTrace();
+								browse(Desktop.getDesktop(),
+										new URI(microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl));
+								//
+							} catch (final IOException | URISyntaxException e1) {
+								//
+								if (GraphicsEnvironment.isHeadless()) {
+									//
+									if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
+										LOG.error(getMessage(e1), e);
+									} else if (e1 != null) {
+										e1.printStackTrace();
+									} // if
+										//
+								} else {
+									//
+									JOptionPane.showMessageDialog(null, getMessage(e1));
+									//
 								} // if
 									//
-							} else {
+							} // try
 								//
-								JOptionPane.showMessageDialog(null, getMessage(e1));
-								//
-							} // if
-								//
-						} // try
-							//
-					}
+						}
 
-				});
-				//
+					});
+					//
+				} // if
+					//
 				jPanelWarning.add(jLabel);
 				//
 				add(jPanelWarning, WRAP);
@@ -854,6 +887,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
+	}
+
+	private static String getTitleText(final HtmlPage instance) {
+		return instance != null ? instance.getTitleText() : null;
 	}
 
 	private static Color darker(final Color instance) {
