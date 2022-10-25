@@ -759,32 +759,28 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					@Override
 					public void mouseClicked(final MouseEvent e) {
 						//
-						final Desktop desktop = Desktop.getDesktop();
-						//
-						if (desktop != null) {
+						try {
 							//
-							try {
+							browse(Desktop.getDesktop(),
+									new URI(microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl));
+							//
+						} catch (final IOException | URISyntaxException e1) {
+							//
+							if (GraphicsEnvironment.isHeadless()) {
 								//
-								desktop.browse(new URI(microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl));
-								//
-							} catch (final IOException | URISyntaxException e1) {
-								//
-								if (GraphicsEnvironment.isHeadless()) {
-									//
-									if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-										LOG.error(getMessage(e1), e);
-									} else if (e1 != null) {
-										e1.printStackTrace();
-									} // if
-										//
-								} else {
-									//
-									JOptionPane.showMessageDialog(null, getMessage(e1));
-									//
+								if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
+									LOG.error(getMessage(e1), e);
+								} else if (e1 != null) {
+									e1.printStackTrace();
 								} // if
 									//
-							}
-						} // if
+							} else {
+								//
+								JOptionPane.showMessageDialog(null, getMessage(e1));
+								//
+							} // if
+								//
+						} // try
 							//
 					}
 
