@@ -927,19 +927,19 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 						});
 						//
-					} catch (final IOException | URISyntaxException e) {
+					} catch (final IOException | URISyntaxException e1) {
 						//
 						if (GraphicsEnvironment.isHeadless()) {
 							//
 							if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-								LOG.error(getMessage(e), e);
-							} else if (e != null) {
-								e.printStackTrace();
+								LOG.error(getMessage(e1), e);
+							} else if (e1 != null) {
+								e1.printStackTrace();
 							} // if
 								//
 						} else {
 							//
-							JOptionPane.showMessageDialog(null, getMessage(e));
+							JOptionPane.showMessageDialog(null, getMessage(e1));
 							//
 						} // if
 							//
