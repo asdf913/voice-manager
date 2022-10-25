@@ -50,6 +50,9 @@
 			value="${org.springframework.context.support.VoiceManager.jlptLevelPageUrl}" />
 		<property name="gaKuNenBeTsuKanJiListPageUrl"
 			value="${org.springframework.context.support.VoiceManager.gaKuNenBeTsuKanJiListPageUrl}" />
+		<property
+			name="microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl"
+			value="${org.springframework.context.support.VoiceManager.microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl}" />
 	</bean>
 
 	<bean id="DataSource" class="org.h2.jdbcx.JdbcConnectionPool"

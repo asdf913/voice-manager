@@ -337,6 +337,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private String jlptLevelPageUrl, gaKuNenBeTsuKanJiListPageUrl = null;
 
+	private String microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl = null;
+
 	private Unit<List<String>> jlptLevels = null;
 
 	private LayoutManager layoutManager = null;
@@ -615,6 +617,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		this.gaKuNenBeTsuKanJiListPageUrl = gaKuNenBeTsuKanJiListPageUrl;
 	}
 
+	public void setMicrosoftSpeechPlatformRuntimeLanguagesDownloadPageUrl(
+			final String microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl) {
+		this.microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl = microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl;
+	}
+
 	private static <E> Stream<E> stream(final Collection<E> instance) {
 		return instance != null ? instance.stream() : null;
 	}
@@ -758,8 +765,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 							try {
 								//
-								desktop.browse(
-										new URI("https://www.microsoft.com/en-us/download/details.aspx?id=27224"));
+								desktop.browse(new URI(microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl));
 								//
 							} catch (final IOException | URISyntaxException e1) {
 								//
