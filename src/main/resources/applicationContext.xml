@@ -51,6 +51,9 @@
 		<property name="gaKuNenBeTsuKanJiListPageUrl"
 			value="${org.springframework.context.support.VoiceManager.gaKuNenBeTsuKanJiListPageUrl}" />
 		<property
+			name="microsoftSpeechPlatformRuntimeDownloadPageUrl"
+			value="${org.springframework.context.support.VoiceManager.microsoftSpeechPlatformRuntimeDownloadPageUrl}" />
+		<property
 			name="microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl"
 			value="${org.springframework.context.support.VoiceManager.microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl}" />
 	</bean>

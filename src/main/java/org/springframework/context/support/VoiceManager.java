@@ -339,7 +339,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private String jlptLevelPageUrl, gaKuNenBeTsuKanJiListPageUrl = null;
 
-	private String microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl = null;
+	private String microsoftSpeechPlatformRuntimeDownloadPageUrl,
+			microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl = null;
 
 	private Unit<List<String>> jlptLevels = null;
 
@@ -619,6 +620,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		this.gaKuNenBeTsuKanJiListPageUrl = gaKuNenBeTsuKanJiListPageUrl;
 	}
 
+	public void setMicrosoftSpeechPlatformRuntimeDownloadPageUrl(
+			final String microsoftSpeechPlatformRuntimeDownloadPageUrl) {
+		this.microsoftSpeechPlatformRuntimeDownloadPageUrl = microsoftSpeechPlatformRuntimeDownloadPageUrl;
+	}
+
 	public void setMicrosoftSpeechPlatformRuntimeLanguagesDownloadPageUrl(
 			final String microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl) {
 		this.microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl = microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl;
@@ -729,103 +735,186 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		String[] voiceIds = null;
 		//
-		try {
+		if (isInstalled(speechApi)) {
 			//
-			voiceIds = isInstalled(speechApi) ? getVoiceIds(speechApi) : null;
-			//
-		} catch (final Error e) {
-			//
-			if (GraphicsEnvironment.isHeadless()) {
+			try {
 				//
-				if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-					LOG.error(getMessage(e), e);
-				} else if (e != null) {
-					e.printStackTrace();
-				} // if
-					//
-			} else {
+				voiceIds = getVoiceIds(speechApi);
 				//
-				(jPanelWarning = new JPanel()).setBorder(BorderFactory.createTitledBorder("Warning"));
+			} catch (final Error e) {
 				//
-				String title = null;
-				//
-				boolean pageAvailable = false;
-				//
-				try (final WebClient webClient = new WebClient()) {
+				if (GraphicsEnvironment.isHeadless()) {
 					//
-					title = getTitleText(cast(HtmlPage.class,
-							webClient.getPage(microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl)));
-					//
-					pageAvailable = true;
-					//
-				} catch (final FailingHttpStatusCodeException | IOException e1) {
-					//
-					if (GraphicsEnvironment.isHeadless()) {
+					if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
+						LOG.error(getMessage(e), e);
+					} else if (e != null) {
+						e.printStackTrace();
+					} // if
 						//
-						if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-							LOG.error(getMessage(e1), e1);
-						} else if (e1 != null) {
-							e1.printStackTrace();
+				} else {
+					//
+					(jPanelWarning = new JPanel()).setBorder(BorderFactory.createTitledBorder("Warning"));
+					//
+					String title = null;
+					//
+					boolean pageAvailable = false;
+					//
+					try (final WebClient webClient = new WebClient()) {
+						//
+						title = getTitleText(cast(HtmlPage.class,
+								webClient.getPage(microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl)));
+						//
+						pageAvailable = true;
+						//
+					} catch (final FailingHttpStatusCodeException | IOException e1) {
+						//
+						if (GraphicsEnvironment.isHeadless()) {
+							//
+							if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
+								LOG.error(getMessage(e1), e1);
+							} else if (e1 != null) {
+								e1.printStackTrace();
+							} // if
+								//
+						} else {
+							//
+							JOptionPane.showMessageDialog(null, getMessage(e1));
+							//
 						} // if
 							//
-					} else {
+					} // try
 						//
-						JOptionPane.showMessageDialog(null, getMessage(e1));
+					final JLabel jLabel = new JLabel(StringUtils.defaultIfBlank(title,
+							"Download Microsoft Speech Platform - Runtime Languages (Version 11) from Official Microsoft Download Center"));
+					//
+					if (pageAvailable) {
+						//
+						jLabel.setForeground(darker(Color.BLUE));
+						//
+						jLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+						//
+						jLabel.addMouseListener(new MouseAdapter() {
+
+							@Override
+							public void mouseClicked(final MouseEvent e) {
+								//
+								try {
+									//
+									browse(Desktop.getDesktop(),
+											new URI(microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl));
+									//
+								} catch (final IOException | URISyntaxException e1) {
+									//
+									if (GraphicsEnvironment.isHeadless()) {
+										//
+										if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
+											LOG.error(getMessage(e1), e);
+										} else if (e1 != null) {
+											e1.printStackTrace();
+										} // if
+											//
+									} else {
+										//
+										JOptionPane.showMessageDialog(null, getMessage(e1));
+										//
+									} // if
+										//
+								} // try
+									//
+							}
+
+						});
 						//
 					} // if
 						//
-				} // try
+					jPanelWarning.add(jLabel);
 					//
-				final JLabel jLabel = new JLabel(StringUtils.defaultIfBlank(title,
-						"Download Microsoft Speech Platform - Runtime Languages (Version 11) from Official Microsoft Download Center"));
-				//
-				if (pageAvailable) {
-					//
-					jLabel.setForeground(darker(Color.BLUE));
-					//
-					jLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-					//
-					jLabel.addMouseListener(new MouseAdapter() {
-
-						@Override
-						public void mouseClicked(final MouseEvent e) {
-							//
-							try {
-								//
-								browse(Desktop.getDesktop(),
-										new URI(microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl));
-								//
-							} catch (final IOException | URISyntaxException e1) {
-								//
-								if (GraphicsEnvironment.isHeadless()) {
-									//
-									if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-										LOG.error(getMessage(e1), e);
-									} else if (e1 != null) {
-										e1.printStackTrace();
-									} // if
-										//
-								} else {
-									//
-									JOptionPane.showMessageDialog(null, getMessage(e1));
-									//
-								} // if
-									//
-							} // try
-								//
-						}
-
-					});
+					add(jPanelWarning, WRAP);
 					//
 				} // if
 					//
-				jPanelWarning.add(jLabel);
+			} // try
 				//
-				add(jPanelWarning, WRAP);
+		} else {
+			//
+			(jPanelWarning = new JPanel()).setBorder(BorderFactory.createTitledBorder("Warning"));
+			//
+			String title = null;
+			//
+			boolean pageAvailable = false;
+			//
+			try (final WebClient webClient = new WebClient()) {
+				//
+				title = getTitleText(cast(HtmlPage.class, testAndApply(Objects::nonNull,
+						microsoftSpeechPlatformRuntimeDownloadPageUrl, webClient::getPage, null)));
+				//
+				pageAvailable = true;
+				//
+			} catch (final FailingHttpStatusCodeException | IOException e1) {
+				//
+				if (GraphicsEnvironment.isHeadless()) {
+					//
+					if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
+						LOG.error(getMessage(e1), e1);
+					} else if (e1 != null) {
+						e1.printStackTrace();
+					} // if
+						//
+				} else {
+					//
+					JOptionPane.showMessageDialog(null, getMessage(e1));
+					//
+				} // if
+					//
+			} // try
+				//
+			final JLabel jLabel = new JLabel(StringUtils.defaultIfBlank(title,
+					"Download Microsoft Speech Platform - Runtime (Version 11) from Official Microsoft Download Center"));
+			//
+			if (pageAvailable) {
+				//
+				jLabel.setForeground(darker(Color.BLUE));
+				//
+				jLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+				//
+				jLabel.addMouseListener(new MouseAdapter() {
+
+					@Override
+					public void mouseClicked(final MouseEvent e) {
+						//
+						try {
+							//
+							browse(Desktop.getDesktop(), new URI(microsoftSpeechPlatformRuntimeDownloadPageUrl));
+							//
+						} catch (final IOException | URISyntaxException e1) {
+							//
+							if (GraphicsEnvironment.isHeadless()) {
+								//
+								if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
+									LOG.error(getMessage(e1), e);
+								} else if (e1 != null) {
+									e1.printStackTrace();
+								} // if
+									//
+							} else {
+								//
+								JOptionPane.showMessageDialog(null, getMessage(e1));
+								//
+							} // if
+								//
+						} // try
+							//
+					}
+
+				});
 				//
 			} // if
 				//
-		} // try
+			jPanelWarning.add(jLabel);
+			//
+			add(jPanelWarning, WRAP);
+			//
+		} // if
 			//
 		jTabbedPane.addTab("TTS", createTtsPanel(cloneLayoutManager(), voiceIds));
 		//

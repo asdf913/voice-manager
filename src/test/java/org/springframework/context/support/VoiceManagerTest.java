@@ -1153,7 +1153,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> instance.afterPropertiesSet());
+		Assertions.assertThrows(IllegalArgumentException.class, () -> instance.afterPropertiesSet());
 		//
 		instance.setSpeechApi(speechApi);
 		//
@@ -1161,7 +1161,7 @@ class VoiceManagerTest {
 		//
 		ih.isInstalled = Boolean.FALSE;
 		//
-		Assertions.assertDoesNotThrow(() -> instance.afterPropertiesSet());
+		Assertions.assertThrows(IllegalArgumentException.class, () -> instance.afterPropertiesSet());
 		//
 		ih.isInstalled = Boolean.TRUE;
 		//
