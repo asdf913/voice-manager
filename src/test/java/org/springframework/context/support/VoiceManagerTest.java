@@ -145,6 +145,7 @@ import org.zeroturnaround.zip.ZipUtil;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gargoylesoftware.htmlunit.SgmlPage;
+import com.gargoylesoftware.htmlunit.WebClientOptions;
 import com.gargoylesoftware.htmlunit.WebWindow;
 import com.gargoylesoftware.htmlunit.html.DomElement;
 import com.gargoylesoftware.htmlunit.html.DomNodeList;
@@ -212,7 +213,8 @@ class VoiceManagerTest {
 			METHOD_CREATE_DRAWING_PATRIARCH, METHOD_GET_CREATION_HELPER, METHOD_CREATE_CELL_COMMENT,
 			METHOD_CREATE_CLIENT_ANCHOR, METHOD_CREATE_RICH_TEXT_STRING, METHOD_SET_CELL_COMMENT, METHOD_SET_AUTHOR,
 			METHOD_TEST_AND_ACCEPT, METHOD_FIND_FIELDS_BY_VALUE, METHOD_GET_DECLARED_FIELDS, METHOD_GET_DECLARING_CLASS,
-			METHOD_GET_PACKAGE, METHOD_BROWSE, METHOD_TO_URI, METHOD_DARKER, METHOD_GET_TITLE_TEXT = null;
+			METHOD_GET_PACKAGE, METHOD_BROWSE, METHOD_TO_URI, METHOD_DARKER, METHOD_GET_TITLE_TEXT,
+			METHOD_SET_JAVA_SCRIPT_ENABLED = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -583,6 +585,9 @@ class VoiceManagerTest {
 		(METHOD_DARKER = clz.getDeclaredMethod("darker", Color.class)).setAccessible(true);
 		//
 		(METHOD_GET_TITLE_TEXT = clz.getDeclaredMethod("getTitleText", HtmlPage.class)).setAccessible(true);
+		//
+		(METHOD_SET_JAVA_SCRIPT_ENABLED = clz.getDeclaredMethod("setJavaScriptEnabled", WebClientOptions.class,
+				Boolean.TYPE)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -4981,6 +4986,21 @@ class VoiceManagerTest {
 				return (String) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void tsetSetJavaScriptEnabled() {
+		//
+		Assertions.assertDoesNotThrow(() -> setJavaScriptEnabled(null, false));
+		//
+	}
+
+	private static void setJavaScriptEnabled(final WebClientOptions instance, final boolean enabled) throws Throwable {
+		try {
+			METHOD_SET_JAVA_SCRIPT_ENABLED.invoke(null, instance, enabled);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
