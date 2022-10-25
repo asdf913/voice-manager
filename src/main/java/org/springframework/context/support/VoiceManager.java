@@ -784,50 +784,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 					} // try
 						//
-					final JLabel jLabel = new JLabel(StringUtils.defaultIfBlank(title,
-							"Download Microsoft Speech Platform - Runtime Languages (Version 11) from Official Microsoft Download Center"));
+					title = StringUtils.defaultIfBlank(title,
+							"Download Microsoft Speech Platform - Runtime Languages (Version 11) from Official Microsoft Download Center");
 					//
-					if (pageAvailable) {
-						//
-						jLabel.setForeground(darker(Color.BLUE));
-						//
-						jLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-						//
-						jLabel.addMouseListener(new MouseAdapter() {
-
-							@Override
-							public void mouseClicked(final MouseEvent e) {
-								//
-								try {
-									//
-									browse(Desktop.getDesktop(),
-											new URI(microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl));
-									//
-								} catch (final IOException | URISyntaxException e1) {
-									//
-									if (GraphicsEnvironment.isHeadless()) {
-										//
-										if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-											LOG.error(getMessage(e1), e);
-										} else if (e1 != null) {
-											e1.printStackTrace();
-										} // if
-											//
-									} else {
-										//
-										JOptionPane.showMessageDialog(null, getMessage(e1));
-										//
-									} // if
-										//
-								} // try
-									//
-							}
-
-						});
-						//
-					} // if
-						//
-					jPanelWarning.add(jLabel);
+					jPanelWarning.add(pageAvailable
+							? new JLabelLink(microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl, title)
+							: new JLabel(title));
 					//
 					add(jPanelWarning, WRAP);
 					//
@@ -868,49 +830,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 			} // try
 				//
-			final JLabel jLabel = new JLabel(StringUtils.defaultIfBlank(title,
-					"Download Microsoft Speech Platform - Runtime (Version 11) from Official Microsoft Download Center"));
+			title = StringUtils.defaultIfBlank(title,
+					"Download Microsoft Speech Platform - Runtime (Version 11) from Official Microsoft Download Center");
 			//
-			if (pageAvailable) {
-				//
-				jLabel.setForeground(darker(Color.BLUE));
-				//
-				jLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-				//
-				jLabel.addMouseListener(new MouseAdapter() {
-
-					@Override
-					public void mouseClicked(final MouseEvent e) {
-						//
-						try {
-							//
-							browse(Desktop.getDesktop(), new URI(microsoftSpeechPlatformRuntimeDownloadPageUrl));
-							//
-						} catch (final IOException | URISyntaxException e1) {
-							//
-							if (GraphicsEnvironment.isHeadless()) {
-								//
-								if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-									LOG.error(getMessage(e1), e);
-								} else if (e1 != null) {
-									e1.printStackTrace();
-								} // if
-									//
-							} else {
-								//
-								JOptionPane.showMessageDialog(null, getMessage(e1));
-								//
-							} // if
-								//
-						} // try
-							//
-					}
-
-				});
-				//
-			} // if
-				//
-			jPanelWarning.add(jLabel);
+			jPanelWarning.add(pageAvailable ? new JLabelLink(microsoftSpeechPlatformRuntimeDownloadPageUrl, title)
+					: new JLabel(title));
 			//
 			add(jPanelWarning, WRAP);
 			//
@@ -976,6 +900,62 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
+	}
+
+	private static class JLabelLink extends JLabel {
+
+		private static final long serialVersionUID = 8848505138795752227L;
+
+		private String url = null;
+
+		{
+			//
+			setForeground(darker(Color.BLUE));
+			//
+			setCursor(new Cursor(Cursor.HAND_CURSOR));
+			//
+			addMouseListener(new MouseAdapter() {
+
+				@Override
+				public void mouseClicked(final MouseEvent e) {
+					//
+					try {
+						//
+						testAndAccept(Objects::nonNull, testAndApply(Objects::nonNull, url, URI::new, null), x -> {
+							//
+							browse(Desktop.getDesktop(), x);
+							//
+						});
+						//
+					} catch (final IOException | URISyntaxException e) {
+						//
+						if (GraphicsEnvironment.isHeadless()) {
+							//
+							if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
+								LOG.error(getMessage(e), e);
+							} else if (e != null) {
+								e.printStackTrace();
+							} // if
+								//
+						} else {
+							//
+							JOptionPane.showMessageDialog(null, getMessage(e));
+							//
+						} // if
+							//
+					} // try
+						//
+				}
+
+			});
+			//
+		}
+
+		private JLabelLink(final String url, final String text) {
+			super(text);
+			this.url = url;
+		}
+
 	}
 
 	private static String getTitleText(final HtmlPage instance) {

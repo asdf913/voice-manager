@@ -15,6 +15,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseListener;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.Console;
@@ -5469,6 +5470,42 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
+	}
+
+	@Test
+	void testJLabelLink() throws Throwable {
+		//
+		final Class<?> clz = forName("org.springframework.context.support.VoiceManager$JLabelLink");
+		//
+		final Constructor<?> constructor = clz != null ? clz.getDeclaredConstructor(String.class, String.class) : null;
+		//
+		if (constructor != null) {
+			//
+			constructor.setAccessible(true);
+			//
+		} // if
+			//
+		final MouseListener[] mouseListeners = getMouseListeners(
+				cast(Component.class, constructor != null ? constructor.newInstance(null, null) : null));
+		//
+		MouseListener mouseListener = null;
+		//
+		for (int i = 0; mouseListeners != null && i < mouseListeners.length; i++) {
+			//
+			if ((mouseListener = mouseListeners[i]) == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			mouseListener.mouseClicked(null);
+			//
+		} // for
+			//
+	}
+
+	private static MouseListener[] getMouseListeners(final Component instance) {
+		return instance != null ? instance.getMouseListeners() : null;
 	}
 
 }
