@@ -712,15 +712,39 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			}
 		});
 		//
-		jTabbedPane.addTab("TTS", createTtsPanel(cloneLayoutManager()));
+		String[] voiceIds = null;
 		//
-		jTabbedPane.addTab(TAB_TITLE_IMPORT_SINGLE, createSingleImportPanel(cloneLayoutManager()));
+		try {
+			//
+			voiceIds = isInstalled(speechApi) ? getVoiceIds(speechApi) : null;
+			//
+		} catch (final Error e) {
+			//
+			if (GraphicsEnvironment.isHeadless()) {
+				//
+				if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
+					LOG.error(getMessage(e), e);
+				} else if (e != null) {
+					e.printStackTrace();
+				} // if
+					//
+			} else {
+				//
+				JOptionPane.showMessageDialog(null, getMessage(e));
+				//
+			} // if
+				//
+		} // try
+			//
+		jTabbedPane.addTab("TTS", createTtsPanel(cloneLayoutManager(), voiceIds));
+		//
+		jTabbedPane.addTab(TAB_TITLE_IMPORT_SINGLE, createSingleImportPanel(cloneLayoutManager(), voiceIds));
 		//
 		jTabbedPane.addTab(TAB_TITLE_IMPORT_BATCH, createBatchImportPanel(cloneLayoutManager()));
 		//
 		jTabbedPane.addTab("Export", createExportPanel(cloneLayoutManager()));
 		//
-		jTabbedPane.addTab("Misc", createMiscellaneousPanel(cloneLayoutManager()));
+		jTabbedPane.addTab("Misc", createMiscellaneousPanel(cloneLayoutManager(), voiceIds));
 		//
 		try {
 			//
@@ -848,7 +872,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private JPanel createTtsPanel(final LayoutManager layoutManager) {
+	private JPanel createTtsPanel(final LayoutManager layoutManager, final String[] voiceIds) {
 		//
 		final JPanel panel = new JPanel();
 		//
@@ -902,8 +926,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			// Voice Id
 			//
 		panel.add(new JLabel("Voice Id"));
-		//
-		final String[] voiceIds = isInstalled ? getVoiceIds(speechApi) : null;
 		//
 		if ((cbmVoiceId = testAndApply(Objects::nonNull, voiceIds,
 				x -> new DefaultComboBoxModel<>(ArrayUtils.insert(0, x, (String) null)), null)) != null) {
@@ -1013,13 +1035,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		addActionListener(this, btnSpeak, btnWriteVoice);
 		//
-		setEnabled(isInstalled, btnSpeak, btnWriteVoice);
+		setEnabled(isInstalled && voiceIds != null, btnSpeak, btnWriteVoice);
 		//
 		return panel;
 		//
 	}
 
-	private JPanel createSingleImportPanel(final LayoutManager layoutManager) {
+	private JPanel createSingleImportPanel(final LayoutManager layoutManager, final String[] voiceIds) {
 		//
 		final JPanel panel = new JPanel();
 		//
@@ -1343,6 +1365,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		addActionListener(this, btnExecute, btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji, btnCopyHiragana,
 				btnCopyKatakana);
 		//
+		setEnabled(voiceIds != null, cbUseTtsVoice);
+		//
 		return panel;
 		//
 	}
@@ -1662,7 +1686,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private JPanel createMiscellaneousPanel(final LayoutManager layoutManager) {
+	private JPanel createMiscellaneousPanel(final LayoutManager layoutManager, final String[] voiceIds) {
 		//
 		final JPanel panel = new JPanel();
 		//
@@ -1694,7 +1718,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		addActionListener(this, btnExportGaKuNenBeTsuKanJi, btnExportJoYoKanJi,
 				btnExportMicrosoftSpeechObjectLibraryInformation, btnExportCopy, btnExportBrowse);
 		//
-		setEnabled(isInstalled(speechApi), btnExportMicrosoftSpeechObjectLibraryInformation);
+		setEnabled(isInstalled(speechApi) && voiceIds != null, btnExportMicrosoftSpeechObjectLibraryInformation);
 		//
 		return panel;
 		//
