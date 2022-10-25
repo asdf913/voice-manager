@@ -2,6 +2,7 @@ package org.springframework.context.support;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
@@ -17,6 +18,8 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.Console;
@@ -43,6 +46,7 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 import java.net.HttpURLConnection;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
@@ -712,6 +716,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			}
 		});
 		//
+		JPanel jPanelWarning = null;
+		//
 		String[] voiceIds = null;
 		//
 		try {
@@ -730,7 +736,57 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 			} else {
 				//
-				JOptionPane.showMessageDialog(null, getMessage(e));
+				(jPanelWarning = new JPanel()).setBorder(BorderFactory.createTitledBorder("Warning"));
+				//
+				// TODO
+				//
+				final JLabel jLabel = new JLabel(
+						"Download Microsoft Speech Platform - Runtime Languages (Version 11) from Official Microsoft Download Center");
+				//
+				jLabel.setForeground(darker(Color.BLUE));
+				//
+				jLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+				//
+				jLabel.addMouseListener(new MouseAdapter() {
+
+					@Override
+					public void mouseClicked(final MouseEvent e) {
+						//
+						final Desktop desktop = Desktop.getDesktop();
+						//
+						if (desktop != null) {
+							//
+							try {
+								//
+								desktop.browse(
+										new URI("https://www.microsoft.com/en-us/download/details.aspx?id=27224"));
+								//
+							} catch (final IOException | URISyntaxException e1) {
+								//
+								if (GraphicsEnvironment.isHeadless()) {
+									//
+									if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
+										LOG.error(getMessage(e1), e);
+									} else if (e1 != null) {
+										e1.printStackTrace();
+									} // if
+										//
+								} else {
+									//
+									JOptionPane.showMessageDialog(null, getMessage(e1));
+									//
+								} // if
+									//
+							}
+						} // if
+							//
+					}
+
+				});
+				//
+				jPanelWarning.add(jLabel);
+				//
+				add(jPanelWarning, WRAP);
 				//
 			} // if
 				//
@@ -783,6 +839,23 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
+		if (jPanelWarning != null) {
+			//
+			final Double maxPreferredWidth = ObjectUtils.max(getPreferredWidth(jPanelWarning),
+					getPreferredWidth(jTabbedPane));
+			//
+			if (maxPreferredWidth != null) {
+				//
+				setPreferredWidth(maxPreferredWidth.intValue(), jPanelWarning);
+				//
+			} // if
+				//
+		} // if
+			//
+	}
+
+	private static Color darker(final Color instance) {
+		return instance != null ? instance.darker() : null;
 	}
 
 	private static Integer getTabIndexByTitle(final Object jTabbedPane, final Object title)
