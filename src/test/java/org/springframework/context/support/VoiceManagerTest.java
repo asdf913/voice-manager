@@ -214,7 +214,7 @@ class VoiceManagerTest {
 			METHOD_CREATE_CLIENT_ANCHOR, METHOD_CREATE_RICH_TEXT_STRING, METHOD_SET_CELL_COMMENT, METHOD_SET_AUTHOR,
 			METHOD_TEST_AND_ACCEPT, METHOD_FIND_FIELDS_BY_VALUE, METHOD_GET_DECLARED_FIELDS, METHOD_GET_DECLARING_CLASS,
 			METHOD_GET_PACKAGE, METHOD_BROWSE, METHOD_TO_URI, METHOD_DARKER, METHOD_GET_TITLE_TEXT,
-			METHOD_SET_JAVA_SCRIPT_ENABLED = null;
+			METHOD_SET_CSS_ENABLED, METHOD_SET_JAVA_SCRIPT_ENABLED = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -585,6 +585,9 @@ class VoiceManagerTest {
 		(METHOD_DARKER = clz.getDeclaredMethod("darker", Color.class)).setAccessible(true);
 		//
 		(METHOD_GET_TITLE_TEXT = clz.getDeclaredMethod("getTitleText", HtmlPage.class)).setAccessible(true);
+		//
+		(METHOD_SET_CSS_ENABLED = clz.getDeclaredMethod("setCssEnabled", WebClientOptions.class, Boolean.TYPE))
+				.setAccessible(true);
 		//
 		(METHOD_SET_JAVA_SCRIPT_ENABLED = clz.getDeclaredMethod("setJavaScriptEnabled", WebClientOptions.class,
 				Boolean.TYPE)).setAccessible(true);
@@ -4986,6 +4989,21 @@ class VoiceManagerTest {
 				return (String) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void tsetSetCssEnabled() {
+		//
+		Assertions.assertDoesNotThrow(() -> setCssEnabled(null, false));
+		//
+	}
+
+	private static void setCssEnabled(final WebClientOptions instance, final boolean enabled) throws Throwable {
+		try {
+			METHOD_SET_CSS_ENABLED.invoke(null, instance, enabled);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

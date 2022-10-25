@@ -761,7 +761,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					try (final WebClient webClient = new WebClient()) {
 						//
-						setJavaScriptEnabled(webClient.getOptions(), false);
+						final WebClientOptions webClientOptions = webClient.getOptions();
+						//
+						setCssEnabled(webClientOptions, false);
+						//
+						setJavaScriptEnabled(webClientOptions, false);
 						//
 						title = getTitleText(cast(HtmlPage.class,
 								webClient.getPage(microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl)));
@@ -809,7 +813,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			try (final WebClient webClient = new WebClient()) {
 				//
-				setJavaScriptEnabled(webClient.getOptions(), false);
+				final WebClientOptions webClientOptions = webClient.getOptions();
+				//
+				setCssEnabled(webClientOptions, false);
+				//
+				setJavaScriptEnabled(webClientOptions, false);
 				//
 				title = getTitleText(cast(HtmlPage.class, testAndApply(Objects::nonNull,
 						microsoftSpeechPlatformRuntimeDownloadPageUrl, webClient::getPage, null)));
@@ -904,6 +912,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
+	}
+
+	private static void setCssEnabled(final WebClientOptions instance, final boolean enabled) {
+		if (instance != null) {
+			instance.setCssEnabled(enabled);
+		}
 	}
 
 	private static void setJavaScriptEnabled(final WebClientOptions instance, final boolean enabled) {
