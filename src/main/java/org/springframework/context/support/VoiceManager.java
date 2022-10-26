@@ -354,6 +354,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private Unit<Multimap<String, String>> gaKuNenBeTsuKanJiMultimap = null;
 
+	private IValue0<String> microsoftSpeechPlatformRuntimeLanguagesDownloadPageTitle = null;
+
 	private VoiceManager() {
 	}
 
@@ -807,7 +809,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					jPanelWarning.setBorder(BorderFactory.createTitledBorder("Warning"));
 					//
-					final Unit<String> pageTitle = getPageTitle(microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl);
+					final IValue0<String> pageTitle = getMicrosoftSpeechPlatformRuntimeLanguagesDownloadPageTitle();
 					//
 					final String title = StringUtils.defaultIfBlank(getValue0(pageTitle),
 							"Download Microsoft Speech Platform - Runtime Languages (Version 11) from Official Microsoft Download Center");
@@ -906,6 +908,19 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
+	}
+
+	private IValue0<String> getMicrosoftSpeechPlatformRuntimeLanguagesDownloadPageTitle() {
+		//
+		if (microsoftSpeechPlatformRuntimeLanguagesDownloadPageTitle == null) {
+			//
+			microsoftSpeechPlatformRuntimeLanguagesDownloadPageTitle = getPageTitle(
+					microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl);
+			//
+		} // if
+			//
+		return microsoftSpeechPlatformRuntimeLanguagesDownloadPageTitle;
+		//
 	}
 
 	private static <T> T getValue0(final IValue0<T> instance) {
@@ -1929,6 +1944,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		final JPanel panel = new JPanel();
 		//
 		panel.setLayout(layoutManager);
+		//
+		panel.add(new JLabelLink(microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl,
+				getValue0(getMicrosoftSpeechPlatformRuntimeLanguagesDownloadPageTitle())), WRAP);
 		//
 		panel.add(btnExportGaKuNenBeTsuKanJi = new JButton("Export 学年別漢字"), WRAP);
 		//
