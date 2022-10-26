@@ -56,6 +56,8 @@
 		<property
 			name="microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl"
 			value="${org.springframework.context.support.VoiceManager.microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl}" />
+		<property name="microsoftWindowsCompatibilitySettingsPageUrl"
+			value="${org.springframework.context.support.VoiceManager.microsoftWindowsCompatibilitySettingsPageUrl}" />
 	</bean>
 
 	<bean id="DataSource" class="org.h2.jdbcx.JdbcConnectionPool"

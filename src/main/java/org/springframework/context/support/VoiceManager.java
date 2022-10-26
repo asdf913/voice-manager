@@ -344,7 +344,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private String jlptLevelPageUrl, gaKuNenBeTsuKanJiListPageUrl = null;
 
 	private String microsoftSpeechPlatformRuntimeDownloadPageUrl,
-			microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl = null;
+			microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl, microsoftWindowsCompatibilitySettingsPageUrl = null;
 
 	private Unit<List<String>> jlptLevels = null;
 
@@ -634,6 +634,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		this.microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl = microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl;
 	}
 
+	public void setMicrosoftWindowsCompatibilitySettingsPageUrl(
+			final String microsoftWindowsCompatibilitySettingsPageUrl) {
+		this.microsoftWindowsCompatibilitySettingsPageUrl = microsoftWindowsCompatibilitySettingsPageUrl;
+	}
+
 	private static <E> Stream<E> stream(final Collection<E> instance) {
 		return instance != null ? instance.stream() : null;
 	}
@@ -765,16 +770,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						jPanelWarning.add(jLabel);
 					} // if
 						//
-						// TODO
-						//
-					final String url = "https://support.microsoft.com/en-us/windows/make-older-apps-or-programs-compatible-with-windows-10-783d6dd7-b439-bdb0-0490-54eea0f45938";
-					//
-					final Unit<String> pageTitle = getPageTitle(url);
+					final Unit<String> pageTitle = getPageTitle(microsoftWindowsCompatibilitySettingsPageUrl);
 					//
 					final String title = StringUtils.defaultIfBlank(getValue0(pageTitle),
 							"Make older apps or programs compatible with Windows 10");
 					//
-					jPanelWarning.add(pageTitle != null ? new JLabelLink(url, title) : new JLabel(title));
+					jPanelWarning
+							.add(pageTitle != null ? new JLabelLink(microsoftWindowsCompatibilitySettingsPageUrl, title)
+									: new JLabel(title));
 					//
 				} // if
 					//
@@ -824,7 +827,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				} else {
 					add(x);
 				} // if
-				//
+					//
 			});
 			//
 		} else {
