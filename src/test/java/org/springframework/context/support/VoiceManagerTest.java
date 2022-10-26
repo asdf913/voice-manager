@@ -35,6 +35,7 @@ import java.lang.reflect.Method;
 import java.net.URI;
 import java.security.MessageDigest;
 import java.text.NumberFormat;
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -152,6 +153,7 @@ import com.gargoylesoftware.htmlunit.html.DomNodeList;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.google.common.base.Predicates;
+import com.google.common.base.Stopwatch;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Range;
@@ -214,7 +216,7 @@ class VoiceManagerTest {
 			METHOD_CREATE_CLIENT_ANCHOR, METHOD_CREATE_RICH_TEXT_STRING, METHOD_SET_CELL_COMMENT, METHOD_SET_AUTHOR,
 			METHOD_TEST_AND_ACCEPT, METHOD_FIND_FIELDS_BY_VALUE, METHOD_GET_DECLARED_FIELDS, METHOD_GET_DECLARING_CLASS,
 			METHOD_GET_PACKAGE, METHOD_BROWSE, METHOD_TO_URI, METHOD_DARKER, METHOD_GET_TITLE_TEXT,
-			METHOD_SET_CSS_ENABLED, METHOD_SET_JAVA_SCRIPT_ENABLED = null;
+			METHOD_SET_CSS_ENABLED, METHOD_SET_JAVA_SCRIPT_ENABLED, METHOD_STOP, METHOD_ELAPSED = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -591,6 +593,10 @@ class VoiceManagerTest {
 		//
 		(METHOD_SET_JAVA_SCRIPT_ENABLED = clz.getDeclaredMethod("setJavaScriptEnabled", WebClientOptions.class,
 				Boolean.TYPE)).setAccessible(true);
+		//
+		(METHOD_STOP = clz.getDeclaredMethod("stop", Stopwatch.class)).setAccessible(true);
+		//
+		(METHOD_ELAPSED = clz.getDeclaredMethod("elapsed", Stopwatch.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -5019,6 +5025,48 @@ class VoiceManagerTest {
 	private static void setJavaScriptEnabled(final WebClientOptions instance, final boolean enabled) throws Throwable {
 		try {
 			METHOD_SET_JAVA_SCRIPT_ENABLED.invoke(null, instance, enabled);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testStop() {
+		//
+		Assertions.assertDoesNotThrow(() -> stop(null));
+		//
+	}
+
+	private static Stopwatch stop(final Stopwatch instance) throws Throwable {
+		try {
+			final Object obj = METHOD_STOP.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Stopwatch) {
+				return (Stopwatch) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testElapsed() {
+		//
+		Assertions.assertDoesNotThrow(() -> elapsed(null));
+		//
+	}
+
+	private static Duration elapsed(final Stopwatch instance) throws Throwable {
+		try {
+			final Object obj = METHOD_ELAPSED.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Duration) {
+				return (Duration) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

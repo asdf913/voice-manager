@@ -54,6 +54,7 @@ import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -222,6 +223,7 @@ import com.gargoylesoftware.htmlunit.html.DomNodeList;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.github.curiousoddman.rgxgen.RgxGen;
+import com.google.common.base.Stopwatch;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Range;
@@ -282,7 +284,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			tfKatakana, tfRomaji, tfSpeechRate, tfSource, tfProviderName, tfProviderVersion, tfProviderPlatform,
 			tfSpeechLanguageCode, tfSpeechLanguageName, tfLanguage, tfSpeechVolume, tfCurrentProcessingFile,
 			tfCurrentProcessingSheetName, tfCurrentProcessingVoice, tfListNames, tfPhraseCounter, tfPhraseTotal,
-			tfJlptFolderNamePrefix, tfOrdinalPositionFileNamePrefix, tfIpaSymbol, tfExportFile = null;
+			tfJlptFolderNamePrefix, tfOrdinalPositionFileNamePrefix, tfIpaSymbol, tfExportFile, tfElapsed = null;
 
 	private ComboBoxModel<Yomi> cbmYomi = null;
 
@@ -1281,10 +1283,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.add(new JComboBox(cbmAudioFormatWrite = new DefaultComboBoxModel<Object>()));
 		//
-		panel.add(btnWriteVoice = new JButton("Write"));
+		panel.add(btnWriteVoice = new JButton("Write"), WRAP);
+		//
+		// elapsed
+		//
+		panel.add(new JLabel("Elapsed"));
+		//
+		panel.add(tfElapsed = new JTextField(), String.format("%1$s,span %2$s", GROWX, 2));
 		//
 		setEditable(false, tfSpeechLanguageCode, tfSpeechLanguageName, tfProviderName, tfProviderVersion,
-				tfProviderPlatform, tfSpeechVolume);
+				tfProviderPlatform, tfSpeechVolume, tfElapsed);
 		//
 		addActionListener(this, btnSpeak, btnWriteVoice);
 		//
@@ -2605,6 +2613,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			if (speechApi != null) {
 				//
+				final Stopwatch stopwatch = Stopwatch.createStarted();
+				//
 				speechApi.speak(getText(tfTextTts), toString(getSelectedItem(cbmVoiceId))
 				//
 						, intValue(getRate(getText(tfSpeechRate)), 0)// rate
@@ -2614,6 +2624,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 								100)// volume
 
 				);
+				//
+				setText(tfElapsed, toString(elapsed(stop(stopwatch))));
 				//
 			} // if
 				//
@@ -2645,8 +2657,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						Math.min(Math.max(intValue(jsSpeechVolume != null ? jsSpeechVolume.getValue() : null, 100), 0),
 								100)// volume
 				);
-				//
-
 				//
 				final ByteConverter byteConverter = getByteConverter(configurableListableBeanFactory, FORMAT,
 						getSelectedItem(cbmAudioFormatWrite));
@@ -3284,6 +3294,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return list;
 		//
+	}
+
+	private static Stopwatch stop(final Stopwatch instance) {
+		return instance != null ? instance.stop() : null;
+	}
+
+	private static Duration elapsed(final Stopwatch instance) {
+		return instance != null ? instance.elapsed() : null;
 	}
 
 	private static void browse(final Desktop instance, final URI uri) throws IOException {
