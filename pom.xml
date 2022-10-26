@@ -114,10 +114,10 @@
 			<artifactId>guava</artifactId>
 			<version>31.1-jre</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/net.java.dev.jna/jna -->
+		<!-- https://mvnrepository.com/artifact/net.java.dev.jna/jna-platform -->
 		<dependency>
 			<groupId>net.java.dev.jna</groupId>
-			<artifactId>jna</artifactId>
+			<artifactId>jna-platform</artifactId>
 			<version>5.12.1</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.mpatric/mp3agic -->

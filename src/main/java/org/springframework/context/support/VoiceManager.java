@@ -231,6 +231,9 @@ import com.mariten.kanatools.KanaConverter;
 import com.mpatric.mp3agic.BaseException;
 import com.mpatric.mp3agic.ID3v1;
 import com.mpatric.mp3agic.Mp3File;
+import com.sun.jna.platform.win32.Kernel32;
+import com.sun.jna.platform.win32.VersionHelpers;
+import com.sun.jna.platform.win32.WinNT.OSVERSIONINFOEX;
 
 import de.sciss.jump3r.lowlevel.LameEncoder;
 import de.sciss.jump3r.mp3.Lame;
@@ -737,6 +740,26 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		if (isInstalled(speechApi)) {
 			//
+			if (VersionHelpers.IsWindows10OrGreater()) {
+				//
+				final OSVERSIONINFOEX osvi = new OSVERSIONINFOEX();
+				//
+				if (Kernel32.INSTANCE != null && Kernel32.INSTANCE.GetVersionEx(osvi) && osvi.getMajor() >= 10) {
+					//
+					if (jPanelWarning == null) {
+						//
+						jPanelWarning = new JPanel();
+						//
+					} // if
+						//
+					jPanelWarning.setBorder(BorderFactory.createTitledBorder("Warning"));
+					//
+					jPanelWarning.add(new JLabel("Please set Compatibility Mode to \"Windows 8\" or prior version"));
+					//
+				} // if
+					//
+			} // if
+				//
 			try {
 				//
 				voiceIds = getVoiceIds(speechApi);
@@ -753,7 +776,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 				} else {
 					//
-					(jPanelWarning = new JPanel()).setBorder(BorderFactory.createTitledBorder("Warning"));
+					if (jPanelWarning == null) {
+						//
+						jPanelWarning = new JPanel();
+						//
+					} // if
+						//
+					jPanelWarning.setBorder(BorderFactory.createTitledBorder("Warning"));
 					//
 					String title = null;
 					//
@@ -797,12 +826,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							? new JLabelLink(microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl, title)
 							: new JLabel(title));
 					//
-					add(jPanelWarning, WRAP);
-					//
 				} // if
 					//
 			} // try
 				//
+			testAndAccept(Objects::nonNull, jPanelWarning, x -> {
+				add(x, WRAP);
+			});
+			//
 		} else {
 			//
 			(jPanelWarning = new JPanel()).setBorder(BorderFactory.createTitledBorder("Warning"));
