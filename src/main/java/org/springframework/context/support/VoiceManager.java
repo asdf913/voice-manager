@@ -185,6 +185,7 @@ import org.apache.poi.util.LocaleID;
 import org.apache.poi.xssf.usermodel.XSSFDataValidationHelper;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.javatuples.Unit;
+import org.javatuples.valueintf.IValue0;
 import org.openxmlformats.schemas.officeDocument.x2006.customProperties.CTProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -740,6 +741,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		if (isInstalled(speechApi)) {
 			//
+			final LayoutManager layoutManager = cloneLayoutManager();
+			//
 			if (VersionHelpers.IsWindows10OrGreater()) {
 				//
 				final OSVERSIONINFOEX osvi = new OSVERSIONINFOEX();
@@ -748,13 +751,30 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					if (jPanelWarning == null) {
 						//
-						jPanelWarning = new JPanel();
+						jPanelWarning = new JPanel(layoutManager);
 						//
 					} // if
 						//
 					jPanelWarning.setBorder(BorderFactory.createTitledBorder("Warning"));
 					//
-					jPanelWarning.add(new JLabel("Please set Compatibility Mode to \"Windows 8\" or prior version"));
+					final JLabel jLabel = new JLabel("Please set Compatibility Mode to \"Windows 8\" or prior version");
+					//
+					if (layoutManager instanceof MigLayout) {
+						jPanelWarning.add(jLabel, WRAP);
+					} else {
+						jPanelWarning.add(jLabel);
+					} // if
+						//
+						// TODO
+						//
+					final String url = "https://support.microsoft.com/en-us/windows/make-older-apps-or-programs-compatible-with-windows-10-783d6dd7-b439-bdb0-0490-54eea0f45938";
+					//
+					final Unit<String> pageTitle = getPageTitle(url);
+					//
+					final String title = StringUtils.defaultIfBlank(getValue0(pageTitle),
+							"Make older apps or programs compatible with Windows 10");
+					//
+					jPanelWarning.add(pageTitle != null ? new JLabelLink(url, title) : new JLabel(title));
 					//
 				} // if
 					//
@@ -784,45 +804,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					jPanelWarning.setBorder(BorderFactory.createTitledBorder("Warning"));
 					//
-					String title = null;
+					final Unit<String> pageTitle = getPageTitle(microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl);
 					//
-					boolean pageAvailable = false;
-					//
-					try (final WebClient webClient = new WebClient()) {
-						//
-						final WebClientOptions webClientOptions = webClient.getOptions();
-						//
-						setCssEnabled(webClientOptions, false);
-						//
-						setJavaScriptEnabled(webClientOptions, false);
-						//
-						title = getTitleText(cast(HtmlPage.class,
-								webClient.getPage(microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl)));
-						//
-						pageAvailable = true;
-						//
-					} catch (final FailingHttpStatusCodeException | IOException e1) {
-						//
-						if (GraphicsEnvironment.isHeadless()) {
-							//
-							if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-								LOG.error(getMessage(e1), e1);
-							} else if (e1 != null) {
-								e1.printStackTrace();
-							} // if
-								//
-						} else {
-							//
-							JOptionPane.showMessageDialog(null, getMessage(e1));
-							//
-						} // if
-							//
-					} // try
-						//
-					title = StringUtils.defaultIfBlank(title,
+					final String title = StringUtils.defaultIfBlank(getValue0(pageTitle),
 							"Download Microsoft Speech Platform - Runtime Languages (Version 11) from Official Microsoft Download Center");
 					//
-					jPanelWarning.add(pageAvailable
+					jPanelWarning.add(pageTitle != null
 							? new JLabelLink(microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl, title)
 							: new JLabel(title));
 					//
@@ -831,52 +818,25 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			} // try
 				//
 			testAndAccept(Objects::nonNull, jPanelWarning, x -> {
-				add(x, WRAP);
+				//
+				if (layoutManager instanceof MigLayout) {
+					add(x, WRAP);
+				} else {
+					add(x);
+				} // if
+				//
 			});
 			//
 		} else {
 			//
 			(jPanelWarning = new JPanel()).setBorder(BorderFactory.createTitledBorder("Warning"));
 			//
-			String title = null;
+			final Unit<String> pageTitle = getPageTitle(microsoftSpeechPlatformRuntimeDownloadPageUrl);
 			//
-			boolean pageAvailable = false;
-			//
-			try (final WebClient webClient = new WebClient()) {
-				//
-				final WebClientOptions webClientOptions = webClient.getOptions();
-				//
-				setCssEnabled(webClientOptions, false);
-				//
-				setJavaScriptEnabled(webClientOptions, false);
-				//
-				title = getTitleText(cast(HtmlPage.class, testAndApply(Objects::nonNull,
-						microsoftSpeechPlatformRuntimeDownloadPageUrl, webClient::getPage, null)));
-				//
-				pageAvailable = true;
-				//
-			} catch (final FailingHttpStatusCodeException | IOException e1) {
-				//
-				if (GraphicsEnvironment.isHeadless()) {
-					//
-					if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-						LOG.error(getMessage(e1), e1);
-					} else if (e1 != null) {
-						e1.printStackTrace();
-					} // if
-						//
-				} else {
-					//
-					JOptionPane.showMessageDialog(null, getMessage(e1));
-					//
-				} // if
-					//
-			} // try
-				//
-			title = StringUtils.defaultIfBlank(title,
+			final String title = StringUtils.defaultIfBlank(getValue0(pageTitle),
 					"Download Microsoft Speech Platform - Runtime (Version 11) from Official Microsoft Download Center");
 			//
-			jPanelWarning.add(pageAvailable ? new JLabelLink(microsoftSpeechPlatformRuntimeDownloadPageUrl, title)
+			jPanelWarning.add(pageTitle != null ? new JLabelLink(microsoftSpeechPlatformRuntimeDownloadPageUrl, title)
 					: new JLabel(title));
 			//
 			add(jPanelWarning, WRAP);
@@ -943,6 +903,45 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
+	}
+
+	private static <T> T getValue0(final IValue0<T> instance) {
+		return instance != null ? instance.getValue0() : null;
+	}
+
+	private static Unit<String> getPageTitle(final String url) {
+		//
+		try (final WebClient webClient = new WebClient()) {
+			//
+			final WebClientOptions webClientOptions = webClient.getOptions();
+			//
+			setCssEnabled(webClientOptions, false);
+			//
+			setJavaScriptEnabled(webClientOptions, false);
+			//
+			return Unit.with(
+					getTitleText(cast(HtmlPage.class, testAndApply(Objects::nonNull, url, webClient::getPage, null))));
+			//
+		} catch (final FailingHttpStatusCodeException | IOException e) {
+			//
+			if (GraphicsEnvironment.isHeadless()) {
+				//
+				if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
+					LOG.error(getMessage(e), e);
+				} else if (e != null) {
+					e.printStackTrace();
+				} // if
+					//
+			} else {
+				//
+				JOptionPane.showMessageDialog(null, getMessage(e));
+				//
+			} // if
+				//
+		} // try
+			//
+		return null;
+		//
 	}
 
 	private static void setCssEnabled(final WebClientOptions instance, final boolean enabled) {
@@ -3743,10 +3742,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static boolean contains(final Collection<?> items, final Object item) {
 		return items != null && items.contains(item);
-	}
-
-	private static <A> A getValue0(final Unit<A> instance) {
-		return instance != null ? instance.getValue0() : null;
 	}
 
 	private static <T> void accept(final Consumer<? super T> action, final T a, final T b, final T... values) {
