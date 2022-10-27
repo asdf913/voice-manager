@@ -2672,8 +2672,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				final Stopwatch stopwatch = Stopwatch.createStarted();
 				//
-				getInstance(speechApi);// TODO;
-				//
 				speechApi.speak(getText(tfTextTts), toString(getSelectedItem(cbmVoiceId))
 				//
 						, intValue(getRate(getText(tfSpeechRate)), 0)// rate
