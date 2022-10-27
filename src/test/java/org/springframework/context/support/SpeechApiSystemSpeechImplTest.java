@@ -20,7 +20,8 @@ import com.kichik.pecoff4j.PE;
 
 class SpeechApiSystemSpeechImplTest {
 
-	private static Method METHOD_CAST, METHOD_TEST_AND_APPLY, METHOD_GET_VERSION_INFO_MAP, METHOD_GET = null;
+	private static Method METHOD_CAST, METHOD_TEST_AND_APPLY, METHOD_GET_VERSION_INFO_MAP0,
+			METHOD_GET_VERSION_INFO_MAP1, METHOD_GET = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -40,10 +41,17 @@ class SpeechApiSystemSpeechImplTest {
 			//
 		} // if
 			//
-		if ((METHOD_GET_VERSION_INFO_MAP = SpeechApiSystemSpeechImpl.class.getDeclaredMethod("getVersionInfoMap",
+		if ((METHOD_GET_VERSION_INFO_MAP0 = SpeechApiSystemSpeechImpl.class
+				.getDeclaredMethod("getVersionInfoMap")) != null) {
+			//
+			METHOD_GET_VERSION_INFO_MAP0.setAccessible(true);
+			//
+		} // if
+			//
+		if ((METHOD_GET_VERSION_INFO_MAP1 = SpeechApiSystemSpeechImpl.class.getDeclaredMethod("getVersionInfoMap",
 				PE.class)) != null) {
 			//
-			METHOD_GET_VERSION_INFO_MAP.setAccessible(true);
+			METHOD_GET_VERSION_INFO_MAP1.setAccessible(true);
 			//
 		} // if
 			//
@@ -161,13 +169,29 @@ class SpeechApiSystemSpeechImplTest {
 	@Test
 	void testGetVersionInfoMap() throws Throwable {
 		//
+		Assertions.assertSame(getVersionInfoMap(), getVersionInfoMap());
+		//
 		Assertions.assertNull(getVersionInfoMap(null));
 		//
 	}
 
+	private Map<String, String> getVersionInfoMap() throws Throwable {
+		try {
+			final Object obj = METHOD_GET_VERSION_INFO_MAP0.invoke(instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Map) {
+				return (Map) obj;
+			}
+			throw new Throwable(toString(obj != null ? obj.getClass() : null));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
 	private static Map<String, String> getVersionInfoMap(final PE pe) throws Throwable {
 		try {
-			final Object obj = METHOD_GET_VERSION_INFO_MAP.invoke(null, pe);
+			final Object obj = METHOD_GET_VERSION_INFO_MAP1.invoke(null, pe);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Map) {
