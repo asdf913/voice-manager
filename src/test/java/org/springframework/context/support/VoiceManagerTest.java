@@ -5380,6 +5380,16 @@ class VoiceManagerTest {
 			//
 			Assertions.assertNull(listCellRenderer1.getListCellRendererComponent(null, null, 0, false, false));
 			//
+			final SpeechApiImpl speechApiImpl = new SpeechApiImpl();
+			//
+			FieldUtils.writeDeclaredField(instance, "speechApi", speechApiImpl, true);
+			//
+			Assertions.assertNull(listCellRenderer1.getListCellRendererComponent(null, null, 0, false, false));
+			//
+			FieldUtils.writeDeclaredField(speechApiImpl, "instance", new SpeechApiSystemSpeechImpl(), true);
+			//
+			Assertions.assertNull(listCellRenderer1.getListCellRendererComponent(null, null, 0, false, false));
+			//
 		} // if
 			//
 	}
