@@ -1,15 +1,27 @@
 package org.springframework.context.support;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.function.Predicate;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 
+import com.kichik.pecoff4j.ImageData;
+import com.kichik.pecoff4j.PE;
+import com.kichik.pecoff4j.ResourceEntry;
+import com.kichik.pecoff4j.constant.ResourceType;
+import com.kichik.pecoff4j.io.PEParser;
+import com.kichik.pecoff4j.io.ResourceParser;
+import com.kichik.pecoff4j.resources.StringFileInfo;
+import com.kichik.pecoff4j.resources.StringPair;
+import com.kichik.pecoff4j.resources.StringTable;
+import com.kichik.pecoff4j.resources.VersionInfo;
+import com.kichik.pecoff4j.util.ResourceHelper;
 import com.sun.jna.Library;
 import com.sun.jna.Native;
-
-import dorkbox.peParser.PE;
 
 @MinValue(name = "volume", value = 0)
 @MaxValue(name = "volume", value = 100)
@@ -33,8 +45,6 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider {
 		public String getVoiceIds(final String requiredAttributes, final String optionalAttributes);
 
 		public String getVoiceAttribute(final String voiceId, final String attribute);
-
-		public String getProviderName();
 
 		public String getProviderPlatform();
 
@@ -111,27 +121,67 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider {
 		//
 	}
 
-	@Override
-	public String getProviderName() {
+	private Map<String, String> versionInfoMap = null;
+
+	private Map<String, String> getVersionInfoMap() throws IOException {
 		//
-		return Jna.INSTANCE != null ? Jna.INSTANCE.getProviderName() : null;
+		if (versionInfoMap == null) {
+			//
+			versionInfoMap = getVersionInfoMap(testAndApply(StringUtils::isNotBlank,
+					Jna.INSTANCE != null ? Jna.INSTANCE.getDllPath() : null, PEParser::parse, null));
+			//
+		} // if
+			//
+		return versionInfoMap;
 		//
 	}
 
-	@Override
-	public String getProviderVersion() {
+	private static Map<String, String> getVersionInfoMap(final PE pe) throws IOException {
 		//
-		try {
+		final ImageData id = pe != null ? pe.getImageData() : null;
+		//
+		final ResourceEntry[] res = ResourceHelper.findResources(id != null ? id.getResourceTable() : null,
+				ResourceType.VERSION_INFO);
+		//
+		ResourceEntry re = null;
+		//
+		VersionInfo vi = null;
+		//
+		StringFileInfo sfi = null;
+		//
+		StringTable st = null;
+		//
+		StringPair sp = null;
+		//
+		Map<String, String> map = null;
+		//
+		for (int i = 0; res != null && i < res.length; i++) {
 			//
-			return testAndApply(StringUtils::isNotBlank, Jna.INSTANCE != null ? Jna.INSTANCE.getDllPath() : null,
-					PE::getVersion, null);
+			if ((re = res[i]) == null) {
+				continue;
+			} // if
+				//
+			st = (sfi = (vi = ResourceParser.readVersionInfo(re.getData())) != null ? vi.getStringFileInfo()
+					: null) != null && sfi.getCount() > 0 ? sfi.getTable(0) : null;
 			//
-		} catch (final Exception e) {
+			for (int j = 0; st != null && j < st.getCount(); j++) {
+				//
+				if ((sp = st.getString(j)) == null) {
+					continue;
+				} // if
+					//
+				if (map == null) {
+					map = new LinkedHashMap<>();
+				} // if
+					//
+				map.put(sp.getKey(), sp.getValue());
+				//
+			} // for
+				//
+		} // for
 			//
-			throw e instanceof RuntimeException ? (RuntimeException) e : new RuntimeException(e);
-			//
-		} // try
-			//
+		return map;
+		//
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
@@ -142,6 +192,40 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider {
 	private static <T, R, E extends Throwable> R apply(final FailableFunction<T, R, E> instance, final T value)
 			throws E {
 		return instance != null ? instance.apply(value) : null;
+	}
+
+	@Override
+	public String getProviderName() {
+		//
+		try {
+			//
+			return get(getVersionInfoMap(), "FileDescription");
+			//
+		} catch (final Exception e) {
+			//
+			throw e instanceof RuntimeException ? (RuntimeException) e : new RuntimeException(e);
+			//
+		} // try
+			//
+	}
+
+	@Override
+	public String getProviderVersion() {
+		//
+		try {
+			//
+			return get(getVersionInfoMap(), "ProductVersion");
+			//
+		} catch (final Exception e) {
+			//
+			throw e instanceof RuntimeException ? (RuntimeException) e : new RuntimeException(e);
+			//
+		} // try
+			//
+	}
+
+	private static <V> V get(final Map<?, V> instance, final Object key) {
+		return instance != null ? instance.get(key) : null;
 	}
 
 	@Override

@@ -1,8 +1,10 @@
 package org.springframework.context.support;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Map;
 import java.util.function.Predicate;
 
 import org.apache.commons.lang3.function.FailableFunction;
@@ -14,10 +16,11 @@ import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.OS;
 
 import com.google.common.base.Predicates;
+import com.kichik.pecoff4j.PE;
 
 class SpeechApiSystemSpeechImplTest {
 
-	private static Method METHOD_CAST, METHOD_TEST_AND_APPLY = null;
+	private static Method METHOD_CAST, METHOD_TEST_AND_APPLY, METHOD_GET_VERSION_INFO_MAP, METHOD_GET = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -34,6 +37,19 @@ class SpeechApiSystemSpeechImplTest {
 				Object.class, FailableFunction.class, FailableFunction.class)) != null) {
 			//
 			METHOD_TEST_AND_APPLY.setAccessible(true);
+			//
+		} // if
+			//
+		if ((METHOD_GET_VERSION_INFO_MAP = SpeechApiSystemSpeechImpl.class.getDeclaredMethod("getVersionInfoMap",
+				PE.class)) != null) {
+			//
+			METHOD_GET_VERSION_INFO_MAP.setAccessible(true);
+			//
+		} // if
+			//
+		if ((METHOD_GET = SpeechApiSystemSpeechImpl.class.getDeclaredMethod("get", Map.class, Object.class)) != null) {
+			//
+			METHOD_GET.setAccessible(true);
 			//
 		} // if
 			//
@@ -137,6 +153,46 @@ class SpeechApiSystemSpeechImplTest {
 			throws Throwable {
 		try {
 			return (R) METHOD_TEST_AND_APPLY.invoke(null, predicate, value, functionTrue, functionFalse);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetVersionInfoMap() throws Throwable {
+		//
+		Assertions.assertNull(getVersionInfoMap(null));
+		//
+	}
+
+	private static Map<String, String> getVersionInfoMap(final PE pe) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_VERSION_INFO_MAP.invoke(null, pe);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Map) {
+				return (Map) obj;
+			}
+			throw new Throwable(toString(obj != null ? obj.getClass() : null));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static String toString(final Object instance) {
+		return instance != null ? instance.toString() : null;
+	}
+
+	@Test
+	void testGet() throws Throwable {
+		//
+		Assertions.assertNull(get(null, null));
+		//
+	}
+
+	private static <V> V get(final Map<?, V> instance, final Object key) throws Throwable {
+		try {
+			return (V) METHOD_GET.invoke(null, instance, key);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

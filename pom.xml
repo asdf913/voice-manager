@@ -180,11 +180,11 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/com.dorkbox/PeParser -->
+		<!-- https://mvnrepository.com/artifact/com.kichik.pecoff4j/pecoff4j -->
 		<dependency>
-			<groupId>com.dorkbox</groupId>
-			<artifactId>PeParser</artifactId>
-			<version>3.1</version>
+			<groupId>com.kichik.pecoff4j</groupId>
+			<artifactId>pecoff4j</artifactId>
+			<version>0.3.2</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
 		<dependency>
