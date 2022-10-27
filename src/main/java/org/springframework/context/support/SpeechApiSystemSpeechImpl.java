@@ -7,6 +7,8 @@ import org.apache.commons.lang3.StringUtils;
 import com.sun.jna.Library;
 import com.sun.jna.Native;
 
+import dorkbox.peParser.PE;
+
 @MinValue(name = "volume", value = 0)
 @MaxValue(name = "volume", value = 100)
 public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider {
@@ -32,9 +34,9 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider {
 
 		public String getProviderName();
 
-		public String getProviderVersion();
-
 		public String getProviderPlatform();
+
+		public String getDllPath();
 
 	}
 
@@ -117,8 +119,16 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider {
 	@Override
 	public String getProviderVersion() {
 		//
-		return Jna.INSTANCE != null ? Jna.INSTANCE.getProviderVersion() : null;
-		//
+		try {
+			//
+			return PE.getVersion(Jna.INSTANCE != null ? Jna.INSTANCE.getDllPath() : null);
+			//
+		} catch (final Exception e) {
+			//
+			throw e instanceof RuntimeException ? (RuntimeException) e : new RuntimeException(e);
+			//
+		} // try
+			//
 	}
 
 	@Override

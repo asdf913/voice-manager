@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.EnabledIf;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.OS;
 
@@ -38,18 +37,11 @@ class SpeechApiSystemSpeechImplTest {
 		//
 	}
 
-	private boolean isInstalled() {
-		//
-		return instance != null && instance.isInstalled();
-		//
-	}
-
 	@Test
 	@EnabledOnOs(OS.WINDOWS)
-	@EnabledIf("isInstalled")
 	void testSpeak() {
 		//
-		Assertions.assertThrows(Error.class, () -> instance.speak(null, null, 0, 0));
+		Assertions.assertDoesNotThrow(() -> instance.speak(null, null, 0, 0));
 		//
 		Assertions.assertDoesNotThrow(() -> instance.speak("1", null, 0, 0));
 		//
@@ -67,7 +59,6 @@ class SpeechApiSystemSpeechImplTest {
 
 	@Test
 	@EnabledOnOs(OS.WINDOWS)
-	@EnabledIf("isInstalled")
 	void testGetVoiceAttribute() {
 		//
 		Assertions.assertNull(instance.getVoiceAttribute(null, null));
@@ -78,9 +69,9 @@ class SpeechApiSystemSpeechImplTest {
 		//
 		for (int i = 0; voiceIds != null && i < voiceIds.length; i++) {
 			//
-			Assertions.assertEquals("", instance.getVoiceAttribute(voiceId = voiceIds[i], null));
+			Assertions.assertNull(instance.getVoiceAttribute(voiceId = voiceIds[i], null));
 			//
-			Assertions.assertEquals("", instance.getVoiceAttribute(voiceId, ""));
+			Assertions.assertNull(instance.getVoiceAttribute(voiceId, ""));
 			//
 			Assertions.assertNotNull(instance.getVoiceAttribute(voiceId, "Language"));
 			//
@@ -90,7 +81,6 @@ class SpeechApiSystemSpeechImplTest {
 
 	@Test
 	@EnabledOnOs(OS.WINDOWS)
-	@EnabledIf("isInstalled")
 	void testGetProviderName() {
 		//
 		Assertions.assertNotNull(instance.getProviderName());
@@ -99,7 +89,6 @@ class SpeechApiSystemSpeechImplTest {
 
 	@Test
 	@EnabledOnOs(OS.WINDOWS)
-	@EnabledIf("isInstalled")
 	void testGetProviderVersion() {
 		//
 		Assertions.assertNotNull(instance.getProviderVersion());
