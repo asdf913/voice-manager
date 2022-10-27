@@ -1196,7 +1196,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		final boolean isInstalled = isInstalled(speechApi);
 		//
 		panel.add(tfProviderVersion = isInstalled ? new JTextField(getProviderVersion(provider)) : new JTextField(),
-				String.format("span %1$s", 3));
+				String.format("span %1$s,width %2$s", 3, 64));
 		//
 		try {
 			//
@@ -1318,7 +1318,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		jsSpeechVolume.setPaintLabels(true);
 		//
-		panel.add(tfSpeechVolume = new JTextField(), String.format("%1$s,width %2$s", WRAP, 25));
+		panel.add(tfSpeechVolume = new JTextField(), String.format("%1$s,width %2$s", WRAP, 27));
 		//
 		// Button(s)
 		//
