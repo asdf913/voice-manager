@@ -41,7 +41,7 @@
 		<property name="outputFolderFileNameExpressions"
 			value="${org.springframework.context.support.VoiceManager.outputFolderFileNameExpressions}" />
 		<property name="speechApi"
-			value="#{new org.springframework.context.support.SpeechApiImpl()}" />
+			value="#{new org.springframework.context.support.SpeechApiSpeechServerImpl()}" />
 		<property name="mp3Tags"
 			value="${org.springframework.context.support.VoiceManager.mp3Tags}" />
 		<property name="microsoftSpeechObjectLibraryAttributeNames"

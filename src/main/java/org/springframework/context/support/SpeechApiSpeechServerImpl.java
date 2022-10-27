@@ -33,7 +33,7 @@ import com.sun.jna.Native;
 
 @MinValue(name = "volume", value = 0)
 @MaxValue(name = "volume", value = 100)
-public class SpeechApiImpl implements SpeechApi, Provider {
+public class SpeechApiSpeechServerImpl implements SpeechApi, Provider {
 
 	private interface Jna extends Library {
 
