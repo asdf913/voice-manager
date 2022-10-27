@@ -2259,7 +2259,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			if (getInstance(speechApi) instanceof SpeechApiSystemSpeechImpl) {
 				//
-				setEnabled(value != null, btnSpeak, btnWriteVoice);
+				setEnabled(getSelectedItem(cbmVoiceId) != null, btnSpeak, btnWriteVoice);
 				//
 			} // if
 				//
