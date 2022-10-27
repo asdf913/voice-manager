@@ -1240,7 +1240,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			jcbVoiceId.setRenderer(voiceIdListCellRenderer);
 			//
-			panel.add(jcbVoiceId, String.format("span %1$s", 3));
+			panel.add(jcbVoiceId, String.format("%1$s,span %2$s", GROWX, 3));
 			//
 			panel.add(tfSpeechLanguageCode = new JTextField(), String.format("width %1$s,span %2$s", 30, 2));
 			//
