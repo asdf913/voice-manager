@@ -3,7 +3,9 @@ package org.springframework.context.support;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.function.Predicate;
 
+import org.apache.commons.lang3.function.FailableFunction;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,9 +13,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.OS;
 
+import com.google.common.base.Predicates;
+
 class SpeechApiSystemSpeechImplTest {
 
-	private static Method METHOD_CAST = null;
+	private static Method METHOD_CAST, METHOD_TEST_AND_APPLY = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -23,6 +27,13 @@ class SpeechApiSystemSpeechImplTest {
 		if ((METHOD_CAST = clz != null ? clz.getDeclaredMethod("cast", Class.class, Object.class) : null) != null) {
 			//
 			METHOD_CAST.setAccessible(true);
+			//
+		} // if
+			//
+		if ((METHOD_TEST_AND_APPLY = SpeechApiSystemSpeechImpl.class.getDeclaredMethod("testAndApply", Predicate.class,
+				Object.class, FailableFunction.class, FailableFunction.class)) != null) {
+			//
+			METHOD_TEST_AND_APPLY.setAccessible(true);
 			//
 		} // if
 			//
@@ -107,6 +118,25 @@ class SpeechApiSystemSpeechImplTest {
 	private static <T> T cast(final Class<T> clz, final Object value) throws Throwable {
 		try {
 			return (T) METHOD_CAST.invoke(null, clz, value);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testTestAndApply() throws Throwable {
+		//
+		Assertions.assertNull(testAndApply(null, null, null, null));
+		//
+		Assertions.assertNull(testAndApply(Predicates.alwaysFalse(), null, null, x -> x));
+		//
+	}
+
+	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse)
+			throws Throwable {
+		try {
+			return (R) METHOD_TEST_AND_APPLY.invoke(null, predicate, value, functionTrue, functionFalse);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
