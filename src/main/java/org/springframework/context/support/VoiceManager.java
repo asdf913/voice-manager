@@ -2209,6 +2209,48 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		public Component getListCellRendererComponent(final JList<? extends Object> list, final Object value,
 				final int index, final boolean isSelected, final boolean cellHasFocus) {
 			//
+			if (speechApi != null) {
+				//
+				final List<Field> fs = toList(
+						filter(testAndApply(Objects::nonNull, getDeclaredFields(VoiceManager.getClass(speechApi)),
+								Arrays::stream, null), f -> Objects.equals(getName(f), "instance")));
+				//
+				final Field f = fs != null && fs.size() == 1 ? fs.get(0) : null;
+				//
+				try {
+					//
+					if (f != null) {
+						//
+						f.setAccessible(true);
+						//
+						if ((f.get(speechApi) instanceof SpeechApiSystemSpeechImpl)) {
+							//
+							setEnabled(value != null, btnSpeak, btnWriteVoice);
+							//
+						} // if
+							//
+					} // if
+						//
+				} catch (final IllegalAccessException e) {
+					//
+					if (GraphicsEnvironment.isHeadless()) {
+						//
+						if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
+							LOG.error(getMessage(e), e);
+						} else if (e != null) {
+							e.printStackTrace();
+						} // if
+							//
+					} else {
+						//
+						JOptionPane.showMessageDialog(null, getMessage(e));
+						//
+					} // if
+						//
+				} // try
+					//
+			} // if
+				//
 			final String s = VoiceManager.toString(value);
 			//
 			try {
