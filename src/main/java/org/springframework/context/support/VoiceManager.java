@@ -1251,8 +1251,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		if (voiceIds != null) {
 			//
-			final List<?> temp = toList(filter(Arrays.stream(voiceIds), x -> Objects.equals(x,
-					getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.voiceId"))));
+			final String voiceId = getProperty(propertyResolver,
+					"org.springframework.context.support.VoiceManager.voiceId");
+			//
+			final List<?> temp = toList(filter(Arrays.stream(voiceIds), x -> Objects.equals(x, voiceId)
+					|| Objects.equals(getVoiceAttribute(speechApi, x, "Name"), voiceId)));
 			//
 			if (temp != null && !temp.isEmpty()) {
 				//
@@ -1283,7 +1286,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.add(new JLabel("Speech Volume"), "aligny top");
 		//
-		final Range<Integer> speechVolumeRange = createVolumnRange(getClass(speechApi));
+		final Range<Integer> speechVolumeRange = createVolumnRange(getClass(getInstance(speechApi)));
 		//
 		final Integer upperEnpoint = speechVolumeRange != null && speechVolumeRange.hasUpperBound()
 				? speechVolumeRange.upperEndpoint()
@@ -2668,6 +2671,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			if (speechApi != null) {
 				//
 				final Stopwatch stopwatch = Stopwatch.createStarted();
+				//
+				getInstance(speechApi);// TODO;
 				//
 				speechApi.speak(getText(tfTextTts), toString(getSelectedItem(cbmVoiceId))
 				//
