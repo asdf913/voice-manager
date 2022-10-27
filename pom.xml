@@ -180,6 +180,7 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.dorkbox/PeParser -->
 		<dependency>
 			<groupId>com.dorkbox</groupId>
 			<artifactId>PeParser</artifactId>
