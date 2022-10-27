@@ -17,11 +17,12 @@ import org.junit.jupiter.api.condition.OS;
 
 import com.google.common.base.Predicates;
 import com.kichik.pecoff4j.PE;
+import com.kichik.pecoff4j.ResourceEntry;
 
 class SpeechApiSystemSpeechImplTest {
 
 	private static Method METHOD_CAST, METHOD_TEST_AND_APPLY, METHOD_GET_VERSION_INFO_MAP0,
-			METHOD_GET_VERSION_INFO_MAP1, METHOD_GET = null;
+			METHOD_GET_VERSION_INFO_MAP_PE, METHOD_GET_VERSION_INFO_MAP1, METHOD_GET = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -48,8 +49,15 @@ class SpeechApiSystemSpeechImplTest {
 			//
 		} // if
 			//
-		if ((METHOD_GET_VERSION_INFO_MAP1 = SpeechApiSystemSpeechImpl.class.getDeclaredMethod("getVersionInfoMap",
+		if ((METHOD_GET_VERSION_INFO_MAP_PE = SpeechApiSystemSpeechImpl.class.getDeclaredMethod("getVersionInfoMap",
 				PE.class)) != null) {
+			//
+			METHOD_GET_VERSION_INFO_MAP_PE.setAccessible(true);
+			//
+		} // if
+			//
+		if ((METHOD_GET_VERSION_INFO_MAP1 = SpeechApiSystemSpeechImpl.class.getDeclaredMethod("getVersionInfoMap",
+				ResourceEntry[].class)) != null) {
 			//
 			METHOD_GET_VERSION_INFO_MAP1.setAccessible(true);
 			//
@@ -171,7 +179,19 @@ class SpeechApiSystemSpeechImplTest {
 		//
 		Assertions.assertSame(getVersionInfoMap(), getVersionInfoMap());
 		//
-		Assertions.assertNull(getVersionInfoMap(null));
+		Assertions.assertNull(getVersionInfoMap((PE) null));
+		//
+		Assertions.assertNull(getVersionInfoMap((ResourceEntry[]) null));
+		//
+		final ResourceEntry re = new ResourceEntry();
+		//
+		final ResourceEntry[] res = new ResourceEntry[] { null, new ResourceEntry() };
+		//
+		Assertions.assertNull(getVersionInfoMap(res));
+		//
+		re.setData(new byte[] {});
+		//
+		Assertions.assertNull(getVersionInfoMap(res));
 		//
 	}
 
@@ -191,7 +211,21 @@ class SpeechApiSystemSpeechImplTest {
 
 	private static Map<String, String> getVersionInfoMap(final PE pe) throws Throwable {
 		try {
-			final Object obj = METHOD_GET_VERSION_INFO_MAP1.invoke(null, pe);
+			final Object obj = METHOD_GET_VERSION_INFO_MAP_PE.invoke(null, pe);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Map) {
+				return (Map) obj;
+			}
+			throw new Throwable(toString(obj != null ? obj.getClass() : null));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static Map<String, String> getVersionInfoMap(final ResourceEntry[] res) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_VERSION_INFO_MAP1.invoke(null, (Object) res);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Map) {

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 import org.apache.commons.lang3.StringUtils;
@@ -138,8 +139,12 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider {
 		//
 		final ImageData id = pe != null ? pe.getImageData() : null;
 		//
-		final ResourceEntry[] res = ResourceHelper.findResources(id != null ? id.getResourceTable() : null,
-				ResourceType.VERSION_INFO);
+		return getVersionInfoMap(
+				ResourceHelper.findResources(id != null ? id.getResourceTable() : null, ResourceType.VERSION_INFO));
+		//
+	}
+
+	private static Map<String, String> getVersionInfoMap(final ResourceEntry[] res) throws IOException {
 		//
 		ResourceEntry re = null;
 		//
@@ -159,8 +164,9 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider {
 				continue;
 			} // if
 				//
-			st = (sfi = (vi = ResourceParser.readVersionInfo(re.getData())) != null ? vi.getStringFileInfo()
-					: null) != null && sfi.getCount() > 0 ? sfi.getTable(0) : null;
+			st = (sfi = (vi = testAndApply(Objects::nonNull, re.getData(), ResourceParser::readVersionInfo,
+					null)) != null ? vi.getStringFileInfo() : null) != null && sfi.getCount() > 0 ? sfi.getTable(0)
+							: null;
 			//
 			for (int j = 0; st != null && j < st.getCount(); j++) {
 				//
