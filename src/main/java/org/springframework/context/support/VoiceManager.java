@@ -5678,107 +5678,113 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 									it.voice.setSource(StringUtils.defaultIfBlank(voice.getSource(), getMp3TagValue(
 											it.file, x -> StringUtils.isNotBlank(toString(x)), mp3Tags)));
 									//
-								} else if (isInstalled(speechApi)) {
+								} else {
 									//
-									if ((it.file = File.createTempFile(
-											RandomStringUtils.randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH),
-											filePath)) != null) {
+									if (speechApi == null) {
 										//
-										if (objectMap != null) {
+										speechApi = ObjectMap.getObject(objectMap, SpeechApi.class);
+										//
+									} // if
+										//
+									if (isInstalled(speechApi)) {
+										//
+										if ((it.file = File.createTempFile(
+												RandomStringUtils.randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH),
+												filePath)) != null) {
 											//
-											objectMap.setObject(File.class, it.file);
-											//
-										} // if
-											//
-										if (voiceManager == null) {
-											//
-											voiceManager = ObjectMap.getObject(objectMap, VoiceManager.class);
-											//
-										} // if
-											//
-										if (voiceManager != null) {
-											//
-											if (jsSpeechVolume == null && voiceManager != null) {
+											if (objectMap != null) {
 												//
-												jsSpeechVolume = voiceManager.jsSpeechVolume;
+												objectMap.setObject(File.class, it.file);
 												//
 											} // if
 												//
-											if (voiceId == null && voiceManager != null) {
+											if (voiceManager == null) {
 												//
-												voiceId = toString(getSelectedItem(
-														voiceManager != null ? voiceManager.cbmVoiceId : null));
+												voiceManager = ObjectMap.getObject(objectMap, VoiceManager.class);
 												//
 											} // if
 												//
-											writeVoiceToFile(objectMap, getText(voice), voiceId
-											//
-													, getRate(getText(
-															voiceManager != null ? voiceManager.tfSpeechRate : null))// rate
+											if (voiceManager != null) {
+												//
+												if (jsSpeechVolume == null && voiceManager != null) {
 													//
-													,
-													Math.min(Math.max(intValue(
-															jsSpeechVolume != null ? jsSpeechVolume.getValue() : null,
-															100), 0), 100)// volume
-											);
+													jsSpeechVolume = voiceManager.jsSpeechVolume;
+													//
+												} // if
+													//
+												if (voiceId == null && voiceManager != null) {
+													//
+													voiceId = toString(getSelectedItem(
+															voiceManager != null ? voiceManager.cbmVoiceId : null));
+													//
+												} // if
+													//
+												writeVoiceToFile(objectMap, getText(voice), voiceId
+												//
+														,
+														getRate(getText(voiceManager != null ? voiceManager.tfSpeechRate
+																: null))// rate
+														//
+														,
+														Math.min(Math.max(intValue(
+																jsSpeechVolume != null ? jsSpeechVolume.getValue()
+																		: null,
+																100), 0), 100)// volume
+												);
+												//
+												if (byteConverter == null) {
+													//
+													byteConverter = ObjectMap.getObject(objectMap, ByteConverter.class);
+													//
+												} // if
+													//
+												if (byteConverter != null) {
+													//
+													FileUtils.writeByteArrayToFile(it.file, byteConverter
+															.convert(FileUtils.readFileToByteArray(it.file)));
+													//
+												} // if
+													//
+											} // if
+												//
+											deleteOnExit(it.file);
 											//
-											if (byteConverter == null) {
-												//
-												byteConverter = ObjectMap.getObject(objectMap, ByteConverter.class);
-												//
-											} // if
-												//
-											if (byteConverter != null) {
-												//
-												FileUtils.writeByteArrayToFile(it.file,
-														byteConverter.convert(FileUtils.readFileToByteArray(it.file)));
-												//
-											} // if
-												//
 										} // if
 											//
-										deleteOnExit(it.file);
+										if (provider == null) {
+											//
+											provider = ObjectMap.getObject(objectMap, Provider.class);
+											//
+										} // if
+											//
+										it.voice.setSource(StringUtils.defaultIfBlank(voice.getSource(),
+												getProviderName(provider)));
 										//
+										try {
+											//
+											it.voice.setLanguage(StringUtils.defaultIfBlank(it.voice.getLanguage(),
+													convertLanguageCodeToText(
+															getVoiceAttribute(speechApi, voiceId, "Language"), 16)));
+											//
+										} catch (final Error e) {
+											//
+											if (GraphicsEnvironment.isHeadless()) {
+												//
+												if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
+													LOG.error(getMessage(e), e);
+												} else if (e != null) {
+													e.printStackTrace();
+												} // if
+													//
+											} else {
+												//
+												JOptionPane.showMessageDialog(null, getMessage(e));
+												//
+											} // if
+												//
+										} // try
+											//
 									} // if
-										//
-									if (provider == null) {
-										//
-										provider = ObjectMap.getObject(objectMap, Provider.class);
-										//
-									} // if
-										//
-									it.voice.setSource(
-											StringUtils.defaultIfBlank(voice.getSource(), getProviderName(provider)));
-									//
-									try {
-										//
-										if (speechApi == null) {
-											//
-											speechApi = ObjectMap.getObject(objectMap, SpeechApi.class);
-											//
-										} // if
-											//
-										it.voice.setLanguage(StringUtils.defaultIfBlank(it.voice.getLanguage(),
-												convertLanguageCodeToText(
-														getVoiceAttribute(speechApi, voiceId, "Language"), 16)));
-										//
-									} catch (final Error e) {
-										//
-										if (GraphicsEnvironment.isHeadless()) {
-											//
-											if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-												LOG.error(getMessage(e), e);
-											} else if (e != null) {
-												e.printStackTrace();
-											} // if
-												//
-										} else {
-											//
-											JOptionPane.showMessageDialog(null, getMessage(e));
-											//
-										} // if
-											//
-									} // try
 										//
 								} // if
 									//
