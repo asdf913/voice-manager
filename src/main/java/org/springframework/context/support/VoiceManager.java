@@ -1317,6 +1317,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				panel.add(btnSpeechRateFaster = new JButton("Faster"), WRAP);
 				//
+				final Double maxWidth = ObjectUtils.max(getPreferredWidth(btnSpeechRateSlower),
+						getPreferredWidth(btnSpeechRateNormal), getPreferredWidth(btnSpeechRateFaster));
+				//
+				if (maxWidth != null) {
+					//
+					setPreferredWidth(maxWidth.intValue(), btnSpeechRateSlower, btnSpeechRateNormal,
+							btnSpeechRateFaster);
+					//
+				} // if
+					//
 			} // if
 				//
 		} // if
