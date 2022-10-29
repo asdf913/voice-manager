@@ -123,4 +123,34 @@ class SpeechApiSpeechServerImplTest {
 		}
 	}
 
+	@Test
+	void testGet() throws Throwable {
+		//
+		if (instance != null) {
+			//
+			Assertions.assertThrows(IllegalStateException.class, () -> instance.get("volume", "min"));
+			//
+			instance.afterPropertiesSet();
+			//
+			Assertions.assertDoesNotThrow(() -> instance.get("volume", "min"));
+			//
+		} // if
+			//
+	}
+
+	@Test
+	void testContains() throws Throwable {
+		//
+		if (instance != null) {
+			//
+			Assertions.assertFalse(instance.contains("volume", "min"));
+			//
+			instance.afterPropertiesSet();
+			//
+			Assertions.assertTrue(instance.contains("volume", "min"));
+			//
+		} // if
+			//
+	}
+
 }

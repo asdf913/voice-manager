@@ -245,6 +245,16 @@ class SpeechApiSystemSpeechImplTest {
 		//
 		Assertions.assertNull(get(null, null));
 		//
+		if (instance != null) {
+			//
+			Assertions.assertThrows(IllegalStateException.class, () -> instance.get("volume", "min"));
+			//
+			instance.afterPropertiesSet();
+			//
+			Assertions.assertDoesNotThrow(() -> instance.get("volume", "min"));
+			//
+		} // if
+			//
 	}
 
 	private static <V> V get(final Map<?, V> instance, final Object key) throws Throwable {
@@ -253,6 +263,21 @@ class SpeechApiSystemSpeechImplTest {
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
+	}
+
+	@Test
+	void testContains() throws Throwable {
+		//
+		if (instance != null) {
+			//
+			Assertions.assertFalse(instance.contains("volume", "min"));
+			//
+			instance.afterPropertiesSet();
+			//
+			Assertions.assertTrue(instance.contains("volume", "min"));
+			//
+		} // if
+			//
 	}
 
 }

@@ -271,6 +271,8 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider, Lookup, I
 	@Override
 	public boolean contains(final Object row, final Object column) {
 		//
+		final Table<?, ?, ?> table = getTable();
+		//
 		return table != null && table.contains(row, column);
 		//
 	}
