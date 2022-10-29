@@ -217,10 +217,11 @@ class VoiceManagerTest {
 			METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK, METHOD_READ_VALUE, METHOD_WRITE_VALUE_AS_STRING,
 			METHOD_CREATE_DRAWING_PATRIARCH, METHOD_GET_CREATION_HELPER, METHOD_CREATE_CELL_COMMENT,
 			METHOD_CREATE_CLIENT_ANCHOR, METHOD_CREATE_RICH_TEXT_STRING, METHOD_SET_CELL_COMMENT, METHOD_SET_AUTHOR,
-			METHOD_TEST_AND_ACCEPT, METHOD_FIND_FIELDS_BY_VALUE, METHOD_GET_DECLARED_FIELDS, METHOD_GET_DECLARING_CLASS,
-			METHOD_GET_PACKAGE, METHOD_BROWSE, METHOD_TO_URI, METHOD_DARKER, METHOD_GET_TITLE_TEXT,
-			METHOD_SET_CSS_ENABLED, METHOD_SET_JAVA_SCRIPT_ENABLED, METHOD_STOP, METHOD_ELAPSED,
-			METHOD_GET_DECLARED_CLASSES, METHOD_GET_DLL_PATH, METHOD_GET_RATE, METHOD_ADD_CHANGE_LISTENER = null;
+			METHOD_TEST_AND_ACCEPT_PREDICATE, METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_FIND_FIELDS_BY_VALUE,
+			METHOD_GET_DECLARED_FIELDS, METHOD_GET_DECLARING_CLASS, METHOD_GET_PACKAGE, METHOD_BROWSE, METHOD_TO_URI,
+			METHOD_DARKER, METHOD_GET_TITLE_TEXT, METHOD_SET_CSS_ENABLED, METHOD_SET_JAVA_SCRIPT_ENABLED, METHOD_STOP,
+			METHOD_ELAPSED, METHOD_GET_DECLARED_CLASSES, METHOD_GET_DLL_PATH, METHOD_GET_RATE,
+			METHOD_ADD_CHANGE_LISTENER = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -584,8 +585,11 @@ class VoiceManagerTest {
 		//
 		(METHOD_SET_AUTHOR = clz.getDeclaredMethod("setAuthor", Comment.class, String.class)).setAccessible(true);
 		//
-		(METHOD_TEST_AND_ACCEPT = clz.getDeclaredMethod("testAndAccept", Predicate.class, Object.class,
+		(METHOD_TEST_AND_ACCEPT_PREDICATE = clz.getDeclaredMethod("testAndAccept", Predicate.class, Object.class,
 				FailableConsumer.class)).setAccessible(true);
+		//
+		(METHOD_TEST_AND_ACCEPT_BI_PREDICATE = clz.getDeclaredMethod("testAndAccept", BiPredicate.class, Object.class,
+				Object.class, BiConsumer.class)).setAccessible(true);
 		//
 		(METHOD_FIND_FIELDS_BY_VALUE = clz.getDeclaredMethod("findFieldsByValue", Field[].class, Object.class,
 				Object.class)).setAccessible(true);
@@ -5032,12 +5036,32 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> testAndAccept(Predicates.alwaysTrue(), null, null));
 		//
+		Assertions.assertDoesNotThrow(() -> testAndAccept(null, null, null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> testAndAccept((a, b) -> false, null, null, null));
+		//
+		final BiPredicate<?, ?> biPredicate = (a, b) -> true;
+		//
+		Assertions.assertDoesNotThrow(() -> testAndAccept(biPredicate, null, null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> testAndAccept(biPredicate, null, null, (a, b) -> {
+		}));
+		//
 	}
 
 	private static <T, E extends Throwable> void testAndAccept(final Predicate<T> predicate, final T value,
 			final FailableConsumer<T, E> consumer) throws Throwable {
 		try {
-			METHOD_TEST_AND_ACCEPT.invoke(null, predicate, value, consumer);
+			METHOD_TEST_AND_ACCEPT_PREDICATE.invoke(null, predicate, value, consumer);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static <T, U> void testAndAccept(final BiPredicate<T, U> biPredicate, final T t, final U u,
+			final BiConsumer<T, U> consumer) throws Throwable {
+		try {
+			METHOD_TEST_AND_ACCEPT_BI_PREDICATE.invoke(null, biPredicate, t, u, consumer);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

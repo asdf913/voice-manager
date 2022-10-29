@@ -1160,7 +1160,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		if (layoutManager instanceof MigLayout) {
 			//
-			layoutManager = new MigLayout();
+			final MigLayout migLayout = new MigLayout();
+			//
+			testAndAccept((a, b) -> a != null && a.containsProperty(b), propertyResolver,
+					"net.miginfocom.swing.MigLayout.layoutConstraints",
+					(a, b) -> migLayout.setLayoutConstraints(getProperty(a, b)));
+			//
+			layoutManager = migLayout;
 			//
 		} else if (layoutManager instanceof Serializable) {
 			//
@@ -3598,6 +3604,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		if (test(predicate, value) && consumer != null) {
 			consumer.accept(value);
 		}
+	}
+
+	private static <T, U> void testAndAccept(final BiPredicate<T, U> biPredicate, final T t, final U u,
+			final BiConsumer<T, U> consumer) {
+		if (biPredicate != null && biPredicate.test(t, u) && consumer != null) {
+			consumer.accept(t, u);
+		} // if
 	}
 
 	private static File[] listFiles(final File instance) {
