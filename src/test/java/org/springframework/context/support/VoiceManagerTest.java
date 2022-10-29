@@ -123,6 +123,8 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.util.LocaleID;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.javatuples.Unit;
+import org.javatuples.valueintf.IValue0;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -217,7 +219,7 @@ class VoiceManagerTest {
 			METHOD_TEST_AND_ACCEPT, METHOD_FIND_FIELDS_BY_VALUE, METHOD_GET_DECLARED_FIELDS, METHOD_GET_DECLARING_CLASS,
 			METHOD_GET_PACKAGE, METHOD_BROWSE, METHOD_TO_URI, METHOD_DARKER, METHOD_GET_TITLE_TEXT,
 			METHOD_SET_CSS_ENABLED, METHOD_SET_JAVA_SCRIPT_ENABLED, METHOD_STOP, METHOD_ELAPSED,
-			METHOD_GET_DECLARED_CLASSES = null;
+			METHOD_GET_DECLARED_CLASSES, METHOD_GET_DLL_PATH = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -601,13 +603,15 @@ class VoiceManagerTest {
 		//
 		(METHOD_GET_DECLARED_CLASSES = clz.getDeclaredMethod("getDeclaredClasses", Class.class)).setAccessible(true);
 		//
+		(METHOD_GET_DLL_PATH = clz.getDeclaredMethod("getDllPath", Object.class)).setAccessible(true);
+		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
 		CLASS_BOOLEAN_MAP = Class.forName("org.springframework.context.support.VoiceManager$BooleanMap");
 		//
 	}
 
-	private class IH implements InvocationHandler {
+	private static class IH implements InvocationHandler {
 
 		private Error errorGetVoiceAttribute = null;
 
@@ -616,7 +620,7 @@ class VoiceManagerTest {
 		private Set<Entry<?, ?>> entrySet = null;
 
 		private String toString, stringCellValue, providerName, providerVersion, artist, voiceAttribute, lpwstr,
-				sheetName, textContent, nodeName = null;
+				sheetName, textContent, nodeName, dllPath = null;
 
 		private Configuration configuration = null;
 
@@ -993,6 +997,14 @@ class VoiceManagerTest {
 				} else if (Objects.equals(methodName, "getNodeName")) {
 					//
 					return nodeName;
+					//
+				} // if
+					//
+			} else if (proxy instanceof InnerClass.InnerInterface) {
+				//
+				if (Objects.equals(methodName, "getDllPath")) {
+					//
+					return dllPath;
 					//
 				} // if
 					//
@@ -5089,6 +5101,39 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof Class<?>[]) {
 				return (Class<?>[]) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private class InnerClass {
+
+		private interface InnerInterface {
+
+			InnerInterface INSTANCE = Reflection.newProxy(InnerInterface.class, new IH());
+
+			String getDllPath();
+
+		}
+
+	}
+
+	@Test
+	void testGetDllPath() throws Throwable {
+		//
+		Assertions.assertEquals(Unit.with(null), getDllPath(new InnerClass()));
+		//
+	}
+
+	private static IValue0<Object> getDllPath(final Object instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_DLL_PATH.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof IValue0) {
+				return (IValue0) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
