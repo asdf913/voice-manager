@@ -281,7 +281,7 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider, Lookup, I
 		//
 		final Table<?, ?, ?> table = getTable();
 		//
-		if (table != null && !table.contains(row, column)) {
+		if (table != null && !TableUtil.contains(table, row, column)) {
 			//
 			throw new IllegalStateException();
 			//
