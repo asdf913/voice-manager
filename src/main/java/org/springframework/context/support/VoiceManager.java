@@ -1306,6 +1306,18 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				setEditable(false, tfSpeechRate);
 				//
+				final Integer speechRate = valueOf(
+						getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.speechRate"));
+				//
+				if (speechRate != null && speechRate >= jsSpeechRate.getMinimum()
+						&& speechRate <= jsSpeechRate.getMaximum()) {
+					//
+					jsSpeechRate.setValue(speechRate.intValue());
+					//
+					stateChanged(new ChangeEvent(jsSpeechRate));
+					//
+				} // if
+					//
 				panel.add(new JLabel(""));
 				//
 				panel.add(btnSpeechRateSlower = new JButton("Slower"));
