@@ -2961,6 +2961,12 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> setValue(jSlider, "max", null));
 		//
+		Assertions.assertThrows(IllegalStateException.class, () -> setValue(jSlider, "ma", null));
+		//
+		Assertions.assertDoesNotThrow(() -> setValue(jSlider, Integer.toString(jSlider.getMinimum() - 1), null));
+		//
+		Assertions.assertDoesNotThrow(() -> setValue(jSlider, Integer.toString(jSlider.getMaximum() + 1), null));
+		//
 	}
 
 	private static void setValue(final JProgressBar instance, final int n) throws Throwable {

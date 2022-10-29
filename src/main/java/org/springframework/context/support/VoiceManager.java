@@ -1429,8 +1429,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				try {
 					//
-					i = cast(Integer.class, invoke(get(ms, 0), instance));
-					//
+					if ((i = cast(Integer.class, invoke(get(ms, 0), instance))) != null) {
+						//
+						instance.setValue(i.intValue());
+						//
+						accept(consumer, instance);
+						//
+					} // if
+						//
 				} catch (final IllegalAccessException e) {
 					//
 					if (headless) {
@@ -1469,14 +1475,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					} // if
 						//
 				} // try
-					//
-				if (i != null) {
-					//
-					instance.setValue(i.intValue());
-					//
-					accept(consumer, instance);
-					//
-				} // if
 					//
 			} else if (size > 1) {
 				//
