@@ -315,7 +315,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private JProgressBar progressBarImport, progressBarExport = null;
 
-	private JSlider jsSpeechVolume = null;
+	private JSlider jsSpeechVolume, jsSpeechRate = null;
 
 	private JComboBox<Object> jcbVoiceId = null;
 
@@ -1275,15 +1275,51 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			// Speech Rate
 			//
-		panel.add(new JLabel("Speech Rate"));
+		final Lookup lookup = cast(Lookup.class, getInstance(speechApi));
 		//
-		panel.add(
-				tfSpeechRate = new JTextField(
-						getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.speechRate")),
-				String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, 3));
+		final BiPredicate<String, String> biPredicate = (a, b) -> contains(lookup, a, b);
 		//
-		// Speech Volume
+		final BiFunction<String, String, Object> biFunction = (a, b) -> get(lookup, a, b);
 		//
+		if (biPredicate != null && biPredicate.test("rate", "min") && biPredicate.test("rate", "max")) {
+			//
+			final Range<Integer> range = createRange(
+					toInteger(testAndApply(biPredicate, "rate", "min", biFunction, null)),
+					toInteger(testAndApply(biPredicate, "rate", "max", biFunction, null)));
+			//
+			if (range != null && range.hasLowerBound() && range.hasUpperBound() && range.lowerEndpoint() != null
+					&& range.upperEndpoint() != null) {
+				//
+				panel.add(new JLabel("Speech Rate"), "aligny top");
+				//
+				panel.add(
+						jsSpeechRate = new JSlider(intValue(range.lowerEndpoint(), 0),
+								intValue(range.upperEndpoint(), 0)),
+						String.format("%1$s,span %2$s,%3$s", GROWX, 7, WRAP));
+				//
+				jsSpeechRate.setMajorTickSpacing(1);
+				//
+				jsSpeechRate.setPaintTicks(true);
+				//
+				jsSpeechRate.setPaintLabels(true);
+				//
+			} // if
+				//
+		} // if
+			//
+		if (jsSpeechRate == null) {
+			//
+			panel.add(new JLabel("Speech Rate"));
+			//
+			panel.add(
+					tfSpeechRate = new JTextField(getProperty(propertyResolver,
+							"org.springframework.context.support.VoiceManager.speechRate")),
+					String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, 3));
+			//
+		} // if
+			//
+			// Speech Volume
+			//
 		panel.add(new JLabel("Speech Volume"), "aligny top");
 		//
 		final Range<Integer> speechVolumeRange = createVolumeRange(getInstance(speechApi));
@@ -2677,7 +2713,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				speechApi.speak(getText(tfTextTts), toString(getSelectedItem(cbmVoiceId))
 				//
-						, intValue(getRate(getText(tfSpeechRate)), 0)// rate
+						, intValue(getRate(), 0)// rate
 						//
 						,
 						Math.min(Math.max(intValue(jsSpeechVolume != null ? jsSpeechVolume.getValue() : null, 100), 0),
@@ -2711,7 +2747,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				writeVoiceToFile(objectMap, getText(tfTextTts), toString(getSelectedItem(cbmVoiceId))
 				//
-						, intValue(getRate(getText(tfSpeechRate)), 0)// rate
+						, intValue(getRate(), 0)// rate
 						//
 						,
 						Math.min(Math.max(intValue(jsSpeechVolume != null ? jsSpeechVolume.getValue() : null, 100), 0),
@@ -2768,7 +2804,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 						speechApi.writeVoiceToFile(getText(tfTextImport), voiceId
 						//
-								, intValue(getRate(getText(tfSpeechRate)), 0)// rate
+								, intValue(getRate(), 0)// rate
 								//
 								,
 								Math.min(Math.max(
@@ -4898,6 +4934,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
+	private Integer getRate() {
+		//
+		return jsSpeechRate != null ? Integer.valueOf(jsSpeechRate.getValue()) : getRate(getText(tfSpeechRate));
+		//
+	}
+
 	private static Integer getRate(final String string) {
 		//
 		Integer rate = valueOf(string);
@@ -5728,9 +5770,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 													//
 												writeVoiceToFile(objectMap, getText(voice), voiceId
 												//
-														,
-														getRate(getText(voiceManager != null ? voiceManager.tfSpeechRate
-																: null))// rate
+														, voiceManager != null ? voiceManager.getRate() : null// rate
 														//
 														,
 														Math.min(Math.max(intValue(
