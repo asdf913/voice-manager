@@ -2011,8 +2011,20 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.add(btnExportJoYoKanJi = new JButton("Export 常用漢字"), WRAP);
 		//
+		// btnExportMicrosoftSpeechObjectLibraryInformation
+		//
+		final StringBuilder btnExportMicrosoftSpeechObjectLibraryInformationName = new StringBuilder("Export ");
+		//
+		if (StringUtils
+				.isNotBlank(btnExportMicrosoftSpeechObjectLibraryInformationName.append(StringUtils.defaultIfBlank(
+						getProviderName(cast(Provider.class, speechApi)), "Microsoft Speech Object Library")))) {
+			//
+			btnExportMicrosoftSpeechObjectLibraryInformationName.append(' ');
+			//
+		} // if
+			//
 		panel.add(btnExportMicrosoftSpeechObjectLibraryInformation = new JButton(
-				"Export Microsoft Speech Object Library Information"), WRAP);
+				toString(btnExportMicrosoftSpeechObjectLibraryInformationName.append("Information"))), WRAP);
 		//
 		final JPanel panel1 = new JPanel();
 		//
