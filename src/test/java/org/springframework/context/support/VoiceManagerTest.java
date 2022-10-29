@@ -5220,7 +5220,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(getRate());
+		Assertions.assertNotNull(getRate());
 		//
 	}
 
