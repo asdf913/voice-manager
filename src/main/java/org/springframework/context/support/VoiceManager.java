@@ -284,7 +284,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			tfKatakana, tfRomaji, tfSpeechRate, tfSource, tfProviderName, tfProviderVersion, tfProviderPlatform,
 			tfSpeechLanguageCode, tfSpeechLanguageName, tfLanguage, tfSpeechVolume, tfCurrentProcessingFile,
 			tfCurrentProcessingSheetName, tfCurrentProcessingVoice, tfListNames, tfPhraseCounter, tfPhraseTotal,
-			tfJlptFolderNamePrefix, tfOrdinalPositionFileNamePrefix, tfIpaSymbol, tfExportFile, tfElapsed = null;
+			tfJlptFolderNamePrefix, tfOrdinalPositionFileNamePrefix, tfIpaSymbol, tfExportFile, tfElapsed,
+			tfDllPath = null;
 
 	private ComboBoxModel<Yomi> cbmYomi = null;
 
@@ -297,7 +298,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private AbstractButton btnSpeak, btnWriteVoice, btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji,
 			btnCopyHiragana, btnCopyKatakana, cbUseTtsVoice, btnExecute, btnImportFileTemplate, btnImport,
 			btnImportWithinFolder, cbOverMp3Title, cbOrdinalPositionAsFileNamePrefix, btnExport,
-			cbImportFileTemplateGenerateBlankRow, cbJlptAsFolder, btnExportCopy, btnExportBrowse = null;
+			cbImportFileTemplateGenerateBlankRow, cbJlptAsFolder, btnExportCopy, btnExportBrowse, btnDllPathCopy = null;
 
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
@@ -2011,8 +2012,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		final IValue0<Object> dllPath = getDllPath(speechApiInstance);
 		//
-		JTextComponent tfDllPath = null;
-		//
 		if (dllPath != null) {
 			//
 			final JPanel panel1 = new JPanel();
@@ -2022,6 +2021,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			panel1.setBorder(BorderFactory.createTitledBorder("Dll Path"));
 			//
 			panel1.add(tfDllPath = new JTextField(toString(getValue0(dllPath))));
+			//
+			panel1.add(btnDllPathCopy = new JButton("Copy"));
 			//
 			panel.add(panel1, WRAP);
 			//
@@ -2065,7 +2066,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		setEditable(false, tfDllPath, tfExportFile);
 		//
 		addActionListener(this, btnExportGaKuNenBeTsuKanJi, btnExportJoYoKanJi,
-				btnExportMicrosoftSpeechObjectLibraryInformation, btnExportCopy, btnExportBrowse);
+				btnExportMicrosoftSpeechObjectLibraryInformation, btnExportCopy, btnExportBrowse, btnDllPathCopy);
 		//
 		setEnabled(isInstalled(speechApi) && voiceIds != null, btnExportMicrosoftSpeechObjectLibraryInformation);
 		//
@@ -3077,6 +3078,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		} else if (Objects.equals(source, btnExportCopy)) {
 			//
 			setContents(getSystemClipboard(getToolkit()), new StringSelection(getText(tfExportFile)), null);
+			//
+		} else if (Objects.equals(source, btnDllPathCopy)) {
+			//
+			setContents(getSystemClipboard(getToolkit()), new StringSelection(getText(tfDllPath)), null);
 			//
 		} else if (Objects.equals(source, btnExportBrowse)) {
 			//
