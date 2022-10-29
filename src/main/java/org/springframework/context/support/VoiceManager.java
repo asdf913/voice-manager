@@ -2273,12 +2273,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			if (declaredClass == null
 					//
 					|| (fs = toList(filter(
-							testAndApply(Objects::nonNull, declaredClass.getDeclaredFields(), Arrays::stream, null),
+							testAndApply(Objects::nonNull, getDeclaredFields(declaredClass), Arrays::stream, null),
 							x -> x != null && Objects.equals(x.getType(), declaredClass)))) == null
 					|| fs.size() != 1 || (f = get(fs, 0)) == null
 					//
 					|| (ms = toList(filter(
-							testAndApply(Objects::nonNull, declaredClass.getDeclaredMethods(), Arrays::stream, null),
+							testAndApply(Objects::nonNull, getDeclaredMethods(declaredClass), Arrays::stream, null),
 							x -> Objects.equals(getName(x), "getDllPath")))) == null
 					|| ms.size() != 1 || (m = get(ms, 0)) == null) {
 				continue;
