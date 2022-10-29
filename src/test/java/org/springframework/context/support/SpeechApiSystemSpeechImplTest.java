@@ -55,7 +55,7 @@ class SpeechApiSystemSpeechImplTest {
 			//
 		} // if
 			//
-		if ((METHOD_GET_VERSION_INFO_MAP2 = SpeechApiSystemSpeechImpl.class.getDeclaredMethod("getVersionInfoMap",
+		if ((METHOD_GET_VERSION_INFO_MAP2 = SpeechApiSystemSpeechImpl.class.getDeclaredMethod("getVersionInfoMap2",
 				ResourceEntry[].class)) != null) {
 			//
 			METHOD_GET_VERSION_INFO_MAP2.setAccessible(true);
