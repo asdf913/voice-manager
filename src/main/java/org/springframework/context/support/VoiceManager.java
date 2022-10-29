@@ -297,7 +297,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private AbstractButton btnSpeak, btnWriteVoice, btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji,
 			btnCopyHiragana, btnCopyKatakana, cbUseTtsVoice, btnExecute, btnImportFileTemplate, btnImport,
 			btnImportWithinFolder, cbOverMp3Title, cbOrdinalPositionAsFileNamePrefix, btnExport,
-			cbImportFileTemplateGenerateBlankRow, cbJlptAsFolder, btnExportCopy, btnExportBrowse, btnDllPathCopy = null;
+			cbImportFileTemplateGenerateBlankRow, cbJlptAsFolder, btnExportCopy, btnExportBrowse, btnDllPathCopy,
+			btnSpeechRateSlower, btnSpeechRateNormal, btnSpeechRateFaster = null;
 
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
@@ -1305,6 +1306,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				setEditable(false, tfSpeechRate);
 				//
+				panel.add(new JLabel(""));
+				//
+				panel.add(btnSpeechRateSlower = new JButton("Slower"));
+				//
+				panel.add(btnSpeechRateNormal = new JButton("Normal"));
+				//
+				panel.add(btnSpeechRateFaster = new JButton("Faster"), WRAP);
+				////
 			} // if
 				//
 		} // if
@@ -1377,7 +1386,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		setEditable(false, tfSpeechLanguageCode, tfSpeechLanguageName, tfProviderName, tfProviderVersion,
 				tfProviderPlatform, tfSpeechVolume, tfElapsed);
 		//
-		addActionListener(this, btnSpeak, btnWriteVoice);
+		addActionListener(this, btnSpeak, btnWriteVoice, btnSpeechRateSlower, btnSpeechRateNormal, btnSpeechRateFaster);
 		//
 		setEnabled(isInstalled && voiceIds != null, btnSpeak, btnWriteVoice);
 		//
@@ -3355,6 +3364,30 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				testAndAccept(EMPTY_FILE_PREDICATE, file, FileUtils::deleteQuietly);
 				//
 			} // try
+				//
+		} else if (Objects.equals(source, btnSpeechRateSlower)) {
+			//
+			if (jsSpeechRate != null) {
+				//
+				jsSpeechRate.setValue(jsSpeechRate.getValue() - 1);
+				//
+			} // if
+				//
+		} else if (Objects.equals(source, btnSpeechRateNormal)) {
+			//
+			if (jsSpeechRate != null) {
+				//
+				jsSpeechRate.setValue(0);
+				//
+			} // if
+				//
+		} else if (Objects.equals(source, btnSpeechRateFaster)) {
+			//
+			if (jsSpeechRate != null) {
+				//
+				jsSpeechRate.setValue(jsSpeechRate.getValue() + 1);
+				//
+			} // if
 				//
 		} // if
 			//

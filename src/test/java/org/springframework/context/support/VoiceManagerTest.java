@@ -1532,6 +1532,74 @@ class VoiceManagerTest {
 			//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnDllPathCopy, 0, null)));
 		//
+		// btnSpeechRateSlower
+		//
+		final AbstractButton btnSpeechRateSlower = new JButton();
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "btnSpeechRateSlower", btnSpeechRateSlower, true);
+			//
+		} // if
+			//
+		final ActionEvent actionEventBtnSpeechRateSlower = new ActionEvent(btnSpeechRateSlower, 0, null);
+		//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnSpeechRateSlower));
+		//
+		final JSlider jsSpeechRate = new JSlider();
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "jsSpeechRate", jsSpeechRate, true);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnSpeechRateSlower));
+		//
+		// btnSpeechRateNormal
+		//
+		final AbstractButton btnSpeechRateNormal = new JButton();
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "btnSpeechRateNormal", btnSpeechRateNormal, true);
+			//
+		} // if
+			//
+		final ActionEvent actionEventBtnSpeechRateNormal = new ActionEvent(btnSpeechRateNormal, 0, null);
+		//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnSpeechRateNormal));
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "jsSpeechRate", null, true);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnSpeechRateNormal));
+		//
+		// btnSpeechRateFaster
+		//
+		final AbstractButton btnSpeechRateFaster = new JButton();
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "btnSpeechRateFaster", btnSpeechRateFaster, true);
+			//
+		} // if
+			//
+		final ActionEvent actionEventBtnSpeechRateFaster = new ActionEvent(btnSpeechRateFaster, 0, null);
+		//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnSpeechRateFaster));
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "jsSpeechRate", jsSpeechRate, true);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnSpeechRateFaster));
+		//
 	}
 
 	private static void actionPerformed(final ActionListener instance, final ActionEvent actionEvent) {
