@@ -8,6 +8,7 @@ import org.springframework.beans.factory.InitializingBean;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
+import com.google.common.collect.TableUtil;
 import com.sun.jna.Library;
 import com.sun.jna.Native;
 
@@ -156,9 +157,7 @@ public class SpeechApiSpeechServerImpl implements SpeechApi, Provider, Lookup, I
 	@Override
 	public boolean contains(final Object row, final Object column) {
 		//
-		final Table<?, ?, ?> table = getTable();
-		//
-		return table != null && table.contains(row, column);
+		return TableUtil.contains(getTable(), row, column);
 		//
 	}
 
@@ -167,13 +166,13 @@ public class SpeechApiSpeechServerImpl implements SpeechApi, Provider, Lookup, I
 		//
 		final Table<?, ?, ?> table = getTable();
 		//
-		if (table != null && !table.contains(row, column)) {
+		if (table != null && !TableUtil.contains(table, row, column)) {
 			//
 			throw new IllegalStateException();
 			//
 		} // if
 			//
-		return table != null ? table.get(row, column) : null;
+		return TableUtil.get(table, row, column);
 		//
 	}
 

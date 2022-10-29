@@ -14,6 +14,7 @@ import org.springframework.beans.factory.InitializingBean;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
+import com.google.common.collect.TableUtil;
 import com.kichik.pecoff4j.ImageData;
 import com.kichik.pecoff4j.PE;
 import com.kichik.pecoff4j.ResourceEntry;
@@ -271,9 +272,7 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider, Lookup, I
 	@Override
 	public boolean contains(final Object row, final Object column) {
 		//
-		final Table<?, ?, ?> table = getTable();
-		//
-		return table != null && table.contains(row, column);
+		return TableUtil.contains(getTable(), row, column);
 		//
 	}
 
@@ -288,7 +287,7 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider, Lookup, I
 			//
 		} // if
 			//
-		return table != null ? table.get(row, column) : null;
+		return TableUtil.get(table, row, column);
 		//
 	}
 
