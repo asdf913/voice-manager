@@ -213,7 +213,7 @@ class VoiceManagerTest {
 			METHOD_CREATE_SHEET, METHOD_ENTRIES, METHOD_GET_WORK_BOOK, METHOD_GET_OLE_ENTRY_NAMES,
 			METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE, METHOD_GET_DOCUMENT_ELEMENT, METHOD_GET_CHILD_NODES,
 			METHOD_GET_NAMED_ITEM, METHOD_GET_TEXT_CONTENT, METHOD_GET_NODE_NAME, METHOD_GET_NAME_FILE,
-			METHOD_GET_NAME_CLASS, METHOD_GET_PASS_WORD, METHOD_GET_SUPPLIER, METHOD_GET_LOOKUP,
+			METHOD_GET_NAME_CLASS, METHOD_GET_PASS_WORD, METHOD_GET_SUPPLIER, METHOD_GET_LOOKUP, METHOD_GET_LIST,
 			METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK, METHOD_READ_VALUE, METHOD_WRITE_VALUE_AS_STRING,
 			METHOD_CREATE_DRAWING_PATRIARCH, METHOD_GET_CREATION_HELPER, METHOD_CREATE_CELL_COMMENT,
 			METHOD_CREATE_CLIENT_ANCHOR, METHOD_CREATE_RICH_TEXT_STRING, METHOD_SET_CELL_COMMENT, METHOD_SET_AUTHOR,
@@ -552,6 +552,8 @@ class VoiceManagerTest {
 		//
 		(METHOD_GET_LOOKUP = clz.getDeclaredMethod("get", Lookup.class, Object.class, Object.class))
 				.setAccessible(true);
+		//
+		(METHOD_GET_LIST = clz.getDeclaredMethod("get", List.class, Integer.TYPE)).setAccessible(true);
 		//
 		(METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK = clz
 				.getDeclaredMethod("createMicrosoftSpeechObjectLibraryWorkbook", SpeechApi.class, String[].class))
@@ -4786,6 +4788,8 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(get(lookup, null, null));
 		//
+		Assertions.assertNull(get(null, 0));
+		//
 	}
 
 	private static <T> T get(final Supplier<T> instance) throws Throwable {
@@ -4799,6 +4803,14 @@ class VoiceManagerTest {
 	private static Object get(final Lookup instance, final Object row, final Object column) throws Throwable {
 		try {
 			return METHOD_GET_LOOKUP.invoke(null, instance, row, column);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static <E> E get(final List<E> instance, final int index) throws Throwable {
+		try {
+			return (E) METHOD_GET_LIST.invoke(null, instance, index);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

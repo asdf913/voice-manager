@@ -451,7 +451,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
-				method = ms.get(0);
+				method = get(ms, 0);
 				//
 			} // if
 				//
@@ -922,7 +922,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					filter(testAndApply(Objects::nonNull, getDeclaredFields(VoiceManager.getClass(speechApi)),
 							Arrays::stream, null), f -> Objects.equals(getName(f), "instance")));
 			//
-			final Field f = fs != null && fs.size() == 1 ? fs.get(0) : null;
+			final Field f = fs != null && fs.size() == 1 ? get(fs, 0) : null;
 			//
 			try {
 				//
@@ -1100,7 +1100,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		for (int i = 0; pages != null && i < pages.size(); i++) {
 			//
-			if ((page = pages.get(i)) == null) {
+			if ((page = get(pages, i)) == null) {
 				//
 				continue;
 				//
@@ -1115,7 +1115,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					if (fs.size() == 1) {
 						//
-						fieldTitle = fs.get(0);
+						fieldTitle = get(fs, 0);
 						//
 					} else {
 						//
@@ -1263,7 +1263,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				if (temp.size() == 1) {
 					//
-					setSelectedItem(cbmVoiceId, temp.get(0));
+					setSelectedItem(cbmVoiceId, get(temp, 0));
 					//
 				} else {
 					//
@@ -1430,7 +1430,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				try {
 					//
-					i = cast(Integer.class, invoke(ms.get(0), instance));
+					i = cast(Integer.class, invoke(get(ms, 0), instance));
 					//
 				} catch (final IllegalAccessException e) {
 					//
@@ -1488,6 +1488,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
+	}
+
+	private static <E> E get(final List<E> instance, final int index) {
+		return instance != null ? instance.get(index) : null;
 	}
 
 	private static void addChangeListener(final ChangeListener changeListener, final JSlider instance,
@@ -1704,7 +1708,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		if (size == 1) {
 			//
-			setSelectedItem(cbmYomi, yomiList.get(0));
+			setSelectedItem(cbmYomi, get(yomiList, 0));
 			//
 		} else if (size > 1) {
 			//
@@ -1872,7 +1876,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			for (int i = 0; domElements != null && i < domElements.getLength(); i++) {
 				//
-				if ((domElement = domElements.get(i)) == null || !matches(matcher = matcher(
+				if ((domElement = get(domElements, i)) == null || !matches(matcher = matcher(
 						pattern = ObjectUtils.getIfNull(pattern, () -> Pattern.compile("(第(\\d+)学年)（\\d+字）\\[編集]")),
 						domElement.getTextContent())) || matcher == null || matcher.groupCount() <= 0) {
 					//
@@ -1924,7 +1928,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		for (int i = 0; fs != null && i < fs.size(); i++) {
 			//
-			if (!Objects.equals(Boolean.class, getType(f = fs.get(i)))) {
+			if (!Objects.equals(Boolean.class, getType(f = get(fs, i)))) {
 				//
 				continue;
 				//
@@ -2258,12 +2262,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					|| (fs = toList(filter(
 							testAndApply(Objects::nonNull, declaredClass.getDeclaredFields(), Arrays::stream, null),
 							x -> x != null && Objects.equals(x.getType(), declaredClass)))) == null
-					|| fs.size() != 1 || (f = fs.get(0)) == null
+					|| fs.size() != 1 || (f = get(fs, 0)) == null
 					//
 					|| (ms = toList(filter(
 							testAndApply(Objects::nonNull, declaredClass.getDeclaredMethods(), Arrays::stream, null),
 							x -> Objects.equals(getName(x), "getDllPath")))) == null
-					|| ms.size() != 1 || (m = ms.get(0)) == null) {
+					|| ms.size() != 1 || (m = get(ms, 0)) == null) {
 				continue;
 			} // if
 				//
@@ -2438,7 +2442,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 											//
 										} // if
 											//
-										Method m = ms.get(0);
+										Method m = get(ms, 0);
 										//
 										if (ms.size() == 1 && m != null) {
 											//
@@ -2502,7 +2506,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					if (objects.size() == 1) {
 						//
-						return Pair.of(getName(f), toString(objects.get(0)));
+						return Pair.of(getName(f), toString(get(objects, 0)));
 						//
 					} // if
 						//
@@ -2517,7 +2521,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		for (int i = 0; pairs != null && i < pairs.size(); i++) {
 			//
-			if ((pair = pairs.get(i)) == null) {
+			if ((pair = get(pairs, i)) == null) {
 				//
 				continue;
 				//
@@ -4300,7 +4304,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				if (size == 1) {
 					//
-					setSelectedItem(cbmGaKuNenBeTsuKanJi, IterableUtils.get(list, 0));
+					setSelectedItem(cbmGaKuNenBeTsuKanJi, get(list, 0));
 					//
 				} else if (size < 1) {
 					//
@@ -4642,7 +4646,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				for (int i = 0; ms != null && i < ms.size(); i++) {
 					//
-					if ((m = ms.get(i)) == null) {
+					if ((m = VoiceManager.get(ms, i)) == null) {
 						//
 						continue;
 						//
@@ -4767,7 +4771,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			if (localeIds.size() == 1) {
 				//
-				final LocaleID localeId = localeIds.get(0);
+				final LocaleID localeId = get(localeIds, 0);
 				//
 				return localeId != null ? localeId.getDescription() : null;
 				//
@@ -4816,7 +4820,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		for (int i = 0; pairs != null && i < pairs.size(); i++) {
 			//
-			if ((pair = pairs.get(i)) == null) {
+			if ((pair = get(pairs, i)) == null) {
 				//
 				continue;
 				//
@@ -4884,7 +4888,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				if (methods.size() == 1) {
 					//
-					if ((m = methods.get(0)) != null && m.getParameterCount() == 0) {
+					if ((m = get(methods, 0)) != null && m.getParameterCount() == 0) {
 						//
 						add(pairs = ObjectUtils.getIfNull(pairs, ArrayList::new), Pair.of(attribute, m.invoke(id3v1)));
 						//
@@ -5116,7 +5120,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
-				final Field f = fs.get(0);
+				final Field f = get(fs, 0);
 				//
 				if (f != null) {
 					//
@@ -5219,7 +5223,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			for (int i = 0; fs != null && i < fs.size(); i++) {
 				//
-				if ((f = fs.get(i)) == null) {
+				if ((f = get(fs, i)) == null) {
 					//
 					continue;
 					//
@@ -5253,7 +5257,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					setCellValue(createCell(row, i), null);
 					//
-					if (Objects.equals(Boolean.class, type = getType(f = fs.get(i)))) {// java.lang.Boolean
+					if (Objects.equals(Boolean.class, type = getType(f = get(fs, i)))) {// java.lang.Boolean
 						//
 						if (dvh == null) {
 							//
@@ -5761,7 +5765,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 								//
 								if (list.size() == 1) {
 									//
-									f.set(voice = ObjectUtils.getIfNull(voice, Voice::new), list.get(0));
+									f.set(voice = ObjectUtils.getIfNull(voice, Voice::new), get(list, 0));
 									//
 								} else {
 									//
@@ -6844,7 +6848,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				et.outputFolderFileNameExpressions = outputFolderFileNameExpressions;
 				//
-				et.voice = voices.get(i);
+				et.voice = get(voices, i);
 				//
 				et.ordinalPositionDigit = numberOfOrdinalPositionDigit;
 				//
@@ -6872,7 +6876,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			for (int i = 0; voices != null && i < voices.size(); i++) {
 				//
-				if ((v = voices.get(i)) == null || (listNames = v.getListNames()) == null) {
+				if ((v = get(voices, i)) == null || (listNames = v.getListNames()) == null) {
 					continue;
 				} // if
 					//
@@ -6975,7 +6979,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				for (int i = 0; voices != null && i < voices.size(); i++) {
 					//
-					if ((v = voices.get(i)) == null || (jlptLevel = v.getJlptLevel()) == null) {
+					if ((v = get(voices, i)) == null || (jlptLevel = v.getJlptLevel()) == null) {
 						//
 						continue;
 						//
@@ -7243,7 +7247,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			for (int i = 0; h3s != null && i < h3s.size(); i++) {
 				//
-				if ((domElement = h3s.get(i)) == null || !Objects.equals(getTextContent(domElement), "本表[編集]")) {
+				if ((domElement = get(h3s, i)) == null || !Objects.equals(getTextContent(domElement), "本表[編集]")) {
 					//
 					continue;
 					//
@@ -7287,7 +7291,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			for (int i = 0; domNodes != null && i < domNodes.size(); i++) {
 				//
-				if (!Objects.equals(getNodeName(domNode = domNodes.get(i)), "tbody")) {
+				if (!Objects.equals(getNodeName(domNode = get(domNodes, i)), "tbody")) {
 					//
 					continue;
 					//
@@ -7321,7 +7325,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			for (int i = 0; domNodes != null && i < domNodes.size(); i++) {
 				//
-				if ((domNode = domNodes.get(i)) == null || domNode.getNodeType() != Node.ELEMENT_NODE
+				if ((domNode = get(domNodes, i)) == null || domNode.getNodeType() != Node.ELEMENT_NODE
 						|| (tds = getChildNodes(domNode)) == null) {
 					//
 					continue;
@@ -7330,7 +7334,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				for (int j = 0; j < tds.size(); j++) {
 					//
-					if ((domNode = tds.get(j)) == null || domNode.getNodeType() != Node.ELEMENT_NODE) {
+					if ((domNode = get(tds, j)) == null || domNode.getNodeType() != Node.ELEMENT_NODE) {
 						//
 						continue;
 						//
@@ -7355,7 +7359,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			for (int i = 0; domNodes != null && i < domNodes.size(); i++) {
 				//
-				if ((domNode = domNodes.get(i)) == null || domNode.getNodeType() != Node.ELEMENT_NODE
+				if ((domNode = get(domNodes, i)) == null || domNode.getNodeType() != Node.ELEMENT_NODE
 						|| (tds = getChildNodes(domNode)) == null) {
 					//
 					continue;
@@ -7376,7 +7380,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				for (int j = 0; j < tds.size(); j++) {
 					//
-					if ((domNode = tds.get(j)) == null || domNode.getNodeType() != Node.ELEMENT_NODE) {
+					if ((domNode = get(tds, j)) == null || domNode.getNodeType() != Node.ELEMENT_NODE) {
 						//
 						continue;
 						//
@@ -7650,7 +7654,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		for (int i = 0; voices != null && i < voices.size(); i++) {
 			//
-			if ((voice = voices.get(i)) == null) {
+			if ((voice = get(voices, i)) == null) {
 				//
 				continue;
 				//
@@ -7785,7 +7789,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			int size = CollectionUtils.size(annotations);
 			//
-			final Annotation annotation = size == 1 ? annotations.get(0) : null;
+			final Annotation annotation = size == 1 ? get(annotations, 0) : null;
 			//
 			if (size == 1) {
 				//
@@ -7793,7 +7797,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						testAndApply(Objects::nonNull, getDeclaredMethods(getClass(annotation)), Arrays::stream, null),
 						m -> Objects.equals(getName(m), "value")));
 				//
-				final Method m = (size = CollectionUtils.size(ms)) == 1 ? ms.get(0) : null;
+				final Method m = (size = CollectionUtils.size(ms)) == 1 ? get(ms, 0) : null;
 				//
 				if (m != null) {
 					//
@@ -7888,7 +7892,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		for (int i = 0; fieldNames != null && i < fieldNames.size(); i++) {
 			//
-			if (!ArrayUtils.contains(orders, fieldName = fieldNames.get(i))) {
+			if (!ArrayUtils.contains(orders, fieldName = get(fieldNames, i))) {
 				//
 				orders = ArrayUtils.add(orders, fieldName);
 				//
