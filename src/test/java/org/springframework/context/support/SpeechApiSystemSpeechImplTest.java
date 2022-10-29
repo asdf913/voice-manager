@@ -21,7 +21,7 @@ import com.kichik.pecoff4j.ResourceEntry;
 class SpeechApiSystemSpeechImplTest {
 
 	private static Method METHOD_CAST, METHOD_TEST_AND_APPLY, METHOD_GET_VERSION_INFO_MAP0,
-			METHOD_GET_VERSION_INFO_MAP_PE, METHOD_GET_VERSION_INFO_MAP1, METHOD_GET = null;
+			METHOD_GET_VERSION_INFO_MAP_PE, METHOD_GET_VERSION_INFO_MAP2, METHOD_GET = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -55,10 +55,10 @@ class SpeechApiSystemSpeechImplTest {
 			//
 		} // if
 			//
-		if ((METHOD_GET_VERSION_INFO_MAP1 = SpeechApiSystemSpeechImpl.class.getDeclaredMethod("getVersionInfoMap",
+		if ((METHOD_GET_VERSION_INFO_MAP2 = SpeechApiSystemSpeechImpl.class.getDeclaredMethod("getVersionInfoMap",
 				ResourceEntry[].class)) != null) {
 			//
-			METHOD_GET_VERSION_INFO_MAP1.setAccessible(true);
+			METHOD_GET_VERSION_INFO_MAP2.setAccessible(true);
 			//
 		} // if
 			//
@@ -224,7 +224,7 @@ class SpeechApiSystemSpeechImplTest {
 
 	private static Map<String, String> getVersionInfoMap(final ResourceEntry[] res) throws Throwable {
 		try {
-			final Object obj = METHOD_GET_VERSION_INFO_MAP1.invoke(null, (Object) res);
+			final Object obj = METHOD_GET_VERSION_INFO_MAP2.invoke(null, (Object) res);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Map) {

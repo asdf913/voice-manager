@@ -168,12 +168,12 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider, Lookup, I
 		//
 		final ImageData id = pe != null ? pe.getImageData() : null;
 		//
-		return getVersionInfoMap(
+		return getVersionInfoMap2(
 				ResourceHelper.findResources(id != null ? id.getResourceTable() : null, ResourceType.VERSION_INFO));
 		//
 	}
 
-	private static Map<String, String> getVersionInfoMap(final ResourceEntry[] res) throws IOException {
+	private static Map<String, String> getVersionInfoMap2(final ResourceEntry[] res) throws IOException {
 		//
 		ResourceEntry re = null;
 		//
