@@ -85,6 +85,7 @@ import java.util.function.ToIntFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collector;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -1305,18 +1306,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				setEditable(false, tfSpeechRate);
 				//
-				final Integer speechRate = valueOf(
-						getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.speechRate"));
+				setValue(jsSpeechRate,
+						getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.speechRate"),
+						a -> stateChanged(new ChangeEvent(a)));
 				//
-				if (speechRate != null && speechRate >= jsSpeechRate.getMinimum()
-						&& speechRate <= jsSpeechRate.getMaximum()) {
-					//
-					jsSpeechRate.setValue(speechRate.intValue());
-					//
-					stateChanged(new ChangeEvent(jsSpeechRate));
-					//
-				} // if
-					//
 				panel.add(new JLabel(""));
 				//
 				panel.add(btnSpeechRateSlower = new JButton("Slower"));
@@ -1405,6 +1398,96 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		return panel;
 		//
+	}
+
+	private static void setValue(final JSlider instance, final String string, final Consumer<JSlider> consumer) {
+		//
+		Integer i = valueOf(string);
+		//
+		if (i != null) {
+			//
+			if (instance != null && i >= instance.getMinimum() && i <= instance.getMaximum()) {
+				//
+				instance.setValue(i.intValue());
+				//
+				accept(consumer, instance);
+				//
+			} // if
+				//
+		} else {
+			//
+			final List<Method> ms = toList(
+					filter(testAndApply(Objects::nonNull, getDeclaredMethods(getClass(instance)), Arrays::stream, null),
+							x -> x != null && Objects.equals(x.getReturnType(), Integer.TYPE)
+									&& x.getParameterCount() == 0
+									&& StringUtils.startsWithIgnoreCase(getName(x), "get" + string)));
+			//
+			final int size = CollectionUtils.size(ms);
+			//
+			if (size == 1) {
+				//
+				final boolean headless = GraphicsEnvironment.isHeadless();
+				//
+				try {
+					//
+					i = cast(Integer.class, invoke(ms.get(0), instance));
+					//
+				} catch (final IllegalAccessException e) {
+					//
+					if (headless) {
+						//
+						if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
+							LOG.error(getMessage(e), e);
+						} else if (e != null) {
+							e.printStackTrace();
+						} // if
+							//
+					} else {
+						//
+						JOptionPane.showMessageDialog(null, getMessage(e));
+						//
+					} // if
+						//
+				} catch (final InvocationTargetException e) {
+					//
+					final Throwable targetException = e.getTargetException();
+					//
+					final Throwable rootCause = ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException),
+							targetException, ExceptionUtils.getRootCause(e), e);
+					//
+					if (headless) {
+						//
+						if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
+							LOG.error(getMessage(rootCause), rootCause);
+						} else if (rootCause != null) {
+							rootCause.printStackTrace();
+						} // if
+							//
+					} else {
+						//
+						JOptionPane.showMessageDialog(null, getMessage(rootCause));
+						//
+					} // if
+						//
+				} // try
+					//
+				if (i != null) {
+					//
+					instance.setValue(i.intValue());
+					//
+					accept(consumer, instance);
+					//
+				} // if
+					//
+			} else if (size > 1) {
+				//
+				throw new IllegalStateException(
+						collect(map(stream(ms), VoiceManager::getName), Collectors.joining(",")));
+				//
+			} // if
+				//
+		} // if
+			//
 	}
 
 	private static void addChangeListener(final ChangeListener changeListener, final JSlider instance,
