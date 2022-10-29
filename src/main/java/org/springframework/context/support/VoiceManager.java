@@ -2000,12 +2000,34 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.setLayout(layoutManager);
 		//
-		if (getInstance(speechApi) instanceof SpeechApiSpeechServerImpl) {
+		final Object speechApiInstance = getInstance(speechApi);
+		//
+		if (speechApiInstance instanceof SpeechApiSpeechServerImpl) {
 			//
 			panel.add(new JLabelLink(microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl,
 					getValue0(getMicrosoftSpeechPlatformRuntimeLanguagesDownloadPageTitle())), WRAP);
 			//
 		} // if
+			//
+		final IValue0<Object> dllPath = getDllPath(speechApiInstance);
+		//
+		JTextComponent tfDllPath = null;
+		//
+		if (dllPath != null) {
+			//
+			final JPanel panel1 = new JPanel();
+			//
+			panel1.setLayout(cloneLayoutManager());
+			//
+			panel1.setBorder(BorderFactory.createTitledBorder("Dll Path"));
+			//
+			panel1.add(tfDllPath = new JTextField(toString(getValue0(dllPath))));
+			//
+			panel.add(panel1, WRAP);
+			//
+		} // if
+			//
+			// btnExportGaKuNenBeTsuKanJi
 			//
 		panel.add(btnExportGaKuNenBeTsuKanJi = new JButton("Export 学年別漢字"), WRAP);
 		//
@@ -2040,7 +2062,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.add(panel1);
 		//
-		setEditable(false, tfExportFile);
+		setEditable(false, tfDllPath, tfExportFile);
 		//
 		addActionListener(this, btnExportGaKuNenBeTsuKanJi, btnExportJoYoKanJi,
 				btnExportMicrosoftSpeechObjectLibraryInformation, btnExportCopy, btnExportBrowse);
@@ -2049,6 +2071,93 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		return panel;
 		//
+	}
+
+	private static IValue0<Object> getDllPath(final Object instance) {
+		//
+		final Class<?>[] declaredClasses = getDeclaredClasses(getClass(instance));
+		//
+		List<Field> fs = null;
+		//
+		Field f = null;
+		//
+		List<Method> ms = null;
+		//
+		Method m = null;
+		//
+		IValue0<Object> dllPath = null;
+		//
+		final boolean headless = GraphicsEnvironment.isHeadless();
+		//
+		for (int i = 0; declaredClasses != null && i < declaredClasses.length; i++) {
+			//
+			final Class<?> declaredClass = declaredClasses[i];
+			//
+			if (declaredClass == null
+					//
+					|| (fs = toList(filter(
+							testAndApply(Objects::nonNull, declaredClass.getDeclaredFields(), Arrays::stream, null),
+							x -> x != null && Objects.equals(x.getType(), declaredClass)))) == null
+					|| fs.size() != 1 || (f = fs.get(0)) == null
+					//
+					|| (ms = toList(filter(
+							testAndApply(Objects::nonNull, declaredClass.getDeclaredMethods(), Arrays::stream, null),
+							x -> Objects.equals(getName(x), "getDllPath")))) == null
+					|| ms.size() != 1 || (m = ms.get(0)) == null) {
+				continue;
+			} // if
+				//
+			try {
+				//
+				dllPath = Unit.with(m.invoke(f.get(null)));
+				//
+			} catch (final IllegalAccessException e) {
+				//
+				if (headless) {
+					//
+					if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
+						LOG.error(getMessage(e), e);
+					} else if (e != null) {
+						e.printStackTrace();
+					} // if
+						//
+				} else {
+					//
+					JOptionPane.showMessageDialog(null, getMessage(e));
+					//
+				} // if
+					//
+			} catch (final InvocationTargetException e) {
+				//
+				final Throwable targetException = e.getTargetException();
+				//
+				final Throwable rootCause = ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException),
+						targetException, ExceptionUtils.getRootCause(e), e);
+				//
+				if (headless) {
+					//
+					if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
+						LOG.error(getMessage(rootCause), rootCause);
+					} else if (rootCause != null) {
+						rootCause.printStackTrace();
+					} // if
+						//
+				} else {
+					//
+					JOptionPane.showMessageDialog(null, getMessage(rootCause));
+					//
+				} // if
+					//
+			} // try
+				//
+		} // for
+			//
+		return dllPath;
+		//
+	}
+
+	private static Class<?>[] getDeclaredClasses(final Class<?> instance) {
+		return instance != null ? instance.getDeclaredClasses() : null;
 	}
 
 	private List<String> getJlptLevels() {

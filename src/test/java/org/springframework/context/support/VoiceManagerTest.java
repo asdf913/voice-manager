@@ -216,7 +216,8 @@ class VoiceManagerTest {
 			METHOD_CREATE_CLIENT_ANCHOR, METHOD_CREATE_RICH_TEXT_STRING, METHOD_SET_CELL_COMMENT, METHOD_SET_AUTHOR,
 			METHOD_TEST_AND_ACCEPT, METHOD_FIND_FIELDS_BY_VALUE, METHOD_GET_DECLARED_FIELDS, METHOD_GET_DECLARING_CLASS,
 			METHOD_GET_PACKAGE, METHOD_BROWSE, METHOD_TO_URI, METHOD_DARKER, METHOD_GET_TITLE_TEXT,
-			METHOD_SET_CSS_ENABLED, METHOD_SET_JAVA_SCRIPT_ENABLED, METHOD_STOP, METHOD_ELAPSED = null;
+			METHOD_SET_CSS_ENABLED, METHOD_SET_JAVA_SCRIPT_ENABLED, METHOD_STOP, METHOD_ELAPSED,
+			METHOD_GET_DECLARED_CLASSES = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -597,6 +598,8 @@ class VoiceManagerTest {
 		(METHOD_STOP = clz.getDeclaredMethod("stop", Stopwatch.class)).setAccessible(true);
 		//
 		(METHOD_ELAPSED = clz.getDeclaredMethod("elapsed", Stopwatch.class)).setAccessible(true);
+		//
+		(METHOD_GET_DECLARED_CLASSES = clz.getDeclaredMethod("getDeclaredClasses", Class.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -5065,6 +5068,27 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof Duration) {
 				return (Duration) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetDeclaredClasses() throws Throwable {
+		//
+		Assertions.assertNull(getDeclaredClasses(null));
+		//
+	}
+
+	private static Class<?>[] getDeclaredClasses(final Class<?> instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_DECLARED_CLASSES.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Class<?>[]) {
+				return (Class<?>[]) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
