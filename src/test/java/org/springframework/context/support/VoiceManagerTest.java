@@ -220,7 +220,7 @@ class VoiceManagerTest {
 			METHOD_FIND_FIELDS_BY_VALUE, METHOD_GET_DECLARED_FIELDS, METHOD_GET_DECLARING_CLASS, METHOD_GET_PACKAGE,
 			METHOD_BROWSE, METHOD_TO_URI, METHOD_DARKER, METHOD_GET_TITLE_TEXT, METHOD_SET_CSS_ENABLED,
 			METHOD_SET_JAVA_SCRIPT_ENABLED, METHOD_STOP, METHOD_ELAPSED, METHOD_GET_DECLARED_CLASSES,
-			METHOD_GET_DLL_PATH, METHOD_GET_RATE = null;
+			METHOD_GET_DLL_PATH, METHOD_GET_RATE, METHOD_ADD_CHANGE_LISTENER = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -613,6 +613,9 @@ class VoiceManagerTest {
 		(METHOD_GET_DLL_PATH = clz.getDeclaredMethod("getDllPath", Object.class)).setAccessible(true);
 		//
 		(METHOD_GET_RATE = clz.getDeclaredMethod("getRate")).setAccessible(true);
+		//
+		(METHOD_ADD_CHANGE_LISTENER = clz.getDeclaredMethod("addChangeListener", ChangeListener.class, JSlider.class,
+				JSlider[].class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -5230,6 +5233,22 @@ class VoiceManagerTest {
 				return (Integer) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testAddChangeListener() {
+		//
+		Assertions.assertDoesNotThrow(() -> addChangeListener(instance, null, (JSlider[]) null));
+		//
+	}
+
+	private static void addChangeListener(final ChangeListener changeListener, final JSlider instance,
+			final JSlider... vs) throws Throwable {
+		try {
+			METHOD_ADD_CHANGE_LISTENER.invoke(null, changeListener, instance, vs);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

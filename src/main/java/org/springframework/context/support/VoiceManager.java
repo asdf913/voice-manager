@@ -1292,10 +1292,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				panel.add(new JLabel("Speech Rate"), "aligny top");
 				//
-				panel.add(
-						jsSpeechRate = new JSlider(intValue(range.lowerEndpoint(), 0),
-								intValue(range.upperEndpoint(), 0)),
-						String.format("%1$s,span %2$s,%3$s", GROWX, 7, WRAP));
+				panel.add(jsSpeechRate = new JSlider(intValue(range.lowerEndpoint(), 0),
+						intValue(range.upperEndpoint(), 0)), String.format("%1$s,span %2$s", GROWX, 7));
 				//
 				jsSpeechRate.setMajorTickSpacing(1);
 				//
@@ -1303,11 +1301,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				jsSpeechRate.setPaintLabels(true);
 				//
+				panel.add(tfSpeechRate = new JTextField(), String.format("%1$s,width %2$s", WRAP, 24));
+				//
+				setEditable(false, tfSpeechRate);
+				//
 			} // if
 				//
 		} // if
 			//
-		if (jsSpeechRate == null) {
+		if (jsSpeechRate == null && tfSpeechRate == null) {
 			//
 			panel.add(new JLabel("Speech Rate"));
 			//
@@ -1332,8 +1334,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				speechVolumeRange != null && speechVolumeRange.hasLowerBound() ? speechVolumeRange.lowerEndpoint()
 						: null,
 				0), intValue(upperEnpoint, 100)), String.format("%1$s,span %2$s", GROWX, 3));
-		//
-		jsSpeechVolume.addChangeListener(this);
 		//
 		final Integer speechVolume = valueOf(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.speechVolume"));
@@ -1381,8 +1381,29 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		setEnabled(isInstalled && voiceIds != null, btnSpeak, btnWriteVoice);
 		//
+		addChangeListener(this, jsSpeechVolume, jsSpeechRate);
+		//
 		return panel;
 		//
+	}
+
+	private static void addChangeListener(final ChangeListener changeListener, final JSlider instance,
+			final JSlider... vs) {
+		//
+		addChangeListener(instance, changeListener);
+		//
+		for (int i = 0; vs != null && i < vs.length; i++) {
+			//
+			addChangeListener(vs[i], changeListener);
+			//
+		} // for
+			//
+	}
+
+	private static void addChangeListener(final JSlider instance, final ChangeListener changeListener) {
+		if (instance != null) {
+			instance.addChangeListener(changeListener);
+		}
 	}
 
 	private JPanel createSingleImportPanel(final LayoutManager layoutManager, final String[] voiceIds) {
@@ -4045,9 +4066,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Override
 	public void stateChanged(final ChangeEvent evt) {
 		//
-		if (Objects.equals(getSource(evt), jsSpeechVolume)) {
+		final Object source = getSource(evt);
+		//
+		if (Objects.equals(source, jsSpeechVolume)) {
 			//
 			setText(tfSpeechVolume, jsSpeechVolume != null ? Integer.toString(jsSpeechVolume.getValue()) : null);
+			//
+		} else if (Objects.equals(source, jsSpeechRate)) {
+			//
+			setText(tfSpeechRate, jsSpeechRate != null ? Integer.toString(jsSpeechRate.getValue()) : null);
 			//
 		} // if
 			//
