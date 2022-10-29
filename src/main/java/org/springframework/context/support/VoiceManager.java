@@ -1278,15 +1278,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		final Lookup lookup = cast(Lookup.class, getInstance(speechApi));
 		//
-		final BiPredicate<String, String> biPredicate = (a, b) -> contains(lookup, a, b);
+		final Predicate<String> predicate = (a) -> contains(lookup, "rate", a);
 		//
-		final BiFunction<String, String, Object> biFunction = (a, b) -> get(lookup, a, b);
+		final FailableFunction<String, Object, RuntimeException> function = (a) -> get(lookup, "rate", a);
 		//
-		if (biPredicate != null && biPredicate.test("rate", "min") && biPredicate.test("rate", "max")) {
+		if (test(predicate, "min") && test(predicate, "max")) {
 			//
-			final Range<Integer> range = createRange(
-					toInteger(testAndApply(biPredicate, "rate", "min", biFunction, null)),
-					toInteger(testAndApply(biPredicate, "rate", "max", biFunction, null)));
+			final Range<Integer> range = createRange(toInteger(testAndApply(predicate, "min", function, null)),
+					toInteger(testAndApply(predicate, "max", function, null)));
 			//
 			if (range != null && range.hasLowerBound() && range.hasUpperBound() && range.lowerEndpoint() != null
 					&& range.upperEndpoint() != null) {
@@ -1325,7 +1324,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				panel.add(btnSpeechRateNormal = new JButton("Normal"));
 				//
 				panel.add(btnSpeechRateFaster = new JButton("Faster"), WRAP);
-				////
+				//
 			} // if
 				//
 		} // if
