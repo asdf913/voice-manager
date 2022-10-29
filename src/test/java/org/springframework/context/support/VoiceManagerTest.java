@@ -1646,11 +1646,31 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testStateChanged() {
+	void testStateChanged() throws IllegalAccessException {
 		//
 		Assertions.assertDoesNotThrow(() -> stateChanged(instance, null));
 		//
 		Assertions.assertDoesNotThrow(() -> stateChanged(instance, new ChangeEvent("")));
+		//
+		final JSlider jsSpeechRate = new JSlider();
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "jsSpeechRate", jsSpeechRate, true);
+			//
+		} // if
+			//
+		final ChangeEvent changeEvent = new ChangeEvent(jsSpeechRate);
+		//
+		Assertions.assertDoesNotThrow(() -> stateChanged(instance, changeEvent));
+		//
+		jsSpeechRate.setValue(jsSpeechRate.getMinimum());
+		//
+		Assertions.assertDoesNotThrow(() -> stateChanged(instance, changeEvent));
+		//
+		jsSpeechRate.setValue(jsSpeechRate.getMaximum());
+		//
+		Assertions.assertDoesNotThrow(() -> stateChanged(instance, changeEvent));
 		//
 	}
 

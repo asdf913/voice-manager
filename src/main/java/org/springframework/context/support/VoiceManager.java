@@ -4212,6 +4212,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} else if (Objects.equals(source, jsSpeechRate)) {
 			//
+			if (jsSpeechRate != null) {
+				//
+				setEnabled(btnSpeechRateSlower, jsSpeechRate.getValue() != jsSpeechRate.getMinimum());
+				//
+				setEnabled(btnSpeechRateFaster, jsSpeechRate.getValue() != jsSpeechRate.getMaximum());
+				//
+			} // if
+				//
 			setText(tfSpeechRate, jsSpeechRate != null ? Integer.toString(jsSpeechRate.getValue()) : null);
 			//
 		} // if
