@@ -202,8 +202,8 @@ class VoiceManagerTest {
 			METHOD_SET_ROMAJI, METHOD_OR, METHOD_CLEAR_DEFAULT_TABLE_MODEL, METHOD_CLEAR_MULTI_MAP,
 			METHOD_CLEAR_STRING_BUILDER, METHOD_EXECUTE, METHOD_PUT_MAP, METHOD_PUT_MULTI_MAP,
 			METHOD_GET_BYTE_CONVERTER, METHOD_GET_PROPERTIES, METHOD_GET_CUSTOM_PROPERTIES,
-			METHOD_CONTAINS_CUSTOM_PROPERTIES, METHOD_CONTAINS_COLLECTION, METHOD_GET_LPW_STR, METHOD_GET_SHEET_NAME,
-			METHOD_ACCEPT, METHOD_TO_ARRAY, METHOD_TO_LIST, METHOD_GET_ID, METHOD_SET_MAXIMUM,
+			METHOD_CONTAINS_CUSTOM_PROPERTIES, METHOD_CONTAINS_COLLECTION, METHOD_CONTAINS_LOOKUP, METHOD_GET_LPW_STR,
+			METHOD_GET_SHEET_NAME, METHOD_ACCEPT, METHOD_TO_ARRAY, METHOD_TO_LIST, METHOD_GET_ID, METHOD_SET_MAXIMUM,
 			METHOD_GET_CURRENT_SHEET_INDEX, METHOD_GET_JLPT_LEVELS, METHOD_PARSE_JLPT_PAGE_HTML,
 			METHOD_GET_DATA_VALIDATION_HELPER, METHOD_CREATE_EXPLICIT_LIST_CONSTRAINT, METHOD_CREATE_VALIDATION,
 			METHOD_CREATE_EXPORT_TASK, METHOD_GET_TAB_INDEX_BY_TITLE, METHOD_GET_DECLARED_FIELD,
@@ -212,14 +212,15 @@ class VoiceManagerTest {
 			METHOD_GET_COLUMN_NAME, METHOD_GET_KEY_SET, METHOD_PUT_ALL, METHOD_CREATE_SHEET, METHOD_ENTRIES,
 			METHOD_GET_WORK_BOOK, METHOD_GET_OLE_ENTRY_NAMES, METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE,
 			METHOD_GET_DOCUMENT_ELEMENT, METHOD_GET_CHILD_NODES, METHOD_GET_NAMED_ITEM, METHOD_GET_TEXT_CONTENT,
-			METHOD_GET_NODE_NAME, METHOD_GET_NAME_FILE, METHOD_GET_NAME_CLASS, METHOD_GET_PASS_WORD, METHOD_GET,
-			METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK, METHOD_READ_VALUE, METHOD_WRITE_VALUE_AS_STRING,
-			METHOD_CREATE_DRAWING_PATRIARCH, METHOD_GET_CREATION_HELPER, METHOD_CREATE_CELL_COMMENT,
-			METHOD_CREATE_CLIENT_ANCHOR, METHOD_CREATE_RICH_TEXT_STRING, METHOD_SET_CELL_COMMENT, METHOD_SET_AUTHOR,
-			METHOD_TEST_AND_ACCEPT, METHOD_FIND_FIELDS_BY_VALUE, METHOD_GET_DECLARED_FIELDS, METHOD_GET_DECLARING_CLASS,
-			METHOD_GET_PACKAGE, METHOD_BROWSE, METHOD_TO_URI, METHOD_DARKER, METHOD_GET_TITLE_TEXT,
-			METHOD_SET_CSS_ENABLED, METHOD_SET_JAVA_SCRIPT_ENABLED, METHOD_STOP, METHOD_ELAPSED,
-			METHOD_GET_DECLARED_CLASSES, METHOD_GET_DLL_PATH = null;
+			METHOD_GET_NODE_NAME, METHOD_GET_NAME_FILE, METHOD_GET_NAME_CLASS, METHOD_GET_PASS_WORD,
+			METHOD_GET_SUPPLIER, METHOD_GET_LOOKUP, METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK,
+			METHOD_READ_VALUE, METHOD_WRITE_VALUE_AS_STRING, METHOD_CREATE_DRAWING_PATRIARCH,
+			METHOD_GET_CREATION_HELPER, METHOD_CREATE_CELL_COMMENT, METHOD_CREATE_CLIENT_ANCHOR,
+			METHOD_CREATE_RICH_TEXT_STRING, METHOD_SET_CELL_COMMENT, METHOD_SET_AUTHOR, METHOD_TEST_AND_ACCEPT,
+			METHOD_FIND_FIELDS_BY_VALUE, METHOD_GET_DECLARED_FIELDS, METHOD_GET_DECLARING_CLASS, METHOD_GET_PACKAGE,
+			METHOD_BROWSE, METHOD_TO_URI, METHOD_DARKER, METHOD_GET_TITLE_TEXT, METHOD_SET_CSS_ENABLED,
+			METHOD_SET_JAVA_SCRIPT_ENABLED, METHOD_STOP, METHOD_ELAPSED, METHOD_GET_DECLARED_CLASSES,
+			METHOD_GET_DLL_PATH = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -444,6 +445,9 @@ class VoiceManagerTest {
 		(METHOD_CONTAINS_COLLECTION = clz.getDeclaredMethod("contains", Collection.class, Object.class))
 				.setAccessible(true);
 		//
+		(METHOD_CONTAINS_LOOKUP = clz.getDeclaredMethod("contains", Lookup.class, Object.class, Object.class))
+				.setAccessible(true);
+		//
 		(METHOD_GET_LPW_STR = clz.getDeclaredMethod("getLpwstr", CTProperty.class)).setAccessible(true);
 		//
 		(METHOD_GET_SHEET_NAME = clz.getDeclaredMethod("getSheetName", Sheet.class)).setAccessible(true);
@@ -540,7 +544,10 @@ class VoiceManagerTest {
 		//
 		(METHOD_GET_PASS_WORD = clz.getDeclaredMethod("getPassword", Console.class)).setAccessible(true);
 		//
-		(METHOD_GET = clz.getDeclaredMethod("get", Supplier.class)).setAccessible(true);
+		(METHOD_GET_SUPPLIER = clz.getDeclaredMethod("get", Supplier.class)).setAccessible(true);
+		//
+		(METHOD_GET_LOOKUP = clz.getDeclaredMethod("get", Lookup.class, Object.class, Object.class))
+				.setAccessible(true);
 		//
 		(METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK = clz
 				.getDeclaredMethod("createMicrosoftSpeechObjectLibraryWorkbook", SpeechApi.class, String[].class))
@@ -1008,6 +1015,18 @@ class VoiceManagerTest {
 					//
 				} // if
 					//
+			} else if (proxy instanceof Lookup) {
+				//
+				if (Objects.equals(methodName, "contains")) {
+					//
+					return contains;
+					//
+				} else if (Objects.equals(methodName, "get")) {
+					//
+					return null;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(methodName);
@@ -1033,6 +1052,8 @@ class VoiceManagerTest {
 	private Multimap<?, ?> multimap = null;
 
 	private Node node = null;
+
+	private Lookup lookup = null;
 
 	@BeforeEach
 	void beforeEach() throws ReflectiveOperationException {
@@ -1060,6 +1081,8 @@ class VoiceManagerTest {
 		multimap = Reflection.newProxy(Multimap.class, ih);
 		//
 		node = Reflection.newProxy(Node.class, ih);
+		//
+		lookup = Reflection.newProxy(Lookup.class, ih);
 		//
 	}
 
@@ -3709,6 +3732,12 @@ class VoiceManagerTest {
 		//
 		Assertions.assertEquals(ih.contains = Boolean.TRUE, Boolean.valueOf(contains(collection, null)));
 		//
+		// org.springframework.context.support.VoiceManagerTest.contains(org.springframework.context.support.Lookup,java.lang.Object,java.lang.Object)
+		//
+		Assertions.assertEquals(ih.contains = Boolean.FALSE, contains(lookup, null, null));
+		//
+		Assertions.assertEquals(ih.contains = Boolean.TRUE, contains(lookup, null, null));
+		//
 	}
 
 	private static boolean contains(final CustomProperties instance, final String name) throws Throwable {
@@ -3726,6 +3755,18 @@ class VoiceManagerTest {
 	private static boolean contains(final Collection<?> items, final Object item) throws Throwable {
 		try {
 			final Object obj = METHOD_CONTAINS_COLLECTION.invoke(null, items, item);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static boolean contains(final Lookup instance, final Object row, final Object column) throws Throwable {
+		try {
+			final Object obj = METHOD_CONTAINS_LOOKUP.invoke(null, instance, row, column);
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
@@ -4645,11 +4686,23 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(get(null));
 		//
+		Assertions.assertNull(get(null, null, null));
+		//
+		Assertions.assertNull(get(lookup, null, null));
+		//
 	}
 
 	private static <T> T get(final Supplier<T> instance) throws Throwable {
 		try {
-			return (T) METHOD_GET.invoke(null, instance);
+			return (T) METHOD_GET_SUPPLIER.invoke(null, instance);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static Object get(final Lookup instance, final Object row, final Object column) throws Throwable {
+		try {
+			return METHOD_GET_LOOKUP.invoke(null, instance, row, column);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

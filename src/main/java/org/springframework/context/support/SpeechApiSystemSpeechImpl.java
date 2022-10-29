@@ -7,9 +7,13 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Predicate;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
+import org.springframework.beans.factory.InitializingBean;
 
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table;
 import com.kichik.pecoff4j.ImageData;
 import com.kichik.pecoff4j.PE;
 import com.kichik.pecoff4j.ResourceEntry;
@@ -24,9 +28,7 @@ import com.kichik.pecoff4j.util.ResourceHelper;
 import com.sun.jna.Library;
 import com.sun.jna.Native;
 
-@MinValue(name = "volume", value = 0)
-@MaxValue(name = "volume", value = 100)
-public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider {
+public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider, Lookup, InitializingBean {
 
 	private interface Jna extends Library {
 
@@ -49,6 +51,33 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider {
 
 		public String getDllPath();
 
+	}
+
+	private Table<Object, Object, Object> table = null;
+
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		//
+		final Table<Object, Object, Object> table = getTable();
+		//
+		if (table != null) {
+			//
+			table.put("volume", "min", 0);
+			//
+			table.put("volume", "max", 100);
+			//
+			table.put("rate", "min", -10);
+			//
+			table.put("rate", "max", 10);
+			//
+		} // if
+			//
+	}
+
+	private Table<Object, Object, Object> getTable() {
+		//
+		return table = ObjectUtils.getIfNull(table, HashBasedTable::create);
+		//
 	}
 
 	@Override
@@ -236,6 +265,28 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider {
 	public String getProviderPlatform() {
 		//
 		return Jna.INSTANCE != null ? Jna.INSTANCE.getProviderPlatform() : null;
+		//
+	}
+
+	@Override
+	public boolean contains(final Object row, final Object column) {
+		//
+		return table != null && table.contains(row, column);
+		//
+	}
+
+	@Override
+	public Object get(final Object row, final Object column) {
+		//
+		final Table<?, ?, ?> table = getTable();
+		//
+		if (table != null && !table.contains(row, column)) {
+			//
+			throw new IllegalStateException();
+			//
+		} // if
+			//
+		return table != null ? table.get(row, column) : null;
 		//
 	}
 

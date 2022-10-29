@@ -2,9 +2,11 @@ package org.springframework.context.support;
 
 import java.io.File;
 
+import org.springframework.beans.factory.InitializingBean;
+
 import com.sun.jna.platform.win32.VersionHelpers;
 
-public class SpeechApiImpl implements SpeechApi, Provider {
+public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean {
 
 	private SpeechApi instance = null;
 
@@ -26,6 +28,19 @@ public class SpeechApiImpl implements SpeechApi, Provider {
 			//
 		return instance;
 		//
+	}
+
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		//
+		final InitializingBean initializingBean = cast(InitializingBean.class, getInstance());
+		//
+		if (initializingBean != null) {
+			//
+			initializingBean.afterPropertiesSet();
+			//
+		} // if
+			//
 	}
 
 	@Override

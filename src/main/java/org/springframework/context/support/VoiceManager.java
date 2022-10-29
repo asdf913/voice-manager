@@ -85,7 +85,6 @@ import java.util.function.ToIntFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collector;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -1287,7 +1286,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.add(new JLabel("Speech Volume"), "aligny top");
 		//
-		final Range<Integer> speechVolumeRange = createVolumnRange(getClass(getInstance(speechApi)));
+		final Range<Integer> speechVolumeRange = createVolumnRange(getInstance(speechApi));
 		//
 		final Integer upperEnpoint = speechVolumeRange != null && speechVolumeRange.hasUpperBound()
 				? speechVolumeRange.upperEndpoint()
@@ -2439,146 +2438,28 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.getVoiceIds() : null;
 	}
 
-	private static Range<Integer> createVolumnRange(final Class<?> clz) {
+	private static Range<Integer> createVolumnRange(final Object instance) {
 		//
-		final Map<String, Object> map = collect(
-				filter(testAndApply(Objects::nonNull, getDeclaredAnnotations(clz), Arrays::stream, null), a -> {
-					//
-					final String simpleName = getSimpleName(annotationType(a));
-					//
-					if (Objects.equals(simpleName, "MinValue") || Objects.equals(simpleName, "MaxValue")) {
-						//
-						final List<Method> temp = toList(
-								filter(testAndApply(Objects::nonNull, getDeclaredMethods(annotationType(a)),
-										Arrays::stream, null), ma -> Objects.equals(getName(ma), "name")));
-						//
-						final boolean headless = GraphicsEnvironment.isHeadless();
-						//
-						if (temp == null || temp.isEmpty()) {
-							//
-							return false;
-							//
-						} else if (temp.size() == 1 && temp.get(0) != null) {
-							//
-							try {
-								//
-								return Objects.equals("volume", temp.get(0).invoke(a));
-								//
-							} catch (final IllegalAccessException e) {
-								//
-								if (headless) {
-									//
-									if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-										LOG.error(getMessage(e), e);
-									} else if (e != null) {
-										e.printStackTrace();
-									} // if
-										//
-								} else {
-									//
-									JOptionPane.showMessageDialog(null, getMessage(e));
-									//
-								} // if
-									//
-							} catch (final InvocationTargetException e) {
-								//
-								final Throwable targetException = e.getTargetException();
-								//
-								final Throwable rootCause = ObjectUtils.firstNonNull(
-										ExceptionUtils.getRootCause(targetException), targetException,
-										ExceptionUtils.getRootCause(e), e);
-								//
-								if (headless) {
-									//
-									if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-										LOG.error(getMessage(rootCause), rootCause);
-									} else if (rootCause != null) {
-										rootCause.printStackTrace();
-									} // if
-										//
-								} else {
-									//
-									JOptionPane.showMessageDialog(null, getMessage(rootCause));
-									//
-								} // if
-									//
-							} // try
-								//
-						} // if
-							//
-						throw new IllegalArgumentException();
-						//
-					} // if
-						//
-					return false;
-					//
-				}), Collectors.toMap(a -> getSimpleName(annotationType(a)), a -> {
-					//
-					final List<Method> temp = toList(filter(
-							testAndApply(Objects::nonNull, getDeclaredMethods(annotationType(a)), Arrays::stream, null),
-							ma -> Objects.equals(getName(ma), "value")));
-					//
-					if (temp == null || temp.isEmpty()) {
-						//
-						return false;
-						//
-					} else if (temp.size() == 1 && temp.get(0) != null) {
-						//
-						final boolean headless = GraphicsEnvironment.isHeadless();
-						//
-						try {
-							//
-							return temp.get(0).invoke(a);
-							//
-						} catch (final IllegalAccessException e) {
-							//
-							if (headless) {
-								//
-								if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-									LOG.error(getMessage(e), e);
-								} else if (e != null) {
-									e.printStackTrace();
-								} // if
-									//
-							} else {
-								//
-								JOptionPane.showMessageDialog(null, getMessage(e));
-								//
-							} // if
-								//
-						} catch (final InvocationTargetException e) {
-							//
-							final Throwable targetException = e.getTargetException();
-							//
-							final Throwable rootCause = ObjectUtils.firstNonNull(
-									ExceptionUtils.getRootCause(targetException), targetException,
-									ExceptionUtils.getRootCause(e), e);
-							//
-							if (headless) {
-								//
-								if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-									LOG.error(getMessage(rootCause), rootCause);
-								} else if (rootCause != null) {
-									rootCause.printStackTrace();
-								} // if
-									//
-							} else {
-								//
-								JOptionPane.showMessageDialog(null, getMessage(rootCause));
-								//
-							} // if
-								//
-						} // try
-							//
-					} // if
-						//
-					throw new IllegalArgumentException();
-					//
-				}));
+		final Lookup lookup = cast(Lookup.class, instance);
 		//
-		return createRange(
-				toInteger(testAndApply(VoiceManager::containsKey, map, "MinValue", MapUtils::getObject, null)),
-				toInteger(testAndApply(VoiceManager::containsKey, map, "MaxValue", MapUtils::getObject, null)));
+		final BiPredicate<String, String> biPredicate = (a, b) -> contains(lookup, a, b);
+		//
+		final BiFunction<String, String, Object> biFunction = (a, b) -> get(lookup, a, b);
+		//
+		return createRange(toInteger(testAndApply(biPredicate, "volume", "min", biFunction, null)),
+				toInteger(testAndApply(biPredicate, "volume", "max", biFunction, null)));
+		//
+	}
+
+	private static boolean contains(final Lookup instance, final Object row, final Object column) {
+		//
+		return instance != null && instance.contains(row, column);
+		//
+	}
+
+	private static Object get(final Lookup instance, final Object row, final Object column) {
+		//
+		return instance != null ? instance.get(row, column) : instance;
 		//
 	}
 

@@ -1,39 +1,17 @@
 package org.springframework.context.support;
 
 import java.io.File;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.InitializingBean;
 
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table;
 import com.sun.jna.Library;
 import com.sun.jna.Native;
 
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-@interface MinValue {
-
-	String name();
-
-	int value();
-
-}
-
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-@interface MaxValue {
-
-	String name();
-
-	int value();
-
-}
-
-@MinValue(name = "volume", value = 0)
-@MaxValue(name = "volume", value = 100)
-public class SpeechApiSpeechServerImpl implements SpeechApi, Provider {
+public class SpeechApiSpeechServerImpl implements SpeechApi, Provider, Lookup, InitializingBean {
 
 	private interface Jna extends Library {
 
@@ -60,6 +38,29 @@ public class SpeechApiSpeechServerImpl implements SpeechApi, Provider {
 
 		public String getProviderPlatform();
 
+	}
+
+	private Table<Object, Object, Object> table = null;
+
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		//
+		final Table<Object, Object, Object> table = getTable();
+		//
+		if (table != null) {
+			//
+			table.put("volume", "min", 0);
+			//
+			table.put("volume", "max", 100);
+			//
+		} // if
+			//
+	}
+
+	private Table<Object, Object, Object> getTable() {
+		//
+		return table = ObjectUtils.getIfNull(table, HashBasedTable::create);
+		//
 	}
 
 	@Override
@@ -149,6 +150,28 @@ public class SpeechApiSpeechServerImpl implements SpeechApi, Provider {
 	public String getProviderPlatform() {
 		//
 		return Jna.INSTANCE != null ? Jna.INSTANCE.getProviderPlatform() : null;
+		//
+	}
+
+	@Override
+	public boolean contains(final Object row, final Object column) {
+		//
+		return table != null && table.contains(row, column);
+		//
+	}
+
+	@Override
+	public Object get(final Object row, final Object column) {
+		//
+		final Table<?, ?, ?> table = getTable();
+		//
+		if (table != null && !table.contains(row, column)) {
+			//
+			throw new IllegalStateException();
+			//
+		} // if
+			//
+		return table != null ? table.get(row, column) : null;
 		//
 	}
 
