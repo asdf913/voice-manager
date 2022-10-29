@@ -1286,7 +1286,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.add(new JLabel("Speech Volume"), "aligny top");
 		//
-		final Range<Integer> speechVolumeRange = createVolumnRange(getInstance(speechApi));
+		final Range<Integer> speechVolumeRange = createVolumeRange(getInstance(speechApi));
 		//
 		final Integer upperEnpoint = speechVolumeRange != null && speechVolumeRange.hasUpperBound()
 				? speechVolumeRange.upperEndpoint()
@@ -2438,7 +2438,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.getVoiceIds() : null;
 	}
 
-	private static Range<Integer> createVolumnRange(final Object instance) {
+	private static Range<Integer> createVolumeRange(final Object instance) {
 		//
 		final Lookup lookup = cast(Lookup.class, instance);
 		//
