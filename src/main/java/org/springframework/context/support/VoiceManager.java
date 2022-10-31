@@ -2923,7 +2923,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				final int volume = Math.min(
 						Math.max(intValue(jsSpeechVolume != null ? jsSpeechVolume.getValue() : null, 100), 0), 100);
 				//
-				if (method != null) {
+				if (method != null && Arrays.equals(method.getParameterTypes(),
+						new Class<?>[] { String.class, String.class, Integer.TYPE, Integer.TYPE })) {
 					//
 					try {
 						//
