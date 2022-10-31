@@ -294,6 +294,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private ComboBoxModel<Boolean> cbmIsKanji, cbmJoYoKanJi = null;
 
+	private ComboBoxModel<Method> cbmSpeakMethod = null;
+
 	private AbstractButton btnSpeak, btnWriteVoice, btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji,
 			btnCopyHiragana, btnCopyKatakana, cbUseTtsVoice, btnExecute, btnImportFileTemplate, btnImport,
 			btnImportWithinFolder, cbOverMp3Title, cbOrdinalPositionAsFileNamePrefix, btnExport,
@@ -1282,7 +1284,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			// Speech Rate
 			//
-		final Lookup lookup = cast(Lookup.class, getInstance(speechApi));
+		final Object speechApiInstance = getInstance(speechApi);
+		//
+		final Lookup lookup = cast(Lookup.class, speechApiInstance);
 		//
 		final Predicate<String> predicate = (a) -> contains(lookup, "rate", a);
 		//
@@ -1352,7 +1356,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		panel.add(new JLabel("Speech Volume"), "aligny top");
 		//
-		final Range<Integer> speechVolumeRange = createVolumeRange(getInstance(speechApi));
+		final Range<Integer> speechVolumeRange = createVolumeRange(speechApiInstance);
 		//
 		final Integer upperEnpoint = speechVolumeRange != null && speechVolumeRange.hasUpperBound()
 				? speechVolumeRange.upperEndpoint()
@@ -1388,6 +1392,33 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.add(new JLabel());
 		//
+		final List<Method> ms = toList(filter(
+				testAndApply(Objects::nonNull, getDeclaredMethods(getClass(speechApiInstance)), Arrays::stream, null),
+				m -> isAnnotationPresent(m, SpeakMethod.class)));
+		//
+		if (CollectionUtils.isNotEmpty(ms)) {
+			//
+			final JComboBox<Method> jcb = new JComboBox<>(cbmSpeakMethod = testAndApply(Objects::nonNull,
+					toArray(ms, new Method[] {}), DefaultComboBoxModel::new, x -> new DefaultComboBoxModel<>()));
+			//
+			final ListCellRenderer<?> listCellRenderer = jcb.getRenderer();
+			//
+			jcb.setRenderer(new ListCellRenderer<Object>() {
+
+				@Override
+				public Component getListCellRendererComponent(final JList<?> list, final Object value, final int index,
+						final boolean isSelected, final boolean cellHasFocus) {
+					//
+					return VoiceManager.getListCellRendererComponent((ListCellRenderer) listCellRenderer, list,
+							getName(cast(Member.class, value)), index, isSelected, cellHasFocus);
+					//
+				}
+			});
+			//
+			panel.add(jcb);
+			//
+		} // if
+			//
 		panel.add(btnSpeak = new JButton("Speak"), WRAP);
 		//
 		// Audio Format
@@ -1415,6 +1446,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		return panel;
 		//
+	}
+
+	private static boolean isAnnotationPresent(final AnnotatedElement instance,
+			final Class<? extends Annotation> annotationClass) {
+		return instance != null && annotationClass != null && instance.isAnnotationPresent(annotationClass);
 	}
 
 	private static void setValue(final JSlider instance, final String string, final Consumer<JSlider> consumer) {
@@ -2824,7 +2860,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		try {
 			//
 			if (anyMatch(stream(findFieldsByValue(getDeclaredFields(getClass()), this, source)),
-					f -> f != null && f.isAnnotationPresent(ExportButton.class))) {
+					f -> isAnnotationPresent(f, ExportButton.class))) {
 				//
 				setText(tfExportFile, null);
 				//
@@ -2854,16 +2890,71 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				final Stopwatch stopwatch = Stopwatch.createStarted();
 				//
-				speechApi.speak(getText(tfTextTts), toString(getSelectedItem(cbmVoiceId))
+				final Method method = cast(Method.class, getSelectedItem(cbmSpeakMethod));
 				//
-						, intValue(getRate(), 0)// rate
+				final Object instance = getInstance(speechApi);
+				//
+				final String text = getText(tfTextTts);
+				//
+				final String voiceId = toString(getSelectedItem(cbmVoiceId));
+				//
+				final int rate = intValue(getRate(), 0);
+				//
+				final int volume = Math.min(
+						Math.max(intValue(jsSpeechVolume != null ? jsSpeechVolume.getValue() : null, 100), 0), 100);
+				//
+				if (method != null) {
+					//
+					try {
 						//
-						,
-						Math.min(Math.max(intValue(jsSpeechVolume != null ? jsSpeechVolume.getValue() : null, 100), 0),
-								100)// volume
-
-				);
-				//
+						invoke(method, instance, text, voiceId, rate, volume);
+						//
+					} catch (final IllegalAccessException e) {
+						//
+						if (headless) {
+							//
+							if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
+								LOG.error(getMessage(e), e);
+							} else if (e != null) {
+								e.printStackTrace();
+							} // if
+								//
+						} else {
+							//
+							JOptionPane.showMessageDialog(null, getMessage(e));
+							//
+						} // if
+							//
+					} catch (final InvocationTargetException e) {
+						//
+						final Throwable targetException = e.getTargetException();
+						//
+						final Throwable rootCause = ObjectUtils.firstNonNull(
+								ExceptionUtils.getRootCause(targetException), targetException,
+								ExceptionUtils.getRootCause(e), e);
+						//
+						if (headless) {
+							//
+							if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
+								LOG.error(getMessage(rootCause), rootCause);
+							} else if (rootCause != null) {
+								rootCause.printStackTrace();
+							} // if
+								//
+						} else {
+							//
+							JOptionPane.showMessageDialog(null, getMessage(rootCause));
+							//
+						} // if
+							//
+					} // try
+						//
+				} else {
+					//
+					speechApi.speak(text, voiceId, rate, volume);
+					//
+				} // if
+					//
 				setText(tfElapsed, toString(elapsed(stop(stopwatch))));
 				//
 			} // if

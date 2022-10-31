@@ -2,6 +2,10 @@ package org.springframework.context.support;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -29,6 +33,11 @@ import com.kichik.pecoff4j.util.ResourceHelper;
 import com.sun.jna.Library;
 import com.sun.jna.Native;
 
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+@interface SpeakMethod {
+}
+
 public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider, Lookup, InitializingBean {
 
 	private interface Jna extends Library {
@@ -40,6 +49,9 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider, Lookup, I
 		}
 
 		public void speak(final int[] text, final int length, final String voiceId, final int rate, final int volume);
+
+		public void speakSsml(final int[] text, final int length, final String voiceId, final int rate,
+				final int volume);
 
 		public void writeVoiceToFile(final int[] text, final int textLength, final String voiceId, final int rate,
 				final int volume, final int[] fileName, final int fileNameLength);
@@ -89,6 +101,7 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider, Lookup, I
 	}
 
 	@Override
+	@SpeakMethod
 	public void speak(final String text, final String voiceId, final int rate, final int volume) {
 		//
 		if (Jna.INSTANCE != null) {
@@ -96,6 +109,19 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider, Lookup, I
 			final int[] ints = toIntArray(text);
 			//
 			Jna.INSTANCE.speak(ints, length(ints), voiceId, rate, volume);
+			//
+		} // if
+			//
+	}
+
+	@SpeakMethod
+	public void speakSsml(final String text, final String voiceId, final int rate, final int volume) {
+		//
+		if (Jna.INSTANCE != null) {
+			//
+			final int[] ints = toIntArray(text);
+			//
+			Jna.INSTANCE.speakSsml(ints, length(ints), voiceId, rate, volume);
 			//
 		} // if
 			//

@@ -91,6 +91,14 @@ class SpeechApiSystemSpeechImplTest {
 
 	@Test
 	@EnabledOnOs(OS.WINDOWS)
+	void testSpeakSsml() {
+		//
+		Assertions.assertDoesNotThrow(() -> instance.speakSsml(null, null, 0, 0));
+		//
+	}
+
+	@Test
+	@EnabledOnOs(OS.WINDOWS)
 	void testWriteVoiceToFile() {
 		//
 		Assertions.assertThrows(Error.class, () -> instance.writeVoiceToFile(null, null, 0, 0, null));
