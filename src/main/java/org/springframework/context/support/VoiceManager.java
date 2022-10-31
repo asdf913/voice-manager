@@ -1388,9 +1388,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.add(new JLabel());
 		//
-		panel.add(btnSpeak = new JButton("Speak"));
+		panel.add(btnSpeak = new JButton("Speak"), WRAP);
 		//
 		// Audio Format
+		//
+		panel.add(new JLabel("Write To File"));
 		//
 		panel.add(new JComboBox(cbmAudioFormatWrite = new DefaultComboBoxModel<Object>()));
 		//
