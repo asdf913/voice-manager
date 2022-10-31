@@ -1392,18 +1392,21 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.add(new JLabel());
 		//
-		final List<Method> ms = toList(filter(
+		final List<Method> speakMethods = toList(filter(
 				testAndApply(Objects::nonNull, getDeclaredMethods(getClass(speechApiInstance)), Arrays::stream, null),
 				m -> isAnnotationPresent(m, SpeakMethod.class)));
 		//
-		if (CollectionUtils.isNotEmpty(ms)) {
+		JComboBox<Method> jcbSpeakMethod = null;
+		//
+		if (CollectionUtils.isNotEmpty(speakMethods)) {
 			//
-			final JComboBox<Method> jcb = new JComboBox<>(cbmSpeakMethod = testAndApply(Objects::nonNull,
-					toArray(ms, new Method[] {}), DefaultComboBoxModel::new, x -> new DefaultComboBoxModel<>()));
+			jcbSpeakMethod = new JComboBox<>(
+					cbmSpeakMethod = testAndApply(Objects::nonNull, toArray(speakMethods, new Method[] {}),
+							DefaultComboBoxModel::new, x -> new DefaultComboBoxModel<>()));
 			//
-			final ListCellRenderer<?> listCellRenderer = jcb.getRenderer();
+			final ListCellRenderer<?> listCellRenderer = jcbSpeakMethod.getRenderer();
 			//
-			jcb.setRenderer(new ListCellRenderer<Object>() {
+			jcbSpeakMethod.setRenderer(new ListCellRenderer<Object>() {
 
 				@Override
 				public Component getListCellRendererComponent(final JList<?> list, final Object value, final int index,
@@ -1415,7 +1418,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				}
 			});
 			//
-			panel.add(jcb);
+			panel.add(jcbSpeakMethod);
 			//
 		} // if
 			//
@@ -1425,7 +1428,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.add(new JLabel("Write To File"));
 		//
-		panel.add(new JComboBox(cbmAudioFormatWrite = new DefaultComboBoxModel<Object>()));
+		final JComboBox<Object> jcbAudioFormat = new JComboBox(
+				cbmAudioFormatWrite = new DefaultComboBoxModel<Object>());
+		//
+		panel.add(jcbAudioFormat);
 		//
 		panel.add(btnWriteVoice = new JButton("Write"), WRAP);
 		//
@@ -1444,6 +1450,20 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		addChangeListener(this, jsSpeechVolume, jsSpeechRate);
 		//
+		Double maxWidth = ObjectUtils.max(getPreferredWidth(jcbAudioFormat), getPreferredWidth(jcbSpeakMethod));
+		//
+		if (maxWidth != null) {
+			//
+			setPreferredWidth(maxWidth.intValue(), jcbAudioFormat, jcbSpeakMethod);
+			//
+		} // if
+			//
+		if ((maxWidth = ObjectUtils.max(getPreferredWidth(btnSpeak), getPreferredWidth(btnWriteVoice))) != null) {
+			//
+			setPreferredWidth(maxWidth.intValue(), btnSpeak, btnWriteVoice);
+			//
+		} // if
+			//
 		return panel;
 		//
 	}
