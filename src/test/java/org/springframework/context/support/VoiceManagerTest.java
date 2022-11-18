@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
@@ -5467,12 +5468,20 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testProcess() {
+	void testProcess() throws IOException {
 		//
 		Assertions.assertDoesNotThrow(() -> process(null, null, null));
 		//
-		Assertions.assertDoesNotThrow(() -> process(new Template(EMPTY, EMPTY, null), null, null));
+		final Template template = new Template(EMPTY, EMPTY, null);
 		//
+		Assertions.assertDoesNotThrow(() -> process(template, null, null));
+		//
+		try (final Writer writer = new StringWriter()) {
+			//
+			Assertions.assertDoesNotThrow(() -> process(template, null, null));
+			//
+		} // try
+			//
 	}
 
 	private static void process(final Template instance, final Object dataModel, final Writer out) throws Throwable {

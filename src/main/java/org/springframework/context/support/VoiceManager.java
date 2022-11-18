@@ -370,6 +370,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private IValue0<String> microsoftSpeechPlatformRuntimeLanguagesDownloadPageTitle = null;
 
+	private String exportHtmlTemplateFile = null;
+
 	private VoiceManager() {
 	}
 
@@ -653,6 +655,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	public void setMicrosoftWindowsCompatibilitySettingsPageUrl(
 			final String microsoftWindowsCompatibilitySettingsPageUrl) {
 		this.microsoftWindowsCompatibilitySettingsPageUrl = microsoftWindowsCompatibilitySettingsPageUrl;
+	}
+
+	public void setExportHtmlTemplateFile(final String exportHtmlTemplateFile) {
+		this.exportHtmlTemplateFile = exportHtmlTemplateFile;
 	}
 
 	private static <E> Stream<E> stream(final Collection<E> instance) {
@@ -3372,7 +3378,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					try (final Writer writer = new FileWriter(
 							StringUtils.defaultIfBlank(getText(tfExportHtmlFileName), "export.html"))) {
 						//
-						exportHtml(writer, voiceFolder, voices);
+						exportHtml(exportHtmlTemplateFile, writer, voiceFolder, voices);
 						//
 					} // try
 						//
@@ -3711,8 +3717,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static void exportHtml(final Writer writer, final String folder, final Iterable<Voice> voices)
-			throws IOException, TemplateException {
+	private static void exportHtml(final String templateFile, final Writer writer, final String folder,
+			final Iterable<Voice> voices) throws IOException, TemplateException {
 		//
 		final Version version = freemarker.template.Configuration.getVersion();
 		//
@@ -3727,7 +3733,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		map.put("voices", voices);
 		//
-		process(configuration.getTemplate("export.html.ftl"), map, writer);
+		process(testAndApply(Objects::nonNull, templateFile, configuration::getTemplate, null), map, writer);
 		//
 	}
 
