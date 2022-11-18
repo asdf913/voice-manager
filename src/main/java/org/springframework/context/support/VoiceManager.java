@@ -292,8 +292,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			tfKatakana, tfRomaji, tfSpeechRate, tfSource, tfProviderName, tfProviderVersion, tfProviderPlatform,
 			tfSpeechLanguageCode, tfSpeechLanguageName, tfLanguage, tfSpeechVolume, tfCurrentProcessingFile,
 			tfCurrentProcessingSheetName, tfCurrentProcessingVoice, tfListNames, tfPhraseCounter, tfPhraseTotal,
-			tfJlptFolderNamePrefix, tfOrdinalPositionFileNamePrefix, tfIpaSymbol, tfExportFile, tfElapsed,
-			tfDllPath = null;
+			tfJlptFolderNamePrefix, tfOrdinalPositionFileNamePrefix, tfIpaSymbol, tfExportFile, tfElapsed, tfDllPath,
+			tfExportHtmlFileName = null;
 
 	private ComboBoxModel<Yomi> cbmYomi = null;
 
@@ -2216,10 +2216,17 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.add(new JLabel(), String.format("span %1$s", 4));
 		//
-		panel.add(cbExportHtml = new JCheckBox("Export HTML"), String.format("%1$s,span %2$s", WRAP, 1));
+		panel.add(cbExportHtml = new JCheckBox("Export HTML"), String.format("span %1$s", 3));
 		//
 		cbExportHtml.setSelected(Boolean.parseBoolean(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.exportHtml")));
+		//
+		panel.add(new JLabel("File Name"));
+		//
+		panel.add(
+				tfExportHtmlFileName = new JTextField(getProperty(propertyResolver,
+						"org.springframework.context.support.VoiceManager.exportHtmlFileName")),
+				String.format("%1$s,wmin %2$s,span %3$s", WRAP, 100, 2));
 		//
 		panel.add(new JLabel(), String.format("span %1$s", 4));
 		//
@@ -3362,7 +3369,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				if (isSelected(cbExportHtml)) {
 					//
-					try (final Writer writer = new FileWriter("export.html")) {
+					try (final Writer writer = new FileWriter(
+							StringUtils.defaultIfBlank(getText(tfExportHtmlFileName), "export.html"))) {
 						//
 						exportHtml(writer, voiceFolder, voices);
 						//
