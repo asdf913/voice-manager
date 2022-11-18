@@ -307,7 +307,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private AbstractButton btnSpeak, btnWriteVoice, btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji,
 			btnCopyHiragana, btnCopyKatakana, cbUseTtsVoice, btnExecute, btnImportFileTemplate, btnImport,
-			btnImportWithinFolder, cbOverMp3Title, cbOrdinalPositionAsFileNamePrefix, btnExport,
+			btnImportWithinFolder, cbOverMp3Title, cbOrdinalPositionAsFileNamePrefix, btnExport, cbExportHtml,
 			cbImportFileTemplateGenerateBlankRow, cbJlptAsFolder, btnExportCopy, btnExportBrowse, btnDllPathCopy,
 			btnSpeechRateSlower, btnSpeechRateNormal, btnSpeechRateFaster = null;
 
@@ -2216,6 +2216,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.add(new JLabel(), String.format("span %1$s", 4));
 		//
+		panel.add(cbExportHtml = new JCheckBox("Export HTML"), String.format("%1$s,span %2$s", WRAP, 1));
+		//
+		cbExportHtml.setSelected(Boolean.parseBoolean(
+				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.exportHtml")));
+		//
+		panel.add(new JLabel(), String.format("span %1$s", 4));
+		//
 		panel.add(btnExport = new JButton("Export"), WRAP);
 		//
 		// Progress
@@ -3353,11 +3360,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					// export HTML file
 					//
-				try (final Writer writer = new FileWriter("export.html")) {
+				if (isSelected(cbExportHtml)) {
 					//
-					exportHtml(writer, voiceFolder, voices);
-					//
-				} // try
+					try (final Writer writer = new FileWriter("export.html")) {
+						//
+						exportHtml(writer, voiceFolder, voices);
+						//
+					} // try
+						//
+				} // if
 					//
 			} catch (final IOException | IllegalAccessException | TemplateException e) {
 				//

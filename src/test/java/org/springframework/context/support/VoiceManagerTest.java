@@ -1452,6 +1452,18 @@ class VoiceManagerTest {
 			//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnExport));
 		//
+		final AbstractButton cbExportHtml = new JCheckBox();
+		//
+		cbExportHtml.setSelected(true);
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "cbExportHtml", cbExportHtml, true);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnExport));
+		//
 		final AbstractButton btnSpeak = new JButton();
 		//
 		if (instance != null) {
