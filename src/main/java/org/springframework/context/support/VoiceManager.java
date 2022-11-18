@@ -25,11 +25,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.Console;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.Serializable;
+import java.io.Writer;
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -57,6 +59,8 @@ import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
+import java.util.Base64.Encoder;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -243,6 +247,11 @@ import domain.Voice;
 import domain.Voice.Yomi;
 import domain.VoiceList;
 import fr.free.nrw.jakaroma.Jakaroma;
+import freemarker.cache.ClassTemplateLoader;
+import freemarker.ext.beans.BeansWrapper;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+import freemarker.template.Version;
 import io.github.toolfactory.narcissus.Narcissus;
 import mapper.VoiceMapper;
 import net.miginfocom.swing.MigLayout;
@@ -3342,7 +3351,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // try
 					//
-			} catch (final IOException | IllegalAccessException e) {
+					// export HTML file
+					//
+				try (final Writer writer = new FileWriter("export.html")) {
+					//
+					exportHtml(writer, voiceFolder, voices);
+					//
+				} // try
+					//
+			} catch (final IOException | IllegalAccessException | TemplateException e) {
 				//
 				if (headless) {
 					//
@@ -3673,6 +3690,64 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return list;
 		//
+	}
+
+	private static void exportHtml(final Writer writer, final String folder, final Iterable<Voice> voices)
+			throws IOException, TemplateException {
+		//
+		final Version version = freemarker.template.Configuration.getVersion();
+		//
+		final freemarker.template.Configuration configuration = new freemarker.template.Configuration(version);
+		//
+		configuration.setTemplateLoader(new ClassTemplateLoader(VoiceManager.class, "/"));
+		//
+		final Map<String, Object> map = new LinkedHashMap<>(
+				Collections.singletonMap("statics", new BeansWrapper(version).getStaticModels()));
+		//
+		map.put("folder", folder);
+		//
+		map.put("voices", voices);
+		//
+		process(configuration.getTemplate("export.html.ftl"), map, writer);
+		//
+	}
+
+	private static void process(final Template instance, final Object dataModel, final Writer out)
+			throws TemplateException, IOException {
+		//
+		if (instance != null && out != null) {
+			//
+			instance.process(dataModel, out);
+			//
+		} // if
+			//
+	}
+
+	public static Pair<String, String> getMimeTypeAndBase64EncodedString(final String folderPath, final String filePath)
+			throws IOException {
+		//
+		final File f = folderPath != null && filePath != null ? new File(folderPath, filePath)
+				: testAndApply(Objects::nonNull, filePath, File::new, null);
+		//
+		final ContentInfo ci = testAndApply(VoiceManager::isFile, f, new ContentInfoUtil()::findMatch, null);
+		//
+		String mimeType = getMimeType(ci);
+		//
+		if (StringUtils.isBlank(mimeType)
+				&& or(x -> matches(matcher(x, getMessage(ci))), PATTERN_CONTENT_INFO_MESSAGE_MP3_1,
+						PATTERN_CONTENT_INFO_MESSAGE_MP3_2, PATTERN_CONTENT_INFO_MESSAGE_MP3_3)) {
+			//
+			mimeType = "audio/mpeg";
+			//
+		} // if
+			//
+		return Pair.of(mimeType, testAndApply(VoiceManager::isFile, f,
+				x -> encodeToString(Base64.getEncoder(), FileUtils.readFileToByteArray(x)), null));
+		//
+	}
+
+	private static String encodeToString(final Encoder instance, final byte[] src) {
+		return instance != null && src != null ? instance.encodeToString(src) : null;
 	}
 
 	private static Stopwatch stop(final Stopwatch instance) {

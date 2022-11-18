@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.io.Writer;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Constructor;
@@ -38,6 +39,8 @@ import java.security.MessageDigest;
 import java.text.NumberFormat;
 import java.time.Duration;
 import java.util.Arrays;
+import java.util.Base64;
+import java.util.Base64.Encoder;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -168,6 +171,7 @@ import domain.Voice;
 import domain.Voice.Yomi;
 import domain.VoiceList;
 import fr.free.nrw.jakaroma.Jakaroma;
+import freemarker.template.Template;
 import io.github.toolfactory.narcissus.Narcissus;
 import mapper.VoiceMapper;
 
@@ -222,7 +226,7 @@ class VoiceManagerTest {
 			METHOD_GET_DECLARED_FIELDS, METHOD_GET_DECLARING_CLASS, METHOD_GET_PACKAGE, METHOD_BROWSE, METHOD_TO_URI,
 			METHOD_DARKER, METHOD_GET_TITLE_TEXT, METHOD_SET_CSS_ENABLED, METHOD_SET_JAVA_SCRIPT_ENABLED, METHOD_STOP,
 			METHOD_ELAPSED, METHOD_GET_DECLARED_CLASSES, METHOD_GET_DLL_PATH, METHOD_GET_RATE,
-			METHOD_ADD_CHANGE_LISTENER, METHOD_IS_ANNOTATION_PRESENT = null;
+			METHOD_ADD_CHANGE_LISTENER, METHOD_IS_ANNOTATION_PRESENT, METHOD_PROCESS, METHOD_ENCODE_TO_STRING = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -630,6 +634,12 @@ class VoiceManagerTest {
 		//
 		(METHOD_IS_ANNOTATION_PRESENT = clz.getDeclaredMethod("isAnnotationPresent", AnnotatedElement.class,
 				Class.class)).setAccessible(true);
+		//
+		(METHOD_PROCESS = clz.getDeclaredMethod("process", Template.class, Object.class, Writer.class))
+				.setAccessible(true);
+		//
+		(METHOD_ENCODE_TO_STRING = clz.getDeclaredMethod("encodeToString", Encoder.class, byte[].class))
+				.setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -1102,6 +1112,17 @@ class VoiceManagerTest {
 		node = Reflection.newProxy(Node.class, ih);
 		//
 		lookup = Reflection.newProxy(Lookup.class, ih);
+		//
+	}
+
+	@Test
+	void testGetMimeTypeAndBase64EncodedString() throws IOException {
+		//
+		Assertions.assertEquals(Pair.of(null, null), VoiceManager.getMimeTypeAndBase64EncodedString(null, null));
+		//
+		Assertions.assertEquals(Pair.of(null, null), VoiceManager.getMimeTypeAndBase64EncodedString(EMPTY, null));
+		//
+		Assertions.assertEquals(Pair.of(null, null), VoiceManager.getMimeTypeAndBase64EncodedString(EMPTY, EMPTY));
 		//
 	}
 
@@ -5426,6 +5447,50 @@ class VoiceManagerTest {
 			final Object obj = METHOD_IS_ANNOTATION_PRESENT.invoke(null, instance, annotationClass);
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testProcess() {
+		//
+		Assertions.assertDoesNotThrow(() -> process(null, null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> process(new Template(EMPTY, EMPTY, null), null, null));
+		//
+	}
+
+	private static void process(final Template instance, final Object dataModel, final Writer out) throws Throwable {
+		try {
+			METHOD_PROCESS.invoke(null, instance, dataModel, out);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testEncodeToString() throws Throwable {
+		//
+		Assertions.assertNull(encodeToString(null, null));
+		//
+		final Encoder encoder = Base64.getEncoder();
+		//
+		Assertions.assertNull(encodeToString(encoder, null));
+		//
+		Assertions.assertEquals(EMPTY, encodeToString(encoder, new byte[] {}));
+		//
+	}
+
+	private static String encodeToString(final Encoder instance, final byte[] src) throws Throwable {
+		try {
+			final Object obj = METHOD_ENCODE_TO_STRING.invoke(null, instance, src);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
