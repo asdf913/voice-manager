@@ -311,8 +311,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private AbstractButton btnSpeak, btnWriteVoice, btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji,
 			btnCopyHiragana, btnCopyKatakana, cbUseTtsVoice, btnExecute, btnImportFileTemplate, btnImport,
 			btnImportWithinFolder, cbOverMp3Title, cbOrdinalPositionAsFileNamePrefix, btnExport, cbExportHtml,
-			cbExportListHtml, cbImportFileTemplateGenerateBlankRow, cbJlptAsFolder, btnExportCopy, btnExportBrowse,
-			btnDllPathCopy, btnSpeechRateSlower, btnSpeechRateNormal, btnSpeechRateFaster = null;
+			cbExportListHtml, cbExportListSheet, cbImportFileTemplateGenerateBlankRow, cbJlptAsFolder, btnExportCopy,
+			btnExportBrowse, btnDllPathCopy, btnSpeechRateSlower, btnSpeechRateNormal, btnSpeechRateFaster = null;
 
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
@@ -2291,6 +2291,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.add(new JLabel(), String.format("span %1$s", 4));
 		//
+		panel.add(cbExportListSheet = new JCheckBox("Export List Sheet"), String.format("%1$s,span %2$s", WRAP, 3));
+		//
+		cbExportListSheet.setSelected(Boolean.parseBoolean(
+				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.exportListSheet")));
+		//
+		panel.add(new JLabel(), String.format("span %1$s", 4));
+		//
 		panel.add(btnExport = new JButton("Export"), WRAP);
 		//
 		// Progress
@@ -3422,7 +3429,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				try (final OutputStream os = new FileOutputStream(
 						file = new File(String.format("voice_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.xlsx", new Date())))) {
 					//
-					write(workbook = createWorkbook(voices), os);
+					write(workbook = createWorkbook(voices, isSelected(cbExportListSheet)), os);
 					//
 				} // try
 					//
@@ -8058,22 +8065,26 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		}
 	}
 
-	private static Workbook createWorkbook(final List<Voice> voices)
+	private static Workbook createWorkbook(final List<Voice> voices, final boolean exportListSheet)
 			throws IllegalAccessException, InvocationTargetException {
 		//
 		Workbook workbook = null;
 		//
 		setSheet(workbook = ObjectUtils.getIfNull(workbook, XSSFWorkbook::new), createSheet(workbook), voices);
 		//
-		final Multimap<String, Voice> multimap = getVoiceMultimapByListName(voices);
-		//
-		if (multimap != null) {
+		if (exportListSheet) {
 			//
-			for (final String key : multimap.keySet()) {
+			final Multimap<String, Voice> multimap = getVoiceMultimapByListName(voices);
+			//
+			if (multimap != null) {
 				//
-				setSheet(workbook, createSheet(workbook, key), multimap.get(key));
-				//
-			} // for
+				for (final String key : multimap.keySet()) {
+					//
+					setSheet(workbook, createSheet(workbook, key), multimap.get(key));
+					//
+				} // for
+					//
+			} // if
 				//
 		} // if
 			//

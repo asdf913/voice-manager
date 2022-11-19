@@ -310,7 +310,8 @@ class VoiceManagerTest {
 		(METHOD_FOR_EACH_ITERABLE = clz.getDeclaredMethod("forEach", Iterable.class, Consumer.class))
 				.setAccessible(true);
 		//
-		(METHOD_CREATE_WORK_BOOK_LIST = clz.getDeclaredMethod("createWorkbook", List.class)).setAccessible(true);
+		(METHOD_CREATE_WORK_BOOK_LIST = clz.getDeclaredMethod("createWorkbook", List.class, Boolean.TYPE))
+				.setAccessible(true);
 		//
 		(METHOD_CREATE_WORK_BOOK_MULTI_MAP = clz.getDeclaredMethod("createWorkbook", Pair.class, Multimap.class))
 				.setAccessible(true);
@@ -2455,9 +2456,9 @@ class VoiceManagerTest {
 	@Test
 	void testCreateWorkbook() throws Throwable {
 		//
-		// java.util.List
+		// java.util.List,boolean
 		//
-		Assertions.assertNotNull(createWorkbook(Collections.singletonList(null)));
+		Assertions.assertNotNull(createWorkbook(Collections.singletonList(null), false));
 		//
 		final Voice voice = new Voice();
 		//
@@ -2465,7 +2466,7 @@ class VoiceManagerTest {
 		//
 		voice.setCreateTs(new Date());
 		//
-		Assertions.assertNotNull(createWorkbook(Collections.nCopies(2, voice)));
+		Assertions.assertNotNull(createWorkbook(Collections.nCopies(2, voice), true));
 		//
 		// org.apache.commons.lang3.tuple.Pair,com.google.common.collect.Multimap
 		//
@@ -2481,9 +2482,9 @@ class VoiceManagerTest {
 		//
 	}
 
-	private static Workbook createWorkbook(final List<Voice> voices) throws Throwable {
+	private static Workbook createWorkbook(final List<Voice> voices, final boolean exportListSheet) throws Throwable {
 		try {
-			final Object obj = METHOD_CREATE_WORK_BOOK_LIST.invoke(null, voices);
+			final Object obj = METHOD_CREATE_WORK_BOOK_LIST.invoke(null, voices, exportListSheet);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Workbook) {
