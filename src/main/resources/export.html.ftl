@@ -48,14 +48,17 @@
 			//
 			for(var i=0;as!=null&&typeof as.length==="number"&&i<as.length;i++){
 				//
-				if((a=as[i])==null){continue;}
+				if((a=as[i])==null||typeof a.addEventListener!=="function"){continue;}
 				//
 				const c=i;
 				//
 				a.addEventListener("ended",function(){
+					//
 					if(c<as.length-1){as[c+1].play();}
+					//
 				});
-			}
+				//
+			}//for
 			//
 			if(as!=null&&typeof as.length==="number"&&as.length>0&&as[0]!=null){as[0].play();}
 			//
