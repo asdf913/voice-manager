@@ -5575,6 +5575,8 @@ class VoiceManagerTest {
 	@Test
 	void testGetVoiceMultimapByListName() throws Throwable {
 		//
+		Assertions.assertNull(getVoiceMultimapByListName(null));
+		//
 		Assertions.assertNull(getVoiceMultimapByListName(Collections.singleton(null)));
 		//
 		final Voice voice = new Voice();

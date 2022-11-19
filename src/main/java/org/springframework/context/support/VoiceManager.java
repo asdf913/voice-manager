@@ -311,8 +311,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private AbstractButton btnSpeak, btnWriteVoice, btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji,
 			btnCopyHiragana, btnCopyKatakana, cbUseTtsVoice, btnExecute, btnImportFileTemplate, btnImport,
 			btnImportWithinFolder, cbOverMp3Title, cbOrdinalPositionAsFileNamePrefix, btnExport, cbExportHtml,
-			cbImportFileTemplateGenerateBlankRow, cbJlptAsFolder, btnExportCopy, btnExportBrowse, btnDllPathCopy,
-			btnSpeechRateSlower, btnSpeechRateNormal, btnSpeechRateFaster = null;
+			cbExportListHtml, cbImportFileTemplateGenerateBlankRow, cbJlptAsFolder, btnExportCopy, btnExportBrowse,
+			btnDllPathCopy, btnSpeechRateSlower, btnSpeechRateNormal, btnSpeechRateFaster = null;
 
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
@@ -2271,7 +2271,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(
 				tfExportHtmlFileName = new JTextField(getProperty(propertyResolver,
 						"org.springframework.context.support.VoiceManager.exportHtmlFileName")),
-				String.format("%1$s,wmin %2$s,span %3$s", WRAP, 100, 2));
+				String.format("wmin %1$s,span %2$s", 100, 2));
 		//
 		final String[] fileExtensions = getFileExtensions(ContentType.fromMimeType("text/html"));
 		//
@@ -2283,6 +2283,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 								orElse(max(fileExtensions != null ? Arrays.stream(fileExtensions) : null,
 										(a, b) -> Integer.compare(StringUtils.length(a), StringUtils.length(b))), null),
 								"")));
+		//
+		panel.add(cbExportListHtml = new JCheckBox("Export List HTML"), WRAP);
+		//
+		cbExportListHtml.setSelected(Boolean.parseBoolean(
+				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.exportListHtml")));
 		//
 		panel.add(new JLabel(), String.format("span %1$s", 4));
 		//
@@ -3495,25 +3500,29 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					} // try
 						//
-					final Multimap<String, Voice> multimap = getVoiceMultimapByListName(voices);
-					//
-					if (multimap != null) {
+					if (isSelected(cbExportListHtml)) {
 						//
-						for (final String key : multimap.keySet()) {
+						final Multimap<String, Voice> multimap = getVoiceMultimapByListName(voices);
+						//
+						if (multimap != null) {
 							//
-							try (final Writer writer = new FileWriter(String.format("%1$s.html", key))) {
+							for (final String key : multimap.keySet()) {
 								//
-								if (objectMap != null) {
+								try (final Writer writer = new FileWriter(String.format("%1$s.html", key))) {
 									//
-									objectMap.setObject(Writer.class, writer);
+									if (objectMap != null) {
+										//
+										objectMap.setObject(Writer.class, writer);
+										//
+									} // if
+										//
+									exportHtml(objectMap, exportHtmlTemplateFile, voiceFolder, multimap.get(key));
 									//
-								} // if
+								} // try
 									//
-								exportHtml(objectMap, exportHtmlTemplateFile, voiceFolder, multimap.get(key));
+							} // for
 								//
-							} // try
-								//
-						} // for
+						} // if
 							//
 					} // if
 						//
