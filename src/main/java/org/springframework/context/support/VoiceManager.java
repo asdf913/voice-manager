@@ -234,6 +234,7 @@ import com.google.common.collect.Range;
 import com.google.common.reflect.Reflection;
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
+import com.j256.simplemagic.ContentType;
 import com.mariten.kanatools.KanaConverter;
 import com.mpatric.mp3agic.BaseException;
 import com.mpatric.mp3agic.ID3v1;
@@ -2272,6 +2273,19 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						"org.springframework.context.support.VoiceManager.exportHtmlFileName")),
 				String.format("%1$s,wmin %2$s,span %3$s", WRAP, 100, 2));
 		//
+		final String[] fileExtensions = getFileExtensions(ContentType.fromMimeType("text/html"));
+		//
+		setToolTipText(tfExportHtmlFileName,
+				String.format("If the File Name does not ends with %1$s, file extension \".%2$s\" will be appended.",
+						collect(map(testAndApply(Objects::nonNull, fileExtensions, Arrays::stream, null).sorted(),
+								x -> StringUtils.wrap(StringUtils.join('.', x), '"')), Collectors.joining(" or ")),
+						StringUtils.defaultIfBlank(
+								orElse(max(fileExtensions != null ? Arrays.stream(fileExtensions) : null,
+										(a, b) -> Integer.compare(StringUtils.length(a), StringUtils.length(b))), null),
+								"")));
+		//
+		System.out.println(tfExportHtmlFileName.getToolTipText());
+		//
 		panel.add(new JLabel(), String.format("span %1$s", 4));
 		//
 		panel.add(btnExport = new JButton("Export"), WRAP);
@@ -3441,10 +3455,45 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 						exportHtml(objectMap, exportHtmlTemplateFile, voiceFolder, voices);
 						//
-						testAndAccept(StringUtils::isNotEmpty, toString(writer),
-								x -> FileUtils.writeStringToFile(new File(
-										StringUtils.defaultIfBlank(getText(tfExportHtmlFileName), "export.html")), x,
-										"utf-8"));
+						final StringBuilder sb = new StringBuilder(
+								StringUtils.defaultString(getText(tfExportHtmlFileName)));
+						//
+						final String[] fileExtensions = getFileExtensions(ContentType.fromMimeType("text/html"));
+						//
+						String fileExtension = null;
+						//
+						boolean htmlFileExtensionFound = false;
+						//
+						for (int i = 0; fileExtensions != null && i < fileExtensions.length; i++) {
+							//
+							if (StringUtils.isBlank(fileExtension = fileExtensions[i])) {
+								//
+								continue;
+								//
+							} // if
+								//
+							htmlFileExtensionFound |= StringUtils.endsWithIgnoreCase(sb,
+									StringUtils.join('.', fileExtension));
+							//
+						} // for
+							//
+						if (!htmlFileExtensionFound) {
+							//
+							if (!StringUtils.endsWith(sb, ".")) {
+								//
+								sb.append('.');
+								//
+							} //
+								//
+							sb.append(StringUtils.defaultIfBlank(orElse(
+									max(fileExtensions != null ? Arrays.stream(fileExtensions) : null,
+											(a, b) -> Integer.compare(StringUtils.length(a), StringUtils.length(b))),
+									null), ""));
+							//
+						} // if
+							//
+						testAndAccept(StringUtils::isNotEmpty, toString(writer), x -> FileUtils.writeStringToFile(
+								new File(StringUtils.defaultIfBlank(toString(sb), "export.html")), x, "utf-8"));
 						//
 					} // try
 						//
@@ -3746,6 +3795,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
+	}
+
+	private static String[] getFileExtensions(final ContentType instance) {
+		return instance != null ? instance.getFileExtensions() : null;
 	}
 
 	private static Multimap<String, Voice> getVoiceMultimapByListName(final Iterable<Voice> voices) {

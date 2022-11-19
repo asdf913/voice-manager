@@ -167,6 +167,7 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.Range;
 import com.google.common.reflect.Reflection;
 import com.j256.simplemagic.ContentInfo;
+import com.j256.simplemagic.ContentType;
 import com.mpatric.mp3agic.ID3v1;
 
 import domain.Voice;
@@ -231,7 +232,7 @@ class VoiceManagerTest {
 			METHOD_DARKER, METHOD_GET_TITLE_TEXT, METHOD_SET_CSS_ENABLED, METHOD_SET_JAVA_SCRIPT_ENABLED, METHOD_STOP,
 			METHOD_ELAPSED, METHOD_GET_DECLARED_CLASSES, METHOD_GET_DLL_PATH, METHOD_GET_RATE,
 			METHOD_ADD_CHANGE_LISTENER, METHOD_IS_ANNOTATION_PRESENT, METHOD_PROCESS, METHOD_ENCODE_TO_STRING,
-			METHOD_GET_VOICE_MULTI_MAP_BY_LIST_NAME, METHOD_GET_TEMPLATE = null;
+			METHOD_GET_VOICE_MULTI_MAP_BY_LIST_NAME, METHOD_GET_TEMPLATE, METHOD_GET_FILE_EXTENSIONS = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -651,6 +652,9 @@ class VoiceManagerTest {
 		//
 		(METHOD_GET_TEMPLATE = clz.getDeclaredMethod("getTemplate", freemarker.template.Configuration.class,
 				String.class)).setAccessible(true);
+		//
+		(METHOD_GET_FILE_EXTENSIONS = clz.getDeclaredMethod("getFileExtensions", ContentType.class))
+				.setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -5625,6 +5629,27 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof Template) {
 				return (Template) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetFileExtensions() throws Throwable {
+		//
+		Assertions.assertNull(getFileExtensions(null));
+		//
+	}
+
+	private static String[] getFileExtensions(final ContentType instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_FILE_EXTENSIONS.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String[]) {
+				return (String[]) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
