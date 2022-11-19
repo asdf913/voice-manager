@@ -2284,8 +2284,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 										(a, b) -> Integer.compare(StringUtils.length(a), StringUtils.length(b))), null),
 								"")));
 		//
-		System.out.println(tfExportHtmlFileName.getToolTipText());
-		//
 		panel.add(new JLabel(), String.format("span %1$s", 4));
 		//
 		panel.add(btnExport = new JButton("Export"), WRAP);
