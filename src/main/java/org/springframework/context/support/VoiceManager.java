@@ -8370,10 +8370,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.annotationType() : null;
 	}
 
-	private static String getSimpleName(final Class<?> instance) {
-		return instance != null ? instance.getSimpleName() : null;
-	}
-
 	private static String getName(final Member instance) {
 		return instance != null ? instance.getName() : null;
 	}
