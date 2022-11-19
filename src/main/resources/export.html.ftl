@@ -10,7 +10,7 @@
 			<thead>
 				<tr>
 					<td>
-						<input type="button" onclick="playAll();" value="Play All"/>
+						<input type="button" id="btnPlayAll" onclick="playAll();" value="Play All"/>
 					</td>
 					<td id="currentText"/>
 				</tr>
@@ -54,6 +54,9 @@
 			</#list>
 			];
 		</#if>
+		//
+		var btnPlayAll=typeof document==="object"&&document!=null&&typeof document.getElementById==="function"?document.getElementById("btnPlayAll"):null;
+		//
 		function playAll(){
 			//
 			var as=typeof document==="object"&&document!=null&&typeof document.querySelectorAll==="function"?document.querySelectorAll("audio"):null;
@@ -70,7 +73,7 @@
 					//
 					var item=items[c];
 					//
-					var currentText=document.getElementById("currentText");
+					var currentText=typeof document==="object"&&document!=null&&typeof document.getElementById==="function"?document.getElementById("currentText"):null;
 					//
 					if(c<as.length&&item!==null&&currentText!==null){
 						//
@@ -94,11 +97,17 @@
 						//
 					}else{
 						//
-						var currentText=document.getElementById("currentText");
+						var currentText=typeof document==="object"&&document!=null&&typeof document.getElementById==="function"?document.getElementById("currentText"):null;
 						//
 						if(currentText!==null){
 							//
 							currentText.innerHTML="";
+							//
+						}//if
+						//
+						if(btnPlayAll!=null&&typeof btnPlayAll.disabled==="boolean"){
+							//
+							btnPlayAll.disabled=false;
 							//
 						}//if
 						//
@@ -108,7 +117,21 @@
 				//
 			}//for
 			//
-			if(as!=null&&typeof as.length==="number"&&as.length>0&&(a=as[0])!=null&&typeof a.play==="function"){a.play();}
+			if(as!=null&&typeof as.length==="number"&&as.length>0&&(a=as[0])!=null){
+				//
+				if(typeof a.play==="function"){
+					//
+					a.play();
+					//
+				}//if
+				//
+				if(btnPlayAll!=null&&typeof btnPlayAll.disabled==="boolean"){
+					//
+					btnPlayAll.disabled=true;
+					//
+				}//if
+				//
+			}//if
 			//
 		}
 		</script>
