@@ -5833,6 +5833,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.createSheet() : null;
 	}
 
+	private static Sheet createSheet(final Workbook instance, final String sheetname) {
+		return instance != null ? instance.createSheet(sheetname) : null;
+	}
+
 	private static DataValidationHelper getDataValidationHelper(final Sheet instance) {
 		return instance != null ? instance.getDataValidationHelper() : null;
 	}
@@ -8067,7 +8071,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			for (final String key : multimap.keySet()) {
 				//
-				setSheet(workbook, workbook != null ? workbook.createSheet(key) : null, multimap.get(key));
+				setSheet(workbook, createSheet(workbook, key), multimap.get(key));
 				//
 			} // for
 				//

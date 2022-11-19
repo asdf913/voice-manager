@@ -220,8 +220,8 @@ class VoiceManagerTest {
 			METHOD_CREATE_EXPORT_TASK, METHOD_GET_TAB_INDEX_BY_TITLE, METHOD_GET_DECLARED_FIELD,
 			METHOD_GET_ABSOLUTE_PATH, METHOD_IS_ASSIGNABLE_FROM, METHOD_GET_ENUM_CONSTANTS, METHOD_LIST_FILES,
 			METHOD_GET_TYPE, METHOD_GET_ELEMENTS_BY_TAG_NAME_SGML_PAGE, METHOD_GET_ELEMENTS_BY_TAG_NAME_DOM_ELEMENT,
-			METHOD_GET_COLUMN_NAME, METHOD_GET_KEY_SET, METHOD_PUT_ALL, METHOD_CREATE_SHEET, METHOD_ENTRIES,
-			METHOD_GET_WORK_BOOK, METHOD_GET_OLE_ENTRY_NAMES, METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE,
+			METHOD_GET_COLUMN_NAME, METHOD_GET_KEY_SET, METHOD_PUT_ALL, METHOD_CREATE_SHEET1, METHOD_CREATE_SHEET2,
+			METHOD_ENTRIES, METHOD_GET_WORK_BOOK, METHOD_GET_OLE_ENTRY_NAMES, METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE,
 			METHOD_GET_DOCUMENT_ELEMENT, METHOD_GET_CHILD_NODES, METHOD_GET_NAMED_ITEM, METHOD_GET_TEXT_CONTENT,
 			METHOD_GET_NODE_NAME, METHOD_GET_NAME_FILE, METHOD_GET_NAME_CLASS, METHOD_GET_PASS_WORD,
 			METHOD_GET_SUPPLIER, METHOD_GET_LOOKUP, METHOD_GET_LIST,
@@ -529,7 +529,9 @@ class VoiceManagerTest {
 		(METHOD_PUT_ALL = clz.getDeclaredMethod("putAll", Multimap.class, Object.class, Iterable.class))
 				.setAccessible(true);
 		//
-		(METHOD_CREATE_SHEET = clz.getDeclaredMethod("createSheet", Workbook.class)).setAccessible(true);
+		(METHOD_CREATE_SHEET1 = clz.getDeclaredMethod("createSheet", Workbook.class)).setAccessible(true);
+		//
+		(METHOD_CREATE_SHEET2 = clz.getDeclaredMethod("createSheet", Workbook.class, String.class)).setAccessible(true);
 		//
 		(METHOD_ENTRIES = clz.getDeclaredMethod("entries", Multimap.class)).setAccessible(true);
 		//
@@ -717,6 +719,8 @@ class VoiceManagerTest {
 		private Collection<Entry<?, ?>> multiMapEntries = null;
 
 		private Node namedItem = null;
+
+		private Sheet sheet = null;
 
 		private Map<Object, String> getProperties() {
 			if (properties == null) {
@@ -1003,6 +1007,10 @@ class VoiceManagerTest {
 				} else if (Objects.equals(methodName, "getSheetName")) {
 					//
 					return sheetName;
+					//
+				} else if (Objects.equals(methodName, "createSheet")) {
+					//
+					return sheet;
 					//
 				} // if
 					//
@@ -4564,11 +4572,29 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(createSheet(null));
 		//
+		Assertions.assertNull(createSheet(null, null));
+		//
+		Assertions.assertNull(createSheet(Reflection.newProxy(Workbook.class, ih), null));
+		//
 	}
 
 	private static Sheet createSheet(final Workbook instance) throws Throwable {
 		try {
-			final Object obj = METHOD_CREATE_SHEET.invoke(null, instance);
+			final Object obj = METHOD_CREATE_SHEET1.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Sheet) {
+				return (Sheet) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static Sheet createSheet(final Workbook instance, final String sheetName) throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_SHEET2.invoke(null, instance, sheetName);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Sheet) {
