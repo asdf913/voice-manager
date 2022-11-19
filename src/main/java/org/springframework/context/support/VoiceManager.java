@@ -3373,7 +3373,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				final IH ih = new IH();
 				//
-				final ObjectMap objectMap = Reflection.newProxy(ObjectMap.class, ih);
+				ObjectMap objectMap = Reflection.newProxy(ObjectMap.class, ih);
 				//
 				if (objectMap != null) {
 					//
@@ -3411,10 +3411,22 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				if (isSelected(cbExportHtml)) {
 					//
+					if ((objectMap = Reflection.newProxy(ObjectMap.class, ih)) != null) {
+						//
+						objectMap.setObject(Version.class, freeMarkerVersion);
+						//
+					} // if
+						//
 					try (final Writer writer = new FileWriter(
 							StringUtils.defaultIfBlank(getText(tfExportHtmlFileName), "export.html"))) {
 						//
-						exportHtml(freeMarkerVersion, exportHtmlTemplateFile, writer, voiceFolder, voices);
+						if (objectMap != null) {
+							//
+							objectMap.setObject(Writer.class, writer);
+							//
+						} // if
+							//
+						exportHtml(objectMap, exportHtmlTemplateFile, voiceFolder, voices);
 						//
 					} // try
 						//
@@ -3426,8 +3438,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 							try (final Writer writer = new FileWriter(String.format("%1$s.html", key))) {
 								//
-								exportHtml(freeMarkerVersion, exportHtmlTemplateFile, writer, voiceFolder,
-										multimap.get(key));
+								if (objectMap != null) {
+									//
+									objectMap.setObject(Writer.class, writer);
+									//
+								} // if
+									//
+								exportHtml(objectMap, exportHtmlTemplateFile, voiceFolder, multimap.get(key));
 								//
 							} // try
 								//
@@ -3800,10 +3817,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static void exportHtml(final Version v, final String templateFile, final Writer writer, final String folder,
+	private static void exportHtml(final ObjectMap objectMap, final String templateFile, final String folder,
 			final Iterable<Voice> voices) throws IOException, TemplateException {
 		//
-		final Version version = ObjectUtils.getIfNull(v, freemarker.template.Configuration::getVersion);
+		final Version version = ObjectUtils.getIfNull(ObjectMap.getObject(objectMap, Version.class),
+				freemarker.template.Configuration::getVersion);
 		//
 		final freemarker.template.Configuration configuration = new freemarker.template.Configuration(version);
 		//
@@ -3816,7 +3834,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		map.put("voices", voices);
 		//
-		process(testAndApply(Objects::nonNull, templateFile, configuration::getTemplate, null), map, writer);
+		process(testAndApply(Objects::nonNull, templateFile, configuration::getTemplate, null), map,
+				ObjectMap.getObject(objectMap, Writer.class));
 		//
 	}
 
