@@ -3418,6 +3418,23 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					} // try
 						//
+					final Multimap<String, Voice> multimap = getVoiceMultimapByListName(voices);
+					//
+					if (multimap != null) {
+						//
+						for (final String key : multimap.keySet()) {
+							//
+							try (final Writer writer = new FileWriter(String.format("%1$s.html", key))) {
+								//
+								exportHtml(freeMarkerVersion, exportHtmlTemplateFile, writer, voiceFolder,
+										multimap.get(key));
+								//
+							} // try
+								//
+						} // for
+							//
+					} // if
+						//
 				} // if
 					//
 			} catch (final IOException | IllegalAccessException | TemplateException e) {
@@ -3694,6 +3711,36 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
+	}
+
+	private static Multimap<String, Voice> getVoiceMultimapByListName(final Iterable<Voice> voices) {
+		//
+		Multimap<String, Voice> multimap = null;
+		//
+		if (voices != null) {
+			//
+			Iterable<String> listNames = null;
+			//
+			for (final Voice v : voices) {
+				//
+				if (v == null || (listNames = v.getListNames()) == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				for (final String listName : listNames) {
+					//
+					put(multimap = ObjectUtils.getIfNull(multimap, LinkedListMultimap::create), listName, v);
+					//
+				} // for
+					//
+			} // for
+				//
+		} // if
+			//
+		return multimap;
+		//
 	}
 
 	private static List<Field> findFieldsByValue(final Field[] fs, final Object instance, final Object value)
