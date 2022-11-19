@@ -2284,7 +2284,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 										(a, b) -> Integer.compare(StringUtils.length(a), StringUtils.length(b))), null),
 								"")));
 		//
-		panel.add(cbExportListHtml = new JCheckBox("Export List HTML"), WRAP);
+		panel.add(cbExportListHtml = new JCheckBox("Export List"), WRAP);
 		//
 		cbExportListHtml.setSelected(Boolean.parseBoolean(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.exportListHtml")));
