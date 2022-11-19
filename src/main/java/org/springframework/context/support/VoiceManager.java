@@ -315,9 +315,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private AbstractButton btnSpeak, btnWriteVoice, btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji,
 			btnCopyHiragana, btnCopyKatakana, cbUseTtsVoice, btnExecute, btnImportFileTemplate, btnImport,
 			btnImportWithinFolder, cbOverMp3Title, cbOrdinalPositionAsFileNamePrefix, btnExport, cbExportHtml,
-			cbExportListHtml, cbExportHtmlAsZip, cbExportListSheet, cbImportFileTemplateGenerateBlankRow,
-			cbJlptAsFolder, btnExportCopy, btnExportBrowse, btnDllPathCopy, btnSpeechRateSlower, btnSpeechRateNormal,
-			btnSpeechRateFaster = null;
+			cbExportListHtml, cbExportHtmlAsZip, cbExportHtmlRemoveAfterZip, cbExportListSheet,
+			cbImportFileTemplateGenerateBlankRow, cbJlptAsFolder, btnExportCopy, btnExportBrowse, btnDllPathCopy,
+			btnSpeechRateSlower, btnSpeechRateNormal, btnSpeechRateFaster = null;
 
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
@@ -2298,10 +2298,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		// ZIP
 		//
-		panel.add(cbExportHtmlAsZip = new JCheckBox("Zip"), WRAP);
+		panel.add(cbExportHtmlAsZip = new JCheckBox("Zip"));
 		//
 		cbExportHtmlAsZip.setSelected(Boolean.parseBoolean(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.exportListHtmlAsZip")));
+		//
+		panel.add(cbExportHtmlRemoveAfterZip = new JCheckBox("Remove Html After Zip"), WRAP);
+		//
+		cbExportHtmlRemoveAfterZip.setSelected(Boolean.parseBoolean(getProperty(propertyResolver,
+				"org.springframework.context.support.VoiceManager.exportHtmlRemoveAfterZip")));
 		//
 		panel.add(new JLabel(), String.format("span %1$s", 4));
 		//
@@ -3584,6 +3589,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						ZipUtil.packEntries(toArray(files, new File[] {}), file = new File(
 								String.format("voice_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.zip", new Date())));
 						//
+						if (isSelected(cbExportHtmlRemoveAfterZip)) {
+							//
+							forEach(files, VoiceManager::delete);
+							//
+						} // if
+							//
 					} // if
 						//
 				} // if
@@ -5294,6 +5305,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
+	}
+
+	private static void delete(final File instance) {
+		if (instance != null) {
+			instance.delete();
+		}
 	}
 
 	private static void deleteOnExit(final File instance) {
