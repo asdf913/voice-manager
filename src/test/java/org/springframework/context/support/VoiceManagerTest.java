@@ -674,8 +674,7 @@ class VoiceManagerTest {
 		(METHOD_GET_FILE_EXTENSIONS = clz.getDeclaredMethod("getFileExtensions", ContentType.class))
 				.setAccessible(true);
 		//
-		(METHOD_CREATE_CELL_STYLE = clz.getDeclaredMethod("getVoiceMultimapByListName", Iterable.class))
-				.setAccessible(true);
+		(METHOD_CREATE_CELL_STYLE = clz.getDeclaredMethod("createCellStyle", Workbook.class)).setAccessible(true);
 		//
 		(METHOD_REDUCE = clz.getDeclaredMethod("reduce", LongStream.class, Long.TYPE, LongBinaryOperator.class))
 				.setAccessible(true);
