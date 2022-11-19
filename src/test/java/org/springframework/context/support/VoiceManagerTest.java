@@ -2479,7 +2479,7 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(orElse(null, null));
 		//
-		Assertions.assertEquals(ZERO, orElse(null, ZERO));
+		Assertions.assertEquals(ZERO, orElse(OptionalInt.empty(), ZERO));
 		//
 	}
 
