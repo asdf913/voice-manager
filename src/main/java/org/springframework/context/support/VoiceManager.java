@@ -3486,7 +3486,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 								//
 								sb.append('.');
 								//
-							} //
+							} // if
 								//
 							sb.append(StringUtils.defaultIfBlank(orElse(
 									max(fileExtensions != null ? Arrays.stream(fileExtensions) : null,
@@ -8057,150 +8057,168 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static Workbook createWorkbook(final List<Voice> voices)
 			throws IllegalAccessException, InvocationTargetException {
 		//
-		Voice voice = null;
-		//
 		Workbook workbook = null;
 		//
-		Sheet sheet = null;
+		setSheet(workbook = ObjectUtils.getIfNull(workbook, XSSFWorkbook::new), createSheet(workbook), voices);
+		//
+		final Multimap<String, Voice> multimap = getVoiceMultimapByListName(voices);
+		//
+		if (multimap != null) {
+			//
+			for (final String key : multimap.keySet()) {
+				//
+				setSheet(workbook, workbook != null ? workbook.createSheet(key) : null, multimap.get(key));
+				//
+			} // for
+				//
+		} // if
+			//
+		return workbook;
+		//
+	}
+
+	private static void setSheet(final Workbook workbook, final Sheet sheet, final Iterable<Voice> voices)
+			throws IllegalAccessException, InvocationTargetException {
 		//
 		Row row = null;
 		//
-		Cell cell = null;
-		//
-		Field[] fs = null;
-		//
-		Field f = null;
-		//
-		Object value = null;
-		//
-		final Class<?> dateFormatClass = forName("domain.Voice$DateFormat");
-		//
-		final Class<?> dataFormatClass = forName("domain.Voice$DataFormat");
-		//
-		final Class<?> spreadsheetColumnClass = forName("domain.Voice$SpreadsheetColumn");
-		//
-		Annotation a = null;
-		//
-		Method m = null;
-		//
-		String[] fieldOrder = getFieldOrder();
-		//
-		CellStyle cellStyle = null;
-		//
-		short dataFormatIndex;
-		//
-		for (int i = 0; voices != null && i < voices.size(); i++) {
+		if (voices != null) {
 			//
-			if ((voice = get(voices, i)) == null) {
+			Cell cell = null;
+			//
+			Field[] fs = null;
+			//
+			Field f = null;
+			//
+			Object value = null;
+			//
+			final Class<?> dateFormatClass = forName("domain.Voice$DateFormat");
+			//
+			final Class<?> dataFormatClass = forName("domain.Voice$DataFormat");
+			//
+			final Class<?> spreadsheetColumnClass = forName("domain.Voice$SpreadsheetColumn");
+			//
+			Annotation a = null;
+			//
+			Method m = null;
+			//
+			String[] fieldOrder = getFieldOrder();
+			//
+			CellStyle cellStyle = null;
+			//
+			short dataFormatIndex;
+			//
+			for (final Voice voice : voices) {
 				//
-				continue;
-				//
-			} // if
-				//
-			if (sheet == null) {
-				//
-				sheet = createSheet(workbook = ObjectUtils.getIfNull(workbook, XSSFWorkbook::new));
-				//
-			} // if
-				//
-			if ((fs = ObjectUtils.getIfNull(fs, () -> FieldUtils.getAllFields(Voice.class))) != null) {
-				//
-				Arrays.sort(fs, (x, y) -> {
+				if (voice == null) {
 					//
-					return Integer.compare(ArrayUtils.indexOf(fieldOrder, getName(x)),
-							ArrayUtils.indexOf(fieldOrder, getName(y)));
+					continue;
 					//
-				});
-				//
-			} // if
-				//
-				// header
-				//
-			if (sheet.getLastRowNum() < 0) {
-				//
-				if ((row = sheet.createRow(0)) == null) {
+				} // if
+					//
+				if ((fs = ObjectUtils.getIfNull(fs, () -> FieldUtils.getAllFields(Voice.class))) != null) {
+					//
+					Arrays.sort(fs, (x, y) -> {
+						//
+						return Integer.compare(ArrayUtils.indexOf(fieldOrder, getName(x)),
+								ArrayUtils.indexOf(fieldOrder, getName(y)));
+						//
+					});
+					//
+				} // if
+					//
+					// header
+					//
+				if (sheet != null && sheet.getLastRowNum() < 0) {
+					//
+					if ((row = sheet.createRow(0)) == null) {
+						continue;
+					} // if
+						//
+					for (int j = 0; fs != null && j < fs.length; j++) {
+						//
+						setCellValue(createCell(row, j), getColumnName(spreadsheetColumnClass, fs[j]));
+						//
+					} // for
+						//
+				} // if
+					//
+					// content
+					//
+				if ((row = sheet != null ? sheet.createRow(sheet.getLastRowNum() + 1) : null) == null) {
 					continue;
 				} // if
 					//
 				for (int j = 0; fs != null && j < fs.length; j++) {
 					//
-					setCellValue(createCell(row, j), getColumnName(spreadsheetColumnClass, fs[j]));
-					//
-				} // for
-					//
-			} // if
-				//
-				// content
-				//
-			if ((row = sheet.createRow(sheet.getLastRowNum() + 1)) == null) {
-				continue;
-			} // if
-				//
-			for (int j = 0; fs != null && j < fs.length; j++) {
-				//
-				if ((f = fs[j]) == null || (cell = createCell(row, j)) == null) {
-					continue;
-				} // if
-					//
-				f.setAccessible(true);
-				//
-				if ((value = f.get(voice)) instanceof Number) {
-					//
-					if ((m = orElse(
-							findFirst(
-									filter(testAndApply(Objects::nonNull,
-											getDeclaredMethods(annotationType(a = orElse(findFirst(filter(
-													testAndApply(Objects::nonNull, getDeclaredAnnotations(f),
-															Arrays::stream, null),
-													x -> Objects.equals(annotationType(x), dataFormatClass))), null))),
-											Arrays::stream, null), x -> Objects.equals(getName(x), "value"))),
-							null)) != null && (cellStyle = workbook.createCellStyle()) != null) {
+					if ((f = fs[j]) == null || (cell = createCell(row, j)) == null) {
+						continue;
+					} // if
 						//
-						m.setAccessible(true);
+					f.setAccessible(true);
+					//
+					if ((value = f.get(voice)) instanceof Number) {
 						//
-						if ((dataFormatIndex = HSSFDataFormat.getBuiltinFormat(toString(invoke(m, a)))) >= 0) {
+						if ((m = orElse(findFirst(filter(
+								testAndApply(Objects::nonNull,
+										getDeclaredMethods(annotationType(a = orElse(
+												findFirst(filter(
+														testAndApply(Objects::nonNull, getDeclaredAnnotations(f),
+																Arrays::stream, null),
+														x -> Objects.equals(annotationType(x), dataFormatClass))),
+												null))),
+										Arrays::stream, null),
+								x -> Objects.equals(getName(x), "value"))), null)) != null
+								&& (cellStyle = createCellStyle(workbook)) != null) {
 							//
-							cellStyle.setDataFormat(dataFormatIndex);
+							m.setAccessible(true);
 							//
-							cell.setCellStyle(cellStyle);
+							if ((dataFormatIndex = HSSFDataFormat.getBuiltinFormat(toString(invoke(m, a)))) >= 0) {
+								//
+								cellStyle.setDataFormat(dataFormatIndex);
+								//
+								cell.setCellStyle(cellStyle);
+								//
+							} // if
+								//
+						} // if
+							//
+						cell.setCellValue(((Number) value).doubleValue());
+						//
+					} else if (value instanceof Date) {
+						//
+						if ((m = orElse(findFirst(filter(
+								testAndApply(Objects::nonNull,
+										getDeclaredMethods(annotationType(a = orElse(
+												findFirst(filter(
+														testAndApply(Objects::nonNull, getDeclaredAnnotations(f),
+																Arrays::stream, null),
+														x -> Objects.equals(annotationType(x), dateFormatClass))),
+												null))),
+										Arrays::stream, null),
+								x -> Objects.equals(getName(x), "value"))), null)) != null) {
+							//
+							m.setAccessible(true);
+							//
+							setCellValue(cell, new SimpleDateFormat(toString(invoke(m, a))).format(value));
+							//
+						} else {
+							//
+							setCellValue(cell, toString(value));
 							//
 						} // if
 							//
-					} // if
-						//
-					cell.setCellValue(((Number) value).doubleValue());
-					//
-				} else if (value instanceof Date) {
-					//
-					if ((m = orElse(
-							findFirst(
-									filter(testAndApply(Objects::nonNull,
-											getDeclaredMethods(annotationType(a = orElse(findFirst(filter(
-													testAndApply(Objects::nonNull, getDeclaredAnnotations(f),
-															Arrays::stream, null),
-													x -> Objects.equals(annotationType(x), dateFormatClass))), null))),
-											Arrays::stream, null), x -> Objects.equals(getName(x), "value"))),
-							null)) != null) {
-						//
-						m.setAccessible(true);
-						//
-						setCellValue(cell, new SimpleDateFormat(toString(invoke(m, a))).format(value));
-						//
 					} else {
 						//
 						setCellValue(cell, toString(value));
 						//
 					} // if
 						//
-				} else {
-					//
-					setCellValue(cell, toString(value));
-					//
-				} // if
+				} // for
 					//
 			} // for
 				//
-		} // for
+		} // if
 			//
 		if (sheet != null && row != null) {
 			//
@@ -8209,8 +8227,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
-		return workbook;
-		//
+	}
+
+	private static CellStyle createCellStyle(final Workbook instance) {
+		return instance != null ? instance.createCellStyle() : null;
 	}
 
 	private static String getColumnName(final Class<?> spreadsheetColumnClass, final Field f)

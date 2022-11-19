@@ -114,6 +114,7 @@ import org.apache.poi.ooxml.POIXMLProperties;
 import org.apache.poi.ooxml.POIXMLProperties.CustomProperties;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.ClientAnchor;
 import org.apache.poi.ss.usermodel.Comment;
 import org.apache.poi.ss.usermodel.CreationHelper;
@@ -232,7 +233,8 @@ class VoiceManagerTest {
 			METHOD_DARKER, METHOD_GET_TITLE_TEXT, METHOD_SET_CSS_ENABLED, METHOD_SET_JAVA_SCRIPT_ENABLED, METHOD_STOP,
 			METHOD_ELAPSED, METHOD_GET_DECLARED_CLASSES, METHOD_GET_DLL_PATH, METHOD_GET_RATE,
 			METHOD_ADD_CHANGE_LISTENER, METHOD_IS_ANNOTATION_PRESENT, METHOD_PROCESS, METHOD_ENCODE_TO_STRING,
-			METHOD_GET_VOICE_MULTI_MAP_BY_LIST_NAME, METHOD_GET_TEMPLATE, METHOD_GET_FILE_EXTENSIONS = null;
+			METHOD_GET_VOICE_MULTI_MAP_BY_LIST_NAME, METHOD_GET_TEMPLATE, METHOD_GET_FILE_EXTENSIONS,
+			METHOD_CREATE_CELL_STYLE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -654,6 +656,9 @@ class VoiceManagerTest {
 				String.class)).setAccessible(true);
 		//
 		(METHOD_GET_FILE_EXTENSIONS = clz.getDeclaredMethod("getFileExtensions", ContentType.class))
+				.setAccessible(true);
+		//
+		(METHOD_CREATE_CELL_STYLE = clz.getDeclaredMethod("getVoiceMultimapByListName", Iterable.class))
 				.setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
@@ -2446,7 +2451,7 @@ class VoiceManagerTest {
 		//
 		// java.util.List
 		//
-		Assertions.assertNull(createWorkbook(Collections.singletonList(null)));
+		Assertions.assertNotNull(createWorkbook(Collections.singletonList(null)));
 		//
 		final Voice voice = new Voice();
 		//
@@ -5575,8 +5580,6 @@ class VoiceManagerTest {
 	@Test
 	void testGetVoiceMultimapByListName() throws Throwable {
 		//
-		Assertions.assertNull(getVoiceMultimapByListName(null));
-		//
 		Assertions.assertNull(getVoiceMultimapByListName(Collections.singleton(null)));
 		//
 		final Voice voice = new Voice();
@@ -5652,6 +5655,27 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof String[]) {
 				return (String[]) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCreateCellStyle() throws Throwable {
+		//
+		Assertions.assertNull(createCellStyle(null));
+		//
+	}
+
+	private static CellStyle createCellStyle(final Workbook instance) throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_CELL_STYLE.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof CellStyle) {
+				return (CellStyle) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
