@@ -31,6 +31,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.Serializable;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
@@ -3430,8 +3431,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					} // if
 						//
-					try (final Writer writer = new FileWriter(
-							StringUtils.defaultIfBlank(getText(tfExportHtmlFileName), "export.html"))) {
+					try (final Writer writer = new StringWriter()) {
 						//
 						if (objectMap != null) {
 							//
@@ -3440,6 +3440,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						} // if
 							//
 						exportHtml(objectMap, exportHtmlTemplateFile, voiceFolder, voices);
+						//
+						testAndAccept(StringUtils::isNotEmpty, toString(writer),
+								x -> FileUtils.writeStringToFile(new File(
+										StringUtils.defaultIfBlank(getText(tfExportHtmlFileName), "export.html")), x,
+										"utf-8"));
 						//
 					} // try
 						//
