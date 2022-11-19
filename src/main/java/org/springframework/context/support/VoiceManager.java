@@ -251,6 +251,7 @@ import freemarker.cache.ClassTemplateLoader;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import freemarker.template.TemplateHashModel;
 import freemarker.template.Version;
 import io.github.toolfactory.narcissus.Narcissus;
 import mapper.VoiceMapper;
@@ -3413,15 +3414,19 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					if ((objectMap = Reflection.newProxy(ObjectMap.class, ih)) != null) {
 						//
-						objectMap.setObject(Version.class, freeMarkerVersion);
+						final Version version = ObjectUtils.getIfNull(freeMarkerVersion,
+								freemarker.template.Configuration::getVersion);
+						//
+						objectMap.setObject(Version.class, version);
 						//
 						final freemarker.template.Configuration configuration = new freemarker.template.Configuration(
-								ObjectUtils.getIfNull(freeMarkerVersion,
-										freemarker.template.Configuration::getVersion));
+								version);
 						//
 						configuration.setTemplateLoader(new ClassTemplateLoader(VoiceManager.class, "/"));
 						//
 						objectMap.setObject(freemarker.template.Configuration.class, configuration);
+						//
+						objectMap.setObject(TemplateHashModel.class, new BeansWrapper(version).getStaticModels());
 						//
 					} // if
 						//
@@ -3841,8 +3846,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
-		final Map<String, Object> map = new LinkedHashMap<>(
-				Collections.singletonMap("statics", new BeansWrapper(version).getStaticModels()));
+		final Map<String, Object> map = new LinkedHashMap<>(Collections.singletonMap("statics",
+				ObjectUtils.getIfNull(ObjectMap.getObject(objectMap, TemplateHashModel.class),
+						() -> new BeansWrapper(version).getStaticModels())));
 		//
 		map.put("folder", folder);
 		//
