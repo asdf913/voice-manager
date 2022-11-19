@@ -12,6 +12,7 @@
 					<td>
 						<input type="button" onclick="playAll();" value="Play All"/>
 					</td>
+					<td id="currentText"/>
 				</tr>
 			</thead>
 			<tbody>
@@ -40,6 +41,19 @@
 			</tbody>
 		</table>
 		<script>
+		<#if voices?? && voices?is_enumerable>
+			var items=[
+			<#list voices as voice>
+				<#if voice??>
+					{
+						 "text"  :"${voice.text  !""}"
+						,"romaji":"${voice.romaji!""}"
+					}
+					<#sep>,</#sep>
+				</#if>
+			</#list>
+			];
+		</#if>
 		function playAll(){
 			//
 			var as=typeof document==="object"&&document!=null&&typeof document.querySelectorAll==="function"?document.querySelectorAll("audio"):null;
@@ -52,9 +66,25 @@
 				//
 				const c=i;
 				//
+				a.addEventListener("playing",function(){
+					//
+					var item=items[c];
+					//
+					var currentText=document.getElementById("currentText");
+					//
+					if(c<as.length&&item!==null&&currentText!==null){
+						currentText.innerHTML=item.text+"&nbsp;"+"("+item.romaji+")";
+					}//if
+					//
+				});
+				//
 				a.addEventListener("ended",function(){
 					//
-					if(c<as.length-1){as[c+1].play();}
+					if(c<as.length-1){
+						as[c+1].play();
+					}else{
+						document.getElementById("currentText").innerHTML="";
+					}//if
 					//
 				});
 				//
