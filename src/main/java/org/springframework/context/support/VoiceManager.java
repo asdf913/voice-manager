@@ -315,7 +315,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private AbstractButton btnSpeak, btnWriteVoice, btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji,
 			btnCopyHiragana, btnCopyKatakana, cbUseTtsVoice, btnExecute, btnImportFileTemplate, btnImport,
 			btnImportWithinFolder, cbOverMp3Title, cbOrdinalPositionAsFileNamePrefix, btnExport, cbExportHtml,
-			cbExportListHtml, cbExportHtmlAsZip, cbExportHtmlRemoveAfterZip, cbExportListSheet,
+			cbExportListHtml, cbExportHtmlAsZip, cbExportHtmlRemoveAfterZip, cbExportListSheet, cbExportJlptSheet,
 			cbImportFileTemplateGenerateBlankRow, cbJlptAsFolder, btnExportCopy, btnExportBrowse, btnDllPathCopy,
 			btnSpeechRateSlower, btnSpeechRateNormal, btnSpeechRateFaster = null;
 
@@ -2308,12 +2308,23 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		cbExportHtmlRemoveAfterZip.setSelected(Boolean.parseBoolean(getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.exportHtmlRemoveAfterZip")));
 		//
+		// Export List Sheet
+		//
 		panel.add(new JLabel(), String.format("span %1$s", 4));
 		//
 		panel.add(cbExportListSheet = new JCheckBox("Export List Sheet"), String.format("%1$s,span %2$s", WRAP, 3));
 		//
 		cbExportListSheet.setSelected(Boolean.parseBoolean(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.exportListSheet")));
+		//
+		// Export JLPT Sheet
+		//
+		panel.add(new JLabel(), String.format("span %1$s", 4));
+		//
+		panel.add(cbExportJlptSheet = new JCheckBox("Export JLPT Sheet"), String.format("%1$s,span %2$s", WRAP, 3));
+		//
+		cbExportJlptSheet.setSelected(Boolean.parseBoolean(
+				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.exportJlptSheet")));
 		//
 		panel.add(new JLabel(), String.format("span %1$s", 4));
 		//
@@ -3470,6 +3481,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 						booleanMap.setBoolean("exportListSheet", isSelected(cbExportListSheet));
 						//
+						booleanMap.setBoolean("exportJlptSheet", isSelected(cbExportJlptSheet));
+						//
 					} // if
 						//
 					write(workbook = createWorkbook(voices, booleanMap), os);
@@ -3909,6 +3922,30 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // for
 					//
+			} // for
+				//
+		} // if
+			//
+		return multimap;
+		//
+	}
+
+	private static Multimap<String, Voice> getVoiceMultimapByJlpt(final Iterable<Voice> voices) {
+		//
+		Multimap<String, Voice> multimap = null;
+		//
+		if (voices != null) {
+			//
+			for (final Voice v : voices) {
+				//
+				if (v == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				put(multimap = ObjectUtils.getIfNull(multimap, LinkedListMultimap::create), v.getJlptLevel(), v);
+				//
 			} // for
 				//
 		} // if
@@ -7316,6 +7353,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 		void setBoolean(final String key, final boolean value);
 
+		static boolean getBoolean(final BooleanMap instance, final String key) {
+			return instance != null && instance.getBoolean(key);
+		}
+
 	}
 
 	private static void export(final List<Voice> voices, final Map<String, String> outputFolderFileNameExpressions,
@@ -7497,7 +7538,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				// JLPT
 				//
-			if (booleanMap != null && booleanMap.getBoolean("jlptAsFolder")) {
+			if (BooleanMap.getBoolean(booleanMap, "jlptAsFolder")) {
 				//
 				clear(multimap = ObjectUtils.getIfNull(multimap, LinkedListMultimap::create));
 				//
@@ -8150,7 +8191,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		setSheet(workbook = ObjectUtils.getIfNull(workbook, XSSFWorkbook::new), createSheet(workbook), voices);
 		//
-		if (booleanMap != null && booleanMap.getBoolean("exportListSheet")) {
+		if (BooleanMap.getBoolean(booleanMap, "exportListSheet")) {
 			//
 			final Multimap<String, Voice> multimap = getVoiceMultimapByListName(voices);
 			//
@@ -8158,6 +8199,28 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				for (final String key : multimap.keySet()) {
 					//
+					setSheet(workbook, createSheet(workbook, key), multimap.get(key));
+					//
+				} // for
+					//
+			} // if
+				//
+		} // if
+			//
+		if (BooleanMap.getBoolean(booleanMap, "exportJlptSheet")) {
+			//
+			final Multimap<String, Voice> multimap = getVoiceMultimapByJlpt(voices);
+			//
+			if (multimap != null) {
+				//
+				for (final String key : multimap.keySet()) {
+					//
+					if (key == null) {
+						//
+						continue;
+						//
+					} // if
+						//
 					setSheet(workbook, createSheet(workbook, key), multimap.get(key));
 					//
 				} // for
