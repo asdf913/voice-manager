@@ -84,14 +84,17 @@ import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.LongBinaryOperator;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.function.ToIntFunction;
+import java.util.function.ToLongFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 import java.util.zip.ZipFile;
@@ -214,6 +217,7 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import org.zeroturnaround.zip.ZipUtil;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -311,8 +315,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private AbstractButton btnSpeak, btnWriteVoice, btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji,
 			btnCopyHiragana, btnCopyKatakana, cbUseTtsVoice, btnExecute, btnImportFileTemplate, btnImport,
 			btnImportWithinFolder, cbOverMp3Title, cbOrdinalPositionAsFileNamePrefix, btnExport, cbExportHtml,
-			cbExportListHtml, cbExportListSheet, cbImportFileTemplateGenerateBlankRow, cbJlptAsFolder, btnExportCopy,
-			btnExportBrowse, btnDllPathCopy, btnSpeechRateSlower, btnSpeechRateNormal, btnSpeechRateFaster = null;
+			cbExportListHtml, cbExportHtmlAsZip, cbExportListSheet, cbImportFileTemplateGenerateBlankRow,
+			cbJlptAsFolder, btnExportCopy, btnExportBrowse, btnDllPathCopy, btnSpeechRateSlower, btnSpeechRateNormal,
+			btnSpeechRateFaster = null;
 
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
@@ -2266,6 +2271,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		cbExportHtml.setSelected(Boolean.parseBoolean(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.exportHtml")));
 		//
+		// File Name
+		//
 		panel.add(new JLabel("File Name"));
 		//
 		panel.add(
@@ -2284,10 +2291,17 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 										(a, b) -> Integer.compare(StringUtils.length(a), StringUtils.length(b))), null),
 								"")));
 		//
-		panel.add(cbExportListHtml = new JCheckBox("Export List"), WRAP);
+		panel.add(cbExportListHtml = new JCheckBox("Export List"));
 		//
 		cbExportListHtml.setSelected(Boolean.parseBoolean(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.exportListHtml")));
+		//
+		// ZIP
+		//
+		panel.add(cbExportHtmlAsZip = new JCheckBox("Zip"), WRAP);
+		//
+		cbExportHtmlAsZip.setSelected(Boolean.parseBoolean(
+				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.exportListHtmlAsZip")));
 		//
 		panel.add(new JLabel(), String.format("span %1$s", 4));
 		//
@@ -2860,6 +2874,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
+	private static <T> LongStream mapToLong(final Stream<T> instance, final ToLongFunction<? super T> mapper) {
+		//
+		return instance != null && (Proxy.isProxyClass(getClass(instance)) || mapper != null)
+				? instance.mapToLong(mapper)
+				: null;
+		//
+	}
+
 	private static <T> Optional<T> max(final Stream<T> instance, final Comparator<? super T> comparator) {
 		//
 		return instance != null && (Proxy.isProxyClass(getClass(instance)) || comparator != null)
@@ -2878,6 +2900,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static int orElse(final OptionalInt instance, final int other) {
 		return instance != null ? instance.orElse(other) : other;
+	}
+
+	private static long reduce(final LongStream instance, final long identity, final LongBinaryOperator op) {
+		return instance != null ? instance.reduce(identity, op) : identity;
 	}
 
 	private static void setEnabled(final boolean b, final Component instance, final Component... cs) {
@@ -2935,6 +2961,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static int intValue(final Number instance, final int defaultValue) {
 		return instance != null ? instance.intValue() : defaultValue;
+	}
+
+	private static long longValue(final Number instance, final long defaultValue) {
+		return instance != null ? instance.longValue() : defaultValue;
 	}
 
 	private static void addActionListener(final ActionListener actionListener, final AbstractButton... abs) {
@@ -3455,6 +3485,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					} // if
 						//
+					List<File> files = null;
+					//
 					try (final Writer writer = new StringWriter()) {
 						//
 						if (objectMap != null) {
@@ -3502,9 +3534,18 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 						} // if
 							//
-						testAndAccept(StringUtils::isNotEmpty, toString(writer), x -> FileUtils.writeStringToFile(
-								new File(StringUtils.defaultIfBlank(toString(sb), "export.html")), x, "utf-8"));
+						final String string = toString(writer);
 						//
+						if (StringUtils.isNotEmpty(fileExtension)) {
+							//
+							FileUtils.writeStringToFile(
+									file = new File(StringUtils.defaultIfBlank(toString(sb), "export.html")), string,
+									"utf-8");
+							//
+							add(files = ObjectUtils.getIfNull(files, ArrayList::new), file);
+							//
+						} // if
+							//
 					} // try
 						//
 					if (isSelected(cbExportListHtml)) {
@@ -3515,7 +3556,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 							for (final String key : multimap.keySet()) {
 								//
-								try (final Writer writer = new FileWriter(String.format("%1$s.html", key))) {
+								try (final Writer writer = new FileWriter(
+										file = new File(String.format("%1$s.html", key)))) {
 									//
 									if (objectMap != null) {
 										//
@@ -3525,12 +3567,23 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 										//
 									exportHtml(objectMap, exportHtmlTemplateFile, voiceFolder, multimap.get(key));
 									//
+									add(files = ObjectUtils.getIfNull(files, ArrayList::new), file);
+									//
 								} // try
 									//
 							} // for
 								//
 						} // if
 							//
+					} // if
+						//
+					if (isSelected(cbExportHtmlAsZip)
+							&& reduce(mapToLong(stream(files), f -> longValue(f != null ? f.length() : null, 0)), 0,
+									Long::sum) > 0) {
+						//
+						ZipUtil.packEntries(toArray(files, new File[] {}), file = new File(
+								String.format("voice_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.zip", new Date())));
+						//
 					} // if
 						//
 				} // if

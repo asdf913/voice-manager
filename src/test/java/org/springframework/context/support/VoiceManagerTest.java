@@ -61,13 +61,16 @@ import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.LongBinaryOperator;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.function.ToIntFunction;
+import java.util.function.ToLongFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collector;
 import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 import javax.sound.sampled.AudioFormat;
@@ -193,11 +196,11 @@ class VoiceManagerTest {
 
 	private static Method METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_GET_FILE_EXTENSION, METHOD_DIGEST,
 			METHOD_GET_MAPPER, METHOD_INSERT_OR_UPDATE, METHOD_SET_ENABLED_2, METHOD_SET_ENABLED_3,
-			METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_CAST, METHOD_INT_VALUE,
+			METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_CAST, METHOD_INT_VALUE, METHOD_LONG_VALUE,
 			METHOD_GET_PROPERTY_PROPERTY_RESOLVER, METHOD_GET_PROPERTY_CUSTOM_PROPERTIES, METHOD_SET_VARIABLE,
 			METHOD_PARSE_EXPRESSION, METHOD_GET_VALUE, METHOD_GET_SOURCE, METHOD_EXPORT, METHOD_MAP, METHOD_MAP_TO_INT,
-			METHOD_MAX_STREAM, METHOD_MAX_INT_STREAM, METHOD_OR_ELSE_OPTIONAL, METHOD_OR_ELSE_OPTIONAL_INT,
-			METHOD_FOR_EACH_STREAM, METHOD_FOR_EACH_ITERABLE, METHOD_CREATE_WORK_BOOK_LIST,
+			METHOD_MAP_TO_LONG, METHOD_MAX_STREAM, METHOD_MAX_INT_STREAM, METHOD_OR_ELSE_OPTIONAL,
+			METHOD_OR_ELSE_OPTIONAL_INT, METHOD_FOR_EACH_STREAM, METHOD_FOR_EACH_ITERABLE, METHOD_CREATE_WORK_BOOK_LIST,
 			METHOD_CREATE_WORK_BOOK_MULTI_MAP, METHOD_CREATE_VOICE, METHOD_GET_MESSAGE, METHOD_INVOKE,
 			METHOD_ANNOTATION_TYPE, METHOD_FIND_FIRST, METHOD_GET_DECLARED_METHODS, METHOD_FOR_NAME, METHOD_FILTER,
 			METHOD_SET_TEXT, METHOD_GET_PREFERRED_WIDTH, METHOD_IMPORT_VOICE1, METHOD_IMPORT_VOICE3,
@@ -234,7 +237,7 @@ class VoiceManagerTest {
 			METHOD_ELAPSED, METHOD_GET_DECLARED_CLASSES, METHOD_GET_DLL_PATH, METHOD_GET_RATE,
 			METHOD_ADD_CHANGE_LISTENER, METHOD_IS_ANNOTATION_PRESENT, METHOD_PROCESS, METHOD_ENCODE_TO_STRING,
 			METHOD_GET_VOICE_MULTI_MAP_BY_LIST_NAME, METHOD_GET_TEMPLATE, METHOD_GET_FILE_EXTENSIONS,
-			METHOD_CREATE_CELL_STYLE = null;
+			METHOD_CREATE_CELL_STYLE, METHOD_REDUCE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -271,6 +274,8 @@ class VoiceManagerTest {
 		//
 		(METHOD_INT_VALUE = clz.getDeclaredMethod("intValue", Number.class, Integer.TYPE)).setAccessible(true);
 		//
+		(METHOD_LONG_VALUE = clz.getDeclaredMethod("longValue", Number.class, Long.TYPE)).setAccessible(true);
+		//
 		(METHOD_GET_PROPERTY_PROPERTY_RESOLVER = clz.getDeclaredMethod("getProperty", PropertyResolver.class,
 				String.class)).setAccessible(true);
 		//
@@ -295,6 +300,9 @@ class VoiceManagerTest {
 		(METHOD_MAP = clz.getDeclaredMethod("map", Stream.class, Function.class)).setAccessible(true);
 		//
 		(METHOD_MAP_TO_INT = clz.getDeclaredMethod("mapToInt", Stream.class, ToIntFunction.class)).setAccessible(true);
+		//
+		(METHOD_MAP_TO_LONG = clz.getDeclaredMethod("mapToLong", Stream.class, ToLongFunction.class))
+				.setAccessible(true);
 		//
 		(METHOD_MAX_STREAM = clz.getDeclaredMethod("max", Stream.class, Comparator.class)).setAccessible(true);
 		//
@@ -662,6 +670,9 @@ class VoiceManagerTest {
 		(METHOD_CREATE_CELL_STYLE = clz.getDeclaredMethod("getVoiceMultimapByListName", Iterable.class))
 				.setAccessible(true);
 		//
+		(METHOD_REDUCE = clz.getDeclaredMethod("reduce", LongStream.class, Long.TYPE, LongBinaryOperator.class))
+				.setAccessible(true);
+		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
 		CLASS_BOOLEAN_MAP = Class.forName("org.springframework.context.support.VoiceManager$BooleanMap");
@@ -714,6 +725,8 @@ class VoiceManagerTest {
 		private Integer numberOfSheets = null;
 
 		private IntStream intStream = null;
+
+		private LongStream longStream = null;
 
 		private Integer columnIndex = null;
 
@@ -898,6 +911,10 @@ class VoiceManagerTest {
 				} else if (Objects.equals(methodName, "mapToInt")) {
 					//
 					return intStream;
+					//
+				} else if (Objects.equals(methodName, "mapToLong")) {
+					//
+					return longStream;
 					//
 				} // if
 					//
@@ -1530,6 +1547,32 @@ class VoiceManagerTest {
 			//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnExport));
 		//
+		final AbstractButton cbExportListHtml = new JCheckBox();
+		//
+		cbExportListHtml.setSelected(true);
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "cbExportListHtml", cbExportListHtml, true);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnExport));
+		//
+		final AbstractButton cbExportHtmlAsZip = new JCheckBox();
+		//
+		cbExportHtmlAsZip.setSelected(true);
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "cbExportHtmlAsZip", cbExportHtmlAsZip, true);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnExport));
+		//
+		// btnSpeak
+		//
 		final AbstractButton btnSpeak = new JButton();
 		//
 		if (instance != null) {
@@ -2114,6 +2157,25 @@ class VoiceManagerTest {
 	}
 
 	@Test
+	void testLongValue() throws Throwable {
+		//
+		Assertions.assertEquals(ZERO, longValue(null, ZERO));
+		//
+	}
+
+	private static long longValue(final Number instance, final long defaultValue) throws Throwable {
+		try {
+			final Object obj = METHOD_LONG_VALUE.invoke(null, instance, defaultValue);
+			if (obj instanceof Long) {
+				return ((Long) obj).longValue();
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
 	void testGetProperty() throws Throwable {
 		//
 		Assertions.assertNull(getProperty((CustomProperties) null, null));
@@ -2335,6 +2397,32 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof IntStream) {
 				return (IntStream) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testMapToLong() throws Throwable {
+		//
+		Assertions.assertNull(mapToLong(null, null));
+		//
+		Assertions.assertNull(mapToLong(stream, null));
+		//
+		Assertions.assertNull(mapToLong(Stream.empty(), null));
+		//
+	}
+
+	private static <T> LongStream mapToLong(final Stream<T> instance, final ToLongFunction<? super T> mapper)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_MAP_TO_LONG.invoke(null, instance, mapper);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof LongStream) {
+				return (LongStream) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
@@ -5678,6 +5766,28 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof CellStyle) {
 				return (CellStyle) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testReduce() throws Throwable {
+		//
+		final long l = 0;
+		//
+		Assertions.assertEquals(l, reduce(null, l, null));
+		//
+	}
+
+	private static long reduce(final LongStream instance, final long identity, final LongBinaryOperator op)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_REDUCE.invoke(null, instance, identity, op);
+			if (obj instanceof Long) {
+				return ((Long) obj).longValue();
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
