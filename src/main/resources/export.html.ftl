@@ -73,7 +73,9 @@
 					var currentText=document.getElementById("currentText");
 					//
 					if(c<as.length&&item!==null&&currentText!==null){
+						//
 						currentText.innerHTML=item.text+"&nbsp;"+"("+item.romaji+")";
+						//
 					}//if
 					//
 				});
@@ -81,16 +83,32 @@
 				a.addEventListener("ended",function(){
 					//
 					if(c<as.length-1){
-						as[c+1].play();
+						//
+						var temp=as[c+1];
+						//
+						if(temp!==null&&typeof temp.play==="function"){
+							//
+							temp.play();
+							//
+						}//if
+						//
 					}else{
-						document.getElementById("currentText").innerHTML="";
+						//
+						var currentText=document.getElementById("currentText");
+						//
+						if(currentText!==null){
+							//
+							currentText.innerHTML="";
+							//
+						}//if
+						//
 					}//if
 					//
 				});
 				//
 			}//for
 			//
-			if(as!=null&&typeof as.length==="number"&&as.length>0&&as[0]!=null){as[0].play();}
+			if(as!=null&&typeof as.length==="number"&&as.length>0&&(a=as[0])!=null&&typeof a.play==="function"){a.play();}
 			//
 		}
 		</script>
