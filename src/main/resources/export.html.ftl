@@ -7,6 +7,13 @@
 	<body>
 		<table>
 			<caption>Audio</caption>
+			<thead>
+				<tr>
+					<td>
+						<input type="button" onclick="playAll();" value="Play All"/>
+					</td>
+				</tr>
+			</thead>
 			<tbody>
 				<#if voices?? && voices?is_enumerable>
 					<#list voices as voice>
@@ -32,5 +39,27 @@
 				</#if>
 			</tbody>
 		</table>
+		<script>
+		function playAll(){
+			//
+			var as=typeof document==="object"&&document!=null&&typeof document.querySelectorAll==="function"?document.querySelectorAll("audio"):null;
+			//
+			var a=null;
+			//
+			for(var i=0;as!=null&&typeof as.length==="number"&&i<as.length;i++){
+				//
+				if((a=as[i])==null){continue;}
+				//
+				const c=i;
+				//
+				a.addEventListener("ended",function(){
+					if(c<as.length-1){as[c+1].play();}
+				});
+			}
+			//
+			if(as!=null&&typeof as.length==="number"&&as.length>0&&as[0]!=null){as[0].play();}
+			//
+		}
+		</script>
 	</body>
 </html>
