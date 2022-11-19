@@ -173,6 +173,7 @@ import domain.Voice;
 import domain.Voice.Yomi;
 import domain.VoiceList;
 import fr.free.nrw.jakaroma.Jakaroma;
+import freemarker.cache.ClassTemplateLoader;
 import freemarker.template.Template;
 import freemarker.template.Version;
 import io.github.toolfactory.narcissus.Narcissus;
@@ -230,7 +231,7 @@ class VoiceManagerTest {
 			METHOD_DARKER, METHOD_GET_TITLE_TEXT, METHOD_SET_CSS_ENABLED, METHOD_SET_JAVA_SCRIPT_ENABLED, METHOD_STOP,
 			METHOD_ELAPSED, METHOD_GET_DECLARED_CLASSES, METHOD_GET_DLL_PATH, METHOD_GET_RATE,
 			METHOD_ADD_CHANGE_LISTENER, METHOD_IS_ANNOTATION_PRESENT, METHOD_PROCESS, METHOD_ENCODE_TO_STRING,
-			METHOD_GET_VOICE_MULTI_MAP_BY_LIST_NAME = null;
+			METHOD_GET_VOICE_MULTI_MAP_BY_LIST_NAME, METHOD_GET_TEMPLATE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -647,6 +648,9 @@ class VoiceManagerTest {
 		//
 		(METHOD_GET_VOICE_MULTI_MAP_BY_LIST_NAME = clz.getDeclaredMethod("getVoiceMultimapByListName", Iterable.class))
 				.setAccessible(true);
+		//
+		(METHOD_GET_TEMPLATE = clz.getDeclaredMethod("getTemplate", freemarker.template.Configuration.class,
+				String.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -5588,6 +5592,39 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof Multimap) {
 				return (Multimap) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetTemplate() throws Throwable {
+		//
+		Assertions.assertNull(getTemplate(null, null));
+		//
+		final freemarker.template.Configuration configuration = new freemarker.template.Configuration(
+				freemarker.template.Configuration.getVersion());
+		//
+		Assertions.assertNull(getTemplate(configuration, null));
+		//
+		Assertions.assertNull(getTemplate(configuration, EMPTY));
+		//
+		configuration.setTemplateLoader(new ClassTemplateLoader(VoiceManager.class, "/"));
+		//
+		Assertions.assertNotNull(getTemplate(configuration, EMPTY));
+		//
+	}
+
+	private static Template getTemplate(final freemarker.template.Configuration instance, final String name)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_GET_TEMPLATE.invoke(null, instance, name);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Template) {
+				return (Template) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

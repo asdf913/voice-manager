@@ -3415,6 +3415,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 						objectMap.setObject(Version.class, freeMarkerVersion);
 						//
+						final freemarker.template.Configuration configuration = new freemarker.template.Configuration(
+								ObjectUtils.getIfNull(freeMarkerVersion,
+										freemarker.template.Configuration::getVersion));
+						//
+						configuration.setTemplateLoader(new ClassTemplateLoader(VoiceManager.class, "/"));
+						//
+						objectMap.setObject(freemarker.template.Configuration.class, configuration);
+						//
 					} // if
 						//
 					try (final Writer writer = new FileWriter(
@@ -3823,10 +3831,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		final Version version = ObjectUtils.getIfNull(ObjectMap.getObject(objectMap, Version.class),
 				freemarker.template.Configuration::getVersion);
 		//
-		final freemarker.template.Configuration configuration = new freemarker.template.Configuration(version);
+		final freemarker.template.Configuration configuration = ObjectUtils.getIfNull(
+				ObjectMap.getObject(objectMap, freemarker.template.Configuration.class),
+				() -> new freemarker.template.Configuration(version));
 		//
-		configuration.setTemplateLoader(new ClassTemplateLoader(VoiceManager.class, "/"));
-		//
+		if (configuration != null && configuration.getTemplateLoader() == null) {
+			//
+			configuration.setTemplateLoader(new ClassTemplateLoader(VoiceManager.class, "/"));
+			//
+		} // if
+			//
 		final Map<String, Object> map = new LinkedHashMap<>(
 				Collections.singletonMap("statics", new BeansWrapper(version).getStaticModels()));
 		//
@@ -3834,8 +3848,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		map.put("voices", voices);
 		//
-		process(testAndApply(Objects::nonNull, templateFile, configuration::getTemplate, null), map,
+		process(testAndApply(Objects::nonNull, templateFile, a -> getTemplate(configuration, a), null), map,
 				ObjectMap.getObject(objectMap, Writer.class));
+		//
+	}
+
+	private static Template getTemplate(final freemarker.template.Configuration instance, final String name)
+			throws IOException {
+		//
+		return instance != null && name != null && instance.getTemplateLoader() != null ? instance.getTemplate(name)
+				: null;
 		//
 	}
 
