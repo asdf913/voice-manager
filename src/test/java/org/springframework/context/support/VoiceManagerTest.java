@@ -5518,7 +5518,7 @@ class VoiceManagerTest {
 		//
 		try (final Writer writer = new StringWriter()) {
 			//
-			Assertions.assertDoesNotThrow(() -> process(template, null, null));
+			Assertions.assertDoesNotThrow(() -> process(template, null, writer));
 			//
 		} // try
 			//
