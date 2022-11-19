@@ -319,7 +319,8 @@ class VoiceManagerTest {
 		(METHOD_FOR_EACH_ITERABLE = clz.getDeclaredMethod("forEach", Iterable.class, Consumer.class))
 				.setAccessible(true);
 		//
-		(METHOD_CREATE_WORK_BOOK_LIST = clz.getDeclaredMethod("createWorkbook", List.class, Boolean.TYPE))
+		(METHOD_CREATE_WORK_BOOK_LIST = clz.getDeclaredMethod("createWorkbook", List.class,
+				CLASS_BOOLEAN_MAP = Class.forName("org.springframework.context.support.VoiceManager$BooleanMap")))
 				.setAccessible(true);
 		//
 		(METHOD_CREATE_WORK_BOOK_MULTI_MAP = clz.getDeclaredMethod("createWorkbook", Pair.class, Multimap.class))
@@ -677,8 +678,6 @@ class VoiceManagerTest {
 				.setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
-		//
-		CLASS_BOOLEAN_MAP = Class.forName("org.springframework.context.support.VoiceManager$BooleanMap");
 		//
 	}
 
@@ -2549,7 +2548,7 @@ class VoiceManagerTest {
 		//
 		// java.util.List,boolean
 		//
-		Assertions.assertNotNull(createWorkbook(Collections.singletonList(null), false));
+		Assertions.assertNotNull(createWorkbook(Collections.singletonList(null), null));
 		//
 		final Voice voice = new Voice();
 		//
@@ -2557,25 +2556,52 @@ class VoiceManagerTest {
 		//
 		voice.setCreateTs(new Date());
 		//
-		Assertions.assertNotNull(createWorkbook(Collections.nCopies(2, voice), true));
+		final Constructor<?> constructor = CLASS_IH != null ? CLASS_IH.getDeclaredConstructor() : null;
+		//
+		if (constructor != null) {
+			//
+			constructor.setAccessible(true);
+			//
+		} // if
+			//
+		final InvocationHandler ih = cast(InvocationHandler.class,
+				constructor != null ? constructor.newInstance() : null);
+		//
+		// org.springframework.context.support.VoiceManager$BooleanMap.setBoolean(java.lang.String,boolean)
+		//
+		final Object booleanMap = Reflection.newProxy(CLASS_BOOLEAN_MAP, ih);
+		//
+		final Method setBoolean = CLASS_BOOLEAN_MAP != null
+				? CLASS_BOOLEAN_MAP.getDeclaredMethod("setBoolean", String.class, Boolean.TYPE)
+				: null;
+		//
+		if (setBoolean != null) {
+			//
+			setBoolean.setAccessible(true);
+			//
+			setBoolean.invoke(booleanMap, "exportListSheet", true);
+			//
+		} // if
+			//
+		Assertions.assertNotNull(createWorkbook(Collections.nCopies(2, voice), booleanMap));
 		//
 		// org.apache.commons.lang3.tuple.Pair,com.google.common.collect.Multimap
 		//
-		Assertions.assertNull(createWorkbook(null, multimap));
+		Assertions.assertNull(createWorkbook((Pair) null, multimap));
 		//
-		ih.multiMapEntries = Collections.singleton(null);
+		this.ih.multiMapEntries = Collections.singleton(null);
 		//
-		Assertions.assertNull(createWorkbook(null, multimap));
+		Assertions.assertNull(createWorkbook((Pair) null, multimap));
 		//
-		ih.multiMapEntries = Collections.singleton(Pair.of(null, null));
+		this.ih.multiMapEntries = Collections.singleton(Pair.of(null, null));
 		//
-		Assertions.assertNotNull(createWorkbook(null, multimap));
+		Assertions.assertNotNull(createWorkbook((Pair) null, multimap));
 		//
 	}
 
-	private static Workbook createWorkbook(final List<Voice> voices, final boolean exportListSheet) throws Throwable {
+	private static Workbook createWorkbook(final List<Voice> voices, final Object booleanMap) throws Throwable {
 		try {
-			final Object obj = METHOD_CREATE_WORK_BOOK_LIST.invoke(null, voices, exportListSheet);
+			final Object obj = METHOD_CREATE_WORK_BOOK_LIST.invoke(null, voices, booleanMap);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Workbook) {

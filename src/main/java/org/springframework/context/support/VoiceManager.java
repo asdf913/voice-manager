@@ -3464,7 +3464,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				try (final OutputStream os = new FileOutputStream(
 						file = new File(String.format("voice_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.xlsx", new Date())))) {
 					//
-					write(workbook = createWorkbook(voices, isSelected(cbExportListSheet)), os);
+					final BooleanMap booleanMap = Reflection.newProxy(BooleanMap.class, ih);
+					//
+					if (booleanMap != null) {
+						//
+						booleanMap.setBoolean("exportListSheet", isSelected(cbExportListSheet));
+						//
+					} // if
+						//
+					write(workbook = createWorkbook(voices, booleanMap), os);
 					//
 				} // try
 					//
@@ -8135,14 +8143,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		}
 	}
 
-	private static Workbook createWorkbook(final List<Voice> voices, final boolean exportListSheet)
+	private static Workbook createWorkbook(final List<Voice> voices, final BooleanMap booleanMap)
 			throws IllegalAccessException, InvocationTargetException {
 		//
 		Workbook workbook = null;
 		//
 		setSheet(workbook = ObjectUtils.getIfNull(workbook, XSSFWorkbook::new), createSheet(workbook), voices);
 		//
-		if (exportListSheet) {
+		if (booleanMap != null && booleanMap.getBoolean("exportListSheet")) {
 			//
 			final Multimap<String, Voice> multimap = getVoiceMultimapByListName(voices);
 			//
