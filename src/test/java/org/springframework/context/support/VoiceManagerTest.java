@@ -173,6 +173,7 @@ import domain.Voice.Yomi;
 import domain.VoiceList;
 import fr.free.nrw.jakaroma.Jakaroma;
 import freemarker.template.Template;
+import freemarker.template.Version;
 import io.github.toolfactory.narcissus.Narcissus;
 import mapper.VoiceMapper;
 
@@ -1113,6 +1114,45 @@ class VoiceManagerTest {
 		node = Reflection.newProxy(Node.class, ih);
 		//
 		lookup = Reflection.newProxy(Lookup.class, ih);
+		//
+	}
+
+	@Test
+	void testSetFreeMarkerVersion() throws NoSuchFieldException, IllegalAccessException {
+		//
+		final Field freeMarkerVersion = VoiceManager.class.getDeclaredField("freeMarkerVersion");
+		//
+		if (freeMarkerVersion != null) {
+			//
+			freeMarkerVersion.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> instance.setFreeMarkerVersion(null));
+		//
+		Assertions.assertNull(get(freeMarkerVersion, instance));
+		//
+		Assertions.assertDoesNotThrow(() -> instance.setFreeMarkerVersion(ONE));
+		//
+		Assertions.assertEquals(new Version(0, 0, ONE), get(freeMarkerVersion, instance));
+		//
+		Assertions.assertDoesNotThrow(() -> instance.setFreeMarkerVersion(EMPTY));
+		//
+		Assertions.assertEquals(new Version(EMPTY), get(freeMarkerVersion, instance));
+		//
+		final Version version = freemarker.template.Configuration.getVersion();
+		//
+		Assertions.assertDoesNotThrow(() -> instance.setFreeMarkerVersion(version));
+		//
+		Assertions.assertSame(version, get(freeMarkerVersion, instance));
+		//
+		set(freeMarkerVersion, instance, null);
+		//
+		Assertions.assertThrows(IllegalArgumentException.class, () -> instance.setFreeMarkerVersion(new int[] {}));
+		//
+		Assertions.assertDoesNotThrow(() -> instance.setFreeMarkerVersion(new int[] { ONE, 2, 3 }));
+		//
+		Assertions.assertEquals(new Version(ONE, 2, 3), get(freeMarkerVersion, instance));
 		//
 	}
 

@@ -372,6 +372,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private String exportHtmlTemplateFile = null;
 
+	private Version freeMarkerVersion = null;
+
 	private VoiceManager() {
 	}
 
@@ -659,6 +661,40 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	public void setExportHtmlTemplateFile(final String exportHtmlTemplateFile) {
 		this.exportHtmlTemplateFile = exportHtmlTemplateFile;
+	}
+
+	public void setFreeMarkerVersion(final Object value) {
+		//
+		if (value instanceof Version) {
+			//
+			this.freeMarkerVersion = (Version) value;
+			//
+		} else if (value instanceof CharSequence) {
+			//
+			this.freeMarkerVersion = new Version(toString(value));
+			//
+		} else if (value instanceof Number) {
+			//
+			this.freeMarkerVersion = new Version(((Number) value).intValue());
+			//
+		} // if
+			//
+		final int[] ints = cast(int[].class, value);
+		//
+		if (ints != null) {
+			//
+			if (ints.length != 3) {
+				//
+				throw new IllegalArgumentException();
+				//
+			} else {
+				//
+				this.freeMarkerVersion = new Version(ints[0], ints[1], ints[2]);
+				//
+			} // if
+				//
+		} // if
+			//
 	}
 
 	private static <E> Stream<E> stream(final Collection<E> instance) {
@@ -3378,7 +3414,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					try (final Writer writer = new FileWriter(
 							StringUtils.defaultIfBlank(getText(tfExportHtmlFileName), "export.html"))) {
 						//
-						exportHtml(exportHtmlTemplateFile, writer, voiceFolder, voices);
+						exportHtml(freeMarkerVersion, exportHtmlTemplateFile, writer, voiceFolder, voices);
 						//
 					} // try
 						//
@@ -3717,10 +3753,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static void exportHtml(final String templateFile, final Writer writer, final String folder,
+	private static void exportHtml(final Version v, final String templateFile, final Writer writer, final String folder,
 			final Iterable<Voice> voices) throws IOException, TemplateException {
 		//
-		final Version version = freemarker.template.Configuration.getVersion();
+		final Version version = ObjectUtils.getIfNull(v, freemarker.template.Configuration::getVersion);
 		//
 		final freemarker.template.Configuration configuration = new freemarker.template.Configuration(version);
 		//
