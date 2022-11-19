@@ -3472,6 +3472,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				export(voices, outputFolderFileNameExpressions, objectMap);
 				//
+				// Export Spreadsheet
+				//
+				boolean fileToBeDeleted = false;
+				//
 				try (final OutputStream os = new FileOutputStream(
 						file = new File(String.format("voice_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.xlsx", new Date())))) {
 					//
@@ -3487,7 +3491,23 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					write(workbook = createWorkbook(voices, booleanMap), os);
 					//
+					if (!(fileToBeDeleted = file.length() == 0)) {
+						//
+						final Sheet sheet = workbook.getNumberOfSheets() == 1 ? workbook.getSheetAt(0) : null;
+						//
+						fileToBeDeleted = sheet != null && sheet.getPhysicalNumberOfRows() == 0;
+						//
+					} // if
+						//
 				} // try
+					//
+					// Delete empty Spreadsheet
+					//
+				if (fileToBeDeleted) {
+					//
+					delete(file);
+					//
+				} // if
 					//
 					// export HTML file
 					//
