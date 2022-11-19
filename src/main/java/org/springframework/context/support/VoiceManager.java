@@ -3904,7 +3904,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		Multimap<String, Voice> multimap = null;
 		//
-		if (voices != null) {
+		if (voices != null && voices.iterator() != null) {
 			//
 			Iterable<String> listNames = null;
 			//
@@ -3934,7 +3934,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		Multimap<String, Voice> multimap = null;
 		//
-		if (voices != null) {
+		if (voices != null && voices.iterator() != null) {
 			//
 			for (final Voice v : voices) {
 				//
@@ -8238,7 +8238,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		Row row = null;
 		//
-		if (voices != null) {
+		if (voices != null && voices.iterator() != null) {
 			//
 			Cell cell = null;
 			//

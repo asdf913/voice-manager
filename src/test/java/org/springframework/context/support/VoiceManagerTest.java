@@ -1132,6 +1132,8 @@ class VoiceManagerTest {
 
 	private Lookup lookup = null;
 
+	private Iterable<?> iterable = null;
+
 	@BeforeEach
 	void beforeEach() throws ReflectiveOperationException {
 		//
@@ -1160,6 +1162,8 @@ class VoiceManagerTest {
 		node = Reflection.newProxy(Node.class, ih);
 		//
 		lookup = Reflection.newProxy(Lookup.class, ih);
+		//
+		iterable = Reflection.newProxy(Iterable.class, ih);
 		//
 	}
 
@@ -1380,7 +1384,7 @@ class VoiceManagerTest {
 		//
 		set(mp3Tags, instance, null);
 		//
-		Assertions.assertDoesNotThrow(() -> instance.setMp3Tags(Reflection.newProxy(Iterable.class, ih)));
+		Assertions.assertDoesNotThrow(() -> instance.setMp3Tags(iterable));
 		//
 		Assertions.assertNull(get(mp3Tags, instance));
 		//
@@ -2523,8 +2527,6 @@ class VoiceManagerTest {
 		Assertions.assertDoesNotThrow(() -> forEach(collection, x -> {
 		}));
 		//
-		final Iterable<?> iterable = Reflection.newProxy(Iterable.class, ih);
-		//
 		Assertions.assertDoesNotThrow(() -> forEach(iterable, null));
 		//
 	}
@@ -2548,7 +2550,9 @@ class VoiceManagerTest {
 	@Test
 	void testCreateWorkbook() throws Throwable {
 		//
-		// java.util.List,boolean
+		// java.util.List,org.springframework.context.support.VoiceManager.BooleanMap
+		//
+		Assertions.assertNotNull(createWorkbook(Reflection.newProxy(List.class, ih), null));
 		//
 		Assertions.assertNotNull(createWorkbook(Collections.singletonList(null), null));
 		//
@@ -5722,6 +5726,8 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(getVoiceMultimapByListName(Collections.singleton(null)));
 		//
+		Assertions.assertNull(getVoiceMultimapByListName(Reflection.newProxy(Iterable.class, ih)));
+		//
 		final Voice voice = new Voice();
 		//
 		final Iterable<Voice> voices = Collections.singleton(voice);
@@ -5754,6 +5760,8 @@ class VoiceManagerTest {
 		Assertions.assertNull(getVoiceMultimapByJlpt(null));
 		//
 		Assertions.assertNull(getVoiceMultimapByJlpt(Collections.singleton(null)));
+		//
+		Assertions.assertNull(getVoiceMultimapByJlpt(Reflection.newProxy(Iterable.class, ih)));
 		//
 	}
 
