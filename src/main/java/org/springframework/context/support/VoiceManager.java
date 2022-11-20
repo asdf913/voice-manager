@@ -380,6 +380,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private String exportHtmlTemplateFile = null;
 
+	private freemarker.template.Configuration freeMarkerConfiguration = null;
+
 	private Version freeMarkerVersion = null;
 
 	private VoiceManager() {
@@ -703,6 +705,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
+	}
+
+	public void setFreeMarkerConfiguration(final freemarker.template.Configuration freeMarkerConfiguration) {
+		this.freeMarkerConfiguration = freeMarkerConfiguration;
 	}
 
 	private static <E> Stream<E> stream(final Collection<E> instance) {
@@ -3520,11 +3526,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 						objectMap.setObject(Version.class, version);
 						//
-						final freemarker.template.Configuration configuration = new freemarker.template.Configuration(
-								version);
+						final freemarker.template.Configuration configuration = ObjectUtils.getIfNull(
+								freeMarkerConfiguration, () -> new freemarker.template.Configuration(version));
 						//
-						configuration.setTemplateLoader(new ClassTemplateLoader(VoiceManager.class, "/"));
-						//
+						if (configuration != null && configuration.getTemplateLoader() == null) {
+							//
+							configuration.setTemplateLoader(new ClassTemplateLoader(VoiceManager.class, "/"));
+							//
+						} // if
+							//
 						objectMap.setObject(freemarker.template.Configuration.class, configuration);
 						//
 						objectMap.setObject(TemplateHashModel.class, new BeansWrapper(version).getStaticModels());
