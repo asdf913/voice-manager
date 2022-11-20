@@ -66,6 +66,7 @@
 		var currentIndex=typeof document==="object"&&document!=null&&typeof document.getElementById==="function"?document.getElementById("currentIndex"):null;
 		//
 		if(typeof document==="object"&&document!=null&&typeof document.addEventListener==="function"){
+			//
 			document.addEventListener('DOMContentLoaded',function (){
 				//
 				var itemCount=typeof document==="object"&&document!=null&&typeof document.getElementById==="function"?document.getElementById("itemCount")   :null;
@@ -110,7 +111,7 @@
 						//
 					}//if
 					//
-				});
+				},{"once":true});
 				//
 				a.addEventListener("ended",function(){
 					//
@@ -146,7 +147,7 @@
 						//
 					}//if
 					//
-				});
+				},{"once":true});
 				//
 			}//for
 			//
