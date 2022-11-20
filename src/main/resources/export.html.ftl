@@ -12,6 +12,9 @@
 					<td>
 						<input type="button" id="btnPlayAll" onclick="playAll();" value="Play All"/>
 					</td>
+					<td id="currentIndex" style="width:1px"/>
+					<td style="width:1px">/</td>
+					<td id="itemCount" style="width:1px"/>
 					<td id="currentText"/>
 				</tr>
 			</thead>
@@ -23,7 +26,7 @@
 								<td>
 									${voice.text!""}&nbsp;(${voice.romaji!""})
 								</td>
-								<td>
+								<td colspan="4">
 									<#if statics??>
 										<#assign mimeTypeAndBase64EncodedString=statics["org.springframework.context.support.VoiceManager"].getMimeTypeAndBase64EncodedString(folder,voice.filePath!"")>
 										<#if mimeTypeAndBase64EncodedString??>
@@ -46,7 +49,8 @@
 			<#list voices as voice>
 				<#if voice??>
 					{
-						 "text"  :"${voice.text  !""}"
+						 "index" :${voice?counter}
+						,"text"  :"${voice.text  !""}"
 						,"romaji":"${voice.romaji!""}"
 					}
 					<#sep>,</#sep>
@@ -55,7 +59,24 @@
 			];
 		</#if>
 		//
-		var btnPlayAll=typeof document==="object"&&document!=null&&typeof document.getElementById==="function"?document.getElementById("btnPlayAll"):null;
+		var btnPlayAll  =typeof document==="object"&&document!=null&&typeof document.getElementById==="function"?document.getElementById("btnPlayAll")  :null;
+		//
+		var currentText =typeof document==="object"&&document!=null&&typeof document.getElementById==="function"?document.getElementById("currentText"):null;
+		//
+		var currentIndex=typeof document==="object"&&document!=null&&typeof document.getElementById==="function"?document.getElementById("currentIndex"):null;
+		//
+		if(typeof document==="object"&&document!=null&&typeof document.addEventListener==="function"){
+			document.addEventListener('DOMContentLoaded',function (){
+				//
+				var itemCount=typeof document==="object"&&document!=null&&typeof document.getElementById==="function"?document.getElementById("itemCount")   :null;
+				//
+				if(itemCount!==null&&typeof items==="object"&&items!==null&&typeof items.length==="number"){
+					itemCount.innerHTML=items.length;
+				}
+				//
+			},
+			false);
+		}//if
 		//
 		function playAll(){
 			//
@@ -73,11 +94,19 @@
 					//
 					var item=items[c];
 					//
-					var currentText=typeof document==="object"&&document!=null&&typeof document.getElementById==="function"?document.getElementById("currentText"):null;
-					//
 					if(c<as.length&&item!==null&&currentText!==null){
 						//
-						currentText.innerHTML=item.text+"&nbsp;"+"("+item.romaji+")";
+						if(currentText!==null){
+							//
+							currentText.innerHTML=item.text+"&nbsp;"+"("+item.romaji+")";
+							//
+						}//if
+						//
+						if(currentIndex!==null){
+							//
+							currentIndex.innerHTML=item.index;
+							//
+						}//if
 						//
 					}//if
 					//
@@ -97,11 +126,15 @@
 						//
 					}else{
 						//
-						var currentText=typeof document==="object"&&document!=null&&typeof document.getElementById==="function"?document.getElementById("currentText"):null;
-						//
 						if(currentText!==null){
 							//
 							currentText.innerHTML="";
+							//
+						}//if
+						//
+						if(currentIndex!==null){
+							//
+							currentIndex.innerHTML="";
 							//
 						}//if
 						//
