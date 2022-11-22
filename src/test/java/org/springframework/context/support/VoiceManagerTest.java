@@ -95,6 +95,8 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.text.JTextComponent;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathFactory;
 
 import org.apache.bcel.classfile.FieldOrMethod;
 import org.apache.bcel.classfile.JavaClass;
@@ -246,7 +248,7 @@ class VoiceManagerTest {
 			METHOD_GET_VOICE_MULTI_MAP_BY_LIST_NAME, METHOD_GET_VOICE_MULTI_MAP_BY_JLPT, METHOD_GET_TEMPLATE,
 			METHOD_GET_FILE_EXTENSIONS, METHOD_CREATE_CELL_STYLE, METHOD_REDUCE, METHOD_APPEND_STRING,
 			METHOD_APPEND_CHAR, METHOD_GET_PROVIDER_PLATFORM, METHOD_OPEN_CONNECTION,
-			METHOD_GENERATE_ODF_PRESENTATION_DOCUMENTS = null;
+			METHOD_GENERATE_ODF_PRESENTATION_DOCUMENTS, METHOD_NEW_XPATH = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -698,6 +700,8 @@ class VoiceManagerTest {
 		//
 		(METHOD_GENERATE_ODF_PRESENTATION_DOCUMENTS = clz.getDeclaredMethod("generateOdfPresentationDocuments",
 				InputStream.class, Table.class)).setAccessible(true);
+		//
+		(METHOD_NEW_XPATH = clz.getDeclaredMethod("newXPath", XPathFactory.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -5993,6 +5997,27 @@ class VoiceManagerTest {
 			throws Throwable {
 		try {
 			METHOD_GENERATE_ODF_PRESENTATION_DOCUMENTS.invoke(null, is, table);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testNewXPath() throws Throwable {
+		//
+		Assertions.assertNull(newXPath(null));
+		//
+	}
+
+	private static XPath newXPath(final XPathFactory instance) throws Throwable {
+		try {
+			final Object obj = METHOD_NEW_XPATH.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof XPath) {
+				return (XPath) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

@@ -8981,9 +8981,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 								ByteArrayInputStream::new, null),
 						x -> parse(newDocumentBuilder(DocumentBuilderFactory.newDefaultInstance()), x), null);
 				//
-				final XPathFactory xpf = XPathFactory.newDefaultInstance();
-				//
-				final XPath xp = xpf != null ? xpf.newXPath() : null;
+				final XPath xp = newXPath(XPathFactory.newDefaultInstance());
 				//
 				final NodeList pages = cast(NodeList.class, document != null ? evaluate(xp,
 						"/*[local-name()='document-content']/*[local-name()='body']/*[local-name()='presentation']/*[local-name()='page']",
@@ -9114,6 +9112,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return newOdfPresentationDocument;
 		//
+	}
+
+	private static XPath newXPath(final XPathFactory instance) {
+		return instance != null ? instance.newXPath() : null;
 	}
 
 	private static Object evaluate(final XPath instance, final String expression, final Object item,
