@@ -6430,17 +6430,17 @@ class VoiceManagerTest {
 		final MouseListener[] mouseListeners = getMouseListeners(
 				cast(Component.class, constructor != null ? constructor.newInstance(null, null) : null));
 		//
-		MouseListener mouseListener = null;
-		//
 		for (int i = 0; mouseListeners != null && i < mouseListeners.length; i++) {
 			//
-			if ((mouseListener = mouseListeners[i]) == null) {
+			final MouseListener ml = mouseListeners[i];
+			//
+			if (ml == null) {
 				//
 				continue;
 				//
 			} // if
 				//
-			mouseListener.mouseClicked(null);
+			Assertions.assertDoesNotThrow(() -> ml.mouseClicked(null));
 			//
 		} // for
 			//
