@@ -101,8 +101,7 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 			for (final PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer : propertySourcesPlaceholderConfigurers
 					.values()) {
 				//
-				if (propertySourcesPlaceholderConfigurer == null
-						|| (pss = propertySourcesPlaceholderConfigurer.getAppliedPropertySources()) == null) {
+				if ((pss = getAppliedPropertySources(propertySourcesPlaceholderConfigurer)) == null) {
 					continue;
 				} // if
 					//
@@ -124,6 +123,11 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 				//
 		} // if
 			//
+	}
+
+	private static PropertySources getAppliedPropertySources(final PropertySourcesPlaceholderConfigurer instance)
+			throws IllegalStateException {
+		return instance != null ? instance.getAppliedPropertySources() : null;
 	}
 
 	private static void addLast(final MutablePropertySources instance, final PropertySource<?> propertySource) {
