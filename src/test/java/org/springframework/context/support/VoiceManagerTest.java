@@ -95,6 +95,7 @@ import javax.swing.text.JTextComponent;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.apache.bcel.classfile.FieldOrMethod;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.collections4.MapUtils;
@@ -6444,6 +6445,12 @@ class VoiceManagerTest {
 			} // try
 				//
 		});
+		//
+		// getName(org.apache.bcel.classfile.FieldOrMethod)
+		//
+		final Method getName = clz != null ? clz.getDeclaredMethod("getName", FieldOrMethod.class) : null;
+		//
+		Assertions.assertNull(invoke(getName, instance, (Object) null));
 		//
 	}
 

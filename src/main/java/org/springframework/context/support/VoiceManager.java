@@ -139,6 +139,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.ClassParserUtil;
 import org.apache.bcel.classfile.CodeUtil;
+import org.apache.bcel.classfile.FieldOrMethod;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Utility;
 import org.apache.bcel.generic.ObjectType;
@@ -5243,7 +5244,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				final List<org.apache.bcel.classfile.Method> ms = toList(filter(testAndApply(Objects::nonNull,
 						getMethods(ClassParserUtil
 								.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null))),
-						Arrays::stream, null), x -> x != null && Objects.equals(x.getName(), "string2quality")));
+						Arrays::stream, null), x -> Objects.equals(getName(x), "string2quality")));
 				//
 				org.apache.bcel.classfile.Method m = null;
 				//
@@ -5285,6 +5286,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // try
 				//
+		}
+
+		private static String getName(final FieldOrMethod instance) {
+			return instance != null ? instance.getName() : null;
 		}
 
 		private static org.apache.bcel.classfile.Method[] getMethods(final JavaClass instance) {
