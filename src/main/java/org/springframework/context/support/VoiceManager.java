@@ -5195,7 +5195,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					} // if
 						//
 					lines = StringUtils.split(StringUtils.trim(Utility.codeToString(bs = CodeUtil.getCode(m.getCode()),
-							m.getConstantPool(), 0, bs != null ? bs.length : 0)), '\n');
+							m.getConstantPool(), 0, length(bs))), '\n');
 					//
 					index1 = index2 = count = null;
 					//
@@ -5228,6 +5228,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // try
 				//
+		}
+
+		private static int length(final byte[] instance) {
+			return instance != null ? instance.length : 0;
 		}
 
 		private static Map<String, Integer> createQualityMap() throws IOException {
@@ -5265,7 +5269,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					} // if
 						//
 					lines = StringUtils.split(StringUtils.trim(Utility.codeToString(bs = CodeUtil.getCode(m.getCode()),
-							m.getConstantPool(), 0, bs != null ? bs.length : 0)), '\n');
+							m.getConstantPool(), 0, length(bs))), '\n');
 					//
 					for (int j = 0; lines != null && j < lines.length; j++) {
 						//
@@ -5303,9 +5307,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			ByteArrayOutputStream baos = null;
 			//
-			try (final ByteArrayInputStream bais = testAndApply(x -> x != null && x.length > 0, source,
-					ByteArrayInputStream::new, null);
-					final AudioInputStream ais = bais != null ? AudioSystem.getAudioInputStream(bais) : null) {
+			try (final ByteArrayInputStream bais = testAndApply(x -> length(x) > 0, source, ByteArrayInputStream::new,
+					null); final AudioInputStream ais = bais != null ? AudioSystem.getAudioInputStream(bais) : null) {
 				//
 				final byte[] inputBuffer = new byte[(encoder = ais != null ? new LameEncoder(ais.getFormat()
 				//
