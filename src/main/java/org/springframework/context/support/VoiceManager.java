@@ -7534,9 +7534,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					final Node parentNode = getParentNode(page);
 					//
-					Node pageCloned, p = null;
-					//
-					NodeList ps = null;
+					Node pageCloned = null;
 					//
 					Voice voice = null;
 					//
@@ -7553,25 +7551,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 							// p
 							//
-						for (int i = 0; (ps = cast(NodeList.class,
-								evaluate(xp, "./*[local-name()='frame']/*[local-name()='text-box']/*[local-name()='p']",
-										pageCloned, XPathConstants.NODESET))) != null
-								&& i < ps.getLength(); i++) {
-							//
-							if ((p = ps.item(i)) == null) {
-								//
-								continue;
-								//
-							} // if
-								//
-								// TODO
-								//
-							p.setTextContent(voice.getText());
-							//
-						} // for
-							//
-							// plugin
-							//
+						replaceText(xp, pageCloned, voice);
+						//
+						// plugin
+						//
 						setPluginHref(xp, pageCloned,
 								pattern = ObjectUtils.getIfNull(pattern, () -> Pattern.compile("(\\w+:)?href")),
 								getKey(entry));
@@ -7608,6 +7591,31 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			return newOdfPresentationDocument;
 			//
+		}
+
+		private static void replaceText(final XPath xp, final Node node, final Voice voice)
+				throws XPathExpressionException {
+			//
+			final NodeList ps = cast(NodeList.class,
+					evaluate(xp, "./*[local-name()='frame']/*[local-name()='text-box']/*[local-name()='p']", node,
+							XPathConstants.NODESET));
+			//
+			Node p = null;
+			//
+			for (int i = 0; ps != null && i < ps.getLength(); i++) {
+				//
+				if ((p = ps.item(i)) == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+					// TODO
+					//
+				p.setTextContent(getText(voice));
+				//
+			} // for
+				//
 		}
 
 		private static void setPluginHref(final XPath xp, final Node node, final Pattern pattern, final String key)

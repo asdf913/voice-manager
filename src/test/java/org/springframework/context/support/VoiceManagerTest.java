@@ -6373,6 +6373,20 @@ class VoiceManagerTest {
 			//
 		Assertions.assertNull(invoke(cloneNode, null, node, true));
 		//
+		// org.springframework.context.support.VoiceManager$ExportTask.replaceText(javax.xml.xpath.XPath,org.w3c.dom.Node,domain.Voice)
+		//
+		final Method replaceText = clz != null
+				? clz.getDeclaredMethod("replaceText", XPath.class, Node.class, Voice.class)
+				: null;
+		//
+		if (replaceText != null) {
+			//
+			replaceText.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertNull(invoke(replaceText, null, null, null, null));
+		//
 		// org.springframework.context.support.VoiceManager$ExportTask.setPluginHref(javax.xml.xpath.XPath,org.w3c.dom.Node,java.util.regex.Pattern,java.lang.String)
 		//
 		final Method setPluginHref = clz != null
