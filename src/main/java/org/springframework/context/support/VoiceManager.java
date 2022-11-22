@@ -8989,7 +8989,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				final Node page = pages != null && pages.getLength() == 1 ? pages.item(0) : null;
 				//
-				final Node parentNode = page != null ? page.getParentNode() : null;
+				final Node parentNode = getParentNode(page);
 				//
 				Node pageCloned, p, plugin, attribute = null;
 				//
@@ -9116,6 +9116,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static XPath newXPath(final XPathFactory instance) {
 		return instance != null ? instance.newXPath() : null;
+	}
+
+	private static Node getParentNode(final Node instance) {
+		return instance != null ? instance.getParentNode() : null;
 	}
 
 	private static Object evaluate(final XPath instance, final String expression, final Object item,
