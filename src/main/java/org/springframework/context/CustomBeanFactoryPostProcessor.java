@@ -96,28 +96,34 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 		//
 		if (propertySourcesPlaceholderConfigurers != null && propertySourcesPlaceholderConfigurers.values() != null) {
 			//
-			PropertySources pss = null;
-			//
-			for (final PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer : propertySourcesPlaceholderConfigurers
-					.values()) {
+			for (final PropertySourcesPlaceholderConfigurer pspc : propertySourcesPlaceholderConfigurers.values()) {
 				//
-				if ((pss = getAppliedPropertySources(propertySourcesPlaceholderConfigurer)) == null) {
+				addPropertySourceToPropertySourcesToLast(environment, getAppliedPropertySources(pspc));
+				//
+			} // for
+				//
+		} // if
+			//
+	}
+
+	private static void addPropertySourceToPropertySourcesToLast(final Environment environment,
+			final Iterable<PropertySource<?>> propertySources) {
+		//
+		if (propertySources != null && propertySources.iterator() != null) {
+			//
+			for (final PropertySource<?> ps : propertySources) {
+				//
+				if (Boolean.logicalOr(ps == null, getSource(ps) == environment)) {
+					//
 					continue;
+					//
 				} // if
 					//
-				for (final PropertySource<?> ps : pss) {
+				if (environment instanceof ConfigurableEnvironment) {
 					//
-					if (Boolean.logicalOr(ps == null, getSource(ps) == environment)) {
-						continue;
-					} // if
-						//
-					if (environment instanceof ConfigurableEnvironment) {
-						//
-						addLast(((ConfigurableEnvironment) environment).getPropertySources(), ps);
-						//
-					} // if
-						//
-				} // for
+					addLast(((ConfigurableEnvironment) environment).getPropertySources(), ps);
+					//
+				} // if
 					//
 			} // for
 				//

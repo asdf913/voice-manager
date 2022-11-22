@@ -23,18 +23,27 @@ import com.google.common.reflect.Reflection;
 
 class CustomBeanFactoryPostProcessorTest {
 
-	private static Method METHOD_ADD_PROPERTY_SOURCE_TO_PROPERTY_SOURCES_TO_LAST, METHOD_GET_SOURCE = null;
+	private static Method METHOD_ADD_PROPERTY_SOURCE_TO_PROPERTY_SOURCES_TO_LAST_MAP,
+			METHOD_ADD_PROPERTY_SOURCE_TO_PROPERTY_SOURCES_TO_LAST_ITERABLE, METHOD_GET_SOURCE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
 		//
 		final Class<?> clz = CustomBeanFactoryPostProcessor.class;
 		//
-		if ((METHOD_ADD_PROPERTY_SOURCE_TO_PROPERTY_SOURCES_TO_LAST = clz != null
+		if ((METHOD_ADD_PROPERTY_SOURCE_TO_PROPERTY_SOURCES_TO_LAST_MAP = clz != null
 				? clz.getDeclaredMethod("addPropertySourceToPropertySourcesToLast", Environment.class, Map.class)
 				: null) != null) {
 			//
-			METHOD_ADD_PROPERTY_SOURCE_TO_PROPERTY_SOURCES_TO_LAST.setAccessible(true);
+			METHOD_ADD_PROPERTY_SOURCE_TO_PROPERTY_SOURCES_TO_LAST_MAP.setAccessible(true);
+			//
+		} // if
+			//
+		if ((METHOD_ADD_PROPERTY_SOURCE_TO_PROPERTY_SOURCES_TO_LAST_ITERABLE = clz != null
+				? clz.getDeclaredMethod("addPropertySourceToPropertySourcesToLast", Environment.class, Iterable.class)
+				: null) != null) {
+			//
+			METHOD_ADD_PROPERTY_SOURCE_TO_PROPERTY_SOURCES_TO_LAST_ITERABLE.setAccessible(true);
 			//
 		} // if
 			//
@@ -115,13 +124,30 @@ class CustomBeanFactoryPostProcessorTest {
 		Assertions.assertDoesNotThrow(() -> addPropertySourceToPropertySourcesToLast(null,
 				Collections.singletonMap(null, propertySourcesPlaceholderConfigurer)));
 		//
+		Assertions.assertDoesNotThrow(
+				() -> addPropertySourceToPropertySourcesToLast(null, Collections.singletonList(null)));
+		//
+		ih.iterator = null;
+		//
+		Assertions.assertDoesNotThrow(
+				() -> addPropertySourceToPropertySourcesToLast(null, Reflection.newProxy(Iterable.class, ih)));
+		//
 	}
 
 	private static void addPropertySourceToPropertySourcesToLast(final Environment environment,
 			final Map<?, PropertySourcesPlaceholderConfigurer> propertySourcesPlaceholderConfigurers) throws Throwable {
 		try {
-			METHOD_ADD_PROPERTY_SOURCE_TO_PROPERTY_SOURCES_TO_LAST.invoke(null, environment,
+			METHOD_ADD_PROPERTY_SOURCE_TO_PROPERTY_SOURCES_TO_LAST_MAP.invoke(null, environment,
 					propertySourcesPlaceholderConfigurers);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static void addPropertySourceToPropertySourcesToLast(final Environment environment,
+			final Iterable<PropertySource<?>> propertySources) throws Throwable {
+		try {
+			METHOD_ADD_PROPERTY_SOURCE_TO_PROPERTY_SOURCES_TO_LAST_ITERABLE.invoke(null, environment, propertySources);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -129,8 +155,6 @@ class CustomBeanFactoryPostProcessorTest {
 
 	@Test
 	void testGetSource() throws Throwable {
-		//
-		Assertions.assertNull(getSource(null));
 		//
 		final Map<String, Object> map = Collections.emptyMap();
 		//
