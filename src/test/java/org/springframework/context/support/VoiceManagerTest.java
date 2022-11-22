@@ -20,7 +20,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.Console;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -99,7 +98,6 @@ import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
-import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathFactory;
 
 import org.apache.bcel.classfile.FieldOrMethod;
@@ -251,9 +249,7 @@ class VoiceManagerTest {
 			METHOD_IS_ANNOTATION_PRESENT, METHOD_PROCESS, METHOD_ENCODE_TO_STRING,
 			METHOD_GET_VOICE_MULTI_MAP_BY_LIST_NAME, METHOD_GET_VOICE_MULTI_MAP_BY_JLPT, METHOD_GET_TEMPLATE,
 			METHOD_GET_FILE_EXTENSIONS, METHOD_CREATE_CELL_STYLE, METHOD_REDUCE, METHOD_APPEND_STRING,
-			METHOD_APPEND_CHAR, METHOD_GET_PROVIDER_PLATFORM, METHOD_OPEN_CONNECTION,
-			METHOD_GENERATE_ODF_PRESENTATION_DOCUMENTS, METHOD_NEW_XPATH, METHOD_GET_PARENT_NODE,
-			METHOD_NEW_TRANSFORMER, METHOD_TRANSFORM, METHOD_APPEND_CHILD = null;
+			METHOD_APPEND_CHAR, METHOD_GET_PROVIDER_PLATFORM, METHOD_OPEN_CONNECTION = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -702,21 +698,6 @@ class VoiceManagerTest {
 				.setAccessible(true);
 		//
 		(METHOD_OPEN_CONNECTION = clz.getDeclaredMethod("openConnection", URL.class)).setAccessible(true);
-		//
-		(METHOD_GENERATE_ODF_PRESENTATION_DOCUMENTS = clz.getDeclaredMethod("generateOdfPresentationDocuments",
-				InputStream.class, Table.class)).setAccessible(true);
-		//
-		(METHOD_NEW_XPATH = clz.getDeclaredMethod("newXPath", XPathFactory.class)).setAccessible(true);
-		//
-		(METHOD_GET_PARENT_NODE = clz.getDeclaredMethod("getParentNode", Node.class)).setAccessible(true);
-		//
-		(METHOD_NEW_TRANSFORMER = clz.getDeclaredMethod("newTransformer", TransformerFactory.class))
-				.setAccessible(true);
-		//
-		(METHOD_TRANSFORM = clz.getDeclaredMethod("transform", Transformer.class, Source.class, Result.class))
-				.setAccessible(true);
-		//
-		(METHOD_APPEND_CHILD = clz.getDeclaredMethod("appendChild", Node.class, Node.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -6007,121 +5988,6 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testGenerateOdfPresentationDocuments() {
-		//
-		Assertions.assertDoesNotThrow(() -> generateOdfPresentationDocuments(null, null));
-		//
-		Assertions.assertThrows(FileNotFoundException.class,
-				() -> generateOdfPresentationDocuments(null, ImmutableTable.of(EMPTY, EMPTY, new Voice())));
-		//
-	}
-
-	private static void generateOdfPresentationDocuments(final InputStream is, final Table<String, String, Voice> table)
-			throws Throwable {
-		try {
-			METHOD_GENERATE_ODF_PRESENTATION_DOCUMENTS.invoke(null, is, table);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testNewXPath() throws Throwable {
-		//
-		Assertions.assertNull(newXPath(null));
-		//
-	}
-
-	private static XPath newXPath(final XPathFactory instance) throws Throwable {
-		try {
-			final Object obj = METHOD_NEW_XPATH.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof XPath) {
-				return (XPath) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetParentNode() throws Throwable {
-		//
-		Assertions.assertNull(getParentNode(node));
-		//
-	}
-
-	private static Node getParentNode(final Node instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_PARENT_NODE.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Node) {
-				return (Node) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testNewTransformer() throws Throwable {
-		//
-		Assertions.assertNull(newTransformer(null));
-		//
-	}
-
-	private static Transformer newTransformer(final TransformerFactory instance) throws Throwable {
-		try {
-			final Object obj = METHOD_NEW_TRANSFORMER.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Transformer) {
-				return (Transformer) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testTransform() {
-		//
-		Assertions.assertDoesNotThrow(() -> transform(null, null, null));
-		//
-	}
-
-	private static void transform(final Transformer instance, final Source xmlSource, final Result outputTarget)
-			throws Throwable {
-		try {
-			METHOD_TRANSFORM.invoke(null, instance, xmlSource, outputTarget);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testAppendChild() {
-		//
-		Assertions.assertDoesNotThrow(() -> appendChild(null, null));
-		//
-		Assertions.assertDoesNotThrow(() -> appendChild(node, null));
-		//
-	}
-
-	private static void appendChild(final Node instance, final Node child) throws Throwable {
-		try {
-			METHOD_APPEND_CHILD.invoke(null, instance, child);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testIh() throws Throwable {
 		//
 		final Constructor<?> constructor = CLASS_IH != null ? CLASS_IH.getDeclaredConstructor() : null;
@@ -6329,16 +6195,6 @@ class VoiceManagerTest {
 		//
 		final Class<?> clz = forName("org.springframework.context.support.VoiceManager$ExportTask");
 		//
-		final Constructor<?> constructor = clz != null ? clz.getDeclaredConstructor() : null;
-		//
-		if (constructor != null) {
-			//
-			constructor.setAccessible(true);
-			//
-		} // if
-			//
-		final Object instance = constructor != null ? constructor.newInstance() : null;
-		//
 		// org.springframework.context.support.VoiceManager.ExportTask.setMp3Title(java.io.File)
 		//
 		final Method setMp3Title = clz != null ? clz.getDeclaredMethod("setMp3Title", File.class) : null;
@@ -6349,11 +6205,11 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(invoke(setMp3Title, instance, (Object) null));
+		Assertions.assertNull(invoke(setMp3Title, null, (Object) null));
 		//
-		Assertions.assertNull(invoke(setMp3Title, instance, new File(".")));
+		Assertions.assertNull(invoke(setMp3Title, null, new File(".")));
 		//
-		Assertions.assertNull(invoke(setMp3Title, instance, new File("pom.xml")));
+		Assertions.assertNull(invoke(setMp3Title, null, new File("pom.xml")));
 		//
 		// org.springframework.context.support.VoiceManager.ExportTask.min(java.util.stream.Stream,java.util.Comparator)
 		//
@@ -6365,11 +6221,11 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(invoke(min, instance, null, null));
+		Assertions.assertNull(invoke(min, null, null, null));
 		//
-		Assertions.assertNull(invoke(min, instance, Stream.empty(), null));
+		Assertions.assertNull(invoke(min, null, Stream.empty(), null));
 		//
-		Assertions.assertNull(invoke(min, instance, stream, null));
+		Assertions.assertNull(invoke(min, null, stream, null));
 		//
 		// org.springframework.context.support.VoiceManager$ExportTask.showPharse(org.springframework.context.support.VoiceManager,org.apache.commons.lang3.math.Fraction)
 		//
@@ -6382,11 +6238,93 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(invoke(showPharse, instance, null, null));
+		Assertions.assertNull(invoke(showPharse, null, null, null));
 		//
-		Assertions.assertNull(invoke(showPharse, instance, this.instance, null));
+		Assertions.assertNull(invoke(showPharse, null, this.instance, null));
 		//
-		Assertions.assertNull(invoke(showPharse, instance, this.instance, Fraction.ZERO));
+		Assertions.assertNull(invoke(showPharse, null, this.instance, Fraction.ZERO));
+		//
+		// org.springframework.context.support.VoiceManager$ExportTask.generateOdfPresentationDocuments(java.io.InputStream,com.google.common.collect.Table)
+		//
+		final Method generateOdfPresentationDocuments = clz != null
+				? clz.getDeclaredMethod("generateOdfPresentationDocuments", InputStream.class, Table.class)
+				: null;
+		//
+		if (generateOdfPresentationDocuments != null) {
+			//
+			generateOdfPresentationDocuments.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertNull(invoke(generateOdfPresentationDocuments, null, null, null));
+		//
+		Assertions.assertThrows(InvocationTargetException.class, () -> invoke(generateOdfPresentationDocuments, null,
+				null, ImmutableTable.of(EMPTY, EMPTY, new Voice())));
+		//
+		// org.springframework.context.support.VoiceManager$ExportTask.newXPath(javax.xml.xpath.XPathFactory)
+		//
+		final Method newXPath = clz != null ? clz.getDeclaredMethod("newXPath", XPathFactory.class) : null;
+		//
+		if (newXPath != null) {
+			//
+			newXPath.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertNull(invoke(newXPath, null, (Object) null));
+		//
+		// org.springframework.context.support.VoiceManager$ExportTask.getParentNode(org.w3c.dom.Node)
+		//
+		final Method getParentNode = clz != null ? clz.getDeclaredMethod("getParentNode", Node.class) : null;
+		//
+		if (getParentNode != null) {
+			//
+			getParentNode.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertNull(invoke(getParentNode, null, node));
+		//
+		// org.springframework.context.support.VoiceManager$ExportTask.appendChild(org.w3c.dom.Node,org.w3c.dom.Node)
+		//
+		final Method appendChild = clz != null ? clz.getDeclaredMethod("appendChild", Node.class, Node.class) : null;
+		//
+		if (appendChild != null) {
+			//
+			appendChild.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertNull(invoke(appendChild, null, null, null));
+		//
+		Assertions.assertNull(invoke(appendChild, null, node, null));
+		//
+		// org.springframework.context.support.VoiceManager$ExportTask.newTransformer(javax.xml.transform.TransformerFactory)
+		//
+		final Method newTransformer = clz != null ? clz.getDeclaredMethod("newTransformer", TransformerFactory.class)
+				: null;
+		//
+		if (newTransformer != null) {
+			//
+			newTransformer.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertNull(invoke(newTransformer, null, (Object) null));
+		//
+		// org.springframework.context.support.VoiceManager$ExportTask.newTransformer(javax.xml.transform.Transformer,javax.xml.transform.Source,javax.xml.transform.Result.class)
+		//
+		final Method transform = clz != null
+				? clz.getDeclaredMethod("transform", Transformer.class, Source.class, Result.class)
+				: null;
+		//
+		if (transform != null) {
+			//
+			transform.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertNull(invoke(transform, null, null, null, null));
 		//
 	}
 

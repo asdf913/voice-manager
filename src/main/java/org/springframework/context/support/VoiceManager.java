@@ -7483,6 +7483,207 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		}
 
+		private static void generateOdfPresentationDocuments(final InputStream is,
+				final Table<String, String, Voice> table) throws Exception {
+			//
+			final Set<String> rowKeySet = table != null ? table.rowKeySet() : null;
+			//
+			if (rowKeySet != null) {
+				//
+				final byte[] bs = testAndApply(Objects::nonNull, is, IOUtils::toByteArray, null);
+				//
+				OdfPresentationDocument odfPd = null;
+				//
+				for (final String rowKey : rowKeySet) {
+					//
+					if ((odfPd = generateOdfPresentationDocument(bs, table.row(rowKey))) != null) {
+						//
+						odfPd.save(new File(rowKey, StringUtils.substringAfter(rowKey, File.separatorChar) + ".odp"));
+						//
+					} // if
+						//
+				} // for
+					//
+			} // if
+				//
+		}
+
+		private static OdfPresentationDocument generateOdfPresentationDocument(final byte[] bs,
+				final Map<String, Voice> voices) throws Exception {
+			//
+			OdfPresentationDocument newOdfPresentationDocument = null;
+			//
+			try (final InputStream is = testAndApply(Objects::nonNull, bs, ByteArrayInputStream::new, null)) {
+				//
+				if (voices != null) {
+					//
+					final Document document = testAndApply(Objects::nonNull,
+							testAndApply(Objects::nonNull,
+									testAndApply(Objects::nonNull, is, x -> ZipUtil.unpackEntry(x, "content.xml"),
+											null),
+									ByteArrayInputStream::new, null),
+							x -> parse(newDocumentBuilder(DocumentBuilderFactory.newDefaultInstance()), x), null);
+					//
+					final XPath xp = newXPath(XPathFactory.newDefaultInstance());
+					//
+					final NodeList pages = cast(NodeList.class, document != null ? evaluate(xp,
+							"/*[local-name()='document-content']/*[local-name()='body']/*[local-name()='presentation']/*[local-name()='page']",
+							document, XPathConstants.NODESET) : null);
+					//
+					final Node page = pages != null && pages.getLength() == 1 ? pages.item(0) : null;
+					//
+					final Node parentNode = getParentNode(page);
+					//
+					Node pageCloned, p, plugin, attribute = null;
+					//
+					NodeList ps, plugins = null;
+					//
+					NamedNodeMap attributes = null;
+					//
+					Voice voice = null;
+					//
+					Pattern pattern = null;
+					//
+					StringBuilder sb = null;
+					//
+					for (final Entry<String, Voice> entry : voices.entrySet()) {
+						//
+						if (entry == null || (voice = entry.getValue()) == null) {
+							//
+							continue;
+							//
+						} // if
+							//
+						if (page != null && (pageCloned = page.cloneNode(true)) != null) {
+							//
+							// p
+							//
+							for (int i = 0; (ps = cast(NodeList.class,
+									evaluate(xp,
+											"./*[local-name()='frame']/*[local-name()='text-box']/*[local-name()='p']",
+											pageCloned, XPathConstants.NODESET))) != null
+									&& i < ps.getLength(); i++) {
+								//
+								if ((p = ps.item(i)) == null) {
+									//
+									continue;
+									//
+								} // if
+									//
+									// TODO
+									//
+								p.setTextContent(voice.getText());
+								//
+							} // for
+								//
+								// plugin
+								//
+							for (int i = 0; (plugins = cast(NodeList.class,
+									evaluate(xp, "./*[local-name()='frame']/*[local-name()='plugin']", pageCloned,
+											XPathConstants.NODESET))) != null
+									&& i < plugins.getLength(); i++) {
+								//
+								if ((plugin = plugins.item(i)) == null
+										|| (attributes = plugin.getAttributes()) == null) {
+									//
+									continue;
+									//
+								} // if
+									//
+								for (int j = 0; j < attributes.getLength(); j++) {
+
+									if ((attribute = attributes.item(j)) == null) {
+										//
+										continue;
+										//
+									} // if
+										//
+									if (matches(matcher(pattern = ObjectUtils.getIfNull(pattern,
+											() -> Pattern.compile("(\\w+:)?href")), attribute.getNodeName()))) {
+										//
+										clear(sb = ObjectUtils.getIfNull(sb, StringBuilder::new));
+										//
+										attribute.setNodeValue(
+												VoiceManager.toString(append(append(sb, "../"), getKey(entry))));
+										//
+									} // if
+										//
+								} // for
+									//
+							} // for
+								//
+							appendChild(parentNode, pageCloned);
+							//
+						} // if
+							//
+					} // for
+						//
+					if (page != null && parentNode != null) {
+						//
+						parentNode.removeChild(page);
+						//
+					} // if
+						//
+					final StringWriter writer = new StringWriter();
+					//
+					transform(newTransformer(TransformerFactory.newInstance()), new DOMSource(document),
+							new StreamResult(writer));
+					//
+					if ((newOdfPresentationDocument = OdfPresentationDocument.newPresentationDocument()) != null) {
+						//
+						final File file = File.createTempFile(
+								RandomStringUtils.randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH), null);
+						//
+						newOdfPresentationDocument.save(file);
+						//
+						ZipUtil.replaceEntry(file, "content.xml",
+								writer != null ? VoiceManager.toString(writer).getBytes() : null);
+						//
+						newOdfPresentationDocument = OdfPresentationDocument.loadDocument(file);
+						//
+						delete(file);
+						//
+					} // if
+						//
+				} // if
+					//
+			} // try
+				//
+			return newOdfPresentationDocument;
+			//
+		}
+
+		private static XPath newXPath(final XPathFactory instance) {
+			return instance != null ? instance.newXPath() : null;
+		}
+
+		private static Node getParentNode(final Node instance) {
+			return instance != null ? instance.getParentNode() : null;
+		}
+
+		private static void appendChild(final Node instance, final Node child) throws DOMException {
+			if (instance != null) {
+				instance.appendChild(child);
+			}
+		}
+
+		private static Transformer newTransformer(final TransformerFactory instance)
+				throws TransformerConfigurationException {
+			return instance != null ? instance.newTransformer() : null;
+		}
+
+		private static void transform(final Transformer instance, final Source xmlSource, final Result outputTarget)
+				throws TransformerException {
+			if (instance != null) {
+				instance.transform(xmlSource, outputTarget);
+			}
+		}
+
+		private static Object evaluate(final XPath instance, final String expression, final Object item,
+				final QName returnType) throws XPathExpressionException {
+			return instance != null ? instance.evaluate(expression, item, returnType) : null;
+		}
+
 	}
 
 	private static Integer getOrdinalPosition(final Voice instance) {
@@ -8946,203 +9147,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		return d != null ? Double.valueOf(d.getWidth()) : null;
 		//
-	}
-
-	private static void generateOdfPresentationDocuments(final InputStream is, final Table<String, String, Voice> table)
-			throws Exception {
-		//
-		final Set<String> rowKeySet = table != null ? table.rowKeySet() : null;
-		//
-		if (rowKeySet != null) {
-			//
-			final byte[] bs = testAndApply(Objects::nonNull, is, IOUtils::toByteArray, null);
-			//
-			OdfPresentationDocument odfPd = null;
-			//
-			for (final String rowKey : rowKeySet) {
-				//
-				if ((odfPd = generateOdfPresentationDocument(bs, table.row(rowKey))) != null) {
-					//
-					odfPd.save(new File(rowKey, StringUtils.substringAfter(rowKey, File.separatorChar) + ".odp"));
-					//
-				} // if
-					//
-			} // for
-				//
-		} // if
-			//
-	}
-
-	private static OdfPresentationDocument generateOdfPresentationDocument(final byte[] bs,
-			final Map<String, Voice> voices) throws Exception {
-		//
-		OdfPresentationDocument newOdfPresentationDocument = null;
-		//
-		try (final InputStream is = testAndApply(Objects::nonNull, bs, ByteArrayInputStream::new, null)) {
-			//
-			if (voices != null) {
-				//
-				final Document document = testAndApply(Objects::nonNull,
-						testAndApply(Objects::nonNull,
-								testAndApply(Objects::nonNull, is, x -> ZipUtil.unpackEntry(x, "content.xml"), null),
-								ByteArrayInputStream::new, null),
-						x -> parse(newDocumentBuilder(DocumentBuilderFactory.newDefaultInstance()), x), null);
-				//
-				final XPath xp = newXPath(XPathFactory.newDefaultInstance());
-				//
-				final NodeList pages = cast(NodeList.class, document != null ? evaluate(xp,
-						"/*[local-name()='document-content']/*[local-name()='body']/*[local-name()='presentation']/*[local-name()='page']",
-						document, XPathConstants.NODESET) : null);
-				//
-				final Node page = pages != null && pages.getLength() == 1 ? pages.item(0) : null;
-				//
-				final Node parentNode = getParentNode(page);
-				//
-				Node pageCloned, p, plugin, attribute = null;
-				//
-				NodeList ps, plugins = null;
-				//
-				NamedNodeMap attributes = null;
-				//
-				Voice voice = null;
-				//
-				Pattern pattern = null;
-				//
-				StringBuilder sb = null;
-				//
-				for (final Entry<String, Voice> entry : voices.entrySet()) {
-					//
-					if (entry == null || (voice = entry.getValue()) == null) {
-						//
-						continue;
-						//
-					} // if
-						//
-					if (page != null && (pageCloned = page.cloneNode(true)) != null) {
-						//
-						// p
-						//
-						for (int i = 0; (ps = cast(NodeList.class,
-								evaluate(xp, "./*[local-name()='frame']/*[local-name()='text-box']/*[local-name()='p']",
-										pageCloned, XPathConstants.NODESET))) != null
-								&& i < ps.getLength(); i++) {
-							//
-							if ((p = ps.item(i)) == null) {
-								//
-								continue;
-								//
-							} // if
-								//
-								// TODO
-								//
-							p.setTextContent(voice.getText());
-							//
-						} // for
-							//
-							// plugin
-							//
-						for (int i = 0; (plugins = cast(NodeList.class,
-								evaluate(xp, "./*[local-name()='frame']/*[local-name()='plugin']", pageCloned,
-										XPathConstants.NODESET))) != null
-								&& i < plugins.getLength(); i++) {
-							//
-							if ((plugin = plugins.item(i)) == null || (attributes = plugin.getAttributes()) == null) {
-								//
-								continue;
-								//
-							} // if
-								//
-							for (int j = 0; j < attributes.getLength(); j++) {
-
-								if ((attribute = attributes.item(j)) == null) {
-									//
-									continue;
-									//
-								} // if
-									//
-								if (matches(matcher(
-										pattern = ObjectUtils.getIfNull(pattern, () -> Pattern.compile("(\\w+:)?href")),
-										attribute.getNodeName()))) {
-									//
-									clear(sb = ObjectUtils.getIfNull(sb, StringBuilder::new));
-									//
-									attribute.setNodeValue(toString(append(append(sb, "../"), getKey(entry))));
-									//
-								} // if
-									//
-							} // for
-								//
-						} // for
-							//
-						appendChild(parentNode, pageCloned);
-						//
-					} // if
-						//
-				} // for
-					//
-				if (page != null && parentNode != null) {
-					//
-					parentNode.removeChild(page);
-					//
-				} // if
-					//
-				final StringWriter writer = new StringWriter();
-				//
-				transform(newTransformer(TransformerFactory.newInstance()), new DOMSource(document),
-						new StreamResult(writer));
-				//
-				if ((newOdfPresentationDocument = OdfPresentationDocument.newPresentationDocument()) != null) {
-					//
-					final File file = File
-							.createTempFile(RandomStringUtils.randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH), null);
-					//
-					newOdfPresentationDocument.save(file);
-					//
-					ZipUtil.replaceEntry(file, "content.xml", writer != null ? toString(writer).getBytes() : null);
-					//
-					newOdfPresentationDocument = OdfPresentationDocument.loadDocument(file);
-					//
-					delete(file);
-					//
-				} // if
-					//
-			} // if
-				//
-		} // try
-			//
-		return newOdfPresentationDocument;
-		//
-	}
-
-	private static XPath newXPath(final XPathFactory instance) {
-		return instance != null ? instance.newXPath() : null;
-	}
-
-	private static Node getParentNode(final Node instance) {
-		return instance != null ? instance.getParentNode() : null;
-	}
-
-	private static void appendChild(final Node instance, final Node child) throws DOMException {
-		if (instance != null) {
-			instance.appendChild(child);
-		}
-	}
-
-	private static Transformer newTransformer(final TransformerFactory instance)
-			throws TransformerConfigurationException {
-		return instance != null ? instance.newTransformer() : null;
-	}
-
-	private static void transform(final Transformer instance, final Source xmlSource, final Result outputTarget)
-			throws TransformerException {
-		if (instance != null) {
-			instance.transform(xmlSource, outputTarget);
-		}
-	}
-
-	private static Object evaluate(final XPath instance, final String expression, final Object item,
-			final QName returnType) throws XPathExpressionException {
-		return instance != null ? instance.evaluate(expression, item, returnType) : null;
 	}
 
 	public static void main(final String[] args) {
