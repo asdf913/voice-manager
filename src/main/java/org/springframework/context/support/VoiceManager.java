@@ -3802,7 +3802,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				importVoice(f);
 				//
-			} // for;
+			} // for
 				//
 		} else if (Objects.equals(source, btnExportGaKuNenBeTsuKanJi)) {
 			//
