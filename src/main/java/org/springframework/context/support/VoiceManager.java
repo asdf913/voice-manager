@@ -316,6 +316,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static final String LANGUAGE = "Language";
 
+	private static final String EXPORT_PRESENTATION = "exportPresentation";
+
 	private static final Predicate<File> EMPTY_FILE_PREDICATE = f -> f != null && f.exists() && isFile(f)
 			&& f.length() == 0;
 
@@ -3523,7 +3525,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 						booleanMap.setBoolean("jlptAsFolder", isSelected(cbJlptAsFolder));
 						//
-						booleanMap.setBoolean("exportPresentation", isSelected(cbExportPresentation));
+						booleanMap.setBoolean(EXPORT_PRESENTATION, isSelected(cbExportPresentation));
 						//
 					} // if
 						//
@@ -7568,7 +7570,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					et.ordinalPositionAsFileNamePrefix = booleanMap.getBoolean("ordinalPositionAsFileNamePrefix");
 					//
-					et.exportPresentation = booleanMap.getBoolean("exportPresentation");
+					et.exportPresentation = booleanMap.getBoolean(EXPORT_PRESENTATION);
 					//
 				} // if
 					//
@@ -7867,7 +7869,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			et.ordinalPositionAsFileNamePrefix = booleanMap.getBoolean("ordinalPositionAsFileNamePrefix");
 			//
-			et.exportPresentation = booleanMap.getBoolean("exportPresentation");
+			et.exportPresentation = booleanMap.getBoolean(EXPORT_PRESENTATION);
 			//
 		} // if
 			//
