@@ -7247,8 +7247,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					if (fileName != null) {
 						//
-						if (ordinalPositionAsFileNamePrefix && StringUtils.isNotBlank(
-								ordinalPositionString = VoiceManager.toString(voice.getOrdinalPosition()))) {
+						if (ordinalPositionAsFileNamePrefix && StringUtils
+								.isNotBlank(ordinalPositionString = VoiceManager.toString(getOrdinalPosition(voice)))) {
 							//
 							append(append(fileName, ordinalPositionDigit != null
 									? StringUtils.leftPad(ordinalPositionString, ordinalPositionDigit.intValue(),
@@ -7393,6 +7393,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	}
 
+	private static Integer getOrdinalPosition(final Voice instance) {
+		return instance != null ? instance.getOrdinalPosition() : null;
+	}
+
 	private static interface BooleanMap {
 
 		boolean getBoolean(final String key);
@@ -7426,10 +7430,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			int size = voices != null ? voices.size() : 0;
 			//
-			Integer numberOfOrdinalPositionDigit = Integer.valueOf(StringUtils.length(toString(orElse(
-					max(filter(map(stream(voices), x -> x != null ? x.getOrdinalPosition() : null), Objects::nonNull),
-							ObjectUtils::compare),
-					null))));
+			Integer numberOfOrdinalPositionDigit = Integer.valueOf(StringUtils.length(
+					toString(orElse(max(filter(map(stream(voices), x -> getOrdinalPosition(x)), Objects::nonNull),
+							ObjectUtils::compare), null))));
 			//
 			Fraction pharse = null;
 			//
@@ -7513,12 +7516,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				size = multimap.size();
 				//
-				numberOfOrdinalPositionDigit = Integer
-						.valueOf(
-								StringUtils.length(toString(orElse(max(
-										filter(map(stream(multimap.values()),
-												x -> x != null ? x.getOrdinalPosition() : null), Objects::nonNull),
-										ObjectUtils::compare), null))));
+				numberOfOrdinalPositionDigit = Integer.valueOf(StringUtils.length(toString(
+						orElse(max(filter(map(stream(multimap.values()), x -> getOrdinalPosition(x)), Objects::nonNull),
+								ObjectUtils::compare), null))));
 				//
 				if (pharse != null) {
 					//
@@ -7625,11 +7625,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					size = multimap.size();
 					//
-					numberOfOrdinalPositionDigit = Integer
-							.valueOf(StringUtils.length(toString(orElse(max(
-									filter(map(stream(multimap.values()),
-											x -> x != null ? x.getOrdinalPosition() : null), Objects::nonNull),
-									ObjectUtils::compare), null))));
+					numberOfOrdinalPositionDigit = Integer.valueOf(StringUtils.length(toString(orElse(
+							max(filter(map(stream(multimap.values()), x -> getOrdinalPosition(x)), Objects::nonNull),
+									ObjectUtils::compare),
+							null))));
 					//
 					for (final Entry<String, Voice> en : multimap.entries()) {
 						//
