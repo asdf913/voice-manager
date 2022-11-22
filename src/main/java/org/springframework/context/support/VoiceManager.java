@@ -8671,7 +8671,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			instance.deleteVoiceListByVoiceId(voiceId);
 			//
-			final Iterable<String> listNames = voice != null ? voice.getListNames() : null;
+			final Iterable<String> listNames = getListNames(voice);
 			//
 			if (listNames != null && listNames.iterator() != null) {
 				//
@@ -8697,6 +8697,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
+	}
+
+	private static Iterable<String> getListNames(final Voice instance) {
+		return instance != null ? instance.getListNames() : null;
 	}
 
 	private static Integer getId(final VoiceList instance) {
