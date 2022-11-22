@@ -95,6 +95,8 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.text.JTextComponent;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathFactory;
 
@@ -248,7 +250,8 @@ class VoiceManagerTest {
 			METHOD_GET_VOICE_MULTI_MAP_BY_LIST_NAME, METHOD_GET_VOICE_MULTI_MAP_BY_JLPT, METHOD_GET_TEMPLATE,
 			METHOD_GET_FILE_EXTENSIONS, METHOD_CREATE_CELL_STYLE, METHOD_REDUCE, METHOD_APPEND_STRING,
 			METHOD_APPEND_CHAR, METHOD_GET_PROVIDER_PLATFORM, METHOD_OPEN_CONNECTION,
-			METHOD_GENERATE_ODF_PRESENTATION_DOCUMENTS, METHOD_NEW_XPATH, METHOD_GET_PARENT_NODE = null;
+			METHOD_GENERATE_ODF_PRESENTATION_DOCUMENTS, METHOD_NEW_XPATH, METHOD_GET_PARENT_NODE,
+			METHOD_NEW_TRANSFORMER = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -704,6 +707,9 @@ class VoiceManagerTest {
 		(METHOD_NEW_XPATH = clz.getDeclaredMethod("newXPath", XPathFactory.class)).setAccessible(true);
 		//
 		(METHOD_GET_PARENT_NODE = clz.getDeclaredMethod("getParentNode", Node.class)).setAccessible(true);
+		//
+		(METHOD_NEW_TRANSFORMER = clz.getDeclaredMethod("newTransformer", TransformerFactory.class))
+				.setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -6043,6 +6049,27 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof Node) {
 				return (Node) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testNewTransformer() throws Throwable {
+		//
+		Assertions.assertNull(newTransformer(null));
+		//
+	}
+
+	private static Transformer newTransformer(final TransformerFactory instance) throws Throwable {
+		try {
+			final Object obj = METHOD_NEW_TRANSFORMER.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Transformer) {
+				return (Transformer) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
