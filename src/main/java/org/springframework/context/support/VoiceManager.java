@@ -126,6 +126,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
 import javax.swing.MutableComboBoxModel;
+import javax.swing.WindowConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
@@ -8819,7 +8820,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final VoiceManager instance = new VoiceManager();
 		//
-		instance.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		instance.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		//
 		instance.setLayout(new MigLayout());
 		//
