@@ -827,7 +827,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		if (isInstalled(speechApi)) {
 			//
-			final LayoutManager layoutManager = cloneLayoutManager();
+			final LayoutManager lm = cloneLayoutManager();
 			//
 			if (VersionHelpers.IsWindows10OrGreater() && getInstance(speechApi) instanceof SpeechApiSpeechServerImpl) {
 				//
@@ -837,7 +837,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					if (jPanelWarning == null) {
 						//
-						jPanelWarning = new JPanel(layoutManager);
+						jPanelWarning = new JPanel(lm);
 						//
 					} // if
 						//
@@ -845,7 +845,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					final JLabel jLabel = new JLabel("Please set Compatibility Mode to \"Windows 8\" or prior version");
 					//
-					if (layoutManager instanceof MigLayout) {
+					if (lm instanceof MigLayout) {
 						jPanelWarning.add(jLabel, WRAP);
 					} else {
 						jPanelWarning.add(jLabel);
@@ -903,7 +903,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			testAndAccept(Objects::nonNull, jPanelWarning, x -> {
 				//
-				if (layoutManager instanceof MigLayout) {
+				if (lm instanceof MigLayout) {
 					add(x, WRAP);
 				} else {
 					add(x);
@@ -1232,9 +1232,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final LayoutManager layoutManagerDefault = null;
 		//
-		LayoutManager layoutManager = ObjectUtils.defaultIfNull(this.layoutManager, layoutManagerDefault);
+		LayoutManager lm = ObjectUtils.defaultIfNull(this.layoutManager, layoutManagerDefault);
 		//
-		if (layoutManager instanceof MigLayout) {
+		if (lm instanceof MigLayout) {
 			//
 			final MigLayout migLayout = new MigLayout();
 			//
@@ -1242,15 +1242,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					"net.miginfocom.swing.MigLayout.layoutConstraints",
 					(a, b) -> migLayout.setLayoutConstraints(getProperty(a, b)));
 			//
-			layoutManager = migLayout;
+			lm = migLayout;
 			//
-		} else if (layoutManager instanceof Serializable) {
+		} else if (lm instanceof Serializable) {
 			//
-			layoutManager = cast(LayoutManager.class, SerializationUtils.clone((Serializable) layoutManager));
+			lm = cast(LayoutManager.class, SerializationUtils.clone((Serializable) lm));
 			//
 		} // if
 			//
-		return ObjectUtils.defaultIfNull(layoutManager, layoutManagerDefault);
+		return ObjectUtils.defaultIfNull(lm, layoutManagerDefault);
 		//
 	}
 
@@ -1887,16 +1887,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		panel.add(new JLabel("JLPT Level"));
 		//
-		final List<String> jlptLevels = testAndApply(Objects::nonNull, getJlptLevels(), ArrayList::new, null);
+		final List<String> jlptLevelList = testAndApply(Objects::nonNull, getJlptLevels(), ArrayList::new, null);
 		//
-		if (jlptLevels != null && !jlptLevels.isEmpty()) {
+		if (jlptLevelList != null && !jlptLevelList.isEmpty()) {
 			//
-			jlptLevels.add(0, null);
+			jlptLevelList.add(0, null);
 			//
 		} // if
 			//
 		panel.add(new JComboBox<String>(
-				cbmJlptLevel = testAndApply(Objects::nonNull, toArray(jlptLevels, new String[] {}),
+				cbmJlptLevel = testAndApply(Objects::nonNull, toArray(jlptLevelList, new String[] {}),
 						DefaultComboBoxModel::new, x -> new DefaultComboBoxModel<String>())),
 				WRAP);
 		//
@@ -4834,11 +4834,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				setBackground(jtf, Color.WHITE);
 				//
-				final ObjectMapper objectMapper = getObjectMapper();
+				final ObjectMapper om = getObjectMapper();
 				//
-				final List<?> list = getObjectList(objectMapper, getText(jtf));
+				final List<?> list = getObjectList(om, getText(jtf));
 				//
-				setText(jlListNames, writeValueAsString(objectMapper, list));
+				setText(jlListNames, writeValueAsString(om, list));
 				//
 				setText(jlListNameCount, list != null ? Integer.toString(list.size()) : null);
 				//
@@ -4852,11 +4852,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} else if (Objects.equals(source, tfTextImport)) {
 			//
-			Multimap<String, String> gaKuNenBeTsuKanJiMultimap = null;
+			Multimap<String, String> gaKuNenBeTsuKanJiMultiMap = null;
 			//
 			try {
 				//
-				gaKuNenBeTsuKanJiMultimap = getGaKuNenBeTsuKanJiMultimap();
+				gaKuNenBeTsuKanJiMultiMap = getGaKuNenBeTsuKanJiMultimap();
 				//
 			} catch (final IOException e) {
 				//
@@ -4876,7 +4876,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 			} // try
 				//
-			final Collection<Entry<String, String>> entries = entries(gaKuNenBeTsuKanJiMultimap);
+			final Collection<Entry<String, String>> entries = entries(gaKuNenBeTsuKanJiMultiMap);
 			//
 			if (entries != null) {
 				//
@@ -5141,9 +5141,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				final Range<Integer> range = createQualityRange();
 				//
-				final Integer quality = getQuality();
+				final Integer q = getQuality();
 				//
-				if (range != null && !range.contains(quality)) {
+				if (range != null && !range.contains(q)) {
 					//
 					throw new IllegalStateException(String.format("Under VBR,\"quality\" cound be with in %1$s to %2$s",
 							range.lowerEndpoint(), range.upperEndpoint()));
