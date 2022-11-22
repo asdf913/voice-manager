@@ -297,6 +297,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static final String NO_FILE_SELECTED = "No File Selected";
 
+	private static final String LANGUAGE = "Language";
+
 	private static final Predicate<File> EMPTY_FILE_PREDICATE = f -> f != null && f.exists() && isFile(f)
 			&& f.length() == 0;
 
@@ -1664,7 +1666,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		// Language
 		//
-		panel.add(new JLabel("Language"));
+		panel.add(new JLabel(LANGUAGE));
 		//
 		panel.add(
 				tfLanguage = new JTextField(
@@ -3266,7 +3268,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				if (voice != null) {
 					//
 					voice.setLanguage(StringUtils.defaultIfBlank(voice.getLanguage(),
-							convertLanguageCodeToText(getVoiceAttribute(speechApi, voiceId, "Language"), 16)));
+							convertLanguageCodeToText(getVoiceAttribute(speechApi, voiceId, LANGUAGE), 16)));
 					//
 					voice.setSource(StringUtils.defaultIfBlank(voice.getSource(),
 							getProviderName(cast(Provider.class, speechApi))));
@@ -4674,7 +4676,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			try {
 				//
-				final String language = getVoiceAttribute(speechApi, toString(getSelectedItem(cbmVoiceId)), "Language");
+				final String language = getVoiceAttribute(speechApi, toString(getSelectedItem(cbmVoiceId)), LANGUAGE);
 				//
 				setText(tfSpeechLanguageCode, language);
 				//
@@ -6575,7 +6577,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 											//
 											it.voice.setLanguage(StringUtils.defaultIfBlank(it.voice.getLanguage(),
 													convertLanguageCodeToText(
-															getVoiceAttribute(speechApi, voiceId, "Language"), 16)));
+															getVoiceAttribute(speechApi, voiceId, LANGUAGE), 16)));
 											//
 										} catch (final Error e) {
 											//
