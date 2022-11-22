@@ -295,6 +295,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static final String VALUE = "value";
 
+	private static final String NO_FILE_SELECTED = "No File Selected";
+
 	private static final Predicate<File> EMPTY_FILE_PREDICATE = f -> f != null && f.exists() && isFile(f)
 			&& f.length() == 0;
 
@@ -3334,15 +3336,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					clear(tmImportException);
 					//
-					final String message = "No File Selected";
-					//
 					if (tmImportException != null) {
 						//
-						tmImportException.addRow(new Object[] { getText(voice), getRomaji(voice), message });
+						tmImportException.addRow(new Object[] { getText(voice), getRomaji(voice), NO_FILE_SELECTED });
 						//
 					} else {
 						//
-						JOptionPane.showMessageDialog(null, message);
+						JOptionPane.showMessageDialog(null, NO_FILE_SELECTED);
 						//
 					} // if
 						//
@@ -5536,7 +5536,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		if (file == null) {
 			//
-			message = "No File Selected";
+			message = NO_FILE_SELECTED;
 			//
 			if (tmImportException != null) {
 				//
@@ -6803,7 +6803,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		if (selectedFile == null) {
 			//
-			accept(errorMessageConsumer, voice, "No File Selected");
+			accept(errorMessageConsumer, voice, NO_FILE_SELECTED);
 			//
 			return;
 			//
