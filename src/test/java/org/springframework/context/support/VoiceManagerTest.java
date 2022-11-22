@@ -239,7 +239,7 @@ class VoiceManagerTest {
 			METHOD_IS_ANNOTATION_PRESENT, METHOD_PROCESS, METHOD_ENCODE_TO_STRING,
 			METHOD_GET_VOICE_MULTI_MAP_BY_LIST_NAME, METHOD_GET_VOICE_MULTI_MAP_BY_JLPT, METHOD_GET_TEMPLATE,
 			METHOD_GET_FILE_EXTENSIONS, METHOD_CREATE_CELL_STYLE, METHOD_REDUCE, METHOD_APPEND_STRING,
-			METHOD_APPEND_CHAR = null;
+			METHOD_APPEND_CHAR, METHOD_GET_PROVIDER_PLATFORM = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -684,6 +684,9 @@ class VoiceManagerTest {
 		//
 		(METHOD_APPEND_CHAR = clz.getDeclaredMethod("append", StringBuilder.class, Character.TYPE)).setAccessible(true);
 		//
+		(METHOD_GET_PROVIDER_PLATFORM = clz.getDeclaredMethod("getProviderPlatform", Provider.class))
+				.setAccessible(true);
+		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
 	}
@@ -697,7 +700,7 @@ class VoiceManagerTest {
 		private Set<Entry<?, ?>> entrySet = null;
 
 		private String toString, stringCellValue, providerName, providerVersion, artist, voiceAttribute, lpwstr,
-				sheetName, textContent, nodeName, dllPath = null;
+				sheetName, textContent, nodeName, dllPath, providerPlatform = null;
 
 		private Configuration configuration = null;
 
@@ -978,6 +981,10 @@ class VoiceManagerTest {
 				} else if (Objects.equals(methodName, "getProviderVersion")) {
 					//
 					return providerVersion;
+					//
+				} else if (Objects.equals(methodName, "getProviderPlatform")) {
+					//
+					return providerPlatform;
 					//
 				} // if
 					//
@@ -5911,6 +5918,27 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof StringBuilder) {
 				return (StringBuilder) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetProviderPlatform() throws Throwable {
+		//
+		Assertions.assertNull(getProviderPlatform(Reflection.newProxy(Provider.class, ih)));
+		//
+	}
+
+	private static String getProviderPlatform(final Provider instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_PROVIDER_PLATFORM.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

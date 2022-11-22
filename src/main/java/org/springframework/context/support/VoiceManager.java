@@ -1283,9 +1283,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		try {
 			//
-			panel.add(tfProviderPlatform = isInstalled
-					? new JTextField(provider != null ? provider.getProviderPlatform() : null)
-					: new JTextField(), WRAP);
+			panel.add(
+					tfProviderPlatform = isInstalled ? new JTextField(getProviderPlatform(provider)) : new JTextField(),
+					WRAP);
 			//
 		} catch (final Error e) {
 			//
@@ -1540,6 +1540,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return panel;
 		//
+	}
+
+	private static String getProviderPlatform(final Provider instance) {
+		return instance != null ? instance.getProviderPlatform() : null;
 	}
 
 	private static boolean isAnnotationPresent(final AnnotatedElement instance,
