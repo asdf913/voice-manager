@@ -3470,7 +3470,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					if (v != null && voiceMapper != null) {
 						//
-						v.setListNames(voiceMapper.searchVoiceListNamesByVoiceId(v.getId()));
+						v.setListNames(voiceMapper.searchVoiceListNamesByVoiceId(getId(v)));
 						//
 					} // if
 						//
@@ -8652,7 +8652,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				if (voice != null) {
 					//
-					voice.setId(voiceOld.getId());
+					voice.setId(getId(voiceOld));
 					//
 					voice.setUpdateTs(new Date());
 					//
@@ -8674,7 +8674,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				// voice_list
 				//
-			final Integer voiceId = voice != null ? voice.getId() : null;
+			final Integer voiceId = getId(voice);
 			//
 			instance.deleteVoiceListByVoiceId(voiceId);
 			//
@@ -8704,6 +8704,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
+	}
+
+	private static Integer getId(final Voice instance) {
+		return instance != null ? instance.getId() : null;
 	}
 
 	private static Iterable<String> getListNames(final Voice instance) {
