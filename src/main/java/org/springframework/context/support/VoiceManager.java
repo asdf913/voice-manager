@@ -324,6 +324,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static final String OVER_MP3_TITLE = "overMp3Title";
 
+	private static final String ORDINAL_POSITION_AS_FILE_NAME_PREFIX = "ordinalPositionAsFileNamePrefix";
+
 	private static final Predicate<File> EMPTY_FILE_PREDICATE = f -> f != null && f.exists() && isFile(f)
 			&& f.length() == 0;
 
@@ -3526,7 +3528,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 						booleanMap.setBoolean(OVER_MP3_TITLE, isSelected(cbOverMp3Title));
 						//
-						booleanMap.setBoolean("ordinalPositionAsFileNamePrefix",
+						booleanMap.setBoolean(ORDINAL_POSITION_AS_FILE_NAME_PREFIX,
 								isSelected(cbOrdinalPositionAsFileNamePrefix));
 						//
 						booleanMap.setBoolean("jlptAsFolder", isSelected(cbJlptAsFolder));
@@ -7796,7 +7798,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					et.overMp3Title = booleanMap.getBoolean(OVER_MP3_TITLE);
 					//
-					et.ordinalPositionAsFileNamePrefix = booleanMap.getBoolean("ordinalPositionAsFileNamePrefix");
+					et.ordinalPositionAsFileNamePrefix = booleanMap.getBoolean(ORDINAL_POSITION_AS_FILE_NAME_PREFIX);
 					//
 					et.exportPresentation = booleanMap.getBoolean(EXPORT_PRESENTATION);
 					//
@@ -8095,7 +8097,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			et.overMp3Title = booleanMap.getBoolean(OVER_MP3_TITLE);
 			//
-			et.ordinalPositionAsFileNamePrefix = booleanMap.getBoolean("ordinalPositionAsFileNamePrefix");
+			et.ordinalPositionAsFileNamePrefix = booleanMap.getBoolean(ORDINAL_POSITION_AS_FILE_NAME_PREFIX);
 			//
 			et.exportPresentation = booleanMap.getBoolean(EXPORT_PRESENTATION);
 			//
