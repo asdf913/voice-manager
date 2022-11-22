@@ -71,17 +71,17 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider, Lookup, I
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		//
-		final Table<Object, Object, Object> table = getTable();
+		final Table<Object, Object, Object> t = getTable();
 		//
-		if (table != null) {
+		if (t != null) {
 			//
-			table.put("volume", "min", 0);
+			t.put("volume", "min", 0);
 			//
-			table.put("volume", "max", 100);
+			t.put("volume", "max", 100);
 			//
-			table.put("rate", "min", -10);
+			t.put("rate", "min", -10);
 			//
-			table.put("rate", "max", 10);
+			t.put("rate", "max", 10);
 			//
 		} // if
 			//
@@ -309,15 +309,15 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider, Lookup, I
 	@Override
 	public Object get(final Object row, final Object column) {
 		//
-		final Table<?, ?, ?> table = getTable();
+		final Table<?, ?, ?> t = getTable();
 		//
-		if (table != null && !TableUtil.contains(table, row, column)) {
+		if (t != null && !TableUtil.contains(t, row, column)) {
 			//
 			throw new IllegalStateException();
 			//
 		} // if
 			//
-		return TableUtil.get(table, row, column);
+		return TableUtil.get(t, row, column);
 		//
 	}
 

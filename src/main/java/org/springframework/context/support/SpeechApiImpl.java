@@ -46,9 +46,9 @@ public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean {
 	@Override
 	public boolean isInstalled() {
 		//
-		final SpeechApi instance = getInstance();
+		final SpeechApi speechApi = getInstance();
 		//
-		return instance != null && instance.isInstalled();
+		return speechApi != null && speechApi.isInstalled();
 		//
 	}
 
@@ -69,11 +69,11 @@ public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean {
 	public void writeVoiceToFile(final String text, final String voiceId, final int rate, final int volume,
 			final File file) {
 		//
-		final SpeechApi instance = getInstance();
+		final SpeechApi speechApi = getInstance();
 		//
-		if (instance != null) {
+		if (speechApi != null) {
 			//
-			instance.writeVoiceToFile(text, voiceId, 0, volume, file);
+			speechApi.writeVoiceToFile(text, voiceId, 0, volume, file);
 			//
 		} // if
 			//
@@ -82,9 +82,9 @@ public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean {
 	@Override
 	public String[] getVoiceIds() {
 		//
-		final SpeechApi instance = getInstance();
+		final SpeechApi speechApi = getInstance();
 		//
-		return instance != null ? instance.getVoiceIds() : null;
+		return speechApi != null ? speechApi.getVoiceIds() : null;
 		//
 	}
 
@@ -98,9 +98,9 @@ public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean {
 	@Override
 	public String getProviderName() {
 		//
-		final Provider instance = cast(Provider.class, getInstance());
+		final Provider provider = cast(Provider.class, getInstance());
 		//
-		return instance != null ? instance.getProviderName() : null;
+		return provider != null ? provider.getProviderName() : null;
 		//
 	}
 
@@ -111,18 +111,18 @@ public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean {
 	@Override
 	public String getProviderVersion() {
 		//
-		final Provider instance = cast(Provider.class, getInstance());
+		final Provider provider = cast(Provider.class, getInstance());
 		//
-		return instance != null ? instance.getProviderVersion() : null;
+		return provider != null ? provider.getProviderVersion() : null;
 		//
 	}
 
 	@Override
 	public String getProviderPlatform() {
 		//
-		final Provider instance = cast(Provider.class, getInstance());
+		final Provider provider = cast(Provider.class, getInstance());
 		//
-		return instance != null ? instance.getProviderPlatform() : null;
+		return provider != null ? provider.getProviderPlatform() : null;
 		//
 	}
 
