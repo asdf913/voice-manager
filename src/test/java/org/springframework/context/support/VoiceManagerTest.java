@@ -5520,7 +5520,7 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void tsetSetCssEnabled() {
+	void testSetCssEnabled() {
 		//
 		Assertions.assertDoesNotThrow(() -> setCssEnabled(null, false));
 		//
@@ -5535,7 +5535,7 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void tsetSetJavaScriptEnabled() {
+	void testSetJavaScriptEnabled() {
 		//
 		Assertions.assertDoesNotThrow(() -> setJavaScriptEnabled(null, false));
 		//
