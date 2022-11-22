@@ -290,8 +290,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static final String GROWX = "growx";
 
 	private static final String FORMAT = "format";
-	
-	private static final String WARNING  = "Warning";
+
+	private static final String WARNING = "Warning";
+
+	private static final String VALUE = "value";
 
 	private static final Predicate<File> EMPTY_FILE_PREDICATE = f -> f != null && f.exists() && isFile(f)
 			&& f.length() == 0;
@@ -2643,7 +2645,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 										final List<Method> ms = toList(filter(
 												testAndApply(Objects::nonNull, getDeclaredMethods(annotationType(a)),
 														Arrays::stream, null),
-												ma -> Objects.equals(getName(ma), "value")));
+												ma -> Objects.equals(getName(ma), VALUE)));
 										//
 										if (ms == null || ms.isEmpty()) {
 											//
@@ -8362,7 +8364,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 														x -> Objects.equals(annotationType(x), dataFormatClass))),
 												null))),
 										Arrays::stream, null),
-								x -> Objects.equals(getName(x), "value"))), null)) != null
+								x -> Objects.equals(getName(x), VALUE))), null)) != null
 								&& (cellStyle = createCellStyle(workbook)) != null) {
 							//
 							m.setAccessible(true);
@@ -8390,7 +8392,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 														x -> Objects.equals(annotationType(x), dateFormatClass))),
 												null))),
 										Arrays::stream, null),
-								x -> Objects.equals(getName(x), "value"))), null)) != null) {
+								x -> Objects.equals(getName(x), VALUE))), null)) != null) {
 							//
 							m.setAccessible(true);
 							//
@@ -8446,7 +8448,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				final List<Method> ms = toList(filter(
 						testAndApply(Objects::nonNull, getDeclaredMethods(getClass(annotation)), Arrays::stream, null),
-						m -> Objects.equals(getName(m), "value")));
+						m -> Objects.equals(getName(m), VALUE)));
 				//
 				final Method m = (size = CollectionUtils.size(ms)) == 1 ? get(ms, 0) : null;
 				//
@@ -8482,7 +8484,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				null);
 		//
 		final Method method = orElse(findFirst(
-				filter(Arrays.stream(getDeclaredMethods(annotationType(a))), z -> Objects.equals(getName(z), "value"))),
+				filter(Arrays.stream(getDeclaredMethods(annotationType(a))), z -> Objects.equals(getName(z), VALUE))),
 				null);
 		//
 		if (method != null) {
