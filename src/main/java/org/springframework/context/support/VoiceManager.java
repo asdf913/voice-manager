@@ -5730,39 +5730,35 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				final Field f = get(fs, 0);
 				//
-				if (f != null) {
+				if (f != null && Modifier.isStatic(f.getModifiers())) {
 					//
-					if (Modifier.isStatic(f.getModifiers())) {
+					try {
 						//
-						try {
+						final Number number = cast(Number.class, f.get(null));
+						//
+						if (number != null) {
 							//
-							final Number number = cast(Number.class, f.get(null));
+							rate = number.intValue();
 							//
-							if (number != null) {
-								//
-								rate = number.intValue();
-								//
+						} // if
+							//
+					} catch (final IllegalAccessException e) {
+						//
+						if (GraphicsEnvironment.isHeadless()) {
+							//
+							if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
+								LOG.error(getMessage(e), e);
+							} else if (e != null) {
+								e.printStackTrace();
 							} // if
 								//
-						} catch (final IllegalAccessException e) {
+						} else {
 							//
-							if (GraphicsEnvironment.isHeadless()) {
-								//
-								if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-									LOG.error(getMessage(e), e);
-								} else if (e != null) {
-									e.printStackTrace();
-								} // if
-									//
-							} else {
-								//
-								JOptionPane.showMessageDialog(null, getMessage(e));
-								//
-							} // if
-								//
-						} // try
+							JOptionPane.showMessageDialog(null, getMessage(e));
 							//
-					} // if
+						} // if
+							//
+					} // try
 						//
 				} // if
 					//
@@ -7368,15 +7364,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					final String fileName = getName(file);
 					//
-					if (StringUtils.isNotBlank(fileName)) {
+					if (StringUtils.isNotBlank(fileName) && StringUtils
+							.endsWith(titleNew = StringUtils.substringBeforeLast(fileName, fileExtension), ".")) {
 						//
-						if (StringUtils.endsWith(titleNew = StringUtils.substringBeforeLast(fileName, fileExtension),
-								".")) {
-							//
-							titleNew = StringUtils.substringBeforeLast(titleNew, ".");
-							//
-						} // if
-							//
+						titleNew = StringUtils.substringBeforeLast(titleNew, ".");
+						//
 					} // if
 						//
 					if (!Objects.equals(titleOld, titleNew)) {
@@ -8113,22 +8105,19 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		for (int i = 0; voiceIds != null && as != null && i < voiceIds.length; i++) {
 			//
-			if (sheet == null) {
+			if (sheet == null
+					&& (sheet = createSheet(workbook = ObjectUtils.getIfNull(workbook, XSSFWorkbook::new))) != null
+					&& (row = sheet.createRow(sheet.getLastRowNum() + 1)) != null) {
 				//
-				if ((sheet = createSheet(workbook = ObjectUtils.getIfNull(workbook, XSSFWorkbook::new))) != null
-						&& (row = sheet.createRow(sheet.getLastRowNum() + 1)) != null) {
+				setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)), "Common Prefix");
+				//
+				setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)), "ID");
+				//
+				for (int j = 0; j < as.length; j++) {
 					//
-					setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)), "Common Prefix");
+					setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)), as[j]);
 					//
-					setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)), "ID");
-					//
-					for (int j = 0; j < as.length; j++) {
-						//
-						setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)), as[j]);
-						//
-					} // for
-						//
-				} // if
+				} // for
 					//
 			} // if
 				//
