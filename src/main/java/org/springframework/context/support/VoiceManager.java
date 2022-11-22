@@ -7549,74 +7549,70 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					for (final Entry<String, Voice> entry : voices.entrySet()) {
 						//
-						if (entry == null || (voice = entry.getValue()) == null) {
+						if (entry == null || (voice = entry.getValue()) == null
+								|| (pageCloned = cloneNode(page, true)) == null) {
 							//
 							continue;
 							//
 						} // if
 							//
-						if (page != null && (pageCloned = page.cloneNode(true)) != null) {
-							//
 							// p
 							//
-							for (int i = 0; (ps = cast(NodeList.class,
-									evaluate(xp,
-											"./*[local-name()='frame']/*[local-name()='text-box']/*[local-name()='p']",
-											pageCloned, XPathConstants.NODESET))) != null
-									&& i < ps.getLength(); i++) {
+						for (int i = 0; (ps = cast(NodeList.class,
+								evaluate(xp, "./*[local-name()='frame']/*[local-name()='text-box']/*[local-name()='p']",
+										pageCloned, XPathConstants.NODESET))) != null
+								&& i < ps.getLength(); i++) {
+							//
+							if ((p = ps.item(i)) == null) {
 								//
-								if ((p = ps.item(i)) == null) {
-									//
-									continue;
-									//
-								} // if
-									//
-									// TODO
-									//
-								p.setTextContent(voice.getText());
+								continue;
 								//
-							} // for
+							} // if
 								//
-								// plugin
+								// TODO
 								//
-							for (int i = 0; (plugins = cast(NodeList.class,
-									evaluate(xp, "./*[local-name()='frame']/*[local-name()='plugin']", pageCloned,
-											XPathConstants.NODESET))) != null
-									&& i < plugins.getLength(); i++) {
+							p.setTextContent(voice.getText());
+							//
+						} // for
+							//
+							// plugin
+							//
+						for (int i = 0; (plugins = cast(NodeList.class,
+								evaluate(xp, "./*[local-name()='frame']/*[local-name()='plugin']", pageCloned,
+										XPathConstants.NODESET))) != null
+								&& i < plugins.getLength(); i++) {
+							//
+							if ((plugin = plugins.item(i)) == null || (attributes = plugin.getAttributes()) == null) {
 								//
-								if ((plugin = plugins.item(i)) == null
-										|| (attributes = plugin.getAttributes()) == null) {
-									//
-									continue;
-									//
-								} // if
-									//
-								for (int j = 0; j < attributes.getLength(); j++) {
+								continue;
+								//
+							} // if
+								//
+							for (int j = 0; j < attributes.getLength(); j++) {
 
-									if ((attribute = attributes.item(j)) == null) {
-										//
-										continue;
-										//
-									} // if
-										//
-									if (matches(matcher(pattern = ObjectUtils.getIfNull(pattern,
-											() -> Pattern.compile("(\\w+:)?href")), attribute.getNodeName()))) {
-										//
-										clear(sb = ObjectUtils.getIfNull(sb, StringBuilder::new));
-										//
-										attribute.setNodeValue(
-												VoiceManager.toString(append(append(sb, "../"), getKey(entry))));
-										//
-									} // if
-										//
-								} // for
+								if ((attribute = attributes.item(j)) == null) {
+									//
+									continue;
+									//
+								} // if
+									//
+								if (matches(matcher(
+										pattern = ObjectUtils.getIfNull(pattern, () -> Pattern.compile("(\\w+:)?href")),
+										attribute.getNodeName()))) {
+									//
+									clear(sb = ObjectUtils.getIfNull(sb, StringBuilder::new));
+									//
+									attribute.setNodeValue(
+											VoiceManager.toString(append(append(sb, "../"), getKey(entry))));
+									//
+								} // if
 									//
 							} // for
 								//
-							appendChild(parentNode, pageCloned);
+						} // for
 							//
-						} // if
-							//
+						appendChild(parentNode, pageCloned);
+						//
 					} // for
 						//
 					if (page != null && parentNode != null) {
@@ -7669,6 +7665,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			if (instance != null) {
 				instance.appendChild(child);
 			}
+		}
+
+		private static Node cloneNode(final Node instance, final boolean deep) {
+			return instance != null ? instance.cloneNode(deep) : null;
 		}
 
 		private static Transformer newTransformer(final TransformerFactory instance)

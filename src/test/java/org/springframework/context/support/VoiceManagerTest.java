@@ -756,7 +756,7 @@ class VoiceManagerTest {
 
 		private Collection<Entry<?, ?>> multiMapEntries = null;
 
-		private Node namedItem, parentNode, appendChild = null;
+		private Node namedItem, parentNode, appendChild, cloneNode = null;
 
 		private Sheet sheet = null;
 
@@ -1113,6 +1113,10 @@ class VoiceManagerTest {
 				} else if (Objects.equals(methodName, "appendChild")) {
 					//
 					return appendChild;
+					//
+				} else if (Objects.equals(methodName, "cloneNode")) {
+					//
+					return cloneNode;
 					//
 				} // if
 					//
@@ -6340,7 +6344,17 @@ class VoiceManagerTest {
 			//
 		Assertions.assertNull(invoke(getBytes, null, (Object) null));
 		//
-	//	Assertions.assertTrue(Objects.deepEquals(new byte[] {}, invoke(getBytes, null, EMPTY)));
+		// org.springframework.context.support.VoiceManager$ExportTask.cloneNode(org.w3c.dom.Node,boolean)
+		//
+		final Method cloneNode = clz != null ? clz.getDeclaredMethod("cloneNode", Node.class, Boolean.TYPE) : null;
+		//
+		if (cloneNode != null) {
+			//
+			cloneNode.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertNull(invoke(cloneNode, null, node, true));
 		//
 	}
 
