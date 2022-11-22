@@ -6479,7 +6479,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 							if ((it.voice = voice) != null) {
 								//
-								if (StringUtils.isNotBlank(filePath = voice.getFilePath())) {
+								if (StringUtils.isNotBlank(filePath = getFilePath(voice))) {
 									//
 									if (!(it.file = new File(filePath)).exists()) {
 										//
@@ -6629,7 +6629,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 								objectMap.setObject(Voice.class, voice);
 								//
 								objectMap.setObject(File.class,
-										voice != null ? new File(folder, voice.getFilePath()) : folder);
+										voice != null ? new File(folder, getFilePath(voice)) : folder);
 								//
 							} // if
 								//
@@ -6651,6 +6651,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // try
 			//
+	}
+
+	private static String getFilePath(final Voice instance) {
+		return instance != null ? instance.getFilePath() : null;
 	}
 
 	private static Integer getCurrentSheetIndex(final Sheet sheet) {
@@ -6910,7 +6914,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} else {
 				//
-				final File file = new File(voiceFolder, voiceOld.getFilePath());
+				final File file = new File(voiceFolder, getFilePath(voiceOld));
 				//
 				if (!file.exists()) {
 					//
@@ -6918,7 +6922,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
-				filePath = voiceOld.getFilePath();
+				filePath = getFilePath(voiceOld);
 				//
 			} // if
 				//
@@ -7210,7 +7214,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			try {
 				//
-				final String filePath = voice != null ? voice.getFilePath() : null;
+				final String filePath = getFilePath(voice);
 				//
 				if (filePath == null || outputFolderFileNameExpressions == null
 						|| outputFolderFileNameExpressions.entrySet() == null) {
