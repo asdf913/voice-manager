@@ -52,6 +52,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.Charset;
 import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -7636,8 +7637,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 						newOdfPresentationDocument.save(file);
 						//
-						ZipUtil.replaceEntry(file, "content.xml",
-								writer != null ? VoiceManager.toString(writer).getBytes() : null);
+						ZipUtil.replaceEntry(file, "content.xml", getBytes(VoiceManager.toString(writer)));
 						//
 						newOdfPresentationDocument = OdfPresentationDocument.loadDocument(file);
 						//
@@ -7651,6 +7651,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			return newOdfPresentationDocument;
 			//
+		}
+
+		private static byte[] getBytes(final String instance) {
+			return instance != null ? instance.getBytes() : null;
 		}
 
 		private static XPath newXPath(final XPathFactory instance) {

@@ -6312,7 +6312,7 @@ class VoiceManagerTest {
 			//
 		Assertions.assertNull(invoke(newTransformer, null, (Object) null));
 		//
-		// org.springframework.context.support.VoiceManager$ExportTask.newTransformer(javax.xml.transform.Transformer,javax.xml.transform.Source,javax.xml.transform.Result.class)
+		// org.springframework.context.support.VoiceManager$ExportTask.newTransformer(javax.xml.transform.Transformer,javax.xml.transform.Source,javax.xml.transform.Result)
 		//
 		final Method transform = clz != null
 				? clz.getDeclaredMethod("transform", Transformer.class, Source.class, Result.class)
@@ -6325,6 +6325,22 @@ class VoiceManagerTest {
 		} // if
 			//
 		Assertions.assertNull(invoke(transform, null, null, null, null));
+		//
+		Assertions.assertNull(invoke(newTransformer, null, (Object) null));
+		//
+		// org.springframework.context.support.VoiceManager$ExportTask.getBytes(java.lang.String)
+		//
+		final Method getBytes = clz != null ? clz.getDeclaredMethod("getBytes", String.class) : null;
+		//
+		if (getBytes != null) {
+			//
+			getBytes.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertNull(invoke(getBytes, null, (Object) null));
+		//
+	//	Assertions.assertTrue(Objects.deepEquals(new byte[] {}, invoke(getBytes, null, EMPTY)));
 		//
 	}
 
