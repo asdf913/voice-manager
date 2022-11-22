@@ -4161,6 +4161,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.getPackage() : null;
 	}
 
+	@Override
 	public Toolkit getToolkit() {
 		//
 		if (toolkit == null) {
