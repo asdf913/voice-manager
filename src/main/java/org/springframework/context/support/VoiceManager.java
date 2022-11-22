@@ -2562,9 +2562,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		try {
 			//
-			final URL url = testAndApply(StringUtils::isNotBlank, urlString, URL::new, null);
-			//
-			httpURLConnection = cast(HttpURLConnection.class, openConnection(url));
+			httpURLConnection = cast(HttpURLConnection.class,
+					openConnection(testAndApply(StringUtils::isNotBlank, urlString, URL::new, null)));
 			//
 		} catch (final IOException e) {
 			//
@@ -2586,7 +2585,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		String html = null;
 		//
-		try (final InputStream is = httpURLConnection != null ? httpURLConnection.getInputStream() : null) {
+		try (final InputStream is = getInputStream(httpURLConnection)) {
 			//
 			html = testAndApply(Objects::nonNull, is, x -> IOUtils.toString(x, "utf-8"), null);
 			//
@@ -2614,6 +2613,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static URLConnection openConnection(final URL instance) throws IOException {
 		return instance != null ? instance.openConnection() : null;
+	}
+
+	private static InputStream getInputStream(final HttpURLConnection instance) throws IOException {
+		return instance != null ? instance.getInputStream() : null;
 	}
 
 	private static List<String> parseJlptPageHtml(final String html) {
