@@ -20,6 +20,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.Console;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -169,9 +170,11 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.google.common.base.Predicates;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.ImmutableTable;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Range;
+import com.google.common.collect.Table;
 import com.google.common.reflect.Reflection;
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentType;
@@ -242,7 +245,8 @@ class VoiceManagerTest {
 			METHOD_IS_ANNOTATION_PRESENT, METHOD_PROCESS, METHOD_ENCODE_TO_STRING,
 			METHOD_GET_VOICE_MULTI_MAP_BY_LIST_NAME, METHOD_GET_VOICE_MULTI_MAP_BY_JLPT, METHOD_GET_TEMPLATE,
 			METHOD_GET_FILE_EXTENSIONS, METHOD_CREATE_CELL_STYLE, METHOD_REDUCE, METHOD_APPEND_STRING,
-			METHOD_APPEND_CHAR, METHOD_GET_PROVIDER_PLATFORM, METHOD_OPEN_CONNECTION = null;
+			METHOD_APPEND_CHAR, METHOD_GET_PROVIDER_PLATFORM, METHOD_OPEN_CONNECTION,
+			METHOD_GENERATE_ODF_PRESENTATION_DOCUMENTS = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -514,7 +518,7 @@ class VoiceManagerTest {
 				DataValidationConstraint.class, CellRangeAddressList.class)).setAccessible(true);
 		//
 		(METHOD_CREATE_EXPORT_TASK = clz.getDeclaredMethod("createExportTask", CLASS_OBJECT_MAP, Integer.class,
-				Integer.class, Integer.class, Map.class)).setAccessible(true);
+				Integer.class, Integer.class, Map.class, Table.class)).setAccessible(true);
 		//
 		(METHOD_GET_TAB_INDEX_BY_TITLE = clz.getDeclaredMethod("getTabIndexByTitle", Object.class, Object.class))
 				.setAccessible(true);
@@ -691,6 +695,9 @@ class VoiceManagerTest {
 				.setAccessible(true);
 		//
 		(METHOD_OPEN_CONNECTION = clz.getDeclaredMethod("openConnection", URL.class)).setAccessible(true);
+		//
+		(METHOD_GENERATE_ODF_PRESENTATION_DOCUMENTS = clz.getDeclaredMethod("generateOdfPresentationDocuments",
+				InputStream.class, Table.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -4432,16 +4439,16 @@ class VoiceManagerTest {
 	@Test
 	void testCreateExportTask() throws Throwable {
 		//
-		Assertions.assertNotNull(createExportTask(null, null, null, null, null));
+		Assertions.assertNotNull(createExportTask(null, null, null, null, null, null));
 		//
 	}
 
 	private static Object createExportTask(final Object objectMap, final Integer size, final Integer counter,
-			final Integer numberOfOrdinalPositionDigit, final Map<String, String> outputFolderFileNameExpressions)
-			throws Throwable {
+			final Integer numberOfOrdinalPositionDigit, final Map<String, String> outputFolderFileNameExpressions,
+			final Table<String, String, Voice> voiceFileNames) throws Throwable {
 		try {
 			return METHOD_CREATE_EXPORT_TASK.invoke(null, objectMap, size, counter, numberOfOrdinalPositionDigit,
-					outputFolderFileNameExpressions);
+					outputFolderFileNameExpressions, voiceFileNames);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -5967,6 +5974,25 @@ class VoiceManagerTest {
 				return (URLConnection) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGenerateOdfPresentationDocuments() {
+		//
+		Assertions.assertDoesNotThrow(() -> generateOdfPresentationDocuments(null, null));
+		//
+		Assertions.assertThrows(FileNotFoundException.class,
+				() -> generateOdfPresentationDocuments(null, ImmutableTable.of(EMPTY, EMPTY, new Voice())));
+		//
+	}
+
+	private static void generateOdfPresentationDocuments(final InputStream is, final Table<String, String, Voice> table)
+			throws Throwable {
+		try {
+			METHOD_GENERATE_ODF_PRESENTATION_DOCUMENTS.invoke(null, is, table);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

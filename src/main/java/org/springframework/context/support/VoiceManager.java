@@ -132,9 +132,18 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.JTextComponent;
+import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.ClassParserUtil;
@@ -197,6 +206,7 @@ import org.apache.poi.xssf.usermodel.XSSFDataValidationHelper;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
+import org.odftoolkit.odfdom.doc.OdfPresentationDocument;
 import org.openxmlformats.schemas.officeDocument.x2006.customProperties.CTProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -235,9 +245,11 @@ import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.github.curiousoddman.rgxgen.RgxGen;
 import com.google.common.base.Stopwatch;
+import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Range;
+import com.google.common.collect.Table;
 import com.google.common.reflect.Reflection;
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
@@ -327,8 +339,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			btnCopyHiragana, btnCopyKatakana, cbUseTtsVoice, btnExecute, btnImportFileTemplate, btnImport,
 			btnImportWithinFolder, cbOverMp3Title, cbOrdinalPositionAsFileNamePrefix, btnExport, cbExportHtml,
 			cbExportListHtml, cbExportHtmlAsZip, cbExportHtmlRemoveAfterZip, cbExportListSheet, cbExportJlptSheet,
-			cbImportFileTemplateGenerateBlankRow, cbJlptAsFolder, btnExportCopy, btnExportBrowse, btnDllPathCopy,
-			btnSpeechRateSlower, btnSpeechRateNormal, btnSpeechRateFaster = null;
+			cbExportPresentation, cbImportFileTemplateGenerateBlankRow, cbJlptAsFolder, btnExportCopy, btnExportBrowse,
+			btnDllPathCopy, btnSpeechRateSlower, btnSpeechRateNormal, btnSpeechRateFaster = null;
 
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
@@ -2347,6 +2359,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		cbExportJlptSheet.setSelected(Boolean.parseBoolean(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.exportJlptSheet")));
 		//
+		// Export Presentation
+		//
+		panel.add(new JLabel(), String.format("span %1$s", 4));
+		//
+		panel.add(cbExportPresentation = new JCheckBox("Export Presentation"),
+				String.format("%1$s,span %2$s", WRAP, 3));
+		//
+		cbExportPresentation.setSelected(Boolean.parseBoolean(
+				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.exportPresentation")));
+		//
 		panel.add(new JLabel(), String.format("span %1$s", 4));
 		//
 		panel.add(btnExport = new JButton("Export"), WRAP);
@@ -3497,6 +3519,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 								isSelected(cbOrdinalPositionAsFileNamePrefix));
 						//
 						booleanMap.setBoolean("jlptAsFolder", isSelected(cbJlptAsFolder));
+						//
+						booleanMap.setBoolean("exportPresentation", isSelected(cbExportPresentation));
 						//
 					} // if
 						//
@@ -7209,13 +7233,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 		private NumberFormat percentNumberFormat = null;
 
-		private boolean overMp3Title = false, ordinalPositionAsFileNamePrefix = false;
+		private boolean overMp3Title = false, ordinalPositionAsFileNamePrefix = false, exportPresentation = false;
 
 		private VoiceManager voiceManager = null;
 
 		private Fraction pharse = null;
 
 		private String ordinalPositionFileNamePrefix = null;
+
+		private Table<String, String, Voice> voiceFileNames = null;
 
 		@Override
 		public void run() {
@@ -7284,6 +7310,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 													null))) != null ? new File(folder, key) : new File(key),
 									VoiceManager.toString(fileName)));
 					//
+					if (voiceFileNames != null) {
+						//
+						voiceFileNames.put(fileDestination.getParent(), VoiceManager.toString(fileName), voice);
+						//
+					} // if
+						//
 					if (overMp3Title) {
 						//
 						setMp3Title(fileDestination);
@@ -7319,7 +7351,18 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				showPharse(voiceManager, pharse);
 				//
-			} catch (final IOException | BaseException e) {
+				if (pharse != null && pharse.getNumerator() == pharse.getDenominator() && Objects.equals(counter, count)
+						&& exportPresentation) {
+					//
+					try (final InputStream is = VoiceManager.class.getResourceAsStream("/template.odp")) {
+						//
+						generateOdfPresentationDocuments(is, voiceFileNames);
+						//
+					} // try
+						//
+				} // if
+					//
+			} catch (final Exception e) {
 				//
 				if (GraphicsEnvironment.isHeadless()) {
 					//
@@ -7453,6 +7496,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			String ordinalPositionFileNamePrefix = null;
 			//
+			Table<String, String, Voice> voiceFileNames = null;
+			//
 			for (int i = 0; i < size; i++) {
 				//
 				if ((es = ObjectUtils.getIfNull(es, () -> Executors.newFixedThreadPool(1))) == null) {
@@ -7493,8 +7538,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					et.ordinalPositionAsFileNamePrefix = booleanMap.getBoolean("ordinalPositionAsFileNamePrefix");
 					//
+					et.exportPresentation = booleanMap.getBoolean("exportPresentation");
+					//
 				} // if
 					//
+				et.voiceFileNames = voiceFileNames = ObjectUtils.getIfNull(voiceFileNames, HashBasedTable::create);
+				//
 				es.submit(et);
 				//
 			} // for
@@ -7589,9 +7638,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					} // if
 						//
-					es.submit(createExportTask(objectMap, size, Integer.valueOf(++coutner),
-							numberOfOrdinalPositionDigit, Collections.singletonMap(getKey(en),
-									"(#voice.text+'('+#voice.romaji+').'+#voice.fileExtension)")));
+					es.submit(
+							createExportTask(objectMap, size, Integer.valueOf(++coutner), numberOfOrdinalPositionDigit,
+									Collections.singletonMap(getKey(en),
+											"(#voice.text+'('+#voice.romaji+').'+#voice.fileExtension)"),
+									voiceFileNames = ObjectUtils.getIfNull(voiceFileNames, HashBasedTable::create)));
 					//
 				} // for
 					//
@@ -7701,8 +7752,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						} // if
 							//
 						es.submit(createExportTask(objectMap, size, Integer.valueOf(++coutner),
-								numberOfOrdinalPositionDigit, Collections.singletonMap(toString(folder),
-										"(#voice.text+'('+#voice.romaji+').'+#voice.fileExtension)")));
+								numberOfOrdinalPositionDigit,
+								Collections.singletonMap(toString(folder),
+										"(#voice.text+'('+#voice.romaji+').'+#voice.fileExtension)"),
+								voiceFileNames = ObjectUtils.getIfNull(voiceFileNames, HashBasedTable::create)));
 						//
 					} // for
 						//
@@ -7737,7 +7790,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	private static ExportTask createExportTask(final ObjectMap objectMap, final Integer size, final Integer counter,
-			final Integer numberOfOrdinalPositionDigit, final Map<String, String> outputFolderFileNameExpressions) {
+			final Integer numberOfOrdinalPositionDigit, final Map<String, String> outputFolderFileNameExpressions,
+			final Table<String, String, Voice> voiceFileNames) {
 		//
 		final ExportTask et = new ExportTask();
 		//
@@ -7772,8 +7826,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			et.ordinalPositionAsFileNamePrefix = booleanMap.getBoolean("ordinalPositionAsFileNamePrefix");
 			//
+			et.exportPresentation = booleanMap.getBoolean("exportPresentation");
+			//
 		} // if
 			//
+		et.voiceFileNames = voiceFileNames;
+		//
 		return et;
 		//
 	}
@@ -8841,6 +8899,186 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		return d != null ? Double.valueOf(d.getWidth()) : null;
 		//
+	}
+
+	private static void generateOdfPresentationDocuments(final InputStream is, final Table<String, String, Voice> table)
+			throws Exception {
+		//
+		final Set<String> rowKeySet = table != null ? table.rowKeySet() : null;
+		//
+		if (rowKeySet != null) {
+			//
+			final byte[] bs = testAndApply(Objects::nonNull, is, IOUtils::toByteArray, null);
+			//
+			OdfPresentationDocument odfPd = null;
+			//
+			for (final String rowKey : rowKeySet) {
+				//
+				if ((odfPd = generateOdfPresentationDocument(bs, table.row(rowKey))) != null) {
+					//
+					odfPd.save(new File(rowKey, StringUtils.substringAfter(rowKey, File.separatorChar) + ".odp"));
+					//
+				} // if
+					//
+			} // for
+				//
+		} // if
+			//
+	}
+
+	private static OdfPresentationDocument generateOdfPresentationDocument(final byte[] bs,
+			final Map<String, Voice> voices) throws Exception {
+		//
+		OdfPresentationDocument newOdfPresentationDocument = null;
+		//
+		try (final InputStream is = testAndApply(Objects::nonNull, bs, ByteArrayInputStream::new, null)) {
+			//
+			if (voices != null) {
+				//
+				final Document document = testAndApply(Objects::nonNull,
+						testAndApply(Objects::nonNull,
+								testAndApply(Objects::nonNull, is, x -> ZipUtil.unpackEntry(x, "content.xml"), null),
+								ByteArrayInputStream::new, null),
+						x -> parse(newDocumentBuilder(DocumentBuilderFactory.newDefaultInstance()), x), null);
+				//
+				final XPathFactory xpf = XPathFactory.newDefaultInstance();
+				//
+				final XPath xp = xpf != null ? xpf.newXPath() : null;
+				//
+				final NodeList pages = cast(NodeList.class, document != null ? evaluate(xp,
+						"/*[local-name()='document-content']/*[local-name()='body']/*[local-name()='presentation']/*[local-name()='page']",
+						document, XPathConstants.NODESET) : null);
+				//
+				final Node page = pages != null && pages.getLength() == 1 ? pages.item(0) : null;
+				//
+				final Node parentNode = page != null ? page.getParentNode() : null;
+				//
+				Node pageCloned, p, plugin, attribute = null;
+				//
+				NodeList ps, plugins = null;
+				//
+				NamedNodeMap attributes = null;
+				//
+				Voice voice = null;
+				//
+				Pattern pattern = null;
+				//
+				StringBuilder sb = null;
+				//
+				for (final Entry<String, Voice> entry : voices.entrySet()) {
+					//
+					if (entry == null || (voice = entry.getValue()) == null) {
+						//
+						continue;
+						//
+					} // if
+						//
+					if (page != null && (pageCloned = page.cloneNode(true)) != null) {
+						//
+						// p
+						//
+						for (int i = 0; (ps = cast(NodeList.class,
+								evaluate(xp, "./*[local-name()='frame']/*[local-name()='text-box']/*[local-name()='p']",
+										pageCloned, XPathConstants.NODESET))) != null
+								&& i < ps.getLength(); i++) {
+							//
+							if ((p = ps.item(i)) == null) {
+								//
+								continue;
+								//
+							} // if
+								//
+								// TODO
+								//
+							p.setTextContent(voice.getText());
+							//
+						} // for
+							//
+							// plugin
+							//
+						for (int i = 0; (plugins = cast(NodeList.class,
+								evaluate(xp, "./*[local-name()='frame']/*[local-name()='plugin']", pageCloned,
+										XPathConstants.NODESET))) != null
+								&& i < plugins.getLength(); i++) {
+							//
+							if ((plugin = plugins.item(i)) == null || (attributes = plugin.getAttributes()) == null) {
+								//
+								continue;
+								//
+							} // if
+								//
+							for (int j = 0; j < attributes.getLength(); j++) {
+
+								if ((attribute = attributes.item(j)) == null) {
+									//
+									continue;
+									//
+								} // if
+									//
+								if (matches(matcher(
+										pattern = ObjectUtils.getIfNull(pattern, () -> Pattern.compile("(\\w+:)?href")),
+										attribute.getNodeName()))) {
+									//
+									clear(sb = ObjectUtils.getIfNull(sb, StringBuilder::new));
+									//
+									attribute.setNodeValue(toString(append(append(sb, "../"), getKey(entry))));
+									//
+								} // if
+									//
+							} // for
+								//
+						} // for
+							//
+						if (parentNode != null) {
+							//
+							parentNode.appendChild(pageCloned);
+							//
+						} // if
+							//
+					} // if
+						//
+				} // for
+					//
+				if (page != null && parentNode != null) {
+					//
+					parentNode.removeChild(page);
+					//
+				} // if
+					//
+				final TransformerFactory tf = TransformerFactory.newInstance();
+				//
+				final Transformer transformer = tf != null ? tf.newTransformer() : null;
+				//
+				final StringWriter writer = new StringWriter();
+				//
+				transformer.transform(new DOMSource(document), new StreamResult(writer));
+				//
+				if ((newOdfPresentationDocument = OdfPresentationDocument.newPresentationDocument()) != null) {
+					//
+					final File file = File
+							.createTempFile(RandomStringUtils.randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH), null);
+					//
+					newOdfPresentationDocument.save(file);
+					//
+					ZipUtil.replaceEntry(file, "content.xml", writer != null ? toString(writer).getBytes() : null);
+					//
+					newOdfPresentationDocument = OdfPresentationDocument.loadDocument(file);
+					//
+					delete(file);
+					//
+				} // if
+					//
+			} // if
+				//
+		} // try
+			//
+		return newOdfPresentationDocument;
+		//
+	}
+
+	private static Object evaluate(final XPath instance, final String expression, final Object item,
+			final QName returnType) throws XPathExpressionException {
+		return instance != null ? instance.evaluate(expression, item, returnType) : null;
 	}
 
 	public static void main(final String[] args) {
