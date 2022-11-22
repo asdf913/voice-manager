@@ -98,6 +98,7 @@ import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
+import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathFactory;
 
 import org.apache.bcel.classfile.FieldOrMethod;
@@ -6355,6 +6356,20 @@ class VoiceManagerTest {
 		} // if
 			//
 		Assertions.assertNull(invoke(cloneNode, null, node, true));
+		//
+		// org.springframework.context.support.VoiceManager$ExportTask.setPluginHref(javax.xml.xpath.XPath,org.w3c.dom.Node,java.util.regex.Pattern,java.lang.String)
+		//
+		final Method setPluginHref = clz != null
+				? clz.getDeclaredMethod("setPluginHref", XPath.class, Node.class, Pattern.class, String.class)
+				: null;
+		//
+		if (setPluginHref != null) {
+			//
+			setPluginHref.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertNull(invoke(setPluginHref, null, null, null, null, null));
 		//
 	}
 

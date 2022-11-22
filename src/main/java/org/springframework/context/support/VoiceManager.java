@@ -52,7 +52,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.nio.charset.Charset;
 import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -7535,17 +7534,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					final Node parentNode = getParentNode(page);
 					//
-					Node pageCloned, p, plugin, attribute = null;
+					Node pageCloned, p = null;
 					//
-					NodeList ps, plugins = null;
-					//
-					NamedNodeMap attributes = null;
+					NodeList ps = null;
 					//
 					Voice voice = null;
 					//
 					Pattern pattern = null;
-					//
-					StringBuilder sb = null;
 					//
 					for (final Entry<String, Voice> entry : voices.entrySet()) {
 						//
@@ -7577,40 +7572,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 							// plugin
 							//
-						for (int i = 0; (plugins = cast(NodeList.class,
-								evaluate(xp, "./*[local-name()='frame']/*[local-name()='plugin']", pageCloned,
-										XPathConstants.NODESET))) != null
-								&& i < plugins.getLength(); i++) {
-							//
-							if ((plugin = plugins.item(i)) == null || (attributes = plugin.getAttributes()) == null) {
-								//
-								continue;
-								//
-							} // if
-								//
-							for (int j = 0; j < attributes.getLength(); j++) {
-
-								if ((attribute = attributes.item(j)) == null) {
-									//
-									continue;
-									//
-								} // if
-									//
-								if (matches(matcher(
-										pattern = ObjectUtils.getIfNull(pattern, () -> Pattern.compile("(\\w+:)?href")),
-										attribute.getNodeName()))) {
-									//
-									clear(sb = ObjectUtils.getIfNull(sb, StringBuilder::new));
-									//
-									attribute.setNodeValue(
-											VoiceManager.toString(append(append(sb, "../"), getKey(entry))));
-									//
-								} // if
-									//
-							} // for
-								//
-						} // for
-							//
+						setPluginHref(xp, pageCloned,
+								pattern = ObjectUtils.getIfNull(pattern, () -> Pattern.compile("(\\w+:)?href")),
+								getKey(entry));
+						//
 						appendChild(parentNode, pageCloned);
 						//
 					} // for
@@ -7647,6 +7612,48 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			return newOdfPresentationDocument;
 			//
+		}
+
+		private static void setPluginHref(final XPath xp, final Node node, final Pattern pattern, final String key)
+				throws XPathExpressionException {
+			//
+			final NodeList plugins = cast(NodeList.class,
+					evaluate(xp, "./*[local-name()='frame']/*[local-name()='plugin']", node, XPathConstants.NODESET));
+			//
+			Node plugin, attribute = null;
+			//
+			NamedNodeMap attributes = null;
+			//
+			StringBuilder sb = null;
+			//
+			for (int i = 0; plugins != null && i < plugins.getLength(); i++) {
+				//
+				if ((plugin = plugins.item(i)) == null || (attributes = plugin.getAttributes()) == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				for (int j = 0; j < attributes.getLength(); j++) {
+
+					if ((attribute = attributes.item(j)) == null) {
+						//
+						continue;
+						//
+					} // if
+						//
+					if (matches(matcher(pattern, getNodeName(attribute)))) {
+						//
+						clear(sb = ObjectUtils.getIfNull(sb, StringBuilder::new));
+						//
+						attribute.setNodeValue(VoiceManager.toString(append(append(sb, "../"), key)));
+						//
+					} // if
+						//
+				} // for
+					//
+			} // for
+				//
 		}
 
 		private static byte[] getBytes(final String instance) {
