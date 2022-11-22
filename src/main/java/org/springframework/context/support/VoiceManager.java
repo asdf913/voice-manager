@@ -2403,7 +2403,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				.isNotBlank(append(btnExportMicrosoftSpeechObjectLibraryInformationName, StringUtils.defaultIfBlank(
 						getProviderName(cast(Provider.class, speechApi)), "Microsoft Speech Object Library")))) {
 			//
-			btnExportMicrosoftSpeechObjectLibraryInformationName.append(' ');
+			append(btnExportMicrosoftSpeechObjectLibraryInformationName, ' ');
 			//
 		} // if
 			//
@@ -2437,6 +2437,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static StringBuilder append(final StringBuilder instance, final String string) {
 		return instance != null ? instance.append(string) : null;
+	}
+
+	private static StringBuilder append(final StringBuilder instance, final char c) {
+		return instance != null ? instance.append(c) : null;
 	}
 
 	private static IValue0<Object> getDllPath(final Object instance) {
@@ -3583,7 +3587,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 							if (!StringUtils.endsWith(sb, ".")) {
 								//
-								sb.append('.');
+								append(sb, '.');
 								//
 							} // if
 								//
