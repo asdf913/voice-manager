@@ -220,9 +220,9 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider, Lookup, I
 				continue;
 			} // if
 				//
-			st = (sfi = (vi = testAndApply(Objects::nonNull, re.getData(), ResourceParser::readVersionInfo,
-					null)) != null ? vi.getStringFileInfo() : null) != null && sfi.getCount() > 0 ? sfi.getTable(0)
-							: null;
+			st = (sfi = (getStringFileInfo(
+					vi = testAndApply(Objects::nonNull, re.getData(), ResourceParser::readVersionInfo, null)))) != null
+					&& sfi.getCount() > 0 ? sfi.getTable(0) : null;
 			//
 			for (int j = 0; st != null && j < st.getCount(); j++) {
 				//
@@ -242,6 +242,10 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider, Lookup, I
 			//
 		return map;
 		//
+	}
+
+	private static StringFileInfo getStringFileInfo(final VersionInfo instance) {
+		return instance != null ? instance.getStringFileInfo() : null;
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
