@@ -7284,25 +7284,26 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						continue;
 					} // if
 						//
+						// fileName
+						//
 					clear(fileName = ObjectUtils.getIfNull(fileName, StringBuilder::new));
 					//
-					if (fileName != null) {
+					if (ordinalPositionAsFileNamePrefix && StringUtils
+							.isNotBlank(ordinalPositionString = VoiceManager.toString(getOrdinalPosition(voice)))) {
 						//
-						if (ordinalPositionAsFileNamePrefix && StringUtils
-								.isNotBlank(ordinalPositionString = VoiceManager.toString(getOrdinalPosition(voice)))) {
-							//
-							append(append(fileName, ordinalPositionDigit != null
-									? StringUtils.leftPad(ordinalPositionString, ordinalPositionDigit.intValue(),
-											StringUtils.defaultString(FILE_NAME_PREFIX_PADDING))
-									: ordinalPositionString),
-									StringUtils.defaultIfBlank(ordinalPositionFileNamePrefix, ""));
-							//
-						} // if
-							//
-						append(fileName, VoiceManager.toString(getValue(expressionParser, evaluationContext, value)));
+						append(append(fileName,
+								ordinalPositionDigit != null
+										? StringUtils.leftPad(ordinalPositionString, ordinalPositionDigit.intValue(),
+												StringUtils.defaultString(FILE_NAME_PREFIX_PADDING))
+										: ordinalPositionString),
+								StringUtils.defaultIfBlank(ordinalPositionFileNamePrefix, ""));
 						//
 					} // if
 						//
+					append(fileName, VoiceManager.toString(getValue(expressionParser, evaluationContext, value)));
+					//
+					// org.apache.commons.io.FileUtils.copyFile(java.io.File,java.io.File)
+					//
 					FileUtils.copyFile(fileSource,
 							fileDestination = new File(
 									(folder = ObjectUtils.getIfNull(folder,
