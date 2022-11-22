@@ -5467,7 +5467,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	private static List<Pair<String, ?>> getMp3TagParirs(final ID3v1 id3v1, final String... attributes)
-			throws BaseException, IOException, IllegalAccessException, InvocationTargetException {
+			throws IllegalAccessException, InvocationTargetException {
 		//
 		List<Pair<String, ?>> pairs = null;
 		//
