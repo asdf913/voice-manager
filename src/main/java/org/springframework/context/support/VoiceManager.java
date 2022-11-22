@@ -7261,10 +7261,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					} // if
 						//
 					FileUtils.copyFile(fileSource,
-							fileDestination = new File((folder = ObjectUtils.getIfNull(folder,
-									() -> outputFolder != null ? new File(outputFolder) : null)) != null
-											? new File(folder, key)
-											: new File(key),
+							fileDestination = new File(
+									(folder = ObjectUtils.getIfNull(folder,
+											() -> testAndApply(Objects::nonNull, outputFolder, File::new,
+													null))) != null ? new File(folder, key) : new File(key),
 									VoiceManager.toString(fileName)));
 					//
 					if (overMp3Title) {
