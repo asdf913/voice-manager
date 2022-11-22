@@ -51,6 +51,7 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -2563,7 +2564,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			final URL url = testAndApply(StringUtils::isNotBlank, urlString, URL::new, null);
 			//
-			httpURLConnection = cast(HttpURLConnection.class, url != null ? url.openConnection() : null);
+			httpURLConnection = cast(HttpURLConnection.class, openConnection(url));
 			//
 		} catch (final IOException e) {
 			//
@@ -2609,6 +2610,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return parseJlptPageHtml(html);
 		//
+	}
+
+	private static URLConnection openConnection(final URL instance) throws IOException {
+		return instance != null ? instance.openConnection() : null;
 	}
 
 	private static List<String> parseJlptPageHtml(final String html) {

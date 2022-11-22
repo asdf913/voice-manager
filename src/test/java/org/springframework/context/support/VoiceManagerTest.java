@@ -36,6 +36,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.net.URI;
+import java.net.URL;
+import java.net.URLConnection;
 import java.security.MessageDigest;
 import java.text.NumberFormat;
 import java.time.Duration;
@@ -239,7 +241,7 @@ class VoiceManagerTest {
 			METHOD_IS_ANNOTATION_PRESENT, METHOD_PROCESS, METHOD_ENCODE_TO_STRING,
 			METHOD_GET_VOICE_MULTI_MAP_BY_LIST_NAME, METHOD_GET_VOICE_MULTI_MAP_BY_JLPT, METHOD_GET_TEMPLATE,
 			METHOD_GET_FILE_EXTENSIONS, METHOD_CREATE_CELL_STYLE, METHOD_REDUCE, METHOD_APPEND_STRING,
-			METHOD_APPEND_CHAR, METHOD_GET_PROVIDER_PLATFORM = null;
+			METHOD_APPEND_CHAR, METHOD_GET_PROVIDER_PLATFORM, METHOD_OPEN_CONNECTION = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -686,6 +688,8 @@ class VoiceManagerTest {
 		//
 		(METHOD_GET_PROVIDER_PLATFORM = clz.getDeclaredMethod("getProviderPlatform", Provider.class))
 				.setAccessible(true);
+		//
+		(METHOD_OPEN_CONNECTION = clz.getDeclaredMethod("openConnection", URL.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -5939,6 +5943,27 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof String) {
 				return (String) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testOpenConnection() throws Throwable {
+		//
+		Assertions.assertNotNull(openConnection(new File("pom.xml").toURI().toURL()));
+		//
+	}
+
+	private static URLConnection openConnection(final URL instance) throws Throwable {
+		try {
+			final Object obj = METHOD_OPEN_CONNECTION.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof URLConnection) {
+				return (URLConnection) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
