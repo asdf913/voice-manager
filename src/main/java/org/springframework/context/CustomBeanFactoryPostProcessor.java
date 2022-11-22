@@ -166,9 +166,7 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 	}
 
 	private static Statement createStatement(final Connection instance) throws SQLException {
-		return instance != null
-				? instance.createStatement()
-						: null;
+		return instance != null ? instance.createStatement() : null;
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
