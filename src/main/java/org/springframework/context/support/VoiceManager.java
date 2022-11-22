@@ -7580,12 +7580,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					} // for
 						//
-					if (page != null && parentNode != null) {
-						//
-						parentNode.removeChild(page);
-						//
-					} // if
-						//
+					removeChild(parentNode, page);
+					//
 					final StringWriter writer = new StringWriter();
 					//
 					transform(newTransformer(TransformerFactory.newInstance()), new DOMSource(document),
@@ -7671,6 +7667,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		private static void appendChild(final Node instance, final Node child) throws DOMException {
 			if (instance != null) {
 				instance.appendChild(child);
+			}
+		}
+
+		private static void removeChild(final Node instance, final Node child) throws DOMException {
+			if (instance != null) {
+				instance.removeChild(child);
 			}
 		}
 

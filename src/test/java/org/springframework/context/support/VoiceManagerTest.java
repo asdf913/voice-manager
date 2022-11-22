@@ -757,7 +757,7 @@ class VoiceManagerTest {
 
 		private Collection<Entry<?, ?>> multiMapEntries = null;
 
-		private Node namedItem, parentNode, appendChild, cloneNode = null;
+		private Node namedItem, parentNode, appendChild, removeChild, cloneNode = null;
 
 		private Sheet sheet = null;
 
@@ -1114,6 +1114,10 @@ class VoiceManagerTest {
 				} else if (Objects.equals(methodName, "appendChild")) {
 					//
 					return appendChild;
+					//
+				} else if (Objects.equals(methodName, "removeChild")) {
+					//
+					return removeChild;
 					//
 				} else if (Objects.equals(methodName, "cloneNode")) {
 					//
@@ -6303,6 +6307,18 @@ class VoiceManagerTest {
 		Assertions.assertNull(invoke(appendChild, null, null, null));
 		//
 		Assertions.assertNull(invoke(appendChild, null, node, null));
+		//
+		// org.springframework.context.support.VoiceManager$ExportTask.removeChild(org.w3c.dom.Node,org.w3c.dom.Node)
+		//
+		final Method removeChild = clz != null ? clz.getDeclaredMethod("removeChild", Node.class, Node.class) : null;
+		//
+		if (removeChild != null) {
+			//
+			removeChild.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertNull(invoke(removeChild, null, node, null));
 		//
 		// org.springframework.context.support.VoiceManager$ExportTask.newTransformer(javax.xml.transform.TransformerFactory)
 		//
