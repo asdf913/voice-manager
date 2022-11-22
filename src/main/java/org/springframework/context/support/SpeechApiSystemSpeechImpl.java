@@ -204,8 +204,6 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider, Lookup, I
 		//
 		ResourceEntry re = null;
 		//
-		VersionInfo vi = null;
-		//
 		StringFileInfo sfi = null;
 		//
 		StringTable st = null;
@@ -221,7 +219,7 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider, Lookup, I
 			} // if
 				//
 			st = (sfi = (getStringFileInfo(
-					vi = testAndApply(Objects::nonNull, re.getData(), ResourceParser::readVersionInfo, null)))) != null
+					testAndApply(Objects::nonNull, re.getData(), ResourceParser::readVersionInfo, null)))) != null
 					&& sfi.getCount() > 0 ? sfi.getTable(0) : null;
 			//
 			for (int j = 0; st != null && j < st.getCount(); j++) {
