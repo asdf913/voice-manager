@@ -290,6 +290,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static final String GROWX = "growx";
 
 	private static final String FORMAT = "format";
+	
+	private static final String WARNING  = "Warning";
 
 	private static final Predicate<File> EMPTY_FILE_PREDICATE = f -> f != null && f.exists() && isFile(f)
 			&& f.length() == 0;
@@ -833,7 +835,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					} // if
 						//
-					jPanelWarning.setBorder(BorderFactory.createTitledBorder("Warning"));
+					jPanelWarning.setBorder(BorderFactory.createTitledBorder(WARNING));
 					//
 					final JLabel jLabel = new JLabel("Please set Compatibility Mode to \"Windows 8\" or prior version");
 					//
@@ -878,7 +880,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					} // if
 						//
-					jPanelWarning.setBorder(BorderFactory.createTitledBorder("Warning"));
+					jPanelWarning.setBorder(BorderFactory.createTitledBorder(WARNING));
 					//
 					final IValue0<String> pageTitle = getMicrosoftSpeechPlatformRuntimeLanguagesDownloadPageTitle();
 					//
@@ -905,7 +907,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} else {
 			//
-			(jPanelWarning = new JPanel()).setBorder(BorderFactory.createTitledBorder("Warning"));
+			(jPanelWarning = new JPanel()).setBorder(BorderFactory.createTitledBorder(WARNING));
 			//
 			final Unit<String> pageTitle = getPageTitle(microsoftSpeechPlatformRuntimeDownloadPageUrl);
 			//
