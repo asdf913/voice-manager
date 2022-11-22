@@ -136,8 +136,11 @@ import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
@@ -9086,16 +9089,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
-				final Transformer transformer = newTransformer(TransformerFactory.newInstance());
-				//
 				final StringWriter writer = new StringWriter();
 				//
-				if (transformer != null) {
-					//
-					transformer.transform(new DOMSource(document), new StreamResult(writer));
-					//
-				} // if
-					//
+				transform(newTransformer(TransformerFactory.newInstance()), new DOMSource(document),
+						new StreamResult(writer));
+				//
 				if ((newOdfPresentationDocument = OdfPresentationDocument.newPresentationDocument()) != null) {
 					//
 					final File file = File
@@ -9130,6 +9128,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static Transformer newTransformer(final TransformerFactory instance)
 			throws TransformerConfigurationException {
 		return instance != null ? instance.newTransformer() : null;
+	}
+
+	private static void transform(final Transformer instance, final Source xmlSource, final Result outputTarget)
+			throws TransformerException {
+		if (instance != null) {
+			instance.transform(xmlSource, outputTarget);
+		}
 	}
 
 	private static Object evaluate(final XPath instance, final String expression, final Object item,

@@ -95,6 +95,8 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.text.JTextComponent;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.xpath.XPath;
@@ -251,7 +253,7 @@ class VoiceManagerTest {
 			METHOD_GET_FILE_EXTENSIONS, METHOD_CREATE_CELL_STYLE, METHOD_REDUCE, METHOD_APPEND_STRING,
 			METHOD_APPEND_CHAR, METHOD_GET_PROVIDER_PLATFORM, METHOD_OPEN_CONNECTION,
 			METHOD_GENERATE_ODF_PRESENTATION_DOCUMENTS, METHOD_NEW_XPATH, METHOD_GET_PARENT_NODE,
-			METHOD_NEW_TRANSFORMER = null;
+			METHOD_NEW_TRANSFORMER, METHOD_TRANSFORM = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -709,6 +711,9 @@ class VoiceManagerTest {
 		(METHOD_GET_PARENT_NODE = clz.getDeclaredMethod("getParentNode", Node.class)).setAccessible(true);
 		//
 		(METHOD_NEW_TRANSFORMER = clz.getDeclaredMethod("newTransformer", TransformerFactory.class))
+				.setAccessible(true);
+		//
+		(METHOD_TRANSFORM = clz.getDeclaredMethod("transform", Transformer.class, Source.class, Result.class))
 				.setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
@@ -6072,6 +6077,22 @@ class VoiceManagerTest {
 				return (Transformer) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void tsetTransform() {
+		//
+		Assertions.assertDoesNotThrow(() -> transform(null, null, null));
+		//
+	}
+
+	private static void transform(final Transformer instance, final Source xmlSource, final Result outputTarget)
+			throws Throwable {
+		try {
+			METHOD_TRANSFORM.invoke(null, instance, xmlSource, outputTarget);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
