@@ -145,7 +145,7 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 					//
 				try (final Connection connection = dataSource != null ? dataSource.getConnection() : null) {
 					//
-					final Statement s = connection != null ? connection.createStatement() : null;
+					final Statement s = createStatement(connection);
 					//
 					if (s != null) {
 						//
@@ -163,6 +163,12 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 				//
 		} // if
 			//
+	}
+
+	private static Statement createStatement(final Connection instance) throws SQLException {
+		return instance != null
+				? instance.createStatement()
+						: null;
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
