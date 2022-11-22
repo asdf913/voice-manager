@@ -238,7 +238,7 @@ class VoiceManagerTest {
 			METHOD_GET_DECLARED_CLASSES, METHOD_GET_DLL_PATH, METHOD_GET_RATE, METHOD_ADD_CHANGE_LISTENER,
 			METHOD_IS_ANNOTATION_PRESENT, METHOD_PROCESS, METHOD_ENCODE_TO_STRING,
 			METHOD_GET_VOICE_MULTI_MAP_BY_LIST_NAME, METHOD_GET_VOICE_MULTI_MAP_BY_JLPT, METHOD_GET_TEMPLATE,
-			METHOD_GET_FILE_EXTENSIONS, METHOD_CREATE_CELL_STYLE, METHOD_REDUCE = null;
+			METHOD_GET_FILE_EXTENSIONS, METHOD_CREATE_CELL_STYLE, METHOD_REDUCE, METHOD_APPEND = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -678,6 +678,8 @@ class VoiceManagerTest {
 		//
 		(METHOD_REDUCE = clz.getDeclaredMethod("reduce", LongStream.class, Long.TYPE, LongBinaryOperator.class))
 				.setAccessible(true);
+		//
+		(METHOD_APPEND = clz.getDeclaredMethod("append", StringBuilder.class, String.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -5869,6 +5871,27 @@ class VoiceManagerTest {
 			final Object obj = METHOD_REDUCE.invoke(null, instance, identity, op);
 			if (obj instanceof Long) {
 				return ((Long) obj).longValue();
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testAppend() throws Throwable {
+		//
+		Assertions.assertNull(append(null, null));
+		//
+	}
+
+	private static StringBuilder append(final StringBuilder instance, final String string) throws Throwable {
+		try {
+			final Object obj = METHOD_APPEND.invoke(null, instance, string);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof StringBuilder) {
+				return (StringBuilder) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

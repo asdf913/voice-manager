@@ -2400,7 +2400,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		final StringBuilder btnExportMicrosoftSpeechObjectLibraryInformationName = new StringBuilder("Export ");
 		//
 		if (StringUtils
-				.isNotBlank(btnExportMicrosoftSpeechObjectLibraryInformationName.append(StringUtils.defaultIfBlank(
+				.isNotBlank(append(btnExportMicrosoftSpeechObjectLibraryInformationName, StringUtils.defaultIfBlank(
 						getProviderName(cast(Provider.class, speechApi)), "Microsoft Speech Object Library")))) {
 			//
 			btnExportMicrosoftSpeechObjectLibraryInformationName.append(' ');
@@ -2408,7 +2408,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		} // if
 			//
 		panel.add(btnExportMicrosoftSpeechObjectLibraryInformation = new JButton(
-				toString(btnExportMicrosoftSpeechObjectLibraryInformationName.append("Information"))), WRAP);
+				toString(append(btnExportMicrosoftSpeechObjectLibraryInformationName, "Information"))), WRAP);
 		//
 		final JPanel panel1 = new JPanel();
 		//
@@ -2433,6 +2433,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		return panel;
 		//
+	}
+
+	private static StringBuilder append(final StringBuilder instance, final String string) {
+		return instance != null ? instance.append(string) : null;
 	}
 
 	private static IValue0<Object> getDllPath(final Object instance) {
@@ -3583,7 +3587,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 								//
 							} // if
 								//
-							sb.append(StringUtils.defaultIfBlank(orElse(
+							append(sb, StringUtils.defaultIfBlank(orElse(
 									max(fileExtensions != null ? Arrays.stream(fileExtensions) : null,
 											(a, b) -> Integer.compare(StringUtils.length(a), StringUtils.length(b))),
 									null), ""));
@@ -7229,16 +7233,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						if (ordinalPositionAsFileNamePrefix && StringUtils.isNotBlank(
 								ordinalPositionString = VoiceManager.toString(voice.getOrdinalPosition()))) {
 							//
-							fileName.append(ordinalPositionDigit != null
+							append(append(fileName, ordinalPositionDigit != null
 									? StringUtils.leftPad(ordinalPositionString, ordinalPositionDigit.intValue(),
 											StringUtils.defaultString(FILE_NAME_PREFIX_PADDING))
-									: ordinalPositionString);
-							//
-							fileName.append(StringUtils.defaultIfBlank(ordinalPositionFileNamePrefix, ""));
+									: ordinalPositionString),
+									StringUtils.defaultIfBlank(ordinalPositionFileNamePrefix, ""));
 							//
 						} // if
 							//
-						fileName.append(VoiceManager.toString(getValue(expressionParser, evaluationContext, value)));
+						append(fileName, VoiceManager.toString(getValue(expressionParser, evaluationContext, value)));
 						//
 					} // if
 						//
@@ -7666,9 +7669,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 						if (folder != null) {
 							//
-							folder.append(StringUtils.defaultIfBlank(jlptFolderNamePrefix, ""));
-							//
-							folder.append(getKey(en));
+							append(append(folder, StringUtils.defaultIfBlank(jlptFolderNamePrefix, "")), getKey(en));
 							//
 						} // if
 							//
