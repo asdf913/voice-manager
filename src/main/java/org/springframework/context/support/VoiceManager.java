@@ -228,6 +228,7 @@ import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -9073,12 +9074,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 								//
 						} // for
 							//
-						if (parentNode != null) {
-							//
-							parentNode.appendChild(pageCloned);
-							//
-						} // if
-							//
+						appendChild(parentNode, pageCloned);
+						//
 					} // if
 						//
 				} // for
@@ -9123,6 +9120,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static Node getParentNode(final Node instance) {
 		return instance != null ? instance.getParentNode() : null;
+	}
+
+	private static void appendChild(final Node instance, final Node child) throws DOMException {
+		if (instance != null) {
+			instance.appendChild(child);
+		}
 	}
 
 	private static Transformer newTransformer(final TransformerFactory instance)

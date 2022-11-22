@@ -253,7 +253,7 @@ class VoiceManagerTest {
 			METHOD_GET_FILE_EXTENSIONS, METHOD_CREATE_CELL_STYLE, METHOD_REDUCE, METHOD_APPEND_STRING,
 			METHOD_APPEND_CHAR, METHOD_GET_PROVIDER_PLATFORM, METHOD_OPEN_CONNECTION,
 			METHOD_GENERATE_ODF_PRESENTATION_DOCUMENTS, METHOD_NEW_XPATH, METHOD_GET_PARENT_NODE,
-			METHOD_NEW_TRANSFORMER, METHOD_TRANSFORM = null;
+			METHOD_NEW_TRANSFORMER, METHOD_TRANSFORM, METHOD_APPEND_CHILD = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -716,6 +716,8 @@ class VoiceManagerTest {
 		(METHOD_TRANSFORM = clz.getDeclaredMethod("transform", Transformer.class, Source.class, Result.class))
 				.setAccessible(true);
 		//
+		(METHOD_APPEND_CHILD = clz.getDeclaredMethod("appendChild", Node.class, Node.class)).setAccessible(true);
+		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
 	}
@@ -773,7 +775,7 @@ class VoiceManagerTest {
 
 		private Collection<Entry<?, ?>> multiMapEntries = null;
 
-		private Node namedItem, parentNode = null;
+		private Node namedItem, parentNode, appendChild = null;
 
 		private Sheet sheet = null;
 
@@ -1126,6 +1128,10 @@ class VoiceManagerTest {
 				} else if (Objects.equals(methodName, "getParentNode")) {
 					//
 					return parentNode;
+					//
+				} else if (Objects.equals(methodName, "appendChild")) {
+					//
+					return appendChild;
 					//
 				} // if
 					//
@@ -6083,7 +6089,7 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void tsetTransform() {
+	void testTransform() {
 		//
 		Assertions.assertDoesNotThrow(() -> transform(null, null, null));
 		//
@@ -6093,6 +6099,23 @@ class VoiceManagerTest {
 			throws Throwable {
 		try {
 			METHOD_TRANSFORM.invoke(null, instance, xmlSource, outputTarget);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testAppendChild() {
+		//
+		Assertions.assertDoesNotThrow(() -> appendChild(null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> appendChild(node, null));
+		//
+	}
+
+	private static void appendChild(final Node instance, final Node child) throws Throwable {
+		try {
+			METHOD_APPEND_CHILD.invoke(null, instance, child);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
