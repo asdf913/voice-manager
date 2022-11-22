@@ -107,7 +107,7 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 					//
 				for (final PropertySource<?> ps : pss) {
 					//
-					if (ps == null || ps.getSource() == environment) {
+					if (Boolean.logicalOr(ps == null, getSource(ps) == environment)) {
 						continue;
 					} // if
 						//
@@ -128,6 +128,10 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 	private static PropertySources getAppliedPropertySources(final PropertySourcesPlaceholderConfigurer instance)
 			throws IllegalStateException {
 		return instance != null ? instance.getAppliedPropertySources() : null;
+	}
+
+	private static <T> T getSource(final PropertySource<T> instance) {
+		return instance != null ? instance.getSource() : null;
 	}
 
 	private static void addLast(final MutablePropertySources instance, final PropertySource<?> propertySource) {
