@@ -18,7 +18,7 @@ import com.google.common.base.Predicates;
 
 class MigLayoutFactoryBeanTest {
 
-	private static Method METHOD_TEST_AND_APPLY, METHOD_CAST = null;
+	private static Method METHOD_TEST_AND_APPLY, METHOD_CAST, METHOD_GET_CLASS = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -29,6 +29,8 @@ class MigLayoutFactoryBeanTest {
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
 		//
 		(METHOD_CAST = clz.getDeclaredMethod("cast", Class.class, Object.class)).setAccessible(true);
+		//
+		(METHOD_GET_CLASS = clz.getDeclaredMethod("getClass", Object.class)).setAccessible(true);
 		//
 	}
 
@@ -180,6 +182,27 @@ class MigLayoutFactoryBeanTest {
 	private static <T> T cast(final Class<T> clz, final Object value) throws Throwable {
 		try {
 			return (T) METHOD_CAST.invoke(null, clz, value);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetClass() throws Throwable {
+		//
+		Assertions.assertNull(getClass(null));
+		//
+	}
+
+	private static Class<?> getClass(final Object instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_CLASS.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Class) {
+				return (Class<?>) obj;
+			}
+			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

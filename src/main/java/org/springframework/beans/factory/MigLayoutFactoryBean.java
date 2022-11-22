@@ -48,7 +48,7 @@ public class MigLayoutFactoryBean implements FactoryBean<MigLayout> {
 			//
 		} // for
 			//
-		final Class<?> clz = value != null ? value.getClass() : null;
+		final Class<?> clz = getClass(value);
 		//
 		if (clz != null && clz.isArray()) {
 			//
@@ -160,7 +160,7 @@ public class MigLayoutFactoryBean implements FactoryBean<MigLayout> {
 				//
 			} else {
 				//
-				throw new IllegalArgumentException(object != null ? toString(object.getClass()) : null);
+				throw new IllegalArgumentException(toString(getClass(object)));
 				//
 			} // if
 				//
@@ -170,6 +170,10 @@ public class MigLayoutFactoryBean implements FactoryBean<MigLayout> {
 			//
 		} // try
 			//
+	}
+
+	private static Class<?> getClass(final Object instance) {
+		return instance != null ? instance.getClass() : null;
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
