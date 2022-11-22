@@ -21,7 +21,7 @@ import com.kichik.pecoff4j.ResourceEntry;
 class SpeechApiSystemSpeechImplTest {
 
 	private static Method METHOD_CAST, METHOD_TEST_AND_APPLY, METHOD_GET_VERSION_INFO_MAP0,
-			METHOD_GET_VERSION_INFO_MAP_PE, METHOD_GET_VERSION_INFO_MAP2, METHOD_GET = null;
+			METHOD_GET_VERSION_INFO_MAP_PE, METHOD_GET_VERSION_INFO_MAP2, METHOD_GET, METHOD_PUT = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -65,6 +65,13 @@ class SpeechApiSystemSpeechImplTest {
 		if ((METHOD_GET = SpeechApiSystemSpeechImpl.class.getDeclaredMethod("get", Map.class, Object.class)) != null) {
 			//
 			METHOD_GET.setAccessible(true);
+			//
+		} // if
+			//
+		if ((METHOD_PUT = SpeechApiSystemSpeechImpl.class.getDeclaredMethod("put", Map.class, Object.class,
+				Object.class)) != null) {
+			//
+			METHOD_PUT.setAccessible(true);
 			//
 		} // if
 			//
@@ -286,6 +293,21 @@ class SpeechApiSystemSpeechImplTest {
 			//
 		} // if
 			//
+	}
+
+	@Test
+	void testPut() {
+		//
+		Assertions.assertDoesNotThrow(() -> put(null, null, null));
+		//
+	}
+
+	private static <K, V> void put(final Map<K, V> instance, final K key, final V value) throws Throwable {
+		try {
+			METHOD_PUT.invoke(null, instance, key, value);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 }

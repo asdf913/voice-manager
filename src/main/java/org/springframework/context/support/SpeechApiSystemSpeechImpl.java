@@ -228,11 +228,7 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider, Lookup, I
 					continue;
 				} // if
 					//
-				if (map == null) {
-					map = new LinkedHashMap<>();
-				} // if
-					//
-				map.put(sp.getKey(), sp.getValue());
+				put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), sp.getKey(), sp.getValue());
 				//
 			} // for
 				//
@@ -240,6 +236,12 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider, Lookup, I
 			//
 		return map;
 		//
+	}
+
+	private static <K, V> void put(final Map<K, V> instance, final K key, final V value) {
+		if (instance != null) {
+			instance.put(key, value);
+		}
 	}
 
 	private static StringFileInfo getStringFileInfo(final VersionInfo instance) {
