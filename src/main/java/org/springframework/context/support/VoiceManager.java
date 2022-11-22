@@ -232,6 +232,8 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import org.zeroturnaround.zip.ZipUtil;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
@@ -7243,6 +7245,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 		private Table<String, String, Voice> voiceFileNames = null;
 
+		private ObjectMapper objectMapper = null;
+
 		@Override
 		public void run() {
 			//
@@ -7257,7 +7261,29 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
-				setVariable(evaluationContext, "voice", voice);
+				final Voice v = objectMapper != null
+						? objectMapper.readValue(objectMapper.writeValueAsBytes(voice), Voice.class)
+						: null;
+				//
+				final Field[] fs = getDeclaredFields(VoiceManager.getClass(v));
+				//
+				Field f = null;
+				//
+				for (int i = 0; fs != null && i < fs.length; i++) {
+					//
+					if ((f = fs[i]) == null || !Objects.equals(getType(f), String.class)) {
+						//
+						continue;
+						//
+					} // if
+						//
+					f.setAccessible(true);
+					//
+					f.set(v, StringUtils.defaultString(VoiceManager.toString(f.get(v))));
+					//
+				} // if
+					//
+				setVariable(evaluationContext, "voice", ObjectUtils.defaultIfNull(v, voice));
 				//
 				String key, value, ordinalPositionString, voiceFolder = null;
 				//
@@ -7499,6 +7525,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			Table<String, String, Voice> voiceFileNames = null;
 			//
+			ObjectMapper objectMapper = null;
+			//
 			for (int i = 0; i < size; i++) {
 				//
 				if ((es = ObjectUtils.getIfNull(es, () -> Executors.newFixedThreadPool(1))) == null) {
@@ -7544,6 +7572,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				} // if
 					//
 				et.voiceFileNames = voiceFileNames = ObjectUtils.getIfNull(voiceFileNames, HashBasedTable::create);
+				//
+				if (objectMap != null && !objectMap.containsObject(ObjectMapper.class)) {
+					//
+					objectMap.setObject(ObjectMapper.class, objectMapper = ObjectUtils.getIfNull(objectMapper,
+							() -> new ObjectMapper().setVisibility(PropertyAccessor.ALL, Visibility.ANY)));
+					//
+				} //
+					//
+				et.objectMapper = objectMapper;
 				//
 				es.submit(et);
 				//
@@ -7807,6 +7844,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		et.evaluationContext = ObjectMap.getObject(objectMap, EvaluationContext.class);
 		//
 		et.expressionParser = ObjectMap.getObject(objectMap, ExpressionParser.class);
+		//
+		et.objectMapper = ObjectMap.getObject(objectMap, ObjectMapper.class);
 		//
 		et.outputFolderFileNameExpressions = outputFolderFileNameExpressions;
 		//
