@@ -143,7 +143,7 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 					continue;
 				} // if
 					//
-				try (final Connection connection = dataSource != null ? dataSource.getConnection() : null) {
+				try (final Connection connection = getConnection(dataSource)) {
 					//
 					final Statement s = createStatement(connection);
 					//
@@ -163,6 +163,10 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 				//
 		} // if
 			//
+	}
+
+	private static Connection getConnection(final DataSource instance) throws SQLException {
+		return instance != null ? instance.getConnection() : null;
 	}
 
 	private static Statement createStatement(final Connection instance) throws SQLException {
