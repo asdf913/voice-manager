@@ -7644,13 +7644,20 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
+				if (!objectMap.containsObject(StringTemplateLoader.class)) {
+					//
+					objectMap.setObject(StringTemplateLoader.class, new StringTemplateLoader());
+					//
+				} // if
+					//
 			} // if
 				//
 			final freemarker.template.Configuration configuration = ObjectUtils.getIfNull(
 					ObjectMap.getObject(objectMap, freemarker.template.Configuration.class),
 					() -> new freemarker.template.Configuration(freemarker.template.Configuration.getVersion()));
 			//
-			StringTemplateLoader stl = null;
+			final StringTemplateLoader stl = ObjectUtils
+					.getIfNull(ObjectMap.getObject(objectMap, StringTemplateLoader.class), StringTemplateLoader::new);
 			//
 			final boolean headless = GraphicsEnvironment.isHeadless();
 			//
@@ -7710,10 +7717,19 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 				} // if
 					//
-				configuration.setTemplateLoader(stl = new StringTemplateLoader());
+				if (configuration != null && configuration.getTemplateLoader() == null) {
+					//
+					configuration.setTemplateLoader(stl);
+					//
+				} // if
+					//
 				//
-				stl.putTemplate("", p.getTextContent());
-				//
+				if (stl != null) {
+					//
+					stl.putTemplate("", p.getTextContent());
+					//
+				} // if
+					//
 				try (final Writer writer = new StringWriter()) {
 					//
 					process(configuration.getTemplate(""), map, writer);
