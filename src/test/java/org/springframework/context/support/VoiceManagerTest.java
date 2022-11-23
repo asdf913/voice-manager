@@ -6550,6 +6550,24 @@ class VoiceManagerTest {
 			//
 		Assertions.assertNull(invoke(describe, null, (Object) null));
 		//
+		// org.springframework.context.support.VoiceManager$ExportTask.clone(com.fasterxml.jackson.databind.ObjectMapper,java.lang.Class,java.lang.Object)
+		//
+		final Method clone = CLASS_EXPORT_TASK != null
+				? CLASS_EXPORT_TASK.getDeclaredMethod("clone", ObjectMapper.class, Class.class, Object.class)
+				: null;
+		//
+		if (clone != null) {
+			//
+			clone.setAccessible(true);
+			//
+		} // if
+			//
+		final ObjectMapper objectMapper = new ObjectMapper();
+		//
+		Assertions.assertNull(invoke(clone, null, objectMapper, null, null));
+		//
+		Assertions.assertNull(invoke(clone, null, objectMapper, Object.class, null));
+		//
 	}
 
 	private static void run(final Runnable instance) {

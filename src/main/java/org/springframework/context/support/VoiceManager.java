@@ -7272,9 +7272,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
-				final Voice v = objectMapper != null
-						? objectMapper.readValue(objectMapper.writeValueAsBytes(voice), Voice.class)
-						: null;
+				final Voice v = clone(objectMapper, Voice.class, voice);
 				//
 				final Field[] fs = getDeclaredFields(VoiceManager.getClass(v));
 				//
@@ -7418,6 +7416,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 			} // try
 				//
+		}
+
+		private static <T> T clone(final ObjectMapper objectMapper, final Class<T> clz, final T instance)
+				throws IOException {
+			//
+			return objectMapper != null && clz != null
+					? objectMapper.readValue(objectMapper.writeValueAsBytes(instance), clz)
+					: null;
+			//
 		}
 
 		private static void setVariable(final EvaluationContext instance, final String name, final Object value) {
