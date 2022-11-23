@@ -7052,7 +7052,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					if (!containsKey(getObjects(), key)) {
 						//
-						throw new IllegalStateException(String.format(KEY_NOT_FOUND_MESSAGE, key));
+						final Class<?> clz = cast(Class.class, key);
+						//
+						throw new IllegalStateException(String.format(KEY_NOT_FOUND_MESSAGE,
+								clz != null && clz.isArray() ? clz.getSimpleName() : key));
 						//
 					} // if
 						//
@@ -7492,21 +7495,21 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				OdfPresentationDocument odfPd = null;
 				//
-				XPath xp = null;
-				//
-				Transformer transformer = null;
+				ObjectMap objectMap = null;
 				//
 				for (final String rowKey : rowKeySet) {
 					//
-					if (transformer == null) {
+					if (objectMap == null && (objectMap = Reflection.newProxy(ObjectMap.class, new IH())) != null) {
 						//
-						transformer = newTransformer(TransformerFactory.newInstance());
+						objectMap.setObject(byte[].class, bs);
+						//
+						objectMap.setObject(XPath.class, newXPath(XPathFactory.newDefaultInstance()));
+						//
+						objectMap.setObject(Transformer.class, newTransformer(TransformerFactory.newInstance()));
 						//
 					} // if
 						//
-					if ((odfPd = generateOdfPresentationDocument(bs, table.row(rowKey),
-							xp = ObjectUtils.getIfNull(xp, () -> newXPath(XPathFactory.newDefaultInstance())),
-							transformer)) != null) {
+					if ((odfPd = generateOdfPresentationDocument(objectMap, table.row(rowKey))) != null) {
 						//
 						odfPd.save(new File(rowKey, StringUtils.substringAfter(rowKey, File.separatorChar) + ".odp"));
 						//
@@ -7518,12 +7521,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		}
 
-		private static OdfPresentationDocument generateOdfPresentationDocument(final byte[] bs,
-				final Map<String, Voice> voices, final XPath xp, final Transformer transformer) throws Exception {
+		private static OdfPresentationDocument generateOdfPresentationDocument(final ObjectMap objectMap,
+				final Map<String, Voice> voices) throws Exception {
 			//
 			OdfPresentationDocument newOdfPresentationDocument = null;
 			//
-			try (final InputStream is = testAndApply(Objects::nonNull, bs, ByteArrayInputStream::new, null)) {
+			try (final InputStream is = testAndApply(Objects::nonNull, ObjectMap.getObject(objectMap, byte[].class),
+					ByteArrayInputStream::new, null)) {
 				//
 				if (voices != null) {
 					//
@@ -7533,6 +7537,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 											null),
 									ByteArrayInputStream::new, null),
 							x -> parse(newDocumentBuilder(DocumentBuilderFactory.newDefaultInstance()), x), null);
+					//
+					final XPath xp = ObjectMap.getObject(objectMap, XPath.class);
 					//
 					final NodeList pages = cast(NodeList.class, document != null ? evaluate(xp,
 							"/*[local-name()='document-content']/*[local-name()='body']/*[local-name()='presentation']/*[local-name()='page']",
@@ -7575,7 +7581,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					final StringWriter writer = new StringWriter();
 					//
-					transform(transformer, new DOMSource(document), new StreamResult(writer));
+					transform(ObjectMap.getObject(objectMap, Transformer.class), new DOMSource(document),
+							new StreamResult(writer));
 					//
 					if ((newOdfPresentationDocument = OdfPresentationDocument.newPresentationDocument()) != null) {
 						//
