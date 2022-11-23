@@ -24,6 +24,8 @@ class MigLayoutFactoryBeanTest {
 			METHOD_GET_IVALUE0_DOUBLE_ARRAY, METHOD_GET_IVALUE0_FLOAT_ARRAY, METHOD_GET_IVALUE0_BYTE_ARRAY,
 			METHOD_GET_IVALUE0_BOOLEAN_ARRAY = null;
 
+	private static Field FIELD_ARGUMENTS = null;
+
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
 		//
@@ -44,6 +46,8 @@ class MigLayoutFactoryBeanTest {
 		//
 		(METHOD_GET_IVALUE0_BOOLEAN_ARRAY = clz.getDeclaredMethod("getIValue0", boolean[].class)).setAccessible(true);
 		//
+		(FIELD_ARGUMENTS = clz.getDeclaredField("arguments")).setAccessible(true);
+		//
 	}
 
 	private MigLayoutFactoryBean instance = null;
@@ -58,70 +62,62 @@ class MigLayoutFactoryBeanTest {
 	@Test
 	void testSetArguments1() throws ReflectiveOperationException {
 		//
-		final Field arguments = MigLayoutFactoryBean.class.getDeclaredField("arguments");
-		//
-		if (arguments != null) {
-			//
-			arguments.setAccessible(true);
-			//
-		} // if
-			//
 		Assertions.assertDoesNotThrow(() -> instance.setArguments(new short[] { 1 }));
 		//
-		Assertions.assertTrue(Objects.deepEquals(new String[] { "1" }, get(arguments, instance)));
+		Assertions.assertTrue(Objects.deepEquals(new String[] { "1" }, get(FIELD_ARGUMENTS, instance)));
 		//
 		Assertions.assertDoesNotThrow(() -> instance.setArguments(new long[] { 1 }));
 		//
-		Assertions.assertTrue(Objects.deepEquals(new String[] { "1" }, get(arguments, instance)));
+		Assertions.assertTrue(Objects.deepEquals(new String[] { "1" }, get(FIELD_ARGUMENTS, instance)));
 		//
 		Assertions.assertDoesNotThrow(() -> instance.setArguments(new double[] { 1 }));
 		//
-		Assertions.assertTrue(Objects.deepEquals(new String[] { "1.0" }, get(arguments, instance)));
+		Assertions.assertTrue(Objects.deepEquals(new String[] { "1.0" }, get(FIELD_ARGUMENTS, instance)));
 		//
 		Assertions.assertDoesNotThrow(() -> instance.setArguments(new float[] { 1 }));
 		//
-		Assertions.assertTrue(Objects.deepEquals(new String[] { "1.0" }, get(arguments, instance)));
+		Assertions.assertTrue(Objects.deepEquals(new String[] { "1.0" }, get(FIELD_ARGUMENTS, instance)));
 		//
 		Assertions.assertDoesNotThrow(() -> instance.setArguments(new byte[] { 1 }));
 		//
-		Assertions.assertTrue(Objects.deepEquals(new String[] { "1" }, get(arguments, instance)));
+		Assertions.assertTrue(Objects.deepEquals(new String[] { "1" }, get(FIELD_ARGUMENTS, instance)));
 		//
 		Assertions.assertDoesNotThrow(() -> instance.setArguments(new boolean[] { true }));
 		//
-		Assertions.assertTrue(Objects.deepEquals(new String[] { "true" }, get(arguments, instance)));
+		Assertions.assertTrue(Objects.deepEquals(new String[] { "true" }, get(FIELD_ARGUMENTS, instance)));
 		//
 		Assertions.assertDoesNotThrow(() -> instance.setArguments(new Object[] { null, "" }));
 		//
-		Assertions.assertTrue(Objects.deepEquals(new String[] { null, "" }, get(arguments, instance)));
+		Assertions.assertTrue(Objects.deepEquals(new String[] { null, "" }, get(FIELD_ARGUMENTS, instance)));
 		//
 		Assertions.assertDoesNotThrow(() -> instance.setArguments(""));
 		//
-		Assertions.assertNull(get(arguments, instance));
+		Assertions.assertNull(get(FIELD_ARGUMENTS, instance));
 		//
 		Assertions.assertDoesNotThrow(() -> instance.setArguments("[1,2]"));
 		//
-		Assertions.assertTrue(Objects.deepEquals(new String[] { "1", "2" }, get(arguments, instance)));
+		Assertions.assertTrue(Objects.deepEquals(new String[] { "1", "2" }, get(FIELD_ARGUMENTS, instance)));
 		//
 		Assertions.assertDoesNotThrow(() -> instance.setArguments("1"));
 		//
-		Assertions.assertTrue(Objects.deepEquals(new String[] { "1" }, get(arguments, instance)));
+		Assertions.assertTrue(Objects.deepEquals(new String[] { "1" }, get(FIELD_ARGUMENTS, instance)));
 		//
 		Assertions.assertDoesNotThrow(() -> instance.setArguments("true"));
 		//
-		Assertions.assertTrue(Objects.deepEquals(new String[] { "true" }, get(arguments, instance)));
+		Assertions.assertTrue(Objects.deepEquals(new String[] { "true" }, get(FIELD_ARGUMENTS, instance)));
 		//
 		Assertions.assertDoesNotThrow(() -> instance.setArguments("\"\""));
 		//
-		Assertions.assertTrue(Objects.deepEquals(new String[] { "" }, get(arguments, instance)));
-		//
-		Assertions.assertDoesNotThrow(() -> instance.setArguments("null"));
-		//
-		Assertions.assertNull(get(arguments, instance));
+		Assertions.assertTrue(Objects.deepEquals(new String[] { "" }, get(FIELD_ARGUMENTS, instance)));
 		//
 	}
 
 	@Test
 	void testSetArguments2() throws ReflectiveOperationException {
+		//
+		Assertions.assertDoesNotThrow(() -> instance.setArguments("null"));
+		//
+		Assertions.assertNull(get(FIELD_ARGUMENTS, instance));
 		//
 		Assertions.assertThrows(IllegalArgumentException.class, () -> instance.setArguments("{}"));
 		//
