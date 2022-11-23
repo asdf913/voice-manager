@@ -7635,8 +7635,20 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			Map<String, Object> map = null;
 			//
-			final freemarker.template.Configuration configuration = new freemarker.template.Configuration(
-					freemarker.template.Configuration.getVersion());
+			if (objectMap != null) {
+				//
+				if (!objectMap.containsObject(freemarker.template.Configuration.class)) {
+					//
+					objectMap.setObject(freemarker.template.Configuration.class,
+							new freemarker.template.Configuration(freemarker.template.Configuration.getVersion()));
+					//
+				} // if
+					//
+			} // if
+				//
+			final freemarker.template.Configuration configuration = ObjectUtils.getIfNull(
+					ObjectMap.getObject(objectMap, freemarker.template.Configuration.class),
+					() -> new freemarker.template.Configuration(freemarker.template.Configuration.getVersion()));
 			//
 			StringTemplateLoader stl = null;
 			//
