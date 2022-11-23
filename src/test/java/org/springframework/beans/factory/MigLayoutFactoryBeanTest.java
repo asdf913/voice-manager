@@ -20,8 +20,9 @@ import com.google.common.base.Predicates;
 
 class MigLayoutFactoryBeanTest {
 
-	private static Method METHOD_TEST_AND_APPLY, METHOD_CAST, METHOD_GET_IVALUE0_OBJECT, METHOD_GET_IVALUE0_FLOAT_ARRAY,
-			METHOD_GET_IVALUE0_BYTE_ARRAY, METHOD_GET_IVALUE0_BOOLEAN_ARRAY = null;
+	private static Method METHOD_TEST_AND_APPLY, METHOD_CAST, METHOD_GET_IVALUE0_OBJECT,
+			METHOD_GET_IVALUE0_DOUBLE_ARRAY, METHOD_GET_IVALUE0_FLOAT_ARRAY, METHOD_GET_IVALUE0_BYTE_ARRAY,
+			METHOD_GET_IVALUE0_BOOLEAN_ARRAY = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -34,6 +35,8 @@ class MigLayoutFactoryBeanTest {
 		(METHOD_CAST = clz.getDeclaredMethod("cast", Class.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_GET_IVALUE0_OBJECT = clz.getDeclaredMethod("getIValue0", Object.class)).setAccessible(true);
+		//
+		(METHOD_GET_IVALUE0_DOUBLE_ARRAY = clz.getDeclaredMethod("getIValue0", double[].class)).setAccessible(true);
 		//
 		(METHOD_GET_IVALUE0_FLOAT_ARRAY = clz.getDeclaredMethod("getIValue0", float[].class)).setAccessible(true);
 		//
@@ -201,6 +204,8 @@ class MigLayoutFactoryBeanTest {
 		//
 		Assertions.assertNull(getIValue0((Object) null));
 		//
+		Assertions.assertEquals(Unit.with(null), getIValue0((double[]) null));
+		//
 		Assertions.assertEquals(Unit.with(null), getIValue0((float[]) null));
 		//
 		Assertions.assertEquals(Unit.with(null), getIValue0((byte[]) null));
@@ -212,6 +217,20 @@ class MigLayoutFactoryBeanTest {
 	private static IValue0<Object> getIValue0(final Object value) throws Throwable {
 		try {
 			final Object obj = METHOD_GET_IVALUE0_OBJECT.invoke(null, value);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof IValue0) {
+				return (IValue0) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static IValue0<Object> getIValue0(final double[] ds) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_IVALUE0_DOUBLE_ARRAY.invoke(null, ds);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof IValue0) {

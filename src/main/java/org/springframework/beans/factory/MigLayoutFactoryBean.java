@@ -124,17 +124,7 @@ public class MigLayoutFactoryBean implements FactoryBean<MigLayout> {
 				//
 			} else if (Objects.equals(componentType, Double.TYPE)) {
 				//
-				final double[] ds = (double[]) value;
-				//
-				final String[] strings = new String[ds.length];
-				//
-				for (int i = 0; i < ds.length; i++) {
-					//
-					strings[i] = Double.toString(ds[i]);
-					//
-				} // for
-					//
-				result = Unit.with(strings);
+				result = getIValue0((double[]) value);
 				//
 			} else if (Objects.equals(componentType, Float.TYPE)) {
 				//
@@ -158,6 +148,20 @@ public class MigLayoutFactoryBean implements FactoryBean<MigLayout> {
 		} // if
 			//
 		return result;
+		//
+	}
+
+	private static IValue0<Object> getIValue0(final double[] ds) {
+		//
+		final String[] strings = ds != null ? new String[ds.length] : null;
+		//
+		for (int i = 0; ds != null && i < ds.length; i++) {
+			//
+			strings[i] = Double.toString(ds[i]);
+			//
+		} // for
+			//
+		return Unit.with(strings);
 		//
 	}
 
