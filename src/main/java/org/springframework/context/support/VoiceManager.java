@@ -2053,7 +2053,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			Matcher matcher = null;
 			//
-			for (int i = 0; domElements != null && i < domElements.getLength(); i++) {
+			for (int i = 0; i < getLength(domElements); i++) {
 				//
 				if ((domElement = get(domElements, i)) == null || !matches(matcher = matcher(
 						pattern = ObjectUtils.getIfNull(pattern, () -> Pattern.compile("(第(\\d+)学年)（\\d+字）\\[編集]")),
@@ -2073,6 +2073,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return multimap;
 		//
+	}
+
+	private static int getLength(final NodeList instance) {
+		return instance != null ? instance.getLength() : 0;
+	}
+
+	private static Node item(final NodeList instance, final int index) {
+		return instance != null ? instance.item(index) : null;
 	}
 
 	private static class BooleanComboBoxModelSupplier implements Supplier<ComboBoxModel<Boolean>> {
@@ -4529,10 +4537,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					boolean isXlsx = false;
 					//
-					for (int i = 0; childNodes != null && i < childNodes.getLength(); i++) {
+					for (int i = 0; i < getLength(childNodes); i++) {
 						//
 						if (Objects.equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml",
-								getTextContent(getNamedItem(getAttributes(childNodes.item(i)), "ContentType")))
+								getTextContent(getNamedItem(getAttributes(item(childNodes, i)), "ContentType")))
 								&& (isXlsx = true)) {
 							//
 							break;
@@ -7562,7 +7570,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							"/*[local-name()='document-content']/*[local-name()='body']/*[local-name()='presentation']/*[local-name()='page']",
 							x, XPathConstants.NODESET), null));
 					//
-					final Node page = pages != null && pages.getLength() == 1 ? pages.item(0) : null;
+					final Node page = testAndApply(x -> getLength(x) == 1, pages, x -> item(x, 0), null);
 					//
 					final Node parentNode = getParentNode(page);
 					//
@@ -7679,7 +7687,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			ObjectMap om = null;
 			//
-			for (int i = 0; ps != null && i < ps.getLength(); i++) {
+			for (int i = 0; i < getLength(ps); i++) {
 				//
 				if (map == null) {
 					//
@@ -7812,9 +7820,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			StringBuilder sb = null;
 			//
-			for (int i = 0; plugins != null && i < plugins.getLength(); i++) {
+			for (int i = 0; i < getLength(plugins); i++) {
 				//
-				if ((attributes = getAttributes(plugins.item(i))) == null) {
+				if ((attributes = getAttributes(item(plugins, i))) == null) {
 					//
 					continue;
 					//

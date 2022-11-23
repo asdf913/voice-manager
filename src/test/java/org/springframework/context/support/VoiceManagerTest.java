@@ -252,7 +252,7 @@ class VoiceManagerTest {
 			METHOD_GET_VOICE_MULTI_MAP_BY_LIST_NAME, METHOD_GET_VOICE_MULTI_MAP_BY_JLPT, METHOD_GET_TEMPLATE,
 			METHOD_GET_FILE_EXTENSIONS, METHOD_CREATE_CELL_STYLE, METHOD_REDUCE, METHOD_APPEND_STRING,
 			METHOD_APPEND_CHAR, METHOD_GET_PROVIDER_PLATFORM, METHOD_OPEN_CONNECTION, METHOD_GET_RESOURCE_AS_STREAM,
-			METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH, METHOD_GET_ATTRIBUTES = null;
+			METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH, METHOD_GET_ATTRIBUTES, METHOD_GET_LENGTH, METHOD_ITEM = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -702,6 +702,10 @@ class VoiceManagerTest {
 		//
 		(METHOD_GET_ATTRIBUTES = clz.getDeclaredMethod("getAttributes", Node.class)).setAccessible(true);
 		//
+		(METHOD_GET_LENGTH = clz.getDeclaredMethod("getLength", NodeList.class)).setAccessible(true);
+		//
+		(METHOD_ITEM = clz.getDeclaredMethod("item", NodeList.class, Integer.TYPE)).setAccessible(true);
+		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
 		CLASS_EXPORT_TASK = Class.forName("org.springframework.context.support.VoiceManager$ExportTask");
@@ -751,7 +755,7 @@ class VoiceManagerTest {
 
 		private Workbook workbook = null;
 
-		private Integer numberOfSheets = null;
+		private Integer numberOfSheets, length = null;
 
 		private IntStream intStream = null;
 
@@ -761,7 +765,7 @@ class VoiceManagerTest {
 
 		private Collection<Entry<?, ?>> multiMapEntries = null;
 
-		private Node namedItem, parentNode, appendChild, removeChild, cloneNode = null;
+		private Node namedItem, parentNode, appendChild, removeChild, cloneNode, item = null;
 
 		private Sheet sheet = null;
 
@@ -1135,6 +1139,18 @@ class VoiceManagerTest {
 					//
 				} // if
 					//
+			} else if (proxy instanceof NodeList) {
+				//
+				if (Objects.equals(methodName, "getLength")) {
+					//
+					return length;
+					//
+				} else if (Objects.equals(methodName, "item")) {
+					//
+					return item;
+					//
+				} // if
+					//
 			} else if (proxy instanceof InnerClass.InnerInterface) {
 				//
 				if (Objects.equals(methodName, "getDllPath")) {
@@ -1181,6 +1197,8 @@ class VoiceManagerTest {
 
 	private Node node = null;
 
+	private NodeList nodeList = null;
+
 	private Lookup lookup = null;
 
 	private Iterable<?> iterable = null;
@@ -1211,6 +1229,8 @@ class VoiceManagerTest {
 		multimap = Reflection.newProxy(Multimap.class, ih);
 		//
 		node = Reflection.newProxy(Node.class, ih);
+		//
+		nodeList = Reflection.newProxy(NodeList.class, ih);
 		//
 		lookup = Reflection.newProxy(Lookup.class, ih);
 		//
@@ -6011,6 +6031,54 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof NamedNodeMap) {
 				return (NamedNodeMap) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetLength() throws Throwable {
+		//
+		if (ih != null) {
+			//
+			ih.length = Integer.valueOf(ZERO);
+			//
+		} // if
+			//
+		Assertions.assertEquals(ZERO, getLength(nodeList));
+		//
+	}
+
+	private static int getLength(final NodeList instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_LENGTH.invoke(null, instance);
+			if (obj instanceof Integer) {
+				return ((Integer) obj).intValue();
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testItem() throws Throwable {
+		//
+		Assertions.assertNull(item(null, 0));
+		//
+		Assertions.assertNull(item(nodeList, 0));
+		//
+	}
+
+	private static Node item(final NodeList instance, final int index) throws Throwable {
+		try {
+			final Object obj = METHOD_ITEM.invoke(null, instance, index);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Node) {
+				return (Node) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
