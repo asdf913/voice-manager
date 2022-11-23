@@ -865,42 +865,40 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			final LayoutManager lm = cloneLayoutManager();
 			//
 			if (Boolean.logicalAnd(Objects.equals(Boolean.TRUE, IValue0Util.getValue0(IsWindows10OrGreater())),
-					getInstance(speechApi) instanceof SpeechApiSpeechServerImpl)) {
+					getInstance(speechApi) instanceof SpeechApiSpeechServerImpl) &&
+			//
+			// https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-osversioninfoexa
+			//
+			// dwMajorVersion
+			//
+					ObjectUtils.compare(valueOf(toString(MapUtils.getObject(getOsVersionInfoExMap(), "getMajor"))),
+							10) >= 10) {
 				//
-				// https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-osversioninfoexa
-				//
-				// dwMajorVersion
-				//
-				if (ObjectUtils.compare(valueOf(toString(MapUtils.getObject(getOsVersionInfoExMap(), "getMajor"))),
-						10) >= 10) {
+				if (jPanelWarning == null) {
 					//
-					if (jPanelWarning == null) {
-						//
-						jPanelWarning = new JPanel(lm);
-						//
-					} // if
-						//
-					jPanelWarning.setBorder(BorderFactory.createTitledBorder(WARNING));
-					//
-					final JLabel jLabel = new JLabel("Please set Compatibility Mode to \"Windows 8\" or prior version");
-					//
-					if (lm instanceof MigLayout) {
-						jPanelWarning.add(jLabel, WRAP);
-					} else {
-						jPanelWarning.add(jLabel);
-					} // if
-						//
-					final Unit<String> pageTitle = getPageTitle(microsoftWindowsCompatibilitySettingsPageUrl);
-					//
-					final String title = StringUtils.defaultIfBlank(IValue0Util.getValue0(pageTitle),
-							"Make older apps or programs compatible with Windows 10");
-					//
-					jPanelWarning
-							.add(pageTitle != null ? new JLabelLink(microsoftWindowsCompatibilitySettingsPageUrl, title)
-									: new JLabel(title));
+					jPanelWarning = new JPanel(lm);
 					//
 				} // if
 					//
+				jPanelWarning.setBorder(BorderFactory.createTitledBorder(WARNING));
+				//
+				final JLabel jLabel = new JLabel("Please set Compatibility Mode to \"Windows 8\" or prior version");
+				//
+				if (lm instanceof MigLayout) {
+					jPanelWarning.add(jLabel, WRAP);
+				} else {
+					jPanelWarning.add(jLabel);
+				} // if
+					//
+				final Unit<String> pageTitle = getPageTitle(microsoftWindowsCompatibilitySettingsPageUrl);
+				//
+				final String title = StringUtils.defaultIfBlank(IValue0Util.getValue0(pageTitle),
+						"Make older apps or programs compatible with Windows 10");
+				//
+				jPanelWarning
+						.add(pageTitle != null ? new JLabelLink(microsoftWindowsCompatibilitySettingsPageUrl, title)
+								: new JLabel(title));
+				//
 			} // if
 				//
 			try {
@@ -950,7 +948,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 			});
 			//
-		} else {
+		} else
+
+		{
 			//
 			(jPanelWarning = new JPanel()).setBorder(BorderFactory.createTitledBorder(WARNING));
 			//
@@ -966,7 +966,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
-		jTabbedPane.addTab("TTS", createTtsPanel(cloneLayoutManager(), voiceIds));
+		jTabbedPane.addTab("TTS",
+
+				createTtsPanel(cloneLayoutManager(), voiceIds));
 		//
 		jTabbedPane.addTab(TAB_TITLE_IMPORT_SINGLE, createSingleImportPanel(cloneLayoutManager(), voiceIds));
 		//
