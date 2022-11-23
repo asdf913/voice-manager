@@ -7660,6 +7660,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			final StringTemplateLoader stl = ObjectUtils
 					.getIfNull(ObjectMap.getObject(objectMap, StringTemplateLoader.class), StringTemplateLoader::new);
 			//
+			String textContent = null;
+			//
 			final boolean headless = GraphicsEnvironment.isHeadless();
 			//
 			for (int i = 0; ps != null && i < ps.getLength(); i++) {
@@ -7702,11 +7704,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
-				putTemplate(stl, "", p.getTextContent());
+				putTemplate(stl, textContent = getTextContent(p), textContent);
 				//
 				try (final Writer writer = new StringWriter()) {
 					//
-					process(configuration.getTemplate(""), map, writer);
+					process(configuration.getTemplate(textContent), map, writer);
 					//
 					p.setTextContent(VoiceManager.toString(writer));
 					//
