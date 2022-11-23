@@ -2489,11 +2489,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.add(new JLabel(), String.format("span %1$s", 4));
 		//
-		panel.add(cbExportPresentation = new JCheckBox("Export Presentation"),
-				String.format("%1$s,span %2$s", WRAP, 3));
+		panel.add(cbExportPresentation = new JCheckBox("Export Presentation"), String.format(",span %1$s", 3));
+		//
+		setToolTipText(cbExportPresentation, "Open Document Format (odp) format, Libre Office is recommended");
 		//
 		cbExportPresentation.setSelected(Boolean.parseBoolean(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.exportPresentation")));
+		//
+		panel.add(new JLabelLink("https://www.libreoffice.org/", "Libre Office"), WRAP);
 		//
 		panel.add(new JLabel(), String.format("span %1$s", 4));
 		//
