@@ -7724,13 +7724,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
-					//
-				if (stl != null) {
-					//
-					stl.putTemplate("", p.getTextContent());
-					//
-				} // if
-					//
+				putTemplate(stl, "", p.getTextContent());
+				//
 				try (final Writer writer = new StringWriter()) {
 					//
 					process(configuration.getTemplate(""), map, writer);
@@ -7757,6 +7752,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 			} // for
 				//
+		}
+
+		private static void putTemplate(final StringTemplateLoader instance, final String name,
+				final String templateContent) {
+			if (instance != null) {
+				instance.putTemplate(name, templateContent);
+			}
 		}
 
 		private static void setPluginHref(final XPath xp, final Node node, final Pattern pattern, final String key)

@@ -191,6 +191,7 @@ import domain.Voice.Yomi;
 import domain.VoiceList;
 import fr.free.nrw.jakaroma.Jakaroma;
 import freemarker.cache.ClassTemplateLoader;
+import freemarker.cache.StringTemplateLoader;
 import freemarker.template.Template;
 import freemarker.template.Version;
 import io.github.toolfactory.narcissus.Narcissus;
@@ -6489,6 +6490,22 @@ class VoiceManagerTest {
 		} // if
 			//
 		Assertions.assertNull(invoke(setVariable, null, null, null, null));
+		//
+		// org.springframework.context.support.VoiceManager$ExportTask.putTemplate(freemarker.cache.StringTemplateLoader,java.lang.String,java.lang.String)
+		//
+		final Method putTemplate = clz != null
+				? clz.getDeclaredMethod("putTemplate", StringTemplateLoader.class, String.class, String.class)
+				: null;
+		//
+		if (putTemplate != null) {
+			//
+			putTemplate.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertNull(invoke(putTemplate, null, null, null, null));
+		//
+		Assertions.assertNull(invoke(putTemplate, null, new StringTemplateLoader(), null, null));
 		//
 	}
 
