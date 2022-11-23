@@ -5472,17 +5472,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		String string = null;
 		//
-		Pair<String, ?> pair = null;
-		//
 		for (int i = 0; pairs != null && i < pairs.size(); i++) {
 			//
-			if ((pair = get(pairs, i)) == null) {
-				//
-				continue;
-				//
-			} // if
-				//
-			if (test(predicate, string = toString(getValue(pair))) || predicate == null) {
+			if (test(predicate, string = toString(getValue(cast(Pair.class, get(pairs, i))))) || predicate == null) {
 				//
 				break;
 				//
