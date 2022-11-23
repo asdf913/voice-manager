@@ -8,6 +8,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+import org.javatuples.Unit;
+import org.javatuples.valueintf.IValue0;
 import org.springframework.beans.factory.InitializingBean;
 
 public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean {
@@ -18,7 +20,7 @@ public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean {
 		//
 		if (instance == null) {
 			//
-			if (Objects.equals(Boolean.TRUE, IsWindows10OrGreater())) {
+			if (Objects.equals(Boolean.TRUE, getValue0(IsWindows10OrGreater()))) {
 				//
 				instance = new SpeechApiSystemSpeechImpl();
 				//
@@ -34,7 +36,7 @@ public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean {
 		//
 	}
 
-	private static Boolean IsWindows10OrGreater() {
+	private static IValue0<Boolean> IsWindows10OrGreater() {
 		//
 		try {
 			//
@@ -52,7 +54,7 @@ public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean {
 				//
 			final Method m = ms.size() == 1 ? ms.get(0) : null;
 			//
-			return cast(Boolean.class, m != null ? m.invoke(null) : null);
+			return Unit.with(cast(Boolean.class, m != null ? m.invoke(null) : null));
 			//
 		} catch (final ClassNotFoundException | IllegalAccessException | InvocationTargetException e) {
 			//
@@ -60,6 +62,10 @@ public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean {
 			//
 		return null;
 		//
+	}
+
+	private static <X> X getValue0(final IValue0<X> instance) {
+		return instance != null ? instance.getValue0() : null;
 	}
 
 	@Override
