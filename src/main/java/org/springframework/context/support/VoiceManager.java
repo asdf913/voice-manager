@@ -334,7 +334,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static final Predicate<File> EMPTY_FILE_PREDICATE = f -> f != null && f.exists() && isFile(f)
 			&& f.length() == 0;
 
-	private PropertyResolver propertyResolver = null;
+	private transient PropertyResolver propertyResolver = null;
 
 	private JTextComponent tfFolder, tfFile, tfFileLength, tfFileDigest, tfTextTts, tfTextImport, tfHiragana,
 			tfKatakana, tfRomaji, tfSpeechRate, tfSource, tfProviderName, tfProviderVersion, tfProviderPlatform,
@@ -343,15 +343,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			tfJlptFolderNamePrefix, tfOrdinalPositionFileNamePrefix, tfIpaSymbol, tfExportFile, tfElapsed, tfDllPath,
 			tfExportHtmlFileName = null;
 
-	private ComboBoxModel<Yomi> cbmYomi = null;
+	private transient ComboBoxModel<Yomi> cbmYomi = null;
 
-	private ComboBoxModel<String> cbmVoiceId, cbmJlptLevel, cbmGaKuNenBeTsuKanJi = null;
+	private transient ComboBoxModel<String> cbmVoiceId, cbmJlptLevel, cbmGaKuNenBeTsuKanJi = null;
 
-	private ComboBoxModel<?> cbmAudioFormatWrite, cbmAudioFormatExecute = null;
+	private transient ComboBoxModel<?> cbmAudioFormatWrite, cbmAudioFormatExecute = null;
 
-	private ComboBoxModel<Boolean> cbmIsKanji, cbmJoYoKanJi = null;
+	private transient ComboBoxModel<Boolean> cbmIsKanji, cbmJoYoKanJi = null;
 
-	private ComboBoxModel<Method> cbmSpeakMethod = null;
+	private transient ComboBoxModel<Method> cbmSpeakMethod = null;
 
 	private AbstractButton btnSpeak, btnWriteVoice, btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji,
 			btnCopyHiragana, btnCopyKatakana, cbUseTtsVoice, btnExecute, btnImportFileTemplate, btnImport,
@@ -384,7 +384,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private DefaultTableModel tmImportException, tmImportResult = null;
 
-	private SqlSessionFactory sqlSessionFactory = null;
+	private transient SqlSessionFactory sqlSessionFactory = null;
 
 	private String voiceFolder = null;
 
@@ -392,15 +392,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private Map<String, String> outputFolderFileNameExpressions = null;
 
-	private SpeechApi speechApi = null;
+	private transient SpeechApi speechApi = null;
 
 	private String[] mp3Tags, microsoftSpeechObjectLibraryAttributeNames = null;
 
-	private ConfigurableListableBeanFactory configurableListableBeanFactory = null;
+	private transient ConfigurableListableBeanFactory configurableListableBeanFactory = null;
 
-	private Jakaroma jakaroma = null;
+	private transient Jakaroma jakaroma = null;
 
-	private Toolkit toolkit = null;
+	private transient Toolkit toolkit = null;
 
 	private ObjectMapper objectMapper = null;
 
@@ -411,17 +411,17 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private Unit<List<String>> jlptLevels = null;
 
-	private LayoutManager layoutManager = null;
+	private transient LayoutManager layoutManager = null;
 
 	private JPanel jPanelImportResult = null;
 
 	private Unit<Multimap<String, String>> gaKuNenBeTsuKanJiMultimap = null;
 
-	private IValue0<String> microsoftSpeechPlatformRuntimeLanguagesDownloadPageTitle = null;
+	private transient IValue0<String> microsoftSpeechPlatformRuntimeLanguagesDownloadPageTitle = null;
 
 	private String exportHtmlTemplateFile = null;
 
-	private freemarker.template.Configuration freeMarkerConfiguration = null;
+	private transient freemarker.template.Configuration freeMarkerConfiguration = null;
 
 	private Version freeMarkerVersion = null;
 
