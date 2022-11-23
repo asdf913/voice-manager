@@ -87,11 +87,11 @@ public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean {
 	@Override
 	public void speak(final String text, final String voiceId, final int rate, final int volume) {
 		//
-		final SpeechApi instance = getInstance();
+		final SpeechApi speechApi = getInstance();
 		//
-		if (instance != null) {
+		if (speechApi != null) {
 			//
-			instance.speak(text, voiceId, rate, volume);
+			speechApi.speak(text, voiceId, rate, volume);
 			//
 		} // if
 			//
