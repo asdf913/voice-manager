@@ -1095,43 +1095,35 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static Object getOsVersionInfoEx() {
+	private static Object getOsVersionInfoEx()
+			throws InstantiationException, IllegalAccessException, InvocationTargetException {
 		//
-		try {
-			//
-			final Class<?> clz = forName("com.sun.jna.platform.win32.Kernel32");
-			//
-			// https://java-native-access.github.io/jna/5.6.0/javadoc/com/sun/jna/platform/win32/Kernel32.html#INSTANCE
-			//
-			final List<Field> fs = toList(
-					filter(testAndApply(Objects::nonNull, getDeclaredFields(clz), Arrays::stream, null),
-							f -> f != null && Objects.equals(getName(f), "INSTANCE") && Objects.equals(f.getType(), clz)
-									&& Modifier.isStatic(f.getModifiers())));
-			//
-			final Field f = fs != null && fs.size() == 1 ? fs.get(0) : null;
-			//
-			final Class<?> clzOsVersionInfoEx = forName("com.sun.jna.platform.win32.WinNT$OSVERSIONINFOEX");
-			//
-			// https://java-native-access.github.io/jna/5.6.0/javadoc/com/sun/jna/platform/win32/Kernel32.html#GetVersionEx-com.sun.jna.platform.win32.WinNT.OSVERSIONINFOEX-
-			//
-			final List<Method> ms = toList(
-					filter(testAndApply(Objects::nonNull, getDeclaredMethods(clz), Arrays::stream, null),
-							m -> m != null && Objects.equals(getName(m), "GetVersionEx")
-									&& Arrays.equals(new Class[] { clzOsVersionInfoEx }, m.getParameterTypes())));
-			//
-			Method m = ms != null && ms.size() == 1 ? ms.get(0) : null;
-			//
-			final Object osVersionInfoEx = clzOsVersionInfoEx != null ? clzOsVersionInfoEx.newInstance() : null;
-			//
-			return Objects.equals(Boolean.TRUE,
-					m != null ? m.invoke(f != null ? f.get(null) : null, osVersionInfoEx) : null) ? osVersionInfoEx
-							: null;
-			//
-		} catch (final IllegalAccessException | InvocationTargetException | InstantiationException e) {
-			//
-		} // try
-			//
-		return null;
+		final Class<?> clz = forName("com.sun.jna.platform.win32.Kernel32");
+		//
+		// https://java-native-access.github.io/jna/5.6.0/javadoc/com/sun/jna/platform/win32/Kernel32.html#INSTANCE
+		//
+		final List<Field> fs = toList(
+				filter(testAndApply(Objects::nonNull, getDeclaredFields(clz), Arrays::stream, null),
+						f -> f != null && Objects.equals(getName(f), "INSTANCE") && Objects.equals(f.getType(), clz)
+								&& Modifier.isStatic(f.getModifiers())));
+		//
+		final Field f = fs != null && fs.size() == 1 ? fs.get(0) : null;
+		//
+		final Class<?> clzOsVersionInfoEx = forName("com.sun.jna.platform.win32.WinNT$OSVERSIONINFOEX");
+		//
+		// https://java-native-access.github.io/jna/5.6.0/javadoc/com/sun/jna/platform/win32/Kernel32.html#GetVersionEx-com.sun.jna.platform.win32.WinNT.OSVERSIONINFOEX-
+		//
+		final List<Method> ms = toList(
+				filter(testAndApply(Objects::nonNull, getDeclaredMethods(clz), Arrays::stream, null),
+						m -> m != null && Objects.equals(getName(m), "GetVersionEx")
+								&& Arrays.equals(new Class[] { clzOsVersionInfoEx }, m.getParameterTypes())));
+		//
+		Method m = ms != null && ms.size() == 1 ? ms.get(0) : null;
+		//
+		final Object osVersionInfoEx = clzOsVersionInfoEx != null ? clzOsVersionInfoEx.newInstance() : null;
+		//
+		return Objects.equals(Boolean.TRUE,
+				m != null ? m.invoke(f != null ? f.get(null) : null, osVersionInfoEx) : null) ? osVersionInfoEx : null;
 		//
 	}
 
