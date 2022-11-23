@@ -7573,7 +7573,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					Node pageCloned = null;
 					//
-					Voice voice = null;
+					Voice voice, temp = null;
 					//
 					Pattern pattern = null;
 					//
@@ -7592,7 +7592,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 							objectMap.setObject(Node.class, pageCloned);
 							//
-							objectMap.setObject(Voice.class, voice);
+							if (!objectMap.containsObject(ObjectMapper.class)) {
+								//
+								objectMap.setObject(ObjectMapper.class, new ObjectMapper());
+								//
+							} // if
+								//
+							setStringFieldDefaultValue(
+									temp = clone(objectMap.getObject(ObjectMapper.class), Voice.class, voice));
+							//
+							objectMap.setObject(Voice.class, ObjectUtils.defaultIfNull(temp, voice));
 							//
 						} // if
 							//
