@@ -1711,18 +1711,6 @@ class VoiceManagerTest {
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance,
 				new ActionEvent(btnExportMicrosoftSpeechObjectLibraryInformation, 0, null)));
 		//
-		// btnExportCopy
-		//
-		final AbstractButton btnExportCopy = new JButton();
-		//
-		if (instance != null) {
-			//
-			FieldUtils.writeDeclaredField(instance, "btnExportCopy", btnExportCopy, true);
-			//
-		} // if
-			//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnExportCopy, 0, null)));
-		//
 		// btnSpeechRateSlower
 		//
 		final AbstractButton btnSpeechRateSlower = new JButton();
@@ -1819,6 +1807,18 @@ class VoiceManagerTest {
 		} // if
 			//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnExportBrowse, 0, null)));
+		//
+		// btnExportCopy
+		//
+		final AbstractButton btnExportCopy = new JButton();
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "btnExportCopy", btnExportCopy, true);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnExportCopy, 0, null)));
 		//
 	}
 
