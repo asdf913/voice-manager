@@ -500,8 +500,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					m -> m != null && Objects.equals(m.getName(), "createTempFile")
 							&& Objects.deepEquals(m.getArgumentTypes(), objectTypes)));
 			//
-			org.apache.bcel.classfile.Method method = null;
-			//
 			if (ms != null && !ms.isEmpty()) {
 				//
 				if (ms.size() > 1) {
@@ -510,40 +508,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
-				method = get(ms, 0);
+				result = getTempFileMinimumPrefixLength(get(ms, 0));
 				//
-			} // if
-				//
-			if (method != null) {
-				//
-				final byte[] bs = CodeUtil.getCode(method.getCode());
-				// )
-				final String[] lines = StringUtils.split(
-						StringUtils.trim(Utility.codeToString(bs, method.getConstantPool(), 0, length(bs))), '\n');
-				//
-				String line = null;
-				//
-				Pattern pattern = null;
-				//
-				Matcher matcher = null;
-				//
-				for (int i = 0; lines != null && i < lines.length; i++) {
-					//
-					if ((line = lines[i]) == null) {
-						continue;
-					} // if
-						//
-					if (line.matches("^\\d+:\\s+if_icmpge\\s+#\\d+$")
-							&& matches((matcher = matcher(pattern = ObjectUtils.getIfNull(pattern,
-									() -> Pattern.compile("^\\d+:\\s+iconst_(\\d+)$")), lines[i - 1])))
-							&& matcher.groupCount() > 0 && (result = valueOf(matcher.group(1))) != null) {
-						//
-						break;
-						//
-					} // if
-						//
-				} // for
-					//
 			} // if
 				//
 		} catch (final IOException e) {
@@ -563,6 +529,46 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			} // if
 				//
 		} // try
+			//
+		return result;
+		//
+	}
+
+	private static Integer getTempFileMinimumPrefixLength(final org.apache.bcel.classfile.Method method) {
+		//
+		Integer result = null;
+		//
+		if (method != null) {
+			//
+			final byte[] bs = CodeUtil.getCode(method.getCode());
+			//
+			final String[] lines = StringUtils
+					.split(StringUtils.trim(Utility.codeToString(bs, method.getConstantPool(), 0, length(bs))), '\n');
+			//
+			String line = null;
+			//
+			Pattern pattern = null;
+			//
+			Matcher matcher = null;
+			//
+			for (int i = 0; lines != null && i < lines.length; i++) {
+				//
+				if ((line = lines[i]) == null) {
+					continue;
+				} // if
+					//
+				if (line.matches("^\\d+:\\s+if_icmpge\\s+#\\d+$")
+						&& matches((matcher = matcher(pattern = ObjectUtils.getIfNull(pattern,
+								() -> Pattern.compile("^\\d+:\\s+iconst_(\\d+)$")), lines[i - 1])))
+						&& matcher.groupCount() > 0 && (result = valueOf(matcher.group(1))) != null) {
+					//
+					break;
+					//
+				} // if
+					//
+			} // for
+				//
+		} // if
 			//
 		return result;
 		//

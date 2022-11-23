@@ -250,8 +250,8 @@ class VoiceManagerTest {
 			METHOD_IS_ANNOTATION_PRESENT, METHOD_PROCESS, METHOD_ENCODE_TO_STRING,
 			METHOD_GET_VOICE_MULTI_MAP_BY_LIST_NAME, METHOD_GET_VOICE_MULTI_MAP_BY_JLPT, METHOD_GET_TEMPLATE,
 			METHOD_GET_FILE_EXTENSIONS, METHOD_CREATE_CELL_STYLE, METHOD_REDUCE, METHOD_APPEND_STRING,
-			METHOD_APPEND_CHAR, METHOD_GET_PROVIDER_PLATFORM, METHOD_OPEN_CONNECTION,
-			METHOD_GET_RESOURCE_AS_STREAM = null;
+			METHOD_APPEND_CHAR, METHOD_GET_PROVIDER_PLATFORM, METHOD_OPEN_CONNECTION, METHOD_GET_RESOURCE_AS_STREAM,
+			METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -703,6 +703,9 @@ class VoiceManagerTest {
 		//
 		(METHOD_GET_RESOURCE_AS_STREAM = clz.getDeclaredMethod("getResourceAsStream", Class.class, String.class))
 				.setAccessible(true);
+		//
+		(METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH = clz.getDeclaredMethod("getTempFileMinimumPrefixLength",
+				org.apache.bcel.classfile.Method.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -6014,6 +6017,28 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof InputStream) {
 				return (InputStream) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetTempFileMinimumPrefixLength() throws Throwable {
+		//
+		Assertions.assertNull(getTempFileMinimumPrefixLength(null));
+		//
+	}
+
+	private static Integer getTempFileMinimumPrefixLength(final org.apache.bcel.classfile.Method method)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH.invoke(null, method);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Integer) {
+				return (Integer) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
