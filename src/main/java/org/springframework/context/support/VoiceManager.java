@@ -7492,9 +7492,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				OdfPresentationDocument odfPd = null;
 				//
+				XPath xp = null;
+				//
 				for (final String rowKey : rowKeySet) {
 					//
-					if ((odfPd = generateOdfPresentationDocument(bs, table.row(rowKey))) != null) {
+					if ((odfPd = generateOdfPresentationDocument(bs, table.row(rowKey), xp = ObjectUtils.getIfNull(xp,
+							() -> newXPath(XPathFactory.newDefaultInstance())))) != null) {
 						//
 						odfPd.save(new File(rowKey, StringUtils.substringAfter(rowKey, File.separatorChar) + ".odp"));
 						//
@@ -7507,7 +7510,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		}
 
 		private static OdfPresentationDocument generateOdfPresentationDocument(final byte[] bs,
-				final Map<String, Voice> voices) throws Exception {
+				final Map<String, Voice> voices, final XPath xp) throws Exception {
 			//
 			OdfPresentationDocument newOdfPresentationDocument = null;
 			//
@@ -7521,8 +7524,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 											null),
 									ByteArrayInputStream::new, null),
 							x -> parse(newDocumentBuilder(DocumentBuilderFactory.newDefaultInstance()), x), null);
-					//
-					final XPath xp = newXPath(XPathFactory.newDefaultInstance());
 					//
 					final NodeList pages = cast(NodeList.class, document != null ? evaluate(xp,
 							"/*[local-name()='document-content']/*[local-name()='body']/*[local-name()='presentation']/*[local-name()='page']",
