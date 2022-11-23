@@ -6536,6 +6536,20 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(invoke(putTemplate, null, new StringTemplateLoader(), EMPTY, EMPTY));
 		//
+		// org.springframework.context.support.VoiceManager$ExportTask.describe(java.lang.Object)
+		//
+		final Method describe = CLASS_EXPORT_TASK != null
+				? CLASS_EXPORT_TASK.getDeclaredMethod("describe", Object.class)
+				: null;
+		//
+		if (describe != null) {
+			//
+			describe.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertNull(invoke(describe, null, (Object) null));
+		//
 	}
 
 	private static void run(final Runnable instance) {

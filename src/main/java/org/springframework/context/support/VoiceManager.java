@@ -7674,9 +7674,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					try {
 						//
-						map = PropertyUtils.describe(ObjectMap.getObject(objectMap, Voice.class));
+						map = describe(ObjectMap.getObject(objectMap, Voice.class));
 						//
-					} catch (IllegalAccessException | NoSuchMethodException e) {
+					} catch (final Throwable e) {
 						//
 						if (headless) {
 							//
@@ -7689,28 +7689,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						} else {
 							//
 							JOptionPane.showMessageDialog(null, getMessage(e));
-							//
-						} // if
-							//
-					} catch (final InvocationTargetException e) {
-						//
-						final Throwable targetException = e.getTargetException();
-						//
-						final Throwable rootCause = ObjectUtils.firstNonNull(
-								ExceptionUtils.getRootCause(targetException), targetException,
-								ExceptionUtils.getRootCause(e), e);
-						//
-						if (headless) {
-							//
-							if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-								LOG.error(getMessage(rootCause), rootCause);
-							} else if (rootCause != null) {
-								rootCause.printStackTrace();
-							} // if
-								//
-						} else {
-							//
-							JOptionPane.showMessageDialog(null, getMessage(rootCause));
 							//
 						} // if
 							//
@@ -7751,6 +7729,23 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				} // try
 					//
 			} // for
+				//
+		}
+
+		private static Map<String, Object> describe(final Object data) throws Throwable {
+			//
+			try {
+				//
+				return testAndApply(Objects::nonNull, data, PropertyUtils::describe, null);
+				//
+			} catch (final InvocationTargetException e) {
+				//
+				final Throwable targetException = e.getTargetException();
+				//
+				throw ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException), targetException,
+						ExceptionUtils.getRootCause(e), e);
+				//
+			} // try
 				//
 		}
 
