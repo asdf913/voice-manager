@@ -327,6 +327,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static final String ORDINAL_POSITION_AS_FILE_NAME_PREFIX = "ordinalPositionAsFileNamePrefix";
 
+	private static final String KEY_NOT_FOUND_MESSAGE = "Key [%1$s] Not Found";
+
 	private static final Predicate<File> EMPTY_FILE_PREDICATE = f -> f != null && f.exists() && isFile(f)
 			&& f.length() == 0;
 
@@ -7050,7 +7052,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					if (!containsKey(getObjects(), key)) {
 						//
-						throw new IllegalStateException(String.format("Key [%1$s] Not Found", key));
+						throw new IllegalStateException(String.format(KEY_NOT_FOUND_MESSAGE, key));
 						//
 					} // if
 						//
@@ -7076,7 +7078,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					if (!containsKey(getBooleans(), key)) {
 						//
-						throw new IllegalStateException(String.format("Key [%1$s] Not Found", key));
+						throw new IllegalStateException(String.format(KEY_NOT_FOUND_MESSAGE, key));
 						//
 					} // if
 						//
@@ -7098,7 +7100,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					if (!containsKey(getIntMapObjects(), key)) {
 						//
-						throw new IllegalStateException(String.format("Key [%1$s] Not Found", key));
+						throw new IllegalStateException(String.format(KEY_NOT_FOUND_MESSAGE, key));
 						//
 					} // if
 						//
@@ -7124,7 +7126,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					if (!containsKey(getIntIntMapObjects(), key)) {
 						//
-						throw new IllegalStateException(String.format("Key [%1$s] Not Found", key));
+						throw new IllegalStateException(String.format(KEY_NOT_FOUND_MESSAGE, key));
 						//
 					} // if
 						//
