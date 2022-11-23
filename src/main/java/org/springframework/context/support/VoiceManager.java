@@ -804,7 +804,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		try {
 			//
-			final Object object = objectMapper != null ? objectMapper.readValue(toString(value), Object.class) : null;
+			final Object object = readValue(objectMapper, toString(value), Object.class);
 			//
 			if (object instanceof Iterable || object == null) {
 				//
