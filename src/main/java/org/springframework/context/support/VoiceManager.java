@@ -7274,24 +7274,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				final Voice v = clone(objectMapper, Voice.class, voice);
 				//
-				final Field[] fs = getDeclaredFields(VoiceManager.getClass(v));
+				setStringFieldDefaultValue(v);
 				//
-				Field f = null;
-				//
-				for (int i = 0; fs != null && i < fs.length; i++) {
-					//
-					if ((f = fs[i]) == null || !Objects.equals(getType(f), String.class)) {
-						//
-						continue;
-						//
-					} // if
-						//
-					f.setAccessible(true);
-					//
-					f.set(v, StringUtils.defaultString(VoiceManager.toString(f.get(v))));
-					//
-				} // if
-					//
 				setVariable(evaluationContext, "voice", ObjectUtils.defaultIfNull(v, voice));
 				//
 				String key, value, ordinalPositionString, voiceFolder = null;
@@ -7415,6 +7399,28 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				} // if
 					//
 			} // try
+				//
+		}
+
+		private static void setStringFieldDefaultValue(final Object instance) throws IllegalAccessException {
+			//
+			final Field[] fs = getDeclaredFields(VoiceManager.getClass(instance));
+			//
+			Field f = null;
+			//
+			for (int i = 0; fs != null && i < fs.length; i++) {
+				//
+				if ((f = fs[i]) == null || !Objects.equals(getType(f), String.class)) {
+					//
+					continue;
+					//
+				} // if
+					//
+				f.setAccessible(true);
+				//
+				f.set(instance, StringUtils.defaultString(VoiceManager.toString(f.get(instance))));
+				//
+			} // if
 				//
 		}
 

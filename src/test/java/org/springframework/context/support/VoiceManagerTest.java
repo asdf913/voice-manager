@@ -6568,6 +6568,20 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(invoke(clone, null, objectMapper, Object.class, null));
 		//
+		// org.springframework.context.support.VoiceManager$ExportTask.setStringFieldDefaultValue(java.lang.Object)
+		//
+		final Method setStringFieldDefaultValue = CLASS_EXPORT_TASK != null
+				? CLASS_EXPORT_TASK.getDeclaredMethod("setStringFieldDefaultValue", Object.class)
+				: null;
+		//
+		if (setStringFieldDefaultValue != null) {
+			//
+			setStringFieldDefaultValue.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertNull(invoke(setStringFieldDefaultValue, null, new Voice()));
+		//
 	}
 
 	private static void run(final Runnable instance) {
