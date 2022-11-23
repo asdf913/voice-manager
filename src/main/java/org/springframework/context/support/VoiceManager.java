@@ -7638,7 +7638,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					if ((odfPd = generateOdfPresentationDocument(objectMap, table.row(rowKey))) != null) {
 						//
-						odfPd.save(new File(rowKey, StringUtils.substringAfter(rowKey, File.separatorChar) + ".odp"));
+						odfPd.save(new File(rowKey,
+								String.join(".", StringUtils.substringAfter(rowKey, File.separatorChar), "odp")));
 						//
 					} // if
 						//
