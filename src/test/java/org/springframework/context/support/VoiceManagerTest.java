@@ -28,6 +28,7 @@ import java.io.PrintStream;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.annotation.Annotation;
+import java.lang.invoke.TypeDescriptor.OfField;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -6175,6 +6176,37 @@ class VoiceManagerTest {
 			//
 			Assertions.assertEquals(Boolean.TRUE,
 					ih.invoke(intIntMap, intIntMapContainsKey, new Object[] { Integer.valueOf(ONE) }));
+			//
+			// org.springframework.context.support.VoiceManager$IH.isArray(java.lang.invoke.TypeDescriptor.OfField)
+			//
+			final Method isArray = CLASS_IH != null ? CLASS_IH.getDeclaredMethod("isArray", OfField.class) : null;
+			//
+			if (isArray != null) {
+				//
+				isArray.setAccessible(true);
+				//
+			} // if
+				//
+			Assertions.assertEquals(Boolean.FALSE, invoke(isArray, null, (Object) null));
+			//
+			final Class<?> clz = byte[].class;
+			//
+			Assertions.assertEquals(Boolean.TRUE, invoke(isArray, null, clz));
+			//
+			// org.springframework.context.support.VoiceManager$IH.getSimpleName(java.lang.class)
+			//
+			final Method getSimpleName = CLASS_IH != null ? CLASS_IH.getDeclaredMethod("getSimpleName", Class.class)
+					: null;
+			//
+			if (getSimpleName != null) {
+				//
+				getSimpleName.setAccessible(true);
+				//
+			} // if
+				//
+			Assertions.assertNull(invoke(getSimpleName, null, (Object) null));
+			//
+			Assertions.assertEquals("byte[]", invoke(getSimpleName, null, clz));
 			//
 		} // if
 			//

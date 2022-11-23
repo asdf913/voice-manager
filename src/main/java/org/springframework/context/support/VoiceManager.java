@@ -38,6 +38,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.lang.invoke.TypeDescriptor.OfField;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
@@ -7052,10 +7053,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					if (!containsKey(getObjects(), key)) {
 						//
-						final Class<?> clz = cast(Class.class, key);
-						//
 						throw new IllegalStateException(String.format(KEY_NOT_FOUND_MESSAGE,
-								clz != null && clz.isArray() ? clz.getSimpleName() : key));
+								testAndApply(IH::isArray, cast(Class.class, key), IH::getSimpleName, x -> key)));
 						//
 					} // if
 						//
@@ -7151,6 +7150,17 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			throw new Throwable(methodName);
 			//
+		}
+
+		private static boolean isArray(final OfField<?> instance) {
+			return instance != null
+					&& instance.isArray();
+		}
+
+		private static String getSimpleName(final Class<?> instance) {
+			return instance != null 
+					? instance.getSimpleName()
+							: null;
 		}
 
 	}
