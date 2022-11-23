@@ -18,6 +18,7 @@ import org.javatuples.valueintf.IValue0Util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import com.google.common.base.Functions;
 
 import net.miginfocom.swing.MigLayout;
@@ -66,7 +67,7 @@ public class MigLayoutFactoryBean implements FactoryBean<MigLayout> {
 		try {
 			//
 			if ((object = testAndApply(StringUtils::isNotEmpty, toString(value),
-					x -> new ObjectMapper().readValue(x, Object.class), null)) == null
+					x -> ObjectMapperUtil.readValue(new ObjectMapper(), x, Object.class), null)) == null
 					|| object instanceof Iterable<?>) {
 				//
 				setArguments(object);

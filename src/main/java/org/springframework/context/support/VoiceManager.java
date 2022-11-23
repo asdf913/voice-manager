@@ -245,6 +245,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.SgmlPage;
 import com.gargoylesoftware.htmlunit.WebClient;
@@ -647,7 +648,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		} // if
 			//
 		final Object object = testAndApply(StringUtils::isNotEmpty, toString(value),
-				x -> readValue(getObjectMapper(), x, Object.class), null);
+				x -> ObjectMapperUtil.readValue(getObjectMapper(), x, Object.class), null);
 		//
 		if (object instanceof Map || object == null) {
 			setOutputFolderFileNameExpressions(object);
@@ -662,11 +663,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			objectMapper = new ObjectMapper();
 		}
 		return objectMapper;
-	}
-
-	private static <T> T readValue(final ObjectMapper instance, final String content, final Class<T> valueType)
-			throws JsonProcessingException {
-		return instance != null ? instance.readValue(content, valueType) : null;
 	}
 
 	private static <K> K getKey(final Entry<K, ?> instance) {
@@ -805,7 +801,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		try {
 			//
-			final Object object = readValue(objectMapper, toString(value), Object.class);
+			final Object object = ObjectMapperUtil.readValue(objectMapper, toString(value), Object.class);
 			//
 			if (object instanceof Iterable || object == null) {
 				//
@@ -2423,8 +2419,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		if (speechApiInstance instanceof SpeechApiSpeechServerImpl) {
 			//
-			panel.add(new JLabelLink(microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl,
-					IValue0Util.getValue0(getMicrosoftSpeechPlatformRuntimeLanguagesDownloadPageTitle())), WRAP);
+			panel.add(
+					new JLabelLink(microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl,
+							IValue0Util.getValue0(getMicrosoftSpeechPlatformRuntimeLanguagesDownloadPageTitle())),
+					WRAP);
 			//
 		} // if
 			//

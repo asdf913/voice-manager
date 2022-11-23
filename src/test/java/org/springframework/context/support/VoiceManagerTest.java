@@ -241,13 +241,12 @@ class VoiceManagerTest {
 			METHOD_GET_OLE_ENTRY_NAMES, METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE, METHOD_GET_DOCUMENT_ELEMENT,
 			METHOD_GET_CHILD_NODES, METHOD_GET_NAMED_ITEM, METHOD_GET_TEXT_CONTENT, METHOD_GET_NODE_NAME,
 			METHOD_GET_NAME_FILE, METHOD_GET_NAME_CLASS, METHOD_GET_PASS_WORD, METHOD_GET_SUPPLIER, METHOD_GET_LOOKUP,
-			METHOD_GET_LIST, METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK, METHOD_READ_VALUE,
-			METHOD_WRITE_VALUE_AS_STRING, METHOD_CREATE_DRAWING_PATRIARCH, METHOD_GET_CREATION_HELPER,
-			METHOD_CREATE_CELL_COMMENT, METHOD_CREATE_CLIENT_ANCHOR, METHOD_CREATE_RICH_TEXT_STRING,
-			METHOD_SET_CELL_COMMENT, METHOD_SET_AUTHOR, METHOD_TEST_AND_ACCEPT_PREDICATE,
-			METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_FIND_FIELDS_BY_VALUE, METHOD_GET_DECLARED_FIELDS,
-			METHOD_GET_DECLARING_CLASS, METHOD_GET_PACKAGE, METHOD_BROWSE, METHOD_TO_URI, METHOD_GET_TITLE_TEXT,
-			METHOD_SET_CSS_ENABLED, METHOD_SET_JAVA_SCRIPT_ENABLED, METHOD_STOP, METHOD_ELAPSED,
+			METHOD_GET_LIST, METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK, METHOD_WRITE_VALUE_AS_STRING,
+			METHOD_CREATE_DRAWING_PATRIARCH, METHOD_GET_CREATION_HELPER, METHOD_CREATE_CELL_COMMENT,
+			METHOD_CREATE_CLIENT_ANCHOR, METHOD_CREATE_RICH_TEXT_STRING, METHOD_SET_CELL_COMMENT, METHOD_SET_AUTHOR,
+			METHOD_TEST_AND_ACCEPT_PREDICATE, METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_FIND_FIELDS_BY_VALUE,
+			METHOD_GET_DECLARED_FIELDS, METHOD_GET_DECLARING_CLASS, METHOD_GET_PACKAGE, METHOD_BROWSE, METHOD_TO_URI,
+			METHOD_GET_TITLE_TEXT, METHOD_SET_CSS_ENABLED, METHOD_SET_JAVA_SCRIPT_ENABLED, METHOD_STOP, METHOD_ELAPSED,
 			METHOD_GET_DECLARED_CLASSES, METHOD_GET_DLL_PATH, METHOD_GET_RATE, METHOD_ADD_CHANGE_LISTENER,
 			METHOD_IS_ANNOTATION_PRESENT, METHOD_PROCESS, METHOD_ENCODE_TO_STRING,
 			METHOD_GET_VOICE_MULTI_MAP_BY_LIST_NAME, METHOD_GET_VOICE_MULTI_MAP_BY_JLPT, METHOD_GET_TEMPLATE,
@@ -596,9 +595,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK = clz
 				.getDeclaredMethod("createMicrosoftSpeechObjectLibraryWorkbook", SpeechApi.class, String[].class))
-				.setAccessible(true);
-		//
-		(METHOD_READ_VALUE = clz.getDeclaredMethod("readValue", ObjectMapper.class, String.class, Class.class))
 				.setAccessible(true);
 		//
 		(METHOD_WRITE_VALUE_AS_STRING = clz.getDeclaredMethod("writeValueAsString", ObjectMapper.class, Object.class))
@@ -1453,7 +1449,7 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> instance.setMp3Tags(EMPTY));
 		//
-		Assertions.assertTrue(Objects.deepEquals(new String[] { EMPTY }, get(mp3Tags, instance)));
+		Assertions.assertNull(get(mp3Tags, instance));
 		//
 		set(mp3Tags, instance, null);
 		//
@@ -1475,7 +1471,7 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> instance.setMp3Tags(string));
 		//
-		Assertions.assertTrue(Objects.deepEquals(new String[] { EMPTY }, get(mp3Tags, instance)));
+		Assertions.assertNull(get(mp3Tags, instance));
 		//
 		set(mp3Tags, instance, null);
 		//
@@ -5160,22 +5156,6 @@ class VoiceManagerTest {
 				return (Workbook) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testReadValue() throws Throwable {
-		//
-		Assertions.assertNull(readValue(null, null, null));
-		//
-	}
-
-	private static <T> T readValue(final ObjectMapper instance, final String content, final Class<T> valueType)
-			throws Throwable {
-		try {
-			return (T) METHOD_READ_VALUE.invoke(null, instance, content, valueType);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
