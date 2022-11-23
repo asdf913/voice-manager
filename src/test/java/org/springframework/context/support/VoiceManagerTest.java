@@ -6562,6 +6562,20 @@ class VoiceManagerTest {
 			//
 		Assertions.assertNull(invoke(setStringFieldDefaultValue, null, new Voice()));
 		//
+		// org.springframework.context.support.VoiceManager$ExportTask.replaceTextContent(java.lang.Object)
+		//
+		final Method replaceTextContent = CLASS_EXPORT_TASK != null
+				? CLASS_EXPORT_TASK.getDeclaredMethod("replaceTextContent", CLASS_OBJECT_MAP, Map.class)
+				: null;
+		//
+		if (replaceTextContent != null) {
+			//
+			replaceTextContent.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertNull(invoke(replaceTextContent, null, null, null));
+		//
 	}
 
 	private static void run(final Runnable instance) {

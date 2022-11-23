@@ -7649,8 +7649,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							"./*[local-name()='frame']/*[local-name()='text-box']/*[local-name()='p']",
 							ObjectMap.getObject(objectMap, Node.class), XPathConstants.NODESET));
 			//
-			Node p = null;
-			//
 			Map<String, Object> map = null;
 			//
 			if (objectMap != null) {
@@ -7677,18 +7675,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			final StringTemplateLoader stl = ObjectUtils
 					.getIfNull(ObjectMap.getObject(objectMap, StringTemplateLoader.class), StringTemplateLoader::new);
 			//
-			String textContent = null;
-			//
 			final boolean headless = GraphicsEnvironment.isHeadless();
+			//
+			ObjectMap om = null;
 			//
 			for (int i = 0; ps != null && i < ps.getLength(); i++) {
 				//
-				if ((p = ps.item(i)) == null) {
-					//
-					continue;
-					//
-				} // if
-					//
 				if (map == null) {
 					//
 					try {
@@ -7715,39 +7707,72 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 				} // if
 					//
-				if (configuration != null && configuration.getTemplateLoader() == null) {
+				if (om == null && (om = Reflection.newProxy(ObjectMap.class, new IH())) != null) {
 					//
-					configuration.setTemplateLoader(stl);
+					om.setObject(freemarker.template.Configuration.class, configuration);
+					//
+					om.setObject(StringTemplateLoader.class, stl);
 					//
 				} // if
 					//
-				putTemplate(stl, textContent = getTextContent(p), textContent);
+				if (om != null) {
+					//
+					om.setObject(Node.class, ps.item(i));
+					//
+				} // if
+					//
+				replaceTextContent(om, map);
 				//
-				try (final Writer writer = new StringWriter()) {
+			} // for
+				//
+		}
+
+		private static void replaceTextContent(final ObjectMap objectMap, final Map<?, ?> map) {
+			//
+			final freemarker.template.Configuration configuration = ObjectMap.getObject(objectMap,
+					freemarker.template.Configuration.class);
+			//
+			final StringTemplateLoader stl = ObjectMap.getObject(objectMap, StringTemplateLoader.class);
+			//
+			if (configuration != null && configuration.getTemplateLoader() == null) {
+				//
+				configuration.setTemplateLoader(stl);
+				//
+			} // if
+				//
+			final Node node = ObjectMap.getObject(objectMap, Node.class);
+			//
+			final String textContent = getTextContent(node);
+			//
+			putTemplate(stl, textContent, textContent);
+			//
+			try (final Writer writer = new StringWriter()) {
+				//
+				process(getTemplate(configuration, textContent), map, writer);
+				//
+				if (node != null) {
 					//
-					process(configuration.getTemplate(textContent), map, writer);
+					node.setTextContent(VoiceManager.toString(writer));
 					//
-					p.setTextContent(VoiceManager.toString(writer));
+				} // if
 					//
-				} catch (final IOException | TemplateException e) {
+			} catch (final IOException | TemplateException e) {
+				//
+				if (GraphicsEnvironment.isHeadless()) {
 					//
-					if (headless) {
-						//
-						if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-							LOG.error(getMessage(e), e);
-						} else if (e != null) {
-							e.printStackTrace();
-						} // if
-							//
-					} else {
-						//
-						JOptionPane.showMessageDialog(null, getMessage(e));
-						//
+					if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
+						LOG.error(getMessage(e), e);
+					} else if (e != null) {
+						e.printStackTrace();
 					} // if
 						//
-				} // try
+				} else {
 					//
-			} // for
+					JOptionPane.showMessageDialog(null, getMessage(e));
+					//
+				} // if
+					//
+			} // try
 				//
 		}
 
