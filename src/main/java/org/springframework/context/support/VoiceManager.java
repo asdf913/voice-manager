@@ -519,9 +519,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				final byte[] bs = CodeUtil.getCode(method.getCode());
 				// )
 				final String[] lines = StringUtils.split(
-						StringUtils.trim(
-								Utility.codeToString(bs, method.getConstantPool(), 0, bs != null ? bs.length : 0)),
-						'\n');
+						StringUtils.trim(Utility.codeToString(bs, method.getConstantPool(), 0, length(bs))), '\n');
 				//
 				String line = null;
 				//
@@ -568,6 +566,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return result;
 		//
+	}
+
+	private static int length(final byte[] instance) {
+		return instance != null ? instance.length : 0;
 	}
 
 	private static InputStream getResourceAsStream(final Class<?> instance, final String name) {
@@ -5266,10 +5268,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // try
 				//
-		}
-
-		private static int length(final byte[] instance) {
-			return instance != null ? instance.length : 0;
 		}
 
 		private static Map<String, Integer> createQualityMap() throws IOException {
