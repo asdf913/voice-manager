@@ -7574,7 +7574,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 							// p
 							//
-						replaceText(xp, pageCloned, voice);
+						if (objectMap != null) {
+							//
+							objectMap.setObject(Node.class, pageCloned);
+							//
+							objectMap.setObject(Voice.class, voice);
+							//
+						} // if
+							//
+						replaceText(objectMap);
 						//
 						// plugin
 						//
@@ -7616,12 +7624,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		}
 
-		private static void replaceText(final XPath xp, final Node node, final Voice voice)
-				throws XPathExpressionException {
+		private static void replaceText(final ObjectMap objectMap) throws XPathExpressionException {
 			//
 			final NodeList ps = cast(NodeList.class,
-					evaluate(xp, "./*[local-name()='frame']/*[local-name()='text-box']/*[local-name()='p']", node,
-							XPathConstants.NODESET));
+					evaluate(ObjectMap.getObject(objectMap, XPath.class),
+							"./*[local-name()='frame']/*[local-name()='text-box']/*[local-name()='p']",
+							ObjectMap.getObject(objectMap, Node.class), XPathConstants.NODESET));
 			//
 			Node p = null;
 			//
@@ -7646,7 +7654,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					try {
 						//
-						map = PropertyUtils.describe(voice);
+						map = PropertyUtils.describe(ObjectMap.getObject(objectMap, Voice.class));
 						//
 					} catch (IllegalAccessException | NoSuchMethodException e) {
 						//

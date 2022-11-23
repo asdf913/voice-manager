@@ -6452,9 +6452,7 @@ class VoiceManagerTest {
 		//
 		// org.springframework.context.support.VoiceManager$ExportTask.replaceText(javax.xml.xpath.XPath,org.w3c.dom.Node,domain.Voice)
 		//
-		final Method replaceText = clz != null
-				? clz.getDeclaredMethod("replaceText", XPath.class, Node.class, Voice.class)
-				: null;
+		final Method replaceText = clz != null ? clz.getDeclaredMethod("replaceText", CLASS_OBJECT_MAP) : null;
 		//
 		if (replaceText != null) {
 			//
@@ -6462,7 +6460,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(invoke(replaceText, null, null, null, null));
+		Assertions.assertNull(invoke(replaceText, null, (Object) null));
 		//
 		// org.springframework.context.support.VoiceManager$ExportTask.setPluginHref(javax.xml.xpath.XPath,org.w3c.dom.Node,java.util.regex.Pattern,java.lang.String)
 		//
