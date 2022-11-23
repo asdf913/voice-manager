@@ -172,17 +172,7 @@ public class MigLayoutFactoryBean implements FactoryBean<MigLayout> {
 				//
 			} else if (Objects.equals(componentType, Boolean.TYPE)) {
 				//
-				final boolean[] ds = (boolean[]) value;
-				//
-				final String[] strings = new String[ds.length];
-				//
-				for (int i = 0; i < ds.length; i++) {
-					//
-					strings[i] = Boolean.toString(ds[i]);
-					//
-				} // for
-					//
-				result = Unit.with(strings);
+				result = getIValue0((boolean[]) value);
 				//
 			} else {
 				//
@@ -194,6 +184,22 @@ public class MigLayoutFactoryBean implements FactoryBean<MigLayout> {
 		} // if
 			//
 		return result;
+		//
+	}
+
+	private static IValue0<Object> getIValue0(final boolean[] value) {
+		//
+		final boolean[] bs = cast(boolean[].class, value);
+		//
+		final String[] strings = bs != null ? new String[bs.length] : null;
+		//
+		for (int i = 0; bs != null && i < bs.length; i++) {
+			//
+			strings[i] = Boolean.toString(bs[i]);
+			//
+		} // for
+			//
+		return Unit.with(strings);
 		//
 	}
 
