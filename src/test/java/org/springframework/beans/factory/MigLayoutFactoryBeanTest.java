@@ -9,6 +9,7 @@ import java.util.function.Predicate;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.lang3.function.FailableFunction;
+import org.javatuples.valueintf.IValue0;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,7 +19,7 @@ import com.google.common.base.Predicates;
 
 class MigLayoutFactoryBeanTest {
 
-	private static Method METHOD_TEST_AND_APPLY, METHOD_CAST, METHOD_GET_CLASS = null;
+	private static Method METHOD_TEST_AND_APPLY, METHOD_CAST, METHOD_GET_IVALUE0 = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -30,7 +31,7 @@ class MigLayoutFactoryBeanTest {
 		//
 		(METHOD_CAST = clz.getDeclaredMethod("cast", Class.class, Object.class)).setAccessible(true);
 		//
-		(METHOD_GET_CLASS = clz.getDeclaredMethod("getClass", Object.class)).setAccessible(true);
+		(METHOD_GET_IVALUE0 = clz.getDeclaredMethod("getIValue0", Object.class)).setAccessible(true);
 		//
 	}
 
@@ -188,24 +189,32 @@ class MigLayoutFactoryBeanTest {
 	}
 
 	@Test
-	void testGetClass() throws Throwable {
+	void testGetIValue0() throws Throwable {
 		//
-		Assertions.assertNull(getClass(null));
+		Assertions.assertNull(getIValue0(null));
 		//
 	}
 
-	private static Class<?> getClass(final Object instance) throws Throwable {
+	private static IValue0<Object> getIValue0(final Object value) throws Throwable {
 		try {
-			final Object obj = METHOD_GET_CLASS.invoke(null, instance);
+			final Object obj = METHOD_GET_IVALUE0.invoke(null, value);
 			if (obj == null) {
 				return null;
-			} else if (obj instanceof Class) {
-				return (Class<?>) obj;
+			} else if (obj instanceof IValue0) {
+				return (IValue0) obj;
 			}
-			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
+	}
+
+	private static Class<?> getClass(final Object instance) {
+		return instance != null ? instance.getClass() : null;
+	}
+
+	private static String toString(final Object instance) {
+		return instance != null ? instance.toString() : null;
 	}
 
 }

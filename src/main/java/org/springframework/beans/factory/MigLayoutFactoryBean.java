@@ -12,6 +12,8 @@ import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
+import org.javatuples.Unit;
+import org.javatuples.valueintf.IValue0;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -48,109 +50,29 @@ public class MigLayoutFactoryBean implements FactoryBean<MigLayout> {
 			//
 		} // for
 			//
-		final Class<?> clz = getClass(value);
+		final IValue0<Object> iValue0 = getIValue0(value);
 		//
-		if (clz != null && clz.isArray()) {
+		Object object = iValue0 != null ? iValue0.getValue0() : null;
+		//
+		if (object instanceof String[]) {
 			//
-			final Class<?> componentType = clz.getComponentType();
+			setArguments(object);
 			//
-			if (Objects.equals(componentType, Integer.TYPE)) {
-				//
-				this.arguments = Arrays.stream((int[]) value).mapToObj(Integer::toString).toList()
-						.toArray(new String[] {});
-				//
-			} else if (Objects.equals(componentType, Long.TYPE)) {
-				//
-				this.arguments = Arrays.stream((long[]) value).mapToObj(Long::toString).toList()
-						.toArray(new String[] {});
-				//
-			} else if (Objects.equals(componentType, Short.TYPE)) {
-				//
-				final short[] ss = (short[]) value;
-				//
-				final int[] ints = new int[ss.length];
-				//
-				for (int i = 0; i < ss.length; i++) {
-					//
-					ints[i] = ss[i];
-					//
-				} // for
-					//
-				setArguments(ints);
-				//
-			} else if (Objects.equals(componentType, Double.TYPE)) {
-				//
-				final double[] ds = (double[]) value;
-				//
-				final String[] strings = new String[ds.length];
-				//
-				for (int i = 0; i < ds.length; i++) {
-					//
-					strings[i] = Double.toString(ds[i]);
-					//
-				} // for
-					//
-				setArguments(strings);
-				//
-			} else if (Objects.equals(componentType, Float.TYPE)) {
-				//
-				final float[] fs = (float[]) value;
-				//
-				final String[] strings = new String[fs.length];
-				//
-				for (int i = 0; i < fs.length; i++) {
-					//
-					strings[i] = Float.toString(fs[i]);
-					//
-				} // for
-					//
-				setArguments(strings);
-				//
-			} else if (Objects.equals(componentType, Byte.TYPE)) {
-				//
-				final byte[] ds = (byte[]) value;
-				//
-				final String[] strings = new String[ds.length];
-				//
-				for (int i = 0; i < ds.length; i++) {
-					//
-					strings[i] = Byte.toString(ds[i]);
-					//
-				} // for
-					//
-				setArguments(strings);
-				//
-			} else if (Objects.equals(componentType, Boolean.TYPE)) {
-				//
-				final boolean[] ds = (boolean[]) value;
-				//
-				final String[] strings = new String[ds.length];
-				//
-				for (int i = 0; i < ds.length; i++) {
-					//
-					strings[i] = Boolean.toString(ds[i]);
-					//
-				} // for
-					//
-				setArguments(strings);
-				//
-			} else {
-				//
-				this.arguments = Arrays.stream((Object[]) value).map(MigLayoutFactoryBean::toString).toList()
-						.toArray(new String[] {});
-				//
-			} // if
-				//
+			return;
+			//
+		} else if (object instanceof int[]) {
+			//
+			setArguments(object);
+			//
 			return;
 			//
 		} // if
 			//
 		try {
 			//
-			final Object object = testAndApply(StringUtils::isNotEmpty, toString(value),
-					x -> new ObjectMapper().readValue(x, Object.class), null);
-			//
-			if (object == null || object instanceof Iterable<?>) {
+			if ((object = testAndApply(StringUtils::isNotEmpty, toString(value),
+					x -> new ObjectMapper().readValue(x, Object.class), null)) == null
+					|| object instanceof Iterable<?>) {
 				//
 				setArguments(object);
 				//
@@ -170,6 +92,109 @@ public class MigLayoutFactoryBean implements FactoryBean<MigLayout> {
 			//
 		} // try
 			//
+	}
+
+	private static IValue0<Object> getIValue0(final Object value) {
+		//
+		final Class<?> clz = getClass(value);
+		//
+		IValue0<Object> result = null;
+		//
+		if (clz != null && clz.isArray()) {
+			//
+			final Class<?> componentType = clz.getComponentType();
+			//
+			if (Objects.equals(componentType, Integer.TYPE)) {
+				//
+				result = Unit.with(
+						Arrays.stream((int[]) value).mapToObj(Integer::toString).toList().toArray(new String[] {}));
+				//
+			} else if (Objects.equals(componentType, Long.TYPE)) {
+				//
+				result = Unit
+						.with(Arrays.stream((long[]) value).mapToObj(Long::toString).toList().toArray(new String[] {}));
+				//
+			} else if (Objects.equals(componentType, Short.TYPE)) {
+				//
+				final short[] ss = (short[]) value;
+				//
+				final int[] ints = new int[ss.length];
+				//
+				for (int i = 0; i < ss.length; i++) {
+					//
+					ints[i] = ss[i];
+					//
+				} // for
+					//
+				result = Unit.with(ints);
+				//
+			} else if (Objects.equals(componentType, Double.TYPE)) {
+				//
+				final double[] ds = (double[]) value;
+				//
+				final String[] strings = new String[ds.length];
+				//
+				for (int i = 0; i < ds.length; i++) {
+					//
+					strings[i] = Double.toString(ds[i]);
+					//
+				} // for
+					//
+				result = Unit.with(strings);
+				//
+			} else if (Objects.equals(componentType, Float.TYPE)) {
+				//
+				final float[] fs = (float[]) value;
+				//
+				final String[] strings = new String[fs.length];
+				//
+				for (int i = 0; i < fs.length; i++) {
+					//
+					strings[i] = Float.toString(fs[i]);
+					//
+				} // for
+					//
+				result = Unit.with(strings);
+				//
+			} else if (Objects.equals(componentType, Byte.TYPE)) {
+				//
+				final byte[] ds = (byte[]) value;
+				//
+				final String[] strings = new String[ds.length];
+				//
+				for (int i = 0; i < ds.length; i++) {
+					//
+					strings[i] = Byte.toString(ds[i]);
+					//
+				} // for
+					//
+				result = Unit.with(strings);
+				//
+			} else if (Objects.equals(componentType, Boolean.TYPE)) {
+				//
+				final boolean[] ds = (boolean[]) value;
+				//
+				final String[] strings = new String[ds.length];
+				//
+				for (int i = 0; i < ds.length; i++) {
+					//
+					strings[i] = Boolean.toString(ds[i]);
+					//
+				} // for
+					//
+				result = Unit.with(strings);
+				//
+			} else {
+				//
+				result = Unit.with(Arrays.stream((Object[]) value).map(MigLayoutFactoryBean::toString).toList()
+						.toArray(new String[] {}));
+				//
+			} // if
+				//
+		} // if
+			//
+		return result;
+		//
 	}
 
 	private static Class<?> getClass(final Object instance) {
