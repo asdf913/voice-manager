@@ -486,9 +486,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final Class<?> clz = File.class;
 		//
-		try (final InputStream is = clz != null
-				? clz.getResourceAsStream(String.format("/%1$s.class", StringUtils.replace(clz.getName(), ".", "/")))
-				: null) {
+		try (final InputStream is = getResourceAsStream(clz,
+				String.format("/%1$s.class", StringUtils.replace(getName(clz), ".", "/")))) {
 			//
 			final Object[] objectTypes = map(Stream.of("java.lang.String", "java.lang.String", "java.io.File"),
 					ObjectType::getInstance).toArray();
@@ -569,6 +568,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return result;
 		//
+	}
+
+	private static InputStream getResourceAsStream(final Class<?> instance, final String name) {
+		return instance != null ? instance.getResourceAsStream(name) : null;
 	}
 
 	private static org.apache.bcel.classfile.Method[] getMethods(final JavaClass instance) {
@@ -5205,10 +5208,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			final Class<?> clz = Lame.class;
 			//
-			try (final InputStream is = clz != null
-					? clz.getResourceAsStream(
-							String.format("/%1$s.class", StringUtils.replace(clz.getName(), ".", "/")))
-					: null) {
+			try (final InputStream is = getResourceAsStream(clz,
+					String.format("/%1$s.class", StringUtils.replace(VoiceManager.getName(clz), ".", "/")))) {
 				//
 				final org.apache.bcel.classfile.Method[] ms = getMethods(
 						ClassParserUtil.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null)));
@@ -5277,10 +5278,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			final Class<?> clz = LameEncoder.class;
 			//
-			try (final InputStream is = clz != null
-					? clz.getResourceAsStream(
-							String.format("/%1$s.class", StringUtils.replace(clz.getName(), ".", "/")))
-					: null) {
+			try (final InputStream is = getResourceAsStream(clz,
+					String.format("/%1$s.class", StringUtils.replace(VoiceManager.getName(clz), ".", "/")))) {
 				//
 				final List<org.apache.bcel.classfile.Method> ms = toList(filter(testAndApply(Objects::nonNull,
 						getMethods(ClassParserUtil
@@ -7392,7 +7391,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				if (pharse != null && pharse.getNumerator() == pharse.getDenominator() && Objects.equals(counter, count)
 						&& exportPresentation) {
 					//
-					try (final InputStream is = VoiceManager.class.getResourceAsStream("/template.odp")) {
+					try (final InputStream is = getResourceAsStream(VoiceManager.class, "/template.odp")) {
 						//
 						generateOdfPresentationDocuments(is, voiceFileNames);
 						//
