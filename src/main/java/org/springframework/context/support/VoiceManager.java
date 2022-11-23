@@ -1030,43 +1030,39 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static Object getInstance(final SpeechApi speechApi) {
 		//
-		if (speechApi != null) {
+		final List<Field> fs = toList(
+				filter(testAndApply(Objects::nonNull, getDeclaredFields(VoiceManager.getClass(speechApi)),
+						Arrays::stream, null), f -> Objects.equals(getName(f), "instance")));
+		//
+		final Field f = IterableUtils.size(fs) == 1 ? get(fs, 0) : null;
+		//
+		try {
 			//
-			final List<Field> fs = toList(
-					filter(testAndApply(Objects::nonNull, getDeclaredFields(VoiceManager.getClass(speechApi)),
-							Arrays::stream, null), f -> Objects.equals(getName(f), "instance")));
-			//
-			final Field f = IterableUtils.size(fs) == 1 ? get(fs, 0) : null;
-			//
-			try {
+			if (f != null) {
 				//
-				if (f != null) {
-					//
-					f.setAccessible(true);
-					//
-					return f.get(speechApi);
-					//
+				f.setAccessible(true);
+				//
+				return f.get(speechApi);
+				//
+			} // if
+				//
+		} catch (final IllegalAccessException e) {
+			//
+			if (GraphicsEnvironment.isHeadless()) {
+				//
+				if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
+					LOG.error(getMessage(e), e);
+				} else if (e != null) {
+					e.printStackTrace();
 				} // if
 					//
-			} catch (final IllegalAccessException e) {
+			} else {
 				//
-				if (GraphicsEnvironment.isHeadless()) {
-					//
-					if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-						LOG.error(getMessage(e), e);
-					} else if (e != null) {
-						e.printStackTrace();
-					} // if
-						//
-				} else {
-					//
-					JOptionPane.showMessageDialog(null, getMessage(e));
-					//
-				} // if
-					//
-			} // try
+				JOptionPane.showMessageDialog(null, getMessage(e));
 				//
-		} // if
+			} // if
+				//
+		} // try
 			//
 		return speechApi;
 		//
