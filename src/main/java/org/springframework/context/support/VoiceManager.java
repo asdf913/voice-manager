@@ -7420,6 +7420,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		}
 
+		private static void setVariable(final EvaluationContext instance, final String name, final Object value) {
+			if (instance != null) {
+				instance.setVariable(name, value);
+			}
+		}
+
 		private static void showPharse(final VoiceManager voiceManager, final Fraction pharse) {
 			//
 			if (voiceManager != null && pharse != null) {
@@ -8946,12 +8952,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				? instance.filter(predicate)
 				: null;
 		//
-	}
-
-	private static void setVariable(final EvaluationContext instance, final String name, final Object value) {
-		if (instance != null) {
-			instance.setVariable(name, value);
-		}
 	}
 
 	private static Object getValue(final ExpressionParser spelExpressionParser,

@@ -208,10 +208,10 @@ class VoiceManagerTest {
 	private static Method METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_GET_FILE_EXTENSION, METHOD_DIGEST,
 			METHOD_GET_MAPPER, METHOD_INSERT_OR_UPDATE, METHOD_SET_ENABLED_2, METHOD_SET_ENABLED_3,
 			METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_CAST, METHOD_INT_VALUE, METHOD_LONG_VALUE,
-			METHOD_GET_PROPERTY_PROPERTY_RESOLVER, METHOD_GET_PROPERTY_CUSTOM_PROPERTIES, METHOD_SET_VARIABLE,
-			METHOD_PARSE_EXPRESSION, METHOD_GET_VALUE, METHOD_GET_SOURCE, METHOD_EXPORT, METHOD_MAP, METHOD_MAP_TO_INT,
-			METHOD_MAP_TO_LONG, METHOD_MAX_STREAM, METHOD_MAX_INT_STREAM, METHOD_OR_ELSE_OPTIONAL,
-			METHOD_OR_ELSE_OPTIONAL_INT, METHOD_FOR_EACH_STREAM, METHOD_FOR_EACH_ITERABLE, METHOD_CREATE_WORK_BOOK_LIST,
+			METHOD_GET_PROPERTY_PROPERTY_RESOLVER, METHOD_GET_PROPERTY_CUSTOM_PROPERTIES, METHOD_PARSE_EXPRESSION,
+			METHOD_GET_VALUE, METHOD_GET_SOURCE, METHOD_EXPORT, METHOD_MAP, METHOD_MAP_TO_INT, METHOD_MAP_TO_LONG,
+			METHOD_MAX_STREAM, METHOD_MAX_INT_STREAM, METHOD_OR_ELSE_OPTIONAL, METHOD_OR_ELSE_OPTIONAL_INT,
+			METHOD_FOR_EACH_STREAM, METHOD_FOR_EACH_ITERABLE, METHOD_CREATE_WORK_BOOK_LIST,
 			METHOD_CREATE_WORK_BOOK_MULTI_MAP, METHOD_CREATE_VOICE, METHOD_GET_MESSAGE, METHOD_INVOKE,
 			METHOD_ANNOTATION_TYPE, METHOD_FIND_FIRST, METHOD_GET_DECLARED_METHODS, METHOD_FOR_NAME, METHOD_FILTER,
 			METHOD_SET_TEXT, METHOD_GET_PREFERRED_WIDTH, METHOD_IMPORT_VOICE1, METHOD_IMPORT_VOICE3,
@@ -295,9 +295,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_GET_PROPERTY_CUSTOM_PROPERTIES = clz.getDeclaredMethod("getProperty", CustomProperties.class,
 				String.class)).setAccessible(true);
-		//
-		(METHOD_SET_VARIABLE = clz.getDeclaredMethod("setVariable", EvaluationContext.class, String.class,
-				Object.class)).setAccessible(true);
 		//
 		(METHOD_PARSE_EXPRESSION = clz.getDeclaredMethod("parseExpression", ExpressionParser.class, String.class))
 				.setAccessible(true);
@@ -2271,24 +2268,6 @@ class VoiceManagerTest {
 				return (String) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testSetVariable() {
-		//
-		Assertions.assertDoesNotThrow(() -> setVariable(null, null, null));
-		//
-		Assertions.assertDoesNotThrow(() -> setVariable(Reflection.newProxy(EvaluationContext.class, ih), null, null));
-		//
-	}
-
-	private static void setVariable(final EvaluationContext instance, final String name, final Object value)
-			throws Throwable {
-		try {
-			METHOD_SET_VARIABLE.invoke(null, instance, name, value);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -6450,6 +6429,20 @@ class VoiceManagerTest {
 		} // if
 			//
 		Assertions.assertNull(invoke(setPluginHref, null, null, null, null, null));
+		//
+		// org.springframework.context.support.VoiceManager$ExportTask.setVariable(org.springframework.expression.EvaluationContext,java.lang.String,java.lang.Object)
+		//
+		final Method setVariable = clz != null
+				? clz.getDeclaredMethod("setVariable", EvaluationContext.class, String.class, Object.class)
+				: null;
+		//
+		if (setVariable != null) {
+			//
+			setVariable.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertNull(invoke(setVariable, null, null, null, null));
 		//
 	}
 
