@@ -56,7 +56,7 @@ class MigLayoutFactoryBeanTest {
 	}
 
 	@Test
-	void testSetArguments() throws ReflectiveOperationException {
+	void testSetArguments1() throws ReflectiveOperationException {
 		//
 		final Field arguments = MigLayoutFactoryBean.class.getDeclaredField("arguments");
 		//
@@ -117,6 +117,11 @@ class MigLayoutFactoryBeanTest {
 		Assertions.assertDoesNotThrow(() -> instance.setArguments("null"));
 		//
 		Assertions.assertNull(get(arguments, instance));
+		//
+	}
+
+	@Test
+	void testSetArguments2() throws ReflectiveOperationException {
 		//
 		Assertions.assertThrows(IllegalArgumentException.class, () -> instance.setArguments("{}"));
 		//
