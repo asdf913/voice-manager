@@ -6003,7 +6003,7 @@ class VoiceManagerTest {
 	@Test
 	void testGetResourceAsStream() throws Throwable {
 		//
-		Assertions.assertNotNull(getResourceAsStream(null, null));
+		Assertions.assertNull(getResourceAsStream(null, null));
 		//
 	}
 
