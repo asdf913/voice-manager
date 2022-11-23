@@ -205,7 +205,7 @@ class VoiceManagerTest {
 
 	private static final int ONE = 1;
 
-	private static Class<?> CLASS_OBJECT_MAP, CLASS_BOOLEAN_MAP, CLASS_IH = null;
+	private static Class<?> CLASS_OBJECT_MAP, CLASS_BOOLEAN_MAP, CLASS_IH, CLASS_EXPORT_TASK = null;
 
 	private static Method METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_GET_FILE_EXTENSION, METHOD_DIGEST,
 			METHOD_GET_MAPPER, METHOD_INSERT_OR_UPDATE, METHOD_SET_ENABLED_2, METHOD_SET_ENABLED_3,
@@ -707,6 +707,8 @@ class VoiceManagerTest {
 		(METHOD_GET_ATTRIBUTES = clz.getDeclaredMethod("getAttributes", Node.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
+		//
+		CLASS_EXPORT_TASK = Class.forName("org.springframework.context.support.VoiceManager$ExportTask");
 		//
 	}
 
@@ -6278,13 +6280,13 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testExportTask() throws Throwable {
-		//
-		final Class<?> clz = forName("org.springframework.context.support.VoiceManager$ExportTask");
+	void testExportTask1() throws Throwable {
 		//
 		// org.springframework.context.support.VoiceManager.ExportTask.setMp3Title(java.io.File)
 		//
-		final Method setMp3Title = clz != null ? clz.getDeclaredMethod("setMp3Title", File.class) : null;
+		final Method setMp3Title = CLASS_EXPORT_TASK != null
+				? CLASS_EXPORT_TASK.getDeclaredMethod("setMp3Title", File.class)
+				: null;
 		//
 		if (setMp3Title != null) {
 			//
@@ -6300,7 +6302,9 @@ class VoiceManagerTest {
 		//
 		// org.springframework.context.support.VoiceManager.ExportTask.min(java.util.stream.Stream,java.util.Comparator)
 		//
-		final Method min = clz != null ? clz.getDeclaredMethod("min", Stream.class, Comparator.class) : null;
+		final Method min = CLASS_EXPORT_TASK != null
+				? CLASS_EXPORT_TASK.getDeclaredMethod("min", Stream.class, Comparator.class)
+				: null;
 		//
 		if (min != null) {
 			//
@@ -6316,7 +6320,8 @@ class VoiceManagerTest {
 		//
 		// org.springframework.context.support.VoiceManager$ExportTask.showPharse(org.springframework.context.support.VoiceManager,org.apache.commons.lang3.math.Fraction)
 		//
-		final Method showPharse = clz != null ? clz.getDeclaredMethod("showPharse", VoiceManager.class, Fraction.class)
+		final Method showPharse = CLASS_EXPORT_TASK != null
+				? CLASS_EXPORT_TASK.getDeclaredMethod("showPharse", VoiceManager.class, Fraction.class)
 				: null;
 		//
 		if (showPharse != null) {
@@ -6333,8 +6338,9 @@ class VoiceManagerTest {
 		//
 		// org.springframework.context.support.VoiceManager$ExportTask.generateOdfPresentationDocuments(java.io.InputStream,com.google.common.collect.Table)
 		//
-		final Method generateOdfPresentationDocuments = clz != null
-				? clz.getDeclaredMethod("generateOdfPresentationDocuments", InputStream.class, Table.class)
+		final Method generateOdfPresentationDocuments = CLASS_EXPORT_TASK != null
+				? CLASS_EXPORT_TASK.getDeclaredMethod("generateOdfPresentationDocuments", InputStream.class,
+						Table.class)
 				: null;
 		//
 		if (generateOdfPresentationDocuments != null) {
@@ -6350,7 +6356,9 @@ class VoiceManagerTest {
 		//
 		// org.springframework.context.support.VoiceManager$ExportTask.newXPath(javax.xml.xpath.XPathFactory)
 		//
-		final Method newXPath = clz != null ? clz.getDeclaredMethod("newXPath", XPathFactory.class) : null;
+		final Method newXPath = CLASS_EXPORT_TASK != null
+				? CLASS_EXPORT_TASK.getDeclaredMethod("newXPath", XPathFactory.class)
+				: null;
 		//
 		if (newXPath != null) {
 			//
@@ -6362,7 +6370,9 @@ class VoiceManagerTest {
 		//
 		// org.springframework.context.support.VoiceManager$ExportTask.getParentNode(org.w3c.dom.Node)
 		//
-		final Method getParentNode = clz != null ? clz.getDeclaredMethod("getParentNode", Node.class) : null;
+		final Method getParentNode = CLASS_EXPORT_TASK != null
+				? CLASS_EXPORT_TASK.getDeclaredMethod("getParentNode", Node.class)
+				: null;
 		//
 		if (getParentNode != null) {
 			//
@@ -6374,7 +6384,9 @@ class VoiceManagerTest {
 		//
 		// org.springframework.context.support.VoiceManager$ExportTask.appendChild(org.w3c.dom.Node,org.w3c.dom.Node)
 		//
-		final Method appendChild = clz != null ? clz.getDeclaredMethod("appendChild", Node.class, Node.class) : null;
+		final Method appendChild = CLASS_EXPORT_TASK != null
+				? CLASS_EXPORT_TASK.getDeclaredMethod("appendChild", Node.class, Node.class)
+				: null;
 		//
 		if (appendChild != null) {
 			//
@@ -6388,7 +6400,9 @@ class VoiceManagerTest {
 		//
 		// org.springframework.context.support.VoiceManager$ExportTask.removeChild(org.w3c.dom.Node,org.w3c.dom.Node)
 		//
-		final Method removeChild = clz != null ? clz.getDeclaredMethod("removeChild", Node.class, Node.class) : null;
+		final Method removeChild = CLASS_EXPORT_TASK != null
+				? CLASS_EXPORT_TASK.getDeclaredMethod("removeChild", Node.class, Node.class)
+				: null;
 		//
 		if (removeChild != null) {
 			//
@@ -6400,7 +6414,8 @@ class VoiceManagerTest {
 		//
 		// org.springframework.context.support.VoiceManager$ExportTask.newTransformer(javax.xml.transform.TransformerFactory)
 		//
-		final Method newTransformer = clz != null ? clz.getDeclaredMethod("newTransformer", TransformerFactory.class)
+		final Method newTransformer = CLASS_EXPORT_TASK != null
+				? CLASS_EXPORT_TASK.getDeclaredMethod("newTransformer", TransformerFactory.class)
 				: null;
 		//
 		if (newTransformer != null) {
@@ -6413,8 +6428,8 @@ class VoiceManagerTest {
 		//
 		// org.springframework.context.support.VoiceManager$ExportTask.newTransformer(javax.xml.transform.Transformer,javax.xml.transform.Source,javax.xml.transform.Result)
 		//
-		final Method transform = clz != null
-				? clz.getDeclaredMethod("transform", Transformer.class, Source.class, Result.class)
+		final Method transform = CLASS_EXPORT_TASK != null
+				? CLASS_EXPORT_TASK.getDeclaredMethod("transform", Transformer.class, Source.class, Result.class)
 				: null;
 		//
 		if (transform != null) {
@@ -6429,7 +6444,9 @@ class VoiceManagerTest {
 		//
 		// org.springframework.context.support.VoiceManager$ExportTask.getBytes(java.lang.String)
 		//
-		final Method getBytes = clz != null ? clz.getDeclaredMethod("getBytes", String.class) : null;
+		final Method getBytes = CLASS_EXPORT_TASK != null
+				? CLASS_EXPORT_TASK.getDeclaredMethod("getBytes", String.class)
+				: null;
 		//
 		if (getBytes != null) {
 			//
@@ -6441,7 +6458,9 @@ class VoiceManagerTest {
 		//
 		// org.springframework.context.support.VoiceManager$ExportTask.cloneNode(org.w3c.dom.Node,boolean)
 		//
-		final Method cloneNode = clz != null ? clz.getDeclaredMethod("cloneNode", Node.class, Boolean.TYPE) : null;
+		final Method cloneNode = CLASS_EXPORT_TASK != null
+				? CLASS_EXPORT_TASK.getDeclaredMethod("cloneNode", Node.class, Boolean.TYPE)
+				: null;
 		//
 		if (cloneNode != null) {
 			//
@@ -6453,7 +6472,9 @@ class VoiceManagerTest {
 		//
 		// org.springframework.context.support.VoiceManager$ExportTask.replaceText(javax.xml.xpath.XPath,org.w3c.dom.Node,domain.Voice)
 		//
-		final Method replaceText = clz != null ? clz.getDeclaredMethod("replaceText", CLASS_OBJECT_MAP) : null;
+		final Method replaceText = CLASS_EXPORT_TASK != null
+				? CLASS_EXPORT_TASK.getDeclaredMethod("replaceText", CLASS_OBJECT_MAP)
+				: null;
 		//
 		if (replaceText != null) {
 			//
@@ -6465,8 +6486,9 @@ class VoiceManagerTest {
 		//
 		// org.springframework.context.support.VoiceManager$ExportTask.setPluginHref(javax.xml.xpath.XPath,org.w3c.dom.Node,java.util.regex.Pattern,java.lang.String)
 		//
-		final Method setPluginHref = clz != null
-				? clz.getDeclaredMethod("setPluginHref", XPath.class, Node.class, Pattern.class, String.class)
+		final Method setPluginHref = CLASS_EXPORT_TASK != null
+				? CLASS_EXPORT_TASK.getDeclaredMethod("setPluginHref", XPath.class, Node.class, Pattern.class,
+						String.class)
 				: null;
 		//
 		if (setPluginHref != null) {
@@ -6479,8 +6501,9 @@ class VoiceManagerTest {
 		//
 		// org.springframework.context.support.VoiceManager$ExportTask.setVariable(org.springframework.expression.EvaluationContext,java.lang.String,java.lang.Object)
 		//
-		final Method setVariable = clz != null
-				? clz.getDeclaredMethod("setVariable", EvaluationContext.class, String.class, Object.class)
+		final Method setVariable = CLASS_EXPORT_TASK != null
+				? CLASS_EXPORT_TASK.getDeclaredMethod("setVariable", EvaluationContext.class, String.class,
+						Object.class)
 				: null;
 		//
 		if (setVariable != null) {
@@ -6491,10 +6514,16 @@ class VoiceManagerTest {
 			//
 		Assertions.assertNull(invoke(setVariable, null, null, null, null));
 		//
+	}
+
+	@Test
+	void testExportTask2() throws Throwable {
+		//
 		// org.springframework.context.support.VoiceManager$ExportTask.putTemplate(freemarker.cache.StringTemplateLoader,java.lang.String,java.lang.String)
 		//
-		final Method putTemplate = clz != null
-				? clz.getDeclaredMethod("putTemplate", StringTemplateLoader.class, String.class, String.class)
+		final Method putTemplate = CLASS_EXPORT_TASK != null
+				? CLASS_EXPORT_TASK.getDeclaredMethod("putTemplate", StringTemplateLoader.class, String.class,
+						String.class)
 				: null;
 		//
 		if (putTemplate != null) {
