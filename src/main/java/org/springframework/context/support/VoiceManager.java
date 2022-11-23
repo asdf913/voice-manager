@@ -7494,10 +7494,19 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				XPath xp = null;
 				//
+				Transformer transformer = null;
+				//
 				for (final String rowKey : rowKeySet) {
 					//
-					if ((odfPd = generateOdfPresentationDocument(bs, table.row(rowKey), xp = ObjectUtils.getIfNull(xp,
-							() -> newXPath(XPathFactory.newDefaultInstance())))) != null) {
+					if (transformer == null) {
+						//
+						transformer = newTransformer(TransformerFactory.newInstance());
+						//
+					} // if
+						//
+					if ((odfPd = generateOdfPresentationDocument(bs, table.row(rowKey),
+							xp = ObjectUtils.getIfNull(xp, () -> newXPath(XPathFactory.newDefaultInstance())),
+							transformer)) != null) {
 						//
 						odfPd.save(new File(rowKey, StringUtils.substringAfter(rowKey, File.separatorChar) + ".odp"));
 						//
@@ -7510,7 +7519,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		}
 
 		private static OdfPresentationDocument generateOdfPresentationDocument(final byte[] bs,
-				final Map<String, Voice> voices, final XPath xp) throws Exception {
+				final Map<String, Voice> voices, final XPath xp, final Transformer transformer) throws Exception {
 			//
 			OdfPresentationDocument newOdfPresentationDocument = null;
 			//
@@ -7566,8 +7575,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					final StringWriter writer = new StringWriter();
 					//
-					transform(newTransformer(TransformerFactory.newInstance()), new DOMSource(document),
-							new StreamResult(writer));
+					transform(transformer, new DOMSource(document), new StreamResult(writer));
 					//
 					if ((newOdfPresentationDocument = OdfPresentationDocument.newPresentationDocument()) != null) {
 						//
