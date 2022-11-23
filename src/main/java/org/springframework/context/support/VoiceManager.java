@@ -9005,12 +9005,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} else {
 				//
-				if (voice != null) {
-					//
-					voice.setCreateTs(new Date());
-					//
-				} // if
-					//
+				setCreateTs(voice, new Date());
+				//
 				instance.insertVoice(voice);
 				//
 			} // if
@@ -9047,6 +9043,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
+	}
+
+	private static void setCreateTs(final Voice instance, final Date createTs) {
+		if (instance != null) {
+			instance.setCreateTs(createTs);
+		}
 	}
 
 	private static Integer getId(final Voice instance) {
