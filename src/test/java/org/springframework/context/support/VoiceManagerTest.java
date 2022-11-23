@@ -6505,7 +6505,7 @@ class VoiceManagerTest {
 			//
 		Assertions.assertNull(invoke(putTemplate, null, null, null, null));
 		//
-		Assertions.assertNull(invoke(putTemplate, null, new StringTemplateLoader(), null, null));
+		Assertions.assertNull(invoke(putTemplate, null, new StringTemplateLoader(), EMPTY, EMPTY));
 		//
 	}
 
