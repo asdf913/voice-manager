@@ -54,13 +54,7 @@ public class MigLayoutFactoryBean implements FactoryBean<MigLayout> {
 		//
 		Object object = iValue0 != null ? iValue0.getValue0() : null;
 		//
-		if (object instanceof String[]) {
-			//
-			setArguments(object);
-			//
-			return;
-			//
-		} else if (object instanceof int[]) {
+		if (object instanceof String[] || object instanceof int[]) {
 			//
 			setArguments(object);
 			//
