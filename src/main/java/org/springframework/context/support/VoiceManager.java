@@ -271,7 +271,6 @@ import com.mpatric.mp3agic.BaseException;
 import com.mpatric.mp3agic.ID3v1;
 import com.mpatric.mp3agic.Mp3File;
 import com.sun.jna.platform.win32.Kernel32;
-import com.sun.jna.platform.win32.VersionHelpers;
 import com.sun.jna.platform.win32.WinNT.OSVERSIONINFOEX;
 
 import de.sciss.jump3r.lowlevel.LameEncoder;
@@ -867,7 +866,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			final LayoutManager lm = cloneLayoutManager();
 			//
-			if (VersionHelpers.IsWindows10OrGreater() && getInstance(speechApi) instanceof SpeechApiSpeechServerImpl) {
+			if (Boolean.logicalAnd(Objects.equals(Boolean.TRUE, IValue0Util.getValue0(IsWindows10OrGreater())),
+					getInstance(speechApi) instanceof SpeechApiSpeechServerImpl)) {
 				//
 				final OSVERSIONINFOEX osvi = new OSVERSIONINFOEX();
 				//
@@ -1025,6 +1025,35 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
+	}
+
+	private static IValue0<Boolean> IsWindows10OrGreater() {
+		//
+		try {
+			//
+			final List<Method> ms = toList(filter(
+					testAndApply(Objects::nonNull,
+							getDeclaredMethods(Class.forName("com.sun.jna.platform.win32.VersionHelpers")),
+							Arrays::stream, null),
+					m -> m != null && Objects.equals(getName(m), "IsWindows10OrGreater") && m.getParameterCount() == 0
+							&& Modifier.isStatic(m.getModifiers())));
+			//
+			if (ms == null || ms.isEmpty()) {
+				//
+				return null;
+				//
+			} // if
+				//
+			final Method m = ms.size() == 1 ? ms.get(0) : null;
+			//
+			return Unit.with(cast(Boolean.class, m != null ? m.invoke(null) : null));
+			//
+		} catch (final ClassNotFoundException | IllegalAccessException | InvocationTargetException e) {
+			//
+		} // try
+			//
+		return null;
+		//
 	}
 
 	private static Object getInstance(final SpeechApi speechApi) {
