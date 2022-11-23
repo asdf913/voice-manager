@@ -7668,8 +7668,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					for (final Entry<String, Voice> entry : voices.entrySet()) {
 						//
-						if (entry == null || (voice = entry.getValue()) == null
-								|| (pageCloned = cloneNode(page, true)) == null) {
+						if ((voice = getValue(entry)) == null || (pageCloned = cloneNode(page, true)) == null) {
 							//
 							continue;
 							//
