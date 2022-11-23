@@ -1087,7 +1087,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-		} catch (final IllegalAccessException | InvocationTargetException e) {
+		} catch (final IllegalAccessException | InvocationTargetException | InstantiationException e) {
 			//
 		} // try
 			//
@@ -1122,8 +1122,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final Object osVersionInfoEx = clzOsVersionInfoEx != null ? clzOsVersionInfoEx.newInstance() : null;
 		//
-		return Objects.equals(Boolean.TRUE,
-				m != null ? m.invoke(f != null ? f.get(null) : null, osVersionInfoEx) : null) ? osVersionInfoEx : null;
+		return Objects.equals(Boolean.TRUE, m != null ? m.invoke(FieldUtils.readStaticField(f), osVersionInfoEx) : null)
+				? osVersionInfoEx
+				: null;
 		//
 	}
 
