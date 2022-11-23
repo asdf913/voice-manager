@@ -546,14 +546,17 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			final String[] lines = StringUtils
 					.split(StringUtils.trim(Utility.codeToString(bs, method.getConstantPool(), 0, length(bs))), '\n');
 			//
-			Pattern pattern = null;
+			Pattern pattern1 = null, pattern2 = null;
 			//
 			Matcher matcher = null;
 			//
 			for (int i = 0; lines != null && i < lines.length; i++) {
 				//
-				if (matches(lines[i], "^\\d+:\\s+if_icmpge\\s+#\\d+$")
-						&& matches((matcher = matcher(pattern = ObjectUtils.getIfNull(pattern,
+				if (//
+				matches(matcher(pattern1 = ObjectUtils.getIfNull(pattern1,
+						() -> Pattern.compile("^\\d+:\\s+if_icmpge\\s+#\\d+$")), lines[i]))
+						//
+						&& matches((matcher = matcher(pattern2 = ObjectUtils.getIfNull(pattern2,
 								() -> Pattern.compile("^\\d+:\\s+iconst_(\\d+)$")), lines[i - 1])))
 						&& matcher.groupCount() > 0 && (result = valueOf(matcher.group(1))) != null) {
 					//
@@ -567,10 +570,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return result;
 		//
-	}
-
-	private static boolean matches(final String instance, final String regex) {
-		return instance != null && instance.matches(regex);
 	}
 
 	private static int length(final byte[] instance) {
