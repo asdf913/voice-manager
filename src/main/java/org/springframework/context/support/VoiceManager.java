@@ -1047,7 +1047,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			final Method m = ms.size() == 1 ? ms.get(0) : null;
 			//
-			return Unit.with(cast(Boolean.class, m != null ? m.invoke(null) : null));
+			return Unit.with(cast(Boolean.class, invoke(m, null)));
 			//
 		} catch (final IllegalAccessException | InvocationTargetException e) {
 			//
@@ -1081,7 +1081,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					} // if
 						//
-					put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), getName(m), m.invoke(osVersionInfoEx));
+					put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), getName(m), invoke(m, osVersionInfoEx));
 					//
 				} // for
 					//
@@ -1124,8 +1124,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final Object osVersionInfoEx = clzOsVersionInfoEx != null ? clzOsVersionInfoEx.newInstance() : null;
 		//
-		return Objects.equals(Boolean.TRUE, m != null ? m.invoke(FieldUtils.readStaticField(f), osVersionInfoEx) : null)
-				? osVersionInfoEx
+		return Objects.equals(Boolean.TRUE, invoke(m, FieldUtils.readStaticField(f), osVersionInfoEx)) ? osVersionInfoEx
 				: null;
 		//
 	}
@@ -2645,7 +2644,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			try {
 				//
-				dllPath = Unit.with(m.invoke(f.get(null)));
+				dllPath = Unit.with(invoke(m, f.get(null)));
 				//
 			} catch (final IllegalAccessException e) {
 				//
@@ -2829,7 +2828,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 											//
 											try {
 												//
-												return m.invoke(a);
+												return invoke(m, a);
 												//
 											} catch (final IllegalAccessException e) {
 												//
@@ -5649,7 +5648,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					if ((m = get(methods, 0)) != null && m.getParameterCount() == 0) {
 						//
-						add(pairs = ObjectUtils.getIfNull(pairs, ArrayList::new), Pair.of(attribute, m.invoke(id3v1)));
+						add(pairs = ObjectUtils.getIfNull(pairs, ArrayList::new), Pair.of(attribute, invoke(m, id3v1)));
 						//
 					} // if
 						//
