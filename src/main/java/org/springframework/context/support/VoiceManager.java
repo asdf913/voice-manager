@@ -158,6 +158,7 @@ import org.apache.bcel.classfile.Utility;
 import org.apache.bcel.generic.ObjectType;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.collections4.IteratorUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.io.FileUtils;
@@ -1035,7 +1036,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					filter(testAndApply(Objects::nonNull, getDeclaredFields(VoiceManager.getClass(speechApi)),
 							Arrays::stream, null), f -> Objects.equals(getName(f), "instance")));
 			//
-			final Field f = fs != null && fs.size() == 1 ? get(fs, 0) : null;
+			final Field f = IterableUtils.size(fs) == 1 ? get(fs, 0) : null;
 			//
 			try {
 				//
