@@ -213,6 +213,7 @@ import org.apache.poi.xssf.usermodel.XSSFDataValidationHelper;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
+import org.javatuples.valueintf.IValue0Util;
 import org.odftoolkit.odfdom.doc.OdfPresentationDocument;
 import org.openxmlformats.schemas.officeDocument.x2006.customProperties.CTProperty;
 import org.slf4j.Logger;
@@ -894,7 +895,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					final Unit<String> pageTitle = getPageTitle(microsoftWindowsCompatibilitySettingsPageUrl);
 					//
-					final String title = StringUtils.defaultIfBlank(getValue0(pageTitle),
+					final String title = StringUtils.defaultIfBlank(IValue0Util.getValue0(pageTitle),
 							"Make older apps or programs compatible with Windows 10");
 					//
 					jPanelWarning
@@ -931,7 +932,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					final IValue0<String> pageTitle = getMicrosoftSpeechPlatformRuntimeLanguagesDownloadPageTitle();
 					//
-					final String title = StringUtils.defaultIfBlank(getValue0(pageTitle),
+					final String title = StringUtils.defaultIfBlank(IValue0Util.getValue0(pageTitle),
 							"Download Microsoft Speech Platform - Runtime Languages (Version 11) from Official Microsoft Download Center");
 					//
 					jPanelWarning.add(pageTitle != null
@@ -958,7 +959,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			final Unit<String> pageTitle = getPageTitle(microsoftSpeechPlatformRuntimeDownloadPageUrl);
 			//
-			final String title = StringUtils.defaultIfBlank(getValue0(pageTitle),
+			final String title = StringUtils.defaultIfBlank(IValue0Util.getValue0(pageTitle),
 					"Download Microsoft Speech Platform - Runtime (Version 11) from Official Microsoft Download Center");
 			//
 			jPanelWarning.add(pageTitle != null ? new JLabelLink(microsoftSpeechPlatformRuntimeDownloadPageUrl, title)
@@ -1081,10 +1082,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return microsoftSpeechPlatformRuntimeLanguagesDownloadPageTitle;
 		//
-	}
-
-	private static <T> T getValue0(final IValue0<T> instance) {
-		return instance != null ? instance.getValue0() : null;
 	}
 
 	private static Unit<String> getPageTitle(final String url) {
@@ -2037,7 +2034,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
-		return getValue0(gaKuNenBeTsuKanJiMultimap);
+		return IValue0Util.getValue0(gaKuNenBeTsuKanJiMultimap);
 		//
 	}
 
@@ -2427,7 +2424,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		if (speechApiInstance instanceof SpeechApiSpeechServerImpl) {
 			//
 			panel.add(new JLabelLink(microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl,
-					getValue0(getMicrosoftSpeechPlatformRuntimeLanguagesDownloadPageTitle())), WRAP);
+					IValue0Util.getValue0(getMicrosoftSpeechPlatformRuntimeLanguagesDownloadPageTitle())), WRAP);
 			//
 		} // if
 			//
@@ -2441,7 +2438,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			panel1.setBorder(BorderFactory.createTitledBorder("Dll Path"));
 			//
-			panel1.add(tfDllPath = new JTextField(toString(getValue0(dllPath))));
+			panel1.add(tfDllPath = new JTextField(toString(IValue0Util.getValue0(dllPath))));
 			//
 			panel1.add(btnDllPathCopy = new JButton("Copy"));
 			//
@@ -2598,7 +2595,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
-		return getValue0(jlptLevels);
+		return IValue0Util.getValue0(jlptLevels);
 		//
 	}
 
@@ -4838,7 +4835,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
-		return getValue0(byteConverter);
+		return IValue0Util.getValue0(byteConverter);
 		//
 	}
 
@@ -5941,12 +5938,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						} // if
 							//
 						if (!(dvh instanceof XSSFDataValidationHelper)
-								|| CollectionUtils.isNotEmpty(getValue0(booleans))) {
+								|| CollectionUtils.isNotEmpty(IValue0Util.getValue0(booleans))) {
 							//
 							sheet.addValidationData(createValidation(dvh,
 									createExplicitListConstraint(dvh,
-											toArray(toList(map(stream(getValue0(booleans)), VoiceManager::toString)),
-													new String[] {})),
+											toArray(toList(map(stream(IValue0Util.getValue0(booleans)),
+													VoiceManager::toString)), new String[] {})),
 									new CellRangeAddressList(row.getRowNum(), row.getRowNum(), i, i)));
 							//
 						} // if

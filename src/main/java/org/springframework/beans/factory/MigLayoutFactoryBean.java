@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
+import org.javatuples.valueintf.IValue0Util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -52,7 +53,7 @@ public class MigLayoutFactoryBean implements FactoryBean<MigLayout> {
 			//
 		final IValue0<Object> iValue0 = getIValue0(value);
 		//
-		Object object = iValue0 != null ? iValue0.getValue0() : null;
+		Object object = IValue0Util.getValue0(iValue0);
 		//
 		if (object instanceof String[] || object instanceof int[]) {
 			//

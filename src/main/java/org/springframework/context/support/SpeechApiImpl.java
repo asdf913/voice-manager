@@ -10,6 +10,7 @@ import java.util.Objects;
 
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
+import org.javatuples.valueintf.IValue0Util;
 import org.springframework.beans.factory.InitializingBean;
 
 public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean {
@@ -20,7 +21,7 @@ public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean {
 		//
 		if (instance == null) {
 			//
-			if (Objects.equals(Boolean.TRUE, getValue0(IsWindows10OrGreater()))) {
+			if (Objects.equals(Boolean.TRUE, IValue0Util.getValue0(IsWindows10OrGreater()))) {
 				//
 				instance = new SpeechApiSystemSpeechImpl();
 				//
@@ -62,10 +63,6 @@ public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean {
 			//
 		return null;
 		//
-	}
-
-	private static <X> X getValue0(final IValue0<X> instance) {
-		return instance != null ? instance.getValue0() : null;
 	}
 
 	@Override
