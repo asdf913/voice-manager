@@ -1723,18 +1723,6 @@ class VoiceManagerTest {
 			//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnExportCopy, 0, null)));
 		//
-		// btnExportBrowse
-		//
-		final AbstractButton btnExportBrowse = new JButton();
-		//
-		if (instance != null) {
-			//
-			FieldUtils.writeDeclaredField(instance, "btnExportBrowse", btnExportBrowse, true);
-			//
-		} // if
-			//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnExportBrowse, 0, null)));
-		//
 		// btnSpeechRateSlower
 		//
 		final AbstractButton btnSpeechRateSlower = new JButton();
@@ -1819,6 +1807,18 @@ class VoiceManagerTest {
 		} // if
 			//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnDllPathCopy, 0, null)));
+		//
+		// btnExportBrowse
+		//
+		final AbstractButton btnExportBrowse = new JButton();
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "btnExportBrowse", btnExportBrowse, true);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnExportBrowse, 0, null)));
 		//
 	}
 
