@@ -270,8 +270,6 @@ import com.mariten.kanatools.KanaConverter;
 import com.mpatric.mp3agic.BaseException;
 import com.mpatric.mp3agic.ID3v1;
 import com.mpatric.mp3agic.Mp3File;
-import com.sun.jna.platform.win32.Kernel32;
-import com.sun.jna.platform.win32.WinNT.OSVERSIONINFOEX;
 
 import de.sciss.jump3r.lowlevel.LameEncoder;
 import de.sciss.jump3r.mp3.Lame;
@@ -869,9 +867,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			if (Boolean.logicalAnd(Objects.equals(Boolean.TRUE, IValue0Util.getValue0(IsWindows10OrGreater())),
 					getInstance(speechApi) instanceof SpeechApiSpeechServerImpl)) {
 				//
-				final OSVERSIONINFOEX osvi = new OSVERSIONINFOEX();
+				// https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-osversioninfoexa
 				//
-				if (Kernel32.INSTANCE != null && Kernel32.INSTANCE.GetVersionEx(osvi) && osvi.getMajor() >= 10) {
+				// dwMajorVersion
+				//
+				if (ObjectUtils.compare(valueOf(toString(MapUtils.getObject(getOsVersionInfoExMap(), "getMajor"))),
+						10) >= 10) {
 					//
 					if (jPanelWarning == null) {
 						//
@@ -1031,10 +1032,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		try {
 			//
-			final List<Method> ms = toList(filter(
-					testAndApply(Objects::nonNull,
-							getDeclaredMethods(Class.forName("com.sun.jna.platform.win32.VersionHelpers")),
-							Arrays::stream, null),
+			final List<Method> ms = toList(filter(testAndApply(Objects::nonNull,
+					getDeclaredMethods(forName("com.sun.jna.platform.win32.VersionHelpers")), Arrays::stream, null),
 					m -> m != null && Objects.equals(getName(m), "IsWindows10OrGreater") && m.getParameterCount() == 0
 							&& Modifier.isStatic(m.getModifiers())));
 			//
@@ -1048,7 +1047,65 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			return Unit.with(cast(Boolean.class, m != null ? m.invoke(null) : null));
 			//
-		} catch (final ClassNotFoundException | IllegalAccessException | InvocationTargetException e) {
+		} catch (final IllegalAccessException | InvocationTargetException e) {
+			//
+		} // try
+			//
+		return null;
+		//
+	}
+
+	private static Map<String, Object> getOsVersionInfoExMap() {
+		//
+		try {
+			//
+			final Class<?> clz = forName("com.sun.jna.platform.win32.Kernel32");
+			//
+			final List<Field> fs = toList(
+					filter(testAndApply(Objects::nonNull, getDeclaredFields(clz), Arrays::stream, null),
+							f -> f != null && Objects.equals(getName(f), "INSTANCE") && Objects.equals(f.getType(), clz)
+									&& Modifier.isStatic(f.getModifiers())));
+			//
+			final Field f = fs != null && fs.size() == 1 ? fs.get(0) : null;
+			//
+			final Class<?> clzOsVersionInfoEx = forName("com.sun.jna.platform.win32.WinNT$OSVERSIONINFOEX");
+			//
+			List<Method> ms = toList(
+					filter(testAndApply(Objects::nonNull, getDeclaredMethods(clz), Arrays::stream, null),
+							m -> m != null && Objects.equals(getName(m), "GetVersionEx")
+									&& Arrays.equals(new Class[] { clzOsVersionInfoEx }, m.getParameterTypes())));
+			//
+			Method m = ms != null && ms.size() == 1 ? ms.get(0) : null;
+			//
+			final Object osVersionInfoEx = clzOsVersionInfoEx != null ? clzOsVersionInfoEx.newInstance() : null;
+			//
+			if (Objects.equals(Boolean.TRUE,
+					m != null ? m.invoke(f != null ? f.get(null) : null, osVersionInfoEx) : null)
+					&& osVersionInfoEx != null
+					&& (ms = toList(filter(
+							testAndApply(Objects::nonNull, getDeclaredMethods(getClass(osVersionInfoEx)),
+									Arrays::stream, null),
+							x -> x != null && !Objects.equals(x.getReturnType(), Void.TYPE)))) != null) {
+				//
+				Map<String, Object> map = null;
+				//
+				for (int i = 0; i < ms.size(); i++) {
+					//
+					if ((m = ms.get(i)) == null || m.isSynthetic()) {
+						//
+						continue;
+						//
+					} // if
+						//
+					put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), getName(m), m.invoke(osVersionInfoEx));
+					//
+				} // for
+					//
+				return map;
+				//
+			} // if
+				//
+		} catch (final IllegalAccessException | InvocationTargetException | InstantiationException e) {
 			//
 		} // try
 			//
