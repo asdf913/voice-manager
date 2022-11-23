@@ -7549,9 +7549,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					final XPath xp = ObjectMap.getObject(objectMap, XPath.class);
 					//
-					final NodeList pages = cast(NodeList.class, document != null ? evaluate(xp,
+					final NodeList pages = cast(NodeList.class, testAndApply(Objects::nonNull, document, x -> evaluate(
+							xp,
 							"/*[local-name()='document-content']/*[local-name()='body']/*[local-name()='presentation']/*[local-name()='page']",
-							document, XPathConstants.NODESET) : null);
+							x, XPathConstants.NODESET), null));
 					//
 					final Node page = pages != null && pages.getLength() == 1 ? pages.item(0) : null;
 					//
@@ -7723,7 +7724,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
-				//
+					//
 				if (stl != null) {
 					//
 					stl.putTemplate("", p.getTextContent());
