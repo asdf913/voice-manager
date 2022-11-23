@@ -244,8 +244,8 @@ class VoiceManagerTest {
 			METHOD_CREATE_CELL_COMMENT, METHOD_CREATE_CLIENT_ANCHOR, METHOD_CREATE_RICH_TEXT_STRING,
 			METHOD_SET_CELL_COMMENT, METHOD_SET_AUTHOR, METHOD_TEST_AND_ACCEPT_PREDICATE,
 			METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_FIND_FIELDS_BY_VALUE, METHOD_GET_DECLARED_FIELDS,
-			METHOD_GET_DECLARING_CLASS, METHOD_GET_PACKAGE, METHOD_BROWSE, METHOD_TO_URI, METHOD_DARKER,
-			METHOD_GET_TITLE_TEXT, METHOD_SET_CSS_ENABLED, METHOD_SET_JAVA_SCRIPT_ENABLED, METHOD_STOP, METHOD_ELAPSED,
+			METHOD_GET_DECLARING_CLASS, METHOD_GET_PACKAGE, METHOD_BROWSE, METHOD_TO_URI, METHOD_GET_TITLE_TEXT,
+			METHOD_SET_CSS_ENABLED, METHOD_SET_JAVA_SCRIPT_ENABLED, METHOD_STOP, METHOD_ELAPSED,
 			METHOD_GET_DECLARED_CLASSES, METHOD_GET_DLL_PATH, METHOD_GET_RATE, METHOD_ADD_CHANGE_LISTENER,
 			METHOD_IS_ANNOTATION_PRESENT, METHOD_PROCESS, METHOD_ENCODE_TO_STRING,
 			METHOD_GET_VOICE_MULTI_MAP_BY_LIST_NAME, METHOD_GET_VOICE_MULTI_MAP_BY_JLPT, METHOD_GET_TEMPLATE,
@@ -639,8 +639,6 @@ class VoiceManagerTest {
 		(METHOD_BROWSE = clz.getDeclaredMethod("browse", Desktop.class, URI.class)).setAccessible(true);
 		//
 		(METHOD_TO_URI = clz.getDeclaredMethod("toURI", File.class)).setAccessible(true);
-		//
-		(METHOD_DARKER = clz.getDeclaredMethod("darker", Color.class)).setAccessible(true);
 		//
 		(METHOD_GET_TITLE_TEXT = clz.getDeclaredMethod("getTitleText", HtmlPage.class)).setAccessible(true);
 		//
@@ -5460,31 +5458,6 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testDarker() throws Throwable {
-		//
-		Assertions.assertNull(darker(null));
-		//
-		final Color color = Color.BLUE;
-		//
-		Assertions.assertNotEquals(color, darker(color));
-		//
-	}
-
-	private static Color darker(final Color instance) throws Throwable {
-		try {
-			final Object obj = METHOD_DARKER.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Color) {
-				return (Color) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testGetTitleText() throws Throwable {
 		//
 		Assertions.assertNull(getTitleText(null));
@@ -6709,6 +6682,18 @@ class VoiceManagerTest {
 			//
 		} // for
 			//
+			// org.springframework.context.support.VoiceManager$JLabelLink.darker(java.awt.Color)
+			//
+		final Method darker = clz != null ? clz.getDeclaredMethod("darker", Color.class) : null;
+		//
+		if (darker != null) {
+			//
+			darker.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertNull(invoke(darker, null, (Object) null));
+		//
 	}
 
 	private static MouseListener[] getMouseListeners(final Component instance) {

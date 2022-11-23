@@ -1186,14 +1186,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			this.url = url;
 		}
 
+		private static Color darker(final Color instance) {
+			return instance != null ? instance.darker() : null;
+		}
+
 	}
 
 	private static String getTitleText(final HtmlPage instance) {
 		return instance != null ? instance.getTitleText() : null;
-	}
-
-	private static Color darker(final Color instance) {
-		return instance != null ? instance.darker() : null;
 	}
 
 	private static Integer getTabIndexByTitle(final Object jTabbedPane, final Object title)
