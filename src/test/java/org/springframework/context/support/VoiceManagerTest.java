@@ -1508,7 +1508,7 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testActionPerformed() throws IllegalAccessException {
+	void testActionPerformed1() throws IllegalAccessException {
 		//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(EMPTY, 0, null)));
 		//
@@ -1735,18 +1735,6 @@ class VoiceManagerTest {
 			//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnExportBrowse, 0, null)));
 		//
-		// btnDllPathCopy
-		//
-		final AbstractButton btnDllPathCopy = new JButton();
-		//
-		if (instance != null) {
-			//
-			FieldUtils.writeDeclaredField(instance, "btnDllPathCopy", btnDllPathCopy, true);
-			//
-		} // if
-			//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnDllPathCopy, 0, null)));
-		//
 		// btnSpeechRateSlower
 		//
 		final AbstractButton btnSpeechRateSlower = new JButton();
@@ -1814,6 +1802,23 @@ class VoiceManagerTest {
 		} // if
 			//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnSpeechRateFaster));
+		//
+	}
+
+	@Test
+	void testActionPerformed2() throws IllegalAccessException {
+		//
+		// btnDllPathCopy
+		//
+		final AbstractButton btnDllPathCopy = new JButton();
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "btnDllPathCopy", btnDllPathCopy, true);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnDllPathCopy, 0, null)));
 		//
 	}
 
