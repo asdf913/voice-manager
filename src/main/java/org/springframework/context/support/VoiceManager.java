@@ -4527,20 +4527,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							is != null ? parse(newDocumentBuilder(DocumentBuilderFactory.newDefaultInstance()), is)
 									: null));
 					//
-					Node node = null;
-					//
 					boolean isXlsx = false;
 					//
 					for (int i = 0; childNodes != null && i < childNodes.getLength(); i++) {
 						//
-						if ((node = childNodes.item(i)) == null) {
-							//
-							continue;
-							//
-						} // if
-							//
 						if (Objects.equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml",
-								getTextContent(getNamedItem(node.getAttributes(), "ContentType"))) && (isXlsx = true)) {
+								getTextContent(getNamedItem(getAttributes(childNodes.item(i)), "ContentType")))
+								&& (isXlsx = true)) {
 							//
 							break;
 							//
@@ -4580,6 +4573,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return null;
 		//
+	}
+
+	private static NamedNodeMap getAttributes(final Node instance) {
+		return instance != null ? instance.getAttributes() : null;
 	}
 
 	private static List<String> getOleEntryNames(final POIFSFileSystem poifs) {
@@ -7631,7 +7628,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			final NodeList plugins = cast(NodeList.class,
 					evaluate(xp, "./*[local-name()='frame']/*[local-name()='plugin']", node, XPathConstants.NODESET));
 			//
-			Node plugin, attribute = null;
+			Node attribute = null;
 			//
 			NamedNodeMap attributes = null;
 			//
@@ -7639,7 +7636,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			for (int i = 0; plugins != null && i < plugins.getLength(); i++) {
 				//
-				if ((plugin = plugins.item(i)) == null || (attributes = plugin.getAttributes()) == null) {
+				if ((attributes = getAttributes(plugins.item(i))) == null) {
 					//
 					continue;
 					//

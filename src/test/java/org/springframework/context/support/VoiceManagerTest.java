@@ -251,7 +251,7 @@ class VoiceManagerTest {
 			METHOD_GET_VOICE_MULTI_MAP_BY_LIST_NAME, METHOD_GET_VOICE_MULTI_MAP_BY_JLPT, METHOD_GET_TEMPLATE,
 			METHOD_GET_FILE_EXTENSIONS, METHOD_CREATE_CELL_STYLE, METHOD_REDUCE, METHOD_APPEND_STRING,
 			METHOD_APPEND_CHAR, METHOD_GET_PROVIDER_PLATFORM, METHOD_OPEN_CONNECTION, METHOD_GET_RESOURCE_AS_STREAM,
-			METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH = null;
+			METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH, METHOD_GET_ATTRIBUTES = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -702,6 +702,8 @@ class VoiceManagerTest {
 		(METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH = clz.getDeclaredMethod("getTempFileMinimumPrefixLength",
 				org.apache.bcel.classfile.Method.class)).setAccessible(true);
 		//
+		(METHOD_GET_ATTRIBUTES = clz.getDeclaredMethod("getAttributes", Node.class)).setAccessible(true);
+		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
 	}
@@ -762,6 +764,8 @@ class VoiceManagerTest {
 		private Node namedItem, parentNode, appendChild, removeChild, cloneNode = null;
 
 		private Sheet sheet = null;
+
+		private NamedNodeMap attributes = null;
 
 		private Map<Object, String> getProperties() {
 			if (properties == null) {
@@ -1124,6 +1128,10 @@ class VoiceManagerTest {
 				} else if (Objects.equals(methodName, "cloneNode")) {
 					//
 					return cloneNode;
+					//
+				} else if (Objects.equals(methodName, "getAttributes")) {
+					//
+					return attributes;
 					//
 				} // if
 					//
@@ -5991,6 +5999,29 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof Integer) {
 				return (Integer) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetAttributes() throws Throwable {
+		//
+		Assertions.assertNull(getAttributes(null));
+		//
+		Assertions.assertNull(getAttributes(node));
+		//
+	}
+
+	private static NamedNodeMap getAttributes(final Node instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_ATTRIBUTES.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof NamedNodeMap) {
+				return (NamedNodeMap) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
