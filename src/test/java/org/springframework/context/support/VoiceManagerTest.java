@@ -251,7 +251,7 @@ class VoiceManagerTest {
 			METHOD_GET_VOICE_MULTI_MAP_BY_LIST_NAME, METHOD_GET_VOICE_MULTI_MAP_BY_JLPT, METHOD_GET_TEMPLATE,
 			METHOD_GET_FILE_EXTENSIONS, METHOD_CREATE_CELL_STYLE, METHOD_REDUCE, METHOD_APPEND_STRING,
 			METHOD_APPEND_CHAR, METHOD_GET_PROVIDER_PLATFORM, METHOD_OPEN_CONNECTION, METHOD_GET_RESOURCE_AS_STREAM,
-			METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH = null;
+			METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH, METHOD_MATCHES = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -702,8 +702,10 @@ class VoiceManagerTest {
 		(METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH = clz.getDeclaredMethod("getTempFileMinimumPrefixLength",
 				org.apache.bcel.classfile.Method.class)).setAccessible(true);
 		//
-		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
+		(METHOD_MATCHES = clz.getDeclaredMethod("matches", String.class, String.class)).setAccessible(true);
 		//
+		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
+		// 
 	}
 
 	private static class IH implements InvocationHandler {
@@ -5991,6 +5993,25 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof Integer) {
 				return (Integer) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testMatches() throws Throwable {
+		//
+		Assertions.assertFalse(matches(null, null));
+		//
+	}
+
+	private static boolean matches(final String instance, final String regex) throws Throwable {
+		try {
+			final Object obj = METHOD_MATCHES.invoke(null, instance, regex);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
