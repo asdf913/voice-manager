@@ -1,10 +1,14 @@
 package org.springframework.context.support;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 import org.springframework.beans.factory.InitializingBean;
-
-import com.sun.jna.platform.win32.VersionHelpers;
 
 public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean {
 
@@ -14,7 +18,7 @@ public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean {
 		//
 		if (instance == null) {
 			//
-			if (VersionHelpers.IsWindows10OrGreater()) {
+			if (Objects.equals(Boolean.TRUE, IsWindows10OrGreater())) {
 				//
 				instance = new SpeechApiSystemSpeechImpl();
 				//
@@ -27,6 +31,34 @@ public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean {
 		} // if
 			//
 		return instance;
+		//
+	}
+
+	private static Boolean IsWindows10OrGreater() {
+		//
+		try {
+			//
+			final List<Method> ms = Arrays
+					.stream(Class.forName("com.sun.jna.platform.win32.VersionHelpers").getDeclaredMethods())
+					.filter(m -> m != null && Objects.equals(m.getName(), "IsWindows10OrGreater")
+							&& m.getParameterCount() == 0 && Modifier.isStatic(m.getModifiers()))
+					.toList();
+			//
+			if (ms == null || ms.isEmpty()) {
+				//
+				return null;
+				//
+			} // if
+				//
+			final Method m = ms.size() == 1 ? ms.get(0) : null;
+			//
+			return cast(Boolean.class, m != null ? m.invoke(null) : null);
+			//
+		} catch (final ClassNotFoundException | IllegalAccessException | InvocationTargetException e) {
+			//
+		} // try
+			//
+		return null;
 		//
 	}
 
