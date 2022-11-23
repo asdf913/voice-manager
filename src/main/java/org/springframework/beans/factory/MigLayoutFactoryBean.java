@@ -138,17 +138,7 @@ public class MigLayoutFactoryBean implements FactoryBean<MigLayout> {
 				//
 			} else if (Objects.equals(componentType, Float.TYPE)) {
 				//
-				final float[] fs = (float[]) value;
-				//
-				final String[] strings = new String[fs.length];
-				//
-				for (int i = 0; i < fs.length; i++) {
-					//
-					strings[i] = Float.toString(fs[i]);
-					//
-				} // for
-					//
-				result = Unit.with(strings);
+				result = getIValue0((float[]) value);
 				//
 			} else if (Objects.equals(componentType, Byte.TYPE)) {
 				//
@@ -171,9 +161,21 @@ public class MigLayoutFactoryBean implements FactoryBean<MigLayout> {
 		//
 	}
 
-	private static IValue0<Object> getIValue0(final byte[] value) {
+	private static IValue0<Object> getIValue0(final float[] fs) {
 		//
-		final byte[] bs = cast(byte[].class, value);
+		final String[] strings = fs != null ? new String[fs.length] : null;
+		//
+		for (int i = 0; fs != null && i < fs.length; i++) {
+			//
+			strings[i] = Float.toString(fs[i]);
+			//
+		} // for
+			//
+		return Unit.with(strings);
+		//
+	}
+
+	private static IValue0<Object> getIValue0(final byte[] bs) {
 		//
 		final String[] strings = bs != null ? new String[bs.length] : null;
 		//
@@ -187,9 +189,7 @@ public class MigLayoutFactoryBean implements FactoryBean<MigLayout> {
 		//
 	}
 
-	private static IValue0<Object> getIValue0(final boolean[] value) {
-		//
-		final boolean[] bs = cast(boolean[].class, value);
+	private static IValue0<Object> getIValue0(final boolean[] bs) {
 		//
 		final String[] strings = bs != null ? new String[bs.length] : null;
 		//

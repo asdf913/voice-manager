@@ -20,8 +20,8 @@ import com.google.common.base.Predicates;
 
 class MigLayoutFactoryBeanTest {
 
-	private static Method METHOD_TEST_AND_APPLY, METHOD_CAST, METHOD_GET_IVALUE0_OBJECT, METHOD_GET_IVALUE0_BYTE_ARRAY,
-			METHOD_GET_IVALUE0_BOOLEAN_ARRAY = null;
+	private static Method METHOD_TEST_AND_APPLY, METHOD_CAST, METHOD_GET_IVALUE0_OBJECT, METHOD_GET_IVALUE0_FLOAT_ARRAY,
+			METHOD_GET_IVALUE0_BYTE_ARRAY, METHOD_GET_IVALUE0_BOOLEAN_ARRAY = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -34,6 +34,8 @@ class MigLayoutFactoryBeanTest {
 		(METHOD_CAST = clz.getDeclaredMethod("cast", Class.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_GET_IVALUE0_OBJECT = clz.getDeclaredMethod("getIValue0", Object.class)).setAccessible(true);
+		//
+		(METHOD_GET_IVALUE0_FLOAT_ARRAY = clz.getDeclaredMethod("getIValue0", float[].class)).setAccessible(true);
 		//
 		(METHOD_GET_IVALUE0_BYTE_ARRAY = clz.getDeclaredMethod("getIValue0", byte[].class)).setAccessible(true);
 		//
@@ -199,6 +201,8 @@ class MigLayoutFactoryBeanTest {
 		//
 		Assertions.assertNull(getIValue0((Object) null));
 		//
+		Assertions.assertEquals(Unit.with(null), getIValue0((float[]) null));
+		//
 		Assertions.assertEquals(Unit.with(null), getIValue0((byte[]) null));
 		//
 		Assertions.assertEquals(Unit.with(null), getIValue0((boolean[]) null));
@@ -219,9 +223,9 @@ class MigLayoutFactoryBeanTest {
 		}
 	}
 
-	private static IValue0<Object> getIValue0(final byte[] value) throws Throwable {
+	private static IValue0<Object> getIValue0(final float[] fs) throws Throwable {
 		try {
-			final Object obj = METHOD_GET_IVALUE0_BYTE_ARRAY.invoke(null, value);
+			final Object obj = METHOD_GET_IVALUE0_FLOAT_ARRAY.invoke(null, fs);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof IValue0) {
@@ -233,9 +237,23 @@ class MigLayoutFactoryBeanTest {
 		}
 	}
 
-	private static IValue0<String[]> getIValue0(final boolean[] value) throws Throwable {
+	private static IValue0<Object> getIValue0(final byte[] bs) throws Throwable {
 		try {
-			final Object obj = METHOD_GET_IVALUE0_BOOLEAN_ARRAY.invoke(null, value);
+			final Object obj = METHOD_GET_IVALUE0_BYTE_ARRAY.invoke(null, bs);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof IValue0) {
+				return (IValue0) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static IValue0<String[]> getIValue0(final boolean[] bs) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_IVALUE0_BOOLEAN_ARRAY.invoke(null, bs);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof IValue0) {
