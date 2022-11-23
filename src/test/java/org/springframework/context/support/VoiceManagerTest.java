@@ -6030,18 +6030,9 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testIh() throws Throwable {
+	void testIh1() throws Throwable {
 		//
-		final Constructor<?> constructor = CLASS_IH != null ? CLASS_IH.getDeclaredConstructor() : null;
-		//
-		if (constructor != null) {
-			//
-			constructor.setAccessible(true);
-			//
-		} // if
-			//
-		final InvocationHandler ih = cast(InvocationHandler.class,
-				constructor != null ? constructor.newInstance() : null);
+		final InvocationHandler ih = createVoiceManagerIH();
 		//
 		if (ih != null) {
 			//
@@ -6135,6 +6126,17 @@ class VoiceManagerTest {
 			//
 			Assertions.assertThrows(Throwable.class, () -> ih.invoke(intMap, intMapSetObject, empty));
 			//
+		} // if
+			//
+	}
+
+	@Test
+	void testIh2() throws Throwable {
+		//
+		final InvocationHandler ih = createVoiceManagerIH();
+		//
+		if (ih != null) {
+			//
 			// org.springframework.context.support.VoiceManager$IntIntMap.setInt(int,int)
 			//
 			final Class<?> classIntIntMap = forName("org.springframework.context.support.VoiceManager$IntIntMap");
@@ -6146,6 +6148,8 @@ class VoiceManagerTest {
 			final Object intIntMap = Reflection.newProxy(classIntIntMap, ih);
 			//
 			Assertions.assertThrows(Throwable.class, () -> ih.invoke(intIntMap, intIntMapSetInt, null));
+			//
+			final Object[] empty = new Object[] {};
 			//
 			Assertions.assertThrows(Throwable.class, () -> ih.invoke(intIntMap, intIntMapSetInt, empty));
 			//
@@ -6167,20 +6171,23 @@ class VoiceManagerTest {
 			Assertions.assertEquals(Boolean.TRUE,
 					ih.invoke(intIntMap, intIntMapContainsKey, new Object[] { Integer.valueOf(ONE) }));
 			//
-			// org.springframework.context.support.VoiceManager$IntIntMap.getInt(int)
+		} // if
 			//
-			final Method intIntMapGetInt = classIntIntMap != null
-					? classIntIntMap.getDeclaredMethod("getInt", Integer.TYPE)
-					: null;
+	}
+
+	private static InvocationHandler createVoiceManagerIH() throws InstantiationException, IllegalAccessException,
+			IllegalArgumentException, InvocationTargetException, Throwable {
+		//
+		final Constructor<?> constructor = CLASS_IH != null ? CLASS_IH.getDeclaredConstructor() : null;
+		//
+		if (constructor != null) {
 			//
-			Assertions.assertThrows(Throwable.class, () -> ih.invoke(intIntMap, intIntMapGetInt, null));
-			//
-			Assertions.assertThrows(Throwable.class, () -> ih.invoke(intIntMap, intIntMapGetInt, empty));
-			//
-			Assertions.assertEquals(two, ih.invoke(intIntMap, intIntMapGetInt, new Object[] { Integer.valueOf(ONE) }));
+			constructor.setAccessible(true);
 			//
 		} // if
 			//
+		return cast(InvocationHandler.class, constructor != null ? constructor.newInstance() : null);
+		//
 	}
 
 	@Test
