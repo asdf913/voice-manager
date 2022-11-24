@@ -2743,6 +2743,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // try
 			//
+		return getJlptLevels(httpURLConnection);
+		//
+	}
+
+	private static List<String> getJlptLevels(final HttpURLConnection httpURLConnection) {
+		//
 		String html = null;
 		//
 		try (final InputStream is = getInputStream(httpURLConnection)) {
