@@ -425,6 +425,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private Version freeMarkerVersion = null;
 
+	private String exportPresentationTemplate = null;
+
 	private VoiceManager() {
 	}
 
@@ -581,7 +583,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	private static InputStream getResourceAsStream(final Class<?> instance, final String name) {
-		return instance != null ? instance.getResourceAsStream(name) : null;
+		return instance != null && name != null ? instance.getResourceAsStream(name) : null;
 	}
 
 	private static org.apache.bcel.classfile.Method[] getMethods(final JavaClass instance) {
@@ -753,6 +755,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	public void setFreeMarkerConfiguration(final freemarker.template.Configuration freeMarkerConfiguration) {
 		this.freeMarkerConfiguration = freeMarkerConfiguration;
+	}
+
+	public void setExportPresentationTemplate(final String exportPresentationTemplate) {
+		this.exportPresentationTemplate = exportPresentationTemplate;
 	}
 
 	private static <E> Stream<E> stream(final Collection<E> instance) {
@@ -7360,7 +7366,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 		private Fraction pharse = null;
 
-		private String ordinalPositionFileNamePrefix = null;
+		private String ordinalPositionFileNamePrefix, exportPresentationTemplate = null;
 
 		private Table<String, String, Voice> voiceFileNames = null;
 
@@ -7482,7 +7488,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				if (pharse != null && pharse.getNumerator() == pharse.getDenominator() && Objects.equals(counter, count)
 						&& exportPresentation) {
 					//
-					try (final InputStream is = getResourceAsStream(VoiceManager.class, "/template.odp")) {
+					try (final InputStream is = getResourceAsStream(VoiceManager.class, exportPresentationTemplate)) {
 						//
 						generateOdfPresentationDocuments(is, voiceFileNames);
 						//
@@ -8106,6 +8112,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				et.objectMapper = objectMapper;
 				//
+				et.exportPresentationTemplate = voiceManager != null ? voiceManager.exportPresentationTemplate : null;
+				//
 				es.submit(et);
 				//
 			} // for
@@ -8381,6 +8389,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		et.ordinalPositionFileNamePrefix = getText(
 				(et.voiceManager = voiceManager) != null ? voiceManager.tfOrdinalPositionFileNamePrefix : null);
+		//
+		et.exportPresentationTemplate = voiceManager != null ? voiceManager.exportPresentationTemplate : null;
 		//
 		final BooleanMap booleanMap = ObjectMap.getObject(objectMap, BooleanMap.class);
 		//

@@ -69,6 +69,7 @@
 				<property name="templateLoader" value="#{new freemarker.cache.ClassTemplateLoader(T(org.springframework.context.support.VoiceManager),'/')}"/>
 			</bean>
 		</property>
+		<property name="exportPresentationTemplate" value="${org.springframework.context.support.VoiceManager.exportPresentationTemplate}" />
 	</bean>
 
 	<bean id="DataSource" class="org.h2.jdbcx.JdbcConnectionPool"

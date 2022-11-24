@@ -5980,6 +5980,8 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(getResourceAsStream(null, null));
 		//
+		Assertions.assertNull(getResourceAsStream(Object.class, null));
+		//
 	}
 
 	private static InputStream getResourceAsStream(final Class<?> instance, final String name) throws Throwable {
