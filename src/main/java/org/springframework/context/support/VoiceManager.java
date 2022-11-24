@@ -8896,28 +8896,35 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		if (BooleanMap.getBoolean(booleanMap, "exportJlptSheet")) {
 			//
-			final Multimap<String, Voice> multimap = getVoiceMultimapByJlpt(voices);
+			createJlptSheet(workbook, voices);
 			//
-			if (multimap != null) {
-				//
-				for (final String key : multimap.keySet()) {
-					//
-					if (key == null) {
-						//
-						continue;
-						//
-					} // if
-						//
-					setSheet(workbook, createSheet(workbook, key), multimap.get(key));
-					//
-				} // for
-					//
-			} // if
-				//
 		} // if
 			//
 		return workbook;
 		//
+	}
+
+	private static void createJlptSheet(final Workbook workbook, final Iterable<Voice> voices)
+			throws IllegalAccessException, InvocationTargetException {
+		//
+		final Multimap<String, Voice> multimap = getVoiceMultimapByJlpt(voices);
+		//
+		if (multimap != null) {
+			//
+			for (final String key : multimap.keySet()) {
+				//
+				if (key == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				setSheet(workbook, createSheet(workbook, key), multimap.get(key));
+				//
+			} // for
+				//
+		} // if
+			//
 	}
 
 	private static void setSheet(final Workbook workbook, final Sheet sheet, final Iterable<Voice> voices)

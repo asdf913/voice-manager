@@ -253,7 +253,7 @@ class VoiceManagerTest {
 			METHOD_GET_FILE_EXTENSIONS, METHOD_CREATE_CELL_STYLE, METHOD_REDUCE, METHOD_APPEND_STRING,
 			METHOD_APPEND_CHAR, METHOD_GET_PROVIDER_PLATFORM, METHOD_OPEN_CONNECTION, METHOD_GET_RESOURCE_AS_STREAM,
 			METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH, METHOD_GET_ATTRIBUTES, METHOD_GET_LENGTH, METHOD_ITEM,
-			METHOD_GET_OS_VERSION_INFO_EX_MAP = null;
+			METHOD_GET_OS_VERSION_INFO_EX_MAP, METHOD_CREATE_JLPT_SHEET = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -708,6 +708,9 @@ class VoiceManagerTest {
 		(METHOD_ITEM = clz.getDeclaredMethod("item", NodeList.class, Integer.TYPE)).setAccessible(true);
 		//
 		(METHOD_GET_OS_VERSION_INFO_EX_MAP = clz.getDeclaredMethod("getOsVersionInfoExMap")).setAccessible(true);
+		//
+		(METHOD_CREATE_JLPT_SHEET = clz.getDeclaredMethod("createJlptSheet", Workbook.class, Iterable.class))
+				.setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -5779,8 +5782,6 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(getVoiceMultimapByJlpt(null));
 		//
-		Assertions.assertNull(getVoiceMultimapByJlpt(Collections.singleton(null)));
-		//
 		Assertions.assertNull(getVoiceMultimapByJlpt(Reflection.newProxy(Iterable.class, ih)));
 		//
 	}
@@ -6107,6 +6108,29 @@ class VoiceManagerTest {
 				return (Map) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCreateJlptSheet() {
+		//
+		Assertions.assertDoesNotThrow(() -> createJlptSheet(null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> createJlptSheet(null, Collections.singleton(null)));
+		//
+		final Voice voice = new Voice();
+		//
+		voice.setJlptLevel(EMPTY);
+		//
+		Assertions.assertDoesNotThrow(() -> createJlptSheet(null, Collections.singleton(voice)));
+		//
+	}
+
+	private static void createJlptSheet(final Workbook workbook, final Iterable<Voice> voices) throws Throwable {
+		try {
+			METHOD_CREATE_JLPT_SHEET.invoke(null, workbook, voices);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
