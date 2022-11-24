@@ -8478,7 +8478,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			DomElement h3 = null;
 			//
-			for (int i = 0; h3s != null && i < h3s.size(); i++) {
+			for (int i = 0; i < IterableUtils.size(h3s); i++) {
 				//
 				if ((domElement = get(h3s, i)) == null || !Objects.equals(getTextContent(domElement), "本表[編集]")) {
 					//
@@ -8522,7 +8522,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			DomNode tbody = null;
 			//
-			for (int i = 0; domNodes != null && i < domNodes.size(); i++) {
+			for (int i = 0; i < IterableUtils.size(domNodes); i++) {
 				//
 				if (!Objects.equals(getNodeName(domNode = get(domNodes, i)), "tbody")) {
 					//
@@ -8556,7 +8556,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			final IH ih = new IH();
 			//
-			for (int i = 0; domNodes != null && i < domNodes.size(); i++) {
+			for (int i = 0; i < IterableUtils.size(domNodes); i++) {
 				//
 				if ((domNode = get(domNodes, i)) == null || domNode.getNodeType() != Node.ELEMENT_NODE
 						|| (tds = getChildNodes(domNode)) == null) {
@@ -8565,7 +8565,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
-				for (int j = 0; j < tds.size(); j++) {
+				for (int j = 0; j < IterableUtils.size(tds); j++) {
 					//
 					if ((domNode = get(tds, j)) == null || domNode.getNodeType() != Node.ELEMENT_NODE) {
 						//
@@ -8590,7 +8590,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			int groupCount = 0;
 			//
-			for (int i = 0; domNodes != null && i < domNodes.size(); i++) {
+			for (int i = 0; i < IterableUtils.size(domNodes); i++) {
 				//
 				if ((domNode = get(domNodes, i)) == null || domNode.getNodeType() != Node.ELEMENT_NODE
 						|| (tds = getChildNodes(domNode)) == null) {
@@ -8611,7 +8611,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
-				for (int j = 0; j < tds.size(); j++) {
+				for (int j = 0; j < IterableUtils.size(tds); j++) {
 					//
 					if ((domNode = get(tds, j)) == null || domNode.getNodeType() != Node.ELEMENT_NODE) {
 						//
