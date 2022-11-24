@@ -8463,14 +8463,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		try (final WebClient webClient = new WebClient()) {
 			//
-			final WebClientOptions webClientOptions = webClient.getOptions();
+			setJavaScriptEnabled(webClient.getOptions(), false);
 			//
-			if (webClientOptions != null) {
-				//
-				webClientOptions.setJavaScriptEnabled(false);
-				//
-			} // if
-				//
 			final DomNodeList<DomElement> h3s = getElementsByTagName(
 					cast(SgmlPage.class, testAndApply(StringUtils::isNotBlank, url, webClient::getPage, null)), "h3");
 			//
