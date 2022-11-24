@@ -2172,7 +2172,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				} // if
 					//
 				putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedListMultimap::create), matcher.group(1),
-						toList(map(stream(getElementsByTagName(domElement.getNextElementSibling(), "a")),
+						toList(map(stream(getElementsByTagName(getNextElementSibling(domElement), "a")),
 								a -> getTextContent(a))));
 				//
 			} // for
@@ -2181,6 +2181,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return multimap;
 		//
+	}
+
+	private static DomElement getNextElementSibling(final DomNode instance) {
+		return instance != null ? instance.getNextElementSibling() : null;
 	}
 
 	private static int getLength(final NodeList instance) {
@@ -8496,7 +8500,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			DomElement table = null;
 			//
-			while ((domElement = domElement != null ? domElement.getNextElementSibling() : null) != null) {
+			while ((domElement = getNextElementSibling(domElement)) != null) {
 				//
 				if (Objects.equals(getNodeName(domElement), "table")) {
 					//
