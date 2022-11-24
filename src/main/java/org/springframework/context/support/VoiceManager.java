@@ -2165,7 +2165,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				if ((domElement = get(domElements, i)) == null || !matches(matcher = matcher(
 						pattern = ObjectUtils.getIfNull(pattern, () -> Pattern.compile("(第(\\d+)学年)（\\d+字）\\[編集]")),
-						domElement.getTextContent())) || matcher == null || matcher.groupCount() <= 0) {
+						getTextContent(domElement))) || matcher == null || matcher.groupCount() <= 0) {
 					//
 					continue;
 					//
@@ -2173,7 +2173,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedListMultimap::create), matcher.group(1),
 						toList(map(stream(getElementsByTagName(domElement.getNextElementSibling(), "a")),
-								a -> a != null ? a.getTextContent() : null)));
+								a -> getTextContent(a))));
 				//
 			} // for
 				//
