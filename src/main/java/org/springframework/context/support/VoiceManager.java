@@ -7761,7 +7761,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		}
 
-		private static void replaceText(final ObjectMap objectMap) throws XPathExpressionException {
+		private static void replaceText(final ObjectMap objectMap)
+				throws XPathExpressionException, NoSuchAlgorithmException {
 			//
 			final NodeList ps = cast(NodeList.class,
 					evaluate(ObjectMap.getObject(objectMap, XPath.class),
@@ -7832,6 +7833,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					om.setObject(StringTemplateLoader.class, stl);
 					//
+					if (objectMap != null && !objectMap.containsObject(MessageDigest.class)) {
+						//
+						objectMap.setObject(MessageDigest.class, MessageDigest.getInstance("SHA-512"));
+						//
+					} // if
+						//
+					om.setObject(MessageDigest.class, ObjectMap.getObject(objectMap, MessageDigest.class));
+					//
 				} // if
 					//
 				if (om != null) {
@@ -7863,11 +7872,22 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			final String textContent = getTextContent(node);
 			//
-			putTemplate(stl, textContent, textContent);
+			// template key
+			//
+			final String key = Collections.min(Arrays.asList(
+					//
+					textContent,
+					testAndApply(Objects::nonNull,
+							digest(ObjectMap.getObject(objectMap, MessageDigest.class), getBytes(textContent)),
+							Hex::encodeHexString, null)
+			//
+			), (a, b) -> Integer.compare(StringUtils.length(a), StringUtils.length(b)));
+			//
+			putTemplate(stl, key, textContent);
 			//
 			try (final Writer writer = new StringWriter()) {
 				//
-				process(getTemplate(configuration, textContent), map, writer);
+				process(getTemplate(configuration, key), map, writer);
 				//
 				if (node != null) {
 					//
