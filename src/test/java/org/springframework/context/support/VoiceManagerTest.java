@@ -257,7 +257,8 @@ class VoiceManagerTest {
 			METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH, METHOD_GET_ATTRIBUTES, METHOD_GET_LENGTH, METHOD_ITEM,
 			METHOD_GET_OS_VERSION_INFO_EX_MAP, METHOD_CREATE_JLPT_SHEET, METHOD_GET_NEXT_ELEMENT_SIBLING,
 			METHOD_CREATE_JO_YO_KAN_JI_WORKBOOK_BY_TBODY, METHOD_CREATE_JO_YO_KAN_JI_WORKBOOK_BY_DOM_NODES,
-			METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_SHOW_MESSAGE_DIALOG = null;
+			METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_SHOW_MESSAGE_DIALOG1,
+			METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_SHOW_MESSAGE_DIALOG2 = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -725,8 +726,12 @@ class VoiceManagerTest {
 		(METHOD_CREATE_JO_YO_KAN_JI_WORKBOOK_BY_DOM_NODES = clz.getDeclaredMethod("createJoYoKanJiWorkbookByDomNodes",
 				List.class)).setAccessible(true);
 		//
-		(METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_SHOW_MESSAGE_DIALOG = clz
+		(METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_SHOW_MESSAGE_DIALOG1 = clz
 				.getDeclaredMethod("errorOrPrintStackTraceOrShowMessageDialog", Throwable.class)).setAccessible(true);
+		//
+		(METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_SHOW_MESSAGE_DIALOG2 = clz
+				.getDeclaredMethod("errorOrPrintStackTraceOrShowMessageDialog", Boolean.TYPE, Throwable.class))
+				.setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -6230,15 +6235,27 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
+		Assertions.assertDoesNotThrow(() -> errorOrPrintStackTraceOrShowMessageDialog(true, null));
+		//
+		Assertions.assertDoesNotThrow(() -> errorOrPrintStackTraceOrShowMessageDialog(true, new Throwable()));
+		//
 	}
 
 	private static void errorOrPrintStackTraceOrShowMessageDialog(final Throwable throwable) throws Throwable {
 		try {
-			METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_SHOW_MESSAGE_DIALOG.invoke(null, throwable);
+			METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_SHOW_MESSAGE_DIALOG1.invoke(null, throwable);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
+	}
 
+	private static void errorOrPrintStackTraceOrShowMessageDialog(final boolean headless, final Throwable throwable)
+			throws Throwable {
+		try {
+			METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_SHOW_MESSAGE_DIALOG2.invoke(null, headless, throwable);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 	@Test

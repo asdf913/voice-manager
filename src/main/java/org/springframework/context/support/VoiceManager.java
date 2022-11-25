@@ -531,7 +531,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static void errorOrPrintStackTraceOrShowMessageDialog(final Throwable throwable) {
 		//
-		if (GraphicsEnvironment.isHeadless()) {
+		errorOrPrintStackTraceOrShowMessageDialog(GraphicsEnvironment.isHeadless(), throwable);
+		//
+	}
+
+	private static void errorOrPrintStackTraceOrShowMessageDialog(final boolean headless, final Throwable throwable) {
+		//
+		if (headless) {
 			//
 			if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
 				LOG.error(getMessage(throwable), throwable);
@@ -1675,43 +1681,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 				} catch (final IllegalAccessException e) {
 					//
-					// TODO
+					errorOrPrintStackTraceOrShowMessageDialog(headless, e);
 					//
-					if (headless) {
-						//
-						if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-							LOG.error(getMessage(e), e);
-						} else if (e != null) {
-							e.printStackTrace();
-						} // if
-							//
-					} else {
-						//
-						JOptionPane.showMessageDialog(null, getMessage(e));
-						//
-					} // if
-						//
 				} catch (final InvocationTargetException e) {
 					//
 					final Throwable targetException = e.getTargetException();
 					//
-					final Throwable rootCause = ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException),
-							targetException, ExceptionUtils.getRootCause(e), e);
+					errorOrPrintStackTraceOrShowMessageDialog(headless,
+							ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException), targetException,
+									ExceptionUtils.getRootCause(e), e));
 					//
-					if (headless) {
-						//
-						if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-							LOG.error(getMessage(rootCause), rootCause);
-						} else if (rootCause != null) {
-							rootCause.printStackTrace();
-						} // if
-							//
-					} else {
-						//
-						JOptionPane.showMessageDialog(null, getMessage(rootCause));
-						//
-					} // if
-						//
 				} // try
 					//
 			} else if (size > 1) {
@@ -2585,43 +2564,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} catch (final IllegalAccessException e) {
 				//
-				// TODO
+				errorOrPrintStackTraceOrShowMessageDialog(headless, e);
 				//
-				if (headless) {
-					//
-					if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-						LOG.error(getMessage(e), e);
-					} else if (e != null) {
-						e.printStackTrace();
-					} // if
-						//
-				} else {
-					//
-					JOptionPane.showMessageDialog(null, getMessage(e));
-					//
-				} // if
-					//
 			} catch (final InvocationTargetException e) {
 				//
 				final Throwable targetException = e.getTargetException();
 				//
-				final Throwable rootCause = ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException),
-						targetException, ExceptionUtils.getRootCause(e), e);
+				errorOrPrintStackTraceOrShowMessageDialog(headless,
+						ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException), targetException,
+								ExceptionUtils.getRootCause(e), e));
 				//
-				if (headless) {
-					//
-					if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-						LOG.error(getMessage(rootCause), rootCause);
-					} else if (rootCause != null) {
-						rootCause.printStackTrace();
-					} // if
-						//
-				} else {
-					//
-					JOptionPane.showMessageDialog(null, getMessage(rootCause));
-					//
-				} // if
-					//
 			} // try
 				//
 		} // for
@@ -2753,8 +2705,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 												//
 											} catch (final IllegalAccessException e) {
 												//
-												// TODO
-												//
 												if (headless) {
 													//
 													if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
@@ -2762,7 +2712,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 													} else if (e != null) {
 														e.printStackTrace();
 													} // if
-														//
+													//
 												} else {
 													//
 													JOptionPane.showMessageDialog(null, getMessage(e));
@@ -3122,22 +3072,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} catch (final IllegalAccessException | NoSuchMethodException e) {
 			//
-			// TODO
+			errorOrPrintStackTraceOrShowMessageDialog(headless, e);
 			//
-			if (headless) {
-				//
-				if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-					LOG.error(getMessage(e), e);
-				} else if (e != null) {
-					e.printStackTrace();
-				} // if
-					//
-			} else {
-				//
-				JOptionPane.showMessageDialog(null, getMessage(e));
-				//
-			} // if
-				//
 		} // try
 			//
 		if (Objects.equals(source, btnSpeak)) {
@@ -3168,44 +3104,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					} catch (final IllegalAccessException e) {
 						//
-						// TODO
+						errorOrPrintStackTraceOrShowMessageDialog(headless, e);
 						//
-						if (headless) {
-							//
-							if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-								LOG.error(getMessage(e), e);
-							} else if (e != null) {
-								e.printStackTrace();
-							} // if
-								//
-						} else {
-							//
-							JOptionPane.showMessageDialog(null, getMessage(e));
-							//
-						} // if
-							//
 					} catch (final InvocationTargetException e) {
 						//
 						final Throwable targetException = e.getTargetException();
 						//
-						final Throwable rootCause = ObjectUtils.firstNonNull(
-								ExceptionUtils.getRootCause(targetException), targetException,
-								ExceptionUtils.getRootCause(e), e);
+						errorOrPrintStackTraceOrShowMessageDialog(headless,
+								ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException), targetException,
+										ExceptionUtils.getRootCause(e), e));
 						//
-						if (headless) {
-							//
-							if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-								LOG.error(getMessage(rootCause), rootCause);
-							} else if (rootCause != null) {
-								rootCause.printStackTrace();
-							} // if
-								//
-						} else {
-							//
-							JOptionPane.showMessageDialog(null, getMessage(rootCause));
-							//
-						} // if
-							//
 					} // try
 						//
 				} else {
@@ -3255,20 +3163,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					} catch (final IOException e) {
 						//
-						if (headless) {
-							//
-							if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-								LOG.error(getMessage(e), e);
-							} else if (e != null) {
-								e.printStackTrace();
-							} // if
-								//
-						} else {
-							//
-							JOptionPane.showMessageDialog(null, getMessage(e));
-							//
-						} // if
-							//
+						errorOrPrintStackTraceOrShowMessageDialog(headless, e);
+						//
 					} // try
 						//
 				} // if
@@ -3321,22 +3217,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 					} catch (final IOException e) {
 						//
-						// TODO
+						errorOrPrintStackTraceOrShowMessageDialog(headless, e);
 						//
-						if (headless) {
-							//
-							if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-								LOG.error(getMessage(e), e);
-							} else if (e != null) {
-								e.printStackTrace();
-							} // if
-								//
-						} else {
-							//
-							JOptionPane.showMessageDialog(null, getMessage(e));
-							//
-						} // if
-							//
 					} // try
 						//
 				} // if
@@ -3372,44 +3254,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 					} catch (final IOException | BaseException | IllegalAccessException e) {
 						//
-						// TODO
+						errorOrPrintStackTraceOrShowMessageDialog(headless, e);
 						//
-						if (headless) {
-							//
-							if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-								LOG.error(getMessage(e), e);
-							} else if (e != null) {
-								e.printStackTrace();
-							} // if
-								//
-						} else {
-							//
-							JOptionPane.showMessageDialog(null, getMessage(e));
-							//
-						} // if
-							//
 					} catch (final InvocationTargetException e) {
 						//
 						final Throwable targetException = e.getTargetException();
 						//
-						final Throwable rootCause = ObjectUtils.firstNonNull(
-								ExceptionUtils.getRootCause(targetException), targetException,
-								ExceptionUtils.getRootCause(e), e);
+						errorOrPrintStackTraceOrShowMessageDialog(headless,
+								ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException), targetException,
+										ExceptionUtils.getRootCause(e), e));
 						//
-						if (headless) {
-							//
-							if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-								LOG.error(getMessage(rootCause), rootCause);
-							} else if (rootCause != null) {
-								rootCause.printStackTrace();
-							} // if
-								//
-						} else {
-							//
-							JOptionPane.showMessageDialog(null, getMessage(rootCause));
-							//
-						} // if
-							//
 					} // try
 						//
 				} else {
@@ -3497,22 +3351,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} catch (final IOException e) {
 				//
-				// TODO
+				errorOrPrintStackTraceOrShowMessageDialog(headless, e);
 				//
-				if (headless) {
-					//
-					if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-						LOG.error(getMessage(e), e);
-					} else if (e != null) {
-						e.printStackTrace();
-					} // if
-						//
-				} else {
-					//
-					JOptionPane.showMessageDialog(null, getMessage(e));
-					//
-				} // if
-					//
 			} // try
 				//
 		} else if (Objects.equals(source, btnExport)) {
@@ -3729,43 +3569,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 			} catch (final IOException | IllegalAccessException | TemplateException e) {
 				//
-				// TODO
+				errorOrPrintStackTraceOrShowMessageDialog(headless, e);
 				//
-				if (headless) {
-					//
-					if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-						LOG.error(getMessage(e), e);
-					} else if (e != null) {
-						e.printStackTrace();
-					} // if
-						//
-				} else {
-					//
-					JOptionPane.showMessageDialog(null, getMessage(e));
-					//
-				} // if
-					//
 			} catch (final InvocationTargetException e) {
 				//
 				final Throwable targetException = e.getTargetException();
 				//
-				final Throwable rootCause = ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException),
-						targetException, ExceptionUtils.getRootCause(e), e);
+				errorOrPrintStackTraceOrShowMessageDialog(headless,
+						ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException), targetException,
+								ExceptionUtils.getRootCause(e), e));
 				//
-				if (headless) {
-					//
-					if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-						LOG.error(getMessage(rootCause), rootCause);
-					} else if (rootCause != null) {
-						rootCause.printStackTrace();
-					} // if
-						//
-				} else {
-					//
-					JOptionPane.showMessageDialog(null, getMessage(rootCause));
-					//
-				} // if
-					//
 			} finally {
 				//
 				IOUtils.closeQuietly(sqlSession);
@@ -3792,22 +3605,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} catch (final IOException e) {
 					//
-					// TODO
+					errorOrPrintStackTraceOrShowMessageDialog(headless, e);
 					//
-					if (headless) {
-						//
-						if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-							LOG.error(getMessage(e), e);
-						} else if (e != null) {
-							e.printStackTrace();
-						} // if
-							//
-					} else {
-						//
-						JOptionPane.showMessageDialog(null, getMessage(e));
-						//
-					} // if
-						//
 				} // try
 					//
 			} // if
@@ -3846,22 +3645,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 				} catch (final IOException | InvalidFormatException | GeneralSecurityException e) {
 					//
-					// TODO
+					errorOrPrintStackTraceOrShowMessageDialog(headless, e);
 					//
-					if (headless) {
-						//
-						if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-							LOG.error(getMessage(e), e);
-						} else if (e != null) {
-							e.printStackTrace();
-						} // if
-							//
-					} else {
-						//
-						JOptionPane.showMessageDialog(null, getMessage(e));
-						//
-					} // if
-						//
 				} // try
 					//
 				importVoice(f);
@@ -3883,22 +3668,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} catch (final IOException e) {
 				//
-				// TODO
+				errorOrPrintStackTraceOrShowMessageDialog(headless, e);
 				//
-				if (headless) {
-					//
-					if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-						LOG.error(getMessage(e), e);
-					} else if (e != null) {
-						e.printStackTrace();
-					} // if
-						//
-				} else {
-					//
-					JOptionPane.showMessageDialog(null, getMessage(e));
-					//
-				} // if
-					//
 			} finally {
 				//
 				IOUtils.closeQuietly(workbook);
@@ -3923,20 +3694,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} catch (final IOException e) {
 				//
-				if (headless) {
-					//
-					if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-						LOG.error(getMessage(e), e);
-					} else if (e != null) {
-						e.printStackTrace();
-					} // if
-						//
-				} else {
-					//
-					JOptionPane.showMessageDialog(null, getMessage(e));
-					//
-				} // if
-					//
+				errorOrPrintStackTraceOrShowMessageDialog(headless, e);
+				//
 			} finally {
 				//
 				IOUtils.closeQuietly(workbook);
@@ -3961,20 +3720,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} catch (final IOException e) {
 				//
-				if (headless) {
-					//
-					if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-						LOG.error(getMessage(e), e);
-					} else if (e != null) {
-						e.printStackTrace();
-					} // if
-						//
-				} else {
-					//
-					JOptionPane.showMessageDialog(null, getMessage(e));
-					//
-				} // if
-					//
+				errorOrPrintStackTraceOrShowMessageDialog(headless, e);
+				//
 			} finally {
 				//
 				IOUtils.closeQuietly(workbook);
@@ -4422,41 +4169,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		} catch (final InvalidFormatException | IOException | IllegalAccessException | BaseException
 				| GeneralSecurityException e) {
 			//
-			if (headless) {
-				//
-				if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-					LOG.error(getMessage(e), e);
-				} else if (e != null) {
-					e.printStackTrace();
-				} // if
-					//
-			} else {
-				//
-				JOptionPane.showMessageDialog(null, getMessage(e));
-				//
-			} // if
-				//
+			errorOrPrintStackTraceOrShowMessageDialog(headless, e);
+			//
 		} catch (final InvocationTargetException e) {
 			//
 			final Throwable targetException = e.getTargetException();
 			//
-			final Throwable rootCause = ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException),
-					targetException, ExceptionUtils.getRootCause(e), e);
+			errorOrPrintStackTraceOrShowMessageDialog(headless, ObjectUtils.firstNonNull(
+					ExceptionUtils.getRootCause(targetException), targetException, ExceptionUtils.getRootCause(e), e));
 			//
-			if (GraphicsEnvironment.isHeadless()) {
-				//
-				if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-					LOG.error(getMessage(rootCause), rootCause);
-				} else if (rootCause != null) {
-					rootCause.printStackTrace();
-				} // if
-					//
-			} else {
-				//
-				JOptionPane.showMessageDialog(null, getMessage(rootCause));
-				//
-			} // if
-				//
 		} // try
 			//
 	}
@@ -4556,22 +4277,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 				} catch (final ParserConfigurationException | SAXException e) {
 					//
-					final Throwable rootCause = ObjectUtils.defaultIfNull(ExceptionUtils.getRootCause(e), e);
+					errorOrPrintStackTraceOrShowMessageDialog(
+							ObjectUtils.defaultIfNull(ExceptionUtils.getRootCause(e), e));
 					//
-					if (GraphicsEnvironment.isHeadless()) {
-						//
-						if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-							LOG.error(getMessage(rootCause), rootCause);
-						} else if (rootCause != null) {
-							rootCause.printStackTrace();
-						} // if
-							//
-					} else {
-						//
-						JOptionPane.showMessageDialog(null, getMessage(rootCause));
-						//
-					} // if
-						//
 				} // try
 					//
 			} // try
@@ -4745,20 +4453,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} catch (final Error e) {
 				//
-				if (GraphicsEnvironment.isHeadless()) {
-					//
-					if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-						LOG.error(getMessage(e), e);
-					} else if (e != null) {
-						e.printStackTrace();
-					} // if
-						//
-				} else {
-					//
-					JOptionPane.showMessageDialog(null, getMessage(e));
-					//
-				} // if
-					//
+				errorOrPrintStackTraceOrShowMessageDialog(e);
+				//
 			} // try
 				//
 				//
@@ -4916,20 +4612,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} catch (final IOException e) {
 				//
-				if (GraphicsEnvironment.isHeadless()) {
-					//
-					if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-						LOG.error(getMessage(e), e);
-					} else if (e != null) {
-						e.printStackTrace();
-					} // if
-						//
-				} else {
-					//
-					JOptionPane.showMessageDialog(null, getMessage(e));
-					//
-				} // if
-					//
+				errorOrPrintStackTraceOrShowMessageDialog(e);
+				//
 			} // try
 				//
 			final Collection<Entry<String, String>> entries = entries(gaKuNenBeTsuKanJiMultiMap);
@@ -5791,20 +5475,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 					} catch (final IllegalAccessException e) {
 						//
-						if (GraphicsEnvironment.isHeadless()) {
-							//
-							if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-								LOG.error(getMessage(e), e);
-							} else if (e != null) {
-								e.printStackTrace();
-							} // if
-								//
-						} else {
-							//
-							JOptionPane.showMessageDialog(null, getMessage(e));
-							//
-						} // if
-							//
+						errorOrPrintStackTraceOrShowMessageDialog(e);
+						//
 					} // try
 						//
 				} // if
@@ -5924,20 +5596,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 								//
 							} catch (final IllegalAccessException e) {
 								//
-								if (headless) {
-									//
-									if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-										LOG.error(getMessage(e), e);
-									} else if (e != null) {
-										e.printStackTrace();
-									} // if
-										//
-								} else {
-									//
-									JOptionPane.showMessageDialog(null, getMessage(e));
-									//
-								} // if
-									//
+								errorOrPrintStackTraceOrShowMessageDialog(headless, e);
+								//
 							} // try
 								//
 						} // if
@@ -6019,20 +5679,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} catch (final IOException e) {
 			//
-			if (headless) {
-				//
-				if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-					LOG.error(getMessage(e), e);
-				} else if (e != null) {
-					e.printStackTrace();
-				} // if
-					//
-			} else {
-				//
-				JOptionPane.showMessageDialog(null, getMessage(e));
-				//
-			} // if
-				//
+			errorOrPrintStackTraceOrShowMessageDialog(headless, e);
+			//
 		} finally {
 			//
 			IOUtils.closeQuietly(workbook);
@@ -6626,20 +6274,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 											//
 										} catch (final Error e) {
 											//
-											if (GraphicsEnvironment.isHeadless()) {
-												//
-												if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-													LOG.error(getMessage(e), e);
-												} else if (e != null) {
-													e.printStackTrace();
-												} // if
-													//
-											} else {
-												//
-												JOptionPane.showMessageDialog(null, getMessage(e));
-												//
-											} // if
-												//
+											errorOrPrintStackTraceOrShowMessageDialog(e);
+											//
 										} // try
 											//
 									} // if
@@ -7380,20 +7016,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 			} catch (final Exception e) {
 				//
-				if (GraphicsEnvironment.isHeadless()) {
-					//
-					if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-						LOG.error(getMessage(e), e);
-					} else if (e != null) {
-						e.printStackTrace();
-					} // if
-						//
-				} else {
-					//
-					JOptionPane.showMessageDialog(null, getMessage(e));
-					//
-				} // if
-					//
+				errorOrPrintStackTraceOrShowMessageDialog(e);
+				//
 			} // try
 				//
 		}
@@ -7689,20 +7313,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					} catch (final Throwable e) {
 						//
-						if (headless) {
-							//
-							if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-								LOG.error(getMessage(e), e);
-							} else if (e != null) {
-								e.printStackTrace();
-							} // if
-								//
-						} else {
-							//
-							JOptionPane.showMessageDialog(null, getMessage(e));
-							//
-						} // if
-							//
+						errorOrPrintStackTraceOrShowMessageDialog(headless, e);
+						//
 					} // try
 						//
 				} // if
@@ -7774,20 +7386,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 			} catch (final IOException | TemplateException e) {
 				//
-				if (GraphicsEnvironment.isHeadless()) {
-					//
-					if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-						LOG.error(getMessage(e), e);
-					} else if (e != null) {
-						e.printStackTrace();
-					} // if
-						//
-				} else {
-					//
-					JOptionPane.showMessageDialog(null, getMessage(e));
-					//
-				} // if
-					//
+				errorOrPrintStackTraceOrShowMessageDialog(e);
+				//
 			} // try
 				//
 		}
@@ -8450,20 +8050,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} catch (final IOException e) {
 			//
-			if (GraphicsEnvironment.isHeadless()) {
-				//
-				if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-					LOG.error(getMessage(e), e);
-				} else if (e != null) {
-					e.printStackTrace();
-				} // if
-					//
-			} else {
-				//
-				JOptionPane.showMessageDialog(null, getMessage(e));
-				//
-			} // if
-				//
+			errorOrPrintStackTraceOrShowMessageDialog(e);
+			//
 		} // try
 			//
 		return workbook;
@@ -9069,41 +8657,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} catch (final IllegalAccessException e) {
 			//
-			if (headless) {
-				//
-				if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-					LOG.error(getMessage(e), e);
-				} else if (e != null) {
-					e.printStackTrace();
-				} // if
-					//
-			} else {
-				//
-				JOptionPane.showMessageDialog(null, getMessage(e));
-				//
-			} // if
-				//
+			errorOrPrintStackTraceOrShowMessageDialog(headless, e);
+			//
 		} catch (final InvocationTargetException e) {
 			//
 			final Throwable targetException = e.getTargetException();
 			//
-			final Throwable rootCause = ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException),
-					targetException, ExceptionUtils.getRootCause(e), e);
+			errorOrPrintStackTraceOrShowMessageDialog(headless, ObjectUtils.firstNonNull(
+					ExceptionUtils.getRootCause(targetException), targetException, ExceptionUtils.getRootCause(e), e));
 			//
-			if (headless) {
-				//
-				if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-					LOG.error(getMessage(rootCause), rootCause);
-				} else if (rootCause != null) {
-					rootCause.printStackTrace();
-				} // if
-					//
-			} else {
-				//
-				JOptionPane.showMessageDialog(null, getMessage(rootCause));
-				//
-			} // if
-				//
 		} // try
 			//
 		final List<String> fieldNames = toList(
