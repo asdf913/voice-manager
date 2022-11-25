@@ -8514,7 +8514,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				// tbody
 				//
-			DomNodeList<DomNode> domNodes = table != null ? table.querySelectorAll("tbody") : null;
+			DomNodeList<DomNode> domNodes = querySelectorAll(table, "tbody");
 			//
 			DomNode domNode = null;
 			//
@@ -8695,6 +8695,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return workbook;
 		//
+	}
+
+	private static DomNodeList<DomNode> querySelectorAll(final DomNode instance, final String selectors) {
+		return instance != null ? instance.querySelectorAll(selectors) : null;
 	}
 
 	private static DomNodeList<DomNode> getChildNodes(final DomNode instance) {
