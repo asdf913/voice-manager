@@ -537,10 +537,17 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static void errorOrPrintStackTraceOrShowMessageDialog(final boolean headless, final Throwable throwable) {
 		//
+		errorOrPrintStackTraceOrShowMessageDialog(headless, LOG, throwable);
+		//
+	}
+
+	private static void errorOrPrintStackTraceOrShowMessageDialog(final boolean headless, final Logger logger,
+			final Throwable throwable) {
+		//
 		if (headless) {
 			//
-			if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-				LOG.error(getMessage(throwable), throwable);
+			if (logger != null && !LoggerUtil.isNOPLogger(logger)) {
+				logger.error(getMessage(throwable), throwable);
 			} else if (throwable != null) {
 				throwable.printStackTrace();
 			} // if
@@ -927,12 +934,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				if (GraphicsEnvironment.isHeadless()) {
 					//
-					if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-						LOG.error(getMessage(e), e);
-					} else if (e != null) {
-						e.printStackTrace();
-					} // if
-						//
+					errorOrPrintStackTraceOrShowMessageDialog(true, e);
+					//
 				} else {
 					//
 					if (jPanelWarning == null) {
@@ -4100,16 +4103,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 						if (headless) {
 							//
-							if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-								//
-								LOG.error(getMessage(e), e);
-								//
-							} else if (e != null) {
-								//
-								e.printStackTrace();
-								//
-							} // if
-								//
+							errorOrPrintStackTraceOrShowMessageDialog(headless, e);
+							//
 						} else {
 							//
 							if (tmImportException != null) {
@@ -5371,16 +5366,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				if (headless) {
 					//
-					if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-						//
-						LOG.error(getMessage(e), e);
-						//
-					} else if (e != null) {
-						//
-						e.printStackTrace();
-						//
-					} // if
-						//
+					errorOrPrintStackTraceOrShowMessageDialog(headless, e);
+					//
 				} else {
 					//
 					if (tmImportException != null) {
