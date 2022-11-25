@@ -1284,7 +1284,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		Field fieldTitle = null;
 		//
-		for (int i = 0; pages != null && i < pages.size(); i++) {
+		for (int i = 0; i < IterableUtils.size(pages); i++) {
 			//
 			if ((page = get(pages, i)) == null) {
 				//
@@ -1903,7 +1903,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				filter(testAndApply(Objects::nonNull, yomis, Arrays::stream, null), y -> Objects.equals(name(y),
 						getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.yomi"))));
 		//
-		final int size = yomiList != null ? yomiList.size() : 0;
+		final int size = IterableUtils.size(yomiList);
 		//
 		if (size == 1) {
 			//
@@ -2779,7 +2779,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		Map<String, String> map = null;
 		//
-		for (int i = 0; pairs != null && i < pairs.size(); i++) {
+		for (int i = 0; i < IterableUtils.size(pairs); i++) {
 			//
 			if ((pair = get(pairs, i)) == null) {
 				//
@@ -4593,7 +4593,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				setText(jlListNames, writeValueAsString(om, list));
 				//
-				setText(jlListNameCount, list != null ? Integer.toString(list.size()) : null);
+				setText(jlListNameCount, Integer.toString(IterableUtils.size(list)));
 				//
 			} catch (final Exception e) {
 				//
@@ -5537,7 +5537,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			List<String> strings = null;
 			//
-			for (int i = 0; fs != null && i < fs.size(); i++) {
+			for (int i = 0; i < IterableUtils.size(fs); i++) {
 				//
 				if ((f = get(fs, i)) == null) {
 					//
