@@ -521,24 +521,30 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} catch (final IOException e) {
 			//
-			if (GraphicsEnvironment.isHeadless()) {
-				//
-				if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-					LOG.error(getMessage(e), e);
-				} else if (e != null) {
-					e.printStackTrace();
-				} // if
-					//
-			} else {
-				//
-				JOptionPane.showMessageDialog(null, getMessage(e));
-				//
-			} // if
-				//
+			errorOrPrintStackTraceOrShowMessageDialog(e);
+			//
 		} // try
 			//
 		return result;
 		//
+	}
+
+	private static void errorOrPrintStackTraceOrShowMessageDialog(final Throwable throwable) {
+		//
+		if (GraphicsEnvironment.isHeadless()) {
+			//
+			if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
+				LOG.error(getMessage(throwable), throwable);
+			} else if (throwable != null) {
+				throwable.printStackTrace();
+			} // if
+				//
+		} else {
+			//
+			JOptionPane.showMessageDialog(null, getMessage(throwable));
+			//
+		} // if
+			//
 	}
 
 	private static Integer getTempFileMinimumPrefixLength(final org.apache.bcel.classfile.Method method) {
@@ -997,20 +1003,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} catch (final NoSuchFieldException e) {
 			//
-			if (GraphicsEnvironment.isHeadless()) {
-				//
-				if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-					LOG.error(getMessage(e), e);
-				} else if (e != null) {
-					e.printStackTrace();
-				} // if
-					//
-			} else {
-				//
-				JOptionPane.showMessageDialog(null, getMessage(e));
-				//
-			} // if
-				//
+			errorOrPrintStackTraceOrShowMessageDialog(e);
+			//
 		} // try
 			//
 		if (layoutManager instanceof MigLayout) {
@@ -1155,20 +1149,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} catch (final IllegalAccessException e) {
 			//
-			if (GraphicsEnvironment.isHeadless()) {
-				//
-				if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-					LOG.error(getMessage(e), e);
-				} else if (e != null) {
-					e.printStackTrace();
-				} // if
-					//
-			} else {
-				//
-				JOptionPane.showMessageDialog(null, getMessage(e));
-				//
-			} // if
-				//
+			errorOrPrintStackTraceOrShowMessageDialog(e);
+			//
 		} // try
 			//
 		return speechApi;
@@ -1203,20 +1185,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} catch (final FailingHttpStatusCodeException | IOException e) {
 			//
-			if (GraphicsEnvironment.isHeadless()) {
-				//
-				if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-					LOG.error(getMessage(e), e);
-				} else if (e != null) {
-					e.printStackTrace();
-				} // if
-					//
-			} else {
-				//
-				JOptionPane.showMessageDialog(null, getMessage(e));
-				//
-			} // if
-				//
+			errorOrPrintStackTraceOrShowMessageDialog(e);
+			//
 		} // try
 			//
 		return null;
@@ -1262,20 +1232,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					} catch (final IOException | URISyntaxException e) {
 						//
-						if (GraphicsEnvironment.isHeadless()) {
-							//
-							if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-								LOG.error(getMessage(e), e);
-							} else if (e != null) {
-								e.printStackTrace();
-							} // if
-								//
-						} else {
-							//
-							JOptionPane.showMessageDialog(null, getMessage(e));
-							//
-						} // if
-							//
+						errorOrPrintStackTraceOrShowMessageDialog(e);
+						//
 					} // try
 						//
 				}
@@ -1427,20 +1385,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} catch (final Error e) {
 			//
-			if (GraphicsEnvironment.isHeadless()) {
-				//
-				if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-					LOG.error(getMessage(e), e);
-				} else if (e != null) {
-					e.printStackTrace();
-				} // if
-					//
-			} else {
-				//
-				JOptionPane.showMessageDialog(null, getMessage(e));
-				//
-			} // if
-				//
+			errorOrPrintStackTraceOrShowMessageDialog(e);
+			//
 		} // try
 			//
 			// Voice Id
@@ -1729,6 +1675,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 				} catch (final IllegalAccessException e) {
 					//
+					// TODO
+					//
 					if (headless) {
 						//
 						if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
@@ -1836,20 +1784,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} catch (final IllegalAccessException e) {
 			//
-			if (GraphicsEnvironment.isHeadless()) {
-				//
-				if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-					LOG.error(getMessage(e), e);
-				} else if (e != null) {
-					e.printStackTrace();
-				} // if
-					//
-			} else {
-				//
-				JOptionPane.showMessageDialog(null, getMessage(e));
-				//
-			} // if
-				//
+			errorOrPrintStackTraceOrShowMessageDialog(e);
+			//
 		} // try
 			//
 		if (booleans != null) {
@@ -1881,22 +1817,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			gaKuNenBeTsuKanJiList = keySet(getGaKuNenBeTsuKanJiMultimap());
 			//
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			//
-			if (GraphicsEnvironment.isHeadless()) {
-				//
-				if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-					LOG.error(getMessage(e), e);
-				} else if (e != null) {
-					e.printStackTrace();
-				} // if
-					//
-			} else {
-				//
-				JOptionPane.showMessageDialog(null, getMessage(e));
-				//
-			} // if
-				//
+			errorOrPrintStackTraceOrShowMessageDialog(e);
+			//
 		} // try
 			//
 		panel.add(new JComboBox<>(cbmGaKuNenBeTsuKanJi = testAndApply(Objects::nonNull,
@@ -2661,6 +2585,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} catch (final IllegalAccessException e) {
 				//
+				// TODO
+				//
 				if (headless) {
 					//
 					if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
@@ -2731,20 +2657,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} catch (final IOException e) {
 			//
-			if (GraphicsEnvironment.isHeadless()) {
-				//
-				if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-					LOG.error(getMessage(e), e);
-				} else if (e != null) {
-					e.printStackTrace();
-				} // if
-					//
-			} else {
-				//
-				JOptionPane.showMessageDialog(null, getMessage(e));
-				//
-			} // if
-				//
+			errorOrPrintStackTraceOrShowMessageDialog(e);
+			//
 		} // try
 			//
 		return getJlptLevels(httpURLConnection);
@@ -2761,20 +2675,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} catch (final IOException e) {
 			//
-			if (GraphicsEnvironment.isHeadless()) {
-				//
-				if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-					LOG.error(getMessage(e), e);
-				} else if (e != null) {
-					e.printStackTrace();
-				} // if
-					//
-			} else {
-				//
-				JOptionPane.showMessageDialog(null, getMessage(e));
-				//
-			} // if
-				//
+			errorOrPrintStackTraceOrShowMessageDialog(e);
+			//
 		} // try
 			//
 		return parseJlptPageHtml(html);
@@ -2850,6 +2752,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 												return invoke(m, a);
 												//
 											} catch (final IllegalAccessException e) {
+												//
+												// TODO
 												//
 												if (headless) {
 													//
@@ -2963,20 +2867,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 			} catch (final Error e) {
 				//
-				if (GraphicsEnvironment.isHeadless()) {
-					//
-					if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-						LOG.error(getMessage(e), e);
-					} else if (e != null) {
-						e.printStackTrace();
-					} // if
-						//
-				} else {
-					//
-					JOptionPane.showMessageDialog(null, getMessage(e));
-					//
-				} // if
-					//
+				errorOrPrintStackTraceOrShowMessageDialog(e);
+				//
 			} // try
 				//
 			return VoiceManager.getListCellRendererComponent(listCellRenderer, list,
@@ -3230,6 +3122,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} catch (final IllegalAccessException | NoSuchMethodException e) {
 			//
+			// TODO
+			//
 			if (headless) {
 				//
 				if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
@@ -3273,6 +3167,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						invoke(method, instance, text, voiceId, rate, volume);
 						//
 					} catch (final IllegalAccessException e) {
+						//
+						// TODO
 						//
 						if (headless) {
 							//
@@ -3425,6 +3321,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 					} catch (final IOException e) {
 						//
+						// TODO
+						//
 						if (headless) {
 							//
 							if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
@@ -3473,6 +3371,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						} // if
 							//
 					} catch (final IOException | BaseException | IllegalAccessException e) {
+						//
+						// TODO
 						//
 						if (headless) {
 							//
@@ -3596,6 +3496,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						x -> browse(Desktop.getDesktop(), x));
 				//
 			} catch (final IOException e) {
+				//
+				// TODO
 				//
 				if (headless) {
 					//
@@ -3827,6 +3729,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 			} catch (final IOException | IllegalAccessException | TemplateException e) {
 				//
+				// TODO
+				//
 				if (headless) {
 					//
 					if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
@@ -3888,6 +3792,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} catch (final IOException e) {
 					//
+					// TODO
+					//
 					if (headless) {
 						//
 						if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
@@ -3940,6 +3846,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 				} catch (final IOException | InvalidFormatException | GeneralSecurityException e) {
 					//
+					// TODO
+					//
 					if (headless) {
 						//
 						if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
@@ -3974,6 +3882,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				setText(tfExportFile, getAbsolutePath(file));
 				//
 			} catch (final IOException e) {
+				//
+				// TODO
 				//
 				if (headless) {
 					//

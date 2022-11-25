@@ -256,7 +256,8 @@ class VoiceManagerTest {
 			METHOD_APPEND_CHAR, METHOD_GET_PROVIDER_PLATFORM, METHOD_OPEN_CONNECTION, METHOD_GET_RESOURCE_AS_STREAM,
 			METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH, METHOD_GET_ATTRIBUTES, METHOD_GET_LENGTH, METHOD_ITEM,
 			METHOD_GET_OS_VERSION_INFO_EX_MAP, METHOD_CREATE_JLPT_SHEET, METHOD_GET_NEXT_ELEMENT_SIBLING,
-			METHOD_CREATE_JO_YO_KAN_JI_WORKBOOK_BY_TBODY, METHOD_CREATE_JO_YO_KAN_JI_WORKBOOK_BY_DOM_NODES = null;
+			METHOD_CREATE_JO_YO_KAN_JI_WORKBOOK_BY_TBODY, METHOD_CREATE_JO_YO_KAN_JI_WORKBOOK_BY_DOM_NODES,
+			METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_SHOW_MESSAGE_DIALOG = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -723,6 +724,9 @@ class VoiceManagerTest {
 		//
 		(METHOD_CREATE_JO_YO_KAN_JI_WORKBOOK_BY_DOM_NODES = clz.getDeclaredMethod("createJoYoKanJiWorkbookByDomNodes",
 				List.class)).setAccessible(true);
+		//
+		(METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_SHOW_MESSAGE_DIALOG = clz
+				.getDeclaredMethod("errorOrPrintStackTraceOrShowMessageDialog", Throwable.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -6215,6 +6219,26 @@ class VoiceManagerTest {
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
+	}
+
+	@Test
+	void testErrorOrPrintStackTraceOrShowMessageDialog() {
+		//
+		if (GraphicsEnvironment.isHeadless()) {
+			//
+			Assertions.assertDoesNotThrow(() -> errorOrPrintStackTraceOrShowMessageDialog(null));
+			//
+		} // if
+			//
+	}
+
+	private static void errorOrPrintStackTraceOrShowMessageDialog(final Throwable throwable) throws Throwable {
+		try {
+			METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_SHOW_MESSAGE_DIALOG.invoke(null, throwable);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+
 	}
 
 	@Test
