@@ -99,7 +99,6 @@ import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
-import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathFactory;
 
 import org.apache.bcel.classfile.FieldOrMethod;
@@ -6740,8 +6739,7 @@ class VoiceManagerTest {
 		// org.springframework.context.support.VoiceManager$ExportTask.setPluginHref(javax.xml.xpath.XPath,org.w3c.dom.Node,java.util.regex.Pattern,java.lang.String)
 		//
 		final Method setPluginHref = CLASS_EXPORT_TASK != null
-				? CLASS_EXPORT_TASK.getDeclaredMethod("setPluginHref", XPath.class, Node.class, Pattern.class,
-						String.class)
+				? CLASS_EXPORT_TASK.getDeclaredMethod("setPluginHref", CLASS_OBJECT_MAP, String.class)
 				: null;
 		//
 		if (setPluginHref != null) {
@@ -6750,7 +6748,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(invoke(setPluginHref, null, null, null, null, null));
+		Assertions.assertNull(invoke(setPluginHref, null, null, null));
 		//
 		// org.springframework.context.support.VoiceManager$ExportTask.setVariable(org.springframework.expression.EvaluationContext,java.lang.String,java.lang.Object)
 		//

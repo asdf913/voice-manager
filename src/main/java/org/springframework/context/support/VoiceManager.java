@@ -7191,8 +7191,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					Voice voice, temp = null;
 					//
-					Pattern pattern = null;
-					//
 					for (final Entry<String, Voice> entry : voices.entrySet()) {
 						//
 						if ((voice = getValue(entry)) == null || (pageCloned = cloneNode(page, true)) == null) {
@@ -7220,9 +7218,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 						// plugin
 						//
-						setPluginHref(xp, pageCloned,
-								pattern = ObjectUtils.getIfNull(pattern, () -> Pattern.compile("(\\w+:)?href")),
-								getKey(entry));
+						if (objectMap != null && !objectMap.containsObject(Pattern.class)) {
+							//
+							ObjectMap.setObject(objectMap, Pattern.class, Pattern.compile("(\\w+:)?href"));
+							//
+						} // if
+							//
+						setPluginHref(objectMap, getKey(entry));
 						//
 						appendChild(parentNode, pageCloned);
 						//
@@ -7409,17 +7411,20 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			}
 		}
 
-		private static void setPluginHref(final XPath xp, final Node node, final Pattern pattern, final String key)
-				throws XPathExpressionException {
+		private static void setPluginHref(final ObjectMap objectMap, final String key) throws XPathExpressionException {
 			//
 			final NodeList plugins = cast(NodeList.class,
-					evaluate(xp, "./*[local-name()='frame']/*[local-name()='plugin']", node, XPathConstants.NODESET));
+					evaluate(ObjectMap.getObject(objectMap, XPath.class),
+							"./*[local-name()='frame']/*[local-name()='plugin']",
+							ObjectMap.getObject(objectMap, Node.class), XPathConstants.NODESET));
 			//
 			Node attribute = null;
 			//
 			NamedNodeMap attributes = null;
 			//
 			StringBuilder sb = null;
+			//
+			final Pattern pattern = ObjectMap.getObject(objectMap, Pattern.class);
 			//
 			for (int i = 0; i < getLength(plugins); i++) {
 				//
