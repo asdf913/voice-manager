@@ -7458,9 +7458,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 						clear(sb = ObjectUtils.getIfNull(sb, StringBuilder::new));
 						//
-						attribute.setNodeValue(VoiceManager.toString(append(append(
-								append(sb, embedAudioInPresentation && StringUtils.isNotBlank(folder) ? folder : ".."),
-								'/'), key)));
+						attribute
+								.setNodeValue(
+										VoiceManager.toString(append(
+												append(append(sb,
+														Boolean.logicalAnd(embedAudioInPresentation,
+																StringUtils.isNotBlank(folder)) ? folder : ".."),
+														'/'),
+												key)));
 						//
 					} // if
 						//
