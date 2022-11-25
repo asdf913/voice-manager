@@ -8474,7 +8474,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			for (int i = 0; i < IterableUtils.size(h3s); i++) {
 				//
-				if ((domElement = get(h3s, i)) == null || !Objects.equals(getTextContent(domElement), "本表[編集]")) {
+				if (!Objects.equals(getTextContent(domElement = get(h3s, i)), "本表[編集]")) {
 					//
 					continue;
 					//
