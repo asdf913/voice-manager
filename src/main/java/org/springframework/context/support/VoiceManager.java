@@ -2721,42 +2721,17 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 												//
 											} catch (final IllegalAccessException e) {
 												//
-												if (headless) {
-													//
-													if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-														LOG.error(getMessage(e), e);
-													} else if (e != null) {
-														e.printStackTrace();
-													} // if
-														//
-												} else {
-													//
-													JOptionPane.showMessageDialog(null, getMessage(e));
-													//
-												} // if
-													//
+												VoiceManager.errorOrPrintStackTraceOrShowMessageDialog(headless, e);
+												//
 											} catch (final InvocationTargetException e) {
 												//
 												final Throwable targetException = e.getTargetException();
 												//
-												final Throwable rootCause = ObjectUtils.firstNonNull(
-														ExceptionUtils.getRootCause(targetException), targetException,
-														ExceptionUtils.getRootCause(e), e);
+												VoiceManager.errorOrPrintStackTraceOrShowMessageDialog(headless,
+														ObjectUtils.firstNonNull(
+																ExceptionUtils.getRootCause(targetException),
+																targetException, ExceptionUtils.getRootCause(e), e));
 												//
-												if (headless) {
-													//
-													if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-														LOG.error(getMessage(rootCause), rootCause);
-													} else if (rootCause != null) {
-														rootCause.printStackTrace();
-													} // if
-														//
-												} else {
-													//
-													JOptionPane.showMessageDialog(null, getMessage(rootCause));
-													//
-												} // if
-													//
 											} // try
 												//
 										} // if
