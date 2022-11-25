@@ -258,7 +258,7 @@ class VoiceManagerTest {
 			METHOD_GET_OS_VERSION_INFO_EX_MAP, METHOD_CREATE_JLPT_SHEET, METHOD_GET_NEXT_ELEMENT_SIBLING,
 			METHOD_CREATE_JO_YO_KAN_JI_WORKBOOK_BY_TBODY, METHOD_CREATE_JO_YO_KAN_JI_WORKBOOK_BY_DOM_NODES,
 			METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_SHOW_MESSAGE_DIALOG1,
-			METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_SHOW_MESSAGE_DIALOG2 = null;
+			METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_SHOW_MESSAGE_DIALOG2, METHOD_SET_VISIBLE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -732,6 +732,8 @@ class VoiceManagerTest {
 		(METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_SHOW_MESSAGE_DIALOG2 = clz
 				.getDeclaredMethod("errorOrPrintStackTraceOrShowMessageDialog", Boolean.TYPE, Throwable.class))
 				.setAccessible(true);
+		//
+		(METHOD_SET_VISIBLE = clz.getDeclaredMethod("setVisible", Component.class, Boolean.TYPE)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -6253,6 +6255,21 @@ class VoiceManagerTest {
 			throws Throwable {
 		try {
 			METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_SHOW_MESSAGE_DIALOG2.invoke(null, headless, throwable);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetVisible() {
+		//
+		Assertions.assertDoesNotThrow(() -> setVisible(new JTextField(), false));
+		//
+	}
+
+	private static void setVisible(final Component instance, final boolean b) throws Throwable {
+		try {
+			METHOD_SET_VISIBLE.invoke(null, instance, b);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

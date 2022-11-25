@@ -864,10 +864,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				final JTabbedPane jtp = cast(JTabbedPane.class, getSource(evt));
 				//
-				if (jtp != null && jPanelImportResult != null) {
+				if (jtp != null) {
 					//
-					jPanelImportResult
-							.setVisible(ArrayUtils.contains(TAB_TITLE_IMPORTS, jtp.getTitleAt(jtp.getSelectedIndex())));
+					setVisible(jPanelImportResult,
+							ArrayUtils.contains(TAB_TITLE_IMPORTS, jtp.getTitleAt(jtp.getSelectedIndex())));
 					//
 				} // if
 					//
@@ -1034,6 +1034,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
+	}
+
+	private static void setVisible(final Component instance, final boolean b) {
+		if (instance != null) {
+			instance.setVisible(b);
+		}
 	}
 
 	private static IValue0<Boolean> IsWindows10OrGreater() {
@@ -2712,7 +2718,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 													} else if (e != null) {
 														e.printStackTrace();
 													} // if
-													//
+														//
 												} else {
 													//
 													JOptionPane.showMessageDialog(null, getMessage(e));
@@ -8968,7 +8974,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		instance.pack();
 		//
-		instance.setVisible(true);
+		setVisible(instance, true);
 		//
 	}
 
