@@ -8461,10 +8461,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		Workbook workbook = null;
 		//
-		Sheet sheet = null;
-		//
-		Row row = null;
-		//
 		try (final WebClient webClient = new WebClient()) {
 			//
 			setJavaScriptEnabled(webClient.getOptions(), false);
@@ -8514,7 +8510,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				// tbody
 				//
-			DomNodeList<DomNode> domNodes = querySelectorAll(table, "tbody");
+			final DomNodeList<DomNode> domNodes = querySelectorAll(table, "tbody");
 			//
 			DomNode domNode = null;
 			//
@@ -8540,134 +8536,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 			} // for
 				//
-			domNodes = getChildNodes(tbody);
+			workbook = createJoYoKanJiWorkbookByTBody(tbody);
 			//
-			DomNodeList<DomNode> tds = null;
-			//
-			String textContent = null;
-			//
-			IntIntMap intIntMap = null;
-			//
-			final Pattern pattern1 = Pattern.compile("(\\d+)([^\\d]+)");
-			//
-			Matcher matcher = null;
-			//
-			final IH ih = new IH();
-			//
-			for (int i = 0; i < IterableUtils.size(domNodes); i++) {
-				//
-				if ((domNode = get(domNodes, i)) == null || domNode.getNodeType() != Node.ELEMENT_NODE
-						|| (tds = getChildNodes(domNode)) == null) {
-					//
-					continue;
-					//
-				} // if
-					//
-				for (int j = 0; j < IterableUtils.size(tds); j++) {
-					//
-					if ((domNode = get(tds, j)) == null || domNode.getNodeType() != Node.ELEMENT_NODE) {
-						//
-						continue;
-						//
-					} // if
-						//
-					if (matches(matcher = matcher(pattern1, textContent = getTextContent(domNode)))
-							&& (intIntMap = ObjectUtils.getIfNull(intIntMap,
-									() -> Reflection.newProxy(IntIntMap.class, ih))) != null
-							&& !intIntMap.containsKey(j)) {
-						//
-						intIntMap.setInt(j, matcher.groupCount());
-						//
-					} // if
-						//
-				} // for
-					//
-			} // for
-				//
-			Pattern pattern2 = null;
-			//
-			int groupCount = 0;
-			//
-			for (int i = 0; i < IterableUtils.size(domNodes); i++) {
-				//
-				if ((domNode = get(domNodes, i)) == null || domNode.getNodeType() != Node.ELEMENT_NODE
-						|| (tds = getChildNodes(domNode)) == null) {
-					//
-					continue;
-					//
-				} // if
-					//
-				if (sheet == null) {
-					//
-					sheet = createSheet(workbook = ObjectUtils.getIfNull(workbook, XSSFWorkbook::new));
-					//
-				} // if
-					//
-				if (sheet != null && (row = sheet.createRow(sheet.getLastRowNum() + 1)) == null) {
-					//
-					continue;
-					//
-				} // if
-					//
-				for (int j = 0; j < IterableUtils.size(tds); j++) {
-					//
-					if ((domNode = get(tds, j)) == null || domNode.getNodeType() != Node.ELEMENT_NODE) {
-						//
-						continue;
-						//
-					} // if
-						//
-					if ((matcher = matcher(
-							pattern2 = ObjectUtils.getIfNull(pattern2, () -> Pattern.compile("\\[\\d+]")),
-							textContent = getTextContent(domNode))) != null) {
-						//
-						textContent = matcher.replaceAll("");
-						//
-					} // if
-						//
-					if (intIntMap != null && intIntMap.containsKey(j)) {
-						//
-						if (Objects.equals("th", getNodeName(domNode))) {
-							//
-							for (int k = 0; k < intIntMap.getInt(j); k++) {
-								//
-								setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)),
-										StringUtils.trim(textContent));
-								//
-							} // for
-								//
-						} else if (intIntMap.getInt(j) > 0
-								&& matches(matcher = matcher(pattern1, textContent = getTextContent(domNode)))
-								&& (groupCount = matcher.groupCount()) > 0) {
-							//
-							for (int k = 1; k <= groupCount; k++) {
-								//
-								setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)), matcher.group(k));
-								//
-							} // for
-								//
-						} else {
-							//
-							setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)), textContent);
-							//
-							for (int k = 1; k < intIntMap.getInt(j); k++) {
-								//
-								setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)), "");
-								//
-							} // for
-								//
-						} // if
-							//
-					} else {
-						//
-						setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)), StringUtils.trim(textContent));
-						//
-					} // if
-						//
-				} // for
-					//
-			} // for
-				//
 		} catch (final IOException e) {
 			//
 			if (GraphicsEnvironment.isHeadless()) {
@@ -8686,7 +8556,163 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // try
 			//
-		if (sheet != null && row != null) {
+		return workbook;
+		//
+	}
+
+	private static Workbook createJoYoKanJiWorkbookByTBody(final DomNode tbody) {
+		//
+		DomNode domNode = null;
+		//
+		final DomNodeList<DomNode> domNodes = getChildNodes(tbody);
+		//
+		DomNodeList<DomNode> tds = null;
+		//
+		IntIntMap intIntMap = null;
+		//
+		final Pattern pattern1 = Pattern.compile("(\\d+)([^\\d]+)");
+		//
+		Matcher matcher = null;
+		//
+		final IH ih = new IH();
+		//
+		for (int i = 0; i < IterableUtils.size(domNodes); i++) {
+			//
+			if ((domNode = get(domNodes, i)) == null || domNode.getNodeType() != Node.ELEMENT_NODE
+					|| (tds = getChildNodes(domNode)) == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			for (int j = 0; j < IterableUtils.size(tds); j++) {
+				//
+				if ((domNode = get(tds, j)) == null || domNode.getNodeType() != Node.ELEMENT_NODE) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if (matches(matcher = matcher(pattern1, getTextContent(domNode))) && (intIntMap = ObjectUtils
+						.getIfNull(intIntMap, () -> Reflection.newProxy(IntIntMap.class, ih))) != null
+						&& !intIntMap.containsKey(j)) {
+					//
+					intIntMap.setInt(j, matcher.groupCount());
+					//
+				} // if
+					//
+			} // for
+				//
+		} // for
+			//
+		return createJoYoKanJiWorkbookByDomNodes(domNodes);
+		//
+	}
+
+	private static Workbook createJoYoKanJiWorkbookByDomNodes(final List<DomNode> domNodes) {
+		//
+		Workbook workbook = null;
+		//
+		Sheet sheet = null;
+		//
+		Row row = null;
+		//
+		DomNode domNode = null;
+		//
+		DomNodeList<DomNode> tds = null;
+		//
+		String textContent = null;
+		//
+		IntIntMap intIntMap = null;
+		//
+		final Pattern pattern1 = Pattern.compile("(\\d+)([^\\d]+)");
+		//
+		Matcher matcher = null;
+		//
+		Pattern pattern2 = null;
+		//
+		int groupCount = 0;
+		//
+		for (int i = 0; i < IterableUtils.size(domNodes); i++) {
+			//
+			if ((domNode = get(domNodes, i)) == null || domNode.getNodeType() != Node.ELEMENT_NODE
+					|| (tds = getChildNodes(domNode)) == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			if (sheet == null) {
+				//
+				sheet = createSheet(workbook = ObjectUtils.getIfNull(workbook, XSSFWorkbook::new));
+				//
+			} // if
+				//
+			if (sheet != null && (row = sheet.createRow(sheet.getLastRowNum() + 1)) == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			for (int j = 0; j < IterableUtils.size(tds); j++) {
+				//
+				if ((domNode = get(tds, j)) == null || domNode.getNodeType() != Node.ELEMENT_NODE) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if ((matcher = matcher(pattern2 = ObjectUtils.getIfNull(pattern2, () -> Pattern.compile("\\[\\d+]")),
+						textContent = getTextContent(domNode))) != null) {
+					//
+					textContent = matcher.replaceAll("");
+					//
+				} // if
+					//
+				if (intIntMap != null && intIntMap.containsKey(j)) {
+					//
+					if (Objects.equals("th", getNodeName(domNode))) {
+						//
+						for (int k = 0; k < intIntMap.getInt(j); k++) {
+							//
+							setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)),
+									StringUtils.trim(textContent));
+							//
+						} // for
+							//
+					} else if (intIntMap.getInt(j) > 0
+							&& matches(matcher = matcher(pattern1, textContent = getTextContent(domNode)))
+							&& (groupCount = matcher.groupCount()) > 0) {
+						//
+						for (int k = 1; k <= groupCount; k++) {
+							//
+							setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)), matcher.group(k));
+							//
+						} // for
+							//
+					} else {
+						//
+						setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)), textContent);
+						//
+						for (int k = 1; k < intIntMap.getInt(j); k++) {
+							//
+							setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)), "");
+							//
+						} // for
+							//
+					} // if
+						//
+				} else {
+					//
+					setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)), StringUtils.trim(textContent));
+					//
+				} // if
+					//
+			} // for
+				//
+		} // for
+			//
+		if (sheet != null && row != null && sheet.getFirstRowNum() < sheet.getLastRowNum()) {
 			//
 			sheet.setAutoFilter(new CellRangeAddress(sheet.getFirstRowNum(), sheet.getLastRowNum() - 1,
 					row.getFirstCellNum(), row.getLastCellNum() - 1));
