@@ -6588,11 +6588,11 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(invoke(showPharse, null, this.instance, Fraction.ZERO));
 		//
-		// org.springframework.context.support.VoiceManager$ExportTask.generateOdfPresentationDocuments(java.io.InputStream,com.google.common.collect.Table)
+		// org.springframework.context.support.VoiceManager$ExportTask.generateOdfPresentationDocuments(java.io.InputStream,boolean,com.google.common.collect.Table)
 		//
 		final Method generateOdfPresentationDocuments = CLASS_EXPORT_TASK != null
 				? CLASS_EXPORT_TASK.getDeclaredMethod("generateOdfPresentationDocuments", InputStream.class,
-						Table.class)
+						Boolean.TYPE, Table.class)
 				: null;
 		//
 		if (generateOdfPresentationDocuments != null) {
@@ -6601,10 +6601,10 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(invoke(generateOdfPresentationDocuments, null, null, null));
+		Assertions.assertNull(invoke(generateOdfPresentationDocuments, null, null, Boolean.TRUE, null));
 		//
 		Assertions.assertThrows(InvocationTargetException.class, () -> invoke(generateOdfPresentationDocuments, null,
-				null, ImmutableTable.of(EMPTY, EMPTY, new Voice())));
+				null, Boolean.TRUE, ImmutableTable.of(EMPTY, EMPTY, new Voice())));
 		//
 		// org.springframework.context.support.VoiceManager$ExportTask.newXPath(javax.xml.xpath.XPathFactory)
 		//
@@ -6736,10 +6736,11 @@ class VoiceManagerTest {
 			//
 		Assertions.assertNull(invoke(replaceText, null, (Object) null));
 		//
-		// org.springframework.context.support.VoiceManager$ExportTask.setPluginHref(javax.xml.xpath.XPath,org.w3c.dom.Node,java.util.regex.Pattern,java.lang.String)
+		// org.springframework.context.support.VoiceManager$ExportTask.setPluginHref(org.springframework.context.support.VoiceManager$ObjectMap,java.lang.String,boolean,java.lang.String)
 		//
 		final Method setPluginHref = CLASS_EXPORT_TASK != null
-				? CLASS_EXPORT_TASK.getDeclaredMethod("setPluginHref", CLASS_OBJECT_MAP, String.class)
+				? CLASS_EXPORT_TASK.getDeclaredMethod("setPluginHref", CLASS_OBJECT_MAP, String.class, Boolean.TYPE,
+						String.class)
 				: null;
 		//
 		if (setPluginHref != null) {
@@ -6748,7 +6749,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(invoke(setPluginHref, null, null, null));
+		Assertions.assertNull(invoke(setPluginHref, null, null, null, Boolean.TRUE, null));
 		//
 		// org.springframework.context.support.VoiceManager$ExportTask.setVariable(org.springframework.expression.EvaluationContext,java.lang.String,java.lang.Object)
 		//

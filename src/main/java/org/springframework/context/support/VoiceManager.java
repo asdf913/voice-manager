@@ -239,6 +239,8 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import org.zeroturnaround.zip.FileSource;
+import org.zeroturnaround.zip.ZipEntrySource;
 import org.zeroturnaround.zip.ZipUtil;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
@@ -357,8 +359,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			btnCopyHiragana, btnCopyKatakana, cbUseTtsVoice, btnExecute, btnImportFileTemplate, btnImport,
 			btnImportWithinFolder, cbOverMp3Title, cbOrdinalPositionAsFileNamePrefix, btnExport, cbExportHtml,
 			cbExportListHtml, cbExportHtmlAsZip, cbExportHtmlRemoveAfterZip, cbExportListSheet, cbExportJlptSheet,
-			cbExportPresentation, cbImportFileTemplateGenerateBlankRow, cbJlptAsFolder, btnExportCopy, btnExportBrowse,
-			btnDllPathCopy, btnSpeechRateSlower, btnSpeechRateNormal, btnSpeechRateFaster = null;
+			cbExportPresentation, cbEmbedAudioInPresentation, cbImportFileTemplateGenerateBlankRow, cbJlptAsFolder,
+			btnExportCopy, btnExportBrowse, btnDllPathCopy, btnSpeechRateSlower, btnSpeechRateNormal,
+			btnSpeechRateFaster = null;
 
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
@@ -2418,7 +2421,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		cbExportPresentation.setSelected(Boolean.parseBoolean(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.exportPresentation")));
 		//
-		panel.add(new JLabelLink("https://www.libreoffice.org/", "Libre Office"), WRAP);
+		panel.add(cbEmbedAudioInPresentation = new JCheckBox("Emded Audio In Presentation"),
+				String.format("%1$s,span %2$s", WRAP, 3));
+		//
+		cbEmbedAudioInPresentation.setSelected(Boolean.parseBoolean(getProperty(propertyResolver,
+				"org.springframework.context.support.VoiceManager.embedAudioInPresentation")));
 		//
 		panel.add(new JLabel(), String.format("span %1$s", 4));
 		//
@@ -3408,6 +3415,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					bm.setBoolean("jlptAsFolder", isSelected(cbJlptAsFolder));
 					//
 					bm.setBoolean(EXPORT_PRESENTATION, isSelected(cbExportPresentation));
+					//
+					bm.setBoolean("embedAudioInPresentation", isSelected(cbEmbedAudioInPresentation));
 					//
 				} // if
 					//
@@ -6871,7 +6880,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 		private NumberFormat percentNumberFormat = null;
 
-		private boolean overMp3Title = false, ordinalPositionAsFileNamePrefix = false, exportPresentation = false;
+		private boolean overMp3Title = false, ordinalPositionAsFileNamePrefix = false, exportPresentation = false,
+				embedAudioInPresentation = false;
 
 		private VoiceManager voiceManager = null;
 
@@ -7001,7 +7011,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					try (final InputStream is = getResourceAsStream(VoiceManager.class, exportPresentationTemplate)) {
 						//
-						generateOdfPresentationDocuments(is, voiceFileNames);
+						generateOdfPresentationDocuments(is, embedAudioInPresentation, voiceFileNames);
 						//
 					} // try
 						//
@@ -7120,7 +7130,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		}
 
 		private static void generateOdfPresentationDocuments(final InputStream is,
-				final Table<String, String, Voice> table) throws Exception {
+				final boolean embedAudioInPresentation, final Table<String, String, Voice> table) throws Exception {
 			//
 			final Set<String> rowKeySet = table != null ? table.rowKeySet() : null;
 			//
@@ -7131,6 +7141,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				OdfPresentationDocument odfPd = null;
 				//
 				ObjectMap objectMap = null;
+				//
+				File file = null;
+				//
+				int counter = 0;
+				//
+				final int size = rowKeySet.size();
 				//
 				for (final String rowKey : rowKeySet) {
 					//
@@ -7146,10 +7162,17 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					} // if
 						//
-					if ((odfPd = generateOdfPresentationDocument(objectMap, table.row(rowKey))) != null) {
+					if ((odfPd = generateOdfPresentationDocument(objectMap, rowKey, table.row(rowKey),
+							embedAudioInPresentation)) != null) {
 						//
-						odfPd.save(new File(rowKey,
+						odfPd.save(file = new File(rowKey,
 								String.join(".", StringUtils.substringAfter(rowKey, File.separatorChar), "odp")));
+						//
+						LOG.info(
+								String.format("%1$s/%2$s,File=%3$s",
+										StringUtils.leftPad(Integer.toString(++counter),
+												StringUtils.length(Integer.toString(size))),
+										size, getAbsolutePath(file)));
 						//
 					} // if
 						//
@@ -7160,7 +7183,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		}
 
 		private static OdfPresentationDocument generateOdfPresentationDocument(final ObjectMap objectMap,
-				final Map<String, Voice> voices) throws Exception {
+				final String outputFolder, final Map<String, Voice> voices, final boolean embedAudioInPresentation)
+				throws Exception {
 			//
 			OdfPresentationDocument newOdfPresentationDocument = null;
 			//
@@ -7190,6 +7214,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					Node pageCloned = null;
 					//
 					Voice voice, temp = null;
+					//
+					// TODO
+					//
+					final String folderInZip = "Media";
 					//
 					for (final Entry<String, Voice> entry : voices.entrySet()) {
 						//
@@ -7224,7 +7252,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 						} // if
 							//
-						setPluginHref(objectMap, getKey(entry));
+						setPluginHref(objectMap, getKey(entry), embedAudioInPresentation, folderInZip);
 						//
 						appendChild(parentNode, pageCloned);
 						//
@@ -7246,6 +7274,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 						ZipUtil.replaceEntry(file, "content.xml", getBytes(VoiceManager.toString(writer)));
 						//
+						if (embedAudioInPresentation) {
+							//
+							ZipUtil.addEntries(file, map(stream(voices.keySet()),
+									x -> new FileSource(String.join("/", folderInZip, x), new File(outputFolder, x)))
+									.toArray(ZipEntrySource[]::new));
+							//
+						} // if
+							//
 						newOdfPresentationDocument = OdfPresentationDocument.loadDocument(file);
 						//
 						delete(file);
@@ -7411,7 +7447,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			}
 		}
 
-		private static void setPluginHref(final ObjectMap objectMap, final String key) throws XPathExpressionException {
+		private static void setPluginHref(final ObjectMap objectMap, final String key,
+				final boolean embedAudioInPresentation, final String folder) throws XPathExpressionException {
 			//
 			final NodeList plugins = cast(NodeList.class,
 					evaluate(ObjectMap.getObject(objectMap, XPath.class),
@@ -7446,7 +7483,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 						clear(sb = ObjectUtils.getIfNull(sb, StringBuilder::new));
 						//
-						attribute.setNodeValue(VoiceManager.toString(append(append(sb, "../"), key)));
+						attribute.setNodeValue(VoiceManager.toString(append(append(
+								append(sb, embedAudioInPresentation && StringUtils.isNotBlank(folder) ? folder : ".."),
+								'/'), key)));
 						//
 					} // if
 						//
@@ -7593,6 +7632,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					et.ordinalPositionAsFileNamePrefix = booleanMap.getBoolean(ORDINAL_POSITION_AS_FILE_NAME_PREFIX);
 					//
 					et.exportPresentation = booleanMap.getBoolean(EXPORT_PRESENTATION);
+					//
+					et.embedAudioInPresentation = booleanMap.getBoolean("embedAudioInPresentation");
 					//
 				} // if
 					//
@@ -7889,6 +7930,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			et.ordinalPositionAsFileNamePrefix = booleanMap.getBoolean(ORDINAL_POSITION_AS_FILE_NAME_PREFIX);
 			//
 			et.exportPresentation = booleanMap.getBoolean(EXPORT_PRESENTATION);
+			//
+			et.embedAudioInPresentation = booleanMap.getBoolean("embedAudioInPresentation");
 			//
 		} // if
 			//
