@@ -1010,7 +1010,31 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		jTabbedPane.addTab("Misc", createMiscellaneousPanel(cloneLayoutManager(), voiceIds));
 		//
-		jTabbedPane.addTab("Help", createHelpPanel());
+		// maximum preferred height of all tab page(s)
+		//
+		Double preferredHeight = null;
+		//
+		try {
+			//
+			final List<?> pages = cast(List.class,
+					Narcissus.getObjectField(jTabbedPane, JTabbedPane.class.getDeclaredField("pages")));
+			//
+			Object page = null;
+			//
+			for (int i = 0; i < IterableUtils.size(pages); i++) {
+				//
+				preferredHeight = ObjectUtils.max(preferredHeight, getPreferredHeight(cast(Component.class, Narcissus
+						.getObjectField(page = get(pages, i), getDeclaredField(getClass(page), "component")))));
+				//
+			} // for
+				//
+		} catch (final NoSuchFieldException e) {
+			//
+			errorOrPrintStackTraceOrShowMessageDialog(e);
+			//
+		} // try
+			//
+		jTabbedPane.addTab("Help", createHelpPanel(preferredHeight));
 		//
 		try {
 			//
@@ -2542,7 +2566,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static JScrollPane createHelpPanel() {
+	private static JScrollPane createHelpPanel(final Double preferredHeight) {
 		//
 		JEditorPane jep = null;
 		//
@@ -2580,6 +2604,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		} // if
 			//
 		final JScrollPane jsp = new JScrollPane(jep);
+		//
+		jsp.setPreferredSize(new Dimension(intValue(getPreferredWidth(jsp), 0),
+				intValue(preferredHeight, intValue(getPreferredHeight(jsp), 0))));
 		//
 		final JPanel jPanel = new JPanel();
 		//
@@ -3076,6 +3103,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static long longValue(final Number instance, final long defaultValue) {
 		return instance != null ? instance.longValue() : defaultValue;
+	}
+
+	private static double doubleValue(final Number instance, final double defaultValue) {
+		return instance != null ? instance.doubleValue() : defaultValue;
 	}
 
 	private static void addActionListener(final ActionListener actionListener, final AbstractButton... abs) {
@@ -9061,6 +9092,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		final Dimension d = c != null ? c.getPreferredSize() : null;
 		//
 		return d != null ? Double.valueOf(d.getWidth()) : null;
+		//
+	}
+
+	private static Double getPreferredHeight(final Component c) {
+		//
+		final Dimension d = c != null ? c.getPreferredSize() : null;
+		//
+		return d != null ? Double.valueOf(d.getHeight()) : null;
 		//
 	}
 
