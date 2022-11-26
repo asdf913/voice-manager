@@ -1036,7 +1036,17 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // try
 			//
-		jTabbedPane.addTab("Help", createHelpPanel(preferredHeight));
+		final freemarker.template.Configuration configuration = ObjectUtils.getIfNull(freeMarkerConfiguration,
+				() -> new freemarker.template.Configuration(ObjectUtils.getIfNull(freeMarkerVersion,
+						() -> freemarker.template.Configuration.getVersion())));
+		//
+		if (configuration != null && configuration.getTemplateLoader() == null) {
+			//
+			configuration.setTemplateLoader(new ClassTemplateLoader(VoiceManager.class, "/"));
+			//
+		} // if
+			//
+		jTabbedPane.addTab("Help", createHelpPanel(preferredHeight, configuration));
 		//
 		try {
 			//
@@ -2568,20 +2578,23 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static JScrollPane createHelpPanel(final Number preferredHeight) {
+	private static JScrollPane createHelpPanel(final Number preferredHeight,
+			final freemarker.template.Configuration configuration) {
 		//
 		JEditorPane jep = null;
 		//
-		try (final InputStream is = VoiceManager.class.getResourceAsStream("/help.html")) {
+		try (final Writer writer = new StringWriter()) {
 			//
-			final String html = testAndApply(Objects::nonNull, is, x -> IOUtils.toString(x, "utf-8"), null);
+			process(getTemplate(configuration, "help.html"), null, writer);
+			//
+			final String html = toString(writer);
 			//
 			setEditable(false,
 					jep = new JEditorPane(StringUtils.defaultIfBlank(
 							getMimeType(new ContentInfoUtil().findMatch(VoiceManager.getBytes(html))), "text/html"),
 							html));
 			//
-		} catch (final IOException e) {
+		} catch (final IOException | TemplateException e) {
 			//
 			errorOrPrintStackTraceOrShowMessageDialog(e);
 			//
