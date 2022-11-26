@@ -1008,50 +1008,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		jTabbedPane.addTab("Misc", createMiscellaneousPanel(cloneLayoutManager(), voiceIds));
 		//
-		// help
-		//
-		JEditorPane jep = null;
-		//
-		try {
-			//
-			setEditable(false, jep = testAndApply(Objects::nonNull, VoiceManager.class.getResource("/help.html"),
-					JEditorPane::new, x -> new JEditorPane()));
-			//
-		} catch (final IOException e) {
-			//
-			errorOrPrintStackTraceOrShowMessageDialog(e);
-			//
-		} // try
-			//
-		if (jep != null) {
-			//
-			jep.addHyperlinkListener(x -> {
-				//
-				try {
-					//
-					if (Objects.equals(EventType.ACTIVATED, x != null ? x.getEventType() : null)) {
-						//
-						browse(Desktop.getDesktop(), x != null ? x.getURL().toURI() : null);
-						//
-					} // if
-						//
-				} catch (final IOException | URISyntaxException e) {
-					//
-					errorOrPrintStackTraceOrShowMessageDialog(e);
-					//
-				} // try
-					//
-			});
-			//
-		} // if
-			//
-		final JScrollPane jsp = new JScrollPane(jep);
-		//
-		final JPanel jPanel = new JPanel();
-		//
-		jPanel.add(jsp);
-		//
-		jTabbedPane.addTab("Help", jPanel);
+		jTabbedPane.addTab("Help", createHelpPanel());
 		//
 		try {
 			//
@@ -2580,6 +2537,53 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		setEnabled(isInstalled(speechApi) && voiceIds != null, btnExportMicrosoftSpeechObjectLibraryInformation);
 		//
 		return panel;
+		//
+	}
+
+	private static JScrollPane createHelpPanel() {
+		//
+		JEditorPane jep = null;
+		//
+		try {
+			//
+			setEditable(false, jep = testAndApply(Objects::nonNull, VoiceManager.class.getResource("/help.html"),
+					JEditorPane::new, x -> new JEditorPane()));
+			//
+		} catch (final IOException e) {
+			//
+			errorOrPrintStackTraceOrShowMessageDialog(e);
+			//
+		} // try
+			//
+		if (jep != null) {
+			//
+			jep.addHyperlinkListener(x -> {
+				//
+				try {
+					//
+					if (Objects.equals(EventType.ACTIVATED, x != null ? x.getEventType() : null)) {
+						//
+						browse(Desktop.getDesktop(), x != null ? x.getURL().toURI() : null);
+						//
+					} // if
+						//
+				} catch (final IOException | URISyntaxException e) {
+					//
+					errorOrPrintStackTraceOrShowMessageDialog(e);
+					//
+				} // try
+					//
+			});
+			//
+		} // if
+			//
+		final JScrollPane jsp = new JScrollPane(jep);
+		//
+		final JPanel jPanel = new JPanel();
+		//
+		jPanel.add(jsp);
+		//
+		return jsp;
 		//
 	}
 
