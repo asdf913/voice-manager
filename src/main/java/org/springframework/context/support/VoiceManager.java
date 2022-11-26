@@ -2410,7 +2410,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						"org.springframework.context.support.VoiceManager.exportHtmlFileName")),
 				String.format("wmin %1$s,span %2$s", 100, 2));
 		//
-		final String[] fileExtensions = getFileExtensions(ContentType.fromMimeType("text/html"));
+		final String[] fileExtensions = getFileExtensions(ContentType.HTML);
 		//
 		setToolTipText(tfExportHtmlFileName,
 				String.format("If the File Name does not ends with %1$s, file extension \".%2$s\" will be appended.",
@@ -3576,7 +3576,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						final StringBuilder sb = new StringBuilder(
 								StringUtils.defaultString(getText(tfExportHtmlFileName)));
 						//
-						final String[] fileExtensions = getFileExtensions(ContentType.fromMimeType("text/html"));
+						final String[] fileExtensions = getFileExtensions(ContentType.HTML);
 						//
 						String fileExtension = null;
 						//
