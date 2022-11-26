@@ -6722,20 +6722,6 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(invoke(newTransformer, null, (Object) null));
 		//
-		// org.springframework.context.support.VoiceManager$ExportTask.getBytes(java.lang.String)
-		//
-		final Method getBytes = CLASS_EXPORT_TASK != null
-				? CLASS_EXPORT_TASK.getDeclaredMethod("getBytes", String.class)
-				: null;
-		//
-		if (getBytes != null) {
-			//
-			getBytes.setAccessible(true);
-			//
-		} // if
-			//
-		Assertions.assertNull(invoke(getBytes, null, (Object) null));
-		//
 		// org.springframework.context.support.VoiceManager$ExportTask.cloneNode(org.w3c.dom.Node,boolean)
 		//
 		final Method cloneNode = CLASS_EXPORT_TASK != null

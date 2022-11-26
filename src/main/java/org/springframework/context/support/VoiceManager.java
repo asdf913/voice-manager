@@ -2574,8 +2574,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		try (final InputStream is = VoiceManager.class.getResourceAsStream("/help.html")) {
 			//
-			setEditable(false, jep = new JEditorPane("text/html",
-					testAndApply(Objects::nonNull, is, x -> IOUtils.toString(x, "utf-8"), null)));
+			final String html = testAndApply(Objects::nonNull, is, x -> IOUtils.toString(x, "utf-8"), null);
+			//
+			setEditable(false,
+					jep = new JEditorPane(StringUtils.defaultIfBlank(
+							getMimeType(new ContentInfoUtil().findMatch(VoiceManager.getBytes(html))), "text/html"),
+							html));
 			//
 		} catch (final IOException e) {
 			//
@@ -2616,6 +2620,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		return jsp;
 		//
+	}
+
+	private static byte[] getBytes(final String instance) {
+		return instance != null ? instance.getBytes() : null;
 	}
 
 	private static StringBuilder append(final StringBuilder instance, final String string) {
@@ -7604,10 +7612,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 			} // for
 				//
-		}
-
-		private static byte[] getBytes(final String instance) {
-			return instance != null ? instance.getBytes() : null;
 		}
 
 		private static XPath newXPath(final XPathFactory instance) {
