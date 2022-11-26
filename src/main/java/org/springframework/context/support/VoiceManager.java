@@ -335,6 +335,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static final String KEY_NOT_FOUND_MESSAGE = "Key [%1$s] Not Found";
 
+	private static final String EMBED_AUDIO_IN_PRESENTATION = "embedAudioInPresentation";
+
 	private static final Predicate<File> EMPTY_FILE_PREDICATE = f -> f != null && f.exists() && isFile(f)
 			&& f.length() == 0;
 
@@ -3474,7 +3476,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					bm.setBoolean(EXPORT_PRESENTATION, isSelected(cbExportPresentation));
 					//
-					bm.setBoolean("embedAudioInPresentation", isSelected(cbEmbedAudioInPresentation));
+					bm.setBoolean(EMBED_AUDIO_IN_PRESENTATION, isSelected(cbEmbedAudioInPresentation));
 					//
 				} // if
 					//
@@ -7725,7 +7727,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					et.exportPresentation = booleanMap.getBoolean(EXPORT_PRESENTATION);
 					//
-					et.embedAudioInPresentation = booleanMap.getBoolean("embedAudioInPresentation");
+					et.embedAudioInPresentation = booleanMap.getBoolean(EMBED_AUDIO_IN_PRESENTATION);
 					//
 				} // if
 					//
@@ -8027,7 +8029,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			et.exportPresentation = booleanMap.getBoolean(EXPORT_PRESENTATION);
 			//
-			et.embedAudioInPresentation = booleanMap.getBoolean("embedAudioInPresentation");
+			et.embedAudioInPresentation = booleanMap.getBoolean(EMBED_AUDIO_IN_PRESENTATION);
 			//
 		} // if
 			//
