@@ -2572,10 +2572,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		JEditorPane jep = null;
 		//
-		try {
+		try (final InputStream is = VoiceManager.class.getResourceAsStream("/help.html")) {
 			//
-			setEditable(false, jep = testAndApply(Objects::nonNull, VoiceManager.class.getResource("/help.html"),
-					JEditorPane::new, x -> new JEditorPane()));
+			setEditable(false, jep = new JEditorPane("text/html",
+					testAndApply(Objects::nonNull, is, x -> IOUtils.toString(x, "utf-8"), null)));
 			//
 		} catch (final IOException e) {
 			//
