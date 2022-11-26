@@ -3105,10 +3105,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.longValue() : defaultValue;
 	}
 
-	private static double doubleValue(final Number instance, final double defaultValue) {
-		return instance != null ? instance.doubleValue() : defaultValue;
-	}
-
 	private static void addActionListener(final ActionListener actionListener, final AbstractButton... abs) {
 		//
 		AbstractButton ab = null;
