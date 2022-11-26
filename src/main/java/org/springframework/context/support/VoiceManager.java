@@ -7260,7 +7260,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						odfPd.save(file = new File(rowKey,
 								String.join(".", StringUtils.substringAfter(rowKey, File.separatorChar), "odp")));
 						//
-						LOG.info(
+						info(LOG,
 								String.format("%1$s/%2$s,File=%3$s",
 										StringUtils.leftPad(Integer.toString(++counter),
 												StringUtils.length(Integer.toString(size))),
@@ -7272,6 +7272,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 			} // if
 				//
+		}
+
+		private static void info(final Logger instance, final String message) {
+			if (instance != null) {
+				instance.info(message);
+			}
 		}
 
 		private static OdfPresentationDocument generateOdfPresentationDocument(final ObjectMap objectMap,

@@ -1239,6 +1239,8 @@ class VoiceManagerTest {
 
 	private Iterable<?> iterable = null;
 
+	private Logger logger = null;
+
 	@BeforeEach
 	void beforeEach() throws ReflectiveOperationException {
 		//
@@ -1271,6 +1273,8 @@ class VoiceManagerTest {
 		lookup = Reflection.newProxy(Lookup.class, ih);
 		//
 		iterable = Reflection.newProxy(Iterable.class, ih);
+		//
+		logger = Reflection.newProxy(Logger.class, ih);
 		//
 	}
 
@@ -3070,7 +3074,7 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> errorOrPrintln(null, null, null));
 		//
-		Assertions.assertDoesNotThrow(() -> errorOrPrintln(Reflection.newProxy(Logger.class, ih), null, null));
+		Assertions.assertDoesNotThrow(() -> errorOrPrintln(logger, null, null));
 		//
 		try (final OutputStream os = new ByteArrayOutputStream(); final PrintStream ps = new PrintStream(os)) {
 			//
@@ -6871,6 +6875,22 @@ class VoiceManagerTest {
 		} // if
 			//
 		Assertions.assertNull(invoke(replaceTextContent, null, null, null));
+		//
+		// org.springframework.context.support.VoiceManager$ExportTask.info(org.slf4j.Logger,java.lang.String)
+		//
+		final Method info = CLASS_EXPORT_TASK != null
+				? CLASS_EXPORT_TASK.getDeclaredMethod("info", Logger.class, String.class)
+				: null;
+		//
+		if (info != null) {
+			//
+			info.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertNull(invoke(info, null, null, null));
+		//
+		Assertions.assertNull(invoke(info, null, logger, null));
 		//
 	}
 
