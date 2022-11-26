@@ -258,7 +258,8 @@ class VoiceManagerTest {
 			METHOD_CREATE_JO_YO_KAN_JI_WORKBOOK_BY_TBODY, METHOD_CREATE_JO_YO_KAN_JI_WORKBOOK_BY_DOM_NODES,
 			METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_SHOW_MESSAGE_DIALOG1,
 			METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_SHOW_MESSAGE_DIALOG2,
-			METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_SHOW_MESSAGE_DIALOG3, METHOD_SET_VISIBLE = null;
+			METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_SHOW_MESSAGE_DIALOG3, METHOD_SET_VISIBLE,
+			METHOD_RANDOM_ALPHABETIC = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -738,6 +739,8 @@ class VoiceManagerTest {
 				.setAccessible(true);
 		//
 		(METHOD_SET_VISIBLE = clz.getDeclaredMethod("setVisible", Component.class, Boolean.TYPE)).setAccessible(true);
+		//
+		(METHOD_RANDOM_ALPHABETIC = clz.getDeclaredMethod("randomAlphabetic", Integer.TYPE)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -6291,6 +6294,27 @@ class VoiceManagerTest {
 	}
 
 	@Test
+	void testRandomAlphabetic() throws Throwable {
+		//
+		Assertions.assertNotEquals(randomAlphabetic(ONE), randomAlphabetic(ONE));
+		//
+	}
+
+	private static String randomAlphabetic(final int count) throws Throwable {
+		try {
+			final Object obj = METHOD_RANDOM_ALPHABETIC.invoke(null, count);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
 	void testIh1() throws Throwable {
 		//
 		final InvocationHandler ih = createVoiceManagerIH();
@@ -6592,7 +6616,7 @@ class VoiceManagerTest {
 		//
 		final Method generateOdfPresentationDocuments = CLASS_EXPORT_TASK != null
 				? CLASS_EXPORT_TASK.getDeclaredMethod("generateOdfPresentationDocuments", InputStream.class,
-						Boolean.TYPE, Table.class)
+						Boolean.TYPE, String.class, Table.class)
 				: null;
 		//
 		if (generateOdfPresentationDocuments != null) {
@@ -6601,10 +6625,10 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(invoke(generateOdfPresentationDocuments, null, null, Boolean.TRUE, null));
+		Assertions.assertNull(invoke(generateOdfPresentationDocuments, null, null, Boolean.TRUE, null, null));
 		//
 		Assertions.assertThrows(InvocationTargetException.class, () -> invoke(generateOdfPresentationDocuments, null,
-				null, Boolean.TRUE, ImmutableTable.of(EMPTY, EMPTY, new Voice())));
+				null, Boolean.TRUE, null, ImmutableTable.of(EMPTY, EMPTY, new Voice())));
 		//
 		// org.springframework.context.support.VoiceManager$ExportTask.newXPath(javax.xml.xpath.XPathFactory)
 		//

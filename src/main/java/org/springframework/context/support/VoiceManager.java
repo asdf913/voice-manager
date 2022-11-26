@@ -338,6 +338,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static final Predicate<File> EMPTY_FILE_PREDICATE = f -> f != null && f.exists() && isFile(f)
 			&& f.length() == 0;
 
+	private static IValue0<Method> METHOD_RANDOM_ALPHABETIC = null;
+
 	private transient PropertyResolver propertyResolver = null;
 
 	private JTextComponent tfFolder, tfFile, tfFileLength, tfFileDigest, tfTextTts, tfTextImport, tfHiragana,
@@ -3241,8 +3243,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 								Math.min(Math.max(
 										intValue(jsSpeechVolume != null ? jsSpeechVolume.getValue() : null, 100), 0),
 										100)// volume
-								, file = File.createTempFile(
-										RandomStringUtils.randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH), null)
+								, file = File.createTempFile(randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH), null)
 						//
 						);
 						//
@@ -3803,6 +3804,39 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			} // if
 				//
 		} // if
+			//
+	}
+
+	private static String randomAlphabetic(final int count) {
+		//
+		Method method = IValue0Util.getValue0(METHOD_RANDOM_ALPHABETIC);
+		//
+		try {
+			//
+			if (method == null) {
+				//
+				METHOD_RANDOM_ALPHABETIC = Unit
+						.with(method = RandomStringUtils.class.getDeclaredMethod("randomAlphabetic", Integer.TYPE));
+				//
+			} // if
+				//
+			return toString(invoke(method, null, count));
+			//
+		} catch (final IllegalAccessException | NoSuchMethodException e) {
+			//
+			throw new RuntimeException(e);
+			//
+		} catch (final InvocationTargetException e) {
+			//
+			final Throwable targetException = e.getTargetException();
+			//
+			final Throwable throwable = ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException),
+					targetException, ExceptionUtils.getRootCause(e));
+			//
+			throw throwable instanceof RuntimeException ? (RuntimeException) throwable
+					: new RuntimeException(throwable);
+			//
+		} // try
 			//
 	}
 
@@ -6233,8 +6267,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 									if (isInstalled(speechApi)) {
 										//
 										if ((it.file = File.createTempFile(
-												RandomStringUtils.randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH),
-												filePath)) != null) {
+												randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH), filePath)) != null) {
 											//
 											ObjectMap.setObject(objectMap, File.class, it.file);
 											//
@@ -6600,9 +6633,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				if (file.exists()) {
 					//
-					file = new File(voiceFolder,
-							filePath = toString(fileName.insert(StringUtils.lastIndexOf(fileName, '.') + 1,
-									RandomStringUtils.randomAlphabetic(2) + ".")));
+					file = new File(voiceFolder, filePath = toString(
+							fileName.insert(StringUtils.lastIndexOf(fileName, '.') + 1, randomAlphabetic(2) + ".")));
 					//
 				} // if
 					//
@@ -7120,8 +7152,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			if (Objects.equals("mp3", fileExtension)) {
 				//
-				final File tempFile = File
-						.createTempFile(RandomStringUtils.randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH), null);
+				final File tempFile = File.createTempFile(randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH), null);
 				//
 				deleteOnExit(tempFile);
 				//
@@ -7295,8 +7326,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					if ((newOdfPresentationDocument = OdfPresentationDocument.newPresentationDocument()) != null) {
 						//
-						final File file = File.createTempFile(
-								RandomStringUtils.randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH), null);
+						final File file = File.createTempFile(randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH), null);
 						//
 						newOdfPresentationDocument.save(file);
 						//
