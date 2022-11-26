@@ -20,6 +20,6 @@
 		Export Format is <a href="https://en.wikipedia.org/wiki/OpenDocument">Open Document Presentation (*.odp)</a><br/>
 		<a href="https://www.libreoffice.org/">LibreOffice - Free Office Suite - Based on OpenOffice - Compatible with Microsoft</a> is recommended.<br/>
 		<a href="https://xiph.org/flac">Free Lossless Audio Codec (FLAC)</a> Audio Format could not be played by the LibreOffice.<br/>
-		Please visit the list of <a href="https://help.libreoffice.org/latest/he/text/shared/01/moviesound.html"> supported media format(s)</a> by LibreOffice.
+		Please visit the list of <a href="https://help.libreoffice.org/latest/en-US/text/shared/01/moviesound.html"> supported media format(s)</a> by LibreOffice.
 	</body>
 </html>
