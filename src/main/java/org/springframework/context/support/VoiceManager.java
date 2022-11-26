@@ -7359,33 +7359,44 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					transform(ObjectMap.getObject(objectMap, Transformer.class), new DOMSource(document),
 							new StreamResult(writer));
 					//
-					if ((newOdfPresentationDocument = OdfPresentationDocument.newPresentationDocument()) != null) {
-						//
-						final File file = File.createTempFile(randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH), null);
-						//
-						newOdfPresentationDocument.save(file);
-						//
-						ZipUtil.replaceEntry(file, "content.xml", getBytes(VoiceManager.toString(writer)));
-						//
-						if (embedAudioInPresentation) {
-							//
-							ZipUtil.addEntries(file,
-									map(stream(voices.keySet()),
-											x -> new FileSource(String.join("/", folderInPresentation, x),
-													new File(outputFolder, x)))
-											.toArray(ZipEntrySource[]::new));
-							//
-						} // if
-							//
-						newOdfPresentationDocument = OdfPresentationDocument.loadDocument(file);
-						//
-						delete(file);
-						//
-					} // if
-						//
+					newOdfPresentationDocument = generateOdfPresentationDocument(VoiceManager.toString(writer),
+							outputFolder, voices.keySet(), embedAudioInPresentation, folderInPresentation);
+					//
 				} // if
 					//
 			} // try
+				//
+			return newOdfPresentationDocument;
+			//
+		}
+
+		private static OdfPresentationDocument generateOdfPresentationDocument(final String string,
+				final String outputFolder, final Collection<String> voiceLKeySet,
+				final boolean embedAudioInPresentation, final String folderInPresentation) throws Exception {
+			//
+			OdfPresentationDocument newOdfPresentationDocument = null;
+			//
+			if ((newOdfPresentationDocument = OdfPresentationDocument.newPresentationDocument()) != null) {
+				//
+				final File file = File.createTempFile(randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH), null);
+				//
+				newOdfPresentationDocument.save(file);
+				//
+				ZipUtil.replaceEntry(file, "content.xml", getBytes(string));
+				//
+				if (embedAudioInPresentation) {
+					//
+					ZipUtil.addEntries(file, map(stream(voiceLKeySet),
+							x -> new FileSource(String.join("/", folderInPresentation, x), new File(outputFolder, x)))
+							.toArray(ZipEntrySource[]::new));
+					//
+				} // if
+					//
+				newOdfPresentationDocument = OdfPresentationDocument.loadDocument(file);
+				//
+				delete(file);
+				//
+			} // if
 				//
 			return newOdfPresentationDocument;
 			//
