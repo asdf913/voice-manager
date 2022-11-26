@@ -2568,7 +2568,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static JScrollPane createHelpPanel(final Double preferredHeight) {
+	private static JScrollPane createHelpPanel(final Number preferredHeight) {
 		//
 		JEditorPane jep = null;
 		//
