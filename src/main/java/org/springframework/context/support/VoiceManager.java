@@ -2585,7 +2585,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		try (final Writer writer = new StringWriter()) {
 			//
-			process(getTemplate(configuration, "help.html"), null, writer);
+			process(getTemplate(configuration, "help.html.ftl"), null, writer);
 			//
 			final String html = toString(writer);
 			//
