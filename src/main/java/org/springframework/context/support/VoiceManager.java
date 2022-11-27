@@ -419,7 +419,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private String jlptLevelPageUrl, gaKuNenBeTsuKanJiListPageUrl = null;
 
 	private String microsoftSpeechPlatformRuntimeDownloadPageUrl,
-			microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl, microsoftWindowsCompatibilitySettingsPageUrl = null;
+			microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl, microsoftWindowsCompatibilitySettingsPageUrl,
+			mediaFormatPageUrl = null;
 
 	private Unit<List<String>> jlptLevels = null;
 
@@ -748,6 +749,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		this.microsoftWindowsCompatibilitySettingsPageUrl = microsoftWindowsCompatibilitySettingsPageUrl;
 	}
 
+	public void setMediaFormatPageUrl(final String mediaFormatPageUrl) {
+		this.mediaFormatPageUrl = mediaFormatPageUrl;
+	}
+
 	public void setExportHtmlTemplateFile(final String exportHtmlTemplateFile) {
 		this.exportHtmlTemplateFile = exportHtmlTemplateFile;
 	}
@@ -1049,7 +1054,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
-		jTabbedPane.addTab("Help", createHelpPanel(preferredHeight, configuration));
+		jTabbedPane.addTab("Help", createHelpPanel(preferredHeight, configuration, mediaFormatPageUrl));
 		//
 		try {
 			//
@@ -2582,18 +2587,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	private static JScrollPane createHelpPanel(final Number preferredHeight,
-			final freemarker.template.Configuration configuration) {
+			final freemarker.template.Configuration configuration, final String mediaFormatPageUrl) {
 		//
 		JEditorPane jep = null;
 		//
 		try (final Writer writer = new StringWriter()) {
 			//
 			process(getTemplate(configuration, "help.html.ftl"),
-					Collections.singletonMap("mediaFormatLink", getMediaFormatLink(
-							//
-							// TODO
-							//
-							"https://help.libreoffice.org/latest/en-US/text/shared/01/moviesound.html", configuration)),
+					Collections.singletonMap("mediaFormatLink", getMediaFormatLink(mediaFormatPageUrl, configuration)),
 					writer);
 			//
 			final String html = toString(writer);

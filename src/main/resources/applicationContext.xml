@@ -59,6 +59,7 @@
 			value="${org.springframework.context.support.VoiceManager.microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl}" />
 		<property name="microsoftWindowsCompatibilitySettingsPageUrl"
 			value="${org.springframework.context.support.VoiceManager.microsoftWindowsCompatibilitySettingsPageUrl}" />
+		<property name="mediaFormatPageUrl" value="${org.springframework.context.support.VoiceManager.mediaFormatPageUrl}" />
 		<property name="exportHtmlTemplateFile"
 			value="${org.springframework.context.support.VoiceManager.exportHtmlTemplateFile}" />
 		<property name="freeMarkerVersion" 
