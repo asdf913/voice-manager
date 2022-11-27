@@ -53,6 +53,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -2623,7 +2624,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			final List<DomNode> domNodes = querySelectorAll(webClient.loadHtmlCodeIntoCurrentWindow(IOUtils
 					.toString(is = new URL("https://help.libreoffice.org/latest/en-US/text/shared/01/moviesound.html")
-							.openStream(), "utf-8")),
+							.openStream(), StandardCharsets.UTF_8)),
 					".relatedtopics a[href]");
 			//
 			Node node = null;
@@ -2826,7 +2827,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		try (final InputStream is = getInputStream(httpURLConnection)) {
 			//
-			html = testAndApply(Objects::nonNull, is, x -> IOUtils.toString(x, "utf-8"), null);
+			html = testAndApply(Objects::nonNull, is, x -> IOUtils.toString(x, StandardCharsets.UTF_8), null);
 			//
 		} catch (final IOException e) {
 			//
@@ -3696,7 +3697,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 							FileUtils.writeStringToFile(
 									file = new File(StringUtils.defaultIfBlank(toString(sb), "export.html")), string,
-									"utf-8");
+									StandardCharsets.UTF_8);
 							//
 							add(files = ObjectUtils.getIfNull(files, ArrayList::new), file);
 							//
