@@ -7177,7 +7177,7 @@ class VoiceManagerTest {
 		//
 		final Class<?> clz = forName("org.springframework.context.support.VoiceManager$JLabelLink");
 		//
-		final Constructor<?> constructor = clz != null ? clz.getDeclaredConstructor(String.class, String.class) : null;
+		final Constructor<?> constructor = clz != null ? clz.getDeclaredConstructor(ATag.class) : null;
 		//
 		if (constructor != null) {
 			//
@@ -7186,7 +7186,7 @@ class VoiceManagerTest {
 		} // if
 			//
 		final MouseListener[] mouseListeners = getMouseListeners(
-				cast(Component.class, constructor != null ? constructor.newInstance(null, null) : null));
+				cast(Component.class, constructor != null ? constructor.newInstance((Object) null) : null));
 		//
 		for (int i = 0; mouseListeners != null && i < mouseListeners.length; i++) {
 			//

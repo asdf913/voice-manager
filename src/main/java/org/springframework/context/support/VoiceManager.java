@@ -79,6 +79,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.Set;
+import java.util.Spliterator;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -292,6 +293,9 @@ import freemarker.template.TemplateException;
 import freemarker.template.TemplateHashModel;
 import freemarker.template.Version;
 import io.github.toolfactory.narcissus.Narcissus;
+import j2html.attributes.Attribute;
+import j2html.tags.ContainerTag;
+import j2html.tags.Tag;
 import j2html.tags.specialized.ATag;
 import mapper.VoiceMapper;
 import net.miginfocom.swing.MigLayout;
@@ -944,9 +948,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				final String title = StringUtils.defaultIfBlank(IValue0Util.getValue0(pageTitle),
 						"Make older apps or programs compatible with Windows 10");
 				//
-				jPanelWarning
-						.add(pageTitle != null ? new JLabelLink(microsoftWindowsCompatibilitySettingsPageUrl, title)
-								: new JLabel(title));
+				jPanelWarning.add(pageTitle != null
+						? new JLabelLink(
+								new ATag().withHref(microsoftWindowsCompatibilitySettingsPageUrl).withText(title))
+						: new JLabel(title));
 				//
 			} // if
 				//
@@ -975,8 +980,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					final String title = StringUtils.defaultIfBlank(IValue0Util.getValue0(pageTitle),
 							"Download Microsoft Speech Platform - Runtime Languages (Version 11) from Official Microsoft Download Center");
 					//
-					jPanelWarning.add(pageTitle != null
-							? new JLabelLink(microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl, title)
+					jPanelWarning.add(pageTitle != null ? new JLabelLink(
+							new ATag().withHref(microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl).withText(title))
 							: new JLabel(title));
 					//
 				} // if
@@ -1002,7 +1007,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			final String title = StringUtils.defaultIfBlank(IValue0Util.getValue0(pageTitle),
 					"Download Microsoft Speech Platform - Runtime (Version 11) from Official Microsoft Download Center");
 			//
-			jPanelWarning.add(pageTitle != null ? new JLabelLink(microsoftSpeechPlatformRuntimeDownloadPageUrl, title)
+			jPanelWarning.add(pageTitle != null
+					? new JLabelLink(new ATag().withHref(microsoftSpeechPlatformRuntimeDownloadPageUrl).withText(title))
 					: new JLabel(title));
 			//
 			add(jPanelWarning, WRAP);
@@ -1309,9 +1315,71 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		}
 
-		private JLabelLink(final String url, final String text) {
-			super(text);
-			this.url = url;
+		private JLabelLink(final ATag aTag) {
+			//
+			super(getChildrenAsString(aTag));
+			//
+			this.url = getValue(getAttributeByName(aTag, "href"));
+			//
+		}
+
+		private static String getValue(final Attribute instance) {
+			return instance != null ? instance.getValue() : null;
+		}
+
+		private static String getChildrenAsString(final ContainerTag<?> instance) {
+			//
+			try {
+				//
+				final Spliterator<?> spliterator = spliterator(cast(Iterable.class, testAndApply(Objects::nonNull,
+						instance, x -> FieldUtils.readField(x, "children", true), null)));
+				//
+				return testAndApply(Objects::nonNull,
+						toList(map(
+								testAndApply(Objects::nonNull, spliterator, x -> StreamSupport.stream(x, false), null),
+								VoiceManager::toString)),
+						x -> String.join("", x), null);
+				//
+			} catch (final IllegalAccessException e) {
+				//
+				return null;
+				//
+			} // try
+				//
+		}
+
+		private static Attribute getAttributeByName(final Tag<?> instance, final String name) {
+			//
+			try {
+				//
+				final Spliterator<?> spliterator = spliterator(cast(Iterable.class, testAndApply(Objects::nonNull,
+						instance, x -> FieldUtils.readField(x, "attributes", true), null)));
+				//
+				final List<Attribute> as = toList(filter(
+						map(testAndApply(Objects::nonNull, spliterator, x -> StreamSupport.stream(x, false), null),
+								x -> cast(Attribute.class, x)),
+						a -> {
+							return Objects.equals(name, a != null ? a.getName() : null);
+						}));
+				//
+				if (as == null || as.isEmpty()) {
+					//
+					return null;
+					//
+				} else if (as.size() != 1) {
+					//
+					throw new IllegalStateException();
+					//
+				} // if
+					//
+				return get(as, 0);
+				//
+			} catch (final IllegalAccessException e) {
+				//
+				return null;
+				//
+			} // try
+				//
 		}
 
 		private static Color darker(final Color instance) {
@@ -2511,8 +2579,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		if (speechApiInstance instanceof SpeechApiSpeechServerImpl) {
 			//
 			panel.add(
-					new JLabelLink(microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl,
-							IValue0Util.getValue0(getMicrosoftSpeechPlatformRuntimeLanguagesDownloadPageTitle())),
+					new JLabelLink(new ATag().withHref(microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl).withText(
+							IValue0Util.getValue0(getMicrosoftSpeechPlatformRuntimeLanguagesDownloadPageTitle()))),
 					WRAP);
 			//
 		} // if
@@ -6223,10 +6291,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				final Integer numberOfSheets = workbook != null ? Integer.valueOf(workbook.getNumberOfSheets()) : null;
 				//
-				final int maxSheetNameLength = orElse(max(mapToInt(
-						map(testAndApply(Objects::nonNull, workbook != null ? workbook.spliterator() : null,
-								x -> StreamSupport.stream(x, false), null), VoiceManager::getSheetName),
-						StringUtils::length)), 0);
+				final int maxSheetNameLength = orElse(
+						max(mapToInt(
+								map(testAndApply(Objects::nonNull, spliterator(workbook),
+										x -> StreamSupport.stream(x, false), null), VoiceManager::getSheetName),
+								StringUtils::length)),
+						0);
 				//
 				for (final Row row : sheet) {
 					//
@@ -6542,6 +6612,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // try
 			//
+	}
+
+	private static <T> Spliterator<T> spliterator(final Iterable<T> instance) {
+		return instance != null ? instance.spliterator() : null;
 	}
 
 	private static String getFilePath(final Voice instance) {
