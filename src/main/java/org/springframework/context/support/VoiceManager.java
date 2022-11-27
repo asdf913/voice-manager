@@ -6289,11 +6289,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				final CustomProperties customProperties = getCustomProperties(
 						getProperties(ObjectMap.getObject(_objectMap, POIXMLDocument.class)));
 				//
-				final boolean hiraganaKatakanaConversion = BooleanUtils
-						.toBooleanDefaultIfNull(getBoolean(customProperties, "hiraganaKatakanaConversion"), false);
+				final boolean hiraganaKatakanaConversion = BooleanUtils.toBooleanDefaultIfNull(
+						IValue0Util.getValue0(getBoolean(customProperties, "hiraganaKatakanaConversion")), false);
 				//
-				final boolean hiraganaRomajiConversion = BooleanUtils
-						.toBooleanDefaultIfNull(getBoolean(customProperties, "hiraganaRomajiConversion"), false);
+				final boolean hiraganaRomajiConversion = BooleanUtils.toBooleanDefaultIfNull(
+						IValue0Util.getValue0(getBoolean(customProperties, "hiraganaRomajiConversion")), false);
 				//
 				ObjectMap objectMap = null;
 				//
@@ -6674,24 +6674,24 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.getEnumConstants() : null;
 	}
 
-	private static Boolean getBoolean(final CustomProperties instance, final String name) {
+	private static IValue0<Boolean> getBoolean(final CustomProperties instance, final String name) {
 		//
 		final CTProperty ctProperty = testAndApply(VoiceManager::contains, instance, name, VoiceManager::getProperty,
 				null);
 		//
 		final Boolean B = ctProperty != null ? ctProperty.getBool() : null;
 		//
-		Boolean result = null;
+		IValue0<Boolean> result = null;
 		//
 		final String lLpwstr = getLpwstr(ctProperty);
 		//
 		if (StringUtils.isNotBlank(lLpwstr)) {
 			//
-			result = Boolean.valueOf(lLpwstr);
+			result = Unit.with(Boolean.valueOf(lLpwstr));
 			//
 		} else if (B != null) {
 			//
-			result = B.booleanValue();
+			result = Unit.with(B);
 			//
 		} // if
 			//
