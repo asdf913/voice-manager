@@ -263,7 +263,7 @@ class VoiceManagerTest {
 			METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_SHOW_MESSAGE_DIALOG1,
 			METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_SHOW_MESSAGE_DIALOG2,
 			METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_SHOW_MESSAGE_DIALOG3, METHOD_SET_VISIBLE, METHOD_RANDOM_ALPHABETIC,
-			METHOD_GET_MEDIA_FORMAT_LINK, METHOD_GET_EVENT_TYPE = null;
+			METHOD_GET_MEDIA_FORMAT_LINK, METHOD_GET_EVENT_TYPE, METHOD_GET_PARENT_FILE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -749,6 +749,8 @@ class VoiceManagerTest {
 				freemarker.template.Configuration.class)).setAccessible(true);
 		//
 		(METHOD_GET_EVENT_TYPE = clz.getDeclaredMethod("getEventType", HyperlinkEvent.class)).setAccessible(true);
+		//
+		(METHOD_GET_PARENT_FILE = clz.getDeclaredMethod("getParentFile", File.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -6370,6 +6372,27 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof EventType) {
 				return (EventType) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetParentFile() throws Throwable {
+		//
+		Assertions.assertNull(getParentFile(new File(".")));
+		//
+	}
+
+	private static File getParentFile(final File instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_PARENT_FILE.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof File) {
+				return (File) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

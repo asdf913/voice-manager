@@ -6238,9 +6238,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			final Consumer<Voice> voiceConsumer)
 			throws IllegalAccessException, IOException, InvocationTargetException, BaseException {
 		//
-		final File file = ObjectMap.getObject(_objectMap, File.class);
-		//
-		final File folder = file != null ? file.getParentFile() : null;
+		final File folder = getParentFile(ObjectMap.getObject(_objectMap, File.class));
 		//
 		IntMap<Field> intMap = null;
 		//
@@ -6630,6 +6628,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // try
 			//
+	}
+
+	private static File getParentFile(final File instance) {
+		return instance != null ? instance.getParentFile() : null;
 	}
 
 	private static <T> Spliterator<T> spliterator(final Iterable<T> instance) {
