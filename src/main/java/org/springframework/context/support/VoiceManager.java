@@ -2363,7 +2363,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		JScrollPane scp = new JScrollPane(new JTable(tmImportResult = new DefaultTableModel(
 				new Object[] { "Number Of Sheet Processed", "Number of Voice Processed" }, 0)));
 		//
-		Dimension d = scp.getPreferredSize();
+		Dimension d = getPreferredSize(scp);
 		//
 		if (d != null) {
 			//
@@ -2382,7 +2382,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						tmImportException = new DefaultTableModel(new Object[] { "Text", "Romaji", "Exception" }, 0))),
 				wrap);
 		//
-		if ((d = scp.getPreferredSize()) != null) {
+		if ((d = getPreferredSize(scp)) != null) {
 			//
 			scp.setMinimumSize(d = new Dimension((int) d.getWidth(), 55));
 			//
@@ -9309,7 +9309,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		for (int i = 0; cs != null && i < cs.length; i++) {
 			//
-			if ((c = cs[i]) == null || (d = c.getPreferredSize()) == null) {
+			if ((c = cs[i]) == null || (d = getPreferredSize(c)) == null) {
 				continue;
 			} // if
 				//
@@ -9321,15 +9321,19 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static Double getPreferredWidth(final Component c) {
 		//
-		final Dimension d = c != null ? c.getPreferredSize() : null;
+		final Dimension d = getPreferredSize(c);
 		//
 		return d != null ? Double.valueOf(d.getWidth()) : null;
 		//
 	}
 
+	private static Dimension getPreferredSize(final Component instance) {
+		return instance != null ? instance.getPreferredSize() : null;
+	}
+
 	private static Double getPreferredHeight(final Component c) {
 		//
-		final Dimension d = c != null ? c.getPreferredSize() : null;
+		final Dimension d = getPreferredSize(c);
 		//
 		return d != null ? Double.valueOf(d.getHeight()) : null;
 		//
