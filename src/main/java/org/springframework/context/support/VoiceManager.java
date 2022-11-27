@@ -297,6 +297,7 @@ import j2html.attributes.Attribute;
 import j2html.tags.ContainerTag;
 import j2html.tags.Tag;
 import j2html.tags.specialized.ATag;
+import j2html.tags.specialized.ATagUtil;
 import mapper.VoiceMapper;
 import net.miginfocom.swing.MigLayout;
 import net.sourceforge.javaflacencoder.AudioStreamEncoder;
@@ -943,15 +944,23 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					jPanelWarning.add(jLabel);
 				} // if
 					//
-				final Unit<String> pageTitle = getPageTitle(microsoftWindowsCompatibilitySettingsPageUrl);
+				ATag aTag = null;
 				//
-				final String title = StringUtils.defaultIfBlank(IValue0Util.getValue0(pageTitle),
-						"Make older apps or programs compatible with Windows 10");
+				try {
+					//
+					aTag = ATagUtil.createByUrl(microsoftWindowsCompatibilitySettingsPageUrl, false);
+					//
+				} catch (final IOException e) {
+					//
+					errorOrPrintStackTraceOrShowMessageDialog(e);
+					//
+				} // try
+					//
+				final String pageTitle = JLabelLink.getChildrenAsString(aTag);
 				//
-				jPanelWarning.add(pageTitle != null
-						? new JLabelLink(
-								new ATag().withHref(microsoftWindowsCompatibilitySettingsPageUrl).withText(title))
-						: new JLabel(title));
+				jPanelWarning.add(pageTitle != null ? new JLabelLink(aTag)
+						: new JLabel(StringUtils.defaultIfBlank(pageTitle,
+								"Make older apps or programs compatible with Windows 10")));
 				//
 			} // if
 				//
@@ -1002,14 +1011,23 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			(jPanelWarning = new JPanel()).setBorder(BorderFactory.createTitledBorder(WARNING));
 			//
-			final Unit<String> pageTitle = getPageTitle(microsoftSpeechPlatformRuntimeDownloadPageUrl);
+			ATag aTag = null;
 			//
-			final String title = StringUtils.defaultIfBlank(IValue0Util.getValue0(pageTitle),
-					"Download Microsoft Speech Platform - Runtime (Version 11) from Official Microsoft Download Center");
+			try {
+				//
+				aTag = ATagUtil.createByUrl(microsoftSpeechPlatformRuntimeDownloadPageUrl, false);
+				//
+			} catch (final IOException e) {
+				//
+				errorOrPrintStackTraceOrShowMessageDialog(e);
+				//
+			} // try
+				//
+			final String pageTitle = JLabelLink.getChildrenAsString(aTag);
 			//
-			jPanelWarning.add(pageTitle != null
-					? new JLabelLink(new ATag().withHref(microsoftSpeechPlatformRuntimeDownloadPageUrl).withText(title))
-					: new JLabel(title));
+			jPanelWarning.add(pageTitle != null ? new JLabelLink(aTag)
+					: new JLabel(StringUtils.defaultIfBlank(pageTitle,
+							"Download Microsoft Speech Platform - Runtime (Version 11) from Official Microsoft Download Center")));
 			//
 			add(jPanelWarning, WRAP);
 			//
