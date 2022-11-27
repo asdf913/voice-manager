@@ -49,7 +49,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -2657,7 +2656,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	private static ATag getMediaFormatLink(final String url, final freemarker.template.Configuration configuration)
-			throws IllegalAccessException, InvocationTargetException, MalformedURLException, IOException {
+			throws IllegalAccessException, InvocationTargetException, IOException {
 		//
 		InputStream is = null;
 		//
