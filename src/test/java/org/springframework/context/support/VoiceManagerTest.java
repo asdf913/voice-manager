@@ -196,6 +196,7 @@ import freemarker.cache.StringTemplateLoader;
 import freemarker.template.Template;
 import freemarker.template.Version;
 import io.github.toolfactory.narcissus.Narcissus;
+import j2html.tags.specialized.ATag;
 import mapper.VoiceMapper;
 
 class VoiceManagerTest {
@@ -259,8 +260,8 @@ class VoiceManagerTest {
 			METHOD_CREATE_JO_YO_KAN_JI_WORKBOOK_BY_TBODY, METHOD_CREATE_JO_YO_KAN_JI_WORKBOOK_BY_DOM_NODES,
 			METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_SHOW_MESSAGE_DIALOG1,
 			METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_SHOW_MESSAGE_DIALOG2,
-			METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_SHOW_MESSAGE_DIALOG3, METHOD_SET_VISIBLE,
-			METHOD_RANDOM_ALPHABETIC = null;
+			METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_SHOW_MESSAGE_DIALOG3, METHOD_SET_VISIBLE, METHOD_RANDOM_ALPHABETIC,
+			METHOD_GET_MEDIA_FORMAT_LINK = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -744,6 +745,9 @@ class VoiceManagerTest {
 		(METHOD_SET_VISIBLE = clz.getDeclaredMethod("setVisible", Component.class, Boolean.TYPE)).setAccessible(true);
 		//
 		(METHOD_RANDOM_ALPHABETIC = clz.getDeclaredMethod("randomAlphabetic", Integer.TYPE)).setAccessible(true);
+		//
+		(METHOD_GET_MEDIA_FORMAT_LINK = clz.getDeclaredMethod("getMediaFormatLink", String.class,
+				freemarker.template.Configuration.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -6335,6 +6339,28 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof String) {
 				return (String) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetMediaFormatLink() throws Throwable {
+		//
+		Assertions.assertNull(getMediaFormatLink(null, null));
+		//
+	}
+
+	private static ATag getMediaFormatLink(final String url, final freemarker.template.Configuration configuration)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_GET_MEDIA_FORMAT_LINK.invoke(null, url, configuration);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof ATag) {
+				return (ATag) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

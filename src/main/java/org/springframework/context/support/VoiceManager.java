@@ -49,6 +49,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -2585,76 +2586,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		JEditorPane jep = null;
 		//
-		InputStream is = null;
-		//
-		try (final WebClient webClient = new WebClient(); final Writer writer = new StringWriter()) {
+		try (final Writer writer = new StringWriter()) {
 			//
-			setJavaScriptEnabled(webClient.getOptions(), false);
-			//
-			final List<Method> ms = toList(filter(
-					testAndApply(Objects::nonNull, getDeclaredMethods(forName("com.sun.jna.Platform")), Arrays::stream,
-							null),
-					m -> m != null && Objects.equals(m.getReturnType(), Boolean.TYPE) && m.getParameterCount() == -0));
-			//
-			Method m = null;
-			//
-			List<String> methodNames = null;
-			//
-			for (int i = 0; i < IterableUtils.size(ms); i++) {
-				//
-				if ((m = get(ms, i)) == null || !Modifier.isStatic(m.getModifiers())) {
-					//
-					continue;
-					//
-				} // if
-					//
-				m.setAccessible(true);
-				//
-				if (!Objects.equals(Boolean.TRUE, invoke(m, null))) {
-					//
-					continue;
-					//
-				} // if
-					//
-				add(methodNames = ObjectUtils.getIfNull(methodNames, ArrayList::new), getName(m));
-				//
-			} // for
-				//
-				// TODO
-				//
-			final List<DomNode> domNodes = querySelectorAll(webClient.loadHtmlCodeIntoCurrentWindow(IOUtils
-					.toString(is = new URL("https://help.libreoffice.org/latest/en-US/text/shared/01/moviesound.html")
-							.openStream(), StandardCharsets.UTF_8)),
-					".relatedtopics a[href]");
-			//
-			Node node = null;
-			//
-			String textContent, methodName = null;
-			//
-			ATag aTag = null;
-			//
-			for (int i = 0; i < IterableUtils.size(domNodes); i++) {
-				//
-				for (int j = 0; j < IterableUtils.size(methodNames); j++) {
-					//
-					if (!StringUtils.startsWithIgnoreCase(methodName = get(methodNames, j), "is")
-							|| !StringUtils.containsIgnoreCase(textContent = getTextContent(node = get(domNodes, i)),
-									StringUtils.substringAfter(methodName, "is"))
-							|| aTag != null) {
-						//
-						continue;
-						//
-					} // if
-						//
-					(aTag = new ATag()).withText(textContent);
-					//
-					aTag.attr("href", getNodeValue(getNamedItem(getAttributes(node), "href")));
-					//
-				} // for
-					//
-			} // for
-				//
-			process(getTemplate(configuration, "help.html.ftl"), Collections.singletonMap("mediaFormatLink", aTag),
+			process(getTemplate(configuration, "help.html.ftl"),
+					Collections.singletonMap("mediaFormatLink", getMediaFormatLink(
+							//
+							// TODO
+							//
+							"https://help.libreoffice.org/latest/en-US/text/shared/01/moviesound.html", configuration)),
 					writer);
 			//
 			final String html = toString(writer);
@@ -2674,10 +2613,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			errorOrPrintStackTraceOrShowMessageDialog(ObjectUtils.firstNonNull(
 					ExceptionUtils.getRootCause(targetException), targetException, ExceptionUtils.getRootCause(e), e));
-			//
-		} finally {
-			//
-			IOUtils.closeQuietly(is);
 			//
 		} // try
 			//
@@ -2714,6 +2649,91 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		return jsp;
 		//
+	}
+
+	private static ATag getMediaFormatLink(final String url, final freemarker.template.Configuration configuration)
+			throws IllegalAccessException, InvocationTargetException, MalformedURLException, IOException {
+		//
+		InputStream is = null;
+		//
+		ATag aTag = null;
+		//
+		try (final WebClient webClient = new WebClient(); final Writer writer = new StringWriter()) {
+			//
+			setJavaScriptEnabled(webClient.getOptions(), false);
+			//
+			final List<Method> ms = toList(filter(
+					testAndApply(Objects::nonNull, getDeclaredMethods(forName("com.sun.jna.Platform")), Arrays::stream,
+							null),
+					m -> m != null && Objects.equals(m.getReturnType(), Boolean.TYPE) && m.getParameterCount() == -0));
+			//
+			Method m = null;
+			//
+			List<String> methodNames = null;
+			//
+			for (int i = 0; i < IterableUtils.size(ms); i++) {
+				//
+				if ((m = get(ms, i)) == null || !Modifier.isStatic(m.getModifiers())) {
+					//
+					continue;
+					//
+				} // if
+					//
+				m.setAccessible(true);
+				//
+				if (!Objects.equals(Boolean.TRUE, invoke(m, null))) {
+					//
+					continue;
+					//
+				} // if
+					//
+				add(methodNames = ObjectUtils.getIfNull(methodNames, ArrayList::new), getName(m));
+				//
+			} // for
+				//
+			final List<DomNode> domNodes = querySelectorAll(webClient.loadHtmlCodeIntoCurrentWindow(
+					(is = openStream(testAndApply(Objects::nonNull, url, URL::new, null))) != null
+							? IOUtils.toString(is, StandardCharsets.UTF_8)
+							: null),
+					".relatedtopics a[href]");
+			//
+			Node node = null;
+			//
+			String textContent, methodName = null;
+			//
+			for (int i = 0; i < IterableUtils.size(domNodes); i++) {
+				//
+				for (int j = 0; j < IterableUtils.size(methodNames); j++) {
+					//
+					if (!StringUtils.startsWithIgnoreCase(methodName = get(methodNames, j), "is")
+							|| !StringUtils.containsIgnoreCase(textContent = getTextContent(node = get(domNodes, i)),
+									StringUtils.substringAfter(methodName, "is"))
+							|| aTag != null) {
+						//
+						continue;
+						//
+					} // if
+						//
+					(aTag = new ATag()).withText(textContent);
+					//
+					aTag.attr("href", getNodeValue(getNamedItem(getAttributes(node), "href")));
+					//
+				} // for
+					//
+			} // for
+				//
+		} finally {
+			//
+			IOUtils.closeQuietly(is);
+			//
+		} // try
+			//
+		return aTag;
+		//
+	}
+
+	private static InputStream openStream(final URL instance) throws IOException {
+		return instance != null ? instance.openStream() : null;
 	}
 
 	private static byte[] getBytes(final String instance) {
