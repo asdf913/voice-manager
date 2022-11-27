@@ -2,7 +2,6 @@ package j2html.tags.specialized;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
@@ -12,7 +11,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 
 import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.WebClientOptions;
+import com.gargoylesoftware.htmlunit.WebClientOptionsUtil;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 public final class ATagUtil {
@@ -28,7 +27,7 @@ public final class ATagUtil {
 		//
 		try (final WebClient webClient = new WebClient()) {
 			//
-			setJavaScriptEnabled(webClient.getOptions(), javaScriptEnabled);
+			WebClientOptionsUtil.setJavaScriptEnabled(webClient.getOptions(), javaScriptEnabled);
 			//
 			(aTag = new ATag()).withText(getTitleText(webClient.loadHtmlCodeIntoCurrentWindow(
 					(is = openStream(testAndApply(Objects::nonNull, url, URL::new, null))) != null
@@ -49,12 +48,6 @@ public final class ATagUtil {
 
 	private static String getTitleText(final HtmlPage instance) {
 		return instance != null ? instance.getTitleText() : null;
-	}
-
-	private static void setJavaScriptEnabled(final WebClientOptions instance, final boolean enabled) {
-		if (instance != null) {
-			instance.setJavaScriptEnabled(enabled);
-		}
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
