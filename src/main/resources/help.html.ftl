@@ -1,3 +1,6 @@
+<#if statics??>
+	<#assign ATagUtil=statics['j2html.tags.specialized.ATagUtil']>
+</#if>
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -10,19 +13,47 @@
 			<tbody>
 				<tr>
 					<td>学年別漢字</td>
-					<td><a href="https://ja.wikipedia.org/wiki/%E5%AD%A6%E5%B9%B4%E5%88%A5%E6%BC%A2%E5%AD%97%E9%85%8D%E5%BD%93%E8%A1%A8">学年別漢字配当表 - Wikipedia</a></td>
+					<td>
+						<#assign url="https://ja.wikipedia.org/wiki/%E5%AD%A6%E5%B9%B4%E5%88%A5%E6%BC%A2%E5%AD%97%E9%85%8D%E5%BD%93%E8%A1%A8">
+						<#if statics??>
+							${statics["j2html.tags.specialized.ATagUtil"].createByUrl(url)}
+						<#else>
+							<a href="${url}">学年別漢字配当表 - Wikipedia</a>
+						</#if>
+					</td>
 				</tr>
 				<tr>
 					<td>常用漢字</td>
-					<td><a href="https://ja.wikipedia.org/wiki/%E5%B8%B8%E7%94%A8%E6%BC%A2%E5%AD%97%E4%B8%80%E8%A6%A7">常用漢字一覧 - Wikipedia</a></td>
+					<td>
+						<#assign url="https://ja.wikipedia.org/wiki/%E5%B8%B8%E7%94%A8%E6%BC%A2%E5%AD%97%E4%B8%80%E8%A6%A7">
+						<#if statics??>
+							${statics["j2html.tags.specialized.ATagUtil"].createByUrl(url)}
+						<#else>
+							<a href="${url}">常用漢字一覧 - Wikipedia</a>
+						</#if>
+					</td>
 				</tr>
 				<tr>
 					<td>IPA</td>
-					<td><a href="http://www.internationalphoneticassociation.org/">International Phonetic Association | ɪntəˈnæʃənəl fəˈnɛtɪk əsoʊsiˈeɪʃn</a></td>
+					<td>
+						<#assign url="https://www.internationalphoneticassociation.org">
+						<#if statics??>
+							${statics["j2html.tags.specialized.ATagUtil"].createByUrl(url)}
+						<#else>
+							<a href="${url}">International Phonetic Association | ɪntəˈnæʃənəl fəˈnɛtɪk əsoʊsiˈeɪʃn</a>
+						</#if>
+					</td>
 				</tr>
 				<tr>
 					<td>JLPT</td>
-					<td><a href="https://www.jlpt.jp/about/levelsummary.html">N1～N5:認定の目安 | 日本語能力試験　JLPT</a></td>
+					<td>
+						<#assign url="https://www.jlpt.jp/about/levelsummary.html">
+						<#if statics??>
+							${statics["j2html.tags.specialized.ATagUtil"].createByUrl(url)}
+						<#else>
+							<a href="${url}">N1～N5:認定の目安 | 日本語能力試験　JLPT</a>
+						</#if>
+					</td>
 				</tr>
 			</tbody>
 		</table>

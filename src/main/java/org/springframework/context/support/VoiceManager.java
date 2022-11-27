@@ -2593,9 +2593,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		try (final Writer writer = new StringWriter()) {
 			//
-			process(getTemplate(configuration, "help.html.ftl"),
-					Collections.singletonMap("mediaFormatLink", getMediaFormatLink(mediaFormatPageUrl, configuration)),
-					writer);
+			final Map<Object, Object> map = new LinkedHashMap<>(Collections.singletonMap("statics",
+					new BeansWrapper(freemarker.template.Configuration.getVersion()).getStaticModels()));
+			//
+			map.put("mediaFormatLink", getMediaFormatLink(mediaFormatPageUrl, configuration));
+			//
+			process(getTemplate(configuration, "help.html.ftl"), map, writer);
 			//
 			final String html = toString(writer);
 			//

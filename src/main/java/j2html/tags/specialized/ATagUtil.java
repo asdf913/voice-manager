@@ -1,0 +1,78 @@
+package j2html.tags.specialized;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.Objects;
+import java.util.function.Predicate;
+
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.function.FailableFunction;
+
+import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.WebClientOptions;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
+
+public final class ATagUtil {
+
+	private ATagUtil() {
+	}
+
+	public static ATag createByUrl(final String url) throws MalformedURLException, IOException {
+		//
+		InputStream is = null;
+		//
+		ATag aTag = null;
+		//
+		try (final WebClient webClient = new WebClient()) {
+			//
+			setJavaScriptEnabled(webClient.getOptions(), false);
+			//
+			(aTag = new ATag()).withText(getTitleText(webClient.loadHtmlCodeIntoCurrentWindow(
+					(is = openStream(testAndApply(Objects::nonNull, url, URL::new, null))) != null
+							? IOUtils.toString(is, StandardCharsets.UTF_8)
+							: null)));
+			//
+			aTag.attr("href", url);
+			//
+		} finally {
+			//
+			IOUtils.closeQuietly(is);
+			//
+		} // try
+			//
+		return aTag;
+		//
+	}
+
+	private static String getTitleText(final HtmlPage instance) {
+		return instance != null ? instance.getTitleText() : null;
+	}
+
+	private static void setJavaScriptEnabled(final WebClientOptions instance, final boolean enabled) {
+		if (instance != null) {
+			instance.setJavaScriptEnabled(enabled);
+		}
+	}
+
+	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse) throws E {
+		return test(predicate, value) ? apply(functionTrue, value) : apply(functionFalse, value);
+	}
+
+	private static final <T> boolean test(final Predicate<T> instance, final T value) {
+		return instance != null && instance.test(value);
+	}
+
+	private static <T, R, E extends Throwable> R apply(final FailableFunction<T, R, E> instance, final T value)
+			throws E {
+		return instance != null ? instance.apply(value) : null;
+	}
+
+	private static InputStream openStream(final URL instance) throws IOException {
+		return instance != null ? instance.openStream() : null;
+	}
+
+}
