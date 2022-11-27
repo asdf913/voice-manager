@@ -2592,7 +2592,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			setJavaScriptEnabled(webClient.getOptions(), false);
 			//
 			final List<Method> ms = toList(filter(
-					testAndApply(Objects::nonNull, getDeclaredMethods(com.sun.jna.Platform.class), Arrays::stream,
+					testAndApply(Objects::nonNull, getDeclaredMethods(forName("com.sun.jna.Platform")), Arrays::stream,
 							null),
 					m -> m != null && Objects.equals(m.getReturnType(), Boolean.TYPE) && m.getParameterCount() == -0));
 			//
