@@ -20,7 +20,8 @@ public final class ATagUtil {
 	private ATagUtil() {
 	}
 
-	public static ATag createByUrl(final String url) throws MalformedURLException, IOException {
+	public static ATag createByUrl(final String url, final boolean javaScriptEnabled)
+			throws MalformedURLException, IOException {
 		//
 		InputStream is = null;
 		//
@@ -28,7 +29,7 @@ public final class ATagUtil {
 		//
 		try (final WebClient webClient = new WebClient()) {
 			//
-			setJavaScriptEnabled(webClient.getOptions(), false);
+			setJavaScriptEnabled(webClient.getOptions(), javaScriptEnabled);
 			//
 			(aTag = new ATag()).withText(getTitleText(webClient.loadHtmlCodeIntoCurrentWindow(
 					(is = openStream(testAndApply(Objects::nonNull, url, URL::new, null))) != null

@@ -29,7 +29,7 @@ class ATagUtilTest {
 	@Test
 	void testCreateByUrl() throws IOException {
 		//
-		Assertions.assertNotNull(ATagUtil.createByUrl(null));
+		Assertions.assertNotNull(ATagUtil.createByUrl(null, false));
 		//
 	}
 
