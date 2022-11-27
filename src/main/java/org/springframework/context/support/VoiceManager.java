@@ -134,6 +134,7 @@ import javax.swing.MutableComboBoxModel;
 import javax.swing.WindowConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkEvent.EventType;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.JTextComponent;
@@ -2622,7 +2623,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				try {
 					//
-					if (Objects.equals(EventType.ACTIVATED, x != null ? x.getEventType() : null)) {
+					if (Objects.equals(EventType.ACTIVATED, getEventType(x))) {
 						//
 						browse(Desktop.getDesktop(), x != null ? x.getURL().toURI() : null);
 						//
@@ -2649,6 +2650,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		return jsp;
 		//
+	}
+
+	private static EventType getEventType(final HyperlinkEvent instance) {
+		return instance != null ? instance.getEventType() : null;
 	}
 
 	private static ATag getMediaFormatLink(final String url, final freemarker.template.Configuration configuration)

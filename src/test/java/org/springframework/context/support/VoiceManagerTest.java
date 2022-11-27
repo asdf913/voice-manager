@@ -91,6 +91,8 @@ import javax.swing.ListCellRenderer;
 import javax.swing.MutableComboBoxModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkEvent.EventType;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.JTextComponent;
 import javax.xml.parsers.DocumentBuilder;
@@ -261,7 +263,7 @@ class VoiceManagerTest {
 			METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_SHOW_MESSAGE_DIALOG1,
 			METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_SHOW_MESSAGE_DIALOG2,
 			METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_SHOW_MESSAGE_DIALOG3, METHOD_SET_VISIBLE, METHOD_RANDOM_ALPHABETIC,
-			METHOD_GET_MEDIA_FORMAT_LINK = null;
+			METHOD_GET_MEDIA_FORMAT_LINK, METHOD_GET_EVENT_TYPE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -748,6 +750,8 @@ class VoiceManagerTest {
 		//
 		(METHOD_GET_MEDIA_FORMAT_LINK = clz.getDeclaredMethod("getMediaFormatLink", String.class,
 				freemarker.template.Configuration.class)).setAccessible(true);
+		//
+		(METHOD_GET_EVENT_TYPE = clz.getDeclaredMethod("getEventType", HyperlinkEvent.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -6361,6 +6365,29 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof ATag) {
 				return (ATag) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetEventType() throws Throwable {
+		//
+		Assertions.assertNull(getEventType(null));
+		//
+		Assertions.assertNull(getEventType(new HyperlinkEvent(EMPTY, null, null)));
+		//
+	}
+
+	private static EventType getEventType(final HyperlinkEvent instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_EVENT_TYPE.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof EventType) {
+				return (EventType) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
