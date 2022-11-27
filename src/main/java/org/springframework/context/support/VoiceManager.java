@@ -289,6 +289,7 @@ import freemarker.template.TemplateException;
 import freemarker.template.TemplateHashModel;
 import freemarker.template.Version;
 import io.github.toolfactory.narcissus.Narcissus;
+import j2html.tags.specialized.ATag;
 import mapper.VoiceMapper;
 import net.miginfocom.swing.MigLayout;
 import net.sourceforge.javaflacencoder.AudioStreamEncoder;
@@ -2583,9 +2584,77 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		JEditorPane jep = null;
 		//
-		try (final Writer writer = new StringWriter()) {
+		InputStream is = null;
+		//
+		try (final WebClient webClient = new WebClient(); final Writer writer = new StringWriter()) {
 			//
-			process(getTemplate(configuration, "help.html.ftl"), null, writer);
+			setJavaScriptEnabled(webClient.getOptions(), false);
+			//
+			final List<Method> ms = toList(filter(
+					testAndApply(Objects::nonNull, getDeclaredMethods(com.sun.jna.Platform.class), Arrays::stream,
+							null),
+					m -> m != null && Objects.equals(m.getReturnType(), Boolean.TYPE) && m.getParameterCount() == -0));
+			//
+			Method m = null;
+			//
+			List<String> methodNames = null;
+			//
+			for (int i = 0; i < IterableUtils.size(ms); i++) {
+				//
+				if ((m = get(ms, i)) == null || !Modifier.isStatic(m.getModifiers())) {
+					//
+					continue;
+					//
+				} // if
+					//
+				m.setAccessible(true);
+				//
+				if (!Objects.equals(Boolean.TRUE, invoke(m, null))) {
+					//
+					continue;
+					//
+				} // if
+					//
+				add(methodNames = ObjectUtils.getIfNull(methodNames, ArrayList::new), getName(m));
+				//
+			} // for
+				//
+				// TODO
+				//
+			final List<DomNode> domNodes = querySelectorAll(webClient.loadHtmlCodeIntoCurrentWindow(IOUtils
+					.toString(is = new URL("https://help.libreoffice.org/latest/en-US/text/shared/01/moviesound.html")
+							.openStream(), "utf-8")),
+					".relatedtopics a[href]");
+			//
+			Node node = null;
+			//
+			String textContent, methodName = null;
+			//
+			ATag aTag = null;
+			//
+			for (int i = 0; i < IterableUtils.size(domNodes); i++) {
+				//
+				for (int j = 0; j < IterableUtils.size(methodNames); j++) {
+					//
+					if (!StringUtils.startsWithIgnoreCase(methodName = get(methodNames, j), "is")
+							|| !StringUtils.containsIgnoreCase(textContent = getTextContent(node = get(domNodes, i)),
+									StringUtils.substringAfter(methodName, "is"))
+							|| aTag != null) {
+						//
+						continue;
+						//
+					} // if
+						//
+					(aTag = new ATag()).withText(textContent);
+					//
+					aTag.attr("href", getNodeValue(getNamedItem(getAttributes(node), "href")));
+					//
+				} // for
+					//
+			} // for
+				//
+			process(getTemplate(configuration, "help.html.ftl"), Collections.singletonMap("mediaFormatLink", aTag),
+					writer);
 			//
 			final String html = toString(writer);
 			//
@@ -2594,9 +2663,20 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							getMimeType(new ContentInfoUtil().findMatch(VoiceManager.getBytes(html))), "text/html"),
 							html));
 			//
-		} catch (final IOException | TemplateException e) {
+		} catch (final IOException | TemplateException | IllegalAccessException e) {
 			//
 			errorOrPrintStackTraceOrShowMessageDialog(e);
+			//
+		} catch (final InvocationTargetException e) {
+			//
+			final Throwable targetException = e.getTargetException();
+			//
+			errorOrPrintStackTraceOrShowMessageDialog(ObjectUtils.firstNonNull(
+					ExceptionUtils.getRootCause(targetException), targetException, ExceptionUtils.getRootCause(e), e));
+			//
+		} finally {
+			//
+			IOUtils.closeQuietly(is);
 			//
 		} // try
 			//
@@ -4489,6 +4569,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static String getNodeName(final Node instance) {
 		return instance != null ? instance.getNodeName() : null;
+	}
+
+	private static String getNodeValue(final Node instance) {
+		return instance != null ? instance.getNodeValue() : null;
 	}
 
 	private static String getName(final File instance) {
