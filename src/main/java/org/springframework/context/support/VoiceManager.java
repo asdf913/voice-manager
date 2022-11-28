@@ -8659,7 +8659,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)), commonPrefix);
 			//
 			setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)),
-					StringUtils.substringAfter(voiceId = voiceIds[i], commonPrefix));
+					StringUtils.contains(commonPrefix, voiceId = voiceIds[i])
+							? StringUtils.substringAfter(voiceId, commonPrefix)
+							: voiceId);
 			//
 			for (int j = 0; j < as.length; j++) {
 				//
