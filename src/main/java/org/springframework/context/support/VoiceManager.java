@@ -8653,9 +8653,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)), commonPrefix);
 			//
 			setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)),
-					StringUtils.contains(commonPrefix, voiceId = voiceIds[i])
-							? StringUtils.substringAfter(voiceId, commonPrefix)
-							: voiceId);
+					StringUtils.defaultIfBlank(testAndApply(StringUtils::contains, commonPrefix, voiceId = voiceIds[i],
+							StringUtils::substringAfter, null), voiceId));
 			//
 			if (objectMap == null && (objectMap = Reflection.newProxy(ObjectMap.class, new IH())) != null) {
 				//
