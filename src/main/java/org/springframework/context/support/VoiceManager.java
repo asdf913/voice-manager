@@ -8628,20 +8628,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		for (int i = 0; voiceIds != null && as != null && i < voiceIds.length; i++) {
 			//
-			if (sheet == null
-					&& (sheet = createSheet(workbook = ObjectUtils.getIfNull(workbook, XSSFWorkbook::new))) != null
-					&& (row = sheet.createRow(sheet.getLastRowNum() + 1)) != null) {
+			if (sheet == null) {
 				//
-				setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)), "Common Prefix");
+				setMicrosoftSpeechObjectLibrarySheetFirstRow(
+						sheet = createSheet(workbook = ObjectUtils.getIfNull(workbook, XSSFWorkbook::new)), as);
 				//
-				setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)), "ID");
-				//
-				for (int j = 0; j < as.length; j++) {
-					//
-					setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)), as[j]);
-					//
-				} // for
-					//
 			} // if
 				//
 			if (sheet != null && (row = sheet.createRow(sheet.getLastRowNum() + 1)) == null) {
@@ -8681,6 +8672,26 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return workbook;
 		//
+	}
+
+	private static void setMicrosoftSpeechObjectLibrarySheetFirstRow(final Sheet sheet, final String[] columnNames) {
+		//
+		final Row row = sheet != null ? sheet.createRow(sheet.getLastRowNum() + 1) : null;
+		//
+		if (row != null) {
+			//
+			setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)), "Common Prefix");
+			//
+			setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)), "ID");
+			//
+			for (int j = 0; columnNames != null && j < columnNames.length; j++) {
+				//
+				setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)), columnNames[j]);
+				//
+			} // for
+				//
+		} // if
+			//
 	}
 
 	private static void setMicrosoftSpeechObjectLibrarySheet(final ObjectMap objectMap, final String voiceId,
