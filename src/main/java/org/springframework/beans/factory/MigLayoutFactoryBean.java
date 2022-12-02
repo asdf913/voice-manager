@@ -233,28 +233,28 @@ public class MigLayoutFactoryBean implements FactoryBean<MigLayout> {
 		final Map<Integer, Constructor<?>> constructorMap = testAndApply(Objects::nonNull,
 				MigLayout.class.getDeclaredConstructors(), Arrays::stream, null).filter(c -> {
 					//
-					if (c != null) {
+					if (c == null) {
 						//
-						final Class<?>[] pts = c.getParameterTypes();
-						//
-						if (pts != null) {
-							//
-							for (final Class<?> pt : pts) {
-								//
-								if (!Objects.equals(pt, String.class)) {
-									//
-									return false;
-								} // if
-									//
-							} // for
-								//
-						} // if
-							//
-						return true;
+						return false;
 						//
 					} // if
 						//
-					return false;
+					final Class<?>[] pts = c.getParameterTypes();
+					//
+					if (pts != null) {
+						//
+						for (final Class<?> pt : pts) {
+							//
+							if (!Objects.equals(pt, String.class)) {
+								//
+								return false;
+							} // if
+								//
+						} // for
+							//
+					} // if
+						//
+					return true;
 					//
 				}).collect(Collectors.toMap(c -> c != null ? c.getParameterCount() : null, Functions.identity()));
 		//
