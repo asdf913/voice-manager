@@ -5124,11 +5124,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				String string = VoiceManager.toString(quality);
 				//
-				if (containsKey(map, string)) {
-					//
-					setQuality(get(map, string));
-					//
-				} else if (containsKey(map, string = StringUtils.lowerCase(string))) {
+				if (containsKey(map, string) || containsKey(map, string = StringUtils.lowerCase(string))) {
 					//
 					setQuality(get(map, string));
 					//
