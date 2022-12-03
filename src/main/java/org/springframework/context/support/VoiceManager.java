@@ -7919,6 +7919,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			ObjectMapper objectMapper = null;
 			//
+			final boolean jlptAsFolder = BooleanMap.getBoolean(booleanMap, "jlptAsFolder");
+			//
+			final AtomicInteger denominator = new AtomicInteger(2);
+			//
+			if (jlptAsFolder) {
+				//
+				denominator.incrementAndGet();
+				//
+			} // if
+				//
 			for (int i = 0; i < size; i++) {
 				//
 				if ((es = ObjectUtils.getIfNull(es, () -> Executors.newFixedThreadPool(1))) == null) {
@@ -7931,7 +7941,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				et.counter = Integer.valueOf(i + 1);
 				//
-				et.pharse = ObjectUtils.getIfNull(pharse, () -> Fraction.getFraction(1, 3));
+				et.pharse = ObjectUtils.getIfNull(pharse, () -> Fraction.getFraction(1, intValue(denominator, 2)));
 				//
 				et.count = size;
 				//
@@ -8027,8 +8037,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
-				ObjectMap.setObject(objectMap, Fraction.class,
-						pharse = ObjectUtils.getIfNull(pharse, () -> Fraction.getFraction(2, 3)));
+				final AtomicInteger numerator = new AtomicInteger(1);
+				//
+				if (jlptAsFolder) {
+					//
+					numerator.incrementAndGet();
+					//
+				} // if
+					//
+				ObjectMap.setObject(objectMap, Fraction.class, pharse = ObjectUtils.getIfNull(pharse,
+						() -> Fraction.getFraction(intValue(numerator, 0) + 1, intValue(denominator, 1))));
 				//
 				for (final Entry<String, Voice> en : entries) {
 					//
@@ -8083,7 +8101,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				// JLPT
 				//
-			if (BooleanMap.getBoolean(booleanMap, "jlptAsFolder")) {
+			if (jlptAsFolder) {
 				//
 				clear(multimap = ObjectUtils.getIfNull(multimap, LinkedListMultimap::create));
 				//
