@@ -346,6 +346,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static final String EMBED_AUDIO_IN_PRESENTATION = "embedAudioInPresentation";
 
+	private static final String HIDE_AUDIO_IMAGE_IN_PRESENTATION = "hideAudioImageInPresentation";
+
 	private static final Predicate<File> EMPTY_FILE_PREDICATE = f -> f != null && f.exists() && isFile(f)
 			&& f.length() == 0;
 
@@ -3695,7 +3697,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					bm.setBoolean(EMBED_AUDIO_IN_PRESENTATION, isSelected(cbEmbedAudioInPresentation));
 					//
-					bm.setBoolean("hideAudioImageInPresentation", !isSelected(cbHideAudioImageInPresentation));
+					bm.setBoolean(HIDE_AUDIO_IMAGE_IN_PRESENTATION, !isSelected(cbHideAudioImageInPresentation));
 					//
 				} // if
 					//
@@ -7337,7 +7339,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 							booleanMap.setBoolean(EMBED_AUDIO_IN_PRESENTATION, embedAudioInPresentation);
 							//
-							booleanMap.setBoolean("hideAudioImageInPresentation", hideAudioImageInPresentation);
+							booleanMap.setBoolean(HIDE_AUDIO_IMAGE_IN_PRESENTATION, hideAudioImageInPresentation);
 							//
 						} // if
 							//
@@ -7558,7 +7560,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							.getBoolean(ObjectMap.getObject(objectMap, BooleanMap.class), EMBED_AUDIO_IN_PRESENTATION);
 					//
 					final boolean hideAudioImageInPresentation = BooleanMap.getBoolean(
-							ObjectMap.getObject(objectMap, BooleanMap.class), "hideAudioImageInPresentation");
+							ObjectMap.getObject(objectMap, BooleanMap.class), HIDE_AUDIO_IMAGE_IN_PRESENTATION);
 					//
 					for (final Entry<String, Voice> entry : voices.entrySet()) {
 						//
@@ -8018,7 +8020,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					et.embedAudioInPresentation = booleanMap.getBoolean(EMBED_AUDIO_IN_PRESENTATION);
 					//
-					et.hideAudioImageInPresentation = booleanMap.getBoolean("hideAudioImageInPresentation");
+					et.hideAudioImageInPresentation = booleanMap.getBoolean(HIDE_AUDIO_IMAGE_IN_PRESENTATION);
 					//
 				} // if
 					//
@@ -8329,7 +8331,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			et.embedAudioInPresentation = booleanMap.getBoolean(EMBED_AUDIO_IN_PRESENTATION);
 			//
-			et.hideAudioImageInPresentation = booleanMap.getBoolean("hideAudioImageInPresentation");
+			et.hideAudioImageInPresentation = booleanMap.getBoolean(HIDE_AUDIO_IMAGE_IN_PRESENTATION);
 			//
 		} // if
 			//
