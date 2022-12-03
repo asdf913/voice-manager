@@ -7345,4 +7345,37 @@ class VoiceManagerTest {
 		return instance != null ? instance.getMouseListeners() : null;
 	}
 
+	@Test
+	void testObjectMap() throws Throwable {
+		//
+		final Method containsObject = CLASS_OBJECT_MAP != null
+				? CLASS_OBJECT_MAP.getDeclaredMethod("containsObject", CLASS_OBJECT_MAP, Class.class)
+				: null;
+		//
+		if (containsObject != null) {
+			//
+			containsObject.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertEquals(Boolean.FALSE, invoke(containsObject, null, null, null));
+		//
+		final Object objectMap = Reflection.newProxy(CLASS_OBJECT_MAP, createVoiceManagerIH());
+		//
+		final Method setObject = CLASS_OBJECT_MAP != null
+				? CLASS_OBJECT_MAP.getDeclaredMethod("setObject", Class.class, Object.class)
+				: null;
+		//
+		if (setObject != null) {
+			//
+			setObject.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertNull(invoke(setObject, objectMap, null, null));
+		//
+		Assertions.assertEquals(Boolean.TRUE, invoke(containsObject, null, objectMap, null));
+		//
+	}
+
 }

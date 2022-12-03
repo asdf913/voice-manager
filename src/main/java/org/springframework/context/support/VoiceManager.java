@@ -6075,6 +6075,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			}
 		}
 
+		static <T> boolean containsObject(final ObjectMap instance, final Class<T> key) {
+			return instance != null && instance.containsObject(key);
+		}
+
 	}
 
 	private static class ImportTask implements Runnable {
@@ -8242,16 +8246,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				orElse(max(filter(map(stream(multimap.values()), x -> getOrdinalPosition(x)), Objects::nonNull),
 						ObjectUtils::compare), null))));
 		//
-		EvaluationContext evaluationContext = testAndApply(c -> objectMap != null && objectMap.containsObject(c),
+		EvaluationContext evaluationContext = testAndApply(c -> ObjectMap.containsObject(objectMap, c),
 				EvaluationContext.class, c -> ObjectMap.getObject(objectMap, c), null);
 		//
-		ExpressionParser expressionParser = testAndApply(c -> objectMap != null && objectMap.containsObject(c),
+		ExpressionParser expressionParser = testAndApply(c -> ObjectMap.containsObject(objectMap, c),
 				ExpressionParser.class, c -> ObjectMap.getObject(objectMap, c), null);
 		//
-		VoiceManager voiceManager = testAndApply(c -> objectMap != null && objectMap.containsObject(c),
-				VoiceManager.class, c -> ObjectMap.getObject(objectMap, c), null);
+		VoiceManager voiceManager = testAndApply(c -> ObjectMap.containsObject(objectMap, c), VoiceManager.class,
+				c -> ObjectMap.getObject(objectMap, c), null);
 		//
-		ExecutorService es = testAndApply(c -> objectMap != null && objectMap.containsObject(c), ExecutorService.class,
+		ExecutorService es = testAndApply(c -> ObjectMap.containsObject(objectMap, c), ExecutorService.class,
 				c -> ObjectMap.getObject(objectMap, c), null);
 		//
 		Table<String, String, Voice> voiceFileNames = null;
@@ -8326,21 +8330,21 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final ExportTask et = new ExportTask();
 		//
-		et.pharse = testAndApply(c -> objectMap != null && objectMap.containsObject(c), Fraction.class,
+		et.pharse = testAndApply(c -> ObjectMap.containsObject(objectMap, c), Fraction.class,
 				c -> ObjectMap.getObject(objectMap, c), null);
 		//
 		et.counter = counter;
 		//
 		et.count = size;
 		//
-		et.percentNumberFormat = testAndApply(c -> objectMap != null && objectMap.containsObject(c), NumberFormat.class,
+		et.percentNumberFormat = testAndApply(c -> ObjectMap.containsObject(objectMap, c), NumberFormat.class,
 				c -> ObjectMap.getObject(objectMap, c), null);
 		//
 		et.evaluationContext = ObjectMap.getObject(objectMap, EvaluationContext.class);
 		//
 		et.expressionParser = ObjectMap.getObject(objectMap, ExpressionParser.class);
 		//
-		et.objectMapper = testAndApply(c -> objectMap != null && objectMap.containsObject(c), ObjectMapper.class,
+		et.objectMapper = testAndApply(c -> ObjectMap.containsObject(objectMap, c), ObjectMapper.class,
 				c -> ObjectMap.getObject(objectMap, c), null);
 		//
 		et.outputFolderFileNameExpressions = outputFolderFileNameExpressions;
@@ -8349,8 +8353,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		et.ordinalPositionDigit = numberOfOrdinalPositionDigit;
 		//
-		final VoiceManager voiceManager = testAndApply(c -> objectMap != null && objectMap.containsObject(c),
-				VoiceManager.class, c -> ObjectMap.getObject(objectMap, c), null);
+		final VoiceManager voiceManager = testAndApply(c -> ObjectMap.containsObject(objectMap, c), VoiceManager.class,
+				c -> ObjectMap.getObject(objectMap, c), null);
 		//
 		et.ordinalPositionFileNamePrefix = getText(
 				(et.voiceManager = voiceManager) != null ? voiceManager.tfOrdinalPositionFileNamePrefix : null);
@@ -8359,8 +8363,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		et.folderInPresentation = voiceManager != null ? voiceManager.folderInPresentation : null;
 		//
-		final BooleanMap booleanMap = testAndApply(c -> objectMap != null && objectMap.containsObject(c),
-				BooleanMap.class, c -> ObjectMap.getObject(objectMap, c), null);
+		final BooleanMap booleanMap = testAndApply(c -> ObjectMap.containsObject(objectMap, c), BooleanMap.class,
+				c -> ObjectMap.getObject(objectMap, c), null);
 		//
 		if (booleanMap != null) {
 			//
