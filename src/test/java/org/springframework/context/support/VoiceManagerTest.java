@@ -115,6 +115,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.function.FailableRunnable;
 import org.apache.commons.lang3.math.Fraction;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -7042,6 +7043,24 @@ class VoiceManagerTest {
 		Assertions.assertNull(invoke(removeCustomShapeByName, null, null, null));
 		//
 		Assertions.assertNull(invoke(removeCustomShapeByName, null, null, ""));
+		//
+		// org.springframework.context.support.VoiceManager$ExportTask.testAndRun(boolean,org.apache.commons.lang3.function.FailableRunnable)
+		//
+		final Method testAndRun = CLASS_EXPORT_TASK != null
+				? CLASS_EXPORT_TASK.getDeclaredMethod("testAndRun", Boolean.TYPE, FailableRunnable.class)
+				: null;
+		//
+		if (testAndRun != null) {
+			//
+			testAndRun.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertNull(invoke(testAndRun, null, Boolean.FALSE, null));
+		//
+		Assertions.assertNull(invoke(testAndRun, null, Boolean.TRUE, null));
+		//
+		Assertions.assertNull(invoke(testAndRun, null, Boolean.TRUE, Reflection.newProxy(FailableRunnable.class, ih)));
 		//
 	}
 

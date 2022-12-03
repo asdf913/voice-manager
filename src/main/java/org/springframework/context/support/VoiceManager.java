@@ -179,6 +179,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.function.FailableRunnable;
 import org.apache.commons.lang3.math.Fraction;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -7608,12 +7609,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						// Delete customShape with the name is "AudioCoverImage" if
 						// "hideAudioImageInPresentation" is true
 						//
-						if (hideAudioImageInPresentation) {
-							//
-							removeCustomShapeByName(objectMap, "AudioCoverImage");
-							//
-						} // if
-							//
+						testAndRun(hideAudioImageInPresentation,
+								() -> removeCustomShapeByName(objectMap, "AudioCoverImage"));
+						//
 						appendChild(parentNode, pageCloned);
 						//
 					} // for
@@ -7634,6 +7632,17 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			return newOdfPresentationDocument;
 			//
+		}
+
+		private static <E extends Throwable> void testAndRun(final boolean b, final FailableRunnable<E> runnable)
+				throws E {
+			//
+			if (b && runnable != null) {
+				//
+				runnable.run();
+				//
+			} // if
+				//
 		}
 
 		private static void removeCustomShapeByName(final ObjectMap objectMap, final String name)
