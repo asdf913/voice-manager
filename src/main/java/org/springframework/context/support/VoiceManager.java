@@ -8106,108 +8106,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			if (jlptAsFolder) {
 				//
-				clear(multimap = ObjectUtils.getIfNull(multimap, LinkedListMultimap::create));
+				exportJlpt(objectMap, voices);
 				//
-				String jlptLevel = null;
-				//
-				for (int i = 0; i < IterableUtils.size(voices); i++) {
-					//
-					if ((jlptLevel = getJlptLevel(v = get(voices, i))) == null) {
-						//
-						continue;
-						//
-					} // if
-						//
-					put(multimap = ObjectUtils.getIfNull(multimap, LinkedListMultimap::create), jlptLevel, v);
-					//
-				} // for
-					//
-				if (objectMap != null && !objectMap.containsObject(Fraction.class)) {
-					//
-					ObjectMap.setObject(objectMap, Fraction.class, pharse);
-					//
-				} // if
-					//
-				String jlptFolderNamePrefix = null;
-				//
-				StringBuilder folder = null;
-				//
-				if ((entries = entries(multimap)) != null) {
-					//
-					int coutner = 0;
-					//
-					size = multimap.size();
-					//
-					numberOfOrdinalPositionDigit = Integer.valueOf(StringUtils.length(toString(orElse(
-							max(filter(map(stream(multimap.values()), x -> getOrdinalPosition(x)), Objects::nonNull),
-									ObjectUtils::compare),
-							null))));
-					//
-					for (final Entry<String, Voice> en : multimap.entries()) {
-						//
-						if (en == null) {
-							//
-							continue;
-							//
-						} // if
-							//
-						if ((es = ObjectUtils.getIfNull(es, () -> Executors.newFixedThreadPool(1))) == null) {
-							//
-							continue;
-							//
-						} // if
-							//
-						if (objectMap != null) {
-							//
-							if (!objectMap.containsObject(NumberFormat.class)) {
-								//
-								ObjectMap.setObject(objectMap, NumberFormat.class, percentNumberFormat = ObjectUtils
-										.getIfNull(percentNumberFormat, () -> new DecimalFormat("#%")));
-								//
-							} // if
-								//
-							if (!objectMap.containsObject(EvaluationContext.class)) {
-								//
-								ObjectMap.setObject(objectMap, EvaluationContext.class, evaluationContext = ObjectUtils
-										.getIfNull(evaluationContext, StandardEvaluationContext::new));
-								//
-							} // if
-								//
-							if (!objectMap.containsObject(ExpressionParser.class)) {
-								//
-								ObjectMap.setObject(objectMap, ExpressionParser.class, expressionParser = ObjectUtils
-										.getIfNull(expressionParser, SpelExpressionParser::new));
-								//
-							} // if
-								//
-						} // if
-							//
-						ObjectMap.setObject(objectMap, Voice.class, getValue(en));
-						//
-						if (jlptFolderNamePrefix == null && voiceManager != null) {
-							//
-							jlptFolderNamePrefix = getText(voiceManager.tfJlptFolderNamePrefix);
-							//
-						} // if
-							//
-						clear(folder = ObjectUtils.getIfNull(folder, StringBuilder::new));
-						//
-						if (folder != null) {
-							//
-							append(append(folder, StringUtils.defaultIfBlank(jlptFolderNamePrefix, "")), getKey(en));
-							//
-						} // if
-							//
-						es.submit(createExportTask(objectMap, size, Integer.valueOf(++coutner),
-								numberOfOrdinalPositionDigit,
-								Collections.singletonMap(toString(folder),
-										"(#voice.text+'('+#voice.romaji+').'+#voice.fileExtension)"),
-								voiceFileNames = ObjectUtils.getIfNull(voiceFileNames, HashBasedTable::create)));
-						//
-					} // for
-						//
-				} // if
-					//
 			} // if
 				//
 		} finally {
@@ -8218,14 +8118,108 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	private static String getJlptLevel(final Voice instance) {
-		return instance != null ? instance.getJlptLevel() : null;
-	}
-
-	private static void clear(final Multimap<?, ?> instance) {
-		if (instance != null) {
-			instance.clear();
-		}
+	private static void exportJlpt(final ObjectMap objectMap, final List<Voice> voices) {
+		//
+		Multimap<String, Voice> multimap = null;
+		//
+		Voice v = null;
+		//
+		String jlptLevel = null;
+		//
+		for (int i = 0; i < IterableUtils.size(voices); i++) {
+			//
+			if ((v = get(voices, i)) == null || (jlptLevel = v.getJlptLevel()) == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			put(multimap = ObjectUtils.getIfNull(multimap, LinkedListMultimap::create), jlptLevel, v);
+			//
+		} // for
+			//
+		String jlptFolderNamePrefix = null;
+		//
+		StringBuilder folder = null;
+		//
+		final Collection<Entry<String, Voice>> entries = entries(multimap);
+		//
+		if (entries != null) {
+			//
+			int coutner = 0;
+			//
+			final int size = multimap.size();
+			//
+			final int numberOfOrdinalPositionDigit = Integer.valueOf(StringUtils.length(toString(
+					orElse(max(filter(map(stream(multimap.values()), x -> getOrdinalPosition(x)), Objects::nonNull),
+							ObjectUtils::compare), null))));
+			//
+			EvaluationContext evaluationContext = testAndApply(c -> objectMap != null && objectMap.containsObject(c),
+					EvaluationContext.class, c -> ObjectMap.getObject(objectMap, c), null);
+			//
+			ExpressionParser expressionParser = testAndApply(c -> objectMap != null && objectMap.containsObject(c),
+					ExpressionParser.class, c -> ObjectMap.getObject(objectMap, c), null);
+			//
+			VoiceManager voiceManager = testAndApply(c -> objectMap != null && objectMap.containsObject(c),
+					VoiceManager.class, c -> ObjectMap.getObject(objectMap, c), null);
+			//
+			ExecutorService es = testAndApply(c -> objectMap != null && objectMap.containsObject(c),
+					ExecutorService.class, c -> ObjectMap.getObject(objectMap, c), null);
+			//
+			Table<String, String, Voice> voiceFileNames = null;
+			//
+			for (final Entry<String, Voice> en : multimap.entries()) {
+				//
+				if (en == null || (es = ObjectUtils.getIfNull(es, () -> Executors.newFixedThreadPool(1))) == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if (objectMap != null) {
+					//
+					if (!objectMap.containsObject(EvaluationContext.class)) {
+						//
+						ObjectMap.setObject(objectMap, EvaluationContext.class, evaluationContext = ObjectUtils
+								.getIfNull(evaluationContext, StandardEvaluationContext::new));
+						//
+					} // if
+						//
+					if (!objectMap.containsObject(ExpressionParser.class)) {
+						//
+						ObjectMap.setObject(objectMap, ExpressionParser.class,
+								expressionParser = ObjectUtils.getIfNull(expressionParser, SpelExpressionParser::new));
+						//
+					} // if
+						//
+				} // if
+					//
+				ObjectMap.setObject(objectMap, Voice.class, getValue(en));
+				//
+				if (jlptFolderNamePrefix == null
+						&& (voiceManager = ObjectUtils.getIfNull(voiceManager, VoiceManager::new)) != null) {
+					//
+					jlptFolderNamePrefix = getText(voiceManager.tfJlptFolderNamePrefix);
+					//
+				} // if
+					//
+				clear(folder = ObjectUtils.getIfNull(folder, StringBuilder::new));
+				//
+				if (folder != null) {
+					//
+					append(append(folder, StringUtils.defaultIfBlank(jlptFolderNamePrefix, "")), getKey(en));
+					//
+				} // if
+					//
+				es.submit(createExportTask(objectMap, size, Integer.valueOf(++coutner), numberOfOrdinalPositionDigit,
+						Collections.singletonMap(toString(folder),
+								"(#voice.text+'('+#voice.romaji+').'+#voice.fileExtension)"),
+						voiceFileNames = ObjectUtils.getIfNull(voiceFileNames, HashBasedTable::create)));
+				//
+			} // for
+				//
+		} // if
+			//
 	}
 
 	private static void clear(final StringBuilder instance) {
@@ -8246,19 +8240,22 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final ExportTask et = new ExportTask();
 		//
-		et.pharse = ObjectMap.getObject(objectMap, Fraction.class);
+		et.pharse = testAndApply(c -> objectMap != null && objectMap.containsObject(c), Fraction.class,
+				c -> ObjectMap.getObject(objectMap, c), null);
 		//
 		et.counter = counter;
 		//
 		et.count = size;
 		//
-		et.percentNumberFormat = ObjectMap.getObject(objectMap, NumberFormat.class);
+		et.percentNumberFormat = testAndApply(c -> objectMap != null && objectMap.containsObject(c), NumberFormat.class,
+				c -> ObjectMap.getObject(objectMap, c), null);
 		//
 		et.evaluationContext = ObjectMap.getObject(objectMap, EvaluationContext.class);
 		//
 		et.expressionParser = ObjectMap.getObject(objectMap, ExpressionParser.class);
 		//
-		et.objectMapper = ObjectMap.getObject(objectMap, ObjectMapper.class);
+		et.objectMapper = testAndApply(c -> objectMap != null && objectMap.containsObject(c), ObjectMapper.class,
+				c -> ObjectMap.getObject(objectMap, c), null);
 		//
 		et.outputFolderFileNameExpressions = outputFolderFileNameExpressions;
 		//
@@ -8266,7 +8263,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		et.ordinalPositionDigit = numberOfOrdinalPositionDigit;
 		//
-		final VoiceManager voiceManager = ObjectMap.getObject(objectMap, VoiceManager.class);
+		final VoiceManager voiceManager = testAndApply(c -> objectMap != null && objectMap.containsObject(c),
+				VoiceManager.class, c -> ObjectMap.getObject(objectMap, c), null);
 		//
 		et.ordinalPositionFileNamePrefix = getText(
 				(et.voiceManager = voiceManager) != null ? voiceManager.tfOrdinalPositionFileNamePrefix : null);
@@ -8275,7 +8273,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		et.folderInPresentation = voiceManager != null ? voiceManager.folderInPresentation : null;
 		//
-		final BooleanMap booleanMap = ObjectMap.getObject(objectMap, BooleanMap.class);
+		final BooleanMap booleanMap = testAndApply(c -> objectMap != null && objectMap.containsObject(c),
+				BooleanMap.class, c -> ObjectMap.getObject(objectMap, c), null);
 		//
 		if (booleanMap != null) {
 			//

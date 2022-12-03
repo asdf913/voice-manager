@@ -231,21 +231,20 @@ class VoiceManagerTest {
 			METHOD_GET_MP3_TAG_PARIRS_ID3V1, METHOD_GET_METHODS_CLASS, METHOD_GET_METHODS_JAVA_CLASS,
 			METHOD_COPY_OBJECT_MAP, METHOD_DELETE, METHOD_DELETE_ON_EXIT, METHOD_CONVERT_LANGUAGE_CODE_TO_TEXT,
 			METHOD_IS_SELECTED, METHOD_SET_HIRAGANA_OR_KATAKANA, METHOD_SET_ROMAJI, METHOD_OR,
-			METHOD_CLEAR_DEFAULT_TABLE_MODEL, METHOD_CLEAR_MULTI_MAP, METHOD_CLEAR_STRING_BUILDER, METHOD_EXECUTE,
-			METHOD_PUT_MAP, METHOD_PUT_MULTI_MAP, METHOD_GET_BYTE_CONVERTER, METHOD_GET_PROPERTIES,
-			METHOD_GET_CUSTOM_PROPERTIES, METHOD_CONTAINS_CUSTOM_PROPERTIES, METHOD_CONTAINS_COLLECTION,
-			METHOD_CONTAINS_LOOKUP, METHOD_GET_LPW_STR, METHOD_GET_SHEET_NAME, METHOD_ACCEPT, METHOD_TO_ARRAY,
-			METHOD_TO_LIST, METHOD_GET_ID, METHOD_SET_MAXIMUM, METHOD_GET_CURRENT_SHEET_INDEX, METHOD_GET_JLPT_LEVELS,
-			METHOD_PARSE_JLPT_PAGE_HTML, METHOD_GET_DATA_VALIDATION_HELPER, METHOD_CREATE_EXPLICIT_LIST_CONSTRAINT,
-			METHOD_CREATE_VALIDATION, METHOD_CREATE_EXPORT_TASK, METHOD_GET_TAB_INDEX_BY_TITLE,
-			METHOD_GET_DECLARED_FIELD, METHOD_GET_ABSOLUTE_PATH, METHOD_IS_ASSIGNABLE_FROM, METHOD_GET_ENUM_CONSTANTS,
-			METHOD_LIST_FILES, METHOD_GET_TYPE, METHOD_GET_ELEMENTS_BY_TAG_NAME_SGML_PAGE,
-			METHOD_GET_ELEMENTS_BY_TAG_NAME_DOM_ELEMENT, METHOD_GET_COLUMN_NAME, METHOD_GET_KEY_SET, METHOD_PUT_ALL,
-			METHOD_CREATE_SHEET1, METHOD_CREATE_SHEET2, METHOD_ENTRIES, METHOD_GET_WORK_BOOK,
-			METHOD_GET_OLE_ENTRY_NAMES, METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE, METHOD_GET_DOCUMENT_ELEMENT,
-			METHOD_GET_CHILD_NODES, METHOD_GET_NAMED_ITEM, METHOD_GET_TEXT_CONTENT, METHOD_GET_NODE_NAME,
-			METHOD_GET_NODE_VALUE, METHOD_GET_NAME_FILE, METHOD_GET_NAME_CLASS, METHOD_GET_PASS_WORD,
-			METHOD_GET_SUPPLIER, METHOD_GET_LOOKUP, METHOD_GET_LIST,
+			METHOD_CLEAR_DEFAULT_TABLE_MODEL, METHOD_CLEAR_STRING_BUILDER, METHOD_EXECUTE, METHOD_PUT_MAP,
+			METHOD_PUT_MULTI_MAP, METHOD_GET_BYTE_CONVERTER, METHOD_GET_PROPERTIES, METHOD_GET_CUSTOM_PROPERTIES,
+			METHOD_CONTAINS_CUSTOM_PROPERTIES, METHOD_CONTAINS_COLLECTION, METHOD_CONTAINS_LOOKUP, METHOD_GET_LPW_STR,
+			METHOD_GET_SHEET_NAME, METHOD_ACCEPT, METHOD_TO_ARRAY, METHOD_TO_LIST, METHOD_GET_ID, METHOD_SET_MAXIMUM,
+			METHOD_GET_CURRENT_SHEET_INDEX, METHOD_GET_JLPT_LEVELS, METHOD_PARSE_JLPT_PAGE_HTML,
+			METHOD_GET_DATA_VALIDATION_HELPER, METHOD_CREATE_EXPLICIT_LIST_CONSTRAINT, METHOD_CREATE_VALIDATION,
+			METHOD_CREATE_EXPORT_TASK, METHOD_GET_TAB_INDEX_BY_TITLE, METHOD_GET_DECLARED_FIELD,
+			METHOD_GET_ABSOLUTE_PATH, METHOD_IS_ASSIGNABLE_FROM, METHOD_GET_ENUM_CONSTANTS, METHOD_LIST_FILES,
+			METHOD_GET_TYPE, METHOD_GET_ELEMENTS_BY_TAG_NAME_SGML_PAGE, METHOD_GET_ELEMENTS_BY_TAG_NAME_DOM_ELEMENT,
+			METHOD_GET_COLUMN_NAME, METHOD_GET_KEY_SET, METHOD_PUT_ALL, METHOD_CREATE_SHEET1, METHOD_CREATE_SHEET2,
+			METHOD_ENTRIES, METHOD_GET_WORK_BOOK, METHOD_GET_OLE_ENTRY_NAMES, METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE,
+			METHOD_GET_DOCUMENT_ELEMENT, METHOD_GET_CHILD_NODES, METHOD_GET_NAMED_ITEM, METHOD_GET_TEXT_CONTENT,
+			METHOD_GET_NODE_NAME, METHOD_GET_NODE_VALUE, METHOD_GET_NAME_FILE, METHOD_GET_NAME_CLASS,
+			METHOD_GET_PASS_WORD, METHOD_GET_SUPPLIER, METHOD_GET_LOOKUP, METHOD_GET_LIST,
 			METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK, METHOD_WRITE_VALUE_AS_STRING,
 			METHOD_CREATE_DRAWING_PATRIARCH, METHOD_GET_CREATION_HELPER, METHOD_CREATE_CELL_COMMENT,
 			METHOD_CREATE_CLIENT_ANCHOR, METHOD_CREATE_RICH_TEXT_STRING, METHOD_SET_CELL_COMMENT, METHOD_SET_AUTHOR,
@@ -265,7 +264,7 @@ class VoiceManagerTest {
 			METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_SHOW_MESSAGE_DIALOG3, METHOD_SET_VISIBLE, METHOD_RANDOM_ALPHABETIC,
 			METHOD_GET_MEDIA_FORMAT_LINK, METHOD_GET_EVENT_TYPE, METHOD_GET_PARENT_FILE,
 			METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET,
-			METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET_FIRST_ROW, METHOD_GET_JLPT_LEVEL = null;
+			METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET_FIRST_ROW, METHOD_EXPORT_JLPT = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -472,8 +471,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_CLEAR_DEFAULT_TABLE_MODEL = clz.getDeclaredMethod("clear", DefaultTableModel.class))
 				.setAccessible(true);
-		//
-		(METHOD_CLEAR_MULTI_MAP = clz.getDeclaredMethod("clear", Multimap.class)).setAccessible(true);
 		//
 		(METHOD_CLEAR_STRING_BUILDER = clz.getDeclaredMethod("clear", StringBuilder.class)).setAccessible(true);
 		//
@@ -762,7 +759,7 @@ class VoiceManagerTest {
 				.getDeclaredMethod("setMicrosoftSpeechObjectLibrarySheetFirstRow", Sheet.class, String[].class))
 				.setAccessible(true);
 		//
-		(METHOD_GET_JLPT_LEVEL = clz.getDeclaredMethod("getJlptLevel", Voice.class)).setAccessible(true);
+		(METHOD_EXPORT_JLPT = clz.getDeclaredMethod("exportJlpt", CLASS_OBJECT_MAP, List.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -3958,13 +3955,9 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> clear((DefaultTableModel) null));
 		//
-		Assertions.assertDoesNotThrow(() -> clear((Multimap<?, ?>) null));
-		//
 		Assertions.assertDoesNotThrow(() -> clear((StringBuilder) null));
 		//
 		Assertions.assertDoesNotThrow(() -> clear(new DefaultTableModel()));
-		//
-		Assertions.assertDoesNotThrow(() -> clear(multimap));
 		//
 		Assertions.assertDoesNotThrow(() -> clear(new StringBuilder()));
 		//
@@ -3973,14 +3966,6 @@ class VoiceManagerTest {
 	private static void clear(final DefaultTableModel instance) throws Throwable {
 		try {
 			METHOD_CLEAR_DEFAULT_TABLE_MODEL.invoke(null, instance);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	private static void clear(final Multimap<?, ?> instance) throws Throwable {
-		try {
-			METHOD_CLEAR_MULTI_MAP.invoke(null, instance);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -6445,23 +6430,38 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testGetJlptLevel() throws Throwable {
+	void testExportJlpt() throws Throwable {
 		//
-		Assertions.assertNull(getJlptLevel(null));
+		Assertions.assertDoesNotThrow(() -> exportJlpt(null, null));
 		//
-		Assertions.assertNull(getJlptLevel(new Voice()));
+		Assertions.assertDoesNotThrow(() -> exportJlpt(null, Collections.singletonList(null)));
+		//
+		final Voice voice = new Voice();
+		//
+		final List<Voice> voices = Collections.singletonList(voice);
+		//
+		Assertions.assertDoesNotThrow(() -> exportJlpt(null, voices));
+		//
+		voice.setJlptLevel("N1");
+		//
+		final Constructor<?> constructor = CLASS_IH != null ? CLASS_IH.getDeclaredConstructor() : null;
+		//
+		if (constructor != null) {
+			//
+			constructor.setAccessible(true);
+			//
+		} // if
+			//
+		final InvocationHandler ih = cast(InvocationHandler.class,
+				constructor != null ? constructor.newInstance() : null);
+		//
+		Assertions.assertDoesNotThrow(() -> exportJlpt(Reflection.newProxy(CLASS_OBJECT_MAP, ih), voices));
 		//
 	}
 
-	private static String getJlptLevel(final Voice instance) throws Throwable {
+	private static void exportJlpt(final Object objectMap, final List<Voice> voices) throws Throwable {
 		try {
-			final Object obj = METHOD_GET_JLPT_LEVEL.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
+			METHOD_EXPORT_JLPT.invoke(null, objectMap, voices);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
