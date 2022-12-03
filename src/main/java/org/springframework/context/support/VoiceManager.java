@@ -8112,7 +8112,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				for (int i = 0; i < IterableUtils.size(voices); i++) {
 					//
-					if ((v = get(voices, i)) == null || (jlptLevel = v.getJlptLevel()) == null) {
+					if ((jlptLevel = getJlptLevel(v = get(voices, i))) == null) {
 						//
 						continue;
 						//
@@ -8216,6 +8216,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // try
 			//
+	}
+
+	private static String getJlptLevel(final Voice instance) {
+		return instance != null ? instance.getJlptLevel() : null;
 	}
 
 	private static void clear(final Multimap<?, ?> instance) {

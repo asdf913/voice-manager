@@ -265,7 +265,7 @@ class VoiceManagerTest {
 			METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_SHOW_MESSAGE_DIALOG3, METHOD_SET_VISIBLE, METHOD_RANDOM_ALPHABETIC,
 			METHOD_GET_MEDIA_FORMAT_LINK, METHOD_GET_EVENT_TYPE, METHOD_GET_PARENT_FILE,
 			METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET,
-			METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET_FIRST_ROW = null;
+			METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET_FIRST_ROW, METHOD_GET_JLPT_LEVEL = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -761,6 +761,8 @@ class VoiceManagerTest {
 		(METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET_FIRST_ROW = clz
 				.getDeclaredMethod("setMicrosoftSpeechObjectLibrarySheetFirstRow", Sheet.class, String[].class))
 				.setAccessible(true);
+		//
+		(METHOD_GET_JLPT_LEVEL = clz.getDeclaredMethod("getJlptLevel", Voice.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -6437,6 +6439,29 @@ class VoiceManagerTest {
 			throws Throwable {
 		try {
 			METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET_FIRST_ROW.invoke(null, sheet, columnNames);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetJlptLevel() throws Throwable {
+		//
+		Assertions.assertNull(getJlptLevel(null));
+		//
+		Assertions.assertNull(getJlptLevel(new Voice()));
+		//
+	}
+
+	private static String getJlptLevel(final Voice instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_JLPT_LEVEL.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
