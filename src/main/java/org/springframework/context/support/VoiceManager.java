@@ -5516,46 +5516,42 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		List<Pair<String, ?>> pairs = null;
 		//
-		if (id3v1 != null && attributes != null) {
+		Method[] ms = null;
+		//
+		List<Method> methods = null;
+		//
+		Method m = null;
+		//
+		for (int i = 0; attributes != null && i < attributes.length; i++) {
 			//
-			Method[] ms = null;
+			final String attribute = attributes[i];
 			//
-			List<Method> methods = null;
-			//
-			Method m = null;
-			//
-			for (int i = 0; i < attributes.length; i++) {
+			if ((methods = toList(filter(
+					testAndApply(Objects::nonNull, ms = ObjectUtils.getIfNull(ms, () -> getMethods(getClass(id3v1))),
+							Arrays::stream, null),
+					a -> matches(matcher(Pattern.compile(String.format("get%1$s", StringUtils.capitalize(attribute))),
+							getName(a)))))) == null
+					|| methods.isEmpty()) {
 				//
-				final String attribute = attributes[i];
+				continue;
 				//
-				if ((methods = toList(filter(testAndApply(Objects::nonNull,
-						ms = ObjectUtils.getIfNull(ms, () -> getMethods(getClass(id3v1))), Arrays::stream, null),
-						a -> matches(
-								matcher(Pattern.compile(String.format("get%1$s", StringUtils.capitalize(attribute))),
-										getName(a)))))) == null
-						|| methods.isEmpty()) {
+			} // if
+				//
+			if (IterableUtils.size(methods) == 1) {
+				//
+				if ((m = get(methods, 0)) != null && m.getParameterCount() == 0) {
 					//
-					continue;
+					add(pairs = ObjectUtils.getIfNull(pairs, ArrayList::new), Pair.of(attribute, invoke(m, id3v1)));
 					//
 				} // if
 					//
-				if (IterableUtils.size(methods) == 1) {
-					//
-					if ((m = get(methods, 0)) != null && m.getParameterCount() == 0) {
-						//
-						add(pairs = ObjectUtils.getIfNull(pairs, ArrayList::new), Pair.of(attribute, invoke(m, id3v1)));
-						//
-					} // if
-						//
-				} else {
-					//
-					throw new IllegalStateException();
-					//
-				} // if
-					//
-			} // for
+			} else {
 				//
-		} // if
+				throw new IllegalStateException();
+				//
+			} // if
+				//
+		} // for
 			//
 		return pairs;
 		//
