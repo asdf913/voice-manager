@@ -7312,6 +7312,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 						setString(progressBar, string);
 						//
+						if (counter.intValue() == count.intValue() && pharse != null) {
+							//
+							FieldUtils.writeDeclaredField(pharse, "numerator", pharse.getNumerator() + 1, true);
+							//
+						} // if
+							//
 					} // if
 						//
 				} // if
@@ -7911,8 +7917,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					toString(orElse(max(filter(map(stream(voices), x -> getOrdinalPosition(x)), Objects::nonNull),
 							ObjectUtils::compare), null))));
 			//
-			Fraction pharse = null;
-			//
 			String ordinalPositionFileNamePrefix = null;
 			//
 			Table<String, String, Voice> voiceFileNames = null;
@@ -7929,6 +7933,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
+			final Fraction pharse = Fraction.getFraction(0, intValue(denominator, 2));
+			//
 			for (int i = 0; i < size; i++) {
 				//
 				if ((es = ObjectUtils.getIfNull(es, () -> Executors.newFixedThreadPool(1))) == null) {
@@ -7941,7 +7947,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				et.counter = Integer.valueOf(i + 1);
 				//
-				et.pharse = ObjectUtils.getIfNull(pharse, () -> Fraction.getFraction(1, intValue(denominator, 2)));
+				et.pharse = pharse;
 				//
 				et.count = size;
 				//
@@ -7983,7 +7989,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							objectMapper = ObjectUtils.getIfNull(objectMapper,
 									() -> new ObjectMapper().setVisibility(PropertyAccessor.ALL, Visibility.ANY)));
 					//
-				} //
+				} // if
 					//
 				et.objectMapper = objectMapper;
 				//
@@ -8031,12 +8037,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						orElse(max(filter(map(stream(multimap.values()), x -> getOrdinalPosition(x)), Objects::nonNull),
 								ObjectUtils::compare), null))));
 				//
-				if (pharse != null) {
-					//
-					pharse = Fraction.getFraction(pharse.getNumerator() + 1, pharse.getDenominator());
-					//
-				} // if
-					//
 				final AtomicInteger numerator = new AtomicInteger(1);
 				//
 				if (jlptAsFolder) {
@@ -8045,9 +8045,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
-				ObjectMap.setObject(objectMap, Fraction.class, pharse = ObjectUtils.getIfNull(pharse,
-						() -> Fraction.getFraction(intValue(numerator, 0) + 1, intValue(denominator, 1))));
-				//
+				if (objectMap != null && !objectMap.containsObject(Fraction.class)) {
+					//
+					ObjectMap.setObject(objectMap, Fraction.class, pharse);
+					//
+				} // if
+					//
 				for (final Entry<String, Voice> en : entries) {
 					//
 					if (en == null) {
@@ -8119,15 +8122,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // for
 					//
-				if (pharse != null) {
+				if (objectMap != null && !objectMap.containsObject(Fraction.class)) {
 					//
-					pharse = Fraction.getFraction(pharse.getNumerator() + 1, pharse.getDenominator());
+					ObjectMap.setObject(objectMap, Fraction.class, pharse);
 					//
 				} // if
 					//
-				ObjectMap.setObject(objectMap, Fraction.class,
-						pharse = ObjectUtils.getIfNull(pharse, () -> Fraction.getFraction(3, 3)));
-				//
 				String jlptFolderNamePrefix = null;
 				//
 				StringBuilder folder = null;
