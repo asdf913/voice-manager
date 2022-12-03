@@ -7567,7 +7567,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					for (final Entry<String, Voice> entry : voices.entrySet()) {
 						//
-						if ((voice = getValue(entry)) == null || (pageCloned = cloneNode(page, true)) == null) {
+						if (Boolean.logicalOr((voice = getValue(entry)) == null,
+								(pageCloned = cloneNode(page, true)) == null)) {
 							//
 							continue;
 							//
@@ -7577,10 +7578,20 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 						ObjectMap.setObject(objectMap, Node.class, pageCloned);
 						//
-						if (objectMap != null && !objectMap.containsObject(ObjectMapper.class)) {
+						if (objectMap != null) {
 							//
-							ObjectMap.setObject(objectMap, ObjectMapper.class, new ObjectMapper());
-							//
+							if (!objectMap.containsObject(ObjectMapper.class)) {
+								//
+								ObjectMap.setObject(objectMap, ObjectMapper.class, new ObjectMapper());
+								//
+							} // if
+								//
+							if (!objectMap.containsObject(Pattern.class)) {
+								//
+								ObjectMap.setObject(objectMap, Pattern.class, Pattern.compile("(\\w+:)?href"));
+								//
+							} // if
+								//
 						} // if
 							//
 						setStringFieldDefaultValue(
@@ -7592,12 +7603,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 						// plugin
 						//
-						if (objectMap != null && !objectMap.containsObject(Pattern.class)) {
-							//
-							ObjectMap.setObject(objectMap, Pattern.class, Pattern.compile("(\\w+:)?href"));
-							//
-						} // if
-							//
 						setPluginHref(objectMap, getKey(entry), embedAudioInPresentation, folderInPresentation);
 						//
 						// Delete customShape with the name is "AudioCoverImage" if
