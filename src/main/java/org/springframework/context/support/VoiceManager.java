@@ -374,9 +374,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			btnCopyHiragana, btnCopyKatakana, cbUseTtsVoice, btnExecute, btnImportFileTemplate, btnImport,
 			btnImportWithinFolder, cbOverMp3Title, cbOrdinalPositionAsFileNamePrefix, btnExport, cbExportHtml,
 			cbExportListHtml, cbExportHtmlAsZip, cbExportHtmlRemoveAfterZip, cbExportListSheet, cbExportJlptSheet,
-			cbExportPresentation, cbEmbedAudioInPresentation, cbImportFileTemplateGenerateBlankRow, cbJlptAsFolder,
-			btnExportCopy, btnExportBrowse, btnDllPathCopy, btnSpeechRateSlower, btnSpeechRateNormal,
-			btnSpeechRateFaster = null;
+			cbExportPresentation, cbEmbedAudioInPresentation, cbHideAudioImageInPresentation,
+			cbImportFileTemplateGenerateBlankRow, cbJlptAsFolder, btnExportCopy, btnExportBrowse, btnDllPathCopy,
+			btnSpeechRateSlower, btnSpeechRateNormal, btnSpeechRateFaster = null;
 
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
@@ -2557,10 +2557,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.exportPresentation")));
 		//
 		panel.add(cbEmbedAudioInPresentation = new JCheckBox("Emded Audio In Presentation"),
-				String.format("%1$s,span %2$s", WRAP, 3));
+				String.format("span %1$s", 3));
 		//
 		cbEmbedAudioInPresentation.setSelected(Boolean.parseBoolean(getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.embedAudioInPresentation")));
+		//
+		panel.add(cbHideAudioImageInPresentation = new JCheckBox("Hide Audio Image In Presentation"),
+				String.format("%1$s,span %2$s", WRAP, 3));
+		//
+		cbHideAudioImageInPresentation.setSelected(Boolean.parseBoolean(getProperty(propertyResolver,
+				"org.springframework.context.support.VoiceManager.hideAudioImageInPresentation")));
 		//
 		panel.add(new JLabel(), String.format("span %1$s", 4));
 		//
@@ -3688,6 +3694,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					bm.setBoolean(EXPORT_PRESENTATION, isSelected(cbExportPresentation));
 					//
 					bm.setBoolean(EMBED_AUDIO_IN_PRESENTATION, isSelected(cbEmbedAudioInPresentation));
+					//
+					bm.setBoolean("hideAudioImageInPresentation", !isSelected(cbHideAudioImageInPresentation));
 					//
 				} // if
 					//
@@ -7187,7 +7195,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		private NumberFormat percentNumberFormat = null;
 
 		private boolean overMp3Title = false, ordinalPositionAsFileNamePrefix = false, exportPresentation = false,
-				embedAudioInPresentation = false;
+				embedAudioInPresentation = false, hideAudioImageInPresentation = false;
 
 		private VoiceManager voiceManager = null;
 
@@ -7328,6 +7336,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						if (booleanMap != null) {
 							//
 							booleanMap.setBoolean("embedAudioInPresentation", embedAudioInPresentation);
+							//
+							booleanMap.setBoolean("hideAudioImageInPresentation", hideAudioImageInPresentation);
 							//
 						} // if
 							//
@@ -7542,8 +7552,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					Voice voice, temp = null;
 					//
+					Node customShape = null;
+					//
 					final boolean embedAudioInPresentation = BooleanMap
 							.getBoolean(ObjectMap.getObject(objectMap, BooleanMap.class), "embedAudioInPresentation");
+					//
+					final boolean hideAudioImageInPresentation = BooleanMap.getBoolean(
+							ObjectMap.getObject(objectMap, BooleanMap.class), "hideAudioImageInPresentation");
 					//
 					for (final Entry<String, Voice> entry : voices.entrySet()) {
 						//
@@ -7580,6 +7595,25 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 						setPluginHref(objectMap, getKey(entry), embedAudioInPresentation, folderInPresentation);
 						//
+						// Delete "AudioCoverImage" if hideAudioImage is true
+						//
+						final NodeList customShapes = cast(NodeList.class, evaluate(
+								ObjectMap.getObject(objectMap, XPath.class),
+								"./*[local-name()='custom-shape'][@*[local-name()='name' and .='AudioCoverImage']]",
+								ObjectMap.getObject(objectMap, Node.class), XPathConstants.NODESET));
+						//
+						for (int i = 0; hideAudioImageInPresentation && i < getLength(customShapes); i++) {
+							//
+							if ((customShape = item(customShapes, i)) == null) {
+								//
+								continue;
+								//
+							} // if
+								//
+							removeChild(getParentNode(customShape), customShape);
+							//
+						} // for
+							//
 						appendChild(parentNode, pageCloned);
 						//
 					} // for
@@ -7984,6 +8018,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					et.embedAudioInPresentation = booleanMap.getBoolean(EMBED_AUDIO_IN_PRESENTATION);
 					//
+					et.hideAudioImageInPresentation = booleanMap.getBoolean("hideAudioImageInPresentation");
+					//
 				} // if
 					//
 				et.voiceFileNames = voiceFileNames = ObjectUtils.getIfNull(voiceFileNames, HashBasedTable::create);
@@ -8292,6 +8328,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			et.exportPresentation = booleanMap.getBoolean(EXPORT_PRESENTATION);
 			//
 			et.embedAudioInPresentation = booleanMap.getBoolean(EMBED_AUDIO_IN_PRESENTATION);
+			//
+			et.hideAudioImageInPresentation = booleanMap.getBoolean("hideAudioImageInPresentation");
 			//
 		} // if
 			//
