@@ -7027,6 +7027,22 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(invoke(info, null, logger, null));
 		//
+		// org.springframework.context.support.VoiceManager$ExportTask.removeCustomShapeByName(org.springframework.context.support.VoiceManager$ObjectMap,java.lang.String)
+		//
+		final Method removeCustomShapeByName = CLASS_EXPORT_TASK != null
+				? CLASS_EXPORT_TASK.getDeclaredMethod("removeCustomShapeByName", CLASS_OBJECT_MAP, String.class)
+				: null;
+		//
+		if (removeCustomShapeByName != null) {
+			//
+			removeCustomShapeByName.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertNull(invoke(removeCustomShapeByName, null, null, null));
+		//
+		Assertions.assertNull(invoke(removeCustomShapeByName, null, null, ""));
+		//
 	}
 
 	private static void run(final Runnable instance) {

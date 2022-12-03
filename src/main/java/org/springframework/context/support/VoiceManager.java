@@ -7554,8 +7554,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					Voice voice, temp = null;
 					//
-					Node customShape = null;
-					//
 					final boolean embedAudioInPresentation = BooleanMap
 							.getBoolean(ObjectMap.getObject(objectMap, BooleanMap.class), EMBED_AUDIO_IN_PRESENTATION);
 					//
@@ -7597,24 +7595,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 						setPluginHref(objectMap, getKey(entry), embedAudioInPresentation, folderInPresentation);
 						//
-						// Delete "AudioCoverImage" if hideAudioImage is true
+						// Delete customShape with the name is "AudioCoverImage" if
+						// "hideAudioImageInPresentation" is true
 						//
-						final NodeList customShapes = cast(NodeList.class, evaluate(
-								ObjectMap.getObject(objectMap, XPath.class),
-								"./*[local-name()='custom-shape'][@*[local-name()='name' and .='AudioCoverImage']]",
-								ObjectMap.getObject(objectMap, Node.class), XPathConstants.NODESET));
-						//
-						for (int i = 0; hideAudioImageInPresentation && i < getLength(customShapes); i++) {
+						if (hideAudioImageInPresentation) {
 							//
-							if ((customShape = item(customShapes, i)) == null) {
-								//
-								continue;
-								//
-							} // if
-								//
-							removeChild(getParentNode(customShape), customShape);
+							removeCustomShapeByName(objectMap, "AudioCoverImage");
 							//
-						} // for
+						} // if
 							//
 						appendChild(parentNode, pageCloned);
 						//
@@ -7636,6 +7624,40 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			return newOdfPresentationDocument;
 			//
+		}
+
+		private static void removeCustomShapeByName(final ObjectMap objectMap, final String name)
+				throws XPathExpressionException {
+			//
+			final StringBuilder sb = new StringBuilder("./*[local-name()='custom-shape']");
+			//
+			if (name != null) {
+				//
+				append(sb, "[@*[local-name()='name' and .='");
+				//
+				append(sb, name);
+				//
+				append(sb, "']]");
+				//
+			} // if
+				//
+			final NodeList customShapes = cast(NodeList.class, evaluate(ObjectMap.getObject(objectMap, XPath.class),
+					VoiceManager.toString(sb), ObjectMap.getObject(objectMap, Node.class), XPathConstants.NODESET));
+			//
+			Node customShape = null;
+			//
+			for (int i = 0; i < getLength(customShapes); i++) {
+				//
+				if ((customShape = item(customShapes, i)) == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				removeChild(getParentNode(customShape), customShape);
+				//
+			} // for
+				//
 		}
 
 		private static OdfPresentationDocument generateOdfPresentationDocument(final String string,
