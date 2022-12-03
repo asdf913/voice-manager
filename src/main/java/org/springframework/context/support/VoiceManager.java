@@ -7335,7 +7335,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 						if (booleanMap != null) {
 							//
-							booleanMap.setBoolean("embedAudioInPresentation", embedAudioInPresentation);
+							booleanMap.setBoolean(EMBED_AUDIO_IN_PRESENTATION, embedAudioInPresentation);
 							//
 							booleanMap.setBoolean("hideAudioImageInPresentation", hideAudioImageInPresentation);
 							//
@@ -7555,7 +7555,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					Node customShape = null;
 					//
 					final boolean embedAudioInPresentation = BooleanMap
-							.getBoolean(ObjectMap.getObject(objectMap, BooleanMap.class), "embedAudioInPresentation");
+							.getBoolean(ObjectMap.getObject(objectMap, BooleanMap.class), EMBED_AUDIO_IN_PRESENTATION);
 					//
 					final boolean hideAudioImageInPresentation = BooleanMap.getBoolean(
 							ObjectMap.getObject(objectMap, BooleanMap.class), "hideAudioImageInPresentation");
