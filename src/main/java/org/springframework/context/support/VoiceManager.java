@@ -4885,10 +4885,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	@Override
 	public void keyTyped(final KeyEvent evt) {
+		//
 	}
 
 	@Override
 	public void keyPressed(final KeyEvent evt) {
+		//
 	}
 
 	@Override
