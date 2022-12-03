@@ -530,7 +530,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			if (ms != null && !ms.isEmpty()) {
 				//
-				if (ms.size() > 1) {
+				if (IterableUtils.size(ms) > 1) {
 					//
 					throw new IllegalStateException();
 					//
@@ -1142,7 +1142,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-			final Method m = ms.size() == 1 ? ms.get(0) : null;
+			final Method m = IterableUtils.size(ms) == 1 ? get(ms, 0) : null;
 			//
 			return Unit.with(cast(Boolean.class, invoke(m, null)));
 			//
@@ -1170,9 +1170,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				Map<String, Object> map = null;
 				//
-				for (int i = 0; i < ms.size(); i++) {
+				for (int i = 0; i < IterableUtils.size(ms); i++) {
 					//
-					if ((m = ms.get(i)) == null || m.isSynthetic()) {
+					if ((m = get(ms, i)) == null || m.isSynthetic()) {
 						//
 						continue;
 						//
@@ -1206,7 +1206,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						f -> f != null && Objects.equals(getName(f), "INSTANCE") && Objects.equals(f.getType(), clz)
 								&& Modifier.isStatic(f.getModifiers())));
 		//
-		final Field f = fs != null && fs.size() == 1 ? fs.get(0) : null;
+		final Field f = IterableUtils.size(fs) == 1 ? get(fs, 0) : null;
 		//
 		final Class<?> clzOsVersionInfoEx = forName("com.sun.jna.platform.win32.WinNT$OSVERSIONINFOEX");
 		//
@@ -1217,7 +1217,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						m -> m != null && Objects.equals(getName(m), "GetVersionEx")
 								&& Arrays.equals(new Class[] { clzOsVersionInfoEx }, m.getParameterTypes())));
 		//
-		Method m = ms != null && ms.size() == 1 ? ms.get(0) : null;
+		Method m = IterableUtils.size(ms) == 1 ? get(ms, 0) : null;
 		//
 		final Object osVersionInfoEx = clzOsVersionInfoEx != null ? clzOsVersionInfoEx.newInstance() : null;
 		//
@@ -1384,7 +1384,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					return null;
 					//
-				} else if (as.size() != 1) {
+				} else if (IterableUtils.size(as) != 1) {
 					//
 					throw new IllegalStateException();
 					//
@@ -1437,7 +1437,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				if (fs != null && !fs.isEmpty()) {
 					//
-					if (fs.size() == 1) {
+					if (IterableUtils.size(fs) == 1) {
 						//
 						fieldTitle = get(fs, 0);
 						//
@@ -1579,7 +1579,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			if (temp != null && !temp.isEmpty()) {
 				//
-				if (temp.size() == 1) {
+				if (IterableUtils.size(temp) == 1) {
 					//
 					setSelectedItem(cbmVoiceId, get(temp, 0));
 					//
@@ -2275,7 +2275,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		Field f = null;
 		//
-		for (int i = 0; fs != null && i < fs.size(); i++) {
+		for (int i = 0; i < IterableUtils.size(fs); i++) {
 			//
 			if (!Objects.equals(Boolean.class, getType(f = get(fs, i)))) {
 				//
@@ -2862,12 +2862,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					|| (fs = toList(filter(
 							testAndApply(Objects::nonNull, getDeclaredFields(declaredClass), Arrays::stream, null),
 							x -> Objects.equals(getType(x), declaredClass)))) == null
-					|| fs.size() != 1 || (f = get(fs, 0)) == null
+					|| IterableUtils.size(fs) != 1 || (f = get(fs, 0)) == null
 					//
 					|| (ms = toList(filter(
 							testAndApply(Objects::nonNull, getDeclaredMethods(declaredClass), Arrays::stream, null),
 							x -> Objects.equals(getName(x), "getDllPath")))) == null
-					|| ms.size() != 1 || (m = get(ms, 0)) == null) {
+					|| IterableUtils.size(ms) != 1 || (m = get(ms, 0)) == null) {
 				continue;
 			} // if
 				//
@@ -3008,7 +3008,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 											//
 										Method m = get(ms, 0);
 										//
-										if (ms.size() == 1 && m != null) {
+										if (IterableUtils.size(ms) == 1 && m != null) {
 											//
 											m.setAccessible(true);
 											//
@@ -3043,7 +3043,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					} // if
 						//
-					if (objects.size() == 1) {
+					if (IterableUtils.size(objects) == 1) {
 						//
 						return Pair.of(getName(f), toString(get(objects, 0)));
 						//
@@ -5298,7 +5298,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				Matcher matcher = null;
 				//
-				for (int i = 0; ms != null && i < ms.size(); i++) {
+				for (int i = 0; i < IterableUtils.size(ms); i++) {
 					//
 					if ((m = VoiceManager.get(ms, i)) == null) {
 						//
@@ -5426,7 +5426,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		if (localeIds != null && !localeIds.isEmpty()) {
 			//
-			if (localeIds.size() == 1) {
+			if (IterableUtils.size(localeIds) == 1) {
 				//
 				final LocaleID localeId = get(localeIds, 0);
 				//
@@ -5479,7 +5479,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		String string = null;
 		//
-		for (int i = 0; pairs != null && i < pairs.size(); i++) {
+		for (int i = 0; i < IterableUtils.size(pairs); i++) {
 			//
 			if (test(predicate, string = toString(getValue(cast(Pair.class, get(pairs, i))))) || predicate == null) {
 				//
@@ -5541,7 +5541,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
-				if (methods.size() == 1) {
+				if (IterableUtils.size(methods) == 1) {
 					//
 					if ((m = get(methods, 0)) != null && m.getParameterCount() == 0) {
 						//
@@ -5759,7 +5759,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			if (fs != null && !fs.isEmpty()) {
 				//
-				final int size = fs.size();
+				final int size = IterableUtils.size(fs);
 				//
 				if (size > 1) {
 					//
@@ -5884,7 +5884,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
-				for (int i = 0; i < fs.size(); i++) {
+				for (int i = 0; i < IterableUtils.size(fs); i++) {
 					//
 					setCellValue(createCell(row, i), null);
 					//
@@ -6376,7 +6376,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 										//
 									}))) != null && !list.isEmpty()) {
 								//
-								if (list.size() == 1) {
+								if (IterableUtils.size(list) == 1) {
 									//
 									f.set(voice = ObjectUtils.getIfNull(voice, Voice::new), get(list, 0));
 									//
@@ -7465,7 +7465,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				int counter = 0;
 				//
-				final int size = rowKeySet.size();
+				final int size = IterableUtils.size(rowKeySet);
 				//
 				for (final String rowKey : rowKeySet) {
 					//
@@ -8007,7 +8007,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			Multimap<String, Voice> multimap = null;
 			//
-			for (int i = 0; voices != null && i < voices.size(); i++) {
+			for (int i = 0; i < IterableUtils.size(voices); i++) {
 				//
 				if ((v = get(voices, i)) == null || (listNames = v.getListNames()) == null) {
 					continue;
@@ -8110,7 +8110,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				String jlptLevel = null;
 				//
-				for (int i = 0; voices != null && i < voices.size(); i++) {
+				for (int i = 0; i < IterableUtils.size(voices); i++) {
 					//
 					if ((v = get(voices, i)) == null || (jlptLevel = v.getJlptLevel()) == null) {
 						//
@@ -9103,7 +9103,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		String fieldName = null;
 		//
-		for (int i = 0; fieldNames != null && i < fieldNames.size(); i++) {
+		for (int i = 0; i < IterableUtils.size(fieldNames); i++) {
 			//
 			if (!ArrayUtils.contains(orders, fieldName = get(fieldNames, i))) {
 				//
