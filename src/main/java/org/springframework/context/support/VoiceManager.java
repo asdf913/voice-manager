@@ -4122,13 +4122,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			for (final Voice v : voices) {
 				//
-				if (v == null) {
-					//
-					continue;
-					//
-				} // if
-					//
-				put(multimap = ObjectUtils.getIfNull(multimap, LinkedListMultimap::create), v.getJlptLevel(), v);
+				put(multimap = ObjectUtils.getIfNull(multimap, LinkedListMultimap::create), getJlptLevel(v), v);
 				//
 			} // for
 				//
@@ -4136,6 +4130,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return multimap;
 		//
+	}
+
+	private static String getJlptLevel(final Voice instance) {
+		return instance != null ? instance.getJlptLevel() : null;
 	}
 
 	private static List<Field> findFieldsByValue(final Field[] fs, final Object instance, final Object value)
@@ -8128,7 +8126,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		for (int i = 0; i < IterableUtils.size(voices); i++) {
 			//
-			if ((v = get(voices, i)) == null || (jlptLevel = v.getJlptLevel()) == null) {
+			if ((jlptLevel = getJlptLevel(v = get(voices, i))) == null) {
 				//
 				continue;
 				//
