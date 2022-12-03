@@ -7323,8 +7323,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					try (final InputStream is = getResourceAsStream(VoiceManager.class, exportPresentationTemplate)) {
 						//
-						generateOdfPresentationDocuments(is, embedAudioInPresentation, folderInPresentation,
-								voiceFileNames);
+						final BooleanMap booleanMap = Reflection.newProxy(BooleanMap.class, new IH());
+						//
+						if (booleanMap != null) {
+							//
+							booleanMap.setBoolean("embedAudioInPresentation", embedAudioInPresentation);
+							//
+						} // if
+							//
+						generateOdfPresentationDocuments(is, booleanMap, folderInPresentation, voiceFileNames);
 						//
 					} // try
 						//
@@ -7441,9 +7448,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		}
 
-		private static void generateOdfPresentationDocuments(final InputStream is,
-				final boolean embedAudioInPresentation, final String folderInPresentation,
-				final Table<String, String, Voice> table) throws Exception {
+		private static void generateOdfPresentationDocuments(final InputStream is, final BooleanMap booleanMap,
+				final String folderInPresentation, final Table<String, String, Voice> table) throws Exception {
 			//
 			final Set<String> rowKeySet = table != null ? table.rowKeySet() : null;
 			//
@@ -7473,10 +7479,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						ObjectMap.setObject(objectMap, Transformer.class,
 								newTransformer(TransformerFactory.newInstance()));
 						//
+						ObjectMap.setObject(objectMap, BooleanMap.class, booleanMap);
+						//
 					} // if
 						//
 					if ((odfPd = generateOdfPresentationDocument(objectMap, rowKey, table.row(rowKey),
-							embedAudioInPresentation, folderInPresentation)) != null) {
+							folderInPresentation)) != null) {
 						//
 						odfPd.save(file = new File(rowKey,
 								String.join(".", StringUtils.substringAfter(rowKey, File.separatorChar), "odp")));
@@ -7502,8 +7510,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		}
 
 		private static OdfPresentationDocument generateOdfPresentationDocument(final ObjectMap objectMap,
-				final String outputFolder, final Map<String, Voice> voices, final boolean embedAudioInPresentation,
-				final String folderInPresentation) throws Exception {
+				final String outputFolder, final Map<String, Voice> voices, final String folderInPresentation)
+				throws Exception {
 			//
 			OdfPresentationDocument newOdfPresentationDocument = null;
 			//
@@ -7533,6 +7541,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					Node pageCloned = null;
 					//
 					Voice voice, temp = null;
+					//
+					final boolean embedAudioInPresentation = BooleanMap
+							.getBoolean(ObjectMap.getObject(objectMap, BooleanMap.class), "embedAudioInPresentation");
 					//
 					for (final Entry<String, Voice> entry : voices.entrySet()) {
 						//
