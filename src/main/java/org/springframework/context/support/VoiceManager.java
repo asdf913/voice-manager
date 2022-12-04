@@ -3389,8 +3389,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				final int rate = intValue(getRate(), 0);
 				//
-				final int volume = Math.min(
-						Math.max(intValue(jsSpeechVolume != null ? jsSpeechVolume.getValue() : null, 100), 0), 100);
+				final int volume = Math.min(Math.max(intValue(getValue(jsSpeechVolume), 100), 0), 100);
 				//
 				if (method != null && Arrays.equals(method.getParameterTypes(),
 						new Class<?>[] { String.class, String.class, Integer.TYPE, Integer.TYPE })) {
@@ -3443,9 +3442,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 						, intValue(getRate(), 0)// rate
 						//
-						,
-						Math.min(Math.max(intValue(jsSpeechVolume != null ? jsSpeechVolume.getValue() : null, 100), 0),
-								100)// volume
+						, Math.min(Math.max(intValue(getValue(jsSpeechVolume), 100), 0), 100)// volume
 				);
 				//
 				final ByteConverter byteConverter = getByteConverter(configurableListableBeanFactory, FORMAT,
@@ -3488,10 +3485,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 								, intValue(getRate(), 0)// rate
 								//
-								,
-								Math.min(Math.max(
-										intValue(jsSpeechVolume != null ? jsSpeechVolume.getValue() : null, 100), 0),
-										100)// volume
+								, Math.min(Math.max(intValue(getValue(jsSpeechVolume), 100), 0), 100)// volume
 								, file = File.createTempFile(randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH), null)
 						//
 						);
@@ -4056,6 +4050,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
+	}
+
+	private static Integer getValue(final JSlider instance) {
+		return instance != null ? Integer.valueOf(instance.getValue()) : null;
 	}
 
 	private static String randomAlphabetic(final int count) {
@@ -4874,7 +4872,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		if (Objects.equals(source, jsSpeechVolume)) {
 			//
-			setText(tfSpeechVolume, jsSpeechVolume != null ? Integer.toString(jsSpeechVolume.getValue()) : null);
+			setText(tfSpeechVolume, toString(getValue(jsSpeechVolume)));
 			//
 		} else if (Objects.equals(source, jsSpeechRate)) {
 			//
@@ -4886,7 +4884,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-			setText(tfSpeechRate, jsSpeechRate != null ? Integer.toString(jsSpeechRate.getValue()) : null);
+			setText(tfSpeechRate, toString(getValue(jsSpeechRate)));
 			//
 		} // if
 			//
@@ -5746,7 +5744,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private Integer getRate() {
 		//
-		return jsSpeechRate != null ? Integer.valueOf(jsSpeechRate.getValue()) : getRate(getText(tfSpeechRate));
+		final Integer speechRate = getValue(jsSpeechRate);
+		//
+		return speechRate != null ? speechRate : getRate(getText(tfSpeechRate));
 		//
 	}
 
@@ -6547,11 +6547,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 												//
 														, voiceManager != null ? voiceManager.getRate() : null// rate
 														//
-														,
-														Math.min(Math.max(intValue(
-																jsSpeechVolume != null ? jsSpeechVolume.getValue()
-																		: null,
-																100), 0), 100)// volume
+														, Math.min(Math.max(intValue(getValue(jsSpeechVolume), 100), 0),
+																100)// volume
 												);
 												//
 												if (byteConverter == null) {
