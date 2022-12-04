@@ -7468,7 +7468,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		private static void generateOdfPresentationDocuments(final InputStream is, final BooleanMap booleanMap,
 				final String folderInPresentation, final Table<String, String, Voice> table) throws Exception {
 			//
-			final Set<String> rowKeySet = table != null ? table.rowKeySet() : null;
+			final Set<String> rowKeySet = rowKeySet(table);
 			//
 			if (rowKeySet != null) {
 				//
@@ -7533,6 +7533,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 			} // if
 				//
+		}
+
+		private static <R> Set<R> rowKeySet(final Table<R, ?, ?> instance) {
+			return instance != null ? instance.rowKeySet() : null;
 		}
 
 		private static void info(final Logger instance, final String message) {
