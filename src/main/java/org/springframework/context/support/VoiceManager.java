@@ -7525,7 +7525,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 								String.format("%1$s/%2$s,Elapsed=%3$s,File=%4$s",
 										StringUtils.leftPad(Integer.toString(++counter),
 												StringUtils.length(Integer.toString(size))),
-										size, stopwatch != null ? stopwatch.elapsed() : null, getAbsolutePath(file)));
+										size, elapsed(stopwatch), getAbsolutePath(file)));
 						//
 					} // if
 						//
