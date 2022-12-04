@@ -8119,7 +8119,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			for (int i = 0; i < IterableUtils.size(voices); i++) {
 				//
-				if ((v = get(voices, i)) == null || (listNames = v.getListNames()) == null) {
+				if ((listNames = getListNames(v = get(voices, i))) == null) {
 					continue;
 				} // if
 					//
