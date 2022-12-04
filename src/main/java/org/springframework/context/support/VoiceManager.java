@@ -7583,20 +7583,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 						ObjectMap.setObject(objectMap, Node.class, pageCloned);
 						//
-						if (objectMap != null) {
+						if (!ObjectMap.containsObject(objectMap, ObjectMapper.class)) {
 							//
-							if (!objectMap.containsObject(ObjectMapper.class)) {
-								//
-								ObjectMap.setObject(objectMap, ObjectMapper.class, new ObjectMapper());
-								//
-							} // if
-								//
-							if (!objectMap.containsObject(Pattern.class)) {
-								//
-								ObjectMap.setObject(objectMap, Pattern.class, Pattern.compile("(\\w+:)?href"));
-								//
-							} // if
-								//
+							ObjectMap.setObject(objectMap, ObjectMapper.class, new ObjectMapper());
+							//
+						} // if
+							//
+						if (!ObjectMap.containsObject(objectMap, Pattern.class)) {
+							//
+							ObjectMap.setObject(objectMap, Pattern.class, Pattern.compile("(\\w+:)?href"));
+							//
 						} // if
 							//
 						setStringFieldDefaultValue(
@@ -7725,21 +7721,17 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			Map<String, Object> map = null;
 			//
-			if (objectMap != null) {
+			if (!ObjectMap.containsObject(objectMap, freemarker.template.Configuration.class)) {
 				//
-				if (!objectMap.containsObject(freemarker.template.Configuration.class)) {
-					//
-					ObjectMap.setObject(objectMap, freemarker.template.Configuration.class,
-							new freemarker.template.Configuration(freemarker.template.Configuration.getVersion()));
-					//
-				} // if
-					//
-				if (!objectMap.containsObject(StringTemplateLoader.class)) {
-					//
-					ObjectMap.setObject(objectMap, StringTemplateLoader.class, new StringTemplateLoader());
-					//
-				} // if
-					//
+				ObjectMap.setObject(objectMap, freemarker.template.Configuration.class,
+						new freemarker.template.Configuration(freemarker.template.Configuration.getVersion()));
+				//
+			} // if
+				//
+			if (!ObjectMap.containsObject(objectMap, StringTemplateLoader.class)) {
+				//
+				ObjectMap.setObject(objectMap, StringTemplateLoader.class, new StringTemplateLoader());
+				//
 			} // if
 				//
 			final freemarker.template.Configuration configuration = ObjectUtils.getIfNull(
@@ -7776,7 +7768,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					ObjectMap.setObject(om, StringTemplateLoader.class, stl);
 					//
-					if (objectMap != null && !objectMap.containsObject(MessageDigest.class)) {
+					if (!ObjectMap.containsObject(objectMap, MessageDigest.class)) {
 						//
 						ObjectMap.setObject(objectMap, MessageDigest.class, MessageDigest.getInstance("SHA-512"));
 						//
@@ -8071,7 +8063,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				et.voiceFileNames = voiceFileNames = ObjectUtils.getIfNull(voiceFileNames, HashBasedTable::create);
 				//
-				if (objectMap != null && !objectMap.containsObject(ObjectMapper.class)) {
+				if (!ObjectMap.containsObject(objectMap, ObjectMapper.class)) {
 					//
 					ObjectMap.setObject(objectMap, ObjectMapper.class,
 							objectMapper = ObjectUtils.getIfNull(objectMapper,
@@ -8133,7 +8125,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
-				if (objectMap != null && !objectMap.containsObject(Fraction.class)) {
+				if (!ObjectMap.containsObject(objectMap, Fraction.class)) {
 					//
 					ObjectMap.setObject(objectMap, Fraction.class, pharse);
 					//
@@ -8153,29 +8145,25 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					} // if
 						//
-					if (objectMap != null) {
+					if (!ObjectMap.containsObject(objectMap, NumberFormat.class)) {
 						//
-						if (!objectMap.containsObject(NumberFormat.class)) {
-							//
-							ObjectMap.setObject(objectMap, NumberFormat.class, percentNumberFormat = ObjectUtils
-									.getIfNull(percentNumberFormat, () -> new DecimalFormat("#%")));
-							//
-						} // if
-							//
-						if (!objectMap.containsObject(EvaluationContext.class)) {
-							//
-							ObjectMap.setObject(objectMap, EvaluationContext.class, evaluationContext = ObjectUtils
-									.getIfNull(evaluationContext, StandardEvaluationContext::new));
-							//
-						} // if
-							//
-						if (!objectMap.containsObject(ExpressionParser.class)) {
-							//
-							ObjectMap.setObject(objectMap, ExpressionParser.class, expressionParser = ObjectUtils
-									.getIfNull(expressionParser, SpelExpressionParser::new));
-							//
-						} // if
-							//
+						ObjectMap.setObject(objectMap, NumberFormat.class, percentNumberFormat = ObjectUtils
+								.getIfNull(percentNumberFormat, () -> new DecimalFormat("#%")));
+						//
+					} // if
+						//
+					if (!ObjectMap.containsObject(objectMap, EvaluationContext.class)) {
+						//
+						ObjectMap.setObject(objectMap, EvaluationContext.class, evaluationContext = ObjectUtils
+								.getIfNull(evaluationContext, StandardEvaluationContext::new));
+						//
+					} // if
+						//
+					if (!ObjectMap.containsObject(objectMap, ExpressionParser.class)) {
+						//
+						ObjectMap.setObject(objectMap, ExpressionParser.class,
+								expressionParser = ObjectUtils.getIfNull(expressionParser, SpelExpressionParser::new));
+						//
 					} // if
 						//
 					ObjectMap.setObject(objectMap, Voice.class, getValue(en));
@@ -8268,22 +8256,18 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-			if (objectMap != null) {
+			if (!ObjectMap.containsObject(objectMap, EvaluationContext.class)) {
 				//
-				if (!objectMap.containsObject(EvaluationContext.class)) {
-					//
-					ObjectMap.setObject(objectMap, EvaluationContext.class, evaluationContext = ObjectUtils
-							.getIfNull(evaluationContext, StandardEvaluationContext::new));
-					//
-				} // if
-					//
-				if (!objectMap.containsObject(ExpressionParser.class)) {
-					//
-					ObjectMap.setObject(objectMap, ExpressionParser.class,
-							expressionParser = ObjectUtils.getIfNull(expressionParser, SpelExpressionParser::new));
-					//
-				} // if
-					//
+				ObjectMap.setObject(objectMap, EvaluationContext.class,
+						evaluationContext = ObjectUtils.getIfNull(evaluationContext, StandardEvaluationContext::new));
+				//
+			} // if
+				//
+			if (!ObjectMap.containsObject(objectMap, ExpressionParser.class)) {
+				//
+				ObjectMap.setObject(objectMap, ExpressionParser.class,
+						expressionParser = ObjectUtils.getIfNull(expressionParser, SpelExpressionParser::new));
+				//
 			} // if
 				//
 			ObjectMap.setObject(objectMap, Voice.class, getValue(en));
