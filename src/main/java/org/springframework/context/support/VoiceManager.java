@@ -8099,10 +8099,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				et.objectMapper = objectMapper;
 				//
-				et.exportPresentationTemplate = voiceManager != null ? voiceManager.exportPresentationTemplate : null;
-				//
-				et.folderInPresentation = voiceManager != null ? voiceManager.folderInPresentation : null;
-				//
+				if (voiceManager != null) {
+					//
+					et.exportPresentationTemplate = voiceManager.exportPresentationTemplate;
+					//
+					et.folderInPresentation = voiceManager.folderInPresentation;
+					//
+				} // if
+					//
 				es.submit(et);
 				//
 			} // for
