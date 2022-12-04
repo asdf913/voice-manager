@@ -7470,68 +7470,68 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			final Set<String> rowKeySet = rowKeySet(table);
 			//
-			if (rowKeySet != null) {
+			if (rowKeySet == null) {
 				//
-				final byte[] bs = testAndApply(Objects::nonNull, is, IOUtils::toByteArray, null);
+				return;
 				//
-				OdfPresentationDocument odfPd = null;
-				//
-				ObjectMap objectMap = null;
-				//
-				File file = null;
-				//
-				int counter = 0;
-				//
-				final int size = IterableUtils.size(rowKeySet);
-				//
-				Stopwatch stopwatch = null;
-				//
-				for (final String rowKey : rowKeySet) {
-					//
-					if (objectMap == null) {
-						//
-						ObjectMap.setObject(objectMap = Reflection.newProxy(ObjectMap.class, new IH()), byte[].class,
-								bs);
-						//
-						ObjectMap.setObject(objectMap, XPath.class, newXPath(XPathFactory.newDefaultInstance()));
-						//
-						ObjectMap.setObject(objectMap, Transformer.class,
-								newTransformer(TransformerFactory.newInstance()));
-						//
-						ObjectMap.setObject(objectMap, BooleanMap.class, booleanMap);
-						//
-					} // if
-						//
-					if ((odfPd = generateOdfPresentationDocument(objectMap, rowKey, table.row(rowKey),
-							folderInPresentation)) != null) {
-						//
-						final String[] fileExtensions = getFileExtensions(ContentType.OPENDOCUMENT_PRESENTATION);
-						//
-						if ((stopwatch = ObjectUtils.getIfNull(stopwatch, Stopwatch::createUnstarted)) != null) {
-							//
-							stopwatch.reset();
-							//
-							stopwatch.start();
-							//
-						} // if
-							//
-						odfPd.save(file = new File(rowKey, String.join(".",
-								StringUtils.substringAfter(rowKey, File.separatorChar),
-								StringUtils.defaultIfBlank(
-										fileExtensions != null && fileExtensions.length == 1 ? fileExtensions[0] : null,
-										"odp"))));
-						//
-						info(LOG,
-								String.format("%1$s/%2$s,Elapsed=%3$s,File=%4$s",
-										StringUtils.leftPad(Integer.toString(++counter),
-												StringUtils.length(Integer.toString(size))),
-										size, elapsed(stopwatch), getAbsolutePath(file)));
-						//
-					} // if
-						//
-				} // for
-					//
 			} // if
+				//
+			final byte[] bs = testAndApply(Objects::nonNull, is, IOUtils::toByteArray, null);
+			//
+			OdfPresentationDocument odfPd = null;
+			//
+			ObjectMap objectMap = null;
+			//
+			File file = null;
+			//
+			int counter = 0;
+			//
+			final int size = IterableUtils.size(rowKeySet);
+			//
+			Stopwatch stopwatch = null;
+			//
+			for (final String rowKey : rowKeySet) {
+				//
+				if (objectMap == null) {
+					//
+					ObjectMap.setObject(objectMap = Reflection.newProxy(ObjectMap.class, new IH()), byte[].class, bs);
+					//
+					ObjectMap.setObject(objectMap, XPath.class, newXPath(XPathFactory.newDefaultInstance()));
+					//
+					ObjectMap.setObject(objectMap, Transformer.class, newTransformer(TransformerFactory.newInstance()));
+					//
+					ObjectMap.setObject(objectMap, BooleanMap.class, booleanMap);
+					//
+				} // if
+					//
+				if ((odfPd = generateOdfPresentationDocument(objectMap, rowKey, table.row(rowKey),
+						folderInPresentation)) != null) {
+					//
+					final String[] fileExtensions = getFileExtensions(ContentType.OPENDOCUMENT_PRESENTATION);
+					//
+					if ((stopwatch = ObjectUtils.getIfNull(stopwatch, Stopwatch::createUnstarted)) != null) {
+						//
+						stopwatch.reset();
+						//
+						stopwatch.start();
+						//
+					} // if
+						//
+					odfPd.save(file = new File(rowKey, String.join(".",
+							StringUtils.substringAfter(rowKey, File.separatorChar),
+							StringUtils.defaultIfBlank(
+									fileExtensions != null && fileExtensions.length == 1 ? fileExtensions[0] : null,
+									"odp"))));
+					//
+					info(LOG,
+							String.format("%1$s/%2$s,Elapsed=%3$s,File=%4$s",
+									StringUtils.leftPad(Integer.toString(++counter),
+											StringUtils.length(Integer.toString(size))),
+									size, elapsed(stopwatch), getAbsolutePath(file)));
+					//
+				} // if
+					//
+			} // for
 				//
 		}
 
