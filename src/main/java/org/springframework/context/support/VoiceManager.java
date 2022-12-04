@@ -7484,6 +7484,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				final int size = IterableUtils.size(rowKeySet);
 				//
+				Stopwatch stopwatch = null;
+				//
 				for (final String rowKey : rowKeySet) {
 					//
 					if (objectMap == null) {
@@ -7505,6 +7507,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 						final String[] fileExtensions = getFileExtensions(ContentType.OPENDOCUMENT_PRESENTATION);
 						//
+						if ((stopwatch = ObjectUtils.getIfNull(stopwatch, Stopwatch::createUnstarted)) != null) {
+							//
+							stopwatch.reset();
+							//
+							stopwatch.start();
+							//
+						} // if
+							//
 						odfPd.save(file = new File(rowKey, String.join(".",
 								StringUtils.substringAfter(rowKey, File.separatorChar),
 								StringUtils.defaultIfBlank(
@@ -7512,10 +7522,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 										"odp"))));
 						//
 						info(LOG,
-								String.format("%1$s/%2$s,File=%3$s",
+								String.format("%1$s/%2$s,Elapsed=%3$s,File=%4$s",
 										StringUtils.leftPad(Integer.toString(++counter),
 												StringUtils.length(Integer.toString(size))),
-										size, getAbsolutePath(file)));
+										size, stopwatch != null ? stopwatch.elapsed() : null, getAbsolutePath(file)));
 						//
 					} // if
 						//
