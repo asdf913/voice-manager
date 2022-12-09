@@ -1055,18 +1055,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		try {
 			//
-			final List<?> pages = cast(List.class,
-					Narcissus.getObjectField(jTabbedPane, JTabbedPane.class.getDeclaredField("pages")));
+			preferredHeight = getMaxPagePreferredHeight(jTabbedPane);
 			//
-			Object page = null;
-			//
-			for (int i = 0; i < IterableUtils.size(pages); i++) {
-				//
-				preferredHeight = ObjectUtils.max(preferredHeight, getPreferredHeight(cast(Component.class, Narcissus
-						.getObjectField(page = get(pages, i), getDeclaredField(getClass(page), "component")))));
-				//
-			} // for
-				//
 		} catch (final NoSuchFieldException e) {
 			//
 			errorOrPrintStackTraceOrShowMessageDialog(e);
@@ -1123,6 +1113,36 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
+	}
+
+	private static Double getMaxPagePreferredHeight(final Object jTabbedPane) throws NoSuchFieldException {
+		//
+		Double preferredHeight = null;
+		//
+		final List<?> pages = cast(List.class, testAndApply(Objects::nonNull, jTabbedPane,
+				x -> Narcissus.getObjectField(x, getDeclaredField(JTabbedPane.class, "pages")), null));
+		//
+		Object page = null;
+		//
+		Field f = null;
+		//
+		for (int i = 0; i < IterableUtils.size(pages); i++) {
+			//
+			page = get(pages, i);
+			//
+			if (f == null) {
+				//
+				f = getDeclaredField(getClass(page), "component");
+				//
+			} // if
+				//
+			preferredHeight = ObjectUtils.max(preferredHeight,
+					getPreferredHeight(cast(Component.class, page != null ? Narcissus.getObjectField(page, f) : null)));
+			//
+		} // for
+			//
+		return preferredHeight;
+		//
 	}
 
 	private static TemplateLoader getTemplateLoader(final freemarker.template.Configuration instance) {

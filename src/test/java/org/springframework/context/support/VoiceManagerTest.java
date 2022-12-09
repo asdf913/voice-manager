@@ -265,7 +265,8 @@ class VoiceManagerTest {
 			METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_SHOW_MESSAGE_DIALOG3, METHOD_SET_VISIBLE, METHOD_RANDOM_ALPHABETIC,
 			METHOD_GET_MEDIA_FORMAT_LINK, METHOD_GET_EVENT_TYPE, METHOD_GET_PARENT_FILE,
 			METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET,
-			METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET_FIRST_ROW, METHOD_EXPORT_JLPT = null;
+			METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET_FIRST_ROW, METHOD_EXPORT_JLPT,
+			METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -761,6 +762,9 @@ class VoiceManagerTest {
 				.setAccessible(true);
 		//
 		(METHOD_EXPORT_JLPT = clz.getDeclaredMethod("exportJlpt", CLASS_OBJECT_MAP, List.class)).setAccessible(true);
+		//
+		(METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT = clz.getDeclaredMethod("getMaxPagePreferredHeight", Object.class))
+				.setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -6463,6 +6467,36 @@ class VoiceManagerTest {
 	private static void exportJlpt(final Object objectMap, final List<Voice> voices) throws Throwable {
 		try {
 			METHOD_EXPORT_JLPT.invoke(null, objectMap, voices);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetMaxPagePreferredHeight() throws Throwable {
+		//
+		Assertions.assertNull(getMaxPagePreferredHeight(null));
+		//
+		final Object jTabbedPane = new JTabbedPane();
+		//
+		final List<?> pages = cast(List.class,
+				Narcissus.getObjectField(jTabbedPane, getDeclaredField(JTabbedPane.class, "pages")));
+		//
+		add(pages, null);
+		//
+		Assertions.assertNull(getMaxPagePreferredHeight(jTabbedPane));
+		//
+	}
+
+	private static Double getMaxPagePreferredHeight(final Object jTabbedPane) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT.invoke(null, jTabbedPane);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Double) {
+				return (Double) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
