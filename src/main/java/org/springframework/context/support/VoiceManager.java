@@ -288,6 +288,7 @@ import domain.VoiceList;
 import fr.free.nrw.jakaroma.Jakaroma;
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.StringTemplateLoader;
+import freemarker.cache.TemplateLoader;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -1076,9 +1077,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				() -> new freemarker.template.Configuration(ObjectUtils.getIfNull(freeMarkerVersion,
 						() -> freemarker.template.Configuration.getVersion())));
 		//
-		if (configuration != null && configuration.getTemplateLoader() == null) {
+		if (getTemplateLoader(configuration) == null) {
 			//
-			configuration.setTemplateLoader(new ClassTemplateLoader(VoiceManager.class, "/"));
+			setTemplateLoader(configuration, new ClassTemplateLoader(VoiceManager.class, "/"));
 			//
 		} // if
 			//
@@ -1122,6 +1123,17 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
+	}
+
+	private static TemplateLoader getTemplateLoader(final freemarker.template.Configuration instance) {
+		return instance != null ? instance.getTemplateLoader() : null;
+	}
+
+	private static void setTemplateLoader(final freemarker.template.Configuration instance,
+			final TemplateLoader templateLoader) {
+		if (instance != null) {
+			instance.setTemplateLoader(templateLoader);
+		}
 	}
 
 	private static void setVisible(final Component instance, final boolean b) {
@@ -3749,9 +3761,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					final freemarker.template.Configuration configuration = ObjectUtils
 							.getIfNull(freeMarkerConfiguration, () -> new freemarker.template.Configuration(version));
 					//
-					if (configuration != null && configuration.getTemplateLoader() == null) {
+					if (getTemplateLoader(configuration) == null) {
 						//
-						configuration.setTemplateLoader(new ClassTemplateLoader(VoiceManager.class, "/"));
+						setTemplateLoader(configuration, new ClassTemplateLoader(VoiceManager.class, "/"));
 						//
 					} // if
 						//
@@ -4212,9 +4224,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				ObjectMap.getObject(objectMap, freemarker.template.Configuration.class),
 				() -> new freemarker.template.Configuration(version));
 		//
-		if (configuration != null && configuration.getTemplateLoader() == null) {
+		if (getTemplateLoader(configuration) == null) {
 			//
-			configuration.setTemplateLoader(new ClassTemplateLoader(VoiceManager.class, "/"));
+			setTemplateLoader(configuration, new ClassTemplateLoader(VoiceManager.class, "/"));
 			//
 		} // if
 			//
@@ -4234,7 +4246,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static Template getTemplate(final freemarker.template.Configuration instance, final String name)
 			throws IOException {
 		//
-		return instance != null && name != null && instance.getTemplateLoader() != null ? instance.getTemplate(name)
+		return instance != null && name != null && getTemplateLoader(instance) != null ? instance.getTemplate(name)
 				: null;
 		//
 	}
@@ -7819,9 +7831,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			final StringTemplateLoader stl = ObjectMap.getObject(objectMap, StringTemplateLoader.class);
 			//
-			if (configuration != null && configuration.getTemplateLoader() == null) {
+			if (getTemplateLoader(configuration) == null) {
 				//
-				configuration.setTemplateLoader(stl);
+				setTemplateLoader(configuration, stl);
 				//
 			} // if
 				//
