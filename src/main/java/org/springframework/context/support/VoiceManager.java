@@ -5903,9 +5903,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
-				if (row == null && sheet != null) {
+				if (row == null) {
 					//
-					row = sheet.createRow(0);
+					row = createRow(sheet, 0);
 					//
 				} // if
 					//
@@ -5917,7 +5917,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				if (sheet != null) {
 					//
-					row = sheet.createRow(sheet.getPhysicalNumberOfRows());
+					row = createRow(sheet, sheet.getPhysicalNumberOfRows());
 					//
 				} // if
 					//
@@ -6042,6 +6042,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static Sheet createSheet(final Workbook instance, final String sheetname) {
 		return instance != null ? instance.createSheet(sheetname) : null;
+	}
+
+	private static Row createRow(final Sheet instance, final int rownum) {
+		return instance != null ? instance.createRow(rownum) : null;
 	}
 
 	private static DataValidationHelper getDataValidationHelper(final Sheet instance) {
@@ -8460,7 +8464,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				if (sheet != null && sheet.getLastRowNum() < 0) {
 					//
-					if ((row = sheet.createRow(sheet.getLastRowNum() + 1)) == null) {
+					if ((row = createRow(sheet, sheet.getLastRowNum() + 1)) == null) {
 						//
 						continue;
 						//
@@ -8474,7 +8478,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					// content
 					//
-				if ((row = sheet.createRow(sheet.getLastRowNum() + 1)) == null) {
+				if ((row = createRow(sheet, sheet.getLastRowNum() + 1)) == null) {
 					//
 					continue;
 					//
@@ -8678,7 +8682,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-			if (sheet != null && (row = sheet.createRow(sheet.getLastRowNum() + 1)) == null) {
+			if (sheet != null && (row = createRow(sheet, sheet.getLastRowNum() + 1)) == null) {
 				//
 				continue;
 				//
@@ -8792,7 +8796,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-			if (sheet != null && (row = sheet.createRow(sheet.getLastRowNum() + 1)) == null) {
+			if (sheet != null && (row = createRow(sheet, sheet.getLastRowNum() + 1)) == null) {
 				//
 				continue;
 				//
@@ -8833,7 +8837,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static void setMicrosoftSpeechObjectLibrarySheetFirstRow(final Sheet sheet, final String[] columnNames) {
 		//
-		final Row row = sheet != null ? sheet.createRow(sheet.getLastRowNum() + 1) : null;
+		final Row row = sheet != null ? createRow(sheet, sheet.getLastRowNum() + 1) : null;
 		//
 		if (row != null) {
 			//
@@ -9050,7 +9054,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					// content
 					//
-				if ((row = sheet != null ? sheet.createRow(sheet.getLastRowNum() + 1) : null) == null) {
+				if ((row = sheet != null ? createRow(sheet, sheet.getLastRowNum() + 1) : null) == null) {
 					continue;
 				} // if
 					//
@@ -9095,7 +9099,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static void setSheetHeaderRow(final Sheet sheet, final Field[] fs, final Class<?> spreadsheetColumnClass)
 			throws IllegalAccessException, InvocationTargetException {
 		//
-		final Row row = sheet != null ? sheet.createRow(0) : null;
+		final Row row = createRow(sheet, 0);
 		//
 		for (int j = 0; fs != null && j < fs.length; j++) {
 			//
