@@ -2492,15 +2492,17 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.add(new JLabel("Encryption Mode"), String.format("span %1$s", 5));
 		//
+		final EncryptionMode[] encryptionModes = EncryptionMode.values();
+		//
 		panel.add(
 				new JComboBox<>(cbmEncryptionMode = new DefaultComboBoxModel<>(
-						ArrayUtils.insert(0, EncryptionMode.values(), (EncryptionMode) null))),
+						ArrayUtils.insert(0, encryptionModes, (EncryptionMode) null))),
 				String.format("%1$s,span %2$s", WRAP, 2));
 		//
 		setSelectedItem(
 				cbmEncryptionMode, orElse(
 						findFirst(
-								filter(Arrays.stream(EncryptionMode.values()),
+								filter(Arrays.stream(encryptionModes),
 										x -> StringUtils.equalsIgnoreCase(name(x), getProperty(propertyResolver,
 												"org.springframework.context.support.VoiceManager.encryptionMode")))),
 						null));
