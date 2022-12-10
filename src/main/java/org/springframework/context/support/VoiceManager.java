@@ -9007,13 +9007,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		if (voices != null && voices.iterator() != null) {
 			//
-			Cell cell = null;
-			//
 			Field[] fs = null;
 			//
 			Field f = null;
-			//
-			Object value = null;
 			//
 			final Class<?> dateFormatClass = forName("domain.Voice$DateFormat");
 			//
@@ -9021,15 +9017,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			final Class<?> spreadsheetColumnClass = forName("domain.Voice$SpreadsheetColumn");
 			//
-			Annotation a = null;
-			//
-			Method m = null;
-			//
 			String[] fieldOrder = getFieldOrder();
 			//
-			CellStyle cellStyle = null;
-			//
-			short dataFormatIndex;
+			ObjectMap objectMap = null;
 			//
 			for (final Voice voice : voices) {
 				//
@@ -9074,69 +9064,27 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				for (int j = 0; fs != null && j < fs.length; j++) {
 					//
-					if ((f = fs[j]) == null || (cell = createCell(row, j)) == null) {
+					if ((f = fs[j]) == null) {
 						continue;
 					} // if
 						//
 					f.setAccessible(true);
 					//
-					if ((value = f.get(voice)) instanceof Number) {
+					if (objectMap == null) {
 						//
-						if ((m = orElse(findFirst(filter(
-								testAndApply(Objects::nonNull,
-										getDeclaredMethods(annotationType(a = orElse(
-												findFirst(filter(
-														testAndApply(Objects::nonNull, getDeclaredAnnotations(f),
-																Arrays::stream, null),
-														x -> Objects.equals(annotationType(x), dataFormatClass))),
-												null))),
-										Arrays::stream, null),
-								x -> Objects.equals(getName(x), VALUE))), null)) != null
-								&& (cellStyle = createCellStyle(workbook)) != null) {
-							//
-							m.setAccessible(true);
-							//
-							if ((dataFormatIndex = HSSFDataFormat.getBuiltinFormat(toString(invoke(m, a)))) >= 0) {
-								//
-								cellStyle.setDataFormat(dataFormatIndex);
-								//
-								cell.setCellStyle(cellStyle);
-								//
-							} // if
-								//
-						} // if
-							//
-						cell.setCellValue(((Number) value).doubleValue());
-						//
-					} else if (value instanceof Date) {
-						//
-						if ((m = orElse(findFirst(filter(
-								testAndApply(Objects::nonNull,
-										getDeclaredMethods(annotationType(a = orElse(
-												findFirst(filter(
-														testAndApply(Objects::nonNull, getDeclaredAnnotations(f),
-																Arrays::stream, null),
-														x -> Objects.equals(annotationType(x), dateFormatClass))),
-												null))),
-										Arrays::stream, null),
-								x -> Objects.equals(getName(x), VALUE))), null)) != null) {
-							//
-							m.setAccessible(true);
-							//
-							setCellValue(cell, new SimpleDateFormat(toString(invoke(m, a))).format(value));
-							//
-						} else {
-							//
-							setCellValue(cell, toString(value));
-							//
-						} // if
-							//
-					} else {
-						//
-						setCellValue(cell, toString(value));
+						ObjectMap.setObject(
+								objectMap = ObjectUtils.getIfNull(objectMap,
+										() -> Reflection.newProxy(ObjectMap.class, new IH())),
+								Workbook.class, workbook);
 						//
 					} // if
 						//
+					ObjectMap.setObject(objectMap, Field.class, f);
+					//
+					ObjectMap.setObject(objectMap, Cell.class, createCell(row, j));
+					//
+					setSheetCellValue(objectMap, f.get(voice), dataFormatClass, dateFormatClass);
+					//
 				} // for
 					//
 			} // for
@@ -9147,6 +9095,84 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			sheet.setAutoFilter(new CellRangeAddress(sheet.getFirstRowNum(), sheet.getLastRowNum() - 1,
 					row.getFirstCellNum(), row.getLastCellNum() - 1));
+			//
+		} // if
+			//
+	}
+
+	private static void setSheetCellValue(final ObjectMap objectMap, final Object value, final Class<?> dataFormatClass,
+			final Class<?> dateFormatClass) throws IllegalAccessException, InvocationTargetException {
+		//
+		final Field field = ObjectMap.getObject(objectMap, Field.class);
+		//
+		final Cell cell = ObjectMap.getObject(objectMap, Cell.class);
+		//
+		Method m = null;
+		//
+		Annotation a = null;
+		//
+		if (value instanceof Number) {
+			//
+			CellStyle cellStyle = null;
+			//
+			if ((m = orElse(
+					findFirst(filter(
+							testAndApply(Objects::nonNull,
+									getDeclaredMethods(
+											annotationType(a = orElse(
+													findFirst(filter(testAndApply(Objects::nonNull,
+															getDeclaredAnnotations(field), Arrays::stream, null),
+															x -> Objects.equals(annotationType(x), dataFormatClass))),
+													null))),
+									Arrays::stream, null),
+							x -> Objects.equals(getName(x), VALUE))),
+					null)) != null
+					&& (cellStyle = createCellStyle(ObjectMap.getObject(objectMap, Workbook.class))) != null) {
+				//
+				m.setAccessible(true);
+				//
+				final short dataFormatIndex = HSSFDataFormat.getBuiltinFormat(toString(invoke(m, a)));
+				//
+				if (dataFormatIndex >= 0) {
+					//
+					cellStyle.setDataFormat(dataFormatIndex);
+					//
+					cell.setCellStyle(cellStyle);
+					//
+				} // if
+					//
+			} // if
+				//
+			cell.setCellValue(((Number) value).doubleValue());
+			//
+		} else if (value instanceof Date) {
+			//
+			if ((m = orElse(
+					findFirst(filter(
+							testAndApply(Objects::nonNull,
+									getDeclaredMethods(
+											annotationType(a = orElse(
+													findFirst(filter(testAndApply(Objects::nonNull,
+															getDeclaredAnnotations(field), Arrays::stream, null),
+															x -> Objects.equals(annotationType(x), dateFormatClass))),
+													null))),
+									Arrays::stream, null),
+							x -> Objects.equals(getName(x), VALUE))),
+					null)) != null) {
+				//
+				m.setAccessible(true);
+				//
+				setCellValue(cell, new SimpleDateFormat(toString(invoke(m, a))).format(value));
+				//
+			} else {
+				//
+				setCellValue(cell, toString(value));
+				//
+			} // if
+				//
+		} else {
+			//
+			setCellValue(cell, toString(value));
 			//
 		} // if
 			//
