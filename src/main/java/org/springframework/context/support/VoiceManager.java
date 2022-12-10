@@ -354,6 +354,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static final String HIDE_AUDIO_IMAGE_IN_PRESENTATION = "hideAudioImageInPresentation";
 
+	private static final String PASSWORD = "Password";
+
 	private static final Predicate<File> EMPTY_FILE_PREDICATE = f -> f != null && f.exists() && isFile(f)
 			&& f.length() == 0;
 
@@ -2486,7 +2488,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.setLayout(layoutManager);
 		//
-		panel.add(new JLabel("Password"), String.format("span %1$s", 4));
+		panel.add(new JLabel(PASSWORD), String.format("span %1$s", 4));
 		//
 		panel.add(
 				tfExportPassword = new JPasswordField(getProperty(propertyResolver,
@@ -4749,14 +4751,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		if (GraphicsEnvironment.isHeadless()) {
 			//
-			return testAndApply(Objects::nonNull, console != null ? console.readPassword("Password") : null,
-					String::new, null);
+			return testAndApply(Objects::nonNull, console != null ? console.readPassword(PASSWORD) : null, String::new,
+					null);
 			//
 		} // if
 			//
 		final JTextComponent jtc = new JPasswordField();
 		//
-		return JOptionPane.showConfirmDialog(null, jtc, "Password", JOptionPane.PLAIN_MESSAGE) == JOptionPane.OK_OPTION
+		return JOptionPane.showConfirmDialog(null, jtc, PASSWORD, JOptionPane.PLAIN_MESSAGE) == JOptionPane.OK_OPTION
 				? getText(jtc)
 				: null;
 		//
