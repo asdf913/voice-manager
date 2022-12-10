@@ -194,8 +194,11 @@ import org.apache.poi.ooxml.POIXMLDocument;
 import org.apache.poi.ooxml.POIXMLProperties;
 import org.apache.poi.ooxml.POIXMLProperties.CustomProperties;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.poifs.crypt.Decryptor;
 import org.apache.poi.poifs.crypt.EncryptionInfo;
+import org.apache.poi.poifs.crypt.EncryptionMode;
+import org.apache.poi.poifs.crypt.Encryptor;
 import org.apache.poi.poifs.filesystem.DirectoryNode;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Cell;
@@ -212,6 +215,7 @@ import org.apache.poi.ss.usermodel.RichTextString;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.util.LocaleID;
@@ -362,7 +366,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			tfSpeechLanguageCode, tfSpeechLanguageName, tfLanguage, tfSpeechVolume, tfCurrentProcessingFile,
 			tfCurrentProcessingSheetName, tfCurrentProcessingVoice, tfListNames, tfPhraseCounter, tfPhraseTotal,
 			tfJlptFolderNamePrefix, tfOrdinalPositionFileNamePrefix, tfIpaSymbol, tfExportFile, tfElapsed, tfDllPath,
-			tfExportHtmlFileName = null;
+			tfExportHtmlFileName, tfExportPassword = null;
 
 	private transient ComboBoxModel<Yomi> cbmYomi = null;
 
@@ -2482,6 +2486,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.setLayout(layoutManager);
 		//
+		panel.add(new JLabel("Password"), String.format("span %1$s", 4));
+		//
+		panel.add(
+				tfExportPassword = new JPasswordField(getProperty(propertyResolver,
+						"org.springframework.context.support.VoiceManager.exportPassword")),
+				String.format("%1$s,growx", WRAP, 50));
+		//
 		panel.add(new JLabel("Option(s)"), String.format("span %1$s", 4));
 		//
 		panel.add(cbOverMp3Title = new JCheckBox("Over Mp3 Title"), String.format("%1$s,span %2$s", WRAP, 2));
@@ -3761,6 +3772,42 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 				} // try
 					//
+				try (final InputStream is = new ByteArrayInputStream(FileUtils.readFileToByteArray(file));
+						final Workbook wb = WorkbookFactory.create(is)) {
+					//
+					final String password = getText(tfExportPassword);
+					//
+					if (wb instanceof XSSFWorkbook && StringUtils.isNotEmpty(password)) {
+						//
+						try (final POIFSFileSystem fs = new POIFSFileSystem()) {
+							//
+							final Encryptor encryptor = new EncryptionInfo(EncryptionMode.agile).getEncryptor();
+							//
+							if (encryptor != null) {
+								//
+								encryptor.confirmPassword(getText(tfExportPassword));
+								//
+							} // if
+								//
+							try (final OPCPackage opc = OPCPackage.open(file);
+									final OutputStream os = encryptor != null ? encryptor.getDataStream(fs) : null) {
+								//
+								opc.save(os);
+								//
+							} // try
+								//
+							try (final FileOutputStream fos = new FileOutputStream(file)) {
+								//
+								fs.writeFilesystem(fos);
+								//
+							} // try
+								//
+						} // try
+							//
+					} // if
+						//
+				} // try
+					//
 					// Delete empty Spreadsheet
 					//
 				if (fileToBeDeleted) {
@@ -3893,7 +3940,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 				} // if
 					//
-			} catch (final IOException | IllegalAccessException | TemplateException e) {
+			} catch (final IOException | IllegalAccessException | TemplateException | InvalidFormatException
+					| GeneralSecurityException e) {
 				//
 				errorOrPrintStackTraceOrShowMessageDialog(headless, e);
 				//
