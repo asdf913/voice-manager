@@ -127,6 +127,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ooxml.POIXMLDocument;
 import org.apache.poi.ooxml.POIXMLProperties;
 import org.apache.poi.ooxml.POIXMLProperties.CustomProperties;
+import org.apache.poi.poifs.crypt.EncryptionMode;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -771,7 +772,8 @@ class VoiceManagerTest {
 		(METHOD_SET_SHEET_HEADER_ROW = clz.getDeclaredMethod("setSheetHeaderRow", Sheet.class, Field[].class,
 				Class.class)).setAccessible(true);
 		//
-		(METHOD_ENCRYPT = clz.getDeclaredMethod("encrypt", File.class, String.class)).setAccessible(true);
+		(METHOD_ENCRYPT = clz.getDeclaredMethod("encrypt", File.class, EncryptionMode.class, String.class))
+				.setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -6528,7 +6530,7 @@ class VoiceManagerTest {
 	@Test
 	void testEencrypt() throws Throwable {
 		//
-		Assertions.assertDoesNotThrow(() -> encrypt(null, null));
+		Assertions.assertDoesNotThrow(() -> encrypt(null, null, null));
 		//
 		final File file = File.createTempFile(randomAlphabetic(3), null);
 		//
@@ -6540,7 +6542,7 @@ class VoiceManagerTest {
 			//
 		} // try
 			//
-		encrypt(file, SPACE);
+		encrypt(file, null, SPACE);
 		//
 		// xlsx
 		//
@@ -6550,13 +6552,14 @@ class VoiceManagerTest {
 			//
 		} // try
 			//
-		encrypt(file, SPACE);
+		encrypt(file, null, SPACE);
 		//
 	}
 
-	private static void encrypt(final File file, final String password) throws Throwable {
+	private static void encrypt(final File file, final EncryptionMode encryptionMode, final String password)
+			throws Throwable {
 		try {
-			METHOD_ENCRYPT.invoke(null, file, password);
+			METHOD_ENCRYPT.invoke(null, file, encryptionMode, password);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

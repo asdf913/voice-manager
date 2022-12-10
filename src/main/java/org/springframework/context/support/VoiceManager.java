@@ -380,6 +380,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private transient ComboBoxModel<Method> cbmSpeakMethod = null;
 
+	private transient ComboBoxModel<EncryptionMode> cbmEncryptionMode = null;
+
 	private AbstractButton btnSpeak, btnWriteVoice, btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji,
 			btnCopyHiragana, btnCopyKatakana, cbUseTtsVoice, btnExecute, btnImportFileTemplate, btnImport,
 			btnImportWithinFolder, cbOverMp3Title, cbOrdinalPositionAsFileNamePrefix, btnExport, cbExportHtml,
@@ -2488,12 +2490,27 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.setLayout(layoutManager);
 		//
+		panel.add(new JLabel("Encryption Mode"), String.format("span %1$s", 5));
+		//
+		panel.add(
+				new JComboBox<>(cbmEncryptionMode = new DefaultComboBoxModel<>(
+						ArrayUtils.insert(0, EncryptionMode.values(), (EncryptionMode) null))),
+				String.format("%1$s,span %2$s", WRAP, 2));
+		//
+		setSelectedItem(
+				cbmEncryptionMode, orElse(
+						findFirst(
+								filter(Arrays.stream(EncryptionMode.values()),
+										x -> StringUtils.equalsIgnoreCase(name(x), getProperty(propertyResolver,
+												"org.springframework.context.support.VoiceManager.encryptionMode")))),
+						null));
+		//
 		panel.add(new JLabel(PASSWORD), String.format("span %1$s", 4));
 		//
 		panel.add(
 				tfExportPassword = new JPasswordField(getProperty(propertyResolver,
 						"org.springframework.context.support.VoiceManager.exportPassword")),
-				String.format("%1$s,growx", WRAP, 50));
+				String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, 2));
 		//
 		panel.add(new JLabel("Option(s)"), String.format("span %1$s", 4));
 		//
@@ -3776,7 +3793,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					// encrypt the file if "password" is set
 					//
-				encrypt(file, getText(tfExportPassword));
+				encrypt(file, cast(EncryptionMode.class, getSelectedItem(cbmEncryptionMode)),
+						getText(tfExportPassword));
 				//
 				// Delete empty Spreadsheet
 				//
@@ -4102,7 +4120,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	private static void encrypt(final File file, final String password)
+	private static void encrypt(final File file, final EncryptionMode encryptionMode, final String password)
 			throws IOException, InvalidFormatException, GeneralSecurityException {
 		//
 		try (final InputStream is = testAndApply(Objects::nonNull,
@@ -4113,7 +4131,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				try (final POIFSFileSystem fs = new POIFSFileSystem()) {
 					//
-					final Encryptor encryptor = new EncryptionInfo(EncryptionMode.agile).getEncryptor();
+					final Encryptor encryptor = new EncryptionInfo(
+							ObjectUtils.defaultIfNull(encryptionMode, EncryptionMode.agile)).getEncryptor();
 					//
 					if (encryptor != null) {
 						//
