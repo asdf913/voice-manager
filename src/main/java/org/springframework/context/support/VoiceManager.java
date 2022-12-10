@@ -6078,16 +6078,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 						} // if
 							//
-						if (!(dvh instanceof XSSFDataValidationHelper) || CollectionUtils.isNotEmpty(strings = toList(
-								map(testAndApply(Objects::nonNull, type.getEnumConstants(), Arrays::stream, null),
-										x -> x instanceof Enum ? name((Enum<?>) x) : toString(x))))) {
-							//
-							sheet.addValidationData(createValidation(dvh,
-									createExplicitListConstraint(dvh, toArray(strings, new String[] {})),
-									new CellRangeAddressList(row.getRowNum(), row.getRowNum(), i, i)));
-							//
-						} // if
-							//
+						addValidationDataForEnum(sheet, row, dvh, type, i);
+						//
 					} else if (anyMatch(testAndApply(Objects::nonNull, getDeclaredAnnotations(f), Arrays::stream, null),
 							a -> Objects.equals(annotationType(a), classJlpt))) {// domain.Voice.JLPT
 						//
@@ -6146,6 +6138,23 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return bs;
 		//
+	}
+
+	private static void addValidationDataForEnum(final Sheet sheet, final Row row, final DataValidationHelper dvh,
+			final Class<?> type, final int index) {
+		//
+		final List<String> strings = toList(
+				map(testAndApply(Objects::nonNull, getEnumConstants(type), Arrays::stream, null),
+						x -> x instanceof Enum ? name((Enum<?>) x) : toString(x)));
+		//
+		if ((!(dvh instanceof XSSFDataValidationHelper) || CollectionUtils.isNotEmpty(strings)) && row != null) {
+			//
+			sheet.addValidationData(
+					createValidation(dvh, createExplicitListConstraint(dvh, toArray(strings, new String[] {})),
+							new CellRangeAddressList(row.getRowNum(), row.getRowNum(), index, index)));
+			//
+		} // if
+			//
 	}
 
 	private static Sheet createSheet(final Workbook instance) {
