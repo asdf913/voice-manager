@@ -4693,43 +4693,39 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} else if (Objects.equals(mimeType, "application/zip")) {
 			//
-			try (final ZipFile zf = new ZipFile(file)) {
+			try (final ZipFile zf = new ZipFile(file);
+					final InputStream is = testAndApply(Objects::nonNull,
+							testAndApply(Objects::nonNull, "[Content_Types].xml", zf::getEntry, null),
+							zf::getInputStream, null)) {
 				//
-				try (final InputStream is = testAndApply(Objects::nonNull,
-						testAndApply(Objects::nonNull, "[Content_Types].xml", zf::getEntry, null), zf::getInputStream,
-						null)) {
+				final NodeList childNodes = getChildNodes(getDocumentElement(
+						is != null ? parse(newDocumentBuilder(DocumentBuilderFactory.newDefaultInstance()), is)
+								: null));
+				//
+				boolean isXlsx = false;
+				//
+				for (int i = 0; i < getLength(childNodes); i++) {
 					//
-					final NodeList childNodes = getChildNodes(getDocumentElement(
-							is != null ? parse(newDocumentBuilder(DocumentBuilderFactory.newDefaultInstance()), is)
-									: null));
-					//
-					boolean isXlsx = false;
-					//
-					for (int i = 0; i < getLength(childNodes); i++) {
+					if (Objects.equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml",
+							getTextContent(getNamedItem(getAttributes(item(childNodes, i)), "ContentType")))
+							&& (isXlsx = true)) {
 						//
-						if (Objects.equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml",
-								getTextContent(getNamedItem(getAttributes(item(childNodes, i)), "ContentType")))
-								&& (isXlsx = true)) {
-							//
-							break;
-							//
-						} // if
-							//
-					} // for
-						//
-					if (isXlsx) {
-						//
-						return new XSSFWorkbook(file);
+						break;
 						//
 					} // if
 						//
-				} catch (final ParserConfigurationException | SAXException e) {
+				} // for
 					//
-					errorOrPrintStackTraceOrShowMessageDialog(
-							ObjectUtils.defaultIfNull(ExceptionUtils.getRootCause(e), e));
+				if (isXlsx) {
 					//
-				} // try
+					return new XSSFWorkbook(file);
 					//
+				} // if
+					//
+			} catch (final ParserConfigurationException | SAXException e) {
+				//
+				errorOrPrintStackTraceOrShowMessageDialog(ObjectUtils.defaultIfNull(ExceptionUtils.getRootCause(e), e));
+				//
 			} // try
 				//
 		} // if
