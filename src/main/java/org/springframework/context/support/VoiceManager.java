@@ -4716,9 +4716,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final ContentInfo ci = testAndApply(x -> x != null && x.isFile(), file, new ContentInfoUtil()::findMatch, null);
 		//
-		final ContentType ct = ci != null ? ci.getContentType() : null;
-		//
-		try (final ZipFile zf = testAndApply(x -> Objects.equals(ContentType.ZIP, ct), file, ZipFile::new, null);
+		try (final ZipFile zf = testAndApply(x -> Objects.equals(ContentType.ZIP, getContentType(ci)), file,
+				ZipFile::new, null);
 				final InputStream is = testAndApply(Objects::nonNull,
 						testAndApply(Objects::nonNull, "[Content_Types].xml", x -> getEntry(zf, x), null),
 						x -> getInputStream(zf, x), null)) {
@@ -4750,6 +4749,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return null;
 		//
+	}
+
+	private static ContentType getContentType(final ContentInfo instance) {
+		return instance != null ? instance.getContentType() : null;
 	}
 
 	private static ZipEntry getEntry(final ZipFile instance, final String name) {
