@@ -5999,6 +5999,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			Class<?> type = null;
 			//
+			ObjectMap objectMap = null;
+			//
 			for (int i = 0; i < IterableUtils.size(fs); i++) {
 				//
 				if ((f = get(fs, i)) == null) {
@@ -6035,11 +6037,20 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					setCellValue(createCell(row, i), null);
 					//
+					if (objectMap == null && (objectMap = Reflection.newProxy(ObjectMap.class, new IH())) != null) {
+						//
+						ObjectMap.setObject(objectMap, Row.class, row);
+						//
+						ObjectMap.setObject(objectMap, Sheet.class, sheet);
+						//
+					} // if
+						//
 					if (Objects.equals(Boolean.class, type = getType(f = get(fs, i)))) {// java.lang.Boolean
 						//
 						if (dvh == null) {
 							//
-							dvh = getDataValidationHelper(sheet);
+							ObjectMap.setObject(objectMap, DataValidationHelper.class,
+									dvh = getDataValidationHelper(sheet));
 							//
 						} // if
 							//
@@ -6057,26 +6068,18 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 								//
 						} // if
 							//
-						if (!(dvh instanceof XSSFDataValidationHelper)
-								|| CollectionUtils.isNotEmpty(IValue0Util.getValue0(booleans))) {
-							//
-							sheet.addValidationData(createValidation(dvh,
-									createExplicitListConstraint(dvh,
-											toArray(toList(map(stream(IValue0Util.getValue0(booleans)),
-													VoiceManager::toString)), new String[] {})),
-									new CellRangeAddressList(row.getRowNum(), row.getRowNum(), i, i)));
-							//
-						} // if
-							//
+						addValidationDataForBoolean(objectMap, booleans, i);
+						//
 					} else if (isAssignableFrom(Enum.class, type)) {// java.lang.Enum
 						//
 						if (dvh == null) {
 							//
-							dvh = getDataValidationHelper(sheet);
+							ObjectMap.setObject(objectMap, DataValidationHelper.class,
+									dvh = getDataValidationHelper(sheet));
 							//
 						} // if
 							//
-						addValidationDataForEnum(sheet, row, dvh, type, i);
+						addValidationDataForEnum(objectMap, type, i);
 						//
 					} else if (anyMatch(testAndApply(Objects::nonNull, getDeclaredAnnotations(f), Arrays::stream, null),
 							a -> Objects.equals(annotationType(a), classJlpt))) {// domain.Voice.JLPT
@@ -6138,21 +6141,51 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static void addValidationDataForEnum(final Sheet sheet, final Row row, final DataValidationHelper dvh,
-			final Class<?> type, final int index) {
+	private static void addValidationDataForBoolean(final ObjectMap objectMap, final IValue0<List<Boolean>> booleans,
+			final int index) {
+		//
+		final Collection<Boolean> bs = IValue0Util.getValue0(booleans);
+		//
+		final DataValidationHelper dvh = ObjectMap.getObject(objectMap, DataValidationHelper.class);
+		//
+		final Row row = ObjectMap.getObject(objectMap, Row.class);
+		//
+		if ((!(dvh instanceof XSSFDataValidationHelper) || CollectionUtils.isNotEmpty(bs)) && row != null) {
+			//
+			addValidationData(ObjectMap.getObject(objectMap, Sheet.class),
+					createValidation(dvh,
+							createExplicitListConstraint(dvh,
+									toArray(toList(map(stream(bs), VoiceManager::toString)), new String[] {})),
+							new CellRangeAddressList(row.getRowNum(), row.getRowNum(), index, index)));
+			//
+		} // if
+			//
+	}
+
+	private static void addValidationDataForEnum(final ObjectMap objectMap, final Class<?> type, final int index) {
 		//
 		final List<String> strings = toList(
 				map(testAndApply(Objects::nonNull, getEnumConstants(type), Arrays::stream, null),
 						x -> x instanceof Enum ? name((Enum<?>) x) : toString(x)));
 		//
+		final DataValidationHelper dvh = ObjectMap.getObject(objectMap, DataValidationHelper.class);
+		//
+		final Row row = ObjectMap.getObject(objectMap, Row.class);
+		//
 		if ((!(dvh instanceof XSSFDataValidationHelper) || CollectionUtils.isNotEmpty(strings)) && row != null) {
 			//
-			sheet.addValidationData(
+			addValidationData(ObjectMap.getObject(objectMap, Sheet.class),
 					createValidation(dvh, createExplicitListConstraint(dvh, toArray(strings, new String[] {})),
 							new CellRangeAddressList(row.getRowNum(), row.getRowNum(), index, index)));
 			//
 		} // if
 			//
+	}
+
+	private static void addValidationData(final Sheet instance, final DataValidation dataValidation) {
+		if (instance != null) {
+			instance.addValidationData(dataValidation);
+		}
 	}
 
 	private static Sheet createSheet(final Workbook instance) {
