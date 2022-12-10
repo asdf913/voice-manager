@@ -266,7 +266,7 @@ class VoiceManagerTest {
 			METHOD_GET_MEDIA_FORMAT_LINK, METHOD_GET_EVENT_TYPE, METHOD_GET_PARENT_FILE,
 			METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET,
 			METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET_FIRST_ROW, METHOD_EXPORT_JLPT,
-			METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT = null;
+			METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT, METHOD_SET_SHEET_HEADER_ROW = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -765,6 +765,9 @@ class VoiceManagerTest {
 		//
 		(METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT = clz.getDeclaredMethod("getMaxPagePreferredHeight", Object.class))
 				.setAccessible(true);
+		//
+		(METHOD_SET_SHEET_HEADER_ROW = clz.getDeclaredMethod("setSheetHeaderRow", Sheet.class, Field[].class,
+				Class.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -6497,6 +6500,22 @@ class VoiceManagerTest {
 				return (Double) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetSheetHeaderRow() {
+		//
+		Assertions.assertDoesNotThrow(() -> setSheetHeaderRow(null, null, null));
+		//
+	}
+
+	private static void setSheetHeaderRow(final Sheet sheet, final Field[] fs, final Class<?> spreadsheetColumnClass)
+			throws Throwable {
+		try {
+			METHOD_SET_SHEET_HEADER_ROW.invoke(null, sheet, fs, spreadsheetColumnClass);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

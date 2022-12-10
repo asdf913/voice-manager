@@ -9044,16 +9044,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				if (sheet != null && sheet.getLastRowNum() < 0) {
 					//
-					if ((row = sheet.createRow(0)) == null) {
-						continue;
-					} // if
-						//
-					for (int j = 0; fs != null && j < fs.length; j++) {
-						//
-						setCellValue(createCell(row, j), getColumnName(spreadsheetColumnClass, fs[j]));
-						//
-					} // for
-						//
+					setSheetHeaderRow(sheet, fs, spreadsheetColumnClass);
+					//
 				} // if
 					//
 					// content
@@ -9097,6 +9089,19 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					row.getFirstCellNum(), row.getLastCellNum() - 1));
 			//
 		} // if
+			//
+	}
+
+	private static void setSheetHeaderRow(final Sheet sheet, final Field[] fs, final Class<?> spreadsheetColumnClass)
+			throws IllegalAccessException, InvocationTargetException {
+		//
+		final Row row = sheet != null ? sheet.createRow(0) : null;
+		//
+		for (int j = 0; fs != null && j < fs.length; j++) {
+			//
+			setCellValue(createCell(row, j), getColumnName(spreadsheetColumnClass, fs[j]));
+			//
+		} // for
 			//
 	}
 
