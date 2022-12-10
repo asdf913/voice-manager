@@ -101,6 +101,8 @@ import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
 import javax.sound.sampled.AudioFormat;
@@ -4693,35 +4695,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} else if (Objects.equals(mimeType, "application/zip")) {
 			//
-			try (final ZipFile zf = new ZipFile(file);
-					final InputStream is = testAndApply(Objects::nonNull,
-							testAndApply(Objects::nonNull, "[Content_Types].xml", zf::getEntry, null),
-							zf::getInputStream, null)) {
+			try {
 				//
-				final NodeList childNodes = getChildNodes(getDocumentElement(
-						is != null ? parse(newDocumentBuilder(DocumentBuilderFactory.newDefaultInstance()), is)
-								: null));
+				return getWorkbookByZipFile(file);
 				//
-				boolean isXlsx = false;
-				//
-				for (int i = 0; i < getLength(childNodes); i++) {
-					//
-					if (Objects.equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml",
-							getTextContent(getNamedItem(getAttributes(item(childNodes, i)), "ContentType")))
-							&& (isXlsx = true)) {
-						//
-						break;
-						//
-					} // if
-						//
-				} // for
-					//
-				if (isXlsx) {
-					//
-					return new XSSFWorkbook(file);
-					//
-				} // if
-					//
 			} catch (final ParserConfigurationException | SAXException e) {
 				//
 				errorOrPrintStackTraceOrShowMessageDialog(ObjectUtils.defaultIfNull(ExceptionUtils.getRootCause(e), e));
@@ -4732,6 +4709,55 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return null;
 		//
+	}
+
+	private static Workbook getWorkbookByZipFile(final File file)
+			throws ZipException, IOException, SAXException, ParserConfigurationException, InvalidFormatException {
+		//
+		final ContentInfo ci = testAndApply(x -> x != null && x.isFile(), file, new ContentInfoUtil()::findMatch, null);
+		//
+		final ContentType ct = ci != null ? ci.getContentType() : null;
+		//
+		try (final ZipFile zf = testAndApply(x -> Objects.equals(ContentType.ZIP, ct), file, ZipFile::new, null);
+				final InputStream is = testAndApply(Objects::nonNull,
+						testAndApply(Objects::nonNull, "[Content_Types].xml", x -> getEntry(zf, x), null),
+						x -> getInputStream(zf, x), null)) {
+			//
+			final NodeList childNodes = getChildNodes(getDocumentElement(
+					is != null ? parse(newDocumentBuilder(DocumentBuilderFactory.newDefaultInstance()), is) : null));
+			//
+			boolean isXlsx = false;
+			//
+			for (int i = 0; i < getLength(childNodes); i++) {
+				//
+				if (Objects.equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml",
+						getTextContent(getNamedItem(getAttributes(item(childNodes, i)), "ContentType")))
+						&& (isXlsx = true)) {
+					//
+					break;
+					//
+				} // if
+					//
+			} // for
+				//
+			if (isXlsx) {
+				//
+				return new XSSFWorkbook(file);
+				//
+			} // if
+				//
+		} // try
+			//
+		return null;
+		//
+	}
+
+	private static ZipEntry getEntry(final ZipFile instance, final String name) {
+		return instance != null ? instance.getEntry(name) : null;
+	}
+
+	private static InputStream getInputStream(final ZipFile instance, final ZipEntry entry) throws IOException {
+		return instance != null ? instance.getInputStream(entry) : null;
 	}
 
 	private static NamedNodeMap getAttributes(final Node instance) {

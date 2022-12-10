@@ -75,6 +75,8 @@ import java.util.stream.Collector;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.sound.sampled.AudioFormat;
 import javax.swing.AbstractButton;
@@ -269,7 +271,8 @@ class VoiceManagerTest {
 			METHOD_GET_MEDIA_FORMAT_LINK, METHOD_GET_EVENT_TYPE, METHOD_GET_PARENT_FILE,
 			METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET,
 			METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET_FIRST_ROW, METHOD_EXPORT_JLPT,
-			METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT, METHOD_SET_SHEET_HEADER_ROW, METHOD_ENCRYPT = null;
+			METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT, METHOD_SET_SHEET_HEADER_ROW, METHOD_ENCRYPT,
+			METHOD_GET_WORKBOOK_BY_ZIP_FILE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -773,6 +776,9 @@ class VoiceManagerTest {
 				Class.class)).setAccessible(true);
 		//
 		(METHOD_ENCRYPT = clz.getDeclaredMethod("encrypt", File.class, EncryptionMode.class, String.class))
+				.setAccessible(true);
+		//
+		(METHOD_GET_WORKBOOK_BY_ZIP_FILE = clz.getDeclaredMethod("getWorkbookByZipFile", File.class))
 				.setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
@@ -6534,6 +6540,8 @@ class VoiceManagerTest {
 		//
 		final File file = File.createTempFile(randomAlphabetic(3), null);
 		//
+		deleteOnExit(file);
+		//
 		// xls
 		//
 		try (final Workbook workbook = new HSSFWorkbook(); final OutputStream os = new FileOutputStream(file)) {
@@ -6560,6 +6568,47 @@ class VoiceManagerTest {
 			throws Throwable {
 		try {
 			METHOD_ENCRYPT.invoke(null, file, encryptionMode, password);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetWorkbookByZipFile() throws Throwable {
+		//
+		Assertions.assertNull(getWorkbookByZipFile(null));
+		//
+		Assertions.assertNull(getWorkbookByZipFile(new File(".")));
+		//
+		Assertions.assertNull(getWorkbookByZipFile(new File("pom.xml")));
+		//
+		final File file = File.createTempFile(randomAlphabetic(3), null);
+		//
+		deleteOnExit(file);
+		//
+		try (final ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(file))) {
+			//
+			zos.putNextEntry(new ZipEntry("/[Content_Types].xml"));
+			//
+			zos.write("1".getBytes());
+			//
+			zos.close();
+			//
+		} // try
+			//
+		Assertions.assertNull(getWorkbookByZipFile(file));
+		//
+	}
+
+	private static Workbook getWorkbookByZipFile(final File file) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_WORKBOOK_BY_ZIP_FILE.invoke(null, file);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Workbook) {
+				return (Workbook) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
