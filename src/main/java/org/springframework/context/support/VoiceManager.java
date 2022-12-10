@@ -4712,7 +4712,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	private static Workbook getWorkbookByZipFile(final File file)
-			throws ZipException, IOException, SAXException, ParserConfigurationException, InvalidFormatException {
+			throws IOException, SAXException, ParserConfigurationException, InvalidFormatException {
 		//
 		final ContentInfo ci = testAndApply(x -> x != null && x.isFile(), file, new ContentInfoUtil()::findMatch, null);
 		//
