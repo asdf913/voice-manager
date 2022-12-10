@@ -6086,18 +6086,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 						if (dvh == null) {
 							//
-							dvh = getDataValidationHelper(sheet);
+							ObjectMap.setObject(objectMap, DataValidationHelper.class,
+									dvh = getDataValidationHelper(sheet));
 							//
 						} // if
 							//
-						if (!(dvh instanceof XSSFDataValidationHelper) || CollectionUtils.isNotEmpty(jlptValues)) {
-							//
-							sheet.addValidationData(createValidation(dvh,
-									createExplicitListConstraint(dvh, toArray(jlptValues, new String[] {})),
-									new CellRangeAddressList(row.getRowNum(), row.getRowNum(), i, i)));
-							//
-						} // if
-							//
+						addValidationDataForJlptLevel(objectMap, jlptValues, i);
+						//
 					} else if (anyMatch(testAndApply(Objects::nonNull, getDeclaredAnnotations(f), Arrays::stream, null),
 							a -> Objects.equals(annotationType(a), classGaKuNenBeTsuKanJi))) {// domain.Voice.GaKuNenBeTsuKanJi
 						//
@@ -6139,6 +6134,23 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return bs;
 		//
+	}
+
+	private static void addValidationDataForJlptLevel(final ObjectMap objectMap, final Collection<String> jlptValues,
+			final int index) {
+		//
+		final DataValidationHelper dvh = ObjectMap.getObject(objectMap, DataValidationHelper.class);
+		//
+		final Row row = ObjectMap.getObject(objectMap, Row.class);
+		//
+		if ((!(dvh instanceof XSSFDataValidationHelper) || CollectionUtils.isNotEmpty(jlptValues)) && row != null) {
+			//
+			addValidationData(ObjectMap.getObject(objectMap, Sheet.class),
+					createValidation(dvh, createExplicitListConstraint(dvh, toArray(jlptValues, new String[] {})),
+							new CellRangeAddressList(row.getRowNum(), row.getRowNum(), index, index)));
+			//
+		} // if
+			//
 	}
 
 	private static void addValidationDataForBoolean(final ObjectMap objectMap, final IValue0<List<Boolean>> booleans,
