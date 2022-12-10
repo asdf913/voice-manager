@@ -6091,27 +6091,20 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 						} // if
 							//
-						addValidationDataForJlptLevel(objectMap, jlptValues, i);
+						addValidationDataForValues(objectMap, jlptValues, i);
 						//
 					} else if (anyMatch(testAndApply(Objects::nonNull, getDeclaredAnnotations(f), Arrays::stream, null),
 							a -> Objects.equals(annotationType(a), classGaKuNenBeTsuKanJi))) {// domain.Voice.GaKuNenBeTsuKanJi
 						//
 						if (dvh == null) {
 							//
-							dvh = getDataValidationHelper(sheet);
+							ObjectMap.setObject(objectMap, DataValidationHelper.class,
+									dvh = getDataValidationHelper(sheet));
 							//
 						} // if
 							//
-						if (!(dvh instanceof XSSFDataValidationHelper)
-								|| CollectionUtils.isNotEmpty(gaKuNenBeTsuKanJiValues)) {
-							//
-							sheet.addValidationData(createValidation(dvh,
-									createExplicitListConstraint(dvh,
-											toArray(gaKuNenBeTsuKanJiValues, new String[] {})),
-									new CellRangeAddressList(row.getRowNum(), row.getRowNum(), i, i)));
-							//
-						} // if
-							//
+						addValidationDataForValues(objectMap, gaKuNenBeTsuKanJiValues, i);
+						//
 					} // if
 						//
 				} // for
@@ -6136,17 +6129,17 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static void addValidationDataForJlptLevel(final ObjectMap objectMap, final Collection<String> jlptValues,
+	private static void addValidationDataForValues(final ObjectMap objectMap, final Collection<String> values,
 			final int index) {
 		//
 		final DataValidationHelper dvh = ObjectMap.getObject(objectMap, DataValidationHelper.class);
 		//
 		final Row row = ObjectMap.getObject(objectMap, Row.class);
 		//
-		if ((!(dvh instanceof XSSFDataValidationHelper) || CollectionUtils.isNotEmpty(jlptValues)) && row != null) {
+		if ((!(dvh instanceof XSSFDataValidationHelper) || CollectionUtils.isNotEmpty(values)) && row != null) {
 			//
 			addValidationData(ObjectMap.getObject(objectMap, Sheet.class),
-					createValidation(dvh, createExplicitListConstraint(dvh, toArray(jlptValues, new String[] {})),
+					createValidation(dvh, createExplicitListConstraint(dvh, toArray(values, new String[] {})),
 							new CellRangeAddressList(row.getRowNum(), row.getRowNum(), index, index)));
 			//
 		} // if
