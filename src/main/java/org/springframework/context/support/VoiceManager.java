@@ -4688,8 +4688,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 			} // try
 				//
-		} else if (Objects.equals(message, "Microsoft Office Open XML")
-				|| Objects.equals(mimeType, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")) {
+		} else if (Boolean.logicalOr(Objects.equals(message, "Microsoft Office Open XML"),
+				Objects.equals(mimeType, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))) {
 			//
 			return new XSSFWorkbook(file);
 			//
