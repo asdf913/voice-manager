@@ -3772,44 +3772,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 				} // try
 					//
-				try (final InputStream is = new ByteArrayInputStream(FileUtils.readFileToByteArray(file));
-						final Workbook wb = WorkbookFactory.create(is)) {
+					// encrypt the file if "password" is set
 					//
-					final String password = getText(tfExportPassword);
-					//
-					if (wb instanceof XSSFWorkbook && StringUtils.isNotEmpty(password)) {
-						//
-						try (final POIFSFileSystem fs = new POIFSFileSystem()) {
-							//
-							final Encryptor encryptor = new EncryptionInfo(EncryptionMode.agile).getEncryptor();
-							//
-							if (encryptor != null) {
-								//
-								encryptor.confirmPassword(getText(tfExportPassword));
-								//
-							} // if
-								//
-							try (final OPCPackage opc = OPCPackage.open(file);
-									final OutputStream os = encryptor != null ? encryptor.getDataStream(fs) : null) {
-								//
-								opc.save(os);
-								//
-							} // try
-								//
-							try (final FileOutputStream fos = new FileOutputStream(file)) {
-								//
-								fs.writeFilesystem(fos);
-								//
-							} // try
-								//
-						} // try
-							//
-					} // if
-						//
-				} // try
-					//
-					// Delete empty Spreadsheet
-					//
+				encrypt(file, getText(tfExportPassword));
+				//
+				// Delete empty Spreadsheet
+				//
 				if (fileToBeDeleted) {
 					//
 					delete(file);
@@ -4129,6 +4097,46 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			} // if
 				//
 		} // if
+			//
+	}
+
+	private static void encrypt(final File file, final String password)
+			throws IOException, InvalidFormatException, GeneralSecurityException {
+		//
+		try (final InputStream is = testAndApply(Objects::nonNull,
+				testAndApply(Objects::nonNull, file, FileUtils::readFileToByteArray, null), ByteArrayInputStream::new,
+				null); final Workbook wb = testAndApply(Objects::nonNull, is, WorkbookFactory::create, null)) {
+			//
+			if (wb instanceof XSSFWorkbook && StringUtils.isNotEmpty(password)) {
+				//
+				try (final POIFSFileSystem fs = new POIFSFileSystem()) {
+					//
+					final Encryptor encryptor = new EncryptionInfo(EncryptionMode.agile).getEncryptor();
+					//
+					if (encryptor != null) {
+						//
+						encryptor.confirmPassword(password);
+						//
+					} // if
+						//
+					try (final OPCPackage opc = OPCPackage.open(file);
+							final OutputStream os = encryptor != null ? encryptor.getDataStream(fs) : null) {
+						//
+						opc.save(os);
+						//
+					} // try
+						//
+					try (final FileOutputStream fos = new FileOutputStream(file)) {
+						//
+						fs.writeFilesystem(fos);
+						//
+					} // try
+						//
+				} // try
+					//
+			} // if
+				//
+		} // try
 			//
 	}
 

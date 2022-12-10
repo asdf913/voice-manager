@@ -206,6 +206,8 @@ class VoiceManagerTest {
 
 	private static final String EMPTY = "";
 
+	private static final String SPACE = " ";
+
 	private static final int ZERO = 0;
 
 	private static final int ONE = 1;
@@ -266,7 +268,7 @@ class VoiceManagerTest {
 			METHOD_GET_MEDIA_FORMAT_LINK, METHOD_GET_EVENT_TYPE, METHOD_GET_PARENT_FILE,
 			METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET,
 			METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET_FIRST_ROW, METHOD_EXPORT_JLPT,
-			METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT, METHOD_SET_SHEET_HEADER_ROW = null;
+			METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT, METHOD_SET_SHEET_HEADER_ROW, METHOD_ENCRYPT = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -768,6 +770,8 @@ class VoiceManagerTest {
 		//
 		(METHOD_SET_SHEET_HEADER_ROW = clz.getDeclaredMethod("setSheetHeaderRow", Sheet.class, Field[].class,
 				Class.class)).setAccessible(true);
+		//
+		(METHOD_ENCRYPT = clz.getDeclaredMethod("encrypt", File.class, String.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -1493,7 +1497,7 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> instance.afterPropertiesSet());
 		//
-		instance.setGaKuNenBeTsuKanJiListPageUrl(" ");
+		instance.setGaKuNenBeTsuKanJiListPageUrl(SPACE);
 		//
 		Assertions.assertDoesNotThrow(() -> instance.afterPropertiesSet());
 		//
@@ -2455,7 +2459,7 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> export(voices, Collections.singletonMap(EMPTY, EMPTY), null));
 		//
-		Assertions.assertDoesNotThrow(() -> export(voices, Collections.singletonMap(EMPTY, " "), null));
+		Assertions.assertDoesNotThrow(() -> export(voices, Collections.singletonMap(EMPTY, SPACE), null));
 		//
 		Assertions.assertDoesNotThrow(() -> export(voices, Collections.singletonMap(EMPTY, "true"), null));
 		//
@@ -2900,7 +2904,7 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(forName(EMPTY));
 		//
-		Assertions.assertNull(forName(" "));
+		Assertions.assertNull(forName(SPACE));
 		//
 		Assertions.assertNull(forName("A"));
 		//
@@ -3452,7 +3456,7 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(valueOf(EMPTY));
 		//
-		Assertions.assertNull(valueOf(" "));
+		Assertions.assertNull(valueOf(SPACE));
 		//
 		Assertions.assertNull(valueOf("A", 10));
 		//
@@ -4417,7 +4421,7 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(getJlptLevels(""));
 		//
-		Assertions.assertNull(getJlptLevels(" "));
+		Assertions.assertNull(getJlptLevels(SPACE));
 		//
 	}
 
@@ -5233,11 +5237,11 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNotNull(createMicrosoftSpeechObjectLibraryWorkbook(speechApi, (String) null));
 		//
-		Assertions.assertNotNull(createMicrosoftSpeechObjectLibraryWorkbook(speechApi, " "));
+		Assertions.assertNotNull(createMicrosoftSpeechObjectLibraryWorkbook(speechApi, SPACE));
 		//
 		ih.errorGetVoiceAttribute = new Error();
 		//
-		Assertions.assertNotNull(createMicrosoftSpeechObjectLibraryWorkbook(speechApi, " "));
+		Assertions.assertNotNull(createMicrosoftSpeechObjectLibraryWorkbook(speechApi, SPACE));
 		//
 	}
 
@@ -6516,6 +6520,31 @@ class VoiceManagerTest {
 			throws Throwable {
 		try {
 			METHOD_SET_SHEET_HEADER_ROW.invoke(null, sheet, fs, spreadsheetColumnClass);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testEencrypt() throws Throwable {
+		//
+		Assertions.assertDoesNotThrow(() -> encrypt(null, null));
+		//
+		final File file = File.createTempFile(randomAlphabetic(3), null);
+		//
+		try (final XSSFWorkbook workbook = new XSSFWorkbook(); final OutputStream os = new FileOutputStream(file)) {
+			//
+			workbook.write(os);
+			//
+		} // try
+			//
+		encrypt(file, SPACE);
+		//
+	}
+
+	private static void encrypt(final File file, final String password) throws Throwable {
+		try {
+			METHOD_ENCRYPT.invoke(null, file, password);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
