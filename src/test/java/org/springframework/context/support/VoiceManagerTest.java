@@ -6532,7 +6532,19 @@ class VoiceManagerTest {
 		//
 		final File file = File.createTempFile(randomAlphabetic(3), null);
 		//
-		try (final XSSFWorkbook workbook = new XSSFWorkbook(); final OutputStream os = new FileOutputStream(file)) {
+		// xls
+		//
+		try (final Workbook workbook = new HSSFWorkbook(); final OutputStream os = new FileOutputStream(file)) {
+			//
+			workbook.write(os);
+			//
+		} // try
+			//
+		encrypt(file, SPACE);
+		//
+		// xlsx
+		//
+		try (final Workbook workbook = new XSSFWorkbook(); final OutputStream os = new FileOutputStream(file)) {
 			//
 			workbook.write(os);
 			//

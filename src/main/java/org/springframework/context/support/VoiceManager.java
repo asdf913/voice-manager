@@ -4134,6 +4134,22 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 				} // try
 					//
+			} else if (wb instanceof HSSFWorkbook) {
+				//
+				Biff8EncryptionKey.setCurrentUserPassword(password);
+				//
+				try (final POIFSFileSystem fs = new POIFSFileSystem(file, true);
+						final Workbook wb2 = new HSSFWorkbook(fs.getRoot(), true);
+						final OutputStream os = new FileOutputStream(file)) {
+					//
+					wb2.write(os);
+					//
+				} finally {
+					//
+					Biff8EncryptionKey.setCurrentUserPassword(null);
+					//
+				} // try
+					//
 			} // if
 				//
 		} // try
