@@ -5999,8 +5999,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			Class<?> type = null;
 			//
-			List<String> strings = null;
-			//
 			for (int i = 0; i < IterableUtils.size(fs); i++) {
 				//
 				if ((f = get(fs, i)) == null) {
