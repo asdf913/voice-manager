@@ -102,7 +102,6 @@ import java.util.stream.LongStream;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
 import javax.sound.sampled.AudioFormat;
@@ -4009,7 +4008,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					} // if
 						//
-				} catch (final IOException | InvalidFormatException | GeneralSecurityException e) {
+				} catch (final IOException | InvalidFormatException | GeneralSecurityException | SAXException
+						| ParserConfigurationException e) {
 					//
 					errorOrPrintStackTraceOrShowMessageDialog(headless, e);
 					//
@@ -4617,7 +4617,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			} // if
 				//
 		} catch (final InvalidFormatException | IOException | IllegalAccessException | BaseException
-				| GeneralSecurityException e) {
+				| GeneralSecurityException | SAXException | ParserConfigurationException e) {
 			//
 			errorOrPrintStackTraceOrShowMessageDialog(headless, e);
 			//
@@ -4632,8 +4632,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	private static Workbook getWorkbook(final File file)
-			throws IOException, GeneralSecurityException, InvalidFormatException {
+	private static Workbook getWorkbook(final File file) throws IOException, GeneralSecurityException,
+			InvalidFormatException, SAXException, ParserConfigurationException {
 		//
 		final ContentInfo ci = testAndApply(Objects::nonNull, file, new ContentInfoUtil()::findMatch, null);
 		//
@@ -4695,16 +4695,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} else if (Objects.equals(mimeType, "application/zip")) {
 			//
-			try {
-				//
-				return getWorkbookByZipFile(file);
-				//
-			} catch (final ParserConfigurationException | SAXException e) {
-				//
-				errorOrPrintStackTraceOrShowMessageDialog(ObjectUtils.defaultIfNull(ExceptionUtils.getRootCause(e), e));
-				//
-			} // try
-				//
+			return getWorkbookByZipFile(file);
+			//
 		} // if
 			//
 		return null;
