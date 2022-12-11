@@ -1744,11 +1744,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		if (speechVolume != null) {
 			//
-			jsSpeechVolume.setValue(Math.min(speechVolume.intValue(), intValue(upperEnpoint, 100)));
+			setValue(jsSpeechVolume, Math.min(speechVolume.intValue(), intValue(upperEnpoint, 100)));
 			//
 		} else if (upperEnpoint != null) {
 			//
-			jsSpeechVolume.setValue(upperEnpoint.intValue());
+			setValue(jsSpeechVolume, upperEnpoint.intValue());
 			//
 		} // if
 			//
@@ -1840,6 +1840,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
+	private static void setValue(final JSlider instance, final int n) {
+		if (instance != null) {
+			instance.setValue(n);
+		}
+	}
+
 	private static String getProviderPlatform(final Provider instance) {
 		return instance != null ? instance.getProviderPlatform() : null;
 	}
@@ -1857,7 +1863,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			if (instance != null && i >= instance.getMinimum() && i <= instance.getMaximum()) {
 				//
-				instance.setValue(i.intValue());
+				setValue(instance, i.intValue());
 				//
 				accept(consumer, instance);
 				//
@@ -4166,23 +4172,19 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			if (jsSpeechRate != null) {
 				//
-				jsSpeechRate.setValue(jsSpeechRate.getValue() - 1);
+				setValue(jsSpeechRate, jsSpeechRate.getValue() - 1);
 				//
 			} // if
 				//
 		} else if (Objects.equals(source, btnSpeechRateNormal)) {
 			//
-			if (jsSpeechRate != null) {
-				//
-				jsSpeechRate.setValue(0);
-				//
-			} // if
-				//
+			setValue(jsSpeechRate, 0);
+			//
 		} else if (Objects.equals(source, btnSpeechRateFaster)) {
 			//
 			if (jsSpeechRate != null) {
 				//
-				jsSpeechRate.setValue(jsSpeechRate.getValue() + 1);
+				setValue(jsSpeechRate, jsSpeechRate.getValue() + 1);
 				//
 			} // if
 				//
