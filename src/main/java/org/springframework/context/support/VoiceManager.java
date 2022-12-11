@@ -8825,8 +8825,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		Row row = null;
 		//
-		org.jsoup.nodes.Element domNode = null;
-		//
 		Elements tds = null;
 		//
 		String textContent = null;
@@ -8849,12 +8847,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-			tds = children(domNode = get(domNodes, i));
+			tds = children(get(domNodes, i));
 			//
 			for (int j = 0; j < IterableUtils.size(tds); j++) {
 				//
 				if ((matcher = matcher(pattern2 = ObjectUtils.getIfNull(pattern2, () -> Pattern.compile("\\[\\d+]")),
-						textContent = ElementUtil.text(domNode = get(tds, j)))) != null) {
+						textContent = ElementUtil.text(get(tds, j)))) != null) {
 					//
 					textContent = matcher.replaceAll("");
 					//
