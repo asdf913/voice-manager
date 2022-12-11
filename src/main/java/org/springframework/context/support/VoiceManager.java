@@ -355,6 +355,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static final String HIDE_AUDIO_IMAGE_IN_PRESENTATION = "hideAudioImageInPresentation";
 
+	private static final String SOURCE = "Source";
+
 	private static final String PASSWORD = "Password";
 
 	private static final Predicate<File> EMPTY_FILE_PREDICATE = f -> f != null && f.exists() && isFile(f)
@@ -1950,7 +1952,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		// Source
 		//
-		panel.add(new JLabel("Source"));
+		panel.add(new JLabel(SOURCE));
 		//
 		panel.add(
 				tfSource = new JTextField(
@@ -4077,7 +4079,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				if (customProperties != null) {
 					//
-					customProperties.addProperty("Source", gaKuNenBeTsuKanJiListPageUrl);
+					customProperties.addProperty(SOURCE, gaKuNenBeTsuKanJiListPageUrl);
 					//
 				} // if
 					//
@@ -4114,7 +4116,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				if (customProperties != null) {
 					//
-					customProperties.addProperty("Source", url);
+					customProperties.addProperty(SOURCE, url);
 					//
 				} // if
 					//
