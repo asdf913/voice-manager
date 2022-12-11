@@ -3991,12 +3991,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 						} // try
 							//
-						if (isSelected(cbExportHtmlRemoveAfterZip)) {
+							// Delete HTML File(s) is "Remove Html After Zip" option is checked
 							//
-							forEach(files, VoiceManager::delete);
-							//
-						} // if
-							//
+						testAndAccept(x -> isSelected(cbExportHtmlRemoveAfterZip), files,
+								x -> forEach(x, VoiceManager::delete));
+						//
 					} // if
 						//
 				} // if
