@@ -275,7 +275,8 @@ class VoiceManagerTest {
 			METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET,
 			METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET_FIRST_ROW, METHOD_EXPORT_JLPT,
 			METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT, METHOD_SET_SHEET_HEADER_ROW, METHOD_ENCRYPT,
-			METHOD_GET_WORKBOOK_BY_ZIP_FILE, METHOD_SELECT, METHOD_ATTR, METHOD_GET_ENCRYPTION_TABLE_HTML = null;
+			METHOD_GET_WORKBOOK_BY_ZIP_FILE, METHOD_SELECT, METHOD_ATTR, METHOD_GET_ENCRYPTION_TABLE_HTML,
+			METHOD_HTML = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -791,6 +792,8 @@ class VoiceManagerTest {
 		(METHOD_GET_ENCRYPTION_TABLE_HTML = clz.getDeclaredMethod("getEncryptionTableHtml", URL.class, Duration.class))
 				.setAccessible(true);
 		//
+		(METHOD_HTML = clz.getDeclaredMethod("html", org.jsoup.nodes.Element.class)).setAccessible(true);
+		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
 		CLASS_EXPORT_TASK = Class.forName("org.springframework.context.support.VoiceManager$ExportTask");
@@ -1290,8 +1293,12 @@ class VoiceManagerTest {
 
 	private Logger logger = null;
 
+	private org.jsoup.nodes.Element element = null;
+
 	@BeforeEach
 	void beforeEach() throws ReflectiveOperationException {
+		//
+		element = new org.jsoup.nodes.Element("A");
 		//
 		final Constructor<VoiceManager> constructor = VoiceManager.class.getDeclaredConstructor();
 		//
@@ -6626,7 +6633,7 @@ class VoiceManagerTest {
 	@Test
 	void testSelect() throws Throwable {
 		//
-		Assertions.assertNotNull(select(new org.jsoup.nodes.Element("A"), ".a"));
+		Assertions.assertNotNull(select(element, ".a"));
 		//
 	}
 
@@ -6649,7 +6656,7 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(attr(null, null));
 		//
-		Assertions.assertEquals(EMPTY, attr(new org.jsoup.nodes.Element("A"), EMPTY));
+		Assertions.assertEquals(EMPTY, attr(element, EMPTY));
 		//
 	}
 
@@ -6694,6 +6701,27 @@ class VoiceManagerTest {
 
 	private static URL toURL(final URI instance) throws MalformedURLException {
 		return instance != null ? instance.toURL() : null;
+	}
+
+	@Test
+	void testHtml() throws Throwable {
+		//
+		Assertions.assertEquals(EMPTY, html(element));
+		//
+	}
+
+	private static String html(final org.jsoup.nodes.Element instance) throws Throwable {
+		try {
+			final Object obj = METHOD_HTML.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 	@Test

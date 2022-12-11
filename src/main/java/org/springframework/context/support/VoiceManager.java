@@ -2768,9 +2768,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			map.put("mediaFormatLink", getMediaFormatLink(mediaFormatPageUrl));
 			//
-			map.put("encryptionTableHtml",
-					getEncryptionTableHtml(testAndApply(StringUtils::isNotBlank, poiEncryptionPageUrl, URL::new, null),
-							Duration.ZERO));
+			map.put("encryptionTableHtml", getEncryptionTableHtml(
+					testAndApply(StringUtils::isNotBlank, poiEncryptionPageUrl, URL::new, null), Duration.ZERO));
 			//
 			process(getTemplate(configuration, "help.html.ftl"), map, writer);
 			//
@@ -2847,10 +2846,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final org.jsoup.nodes.Element element = IterableUtils.size(h2s) == 1 ? IterableUtils.get(h2s, 0) : null;
 		//
-		final org.jsoup.nodes.Element nextElementSibling = element != null ? element.nextElementSibling() : null;
+		return html(element != null ? element.nextElementSibling() : null);
 		//
-		return nextElementSibling != null ? nextElementSibling.html() : null;
-		//
+	}
+
+	private static String html(final org.jsoup.nodes.Element instance) {
+		return instance != null ? instance.html() : null;
 	}
 
 	private static EventType getEventType(final HyperlinkEvent instance) {
