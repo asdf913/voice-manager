@@ -8861,6 +8861,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 									? children(IterableUtils.get(elements, 0))
 									: null);
 			//
+			// 備考欄
+			//
+			addJoYoKanJiSheet(workbook = ObjectUtils.getIfNull(workbook, XSSFWorkbook::new), "備考欄",
+					IterableUtils.size(elements = selectXpath(document,
+							"//h3/span[text()=\"備考欄\"]/../following-sibling::table[1]/tbody")) == 1
+									? children(IterableUtils.get(elements, 0))
+									: null);
+			//
 		} catch (final IOException e) {
 			//
 			errorOrPrintStackTraceOrShowMessageDialog(e);
