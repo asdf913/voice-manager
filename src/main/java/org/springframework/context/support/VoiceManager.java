@@ -3832,9 +3832,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					if (!(fileToBeDeleted = longValue(length(file), 0) == 0)) {
 						//
-						final Sheet sheet = workbook.getNumberOfSheets() == 1 ? workbook.getSheetAt(0) : null;
-						//
-						fileToBeDeleted = sheet != null && sheet.getPhysicalNumberOfRows() == 0;
+						fileToBeDeleted = intValue(getPhysicalNumberOfRows(
+								workbook.getNumberOfSheets() == 1 ? workbook.getSheetAt(0) : null), 0) == 0;
 						//
 					} // if
 						//
@@ -4699,7 +4698,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
-				setMaximum(progressBarImport, Math.max(0, (sheet != null ? sheet.getPhysicalNumberOfRows() : 0) - 1));
+				setMaximum(progressBarImport, Math.max(0, (intValue(getPhysicalNumberOfRows(sheet), 0)) - 1));
 				//
 				ObjectMap.setObject(objectMap, ByteConverter.class,
 						getByteConverter(configurableListableBeanFactory, FORMAT,
@@ -4981,6 +4980,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static String getSheetName(final Sheet instance) {
 		return instance != null ? instance.getSheetName() : null;
+	}
+
+	private static Integer getPhysicalNumberOfRows(final Sheet instance) {
+		return instance != null ? Integer.valueOf(instance.getPhysicalNumberOfRows()) : null;
 	}
 
 	private static POIXMLProperties getProperties(final POIXMLDocument instance) {
@@ -6124,12 +6127,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			if (generateBlankRow && fs != null) {
 				//
-				if (sheet != null) {
-					//
-					row = createRow(sheet, sheet.getPhysicalNumberOfRows());
-					//
-				} // if
-					//
+				row = createRow(sheet, intValue(getPhysicalNumberOfRows(sheet), 0));
+				//
 				for (int i = 0; i < IterableUtils.size(fs); i++) {
 					//
 					setCellValue(createCell(row, i), null);
@@ -6767,7 +6766,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 							it.counter = Integer.valueOf(row.getRowNum());
 							//
-							it.count = Integer.valueOf(sheet.getPhysicalNumberOfRows() - 1);
+							it.count = Integer.valueOf(intValue(getPhysicalNumberOfRows(sheet), 0) - 1);
 							//
 							it.percentNumberFormat = ObjectUtils.getIfNull(percentNumberFormat,
 									() -> new DecimalFormat("#%"));
