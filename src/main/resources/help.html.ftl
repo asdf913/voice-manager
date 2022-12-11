@@ -67,5 +67,6 @@
 		<a href="https://xiph.org/flac">Free Lossless Audio Codec (FLAC)</a> Audio Format could not be played by the LibreOffice.<br/>
 		Please visit the list of <a href="https://help.libreoffice.org/latest/en-US/text/shared/01/moviesound.html"> supported media format(s)</a> by LibreOffice.
 		<#if mediaFormatLink??><br/>${mediaFormatLink}</#if>
+		<#if encryptionTableHtml??><h2>Encryption</h2>${encryptionTableHtml}</#if>
 	</body>
 </html>

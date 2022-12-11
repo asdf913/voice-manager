@@ -442,7 +442,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private String microsoftSpeechPlatformRuntimeDownloadPageUrl,
 			microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl, microsoftWindowsCompatibilitySettingsPageUrl,
-			mediaFormatPageUrl = null;
+			mediaFormatPageUrl, poiEncryptionPageUrl = null;
 
 	private Unit<List<String>> jlptLevels = null;
 
@@ -775,6 +775,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		this.mediaFormatPageUrl = mediaFormatPageUrl;
 	}
 
+	public void setPoiEncryptionPageUrl(final String poiEncryptionPageUrl) {
+		this.poiEncryptionPageUrl = poiEncryptionPageUrl;
+	}
+
 	public void setExportHtmlTemplateFile(final String exportHtmlTemplateFile) {
 		this.exportHtmlTemplateFile = exportHtmlTemplateFile;
 	}
@@ -1085,7 +1089,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
-		jTabbedPane.addTab("Help", createHelpPanel(preferredHeight, configuration, mediaFormatPageUrl));
+		jTabbedPane.addTab("Help",
+				createHelpPanel(preferredHeight, configuration, mediaFormatPageUrl, poiEncryptionPageUrl));
 		//
 		try {
 			//
@@ -2751,7 +2756,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	private static JScrollPane createHelpPanel(final Number preferredHeight,
-			final freemarker.template.Configuration configuration, final String mediaFormatPageUrl) {
+			final freemarker.template.Configuration configuration, final String mediaFormatPageUrl,
+			final String poiEncryptionPageUrl) {
 		//
 		JEditorPane jep = null;
 		//
@@ -2761,6 +2767,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					new BeansWrapper(freemarker.template.Configuration.getVersion()).getStaticModels()));
 			//
 			map.put("mediaFormatLink", getMediaFormatLink(mediaFormatPageUrl));
+			//
+			map.put("encryptionTableHtml", getEncryptionTableHtml(
+					testAndApply(StringUtils::isNotBlank, poiEncryptionPageUrl, URL::new, null)));
 			//
 			process(getTemplate(configuration, "help.html.ftl"), map, writer);
 			//
@@ -2816,6 +2825,30 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		jPanel.add(jsp);
 		//
 		return jsp;
+		//
+	}
+
+	private static String getEncryptionTableHtml(final URL url) throws IOException {
+		//
+		org.jsoup.nodes.Document document = testAndApply(
+				x -> StringUtils.equalsAnyIgnoreCase(x != null ? x.getProtocol() : null, "http", "https"), url,
+				x -> Jsoup.parse(x, 0), null);
+		//
+		if (document == null) {
+			//
+			document = testAndApply(Objects::nonNull,
+					testAndApply(Objects::nonNull, url, x -> IOUtils.toString(x, "utf-8"), null), Jsoup::parse, null);
+			//
+		} // if
+			//
+		final Elements h2s = document != null ? document.selectXpath("//h2[text()=\"Supported feature matrix\"]")
+				: null;
+		//
+		final org.jsoup.nodes.Element element = IterableUtils.size(h2s) == 1 ? IterableUtils.get(h2s, 0) : null;
+		//
+		final org.jsoup.nodes.Element nextElementSibling = element != null ? element.nextElementSibling() : null;
+		//
+		return nextElementSibling != null ? nextElementSibling.html() : null;
 		//
 	}
 

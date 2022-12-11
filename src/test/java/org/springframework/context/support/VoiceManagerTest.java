@@ -36,6 +36,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
@@ -274,7 +275,7 @@ class VoiceManagerTest {
 			METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET,
 			METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET_FIRST_ROW, METHOD_EXPORT_JLPT,
 			METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT, METHOD_SET_SHEET_HEADER_ROW, METHOD_ENCRYPT,
-			METHOD_GET_WORKBOOK_BY_ZIP_FILE, METHOD_SELECT, METHOD_ATTR = null;
+			METHOD_GET_WORKBOOK_BY_ZIP_FILE, METHOD_SELECT, METHOD_ATTR, METHOD_GET_ENCRYPTION_TABLE_HTML = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -786,6 +787,9 @@ class VoiceManagerTest {
 				.setAccessible(true);
 		//
 		(METHOD_ATTR = clz.getDeclaredMethod("attr", org.jsoup.nodes.Element.class, String.class)).setAccessible(true);
+		//
+		(METHOD_GET_ENCRYPTION_TABLE_HTML = clz.getDeclaredMethod("getEncryptionTableHtml", URL.class))
+				.setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -6661,6 +6665,31 @@ class VoiceManagerTest {
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
+	}
+
+	@Test
+	void testGetEncryptionTableHtml() throws Throwable {
+		//
+		Assertions.assertNull(getEncryptionTableHtml(toURL(toURI(new File("pom.xml")))));
+		//
+	}
+
+	private static String getEncryptionTableHtml(final URL url) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_ENCRYPTION_TABLE_HTML.invoke(null, url);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static URL toURL(final URI instance) throws MalformedURLException {
+		return instance != null ? instance.toURL() : null;
 	}
 
 	@Test
