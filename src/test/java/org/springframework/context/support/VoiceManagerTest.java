@@ -270,7 +270,7 @@ class VoiceManagerTest {
 			METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT, METHOD_SET_SHEET_HEADER_ROW, METHOD_ENCRYPT,
 			METHOD_GET_WORKBOOK_BY_ZIP_FILE, METHOD_SELECT, METHOD_ATTR, METHOD_GET_ENCRYPTION_TABLE_HTML,
 			METHOD_NEXT_ELEMENT_SIBLING, METHOD_HTML, METHOD_LENGTH, METHOD_CREATE_ZIP_FILE, METHOD_RETRIEVE_ALL_VOICES,
-			METHOD_SET_LIST_NAMES, METHOD_SET_SOURCE = null;
+			METHOD_SEARCH_VOICE_LIST_NAMES_BY_VOICE_ID, METHOD_SET_LIST_NAMES, METHOD_SET_SOURCE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -785,6 +785,9 @@ class VoiceManagerTest {
 		(METHOD_RETRIEVE_ALL_VOICES = clz.getDeclaredMethod("retrieveAllVoices", VoiceMapper.class))
 				.setAccessible(true);
 		//
+		(METHOD_SEARCH_VOICE_LIST_NAMES_BY_VOICE_ID = clz.getDeclaredMethod("searchVoiceListNamesByVoiceId",
+				VoiceMapper.class, Integer.class)).setAccessible(true);
+		//
 		(METHOD_SET_LIST_NAMES = clz.getDeclaredMethod("setListNames", Voice.class, Iterable.class))
 				.setAccessible(true);
 		//
@@ -952,6 +955,10 @@ class VoiceManagerTest {
 				} else if (Objects.equals(methodName, "retrieveAllVoices")) {
 					//
 					return voices;
+					//
+				} else if (Objects.equals(methodName, "searchVoiceListNamesByVoiceId")) {
+					//
+					return null;
 					//
 				} // if
 					//
@@ -6686,6 +6693,30 @@ class VoiceManagerTest {
 	private static List<Voice> retrieveAllVoices(final VoiceMapper instance) throws Throwable {
 		try {
 			final Object obj = METHOD_RETRIEVE_ALL_VOICES.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof List) {
+				return (List) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSearchVoiceListNamesByVoiceId() throws Throwable {
+		//
+		Assertions.assertNull(searchVoiceListNamesByVoiceId(null, null));
+		//
+		Assertions.assertNull(searchVoiceListNamesByVoiceId(voiceMapper, null));
+		//
+	}
+
+	private static List<String> searchVoiceListNamesByVoiceId(final VoiceMapper instance, final Integer voiceId)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_SEARCH_VOICE_LIST_NAMES_BY_VOICE_ID.invoke(null, instance, voiceId);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof List) {

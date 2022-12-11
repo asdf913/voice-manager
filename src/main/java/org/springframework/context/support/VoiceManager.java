@@ -3779,15 +3779,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				final List<Voice> voices = retrieveAllVoices(voiceMapper);
 				//
-				forEach(voices, v -> {
-					//
-					if (voiceMapper != null) {
-						//
-						setListNames(v, voiceMapper.searchVoiceListNamesByVoiceId(getId(v)));
-						//
-					} // if
-						//
-				});
+				forEach(voices, v -> setListNames(v, searchVoiceListNamesByVoiceId(voiceMapper, getId(v))));
 				//
 				final IH ih = new IH();
 				//
@@ -4201,6 +4193,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static List<Voice> retrieveAllVoices(final VoiceMapper instance) {
 		return instance != null ? instance.retrieveAllVoices() : null;
+	}
+
+	private static List<String> searchVoiceListNamesByVoiceId(final VoiceMapper instance, final Integer voiceId) {
+		return instance != null ? instance.searchVoiceListNamesByVoiceId(voiceId) : null;
 	}
 
 	private static void createZipFile(final File file, final EncryptionMethod encryptionMethod, final String password,
