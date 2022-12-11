@@ -12,7 +12,6 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
 import org.jsoup.select.Elements;
 
@@ -37,9 +36,8 @@ public final class ATagUtil {
 			//
 			final Elements elements = document != null ? document.getElementsByTag("title") : null;
 			//
-			final Element element = IterableUtils.size(elements) == 1 ? IterableUtils.get(elements, 0) : null;
-			//
-			(aTag = new ATag()).withText(ElementUtil.text(element));
+			(aTag = new ATag()).withText(
+					ElementUtil.text(IterableUtils.size(elements) == 1 ? IterableUtils.get(elements, 0) : null));
 			//
 			aTag.attr("href", url);
 			//
