@@ -269,7 +269,8 @@ class VoiceManagerTest {
 			METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET_FIRST_ROW, METHOD_EXPORT_JLPT,
 			METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT, METHOD_SET_SHEET_HEADER_ROW, METHOD_ENCRYPT,
 			METHOD_GET_WORKBOOK_BY_ZIP_FILE, METHOD_SELECT, METHOD_ATTR, METHOD_GET_ENCRYPTION_TABLE_HTML,
-			METHOD_NEXT_ELEMENT_SIBLING, METHOD_HTML, METHOD_LENGTH, METHOD_CREATE_ZIP_FILE = null;
+			METHOD_NEXT_ELEMENT_SIBLING, METHOD_HTML, METHOD_LENGTH, METHOD_CREATE_ZIP_FILE,
+			METHOD_RETRIEVE_ALL_VOICES = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -779,6 +780,9 @@ class VoiceManagerTest {
 		(METHOD_CREATE_ZIP_FILE = clz.getDeclaredMethod("createZipFile", File.class, EncryptionMethod.class,
 				String.class, Iterable.class)).setAccessible(true);
 		//
+		(METHOD_RETRIEVE_ALL_VOICES = clz.getDeclaredMethod("retrieveAllVoices", VoiceMapper.class))
+				.setAccessible(true);
+		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
 		CLASS_EXPORT_TASK = Class.forName("org.springframework.context.support.VoiceManager$ExportTask");
@@ -843,6 +847,8 @@ class VoiceManagerTest {
 		private Sheet sheet = null;
 
 		private NamedNodeMap attributes = null;
+
+		private List<Voice> voices = null;
 
 		private Map<Object, String> getProperties() {
 			if (properties == null) {
@@ -935,6 +941,10 @@ class VoiceManagerTest {
 				} else if (Objects.equals(methodName, "searchVoiceListByName")) {
 					//
 					return voiceList;
+					//
+				} else if (Objects.equals(methodName, "retrieveAllVoices")) {
+					//
+					return voices;
 					//
 				} // if
 					//
@@ -1278,6 +1288,8 @@ class VoiceManagerTest {
 
 	private Logger logger = null;
 
+	private VoiceMapper voiceMapper = null;
+
 	private org.jsoup.nodes.Element element = null;
 
 	@BeforeEach
@@ -1316,6 +1328,8 @@ class VoiceManagerTest {
 		iterable = Reflection.newProxy(Iterable.class, ih);
 		//
 		logger = Reflection.newProxy(Logger.class, ih);
+		//
+		voiceMapper = Reflection.newProxy(VoiceMapper.class, ih);
 		//
 	}
 
@@ -2191,8 +2205,6 @@ class VoiceManagerTest {
 	void testInsertOrUpdate() {
 		//
 		Assertions.assertDoesNotThrow(() -> insertOrUpdate(null, null));
-		//
-		final VoiceMapper voiceMapper = Reflection.newProxy(VoiceMapper.class, ih);
 		//
 		Assertions.assertDoesNotThrow(() -> insertOrUpdate(voiceMapper, null));
 		//
@@ -6634,6 +6646,27 @@ class VoiceManagerTest {
 			final Iterable<File> files) throws Throwable {
 		try {
 			METHOD_CREATE_ZIP_FILE.invoke(null, file, encryptionMethod, password, files);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testRetrieveAllVoices() throws Throwable {
+		//
+		Assertions.assertNull(retrieveAllVoices(voiceMapper));
+		//
+	}
+
+	private static List<Voice> retrieveAllVoices(final VoiceMapper instance) throws Throwable {
+		try {
+			final Object obj = METHOD_RETRIEVE_ALL_VOICES.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof List) {
+				return (List) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

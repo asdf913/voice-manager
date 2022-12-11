@@ -3776,7 +3776,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				final VoiceMapper voiceMapper = getMapper(getConfiguration(sqlSessionFactory), VoiceMapper.class,
 						sqlSession = openSession(sqlSessionFactory));
 				//
-				final List<Voice> voices = voiceMapper != null ? voiceMapper.retrieveAllVoices() : null;
+				final List<Voice> voices = retrieveAllVoices(voiceMapper);
 				//
 				forEach(voices, v -> {
 					//
@@ -4190,6 +4190,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
+	}
+
+	private static List<Voice> retrieveAllVoices(final VoiceMapper instance) {
+		return instance != null ? instance.retrieveAllVoices() : null;
 	}
 
 	private static void createZipFile(final File file, final EncryptionMethod encryptionMethod, final String password,
