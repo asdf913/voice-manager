@@ -3780,9 +3780,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				forEach(voices, v -> {
 					//
-					if (v != null && voiceMapper != null) {
+					if (voiceMapper != null) {
 						//
-						v.setListNames(voiceMapper.searchVoiceListNamesByVoiceId(getId(v)));
+						setListNames(v, voiceMapper.searchVoiceListNamesByVoiceId(getId(v)));
 						//
 					} // if
 						//
@@ -4174,6 +4174,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
+	}
+
+	private static void setListNames(final Voice instance, final Iterable<String> listNames) {
+		if (instance != null) {
+			instance.setListNames(listNames);
+		}
 	}
 
 	private static void addProperty(final CustomProperties instance, final String name, final String value) {
@@ -7475,7 +7481,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		voice.setYomi(cast(Yomi.class, getSelectedItem(instance.cbmYomi)));
 		//
-		voice.setListNames(toList(
+		setListNames(voice, toList(
 				map(stream(getObjectList(objectMapper, getText(instance.tfListNames))), VoiceManager::toString)));
 		//
 		voice.setJlptLevel(toString(getSelectedItem(instance.cbmJlptLevel)));

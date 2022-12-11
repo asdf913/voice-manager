@@ -269,8 +269,8 @@ class VoiceManagerTest {
 			METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET_FIRST_ROW, METHOD_EXPORT_JLPT,
 			METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT, METHOD_SET_SHEET_HEADER_ROW, METHOD_ENCRYPT,
 			METHOD_GET_WORKBOOK_BY_ZIP_FILE, METHOD_SELECT, METHOD_ATTR, METHOD_GET_ENCRYPTION_TABLE_HTML,
-			METHOD_NEXT_ELEMENT_SIBLING, METHOD_HTML, METHOD_LENGTH, METHOD_CREATE_ZIP_FILE,
-			METHOD_RETRIEVE_ALL_VOICES = null;
+			METHOD_NEXT_ELEMENT_SIBLING, METHOD_HTML, METHOD_LENGTH, METHOD_CREATE_ZIP_FILE, METHOD_RETRIEVE_ALL_VOICES,
+			METHOD_SET_LIST_NAMES = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -782,6 +782,9 @@ class VoiceManagerTest {
 		//
 		(METHOD_RETRIEVE_ALL_VOICES = clz.getDeclaredMethod("retrieveAllVoices", VoiceMapper.class))
 				.setAccessible(true);
+		//
+		(METHOD_SET_LIST_NAMES = clz.getDeclaredMethod("setListNames", Voice.class,
+				Iterable.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -6667,6 +6670,21 @@ class VoiceManagerTest {
 				return (List) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetListNames() {
+		//
+		Assertions.assertDoesNotThrow(() -> setListNames(null, null));
+		//
+	}
+
+	private static void setListNames(final Voice instance, final Iterable<String> listNames) throws Throwable {
+		try {
+			METHOD_SET_LIST_NAMES.invoke(null, instance, listNames);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
