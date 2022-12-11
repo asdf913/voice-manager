@@ -9,20 +9,14 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
-
 class ATagUtilTest {
 
-	private static Method METHOD_GET_TITLE, METHOD_TEST = null;
+	private static Method METHOD_TEST = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
 		//
-		final Class<?> clz = ATagUtil.class;
-		//
-		(METHOD_GET_TITLE = clz.getDeclaredMethod("getTitleText", HtmlPage.class)).setAccessible(true);
-		//
-		(METHOD_TEST = clz.getDeclaredMethod("test", Predicate.class, Object.class)).setAccessible(true);
+		(METHOD_TEST = ATagUtil.class.getDeclaredMethod("test", Predicate.class, Object.class)).setAccessible(true);
 		//
 	}
 
@@ -31,27 +25,6 @@ class ATagUtilTest {
 		//
 		Assertions.assertNotNull(ATagUtil.createByUrl(null, false));
 		//
-	}
-
-	@Test
-	void testGetTitleText() throws Throwable {
-		//
-		Assertions.assertNull(getTitleText(null));
-		//
-	}
-
-	private static String getTitleText(final HtmlPage instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_TITLE.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test

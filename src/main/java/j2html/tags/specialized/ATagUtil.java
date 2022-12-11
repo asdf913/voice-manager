@@ -7,12 +7,13 @@ import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.function.Predicate;
 
+import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.function.FailableFunction;
-
-import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.WebClientOptionsUtil;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 public final class ATagUtil {
 
@@ -25,14 +26,19 @@ public final class ATagUtil {
 		//
 		ATag aTag = null;
 		//
-		try (final WebClient webClient = new WebClient()) {
+		try {
 			//
-			WebClientOptionsUtil.setJavaScriptEnabled(webClient.getOptions(), javaScriptEnabled);
-			//
-			(aTag = new ATag()).withText(getTitleText(webClient.loadHtmlCodeIntoCurrentWindow(
+			final Document document = testAndApply(Objects::nonNull,
 					(is = openStream(testAndApply(Objects::nonNull, url, URL::new, null))) != null
 							? IOUtils.toString(is, StandardCharsets.UTF_8)
-							: null)));
+							: null,
+					Jsoup::parse, null);
+			//
+			final Elements elements = document != null ? document.getElementsByTag("title") : null;
+			//
+			final Element element = IterableUtils.size(elements) == 1 ? IterableUtils.get(elements, 0) : null;
+			//
+			(aTag = new ATag()).withText(element != null ? element.text() : null);
 			//
 			aTag.attr("href", url);
 			//
@@ -44,10 +50,6 @@ public final class ATagUtil {
 			//
 		return aTag;
 		//
-	}
-
-	private static String getTitleText(final HtmlPage instance) {
-		return instance != null ? instance.getTitleText() : null;
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
