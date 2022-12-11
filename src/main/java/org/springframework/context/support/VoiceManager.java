@@ -4880,10 +4880,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.getTextContent() : null;
 	}
 
-	private static String getNodeName(final Node instance) {
-		return instance != null ? instance.getNodeName() : null;
-	}
-
 	private static String getName(final File instance) {
 		return instance != null ? instance.getName() : null;
 	}
@@ -8251,6 +8247,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 			} // for
 				//
+		}
+
+		private static String getNodeName(final Node instance) {
+			return instance != null ? instance.getNodeName() : null;
 		}
 
 		private static XPath newXPath(final XPathFactory instance) {

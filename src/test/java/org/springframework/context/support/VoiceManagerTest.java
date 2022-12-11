@@ -252,9 +252,8 @@ class VoiceManagerTest {
 			METHOD_GET_COLUMN_NAME, METHOD_GET_KEY_SET, METHOD_PUT_ALL, METHOD_CREATE_SHEET1, METHOD_CREATE_SHEET2,
 			METHOD_ENTRIES, METHOD_GET_WORK_BOOK, METHOD_GET_OLE_ENTRY_NAMES, METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE,
 			METHOD_GET_DOCUMENT_ELEMENT, METHOD_GET_CHILD_NODES, METHOD_GET_NAMED_ITEM, METHOD_GET_TEXT_CONTENT,
-			METHOD_GET_NODE_NAME, METHOD_GET_NAME_FILE, METHOD_GET_NAME_CLASS, METHOD_GET_PASS_WORD,
-			METHOD_GET_SUPPLIER, METHOD_GET_LOOKUP, METHOD_GET_LIST,
-			METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK, METHOD_WRITE_VALUE_AS_STRING,
+			METHOD_GET_NAME_FILE, METHOD_GET_NAME_CLASS, METHOD_GET_PASS_WORD, METHOD_GET_SUPPLIER, METHOD_GET_LOOKUP,
+			METHOD_GET_LIST, METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK, METHOD_WRITE_VALUE_AS_STRING,
 			METHOD_CREATE_DRAWING_PATRIARCH, METHOD_GET_CREATION_HELPER, METHOD_CREATE_CELL_COMMENT,
 			METHOD_CREATE_CLIENT_ANCHOR, METHOD_CREATE_RICH_TEXT_STRING, METHOD_SET_CELL_COMMENT, METHOD_SET_AUTHOR,
 			METHOD_TEST_AND_ACCEPT_PREDICATE, METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_FIND_FIELDS_BY_VALUE,
@@ -598,8 +597,6 @@ class VoiceManagerTest {
 				.setAccessible(true);
 		//
 		(METHOD_GET_TEXT_CONTENT = clz.getDeclaredMethod("getTextContent", Node.class)).setAccessible(true);
-		//
-		(METHOD_GET_NODE_NAME = clz.getDeclaredMethod("getNodeName", Node.class)).setAccessible(true);
 		//
 		(METHOD_GET_NAME_FILE = clz.getDeclaredMethod("getName", File.class)).setAccessible(true);
 		//
@@ -5102,29 +5099,6 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testGetNodeName() throws Throwable {
-		//
-		Assertions.assertNull(getNodeName(null));
-		//
-		Assertions.assertEquals(ih.nodeName = EMPTY, getNodeName(node));
-		//
-	}
-
-	private static String getNodeName(final Node instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_NODE_NAME.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testGetName() throws Throwable {
 		//
 		Assertions.assertNull(getName((File) null));
@@ -7311,6 +7285,22 @@ class VoiceManagerTest {
 		} // if
 			//
 		Assertions.assertNull(invoke(setPassword, null, constructor != null ? constructor.newInstance() : null, null));
+		//
+		// org.springframework.context.support.VoiceManager$ExportTask.getNodeName(org.w3c.dom.Node)
+		//
+		final Method getNodeName = CLASS_EXPORT_TASK != null
+				? CLASS_EXPORT_TASK.getDeclaredMethod("getNodeName", Node.class)
+				: null;
+		//
+		if (getNodeName != null) {
+			//
+			getNodeName.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertNull(invoke(getNodeName, null, (Object) null));
+		//
+		Assertions.assertEquals(ih.nodeName = EMPTY, invoke(getNodeName, null, node));
 		//
 	}
 
