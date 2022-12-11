@@ -264,12 +264,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
-import com.gargoylesoftware.htmlunit.SgmlPage;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.WebClientOptions;
-import com.gargoylesoftware.htmlunit.html.DomElement;
-import com.gargoylesoftware.htmlunit.html.DomNodeList;
-import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.github.curiousoddman.rgxgen.RgxGen;
 import com.google.common.base.Stopwatch;
@@ -2367,14 +2363,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		if (instance != null) {
 			instance.putAll(key, values);
 		}
-	}
-
-	private static DomNodeList<DomElement> getElementsByTagName(final SgmlPage instance, final String tagName) {
-		return instance != null ? instance.getElementsByTagName(tagName) : null;
-	}
-
-	private static DomNodeList<HtmlElement> getElementsByTagName(final DomElement instance, final String tagName) {
-		return instance != null ? instance.getElementsByTagName(tagName) : null;
 	}
 
 	private JPanel createBatchImportPanel(final LayoutManager layoutManager) {

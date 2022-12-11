@@ -174,12 +174,8 @@ import org.w3c.dom.NodeList;
 import org.zeroturnaround.zip.ZipUtil;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gargoylesoftware.htmlunit.SgmlPage;
 import com.gargoylesoftware.htmlunit.WebClientOptions;
 import com.gargoylesoftware.htmlunit.WebWindow;
-import com.gargoylesoftware.htmlunit.html.DomElement;
-import com.gargoylesoftware.htmlunit.html.DomNodeList;
-import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.google.common.base.Predicates;
 import com.google.common.base.Stopwatch;
@@ -247,12 +243,12 @@ class VoiceManagerTest {
 			METHOD_GET_DATA_VALIDATION_HELPER, METHOD_CREATE_EXPLICIT_LIST_CONSTRAINT, METHOD_CREATE_VALIDATION,
 			METHOD_CREATE_EXPORT_TASK, METHOD_GET_TAB_INDEX_BY_TITLE, METHOD_GET_DECLARED_FIELD,
 			METHOD_GET_ABSOLUTE_PATH, METHOD_IS_ASSIGNABLE_FROM, METHOD_GET_ENUM_CONSTANTS, METHOD_LIST_FILES,
-			METHOD_GET_TYPE, METHOD_GET_ELEMENTS_BY_TAG_NAME_SGML_PAGE, METHOD_GET_ELEMENTS_BY_TAG_NAME_DOM_ELEMENT,
-			METHOD_GET_COLUMN_NAME, METHOD_GET_KEY_SET, METHOD_PUT_ALL, METHOD_CREATE_SHEET1, METHOD_CREATE_SHEET2,
-			METHOD_ENTRIES, METHOD_GET_WORK_BOOK, METHOD_GET_OLE_ENTRY_NAMES, METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE,
-			METHOD_GET_DOCUMENT_ELEMENT, METHOD_GET_CHILD_NODES, METHOD_GET_NAMED_ITEM, METHOD_GET_TEXT_CONTENT,
-			METHOD_GET_NAME_FILE, METHOD_GET_NAME_CLASS, METHOD_GET_PASS_WORD, METHOD_GET_SUPPLIER, METHOD_GET_LOOKUP,
-			METHOD_GET_LIST, METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK, METHOD_WRITE_VALUE_AS_STRING,
+			METHOD_GET_TYPE, METHOD_GET_COLUMN_NAME, METHOD_GET_KEY_SET, METHOD_PUT_ALL, METHOD_CREATE_SHEET1,
+			METHOD_CREATE_SHEET2, METHOD_ENTRIES, METHOD_GET_WORK_BOOK, METHOD_GET_OLE_ENTRY_NAMES,
+			METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE, METHOD_GET_DOCUMENT_ELEMENT, METHOD_GET_CHILD_NODES,
+			METHOD_GET_NAMED_ITEM, METHOD_GET_TEXT_CONTENT, METHOD_GET_NAME_FILE, METHOD_GET_NAME_CLASS,
+			METHOD_GET_PASS_WORD, METHOD_GET_SUPPLIER, METHOD_GET_LOOKUP, METHOD_GET_LIST,
+			METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK, METHOD_WRITE_VALUE_AS_STRING,
 			METHOD_CREATE_DRAWING_PATRIARCH, METHOD_GET_CREATION_HELPER, METHOD_CREATE_CELL_COMMENT,
 			METHOD_CREATE_CLIENT_ANCHOR, METHOD_CREATE_RICH_TEXT_STRING, METHOD_SET_CELL_COMMENT, METHOD_SET_AUTHOR,
 			METHOD_TEST_AND_ACCEPT_PREDICATE, METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_FIND_FIELDS_BY_VALUE,
@@ -558,12 +554,6 @@ class VoiceManagerTest {
 		(METHOD_LIST_FILES = clz.getDeclaredMethod("listFiles", File.class)).setAccessible(true);
 		//
 		(METHOD_GET_TYPE = clz.getDeclaredMethod("getType", Field.class)).setAccessible(true);
-		//
-		(METHOD_GET_ELEMENTS_BY_TAG_NAME_SGML_PAGE = clz.getDeclaredMethod("getElementsByTagName", SgmlPage.class,
-				String.class)).setAccessible(true);
-		//
-		(METHOD_GET_ELEMENTS_BY_TAG_NAME_DOM_ELEMENT = clz.getDeclaredMethod("getElementsByTagName", DomElement.class,
-				String.class)).setAccessible(true);
 		//
 		(METHOD_GET_COLUMN_NAME = clz.getDeclaredMethod("getColumnName", Class.class, Field.class)).setAccessible(true);
 		//
@@ -4737,48 +4727,6 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof Class<?>) {
 				return (Class<?>) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetElementsByTagName() throws Throwable {
-		//
-		Assertions.assertNotNull(
-				getElementsByTagName(new HtmlPage(null, Reflection.newProxy(WebWindow.class, ih)), null));
-		//
-		Assertions.assertNull(getElementsByTagName((DomElement) null, null));
-		//
-		Assertions.assertNotNull(getElementsByTagName(new DomElement(null, EMPTY, null, null), null));
-		//
-	}
-
-	private DomNodeList<DomElement> getElementsByTagName(final SgmlPage instance, final String tagName)
-			throws Throwable {
-		try {
-			final Object obj = METHOD_GET_ELEMENTS_BY_TAG_NAME_SGML_PAGE.invoke(null, instance, tagName);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof DomNodeList) {
-				return (DomNodeList) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	private static DomNodeList<HtmlElement> getElementsByTagName(final DomElement instance, final String tagName)
-			throws Throwable {
-		try {
-			final Object obj = METHOD_GET_ELEMENTS_BY_TAG_NAME_DOM_ELEMENT.invoke(null, instance, tagName);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof DomNodeList) {
-				return (DomNodeList) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
