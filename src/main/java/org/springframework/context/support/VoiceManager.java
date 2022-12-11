@@ -7222,23 +7222,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 			} else if (proxy instanceof BooleanMap) {
 				//
-				if (Objects.equals(methodName, "getBoolean") && args != null && args.length > 0) {
+				final IValue0<?> value = handleBooleanMap(methodName, getBooleans(), args);
+				//
+				if (value != null) {
 					//
-					final Object key = args[0];
-					//
-					if (!containsKey(getBooleans(), key)) {
-						//
-						throw new IllegalStateException(String.format(KEY_NOT_FOUND_MESSAGE, key));
-						//
-					} // if
-						//
-					return getBooleans().get(key);
-					//
-				} else if (Objects.equals(methodName, "setBoolean") && args != null && args.length > 1) {
-					//
-					put(getBooleans(), args[0], args[1]);
-					//
-					return null;
+					return IValue0Util.getValue0(value);
 					//
 				} // if
 					//
@@ -7265,6 +7253,33 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			} // if
 				//
 			throw new Throwable(methodName);
+			//
+		}
+
+		private static IValue0<Object> handleBooleanMap(final String methodName, final Map<Object, Object> map,
+				final Object[] args) {
+			//
+			if (Objects.equals(methodName, "getBoolean") && args != null && args.length > 0) {
+				//
+				final Object key = args[0];
+				//
+				if (!containsKey(map, key)) {
+					//
+					throw new IllegalStateException(String.format(KEY_NOT_FOUND_MESSAGE, key));
+					//
+				} // if
+					//
+				return Unit.with(MapUtils.getObject(map, key));
+				//
+			} else if (Objects.equals(methodName, "setBoolean") && args != null && args.length > 1) {
+				//
+				put(map, args[0], args[1]);
+				//
+				return Unit.with(null);
+				//
+			} // if
+				//
+			return null;
 			//
 		}
 
