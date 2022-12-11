@@ -309,6 +309,8 @@ import j2html.tags.Tag;
 import j2html.tags.specialized.ATag;
 import j2html.tags.specialized.ATagUtil;
 import mapper.VoiceMapper;
+import net.lingala.zip4j.model.ZipParameters;
+import net.lingala.zip4j.model.enums.EncryptionMethod;
 import net.miginfocom.swing.MigLayout;
 import net.sourceforge.javaflacencoder.AudioStreamEncoder;
 import net.sourceforge.javaflacencoder.FLACEncoder;
@@ -3970,9 +3972,22 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							&& reduce(mapToLong(stream(files), f -> longValue(f != null ? f.length() : null, 0)), 0,
 									Long::sum) > 0) {
 						//
-						ZipUtil.packEntries(toArray(files, new File[] {}), file = new File(
-								String.format("voice_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.zip", new Date())));
+						final String password = getText(tfExportPassword);
 						//
+						final ZipParameters zipParameters = new ZipParameters();
+						//
+						zipParameters.setEncryptFiles(StringUtils.isNotEmpty(password));
+						//
+						zipParameters.setEncryptionMethod(EncryptionMethod.ZIP_STANDARD);
+						//
+						try (final net.lingala.zip4j.ZipFile zipFile = new net.lingala.zip4j.ZipFile(
+								file = new File(String.format("voice_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.zip", new Date())),
+								password != null ? password.toCharArray() : null)) {
+							//
+							zipFile.addFiles(files, zipParameters);
+							//
+						} // try
+							//
 						if (isSelected(cbExportHtmlRemoveAfterZip)) {
 							//
 							forEach(files, VoiceManager::delete);
