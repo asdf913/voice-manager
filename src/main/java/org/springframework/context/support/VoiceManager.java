@@ -3975,26 +3975,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					if (isSelected(cbExportHtmlAsZip)
 							&& reduce(mapToLong(stream(files), f -> longValue(length(f), 0)), 0, Long::sum) > 0) {
 						//
-						final String password = getText(tfExportPassword);
-						//
-						final ZipParameters zipParameters = new ZipParameters();
-						//
-						zipParameters.setEncryptFiles(StringUtils.isNotEmpty(password));
-						//
-						zipParameters.setEncryptionMethod(EncryptionMethod.ZIP_STANDARD);
-						//
-						try (final net.lingala.zip4j.ZipFile zipFile = new net.lingala.zip4j.ZipFile(
+						createZipFile(
 								file = new File(String.format("voice_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.zip", new Date())),
-								toCharArray(password))) {
-							//
-							zipFile.addFiles(files, zipParameters);
-							//
-						} // try
-							//
-							// Delete HTML File(s) is "Remove Html After Zip" option is checked
-							//
-						testAndAccept(x -> isSelected(cbExportHtmlRemoveAfterZip), files,
-								x -> forEach(x, VoiceManager::delete));
+								getText(tfExportPassword), files);
+						//
+						// Delete HTML File(s) is "Remove Html After Zip" option is checked
+						//
+						testAndAccept((a, b) -> a, isSelected(cbExportHtmlRemoveAfterZip), files,
+								(a, b) -> forEach(b, VoiceManager::delete));
 						//
 					} // if
 						//
@@ -4190,6 +4178,32 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			} // if
 				//
 		} // if
+			//
+	}
+
+	private static void createZipFile(final File file, final String password, final Iterable<File> files)
+			throws IOException {
+		//
+		final ZipParameters zipParameters = new ZipParameters();
+		//
+		zipParameters.setEncryptFiles(StringUtils.isNotEmpty(password));
+		//
+		zipParameters.setEncryptionMethod(EncryptionMethod.ZIP_STANDARD);
+		//
+		try (final net.lingala.zip4j.ZipFile zipFile = testAndApply(Objects::nonNull, file,
+				x -> new net.lingala.zip4j.ZipFile(x, toCharArray(password)), null)) {
+			//
+			forEach(files, x -> {
+				//
+				if (zipFile != null && x != null) {
+					//
+					zipFile.addFile(x, zipParameters);
+					//
+				} // if
+					//
+			});
+			//
+		} // try
 			//
 	}
 
@@ -7489,10 +7503,17 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	private static <T> void forEach(final Iterable<T> instance, final Consumer<? super T> action) {
+	private static <T, E extends Throwable> void forEach(final Iterable<T> items,
+			final FailableConsumer<? super T, E> action) throws E {
 		//
-		if (instance != null && (action != null || Proxy.isProxyClass(getClass(instance)))) {
-			instance.forEach(action);
+		if (items != null && items.iterator() != null && (action != null || Proxy.isProxyClass(getClass(items)))) {
+			//
+			for (final T item : items) {
+				//
+				action.accept(item);
+				//
+			} // for
+				//
 		} // if
 			//
 	}

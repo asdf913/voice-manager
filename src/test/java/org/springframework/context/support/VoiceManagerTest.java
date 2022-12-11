@@ -274,7 +274,7 @@ class VoiceManagerTest {
 			METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET_FIRST_ROW, METHOD_EXPORT_JLPT,
 			METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT, METHOD_SET_SHEET_HEADER_ROW, METHOD_ENCRYPT,
 			METHOD_GET_WORKBOOK_BY_ZIP_FILE, METHOD_SELECT, METHOD_ATTR, METHOD_GET_ENCRYPTION_TABLE_HTML,
-			METHOD_NEXT_ELEMENT_SIBLING, METHOD_HTML, METHOD_LENGTH, METHOD_TO_CHAR_ARRAY = null;
+			METHOD_NEXT_ELEMENT_SIBLING, METHOD_HTML, METHOD_LENGTH, METHOD_CREATE_ZIP_FILE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -349,7 +349,7 @@ class VoiceManagerTest {
 		//
 		(METHOD_FOR_EACH_STREAM = clz.getDeclaredMethod("forEach", Stream.class, Consumer.class)).setAccessible(true);
 		//
-		(METHOD_FOR_EACH_ITERABLE = clz.getDeclaredMethod("forEach", Iterable.class, Consumer.class))
+		(METHOD_FOR_EACH_ITERABLE = clz.getDeclaredMethod("forEach", Iterable.class, FailableConsumer.class))
 				.setAccessible(true);
 		//
 		(METHOD_CREATE_WORK_BOOK_LIST = clz.getDeclaredMethod("createWorkbook", List.class,
@@ -790,7 +790,8 @@ class VoiceManagerTest {
 		//
 		(METHOD_LENGTH = clz.getDeclaredMethod("length", File.class)).setAccessible(true);
 		//
-		(METHOD_TO_CHAR_ARRAY = clz.getDeclaredMethod("toCharArray", String.class)).setAccessible(true);
+		(METHOD_CREATE_ZIP_FILE = clz.getDeclaredMethod("createZipFile", File.class, String.class, Iterable.class))
+				.setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -2691,7 +2692,8 @@ class VoiceManagerTest {
 		}
 	}
 
-	private static <T> void forEach(final Iterable<T> instance, final Consumer<? super T> action) throws Throwable {
+	private static <T, E extends Throwable> void forEach(final Iterable<T> instance,
+			final FailableConsumer<? super T, E> action) throws Throwable {
 		try {
 			METHOD_FOR_EACH_ITERABLE.invoke(null, instance, action);
 		} catch (final InvocationTargetException e) {
@@ -6694,23 +6696,26 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testToCharArray() throws Throwable {
+	void testCreateZipFile() throws Throwable {
 		//
-		Assertions.assertNull(toCharArray(null));
+		Assertions.assertDoesNotThrow(() -> createZipFile(null, null, Collections.singleton(null)));
 		//
-		Assertions.assertNotNull(toCharArray(""));
+		Assertions.assertDoesNotThrow(() -> createZipFile(new File("."), null, Collections.singleton(null)));
+		//
+		final File file = File.createTempFile(randomAlphabetic(3), null);
+		//
+		deleteOnExit(file);
+		//
+		Assertions.assertDoesNotThrow(() -> createZipFile(file, null, Collections.singleton(null)));
+		//
+		Assertions.assertDoesNotThrow(() -> createZipFile(file, EMPTY, Collections.singleton(null)));
 		//
 	}
 
-	private static char[] toCharArray(final String instance) throws Throwable {
+	private static void createZipFile(final File file, final String password, final Iterable<File> files)
+			throws Throwable {
 		try {
-			final Object obj = METHOD_TO_CHAR_ARRAY.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof char[]) {
-				return (char[]) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
+			METHOD_CREATE_ZIP_FILE.invoke(null, file, password, files);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
