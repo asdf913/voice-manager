@@ -41,6 +41,7 @@ import java.lang.annotation.Target;
 import java.lang.invoke.TypeDescriptor.OfField;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -1269,8 +1270,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final List<Method> ms = toList(
 				filter(testAndApply(Objects::nonNull, getDeclaredMethods(clz), Arrays::stream, null),
-						m -> m != null && Objects.equals(getName(m), "GetVersionEx")
-								&& Arrays.equals(new Class[] { clzOsVersionInfoEx }, m.getParameterTypes())));
+						m -> Objects.equals(getName(m), "GetVersionEx")
+								&& Arrays.equals(new Class[] { clzOsVersionInfoEx }, getParameterTypes(m))));
 		//
 		Method m = IterableUtils.size(ms) == 1 ? get(ms, 0) : null;
 		//
@@ -1279,6 +1280,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return Objects.equals(Boolean.TRUE, invoke(m, FieldUtils.readStaticField(f), osVersionInfoEx)) ? osVersionInfoEx
 				: null;
 		//
+	}
+
+	private static Class<?>[] getParameterTypes(final Executable instance) {
+		return instance != null ? instance.getParameterTypes() : null;
 	}
 
 	private static Object getInstance(final SpeechApi speechApi) {
@@ -3509,7 +3514,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				final int volume = Math.min(Math.max(intValue(getValue(jsSpeechVolume), 100), 0), 100);
 				//
-				if (method != null && Arrays.equals(method.getParameterTypes(),
+				if (Arrays.equals(getParameterTypes(method),
 						new Class<?>[] { String.class, String.class, Integer.TYPE, Integer.TYPE })) {
 					//
 					try {
