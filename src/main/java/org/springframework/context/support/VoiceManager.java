@@ -3636,11 +3636,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					voice.setLanguage(StringUtils.defaultIfBlank(voice.getLanguage(),
 							convertLanguageCodeToText(getVoiceAttribute(speechApi, voiceId, LANGUAGE), 16)));
 					//
-					voice.setSource(StringUtils.defaultIfBlank(voice.getSource(),
-							getProviderName(cast(Provider.class, speechApi))));
-					//
 				} // if
 					//
+				setSource(voice,
+						StringUtils.defaultIfBlank(getSource(voice), getProviderName(cast(Provider.class, speechApi))));
+				//
 				deleteOnExit(file);
 				//
 			} else {
@@ -3653,13 +3653,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					try {
 						//
-						if (voice != null) {
-							//
-							voice.setSource(StringUtils.defaultIfBlank(voice.getSource(), getMp3TagValue(
-									file = jfc.getSelectedFile(), x -> StringUtils.isNotBlank(toString(x)), mp3Tags)));
-							//
-						} // if
-							//
+						setSource(voice, StringUtils.defaultIfBlank(getSource(voice), getMp3TagValue(
+								file = jfc.getSelectedFile(), x -> StringUtils.isNotBlank(toString(x)), mp3Tags)));
+						//
 					} catch (final IOException | BaseException | IllegalAccessException e) {
 						//
 						errorOrPrintStackTraceOrShowMessageDialog(headless, e);
@@ -4174,6 +4170,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
+	}
+
+	private static void setSource(final Voice instance, final String source) {
+		if (instance != null) {
+			instance.setSource(source);
+		}
+	}
+
+	private static String getSource(final Voice instance) {
+		return instance != null ? instance.getSource() : null;
 	}
 
 	private static void setListNames(final Voice instance, final Iterable<String> listNames) {
@@ -6787,8 +6793,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 										//
 									} // if
 										//
-									it.voice.setSource(StringUtils.defaultIfBlank(voice.getSource(), getMp3TagValue(
-											it.file, x -> StringUtils.isNotBlank(toString(x)), mp3Tags)));
+									setSource(it.voice,
+											StringUtils.defaultIfBlank(getSource(voice), getMp3TagValue(it.file,
+													x -> StringUtils.isNotBlank(toString(x)), mp3Tags)));
 									//
 								} else {
 									//
@@ -6859,7 +6866,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 											//
 										} // if
 											//
-										it.voice.setSource(StringUtils.defaultIfBlank(voice.getSource(),
+										setSource(it.voice, StringUtils.defaultIfBlank(getSource(voice),
 												getProviderName(provider)));
 										//
 										try {
@@ -7471,7 +7478,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		voice.setText(getText(instance.tfTextImport));
 		//
-		voice.setSource(getText(instance.tfSource));
+		setSource(voice, getText(instance.tfSource));
 		//
 		voice.setRomaji(getText(instance.tfRomaji));
 		//

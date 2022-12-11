@@ -219,9 +219,9 @@ class VoiceManagerTest {
 			METHOD_GET_MAPPER, METHOD_INSERT_OR_UPDATE, METHOD_SET_ENABLED_2, METHOD_SET_ENABLED_3,
 			METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_CAST, METHOD_INT_VALUE, METHOD_LONG_VALUE,
 			METHOD_GET_PROPERTY_PROPERTY_RESOLVER, METHOD_GET_PROPERTY_CUSTOM_PROPERTIES, METHOD_PARSE_EXPRESSION,
-			METHOD_GET_VALUE, METHOD_GET_SOURCE, METHOD_EXPORT, METHOD_MAP, METHOD_MAP_TO_INT, METHOD_MAP_TO_LONG,
-			METHOD_MAX_STREAM, METHOD_MAX_INT_STREAM, METHOD_OR_ELSE_OPTIONAL, METHOD_OR_ELSE_OPTIONAL_INT,
-			METHOD_FOR_EACH_STREAM, METHOD_FOR_EACH_ITERABLE, METHOD_CREATE_WORK_BOOK_LIST,
+			METHOD_GET_VALUE, METHOD_GET_SOURCE_EVENT_OBJECT, METHOD_GET_SOURCE_VOICE, METHOD_EXPORT, METHOD_MAP,
+			METHOD_MAP_TO_INT, METHOD_MAP_TO_LONG, METHOD_MAX_STREAM, METHOD_MAX_INT_STREAM, METHOD_OR_ELSE_OPTIONAL,
+			METHOD_OR_ELSE_OPTIONAL_INT, METHOD_FOR_EACH_STREAM, METHOD_FOR_EACH_ITERABLE, METHOD_CREATE_WORK_BOOK_LIST,
 			METHOD_CREATE_WORK_BOOK_MULTI_MAP, METHOD_CREATE_VOICE, METHOD_GET_MESSAGE, METHOD_INVOKE,
 			METHOD_ANNOTATION_TYPE, METHOD_FIND_FIRST, METHOD_GET_DECLARED_METHODS, METHOD_FOR_NAME, METHOD_FILTER,
 			METHOD_SET_TEXT, METHOD_GET_PREFERRED_WIDTH, METHOD_IMPORT_VOICE1, METHOD_IMPORT_VOICE3,
@@ -270,7 +270,7 @@ class VoiceManagerTest {
 			METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT, METHOD_SET_SHEET_HEADER_ROW, METHOD_ENCRYPT,
 			METHOD_GET_WORKBOOK_BY_ZIP_FILE, METHOD_SELECT, METHOD_ATTR, METHOD_GET_ENCRYPTION_TABLE_HTML,
 			METHOD_NEXT_ELEMENT_SIBLING, METHOD_HTML, METHOD_LENGTH, METHOD_CREATE_ZIP_FILE, METHOD_RETRIEVE_ALL_VOICES,
-			METHOD_SET_LIST_NAMES = null;
+			METHOD_SET_LIST_NAMES, METHOD_SET_SOURCE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -321,7 +321,9 @@ class VoiceManagerTest {
 		(METHOD_GET_VALUE = clz.getDeclaredMethod("getValue", Expression.class, EvaluationContext.class))
 				.setAccessible(true);
 		//
-		(METHOD_GET_SOURCE = clz.getDeclaredMethod("getSource", EventObject.class)).setAccessible(true);
+		(METHOD_GET_SOURCE_EVENT_OBJECT = clz.getDeclaredMethod("getSource", EventObject.class)).setAccessible(true);
+		//
+		(METHOD_GET_SOURCE_VOICE = clz.getDeclaredMethod("getSource", Voice.class)).setAccessible(true);
 		//
 		(METHOD_EXPORT = clz.getDeclaredMethod("export", List.class, Map.class,
 				CLASS_OBJECT_MAP = Class.forName("org.springframework.context.support.VoiceManager$ObjectMap")))
@@ -783,8 +785,10 @@ class VoiceManagerTest {
 		(METHOD_RETRIEVE_ALL_VOICES = clz.getDeclaredMethod("retrieveAllVoices", VoiceMapper.class))
 				.setAccessible(true);
 		//
-		(METHOD_SET_LIST_NAMES = clz.getDeclaredMethod("setListNames", Voice.class,
-				Iterable.class)).setAccessible(true);
+		(METHOD_SET_LIST_NAMES = clz.getDeclaredMethod("setListNames", Voice.class, Iterable.class))
+				.setAccessible(true);
+		//
+		(METHOD_SET_SOURCE = clz.getDeclaredMethod("setSource", Voice.class, String.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -2445,13 +2449,31 @@ class VoiceManagerTest {
 	@Test
 	void testGetSource() throws Throwable {
 		//
-		Assertions.assertNull(getSource(null));
+		Assertions.assertNull(getSource((EventObject) null));
+		//
+		Assertions.assertNull(getSource((Voice) null));
+		//
+		Assertions.assertNull(getSource(new Voice()));
 		//
 	}
 
 	private static Object getSource(final EventObject instance) throws Throwable {
 		try {
-			return METHOD_GET_SOURCE.invoke(null, instance);
+			return METHOD_GET_SOURCE_EVENT_OBJECT.invoke(null, instance);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static String getSource(final Voice instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_SOURCE_VOICE.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -6685,6 +6707,21 @@ class VoiceManagerTest {
 	private static void setListNames(final Voice instance, final Iterable<String> listNames) throws Throwable {
 		try {
 			METHOD_SET_LIST_NAMES.invoke(null, instance, listNames);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetSource() {
+		//
+		Assertions.assertDoesNotThrow(() -> setSource(null, null));
+		//
+	}
+
+	private static void setSource(final Voice instance, final String source) throws Throwable {
+		try {
+			METHOD_SET_SOURCE.invoke(null, instance, source);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
