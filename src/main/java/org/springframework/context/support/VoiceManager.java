@@ -8853,14 +8853,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			for (int j = 0; j < IterableUtils.size(tds); j++) {
 				//
-				if ((domNode = get(tds, j)) == null) {
-					//
-					continue;
-					//
-				} // if
-					//
 				if ((matcher = matcher(pattern2 = ObjectUtils.getIfNull(pattern2, () -> Pattern.compile("\\[\\d+]")),
-						textContent = ElementUtil.text(domNode))) != null) {
+						textContent = ElementUtil.text(domNode = get(tds, j)))) != null) {
 					//
 					textContent = matcher.replaceAll("");
 					//
