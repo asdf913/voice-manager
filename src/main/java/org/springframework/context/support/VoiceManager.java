@@ -2768,8 +2768,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			map.put("mediaFormatLink", getMediaFormatLink(mediaFormatPageUrl));
 			//
-			map.put("encryptionTableHtml", getEncryptionTableHtml(
-					testAndApply(StringUtils::isNotBlank, poiEncryptionPageUrl, URL::new, null)));
+			map.put("encryptionTableHtml",
+					getEncryptionTableHtml(testAndApply(StringUtils::isNotBlank, poiEncryptionPageUrl, URL::new, null),
+							Duration.ZERO));
 			//
 			process(getTemplate(configuration, "help.html.ftl"), map, writer);
 			//
@@ -2828,11 +2829,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static String getEncryptionTableHtml(final URL url) throws IOException {
+	private static String getEncryptionTableHtml(final URL url, final Duration timeout) throws IOException {
 		//
 		org.jsoup.nodes.Document document = testAndApply(
 				x -> StringUtils.equalsAnyIgnoreCase(x != null ? x.getProtocol() : null, "http", "https"), url,
-				x -> Jsoup.parse(x, 0), null);
+				x -> Jsoup.parse(x, timeout != null ? (int) timeout.toMillis() : 0), null);
 		//
 		if (document == null) {
 			//

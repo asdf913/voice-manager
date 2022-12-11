@@ -788,7 +788,7 @@ class VoiceManagerTest {
 		//
 		(METHOD_ATTR = clz.getDeclaredMethod("attr", org.jsoup.nodes.Element.class, String.class)).setAccessible(true);
 		//
-		(METHOD_GET_ENCRYPTION_TABLE_HTML = clz.getDeclaredMethod("getEncryptionTableHtml", URL.class))
+		(METHOD_GET_ENCRYPTION_TABLE_HTML = clz.getDeclaredMethod("getEncryptionTableHtml", URL.class, Duration.class))
 				.setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
@@ -6670,13 +6670,17 @@ class VoiceManagerTest {
 	@Test
 	void testGetEncryptionTableHtml() throws Throwable {
 		//
-		Assertions.assertNull(getEncryptionTableHtml(toURL(toURI(new File("pom.xml")))));
+		final URL url = toURL(toURI(new File("pom.xml")));
+		//
+		Assertions.assertNull(getEncryptionTableHtml(url, null));
+		//
+		Assertions.assertNull(getEncryptionTableHtml(url, Duration.ZERO));
 		//
 	}
 
-	private static String getEncryptionTableHtml(final URL url) throws Throwable {
+	private static String getEncryptionTableHtml(final URL url, final Duration timeout) throws Throwable {
 		try {
-			final Object obj = METHOD_GET_ENCRYPTION_TABLE_HTML.invoke(null, url);
+			final Object obj = METHOD_GET_ENCRYPTION_TABLE_HTML.invoke(null, url, timeout);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof String) {
