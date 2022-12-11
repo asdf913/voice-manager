@@ -3985,7 +3985,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 						try (final net.lingala.zip4j.ZipFile zipFile = new net.lingala.zip4j.ZipFile(
 								file = new File(String.format("voice_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.zip", new Date())),
-								password != null ? password.toCharArray() : null)) {
+								toCharArray(password))) {
 							//
 							zipFile.addFiles(files, zipParameters);
 							//
@@ -4192,6 +4192,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
+	}
+
+	private static char[] toCharArray(final String instance) {
+		return instance != null ? instance.toCharArray() : null;
 	}
 
 	private static void encrypt(final File file, final EncryptionMode encryptionMode, final String password)

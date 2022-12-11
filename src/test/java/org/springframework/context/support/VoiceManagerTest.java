@@ -274,7 +274,7 @@ class VoiceManagerTest {
 			METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET_FIRST_ROW, METHOD_EXPORT_JLPT,
 			METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT, METHOD_SET_SHEET_HEADER_ROW, METHOD_ENCRYPT,
 			METHOD_GET_WORKBOOK_BY_ZIP_FILE, METHOD_SELECT, METHOD_ATTR, METHOD_GET_ENCRYPTION_TABLE_HTML,
-			METHOD_NEXT_ELEMENT_SIBLING, METHOD_HTML, METHOD_LENGTH = null;
+			METHOD_NEXT_ELEMENT_SIBLING, METHOD_HTML, METHOD_LENGTH, METHOD_TO_CHAR_ARRAY = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -789,6 +789,8 @@ class VoiceManagerTest {
 		(METHOD_HTML = clz.getDeclaredMethod("html", org.jsoup.nodes.Element.class)).setAccessible(true);
 		//
 		(METHOD_LENGTH = clz.getDeclaredMethod("length", File.class)).setAccessible(true);
+		//
+		(METHOD_TO_CHAR_ARRAY = clz.getDeclaredMethod("toCharArray", String.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -6684,6 +6686,29 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof Long) {
 				return (Long) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testToCharArray() throws Throwable {
+		//
+		Assertions.assertNull(toCharArray(null));
+		//
+		Assertions.assertNotNull(toCharArray(""));
+		//
+	}
+
+	private static char[] toCharArray(final String instance) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_CHAR_ARRAY.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof char[]) {
+				return (char[]) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
