@@ -7195,28 +7195,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			if (proxy instanceof ObjectMap) {
 				//
-				if (Objects.equals(methodName, "getObject") && args != null && args.length > 0) {
+				final IValue0<?> value = handleObjectMap(methodName, getObjects(), args);
+				//
+				if (value != null) {
 					//
-					final Object key = args[0];
-					//
-					if (!containsKey(getObjects(), key)) {
-						//
-						throw new IllegalStateException(String.format(KEY_NOT_FOUND_MESSAGE,
-								testAndApply(IH::isArray, cast(Class.class, key), IH::getSimpleName, x -> key)));
-						//
-					} // if
-						//
-					return getObjects().get(key);
-					//
-				} else if (Objects.equals(methodName, "containsObject") && args != null && args.length > 0) {
-					//
-					return Boolean.valueOf(containsKey(getObjects(), args[0]));
-					//
-				} else if (Objects.equals(methodName, "setObject") && args != null && args.length > 1) {
-					//
-					put(getObjects(), args[0], args[1]);
-					//
-					return null;
+					return IValue0Util.getValue0(value);
 					//
 				} // if
 					//
@@ -7253,6 +7236,38 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			} // if
 				//
 			throw new Throwable(methodName);
+			//
+		}
+
+		private static IValue0<Object> handleObjectMap(final String methodName, final Map<Object, Object> map,
+				final Object[] args) {
+			//
+			if (Objects.equals(methodName, "getObject") && args != null && args.length > 0) {
+				//
+				final Object key = args[0];
+				//
+				if (!containsKey(map, key)) {
+					//
+					throw new IllegalStateException(String.format(KEY_NOT_FOUND_MESSAGE,
+							testAndApply(IH::isArray, cast(Class.class, key), IH::getSimpleName, x -> key)));
+					//
+				} // if
+					//
+				return Unit.with(MapUtils.getObject(map, key));
+				//
+			} else if (Objects.equals(methodName, "containsObject") && args != null && args.length > 0) {
+				//
+				return Unit.with(Boolean.valueOf(containsKey(map, args[0])));
+				//
+			} else if (Objects.equals(methodName, "setObject") && args != null && args.length > 1) {
+				//
+				put(map, args[0], args[1]);
+				//
+				return Unit.with(null);
+				//
+			} // if
+				//
+			return null;
 			//
 		}
 
