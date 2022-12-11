@@ -4884,10 +4884,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.getNodeName() : null;
 	}
 
-	private static String getNodeValue(final Node instance) {
-		return instance != null ? instance.getNodeValue() : null;
-	}
-
 	private static String getName(final File instance) {
 		return instance != null ? instance.getName() : null;
 	}
