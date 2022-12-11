@@ -1259,7 +1259,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final List<Field> fs = toList(
 				filter(testAndApply(Objects::nonNull, getDeclaredFields(clz), Arrays::stream, null),
-						f -> f != null && Objects.equals(getName(f), "INSTANCE") && Objects.equals(f.getType(), clz)
+						f -> f != null && Objects.equals(getName(f), "INSTANCE") && Objects.equals(getType(f), clz)
 								&& Modifier.isStatic(f.getModifiers())));
 		//
 		final Field f = IterableUtils.size(fs) == 1 ? get(fs, 0) : null;
