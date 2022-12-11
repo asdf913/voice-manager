@@ -7716,12 +7716,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					} // if
 						//
-					if (StringUtils.isNotEmpty(password)) {
+						// Set "Password"
 						//
-						setPassword(odfPd.getPackage(), password);
-						//
-					} // if
-						//
+					testAndAccept((a, b) -> StringUtils.isNotEmpty(b), odfPd.getPackage(), password,
+							(a, b) -> setPassword(a, b));
+					//
 					odfPd.save(file = new File(rowKey, String.join(".",
 							StringUtils.substringAfter(rowKey, File.separatorChar),
 							StringUtils.defaultIfBlank(
