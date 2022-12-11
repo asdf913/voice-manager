@@ -276,7 +276,7 @@ class VoiceManagerTest {
 			METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET_FIRST_ROW, METHOD_EXPORT_JLPT,
 			METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT, METHOD_SET_SHEET_HEADER_ROW, METHOD_ENCRYPT,
 			METHOD_GET_WORKBOOK_BY_ZIP_FILE, METHOD_SELECT, METHOD_ATTR, METHOD_GET_ENCRYPTION_TABLE_HTML,
-			METHOD_HTML = null;
+			METHOD_NEXT_ELEMENT_SIBLING, METHOD_HTML = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -790,6 +790,9 @@ class VoiceManagerTest {
 		(METHOD_ATTR = clz.getDeclaredMethod("attr", org.jsoup.nodes.Element.class, String.class)).setAccessible(true);
 		//
 		(METHOD_GET_ENCRYPTION_TABLE_HTML = clz.getDeclaredMethod("getEncryptionTableHtml", URL.class, Duration.class))
+				.setAccessible(true);
+		//
+		(METHOD_NEXT_ELEMENT_SIBLING = clz.getDeclaredMethod("nextElementSibling", org.jsoup.nodes.Element.class))
 				.setAccessible(true);
 		//
 		(METHOD_HTML = clz.getDeclaredMethod("html", org.jsoup.nodes.Element.class)).setAccessible(true);
@@ -6701,6 +6704,27 @@ class VoiceManagerTest {
 
 	private static URL toURL(final URI instance) throws MalformedURLException {
 		return instance != null ? instance.toURL() : null;
+	}
+
+	@Test
+	void testNextElementSibling() throws Throwable {
+		//
+		Assertions.assertNull(nextElementSibling(element));
+		//
+	}
+
+	private static org.jsoup.nodes.Element nextElementSibling(final org.jsoup.nodes.Element instance) throws Throwable {
+		try {
+			final Object obj = METHOD_NEXT_ELEMENT_SIBLING.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof org.jsoup.nodes.Element) {
+				return (org.jsoup.nodes.Element) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 	@Test

@@ -2844,10 +2844,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		final Elements h2s = document != null ? document.selectXpath("//h2[text()=\"Supported feature matrix\"]")
 				: null;
 		//
-		final org.jsoup.nodes.Element element = IterableUtils.size(h2s) == 1 ? IterableUtils.get(h2s, 0) : null;
+		return html(nextElementSibling(IterableUtils.size(h2s) == 1 ? IterableUtils.get(h2s, 0) : null));
 		//
-		return html(element != null ? element.nextElementSibling() : null);
-		//
+	}
+
+	private static org.jsoup.nodes.Element nextElementSibling(final org.jsoup.nodes.Element instance) {
+		return instance != null ? instance.nextElementSibling() : null;
 	}
 
 	private static String html(final org.jsoup.nodes.Element instance) {
