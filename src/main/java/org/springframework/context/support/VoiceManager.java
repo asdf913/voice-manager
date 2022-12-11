@@ -8872,7 +8872,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // for
 			//
-		if (sheet != null && row != null && sheet.getFirstRowNum() < sheet.getLastRowNum()) {
+		if (sheet != null && row != null && sheet.getFirstRowNum() < sheet.getLastRowNum()
+				&& row.getFirstCellNum() >= 0) {
 			//
 			sheet.setAutoFilter(new CellRangeAddress(sheet.getFirstRowNum(), sheet.getLastRowNum() - 1,
 					row.getFirstCellNum(), row.getLastCellNum() - 1));
