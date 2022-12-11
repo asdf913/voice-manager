@@ -226,6 +226,7 @@ import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.ElementUtil;
 import org.jsoup.select.Elements;
 import org.odftoolkit.odfdom.doc.OdfPresentationDocument;
 import org.odftoolkit.odfdom.pkg.OdfPackage;
@@ -2874,8 +2875,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				for (int j = 0; j < IterableUtils.size(methodNames); j++) {
 					//
-					if (!StringUtils.startsWithIgnoreCase(methodName = get(methodNames, j), "is")
-							|| !StringUtils.containsIgnoreCase(textContent = text(element = get(elements, i)),
+					if (!StringUtils.startsWithIgnoreCase(methodName = get(methodNames, j), "is") || !StringUtils
+							.containsIgnoreCase(textContent = ElementUtil.text(element = get(elements, i)),
 									StringUtils.substringAfter(methodName, "is"))
 							|| aTag != null) {
 						//
@@ -2903,10 +2904,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static Elements select(final org.jsoup.nodes.Element instance, final String cssQuery) {
 		return instance != null ? instance.select(cssQuery) : null;
-	}
-
-	private static String text(final org.jsoup.nodes.Element instance) {
-		return instance != null ? instance.text() : null;
 	}
 
 	private static String attr(final org.jsoup.nodes.Element instance, final String attributeKey) {

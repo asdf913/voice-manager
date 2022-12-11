@@ -13,6 +13,7 @@ import org.apache.commons.lang3.function.FailableFunction;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.ElementUtil;
 import org.jsoup.select.Elements;
 
 public final class ATagUtil {
@@ -38,7 +39,7 @@ public final class ATagUtil {
 			//
 			final Element element = IterableUtils.size(elements) == 1 ? IterableUtils.get(elements, 0) : null;
 			//
-			(aTag = new ATag()).withText(element != null ? element.text() : null);
+			(aTag = new ATag()).withText(ElementUtil.text(element));
 			//
 			aTag.attr("href", url);
 			//
