@@ -753,8 +753,7 @@ class VoiceManagerTest {
 		//
 		(METHOD_RANDOM_ALPHABETIC = clz.getDeclaredMethod("randomAlphabetic", Integer.TYPE)).setAccessible(true);
 		//
-		(METHOD_GET_MEDIA_FORMAT_LINK = clz.getDeclaredMethod("getMediaFormatLink", String.class,
-				freemarker.template.Configuration.class)).setAccessible(true);
+		(METHOD_GET_MEDIA_FORMAT_LINK = clz.getDeclaredMethod("getMediaFormatLink", String.class)).setAccessible(true);
 		//
 		(METHOD_GET_EVENT_TYPE = clz.getDeclaredMethod("getEventType", HyperlinkEvent.class)).setAccessible(true);
 		//
@@ -6355,14 +6354,13 @@ class VoiceManagerTest {
 	@Test
 	void testGetMediaFormatLink() throws Throwable {
 		//
-		Assertions.assertNull(getMediaFormatLink(null, null));
+		Assertions.assertNull(getMediaFormatLink(null));
 		//
 	}
 
-	private static ATag getMediaFormatLink(final String url, final freemarker.template.Configuration configuration)
-			throws Throwable {
+	private static ATag getMediaFormatLink(final String url) throws Throwable {
 		try {
-			final Object obj = METHOD_GET_MEDIA_FORMAT_LINK.invoke(null, url, configuration);
+			final Object obj = METHOD_GET_MEDIA_FORMAT_LINK.invoke(null, url);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof ATag) {

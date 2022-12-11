@@ -225,6 +225,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
+import org.jsoup.Jsoup;
+import org.jsoup.select.Elements;
 import org.odftoolkit.odfdom.doc.OdfPresentationDocument;
 import org.odftoolkit.odfdom.pkg.OdfPackage;
 import org.openxmlformats.schemas.officeDocument.x2006.customProperties.CTProperty;
@@ -2752,7 +2754,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			final Map<Object, Object> map = new LinkedHashMap<>(Collections.singletonMap("statics",
 					new BeansWrapper(freemarker.template.Configuration.getVersion()).getStaticModels()));
 			//
-			map.put("mediaFormatLink", getMediaFormatLink(mediaFormatPageUrl, configuration));
+			map.put("mediaFormatLink", getMediaFormatLink(mediaFormatPageUrl));
 			//
 			process(getTemplate(configuration, "help.html.ftl"), map, writer);
 			//
@@ -2815,16 +2817,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.getEventType() : null;
 	}
 
-	private static ATag getMediaFormatLink(final String url, final freemarker.template.Configuration configuration)
+	private static ATag getMediaFormatLink(final String url)
 			throws IllegalAccessException, InvocationTargetException, IOException {
 		//
 		InputStream is = null;
 		//
 		ATag aTag = null;
 		//
-		try (final WebClient webClient = new WebClient(); final Writer writer = new StringWriter()) {
-			//
-			WebClientOptionsUtil.setJavaScriptEnabled(webClient.getOptions(), false);
+		try {
 			//
 			final List<Method> ms = toList(filter(
 					testAndApply(Objects::nonNull, getDeclaredMethods(forName("com.sun.jna.Platform")), Arrays::stream,
@@ -2855,22 +2855,25 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // for
 				//
-			final List<DomNode> domNodes = querySelectorAll(webClient.loadHtmlCodeIntoCurrentWindow(
+			final org.jsoup.nodes.Document document = testAndApply(Objects::nonNull,
 					(is = openStream(testAndApply(Objects::nonNull, url, URL::new, null))) != null
 							? IOUtils.toString(is, StandardCharsets.UTF_8)
-							: null),
-					".relatedtopics a[href]");
+							: null,
+					Jsoup::parse, null);
 			//
-			Node node = null;
+			final Elements elements = document != null ? document.select(".relatedtopics a[href]") : null;
+			//
+			org.jsoup.nodes.Element element = null;
 			//
 			String textContent, methodName = null;
 			//
-			for (int i = 0; i < IterableUtils.size(domNodes); i++) {
+			for (int i = 0; i < IterableUtils.size(elements); i++) {
 				//
 				for (int j = 0; j < IterableUtils.size(methodNames); j++) {
 					//
 					if (!StringUtils.startsWithIgnoreCase(methodName = get(methodNames, j), "is")
-							|| !StringUtils.containsIgnoreCase(textContent = getTextContent(node = get(domNodes, i)),
+							|| !StringUtils.containsIgnoreCase(
+									textContent = (element = get(elements, i)) != null ? element.text() : null,
 									StringUtils.substringAfter(methodName, "is"))
 							|| aTag != null) {
 						//
@@ -2880,7 +2883,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					(aTag = new ATag()).withText(textContent);
 					//
-					aTag.attr("href", getNodeValue(getNamedItem(getAttributes(node), "href")));
+					aTag.attr("href", element != null ? element.attr("href") : null);
 					//
 				} // for
 					//
