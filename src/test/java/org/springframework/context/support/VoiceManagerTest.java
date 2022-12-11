@@ -274,7 +274,7 @@ class VoiceManagerTest {
 			METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET,
 			METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET_FIRST_ROW, METHOD_EXPORT_JLPT,
 			METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT, METHOD_SET_SHEET_HEADER_ROW, METHOD_ENCRYPT,
-			METHOD_GET_WORKBOOK_BY_ZIP_FILE, METHOD_SELECT, METHOD_TEXT = null;
+			METHOD_GET_WORKBOOK_BY_ZIP_FILE, METHOD_SELECT, METHOD_TEXT, METHOD_ATTR = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -786,6 +786,8 @@ class VoiceManagerTest {
 				.setAccessible(true);
 		//
 		(METHOD_TEXT = clz.getDeclaredMethod("text", org.jsoup.nodes.Element.class)).setAccessible(true);
+		//
+		(METHOD_ATTR = clz.getDeclaredMethod("attr", org.jsoup.nodes.Element.class, String.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -6652,6 +6654,29 @@ class VoiceManagerTest {
 	private static String text(final org.jsoup.nodes.Element instance) throws Throwable {
 		try {
 			final Object obj = METHOD_TEXT.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testAttr() throws Throwable {
+		//
+		Assertions.assertNull(attr(null, null));
+		//
+		Assertions.assertEquals(EMPTY, attr(new org.jsoup.nodes.Element("A"), EMPTY));
+		//
+	}
+
+	private static String attr(final org.jsoup.nodes.Element instance, final String attributeKey) throws Throwable {
+		try {
+			final Object obj = METHOD_ATTR.invoke(null, instance, attributeKey);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof String) {
