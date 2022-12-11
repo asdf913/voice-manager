@@ -6916,7 +6916,7 @@ class VoiceManagerTest {
 		//
 		final Method generateOdfPresentationDocuments = CLASS_EXPORT_TASK != null
 				? CLASS_EXPORT_TASK.getDeclaredMethod("generateOdfPresentationDocuments", InputStream.class,
-						CLASS_BOOLEAN_MAP, String.class, Table.class)
+						CLASS_BOOLEAN_MAP, String.class, Table.class, String.class)
 				: null;
 		//
 		if (generateOdfPresentationDocuments != null) {
@@ -6925,10 +6925,10 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(invoke(generateOdfPresentationDocuments, null, null, null, null, null));
+		Assertions.assertNull(invoke(generateOdfPresentationDocuments, null, null, null, null, null, null));
 		//
 		Assertions.assertThrows(InvocationTargetException.class, () -> invoke(generateOdfPresentationDocuments, null,
-				null, null, null, ImmutableTable.of(EMPTY, EMPTY, new Voice())));
+				null, null, null, ImmutableTable.of(EMPTY, EMPTY, new Voice()), null));
 		//
 		// org.springframework.context.support.VoiceManager$ExportTask.newXPath(javax.xml.xpath.XPathFactory)
 		//

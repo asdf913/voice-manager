@@ -226,6 +226,7 @@ import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
 import org.odftoolkit.odfdom.doc.OdfPresentationDocument;
+import org.odftoolkit.odfdom.pkg.OdfPackage;
 import org.openxmlformats.schemas.officeDocument.x2006.customProperties.CTProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7404,6 +7405,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 		private ObjectMapper objectMapper = null;
 
+		private String password = null;
+
 		@Override
 		public void run() {
 			//
@@ -7538,7 +7541,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 						} // if
 							//
-						generateOdfPresentationDocuments(is, booleanMap, folderInPresentation, voiceFileNames);
+						generateOdfPresentationDocuments(is, booleanMap, folderInPresentation, voiceFileNames,
+								password);
 						//
 					} // try
 						//
@@ -7656,7 +7660,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		}
 
 		private static void generateOdfPresentationDocuments(final InputStream is, final BooleanMap booleanMap,
-				final String folderInPresentation, final Table<String, String, Voice> table) throws Exception {
+				final String folderInPresentation, final Table<String, String, Voice> table, final String password)
+				throws Exception {
 			//
 			final Set<String> rowKeySet = rowKeySet(table);
 			//
@@ -7684,6 +7689,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			int maxElapsedStringLength = 0;
 			//
+			OdfPackage odfPackage = null;
+			//
 			for (final String rowKey : rowKeySet) {
 				//
 				if (objectMap == null) {
@@ -7708,6 +7715,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						stopwatch.reset();
 						//
 						stopwatch.start();
+						//
+					} // if
+						//
+					if ((odfPackage = odfPd.getPackage()) != null && StringUtils.isNotEmpty(password)) {
+						//
+						odfPackage.setPassword(password);
 						//
 					} // if
 						//
@@ -8298,6 +8311,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					et.folderInPresentation = voiceManager.folderInPresentation;
 					//
+					et.password = getText(voiceManager.tfExportPassword);
+					//
 				} // if
 					//
 				es.submit(et);
@@ -8569,6 +8584,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		et.exportPresentationTemplate = voiceManager != null ? voiceManager.exportPresentationTemplate : null;
 		//
 		et.folderInPresentation = voiceManager != null ? voiceManager.folderInPresentation : null;
+		//
+		et.password = getText(voiceManager != null ? voiceManager.tfExportPassword : null);
 		//
 		final BooleanMap booleanMap = testAndApply(c -> ObjectMap.containsObject(objectMap, c), BooleanMap.class,
 				c -> ObjectMap.getObject(objectMap, c), null);
