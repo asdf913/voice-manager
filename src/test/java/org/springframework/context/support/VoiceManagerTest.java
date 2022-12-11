@@ -267,8 +267,7 @@ class VoiceManagerTest {
 			METHOD_GET_PROVIDER_PLATFORM, METHOD_OPEN_CONNECTION, METHOD_GET_RESOURCE_AS_STREAM,
 			METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH, METHOD_GET_ATTRIBUTES, METHOD_GET_LENGTH, METHOD_ITEM,
 			METHOD_GET_OS_VERSION_INFO_EX_MAP, METHOD_CREATE_JLPT_SHEET, METHOD_GET_NEXT_ELEMENT_SIBLING,
-			METHOD_CREATE_JO_YO_KAN_JI_WORKBOOK_BY_TBODY, METHOD_CREATE_JO_YO_KAN_JI_WORKBOOK_BY_DOM_NODES,
-			METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_SHOW_MESSAGE_DIALOG1,
+			METHOD_CREATE_JO_YO_KAN_JI_WORKBOOK_BY_ELEMENTS, METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_SHOW_MESSAGE_DIALOG1,
 			METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_SHOW_MESSAGE_DIALOG2,
 			METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_SHOW_MESSAGE_DIALOG3, METHOD_SET_VISIBLE, METHOD_RANDOM_ALPHABETIC,
 			METHOD_GET_MEDIA_FORMAT_LINK, METHOD_GET_EVENT_TYPE, METHOD_GET_PARENT_FILE,
@@ -735,11 +734,8 @@ class VoiceManagerTest {
 		(METHOD_GET_NEXT_ELEMENT_SIBLING = clz.getDeclaredMethod("getNextElementSibling", DomNode.class))
 				.setAccessible(true);
 		//
-		(METHOD_CREATE_JO_YO_KAN_JI_WORKBOOK_BY_TBODY = clz.getDeclaredMethod("createJoYoKanJiWorkbookByTBody",
-				DomNode.class)).setAccessible(true);
-		//
-		(METHOD_CREATE_JO_YO_KAN_JI_WORKBOOK_BY_DOM_NODES = clz.getDeclaredMethod("createJoYoKanJiWorkbookByDomNodes",
-				List.class)).setAccessible(true);
+		(METHOD_CREATE_JO_YO_KAN_JI_WORKBOOK_BY_ELEMENTS = clz.getDeclaredMethod("createJoYoKanJiWorkbookByElements",
+				Elements.class)).setAccessible(true);
 		//
 		(METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_SHOW_MESSAGE_DIALOG1 = clz
 				.getDeclaredMethod("errorOrPrintStackTraceOrShowMessageDialog", Throwable.class)).setAccessible(true);
@@ -6245,42 +6241,15 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testCreateJoYoKanJiWorkbookByTBody() throws Throwable {
+	void testCreateJoYoKanJiWorkbookByElements() throws Throwable {
 		//
-		final DomNode domNode = new DomText(null, null);
-		//
-		domNode.appendChild(new DomText(null, null));
-		//
-		domNode.appendChild(new DomElement(null, EMPTY, null, null));
-		//
-		Assertions.assertNotNull(createJoYoKanJiWorkbookByTBody(domNode));
+		Assertions.assertNotNull(createJoYoKanJiWorkbookByDomNodes(new Elements(Arrays.asList(null, element))));
 		//
 	}
 
-	private static Workbook createJoYoKanJiWorkbookByTBody(final DomNode tbody) throws Throwable {
+	private static Workbook createJoYoKanJiWorkbookByDomNodes(final Elements domNodes) throws Throwable {
 		try {
-			final Object obj = METHOD_CREATE_JO_YO_KAN_JI_WORKBOOK_BY_TBODY.invoke(null, tbody);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Workbook) {
-				return (Workbook) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testCreateJoYoKanJiWorkbookByDomNodes() throws Throwable {
-		//
-		Assertions.assertNull(createJoYoKanJiWorkbookByDomNodes(Collections.singletonList(null)));
-		//
-	}
-
-	private static Workbook createJoYoKanJiWorkbookByDomNodes(final List<DomNode> domNodes) throws Throwable {
-		try {
-			final Object obj = METHOD_CREATE_JO_YO_KAN_JI_WORKBOOK_BY_DOM_NODES.invoke(null, domNodes);
+			final Object obj = METHOD_CREATE_JO_YO_KAN_JI_WORKBOOK_BY_ELEMENTS.invoke(null, domNodes);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Workbook) {

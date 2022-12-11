@@ -8795,82 +8795,17 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		Workbook workbook = null;
 		//
-		try (final WebClient webClient = new WebClient()) {
+		try {
 			//
-			setJavaScriptEnabled(webClient.getOptions(), false);
+			final org.jsoup.nodes.Document document = testAndApply(Objects::nonNull,
+					testAndApply(StringUtils::isNotBlank, url, URL::new, null), x -> Jsoup.parse(x, 0), null);
 			//
-			final DomNodeList<DomElement> h3s = getElementsByTagName(
-					cast(SgmlPage.class, testAndApply(StringUtils::isNotBlank, url, webClient::getPage, null)), "h3");
+			final Elements tbodies = document != null
+					? document.selectXpath("//h3/span[text()=\"本表\"]/../following-sibling::table[1]/tbody")
+					: null;
 			//
-			DomElement domElement = null;
-			//
-			DomElement h3 = null;
-			//
-			for (int i = 0; i < IterableUtils.size(h3s); i++) {
-				//
-				if (!Objects.equals(getTextContent(domElement = get(h3s, i)), "本表[編集]")) {
-					//
-					continue;
-					//
-				} // if
-					//
-				if (h3 == null) {
-					//
-					h3 = domElement;
-					//
-				} else {
-					//
-					throw new IllegalStateException();
-					//
-				} // if
-					//
-			} // for
-				//
-			domElement = h3;
-			//
-			DomElement table = null;
-			//
-			while ((domElement = getNextElementSibling(domElement)) != null) {
-				//
-				if (Objects.equals(getNodeName(domElement), "table")) {
-					//
-					table = domElement;
-					//
-					break;
-					//
-				} // if
-					//
-			} // while
-				//
-				// tbody
-				//
-			final DomNodeList<DomNode> domNodes = querySelectorAll(table, "tbody");
-			//
-			DomNode domNode = null;
-			//
-			DomNode tbody = null;
-			//
-			for (int i = 0; i < IterableUtils.size(domNodes); i++) {
-				//
-				if (!Objects.equals(getNodeName(domNode = get(domNodes, i)), "tbody")) {
-					//
-					continue;
-					//
-				} // if
-					//
-				if (tbody == null) {
-					//
-					tbody = domNode;
-					//
-				} else {
-					//
-					throw new IllegalStateException();
-					//
-				} // if
-					//
-			} // for
-				//
-			workbook = createJoYoKanJiWorkbookByTBody(tbody);
+			workbook = createJoYoKanJiWorkbookByElements(
+					IterableUtils.size(tbodies) == 1 ? children(IterableUtils.get(tbodies, 0)) : null);
 			//
 		} catch (final IOException e) {
 			//
@@ -8882,56 +8817,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static Workbook createJoYoKanJiWorkbookByTBody(final DomNode tbody) {
-		//
-		DomNode domNode = null;
-		//
-		final DomNodeList<DomNode> domNodes = getChildNodes(tbody);
-		//
-		DomNodeList<DomNode> tds = null;
-		//
-		IntIntMap intIntMap = null;
-		//
-		final Pattern pattern1 = Pattern.compile("(\\d+)([^\\d]+)");
-		//
-		Matcher matcher = null;
-		//
-		final IH ih = new IH();
-		//
-		for (int i = 0; i < IterableUtils.size(domNodes); i++) {
-			//
-			if ((domNode = get(domNodes, i)) == null || domNode.getNodeType() != Node.ELEMENT_NODE
-					|| (tds = getChildNodes(domNode)) == null) {
-				//
-				continue;
-				//
-			} // if
-				//
-			for (int j = 0; j < IterableUtils.size(tds); j++) {
-				//
-				if ((domNode = get(tds, j)) == null || domNode.getNodeType() != Node.ELEMENT_NODE) {
-					//
-					continue;
-					//
-				} // if
-					//
-				if (matches(matcher = matcher(pattern1, getTextContent(domNode))) && (intIntMap = ObjectUtils
-						.getIfNull(intIntMap, () -> Reflection.newProxy(IntIntMap.class, ih))) != null
-						&& !intIntMap.containsKey(j)) {
-					//
-					intIntMap.setInt(j, matcher.groupCount());
-					//
-				} // if
-					//
-			} // for
-				//
-		} // for
-			//
-		return createJoYoKanJiWorkbookByDomNodes(domNodes);
-		//
+	private static Elements children(final org.jsoup.nodes.Element instance) {
+		return instance != null ? instance.children() : null;
 	}
 
-	private static Workbook createJoYoKanJiWorkbookByDomNodes(final List<DomNode> domNodes) {
+	private static Workbook createJoYoKanJiWorkbookByElements(final Elements domNodes) {
 		//
 		Workbook workbook = null;
 		//
@@ -8939,26 +8829,19 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		Row row = null;
 		//
-		DomNode domNode = null;
+		org.jsoup.nodes.Element domNode = null;
 		//
-		DomNodeList<DomNode> tds = null;
+		Elements tds = null;
 		//
 		String textContent = null;
-		//
-		IntIntMap intIntMap = null;
-		//
-		final Pattern pattern1 = Pattern.compile("(\\d+)([^\\d]+)");
 		//
 		Matcher matcher = null;
 		//
 		Pattern pattern2 = null;
 		//
-		int groupCount = 0;
-		//
 		for (int i = 0; i < IterableUtils.size(domNodes); i++) {
 			//
-			if ((domNode = get(domNodes, i)) == null || domNode.getNodeType() != Node.ELEMENT_NODE
-					|| (tds = getChildNodes(domNode)) == null) {
+			if ((tds = children(domNode = get(domNodes, i))) == null) {
 				//
 				continue;
 				//
@@ -8978,58 +8861,21 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			for (int j = 0; j < IterableUtils.size(tds); j++) {
 				//
-				if ((domNode = get(tds, j)) == null || domNode.getNodeType() != Node.ELEMENT_NODE) {
+				if ((domNode = get(tds, j)) == null) {
 					//
 					continue;
 					//
 				} // if
 					//
 				if ((matcher = matcher(pattern2 = ObjectUtils.getIfNull(pattern2, () -> Pattern.compile("\\[\\d+]")),
-						textContent = getTextContent(domNode))) != null) {
+						textContent = ElementUtil.text(domNode))) != null) {
 					//
 					textContent = matcher.replaceAll("");
 					//
 				} // if
 					//
-				if (intIntMap != null && intIntMap.containsKey(j)) {
-					//
-					if (Objects.equals("th", getNodeName(domNode))) {
-						//
-						for (int k = 0; k < intIntMap.getInt(j); k++) {
-							//
-							setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)),
-									StringUtils.trim(textContent));
-							//
-						} // for
-							//
-					} else if (intIntMap.getInt(j) > 0
-							&& matches(matcher = matcher(pattern1, textContent = getTextContent(domNode)))
-							&& (groupCount = matcher.groupCount()) > 0) {
-						//
-						for (int k = 1; k <= groupCount; k++) {
-							//
-							setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)), matcher.group(k));
-							//
-						} // for
-							//
-					} else {
-						//
-						setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)), textContent);
-						//
-						for (int k = 1; k < intIntMap.getInt(j); k++) {
-							//
-							setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)), "");
-							//
-						} // for
-							//
-					} // if
-						//
-				} else {
-					//
-					setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)), StringUtils.trim(textContent));
-					//
-				} // if
-					//
+				setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)), StringUtils.trim(textContent));
+				//
 			} // for
 				//
 		} // for
@@ -9043,14 +8889,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return workbook;
 		//
-	}
-
-	private static DomNodeList<DomNode> querySelectorAll(final DomNode instance, final String selectors) {
-		return instance != null ? instance.querySelectorAll(selectors) : null;
-	}
-
-	private static DomNodeList<DomNode> getChildNodes(final DomNode instance) {
-		return instance != null ? instance.getChildNodes() : null;
 	}
 
 	private static Workbook createMicrosoftSpeechObjectLibraryWorkbook(final SpeechApi speechApi,
