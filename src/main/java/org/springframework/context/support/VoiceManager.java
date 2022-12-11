@@ -4106,7 +4106,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					file = new File(String.format("常用漢字_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.xlsx", new Date())))) {
 				//
 				write(workbook = createJoYoKanJiWorkbook(getProperty(propertyResolver,
-						"org.springframework.context.support.VoiceManager.joYoKanJiPageUrl")), os);
+						"org.springframework.context.support.VoiceManager.joYoKanJiPageUrl"), Duration.ZERO), os);
 				//
 				setText(tfExportFile, getAbsolutePath(file));
 				//
@@ -8787,14 +8787,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static Workbook createJoYoKanJiWorkbook(final String url) {
+	private static Workbook createJoYoKanJiWorkbook(final String url, final Duration timeout) {
 		//
 		Workbook workbook = null;
 		//
 		try {
 			//
 			final org.jsoup.nodes.Document document = testAndApply(Objects::nonNull,
-					testAndApply(StringUtils::isNotBlank, url, URL::new, null), x -> Jsoup.parse(x, 0), null);
+					testAndApply(StringUtils::isNotBlank, url, URL::new, null),
+					x -> Jsoup.parse(x, timeout != null ? (int) timeout.toMillis() : 0), null);
 			//
 			final Elements tbodies = document != null
 					? document.selectXpath("//h3/span[text()=\"本表\"]/../following-sibling::table[1]/tbody")
