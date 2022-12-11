@@ -2855,13 +2855,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // for
 				//
-			final org.jsoup.nodes.Document document = testAndApply(Objects::nonNull,
+			final Elements elements = select(testAndApply(Objects::nonNull,
 					(is = openStream(testAndApply(Objects::nonNull, url, URL::new, null))) != null
 							? IOUtils.toString(is, StandardCharsets.UTF_8)
 							: null,
-					Jsoup::parse, null);
-			//
-			final Elements elements = document != null ? document.select(".relatedtopics a[href]") : null;
+					Jsoup::parse, null), ".relatedtopics a[href]");
 			//
 			org.jsoup.nodes.Element element = null;
 			//
@@ -2897,6 +2895,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return aTag;
 		//
+	}
+
+	private static Elements select(final org.jsoup.nodes.Element instance, final String cssQuery) {
+		return instance != null ? instance.select(cssQuery) : null;
 	}
 
 	private static InputStream openStream(final URL instance) throws IOException {
