@@ -4106,8 +4106,19 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			try (final OutputStream os = new FileOutputStream(
 					file = new File(String.format("常用漢字_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.xlsx", new Date())))) {
 				//
-				write(workbook = createJoYoKanJiWorkbook(getProperty(propertyResolver,
-						"org.springframework.context.support.VoiceManager.joYoKanJiPageUrl"), Duration.ZERO), os);
+				final String url = getProperty(propertyResolver,
+						"org.springframework.context.support.VoiceManager.joYoKanJiPageUrl");
+				//
+				final CustomProperties customProperties = getCustomProperties(getProperties(
+						cast(POIXMLDocument.class, workbook = createJoYoKanJiWorkbook(url, Duration.ZERO))));
+				//
+				if (customProperties != null) {
+					//
+					customProperties.addProperty("Source", url);
+					//
+				} // if
+					//
+				write(workbook, os);
 				//
 				setText(tfExportFile, getAbsolutePath(file));
 				//
