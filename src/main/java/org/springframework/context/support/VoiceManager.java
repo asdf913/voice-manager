@@ -8841,12 +8841,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		for (int i = 0; i < IterableUtils.size(domNodes); i++) {
 			//
-			if ((tds = children(domNode = get(domNodes, i))) == null) {
-				//
-				continue;
-				//
-			} // if
-				//
 			if (sheet == null) {
 				//
 				sheet = createSheet(workbook = ObjectUtils.getIfNull(workbook, XSSFWorkbook::new));
@@ -8859,6 +8853,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
+			tds = children(domNode = get(domNodes, i));
+			//
 			for (int j = 0; j < IterableUtils.size(tds); j++) {
 				//
 				if ((domNode = get(tds, j)) == null) {
