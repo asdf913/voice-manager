@@ -2870,8 +2870,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				for (int j = 0; j < IterableUtils.size(methodNames); j++) {
 					//
 					if (!StringUtils.startsWithIgnoreCase(methodName = get(methodNames, j), "is")
-							|| !StringUtils.containsIgnoreCase(
-									textContent = (element = get(elements, i)) != null ? element.text() : null,
+							|| !StringUtils.containsIgnoreCase(textContent = text(element = get(elements, i)),
 									StringUtils.substringAfter(methodName, "is"))
 							|| aTag != null) {
 						//
@@ -2899,6 +2898,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static Elements select(final org.jsoup.nodes.Element instance, final String cssQuery) {
 		return instance != null ? instance.select(cssQuery) : null;
+	}
+
+	private static String text(final org.jsoup.nodes.Element instance) {
+		return instance != null ? instance.text() : null;
 	}
 
 	private static InputStream openStream(final URL instance) throws IOException {
