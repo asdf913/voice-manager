@@ -7689,8 +7689,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			int maxElapsedStringLength = 0;
 			//
-			OdfPackage odfPackage = null;
-			//
 			for (final String rowKey : rowKeySet) {
 				//
 				if (objectMap == null) {
@@ -7718,9 +7716,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					} // if
 						//
-					if ((odfPackage = odfPd.getPackage()) != null && StringUtils.isNotEmpty(password)) {
+					if (StringUtils.isNotEmpty(password)) {
 						//
-						odfPackage.setPassword(password);
+						setPassword(odfPd.getPackage(), password);
 						//
 					} // if
 						//
@@ -7751,6 +7749,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 			} // for
 				//
+		}
+
+		private static void setPassword(final OdfPackage instance, final String password) {
+			if (instance != null) {
+				instance.setPassword(password);
+			}
 		}
 
 		private static <R> Set<R> rowKeySet(final Table<R, ?, ?> instance) {

@@ -153,6 +153,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.odftoolkit.odfdom.pkg.OdfPackage;
 import org.openxmlformats.schemas.officeDocument.x2006.customProperties.CTProperty;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.ListableBeanFactory;
@@ -7207,6 +7208,30 @@ class VoiceManagerTest {
 		Assertions.assertNull(invoke(testAndRun, null, Boolean.TRUE, null));
 		//
 		Assertions.assertNull(invoke(testAndRun, null, Boolean.TRUE, Reflection.newProxy(FailableRunnable.class, ih)));
+		//
+		// org.springframework.context.support.VoiceManager$ExportTask.setPassword(org.odftoolkit.odfdom.pkg.OdfPackage,java.lang.String)
+		//
+		final Method setPassword = CLASS_EXPORT_TASK != null
+				? CLASS_EXPORT_TASK.getDeclaredMethod("setPassword", OdfPackage.class, String.class)
+				: null;
+		//
+		if (setPassword != null) {
+			//
+			setPassword.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertNull(invoke(setPassword, null, null, null));
+		//
+		final Constructor<?> constructor = OdfPackage.class.getDeclaredConstructor();
+		//
+		if (constructor != null) {
+			//
+			constructor.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertNull(invoke(setPassword, null, constructor != null ? constructor.newInstance() : null, null));
 		//
 	}
 
