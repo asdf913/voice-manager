@@ -178,9 +178,7 @@ import com.gargoylesoftware.htmlunit.SgmlPage;
 import com.gargoylesoftware.htmlunit.WebClientOptions;
 import com.gargoylesoftware.htmlunit.WebWindow;
 import com.gargoylesoftware.htmlunit.html.DomElement;
-import com.gargoylesoftware.htmlunit.html.DomNode;
 import com.gargoylesoftware.htmlunit.html.DomNodeList;
-import com.gargoylesoftware.htmlunit.html.DomText;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.google.common.base.Predicates;
@@ -266,7 +264,7 @@ class VoiceManagerTest {
 			METHOD_CREATE_CELL_STYLE, METHOD_REDUCE, METHOD_APPEND_STRING, METHOD_APPEND_CHAR,
 			METHOD_GET_PROVIDER_PLATFORM, METHOD_OPEN_CONNECTION, METHOD_GET_RESOURCE_AS_STREAM,
 			METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH, METHOD_GET_ATTRIBUTES, METHOD_GET_LENGTH, METHOD_ITEM,
-			METHOD_GET_OS_VERSION_INFO_EX_MAP, METHOD_CREATE_JLPT_SHEET, METHOD_GET_NEXT_ELEMENT_SIBLING,
+			METHOD_GET_OS_VERSION_INFO_EX_MAP, METHOD_CREATE_JLPT_SHEET,
 			METHOD_CREATE_JO_YO_KAN_JI_WORKBOOK_BY_ELEMENTS, METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_SHOW_MESSAGE_DIALOG1,
 			METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_SHOW_MESSAGE_DIALOG2,
 			METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_SHOW_MESSAGE_DIALOG3, METHOD_SET_VISIBLE, METHOD_RANDOM_ALPHABETIC,
@@ -725,9 +723,6 @@ class VoiceManagerTest {
 		(METHOD_GET_OS_VERSION_INFO_EX_MAP = clz.getDeclaredMethod("getOsVersionInfoExMap")).setAccessible(true);
 		//
 		(METHOD_CREATE_JLPT_SHEET = clz.getDeclaredMethod("createJlptSheet", Workbook.class, Iterable.class))
-				.setAccessible(true);
-		//
-		(METHOD_GET_NEXT_ELEMENT_SIBLING = clz.getDeclaredMethod("getNextElementSibling", DomNode.class))
 				.setAccessible(true);
 		//
 		(METHOD_CREATE_JO_YO_KAN_JI_WORKBOOK_BY_ELEMENTS = clz.getDeclaredMethod("createJoYoKanJiWorkbookByElements",
@@ -6172,27 +6167,6 @@ class VoiceManagerTest {
 	private static void createJlptSheet(final Workbook workbook, final Iterable<Voice> voices) throws Throwable {
 		try {
 			METHOD_CREATE_JLPT_SHEET.invoke(null, workbook, voices);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetNextElementSibling() throws Throwable {
-		//
-		Assertions.assertNull(getNextElementSibling(new DomText(null, null)));
-		//
-	}
-
-	private static DomElement getNextElementSibling(final DomNode instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_NEXT_ELEMENT_SIBLING.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof DomElement) {
-				return (DomElement) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

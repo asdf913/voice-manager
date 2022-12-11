@@ -268,7 +268,6 @@ import com.gargoylesoftware.htmlunit.SgmlPage;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.WebClientOptions;
 import com.gargoylesoftware.htmlunit.html.DomElement;
-import com.gargoylesoftware.htmlunit.html.DomNode;
 import com.gargoylesoftware.htmlunit.html.DomNodeList;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
@@ -2264,41 +2263,42 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		Multimap<String, String> multimap = null;
 		//
-		try (final WebClient webClient = new WebClient()) {
+		final Elements elements = selectXpath(
+				testAndApply(x -> StringUtils.equalsAnyIgnoreCase(getProtocol(x), "http", "https"),
+						testAndApply(Objects::nonNull, url, URL::new, null), x -> Jsoup.parse(x, 0), null),
+				"//span[@class='mw-headline'][starts-with(.,'第')]");
+		//
+		org.jsoup.nodes.Element element = null;
+		//
+		Pattern pattern = null;
+		//
+		Matcher matcher = null;
+		//
+		for (int i = 0; i < IterableUtils.size(elements); i++) {
 			//
-			final DomNodeList<DomElement> domElements = getElementsByTagName(
-					cast(SgmlPage.class, testAndApply(StringUtils::isNotBlank, url, webClient::getPage, null)), "h2");
-			//
-			DomElement domElement = null;
-			//
-			Pattern pattern = null;
-			//
-			Matcher matcher = null;
-			//
-			for (int i = 0; i < getLength(domElements); i++) {
+			if ((element = get(elements, i)) == null || !matches(matcher = matcher(
+					pattern = ObjectUtils.getIfNull(pattern, () -> Pattern.compile("(第(\\d+)学年)（\\d+字）")),
+					ElementUtil.text(element))) || matcher == null || matcher.groupCount() <= 0) {
 				//
-				if ((domElement = get(domElements, i)) == null || !matches(matcher = matcher(
-						pattern = ObjectUtils.getIfNull(pattern, () -> Pattern.compile("(第(\\d+)学年)（\\d+字）\\[編集]")),
-						getTextContent(domElement))) || matcher == null || matcher.groupCount() <= 0) {
-					//
-					continue;
-					//
-				} // if
-					//
-				putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedListMultimap::create), matcher.group(1),
-						toList(map(stream(getElementsByTagName(getNextElementSibling(domElement), "a")),
-								a -> getTextContent(a))));
+				continue;
 				//
-			} // for
+			} // if
 				//
-		} // try
+			putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedListMultimap::create), matcher.group(1),
+					toList(map(stream(select(nextElementSibling(element.parent()), "a")), a -> ElementUtil.text(a))));
+			//
+		} // for
 			//
 		return multimap;
 		//
 	}
 
-	private static DomElement getNextElementSibling(final DomNode instance) {
-		return instance != null ? instance.getNextElementSibling() : null;
+	private static String getProtocol(final URL instance) {
+		return instance != null ? instance.getProtocol() : null;
+	}
+
+	private static Elements selectXpath(final org.jsoup.nodes.Element instance, final String xpath) {
+		return instance != null ? instance.selectXpath(xpath) : null;
 	}
 
 	private static int getLength(final NodeList instance) {
@@ -2837,7 +2837,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static String getEncryptionTableHtml(final URL url, final Duration timeout) throws IOException {
 		//
 		org.jsoup.nodes.Document document = testAndApply(
-				x -> StringUtils.equalsAnyIgnoreCase(x != null ? x.getProtocol() : null, "http", "https"), url,
+				x -> StringUtils.equalsAnyIgnoreCase(getProtocol(x), "http", "https"), url,
 				x -> Jsoup.parse(x, timeout != null ? (int) timeout.toMillis() : 0), null);
 		//
 		if (document == null) {
@@ -2847,8 +2847,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
-		final Elements h2s = document != null ? document.selectXpath("//h2[text()=\"Supported feature matrix\"]")
-				: null;
+		final Elements h2s = selectXpath(document, "//h2[text()=\"Supported feature matrix\"]");
 		//
 		return html(nextElementSibling(IterableUtils.size(h2s) == 1 ? IterableUtils.get(h2s, 0) : null));
 		//
@@ -8833,13 +8832,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		try {
 			//
-			final org.jsoup.nodes.Document document = testAndApply(Objects::nonNull,
-					testAndApply(StringUtils::isNotBlank, url, URL::new, null),
-					x -> Jsoup.parse(x, timeout != null ? (int) timeout.toMillis() : 0), null);
-			//
-			final Elements tbodies = document != null
-					? document.selectXpath("//h3/span[text()=\"本表\"]/../following-sibling::table[1]/tbody")
-					: null;
+			final Elements tbodies = selectXpath(
+					testAndApply(Objects::nonNull, testAndApply(StringUtils::isNotBlank, url, URL::new, null),
+							x -> Jsoup.parse(x, timeout != null ? (int) timeout.toMillis() : 0), null),
+					"//h3/span[text()=\"本表\"]/../following-sibling::table[1]/tbody");
 			//
 			workbook = createJoYoKanJiWorkbookByElements(
 					IterableUtils.size(tbodies) == 1 ? children(IterableUtils.get(tbodies, 0)) : null);
