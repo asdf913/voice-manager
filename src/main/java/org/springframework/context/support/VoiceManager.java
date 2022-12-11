@@ -4162,24 +4162,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} else if (Objects.equals(source, btnSpeechRateSlower)) {
 			//
-			if (jsSpeechRate != null) {
-				//
-				setValue(jsSpeechRate, jsSpeechRate.getValue() - 1);
-				//
-			} // if
-				//
+			setValue(jsSpeechRate, intValue(getValue(jsSpeechRate), 0) - 1);
+			//
 		} else if (Objects.equals(source, btnSpeechRateNormal)) {
 			//
 			setValue(jsSpeechRate, 0);
 			//
 		} else if (Objects.equals(source, btnSpeechRateFaster)) {
 			//
-			if (jsSpeechRate != null) {
-				//
-				setValue(jsSpeechRate, jsSpeechRate.getValue() + 1);
-				//
-			} // if
-				//
+			setValue(jsSpeechRate, intValue(getValue(jsSpeechRate), 0) + 1);
+			//
 		} // if
 			//
 	}
@@ -5114,9 +5106,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			if (jsSpeechRate != null) {
 				//
-				setEnabled(btnSpeechRateSlower, jsSpeechRate.getValue() != jsSpeechRate.getMinimum());
+				setEnabled(btnSpeechRateSlower, intValue(getValue(jsSpeechRate), 0) != jsSpeechRate.getMinimum());
 				//
-				setEnabled(btnSpeechRateFaster, jsSpeechRate.getValue() != jsSpeechRate.getMaximum());
+				setEnabled(btnSpeechRateFaster, intValue(getValue(jsSpeechRate), 0) != jsSpeechRate.getMaximum());
 				//
 			} // if
 				//
