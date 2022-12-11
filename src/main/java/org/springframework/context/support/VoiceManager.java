@@ -4080,15 +4080,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			try (final OutputStream os = new FileOutputStream(
 					file = new File(String.format("学年別漢字_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.xlsx", new Date())))) {
 				//
-				final CustomProperties customProperties = getCustomProperties(getProperties(cast(POIXMLDocument.class,
-						workbook = createWorkbook(Pair.of("学年", "漢字"), getGaKuNenBeTsuKanJiMultimap()))));
+				addProperty(
+						getCustomProperties(getProperties(cast(POIXMLDocument.class,
+								workbook = createWorkbook(Pair.of("学年", "漢字"), getGaKuNenBeTsuKanJiMultimap())))),
+						SOURCE, gaKuNenBeTsuKanJiListPageUrl);
 				//
-				if (customProperties != null) {
-					//
-					customProperties.addProperty(SOURCE, gaKuNenBeTsuKanJiListPageUrl);
-					//
-				} // if
-					//
 				write(workbook, os);
 				//
 				setText(tfExportFile, getAbsolutePath(file));
@@ -4117,15 +4113,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				final String url = getProperty(propertyResolver,
 						"org.springframework.context.support.VoiceManager.joYoKanJiPageUrl");
 				//
-				final CustomProperties customProperties = getCustomProperties(getProperties(
-						cast(POIXMLDocument.class, workbook = createJoYoKanJiWorkbook(url, Duration.ZERO))));
+				addProperty(
+						getCustomProperties(getProperties(
+								cast(POIXMLDocument.class, workbook = createJoYoKanJiWorkbook(url, Duration.ZERO)))),
+						SOURCE, url);
 				//
-				if (customProperties != null) {
-					//
-					customProperties.addProperty(SOURCE, url);
-					//
-				} // if
-					//
 				write(workbook, os);
 				//
 				setText(tfExportFile, getAbsolutePath(file));
@@ -4190,6 +4182,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
+	}
+
+	private static void addProperty(final CustomProperties instance, final String name, final String value) {
+		if (instance != null) {
+			instance.addProperty(name, value);
+		}
 	}
 
 	private static List<Voice> retrieveAllVoices(final VoiceMapper instance) {
