@@ -20,7 +20,7 @@ public final class ATagUtil {
 	private ATagUtil() {
 	}
 
-	public static ATag createByUrl(final String url, final boolean javaScriptEnabled) throws IOException {
+	public static ATag createByUrl(final String url) throws IOException {
 		//
 		InputStream is = null;
 		//

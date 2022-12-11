@@ -962,7 +962,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				try {
 					//
-					aTag = ATagUtil.createByUrl(microsoftWindowsCompatibilitySettingsPageUrl, false);
+					aTag = ATagUtil.createByUrl(microsoftWindowsCompatibilitySettingsPageUrl);
 					//
 				} catch (final IOException e) {
 					//
@@ -1029,7 +1029,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			try {
 				//
-				aTag = ATagUtil.createByUrl(microsoftSpeechPlatformRuntimeDownloadPageUrl, false);
+				aTag = ATagUtil.createByUrl(microsoftSpeechPlatformRuntimeDownloadPageUrl);
 				//
 			} catch (final IOException e) {
 				//
