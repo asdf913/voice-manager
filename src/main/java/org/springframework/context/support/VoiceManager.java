@@ -4072,7 +4072,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			try (final OutputStream os = new FileOutputStream(
 					file = new File(String.format("学年別漢字_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.xlsx", new Date())))) {
 				//
-				write(workbook = createWorkbook(Pair.of("学年", "漢字"), getGaKuNenBeTsuKanJiMultimap()), os);
+				final CustomProperties customProperties = getCustomProperties(getProperties(cast(POIXMLDocument.class,
+						workbook = createWorkbook(Pair.of("学年", "漢字"), getGaKuNenBeTsuKanJiMultimap()))));
+				//
+				if (customProperties != null) {
+					//
+					customProperties.addProperty("Source", gaKuNenBeTsuKanJiListPageUrl);
+					//
+				} // if
+					//
+				write(workbook, os);
 				//
 				setText(tfExportFile, getAbsolutePath(file));
 				//
