@@ -207,6 +207,7 @@ import freemarker.template.Version;
 import io.github.toolfactory.narcissus.Narcissus;
 import j2html.tags.specialized.ATag;
 import mapper.VoiceMapper;
+import net.lingala.zip4j.model.enums.EncryptionMethod;
 
 class VoiceManagerTest {
 
@@ -790,8 +791,8 @@ class VoiceManagerTest {
 		//
 		(METHOD_LENGTH = clz.getDeclaredMethod("length", File.class)).setAccessible(true);
 		//
-		(METHOD_CREATE_ZIP_FILE = clz.getDeclaredMethod("createZipFile", File.class, String.class, Iterable.class))
-				.setAccessible(true);
+		(METHOD_CREATE_ZIP_FILE = clz.getDeclaredMethod("createZipFile", File.class, EncryptionMethod.class,
+				String.class, Iterable.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -6698,24 +6699,24 @@ class VoiceManagerTest {
 	@Test
 	void testCreateZipFile() throws Throwable {
 		//
-		Assertions.assertDoesNotThrow(() -> createZipFile(null, null, Collections.singleton(null)));
+		Assertions.assertDoesNotThrow(() -> createZipFile(null, null, null, Collections.singleton(null)));
 		//
-		Assertions.assertDoesNotThrow(() -> createZipFile(new File("."), null, Collections.singleton(null)));
+		Assertions.assertDoesNotThrow(() -> createZipFile(new File("."), null, null, Collections.singleton(null)));
 		//
 		final File file = File.createTempFile(randomAlphabetic(3), null);
 		//
 		deleteOnExit(file);
 		//
-		Assertions.assertDoesNotThrow(() -> createZipFile(file, null, Collections.singleton(null)));
+		Assertions.assertDoesNotThrow(() -> createZipFile(file, null, null, Collections.singleton(null)));
 		//
-		Assertions.assertDoesNotThrow(() -> createZipFile(file, EMPTY, Collections.singleton(null)));
+		Assertions.assertDoesNotThrow(() -> createZipFile(file, null, EMPTY, Collections.singleton(null)));
 		//
 	}
 
-	private static void createZipFile(final File file, final String password, final Iterable<File> files)
-			throws Throwable {
+	private static void createZipFile(final File file, final EncryptionMethod encryptionMethod, final String password,
+			final Iterable<File> files) throws Throwable {
 		try {
-			METHOD_CREATE_ZIP_FILE.invoke(null, file, password, files);
+			METHOD_CREATE_ZIP_FILE.invoke(null, file, encryptionMethod, password, files);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
