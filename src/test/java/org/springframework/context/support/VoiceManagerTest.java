@@ -260,8 +260,8 @@ class VoiceManagerTest {
 			METHOD_CREATE_CELL_STYLE, METHOD_REDUCE, METHOD_APPEND_STRING, METHOD_APPEND_CHAR,
 			METHOD_GET_PROVIDER_PLATFORM, METHOD_OPEN_CONNECTION, METHOD_GET_RESOURCE_AS_STREAM,
 			METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH, METHOD_GET_ATTRIBUTES, METHOD_GET_LENGTH, METHOD_ITEM,
-			METHOD_GET_OS_VERSION_INFO_EX_MAP, METHOD_CREATE_JLPT_SHEET,
-			METHOD_CREATE_JO_YO_KAN_JI_WORKBOOK_BY_ELEMENTS, METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_SHOW_MESSAGE_DIALOG1,
+			METHOD_GET_OS_VERSION_INFO_EX_MAP, METHOD_CREATE_JLPT_SHEET, METHOD_ADD_JO_YO_KAN_JI_SHEET,
+			METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_SHOW_MESSAGE_DIALOG1,
 			METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_SHOW_MESSAGE_DIALOG2,
 			METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_SHOW_MESSAGE_DIALOG3, METHOD_SET_VISIBLE, METHOD_RANDOM_ALPHABETIC,
 			METHOD_GET_MEDIA_FORMAT_LINK, METHOD_GET_EVENT_TYPE, METHOD_GET_PARENT_FILE,
@@ -715,7 +715,7 @@ class VoiceManagerTest {
 		(METHOD_CREATE_JLPT_SHEET = clz.getDeclaredMethod("createJlptSheet", Workbook.class, Iterable.class))
 				.setAccessible(true);
 		//
-		(METHOD_CREATE_JO_YO_KAN_JI_WORKBOOK_BY_ELEMENTS = clz.getDeclaredMethod("createJoYoKanJiWorkbookByElements",
+		(METHOD_ADD_JO_YO_KAN_JI_SHEET = clz.getDeclaredMethod("addJoYoKanJiSheet", Workbook.class, String.class,
 				Elements.class)).setAccessible(true);
 		//
 		(METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_SHOW_MESSAGE_DIALOG1 = clz
@@ -6121,21 +6121,16 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testCreateJoYoKanJiWorkbookByElements() throws Throwable {
+	void testAddJoYoKanJiSheet() {
 		//
-		Assertions.assertNotNull(createJoYoKanJiWorkbookByDomNodes(new Elements(Arrays.asList(null, element))));
+		Assertions.assertDoesNotThrow(() -> addJoYoKanJiSheet(null, null, new Elements(Arrays.asList(null, element))));
 		//
 	}
 
-	private static Workbook createJoYoKanJiWorkbookByDomNodes(final Elements domNodes) throws Throwable {
+	private static void addJoYoKanJiSheet(final Workbook workbook, final String sheetName, final Elements domNodes)
+			throws Throwable {
 		try {
-			final Object obj = METHOD_CREATE_JO_YO_KAN_JI_WORKBOOK_BY_ELEMENTS.invoke(null, domNodes);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Workbook) {
-				return (Workbook) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
+			METHOD_ADD_JO_YO_KAN_JI_SHEET.invoke(null, workbook, sheetName, domNodes);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

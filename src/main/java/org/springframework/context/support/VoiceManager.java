@@ -8842,13 +8842,24 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		try {
 			//
-			final Elements tbodies = selectXpath(
-					testAndApply(Objects::nonNull, testAndApply(StringUtils::isNotBlank, url, URL::new, null),
-							x -> Jsoup.parse(x, timeout != null ? (int) timeout.toMillis() : 0), null),
-					"//h3/span[text()=\"本表\"]/../following-sibling::table[1]/tbody");
+			final org.jsoup.nodes.Document document = testAndApply(Objects::nonNull,
+					testAndApply(StringUtils::isNotBlank, url, URL::new, null),
+					x -> Jsoup.parse(x, timeout != null ? (int) timeout.toMillis() : 0), null);
 			//
-			workbook = createJoYoKanJiWorkbookByElements(
-					IterableUtils.size(tbodies) == 1 ? children(IterableUtils.get(tbodies, 0)) : null);
+			// 本表
+			//
+			Elements elements = selectXpath(document, "//h3/span[text()=\"本表\"]/../following-sibling::table[1]/tbody");
+			//
+			addJoYoKanJiSheet(workbook = ObjectUtils.getIfNull(workbook, XSSFWorkbook::new), "本表",
+					IterableUtils.size(elements) == 1 ? children(IterableUtils.get(elements, 0)) : null);
+			//
+			// 付表
+			//
+			addJoYoKanJiSheet(workbook = ObjectUtils.getIfNull(workbook, XSSFWorkbook::new), "付表",
+					IterableUtils.size(elements = selectXpath(document,
+							"//h3/span[text()=\"付表\"]/../following-sibling::table[1]/tbody")) == 1
+									? children(IterableUtils.get(elements, 0))
+									: null);
 			//
 		} catch (final IOException e) {
 			//
@@ -8864,9 +8875,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.children() : null;
 	}
 
-	private static Workbook createJoYoKanJiWorkbookByElements(final Elements domNodes) {
-		//
-		Workbook workbook = null;
+	private static void addJoYoKanJiSheet(final Workbook workbook, final String sheetName, final Elements domNodes) {
 		//
 		Sheet sheet = null;
 		//
@@ -8882,13 +8891,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		for (int i = 0; i < IterableUtils.size(domNodes); i++) {
 			//
-			if (sheet == null) {
-				//
-				sheet = createSheet(workbook = ObjectUtils.getIfNull(workbook, XSSFWorkbook::new));
-				//
-			} // if
-				//
-			if (sheet != null && (row = createRow(sheet, sheet.getLastRowNum() + 1)) == null) {
+			if ((sheet = ObjectUtils.getIfNull(sheet, () -> createSheet(workbook, sheetName))) != null
+					&& (row = createRow(sheet, sheet.getLastRowNum() + 1)) == null) {
 				//
 				continue;
 				//
@@ -8919,8 +8923,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
-		return workbook;
-		//
 	}
 
 	private static Workbook createMicrosoftSpeechObjectLibraryWorkbook(final SpeechApi speechApi,
