@@ -363,7 +363,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static final String PASSWORD = "Password";
 
 	private static final Predicate<File> EMPTY_FILE_PREDICATE = f -> f != null && f.exists() && isFile(f)
-			&& f.length() == 0;
+			&& longValue(length(f), 0) == 0;
 
 	private static IValue0<Method> METHOD_RANDOM_ALPHABETIC = null;
 
@@ -524,6 +524,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		///
 		super.setLayout(this.layoutManager = layoutManager);
 		//
+	}
+
+	private static Long length(final File instance) {
+		return instance != null ? Long.valueOf(instance.length()) : null;
 	}
 
 	private static Integer getTempFileMinimumPrefixLength() {
@@ -3838,7 +3842,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					write(workbook = createWorkbook(voices, booleanMap), os);
 					//
-					if (!(fileToBeDeleted = file.length() == 0)) {
+					if (!(fileToBeDeleted = longValue(length(file), 0) == 0)) {
 						//
 						final Sheet sheet = workbook.getNumberOfSheets() == 1 ? workbook.getSheetAt(0) : null;
 						//
@@ -3969,8 +3973,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					} // if
 						//
 					if (isSelected(cbExportHtmlAsZip)
-							&& reduce(mapToLong(stream(files), f -> longValue(f != null ? f.length() : null, 0)), 0,
-									Long::sum) > 0) {
+							&& reduce(mapToLong(stream(files), f -> longValue(length(f), 0)), 0, Long::sum) > 0) {
 						//
 						final String password = getText(tfExportPassword);
 						//
@@ -5841,7 +5844,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			return;
 			//
-		} else if (file.length() == 0) {
+		} else if (longValue(length(file), 0) == 0) {
 			//
 			message = "Empty File Selected";
 			//
@@ -7076,7 +7079,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			return;
 			//
-		} else if (selectedFile.length() == 0) {
+		} else if (longValue(length(selectedFile), 0) == 0) {
 			//
 			accept(errorMessageConsumer, voice, "Empty File Selected");
 			//
@@ -7122,15 +7125,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			final String messageDigestAlgorithm = md != null ? md.getAlgorithm() : null;
 			//
-			Long length = selectedFile != null ? Long.valueOf(selectedFile.length()) : null;
+			Long length = length(selectedFile);
 			//
 			String fileDigest = Hex.encodeHexString(digest(md, FileUtils.readFileToByteArray(selectedFile)));
 			//
 			final String voiceFolder = ObjectMap.getObject(objectMap, String.class);
 			//
-			if (voiceOld == null
-					|| !Objects.equals(voiceOld.getFileLength(),
-							selectedFile != null ? Long.valueOf(selectedFile.length()) : null)
+			if (voiceOld == null || !Objects.equals(voiceOld.getFileLength(), length(selectedFile))
 					|| !Objects.equals(voiceOld.getFileDigestAlgorithm(), messageDigestAlgorithm)
 					|| !Objects.equals(voiceOld.getFileDigest(), fileDigest)) {
 				//
@@ -7148,7 +7149,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				FileUtils.copyFile(selectedFile, file);
 				//
-				length = Long.valueOf(file.length());
+				length = length(file);
 				//
 				fileDigest = Hex.encodeHexString(digest(md, FileUtils.readFileToByteArray(file)));
 				//
