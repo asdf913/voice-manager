@@ -266,7 +266,6 @@ import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.SgmlPage;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.WebClientOptions;
-import com.gargoylesoftware.htmlunit.WebClientOptionsUtil;
 import com.gargoylesoftware.htmlunit.html.DomElement;
 import com.gargoylesoftware.htmlunit.html.DomNode;
 import com.gargoylesoftware.htmlunit.html.DomNodeList;
@@ -1322,7 +1321,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			setCssEnabled(webClientOptions, false);
 			//
-			WebClientOptionsUtil.setJavaScriptEnabled(webClientOptions, false);
+			setJavaScriptEnabled(webClientOptions, false);
 			//
 			return Unit.with(
 					getTitleText(cast(HtmlPage.class, testAndApply(Objects::nonNull, url, webClient::getPage, null))));
@@ -1335,6 +1334,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return null;
 		//
+	}
+
+	private static void setJavaScriptEnabled(final WebClientOptions instance, final boolean enabled) {
+		if (instance != null) {
+			instance.setJavaScriptEnabled(enabled);
+		}
 	}
 
 	private static void setCssEnabled(final WebClientOptions instance, final boolean enabled) {
@@ -8758,7 +8763,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		try (final WebClient webClient = new WebClient()) {
 			//
-			WebClientOptionsUtil.setJavaScriptEnabled(webClient.getOptions(), false);
+			setJavaScriptEnabled(webClient.getOptions(), false);
 			//
 			final DomNodeList<DomElement> h3s = getElementsByTagName(
 					cast(SgmlPage.class, testAndApply(StringUtils::isNotBlank, url, webClient::getPage, null)), "h3");
