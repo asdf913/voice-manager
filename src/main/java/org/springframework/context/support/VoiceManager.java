@@ -3547,40 +3547,41 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
 			//
-			if (jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+			if (jfc.showSaveDialog(null) != JFileChooser.APPROVE_OPTION) {
 				//
-				final ObjectMap objectMap = Reflection.newProxy(ObjectMap.class, new IH());
+				return;
 				//
-				final File file = jfc.getSelectedFile();
+			} //
 				//
-				ObjectMap.setObject(objectMap, SpeechApi.class, speechApi);
-				//
-				ObjectMap.setObject(objectMap, File.class, file);
-				//
-				writeVoiceToFile(objectMap, getText(tfTextTts), toString(getSelectedItem(cbmVoiceId))
-				//
-						, intValue(getRate(), 0)// rate
-						//
-						, Math.min(Math.max(intValue(getValue(jsSpeechVolume), 100), 0), 100)// volume
-				);
-				//
-				final ByteConverter byteConverter = getByteConverter(configurableListableBeanFactory, FORMAT,
-						getSelectedItem(cbmAudioFormatWrite));
-				//
-				if (byteConverter != null) {
+			final ObjectMap objectMap = Reflection.newProxy(ObjectMap.class, new IH());
+			//
+			final File file = jfc.getSelectedFile();
+			//
+			ObjectMap.setObject(objectMap, SpeechApi.class, speechApi);
+			//
+			ObjectMap.setObject(objectMap, File.class, file);
+			//
+			writeVoiceToFile(objectMap, getText(tfTextTts), toString(getSelectedItem(cbmVoiceId))
+			//
+					, intValue(getRate(), 0)// rate
 					//
-					try {
-						//
-						FileUtils.writeByteArrayToFile(file,
-								byteConverter.convert(FileUtils.readFileToByteArray(file)));
-						//
-					} catch (final IOException e) {
-						//
-						errorOrPrintStackTraceOrShowMessageDialog(headless, e);
-						//
-					} // try
-						//
-				} // if
+					, Math.min(Math.max(intValue(getValue(jsSpeechVolume), 100), 0), 100)// volume
+			);
+			//
+			final ByteConverter byteConverter = getByteConverter(configurableListableBeanFactory, FORMAT,
+					getSelectedItem(cbmAudioFormatWrite));
+			//
+			if (byteConverter != null) {
+				//
+				try {
+					//
+					FileUtils.writeByteArrayToFile(file, byteConverter.convert(FileUtils.readFileToByteArray(file)));
+					//
+				} catch (final IOException e) {
+					//
+					errorOrPrintStackTraceOrShowMessageDialog(headless, e);
+					//
+				} // try
 					//
 			} // if
 				//
