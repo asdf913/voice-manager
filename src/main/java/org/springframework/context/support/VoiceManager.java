@@ -3496,55 +3496,51 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // try
 			//
-		if (Objects.equals(source, btnSpeak)) {
+		if (Objects.equals(source, btnSpeak) && speechApi != null) {
 			//
-			if (speechApi != null) {
+			final Stopwatch stopwatch = Stopwatch.createStarted();
+			//
+			final Method method = cast(Method.class, getSelectedItem(cbmSpeakMethod));
+			//
+			final Object instance = getInstance(speechApi);
+			//
+			final String text = getText(tfTextTts);
+			//
+			final String voiceId = toString(getSelectedItem(cbmVoiceId));
+			//
+			final int rate = intValue(getRate(), 0);
+			//
+			final int volume = Math.min(Math.max(intValue(getValue(jsSpeechVolume), 100), 0), 100);
+			//
+			if (Arrays.equals(getParameterTypes(method),
+					new Class<?>[] { String.class, String.class, Integer.TYPE, Integer.TYPE })) {
 				//
-				final Stopwatch stopwatch = Stopwatch.createStarted();
-				//
-				final Method method = cast(Method.class, getSelectedItem(cbmSpeakMethod));
-				//
-				final Object instance = getInstance(speechApi);
-				//
-				final String text = getText(tfTextTts);
-				//
-				final String voiceId = toString(getSelectedItem(cbmVoiceId));
-				//
-				final int rate = intValue(getRate(), 0);
-				//
-				final int volume = Math.min(Math.max(intValue(getValue(jsSpeechVolume), 100), 0), 100);
-				//
-				if (Arrays.equals(getParameterTypes(method),
-						new Class<?>[] { String.class, String.class, Integer.TYPE, Integer.TYPE })) {
+				try {
 					//
-					try {
-						//
-						invoke(method, instance, text, voiceId, rate, volume);
-						//
-					} catch (final IllegalAccessException e) {
-						//
-						errorOrPrintStackTraceOrShowMessageDialog(headless, e);
-						//
-					} catch (final InvocationTargetException e) {
-						//
-						final Throwable targetException = e.getTargetException();
-						//
-						errorOrPrintStackTraceOrShowMessageDialog(headless,
-								ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException), targetException,
-										ExceptionUtils.getRootCause(e), e));
-						//
-					} // try
-						//
-				} else {
+					invoke(method, instance, text, voiceId, rate, volume);
 					//
-					speechApi.speak(text, voiceId, rate, volume);
+				} catch (final IllegalAccessException e) {
 					//
-				} // if
+					errorOrPrintStackTraceOrShowMessageDialog(headless, e);
 					//
-				setText(tfElapsed, toString(elapsed(stop(stopwatch))));
+				} catch (final InvocationTargetException e) {
+					//
+					final Throwable targetException = e.getTargetException();
+					//
+					errorOrPrintStackTraceOrShowMessageDialog(headless,
+							ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException), targetException,
+									ExceptionUtils.getRootCause(e), e));
+					//
+				} // try
+					//
+			} else {
+				//
+				speechApi.speak(text, voiceId, rate, volume);
 				//
 			} // if
 				//
+			setText(tfElapsed, toString(elapsed(stop(stopwatch))));
+			//
 		} else if (Objects.equals(source, btnWriteVoice)) {
 			//
 			final JFileChooser jfc = new JFileChooser(".");
