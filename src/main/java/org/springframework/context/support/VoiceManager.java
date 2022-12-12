@@ -3936,27 +3936,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					if (isSelected(cbExportListHtml)) {
 						//
-						final Multimap<String, Voice> multimap = getVoiceMultimapByListName(voices);
+						exportHtml(objectMap, getVoiceMultimapByListName(voices),
+								files = ObjectUtils.getIfNull(files, ArrayList::new));
 						//
-						if (multimap != null) {
-							//
-							for (final String key : multimap.keySet()) {
-								//
-								try (final Writer writer = new FileWriter(
-										file = new File(String.format("%1$s.html", key)))) {
-									//
-									ObjectMap.setObject(objectMap, Writer.class, writer);
-									//
-									exportHtml(objectMap, exportHtmlTemplateFile, voiceFolder, multimap.get(key));
-									//
-									add(files = ObjectUtils.getIfNull(files, ArrayList::new), file);
-									//
-								} // try
-									//
-							} // for
-								//
-						} // if
-							//
 					} // if
 						//
 					if (isSelected(cbExportHtmlAsZip)
@@ -4433,6 +4415,37 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return list;
 		//
+	}
+
+	private void exportHtml(final ObjectMap objectMap, final Multimap<String, Voice> multimap,
+			final Collection<File> files) throws IOException, TemplateException {
+		//
+		final Iterable<String> keySet = keySet(multimap);
+		//
+		if (keySet != null && keySet.iterator() != null) {
+			//
+			File file = null;
+			//
+			for (final String key : keySet) {
+				//
+				try (final Writer writer = new FileWriter(file = new File(String.format("%1$s.html", key)))) {
+					//
+					ObjectMap.setObject(objectMap, Writer.class, writer);
+					//
+					exportHtml(objectMap, exportHtmlTemplateFile, voiceFolder, multimap.get(key));
+					//
+					add(files, file);
+					//
+				} finally {
+					//
+					testAndAccept(x -> intValue(length(x), 0) == 0, file, VoiceManager::delete);
+					//
+				} // try
+					//
+			} // for
+				//
+		} // if
+			//
 	}
 
 	private static void exportHtml(final ObjectMap objectMap, final String templateFile, final String folder,

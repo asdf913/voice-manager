@@ -243,12 +243,11 @@ class VoiceManagerTest {
 			METHOD_GET_DATA_VALIDATION_HELPER, METHOD_CREATE_EXPLICIT_LIST_CONSTRAINT, METHOD_CREATE_VALIDATION,
 			METHOD_CREATE_EXPORT_TASK, METHOD_GET_TAB_INDEX_BY_TITLE, METHOD_GET_DECLARED_FIELD,
 			METHOD_GET_ABSOLUTE_PATH, METHOD_IS_ASSIGNABLE_FROM, METHOD_GET_ENUM_CONSTANTS, METHOD_LIST_FILES,
-			METHOD_GET_TYPE, METHOD_GET_COLUMN_NAME, METHOD_GET_KEY_SET, METHOD_PUT_ALL, METHOD_CREATE_SHEET1,
-			METHOD_CREATE_SHEET2, METHOD_ENTRIES, METHOD_GET_WORK_BOOK, METHOD_GET_OLE_ENTRY_NAMES,
-			METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE, METHOD_GET_DOCUMENT_ELEMENT, METHOD_GET_CHILD_NODES,
-			METHOD_GET_NAMED_ITEM, METHOD_GET_TEXT_CONTENT, METHOD_GET_NAME_FILE, METHOD_GET_NAME_CLASS,
-			METHOD_GET_PASS_WORD, METHOD_GET_SUPPLIER, METHOD_GET_LOOKUP, METHOD_GET_LIST,
-			METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK, METHOD_WRITE_VALUE_AS_STRING,
+			METHOD_GET_TYPE, METHOD_GET_COLUMN_NAME, METHOD_PUT_ALL, METHOD_CREATE_SHEET1, METHOD_CREATE_SHEET2,
+			METHOD_ENTRIES, METHOD_GET_WORK_BOOK, METHOD_GET_OLE_ENTRY_NAMES, METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE,
+			METHOD_GET_DOCUMENT_ELEMENT, METHOD_GET_CHILD_NODES, METHOD_GET_NAMED_ITEM, METHOD_GET_TEXT_CONTENT,
+			METHOD_GET_NAME_FILE, METHOD_GET_NAME_CLASS, METHOD_GET_PASS_WORD, METHOD_GET_SUPPLIER, METHOD_GET_LOOKUP,
+			METHOD_GET_LIST, METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK, METHOD_WRITE_VALUE_AS_STRING,
 			METHOD_CREATE_DRAWING_PATRIARCH, METHOD_GET_CREATION_HELPER, METHOD_CREATE_CELL_COMMENT,
 			METHOD_CREATE_CLIENT_ANCHOR, METHOD_CREATE_RICH_TEXT_STRING, METHOD_SET_CELL_COMMENT, METHOD_SET_AUTHOR,
 			METHOD_TEST_AND_ACCEPT_PREDICATE, METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_FIND_FIELDS_BY_VALUE,
@@ -271,7 +270,7 @@ class VoiceManagerTest {
 			METHOD_GET_WORKBOOK_BY_ZIP_FILE, METHOD_SELECT, METHOD_ATTR, METHOD_GET_ENCRYPTION_TABLE_HTML,
 			METHOD_NEXT_ELEMENT_SIBLING, METHOD_HTML, METHOD_LENGTH, METHOD_CREATE_ZIP_FILE, METHOD_RETRIEVE_ALL_VOICES,
 			METHOD_SEARCH_VOICE_LIST_NAMES_BY_VOICE_ID, METHOD_SET_LIST_NAMES, METHOD_SET_SOURCE,
-			METHOD_GET_PHYSICAL_NUMBER_OF_ROWS = null;
+			METHOD_GET_PHYSICAL_NUMBER_OF_ROWS, METHOD_EXPORT_HTML = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -561,8 +560,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_GET_COLUMN_NAME = clz.getDeclaredMethod("getColumnName", Class.class, Field.class)).setAccessible(true);
 		//
-		(METHOD_GET_KEY_SET = clz.getDeclaredMethod("keySet", Multimap.class)).setAccessible(true);
-		//
 		(METHOD_PUT_ALL = clz.getDeclaredMethod("putAll", Multimap.class, Object.class, Iterable.class))
 				.setAccessible(true);
 		//
@@ -797,6 +794,9 @@ class VoiceManagerTest {
 		(METHOD_GET_PHYSICAL_NUMBER_OF_ROWS = clz.getDeclaredMethod("getPhysicalNumberOfRows", Sheet.class))
 				.setAccessible(true);
 		//
+		(METHOD_EXPORT_HTML = clz.getDeclaredMethod("exportHtml", CLASS_OBJECT_MAP, Multimap.class, Collection.class))
+				.setAccessible(true);
+		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
 		CLASS_EXPORT_TASK = Class.forName("org.springframework.context.support.VoiceManager$ExportTask");
@@ -863,6 +863,8 @@ class VoiceManagerTest {
 		private NamedNodeMap attributes = null;
 
 		private List<Voice> voices = null;
+
+		private Set<?> keySet = null;
 
 		private Map<Object, String> getProperties() {
 			if (properties == null) {
@@ -1180,7 +1182,7 @@ class VoiceManagerTest {
 					//
 				} else if (Objects.equals(methodName, "keySet")) {
 					//
-					return null;
+					return keySet;
 					//
 				} else if (Objects.equals(methodName, "putAll")) {
 					//
@@ -1189,6 +1191,10 @@ class VoiceManagerTest {
 				} else if (Objects.equals(methodName, "entries")) {
 					//
 					return multiMapEntries;
+					//
+				} else if (Objects.equals(methodName, "get")) {
+					//
+					return null;
 					//
 				} // if
 					//
@@ -4804,27 +4810,6 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testKeySet() throws Throwable {
-		//
-		Assertions.assertNull(keySet(multimap));
-		//
-	}
-
-	private static <K> Set<K> keySet(final Multimap<K, ?> instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_KEY_SET.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Set) {
-				return (Set) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testPutAll() {
 		//
 		Assertions.assertDoesNotThrow(() -> putAll(null, null, null));
@@ -6778,6 +6763,32 @@ class VoiceManagerTest {
 				return (Integer) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testExportHtml() {
+		//
+		final Multimap<String, Voice> multimap = (Multimap) this.multimap;
+		//
+		Assertions.assertDoesNotThrow(() -> exportHtml(null, multimap, null));
+		//
+		ih.keySet = Reflection.newProxy(Set.class, ih);
+		//
+		Assertions.assertDoesNotThrow(() -> exportHtml(null, multimap, null));
+		//
+		ih.keySet = Collections.singleton(null);
+		//
+		Assertions.assertDoesNotThrow(() -> exportHtml(null, multimap, null));
+		//
+	}
+
+	private void exportHtml(final Object objectMap, final Multimap<String, Voice> multimap,
+			final Collection<File> files) throws Throwable {
+		try {
+			METHOD_EXPORT_HTML.invoke(instance, objectMap, multimap, files);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
