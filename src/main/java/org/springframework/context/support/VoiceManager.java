@@ -3983,21 +3983,23 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
 			//
-			if (jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+			if (jfc.showSaveDialog(null) != JFileChooser.APPROVE_OPTION) {
 				//
-				try {
-					//
-					FileUtils.writeByteArrayToFile(jfc.getSelectedFile(),
-							createImportFileTemplateByteArray(isSelected(cbImportFileTemplateGenerateBlankRow),
-									getJlptLevels(), keySet(getGaKuNenBeTsuKanJiMultimap())));
-					//
-				} catch (final IOException e) {
-					//
-					errorOrPrintStackTraceOrShowMessageDialog(headless, e);
-					//
-				} // try
-					//
+				return;
+				//
 			} // if
+				//
+			try {
+				//
+				FileUtils.writeByteArrayToFile(jfc.getSelectedFile(),
+						createImportFileTemplateByteArray(isSelected(cbImportFileTemplateGenerateBlankRow),
+								getJlptLevels(), keySet(getGaKuNenBeTsuKanJiMultimap())));
+				//
+			} catch (final IOException e) {
+				//
+				errorOrPrintStackTraceOrShowMessageDialog(headless, e);
+				//
+			} // try
 				//
 		} else if (Objects.equals(source, btnImport)) {
 			//
