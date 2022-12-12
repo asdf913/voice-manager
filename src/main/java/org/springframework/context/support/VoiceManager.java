@@ -4101,7 +4101,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				IOUtils.closeQuietly(workbook);
 				//
-				testAndAccept(EMPTY_FILE_PREDICATE, file, FileUtils::deleteQuietly);
+				final int totalPhysicalNumberOfRows = mapToInt(StreamSupport.stream(spliterator(workbook), false),
+						x -> intValue(getPhysicalNumberOfRows(x), 0)).sum();
+				//
+				testAndAccept(x -> totalPhysicalNumberOfRows == 0, file, FileUtils::deleteQuietly);
 				//
 			} // try
 				//
