@@ -184,6 +184,7 @@ import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableRunnable;
 import org.apache.commons.lang3.math.Fraction;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
@@ -386,13 +387,32 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private transient ComboBoxModel<EncryptionMode> cbmEncryptionMode = null;
 
-	private AbstractButton btnSpeak, btnWriteVoice, btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji,
-			btnCopyHiragana, btnCopyKatakana, cbUseTtsVoice, btnExecute, btnImportFileTemplate, btnImport,
-			btnImportWithinFolder, cbOverMp3Title, cbOrdinalPositionAsFileNamePrefix, btnExport, cbExportHtml,
-			cbExportListHtml, cbExportHtmlAsZip, cbExportHtmlRemoveAfterZip, cbExportListSheet, cbExportJlptSheet,
-			cbExportPresentation, cbEmbedAudioInPresentation, cbHideAudioImageInPresentation,
-			cbImportFileTemplateGenerateBlankRow, cbJlptAsFolder, btnExportCopy, btnExportBrowse, btnDllPathCopy,
-			btnSpeechRateSlower, btnSpeechRateNormal, btnSpeechRateFaster = null;
+	private AbstractButton btnSpeak, btnWriteVoice, btnConvertToRomaji, btnConvertToKatakana, cbUseTtsVoice, btnExecute,
+			btnImportFileTemplate, btnImport, btnImportWithinFolder, cbOverMp3Title, cbOrdinalPositionAsFileNamePrefix,
+			btnExport, cbExportHtml, cbExportListHtml, cbExportHtmlAsZip, cbExportHtmlRemoveAfterZip, cbExportListSheet,
+			cbExportJlptSheet, cbExportPresentation, cbEmbedAudioInPresentation, cbHideAudioImageInPresentation,
+			cbImportFileTemplateGenerateBlankRow, cbJlptAsFolder, btnExportBrowse, btnSpeechRateSlower,
+			btnSpeechRateNormal, btnSpeechRateFaster = null;
+
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target(ElementType.FIELD)
+	private @interface SystemClipboard {
+	}
+
+	@SystemClipboard
+	private AbstractButton btnCopyRomaji = null;
+
+	@SystemClipboard
+	private AbstractButton btnCopyHiragana = null;
+
+	@SystemClipboard
+	private AbstractButton btnCopyKatakana = null;
+
+	@SystemClipboard
+	private AbstractButton btnExportCopy = null;
+
+	@SystemClipboard
+	private AbstractButton btnDllPathCopy = null;
 
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
@@ -3496,6 +3516,17 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // try
 			//
+			// if the "source" is one of the value of the field annotated with
+			// "@SystemClipboard", pass the "source" to
+			// "actionPerformedForSystemClipboardAnnotated(java.lang.Object)" method
+			//
+		testAndAccept(x -> contains(x, source),
+				toList(filter(stream(new FailableStream<>(filter(
+						testAndApply(Objects::nonNull, getDeclaredFields(VoiceManager.class), Arrays::stream, null),
+						f -> isAnnotationPresent(f, SystemClipboard.class)))
+						.map(f -> FieldUtils.readField(f, this, true))), Objects::nonNull)),
+				x -> actionPerformedForSystemClipboardAnnotated(source));
+		//
 		if (Objects.equals(source, btnSpeak) && speechApi != null) {
 			//
 			final Stopwatch stopwatch = Stopwatch.createStarted();
@@ -3726,26 +3757,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			setText(tfKatakana, testAndApply(Objects::nonNull, getText(tfHiragana),
 					x -> KanaConverter.convertKana(x, KanaConverter.OP_ZEN_HIRA_TO_ZEN_KATA), null));
-			//
-		} else if (Objects.equals(source, btnCopyRomaji)) {
-			//
-			setContents(getSystemClipboard(getToolkit()), new StringSelection(getText(tfRomaji)), null);
-			//
-		} else if (Objects.equals(source, btnCopyHiragana)) {
-			//
-			setContents(getSystemClipboard(getToolkit()), new StringSelection(getText(tfHiragana)), null);
-			//
-		} else if (Objects.equals(source, btnCopyKatakana)) {
-			//
-			setContents(getSystemClipboard(getToolkit()), new StringSelection(getText(tfKatakana)), null);
-			//
-		} else if (Objects.equals(source, btnExportCopy)) {
-			//
-			setContents(getSystemClipboard(getToolkit()), new StringSelection(getText(tfExportFile)), null);
-			//
-		} else if (Objects.equals(source, btnDllPathCopy)) {
-			//
-			setContents(getSystemClipboard(getToolkit()), new StringSelection(getText(tfDllPath)), null);
 			//
 		} else if (Objects.equals(source, btnExportBrowse)) {
 			//
@@ -4150,6 +4161,50 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
+	}
+
+	private static <O> Stream<O> stream(final FailableStream<O> instance) {
+		return instance != null ? instance.stream() : null;
+	}
+
+	private void actionPerformedForSystemClipboardAnnotated(final Object source) {
+		//
+		final Clipboard clipboard = getSystemClipboard(getToolkit());
+		//
+		IValue0<String> string = null;
+		//
+		if (Objects.equals(source, btnCopyRomaji)) {
+			//
+			string = Unit.with(getText(tfRomaji));
+			//
+		} else if (Objects.equals(source, btnCopyHiragana)) {
+			//
+			string = Unit.with(getText(tfHiragana));
+			//
+		} else if (Objects.equals(source, btnCopyKatakana)) {
+			//
+			string = Unit.with(getText(tfKatakana));
+			//
+		} else if (Objects.equals(source, btnExportCopy)) {
+			//
+			string = Unit.with(getText(tfExportFile));
+			//
+		} else if (Objects.equals(source, btnDllPathCopy)) {
+			//
+			string = Unit.with(getText(tfDllPath));
+			//
+		} // if
+			//
+		if (string != null) {
+			//
+			setContents(clipboard, new StringSelection(IValue0Util.getValue0(string)), null);
+			//
+			return;
+			//
+		} // if
+			//
+		throw new IllegalStateException();
+		//
 	}
 
 	private static void setSource(final Voice instance, final String source) {

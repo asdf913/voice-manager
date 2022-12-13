@@ -121,6 +121,7 @@ import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableRunnable;
 import org.apache.commons.lang3.math.Fraction;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.ibatis.binding.BindingException;
 import org.apache.ibatis.session.Configuration;
@@ -270,7 +271,8 @@ class VoiceManagerTest {
 			METHOD_GET_WORKBOOK_BY_ZIP_FILE, METHOD_SELECT, METHOD_ATTR, METHOD_GET_ENCRYPTION_TABLE_HTML,
 			METHOD_NEXT_ELEMENT_SIBLING, METHOD_HTML, METHOD_LENGTH, METHOD_CREATE_ZIP_FILE, METHOD_RETRIEVE_ALL_VOICES,
 			METHOD_SEARCH_VOICE_LIST_NAMES_BY_VOICE_ID, METHOD_SET_LIST_NAMES, METHOD_SET_SOURCE,
-			METHOD_GET_PHYSICAL_NUMBER_OF_ROWS, METHOD_EXPORT_HTML = null;
+			METHOD_GET_PHYSICAL_NUMBER_OF_ROWS, METHOD_EXPORT_HTML, METHOD_STREAM,
+			METHOD_ACTION_PERFORMED_FOR_SYSTEM_CLIPBOARD_ANNOTATED = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -796,6 +798,11 @@ class VoiceManagerTest {
 		//
 		(METHOD_EXPORT_HTML = clz.getDeclaredMethod("exportHtml", CLASS_OBJECT_MAP, Multimap.class, Collection.class))
 				.setAccessible(true);
+		//
+		(METHOD_STREAM = clz.getDeclaredMethod("stream", FailableStream.class)).setAccessible(true);
+		//
+		(METHOD_ACTION_PERFORMED_FOR_SYSTEM_CLIPBOARD_ANNOTATED = clz
+				.getDeclaredMethod("actionPerformedForSystemClipboardAnnotated", Object.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -6789,6 +6796,42 @@ class VoiceManagerTest {
 			final Collection<File> files) throws Throwable {
 		try {
 			METHOD_EXPORT_HTML.invoke(instance, objectMap, multimap, files);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testStream() throws Throwable {
+		//
+		Assertions.assertNull(stream(null));
+		//
+	}
+
+	private static <O> Stream<O> stream(final FailableStream<O> instance) throws Throwable {
+		try {
+			final Object obj = METHOD_STREAM.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Stream) {
+				return (Stream) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testActionPerformedForSystemClipboardAnnotated() {
+		//
+		Assertions.assertThrows(IllegalStateException.class, () -> actionPerformedForSystemClipboardAnnotated(""));
+		//
+	}
+
+	private void actionPerformedForSystemClipboardAnnotated(final Object source) throws Throwable {
+		try {
+			METHOD_ACTION_PERFORMED_FOR_SYSTEM_CLIPBOARD_ANNOTATED.invoke(instance, source);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
