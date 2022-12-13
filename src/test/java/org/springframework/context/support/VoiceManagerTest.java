@@ -2145,6 +2145,8 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> setContents(null, null, null));
 		//
+		Assertions.assertDoesNotThrow(() -> setContents(new Clipboard(null), null, null));
+		//
 	}
 
 	private static void setContents(final Clipboard instance, final Transferable contents, final ClipboardOwner owner)

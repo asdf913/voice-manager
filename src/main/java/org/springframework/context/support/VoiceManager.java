@@ -4171,33 +4171,40 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final Clipboard clipboard = getSystemClipboard(getToolkit());
 		//
-		IValue0<String> string = null;
+		IValue0<String> stringValue = null;
 		//
 		if (Objects.equals(source, btnCopyRomaji)) {
 			//
-			string = Unit.with(getText(tfRomaji));
+			stringValue = Unit.with(getText(tfRomaji));
 			//
 		} else if (Objects.equals(source, btnCopyHiragana)) {
 			//
-			string = Unit.with(getText(tfHiragana));
+			stringValue = Unit.with(getText(tfHiragana));
 			//
 		} else if (Objects.equals(source, btnCopyKatakana)) {
 			//
-			string = Unit.with(getText(tfKatakana));
+			stringValue = Unit.with(getText(tfKatakana));
 			//
 		} else if (Objects.equals(source, btnExportCopy)) {
 			//
-			string = Unit.with(getText(tfExportFile));
+			stringValue = Unit.with(getText(tfExportFile));
 			//
 		} else if (Objects.equals(source, btnDllPathCopy)) {
 			//
-			string = Unit.with(getText(tfDllPath));
+			stringValue = Unit.with(getText(tfDllPath));
 			//
 		} // if
 			//
-		if (string != null) {
+		if (stringValue != null) {
 			//
-			setContents(clipboard, new StringSelection(IValue0Util.getValue0(string)), null);
+			// if this method is not run under unit test, call
+			// "java.awt.datatransfer.Clipboard.setContents(java.awt.datatransfer.Transferable,java.awt.datatransfer.ClipboardOwner)"
+			// method
+			//
+			final String string = IValue0Util.getValue0(stringValue);
+			//
+			testAndAccept(Objects::isNull, forName("org.junit.jupiter.api.Assertions"),
+					x -> setContents(clipboard, new StringSelection(string), null));
 			//
 			return;
 			//
