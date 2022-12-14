@@ -272,7 +272,7 @@ class VoiceManagerTest {
 			METHOD_NEXT_ELEMENT_SIBLING, METHOD_HTML, METHOD_LENGTH, METHOD_CREATE_ZIP_FILE, METHOD_RETRIEVE_ALL_VOICES,
 			METHOD_SEARCH_VOICE_LIST_NAMES_BY_VOICE_ID, METHOD_SET_LIST_NAMES, METHOD_SET_SOURCE,
 			METHOD_GET_PHYSICAL_NUMBER_OF_ROWS, METHOD_EXPORT_HTML, METHOD_STREAM,
-			METHOD_ACTION_PERFORMED_FOR_SYSTEM_CLIPBOARD_ANNOTATED = null;
+			METHOD_ACTION_PERFORMED_FOR_SYSTEM_CLIPBOARD_ANNOTATED, METHOD_TEST_AND_RUN = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -803,6 +803,9 @@ class VoiceManagerTest {
 		//
 		(METHOD_ACTION_PERFORMED_FOR_SYSTEM_CLIPBOARD_ANNOTATED = clz
 				.getDeclaredMethod("actionPerformedForSystemClipboardAnnotated", Object.class)).setAccessible(true);
+		//
+		(METHOD_TEST_AND_RUN = clz.getDeclaredMethod("testAndRun", Boolean.TYPE, FailableRunnable.class))
+				.setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -6840,6 +6843,22 @@ class VoiceManagerTest {
 	}
 
 	@Test
+	void testTestAndRun() {
+		//
+		Assertions.assertDoesNotThrow(() -> testAndRun(true, null));
+		//
+	}
+
+	private static <E extends Throwable> void testAndRun(final boolean b, final FailableRunnable<E> runnable)
+			throws Throwable {
+		try {
+			METHOD_TEST_AND_RUN.invoke(null, b, runnable);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
 	void testIh1() throws Throwable {
 		//
 		final InvocationHandler ih = createVoiceManagerIH();
@@ -7414,24 +7433,6 @@ class VoiceManagerTest {
 		Assertions.assertNull(invoke(removeCustomShapeByName, null, null, null));
 		//
 		Assertions.assertNull(invoke(removeCustomShapeByName, null, null, ""));
-		//
-		// org.springframework.context.support.VoiceManager$ExportTask.testAndRun(boolean,org.apache.commons.lang3.function.FailableRunnable)
-		//
-		final Method testAndRun = CLASS_EXPORT_TASK != null
-				? CLASS_EXPORT_TASK.getDeclaredMethod("testAndRun", Boolean.TYPE, FailableRunnable.class)
-				: null;
-		//
-		if (testAndRun != null) {
-			//
-			testAndRun.setAccessible(true);
-			//
-		} // if
-			//
-		Assertions.assertNull(invoke(testAndRun, null, Boolean.FALSE, null));
-		//
-		Assertions.assertNull(invoke(testAndRun, null, Boolean.TRUE, null));
-		//
-		Assertions.assertNull(invoke(testAndRun, null, Boolean.TRUE, Reflection.newProxy(FailableRunnable.class, ih)));
 		//
 		// org.springframework.context.support.VoiceManager$ExportTask.setPassword(org.odftoolkit.odfdom.pkg.OdfPackage,java.lang.String)
 		//

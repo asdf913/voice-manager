@@ -3520,12 +3520,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			// "@SystemClipboard", pass the "source" to
 			// "actionPerformedForSystemClipboardAnnotated(java.lang.Object)" method
 			//
-		testAndAccept(x -> contains(x, source),
-				toList(filter(stream(new FailableStream<>(filter(
+		testAndRun(
+				contains(toList(filter(stream(new FailableStream<>(filter(
 						testAndApply(Objects::nonNull, getDeclaredFields(VoiceManager.class), Arrays::stream, null),
 						f -> isAnnotationPresent(f, SystemClipboard.class)))
-						.map(f -> FieldUtils.readField(f, this, true))), Objects::nonNull)),
-				x -> actionPerformedForSystemClipboardAnnotated(source));
+						.map(f -> FieldUtils.readField(f, this, true))), Objects::nonNull)), source),
+				() -> actionPerformedForSystemClipboardAnnotated(source));
 		//
 		if (Objects.equals(source, btnSpeak) && speechApi != null) {
 			//
@@ -4163,6 +4163,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
+	private static <E extends Throwable> void testAndRun(final boolean b, final FailableRunnable<E> runnable) throws E {
+		//
+		if (b && runnable != null) {
+			//
+			runnable.run();
+			//
+		} // if
+			//
+	}
+
 	private static <O> Stream<O> stream(final FailableStream<O> instance) {
 		return instance != null ? instance.stream() : null;
 	}
@@ -4203,8 +4213,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			final String string = IValue0Util.getValue0(stringValue);
 			//
-			testAndAccept(Objects::isNull, forName("org.junit.jupiter.api.Assertions"),
-					x -> setContents(clipboard, new StringSelection(string), null));
+			testAndRun(forName("org.junit.jupiter.api.Assertions") == null,
+					() -> setContents(clipboard, new StringSelection(string), null));
 			//
 			return;
 			//
@@ -8105,17 +8115,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			return newOdfPresentationDocument;
 			//
-		}
-
-		private static <E extends Throwable> void testAndRun(final boolean b, final FailableRunnable<E> runnable)
-				throws E {
-			//
-			if (b && runnable != null) {
-				//
-				runnable.run();
-				//
-			} // if
-				//
 		}
 
 		private static void removeCustomShapeByName(final ObjectMap objectMap, final String name)
