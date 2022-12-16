@@ -4264,8 +4264,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		zipParameters.setEncryptFiles(StringUtils.isNotEmpty(password));
 		//
-		zipParameters.setEncryptionMethod(ObjectUtils
-				.defaultIfNull(ObjectMap.getObject(objectMap, EncryptionMethod.class), EncryptionMethod.ZIP_STANDARD));
+		zipParameters
+				.setEncryptionMethod(ObjectUtils.firstNonNull(ObjectMap.getObject(objectMap, EncryptionMethod.class),
+						zipParameters.getEncryptionMethod(), EncryptionMethod.ZIP_STANDARD));
 		//
 		try (final net.lingala.zip4j.ZipFile zipFile = testAndApply(Objects::nonNull,
 				ObjectMap.getObject(objectMap, File.class),
