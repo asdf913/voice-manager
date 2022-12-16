@@ -3952,9 +3952,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					if (isSelected(cbExportHtmlAsZip)
 							&& reduce(mapToLong(stream(files), f -> longValue(length(f), 0)), 0, Long::sum) > 0) {
 						//
-						createZipFile(
-								file = new File(String.format("voice_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.zip", new Date())),
-								EncryptionMethod.ZIP_STANDARD, getText(tfExportPassword), files);
+						ObjectMap.setObject(objectMap, File.class, file = new File(
+								String.format("voice_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.zip", new Date())));
+						//
+						ObjectMap.setObject(objectMap, EncryptionMethod.class, EncryptionMethod.ZIP_STANDARD);
+						//
+						createZipFile(objectMap, getText(tfExportPassword), files);
 						//
 						// Delete HTML File(s) is "Remove Html After Zip" option is checked
 						//
@@ -4254,16 +4257,18 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.searchVoiceListNamesByVoiceId(voiceId) : null;
 	}
 
-	private static void createZipFile(final File file, final EncryptionMethod encryptionMethod, final String password,
-			final Iterable<File> files) throws IOException {
+	private static void createZipFile(final ObjectMap objectMap, final String password, final Iterable<File> files)
+			throws IOException {
 		//
 		final ZipParameters zipParameters = new ZipParameters();
 		//
 		zipParameters.setEncryptFiles(StringUtils.isNotEmpty(password));
 		//
-		zipParameters.setEncryptionMethod(ObjectUtils.defaultIfNull(encryptionMethod, EncryptionMethod.ZIP_STANDARD));
+		zipParameters.setEncryptionMethod(ObjectUtils
+				.defaultIfNull(ObjectMap.getObject(objectMap, EncryptionMethod.class), EncryptionMethod.ZIP_STANDARD));
 		//
-		try (final net.lingala.zip4j.ZipFile zipFile = testAndApply(Objects::nonNull, file,
+		try (final net.lingala.zip4j.ZipFile zipFile = testAndApply(Objects::nonNull,
+				ObjectMap.getObject(objectMap, File.class),
 				x -> new net.lingala.zip4j.ZipFile(x, toCharArray(password)), null)) {
 			//
 			forEach(files, x -> {
