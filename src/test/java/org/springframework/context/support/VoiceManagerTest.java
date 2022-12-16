@@ -271,8 +271,8 @@ class VoiceManagerTest {
 			METHOD_NEXT_ELEMENT_SIBLING, METHOD_HTML, METHOD_LENGTH, METHOD_CREATE_ZIP_FILE, METHOD_RETRIEVE_ALL_VOICES,
 			METHOD_SEARCH_VOICE_LIST_NAMES_BY_VOICE_ID, METHOD_SET_LIST_NAMES, METHOD_SET_SOURCE,
 			METHOD_GET_PHYSICAL_NUMBER_OF_ROWS, METHOD_EXPORT_HTML, METHOD_STREAM,
-			METHOD_ACTION_PERFORMED_FOR_SYSTEM_CLIPBOARD_ANNOTATED, METHOD_TEST_AND_RUN,
-			METHOD_TO_COMPRESSION_LEVEL = null;
+			METHOD_ACTION_PERFORMED_FOR_SYSTEM_CLIPBOARD_ANNOTATED, METHOD_TEST_AND_RUN, METHOD_TO_COMPRESSION_LEVEL,
+			METHOD_TO_CHAR_ARRAY = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -808,6 +808,8 @@ class VoiceManagerTest {
 				.setAccessible(true);
 		//
 		(METHOD_TO_COMPRESSION_LEVEL = clz.getDeclaredMethod("toCompressionLevel", String.class)).setAccessible(true);
+		//
+		(METHOD_TO_CHAR_ARRAY = clz.getDeclaredMethod("toCharArray", String.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -6871,6 +6873,29 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof CompressionLevel) {
 				return (CompressionLevel) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testToCharArray() throws Throwable {
+		//
+		Assertions.assertNull(toCharArray(null));
+		//
+		Assertions.assertNotNull(toCharArray(EMPTY));
+		//
+	}
+
+	private static char[] toCharArray(final String instance) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_CHAR_ARRAY.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof char[]) {
+				return (char[]) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
