@@ -3958,7 +3958,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 						ObjectMap.setObject(objectMap, EncryptionMethod.class, EncryptionMethod.ZIP_STANDARD);
 						//
-						ObjectMap.setObject(objectMap, CompressionLevel.class, CompressionLevel.NORMAL);
+						ObjectMap.setObject(objectMap, CompressionLevel.class,
+								toCompressionLevel(getProperty(propertyResolver,
+										"org.springframework.context.support.VoiceManager.CompressionLevel")));
 						//
 						createZipFile(objectMap, getText(tfExportPassword), files);
 						//
@@ -4167,6 +4169,63 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
+	}
+
+	private static CompressionLevel toCompressionLevel(final String string) {
+		//
+		final CompressionLevel[] cs = CompressionLevel.values();
+		//
+		List<CompressionLevel> list = toList(filter(testAndApply(Objects::nonNull, cs, Arrays::stream, null),
+				x -> StringUtils.equalsIgnoreCase(name(x), string)));
+		//
+		if (list != null) {
+			//
+			if (list.size() == 1) {
+				//
+				return list.get(0);
+				//
+			} else if (CollectionUtils.isNotEmpty(list)) {
+				//
+				throw new IllegalStateException();
+				//
+			} // if
+				//
+		} // if
+			//
+		if ((list = toList(filter(testAndApply(Objects::nonNull, cs, Arrays::stream, null),
+				x -> StringUtils.startsWithIgnoreCase(name(x), string)))) != null) {
+			//
+			if (list.size() == 1) {
+				//
+				return list.get(0);
+				//
+			} else if (CollectionUtils.isNotEmpty(list)) {
+				//
+				throw new IllegalStateException();
+				//
+			} // if
+				//
+		} // if
+			//
+		final Integer level = valueOf(string);
+		//
+		if ((list = toList(filter(testAndApply(Objects::nonNull, cs, Arrays::stream, null),
+				x -> x != null && Objects.equals(Integer.valueOf(x.getLevel()), level)))) != null) {
+			//
+			if (list.size() == 1) {
+				//
+				return list.get(0);
+				//
+			} else if (CollectionUtils.isNotEmpty(list)) {
+				//
+				throw new IllegalStateException();
+				//
+			} // if
+				//
+		} // if
+			//
+		return null;
+		//
 	}
 
 	private static <E extends Throwable> void testAndRun(final boolean b, final FailableRunnable<E> runnable) throws E {

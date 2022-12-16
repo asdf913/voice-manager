@@ -192,7 +192,6 @@ import com.j256.simplemagic.ContentType;
 import com.mpatric.mp3agic.ID3v1;
 
 import domain.Voice;
-import domain.Voice.Yomi;
 import domain.VoiceList;
 import fr.free.nrw.jakaroma.Jakaroma;
 import freemarker.cache.ClassTemplateLoader;
@@ -202,6 +201,7 @@ import freemarker.template.Version;
 import io.github.toolfactory.narcissus.Narcissus;
 import j2html.tags.specialized.ATag;
 import mapper.VoiceMapper;
+import net.lingala.zip4j.model.enums.CompressionLevel;
 
 class VoiceManagerTest {
 
@@ -271,7 +271,8 @@ class VoiceManagerTest {
 			METHOD_NEXT_ELEMENT_SIBLING, METHOD_HTML, METHOD_LENGTH, METHOD_CREATE_ZIP_FILE, METHOD_RETRIEVE_ALL_VOICES,
 			METHOD_SEARCH_VOICE_LIST_NAMES_BY_VOICE_ID, METHOD_SET_LIST_NAMES, METHOD_SET_SOURCE,
 			METHOD_GET_PHYSICAL_NUMBER_OF_ROWS, METHOD_EXPORT_HTML, METHOD_STREAM,
-			METHOD_ACTION_PERFORMED_FOR_SYSTEM_CLIPBOARD_ANNOTATED, METHOD_TEST_AND_RUN = null;
+			METHOD_ACTION_PERFORMED_FOR_SYSTEM_CLIPBOARD_ANNOTATED, METHOD_TEST_AND_RUN,
+			METHOD_TO_COMPRESSION_LEVEL = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -805,6 +806,8 @@ class VoiceManagerTest {
 		//
 		(METHOD_TEST_AND_RUN = clz.getDeclaredMethod("testAndRun", Boolean.TYPE, FailableRunnable.class))
 				.setAccessible(true);
+		//
+		(METHOD_TO_COMPRESSION_LEVEL = clz.getDeclaredMethod("toCompressionLevel", String.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -3327,8 +3330,6 @@ class VoiceManagerTest {
 	void testName() throws Throwable {
 		//
 		Assertions.assertNull(name(null));
-		//
-		Assertions.assertNotNull(name(Yomi.KUN_YOMI));
 		//
 	}
 
@@ -6842,6 +6843,36 @@ class VoiceManagerTest {
 			throws Throwable {
 		try {
 			METHOD_TEST_AND_RUN.invoke(null, b, runnable);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testToCompressionLevel() throws Throwable {
+		//
+		Assertions.assertNull(toCompressionLevel(null));
+		//
+		final CompressionLevel compressionLevel = CompressionLevel.FAST;
+		//
+		Assertions.assertSame(compressionLevel, toCompressionLevel(name(compressionLevel)));
+		//
+		Assertions.assertSame(compressionLevel,
+				toCompressionLevel(compressionLevel != null ? Integer.toString(compressionLevel.getLevel()) : null));
+		//
+		Assertions.assertSame(CompressionLevel.NORMAL, toCompressionLevel("Nor"));
+		//
+	}
+
+	private static CompressionLevel toCompressionLevel(final String string) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_COMPRESSION_LEVEL.invoke(null, string);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof CompressionLevel) {
+				return (CompressionLevel) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
