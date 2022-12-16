@@ -272,7 +272,7 @@ class VoiceManagerTest {
 			METHOD_SEARCH_VOICE_LIST_NAMES_BY_VOICE_ID, METHOD_SET_LIST_NAMES, METHOD_SET_SOURCE,
 			METHOD_GET_PHYSICAL_NUMBER_OF_ROWS, METHOD_EXPORT_HTML, METHOD_STREAM,
 			METHOD_ACTION_PERFORMED_FOR_SYSTEM_CLIPBOARD_ANNOTATED, METHOD_TEST_AND_RUN, METHOD_TO_COMPRESSION_LEVEL,
-			METHOD_TO_CHAR_ARRAY = null;
+			METHOD_TO_CHAR_ARRAY, METHOD_HAS_LOWER_BOUND, METHOD_LOWER_END_POINT = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -810,6 +810,10 @@ class VoiceManagerTest {
 		(METHOD_TO_COMPRESSION_LEVEL = clz.getDeclaredMethod("toCompressionLevel", String.class)).setAccessible(true);
 		//
 		(METHOD_TO_CHAR_ARRAY = clz.getDeclaredMethod("toCharArray", String.class)).setAccessible(true);
+		//
+		(METHOD_HAS_LOWER_BOUND = clz.getDeclaredMethod("hasLowerBound", Range.class)).setAccessible(true);
+		//
+		(METHOD_LOWER_END_POINT = clz.getDeclaredMethod("lowerEndpoint", Range.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -6898,6 +6902,42 @@ class VoiceManagerTest {
 				return (char[]) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testHasLowerBound() throws Throwable {
+		//
+		Assertions.assertFalse(hasLowerBound(null));
+		//
+		Assertions.assertTrue(hasLowerBound(Range.atLeast(ONE)));
+		//
+	}
+
+	private static boolean hasLowerBound(final Range<?> instance) throws Throwable {
+		try {
+			final Object obj = METHOD_HAS_LOWER_BOUND.invoke(null, instance);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testLowerEndpoint() throws Throwable {
+		//
+		Assertions.assertNull(lowerEndpoint(null));
+		//
+	}
+
+	private static <C extends Comparable<C>> C lowerEndpoint(final Range<C> instance) throws Throwable {
+		try {
+			return (C) METHOD_LOWER_END_POINT.invoke(null, instance);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

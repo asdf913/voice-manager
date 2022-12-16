@@ -1695,12 +1695,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			final Range<Integer> range = createRange(toInteger(testAndApply(predicate, "min", function, null)),
 					toInteger(testAndApply(predicate, "max", function, null)));
 			//
-			if (range != null && range.hasLowerBound() && range.hasUpperBound() && range.lowerEndpoint() != null
+			if (range != null && hasLowerBound(range) && range.hasUpperBound() && lowerEndpoint(range) != null
 					&& range.upperEndpoint() != null) {
 				//
 				panel.add(new JLabel("Speech Rate"), "aligny top");
 				//
-				panel.add(jsSpeechRate = new JSlider(intValue(range.lowerEndpoint(), 0),
+				panel.add(jsSpeechRate = new JSlider(intValue(lowerEndpoint(range), 0),
 						intValue(range.upperEndpoint(), 0)), String.format("%1$s,span %2$s", GROWX, 7));
 				//
 				jsSpeechRate.setMajorTickSpacing(1);
@@ -1760,10 +1760,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				? speechVolumeRange.upperEndpoint()
 				: null;
 		//
-		panel.add(jsSpeechVolume = new JSlider(intValue(
-				speechVolumeRange != null && speechVolumeRange.hasLowerBound() ? speechVolumeRange.lowerEndpoint()
-						: null,
-				0), intValue(upperEnpoint, 100)), String.format("%1$s,span %2$s", GROWX, 3));
+		panel.add(jsSpeechVolume = new JSlider(
+				intValue(hasLowerBound(speechVolumeRange) ? lowerEndpoint(speechVolumeRange) : null, 0),
+				intValue(upperEnpoint, 100)), String.format("%1$s,span %2$s", GROWX, 3));
 		//
 		final Integer speechVolume = valueOf(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.speechVolume"));
@@ -1844,7 +1843,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		addActionListener(this, btnSpeak, btnWriteVoice, btnSpeechRateSlower, btnSpeechRateNormal, btnSpeechRateFaster);
 		//
-		setEnabled(isInstalled && voiceIds != null, btnSpeak, btnWriteVoice);
+		setEnabled(Boolean.logicalAnd(isInstalled, voiceIds != null), btnSpeak, btnWriteVoice);
 		//
 		addChangeListener(this, jsSpeechVolume, jsSpeechRate);
 		//
@@ -1864,6 +1863,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return panel;
 		//
+	}
+
+	private static boolean hasLowerBound(final Range<?> instance) {
+		return instance != null && instance.hasLowerBound();
+	}
+
+	private static <C extends Comparable<C>> C lowerEndpoint(final Range<C> instance) {
+		return instance != null ? instance.lowerEndpoint() : null;
 	}
 
 	private static void setValue(final JSlider instance, final int n) {
@@ -5612,7 +5619,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				if (range != null && !range.contains(q)) {
 					//
 					throw new IllegalStateException(String.format("Under VBR,\"quality\" cound be with in %1$s to %2$s",
-							range.lowerEndpoint(), range.upperEndpoint()));
+							lowerEndpoint(range), range.upperEndpoint()));
 					//
 				} // if
 					//
