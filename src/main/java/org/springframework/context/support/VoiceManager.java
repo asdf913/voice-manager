@@ -307,6 +307,7 @@ import j2html.tags.specialized.ATag;
 import j2html.tags.specialized.ATagUtil;
 import mapper.VoiceMapper;
 import net.lingala.zip4j.model.ZipParameters;
+import net.lingala.zip4j.model.enums.CompressionLevel;
 import net.lingala.zip4j.model.enums.EncryptionMethod;
 import net.miginfocom.swing.MigLayout;
 import net.sourceforge.javaflacencoder.AudioStreamEncoder;
@@ -3957,6 +3958,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 						ObjectMap.setObject(objectMap, EncryptionMethod.class, EncryptionMethod.ZIP_STANDARD);
 						//
+						ObjectMap.setObject(objectMap, CompressionLevel.class, CompressionLevel.NORMAL);
+						//
 						createZipFile(objectMap, getText(tfExportPassword), files);
 						//
 						// Delete HTML File(s) is "Remove Html After Zip" option is checked
@@ -4267,6 +4270,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		zipParameters
 				.setEncryptionMethod(ObjectUtils.firstNonNull(ObjectMap.getObject(objectMap, EncryptionMethod.class),
 						zipParameters.getEncryptionMethod(), EncryptionMethod.ZIP_STANDARD));
+		//
+		zipParameters
+				.setCompressionLevel(ObjectUtils.firstNonNull(ObjectMap.getObject(objectMap, CompressionLevel.class),
+						zipParameters.getCompressionLevel(), CompressionLevel.NORMAL));
 		//
 		try (final net.lingala.zip4j.ZipFile zipFile = testAndApply(Objects::nonNull,
 				ObjectMap.getObject(objectMap, File.class),
