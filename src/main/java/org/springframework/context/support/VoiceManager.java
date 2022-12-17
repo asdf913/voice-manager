@@ -85,7 +85,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -179,6 +178,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.commons.lang3.function.FailableBiFunction;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableRunnable;
@@ -3324,7 +3324,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final BiPredicate<String, String> biPredicate = (a, b) -> contains(lookup, a, b);
 		//
-		final BiFunction<String, String, Object> biFunction = (a, b) -> get(lookup, a, b);
+		final FailableBiFunction<String, String, Object, RuntimeException> biFunction = (a, b) -> get(lookup, a, b);
 		//
 		return createRange(toInteger(testAndApply(biPredicate, "volume", "min", biFunction, null)),
 				toInteger(testAndApply(biPredicate, "volume", "max", biFunction, null)));
@@ -3474,12 +3474,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.apply(value) : null;
 	}
 
-	private static <T, U, R> R testAndApply(final BiPredicate<T, U> predicate, final T t, final U u,
-			final BiFunction<T, U, R> functionTrue, final BiFunction<T, U, R> functionFalse) {
+	private static <T, U, R, E extends Throwable> R testAndApply(final BiPredicate<T, U> predicate, final T t,
+			final U u, final FailableBiFunction<T, U, R, E> functionTrue,
+			final FailableBiFunction<T, U, R, E> functionFalse) throws E {
 		return predicate != null && predicate.test(t, u) ? apply(functionTrue, t, u) : apply(functionFalse, t, u);
 	}
 
-	private static <T, U, R> R apply(final BiFunction<T, U, R> instance, final T t, final U u) {
+	private static <T, U, R, E extends Throwable> R apply(final FailableBiFunction<T, U, R, E> instance, final T t,
+			final U u) throws E {
 		return instance != null ? instance.apply(t, u) : null;
 	}
 
@@ -4523,7 +4525,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			} // if
 				//
 			if ((fieldValue = Modifier.isStatic(f.getModifiers()) ? f.get(null)
-					: instance != null ? f.get(instance) : null) != value || !Objects.equals(fieldValue, value)) {
+					: testAndApply((a, b) -> b != null, f, instance, (a, b) -> FieldUtils.readField(a, b),
+							null)) != value
+					|| !Objects.equals(fieldValue, value)) {
 				//
 				continue;
 				//

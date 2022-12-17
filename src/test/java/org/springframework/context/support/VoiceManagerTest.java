@@ -60,7 +60,6 @@ import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.Set;
 import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -115,6 +114,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.apache.commons.lang3.function.FailableBiFunction;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableRunnable;
@@ -270,9 +270,8 @@ class VoiceManagerTest {
 			METHOD_NEXT_ELEMENT_SIBLING, METHOD_HTML, METHOD_LENGTH, METHOD_CREATE_ZIP_FILE, METHOD_RETRIEVE_ALL_VOICES,
 			METHOD_SEARCH_VOICE_LIST_NAMES_BY_VOICE_ID, METHOD_SET_LIST_NAMES, METHOD_SET_SOURCE,
 			METHOD_GET_PHYSICAL_NUMBER_OF_ROWS, METHOD_EXPORT_HTML, METHOD_STREAM,
-			METHOD_ACTION_PERFORMED_FOR_SYSTEM_CLIPBOARD_ANNOTATED, METHOD_TEST_AND_RUN, METHOD_TO_COMPRESSION_LEVEL,
-			METHOD_TO_CHAR_ARRAY, METHOD_HAS_LOWER_BOUND, METHOD_HAS_UPPER_BOUND, METHOD_LOWER_END_POINT,
-			METHOD_UPPER_END_POINT = null;
+			METHOD_ACTION_PERFORMED_FOR_SYSTEM_CLIPBOARD_ANNOTATED, METHOD_TEST_AND_RUN, METHOD_TO_CHAR_ARRAY,
+			METHOD_HAS_LOWER_BOUND, METHOD_HAS_UPPER_BOUND, METHOD_LOWER_END_POINT, METHOD_UPPER_END_POINT = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -303,7 +302,7 @@ class VoiceManagerTest {
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
 		//
 		(METHOD_TEST_AND_APPLY5 = clz.getDeclaredMethod("testAndApply", BiPredicate.class, Object.class, Object.class,
-				BiFunction.class, BiFunction.class)).setAccessible(true);
+				FailableBiFunction.class, FailableBiFunction.class)).setAccessible(true);
 		//
 		(METHOD_CAST = clz.getDeclaredMethod("cast", Class.class, Object.class)).setAccessible(true);
 		//
@@ -2341,8 +2340,9 @@ class VoiceManagerTest {
 		}
 	}
 
-	private static <T, U, R> R testAndApply(final BiPredicate<T, U> predicate, final T t, final U u,
-			final BiFunction<T, U, R> functionTrue, final BiFunction<T, U, R> functionFalse) throws Throwable {
+	private static <T, U, R, E extends Throwable> R testAndApply(final BiPredicate<T, U> predicate, final T t,
+			final U u, final FailableBiFunction<T, U, R, E> functionTrue,
+			final FailableBiFunction<T, U, R, E> functionFalse) throws Throwable {
 		try {
 			return (R) METHOD_TEST_AND_APPLY5.invoke(null, predicate, t, u, functionTrue, functionFalse);
 		} catch (final InvocationTargetException e) {
