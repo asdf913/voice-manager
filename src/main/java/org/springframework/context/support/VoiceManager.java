@@ -4549,7 +4549,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	 */
 	private static <T, E extends Throwable> T getIfNull(final T object, final FailableSupplier<T, E> defaultSupplier)
 			throws E {
-		return object != null ? object : defaultSupplier == null ? null : defaultSupplier.get();
+		return object != null ? object : get(defaultSupplier);
+	}
+
+	private static <T, E extends Throwable> T get(final FailableSupplier<T, E> instance) throws E {
+		return instance != null ? instance.get() : null;
 	}
 
 	private void exportHtml(final ObjectMap objectMap, final Multimap<String, Voice> multimap,
