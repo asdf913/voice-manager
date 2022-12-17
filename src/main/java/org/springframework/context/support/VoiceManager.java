@@ -3704,13 +3704,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 				} // if
 					//
-				if (voice != null) {
-					//
-					voice.setLanguage(StringUtils.defaultIfBlank(voice.getLanguage(),
-							convertLanguageCodeToText(getVoiceAttribute(speechApi, voiceId, LANGUAGE), 16)));
-					//
-				} // if
-					//
+				setLanguage(voice, StringUtils.defaultIfBlank(getLanguage(voice),
+						convertLanguageCodeToText(getVoiceAttribute(speechApi, voiceId, LANGUAGE), 16)));
+				//
 				setSource(voice,
 						StringUtils.defaultIfBlank(getSource(voice), getProviderName(cast(Provider.class, speechApi))));
 				//
@@ -4207,6 +4203,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
+	}
+
+	private static void setLanguage(final Voice instance, final String language) {
+		if (instance != null) {
+			instance.setLanguage(language);
+		}
+	}
+
+	private static String getLanguage(final Voice instance) {
+		return instance != null ? instance.getLanguage() : null;
 	}
 
 	private static <E extends Throwable> void testAndRun(final boolean b, final FailableRunnable<E> runnable) throws E {
@@ -7026,9 +7032,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 										//
 										try {
 											//
-											it.voice.setLanguage(StringUtils.defaultIfBlank(it.voice.getLanguage(),
-													convertLanguageCodeToText(
-															getVoiceAttribute(speechApi, voiceId, LANGUAGE), 16)));
+											setLanguage(it.voice,
+													StringUtils.defaultIfBlank(getLanguage(it.voice),
+															convertLanguageCodeToText(
+																	getVoiceAttribute(speechApi, voiceId, LANGUAGE),
+																	16)));
 											//
 										} catch (final Error e) {
 											//

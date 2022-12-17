@@ -272,7 +272,7 @@ class VoiceManagerTest {
 			METHOD_GET_PHYSICAL_NUMBER_OF_ROWS, METHOD_EXPORT_HTML, METHOD_STREAM,
 			METHOD_ACTION_PERFORMED_FOR_SYSTEM_CLIPBOARD_ANNOTATED, METHOD_TEST_AND_RUN, METHOD_TO_CHAR_ARRAY,
 			METHOD_HAS_LOWER_BOUND, METHOD_HAS_UPPER_BOUND, METHOD_LOWER_END_POINT, METHOD_UPPER_END_POINT,
-			METHOD_GET_IF_NULL = null;
+			METHOD_GET_IF_NULL, METHOD_SET_LANGUAGE, METHOD_GET_LANGUAGE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -819,6 +819,10 @@ class VoiceManagerTest {
 		//
 		(METHOD_GET_IF_NULL = clz.getDeclaredMethod("getIfNull", Object.class, FailableSupplier.class))
 				.setAccessible(true);
+		//
+		(METHOD_SET_LANGUAGE = clz.getDeclaredMethod("setLanguage", Voice.class, String.class)).setAccessible(true);
+		//
+		(METHOD_GET_LANGUAGE = clz.getDeclaredMethod("getLanguage", Voice.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -6967,6 +6971,50 @@ class VoiceManagerTest {
 			throws Throwable {
 		try {
 			return (T) METHOD_GET_IF_NULL.invoke(null, object, defaultSupplier);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetLanguage() throws Throwable {
+		//
+		Assertions.assertDoesNotThrow(() -> setLanguage(null, null));
+		//
+		final Voice voice = new Voice();
+		//
+		Assertions.assertNull(getLanguage(voice));
+		//
+		Assertions.assertDoesNotThrow(() -> setLanguage(voice, EMPTY));
+		//
+		Assertions.assertEquals(EMPTY, getLanguage(voice));
+		//
+	}
+
+	private static void setLanguage(final Voice instance, final String language) throws Throwable {
+		try {
+			METHOD_SET_LANGUAGE.invoke(null, instance, language);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetLanguage() throws Throwable {
+		//
+		Assertions.assertNull(getLanguage(null));
+		//
+	}
+
+	private static String getLanguage(final Voice instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_LANGUAGE.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
