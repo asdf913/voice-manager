@@ -7602,6 +7602,26 @@ class VoiceManagerTest {
 		//
 		Assertions.assertEquals(ih.nodeName = EMPTY, invoke(getNodeName, null, node));
 		//
+		// org.springframework.context.support.VoiceManager$ExportTask.getNodeName(org.w3c.dom.Node)
+		//
+		final Method getOutputFolder = CLASS_EXPORT_TASK != null
+				? CLASS_EXPORT_TASK.getDeclaredMethod("getOutputFolder", VoiceManager.class)
+				: null;
+		//
+		if (getOutputFolder != null) {
+			//
+			getOutputFolder.setAccessible(true);
+			//
+		} // if
+			//
+		if (instance != null) {
+			//
+			instance.setOutputFolder(EMPTY);
+			//
+		} // if
+			//
+		Assertions.assertEquals(EMPTY, invoke(getOutputFolder, null, instance));
+		//
 	}
 
 	private static void run(final Runnable instance) {

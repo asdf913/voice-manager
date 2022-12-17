@@ -7762,7 +7762,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				JProgressBar progressBar = null;
 				//
-				final String outputFolder = voiceManager != null ? voiceManager.outputFolder : null;
+				final String outputFolder = getOutputFolder(voiceManager);
 				//
 				for (final Entry<String, String> folderFileNamePattern : outputFolderFileNameExpressions.entrySet()) {
 					//
@@ -7881,6 +7881,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // try
 				//
+		}
+
+		private static String getOutputFolder(final VoiceManager instance) {
+			return instance != null ? instance.outputFolder : null;
 		}
 
 		private static void setStringFieldDefaultValue(final Object instance) throws IllegalAccessException {
