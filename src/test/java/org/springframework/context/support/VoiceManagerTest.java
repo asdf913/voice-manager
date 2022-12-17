@@ -7602,7 +7602,7 @@ class VoiceManagerTest {
 		//
 		Assertions.assertEquals(ih.nodeName = EMPTY, invoke(getNodeName, null, node));
 		//
-		// org.springframework.context.support.VoiceManager$ExportTask.getNodeName(org.w3c.dom.Node)
+		// org.springframework.context.support.VoiceManager$ExportTask.getOutputFolder(org.springframework.context.support.VoiceManager)
 		//
 		final Method getOutputFolder = CLASS_EXPORT_TASK != null
 				? CLASS_EXPORT_TASK.getDeclaredMethod("getOutputFolder", VoiceManager.class)
@@ -7621,6 +7621,26 @@ class VoiceManagerTest {
 		} // if
 			//
 		Assertions.assertEquals(EMPTY, invoke(getOutputFolder, null, instance));
+		//
+		// org.springframework.context.support.VoiceManager$ExportTask.getVoiceFolder(org.springframework.context.support.VoiceManager)
+		//
+		final Method getVoiceFolder = CLASS_EXPORT_TASK != null
+				? CLASS_EXPORT_TASK.getDeclaredMethod("getVoiceFolder", VoiceManager.class)
+				: null;
+		//
+		if (getVoiceFolder != null) {
+			//
+			getVoiceFolder.setAccessible(true);
+			//
+		} // if
+			//
+		if (instance != null) {
+			//
+			instance.setVoiceFolder(EMPTY);
+			//
+		} // if
+			//
+		Assertions.assertEquals(EMPTY, invoke(getVoiceFolder, null, instance));
 		//
 	}
 

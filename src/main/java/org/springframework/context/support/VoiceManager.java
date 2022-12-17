@@ -7766,9 +7766,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				for (final Entry<String, String> folderFileNamePattern : outputFolderFileNameExpressions.entrySet()) {
 					//
-					if (voiceFolder == null && voiceManager != null) {
+					if (voiceFolder == null) {
 						//
-						voiceFolder = voiceManager != null ? voiceManager.voiceFolder : null;
+						voiceFolder = getVoiceFolder(voiceManager);
 						//
 					} // if
 						//
@@ -7885,6 +7885,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 		private static String getOutputFolder(final VoiceManager instance) {
 			return instance != null ? instance.outputFolder : null;
+		}
+
+		private static String getVoiceFolder(final VoiceManager instance) {
+			return instance != null ? instance.voiceFolder : null;
 		}
 
 		private static void setStringFieldDefaultValue(final Object instance) throws IllegalAccessException {
