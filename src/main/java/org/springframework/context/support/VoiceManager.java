@@ -470,8 +470,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private transient LayoutManager layoutManager = null;
 
-	private JPanel jPanelImportResult = null;
-
 	private Unit<Multimap<String, String>> gaKuNenBeTsuKanJiMultimap = null;
 
 	private transient IValue0<String> microsoftSpeechPlatformRuntimeLanguagesDownloadPageTitle = null;
@@ -1150,8 +1148,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			add(jTabbedPane, WRAP);
 			//
-			add(jTabbedPaneChangeListener.component = jPanelImportResult = createImportResultPanel(
-					cloneLayoutManager()), GROWX);
+			add(jTabbedPaneChangeListener.component = createImportResultPanel(cloneLayoutManager()), GROWX);
+			//
+			jTabbedPaneChangeListener.stateChanged(testAndApply(Objects::nonNull, jTabbedPane, ChangeEvent::new, null));
 			//
 		} // if
 			//
