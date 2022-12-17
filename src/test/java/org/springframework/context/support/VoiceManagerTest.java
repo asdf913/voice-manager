@@ -200,7 +200,6 @@ import freemarker.template.Version;
 import io.github.toolfactory.narcissus.Narcissus;
 import j2html.tags.specialized.ATag;
 import mapper.VoiceMapper;
-import net.lingala.zip4j.model.enums.CompressionLevel;
 
 class VoiceManagerTest {
 
@@ -807,8 +806,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_TEST_AND_RUN = clz.getDeclaredMethod("testAndRun", Boolean.TYPE, FailableRunnable.class))
 				.setAccessible(true);
-		//
-		(METHOD_TO_COMPRESSION_LEVEL = clz.getDeclaredMethod("toCompressionLevel", String.class)).setAccessible(true);
 		//
 		(METHOD_TO_CHAR_ARRAY = clz.getDeclaredMethod("toCharArray", String.class)).setAccessible(true);
 		//
@@ -6853,36 +6850,6 @@ class VoiceManagerTest {
 			throws Throwable {
 		try {
 			METHOD_TEST_AND_RUN.invoke(null, b, runnable);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testToCompressionLevel() throws Throwable {
-		//
-		Assertions.assertNull(toCompressionLevel(null));
-		//
-		final CompressionLevel compressionLevel = CompressionLevel.FAST;
-		//
-		Assertions.assertSame(compressionLevel, toCompressionLevel(name(compressionLevel)));
-		//
-		Assertions.assertSame(compressionLevel,
-				toCompressionLevel(compressionLevel != null ? Integer.toString(compressionLevel.getLevel()) : null));
-		//
-		Assertions.assertSame(CompressionLevel.NORMAL, toCompressionLevel("Nor"));
-		//
-	}
-
-	private static CompressionLevel toCompressionLevel(final String string) throws Throwable {
-		try {
-			final Object obj = METHOD_TO_COMPRESSION_LEVEL.invoke(null, string);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof CompressionLevel) {
-				return (CompressionLevel) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

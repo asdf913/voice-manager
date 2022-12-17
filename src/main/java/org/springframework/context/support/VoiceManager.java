@@ -389,6 +389,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private transient ComboBoxModel<EncryptionMode> cbmEncryptionMode = null;
 
+	private transient ComboBoxModel<CompressionLevel> cbmCompressionLevel = null;
+
 	private AbstractButton btnSpeak, btnWriteVoice, btnConvertToRomaji, btnConvertToKatakana, cbUseTtsVoice, btnExecute,
 			btnImportFileTemplate, btnImport, btnImportWithinFolder, cbOverMp3Title, cbOrdinalPositionAsFileNamePrefix,
 			btnExport, cbExportHtml, cbExportListHtml, cbExportHtmlAsZip, cbExportHtmlRemoveAfterZip, cbExportListSheet,
@@ -2563,6 +2565,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.setLayout(layoutManager);
 		//
+		// Encryption Mode
+		//
 		panel.add(new JLabel("Encryption Mode"), String.format("span %1$s", 5));
 		//
 		final EncryptionMode[] encryptionModes = EncryptionMode.values();
@@ -2579,6 +2583,27 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 										x -> StringUtils.equalsIgnoreCase(name(x), getProperty(propertyResolver,
 												"org.springframework.context.support.VoiceManager.encryptionMode")))),
 						null));
+		//
+		// ZIP Compression Level
+		//
+		panel.add(new JLabel("ZIP Compression Level"), String.format("span %1$s", 5));
+		//
+		final CompressionLevel[] compressionLevels = CompressionLevel.values();
+		//
+		panel.add(
+				new JComboBox<>(cbmCompressionLevel = new DefaultComboBoxModel<>(
+						ArrayUtils.insert(0, compressionLevels, (CompressionLevel) null))),
+				String.format("%1$s,span %2$s", WRAP, 2));
+		//
+		setSelectedItem(
+				cbmCompressionLevel, orElse(
+						findFirst(
+								filter(Arrays.stream(compressionLevels),
+										x -> StringUtils.equalsIgnoreCase(name(x), getProperty(propertyResolver,
+												"org.springframework.context.support.VoiceManager.compressionLevel")))),
+						null));
+		//
+		// Password
 		//
 		panel.add(new JLabel(PASSWORD), String.format("span %1$s", 4));
 		//
@@ -3970,12 +3995,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						ObjectMap.setObject(objectMap, EncryptionMethod.class, EncryptionMethod.ZIP_STANDARD);
 						//
 						ObjectMap.setObject(objectMap, CompressionLevel.class,
-								toCompressionLevel(getProperty(propertyResolver,
-										"org.springframework.context.support.VoiceManager.CompressionLevel")));
+								cast(CompressionLevel.class, getSelectedItem(cbmCompressionLevel)));
 						//
 						createZipFile(objectMap, getText(tfExportPassword), files);
 						//
-						// Delete HTML File(s) is "Remove Html After Zip" option is checked
+						// Delete HTML File(s) is "Remove HTML After ZIP" option is checked
 						//
 						testAndAccept((a, b) -> a, isSelected(cbExportHtmlRemoveAfterZip), files,
 								(a, b) -> forEach(b, VoiceManager::delete));
@@ -4180,63 +4204,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
-	}
-
-	private static CompressionLevel toCompressionLevel(final String string) {
-		//
-		final CompressionLevel[] cs = CompressionLevel.values();
-		//
-		List<CompressionLevel> list = toList(filter(testAndApply(Objects::nonNull, cs, Arrays::stream, null),
-				x -> StringUtils.equalsIgnoreCase(name(x), string)));
-		//
-		if (list != null) {
-			//
-			if (list.size() == 1) {
-				//
-				return list.get(0);
-				//
-			} else if (CollectionUtils.isNotEmpty(list)) {
-				//
-				throw new IllegalStateException();
-				//
-			} // if
-				//
-		} // if
-			//
-		if ((list = toList(filter(testAndApply(Objects::nonNull, cs, Arrays::stream, null),
-				x -> StringUtils.startsWithIgnoreCase(name(x), string)))) != null) {
-			//
-			if (list.size() == 1) {
-				//
-				return list.get(0);
-				//
-			} else if (CollectionUtils.isNotEmpty(list)) {
-				//
-				throw new IllegalStateException();
-				//
-			} // if
-				//
-		} // if
-			//
-		final Integer level = valueOf(string);
-		//
-		if ((list = toList(filter(testAndApply(Objects::nonNull, cs, Arrays::stream, null),
-				x -> x != null && Objects.equals(Integer.valueOf(x.getLevel()), level)))) != null) {
-			//
-			if (list.size() == 1) {
-				//
-				return list.get(0);
-				//
-			} else if (CollectionUtils.isNotEmpty(list)) {
-				//
-				throw new IllegalStateException();
-				//
-			} // if
-				//
-		} // if
-			//
-		return null;
-		//
 	}
 
 	private static <E extends Throwable> void testAndRun(final boolean b, final FailableRunnable<E> runnable) throws E {
