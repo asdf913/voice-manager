@@ -2112,7 +2112,19 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final ListCellRenderer<Object> listCellRenderer = jcbYomi.getRenderer();
 		//
-		final Map<String, String> yomiNameMap = createYomiNameMap();
+		Map<String, String> yomiNameMap = null;
+		//
+		try {
+			//
+			yomiNameMap = createYomiNameMap();
+			//
+		} catch (final Exception e) {
+			//
+			errorOrPrintStackTraceOrShowMessageDialog(GraphicsEnvironment.isHeadless(), e);
+			//
+		} // try
+			//
+		final Map<String, String> yomiNameMapTemp = yomiNameMap;
 		//
 		jcbYomi.setRenderer(new ListCellRenderer<Object>() {
 
@@ -2122,10 +2134,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				final String name = name(cast(Enum.class, value));
 				//
-				if (containsKey(yomiNameMap, name)) {
+				if (containsKey(yomiNameMapTemp, name)) {
 					//
 					return VoiceManager.getListCellRendererComponent(listCellRenderer, list,
-							MapUtils.getObject(yomiNameMap, name), index, isSelected, cellHasFocus);
+							MapUtils.getObject(yomiNameMapTemp, name), index, isSelected, cellHasFocus);
 					//
 				} // if
 					//
@@ -3152,57 +3164,38 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final Class<?> nameClass = forName("domain.Voice$Name");
 		//
-		final boolean headless = GraphicsEnvironment.isHeadless();
-		//
 		final List<Pair<String, String>> pairs = toList(
 				//
 				filter(map(testAndApply(Objects::nonNull, getDeclaredFields(Yomi.class), Arrays::stream, null), f -> {
 					//
-					final List<Object> objects = toList(
-							map(filter(testAndApply(Objects::nonNull, getDeclaredAnnotations(f), Arrays::stream, null),
-									a -> Objects.equals(annotationType(a), nameClass)), a -> {
-										//
-										final List<Method> ms = toList(filter(
-												testAndApply(Objects::nonNull, getDeclaredMethods(annotationType(a)),
-														Arrays::stream, null),
-												ma -> Objects.equals(getName(ma), VALUE)));
-										//
-										if (ms == null || ms.isEmpty()) {
-											//
-											return false;
-											//
-										} // if
-											//
-										Method m = get(ms, 0);
-										//
-										if (IterableUtils.size(ms) == 1 && m != null) {
-											//
-											m.setAccessible(true);
-											//
-											try {
-												//
-												return invoke(m, a);
-												//
-											} catch (final IllegalAccessException e) {
-												//
-												VoiceManager.errorOrPrintStackTraceOrShowMessageDialog(headless, e);
-												//
-											} catch (final InvocationTargetException e) {
-												//
-												final Throwable targetException = e.getTargetException();
-												//
-												VoiceManager.errorOrPrintStackTraceOrShowMessageDialog(headless,
-														ObjectUtils.firstNonNull(
-																ExceptionUtils.getRootCause(targetException),
-																targetException, ExceptionUtils.getRootCause(e), e));
-												//
-											} // try
-												//
-										} // if
-											//
-										throw new IllegalStateException();
-										//
-									}));
+					final List<?> objects = toList(stream(new FailableStream<>(
+							filter(testAndApply(Objects::nonNull, getDeclaredAnnotations(f), Arrays::stream, null),
+									a -> Objects.equals(annotationType(a), nameClass)))
+							.map(a -> {
+								//
+								final List<Method> ms = toList(
+										filter(testAndApply(Objects::nonNull, getDeclaredMethods(annotationType(a)),
+												Arrays::stream, null), ma -> Objects.equals(getName(ma), VALUE)));
+								//
+								if (ms == null || ms.isEmpty()) {
+									//
+									return false;
+									//
+								} // if
+									//
+								Method m = get(ms, 0);
+								//
+								if (IterableUtils.size(ms) == 1 && m != null) {
+									//
+									m.setAccessible(true);
+									//
+									return invoke(m, a);
+									//
+								} // if
+									//
+								throw new IllegalStateException();
+								//
+							})));
 					//
 					if (objects == null || objects.isEmpty()) {
 						//
