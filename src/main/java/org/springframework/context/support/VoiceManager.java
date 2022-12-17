@@ -7805,12 +7805,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					TableUtil.put(voiceFileNames, fileDestination.getParent(), VoiceManager.toString(fileName), voice);
 					//
-					if (overMp3Title) {
-						//
-						setMp3Title(fileDestination);
-						//
-					} // if
-						//
+					// Set MP3 Title if "overMp3Title" is true
+					//
+					testAndAccept(x -> overMp3Title, fileDestination, ExportTask::setMp3Title);
+					//
 				} // for
 					//
 				if (counter != null) {
