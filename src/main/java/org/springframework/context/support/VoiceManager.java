@@ -1690,7 +1690,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final FailableFunction<String, Object, RuntimeException> function = (a) -> get(lookup, "rate", a);
 		//
-		if (test(predicate, "min") && test(predicate, "max")) {
+		if (Boolean.logicalAnd(test(predicate, "min"), test(predicate, "max"))) {
 			//
 			final Range<Integer> range = createRange(toInteger(testAndApply(predicate, "min", function, null)),
 					toInteger(testAndApply(predicate, "max", function, null)));
