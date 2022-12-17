@@ -7767,16 +7767,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				for (final Entry<String, String> folderFileNamePattern : outputFolderFileNameExpressions.entrySet()) {
 					//
-					if (voiceFolder == null) {
-						//
-						voiceFolder = getVoiceFolder(voiceManager);
-						//
-					} // if
-						//
 					if (folderFileNamePattern == null || (key = getKey(folderFileNamePattern)) == null
 							|| StringUtils.isBlank(value = getValue(folderFileNamePattern))
-							|| !(fileSource = voiceFolder != null ? new File(voiceFolder, filePath)
-									: new File(filePath)).exists()) {
+							|| !(fileSource = (voiceFolder = ObjectUtils.getIfNull(voiceFolder,
+									() -> getVoiceFolder(voiceManager))) != null ? new File(voiceFolder, filePath)
+											: new File(filePath))
+									.exists()) {
 						continue;
 					} // if
 						//
@@ -7819,13 +7815,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				if (counter != null) {
 					//
-					if (progressBar == null) {
-						//
-						progressBar = getProgressBarExport(voiceManager);
-						//
-					} // if
-						//
-					setValue(progressBar, counter.intValue());
+					setValue(progressBar = ObjectUtils.getIfNull(progressBar, () -> getProgressBarExport(voiceManager)),
+							counter.intValue());
 					//
 					if (count != null) {
 						//
