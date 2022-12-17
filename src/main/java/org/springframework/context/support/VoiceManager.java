@@ -1695,13 +1695,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			final Range<Integer> range = createRange(toInteger(testAndApply(predicate, "min", function, null)),
 					toInteger(testAndApply(predicate, "max", function, null)));
 			//
-			if (range != null && hasLowerBound(range) && range.hasUpperBound() && lowerEndpoint(range) != null
-					&& range.upperEndpoint() != null) {
+			if (hasLowerBound(range) && hasUpperBound(range) && lowerEndpoint(range) != null
+					&& upperEndpoint(range) != null) {
 				//
 				panel.add(new JLabel("Speech Rate"), "aligny top");
 				//
 				panel.add(jsSpeechRate = new JSlider(intValue(lowerEndpoint(range), 0),
-						intValue(range.upperEndpoint(), 0)), String.format("%1$s,span %2$s", GROWX, 7));
+						intValue(upperEndpoint(range), 0)), String.format("%1$s,span %2$s", GROWX, 7));
 				//
 				jsSpeechRate.setMajorTickSpacing(1);
 				//
@@ -1756,9 +1756,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final Range<Integer> speechVolumeRange = createVolumeRange(speechApiInstance);
 		//
-		final Integer upperEnpoint = speechVolumeRange != null && speechVolumeRange.hasUpperBound()
-				? speechVolumeRange.upperEndpoint()
-				: null;
+		final Integer upperEnpoint = hasUpperBound(speechVolumeRange) ? upperEndpoint(speechVolumeRange) : null;
 		//
 		panel.add(jsSpeechVolume = new JSlider(
 				intValue(hasLowerBound(speechVolumeRange) ? lowerEndpoint(speechVolumeRange) : null, 0),
@@ -1869,8 +1867,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null && instance.hasLowerBound();
 	}
 
+	private static boolean hasUpperBound(final Range<?> instance) {
+		return instance != null && instance.hasUpperBound();
+	}
+
 	private static <C extends Comparable<C>> C lowerEndpoint(final Range<C> instance) {
 		return instance != null ? instance.lowerEndpoint() : null;
+	}
+
+	private static <C extends Comparable<C>> C upperEndpoint(final Range<C> instance) {
+		return instance != null ? instance.upperEndpoint() : null;
 	}
 
 	private static void setValue(final JSlider instance, final int n) {
