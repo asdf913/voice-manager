@@ -50,7 +50,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.EventObject;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -219,9 +218,9 @@ class VoiceManagerTest {
 			METHOD_GET_MAPPER, METHOD_INSERT_OR_UPDATE, METHOD_SET_ENABLED_2, METHOD_SET_ENABLED_3,
 			METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_CAST, METHOD_INT_VALUE, METHOD_LONG_VALUE,
 			METHOD_GET_PROPERTY_PROPERTY_RESOLVER, METHOD_GET_PROPERTY_CUSTOM_PROPERTIES, METHOD_PARSE_EXPRESSION,
-			METHOD_GET_VALUE, METHOD_GET_SOURCE_EVENT_OBJECT, METHOD_GET_SOURCE_VOICE, METHOD_EXPORT, METHOD_MAP,
-			METHOD_MAP_TO_INT, METHOD_MAP_TO_LONG, METHOD_MAX_STREAM, METHOD_MAX_INT_STREAM, METHOD_OR_ELSE_OPTIONAL,
-			METHOD_OR_ELSE_OPTIONAL_INT, METHOD_FOR_EACH_STREAM, METHOD_FOR_EACH_ITERABLE, METHOD_CREATE_WORK_BOOK_LIST,
+			METHOD_GET_VALUE, METHOD_GET_SOURCE_VOICE, METHOD_EXPORT, METHOD_MAP, METHOD_MAP_TO_INT, METHOD_MAP_TO_LONG,
+			METHOD_MAX_STREAM, METHOD_MAX_INT_STREAM, METHOD_OR_ELSE_OPTIONAL, METHOD_OR_ELSE_OPTIONAL_INT,
+			METHOD_FOR_EACH_STREAM, METHOD_FOR_EACH_ITERABLE, METHOD_CREATE_WORK_BOOK_LIST,
 			METHOD_CREATE_WORK_BOOK_MULTI_MAP, METHOD_CREATE_VOICE, METHOD_GET_MESSAGE, METHOD_INVOKE,
 			METHOD_ANNOTATION_TYPE, METHOD_FIND_FIRST, METHOD_GET_DECLARED_METHODS, METHOD_FOR_NAME, METHOD_FILTER,
 			METHOD_SET_TEXT, METHOD_GET_PREFERRED_WIDTH, METHOD_IMPORT_VOICE1, METHOD_IMPORT_VOICE3,
@@ -324,8 +323,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_GET_VALUE = clz.getDeclaredMethod("getValue", Expression.class, EvaluationContext.class))
 				.setAccessible(true);
-		//
-		(METHOD_GET_SOURCE_EVENT_OBJECT = clz.getDeclaredMethod("getSource", EventObject.class)).setAccessible(true);
 		//
 		(METHOD_GET_SOURCE_VOICE = clz.getDeclaredMethod("getSource", Voice.class)).setAccessible(true);
 		//
@@ -1355,7 +1352,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		instance = constructor != null && !GraphicsEnvironment.isHeadless() ? constructor.newInstance() : null;
+		instance = !GraphicsEnvironment.isHeadless() ? newInstance(constructor) : null;
 		//
 		sqlSessionFactory = Reflection.newProxy(SqlSessionFactory.class, ih = new IH());
 		//
@@ -1381,6 +1378,11 @@ class VoiceManagerTest {
 		//
 		voiceMapper = Reflection.newProxy(VoiceMapper.class, ih);
 		//
+	}
+
+	private static <T> T newInstance(final Constructor<T> instance, final Object... initargs)
+			throws InstantiationException, IllegalAccessException, InvocationTargetException {
+		return instance != null ? instance.newInstance(initargs) : null;
 	}
 
 	@Test
@@ -2494,20 +2496,10 @@ class VoiceManagerTest {
 	@Test
 	void testGetSource() throws Throwable {
 		//
-		Assertions.assertNull(getSource((EventObject) null));
-		//
 		Assertions.assertNull(getSource((Voice) null));
 		//
 		Assertions.assertNull(getSource(new Voice()));
 		//
-	}
-
-	private static Object getSource(final EventObject instance) throws Throwable {
-		try {
-			return METHOD_GET_SOURCE_EVENT_OBJECT.invoke(null, instance);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	private static String getSource(final Voice instance) throws Throwable {
@@ -2563,9 +2555,9 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertThrows(IllegalStateException.class,
-				() -> export(voices, Collections.singletonMap(EMPTY, "true"), Reflection.newProxy(CLASS_OBJECT_MAP,
-						cast(InvocationHandler.class, constructor != null ? constructor.newInstance() : null))));
+		Assertions.assertThrows(IllegalStateException.class, () -> export(voices,
+				Collections.singletonMap(EMPTY, "true"),
+				Reflection.newProxy(CLASS_OBJECT_MAP, cast(InvocationHandler.class, newInstance(constructor)))));
 		//
 
 	}
@@ -2792,8 +2784,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		final InvocationHandler ih = cast(InvocationHandler.class,
-				constructor != null ? constructor.newInstance() : null);
+		final InvocationHandler ih = cast(InvocationHandler.class, newInstance(constructor));
 		//
 		// org.springframework.context.support.VoiceManager$BooleanMap.setBoolean(java.lang.String,boolean)
 		//
@@ -3096,8 +3087,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		final InvocationHandler ih = cast(InvocationHandler.class,
-				constructor != null ? constructor.newInstance() : null);
+		final InvocationHandler ih = cast(InvocationHandler.class, newInstance(constructor));
 		//
 		final Object objectMap = Reflection.newProxy(CLASS_OBJECT_MAP, ih);
 		//
@@ -3689,8 +3679,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		final InvocationHandler ih = cast(InvocationHandler.class,
-				constructor != null ? constructor.newInstance() : null);
+		final InvocationHandler ih = cast(InvocationHandler.class, newInstance(constructor));
 		//
 		final Field fieldObjects = ih != null ? getDeclaredField(ih.getClass(), "objects") : null;
 		//
@@ -3867,8 +3856,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		final InvocationHandler ih = cast(InvocationHandler.class,
-				constructor != null ? constructor.newInstance() : null);
+		final InvocationHandler ih = cast(InvocationHandler.class, newInstance(constructor));
 		//
 		final Object objectMap2 = Reflection.newProxy(CLASS_OBJECT_MAP, ih);
 		//
@@ -4103,8 +4091,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		final InvocationHandler ih = cast(InvocationHandler.class,
-				constructor != null ? constructor.newInstance() : null);
+		final InvocationHandler ih = cast(InvocationHandler.class, newInstance(constructor));
 		//
 		final Object objectMap = Reflection.newProxy(CLASS_OBJECT_MAP, ih);
 		//
@@ -6404,8 +6391,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		final InvocationHandler ih = cast(InvocationHandler.class,
-				constructor != null ? constructor.newInstance() : null);
+		final InvocationHandler ih = cast(InvocationHandler.class, newInstance(constructor));
 		//
 		Assertions.assertDoesNotThrow(() -> exportJlpt(Reflection.newProxy(CLASS_OBJECT_MAP, ih), voices));
 		//
@@ -7187,7 +7173,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		return cast(InvocationHandler.class, constructor != null ? constructor.newInstance() : null);
+		return cast(InvocationHandler.class, newInstance(constructor));
 		//
 	}
 
@@ -7204,7 +7190,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		final Runnable runnable = cast(Runnable.class, constructor != null ? constructor.newInstance() : null);
+		final Runnable runnable = cast(Runnable.class, newInstance(constructor));
 		//
 		Assertions.assertDoesNotThrow(() -> run(runnable));
 		//
@@ -7597,7 +7583,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(invoke(setPassword, null, constructor != null ? constructor.newInstance() : null, null));
+		Assertions.assertNull(invoke(setPassword, null, newInstance(constructor), null));
 		//
 		// org.springframework.context.support.VoiceManager$ExportTask.getNodeName(org.w3c.dom.Node)
 		//
@@ -7691,7 +7677,7 @@ class VoiceManagerTest {
 		} // if
 			//
 		final ListCellRenderer<?> listCellRenderer1 = cast(ListCellRenderer.class,
-				constructor != null ? constructor.newInstance(this.instance) : null);
+				newInstance(constructor, this.instance));
 		//
 		if (listCellRenderer1 != null) {
 			//
@@ -7737,7 +7723,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		final Object instance = constructor != null ? constructor.newInstance() : null;
+		final Object instance = newInstance(constructor);
 		//
 		// setAudioStreamEncoderByteArrayLength(java.lang.Object)
 		//
@@ -7800,7 +7786,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		final Object instance = constructor != null ? constructor.newInstance() : null;
+		final Object instance = newInstance(constructor);
 		//
 		// convert(byte[])
 		//
@@ -7918,7 +7904,7 @@ class VoiceManagerTest {
 		} // if
 			//
 		final MouseListener[] mouseListeners = getMouseListeners(
-				cast(Component.class, constructor != null ? constructor.newInstance((Object) null) : null));
+				cast(Component.class, newInstance(constructor, (Object) null)));
 		//
 		for (int i = 0; mouseListeners != null && i < mouseListeners.length; i++) {
 			//
@@ -7982,6 +7968,23 @@ class VoiceManagerTest {
 		Assertions.assertNull(invoke(setObject, objectMap, null, null));
 		//
 		Assertions.assertEquals(Boolean.TRUE, invoke(containsObject, null, objectMap, null));
+		//
+	}
+
+	@Test
+	void testJTabbedPaneChangeListener() throws Throwable {
+		//
+		final Class<?> clz = forName("org.springframework.context.support.VoiceManager$JTabbedPaneChangeListener");
+		//
+		final Constructor<?> constructor = clz != null ? clz.getDeclaredConstructor() : null;
+		//
+		if (constructor != null) {
+			//
+			constructor.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> stateChanged(cast(ChangeListener.class, newInstance(constructor)), null));
 		//
 	}
 

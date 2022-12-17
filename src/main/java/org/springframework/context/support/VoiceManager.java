@@ -933,6 +933,26 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return clz != null && clz.isInstance(value) ? clz.cast(value) : null;
 	}
 
+	private static class JTabbedPaneChangeListener implements ChangeListener {
+
+		private Component component = null;
+
+		private String[] importTabNames = null;
+
+		@Override
+		public void stateChanged(final ChangeEvent evt) {
+			//
+			final JTabbedPane jtp = cast(JTabbedPane.class, getSource(evt));
+			//
+			if (jtp != null) {
+				//
+				setVisible(component, ArrayUtils.contains(importTabNames, jtp.getTitleAt(jtp.getSelectedIndex())));
+				//
+			} // if
+				//
+		}
+	}
+
 	private void init() {
 		//
 		final JTabbedPane jTabbedPane = new JTabbedPane();
@@ -941,24 +961,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final String TAB_TITLE_IMPORT_BATCH = "Import(Batch)";
 		//
-		final String[] TAB_TITLE_IMPORTS = new String[] { TAB_TITLE_IMPORT_SINGLE, TAB_TITLE_IMPORT_BATCH };
+		final JTabbedPaneChangeListener jTabbedPaneChangeListener = new JTabbedPaneChangeListener();
 		//
-		jTabbedPane.addChangeListener(new ChangeListener() {
-
-			@Override
-			public void stateChanged(final ChangeEvent evt) {
-				//
-				final JTabbedPane jtp = cast(JTabbedPane.class, getSource(evt));
-				//
-				if (jtp != null) {
-					//
-					setVisible(jPanelImportResult,
-							ArrayUtils.contains(TAB_TITLE_IMPORTS, jtp.getTitleAt(jtp.getSelectedIndex())));
-					//
-				} // if
-					//
-			}
-		});
+		jTabbedPaneChangeListener.importTabNames = new String[] { TAB_TITLE_IMPORT_SINGLE, TAB_TITLE_IMPORT_BATCH };
+		//
+		jTabbedPane.addChangeListener(jTabbedPaneChangeListener);
 		//
 		JPanel jPanelWarning = null;
 		//
@@ -1143,7 +1150,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			add(jTabbedPane, WRAP);
 			//
-			add(jPanelImportResult = createImportResultPanel(cloneLayoutManager()), GROWX);
+			add(jTabbedPaneChangeListener.component = jPanelImportResult = createImportResultPanel(
+					cloneLayoutManager()), GROWX);
 			//
 		} // if
 			//
