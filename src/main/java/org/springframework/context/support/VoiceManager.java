@@ -1756,10 +1756,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final Range<Integer> speechVolumeRange = createVolumeRange(speechApiInstance);
 		//
-		final Integer upperEnpoint = hasUpperBound(speechVolumeRange) ? upperEndpoint(speechVolumeRange) : null;
+		final Integer upperEnpoint = testAndApply(VoiceManager::hasUpperBound, speechVolumeRange,
+				VoiceManager::upperEndpoint, null);
 		//
-		panel.add(jsSpeechVolume = new JSlider(
-				intValue(hasLowerBound(speechVolumeRange) ? lowerEndpoint(speechVolumeRange) : null, 0),
+		panel.add(jsSpeechVolume = new JSlider(intValue(
+				testAndApply(VoiceManager::hasLowerBound, speechVolumeRange, VoiceManager::lowerEndpoint, null), 0),
 				intValue(upperEnpoint, 100)), String.format("%1$s,span %2$s", GROWX, 3));
 		//
 		final Integer speechVolume = valueOf(
