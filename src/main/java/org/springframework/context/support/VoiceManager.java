@@ -7755,11 +7755,17 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				setVariable(evaluationContext, "voice", ObjectUtils.defaultIfNull(v, voice));
 				//
-				String key, value, ordinalPositionString, voiceFolder = null;
+				String key = null;
+				//
+				String value, ordinalPositionString, voiceFolder = null;
 				//
 				StringBuilder fileName = null;
 				//
-				File fileSource = null, fileDestination, folder = null;
+				File fileSource = null;
+				//
+				File fileDestination;
+				//
+				File folder = null;
 				//
 				JProgressBar progressBar = null;
 				//
@@ -7798,12 +7804,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					// org.apache.commons.io.FileUtils.copyFile(java.io.File,java.io.File)
 					//
+					final String k = key;
+					//
 					FileUtils.copyFile(fileSource,
-							fileDestination = new File(
-									(folder = ObjectUtils.getIfNull(folder,
-											() -> testAndApply(Objects::nonNull, outputFolder, File::new,
-													null))) != null ? new File(folder, key) : new File(key),
-									VoiceManager.toString(fileName)));
+							fileDestination = new File(testAndApply(Objects::nonNull,
+									folder = ObjectUtils.getIfNull(folder,
+											() -> testAndApply(Objects::nonNull, outputFolder, File::new, null)),
+									x -> new File(x, k), x -> new File(k)), VoiceManager.toString(fileName)));
 					//
 					TableUtil.put(voiceFileNames, fileDestination.getParent(), VoiceManager.toString(fileName), voice);
 					//
