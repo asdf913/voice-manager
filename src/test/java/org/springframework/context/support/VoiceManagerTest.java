@@ -7642,6 +7642,20 @@ class VoiceManagerTest {
 			//
 		Assertions.assertEquals(EMPTY, invoke(getVoiceFolder, null, instance));
 		//
+		// org.springframework.context.support.VoiceManager$ExportTask.getProgressBarExport(org.springframework.context.support.VoiceManager)
+		//
+		final Method getProgressBarExport = CLASS_EXPORT_TASK != null
+				? CLASS_EXPORT_TASK.getDeclaredMethod("getProgressBarExport", VoiceManager.class)
+				: null;
+		//
+		if (getProgressBarExport != null) {
+			//
+			getProgressBarExport.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertNull(invoke(getProgressBarExport, null, instance));
+		//
 	}
 
 	private static void run(final Runnable instance) {
