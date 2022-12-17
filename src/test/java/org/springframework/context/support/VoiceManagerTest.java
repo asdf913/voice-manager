@@ -118,6 +118,7 @@ import org.apache.commons.lang3.function.FailableBiFunction;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableRunnable;
+import org.apache.commons.lang3.function.FailableSupplier;
 import org.apache.commons.lang3.math.Fraction;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
@@ -271,7 +272,8 @@ class VoiceManagerTest {
 			METHOD_SEARCH_VOICE_LIST_NAMES_BY_VOICE_ID, METHOD_SET_LIST_NAMES, METHOD_SET_SOURCE,
 			METHOD_GET_PHYSICAL_NUMBER_OF_ROWS, METHOD_EXPORT_HTML, METHOD_STREAM,
 			METHOD_ACTION_PERFORMED_FOR_SYSTEM_CLIPBOARD_ANNOTATED, METHOD_TEST_AND_RUN, METHOD_TO_CHAR_ARRAY,
-			METHOD_HAS_LOWER_BOUND, METHOD_HAS_UPPER_BOUND, METHOD_LOWER_END_POINT, METHOD_UPPER_END_POINT = null;
+			METHOD_HAS_LOWER_BOUND, METHOD_HAS_UPPER_BOUND, METHOD_LOWER_END_POINT, METHOD_UPPER_END_POINT,
+			METHOD_GET_IF_NULL = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -815,6 +817,9 @@ class VoiceManagerTest {
 		(METHOD_LOWER_END_POINT = clz.getDeclaredMethod("lowerEndpoint", Range.class)).setAccessible(true);
 		//
 		(METHOD_UPPER_END_POINT = clz.getDeclaredMethod("upperEndpoint", Range.class)).setAccessible(true);
+		//
+		(METHOD_GET_IF_NULL = clz.getDeclaredMethod("getIfNull", Object.class, FailableSupplier.class))
+				.setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -3686,7 +3691,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Map<Object, Object> objects = ObjectUtils.getIfNull(cast(Map.class, get(fieldObjects, ih)), LinkedHashMap::new);
+		Map<Object, Object> objects = getIfNull(cast(Map.class, get(fieldObjects, ih)), LinkedHashMap::new);
 		//
 		if (objects != null) {
 			//
@@ -4100,7 +4105,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Map<Object, Object> objects = ObjectUtils.getIfNull(cast(Map.class, get(fieldObjects, ih)), LinkedHashMap::new);
+		Map<Object, Object> objects = getIfNull(cast(Map.class, get(fieldObjects, ih)), LinkedHashMap::new);
 		//
 		if (objects != null) {
 			//
@@ -6947,6 +6952,22 @@ class VoiceManagerTest {
 	private static <C extends Comparable<C>> C upperEndpoint(final Range<C> instance) throws Throwable {
 		try {
 			return (C) METHOD_UPPER_END_POINT.invoke(null, instance);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetIfNull() throws Throwable {
+		//
+		Assertions.assertNull(getIfNull(null, null));
+		//
+	}
+
+	private static <T, E extends Throwable> T getIfNull(final T object, final FailableSupplier<T, E> defaultSupplier)
+			throws Throwable {
+		try {
+			return (T) METHOD_GET_IF_NULL.invoke(null, object, defaultSupplier);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

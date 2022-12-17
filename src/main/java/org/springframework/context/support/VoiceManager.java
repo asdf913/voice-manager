@@ -182,6 +182,7 @@ import org.apache.commons.lang3.function.FailableBiFunction;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableRunnable;
+import org.apache.commons.lang3.function.FailableSupplier;
 import org.apache.commons.lang3.math.Fraction;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
@@ -4505,13 +4506,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-			if (methodIsAccessible == null) {
-				//
-				methodIsAccessible = AccessibleObject.class.getDeclaredMethod("isAccessible");
-				//
-			} // if
-				//
-			if (!Narcissus.invokeBooleanMethod(f, methodIsAccessible)) {
+			if (!Narcissus.invokeBooleanMethod(f, methodIsAccessible = getIfNull(methodIsAccessible,
+					() -> AccessibleObject.class.getDeclaredMethod("isAccessible")))) {
 				//
 				if (ArrayUtils.contains(new String[] { "javax.swing", "java.awt" },
 						getName(getPackage(getDeclaringClass(f))))) {
@@ -4543,6 +4539,17 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return list;
 		//
+	}
+
+	/*
+	 * Copy from the below URL
+	 * 
+	 * https://github.com/apache/commons-lang/blob/master/src/main/java/org/apache/
+	 * commons/lang3/ObjectUtils.java#L597
+	 */
+	private static <T, E extends Throwable> T getIfNull(final T object, final FailableSupplier<T, E> defaultSupplier)
+			throws E {
+		return object != null ? object : defaultSupplier == null ? null : defaultSupplier.get();
 	}
 
 	private void exportHtml(final ObjectMap objectMap, final Multimap<String, Voice> multimap,
@@ -4579,10 +4586,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static void exportHtml(final ObjectMap objectMap, final String templateFile, final String folder,
 			final Iterable<Voice> voices) throws IOException, TemplateException {
 		//
-		final Version version = ObjectUtils.getIfNull(ObjectMap.getObject(objectMap, Version.class),
+		final Version version = getIfNull(ObjectMap.getObject(objectMap, Version.class),
 				freemarker.template.Configuration::getVersion);
 		//
-		final freemarker.template.Configuration configuration = ObjectUtils.getIfNull(
+		final freemarker.template.Configuration configuration = getIfNull(
 				ObjectMap.getObject(objectMap, freemarker.template.Configuration.class),
 				() -> new freemarker.template.Configuration(version));
 		//
@@ -4592,8 +4599,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
-		final Map<String, Object> map = new LinkedHashMap<>(Collections.singletonMap("statics",
-				ObjectUtils.getIfNull(ObjectMap.getObject(objectMap, TemplateHashModel.class),
+		final Map<String, Object> map = new LinkedHashMap<>(
+				Collections.singletonMap("statics", getIfNull(ObjectMap.getObject(objectMap, TemplateHashModel.class),
 						() -> new BeansWrapper(version).getStaticModels())));
 		//
 		map.put("folder", folder);
@@ -4686,7 +4693,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
-		return ObjectUtils.getIfNull(toolkit, super::getToolkit);
+		return getIfNull(toolkit, super::getToolkit);
 		//
 	}
 
@@ -4747,7 +4754,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			ObjectMap.setObject(objectMap, POIXMLDocument.class, poiXmlDocument);
 			//
-			ObjectMap.setObject(objectMap, Jakaroma.class, jakaroma = ObjectUtils.getIfNull(jakaroma, Jakaroma::new));
+			ObjectMap.setObject(objectMap, Jakaroma.class, jakaroma = getIfNull(jakaroma, Jakaroma::new));
 			//
 			BiConsumer<Voice, String> errorMessageConsumer = null;
 			//
@@ -5022,7 +5029,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-			add(list = ObjectUtils.getIfNull(list, ArrayList::new), entry.getName());
+			add(list = getIfNull(list, ArrayList::new), entry.getName());
 			//
 		} // while
 			//
@@ -5198,7 +5205,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					continue;
 				} // if
 					//
-				add(list = ObjectUtils.getIfNull(list, ArrayList::new), bd.getAttribute(attribute));
+				add(list = getIfNull(list, ArrayList::new), bd.getAttribute(attribute));
 				//
 			} // for
 				//
@@ -5346,9 +5353,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						continue;
 					} // if
 						//
-					if (!contains(list = ObjectUtils.getIfNull(list, ArrayList::new), key = getKey(en))) {
+					if (!contains(list = getIfNull(list, ArrayList::new), key = getKey(en))) {
 						//
-						add(list = ObjectUtils.getIfNull(list, ArrayList::new), key);
+						add(list = getIfNull(list, ArrayList::new), key);
 						//
 					} else {
 						//
@@ -5711,9 +5718,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 								&& matcher.groupCount() > 0) {
 							key = matcher.group(1);
 						} else if (matches(matcher = matcher(PATTERN_BI_PUSH, line)) && matcher.groupCount() > 0) {
-							put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), key, valueOf(matcher.group(1)));
+							put(map = getIfNull(map, LinkedHashMap::new), key, valueOf(matcher.group(1)));
 						} else if (matches(matcher = matcher(PATTERN_ICONST, line)) && matcher.groupCount() > 0) {
-							put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), key, valueOf(matcher.group(1)));
+							put(map = getIfNull(map, LinkedHashMap::new), key, valueOf(matcher.group(1)));
 						} // if
 							//
 					} // for
@@ -5770,7 +5777,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					bytesWritten = encoder.encodeBuffer(inputBuffer, 0, bytesRead, outputBuffer);
 					//
-					if ((baos = ObjectUtils.getIfNull(baos, ByteArrayOutputStream::new)) != null) {
+					if ((baos = getIfNull(baos, ByteArrayOutputStream::new)) != null) {
 						//
 						baos.write(outputBuffer, 0, bytesWritten);
 						//
@@ -5925,7 +5932,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			final String attribute = attributes[i];
 			//
 			if ((methods = toList(filter(
-					testAndApply(Objects::nonNull, ms = ObjectUtils.getIfNull(ms, () -> getMethods(getClass(id3v1))),
+					testAndApply(Objects::nonNull, ms = getIfNull(ms, () -> getMethods(getClass(id3v1))),
 							Arrays::stream, null),
 					a -> matches(matcher(Pattern.compile(String.format("get%1$s", StringUtils.capitalize(attribute))),
 							getName(a)))))) == null
@@ -5939,7 +5946,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				if ((m = get(methods, 0)) != null && m.getParameterCount() == 0) {
 					//
-					add(pairs = ObjectUtils.getIfNull(pairs, ArrayList::new), Pair.of(attribute, invoke(m, id3v1)));
+					add(pairs = getIfNull(pairs, ArrayList::new), Pair.of(attribute, invoke(m, id3v1)));
 					//
 				} // if
 					//
@@ -6256,7 +6263,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				if (sheet == null) {
 					//
-					sheet = createSheet(workbook = ObjectUtils.getIfNull(workbook, XSSFWorkbook::new));
+					sheet = createSheet(workbook = getIfNull(workbook, XSSFWorkbook::new));
 					//
 				} // if
 					//
@@ -6777,7 +6784,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 								//
 							} // if
 								//
-							if ((intMap = ObjectUtils.getIfNull(intMap,
+							if ((intMap = getIfNull(intMap,
 									() -> Reflection.newProxy(IntMap.class, new IH()))) != null) {
 								//
 								intMap.setObject(cell.getColumnIndex(), orElse(
@@ -6804,7 +6811,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 									//
 								} // if
 									//
-								f.set(voice = ObjectUtils.getIfNull(voice, Voice::new), string);
+								f.set(voice = getIfNull(voice, Voice::new), string);
 								//
 							} else if (isAssignableFrom(Enum.class, type) && (list = toList(filter(
 									testAndApply(Objects::nonNull, getEnumConstants(type), Arrays::stream, null), e -> {
@@ -6821,7 +6828,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 								//
 								if (IterableUtils.size(list) == 1) {
 									//
-									f.set(voice = ObjectUtils.getIfNull(voice, Voice::new), get(list, 0));
+									f.set(voice = getIfNull(voice, Voice::new), get(list, 0));
 									//
 								} else {
 									//
@@ -6831,10 +6838,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 									//
 							} else if (Objects.equals(type, Iterable.class)) {
 								//
-								f.set(voice = ObjectUtils.getIfNull(voice, Voice::new),
-										toList(map(
-												stream(getObjectList(objectMapper = ObjectUtils.getIfNull(objectMapper,
-														ObjectMapper::new), cell.getStringCellValue())),
+								f.set(voice = getIfNull(voice, Voice::new),
+										toList(map(stream(
+												getObjectList(objectMapper = getIfNull(objectMapper, ObjectMapper::new),
+														cell.getStringCellValue())),
 												VoiceManager::toString)));
 								//
 							} else if (Objects.equals(type, Integer.class)) {
@@ -6850,7 +6857,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 									//
 								} // if
 									//
-								f.set(voice = ObjectUtils.getIfNull(voice, Voice::new), integer);
+								f.set(voice = getIfNull(voice, Voice::new), integer);
 								//
 							} else if (Objects.equals(type, Boolean.class)) {
 								//
@@ -6864,7 +6871,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 									//
 								} // if
 									//
-								f.set(voice = ObjectUtils.getIfNull(voice, Voice::new), b);
+								f.set(voice = getIfNull(voice, Voice::new), b);
 								//
 							} // if
 								//
@@ -6902,7 +6909,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					} else {
 						//
-						if ((es = ObjectUtils.getIfNull(es, () -> Executors.newFixedThreadPool(1))) != null) {
+						if ((es = getIfNull(es, () -> Executors.newFixedThreadPool(1))) != null) {
 							//
 							(it = new ImportTask()).sheetCurrentAndTotal = Pair.of(getCurrentSheetIndex(sheet),
 									numberOfSheets);
@@ -6913,8 +6920,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 							it.count = Integer.valueOf(intValue(getPhysicalNumberOfRows(sheet), 0) - 1);
 							//
-							it.percentNumberFormat = ObjectUtils.getIfNull(percentNumberFormat,
-									() -> new DecimalFormat("#%"));
+							it.percentNumberFormat = getIfNull(percentNumberFormat, () -> new DecimalFormat("#%"));
 							//
 							if ((it.voice = voice) != null) {
 								//
@@ -7761,8 +7767,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					if (folderFileNamePattern == null || (key = getKey(folderFileNamePattern)) == null
 							|| StringUtils.isBlank(value = getValue(folderFileNamePattern))
 							|| !(fileSource = testAndApply(Objects::nonNull,
-									voiceFolder = ObjectUtils.getIfNull(voiceFolder,
-											() -> getVoiceFolder(voiceManager)),
+									voiceFolder = getIfNull(voiceFolder, () -> getVoiceFolder(voiceManager)),
 									x -> new File(x, filePath), x -> new File(filePath))).exists()) {
 						//
 						continue;
@@ -7771,7 +7776,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 						// fileName
 						//
-					clear(fileName = ObjectUtils.getIfNull(fileName, StringBuilder::new));
+					clear(fileName = getIfNull(fileName, StringBuilder::new));
 					//
 					if (ordinalPositionAsFileNamePrefix && StringUtils
 							.isNotBlank(ordinalPositionString = VoiceManager.toString(getOrdinalPosition(voice)))) {
@@ -7792,13 +7797,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					final String k = key;
 					//
 					FileUtils.copyFile(fileSource,
-							fileDestination = new File(
-									VoiceManager.toString(testAndApply(Objects::nonNull,
-											folder = ObjectUtils.getIfNull(folder,
-													() -> testAndApply(Objects::nonNull, outputFolder, File::new,
-															null)),
-											x -> new File(x, k), x -> new File(k))),
-									VoiceManager.toString(fileName)));
+							fileDestination = new File(VoiceManager.toString(testAndApply(Objects::nonNull,
+									folder = getIfNull(folder,
+											() -> testAndApply(Objects::nonNull, outputFolder, File::new, null)),
+									x -> new File(x, k), x -> new File(k))), VoiceManager.toString(fileName)));
 					//
 					TableUtil.put(voiceFileNames, fileDestination.getParent(), VoiceManager.toString(fileName), voice);
 					//
@@ -7810,7 +7812,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				if (counter != null) {
 					//
-					setValue(progressBar = ObjectUtils.getIfNull(progressBar, () -> getProgressBarExport(voiceManager)),
+					setValue(progressBar = getIfNull(progressBar, () -> getProgressBarExport(voiceManager)),
 							counter.intValue());
 					//
 					if (count != null) {
@@ -8030,7 +8032,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					final String[] fileExtensions = getFileExtensions(ContentType.OPENDOCUMENT_PRESENTATION);
 					//
-					if ((stopwatch = ObjectUtils.getIfNull(stopwatch, Stopwatch::createUnstarted)) != null) {
+					if ((stopwatch = getIfNull(stopwatch, Stopwatch::createUnstarted)) != null) {
 						//
 						stopwatch.reset();
 						//
@@ -8282,7 +8284,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-			final freemarker.template.Configuration configuration = ObjectUtils.getIfNull(
+			final freemarker.template.Configuration configuration = getIfNull(
 					ObjectMap.getObject(objectMap, freemarker.template.Configuration.class),
 					() -> new freemarker.template.Configuration(freemarker.template.Configuration.getVersion()));
 			//
@@ -8440,7 +8442,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					if (matches(matcher(pattern, getNodeName(attribute)))) {
 						//
-						clear(sb = ObjectUtils.getIfNull(sb, StringBuilder::new));
+						clear(sb = getIfNull(sb, StringBuilder::new));
 						//
 						attribute
 								.setNodeValue(
@@ -8567,7 +8569,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			for (int i = 0; i < size; i++) {
 				//
-				if ((es = ObjectUtils.getIfNull(es, () -> Executors.newFixedThreadPool(1))) == null) {
+				if ((es = getIfNull(es, () -> Executors.newFixedThreadPool(1))) == null) {
 					//
 					continue;
 					//
@@ -8581,13 +8583,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				et.count = size;
 				//
-				et.percentNumberFormat = ObjectUtils.getIfNull(percentNumberFormat, () -> new DecimalFormat("#%"));
+				et.percentNumberFormat = getIfNull(percentNumberFormat, () -> new DecimalFormat("#%"));
 				//
-				et.evaluationContext = evaluationContext = ObjectUtils.getIfNull(evaluationContext,
-						StandardEvaluationContext::new);
+				et.evaluationContext = evaluationContext = getIfNull(evaluationContext, StandardEvaluationContext::new);
 				//
-				et.expressionParser = expressionParser = ObjectUtils.getIfNull(expressionParser,
-						SpelExpressionParser::new);
+				et.expressionParser = expressionParser = getIfNull(expressionParser, SpelExpressionParser::new);
 				//
 				et.outputFolderFileNameExpressions = outputFolderFileNameExpressions;
 				//
@@ -8595,7 +8595,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				et.ordinalPositionDigit = numberOfOrdinalPositionDigit;
 				//
-				et.ordinalPositionFileNamePrefix = ordinalPositionFileNamePrefix = ObjectUtils.getIfNull(
+				et.ordinalPositionFileNamePrefix = ordinalPositionFileNamePrefix = getIfNull(
 						ordinalPositionFileNamePrefix,
 						() -> getText(voiceManager != null ? voiceManager.tfOrdinalPositionFileNamePrefix : null));
 				//
@@ -8613,13 +8613,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
-				et.voiceFileNames = voiceFileNames = ObjectUtils.getIfNull(voiceFileNames, HashBasedTable::create);
+				et.voiceFileNames = voiceFileNames = getIfNull(voiceFileNames, HashBasedTable::create);
 				//
 				if (!ObjectMap.containsObject(objectMap, ObjectMapper.class)) {
 					//
-					ObjectMap.setObject(objectMap, ObjectMapper.class,
-							objectMapper = ObjectUtils.getIfNull(objectMapper,
-									() -> new ObjectMapper().setVisibility(PropertyAccessor.ALL, Visibility.ANY)));
+					ObjectMap.setObject(objectMap, ObjectMapper.class, objectMapper = getIfNull(objectMapper,
+							() -> new ObjectMapper().setVisibility(PropertyAccessor.ALL, Visibility.ANY)));
 					//
 				} // if
 					//
@@ -8657,7 +8656,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						continue;
 					} // if
 						//
-					put(multimap = ObjectUtils.getIfNull(multimap, LinkedListMultimap::create), listName, v);
+					put(multimap = getIfNull(multimap, LinkedListMultimap::create), listName, v);
 					//
 				} // for
 					//
@@ -8697,7 +8696,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					} // if
 						//
-					if ((es = ObjectUtils.getIfNull(es, () -> Executors.newFixedThreadPool(1))) == null) {
+					if ((es = getIfNull(es, () -> Executors.newFixedThreadPool(1))) == null) {
 						//
 						continue;
 						//
@@ -8720,7 +8719,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					if (!ObjectMap.containsObject(objectMap, ExpressionParser.class)) {
 						//
 						ObjectMap.setObject(objectMap, ExpressionParser.class,
-								expressionParser = ObjectUtils.getIfNull(expressionParser, SpelExpressionParser::new));
+								expressionParser = getIfNull(expressionParser, SpelExpressionParser::new));
 						//
 					} // if
 						//
@@ -8730,7 +8729,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							createExportTask(objectMap, size, Integer.valueOf(++coutner), numberOfOrdinalPositionDigit,
 									Collections.singletonMap(getKey(en),
 											"(#voice.text+'('+#voice.romaji+').'+#voice.fileExtension)"),
-									voiceFileNames = ObjectUtils.getIfNull(voiceFileNames, HashBasedTable::create)));
+									voiceFileNames = getIfNull(voiceFileNames, HashBasedTable::create)));
 					//
 				} // for
 					//
@@ -8768,7 +8767,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-			put(multimap = ObjectUtils.getIfNull(multimap, LinkedListMultimap::create), jlptLevel, v);
+			put(multimap = getIfNull(multimap, LinkedListMultimap::create), jlptLevel, v);
 			//
 		} // for
 			//
@@ -8808,7 +8807,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		for (final Entry<String, Voice> en : entries) {
 			//
-			if (en == null || (es = ObjectUtils.getIfNull(es, () -> Executors.newFixedThreadPool(1))) == null) {
+			if (en == null || (es = getIfNull(es, () -> Executors.newFixedThreadPool(1))) == null) {
 				//
 				continue;
 				//
@@ -8817,27 +8816,26 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			if (!ObjectMap.containsObject(objectMap, EvaluationContext.class)) {
 				//
 				ObjectMap.setObject(objectMap, EvaluationContext.class,
-						evaluationContext = ObjectUtils.getIfNull(evaluationContext, StandardEvaluationContext::new));
+						evaluationContext = getIfNull(evaluationContext, StandardEvaluationContext::new));
 				//
 			} // if
 				//
 			if (!ObjectMap.containsObject(objectMap, ExpressionParser.class)) {
 				//
 				ObjectMap.setObject(objectMap, ExpressionParser.class,
-						expressionParser = ObjectUtils.getIfNull(expressionParser, SpelExpressionParser::new));
+						expressionParser = getIfNull(expressionParser, SpelExpressionParser::new));
 				//
 			} // if
 				//
 			ObjectMap.setObject(objectMap, Voice.class, getValue(en));
 			//
-			if (jlptFolderNamePrefix == null
-					&& (voiceManager = ObjectUtils.getIfNull(voiceManager, VoiceManager::new)) != null) {
+			if (jlptFolderNamePrefix == null && (voiceManager = getIfNull(voiceManager, VoiceManager::new)) != null) {
 				//
 				jlptFolderNamePrefix = getText(voiceManager.tfJlptFolderNamePrefix);
 				//
 			} // if
 				//
-			clear(folder = ObjectUtils.getIfNull(folder, StringBuilder::new));
+			clear(folder = getIfNull(folder, StringBuilder::new));
 			//
 			if (folder != null) {
 				//
@@ -8848,7 +8846,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			es.submit(createExportTask(objectMap, size, Integer.valueOf(++coutner), numberOfOrdinalPositionDigit,
 					Collections.singletonMap(toString(folder),
 							"(#voice.text+'('+#voice.romaji+').'+#voice.fileExtension)"),
-					voiceFileNames = ObjectUtils.getIfNull(voiceFileNames, HashBasedTable::create)));
+					voiceFileNames = getIfNull(voiceFileNames, HashBasedTable::create)));
 			//
 		} // for
 			//
@@ -8950,7 +8948,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				if (sheet == null) {
 					//
-					sheet = createSheet(workbook = ObjectUtils.getIfNull(workbook, XSSFWorkbook::new));
+					sheet = createSheet(workbook = getIfNull(workbook, XSSFWorkbook::new));
 					//
 				} // if
 					//
@@ -9011,12 +9009,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			Elements elements = selectXpath(document, "//h3/span[text()=\"本表\"]/../following-sibling::table[1]/tbody");
 			//
-			addJoYoKanJiSheet(workbook = ObjectUtils.getIfNull(workbook, XSSFWorkbook::new), "本表",
+			addJoYoKanJiSheet(workbook = getIfNull(workbook, XSSFWorkbook::new), "本表",
 					IterableUtils.size(elements) == 1 ? children(IterableUtils.get(elements, 0)) : null);
 			//
 			// 付表
 			//
-			addJoYoKanJiSheet(workbook = ObjectUtils.getIfNull(workbook, XSSFWorkbook::new), "付表",
+			addJoYoKanJiSheet(workbook = getIfNull(workbook, XSSFWorkbook::new), "付表",
 					IterableUtils.size(elements = selectXpath(document,
 							"//h3/span[text()=\"付表\"]/../following-sibling::table[1]/tbody")) == 1
 									? children(IterableUtils.get(elements, 0))
@@ -9024,7 +9022,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			// 備考欄
 			//
-			addJoYoKanJiSheet(workbook = ObjectUtils.getIfNull(workbook, XSSFWorkbook::new), "備考欄",
+			addJoYoKanJiSheet(workbook = getIfNull(workbook, XSSFWorkbook::new), "備考欄",
 					IterableUtils.size(elements = selectXpath(document,
 							"//h3/span[text()=\"備考欄\"]/../following-sibling::table[1]/tbody")) == 1
 									? children(IterableUtils.get(elements, 0))
@@ -9060,7 +9058,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		for (int i = 0; i < IterableUtils.size(domNodes); i++) {
 			//
-			if ((sheet = ObjectUtils.getIfNull(sheet, () -> createSheet(workbook, sheetName))) != null
+			if ((sheet = getIfNull(sheet, () -> createSheet(workbook, sheetName))) != null
 					&& (row = createRow(sheet, sheet.getLastRowNum() + 1)) == null) {
 				//
 				continue;
@@ -9071,7 +9069,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			for (int j = 0; j < IterableUtils.size(tds); j++) {
 				//
-				if ((matcher = matcher(pattern2 = ObjectUtils.getIfNull(pattern2, () -> Pattern.compile("\\[\\d+]")),
+				if ((matcher = matcher(pattern2 = getIfNull(pattern2, () -> Pattern.compile("\\[\\d+]")),
 						textContent = ElementUtil.text(get(tds, j)))) != null) {
 					//
 					textContent = matcher.replaceAll("");
@@ -9121,7 +9119,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			if (sheet == null) {
 				//
 				setMicrosoftSpeechObjectLibrarySheetFirstRow(
-						sheet = createSheet(workbook = ObjectUtils.getIfNull(workbook, XSSFWorkbook::new)), as);
+						sheet = createSheet(workbook = getIfNull(workbook, XSSFWorkbook::new)), as);
 				//
 			} // if
 				//
@@ -9282,7 +9280,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		Workbook workbook = null;
 		//
-		setSheet(workbook = ObjectUtils.getIfNull(workbook, XSSFWorkbook::new), createSheet(workbook), voices);
+		setSheet(workbook = getIfNull(workbook, XSSFWorkbook::new), createSheet(workbook), voices);
 		//
 		if (BooleanMap.getBoolean(booleanMap, "exportListSheet")) {
 			//
@@ -9362,7 +9360,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
-				if ((fs = ObjectUtils.getIfNull(fs, () -> FieldUtils.getAllFields(Voice.class))) != null) {
+				if ((fs = getIfNull(fs, () -> FieldUtils.getAllFields(Voice.class))) != null) {
 					//
 					Arrays.sort(fs, (x, y) -> {
 						//
@@ -9398,8 +9396,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					if (objectMap == null) {
 						//
 						ObjectMap.setObject(
-								objectMap = ObjectUtils.getIfNull(objectMap,
-										() -> Reflection.newProxy(ObjectMap.class, new IH())),
+								objectMap = getIfNull(objectMap, () -> Reflection.newProxy(ObjectMap.class, new IH())),
 								Workbook.class, workbook);
 						//
 					} // if
