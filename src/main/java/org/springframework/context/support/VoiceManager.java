@@ -7759,7 +7759,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				StringBuilder fileName = null;
 				//
-				File fileSource, fileDestination, folder = null;
+				File fileSource = null, fileDestination, folder = null;
 				//
 				JProgressBar progressBar = null;
 				//
@@ -7769,11 +7769,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					if (folderFileNamePattern == null || (key = getKey(folderFileNamePattern)) == null
 							|| StringUtils.isBlank(value = getValue(folderFileNamePattern))
-							|| !(fileSource = (voiceFolder = ObjectUtils.getIfNull(voiceFolder,
-									() -> getVoiceFolder(voiceManager))) != null ? new File(voiceFolder, filePath)
-											: new File(filePath))
-									.exists()) {
+							|| !(fileSource = testAndApply(Objects::nonNull,
+									voiceFolder = ObjectUtils.getIfNull(voiceFolder,
+											() -> getVoiceFolder(voiceManager)),
+									x -> new File(x, filePath), x -> new File(filePath))).exists()) {
+						//
 						continue;
+						//
 					} // if
 						//
 						// fileName
