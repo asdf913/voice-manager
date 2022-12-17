@@ -7816,10 +7816,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					final String k = key;
 					//
 					FileUtils.copyFile(fileSource,
-							fileDestination = new File(testAndApply(Objects::nonNull,
-									folder = ObjectUtils.getIfNull(folder,
-											() -> testAndApply(Objects::nonNull, outputFolder, File::new, null)),
-									x -> new File(x, k), x -> new File(k)), VoiceManager.toString(fileName)));
+							fileDestination = new File(
+									VoiceManager.toString(testAndApply(Objects::nonNull,
+											folder = ObjectUtils.getIfNull(folder,
+													() -> testAndApply(Objects::nonNull, outputFolder, File::new,
+															null)),
+											x -> new File(x, k), x -> new File(k))),
+									VoiceManager.toString(fileName)));
 					//
 					TableUtil.put(voiceFileNames, fileDestination.getParent(), VoiceManager.toString(fileName), voice);
 					//
