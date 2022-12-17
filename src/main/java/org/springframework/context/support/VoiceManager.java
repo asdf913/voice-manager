@@ -2026,12 +2026,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // try
 			//
-		if (booleans != null) {
-			//
-			booleans.add(0, null);
-			//
-		} // if
-			//
+		add(booleans, 0, null);
+		//
 		final Supplier<ComboBoxModel<Boolean>> booleanComboBoxModelSupplier = new BooleanComboBoxModelSupplier(
 				booleans);
 		//
@@ -2201,12 +2197,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final List<String> jlptLevelList = testAndApply(Objects::nonNull, getJlptLevels(), ArrayList::new, null);
 		//
-		if (jlptLevelList != null && !jlptLevelList.isEmpty()) {
-			//
-			jlptLevelList.add(0, null);
-			//
-		} // if
-			//
+		testAndAccept(CollectionUtils::isNotEmpty, jlptLevelList, x -> add(x, 0, null));
+		//
 		panel.add(new JComboBox<String>(
 				cbmJlptLevel = testAndApply(Objects::nonNull, toArray(jlptLevelList, new String[] {}),
 						DefaultComboBoxModel::new, x -> new DefaultComboBoxModel<String>())),
@@ -7260,6 +7252,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static <E> void add(final Collection<E> items, final E item) {
 		if (items != null) {
 			items.add(item);
+		}
+	}
+
+	private static <E> void add(final List<E> instance, final int index, final E element) {
+		if (instance != null) {
+			instance.add(index, element);
 		}
 	}
 
