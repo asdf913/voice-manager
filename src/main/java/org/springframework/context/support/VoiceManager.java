@@ -276,6 +276,7 @@ import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Range;
 import com.google.common.collect.Table;
+import com.google.common.collect.TableUtil;
 import com.google.common.reflect.Reflection;
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
@@ -7806,12 +7807,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 													null))) != null ? new File(folder, key) : new File(key),
 									VoiceManager.toString(fileName)));
 					//
-					if (voiceFileNames != null) {
-						//
-						voiceFileNames.put(fileDestination.getParent(), VoiceManager.toString(fileName), voice);
-						//
-					} // if
-						//
+					TableUtil.put(voiceFileNames, fileDestination.getParent(), VoiceManager.toString(fileName), voice);
+					//
 					if (overMp3Title) {
 						//
 						setMp3Title(fileDestination);

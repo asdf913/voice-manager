@@ -48,14 +48,10 @@ public class SpeechApiSpeechServerImpl implements SpeechApi, Provider, Lookup, I
 		//
 		final Table<Object, Object, Object> t = getTable();
 		//
-		if (t != null) {
-			//
-			t.put("volume", "min", 0);
-			//
-			t.put("volume", "max", 100);
-			//
-		} // if
-			//
+		TableUtil.put(t, "volume", "min", 0);
+		//
+		TableUtil.put(t, "volume", "max", 100);
+		//
 	}
 
 	private Table<Object, Object, Object> getTable() {
