@@ -706,9 +706,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		final Map<?, ?> map = cast(Map.class, value);
 		//
-		if (map != null && map.entrySet() != null) {
+		if (entrySet(map) != null) {
 			//
-			for (final Entry<?, ?> entry : map.entrySet()) {
+			for (final Entry<?, ?> entry : entrySet(map)) {
 				//
 				if (entry == null) {
 					//
@@ -737,6 +737,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			throw new IllegalArgumentException(toString(getClass(object)));
 		} // if
 			//
+	}
+
+	private static <K, V> Set<Entry<K, V>> entrySet(final Map<K, V> instance) {
+		return instance != null ? instance.entrySet() : null;
 	}
 
 	private ObjectMapper getObjectMapper() {
@@ -5211,11 +5215,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		final Map<String, ByteConverter> byteConverters = getBeansOfType(configurableListableBeanFactory,
 				ByteConverter.class);
 		//
-		if (byteConverters != null && byteConverters.entrySet() != null) {
+		final Set<Entry<String, ByteConverter>> entrySet = entrySet(byteConverters);
+		//
+		if (entrySet != null) {
 			//
 			BeanDefinition bd = null;
 			//
-			for (final Entry<String, ByteConverter> en : byteConverters.entrySet()) {
+			for (final Entry<String, ByteConverter> en : entrySet) {
 				//
 				if (en == null || (bd = configurableListableBeanFactory.getBeanDefinition(getKey(en))) == null
 						|| !bd.hasAttribute(attribute)) {
@@ -5244,11 +5250,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		final Map<String, ByteConverter> byteConverters = getBeansOfType(configurableListableBeanFactory,
 				ByteConverter.class);
 		//
-		if (byteConverters != null && byteConverters.entrySet() != null) {
+		final Set<Entry<String, ByteConverter>> entrySet = entrySet(byteConverters);
+		//
+		if (entrySet != null) {
 			//
 			BeanDefinition bd = null;
 			//
-			for (final Entry<String, ByteConverter> en : byteConverters.entrySet()) {
+			for (final Entry<String, ByteConverter> en : entrySet) {
 				//
 				if (en == null || (bd = configurableListableBeanFactory.getBeanDefinition(getKey(en))) == null
 						|| !bd.hasAttribute(attribute)
@@ -7742,8 +7750,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				final String filePath = getFilePath(voice);
 				//
-				if (filePath == null || outputFolderFileNameExpressions == null
-						|| outputFolderFileNameExpressions.entrySet() == null) {
+				final Set<Entry<String, String>> entrySet = entrySet(outputFolderFileNameExpressions);
+				//
+				if (filePath == null || entrySet == null) {
 					//
 					return;
 					//
@@ -7771,7 +7780,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				final String outputFolder = getOutputFolder(voiceManager);
 				//
-				for (final Entry<String, String> folderFileNamePattern : outputFolderFileNameExpressions.entrySet()) {
+				for (final Entry<String, String> folderFileNamePattern : entrySet) {
 					//
 					if (folderFileNamePattern == null || (key = getKey(folderFileNamePattern)) == null
 							|| StringUtils.isBlank(value = getValue(folderFileNamePattern))
@@ -8109,7 +8118,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			try (final InputStream is = testAndApply(Objects::nonNull, ObjectMap.getObject(objectMap, byte[].class),
 					ByteArrayInputStream::new, null)) {
 				//
-				if (voices != null) {
+				final Set<Entry<String, Voice>> entrySet = entrySet(voices);
+				//
+				if (entrySet != null) {
 					//
 					final Document document = testAndApply(Objects::nonNull,
 							testAndApply(Objects::nonNull,
@@ -8139,7 +8150,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					final boolean hideAudioImageInPresentation = BooleanMap.getBoolean(
 							ObjectMap.getObject(objectMap, BooleanMap.class), HIDE_AUDIO_IMAGE_IN_PRESENTATION);
 					//
-					for (final Entry<String, Voice> entry : voices.entrySet()) {
+					for (final Entry<String, Voice> entry : entrySet) {
 						//
 						if (Boolean.logicalOr((voice = getValue(entry)) == null,
 								(pageCloned = cloneNode(page, true)) == null)) {
