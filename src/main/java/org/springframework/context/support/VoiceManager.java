@@ -7312,13 +7312,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 												//
 											if (voiceManager != null) {
 												//
-												if (jsSpeechVolume == null && voiceManager != null) {
+												if (jsSpeechVolume == null) {
 													//
 													jsSpeechVolume = voiceManager.jsSpeechVolume;
 													//
 												} // if
 													//
-												if (voiceId == null && voiceManager != null) {
+												if (voiceId == null) {
 													//
 													voiceId = toString(getSelectedItem(
 															voiceManager != null ? voiceManager.cbmVoiceId : null));
