@@ -418,11 +418,17 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Group("Conversion")
 	private AbstractButton btnConvertToKatakana = null;
 
-	private AbstractButton btnSpeak, btnWriteVoice, cbUseTtsVoice, btnExecute, btnImportFileTemplate, btnImport,
-			btnImportWithinFolder, cbOverMp3Title, cbOrdinalPositionAsFileNamePrefix, btnExport, cbExportHtml,
-			cbExportListHtml, cbExportHtmlAsZip, cbExportHtmlRemoveAfterZip, cbExportListSheet, cbExportJlptSheet,
-			cbExportPresentation, cbEmbedAudioInPresentation, cbHideAudioImageInPresentation,
-			cbImportFileTemplateGenerateBlankRow, cbJlptAsFolder, btnExportBrowse, btnPronunciationPageUrlCheck = null;
+	@Group("TTS Button")
+	private AbstractButton btnSpeak = null;
+
+	@Group("TTS Button")
+	private AbstractButton btnWriteVoice = null;
+
+	private AbstractButton cbUseTtsVoice, btnExecute, btnImportFileTemplate, btnImport, btnImportWithinFolder,
+			cbOverMp3Title, cbOrdinalPositionAsFileNamePrefix, btnExport, cbExportHtml, cbExportListHtml,
+			cbExportHtmlAsZip, cbExportHtmlRemoveAfterZip, cbExportListSheet, cbExportJlptSheet, cbExportPresentation,
+			cbEmbedAudioInPresentation, cbHideAudioImageInPresentation, cbImportFileTemplateGenerateBlankRow,
+			cbJlptAsFolder, btnExportBrowse, btnPronunciationPageUrlCheck = null;
 
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.FIELD)
@@ -1981,7 +1987,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		addChangeListener(this, jsSpeechVolume, jsSpeechRate);
 		//
-		Double maxWidth = ObjectUtils.max(getPreferredWidth(jcbAudioFormat), getPreferredWidth(jcbSpeakMethod));
+		final Double maxWidth = ObjectUtils.max(getPreferredWidth(jcbAudioFormat), getPreferredWidth(jcbSpeakMethod));
 		//
 		if (maxWidth != null) {
 			//
@@ -1989,12 +1995,18 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
-		if ((maxWidth = ObjectUtils.max(getPreferredWidth(btnSpeak), getPreferredWidth(btnWriteVoice))) != null) {
+			// Find the maximum width of the "java.awt.Component" instance from the field
+			// with "org.springframework.context.support.VoiceManager.Group" annotation with
+			// same value (i.e. "TTS Button"),
+			// then set the maximum width to each "java.awt.Component" in the list.
 			//
-			setPreferredWidth(maxWidth.intValue(), btnSpeak, btnWriteVoice);
-			//
-		} // if
-			//
+		final Collection<Component> cs = getObjectsByGroupAnnotation(this, "TTS Button", Component.class);
+		//
+		setPreferredWidth(intValue(
+				getPreferredWidth(
+						Collections.max(cs, (a, b) -> ObjectUtils.compare(getPreferredWidth(a), getPreferredWidth(b)))),
+				0), cs);
+		//
 		return panel;
 		//
 	}
@@ -2937,6 +2949,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		// btnExportJoYoKanJi
 		//
 		panel.add(btnExportJoYoKanJi = new JButton("Export 常用漢字"), WRAP);
+		//
+		// Find the maximum width of the "java.awt.Component" instance from the field
+		// with "org.springframework.context.support.VoiceManager.Group" annotation with
+		// same value (i.e. "Short Export Button"),
+		// then set the maximum width to each "java.awt.Component" in the list.
 		//
 		final List<Component> cs = getObjectsByGroupAnnotation(this, "Short Export Button", Component.class);
 		//
