@@ -4226,15 +4226,17 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				final boolean nonTest = forName("org.junit.jupiter.api.Test") == null;
 				//
-				if (nonTest) {
-					//
-					JOptionPane.showMessageDialog(null, jcbVoiceId, "Voice ID", JOptionPane.PLAIN_MESSAGE);
-					//
-				} // if
-					//
+				// Show "Voice ID" option dialog if this method is not run under test case
+				//
+				testAndAccept((a, b) -> Objects.equals(a, Boolean.TRUE), nonTest, jcbVoiceId,
+						(a, b) -> JOptionPane.showMessageDialog(null, b, "Voice ID", JOptionPane.PLAIN_MESSAGE));
+				//
 				final Object selectedItem = getSelectedItem(cbmVoiceId);
 				//
 				if (selectedItem == null) {
+					//
+					// Show "Please select a Voice" message if this method is not run under test
+					// case
 					//
 					testAndRun(nonTest, () -> JOptionPane.showMessageDialog(null, "Please select a Voice"));
 					//
