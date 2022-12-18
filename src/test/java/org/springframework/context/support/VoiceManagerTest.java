@@ -2069,7 +2069,17 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnExecute, 0, null)));
+		final ActionEvent actionEventBtnExecute = new ActionEvent(btnExecute, 0, null);
+		//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnExecute));
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "speechApi", speechApi, true);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnExecute));
 		//
 	}
 

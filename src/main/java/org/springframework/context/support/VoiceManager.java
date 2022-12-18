@@ -4202,51 +4202,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		if (isSelected(cbUseTtsVoice)) {
 			//
-			final String voiceId = toString(getSelectedItem(cbmVoiceId));
-			//
-			if (speechApi != null) {
-				//
-				try {
-					//
-					speechApi.writeVoiceToFile(getText(tfTextImport), voiceId
-					//
-							, intValue(getRate(), 0)// rate
-							//
-							, Math.min(Math.max(intValue(getValue(jsSpeechVolume), 100), 0), 100)// volume
-							, file = File.createTempFile(randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH), null)
-					//
-					);
-					//
-					if (Objects.equals("wav", getFileExtension(
-							testAndApply(Objects::nonNull, file, new ContentInfoUtil()::findMatch, null)))) {
-						//
-						final ByteConverter byteConverter = getByteConverter(configurableListableBeanFactory, FORMAT,
-								getSelectedItem(cbmAudioFormatExecute));
-						//
-						if (byteConverter != null) {
-							//
-							FileUtils.writeByteArrayToFile(file,
-									byteConverter.convert(FileUtils.readFileToByteArray(file)));
-							//
-						} // if
-							//
-					} // if
-						//
-				} catch (final IOException e) {
-					//
-					errorOrPrintStackTraceOrShowMessageDialog(headless, e);
-					//
-				} // try
-					//
-			} // if
-				//
-			setLanguage(voice, StringUtils.defaultIfBlank(getLanguage(voice),
-					convertLanguageCodeToText(getVoiceAttribute(speechApi, voiceId, LANGUAGE), 16)));
-			//
-			setSource(voice,
-					StringUtils.defaultIfBlank(getSource(voice), getProviderName(cast(Provider.class, speechApi))));
-			//
-			deleteOnExit(file);
+			deleteOnExit(file = generateTtsAudioFile(headless, voice));
 			//
 		} else {
 			//
@@ -4321,6 +4277,58 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // try
 			//
+	}
+
+	private File generateTtsAudioFile(final boolean headless, final Voice voice) {
+		//
+		File file = null;
+		//
+		final String voiceId = toString(getSelectedItem(cbmVoiceId));
+		//
+		if (speechApi != null) {
+			//
+			try {
+				//
+				speechApi.writeVoiceToFile(getText(tfTextImport), voiceId
+				//
+						, intValue(getRate(), 0)// rate
+						//
+						, Math.min(Math.max(intValue(getValue(jsSpeechVolume), 100), 0), 100)// volume
+						, file = File.createTempFile(randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH), null)
+				//
+				);
+				//
+				if (Objects.equals("wav", getFileExtension(
+						testAndApply(Objects::nonNull, file, new ContentInfoUtil()::findMatch, null)))) {
+					//
+					final ByteConverter byteConverter = getByteConverter(configurableListableBeanFactory, FORMAT,
+							getSelectedItem(cbmAudioFormatExecute));
+					//
+					if (byteConverter != null) {
+						//
+						FileUtils.writeByteArrayToFile(file,
+								byteConverter.convert(FileUtils.readFileToByteArray(file)));
+						//
+					} // if
+						//
+				} // if
+					//
+			} catch (final IOException e) {
+				//
+				errorOrPrintStackTraceOrShowMessageDialog(headless, e);
+				//
+			} // try
+				//
+		} // if
+			//
+		setLanguage(voice, StringUtils.defaultIfBlank(getLanguage(voice),
+				convertLanguageCodeToText(getVoiceAttribute(speechApi, voiceId, LANGUAGE), 16)));
+		//
+		setSource(voice,
+				StringUtils.defaultIfBlank(getSource(voice), getProviderName(cast(Provider.class, speechApi))));
+		//
+		return file;
+		//
 	}
 
 	private void actionPerformedForPronunciationPageUrlCheck(final boolean headless) {
@@ -6241,6 +6249,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final boolean headless = GraphicsEnvironment.isHeadless();
 		//
+		final boolean nonTest = forName("org.junit.jupiter.api.Test") == null;
+		//
 		if (file == null) {
 			//
 			message = NO_FILE_SELECTED;
@@ -6249,7 +6259,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				tmImportException.addRow(new Object[] { getText(voice), getRomaji(voice), message });
 				//
-			} else if (!headless && forName("org.junit.jupiter.api.Test") == null) {
+			} else if (!headless && nonTest) {
 				//
 				JOptionPane.showMessageDialog(null, message);
 				//
@@ -6297,7 +6307,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				tmImportException.addRow(new Object[] { getText(voice), getRomaji(voice), message });
 				//
-			} else {
+			} else if (nonTest) {
 				//
 				JOptionPane.showMessageDialog(null, message);
 				//
