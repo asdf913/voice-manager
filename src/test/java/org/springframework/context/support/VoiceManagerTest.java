@@ -278,7 +278,7 @@ class VoiceManagerTest {
 			METHOD_ACTION_PERFORMED_FOR_CONVERSION, METHOD_TEST_AND_RUN, METHOD_TO_CHAR_ARRAY, METHOD_HAS_LOWER_BOUND,
 			METHOD_HAS_UPPER_BOUND, METHOD_LOWER_END_POINT, METHOD_UPPER_END_POINT, METHOD_GET_IF_NULL,
 			METHOD_SET_LANGUAGE, METHOD_GET_LANGUAGE, METHOD_GET_BOOLEAN_VALUE, METHOD_CREATE_FORMULA_EVALUATOR,
-			METHOD_GET_RESPONSE_CODE, METHOD_TO_RUNTIME_EXCEPTION = null;
+			METHOD_GET_RESPONSE_CODE, METHOD_TO_RUNTIME_EXCEPTION, METHOD_GET_ALGORITHM = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -847,6 +847,8 @@ class VoiceManagerTest {
 		//
 		(METHOD_TO_RUNTIME_EXCEPTION = clz.getDeclaredMethod("toRuntimeException", Throwable.class))
 				.setAccessible(true);
+		//
+		(METHOD_GET_ALGORITHM = clz.getDeclaredMethod("getAlgorithm", MessageDigest.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -7238,6 +7240,31 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof RuntimeException) {
 				return (RuntimeException) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetAlgorithm() throws Throwable {
+		//
+		Assertions.assertNull(getAlgorithm(null));
+		//
+		final String algorithm = "SHA-512";
+		//
+		Assertions.assertEquals(algorithm, getAlgorithm(MessageDigest.getInstance(algorithm)));
+		//
+	}
+
+	private static String getAlgorithm(final MessageDigest instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_ALGORITHM.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

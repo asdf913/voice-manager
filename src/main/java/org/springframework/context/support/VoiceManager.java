@@ -7664,7 +7664,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			final MessageDigest md = MessageDigest.getInstance("SHA-512");
 			//
-			final String messageDigestAlgorithm = md != null ? md.getAlgorithm() : null;
+			final String messageDigestAlgorithm = getAlgorithm(md);
 			//
 			Long length = length(selectedFile);
 			//
@@ -7742,6 +7742,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // try
 			//
+	}
+
+	private static String getAlgorithm(final MessageDigest instance) {
+		return instance != null ? instance.getAlgorithm() : null;
 	}
 
 	private static <T, U> void accept(final BiConsumer<T, U> instance, final T t, final U u) {
