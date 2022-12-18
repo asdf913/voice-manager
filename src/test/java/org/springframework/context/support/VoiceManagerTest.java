@@ -134,6 +134,7 @@ import org.apache.poi.poifs.crypt.EncryptionMode;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CellValue;
 import org.apache.poi.ss.usermodel.ClientAnchor;
 import org.apache.poi.ss.usermodel.Comment;
 import org.apache.poi.ss.usermodel.CreationHelper;
@@ -141,6 +142,7 @@ import org.apache.poi.ss.usermodel.DataValidation;
 import org.apache.poi.ss.usermodel.DataValidationConstraint;
 import org.apache.poi.ss.usermodel.DataValidationHelper;
 import org.apache.poi.ss.usermodel.Drawing;
+import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.RichTextString;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -272,7 +274,8 @@ class VoiceManagerTest {
 			METHOD_GET_PHYSICAL_NUMBER_OF_ROWS, METHOD_EXPORT_HTML, METHOD_STREAM,
 			METHOD_ACTION_PERFORMED_FOR_SYSTEM_CLIPBOARD_ANNOTATED, METHOD_TEST_AND_RUN, METHOD_TO_CHAR_ARRAY,
 			METHOD_HAS_LOWER_BOUND, METHOD_HAS_UPPER_BOUND, METHOD_LOWER_END_POINT, METHOD_UPPER_END_POINT,
-			METHOD_GET_IF_NULL, METHOD_SET_LANGUAGE, METHOD_GET_LANGUAGE = null;
+			METHOD_GET_IF_NULL, METHOD_SET_LANGUAGE, METHOD_GET_LANGUAGE, METHOD_GET_BOOLEAN_VALUE,
+			METHOD_CREATE_FORMULA_EVALUATOR = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -824,6 +827,11 @@ class VoiceManagerTest {
 		//
 		(METHOD_GET_LANGUAGE = clz.getDeclaredMethod("getLanguage", Voice.class)).setAccessible(true);
 		//
+		(METHOD_GET_BOOLEAN_VALUE = clz.getDeclaredMethod("getBooleanValue", CellValue.class)).setAccessible(true);
+		//
+		(METHOD_CREATE_FORMULA_EVALUATOR = clz.getDeclaredMethod("createFormulaEvaluator", CreationHelper.class))
+				.setAccessible(true);
+		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
 		CLASS_EXPORT_TASK = Class.forName("org.springframework.context.support.VoiceManager$ExportTask");
@@ -1300,6 +1308,14 @@ class VoiceManagerTest {
 					return contains;
 					//
 				} else if (Objects.equals(methodName, "get")) {
+					//
+					return null;
+					//
+				} // if
+					//
+			} else if (proxy instanceof CreationHelper) {
+				//
+				if (Objects.equals(methodName, "createFormulaEvaluator")) {
 					//
 					return null;
 					//
@@ -7013,6 +7029,52 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof String) {
 				return (String) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetBooleanValue() throws Throwable {
+		//
+		Assertions.assertNull(getBooleanValue(null));
+		//
+		Assertions.assertEquals(Boolean.FALSE, getBooleanValue(new CellValue(null)));
+		//
+	}
+
+	private static Boolean getBooleanValue(final CellValue instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_BOOLEAN_VALUE.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Boolean) {
+				return (Boolean) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCreateFormulaEvaluator() throws Throwable {
+		//
+		Assertions.assertNull(createFormulaEvaluator(null));
+		//
+		Assertions.assertNull(createFormulaEvaluator(Reflection.newProxy(CreationHelper.class, ih)));
+		//
+	}
+
+	private static FormulaEvaluator createFormulaEvaluator(final CreationHelper instance) throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_FORMULA_EVALUATOR.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof FormulaEvaluator) {
+				return (FormulaEvaluator) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

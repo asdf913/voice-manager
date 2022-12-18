@@ -113,6 +113,8 @@ public class Voice {
 	@DataFormat("#,##0")
 	private Long fileLength = null;
 
+	private String pronunciationPageUrl = null;
+
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
 	private @interface DateFormat {
@@ -267,6 +269,10 @@ public class Voice {
 
 	public void setGaKuNenBeTsuKanJi(final String gaKuNenBeTsuKanJi) {
 		this.gaKuNenBeTsuKanJi = gaKuNenBeTsuKanJi;
+	}
+
+	public void setPronunciationPageUrl(final String pronunciationPageUrl) {
+		this.pronunciationPageUrl = pronunciationPageUrl;
 	}
 
 }

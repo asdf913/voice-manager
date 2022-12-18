@@ -208,6 +208,7 @@ import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.CellValue;
 import org.apache.poi.ss.usermodel.ClientAnchor;
 import org.apache.poi.ss.usermodel.Comment;
 import org.apache.poi.ss.usermodel.CreationHelper;
@@ -215,6 +216,7 @@ import org.apache.poi.ss.usermodel.DataValidation;
 import org.apache.poi.ss.usermodel.DataValidationConstraint;
 import org.apache.poi.ss.usermodel.DataValidationHelper;
 import org.apache.poi.ss.usermodel.Drawing;
+import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.RichTextString;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -376,7 +378,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			tfSpeechLanguageCode, tfSpeechLanguageName, tfLanguage, tfSpeechVolume, tfCurrentProcessingFile,
 			tfCurrentProcessingSheetName, tfCurrentProcessingVoice, tfListNames, tfPhraseCounter, tfPhraseTotal,
 			tfJlptFolderNamePrefix, tfOrdinalPositionFileNamePrefix, tfIpaSymbol, tfExportFile, tfElapsed, tfDllPath,
-			tfExportHtmlFileName, tfExportPassword = null;
+			tfExportHtmlFileName, tfExportPassword, tfPronunciationPageUrl = null;
 
 	private transient ComboBoxModel<Yomi> cbmYomi = null;
 
@@ -2251,6 +2253,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				String.format("%1$s,span %2$s", GROWX, 6));
 		//
 		panel.add(btnCopyKatakana = new JButton("Copy"), WRAP);
+		//
+		// Pronunciation Page URL
+		//
+		panel.add(new JLabel("Pronunciation Page URL"), String.format("span %1$s", 2));
+		//
+		panel.add(
+				tfPronunciationPageUrl = new JTextField(getProperty(propertyResolver,
+						"org.springframework.context.support.VoiceManager.pronunciationPageUrl")),
+				String.format("%1$s,%2$s,span %3$s", WRAP, GROWX, 22));
 		//
 		panel.add(new JLabel());
 		//
@@ -6778,6 +6789,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 								StringUtils::length)),
 						0);
 				//
+				FormulaEvaluator formulaEvaluator = null;
+				//
 				for (final Row row : sheet) {
 					//
 					if (row == null || row.iterator() == null) {
@@ -6880,6 +6893,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 								if (Objects.equals(cell.getCellType(), CellType.BOOLEAN)) {
 									//
 									b = cell.getBooleanCellValue();
+									//
+								} else if (Objects.equals(cell.getCellType(), CellType.FORMULA)
+										&& (formulaEvaluator = getIfNull(formulaEvaluator,
+												() -> createFormulaEvaluator(getCreationHelper(workbook)))) != null) {
+									//
+									b = getBooleanValue(formulaEvaluator.evaluate(cell));
 									//
 								} else {
 									//
@@ -7091,6 +7110,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // try
 			//
+	}
+
+	private static Boolean getBooleanValue(final CellValue instance) {
+		return instance != null ? Boolean.valueOf(instance.getBooleanValue()) : null;
+	}
+
+	private static FormulaEvaluator createFormulaEvaluator(final CreationHelper instance) {
+		return instance != null ? instance.createFormulaEvaluator() : null;
 	}
 
 	private static File getParentFile(final File instance) {
@@ -7675,6 +7702,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		voice.setJoYoKanji(cast(Boolean.class, getSelectedItem(instance.cbmJoYoKanJi)));
 		//
 		voice.setGaKuNenBeTsuKanJi(toString(getSelectedItem(instance.cbmGaKuNenBeTsuKanJi)));
+		//
+		voice.setPronunciationPageUrl(getText(instance.tfPronunciationPageUrl));
 		//
 		return voice;
 		//

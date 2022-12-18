@@ -17,13 +17,14 @@
 		<result column="is_kanji" property="isKanji" />
 		<result column="jo_yo_kanji" property="joYoKanji" />
 		<result column="ga_ku_nen_be_tsu_kan_ji" property="gaKuNenBeTsuKanJi" />
+		<result column="pronunciation_page_url" property="pronunciationPageUrl" />
 	</resultMap>
 
 	<resultMap id="resultMapVoiceList" type="domain.VoiceList" />
 
 	<select id="retrieveAllVoices" resultMap="resultMapVoice">
 		select
-		id,language,text,source,yomi,romaji,hiragana,katakana,file_path,file_length,file_digest_algorithm,file_digest,file_extension,create_ts,update_ts,ordinal_position,jlpt_level,ipa_symbol,is_kanji,jo_yo_kanji,ga_ku_nen_be_tsu_kan_ji
+		id,language,text,source,yomi,romaji,hiragana,katakana,file_path,file_length,file_digest_algorithm,file_digest,file_extension,create_ts,update_ts,ordinal_position,jlpt_level,ipa_symbol,is_kanji,jo_yo_kanji,ga_ku_nen_be_tsu_kan_ji,pronunciation_page_url
 		from voice
 	</select>
 
@@ -42,7 +43,7 @@
 
 	<select id="searchByTextAndRomaji" resultMap="resultMapVoice">
 		select
-		id,language,text,source,yomi,romaji,hiragana,katakana,file_path,file_length,file_digest_algorithm,file_digest,file_extension,create_ts,update_ts,ordinal_position,jlpt_level,ipa_symbol,is_kanji,jo_yo_kanji,ga_ku_nen_be_tsu_kan_ji
+		id,language,text,source,yomi,romaji,hiragana,katakana,file_path,file_length,file_digest_algorithm,file_digest,file_extension,create_ts,update_ts,ordinal_position,jlpt_level,ipa_symbol,is_kanji,jo_yo_kanji,ga_ku_nen_be_tsu_kan_ji,pronunciation_page_url
 		from voice
 		<where>
 			true
@@ -57,7 +58,7 @@
 		keyProperty="id">
 		<if test="voice!=null">
 			insert into
-			voice(language,text,source,yomi,romaji,hiragana,katakana,file_path,file_length,file_digest_algorithm,file_digest,file_extension,create_ts,ordinal_position,jlpt_level,ipa_symbol,is_kanji,jo_yo_kanji,ga_ku_nen_be_tsu_kan_ji)values(#{voice.language},#{voice.text},#{voice.source},#{voice.yomi},#{voice.romaji},#{voice.hiragana},#{voice.katakana},#{voice.filePath},#{voice.fileLength},#{voice.fileDigestAlgorithm},#{voice.fileDigest},#{voice.fileExtension},#{voice.createTs},#{voice.ordinalPosition},#{voice.jlptLevel},#{voice.ipaSymbol},#{voice.isKanji},#{voice.joYoKanji},#{voice.gaKuNenBeTsuKanJi});
+			voice(language,text,source,yomi,romaji,hiragana,katakana,file_path,file_length,file_digest_algorithm,file_digest,file_extension,create_ts,ordinal_position,jlpt_level,ipa_symbol,is_kanji,jo_yo_kanji,ga_ku_nen_be_tsu_kan_ji,pronunciation_page_url)values(#{voice.language},#{voice.text},#{voice.source},#{voice.yomi},#{voice.romaji},#{voice.hiragana},#{voice.katakana},#{voice.filePath},#{voice.fileLength},#{voice.fileDigestAlgorithm},#{voice.fileDigest},#{voice.fileExtension},#{voice.createTs},#{voice.ordinalPosition},#{voice.jlptLevel},#{voice.ipaSymbol},#{voice.isKanji},#{voice.joYoKanji},#{voice.gaKuNenBeTsuKanJi},#{voice.pronunciationPageUrl});
 		</if>
 	</insert>
 
@@ -84,6 +85,7 @@
 				,is_kanji=#{voice.isKanji}
 				,jo_yo_kanji=#{voice.joYoKanji}
 				,ga_ku_nen_be_tsu_kan_ji=#{voice.gaKuNenBeTsuKanJi}
+				,pronunciation_page_url=#{voice.pronunciationPageUrl}
 			</set>
 			<where>
 				true
