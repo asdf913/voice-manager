@@ -4236,12 +4236,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				if (selectedItem == null) {
 					//
-					if (nonTest) {
-						//
-						JOptionPane.showMessageDialog(null, "Please select a Voice");
-						//
-					} // if
-						//
+					testAndRun(nonTest, () -> JOptionPane.showMessageDialog(null, "Please select a Voice"));
+					//
 					return;
 					//
 				} // if
