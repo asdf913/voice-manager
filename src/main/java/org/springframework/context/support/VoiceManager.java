@@ -3777,132 +3777,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} else if (Objects.equals(source, btnExecute)) {
 			//
-			forEach(Stream.of(tfFile, tfFileLength, tfFileDigest), x -> setText(x, null));
+			actionPerformedForExecute(headless);
 			//
-			File file = null;
-			//
-			final Voice voice = createVoice(getObjectMapper(), this);
-			//
-			if (isSelected(cbUseTtsVoice)) {
-				//
-				final String voiceId = toString(getSelectedItem(cbmVoiceId));
-				//
-				if (speechApi != null) {
-					//
-					try {
-						//
-						speechApi.writeVoiceToFile(getText(tfTextImport), voiceId
-						//
-								, intValue(getRate(), 0)// rate
-								//
-								, Math.min(Math.max(intValue(getValue(jsSpeechVolume), 100), 0), 100)// volume
-								, file = File.createTempFile(randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH), null)
-						//
-						);
-						//
-						if (Objects.equals("wav", getFileExtension(
-								testAndApply(Objects::nonNull, file, new ContentInfoUtil()::findMatch, null)))) {
-							//
-							final ByteConverter byteConverter = getByteConverter(configurableListableBeanFactory,
-									FORMAT, getSelectedItem(cbmAudioFormatExecute));
-							//
-							if (byteConverter != null) {
-								//
-								FileUtils.writeByteArrayToFile(file,
-										byteConverter.convert(FileUtils.readFileToByteArray(file)));
-								//
-							} // if
-								//
-						} // if
-							//
-					} catch (final IOException e) {
-						//
-						errorOrPrintStackTraceOrShowMessageDialog(headless, e);
-						//
-					} // try
-						//
-				} // if
-					//
-				setLanguage(voice, StringUtils.defaultIfBlank(getLanguage(voice),
-						convertLanguageCodeToText(getVoiceAttribute(speechApi, voiceId, LANGUAGE), 16)));
-				//
-				setSource(voice,
-						StringUtils.defaultIfBlank(getSource(voice), getProviderName(cast(Provider.class, speechApi))));
-				//
-				deleteOnExit(file);
-				//
-			} else {
-				//
-				final JFileChooser jfc = new JFileChooser(".");
-				//
-				jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-				//
-				if (jfc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-					//
-					try {
-						//
-						setSource(voice, StringUtils.defaultIfBlank(getSource(voice), getMp3TagValue(
-								file = jfc.getSelectedFile(), x -> StringUtils.isNotBlank(toString(x)), mp3Tags)));
-						//
-					} catch (final IOException | BaseException | IllegalAccessException e) {
-						//
-						errorOrPrintStackTraceOrShowMessageDialog(headless, e);
-						//
-					} catch (final InvocationTargetException e) {
-						//
-						final Throwable targetException = e.getTargetException();
-						//
-						errorOrPrintStackTraceOrShowMessageDialog(headless,
-								ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException), targetException,
-										ExceptionUtils.getRootCause(e), e));
-						//
-					} // try
-						//
-				} else {
-					//
-					clear(tmImportException);
-					//
-					if (tmImportException != null) {
-						//
-						tmImportException.addRow(new Object[] { getText(voice), getRomaji(voice), NO_FILE_SELECTED });
-						//
-					} else {
-						//
-						JOptionPane.showMessageDialog(null, NO_FILE_SELECTED);
-						//
-					} // if
-						//
-					return;
-					//
-				} // if
-					//
-			} // if
-				//
-			SqlSession sqlSession = null;
-			//
-			try {
-				//
-				final ObjectMap objectMap = Reflection.newProxy(ObjectMap.class, new IH());
-				//
-				ObjectMap.setObject(objectMap, File.class, file);
-				//
-				ObjectMap.setObject(objectMap, Voice.class, voice);
-				//
-				ObjectMap.setObject(objectMap, VoiceMapper.class, getMapper(getConfiguration(sqlSessionFactory),
-						VoiceMapper.class, sqlSession = openSession(sqlSessionFactory)));
-				//
-				ObjectMap.setObject(objectMap, VoiceManager.class, this);
-				//
-				ObjectMap.setObject(objectMap, String.class, voiceFolder);
-				//
-				execute(objectMap);
-				//
-			} finally {
-				//
-				IOUtils.closeQuietly(sqlSession);
-				//
-			} // try
-				//
 		} else if (Objects.equals(source, btnExportBrowse)) {
 			//
 			try {
@@ -4314,6 +4190,137 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					return StringUtils.equals(g != null ? g.value() : null, group);
 				})).map(f -> FieldUtils.readField(f, instance, true))));
 		//
+	}
+
+	private void actionPerformedForExecute(final boolean headless) {
+		//
+		forEach(Stream.of(tfFile, tfFileLength, tfFileDigest), x -> setText(x, null));
+		//
+		File file = null;
+		//
+		final Voice voice = createVoice(getObjectMapper(), this);
+		//
+		if (isSelected(cbUseTtsVoice)) {
+			//
+			final String voiceId = toString(getSelectedItem(cbmVoiceId));
+			//
+			if (speechApi != null) {
+				//
+				try {
+					//
+					speechApi.writeVoiceToFile(getText(tfTextImport), voiceId
+					//
+							, intValue(getRate(), 0)// rate
+							//
+							, Math.min(Math.max(intValue(getValue(jsSpeechVolume), 100), 0), 100)// volume
+							, file = File.createTempFile(randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH), null)
+					//
+					);
+					//
+					if (Objects.equals("wav", getFileExtension(
+							testAndApply(Objects::nonNull, file, new ContentInfoUtil()::findMatch, null)))) {
+						//
+						final ByteConverter byteConverter = getByteConverter(configurableListableBeanFactory, FORMAT,
+								getSelectedItem(cbmAudioFormatExecute));
+						//
+						if (byteConverter != null) {
+							//
+							FileUtils.writeByteArrayToFile(file,
+									byteConverter.convert(FileUtils.readFileToByteArray(file)));
+							//
+						} // if
+							//
+					} // if
+						//
+				} catch (final IOException e) {
+					//
+					errorOrPrintStackTraceOrShowMessageDialog(headless, e);
+					//
+				} // try
+					//
+			} // if
+				//
+			setLanguage(voice, StringUtils.defaultIfBlank(getLanguage(voice),
+					convertLanguageCodeToText(getVoiceAttribute(speechApi, voiceId, LANGUAGE), 16)));
+			//
+			setSource(voice,
+					StringUtils.defaultIfBlank(getSource(voice), getProviderName(cast(Provider.class, speechApi))));
+			//
+			deleteOnExit(file);
+			//
+		} else {
+			//
+			final JFileChooser jfc = new JFileChooser(".");
+			//
+			jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+			//
+			if (jfc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+				//
+				try {
+					//
+					setSource(voice,
+							StringUtils.defaultIfBlank(getSource(voice), getMp3TagValue(file = jfc.getSelectedFile(),
+									x -> StringUtils.isNotBlank(toString(x)), mp3Tags)));
+					//
+				} catch (final IOException | BaseException | IllegalAccessException e) {
+					//
+					errorOrPrintStackTraceOrShowMessageDialog(headless, e);
+					//
+				} catch (final InvocationTargetException e) {
+					//
+					final Throwable targetException = e.getTargetException();
+					//
+					errorOrPrintStackTraceOrShowMessageDialog(headless,
+							ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException), targetException,
+									ExceptionUtils.getRootCause(e), e));
+					//
+				} // try
+					//
+			} else {
+				//
+				clear(tmImportException);
+				//
+				if (tmImportException != null) {
+					//
+					tmImportException.addRow(new Object[] { getText(voice), getRomaji(voice), NO_FILE_SELECTED });
+					//
+				} else {
+					//
+					JOptionPane.showMessageDialog(null, NO_FILE_SELECTED);
+					//
+				} // if
+					//
+				return;
+				//
+			} // if
+				//
+		} // if
+			//
+		SqlSession sqlSession = null;
+		//
+		try {
+			//
+			final ObjectMap objectMap = Reflection.newProxy(ObjectMap.class, new IH());
+			//
+			ObjectMap.setObject(objectMap, File.class, file);
+			//
+			ObjectMap.setObject(objectMap, Voice.class, voice);
+			//
+			ObjectMap.setObject(objectMap, VoiceMapper.class, getMapper(getConfiguration(sqlSessionFactory),
+					VoiceMapper.class, sqlSession = openSession(sqlSessionFactory)));
+			//
+			ObjectMap.setObject(objectMap, VoiceManager.class, this);
+			//
+			ObjectMap.setObject(objectMap, String.class, voiceFolder);
+			//
+			execute(objectMap);
+			//
+		} finally {
+			//
+			IOUtils.closeQuietly(sqlSession);
+			//
+		} // try
+			//
 	}
 
 	private void actionPerformedForPronunciationPageUrlCheck(final boolean headless) {
@@ -6242,7 +6249,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				tmImportException.addRow(new Object[] { getText(voice), getRomaji(voice), message });
 				//
-			} else if (!headless) {
+			} else if (!headless && forName("org.junit.jupiter.api.Test") == null) {
 				//
 				JOptionPane.showMessageDialog(null, message);
 				//

@@ -2053,6 +2053,24 @@ class VoiceManagerTest {
 		Assertions.assertThrows(RuntimeException.class,
 				() -> actionPerformed(instance, actionEventBtnPronunciationPageUrlCheck));
 		//
+		// btnExecute
+		//
+		final AbstractButton btnExecute = new JButton();
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "btnExecute", btnExecute, true);
+			//
+			final AbstractButton cbUseTtsVoice = new JCheckBox();
+			//
+			cbUseTtsVoice.setSelected(true);
+			//
+			FieldUtils.writeDeclaredField(instance, "cbUseTtsVoice", cbUseTtsVoice, true);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnExecute, 0, null)));
+		//
 	}
 
 	private static void actionPerformed(final ActionListener instance, final ActionEvent actionEvent) {
@@ -7072,14 +7090,6 @@ class VoiceManagerTest {
 	void testSetLanguage() throws Throwable {
 		//
 		Assertions.assertDoesNotThrow(() -> setLanguage(null, null));
-		//
-		final Voice voice = new Voice();
-		//
-		Assertions.assertNull(getLanguage(voice));
-		//
-		Assertions.assertDoesNotThrow(() -> setLanguage(voice, EMPTY));
-		//
-		Assertions.assertEquals(EMPTY, getLanguage(voice));
 		//
 	}
 
