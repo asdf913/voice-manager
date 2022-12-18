@@ -7172,12 +7172,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 						if (first) {
 							//
-							if (fs == null) {
-								//
-								fs = FieldUtils.getAllFields(Voice.class);
-								//
-							} // if
-								//
+							fs = getIfNull(fs, () -> FieldUtils.getAllFields(Voice.class));
+							//
 							if ((intMap = getIfNull(intMap,
 									() -> Reflection.newProxy(IntMap.class, new IH()))) != null) {
 								//
