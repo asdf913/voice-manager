@@ -679,7 +679,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} else if (instance instanceof Throwable) {
 			//
-			return new RuntimeException((Throwable) instance);
+			return new RuntimeException(instance);
 			//
 		} // if
 			//
