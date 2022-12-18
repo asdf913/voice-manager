@@ -641,15 +641,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				try {
 					//
-					final Object object = invoke(method, null, getMessage(throwable), throwable);
+					final RuntimeException runtimeException = toRuntimeException(
+							cast(Throwable.class, invoke(method, null, getMessage(throwable), throwable)));
 					//
-					if (object instanceof RuntimeException) {
+					if (runtimeException != null) {
 						//
-						throw (RuntimeException) object;
-						//
-					} else if (object instanceof Throwable) {
-						//
-						throw new RuntimeException((Throwable) object);
+						throw runtimeException;
 						//
 					} // if
 						//
@@ -671,6 +668,22 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
+	}
+
+	private static RuntimeException toRuntimeException(final Throwable instance) {
+		//
+		if (instance instanceof RuntimeException) {
+			//
+			return (RuntimeException) instance;
+			//
+		} else if (instance instanceof Throwable) {
+			//
+			return new RuntimeException((Throwable) instance);
+			//
+		} // if
+			//
+		return null;
+		//
 	}
 
 	private static Integer getTempFileMinimumPrefixLength(final org.apache.bcel.classfile.Method method) {
@@ -4527,8 +4540,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			final Throwable throwable = ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException),
 					targetException, ExceptionUtils.getRootCause(e));
 			//
-			throw throwable instanceof RuntimeException ? (RuntimeException) throwable
-					: new RuntimeException(throwable);
+			throw toRuntimeException(throwable);
 			//
 		} // try
 			//

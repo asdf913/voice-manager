@@ -276,7 +276,7 @@ class VoiceManagerTest {
 			METHOD_ACTION_PERFORMED_FOR_SYSTEM_CLIPBOARD_ANNOTATED, METHOD_TEST_AND_RUN, METHOD_TO_CHAR_ARRAY,
 			METHOD_HAS_LOWER_BOUND, METHOD_HAS_UPPER_BOUND, METHOD_LOWER_END_POINT, METHOD_UPPER_END_POINT,
 			METHOD_GET_IF_NULL, METHOD_SET_LANGUAGE, METHOD_GET_LANGUAGE, METHOD_GET_BOOLEAN_VALUE,
-			METHOD_CREATE_FORMULA_EVALUATOR, METHOD_GET_RESPONSE_CODE = null;
+			METHOD_CREATE_FORMULA_EVALUATOR, METHOD_GET_RESPONSE_CODE, METHOD_TO_RUNTIME_EXCEPTION = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -834,6 +834,9 @@ class VoiceManagerTest {
 				.setAccessible(true);
 		//
 		(METHOD_GET_RESPONSE_CODE = clz.getDeclaredMethod("getResponseCode", HttpURLConnection.class))
+				.setAccessible(true);
+		//
+		(METHOD_TO_RUNTIME_EXCEPTION = clz.getDeclaredMethod("toRuntimeException", Throwable.class))
 				.setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
@@ -7132,6 +7135,31 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof Integer) {
 				return (Integer) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testToRuntimeException() throws Throwable {
+		//
+		Assertions.assertNull(toRuntimeException(null));
+		//
+		final RuntimeException runtimeException = new RuntimeException();
+		//
+		Assertions.assertSame(runtimeException, toRuntimeException(runtimeException));
+		//
+	}
+
+	private static RuntimeException toRuntimeException(final Throwable instance) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_RUNTIME_EXCEPTION.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof RuntimeException) {
+				return (RuntimeException) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
