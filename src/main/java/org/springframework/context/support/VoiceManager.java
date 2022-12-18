@@ -2249,7 +2249,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(
 				tfIpaSymbol = new JTextField(
 						getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.ipaSymbol")),
-				String.format("%1$s,span %2$s", GROWX, 2));
+				String.format("%1$s,wmin %2$s,span %3$s", GROWX, 100, 2));
 		//
 		final List<Yomi> yomiList = toList(
 				filter(testAndApply(Objects::nonNull, yomis, Arrays::stream, null), y -> Objects.equals(name(y),
