@@ -412,10 +412,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Group(SPEECH_RATE)
 	private AbstractButton btnSpeechRateFaster = null;
 
-	private AbstractButton btnSpeak, btnWriteVoice, btnConvertToRomaji, btnConvertToKatakana, cbUseTtsVoice, btnExecute,
-			btnImportFileTemplate, btnImport, btnImportWithinFolder, cbOverMp3Title, cbOrdinalPositionAsFileNamePrefix,
-			btnExport, cbExportHtml, cbExportListHtml, cbExportHtmlAsZip, cbExportHtmlRemoveAfterZip, cbExportListSheet,
-			cbExportJlptSheet, cbExportPresentation, cbEmbedAudioInPresentation, cbHideAudioImageInPresentation,
+	@Group("Conversion")
+	private AbstractButton btnConvertToRomaji = null;
+
+	@Group("Conversion")
+	private AbstractButton btnConvertToKatakana = null;
+
+	private AbstractButton btnSpeak, btnWriteVoice, cbUseTtsVoice, btnExecute, btnImportFileTemplate, btnImport,
+			btnImportWithinFolder, cbOverMp3Title, cbOrdinalPositionAsFileNamePrefix, btnExport, cbExportHtml,
+			cbExportListHtml, cbExportHtmlAsZip, cbExportHtmlRemoveAfterZip, cbExportListSheet, cbExportJlptSheet,
+			cbExportPresentation, cbEmbedAudioInPresentation, cbHideAudioImageInPresentation,
 			cbImportFileTemplateGenerateBlankRow, cbJlptAsFolder, btnExportBrowse, btnPronunciationPageUrlCheck = null;
 
 	@Retention(RetentionPolicy.RUNTIME)
@@ -3675,6 +3681,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		testAndRun(contains(getObjectsByGroupAnnotation(this, SPEECH_RATE), source),
 				() -> actionPerformedForSpeechRate(source));
 		//
+		// Conversion
+		//
+		testAndRun(contains(getObjectsByGroupAnnotation(this, "Conversion"), source),
+				() -> actionPerformedForConversion(source));
+		//
 		if (Objects.equals(source, btnSpeak) && speechApi != null) {
 			//
 			final Stopwatch stopwatch = Stopwatch.createStarted();
@@ -3892,16 +3903,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // try
 				//
-		} else if (Objects.equals(source, btnConvertToRomaji)) {
-			//
-			setText(tfRomaji, convert(jakaroma = ObjectUtils.getIfNull(jakaroma, Jakaroma::new), getText(tfTextImport),
-					false, false));
-			//
-		} else if (Objects.equals(source, btnConvertToKatakana)) {
-			//
-			setText(tfKatakana, testAndApply(Objects::nonNull, getText(tfHiragana),
-					x -> KanaConverter.convertKana(x, KanaConverter.OP_ZEN_HIRA_TO_ZEN_KATA), null));
-			//
 		} else if (Objects.equals(source, btnExportBrowse)) {
 			//
 			try {
@@ -4467,6 +4468,34 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		if (intValue != null) {
 			//
 			setValue(jsSpeechRate, intValue.value);
+			//
+			return;
+			//
+		} // if
+			//
+		throw new IllegalStateException();
+		//
+	}
+
+	private void actionPerformedForConversion(final Object source) {
+		//
+		Entry<JTextComponent, String> pair = null;
+		//
+		if (Objects.equals(source, btnConvertToRomaji)) {
+			//
+			pair = Pair.of(tfRomaji, convert(jakaroma = ObjectUtils.getIfNull(jakaroma, Jakaroma::new),
+					getText(tfTextImport), false, false));
+			//
+		} else if (Objects.equals(source, btnConvertToKatakana)) {
+			//
+			pair = Pair.of(tfKatakana, testAndApply(Objects::nonNull, getText(tfHiragana),
+					x -> KanaConverter.convertKana(x, KanaConverter.OP_ZEN_HIRA_TO_ZEN_KATA), null));
+			//
+		}
+		//
+		if (pair != null) {
+			//
+			setText(getKey(pair), getValue(pair));
 			//
 			return;
 			//

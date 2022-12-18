@@ -274,10 +274,10 @@ class VoiceManagerTest {
 			METHOD_SEARCH_VOICE_LIST_NAMES_BY_VOICE_ID, METHOD_SET_LIST_NAMES, METHOD_SET_SOURCE,
 			METHOD_GET_PHYSICAL_NUMBER_OF_ROWS, METHOD_EXPORT_HTML, METHOD_STREAM,
 			METHOD_ACTION_PERFORMED_FOR_SYSTEM_CLIPBOARD_ANNOTATED, METHOD_ACTION_PERFORMED_FOR_SPEECH_RATE,
-			METHOD_TEST_AND_RUN, METHOD_TO_CHAR_ARRAY, METHOD_HAS_LOWER_BOUND, METHOD_HAS_UPPER_BOUND,
-			METHOD_LOWER_END_POINT, METHOD_UPPER_END_POINT, METHOD_GET_IF_NULL, METHOD_SET_LANGUAGE,
-			METHOD_GET_LANGUAGE, METHOD_GET_BOOLEAN_VALUE, METHOD_CREATE_FORMULA_EVALUATOR, METHOD_GET_RESPONSE_CODE,
-			METHOD_TO_RUNTIME_EXCEPTION = null;
+			METHOD_ACTION_PERFORMED_FOR_CONVERSION, METHOD_TEST_AND_RUN, METHOD_TO_CHAR_ARRAY, METHOD_HAS_LOWER_BOUND,
+			METHOD_HAS_UPPER_BOUND, METHOD_LOWER_END_POINT, METHOD_UPPER_END_POINT, METHOD_GET_IF_NULL,
+			METHOD_SET_LANGUAGE, METHOD_GET_LANGUAGE, METHOD_GET_BOOLEAN_VALUE, METHOD_CREATE_FORMULA_EVALUATOR,
+			METHOD_GET_RESPONSE_CODE, METHOD_TO_RUNTIME_EXCEPTION = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -810,6 +810,9 @@ class VoiceManagerTest {
 				.getDeclaredMethod("actionPerformedForSystemClipboardAnnotated", Object.class)).setAccessible(true);
 		//
 		(METHOD_ACTION_PERFORMED_FOR_SPEECH_RATE = clz.getDeclaredMethod("actionPerformedForSpeechRate", Object.class))
+				.setAccessible(true);
+		//
+		(METHOD_ACTION_PERFORMED_FOR_CONVERSION = clz.getDeclaredMethod("actionPerformedForConversion", Object.class))
 				.setAccessible(true);
 		//
 		(METHOD_TEST_AND_RUN = clz.getDeclaredMethod("testAndRun", Boolean.TYPE, FailableRunnable.class))
@@ -6916,6 +6919,21 @@ class VoiceManagerTest {
 	private void actionPerformedForSpeechRate(final Object source) throws Throwable {
 		try {
 			METHOD_ACTION_PERFORMED_FOR_SPEECH_RATE.invoke(instance, source);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testActionPerformedForConversion() {
+		//
+		Assertions.assertThrows(IllegalStateException.class, () -> actionPerformedForConversion(EMPTY));
+		//
+	}
+
+	private void actionPerformedForConversion(final Object source) throws Throwable {
+		try {
+			METHOD_ACTION_PERFORMED_FOR_CONVERSION.invoke(instance, source);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
