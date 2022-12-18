@@ -279,7 +279,7 @@ class VoiceManagerTest {
 			METHOD_HAS_UPPER_BOUND, METHOD_LOWER_END_POINT, METHOD_UPPER_END_POINT, METHOD_GET_IF_NULL,
 			METHOD_SET_LANGUAGE, METHOD_GET_LANGUAGE, METHOD_GET_BOOLEAN_VALUE, METHOD_CREATE_FORMULA_EVALUATOR,
 			METHOD_GET_RESPONSE_CODE, METHOD_TO_RUNTIME_EXCEPTION, METHOD_GET_ALGORITHM,
-			METHOD_SET_PREFERRED_WIDTH_ARRAY, METHOD_SET_PREFERRED_WIDTH_ITERABLE = null;
+			METHOD_SET_PREFERRED_WIDTH_ARRAY, METHOD_SET_PREFERRED_WIDTH_ITERABLE, METHOD_PRINT_STACK_TRACE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -856,6 +856,8 @@ class VoiceManagerTest {
 		//
 		(METHOD_SET_PREFERRED_WIDTH_ITERABLE = clz.getDeclaredMethod("setPreferredWidth", Integer.TYPE, Iterable.class))
 				.setAccessible(true);
+		//
+		(METHOD_PRINT_STACK_TRACE = clz.getDeclaredMethod("printStackTrace", Throwable.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -7305,6 +7307,21 @@ class VoiceManagerTest {
 	private static void setPreferredWidth(final int width, final Iterable<Component> cs) throws Throwable {
 		try {
 			METHOD_SET_PREFERRED_WIDTH_ITERABLE.invoke(null, width, cs);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testPrintStackTrace() {
+		//
+		Assertions.assertDoesNotThrow(() -> printStackTrace(null));
+		//
+	}
+
+	private static void printStackTrace(final Throwable throwable) throws Throwable {
+		try {
+			METHOD_PRINT_STACK_TRACE.invoke(null, throwable);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
