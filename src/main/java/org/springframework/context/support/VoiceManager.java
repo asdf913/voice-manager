@@ -7426,7 +7426,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final Class<?> type = getType(f);
 		//
-		final CellType cellType = cell != null ? cell.getCellType() : null;
+		final CellType cellType = getCellType(cell);
 		//
 		List<?> list = null;
 		//
@@ -7511,6 +7511,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return value;
 		//
+	}
+
+	private static CellType getCellType(final Cell instance) {
+		return instance != null ? instance.getCellType() : null;
 	}
 
 	private static Boolean getBooleanValue(final CellValue instance) {
