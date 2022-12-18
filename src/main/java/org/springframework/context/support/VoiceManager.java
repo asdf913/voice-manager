@@ -626,8 +626,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			final List<Method> ms = toList(filter(testAndApply(Objects::nonNull,
 					getDeclaredMethods(forName("org.junit.jupiter.api.AssertDoesNotThrow")), Arrays::stream, null),
-					x -> StringUtils.equals(getName(x), "createAssertionFailedError")
-							&& Arrays.equals(new Class<?>[] { Object.class, Throwable.class }, getParameterTypes(x))));
+					x -> Boolean.logicalAnd(StringUtils.equals(getName(x), "createAssertionFailedError"),
+							Arrays.equals(new Class<?>[] { Object.class, Throwable.class }, getParameterTypes(x)))));
 			//
 			final Method method = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> get(x, 0), null);
 			//
