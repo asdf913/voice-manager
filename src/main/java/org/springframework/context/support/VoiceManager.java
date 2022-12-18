@@ -4290,47 +4290,53 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} else if (Objects.equals(source, btnPronunciationPageUrlCheck)) {
 			//
-			setText(tfPronunciationPageStatusCode, null);
+			actionPerformedForPronunciationPageUrlCheck(headless);
 			//
-			setBackground(tfPronunciationPageStatusCode, null);
+		} // if
 			//
-			final String urlString = getText(tfPronunciationPageUrl);
+	}
+
+	private void actionPerformedForPronunciationPageUrlCheck(final boolean headless) {
+		//
+		setText(tfPronunciationPageStatusCode, null);
+		//
+		setBackground(tfPronunciationPageStatusCode, null);
+		//
+		final String urlString = getText(tfPronunciationPageUrl);
+		//
+		if (StringUtils.isNotBlank(urlString)) {
 			//
-			if (StringUtils.isNotBlank(urlString)) {
+			try {
 				//
-				try {
+				final Integer responseCode = getResponseCode(
+						cast(HttpURLConnection.class, new URL(urlString).openConnection()));
+				//
+				setText(tfPronunciationPageStatusCode, Integer.toString(responseCode));
+				//
+				if (responseCode != null) {
 					//
-					final Integer responseCode = getResponseCode(
-							cast(HttpURLConnection.class, new URL(urlString).openConnection()));
+					Color background = null;
 					//
-					setText(tfPronunciationPageStatusCode, Integer.toString(responseCode));
-					//
-					if (responseCode != null) {
+					if (HttpStatus.isSuccess(responseCode.intValue())) {
 						//
-						Color background = null;
+						background = Color.GREEN;
 						//
-						if (HttpStatus.isSuccess(responseCode.intValue())) {
-							//
-							background = Color.GREEN;
-							//
-						} else if (Boolean.logicalOr(HttpStatus.isClientError(responseCode.intValue()),
-								HttpStatus.isServerError(responseCode.intValue()))) {
-							//
-							background = Color.RED;
-							//
-						} // if
-							//
-						setBackground(tfPronunciationPageStatusCode, background);
+					} else if (Boolean.logicalOr(HttpStatus.isClientError(responseCode.intValue()),
+							HttpStatus.isServerError(responseCode.intValue()))) {
+						//
+						background = Color.RED;
 						//
 					} // if
 						//
-				} catch (final IOException e) {
+					setBackground(tfPronunciationPageStatusCode, background);
 					//
-					errorOrPrintStackTraceOrShowMessageDialog(headless, e);
+				} // if
 					//
-				} // try
-					//
-			} // if
+			} catch (final IOException e) {
+				//
+				errorOrPrintStackTraceOrShowMessageDialog(headless, e);
+				//
+			} // try
 				//
 		} // if
 			//
