@@ -3936,28 +3936,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} else if (Objects.equals(source, btnImportFileTemplate)) {
 			//
-			final JFileChooser jfc = new JFileChooser(".");
+			actionPerformedForImportFileTemplate(headless);
 			//
-			jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-			//
-			if (jfc.showSaveDialog(null) != JFileChooser.APPROVE_OPTION) {
-				//
-				return;
-				//
-			} // if
-				//
-			try {
-				//
-				FileUtils.writeByteArrayToFile(jfc.getSelectedFile(),
-						createImportFileTemplateByteArray(isSelected(cbImportFileTemplateGenerateBlankRow),
-								getJlptLevels(), keySet(getGaKuNenBeTsuKanJiMultimap())));
-				//
-			} catch (final IOException e) {
-				//
-				errorOrPrintStackTraceOrShowMessageDialog(headless, e);
-				//
-			} // try
-				//
 		} else if (Objects.equals(source, btnImport)) {
 			//
 			final JFileChooser jfc = new JFileChooser(".");
@@ -4390,6 +4370,32 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		return file;
 		//
+	}
+
+	private void actionPerformedForImportFileTemplate(final boolean headless) {
+		//
+		final JFileChooser jfc = new JFileChooser(".");
+		//
+		jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		//
+		if (jfc.showSaveDialog(null) != JFileChooser.APPROVE_OPTION) {
+			//
+			return;
+			//
+		} // if
+			//
+		try {
+			//
+			FileUtils.writeByteArrayToFile(jfc.getSelectedFile(),
+					createImportFileTemplateByteArray(isSelected(cbImportFileTemplateGenerateBlankRow), getJlptLevels(),
+							keySet(getGaKuNenBeTsuKanJiMultimap())));
+			//
+		} catch (final IOException e) {
+			//
+			errorOrPrintStackTraceOrShowMessageDialog(headless, e);
+			//
+		} // try
+			//
 	}
 
 	private void actionPerformedForPronunciationPageUrlCheck(final boolean headless) {
