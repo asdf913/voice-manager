@@ -450,9 +450,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@ExportButton
+	@Group("Short Export Button")
 	private AbstractButton btnExportGaKuNenBeTsuKanJi = null;
 
 	@ExportButton
+	@Group("Short Export Button")
 	private AbstractButton btnExportJoYoKanJi = null;
 
 	@ExportButton
@@ -2902,9 +2904,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.add(btnExportJoYoKanJi = new JButton("Export 常用漢字"), WRAP);
 		//
+		final List<Component> cs = getObjectsByGroupAnnotation(this, "Short Export Button", Component.class);
+		//
 		setPreferredWidth(intValue(
-				ObjectUtils.max(getPreferredWidth(btnExportGaKuNenBeTsuKanJi), getPreferredWidth(btnExportJoYoKanJi)),
-				0), btnExportGaKuNenBeTsuKanJi, btnExportJoYoKanJi);
+				getPreferredWidth(
+						Collections.max(cs, (a, b) -> ObjectUtils.compare(getPreferredWidth(a), getPreferredWidth(b)))),
+				0), cs);
 		//
 		// btnExportMicrosoftSpeechObjectLibraryInformation
 		//
@@ -4079,6 +4084,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
+	}
+
+	private static <T> List<T> getObjectsByGroupAnnotation(final Object instance, final String group,
+			final Class<T> clz) {
+		//
+		return toList(map(stream(getObjectsByGroupAnnotation(instance, group)), x -> cast(clz, x)));
+		//
 	}
 
 	private static List<?> getObjectsByGroupAnnotation(final Object instance, final String group) {
@@ -10224,12 +10236,36 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		for (int i = 0; cs != null && i < cs.length; i++) {
 			//
 			if ((c = cs[i]) == null || (d = getPreferredSize(c)) == null) {
+				//
 				continue;
+				//
 			} // if
 				//
 			c.setPreferredSize(new Dimension(width, (int) d.getHeight()));
 			//
 		} // for
+			//
+	}
+
+	private static void setPreferredWidth(final int width, final Iterable<Component> cs) {
+		//
+		if (cs != null && cs.iterator() != null) {
+			//
+			Dimension d = null;
+			//
+			for (final Component c : cs) {
+				//
+				if (c == null || (d = getPreferredSize(c)) == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				c.setPreferredSize(new Dimension(width, (int) d.getHeight()));
+				//
+			} // for
+				//
+		} // if
 			//
 	}
 

@@ -278,7 +278,8 @@ class VoiceManagerTest {
 			METHOD_ACTION_PERFORMED_FOR_CONVERSION, METHOD_TEST_AND_RUN, METHOD_TO_CHAR_ARRAY, METHOD_HAS_LOWER_BOUND,
 			METHOD_HAS_UPPER_BOUND, METHOD_LOWER_END_POINT, METHOD_UPPER_END_POINT, METHOD_GET_IF_NULL,
 			METHOD_SET_LANGUAGE, METHOD_GET_LANGUAGE, METHOD_GET_BOOLEAN_VALUE, METHOD_CREATE_FORMULA_EVALUATOR,
-			METHOD_GET_RESPONSE_CODE, METHOD_TO_RUNTIME_EXCEPTION, METHOD_GET_ALGORITHM = null;
+			METHOD_GET_RESPONSE_CODE, METHOD_TO_RUNTIME_EXCEPTION, METHOD_GET_ALGORITHM,
+			METHOD_SET_PREFERRED_WIDTH_ARRAY, METHOD_SET_PREFERRED_WIDTH_ITERABLE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -849,6 +850,12 @@ class VoiceManagerTest {
 				.setAccessible(true);
 		//
 		(METHOD_GET_ALGORITHM = clz.getDeclaredMethod("getAlgorithm", MessageDigest.class)).setAccessible(true);
+		//
+		(METHOD_SET_PREFERRED_WIDTH_ARRAY = clz.getDeclaredMethod("setPreferredWidth", Integer.TYPE, Component[].class))
+				.setAccessible(true);
+		//
+		(METHOD_SET_PREFERRED_WIDTH_ITERABLE = clz.getDeclaredMethod("setPreferredWidth", Integer.TYPE, Iterable.class))
+				.setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -7267,6 +7274,37 @@ class VoiceManagerTest {
 				return (String) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetPreferredWidth() {
+		//
+		Assertions.assertDoesNotThrow(() -> setPreferredWidth(ZERO, (Component[]) null));
+		//
+		Assertions.assertDoesNotThrow(() -> setPreferredWidth(ZERO, (Component) null));
+		//
+		Assertions.assertDoesNotThrow(() -> setPreferredWidth(ZERO, (Iterable) null));
+		//
+		Assertions.assertDoesNotThrow(() -> setPreferredWidth(ZERO, (Iterable) iterable));
+		//
+		Assertions.assertDoesNotThrow(() -> setPreferredWidth(ZERO, Collections.singleton(null)));
+		//
+	}
+
+	private static void setPreferredWidth(final int width, final Component... cs) throws Throwable {
+		try {
+			METHOD_SET_PREFERRED_WIDTH_ARRAY.invoke(null, width, cs);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static void setPreferredWidth(final int width, final Iterable<Component> cs) throws Throwable {
+		try {
+			METHOD_SET_PREFERRED_WIDTH_ITERABLE.invoke(null, width, cs);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
