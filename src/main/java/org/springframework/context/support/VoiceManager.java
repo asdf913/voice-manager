@@ -7106,15 +7106,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				int columnIndex;
 				//
-				Class<?> type = null;
-				//
-				List<?> list = null;
-				//
 				ImportTask it = null;
 				//
 				NumberFormat percentNumberFormat = null;
 				//
-				String string, filePath = null;
+				String filePath = null;
 				//
 				VoiceManager voiceManager = null;
 				//
