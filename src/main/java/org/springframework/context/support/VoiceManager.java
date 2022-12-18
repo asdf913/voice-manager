@@ -7470,19 +7470,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} else if (Objects.equals(type, Integer.class)) {
 			//
-			final Double D = Objects.equals(cellType, CellType.NUMERIC) ? Double.valueOf(cell.getNumericCellValue())
-					: null;
+			value = getIntegerValueFromCell(objectMap);
 			//
-			if (D != null) {
-				//
-				value = Unit.with(Integer.valueOf(D.intValue()));
-				//
-			} else {
-				//
-				value = Unit.with(valueOf(cell.getStringCellValue()));
-				//
-			} // if
-				//
 		} else if (Objects.equals(type, Boolean.class)) {
 			//
 			value = getBooleanValueFromCell(objectMap);
@@ -7493,7 +7482,31 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static IValue0<?> getBooleanValueFromCell(final ObjectMap objectMap) {
+	private static IValue0<Integer> getIntegerValueFromCell(final ObjectMap objectMap) {
+		//
+		final Cell cell = ObjectMap.getObject(objectMap, Cell.class);
+		//
+		final CellType cellType = getCellType(cell);
+		//
+		IValue0<Integer> value = null;
+		//
+		final Double D = Objects.equals(cellType, CellType.NUMERIC) ? Double.valueOf(cell.getNumericCellValue()) : null;
+		//
+		if (D != null) {
+			//
+			value = Unit.with(Integer.valueOf(D.intValue()));
+			//
+		} else {
+			//
+			value = Unit.with(valueOf(cell.getStringCellValue()));
+			//
+		} // if
+			//
+		return value;
+		//
+	}
+
+	private static IValue0<Boolean> getBooleanValueFromCell(final ObjectMap objectMap) {
 		//
 		final FormulaEvaluator formulaEvaluator = ObjectMap.getObject(objectMap, FormulaEvaluator.class);
 		//
@@ -7503,7 +7516,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		String string = null;
 		//
-		IValue0<?> value = null;
+		IValue0<Boolean> value = null;
 		//
 		if (Objects.equals(cellType, CellType.BOOLEAN)) {
 			//
