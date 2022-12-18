@@ -808,7 +808,8 @@ class VoiceManagerTest {
 		(METHOD_STREAM = clz.getDeclaredMethod("stream", FailableStream.class)).setAccessible(true);
 		//
 		(METHOD_ACTION_PERFORMED_FOR_SYSTEM_CLIPBOARD_ANNOTATED = clz
-				.getDeclaredMethod("actionPerformedForSystemClipboardAnnotated", Object.class)).setAccessible(true);
+				.getDeclaredMethod("actionPerformedForSystemClipboardAnnotated", Boolean.TYPE, Object.class))
+				.setAccessible(true);
 		//
 		(METHOD_ACTION_PERFORMED_FOR_SPEECH_RATE = clz.getDeclaredMethod("actionPerformedForSpeechRate", Object.class))
 				.setAccessible(true);
@@ -6943,13 +6944,15 @@ class VoiceManagerTest {
 	@Test
 	void testActionPerformedForSystemClipboardAnnotated() {
 		//
-		Assertions.assertThrows(IllegalStateException.class, () -> actionPerformedForSystemClipboardAnnotated(EMPTY));
+		Assertions.assertThrows(IllegalStateException.class,
+				() -> actionPerformedForSystemClipboardAnnotated(false, EMPTY));
 		//
 	}
 
-	private void actionPerformedForSystemClipboardAnnotated(final Object source) throws Throwable {
+	private void actionPerformedForSystemClipboardAnnotated(final boolean nonTest, final Object source)
+			throws Throwable {
 		try {
-			METHOD_ACTION_PERFORMED_FOR_SYSTEM_CLIPBOARD_ANNOTATED.invoke(instance, source);
+			METHOD_ACTION_PERFORMED_FOR_SYSTEM_CLIPBOARD_ANNOTATED.invoke(instance, nonTest, source);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

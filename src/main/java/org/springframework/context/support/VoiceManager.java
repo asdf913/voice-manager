@@ -3661,18 +3661,20 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			errorOrPrintStackTraceOrShowMessageDialog(headless, e);
 			//
-		} // try
+		} //
 			//
-			// if the "source" is one of the value of the field annotated with
-			// "@SystemClipboard", pass the "source" to
-			// "actionPerformedForSystemClipboardAnnotated(java.lang.Object)" method
-			//
+		final boolean nonTest = forName("org.junit.jupiter.api.Test") == null;
+		//
+		// if the "source" is one of the value of the field annotated with
+		// "@SystemClipboard", pass the "source" to
+		// "actionPerformedForSystemClipboardAnnotated(java.lang.Object)" method
+		//
 		testAndRun(
 				contains(toList(filter(stream(new FailableStream<>(filter(
 						testAndApply(Objects::nonNull, getDeclaredFields(VoiceManager.class), Arrays::stream, null),
 						f -> isAnnotationPresent(f, SystemClipboard.class)))
 						.map(f -> FieldUtils.readField(f, this, true))), Objects::nonNull)), source),
-				() -> actionPerformedForSystemClipboardAnnotated(source));
+				() -> actionPerformedForSystemClipboardAnnotated(nonTest, source));
 		//
 		// Speech Rate
 		//
@@ -3775,7 +3777,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} else if (Objects.equals(source, btnExecute)) {
 			//
-			actionPerformedForExecute(headless);
+			actionPerformedForExecute(headless, nonTest);
 			//
 		} else if (Objects.equals(source, btnExportBrowse)) {
 			//
@@ -4190,7 +4192,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private void actionPerformedForExecute(final boolean headless) {
+	private void actionPerformedForExecute(final boolean headless, final boolean nonTest) {
 		//
 		forEach(Stream.of(tfFile, tfFileLength, tfFileDigest), x -> setText(x, null));
 		//
@@ -4224,10 +4226,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
-				final boolean nonTest = forName("org.junit.jupiter.api.Test") == null;
-				//
-				// Show "Voice ID" option dialog if this method is not run under test case
-				//
+					// Show "Voice ID" option dialog if this method is not run under test case
+					//
 				testAndAccept((a, b) -> Objects.equals(a, Boolean.TRUE), nonTest, jcbVoiceId,
 						(a, b) -> JOptionPane.showMessageDialog(null, b, "Voice ID", JOptionPane.PLAIN_MESSAGE));
 				//
@@ -4449,7 +4449,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.stream() : null;
 	}
 
-	private void actionPerformedForSystemClipboardAnnotated(final Object source) {
+	private void actionPerformedForSystemClipboardAnnotated(final boolean nonTest, final Object source) {
 		//
 		final Clipboard clipboard = getSystemClipboard(getToolkit());
 		//
@@ -4485,8 +4485,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			final String string = IValue0Util.getValue0(stringValue);
 			//
-			testAndRun(forName("org.junit.jupiter.api.Test") == null,
-					() -> setContents(clipboard, new StringSelection(string), null));
+			testAndRun(nonTest, () -> setContents(clipboard, new StringSelection(string), null));
 			//
 			return;
 			//
