@@ -3756,18 +3756,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} else if (Objects.equals(source, btnExportBrowse)) {
 			//
-			try {
-				//
-				testAndAccept(Objects::nonNull,
-						toURI(testAndApply(Objects::nonNull, getText(tfExportFile), File::new, null)),
-						x -> browse(Desktop.getDesktop(), x));
-				//
-			} catch (final IOException e) {
-				//
-				errorOrPrintStackTraceOrShowMessageDialog(headless, e);
-				//
-			} // try
-				//
+			actionPerformedForExportBrowse(headless);
+			//
 		} else if (Objects.equals(source, btnExport)) {
 			//
 			SqlSession sqlSession = null;
@@ -4452,6 +4442,22 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			FileUtils.writeByteArrayToFile(jfc.getSelectedFile(),
 					createImportFileTemplateByteArray(isSelected(cbImportFileTemplateGenerateBlankRow), getJlptLevels(),
 							keySet(getGaKuNenBeTsuKanJiMultimap())));
+			//
+		} catch (final IOException e) {
+			//
+			errorOrPrintStackTraceOrShowMessageDialog(headless, e);
+			//
+		} // try
+			//
+	}
+
+	private void actionPerformedForExportBrowse(final boolean headless) {
+		//
+		try {
+			//
+			testAndAccept(Objects::nonNull,
+					toURI(testAndApply(Objects::nonNull, getText(tfExportFile), File::new, null)),
+					x -> browse(Desktop.getDesktop(), x));
 			//
 		} catch (final IOException e) {
 			//
