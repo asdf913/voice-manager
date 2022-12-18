@@ -2797,7 +2797,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		panel.add(btnExportGaKuNenBeTsuKanJi = new JButton("Export 学年別漢字"), WRAP);
 		//
+		// btnExportJoYoKanJi
+		//
 		panel.add(btnExportJoYoKanJi = new JButton("Export 常用漢字"), WRAP);
+		//
+		setPreferredWidth(intValue(
+				ObjectUtils.max(getPreferredWidth(btnExportGaKuNenBeTsuKanJi), getPreferredWidth(btnExportJoYoKanJi)),
+				0), btnExportGaKuNenBeTsuKanJi, btnExportJoYoKanJi);
 		//
 		// btnExportMicrosoftSpeechObjectLibraryInformation
 		//
