@@ -3636,7 +3636,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-		} catch (final IllegalAccessException | NoSuchMethodException e) {
+		} catch (final IllegalAccessException e) {
 			//
 			errorOrPrintStackTraceOrShowMessageDialog(headless, e);
 			//
@@ -4604,7 +4604,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	private static List<Field> findFieldsByValue(final Field[] fs, final Object instance, final Object value)
-			throws IllegalAccessException, NoSuchMethodException {
+			throws IllegalAccessException {
 		//
 		Field f = null;
 		//
@@ -4623,7 +4623,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			} // if
 				//
 			if (!Narcissus.invokeBooleanMethod(f, methodIsAccessible = getIfNull(methodIsAccessible,
-					() -> AccessibleObject.class.getDeclaredMethod("isAccessible")))) {
+					VoiceManager::getAccessibleObjectIsAccessibleMethod))) {
 				//
 				if (ArrayUtils.contains(new String[] { "javax.swing", "java.awt" },
 						getName(getPackage(getDeclaringClass(f))))) {
@@ -4654,6 +4654,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		} // for
 			//
 		return list;
+		//
+	}
+
+	private static Method getAccessibleObjectIsAccessibleMethod() {
+		//
+		final List<Method> ms = toList(filter(
+				testAndApply(Objects::nonNull, getDeclaredMethods(AccessibleObject.class), Arrays::stream, null),
+				m -> m != null && StringUtils.equals(getName(m), "isAccessible") && m.getParameterCount() == 0));
+		//
+		return testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> get(x, 0), null);
 		//
 	}
 
