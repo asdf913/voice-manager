@@ -367,6 +367,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static final String PASSWORD = "Password";
 
+	private static final String SPEECH_RATE = "Speech Rate";
+
 	private static final Predicate<File> EMPTY_FILE_PREDICATE = f -> f != null && f.exists() && isFile(f)
 			&& longValue(length(f), 0) == 0;
 
@@ -401,13 +403,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		String value();
 	}
 
-	@Group("Speech Rate")
+	@Group(SPEECH_RATE)
 	private AbstractButton btnSpeechRateSlower = null;
 
-	@Group("Speech Rate")
+	@Group(SPEECH_RATE)
 	private AbstractButton btnSpeechRateNormal = null;
 
-	@Group("Speech Rate")
+	@Group(SPEECH_RATE)
 	private AbstractButton btnSpeechRateFaster = null;
 
 	private AbstractButton btnSpeak, btnWriteVoice, btnConvertToRomaji, btnConvertToKatakana, cbUseTtsVoice, btnExecute,
@@ -1791,7 +1793,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			if (hasLowerBound(range) && hasUpperBound(range) && lowerEndpoint(range) != null
 					&& upperEndpoint(range) != null) {
 				//
-				panel.add(new JLabel("Speech Rate"), "aligny top");
+				panel.add(new JLabel(SPEECH_RATE), "aligny top");
 				//
 				panel.add(jsSpeechRate = new JSlider(intValue(lowerEndpoint(range), 0),
 						intValue(upperEndpoint(range), 0)), String.format("%1$s,span %2$s", GROWX, 7));
@@ -1834,7 +1836,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		if (jsSpeechRate == null && tfSpeechRate == null) {
 			//
-			panel.add(new JLabel("Speech Rate"));
+			panel.add(new JLabel(SPEECH_RATE));
 			//
 			panel.add(
 					tfSpeechRate = new JTextField(getProperty(propertyResolver,
@@ -3670,7 +3672,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		// Speech Rate
 		//
-		testAndRun(contains(getObjectsByGroupAnnotation(this, "Speech Rate"), source),
+		testAndRun(contains(getObjectsByGroupAnnotation(this, SPEECH_RATE), source),
 				() -> actionPerformedForSpeechRate(source));
 		//
 		if (Objects.equals(source, btnSpeak) && speechApi != null) {
