@@ -7274,9 +7274,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 										//
 									} // if
 										//
-									if (mp3Tags == null && voiceManager != null) {
+									if (mp3Tags == null) {
 										//
-										mp3Tags = voiceManager.mp3Tags;
+										mp3Tags = getMp3Tags(voiceManager);
 										//
 									} // if
 										//
@@ -7410,6 +7410,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // try
 			//
+	}
+
+	private static String[] getMp3Tags(final VoiceManager instance) {
+		return instance != null ? instance.mp3Tags : null;
 	}
 
 	private static IValue0<?> getValueFromCell(final ObjectMap objectMap) {
