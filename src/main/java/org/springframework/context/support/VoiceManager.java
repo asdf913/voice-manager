@@ -645,8 +645,37 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} else if (throwable != null) {
 				//
-				throwable.printStackTrace();
+				final List<Method> ms = toList(filter(
+						testAndApply(Objects::nonNull, getDeclaredMethods(Throwable.class), Arrays::stream, null),
+						m -> m != null && StringUtils.equals(getName(m), "printStackTrace")
+								&& m.getParameterCount() == 0));
 				//
+				final Method method = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> get(x, 0), null);
+				//
+				if (method != null) {
+					//
+					method.setAccessible(true);
+					//
+				} // if
+					//
+				try {
+					//
+					invoke(method, throwable);
+					//
+				} catch (final IllegalAccessException e) {
+					//
+					errorOrPrintStackTraceOrShowMessageDialog(headless, LOG, throwable);
+					//
+				} catch (final InvocationTargetException e) {
+					//
+					final Throwable targetException = e.getTargetException();
+					//
+					errorOrPrintStackTraceOrShowMessageDialog(headless, LOG,
+							ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException), targetException,
+									ExceptionUtils.getRootCause(e), e));
+					//
+				} // try
+					//
 			} // if
 				//
 			return;
