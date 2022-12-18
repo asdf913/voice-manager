@@ -2349,7 +2349,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.add(new JLabel("Status"));
 		//
-		panel.add(tfPronunciationPageStatusCode = new JTextField(), String.format("%1$s", GROWX));
+		panel.add(tfPronunciationPageStatusCode = new JTextField(), String.format("wmin %1$s", 30));
 		//
 		panel.add(btnPronunciationPageUrlCheck = new JButton("Check"), WRAP);
 		//
