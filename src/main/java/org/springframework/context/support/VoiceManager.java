@@ -395,12 +395,26 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private transient ComboBoxModel<CompressionLevel> cbmCompressionLevel = null;
 
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target(ElementType.FIELD)
+	private @interface Group {
+		String value();
+	}
+
+	@Group("Speech Rate")
+	private AbstractButton btnSpeechRateSlower = null;
+
+	@Group("Speech Rate")
+	private AbstractButton btnSpeechRateNormal = null;
+
+	@Group("Speech Rate")
+	private AbstractButton btnSpeechRateFaster = null;
+
 	private AbstractButton btnSpeak, btnWriteVoice, btnConvertToRomaji, btnConvertToKatakana, cbUseTtsVoice, btnExecute,
 			btnImportFileTemplate, btnImport, btnImportWithinFolder, cbOverMp3Title, cbOrdinalPositionAsFileNamePrefix,
 			btnExport, cbExportHtml, cbExportListHtml, cbExportHtmlAsZip, cbExportHtmlRemoveAfterZip, cbExportListSheet,
 			cbExportJlptSheet, cbExportPresentation, cbEmbedAudioInPresentation, cbHideAudioImageInPresentation,
-			cbImportFileTemplateGenerateBlankRow, cbJlptAsFolder, btnExportBrowse, btnSpeechRateSlower,
-			btnSpeechRateNormal, btnSpeechRateFaster, btnPronunciationPageUrlCheck = null;
+			cbImportFileTemplateGenerateBlankRow, cbJlptAsFolder, btnExportBrowse, btnPronunciationPageUrlCheck = null;
 
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.FIELD)
@@ -3654,6 +3668,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						.map(f -> FieldUtils.readField(f, this, true))), Objects::nonNull)), source),
 				() -> actionPerformedForSystemClipboardAnnotated(source));
 		//
+		// Speech Rate
+		//
+		testAndRun(contains(getObjectsByGroupAnnotation(this, "Speech Rate"), source),
+				() -> actionPerformedForSpeechRate(source));
+		//
 		if (Objects.equals(source, btnSpeak) && speechApi != null) {
 			//
 			final Stopwatch stopwatch = Stopwatch.createStarted();
@@ -4276,24 +4295,22 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // try
 				//
-		} else if (Objects.equals(source, btnSpeechRateSlower)) {
-			//
-			setValue(jsSpeechRate, intValue(getValue(jsSpeechRate), 0) - 1);
-			//
-		} else if (Objects.equals(source, btnSpeechRateNormal)) {
-			//
-			setValue(jsSpeechRate, 0);
-			//
-		} else if (Objects.equals(source, btnSpeechRateFaster)) {
-			//
-			setValue(jsSpeechRate, intValue(getValue(jsSpeechRate), 0) + 1);
-			//
 		} else if (Objects.equals(source, btnPronunciationPageUrlCheck)) {
 			//
 			actionPerformedForPronunciationPageUrlCheck(headless);
 			//
 		} // if
 			//
+	}
+
+	private static List<?> getObjectsByGroupAnnotation(final Object instance, final String group) {
+		//
+		return toList(stream(new FailableStream<>(filter(
+				testAndApply(Objects::nonNull, getDeclaredFields(VoiceManager.class), Arrays::stream, null), f -> {
+					final Group g = isAnnotationPresent(f, Group.class) ? f.getAnnotation(Group.class) : null;
+					return StringUtils.equals(g != null ? g.value() : null, group);
+				})).map(f -> FieldUtils.readField(f, instance, true))));
+		//
 	}
 
 	private void actionPerformedForPronunciationPageUrlCheck(final boolean headless) {
@@ -4408,6 +4425,46 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			testAndRun(forName("org.junit.jupiter.api.Test") == null,
 					() -> setContents(clipboard, new StringSelection(string), null));
+			//
+			return;
+			//
+		} // if
+			//
+		throw new IllegalStateException();
+		//
+	}
+
+	private static class IntValue {
+
+		private int value = 0;
+
+		private IntValue(final int value) {
+			this.value = value;
+		}
+
+	}
+
+	private void actionPerformedForSpeechRate(final Object source) {
+		//
+		IntValue intValue = null;
+		//
+		if (Objects.equals(source, btnSpeechRateSlower)) {
+			//
+			intValue = new IntValue(intValue(getValue(jsSpeechRate), 0) - 1);
+			//
+		} else if (Objects.equals(source, btnSpeechRateNormal)) {
+			//
+			intValue = new IntValue(0);
+			//
+		} else if (Objects.equals(source, btnSpeechRateFaster)) {
+			//
+			intValue = new IntValue(intValue(getValue(jsSpeechRate), 0) + 1);
+			//
+		} // if
+			//
+		if (intValue != null) {
+			//
+			setValue(jsSpeechRate, intValue.value);
 			//
 			return;
 			//
