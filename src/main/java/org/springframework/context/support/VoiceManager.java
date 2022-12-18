@@ -4206,32 +4206,33 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			if (StringUtils.isBlank(voiceId)) {
 				//
-				final ComboBoxModel<Object> cbmVoiceId = testAndApply(Objects::nonNull, voiceIds,
+				final ComboBoxModel<Object> cbmVoiceIdLocal = testAndApply(Objects::nonNull, voiceIds,
 						x -> new DefaultComboBoxModel<>(ArrayUtils.insert(0, x, (String) null)), null);
 				//
-				JComboBox<Object> jcbVoiceId = null;
+				JComboBox<Object> jcbVoiceIdLocal = null;
 				//
-				if (cbmVoiceId != null) {
+				if (cbmVoiceIdLocal != null) {
 					//
 					final VoiceIdListCellRenderer voiceIdListCellRenderer = new VoiceIdListCellRenderer();
 					//
-					voiceIdListCellRenderer.listCellRenderer = (jcbVoiceId = new JComboBox(cbmVoiceId)).getRenderer();
+					voiceIdListCellRenderer.listCellRenderer = (jcbVoiceIdLocal = new JComboBox(cbmVoiceIdLocal))
+							.getRenderer();
 					//
-					jcbVoiceId.addItemListener(this);
+					jcbVoiceIdLocal.addItemListener(this);
 					//
 					voiceIdListCellRenderer.commonPrefix = String.join("",
 							StringUtils.substringBeforeLast(StringUtils.getCommonPrefix(voiceIds), "\\"), "\\");
 					//
-					jcbVoiceId.setRenderer(voiceIdListCellRenderer);
+					jcbVoiceIdLocal.setRenderer(voiceIdListCellRenderer);
 					//
 				} // if
 					//
 					// Show "Voice ID" option dialog if this method is not run under test case
 					//
-				testAndAccept((a, b) -> Objects.equals(a, Boolean.TRUE), nonTest, jcbVoiceId,
+				testAndAccept((a, b) -> Objects.equals(a, Boolean.TRUE), nonTest, jcbVoiceIdLocal,
 						(a, b) -> JOptionPane.showMessageDialog(null, b, "Voice ID", JOptionPane.PLAIN_MESSAGE));
 				//
-				final Object selectedItem = getSelectedItem(cbmVoiceId);
+				final Object selectedItem = getSelectedItem(cbmVoiceIdLocal);
 				//
 				if (selectedItem == null) {
 					//
