@@ -3692,48 +3692,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} else if (Objects.equals(source, btnWriteVoice)) {
 			//
-			final JFileChooser jfc = new JFileChooser(".");
+			actionPerformedForWriteVoice(headless);
 			//
-			jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-			//
-			if (jfc.showSaveDialog(null) != JFileChooser.APPROVE_OPTION) {
-				//
-				return;
-				//
-			} //
-				//
-			final ObjectMap objectMap = Reflection.newProxy(ObjectMap.class, new IH());
-			//
-			final File file = jfc.getSelectedFile();
-			//
-			ObjectMap.setObject(objectMap, SpeechApi.class, speechApi);
-			//
-			ObjectMap.setObject(objectMap, File.class, file);
-			//
-			writeVoiceToFile(objectMap, getText(tfTextTts), toString(getSelectedItem(cbmVoiceId))
-			//
-					, intValue(getRate(), 0)// rate
-					//
-					, Math.min(Math.max(intValue(getValue(jsSpeechVolume), 100), 0), 100)// volume
-			);
-			//
-			final ByteConverter byteConverter = getByteConverter(configurableListableBeanFactory, FORMAT,
-					getSelectedItem(cbmAudioFormatWrite));
-			//
-			if (byteConverter != null) {
-				//
-				try {
-					//
-					FileUtils.writeByteArrayToFile(file, byteConverter.convert(FileUtils.readFileToByteArray(file)));
-					//
-				} catch (final IOException e) {
-					//
-					errorOrPrintStackTraceOrShowMessageDialog(headless, e);
-					//
-				} // try
-					//
-			} // if
-				//
 		} else if (Objects.equals(source, btnExecute)) {
 			//
 			actionPerformedForExecute(headless, nonTest);
@@ -4196,6 +4156,52 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		setText(tfElapsed, toString(elapsed(stop(stopwatch))));
 		//
+	}
+
+	private void actionPerformedForWriteVoice(final boolean headless) {
+		//
+		final JFileChooser jfc = new JFileChooser(".");
+		//
+		jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		//
+		if (jfc.showSaveDialog(null) != JFileChooser.APPROVE_OPTION) {
+			//
+			return;
+			//
+		} //
+			//
+		final ObjectMap objectMap = Reflection.newProxy(ObjectMap.class, new IH());
+		//
+		final File file = jfc.getSelectedFile();
+		//
+		ObjectMap.setObject(objectMap, SpeechApi.class, speechApi);
+		//
+		ObjectMap.setObject(objectMap, File.class, file);
+		//
+		writeVoiceToFile(objectMap, getText(tfTextTts), toString(getSelectedItem(cbmVoiceId))
+		//
+				, intValue(getRate(), 0)// rate
+				//
+				, Math.min(Math.max(intValue(getValue(jsSpeechVolume), 100), 0), 100)// volume
+		);
+		//
+		final ByteConverter byteConverter = getByteConverter(configurableListableBeanFactory, FORMAT,
+				getSelectedItem(cbmAudioFormatWrite));
+		//
+		if (byteConverter != null) {
+			//
+			try {
+				//
+				FileUtils.writeByteArrayToFile(file, byteConverter.convert(FileUtils.readFileToByteArray(file)));
+				//
+			} catch (final IOException e) {
+				//
+				errorOrPrintStackTraceOrShowMessageDialog(headless, e);
+				//
+			} // try
+				//
+		} // if
+			//
 	}
 
 	private void actionPerformedForExecute(final boolean headless, final boolean nonTest) {
