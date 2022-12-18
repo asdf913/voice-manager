@@ -227,6 +227,7 @@ import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.util.LocaleID;
 import org.apache.poi.xssf.usermodel.XSSFDataValidationHelper;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.eclipse.jetty.http.HttpStatus;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
@@ -4291,15 +4292,38 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			setText(tfPronunciationPageStatusCode, null);
 			//
+			setBackground(tfPronunciationPageStatusCode, null);
+			//
 			final String urlString = getText(tfPronunciationPageUrl);
 			//
 			if (StringUtils.isNotBlank(urlString)) {
 				//
 				try {
 					//
-					setText(tfPronunciationPageStatusCode, Integer.toString(
-							getResponseCode(cast(HttpURLConnection.class, new URL(urlString).openConnection()))));
+					final Integer responseCode = getResponseCode(
+							cast(HttpURLConnection.class, new URL(urlString).openConnection()));
 					//
+					setText(tfPronunciationPageStatusCode, Integer.toString(responseCode));
+					//
+					if (responseCode != null) {
+						//
+						Color background = null;
+						//
+						if (HttpStatus.isSuccess(responseCode.intValue())) {
+							//
+							background = Color.GREEN;
+							//
+						} else if (HttpStatus.isClientError(responseCode.intValue())
+								|| HttpStatus.isServerError(responseCode.intValue())) {
+							//
+							background = Color.RED;
+							//
+						} // if
+							//
+						setBackground(tfPronunciationPageStatusCode, background);
+						//
+					} // if
+						//
 				} catch (final IOException e) {
 					//
 					errorOrPrintStackTraceOrShowMessageDialog(headless, e);
