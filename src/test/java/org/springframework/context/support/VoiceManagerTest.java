@@ -81,6 +81,7 @@ import java.util.zip.ZipOutputStream;
 import javax.sound.sampled.AudioFormat;
 import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
@@ -2076,6 +2077,23 @@ class VoiceManagerTest {
 		if (instance != null) {
 			//
 			FieldUtils.writeDeclaredField(instance, "speechApi", speechApi, true);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnExecute));
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "voiceIds", new String[] { Integer.toString(ZERO) }, true);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnExecute));
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "cbmVoiceId", new DefaultComboBoxModel<>(new Object[] { ZERO }),
+					true);
 			//
 		} // if
 			//

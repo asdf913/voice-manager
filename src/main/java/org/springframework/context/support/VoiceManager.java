@@ -512,6 +512,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private String folderInPresentation = null;
 
+	private String[] voiceIds = null;
+
 	private VoiceManager() {
 	}
 
@@ -1056,8 +1058,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		JPanel jPanelWarning = null;
 		//
-		String[] voiceIds = null;
-		//
 		if (isInstalled(speechApi)) {
 			//
 			final LayoutManager lm = cloneLayoutManager();
@@ -1177,9 +1177,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
-		jTabbedPane.addTab("TTS",
-
-				createTtsPanel(cloneLayoutManager(), voiceIds));
+		jTabbedPane.addTab("TTS", createTtsPanel(cloneLayoutManager(), voiceIds));
 		//
 		jTabbedPane.addTab(TAB_TITLE_IMPORT_SINGLE, createSingleImportPanel(cloneLayoutManager(), voiceIds));
 		//
@@ -4202,7 +4200,57 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		if (isSelected(cbUseTtsVoice)) {
 			//
-			deleteOnExit(file = generateTtsAudioFile(headless, voice));
+			String voiceId = toString(getSelectedItem(cbmVoiceId));
+			//
+			if (StringUtils.isBlank(voiceId)) {
+				//
+				final ComboBoxModel<Object> cbmVoiceId = testAndApply(Objects::nonNull, voiceIds,
+						x -> new DefaultComboBoxModel<>(ArrayUtils.insert(0, x, (String) null)), null);
+				//
+				JComboBox<Object> jcbVoiceId = null;
+				//
+				if (cbmVoiceId != null) {
+					//
+					final VoiceIdListCellRenderer voiceIdListCellRenderer = new VoiceIdListCellRenderer();
+					//
+					voiceIdListCellRenderer.listCellRenderer = (jcbVoiceId = new JComboBox(cbmVoiceId)).getRenderer();
+					//
+					jcbVoiceId.addItemListener(this);
+					//
+					voiceIdListCellRenderer.commonPrefix = String.join("",
+							StringUtils.substringBeforeLast(StringUtils.getCommonPrefix(voiceIds), "\\"), "\\");
+					//
+					jcbVoiceId.setRenderer(voiceIdListCellRenderer);
+					//
+				} // if
+					//
+				final boolean nonTest = forName("org.junit.jupiter.api.Test") == null;
+				//
+				if (nonTest) {
+					//
+					JOptionPane.showMessageDialog(null, jcbVoiceId, "Voice ID", JOptionPane.PLAIN_MESSAGE);
+					//
+				} // if
+					//
+				final Object selectedItem = getSelectedItem(cbmVoiceId);
+				//
+				if (selectedItem == null) {
+					//
+					if (nonTest) {
+						//
+						JOptionPane.showMessageDialog(null, "Please select a Voice");
+						//
+					} // if
+						//
+					return;
+					//
+				} // if
+					//
+				voiceId = toString(selectedItem);
+				//
+			} // if
+				//
+			deleteOnExit(file = generateTtsAudioFile(headless, voiceId, voice));
 			//
 		} else {
 			//
@@ -4279,11 +4327,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	private File generateTtsAudioFile(final boolean headless, final Voice voice) {
+	private File generateTtsAudioFile(final boolean headless, final String voiceId, final Voice voice) {
 		//
 		File file = null;
-		//
-		final String voiceId = toString(getSelectedItem(cbmVoiceId));
 		//
 		if (speechApi != null) {
 			//
