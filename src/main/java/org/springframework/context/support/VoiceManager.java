@@ -4313,8 +4313,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 							background = Color.GREEN;
 							//
-						} else if (HttpStatus.isClientError(responseCode.intValue())
-								|| HttpStatus.isServerError(responseCode.intValue())) {
+						} else if (Boolean.logicalOr(HttpStatus.isClientError(responseCode.intValue()),
+								HttpStatus.isServerError(responseCode.intValue()))) {
 							//
 							background = Color.RED;
 							//
