@@ -622,49 +622,50 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
+			return;
+			//
+		} // if
+			//
+		final List<Method> ms = toList(filter(
+				testAndApply(Objects::nonNull, getDeclaredMethods(forName("org.junit.jupiter.api.AssertDoesNotThrow")),
+						Arrays::stream, null),
+				x -> Boolean.logicalAnd(StringUtils.equals(getName(x), "createAssertionFailedError"),
+						Arrays.equals(new Class<?>[] { Object.class, Throwable.class }, getParameterTypes(x)))));
+		//
+		final Method method = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> get(x, 0), null);
+		//
+		if (method == null) {
+			//
+			JOptionPane.showMessageDialog(null, getMessage(throwable));
+			//
 		} else {
 			//
-			final List<Method> ms = toList(filter(testAndApply(Objects::nonNull,
-					getDeclaredMethods(forName("org.junit.jupiter.api.AssertDoesNotThrow")), Arrays::stream, null),
-					x -> Boolean.logicalAnd(StringUtils.equals(getName(x), "createAssertionFailedError"),
-							Arrays.equals(new Class<?>[] { Object.class, Throwable.class }, getParameterTypes(x)))));
+			method.setAccessible(true);
 			//
-			final Method method = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> get(x, 0), null);
-			//
-			if (method == null) {
+			try {
 				//
-				JOptionPane.showMessageDialog(null, getMessage(throwable));
+				final RuntimeException runtimeException = toRuntimeException(
+						cast(Throwable.class, invoke(method, null, getMessage(throwable), throwable)));
 				//
-			} else {
+				if (runtimeException != null) {
+					//
+					throw runtimeException;
+					//
+				} // if
+					//
+			} catch (final IllegalAccessException e) {
 				//
-				method.setAccessible(true);
+				errorOrPrintStackTraceOrShowMessageDialog(headless, LOG, throwable);
 				//
-				try {
-					//
-					final RuntimeException runtimeException = toRuntimeException(
-							cast(Throwable.class, invoke(method, null, getMessage(throwable), throwable)));
-					//
-					if (runtimeException != null) {
-						//
-						throw runtimeException;
-						//
-					} // if
-						//
-				} catch (final IllegalAccessException e) {
-					//
-					errorOrPrintStackTraceOrShowMessageDialog(headless, LOG, throwable);
-					//
-				} catch (final InvocationTargetException e) {
-					//
-					final Throwable targetException = e.getTargetException();
-					//
-					errorOrPrintStackTraceOrShowMessageDialog(headless, LOG,
-							ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException), targetException,
-									ExceptionUtils.getRootCause(e), e));
-					//
-				} // try
-					//
-			} // if
+			} catch (final InvocationTargetException e) {
+				//
+				final Throwable targetException = e.getTargetException();
+				//
+				errorOrPrintStackTraceOrShowMessageDialog(headless, LOG,
+						ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException), targetException,
+								ExceptionUtils.getRootCause(e), e));
+				//
+			} // try
 				//
 		} // if
 			//
