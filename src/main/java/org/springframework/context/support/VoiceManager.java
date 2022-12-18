@@ -7315,8 +7315,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 													//
 												if (voiceId == null) {
 													//
-													voiceId = toString(getSelectedItem(
-															voiceManager != null ? voiceManager.cbmVoiceId : null));
+													voiceId = toString(getSelectedItem(voiceManager.cbmVoiceId));
 													//
 												} // if
 													//
