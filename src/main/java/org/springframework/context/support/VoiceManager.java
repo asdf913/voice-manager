@@ -7485,24 +7485,38 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} else if (Objects.equals(type, Boolean.class)) {
 			//
-			final FormulaEvaluator formulaEvaluator = ObjectMap.getObject(objectMap, FormulaEvaluator.class);
+			value = getBooleanValueFromCell(objectMap);
 			//
-			String string = null;
+		} // if
 			//
-			if (Objects.equals(cellType, CellType.BOOLEAN)) {
-				//
-				value = Unit.with(cell.getBooleanCellValue());
-				//
-			} else if (Objects.equals(cellType, CellType.FORMULA) && formulaEvaluator != null) {
-				//
-				value = Unit.with(getBooleanValue(formulaEvaluator.evaluate(cell)));
-				//
-			} else if (StringUtils.isNotEmpty(string = cell.getStringCellValue())) {
-				//
-				value = Unit.with(Boolean.valueOf(string));
-				//
-			} // if
-				//
+		return value;
+		//
+	}
+
+	private static IValue0<?> getBooleanValueFromCell(final ObjectMap objectMap) {
+		//
+		final FormulaEvaluator formulaEvaluator = ObjectMap.getObject(objectMap, FormulaEvaluator.class);
+		//
+		final Cell cell = ObjectMap.getObject(objectMap, Cell.class);
+		//
+		final CellType cellType = getCellType(cell);
+		//
+		String string = null;
+		//
+		IValue0<?> value = null;
+		//
+		if (Objects.equals(cellType, CellType.BOOLEAN)) {
+			//
+			value = Unit.with(cell.getBooleanCellValue());
+			//
+		} else if (Objects.equals(cellType, CellType.FORMULA) && formulaEvaluator != null) {
+			//
+			value = Unit.with(getBooleanValue(formulaEvaluator.evaluate(cell)));
+			//
+		} else if (StringUtils.isNotEmpty(string = cell.getStringCellValue())) {
+			//
+			value = Unit.with(Boolean.valueOf(string));
+			//
 		} // if
 			//
 		return value;
