@@ -136,6 +136,7 @@ import org.apache.poi.poifs.crypt.EncryptionMode;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.CellValue;
 import org.apache.poi.ss.usermodel.ClientAnchor;
 import org.apache.poi.ss.usermodel.Comment;
@@ -279,7 +280,8 @@ class VoiceManagerTest {
 			METHOD_HAS_UPPER_BOUND, METHOD_LOWER_END_POINT, METHOD_UPPER_END_POINT, METHOD_GET_IF_NULL,
 			METHOD_SET_LANGUAGE, METHOD_GET_LANGUAGE, METHOD_GET_BOOLEAN_VALUE, METHOD_CREATE_FORMULA_EVALUATOR,
 			METHOD_GET_RESPONSE_CODE, METHOD_TO_RUNTIME_EXCEPTION, METHOD_GET_ALGORITHM,
-			METHOD_SET_PREFERRED_WIDTH_ARRAY, METHOD_SET_PREFERRED_WIDTH_ITERABLE, METHOD_PRINT_STACK_TRACE = null;
+			METHOD_SET_PREFERRED_WIDTH_ARRAY, METHOD_SET_PREFERRED_WIDTH_ITERABLE, METHOD_PRINT_STACK_TRACE,
+			METHOD_GET_VALUE_FROM_CELL = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -859,6 +861,8 @@ class VoiceManagerTest {
 		//
 		(METHOD_PRINT_STACK_TRACE = clz.getDeclaredMethod("printStackTrace", Throwable.class)).setAccessible(true);
 		//
+		(METHOD_GET_VALUE_FROM_CELL = clz.getDeclaredMethod("getValueFromCell", CLASS_OBJECT_MAP)).setAccessible(true);
+		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
 		CLASS_EXPORT_TASK = Class.forName("org.springframework.context.support.VoiceManager$ExportTask");
@@ -927,6 +931,8 @@ class VoiceManagerTest {
 		private List<Voice> voices = null;
 
 		private Set<?> keySet = null;
+
+		private CellType cellType = null;
 
 		private Map<Object, String> getProperties() {
 			if (properties == null) {
@@ -1127,6 +1133,10 @@ class VoiceManagerTest {
 				} else if (Objects.equals(methodName, "getColumnIndex")) {
 					//
 					return columnIndex;
+					//
+				} else if (Objects.equals(methodName, "getCellType")) {
+					//
+					return cellType;
 					//
 				} // if
 					//
@@ -7322,6 +7332,93 @@ class VoiceManagerTest {
 	private static void printStackTrace(final Throwable throwable) throws Throwable {
 		try {
 			METHOD_PRINT_STACK_TRACE.invoke(null, throwable);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetValueFromCell() throws Throwable {
+		//
+		Assertions.assertNull(getValueFromCell(null));
+		//
+		final Constructor<?> constructor = CLASS_IH != null ? CLASS_IH.getDeclaredConstructor() : null;
+		//
+		if (constructor != null) {
+			//
+			constructor.setAccessible(true);
+			//
+		} // if
+			//
+		final InvocationHandler ih = cast(InvocationHandler.class, newInstance(constructor));
+		//
+		final Object objectMap = Reflection.newProxy(CLASS_OBJECT_MAP, ih);
+		//
+		final Method setObject = CLASS_OBJECT_MAP != null
+				? CLASS_OBJECT_MAP.getDeclaredMethod("setObject", Class.class, Object.class)
+				: null;
+		//
+		Assertions.assertDoesNotThrow(() -> invoke(setObject, objectMap, Field.class, null));
+		//
+		Assertions.assertDoesNotThrow(() -> invoke(setObject, objectMap, Cell.class, null));
+		//
+		Assertions.assertNull(getValueFromCell(objectMap));
+		//
+		Assertions.assertDoesNotThrow(
+				() -> invoke(setObject, objectMap, Cell.class, Reflection.newProxy(Cell.class, this.ih)));
+		//
+		Assertions.assertNull(getValueFromCell(objectMap));
+		//
+		// java.lang.String
+		//
+		Assertions.assertDoesNotThrow(
+				() -> invoke(setObject, objectMap, Field.class, getDeclaredField(Voice.class, "language")));
+		//
+		Assertions.assertEquals(Unit.with(null), getValueFromCell(objectMap));
+		//
+		// java.lang.Integer
+		//
+		Assertions.assertDoesNotThrow(
+				() -> invoke(setObject, objectMap, Field.class, getDeclaredField(Voice.class, "id")));
+		//
+		Assertions.assertEquals(Unit.with(null), getValueFromCell(objectMap));
+		//
+		// java.lang.Enum
+		//
+		Assertions.assertDoesNotThrow(
+				() -> invoke(setObject, objectMap, Field.class, getDeclaredField(Voice.class, "yomi")));
+		//
+		Assertions.assertNull(getValueFromCell(objectMap));
+		//
+		// java.lang.Iterable
+		//
+		Assertions.assertDoesNotThrow(
+				() -> invoke(setObject, objectMap, Field.class, getDeclaredField(Voice.class, "listNames")));
+		//
+		Assertions.assertDoesNotThrow(() -> invoke(setObject, objectMap, ObjectMapper.class, null));
+		//
+		Assertions.assertEquals(Unit.with(null), getValueFromCell(objectMap));
+		//
+		// java.lang.Boolean
+		//
+		Assertions.assertDoesNotThrow(
+				() -> invoke(setObject, objectMap, Field.class, getDeclaredField(Voice.class, "isKanji")));
+		//
+		Assertions.assertDoesNotThrow(() -> invoke(setObject, objectMap, FormulaEvaluator.class, null));
+		//
+		Assertions.assertNull(getValueFromCell(objectMap));
+		//
+	}
+
+	private static IValue0<?> getValueFromCell(final Object objectMap) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_VALUE_FROM_CELL.invoke(null, objectMap);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof IValue0) {
+				return (IValue0) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

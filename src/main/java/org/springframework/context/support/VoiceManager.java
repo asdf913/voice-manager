@@ -7145,12 +7145,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				ObjectMapper objectMapper = null;
 				//
-				Double D = null;
-				//
-				Integer integer = null;
-				//
-				Boolean b = null;
-				//
 				final Workbook workbook = sheet.getWorkbook();
 				//
 				final Integer numberOfSheets = workbook != null ? Integer.valueOf(workbook.getNumberOfSheets()) : null;
@@ -7163,6 +7157,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						0);
 				//
 				FormulaEvaluator formulaEvaluator = null;
+				//
+				IValue0<?> value = null;
 				//
 				for (final Row row : sheet) {
 					//
@@ -7201,88 +7197,25 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 							f.setAccessible(true);
 							//
-							if (Objects.equals(type = getType(f), String.class)) {
+							ObjectMap.setObject(objectMap, Field.class, f);
+							//
+							ObjectMap.setObject(objectMap, Cell.class, cell);
+							//
+							ObjectMap.setObject(objectMap, ObjectMapper.class,
+									objectMapper = getIfNull(objectMapper, ObjectMapper::new));
+							//
+							ObjectMap.setObject(objectMap, FormulaEvaluator.class,
+									formulaEvaluator = getIfNull(formulaEvaluator,
+											() -> createFormulaEvaluator(getCreationHelper(workbook))));
+							//
+							if ((value = getValueFromCell(objectMap)) == null) {
 								//
-								if (Objects.equals(cell.getCellType(), CellType.NUMERIC)) {
-									//
-									string = Double.toString(cell.getNumericCellValue());
-									//
-								} else {
-									//
-									string = cell.getStringCellValue();
-									//
-								} // if
-									//
-								f.set(voice = getIfNull(voice, Voice::new), string);
-								//
-							} else if (isAssignableFrom(Enum.class, type) && (list = toList(filter(
-									testAndApply(Objects::nonNull, getEnumConstants(type), Arrays::stream, null), e -> {
-										//
-										final String name = name(cast(Enum.class, e));
-										//
-										final String stringCellValue = cell.getStringCellValue();
-										//
-										return Objects.equals(name, stringCellValue)
-												|| (StringUtils.isNotEmpty(stringCellValue)
-														&& StringUtils.startsWithIgnoreCase(name, stringCellValue));
-										//
-									}))) != null && !list.isEmpty()) {
-								//
-								if (IterableUtils.size(list) == 1) {
-									//
-									f.set(voice = getIfNull(voice, Voice::new), get(list, 0));
-									//
-								} else {
-									//
-									throw new IllegalStateException("list.size()>1");
-									//
-								} // if
-									//
-							} else if (Objects.equals(type, Iterable.class)) {
-								//
-								f.set(voice = getIfNull(voice, Voice::new),
-										toList(map(stream(
-												getObjectList(objectMapper = getIfNull(objectMapper, ObjectMapper::new),
-														cell.getStringCellValue())),
-												VoiceManager::toString)));
-								//
-							} else if (Objects.equals(type, Integer.class)) {
-								//
-								if (Objects.equals(cell.getCellType(), CellType.NUMERIC)
-										&& (D = Double.valueOf(cell.getNumericCellValue())) != null) {
-									//
-									integer = Integer.valueOf(D.intValue());
-									//
-								} else {
-									//
-									integer = valueOf(cell.getStringCellValue());
-									//
-								} // if
-									//
-								f.set(voice = getIfNull(voice, Voice::new), integer);
-								//
-							} else if (Objects.equals(type, Boolean.class)) {
-								//
-								if (Objects.equals(cell.getCellType(), CellType.BOOLEAN)) {
-									//
-									b = cell.getBooleanCellValue();
-									//
-								} else if (Objects.equals(cell.getCellType(), CellType.FORMULA)
-										&& (formulaEvaluator = getIfNull(formulaEvaluator,
-												() -> createFormulaEvaluator(getCreationHelper(workbook)))) != null) {
-									//
-									b = getBooleanValue(formulaEvaluator.evaluate(cell));
-									//
-								} else {
-									//
-									b = Boolean.valueOf(cell.getStringCellValue());
-									//
-								} // if
-									//
-								f.set(voice = getIfNull(voice, Voice::new), b);
+								throw new IllegalStateException();
 								//
 							} // if
 								//
+							f.set(voice = getIfNull(voice, Voice::new), IValue0Util.getValue0(value));
+							//
 						} // if
 							//
 					} // for
@@ -7483,6 +7416,101 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // try
 			//
+	}
+
+	private static IValue0<?> getValueFromCell(final ObjectMap objectMap) {
+		//
+		final Field f = ObjectMap.getObject(objectMap, Field.class);
+		//
+		final Cell cell = ObjectMap.getObject(objectMap, Cell.class);
+		//
+		final Class<?> type = getType(f);
+		//
+		final CellType cellType = cell != null ? cell.getCellType() : null;
+		//
+		List<?> list = null;
+		//
+		IValue0<?> value = null;
+		//
+		if (Objects.equals(type, String.class)) {
+			//
+			if (Objects.equals(cellType, CellType.NUMERIC)) {
+				//
+				value = Unit.with(Double.toString(cell.getNumericCellValue()));
+				//
+			} else {
+				//
+				value = Unit.with(cell.getStringCellValue());
+				//
+			} // if
+				//
+		} else if (isAssignableFrom(Enum.class, type) && (list = toList(
+				filter(testAndApply(Objects::nonNull, getEnumConstants(type), Arrays::stream, null), e -> {
+					//
+					final String name = name(cast(Enum.class, e));
+					//
+					final String stringCellValue = cell.getStringCellValue();
+					//
+					return Objects.equals(name, stringCellValue) || (StringUtils.isNotEmpty(stringCellValue)
+							&& StringUtils.startsWithIgnoreCase(name, stringCellValue));
+					//
+				}))) != null && !list.isEmpty()) {
+			//
+			if (IterableUtils.size(list) == 1) {
+				//
+				value = Unit.with(get(list, 0));
+				//
+			} else {
+				//
+				throw new IllegalStateException("list.size()>1");
+				//
+			} // if
+				//
+		} else if (Objects.equals(type, Iterable.class)) {
+			//
+			value = Unit.with(toList(map(stream(
+					getObjectList(ObjectMap.getObject(objectMap, ObjectMapper.class), cell.getStringCellValue())),
+					VoiceManager::toString)));
+			//
+		} else if (Objects.equals(type, Integer.class)) {
+			//
+			final Double D = Objects.equals(cellType, CellType.NUMERIC) ? Double.valueOf(cell.getNumericCellValue())
+					: null;
+			//
+			if (D != null) {
+				//
+				value = Unit.with(Integer.valueOf(D.intValue()));
+				//
+			} else {
+				//
+				value = Unit.with(valueOf(cell.getStringCellValue()));
+				//
+			} // if
+				//
+		} else if (Objects.equals(type, Boolean.class)) {
+			//
+			final FormulaEvaluator formulaEvaluator = ObjectMap.getObject(objectMap, FormulaEvaluator.class);
+			//
+			String string = null;
+			//
+			if (Objects.equals(cellType, CellType.BOOLEAN)) {
+				//
+				value = Unit.with(cell.getBooleanCellValue());
+				//
+			} else if (Objects.equals(cellType, CellType.FORMULA) && formulaEvaluator != null) {
+				//
+				value = Unit.with(getBooleanValue(formulaEvaluator.evaluate(cell)));
+				//
+			} else if (StringUtils.isNotEmpty(string = cell.getStringCellValue())) {
+				//
+				value = Unit.with(Boolean.valueOf(string));
+				//
+			} // if
+				//
+		} // if
+			//
+		return value;
+		//
 	}
 
 	private static Boolean getBooleanValue(final CellValue instance) {
