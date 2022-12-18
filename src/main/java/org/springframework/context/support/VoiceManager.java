@@ -7322,7 +7322,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 													//
 												writeVoiceToFile(objectMap, getText(voice), voiceId
 												//
-														, voiceManager != null ? voiceManager.getRate() : null// rate
+														, voiceManager.getRate()// rate
 														//
 														, Math.min(Math.max(intValue(getValue(jsSpeechVolume), 100), 0),
 																100)// volume
