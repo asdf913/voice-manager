@@ -7220,12 +7220,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					if (voice != null) {
 						//
-						if (hiraganaKatakanaConversion) {
-							//
-							setHiraganaOrKatakana(voice);
-							//
-						} // if
-							//
+						// org.springframework.context.support.VoiceManager.setHiraganaOrKatakana(domain.Voice)
+						//
+						testAndAccept((a, b) -> Objects.equals(Boolean.TRUE, a), hiraganaKatakanaConversion, voice,
+								(a, b) -> setHiraganaOrKatakana(b));
+						//
 						if (hiraganaRomajiConversion) {
 							//
 							if (jakaroma == null) {
