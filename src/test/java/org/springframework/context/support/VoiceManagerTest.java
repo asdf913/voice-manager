@@ -36,6 +36,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
@@ -275,7 +276,7 @@ class VoiceManagerTest {
 			METHOD_ACTION_PERFORMED_FOR_SYSTEM_CLIPBOARD_ANNOTATED, METHOD_TEST_AND_RUN, METHOD_TO_CHAR_ARRAY,
 			METHOD_HAS_LOWER_BOUND, METHOD_HAS_UPPER_BOUND, METHOD_LOWER_END_POINT, METHOD_UPPER_END_POINT,
 			METHOD_GET_IF_NULL, METHOD_SET_LANGUAGE, METHOD_GET_LANGUAGE, METHOD_GET_BOOLEAN_VALUE,
-			METHOD_CREATE_FORMULA_EVALUATOR = null;
+			METHOD_CREATE_FORMULA_EVALUATOR, METHOD_GET_RESPONSE_CODE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -830,6 +831,9 @@ class VoiceManagerTest {
 		(METHOD_GET_BOOLEAN_VALUE = clz.getDeclaredMethod("getBooleanValue", CellValue.class)).setAccessible(true);
 		//
 		(METHOD_CREATE_FORMULA_EVALUATOR = clz.getDeclaredMethod("createFormulaEvaluator", CreationHelper.class))
+				.setAccessible(true);
+		//
+		(METHOD_GET_RESPONSE_CODE = clz.getDeclaredMethod("getResponseCode", HttpURLConnection.class))
 				.setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
@@ -2006,6 +2010,38 @@ class VoiceManagerTest {
 		} // if
 			//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnExportCopy, 0, null)));
+		//
+		// btnPronunciationPageUrlCheck
+		//
+		final AbstractButton btnPronunciationPageUrlCheck = new JButton();
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "btnPronunciationPageUrlCheck", btnPronunciationPageUrlCheck, true);
+			//
+		} // if
+			//
+		final ActionEvent actionEventBtnPronunciationPageUrlCheck = new ActionEvent(btnPronunciationPageUrlCheck, 0,
+				null);
+		//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnPronunciationPageUrlCheck));
+		//
+		final JTextComponent tfPronunciationPageUrl = new JTextField();
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "tfPronunciationPageUrl", tfPronunciationPageUrl, true);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> setText(tfPronunciationPageUrl, " "));
+		//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnPronunciationPageUrlCheck));
+		//
+		Assertions.assertDoesNotThrow(() -> setText(tfPronunciationPageUrl, "a"));
+		//
+		Assertions.assertThrows(RuntimeException.class,
+				() -> actionPerformed(instance, actionEventBtnPronunciationPageUrlCheck));
 		//
 	}
 
@@ -7075,6 +7111,27 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof FormulaEvaluator) {
 				return (FormulaEvaluator) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetResponseCode() throws Throwable {
+		//
+		Assertions.assertNull(getResponseCode(null));
+		//
+	}
+
+	private static Integer getResponseCode(final HttpURLConnection instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_RESPONSE_CODE.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Integer) {
+				return (Integer) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

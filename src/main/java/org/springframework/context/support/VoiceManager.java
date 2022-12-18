@@ -378,7 +378,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			tfSpeechLanguageCode, tfSpeechLanguageName, tfLanguage, tfSpeechVolume, tfCurrentProcessingFile,
 			tfCurrentProcessingSheetName, tfCurrentProcessingVoice, tfListNames, tfPhraseCounter, tfPhraseTotal,
 			tfJlptFolderNamePrefix, tfOrdinalPositionFileNamePrefix, tfIpaSymbol, tfExportFile, tfElapsed, tfDllPath,
-			tfExportHtmlFileName, tfExportPassword, tfPronunciationPageUrl = null;
+			tfExportHtmlFileName, tfExportPassword, tfPronunciationPageUrl, tfPronunciationPageStatusCode = null;
 
 	private transient ComboBoxModel<Yomi> cbmYomi = null;
 
@@ -399,7 +399,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			btnExport, cbExportHtml, cbExportListHtml, cbExportHtmlAsZip, cbExportHtmlRemoveAfterZip, cbExportListSheet,
 			cbExportJlptSheet, cbExportPresentation, cbEmbedAudioInPresentation, cbHideAudioImageInPresentation,
 			cbImportFileTemplateGenerateBlankRow, cbJlptAsFolder, btnExportBrowse, btnSpeechRateSlower,
-			btnSpeechRateNormal, btnSpeechRateFaster = null;
+			btnSpeechRateNormal, btnSpeechRateFaster, btnPronunciationPageUrlCheck = null;
 
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.FIELD)
@@ -613,15 +613,62 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		if (headless) {
 			//
 			if (logger != null && !LoggerUtil.isNOPLogger(logger)) {
+				//
 				logger.error(getMessage(throwable), throwable);
+				//
 			} else if (throwable != null) {
+				//
 				throwable.printStackTrace();
+				//
 			} // if
 				//
 		} else {
 			//
-			JOptionPane.showMessageDialog(null, getMessage(throwable));
+			final List<Method> ms = toList(filter(testAndApply(Objects::nonNull,
+					getDeclaredMethods(forName("org.junit.jupiter.api.AssertDoesNotThrow")), Arrays::stream, null),
+					x -> StringUtils.equals(getName(x), "createAssertionFailedError")
+							&& Arrays.equals(new Class<?>[] { Object.class, Throwable.class }, getParameterTypes(x))));
 			//
+			final Method method = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> get(x, 0), null);
+			//
+			if (method == null) {
+				//
+				JOptionPane.showMessageDialog(null, getMessage(throwable));
+				//
+			} else {
+				//
+				method.setAccessible(true);
+				//
+				try {
+					//
+					final Object object = invoke(method, null, getMessage(throwable), throwable);
+					//
+					if (object instanceof RuntimeException) {
+						//
+						throw (RuntimeException) object;
+						//
+					} else if (object instanceof Throwable) {
+						//
+						throw new RuntimeException((Throwable) object);
+						//
+					} // if
+						//
+				} catch (final IllegalAccessException e) {
+					//
+					errorOrPrintStackTraceOrShowMessageDialog(headless, LOG, throwable);
+					//
+				} catch (final InvocationTargetException e) {
+					//
+					final Throwable targetException = e.getTargetException();
+					//
+					errorOrPrintStackTraceOrShowMessageDialog(headless, LOG,
+							ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException), targetException,
+									ExceptionUtils.getRootCause(e), e));
+					//
+				} // try
+					//
+			} // if
+				//
 		} // if
 			//
 	}
@@ -2261,7 +2308,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(
 				tfPronunciationPageUrl = new JTextField(getProperty(propertyResolver,
 						"org.springframework.context.support.VoiceManager.pronunciationPageUrl")),
-				String.format("%1$s,%2$s,span %3$s", WRAP, GROWX, 22));
+				String.format("%1$s,span %2$s", GROWX, 20));
+		//
+		panel.add(new JLabel("Status"));
+		//
+		panel.add(tfPronunciationPageStatusCode = new JTextField(), String.format("%1$s", GROWX));
+		//
+		panel.add(btnPronunciationPageUrlCheck = new JButton("Check"), WRAP);
 		//
 		panel.add(new JLabel());
 		//
@@ -2309,9 +2362,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		} // if
 			//
 		addActionListener(this, btnExecute, btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji, btnCopyHiragana,
-				btnCopyKatakana);
+				btnCopyKatakana, btnPronunciationPageUrlCheck);
 		//
 		setEnabled(voiceIds != null, cbUseTtsVoice);
+		//
+		setEnabled(false, tfPronunciationPageStatusCode);
 		//
 		return panel;
 		//
@@ -4218,8 +4273,33 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			setValue(jsSpeechRate, intValue(getValue(jsSpeechRate), 0) + 1);
 			//
+		} else if (Objects.equals(source, btnPronunciationPageUrlCheck)) {
+			//
+			setText(tfPronunciationPageStatusCode, null);
+			//
+			final String urlString = getText(tfPronunciationPageUrl);
+			//
+			if (StringUtils.isNotBlank(urlString)) {
+				//
+				try {
+					//
+					setText(tfPronunciationPageStatusCode, Integer.toString(
+							getResponseCode(cast(HttpURLConnection.class, new URL(urlString).openConnection()))));
+					//
+				} catch (final IOException e) {
+					//
+					errorOrPrintStackTraceOrShowMessageDialog(headless, e);
+					//
+				} // try
+					//
+			} // if
+				//
 		} // if
 			//
+	}
+
+	private static Integer getResponseCode(final HttpURLConnection instance) throws IOException {
+		return instance != null ? Integer.valueOf(instance.getResponseCode()) : null;
 	}
 
 	private static void setLanguage(final Voice instance, final String language) {
@@ -4282,7 +4362,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			final String string = IValue0Util.getValue0(stringValue);
 			//
-			testAndRun(forName("org.junit.jupiter.api.Assertions") == null,
+			testAndRun(forName("org.junit.jupiter.api.Test") == null,
 					() -> setContents(clipboard, new StringSelection(string), null));
 			//
 			return;
