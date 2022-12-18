@@ -4305,7 +4305,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				final VoiceIdListCellRenderer voiceIdListCellRenderer = new VoiceIdListCellRenderer();
 				//
-				voiceIdListCellRenderer.listCellRenderer = (jcbVoiceIdLocal = new JComboBox(cbmVoiceIdLocal))
+				voiceIdListCellRenderer.listCellRenderer = (jcbVoiceIdLocal = new JComboBox<>(cbmVoiceIdLocal))
 						.getRenderer();
 				//
 				jcbVoiceIdLocal.addItemListener(this);
