@@ -7221,13 +7221,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						testAndAccept((a, b) -> Objects.equals(Boolean.TRUE, a), hiraganaKatakanaConversion, voice,
 								(a, b) -> setHiraganaOrKatakana(b));
 						//
-						if (hiraganaRomajiConversion) {
-							//
-							setRomaji(voice, jakaroma = ObjectUtils.getIfNull(jakaroma,
-									() -> ObjectMap.getObject(objectMap, Jakaroma.class)));
-							//
-						} // if
-							//
+						// org.springframework.context.support.VoiceManager.setRomaji(domain.Voice,fr.free.nrw.jakaroma.Jakaroma)
+						//
+						testAndAccept((a, b) -> hiraganaRomajiConversion, voice,
+								jakaroma = ObjectUtils.getIfNull(jakaroma,
+										() -> ObjectMap.getObject(objectMap, Jakaroma.class)),
+								(a, b) -> setRomaji(a, b));
+						//
 					} // if
 						//
 					if (first) {
