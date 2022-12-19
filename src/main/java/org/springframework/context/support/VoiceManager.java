@@ -7070,6 +7070,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 		void setObject(final int key, final T value);
 
+		static <T> T getObject(final IntMap<T> instance, final int key) {
+			return instance != null ? instance.getObject(key) : null;
+		}
+
+		static <T> boolean containsKey(final IntMap<T> instance, final int key) {
+			return instance != null && instance.containsKey(key);
+		}
+
 		static <T> void setObject(final IntMap<T> instance, final int key, final T value) {
 			if (instance != null) {
 				instance.setObject(key, value);
@@ -7191,8 +7199,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 													cell.getStringCellValue()))),
 											null));
 							//
-						} else if (intMap != null && intMap.containsKey(columnIndex = cell.getColumnIndex())
-								&& (f = intMap.getObject(columnIndex)) != null) {
+						} else if (IntMap.containsKey(intMap, columnIndex = cell.getColumnIndex())
+								&& (f = IntMap.getObject(intMap, columnIndex)) != null) {
 							//
 							f.setAccessible(true);
 							//
