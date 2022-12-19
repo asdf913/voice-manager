@@ -7371,8 +7371,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 							ObjectMap.setObject(objectMap, Voice.class, voice);
 							//
-							ObjectMap.setObject(objectMap, File.class,
-									voice != null ? new File(folder, getFilePath(voice)) : folder);
+							ObjectMap.setObject(objectMap, File.class, testAndApply(Objects::nonNull, voice,
+									x -> new File(folder, getFilePath(x)), x -> folder));
 							//
 							importVoice(objectMap, errorMessageConsumer, throwableConsumer);
 							//
