@@ -7305,13 +7305,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 																100)// volume
 												);
 												//
-												if (byteConverter == null) {
-													//
-													byteConverter = ObjectMap.getObject(objectMap, ByteConverter.class);
-													//
-												} // if
-													//
-												if (byteConverter != null) {
+												if ((byteConverter = getIfNull(byteConverter, () -> ObjectMap
+														.getObject(objectMap, ByteConverter.class))) != null) {
 													//
 													FileUtils.writeByteArrayToFile(it.file, byteConverter
 															.convert(FileUtils.readFileToByteArray(it.file)));
