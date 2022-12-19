@@ -7281,27 +7281,26 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 											//
 											ObjectMap.setObject(objectMap, File.class, it.file);
 											//
-											if ((voiceManager = getIfNull(voiceManager, () -> ObjectMap
-													.getObject(objectMap, VoiceManager.class))) != null) {
+											final VoiceManager vm = getIfNull(voiceManager,
+													() -> ObjectMap.getObject(objectMap, VoiceManager.class));
+											//
+											if (vm != null) {
 												//
-												if (jsSpeechVolume == null) {
-													//
-													jsSpeechVolume = voiceManager.jsSpeechVolume;
-													//
-												} // if
-													//
 												if (voiceId == null) {
 													//
-													voiceId = toString(getSelectedItem(voiceManager.cbmVoiceId));
+													voiceId = toString(getSelectedItem(vm.cbmVoiceId));
 													//
 												} // if
 													//
 												writeVoiceToFile(objectMap, getText(voice), voiceId
 												//
-														, voiceManager.getRate()// rate
+														, vm.getRate()// rate
 														//
-														, Math.min(Math.max(intValue(getValue(jsSpeechVolume), 100), 0),
-																100)// volume
+														,
+														Math.min(Math.max(
+																intValue(getValue(jsSpeechVolume = getIfNull(
+																		jsSpeechVolume, () -> vm.jsSpeechVolume)), 100),
+																0), 100)// volume
 												);
 												//
 												if ((byteConverter = getIfNull(byteConverter, () -> ObjectMap
