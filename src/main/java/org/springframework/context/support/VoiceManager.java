@@ -7164,10 +7164,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					voice = null;
 					//
+					objectMap = ObjectUtils.defaultIfNull(copyObjectMap(_objectMap), _objectMap);
+					//
 					for (final Cell cell : row) {
 						//
 						if (cell == null) {
+							//
 							continue;
+							//
 						} // if
 							//
 						if (first) {
@@ -7212,8 +7216,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 					} // for
 						//
-					objectMap = ObjectUtils.defaultIfNull(copyObjectMap(_objectMap), _objectMap);
-					//
 					if (voice != null) {
 						//
 						// org.springframework.context.support.VoiceManager.setHiraganaOrKatakana(domain.Voice)
@@ -7448,9 +7450,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					return Objects.equals(name, stringCellValue) || (StringUtils.isNotEmpty(stringCellValue)
 							&& StringUtils.startsWithIgnoreCase(name, stringCellValue));
 					//
-				}))) != null && !list.isEmpty()) {
+				}))) != null) {
 			//
-			if (IterableUtils.size(list) == 1) {
+			if (list.isEmpty()) {
+				//
+				value = Unit.with(null);
+				//
+			} else if (IterableUtils.size(list) == 1) {
 				//
 				value = Unit.with(get(list, 0));
 				//

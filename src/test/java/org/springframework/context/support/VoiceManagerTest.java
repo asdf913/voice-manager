@@ -281,7 +281,7 @@ class VoiceManagerTest {
 			METHOD_SET_LANGUAGE, METHOD_GET_LANGUAGE, METHOD_GET_BOOLEAN_VALUE, METHOD_CREATE_FORMULA_EVALUATOR,
 			METHOD_GET_RESPONSE_CODE, METHOD_TO_RUNTIME_EXCEPTION, METHOD_GET_ALGORITHM,
 			METHOD_SET_PREFERRED_WIDTH_ARRAY, METHOD_SET_PREFERRED_WIDTH_ITERABLE, METHOD_PRINT_STACK_TRACE,
-			METHOD_GET_VALUE_FROM_CELL,METHOD_GET_MP3_TAGS = null;
+			METHOD_GET_VALUE_FROM_CELL, METHOD_GET_MP3_TAGS = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -863,7 +863,7 @@ class VoiceManagerTest {
 		//
 		(METHOD_GET_VALUE_FROM_CELL = clz.getDeclaredMethod("getValueFromCell", CLASS_OBJECT_MAP)).setAccessible(true);
 		//
-		(METHOD_GET_MP3_TAGS= clz.getDeclaredMethod("getMp3Tags", VoiceManager.class)).setAccessible(true);
+		(METHOD_GET_MP3_TAGS = clz.getDeclaredMethod("getMp3Tags", VoiceManager.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -7390,7 +7390,7 @@ class VoiceManagerTest {
 		Assertions.assertDoesNotThrow(
 				() -> invoke(setObject, objectMap, Field.class, getDeclaredField(Voice.class, "yomi")));
 		//
-		Assertions.assertNull(getValueFromCell(objectMap));
+		Assertions.assertEquals(Unit.with(null), getValueFromCell(objectMap));
 		//
 		// java.lang.Iterable
 		//
@@ -7425,7 +7425,7 @@ class VoiceManagerTest {
 			throw e.getTargetException();
 		}
 	}
-	
+
 	@Test
 	void testGetMp3Tags() throws Throwable {
 		//
@@ -7434,21 +7434,20 @@ class VoiceManagerTest {
 		Assertions.assertNull(getMp3Tags(instance));
 		//
 	}
-	
+
 	private static String[] getMp3Tags(final VoiceManager instance) throws Throwable {
 		try {
 			final Object obj = METHOD_GET_MP3_TAGS.invoke(null, instance);
 			if (obj == null) {
 				return null;
-			} else if (obj instanceof String[] ) {
-				return (String[] ) obj;
+			} else if (obj instanceof String[]) {
+				return (String[]) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
 	}
-
 
 	@Test
 	void testIh1() throws Throwable {
