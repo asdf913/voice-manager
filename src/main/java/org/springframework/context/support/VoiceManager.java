@@ -7137,8 +7137,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				final boolean hiraganaRomajiConversion = BooleanUtils.toBooleanDefaultIfNull(
 						IValue0Util.getValue0(getBoolean(customProperties, "hiraganaRomajiConversion")), false);
 				//
-				ObjectMap objectMap = null;
-				//
 				ObjectMapper objectMapper = null;
 				//
 				final Workbook workbook = sheet.getWorkbook();
@@ -7164,7 +7162,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					voice = null;
 					//
-					objectMap = ObjectUtils.defaultIfNull(copyObjectMap(_objectMap), _objectMap);
+					final ObjectMap objectMap = ObjectUtils.defaultIfNull(copyObjectMap(_objectMap), _objectMap);
 					//
 					for (final Cell cell : row) {
 						//
@@ -7225,13 +7223,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 						if (hiraganaRomajiConversion) {
 							//
-							if (jakaroma == null) {
-								//
-								jakaroma = ObjectMap.getObject(objectMap, Jakaroma.class);
-								//
-							} // if
-								//
-							setRomaji(voice, jakaroma);
+							setRomaji(voice, jakaroma = ObjectUtils.getIfNull(jakaroma,
+									() -> ObjectMap.getObject(objectMap, Jakaroma.class)));
 							//
 						} // if
 							//
@@ -7266,12 +7259,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 										//
 									} // if
 										//
-									if (voiceManager == null) {
-										//
-										voiceManager = ObjectMap.getObject(objectMap, VoiceManager.class);
-										//
-									} // if
-										//
+									voiceManager = getIfNull(voiceManager,
+											() -> ObjectMap.getObject(objectMap, VoiceManager.class));
+									//
 									if (mp3Tags == null) {
 										//
 										mp3Tags = getMp3Tags(voiceManager);
@@ -7284,26 +7274,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 									//
 								} else {
 									//
-									if (speechApi == null) {
-										//
-										speechApi = ObjectMap.getObject(objectMap, SpeechApi.class);
-										//
-									} // if
-										//
-									if (isInstalled(speechApi)) {
+									if (isInstalled(speechApi = getIfNull(speechApi,
+											() -> ObjectMap.getObject(objectMap, SpeechApi.class)))) {
 										//
 										if ((it.file = File.createTempFile(
 												randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH), filePath)) != null) {
 											//
 											ObjectMap.setObject(objectMap, File.class, it.file);
 											//
-											if (voiceManager == null) {
-												//
-												voiceManager = ObjectMap.getObject(objectMap, VoiceManager.class);
-												//
-											} // if
-												//
-											if (voiceManager != null) {
+											if ((voiceManager = getIfNull(voiceManager, () -> ObjectMap
+													.getObject(objectMap, VoiceManager.class))) != null) {
 												//
 												if (jsSpeechVolume == null) {
 													//
@@ -7344,14 +7324,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 											//
 										} // if
 											//
-										if (provider == null) {
-											//
-											provider = ObjectMap.getObject(objectMap, Provider.class);
-											//
-										} // if
-											//
 										setSource(it.voice, StringUtils.defaultIfBlank(getSource(voice),
-												getProviderName(provider)));
+												getProviderName(provider = getIfNull(provider,
+														() -> ObjectMap.getObject(objectMap, Provider.class)))));
 										//
 										try {
 											//
