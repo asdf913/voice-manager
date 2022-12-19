@@ -205,6 +205,7 @@ import org.apache.poi.poifs.crypt.EncryptionMode;
 import org.apache.poi.poifs.crypt.Encryptor;
 import org.apache.poi.poifs.filesystem.DirectoryNode;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.ss.formula.functions.T;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
@@ -7069,6 +7070,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 		void setObject(final int key, final T value);
 
+		static <T> void setObject(final IntMap<T> instance, final int key, final T value) {
+			if (instance != null) {
+				instance.setObject(key, value);
+			}
+		}
+
 	}
 
 	private static interface IntIntMap {
@@ -7174,18 +7181,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 						if (first) {
 							//
-							fs = getIfNull(fs, () -> FieldUtils.getAllFields(Voice.class));
+							IntMap.setObject(
+									intMap = getIfNull(intMap, () -> Reflection.newProxy(IntMap.class, new IH())),
+									cell.getColumnIndex(),
+									orElse(findFirst(testAndApply(Objects::nonNull,
+											fs = getIfNull(fs, () -> FieldUtils.getAllFields(Voice.class)),
+											Arrays::stream, null)
+											.filter(field -> Objects.equals(getName(field),
+													cell.getStringCellValue()))),
+											null));
 							//
-							if ((intMap = getIfNull(intMap,
-									() -> Reflection.newProxy(IntMap.class, new IH()))) != null) {
-								//
-								intMap.setObject(cell.getColumnIndex(), orElse(
-										findFirst(testAndApply(Objects::nonNull, fs, Arrays::stream, null).filter(
-												field -> Objects.equals(getName(field), cell.getStringCellValue()))),
-										null));
-								//
-							} // if
-								//
 						} else if (intMap != null && intMap.containsKey(columnIndex = cell.getColumnIndex())
 								&& (f = intMap.getObject(columnIndex)) != null) {
 							//
