@@ -7263,6 +7263,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 							if ((it.voice = voice) != null) {
 								//
+								final VoiceManager vm = voiceManager = getIfNull(voiceManager,
+										() -> ObjectMap.getObject(objectMap, VoiceManager.class));
+								//
 								if (StringUtils.isNotBlank(filePath = getFilePath(voice))) {
 									//
 									if (!(it.file = new File(filePath)).exists()) {
@@ -7271,18 +7274,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 										//
 									} // if
 										//
-									voiceManager = getIfNull(voiceManager,
-											() -> ObjectMap.getObject(objectMap, VoiceManager.class));
-									//
-									if (mp3Tags == null) {
-										//
-										mp3Tags = getMp3Tags(voiceManager);
-										//
-									} // if
-										//
 									setSource(it.voice,
-											StringUtils.defaultIfBlank(getSource(voice), getMp3TagValue(it.file,
-													x -> StringUtils.isNotBlank(toString(x)), mp3Tags)));
+											StringUtils.defaultIfBlank(getSource(voice),
+													getMp3TagValue(it.file, x -> StringUtils.isNotBlank(toString(x)),
+															mp3Tags = getIfNull(mp3Tags, () -> getMp3Tags(vm)))));
 									//
 								} else {
 									//
@@ -7293,9 +7288,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 												randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH), filePath)) != null) {
 											//
 											ObjectMap.setObject(objectMap, File.class, it.file);
-											//
-											final VoiceManager vm = getIfNull(voiceManager,
-													() -> ObjectMap.getObject(objectMap, VoiceManager.class));
 											//
 											if (vm != null) {
 												//
