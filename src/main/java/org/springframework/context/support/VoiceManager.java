@@ -7109,274 +7109,272 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		try {
 			//
-			if (sheet != null && sheet.iterator() != null) {
+			if (sheet == null || sheet.iterator() == null) {
 				//
-				boolean first = true;
+				return;
 				//
-				Field[] fs = null;
+			} // if
 				//
-				Voice voice = null;
+			boolean first = true;
+			//
+			Field[] fs = null;
+			//
+			Voice voice = null;
+			//
+			Field f = null;
+			//
+			int columnIndex;
+			//
+			ImportTask it = null;
+			//
+			NumberFormat percentNumberFormat = null;
+			//
+			String filePath = null;
+			//
+			VoiceManager voiceManager = null;
+			//
+			Provider provider = null;
+			//
+			JSlider jsSpeechVolume = null;
+			//
+			String[] mp3Tags = null;
+			//
+			SpeechApi speechApi = null;
+			//
+			String voiceId = null;
+			//
+			ByteConverter byteConverter = null;
+			//
+			Jakaroma jakaroma = null;
+			//
+			final CustomProperties customProperties = getCustomProperties(
+					getProperties(ObjectMap.getObject(_objectMap, POIXMLDocument.class)));
+			//
+			final boolean hiraganaKatakanaConversion = BooleanUtils.toBooleanDefaultIfNull(
+					IValue0Util.getValue0(getBoolean(customProperties, "hiraganaKatakanaConversion")), false);
+			//
+			final boolean hiraganaRomajiConversion = BooleanUtils.toBooleanDefaultIfNull(
+					IValue0Util.getValue0(getBoolean(customProperties, "hiraganaRomajiConversion")), false);
+			//
+			ObjectMapper objectMapper = null;
+			//
+			final Workbook workbook = sheet.getWorkbook();
+			//
+			final Integer numberOfSheets = workbook != null ? Integer.valueOf(workbook.getNumberOfSheets()) : null;
+			//
+			final int maxSheetNameLength = orElse(
+					max(mapToInt(
+							map(testAndApply(Objects::nonNull, spliterator(workbook),
+									x -> StreamSupport.stream(x, false), null), VoiceManager::getSheetName),
+							StringUtils::length)),
+					0);
+			//
+			FormulaEvaluator formulaEvaluator = null;
+			//
+			IValue0<?> value = null;
+			//
+			for (final Row row : sheet) {
 				//
-				Field f = null;
-				//
-				int columnIndex;
-				//
-				ImportTask it = null;
-				//
-				NumberFormat percentNumberFormat = null;
-				//
-				String filePath = null;
-				//
-				VoiceManager voiceManager = null;
-				//
-				Provider provider = null;
-				//
-				JSlider jsSpeechVolume = null;
-				//
-				String[] mp3Tags = null;
-				//
-				SpeechApi speechApi = null;
-				//
-				String voiceId = null;
-				//
-				ByteConverter byteConverter = null;
-				//
-				Jakaroma jakaroma = null;
-				//
-				final CustomProperties customProperties = getCustomProperties(
-						getProperties(ObjectMap.getObject(_objectMap, POIXMLDocument.class)));
-				//
-				final boolean hiraganaKatakanaConversion = BooleanUtils.toBooleanDefaultIfNull(
-						IValue0Util.getValue0(getBoolean(customProperties, "hiraganaKatakanaConversion")), false);
-				//
-				final boolean hiraganaRomajiConversion = BooleanUtils.toBooleanDefaultIfNull(
-						IValue0Util.getValue0(getBoolean(customProperties, "hiraganaRomajiConversion")), false);
-				//
-				ObjectMapper objectMapper = null;
-				//
-				final Workbook workbook = sheet.getWorkbook();
-				//
-				final Integer numberOfSheets = workbook != null ? Integer.valueOf(workbook.getNumberOfSheets()) : null;
-				//
-				final int maxSheetNameLength = orElse(
-						max(mapToInt(
-								map(testAndApply(Objects::nonNull, spliterator(workbook),
-										x -> StreamSupport.stream(x, false), null), VoiceManager::getSheetName),
-								StringUtils::length)),
-						0);
-				//
-				FormulaEvaluator formulaEvaluator = null;
-				//
-				IValue0<?> value = null;
-				//
-				for (final Row row : sheet) {
+				if (row == null || row.iterator() == null) {
+					continue;
+				} // if
 					//
-					if (row == null || row.iterator() == null) {
+				voice = null;
+				//
+				final ObjectMap objectMap = ObjectUtils.defaultIfNull(copyObjectMap(_objectMap), _objectMap);
+				//
+				for (final Cell cell : row) {
+					//
+					if (cell == null) {
+						//
 						continue;
-					} // if
-						//
-					voice = null;
-					//
-					final ObjectMap objectMap = ObjectUtils.defaultIfNull(copyObjectMap(_objectMap), _objectMap);
-					//
-					for (final Cell cell : row) {
-						//
-						if (cell == null) {
-							//
-							continue;
-							//
-						} // if
-							//
-						if (first) {
-							//
-							IntMap.setObject(
-									intMap = getIfNull(intMap, () -> Reflection.newProxy(IntMap.class, new IH())),
-									cell.getColumnIndex(),
-									orElse(findFirst(testAndApply(Objects::nonNull,
-											fs = getIfNull(fs, () -> FieldUtils.getAllFields(Voice.class)),
-											Arrays::stream, null)
-											.filter(field -> Objects.equals(getName(field),
-													cell.getStringCellValue()))),
-											null));
-							//
-						} else if (IntMap.containsKey(intMap, columnIndex = cell.getColumnIndex())
-								&& (f = IntMap.getObject(intMap, columnIndex)) != null) {
-							//
-							f.setAccessible(true);
-							//
-							ObjectMap.setObject(objectMap, Field.class, f);
-							//
-							ObjectMap.setObject(objectMap, Cell.class, cell);
-							//
-							ObjectMap.setObject(objectMap, ObjectMapper.class,
-									objectMapper = getIfNull(objectMapper, ObjectMapper::new));
-							//
-							ObjectMap.setObject(objectMap, FormulaEvaluator.class,
-									formulaEvaluator = getIfNull(formulaEvaluator,
-											() -> createFormulaEvaluator(getCreationHelper(workbook))));
-							//
-							if ((value = getValueFromCell(objectMap)) == null) {
-								//
-								throw new IllegalStateException();
-								//
-							} // if
-								//
-							f.set(voice = getIfNull(voice, Voice::new), IValue0Util.getValue0(value));
-							//
-						} // if
-							//
-					} // for
-						//
-					if (voice != null) {
-						//
-						// org.springframework.context.support.VoiceManager.setHiraganaOrKatakana(domain.Voice)
-						//
-						testAndAccept(a -> hiraganaKatakanaConversion, voice, a -> setHiraganaOrKatakana(a));
-						//
-						// org.springframework.context.support.VoiceManager.setRomaji(domain.Voice,fr.free.nrw.jakaroma.Jakaroma)
-						//
-						testAndAccept((a, b) -> hiraganaRomajiConversion, voice,
-								jakaroma = ObjectUtils.getIfNull(jakaroma,
-										() -> ObjectMap.getObject(objectMap, Jakaroma.class)),
-								(a, b) -> setRomaji(a, b));
 						//
 					} // if
 						//
 					if (first) {
 						//
-						first = false;
+						IntMap.setObject(intMap = getIfNull(intMap, () -> Reflection.newProxy(IntMap.class, new IH())),
+								cell.getColumnIndex(),
+								orElse(findFirst(testAndApply(Objects::nonNull,
+										fs = getIfNull(fs, () -> FieldUtils.getAllFields(Voice.class)), Arrays::stream,
+										null)
+										.filter(field -> Objects.equals(getName(field), cell.getStringCellValue()))),
+										null));
 						//
-					} else {
+					} else if (IntMap.containsKey(intMap, columnIndex = cell.getColumnIndex())
+							&& (f = IntMap.getObject(intMap, columnIndex)) != null) {
 						//
-						if ((es = getIfNull(es, () -> Executors.newFixedThreadPool(1))) != null) {
+						f.setAccessible(true);
+						//
+						ObjectMap.setObject(objectMap, Field.class, f);
+						//
+						ObjectMap.setObject(objectMap, Cell.class, cell);
+						//
+						ObjectMap.setObject(objectMap, ObjectMapper.class,
+								objectMapper = getIfNull(objectMapper, ObjectMapper::new));
+						//
+						ObjectMap.setObject(objectMap, FormulaEvaluator.class,
+								formulaEvaluator = getIfNull(formulaEvaluator,
+										() -> createFormulaEvaluator(getCreationHelper(workbook))));
+						//
+						if ((value = getValueFromCell(objectMap)) == null) {
 							//
-							(it = new ImportTask()).sheetCurrentAndTotal = Pair.of(getCurrentSheetIndex(sheet),
-									numberOfSheets);
+							throw new IllegalStateException();
 							//
-							it.currentSheetName = StringUtils.leftPad(getSheetName(sheet), maxSheetNameLength);
+						} // if
 							//
-							it.counter = Integer.valueOf(row.getRowNum());
+						f.set(voice = getIfNull(voice, Voice::new), IValue0Util.getValue0(value));
+						//
+					} // if
+						//
+				} // for
+					//
+				if (voice != null) {
+					//
+					// org.springframework.context.support.VoiceManager.setHiraganaOrKatakana(domain.Voice)
+					//
+					testAndAccept(a -> hiraganaKatakanaConversion, voice, a -> setHiraganaOrKatakana(a));
+					//
+					// org.springframework.context.support.VoiceManager.setRomaji(domain.Voice,fr.free.nrw.jakaroma.Jakaroma)
+					//
+					testAndAccept((a, b) -> hiraganaRomajiConversion, voice, jakaroma = ObjectUtils.getIfNull(jakaroma,
+							() -> ObjectMap.getObject(objectMap, Jakaroma.class)), (a, b) -> setRomaji(a, b));
+					//
+				} // if
+					//
+				if (first) {
+					//
+					first = false;
+					//
+				} else {
+					//
+					if ((es = getIfNull(es, () -> Executors.newFixedThreadPool(1))) != null) {
+						//
+						(it = new ImportTask()).sheetCurrentAndTotal = Pair.of(getCurrentSheetIndex(sheet),
+								numberOfSheets);
+						//
+						it.currentSheetName = StringUtils.leftPad(getSheetName(sheet), maxSheetNameLength);
+						//
+						it.counter = Integer.valueOf(row.getRowNum());
+						//
+						it.count = Integer.valueOf(intValue(getPhysicalNumberOfRows(sheet), 0) - 1);
+						//
+						it.percentNumberFormat = getIfNull(percentNumberFormat, () -> new DecimalFormat("#%"));
+						//
+						if ((it.voice = voice) != null) {
 							//
-							it.count = Integer.valueOf(intValue(getPhysicalNumberOfRows(sheet), 0) - 1);
+							final VoiceManager vm = voiceManager = getIfNull(voiceManager,
+									() -> ObjectMap.getObject(objectMap, VoiceManager.class));
 							//
-							it.percentNumberFormat = getIfNull(percentNumberFormat, () -> new DecimalFormat("#%"));
-							//
-							if ((it.voice = voice) != null) {
+							if (StringUtils.isNotBlank(filePath = getFilePath(voice))) {
 								//
-								final VoiceManager vm = voiceManager = getIfNull(voiceManager,
-										() -> ObjectMap.getObject(objectMap, VoiceManager.class));
-								//
-								if (StringUtils.isNotBlank(filePath = getFilePath(voice))) {
+								if (!(it.file = new File(filePath)).exists()) {
 									//
-									if (!(it.file = new File(filePath)).exists()) {
+									it.file = new File(folder, filePath);
+									//
+								} // if
+									//
+								setSource(it.voice,
+										StringUtils.defaultIfBlank(getSource(voice),
+												getMp3TagValue(it.file, x -> StringUtils.isNotBlank(toString(x)),
+														mp3Tags = getIfNull(mp3Tags, () -> getMp3Tags(vm)))));
+								//
+							} else {
+								//
+								if (isInstalled(speechApi = getIfNull(speechApi,
+										() -> ObjectMap.getObject(objectMap, SpeechApi.class)))) {
+									//
+									if ((it.file = File.createTempFile(
+											randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH), filePath)) != null) {
 										//
-										it.file = new File(folder, filePath);
+										ObjectMap.setObject(objectMap, File.class, it.file);
+										//
+										if (vm != null) {
+											//
+											writeVoiceToFile(objectMap, getText(voice),
+													//
+													// voiceId
+													//
+													voiceId = getIfNull(voiceId,
+															() -> toString(getSelectedItem(vm.cbmVoiceId)))
+													//
+													// rate
+													//
+													, vm.getRate(),
+													//
+													// volume
+													//
+													Math.min(Math.max(
+															intValue(getValue(jsSpeechVolume = getIfNull(jsSpeechVolume,
+																	() -> vm.jsSpeechVolume)), 100),
+															0), 100)
+											//
+											);
+											//
+											if ((byteConverter = getIfNull(byteConverter, () -> ObjectMap
+													.getObject(objectMap, ByteConverter.class))) != null) {
+												//
+												FileUtils.writeByteArrayToFile(it.file,
+														byteConverter.convert(FileUtils.readFileToByteArray(it.file)));
+												//
+											} // if
+												//
+										} // if
+											//
+										deleteOnExit(it.file);
 										//
 									} // if
 										//
 									setSource(it.voice,
 											StringUtils.defaultIfBlank(getSource(voice),
-													getMp3TagValue(it.file, x -> StringUtils.isNotBlank(toString(x)),
-															mp3Tags = getIfNull(mp3Tags, () -> getMp3Tags(vm)))));
+													getProviderName(provider = getIfNull(provider,
+															() -> ObjectMap.getObject(objectMap, Provider.class)))));
 									//
-								} else {
-									//
-									if (isInstalled(speechApi = getIfNull(speechApi,
-											() -> ObjectMap.getObject(objectMap, SpeechApi.class)))) {
+									try {
 										//
-										if ((it.file = File.createTempFile(
-												randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH), filePath)) != null) {
-											//
-											ObjectMap.setObject(objectMap, File.class, it.file);
-											//
-											if (vm != null) {
-												//
-												writeVoiceToFile(objectMap, getText(voice),
-														//
-														// voiceId
-														//
-														voiceId = getIfNull(voiceId,
-																() -> toString(getSelectedItem(vm.cbmVoiceId)))
-														//
-														// rate
-														//
-														, vm.getRate(),
-														//
-														// volume
-														//
-														Math.min(Math.max(
-																intValue(getValue(jsSpeechVolume = getIfNull(
-																		jsSpeechVolume, () -> vm.jsSpeechVolume)), 100),
-																0), 100)
-												//
-												);
-												//
-												if ((byteConverter = getIfNull(byteConverter, () -> ObjectMap
-														.getObject(objectMap, ByteConverter.class))) != null) {
-													//
-													FileUtils.writeByteArrayToFile(it.file, byteConverter
-															.convert(FileUtils.readFileToByteArray(it.file)));
-													//
-												} // if
-													//
-											} // if
-												//
-											deleteOnExit(it.file);
-											//
-										} // if
-											//
-										setSource(it.voice, StringUtils.defaultIfBlank(getSource(voice),
-												getProviderName(provider = getIfNull(provider,
-														() -> ObjectMap.getObject(objectMap, Provider.class)))));
+										setLanguage(it.voice,
+												StringUtils.defaultIfBlank(getLanguage(it.voice),
+														convertLanguageCodeToText(
+																getVoiceAttribute(speechApi, voiceId, LANGUAGE), 16)));
 										//
-										try {
-											//
-											setLanguage(it.voice,
-													StringUtils.defaultIfBlank(getLanguage(it.voice),
-															convertLanguageCodeToText(
-																	getVoiceAttribute(speechApi, voiceId, LANGUAGE),
-																	16)));
-											//
-										} catch (final Error e) {
-											//
-											errorOrPrintStackTraceOrShowMessageDialog(e);
-											//
-										} // try
-											//
-									} // if
+									} catch (final Error e) {
+										//
+										errorOrPrintStackTraceOrShowMessageDialog(e);
+										//
+									} // try
 										//
 								} // if
 									//
 							} // if
 								//
-							it.objectMap = ObjectUtils.defaultIfNull(copyObjectMap(objectMap), objectMap);
-							//
-							it.errorMessageConsumer = errorMessageConsumer;
-							//
-							it.throwableConsumer = throwableConsumer;
-							//
-							it.voiceConsumer = voiceConsumer;
-							//
-							es.submit(it);
-							//
-						} else {
-							//
-							ObjectMap.setObject(objectMap, Voice.class, voice);
-							//
-							ObjectMap.setObject(objectMap, File.class, testAndApply(Objects::nonNull, voice,
-									x -> new File(folder, getFilePath(x)), x -> folder));
-							//
-							importVoice(objectMap, errorMessageConsumer, throwableConsumer);
-							//
-							accept(voiceConsumer, voice);
-							//
 						} // if
 							//
+						it.objectMap = ObjectUtils.defaultIfNull(copyObjectMap(objectMap), objectMap);
+						//
+						it.errorMessageConsumer = errorMessageConsumer;
+						//
+						it.throwableConsumer = throwableConsumer;
+						//
+						it.voiceConsumer = voiceConsumer;
+						//
+						es.submit(it);
+						//
+					} else {
+						//
+						ObjectMap.setObject(objectMap, Voice.class, voice);
+						//
+						ObjectMap.setObject(objectMap, File.class, testAndApply(Objects::nonNull, voice,
+								x -> new File(folder, getFilePath(x)), x -> folder));
+						//
+						importVoice(objectMap, errorMessageConsumer, throwableConsumer);
+						//
+						accept(voiceConsumer, voice);
+						//
 					} // if
 						//
-				} // for
+				} // if
 					//
-			} // if
+			} // for
 				//
 		} finally {
 			//
