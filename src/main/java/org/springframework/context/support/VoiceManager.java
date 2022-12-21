@@ -5776,53 +5776,43 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} else if (Objects.equals(source, tfTextImport)) {
 			//
-			Multimap<String, String> gaKuNenBeTsuKanJiMultiMap = null;
+			keyReleasedForTextImport(jtf);
 			//
-			try {
-				//
-				gaKuNenBeTsuKanJiMultiMap = getGaKuNenBeTsuKanJiMultimap();
-				//
-			} catch (final IOException e) {
-				//
-				errorOrPrintStackTraceOrShowMessageDialog(e);
-				//
-			} // try
-				//
-			final Collection<Entry<String, String>> entries = entries(gaKuNenBeTsuKanJiMultiMap);
+		} // if
 			//
-			if (entries != null) {
+	}
+
+	private void keyReleasedForTextImport(final JTextComponent jTextComponent) {
+		//
+		Multimap<String, String> gaKuNenBeTsuKanJiMultiMap = null;
+		//
+		try {
+			//
+			gaKuNenBeTsuKanJiMultiMap = getGaKuNenBeTsuKanJiMultimap();
+			//
+		} catch (final IOException e) {
+			//
+			errorOrPrintStackTraceOrShowMessageDialog(e);
+			//
+		} // try
+			//
+		final Collection<Entry<String, String>> entries = entries(gaKuNenBeTsuKanJiMultiMap);
+		//
+		if (entries != null) {
+			//
+			List<String> list = null;
+			//
+			String key = null;
+			//
+			for (final Entry<String, String> en : entries) {
 				//
-				List<String> list = null;
-				//
-				String key = null;
-				//
-				for (final Entry<String, String> en : entries) {
+				if (en == null || !StringUtils.equals(getValue(en), getText(jTextComponent))) {
+					continue;
+				} // if
 					//
-					if (en == null || !StringUtils.equals(getValue(en), getText(jtf))) {
-						continue;
-					} // if
-						//
-					if (!contains(list = getIfNull(list, ArrayList::new), key = getKey(en))) {
-						//
-						add(list = getIfNull(list, ArrayList::new), key);
-						//
-					} else {
-						//
-						throw new IllegalStateException();
-						//
-					} // if
-						//
-				} // for
+				if (!contains(list = getIfNull(list, ArrayList::new), key = getKey(en))) {
 					//
-				final int size = CollectionUtils.size(list);
-				//
-				if (size == 1) {
-					//
-					setSelectedItem(cbmGaKuNenBeTsuKanJi, get(list, 0));
-					//
-				} else if (size < 1) {
-					//
-					setSelectedItem(cbmGaKuNenBeTsuKanJi, null);
+					add(list = getIfNull(list, ArrayList::new), key);
 					//
 				} else {
 					//
@@ -5830,6 +5820,22 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
+			} // for
+				//
+			final int size = CollectionUtils.size(list);
+			//
+			if (size == 1) {
+				//
+				setSelectedItem(cbmGaKuNenBeTsuKanJi, get(list, 0));
+				//
+			} else if (size < 1) {
+				//
+				setSelectedItem(cbmGaKuNenBeTsuKanJi, null);
+				//
+			} else {
+				//
+				throw new IllegalStateException();
+				//
 			} // if
 				//
 		} // if
