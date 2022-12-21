@@ -8453,4 +8453,47 @@ class VoiceManagerTest {
 		//
 	}
 
+	@Test
+	void testThrowableBiConsumer() throws Throwable {
+		//
+		final Class<?> clz = forName("org.springframework.context.support.VoiceManager$ThrowableBiConsumer");
+		//
+		final Constructor<?> constructor = clz != null
+				? clz.getDeclaredConstructor(Boolean.TYPE, DefaultTableModel.class)
+				: null;
+		//
+		if (constructor != null) {
+			//
+			constructor.setAccessible(true);
+			//
+		} // if
+			//
+		final BiConsumer<?, ?> biConsumer = cast(BiConsumer.class, newInstance(constructor, Boolean.TRUE, null));
+		//
+		Assertions.assertDoesNotThrow(() -> {
+			//
+			if (biConsumer != null) {
+				//
+				biConsumer.accept(null, null);
+				//
+			} // if
+				//
+		});
+		//
+		FieldUtils.writeDeclaredField(biConsumer, "headless", Boolean.FALSE, true);
+		//
+		FieldUtils.writeDeclaredField(biConsumer, "tableModel", new DefaultTableModel(), true);
+		//
+		Assertions.assertDoesNotThrow(() -> {
+			//
+			if (biConsumer != null) {
+				//
+				biConsumer.accept(null, null);
+				//
+			} // if
+				//
+		});
+		//
+	}
+
 }
