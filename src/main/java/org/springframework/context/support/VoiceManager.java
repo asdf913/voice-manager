@@ -5169,6 +5169,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			final AtomicInteger numberOfVoiceProcessed = new AtomicInteger();
 			//
+			IValue0<String> voiceId = null;
+			//
 			for (int i = 0; workbook != null && i < workbook.getNumberOfSheets(); i++) {
 				//
 				if (errorMessageConsumer == null) {
@@ -5253,7 +5255,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 										getCustomProperties(getProperties(poiXmlDocument)), "audioFormat",
 										VoiceManager::getProperty, null))));
 				//
-				importVoice(sheet, objectMap, errorMessageConsumer, throwableConsumer, voiceConsumer);
+				if (voiceId == null) {
+					//
+					voiceId = Unit.with(getIfNull(toString(getSelectedItem(cbmVoiceId)),
+							() -> getVoiceIdForExecute(forName("org.junit.jupiter.api.Test") == null)));
+					//
+				} // if
+					//
+				importVoice(sheet, objectMap, IValue0Util.getValue0(voiceId), errorMessageConsumer, throwableConsumer,
+						voiceConsumer);
 				//
 				setText(tfCurrentProcessingSheetName, getSheetName(sheet));
 				//
@@ -7096,7 +7106,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	}
 
-	private static void importVoice(final Sheet sheet, final ObjectMap _objectMap,
+	private static void importVoice(final Sheet sheet, final ObjectMap _objectMap, final String voiceId,
 			final BiConsumer<Voice, String> errorMessageConsumer, final BiConsumer<Voice, Throwable> throwableConsumer,
 			final Consumer<Voice> voiceConsumer)
 			throws IllegalAccessException, IOException, InvocationTargetException, BaseException {
@@ -7140,8 +7150,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			String[] mp3Tags = null;
 			//
 			SpeechApi speechApi = null;
-			//
-			String voiceId = null;
 			//
 			ByteConverter byteConverter = null;
 			//
@@ -7295,8 +7303,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 													//
 													// voiceId
 													//
-													voiceId = getIfNull(voiceId,
-															() -> toString(getSelectedItem(vm.cbmVoiceId)))
+													voiceId
 													//
 													// rate
 													//

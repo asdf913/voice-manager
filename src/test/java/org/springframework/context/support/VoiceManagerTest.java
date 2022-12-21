@@ -393,8 +393,8 @@ class VoiceManagerTest {
 		(METHOD_IMPORT_VOICE3 = clz.getDeclaredMethod("importVoice", CLASS_OBJECT_MAP, BiConsumer.class,
 				BiConsumer.class)).setAccessible(true);
 		//
-		(METHOD_IMPORT_VOICE5 = clz.getDeclaredMethod("importVoice", Sheet.class, CLASS_OBJECT_MAP, BiConsumer.class,
-				BiConsumer.class, Consumer.class)).setAccessible(true);
+		(METHOD_IMPORT_VOICE5 = clz.getDeclaredMethod("importVoice", Sheet.class, CLASS_OBJECT_MAP, String.class,
+				BiConsumer.class, BiConsumer.class, Consumer.class)).setAccessible(true);
 		//
 		(METHOD_ERROR_OR_PRINT_LN = clz.getDeclaredMethod("errorOrPrintln", Logger.class, PrintStream.class,
 				String.class)).setAccessible(true);
@@ -3214,7 +3214,7 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> importVoice(null, null, null));
 		//
-		Assertions.assertDoesNotThrow(() -> importVoice(null, null, null, null, null));
+		Assertions.assertDoesNotThrow(() -> importVoice(null, null, null, null, null, null));
 		//
 		final Constructor<?> constructor = CLASS_IH != null ? CLASS_IH.getDeclaredConstructor() : null;
 		//
@@ -3275,13 +3275,13 @@ class VoiceManagerTest {
 			//
 		Assertions.assertDoesNotThrow(() -> importVoice(objectMap, null, null));
 		//
-		Assertions.assertDoesNotThrow(() -> importVoice(sheet, null, null, null, null));
+		Assertions.assertDoesNotThrow(() -> importVoice(sheet, null, null, null, null, null));
 		//
 		final Row row = Reflection.newProxy(Row.class, this.ih);
 		//
 		this.ih.rows = Iterators.forArray(null, row);
 		//
-		Assertions.assertDoesNotThrow(() -> importVoice(sheet, null, null, null, null));
+		Assertions.assertDoesNotThrow(() -> importVoice(sheet, null, null, null, null, null));
 		//
 		this.ih.rows = Iterators.forArray(null, row);
 		//
@@ -3289,7 +3289,7 @@ class VoiceManagerTest {
 		//
 		this.ih.columnIndex = Integer.valueOf(0);
 		//
-		Assertions.assertDoesNotThrow(() -> importVoice(sheet, null, null, null, null));
+		Assertions.assertDoesNotThrow(() -> importVoice(sheet, null, null, null, null, null));
 		//
 	}
 
@@ -3310,11 +3310,12 @@ class VoiceManagerTest {
 		}
 	}
 
-	private static void importVoice(final Sheet sheet, final Object objectMap,
+	private static void importVoice(final Sheet sheet, final Object _objectMap, final String voiceId,
 			final BiConsumer<Voice, String> errorMessageConsumer, final BiConsumer<Voice, Throwable> throwableConsumer,
 			final Consumer<Voice> voiceConsumer) throws Throwable {
 		try {
-			METHOD_IMPORT_VOICE5.invoke(null, sheet, objectMap, errorMessageConsumer, throwableConsumer, voiceConsumer);
+			METHOD_IMPORT_VOICE5.invoke(null, sheet, _objectMap, voiceId, errorMessageConsumer, throwableConsumer,
+					voiceConsumer);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
