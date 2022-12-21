@@ -5796,7 +5796,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // try
 			//
-		final Collection<Entry<String, String>> entries = entries(gaKuNenBeTsuKanJiMultiMap);
+		keyReleasedForTextImport(gaKuNenBeTsuKanJiMultiMap, jTextComponent);
+		//
+	}
+
+	private void keyReleasedForTextImport(final Multimap<String, String> multiMap,
+			final JTextComponent jTextComponent) {
+		//
+		final Collection<Entry<String, String>> entries = entries(multiMap);
 		//
 		if (entries != null) {
 			//
@@ -5807,7 +5814,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			for (final Entry<String, String> en : entries) {
 				//
 				if (en == null || !StringUtils.equals(getValue(en), getText(jTextComponent))) {
+					//
 					continue;
+					//
 				} // if
 					//
 				if (!contains(list = getIfNull(list, ArrayList::new), key = getKey(en))) {
