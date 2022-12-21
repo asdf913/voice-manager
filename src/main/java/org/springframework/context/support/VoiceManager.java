@@ -5150,6 +5150,42 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	}
 
+	private static class VoiceThrowableBiConsumer implements BiConsumer<Voice, Throwable> {
+
+		private boolean headless = false;
+
+		private DefaultTableModel tableModel = null;
+
+		private VoiceThrowableBiConsumer(final boolean headless, final DefaultTableModel tableModel) {
+			this.headless = headless;
+			this.tableModel = tableModel;
+		}
+
+		@Override
+		public void accept(final Voice v, final Throwable e) {
+			//
+			if (headless) {
+				//
+				errorOrPrintStackTraceOrShowMessageDialog(headless, e);
+				//
+			} else {
+				//
+				if (tableModel != null) {
+					//
+					tableModel.addRow(new Object[] { getText(v), getRomaji(v), e });
+					//
+				} else {
+					//
+					JOptionPane.showMessageDialog(null, e);
+					//
+				} // if
+					//
+			} // if
+				//
+		}
+
+	}
+
 	private void importVoice(final File file) {
 		//
 		final boolean headless = GraphicsEnvironment.isHeadless();
@@ -5209,32 +5245,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			for (int i = 0; workbook != null && i < workbook.getNumberOfSheets(); i++) {
 				//
-				if (throwableConsumer == null) {
-					//
-					throwableConsumer = (v, e) -> {
-						//
-						if (headless) {
-							//
-							errorOrPrintStackTraceOrShowMessageDialog(headless, e);
-							//
-						} else {
-							//
-							if (tmImportException != null) {
-								//
-								tmImportException.addRow(new Object[] { getText(v), getRomaji(v), e });
-								//
-							} else {
-								//
-								JOptionPane.showMessageDialog(null, e);
-								//
-							} // if
-								//
-						} // if
-							//
-					};
-					//
-				} // if
-					//
 				if (voiceConsumer == null) {
 					//
 					voiceConsumer = v -> {
@@ -5275,7 +5285,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				importVoice(sheet, objectMap, IValue0Util.getValue0(voiceId),
 						errorMessageConsumer = getIfNull(errorMessageConsumer,
 								() -> new VoiceThrowableMessageBiConsumer(headless, tmImportException)),
-						throwableConsumer, voiceConsumer);
+						throwableConsumer = getIfNull(throwableConsumer,
+								() -> new VoiceThrowableBiConsumer(headless, tmImportException)),
+						voiceConsumer);
 				//
 				setText(tfCurrentProcessingSheetName, getSheetName(sheet));
 				//

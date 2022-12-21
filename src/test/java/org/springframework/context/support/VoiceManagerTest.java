@@ -8473,12 +8473,8 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> {
 			//
-			if (biConsumer != null) {
-				//
-				biConsumer.accept(null, null);
-				//
-			} // if
-				//
+			accept(biConsumer, null, null);
+			//
 		});
 		//
 		FieldUtils.writeDeclaredField(biConsumer, "headless", Boolean.FALSE, true);
@@ -8487,14 +8483,51 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> {
 			//
-			if (biConsumer != null) {
-				//
-				biConsumer.accept(null, null);
-				//
-			} // if
-				//
+			accept(biConsumer, null, null);
+			//
 		});
 		//
+	}
+
+	@Test
+	void tsetVoiceThrowableBiConsumer() throws Throwable {
+		//
+		final Class<?> clz = forName("org.springframework.context.support.VoiceManager$VoiceThrowableBiConsumer");
+		//
+		final Constructor<?> constructor = clz != null
+				? clz.getDeclaredConstructor(Boolean.TYPE, DefaultTableModel.class)
+				: null;
+		//
+		if (constructor != null) {
+			//
+			constructor.setAccessible(true);
+			//
+		} // if
+			//
+		final BiConsumer<?, ?> biConsumer = cast(BiConsumer.class, newInstance(constructor, Boolean.TRUE, null));
+		//
+		Assertions.assertDoesNotThrow(() -> {
+			//
+			accept(biConsumer, null, null);
+			//
+		});
+		//
+		FieldUtils.writeDeclaredField(biConsumer, "headless", Boolean.FALSE, true);
+		//
+		FieldUtils.writeDeclaredField(biConsumer, "tableModel", new DefaultTableModel(), true);
+		//
+		Assertions.assertDoesNotThrow(() -> {
+			//
+			accept(biConsumer, null, null);
+			//
+		});
+		//
+	}
+
+	private static <T, U> void accept(final BiConsumer<T, U> instance, final T t, final U u) {
+		if (instance != null) {
+			instance.accept(t, u);
+		}
 	}
 
 }
