@@ -5114,13 +5114,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.listFiles() : null;
 	}
 
-	private static class ThrowableBiConsumer implements BiConsumer<Voice, String> {
+	private static class VoiceThrowableMessageBiConsumer implements BiConsumer<Voice, String> {
 
 		private boolean headless = false;
 
 		private DefaultTableModel tableModel = null;
 
-		private ThrowableBiConsumer(final boolean headless, final DefaultTableModel tableModel) {
+		private VoiceThrowableMessageBiConsumer(final boolean headless, final DefaultTableModel tableModel) {
 			this.headless = headless;
 			this.tableModel = tableModel;
 		}
@@ -5274,7 +5274,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				importVoice(sheet, objectMap, IValue0Util.getValue0(voiceId),
 						errorMessageConsumer = getIfNull(errorMessageConsumer,
-								() -> new ThrowableBiConsumer(headless, tmImportException)),
+								() -> new VoiceThrowableMessageBiConsumer(headless, tmImportException)),
 						throwableConsumer, voiceConsumer);
 				//
 				setText(tfCurrentProcessingSheetName, getSheetName(sheet));

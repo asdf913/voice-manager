@@ -8454,9 +8454,10 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testThrowableBiConsumer() throws Throwable {
+	void testVoiceThrowableMessageBiConsumer() throws Throwable {
 		//
-		final Class<?> clz = forName("org.springframework.context.support.VoiceManager$ThrowableBiConsumer");
+		final Class<?> clz = forName(
+				"org.springframework.context.support.VoiceManager$VoiceThrowableMessageBiConsumer");
 		//
 		final Constructor<?> constructor = clz != null
 				? clz.getDeclaredConstructor(Boolean.TYPE, DefaultTableModel.class)
