@@ -5186,6 +5186,32 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	}
 
+	private static class VoiceConsumer implements Consumer<Voice> {
+
+		private JTextComponent jTextComponent = null;
+
+		private AtomicInteger atomicInteger = null;
+
+		private VoiceConsumer(final JTextComponent jTextComponent, final AtomicInteger atomicInteger) {
+			this.jTextComponent = jTextComponent;
+			this.atomicInteger = atomicInteger;
+		}
+
+		@Override
+		public void accept(final Voice v) {
+			//
+			setText(jTextComponent, getText(v));
+			//
+			if (atomicInteger != null) {
+				//
+				atomicInteger.incrementAndGet();
+				//
+			} // if
+				//
+		}
+
+	}
+
 	private void importVoice(final File file) {
 		//
 		final boolean headless = GraphicsEnvironment.isHeadless();
@@ -5245,22 +5271,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			for (int i = 0; workbook != null && i < workbook.getNumberOfSheets(); i++) {
 				//
-				if (voiceConsumer == null) {
-					//
-					voiceConsumer = v -> {
-						//
-						setText(tfCurrentProcessingVoice, getText(v));
-						//
-						if (numberOfVoiceProcessed != null) {
-							//
-							numberOfVoiceProcessed.incrementAndGet();
-							//
-						} // if
-							//
-					};
-					//
-				} // if
-					//
 				if (contains(sheetExclued, getSheetName(sheet = workbook.getSheetAt(i)))) {
 					//
 					continue;
@@ -5283,11 +5293,17 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				} // if
 					//
 				importVoice(sheet, objectMap, IValue0Util.getValue0(voiceId),
+						//
 						errorMessageConsumer = getIfNull(errorMessageConsumer,
 								() -> new VoiceThrowableMessageBiConsumer(headless, tmImportException)),
+						//
 						throwableConsumer = getIfNull(throwableConsumer,
 								() -> new VoiceThrowableBiConsumer(headless, tmImportException)),
-						voiceConsumer);
+						//
+						voiceConsumer = getIfNull(voiceConsumer,
+								() -> new VoiceConsumer(tfCurrentProcessingVoice, numberOfVoiceProcessed))
+				//
+				);
 				//
 				setText(tfCurrentProcessingSheetName, getSheetName(sheet));
 				//

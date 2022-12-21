@@ -60,6 +60,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
@@ -8506,27 +8507,50 @@ class VoiceManagerTest {
 			//
 		final BiConsumer<?, ?> biConsumer = cast(BiConsumer.class, newInstance(constructor, Boolean.TRUE, null));
 		//
-		Assertions.assertDoesNotThrow(() -> {
-			//
-			accept(biConsumer, null, null);
-			//
-		});
+		Assertions.assertDoesNotThrow(() -> accept(biConsumer, null, null));
 		//
 		FieldUtils.writeDeclaredField(biConsumer, "headless", Boolean.FALSE, true);
 		//
 		FieldUtils.writeDeclaredField(biConsumer, "tableModel", new DefaultTableModel(), true);
 		//
-		Assertions.assertDoesNotThrow(() -> {
-			//
-			accept(biConsumer, null, null);
-			//
-		});
+		Assertions.assertDoesNotThrow(() -> accept(biConsumer, null, null));
 		//
 	}
 
 	private static <T, U> void accept(final BiConsumer<T, U> instance, final T t, final U u) {
 		if (instance != null) {
 			instance.accept(t, u);
+		}
+	}
+
+	@Test
+	void testVoiceConsumer() throws Throwable {
+		//
+		final Class<?> clz = forName("org.springframework.context.support.VoiceManager$VoiceConsumer");
+		//
+		final Constructor<?> constructor = clz != null
+				? clz.getDeclaredConstructor(JTextComponent.class, AtomicInteger.class)
+				: null;
+		//
+		if (constructor != null) {
+			//
+			constructor.setAccessible(true);
+			//
+		} // if
+			//
+		final Consumer<?> consumer = cast(Consumer.class, newInstance(constructor, null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> accept(consumer, null));
+		//
+		FieldUtils.writeDeclaredField(consumer, "atomicInteger", new AtomicInteger(), true);
+		//
+		Assertions.assertDoesNotThrow(() -> accept(consumer, null));
+		//
+	}
+
+	private static <T> void accept(final Consumer<T> instance, final T t) {
+		if (instance != null) {
+			instance.accept(t);
 		}
 	}
 
