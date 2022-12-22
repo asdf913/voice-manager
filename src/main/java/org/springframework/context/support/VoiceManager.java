@@ -5805,41 +5805,27 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final Collection<Entry<String, String>> entries = entries(multiMap);
 		//
-		if (entries != null && entries.iterator() != null) {
+		if (entries == null || entries.iterator() == null) {
 			//
-			List<String> list = null;
+			return;
 			//
-			String key = null;
+		} // if
 			//
-			for (final Entry<String, String> en : entries) {
-				//
-				if (en == null || !StringUtils.equals(getValue(en), getText(jTextComponent))) {
-					//
-					continue;
-					//
-				} // if
-					//
-				if (!contains(list = getIfNull(list, ArrayList::new), key = getKey(en))) {
-					//
-					add(list = getIfNull(list, ArrayList::new), key);
-					//
-				} else {
-					//
-					throw new IllegalStateException();
-					//
-				} // if
-					//
-			} // for
-				//
-			final int size = CollectionUtils.size(list);
+		List<String> list = null;
+		//
+		String key = null;
+		//
+		for (final Entry<String, String> en : entries) {
 			//
-			if (size == 1) {
+			if (en == null || !StringUtils.equals(getValue(en), getText(jTextComponent))) {
 				//
-				setSelectedItem(cbmGaKuNenBeTsuKanJi, get(list, 0));
+				continue;
 				//
-			} else if (size < 1) {
+			} // if
 				//
-				setSelectedItem(cbmGaKuNenBeTsuKanJi, null);
+			if (!contains(list = getIfNull(list, ArrayList::new), key = getKey(en))) {
+				//
+				add(list = getIfNull(list, ArrayList::new), key);
 				//
 			} else {
 				//
@@ -5847,6 +5833,22 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
+		} // for
+			//
+		final int size = CollectionUtils.size(list);
+		//
+		if (size == 1) {
+			//
+			setSelectedItem(cbmGaKuNenBeTsuKanJi, get(list, 0));
+			//
+		} else if (size < 1) {
+			//
+			setSelectedItem(cbmGaKuNenBeTsuKanJi, null);
+			//
+		} else {
+			//
+			throw new IllegalStateException();
+			//
 		} // if
 			//
 	}
