@@ -7463,6 +7463,10 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> keyReleasedForTextImport((Multimap) multimap, null));
 		//
+		ih.multiMapEntries = Reflection.newProxy(Collection.class, ih);
+		//
+		Assertions.assertDoesNotThrow(() -> keyReleasedForTextImport((Multimap) multimap, null));
+		//
 		ih.multiMapEntries = Collections.singleton(Pair.of(null, EMPTY));
 		//
 		Assertions.assertDoesNotThrow(() -> keyReleasedForTextImport((Multimap) multimap, null));

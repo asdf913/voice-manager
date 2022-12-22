@@ -5805,7 +5805,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final Collection<Entry<String, String>> entries = entries(multiMap);
 		//
-		if (entries != null) {
+		if (entries != null && entries.iterator() != null) {
 			//
 			List<String> list = null;
 			//
