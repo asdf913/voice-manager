@@ -867,7 +867,7 @@ class VoiceManagerTest {
 		(METHOD_GET_MP3_TAGS = clz.getDeclaredMethod("getMp3Tags", VoiceManager.class)).setAccessible(true);
 		//
 		(METHOD_KEY_RELEASED_FOR_TEXT_IMPORT = clz.getDeclaredMethod("keyReleasedForTextImport", Multimap.class,
-				JTextComponent.class)).setAccessible(true);
+				JTextComponent.class, ComboBoxModel.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -7457,30 +7457,30 @@ class VoiceManagerTest {
 	@Test
 	void testKeyReleasedForTextImport() {
 		//
-		Assertions.assertDoesNotThrow(() -> keyReleasedForTextImport((Multimap) multimap, null));
+		Assertions.assertDoesNotThrow(() -> keyReleasedForTextImport((Multimap) multimap, null, null));
 		//
 		ih.multiMapEntries = Collections.singleton(null);
 		//
-		Assertions.assertDoesNotThrow(() -> keyReleasedForTextImport((Multimap) multimap, null));
+		Assertions.assertDoesNotThrow(() -> keyReleasedForTextImport((Multimap) multimap, null, null));
 		//
 		ih.multiMapEntries = Reflection.newProxy(Collection.class, ih);
 		//
-		Assertions.assertDoesNotThrow(() -> keyReleasedForTextImport((Multimap) multimap, null));
+		Assertions.assertDoesNotThrow(() -> keyReleasedForTextImport((Multimap) multimap, null, null));
 		//
 		ih.multiMapEntries = Collections.singleton(Pair.of(null, EMPTY));
 		//
-		Assertions.assertDoesNotThrow(() -> keyReleasedForTextImport((Multimap) multimap, null));
+		Assertions.assertDoesNotThrow(() -> keyReleasedForTextImport((Multimap) multimap, null, null));
 		//
 		ih.multiMapEntries = Collections.singleton(Pair.of(null, null));
 		//
-		Assertions.assertDoesNotThrow(() -> keyReleasedForTextImport((Multimap) multimap, null));
+		Assertions.assertDoesNotThrow(() -> keyReleasedForTextImport((Multimap) multimap, null, null));
 		//
 	}
 
-	private void keyReleasedForTextImport(final Multimap<String, String> multiMap, final JTextComponent jTextComponent)
-			throws Throwable {
+	private static void keyReleasedForTextImport(final Multimap<String, String> multiMap,
+			final JTextComponent jTextComponent, final ComboBoxModel<String> comboBoxModel) throws Throwable {
 		try {
-			METHOD_KEY_RELEASED_FOR_TEXT_IMPORT.invoke(instance, multiMap, jTextComponent);
+			METHOD_KEY_RELEASED_FOR_TEXT_IMPORT.invoke(null, multiMap, jTextComponent, comboBoxModel);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

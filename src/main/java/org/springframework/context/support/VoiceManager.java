@@ -5796,12 +5796,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // try
 			//
-		keyReleasedForTextImport(gaKuNenBeTsuKanJiMultiMap, jTextComponent);
+		keyReleasedForTextImport(gaKuNenBeTsuKanJiMultiMap, jTextComponent, cbmGaKuNenBeTsuKanJi);
 		//
 	}
 
-	private void keyReleasedForTextImport(final Multimap<String, String> multiMap,
-			final JTextComponent jTextComponent) {
+	private static void keyReleasedForTextImport(final Multimap<String, String> multiMap,
+			final JTextComponent jTextComponent, final ComboBoxModel<String> comboBoxModel) {
 		//
 		final Collection<Entry<String, String>> entries = entries(multiMap);
 		//
@@ -5839,11 +5839,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		if (size == 1) {
 			//
-			setSelectedItem(cbmGaKuNenBeTsuKanJi, get(list, 0));
+			setSelectedItem(comboBoxModel, get(list, 0));
 			//
 		} else if (size < 1) {
 			//
-			setSelectedItem(cbmGaKuNenBeTsuKanJi, null);
+			setSelectedItem(comboBoxModel, null);
 			//
 		} else {
 			//
