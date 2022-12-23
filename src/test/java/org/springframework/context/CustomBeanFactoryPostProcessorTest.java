@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertySource;
@@ -24,8 +25,8 @@ import com.google.common.reflect.Reflection;
 class CustomBeanFactoryPostProcessorTest {
 
 	private static Method METHOD_ADD_PROPERTY_SOURCE_TO_PROPERTY_SOURCES_TO_LAST_MAP,
-			METHOD_ADD_PROPERTY_SOURCE_TO_PROPERTY_SOURCES_TO_LAST_ITERABLE, METHOD_GET_SOURCE,
-			METHOD_GET_MESSAGE = null;
+			METHOD_ADD_PROPERTY_SOURCE_TO_PROPERTY_SOURCES_TO_LAST_ITERABLE, METHOD_GET_SOURCE, METHOD_GET_MESSAGE,
+			METHOD_ERROR_OR_PRINT_STACK_TRACE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -55,10 +56,17 @@ class CustomBeanFactoryPostProcessorTest {
 			//
 		} // if
 			//
-			//
 		if ((METHOD_GET_MESSAGE = clz != null ? clz.getDeclaredMethod("getMessage", Throwable.class) : null) != null) {
 			//
 			METHOD_GET_MESSAGE.setAccessible(true);
+			//
+		} // if
+			//
+		if ((METHOD_ERROR_OR_PRINT_STACK_TRACE = clz != null
+				? clz.getDeclaredMethod("errorOrPrintStackTrace", Logger.class, Throwable.class, Throwable.class)
+				: null) != null) {
+			//
+			METHOD_ERROR_OR_PRINT_STACK_TRACE.setAccessible(true);
 			//
 		} // if
 			//
@@ -71,6 +79,12 @@ class CustomBeanFactoryPostProcessorTest {
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
+			if (Objects.equals(Void.TYPE, method != null ? method.getReturnType() : null)) {
+				//
+				return null;
+				//
+			} // if
+				//
 			final String methodName = method != null ? method.getName() : null;
 			//
 			if (proxy instanceof Iterable) {
@@ -91,10 +105,14 @@ class CustomBeanFactoryPostProcessorTest {
 
 	private CustomBeanFactoryPostProcessor instance = null;
 
+	private IH ih = null;
+
 	@BeforeEach
 	void beforeEach() {
 		//
 		instance = new CustomBeanFactoryPostProcessor();
+		//
+		ih = new IH();
 		//
 	}
 
@@ -120,10 +138,12 @@ class CustomBeanFactoryPostProcessorTest {
 		//
 		final PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer = new PropertySourcesPlaceholderConfigurer();
 		//
-		final IH ih = new IH();
-		//
-		ih.iterator = Collections.emptyIterator();
-		//
+		if (ih != null) {
+			//
+			ih.iterator = Collections.emptyIterator();
+			//
+		} // if
+			//
 		propertySourcesPlaceholderConfigurer.setPropertySources(Reflection.newProxy(PropertySources.class, ih));
 		//
 		FieldUtils.writeDeclaredField(propertySourcesPlaceholderConfigurer, "appliedPropertySources",
@@ -200,4 +220,37 @@ class CustomBeanFactoryPostProcessorTest {
 			throw e.getTargetException();
 		}
 	}
+
+	@Test
+	void testErrorOrPrintStackTrace() throws IllegalAccessException {
+		//
+		Assertions.assertDoesNotThrow(() -> errorOrPrintStackTrace(null, null, null));
+		//
+		final Throwable throwable = new Throwable();
+		//
+		FieldUtils.writeDeclaredField(throwable, "stackTrace", new StackTraceElement[0], true);
+		//
+		Assertions.assertDoesNotThrow(() -> errorOrPrintStackTrace(null, throwable, null));
+		//
+		Assertions.assertDoesNotThrow(() -> errorOrPrintStackTrace(null, null, throwable));
+		//
+		final Logger logger = Reflection.newProxy(Logger.class, ih);
+		//
+		Assertions.assertDoesNotThrow(() -> errorOrPrintStackTrace(logger, null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> errorOrPrintStackTrace(logger, throwable, null));
+		//
+		Assertions.assertDoesNotThrow(() -> errorOrPrintStackTrace(logger, null, throwable));
+		//
+	}
+
+	private static void errorOrPrintStackTrace(final Logger logger, final Throwable a, final Throwable b)
+			throws Throwable {
+		try {
+			METHOD_ERROR_OR_PRINT_STACK_TRACE.invoke(null, logger, a, b);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
 }

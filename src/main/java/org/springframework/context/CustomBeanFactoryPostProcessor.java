@@ -75,28 +75,8 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 			//
 			if (GraphicsEnvironment.isHeadless()) {
 				//
-				if (!LoggerUtil.isNOPLogger(LOG)) {
-					//
-					if (rootCause != null) {
-						//
-						LoggerUtil.error(LOG, getMessage(rootCause), rootCause);
-						//
-					} else if (e != null) {
-						//
-						LoggerUtil.error(LOG, getMessage(e), e);
-						//
-					} // if
-						//
-				} else if (rootCause != null) {
-					//
-					rootCause.printStackTrace();
-					//
-				} else if (e != null) {
-					//
-					e.printStackTrace();
-					//
-				} // if
-					//
+				errorOrPrintStackTrace(LOG, rootCause, e);
+				//
 			} else {
 				//
 				if (rootCause != null) {
@@ -112,6 +92,32 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 			} // if
 				//
 		} // try
+			//
+	}
+
+	private static void errorOrPrintStackTrace(final Logger logger, final Throwable a, final Throwable b) {
+		//
+		if (Boolean.logicalAnd(logger != null, !LoggerUtil.isNOPLogger(logger))) {
+			//
+			if (a != null) {
+				//
+				LoggerUtil.error(logger, getMessage(a), a);
+				//
+			} else if (b != null) {
+				//
+				LoggerUtil.error(logger, getMessage(b), b);
+				//
+			} // if
+				//
+		} else if (a != null) {
+			//
+			a.printStackTrace();
+			//
+		} else if (b != null) {
+			//
+			b.printStackTrace();
+			//
+		} // if
 			//
 	}
 
