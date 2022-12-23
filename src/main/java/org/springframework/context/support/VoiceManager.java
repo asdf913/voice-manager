@@ -6719,18 +6719,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			Row row = null;
 			//
-			final Class<?> classJlpt = forName("domain.Voice$JLPT");
-			//
-			final Class<?> classGaKuNenBeTsuKanJi = forName("domain.Voice$GaKuNenBeTsuKanJi");
-			//
-			DataValidationHelper dvh = null;
-			//
-			Unit<List<Boolean>> booleans = null;
-			//
-			Class<?> type = null;
-			//
-			ObjectMap objectMap = null;
-			//
 			for (int i = 0; i < IterableUtils.size(fs); i++) {
 				//
 				if ((f = get(fs, i)) == null) {
@@ -6757,84 +6745,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			if (generateBlankRow && fs != null) {
 				//
-				row = createRow(sheet, intValue(getPhysicalNumberOfRows(sheet), 0));
+				addImportFileTemplateBlankRow(sheet, fs, headless, jlptValues, gaKuNenBeTsuKanJiValues);
 				//
-				for (int i = 0; i < IterableUtils.size(fs); i++) {
-					//
-					setCellValue(createCell(row, i), null);
-					//
-					if (objectMap == null && (objectMap = Reflection.newProxy(ObjectMap.class, new IH())) != null) {
-						//
-						ObjectMap.setObject(objectMap, Row.class, row);
-						//
-						ObjectMap.setObject(objectMap, Sheet.class, sheet);
-						//
-					} // if
-						//
-					if (Objects.equals(Boolean.class, type = getType(f = get(fs, i)))) {// java.lang.Boolean
-						//
-						if (dvh == null) {
-							//
-							ObjectMap.setObject(objectMap, DataValidationHelper.class,
-									dvh = getDataValidationHelper(sheet));
-							//
-						} // if
-							//
-						if (booleans == null) {
-							//
-							try {
-								//
-								booleans = Unit.with(getBooleanValues());
-								//
-							} catch (final IllegalAccessException e) {
-								//
-								errorOrPrintStackTraceOrShowMessageDialog(headless, e);
-								//
-							} // try
-								//
-						} // if
-							//
-						addValidationDataForBoolean(objectMap, booleans, i);
-						//
-					} else if (isAssignableFrom(Enum.class, type)) {// java.lang.Enum
-						//
-						if (dvh == null) {
-							//
-							ObjectMap.setObject(objectMap, DataValidationHelper.class,
-									dvh = getDataValidationHelper(sheet));
-							//
-						} // if
-							//
-						addValidationDataForEnum(objectMap, type, i);
-						//
-					} else if (anyMatch(testAndApply(Objects::nonNull, getDeclaredAnnotations(f), Arrays::stream, null),
-							a -> Objects.equals(annotationType(a), classJlpt))) {// domain.Voice.JLPT
-						//
-						if (dvh == null) {
-							//
-							ObjectMap.setObject(objectMap, DataValidationHelper.class,
-									dvh = getDataValidationHelper(sheet));
-							//
-						} // if
-							//
-						addValidationDataForValues(objectMap, jlptValues, i);
-						//
-					} else if (anyMatch(testAndApply(Objects::nonNull, getDeclaredAnnotations(f), Arrays::stream, null),
-							a -> Objects.equals(annotationType(a), classGaKuNenBeTsuKanJi))) {// domain.Voice.GaKuNenBeTsuKanJi
-						//
-						if (dvh == null) {
-							//
-							ObjectMap.setObject(objectMap, DataValidationHelper.class,
-									dvh = getDataValidationHelper(sheet));
-							//
-						} // if
-							//
-						addValidationDataForValues(objectMap, gaKuNenBeTsuKanJiValues, i);
-						//
-					} // if
-						//
-				} // for
-					//
 			} // if
 				//
 			write(workbook, baos);
@@ -6853,6 +6765,99 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return bs;
 		//
+	}
+
+	private static void addImportFileTemplateBlankRow(final Sheet sheet, final List<Field> fs, final boolean headless,
+			final Collection<String> jlptValues, final Collection<String> gaKuNenBeTsuKanJiValues) {
+		//
+		final Row row = createRow(sheet, intValue(getPhysicalNumberOfRows(sheet), 0));
+		//
+		ObjectMap objectMap = null;
+		//
+		Field f = null;
+		//
+		Class<?> type;
+		//
+		DataValidationHelper dvh = null;
+		//
+		Unit<List<Boolean>> booleans = null;
+		//
+		final Class<?> classJlpt = forName("domain.Voice$JLPT");
+		//
+		final Class<?> classGaKuNenBeTsuKanJi = forName("domain.Voice$GaKuNenBeTsuKanJi");
+		//
+		for (int i = 0; i < IterableUtils.size(fs); i++) {
+			//
+			setCellValue(createCell(row, i), null);
+			//
+			if (objectMap == null && (objectMap = Reflection.newProxy(ObjectMap.class, new IH())) != null) {
+				//
+				ObjectMap.setObject(objectMap, Row.class, row);
+				//
+				ObjectMap.setObject(objectMap, Sheet.class, sheet);
+				//
+			} // if
+				//
+			if (Objects.equals(Boolean.class, type = getType(f = get(fs, i)))) {// java.lang.Boolean
+				//
+				if (dvh == null) {
+					//
+					ObjectMap.setObject(objectMap, DataValidationHelper.class, dvh = getDataValidationHelper(sheet));
+					//
+				} // if
+					//
+				if (booleans == null) {
+					//
+					try {
+						//
+						booleans = Unit.with(getBooleanValues());
+						//
+					} catch (final IllegalAccessException e) {
+						//
+						errorOrPrintStackTraceOrShowMessageDialog(headless, e);
+						//
+					} // try
+						//
+				} // if
+					//
+				addValidationDataForBoolean(objectMap, booleans, i);
+				//
+			} else if (isAssignableFrom(Enum.class, type)) {// java.lang.Enum
+				//
+				if (dvh == null) {
+					//
+					ObjectMap.setObject(objectMap, DataValidationHelper.class, dvh = getDataValidationHelper(sheet));
+					//
+				} // if
+					//
+				addValidationDataForEnum(objectMap, type, i);
+				//
+			} else if (anyMatch(testAndApply(Objects::nonNull, getDeclaredAnnotations(f), Arrays::stream, null),
+					a -> Objects.equals(annotationType(a), classJlpt))) {// domain.Voice.JLPT
+				//
+				if (dvh == null) {
+					//
+					ObjectMap.setObject(objectMap, DataValidationHelper.class, dvh = getDataValidationHelper(sheet));
+					//
+				} // if
+					//
+				addValidationDataForValues(objectMap, jlptValues, i);
+				//
+			} else if (anyMatch(testAndApply(Objects::nonNull, getDeclaredAnnotations(f), Arrays::stream, null),
+					a -> Objects.equals(annotationType(a), classGaKuNenBeTsuKanJi))) {// domain.Voice.GaKuNenBeTsuKanJi
+				//
+				if (dvh == null) {
+					//
+					ObjectMap.setObject(objectMap, DataValidationHelper.class, dvh = getDataValidationHelper(sheet));
+					//
+				} // if
+					//
+				addValidationDataForValues(objectMap, gaKuNenBeTsuKanJiValues, i);
+				//
+			} // if
+				//
+		} // for
+			//
 	}
 
 	private static void addValidationDataForValues(final ObjectMap objectMap, final Collection<String> values,
