@@ -6790,9 +6790,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			setCellValue(createCell(row, i), null);
 			//
-			if (objectMap == null && (objectMap = Reflection.newProxy(ObjectMap.class, new IH())) != null) {
+			if (objectMap == null) {
 				//
-				ObjectMap.setObject(objectMap, Row.class, row);
+				ObjectMap.setObject(objectMap = Reflection.newProxy(ObjectMap.class, new IH()), Row.class, row);
 				//
 				ObjectMap.setObject(objectMap, Sheet.class, sheet);
 				//
