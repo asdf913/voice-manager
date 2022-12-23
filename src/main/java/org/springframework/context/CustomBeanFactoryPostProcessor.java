@@ -148,7 +148,7 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 			//
 		try {
 			//
-			testAndAccept(m -> m != null || isStatic(m), method, m -> invoke(m, throwable));
+			testAndAccept(m -> throwable != null || isStatic(m), method, m -> invoke(m, throwable));
 			//
 		} catch (final InvocationTargetException e) {
 			//
