@@ -2,18 +2,29 @@ package org.springframework.context;
 
 import java.awt.GraphicsEnvironment;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Member;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.Proxy;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.oxbow.swingbits.dialog.task.TaskDialogs;
 import org.slf4j.Logger;
@@ -111,14 +122,95 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 				//
 		} else if (a != null) {
 			//
-			a.printStackTrace();
+			printStackTrace(a);
 			//
 		} else if (b != null) {
 			//
-			b.printStackTrace();
+			printStackTrace(b);
 			//
 		} // if
 			//
+	}
+
+	private static void printStackTrace(final Throwable throwable) {
+		//
+		final List<Method> ms = toList(filter(
+				testAndApply(Objects::nonNull, getDeclaredMethods(Throwable.class), Arrays::stream, null),
+				m -> m != null && StringUtils.equals(getName(m), "printStackTrace") && m.getParameterCount() == 0));
+		//
+		final Method method = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null);
+		//
+		if (method != null) {
+			//
+			method.setAccessible(true);
+			//
+		} // if
+			//
+		try {
+			//
+			testAndAccept(m -> m != null || isStatic(m), method, m -> invoke(m, throwable));
+			//
+		} catch (final InvocationTargetException e) {
+			//
+			final Throwable targetException = e.getTargetException();
+			//
+			printStackTrace(ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException), targetException,
+					ExceptionUtils.getRootCause(e), e));
+			//
+		} catch (final ReflectiveOperationException e) {
+			//
+			printStackTrace(throwable);
+			//
+		} // try
+			//
+	}
+
+	private static boolean isStatic(final Member instance) {
+		return instance != null && Modifier.isStatic(instance.getModifiers());
+	}
+
+	private static Method[] getDeclaredMethods(final Class<?> instance) {
+		return instance != null ? instance.getDeclaredMethods() : null;
+	}
+
+	private static <T> Stream<T> filter(final Stream<T> instance, final Predicate<? super T> predicate) {
+		//
+		return instance != null && (predicate != null || Proxy.isProxyClass(getClass(instance)))
+				? instance.filter(predicate)
+				: null;
+		//
+	}
+
+	private static Class<?> getClass(final Object instance) {
+		return instance != null ? instance.getClass() : null;
+	}
+
+	private static <T> List<T> toList(final Stream<T> instance) {
+		return instance != null ? instance.toList() : null;
+	}
+
+	private static <T, E extends Throwable> void testAndAccept(final Predicate<T> predicate, final T value,
+			final FailableConsumer<T, E> consumer) throws E {
+		//
+		if (test(predicate, value) && consumer != null) {
+			//
+			consumer.accept(value);
+			//
+		} // if
+			//
+	}
+
+	private static final <T> boolean test(final Predicate<T> instance, final T value) {
+		return instance != null && instance.test(value);
+	}
+
+	private static String getName(final Member instance) {
+		return instance != null ? instance.getName() : null;
+	}
+
+	private static Object invoke(final Method method, final Object instance, Object... args)
+			throws IllegalAccessException, InvocationTargetException {
+		return method != null ? method.invoke(instance, args) : null;
 	}
 
 	private static String getMessage(final Throwable instance) {
