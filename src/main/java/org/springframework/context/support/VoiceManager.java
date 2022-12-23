@@ -6824,34 +6824,25 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} else if (isAssignableFrom(Enum.class, type)) {// java.lang.Enum
 				//
-				if (dvh == null) {
-					//
-					ObjectMap.setObject(objectMap, DataValidationHelper.class, dvh = getDataValidationHelper(sheet));
-					//
-				} // if
-					//
+				ObjectMap.setObject(objectMap, DataValidationHelper.class,
+						dvh = getIfNull(dvh, () -> getDataValidationHelper(sheet)));
+				//
 				addValidationDataForEnum(objectMap, type, i);
 				//
 			} else if (anyMatch(testAndApply(Objects::nonNull, getDeclaredAnnotations(f), Arrays::stream, null),
 					a -> Objects.equals(annotationType(a), classJlpt))) {// domain.Voice.JLPT
 				//
-				if (dvh == null) {
-					//
-					ObjectMap.setObject(objectMap, DataValidationHelper.class, dvh = getDataValidationHelper(sheet));
-					//
-				} // if
-					//
+				ObjectMap.setObject(objectMap, DataValidationHelper.class,
+						dvh = getIfNull(dvh, () -> getDataValidationHelper(sheet)));
+				//
 				addValidationDataForValues(objectMap, jlptValues, i);
 				//
 			} else if (anyMatch(testAndApply(Objects::nonNull, getDeclaredAnnotations(f), Arrays::stream, null),
 					a -> Objects.equals(annotationType(a), classGaKuNenBeTsuKanJi))) {// domain.Voice.GaKuNenBeTsuKanJi
 				//
-				if (dvh == null) {
-					//
-					ObjectMap.setObject(objectMap, DataValidationHelper.class, dvh = getDataValidationHelper(sheet));
-					//
-				} // if
-					//
+				ObjectMap.setObject(objectMap, DataValidationHelper.class,
+						dvh = getIfNull(dvh, () -> getDataValidationHelper(sheet)));
+				//
 				addValidationDataForValues(objectMap, gaKuNenBeTsuKanJiValues, i);
 				//
 			} // if
