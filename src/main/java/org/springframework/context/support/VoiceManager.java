@@ -6800,12 +6800,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			if (Objects.equals(Boolean.class, type = getType(f = get(fs, i)))) {// java.lang.Boolean
 				//
-				if (dvh == null) {
-					//
-					ObjectMap.setObject(objectMap, DataValidationHelper.class, dvh = getDataValidationHelper(sheet));
-					//
-				} // if
-					//
+				ObjectMap.setObject(objectMap, DataValidationHelper.class,
+						dvh = getIfNull(dvh, () -> getDataValidationHelper(sheet)));
+				//
 				if (booleans == null) {
 					//
 					try {
