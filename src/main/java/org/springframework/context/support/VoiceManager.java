@@ -238,6 +238,7 @@ import org.jsoup.select.Elements;
 import org.odftoolkit.odfdom.doc.OdfPresentationDocument;
 import org.odftoolkit.odfdom.pkg.OdfPackage;
 import org.openxmlformats.schemas.officeDocument.x2006.customProperties.CTProperty;
+import org.oxbow.swingbits.dialog.task.TaskDialogs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
@@ -670,7 +671,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		if (method == null) {
 			//
-			JOptionPane.showMessageDialog(null, getMessage(throwable));
+			TaskDialogs.showException(throwable);
 			//
 		} else {
 			//
