@@ -24,7 +24,8 @@ import com.google.common.reflect.Reflection;
 class CustomBeanFactoryPostProcessorTest {
 
 	private static Method METHOD_ADD_PROPERTY_SOURCE_TO_PROPERTY_SOURCES_TO_LAST_MAP,
-			METHOD_ADD_PROPERTY_SOURCE_TO_PROPERTY_SOURCES_TO_LAST_ITERABLE, METHOD_GET_SOURCE = null;
+			METHOD_ADD_PROPERTY_SOURCE_TO_PROPERTY_SOURCES_TO_LAST_ITERABLE, METHOD_GET_SOURCE,
+			METHOD_GET_MESSAGE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -51,6 +52,13 @@ class CustomBeanFactoryPostProcessorTest {
 				: null) != null) {
 			//
 			METHOD_GET_SOURCE.setAccessible(true);
+			//
+		} // if
+			//
+			//
+		if ((METHOD_GET_MESSAGE = clz != null ? clz.getDeclaredMethod("getMessage", Throwable.class) : null) != null) {
+			//
+			METHOD_GET_MESSAGE.setAccessible(true);
 			//
 		} // if
 			//
@@ -170,4 +178,26 @@ class CustomBeanFactoryPostProcessorTest {
 		}
 	}
 
+	@Test
+	void testGetMessage() throws Throwable {
+		//
+		Assertions.assertNull(getMessage(null));
+		//
+		Assertions.assertNull(getMessage(new Throwable()));
+		//
+	}
+
+	private static String getMessage(final Throwable instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_MESSAGE.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
 }

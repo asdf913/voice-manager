@@ -12,6 +12,8 @@ import java.util.function.Predicate;
 import javax.sql.DataSource;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.oxbow.swingbits.dialog.task.TaskDialogs;
 import org.slf4j.Logger;
@@ -69,22 +71,52 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 			//
 		} catch (final SQLException | IOException e) {
 			//
+			final Throwable rootCause = ObjectUtils.defaultIfNull(ExceptionUtils.getRootCause(e), e);
+			//
 			if (GraphicsEnvironment.isHeadless()) {
 				//
 				if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-					LOG.error(e.getMessage(), e);
-				} else {
+					//
+					if (rootCause != null) {
+						//
+						LOG.error(getMessage(rootCause), rootCause);
+						//
+					} else if (e != null) {
+						//
+						LOG.error(getMessage(e), e);
+						//
+					} // if
+						//
+				} else if (rootCause != null) {
+					//
+					rootCause.printStackTrace();
+					//
+				} else if (e != null) {
+					//
 					e.printStackTrace();
+					//
 				} // if
 					//
 			} else {
 				//
-				TaskDialogs.showException(e);
-				//
+				if (rootCause != null) {
+					//
+					TaskDialogs.showException(rootCause);
+					//
+				} else if (e != null) {
+					//
+					TaskDialogs.showException(e);
+					//
+				} // if
+					//
 			} // if
 				//
 		} // try
 			//
+	}
+
+	public static String getMessage(final Throwable instance) {
+		return instance != null ? instance.getMessage() : null;
 	}
 
 	private static <T> Map<String, T> getBeansOfType(final ListableBeanFactory instance, final Class<T> type) {
