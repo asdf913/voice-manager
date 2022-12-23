@@ -36,6 +36,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -282,7 +283,8 @@ class VoiceManagerTest {
 			METHOD_SET_LANGUAGE, METHOD_GET_LANGUAGE, METHOD_GET_BOOLEAN_VALUE, METHOD_CREATE_FORMULA_EVALUATOR,
 			METHOD_GET_RESPONSE_CODE, METHOD_TO_RUNTIME_EXCEPTION, METHOD_GET_ALGORITHM,
 			METHOD_SET_PREFERRED_WIDTH_ARRAY, METHOD_SET_PREFERRED_WIDTH_ITERABLE, METHOD_PRINT_STACK_TRACE,
-			METHOD_GET_VALUE_FROM_CELL, METHOD_GET_MP3_TAGS, METHOD_KEY_RELEASED_FOR_TEXT_IMPORT = null;
+			METHOD_GET_VALUE_FROM_CELL, METHOD_GET_MP3_TAGS, METHOD_KEY_RELEASED_FOR_TEXT_IMPORT,
+			METHOD_IS_STATIC = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -870,6 +872,8 @@ class VoiceManagerTest {
 		//
 		(METHOD_KEY_RELEASED_FOR_TEXT_IMPORT = clz.getDeclaredMethod("keyReleasedForTextImport", Multimap.class,
 				JTextComponent.class, ComboBoxModel.class)).setAccessible(true);
+		//
+		(METHOD_IS_STATIC = clz.getDeclaredMethod("isStatic", Member.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -7501,6 +7505,27 @@ class VoiceManagerTest {
 			final JTextComponent jTextComponent, final ComboBoxModel<String> comboBoxModel) throws Throwable {
 		try {
 			METHOD_KEY_RELEASED_FOR_TEXT_IMPORT.invoke(null, multiMap, jTextComponent, comboBoxModel);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testIsStatic() throws Throwable {
+		//
+		Assertions.assertFalse(isStatic(null));
+		//
+		Assertions.assertTrue(isStatic(Objects.class.getDeclaredMethod("hashCode",Object.class)));
+		//
+	}
+
+	private static boolean isStatic(final Member instance) throws Throwable {
+		try {
+			final Object obj = METHOD_IS_STATIC.invoke(null, instance);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

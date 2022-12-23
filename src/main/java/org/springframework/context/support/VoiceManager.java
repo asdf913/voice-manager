@@ -722,7 +722,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		try {
 			//
-			testAndAccept(m -> m == null || (Modifier.isStatic(m.getModifiers())), method, m -> invoke(m, throwable));
+			testAndAccept(m -> throwable != null || isStatic(m), method, m -> invoke(m, throwable));
 			//
 		} catch (final InvocationTargetException e) {
 			//
@@ -737,7 +737,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // try
 			//
+	}
 
+	private static boolean isStatic(final Member instance) {
+		return instance != null && Modifier.isStatic(instance.getModifiers());
 	}
 
 	private static RuntimeException toRuntimeException(final Throwable instance) {
@@ -1354,7 +1357,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			final List<Method> ms = toList(filter(testAndApply(Objects::nonNull,
 					getDeclaredMethods(forName("com.sun.jna.platform.win32.VersionHelpers")), Arrays::stream, null),
 					m -> m != null && Objects.equals(getName(m), "IsWindows10OrGreater") && m.getParameterCount() == 0
-							&& Modifier.isStatic(m.getModifiers())));
+							&& isStatic(m)));
 			//
 			if (ms == null || ms.isEmpty()) {
 				//
@@ -1423,8 +1426,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final List<Field> fs = toList(
 				filter(testAndApply(Objects::nonNull, getDeclaredFields(clz), Arrays::stream, null),
-						f -> f != null && Objects.equals(getName(f), "INSTANCE") && Objects.equals(getType(f), clz)
-								&& Modifier.isStatic(f.getModifiers())));
+						f -> Objects.equals(getName(f), "INSTANCE") && Objects.equals(getType(f), clz) && isStatic(f)));
 		//
 		final Field f = IterableUtils.size(fs) == 1 ? get(fs, 0) : null;
 		//
@@ -3128,7 +3130,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			for (int i = 0; i < IterableUtils.size(ms); i++) {
 				//
-				if ((m = get(ms, i)) == null || !Modifier.isStatic(m.getModifiers())) {
+				if ((m = get(ms, i)) == null || !isStatic(m)) {
 					//
 					continue;
 					//
@@ -4910,7 +4912,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-			if ((fieldValue = Modifier.isStatic(f.getModifiers()) ? f.get(null)
+			if ((fieldValue = isStatic(f) ? f.get(null)
 					: testAndApply((a, b) -> b != null, f, instance, (a, b) -> FieldUtils.readField(a, b),
 							null)) != value
 					|| !Objects.equals(fieldValue, value)) {
@@ -6645,7 +6647,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				final Field f = get(fs, 0);
 				//
-				if (f != null && Modifier.isStatic(f.getModifiers())) {
+				if (f != null && isStatic(f)) {
 					//
 					try {
 						//
