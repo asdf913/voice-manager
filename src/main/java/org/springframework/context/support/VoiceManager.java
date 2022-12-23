@@ -6670,6 +6670,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
+	private static Integer getRate(final VoiceManager instance) {
+		return instance != null ? instance.getRate() : null;
+	}
+
 	private static boolean isAssignableFrom(final Class<?> a, final Class<?> b) {
 		return a != null && b != null && a.isAssignableFrom(b);
 	}
@@ -7358,35 +7362,33 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 										//
 										ObjectMap.setObject(objectMap, File.class, it.file);
 										//
-										if (vm != null) {
-											//
-											writeVoiceToFile(objectMap, getText(voice),
-													//
-													// voiceId
-													//
-													voiceId
-													//
-													// rate
-													//
-													, vm.getRate(),
-													//
-													// volume
-													//
-													Math.min(Math.max(
-															intValue(getValue(jsSpeechVolume = getIfNull(jsSpeechVolume,
-																	() -> vm.jsSpeechVolume)), 100),
-															0), 100)
-											//
-											);
-											//
-											if ((byteConverter = getIfNull(byteConverter, () -> ObjectMap
-													.getObject(objectMap, ByteConverter.class))) != null) {
+										writeVoiceToFile(objectMap, getText(voice),
 												//
-												FileUtils.writeByteArrayToFile(it.file,
-														byteConverter.convert(FileUtils.readFileToByteArray(it.file)));
+												// voiceId
 												//
-											} // if
+												voiceId
 												//
+												// rate
+												//
+												, getRate(vm),
+												//
+												// volume
+												//
+												Math.min(
+														Math.max(intValue(
+																getValue(jsSpeechVolume = getIfNull(jsSpeechVolume,
+																		() -> vm != null ? vm.jsSpeechVolume : null)),
+																100), 0),
+														100)
+										//
+										);
+										//
+										if ((byteConverter = getIfNull(byteConverter,
+												() -> ObjectMap.getObject(objectMap, ByteConverter.class))) != null) {
+											//
+											FileUtils.writeByteArrayToFile(it.file,
+													byteConverter.convert(FileUtils.readFileToByteArray(it.file)));
+											//
 										} // if
 											//
 										deleteOnExit(it.file);
