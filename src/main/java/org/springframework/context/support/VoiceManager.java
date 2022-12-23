@@ -2072,32 +2072,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			if (size == 1) {
 				//
-				final boolean headless = GraphicsEnvironment.isHeadless();
+				setValue(instance, get(ms, 0), consumer, GraphicsEnvironment.isHeadless());
 				//
-				try {
-					//
-					if ((i = cast(Integer.class, invoke(get(ms, 0), instance))) != null) {
-						//
-						instance.setValue(i.intValue());
-						//
-						accept(consumer, instance);
-						//
-					} // if
-						//
-				} catch (final IllegalAccessException e) {
-					//
-					errorOrPrintStackTraceOrShowMessageDialog(headless, e);
-					//
-				} catch (final InvocationTargetException e) {
-					//
-					final Throwable targetException = e.getTargetException();
-					//
-					errorOrPrintStackTraceOrShowMessageDialog(headless,
-							ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException), targetException,
-									ExceptionUtils.getRootCause(e), e));
-					//
-				} // try
-					//
 			} else if (size > 1) {
 				//
 				throw new IllegalStateException(
@@ -2106,6 +2082,36 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			} // if
 				//
 		} // if
+			//
+	}
+
+	private static void setValue(final JSlider instance, final Method method, final Consumer<JSlider> consumer,
+			final boolean headless) {
+		//
+		try {
+			//
+			final Integer i = cast(Integer.class, invoke(method, instance));
+			//
+			if (i != null) {
+				//
+				instance.setValue(i.intValue());
+				//
+				accept(consumer, instance);
+				//
+			} // if
+				//
+		} catch (final IllegalAccessException e) {
+			//
+			errorOrPrintStackTraceOrShowMessageDialog(headless, e);
+			//
+		} catch (final InvocationTargetException e) {
+			//
+			final Throwable targetException = e.getTargetException();
+			//
+			errorOrPrintStackTraceOrShowMessageDialog(headless, ObjectUtils.firstNonNull(
+					ExceptionUtils.getRootCause(targetException), targetException, ExceptionUtils.getRootCause(e), e));
+			//
+		} // try
 			//
 	}
 
