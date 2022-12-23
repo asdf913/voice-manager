@@ -6539,27 +6539,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		try {
 			//
-			importVoice(objectMap, (v, m) -> {
-				//
-				if (headless) {
-					//
-					errorOrPrintln(LOG, System.err, m);
-					//
-				} else {
-					//
-					if (tmImportException != null) {
-						//
-						tmImportException.addRow(new Object[] { getText(v), getRomaji(v), m });
-						//
-					} else {
-						//
-						JOptionPane.showMessageDialog(null, m);
-						//
-					} // if
-						//
-				} // if
-					//
-			}, (v, e) -> {
+			importVoice(objectMap, new VoiceThrowableMessageBiConsumer(headless, tmImportException), (v, e) -> {
 				//
 				if (headless) {
 					//
