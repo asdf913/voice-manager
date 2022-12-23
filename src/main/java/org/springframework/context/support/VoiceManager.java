@@ -4339,6 +4339,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			ObjectMap.setObject(objectMap, String.class, voiceFolder);
 			//
+			ObjectMap.setObject(objectMap, DefaultTableModel.class, tmImportException);
+			//
 			execute(objectMap);
 			//
 		} finally {
@@ -6455,9 +6457,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final File file = ObjectMap.getObject(objectMap, File.class);
 		//
-		final VoiceManager voiceManager = ObjectMap.getObject(objectMap, VoiceManager.class);
-		//
-		final DefaultTableModel tmImportException = voiceManager != null ? voiceManager.tmImportException : null;
+		final DefaultTableModel tmImportException = ObjectMap.getObject(objectMap, DefaultTableModel.class);
 		//
 		final Voice voice = ObjectMap.getObject(objectMap, Voice.class);
 		//
@@ -6477,7 +6477,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				tmImportException.addRow(new Object[] { getText(voice), getRomaji(voice), message });
 				//
-			} else if (!headless && nonTest) {
+			} else if (Boolean.logicalAnd(!headless, nonTest)) {
 				//
 				JOptionPane.showMessageDialog(null, message);
 				//

@@ -4260,11 +4260,7 @@ class VoiceManagerTest {
 			//
 			objects.put(Voice.class, null);
 			//
-		} // if
-			//
-		if (instance != null) {
-			//
-			FieldUtils.writeDeclaredField(instance, "tmImportException", new DefaultTableModel(), true);
+			objects.put(DefaultTableModel.class, new DefaultTableModel());
 			//
 		} // if
 			//
@@ -7514,7 +7510,7 @@ class VoiceManagerTest {
 		//
 		Assertions.assertFalse(isStatic(null));
 		//
-		Assertions.assertTrue(isStatic(Objects.class.getDeclaredMethod("hashCode",Object.class)));
+		Assertions.assertTrue(isStatic(Objects.class.getDeclaredMethod("hashCode", Object.class)));
 		//
 	}
 
