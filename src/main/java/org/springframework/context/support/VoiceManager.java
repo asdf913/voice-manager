@@ -4288,7 +4288,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				if (tmImportException != null) {
 					//
-					tmImportException.addRow(new Object[] { getText(voice), getRomaji(voice), NO_FILE_SELECTED });
+					addRow(tmImportException, new Object[] { getText(voice), getRomaji(voice), NO_FILE_SELECTED });
 					//
 				} else {
 					//
@@ -4348,6 +4348,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			IOUtils.closeQuietly(sqlSession);
 			//
 		} // try
+			//
+	}
+
+	private static void addRow(final DefaultTableModel instance, final Object[] rowData) {
+		//
+		if (instance != null) {
+			//
+			instance.addRow(rowData);
+			//
+		} // if
 			//
 	}
 
@@ -5151,7 +5161,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				if (tableModel != null) {
 					//
-					tableModel.addRow(new Object[] { getText(v), getRomaji(v), m });
+					addRow(tableModel, new Object[] { getText(v), getRomaji(v), m });
 					//
 				} else {
 					//
@@ -5201,7 +5211,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				if (tableModel != null) {
 					//
-					tableModel.addRow(new Object[] { getText(v), getRomaji(v), e });
+					addRow(tableModel, new Object[] { getText(v), getRomaji(v), e });
 					//
 				} else {
 					//
@@ -5342,12 +5352,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // for
 				//
-			if (tmImportResult != null) {
-				//
-				tmImportResult.addRow(new Object[] { numberOfSheetProcessed, numberOfVoiceProcessed });
-				//
-			} // if
-				//
+			addRow(tmImportResult, new Object[] { numberOfSheetProcessed, numberOfVoiceProcessed });
+			//
 		} catch (final InvalidFormatException | IOException | IllegalAccessException | BaseException
 				| GeneralSecurityException | SAXException | ParserConfigurationException e) {
 			//
@@ -6489,7 +6495,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			if (tmImportException != null) {
 				//
-				tmImportException.addRow(new Object[] { getText(voice), getRomaji(voice), message });
+				addRow(tmImportException, new Object[] { getText(voice), getRomaji(voice), message });
 				//
 			} else if (Boolean.logicalAnd(!headless, nonTest)) {
 				//
@@ -6505,7 +6511,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			if (tmImportException != null) {
 				//
-				tmImportException.addRow(new Object[] { getText(voice), getRomaji(voice), message });
+				addRow(tmImportException, new Object[] { getText(voice), getRomaji(voice), message });
 				//
 			} else if (!headless) {
 				//
@@ -6521,7 +6527,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			if (tmImportException != null) {
 				//
-				tmImportException.addRow(new Object[] { getText(voice), getRomaji(voice), message });
+				addRow(tmImportException, new Object[] { getText(voice), getRomaji(voice), message });
 				//
 			} else if (!headless) {
 				//
@@ -6537,7 +6543,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			if (tmImportException != null) {
 				//
-				tmImportException.addRow(new Object[] { getText(voice), getRomaji(voice), message });
+				addRow(tmImportException, new Object[] { getText(voice), getRomaji(voice), message });
 				//
 			} else if (nonTest) {
 				//
@@ -6563,8 +6569,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		} // try
 			//
 	}
-
-
 
 	private static void writeVoiceToFile(final ObjectMap objectMap, final String text, final String voiceId,
 			final Integer rate, final Integer volume) {
