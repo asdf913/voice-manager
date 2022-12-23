@@ -75,15 +75,15 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 			//
 			if (GraphicsEnvironment.isHeadless()) {
 				//
-				if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
+				if (!LoggerUtil.isNOPLogger(LOG)) {
 					//
 					if (rootCause != null) {
 						//
-						LOG.error(getMessage(rootCause), rootCause);
+						LoggerUtil.error(LOG, getMessage(rootCause), rootCause);
 						//
 					} else if (e != null) {
 						//
-						LOG.error(getMessage(e), e);
+						LoggerUtil.error(LOG, getMessage(e), e);
 						//
 					} // if
 						//
@@ -115,7 +115,7 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 			//
 	}
 
-	public static String getMessage(final Throwable instance) {
+	private static String getMessage(final Throwable instance) {
 		return instance != null ? instance.getMessage() : null;
 	}
 

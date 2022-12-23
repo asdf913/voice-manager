@@ -646,9 +646,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		if (headless) {
 			//
-			if (logger != null && !LoggerUtil.isNOPLogger(logger)) {
+			if (!LoggerUtil.isNOPLogger(logger)) {
 				//
-				logger.error(getMessage(throwable), throwable);
+				LoggerUtil.error(logger, getMessage(throwable), throwable);
 				//
 			} else if (throwable != null) {
 				//

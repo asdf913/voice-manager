@@ -29,6 +29,16 @@ public class LoggerUtil {
 	private LoggerUtil() {
 	}
 
+	public static void error(final Logger instance, final String msg, final Throwable t) {
+		//
+		if (instance != null) {
+			//
+			instance.error(msg, t);
+			//
+		} // if
+			//
+	}
+
 	public static boolean isNOPLogger(final Logger instance) {
 		//
 		final Class<?> clz = getClass(instance);
