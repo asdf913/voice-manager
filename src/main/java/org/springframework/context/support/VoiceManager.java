@@ -5163,6 +5163,20 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		}
 
+		private static void errorOrPrintln(final Logger logger, final PrintStream ps, final String message) {
+			//
+			if (logger != null) {
+				//
+				logger.error(message);
+				//
+			} else if (ps != null) {
+				//
+				ps.println(message);
+				//
+			} // if
+				//
+		}
+
 	}
 
 	private static class VoiceThrowableBiConsumer implements BiConsumer<Voice, Throwable> {
@@ -6550,19 +6564,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	private static void errorOrPrintln(final Logger logger, final PrintStream ps, final String message) {
-		//
-		if (logger != null) {
-			//
-			logger.error(message);
-			//
-		} else if (ps != null) {
-			//
-			ps.println(message);
-			//
-		} // if
-			//
-	}
+
 
 	private static void writeVoiceToFile(final ObjectMap objectMap, final String text, final String voiceId,
 			final Integer rate, final Integer volume) {

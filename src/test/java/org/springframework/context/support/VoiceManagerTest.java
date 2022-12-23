@@ -398,9 +398,6 @@ class VoiceManagerTest {
 		(METHOD_IMPORT_VOICE5 = clz.getDeclaredMethod("importVoice", Sheet.class, CLASS_OBJECT_MAP, String.class,
 				BiConsumer.class, BiConsumer.class, Consumer.class)).setAccessible(true);
 		//
-		(METHOD_ERROR_OR_PRINT_LN = clz.getDeclaredMethod("errorOrPrintln", Logger.class, PrintStream.class,
-				String.class)).setAccessible(true);
-		//
 		(METHOD_ADD_COLLECTION = clz.getDeclaredMethod("add", Collection.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_ADD_LIST = clz.getDeclaredMethod("add", List.class, Integer.TYPE, Object.class)).setAccessible(true);
@@ -3325,30 +3322,6 @@ class VoiceManagerTest {
 		try {
 			METHOD_IMPORT_VOICE5.invoke(null, sheet, _objectMap, voiceId, errorMessageConsumer, throwableConsumer,
 					voiceConsumer);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testErrorOrPrintln() throws IOException {
-		//
-		Assertions.assertDoesNotThrow(() -> errorOrPrintln(null, null, null));
-		//
-		Assertions.assertDoesNotThrow(() -> errorOrPrintln(logger, null, null));
-		//
-		try (final OutputStream os = new ByteArrayOutputStream(); final PrintStream ps = new PrintStream(os)) {
-			//
-			Assertions.assertDoesNotThrow(() -> errorOrPrintln(null, ps, null));
-			//
-		} // try
-			//
-	}
-
-	private static void errorOrPrintln(final Logger logger, final PrintStream ps, final String message)
-			throws Throwable {
-		try {
-			METHOD_ERROR_OR_PRINT_LN.invoke(null, logger, ps, message);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -8563,6 +8536,26 @@ class VoiceManagerTest {
 			//
 		});
 		//
+		// errorOrPrintln(org.slf4j.Logger,java.io.PrintStream,java.lang.String)
+		//
+		final Method errorOrPrintln = clz != null
+				? clz.getDeclaredMethod("errorOrPrintln", Logger.class, PrintStream.class, String.class)
+				: null;
+		//
+		if (errorOrPrintln != null) {
+			//
+			errorOrPrintln.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertNull(invoke(errorOrPrintln, null, null, null, null));
+		//
+		try (final OutputStream os = new ByteArrayOutputStream(); final PrintStream ps = new PrintStream(os)) {
+			//
+			Assertions.assertNull(invoke(errorOrPrintln, null, null, ps, null));
+			//
+		} // try
+			//
 	}
 
 	@Test
