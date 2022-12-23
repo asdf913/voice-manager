@@ -5257,6 +5257,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			ObjectMap.setObject(objectMap, Jakaroma.class, jakaroma = getIfNull(jakaroma, Jakaroma::new));
 			//
+			ObjectMap.setObject(objectMap, JSlider.class, jsSpeechVolume);
+			//
 			BiConsumer<Voice, String> errorMessageConsumer = null;
 			//
 			BiConsumer<Voice, Throwable> throwableConsumer = null;
@@ -7374,12 +7376,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 												//
 												// volume
 												//
-												Math.min(
-														Math.max(intValue(
-																getValue(jsSpeechVolume = getIfNull(jsSpeechVolume,
-																		() -> vm != null ? vm.jsSpeechVolume : null)),
-																100), 0),
-														100)
+												Math.min(Math.max(intValue(
+														getValue(jsSpeechVolume = getIfNull(jsSpeechVolume,
+																() -> ObjectMap.getObject(_objectMap, JSlider.class))),
+														100), 0), 100)
 										//
 										);
 										//
