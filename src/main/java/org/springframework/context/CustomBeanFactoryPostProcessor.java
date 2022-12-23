@@ -10,10 +10,10 @@ import java.util.Objects;
 import java.util.function.Predicate;
 
 import javax.sql.DataSource;
-import javax.swing.JOptionPane;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.function.FailableFunction;
+import org.oxbow.swingbits.dialog.task.TaskDialogs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
@@ -79,7 +79,7 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 					//
 			} else {
 				//
-				JOptionPane.showMessageDialog(null, e.getMessage());
+				TaskDialogs.showException(e);
 				//
 			} // if
 				//

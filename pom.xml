@@ -228,6 +228,12 @@
 			<artifactId>zip4j</artifactId>
 			<version>2.11.2</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.bidib.org.oxbow/swingbits -->
+		<dependency>
+			<groupId>org.bidib.org.oxbow</groupId>
+			<artifactId>swingbits</artifactId>
+			<version>1.2.2</version>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
