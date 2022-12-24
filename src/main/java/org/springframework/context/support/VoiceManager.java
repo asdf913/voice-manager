@@ -9304,13 +9304,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				for (final Entry<String, Voice> en : entries) {
 					//
-					if (en == null) {
-						//
-						continue;
-						//
-					} // if
-						//
-					if ((es = getIfNull(es, () -> Executors.newFixedThreadPool(1))) == null) {
+					if (en == null || (es = getIfNull(es, () -> Executors.newFixedThreadPool(1))) == null) {
 						//
 						continue;
 						//
