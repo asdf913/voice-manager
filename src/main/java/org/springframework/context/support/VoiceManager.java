@@ -507,7 +507,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private ObjectMapper objectMapper = null;
 
-	private String jlptLevelPageUrl, gaKuNenBeTsuKanJiListPageUrl = null;
+	private String jlptLevelPageUrl = null;
+
+	@Url("https://ja.wikipedia.org/wiki/%E5%AD%A6%E5%B9%B4%E5%88%A5%E6%BC%A2%E5%AD%97%E9%85%8D%E5%BD%93%E8%A1%A8")
+	private String gaKuNenBeTsuKanJiListPageUrl = null;
 
 	private String microsoftSpeechPlatformRuntimeDownloadPageUrl, mediaFormatPageUrl, poiEncryptionPageUrl = null;
 
