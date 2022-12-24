@@ -3797,231 +3797,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} else if (Objects.equals(source, btnExport)) {
 			//
-			SqlSession sqlSession = null;
+			actionPerformedForExport(headless);
 			//
-			Workbook workbook = null;
-			//
-			File file = null;
-			//
-			try {
-				//
-				final VoiceMapper voiceMapper = getMapper(getConfiguration(sqlSessionFactory), VoiceMapper.class,
-						sqlSession = openSession(sqlSessionFactory));
-				//
-				final List<Voice> voices = retrieveAllVoices(voiceMapper);
-				//
-				forEach(voices, v -> setListNames(v, searchVoiceListNamesByVoiceId(voiceMapper, getId(v))));
-				//
-				final IH ih = new IH();
-				//
-				ObjectMap objectMap = Reflection.newProxy(ObjectMap.class, ih);
-				//
-				ObjectMap.setObject(objectMap, VoiceManager.class, this);
-				//
-				// org.springframework.context.support.VoiceManager$BooleanMap
-				//
-				final BooleanMap bm = Reflection.newProxy(BooleanMap.class, ih);
-				//
-				BooleanMap.setBoolean(bm, OVER_MP3_TITLE, isSelected(cbOverMp3Title));
-				//
-				BooleanMap.setBoolean(bm, ORDINAL_POSITION_AS_FILE_NAME_PREFIX,
-						isSelected(cbOrdinalPositionAsFileNamePrefix));
-				//
-				BooleanMap.setBoolean(bm, "jlptAsFolder", isSelected(cbJlptAsFolder));
-				//
-				BooleanMap.setBoolean(bm, EXPORT_PRESENTATION, isSelected(cbExportPresentation));
-				//
-				BooleanMap.setBoolean(bm, EMBED_AUDIO_IN_PRESENTATION, isSelected(cbEmbedAudioInPresentation));
-				//
-				BooleanMap.setBoolean(bm, HIDE_AUDIO_IMAGE_IN_PRESENTATION,
-						!isSelected(cbHideAudioImageInPresentation));
-				//
-				ObjectMap.setObject(objectMap, BooleanMap.class, bm);
-				//
-				// org.springframework.context.support.VoiceManager$StringMap
-				//
-				final StringMap stringMap = Reflection.newProxy(StringMap.class, ih);
-				//
-				StringMap.setString(stringMap, "ordinalPositionFileNamePrefix",
-						getText(tfOrdinalPositionFileNamePrefix));
-				//
-				StringMap.setString(stringMap, "exportPresentationTemplate", exportPresentationTemplate);
-				//
-				StringMap.setString(stringMap, "exportPassword", getText(tfExportPassword));
-				//
-				StringMap.setString(stringMap, "folderInPresentation", folderInPresentation);
-				//
-				ObjectMap.setObject(objectMap, StringMap.class, stringMap);
-				//
-				export(voices, outputFolderFileNameExpressions, objectMap);
-				//
-				// Export Spreadsheet
-				//
-				boolean fileToBeDeleted = false;
-				//
-				try (final OutputStream os = new FileOutputStream(
-						file = new File(String.format("voice_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.xlsx", new Date())))) {
-					//
-					final BooleanMap booleanMap = Reflection.newProxy(BooleanMap.class, ih);
-					//
-					BooleanMap.setBoolean(booleanMap, "exportListSheet", isSelected(cbExportListSheet));
-					//
-					BooleanMap.setBoolean(booleanMap, "exportJlptSheet", isSelected(cbExportJlptSheet));
-					//
-					write(workbook = createWorkbook(voices, booleanMap), os);
-					//
-					if (!(fileToBeDeleted = longValue(length(file), 0) == 0)) {
-						//
-						fileToBeDeleted = intValue(getPhysicalNumberOfRows(
-								workbook.getNumberOfSheets() == 1 ? workbook.getSheetAt(0) : null), 0) == 0;
-						//
-					} // if
-						//
-				} // try
-					//
-					// encrypt the file if "password" is set
-					//
-				encrypt(file, cast(EncryptionMode.class, getSelectedItem(cbmEncryptionMode)),
-						getText(tfExportPassword));
-				//
-				// Delete empty Spreadsheet
-				//
-				testAndAccept((a, b) -> Objects.equals(Boolean.TRUE, a), fileToBeDeleted, file, (a, b) -> delete(b));
-				//
-				// export HTML file
-				//
-				if (isSelected(cbExportHtml)) {
-					//
-					final Version version = ObjectUtils.getIfNull(freeMarkerVersion,
-							freemarker.template.Configuration::getVersion);
-					//
-					ObjectMap.setObject(objectMap = Reflection.newProxy(ObjectMap.class, ih), Version.class, version);
-					//
-					final freemarker.template.Configuration configuration = ObjectUtils
-							.getIfNull(freeMarkerConfiguration, () -> new freemarker.template.Configuration(version));
-					//
-					if (getTemplateLoader(configuration) == null) {
-						//
-						setTemplateLoader(configuration, new ClassTemplateLoader(VoiceManager.class, "/"));
-						//
-					} // if
-						//
-					ObjectMap.setObject(objectMap, freemarker.template.Configuration.class, configuration);
-					//
-					ObjectMap.setObject(objectMap, TemplateHashModel.class,
-							new BeansWrapper(version).getStaticModels());
-					//
-					List<File> files = null;
-					//
-					try (final Writer writer = new StringWriter()) {
-						//
-						ObjectMap.setObject(objectMap, Writer.class, writer);
-						//
-						exportHtml(objectMap, exportHtmlTemplateFile, voiceFolder, voices);
-						//
-						final StringBuilder sb = new StringBuilder(
-								StringUtils.defaultString(getText(tfExportHtmlFileName)));
-						//
-						final String[] fileExtensions = getFileExtensions(ContentType.HTML);
-						//
-						String fileExtension = null;
-						//
-						boolean htmlFileExtensionFound = false;
-						//
-						for (int i = 0; fileExtensions != null && i < fileExtensions.length; i++) {
-							//
-							if (StringUtils.isBlank(fileExtension = fileExtensions[i])) {
-								//
-								continue;
-								//
-							} // if
-								//
-							htmlFileExtensionFound |= StringUtils.endsWithIgnoreCase(sb,
-									StringUtils.join('.', fileExtension));
-							//
-						} // for
-							//
-						if (!htmlFileExtensionFound) {
-							//
-							if (!StringUtils.endsWith(sb, ".")) {
-								//
-								append(sb, '.');
-								//
-							} // if
-								//
-							append(sb, StringUtils.defaultIfBlank(orElse(
-									max(fileExtensions != null ? Arrays.stream(fileExtensions) : null,
-											(a, b) -> Integer.compare(StringUtils.length(a), StringUtils.length(b))),
-									null), ""));
-							//
-						} // if
-							//
-						final String string = toString(writer);
-						//
-						if (StringUtils.isNotEmpty(fileExtension)) {
-							//
-							FileUtils.writeStringToFile(
-									file = new File(StringUtils.defaultIfBlank(toString(sb), "export.html")), string,
-									StandardCharsets.UTF_8);
-							//
-							add(files = ObjectUtils.getIfNull(files, ArrayList::new), file);
-							//
-						} // if
-							//
-					} // try
-						//
-					if (isSelected(cbExportListHtml)) {
-						//
-						exportHtml(objectMap, getVoiceMultimapByListName(voices),
-								files = ObjectUtils.getIfNull(files, ArrayList::new));
-						//
-					} // if
-						//
-					if (isSelected(cbExportHtmlAsZip)
-							&& reduce(mapToLong(stream(files), f -> longValue(length(f), 0)), 0, Long::sum) > 0) {
-						//
-						ObjectMap.setObject(objectMap, File.class, file = new File(
-								String.format("voice_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.zip", new Date())));
-						//
-						ObjectMap.setObject(objectMap, EncryptionMethod.class, EncryptionMethod.ZIP_STANDARD);
-						//
-						ObjectMap.setObject(objectMap, CompressionLevel.class,
-								cast(CompressionLevel.class, getSelectedItem(cbmCompressionLevel)));
-						//
-						createZipFile(objectMap, getText(tfExportPassword), files);
-						//
-						// Delete HTML File(s) is "Remove HTML After ZIP" option is checked
-						//
-						testAndAccept((a, b) -> a, isSelected(cbExportHtmlRemoveAfterZip), files,
-								(a, b) -> forEach(b, VoiceManager::delete));
-						//
-					} // if
-						//
-				} // if
-					//
-			} catch (final IOException | IllegalAccessException | TemplateException | InvalidFormatException
-					| GeneralSecurityException e) {
-				//
-				errorOrPrintStackTraceOrShowMessageDialog(headless, e);
-				//
-			} catch (final InvocationTargetException e) {
-				//
-				final Throwable targetException = e.getTargetException();
-				//
-				errorOrPrintStackTraceOrShowMessageDialog(headless,
-						ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException), targetException,
-								ExceptionUtils.getRootCause(e), e));
-				//
-			} finally {
-				//
-				IOUtils.closeQuietly(sqlSession);
-				//
-				IOUtils.closeQuietly(workbook);
-				//
-				testAndAccept(EMPTY_FILE_PREDICATE, file, FileUtils::deleteQuietly);
-				//
-			} // try
-				//
 		} else if (Objects.equals(source, btnImportFileTemplate)) {
 			//
 			actionPerformedForImportFileTemplate(headless);
@@ -4733,6 +4510,231 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		throw new IllegalStateException();
 		//
+	}
+
+	private void actionPerformedForExport(final boolean headless) {
+		//
+		SqlSession sqlSession = null;
+		//
+		Workbook workbook = null;
+		//
+		File file = null;
+		//
+		try {
+			//
+			final VoiceMapper voiceMapper = getMapper(getConfiguration(sqlSessionFactory), VoiceMapper.class,
+					sqlSession = openSession(sqlSessionFactory));
+			//
+			final List<Voice> voices = retrieveAllVoices(voiceMapper);
+			//
+			forEach(voices, v -> setListNames(v, searchVoiceListNamesByVoiceId(voiceMapper, getId(v))));
+			//
+			final IH ih = new IH();
+			//
+			ObjectMap objectMap = Reflection.newProxy(ObjectMap.class, ih);
+			//
+			ObjectMap.setObject(objectMap, VoiceManager.class, this);
+			//
+			// org.springframework.context.support.VoiceManager$BooleanMap
+			//
+			final BooleanMap bm = Reflection.newProxy(BooleanMap.class, ih);
+			//
+			BooleanMap.setBoolean(bm, OVER_MP3_TITLE, isSelected(cbOverMp3Title));
+			//
+			BooleanMap.setBoolean(bm, ORDINAL_POSITION_AS_FILE_NAME_PREFIX,
+					isSelected(cbOrdinalPositionAsFileNamePrefix));
+			//
+			BooleanMap.setBoolean(bm, "jlptAsFolder", isSelected(cbJlptAsFolder));
+			//
+			BooleanMap.setBoolean(bm, EXPORT_PRESENTATION, isSelected(cbExportPresentation));
+			//
+			BooleanMap.setBoolean(bm, EMBED_AUDIO_IN_PRESENTATION, isSelected(cbEmbedAudioInPresentation));
+			//
+			BooleanMap.setBoolean(bm, HIDE_AUDIO_IMAGE_IN_PRESENTATION, !isSelected(cbHideAudioImageInPresentation));
+			//
+			ObjectMap.setObject(objectMap, BooleanMap.class, bm);
+			//
+			// org.springframework.context.support.VoiceManager$StringMap
+			//
+			final StringMap stringMap = Reflection.newProxy(StringMap.class, ih);
+			//
+			StringMap.setString(stringMap, "ordinalPositionFileNamePrefix", getText(tfOrdinalPositionFileNamePrefix));
+			//
+			StringMap.setString(stringMap, "exportPresentationTemplate", exportPresentationTemplate);
+			//
+			StringMap.setString(stringMap, "exportPassword", getText(tfExportPassword));
+			//
+			StringMap.setString(stringMap, "folderInPresentation", folderInPresentation);
+			//
+			ObjectMap.setObject(objectMap, StringMap.class, stringMap);
+			//
+			export(voices, outputFolderFileNameExpressions, objectMap);
+			//
+			// Export Spreadsheet
+			//
+			boolean fileToBeDeleted = false;
+			//
+			try (final OutputStream os = new FileOutputStream(
+					file = new File(String.format("voice_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.xlsx", new Date())))) {
+				//
+				final BooleanMap booleanMap = Reflection.newProxy(BooleanMap.class, ih);
+				//
+				BooleanMap.setBoolean(booleanMap, "exportListSheet", isSelected(cbExportListSheet));
+				//
+				BooleanMap.setBoolean(booleanMap, "exportJlptSheet", isSelected(cbExportJlptSheet));
+				//
+				write(workbook = createWorkbook(voices, booleanMap), os);
+				//
+				if (!(fileToBeDeleted = longValue(length(file), 0) == 0)) {
+					//
+					fileToBeDeleted = intValue(
+							getPhysicalNumberOfRows(workbook.getNumberOfSheets() == 1 ? workbook.getSheetAt(0) : null),
+							0) == 0;
+					//
+				} // if
+					//
+			} // try
+				//
+				// encrypt the file if "password" is set
+				//
+			encrypt(file, cast(EncryptionMode.class, getSelectedItem(cbmEncryptionMode)), getText(tfExportPassword));
+			//
+			// Delete empty Spreadsheet
+			//
+			testAndAccept((a, b) -> Objects.equals(Boolean.TRUE, a), fileToBeDeleted, file, (a, b) -> delete(b));
+			//
+			// export HTML file
+			//
+			if (isSelected(cbExportHtml)) {
+				//
+				final Version version = ObjectUtils.getIfNull(freeMarkerVersion,
+						freemarker.template.Configuration::getVersion);
+				//
+				ObjectMap.setObject(objectMap = Reflection.newProxy(ObjectMap.class, ih), Version.class, version);
+				//
+				final freemarker.template.Configuration configuration = ObjectUtils.getIfNull(freeMarkerConfiguration,
+						() -> new freemarker.template.Configuration(version));
+				//
+				if (getTemplateLoader(configuration) == null) {
+					//
+					setTemplateLoader(configuration, new ClassTemplateLoader(VoiceManager.class, "/"));
+					//
+				} // if
+					//
+				ObjectMap.setObject(objectMap, freemarker.template.Configuration.class, configuration);
+				//
+				ObjectMap.setObject(objectMap, TemplateHashModel.class, new BeansWrapper(version).getStaticModels());
+				//
+				List<File> files = null;
+				//
+				try (final Writer writer = new StringWriter()) {
+					//
+					ObjectMap.setObject(objectMap, Writer.class, writer);
+					//
+					exportHtml(objectMap, exportHtmlTemplateFile, voiceFolder, voices);
+					//
+					final StringBuilder sb = new StringBuilder(
+							StringUtils.defaultString(getText(tfExportHtmlFileName)));
+					//
+					final String[] fileExtensions = getFileExtensions(ContentType.HTML);
+					//
+					String fileExtension = null;
+					//
+					boolean htmlFileExtensionFound = false;
+					//
+					for (int i = 0; fileExtensions != null && i < fileExtensions.length; i++) {
+						//
+						if (StringUtils.isBlank(fileExtension = fileExtensions[i])) {
+							//
+							continue;
+							//
+						} // if
+							//
+						htmlFileExtensionFound |= StringUtils.endsWithIgnoreCase(sb,
+								StringUtils.join('.', fileExtension));
+						//
+					} // for
+						//
+					if (!htmlFileExtensionFound) {
+						//
+						if (!StringUtils.endsWith(sb, ".")) {
+							//
+							append(sb, '.');
+							//
+						} // if
+							//
+						append(sb, StringUtils.defaultIfBlank(
+								orElse(max(fileExtensions != null ? Arrays.stream(fileExtensions) : null,
+										(a, b) -> Integer.compare(StringUtils.length(a), StringUtils.length(b))), null),
+								""));
+						//
+					} // if
+						//
+					final String string = toString(writer);
+					//
+					if (StringUtils.isNotEmpty(fileExtension)) {
+						//
+						FileUtils.writeStringToFile(
+								file = new File(StringUtils.defaultIfBlank(toString(sb), "export.html")), string,
+								StandardCharsets.UTF_8);
+						//
+						add(files = ObjectUtils.getIfNull(files, ArrayList::new), file);
+						//
+					} // if
+						//
+				} // try
+					//
+				if (isSelected(cbExportListHtml)) {
+					//
+					exportHtml(objectMap, getVoiceMultimapByListName(voices),
+							files = ObjectUtils.getIfNull(files, ArrayList::new));
+					//
+				} // if
+					//
+				if (isSelected(cbExportHtmlAsZip)
+						&& reduce(mapToLong(stream(files), f -> longValue(length(f), 0)), 0, Long::sum) > 0) {
+					//
+					ObjectMap.setObject(objectMap, File.class,
+							file = new File(String.format("voice_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.zip", new Date())));
+					//
+					ObjectMap.setObject(objectMap, EncryptionMethod.class, EncryptionMethod.ZIP_STANDARD);
+					//
+					ObjectMap.setObject(objectMap, CompressionLevel.class,
+							cast(CompressionLevel.class, getSelectedItem(cbmCompressionLevel)));
+					//
+					createZipFile(objectMap, getText(tfExportPassword), files);
+					//
+					// Delete HTML File(s) is "Remove HTML After ZIP" option is checked
+					//
+					testAndAccept((a, b) -> a, isSelected(cbExportHtmlRemoveAfterZip), files,
+							(a, b) -> forEach(b, VoiceManager::delete));
+					//
+				} // if
+					//
+			} // if
+				//
+		} catch (final IOException | IllegalAccessException | TemplateException | InvalidFormatException
+				| GeneralSecurityException e) {
+			//
+			errorOrPrintStackTraceOrShowMessageDialog(headless, e);
+			//
+		} catch (final InvocationTargetException e) {
+			//
+			final Throwable targetException = e.getTargetException();
+			//
+			errorOrPrintStackTraceOrShowMessageDialog(headless, ObjectUtils.firstNonNull(
+					ExceptionUtils.getRootCause(targetException), targetException, ExceptionUtils.getRootCause(e), e));
+			//
+		} finally {
+			//
+			IOUtils.closeQuietly(sqlSession);
+			//
+			IOUtils.closeQuietly(workbook);
+			//
+			testAndAccept(EMPTY_FILE_PREDICATE, file, FileUtils::deleteQuietly);
+			//
+		} // try
+			//
 	}
 
 	private static void setSource(final Voice instance, final String source) {
