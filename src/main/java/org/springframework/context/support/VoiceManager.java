@@ -4993,12 +4993,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-			if (!contains(list = ObjectUtils.getIfNull(list, ArrayList::new), f)) {
-				//
-				add(list = ObjectUtils.getIfNull(list, ArrayList::new), f);
-				//
-			} // if
-				//
+			testAndAccept((a, b) -> !contains(a, b), list = ObjectUtils.getIfNull(list, ArrayList::new), f,
+					(a, b) -> add(a, b), null);
+			//
 		} // for
 			//
 		return list;
