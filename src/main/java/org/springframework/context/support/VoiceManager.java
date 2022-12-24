@@ -1707,23 +1707,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			if (fieldTitle == null) {
 				//
-				final List<Field> fs = toList(filter(stream(FieldUtils.getAllFieldsList(getClass(page))),
-						f -> Objects.equals(getName(f), "title")));
+				fieldTitle = getFieldByName(getClass(page), "title");
 				//
-				if (fs != null && !fs.isEmpty()) {
-					//
-					if (IterableUtils.size(fs) == 1) {
-						//
-						fieldTitle = get(fs, 0);
-						//
-					} else {
-						//
-						throw new IllegalStateException();
-						//
-					} // if
-						//
-				} // if
-					//
 			} // if
 				//
 			if (fieldTitle == null || !Objects.equals(Narcissus.getField(page, fieldTitle), title)) {
@@ -1745,6 +1730,32 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		} // for
 			//
 		return tabIndex;
+		//
+	}
+
+	private static Field getFieldByName(final Class<?> clz, final String name) {
+		//
+		final List<Field> fs = toList(
+				filter(stream(testAndApply(Objects::nonNull, clz, FieldUtils::getAllFieldsList, null)),
+						f -> Objects.equals(getName(f), name)));
+		//
+		Field field = null;
+		//
+		if (fs != null && !fs.isEmpty()) {
+			//
+			if (IterableUtils.size(fs) == 1) {
+				//
+				field = get(fs, 0);
+				//
+			} else {
+				//
+				throw new IllegalStateException();
+				//
+			} // if
+				//
+		} // if
+			//
+		return field;
 		//
 	}
 

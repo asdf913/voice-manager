@@ -283,7 +283,7 @@ class VoiceManagerTest {
 			METHOD_SET_PREFERRED_WIDTH_ARRAY, METHOD_SET_PREFERRED_WIDTH_ITERABLE, METHOD_PRINT_STACK_TRACE,
 			METHOD_GET_VALUE_FROM_CELL, METHOD_GET_MP3_TAGS, METHOD_KEY_RELEASED_FOR_TEXT_IMPORT, METHOD_IS_STATIC,
 			METHOD_IMPORT_BY_WORK_BOOK_FILES, METHOD_ACTION_PERFORMED_FOR_EXPORT_BUTTONS,
-			METHOD_CREATE_MULTI_MAP_BY_LIST_NAMES = null;
+			METHOD_CREATE_MULTI_MAP_BY_LIST_NAMES, METHOD_GET_FIELD_BY_NAME = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -878,6 +878,9 @@ class VoiceManagerTest {
 				Object.class, Boolean.TYPE)).setAccessible(true);
 		//
 		(METHOD_CREATE_MULTI_MAP_BY_LIST_NAMES = clz.getDeclaredMethod("createMultimapByListNames", Iterable.class))
+				.setAccessible(true);
+		//
+		(METHOD_GET_FIELD_BY_NAME = clz.getDeclaredMethod("getFieldByName", Class.class, String.class))
 				.setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
@@ -7572,6 +7575,27 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof Multimap) {
 				return (Multimap) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetFieldByName() throws Throwable {
+		//
+		Assertions.assertNull(getFieldByName(null, null));
+		//
+	}
+
+	private static Field getFieldByName(final Class<?> clz, final String name) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_FIELD_BY_NAME.invoke(null, clz, name);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Field) {
+				return (Field) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
