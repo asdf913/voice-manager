@@ -7561,7 +7561,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertEquals(ImmutableMultimap.of(EMPTY, voice), createMultimapByListNames((Iterable) iterable));
+		Assertions.assertEquals(ImmutableMultimap.of(SPACE, voice), createMultimapByListNames((Iterable) iterable));
 		//
 	}
 
