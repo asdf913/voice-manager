@@ -4595,6 +4595,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			StringMap.setString(stringMap, "folderInPresentation", folderInPresentation);
 			//
+			StringMap.setString(stringMap, "jlptFolderNamePrefix", getText(tfJlptFolderNamePrefix));
+			//
 			ObjectMap.setObject(objectMap, StringMap.class, stringMap);
 			//
 			export(voices, outputFolderFileNameExpressions, objectMap);
@@ -9432,10 +9434,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		ExpressionParser expressionParser = testAndApply(c -> ObjectMap.containsObject(objectMap, c),
 				ExpressionParser.class, c -> ObjectMap.getObject(objectMap, c), null);
 		//
-		VoiceManager voiceManager = testAndApply(c -> ObjectMap.containsObject(objectMap, c), VoiceManager.class,
+		ExecutorService es = testAndApply(c -> ObjectMap.containsObject(objectMap, c), ExecutorService.class,
 				c -> ObjectMap.getObject(objectMap, c), null);
 		//
-		ExecutorService es = testAndApply(c -> ObjectMap.containsObject(objectMap, c), ExecutorService.class,
+		final StringMap stringMap = testAndApply(c -> ObjectMap.containsObject(objectMap, c), StringMap.class,
 				c -> ObjectMap.getObject(objectMap, c), null);
 		//
 		Table<String, String, Voice> voiceFileNames = null;
@@ -9464,17 +9466,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			ObjectMap.setObject(objectMap, Voice.class, getValue(en));
 			//
-			if (jlptFolderNamePrefix == null && (voiceManager = getIfNull(voiceManager, VoiceManager::new)) != null) {
-				//
-				jlptFolderNamePrefix = getText(voiceManager.tfJlptFolderNamePrefix);
-				//
-			} // if
-				//
 			clear(folder = getIfNull(folder, StringBuilder::new));
 			//
 			if (folder != null) {
 				//
-				append(append(folder, StringUtils.defaultIfBlank(jlptFolderNamePrefix, "")), getKey(en));
+				append(append(folder, StringUtils.defaultIfBlank(jlptFolderNamePrefix = getIfNull(jlptFolderNamePrefix,
+						() -> StringMap.getString(stringMap, "jlptFolderNamePrefix")), "")), getKey(en));
 				//
 			} // if
 				//
