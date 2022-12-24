@@ -1862,18 +1862,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final int size = IterableUtils.size(temp);
 		//
-		if (size > 0) {
+		if (size == 1) {
 			//
-			if (size == 1) {
-				//
-				setSelectedItem(cbmVoiceId, get(temp, 0));
-				//
-			} else {
-				//
-				throw new IllegalStateException();
-				//
-			} // if
-				//
+			setSelectedItem(cbmVoiceId, get(temp, 0));
+			//
+		} else if (size > 1) {
+			//
+			throw new IllegalStateException();
+			//
 		} // if
 			//
 			// Speech Rate
