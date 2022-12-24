@@ -3746,6 +3746,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				setText(tfExportFile, null);
 				//
+				actionPerformedForExportButtons(source, headless);
+				//
 			} // if
 				//
 		} catch (final IllegalAccessException e) {
@@ -4037,98 +4039,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					, headless);
 			//
-		} else if (Objects.equals(source, btnExportGaKuNenBeTsuKanJi)) {
-			//
-			File file = null;
-			//
-			Workbook workbook = null;
-			//
-			try (final OutputStream os = new FileOutputStream(
-					file = new File(String.format("学年別漢字_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.xlsx", new Date())))) {
-				//
-				addProperty(
-						getCustomProperties(getProperties(cast(POIXMLDocument.class,
-								workbook = createWorkbook(Pair.of("学年", "漢字"), getGaKuNenBeTsuKanJiMultimap())))),
-						SOURCE, gaKuNenBeTsuKanJiListPageUrl);
-				//
-				write(workbook, os);
-				//
-				setText(tfExportFile, getAbsolutePath(file));
-				//
-			} catch (final IOException e) {
-				//
-				errorOrPrintStackTraceOrShowMessageDialog(headless, e);
-				//
-			} finally {
-				//
-				IOUtils.closeQuietly(workbook);
-				//
-				testAndAccept(EMPTY_FILE_PREDICATE, file, FileUtils::deleteQuietly);
-				//
-			} // try
-				//
-		} else if (Objects.equals(source, btnExportJoYoKanJi)) {
-			//
-			File file = null;
-			//
-			Workbook workbook = null;
-			//
-			try (final OutputStream os = new FileOutputStream(
-					file = new File(String.format("常用漢字_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.xlsx", new Date())))) {
-				//
-				final String url = getProperty(propertyResolver,
-						"org.springframework.context.support.VoiceManager.joYoKanJiPageUrl");
-				//
-				addProperty(
-						getCustomProperties(getProperties(
-								cast(POIXMLDocument.class, workbook = createJoYoKanJiWorkbook(url, Duration.ZERO)))),
-						SOURCE, url);
-				//
-				write(workbook, os);
-				//
-				setText(tfExportFile, getAbsolutePath(file));
-				//
-			} catch (final IOException e) {
-				//
-				errorOrPrintStackTraceOrShowMessageDialog(headless, e);
-				//
-			} finally {
-				//
-				IOUtils.closeQuietly(workbook);
-				//
-				final int totalPhysicalNumberOfRows = mapToInt(StreamSupport.stream(spliterator(workbook), false),
-						x -> intValue(getPhysicalNumberOfRows(x), 0)).sum();
-				//
-				testAndAccept(x -> totalPhysicalNumberOfRows == 0, file, FileUtils::deleteQuietly);
-				//
-			} // try
-				//
-		} else if (Objects.equals(source, btnExportMicrosoftSpeechObjectLibraryInformation)) {
-			//
-			File file = null;
-			//
-			Workbook workbook = null;
-			//
-			try (final OutputStream os = new FileOutputStream(file = new File(
-					String.format("MicrosoftSpeechObjectLibrary_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.xlsx", new Date())))) {
-				//
-				write(workbook = createMicrosoftSpeechObjectLibraryWorkbook(speechApi,
-						microsoftSpeechObjectLibraryAttributeNames), os);
-				//
-				setText(tfExportFile, getAbsolutePath(file));
-				//
-			} catch (final IOException e) {
-				//
-				errorOrPrintStackTraceOrShowMessageDialog(headless, e);
-				//
-			} finally {
-				//
-				IOUtils.closeQuietly(workbook);
-				//
-				testAndAccept(EMPTY_FILE_PREDICATE, file, FileUtils::deleteQuietly);
-				//
-			} // try
-				//
 		} else if (Objects.equals(source, btnPronunciationPageUrlCheck)) {
 			//
 			actionPerformedForPronunciationPageUrlCheck(headless);
@@ -4700,6 +4610,112 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			setText(getKey(pair), getValue(pair));
 			//
+			return;
+			//
+		} // if
+			//
+		throw new IllegalStateException();
+		//
+	}
+
+	private void actionPerformedForExportButtons(final Object source, final boolean headless) {
+		//
+		if (Objects.equals(source, btnExportGaKuNenBeTsuKanJi)) {
+			//
+			File file = null;
+			//
+			Workbook workbook = null;
+			//
+			try (final OutputStream os = new FileOutputStream(
+					file = new File(String.format("学年別漢字_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.xlsx", new Date())))) {
+				//
+				addProperty(
+						getCustomProperties(getProperties(cast(POIXMLDocument.class,
+								workbook = createWorkbook(Pair.of("学年", "漢字"), getGaKuNenBeTsuKanJiMultimap())))),
+						SOURCE, gaKuNenBeTsuKanJiListPageUrl);
+				//
+				write(workbook, os);
+				//
+				setText(tfExportFile, getAbsolutePath(file));
+				//
+			} catch (final IOException e) {
+				//
+				errorOrPrintStackTraceOrShowMessageDialog(headless, e);
+				//
+			} finally {
+				//
+				IOUtils.closeQuietly(workbook);
+				//
+				testAndAccept(EMPTY_FILE_PREDICATE, file, FileUtils::deleteQuietly);
+				//
+			} // try
+				//
+			return;
+			//
+		} else if (Objects.equals(source, btnExportJoYoKanJi)) {
+			//
+			File file = null;
+			//
+			Workbook workbook = null;
+			//
+			try (final OutputStream os = new FileOutputStream(
+					file = new File(String.format("常用漢字_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.xlsx", new Date())))) {
+				//
+				final String url = getProperty(propertyResolver,
+						"org.springframework.context.support.VoiceManager.joYoKanJiPageUrl");
+				//
+				addProperty(
+						getCustomProperties(getProperties(
+								cast(POIXMLDocument.class, workbook = createJoYoKanJiWorkbook(url, Duration.ZERO)))),
+						SOURCE, url);
+				//
+				write(workbook, os);
+				//
+				setText(tfExportFile, getAbsolutePath(file));
+				//
+			} catch (final IOException e) {
+				//
+				errorOrPrintStackTraceOrShowMessageDialog(headless, e);
+				//
+			} finally {
+				//
+				IOUtils.closeQuietly(workbook);
+				//
+				final int totalPhysicalNumberOfRows = mapToInt(StreamSupport.stream(spliterator(workbook), false),
+						x -> intValue(getPhysicalNumberOfRows(x), 0)).sum();
+				//
+				testAndAccept(x -> totalPhysicalNumberOfRows == 0, file, FileUtils::deleteQuietly);
+				//
+			} // try
+				//
+			return;
+			//
+		} else if (Objects.equals(source, btnExportMicrosoftSpeechObjectLibraryInformation)) {
+			//
+			File file = null;
+			//
+			Workbook workbook = null;
+			//
+			try (final OutputStream os = new FileOutputStream(file = new File(
+					String.format("MicrosoftSpeechObjectLibrary_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.xlsx", new Date())))) {
+				//
+				write(workbook = createMicrosoftSpeechObjectLibraryWorkbook(speechApi,
+						microsoftSpeechObjectLibraryAttributeNames), os);
+				//
+				setText(tfExportFile, getAbsolutePath(file));
+				//
+			} catch (final IOException e) {
+				//
+				errorOrPrintStackTraceOrShowMessageDialog(headless, e);
+				//
+			} finally {
+				//
+				IOUtils.closeQuietly(workbook);
+				//
+				testAndAccept(EMPTY_FILE_PREDICATE, file, FileUtils::deleteQuietly);
+				//
+			} // try
+				//
 			return;
 			//
 		} // if

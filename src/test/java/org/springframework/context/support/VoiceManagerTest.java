@@ -282,7 +282,7 @@ class VoiceManagerTest {
 			METHOD_GET_RESPONSE_CODE, METHOD_TO_RUNTIME_EXCEPTION, METHOD_GET_ALGORITHM,
 			METHOD_SET_PREFERRED_WIDTH_ARRAY, METHOD_SET_PREFERRED_WIDTH_ITERABLE, METHOD_PRINT_STACK_TRACE,
 			METHOD_GET_VALUE_FROM_CELL, METHOD_GET_MP3_TAGS, METHOD_KEY_RELEASED_FOR_TEXT_IMPORT, METHOD_IS_STATIC,
-			METHOD_IMPORT_BY_WORK_BOOK_FILES = null;
+			METHOD_IMPORT_BY_WORK_BOOK_FILES, METHOD_ACTION_PERFORMED_FOR_EXPORT_BUTTONS = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -872,6 +872,9 @@ class VoiceManagerTest {
 		//
 		(METHOD_IMPORT_BY_WORK_BOOK_FILES = clz.getDeclaredMethod("importByWorkbookFiles", File[].class, Boolean.TYPE))
 				.setAccessible(true);
+		//
+		(METHOD_ACTION_PERFORMED_FOR_EXPORT_BUTTONS = clz.getDeclaredMethod("actionPerformedForExportButtons",
+				Object.class, Boolean.TYPE)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -7501,6 +7504,21 @@ class VoiceManagerTest {
 	private void importByWorkbookFiles(final File[] fs, final boolean headless) throws Throwable {
 		try {
 			METHOD_IMPORT_BY_WORK_BOOK_FILES.invoke(instance, fs, headless);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testActionPerformedForExportButtons() {
+		//
+		Assertions.assertThrows(IllegalStateException.class, () -> actionPerformedForExportButtons(EMPTY, false));
+		//
+	}
+
+	private void actionPerformedForExportButtons(final Object source, final boolean headless) throws Throwable {
+		try {
+			METHOD_ACTION_PERFORMED_FOR_EXPORT_BUTTONS.invoke(instance, source, headless);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
