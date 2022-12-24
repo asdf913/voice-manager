@@ -2264,17 +2264,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				ArrayUtils.insert(0, toArray(gaKuNenBeTsuKanJiList, new String[] {}), (String) null),
 				DefaultComboBoxModel::new, x -> new DefaultComboBoxModel<>())), String.format("span %1$s", 2));
 		//
-		if (cbmGaKuNenBeTsuKanJi != null) {
+		final String string = getProperty(propertyResolver,
+				"org.springframework.context.support.VoiceManager.gaKuNenBeTsuKanJi");
+		//
+		if (StringUtils.isNotEmpty(string)) {
 			//
-			final String string = getProperty(propertyResolver,
-					"org.springframework.context.support.VoiceManager.gaKuNenBeTsuKanJi");
+			setSelectedItem(cbmGaKuNenBeTsuKanJi, string);
 			//
-			if (StringUtils.isNotEmpty(string)) {
-				//
-				cbmGaKuNenBeTsuKanJi.setSelectedItem(string);
-				//
-			} // if
-				//
 		} // if
 			//
 			// 常用漢字 JoYoKanJi
