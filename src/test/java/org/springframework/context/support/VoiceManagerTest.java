@@ -281,8 +281,8 @@ class VoiceManagerTest {
 			METHOD_SET_LANGUAGE, METHOD_GET_LANGUAGE, METHOD_GET_BOOLEAN_VALUE, METHOD_CREATE_FORMULA_EVALUATOR,
 			METHOD_GET_RESPONSE_CODE, METHOD_TO_RUNTIME_EXCEPTION, METHOD_GET_ALGORITHM,
 			METHOD_SET_PREFERRED_WIDTH_ARRAY, METHOD_SET_PREFERRED_WIDTH_ITERABLE, METHOD_PRINT_STACK_TRACE,
-			METHOD_GET_VALUE_FROM_CELL, METHOD_GET_MP3_TAGS, METHOD_KEY_RELEASED_FOR_TEXT_IMPORT,
-			METHOD_IS_STATIC = null;
+			METHOD_GET_VALUE_FROM_CELL, METHOD_GET_MP3_TAGS, METHOD_KEY_RELEASED_FOR_TEXT_IMPORT, METHOD_IS_STATIC,
+			METHOD_IMPORT_BY_WORK_BOOK_FILES = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -869,6 +869,9 @@ class VoiceManagerTest {
 				JTextComponent.class, ComboBoxModel.class)).setAccessible(true);
 		//
 		(METHOD_IS_STATIC = clz.getDeclaredMethod("isStatic", Member.class)).setAccessible(true);
+		//
+		(METHOD_IMPORT_BY_WORK_BOOK_FILES = clz.getDeclaredMethod("importByWorkbookFiles", File[].class, Boolean.TYPE))
+				.setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -7487,6 +7490,23 @@ class VoiceManagerTest {
 	}
 
 	@Test
+	void testImportByWorkbookFiles() {
+		//
+		Assertions.assertDoesNotThrow(() -> importByWorkbookFiles(null, false));
+		//
+		Assertions.assertDoesNotThrow(() -> importByWorkbookFiles(new File[] { null }, false));
+		//
+	}
+
+	private void importByWorkbookFiles(final File[] fs, final boolean headless) throws Throwable {
+		try {
+			METHOD_IMPORT_BY_WORK_BOOK_FILES.invoke(instance, fs, headless);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
 	void testIh1() throws Throwable {
 		//
 		final InvocationHandler ih = createVoiceManagerIH();
@@ -8494,7 +8514,7 @@ class VoiceManagerTest {
 		//
 		final Class<?> clz = forName("org.springframework.context.support.VoiceManager$BooleanMap");
 		//
-		// org.springframework.context.support.VoiceManager.BooleanMap.setBoolean(org.springframework.context.support.VoiceManager$BooleanMap,java.lang.String,boolean)
+		// org.springframework.context.support.VoiceManager$BooleanMap.setBoolean(org.springframework.context.support.VoiceManager$BooleanMap,java.lang.String,boolean)
 		//
 		final Method setBoolean = clz != null ? clz.getDeclaredMethod("setBoolean", clz, String.class, Boolean.TYPE)
 				: null;
@@ -8566,7 +8586,7 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void tsetVoiceThrowableBiConsumer() throws Throwable {
+	void testVoiceThrowableBiConsumer() throws Throwable {
 		//
 		final Class<?> clz = forName("org.springframework.context.support.VoiceManager$VoiceThrowableBiConsumer");
 		//

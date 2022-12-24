@@ -4027,35 +4027,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} else if (Objects.equals(source, btnImportWithinFolder)) {
 			//
-			final File[] fs = listFiles(testAndApply(Objects::nonNull,
-					JOptionPane.showInputDialog("Folder",
-							getProperty(propertyResolver,
-									"org.springframework.context.support.VoiceManager.importFolder")),
-					File::new, null));
+			importByWorkbookFiles(
+					//
+					listFiles(testAndApply(Objects::nonNull,
+							JOptionPane.showInputDialog("Folder",
+									getProperty(propertyResolver,
+											"org.springframework.context.support.VoiceManager.importFolder")),
+							File::new, null))
+					//
+					, headless);
 			//
-			File f = null;
-			//
-			for (int i = 0; fs != null && i < fs.length; i++) {
-				//
-				try {
-					//
-					if (getWorkbook(f = fs[i]) == null) {
-						//
-						continue;
-						//
-					} // if
-						//
-				} catch (final IOException | InvalidFormatException | GeneralSecurityException | SAXException
-						| ParserConfigurationException e) {
-					//
-					errorOrPrintStackTraceOrShowMessageDialog(headless, e);
-					//
-				} // try
-					//
-				importVoice(f);
-				//
-			} // for
-				//
 		} else if (Objects.equals(source, btnExportGaKuNenBeTsuKanJi)) {
 			//
 			File file = null;
@@ -4153,6 +4134,33 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			actionPerformedForPronunciationPageUrlCheck(headless);
 			//
 		} // if
+			//
+	}
+
+	private void importByWorkbookFiles(final File[] fs, final boolean headless) {
+		//
+		File f = null;
+		//
+		for (int i = 0; fs != null && i < fs.length; i++) {
+			//
+			try {
+				//
+				if (getWorkbook(f = fs[i]) == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+			} catch (final IOException | InvalidFormatException | GeneralSecurityException | SAXException
+					| ParserConfigurationException e) {
+				//
+				errorOrPrintStackTraceOrShowMessageDialog(headless, e);
+				//
+			} // try
+				//
+			importVoice(f);
+			//
+		} // for
 			//
 	}
 
