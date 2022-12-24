@@ -2239,16 +2239,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.add(new JComboBox<>(cbmIsKanji = get(booleanComboBoxModelSupplier)));
 		//
-		if (cbmIsKanji != null) {
-			//
-			cbmIsKanji.setSelectedItem(testAndApply(StringUtils::isNotEmpty,
-					getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.isKanji"),
-					Boolean::valueOf, null));
-			//
-		} // if
-			//
-			// 学年別漢字 GaKuNenBeTsuKanJi
-			//
+		setSelectedItem(cbmIsKanji,
+				testAndApply(StringUtils::isNotEmpty,
+						getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.isKanji"),
+						Boolean::valueOf, null));
+		//
+		// 学年別漢字 GaKuNenBeTsuKanJi
+		//
 		panel.add(new JLabel("学年別漢字"));
 		//
 		Set<String> gaKuNenBeTsuKanJiList = null;
