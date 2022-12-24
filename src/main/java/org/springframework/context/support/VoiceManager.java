@@ -387,17 +387,20 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private transient ComboBoxModel<Yomi> cbmYomi = null;
 
-	private transient ComboBoxModel<String> cbmVoiceId, cbmJlptLevel, cbmGaKuNenBeTsuKanJi = null;
-
-	private transient ComboBoxModel<?> cbmAudioFormatWrite, cbmAudioFormatExecute = null;
-
-	private transient ComboBoxModel<Boolean> cbmIsKanji = null;
+	private transient ComboBoxModel<String> cbmVoiceId, cbmGaKuNenBeTsuKanJi = null;
 
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.FIELD)
 	private @interface Url {
 		String value();
 	}
+
+	@Url("https://www.jlpt.jp/about/levelsummary.html")
+	private transient ComboBoxModel<String> cbmJlptLevel = null;
+
+	private transient ComboBoxModel<?> cbmAudioFormatWrite, cbmAudioFormatExecute = null;
+
+	private transient ComboBoxModel<Boolean> cbmIsKanji = null;
 
 	@Url("https://ja.wikipedia.org/wiki/%E5%B8%B8%E7%94%A8%E6%BC%A2%E5%AD%97%E4%B8%80%E8%A6%A7")
 	private transient ComboBoxModel<Boolean> cbmJoYoKanJi = null;
