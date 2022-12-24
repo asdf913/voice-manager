@@ -1298,12 +1298,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				() -> new freemarker.template.Configuration(ObjectUtils.getIfNull(freeMarkerVersion,
 						() -> freemarker.template.Configuration.getVersion())));
 		//
-		if (getTemplateLoader(configuration) == null) {
-			//
-			setTemplateLoader(configuration, new ClassTemplateLoader(VoiceManager.class, "/"));
-			//
-		} // if
-			//
+		testAndAccept(x -> getTemplateLoader(configuration) == null, configuration,
+				x -> setTemplateLoader(x, new ClassTemplateLoader(VoiceManager.class, "/")));
+		//
 		jTabbedPane.addTab("Help",
 				createHelpPanel(preferredHeight, configuration, mediaFormatPageUrl, poiEncryptionPageUrl));
 		//
@@ -4636,12 +4633,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				final freemarker.template.Configuration configuration = ObjectUtils.getIfNull(freeMarkerConfiguration,
 						() -> new freemarker.template.Configuration(version));
 				//
-				if (getTemplateLoader(configuration) == null) {
-					//
-					setTemplateLoader(configuration, new ClassTemplateLoader(VoiceManager.class, "/"));
-					//
-				} // if
-					//
+				testAndAccept(x -> getTemplateLoader(configuration) == null, configuration,
+						x -> setTemplateLoader(x, new ClassTemplateLoader(VoiceManager.class, "/")));
+				//
 				ObjectMap.setObject(objectMap, freemarker.template.Configuration.class, configuration);
 				//
 				ObjectMap.setObject(objectMap, TemplateHashModel.class, new BeansWrapper(version).getStaticModels());
@@ -5094,12 +5088,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				ObjectMap.getObject(objectMap, freemarker.template.Configuration.class),
 				() -> new freemarker.template.Configuration(version));
 		//
-		if (getTemplateLoader(configuration) == null) {
-			//
-			setTemplateLoader(configuration, new ClassTemplateLoader(VoiceManager.class, "/"));
-			//
-		} // if
-			//
+		testAndAccept(x -> getTemplateLoader(configuration) == null, configuration,
+				x -> setTemplateLoader(x, new ClassTemplateLoader(VoiceManager.class, "/")));
+		//
 		final Map<String, Object> map = new LinkedHashMap<>(
 				Collections.singletonMap("statics", getIfNull(ObjectMap.getObject(objectMap, TemplateHashModel.class),
 						() -> new BeansWrapper(version).getStaticModels())));
@@ -8990,12 +8981,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			final StringTemplateLoader stl = ObjectMap.getObject(objectMap, StringTemplateLoader.class);
 			//
-			if (getTemplateLoader(configuration) == null) {
-				//
-				setTemplateLoader(configuration, stl);
-				//
-			} // if
-				//
+			testAndAccept(x -> getTemplateLoader(configuration) == null, configuration, x -> setTemplateLoader(x, stl));
+			//
 			final Node node = ObjectMap.getObject(objectMap, Node.class);
 			//
 			final String textContent = getTextContent(node);
