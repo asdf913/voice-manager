@@ -2284,16 +2284,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(new JComboBox<>(cbmJoYoKanJi = get(booleanComboBoxModelSupplier)),
 				String.format("%1$s,span %2$s", WRAP, 1));
 		//
-		if (cbmJoYoKanJi != null) {
-			//
-			cbmJoYoKanJi.setSelectedItem(testAndApply(StringUtils::isNotEmpty,
-					getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.yoKoKanJi"),
-					Boolean::valueOf, null));
-			//
-		} // if
-			//
-			// Text
-			//
+		setSelectedItem(cbmJoYoKanJi,
+				testAndApply(StringUtils::isNotEmpty,
+						getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.yoKoKanJi"),
+						Boolean::valueOf, null));
+		//
+		// Text
+		//
 		panel.add(new JLabel("Text"));
 		//
 		panel.add(
