@@ -8625,7 +8625,8 @@ class VoiceManagerTest {
 		//
 		// org.springframework.context.support.VoiceManager$StringMap.setString(java.lang.String,java.lang.String)
 		//
-		final Method setString = clz != null ? clz.getDeclaredMethod("setString", String.class, String.class) : null;
+		final Method setString = clz != null ? clz.getDeclaredMethod("setString", clz, String.class, String.class)
+				: null;
 		//
 		if (setString != null) {
 			//
@@ -8633,7 +8634,9 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(invoke(setString, stringMap, null, null));
+		Assertions.assertNull(invoke(setString, null, null, null, null));
+		//
+		Assertions.assertNull(invoke(setString, null, stringMap, null, null));
 		//
 		Assertions.assertNull(invoke(getString, null, stringMap, null));
 		//

@@ -3842,18 +3842,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				final StringMap stringMap = Reflection.newProxy(StringMap.class, ih);
 				//
-				if (stringMap != null) {
-					//
-					stringMap.setString("ordinalPositionFileNamePrefix", getText(tfOrdinalPositionFileNamePrefix));
-					//
-					stringMap.setString("exportPresentationTemplate", exportPresentationTemplate);
-					//
-					stringMap.setString("exportPassword", getText(tfExportPassword));
-					//
-					stringMap.setString("folderInPresentation", folderInPresentation);
-					//
-				} // if
-					//
+				StringMap.setString(stringMap, "ordinalPositionFileNamePrefix",
+						getText(tfOrdinalPositionFileNamePrefix));
+				//
+				StringMap.setString(stringMap, "exportPresentationTemplate", exportPresentationTemplate);
+				//
+				StringMap.setString(stringMap, "exportPassword", getText(tfExportPassword));
+				//
+				StringMap.setString(stringMap, "folderInPresentation", folderInPresentation);
+				//
 				ObjectMap.setObject(objectMap, StringMap.class, stringMap);
 				//
 				export(voices, outputFolderFileNameExpressions, objectMap);
@@ -7036,6 +7033,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 		static String getString(final StringMap instance, final String key) {
 			return instance != null ? instance.getString(key) : null;
+		}
+
+		static void setString(final StringMap instance, final String key, final String value) {
+			if (instance != null) {
+				instance.setString(key, value);
+			}
 		}
 	}
 
