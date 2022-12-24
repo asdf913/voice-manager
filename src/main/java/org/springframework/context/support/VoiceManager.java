@@ -4685,18 +4685,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					} // if
 						//
-					final String string = toString(writer);
+					FileUtils.writeStringToFile(
+							file = new File(StringUtils.defaultIfBlank(toString(sb), "export.html")), toString(writer),
+							StandardCharsets.UTF_8);
 					//
-					if (StringUtils.isNotEmpty(fileExtension)) {
-						//
-						FileUtils.writeStringToFile(
-								file = new File(StringUtils.defaultIfBlank(toString(sb), "export.html")), string,
-								StandardCharsets.UTF_8);
-						//
-						add(files = ObjectUtils.getIfNull(files, ArrayList::new), file);
-						//
-					} // if
-						//
+					add(files = ObjectUtils.getIfNull(files, ArrayList::new), file);
+					//
 				} // try
 					//
 				if (isSelected(cbExportListHtml)) {
