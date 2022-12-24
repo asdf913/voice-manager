@@ -7030,6 +7030,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			return instance != null && instance.containsObject(key);
 		}
 
+		static <T> void setObjectIfAbsent(final ObjectMap instance, final Class<T> key, final T value) {
+			//
+			if (!ObjectMap.containsObject(instance, key)) {
+				//
+				ObjectMap.setObject(instance, key, value);
+				//
+			} // if
+				//
+		}
+
 	}
 
 	private static interface StringMap {
@@ -8902,19 +8912,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			Map<String, Object> map = null;
 			//
-			if (!ObjectMap.containsObject(objectMap, freemarker.template.Configuration.class)) {
-				//
-				ObjectMap.setObject(objectMap, freemarker.template.Configuration.class,
-						new freemarker.template.Configuration(freemarker.template.Configuration.getVersion()));
-				//
-			} // if
-				//
-			if (!ObjectMap.containsObject(objectMap, StringTemplateLoader.class)) {
-				//
-				ObjectMap.setObject(objectMap, StringTemplateLoader.class, new StringTemplateLoader());
-				//
-			} // if
-				//
+			ObjectMap.setObjectIfAbsent(objectMap, freemarker.template.Configuration.class,
+					new freemarker.template.Configuration(freemarker.template.Configuration.getVersion()));
+			//
+			ObjectMap.setObjectIfAbsent(objectMap, StringTemplateLoader.class, new StringTemplateLoader());
+			//
 			final freemarker.template.Configuration configuration = getIfNull(
 					ObjectMap.getObject(objectMap, freemarker.template.Configuration.class),
 					() -> new freemarker.template.Configuration(freemarker.template.Configuration.getVersion()));
@@ -9252,13 +9254,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				et.voiceFileNames = voiceFileNames = getIfNull(voiceFileNames, HashBasedTable::create);
 				//
-				if (!ObjectMap.containsObject(objectMap, ObjectMapper.class)) {
-					//
-					ObjectMap.setObject(objectMap, ObjectMapper.class, objectMapper = getIfNull(objectMapper,
-							() -> new ObjectMapper().setVisibility(PropertyAccessor.ALL, Visibility.ANY)));
-					//
-				} // if
-					//
+				ObjectMap.setObjectIfAbsent(objectMap, ObjectMapper.class, objectMapper = getIfNull(objectMapper,
+						() -> new ObjectMapper().setVisibility(PropertyAccessor.ALL, Visibility.ANY)));
+				//
 				et.objectMapper = objectMapper;
 				//
 				et.exportPresentationTemplate = StringMap.getString(stringMap, "exportPresentationTemplate");
@@ -9293,12 +9291,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
-				if (!ObjectMap.containsObject(objectMap, Fraction.class)) {
-					//
-					ObjectMap.setObject(objectMap, Fraction.class, pharse);
-					//
-				} // if
-					//
+				ObjectMap.setObjectIfAbsent(objectMap, Fraction.class, pharse);
+				//
 				for (final Entry<String, Voice> en : entries) {
 					//
 					if (en == null || (es = getIfNull(es, () -> Executors.newFixedThreadPool(1))) == null) {
@@ -9307,27 +9301,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					} // if
 						//
-					if (!ObjectMap.containsObject(objectMap, NumberFormat.class)) {
-						//
-						ObjectMap.setObject(objectMap, NumberFormat.class, percentNumberFormat = ObjectUtils
-								.getIfNull(percentNumberFormat, () -> new DecimalFormat("#%")));
-						//
-					} // if
-						//
-					if (!ObjectMap.containsObject(objectMap, EvaluationContext.class)) {
-						//
-						ObjectMap.setObject(objectMap, EvaluationContext.class, evaluationContext = ObjectUtils
-								.getIfNull(evaluationContext, StandardEvaluationContext::new));
-						//
-					} // if
-						//
-					if (!ObjectMap.containsObject(objectMap, ExpressionParser.class)) {
-						//
-						ObjectMap.setObject(objectMap, ExpressionParser.class,
-								expressionParser = getIfNull(expressionParser, SpelExpressionParser::new));
-						//
-					} // if
-						//
+					ObjectMap.setObjectIfAbsent(objectMap, NumberFormat.class, percentNumberFormat = ObjectUtils
+							.getIfNull(percentNumberFormat, () -> new DecimalFormat("#%")));
+					//
+					ObjectMap.setObjectIfAbsent(objectMap, EvaluationContext.class, evaluationContext = ObjectUtils
+							.getIfNull(evaluationContext, StandardEvaluationContext::new));
+					//
+					ObjectMap.setObjectIfAbsent(objectMap, ExpressionParser.class,
+							expressionParser = getIfNull(expressionParser, SpelExpressionParser::new));
+					//
 					ObjectMap.setObject(objectMap, Voice.class, getValue(en));
 					//
 					es.submit(
