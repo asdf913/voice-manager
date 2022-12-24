@@ -1955,19 +1955,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				testAndApply(VoiceManager::hasLowerBound, speechVolumeRange, VoiceManager::lowerEndpoint, null), 0),
 				intValue(upperEnpoint, 100)), String.format("%1$s,span %2$s", GROWX, 3));
 		//
-		final Integer speechVolume = valueOf(
-				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.speechVolume"));
+		setSpeechVolume(
+				valueOf(getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.speechVolume")),
+				upperEnpoint);
 		//
-		if (speechVolume != null) {
-			//
-			setValue(jsSpeechVolume, Math.min(speechVolume.intValue(), intValue(upperEnpoint, 100)));
-			//
-		} else if (upperEnpoint != null) {
-			//
-			setValue(jsSpeechVolume, upperEnpoint.intValue());
-			//
-		} // if
-			//
 		jsSpeechVolume.setMajorTickSpacing(10);
 		//
 		jsSpeechVolume.setPaintTicks(true);
@@ -2060,6 +2051,20 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		return panel;
 		//
+	}
+
+	private void setSpeechVolume(final Number speechVolume, final Number upperEnpoint) {
+		//
+		if (speechVolume != null) {
+			//
+			setValue(jsSpeechVolume, Math.min(speechVolume.intValue(), intValue(upperEnpoint, 100)));
+			//
+		} else if (upperEnpoint != null) {
+			//
+			setValue(jsSpeechVolume, upperEnpoint.intValue());
+			//
+		} // if
+			//
 	}
 
 	private static JTextComponent createProviderVersionJTextComponent(final boolean isInstalled,
