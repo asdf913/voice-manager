@@ -1851,26 +1851,24 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
-		if (voiceIds != null) {
+			// Voice ID
 			//
-			final String voiceId = getProperty(propertyResolver,
-					"org.springframework.context.support.VoiceManager.voiceId");
+		final String voiceId = getProperty(propertyResolver,
+				"org.springframework.context.support.VoiceManager.voiceId");
+		//
+		final List<?> temp = toList(filter(testAndApply(Objects::nonNull, voiceIds, Arrays::stream, null),
+				x -> Objects.equals(x, voiceId) || Objects.equals(getVoiceAttribute(speechApi, x, "Name"), voiceId)));
+		//
+		if (temp != null && !temp.isEmpty()) {
 			//
-			final List<?> temp = toList(filter(Arrays.stream(voiceIds), x -> Objects.equals(x, voiceId)
-					|| Objects.equals(getVoiceAttribute(speechApi, x, "Name"), voiceId)));
-			//
-			if (temp != null && !temp.isEmpty()) {
+			if (IterableUtils.size(temp) == 1) {
 				//
-				if (IterableUtils.size(temp) == 1) {
-					//
-					setSelectedItem(cbmVoiceId, get(temp, 0));
-					//
-				} else {
-					//
-					throw new IllegalStateException();
-					//
-				} // if
-					//
+				setSelectedItem(cbmVoiceId, get(temp, 0));
+				//
+			} else {
+				//
+				throw new IllegalStateException();
+				//
 			} // if
 				//
 		} // if
