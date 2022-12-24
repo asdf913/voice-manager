@@ -3820,22 +3820,20 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				final BooleanMap bm = Reflection.newProxy(BooleanMap.class, ih);
 				//
-				if (bm != null) {
-					//
-					bm.setBoolean(OVER_MP3_TITLE, isSelected(cbOverMp3Title));
-					//
-					bm.setBoolean(ORDINAL_POSITION_AS_FILE_NAME_PREFIX, isSelected(cbOrdinalPositionAsFileNamePrefix));
-					//
-					bm.setBoolean("jlptAsFolder", isSelected(cbJlptAsFolder));
-					//
-					bm.setBoolean(EXPORT_PRESENTATION, isSelected(cbExportPresentation));
-					//
-					bm.setBoolean(EMBED_AUDIO_IN_PRESENTATION, isSelected(cbEmbedAudioInPresentation));
-					//
-					bm.setBoolean(HIDE_AUDIO_IMAGE_IN_PRESENTATION, !isSelected(cbHideAudioImageInPresentation));
-					//
-				} // if
-					//
+				BooleanMap.setBoolean(bm, OVER_MP3_TITLE, isSelected(cbOverMp3Title));
+				//
+				BooleanMap.setBoolean(bm, ORDINAL_POSITION_AS_FILE_NAME_PREFIX,
+						isSelected(cbOrdinalPositionAsFileNamePrefix));
+				//
+				BooleanMap.setBoolean(bm, "jlptAsFolder", isSelected(cbJlptAsFolder));
+				//
+				BooleanMap.setBoolean(bm, EXPORT_PRESENTATION, isSelected(cbExportPresentation));
+				//
+				BooleanMap.setBoolean(bm, EMBED_AUDIO_IN_PRESENTATION, isSelected(cbEmbedAudioInPresentation));
+				//
+				BooleanMap.setBoolean(bm, HIDE_AUDIO_IMAGE_IN_PRESENTATION,
+						!isSelected(cbHideAudioImageInPresentation));
+				//
 				ObjectMap.setObject(objectMap, BooleanMap.class, bm);
 				//
 				export(voices, outputFolderFileNameExpressions, objectMap);
@@ -3849,14 +3847,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					final BooleanMap booleanMap = Reflection.newProxy(BooleanMap.class, ih);
 					//
-					if (booleanMap != null) {
-						//
-						booleanMap.setBoolean("exportListSheet", isSelected(cbExportListSheet));
-						//
-						booleanMap.setBoolean("exportJlptSheet", isSelected(cbExportJlptSheet));
-						//
-					} // if
-						//
+					BooleanMap.setBoolean(booleanMap, "exportListSheet", isSelected(cbExportListSheet));
+					//
+					BooleanMap.setBoolean(booleanMap, "exportJlptSheet", isSelected(cbExportJlptSheet));
+					//
 					write(workbook = createWorkbook(voices, booleanMap), os);
 					//
 					if (!(fileToBeDeleted = longValue(length(file), 0) == 0)) {
@@ -8376,14 +8370,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 						final BooleanMap booleanMap = Reflection.newProxy(BooleanMap.class, new IH());
 						//
-						if (booleanMap != null) {
-							//
-							booleanMap.setBoolean(EMBED_AUDIO_IN_PRESENTATION, embedAudioInPresentation);
-							//
-							booleanMap.setBoolean(HIDE_AUDIO_IMAGE_IN_PRESENTATION, hideAudioImageInPresentation);
-							//
-						} // if
-							//
+						BooleanMap.setBoolean(booleanMap, EMBED_AUDIO_IN_PRESENTATION, embedAudioInPresentation);
+						//
+						BooleanMap.setBoolean(booleanMap, HIDE_AUDIO_IMAGE_IN_PRESENTATION,
+								hideAudioImageInPresentation);
+						//
 						generateOdfPresentationDocuments(is, booleanMap, folderInPresentation, voiceFileNames,
 								password);
 						//
@@ -9051,6 +9042,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 		static boolean getBoolean(final BooleanMap instance, final String key) {
 			return instance != null && instance.getBoolean(key);
+		}
+
+		static void setBoolean(final BooleanMap instance, final String key, final boolean value) {
+			if (instance != null) {
+				instance.setBoolean(key, value);
+			}
 		}
 
 	}

@@ -8490,6 +8490,26 @@ class VoiceManagerTest {
 	}
 
 	@Test
+	void testBooleanMap() throws Throwable {
+		//
+		final Class<?> clz = forName("org.springframework.context.support.VoiceManager$BooleanMap");
+		//
+		// org.springframework.context.support.VoiceManager.BooleanMap.setBoolean(org.springframework.context.support.VoiceManager$BooleanMap,java.lang.String,boolean)
+		//
+		final Method setBoolean = clz != null ? clz.getDeclaredMethod("setBoolean", clz, String.class, Boolean.TYPE)
+				: null;
+		//
+		if (setBoolean != null) {
+			//
+			setBoolean.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertNull(invoke(setBoolean, null, null, null, Boolean.FALSE));
+		//
+	}
+
+	@Test
 	void testVoiceThrowableMessageBiConsumer() throws Throwable {
 		//
 		final Class<?> clz = forName(
