@@ -3886,14 +3886,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				// Delete empty Spreadsheet
 				//
-				if (fileToBeDeleted) {
-					//
-					delete(file);
-					//
-				} // if
-					//
-					// export HTML file
-					//
+				testAndAccept((a, b) -> Objects.equals(Boolean.TRUE, a), fileToBeDeleted, file, (a, b) -> delete(b));
+				//
+				// export HTML file
+				//
 				if (isSelected(cbExportHtml)) {
 					//
 					final Version version = ObjectUtils.getIfNull(freeMarkerVersion,
