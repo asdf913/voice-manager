@@ -8619,6 +8619,24 @@ class VoiceManagerTest {
 			//
 		Assertions.assertNull(invoke(getString, null, null, null));
 		//
+		final Object stringMap = Reflection.newProxy(clz, createVoiceManagerIH());
+		//
+		Assertions.assertThrows(InvocationTargetException.class, () -> invoke(getString, null, stringMap, null));
+		//
+		// org.springframework.context.support.VoiceManager$StringMap.setString(java.lang.String,java.lang.String)
+		//
+		final Method setString = clz != null ? clz.getDeclaredMethod("setString", String.class, String.class) : null;
+		//
+		if (setString != null) {
+			//
+			setString.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertNull(invoke(setString, stringMap, null, null));
+		//
+		Assertions.assertNull(invoke(getString, null, stringMap, null));
+		//
 	}
 
 	@Test
