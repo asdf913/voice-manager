@@ -10339,14 +10339,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			if (voiceOld != null) {
 				//
-				if (voice != null) {
-					//
-					voice.setId(getId(voiceOld));
-					//
-					voice.setUpdateTs(new Date());
-					//
-				} // if
-					//
+				setId(voice, getId(voiceOld));
+				//
+				setUpdateTs(voice, new Date());
+				//
 				instance.updateVoice(voice);
 				//
 			} else {
@@ -10391,9 +10387,21 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
+	private static void setId(final Voice instance, final Integer id) {
+		if (instance != null) {
+			instance.setId(id);
+		}
+	}
+
 	private static void setCreateTs(final Voice instance, final Date createTs) {
 		if (instance != null) {
 			instance.setCreateTs(createTs);
+		}
+	}
+
+	private static void setUpdateTs(final Voice instance, final Date updateTs) {
+		if (instance != null) {
+			instance.setUpdateTs(updateTs);
 		}
 	}
 
