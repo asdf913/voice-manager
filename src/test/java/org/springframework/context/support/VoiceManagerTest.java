@@ -282,7 +282,8 @@ class VoiceManagerTest {
 			METHOD_GET_RESPONSE_CODE, METHOD_TO_RUNTIME_EXCEPTION, METHOD_GET_ALGORITHM,
 			METHOD_SET_PREFERRED_WIDTH_ARRAY, METHOD_SET_PREFERRED_WIDTH_ITERABLE, METHOD_PRINT_STACK_TRACE,
 			METHOD_GET_VALUE_FROM_CELL, METHOD_GET_MP3_TAGS, METHOD_KEY_RELEASED_FOR_TEXT_IMPORT, METHOD_IS_STATIC,
-			METHOD_IMPORT_BY_WORK_BOOK_FILES, METHOD_ACTION_PERFORMED_FOR_EXPORT_BUTTONS = null;
+			METHOD_IMPORT_BY_WORK_BOOK_FILES, METHOD_ACTION_PERFORMED_FOR_EXPORT_BUTTONS,
+			METHOD_CREATE_MULTI_MAP_BY_LIST_NAMES = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -875,6 +876,9 @@ class VoiceManagerTest {
 		//
 		(METHOD_ACTION_PERFORMED_FOR_EXPORT_BUTTONS = clz.getDeclaredMethod("actionPerformedForExportButtons",
 				Object.class, Boolean.TYPE)).setAccessible(true);
+		//
+		(METHOD_CREATE_MULTI_MAP_BY_LIST_NAMES = clz.getDeclaredMethod("createMultimapByListNames", Iterable.class))
+				.setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -7519,6 +7523,57 @@ class VoiceManagerTest {
 	private void actionPerformedForExportButtons(final Object source, final boolean headless) throws Throwable {
 		try {
 			METHOD_ACTION_PERFORMED_FOR_EXPORT_BUTTONS.invoke(instance, source, headless);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCreateMultimapByListNames() throws Throwable {
+		//
+		Assertions.assertNull(createMultimapByListNames((Iterable) iterable));
+		//
+		if (ih != null) {
+			//
+			ih.iterator = Collections.singleton(null).iterator();
+			//
+		} // if
+			//
+		Assertions.assertNull(createMultimapByListNames((Iterable) iterable));
+		//
+		final Voice voice = new Voice();
+		//
+		voice.setListNames((Iterable) iterable);
+		//
+		if (ih != null) {
+			//
+			ih.iterator = Collections.singleton(voice).iterator();
+			//
+		} // if
+			//
+		Assertions.assertNull(createMultimapByListNames((Iterable) iterable));
+		//
+		voice.setListNames(Arrays.asList(null, EMPTY, SPACE));
+		//
+		if (ih != null) {
+			//
+			ih.iterator = Collections.singleton(voice).iterator();
+			//
+		} // if
+			//
+		Assertions.assertEquals(ImmutableMultimap.of(EMPTY, voice), createMultimapByListNames((Iterable) iterable));
+		//
+	}
+
+	private static Multimap<String, Voice> createMultimapByListNames(final Iterable<Voice> voices) throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_MULTI_MAP_BY_LIST_NAMES.invoke(null, voices);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Multimap) {
+				return (Multimap) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

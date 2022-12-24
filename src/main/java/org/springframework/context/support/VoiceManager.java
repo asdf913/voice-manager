@@ -9252,33 +9252,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // for
 				//
-			Voice v = null;
+			final Multimap<String, Voice> multimap = createMultimapByListNames(voices);
 			//
-			Iterable<String> listNames = null;
-			//
-			Multimap<String, Voice> multimap = null;
-			//
-			for (int i = 0; i < IterableUtils.size(voices); i++) {
-				//
-				if ((listNames = getListNames(v = get(voices, i))) == null) {
-					continue;
-				} // if
-					//
-				for (final String listName : listNames) {
-					//
-					if (StringUtils.isEmpty(listName)) {
-						continue;
-					} // if
-						//
-					put(multimap = getIfNull(multimap, LinkedListMultimap::create), listName, v);
-					//
-				} // for
-					//
-			} // for
-				//
 			Collection<Entry<String, Voice>> entries = entries(multimap);
 			//
-			if (entries != null) {
+			if (entries != null && entries.iterator() != null) {
 				//
 				int coutner = 0;
 				//
@@ -9353,6 +9331,42 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // try
 			//
+	}
+
+	private static Multimap<String, Voice> createMultimapByListNames(final Iterable<Voice> voices) {
+		//
+		Multimap<String, Voice> multimap = null;
+		//
+		if (voices != null && voices.iterator() != null) {
+			//
+			Iterable<String> listNames = null;
+			//
+			for (final Voice voice : voices) {
+				//
+				if ((listNames = getListNames(voice)) == null || listNames.iterator() == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				for (final String listName : listNames) {
+					//
+					if (StringUtils.isEmpty(listName)) {
+						//
+						continue;
+						//
+					} // if
+						//
+					put(multimap = getIfNull(multimap, LinkedListMultimap::create), listName, voice);
+					//
+				} // for
+					//
+			} // for
+				//
+		} // if
+			//
+		return multimap;
+		//
 	}
 
 	private static void exportJlpt(final ObjectMap objectMap, final List<Voice> voices) {
