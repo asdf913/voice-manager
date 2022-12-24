@@ -509,11 +509,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private String jlptLevelPageUrl, gaKuNenBeTsuKanJiListPageUrl = null;
 
-	private String microsoftSpeechPlatformRuntimeDownloadPageUrl,
-			microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl, mediaFormatPageUrl, poiEncryptionPageUrl = null;
+	private String microsoftSpeechPlatformRuntimeDownloadPageUrl, mediaFormatPageUrl, poiEncryptionPageUrl = null;
 
 	@Url("https://support.microsoft.com/en-us/windows/make-older-apps-or-programs-compatible-with-windows-10-783d6dd7-b439-bdb0-0490-54eea0f45938")
 	private String microsoftWindowsCompatibilitySettingsPageUrl = null;
+
+	@Url("https://www.microsoft.com/en-us/download/details.aspx?id=27224")
+	private String microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl = null;
 
 	private Unit<List<String>> jlptLevels = null;
 
