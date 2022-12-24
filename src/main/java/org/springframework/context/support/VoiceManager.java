@@ -480,15 +480,33 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@ExportButton
 	private AbstractButton btnExportMicrosoftSpeechObjectLibraryInformation = null;
 
-	private JProgressBar progressBarImport, progressBarExport = null;
+	@Target(ElementType.FIELD)
+	@Retention(RetentionPolicy.RUNTIME)
+	private @interface Note {
+		String value();
+	}
 
-	private JSlider jsSpeechVolume, jsSpeechRate = null;
+	@Note("Progress Bar For Import")
+	private JProgressBar progressBarImport = null;
+
+	@Note("Progress Bar For Export")
+	private JProgressBar progressBarExport = null;
+
+	@Note("Slider For Speech Volumne")
+	private JSlider jsSpeechVolume = null;
+
+	@Note("Slider For Speech Rate")
+	private JSlider jsSpeechRate = null;
 
 	private JComboBox<Object> jcbVoiceId = null;
 
 	private JLabel jlListNames, jlListNameCount = null;
 
-	private DefaultTableModel tmImportException, tmImportResult = null;
+	@Note("Import Exception")
+	private DefaultTableModel tmImportException = null;
+
+	@Note("Import Result")
+	private DefaultTableModel tmImportResult = null;
 
 	private transient SqlSessionFactory sqlSessionFactory = null;
 
