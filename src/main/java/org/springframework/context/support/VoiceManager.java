@@ -5128,11 +5128,24 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		}
 	}
 
-	private static <T, U> void testAndAccept(final BiPredicate<T, U> biPredicate, final T t, final U u,
+	private static <T, U> void testAndAccept(final BiPredicate<T, U> instance, final T t, final U u,
 			final BiConsumer<T, U> consumer) {
-		if (biPredicate != null && biPredicate.test(t, u) && consumer != null) {
-			consumer.accept(t, u);
+		if (test(instance, t, u)) {
+			accept(consumer, t, u);
 		} // if
+	}
+
+	private static <T, U> void testAndAccept(final BiPredicate<T, U> instance, final T t, final U u,
+			final BiConsumer<T, U> a, final BiConsumer<T, U> b) {
+		if (test(instance, t, u)) {
+			accept(a, t, u);
+		} else {
+			accept(b, t, u);
+		} // if
+	}
+
+	private static <T, U> boolean test(final BiPredicate<T, U> instance, final T t, final U u) {
+		return instance != null && instance.test(t, u);
 	}
 
 	private static File[] listFiles(final File instance) {
@@ -6481,76 +6494,61 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final Voice voice = ObjectMap.getObject(objectMap, Voice.class);
 		//
-		String message = null;
-		//
 		clear(tmImportException);
 		//
 		final boolean headless = GraphicsEnvironment.isHeadless();
 		//
 		final boolean nonTest = isTestMode();
 		//
+		final boolean nonHeadlessAndnonTest = !headless && nonTest;
+		//
 		if (file == null) {
 			//
-			message = NO_FILE_SELECTED;
+			testAndAccept((a, b) -> a != null, tmImportException, NO_FILE_SELECTED,
+					//
+					(a, b) -> addRow(a, new Object[] { getText(voice), getRomaji(voice), b }),
+					//
+					(a, b) -> testAndRun(nonHeadlessAndnonTest, () -> JOptionPane.showMessageDialog(null, b))
 			//
-			if (tmImportException != null) {
-				//
-				addRow(tmImportException, new Object[] { getText(voice), getRomaji(voice), message });
-				//
-			} else if (Boolean.logicalAnd(!headless, nonTest)) {
-				//
-				JOptionPane.showMessageDialog(null, message);
-				//
-			} // if
-				//
+			);
+			//
 			return;
 			//
 		} else if (!file.exists()) {
 			//
-			message = String.format("File \"%1$s\" does not exist", getAbsolutePath(file));
+			testAndAccept((a, b) -> a != null, tmImportException,
+					String.format("File \"%1$s\" does not exist", getAbsolutePath(file)),
+					//
+					(a, b) -> addRow(a, new Object[] { getText(voice), getRomaji(voice), b }),
+					//
+					(a, b) -> testAndRun(nonHeadlessAndnonTest, () -> JOptionPane.showMessageDialog(null, b))
 			//
-			if (tmImportException != null) {
-				//
-				addRow(tmImportException, new Object[] { getText(voice), getRomaji(voice), message });
-				//
-			} else if (!headless) {
-				//
-				JOptionPane.showMessageDialog(null, message);
-				//
-			} // if
-				//
+			);
+			//
 			return;
 			//
 		} else if (!isFile(file)) {
 			//
-			message = "Not A Regular File Selected";
+			testAndAccept((a, b) -> a != null, tmImportException, "Not A Regular File Selected",
+					//
+					(a, b) -> addRow(a, new Object[] { getText(voice), getRomaji(voice), b }),
+					//
+					(a, b) -> testAndRun(nonHeadlessAndnonTest, () -> JOptionPane.showMessageDialog(null, b))
 			//
-			if (tmImportException != null) {
-				//
-				addRow(tmImportException, new Object[] { getText(voice), getRomaji(voice), message });
-				//
-			} else if (!headless) {
-				//
-				JOptionPane.showMessageDialog(null, message);
-				//
-			} // if
-				//
+			);
+			//
 			return;
 			//
 		} else if (longValue(length(file), 0) == 0) {
 			//
-			message = "Empty File Selected";
+			testAndAccept((a, b) -> a != null, tmImportException, "Empty File Selected",
+					//
+					(a, b) -> addRow(a, new Object[] { getText(voice), getRomaji(voice), b }),
+					//
+					(a, b) -> testAndRun(nonTest, () -> JOptionPane.showMessageDialog(null, b))
 			//
-			if (tmImportException != null) {
-				//
-				addRow(tmImportException, new Object[] { getText(voice), getRomaji(voice), message });
-				//
-			} else if (nonTest) {
-				//
-				JOptionPane.showMessageDialog(null, message);
-				//
-			} // if
-				//
+			);
+			//
 			return;
 			//
 		} // if

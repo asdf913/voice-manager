@@ -229,30 +229,29 @@ class VoiceManagerTest {
 			METHOD_CREATE_WORK_BOOK_MULTI_MAP, METHOD_CREATE_VOICE, METHOD_GET_MESSAGE, METHOD_INVOKE,
 			METHOD_ANNOTATION_TYPE, METHOD_FIND_FIRST, METHOD_GET_DECLARED_METHODS, METHOD_FOR_NAME, METHOD_FILTER,
 			METHOD_SET_TEXT, METHOD_GET_PREFERRED_WIDTH, METHOD_IMPORT_VOICE1, METHOD_IMPORT_VOICE3,
-			METHOD_IMPORT_VOICE5, METHOD_ERROR_OR_PRINT_LN, METHOD_ADD_COLLECTION, METHOD_ADD_LIST,
-			METHOD_CREATE_IMPORT_FILE_TEMPLATE_BYTE_ARRAY, METHOD_CREATE_CELL, METHOD_SET_CELL_VALUE, METHOD_ANY_MATCH,
-			METHOD_COLLECT, METHOD_NAME, METHOD_GET_SELECTED_ITEM, METHOD_WRITE, METHOD_MATCHER,
-			METHOD_SET_VALUE_J_PROGRESS_BAR, METHOD_SET_VALUE_J_SLIDER, METHOD_SET_STRING_J_PROGRESS_BAR,
-			METHOD_SET_STRING_COMMENT, METHOD_SET_TOOL_TIP_TEXT, METHOD_FORMAT, METHOD_CONTAINS_KEY, METHOD_VALUE_OF1,
-			METHOD_VALUE_OF2, METHOD_GET_CLASS, METHOD_CREATE_RANGE, METHOD_GET_PROVIDER_NAME,
-			METHOD_GET_PROVIDER_VERSION, METHOD_WRITE_VOICE_TO_FILE, METHOD_GET_MP3_TAG_VALUE_FILE,
-			METHOD_GET_MP3_TAG_VALUE_LIST, METHOD_GET_MP3_TAG_PARIRS_ID3V1, METHOD_GET_METHODS_CLASS,
-			METHOD_GET_METHODS_JAVA_CLASS, METHOD_COPY_OBJECT_MAP, METHOD_DELETE, METHOD_DELETE_ON_EXIT,
-			METHOD_CONVERT_LANGUAGE_CODE_TO_TEXT, METHOD_IS_SELECTED, METHOD_SET_HIRAGANA_OR_KATAKANA,
-			METHOD_SET_ROMAJI, METHOD_OR, METHOD_CLEAR_DEFAULT_TABLE_MODEL, METHOD_CLEAR_STRING_BUILDER, METHOD_EXECUTE,
-			METHOD_PUT_MAP, METHOD_PUT_MULTI_MAP, METHOD_GET_BYTE_CONVERTER, METHOD_GET_PROPERTIES,
-			METHOD_GET_CUSTOM_PROPERTIES, METHOD_CONTAINS_CUSTOM_PROPERTIES, METHOD_CONTAINS_COLLECTION,
-			METHOD_CONTAINS_LOOKUP, METHOD_GET_LPW_STR, METHOD_GET_SHEET_NAME, METHOD_ACCEPT, METHOD_TO_ARRAY,
-			METHOD_TO_LIST, METHOD_GET_ID, METHOD_SET_MAXIMUM, METHOD_GET_CURRENT_SHEET_INDEX, METHOD_GET_JLPT_LEVELS,
-			METHOD_PARSE_JLPT_PAGE_HTML, METHOD_GET_DATA_VALIDATION_HELPER, METHOD_CREATE_EXPLICIT_LIST_CONSTRAINT,
-			METHOD_CREATE_VALIDATION, METHOD_CREATE_EXPORT_TASK, METHOD_GET_TAB_INDEX_BY_TITLE,
-			METHOD_GET_DECLARED_FIELD, METHOD_GET_ABSOLUTE_PATH, METHOD_IS_ASSIGNABLE_FROM, METHOD_GET_ENUM_CONSTANTS,
-			METHOD_LIST_FILES, METHOD_GET_TYPE, METHOD_GET_COLUMN_NAME, METHOD_PUT_ALL, METHOD_CREATE_SHEET1,
-			METHOD_CREATE_SHEET2, METHOD_ENTRIES, METHOD_GET_WORK_BOOK, METHOD_GET_OLE_ENTRY_NAMES,
-			METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE, METHOD_GET_DOCUMENT_ELEMENT, METHOD_GET_CHILD_NODES,
-			METHOD_GET_NAMED_ITEM, METHOD_GET_TEXT_CONTENT, METHOD_GET_NAME_FILE, METHOD_GET_NAME_CLASS,
-			METHOD_GET_PASS_WORD, METHOD_GET_SUPPLIER, METHOD_GET_LOOKUP, METHOD_GET_LIST,
-			METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK, METHOD_WRITE_VALUE_AS_STRING,
+			METHOD_IMPORT_VOICE5, METHOD_ADD_COLLECTION, METHOD_ADD_LIST, METHOD_CREATE_IMPORT_FILE_TEMPLATE_BYTE_ARRAY,
+			METHOD_CREATE_CELL, METHOD_SET_CELL_VALUE, METHOD_ANY_MATCH, METHOD_COLLECT, METHOD_NAME,
+			METHOD_GET_SELECTED_ITEM, METHOD_WRITE, METHOD_MATCHER, METHOD_SET_VALUE_J_PROGRESS_BAR,
+			METHOD_SET_VALUE_J_SLIDER, METHOD_SET_STRING_J_PROGRESS_BAR, METHOD_SET_STRING_COMMENT,
+			METHOD_SET_TOOL_TIP_TEXT, METHOD_FORMAT, METHOD_CONTAINS_KEY, METHOD_VALUE_OF1, METHOD_VALUE_OF2,
+			METHOD_GET_CLASS, METHOD_CREATE_RANGE, METHOD_GET_PROVIDER_NAME, METHOD_GET_PROVIDER_VERSION,
+			METHOD_WRITE_VOICE_TO_FILE, METHOD_GET_MP3_TAG_VALUE_FILE, METHOD_GET_MP3_TAG_VALUE_LIST,
+			METHOD_GET_MP3_TAG_PARIRS_ID3V1, METHOD_GET_METHODS_CLASS, METHOD_GET_METHODS_JAVA_CLASS,
+			METHOD_COPY_OBJECT_MAP, METHOD_DELETE, METHOD_DELETE_ON_EXIT, METHOD_CONVERT_LANGUAGE_CODE_TO_TEXT,
+			METHOD_IS_SELECTED, METHOD_SET_HIRAGANA_OR_KATAKANA, METHOD_SET_ROMAJI, METHOD_OR,
+			METHOD_CLEAR_DEFAULT_TABLE_MODEL, METHOD_CLEAR_STRING_BUILDER, METHOD_EXECUTE, METHOD_PUT_MAP,
+			METHOD_PUT_MULTI_MAP, METHOD_GET_BYTE_CONVERTER, METHOD_GET_PROPERTIES, METHOD_GET_CUSTOM_PROPERTIES,
+			METHOD_CONTAINS_CUSTOM_PROPERTIES, METHOD_CONTAINS_COLLECTION, METHOD_CONTAINS_LOOKUP, METHOD_GET_LPW_STR,
+			METHOD_GET_SHEET_NAME, METHOD_ACCEPT, METHOD_TO_ARRAY, METHOD_TO_LIST, METHOD_GET_ID, METHOD_SET_MAXIMUM,
+			METHOD_GET_CURRENT_SHEET_INDEX, METHOD_GET_JLPT_LEVELS, METHOD_PARSE_JLPT_PAGE_HTML,
+			METHOD_GET_DATA_VALIDATION_HELPER, METHOD_CREATE_EXPLICIT_LIST_CONSTRAINT, METHOD_CREATE_VALIDATION,
+			METHOD_CREATE_EXPORT_TASK, METHOD_GET_TAB_INDEX_BY_TITLE, METHOD_GET_DECLARED_FIELD,
+			METHOD_GET_ABSOLUTE_PATH, METHOD_IS_ASSIGNABLE_FROM, METHOD_GET_ENUM_CONSTANTS, METHOD_LIST_FILES,
+			METHOD_GET_TYPE, METHOD_GET_COLUMN_NAME, METHOD_PUT_ALL, METHOD_CREATE_SHEET1, METHOD_CREATE_SHEET2,
+			METHOD_ENTRIES, METHOD_GET_WORK_BOOK, METHOD_GET_OLE_ENTRY_NAMES, METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE,
+			METHOD_GET_DOCUMENT_ELEMENT, METHOD_GET_CHILD_NODES, METHOD_GET_NAMED_ITEM, METHOD_GET_TEXT_CONTENT,
+			METHOD_GET_NAME_FILE, METHOD_GET_NAME_CLASS, METHOD_GET_PASS_WORD, METHOD_GET_SUPPLIER, METHOD_GET_LOOKUP,
+			METHOD_GET_LIST, METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK, METHOD_WRITE_VALUE_AS_STRING,
 			METHOD_CREATE_DRAWING_PATRIARCH, METHOD_GET_CREATION_HELPER, METHOD_CREATE_CELL_COMMENT,
 			METHOD_CREATE_CLIENT_ANCHOR, METHOD_CREATE_RICH_TEXT_STRING, METHOD_SET_CELL_COMMENT, METHOD_SET_AUTHOR,
 			METHOD_TEST_AND_ACCEPT_PREDICATE, METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_FIND_FIELDS_BY_VALUE,
@@ -1538,11 +1537,11 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> instance.postProcessBeanFactory(configurableListableBeanFactory));
 		//
-		ih.getBeanDefinitions().put(null, beanDefinition);
+		Assertions.assertDoesNotThrow(() -> put(ih.getBeanDefinitions(), null, beanDefinition));
 		//
 		Assertions.assertDoesNotThrow(() -> instance.postProcessBeanFactory(configurableListableBeanFactory));
 		//
-		ih.getBeanDefinitionAttributes().put("format", null);
+		Assertions.assertDoesNotThrow(() -> put(ih.getBeanDefinitions(), "format", null));
 		//
 		Assertions.assertDoesNotThrow(() -> instance.postProcessBeanFactory(configurableListableBeanFactory));
 		//
@@ -3238,30 +3237,18 @@ class VoiceManagerTest {
 		//
 		final Map<?, ?> objects = cast(Map.class, FieldUtils.readDeclaredField(ih, "objects", true));
 		//
-		if (objects != null) {
-			//
-			((Map) objects).put(File.class, new File("."));
-			//
-			((Map) objects).put(Voice.class, null);
-			//
-		} // if
-			//
+		put(((Map) objects), File.class, new File("."));
+		//
+		put(((Map) objects), Voice.class, null);
+		//
 		Assertions.assertDoesNotThrow(() -> importVoice(objectMap, null, null));
 		//
-		if (objects != null) {
-			//
-			((Map) objects).put(File.class, new File("NON_EXISTS"));
-			//
-		} // if
-			//
+		put(((Map) objects), File.class, new File("NON_EXISTS"));
+		//
 		Assertions.assertDoesNotThrow(() -> importVoice(objectMap, null, null));
 		//
-		if (objects != null) {
-			//
-			((Map) objects).put(File.class, new File("pom.xml"));
-			//
-		} // if
-			//
+		put(((Map) objects), File.class, new File("pom.xml"));
+		//
 		Assertions.assertDoesNotThrow(() -> importVoice(objectMap, (v, m) -> {
 		}, null));
 		//
@@ -3273,12 +3260,8 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		if (objects != null) {
-			//
-			((Map) objects).put(File.class, file);
-			//
-		} // if
-			//
+		put(((Map) objects), File.class, file);
+		//
 		Assertions.assertDoesNotThrow(() -> importVoice(objectMap, null, null));
 		//
 		Assertions.assertDoesNotThrow(() -> importVoice(sheet, null, null, null, null, null));
@@ -3811,14 +3794,10 @@ class VoiceManagerTest {
 			//
 		Map<Object, Object> objects = getIfNull(cast(Map.class, get(fieldObjects, ih)), LinkedHashMap::new);
 		//
-		if (objects != null) {
-			//
-			objects.put(SpeechApi.class, speechApi);
-			//
-			objects.put(File.class, null);
-			//
-		} // if
-			//
+		put(objects, SpeechApi.class, speechApi);
+		//
+		put(objects, File.class, null);
+		//
 		set(fieldObjects, ih, objects);
 		//
 		Assertions.assertDoesNotThrow(
@@ -4225,36 +4204,44 @@ class VoiceManagerTest {
 			//
 		Map<Object, Object> objects = getIfNull(cast(Map.class, get(fieldObjects, ih)), LinkedHashMap::new);
 		//
-		if (objects != null) {
-			//
-			objects.put(File.class, null);
-			//
-			objects.put(VoiceManager.class, instance);
-			//
-			objects.put(Voice.class, null);
-			//
-			objects.put(DefaultTableModel.class, new DefaultTableModel());
-			//
-		} // if
-			//
+		final DefaultTableModel defaultTableModel = new DefaultTableModel();
+		//
+		put(objects, File.class, null);
+		//
+		put(objects, VoiceManager.class, instance);
+		//
+		put(objects, Voice.class, null);
+		//
+		put(objects, DefaultTableModel.class, null);
+		//
 		set(fieldObjects, ih, objects);
 		//
 		Assertions.assertDoesNotThrow(() -> execute(objectMap));
 		//
-		if (objects != null) {
-			//
-			objects.put(File.class, new File("NON_EXISTS"));
-			//
-		} // if
-			//
+		put(objects, DefaultTableModel.class, defaultTableModel);
+		//
 		Assertions.assertDoesNotThrow(() -> execute(objectMap));
 		//
-		if (objects != null) {
-			//
-			objects.put(File.class, new File("."));
-			//
-		} // if
-			//
+		// !java.io.File.exists()
+		//
+		put(objects, File.class, new File("NON_EXISTS"));
+		//
+		Assertions.assertDoesNotThrow(() -> execute(objectMap));
+		//
+		put(objects, DefaultTableModel.class, null);
+		//
+		Assertions.assertDoesNotThrow(() -> execute(objectMap));
+		//
+		// !java.io.File.isFile()
+		//
+		put(objects, File.class, new File("."));
+		//
+		put(objects, DefaultTableModel.class, defaultTableModel);
+		//
+		Assertions.assertDoesNotThrow(() -> execute(objectMap));
+		//
+		put(objects, DefaultTableModel.class, null);
+		//
 		Assertions.assertDoesNotThrow(() -> execute(objectMap));
 		//
 	}
@@ -4322,25 +4309,25 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(getByteConverter(configurableListableBeanFactory, null, null));
 		//
-		ih.getBeanDefinitions().put(null, beanDefinition);
+		put(ih.getBeanDefinitions(), null, beanDefinition);
 		//
 		Assertions.assertNull(getByteConverter(configurableListableBeanFactory, null, null));
 		//
 		final String format = toString(FieldUtils.readDeclaredStaticField(VoiceManager.class, "FORMAT", true));
 		//
-		ih.getBeanDefinitionAttributes().put(format, null);
+		put(ih.getBeanDefinitionAttributes(), format, null);
 		//
 		Assertions.assertNull(getByteConverter(configurableListableBeanFactory, format, null));
 		//
-		ih.getBeanDefinitionAttributes().put(format, "");
+		put(ih.getBeanDefinitionAttributes(), format, "");
 		//
 		Assertions.assertNull(getByteConverter(configurableListableBeanFactory, format, null));
 		//
-		(ih.beansOfType = new LinkedHashMap<Object, Object>(Collections.singletonMap(null, null))).put("", null);
+		put((ih.beansOfType = new LinkedHashMap<Object, Object>(Collections.singletonMap(null, null))), "", null);
 		//
-		ih.getBeanDefinitions().put("", beanDefinition);
+		put(ih.getBeanDefinitions(), "", beanDefinition);
 		//
-		ih.getBeanDefinitionAttributes().put(format, null);
+		put(ih.getBeanDefinitionAttributes(), format, null);
 		//
 		Assertions.assertThrows(IllegalStateException.class,
 				() -> getByteConverter(configurableListableBeanFactory, format, null));
