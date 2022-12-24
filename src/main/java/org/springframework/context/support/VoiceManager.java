@@ -1857,11 +1857,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				"org.springframework.context.support.VoiceManager.voiceId");
 		//
 		final List<?> temp = toList(filter(testAndApply(Objects::nonNull, voiceIds, Arrays::stream, null),
-				x -> Objects.equals(x, voiceId) || Objects.equals(getVoiceAttribute(speechApi, x, "Name"), voiceId)));
+				x -> Boolean.logicalOr(Objects.equals(x, voiceId),
+						Objects.equals(getVoiceAttribute(speechApi, x, "Name"), voiceId))));
 		//
-		if (temp != null && !temp.isEmpty()) {
+		final int size = IterableUtils.size(temp);
+		//
+		if (size > 0) {
 			//
-			if (IterableUtils.size(temp) == 1) {
+			if (size == 1) {
 				//
 				setSelectedItem(cbmVoiceId, get(temp, 0));
 				//
