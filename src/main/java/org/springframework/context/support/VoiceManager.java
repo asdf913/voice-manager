@@ -4660,10 +4660,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 						testAndAccept(x -> !StringUtils.endsWith(x, "."), sb, x -> append(x, '.'));
 						//
-						append(sb, StringUtils.defaultIfBlank(
-								orElse(max(fileExtensions != null ? Arrays.stream(fileExtensions) : null,
-										(a, b) -> Integer.compare(StringUtils.length(a), StringUtils.length(b))), null),
-								""));
+						append(sb, getLongestString(fileExtensions));
 						//
 					} // if
 						//
@@ -4726,6 +4723,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // try
 			//
+	}
+
+	private static String getLongestString(final String[] ss) {
+		//
+		return orElse(max(testAndApply(Objects::nonNull, ss, Arrays::stream, null),
+				(a, b) -> Integer.compare(StringUtils.length(a), StringUtils.length(b))), null);
+		//
 	}
 
 	private static void setSource(final Voice instance, final String source) {
