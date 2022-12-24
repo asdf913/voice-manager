@@ -6655,49 +6655,51 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		if (rate == null) {
 			//
-			final List<Field> fs = toList(filter(
+			rate = getIfNull(rate, () -> getRate(toList(filter(
 					testAndApply(Objects::nonNull, getDeclaredFields(Integer.class), Arrays::stream, null),
 					f -> f != null
 							&& (isAssignableFrom(Number.class, getType(f)) || Objects.equals(Integer.TYPE, getType(f)))
-							&& Objects.equals(getName(f), string)));
+							&& Objects.equals(getName(f), string)))));
 			//
-			if (fs != null && !fs.isEmpty()) {
+		} // if
+			//
+		return rate;
+		//
+	}
+
+	private static Integer getRate(final List<Field> fs) {
+		//
+		if (fs != null && !fs.isEmpty()) {
+			//
+			final int size = IterableUtils.size(fs);
+			//
+			if (size > 1) {
 				//
-				final int size = IterableUtils.size(fs);
+				throw new IllegalStateException();
 				//
-				if (size > 1) {
-					//
-					throw new IllegalStateException();
-					//
-				} // if
-					//
-				final Field f = get(fs, 0);
+			} // if
 				//
-				if (f != null && isStatic(f)) {
+			final Field f = get(fs, 0);
+			//
+			if (f != null && isStatic(f)) {
+				//
+				try {
 					//
-					try {
-						//
-						final Number number = cast(Number.class, f.get(null));
-						//
-						if (number != null) {
-							//
-							rate = number.intValue();
-							//
-						} // if
-							//
-					} catch (final IllegalAccessException e) {
-						//
-						errorOrPrintStackTraceOrShowMessageDialog(e);
-						//
-					} // try
-						//
-				} // if
+					final Number number = cast(Number.class, f.get(null));
+					//
+					return number != null ? Integer.valueOf(number.intValue()) : null;
+					//
+				} catch (final IllegalAccessException e) {
+					//
+					errorOrPrintStackTraceOrShowMessageDialog(e);
+					//
+				} // try
 					//
 			} // if
 				//
 		} // if
 			//
-		return rate;
+		return null;
 		//
 	}
 
