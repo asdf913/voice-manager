@@ -515,7 +515,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Url("https://ja.wikipedia.org/wiki/%E5%AD%A6%E5%B9%B4%E5%88%A5%E6%BC%A2%E5%AD%97%E9%85%8D%E5%BD%93%E8%A1%A8")
 	private String gaKuNenBeTsuKanJiListPageUrl = null;
 
-	private String microsoftSpeechPlatformRuntimeDownloadPageUrl, poiEncryptionPageUrl = null;
+	private String microsoftSpeechPlatformRuntimeDownloadPageUrl = null;
 
 	@Url("https://support.microsoft.com/en-us/windows/make-older-apps-or-programs-compatible-with-windows-10-783d6dd7-b439-bdb0-0490-54eea0f45938")
 	private String microsoftWindowsCompatibilitySettingsPageUrl = null;
@@ -525,6 +525,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	@Url("https://help.libreoffice.org/latest/en-US/text/shared/01/moviesound.html")
 	private String mediaFormatPageUrl = null;
+
+	@Url("https://poi.apache.org/encryption.html")
+	private String poiEncryptionPageUrl = null;
 
 	private Unit<List<String>> jlptLevels = null;
 
