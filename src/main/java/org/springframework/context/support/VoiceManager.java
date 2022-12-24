@@ -5315,14 +5315,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			setText(jTextComponent, getText(v));
 			//
-			if (atomicInteger != null) {
-				//
-				atomicInteger.incrementAndGet();
-				//
-			} // if
-				//
+			incrementAndGet(atomicInteger);
+			//
 		}
 
+	}
+
+	private static Integer incrementAndGet(final AtomicInteger instance) {
+		return instance != null ? Integer.valueOf(instance.incrementAndGet()) : null;
 	}
 
 	private void importVoice(final File file) {
@@ -9196,12 +9196,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			final AtomicInteger denominator = new AtomicInteger(2);
 			//
-			if (jlptAsFolder) {
-				//
-				denominator.incrementAndGet();
-				//
-			} // if
-				//
+			testAndRun(jlptAsFolder, () -> incrementAndGet(denominator));
+			//
 			final Fraction pharse = Fraction.getFraction(0, intValue(denominator, 2));
 			//
 			for (int i = 0; i < size; i++) {
@@ -9285,12 +9281,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				final AtomicInteger numerator = new AtomicInteger(1);
 				//
-				if (jlptAsFolder) {
-					//
-					numerator.incrementAndGet();
-					//
-				} // if
-					//
+				testAndRun(jlptAsFolder, () -> incrementAndGet(numerator));
+				//
 				ObjectMap.setObjectIfAbsent(objectMap, Fraction.class, pharse);
 				//
 				for (final Entry<String, Voice> en : entries) {
