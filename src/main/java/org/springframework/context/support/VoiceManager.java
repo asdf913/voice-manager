@@ -3838,6 +3838,24 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				ObjectMap.setObject(objectMap, BooleanMap.class, bm);
 				//
+				// org.springframework.context.support.VoiceManager$StringMap
+				//
+				final StringMap stringMap = Reflection.newProxy(StringMap.class, ih);
+				//
+				if (stringMap != null) {
+					//
+					stringMap.setString("ordinalPositionFileNamePrefix", getText(tfOrdinalPositionFileNamePrefix));
+					//
+					stringMap.setString("exportPresentationTemplate", exportPresentationTemplate);
+					//
+					stringMap.setString("exportPassword", getText(tfExportPassword));
+					//
+					stringMap.setString("folderInPresentation", folderInPresentation);
+					//
+				} // if
+					//
+				ObjectMap.setObject(objectMap, StringMap.class, stringMap);
+				//
 				export(voices, outputFolderFileNameExpressions, objectMap);
 				//
 				// Export Spreadsheet
@@ -7010,6 +7028,17 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	}
 
+	private static interface StringMap {
+
+		String getString(final String key);
+
+		void setString(final String key, final String value);
+
+		static String getString(final StringMap instance, final String key) {
+			return instance != null ? instance.getString(key) : null;
+		}
+	}
+
 	private static class ImportTask implements Runnable {
 
 		private static final Logger LOG = LoggerFactory.getLogger(ImportTask.class);
@@ -7958,6 +7987,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 		private Map<Object, Object> intIntMapObjects = null;
 
+		private Map<Object, Object> strings = null;
+
 		private Map<Object, Object> getObjects() {
 			if (objects == null) {
 				objects = new LinkedHashMap<>();
@@ -7984,6 +8015,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				intIntMapObjects = new LinkedHashMap<>();
 			}
 			return intIntMapObjects;
+		}
+
+		private Map<Object, Object> getStrings() {
+			if (strings == null) {
+				strings = new LinkedHashMap<>();
+			}
+			return strings;
 		}
 
 		@Override
@@ -8028,6 +8066,30 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				if (value != null) {
 					//
 					return IValue0Util.getValue0(value);
+					//
+				} // if
+					//
+			} else if (proxy instanceof StringMap) {
+				//
+				final Map<Object, Object> map = getStrings();
+				//
+				if (Objects.equals(methodName, "getString") && args != null && args.length > 0) {
+					//
+					final Object key = args[0];
+					//
+					if (!containsKey(map, key)) {
+						//
+						throw new IllegalStateException(String.format(KEY_NOT_FOUND_MESSAGE, key));
+						//
+					} // if
+						//
+					return MapUtils.getObject(map, key);
+					//
+				} else if (Objects.equals(methodName, "setString") && args != null && args.length > 1) {
+					//
+					put(map, args[0], args[1]);
+					//
+					return null;
 					//
 				} // if
 					//
@@ -9093,6 +9155,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final VoiceManager voiceManager = ObjectMap.getObject(objectMap, VoiceManager.class);
 		//
+		final StringMap stringMap = ObjectMap.getObject(objectMap, StringMap.class);
+		//
 		try {
 			//
 			int size = IterableUtils.size(voices);
@@ -9149,7 +9213,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				et.ordinalPositionFileNamePrefix = ordinalPositionFileNamePrefix = getIfNull(
 						ordinalPositionFileNamePrefix,
-						() -> getText(voiceManager != null ? voiceManager.tfOrdinalPositionFileNamePrefix : null));
+						() -> StringMap.getString(stringMap, "ordinalPositionFileNamePrefix")
+				//
+				);
 				//
 				if (booleanMap != null) {
 					//
@@ -9176,16 +9242,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				et.objectMapper = objectMapper;
 				//
-				if (voiceManager != null) {
-					//
-					et.exportPresentationTemplate = voiceManager.exportPresentationTemplate;
-					//
-					et.folderInPresentation = voiceManager.folderInPresentation;
-					//
-					et.password = getText(voiceManager.tfExportPassword);
-					//
-				} // if
-					//
+				et.exportPresentationTemplate = StringMap.getString(stringMap, "exportPresentationTemplate");
+				//
+				et.folderInPresentation = StringMap.getString(stringMap, "folderInPresentation");
+				//
+				et.password = StringMap.getString(stringMap, "exportPassword");
+				//
 				es.submit(et);
 				//
 			} // for
@@ -9875,7 +9937,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
-				setSheet(workbook, createSheet(workbook, key), multimap.get(key));
+				setSheet(workbook, StringUtils.length(key) > 0 ? createSheet(workbook, key) : createSheet(workbook),
+						multimap.get(key));
 				//
 			} // for
 				//

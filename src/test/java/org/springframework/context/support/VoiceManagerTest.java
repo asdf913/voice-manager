@@ -8548,6 +8548,25 @@ class VoiceManagerTest {
 	}
 
 	@Test
+	void testStringMap() throws Throwable {
+		//
+		final Class<?> clz = forName("org.springframework.context.support.VoiceManager$StringMap");
+		//
+		// org.springframework.context.support.VoiceManager$StringMap.getString(org.springframework.context.support.VoiceManager$StringMap,java.lang.String)
+		//
+		final Method getString = clz != null ? clz.getDeclaredMethod("getString", clz, String.class) : null;
+		//
+		if (getString != null) {
+			//
+			getString.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertNull(invoke(getString, null, null, null));
+		//
+	}
+
+	@Test
 	void testVoiceThrowableMessageBiConsumer() throws Throwable {
 		//
 		final Class<?> clz = forName(
