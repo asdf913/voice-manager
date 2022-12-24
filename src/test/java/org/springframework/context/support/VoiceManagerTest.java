@@ -284,7 +284,7 @@ class VoiceManagerTest {
 			METHOD_GET_VALUE_FROM_CELL, METHOD_GET_MP3_TAGS, METHOD_KEY_RELEASED_FOR_TEXT_IMPORT, METHOD_IS_STATIC,
 			METHOD_IMPORT_BY_WORK_BOOK_FILES, METHOD_ACTION_PERFORMED_FOR_EXPORT_BUTTONS,
 			METHOD_CREATE_MULTI_MAP_BY_LIST_NAMES, METHOD_GET_FIELD_BY_NAME,
-			METHOD_CREATE_PROVIDER_PLATFORM_J_TEXT_COMPONENT = null;
+			METHOD_CREATE_PROVIDER_VERSION_J_TEXT_COMPONENT, METHOD_CREATE_PROVIDER_PLATFORM_J_TEXT_COMPONENT = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -885,6 +885,9 @@ class VoiceManagerTest {
 		//
 		(METHOD_GET_FIELD_BY_NAME = clz.getDeclaredMethod("getFieldByName", Class.class, String.class))
 				.setAccessible(true);
+		//
+		(METHOD_CREATE_PROVIDER_VERSION_J_TEXT_COMPONENT = clz.getDeclaredMethod("createProviderVersionJTextComponent",
+				Boolean.TYPE, Provider.class)).setAccessible(true);
 		//
 		(METHOD_CREATE_PROVIDER_PLATFORM_J_TEXT_COMPONENT = clz
 				.getDeclaredMethod("createProviderPlatformJTextComponent", Boolean.TYPE, Provider.class))
@@ -7625,6 +7628,28 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof Field) {
 				return (Field) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCreateProviderVersionJTextComponent() throws Throwable {
+		//
+		Assertions.assertNotNull(createProviderVersionJTextComponent(false, null));
+		//
+	}
+
+	private static JTextComponent createProviderVersionJTextComponent(final boolean isInstalled,
+			final Provider provider) throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_PROVIDER_VERSION_J_TEXT_COMPONENT.invoke(null, isInstalled, provider);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof JTextComponent) {
+				return (JTextComponent) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

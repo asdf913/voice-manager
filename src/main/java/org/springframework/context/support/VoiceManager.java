@@ -1813,8 +1813,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final boolean isInstalled = isInstalled(speechApi);
 		//
-		panel.add(tfProviderVersion = isInstalled ? new JTextField(getProviderVersion(provider)) : new JTextField(),
-				String.format("span %1$s,width %2$s", 3, 64));
+		// Provider Version
+		//
+		testAndAccept(Objects::nonNull, tfProviderVersion = createProviderVersionJTextComponent(isInstalled, provider),
+				x -> panel.add(x, String.format("span %1$s,width %2$s", 3, 64)));
 		//
 		// Provider Platform
 		//
@@ -2060,6 +2062,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				0), cs);
 		//
 		return panel;
+		//
+	}
+
+	private static JTextComponent createProviderVersionJTextComponent(final boolean isInstalled,
+			final Provider provider) {
+		//
+		return isInstalled ? new JTextField(getProviderVersion(provider)) : new JTextField();
 		//
 	}
 
