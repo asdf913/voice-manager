@@ -1816,20 +1816,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(tfProviderVersion = isInstalled ? new JTextField(getProviderVersion(provider)) : new JTextField(),
 				String.format("span %1$s,width %2$s", 3, 64));
 		//
-		try {
-			//
-			panel.add(
-					tfProviderPlatform = isInstalled ? new JTextField(getProviderPlatform(provider)) : new JTextField(),
-					WRAP);
-			//
-		} catch (final Error e) {
-			//
-			errorOrPrintStackTraceOrShowMessageDialog(e);
-			//
-		} // try
-			//
-			// Voice Id
-			//
+		// Provider Platform
+		//
+		testAndAccept(Objects::nonNull,
+				tfProviderPlatform = createProviderPlatformJTextComponent(isInstalled, provider),
+				x -> panel.add(x, WRAP));
+		//
+		// Voice Id
+		//
 		panel.add(new JLabel("Voice Id"));
 		//
 		if ((cbmVoiceId = testAndApply(Objects::nonNull, voiceIds,
@@ -2066,6 +2060,23 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				0), cs);
 		//
 		return panel;
+		//
+	}
+
+	private static JTextComponent createProviderPlatformJTextComponent(final boolean isInstalled,
+			final Provider provider) {
+		//
+		try {
+			//
+			return isInstalled ? new JTextField(getProviderPlatform(provider)) : new JTextField();
+			//
+		} catch (final Error e) {
+			//
+			errorOrPrintStackTraceOrShowMessageDialog(e);
+			//
+		} // try
+			//
+		return null;
 		//
 	}
 

@@ -283,7 +283,8 @@ class VoiceManagerTest {
 			METHOD_SET_PREFERRED_WIDTH_ARRAY, METHOD_SET_PREFERRED_WIDTH_ITERABLE, METHOD_PRINT_STACK_TRACE,
 			METHOD_GET_VALUE_FROM_CELL, METHOD_GET_MP3_TAGS, METHOD_KEY_RELEASED_FOR_TEXT_IMPORT, METHOD_IS_STATIC,
 			METHOD_IMPORT_BY_WORK_BOOK_FILES, METHOD_ACTION_PERFORMED_FOR_EXPORT_BUTTONS,
-			METHOD_CREATE_MULTI_MAP_BY_LIST_NAMES, METHOD_GET_FIELD_BY_NAME = null;
+			METHOD_CREATE_MULTI_MAP_BY_LIST_NAMES, METHOD_GET_FIELD_BY_NAME,
+			METHOD_CREATE_PROVIDER_PLATFORM_J_TEXT_COMPONENT = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -885,6 +886,10 @@ class VoiceManagerTest {
 		(METHOD_GET_FIELD_BY_NAME = clz.getDeclaredMethod("getFieldByName", Class.class, String.class))
 				.setAccessible(true);
 		//
+		(METHOD_CREATE_PROVIDER_PLATFORM_J_TEXT_COMPONENT = clz
+				.getDeclaredMethod("createProviderPlatformJTextComponent", Boolean.TYPE, Provider.class))
+				.setAccessible(true);
+		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
 		CLASS_EXPORT_TASK = Class.forName("org.springframework.context.support.VoiceManager$ExportTask");
@@ -1418,6 +1423,8 @@ class VoiceManagerTest {
 
 	private org.jsoup.nodes.Element element = null;
 
+	private Provider provider = null;
+
 	@BeforeEach
 	void beforeEach() throws ReflectiveOperationException {
 		//
@@ -1456,6 +1463,8 @@ class VoiceManagerTest {
 		logger = Reflection.newProxy(Logger.class, ih);
 		//
 		voiceMapper = Reflection.newProxy(VoiceMapper.class, ih);
+		//
+		provider = Reflection.newProxy(Provider.class, ih);
 		//
 	}
 
@@ -3745,14 +3754,14 @@ class VoiceManagerTest {
 	@Test
 	void testGetProviderName() throws Throwable {
 		//
-		Assertions.assertNull(getProviderName(Reflection.newProxy(Provider.class, ih)));
+		Assertions.assertNull(getProviderName(provider));
 		//
 	}
 
 	@Test
 	void testGetProviderVersioni() throws Throwable {
 		//
-		Assertions.assertNull(getProviderVersion(Reflection.newProxy(Provider.class, ih)));
+		Assertions.assertNull(getProviderVersion(provider));
 		//
 	}
 
@@ -6131,7 +6140,7 @@ class VoiceManagerTest {
 	@Test
 	void testGetProviderPlatform() throws Throwable {
 		//
-		Assertions.assertNull(getProviderPlatform(Reflection.newProxy(Provider.class, ih)));
+		Assertions.assertNull(getProviderPlatform(provider));
 		//
 	}
 
@@ -7616,6 +7625,28 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof Field) {
 				return (Field) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCreateProviderPlatformJTextComponent() throws Throwable {
+		//
+		Assertions.assertNotNull(createProviderPlatformJTextComponent(false, null));
+		//
+	}
+
+	private static JTextComponent createProviderPlatformJTextComponent(final boolean isInstalled,
+			final Provider provider) throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_PROVIDER_PLATFORM_J_TEXT_COMPONENT.invoke(null, isInstalled, provider);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof JTextComponent) {
+				return (JTextComponent) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
