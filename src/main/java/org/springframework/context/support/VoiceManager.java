@@ -7765,28 +7765,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final Voice voice = ObjectMap.getObject(objectMap, Voice.class);
 		//
-		if (selectedFile == null) {
-			//
-			accept(errorMessageConsumer, voice, NO_FILE_SELECTED);
-			//
-			return;
-			//
-		} else if (!selectedFile.exists()) {
-			//
-			accept(errorMessageConsumer, voice,
-					String.format("File \"%1$s\" does not exist", getAbsolutePath(selectedFile)));
-			//
-			return;
-			//
-		} else if (!isFile(selectedFile)) {
-			//
-			accept(errorMessageConsumer, voice, "Not A Regular File Selected");
-			//
-			return;
-			//
-		} else if (longValue(length(selectedFile), 0) == 0) {
-			//
-			accept(errorMessageConsumer, voice, "Empty File Selected");
+		if (!checkImportFile(selectedFile, voice, errorMessageConsumer)) {
 			//
 			return;
 			//
@@ -7906,6 +7885,39 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // try
 			//
+	}
+
+	private static boolean checkImportFile(final File file, final Voice voice,
+			final BiConsumer<Voice, String> errorMessageConsumer) {
+		//
+		if (file == null) {
+			//
+			accept(errorMessageConsumer, voice, NO_FILE_SELECTED);
+			//
+			return false;
+			//
+		} else if (!file.exists()) {
+			//
+			accept(errorMessageConsumer, voice, String.format("File \"%1$s\" does not exist", getAbsolutePath(file)));
+			//
+			return false;
+			//
+		} else if (!isFile(file)) {
+			//
+			accept(errorMessageConsumer, voice, "Not A Regular File Selected");
+			//
+			return false;
+			//
+		} else if (longValue(length(file), 0) == 0) {
+			//
+			accept(errorMessageConsumer, voice, "Empty File Selected");
+			//
+			return false;
+			//
+		} // if
+			//
+		return true;
+		//
 	}
 
 	private static String getAlgorithm(final MessageDigest instance) {
