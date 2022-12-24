@@ -4653,24 +4653,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					final String[] fileExtensions = getFileExtensions(ContentType.HTML);
 					//
-					String fileExtension = null;
-					//
-					boolean htmlFileExtensionFound = false;
-					//
-					for (int i = 0; fileExtensions != null && i < fileExtensions.length; i++) {
-						//
-						if (StringUtils.isBlank(fileExtension = fileExtensions[i])) {
-							//
-							continue;
-							//
-						} // if
-							//
-						htmlFileExtensionFound |= StringUtils.endsWithIgnoreCase(sb,
-								StringUtils.join('.', fileExtension));
-						//
-					} // for
-						//
-					if (!htmlFileExtensionFound) {
+					if (!anyMatch(
+							testAndApply(Objects::nonNull, fileExtensions, Arrays::stream, null),
+							x -> StringUtils.endsWithIgnoreCase(sb, StringUtils.join('.', x)))) {
 						//
 						if (!StringUtils.endsWith(sb, ".")) {
 							//
