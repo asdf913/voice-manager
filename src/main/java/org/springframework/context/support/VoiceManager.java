@@ -518,7 +518,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private transient SpeechApi speechApi = null;
 
-	private String[] mp3Tags, microsoftSpeechObjectLibraryAttributeNames = null;
+	@Note("MP3 Tag(s)")
+	private String[] mp3Tags = null;
+
+	private String[] microsoftSpeechObjectLibraryAttributeNames = null;
 
 	private transient ConfigurableListableBeanFactory configurableListableBeanFactory = null;
 
@@ -6101,7 +6104,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 		private static final Pattern PATTERN_ICONST = Pattern.compile("^\\d+:\\s+iconst_(\\d+)$");
 
-		private Integer bitRate, quality = null;
+		@Note("Bitrate")
+		private Integer bitRate = null;
+
+		@Note("Quality")
+		private Integer quality = null;
 
 		private Boolean vbr = null;
 
