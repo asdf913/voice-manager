@@ -9345,12 +9345,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				// JLPT
 				//
-			if (jlptAsFolder) {
-				//
-				exportJlpt(objectMap, voices);
-				//
-			} // if
-				//
+			testAndRun(jlptAsFolder, () -> exportJlpt(objectMap, voices));
+			//
 		} finally {
 			//
 			shutdown(es);
