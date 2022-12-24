@@ -8506,6 +8506,14 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(invoke(getName, instance, (Object) null));
 		//
+		// createQuality(java.lang.String[])
+		//
+		final Method createQuality = clz != null ? clz.getDeclaredMethod("createQuality", String[].class) : null;
+		//
+		Assertions.assertNull(invoke(createQuality, instance, (Object) null));
+		//
+		Assertions.assertNull(invoke(createQuality, instance, new String[] { null }));
+		//
 	}
 
 	@Test

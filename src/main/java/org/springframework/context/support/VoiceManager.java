@@ -6198,11 +6198,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				byte[] bs = null;
 				//
-				String line = null;
-				//
-				String[] lines = null;
-				//
-				Integer index1 = null, index2 = null, count = null;
+				Map<Integer, Integer> map = null;
 				//
 				for (int i = 0; ms != null && i < ms.length; i++) {
 					//
@@ -6212,40 +6208,61 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					} // if
 						//
-					lines = StringUtils.split(StringUtils.trim(Utility.codeToString(bs = CodeUtil.getCode(m.getCode()),
-							m.getConstantPool(), 0, length(bs))), '\n');
+					put(map = getIfNull(map, LinkedHashMap::new), Integer.valueOf(i),
+							createQuality(StringUtils
+									.split(StringUtils.trim(Utility.codeToString(bs = CodeUtil.getCode(m.getCode()),
+											m.getConstantPool(), 0, length(bs))), '\n')));
 					//
-					index1 = index2 = count = null;
-					//
-					for (int j = 0; lines != null && j < lines.length; j++) {
-						//
-						if ((line = lines[j]) == null) {
-							continue;
-						} // if
-							//
-						if (index1 == null && matches(matcher(PATTERN_NEW_ARRAY_FLOAT, line))) {
-							index1 = Integer.valueOf(j);
-						} else if (index2 == null && matches(matcher(PATTERN_VBR_Q, line))) {
-							index2 = Integer.valueOf(j);
-							break;
-						} // if
-							//
-						if (index1 != null && matches(matcher(PATTERN_LDC_NUMBER, line))) {
-							count = Integer.valueOf(intValue(count, 0) + 1);
-						} // if
-							//
-					} // for
-						//
-					if (index1 != null && index2 != null) {
-						break;
-					} // if
-						//
 				} // for
+					//
+				final List<Integer> counts = toList(
+						filter(map(stream(entrySet(map)), VoiceManager::getValue), Objects::nonNull));
+				//
+				final int size = IterableUtils.size(counts);
+				//
+				Integer count = null;
+				//
+				if (size == 1) {
+					count = IterableUtils.get(counts, 0);
+				} else if (size > 1) {
+					throw new IllegalStateException();
+				} // if
 					//
 				return count != null ? Range.closed(0, count.intValue() - 1) : null;
 				//
 			} // try
 				//
+		}
+
+		private static Integer createQuality(final String[] lines) {
+			//
+			String line = null;
+			//
+			Integer index1 = null, index2 = null, count = null;
+			//
+			for (int j = 0; lines != null && j < lines.length; j++) {
+				//
+				if ((line = lines[j]) == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if (index1 == null && matches(matcher(PATTERN_NEW_ARRAY_FLOAT, line))) {
+					index1 = Integer.valueOf(j);
+				} else if (index2 == null && matches(matcher(PATTERN_VBR_Q, line))) {
+					index2 = Integer.valueOf(j);
+					break;
+				} // if
+					//
+				if (index1 != null && matches(matcher(PATTERN_LDC_NUMBER, line))) {
+					count = Integer.valueOf(intValue(count, 0) + 1);
+				} // if
+					//
+			} // for
+				//
+			return count;
+			//
 		}
 
 		private static Map<String, Integer> createQualityMap() throws IOException {
