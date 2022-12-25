@@ -224,16 +224,16 @@ class VoiceManagerTest {
 
 	private static Class<?> CLASS_OBJECT_MAP, CLASS_BOOLEAN_MAP, CLASS_IH, CLASS_EXPORT_TASK = null;
 
-	private static Method METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_GET_FILE_EXTENSION, METHOD_DIGEST,
-			METHOD_GET_MAPPER, METHOD_INSERT_OR_UPDATE, METHOD_SET_ENABLED_2, METHOD_SET_ENABLED_3,
-			METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_CAST, METHOD_INT_VALUE, METHOD_LONG_VALUE,
-			METHOD_GET_PROPERTY_PROPERTY_RESOLVER, METHOD_GET_PROPERTY_CUSTOM_PROPERTIES, METHOD_PARSE_EXPRESSION,
-			METHOD_GET_VALUE, METHOD_GET_SOURCE_VOICE, METHOD_EXPORT, METHOD_MAP, METHOD_MAP_TO_INT, METHOD_MAP_TO_LONG,
-			METHOD_MAX_STREAM, METHOD_MAX_INT_STREAM, METHOD_OR_ELSE_OPTIONAL, METHOD_OR_ELSE_OPTIONAL_INT,
-			METHOD_FOR_EACH_STREAM, METHOD_FOR_EACH_ITERABLE, METHOD_CREATE_WORK_BOOK_LIST,
-			METHOD_CREATE_WORK_BOOK_MULTI_MAP, METHOD_CREATE_VOICE, METHOD_GET_MESSAGE, METHOD_INVOKE,
-			METHOD_ANNOTATION_TYPE, METHOD_FIND_FIRST, METHOD_GET_DECLARED_METHODS, METHOD_FOR_NAME, METHOD_FILTER,
-			METHOD_SET_TEXT, METHOD_GET_PREFERRED_WIDTH, METHOD_IMPORT_VOICE1, METHOD_IMPORT_VOICE3,
+	private static Method METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_GET_FILE_EXTENSION_CONTENT_INFO,
+			METHOD_GET_FILE_EXTENSION_FILE_FORMAT, METHOD_DIGEST, METHOD_GET_MAPPER, METHOD_INSERT_OR_UPDATE,
+			METHOD_SET_ENABLED_2, METHOD_SET_ENABLED_3, METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_CAST,
+			METHOD_INT_VALUE, METHOD_LONG_VALUE, METHOD_GET_PROPERTY_PROPERTY_RESOLVER,
+			METHOD_GET_PROPERTY_CUSTOM_PROPERTIES, METHOD_PARSE_EXPRESSION, METHOD_GET_VALUE, METHOD_GET_SOURCE_VOICE,
+			METHOD_EXPORT, METHOD_MAP, METHOD_MAP_TO_INT, METHOD_MAP_TO_LONG, METHOD_MAX_STREAM, METHOD_MAX_INT_STREAM,
+			METHOD_OR_ELSE_OPTIONAL, METHOD_OR_ELSE_OPTIONAL_INT, METHOD_FOR_EACH_STREAM, METHOD_FOR_EACH_ITERABLE,
+			METHOD_CREATE_WORK_BOOK_LIST, METHOD_CREATE_WORK_BOOK_MULTI_MAP, METHOD_CREATE_VOICE, METHOD_GET_MESSAGE,
+			METHOD_INVOKE, METHOD_ANNOTATION_TYPE, METHOD_FIND_FIRST, METHOD_GET_DECLARED_METHODS, METHOD_FOR_NAME,
+			METHOD_FILTER, METHOD_SET_TEXT, METHOD_GET_PREFERRED_WIDTH, METHOD_IMPORT_VOICE1, METHOD_IMPORT_VOICE3,
 			METHOD_IMPORT_VOICE5, METHOD_ADD_COLLECTION, METHOD_ADD_LIST, METHOD_CREATE_IMPORT_FILE_TEMPLATE_BYTE_ARRAY,
 			METHOD_CREATE_CELL, METHOD_SET_CELL_VALUE, METHOD_ANY_MATCH, METHOD_COLLECT, METHOD_NAME,
 			METHOD_GET_SELECTED_ITEM, METHOD_WRITE, METHOD_MATCHER, METHOD_SET_VALUE_J_PROGRESS_BAR,
@@ -302,7 +302,11 @@ class VoiceManagerTest {
 		(METHOD_SET_CONTENTS = clz.getDeclaredMethod("setContents", Clipboard.class, Transferable.class,
 				ClipboardOwner.class)).setAccessible(true);
 		//
-		(METHOD_GET_FILE_EXTENSION = clz.getDeclaredMethod("getFileExtension", ContentInfo.class)).setAccessible(true);
+		(METHOD_GET_FILE_EXTENSION_CONTENT_INFO = clz.getDeclaredMethod("getFileExtension", ContentInfo.class))
+				.setAccessible(true);
+		//
+		(METHOD_GET_FILE_EXTENSION_FILE_FORMAT = clz.getDeclaredMethod("getFileExtension", FileFormat.class))
+				.setAccessible(true);
 		//
 		(METHOD_DIGEST = clz.getDeclaredMethod("digest", MessageDigest.class, byte[].class)).setAccessible(true);
 		//
@@ -2406,6 +2410,8 @@ class VoiceManagerTest {
 	@Test
 	void testGetFileExtension() throws Throwable {
 		//
+		Assertions.assertNull(getFileExtension((FileFormat) null));
+		//
 		Assertions.assertNull(getFileExtension(new ContentInfo(null, null, EMPTY, false)));
 		//
 		Assertions.assertEquals("mp3", getFileExtension(new ContentInfo(null, null, "MPEG ADTS, layer III.", false)));
@@ -2420,7 +2426,21 @@ class VoiceManagerTest {
 
 	private static String getFileExtension(final ContentInfo ci) throws Throwable {
 		try {
-			final Object obj = METHOD_GET_FILE_EXTENSION.invoke(null, ci);
+			final Object obj = METHOD_GET_FILE_EXTENSION_CONTENT_INFO.invoke(null, ci);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static String getFileExtension(final FileFormat instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_FILE_EXTENSION_FILE_FORMAT.invoke(null, instance);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof String) {

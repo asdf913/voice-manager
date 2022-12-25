@@ -4754,7 +4754,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				exportMicrosoftAccess(values(getBeansOfType(configurableListableBeanFactory, DataSource.class)),
 						fileFormat, file = new File(String.format("voice_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.%2$s",
-								new Date(), fileFormat != null ? fileFormat.getFileExtension() : null)));
+								new Date(), getFileExtension(fileFormat))));
 				//
 			} // if
 				//
@@ -4780,6 +4780,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // try
 			//
+	}
+
+	private static String getFileExtension(final FileFormat instance) {
+		return instance != null ? instance.getFileExtension() : null;
 	}
 
 	private static <V> Collection<V> values(final Map<?, V> instance) {
