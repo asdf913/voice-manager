@@ -73,6 +73,7 @@
 		</property>
 		<property name="exportPresentationTemplate" value="${org.springframework.context.support.VoiceManager.exportPresentationTemplate}" />
 		<property name="folderInPresentation" value="${org.springframework.context.support.VoiceManager.folderInPresentation}" />
+		<property name="microsoftAccessFileFormat" value="${org.springframework.context.support.VoiceManager.microsoftAccessFileFormat}" />
 	</bean>
 
 	<bean id="DataSource" class="org.h2.jdbcx.JdbcConnectionPool"

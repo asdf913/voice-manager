@@ -580,6 +580,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private String[] voiceIds = null;
 
+	private FileFormat microsoftAccessFileFormat = null;
+
 	private VoiceManager() {
 	}
 
@@ -1049,6 +1051,35 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	public void setFolderInPresentation(final String folderInPresentation) {
 		this.folderInPresentation = folderInPresentation;
+	}
+
+	public void setMicrosoftAccessFileFormat(final Object object) {
+		//
+		if (object instanceof FileFormat) {
+			//
+			this.microsoftAccessFileFormat = (FileFormat) object;
+			//
+			return;
+			//
+		} // if
+			//
+		final List<FileFormat> fileFormats = toList(
+				filter(testAndApply(Objects::nonNull, FileFormat.values(), Arrays::stream, null),
+						x -> StringUtils.startsWithIgnoreCase(name(x), toString(object))
+								|| StringUtils.startsWithIgnoreCase(getFileExtension(x), toString(object))));
+		//
+		final int size = IterableUtils.size(fileFormats);
+		//
+		if (size == 1) {
+			//
+			this.microsoftAccessFileFormat = IterableUtils.get(fileFormats, 0);
+			//
+		} else if (size > 1) {
+			//
+			throw new IllegalArgumentException();
+			//
+		} // if
+			//
 	}
 
 	private static <E> Stream<E> stream(final Collection<E> instance) {
@@ -4205,7 +4236,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				);
 				//
 				if (Objects.equals("wav", getFileExtension(
-						testAndApply(Objects::nonNull, file, new ContentInfoUtil()::findMatch, null)))) {
+						(ContentInfo) testAndApply(Objects::nonNull, file, new ContentInfoUtil()::findMatch, null)))) {
 					//
 					final ByteConverter byteConverter = getByteConverter(configurableListableBeanFactory, FORMAT,
 							getSelectedItem(cbmAudioFormatExecute));
@@ -4750,11 +4781,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			if (isSelected(cbExportMicrosoftAccess)) {
 				//
-				final FileFormat fileFormat = FileFormat.V2000;
-				//
 				exportMicrosoftAccess(values(getBeansOfType(configurableListableBeanFactory, DataSource.class)),
-						fileFormat, file = new File(String.format("voice_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.%2$s",
-								new Date(), getFileExtension(fileFormat))));
+						microsoftAccessFileFormat,
+						file = new File(String.format("voice_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.%2$s", new Date(),
+								getFileExtension(microsoftAccessFileFormat))));
 				//
 			} // if
 				//
@@ -6642,8 +6672,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static List<Pair<String, ?>> getMp3TagParirs(final File file, final String... attributes)
 			throws BaseException, IOException, IllegalAccessException, InvocationTargetException {
 		//
-		if (Objects.equals("mp3",
-				getFileExtension(testAndApply(VoiceManager::isFile, file, new ContentInfoUtil()::findMatch, null)))) {
+		if (Objects.equals("mp3", getFileExtension(
+				(ContentInfo) testAndApply(VoiceManager::isFile, file, new ContentInfoUtil()::findMatch, null)))) {
 			//
 			final Mp3File mp3File = new Mp3File(file);
 			//
@@ -8741,7 +8771,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		private static void setMp3Title(final File file) throws IOException, BaseException {
 			//
 			final String fileExtension = getFileExtension(
-					testAndApply(VoiceManager::isFile, file, new ContentInfoUtil()::findMatch, null));
+					(ContentInfo) testAndApply(VoiceManager::isFile, file, new ContentInfoUtil()::findMatch, null));
 			//
 			if (Objects.equals("mp3", fileExtension)) {
 				//

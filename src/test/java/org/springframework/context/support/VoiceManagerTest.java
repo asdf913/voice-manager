@@ -1564,6 +1564,59 @@ class VoiceManagerTest {
 	}
 
 	@Test
+	void testSetMicrosoftAccessFileFormat() throws Exception {
+		//
+		final Field microsoftAccessFileFormat = VoiceManager.class.getDeclaredField("microsoftAccessFileFormat");
+		//
+		if (microsoftAccessFileFormat != null) {
+			//
+			microsoftAccessFileFormat.setAccessible(true);
+			//
+		} // if
+			//
+		if (instance != null) {
+			//
+			instance.setMicrosoftAccessFileFormat(null);
+			//
+		} // if
+			//
+		Assertions.assertNull(get(microsoftAccessFileFormat, instance));
+		//
+		if (instance != null) {
+			//
+			instance.setMicrosoftAccessFileFormat("V1");
+			//
+		} // if
+			//
+		Assertions.assertEquals(FileFormat.V1997, get(microsoftAccessFileFormat, instance));
+		//
+		if (instance != null) {
+			//
+			Assertions.assertThrows(IllegalArgumentException.class, () -> instance.setMicrosoftAccessFileFormat("V2"));
+			//
+		} // if
+			//
+		if (instance != null) {
+			//
+			instance.setMicrosoftAccessFileFormat(".mn");
+			//
+		} // if
+			//
+		Assertions.assertEquals(FileFormat.MSISAM, get(microsoftAccessFileFormat, instance));
+		//
+		// com.healthmarketscience.jackcess.Database.FileFormat
+		//
+		if (instance != null) {
+			//
+			instance.setMicrosoftAccessFileFormat(FileFormat.GENERIC_JET4);
+			//
+		} // if
+			//
+		Assertions.assertEquals(FileFormat.GENERIC_JET4, get(microsoftAccessFileFormat, instance));
+		//
+	}
+
+	@Test
 	void testGetMimeTypeAndBase64EncodedString() throws IOException {
 		//
 		Assertions.assertEquals(Pair.of(null, null), VoiceManager.getMimeTypeAndBase64EncodedString(null, null));
