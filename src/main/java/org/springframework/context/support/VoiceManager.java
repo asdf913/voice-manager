@@ -4235,8 +4235,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				);
 				//
-				if (Objects.equals("wav", getFileExtension(
-						(ContentInfo) testAndApply(Objects::nonNull, file, new ContentInfoUtil()::findMatch, null)))) {
+				if (Objects.equals("wav", getFileExtension(cast(ContentInfo.class,
+						testAndApply(Objects::nonNull, file, new ContentInfoUtil()::findMatch, null))))) {
 					//
 					final ByteConverter byteConverter = getByteConverter(configurableListableBeanFactory, FORMAT,
 							getSelectedItem(cbmAudioFormatExecute));
@@ -6672,8 +6672,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static List<Pair<String, ?>> getMp3TagParirs(final File file, final String... attributes)
 			throws BaseException, IOException, IllegalAccessException, InvocationTargetException {
 		//
-		if (Objects.equals("mp3", getFileExtension(
-				(ContentInfo) testAndApply(VoiceManager::isFile, file, new ContentInfoUtil()::findMatch, null)))) {
+		if (Objects.equals("mp3", getFileExtension(cast(ContentInfo.class,
+				testAndApply(VoiceManager::isFile, file, new ContentInfoUtil()::findMatch, null))))) {
 			//
 			final Mp3File mp3File = new Mp3File(file);
 			//
@@ -8770,8 +8770,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 		private static void setMp3Title(final File file) throws IOException, BaseException {
 			//
-			final String fileExtension = getFileExtension(
-					(ContentInfo) testAndApply(VoiceManager::isFile, file, new ContentInfoUtil()::findMatch, null));
+			final String fileExtension = getFileExtension(cast(ContentInfo.class,
+					testAndApply(VoiceManager::isFile, file, new ContentInfoUtil()::findMatch, null)));
 			//
 			if (Objects.equals("mp3", fileExtension)) {
 				//
