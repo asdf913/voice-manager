@@ -196,6 +196,7 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.Range;
 import com.google.common.collect.Table;
 import com.google.common.reflect.Reflection;
+import com.healthmarketscience.jackcess.Database.FileFormat;
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentType;
 import com.mpatric.mp3agic.ID3v1;
@@ -903,8 +904,8 @@ class VoiceManagerTest {
 		//
 		(METHOD_VALUES = clz.getDeclaredMethod("values", Map.class)).setAccessible(true);
 		//
-		(METHOD_EXPORT_MICROSOFT_ACCESS = clz.getDeclaredMethod("exportMicrosoftAccess", Iterable.class, File.class))
-				.setAccessible(true);
+		(METHOD_EXPORT_MICROSOFT_ACCESS = clz.getDeclaredMethod("exportMicrosoftAccess", Iterable.class,
+				FileFormat.class, File.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -7777,9 +7778,9 @@ class VoiceManagerTest {
 	@Test
 	void testExportMicrosoftAccess() throws Throwable {
 		//
-		Assertions.assertDoesNotThrow(() -> exportMicrosoftAccess((Iterable) iterable, null));
+		Assertions.assertDoesNotThrow(() -> exportMicrosoftAccess((Iterable) iterable, null, null));
 		//
-		Assertions.assertDoesNotThrow(() -> exportMicrosoftAccess(Collections.singleton(null), null));
+		Assertions.assertDoesNotThrow(() -> exportMicrosoftAccess(Collections.singleton(null), null, null));
 		//
 		final Iterable<DataSource> dss = Collections.singleton(Reflection.newProxy(DataSource.class, ih));
 		//
@@ -7791,13 +7792,14 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> exportMicrosoftAccess(dss, null));
+		Assertions.assertDoesNotThrow(() -> exportMicrosoftAccess(dss, null, null));
 		//
 	}
 
-	private static void exportMicrosoftAccess(final Iterable<DataSource> dss, final File file) throws Throwable {
+	private static void exportMicrosoftAccess(final Iterable<DataSource> dss, final FileFormat fileFormat,
+			final File file) throws Throwable {
 		try {
-			METHOD_EXPORT_MICROSOFT_ACCESS.invoke(null, dss, file);
+			METHOD_EXPORT_MICROSOFT_ACCESS.invoke(null, dss, fileFormat, file);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

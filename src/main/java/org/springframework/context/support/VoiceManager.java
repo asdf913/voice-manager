@@ -291,6 +291,7 @@ import com.google.common.collect.Table;
 import com.google.common.collect.TableUtil;
 import com.google.common.reflect.Reflection;
 import com.healthmarketscience.jackcess.Database;
+import com.healthmarketscience.jackcess.Database.FileFormat;
 import com.healthmarketscience.jackcess.DatabaseBuilder;
 import com.healthmarketscience.jackcess.util.ImportUtil;
 import com.j256.simplemagic.ContentInfo;
@@ -4749,8 +4750,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			if (isSelected(cbExportMicrosoftAccess)) {
 				//
+				final FileFormat fileFormat = FileFormat.V2000;
+				//
 				exportMicrosoftAccess(values(getBeansOfType(configurableListableBeanFactory, DataSource.class)),
-						file = new File(String.format("voice_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.mdb", new Date())));
+						fileFormat, file = new File(String.format("voice_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.%2$s",
+								new Date(), fileFormat != null ? fileFormat.getFileExtension() : null)));
 				//
 			} // if
 				//
@@ -4782,11 +4786,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.values() : null;
 	}
 
-	private static void exportMicrosoftAccess(final Iterable<DataSource> dss, final File file)
-			throws IOException, SQLException {
+	private static void exportMicrosoftAccess(final Iterable<DataSource> dss, final FileFormat fileFormat,
+			final File file) throws IOException, SQLException {
 		//
 		try (final Database db = create(setFileFormat(testAndApply(Objects::nonNull, file, DatabaseBuilder::new, null),
-				Database.FileFormat.V2000))) {
+				ObjectUtils.defaultIfNull(fileFormat, FileFormat.V2000)))) {
 			//
 			if (dss != null && dss.iterator() != null) {
 				//
