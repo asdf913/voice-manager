@@ -1998,18 +1998,6 @@ class VoiceManagerTest {
 		Assertions.assertDoesNotThrow(
 				() -> actionPerformed(instance, new ActionEvent(btnExportGaKuNenBeTsuKanJi, 0, null)));
 		//
-		// btnExportJoYoKanJi
-		//
-		final AbstractButton btnExportJoYoKanJi = new JButton();
-		//
-		if (instance != null) {
-			//
-			FieldUtils.writeDeclaredField(instance, "btnExportJoYoKanJi", btnExportJoYoKanJi, true);
-			//
-		} // if
-			//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnExportJoYoKanJi, 0, null)));
-		//
 		// btnExportMicrosoftSpeechObjectLibraryInformation
 		//
 		final AbstractButton btnExportMicrosoftSpeechObjectLibraryInformation = new JButton();
@@ -2096,6 +2084,18 @@ class VoiceManagerTest {
 
 	@Test
 	void testActionPerformed2() throws IllegalAccessException {
+		//
+		// btnExportJoYoKanJi
+		//
+		final AbstractButton btnExportJoYoKanJi = new JButton();
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "btnExportJoYoKanJi", btnExportJoYoKanJi, true);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnExportJoYoKanJi, 0, null)));
 		//
 		// btnDllPathCopy
 		//
