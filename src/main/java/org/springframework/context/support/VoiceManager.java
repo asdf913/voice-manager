@@ -4839,7 +4839,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		try (final Database db = testAndApply(Objects::nonNull, file, DatabaseBuilder::open, null)) {
 			//
-			if (db == null || CollectionUtils.isEmpty(db.getTableNames())) {
+			if (CollectionUtils.isEmpty(getTableNames(db))) {
 				//
 				delete(file);
 				//
@@ -4867,6 +4867,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static Database create(final DatabaseBuilder instance) throws IOException {
 		return instance != null ? instance.create() : null;
+	}
+
+	private static Set<String> getTableNames(final Database instance) throws IOException {
+		return instance != null ? instance.getTableNames() : null;
 	}
 
 	private static String getLongestString(final String[] ss) {
