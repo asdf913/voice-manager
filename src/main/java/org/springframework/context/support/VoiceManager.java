@@ -4792,7 +4792,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				for (final DataSource ds : dss) {
 					//
-					try (final Connection connection = ds != null ? ds.getConnection() : null) {
+					try (final Connection connection = getConnection(ds)) {
 						//
 						// Retrieve all table name(s) from "information_schema.tables" table
 						//
@@ -4847,6 +4847,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // try
 			//
+	}
+
+	private static Connection getConnection(final DataSource instance) throws SQLException {
+		return instance != null ? instance.getConnection() : null;
 	}
 
 	private static PreparedStatement prepareStatement(final Connection instance, final String sql) throws SQLException {
