@@ -4829,16 +4829,18 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final File file = ObjectMap.getObject(objectMap, File.class);
 		//
-		final FileFormat fileFormat = ObjectMap.getObject(objectMap, FileFormat.class);
-		//
 		try (final Database db = create(setFileFormat(testAndApply(Objects::nonNull, file, DatabaseBuilder::new, null),
-				ObjectUtils.defaultIfNull(fileFormat, FileFormat.V2000)))) {
+				ObjectUtils.defaultIfNull(ObjectMap.getObject(objectMap, FileFormat.class), FileFormat.V2000)))) {
 			//
 			if (dss != null && dss.iterator() != null) {
 				//
 				for (final DataSource ds : dss) {
 					//
-					exportMicrosoftAccess(db, ds);
+					ObjectMap.setObject(objectMap, Database.class, db);
+					//
+					ObjectMap.setObject(objectMap, DataSource.class, ds);
+					//
+					exportMicrosoftAccess(objectMap);
 					//
 				} // for
 					//
@@ -4854,9 +4856,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	private static void exportMicrosoftAccess(final Database db, final DataSource ds) throws IOException, SQLException {
+	private static void exportMicrosoftAccess(final ObjectMap objectMap) throws IOException, SQLException {
 		//
-		try (final Connection connection = getConnection(ds)) {
+		final Database db = ObjectMap.getObject(objectMap, Database.class);
+		//
+		try (final Connection connection = getConnection(ObjectMap.getObject(objectMap, DataSource.class))) {
 			//
 			// Retrieve all table name(s) from "information_schema.tables" table
 			//
