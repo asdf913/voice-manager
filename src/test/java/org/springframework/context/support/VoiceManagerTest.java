@@ -246,7 +246,7 @@ class VoiceManagerTest {
 			METHOD_WRITE_VOICE_TO_FILE, METHOD_GET_MP3_TAG_VALUE_FILE, METHOD_GET_MP3_TAG_VALUE_LIST,
 			METHOD_GET_MP3_TAG_PARIRS_ID3V1, METHOD_GET_METHODS_CLASS, METHOD_GET_METHODS_JAVA_CLASS,
 			METHOD_COPY_OBJECT_MAP, METHOD_DELETE, METHOD_DELETE_ON_EXIT, METHOD_CONVERT_LANGUAGE_CODE_TO_TEXT,
-			METHOD_IS_SELECTED, METHOD_SET_HIRAGANA_OR_KATAKANA, METHOD_SET_ROMAJI, METHOD_OR,
+			METHOD_IS_SELECTED, METHOD_SET_HIRAGANA_OR_KATAKANA, METHOD_SET_ROMAJI, METHOD_AND, METHOD_OR,
 			METHOD_CLEAR_DEFAULT_TABLE_MODEL, METHOD_CLEAR_STRING_BUILDER, METHOD_EXECUTE, METHOD_PUT_MAP,
 			METHOD_PUT_MULTI_MAP, METHOD_GET_BYTE_CONVERTER, METHOD_GET_PROPERTIES, METHOD_GET_CUSTOM_PROPERTIES,
 			METHOD_CONTAINS_CUSTOM_PROPERTIES, METHOD_CONTAINS_COLLECTION, METHOD_CONTAINS_LOOKUP, METHOD_GET_LPW_STR,
@@ -497,6 +497,9 @@ class VoiceManagerTest {
 				.setAccessible(true);
 		//
 		(METHOD_SET_ROMAJI = clz.getDeclaredMethod("setRomaji", Voice.class, Jakaroma.class)).setAccessible(true);
+		//
+		(METHOD_AND = clz.getDeclaredMethod("and", Predicate.class, Object.class, Object.class, Object[].class))
+				.setAccessible(true);
 		//
 		(METHOD_OR = clz.getDeclaredMethod("or", Predicate.class, Object.class, Object.class, Object[].class))
 				.setAccessible(true);
@@ -4301,6 +4304,28 @@ class VoiceManagerTest {
 	private static void setRomaji(final Voice voice, final Jakaroma jakaroma) throws Throwable {
 		try {
 			METHOD_SET_ROMAJI.invoke(null, voice, jakaroma);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testAnd() throws Throwable {
+		//
+		Assertions.assertTrue(and(Objects::nonNull, EMPTY, EMPTY, (Object[]) null));
+		//
+		Assertions.assertTrue(and(Objects::nonNull, EMPTY, EMPTY, EMPTY));
+		//
+	}
+
+	private static <T> boolean and(final Predicate<T> predicate, final T a, final T b, final T... values)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_AND.invoke(null, predicate, a, b, values);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

@@ -4899,7 +4899,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				try (final ResultSet rs = executeQuery(
 						prepareStatement(connection, String.format("select * from %1$s", tableName)))) {
 					//
-					if (rs != null && db != null && tableName != null) {
+					if (and(Objects::nonNull, rs, db, tableName)) {
 						//
 						ImportUtil.importResultSet(rs, db, tableName);
 						//
@@ -10635,6 +10635,26 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		} // if
 			//
 		return null;
+		//
+	}
+
+	private static <T> boolean and(final Predicate<T> predicate, final T a, final T b, final T... values) {
+		//
+		boolean result = test(predicate, a) && test(predicate, b);
+		//
+		if (!result) {
+			//
+			return result;
+			//
+		} // if
+			//
+		for (int i = 0; values != null && i < values.length; i++) {
+			//
+			result &= test(predicate, values[i]);
+			//
+		} // for
+			//
+		return result;
 		//
 	}
 
