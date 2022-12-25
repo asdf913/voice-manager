@@ -4783,7 +4783,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				ObjectMap.setObject(objectMap, File.class,
 						file = new File(String.format("voice_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.%2$s", new Date(),
-								getFileExtension(microsoftAccessFileFormat))));
+								StringUtils.substringAfter(getFileExtension(microsoftAccessFileFormat), '.'))));
 				//
 				ObjectMap.setObject(objectMap, FileFormat.class, microsoftAccessFileFormat);
 				//
