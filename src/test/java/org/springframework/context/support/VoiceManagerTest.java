@@ -42,6 +42,9 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.security.MessageDigest;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.text.NumberFormat;
 import java.time.Duration;
 import java.util.Arrays;
@@ -80,6 +83,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import javax.sound.sampled.AudioFormat;
+import javax.sql.DataSource;
 import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
@@ -284,7 +288,8 @@ class VoiceManagerTest {
 			METHOD_GET_VALUE_FROM_CELL, METHOD_GET_MP3_TAGS, METHOD_KEY_RELEASED_FOR_TEXT_IMPORT, METHOD_IS_STATIC,
 			METHOD_IMPORT_BY_WORK_BOOK_FILES, METHOD_ACTION_PERFORMED_FOR_EXPORT_BUTTONS,
 			METHOD_CREATE_MULTI_MAP_BY_LIST_NAMES, METHOD_GET_FIELD_BY_NAME,
-			METHOD_CREATE_PROVIDER_VERSION_J_TEXT_COMPONENT, METHOD_CREATE_PROVIDER_PLATFORM_J_TEXT_COMPONENT = null;
+			METHOD_CREATE_PROVIDER_VERSION_J_TEXT_COMPONENT, METHOD_CREATE_PROVIDER_PLATFORM_J_TEXT_COMPONENT,
+			METHOD_SET_SPEECH_VOLUME, METHOD_VALUES, METHOD_EXPORT_MICROSOFT_ACCESS = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -893,6 +898,14 @@ class VoiceManagerTest {
 				.getDeclaredMethod("createProviderPlatformJTextComponent", Boolean.TYPE, Provider.class))
 				.setAccessible(true);
 		//
+		(METHOD_SET_SPEECH_VOLUME = clz.getDeclaredMethod("setSpeechVolume", Number.class, Number.class))
+				.setAccessible(true);
+		//
+		(METHOD_VALUES = clz.getDeclaredMethod("values", Map.class)).setAccessible(true);
+		//
+		(METHOD_EXPORT_MICROSOFT_ACCESS = clz.getDeclaredMethod("exportMicrosoftAccess", Iterable.class, File.class))
+				.setAccessible(true);
+		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
 		CLASS_EXPORT_TASK = Class.forName("org.springframework.context.support.VoiceManager$ExportTask");
@@ -963,6 +976,12 @@ class VoiceManagerTest {
 		private Set<?> keySet = null;
 
 		private CellType cellType = null;
+
+		private Connection connection = null;
+
+		private PreparedStatement preparedStatement = null;
+
+		private ResultSet resultSet = null;
 
 		private Map<Object, String> getProperties() {
 			if (properties == null) {
@@ -1385,6 +1404,30 @@ class VoiceManagerTest {
 				if (Objects.equals(methodName, "createFormulaEvaluator")) {
 					//
 					return null;
+					//
+				} // if
+					//
+			} else if (proxy instanceof DataSource) {
+				//
+				if (Objects.equals(methodName, "getConnection")) {
+					//
+					return connection;
+					//
+				} // if
+					//
+			} else if (proxy instanceof Connection) {
+				//
+				if (Objects.equals(methodName, "prepareStatement")) {
+					//
+					return preparedStatement;
+					//
+				} // if
+					//
+			} else if (proxy instanceof PreparedStatement) {
+				//
+				if (Objects.equals(methodName, "executeQuery")) {
+					//
+					return resultSet;
 					//
 				} // if
 					//
@@ -1883,6 +1926,18 @@ class VoiceManagerTest {
 		if (instance != null) {
 			//
 			FieldUtils.writeDeclaredField(instance, "cbExportHtmlAsZip", cbExportHtmlAsZip, true);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnExport));
+		//
+		final AbstractButton cbExportMicrosoftAccess = new JCheckBox();
+		//
+		cbExportMicrosoftAccess.setSelected(true);
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "cbExportMicrosoftAccess", cbExportMicrosoftAccess, true);
 			//
 		} // if
 			//
@@ -7674,6 +7729,75 @@ class VoiceManagerTest {
 				return (JTextComponent) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetSpeechVolume() {
+		//
+		final Integer zero = Integer.valueOf(ZERO);
+		//
+		Assertions.assertDoesNotThrow(() -> setSpeechVolume(zero, null));
+		//
+		Assertions.assertDoesNotThrow(() -> setSpeechVolume(null, zero));
+		//
+	}
+
+	private void setSpeechVolume(final Number speechVolume, final Number upperEnpoint) throws Throwable {
+		try {
+			METHOD_SET_SPEECH_VOLUME.invoke(instance, speechVolume, upperEnpoint);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testValues() throws Throwable {
+		//
+		Assertions.assertEquals(Collections.emptySet(), values(Collections.emptyMap()));
+		//
+	}
+
+	private static <V> Collection<V> values(final Map<?, V> instance) throws Throwable {
+		try {
+			final Object obj = METHOD_VALUES.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Collection) {
+				return (Collection) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testExportMicrosoftAccess() throws Throwable {
+		//
+		Assertions.assertDoesNotThrow(() -> exportMicrosoftAccess((Iterable) iterable, null));
+		//
+		Assertions.assertDoesNotThrow(() -> exportMicrosoftAccess(Collections.singleton(null), null));
+		//
+		final Iterable<DataSource> dss = Collections.singleton(Reflection.newProxy(DataSource.class, ih));
+		//
+		if (ih != null) {
+			//
+			ih.connection = Reflection.newProxy(Connection.class, ih);
+			//
+			ih.preparedStatement = Reflection.newProxy(PreparedStatement.class, ih);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> exportMicrosoftAccess(dss, null));
+		//
+	}
+
+	private static void exportMicrosoftAccess(final Iterable<DataSource> dss, final File file) throws Throwable {
+		try {
+			METHOD_EXPORT_MICROSOFT_ACCESS.invoke(null, dss, file);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

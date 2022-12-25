@@ -58,6 +58,10 @@ import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -73,6 +77,7 @@ import java.util.Date;
 import java.util.EventObject;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -108,6 +113,7 @@ import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.sql.DataSource;
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.ComboBoxModel;
@@ -169,6 +175,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.collections4.IteratorUtils;
 import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
@@ -205,7 +212,6 @@ import org.apache.poi.poifs.crypt.EncryptionMode;
 import org.apache.poi.poifs.crypt.Encryptor;
 import org.apache.poi.poifs.filesystem.DirectoryNode;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
-import org.apache.poi.ss.formula.functions.T;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
@@ -284,6 +290,9 @@ import com.google.common.collect.Range;
 import com.google.common.collect.Table;
 import com.google.common.collect.TableUtil;
 import com.google.common.reflect.Reflection;
+import com.healthmarketscience.jackcess.Database;
+import com.healthmarketscience.jackcess.DatabaseBuilder;
+import com.healthmarketscience.jackcess.util.ImportUtil;
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
 import com.j256.simplemagic.ContentType;
@@ -441,8 +450,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private AbstractButton cbUseTtsVoice, btnExecute, btnImportFileTemplate, btnImport, btnImportWithinFolder,
 			cbOverMp3Title, cbOrdinalPositionAsFileNamePrefix, btnExport, cbExportHtml, cbExportListHtml,
 			cbExportHtmlAsZip, cbExportHtmlRemoveAfterZip, cbExportListSheet, cbExportJlptSheet, cbExportPresentation,
-			cbEmbedAudioInPresentation, cbHideAudioImageInPresentation, cbImportFileTemplateGenerateBlankRow,
-			cbJlptAsFolder, btnExportBrowse, btnPronunciationPageUrlCheck = null;
+			cbEmbedAudioInPresentation, cbHideAudioImageInPresentation, cbExportMicrosoftAccess,
+			cbImportFileTemplateGenerateBlankRow, cbJlptAsFolder, btnExportBrowse, btnPronunciationPageUrlCheck = null;
 
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.FIELD)
@@ -2959,6 +2968,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		cbHideAudioImageInPresentation.setSelected(Boolean.parseBoolean(getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.hideAudioImageInPresentation")));
 		//
+		// Export Microsoft Access
+		//
+		panel.add(new JLabel(), String.format("span %1$s", 4));
+		//
+		panel.add(cbExportMicrosoftAccess = new JCheckBox("Export Microsoft Access"),
+				String.format("%1$s,span %2$s", WRAP, 2));
+		//
+		cbExportMicrosoftAccess.setSelected(Boolean.parseBoolean(getProperty(propertyResolver,
+				"org.springframework.context.support.VoiceManager.exportMicrosoftAccess")));
+		//
 		panel.add(new JLabel(), String.format("span %1$s", 4));
 		//
 		panel.add(btnExport = new JButton("Export"), WRAP);
@@ -4646,7 +4665,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			testAndAccept((a, b) -> Objects.equals(Boolean.TRUE, a), fileToBeDeleted, file, (a, b) -> delete(b));
 			//
-			// export HTML file
+			// Export HTML file
 			//
 			if (isSelected(cbExportHtml)) {
 				//
@@ -4726,8 +4745,17 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 			} // if
 				//
+				// Export Microsoft Access
+				//
+			if (isSelected(cbExportMicrosoftAccess)) {
+				//
+				exportMicrosoftAccess(values(getBeansOfType(configurableListableBeanFactory, DataSource.class)),
+						file = new File(String.format("voice_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.mdb", new Date())));
+				//
+			} // if
+				//
 		} catch (final IOException | IllegalAccessException | TemplateException | InvalidFormatException
-				| GeneralSecurityException e) {
+				| GeneralSecurityException | SQLException e) {
 			//
 			errorOrPrintStackTraceOrShowMessageDialog(headless, e);
 			//
@@ -4748,6 +4776,93 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // try
 			//
+	}
+
+	private static <V> Collection<V> values(final Map<?, V> instance) {
+		return instance != null ? instance.values() : null;
+	}
+
+	private static void exportMicrosoftAccess(final Iterable<DataSource> dss, final File file)
+			throws IOException, SQLException {
+		//
+		try (final Database db = create(setFileFormat(testAndApply(Objects::nonNull, file, DatabaseBuilder::new, null),
+				Database.FileFormat.V2000))) {
+			//
+			if (dss != null && dss.iterator() != null) {
+				//
+				for (final DataSource ds : dss) {
+					//
+					try (final Connection connection = ds != null ? ds.getConnection() : null) {
+						//
+						// Retrieve all table name(s) from "information_schema.tables" table
+						//
+						final PreparedStatement ps = prepareStatement(connection,
+								"select distinct table_name from information_schema.tables where table_schema='PUBLIC' order by table_name");
+						//
+						ResultSet rs = executeQuery(ps);
+						//
+						Set<String> tableNames = null;
+						//
+						while (rs != null && rs.next()) {
+							//
+							add(tableNames = getIfNull(tableNames, LinkedHashSet::new), rs.getString("table_name"));
+							//
+						} // while
+							//
+						DbUtils.closeQuietly(rs);
+						//
+						DbUtils.closeQuietly(ps);
+						//
+						if (tableNames != null && tableNames.iterator() != null) {
+							//
+							for (final String tableName : tableNames) {
+								//
+								ImportUtil
+										.importResultSet(
+												rs = executeQuery(prepareStatement(connection,
+														String.format("select * from %1$s", tableName))),
+												db, tableName);
+								//
+								DbUtils.closeQuietly(rs);
+								//
+							} // for
+								//
+						} // if
+							//
+					} // try
+						//
+				} // for
+					//
+			} // if
+				//
+		} // try
+			//
+		try (final Database db = testAndApply(Objects::nonNull, file, DatabaseBuilder::open, null)) {
+			//
+			if (db == null || CollectionUtils.isEmpty(db.getTableNames())) {
+				//
+				delete(file);
+				//
+			} // if
+				//
+		} // try
+			//
+	}
+
+	private static PreparedStatement prepareStatement(final Connection instance, final String sql) throws SQLException {
+		return instance != null ? instance.prepareStatement(sql) : null;
+	}
+
+	private static ResultSet executeQuery(final PreparedStatement instance) throws SQLException {
+		return instance != null ? instance.executeQuery() : null;
+	}
+
+	private static DatabaseBuilder setFileFormat(final DatabaseBuilder instance, final Database.FileFormat fileFormat) {
+		return instance != null ? instance.setFileFormat(fileFormat) : instance;
+	}
+
+	private static Database create(final DatabaseBuilder instance) throws IOException {
+		return instance != null ? instance.create() : null;
 	}
 
 	private static String getLongestString(final String[] ss) {
