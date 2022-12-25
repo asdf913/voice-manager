@@ -4792,45 +4792,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				for (final DataSource ds : dss) {
 					//
-					try (final Connection connection = getConnection(ds)) {
-						//
-						// Retrieve all table name(s) from "information_schema.tables" table
-						//
-						final PreparedStatement ps = prepareStatement(connection,
-								"select distinct table_name from information_schema.tables where table_schema='PUBLIC' order by table_name");
-						//
-						ResultSet rs = executeQuery(ps);
-						//
-						Set<String> tableNames = null;
-						//
-						while (rs != null && rs.next()) {
-							//
-							add(tableNames = getIfNull(tableNames, LinkedHashSet::new), rs.getString("table_name"));
-							//
-						} // while
-							//
-						DbUtils.closeQuietly(rs);
-						//
-						DbUtils.closeQuietly(ps);
-						//
-						if (tableNames != null && tableNames.iterator() != null) {
-							//
-							for (final String tableName : tableNames) {
-								//
-								ImportUtil
-										.importResultSet(
-												rs = executeQuery(prepareStatement(connection,
-														String.format("select * from %1$s", tableName))),
-												db, tableName);
-								//
-								DbUtils.closeQuietly(rs);
-								//
-							} // for
-								//
-						} // if
-							//
-					} // try
-						//
+					exportMicrosoftAccess(db, ds);
+					//
 				} // for
 					//
 			} // if
@@ -4841,6 +4804,48 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			testAndAccept(CollectionUtils::isEmpty, getTableNames(db), x -> delete(file));
 			//
+		} // try
+			//
+	}
+
+	private static void exportMicrosoftAccess(final Database db, final DataSource ds) throws IOException, SQLException {
+		//
+		try (final Connection connection = getConnection(ds)) {
+			//
+			// Retrieve all table name(s) from "information_schema.tables" table
+			//
+			final PreparedStatement ps = prepareStatement(connection,
+					"select distinct table_name from information_schema.tables where table_schema='PUBLIC' order by table_name");
+			//
+			ResultSet rs = executeQuery(ps);
+			//
+			Set<String> tableNames = null;
+			//
+			while (rs != null && rs.next()) {
+				//
+				add(tableNames = getIfNull(tableNames, LinkedHashSet::new), rs.getString("table_name"));
+				//
+			} // while
+				//
+			DbUtils.closeQuietly(rs);
+			//
+			DbUtils.closeQuietly(ps);
+			//
+			if (tableNames != null && tableNames.iterator() != null) {
+				//
+				for (final String tableName : tableNames) {
+					//
+					ImportUtil.importResultSet(
+							rs = executeQuery(
+									prepareStatement(connection, String.format("select * from %1$s", tableName))),
+							db, tableName);
+					//
+					DbUtils.closeQuietly(rs);
+					//
+				} // for
+					//
+			} // if
+				//
 		} // try
 			//
 	}
