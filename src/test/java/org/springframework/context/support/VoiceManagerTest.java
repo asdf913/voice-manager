@@ -45,6 +45,7 @@ import java.security.MessageDigest;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.text.NumberFormat;
 import java.time.Duration;
 import java.util.Arrays;
@@ -127,6 +128,7 @@ import org.apache.commons.lang3.function.FailableRunnable;
 import org.apache.commons.lang3.function.FailableSupplier;
 import org.apache.commons.lang3.math.Fraction;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.lang3.reflect.MethodUtils;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.ibatis.binding.BindingException;
@@ -196,6 +198,7 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.Range;
 import com.google.common.collect.Table;
 import com.google.common.reflect.Reflection;
+import com.healthmarketscience.jackcess.Database;
 import com.healthmarketscience.jackcess.Database.FileFormat;
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentType;
@@ -290,7 +293,7 @@ class VoiceManagerTest {
 			METHOD_IMPORT_BY_WORK_BOOK_FILES, METHOD_ACTION_PERFORMED_FOR_EXPORT_BUTTONS,
 			METHOD_CREATE_MULTI_MAP_BY_LIST_NAMES, METHOD_GET_FIELD_BY_NAME,
 			METHOD_CREATE_PROVIDER_VERSION_J_TEXT_COMPONENT, METHOD_CREATE_PROVIDER_PLATFORM_J_TEXT_COMPONENT,
-			METHOD_SET_SPEECH_VOLUME, METHOD_VALUES, METHOD_EXPORT_MICROSOFT_ACCESS = null;
+			METHOD_SET_SPEECH_VOLUME, METHOD_VALUES, METHOD_EXPORT_MICROSOFT_ACCESS, METHOD_IMPORT_RESULT_SET = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -911,6 +914,9 @@ class VoiceManagerTest {
 		(METHOD_EXPORT_MICROSOFT_ACCESS = clz.getDeclaredMethod("exportMicrosoftAccess", CLASS_OBJECT_MAP,
 				Iterable.class)).setAccessible(true);
 		//
+		(METHOD_IMPORT_RESULT_SET = clz.getDeclaredMethod("importResultSet", CLASS_OBJECT_MAP, Iterable.class))
+				.setAccessible(true);
+		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
 		CLASS_EXPORT_TASK = Class.forName("org.springframework.context.support.VoiceManager$ExportTask");
@@ -960,13 +966,11 @@ class VoiceManagerTest {
 
 		private Workbook workbook = null;
 
-		private Integer numberOfSheets, length = null;
+		private Integer numberOfSheets, length, columnIndex, columnCount = null;
 
 		private IntStream intStream = null;
 
 		private LongStream longStream = null;
-
-		private Integer columnIndex = null;
 
 		private Collection<Entry<?, ?>> multiMapEntries = null;
 
@@ -987,6 +991,8 @@ class VoiceManagerTest {
 		private PreparedStatement preparedStatement = null;
 
 		private ResultSet resultSet = null;
+
+		private ResultSetMetaData resultSetMetaData = null;
 
 		private Map<Object, String> getProperties() {
 			if (properties == null) {
@@ -1433,6 +1439,22 @@ class VoiceManagerTest {
 				if (Objects.equals(methodName, "executeQuery")) {
 					//
 					return resultSet;
+					//
+				} // if
+					//
+			} else if (proxy instanceof ResultSet) {
+				//
+				if (Objects.equals(methodName, "getMetaData")) {
+					//
+					return resultSetMetaData;
+					//
+				} // if
+					//
+			} else if (proxy instanceof ResultSetMetaData) {
+				//
+				if (Objects.equals(methodName, "getColumnCount")) {
+					//
+					return columnCount;
 					//
 				} // if
 					//
@@ -6747,7 +6769,7 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testEencrypt() throws Throwable {
+	void testEncrypt() throws Throwable {
 		//
 		Assertions.assertDoesNotThrow(() -> encrypt(null, null, null));
 		//
@@ -7872,6 +7894,45 @@ class VoiceManagerTest {
 	private static void exportMicrosoftAccess(final Object objectMap, final Iterable<DataSource> dss) throws Throwable {
 		try {
 			METHOD_EXPORT_MICROSOFT_ACCESS.invoke(null, objectMap, dss);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testImportResultSet() throws Throwable {
+		//
+		Assertions.assertDoesNotThrow(() -> importResultSet(null, (Iterable) iterable));
+		//
+		Assertions.assertDoesNotThrow(() -> importResultSet(null, Collections.singleton(null)));
+		//
+		final Object objectMap = Reflection.newProxy(CLASS_OBJECT_MAP, createVoiceManagerIH());
+		//
+		MethodUtils.invokeMethod(objectMap, true, "setObject", Database.class, null);
+		//
+		MethodUtils.invokeMethod(objectMap, true, "setObject", Connection.class,
+				Reflection.newProxy(Connection.class, ih));
+		//
+		if (ih != null) {
+			//
+			ih.preparedStatement = Reflection.newProxy(PreparedStatement.class, ih);
+			//
+			ih.resultSet = Reflection.newProxy(ResultSet.class, ih);
+			//
+			ih.resultSetMetaData = Reflection.newProxy(ResultSetMetaData.class, ih);
+			//
+			ih.columnCount = Integer.valueOf(ZERO);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> importResultSet(objectMap, Arrays.asList(null, EMPTY)));
+		//
+		//
+	}
+
+	private static void importResultSet(final Object objectMap, final Iterable<String> tableNames) throws Throwable {
+		try {
+			METHOD_IMPORT_RESULT_SET.invoke(null, objectMap, tableNames);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

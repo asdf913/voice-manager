@@ -4881,22 +4881,37 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			DbUtils.closeQuietly(ps);
 			//
-			if (tableNames != null && tableNames.iterator() != null) {
-				//
-				for (final String tableName : tableNames) {
-					//
-					ImportUtil.importResultSet(
-							rs = executeQuery(
-									prepareStatement(connection, String.format("select * from %1$s", tableName))),
-							db, tableName);
-					//
-					DbUtils.closeQuietly(rs);
-					//
-				} // for
-					//
-			} // if
-				//
+			importResultSet(objectMap, tableNames);
+			//
 		} // try
+			//
+	}
+
+	private static void importResultSet(final ObjectMap objectMap, final Iterable<String> tableNames)
+			throws IOException, SQLException {
+		//
+		final Database db = ObjectMap.getObject(objectMap, Database.class);
+		//
+		if (tableNames != null && tableNames.iterator() != null) {
+			//
+			final Connection connection = ObjectMap.getObject(objectMap, Connection.class);
+			//
+			for (final String tableName : tableNames) {
+				//
+				try (final ResultSet rs = executeQuery(
+						prepareStatement(connection, String.format("select * from %1$s", tableName)))) {
+					//
+					if (rs != null && db != null && tableName != null) {
+						//
+						ImportUtil.importResultSet(rs, db, tableName);
+						//
+					} // if
+						//
+				} // try
+					//
+			} // for
+				//
+		} // if
 			//
 	}
 
