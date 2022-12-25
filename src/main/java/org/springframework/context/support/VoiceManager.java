@@ -4839,12 +4839,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		try (final Database db = testAndApply(Objects::nonNull, file, DatabaseBuilder::open, null)) {
 			//
-			if (CollectionUtils.isEmpty(getTableNames(db))) {
-				//
-				delete(file);
-				//
-			} // if
-				//
+			testAndAccept(CollectionUtils::isEmpty, getTableNames(db), x -> delete(file));
+			//
 		} // try
 			//
 	}
