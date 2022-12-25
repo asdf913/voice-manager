@@ -908,8 +908,8 @@ class VoiceManagerTest {
 		//
 		(METHOD_VALUES = clz.getDeclaredMethod("values", Map.class)).setAccessible(true);
 		//
-		(METHOD_EXPORT_MICROSOFT_ACCESS = clz.getDeclaredMethod("exportMicrosoftAccess", Iterable.class,
-				FileFormat.class, File.class)).setAccessible(true);
+		(METHOD_EXPORT_MICROSOFT_ACCESS = clz.getDeclaredMethod("exportMicrosoftAccess", CLASS_OBJECT_MAP,
+				Iterable.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -7851,9 +7851,9 @@ class VoiceManagerTest {
 	@Test
 	void testExportMicrosoftAccess() throws Throwable {
 		//
-		Assertions.assertDoesNotThrow(() -> exportMicrosoftAccess((Iterable) iterable, null, null));
+		Assertions.assertDoesNotThrow(() -> exportMicrosoftAccess(null, (Iterable) iterable));
 		//
-		Assertions.assertDoesNotThrow(() -> exportMicrosoftAccess(Collections.singleton(null), null, null));
+		Assertions.assertDoesNotThrow(() -> exportMicrosoftAccess(null, Collections.singleton(null)));
 		//
 		final Iterable<DataSource> dss = Collections.singleton(Reflection.newProxy(DataSource.class, ih));
 		//
@@ -7865,14 +7865,13 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> exportMicrosoftAccess(dss, null, null));
+		Assertions.assertDoesNotThrow(() -> exportMicrosoftAccess(null, dss));
 		//
 	}
 
-	private static void exportMicrosoftAccess(final Iterable<DataSource> dss, final FileFormat fileFormat,
-			final File file) throws Throwable {
+	private static void exportMicrosoftAccess(final Object objectMap, final Iterable<DataSource> dss) throws Throwable {
 		try {
-			METHOD_EXPORT_MICROSOFT_ACCESS.invoke(null, dss, fileFormat, file);
+			METHOD_EXPORT_MICROSOFT_ACCESS.invoke(null, objectMap, dss);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

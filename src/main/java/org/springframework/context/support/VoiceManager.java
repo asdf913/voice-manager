@@ -4781,10 +4781,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			if (isSelected(cbExportMicrosoftAccess)) {
 				//
-				exportMicrosoftAccess(values(getBeansOfType(configurableListableBeanFactory, DataSource.class)),
-						microsoftAccessFileFormat,
+				ObjectMap.setObject(objectMap, File.class,
 						file = new File(String.format("voice_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.%2$s", new Date(),
 								getFileExtension(microsoftAccessFileFormat))));
+				//
+				ObjectMap.setObject(objectMap, FileFormat.class, microsoftAccessFileFormat);
+				//
+				exportMicrosoftAccess(objectMap,
+						values(getBeansOfType(configurableListableBeanFactory, DataSource.class)));
 				//
 			} // if
 				//
@@ -4820,8 +4824,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.values() : null;
 	}
 
-	private static void exportMicrosoftAccess(final Iterable<DataSource> dss, final FileFormat fileFormat,
-			final File file) throws IOException, SQLException {
+	private static void exportMicrosoftAccess(final ObjectMap objectMap, final Iterable<DataSource> dss)
+			throws IOException, SQLException {
+		//
+		final File file = ObjectMap.getObject(objectMap, File.class);
+		//
+		final FileFormat fileFormat = ObjectMap.getObject(objectMap, FileFormat.class);
 		//
 		try (final Database db = create(setFileFormat(testAndApply(Objects::nonNull, file, DatabaseBuilder::new, null),
 				ObjectUtils.defaultIfNull(fileFormat, FileFormat.V2000)))) {
