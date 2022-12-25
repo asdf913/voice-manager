@@ -4858,8 +4858,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static void exportMicrosoftAccess(final ObjectMap objectMap) throws IOException, SQLException {
 		//
-		final Database db = ObjectMap.getObject(objectMap, Database.class);
-		//
 		try (final Connection connection = getConnection(ObjectMap.getObject(objectMap, DataSource.class))) {
 			//
 			// Retrieve all table name(s) from "information_schema.tables" table
