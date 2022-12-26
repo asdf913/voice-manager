@@ -9775,19 +9775,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					// header
 					//
-				if (sheet != null && sheet.getLastRowNum() < 0) {
-					//
-					if ((row = createRow(sheet, sheet.getLastRowNum() + 1)) == null) {
-						//
-						continue;
-						//
-					} // if
-						//
-					setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)), getKey(columnNames));
-					//
-					setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)), getValue(columnNames));
-					//
-				} // if
+				addHeaderRow(sheet, columnNames);
 					//
 					// content
 					//
@@ -9814,6 +9802,26 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return workbook;
 		//
+	}
+
+	private static void addHeaderRow(final Sheet sheet, final Pair<String, String> columnNames) {
+		//
+		if (sheet != null && sheet.getLastRowNum() < 0) {
+			//
+			final Row row = createRow(sheet, sheet.getLastRowNum() + 1);
+			//
+			if (row == null) {
+				//
+				return;
+				//
+			} // if
+				//
+			setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)), getKey(columnNames));
+			//
+			setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)), getValue(columnNames));
+			//
+		} // if
+			//
 	}
 
 	private static Workbook createJoYoKanJiWorkbook(final String url, final Duration timeout) {
