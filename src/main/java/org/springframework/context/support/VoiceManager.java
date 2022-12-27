@@ -4879,6 +4879,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			DbUtils.closeQuietly(ps);
 			//
+			ObjectMap.setObject(objectMap, Connection.class, connection);
+			//
 			importResultSet(objectMap, tableNames);
 			//
 		} // try
