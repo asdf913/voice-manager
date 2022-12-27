@@ -9776,9 +9776,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					// header
 					//
 				addHeaderRow(sheet, columnNames);
-					//
-					// content
-					//
+				//
+				// content
+				//
 				if ((row = createRow(sheet, sheet.getLastRowNum() + 1)) == null) {
 					//
 					continue;
@@ -10164,23 +10164,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static void setSheet(final Workbook workbook, final Sheet sheet, final Iterable<Voice> voices)
 			throws IllegalAccessException, InvocationTargetException {
 		//
-		Row row = null;
+		ObjectMap objectMap = null;
 		//
 		if (voices != null && voices.iterator() != null) {
 			//
 			Field[] fs = null;
 			//
-			Field f = null;
-			//
-			final Class<?> dateFormatClass = forName("domain.Voice$DateFormat");
-			//
-			final Class<?> dataFormatClass = forName("domain.Voice$DataFormat");
-			//
 			final Class<?> spreadsheetColumnClass = forName("domain.Voice$SpreadsheetColumn");
 			//
 			String[] fieldOrder = getFieldOrder();
-			//
-			ObjectMap objectMap = null;
 			//
 			for (final Voice voice : voices) {
 				//
@@ -10211,44 +10203,76 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					// content
 					//
-				if ((row = sheet != null ? createRow(sheet, sheet.getLastRowNum() + 1) : null) == null) {
-					continue;
+				if (objectMap == null) {
+					//
+					ObjectMap.setObject(
+							objectMap = getIfNull(objectMap, () -> Reflection.newProxy(ObjectMap.class, new IH())),
+							Sheet.class, sheet);
+					//
+					ObjectMap.setObject(objectMap, Field[].class, fs);
+					//
+					ObjectMap.setObject(objectMap, Workbook.class, workbook);
+					//
 				} // if
 					//
-				for (int j = 0; fs != null && j < fs.length; j++) {
-					//
-					if ((f = fs[j]) == null) {
-						continue;
-					} // if
-						//
-					f.setAccessible(true);
-					//
-					if (objectMap == null) {
-						//
-						ObjectMap.setObject(
-								objectMap = getIfNull(objectMap, () -> Reflection.newProxy(ObjectMap.class, new IH())),
-								Workbook.class, workbook);
-						//
-					} // if
-						//
-					ObjectMap.setObject(objectMap, Field.class, f);
-					//
-					ObjectMap.setObject(objectMap, Cell.class, createCell(row, j));
-					//
-					setSheetCellValue(objectMap, f.get(voice), dataFormatClass, dateFormatClass);
-					//
-				} // for
-					//
+				ObjectMap.setObject(objectMap, Voice.class, voice);
+				//
+				setContent(objectMap);
+				//
 			} // for
 				//
 		} // if
 			//
+		final Row row = ObjectMap.getObject(objectMap, Row.class);
+		//
 		if (sheet != null && row != null) {
 			//
 			sheet.setAutoFilter(new CellRangeAddress(sheet.getFirstRowNum(), sheet.getLastRowNum() - 1,
 					row.getFirstCellNum(), row.getLastCellNum() - 1));
 			//
 		} // if
+			//
+	}
+
+	private static void setContent(final ObjectMap objectMap) throws IllegalAccessException, InvocationTargetException {
+		//
+		final Sheet sheet = ObjectMap.getObject(objectMap, Sheet.class);
+		//
+		final Row row = sheet != null ? createRow(sheet, sheet.getLastRowNum() + 1) : null;
+		//
+		ObjectMap.setObject(objectMap, Row.class, row);
+		//
+		if (row == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		final Field[] fs = ObjectMap.getObject(objectMap, Field[].class);
+		//
+		Field f = null;
+		//
+		final Class<?> dateFormatClass = forName("domain.Voice$DateFormat");
+		//
+		final Class<?> dataFormatClass = forName("domain.Voice$DataFormat");
+		//
+		for (int j = 0; fs != null && j < fs.length; j++) {
+			//
+			if ((f = fs[j]) == null) {
+				//
+				continue;
+			} // if
+				//
+			f.setAccessible(true);
+			//
+			ObjectMap.setObject(objectMap, Field.class, f);
+			//
+			ObjectMap.setObject(objectMap, Cell.class, createCell(row, j));
+			//
+			setSheetCellValue(objectMap, f.get(ObjectMap.getObject(objectMap, Voice.class)), dataFormatClass,
+					dateFormatClass);
+			//
+		} // for
 			//
 	}
 
