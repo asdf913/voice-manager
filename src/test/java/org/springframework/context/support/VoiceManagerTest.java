@@ -298,7 +298,7 @@ class VoiceManagerTest {
 			METHOD_CREATE_MULTI_MAP_BY_LIST_NAMES, METHOD_GET_FIELD_BY_NAME,
 			METHOD_CREATE_PROVIDER_VERSION_J_TEXT_COMPONENT, METHOD_CREATE_PROVIDER_PLATFORM_J_TEXT_COMPONENT,
 			METHOD_SET_SPEECH_VOLUME, METHOD_VALUES, METHOD_EXPORT_MICROSOFT_ACCESS, METHOD_IMPORT_RESULT_SET,
-			METHOD_CREATE_MICROSOFT_WINDOWS_COMPATIBILITY_WARNING_J_PANEL = null;
+			METHOD_CREATE_VOICE_ID_WARNING_PANEL, METHOD_CREATE_MICROSOFT_WINDOWS_COMPATIBILITY_WARNING_J_PANEL = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -925,6 +925,9 @@ class VoiceManagerTest {
 				Iterable.class)).setAccessible(true);
 		//
 		(METHOD_IMPORT_RESULT_SET = clz.getDeclaredMethod("importResultSet", CLASS_OBJECT_MAP, Iterable.class))
+				.setAccessible(true);
+		//
+		(METHOD_CREATE_VOICE_ID_WARNING_PANEL = clz.getDeclaredMethod("createVoiceIdWarningPanel", VoiceManager.class))
 				.setAccessible(true);
 		//
 		(METHOD_CREATE_MICROSOFT_WINDOWS_COMPATIBILITY_WARNING_J_PANEL = clz.getDeclaredMethod(
@@ -7978,6 +7981,29 @@ class VoiceManagerTest {
 	private static void importResultSet(final Object objectMap, final Iterable<String> tableNames) throws Throwable {
 		try {
 			METHOD_IMPORT_RESULT_SET.invoke(null, objectMap, tableNames);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCreateVoiceIdWarningPanel() throws Throwable {
+		//
+		Assertions.assertNotNull(createVoiceIdWarningPanel(null));
+		//
+		Assertions.assertNotNull(createVoiceIdWarningPanel(instance));
+		//
+	}
+
+	private static JPanel createVoiceIdWarningPanel(final VoiceManager instance) throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_VOICE_ID_WARNING_PANEL.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof JPanel) {
+				return (JPanel) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
