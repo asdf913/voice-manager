@@ -421,6 +421,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private transient ComboBoxModel<CompressionLevel> cbmCompressionLevel = null;
 
+	private transient ComboBoxModel<FileFormat> cbmMicrosoftAccessFileFormat = null;
+
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.FIELD)
 	private @interface Group {
@@ -3004,11 +3006,18 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.add(new JLabel(), String.format("span %1$s", 4));
 		//
-		panel.add(cbExportMicrosoftAccess = new JCheckBox("Export Microsoft Access"),
-				String.format("%1$s,span %2$s", WRAP, 2));
+		panel.add(cbExportMicrosoftAccess = new JCheckBox("Export Microsoft Access"), String.format("span %1$s", 3));
 		//
 		cbExportMicrosoftAccess.setSelected(Boolean.parseBoolean(getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.exportMicrosoftAccess")));
+		//
+		final FileFormat[] fileFormats = testAndApply(Objects::nonNull, FileFormat.values(),
+				x -> ArrayUtils.addFirst(x, null), null);
+		//
+		panel.add(new JComboBox<>(cbmMicrosoftAccessFileFormat = new DefaultComboBoxModel<>(fileFormats)),
+				String.format("%1$s,span %2$s", WRAP, 4));
+		//
+		cbmMicrosoftAccessFileFormat.setSelectedItem(microsoftAccessFileFormat);
 		//
 		panel.add(new JLabel(), String.format("span %1$s", 4));
 		//
@@ -4781,11 +4790,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			if (isSelected(cbExportMicrosoftAccess)) {
 				//
+				final FileFormat fileFormat = cast(FileFormat.class, getSelectedItem(cbmMicrosoftAccessFileFormat));
+				//
 				ObjectMap.setObject(objectMap, File.class,
 						file = new File(String.format("voice_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.%2$s", new Date(),
-								StringUtils.substringAfter(getFileExtension(microsoftAccessFileFormat), '.'))));
+								StringUtils.substringAfter(getFileExtension(fileFormat), '.'))));
 				//
-				ObjectMap.setObject(objectMap, FileFormat.class, microsoftAccessFileFormat);
+				ObjectMap.setObject(objectMap, FileFormat.class, fileFormat);
 				//
 				exportMicrosoftAccess(objectMap,
 						values(getBeansOfType(configurableListableBeanFactory, DataSource.class)));
