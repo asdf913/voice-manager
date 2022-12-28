@@ -1208,39 +1208,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 					ObjectUtils.compare(valueOf(toString(get(getOsVersionInfoExMap(), "getMajor"))), 10) >= 10) {
 				//
-				if (jPanelWarning == null) {
-					//
-					jPanelWarning = new JPanel(lm);
-					//
-				} // if
-					//
-				jPanelWarning.setBorder(BorderFactory.createTitledBorder(WARNING));
-				//
-				final JLabel jLabel = new JLabel("Please set Compatibility Mode to \"Windows 8\" or prior version");
-				//
-				if (lm instanceof MigLayout) {
-					jPanelWarning.add(jLabel, WRAP);
-				} else {
-					jPanelWarning.add(jLabel);
-				} // if
-					//
-				ATag aTag = null;
-				//
-				try {
-					//
-					aTag = ATagUtil.createByUrl(microsoftWindowsCompatibilitySettingsPageUrl);
-					//
-				} catch (final IOException e) {
-					//
-					errorOrPrintStackTraceOrShowMessageDialog(e);
-					//
-				} // try
-					//
-				final String pageTitle = JLabelLink.getChildrenAsString(aTag);
-				//
-				jPanelWarning.add(pageTitle != null ? new JLabelLink(aTag)
-						: new JLabel(StringUtils.defaultIfBlank(pageTitle,
-								"Make older apps or programs compatible with Windows 10")));
+				jPanelWarning = createMicrosoftWindowsCompatibilityWarningJPanel(lm,
+						microsoftWindowsCompatibilitySettingsPageUrl);
 				//
 			} // if
 				//
@@ -1367,6 +1336,43 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
+	}
+
+	private static JPanel createMicrosoftWindowsCompatibilityWarningJPanel(final LayoutManager lm,
+			final String microsoftWindowsCompatibilitySettingsPageUrl) {
+		//
+		final JPanel jPanelWarning = new JPanel(lm);
+		//
+		jPanelWarning.setBorder(BorderFactory.createTitledBorder(WARNING));
+		//
+		final JLabel jLabel = new JLabel("Please set Compatibility Mode to \"Windows 8\" or prior version");
+		//
+		if (lm instanceof MigLayout) {
+			jPanelWarning.add(jLabel, WRAP);
+		} else {
+			jPanelWarning.add(jLabel);
+		} // if
+			//
+		ATag aTag = null;
+		//
+		try {
+			//
+			aTag = ATagUtil.createByUrl(microsoftWindowsCompatibilitySettingsPageUrl);
+			//
+		} catch (final IOException e) {
+			//
+			errorOrPrintStackTraceOrShowMessageDialog(e);
+			//
+		} // try
+			//
+		final String pageTitle = JLabelLink.getChildrenAsString(aTag);
+		//
+		jPanelWarning.add(pageTitle != null ? new JLabelLink(aTag)
+				: new JLabel(StringUtils.defaultIfBlank(pageTitle,
+						"Make older apps or programs compatible with Windows 10")));
+		//
+		return jPanelWarning;
+		//
 	}
 
 	private static JPanel craeteSpeechApiInstallationWarningJPanel(

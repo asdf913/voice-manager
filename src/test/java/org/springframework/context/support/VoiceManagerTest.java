@@ -5,6 +5,7 @@ import java.awt.Component;
 import java.awt.Desktop;
 import java.awt.GraphicsEnvironment;
 import java.awt.ItemSelectable;
+import java.awt.LayoutManager;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.ClipboardOwner;
@@ -92,6 +93,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JSlider;
 import javax.swing.JTabbedPane;
@@ -214,6 +216,7 @@ import freemarker.template.Version;
 import io.github.toolfactory.narcissus.Narcissus;
 import j2html.tags.specialized.ATag;
 import mapper.VoiceMapper;
+import net.miginfocom.swing.MigLayout;
 
 class VoiceManagerTest {
 
@@ -294,7 +297,8 @@ class VoiceManagerTest {
 			METHOD_IMPORT_BY_WORK_BOOK_FILES, METHOD_ACTION_PERFORMED_FOR_EXPORT_BUTTONS,
 			METHOD_CREATE_MULTI_MAP_BY_LIST_NAMES, METHOD_GET_FIELD_BY_NAME,
 			METHOD_CREATE_PROVIDER_VERSION_J_TEXT_COMPONENT, METHOD_CREATE_PROVIDER_PLATFORM_J_TEXT_COMPONENT,
-			METHOD_SET_SPEECH_VOLUME, METHOD_VALUES, METHOD_EXPORT_MICROSOFT_ACCESS, METHOD_IMPORT_RESULT_SET = null;
+			METHOD_SET_SPEECH_VOLUME, METHOD_VALUES, METHOD_EXPORT_MICROSOFT_ACCESS, METHOD_IMPORT_RESULT_SET,
+			METHOD_CREATE_MICROSOFT_WINDOWS_COMPATIBILITY_WARNING_J_PANEL = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -921,6 +925,10 @@ class VoiceManagerTest {
 				Iterable.class)).setAccessible(true);
 		//
 		(METHOD_IMPORT_RESULT_SET = clz.getDeclaredMethod("importResultSet", CLASS_OBJECT_MAP, Iterable.class))
+				.setAccessible(true);
+		//
+		(METHOD_CREATE_MICROSOFT_WINDOWS_COMPATIBILITY_WARNING_J_PANEL = clz.getDeclaredMethod(
+				"createMicrosoftWindowsCompatibilityWarningJPanel", LayoutManager.class, String.class))
 				.setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
@@ -7965,12 +7973,36 @@ class VoiceManagerTest {
 			//
 		Assertions.assertDoesNotThrow(() -> importResultSet(objectMap, Arrays.asList(null, EMPTY)));
 		//
-		//
 	}
 
 	private static void importResultSet(final Object objectMap, final Iterable<String> tableNames) throws Throwable {
 		try {
 			METHOD_IMPORT_RESULT_SET.invoke(null, objectMap, tableNames);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCreateMicrosoftWindowsCompatibilityWarningJPanel() throws Throwable {
+		//
+		Assertions.assertNotNull(createMicrosoftWindowsCompatibilityWarningJPanel(null, null));
+		//
+		Assertions.assertNotNull(createMicrosoftWindowsCompatibilityWarningJPanel(new MigLayout(), null));
+		//
+	}
+
+	private static JPanel createMicrosoftWindowsCompatibilityWarningJPanel(final LayoutManager lm,
+			final String microsoftWindowsCompatibilitySettingsPageUrl) throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_MICROSOFT_WINDOWS_COMPATIBILITY_WARNING_J_PANEL.invoke(null, lm,
+					microsoftWindowsCompatibilitySettingsPageUrl);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof JPanel) {
+				return (JPanel) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
