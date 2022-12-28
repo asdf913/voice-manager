@@ -1336,9 +1336,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		final String title = StringUtils.defaultIfBlank(IValue0Util.getValue0(pageTitle),
 				"Download Microsoft Speech Platform - Runtime Languages (Version 11) from Official Microsoft Download Center");
 		//
-		jPanelWarning.add(pageTitle != null ? new JLabelLink(new ATag()
-				.withHref(instance != null ? instance.microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl : null)
-				.withText(title)) : new JLabel(title));
+		final String microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl = instance != null
+				? instance.microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl
+				: null;
+		//
+		jPanelWarning.add(pageTitle != null
+				? new JLabelLink(
+						new ATag().withHref(microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl).withText(title))
+				: new JLabel(title));
 		//
 		return jPanelWarning;
 		//
