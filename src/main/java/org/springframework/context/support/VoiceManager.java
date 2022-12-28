@@ -1289,27 +1289,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} else {
 			//
-			(jPanelWarning = new JPanel()).setBorder(BorderFactory.createTitledBorder(WARNING));
-			//
-			ATag aTag = null;
-			//
-			try {
-				//
-				aTag = ATagUtil.createByUrl(microsoftSpeechPlatformRuntimeDownloadPageUrl);
-				//
-			} catch (final IOException e) {
-				//
-				errorOrPrintStackTraceOrShowMessageDialog(e);
-				//
-			} // try
-				//
-			final String pageTitle = JLabelLink.getChildrenAsString(aTag);
-			//
-			jPanelWarning.add(pageTitle != null ? new JLabelLink(aTag)
-					: new JLabel(StringUtils.defaultIfBlank(pageTitle,
-							"Download Microsoft Speech Platform - Runtime (Version 11) from Official Microsoft Download Center")));
-			//
-			add(jPanelWarning, WRAP);
+			add(craeteSpeechApiInstallationWarningJPanel(microsoftSpeechPlatformRuntimeDownloadPageUrl), WRAP);
 			//
 		} // if
 			//
@@ -1387,6 +1367,35 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
+	}
+
+	private static JPanel craeteSpeechApiInstallationWarningJPanel(
+			final String microsoftSpeechPlatformRuntimeDownloadPageUrl) {
+		//
+		final JPanel jPanelWarning = new JPanel();
+		//
+		jPanelWarning.setBorder(BorderFactory.createTitledBorder(WARNING));
+		//
+		ATag aTag = null;
+		//
+		try {
+			//
+			aTag = ATagUtil.createByUrl(microsoftSpeechPlatformRuntimeDownloadPageUrl);
+			//
+		} catch (final IOException e) {
+			//
+			errorOrPrintStackTraceOrShowMessageDialog(e);
+			//
+		} // try
+			//
+		final String pageTitle = JLabelLink.getChildrenAsString(aTag);
+		//
+		jPanelWarning.add(pageTitle != null ? new JLabelLink(aTag)
+				: new JLabel(StringUtils.defaultIfBlank(pageTitle,
+						"Download Microsoft Speech Platform - Runtime (Version 11) from Official Microsoft Download Center")));
+		//
+		return jPanelWarning;
+		//
 	}
 
 	private static Double getMaxPagePreferredHeight(final Object jTabbedPane) throws NoSuchFieldException {
