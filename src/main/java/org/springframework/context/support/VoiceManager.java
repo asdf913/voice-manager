@@ -389,8 +389,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private transient PropertyResolver propertyResolver = null;
 
-	private JTextComponent tfFolder, tfFile, tfFileLength, tfFileDigest, tfTextTts, tfTextImport, tfHiragana,
-			tfKatakana, tfRomaji, tfSpeechRate, tfSource, tfProviderName, tfProviderVersion, tfProviderPlatform,
+	@Note("Folder")
+	private JTextComponent tfFolder = null;
+
+	private JTextComponent tfFile, tfFileLength, tfFileDigest, tfTextTts, tfTextImport, tfHiragana, tfKatakana,
+			tfRomaji, tfSpeechRate, tfSource, tfProviderName, tfProviderVersion, tfProviderPlatform,
 			tfSpeechLanguageCode, tfSpeechLanguageName, tfLanguage, tfSpeechVolume, tfCurrentProcessingFile,
 			tfCurrentProcessingSheetName, tfCurrentProcessingVoice, tfListNames, tfPhraseCounter, tfPhraseTotal,
 			tfJlptFolderNamePrefix, tfOrdinalPositionFileNamePrefix, tfIpaSymbol, tfExportFile, tfElapsed, tfDllPath,
@@ -398,7 +401,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private transient ComboBoxModel<Yomi> cbmYomi = null;
 
-	private transient ComboBoxModel<String> cbmVoiceId, cbmGaKuNenBeTsuKanJi = null;
+	@Note("Voice ID")
+	private transient ComboBoxModel<String> cbmVoiceId = null;
+
+	private transient ComboBoxModel<String> cbmGaKuNenBeTsuKanJi = null;
 
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.FIELD)
@@ -451,9 +457,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Group("TTS Button")
 	private AbstractButton btnWriteVoice = null;
 
-	private AbstractButton cbUseTtsVoice, btnExecute, btnImportFileTemplate, btnImport, btnImportWithinFolder,
-			cbOverMp3Title, cbOrdinalPositionAsFileNamePrefix, btnExport, cbExportHtml, cbExportListHtml,
-			cbExportHtmlAsZip, cbExportHtmlRemoveAfterZip, cbExportListSheet, cbExportJlptSheet, cbExportPresentation,
+	@Note("Execute")
+	private AbstractButton btnExecute = null;
+
+	private AbstractButton cbUseTtsVoice, btnImportFileTemplate, btnImport, btnImportWithinFolder, cbOverMp3Title,
+			cbOrdinalPositionAsFileNamePrefix, btnExport, cbExportHtml, cbExportListHtml, cbExportHtmlAsZip,
+			cbExportHtmlRemoveAfterZip, cbExportListSheet, cbExportJlptSheet, cbExportPresentation,
 			cbEmbedAudioInPresentation, cbHideAudioImageInPresentation, cbExportMicrosoftAccess,
 			cbImportFileTemplateGenerateBlankRow, cbJlptAsFolder, btnExportBrowse, btnPronunciationPageUrlCheck = null;
 
@@ -8667,14 +8676,20 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 		private NumberFormat percentNumberFormat = null;
 
-		private boolean overMp3Title = false, ordinalPositionAsFileNamePrefix = false, exportPresentation = false,
+		private boolean overMp3Title = false;
+
+		@Note("Ordinal Position As File Name Prefix")
+		private boolean ordinalPositionAsFileNamePrefix = false, exportPresentation = false,
 				embedAudioInPresentation = false, hideAudioImageInPresentation = false;
 
 		private VoiceManager voiceManager = null;
 
 		private Fraction pharse = null;
 
-		private String ordinalPositionFileNamePrefix, exportPresentationTemplate, folderInPresentation = null;
+		private String ordinalPositionFileNamePrefix = null;
+
+		@Note("Export Presentation Template")
+		private String exportPresentationTemplate, folderInPresentation = null;
 
 		private Table<String, String, Voice> voiceFileNames = null;
 
