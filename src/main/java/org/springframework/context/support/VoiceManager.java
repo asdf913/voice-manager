@@ -10212,7 +10212,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	private static void setMicrosoftSpeechObjectLibrarySheet(final ObjectMap objectMap, final String voiceId,
-			final String[] as) {
+			final String[] attributes) {
 		//
 		final Workbook workbook = ObjectMap.getObject(objectMap, Workbook.class);
 		//
@@ -10228,27 +10228,39 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		Comment comment = null;
 		//
-		for (int j = 0; as != null && j < as.length; j++) {
+		String attribute, value = null;
+		//
+		for (int j = 0; attributes != null && j < attributes.length; j++) {
 			//
+			if (drawing == null) {
+				//
+				drawing = createDrawingPatriarch(sheet);
+				//
+			} // if
+				//
+			if (creationHelper == null) {
+				//
+				creationHelper = getCreationHelper(workbook);
+				//
+			} // if
+				//
 			try {
 				//
 				setCellValue(cell = createCell(row, Math.max(row != null ? row.getLastCellNum() : 0, 0)),
-						getVoiceAttribute(ObjectMap.getObject(objectMap, SpeechApi.class), voiceId, as[j]));
+						value = getVoiceAttribute(ObjectMap.getObject(objectMap, SpeechApi.class), voiceId,
+								attribute = attributes[j]));
 				//
+				if (Objects.equals(LANGUAGE, attribute)) {
+					//
+					setString(comment = createCellComment(drawing, createClientAnchor(creationHelper)),
+							createRichTextString(creationHelper, convertLanguageCodeToText(value, 16)));
+					//
+					setCellComment(cell, comment);
+					//
+				} // if
+					//
 			} catch (final Error e) {
 				//
-				if (drawing == null) {
-					//
-					drawing = createDrawingPatriarch(sheet);
-					//
-				} // if
-					//
-				if (creationHelper == null) {
-					//
-					creationHelper = getCreationHelper(workbook);
-					//
-				} // if
-					//
 				setString(comment = createCellComment(drawing, createClientAnchor(creationHelper)),
 						createRichTextString(creationHelper, e.getMessage()));
 				//
