@@ -8786,6 +8786,40 @@ class VoiceManagerTest {
 	}
 
 	@Test
+	void testMicrosoftAccessFileFormatListCellRenderer() throws Throwable {
+		//
+		final Class<?> clz = forName(
+				"org.springframework.context.support.VoiceManager$MicrosoftAccessFileFormatListCellRenderer");
+		//
+		final Constructor<?> constructor = clz != null ? clz.getDeclaredConstructor() : null;
+		//
+		if (constructor != null) {
+			//
+			constructor.setAccessible(true);
+			//
+		} // if
+			//
+		final ListCellRenderer<?> listCellRenderer = cast(ListCellRenderer.class, newInstance(constructor));
+		//
+		if (listCellRenderer != null) {
+			//
+			Assertions.assertNull(listCellRenderer.getListCellRendererComponent(null, null, 0, false, false));
+			//
+			final FileFormat fileFormat = FileFormat.V2000;
+			//
+			Assertions.assertNull(((ListCellRenderer) listCellRenderer).getListCellRendererComponent(null, fileFormat,
+					0, false, false));
+			//
+			FieldUtils.writeDeclaredField(listCellRenderer, "commonPrefix", "VERSION_", true);
+			//
+			Assertions.assertNull(((ListCellRenderer) listCellRenderer).getListCellRendererComponent(null, fileFormat,
+					0, false, false));
+			//
+		} // if
+			//
+	}
+
+	@Test
 	void testAudioToFlacByteConverter() throws Throwable {
 		//
 		final Class<?> clz = forName("org.springframework.context.support.VoiceManager$AudioToFlacByteConverter");

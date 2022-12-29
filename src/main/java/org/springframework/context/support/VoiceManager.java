@@ -2900,6 +2900,55 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.getAbsolutePath() : null;
 	}
 
+	private static class MicrosoftAccessFileFormatListCellRenderer implements ListCellRenderer<Object> {
+
+		private String commonPrefix = null;
+
+		private ListCellRenderer<Object> listCellRenderer = null;
+
+		@Override
+		public Component getListCellRendererComponent(final JList<?> list, final Object value, final int index,
+				final boolean isSelected, final boolean cellHasFocus) {
+			//
+			final FileFormat fileFormat = cast(FileFormat.class, value);
+			//
+			if (fileFormat != null) {
+				//
+				final String toString = VoiceManager.toString(value);
+				//
+				int idx = StringUtils.indexOf(toString, ' ');
+				//
+				StringBuilder sb = null;
+				//
+				if (idx >= 0) {
+					//
+					(sb = new StringBuilder(StringUtils.defaultString(toString))).insert(idx,
+							String.format(" (%1$s)", fileFormat.getFileExtension()));
+					//
+				} // if
+					//
+				if ((idx = StringUtils.indexOf(sb, commonPrefix)) >= 0
+						&& (sb = getIfNull(sb, () -> new StringBuilder(StringUtils.defaultString(toString)))) != null) {
+					//
+					sb.delete(idx, idx + StringUtils.length(commonPrefix));
+					//
+				} // if
+					//
+				if (sb != null) {
+					//
+					return VoiceManager.getListCellRendererComponent(this, list, sb, index, isSelected, cellHasFocus);
+					//
+				} // if
+					//
+			} // if
+				//
+			return VoiceManager.getListCellRendererComponent(listCellRenderer, list, value, index, isSelected,
+					cellHasFocus);
+			//
+		}
+
+	}
+
 	private JPanel createExportPanel(final LayoutManager layoutManager) {
 		//
 		final JPanel panel = new JPanel();
@@ -3114,56 +3163,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		final JComboBox<FileFormat> jcbFileFormat = new JComboBox<>(
 				cbmMicrosoftAccessFileFormat = new DefaultComboBoxModel<>(fileFormats));
 		//
-		final ListCellRenderer<?> render = jcbFileFormat.getRenderer();
+		final MicrosoftAccessFileFormatListCellRenderer listCellRenderer = new MicrosoftAccessFileFormatListCellRenderer();
 		//
-		final String commonPrefix = orElse(filter(
+		listCellRenderer.listCellRenderer = (ListCellRenderer) jcbFileFormat.getRenderer();
+		//
+		listCellRenderer.commonPrefix = orElse(filter(
 				map(map(map(testAndApply(Objects::nonNull, fileFormats, Arrays::stream, null),
 						DatabaseImpl::getFileFormatDetails), VoiceManager::getFormat), VoiceManager::toString),
 				Objects::nonNull).reduce(StringUtils::getCommonPrefix), null);
 		//
-		jcbFileFormat.setRenderer(new ListCellRenderer() {
-			@Override
-			public Component getListCellRendererComponent(final JList list, final Object value, final int index,
-					final boolean isSelected, final boolean cellHasFocus) {
-				//
-				final FileFormat fileFormat = cast(FileFormat.class, value);
-				//
-				if (fileFormat != null) {
-					//
-					final String toString = VoiceManager.toString(value);
-					//
-					int idx = StringUtils.indexOf(toString, ' ');
-					//
-					StringBuilder sb = null;
-					//
-					if (idx >= 0) {
-						//
-						(sb = new StringBuilder(StringUtils.defaultString(toString))).insert(idx,
-								String.format(" (%1$s)", fileFormat.getFileExtension()));
-						//
-					} // if
-						//
-					if ((idx = StringUtils.indexOf(sb, commonPrefix)) >= 0 && (sb = getIfNull(sb,
-							() -> new StringBuilder(StringUtils.defaultString(toString)))) != null) {
-						//
-						sb.delete(idx, idx + StringUtils.length(commonPrefix));
-						//
-					} // if
-						//
-					if (sb != null) {
-						//
-						return VoiceManager.getListCellRendererComponent((ListCellRenderer) this, list, sb, index,
-								isSelected, cellHasFocus);
-						//
-					} // if
-						//
-				} // if
-					//
-				return VoiceManager.getListCellRendererComponent((ListCellRenderer) render, list, value, index,
-						isSelected, cellHasFocus);
-				//
-			}
-		});
+		jcbFileFormat.setRenderer(listCellRenderer);
 		//
 		panel.add(jcbFileFormat, String.format("%1$s,span %2$s", WRAP, 5));
 		//
