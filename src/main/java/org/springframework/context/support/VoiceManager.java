@@ -1922,59 +1922,19 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			// Voice ID
 			//
-		final String voiceId = getProperty(propertyResolver,
-				"org.springframework.context.support.VoiceManager.voiceId");
+		final ObjectMap objectMap = Reflection.newProxy(ObjectMap.class, new IH());
 		//
-		final List<?> temp = toList(filter(testAndApply(Objects::nonNull, voiceIds, Arrays::stream, null),
-				x -> Boolean.logicalOr(Objects.equals(x, voiceId),
-						Objects.equals(getVoiceAttribute(speechApi, x, "Name"), voiceId))));
+		ObjectMap.setObject(objectMap, PropertyResolver.class, propertyResolver);
 		//
-		int size = IterableUtils.size(temp);
+		ObjectMap.setObject(objectMap, String[].class, voiceIds);
 		//
-		if (size == 1) {
-			//
-			setSelectedItem(cbmVoiceId, get(temp, 0));
-			//
-		} else if (size > 1) {
-			//
-			throw new IllegalStateException();
-			//
-		} // if
-			//
-		if (getSelectedItem(cbmVoiceId) == null) {
-			//
-			final String voiceLanguage = getProperty(propertyResolver,
-					"org.springframework.context.support.VoiceManager.voiceLanguage");
-			//
-			final Collection<Entry<Object, Object>> entrySet = entrySet(collect(
-					filter(testAndApply(Objects::nonNull, getVoiceIds(speechApi), Arrays::stream, null),
-							x -> StringUtils.startsWithIgnoreCase(
-									convertLanguageCodeToText(getVoiceAttribute(speechApi, x, LANGUAGE), 16),
-									voiceLanguage)),
-					Collectors.toMap(x -> x, x -> getVoiceAttribute(speechApi, x, LANGUAGE))));
-			//
-			if (StringUtils.isNotEmpty(voiceLanguage)) {
-				//
-				if ((size = IterableUtils.size(entrySet)) == 1) {
-					//
-					setSelectedItem(cbmVoiceId, getKey(IterableUtils.get(entrySet, 0)));
-					//
-				} else if (size > 1) {
-					//
-					throw new IllegalStateException(
-							String.format("There are more than one Voice %1$s found for Lanaguge \"%2$s\"",
-									toList(map(map(stream(entrySet), VoiceManager::getKey),
-											x -> StringUtils.wrap(toString(x), "\""))),
-									voiceLanguage));
-					//
-				} // if
-					//
-			} // if
-				//
-		} // if
-			//
-			// Speech Rate
-			//
+		ObjectMap.setObject(objectMap, SpeechApi.class, speechApi);
+		//
+		testAndAccept(Objects::nonNull, getVoiceId(objectMap),
+				x -> setSelectedItem(cbmVoiceId, IValue0Util.getValue0(x)));
+		//
+		// Speech Rate
+		//
 		final Object speechApiInstance = getInstance(speechApi);
 		//
 		final Lookup lookup = cast(Lookup.class, speechApiInstance);
@@ -2151,6 +2111,60 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				0), cs);
 		//
 		return panel;
+		//
+	}
+
+	private static IValue0<?> getVoiceId(final ObjectMap objectMap) {
+		//
+		final PropertyResolver propertyResolver = ObjectMap.getObject(objectMap, PropertyResolver.class);
+		//
+		final SpeechApi speechApi = ObjectMap.getObject(objectMap, SpeechApi.class);
+		//
+		final String[] voiceIds = ObjectMap.getObject(objectMap, String[].class);
+		//
+		final String voiceId = getProperty(propertyResolver,
+				"org.springframework.context.support.VoiceManager.voiceId");
+		//
+		List<?> temp = toList(filter(testAndApply(Objects::nonNull, voiceIds, Arrays::stream, null),
+				x -> Boolean.logicalOr(Objects.equals(x, voiceId),
+						Objects.equals(getVoiceAttribute(speechApi, x, "Name"), voiceId))));
+		//
+		int size = IterableUtils.size(temp);
+		//
+		if (size == 1) {
+			//
+			return Unit.with(get(temp, 0));
+			//
+		} else if (size > 1) {
+			//
+			throw new IllegalStateException();
+			//
+		} // if
+			//
+		final String voiceLanguage = getProperty(propertyResolver,
+				"org.springframework.context.support.VoiceManager.voiceLanguage");
+		//
+		if (StringUtils.isNotEmpty(voiceLanguage)) {
+			//
+			if ((size = IterableUtils
+					.size(temp = toList(filter(testAndApply(Objects::nonNull, voiceIds, Arrays::stream, null),
+							x -> StringUtils.startsWithIgnoreCase(
+									convertLanguageCodeToText(getVoiceAttribute(speechApi, x, LANGUAGE), 16),
+									voiceLanguage))))) == 1) {
+				//
+				return Unit.with(get(temp, 0));
+				//
+			} else if (size > 1) {
+				//
+				throw new IllegalStateException(
+						String.format("There are more than one Voice %1$s found for Lanaguge \"%2$s\"",
+								toList(map(stream(temp), x -> StringUtils.wrap(toString(x), "\""))), voiceLanguage));
+				//
+			} // if
+				//
+		} // if
+			//
+		return null;
 		//
 	}
 
