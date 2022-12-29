@@ -10288,6 +10288,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		Row row = null;
 		//
+		Method methodIsAccessible = null;
+		//
+		Object value = null;
+		//
+		boolean javaLangPacakge = false;
+		//
 		for (int i = 0; localeIds != null && i < localeIds.length; i++) {
 			//
 			if ((localeId = localeIds[i]) == null) {
@@ -10298,10 +10304,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			if (fs == null) {
 				//
-				fs = toList(
-						filter(testAndApply(Objects::nonNull, getDeclaredFields(LocaleID.class), Arrays::stream, null),
-								x -> x != null && !Objects.equals(getType(x), getDeclaringClass(x)) && !x.isSynthetic()
-										&& !isStatic(x)));
+				fs = toList(filter(
+						testAndApply(Objects::nonNull, FieldUtils.getAllFields(LocaleID.class), Arrays::stream, null),
+						x -> x != null && !Objects.equals(getType(x), getDeclaringClass(x)) && !x.isSynthetic()
+								&& !isStatic(x))
+						.sorted((a, b) -> StringUtils.compare(getName(getPackage(getDeclaringClass(a))),
+								getName(getPackage(getDeclaringClass(b))))));
 				//
 			} // if
 				//
@@ -10319,11 +10327,41 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
-				f.setAccessible(true);
+				javaLangPacakge = ArrayUtils.contains(new String[] { "java.lang" },
+						getName(getPackage(getDeclaringClass(f))));
 				//
+				if (!Narcissus.invokeBooleanMethod(f, methodIsAccessible = getIfNull(methodIsAccessible,
+						VoiceManager::getAccessibleObjectIsAccessibleMethod))) {
+					//
+					if (!javaLangPacakge) {
+						//
+						f.setAccessible(true);
+						//
+					} // if
+						//
+				} // if
+					//
+				if (javaLangPacakge) {
+					//
+					if (Objects.equals(getType(f), Integer.TYPE)) {
+						//
+						value = Integer.valueOf(Narcissus.getIntField(localeId, f));
+						//
+					} else {
+						//
+						value = Narcissus.getObjectField(localeId, f);
+						//
+					} // if
+						//
+				} else {
+					//
+					value = f.get(localeId);
+					//
+				} // if
+					//
 				setCellValue(createCell(
 						row = getIfNull(row, () -> createRow(sheet, intValue(getPhysicalNumberOfRows(sheet), 0))),
-						intValue(getPhysicalNumberOfCells(row), 0)), toString(f.get(localeId)));
+						intValue(getPhysicalNumberOfCells(row), 0)), toString(value));
 				//
 			} // for
 				//
