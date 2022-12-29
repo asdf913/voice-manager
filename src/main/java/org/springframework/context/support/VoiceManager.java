@@ -3104,7 +3104,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					return Objects.equals(Boolean.FALSE,
 							ffds != null && ffds.getFormat() != null ? Boolean.valueOf(ffds.getFormat().READ_ONLY)
-									: null);
+									: null)
+							&& (ffds != null ? ffds.getEmptyFilePath() : null) != null;
 					//
 				})), new FileFormat[] {}), x -> ArrayUtils.addFirst(x, null), null);
 		//
