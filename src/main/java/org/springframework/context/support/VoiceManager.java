@@ -3109,8 +3109,44 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				})), new FileFormat[] {}), x -> ArrayUtils.addFirst(x, null), null);
 		//
-		panel.add(new JComboBox<>(cbmMicrosoftAccessFileFormat = new DefaultComboBoxModel<>(fileFormats)),
-				String.format("%1$s,span %2$s", WRAP, 4));
+		final JComboBox<FileFormat> jcbFileFormat = new JComboBox<>(
+				cbmMicrosoftAccessFileFormat = new DefaultComboBoxModel<>(fileFormats));
+		//
+		final ListCellRenderer<?> render = jcbFileFormat.getRenderer();
+		//
+		jcbFileFormat.setRenderer(new ListCellRenderer() {
+			@Override
+			public Component getListCellRendererComponent(final JList list, final Object value, final int index,
+					final boolean isSelected, final boolean cellHasFocus) {
+				//
+				final FileFormat fileFormat = cast(FileFormat.class, value);
+				//
+				if (fileFormat != null) {
+					//
+					final String toString = VoiceManager.toString(value);
+					//
+					final int spaceIdx = StringUtils.indexOf(toString, ' ');
+					//
+					if (spaceIdx >= 0) {
+						//
+						final StringBuilder sb = new StringBuilder(toString);
+						//
+						sb.insert(spaceIdx, String.format(" (%1$s)", fileFormat.getFileExtension()));
+						//
+						return VoiceManager.getListCellRendererComponent((ListCellRenderer) this, list, sb, index,
+								isSelected, cellHasFocus);
+						//
+					} // if
+						//
+				} // if
+					//
+				return VoiceManager.getListCellRendererComponent((ListCellRenderer) render, list, value, index,
+						isSelected, cellHasFocus);
+				//
+			}
+		});
+		//
+		panel.add(jcbFileFormat, String.format("%1$s,span %2$s", WRAP, 5));
 		//
 		cbmMicrosoftAccessFileFormat.setSelectedItem(microsoftAccessFileFormat);
 		//
