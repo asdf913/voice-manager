@@ -10305,19 +10305,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-			if (sheet != null && sheet.getPhysicalNumberOfRows() == 0) {
+				// Header Row
 				//
-				for (int j = 0; fs != null && j < fs.size(); j++) {
-					//
-					setCellValue(
-							createCell(row = getIfNull(row, () -> createRow(sheet, sheet.getPhysicalNumberOfRows())),
-									row.getPhysicalNumberOfCells()),
-							getName(fs.get(j)));
-					//
-				} // for
-					//
-			} // if
-				//
+			addLocaleIdSheetHeaderRow(sheet, fs);
+			//
 			row = null;
 			//
 			for (int j = 0; fs != null && j < fs.size(); j++) {
@@ -10344,6 +10335,24 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			sheet.setAutoFilter(new CellRangeAddress(sheet.getFirstRowNum(), sheet.getLastRowNum() - 1,
 					row.getFirstCellNum(), row.getLastCellNum() - 1));
 			//
+		} // if
+			//
+	}
+
+	private static void addLocaleIdSheetHeaderRow(final Sheet sheet, final List<Field> fs)
+			throws IllegalAccessException {
+		//
+		if (sheet != null && sheet.getPhysicalNumberOfRows() == 0) {
+			//
+			Row row = null;
+			//
+			for (int j = 0; fs != null && j < fs.size(); j++) {
+				//
+				setCellValue(createCell(row = getIfNull(row, () -> createRow(sheet, sheet.getPhysicalNumberOfRows())),
+						row.getPhysicalNumberOfCells()), getName(fs.get(j)));
+				//
+			} // for
+				//
 		} // if
 			//
 	}
