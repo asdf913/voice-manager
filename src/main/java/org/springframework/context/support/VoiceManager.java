@@ -10330,15 +10330,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				javaLangPacakge = ArrayUtils.contains(new String[] { "java.lang" },
 						getName(getPackage(getDeclaringClass(f))));
 				//
-				if (!Narcissus.invokeBooleanMethod(f, methodIsAccessible = getIfNull(methodIsAccessible,
-						VoiceManager::getAccessibleObjectIsAccessibleMethod))) {
+				if (Boolean
+						.logicalAnd(
+								!Narcissus.invokeBooleanMethod(f,
+										methodIsAccessible = getIfNull(methodIsAccessible,
+												VoiceManager::getAccessibleObjectIsAccessibleMethod)),
+								!javaLangPacakge)) {
 					//
-					if (!javaLangPacakge) {
-						//
-						f.setAccessible(true);
-						//
-					} // if
-						//
+					f.setAccessible(true);
+					//
 				} // if
 					//
 				if (javaLangPacakge) {
@@ -10367,7 +10367,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // for
 			//
-		if (sheet != null && row != null) {
+		if (sheet != null && row != null)
+
+		{
 			//
 			sheet.setAutoFilter(new CellRangeAddress(sheet.getFirstRowNum(), sheet.getLastRowNum() - 1,
 					row.getFirstCellNum(), row.getLastCellNum() - 1));
