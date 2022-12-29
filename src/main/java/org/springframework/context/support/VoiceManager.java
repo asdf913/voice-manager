@@ -8679,8 +8679,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		private boolean overMp3Title = false;
 
 		@Note("Ordinal Position As File Name Prefix")
-		private boolean ordinalPositionAsFileNamePrefix = false, exportPresentation = false,
-				embedAudioInPresentation = false, hideAudioImageInPresentation = false;
+		private boolean ordinalPositionAsFileNamePrefix = false;
+
+		@Note("Export Presentation")
+		private boolean exportPresentation = false, embedAudioInPresentation = false,
+				hideAudioImageInPresentation = false;
 
 		private VoiceManager voiceManager = null;
 
@@ -8689,7 +8692,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		private String ordinalPositionFileNamePrefix = null;
 
 		@Note("Export Presentation Template")
-		private String exportPresentationTemplate, folderInPresentation = null;
+		private String exportPresentationTemplate = null;
+
+		@Note("Folder In Presentation")
+		private String folderInPresentation = null;
 
 		private Table<String, String, Voice> voiceFileNames = null;
 
