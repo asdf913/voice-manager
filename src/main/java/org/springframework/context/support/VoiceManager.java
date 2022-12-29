@@ -634,8 +634,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Override
 	public void afterPropertiesSet() {
 		//
-		init();
-		//
+		try {
+			//
+			init();
+			//
+		} catch (final NoSuchFieldException e) {
+			//
+			errorOrPrintStackTraceOrShowMessageDialog(e);
+			//
+		} // try
+			//
 	}
 
 	@Override
@@ -1179,7 +1187,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		}
 	}
 
-	private void init() {
+	private void init() throws NoSuchFieldException {
 		//
 		final JTabbedPane jTabbedPane = new JTabbedPane();
 		//
@@ -1259,18 +1267,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		// maximum preferred height of all tab page(s)
 		//
-		Double preferredHeight = null;
+		final Double preferredHeight = getMaxPagePreferredHeight(jTabbedPane);
 		//
-		try {
-			//
-			preferredHeight = getMaxPagePreferredHeight(jTabbedPane);
-			//
-		} catch (final NoSuchFieldException e) {
-			//
-			errorOrPrintStackTraceOrShowMessageDialog(e);
-			//
-		} // try
-			//
 		final freemarker.template.Configuration configuration = ObjectUtils.getIfNull(freeMarkerConfiguration,
 				() -> new freemarker.template.Configuration(ObjectUtils.getIfNull(freeMarkerVersion,
 						() -> freemarker.template.Configuration.getVersion())));
@@ -1281,22 +1279,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		jTabbedPane.addTab("Help",
 				createHelpPanel(preferredHeight, configuration, mediaFormatPageUrl, poiEncryptionPageUrl));
 		//
-		try {
+		final Integer tabIndex = getTabIndexByTitle(jTabbedPane,
+				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.tabTitle"));
+		//
+		if (tabIndex != null) {
 			//
-			final Integer tabIndex = getTabIndexByTitle(jTabbedPane,
-					getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.tabTitle"));
+			jTabbedPane.setSelectedIndex(tabIndex.intValue());
 			//
-			if (tabIndex != null) {
-				//
-				jTabbedPane.setSelectedIndex(tabIndex.intValue());
-				//
-			} // if
-				//
-		} catch (final NoSuchFieldException e) {
-			//
-			errorOrPrintStackTraceOrShowMessageDialog(e);
-			//
-		} // try
+		} // if
 			//
 		if (layoutManager instanceof MigLayout) {
 			//
