@@ -10322,8 +10322,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				f.setAccessible(true);
 				//
 				setCellValue(createCell(
-						row = getIfNull(row,
-								() -> createRow(sheet, sheet != null ? sheet.getPhysicalNumberOfRows() : 0)),
+						row = getIfNull(row, () -> createRow(sheet, intValue(getPhysicalNumberOfRows(sheet), 0))),
 						row != null ? row.getPhysicalNumberOfCells() : 0), toString(f.get(localeId)));
 				//
 			} // for
@@ -10342,14 +10341,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static void addLocaleIdSheetHeaderRow(final Sheet sheet, final List<Field> fs)
 			throws IllegalAccessException {
 		//
-		if (sheet != null && sheet.getPhysicalNumberOfRows() == 0) {
+		final int physicalNumberOfRows = intValue(getPhysicalNumberOfRows(sheet), 0);
+		//
+		if (physicalNumberOfRows == 0) {
 			//
 			Row row = null;
 			//
 			for (int j = 0; fs != null && j < fs.size(); j++) {
 				//
-				setCellValue(createCell(row = getIfNull(row, () -> createRow(sheet, sheet.getPhysicalNumberOfRows())),
-						row.getPhysicalNumberOfCells()), getName(fs.get(j)));
+				setCellValue(createCell(row = getIfNull(row, () -> createRow(sheet, intValue(physicalNumberOfRows, 0))),
+						row != null ? row.getPhysicalNumberOfCells() : 0), getName(fs.get(j)));
 				//
 			} // for
 				//
