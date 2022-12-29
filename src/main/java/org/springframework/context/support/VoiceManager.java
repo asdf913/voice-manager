@@ -8683,8 +8683,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		private boolean ordinalPositionAsFileNamePrefix = false;
 
 		@Note("Export Presentation")
-		private boolean exportPresentation = false, embedAudioInPresentation = false,
-				hideAudioImageInPresentation = false;
+		private boolean exportPresentation = false;
+
+		@Note("Embed Audio In Presentation")
+		private boolean embedAudioInPresentation = false;
+
+		private boolean hideAudioImageInPresentation = false;
 
 		private VoiceManager voiceManager = null;
 
