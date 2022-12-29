@@ -10180,7 +10180,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // for
 			//
-		setLocaleIdSheet(createSheet(workbook, "Locale ID"));
+		ObjectMap.setObject(objectMap, Sheet.class, createSheet(workbook, "Locale ID"));
+		//
+		setLocaleIdSheet(objectMap);
 		//
 		if (sheet != null && row != null) {
 			//
@@ -10276,7 +10278,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	private static void setLocaleIdSheet(final Sheet sheet) throws IllegalAccessException {
+	private static void setLocaleIdSheet(final ObjectMap objectMap) throws IllegalAccessException {
+		//
+		final Sheet sheet = ObjectMap.getObject(objectMap, Sheet.class);
 		//
 		final LocaleID[] localeIds = LocaleID.values();
 		//
