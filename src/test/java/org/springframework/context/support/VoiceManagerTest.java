@@ -202,6 +202,7 @@ import com.google.common.collect.Table;
 import com.google.common.reflect.Reflection;
 import com.healthmarketscience.jackcess.Database;
 import com.healthmarketscience.jackcess.Database.FileFormat;
+import com.healthmarketscience.jackcess.impl.DatabaseImpl.FileFormatDetails;
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentType;
 import com.mpatric.mp3agic.ID3v1;
@@ -298,7 +299,8 @@ class VoiceManagerTest {
 			METHOD_CREATE_MULTI_MAP_BY_LIST_NAMES, METHOD_GET_FIELD_BY_NAME,
 			METHOD_CREATE_PROVIDER_VERSION_J_TEXT_COMPONENT, METHOD_CREATE_PROVIDER_PLATFORM_J_TEXT_COMPONENT,
 			METHOD_SET_SPEECH_VOLUME, METHOD_VALUES, METHOD_EXPORT_MICROSOFT_ACCESS, METHOD_IMPORT_RESULT_SET,
-			METHOD_CREATE_VOICE_ID_WARNING_PANEL, METHOD_CREATE_MICROSOFT_WINDOWS_COMPATIBILITY_WARNING_J_PANEL = null;
+			METHOD_CREATE_VOICE_ID_WARNING_PANEL, METHOD_CREATE_MICROSOFT_WINDOWS_COMPATIBILITY_WARNING_J_PANEL,
+			METHOD_GET_EMPTY_FILE_PATH = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -932,6 +934,9 @@ class VoiceManagerTest {
 		//
 		(METHOD_CREATE_MICROSOFT_WINDOWS_COMPATIBILITY_WARNING_J_PANEL = clz.getDeclaredMethod(
 				"createMicrosoftWindowsCompatibilityWarningJPanel", LayoutManager.class, String.class))
+				.setAccessible(true);
+		//
+		(METHOD_GET_EMPTY_FILE_PATH = clz.getDeclaredMethod("getEmptyFilePath", FileFormatDetails.class))
 				.setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
@@ -8027,6 +8032,27 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof JPanel) {
 				return (JPanel) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetEmptyFilePath() throws Throwable {
+		//
+		Assertions.assertNotNull(getEmptyFilePath(null));
+		//
+	}
+
+	private static String getEmptyFilePath(final FileFormatDetails instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_EMPTY_FILE_PATH.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
