@@ -1221,11 +1221,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} catch (final Error e) {
 				//
-				if (GraphicsEnvironment.isHeadless()) {
-					//
-					errorOrPrintStackTraceOrShowMessageDialog(true, e);
-					//
-				} else {
+				final boolean headless = GraphicsEnvironment.isHeadless();
+				//
+				testAndRun(headless, () -> errorOrPrintStackTraceOrShowMessageDialog(true, e));
+				//
+				if (!headless) {
 					//
 					jPanelWarning = createVoiceIdWarningPanel(this);
 					//
