@@ -1233,12 +1233,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			testAndAccept(Objects::nonNull, jPanelWarning, x -> {
 				//
-				if (lm instanceof MigLayout) {
-					add(x, WRAP);
-				} else {
-					add(x);
-				} // if
-					//
+				testAndAccept(y -> y instanceof MigLayout, lm, y -> add(x, WRAP));
+				//
+				testAndAccept(y -> !(y instanceof MigLayout), lm, y -> add(x));
+				//
 			});
 			//
 		} else {
