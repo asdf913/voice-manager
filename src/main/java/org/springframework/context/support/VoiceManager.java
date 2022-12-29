@@ -1195,7 +1195,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		JPanel jPanelWarning = null;
 		//
-		if (isInstalled(speechApi)) {
+		final boolean isInstalled = isInstalled(speechApi);
+		//
+		if (isInstalled) {
 			//
 			final LayoutManager lm = cloneLayoutManager();
 			//
@@ -1239,12 +1241,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			});
 			//
-		} else {
-			//
-			add(craeteSpeechApiInstallationWarningJPanel(microsoftSpeechPlatformRuntimeDownloadPageUrl), WRAP);
-			//
 		} // if
 			//
+		testAndRun(!isInstalled,
+				() -> add(craeteSpeechApiInstallationWarningJPanel(microsoftSpeechPlatformRuntimeDownloadPageUrl),
+						WRAP));
+		//
 		jTabbedPane.addTab("TTS", createTtsPanel(cloneLayoutManager(), voiceIds));
 		//
 		jTabbedPane.addTab(TAB_TITLE_IMPORT_SINGLE, createSingleImportPanel(cloneLayoutManager(), voiceIds));
