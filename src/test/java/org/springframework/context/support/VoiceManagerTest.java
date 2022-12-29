@@ -8042,7 +8042,7 @@ class VoiceManagerTest {
 	@Test
 	void testGetEmptyFilePath() throws Throwable {
 		//
-		Assertions.assertNotNull(getEmptyFilePath(null));
+		Assertions.assertNull(getEmptyFilePath(null));
 		//
 	}
 
