@@ -293,6 +293,7 @@ import com.healthmarketscience.jackcess.Database;
 import com.healthmarketscience.jackcess.Database.FileFormat;
 import com.healthmarketscience.jackcess.DatabaseBuilder;
 import com.healthmarketscience.jackcess.impl.DatabaseImpl;
+import com.healthmarketscience.jackcess.impl.JetFormat;
 import com.healthmarketscience.jackcess.impl.DatabaseImpl.FileFormatDetails;
 import com.healthmarketscience.jackcess.util.ImportUtil;
 import com.j256.simplemagic.ContentInfo;
@@ -3102,9 +3103,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					final FileFormatDetails ffds = cast(FileFormatDetails.class, get(fileFormatDetails, x));
 					//
-					return Objects.equals(Boolean.FALSE,
-							ffds != null && ffds.getFormat() != null ? Boolean.valueOf(ffds.getFormat().READ_ONLY)
-									: null)
+					final JetFormat format = getFormat(ffds);
+					//
+					return Objects.equals(Boolean.FALSE, format != null ? Boolean.valueOf(format.READ_ONLY) : null)
 							&& (ffds != null ? ffds.getEmptyFilePath() : null) != null;
 					//
 				})), new FileFormat[] {}), x -> ArrayUtils.addFirst(x, null), null);
@@ -3114,10 +3115,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final ListCellRenderer<?> render = jcbFileFormat.getRenderer();
 		//
-		final String commonPrefix = orElse(filter(map(
-				map(map(testAndApply(Objects::nonNull, fileFormats, Arrays::stream, null),
-						DatabaseImpl::getFileFormatDetails), x -> x != null ? x.getFormat() : null),
-				VoiceManager::toString), Objects::nonNull).reduce(StringUtils::getCommonPrefix), null);
+		final String commonPrefix = orElse(filter(
+				map(map(map(testAndApply(Objects::nonNull, fileFormats, Arrays::stream, null),
+						DatabaseImpl::getFileFormatDetails), VoiceManager::getFormat), VoiceManager::toString),
+				Objects::nonNull).reduce(StringUtils::getCommonPrefix), null);
 		//
 		jcbFileFormat.setRenderer(new ListCellRenderer() {
 			@Override
@@ -3189,6 +3190,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		return panel;
 		//
+	}
+
+	private static JetFormat getFormat(final FileFormatDetails instance) {
+		return instance != null ? instance.getFormat() : null;
 	}
 
 	private static <V> V get(final Map<?, V> instance, final Object key) {
