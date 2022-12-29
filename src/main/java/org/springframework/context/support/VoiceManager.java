@@ -3114,6 +3114,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final ListCellRenderer<?> render = jcbFileFormat.getRenderer();
 		//
+		final int maxFileFormatFileExtensionLength = orElse(
+				max(mapToInt(testAndApply(Objects::nonNull, fileFormats, Arrays::stream, null),
+						x -> StringUtils.length(x != null ? x.getFileExtension() : null))),
+				0);
+		//
+		final String commonPrefix = orElse(filter(map(
+				map(map(testAndApply(Objects::nonNull, fileFormats, Arrays::stream, null),
+						DatabaseImpl::getFileFormatDetails), x -> x != null ? x.getFormat() : null),
+				VoiceManager::toString), Objects::nonNull).reduce(StringUtils::getCommonPrefix), null);
+		//
 		jcbFileFormat.setRenderer(new ListCellRenderer() {
 			@Override
 			public Component getListCellRendererComponent(final JList list, final Object value, final int index,
@@ -3125,13 +3135,25 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					final String toString = VoiceManager.toString(value);
 					//
-					final int spaceIdx = StringUtils.indexOf(toString, ' ');
+					int idx = StringUtils.indexOf(toString, ' ');
 					//
-					if (spaceIdx >= 0) {
+					StringBuilder sb = null;
+					//
+					if (idx >= 0) {
 						//
-						final StringBuilder sb = new StringBuilder(toString);
+						(sb = new StringBuilder(StringUtils.defaultString(toString))).insert(idx,
+								String.format(" (%1$s)", fileFormat.getFileExtension()));
 						//
-						sb.insert(spaceIdx, String.format(" (%1$s)", fileFormat.getFileExtension()));
+					} // if
+						//
+					if ((idx = StringUtils.indexOf(sb, commonPrefix)) >= 0 && (sb = getIfNull(sb,
+							() -> new StringBuilder(StringUtils.defaultString(toString)))) != null) {
+						//
+						sb.delete(idx, idx + StringUtils.length(commonPrefix));
+						//
+					} // if
+						//
+					if (sb != null) {
 						//
 						return VoiceManager.getListCellRendererComponent((ListCellRenderer) this, list, sb, index,
 								isSelected, cellHasFocus);
