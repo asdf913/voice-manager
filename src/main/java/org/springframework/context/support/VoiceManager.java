@@ -10317,8 +10317,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			addLocaleIdSheetHeaderRow(sheet, fs);
 			//
-			row = addLocaleIdRow(fs, methodIsAccessible = getIfNull(methodIsAccessible,
-					VoiceManager::getAccessibleObjectIsAccessibleMethod), sheet, localeId);
+			ObjectMap.setObject(objectMap, Method.class, methodIsAccessible = getIfNull(methodIsAccessible,
+					VoiceManager::getAccessibleObjectIsAccessibleMethod));
+			//
+			row = addLocaleIdRow(objectMap, fs, localeId);
 			//
 		} // for
 			//
@@ -10331,8 +10333,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	private static Row addLocaleIdRow(final List<Field> fs, final Method methodIsAccessible, final Sheet sheet,
-			final Object instance) throws IllegalAccessException {
+	private static Row addLocaleIdRow(final ObjectMap objectMap, final List<Field> fs, final Object instance)
+			throws IllegalAccessException {
+		//
+		final Method methodIsAccessible = ObjectMap.getObject(objectMap, Method.class);
+		//
+		final Sheet sheet = ObjectMap.getObject(objectMap, Sheet.class);
 		//
 		Field f = null;
 		//
@@ -10350,10 +10356,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-			javaLangPacakge = ArrayUtils.contains(new String[] { "java.lang" },
-					getName(getPackage(getDeclaringClass(f))));
-			//
-			if (Boolean.logicalAnd(!Narcissus.invokeBooleanMethod(f, methodIsAccessible), !javaLangPacakge)) {
+			if (Boolean.logicalAnd(!Narcissus.invokeBooleanMethod(f, methodIsAccessible), !(javaLangPacakge = ArrayUtils
+					.contains(new String[] { "java.lang" }, getName(getPackage(getDeclaringClass(f))))))) {
 				//
 				f.setAccessible(true);
 				//

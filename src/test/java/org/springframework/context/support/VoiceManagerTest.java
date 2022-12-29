@@ -300,7 +300,7 @@ class VoiceManagerTest {
 			METHOD_CREATE_PROVIDER_VERSION_J_TEXT_COMPONENT, METHOD_CREATE_PROVIDER_PLATFORM_J_TEXT_COMPONENT,
 			METHOD_SET_SPEECH_VOLUME, METHOD_VALUES, METHOD_EXPORT_MICROSOFT_ACCESS, METHOD_IMPORT_RESULT_SET,
 			METHOD_CREATE_VOICE_ID_WARNING_PANEL, METHOD_CREATE_MICROSOFT_WINDOWS_COMPATIBILITY_WARNING_J_PANEL,
-			METHOD_GET_EMPTY_FILE_PATH, METHOD_SET_LOCALE_ID_SHEET = null;
+			METHOD_GET_EMPTY_FILE_PATH, METHOD_SET_LOCALE_ID_SHEET, METHOD_ADD_LOCALE_ID_ROW = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -940,6 +940,9 @@ class VoiceManagerTest {
 				.setAccessible(true);
 		//
 		(METHOD_SET_LOCALE_ID_SHEET = clz.getDeclaredMethod("setLocaleIdSheet", CLASS_OBJECT_MAP)).setAccessible(true);
+		//
+		(METHOD_ADD_LOCALE_ID_ROW = clz.getDeclaredMethod("addLocaleIdRow", CLASS_OBJECT_MAP, List.class, Object.class))
+				.setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -8082,6 +8085,30 @@ class VoiceManagerTest {
 	private static void setLocaleIdSheet(final Object objectMap) throws Throwable {
 		try {
 			METHOD_SET_LOCALE_ID_SHEET.invoke(null, objectMap);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testAddLocaleIdRow() throws Throwable {
+		//
+		Assertions.assertNull(addLocaleIdRow(null, null, null));
+		//
+		Assertions.assertNull(addLocaleIdRow(null, Collections.singletonList(null), null));
+		//
+	}
+
+	private static Row addLocaleIdRow(final Object objectMap, final List<Field> fs, final Object instance)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_ADD_LOCALE_ID_ROW.invoke(null, objectMap, fs, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Row) {
+				return (Row) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
