@@ -1929,7 +1929,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				x -> Boolean.logicalOr(Objects.equals(x, voiceId),
 						Objects.equals(getVoiceAttribute(speechApi, x, "Name"), voiceId))));
 		//
-		final int size = IterableUtils.size(temp);
+		int size = IterableUtils.size(temp);
 		//
 		if (size == 1) {
 			//
@@ -1939,6 +1939,38 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			throw new IllegalStateException();
 			//
+		} // if
+			//
+		if (getSelectedItem(cbmVoiceId) == null) {
+			//
+			final String voiceLanguage = getProperty(propertyResolver,
+					"org.springframework.context.support.VoiceManager.voiceLanguage");
+			//
+			final Collection<Entry<Object, Object>> entrySet = entrySet(collect(
+					filter(testAndApply(Objects::nonNull, getVoiceIds(speechApi), Arrays::stream, null),
+							x -> StringUtils.startsWithIgnoreCase(
+									convertLanguageCodeToText(getVoiceAttribute(speechApi, x, LANGUAGE), 16),
+									voiceLanguage)),
+					Collectors.toMap(x -> x, x -> getVoiceAttribute(speechApi, x, LANGUAGE))));
+			//
+			if (StringUtils.isNotEmpty(voiceLanguage)) {
+				//
+				if ((size = IterableUtils.size(entrySet)) == 1) {
+					//
+					setSelectedItem(cbmVoiceId, getKey(IterableUtils.get(entrySet, 0)));
+					//
+				} else if (size > 1) {
+					//
+					throw new IllegalStateException(
+							String.format("There are more than one Voice %1$s found for Lanaguge \"%2$s\"",
+									toList(map(map(stream(entrySet), VoiceManager::getKey),
+											x -> StringUtils.wrap(toString(x), "\""))),
+									voiceLanguage));
+					//
+				} // if
+					//
+			} // if
+				//
 		} // if
 			//
 			// Speech Rate
