@@ -2819,8 +2819,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.add(tfCurrentProcessingVoice = new JTextField(), String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, 2));
 		//
-		final File folder = testAndApply(StringUtils::isNotBlank, this.voiceFolder, File::new, null);
-		//
 		panel.add(new JLabel("Import Result"));
 		//
 		JScrollPane scp = new JScrollPane(new JTable(tmImportResult = new DefaultTableModel(
@@ -2857,8 +2855,19 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		setEditable(false, tfCurrentProcessingFile, tfCurrentProcessingSheetName, tfCurrentProcessingVoice);
 		//
-		setEnabled(btnExecute, folder != null && folder.exists() && folder.isDirectory());
+		final File folder = testAndApply(StringUtils::isNotBlank, this.voiceFolder, File::new, null);
 		//
+		final boolean b = folder != null && folder.exists() && folder.isDirectory();
+		//
+		setEnabled(btnExecute, b);
+		//
+		if (!b) {
+			//
+			btnExecute.setToolTipText(
+					String.format("Please create \"%1$s\" folder.", folder != null ? folder.getAbsolutePath() : null));
+			//
+		} // if
+			//
 		return panel;
 		//
 	}
