@@ -300,7 +300,7 @@ class VoiceManagerTest {
 			METHOD_CREATE_PROVIDER_VERSION_J_TEXT_COMPONENT, METHOD_CREATE_PROVIDER_PLATFORM_J_TEXT_COMPONENT,
 			METHOD_SET_SPEECH_VOLUME, METHOD_VALUES, METHOD_EXPORT_MICROSOFT_ACCESS, METHOD_IMPORT_RESULT_SET,
 			METHOD_CREATE_VOICE_ID_WARNING_PANEL, METHOD_CREATE_MICROSOFT_WINDOWS_COMPATIBILITY_WARNING_J_PANEL,
-			METHOD_GET_EMPTY_FILE_PATH = null;
+			METHOD_GET_EMPTY_FILE_PATH, METHOD_SET_LOCALE_ID_SHEET = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -938,6 +938,8 @@ class VoiceManagerTest {
 		//
 		(METHOD_GET_EMPTY_FILE_PATH = clz.getDeclaredMethod("getEmptyFilePath", FileFormatDetails.class))
 				.setAccessible(true);
+		//
+		(METHOD_SET_LOCALE_ID_SHEET = clz.getDeclaredMethod("setLocaleIdSheet", CLASS_OBJECT_MAP)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -8055,6 +8057,31 @@ class VoiceManagerTest {
 				return (String) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetLocaleIdSheet() throws Throwable {
+		//
+		final Object objectMap = Reflection.newProxy(CLASS_OBJECT_MAP, createVoiceManagerIH());
+		//
+		final Method setObject = CLASS_OBJECT_MAP != null
+				? CLASS_OBJECT_MAP.getDeclaredMethod("setObject", Class.class, Object.class)
+				: null;
+		//
+		invoke(setObject, objectMap, Sheet.class, null);
+		//
+		invoke(setObject, objectMap, LocaleID[].class, new LocaleID[] { null });
+		//
+		Assertions.assertDoesNotThrow(() -> setLocaleIdSheet(objectMap));
+		//
+	}
+
+	private static void setLocaleIdSheet(final Object objectMap) throws Throwable {
+		try {
+			METHOD_SET_LOCALE_ID_SHEET.invoke(null, objectMap);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

@@ -10182,6 +10182,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		ObjectMap.setObject(objectMap, Sheet.class, createSheet(workbook, "Locale ID"));
 		//
+		ObjectMap.setObject(objectMap, LocaleID[].class, LocaleID.values());
+		//
 		setLocaleIdSheet(objectMap);
 		//
 		if (sheet != null && row != null) {
@@ -10282,7 +10284,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final Sheet sheet = ObjectMap.getObject(objectMap, Sheet.class);
 		//
-		final LocaleID[] localeIds = LocaleID.values();
+		final LocaleID[] localeIds = ObjectMap.getObject(objectMap, LocaleID[].class);
 		//
 		LocaleID localeId = null;
 		//
