@@ -3114,11 +3114,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final ListCellRenderer<?> render = jcbFileFormat.getRenderer();
 		//
-		final int maxFileFormatFileExtensionLength = orElse(
-				max(mapToInt(testAndApply(Objects::nonNull, fileFormats, Arrays::stream, null),
-						x -> StringUtils.length(x != null ? x.getFileExtension() : null))),
-				0);
-		//
 		final String commonPrefix = orElse(filter(map(
 				map(map(testAndApply(Objects::nonNull, fileFormats, Arrays::stream, null),
 						DatabaseImpl::getFileFormatDetails), x -> x != null ? x.getFormat() : null),
