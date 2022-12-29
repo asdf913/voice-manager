@@ -2863,7 +2863,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		if (!b) {
 			//
-			btnExecute.setToolTipText(
+			setToolTipText(btnExecute,
 					String.format("Please create \"%1$s\" folder.", folder != null ? folder.getAbsolutePath() : null));
 			//
 		} // if
