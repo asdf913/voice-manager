@@ -2147,10 +2147,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		if (StringUtils.isNotEmpty(voiceLanguage)) {
 			//
 			if ((size = IterableUtils
-					.size(temp = toList(filter(testAndApply(Objects::nonNull, voiceIds, Arrays::stream, null),
-							x -> StringUtils.startsWithIgnoreCase(
-									convertLanguageCodeToText(getVoiceAttribute(speechApi, x, LANGUAGE), 16),
-									voiceLanguage))))) == 1) {
+					.size(temp = toList(filter(testAndApply(Objects::nonNull, voiceIds, Arrays::stream, null), x -> {
+						//
+						final String language = getVoiceAttribute(speechApi, x, LANGUAGE);
+						//
+						return StringUtils.startsWithIgnoreCase(convertLanguageCodeToText(language, 16), voiceLanguage)
+								|| Objects.equals(language, voiceLanguage);
+						//
+					})))) == 1) {
 				//
 				return Unit.with(get(temp, 0));
 				//
