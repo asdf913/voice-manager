@@ -10323,7 +10323,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				setCellValue(createCell(
 						row = getIfNull(row, () -> createRow(sheet, intValue(getPhysicalNumberOfRows(sheet), 0))),
-						row != null ? row.getPhysicalNumberOfCells() : 0), toString(f.get(localeId)));
+						intValue(getPhysicalNumberOfCells(row), 0)), toString(f.get(localeId)));
 				//
 			} // for
 				//
@@ -10350,12 +10350,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			for (int j = 0; fs != null && j < fs.size(); j++) {
 				//
 				setCellValue(createCell(row = getIfNull(row, () -> createRow(sheet, intValue(physicalNumberOfRows, 0))),
-						row != null ? row.getPhysicalNumberOfCells() : 0), getName(fs.get(j)));
+						intValue(getPhysicalNumberOfCells(row), 0)), getName(fs.get(j)));
 				//
 			} // for
 				//
 		} // if
 			//
+	}
+
+	private static Integer getPhysicalNumberOfCells(final Row instance) {
+		return instance != null ? Integer.valueOf(instance.getPhysicalNumberOfCells()) : null;
 	}
 
 	private static String getName(final Class<?> instance) {
