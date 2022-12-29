@@ -10338,8 +10338,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	private static void addLocaleIdSheetHeaderRow(final Sheet sheet, final List<Field> fs)
-			throws IllegalAccessException {
+	private static void addLocaleIdSheetHeaderRow(final Sheet sheet, final List<Field> fs) {
 		//
 		final int physicalNumberOfRows = intValue(getPhysicalNumberOfRows(sheet), 0);
 		//
