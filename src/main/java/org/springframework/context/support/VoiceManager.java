@@ -10284,15 +10284,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		List<Field> fs = null;
 		//
-		Field f = null;
-		//
 		Row row = null;
 		//
 		Method methodIsAccessible = null;
-		//
-		Object value = null;
-		//
-		boolean javaLangPacakge = false;
 		//
 		for (int i = 0; localeIds != null && i < localeIds.length; i++) {
 			//
@@ -10317,65 +10311,74 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			addLocaleIdSheetHeaderRow(sheet, fs);
 			//
-			row = null;
+			row = addLocaleIdRow(fs, methodIsAccessible = getIfNull(methodIsAccessible,
+					VoiceManager::getAccessibleObjectIsAccessibleMethod), sheet, localeId);
 			//
-			for (int j = 0; fs != null && j < fs.size(); j++) {
-				//
-				if ((f = fs.get(j)) == null) {
-					//
-					continue;
-					//
-				} // if
-					//
-				javaLangPacakge = ArrayUtils.contains(new String[] { "java.lang" },
-						getName(getPackage(getDeclaringClass(f))));
-				//
-				if (Boolean
-						.logicalAnd(
-								!Narcissus.invokeBooleanMethod(f,
-										methodIsAccessible = getIfNull(methodIsAccessible,
-												VoiceManager::getAccessibleObjectIsAccessibleMethod)),
-								!javaLangPacakge)) {
-					//
-					f.setAccessible(true);
-					//
-				} // if
-					//
-				if (javaLangPacakge) {
-					//
-					if (Objects.equals(getType(f), Integer.TYPE)) {
-						//
-						value = Integer.valueOf(Narcissus.getIntField(localeId, f));
-						//
-					} else {
-						//
-						value = Narcissus.getObjectField(localeId, f);
-						//
-					} // if
-						//
-				} else {
-					//
-					value = f.get(localeId);
-					//
-				} // if
-					//
-				setCellValue(createCell(
-						row = getIfNull(row, () -> createRow(sheet, intValue(getPhysicalNumberOfRows(sheet), 0))),
-						intValue(getPhysicalNumberOfCells(row), 0)), toString(value));
-				//
-			} // for
-				//
 		} // for
 			//
-		if (sheet != null && row != null)
-
-		{
+		if (sheet != null && row != null) {
 			//
 			sheet.setAutoFilter(new CellRangeAddress(sheet.getFirstRowNum(), sheet.getLastRowNum() - 1,
 					row.getFirstCellNum(), row.getLastCellNum() - 1));
 			//
 		} // if
 			//
+	}
+
+	private static Row addLocaleIdRow(final List<Field> fs, final Method methodIsAccessible, final Sheet sheet,
+			final Object instance) throws IllegalAccessException {
+		//
+		Field f = null;
+		//
+		boolean javaLangPacakge = false;
+		//
+		Object value = null;
+		//
+		Row row = null;
+		//
+		for (int j = 0; fs != null && j < fs.size(); j++) {
+			//
+			if ((f = fs.get(j)) == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			javaLangPacakge = ArrayUtils.contains(new String[] { "java.lang" },
+					getName(getPackage(getDeclaringClass(f))));
+			//
+			if (Boolean.logicalAnd(!Narcissus.invokeBooleanMethod(f, methodIsAccessible), !javaLangPacakge)) {
+				//
+				f.setAccessible(true);
+				//
+			} // if
+				//
+			if (javaLangPacakge) {
+				//
+				if (Objects.equals(getType(f), Integer.TYPE)) {
+					//
+					value = Integer.valueOf(Narcissus.getIntField(instance, f));
+					//
+				} else {
+					//
+					value = Narcissus.getObjectField(instance, f);
+					//
+				} // if
+					//
+			} else {
+				//
+				value = f.get(instance);
+				//
+			} // if
+				//
+			setCellValue(createCell(
+					row = getIfNull(row, () -> createRow(sheet, intValue(getPhysicalNumberOfRows(sheet), 0))),
+					intValue(getPhysicalNumberOfCells(row), 0)), toString(value));
+			//
+		} // for
+			//
+		return row;
+		//
 	}
 
 	private static void addLocaleIdSheetHeaderRow(final Sheet sheet, final List<Field> fs) {
