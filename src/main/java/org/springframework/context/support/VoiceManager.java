@@ -3105,8 +3105,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					final JetFormat format = getFormat(ffds);
 					//
-					return Objects.equals(Boolean.FALSE, format != null ? Boolean.valueOf(format.READ_ONLY) : null)
-							&& getEmptyFilePath(ffds) != null;
+					return Boolean.logicalAnd(
+							Objects.equals(Boolean.FALSE, format != null ? Boolean.valueOf(format.READ_ONLY) : null),
+							getEmptyFilePath(ffds) != null);
 					//
 				})), new FileFormat[] {}), x -> ArrayUtils.addFirst(x, null), null);
 		//
@@ -3197,9 +3198,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	private static String getEmptyFilePath(final FileFormatDetails instance) {
-		return instance != null 
-				? instance.getEmptyFilePath() 
-						: null;
+		return instance != null ? instance.getEmptyFilePath() : null;
 	}
 
 	private static <V> V get(final Map<?, V> instance, final Object key) {
