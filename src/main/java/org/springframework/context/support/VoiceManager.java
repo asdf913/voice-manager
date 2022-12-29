@@ -4768,7 +4768,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				setText(tfExportFile, getAbsolutePath(file));
 				//
-			} catch (final IOException e) {
+			} catch (final IOException | IllegalAccessException e) {
 				//
 				errorOrPrintStackTraceOrShowMessageDialog(headless, e);
 				//
@@ -10122,7 +10122,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	private static Workbook createMicrosoftSpeechObjectLibraryWorkbook(final SpeechApi speechApi,
-			final String... attributes) {
+			final String... attributes) throws IllegalAccessException {
 		//
 		Workbook workbook = null;
 		//
@@ -10180,6 +10180,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // for
 			//
+		setLocaleIdSheet(createSheet(workbook, "Locale ID"));
+		//
 		if (sheet != null && row != null) {
 			//
 			sheet.setAutoFilter(new CellRangeAddress(sheet.getFirstRowNum(), sheet.getLastRowNum() - 1,
@@ -10271,6 +10273,78 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			} // try
 				//
 		} // for
+			//
+	}
+
+	private static void setLocaleIdSheet(final Sheet sheet) throws IllegalAccessException {
+		//
+		final LocaleID[] localeIds = LocaleID.values();
+		//
+		LocaleID localeId = null;
+		//
+		List<Field> fs = null;
+		//
+		Field f = null;
+		//
+		Row row = null;
+		//
+		for (int i = 0; localeIds != null && i < localeIds.length; i++) {
+			//
+			if ((localeId = localeIds[i]) == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			if (fs == null) {
+				//
+				fs = toList(
+						filter(testAndApply(Objects::nonNull, getDeclaredFields(LocaleID.class), Arrays::stream, null),
+								x -> x != null && !Objects.equals(getType(x), getDeclaringClass(x)) && !x.isSynthetic()
+										&& !isStatic(x)));
+				//
+			} // if
+				//
+			if (sheet != null && sheet.getPhysicalNumberOfRows() == 0) {
+				//
+				for (int j = 0; fs != null && j < fs.size(); j++) {
+					//
+					setCellValue(
+							createCell(row = getIfNull(row, () -> createRow(sheet, sheet.getPhysicalNumberOfRows())),
+									row.getPhysicalNumberOfCells()),
+							getName(fs.get(j)));
+					//
+				} // for
+					//
+			} // if
+				//
+			row = null;
+			//
+			for (int j = 0; fs != null && j < fs.size(); j++) {
+				//
+				if ((f = fs.get(j)) == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				f.setAccessible(true);
+				//
+				setCellValue(createCell(
+						row = getIfNull(row,
+								() -> createRow(sheet, sheet != null ? sheet.getPhysicalNumberOfRows() : 0)),
+						row != null ? row.getPhysicalNumberOfCells() : 0), toString(f.get(localeId)));
+				//
+			} // for
+				//
+		} // for
+			//
+		if (sheet != null && row != null) {
+			//
+			sheet.setAutoFilter(new CellRangeAddress(sheet.getFirstRowNum(), sheet.getLastRowNum() - 1,
+					row.getFirstCellNum(), row.getLastCellNum() - 1));
+			//
+		} // if
 			//
 	}
 
