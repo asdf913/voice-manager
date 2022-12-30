@@ -4125,7 +4125,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			try {
 				//
-				if (getWorkbook(f = fs[i]) == null) {
+				if (!isFile(f = fs[i]) || getWorkbook(f = fs[i]) == null) {
 					//
 					continue;
 					//
@@ -4137,7 +4137,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				errorOrPrintStackTraceOrShowMessageDialog(headless, e);
 				//
 			} // try
-				//
+			//
 			importVoice(f);
 			//
 		} // for
