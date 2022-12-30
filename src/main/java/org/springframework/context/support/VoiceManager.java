@@ -293,8 +293,8 @@ import com.healthmarketscience.jackcess.Database;
 import com.healthmarketscience.jackcess.Database.FileFormat;
 import com.healthmarketscience.jackcess.DatabaseBuilder;
 import com.healthmarketscience.jackcess.impl.DatabaseImpl;
-import com.healthmarketscience.jackcess.impl.JetFormat;
 import com.healthmarketscience.jackcess.impl.DatabaseImpl.FileFormatDetails;
+import com.healthmarketscience.jackcess.impl.JetFormat;
 import com.healthmarketscience.jackcess.util.ImportUtil;
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
@@ -324,6 +324,7 @@ import j2html.tags.ContainerTag;
 import j2html.tags.Tag;
 import j2html.tags.specialized.ATag;
 import j2html.tags.specialized.ATagUtil;
+import jnafilechooser.api.WindowsFolderBrowser;
 import mapper.VoiceMapper;
 import net.lingala.zip4j.model.ZipParameters;
 import net.lingala.zip4j.model.enums.CompressionLevel;
@@ -4104,11 +4105,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			importByWorkbookFiles(
 					//
-					listFiles(testAndApply(Objects::nonNull,
-							JOptionPane.showInputDialog("Folder",
-									getProperty(propertyResolver,
-											"org.springframework.context.support.VoiceManager.importFolder")),
-							File::new, null))
+					listFiles(new WindowsFolderBrowser().showDialog(this))
 					//
 					, headless);
 			//
