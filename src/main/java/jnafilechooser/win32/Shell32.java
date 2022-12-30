@@ -25,6 +25,9 @@ public class Shell32
 		Native.register("shell32");
 	}
 
+	private Shell32() {
+	}
+
 	public static native Pointer SHBrowseForFolder(BrowseInfo params);
 	public static native boolean SHGetPathFromIDListW(Pointer pidl, Pointer path);
 
