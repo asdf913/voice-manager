@@ -40,8 +40,8 @@ public class Shell32
 		public int iImage;
 
 		protected List<String> getFieldOrder() {
-		return Arrays.asList(new String[] { "hwndOwner","pidlRoot","pszDisplayName","lpszTitle"
-				,"ulFlags","lpfn","lParam","iImage"});
+			return Arrays.asList("hwndOwner", "pidlRoot", "pszDisplayName", "lpszTitle", "ulFlags", "lpfn", "lParam",
+					"iImage");
 		}
 	}
 
