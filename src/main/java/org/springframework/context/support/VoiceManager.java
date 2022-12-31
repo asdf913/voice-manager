@@ -1325,6 +1325,42 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
+		final List<Container> cs = toList(map(new FailableStream<>(cast(List.class,
+				testAndApply(Objects::nonNull, jTabbedPane,
+						x -> Narcissus.getObjectField(x, getDeclaredField(JTabbedPane.class, "pages")), null))
+				.stream()).map(x -> Narcissus.getObjectField(x, getDeclaredField(getClass(x), "component"))).stream(),
+				x -> cast(Container.class, x)));
+		//
+		final List<Class<?>> compontentClassNotFocus = Arrays.asList(JLabel.class, JScrollPane.class,
+				JProgressBar.class, JPanel.class);
+		//
+		forEach(cs, c -> {
+			//
+			if (c != null) {
+				//
+				// https://stackoverflow.com/questions/35508128/setting-personalized-focustraversalpolicy-on-tab-in-jtabbedpane
+				//
+				c.setFocusCycleRoot(true);
+				//
+				c.setFocusTraversalPolicy(new TabFocusTraversalPolicy(
+						toList(filter(testAndApply(Objects::nonNull, c.getComponents(), Arrays::stream, null), x -> {
+							//
+							final JTextComponent jtc = cast(JTextComponent.class, x);
+							//
+							if (jtc != null) {
+								//
+								return jtc.isEditable();
+								//
+							} // if
+								//
+							return !contains(compontentClassNotFocus, getClass(x));
+							//
+						}))));
+				//
+			} // if
+				//
+		});
+		//
 	}
 
 	private static JPanel createVoiceIdWarningPanel(final VoiceManager instance) {
@@ -2166,24 +2202,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				getPreferredWidth(
 						Collections.max(cs, (a, b) -> ObjectUtils.compare(getPreferredWidth(a), getPreferredWidth(b)))),
 				0), cs);
-		//
-		// https://stackoverflow.com/questions/35508128/setting-personalized-focustraversalpolicy-on-tab-in-jtabbedpane
-		//
-		panel.setFocusCycleRoot(true);
-		//
-		panel.setFocusTraversalPolicy(new TabFocusTraversalPolicy(
-				toList(filter(testAndApply(Objects::nonNull, panel.getComponents(), Arrays::stream, null), x -> {
-					//
-					final JTextComponent jtc = cast(JTextComponent.class, x);
-					//
-					if (jtc != null) {
-						//
-						return jtc.isEditable();
-						//
-					} // if
-						//
-					return !(x instanceof JLabel);
-				}))));
 		//
 		return panel;
 		//
