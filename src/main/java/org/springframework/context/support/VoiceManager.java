@@ -4949,13 +4949,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					@Override
 					public Workbook get() throws RuntimeException {
 						try {
-							final Constructor<?> c = getDeclaredConstructor(x);
 							//
-							return cast(Workbook.class, c != null ? c.newInstance() : null);
+							return cast(Workbook.class, newInstance(getDeclaredConstructor(x)));
 							//
 						} catch (final NoSuchMethodException | InstantiationException | IllegalAccessException
 								| InvocationTargetException e) {
+							//
 							throw toRuntimeException(e);
+							//
 						} // try
 					}
 
@@ -5197,6 +5198,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static <T> Constructor<T> getDeclaredConstructor(final Class<T> clz, final Class<?>... parameterTypes)
 			throws NoSuchMethodException {
 		return clz != null ? clz.getDeclaredConstructor(parameterTypes) : null;
+	}
+
+	private static <T> T newInstance(final Constructor<T> constructor, final Object... initargs)
+			throws InstantiationException, IllegalAccessException, InvocationTargetException {
+		return constructor != null ? constructor.newInstance(initargs) : null;
 	}
 
 	private static String getFileExtension(final FileFormat instance) {
