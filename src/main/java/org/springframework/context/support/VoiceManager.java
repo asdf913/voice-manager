@@ -604,7 +604,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private FileFormat microsoftAccessFileFormat = null;
 
-	private IValue0<Map<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>>> workbookClassFailableSupplierMap = null;
+	private transient IValue0<Map<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>>> workbookClassFailableSupplierMap = null;
 
 	private VoiceManager() {
 	}
