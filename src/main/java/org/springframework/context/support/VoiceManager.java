@@ -1328,8 +1328,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
-		final List<Class<?>> compontentClassNotFocus = Arrays.asList(JLabel.class, JScrollPane.class,
-				JProgressBar.class, JPanel.class);
+		final Predicate<Component> predicate = createFocusableComponentPredicate(
+				Arrays.asList(JLabel.class, JScrollPane.class, JProgressBar.class, JPanel.class));
 		//
 		forEach(toList(map(
 				new FailableStream<>(stream(pages))
@@ -1340,22 +1340,31 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					setFocusCycleRoot(c, true);
 					//
-					setFocusTraversalPolicy(c, new TabFocusTraversalPolicy(
-							toList(filter(testAndApply(Objects::nonNull, getComponents(c), Arrays::stream, null), x -> {
-								//
-								final JTextComponent jtc = cast(JTextComponent.class, x);
-								//
-								if (jtc != null) {
-									//
-									return jtc.isEditable();
-									//
-								} // if
-									//
-								return !contains(compontentClassNotFocus, getClass(x));
-								//
-							}))));
+					setFocusTraversalPolicy(c,
+							new TabFocusTraversalPolicy(toList(
+									filter(testAndApply(Objects::nonNull, getComponents(c), Arrays::stream, null),
+											predicate))));
 					//
 				});
+		//
+	}
+
+	private static Predicate<Component> createFocusableComponentPredicate(
+			final Collection<Class<?>> compontentClassNotFocus) {
+		//
+		return x -> {
+			//
+			final JTextComponent jtc = cast(JTextComponent.class, x);
+			//
+			if (jtc != null) {
+				//
+				return jtc.isEditable();
+				//
+			} // if
+				//
+			return !contains(compontentClassNotFocus, getClass(x));
+			//
+		};
 		//
 	}
 
