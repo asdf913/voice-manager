@@ -1904,6 +1904,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			return CollectionUtils.isNotEmpty(components) ? get(components, 0) : null;
 		}
 
+		@Override
 		public Component getInitialComponent(final Window window) {
 			return window != null ? super.getInitialComponent(window) : null;
 		}
