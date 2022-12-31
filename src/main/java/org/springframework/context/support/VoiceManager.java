@@ -1336,18 +1336,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						.map(x -> Narcissus.getObjectField(x, getDeclaredField(getClass(x), "component"))).stream(),
 				x -> cast(Container.class, x))), c -> {
 					//
-					if (c == null) {
-						//
-						return;
-						//
-					} // if
-						//
-						// https://stackoverflow.com/questions/35508128/setting-personalized-focustraversalpolicy-on-tab-in-jtabbedpane
-						//
-					c.setFocusCycleRoot(true);
+					// https://stackoverflow.com/questions/35508128/setting-personalized-focustraversalpolicy-on-tab-in-jtabbedpane
 					//
-					c.setFocusTraversalPolicy(new TabFocusTraversalPolicy(toList(
-							filter(testAndApply(Objects::nonNull, c.getComponents(), Arrays::stream, null), x -> {
+					setFocusCycleRoot(c, true);
+					//
+					setFocusTraversalPolicy(c, new TabFocusTraversalPolicy(
+							toList(filter(testAndApply(Objects::nonNull, getComponents(c), Arrays::stream, null), x -> {
 								//
 								final JTextComponent jtc = cast(JTextComponent.class, x);
 								//
@@ -1363,6 +1357,22 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				});
 		//
+	}
+
+	private static void setFocusCycleRoot(final Container instance, final boolean focusCycleRoot) {
+		if (instance != null) {
+			instance.setFocusCycleRoot(focusCycleRoot);
+		}
+	}
+
+	private static void setFocusTraversalPolicy(final Container instance, final FocusTraversalPolicy policy) {
+		if (instance != null) {
+			instance.setFocusTraversalPolicy(policy);
+		}
+	}
+
+	private static Component[] getComponents(final Container instance) {
+		return instance != null ? instance.getComponents() : null;
 	}
 
 	private static JPanel createVoiceIdWarningPanel(final VoiceManager instance) {

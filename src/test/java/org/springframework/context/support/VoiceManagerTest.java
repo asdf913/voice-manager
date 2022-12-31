@@ -2,6 +2,7 @@ package org.springframework.context.support;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Desktop;
 import java.awt.FocusTraversalPolicy;
 import java.awt.GraphicsEnvironment;
@@ -301,7 +302,8 @@ class VoiceManagerTest {
 			METHOD_CREATE_PROVIDER_VERSION_J_TEXT_COMPONENT, METHOD_CREATE_PROVIDER_PLATFORM_J_TEXT_COMPONENT,
 			METHOD_SET_SPEECH_VOLUME, METHOD_VALUES, METHOD_EXPORT_MICROSOFT_ACCESS, METHOD_IMPORT_RESULT_SET,
 			METHOD_CREATE_VOICE_ID_WARNING_PANEL, METHOD_CREATE_MICROSOFT_WINDOWS_COMPATIBILITY_WARNING_J_PANEL,
-			METHOD_GET_EMPTY_FILE_PATH, METHOD_SET_LOCALE_ID_SHEET, METHOD_ADD_LOCALE_ID_ROW = null;
+			METHOD_GET_EMPTY_FILE_PATH, METHOD_SET_LOCALE_ID_SHEET, METHOD_ADD_LOCALE_ID_ROW,
+			METHOD_SET_FOCUS_CYCLE_ROOT, METHOD_SET_FOCUS_TRAVERSAL_POLICY, METHOD_GET_COMPONENTS = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -944,6 +946,14 @@ class VoiceManagerTest {
 		//
 		(METHOD_ADD_LOCALE_ID_ROW = clz.getDeclaredMethod("addLocaleIdRow", CLASS_OBJECT_MAP, List.class, Object.class))
 				.setAccessible(true);
+		//
+		(METHOD_SET_FOCUS_CYCLE_ROOT = clz.getDeclaredMethod("setFocusCycleRoot", Container.class, Boolean.TYPE))
+				.setAccessible(true);
+		//
+		(METHOD_SET_FOCUS_TRAVERSAL_POLICY = clz.getDeclaredMethod("setFocusTraversalPolicy", Container.class,
+				FocusTraversalPolicy.class)).setAccessible(true);
+		//
+		(METHOD_GET_COMPONENTS = clz.getDeclaredMethod("getComponents", Container.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -8082,6 +8092,58 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof Row) {
 				return (Row) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetFocusCycleRoot() {
+		//
+		Assertions.assertDoesNotThrow(() -> setFocusCycleRoot(null, false));
+		//
+	}
+
+	private static void setFocusCycleRoot(final Container instance, final boolean focusCycleRoot) throws Throwable {
+		try {
+			METHOD_SET_FOCUS_CYCLE_ROOT.invoke(null, instance, focusCycleRoot);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetFocusTraversalPolicy() {
+		//
+		Assertions.assertDoesNotThrow(() -> setFocusTraversalPolicy(null, null));
+		//
+	}
+
+	private static void setFocusTraversalPolicy(final Container instance, final FocusTraversalPolicy policy)
+			throws Throwable {
+		try {
+			METHOD_SET_FOCUS_TRAVERSAL_POLICY.invoke(null, instance, policy);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetComponents() throws Throwable {
+		//
+		Assertions.assertNull(getComponents(null));
+		//
+	}
+
+	private static Component[] getComponents(final Container instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_COMPONENTS.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Component[]) {
+				return (Component[]) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
