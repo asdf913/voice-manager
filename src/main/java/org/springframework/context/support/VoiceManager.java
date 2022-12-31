@@ -1293,7 +1293,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		jTabbedPane.addTab("Help",
 				createHelpPanel(preferredHeight, configuration, mediaFormatPageUrl, poiEncryptionPageUrl));
 		//
-		final Integer tabIndex = getTabIndexByTitle(jTabbedPane,
+		final List<?> pages = cast(List.class, testAndApply(Objects::nonNull, jTabbedPane,
+				x -> Narcissus.getField(x, getDeclaredField(getClass(x), "pages")), null));
+		//
+		final Integer tabIndex = getTabIndexByTitle(pages, jTabbedPane,
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.tabTitle"));
 		//
 		if (tabIndex != null) {
@@ -1325,41 +1328,38 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
-		final List<Container> cs = toList(map(new FailableStream<>(cast(List.class,
-				testAndApply(Objects::nonNull, jTabbedPane,
-						x -> Narcissus.getObjectField(x, getDeclaredField(JTabbedPane.class, "pages")), null))
-				.stream()).map(x -> Narcissus.getObjectField(x, getDeclaredField(getClass(x), "component"))).stream(),
-				x -> cast(Container.class, x)));
-		//
 		final List<Class<?>> compontentClassNotFocus = Arrays.asList(JLabel.class, JScrollPane.class,
 				JProgressBar.class, JPanel.class);
 		//
-		forEach(cs, c -> {
-			//
-			if (c != null) {
-				//
-				// https://stackoverflow.com/questions/35508128/setting-personalized-focustraversalpolicy-on-tab-in-jtabbedpane
-				//
-				c.setFocusCycleRoot(true);
-				//
-				c.setFocusTraversalPolicy(new TabFocusTraversalPolicy(
-						toList(filter(testAndApply(Objects::nonNull, c.getComponents(), Arrays::stream, null), x -> {
-							//
-							final JTextComponent jtc = cast(JTextComponent.class, x);
-							//
-							if (jtc != null) {
-								//
-								return jtc.isEditable();
-								//
-							} // if
-								//
-							return !contains(compontentClassNotFocus, getClass(x));
-							//
-						}))));
-				//
-			} // if
-				//
-		});
+		forEach(toList(map(
+				new FailableStream<>(stream(pages))
+						.map(x -> Narcissus.getObjectField(x, getDeclaredField(getClass(x), "component"))).stream(),
+				x -> cast(Container.class, x))), c -> {
+					//
+					if (c != null) {
+						//
+						// https://stackoverflow.com/questions/35508128/setting-personalized-focustraversalpolicy-on-tab-in-jtabbedpane
+						//
+						c.setFocusCycleRoot(true);
+						//
+						c.setFocusTraversalPolicy(new TabFocusTraversalPolicy(toList(
+								filter(testAndApply(Objects::nonNull, c.getComponents(), Arrays::stream, null), x -> {
+									//
+									final JTextComponent jtc = cast(JTextComponent.class, x);
+									//
+									if (jtc != null) {
+										//
+										return jtc.isEditable();
+										//
+									} // if
+										//
+									return !contains(compontentClassNotFocus, getClass(x));
+									//
+								}))));
+						//
+					} // if
+						//
+				});
 		//
 	}
 
@@ -1794,13 +1794,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.getTitleText() : null;
 	}
 
-	private static Integer getTabIndexByTitle(final Object jTabbedPane, final Object title)
+	private static Integer getTabIndexByTitle(final List<?> pages, final Object jTabbedPane, final Object title)
 			throws NoSuchFieldException {
 		//
 		Integer tabIndex = null;
-		//
-		final List<?> pages = cast(List.class, testAndApply(Objects::nonNull, jTabbedPane,
-				x -> Narcissus.getField(x, getDeclaredField(getClass(x), "pages")), null));
 		//
 		Object page = null;
 		//

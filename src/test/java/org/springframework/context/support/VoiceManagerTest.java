@@ -576,8 +576,8 @@ class VoiceManagerTest {
 		(METHOD_CREATE_EXPORT_TASK = clz.getDeclaredMethod("createExportTask", CLASS_OBJECT_MAP, Integer.class,
 				Integer.class, Integer.class, Map.class, Table.class)).setAccessible(true);
 		//
-		(METHOD_GET_TAB_INDEX_BY_TITLE = clz.getDeclaredMethod("getTabIndexByTitle", Object.class, Object.class))
-				.setAccessible(true);
+		(METHOD_GET_TAB_INDEX_BY_TITLE = clz.getDeclaredMethod("getTabIndexByTitle", List.class, Object.class,
+				Object.class)).setAccessible(true);
 		//
 		(METHOD_GET_DECLARED_FIELD = clz.getDeclaredMethod("getDeclaredField", Class.class, String.class))
 				.setAccessible(true);
@@ -4969,40 +4969,14 @@ class VoiceManagerTest {
 	@Test
 	void testGetTabIndexByTitle() throws Throwable {
 		//
-		Assertions.assertNull(getTabIndexByTitle(null, null));
-		//
-		final JTabbedPane jTabbedPane = new JTabbedPane();
-		//
-		final Collection<Object> pages = cast(Collection.class, testAndApply(Objects::nonNull, jTabbedPane,
-				x -> Narcissus.getField(x, getDeclaredField(getClass(x), "pages")), null));
-		//
-		add(pages, null);
-		//
-		Assertions.assertNull(getTabIndexByTitle(jTabbedPane, null));
-		//
-		add(pages, "");
-		//
-		Assertions.assertNull(getTabIndexByTitle(jTabbedPane, null));
-		//
-		if (pages != null) {
-			//
-			pages.clear();
-			//
-		} // if
-			//
-		jTabbedPane.addTab(EMPTY, null);
-		//
-		Assertions.assertEquals(Integer.valueOf(0), getTabIndexByTitle(jTabbedPane, EMPTY));
-		//
-		jTabbedPane.addTab(EMPTY, null);
-		//
-		Assertions.assertThrows(IllegalStateException.class, () -> getTabIndexByTitle(jTabbedPane, EMPTY));
+		Assertions.assertNull(getTabIndexByTitle(Collections.singletonList(null), null, null));
 		//
 	}
 
-	private static Integer getTabIndexByTitle(final Object jTabbedPane, final Object title) throws Throwable {
+	private static Integer getTabIndexByTitle(final List<?> pages, final Object jTabbedPane, final Object title)
+			throws Throwable {
 		try {
-			final Object obj = METHOD_GET_TAB_INDEX_BY_TITLE.invoke(null, jTabbedPane, title);
+			final Object obj = METHOD_GET_TAB_INDEX_BY_TITLE.invoke(null, pages, jTabbedPane, title);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Integer) {
