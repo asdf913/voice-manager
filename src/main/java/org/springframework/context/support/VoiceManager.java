@@ -3092,12 +3092,28 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.add(new JLabel("Workbook Implementation"), String.format("span %1$s", 5));
 		//
-		final Set<Class<? extends Workbook>> classes = new Reflections("org.apache.poi").getSubTypesOf(Workbook.class);
+		final Collection<Class<? extends Workbook>> classes = new Reflections("org.apache.poi")
+				.getSubTypesOf(Workbook.class);
 		//
-		panel.add(
-				new JComboBox<>(
-						cbmWorkbookClass = new DefaultComboBoxModel<>((Class[]) toArray(classes, new Class[] {}))),
-				String.format("%1$s,span %2$s", WRAP, 7));
+		final JComboBox<Class> jcbClass = new JComboBox<Class>(
+				cbmWorkbookClass = new DefaultComboBoxModel<>((Class[]) toArray(classes, new Class[] {})));
+		//
+		final ListCellRenderer<?> lcr = jcbClass.getRenderer();
+		//
+		jcbClass.setRenderer(new ListCellRenderer<>() {
+
+			@Override
+			public Component getListCellRendererComponent(final JList<? extends Class> list, final Class value,
+					final int index, final boolean isSelected, final boolean cellHasFocus) {
+				//
+				return VoiceManager.getListCellRendererComponent((ListCellRenderer) lcr, list, getName(value), index,
+						isSelected, cellHasFocus);
+				//
+			}
+
+		});
+		//
+		panel.add(jcbClass, String.format("%1$s,span %2$s", WRAP, 7));
 		//
 		// Encryption Mode
 		//
@@ -3307,16 +3323,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		final JComboBox<FileFormat> jcbFileFormat = new JComboBox<>(
 				cbmMicrosoftAccessFileFormat = new DefaultComboBoxModel<>(fileFormats));
 		//
-		final MicrosoftAccessFileFormatListCellRenderer listCellRenderer = new MicrosoftAccessFileFormatListCellRenderer();
+		final MicrosoftAccessFileFormatListCellRenderer mafflcr = new MicrosoftAccessFileFormatListCellRenderer();
 		//
-		listCellRenderer.listCellRenderer = (ListCellRenderer) jcbFileFormat.getRenderer();
+		mafflcr.listCellRenderer = (ListCellRenderer) jcbFileFormat.getRenderer();
 		//
-		listCellRenderer.commonPrefix = orElse(filter(
+		mafflcr.commonPrefix = orElse(filter(
 				map(map(map(testAndApply(Objects::nonNull, fileFormats, Arrays::stream, null),
 						DatabaseImpl::getFileFormatDetails), VoiceManager::getFormat), VoiceManager::toString),
 				Objects::nonNull).reduce(StringUtils::getCommonPrefix), null);
 		//
-		jcbFileFormat.setRenderer(listCellRenderer);
+		jcbFileFormat.setRenderer(mafflcr);
 		//
 		panel.add(jcbFileFormat, String.format("%1$s,span %2$s", WRAP, 5));
 		//
