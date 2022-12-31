@@ -2886,10 +2886,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.keySet() : null;
 	}
 
-	private static <K> Set<K> keySet(final Map<K, ?> instance) {
-		return instance != null ? instance.keySet() : null;
-	}
-
 	private static <K, V> void putAll(final Multimap<K, V> instance, final K key, final Iterable<? extends V> values) {
 		if (instance != null) {
 			instance.putAll(key, values);
@@ -9444,7 +9440,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							new StreamResult(writer));
 					//
 					newOdfPresentationDocument = generateOdfPresentationDocument(VoiceManager.toString(writer),
-							outputFolder, keySet(voices), embedAudioInPresentation, folderInPresentation);
+							outputFolder, voices.keySet(), embedAudioInPresentation, folderInPresentation);
 					//
 				} // if
 					//
