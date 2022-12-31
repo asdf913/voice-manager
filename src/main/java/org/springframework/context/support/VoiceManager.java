@@ -2,9 +2,11 @@ package org.springframework.context.support;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Desktop;
 import java.awt.Dimension;
+import java.awt.FocusTraversalPolicy;
 import java.awt.GraphicsEnvironment;
 import java.awt.LayoutManager;
 import java.awt.Toolkit;
@@ -2110,6 +2112,60 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				getPreferredWidth(
 						Collections.max(cs, (a, b) -> ObjectUtils.compare(getPreferredWidth(a), getPreferredWidth(b)))),
 				0), cs);
+		//
+		// https://stackoverflow.com/questions/35508128/setting-personalized-focustraversalpolicy-on-tab-in-jtabbedpane
+		//
+		panel.setFocusCycleRoot(true);
+		//
+		final List<Component> components = toList(
+				filter(testAndApply(Objects::nonNull, panel.getComponents(), Arrays::stream, null), x -> {
+					//
+					final JTextComponent jtc = cast(JTextComponent.class, x);
+					//
+					if (jtc != null) {
+						//
+						return jtc.isEditable();
+						//
+					} // if
+						//
+					return !(x instanceof JLabel);
+				}));
+		//
+		panel.setFocusTraversalPolicy(new FocusTraversalPolicy() {
+
+			public Component getComponentAfter(final Container focusCycleRoot, final Component aComponent) {
+				//
+				return get(components, (components.indexOf(aComponent) + 1) % components.size());
+				//
+			}
+
+			public Component getComponentBefore(final Container focusCycleRoot, final Component aComponent) {
+				//
+				int idx = components.indexOf(aComponent) - 1;
+				//
+				if (idx < 0) {
+					//
+					idx = cs.size() - 1;
+					//
+				} // if
+					//
+				return get(components, idx);
+				//
+			}
+
+			public Component getDefaultComponent(final Container focusCycleRoot) {
+				return CollectionUtils.isNotEmpty(components) ? get(components, 0) : null;
+			}
+
+			public Component getLastComponent(final Container focusCycleRoot) {
+				return CollectionUtils.isNotEmpty(components) ? get(components, components.size() - 1) : null;
+			}
+
+			public Component getFirstComponent(final Container focusCycleRoot) {
+				return CollectionUtils.isNotEmpty(components) ? get(components, 0) : null;
+			}
+
+		});
 		//
 		return panel;
 		//
