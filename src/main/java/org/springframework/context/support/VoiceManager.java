@@ -44,6 +44,7 @@ import java.lang.annotation.Target;
 import java.lang.invoke.TypeDescriptor.OfField;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
@@ -247,6 +248,7 @@ import org.odftoolkit.odfdom.doc.OdfPresentationDocument;
 import org.odftoolkit.odfdom.pkg.OdfPackage;
 import org.openxmlformats.schemas.officeDocument.x2006.customProperties.CTProperty;
 import org.oxbow.swingbits.dialog.task.TaskDialogs;
+import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
@@ -284,6 +286,7 @@ import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.WebClientOptions;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.github.curiousoddman.rgxgen.RgxGen;
+import com.google.common.base.Functions;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.LinkedListMultimap;
@@ -428,6 +431,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private transient ComboBoxModel<Boolean> cbmJoYoKanJi = null;
 
 	private transient ComboBoxModel<Method> cbmSpeakMethod = null;
+
+	private transient ComboBoxModel<Class> cbmWorkbookClass = null;
 
 	private transient ComboBoxModel<EncryptionMode> cbmEncryptionMode = null;
 
@@ -2881,6 +2886,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.keySet() : null;
 	}
 
+	private static <K> Set<K> keySet(final Map<K, ?> instance) {
+		return instance != null ? instance.keySet() : null;
+	}
+
 	private static <K, V> void putAll(final Multimap<K, V> instance, final K key, final Iterable<? extends V> values) {
 		if (instance != null) {
 			instance.putAll(key, values);
@@ -3078,6 +3087,17 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		final JPanel panel = new JPanel();
 		//
 		panel.setLayout(layoutManager);
+		//
+		// Microsoft Excel Format
+		//
+		panel.add(new JLabel("Workbook Implementation"), String.format("span %1$s", 5));
+		//
+		final Set<Class<? extends Workbook>> classes = new Reflections("org.apache.poi").getSubTypesOf(Workbook.class);
+		//
+		panel.add(
+				new JComboBox<>(
+						cbmWorkbookClass = new DefaultComboBoxModel<>((Class[]) toArray(classes, new Class[] {}))),
+				String.format("%1$s,span %2$s", WRAP, 7));
 		//
 		// Encryption Mode
 		//
@@ -4906,6 +4926,28 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private void actionPerformedForExport(final boolean headless) {
 		//
+		final Map<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>> map = collect(
+				stream(new Reflections("org.apache.poi").getSubTypesOf(Workbook.class)),
+				Collectors.toMap(Functions.identity(), x -> new FailableSupplier<Workbook, RuntimeException>() {
+
+					@Override
+					public Workbook get() throws RuntimeException {
+						try {
+							final Constructor<?> c = x != null ? x.getDeclaredConstructor() : null;
+							//
+							return cast(Workbook.class, c != null ? c.newInstance() : null);
+							//
+						} catch (final NoSuchMethodException | InstantiationException | IllegalAccessException
+								| InvocationTargetException e) {
+							throw toRuntimeException(e);
+						} // try
+					}
+
+				}));
+		//
+		final FailableSupplier<Workbook, RuntimeException> workbookSupplier = get(map,
+				getSelectedItem(cbmWorkbookClass));
+		//
 		SqlSession sqlSession = null;
 		//
 		Workbook workbook = null;
@@ -4968,8 +5010,26 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			boolean fileToBeDeleted = false;
 			//
+			String fileExtension = null;
+			//
+			try (final Workbook wb = get(workbookSupplier);
+					final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+				//
+				write(wb, baos);
+				//
+				final ContentInfo ci = new ContentInfoUtil().findMatch(baos.toByteArray());
+				//
+				if (Objects.equals(getMessage(ci), "OLE 2 Compound Document")) {
+					//
+					fileExtension = "xls";
+					//
+				} // if
+					//
+			} // try
+				//
 			try (final OutputStream os = new FileOutputStream(
-					file = new File(String.format("voice_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.xlsx", new Date())))) {
+					file = new File(String.format("voice_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.%2$s", new Date(),
+							StringUtils.defaultIfEmpty(fileExtension, "xlsx"))))) {
 				//
 				final BooleanMap booleanMap = Reflection.newProxy(BooleanMap.class, ih);
 				//
@@ -4977,7 +5037,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				BooleanMap.setBoolean(booleanMap, "exportJlptSheet", isSelected(cbExportJlptSheet));
 				//
-				write(workbook = createWorkbook(voices, booleanMap, XSSFWorkbook::new), os);
+				write(workbook = createWorkbook(voices, booleanMap, workbookSupplier), os);
 				//
 				if (!(fileToBeDeleted = longValue(length(file), 0) == 0)) {
 					//
@@ -5318,7 +5378,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static void encrypt(final File file, final EncryptionMode encryptionMode, final String password)
 			throws IOException, InvalidFormatException, GeneralSecurityException {
 		//
-		try (final InputStream is = testAndApply(Objects::nonNull,
+		try (final InputStream is = testAndApply(x -> x != null && x.length > 0,
 				testAndApply(Objects::nonNull, file, FileUtils::readFileToByteArray, null), ByteArrayInputStream::new,
 				null); final Workbook wb = testAndApply(Objects::nonNull, is, WorkbookFactory::create, null)) {
 			//
@@ -5350,7 +5410,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 				} // try
 					//
-			} else if (wb instanceof HSSFWorkbook) {
+			} else if (wb instanceof HSSFWorkbook && StringUtils.isNotEmpty(password)) {
 				//
 				Biff8EncryptionKey.setCurrentUserPassword(password);
 				//
@@ -9357,7 +9417,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							new StreamResult(writer));
 					//
 					newOdfPresentationDocument = generateOdfPresentationDocument(VoiceManager.toString(writer),
-							outputFolder, voices.keySet(), embedAudioInPresentation, folderInPresentation);
+							outputFolder, keySet(voices), embedAudioInPresentation, folderInPresentation);
 					//
 				} // if
 					//
@@ -10692,6 +10752,24 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		if (sheet != null && row != null) {
 			//
+			final List<Field> fs = toList(filter(
+					testAndApply(Objects::nonNull, FieldUtils.getAllFields(getClass(sheet)), Arrays::stream, null),
+					f -> Objects.equals(getName(f), "_writer")));
+			//
+			final Field f = IterableUtils.size(fs) == 1 ? get(fs, 0) : null;
+			//
+			if (f != null) {
+				//
+				f.setAccessible(true);
+				//
+				if (f.get(sheet) == null) {
+					//
+					return;
+					//
+				} // if
+					//
+			} // if
+				//
 			sheet.setAutoFilter(new CellRangeAddress(sheet.getFirstRowNum(), sheet.getLastRowNum() - 1,
 					row.getFirstCellNum(), row.getLastCellNum() - 1));
 			//
