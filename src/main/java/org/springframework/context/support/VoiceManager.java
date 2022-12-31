@@ -604,6 +604,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private FileFormat microsoftAccessFileFormat = null;
 
+	private IValue0<Map<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>>> workbookClassFailableSupplierMap = null;
+
 	private VoiceManager() {
 	}
 
@@ -1110,6 +1112,36 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
+	}
+
+	private IValue0<Map<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>>> getWorkbookClassFailableSupplierMap() {
+		//
+		if (workbookClassFailableSupplierMap == null) {
+			//
+			workbookClassFailableSupplierMap = Unit.with(collect(
+					stream(new Reflections("org.apache.poi").getSubTypesOf(Workbook.class)),
+					Collectors.toMap(Functions.identity(), x -> new FailableSupplier<Workbook, RuntimeException>() {
+
+						@Override
+						public Workbook get() throws RuntimeException {
+							try {
+								//
+								return cast(Workbook.class, newInstance(getDeclaredConstructor(x)));
+								//
+							} catch (final NoSuchMethodException | InstantiationException | IllegalAccessException
+									| InvocationTargetException e) {
+								//
+								throw toRuntimeException(e);
+								//
+							} // try
+						}
+
+					})));
+			//
+		} // if
+			//
+		return workbookClassFailableSupplierMap;
+		//
 	}
 
 	private static <E> Stream<E> stream(final Collection<E> instance) {
@@ -4938,28 +4970,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private void actionPerformedForExport(final boolean headless) {
 		//
-		final Map<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>> map = collect(
-				stream(new Reflections("org.apache.poi").getSubTypesOf(Workbook.class)),
-				Collectors.toMap(Functions.identity(), x -> new FailableSupplier<Workbook, RuntimeException>() {
-
-					@Override
-					public Workbook get() throws RuntimeException {
-						try {
-							//
-							return cast(Workbook.class, newInstance(getDeclaredConstructor(x)));
-							//
-						} catch (final NoSuchMethodException | InstantiationException | IllegalAccessException
-								| InvocationTargetException e) {
-							//
-							throw toRuntimeException(e);
-							//
-						} // try
-					}
-
-				}));
-		//
-		final FailableSupplier<Workbook, RuntimeException> workbookSupplier = get(map,
-				getSelectedItem(cbmWorkbookClass));
+		final FailableSupplier<Workbook, RuntimeException> workbookSupplier = get(
+				IValue0Util.getValue0(getWorkbookClassFailableSupplierMap()), getSelectedItem(cbmWorkbookClass));
 		//
 		SqlSession sqlSession = null;
 		//
