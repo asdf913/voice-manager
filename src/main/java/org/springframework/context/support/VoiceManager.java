@@ -4949,7 +4949,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					@Override
 					public Workbook get() throws RuntimeException {
 						try {
-							final Constructor<?> c = x != null ? x.getDeclaredConstructor() : null;
+							final Constructor<?> c = getDeclaredConstructor(x);
 							//
 							return cast(Workbook.class, c != null ? c.newInstance() : null);
 							//
@@ -5192,6 +5192,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // try
 			//
+	}
+
+	private static <T> Constructor<T> getDeclaredConstructor(final Class<T> clz, final Class<?>... parameterTypes)
+			throws NoSuchMethodException {
+		return clz != null ? clz.getDeclaredConstructor(parameterTypes) : null;
 	}
 
 	private static String getFileExtension(final FileFormat instance) {
