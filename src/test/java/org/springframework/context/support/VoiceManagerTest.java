@@ -386,8 +386,8 @@ class VoiceManagerTest {
 				.setAccessible(true);
 		//
 		(METHOD_CREATE_WORK_BOOK_LIST = clz.getDeclaredMethod("createWorkbook", List.class,
-				CLASS_BOOLEAN_MAP = Class.forName("org.springframework.context.support.VoiceManager$BooleanMap")))
-				.setAccessible(true);
+				CLASS_BOOLEAN_MAP = Class.forName("org.springframework.context.support.VoiceManager$BooleanMap"),
+				FailableSupplier.class)).setAccessible(true);
 		//
 		(METHOD_CREATE_WORK_BOOK_MULTI_MAP = clz.getDeclaredMethod("createWorkbook", Pair.class, Multimap.class))
 				.setAccessible(true);
@@ -3124,9 +3124,15 @@ class VoiceManagerTest {
 		//
 		// java.util.List,org.springframework.context.support.VoiceManager.BooleanMap
 		//
-		Assertions.assertNotNull(createWorkbook(Reflection.newProxy(List.class, ih), null));
+		List<Voice> list = Reflection.newProxy(List.class, ih);
 		//
-		Assertions.assertNotNull(createWorkbook(Collections.singletonList(null), null));
+		Assertions.assertNull(createWorkbook(list, null, null));
+		//
+		Assertions.assertNotNull(createWorkbook(list, null, XSSFWorkbook::new));
+		//
+		Assertions.assertNull(createWorkbook(list = Collections.singletonList(null), null, null));
+		//
+		Assertions.assertNotNull(createWorkbook(list, null, XSSFWorkbook::new));
 		//
 		final Voice voice = new Voice();
 		//
@@ -3162,7 +3168,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertNotNull(createWorkbook(Collections.nCopies(2, voice), booleanMap));
+		Assertions.assertNotNull(createWorkbook(Collections.nCopies(2, voice), booleanMap, XSSFWorkbook::new));
 		//
 		// org.apache.commons.lang3.tuple.Pair,com.google.common.collect.Multimap
 		//
@@ -3178,9 +3184,10 @@ class VoiceManagerTest {
 		//
 	}
 
-	private static Workbook createWorkbook(final List<Voice> voices, final Object booleanMap) throws Throwable {
+	private static Workbook createWorkbook(final List<Voice> voices, final Object booleanMap,
+			final FailableSupplier<Workbook, RuntimeException> supplier) throws Throwable {
 		try {
-			final Object obj = METHOD_CREATE_WORK_BOOK_LIST.invoke(null, voices, booleanMap);
+			final Object obj = METHOD_CREATE_WORK_BOOK_LIST.invoke(null, voices, booleanMap, supplier);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Workbook) {

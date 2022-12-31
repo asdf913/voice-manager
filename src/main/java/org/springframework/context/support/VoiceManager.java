@@ -4977,7 +4977,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				BooleanMap.setBoolean(booleanMap, "exportJlptSheet", isSelected(cbExportJlptSheet));
 				//
-				write(workbook = createWorkbook(voices, booleanMap), os);
+				write(workbook = createWorkbook(voices, booleanMap, XSSFWorkbook::new), os);
 				//
 				if (!(fileToBeDeleted = longValue(length(file), 0) == 0)) {
 					//
@@ -10572,12 +10572,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		}
 	}
 
-	private static Workbook createWorkbook(final List<Voice> voices, final BooleanMap booleanMap)
+	private static Workbook createWorkbook(final List<Voice> voices, final BooleanMap booleanMap,
+			final FailableSupplier<Workbook, RuntimeException> supplier)
 			throws IllegalAccessException, InvocationTargetException {
 		//
 		Workbook workbook = null;
 		//
-		setSheet(workbook = getIfNull(workbook, XSSFWorkbook::new), createSheet(workbook), voices);
+		setSheet(workbook = getIfNull(workbook, supplier), createSheet(workbook), voices);
 		//
 		if (BooleanMap.getBoolean(booleanMap, "exportListSheet")) {
 			//
