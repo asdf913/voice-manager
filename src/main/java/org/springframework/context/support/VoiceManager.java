@@ -10773,22 +10773,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		if (sheet != null && row != null) {
 			//
-			final List<Field> fs = toList(filter(
-					testAndApply(Objects::nonNull, FieldUtils.getAllFields(getClass(sheet)), Arrays::stream, null),
-					f -> Objects.equals(getName(f), "_writer")));
+			final IValue0<?> writer = getWriter(sheet);
 			//
-			final Field f = IterableUtils.size(fs) == 1 ? get(fs, 0) : null;
-			//
-			if (f != null) {
+			if (writer != null && writer.getValue0() == null) {
 				//
-				f.setAccessible(true);
+				return;
 				//
-				if (f.get(sheet) == null) {
-					//
-					return;
-					//
-				} // if
-					//
 			} // if
 				//
 			sheet.setAutoFilter(new CellRangeAddress(sheet.getFirstRowNum(), sheet.getLastRowNum() - 1,
@@ -10796,6 +10786,26 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
+	}
+
+	private static IValue0<Object> getWriter(final Object instance) throws IllegalAccessException {
+		//
+		final List<Field> fs = toList(filter(
+				testAndApply(Objects::nonNull, FieldUtils.getAllFields(getClass(instance)), Arrays::stream, null),
+				f -> Objects.equals(getName(f), "_writer")));
+		//
+		final Field f = IterableUtils.size(fs) == 1 ? get(fs, 0) : null;
+		//
+		if (f != null) {
+			//
+			f.setAccessible(true);
+			//
+			return Unit.with(f.get(instance));
+			//
+		} // if
+			//
+		return null;
+		//
 	}
 
 	private static void setContent(final ObjectMap objectMap) throws IllegalAccessException, InvocationTargetException {
