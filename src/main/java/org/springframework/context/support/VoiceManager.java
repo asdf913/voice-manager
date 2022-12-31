@@ -1336,29 +1336,31 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						.map(x -> Narcissus.getObjectField(x, getDeclaredField(getClass(x), "component"))).stream(),
 				x -> cast(Container.class, x))), c -> {
 					//
-					if (c != null) {
+					if (c == null) {
 						//
-						// https://stackoverflow.com/questions/35508128/setting-personalized-focustraversalpolicy-on-tab-in-jtabbedpane
-						//
-						c.setFocusCycleRoot(true);
-						//
-						c.setFocusTraversalPolicy(new TabFocusTraversalPolicy(toList(
-								filter(testAndApply(Objects::nonNull, c.getComponents(), Arrays::stream, null), x -> {
-									//
-									final JTextComponent jtc = cast(JTextComponent.class, x);
-									//
-									if (jtc != null) {
-										//
-										return jtc.isEditable();
-										//
-									} // if
-										//
-									return !contains(compontentClassNotFocus, getClass(x));
-									//
-								}))));
+						return;
 						//
 					} // if
 						//
+						// https://stackoverflow.com/questions/35508128/setting-personalized-focustraversalpolicy-on-tab-in-jtabbedpane
+						//
+					c.setFocusCycleRoot(true);
+					//
+					c.setFocusTraversalPolicy(new TabFocusTraversalPolicy(toList(
+							filter(testAndApply(Objects::nonNull, c.getComponents(), Arrays::stream, null), x -> {
+								//
+								final JTextComponent jtc = cast(JTextComponent.class, x);
+								//
+								if (jtc != null) {
+									//
+									return jtc.isEditable();
+									//
+								} // if
+									//
+								return !contains(compontentClassNotFocus, getClass(x));
+								//
+							}))));
+					//
 				});
 		//
 	}
