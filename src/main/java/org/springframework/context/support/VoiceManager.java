@@ -10804,9 +10804,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static IValue0<Object> getWriter(final Object instance) throws IllegalAccessException {
 		//
-		final List<Field> fs = toList(filter(
-				testAndApply(Objects::nonNull, FieldUtils.getAllFields(getClass(instance)), Arrays::stream, null),
-				f -> Objects.equals(getName(f), "_writer")));
+		final List<Field> fs = toList(filter(testAndApply(Objects::nonNull,
+				testAndApply(Objects::nonNull, getClass(instance), FieldUtils::getAllFields, null), Arrays::stream,
+				null), f -> Objects.equals(getName(f), "_writer")));
 		//
 		final Field f = IterableUtils.size(fs) == 1 ? get(fs, 0) : null;
 		//

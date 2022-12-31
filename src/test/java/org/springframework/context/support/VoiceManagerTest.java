@@ -166,6 +166,7 @@ import org.apache.poi.util.LocaleID;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
+import org.javatuples.valueintf.IValue0Util;
 import org.jsoup.select.Elements;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -303,7 +304,9 @@ class VoiceManagerTest {
 			METHOD_SET_SPEECH_VOLUME, METHOD_VALUES, METHOD_EXPORT_MICROSOFT_ACCESS, METHOD_IMPORT_RESULT_SET,
 			METHOD_CREATE_VOICE_ID_WARNING_PANEL, METHOD_CREATE_MICROSOFT_WINDOWS_COMPATIBILITY_WARNING_J_PANEL,
 			METHOD_GET_EMPTY_FILE_PATH, METHOD_SET_LOCALE_ID_SHEET, METHOD_ADD_LOCALE_ID_ROW,
-			METHOD_SET_FOCUS_CYCLE_ROOT, METHOD_SET_FOCUS_TRAVERSAL_POLICY, METHOD_GET_COMPONENTS = null;
+			METHOD_SET_FOCUS_CYCLE_ROOT, METHOD_SET_FOCUS_TRAVERSAL_POLICY, METHOD_GET_COMPONENTS,
+			METHOD_GET_WORKBOOK_CLASS_FAILABLE_SUPPLIER_MAP, METHOD_GET_DECLARED_CONSTRUCTOR, METHOD_NEW_INSTANCE,
+			METHOD_GET_WRITER = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -955,6 +958,17 @@ class VoiceManagerTest {
 		//
 		(METHOD_GET_COMPONENTS = clz.getDeclaredMethod("getComponents", Container.class)).setAccessible(true);
 		//
+		(METHOD_GET_WORKBOOK_CLASS_FAILABLE_SUPPLIER_MAP = clz.getDeclaredMethod("getWorkbookClassFailableSupplierMap"))
+				.setAccessible(true);
+		//
+		(METHOD_GET_DECLARED_CONSTRUCTOR = clz.getDeclaredMethod("getDeclaredConstructor", Class.class, Class[].class))
+				.setAccessible(true);
+		//
+		(METHOD_NEW_INSTANCE = clz.getDeclaredMethod("newInstance", Constructor.class, Object[].class))
+				.setAccessible(true);
+		//
+		(METHOD_GET_WRITER = clz.getDeclaredMethod("getWriter", Object.class)).setAccessible(true);
+		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
 		CLASS_EXPORT_TASK = Class.forName("org.springframework.context.support.VoiceManager$ExportTask");
@@ -1537,11 +1551,11 @@ class VoiceManagerTest {
 	private Provider provider = null;
 
 	@BeforeEach
-	void beforeEach() throws ReflectiveOperationException {
+	void beforeEach() throws Throwable {
 		//
 		element = new org.jsoup.nodes.Element("A");
 		//
-		final Constructor<VoiceManager> constructor = VoiceManager.class.getDeclaredConstructor();
+		final Constructor<VoiceManager> constructor = getDeclaredConstructor(VoiceManager.class);
 		//
 		if (constructor != null) {
 			//
@@ -1577,11 +1591,6 @@ class VoiceManagerTest {
 		//
 		provider = Reflection.newProxy(Provider.class, ih);
 		//
-	}
-
-	private static <T> T newInstance(final Constructor<T> instance, final Object... initargs)
-			throws InstantiationException, IllegalAccessException, InvocationTargetException {
-		return instance != null ? instance.newInstance(initargs) : null;
 	}
 
 	@Test
@@ -2905,7 +2914,7 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> export(voices, Collections.singletonMap(EMPTY, "true"), null));
 		//
-		final Constructor<?> constructor = CLASS_IH != null ? CLASS_IH.getDeclaredConstructor() : null;
+		final Constructor<?> constructor = getDeclaredConstructor(CLASS_IH);
 		//
 		if (constructor != null) {
 			//
@@ -3140,7 +3149,7 @@ class VoiceManagerTest {
 		//
 		voice.setCreateTs(new Date());
 		//
-		final Constructor<?> constructor = CLASS_IH != null ? CLASS_IH.getDeclaredConstructor() : null;
+		final Constructor<?> constructor = getDeclaredConstructor(CLASS_IH);
 		//
 		if (constructor != null) {
 			//
@@ -3444,7 +3453,7 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> importVoice(null, null, null, null, null, null));
 		//
-		final Constructor<?> constructor = CLASS_IH != null ? CLASS_IH.getDeclaredConstructor() : null;
+		final Constructor<?> constructor = getDeclaredConstructor(CLASS_IH);
 		//
 		if (constructor != null) {
 			//
@@ -3997,7 +4006,7 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> writeVoiceToFile(null, null, null, null, null));
 		//
-		final Constructor<?> constructor = CLASS_IH != null ? CLASS_IH.getDeclaredConstructor() : null;
+		final Constructor<?> constructor = getDeclaredConstructor(CLASS_IH);
 		//
 		if (constructor != null) {
 			//
@@ -4170,7 +4179,7 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNotSame(objectMap1, copyObjectMap(objectMap1));
 		//
-		final Constructor<?> constructor = CLASS_IH != null ? CLASS_IH.getDeclaredConstructor() : null;
+		final Constructor<?> constructor = getDeclaredConstructor(CLASS_IH);
 		//
 		if (constructor != null) {
 			//
@@ -4427,7 +4436,7 @@ class VoiceManagerTest {
 	@Test
 	void testExecute() throws Throwable {
 		//
-		final Constructor<?> constructor = CLASS_IH != null ? CLASS_IH.getDeclaredConstructor() : null;
+		final Constructor<?> constructor = getDeclaredConstructor(CLASS_IH);
 		//
 		if (constructor != null) {
 			//
@@ -6751,7 +6760,7 @@ class VoiceManagerTest {
 		//
 		voice.setJlptLevel("N1");
 		//
-		final Constructor<?> constructor = CLASS_IH != null ? CLASS_IH.getDeclaredConstructor() : null;
+		final Constructor<?> constructor = getDeclaredConstructor(CLASS_IH);
 		//
 		if (constructor != null) {
 			//
@@ -7575,7 +7584,7 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(getValueFromCell(null));
 		//
-		final Constructor<?> constructor = CLASS_IH != null ? CLASS_IH.getDeclaredConstructor() : null;
+		final Constructor<?> constructor = getDeclaredConstructor(CLASS_IH);
 		//
 		if (constructor != null) {
 			//
@@ -8159,6 +8168,97 @@ class VoiceManagerTest {
 	}
 
 	@Test
+	void testGetWorkbookClassFailableSupplierMap() throws Throwable {
+		//
+		final Map<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>> map = IValue0Util
+				.getValue0(getWorkbookClassFailableSupplierMap());
+		//
+		if (map != null) {
+			//
+			map.forEach((k, v) -> {
+				//
+				Assertions.assertNotNull(v != null ? v.get() : null);
+				//
+			});
+			//
+		} // if
+			//
+	}
+
+	private IValue0<Map<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>>> getWorkbookClassFailableSupplierMap()
+			throws Throwable {
+		try {
+			final Object obj = METHOD_GET_WORKBOOK_CLASS_FAILABLE_SUPPLIER_MAP.invoke(instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof IValue0) {
+				return (IValue0) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testgGetDeclaredConstructor() throws Throwable {
+		//
+		Assertions.assertNull(getDeclaredConstructor(null));
+		//
+	}
+
+	private static <T> Constructor<T> getDeclaredConstructor(final Class<T> clz, final Class<?>... parameterTypes)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_GET_DECLARED_CONSTRUCTOR.invoke(null, clz, parameterTypes);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Constructor) {
+				return (Constructor) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testNewInstance() throws Throwable {
+		//
+		Assertions.assertNull(newInstance(null));
+		//
+	}
+
+	private static <T> T newInstance(final Constructor<T> constructor, final Object... initargs) throws Throwable {
+		try {
+			return (T) METHOD_NEW_INSTANCE.invoke(null, constructor, initargs);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetWriter() throws Throwable {
+		//
+		Assertions.assertNull(getWriter(null));
+		//
+	}
+
+	private static IValue0<Object> getWriter(final Object instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_WRITER.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof IValue0) {
+				return (IValue0) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
 	void testIh1() throws Throwable {
 		//
 		final InvocationHandler ih = createVoiceManagerIH();
@@ -8338,7 +8438,7 @@ class VoiceManagerTest {
 	private static InvocationHandler createVoiceManagerIH() throws InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, Throwable {
 		//
-		final Constructor<?> constructor = CLASS_IH != null ? CLASS_IH.getDeclaredConstructor() : null;
+		final Constructor<?> constructor = getDeclaredConstructor(CLASS_IH);
 		//
 		if (constructor != null) {
 			//
@@ -8355,7 +8455,7 @@ class VoiceManagerTest {
 		//
 		final Class<?> clz = forName("org.springframework.context.support.VoiceManager$ImportTask");
 		//
-		final Constructor<?> constructor = clz != null ? clz.getDeclaredConstructor() : null;
+		final Constructor<?> constructor = getDeclaredConstructor(clz);
 		//
 		if (constructor != null) {
 			//
@@ -8748,7 +8848,7 @@ class VoiceManagerTest {
 			//
 		Assertions.assertNull(invoke(setPassword, null, null, null));
 		//
-		final Constructor<?> constructor = OdfPackage.class.getDeclaredConstructor();
+		final Constructor<?> constructor = getDeclaredConstructor(OdfPackage.class);
 		//
 		if (constructor != null) {
 			//
@@ -8839,9 +8939,9 @@ class VoiceManagerTest {
 	@Test
 	void testVoiceIdListCellRenderer() throws Throwable {
 		//
-		final Class<?> clz = forName("org.springframework.context.support.VoiceManager$VoiceIdListCellRenderer");
-		//
-		final Constructor<?> constructor = clz != null ? clz.getDeclaredConstructor(VoiceManager.class) : null;
+		final Constructor<?> constructor = getDeclaredConstructor(
+				forName("org.springframework.context.support.VoiceManager$VoiceIdListCellRenderer"),
+				VoiceManager.class);
 		//
 		if (constructor != null) {
 			//
@@ -8886,10 +8986,8 @@ class VoiceManagerTest {
 	@Test
 	void testMicrosoftAccessFileFormatListCellRenderer() throws Throwable {
 		//
-		final Class<?> clz = forName(
-				"org.springframework.context.support.VoiceManager$MicrosoftAccessFileFormatListCellRenderer");
-		//
-		final Constructor<?> constructor = clz != null ? clz.getDeclaredConstructor() : null;
+		final Constructor<?> constructor = getDeclaredConstructor(
+				forName("org.springframework.context.support.VoiceManager$MicrosoftAccessFileFormatListCellRenderer"));
 		//
 		if (constructor != null) {
 			//
@@ -8922,7 +9020,7 @@ class VoiceManagerTest {
 		//
 		final Class<?> clz = forName("org.springframework.context.support.VoiceManager$AudioToFlacByteConverter");
 		//
-		final Constructor<?> constructor = clz != null ? clz.getDeclaredConstructor() : null;
+		final Constructor<?> constructor = getDeclaredConstructor(clz);
 		//
 		if (constructor != null) {
 			//
@@ -8985,7 +9083,7 @@ class VoiceManagerTest {
 		//
 		final Class<?> clz = forName("org.springframework.context.support.VoiceManager$AudioToMp3ByteConverter");
 		//
-		final Constructor<?> constructor = clz != null ? clz.getDeclaredConstructor() : null;
+		final Constructor<?> constructor = getDeclaredConstructor(clz);
 		//
 		if (constructor != null) {
 			//
@@ -9105,7 +9203,7 @@ class VoiceManagerTest {
 		//
 		final Class<?> clz = forName("org.springframework.context.support.VoiceManager$JLabelLink");
 		//
-		final Constructor<?> constructor = clz != null ? clz.getDeclaredConstructor(ATag.class) : null;
+		final Constructor<?> constructor = getDeclaredConstructor(clz, ATag.class);
 		//
 		if (constructor != null) {
 			//
@@ -9184,9 +9282,8 @@ class VoiceManagerTest {
 	@Test
 	void testJTabbedPaneChangeListener() throws Throwable {
 		//
-		final Class<?> clz = forName("org.springframework.context.support.VoiceManager$JTabbedPaneChangeListener");
-		//
-		final Constructor<?> constructor = clz != null ? clz.getDeclaredConstructor() : null;
+		final Constructor<?> constructor = getDeclaredConstructor(
+				forName("org.springframework.context.support.VoiceManager$JTabbedPaneChangeListener"));
 		//
 		if (constructor != null) {
 			//
@@ -9264,9 +9361,7 @@ class VoiceManagerTest {
 		final Class<?> clz = forName(
 				"org.springframework.context.support.VoiceManager$VoiceThrowableMessageBiConsumer");
 		//
-		final Constructor<?> constructor = clz != null
-				? clz.getDeclaredConstructor(Boolean.TYPE, DefaultTableModel.class)
-				: null;
+		final Constructor<?> constructor = getDeclaredConstructor(clz, Boolean.TYPE, DefaultTableModel.class);
 		//
 		if (constructor != null) {
 			//
@@ -9317,11 +9412,9 @@ class VoiceManagerTest {
 	@Test
 	void testVoiceThrowableBiConsumer() throws Throwable {
 		//
-		final Class<?> clz = forName("org.springframework.context.support.VoiceManager$VoiceThrowableBiConsumer");
-		//
-		final Constructor<?> constructor = clz != null
-				? clz.getDeclaredConstructor(Boolean.TYPE, DefaultTableModel.class)
-				: null;
+		final Constructor<?> constructor = getDeclaredConstructor(
+				forName("org.springframework.context.support.VoiceManager$VoiceThrowableBiConsumer"), Boolean.TYPE,
+				DefaultTableModel.class);
 		//
 		if (constructor != null) {
 			//
@@ -9350,11 +9443,9 @@ class VoiceManagerTest {
 	@Test
 	void testVoiceConsumer() throws Throwable {
 		//
-		final Class<?> clz = forName("org.springframework.context.support.VoiceManager$VoiceConsumer");
-		//
-		final Constructor<?> constructor = clz != null
-				? clz.getDeclaredConstructor(JTextComponent.class, AtomicInteger.class)
-				: null;
+		final Constructor<?> constructor = getDeclaredConstructor(
+				forName("org.springframework.context.support.VoiceManager$VoiceConsumer"), JTextComponent.class,
+				AtomicInteger.class);
 		//
 		if (constructor != null) {
 			//
@@ -9381,9 +9472,8 @@ class VoiceManagerTest {
 	@Test
 	void testTabFocusTraversalPolicy() throws Throwable {
 		//
-		final Class<?> clz = forName("org.springframework.context.support.VoiceManager$TabFocusTraversalPolicy");
-		//
-		final Constructor<?> constructor = clz != null ? clz.getDeclaredConstructor(List.class) : null;
+		final Constructor<?> constructor = getDeclaredConstructor(
+				forName("org.springframework.context.support.VoiceManager$TabFocusTraversalPolicy"), List.class);
 		//
 		if (constructor != null) {
 			//
