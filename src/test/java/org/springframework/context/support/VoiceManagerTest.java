@@ -3,6 +3,7 @@ package org.springframework.context.support;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Desktop;
+import java.awt.FocusTraversalPolicy;
 import java.awt.GraphicsEnvironment;
 import java.awt.ItemSelectable;
 import java.awt.LayoutManager;
@@ -9332,6 +9333,56 @@ class VoiceManagerTest {
 		if (instance != null) {
 			instance.accept(t);
 		}
+	}
+
+	@Test
+	void testTabFocusTraversalPolicy() throws Throwable {
+		//
+		final Class<?> clz = forName("org.springframework.context.support.VoiceManager$TabFocusTraversalPolicy");
+		//
+		final Constructor<?> constructor = clz != null ? clz.getDeclaredConstructor(List.class) : null;
+		//
+		if (constructor != null) {
+			//
+			constructor.setAccessible(true);
+			//
+		} // if
+			//
+		final FocusTraversalPolicy focusTraversalPolicy = cast(FocusTraversalPolicy.class,
+				newInstance(constructor, (Object) null));
+		//
+		if (focusTraversalPolicy != null) {
+			//
+			Assertions.assertNull(focusTraversalPolicy.getComponentAfter(null, null));
+			//
+			Assertions.assertNull(focusTraversalPolicy.getComponentBefore(null, null));
+			//
+			Assertions.assertNull(focusTraversalPolicy.getDefaultComponent(null));
+			//
+			Assertions.assertNull(focusTraversalPolicy.getFirstComponent(null));
+			//
+			Assertions.assertNull(focusTraversalPolicy.getLastComponent(null));
+			//
+			FieldUtils.writeDeclaredField(focusTraversalPolicy, "components", Arrays.asList((Object) null), true);
+			//
+			Assertions.assertNull(focusTraversalPolicy.getComponentAfter(null, null));
+			//
+			Assertions.assertNull(focusTraversalPolicy.getComponentBefore(null, null));
+			//
+			Assertions.assertNull(focusTraversalPolicy.getDefaultComponent(null));
+			//
+			Assertions.assertNull(focusTraversalPolicy.getFirstComponent(null));
+			//
+			Assertions.assertNull(focusTraversalPolicy.getLastComponent(null));
+			//
+			// java.awt.FocusTraversalPolicy.getInitialComponent(java.awt.Window)
+			//
+			Assertions.assertNull(focusTraversalPolicy.getInitialComponent(null));
+			//
+			Assertions.assertSame(instance, focusTraversalPolicy.getInitialComponent(instance));
+			//
+		} // if
+			//
 	}
 
 }

@@ -10,6 +10,7 @@ import java.awt.FocusTraversalPolicy;
 import java.awt.GraphicsEnvironment;
 import java.awt.LayoutManager;
 import java.awt.Toolkit;
+import java.awt.Window;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.StringSelection;
@@ -1861,6 +1862,58 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
+	private static class TabFocusTraversalPolicy extends FocusTraversalPolicy {
+
+		private List<Component> components = null;
+
+		private TabFocusTraversalPolicy(final List<Component> components) {
+			this.components = components;
+		}
+
+		public Component getComponentAfter(final Container focusCycleRoot, final Component aComponent) {
+			//
+			final int size = IterableUtils.size(components);
+			//
+			return size != 0 ? get(components, (intValue(indexOf(components, aComponent), -1) + 1) % size) : null;
+			//
+		}
+
+		public Component getComponentBefore(final Container focusCycleRoot, final Component aComponent) {
+			//
+			int idx = intValue(indexOf(components, aComponent), -1) - 1;
+			//
+			if (idx < 0) {
+				//
+				idx = IterableUtils.size(components) - 1;
+				//
+			} // if
+				//
+			return get(components, idx);
+			//
+		}
+
+		public Component getDefaultComponent(final Container focusCycleRoot) {
+			return CollectionUtils.isNotEmpty(components) ? get(components, 0) : null;
+		}
+
+		public Component getLastComponent(final Container focusCycleRoot) {
+			return CollectionUtils.isNotEmpty(components) ? get(components, components.size() - 1) : null;
+		}
+
+		public Component getFirstComponent(final Container focusCycleRoot) {
+			return CollectionUtils.isNotEmpty(components) ? get(components, 0) : null;
+		}
+
+		public Component getInitialComponent(final Window window) {
+			return window != null ? super.getInitialComponent(window) : null;
+		}
+
+		private static Integer indexOf(final List<?> items, final Object item) {
+			return items != null ? Integer.valueOf(items.indexOf(item)) : null;
+		}
+
+	}
+
 	private JPanel createTtsPanel(final LayoutManager layoutManager, final String[] voiceIds) {
 		//
 		final JPanel panel = new JPanel();
@@ -2117,8 +2170,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.setFocusCycleRoot(true);
 		//
-		final List<Component> components = toList(
-				filter(testAndApply(Objects::nonNull, panel.getComponents(), Arrays::stream, null), x -> {
+		panel.setFocusTraversalPolicy(new TabFocusTraversalPolicy(
+				toList(filter(testAndApply(Objects::nonNull, panel.getComponents(), Arrays::stream, null), x -> {
 					//
 					final JTextComponent jtc = cast(JTextComponent.class, x);
 					//
@@ -2129,43 +2182,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					} // if
 						//
 					return !(x instanceof JLabel);
-				}));
-		//
-		panel.setFocusTraversalPolicy(new FocusTraversalPolicy() {
-
-			public Component getComponentAfter(final Container focusCycleRoot, final Component aComponent) {
-				//
-				return get(components, (components.indexOf(aComponent) + 1) % components.size());
-				//
-			}
-
-			public Component getComponentBefore(final Container focusCycleRoot, final Component aComponent) {
-				//
-				int idx = components.indexOf(aComponent) - 1;
-				//
-				if (idx < 0) {
-					//
-					idx = cs.size() - 1;
-					//
-				} // if
-					//
-				return get(components, idx);
-				//
-			}
-
-			public Component getDefaultComponent(final Container focusCycleRoot) {
-				return CollectionUtils.isNotEmpty(components) ? get(components, 0) : null;
-			}
-
-			public Component getLastComponent(final Container focusCycleRoot) {
-				return CollectionUtils.isNotEmpty(components) ? get(components, components.size() - 1) : null;
-			}
-
-			public Component getFirstComponent(final Container focusCycleRoot) {
-				return CollectionUtils.isNotEmpty(components) ? get(components, 0) : null;
-			}
-
-		});
+				}))));
 		//
 		return panel;
 		//
