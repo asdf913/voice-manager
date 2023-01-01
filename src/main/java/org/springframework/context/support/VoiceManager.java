@@ -390,6 +390,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static final String SPEECH_RATE = "Speech Rate";
 
+	private static final String OLE_2_COMPOUND_DOCUMENT = "OLE 2 Compound Document";
+
 	private static final Predicate<File> EMPTY_FILE_PREDICATE = f -> f != null && f.exists() && isFile(f)
 			&& longValue(length(f), 0) == 0;
 
@@ -1228,7 +1230,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				if (Boolean
 						.logicalOr(
 								Boolean.logicalAnd(StringUtils.equalsIgnoreCase("xls", string),
-										Objects.equals("OLE 2 Compound Document",
+										Objects.equals(OLE_2_COMPOUND_DOCUMENT,
 												message = getMessage(
 														new ContentInfoUtil().findMatch(baos.toByteArray())))),
 								Boolean.logicalAnd(StringUtils.equalsIgnoreCase("xlsx", string),
@@ -5174,7 +5176,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				write(wb, baos);
 				//
 				if (Objects.equals(getMessage(new ContentInfoUtil().findMatch(baos.toByteArray())),
-						"OLE 2 Compound Document")) {
+						OLE_2_COMPOUND_DOCUMENT)) {
 					//
 					fileExtension = "xls";
 					//
@@ -6178,7 +6180,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final String mimeType = getMimeType(ci);
 		//
-		if (Objects.equals(message, "OLE 2 Compound Document")) {
+		if (Objects.equals(message, OLE_2_COMPOUND_DOCUMENT)) {
 			//
 			try (final POIFSFileSystem poifs = new POIFSFileSystem(file)) {
 				//
