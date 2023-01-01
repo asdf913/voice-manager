@@ -1221,8 +1221,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					} // if
 						//
 				} catch (final IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					//
+					errorOrPrintStackTraceOrShowMessageDialog(e);
+					//
 				} //
 			} // for
 				//
