@@ -3120,9 +3120,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.add(new JLabel("Workbook Implementation"), String.format("span %1$s", 5));
 		//
-		final Collection<Class<? extends Workbook>> classes = new Reflections("org.apache.poi")
-				.getSubTypesOf(Workbook.class);
+		final List<Class<? extends Workbook>> classes = testAndApply(Objects::nonNull,
+				new Reflections("org.apache.poi").getSubTypesOf(Workbook.class), ArrayList::new, null);
 		//
+		if (classes != null) {
+			//
+			classes.add(0, null);
+			//
+		} // if
+			//
 		final JComboBox<Class> jcbClass = new JComboBox<Class>(
 				cbmWorkbookClass = new DefaultComboBoxModel<>((Class[]) toArray(classes, new Class[] {})));
 		//
