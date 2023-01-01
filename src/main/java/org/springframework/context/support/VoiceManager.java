@@ -1167,8 +1167,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		final Map<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>> map = IValue0Util
 				.getValue0(getWorkbookClassFailableSupplierMap());
 		//
-		List<Class<? extends Workbook>> classes = toList(filter(stream(keySet(map)),
-				x -> Objects.equals(getName(x), toString) || StringUtils.endsWithIgnoreCase(getName(x), toString)));
+		List<Class<? extends Workbook>> classes = toList(
+				filter(stream(keySet(map)), x -> Boolean.logicalOr(Objects.equals(getName(x), toString),
+						StringUtils.endsWithIgnoreCase(getName(x), toString))));
 		//
 		int size = IterableUtils.size(classes);
 		//
