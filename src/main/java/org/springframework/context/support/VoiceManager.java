@@ -1231,8 +1231,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				workbookClass = get(classes, 0);
 				//
-				return;
-				//
 			} else if (size > 1) {
 				//
 				throw new IllegalArgumentException();
