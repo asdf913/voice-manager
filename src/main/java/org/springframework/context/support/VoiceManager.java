@@ -1202,58 +1202,60 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		final Set<Entry<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>>> entrySet = entrySet(
 				map);
 		//
-		if (entrySet != null && entrySet.iterator() != null) {
+		if (entrySet == null || entrySet.iterator() == null) {
 			//
-			List<Class<? extends Workbook>> classes = null;
+			return null;
 			//
-			String message = null;
+		} // if
 			//
-			for (final Entry<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>> en : entrySet) {
-				//
-				if (en == null) {
-					//
-					continue;
-					//
-				} // if
-					//
-				try (final Workbook wb = get(getValue(en));
-						final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-					//
-					write(wb, baos);
-					//
-					if (Boolean
-							.logicalOr(
-									Boolean.logicalAnd(StringUtils.equalsIgnoreCase("xls", string),
-											Objects.equals("OLE 2 Compound Document",
-													message = getMessage(
-															new ContentInfoUtil().findMatch(baos.toByteArray())))),
-									Boolean.logicalAnd(StringUtils.equalsIgnoreCase("xlsx", string),
-											Objects.equals("Microsoft Office Open XML", message)))) {
-						//
-						testAndAccept((a, b) -> !contains(a, b), classes = getIfNull(classes, ArrayList::new),
-								getKey(en), VoiceManager::add);
-						//
-					} // if
-						//
-				} catch (final IOException e) {
-					//
-					errorOrPrintStackTraceOrShowMessageDialog(e);
-					//
-				} //
-			} // for
-				//
-			final int size = IterableUtils.size(classes);
+		List<Class<? extends Workbook>> classes = null;
+		//
+		String message = null;
+		//
+		for (final Entry<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>> en : entrySet) {
 			//
-			if (size == 1) {
+			if (en == null) {
 				//
-				return Unit.with(get(classes, 0));
-				//
-			} else if (size > 1) {
-				//
-				throw new IllegalArgumentException();
+				continue;
 				//
 			} // if
 				//
+			try (final Workbook wb = get(getValue(en));
+					final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+				//
+				write(wb, baos);
+				//
+				if (Boolean
+						.logicalOr(
+								Boolean.logicalAnd(StringUtils.equalsIgnoreCase("xls", string),
+										Objects.equals("OLE 2 Compound Document",
+												message = getMessage(
+														new ContentInfoUtil().findMatch(baos.toByteArray())))),
+								Boolean.logicalAnd(StringUtils.equalsIgnoreCase("xlsx", string),
+										Objects.equals("Microsoft Office Open XML", message)))) {
+					//
+					testAndAccept((a, b) -> !contains(a, b), classes = getIfNull(classes, ArrayList::new), getKey(en),
+							VoiceManager::add);
+					//
+				} // if
+					//
+			} catch (final IOException e) {
+				//
+				errorOrPrintStackTraceOrShowMessageDialog(e);
+				//
+			} //
+		} // for
+			//
+		final int size = IterableUtils.size(classes);
+		//
+		if (size == 1) {
+			//
+			return Unit.with(get(classes, 0));
+			//
+		} else if (size > 1) {
+			//
+			throw new IllegalArgumentException();
+			//
 		} // if
 			//
 		return null;
