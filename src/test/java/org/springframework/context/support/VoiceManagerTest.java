@@ -306,7 +306,7 @@ class VoiceManagerTest {
 			METHOD_GET_EMPTY_FILE_PATH, METHOD_SET_LOCALE_ID_SHEET, METHOD_ADD_LOCALE_ID_ROW,
 			METHOD_SET_FOCUS_CYCLE_ROOT, METHOD_SET_FOCUS_TRAVERSAL_POLICY, METHOD_GET_COMPONENTS,
 			METHOD_GET_WORKBOOK_CLASS_FAILABLE_SUPPLIER_MAP, METHOD_GET_DECLARED_CONSTRUCTOR, METHOD_NEW_INSTANCE,
-			METHOD_GET_WRITER, METHOD_KEY_SET = null;
+			METHOD_GET_WRITER, METHOD_KEY_SET, METHOD_GET_WORK_BOOK_CLASS = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -970,6 +970,9 @@ class VoiceManagerTest {
 		(METHOD_GET_WRITER = clz.getDeclaredMethod("getWriter", Object.class)).setAccessible(true);
 		//
 		(METHOD_KEY_SET = clz.getDeclaredMethod("keySet", Map.class)).setAccessible(true);
+		//
+		(METHOD_GET_WORK_BOOK_CLASS = clz.getDeclaredMethod("getWorkbookClass", Map.class, String.class))
+				.setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -8329,6 +8332,50 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof Set) {
 				return (Set) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetWorkbookClass() throws Throwable {
+		//
+		Assertions.assertNull(getWorkbookClass(null, null));
+		//
+		final Map<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>> map = Reflection
+				.newProxy(Map.class, ih);
+		//
+		Assertions.assertNull(getWorkbookClass(map, null));
+		//
+		if (ih != null) {
+			//
+			ih.entrySet = Reflection.newProxy(Set.class, ih);
+			//
+		} // if
+			//
+		Assertions.assertNull(getWorkbookClass(map, null));
+		//
+		if (ih != null) {
+			//
+			ih.entrySet = Collections.singleton(null);
+			//
+		} // if
+			//
+		Assertions.assertNull(getWorkbookClass(map, null));
+		//
+	}
+
+	private static IValue0<Class<? extends Workbook>> getWorkbookClass(
+			final Map<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>> map, final String string)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_GET_WORK_BOOK_CLASS.invoke(null, map, string);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof IValue0) {
+				return (IValue0) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

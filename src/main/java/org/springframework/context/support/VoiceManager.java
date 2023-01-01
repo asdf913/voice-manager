@@ -1167,11 +1167,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		final Map<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>> map = IValue0Util
 				.getValue0(getWorkbookClassFailableSupplierMap());
 		//
-		List<Class<? extends Workbook>> classes = toList(
+		final List<Class<? extends Workbook>> classes = toList(
 				filter(stream(keySet(map)), x -> Boolean.logicalOr(Objects.equals(getName(x), toString),
 						StringUtils.endsWithIgnoreCase(getName(x), toString))));
 		//
-		int size = IterableUtils.size(classes);
+		final int size = IterableUtils.size(classes);
 		//
 		if (size == 1) {
 			//
@@ -1185,12 +1185,26 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
+		final IValue0<Class<? extends Workbook>> iValue0 = getWorkbookClass(map, toString);
+		//
+		if (iValue0 != null) {
+			//
+			workbookClass = IValue0Util.getValue0(iValue0);
+			//
+		} // if
+			//
+	}
+
+	private static IValue0<Class<? extends Workbook>> getWorkbookClass(
+			final Map<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>> map,
+			final String string) {
+		//
 		final Set<Entry<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>>> entrySet = entrySet(
 				map);
 		//
-		if (entrySet != null) {
+		if (entrySet != null && entrySet.iterator() != null) {
 			//
-			classes = null;
+			List<Class<? extends Workbook>> classes = null;
 			//
 			String message = null;
 			//
@@ -1209,11 +1223,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					if (Boolean
 							.logicalOr(
-									Boolean.logicalAnd(StringUtils.equalsIgnoreCase("xls", toString),
+									Boolean.logicalAnd(StringUtils.equalsIgnoreCase("xls", string),
 											Objects.equals("OLE 2 Compound Document",
 													message = getMessage(
 															new ContentInfoUtil().findMatch(baos.toByteArray())))),
-									Boolean.logicalAnd(StringUtils.equalsIgnoreCase("xlsx", toString),
+									Boolean.logicalAnd(StringUtils.equalsIgnoreCase("xlsx", string),
 											Objects.equals("Microsoft Office Open XML", message)))) {
 						//
 						testAndAccept((a, b) -> !contains(a, b), classes = getIfNull(classes, ArrayList::new),
@@ -1228,9 +1242,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				} //
 			} // for
 				//
-			if ((size = IterableUtils.size(classes)) == 1) {
+			final int size = IterableUtils.size(classes);
+			//
+			if (size == 1) {
 				//
-				workbookClass = get(classes, 0);
+				return Unit.with(get(classes, 0));
 				//
 			} else if (size > 1) {
 				//
@@ -1238,9 +1254,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-				//
 		} // if
 			//
+		return null;
+		//
 	}
 
 	private static <K> Set<K> keySet(final Map<K, ?> instance) {
