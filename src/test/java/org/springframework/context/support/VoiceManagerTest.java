@@ -306,7 +306,7 @@ class VoiceManagerTest {
 			METHOD_GET_EMPTY_FILE_PATH, METHOD_SET_LOCALE_ID_SHEET, METHOD_ADD_LOCALE_ID_ROW,
 			METHOD_SET_FOCUS_CYCLE_ROOT, METHOD_SET_FOCUS_TRAVERSAL_POLICY, METHOD_GET_COMPONENTS,
 			METHOD_GET_WORKBOOK_CLASS_FAILABLE_SUPPLIER_MAP, METHOD_GET_DECLARED_CONSTRUCTOR, METHOD_NEW_INSTANCE,
-			METHOD_GET_WRITER = null;
+			METHOD_GET_WRITER, METHOD_KEY_SET = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -968,6 +968,8 @@ class VoiceManagerTest {
 				.setAccessible(true);
 		//
 		(METHOD_GET_WRITER = clz.getDeclaredMethod("getWriter", Object.class)).setAccessible(true);
+		//
+		(METHOD_KEY_SET = clz.getDeclaredMethod("keySet", Map.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -1919,6 +1921,61 @@ class VoiceManagerTest {
 		if (instance != null) {
 			//
 			Assertions.assertDoesNotThrow(() -> instance.setMicrosoftSpeechObjectLibraryAttributeNames(null));
+			//
+		} // if
+			//
+	}
+
+	@Test
+	void testSetWorkbookClass() throws Throwable {
+		//
+		final Field workbookClass = VoiceManager.class.getDeclaredField("workbookClass");
+		//
+		if (workbookClass != null) {
+			//
+			workbookClass.setAccessible(true);
+			//
+		} // if
+			//
+		if (instance != null) {
+			//
+			Assertions.assertDoesNotThrow(() -> instance.setWorkbookClass(null));
+			//
+			Assertions.assertNull(get(workbookClass, instance));
+			//
+			// java.lang.Class
+			//
+			final Class<?> clz = Class.class;
+			//
+			Assertions.assertDoesNotThrow(() -> instance.setWorkbookClass(clz));
+			//
+			Assertions.assertSame(clz, get(workbookClass, instance));
+			//
+			// java.lang.String
+			//
+			final String toString = getName(String.class);
+			//
+			Assertions.assertDoesNotThrow(() -> instance.setWorkbookClass(toString));
+			//
+			Assertions.assertSame(forName(toString), get(workbookClass, instance));
+			//
+			// org.apache.poi.hssf.usermodel.HSSFWorkbook
+			//
+			Assertions.assertDoesNotThrow(() -> instance.setWorkbookClass("HSSFWorkbook"));
+			//
+			Assertions.assertSame(HSSFWorkbook.class, get(workbookClass, instance));
+			//
+			// xls
+			//
+			Assertions.assertDoesNotThrow(() -> instance.setWorkbookClass("xls"));
+			//
+			Assertions.assertSame(HSSFWorkbook.class, get(workbookClass, instance));
+			//
+			// xlsx
+			//
+			Assertions.assertDoesNotThrow(() -> instance.setWorkbookClass("xlsx"));
+			//
+			Assertions.assertSame(XSSFWorkbook.class, get(workbookClass, instance));
 			//
 		} // if
 			//
@@ -8251,6 +8308,27 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof IValue0) {
 				return (IValue0) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testKeySet() throws Throwable {
+		//
+		Assertions.assertNull(keySet(null));
+		//
+	}
+
+	private static <K> Set<K> keySet(final Map<K, ?> instance) throws Throwable {
+		try {
+			final Object obj = METHOD_KEY_SET.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Set) {
+				return (Set) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

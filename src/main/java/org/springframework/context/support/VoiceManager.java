@@ -606,6 +606,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private transient IValue0<Map<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>>> workbookClassFailableSupplierMap = null;
 
+	private Class<?> workbookClass = null;
+
 	private VoiceManager() {
 	}
 
@@ -1142,6 +1144,107 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return workbookClassFailableSupplierMap;
 		//
+	}
+
+	public void setWorkbookClass(final Object object) {
+		//
+		if (object instanceof Class<?>) {
+			//
+			workbookClass = (Class<?>) object;
+			//
+			return;
+			//
+		} // if
+			//
+		final String toString = toString(object);
+		//
+		if ((workbookClass = forName(toString)) != null) {
+			//
+			return;
+			//
+		} // if
+			//
+		final Map<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>> map = IValue0Util
+				.getValue0(getWorkbookClassFailableSupplierMap());
+		//
+		List<Class<? extends Workbook>> classes = toList(filter(stream(keySet(map)),
+				x -> Objects.equals(getName(x), toString) || StringUtils.endsWithIgnoreCase(getName(x), toString)));
+		//
+		int size = IterableUtils.size(classes);
+		//
+		if (size == 1) {
+			//
+			workbookClass = get(classes, 0);
+			//
+			return;
+			//
+		} else if (size > 1) {
+			//
+			throw new IllegalArgumentException();
+			//
+		} // if
+			//
+		final Set<Entry<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>>> entrySet = entrySet(
+				map);
+		//
+		if (entrySet != null) {
+			//
+			classes = null;
+			//
+			String message = null;
+			//
+			for (final Entry<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>> en : entrySet) {
+				//
+				if (en == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				try (final Workbook wb = get(getValue(en));
+						final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+					//
+					write(wb, baos);
+					//
+					if (Boolean
+							.logicalOr(
+									Boolean.logicalAnd(StringUtils.equalsIgnoreCase("xls", toString),
+											Objects.equals("OLE 2 Compound Document",
+													message = getMessage(
+															new ContentInfoUtil().findMatch(baos.toByteArray())))),
+									Boolean.logicalAnd(StringUtils.equalsIgnoreCase("xlsx", toString),
+											Objects.equals("Microsoft Office Open XML", message)))) {
+						//
+						testAndAccept((a, b) -> !contains(a, b), classes = getIfNull(classes, ArrayList::new),
+								getKey(en), VoiceManager::add);
+						//
+					} // if
+						//
+				} catch (final IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} //
+			} // for
+				//
+			if ((size = IterableUtils.size(classes)) == 1) {
+				//
+				workbookClass = get(classes, 0);
+				//
+				return;
+				//
+			} else if (size > 1) {
+				//
+				throw new IllegalArgumentException();
+				//
+			} // if
+				//
+				//
+		} // if
+			//
+	}
+
+	private static <K> Set<K> keySet(final Map<K, ?> instance) {
+		return instance != null ? instance.keySet() : null;
 	}
 
 	private static <E> Stream<E> stream(final Collection<E> instance) {
@@ -3132,6 +3235,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		final JComboBox<Class> jcbClass = new JComboBox<Class>(
 				cbmWorkbookClass = new DefaultComboBoxModel<>((Class[]) toArray(classes, new Class[] {})));
 		//
+		testAndRun(contains(keySet(IValue0Util.getValue0(getWorkbookClassFailableSupplierMap())), workbookClass),
+				() -> setSelectedItem(cbmWorkbookClass, workbookClass));
+		//
 		final ListCellRenderer<?> lcr = jcbClass.getRenderer();
 		//
 		jcbClass.setRenderer(new ListCellRenderer<>() {
@@ -5048,9 +5154,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				write(wb, baos);
 				//
-				final ContentInfo ci = new ContentInfoUtil().findMatch(baos.toByteArray());
-				//
-				if (Objects.equals(getMessage(ci), "OLE 2 Compound Document")) {
+				if (Objects.equals(getMessage(new ContentInfoUtil().findMatch(baos.toByteArray())),
+						"OLE 2 Compound Document")) {
 					//
 					fileExtension = "xls";
 					//
@@ -9458,7 +9563,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							new StreamResult(writer));
 					//
 					newOdfPresentationDocument = generateOdfPresentationDocument(VoiceManager.toString(writer),
-							outputFolder, voices.keySet(), embedAudioInPresentation, folderInPresentation);
+							outputFolder, keySet(voices), embedAudioInPresentation, folderInPresentation);
 					//
 				} // if
 					//
