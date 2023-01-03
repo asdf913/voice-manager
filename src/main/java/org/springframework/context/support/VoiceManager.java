@@ -414,12 +414,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("Text in Import Pnael")
 	private JTextComponent tfTextImport = null;
 
-	private JTextComponent tfFile, tfHiragana, tfKatakana, tfRomaji, tfSpeechRate, tfSource, tfProviderName,
-			tfProviderVersion, tfProviderPlatform, tfSpeechLanguageCode, tfSpeechLanguageName, tfLanguage,
-			tfSpeechVolume, tfCurrentProcessingFile, tfCurrentProcessingSheetName, tfCurrentProcessingVoice,
-			tfListNames, tfPhraseCounter, tfPhraseTotal, tfJlptFolderNamePrefix, tfOrdinalPositionFileNamePrefix,
-			tfIpaSymbol, tfExportFile, tfElapsed, tfDllPath, tfExportHtmlFileName, tfExportPassword,
-			tfPronunciationPageUrl, tfPronunciationPageStatusCode = null;
+	@Note("Hiragana")
+	private JTextComponent tfHiragana = null;
+
+	private JTextComponent tfFile, tfKatakana, tfRomaji, tfSpeechRate, tfSource, tfProviderName, tfProviderVersion,
+			tfProviderPlatform, tfSpeechLanguageCode, tfSpeechLanguageName, tfLanguage, tfSpeechVolume,
+			tfCurrentProcessingFile, tfCurrentProcessingSheetName, tfCurrentProcessingVoice, tfListNames,
+			tfPhraseCounter, tfPhraseTotal, tfJlptFolderNamePrefix, tfOrdinalPositionFileNamePrefix, tfIpaSymbol,
+			tfExportFile, tfElapsed, tfDllPath, tfExportHtmlFileName, tfExportPassword, tfPronunciationPageUrl,
+			tfPronunciationPageStatusCode = null;
 
 	private transient ComboBoxModel<Yomi> cbmYomi = null;
 
@@ -500,8 +503,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("Over MP3 Title")
 	private AbstractButton cbOverMp3Title = null;
 
-	private AbstractButton cbUseTtsVoice, cbOrdinalPositionAsFileNamePrefix, btnExport, cbExportHtml, cbExportListHtml,
-			cbExportHtmlAsZip, cbExportHtmlRemoveAfterZip, cbExportListSheet, cbExportJlptSheet, cbExportPresentation,
+	@Note("Ordinal Position As File Name Prefix")
+	private AbstractButton cbOrdinalPositionAsFileNamePrefix = null;
+
+	private AbstractButton cbUseTtsVoice, btnExport, cbExportHtml, cbExportListHtml, cbExportHtmlAsZip,
+			cbExportHtmlRemoveAfterZip, cbExportListSheet, cbExportJlptSheet, cbExportPresentation,
 			cbEmbedAudioInPresentation, cbHideAudioImageInPresentation, cbExportMicrosoftAccess,
 			cbImportFileTemplateGenerateBlankRow, cbJlptAsFolder, btnExportBrowse, btnPronunciationPageUrlCheck = null;
 
