@@ -137,8 +137,8 @@ public class IniAsPropertiesResource implements Resource {
 			//
 			final Properties properties = new Properties();
 			//
-			properties.putAll(map.entrySet().stream().collect(Collectors.toMap(k -> getKey(k),
-					v -> v != null && v.getValue() != null ? v.getValue().toString() : null)));
+			properties.putAll(map.entrySet().stream().collect(
+					Collectors.toMap(IniAsPropertiesResource::getKey, v -> v != null ? toString(v.getValue()) : null)));
 			//
 			return toInputStream(properties);
 			//
@@ -286,6 +286,10 @@ public class IniAsPropertiesResource implements Resource {
 			//
 		} // try
 			//
+	}
+
+	private static String toString(final Object instance) {
+		return instance != null ? instance.toString() : null;
 	}
 
 	private static <K> K getKey(final Entry<K, ?> instance) {
