@@ -124,12 +124,8 @@ public class IniAsPropertiesResource implements Resource {
 			//
 		if (CollectionUtils.isEmpty(sections)) {
 			//
-			if (section != null) {
-				//
-				section.set(Unit.with(null));
-				//
-			} // if
-				//
+			set(section, Unit.with(null));
+			//
 			return toInputStream(new Properties());
 			//
 		} else if (size == 1) {
@@ -143,12 +139,8 @@ public class IniAsPropertiesResource implements Resource {
 			properties.putAll(map.entrySet().stream()
 					.collect(Collectors.toMap(IniAsPropertiesResource::getKey, v -> toString(getValue(v)))));
 			//
-			if (section != null) {
-				//
-				section.set(Unit.with(sectionString));
-				//
-			} // if
-				//
+			set(section, Unit.with(sectionString));
+			//
 			return toInputStream(properties);
 			//
 		} // if
@@ -338,6 +330,12 @@ public class IniAsPropertiesResource implements Resource {
 
 	private static Object getSelectedItem(final JComboBox<?> instance) {
 		return instance != null ? instance.getSelectedItem() : null;
+	}
+
+	private static <V> void set(final AtomicReference<V> instance, final V newValue) {
+		if (instance != null) {
+			instance.set(newValue);
+		}
 	}
 
 	private static InputStream toInputStream(final Properties properties) throws IOException {

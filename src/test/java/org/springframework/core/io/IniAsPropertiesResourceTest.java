@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.function.Predicate;
@@ -51,7 +52,7 @@ class IniAsPropertiesResourceTest {
 	private static Method METHOD_GET_SECTION, METHOD_TO_STRING, METHOD_TEST_AND_APPLY, METHOD_FILTER, METHOD_TO_LIST,
 			METHOD_GET_NAME, METHOD_TEST_AND_ACCEPT, METHOD_IS_STATIC, METHOD_TO_INPUT_STREAM, METHOD_CAST,
 			METHOD_GET_TYPE, METHOD_GET_KEY, METHOD_GET_VALUE, METHOD_EXISTS, METHOD_TO_ARRAY, METHOD_READY,
-			METHOD_GET_SELECTED_ITEM = null;
+			METHOD_GET_SELECTED_ITEM, METHOD_SET = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -94,6 +95,8 @@ class IniAsPropertiesResourceTest {
 		(METHOD_READY = clz.getDeclaredMethod("ready", Reader.class)).setAccessible(true);
 		//
 		(METHOD_GET_SELECTED_ITEM = clz.getDeclaredMethod("getSelectedItem", JComboBox.class)).setAccessible(true);
+		//
+		(METHOD_SET = clz.getDeclaredMethod("set", AtomicReference.class, Object.class)).setAccessible(true);
 		//
 	}
 
@@ -624,6 +627,21 @@ class IniAsPropertiesResourceTest {
 	private static Object getSelectedItem(final JComboBox<?> instance) throws Throwable {
 		try {
 			return METHOD_GET_SELECTED_ITEM.invoke(null, instance);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSet() {
+		//
+		Assertions.assertDoesNotThrow(() -> set(new AtomicReference<>(), null));
+		//
+	}
+
+	private static <V> void set(final AtomicReference<V> instance, final V newValue) throws Throwable {
+		try {
+			METHOD_SET.invoke(null, instance, newValue);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
