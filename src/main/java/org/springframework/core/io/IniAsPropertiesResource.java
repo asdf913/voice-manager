@@ -160,8 +160,7 @@ public class IniAsPropertiesResource implements Resource {
 			//
 			final JComboBox<Object> jcb = testAndApply(Objects::nonNull,
 					//
-					testAndApply(Objects::nonNull, collection != null ? collection.toArray() : null,
-							x -> ArrayUtils.addFirst(x, null), null)
+					testAndApply(Objects::nonNull, toArray(collection), x -> ArrayUtils.addFirst(x, null), null)
 					//
 					, JComboBox::new, null);
 			//
@@ -436,6 +435,10 @@ public class IniAsPropertiesResource implements Resource {
 
 	private static boolean retainAll(final Collection<?> a, final Collection<?> b) {
 		return a != null && a.retainAll(b);
+	}
+
+	private static Object[] toArray(final Collection<?> instance) {
+		return instance != null ? instance.toArray() : null;
 	}
 
 	private static boolean isStatic(final Member instance) {
