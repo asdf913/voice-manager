@@ -2,6 +2,8 @@ package org.springframework.context;
 
 import java.awt.GraphicsEnvironment;
 import java.io.IOException;
+import java.io.PrintStream;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
@@ -27,6 +29,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.reflect.MethodUtils;
 import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -85,10 +88,35 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 			//
 			LOG.info("iniSection={}", iniSection);
 			//
-		} else if (System.out != null) {
+		} else {
 			//
-			System.out.println("iniSection=" + iniSection);
+			final List<Field> fs = toList(
+					filter(testAndApply(Objects::nonNull, System.class.getDeclaredFields(), Arrays::stream, null),
+							f -> f != null && Objects.equals(f.getType(), PrintStream.class)
+									&& Objects.equals(getName(f), "out")));
 			//
+			final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+			//
+			try {
+				//
+				// System.out.println
+				//
+				MethodUtils.invokeMethod(f != null ? f.get(null) : null, "println", "iniSection=" + iniSection);
+				//
+			} catch (final InvocationTargetException e) {
+				//
+				final Throwable targetException = e.getTargetException();
+				//
+				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(
+						ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException), targetException,
+								ExceptionUtils.getRootCause(e), e));
+				//
+			} catch (final ReflectiveOperationException e) {
+				//
+				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
+				//
+			} // try
+				//
 		} // if
 			//
 		addPropertySourceToPropertySourcesToLast(environment,
