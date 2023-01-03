@@ -179,6 +179,8 @@ public class IniAsPropertiesResource implements Resource {
 			//
 			boolean ready = false;
 			//
+			// java.io.Console.reader
+			//
 			try {
 				//
 				ready = ready(cast(Reader.class,
