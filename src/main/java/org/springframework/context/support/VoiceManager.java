@@ -534,7 +534,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private JComboBox<Object> jcbVoiceId = null;
 
-	private JLabel jlListNames, jlListNameCount = null;
+	@Note("List Name(s)")
+	private JLabel jlListNames = null;
+
+	@Note("List Count")
+	private JLabel jlListNameCount = null;
 
 	@Note("Import Exception")
 	private DefaultTableModel tmImportException = null;
@@ -9084,7 +9088,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		private static String FILE_NAME_PREFIX_PADDING = orElse(
 				min(stream(IteratorUtils.toList(new RgxGen("\\d").iterateUnique())), StringUtils::compare), null);
 
-		private Integer counter, count, ordinalPositionDigit;
+		private Integer counter, ordinalPositionDigit;
+
+		@Note("Count")
+		private Integer count;
 
 		private Voice voice = null;
 
