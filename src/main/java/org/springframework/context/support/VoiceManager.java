@@ -426,11 +426,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("Speech Rate")
 	private JTextComponent tfSpeechRate = null;
 
-	private JTextComponent tfFile, tfSource, tfProviderName, tfProviderVersion, tfProviderPlatform,
-			tfSpeechLanguageCode, tfSpeechLanguageName, tfLanguage, tfSpeechVolume, tfCurrentProcessingFile,
-			tfCurrentProcessingSheetName, tfCurrentProcessingVoice, tfListNames, tfPhraseCounter, tfPhraseTotal,
-			tfJlptFolderNamePrefix, tfOrdinalPositionFileNamePrefix, tfIpaSymbol, tfExportFile, tfElapsed, tfDllPath,
-			tfExportHtmlFileName, tfExportPassword, tfPronunciationPageUrl, tfPronunciationPageStatusCode = null;
+	@Note("Source")
+	private JTextComponent tfSource = null;
+
+	private JTextComponent tfFile, tfProviderName, tfProviderVersion, tfProviderPlatform, tfSpeechLanguageCode,
+			tfSpeechLanguageName, tfLanguage, tfSpeechVolume, tfCurrentProcessingFile, tfCurrentProcessingSheetName,
+			tfCurrentProcessingVoice, tfListNames, tfPhraseCounter, tfPhraseTotal, tfJlptFolderNamePrefix,
+			tfOrdinalPositionFileNamePrefix, tfIpaSymbol, tfExportFile, tfElapsed, tfDllPath, tfExportHtmlFileName,
+			tfExportPassword, tfPronunciationPageUrl, tfPronunciationPageStatusCode = null;
 
 	private transient ComboBoxModel<Yomi> cbmYomi = null;
 
@@ -523,10 +526,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("Export List As HTML")
 	private AbstractButton cbExportListHtml = null;
 
-	private AbstractButton cbUseTtsVoice, cbExportHtmlAsZip, cbExportHtmlRemoveAfterZip, cbExportListSheet,
-			cbExportJlptSheet, cbExportPresentation, cbEmbedAudioInPresentation, cbHideAudioImageInPresentation,
-			cbExportMicrosoftAccess, cbImportFileTemplateGenerateBlankRow, cbJlptAsFolder, btnExportBrowse,
-			btnPronunciationPageUrlCheck = null;
+	@Note("Export HTML as ZIP")
+	private AbstractButton cbExportHtmlAsZip = null;
+
+	private AbstractButton cbUseTtsVoice, cbExportHtmlRemoveAfterZip, cbExportListSheet, cbExportJlptSheet,
+			cbExportPresentation, cbEmbedAudioInPresentation, cbHideAudioImageInPresentation, cbExportMicrosoftAccess,
+			cbImportFileTemplateGenerateBlankRow, cbJlptAsFolder, btnExportBrowse, btnPronunciationPageUrlCheck = null;
 
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.FIELD)
