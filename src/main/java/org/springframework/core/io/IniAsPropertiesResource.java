@@ -100,7 +100,8 @@ public class IniAsPropertiesResource implements Resource {
 			final Field f = IterableUtils.size(fs) == 1 ? IterableUtils.get(fs, 0) : null;
 			//
 			if (exists(cast(File.class,
-					urlConnection != null && f != null ? Narcissus.getObjectField(urlConnection, f) : null))) {
+					Boolean.logicalAnd(urlConnection != null, f != null) ? Narcissus.getObjectField(urlConnection, f)
+							: null))) {
 				//
 				testAndAccept(Objects::nonNull, getInputStream(resource), ini::load);
 				//
