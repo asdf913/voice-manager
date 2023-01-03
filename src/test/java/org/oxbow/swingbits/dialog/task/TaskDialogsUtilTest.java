@@ -1,6 +1,5 @@
 package org.oxbow.swingbits.dialog.task;
 
-import java.io.InputStream;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Executable;
 import java.lang.reflect.InvocationHandler;
@@ -18,7 +17,6 @@ import org.apache.jena.ext.com.google.common.base.Predicates;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.springframework.core.io.Resource;
 
 import com.google.common.reflect.Reflection;
 
@@ -73,26 +71,12 @@ class TaskDialogsUtilTest {
 
 	private class IH implements InvocationHandler {
 
-		private InputStream inputStream = null;
-
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
 			final String methodName = getName(method);
 			//
-			if (proxy instanceof Resource) {
-				//
-				if (Objects.equals(methodName, "getInputStream")) {
-					//
-					return inputStream;
-					//
-				} else if (Objects.equals(methodName, "getFilename")) {
-					//
-					return null;
-					//
-				} // if
-					//
-			} else if (proxy instanceof Stream) {
+			if (proxy instanceof Stream) {
 				//
 				if (Objects.equals(methodName, "filter")) {
 					//
