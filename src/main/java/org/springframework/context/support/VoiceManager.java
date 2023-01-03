@@ -4632,7 +4632,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	private static void ifElse(final boolean condition, final Runnable runnableTrue, final Runnable runnableFalse) {
+	private static <E extends Throwable> void ifElse(final boolean condition, final FailableRunnable<E> runnableTrue,
+			final FailableRunnable<E> runnableFalse) throws E {
 		//
 		if (condition) {
 			//
@@ -4646,7 +4647,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	private static void run(final Runnable instance) {
+	private static <E extends Throwable> void run(final FailableRunnable<E> instance) throws E {
 		//
 		if (instance != null) {
 			//
@@ -8140,12 +8141,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 								formulaEvaluator = getIfNull(formulaEvaluator,
 										() -> createFormulaEvaluator(getCreationHelper(workbook))));
 						//
-						if ((value = getValueFromCell(objectMap)) == null) {
-							//
+						ifElse((value = getValueFromCell(objectMap)) == null, () -> {
 							throw new IllegalStateException();
-							//
-						} // if
-							//
+						}, null);
+						//
 						f.set(voice = getIfNull(voice, Voice::new), IValue0Util.getValue0(value));
 						//
 					} // if

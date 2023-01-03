@@ -964,7 +964,7 @@ class VoiceManagerTest {
 		(METHOD_GET_SYSTEM_PRINT_STREAM_BY_FIELD_NAME = clz.getDeclaredMethod("getSystemPrintStreamByFieldName",
 				String.class)).setAccessible(true);
 		//
-		(METHOD_IF_ELSE = clz.getDeclaredMethod("ifElse", Boolean.TYPE, Runnable.class, Runnable.class))
+		(METHOD_IF_ELSE = clz.getDeclaredMethod("ifElse", Boolean.TYPE, FailableRunnable.class, FailableRunnable.class))
 				.setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
@@ -8337,12 +8337,12 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> ifElse(false, null, null));
 		//
-		Assertions.assertDoesNotThrow(() -> ifElse(true, Reflection.newProxy(Runnable.class, ih), null));
+		Assertions.assertDoesNotThrow(() -> ifElse(true, Reflection.newProxy(FailableRunnable.class, ih), null));
 		//
 	}
 
-	private static void ifElse(final boolean condition, final Runnable runnableTrue, final Runnable runnableFalse)
-			throws Throwable {
+	private static <E extends Throwable> void ifElse(final boolean condition, final FailableRunnable<E> runnableTrue,
+			final FailableRunnable<E> runnableFalse) throws Throwable {
 		try {
 			METHOD_IF_ELSE.invoke(null, condition, runnableTrue, runnableFalse);
 		} catch (final InvocationTargetException e) {
