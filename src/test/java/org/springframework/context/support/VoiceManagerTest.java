@@ -241,9 +241,9 @@ class VoiceManagerTest {
 			METHOD_GET_PROPERTY_CUSTOM_PROPERTIES, METHOD_PARSE_EXPRESSION, METHOD_GET_VALUE, METHOD_GET_SOURCE_VOICE,
 			METHOD_EXPORT, METHOD_MAP, METHOD_MAP_TO_INT, METHOD_MAP_TO_LONG, METHOD_MAX_STREAM, METHOD_MAX_INT_STREAM,
 			METHOD_OR_ELSE_OPTIONAL, METHOD_OR_ELSE_OPTIONAL_INT, METHOD_FOR_EACH_STREAM, METHOD_FOR_EACH_ITERABLE,
-			METHOD_CREATE_WORK_BOOK_LIST, METHOD_CREATE_WORK_BOOK_MULTI_MAP, METHOD_CREATE_VOICE, METHOD_GET_MESSAGE,
-			METHOD_INVOKE, METHOD_ANNOTATION_TYPE, METHOD_FIND_FIRST, METHOD_GET_DECLARED_METHODS, METHOD_FOR_NAME,
-			METHOD_FILTER, METHOD_SET_TEXT, METHOD_GET_PREFERRED_WIDTH, METHOD_IMPORT_VOICE1, METHOD_IMPORT_VOICE3,
+			METHOD_CREATE_WORK_BOOK_LIST, METHOD_CREATE_WORK_BOOK_MULTI_MAP, METHOD_CREATE_VOICE, METHOD_INVOKE,
+			METHOD_ANNOTATION_TYPE, METHOD_FIND_FIRST, METHOD_GET_DECLARED_METHODS, METHOD_FOR_NAME, METHOD_FILTER,
+			METHOD_SET_TEXT, METHOD_GET_PREFERRED_WIDTH, METHOD_IMPORT_VOICE1, METHOD_IMPORT_VOICE3,
 			METHOD_IMPORT_VOICE5, METHOD_ADD_COLLECTION, METHOD_ADD_LIST, METHOD_CREATE_IMPORT_FILE_TEMPLATE_BYTE_ARRAY,
 			METHOD_CREATE_CELL, METHOD_SET_CELL_VALUE, METHOD_ANY_MATCH, METHOD_COLLECT, METHOD_NAME,
 			METHOD_GET_SELECTED_ITEM, METHOD_WRITE, METHOD_MATCHER, METHOD_SET_VALUE_J_PROGRESS_BAR,
@@ -280,8 +280,8 @@ class VoiceManagerTest {
 			METHOD_APPEND_CHAR, METHOD_GET_PROVIDER_PLATFORM, METHOD_OPEN_CONNECTION, METHOD_GET_RESOURCE_AS_STREAM,
 			METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH, METHOD_GET_ATTRIBUTES, METHOD_GET_LENGTH, METHOD_ITEM,
 			METHOD_GET_OS_VERSION_INFO_EX_MAP, METHOD_CREATE_JLPT_SHEET, METHOD_ADD_JO_YO_KAN_JI_SHEET,
-			METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2, METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION3, METHOD_SET_VISIBLE,
-			METHOD_RANDOM_ALPHABETIC, METHOD_GET_MEDIA_FORMAT_LINK, METHOD_GET_EVENT_TYPE, METHOD_GET_PARENT_FILE,
+			METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2, METHOD_SET_VISIBLE, METHOD_RANDOM_ALPHABETIC,
+			METHOD_GET_MEDIA_FORMAT_LINK, METHOD_GET_EVENT_TYPE, METHOD_GET_PARENT_FILE,
 			METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET,
 			METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET_FIRST_ROW, METHOD_EXPORT_JLPT,
 			METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT, METHOD_SET_SHEET_HEADER_ROW, METHOD_ENCRYPT,
@@ -294,8 +294,8 @@ class VoiceManagerTest {
 			METHOD_HAS_UPPER_BOUND, METHOD_LOWER_END_POINT, METHOD_UPPER_END_POINT, METHOD_GET_IF_NULL,
 			METHOD_SET_LANGUAGE, METHOD_GET_LANGUAGE, METHOD_GET_BOOLEAN_VALUE, METHOD_CREATE_FORMULA_EVALUATOR,
 			METHOD_GET_RESPONSE_CODE, METHOD_TO_RUNTIME_EXCEPTION, METHOD_GET_ALGORITHM,
-			METHOD_SET_PREFERRED_WIDTH_ARRAY, METHOD_SET_PREFERRED_WIDTH_ITERABLE, METHOD_PRINT_STACK_TRACE,
-			METHOD_GET_VALUE_FROM_CELL, METHOD_GET_MP3_TAGS, METHOD_KEY_RELEASED_FOR_TEXT_IMPORT, METHOD_IS_STATIC,
+			METHOD_SET_PREFERRED_WIDTH_ARRAY, METHOD_SET_PREFERRED_WIDTH_ITERABLE, METHOD_GET_VALUE_FROM_CELL,
+			METHOD_GET_MP3_TAGS, METHOD_KEY_RELEASED_FOR_TEXT_IMPORT, METHOD_IS_STATIC,
 			METHOD_IMPORT_BY_WORK_BOOK_FILES, METHOD_ACTION_PERFORMED_FOR_EXPORT_BUTTONS,
 			METHOD_CREATE_MULTI_MAP_BY_LIST_NAMES, METHOD_GET_FIELD_BY_NAME,
 			METHOD_CREATE_PROVIDER_VERSION_J_TEXT_COMPONENT, METHOD_CREATE_PROVIDER_PLATFORM_J_TEXT_COMPONENT,
@@ -395,8 +395,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_CREATE_VOICE = clz.getDeclaredMethod("createVoice", ObjectMapper.class, VoiceManager.class))
 				.setAccessible(true);
-		//
-		(METHOD_GET_MESSAGE = clz.getDeclaredMethod("getMessage", Throwable.class)).setAccessible(true);
 		//
 		(METHOD_INVOKE = clz.getDeclaredMethod("invoke", Method.class, Object.class, Object[].class))
 				.setAccessible(true);
@@ -766,9 +764,6 @@ class VoiceManagerTest {
 		(METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2 = clz.getDeclaredMethod("errorOrAssertOrShowException", Boolean.TYPE,
 				Throwable.class)).setAccessible(true);
 		//
-		(METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION3 = clz.getDeclaredMethod("errorOrAssertOrShowException", Boolean.TYPE,
-				Logger.class, Throwable.class)).setAccessible(true);
-		//
 		(METHOD_SET_VISIBLE = clz.getDeclaredMethod("setVisible", Component.class, Boolean.TYPE)).setAccessible(true);
 		//
 		(METHOD_RANDOM_ALPHABETIC = clz.getDeclaredMethod("randomAlphabetic", Integer.TYPE)).setAccessible(true);
@@ -886,8 +881,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_SET_PREFERRED_WIDTH_ITERABLE = clz.getDeclaredMethod("setPreferredWidth", Integer.TYPE, Iterable.class))
 				.setAccessible(true);
-		//
-		(METHOD_PRINT_STACK_TRACE = clz.getDeclaredMethod("printStackTrace", Throwable.class)).setAccessible(true);
 		//
 		(METHOD_GET_VALUE_FROM_CELL = clz.getDeclaredMethod("getValueFromCell", CLASS_OBJECT_MAP)).setAccessible(true);
 		//
@@ -3300,29 +3293,6 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof Voice) {
 				return (Voice) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetMessage() throws Throwable {
-		//
-		Assertions.assertNull(getMessage(null));
-		//
-		Assertions.assertNull(getMessage(new Throwable()));
-		//
-	}
-
-	private static String getMessage(final Throwable instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_MESSAGE.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
@@ -6627,27 +6597,12 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> errorOrAssertOrShowException(true, null));
 		//
-		Assertions.assertDoesNotThrow(() -> errorOrAssertOrShowException(true, null, null));
-		//
-		Assertions.assertDoesNotThrow(() -> errorOrAssertOrShowException(true, null, new Throwable()));
-		//
-		Assertions.assertDoesNotThrow(() -> errorOrAssertOrShowException(false, null, null));
-		//
 	}
 
 	private static void errorOrAssertOrShowException(final boolean headless, final Throwable throwable)
 			throws Throwable {
 		try {
 			METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2.invoke(null, headless, throwable);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	private static void errorOrAssertOrShowException(final boolean headless, final Logger logger,
-			final Throwable throwable) throws Throwable {
-		try {
-			METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION3.invoke(null, headless, logger, throwable);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -7600,21 +7555,6 @@ class VoiceManagerTest {
 	private static void setPreferredWidth(final int width, final Iterable<Component> cs) throws Throwable {
 		try {
 			METHOD_SET_PREFERRED_WIDTH_ITERABLE.invoke(null, width, cs);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testPrintStackTrace() {
-		//
-		Assertions.assertDoesNotThrow(() -> printStackTrace(null));
-		//
-	}
-
-	private static void printStackTrace(final Throwable throwable) throws Throwable {
-		try {
-			METHOD_PRINT_STACK_TRACE.invoke(null, throwable);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

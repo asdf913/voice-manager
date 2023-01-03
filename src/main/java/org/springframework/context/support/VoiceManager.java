@@ -247,7 +247,6 @@ import org.jsoup.select.Elements;
 import org.odftoolkit.odfdom.doc.OdfPresentationDocument;
 import org.odftoolkit.odfdom.pkg.OdfPackage;
 import org.openxmlformats.schemas.officeDocument.x2006.customProperties.CTProperty;
-import org.oxbow.swingbits.dialog.task.TaskDialogs;
 import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
@@ -731,105 +730,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static void errorOrAssertOrShowException(final boolean headless, final Throwable throwable) {
 		//
-		errorOrAssertOrShowException(headless, LOG, throwable);
+		TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(headless, LOG, throwable);
 		//
-	}
-
-	private static void errorOrAssertOrShowException(final boolean headless, final Logger logger,
-			final Throwable throwable) {
-		//
-		if (headless) {
-			//
-			if (Boolean.logicalAnd(logger != null, !LoggerUtil.isNOPLogger(logger))) {
-				//
-				LoggerUtil.error(logger, getMessage(throwable), throwable);
-				//
-			} else if (throwable != null) {
-				//
-				printStackTrace(throwable);
-				//
-			} // if
-				//
-			return;
-			//
-		} // if
-			//
-		final List<Method> ms = toList(filter(
-				testAndApply(Objects::nonNull, getDeclaredMethods(forName("org.junit.jupiter.api.AssertDoesNotThrow")),
-						Arrays::stream, null),
-				x -> Boolean.logicalAnd(StringUtils.equals(getName(x), "createAssertionFailedError"),
-						Arrays.equals(new Class<?>[] { Object.class, Throwable.class }, getParameterTypes(x)))));
-		//
-		final Method method = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> get(x, 0), null);
-		//
-		if (method == null) {
-			//
-			TaskDialogs.showException(throwable);
-			//
-		} else {
-			//
-			method.setAccessible(true);
-			//
-			try {
-				//
-				final RuntimeException runtimeException = toRuntimeException(cast(Throwable.class,
-						getClass(throwable) != null ? invoke(method, null, getMessage(throwable), throwable) : null));
-				//
-				if (runtimeException != null) {
-					//
-					throw runtimeException;
-					//
-				} // if
-					//
-			} catch (final IllegalAccessException e) {
-				//
-				errorOrAssertOrShowException(headless, LOG, throwable);
-				//
-			} catch (final InvocationTargetException e) {
-				//
-				final Throwable targetException = e.getTargetException();
-				//
-				errorOrAssertOrShowException(headless, LOG,
-						ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException), targetException,
-								ExceptionUtils.getRootCause(e), e));
-				//
-			} // try
-				//
-		} // if
-			//
-	}
-
-	private static void printStackTrace(final Throwable throwable) {
-		//
-		final List<Method> ms = toList(filter(
-				testAndApply(Objects::nonNull, getDeclaredMethods(Throwable.class), Arrays::stream, null),
-				m -> m != null && StringUtils.equals(getName(m), "printStackTrace") && m.getParameterCount() == 0));
-		//
-		final Method method = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> get(x, 0), null);
-		//
-		if (method != null) {
-			//
-			method.setAccessible(true);
-			//
-		} // if
-			//
-		try {
-			//
-			testAndAccept(m -> throwable != null || isStatic(m), method, m -> invoke(m, throwable));
-			//
-		} catch (final InvocationTargetException e) {
-			//
-			final Throwable targetException = e.getTargetException();
-			//
-			printStackTrace(ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException), targetException,
-					ExceptionUtils.getRootCause(e), e));
-			//
-		} catch (final ReflectiveOperationException e) {
-			//
-			printStackTrace(throwable);
-			//
-		} // try
-			//
 	}
 
 	private static boolean isStatic(final Member instance) {
@@ -9049,10 +8951,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static Object getSelectedItem(final ComboBoxModel<?> instance) {
 		return instance != null ? instance.getSelectedItem() : null;
-	}
-
-	private static String getMessage(final Throwable instance) {
-		return instance != null ? instance.getMessage() : null;
 	}
 
 	private static <T> void forEach(final Stream<T> instance, final Consumer<? super T> action) {

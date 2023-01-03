@@ -37,7 +37,7 @@ public class TaskDialogsUtil {
 		//
 	}
 
-	private static void errorOrPrintStackTraceOrAssertOrShowException(final boolean headless, final Logger logger,
+	public static void errorOrPrintStackTraceOrAssertOrShowException(final boolean headless, final Logger logger,
 			final Throwable throwable) {
 		//
 		if (headless) {
