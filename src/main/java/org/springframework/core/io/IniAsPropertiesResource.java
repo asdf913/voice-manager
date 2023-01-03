@@ -82,7 +82,7 @@ public class IniAsPropertiesResource implements Resource {
 				//
 			try {
 				//
-				url = cast(URL.class, f != null ? f.get(resource) : null);
+				url = cast(URL.class, get(f, resource));
 				//
 			} catch (final IllegalAccessException e) {
 				//
@@ -306,6 +306,11 @@ public class IniAsPropertiesResource implements Resource {
 
 	private static Class<?> getType(final Field instance) {
 		return instance != null ? instance.getType() : null;
+	}
+
+	private static Object get(final Field field, final Object instance)
+			throws IllegalArgumentException, IllegalAccessException {
+		return field != null ? field.get(instance) : null;
 	}
 
 	private static Method[] getDeclaredMethods(final Class<?> instance) {
