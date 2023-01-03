@@ -4684,7 +4684,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	private static File createTempFile(final String prefix, final String suffix)
-			throws IOException, IllegalAccessException, InvocationTargetException {
+			throws IllegalAccessException, InvocationTargetException {
 		//
 		final List<Method> ms = toList(
 				filter(testAndApply(Objects::nonNull, getDeclaredMethods(File.class), Arrays::stream, null),
