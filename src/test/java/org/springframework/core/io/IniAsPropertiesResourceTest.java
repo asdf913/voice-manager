@@ -126,7 +126,7 @@ class IniAsPropertiesResourceTest {
 					//
 					return proxy;
 					//
-				} //
+				} // if
 					//
 			} // if
 				//
