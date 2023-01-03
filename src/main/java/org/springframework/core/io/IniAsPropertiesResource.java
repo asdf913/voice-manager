@@ -159,15 +159,14 @@ public class IniAsPropertiesResource implements Resource {
 			//
 			JOptionPane.showMessageDialog(null, jcb, "Profile", JOptionPane.QUESTION_MESSAGE);
 			//
-			if (collection != null
-					&& collection.retainAll(Collections.singleton(jcb != null ? jcb.getSelectedItem() : null))) {
+			if (retainAll(collection, Collections.singleton(jcb != null ? jcb.getSelectedItem() : null))) {
 				//
 				size = IterableUtils.size(collection);
 				//
 			} // if
 				//
-		} else if (map != null && map.containsKey("profile") && collection != null
-				&& collection.retainAll(Collections.singleton(map.get("profile")))) {
+		} else if (map != null && map.containsKey("profile")
+				&& retainAll(collection, Collections.singleton(map.get("profile")))) {
 			//
 			size = IterableUtils.size(collection);
 			//
@@ -371,6 +370,10 @@ public class IniAsPropertiesResource implements Resource {
 		if (test(predicate, value) && consumer != null) {
 			consumer.accept(value);
 		}
+	}
+
+	private static boolean retainAll(final Collection<?> a, final Collection<?> b) {
+		return a != null && a.retainAll(b);
 	}
 
 	private static boolean isStatic(final Member instance) {
