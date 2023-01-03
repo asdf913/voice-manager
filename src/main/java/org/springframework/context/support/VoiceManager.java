@@ -420,12 +420,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("Katakana")
 	private JTextComponent tfKatakana = null;
 
-	private JTextComponent tfFile, tfRomaji, tfSpeechRate, tfSource, tfProviderName, tfProviderVersion,
-			tfProviderPlatform, tfSpeechLanguageCode, tfSpeechLanguageName, tfLanguage, tfSpeechVolume,
-			tfCurrentProcessingFile, tfCurrentProcessingSheetName, tfCurrentProcessingVoice, tfListNames,
-			tfPhraseCounter, tfPhraseTotal, tfJlptFolderNamePrefix, tfOrdinalPositionFileNamePrefix, tfIpaSymbol,
-			tfExportFile, tfElapsed, tfDllPath, tfExportHtmlFileName, tfExportPassword, tfPronunciationPageUrl,
-			tfPronunciationPageStatusCode = null;
+	@Note("Romaji")
+	private JTextComponent tfRomaji = null;
+
+	private JTextComponent tfFile, tfSpeechRate, tfSource, tfProviderName, tfProviderVersion, tfProviderPlatform,
+			tfSpeechLanguageCode, tfSpeechLanguageName, tfLanguage, tfSpeechVolume, tfCurrentProcessingFile,
+			tfCurrentProcessingSheetName, tfCurrentProcessingVoice, tfListNames, tfPhraseCounter, tfPhraseTotal,
+			tfJlptFolderNamePrefix, tfOrdinalPositionFileNamePrefix, tfIpaSymbol, tfExportFile, tfElapsed, tfDllPath,
+			tfExportHtmlFileName, tfExportPassword, tfPronunciationPageUrl, tfPronunciationPageStatusCode = null;
 
 	private transient ComboBoxModel<Yomi> cbmYomi = null;
 
@@ -512,7 +514,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("Export")
 	private AbstractButton btnExport = null;
 
-	private AbstractButton cbUseTtsVoice, cbExportHtml, cbExportListHtml, cbExportHtmlAsZip, cbExportHtmlRemoveAfterZip,
+	@Note("Export HTML")
+	private AbstractButton cbExportHtml = null;
+
+	private AbstractButton cbUseTtsVoice, cbExportListHtml, cbExportHtmlAsZip, cbExportHtmlRemoveAfterZip,
 			cbExportListSheet, cbExportJlptSheet, cbExportPresentation, cbEmbedAudioInPresentation,
 			cbHideAudioImageInPresentation, cbExportMicrosoftAccess, cbImportFileTemplateGenerateBlankRow,
 			cbJlptAsFolder, btnExportBrowse, btnPronunciationPageUrlCheck = null;
