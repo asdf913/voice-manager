@@ -79,7 +79,7 @@ public class IniAsPropertiesResource implements Resource {
 			//
 			try {
 				//
-				url = cast(URL.class, get(f, resource));
+				url = cast(URL.class, isStatic(f) || resource != null ? get(f, resource) : null);
 				//
 			} catch (final IllegalAccessException e) {
 				//
