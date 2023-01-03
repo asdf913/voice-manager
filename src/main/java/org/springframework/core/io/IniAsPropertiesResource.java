@@ -103,13 +103,13 @@ public class IniAsPropertiesResource implements Resource {
 					Boolean.logicalAnd(urlConnection != null, f != null) ? Narcissus.getObjectField(urlConnection, f)
 							: null))) {
 				//
-				testAndAccept(Objects::nonNull, getInputStream(resource), ini::load);
+				testAndAccept(Objects::nonNull, InputStreamSourceUtil.getInputStream(resource), ini::load);
 				//
 			} // try
 				//
 		} else {
 			//
-			testAndAccept(Objects::nonNull, getInputStream(resource), ini::load);
+			testAndAccept(Objects::nonNull, InputStreamSourceUtil.getInputStream(resource), ini::load);
 			//
 		} // if
 			//
@@ -294,10 +294,6 @@ public class IniAsPropertiesResource implements Resource {
 
 	private static boolean exists(final File instance) {
 		return instance != null && instance.exists();
-	}
-
-	private static InputStream getInputStream(final InputStreamSource instance) throws IOException {
-		return instance != null ? instance.getInputStream() : null;
 	}
 
 	private static Class<?> getType(final Field instance) {
