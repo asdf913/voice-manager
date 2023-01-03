@@ -10878,19 +10878,19 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
-				if ((fs = getIfNull(fs, () -> FieldUtils.getAllFields(Voice.class))) != null) {
+				testAndAccept(Objects::nonNull, fs = getIfNull(fs, () -> FieldUtils.getAllFields(Voice.class)), a -> {
 					//
-					Arrays.sort(fs, (x, y) -> {
+					Arrays.sort(a, (x, y) -> {
 						//
 						return Integer.compare(ArrayUtils.indexOf(fieldOrder, getName(x)),
 								ArrayUtils.indexOf(fieldOrder, getName(y)));
 						//
 					});
 					//
-				} // if
-					//
-					// header
-					//
+				});
+				//
+				// header
+				//
 				setSheetHeaderRow(sheet, fs, spreadsheetColumnClass);
 				//
 				// content
