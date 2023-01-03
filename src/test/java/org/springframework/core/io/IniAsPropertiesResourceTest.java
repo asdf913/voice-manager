@@ -29,6 +29,8 @@ import java.util.Properties;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import javax.swing.JComboBox;
+
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableFunction;
@@ -54,7 +56,8 @@ class IniAsPropertiesResourceTest {
 			METHOD_GET_MESSAGE, METHOD_PRINT_STACK_TRACE, METHOD_GET_DECLARED_METHODS, METHOD_TEST_AND_APPLY,
 			METHOD_FILTER, METHOD_FOR_NAME, METHOD_TO_LIST, METHOD_GET_NAME, METHOD_GET_PARAMETER_TYPES, METHOD_INVOKE,
 			METHOD_TEST_AND_ACCEPT, METHOD_IS_STATIC, METHOD_TO_RUNTIME_EXCEPTION, METHOD_TO_INPUT_STREAM, METHOD_CAST,
-			METHOD_GET_TYPE, METHOD_GET_KEY, METHOD_GET_VALUE, METHOD_EXISTS, METHOD_TO_ARRAY, METHOD_READY = null;
+			METHOD_GET_TYPE, METHOD_GET_KEY, METHOD_GET_VALUE, METHOD_EXISTS, METHOD_TO_ARRAY, METHOD_READY,
+			METHOD_GET_SELECTED_ITEM = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -114,6 +117,8 @@ class IniAsPropertiesResourceTest {
 		(METHOD_TO_ARRAY = clz.getDeclaredMethod("toArray", Collection.class)).setAccessible(true);
 		//
 		(METHOD_READY = clz.getDeclaredMethod("ready", Reader.class)).setAccessible(true);
+		//
+		(METHOD_GET_SELECTED_ITEM = clz.getDeclaredMethod("getSelectedItem", JComboBox.class)).setAccessible(true);
 		//
 	}
 
@@ -795,6 +800,23 @@ class IniAsPropertiesResourceTest {
 				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetSelectedItem() throws Throwable {
+		//
+		Assertions.assertNull(getSelectedItem(null));
+		//
+		Assertions.assertNull(getSelectedItem(new JComboBox<>()));
+		//
+	}
+
+	private static Object getSelectedItem(final JComboBox<?> instance) throws Throwable {
+		try {
+			return METHOD_GET_SELECTED_ITEM.invoke(null, instance);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

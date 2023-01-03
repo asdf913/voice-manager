@@ -166,7 +166,7 @@ public class IniAsPropertiesResource implements Resource {
 			//
 			JOptionPane.showMessageDialog(null, jcb, "Profile", JOptionPane.QUESTION_MESSAGE);
 			//
-			if (retainAll(collection, Collections.singleton(jcb != null ? jcb.getSelectedItem() : null))) {
+			if (retainAll(collection, Collections.singleton(getSelectedItem(jcb)))) {
 				//
 				return IterableUtils.size(collection);
 				//
@@ -447,6 +447,10 @@ public class IniAsPropertiesResource implements Resource {
 
 	private static boolean ready(final Reader instance) throws IOException {
 		return instance != null && instance.ready();
+	}
+
+	private static Object getSelectedItem(final JComboBox<?> instance) {
+		return instance != null ? instance.getSelectedItem() : null;
 	}
 
 	private static RuntimeException toRuntimeException(final Throwable instance) {
