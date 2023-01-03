@@ -120,6 +120,14 @@ class IniAsPropertiesResourceTest {
 					//
 				} // if
 					//
+			} else if (proxy instanceof Stream) {
+				//
+				if (Objects.equals(methodName, "filter")) {
+					//
+					return proxy;
+					//
+				} //
+					//
 			} // if
 				//
 			throw new Throwable(methodName);
@@ -341,6 +349,10 @@ class IniAsPropertiesResourceTest {
 		Assertions.assertNull(filter(null, null));
 		//
 		Assertions.assertNull(filter(Stream.empty(), null));
+		//
+		final Stream<?> steram = Reflection.newProxy(Stream.class, ih);
+		//
+		Assertions.assertSame(steram, filter(steram, null));
 		//
 	}
 
