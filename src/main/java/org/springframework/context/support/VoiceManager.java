@@ -408,7 +408,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("File Digest")
 	private JTextComponent tfFileDigest = null;
 
-	private JTextComponent tfFile, tfTextTts, tfTextImport, tfHiragana, tfKatakana, tfRomaji, tfSpeechRate, tfSource,
+	@Note("Text in TTS Pnael")
+	private JTextComponent tfTextTts = null;
+
+	private JTextComponent tfFile, tfTextImport, tfHiragana, tfKatakana, tfRomaji, tfSpeechRate, tfSource,
 			tfProviderName, tfProviderVersion, tfProviderPlatform, tfSpeechLanguageCode, tfSpeechLanguageName,
 			tfLanguage, tfSpeechVolume, tfCurrentProcessingFile, tfCurrentProcessingSheetName, tfCurrentProcessingVoice,
 			tfListNames, tfPhraseCounter, tfPhraseTotal, tfJlptFolderNamePrefix, tfOrdinalPositionFileNamePrefix,
@@ -485,14 +488,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("Import File Template")
 	private AbstractButton btnImportFileTemplate = null;
 
-	@Note("Import")
+	@Note("Import a single Spread Sheet File")
 	private AbstractButton btnImport = null;
 
-	private AbstractButton cbUseTtsVoice, btnImportWithinFolder, cbOverMp3Title, cbOrdinalPositionAsFileNamePrefix,
-			btnExport, cbExportHtml, cbExportListHtml, cbExportHtmlAsZip, cbExportHtmlRemoveAfterZip, cbExportListSheet,
-			cbExportJlptSheet, cbExportPresentation, cbEmbedAudioInPresentation, cbHideAudioImageInPresentation,
-			cbExportMicrosoftAccess, cbImportFileTemplateGenerateBlankRow, cbJlptAsFolder, btnExportBrowse,
-			btnPronunciationPageUrlCheck = null;
+	@Note("Import Spread Sheet File(s) within a specified folder")
+	private AbstractButton btnImportWithinFolder = null;
+
+	private AbstractButton cbUseTtsVoice, cbOverMp3Title, cbOrdinalPositionAsFileNamePrefix, btnExport, cbExportHtml,
+			cbExportListHtml, cbExportHtmlAsZip, cbExportHtmlRemoveAfterZip, cbExportListSheet, cbExportJlptSheet,
+			cbExportPresentation, cbEmbedAudioInPresentation, cbHideAudioImageInPresentation, cbExportMicrosoftAccess,
+			cbImportFileTemplateGenerateBlankRow, cbJlptAsFolder, btnExportBrowse, btnPronunciationPageUrlCheck = null;
 
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.FIELD)
