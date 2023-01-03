@@ -134,18 +134,18 @@ public class IniAsPropertiesResource implements Resource {
 			//
 		} else if (size == 1) {
 			//
-			final String section = IterableUtils.get(sections, 0);
+			final String sectionString = IterableUtils.get(sections, 0);
 			//
-			final Map<String, Object> map = ini.getSectionSortedByKey(section);
+			final Map<String, Object> map = ini.getSectionSortedByKey(sectionString);
 			//
 			final Properties properties = new Properties();
 			//
 			properties.putAll(map.entrySet().stream()
 					.collect(Collectors.toMap(IniAsPropertiesResource::getKey, v -> toString(getValue(v)))));
 			//
-			if (this.section != null) {
+			if (section != null) {
 				//
-				this.section.set(Unit.with(section));
+				section.set(Unit.with(sectionString));
 				//
 			} // if
 				//
