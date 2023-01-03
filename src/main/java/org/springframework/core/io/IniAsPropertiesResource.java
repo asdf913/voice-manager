@@ -3,9 +3,11 @@ package org.springframework.core.io;
 import java.awt.GraphicsEnvironment;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.Console;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
@@ -119,8 +121,16 @@ public class IniAsPropertiesResource implements Resource {
 		//
 		if (size > 1) {
 			//
-			size = getSection(GraphicsEnvironment.isHeadless(), System.getProperties(), sections);
-			//
+			try {
+				//
+				size = getSection(GraphicsEnvironment.isHeadless(), System.getProperties(), System.console(), sections);
+				//
+			} catch (final IllegalAccessException e) {
+				//
+				errorOrAssertOrShowException(e);
+				//
+			} // try
+				//
 		} // if
 			//
 		if (CollectionUtils.isEmpty(sections)) {
@@ -144,7 +154,8 @@ public class IniAsPropertiesResource implements Resource {
 		//
 	}
 
-	private static int getSection(final boolean headless, final Map<?, ?> map, final Collection<?> collection) {
+	private static int getSection(final boolean headless, final Map<?, ?> map, final Console console,
+			final Collection<?> collection) throws IllegalAccessException {
 		//
 		if (map != null && map.containsKey("profile")
 				&& retainAll(collection, Collections.singleton(map.get("profile")))) {
@@ -165,6 +176,65 @@ public class IniAsPropertiesResource implements Resource {
 			JOptionPane.showMessageDialog(null, jcb, "Profile", JOptionPane.QUESTION_MESSAGE);
 			//
 			if (retainAll(collection, Collections.singleton(jcb != null ? jcb.getSelectedItem() : null))) {
+				//
+				return IterableUtils.size(collection);
+				//
+			} // if
+				//
+		} else if (console != null) {
+			//
+			final List<Field> fs = toList(
+					testAndApply(Objects::nonNull, FieldUtils.getAllFields(getClass(console)), Arrays::stream, null));
+			//
+			final Reader reader = cast(Reader.class,
+					Narcissus.getObjectField(console,
+							testAndApply(x -> IterableUtils.size(x) == 1,
+									toList(filter(fs.stream(), x -> Objects.equals(getName(x), "reader"))),
+									x -> IterableUtils.get(x, 0), null)));
+			//
+			boolean ready = false;
+			//
+			try {
+				//
+				ready = reader != null && reader.ready();
+				//
+			} catch (final IOException e) {
+				//
+				ready = false;
+				//
+			} // try
+				//
+			if (//
+				// java.io.Console.readLock
+				//
+			Narcissus.getObjectField(console,
+					testAndApply(x -> IterableUtils.size(x) == 1,
+							toList(filter(fs.stream(), x -> Objects.equals(getName(x), "writeLock"))),
+							x -> IterableUtils.get(x, 0), null)) != null
+					//
+					// java.io.Console.readLock
+					//
+					&& Narcissus.getObjectField(console,
+							testAndApply(x -> IterableUtils.size(x) == 1,
+									toList(filter(fs.stream(), x -> Objects.equals(getName(x), "readLock"))),
+									x -> IterableUtils.get(x, 0), null)) != null
+					//
+					// java.io.Console.pw
+					//
+					&& Narcissus.getObjectField(console,
+							testAndApply(x -> IterableUtils.size(x) == 1,
+									toList(filter(fs.stream(), x -> Objects.equals(getName(x), "pw"))),
+									x -> IterableUtils.get(x, 0), null)) != null
+
+					//
+					// java.io.Console.rcb
+					//
+					&& Narcissus.getObjectField(console,
+							testAndApply(x -> IterableUtils.size(x) == 1,
+									toList(filter(fs.stream(), x -> Objects.equals(getName(x), "rcb"))),
+									x -> IterableUtils.get(x, 0), null)) != null
+					//
+					&& ready && retainAll(collection, Collections.singleton(console.readLine("Profile")))) {
 				//
 				return IterableUtils.size(collection);
 				//

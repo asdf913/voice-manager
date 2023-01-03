@@ -1,9 +1,15 @@
 package org.springframework.core.io;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.Console;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.Reader;
+import java.io.StringReader;
 import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
@@ -15,9 +21,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Properties;
-import java.util.Map.Entry;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -34,6 +40,8 @@ import org.slf4j.helpers.NOPLogger;
 
 import com.google.common.reflect.Reflection;
 
+import io.github.toolfactory.narcissus.Narcissus;
+
 class IniAsPropertiesResourceTest {
 
 	private static Method METHOD_GET_SECTION, METHOD_TO_STRING, METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION,
@@ -47,8 +55,8 @@ class IniAsPropertiesResourceTest {
 		//
 		final Class<?> clz = IniAsPropertiesResource.class;
 		//
-		(METHOD_GET_SECTION = clz.getDeclaredMethod("getSection", Boolean.TYPE, Map.class, Collection.class))
-				.setAccessible(true);
+		(METHOD_GET_SECTION = clz.getDeclaredMethod("getSection", Boolean.TYPE, Map.class, Console.class,
+				Collection.class)).setAccessible(true);
 		//
 		(METHOD_TO_STRING = clz.getDeclaredMethod("toString", Object.class)).setAccessible(true);
 		//
@@ -186,26 +194,82 @@ class IniAsPropertiesResourceTest {
 	@Test
 	void testGetSection() throws Throwable {
 		//
-		Assertions.assertEquals(0, getSection(true, null, null));
+		Assertions.assertEquals(0, getSection(true, null, null, null));
 		//
-		Assertions.assertEquals(0, getSection(true, Collections.singletonMap(null, null), null));
+		Console console = System.console();
+		//
+		if (console == null) {
+			//
+			console = cast(Console.class, Narcissus.allocateInstance(Console.class));
+			//
+		} // if
+			//
+		Assertions.assertEquals(0, getSection(true, null, console, null));
+		//
+		// java.io.Console.writeLock
+		//
+		Narcissus.setObjectField(console, Console.class.getDeclaredField("writeLock"), new Object());
+		//
+		Assertions.assertEquals(0, getSection(true, null, console, null));
+		//
+		// java.io.Console.readLock
+		//
+		Narcissus.setObjectField(console, Console.class.getDeclaredField("readLock"), new Object());
+		//
+		Assertions.assertEquals(0, getSection(true, null, console, null));
+		//
+		// java.io.Console.pw
+		//
+		try (final OutputStream os = new ByteArrayOutputStream(); final PrintWriter pw = new PrintWriter(os)) {
+			//
+			Narcissus.setObjectField(console, Console.class.getDeclaredField("pw"), pw);
+			//
+		} // try
+			//
+		Assertions.assertEquals(0, getSection(true, null, console, null));
+		//
+		// java.io.Console.rcb
+		//
+		Narcissus.setObjectField(console, Console.class.getDeclaredField("rcb"), new char[1]);
+		//
+		Assertions.assertEquals(0, getSection(true, null, console, null));
+		//
+		// java.io.Console.reader
+		//
+		try (final Reader reader = new StringReader("")) {
+			//
+			Narcissus.setObjectField(console, Console.class.getDeclaredField("reader"), reader);
+			//
+		} // try
+			//
+		Assertions.assertEquals(0, getSection(true, null, console, null));
+		//
+		try (final Reader reader = new StringReader("")) {
+			//
+			Narcissus.setObjectField(console, Console.class.getDeclaredField("reader"), reader);
+			//
+			Assertions.assertEquals(0, getSection(true, null, console, null));
+			//
+		} // try
+			//
+		Assertions.assertEquals(0, getSection(true, Collections.singletonMap(null, null), null, null));
 		//
 		final Map<?, ?> map = Collections.singletonMap("profile", null);
 		//
-		Assertions.assertEquals(0, getSection(true, map, null));
+		Assertions.assertEquals(0, getSection(true, map, null, null));
 		//
-		Assertions.assertEquals(0, getSection(true, map, Collections.emptySet()));
+		Assertions.assertEquals(0, getSection(true, map, null, Collections.emptySet()));
 		//
-		Assertions.assertEquals(1, getSection(true, map, Collections.singleton(null)));
+		Assertions.assertEquals(1, getSection(true, map, null, Collections.singleton(null)));
 		//
-		Assertions.assertEquals(0, getSection(true, map, new ArrayList<>(Collections.singleton("1"))));
+		Assertions.assertEquals(0, getSection(true, map, null, new ArrayList<>(Collections.singleton("1"))));
 		//
 	}
 
-	private static int getSection(final boolean headless, final Map<?, ?> map, final Collection<?> collection)
-			throws Throwable {
+	private static int getSection(final boolean headless, final Map<?, ?> map, final Console console,
+			final Collection<?> collection) throws Throwable {
 		try {
-			final Object obj = METHOD_GET_SECTION.invoke(null, headless, map, collection);
+			final Object obj = METHOD_GET_SECTION.invoke(null, headless, map, console, collection);
 			if (obj instanceof Integer) {
 				return ((Integer) obj).intValue();
 			}
