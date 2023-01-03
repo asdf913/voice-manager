@@ -1,9 +1,15 @@
 package org.springframework.context;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
+import java.sql.Connection;
+import java.sql.Statement;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -12,7 +18,10 @@ import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import javax.sql.DataSource;
+
 import org.apache.commons.lang3.function.FailableConsumer;
+import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.jena.ext.com.google.common.base.Predicates;
 import org.junit.jupiter.api.Assertions;
@@ -22,9 +31,12 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.Environment;
+import org.springframework.core.env.MutablePropertySources;
 import org.springframework.core.env.PropertySource;
 import org.springframework.core.env.PropertySources;
 import org.springframework.core.env.SystemEnvironmentPropertySource;
+import org.springframework.core.io.InputStreamSource;
+import org.springframework.core.io.Resource;
 
 import com.google.common.reflect.Reflection;
 
@@ -33,7 +45,8 @@ class CustomBeanFactoryPostProcessorTest {
 	private static Method METHOD_ADD_PROPERTY_SOURCE_TO_PROPERTY_SOURCES_TO_LAST_MAP,
 			METHOD_ADD_PROPERTY_SOURCE_TO_PROPERTY_SOURCES_TO_LAST_ITERABLE, METHOD_GET_SOURCE, METHOD_IS_STATIC,
 			METHOD_GET_MESSAGE, METHOD_GET_CLASS, METHOD_ERROR_OR_PRINT_STACK_TRACE, METHOD_GET_DECLARED_METHODS,
-			METHOD_FILTER, METHOD_TO_LIST, METHOD_TEST_AND_ACCEPT, METHOD_GET_NAME, METHOD_INVOKE = null;
+			METHOD_FILTER, METHOD_TO_LIST, METHOD_TEST_AND_ACCEPT, METHOD_GET_NAME, METHOD_INVOKE, METHOD_ADD_LAST,
+			METHOD_POST_PROCESS_DATA_SOURCES, METHOD_TEST_AND_APPLY = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -130,11 +143,44 @@ class CustomBeanFactoryPostProcessorTest {
 			//
 		} // if
 			//
+		if ((METHOD_ADD_LAST = clz != null
+				? clz.getDeclaredMethod("addLast", MutablePropertySources.class, PropertySource.class)
+				: null) != null) {
+			//
+			METHOD_ADD_LAST.setAccessible(true);
+			//
+		} // if
+			//
+		if ((METHOD_POST_PROCESS_DATA_SOURCES = clz != null
+				? clz.getDeclaredMethod("postProcessDatasources", Map.class, Resource.class, String.class)
+				: null) != null) {
+			//
+			METHOD_POST_PROCESS_DATA_SOURCES.setAccessible(true);
+			//
+		} // if
+			//
+		if ((METHOD_TEST_AND_APPLY = clz != null ? clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
+				FailableFunction.class, FailableFunction.class) : null) != null) {
+			//
+			METHOD_TEST_AND_APPLY.setAccessible(true);
+			//
+		} // if
+			//
 	}
 
 	private static class IH implements InvocationHandler {
 
 		private Iterator<?> iterator = null;
+
+		private Connection connection = null;
+
+		private Statement statement = null;
+
+		private Boolean exists, execute = null;
+
+		private InputStream inputStream = null;
+
+		private Collection<?> values = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -145,8 +191,18 @@ class CustomBeanFactoryPostProcessorTest {
 				//
 			} // if
 				//
-			final String methodName = method != null ? method.getName() : null;
+			final String methodName = getName(method);
 			//
+			if (proxy instanceof InputStreamSource) {
+				//
+				if (Objects.equals(methodName, "getInputStream")) {
+					//
+					return inputStream;
+					//
+				} // if
+					//
+			} // if
+				//
 			if (proxy instanceof Iterable) {
 				//
 				if (Objects.equals(methodName, "iterator")) {
@@ -160,6 +216,46 @@ class CustomBeanFactoryPostProcessorTest {
 				if (Objects.equals(methodName, "filter")) {
 					//
 					return proxy;
+					//
+				} // if
+					//
+			} else if (proxy instanceof DataSource) {
+				//
+				if (Objects.equals(methodName, "getConnection")) {
+					//
+					return connection;
+					//
+				} // if
+					//
+			} else if (proxy instanceof Connection) {
+				//
+				if (Objects.equals(methodName, "createStatement")) {
+					//
+					return statement;
+					//
+				} // if
+					//
+			} else if (proxy instanceof Statement) {
+				//
+				if (Objects.equals(methodName, "execute")) {
+					//
+					return execute;
+					//
+				} // if
+					//
+			} else if (proxy instanceof Resource) {
+				//
+				if (Objects.equals(methodName, "exists")) {
+					//
+					return exists;
+					//
+				} // if
+					//
+			} else if (proxy instanceof Map) {
+				//
+				if (Objects.equals(methodName, "values")) {
+					//
+					return values;
 					//
 				} // if
 					//
@@ -488,6 +584,113 @@ class CustomBeanFactoryPostProcessorTest {
 	private static Object invoke(final Method method, final Object instance, Object... args) throws Throwable {
 		try {
 			return METHOD_INVOKE.invoke(null, method, instance, args);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testAddLast() {
+		//
+		Assertions.assertDoesNotThrow(() -> addLast(null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> addLast(new MutablePropertySources(), null));
+		//
+	}
+
+	private static void addLast(final MutablePropertySources instance, final PropertySource<?> propertySource)
+			throws Throwable {
+		try {
+			METHOD_ADD_LAST.invoke(null, instance, propertySource);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testPostProcessDatasources() throws IOException {
+		//
+		Assertions.assertDoesNotThrow(() -> postProcessDatasources(Collections.singletonMap(null, null), null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> postProcessDatasources(Reflection.newProxy(Map.class, ih), null, null));
+		//
+		final DataSource dataSource = Reflection.newProxy(DataSource.class, ih);
+		//
+		final Map<?, DataSource> dataSources = Collections.singletonMap(null, dataSource);
+		//
+		Assertions.assertDoesNotThrow(() -> postProcessDatasources(dataSources, null, null));
+		//
+		if (ih != null) {
+			//
+			ih.connection = Reflection.newProxy(Connection.class, ih);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> postProcessDatasources(dataSources, null, null));
+		//
+		if (ih != null) {
+			//
+			ih.statement = Reflection.newProxy(Statement.class, ih);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> postProcessDatasources(dataSources, null, null));
+		//
+		final Resource resource = Reflection.newProxy(Resource.class, ih);
+		//
+		if (ih != null) {
+			//
+			ih.exists = Boolean.FALSE;
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> postProcessDatasources(dataSources, resource, null));
+		//
+		if (ih != null) {
+			//
+			ih.exists = Boolean.TRUE;
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> postProcessDatasources(dataSources, resource, null));
+		//
+		if (ih != null) {
+			//
+			try (final InputStream is = new ByteArrayInputStream("".getBytes())) {
+				//
+				ih.inputStream = is;
+				//
+			} // try
+				//
+			ih.execute = Boolean.FALSE;
+			//
+			Assertions.assertDoesNotThrow(() -> postProcessDatasources(dataSources, resource, null));
+			//
+		} // if
+			//
+	}
+
+	private static void postProcessDatasources(final Map<?, DataSource> dataSources, final Resource tableSql,
+			final String tableSqlEncoding) throws Throwable {
+		try {
+			METHOD_POST_PROCESS_DATA_SOURCES.invoke(null, dataSources, tableSql, tableSqlEncoding);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testTestAndApply() throws Throwable {
+		//
+		Assertions.assertNull(testAndApply(null, null, null, null));
+		//
+	}
+
+	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse)
+			throws Throwable {
+		try {
+			return (R) METHOD_TEST_AND_APPLY.invoke(null, predicate, value, functionTrue, functionFalse);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

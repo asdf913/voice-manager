@@ -273,10 +273,6 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 			//
 			for (final DataSource dataSource : dataSources.values()) {
 				//
-				if (dataSource == null) {
-					continue;
-				} // if
-					//
 				try (final Connection connection = getConnection(dataSource)) {
 					//
 					final Statement s = createStatement(connection);
