@@ -23,7 +23,7 @@ import org.springframework.core.io.Resource;
 
 import com.google.common.reflect.Reflection;
 
-public class TaskDialogsUtilTest {
+ class TaskDialogsUtilTest {
 
 	private static Method METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_ASSERT_OR_SHOW_EXCEPTION, METHOD_GET_MESSAGE,
 			METHOD_PRINT_STACK_TRACE, METHOD_GET_DECLARED_METHODS, METHOD_TEST_AND_APPLY, METHOD_TEST_AND_ACCEPT,
