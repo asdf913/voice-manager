@@ -304,7 +304,8 @@ class VoiceManagerTest {
 			METHOD_GET_EMPTY_FILE_PATH, METHOD_SET_LOCALE_ID_SHEET, METHOD_ADD_LOCALE_ID_ROW,
 			METHOD_SET_FOCUS_CYCLE_ROOT, METHOD_SET_FOCUS_TRAVERSAL_POLICY, METHOD_GET_COMPONENTS,
 			METHOD_GET_WORKBOOK_CLASS_FAILABLE_SUPPLIER_MAP, METHOD_GET_DECLARED_CONSTRUCTOR, METHOD_NEW_INSTANCE,
-			METHOD_GET_WRITER, METHOD_KEY_SET, METHOD_GET_WORK_BOOK_CLASS = null;
+			METHOD_GET_WRITER, METHOD_KEY_SET, METHOD_GET_WORK_BOOK_CLASS,
+			METHOD_GET_SYSTEM_PRINT_STREAM_BY_FIELD_NAME = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -959,6 +960,9 @@ class VoiceManagerTest {
 		//
 		(METHOD_GET_WORK_BOOK_CLASS = clz.getDeclaredMethod("getWorkbookClass", Map.class, String.class))
 				.setAccessible(true);
+		//
+		(METHOD_GET_SYSTEM_PRINT_STREAM_BY_FIELD_NAME = clz.getDeclaredMethod("getSystemPrintStreamByFieldName",
+				String.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -8297,6 +8301,27 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof IValue0) {
 				return (IValue0) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetSystemPrintStreamByFieldName() throws Throwable {
+		//
+		Assertions.assertNull(getSystemPrintStreamByFieldName(null));
+		//
+	}
+
+	private static PrintStream getSystemPrintStreamByFieldName(final String name) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_SYSTEM_PRINT_STREAM_BY_FIELD_NAME.invoke(null, name);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof PrintStream) {
+				return (PrintStream) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

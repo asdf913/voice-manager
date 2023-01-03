@@ -5857,8 +5857,22 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			if (headless) {
 				//
-				errorOrPrintln(LOG, System.err, m);
-				//
+				try {
+					//
+					errorOrPrintln(LOG, getSystemPrintStreamByFieldName("err"), m);
+					//
+				} catch (final IllegalAccessException e) {
+					//
+					final RuntimeException runtimeException = toRuntimeException(e);
+					//
+					if (runtimeException != null) {
+						//
+						throw runtimeException;
+						//
+					} // if
+						//
+				} // try
+					//
 			} else {
 				//
 				if (tableModel != null) {
@@ -5947,6 +5961,18 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		}
 
+	}
+
+	private static PrintStream getSystemPrintStreamByFieldName(final String name) throws IllegalAccessException {
+		//
+		final List<Field> fs = toList(
+				filter(testAndApply(Objects::nonNull, System.class.getDeclaredFields(), Arrays::stream, null),
+						f -> Objects.equals(getType(f), PrintStream.class) && Objects.equals(getName(f), name)));
+		//
+		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		//
+		return cast(PrintStream.class, f != null ? f.get(null) : null);
+		//
 	}
 
 	private static Integer incrementAndGet(final AtomicInteger instance) {
@@ -7745,16 +7771,34 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			final Fraction percentage = add(fraction1, fraction2);
 			//
-			infoOrPrintln(LOG, System.out, String.format("%1$s %2$s/%3$s (%4$s) %5$s/%6$s",
-					percentage != null
-							? StringUtils.leftPad(format(percentNumberFormat, percentage.doubleValue()), 5, ' ')
-							: null,
-					StringUtils.leftPad(VoiceManager.toString(sheetCurrent),
-							StringUtils.length(VoiceManager.toString(ObjectUtils.max(sheetCurrent, sheetTotal))), ' '),
-					sheetTotal, currentSheetName, StringUtils.leftPad(VoiceManager.toString(counter),
-							StringUtils.length(VoiceManager.toString(count))),
-					count));
-			//
+			try {
+				//
+				infoOrPrintln(LOG, getSystemPrintStreamByFieldName("out"),
+						String.format("%1$s %2$s/%3$s (%4$s) %5$s/%6$s",
+								percentage != null
+										? StringUtils.leftPad(format(percentNumberFormat, percentage.doubleValue()), 5,
+												' ')
+										: null,
+								StringUtils.leftPad(VoiceManager.toString(sheetCurrent),
+										StringUtils.length(
+												VoiceManager.toString(ObjectUtils.max(sheetCurrent, sheetTotal))),
+										' '),
+								sheetTotal, currentSheetName, StringUtils.leftPad(VoiceManager.toString(counter),
+										StringUtils.length(VoiceManager.toString(count))),
+								count));
+				//
+			} catch (final IllegalAccessException e) {
+				//
+				final RuntimeException runtimeException = toRuntimeException(e);
+				//
+				if (runtimeException != null) {
+					//
+					throw runtimeException;
+					//
+				} // if
+					//
+			} // try
+				//
 			SqlSession sqlSession = null;
 			//
 			try {
