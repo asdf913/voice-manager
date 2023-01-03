@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.Map.Entry;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -38,7 +39,7 @@ class IniAsPropertiesResourceTest {
 			METHOD_PRINT_STACK_TRACE, METHOD_GET_DECLARED_METHODS, METHOD_TEST_AND_APPLY, METHOD_FILTER,
 			METHOD_FOR_NAME, METHOD_TO_LIST, METHOD_GET_NAME, METHOD_GET_PARAMETER_TYPES, METHOD_INVOKE,
 			METHOD_TEST_AND_ACCEPT, METHOD_IS_STATIC, METHOD_TO_RUNTIME_EXCEPTION, METHOD_TO_INPUT_STREAM, METHOD_CAST,
-			METHOD_GET_TYPE = null;
+			METHOD_GET_TYPE, METHOD_GET_KEY = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -86,6 +87,8 @@ class IniAsPropertiesResourceTest {
 		(METHOD_CAST = clz.getDeclaredMethod("cast", Class.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_GET_TYPE = clz.getDeclaredMethod("getType", Field.class)).setAccessible(true);
+		//
+		(METHOD_GET_KEY = clz.getDeclaredMethod("getKey", Entry.class)).setAccessible(true);
 		//
 	}
 
@@ -537,6 +540,21 @@ class IniAsPropertiesResourceTest {
 				return (Class<?>) obj;
 			}
 			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetKey() throws Throwable {
+		//
+		Assertions.assertNull(getKey(null));
+		//
+	}
+
+	private static <K> K getKey(final Entry<K, ?> instance) throws Throwable {
+		try {
+			return (K) METHOD_GET_KEY.invoke(null, instance);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

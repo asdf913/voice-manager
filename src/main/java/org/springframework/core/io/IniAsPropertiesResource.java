@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.function.Predicate;
@@ -136,7 +137,7 @@ public class IniAsPropertiesResource implements Resource {
 			//
 			final Properties properties = new Properties();
 			//
-			properties.putAll(map.entrySet().stream().collect(Collectors.toMap(k -> k != null ? k.getKey() : null,
+			properties.putAll(map.entrySet().stream().collect(Collectors.toMap(k -> getKey(k),
 					v -> v != null && v.getValue() != null ? v.getValue().toString() : null)));
 			//
 			return toInputStream(properties);
@@ -285,6 +286,10 @@ public class IniAsPropertiesResource implements Resource {
 			//
 		} // try
 			//
+	}
+
+	private static <K> K getKey(final Entry<K, ?> instance) {
+		return instance != null ? instance.getKey() : null;
 	}
 
 	private static InputStream getInputStream(final InputStreamSource instance) throws IOException {
