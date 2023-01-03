@@ -417,7 +417,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("Hiragana")
 	private JTextComponent tfHiragana = null;
 
-	private JTextComponent tfFile, tfKatakana, tfRomaji, tfSpeechRate, tfSource, tfProviderName, tfProviderVersion,
+	@Note("Katakana")
+	private JTextComponent tfKatakana = null;
+
+	private JTextComponent tfFile, tfRomaji, tfSpeechRate, tfSource, tfProviderName, tfProviderVersion,
 			tfProviderPlatform, tfSpeechLanguageCode, tfSpeechLanguageName, tfLanguage, tfSpeechVolume,
 			tfCurrentProcessingFile, tfCurrentProcessingSheetName, tfCurrentProcessingVoice, tfListNames,
 			tfPhraseCounter, tfPhraseTotal, tfJlptFolderNamePrefix, tfOrdinalPositionFileNamePrefix, tfIpaSymbol,
@@ -506,10 +509,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("Ordinal Position As File Name Prefix")
 	private AbstractButton cbOrdinalPositionAsFileNamePrefix = null;
 
-	private AbstractButton cbUseTtsVoice, btnExport, cbExportHtml, cbExportListHtml, cbExportHtmlAsZip,
-			cbExportHtmlRemoveAfterZip, cbExportListSheet, cbExportJlptSheet, cbExportPresentation,
-			cbEmbedAudioInPresentation, cbHideAudioImageInPresentation, cbExportMicrosoftAccess,
-			cbImportFileTemplateGenerateBlankRow, cbJlptAsFolder, btnExportBrowse, btnPronunciationPageUrlCheck = null;
+	@Note("Export")
+	private AbstractButton btnExport = null;
+
+	private AbstractButton cbUseTtsVoice, cbExportHtml, cbExportListHtml, cbExportHtmlAsZip, cbExportHtmlRemoveAfterZip,
+			cbExportListSheet, cbExportJlptSheet, cbExportPresentation, cbEmbedAudioInPresentation,
+			cbHideAudioImageInPresentation, cbExportMicrosoftAccess, cbImportFileTemplateGenerateBlankRow,
+			cbJlptAsFolder, btnExportBrowse, btnPronunciationPageUrlCheck = null;
 
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.FIELD)
