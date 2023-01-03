@@ -71,9 +71,9 @@ public class IniAsPropertiesResource implements Resource {
 			//
 			final List<Field> fs = toList(filter(testAndApply(Objects::nonNull,
 					testAndApply(Objects::nonNull, getClass(resource), FieldUtils::getAllFields, null), Arrays::stream,
-					null), f -> Objects.equals(URL.class, getType(f))));
+					null), x -> Objects.equals(URL.class, getType(x))));
 			//
-			final Field f = IterableUtils.size(fs) == 1 ? IterableUtils.get(fs, 0) : null;
+			final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
 			//
 			setAccessible(f, true);
 			//
@@ -97,7 +97,7 @@ public class IniAsPropertiesResource implements Resource {
 					testAndApply(Objects::nonNull, getClass(urlConnection), FieldUtils::getAllFields, null),
 					Arrays::stream, null), f -> Objects.equals(File.class, getType(f))));
 			//
-			final Field f = IterableUtils.size(fs) == 1 ? IterableUtils.get(fs, 0) : null;
+			final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
 			//
 			if (exists(cast(File.class,
 					Boolean.logicalAnd(urlConnection != null, f != null) ? Narcissus.getObjectField(urlConnection, f)
