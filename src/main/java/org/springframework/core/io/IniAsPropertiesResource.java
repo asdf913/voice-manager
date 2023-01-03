@@ -146,6 +146,13 @@ public class IniAsPropertiesResource implements Resource {
 
 	private static int getSection(final boolean headless, final Map<?, ?> map, final Collection<?> collection) {
 		//
+		if (map != null && map.containsKey("profile")
+				&& retainAll(collection, Collections.singleton(map.get("profile")))) {
+			//
+			return IterableUtils.size(collection);
+			//
+		} // if
+			//
 		int size = IterableUtils.size(collection);
 		//
 		if (!headless) {
@@ -165,11 +172,6 @@ public class IniAsPropertiesResource implements Resource {
 				//
 			} // if
 				//
-		} else if (map != null && map.containsKey("profile")
-				&& retainAll(collection, Collections.singleton(map.get("profile")))) {
-			//
-			size = IterableUtils.size(collection);
-			//
 		} // if
 			//
 		return size;
