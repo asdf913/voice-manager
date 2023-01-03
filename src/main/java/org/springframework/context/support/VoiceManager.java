@@ -9088,10 +9088,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		private static String FILE_NAME_PREFIX_PADDING = orElse(
 				min(stream(IteratorUtils.toList(new RgxGen("\\d").iterateUnique())), StringUtils::compare), null);
 
-		private Integer counter, ordinalPositionDigit;
-
 		@Note("Count")
 		private Integer count;
+
+		@Note("Counter")
+		private Integer counter;
+
+		private Integer ordinalPositionDigit;
 
 		private Voice voice = null;
 
