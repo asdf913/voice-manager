@@ -253,7 +253,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.ListableBeanFactory;
+import org.springframework.beans.factory.ListableBeanFactoryUtil;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -5207,8 +5207,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				ObjectMap.setObject(objectMap, FileFormat.class, fileFormat);
 				//
-				exportMicrosoftAccess(objectMap,
-						values(getBeansOfType(configurableListableBeanFactory, DataSource.class)));
+				exportMicrosoftAccess(objectMap, values(
+						ListableBeanFactoryUtil.getBeansOfType(configurableListableBeanFactory, DataSource.class)));
 				//
 			} // if
 				//
@@ -6377,8 +6377,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		List<Object> list = null;
 		//
-		final Map<String, ByteConverter> byteConverters = getBeansOfType(configurableListableBeanFactory,
-				ByteConverter.class);
+		final Map<String, ByteConverter> byteConverters = ListableBeanFactoryUtil
+				.getBeansOfType(configurableListableBeanFactory, ByteConverter.class);
 		//
 		final Set<Entry<String, ByteConverter>> entrySet = entrySet(byteConverters);
 		//
@@ -6403,17 +6403,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static <T> Map<String, T> getBeansOfType(final ListableBeanFactory instance, final Class<T> type) {
-		return instance != null ? instance.getBeansOfType(type) : null;
-	}
-
 	private static ByteConverter getByteConverter(final ConfigurableListableBeanFactory configurableListableBeanFactory,
 			final String attribute, final Object value) {
 		//
 		Unit<ByteConverter> byteConverter = null;
 		//
-		final Map<String, ByteConverter> byteConverters = getBeansOfType(configurableListableBeanFactory,
-				ByteConverter.class);
+		final Map<String, ByteConverter> byteConverters = ListableBeanFactoryUtil
+				.getBeansOfType(configurableListableBeanFactory, ByteConverter.class);
 		//
 		final Set<Entry<String, ByteConverter>> entrySet = entrySet(byteConverters);
 		//

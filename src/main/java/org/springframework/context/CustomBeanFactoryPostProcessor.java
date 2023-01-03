@@ -30,7 +30,7 @@ import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
-import org.springframework.beans.factory.ListableBeanFactory;
+import org.springframework.beans.factory.ListableBeanFactoryUtil;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
@@ -75,11 +75,12 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 	public void postProcessBeanFactory(final ConfigurableListableBeanFactory beanFactory) {
 		//
 		addPropertySourceToPropertySourcesToLast(environment,
-				getBeansOfType(beanFactory, PropertySourcesPlaceholderConfigurer.class));
+				ListableBeanFactoryUtil.getBeansOfType(beanFactory, PropertySourcesPlaceholderConfigurer.class));
 		//
 		try {
 			//
-			postProcessDatasources(getBeansOfType(beanFactory, DataSource.class), tableSql, tableSqlEncoding);
+			postProcessDatasources(ListableBeanFactoryUtil.getBeansOfType(beanFactory, DataSource.class), tableSql,
+					tableSqlEncoding);
 			//
 		} catch (final SQLException | IOException e) {
 			//
@@ -208,10 +209,6 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 
 	private static String getMessage(final Throwable instance) {
 		return instance != null ? instance.getMessage() : null;
-	}
-
-	private static <T> Map<String, T> getBeansOfType(final ListableBeanFactory instance, final Class<T> type) {
-		return instance != null ? instance.getBeansOfType(type) : null;
 	}
 
 	private static void addPropertySourceToPropertySourcesToLast(final Environment environment,

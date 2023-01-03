@@ -10,6 +10,7 @@ import javax.swing.JOptionPane;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.ListableBeanFactory;
+import org.springframework.beans.factory.ListableBeanFactoryUtil;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.PropertyResolver;
 
@@ -74,7 +75,7 @@ public class Main {
 			//
 		} // if
 			//
-		final Map<?, ?> beans = beanFactory != null ? beanFactory.getBeansOfType(clz) : null;
+		final Map<?, ?> beans = ListableBeanFactoryUtil.getBeansOfType(beanFactory, clz);
 		//
 		if (beans == null) {
 			//
