@@ -280,9 +280,8 @@ class VoiceManagerTest {
 			METHOD_APPEND_CHAR, METHOD_GET_PROVIDER_PLATFORM, METHOD_OPEN_CONNECTION, METHOD_GET_RESOURCE_AS_STREAM,
 			METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH, METHOD_GET_ATTRIBUTES, METHOD_GET_LENGTH, METHOD_ITEM,
 			METHOD_GET_OS_VERSION_INFO_EX_MAP, METHOD_CREATE_JLPT_SHEET, METHOD_ADD_JO_YO_KAN_JI_SHEET,
-			METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_SHOW_MESSAGE_DIALOG1,
-			METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_SHOW_MESSAGE_DIALOG2,
-			METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_SHOW_MESSAGE_DIALOG3, METHOD_SET_VISIBLE, METHOD_RANDOM_ALPHABETIC,
+			METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION1, METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2,
+			METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION3, METHOD_SET_VISIBLE, METHOD_RANDOM_ALPHABETIC,
 			METHOD_GET_MEDIA_FORMAT_LINK, METHOD_GET_EVENT_TYPE, METHOD_GET_PARENT_FILE,
 			METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET,
 			METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET_FIRST_ROW, METHOD_EXPORT_JLPT,
@@ -765,16 +764,14 @@ class VoiceManagerTest {
 		(METHOD_ADD_JO_YO_KAN_JI_SHEET = clz.getDeclaredMethod("addJoYoKanJiSheet", Workbook.class, String.class,
 				Elements.class)).setAccessible(true);
 		//
-		(METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_SHOW_MESSAGE_DIALOG1 = clz
-				.getDeclaredMethod("errorOrPrintStackTraceOrShowMessageDialog", Throwable.class)).setAccessible(true);
+		(METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION1 = clz.getDeclaredMethod("errorOrAssertOrShowException",
+				Throwable.class)).setAccessible(true);
 		//
-		(METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_SHOW_MESSAGE_DIALOG2 = clz
-				.getDeclaredMethod("errorOrPrintStackTraceOrShowMessageDialog", Boolean.TYPE, Throwable.class))
-				.setAccessible(true);
+		(METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2 = clz.getDeclaredMethod("errorOrAssertOrShowException", Boolean.TYPE,
+				Throwable.class)).setAccessible(true);
 		//
-		(METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_SHOW_MESSAGE_DIALOG3 = clz.getDeclaredMethod(
-				"errorOrPrintStackTraceOrShowMessageDialog", Boolean.TYPE, Logger.class, Throwable.class))
-				.setAccessible(true);
+		(METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION3 = clz.getDeclaredMethod("errorOrAssertOrShowException", Boolean.TYPE,
+				Logger.class, Throwable.class)).setAccessible(true);
 		//
 		(METHOD_SET_VISIBLE = clz.getDeclaredMethod("setVisible", Component.class, Boolean.TYPE)).setAccessible(true);
 		//
@@ -6630,43 +6627,43 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testErrorOrPrintStackTraceOrShowMessageDialog() {
+	void testErrorOrAssertOrShowException() {
 		//
 		if (GraphicsEnvironment.isHeadless()) {
 			//
-			Assertions.assertDoesNotThrow(() -> errorOrPrintStackTraceOrShowMessageDialog(null));
+			Assertions.assertDoesNotThrow(() -> errorOrAssertOrShowException(null));
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> errorOrPrintStackTraceOrShowMessageDialog(true, null));
+		Assertions.assertDoesNotThrow(() -> errorOrAssertOrShowException(true, null));
 		//
-		Assertions.assertDoesNotThrow(() -> errorOrPrintStackTraceOrShowMessageDialog(true, null, null));
+		Assertions.assertDoesNotThrow(() -> errorOrAssertOrShowException(true, null, null));
 		//
-		Assertions.assertDoesNotThrow(() -> errorOrPrintStackTraceOrShowMessageDialog(true, null, new Throwable()));
+		Assertions.assertDoesNotThrow(() -> errorOrAssertOrShowException(true, null, new Throwable()));
 		//
 	}
 
-	private static void errorOrPrintStackTraceOrShowMessageDialog(final Throwable throwable) throws Throwable {
+	private static void errorOrAssertOrShowException(final Throwable throwable) throws Throwable {
 		try {
-			METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_SHOW_MESSAGE_DIALOG1.invoke(null, throwable);
+			METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION1.invoke(null, throwable);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
 	}
 
-	private static void errorOrPrintStackTraceOrShowMessageDialog(final boolean headless, final Throwable throwable)
+	private static void errorOrAssertOrShowException(final boolean headless, final Throwable throwable)
 			throws Throwable {
 		try {
-			METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_SHOW_MESSAGE_DIALOG2.invoke(null, headless, throwable);
+			METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2.invoke(null, headless, throwable);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
 	}
 
-	private static void errorOrPrintStackTraceOrShowMessageDialog(final boolean headless, final Logger logger,
+	private static void errorOrAssertOrShowException(final boolean headless, final Logger logger,
 			final Throwable throwable) throws Throwable {
 		try {
-			METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_SHOW_MESSAGE_DIALOG3.invoke(null, headless, logger, throwable);
+			METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION3.invoke(null, headless, logger, throwable);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

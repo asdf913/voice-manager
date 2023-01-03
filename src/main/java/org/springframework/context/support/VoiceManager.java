@@ -665,7 +665,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} catch (final NoSuchFieldException e) {
 			//
-			errorOrPrintStackTraceOrShowMessageDialog(e);
+			errorOrAssertOrShowException(e);
 			//
 		} // try
 			//
@@ -716,7 +716,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} catch (final IOException e) {
 			//
-			errorOrPrintStackTraceOrShowMessageDialog(e);
+			errorOrAssertOrShowException(e);
 			//
 		} // try
 			//
@@ -724,19 +724,19 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static void errorOrPrintStackTraceOrShowMessageDialog(final Throwable throwable) {
+	private static void errorOrAssertOrShowException(final Throwable throwable) {
 		//
-		errorOrPrintStackTraceOrShowMessageDialog(GraphicsEnvironment.isHeadless(), throwable);
-		//
-	}
-
-	private static void errorOrPrintStackTraceOrShowMessageDialog(final boolean headless, final Throwable throwable) {
-		//
-		errorOrPrintStackTraceOrShowMessageDialog(headless, LOG, throwable);
+		errorOrAssertOrShowException(GraphicsEnvironment.isHeadless(), throwable);
 		//
 	}
 
-	private static void errorOrPrintStackTraceOrShowMessageDialog(final boolean headless, final Logger logger,
+	private static void errorOrAssertOrShowException(final boolean headless, final Throwable throwable) {
+		//
+		errorOrAssertOrShowException(headless, LOG, throwable);
+		//
+	}
+
+	private static void errorOrAssertOrShowException(final boolean headless, final Logger logger,
 			final Throwable throwable) {
 		//
 		if (headless) {
@@ -784,13 +784,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 			} catch (final IllegalAccessException e) {
 				//
-				errorOrPrintStackTraceOrShowMessageDialog(headless, LOG, throwable);
+				errorOrAssertOrShowException(headless, LOG, throwable);
 				//
 			} catch (final InvocationTargetException e) {
 				//
 				final Throwable targetException = e.getTargetException();
 				//
-				errorOrPrintStackTraceOrShowMessageDialog(headless, LOG,
+				errorOrAssertOrShowException(headless, LOG,
 						ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException), targetException,
 								ExceptionUtils.getRootCause(e), e));
 				//
@@ -1243,7 +1243,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 			} catch (final IOException e) {
 				//
-				errorOrPrintStackTraceOrShowMessageDialog(e);
+				errorOrAssertOrShowException(e);
 				//
 			} //
 		} // for
@@ -1406,7 +1406,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				final boolean headless = GraphicsEnvironment.isHeadless();
 				//
-				testAndRun(headless, () -> errorOrPrintStackTraceOrShowMessageDialog(true, e));
+				testAndRun(headless, () -> errorOrAssertOrShowException(true, e));
 				//
 				if (!headless) {
 					//
@@ -1594,7 +1594,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} catch (final IOException e) {
 			//
-			errorOrPrintStackTraceOrShowMessageDialog(e);
+			errorOrAssertOrShowException(e);
 			//
 		} // try
 			//
@@ -1623,7 +1623,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} catch (final IOException e) {
 			//
-			errorOrPrintStackTraceOrShowMessageDialog(e);
+			errorOrAssertOrShowException(e);
 			//
 		} // try
 			//
@@ -1806,7 +1806,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} catch (final IllegalAccessException e) {
 			//
-			errorOrPrintStackTraceOrShowMessageDialog(e);
+			errorOrAssertOrShowException(e);
 			//
 		} // try
 			//
@@ -1842,7 +1842,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} catch (final FailingHttpStatusCodeException | IOException e) {
 			//
-			errorOrPrintStackTraceOrShowMessageDialog(e);
+			errorOrAssertOrShowException(e);
 			//
 		} // try
 			//
@@ -1889,7 +1889,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					} catch (final IOException | URISyntaxException e) {
 						//
-						errorOrPrintStackTraceOrShowMessageDialog(e);
+						errorOrAssertOrShowException(e);
 						//
 					} // try
 						//
@@ -2474,7 +2474,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} catch (final Error e) {
 			//
-			errorOrPrintStackTraceOrShowMessageDialog(e);
+			errorOrAssertOrShowException(e);
 			//
 		} // try
 			//
@@ -2569,13 +2569,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} catch (final IllegalAccessException e) {
 			//
-			errorOrPrintStackTraceOrShowMessageDialog(headless, e);
+			errorOrAssertOrShowException(headless, e);
 			//
 		} catch (final InvocationTargetException e) {
 			//
 			final Throwable targetException = e.getTargetException();
 			//
-			errorOrPrintStackTraceOrShowMessageDialog(headless, ObjectUtils.firstNonNull(
+			errorOrAssertOrShowException(headless, ObjectUtils.firstNonNull(
 					ExceptionUtils.getRootCause(targetException), targetException, ExceptionUtils.getRootCause(e), e));
 			//
 		} // try
@@ -2641,7 +2641,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} catch (final IllegalAccessException e) {
 			//
-			errorOrPrintStackTraceOrShowMessageDialog(e);
+			errorOrAssertOrShowException(e);
 			//
 		} // try
 			//
@@ -2669,7 +2669,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} catch (final IOException e) {
 			//
-			errorOrPrintStackTraceOrShowMessageDialog(e);
+			errorOrAssertOrShowException(e);
 			//
 		} // try
 			//
@@ -2730,7 +2730,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} catch (final Exception e) {
 			//
-			errorOrPrintStackTraceOrShowMessageDialog(GraphicsEnvironment.isHeadless(), e);
+			errorOrAssertOrShowException(GraphicsEnvironment.isHeadless(), e);
 			//
 		} // try
 			//
@@ -3464,7 +3464,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} catch (final IllegalAccessException e) {
 			//
-			errorOrPrintStackTraceOrShowMessageDialog(e);
+			errorOrAssertOrShowException(e);
 			//
 		} // try
 			//
@@ -3657,14 +3657,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} catch (final IOException | TemplateException | IllegalAccessException e) {
 			//
-			errorOrPrintStackTraceOrShowMessageDialog(e);
+			errorOrAssertOrShowException(e);
 			//
 		} catch (final InvocationTargetException e) {
 			//
 			final Throwable targetException = e.getTargetException();
 			//
-			errorOrPrintStackTraceOrShowMessageDialog(ObjectUtils.firstNonNull(
-					ExceptionUtils.getRootCause(targetException), targetException, ExceptionUtils.getRootCause(e), e));
+			errorOrAssertOrShowException(ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException),
+					targetException, ExceptionUtils.getRootCause(e), e));
 			//
 		} // try
 			//
@@ -3682,7 +3682,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 				} catch (final IOException | URISyntaxException e) {
 					//
-					errorOrPrintStackTraceOrShowMessageDialog(e);
+					errorOrAssertOrShowException(e);
 					//
 				} // try
 					//
@@ -3877,13 +3877,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} catch (final IllegalAccessException e) {
 				//
-				errorOrPrintStackTraceOrShowMessageDialog(headless, e);
+				errorOrAssertOrShowException(headless, e);
 				//
 			} catch (final InvocationTargetException e) {
 				//
 				final Throwable targetException = e.getTargetException();
 				//
-				errorOrPrintStackTraceOrShowMessageDialog(headless,
+				errorOrAssertOrShowException(headless,
 						ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException), targetException,
 								ExceptionUtils.getRootCause(e), e));
 				//
@@ -3922,7 +3922,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} catch (final IOException e) {
 			//
-			errorOrPrintStackTraceOrShowMessageDialog(e);
+			errorOrAssertOrShowException(e);
 			//
 		} // try
 			//
@@ -3940,7 +3940,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} catch (final IOException e) {
 			//
-			errorOrPrintStackTraceOrShowMessageDialog(e);
+			errorOrAssertOrShowException(e);
 			//
 		} // try
 			//
@@ -4086,7 +4086,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 			} catch (final Error e) {
 				//
-				errorOrPrintStackTraceOrShowMessageDialog(e);
+				errorOrAssertOrShowException(e);
 				//
 			} // try
 				//
@@ -4345,7 +4345,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} catch (final IllegalAccessException e) {
 			//
-			errorOrPrintStackTraceOrShowMessageDialog(headless, e);
+			errorOrAssertOrShowException(headless, e);
 			//
 		} //
 			//
@@ -4441,7 +4441,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			} catch (final IOException | InvalidFormatException | GeneralSecurityException | SAXException
 					| ParserConfigurationException e) {
 				//
-				errorOrPrintStackTraceOrShowMessageDialog(headless, e);
+				errorOrAssertOrShowException(headless, e);
 				//
 			} // try
 				//
@@ -4497,13 +4497,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} catch (final IllegalAccessException e) {
 				//
-				errorOrPrintStackTraceOrShowMessageDialog(headless, e);
+				errorOrAssertOrShowException(headless, e);
 				//
 			} catch (final InvocationTargetException e) {
 				//
 				final Throwable targetException = e.getTargetException();
 				//
-				errorOrPrintStackTraceOrShowMessageDialog(headless,
+				errorOrAssertOrShowException(headless,
 						ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException), targetException,
 								ExceptionUtils.getRootCause(e), e));
 				//
@@ -4557,7 +4557,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} catch (final IOException e) {
 				//
-				errorOrPrintStackTraceOrShowMessageDialog(headless, e);
+				errorOrAssertOrShowException(headless, e);
 				//
 			} // try
 				//
@@ -4622,13 +4622,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} catch (final IOException | BaseException | IllegalAccessException e) {
 				//
-				errorOrPrintStackTraceOrShowMessageDialog(headless, e);
+				errorOrAssertOrShowException(headless, e);
 				//
 			} catch (final InvocationTargetException e) {
 				//
 				final Throwable targetException = e.getTargetException();
 				//
-				errorOrPrintStackTraceOrShowMessageDialog(headless,
+				errorOrAssertOrShowException(headless,
 						ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException), targetException,
 								ExceptionUtils.getRootCause(e), e));
 				//
@@ -4749,7 +4749,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 			} catch (final IOException e) {
 				//
-				errorOrPrintStackTraceOrShowMessageDialog(headless, e);
+				errorOrAssertOrShowException(headless, e);
 				//
 			} // try
 				//
@@ -4785,7 +4785,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} catch (final IOException e) {
 			//
-			errorOrPrintStackTraceOrShowMessageDialog(headless, e);
+			errorOrAssertOrShowException(headless, e);
 			//
 		} // try
 			//
@@ -4801,7 +4801,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} catch (final IOException e) {
 			//
-			errorOrPrintStackTraceOrShowMessageDialog(headless, e);
+			errorOrAssertOrShowException(headless, e);
 			//
 		} // try
 			//
@@ -4845,7 +4845,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 			} catch (final IOException e) {
 				//
-				errorOrPrintStackTraceOrShowMessageDialog(headless, e);
+				errorOrAssertOrShowException(headless, e);
 				//
 			} // try
 				//
@@ -5017,7 +5017,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} catch (final IOException e) {
 				//
-				errorOrPrintStackTraceOrShowMessageDialog(headless, e);
+				errorOrAssertOrShowException(headless, e);
 				//
 			} finally {
 				//
@@ -5052,7 +5052,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} catch (final IOException e) {
 				//
-				errorOrPrintStackTraceOrShowMessageDialog(headless, e);
+				errorOrAssertOrShowException(headless, e);
 				//
 			} finally {
 				//
@@ -5083,7 +5083,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} catch (final IOException | IllegalAccessException e) {
 				//
-				errorOrPrintStackTraceOrShowMessageDialog(headless, e);
+				errorOrAssertOrShowException(headless, e);
 				//
 			} finally {
 				//
@@ -5314,13 +5314,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		} catch (final IOException | IllegalAccessException | TemplateException | InvalidFormatException
 				| GeneralSecurityException | SQLException e) {
 			//
-			errorOrPrintStackTraceOrShowMessageDialog(headless, e);
+			errorOrAssertOrShowException(headless, e);
 			//
 		} catch (final InvocationTargetException e) {
 			//
 			final Throwable targetException = e.getTargetException();
 			//
-			errorOrPrintStackTraceOrShowMessageDialog(headless, ObjectUtils.firstNonNull(
+			errorOrAssertOrShowException(headless, ObjectUtils.firstNonNull(
 					ExceptionUtils.getRootCause(targetException), targetException, ExceptionUtils.getRootCause(e), e));
 			//
 		} finally {
@@ -6006,7 +6006,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			if (headless) {
 				//
-				errorOrPrintStackTraceOrShowMessageDialog(headless, e);
+				errorOrAssertOrShowException(headless, e);
 				//
 			} else {
 				//
@@ -6158,13 +6158,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		} catch (final InvalidFormatException | IOException | IllegalAccessException | BaseException
 				| GeneralSecurityException | SAXException | ParserConfigurationException e) {
 			//
-			errorOrPrintStackTraceOrShowMessageDialog(headless, e);
+			errorOrAssertOrShowException(headless, e);
 			//
 		} catch (final InvocationTargetException e) {
 			//
 			final Throwable targetException = e.getTargetException();
 			//
-			errorOrPrintStackTraceOrShowMessageDialog(headless, ObjectUtils.firstNonNull(
+			errorOrAssertOrShowException(headless, ObjectUtils.firstNonNull(
 					ExceptionUtils.getRootCause(targetException), targetException, ExceptionUtils.getRootCause(e), e));
 			//
 		} // try
@@ -6457,7 +6457,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} catch (final Error e) {
 				//
-				errorOrPrintStackTraceOrShowMessageDialog(e);
+				errorOrAssertOrShowException(e);
 				//
 			} // try
 				//
@@ -6630,7 +6630,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} catch (final IOException e) {
 			//
-			errorOrPrintStackTraceOrShowMessageDialog(e);
+			errorOrAssertOrShowException(e);
 			//
 		} // try
 			//
@@ -7441,7 +7441,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} catch (final IllegalAccessException e) {
 					//
-					errorOrPrintStackTraceOrShowMessageDialog(e);
+					errorOrAssertOrShowException(e);
 					//
 				} // try
 					//
@@ -7536,7 +7536,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} catch (final IOException e) {
 			//
-			errorOrPrintStackTraceOrShowMessageDialog(headless, e);
+			errorOrAssertOrShowException(headless, e);
 			//
 		} finally {
 			//
@@ -7592,7 +7592,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					} catch (final IllegalAccessException e) {
 						//
-						errorOrPrintStackTraceOrShowMessageDialog(headless, e);
+						errorOrAssertOrShowException(headless, e);
 						//
 					} // try
 						//
@@ -8210,7 +8210,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 										//
 									} catch (final Error e) {
 										//
-										errorOrPrintStackTraceOrShowMessageDialog(e);
+										errorOrAssertOrShowException(e);
 										//
 									} // try
 										//
@@ -9261,7 +9261,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 			} catch (final Exception e) {
 				//
-				errorOrPrintStackTraceOrShowMessageDialog(e);
+				errorOrAssertOrShowException(e);
 				//
 			} // try
 				//
@@ -9696,7 +9696,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					} catch (final Throwable e) {
 						//
-						errorOrPrintStackTraceOrShowMessageDialog(headless, e);
+						errorOrAssertOrShowException(headless, e);
 						//
 					} // try
 						//
@@ -9765,7 +9765,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 			} catch (final IOException | TemplateException e) {
 				//
-				errorOrPrintStackTraceOrShowMessageDialog(e);
+				errorOrAssertOrShowException(e);
 				//
 			} // try
 				//
@@ -10402,7 +10402,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} catch (final IOException e) {
 			//
-			errorOrPrintStackTraceOrShowMessageDialog(e);
+			errorOrAssertOrShowException(e);
 			//
 		} // try
 			//
@@ -11167,13 +11167,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} catch (final IllegalAccessException e) {
 			//
-			errorOrPrintStackTraceOrShowMessageDialog(headless, e);
+			errorOrAssertOrShowException(headless, e);
 			//
 		} catch (final InvocationTargetException e) {
 			//
 			final Throwable targetException = e.getTargetException();
 			//
-			errorOrPrintStackTraceOrShowMessageDialog(headless, ObjectUtils.firstNonNull(
+			errorOrAssertOrShowException(headless, ObjectUtils.firstNonNull(
 					ExceptionUtils.getRootCause(targetException), targetException, ExceptionUtils.getRootCause(e), e));
 			//
 		} // try
