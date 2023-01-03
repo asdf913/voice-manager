@@ -177,17 +177,15 @@ public class IniAsPropertiesResource implements Resource {
 			final List<Field> fs = toList(
 					testAndApply(Objects::nonNull, FieldUtils.getAllFields(getClass(console)), Arrays::stream, null));
 			//
-			final Reader reader = cast(Reader.class,
-					Narcissus.getObjectField(console,
-							testAndApply(x -> IterableUtils.size(x) == 1,
-									toList(filter(fs.stream(), x -> Objects.equals(getName(x), "reader"))),
-									x -> IterableUtils.get(x, 0), null)));
-			//
 			boolean ready = false;
 			//
 			try {
 				//
-				ready = reader != null && reader.ready();
+				ready = ready(cast(Reader.class,
+						Narcissus.getObjectField(console,
+								testAndApply(x -> IterableUtils.size(x) == 1,
+										toList(filter(fs.stream(), x -> Objects.equals(getName(x), "reader"))),
+										x -> IterableUtils.get(x, 0), null))));
 				//
 			} catch (final IOException e) {
 				//
@@ -443,6 +441,10 @@ public class IniAsPropertiesResource implements Resource {
 
 	private static boolean isStatic(final Member instance) {
 		return instance != null && Modifier.isStatic(instance.getModifiers());
+	}
+
+	private static boolean ready(final Reader instance) throws IOException {
+		return instance != null && instance.ready();
 	}
 
 	private static RuntimeException toRuntimeException(final Throwable instance) {

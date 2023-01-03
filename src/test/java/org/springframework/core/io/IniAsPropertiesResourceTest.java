@@ -41,6 +41,9 @@ import org.slf4j.helpers.NOPLogger;
 import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
+import javassist.util.proxy.MethodHandler;
+import javassist.util.proxy.ProxyFactory;
+import javassist.util.proxy.ProxyObject;
 
 class IniAsPropertiesResourceTest {
 
@@ -48,7 +51,7 @@ class IniAsPropertiesResourceTest {
 			METHOD_GET_MESSAGE, METHOD_PRINT_STACK_TRACE, METHOD_GET_DECLARED_METHODS, METHOD_TEST_AND_APPLY,
 			METHOD_FILTER, METHOD_FOR_NAME, METHOD_TO_LIST, METHOD_GET_NAME, METHOD_GET_PARAMETER_TYPES, METHOD_INVOKE,
 			METHOD_TEST_AND_ACCEPT, METHOD_IS_STATIC, METHOD_TO_RUNTIME_EXCEPTION, METHOD_TO_INPUT_STREAM, METHOD_CAST,
-			METHOD_GET_TYPE, METHOD_GET_KEY, METHOD_GET_VALUE, METHOD_EXISTS, METHOD_TO_ARRAY = null;
+			METHOD_GET_TYPE, METHOD_GET_KEY, METHOD_GET_VALUE, METHOD_EXISTS, METHOD_TO_ARRAY, METHOD_READY = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -107,6 +110,8 @@ class IniAsPropertiesResourceTest {
 		//
 		(METHOD_TO_ARRAY = clz.getDeclaredMethod("toArray", Collection.class)).setAccessible(true);
 		//
+		(METHOD_READY = clz.getDeclaredMethod("ready", Reader.class)).setAccessible(true);
+		//
 	}
 
 	private class IH implements InvocationHandler {
@@ -116,7 +121,7 @@ class IniAsPropertiesResourceTest {
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
-			final String methodName = method != null ? method.getName() : null;
+			final String methodName = getName(method);
 			//
 			if (proxy instanceof Resource) {
 				//
@@ -140,6 +145,28 @@ class IniAsPropertiesResourceTest {
 					//
 			} // if
 				//
+			throw new Throwable(methodName);
+			//
+		}
+
+	}
+
+	private static class MH implements MethodHandler {
+
+		private Boolean ready = null;
+
+		@Override
+		public Object invoke(final Object self, final Method thisMethod, final Method proceed, final Object[] args)
+				throws Throwable {
+			//
+			final String methodName = getName(thisMethod);
+			//
+			if (self instanceof Reader) {
+				if (Objects.equals(methodName, "ready")) {
+					return ready;
+				}
+			}
+			//
 			throw new Throwable(methodName);
 			//
 		}
@@ -722,6 +749,41 @@ class IniAsPropertiesResourceTest {
 				return null;
 			} else if (obj instanceof Object[]) {
 				return (Object[]) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testReady() throws Throwable {
+		//
+		final ProxyFactory proxyFactory = new ProxyFactory();
+		//
+		proxyFactory.setSuperclass(Reader.class);
+		//
+		final Class<?> clz = proxyFactory.createClass();
+		//
+		final Object instance = clz != null ? clz.newInstance() : null;
+		//
+		final MH mh = new MH();
+		//
+		if (instance instanceof ProxyObject) {
+			//
+			((ProxyObject) instance).setHandler(mh);
+			//
+		} // if
+			//
+		Assertions.assertSame(mh.ready = Boolean.FALSE, Boolean.valueOf(ready(cast(Reader.class, instance))));
+		//
+	}
+
+	private static boolean ready(final Reader instance) throws Throwable {
+		try {
+			final Object obj = METHOD_READY.invoke(null, instance);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
