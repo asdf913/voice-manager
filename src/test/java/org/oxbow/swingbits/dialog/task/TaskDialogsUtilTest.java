@@ -18,26 +18,21 @@ import org.apache.jena.ext.com.google.common.base.Predicates;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
 import org.springframework.core.io.Resource;
 
 import com.google.common.reflect.Reflection;
 
- class TaskDialogsUtilTest {
+class TaskDialogsUtilTest {
 
-	private static Method METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_ASSERT_OR_SHOW_EXCEPTION, METHOD_GET_MESSAGE,
-			METHOD_PRINT_STACK_TRACE, METHOD_GET_DECLARED_METHODS, METHOD_TEST_AND_APPLY, METHOD_TEST_AND_ACCEPT,
-			METHOD_FILTER, METHOD_FOR_NAME, METHOD_TO_LIST, METHOD_GET_NAME, METHOD_GET_PARAMETER_TYPES,
-			METHOD_SET_ACCESSIBLE, METHOD_INVOKE, METHOD_CAST, METHOD_IS_STATIC, METHOD_TO_RUNTIME_EXCEPTION;
+	private static Method METHOD_GET_MESSAGE, METHOD_PRINT_STACK_TRACE, METHOD_GET_DECLARED_METHODS,
+			METHOD_TEST_AND_APPLY, METHOD_TEST_AND_ACCEPT, METHOD_FILTER, METHOD_FOR_NAME, METHOD_TO_LIST,
+			METHOD_GET_NAME, METHOD_GET_PARAMETER_TYPES, METHOD_SET_ACCESSIBLE, METHOD_INVOKE, METHOD_CAST,
+			METHOD_IS_STATIC, METHOD_TO_RUNTIME_EXCEPTION;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
 		//
 		final Class<?> clz = TaskDialogsUtil.class;
-		//
-		(METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_ASSERT_OR_SHOW_EXCEPTION = clz.getDeclaredMethod(
-				"errorOrPrintStackTraceOrAssertOrShowException", Boolean.TYPE, Logger.class, Throwable.class))
-				.setAccessible(true);
 		//
 		(METHOD_GET_MESSAGE = clz.getDeclaredMethod("getMessage", Throwable.class)).setAccessible(true);
 		//
@@ -83,7 +78,7 @@ import com.google.common.reflect.Reflection;
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
-			final String methodName = method != null ? method.getName() : null;
+			final String methodName = getName(method);
 			//
 			if (proxy instanceof Resource) {
 				//
@@ -116,26 +111,20 @@ import com.google.common.reflect.Reflection;
 	@Test
 	void testErrorOrPrintStackTraceOrAssertOrShowException() {
 		//
-		Assertions.assertDoesNotThrow(() -> errorOrPrintStackTraceOrAssertOrShowException(true, null, null));
+		Assertions.assertDoesNotThrow(
+				() -> TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(true, null, null));
 		//
-		Assertions.assertDoesNotThrow(() -> errorOrPrintStackTraceOrAssertOrShowException(false, null, null));
+		Assertions.assertDoesNotThrow(
+				() -> TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(false, null, null));
 		//
 		final Throwable throwable = new Throwable();
 		//
-		Assertions.assertDoesNotThrow(() -> errorOrPrintStackTraceOrAssertOrShowException(true, null, throwable));
+		Assertions.assertDoesNotThrow(
+				() -> TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(true, null, throwable));
 		//
 		Assertions.assertThrows(RuntimeException.class,
-				() -> errorOrPrintStackTraceOrAssertOrShowException(false, null, throwable));
+				() -> TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(false, null, throwable));
 		//
-	}
-
-	private static void errorOrPrintStackTraceOrAssertOrShowException(final boolean headless, final Logger logger,
-			final Throwable throwable) throws Throwable {
-		try {
-			METHOD_ERROR_OR_PRINT_STACK_TRACE_OR_ASSERT_OR_SHOW_EXCEPTION.invoke(null, headless, logger, throwable);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test
