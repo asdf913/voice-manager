@@ -432,7 +432,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private transient ComboBoxModel<?> cbmAudioFormatWrite = null;
 
 	@Note("For Import Panel")
-	private ComboBoxModel<?> cbmAudioFormatExecute = null;
+	private transient ComboBoxModel<?> cbmAudioFormatExecute = null;
 
 	private transient ComboBoxModel<Boolean> cbmIsKanji = null;
 
