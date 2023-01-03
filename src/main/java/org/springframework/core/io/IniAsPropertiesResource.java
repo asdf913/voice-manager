@@ -102,10 +102,8 @@ public class IniAsPropertiesResource implements Resource {
 			//
 			final Field f = IterableUtils.size(fs) == 1 ? IterableUtils.get(fs, 0) : null;
 			//
-			final File file = cast(File.class,
-					urlConnection != null && f != null ? Narcissus.getObjectField(urlConnection, f) : null);
-			//
-			if (file != null && file.exists()) {
+			if (exists(cast(File.class,
+					urlConnection != null && f != null ? Narcissus.getObjectField(urlConnection, f) : null))) {
 				//
 				testAndAccept(Objects::nonNull, getInputStream(resource), ini::load);
 				//
@@ -298,6 +296,10 @@ public class IniAsPropertiesResource implements Resource {
 
 	private static <V> V getValue(final Entry<?, V> instance) {
 		return instance != null ? instance.getValue() : null;
+	}
+
+	private static boolean exists(final File instance) {
+		return instance != null && instance.exists();
 	}
 
 	private static InputStream getInputStream(final InputStreamSource instance) throws IOException {
