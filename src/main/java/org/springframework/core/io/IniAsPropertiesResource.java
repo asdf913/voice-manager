@@ -106,13 +106,13 @@ public class IniAsPropertiesResource implements Resource {
 			//
 			if (file != null && file.exists()) {
 				//
-				testAndAccept(Objects::nonNull, resource != null ? resource.getInputStream() : null, ini::load);
+				testAndAccept(Objects::nonNull, getInputStream(resource), ini::load);
 				//
 			} // try
 				//
 		} else {
 			//
-			testAndAccept(Objects::nonNull, resource != null ? resource.getInputStream() : null, ini::load);
+			testAndAccept(Objects::nonNull, getInputStream(resource), ini::load);
 			//
 		} // if
 			//
@@ -285,6 +285,10 @@ public class IniAsPropertiesResource implements Resource {
 			//
 		} // try
 			//
+	}
+
+	private static InputStream getInputStream(final InputStreamSource instance) throws IOException {
+		return instance != null ? instance.getInputStream() : null;
 	}
 
 	private static Class<?> getType(final Field instance) {
