@@ -4533,16 +4533,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				clear(tmImportException);
 				//
-				if (tmImportException != null) {
-					//
-					addRow(tmImportException, new Object[] { getText(voice), getRomaji(voice), NO_FILE_SELECTED });
-					//
-				} else {
-					//
-					JOptionPane.showMessageDialog(null, NO_FILE_SELECTED);
-					//
-				} // if
-					//
+				ifElse(tmImportException != null,
+						() -> addRow(tmImportException,
+								new Object[] { getText(voice), getRomaji(voice), NO_FILE_SELECTED }),
+						() -> JOptionPane.showMessageDialog(null, NO_FILE_SELECTED));
+				//
 				return;
 				//
 			} // if
@@ -4595,6 +4590,30 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			IOUtils.closeQuietly(sqlSession);
 			//
 		} // try
+			//
+	}
+
+	private static void ifElse(final boolean condition, final Runnable runnableTrue, final Runnable runnableFalse) {
+		//
+		if (condition) {
+			//
+			run(runnableTrue);
+			//
+		} else {
+			//
+			run(runnableFalse);
+			//
+		} // if
+			//
+	}
+
+	private static void run(final Runnable instance) {
+		//
+		if (instance != null) {
+			//
+			instance.run();
+			//
+		} // if
 			//
 	}
 
