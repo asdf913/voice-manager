@@ -423,7 +423,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("Romaji")
 	private JTextComponent tfRomaji = null;
 
-	private JTextComponent tfFile, tfSpeechRate, tfSource, tfProviderName, tfProviderVersion, tfProviderPlatform,
+	@Note("Speech Rate")
+	private JTextComponent tfSpeechRate = null;
+
+	private JTextComponent tfFile, tfSource, tfProviderName, tfProviderVersion, tfProviderPlatform,
 			tfSpeechLanguageCode, tfSpeechLanguageName, tfLanguage, tfSpeechVolume, tfCurrentProcessingFile,
 			tfCurrentProcessingSheetName, tfCurrentProcessingVoice, tfListNames, tfPhraseCounter, tfPhraseTotal,
 			tfJlptFolderNamePrefix, tfOrdinalPositionFileNamePrefix, tfIpaSymbol, tfExportFile, tfElapsed, tfDllPath,
@@ -517,10 +520,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("Export HTML")
 	private AbstractButton cbExportHtml = null;
 
-	private AbstractButton cbUseTtsVoice, cbExportListHtml, cbExportHtmlAsZip, cbExportHtmlRemoveAfterZip,
-			cbExportListSheet, cbExportJlptSheet, cbExportPresentation, cbEmbedAudioInPresentation,
-			cbHideAudioImageInPresentation, cbExportMicrosoftAccess, cbImportFileTemplateGenerateBlankRow,
-			cbJlptAsFolder, btnExportBrowse, btnPronunciationPageUrlCheck = null;
+	@Note("Export List As HTML")
+	private AbstractButton cbExportListHtml = null;
+
+	private AbstractButton cbUseTtsVoice, cbExportHtmlAsZip, cbExportHtmlRemoveAfterZip, cbExportListSheet,
+			cbExportJlptSheet, cbExportPresentation, cbEmbedAudioInPresentation, cbHideAudioImageInPresentation,
+			cbExportMicrosoftAccess, cbImportFileTemplateGenerateBlankRow, cbJlptAsFolder, btnExportBrowse,
+			btnPronunciationPageUrlCheck = null;
 
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.FIELD)
