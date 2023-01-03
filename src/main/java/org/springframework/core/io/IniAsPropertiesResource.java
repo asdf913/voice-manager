@@ -121,16 +121,8 @@ public class IniAsPropertiesResource implements Resource {
 		//
 		if (size > 1) {
 			//
-			try {
-				//
-				size = getSection(GraphicsEnvironment.isHeadless(), System.getProperties(), System.console(), sections);
-				//
-			} catch (final IllegalAccessException e) {
-				//
-				errorOrAssertOrShowException(e);
-				//
-			} // try
-				//
+			size = getSection(GraphicsEnvironment.isHeadless(), System.getProperties(), System.console(), sections);
+			//
 		} // if
 			//
 		if (CollectionUtils.isEmpty(sections)) {
@@ -155,7 +147,7 @@ public class IniAsPropertiesResource implements Resource {
 	}
 
 	private static int getSection(final boolean headless, final Map<?, ?> map, final Console console,
-			final Collection<?> collection) throws IllegalAccessException {
+			final Collection<?> collection) {
 		//
 		if (map != null && map.containsKey("profile")
 				&& retainAll(collection, Collections.singleton(map.get("profile")))) {
