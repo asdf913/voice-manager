@@ -69,7 +69,7 @@ public class IniAsPropertiesResource implements Resource {
 			//
 			final List<Field> fs = toList(filter(testAndApply(Objects::nonNull,
 					testAndApply(Objects::nonNull, getClass(resource), FieldUtils::getAllFields, null), Arrays::stream,
-					null), f -> f != null && Objects.equals(URL.class, f.getType())));
+					null), f -> Objects.equals(URL.class, getType(f))));
 			//
 			final Field f = IterableUtils.size(fs) == 1 ? IterableUtils.get(fs, 0) : null;
 			//
@@ -97,7 +97,7 @@ public class IniAsPropertiesResource implements Resource {
 			//
 			final List<Field> fs = toList(filter(testAndApply(Objects::nonNull,
 					testAndApply(Objects::nonNull, getClass(urlConnection), FieldUtils::getAllFields, null),
-					Arrays::stream, null), f -> f != null && Objects.equals(File.class, f.getType())));
+					Arrays::stream, null), f -> Objects.equals(File.class, getType(f))));
 			//
 			final Field f = IterableUtils.size(fs) == 1 ? IterableUtils.get(fs, 0) : null;
 			//
@@ -288,6 +288,10 @@ public class IniAsPropertiesResource implements Resource {
 			//
 		} // try
 			//
+	}
+
+	private static Class<?> getType(final Field instance) {
+		return instance != null ? instance.getType() : null;
 	}
 
 	private static Method[] getDeclaredMethods(final Class<?> instance) {

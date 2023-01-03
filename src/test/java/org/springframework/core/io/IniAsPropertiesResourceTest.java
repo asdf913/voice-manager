@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Executable;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
@@ -36,8 +37,8 @@ class IniAsPropertiesResourceTest {
 	private static Method METHOD_GET_SECTION, METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION, METHOD_GET_MESSAGE,
 			METHOD_PRINT_STACK_TRACE, METHOD_GET_DECLARED_METHODS, METHOD_TEST_AND_APPLY, METHOD_FILTER,
 			METHOD_FOR_NAME, METHOD_TO_LIST, METHOD_GET_NAME, METHOD_GET_PARAMETER_TYPES, METHOD_INVOKE,
-			METHOD_TEST_AND_ACCEPT, METHOD_IS_STATIC, METHOD_TO_RUNTIME_EXCEPTION, METHOD_TO_INPUT_STREAM,
-			METHOD_CAST = null;
+			METHOD_TEST_AND_ACCEPT, METHOD_IS_STATIC, METHOD_TO_RUNTIME_EXCEPTION, METHOD_TO_INPUT_STREAM, METHOD_CAST,
+			METHOD_GET_TYPE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -83,6 +84,8 @@ class IniAsPropertiesResourceTest {
 		(METHOD_TO_INPUT_STREAM = clz.getDeclaredMethod("toInputStream", Properties.class)).setAccessible(true);
 		//
 		(METHOD_CAST = clz.getDeclaredMethod("cast", Class.class, Object.class)).setAccessible(true);
+		//
+		(METHOD_GET_TYPE = clz.getDeclaredMethod("getType", Field.class)).setAccessible(true);
 		//
 	}
 
@@ -513,6 +516,27 @@ class IniAsPropertiesResourceTest {
 	private static <T> T cast(final Class<T> clz, final Object instance) throws Throwable {
 		try {
 			return (T) METHOD_CAST.invoke(null, clz, instance);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetType() throws Throwable {
+		//
+		Assertions.assertNull(getType(null));
+		//
+	}
+
+	private static Class<?> getType(final Field instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_TYPE.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Class<?>) {
+				return (Class<?>) obj;
+			}
+			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
