@@ -402,12 +402,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("Folder")
 	private JTextComponent tfFolder = null;
 
-	private JTextComponent tfFile, tfFileLength, tfFileDigest, tfTextTts, tfTextImport, tfHiragana, tfKatakana,
-			tfRomaji, tfSpeechRate, tfSource, tfProviderName, tfProviderVersion, tfProviderPlatform,
-			tfSpeechLanguageCode, tfSpeechLanguageName, tfLanguage, tfSpeechVolume, tfCurrentProcessingFile,
-			tfCurrentProcessingSheetName, tfCurrentProcessingVoice, tfListNames, tfPhraseCounter, tfPhraseTotal,
-			tfJlptFolderNamePrefix, tfOrdinalPositionFileNamePrefix, tfIpaSymbol, tfExportFile, tfElapsed, tfDllPath,
-			tfExportHtmlFileName, tfExportPassword, tfPronunciationPageUrl, tfPronunciationPageStatusCode = null;
+	@Note("File Length")
+	private JTextComponent tfFileLength = null;
+
+	private JTextComponent tfFile, tfFileDigest, tfTextTts, tfTextImport, tfHiragana, tfKatakana, tfRomaji,
+			tfSpeechRate, tfSource, tfProviderName, tfProviderVersion, tfProviderPlatform, tfSpeechLanguageCode,
+			tfSpeechLanguageName, tfLanguage, tfSpeechVolume, tfCurrentProcessingFile, tfCurrentProcessingSheetName,
+			tfCurrentProcessingVoice, tfListNames, tfPhraseCounter, tfPhraseTotal, tfJlptFolderNamePrefix,
+			tfOrdinalPositionFileNamePrefix, tfIpaSymbol, tfExportFile, tfElapsed, tfDllPath, tfExportHtmlFileName,
+			tfExportPassword, tfPronunciationPageUrl, tfPronunciationPageStatusCode = null;
 
 	private transient ComboBoxModel<Yomi> cbmYomi = null;
 
