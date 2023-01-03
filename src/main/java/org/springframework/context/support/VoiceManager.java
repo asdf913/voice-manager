@@ -4489,8 +4489,24 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-			deleteOnExit(file = generateTtsAudioFile(headless, voiceId, voice));
-			//
+			try {
+				//
+				deleteOnExit(file = generateTtsAudioFile(headless, voiceId, voice));
+				//
+			} catch (IllegalAccessException e) {
+				//
+				errorOrAssertOrShowException(headless, e);
+				//
+			} catch (InvocationTargetException e) {
+				//
+				final Throwable targetException = e.getTargetException();
+				//
+				errorOrAssertOrShowException(headless,
+						ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException), targetException,
+								ExceptionUtils.getRootCause(e), e));
+				//
+			} // try
+				//
 		} else {
 			//
 			final JFileChooser jfc = new JFileChooser(".");
@@ -4616,7 +4632,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private File generateTtsAudioFile(final boolean headless, final String voiceId, final Voice voice) {
+	private File generateTtsAudioFile(final boolean headless, final String voiceId, final Voice voice)
+			throws IllegalAccessException, InvocationTargetException {
 		//
 		File file = null;
 		//
@@ -4629,7 +4646,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						, intValue(getRate(), 0)// rate
 						//
 						, Math.min(Math.max(intValue(getValue(jsSpeechVolume), 100), 0), 100)// volume
-						, file = File.createTempFile(randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH), null)
+						, file = createTempFile(randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH), null)
 				//
 				);
 				//
@@ -4664,6 +4681,21 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		return file;
 		//
+	}
+
+	private static File createTempFile(final String prefix, final String suffix)
+			throws IOException, IllegalAccessException, InvocationTargetException {
+		//
+		final List<Method> ms = toList(
+				filter(testAndApply(Objects::nonNull, getDeclaredMethods(File.class), Arrays::stream, null),
+						x -> Objects.equals(getName(x), "createTempFile")
+								&& Arrays.equals(new Class<?>[] { String.class, String.class }, getParameterTypes(x))));
+		//
+		return cast(File.class,
+				invoke(testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null), null,
+						prefix, suffix));
+		//
+
 	}
 
 	private void actionPerformedForImportFileTemplate(final boolean headless) {
@@ -8101,8 +8133,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 								if (isInstalled(speechApi = getIfNull(speechApi,
 										() -> ObjectMap.getObject(objectMap, SpeechApi.class)))) {
 									//
-									if ((it.file = File.createTempFile(
-											randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH), filePath)) != null) {
+									if ((it.file = createTempFile(randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH),
+											filePath)) != null) {
 										//
 										ObjectMap.setObject(objectMap, File.class, it.file);
 										//
@@ -9279,14 +9311,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		}
 
-		private static void setMp3Title(final File file) throws IOException, BaseException {
+		private static void setMp3Title(final File file)
+				throws IOException, BaseException, IllegalAccessException, InvocationTargetException {
 			//
 			final String fileExtension = getFileExtension(cast(ContentInfo.class,
 					testAndApply(VoiceManager::isFile, file, new ContentInfoUtil()::findMatch, null)));
 			//
 			if (Objects.equals("mp3", fileExtension)) {
 				//
-				final File tempFile = File.createTempFile(randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH), null);
+				final File tempFile = createTempFile(randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH), null);
 				//
 				deleteOnExit(tempFile);
 				//
@@ -9579,7 +9612,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			if ((newOdfPresentationDocument = OdfPresentationDocument.newPresentationDocument()) != null) {
 				//
-				final File file = File.createTempFile(randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH), null);
+				final File file = createTempFile(randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH), null);
 				//
 				newOdfPresentationDocument.save(file);
 				//
