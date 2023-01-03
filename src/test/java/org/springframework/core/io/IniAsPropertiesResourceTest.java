@@ -39,7 +39,7 @@ class IniAsPropertiesResourceTest {
 			METHOD_GET_MESSAGE, METHOD_PRINT_STACK_TRACE, METHOD_GET_DECLARED_METHODS, METHOD_TEST_AND_APPLY,
 			METHOD_FILTER, METHOD_FOR_NAME, METHOD_TO_LIST, METHOD_GET_NAME, METHOD_GET_PARAMETER_TYPES, METHOD_INVOKE,
 			METHOD_TEST_AND_ACCEPT, METHOD_IS_STATIC, METHOD_TO_RUNTIME_EXCEPTION, METHOD_TO_INPUT_STREAM, METHOD_CAST,
-			METHOD_GET_TYPE, METHOD_GET_KEY = null;
+			METHOD_GET_TYPE, METHOD_GET_KEY, METHOD_GET_VALUE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -91,6 +91,8 @@ class IniAsPropertiesResourceTest {
 		(METHOD_GET_TYPE = clz.getDeclaredMethod("getType", Field.class)).setAccessible(true);
 		//
 		(METHOD_GET_KEY = clz.getDeclaredMethod("getKey", Entry.class)).setAccessible(true);
+		//
+		(METHOD_GET_VALUE = clz.getDeclaredMethod("getValue", Entry.class)).setAccessible(true);
 		//
 	}
 
@@ -582,6 +584,21 @@ class IniAsPropertiesResourceTest {
 	private static <K> K getKey(final Entry<K, ?> instance) throws Throwable {
 		try {
 			return (K) METHOD_GET_KEY.invoke(null, instance);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetValue() throws Throwable {
+		//
+		Assertions.assertNull(getValue(null));
+		//
+	}
+
+	private static <V> V getValue(final Entry<?, V> instance) throws Throwable {
+		try {
+			return (V) METHOD_GET_VALUE.invoke(null, instance);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
