@@ -26,7 +26,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableFunction;
-import org.oxbow.swingbits.dialog.task.TaskDialogs;
+import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
@@ -91,16 +91,8 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 				//
 			} else {
 				//
-				if (rootCause != null) {
-					//
-					TaskDialogs.showException(rootCause);
-					//
-				} else if (e != null) {
-					//
-					TaskDialogs.showException(e);
-					//
-				} // if
-					//
+				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(ObjectUtils.defaultIfNull(rootCause, e));
+				//
 			} // if
 				//
 		} // try

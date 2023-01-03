@@ -11,7 +11,6 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.StringReader;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -39,9 +38,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.helpers.NOPLogger;
 
 import com.google.common.reflect.Reflection;
 
@@ -52,10 +48,8 @@ import javassist.util.proxy.ProxyObject;
 
 class IniAsPropertiesResourceTest {
 
-	private static Method METHOD_GET_SECTION, METHOD_TO_STRING, METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION,
-			METHOD_GET_MESSAGE, METHOD_PRINT_STACK_TRACE, METHOD_GET_DECLARED_METHODS, METHOD_TEST_AND_APPLY,
-			METHOD_FILTER, METHOD_FOR_NAME, METHOD_TO_LIST, METHOD_GET_NAME, METHOD_GET_PARAMETER_TYPES, METHOD_INVOKE,
-			METHOD_TEST_AND_ACCEPT, METHOD_IS_STATIC, METHOD_TO_RUNTIME_EXCEPTION, METHOD_TO_INPUT_STREAM, METHOD_CAST,
+	private static Method METHOD_GET_SECTION, METHOD_TO_STRING, METHOD_TEST_AND_APPLY, METHOD_FILTER, METHOD_TO_LIST,
+			METHOD_GET_NAME, METHOD_TEST_AND_ACCEPT, METHOD_IS_STATIC, METHOD_TO_INPUT_STREAM, METHOD_CAST,
 			METHOD_GET_TYPE, METHOD_GET_KEY, METHOD_GET_VALUE, METHOD_EXISTS, METHOD_TO_ARRAY, METHOD_READY,
 			METHOD_GET_SELECTED_ITEM = null;
 
@@ -69,38 +63,19 @@ class IniAsPropertiesResourceTest {
 		//
 		(METHOD_TO_STRING = clz.getDeclaredMethod("toString", Object.class)).setAccessible(true);
 		//
-		(METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION = clz.getDeclaredMethod("errorOrAssertOrShowException", Boolean.TYPE,
-				Logger.class, Throwable.class)).setAccessible(true);
-		//
-		(METHOD_GET_MESSAGE = clz.getDeclaredMethod("getMessage", Throwable.class)).setAccessible(true);
-		//
-		(METHOD_PRINT_STACK_TRACE = clz.getDeclaredMethod("printStackTrace", Throwable.class)).setAccessible(true);
-		//
-		(METHOD_GET_DECLARED_METHODS = clz.getDeclaredMethod("getDeclaredMethods", Class.class)).setAccessible(true);
-		//
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
 		//
 		(METHOD_FILTER = clz.getDeclaredMethod("filter", Stream.class, Predicate.class)).setAccessible(true);
 		//
-		(METHOD_FOR_NAME = clz.getDeclaredMethod("forName", String.class)).setAccessible(true);
-		//
 		(METHOD_TO_LIST = clz.getDeclaredMethod("toList", Stream.class)).setAccessible(true);
 		//
 		(METHOD_GET_NAME = clz.getDeclaredMethod("getName", Member.class)).setAccessible(true);
-		//
-		(METHOD_GET_PARAMETER_TYPES = clz.getDeclaredMethod("getParameterTypes", Executable.class)).setAccessible(true);
-		//
-		(METHOD_INVOKE = clz.getDeclaredMethod("invoke", Method.class, Object.class, Object[].class))
-				.setAccessible(true);
 		//
 		(METHOD_TEST_AND_ACCEPT = clz.getDeclaredMethod("testAndAccept", Predicate.class, Object.class,
 				FailableConsumer.class)).setAccessible(true);
 		//
 		(METHOD_IS_STATIC = clz.getDeclaredMethod("isStatic", Member.class)).setAccessible(true);
-		//
-		(METHOD_TO_RUNTIME_EXCEPTION = clz.getDeclaredMethod("toRuntimeException", Throwable.class))
-				.setAccessible(true);
 		//
 		(METHOD_TO_INPUT_STREAM = clz.getDeclaredMethod("toInputStream", Properties.class)).setAccessible(true);
 		//
@@ -342,92 +317,6 @@ class IniAsPropertiesResourceTest {
 	}
 
 	@Test
-	void testErrorOrAssertOrShowException() {
-		//
-		Assertions.assertDoesNotThrow(() -> errorOrAssertOrShowException(true, null, null));
-		//
-		final Throwable throwable = new RuntimeException();
-		//
-		Assertions.assertDoesNotThrow(() -> errorOrAssertOrShowException(true, null, throwable));
-		//
-		Assertions.assertDoesNotThrow(() -> errorOrAssertOrShowException(true, NOPLogger.NOP_LOGGER, throwable));
-		//
-		Assertions.assertDoesNotThrow(
-				() -> errorOrAssertOrShowException(true, LoggerFactory.getLogger(getClass()), throwable));
-		//
-		Assertions.assertDoesNotThrow(() -> errorOrAssertOrShowException(false, null, null));
-		//
-		Assertions.assertThrows(RuntimeException.class, () -> errorOrAssertOrShowException(false, null, throwable));
-		//
-	}
-
-	private static void errorOrAssertOrShowException(final boolean headless, final Logger logger,
-			final Throwable throwable) throws Throwable {
-		try {
-			METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION.invoke(null, headless, logger, throwable);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetMessage() throws Throwable {
-		//
-		Assertions.assertNull(getMessage(null));
-		//
-	}
-
-	private static String getMessage(final Throwable instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_MESSAGE.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testPrintStackTrace() {
-		//
-		Assertions.assertDoesNotThrow(() -> printStackTrace(null));
-		//
-	}
-
-	private static void printStackTrace(final Throwable throwable) throws Throwable {
-		try {
-			METHOD_PRINT_STACK_TRACE.invoke(null, throwable);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetDeclaredMethods() throws Throwable {
-		//
-		Assertions.assertNull(getDeclaredMethods(null));
-		//
-	}
-
-	private static Method[] getDeclaredMethods(final Class<?> instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_DECLARED_METHODS.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Method[]) {
-				return (Method[]) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testTestAndApply() throws Throwable {
 		//
 		Assertions.assertNull(testAndApply(null, null, null, null));
@@ -465,29 +354,6 @@ class IniAsPropertiesResourceTest {
 				return null;
 			} else if (obj instanceof Stream) {
 				return (Stream) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testForName() throws Throwable {
-		//
-		Assertions.assertNull(forName(null));
-		//
-		Assertions.assertNull(forName("A"));
-		//
-	}
-
-	private static Class<?> forName(final String className) throws Throwable {
-		try {
-			final Object obj = METHOD_FOR_NAME.invoke(null, className);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Class) {
-				return (Class) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
@@ -538,42 +404,6 @@ class IniAsPropertiesResourceTest {
 	}
 
 	@Test
-	void testGetParameterTypes() throws Throwable {
-		//
-		Assertions.assertNull(getParameterTypes(null));
-		//
-	}
-
-	private static Class<?>[] getParameterTypes(final Executable instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_PARAMETER_TYPES.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Class<?>[]) {
-				return (Class<?>[]) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testInvoke() throws Throwable {
-		//
-		Assertions.assertNull(invoke(null, null));
-		//
-	}
-
-	private static Object invoke(final Method method, final Object instance, Object... args) throws Throwable {
-		try {
-			return METHOD_INVOKE.invoke(null, method, instance, args);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testTestAndAccept() {
 		//
 		Assertions.assertDoesNotThrow(() -> testAndAccept(Predicates.alwaysTrue(), null, null));
@@ -603,29 +433,6 @@ class IniAsPropertiesResourceTest {
 			final Object obj = METHOD_IS_STATIC.invoke(null, instance);
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testToRuntimeException() throws Throwable {
-		//
-		final RuntimeException runtimeException = new RuntimeException();
-		//
-		Assertions.assertSame(runtimeException, toRuntimeException(runtimeException));
-		//
-	}
-
-	private static RuntimeException toRuntimeException(final Throwable instance) throws Throwable {
-		try {
-			final Object obj = METHOD_TO_RUNTIME_EXCEPTION.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof RuntimeException) {
-				return (RuntimeException) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

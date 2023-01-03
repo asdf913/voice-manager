@@ -248,6 +248,7 @@ import org.odftoolkit.odfdom.doc.OdfPresentationDocument;
 import org.odftoolkit.odfdom.pkg.OdfPackage;
 import org.openxmlformats.schemas.officeDocument.x2006.customProperties.CTProperty;
 import org.oxbow.swingbits.dialog.task.TaskDialogs;
+import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -669,7 +670,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} catch (final NoSuchFieldException e) {
 			//
-			errorOrAssertOrShowException(e);
+			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
 			//
 		} // try
 			//
@@ -720,17 +721,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} catch (final IOException e) {
 			//
-			errorOrAssertOrShowException(e);
+			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
 			//
 		} // try
 			//
 		return result;
-		//
-	}
-
-	private static void errorOrAssertOrShowException(final Throwable throwable) {
-		//
-		errorOrAssertOrShowException(GraphicsEnvironment.isHeadless(), throwable);
 		//
 	}
 
@@ -1247,7 +1242,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 			} catch (final IOException e) {
 				//
-				errorOrAssertOrShowException(e);
+				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
 				//
 			} //
 		} // for
@@ -1598,7 +1593,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} catch (final IOException e) {
 			//
-			errorOrAssertOrShowException(e);
+			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
 			//
 		} // try
 			//
@@ -1627,7 +1622,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} catch (final IOException e) {
 			//
-			errorOrAssertOrShowException(e);
+			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
 			//
 		} // try
 			//
@@ -1810,7 +1805,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} catch (final IllegalAccessException e) {
 			//
-			errorOrAssertOrShowException(e);
+			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
 			//
 		} // try
 			//
@@ -1846,7 +1841,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} catch (final FailingHttpStatusCodeException | IOException e) {
 			//
-			errorOrAssertOrShowException(e);
+			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
 			//
 		} // try
 			//
@@ -1893,7 +1888,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					} catch (final IOException | URISyntaxException e) {
 						//
-						errorOrAssertOrShowException(e);
+						TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
 						//
 					} // try
 						//
@@ -2478,7 +2473,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} catch (final Error e) {
 			//
-			errorOrAssertOrShowException(e);
+			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
 			//
 		} // try
 			//
@@ -2645,7 +2640,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} catch (final IllegalAccessException e) {
 			//
-			errorOrAssertOrShowException(e);
+			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
 			//
 		} // try
 			//
@@ -2673,7 +2668,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} catch (final IOException e) {
 			//
-			errorOrAssertOrShowException(e);
+			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
 			//
 		} // try
 			//
@@ -3468,7 +3463,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} catch (final IllegalAccessException e) {
 			//
-			errorOrAssertOrShowException(e);
+			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
 			//
 		} // try
 			//
@@ -3661,14 +3656,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} catch (final IOException | TemplateException | IllegalAccessException e) {
 			//
-			errorOrAssertOrShowException(e);
+			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
 			//
 		} catch (final InvocationTargetException e) {
 			//
 			final Throwable targetException = e.getTargetException();
 			//
-			errorOrAssertOrShowException(ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException),
-					targetException, ExceptionUtils.getRootCause(e), e));
+			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(ObjectUtils.firstNonNull(
+					ExceptionUtils.getRootCause(targetException), targetException, ExceptionUtils.getRootCause(e), e));
 			//
 		} // try
 			//
@@ -3686,7 +3681,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 				} catch (final IOException | URISyntaxException e) {
 					//
-					errorOrAssertOrShowException(e);
+					TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
 					//
 				} // try
 					//
@@ -3926,7 +3921,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} catch (final IOException e) {
 			//
-			errorOrAssertOrShowException(e);
+			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
 			//
 		} // try
 			//
@@ -3944,7 +3939,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} catch (final IOException e) {
 			//
-			errorOrAssertOrShowException(e);
+			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
 			//
 		} // try
 			//
@@ -4090,7 +4085,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 			} catch (final Error e) {
 				//
-				errorOrAssertOrShowException(e);
+				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
 				//
 			} // try
 				//
@@ -6461,7 +6456,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} catch (final Error e) {
 				//
-				errorOrAssertOrShowException(e);
+				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
 				//
 			} // try
 				//
@@ -6634,7 +6629,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} catch (final IOException e) {
 			//
-			errorOrAssertOrShowException(e);
+			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
 			//
 		} // try
 			//
@@ -7445,7 +7440,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} catch (final IllegalAccessException e) {
 					//
-					errorOrAssertOrShowException(e);
+					TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
 					//
 				} // try
 					//
@@ -8214,7 +8209,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 										//
 									} catch (final Error e) {
 										//
-										errorOrAssertOrShowException(e);
+										TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
 										//
 									} // try
 										//
@@ -9271,7 +9266,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 			} catch (final Exception e) {
 				//
-				errorOrAssertOrShowException(e);
+				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
 				//
 			} // try
 				//
@@ -9775,7 +9770,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 			} catch (final IOException | TemplateException e) {
 				//
-				errorOrAssertOrShowException(e);
+				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
 				//
 			} // try
 				//
@@ -10412,7 +10407,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} catch (final IOException e) {
 			//
-			errorOrAssertOrShowException(e);
+			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
 			//
 		} // try
 			//

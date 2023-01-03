@@ -280,9 +280,8 @@ class VoiceManagerTest {
 			METHOD_APPEND_CHAR, METHOD_GET_PROVIDER_PLATFORM, METHOD_OPEN_CONNECTION, METHOD_GET_RESOURCE_AS_STREAM,
 			METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH, METHOD_GET_ATTRIBUTES, METHOD_GET_LENGTH, METHOD_ITEM,
 			METHOD_GET_OS_VERSION_INFO_EX_MAP, METHOD_CREATE_JLPT_SHEET, METHOD_ADD_JO_YO_KAN_JI_SHEET,
-			METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION1, METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2,
-			METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION3, METHOD_SET_VISIBLE, METHOD_RANDOM_ALPHABETIC,
-			METHOD_GET_MEDIA_FORMAT_LINK, METHOD_GET_EVENT_TYPE, METHOD_GET_PARENT_FILE,
+			METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2, METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION3, METHOD_SET_VISIBLE,
+			METHOD_RANDOM_ALPHABETIC, METHOD_GET_MEDIA_FORMAT_LINK, METHOD_GET_EVENT_TYPE, METHOD_GET_PARENT_FILE,
 			METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET,
 			METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET_FIRST_ROW, METHOD_EXPORT_JLPT,
 			METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT, METHOD_SET_SHEET_HEADER_ROW, METHOD_ENCRYPT,
@@ -763,9 +762,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_ADD_JO_YO_KAN_JI_SHEET = clz.getDeclaredMethod("addJoYoKanJiSheet", Workbook.class, String.class,
 				Elements.class)).setAccessible(true);
-		//
-		(METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION1 = clz.getDeclaredMethod("errorOrAssertOrShowException",
-				Throwable.class)).setAccessible(true);
 		//
 		(METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2 = clz.getDeclaredMethod("errorOrAssertOrShowException", Boolean.TYPE,
 				Throwable.class)).setAccessible(true);
@@ -6629,12 +6625,6 @@ class VoiceManagerTest {
 	@Test
 	void testErrorOrAssertOrShowException() {
 		//
-		if (GraphicsEnvironment.isHeadless()) {
-			//
-			Assertions.assertDoesNotThrow(() -> errorOrAssertOrShowException(null));
-			//
-		} // if
-			//
 		Assertions.assertDoesNotThrow(() -> errorOrAssertOrShowException(true, null));
 		//
 		Assertions.assertDoesNotThrow(() -> errorOrAssertOrShowException(true, null, null));
@@ -6643,14 +6633,6 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> errorOrAssertOrShowException(false, null, null));
 		//
-	}
-
-	private static void errorOrAssertOrShowException(final Throwable throwable) throws Throwable {
-		try {
-			METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION1.invoke(null, throwable);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	private static void errorOrAssertOrShowException(final boolean headless, final Throwable throwable)
