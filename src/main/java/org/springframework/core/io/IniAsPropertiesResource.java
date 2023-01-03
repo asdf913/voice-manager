@@ -447,7 +447,7 @@ public class IniAsPropertiesResource implements Resource {
 	}
 
 	@Override
-	public Resource createRelative(String relativePath) throws IOException {
+	public Resource createRelative(final String relativePath) throws IOException {
 		throw new UnsupportedOperationException();
 	}
 
