@@ -10,6 +10,11 @@
 			<list>
 				<value>classpath:configuration.properties</value>
 				<value>file:configuration.properties</value>
+				<bean
+					class="org.springframework.core.io.IniAsPropertiesResource">
+					<constructor-arg index="0"
+						value="file:configuration.ini" />
+				</bean>
 			</list>
 		</property>
 	</bean>
