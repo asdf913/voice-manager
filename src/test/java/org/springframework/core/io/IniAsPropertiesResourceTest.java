@@ -10,6 +10,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.StringReader;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
@@ -17,6 +18,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -27,6 +29,7 @@ import java.util.Properties;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.jena.ext.com.google.common.base.Predicates;
@@ -765,7 +768,13 @@ class IniAsPropertiesResourceTest {
 		//
 		final Class<?> clz = proxyFactory.createClass();
 		//
-		final Object instance = clz != null ? clz.newInstance() : null;
+		final List<Constructor<?>> cs = toList(
+				filter(testAndApply(Objects::nonNull, clz != null ? clz.getDeclaredConstructors() : null,
+						Arrays::stream, null), x -> x != null && x.getParameterCount() == 0));
+		//
+		final Constructor<?> c = testAndApply(x -> IterableUtils.size(x) == 1, cs, x -> IterableUtils.get(x, 0), null);
+		//
+		final Object instance = c != null ? c.newInstance() : null;
 		//
 		final MH mh = new MH();
 		//
