@@ -169,14 +169,11 @@ public class IniAsPropertiesResource implements Resource {
 				//
 			} // if
 				//
-		} else if (map != null && map.containsKey("profile")) {
+		} else if (map != null && map.containsKey("profile") && collection != null
+				&& collection.retainAll(Collections.singleton(map.get("profile")))) {
 			//
-			if (collection != null && collection.retainAll(Collections.singleton(map.get("profile")))) {
-				//
-				size = IterableUtils.size(collection);
-				//
-			} // if
-				//
+			size = IterableUtils.size(collection);
+			//
 		} // if
 			//
 		return size;
