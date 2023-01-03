@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -37,6 +38,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.javatuples.Unit;
 import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
 
 import com.github.vincentrussell.ini.Ini;
@@ -47,8 +49,14 @@ public class IniAsPropertiesResource implements Resource {
 
 	private Resource resource = null;
 
+	private AtomicReference<Object> section = null;
+
 	public IniAsPropertiesResource(final Resource resource) {
 		this.resource = resource;
+	}
+
+	public void setSection(final AtomicReference<Object> section) {
+		this.section = section;
 	}
 
 	@Override
@@ -116,17 +124,31 @@ public class IniAsPropertiesResource implements Resource {
 			//
 		if (CollectionUtils.isEmpty(sections)) {
 			//
+			if (section != null) {
+				//
+				section.set(Unit.with(null));
+				//
+			} // if
+				//
 			return toInputStream(new Properties());
 			//
 		} else if (size == 1) {
 			//
-			final Map<String, Object> map = ini.getSectionSortedByKey(IterableUtils.get(sections, 0));
+			final String section = IterableUtils.get(sections, 0);
+			//
+			final Map<String, Object> map = ini.getSectionSortedByKey(section);
 			//
 			final Properties properties = new Properties();
 			//
 			properties.putAll(map.entrySet().stream()
 					.collect(Collectors.toMap(IniAsPropertiesResource::getKey, v -> toString(getValue(v)))));
 			//
+			if (this.section != null) {
+				//
+				this.section.set(Unit.with(section));
+				//
+			} // if
+				//
 			return toInputStream(properties);
 			//
 		} // if

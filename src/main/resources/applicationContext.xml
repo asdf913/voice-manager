@@ -3,6 +3,9 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
 
+	<bean id="iniSection"
+		class="java.util.concurrent.atomic.AtomicReference"></bean>
+
 	<bean
 		class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
 		<property name="ignoreResourceNotFound" value="true" />
@@ -14,6 +17,7 @@
 					class="org.springframework.core.io.IniAsPropertiesResource">
 					<constructor-arg index="0"
 						value="file:configuration.ini" />
+					<property name="section" ref="iniSection" />
 				</bean>
 			</list>
 		</property>
@@ -24,6 +28,7 @@
 		<property name="tableSql" value="classpath:table.sql" />
 		<property name="tableSqlEncoding"
 			value="${org.springframework.context.CustomBeanFactoryPostProcessor.tableSqlEncoding}" />
+		<property name="iniSection" ref="iniSection" />
 	</bean>
 
 	<bean class="org.springframework.context.support.VoiceManager">
@@ -64,22 +69,30 @@
 			value="${org.springframework.context.support.VoiceManager.microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl}" />
 		<property name="microsoftWindowsCompatibilitySettingsPageUrl"
 			value="${org.springframework.context.support.VoiceManager.microsoftWindowsCompatibilitySettingsPageUrl}" />
-		<property name="mediaFormatPageUrl" value="${org.springframework.context.support.VoiceManager.mediaFormatPageUrl}" />
-		<property name="poiEncryptionPageUrl" value="${org.springframework.context.support.VoiceManager.poiEncryptionPageUrl}" />
+		<property name="mediaFormatPageUrl"
+			value="${org.springframework.context.support.VoiceManager.mediaFormatPageUrl}" />
+		<property name="poiEncryptionPageUrl"
+			value="${org.springframework.context.support.VoiceManager.poiEncryptionPageUrl}" />
 		<property name="exportHtmlTemplateFile"
 			value="${org.springframework.context.support.VoiceManager.exportHtmlTemplateFile}" />
-		<property name="freeMarkerVersion" 
+		<property name="freeMarkerVersion"
 			value="${org.springframework.context.support.VoiceManager.freeMarkerVersion}" />
 		<property name="freeMarkerConfiguration">
 			<bean class="freemarker.template.Configuration">
-				<constructor-arg index="0" value="#{T(freemarker.template.Configuration).getVersion()}"/>
-				<property name="templateLoader" value="#{new freemarker.cache.ClassTemplateLoader(T(org.springframework.context.support.VoiceManager),'/')}"/>
+				<constructor-arg index="0"
+					value="#{T(freemarker.template.Configuration).getVersion()}" />
+				<property name="templateLoader"
+					value="#{new freemarker.cache.ClassTemplateLoader(T(org.springframework.context.support.VoiceManager),'/')}" />
 			</bean>
 		</property>
-		<property name="exportPresentationTemplate" value="${org.springframework.context.support.VoiceManager.exportPresentationTemplate}" />
-		<property name="folderInPresentation" value="${org.springframework.context.support.VoiceManager.folderInPresentation}" />
-		<property name="microsoftAccessFileFormat" value="${org.springframework.context.support.VoiceManager.microsoftAccessFileFormat}" />
-		<property name="workbookClass" value="${org.springframework.context.support.VoiceManager.workbookClass}" />
+		<property name="exportPresentationTemplate"
+			value="${org.springframework.context.support.VoiceManager.exportPresentationTemplate}" />
+		<property name="folderInPresentation"
+			value="${org.springframework.context.support.VoiceManager.folderInPresentation}" />
+		<property name="microsoftAccessFileFormat"
+			value="${org.springframework.context.support.VoiceManager.microsoftAccessFileFormat}" />
+		<property name="workbookClass"
+			value="${org.springframework.context.support.VoiceManager.workbookClass}" />
 	</bean>
 
 	<bean id="DataSource" class="org.h2.jdbcx.JdbcConnectionPool"

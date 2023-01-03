@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -53,6 +54,8 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 
 	private String tableSqlEncoding = null;
 
+	private AtomicReference<Object> iniSection = null;
+
 	@Override
 	public int getOrder() {
 		return HIGHEST_PRECEDENCE;
@@ -71,9 +74,23 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 		this.tableSqlEncoding = tableSqlEncoding;
 	}
 
+	public void setIniSection(final AtomicReference<Object> iniSection) {
+		this.iniSection = iniSection;
+	}
+
 	@Override
 	public void postProcessBeanFactory(final ConfigurableListableBeanFactory beanFactory) {
 		//
+		if (LOG != null) {
+			//
+			LOG.info("iniSection={}", iniSection);
+			//
+		} else if (System.out != null) {
+			//
+			System.out.println("iniSection=" + iniSection);
+			//
+		} // if
+			//
 		addPropertySourceToPropertySourcesToLast(environment,
 				ListableBeanFactoryUtil.getBeansOfType(beanFactory, PropertySourcesPlaceholderConfigurer.class));
 		//
