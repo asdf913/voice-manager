@@ -6641,6 +6641,8 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> errorOrAssertOrShowException(true, null, new Throwable()));
 		//
+		Assertions.assertDoesNotThrow(() -> errorOrAssertOrShowException(false, null, null));
+		//
 	}
 
 	private static void errorOrAssertOrShowException(final Throwable throwable) throws Throwable {

@@ -773,8 +773,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			try {
 				//
-				final RuntimeException runtimeException = toRuntimeException(
-						cast(Throwable.class, invoke(method, null, getMessage(throwable), throwable)));
+				final RuntimeException runtimeException = toRuntimeException(cast(Throwable.class,
+						getClass(throwable) != null ? invoke(method, null, getMessage(throwable), throwable) : null));
 				//
 				if (runtimeException != null) {
 					//
