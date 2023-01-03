@@ -153,8 +153,6 @@ public class IniAsPropertiesResource implements Resource {
 			//
 		} // if
 			//
-		int size = IterableUtils.size(collection);
-		//
 		if (!headless) {
 			//
 			final JComboBox<Object> jcb = testAndApply(Objects::nonNull,
@@ -168,13 +166,13 @@ public class IniAsPropertiesResource implements Resource {
 			//
 			if (retainAll(collection, Collections.singleton(jcb != null ? jcb.getSelectedItem() : null))) {
 				//
-				size = IterableUtils.size(collection);
+				return IterableUtils.size(collection);
 				//
 			} // if
 				//
 		} // if
 			//
-		return size;
+		return IterableUtils.size(collection);
 		//
 	}
 
