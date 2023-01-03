@@ -6,6 +6,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -74,12 +75,8 @@ public class IniAsPropertiesResource implements Resource {
 			//
 			final Field f = IterableUtils.size(fs) == 1 ? IterableUtils.get(fs, 0) : null;
 			//
-			if (f != null) {
-				//
-				f.setAccessible(true);
-				//
-			} // if
-				//
+			setAccessible(f, true);
+			//
 			try {
 				//
 				url = cast(URL.class, get(f, resource));
@@ -218,7 +215,7 @@ public class IniAsPropertiesResource implements Resource {
 			//
 		} else {
 			//
-			method.setAccessible(true);
+			setAccessible(method, true);
 			//
 			try {
 				//
@@ -261,12 +258,8 @@ public class IniAsPropertiesResource implements Resource {
 		//
 		final Method method = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null);
 		//
-		if (method != null) {
-			//
-			method.setAccessible(true);
-			//
-		} // if
-			//
+		setAccessible(method, true);
+		//
 		try {
 			//
 			testAndAccept(m -> throwable != null || isStatic(m), method, m -> invoke(m, throwable));
@@ -313,6 +306,12 @@ public class IniAsPropertiesResource implements Resource {
 	private static Object get(final Field field, final Object instance)
 			throws IllegalArgumentException, IllegalAccessException {
 		return field != null ? field.get(instance) : null;
+	}
+
+	private static void setAccessible(final AccessibleObject instance, final boolean flag) {
+		if (instance != null) {
+			instance.setAccessible(flag);
+		}
 	}
 
 	private static Method[] getDeclaredMethods(final Class<?> instance) {
