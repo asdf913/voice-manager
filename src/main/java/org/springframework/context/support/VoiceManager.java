@@ -476,7 +476,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("Execute")
 	private AbstractButton btnExecute = null;
 
-	private AbstractButton cbUseTtsVoice, btnImportFileTemplate, btnImport, btnImportWithinFolder, cbOverMp3Title,
+	@Note("Import File Template")
+	private AbstractButton btnImportFileTemplate = null;
+
+	private AbstractButton cbUseTtsVoice, btnImport, btnImportWithinFolder, cbOverMp3Title,
 			cbOrdinalPositionAsFileNamePrefix, btnExport, cbExportHtml, cbExportListHtml, cbExportHtmlAsZip,
 			cbExportHtmlRemoveAfterZip, cbExportListSheet, cbExportJlptSheet, cbExportPresentation,
 			cbEmbedAudioInPresentation, cbHideAudioImageInPresentation, cbExportMicrosoftAccess,
