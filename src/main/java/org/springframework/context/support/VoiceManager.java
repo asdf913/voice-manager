@@ -281,9 +281,6 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
-import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
-import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.WebClientOptions;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.github.curiousoddman.rgxgen.RgxGen;
 import com.google.common.base.Functions;
@@ -1783,20 +1780,19 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static Unit<String> getPageTitle(final String url) {
+	private static IValue0<String> getPageTitle(final String url) {
 		//
-		try (final WebClient webClient = new WebClient()) {
+		try {
 			//
-			final WebClientOptions webClientOptions = webClient.getOptions();
+			final org.jsoup.nodes.Document document = testAndApply(Objects::nonNull,
+					testAndApply(StringUtils::isNotBlank, url, URL::new, null), x -> Jsoup.parse(x, 0), null);
 			//
-			setCssEnabled(webClientOptions, false);
+			final org.jsoup.nodes.Element head = document != null ? document.head() : null;
 			//
-			setJavaScriptEnabled(webClientOptions, false);
+			return Unit.with(ElementUtil.text(testAndApply(x -> IterableUtils.size(x) == 1,
+					head != null ? head.getElementsByTag("title") : null, x -> get(x, 0), null)));
 			//
-			return Unit.with(
-					getTitleText(cast(HtmlPage.class, testAndApply(Objects::nonNull, url, webClient::getPage, null))));
-			//
-		} catch (final FailingHttpStatusCodeException | IOException e) {
+		} catch (final IOException e) {
 			//
 			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
 			//
@@ -1804,18 +1800,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return null;
 		//
-	}
-
-	private static void setJavaScriptEnabled(final WebClientOptions instance, final boolean enabled) {
-		if (instance != null) {
-			instance.setJavaScriptEnabled(enabled);
-		}
-	}
-
-	private static void setCssEnabled(final WebClientOptions instance, final boolean enabled) {
-		if (instance != null) {
-			instance.setCssEnabled(enabled);
-		}
 	}
 
 	private static class JLabelLink extends JLabel {
@@ -1926,10 +1910,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			return instance != null ? instance.darker() : null;
 		}
 
-	}
-
-	private static String getTitleText(final HtmlPage instance) {
-		return instance != null ? instance.getTitleText() : null;
 	}
 
 	private static Integer getTabIndexByTitle(final List<?> pages, final Object jTabbedPane, final Object title)
