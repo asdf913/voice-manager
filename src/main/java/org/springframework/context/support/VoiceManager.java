@@ -1783,11 +1783,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		try {
 			//
-			final org.jsoup.nodes.Document document = testAndApply(Objects::nonNull,
-					testAndApply(StringUtils::isNotBlank, url, URL::new, null), x -> Jsoup.parse(x, 0), null);
-			//
 			return Unit.with(ElementUtil.text(testAndApply(x -> IterableUtils.size(x) == 1,
-					document != null ? document.getElementsByTag("title") : null, x -> get(x, 0), null)));
+					ElementUtil.getElementsByTag(testAndApply(Objects::nonNull,
+							testAndApply(StringUtils::isNotBlank, url, URL::new, null), x -> Jsoup.parse(x, 0), null),
+							"title"),
+					x -> get(x, 0), null)));
 			//
 		} catch (final IOException e) {
 			//

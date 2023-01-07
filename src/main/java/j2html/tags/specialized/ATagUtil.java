@@ -11,7 +11,6 @@ import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.jsoup.nodes.ElementUtil;
 import org.jsoup.select.Elements;
 
@@ -28,13 +27,11 @@ public final class ATagUtil {
 		//
 		try {
 			//
-			final Document document = testAndApply(Objects::nonNull,
+			final Elements elements = ElementUtil.getElementsByTag(testAndApply(Objects::nonNull,
 					(is = openStream(testAndApply(Objects::nonNull, url, URL::new, null))) != null
-							? IOUtils.toString(is, StandardCharsets.UTF_8)
-							: null,
-					Jsoup::parse, null);
-			//
-			final Elements elements = document != null ? document.getElementsByTag("title") : null;
+					? IOUtils.toString(is, StandardCharsets.UTF_8)
+					: null,
+			Jsoup::parse, null), "title");
 			//
 			(aTag = new ATag()).withText(
 					ElementUtil.text(IterableUtils.size(elements) == 1 ? IterableUtils.get(elements, 0) : null));
