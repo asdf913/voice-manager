@@ -4,7 +4,7 @@ import org.jsoup.select.Elements;
 
 public interface ElementUtil {
 
-	static String text(final org.jsoup.nodes.Element instance) {
+	static String text(final Element instance) {
 		return instance != null ? instance.text() : null;
 	}
 
