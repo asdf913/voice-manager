@@ -301,7 +301,7 @@ class VoiceManagerTest {
 			METHOD_SET_FOCUS_CYCLE_ROOT, METHOD_SET_FOCUS_TRAVERSAL_POLICY, METHOD_GET_COMPONENTS,
 			METHOD_GET_WORKBOOK_CLASS_FAILABLE_SUPPLIER_MAP, METHOD_GET_DECLARED_CONSTRUCTOR, METHOD_NEW_INSTANCE,
 			METHOD_GET_WRITER, METHOD_KEY_SET, METHOD_GET_WORK_BOOK_CLASS, METHOD_GET_SYSTEM_PRINT_STREAM_BY_FIELD_NAME,
-			METHOD_IF_ELSE, METHOD_GET_PAGE_TITLE = null;
+			METHOD_IF_ELSE, METHOD_GET_PAGE_TITLE, METHOD_SET_HIRAGANA_OR_KATAKANA_AND_ROMAJI = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -959,6 +959,9 @@ class VoiceManagerTest {
 				.setAccessible(true);
 		//
 		(METHOD_GET_PAGE_TITLE = clz.getDeclaredMethod("getPageTitle", String.class)).setAccessible(true);
+		//
+		(METHOD_SET_HIRAGANA_OR_KATAKANA_AND_ROMAJI = clz.getDeclaredMethod("setHiraganaOrKatakanaAndRomaji",
+				Boolean.TYPE, Boolean.TYPE, Voice.class, Jakaroma.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -8322,6 +8325,23 @@ class VoiceManagerTest {
 				return (Unit) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetHiraganaOrKatakanaAndRomaji() {
+		//
+		Assertions.assertDoesNotThrow(() -> setHiraganaOrKatakanaAndRomaji(false, false, new Voice(), null));
+		//
+	}
+
+	private static void setHiraganaOrKatakanaAndRomaji(final boolean hiraganaKatakanaConversion,
+			final boolean hiraganaRomajiConversion, final Voice voice, final Jakaroma jakaroma) throws Throwable {
+		try {
+			METHOD_SET_HIRAGANA_OR_KATAKANA_AND_ROMAJI.invoke(null, hiraganaKatakanaConversion,
+					hiraganaRomajiConversion, voice, jakaroma);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

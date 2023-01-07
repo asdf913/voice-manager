@@ -8130,19 +8130,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 				} // for
 					//
-				if (voice != null) {
-					//
-					// org.springframework.context.support.VoiceManager.setHiraganaOrKatakana(domain.Voice)
-					//
-					testAndAccept(a -> hiraganaKatakanaConversion, voice, a -> setHiraganaOrKatakana(a));
-					//
-					// org.springframework.context.support.VoiceManager.setRomaji(domain.Voice,fr.free.nrw.jakaroma.Jakaroma)
-					//
-					testAndAccept((a, b) -> hiraganaRomajiConversion, voice, jakaroma = ObjectUtils.getIfNull(jakaroma,
-							() -> ObjectMap.getObject(objectMap, Jakaroma.class)), (a, b) -> setRomaji(a, b));
-					//
-				} // if
-					//
+				setHiraganaOrKatakanaAndRomaji(hiraganaKatakanaConversion, hiraganaRomajiConversion, voice,
+						jakaroma = ObjectUtils.getIfNull(jakaroma,
+								() -> ObjectMap.getObject(objectMap, Jakaroma.class)));
+				//
 				if (first) {
 					//
 					first = false;
@@ -8278,6 +8269,23 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // try
 			//
+	}
+
+	private static void setHiraganaOrKatakanaAndRomaji(final boolean hiraganaKatakanaConversion,
+			final boolean hiraganaRomajiConversion, final Voice voice, final Jakaroma jakaroma) {
+		//
+		if (voice != null) {
+			//
+			// org.springframework.context.support.VoiceManager.setHiraganaOrKatakana(domain.Voice)
+			//
+			testAndAccept(a -> hiraganaKatakanaConversion, voice, a -> setHiraganaOrKatakana(a));
+			//
+			// org.springframework.context.support.VoiceManager.setRomaji(domain.Voice,fr.free.nrw.jakaroma.Jakaroma)
+			//
+			testAndAccept((a, b) -> hiraganaRomajiConversion, voice, jakaroma, (a, b) -> setRomaji(a, b));
+			//
+		} // if
+			///
 	}
 
 	private static String[] getMp3Tags(final VoiceManager instance) {
