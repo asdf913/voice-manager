@@ -647,7 +647,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private transient IValue0<String> microsoftSpeechPlatformRuntimeLanguagesDownloadPageTitle = null;
 
-	private String exportHtmlTemplateFile = null;
+	private String exportHtmlTemplateFile, exportWebSpeechSynthesisHtmlTemplateFile = null;
 
 	private transient freemarker.template.Configuration freeMarkerConfiguration = null;
 
@@ -993,6 +993,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	public void setExportHtmlTemplateFile(final String exportHtmlTemplateFile) {
 		this.exportHtmlTemplateFile = exportHtmlTemplateFile;
+	}
+
+	public void setExportWebSpeechSynthesisHtmlTemplateFile(final String exportWebSpeechSynthesisHtmlTemplateFile) {
+		this.exportWebSpeechSynthesisHtmlTemplateFile = exportWebSpeechSynthesisHtmlTemplateFile;
 	}
 
 	public void setFreeMarkerVersion(final Object value) {
@@ -5266,9 +5270,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					put(map, "voice", "saya");
 					//
-					// TODO
-					//
-					exportHtml(objectMap, "WebSpeechSynthesis.html.ftl", map);
+					exportHtml(objectMap, exportWebSpeechSynthesisHtmlTemplateFile, map);
 					//
 					final StringBuilder sb = new StringBuilder(StringUtils.defaultString("WebSpeechSynthesis.html"));
 					//
@@ -5304,7 +5306,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 							// TODO
 							//
-							Pair.of("WebSpeechSynthesis.html.ftl",
+							Pair.of(exportWebSpeechSynthesisHtmlTemplateFile,
 									x -> String.format("%1$s.WebSpeechSynthesis.html", x)),
 
 							//
