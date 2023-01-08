@@ -77,6 +77,7 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.function.ToIntFunction;
 import java.util.function.ToLongFunction;
+import java.util.function.UnaryOperator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collector;
@@ -191,7 +192,6 @@ import org.w3c.dom.NodeList;
 import org.zeroturnaround.zip.ZipUtil;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Functions;
 import com.google.common.base.Predicates;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableMultimap;
@@ -7126,7 +7126,7 @@ class VoiceManagerTest {
 		//
 		ih.keySet = Collections.singleton(null);
 		//
-		final Entry<?, Function<Object, Object>> pair = Pair.of(null, Functions.identity());
+		final Entry<?, UnaryOperator<Object>> pair = Pair.of(null, UnaryOperator.identity());
 		//
 		Assertions
 				.assertDoesNotThrow(() -> exportHtml(null, multimap, pair, Collections.singletonMap(null, null), null));
@@ -7154,7 +7154,7 @@ class VoiceManagerTest {
 	}
 
 	private void exportHtml(final Object objectMap, final Multimap<String, Voice> multimap,
-			final Entry<?, Function<Object, Object>> filePair, final Map<?, ?> parameters, final Collection<File> files)
+			final Entry<?, UnaryOperator<Object>> filePair, final Map<?, ?> parameters, final Collection<File> files)
 			throws Throwable {
 		try {
 			METHOD_EXPORT_HTML.invoke(instance, objectMap, multimap, filePair, parameters, files);

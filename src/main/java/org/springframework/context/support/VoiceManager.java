@@ -102,6 +102,7 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.function.ToIntFunction;
 import java.util.function.ToLongFunction;
+import java.util.function.UnaryOperator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collector;
@@ -5815,7 +5816,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	private void exportHtml(final ObjectMap objectMap, final Multimap<String, Voice> multimap,
-			final Entry<?, Function<Object, Object>> filePair, final Map<Object, Object> parameters,
+			final Entry<?, UnaryOperator<Object>> filePair, final Map<Object, Object> parameters,
 			final Collection<File> files) throws IOException, TemplateException {
 		//
 		final Iterable<String> keySet = keySet(multimap);
@@ -5828,7 +5829,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				final Map<Object, Object> map = new LinkedHashMap<>();
 				//
-				final Function<Object, Object> function = getValue(filePair);
+				final UnaryOperator<Object> function = getValue(filePair);
 				//
 				try (final Writer writer = testAndApply(
 						Objects::nonNull, file = testAndApply(Objects::nonNull,
