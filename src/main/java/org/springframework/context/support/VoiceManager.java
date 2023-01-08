@@ -429,11 +429,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("Source")
 	private JTextComponent tfSource = null;
 
-	private JTextComponent tfFile, tfProviderName, tfProviderVersion, tfProviderPlatform, tfSpeechLanguageCode,
-			tfSpeechLanguageName, tfLanguage, tfSpeechVolume, tfCurrentProcessingFile, tfCurrentProcessingSheetName,
-			tfCurrentProcessingVoice, tfListNames, tfPhraseCounter, tfPhraseTotal, tfJlptFolderNamePrefix,
-			tfOrdinalPositionFileNamePrefix, tfIpaSymbol, tfExportFile, tfElapsed, tfDllPath, tfExportHtmlFileName,
-			tfExportPassword, tfPronunciationPageUrl, tfPronunciationPageStatusCode = null;
+	@Note("Provider Name")
+	private JTextComponent tfProviderName = null;
+
+	private JTextComponent tfFile, tfProviderVersion, tfProviderPlatform, tfSpeechLanguageCode, tfSpeechLanguageName,
+			tfLanguage, tfSpeechVolume, tfCurrentProcessingFile, tfCurrentProcessingSheetName, tfCurrentProcessingVoice,
+			tfListNames, tfPhraseCounter, tfPhraseTotal, tfJlptFolderNamePrefix, tfOrdinalPositionFileNamePrefix,
+			tfIpaSymbol, tfExportFile, tfElapsed, tfDllPath, tfExportHtmlFileName, tfExportPassword,
+			tfPronunciationPageUrl, tfPronunciationPageStatusCode = null;
 
 	private transient ComboBoxModel<Yomi> cbmYomi = null;
 
@@ -529,8 +532,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("Export HTML as ZIP")
 	private AbstractButton cbExportHtmlAsZip = null;
 
-	private AbstractButton cbUseTtsVoice, cbExportHtmlRemoveAfterZip, cbExportListSheet, cbExportJlptSheet,
-			cbExportPresentation, cbEmbedAudioInPresentation, cbHideAudioImageInPresentation, cbExportMicrosoftAccess,
+	@Note("Remove Exported HTML After Zip")
+	private AbstractButton cbExportHtmlRemoveAfterZip = null;
+
+	private AbstractButton cbUseTtsVoice, cbExportListSheet, cbExportJlptSheet, cbExportPresentation,
+			cbEmbedAudioInPresentation, cbHideAudioImageInPresentation, cbExportMicrosoftAccess,
 			cbImportFileTemplateGenerateBlankRow, cbJlptAsFolder, btnExportBrowse, btnPronunciationPageUrlCheck = null;
 
 	@Retention(RetentionPolicy.RUNTIME)
