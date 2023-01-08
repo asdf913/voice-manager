@@ -1010,7 +1010,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			final Map<?, ?> map = (Map<?, ?>) arg;
 			//
-			if (entrySet(map) != null && entrySet(map).iterator() != null) {
+			if (iterator(entrySet(map)) != null) {
 				//
 				for (final Entry<?, ?> entry : entrySet(map)) {
 					//
@@ -1046,6 +1046,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
+	}
+
+	private static <T> Iterator<T> iterator(final Iterable<T> instance) {
+		return instance != null ? instance.iterator() : null;
 	}
 
 	public void setFreeMarkerVersion(final Object value) {
@@ -1209,7 +1213,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		final Set<Entry<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>>> entrySet = entrySet(
 				map);
 		//
-		if (entrySet == null || entrySet.iterator() == null) {
+		if (iterator(entrySet) == null) {
 			//
 			return null;
 			//
@@ -1296,7 +1300,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		if (iterable != null) {
 			//
-			if (iterable.iterator() == null) {
+			if (iterator(iterable) == null) {
 				//
 				return null;
 				//
@@ -5458,7 +5462,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		try (final Database db = create(setFileFormat(testAndApply(Objects::nonNull, file, DatabaseBuilder::new, null),
 				ObjectUtils.defaultIfNull(ObjectMap.getObject(objectMap, FileFormat.class), FileFormat.V2000)))) {
 			//
-			if (dss != null && dss.iterator() != null) {
+			if (iterator(dss) != null) {
 				//
 				for (final DataSource ds : dss) {
 					//
@@ -5518,7 +5522,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final Database db = ObjectMap.getObject(objectMap, Database.class);
 		//
-		if (tableNames != null && tableNames.iterator() != null) {
+		if (iterator(tableNames) != null) {
 			//
 			final Connection connection = ObjectMap.getObject(objectMap, Connection.class);
 			//
@@ -5740,7 +5744,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		Multimap<String, Voice> multimap = null;
 		//
-		if (voices != null && voices.iterator() != null) {
+		if (iterator(voices) != null) {
 			//
 			Iterable<String> listNames = null;
 			//
@@ -5770,7 +5774,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		Multimap<String, Voice> multimap = null;
 		//
-		if (voices != null && voices.iterator() != null) {
+		if (iterator(voices) != null) {
 			//
 			for (final Voice v : voices) {
 				//
@@ -5870,7 +5874,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final Iterable<String> keySet = keySet(multimap);
 		//
-		if (keySet != null && keySet.iterator() != null) {
+		if (iterator(keySet) != null) {
 			//
 			File file = null;
 			//
@@ -5893,7 +5897,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					final Collection<Entry<Object, Object>> entrySet = entrySet(parameters);
 					//
-					if (entrySet != null && entrySet.iterator() != null) {
+					if (iterator(entrySet) != null) {
 						//
 						for (final Entry<?, ?> parameter : entrySet) {
 							//
@@ -5944,7 +5948,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final Collection<Entry<Object, Object>> entrySet = entrySet(parameters);
 		//
-		if (entrySet != null && entrySet.iterator() != null) {
+		if (iterator(entrySet) != null) {
 			//
 			for (final Entry<?, ?> parameter : entrySet) {
 				//
@@ -6806,7 +6810,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final Collection<Entry<String, String>> entries = entries(multiMap);
 		//
-		if (entries == null || entries.iterator() == null) {
+		if (iterator(entries) == null) {
 			//
 			return;
 			//
@@ -8168,7 +8172,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		try {
 			//
-			if (sheet == null || sheet.iterator() == null) {
+			if (iterator(sheet) == null) {
 				//
 				return;
 				//
@@ -8232,7 +8236,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			for (final Row row : sheet) {
 				//
-				if (row == null || row.iterator() == null) {
+				if (iterator(row) == null) {
 					continue;
 				} // if
 					//
@@ -9250,7 +9254,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static <T, E extends Throwable> void forEach(final Iterable<T> items,
 			final FailableConsumer<? super T, E> action) throws E {
 		//
-		if (items != null && items.iterator() != null && (action != null || Proxy.isProxyClass(getClass(items)))) {
+		if (iterator(items) != null && (action != null || Proxy.isProxyClass(getClass(items)))) {
 			//
 			for (final T item : items) {
 				//
@@ -10217,7 +10221,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			Collection<Entry<String, Voice>> entries = entries(multimap);
 			//
-			if (entries != null && entries.iterator() != null) {
+			if (iterator(entries) != null) {
 				//
 				int coutner = 0;
 				//
@@ -10278,13 +10282,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		Multimap<String, Voice> multimap = null;
 		//
-		if (voices != null && voices.iterator() != null) {
+		if (iterator(voices) != null) {
 			//
 			Iterable<String> listNames = null;
 			//
 			for (final Voice voice : voices) {
 				//
-				if ((listNames = getListNames(voice)) == null || listNames.iterator() == null) {
+				if (iterator(listNames = getListNames(voice)) == null) {
 					//
 					continue;
 					//
@@ -11052,7 +11056,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		ObjectMap objectMap = null;
 		//
-		if (voices != null && voices.iterator() != null) {
+		if (iterator(voices) != null) {
 			//
 			Field[] fs = null;
 			//
@@ -11493,7 +11497,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			final Iterable<String> listNames = getListNames(voice);
 			//
-			if (listNames != null && listNames.iterator() != null) {
+			if (iterator(listNames) != null) {
 				//
 				VoiceList voiceListOld = null;
 				//
@@ -11678,7 +11682,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static void setPreferredWidth(final int width, final Iterable<Component> cs) {
 		//
-		if (cs != null && cs.iterator() != null) {
+		if (iterator(cs) != null) {
 			//
 			Dimension d = null;
 			//
