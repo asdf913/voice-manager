@@ -668,6 +668,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private Class<?> workbookClass = null;
 
+	private Map<Object, Object> exportWebSpeechSynthesisHtmlTemplateProperties = null;
+
 	private VoiceManager() {
 	}
 
@@ -1000,6 +1002,51 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	public void setExportWebSpeechSynthesisHtmlTemplateFile(final String exportWebSpeechSynthesisHtmlTemplateFile) {
 		this.exportWebSpeechSynthesisHtmlTemplateFile = exportWebSpeechSynthesisHtmlTemplateFile;
+	}
+
+	public void setExportWebSpeechSynthesisHtmlTemplateProperties(final Object arg) throws JsonProcessingException {
+		//
+		if (arg == null || arg instanceof Map) {
+			//
+			final Map<?, ?> map = (Map<?, ?>) arg;
+			//
+			if (entrySet(map) != null && entrySet(map).iterator() != null) {
+				//
+				for (final Entry<?, ?> entry : entrySet(map)) {
+					//
+					if (entry == null) {
+						//
+						continue;
+						//
+					} // if
+						//
+					put(exportWebSpeechSynthesisHtmlTemplateProperties = ObjectUtils
+							.getIfNull(exportWebSpeechSynthesisHtmlTemplateProperties, LinkedHashMap::new),
+							getKey(entry), getValue(entry));
+					//
+				} // for
+					//
+			} // if
+				//
+			if (map != null && map.isEmpty() && exportWebSpeechSynthesisHtmlTemplateProperties == null) {
+				//
+				exportWebSpeechSynthesisHtmlTemplateProperties = new LinkedHashMap<>();
+				//
+			} // if
+				//
+			return;
+			//
+		} else if (arg instanceof CharSequence) {
+			//
+			setExportWebSpeechSynthesisHtmlTemplateProperties(
+					ObjectMapperUtil.readValue(getObjectMapper(), toString(arg), Object.class));
+			//
+		} else {
+			//
+			throw new IllegalArgumentException();
+			//
+		} // if
+			//
 	}
 
 	public void setFreeMarkerVersion(final Object value) {
@@ -3399,7 +3446,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			testAndAccept(Objects::nonNull, cast(Map.class,
 					FieldUtils.readDeclaredStaticField(DatabaseImpl.class, "FILE_FORMAT_DETAILS", true)), x -> {
-						fileFormatDetails.putAll(x);
+						putAll(fileFormatDetails, x);
 					});
 			//
 		} catch (final IllegalAccessException e) {
@@ -3461,6 +3508,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		return panel;
 		//
+	}
+
+	private static <K, V> void putAll(final Map<K, V> a, final Map<? extends K, ? extends V> b) {
+		if (a != null && b != null) {
+			a.putAll(b);
+		}
 	}
 
 	private static JetFormat getFormat(final FileFormatDetails instance) {
@@ -5269,9 +5322,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					ObjectMap.setObject(objectMap, Writer.class, writer);
 					//
-					// TODO
-					//
-					put(map, VOICE, "saya");
+					putAll(map, exportWebSpeechSynthesisHtmlTemplateProperties);
 					//
 					exportHtml(objectMap, exportWebSpeechSynthesisHtmlTemplateFile, map);
 					//
@@ -5313,10 +5364,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 									x -> String.format("%1$s.WebSpeechSynthesis.html", x)),
 
 							//
-							// TODO
+							exportWebSpeechSynthesisHtmlTemplateProperties
 							//
-							Collections.singletonMap(VOICE, "saya"),
-							files = ObjectUtils.getIfNull(files, ArrayList::new));
+							, files = ObjectUtils.getIfNull(files, ArrayList::new));
 					//
 				} // if
 					//

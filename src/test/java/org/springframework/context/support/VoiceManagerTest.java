@@ -54,6 +54,7 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Base64.Encoder;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -260,25 +261,26 @@ class VoiceManagerTest {
 			METHOD_GET_DATA_VALIDATION_HELPER, METHOD_CREATE_EXPLICIT_LIST_CONSTRAINT, METHOD_CREATE_VALIDATION,
 			METHOD_CREATE_EXPORT_TASK, METHOD_GET_TAB_INDEX_BY_TITLE, METHOD_GET_DECLARED_FIELD,
 			METHOD_GET_ABSOLUTE_PATH, METHOD_IS_ASSIGNABLE_FROM, METHOD_GET_ENUM_CONSTANTS, METHOD_LIST_FILES,
-			METHOD_GET_TYPE, METHOD_GET_COLUMN_NAME, METHOD_PUT_ALL, METHOD_CREATE_SHEET1, METHOD_CREATE_SHEET2,
-			METHOD_ENTRIES, METHOD_GET_WORK_BOOK, METHOD_GET_OLE_ENTRY_NAMES, METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE,
-			METHOD_GET_DOCUMENT_ELEMENT, METHOD_GET_CHILD_NODES, METHOD_GET_NAMED_ITEM, METHOD_GET_TEXT_CONTENT,
-			METHOD_GET_NAME_FILE, METHOD_GET_NAME_CLASS, METHOD_GET_PASS_WORD, METHOD_GET_SUPPLIER, METHOD_GET_LOOKUP,
-			METHOD_GET_LIST, METHOD_GET_MAP, METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK,
-			METHOD_WRITE_VALUE_AS_STRING, METHOD_CREATE_DRAWING_PATRIARCH, METHOD_GET_CREATION_HELPER,
-			METHOD_CREATE_CELL_COMMENT, METHOD_CREATE_CLIENT_ANCHOR, METHOD_CREATE_RICH_TEXT_STRING,
-			METHOD_SET_CELL_COMMENT, METHOD_SET_AUTHOR, METHOD_TEST_AND_ACCEPT_PREDICATE,
-			METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_FIND_FIELDS_BY_VALUE, METHOD_GET_DECLARED_FIELDS,
-			METHOD_GET_DECLARING_CLASS, METHOD_GET_PACKAGE, METHOD_BROWSE, METHOD_TO_URI, METHOD_STOP, METHOD_ELAPSED,
-			METHOD_GET_DECLARED_CLASSES, METHOD_GET_DLL_PATH, METHOD_GET_RATE0, METHOD_GET_RATE_VOICE_MANAGER,
-			METHOD_GET_RATE_FIELD_LIST, METHOD_ADD_CHANGE_LISTENER, METHOD_IS_ANNOTATION_PRESENT, METHOD_PROCESS,
-			METHOD_ENCODE_TO_STRING, METHOD_GET_VOICE_MULTI_MAP_BY_LIST_NAME, METHOD_GET_VOICE_MULTI_MAP_BY_JLPT,
-			METHOD_GET_TEMPLATE, METHOD_GET_FILE_EXTENSIONS, METHOD_CREATE_CELL_STYLE, METHOD_REDUCE,
-			METHOD_APPEND_STRING, METHOD_APPEND_CHAR, METHOD_GET_PROVIDER_PLATFORM, METHOD_OPEN_CONNECTION,
-			METHOD_GET_RESOURCE_AS_STREAM, METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH, METHOD_GET_ATTRIBUTES,
-			METHOD_GET_LENGTH, METHOD_ITEM, METHOD_GET_OS_VERSION_INFO_EX_MAP, METHOD_CREATE_JLPT_SHEET,
-			METHOD_ADD_JO_YO_KAN_JI_SHEET, METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2, METHOD_SET_VISIBLE,
-			METHOD_RANDOM_ALPHABETIC, METHOD_GET_MEDIA_FORMAT_LINK, METHOD_GET_EVENT_TYPE, METHOD_GET_PARENT_FILE,
+			METHOD_GET_TYPE, METHOD_GET_COLUMN_NAME, METHOD_PUT_ALL_MULTI_MAP, METHOD_PUT_ALL_MAP, METHOD_CREATE_SHEET1,
+			METHOD_CREATE_SHEET2, METHOD_ENTRIES, METHOD_GET_WORK_BOOK, METHOD_GET_OLE_ENTRY_NAMES,
+			METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE, METHOD_GET_DOCUMENT_ELEMENT, METHOD_GET_CHILD_NODES,
+			METHOD_GET_NAMED_ITEM, METHOD_GET_TEXT_CONTENT, METHOD_GET_NAME_FILE, METHOD_GET_NAME_CLASS,
+			METHOD_GET_PASS_WORD, METHOD_GET_SUPPLIER, METHOD_GET_LOOKUP, METHOD_GET_LIST, METHOD_GET_MAP,
+			METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK, METHOD_WRITE_VALUE_AS_STRING,
+			METHOD_CREATE_DRAWING_PATRIARCH, METHOD_GET_CREATION_HELPER, METHOD_CREATE_CELL_COMMENT,
+			METHOD_CREATE_CLIENT_ANCHOR, METHOD_CREATE_RICH_TEXT_STRING, METHOD_SET_CELL_COMMENT, METHOD_SET_AUTHOR,
+			METHOD_TEST_AND_ACCEPT_PREDICATE, METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_FIND_FIELDS_BY_VALUE,
+			METHOD_GET_DECLARED_FIELDS, METHOD_GET_DECLARING_CLASS, METHOD_GET_PACKAGE, METHOD_BROWSE, METHOD_TO_URI,
+			METHOD_STOP, METHOD_ELAPSED, METHOD_GET_DECLARED_CLASSES, METHOD_GET_DLL_PATH, METHOD_GET_RATE0,
+			METHOD_GET_RATE_VOICE_MANAGER, METHOD_GET_RATE_FIELD_LIST, METHOD_ADD_CHANGE_LISTENER,
+			METHOD_IS_ANNOTATION_PRESENT, METHOD_PROCESS, METHOD_ENCODE_TO_STRING,
+			METHOD_GET_VOICE_MULTI_MAP_BY_LIST_NAME, METHOD_GET_VOICE_MULTI_MAP_BY_JLPT, METHOD_GET_TEMPLATE,
+			METHOD_GET_FILE_EXTENSIONS, METHOD_CREATE_CELL_STYLE, METHOD_REDUCE, METHOD_APPEND_STRING,
+			METHOD_APPEND_CHAR, METHOD_GET_PROVIDER_PLATFORM, METHOD_OPEN_CONNECTION, METHOD_GET_RESOURCE_AS_STREAM,
+			METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH, METHOD_GET_ATTRIBUTES, METHOD_GET_LENGTH, METHOD_ITEM,
+			METHOD_GET_OS_VERSION_INFO_EX_MAP, METHOD_CREATE_JLPT_SHEET, METHOD_ADD_JO_YO_KAN_JI_SHEET,
+			METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2, METHOD_SET_VISIBLE, METHOD_RANDOM_ALPHABETIC,
+			METHOD_GET_MEDIA_FORMAT_LINK, METHOD_GET_EVENT_TYPE, METHOD_GET_PARENT_FILE,
 			METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET,
 			METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET_FIRST_ROW, METHOD_EXPORT_JLPT,
 			METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT, METHOD_SET_SHEET_HEADER_ROW, METHOD_ENCRYPT,
@@ -594,8 +596,10 @@ class VoiceManagerTest {
 		//
 		(METHOD_GET_COLUMN_NAME = clz.getDeclaredMethod("getColumnName", Class.class, Field.class)).setAccessible(true);
 		//
-		(METHOD_PUT_ALL = clz.getDeclaredMethod("putAll", Multimap.class, Object.class, Iterable.class))
+		(METHOD_PUT_ALL_MULTI_MAP = clz.getDeclaredMethod("putAll", Multimap.class, Object.class, Iterable.class))
 				.setAccessible(true);
+		//
+		(METHOD_PUT_ALL_MAP = clz.getDeclaredMethod("putAll", Map.class, Map.class)).setAccessible(true);
 		//
 		(METHOD_CREATE_SHEET1 = clz.getDeclaredMethod("createSheet", Workbook.class)).setAccessible(true);
 		//
@@ -993,7 +997,7 @@ class VoiceManagerTest {
 
 		private Iterator<Cell> cells = null;
 
-		private Boolean anyMatch, contains, multiMapPut, multiMapPutAll, isInstalled = null;
+		private Boolean anyMatch, contains, multiMapPut, multiMapPutAll, isInstalled, isEmpty = null;
 
 		private String[] voiceIds = null;
 
@@ -1160,6 +1164,10 @@ class VoiceManagerTest {
 				if (Objects.equals(methodName, "entrySet")) {
 					//
 					return entrySet;
+					//
+				} else if (Objects.equals(methodName, "isEmpty")) {
+					//
+					return isEmpty;
 					//
 				} // if
 					//
@@ -1964,6 +1972,87 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
+	}
+
+	@Test
+	void testSetExportWebSpeechSynthesisHtmlTemplateProperties() throws NoSuchFieldException, IllegalAccessException {
+		//
+		Field exportWebSpeechSynthesisHtmlTemplateProperties = VoiceManager.class
+				.getDeclaredField("exportWebSpeechSynthesisHtmlTemplateProperties");
+		//
+		if (exportWebSpeechSynthesisHtmlTemplateProperties != null) {
+			//
+			exportWebSpeechSynthesisHtmlTemplateProperties.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> instance.setExportWebSpeechSynthesisHtmlTemplateProperties(null));
+		//
+		Assertions.assertNull(get(exportWebSpeechSynthesisHtmlTemplateProperties, instance));
+		//
+		Assertions.assertDoesNotThrow(() -> instance.setExportWebSpeechSynthesisHtmlTemplateProperties(EMPTY));
+		//
+		Assertions.assertNull(get(exportWebSpeechSynthesisHtmlTemplateProperties, instance));
+		//
+		Assertions.assertThrows(IllegalArgumentException.class,
+				() -> instance.setExportWebSpeechSynthesisHtmlTemplateProperties(Integer.valueOf(ZERO)));
+		//
+		Assertions.assertThrows(IllegalArgumentException.class,
+				() -> instance.setExportWebSpeechSynthesisHtmlTemplateProperties(new Date()));
+		//
+		Assertions.assertThrows(IllegalArgumentException.class,
+				() -> instance.setExportWebSpeechSynthesisHtmlTemplateProperties(Calendar.getInstance()));
+		//
+		// java.util.Map
+		//
+		final Map<?, ?> map1 = Collections.emptyMap();
+		//
+		Assertions.assertDoesNotThrow(() -> instance.setExportWebSpeechSynthesisHtmlTemplateProperties(map1));
+		//
+		Assertions.assertEquals(map1, get(exportWebSpeechSynthesisHtmlTemplateProperties, instance));
+		//
+		final Map<?, ?> map2 = Collections.singletonMap(null, null);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.setExportWebSpeechSynthesisHtmlTemplateProperties(map2));
+		//
+		Assertions.assertEquals(map2, get(exportWebSpeechSynthesisHtmlTemplateProperties, instance));
+		//
+		set(exportWebSpeechSynthesisHtmlTemplateProperties, instance, null);
+		//
+		final Map<?, ?> map3 = Reflection.newProxy(Map.class, ih);
+		//
+		if (ih != null) {
+			//
+			ih.isEmpty = Boolean.FALSE;
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> instance.setExportWebSpeechSynthesisHtmlTemplateProperties(map3));
+		//
+		Assertions.assertNull(get(exportWebSpeechSynthesisHtmlTemplateProperties, instance));
+		//
+		if (ih != null) {
+			//
+			ih.entrySet = Reflection.newProxy(Set.class, ih);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> instance.setExportWebSpeechSynthesisHtmlTemplateProperties(map3));
+		//
+		Assertions.assertNull(get(exportWebSpeechSynthesisHtmlTemplateProperties, instance));
+		//
+		set(exportWebSpeechSynthesisHtmlTemplateProperties, instance, null);
+		//
+		if (ih != null) {
+			//
+			ih.entrySet = Collections.singleton(null);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> instance.setExportWebSpeechSynthesisHtmlTemplateProperties(map3));
+		//
+		Assertions.assertNull(get(exportWebSpeechSynthesisHtmlTemplateProperties, instance));
+		//
 	}
 
 	private static Object get(final Field field, final Object instance) throws IllegalAccessException {
@@ -5185,6 +5274,8 @@ class VoiceManagerTest {
 	@Test
 	void testPutAll() {
 		//
+		Assertions.assertDoesNotThrow(() -> putAll(null, null));
+		//
 		Assertions.assertDoesNotThrow(() -> putAll(null, null, null));
 		//
 		ih.multiMapPutAll = Boolean.FALSE;
@@ -5196,7 +5287,15 @@ class VoiceManagerTest {
 	private static <K, V> void putAll(final Multimap<K, V> instance, final K key, final Iterable<? extends V> values)
 			throws Throwable {
 		try {
-			METHOD_PUT_ALL.invoke(null, instance, key, values);
+			METHOD_PUT_ALL_MULTI_MAP.invoke(null, instance, key, values);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static <K, V> void putAll(final Map<K, V> a, final Map<? extends K, ? extends V> b) throws Throwable {
+		try {
+			METHOD_PUT_ALL_MAP.invoke(null, a, b);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
