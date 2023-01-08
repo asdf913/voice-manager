@@ -388,6 +388,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static final String OLE_2_COMPOUND_DOCUMENT = "OLE 2 Compound Document";
 
+	private static final String VOICE = "voice";
+
 	private static final Predicate<File> EMPTY_FILE_PREDICATE = f -> f != null && f.exists() && isFile(f)
 			&& longValue(length(f), 0) == 0;
 
@@ -5268,7 +5270,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					// TODO
 					//
-					put(map, "voice", "saya");
+					put(map, VOICE, "saya");
 					//
 					exportHtml(objectMap, exportWebSpeechSynthesisHtmlTemplateFile, map);
 					//
@@ -5312,7 +5314,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 							// TODO
 							//
-							Collections.singletonMap("voice", "saya"),
+							Collections.singletonMap(VOICE, "saya"),
 							files = ObjectUtils.getIfNull(files, ArrayList::new));
 					//
 				} // if
@@ -9283,7 +9285,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				setStringFieldDefaultValue(v);
 				//
-				setVariable(evaluationContext, "voice", ObjectUtils.defaultIfNull(v, voice));
+				setVariable(evaluationContext, VOICE, ObjectUtils.defaultIfNull(v, voice));
 				//
 				String key = null;
 				//
