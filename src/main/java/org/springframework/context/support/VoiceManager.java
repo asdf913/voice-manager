@@ -650,7 +650,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private transient IValue0<String> microsoftSpeechPlatformRuntimeLanguagesDownloadPageTitle = null;
 
-	private String exportHtmlTemplateFile, exportWebSpeechSynthesisHtmlTemplateFile = null;
+	@Note("Export HTML Template File")
+	private String exportHtmlTemplateFile = null;
+
+	@Note("Export Web Speech Synthesis HTML Template File")
+	private String exportWebSpeechSynthesisHtmlTemplateFile = null;
 
 	private transient freemarker.template.Configuration freeMarkerConfiguration = null;
 
