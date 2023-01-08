@@ -9329,7 +9329,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				final Set<Entry<String, String>> entrySet = entrySet(outputFolderFileNameExpressions);
 				//
-				if (filePath == null || entrySet == null) {
+				if (Boolean.logicalOr(filePath == null, iterator(entrySet) == null)) {
 					//
 					return;
 					//
