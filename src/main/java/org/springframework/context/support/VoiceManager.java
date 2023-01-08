@@ -668,7 +668,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private Class<?> workbookClass = null;
 
-	private Map<Object, Object> exportWebSpeechSynthesisHtmlTemplateProperties = null;
+	private transient Map<Object, Object> exportWebSpeechSynthesisHtmlTemplateProperties = null;
 
 	private VoiceManager() {
 	}
