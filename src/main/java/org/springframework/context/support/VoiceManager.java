@@ -1034,8 +1034,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-			return;
-			//
 		} else if (arg instanceof CharSequence) {
 			//
 			setExportWebSpeechSynthesisHtmlTemplateProperties(
