@@ -5908,9 +5908,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
-			// map.putAll(collect(stream(entrySet(parameters)), Collectors.toMap(x ->
-			// toString(getKey(x)), x -> getValue(x))));
-			//
 		process(testAndApply(Objects::nonNull, templateFile, a -> getTemplate(configuration, a), null), map,
 				ObjectMap.getObject(objectMap, Writer.class));
 		//
