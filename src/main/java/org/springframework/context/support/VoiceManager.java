@@ -179,6 +179,7 @@ import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.collections4.IteratorUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -1032,7 +1033,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 			} // if
 				//
-			if (Boolean.logicalAnd(Boolean.logicalAnd(map != null, map.isEmpty()),
+			if (Boolean.logicalAnd(Boolean.logicalAnd(map != null, MapUtils.isEmpty(map)),
 					exportWebSpeechSynthesisHtmlTemplateProperties == null)) {
 				//
 				exportWebSpeechSynthesisHtmlTemplateProperties = new LinkedHashMap<>();
