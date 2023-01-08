@@ -432,8 +432,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("Provider Name")
 	private JTextComponent tfProviderName = null;
 
-	private JTextComponent tfFile, tfProviderVersion, tfProviderPlatform, tfSpeechLanguageCode, tfSpeechLanguageName,
-			tfLanguage, tfSpeechVolume, tfCurrentProcessingFile, tfCurrentProcessingSheetName, tfCurrentProcessingVoice,
+	@Note("Provider Version")
+	private JTextComponent tfProviderVersion = null;
+
+	private JTextComponent tfFile, tfProviderPlatform, tfSpeechLanguageCode, tfSpeechLanguageName, tfLanguage,
+			tfSpeechVolume, tfCurrentProcessingFile, tfCurrentProcessingSheetName, tfCurrentProcessingVoice,
 			tfListNames, tfPhraseCounter, tfPhraseTotal, tfJlptFolderNamePrefix, tfOrdinalPositionFileNamePrefix,
 			tfIpaSymbol, tfExportFile, tfElapsed, tfDllPath, tfExportHtmlFileName, tfExportPassword,
 			tfPronunciationPageUrl, tfPronunciationPageStatusCode = null;
@@ -535,9 +538,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("Remove Exported HTML After Zip")
 	private AbstractButton cbExportHtmlRemoveAfterZip = null;
 
-	private AbstractButton cbUseTtsVoice, cbExportListSheet, cbExportJlptSheet, cbExportPresentation,
-			cbEmbedAudioInPresentation, cbHideAudioImageInPresentation, cbExportMicrosoftAccess,
-			cbImportFileTemplateGenerateBlankRow, cbJlptAsFolder, btnExportBrowse, btnPronunciationPageUrlCheck = null;
+	@Note("Export List Sheet")
+	private AbstractButton cbExportListSheet = null;
+
+	private AbstractButton cbUseTtsVoice, cbExportJlptSheet, cbExportPresentation, cbEmbedAudioInPresentation,
+			cbHideAudioImageInPresentation, cbExportMicrosoftAccess, cbImportFileTemplateGenerateBlankRow,
+			cbJlptAsFolder, btnExportBrowse, btnPronunciationPageUrlCheck = null;
 
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.FIELD)
