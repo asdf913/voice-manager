@@ -5220,11 +5220,17 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				List<File> files = null;
 				//
+				final Map<Object, Object> map = new LinkedHashMap<>();
+				//
+				put(map, "folder", voiceFolder);
+				//
+				put(map, "voices", voices);
+				//
 				try (final Writer writer = new StringWriter()) {
 					//
 					ObjectMap.setObject(objectMap, Writer.class, writer);
 					//
-					exportHtml(objectMap, exportHtmlTemplateFile, voiceFolder, voices);
+					exportHtml(objectMap, exportHtmlTemplateFile, map);
 					//
 					final StringBuilder sb = new StringBuilder(
 							StringUtils.defaultString(getText(tfExportHtmlFileName)));
@@ -5250,9 +5256,61 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // try
 					//
+					// TODO
+					//
+				try (final Writer writer = new StringWriter()) {
+					//
+					ObjectMap.setObject(objectMap, Writer.class, writer);
+					//
+					// TODO
+					//
+					put(map, "voice", "saya");
+					//
+					// TODO
+					//
+					exportHtml(objectMap, "WebSpeechSynthesis.html.ftl", map);
+					//
+					final StringBuilder sb = new StringBuilder(StringUtils.defaultString("WebSpeechSynthesis.html"));
+					//
+					final String[] fileExtensions = getFileExtensions(ContentType.HTML);
+					//
+					if (!anyMatch(testAndApply(Objects::nonNull, fileExtensions, Arrays::stream, null),
+							x -> StringUtils.endsWithIgnoreCase(sb, StringUtils.join('.', x)))) {
+						//
+						// append "." if the file name does not ends with "."
+						//
+						testAndAccept(x -> !StringUtils.endsWith(x, "."), sb, x -> append(x, '.'));
+						//
+						append(sb, getLongestString(fileExtensions));
+						//
+					} // if
+						//
+					FileUtils.writeStringToFile(
+							file = new File(StringUtils.defaultIfBlank(toString(sb), "WebSpeechSynthesis.html")),
+							toString(writer), StandardCharsets.UTF_8);
+					//
+					add(files = ObjectUtils.getIfNull(files, ArrayList::new), file);
+					//
+				} // try
 				if (isSelected(cbExportListHtml)) {
 					//
 					exportHtml(objectMap, getVoiceMultimapByListName(voices),
+							Pair.of(exportHtmlTemplateFile, x -> String.format("%1$s.html", x)), null,
+							files = ObjectUtils.getIfNull(files, ArrayList::new));
+					//
+					// TODO
+					//
+					exportHtml(objectMap, getVoiceMultimapByListName(voices),
+							//
+							// TODO
+							//
+							Pair.of("WebSpeechSynthesis.html.ftl",
+									x -> String.format("%1$s.WebSpeechSynthesis.html", x)),
+
+							//
+							// TODO
+							//
+							Collections.singletonMap("voice", "saya"),
 							files = ObjectUtils.getIfNull(files, ArrayList::new));
 					//
 				} // if
@@ -5753,6 +5811,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	private void exportHtml(final ObjectMap objectMap, final Multimap<String, Voice> multimap,
+			final Entry<?, Function<Object, Object>> filePair, final Map<Object, Object> parameters,
 			final Collection<File> files) throws IOException, TemplateException {
 		//
 		final Iterable<String> keySet = keySet(multimap);
@@ -5763,11 +5822,40 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			for (final String key : keySet) {
 				//
-				try (final Writer writer = new FileWriter(file = new File(String.format("%1$s.html", key)))) {
+				final Map<Object, Object> map = new LinkedHashMap<>();
+				//
+				final Function<Object, Object> function = getValue(filePair);
+				//
+				try (final Writer writer = testAndApply(
+						Objects::nonNull, file = testAndApply(Objects::nonNull,
+								function != null ? toString(function.apply(key)) : null, File::new, null),
+						FileWriter::new, null)) {
 					//
 					ObjectMap.setObject(objectMap, Writer.class, writer);
 					//
-					exportHtml(objectMap, exportHtmlTemplateFile, voiceFolder, multimap.get(key));
+					put(map, "folder", voiceFolder);
+					//
+					put(map, "voices", multimap.get(key));
+					//
+					final Collection<Entry<Object, Object>> entrySet = entrySet(parameters);
+					//
+					if (entrySet != null && entrySet.iterator() != null) {
+						//
+						for (final Entry<?, ?> parameter : entrySet) {
+							//
+							if (parameter == null) {
+								//
+								continue;
+								//
+							} // if
+								//
+							map.put(toString(getKey(parameter)), getValue(parameter));
+							//
+						} // for
+							//
+					} // if
+						//
+					exportHtml(objectMap, toString(getKey(filePair)), map);
 					//
 					add(files, file);
 					//
@@ -5783,8 +5871,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	private static void exportHtml(final ObjectMap objectMap, final String templateFile, final String folder,
-			final Iterable<Voice> voices) throws IOException, TemplateException {
+	private static void exportHtml(final ObjectMap objectMap, final String templateFile,
+			final Map<Object, Object> parameters) throws IOException, TemplateException {
 		//
 		final Version version = getIfNull(ObjectMap.getObject(objectMap, Version.class),
 				freemarker.template.Configuration::getVersion);
@@ -5800,10 +5888,27 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				Collections.singletonMap("statics", getIfNull(ObjectMap.getObject(objectMap, TemplateHashModel.class),
 						() -> new BeansWrapper(version).getStaticModels())));
 		//
-		map.put("folder", folder);
+		final Collection<Entry<Object, Object>> entrySet = entrySet(parameters);
 		//
-		map.put("voices", voices);
-		//
+		if (entrySet != null && entrySet.iterator() != null) {
+			//
+			for (final Entry<?, ?> parameter : entrySet) {
+				//
+				if (parameter == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				map.put(toString(getKey(parameter)), getValue(parameter));
+				//
+			} // for
+				//
+		} // if
+			//
+			// map.putAll(collect(stream(entrySet(parameters)), Collectors.toMap(x ->
+			// toString(getKey(x)), x -> getValue(x))));
+			//
 		process(testAndApply(Objects::nonNull, templateFile, a -> getTemplate(configuration, a), null), map,
 				ObjectMap.getObject(objectMap, Writer.class));
 		//

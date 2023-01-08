@@ -191,6 +191,7 @@ import org.w3c.dom.NodeList;
 import org.zeroturnaround.zip.ZipUtil;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Functions;
 import com.google.common.base.Predicates;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableMultimap;
@@ -820,8 +821,8 @@ class VoiceManagerTest {
 		(METHOD_GET_PHYSICAL_NUMBER_OF_ROWS = clz.getDeclaredMethod("getPhysicalNumberOfRows", Sheet.class))
 				.setAccessible(true);
 		//
-		(METHOD_EXPORT_HTML = clz.getDeclaredMethod("exportHtml", CLASS_OBJECT_MAP, Multimap.class, Collection.class))
-				.setAccessible(true);
+		(METHOD_EXPORT_HTML = clz.getDeclaredMethod("exportHtml", CLASS_OBJECT_MAP, Multimap.class, Entry.class,
+				Map.class, Collection.class)).setAccessible(true);
 		//
 		(METHOD_STREAM = clz.getDeclaredMethod("stream", FailableStream.class)).setAccessible(true);
 		//
@@ -7117,22 +7118,46 @@ class VoiceManagerTest {
 		//
 		final Multimap<String, Voice> multimap = (Multimap) this.multimap;
 		//
-		Assertions.assertDoesNotThrow(() -> exportHtml(null, multimap, null));
+		Assertions.assertDoesNotThrow(() -> exportHtml(null, multimap, null, null, null));
 		//
 		ih.keySet = Reflection.newProxy(Set.class, ih);
 		//
-		Assertions.assertDoesNotThrow(() -> exportHtml(null, multimap, null));
+		Assertions.assertDoesNotThrow(() -> exportHtml(null, multimap, null, null, null));
 		//
 		ih.keySet = Collections.singleton(null);
 		//
-		Assertions.assertDoesNotThrow(() -> exportHtml(null, multimap, null));
+		final Entry<?, Function<Object, Object>> pair = Pair.of(null, Functions.identity());
+		//
+		Assertions
+				.assertDoesNotThrow(() -> exportHtml(null, multimap, pair, Collections.singletonMap(null, null), null));
+		//
+		final Map<?, ?> map = Reflection.newProxy(Map.class, ih);
+		//
+		Assertions.assertDoesNotThrow(() -> exportHtml(null, multimap, pair, map, null));
+		//
+		if (ih != null) {
+			//
+			ih.entrySet = Collections.singleton(null);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> exportHtml(null, multimap, pair, map, null));
+		//
+		if (ih != null) {
+			//
+			ih.entrySet = Reflection.newProxy(Set.class, ih);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> exportHtml(null, multimap, pair, map, null));
 		//
 	}
 
 	private void exportHtml(final Object objectMap, final Multimap<String, Voice> multimap,
-			final Collection<File> files) throws Throwable {
+			final Entry<?, Function<Object, Object>> filePair, final Map<?, ?> parameters, final Collection<File> files)
+			throws Throwable {
 		try {
-			METHOD_EXPORT_HTML.invoke(instance, objectMap, multimap, files);
+			METHOD_EXPORT_HTML.invoke(instance, objectMap, multimap, filePair, parameters, files);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
