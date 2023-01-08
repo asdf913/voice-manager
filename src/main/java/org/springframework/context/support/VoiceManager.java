@@ -5882,12 +5882,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				final Map<Object, Object> map = new LinkedHashMap<>();
 				//
-				final UnaryOperator<Object> function = getValue(filePair);
-				//
-				try (final Writer writer = testAndApply(
-						Objects::nonNull, file = testAndApply(Objects::nonNull,
-								function != null ? toString(function.apply(key)) : null, File::new, null),
-						FileWriter::new, null)) {
+				try (final Writer writer = testAndApply(Objects::nonNull, file = testAndApply(Objects::nonNull,
+						toString(apply(getValue(filePair), key)), File::new, null), FileWriter::new, null)) {
 					//
 					ObjectMap.setObject(objectMap, Writer.class, writer);
 					//
@@ -5927,6 +5923,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
+	}
+
+	private static <T, R> R apply(final Function<T, R> instance, final T t) {
+		return instance != null ? instance.apply(t) : null;
 	}
 
 	private static void exportHtml(final ObjectMap objectMap, final String templateFile,
