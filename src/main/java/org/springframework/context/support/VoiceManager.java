@@ -1028,7 +1028,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 			} // if
 				//
-			if (Boolean.logicalAnd(map != null && map.isEmpty(),
+			if (Boolean.logicalAnd(Boolean.logicalAnd(map != null, map.isEmpty()),
 					exportWebSpeechSynthesisHtmlTemplateProperties == null)) {
 				//
 				exportWebSpeechSynthesisHtmlTemplateProperties = new LinkedHashMap<>();
