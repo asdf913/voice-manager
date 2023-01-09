@@ -5311,7 +5311,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				if (!(fileToBeDeleted = longValue(length(file), 0) == 0)) {
 					//
 					fileToBeDeleted = intValue(
-							getPhysicalNumberOfRows(workbook.getNumberOfSheets() == 1 ? workbook.getSheetAt(0) : null),
+							getPhysicalNumberOfRows(testAndApply(x -> intValue(getNumberOfSheets(x), 0) == 1, workbook,
+									x -> getSheetAt(x, 0), null)),
 							0) == 0;
 					//
 				} // if
@@ -5482,6 +5483,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // try
 			//
+	}
+
+	private static Integer getNumberOfSheets(final Workbook instance) {
+		return instance != null ? Integer.valueOf(instance.getNumberOfSheets()) : null;
+	}
+
+	private static Sheet getSheetAt(final Workbook instance, final int index) {
+		return instance != null ? instance.getSheetAt(index) : null;
 	}
 
 	private void exportWebSpeechSynthesisHtml(final boolean condition, final ObjectMap objectMap,
@@ -6369,7 +6378,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			IValue0<String> voiceId = null;
 			//
-			for (int i = 0; workbook != null && i < workbook.getNumberOfSheets(); i++) {
+			for (int i = 0; i < intValue(getNumberOfSheets(workbook), 0); i++) {
 				//
 				if (contains(sheetExclued, getSheetName(sheet = workbook.getSheetAt(i)))) {
 					//
@@ -8308,7 +8317,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			final Workbook workbook = sheet.getWorkbook();
 			//
-			final Integer numberOfSheets = workbook != null ? Integer.valueOf(workbook.getNumberOfSheets()) : null;
+			final Integer numberOfSheets = getNumberOfSheets(workbook);
 			//
 			final int maxSheetNameLength = orElse(
 					max(mapToInt(
@@ -8695,7 +8704,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		if (workbook != null) {
 			//
-			final int numberOfSheets = workbook.getNumberOfSheets();
+			final int numberOfSheets = getNumberOfSheets(workbook);
 			//
 			for (int i = 0; i < numberOfSheets; i++) {
 				//
