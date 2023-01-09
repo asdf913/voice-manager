@@ -5271,22 +5271,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			boolean fileToBeDeleted = false;
 			//
-			String fileExtension = null;
+			final String fileExtension = getFileExtension(workbookSupplier);
 			//
-			try (final Workbook wb = get(workbookSupplier);
-					final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-				//
-				write(wb, baos);
-				//
-				if (Objects.equals(getMessage(new ContentInfoUtil().findMatch(baos.toByteArray())),
-						OLE_2_COMPOUND_DOCUMENT)) {
-					//
-					fileExtension = "xls";
-					//
-				} // if
-					//
-			} // try
-				//
 			try (final OutputStream os = new FileOutputStream(
 					file = new File(String.format("voice_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.%2$s", new Date(),
 							StringUtils.defaultIfEmpty(fileExtension, "xlsx"))))) {
@@ -5494,6 +5480,26 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // try
 			//
+	}
+
+	private static String getFileExtension(final FailableSupplier<Workbook, RuntimeException> supplier)
+			throws IOException {
+		//
+		try (final Workbook wb = get(supplier); final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+			//
+			write(wb, baos);
+			//
+			if (Objects.equals(getMessage(new ContentInfoUtil().findMatch(baos.toByteArray())),
+					OLE_2_COMPOUND_DOCUMENT)) {
+				//
+				return "xls";
+				//
+			} // if
+				//
+		} // try
+			//
+		return null;
+		//
 	}
 
 	private static <T> Constructor<T> getDeclaredConstructor(final Class<T> clz, final Class<?>... parameterTypes)
