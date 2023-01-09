@@ -438,11 +438,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("Provider Platform")
 	private JTextComponent tfProviderPlatform = null;
 
-	private JTextComponent tfFile, tfSpeechLanguageCode, tfSpeechLanguageName, tfLanguage, tfSpeechVolume,
-			tfCurrentProcessingFile, tfCurrentProcessingSheetName, tfCurrentProcessingVoice, tfListNames,
-			tfPhraseCounter, tfPhraseTotal, tfJlptFolderNamePrefix, tfOrdinalPositionFileNamePrefix, tfIpaSymbol,
-			tfExportFile, tfElapsed, tfDllPath, tfExportHtmlFileName, tfExportPassword, tfPronunciationPageUrl,
-			tfPronunciationPageStatusCode = null;
+	@Note("Speech Language Code")
+	private JTextComponent tfSpeechLanguageCode = null;
+
+	private JTextComponent tfFile, tfSpeechLanguageName, tfLanguage, tfSpeechVolume, tfCurrentProcessingFile,
+			tfCurrentProcessingSheetName, tfCurrentProcessingVoice, tfListNames, tfPhraseCounter, tfPhraseTotal,
+			tfJlptFolderNamePrefix, tfOrdinalPositionFileNamePrefix, tfIpaSymbol, tfExportFile, tfElapsed, tfDllPath,
+			tfExportHtmlFileName, tfExportPassword, tfPronunciationPageUrl, tfPronunciationPageStatusCode = null;
 
 	private transient ComboBoxModel<Yomi> cbmYomi = null;
 
@@ -550,9 +552,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("Export JLPT Sheet")
 	private AbstractButton cbExportJlptSheet = null;
 
-	private AbstractButton cbUseTtsVoice, cbExportPresentation, cbEmbedAudioInPresentation,
-			cbHideAudioImageInPresentation, cbExportMicrosoftAccess, cbImportFileTemplateGenerateBlankRow,
-			cbJlptAsFolder, btnExportBrowse, btnPronunciationPageUrlCheck = null;
+	@Note("Export Presentation")
+	private AbstractButton cbExportPresentation = null;
+
+	private AbstractButton cbUseTtsVoice, cbEmbedAudioInPresentation, cbHideAudioImageInPresentation,
+			cbExportMicrosoftAccess, cbImportFileTemplateGenerateBlankRow, cbJlptAsFolder, btnExportBrowse,
+			btnPronunciationPageUrlCheck = null;
 
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.FIELD)
