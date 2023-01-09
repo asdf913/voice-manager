@@ -5206,8 +5206,31 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private void actionPerformedForExport(final boolean headless) {
 		//
-		final FailableSupplier<Workbook, RuntimeException> workbookSupplier = get(
-				IValue0Util.getValue0(getWorkbookClassFailableSupplierMap()), getSelectedItem(cbmWorkbookClass));
+		try {
+			//
+			actionPerformedForExport(headless, get(IValue0Util.getValue0(getWorkbookClassFailableSupplierMap()),
+					getSelectedItem(cbmWorkbookClass)));
+			//
+		} catch (final IOException | IllegalAccessException | TemplateException | InvalidFormatException
+				| GeneralSecurityException | SQLException e) {
+			//
+			errorOrAssertOrShowException(headless, e);
+			//
+		} catch (final InvocationTargetException e) {
+			//
+			final Throwable targetException = e.getTargetException();
+			//
+			errorOrAssertOrShowException(headless, ObjectUtils.firstNonNull(
+					ExceptionUtils.getRootCause(targetException), targetException, ExceptionUtils.getRootCause(e), e));
+			//
+		} // try
+			//
+	}
+
+	private void actionPerformedForExport(final boolean headless,
+			final FailableSupplier<Workbook, RuntimeException> workbookSupplier)
+			throws IOException, IllegalAccessException, InvocationTargetException, InvalidFormatException,
+			GeneralSecurityException, TemplateException, SQLException {
 		//
 		SqlSession sqlSession = null;
 		//
@@ -5449,18 +5472,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-		} catch (final IOException | IllegalAccessException | TemplateException | InvalidFormatException
-				| GeneralSecurityException | SQLException e) {
-			//
-			errorOrAssertOrShowException(headless, e);
-			//
-		} catch (final InvocationTargetException e) {
-			//
-			final Throwable targetException = e.getTargetException();
-			//
-			errorOrAssertOrShowException(headless, ObjectUtils.firstNonNull(
-					ExceptionUtils.getRootCause(targetException), targetException, ExceptionUtils.getRootCause(e), e));
-			//
 		} finally {
 			//
 			IOUtils.closeQuietly(sqlSession);
