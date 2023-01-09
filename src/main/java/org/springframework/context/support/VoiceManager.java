@@ -435,11 +435,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("Provider Version")
 	private JTextComponent tfProviderVersion = null;
 
-	private JTextComponent tfFile, tfProviderPlatform, tfSpeechLanguageCode, tfSpeechLanguageName, tfLanguage,
-			tfSpeechVolume, tfCurrentProcessingFile, tfCurrentProcessingSheetName, tfCurrentProcessingVoice,
-			tfListNames, tfPhraseCounter, tfPhraseTotal, tfJlptFolderNamePrefix, tfOrdinalPositionFileNamePrefix,
-			tfIpaSymbol, tfExportFile, tfElapsed, tfDllPath, tfExportHtmlFileName, tfExportPassword,
-			tfPronunciationPageUrl, tfPronunciationPageStatusCode = null;
+	@Note("Provider Platform")
+	private JTextComponent tfProviderPlatform = null;
+
+	private JTextComponent tfFile, tfSpeechLanguageCode, tfSpeechLanguageName, tfLanguage, tfSpeechVolume,
+			tfCurrentProcessingFile, tfCurrentProcessingSheetName, tfCurrentProcessingVoice, tfListNames,
+			tfPhraseCounter, tfPhraseTotal, tfJlptFolderNamePrefix, tfOrdinalPositionFileNamePrefix, tfIpaSymbol,
+			tfExportFile, tfElapsed, tfDllPath, tfExportHtmlFileName, tfExportPassword, tfPronunciationPageUrl,
+			tfPronunciationPageStatusCode = null;
 
 	private transient ComboBoxModel<Yomi> cbmYomi = null;
 
@@ -541,7 +544,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("Export List Sheet")
 	private AbstractButton cbExportListSheet = null;
 
-	private AbstractButton cbUseTtsVoice, cbExportJlptSheet, cbExportPresentation, cbEmbedAudioInPresentation,
+	@Note("Export JLPT Sheet")
+	private AbstractButton cbExportJlptSheet = null;
+
+	private AbstractButton cbUseTtsVoice, cbExportPresentation, cbEmbedAudioInPresentation,
 			cbHideAudioImageInPresentation, cbExportMicrosoftAccess, cbImportFileTemplateGenerateBlankRow,
 			cbJlptAsFolder, btnExportBrowse, btnPronunciationPageUrlCheck = null;
 
