@@ -450,10 +450,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("Speech Volume")
 	private JTextComponent tfSpeechVolume = null;
 
-	private JTextComponent tfFile, tfCurrentProcessingFile, tfCurrentProcessingSheetName, tfCurrentProcessingVoice,
-			tfListNames, tfPhraseCounter, tfPhraseTotal, tfJlptFolderNamePrefix, tfOrdinalPositionFileNamePrefix,
-			tfIpaSymbol, tfExportFile, tfElapsed, tfDllPath, tfExportHtmlFileName, tfExportPassword,
-			tfPronunciationPageUrl, tfPronunciationPageStatusCode = null;
+	@Note("Current Processing File")
+	private JTextComponent tfCurrentProcessingFile = null;
+
+	private JTextComponent tfFile, tfCurrentProcessingSheetName, tfCurrentProcessingVoice, tfListNames, tfPhraseCounter,
+			tfPhraseTotal, tfJlptFolderNamePrefix, tfOrdinalPositionFileNamePrefix, tfIpaSymbol, tfExportFile,
+			tfElapsed, tfDllPath, tfExportHtmlFileName, tfExportPassword, tfPronunciationPageUrl,
+			tfPronunciationPageStatusCode = null;
 
 	private transient ComboBoxModel<Yomi> cbmYomi = null;
 
@@ -573,8 +576,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("Export Microsoft Access")
 	private AbstractButton cbExportMicrosoftAccess = null;
 
-	private AbstractButton cbUseTtsVoice, cbImportFileTemplateGenerateBlankRow, cbJlptAsFolder, btnExportBrowse,
-			btnPronunciationPageUrlCheck = null;
+	@Note("Generate a Blank Row in Import File Template")
+	private AbstractButton cbImportFileTemplateGenerateBlankRow = null;
+
+	private AbstractButton cbUseTtsVoice, cbJlptAsFolder, btnExportBrowse, btnPronunciationPageUrlCheck = null;
 
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.FIELD)
