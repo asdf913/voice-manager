@@ -441,10 +441,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("Speech Language Code")
 	private JTextComponent tfSpeechLanguageCode = null;
 
-	private JTextComponent tfFile, tfSpeechLanguageName, tfLanguage, tfSpeechVolume, tfCurrentProcessingFile,
-			tfCurrentProcessingSheetName, tfCurrentProcessingVoice, tfListNames, tfPhraseCounter, tfPhraseTotal,
-			tfJlptFolderNamePrefix, tfOrdinalPositionFileNamePrefix, tfIpaSymbol, tfExportFile, tfElapsed, tfDllPath,
-			tfExportHtmlFileName, tfExportPassword, tfPronunciationPageUrl, tfPronunciationPageStatusCode = null;
+	@Note("Speech Language Name")
+	private JTextComponent tfSpeechLanguageName = null;
+
+	private JTextComponent tfFile, tfLanguage, tfSpeechVolume, tfCurrentProcessingFile, tfCurrentProcessingSheetName,
+			tfCurrentProcessingVoice, tfListNames, tfPhraseCounter, tfPhraseTotal, tfJlptFolderNamePrefix,
+			tfOrdinalPositionFileNamePrefix, tfIpaSymbol, tfExportFile, tfElapsed, tfDllPath, tfExportHtmlFileName,
+			tfExportPassword, tfPronunciationPageUrl, tfPronunciationPageStatusCode = null;
 
 	private transient ComboBoxModel<Yomi> cbmYomi = null;
 
@@ -555,9 +558,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("Export Presentation")
 	private AbstractButton cbExportPresentation = null;
 
-	private AbstractButton cbUseTtsVoice, cbEmbedAudioInPresentation, cbHideAudioImageInPresentation,
-			cbExportMicrosoftAccess, cbImportFileTemplateGenerateBlankRow, cbJlptAsFolder, btnExportBrowse,
-			btnPronunciationPageUrlCheck = null;
+	@Note("Embed Audio In Presentation")
+	private AbstractButton cbEmbedAudioInPresentation = null;
+
+	private AbstractButton cbUseTtsVoice, cbHideAudioImageInPresentation, cbExportMicrosoftAccess,
+			cbImportFileTemplateGenerateBlankRow, cbJlptAsFolder, btnExportBrowse, btnPronunciationPageUrlCheck = null;
 
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.FIELD)
