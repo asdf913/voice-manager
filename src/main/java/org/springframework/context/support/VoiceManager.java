@@ -535,6 +535,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("Export List As HTML")
 	private AbstractButton cbExportListHtml = null;
 
+	@Note("Export Web Speech Synthesis HTML")
+	private AbstractButton cbExportWebSpeechSynthesisHtml = null;
+
 	@Note("Export HTML as ZIP")
 	private AbstractButton cbExportHtmlAsZip = null;
 
@@ -3404,6 +3407,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		cbExportListHtml.setSelected(Boolean.parseBoolean(
 				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.exportListHtml")));
 		//
+		// cbExportWebSpeechSynthesisHtml
+		//
+		panel.add(cbExportWebSpeechSynthesisHtml = new JCheckBox("Export Web Speech Synthesis HTML"));
+		//
+		cbExportWebSpeechSynthesisHtml.setSelected(Boolean.parseBoolean(getProperty(propertyResolver,
+				"org.springframework.context.support.VoiceManager.exportWebSpeechSynthesisHtml")));
+		//
 		// ZIP
 		//
 		panel.add(cbExportHtmlAsZip = new JCheckBox("Zip"));
@@ -5342,58 +5352,63 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // try
 					//
-					// TODO
-					//
-				try (final Writer writer = new StringWriter()) {
-					//
-					ObjectMap.setObject(objectMap, Writer.class, writer);
-					//
-					putAll(map, exportWebSpeechSynthesisHtmlTemplateProperties);
-					//
-					exportHtml(objectMap, exportWebSpeechSynthesisHtmlTemplateFile, map);
-					//
-					final StringBuilder sb = new StringBuilder(StringUtils.defaultString("WebSpeechSynthesis.html"));
-					//
-					final String[] fileExtensions = getFileExtensions(ContentType.HTML);
-					//
-					if (!anyMatch(testAndApply(Objects::nonNull, fileExtensions, Arrays::stream, null),
-							x -> StringUtils.endsWithIgnoreCase(sb, StringUtils.join('.', x)))) {
+				final boolean exportWebSpeechSynthesisHtml = isSelected(cbExportWebSpeechSynthesisHtml);
+				//
+				if (exportWebSpeechSynthesisHtml) {
+
+					try (final Writer writer = new StringWriter()) {
 						//
-						// append "." if the file name does not ends with "."
+						ObjectMap.setObject(objectMap, Writer.class, writer);
 						//
-						testAndAccept(x -> !StringUtils.endsWith(x, "."), sb, x -> append(x, '.'));
+						putAll(map, exportWebSpeechSynthesisHtmlTemplateProperties);
 						//
-						append(sb, getLongestString(fileExtensions));
+						exportHtml(objectMap, exportWebSpeechSynthesisHtmlTemplateFile, map);
 						//
-					} // if
+						final StringBuilder sb = new StringBuilder(
+								StringUtils.defaultString("WebSpeechSynthesis.html"));
 						//
-					FileUtils.writeStringToFile(
-							file = new File(StringUtils.defaultIfBlank(toString(sb), "WebSpeechSynthesis.html")),
-							toString(writer), StandardCharsets.UTF_8);
+						final String[] fileExtensions = getFileExtensions(ContentType.HTML);
+						//
+						if (!anyMatch(testAndApply(Objects::nonNull, fileExtensions, Arrays::stream, null),
+								x -> StringUtils.endsWithIgnoreCase(sb, StringUtils.join('.', x)))) {
+							//
+							// append "." if the file name does not ends with "."
+							//
+							testAndAccept(x -> !StringUtils.endsWith(x, "."), sb, x -> append(x, '.'));
+							//
+							append(sb, getLongestString(fileExtensions));
+							//
+						} // if
+							//
+						FileUtils.writeStringToFile(
+								file = new File(StringUtils.defaultIfBlank(toString(sb), "WebSpeechSynthesis.html")),
+								toString(writer), StandardCharsets.UTF_8);
+						//
+						add(files = ObjectUtils.getIfNull(files, ArrayList::new), file);
+						//
+					} // try
+						//
+				} // if
 					//
-					add(files = ObjectUtils.getIfNull(files, ArrayList::new), file);
-					//
-				} // try
 				if (isSelected(cbExportListHtml)) {
 					//
 					exportHtml(objectMap, getVoiceMultimapByListName(voices),
 							Pair.of(exportHtmlTemplateFile, x -> String.format("%1$s.html", x)), null,
 							files = ObjectUtils.getIfNull(files, ArrayList::new));
 					//
-					// TODO
-					//
-					exportHtml(objectMap, getVoiceMultimapByListName(voices),
-							//
-							// TODO
-							//
-							Pair.of(exportWebSpeechSynthesisHtmlTemplateFile,
-									x -> String.format("%1$s.WebSpeechSynthesis.html", x)),
-
-							//
-							exportWebSpeechSynthesisHtmlTemplateProperties
-							//
-							, files = ObjectUtils.getIfNull(files, ArrayList::new));
-					//
+					if (exportWebSpeechSynthesisHtml) {
+						//
+						exportHtml(objectMap, getVoiceMultimapByListName(voices),
+								//
+								Pair.of(exportWebSpeechSynthesisHtmlTemplateFile,
+										x -> String.format("%1$s.WebSpeechSynthesis.html", x)),
+								//
+								exportWebSpeechSynthesisHtmlTemplateProperties
+								//
+								, files = ObjectUtils.getIfNull(files, ArrayList::new));
+						//
+					} // if
+						//
 				} // if
 					//
 				if (isSelected(cbExportHtmlAsZip)
