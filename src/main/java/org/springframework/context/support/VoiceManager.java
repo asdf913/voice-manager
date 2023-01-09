@@ -5400,23 +5400,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				if (isSelected(cbExportListHtml)) {
 					//
-					exportHtml(objectMap, getVoiceMultimapByListName(voices),
-							Pair.of(exportHtmlTemplateFile, x -> String.format("%1$s.html", x)), null,
+					final Multimap<String, Voice> multimap = getVoiceMultimapByListName(voices);
+					//
+					exportHtml(objectMap, multimap, Pair.of(exportHtmlTemplateFile, x -> String.format("%1$s.html", x)),
+							null, files = ObjectUtils.getIfNull(files, ArrayList::new));
+					//
+					exportWebSpeechSynthesisHtml(exportWebSpeechSynthesisHtml, objectMap, multimap,
 							files = ObjectUtils.getIfNull(files, ArrayList::new));
 					//
-					if (exportWebSpeechSynthesisHtml) {
-						//
-						exportHtml(objectMap, getVoiceMultimapByListName(voices),
-								//
-								Pair.of(exportWebSpeechSynthesisHtmlTemplateFile,
-										x -> String.format("%1$s.WebSpeechSynthesis.html", x)),
-								//
-								exportWebSpeechSynthesisHtmlTemplateProperties
-								//
-								, files = ObjectUtils.getIfNull(files, ArrayList::new));
-						//
-					} // if
-						//
 				} // if
 					//
 				if (isSelected(cbExportHtmlAsZip)
@@ -5479,6 +5470,25 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			testAndAccept(EMPTY_FILE_PREDICATE, file, FileUtils::deleteQuietly);
 			//
 		} // try
+			//
+	}
+
+	private void exportWebSpeechSynthesisHtml(final boolean condition, final ObjectMap objectMap,
+			final Multimap<String, Voice> multimap, final Collection<File> files)
+			throws IOException, TemplateException {
+		//
+		if (condition) {
+			//
+			exportHtml(objectMap, multimap,
+					//
+					Pair.of(exportWebSpeechSynthesisHtmlTemplateFile,
+							x -> String.format("%1$s.WebSpeechSynthesis.html", x)),
+					//
+					exportWebSpeechSynthesisHtmlTemplateProperties
+					//
+					, files);
+			//
+		} // if
 			//
 	}
 
