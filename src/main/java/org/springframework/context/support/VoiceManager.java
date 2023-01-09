@@ -447,10 +447,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("Language")
 	private JTextComponent tfLanguage = null;
 
-	private JTextComponent tfFile, tfSpeechVolume, tfCurrentProcessingFile, tfCurrentProcessingSheetName,
-			tfCurrentProcessingVoice, tfListNames, tfPhraseCounter, tfPhraseTotal, tfJlptFolderNamePrefix,
-			tfOrdinalPositionFileNamePrefix, tfIpaSymbol, tfExportFile, tfElapsed, tfDllPath, tfExportHtmlFileName,
-			tfExportPassword, tfPronunciationPageUrl, tfPronunciationPageStatusCode = null;
+	@Note("Speech Volume")
+	private JTextComponent tfSpeechVolume = null;
+
+	private JTextComponent tfFile, tfCurrentProcessingFile, tfCurrentProcessingSheetName, tfCurrentProcessingVoice,
+			tfListNames, tfPhraseCounter, tfPhraseTotal, tfJlptFolderNamePrefix, tfOrdinalPositionFileNamePrefix,
+			tfIpaSymbol, tfExportFile, tfElapsed, tfDllPath, tfExportHtmlFileName, tfExportPassword,
+			tfPronunciationPageUrl, tfPronunciationPageStatusCode = null;
 
 	private transient ComboBoxModel<Yomi> cbmYomi = null;
 
@@ -567,8 +570,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("Hide Audio Image In Presentation")
 	private AbstractButton cbHideAudioImageInPresentation = null;
 
-	private AbstractButton cbUseTtsVoice, cbExportMicrosoftAccess, cbImportFileTemplateGenerateBlankRow, cbJlptAsFolder,
-			btnExportBrowse, btnPronunciationPageUrlCheck = null;
+	@Note("Export Microsoft Access")
+	private AbstractButton cbExportMicrosoftAccess = null;
+
+	private AbstractButton cbUseTtsVoice, cbImportFileTemplateGenerateBlankRow, cbJlptAsFolder, btnExportBrowse,
+			btnPronunciationPageUrlCheck = null;
 
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.FIELD)
