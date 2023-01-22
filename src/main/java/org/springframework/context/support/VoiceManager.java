@@ -1955,8 +1955,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static Long toMillis(final Duration instnace) {
-		return instnace != null ? Long.valueOf(instnace.toMillis()) : null;
+	private static Long toMillis(final Duration instance) {
+		return instance != null ? Long.valueOf(instance.toMillis()) : null;
 	}
 
 	private static class JLabelLink extends JLabel {
