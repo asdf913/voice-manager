@@ -453,10 +453,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("Current Processing File")
 	private JTextComponent tfCurrentProcessingFile = null;
 
-	private JTextComponent tfFile, tfCurrentProcessingSheetName, tfCurrentProcessingVoice, tfListNames, tfPhraseCounter,
-			tfPhraseTotal, tfJlptFolderNamePrefix, tfOrdinalPositionFileNamePrefix, tfIpaSymbol, tfExportFile,
-			tfElapsed, tfDllPath, tfExportHtmlFileName, tfExportPassword, tfPronunciationPageUrl,
-			tfPronunciationPageStatusCode = null;
+	@Note("Current Processing Sheet")
+	private JTextComponent tfCurrentProcessingSheetName = null;
+
+	private JTextComponent tfFile, tfCurrentProcessingVoice, tfListNames, tfPhraseCounter, tfPhraseTotal,
+			tfJlptFolderNamePrefix, tfOrdinalPositionFileNamePrefix, tfIpaSymbol, tfExportFile, tfElapsed, tfDllPath,
+			tfExportHtmlFileName, tfExportPassword, tfPronunciationPageUrl, tfPronunciationPageStatusCode = null;
 
 	private transient ComboBoxModel<Yomi> cbmYomi = null;
 
@@ -579,7 +581,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("Generate a Blank Row in Import File Template")
 	private AbstractButton cbImportFileTemplateGenerateBlankRow = null;
 
-	private AbstractButton cbUseTtsVoice, cbJlptAsFolder, btnExportBrowse, btnPronunciationPageUrlCheck = null;
+	@Note("JLPT As Folder")
+	private AbstractButton cbJlptAsFolder = null;
+
+	private AbstractButton cbUseTtsVoice, btnExportBrowse, btnPronunciationPageUrlCheck = null;
 
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.FIELD)
