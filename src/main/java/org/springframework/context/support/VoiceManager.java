@@ -456,9 +456,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("Current Processing Sheet")
 	private JTextComponent tfCurrentProcessingSheetName = null;
 
-	private JTextComponent tfFile, tfCurrentProcessingVoice, tfListNames, tfPhraseCounter, tfPhraseTotal,
-			tfJlptFolderNamePrefix, tfOrdinalPositionFileNamePrefix, tfIpaSymbol, tfExportFile, tfElapsed, tfDllPath,
-			tfExportHtmlFileName, tfExportPassword, tfPronunciationPageUrl, tfPronunciationPageStatusCode = null;
+	@Note("Current Processing Voice")
+	private JTextComponent tfCurrentProcessingVoice = null;
+
+	private JTextComponent tfFile, tfListNames, tfPhraseCounter, tfPhraseTotal, tfJlptFolderNamePrefix,
+			tfOrdinalPositionFileNamePrefix, tfIpaSymbol, tfExportFile, tfElapsed, tfDllPath, tfExportHtmlFileName,
+			tfExportPassword, tfPronunciationPageUrl, tfPronunciationPageStatusCode = null;
 
 	private transient ComboBoxModel<Yomi> cbmYomi = null;
 
@@ -584,7 +587,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("JLPT As Folder")
 	private AbstractButton cbJlptAsFolder = null;
 
-	private AbstractButton cbUseTtsVoice, btnExportBrowse, btnPronunciationPageUrlCheck = null;
+	@Note("Browse Button For Export Function")
+	private AbstractButton btnExportBrowse = null;
+
+	private AbstractButton cbUseTtsVoice, btnPronunciationPageUrlCheck = null;
 
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.FIELD)
