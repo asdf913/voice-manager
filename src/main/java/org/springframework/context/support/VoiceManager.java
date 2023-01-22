@@ -723,6 +723,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private transient Map<Object, Object> exportWebSpeechSynthesisHtmlTemplateProperties = null;
 
+	private Duration jSoupParseTimeout = null;
+
 	private VoiceManager() {
 	}
 
@@ -1259,6 +1261,44 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
+	public void setjSoupParseTimeout(final Object object) {
+		//
+		if (object == null) {
+			//
+			this.jSoupParseTimeout = null;
+			//
+			return;
+			//
+		} else if (object instanceof Duration) {
+			//
+			this.jSoupParseTimeout = (Duration) object;
+			//
+			return;
+			//
+		} else if (object instanceof Number) {
+			//
+			this.jSoupParseTimeout = Duration.ofMillis(((Number) object).longValue());
+			//
+			return;
+			//
+		} // if
+			//
+		final String string = toString(object);
+		//
+		final Integer integer = valueOf(string);
+		//
+		if (integer != null) {
+			//
+			setjSoupParseTimeout(integer);
+			//
+			return;
+			//
+		} // if
+			//
+		this.jSoupParseTimeout = testAndApply(StringUtils::isNotBlank, string, Duration::parse, null);
+		//
+	}
+
 	private static IValue0<Class<? extends Workbook>> getWorkbookClass(
 			final Map<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>> map,
 			final String string) {
@@ -1513,8 +1553,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		testAndAccept(x -> getTemplateLoader(configuration) == null, configuration,
 				x -> setTemplateLoader(x, new ClassTemplateLoader(VoiceManager.class, "/")));
 		//
-		jTabbedPane.addTab("Help",
-				createHelpPanel(preferredHeight, configuration, mediaFormatPageUrl, poiEncryptionPageUrl));
+		jTabbedPane.addTab("Help", createHelpPanel(preferredHeight, configuration, mediaFormatPageUrl,
+				poiEncryptionPageUrl, jSoupParseTimeout));
 		//
 		final List<?> pages = cast(List.class, testAndApply(Objects::nonNull, jTabbedPane,
 				x -> Narcissus.getField(x, getDeclaredField(getClass(x), "pages")), null));
@@ -1881,7 +1921,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		if (microsoftSpeechPlatformRuntimeLanguagesDownloadPageTitle == null) {
 			//
 			microsoftSpeechPlatformRuntimeLanguagesDownloadPageTitle = getPageTitle(
-					microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl);
+					microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl, jSoupParseTimeout);
 			//
 		} // if
 			//
@@ -1889,15 +1929,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static IValue0<String> getPageTitle(final String url) {
+	private static IValue0<String> getPageTitle(final String url, final Duration timeout) {
 		//
 		try {
 			//
-			return Unit.with(ElementUtil.text(testAndApply(x -> IterableUtils.size(x) == 1,
-					ElementUtil.getElementsByTag(testAndApply(Objects::nonNull,
-							testAndApply(StringUtils::isNotBlank, url, URL::new, null), x -> Jsoup.parse(x, 0), null),
-							"title"),
-					x -> get(x, 0), null)));
+			return Unit
+					.with(ElementUtil.text(testAndApply(x -> IterableUtils.size(x) == 1,
+							ElementUtil.getElementsByTag(testAndApply(Objects::nonNull,
+									testAndApply(StringUtils::isNotBlank, url, URL::new, null),
+									x -> Jsoup.parse(x, intValue(toMillis(timeout), 0)), null), "title"),
+							x -> get(x, 0), null)));
 			//
 		} catch (final IOException e) {
 			//
@@ -1907,6 +1948,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return null;
 		//
+	}
+
+	private static Long toMillis(final Duration instnace) {
+		return instnace != null ? Long.valueOf(instnace.toMillis()) : null;
 	}
 
 	private static class JLabelLink extends JLabel {
@@ -2969,7 +3014,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		if (gaKuNenBeTsuKanJiMultimap == null) {
 			//
-			gaKuNenBeTsuKanJiMultimap = Unit.with(getGaKuNenBeTsuKanJiMultimap(gaKuNenBeTsuKanJiListPageUrl));
+			gaKuNenBeTsuKanJiMultimap = Unit
+					.with(getGaKuNenBeTsuKanJiMultimap(gaKuNenBeTsuKanJiListPageUrl, jSoupParseTimeout));
 			//
 		} // if
 			//
@@ -2981,13 +3027,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.get() : null;
 	}
 
-	private static Multimap<String, String> getGaKuNenBeTsuKanJiMultimap(final String url) throws IOException {
+	private static Multimap<String, String> getGaKuNenBeTsuKanJiMultimap(final String url, final Duration timeout)
+			throws IOException {
 		//
 		Multimap<String, String> multimap = null;
 		//
 		final Elements elements = selectXpath(
 				testAndApply(x -> StringUtils.equalsAnyIgnoreCase(getProtocol(x), "http", "https"),
-						testAndApply(Objects::nonNull, url, URL::new, null), x -> Jsoup.parse(x, 0), null),
+						testAndApply(Objects::nonNull, url, URL::new, null),
+						x -> Jsoup.parse(x, intValue(toMillis(timeout), 0)), null),
 				"//span[@class='mw-headline'][starts-with(.,'第')]");
 		//
 		org.jsoup.nodes.Element element = null;
@@ -3688,7 +3736,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static JScrollPane createHelpPanel(final Number preferredHeight,
 			final freemarker.template.Configuration configuration, final String mediaFormatPageUrl,
-			final String poiEncryptionPageUrl) {
+			final String poiEncryptionPageUrl, final Duration timeout) {
 		//
 		JEditorPane jep = null;
 		//
@@ -3700,7 +3748,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			map.put("mediaFormatLink", getMediaFormatLink(mediaFormatPageUrl));
 			//
 			map.put("encryptionTableHtml", getEncryptionTableHtml(
-					testAndApply(StringUtils::isNotBlank, poiEncryptionPageUrl, URL::new, null), Duration.ZERO));
+					testAndApply(StringUtils::isNotBlank, poiEncryptionPageUrl, URL::new, null), timeout));
 			//
 			process(getTemplate(configuration, "help.html.ftl"), map, writer);
 			//
@@ -3763,7 +3811,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		org.jsoup.nodes.Document document = testAndApply(
 				x -> StringUtils.equalsAnyIgnoreCase(getProtocol(x), "http", "https"), url,
-				x -> Jsoup.parse(x, timeout != null ? (int) timeout.toMillis() : 0), null);
+				x -> Jsoup.parse(x, intValue(toMillis(timeout), 0)), null);
 		//
 		if (document == null) {
 			//
@@ -10670,7 +10718,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			final org.jsoup.nodes.Document document = testAndApply(Objects::nonNull,
 					testAndApply(StringUtils::isNotBlank, url, URL::new, null),
-					x -> Jsoup.parse(x, timeout != null ? (int) timeout.toMillis() : 0), null);
+					x -> Jsoup.parse(x, intValue(toMillis(timeout), 0)), null);
 			//
 			// 本表
 			//

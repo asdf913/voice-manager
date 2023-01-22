@@ -968,7 +968,8 @@ class VoiceManagerTest {
 		(METHOD_IF_ELSE = clz.getDeclaredMethod("ifElse", Boolean.TYPE, FailableRunnable.class, FailableRunnable.class))
 				.setAccessible(true);
 		//
-		(METHOD_GET_PAGE_TITLE = clz.getDeclaredMethod("getPageTitle", String.class)).setAccessible(true);
+		(METHOD_GET_PAGE_TITLE = clz.getDeclaredMethod("getPageTitle", String.class, Duration.class))
+				.setAccessible(true);
 		//
 		(METHOD_SET_HIRAGANA_OR_KATAKANA_AND_ROMAJI = clz.getDeclaredMethod("setHiraganaOrKatakanaAndRomaji",
 				Boolean.TYPE, Boolean.TYPE, Voice.class, Jakaroma.class)).setAccessible(true);
@@ -2512,6 +2513,57 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> itemStateChanged(instance, null));
 		//
+	}
+
+	@Test
+	void testSetjSoupParseTimeout() throws NoSuchFieldException, IllegalAccessException {
+		//
+		final Field jSoupParseTimeout = VoiceManager.class.getDeclaredField("jSoupParseTimeout");
+		//
+		if (jSoupParseTimeout != null) {
+			//
+			jSoupParseTimeout.setAccessible(true);
+			//
+		} // if
+			//
+		if (instance != null) {
+			//
+			// null
+			//
+			Assertions.assertDoesNotThrow(() -> instance.setjSoupParseTimeout(null));
+			//
+			Assertions.assertNull(get(jSoupParseTimeout, instance));
+			//
+			// java.time.Duration
+			//
+			final Duration duration = Duration.ZERO;
+			//
+			Assertions.assertDoesNotThrow(() -> instance.setjSoupParseTimeout(duration));
+			//
+			Assertions.assertSame(duration, get(jSoupParseTimeout, instance));
+			//
+			// java.lang.Number as java.lang.String
+			//
+			Assertions.assertDoesNotThrow(() -> instance.setjSoupParseTimeout(Integer.toString(ZERO)));
+			//
+			Assertions.assertSame(duration, get(jSoupParseTimeout, instance));
+			//
+			// java.lang.String
+			//
+			Assertions.assertDoesNotThrow(() -> instance.setjSoupParseTimeout(EMPTY));
+			//
+			Assertions.assertNull(get(jSoupParseTimeout, instance));
+			//
+			Assertions.assertDoesNotThrow(() -> instance.setjSoupParseTimeout(SPACE));
+			//
+			Assertions.assertNull(get(jSoupParseTimeout, instance));
+			//
+			Assertions.assertDoesNotThrow(() -> instance.setjSoupParseTimeout("PT0S"));
+			//
+			Assertions.assertSame(duration, get(jSoupParseTimeout, instance));
+			//
+		} // if
+			//
 	}
 
 	private static void itemStateChanged(final ItemListener instance, final ItemEvent itemEvent) {
@@ -8461,20 +8513,20 @@ class VoiceManagerTest {
 	@Test
 	void testGetPageTitle() throws Throwable {
 		//
-		Assertions.assertEquals(Unit.with(null), getPageTitle(null));
+		Assertions.assertEquals(Unit.with(null), getPageTitle(null, null));
 		//
-		Assertions.assertEquals(Unit.with(null), getPageTitle(EMPTY));
+		Assertions.assertEquals(Unit.with(null), getPageTitle(EMPTY, null));
 		//
-		Assertions.assertEquals(Unit.with(null), getPageTitle(" "));
+		Assertions.assertEquals(Unit.with(null), getPageTitle(" ", null));
 		//
 		Assertions.assertThrows(RuntimeException.class,
-				() -> getPageTitle(toString(new File("pom.xml").toURI().toURL())));
+				() -> getPageTitle(toString(new File("pom.xml").toURI().toURL()), null));
 		//
 	}
 
-	private static Unit<String> getPageTitle(final String url) throws Throwable {
+	private static Unit<String> getPageTitle(final String url, final Duration timeout) throws Throwable {
 		try {
-			final Object obj = METHOD_GET_PAGE_TITLE.invoke(null, url);
+			final Object obj = METHOD_GET_PAGE_TITLE.invoke(null, url, timeout);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Unit) {
