@@ -459,7 +459,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("Current Processing Voice")
 	private JTextComponent tfCurrentProcessingVoice = null;
 
-	private JTextComponent tfFile, tfListNames, tfPhraseCounter, tfPhraseTotal, tfJlptFolderNamePrefix,
+	@Note("List Name(s)")
+	private JTextComponent tfListNames = null;
+
+	private JTextComponent tfFile, tfPhraseCounter, tfPhraseTotal, tfJlptFolderNamePrefix,
 			tfOrdinalPositionFileNamePrefix, tfIpaSymbol, tfExportFile, tfElapsed, tfDllPath, tfExportHtmlFileName,
 			tfExportPassword, tfPronunciationPageUrl, tfPronunciationPageStatusCode = null;
 
@@ -590,7 +593,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("Browse Button For Export Function")
 	private AbstractButton btnExportBrowse = null;
 
-	private AbstractButton cbUseTtsVoice, btnPronunciationPageUrlCheck = null;
+	@Note("Check Pronunciation Page")
+	private AbstractButton btnPronunciationPageUrlCheck = null;
+
+	private AbstractButton cbUseTtsVoice = null;
 
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.FIELD)
