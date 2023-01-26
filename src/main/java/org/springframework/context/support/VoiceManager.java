@@ -4568,7 +4568,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				try {
 					//
 					map = IValue0Util.getValue0(ipaSymbolMap = getMapUnitFromJson(objectMapper,
-							exists(ipaJsonResource) ? getInputStream(ipaJsonResource) : null));
+							testAndApply(VoiceManager::exists, ipaJsonResource, VoiceManager::getInputStream, null)));
 					//
 				} catch (final IOException e) {
 					//
@@ -4601,14 +4601,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	private static boolean exists(final Resource instance) {
-		return instance != null
-				&& instance.exists();
+		return instance != null && instance.exists();
 	}
 
 	private static InputStream getInputStream(final InputStreamSource instance) throws IOException {
-		return instance != null
-				? instance.getInputStream()
-						: null;
+		return instance != null ? instance.getInputStream() : null;
 	}
 
 	private static Unit<Map<?, ?>> getMapUnitFromJson(final ObjectMapper objectMapper, final InputStream is)
