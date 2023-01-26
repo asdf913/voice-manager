@@ -748,7 +748,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private String ipaJsonUrl = null;
 
-	private Resource ipaJsonResource = null;
+	private transient Resource ipaJsonResource = null;
 
 	private VoiceManager() {
 	}
