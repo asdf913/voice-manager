@@ -596,7 +596,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("Check Pronunciation Page")
 	private AbstractButton btnPronunciationPageUrlCheck = null;
 
-	private AbstractButton cbUseTtsVoice = null;
+	private AbstractButton cbUseTtsVoice, btnIpaSymbol = null;
 
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.FIELD)
@@ -741,6 +741,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private transient Map<Object, Object> exportWebSpeechSynthesisHtmlTemplateProperties = null;
 
 	private Duration jSoupParseTimeout = null;
+
+	private Unit<Map<?, ?>> ipaSymbolMap = null;
+
+	private String ipaJsonUrl = null;
 
 	private VoiceManager() {
 	}
@@ -1074,6 +1078,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	public void setExportWebSpeechSynthesisHtmlTemplateFile(final String exportWebSpeechSynthesisHtmlTemplateFile) {
 		this.exportWebSpeechSynthesisHtmlTemplateFile = exportWebSpeechSynthesisHtmlTemplateFile;
+	}
+
+	public void setIpaJsonUrl(final String ipaJsonUrl) {
+		this.ipaJsonUrl = ipaJsonUrl;
 	}
 
 	public void setExportWebSpeechSynthesisHtmlTemplateProperties(final Object arg) throws JsonProcessingException {
@@ -2887,6 +2895,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
+		panel.add(btnIpaSymbol = new JButton("Get IPA"));
+		//
 		panel.add(new JLabel("List(s)"));
 		//
 		final String tags = getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.listNames");
@@ -2895,7 +2905,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		tfListNames.addKeyListener(this);
 		//
-		panel.add(jlListNames = new JLabel(), String.format("span %1$s", 6));
+		panel.add(jlListNames = new JLabel(), String.format("span %1$s", 5));
 		//
 		panel.add(jlListNameCount = new JLabel(), String.format("wmax %1$s", 20));
 		//
@@ -3017,7 +3027,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		} // if
 			//
 		addActionListener(this, btnExecute, btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji, btnCopyHiragana,
-				btnCopyKatakana, btnPronunciationPageUrlCheck);
+				btnCopyKatakana, btnPronunciationPageUrlCheck, btnIpaSymbol);
 		//
 		setEnabled(voiceIds != null, cbUseTtsVoice);
 		//
@@ -4540,6 +4550,34 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		} else if (Objects.equals(source, btnPronunciationPageUrlCheck)) {
 			//
 			actionPerformedForPronunciationPageUrlCheck(headless);
+			//
+		} else if (Objects.equals(source, btnIpaSymbol)) {
+			//
+			Map<?, ?> map = IValue0Util.getValue0(ipaSymbolMap);
+			//
+			if (ipaSymbolMap == null) {
+				//
+				try (final InputStream is = openStream(
+						testAndApply(StringUtils::isNotBlank, ipaJsonUrl, URL::new, null))) {
+					//
+					final Object obj = objectMapper != null && is != null ? objectMapper.readValue(is, Object.class)
+							: null;
+					//
+					if (obj instanceof Map) {
+						//
+						ipaSymbolMap = Unit.with(map = (Map<?, ?>) obj);
+						//
+					} // if
+						//
+				} catch (final IOException e) {
+					//
+					errorOrAssertOrShowException(headless, e);
+					//
+				} // try
+					//
+			} // if
+				//
+			setText(tfIpaSymbol, toString(get(map, getText(tfTextImport))));
 			//
 		} // if
 			//

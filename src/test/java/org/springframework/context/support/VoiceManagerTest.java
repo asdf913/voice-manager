@@ -2485,6 +2485,36 @@ class VoiceManagerTest {
 			//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnExecute));
 		//
+		// btnIpaSymbol
+		//
+		final AbstractButton btnIpaSymbol = new JButton();
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "btnIpaSymbol", btnIpaSymbol, true);
+			//
+		} // if
+			//
+		final ActionEvent actionEventBtnIpaSymbol = new ActionEvent(btnIpaSymbol, 0, null);
+		//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnIpaSymbol));
+		//
+		if (instance != null) {
+			//
+			instance.setIpaJsonUrl(EMPTY);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnIpaSymbol));
+		//
+		if (instance != null) {
+			//
+			instance.setIpaJsonUrl(" ");
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnIpaSymbol));
+		//
 	}
 
 	private static void actionPerformed(final ActionListener instance, final ActionEvent actionEvent) {
