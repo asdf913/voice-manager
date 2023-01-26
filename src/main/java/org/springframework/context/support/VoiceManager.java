@@ -4596,7 +4596,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		throw new IllegalArgumentException(toString(getClass(obj)));
 		//
-
 	}
 
 	private void importByWorkbookFiles(final File[] fs, final boolean headless) {

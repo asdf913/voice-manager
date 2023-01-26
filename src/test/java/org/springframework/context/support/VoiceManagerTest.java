@@ -309,7 +309,7 @@ class VoiceManagerTest {
 			METHOD_GET_WORKBOOK_CLASS_FAILABLE_SUPPLIER_MAP, METHOD_GET_DECLARED_CONSTRUCTOR, METHOD_NEW_INSTANCE,
 			METHOD_GET_WRITER, METHOD_KEY_SET, METHOD_GET_WORK_BOOK_CLASS, METHOD_GET_SYSTEM_PRINT_STREAM_BY_FIELD_NAME,
 			METHOD_IF_ELSE, METHOD_GET_PAGE_TITLE, METHOD_SET_HIRAGANA_OR_KATAKANA_AND_ROMAJI, METHOD_APPLY,
-			METHOD_GET_SHEET_AT, METHOD_TO_MILLIS, METHOD_GET_INPUT_STREAM = null;
+			METHOD_GET_SHEET_AT, METHOD_TO_MILLIS, METHOD_GET_INPUT_STREAM, METHOD_GET_MAP_UNIT_FROM_JSON = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -986,6 +986,9 @@ class VoiceManagerTest {
 		(METHOD_GET_INPUT_STREAM = clz.getDeclaredMethod("getInputStream", InputStreamSource.class))
 				.setAccessible(true);
 		//
+		(METHOD_GET_MAP_UNIT_FROM_JSON = clz.getDeclaredMethod("getMapUnitFromJson", ObjectMapper.class,
+				InputStream.class)).setAccessible(true);
+		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
 		CLASS_EXPORT_TASK = Class.forName("org.springframework.context.support.VoiceManager$ExportTask");
@@ -1591,6 +1594,8 @@ class VoiceManagerTest {
 
 	private Workbook workbook = null;
 
+	private ObjectMapper objectMapper = null;
+
 	@BeforeEach
 	void beforeEach() throws Throwable {
 		//
@@ -1604,6 +1609,8 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
+		objectMapper = new ObjectMapper();
+		//
 		instance = !GraphicsEnvironment.isHeadless() ? newInstance(constructor) : null;
 		//
 		sqlSessionFactory = Reflection.newProxy(SqlSessionFactory.class, ih = new IH());
@@ -1946,7 +1953,7 @@ class VoiceManagerTest {
 		//
 		set(mp3Tags, instance, null);
 		//
-		final String json = new ObjectMapper().writeValueAsString(Collections.singleton(EMPTY));
+		final String json = objectMapper != null ? objectMapper.writeValueAsString(Collections.singleton(EMPTY)) : null;
 		//
 		Assertions.assertDoesNotThrow(() -> instance.setMp3Tags(json));
 		//
@@ -8746,6 +8753,34 @@ class VoiceManagerTest {
 	}
 
 	@Test
+	void testGetMapUnitFromJson() throws Throwable {
+		//
+		Assertions.assertNull(getMapUnitFromJson(null, null));
+		//
+		try (final InputStream is = new ByteArrayInputStream("[]".getBytes())) {
+			//
+			Assertions.assertThrows(IllegalArgumentException.class, () -> getMapUnitFromJson(objectMapper, is));
+			//
+		} // try
+			//
+	}
+
+	private static Unit<Map<?, ?>> getMapUnitFromJson(final ObjectMapper objectMapper, final InputStream is)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_GET_MAP_UNIT_FROM_JSON.invoke(null, objectMapper, is);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Unit) {
+				return (Unit) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
 	void testIh1() throws Throwable {
 		//
 		final InvocationHandler ih = createVoiceManagerIH();
@@ -9255,8 +9290,6 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		final ObjectMapper objectMapper = new ObjectMapper();
-		//
 		Assertions.assertNull(invoke(clone, null, objectMapper, null, null));
 		//
 		Assertions.assertNull(invoke(clone, null, objectMapper, Object.class, null));
