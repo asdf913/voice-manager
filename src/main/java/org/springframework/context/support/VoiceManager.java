@@ -262,6 +262,7 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertyResolver;
+import org.springframework.core.io.Resource;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
@@ -746,6 +747,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private String ipaJsonUrl = null;
 
+	private Resource ipaJsonResource = null;
+
 	private VoiceManager() {
 	}
 
@@ -1082,6 +1085,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	public void setIpaJsonUrl(final String ipaJsonUrl) {
 		this.ipaJsonUrl = ipaJsonUrl;
+	}
+
+	public void setIpaJsonResource(final Resource ipaJsonResource) {
+		this.ipaJsonResource = ipaJsonResource;
 	}
 
 	public void setExportWebSpeechSynthesisHtmlTemplateProperties(final Object arg) throws JsonProcessingException {
@@ -4557,18 +4564,28 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			if (ipaSymbolMap == null) {
 				//
+				try {
+					//
+					map = IValue0Util.getValue0(ipaSymbolMap = getMapUnitFromJson(objectMapper,
+							ipaJsonResource != null && ipaJsonResource.exists() ? ipaJsonResource.getInputStream()
+									: null));
+					//
+				} catch (final IOException e) {
+					//
+					errorOrAssertOrShowException(headless, e);
+					//
+				} // try
+					//
+			} // if
+				//
+			if (ipaSymbolMap == null) {
+				//
 				try (final InputStream is = openStream(
 						testAndApply(StringUtils::isNotBlank, ipaJsonUrl, URL::new, null))) {
 					//
-					final Object obj = objectMapper != null && is != null ? objectMapper.readValue(is, Object.class)
-							: null;
+					map = IValue0Util.getValue0(ipaSymbolMap = getMapUnitFromJson(objectMapper,
+							openStream(testAndApply(StringUtils::isNotBlank, ipaJsonUrl, URL::new, null))));
 					//
-					if (obj instanceof Map) {
-						//
-						ipaSymbolMap = Unit.with(map = (Map<?, ?>) obj);
-						//
-					} // if
-						//
 				} catch (final IOException e) {
 					//
 					errorOrAssertOrShowException(headless, e);
@@ -4581,6 +4598,30 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
+	}
+
+	private static Unit<Map<?, ?>> getMapUnitFromJson(final ObjectMapper objectMapper, final InputStream is)
+			throws IOException {
+		//
+		final Object obj = objectMapper != null && is != null ? objectMapper.readValue(is, Object.class) : null;
+		//
+		if (is == null) {
+			//
+			return null;
+			//
+		} else if (obj == null) {
+			//
+			return Unit.with(null);
+			//
+		} else if (obj instanceof Map) {
+			//
+			return Unit.with((Map<?, ?>) obj);
+			//
+		} // if
+			//
+		throw new IllegalArgumentException(toString(getClass(obj)));
+		//
+
 	}
 
 	private void importByWorkbookFiles(final File[] fs, final boolean headless) {

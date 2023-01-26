@@ -182,6 +182,8 @@ import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.core.env.PropertyResolver;
+import org.springframework.core.io.InputStreamSource;
+import org.springframework.core.io.Resource;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
@@ -1010,7 +1012,7 @@ class VoiceManagerTest {
 
 		private Iterator<Cell> cells = null;
 
-		private Boolean anyMatch, contains, multiMapPut, multiMapPutAll, isInstalled, isEmpty = null;
+		private Boolean anyMatch, contains, multiMapPut, multiMapPutAll, isInstalled, isEmpty, exists = null;
 
 		private String[] voiceIds = null;
 
@@ -1057,6 +1059,8 @@ class VoiceManagerTest {
 		private ResultSet resultSet = null;
 
 		private ResultSetMetaData resultSetMetaData = null;
+
+		private InputStream inputStream = null;
 
 		private Map<Object, String> getProperties() {
 			if (properties == null) {
@@ -1135,6 +1139,14 @@ class VoiceManagerTest {
 				} else if (Objects.equals(methodName, "iterator")) {
 					//
 					return iterator;
+					//
+				} // if
+					//
+			} else if (proxy instanceof InputStreamSource) {
+				//
+				if (Objects.equals(methodName, "getInputStream")) {
+					//
+					return inputStream;
 					//
 				} // if
 					//
@@ -1515,6 +1527,14 @@ class VoiceManagerTest {
 				if (Objects.equals(methodName, "getColumnCount")) {
 					//
 					return columnCount;
+					//
+				} // if
+					//
+			} else if (proxy instanceof Resource) {
+				//
+				if (Objects.equals(methodName, "exists")) {
+					//
+					return exists;
 					//
 				} // if
 					//
@@ -2358,7 +2378,7 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testActionPerformed2() throws IllegalAccessException {
+	void testActionPerformed2() throws IllegalAccessException, IOException {
 		//
 		// btnExportJoYoKanJi
 		//
@@ -2515,6 +2535,34 @@ class VoiceManagerTest {
 			//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnIpaSymbol));
 		//
+		if (instance != null) {
+			//
+			instance.setIpaJsonResource(Reflection.newProxy(Resource.class, ih));
+			//
+		} // if
+			//
+		if (ih != null) {
+			//
+			ih.exists = Boolean.FALSE;
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnIpaSymbol));
+		//
+		try (final InputStream is = new ByteArrayInputStream("{}".getBytes())) {
+			//
+			if (ih != null) {
+				//
+				ih.exists = Boolean.TRUE;
+				//
+				ih.inputStream = is;
+				//
+			} // if
+				//
+			Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnIpaSymbol));
+			//
+		} // try
+			//
 	}
 
 	private static void actionPerformed(final ActionListener instance, final ActionEvent actionEvent) {

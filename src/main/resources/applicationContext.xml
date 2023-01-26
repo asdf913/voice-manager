@@ -102,6 +102,7 @@
 			value="${org.springframework.context.support.VoiceManager.jSoupParseTimeout}" />
 		<property name="ipaJsonUrl"
 			value="${org.springframework.context.support.VoiceManager.ipaJsonUrl}" />
+		<property name="ipaJsonResource" value="classpath:ipa.json" />
 	</bean>
 
 	<bean id="DataSource" class="org.h2.jdbcx.JdbcConnectionPool"
