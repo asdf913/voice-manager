@@ -4561,40 +4561,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} else if (Objects.equals(source, btnIpaSymbol)) {
 			//
-			Map<?, ?> map = IValue0Util.getValue0(ipaSymbolMap);
-			//
-			if (ipaSymbolMap == null) {
-				//
-				try {
-					//
-					map = IValue0Util.getValue0(ipaSymbolMap = getMapUnitFromJson(objectMapper,
-							testAndApply(VoiceManager::exists, ipaJsonResource, VoiceManager::getInputStream, null)));
-					//
-				} catch (final IOException e) {
-					//
-					errorOrAssertOrShowException(headless, e);
-					//
-				} // try
-					//
-			} // if
-				//
-			if (ipaSymbolMap == null) {
-				//
-				try (final InputStream is = openStream(
-						testAndApply(StringUtils::isNotBlank, ipaJsonUrl, URL::new, null))) {
-					//
-					map = IValue0Util.getValue0(ipaSymbolMap = getMapUnitFromJson(objectMapper,
-							openStream(testAndApply(StringUtils::isNotBlank, ipaJsonUrl, URL::new, null))));
-					//
-				} catch (final IOException e) {
-					//
-					errorOrAssertOrShowException(headless, e);
-					//
-				} // try
-					//
-			} // if
-				//
-			setText(tfIpaSymbol, toString(get(map, getText(tfTextImport))));
+			actionPerformedForIpaSymbol(headless);
 			//
 		} // if
 			//
@@ -5111,6 +5078,44 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
+	}
+
+	private void actionPerformedForIpaSymbol(final boolean headless) {
+		//
+		Map<?, ?> map = IValue0Util.getValue0(ipaSymbolMap);
+		//
+		if (ipaSymbolMap == null) {
+			//
+			try {
+				//
+				map = IValue0Util.getValue0(ipaSymbolMap = getMapUnitFromJson(objectMapper,
+						testAndApply(VoiceManager::exists, ipaJsonResource, VoiceManager::getInputStream, null)));
+				//
+			} catch (final IOException e) {
+				//
+				errorOrAssertOrShowException(headless, e);
+				//
+			} // try
+				//
+		} // if
+			//
+		if (ipaSymbolMap == null) {
+			//
+			try (final InputStream is = openStream(testAndApply(StringUtils::isNotBlank, ipaJsonUrl, URL::new, null))) {
+				//
+				map = IValue0Util.getValue0(ipaSymbolMap = getMapUnitFromJson(objectMapper,
+						openStream(testAndApply(StringUtils::isNotBlank, ipaJsonUrl, URL::new, null))));
+				//
+			} catch (final IOException e) {
+				//
+				errorOrAssertOrShowException(headless, e);
+				//
+			} // try
+				//
+		} // if
+			//
+		setText(tfIpaSymbol, toString(get(map, getText(tfTextImport))));
+		//
 	}
 
 	private static Integer getResponseCode(final HttpURLConnection instance) throws IOException {
