@@ -1065,6 +1065,8 @@ class VoiceManagerTest {
 
 		private InputStream inputStream = null;
 
+		private IOException ioException = null;
+
 		private Map<Object, String> getProperties() {
 			if (properties == null) {
 				properties = new LinkedHashMap<>();
@@ -1149,6 +1151,12 @@ class VoiceManagerTest {
 				//
 				if (Objects.equals(methodName, "getInputStream")) {
 					//
+					if (ioException != null) {
+						//
+						throw ioException;
+						//
+					} // if
+						//
 					return inputStream;
 					//
 				} // if
@@ -2557,6 +2565,20 @@ class VoiceManagerTest {
 			if (ih != null) {
 				//
 				ih.exists = Boolean.TRUE;
+				//
+				ih.ioException = new IOException();
+				//
+			} // if
+				//
+			Assertions.assertThrows(RuntimeException.class, () -> actionPerformed(instance, actionEventBtnIpaSymbol));
+			//
+		} // try
+			//
+		try (final InputStream is = new ByteArrayInputStream("{}".getBytes())) {
+			//
+			if (ih != null) {
+				//
+				ih.ioException = null;
 				//
 				ih.inputStream = is;
 				//
