@@ -262,6 +262,7 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertyResolver;
+import org.springframework.core.io.InputStreamSource;
 import org.springframework.core.io.Resource;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
@@ -4567,8 +4568,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				try {
 					//
 					map = IValue0Util.getValue0(ipaSymbolMap = getMapUnitFromJson(objectMapper,
-							ipaJsonResource != null && ipaJsonResource.exists() ? ipaJsonResource.getInputStream()
-									: null));
+							exists(ipaJsonResource) ? getInputStream(ipaJsonResource) : null));
 					//
 				} catch (final IOException e) {
 					//
@@ -4598,6 +4598,17 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
+	}
+
+	private static boolean exists(final Resource instance) {
+		return instance != null
+				&& instance.exists();
+	}
+
+	private static InputStream getInputStream(final InputStreamSource instance) throws IOException {
+		return instance != null
+				? instance.getInputStream()
+						: null;
 	}
 
 	private static Unit<Map<?, ?>> getMapUnitFromJson(final ObjectMapper objectMapper, final InputStream is)

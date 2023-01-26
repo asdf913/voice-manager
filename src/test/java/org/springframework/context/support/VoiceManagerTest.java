@@ -309,7 +309,7 @@ class VoiceManagerTest {
 			METHOD_GET_WORKBOOK_CLASS_FAILABLE_SUPPLIER_MAP, METHOD_GET_DECLARED_CONSTRUCTOR, METHOD_NEW_INSTANCE,
 			METHOD_GET_WRITER, METHOD_KEY_SET, METHOD_GET_WORK_BOOK_CLASS, METHOD_GET_SYSTEM_PRINT_STREAM_BY_FIELD_NAME,
 			METHOD_IF_ELSE, METHOD_GET_PAGE_TITLE, METHOD_SET_HIRAGANA_OR_KATAKANA_AND_ROMAJI, METHOD_APPLY,
-			METHOD_GET_SHEET_AT, METHOD_TO_MILLIS = null;
+			METHOD_GET_SHEET_AT, METHOD_TO_MILLIS, METHOD_GET_INPUT_STREAM = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -982,6 +982,9 @@ class VoiceManagerTest {
 		(METHOD_GET_SHEET_AT = clz.getDeclaredMethod("getSheetAt", Workbook.class, Integer.TYPE)).setAccessible(true);
 		//
 		(METHOD_TO_MILLIS = clz.getDeclaredMethod("toMillis", Duration.class)).setAccessible(true);
+		//
+		(METHOD_GET_INPUT_STREAM = clz.getDeclaredMethod("getInputStream", InputStreamSource.class))
+				.setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -8692,6 +8695,27 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof Long) {
 				return (Long) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetInputStream() throws Throwable {
+		//
+		Assertions.assertNull(getInputStream(null));
+		//
+	}
+
+	private static InputStream getInputStream(final InputStreamSource instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_INPUT_STREAM.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof InputStream) {
+				return (InputStream) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
