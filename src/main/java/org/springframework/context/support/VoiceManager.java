@@ -394,6 +394,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static final String VOICE = "voice";
 
+	private static final String SHA_512 = "SHA-512";
+
 	private static final Predicate<File> EMPTY_FILE_PREDICATE = f -> f != null && f.exists() && isFile(f)
 			&& longValue(length(f), 0) == 0;
 
@@ -758,6 +760,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private transient Resource ipaJsonResource = null;
 
+	private String messageDigestAlgorithm = null;
+
 	private VoiceManager() {
 	}
 
@@ -1098,6 +1102,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	public void setIpaJsonResource(final Resource ipaJsonResource) {
 		this.ipaJsonResource = ipaJsonResource;
+	}
+
+	public void setMessageDigestAlgorithm(final String messageDigestAlgorithm) {
+		this.messageDigestAlgorithm = messageDigestAlgorithm;
 	}
 
 	public void setExportWebSpeechSynthesisHtmlTemplateProperties(final Object arg) throws JsonProcessingException {
@@ -5148,10 +5156,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		String hex1 = null;
 		//
-		try (final InputStream is = testAndApply(VoiceManager::exists, ipaJsonResource,
-				VoiceManager::getInputStream, null)) {
+		try (final InputStream is = testAndApply(VoiceManager::exists, ipaJsonResource, VoiceManager::getInputStream,
+				null)) {
 			//
-			final byte[] digest = digest(md = MessageDigest.getInstance("SHA-512"),
+			final byte[] digest = digest(
+					md = MessageDigest.getInstance(StringUtils.defaultIfBlank(messageDigestAlgorithm, SHA_512)),
 					testAndApply(Objects::nonNull, is, IOUtils::toByteArray, null));
 			//
 			length1 = digest != null ? Integer.valueOf(digest.length) : null;
@@ -5519,6 +5528,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			StringMap.setString(stringMap, "folderInPresentation", folderInPresentation);
 			//
 			StringMap.setString(stringMap, "jlptFolderNamePrefix", getText(tfJlptFolderNamePrefix));
+			//
+			StringMap.setString(stringMap, "messageDigestAlgorithm", messageDigestAlgorithm);
 			//
 			ObjectMap.setObject(objectMap, StringMap.class, stringMap);
 			//
@@ -6595,6 +6606,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			ObjectMap.setObject(objectMap, Jakaroma.class, jakaroma = getIfNull(jakaroma, Jakaroma::new));
 			//
 			ObjectMap.setObject(objectMap, JSlider.class, jsSpeechVolume);
+			//
+			ObjectMap.setObject(objectMap, MessageDigest.class,
+					MessageDigest.getInstance(StringUtils.defaultIfBlank(messageDigestAlgorithm, SHA_512)));
 			//
 			BiConsumer<Voice, String> errorMessageConsumer = null;
 			//
@@ -9141,7 +9155,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			final Voice voiceOld = voiceMapper != null ? voiceMapper.searchByTextAndRomaji(text, romaji) : null;
 			//
-			final MessageDigest md = MessageDigest.getInstance("SHA-512");
+			final MessageDigest md = ObjectMap.getObject(objectMap, MessageDigest.class);
 			//
 			final String messageDigestAlgorithm = getAlgorithm(md);
 			//
@@ -9215,7 +9229,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			insertOrUpdate(voiceMapper, voice);
 			//
-		} catch (IOException | NoSuchAlgorithmException e) {
+		} catch (final IOException e) {
 			//
 			accept(throwableConsumer, voice, e);
 			//
@@ -9656,6 +9670,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 		private String password = null;
 
+		private String messageDigestAlgorithm = null;
+
 		@Override
 		public void run() {
 			//
@@ -9781,8 +9797,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						BooleanMap.setBoolean(booleanMap, HIDE_AUDIO_IMAGE_IN_PRESENTATION,
 								hideAudioImageInPresentation);
 						//
-						generateOdfPresentationDocuments(is, booleanMap, folderInPresentation, voiceFileNames,
-								password);
+						generateOdfPresentationDocuments(is, booleanMap, folderInPresentation, voiceFileNames, password,
+								messageDigestAlgorithm);
 						//
 					} // try
 						//
@@ -9913,8 +9929,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		}
 
 		private static void generateOdfPresentationDocuments(final InputStream is, final BooleanMap booleanMap,
-				final String folderInPresentation, final Table<String, String, Voice> table, final String password)
-				throws Exception {
+				final String folderInPresentation, final Table<String, String, Voice> table, final String password,
+				final String messageDigestAlgorithm) throws Exception {
 			//
 			final Set<String> rowKeySet = rowKeySet(table);
 			//
@@ -9956,8 +9972,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
-				if ((odfPd = generateOdfPresentationDocument(objectMap, rowKey, table.row(rowKey),
-						folderInPresentation)) != null) {
+				if ((odfPd = generateOdfPresentationDocument(objectMap, rowKey, table.row(rowKey), folderInPresentation,
+						messageDigestAlgorithm)) != null) {
 					//
 					final String[] fileExtensions = getFileExtensions(ContentType.OPENDOCUMENT_PRESENTATION);
 					//
@@ -10020,8 +10036,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		}
 
 		private static OdfPresentationDocument generateOdfPresentationDocument(final ObjectMap objectMap,
-				final String outputFolder, final Map<String, Voice> voices, final String folderInPresentation)
-				throws Exception {
+				final String outputFolder, final Map<String, Voice> voices, final String folderInPresentation,
+				final String messageDigestAlgorithm) throws Exception {
 			//
 			OdfPresentationDocument newOdfPresentationDocument = null;
 			//
@@ -10090,7 +10106,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 						ObjectMap.setObject(objectMap, Voice.class, ObjectUtils.defaultIfNull(temp, voice));
 						//
-						replaceText(objectMap);
+						replaceText(objectMap, messageDigestAlgorithm);
 						//
 						// plugin
 						//
@@ -10190,7 +10206,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		}
 
-		private static void replaceText(final ObjectMap objectMap)
+		private static void replaceText(final ObjectMap objectMap, final String messageDigestAlgorithm)
 				throws XPathExpressionException, NoSuchAlgorithmException {
 			//
 			final NodeList ps = cast(NodeList.class,
@@ -10241,7 +10257,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					if (!ObjectMap.containsObject(objectMap, MessageDigest.class)) {
 						//
-						ObjectMap.setObject(objectMap, MessageDigest.class, MessageDigest.getInstance("SHA-512"));
+						ObjectMap.setObject(objectMap, MessageDigest.class, MessageDigest
+								.getInstance(StringUtils.defaultString(messageDigestAlgorithm, "SHA-513")));
 						//
 					} // if
 						//
@@ -10548,6 +10565,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				et.folderInPresentation = StringMap.getString(stringMap, "folderInPresentation");
 				//
 				et.password = StringMap.getString(stringMap, "exportPassword");
+				//
+				et.messageDigestAlgorithm = StringMap.getString(stringMap, "messageDigestAlgorithm");
 				//
 				es.submit(et);
 				//

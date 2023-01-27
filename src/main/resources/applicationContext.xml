@@ -103,6 +103,8 @@
 		<property name="ipaJsonUrl"
 			value="${org.springframework.context.support.VoiceManager.ipaJsonUrl}" />
 		<property name="ipaJsonResource" value="classpath:ipa.json" />
+		<property name="messageDigestAlgorithm"
+			value="${org.springframework.context.support.VoiceManager.messageDigestAlgorithm}" />
 	</bean>
 
 	<bean id="DataSource" class="org.h2.jdbcx.JdbcConnectionPool"
