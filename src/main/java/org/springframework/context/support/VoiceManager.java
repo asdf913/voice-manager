@@ -598,7 +598,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("Check Pronunciation Page")
 	private AbstractButton btnPronunciationPageUrlCheck = null;
 
-	private AbstractButton cbUseTtsVoice, btnIpaSymbol, btnCheckIpaSymbolJson = null;
+	@Note("IPA Symbol")
+	private AbstractButton btnIpaSymbol = null;
+
+	private AbstractButton cbUseTtsVoice, btnCheckIpaSymbolJson = null;
 
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.FIELD)
