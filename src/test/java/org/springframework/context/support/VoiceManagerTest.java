@@ -2595,6 +2595,38 @@ class VoiceManagerTest {
 			//
 		} // try
 			//
+			// btnCheckIpaSymbolJson
+			//
+		final AbstractButton btnCheckIpaSymbolJson = new JButton();
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "btnCheckIpaSymbolJson", btnCheckIpaSymbolJson, true);
+			//
+		} // if
+			//
+		final ActionEvent actionEventBtnCheckIpaSymbolJson = new ActionEvent(btnCheckIpaSymbolJson, 0, null);
+		//
+		if (ih != null) {
+			//
+			ih.inputStream = null;
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnCheckIpaSymbolJson));
+		//
+		try (final InputStream is = new ByteArrayInputStream("{}".getBytes())) {
+			//
+			if (ih != null) {
+				//
+				ih.inputStream = is;
+				//
+			} // if
+				//
+			Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnCheckIpaSymbolJson));
+			//
+		} // try
+			//
 	}
 
 	private static void actionPerformed(final ActionListener instance, final ActionEvent actionEvent) {

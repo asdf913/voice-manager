@@ -598,7 +598,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("Check Pronunciation Page")
 	private AbstractButton btnPronunciationPageUrlCheck = null;
 
-	private AbstractButton cbUseTtsVoice, btnIpaSymbol = null;
+	private AbstractButton cbUseTtsVoice, btnIpaSymbol, btnCheckIpaSymbolJson = null;
 
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.FIELD)
@@ -661,6 +661,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	@Note("List Count")
 	private JLabel jlListNameCount = null;
+
+	private JLabel jlIpaJsonFile = null;
 
 	@Note("Import Exception")
 	private DefaultTableModel tmImportException = null;
@@ -3705,17 +3707,17 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			panel1.add(btnDllPathCopy = new JButton("Copy"));
 			//
-			panel.add(panel1, WRAP);
+			panel.add(panel1, String.format("%1$s,span %2$s", WRAP, 2));
 			//
 		} // if
 			//
 			// btnExportGaKuNenBeTsuKanJi
 			//
-		panel.add(btnExportGaKuNenBeTsuKanJi = new JButton("Export 学年別漢字"), WRAP);
+		panel.add(btnExportGaKuNenBeTsuKanJi = new JButton("Export 学年別漢字"), String.format("%1$s,span %2$s", WRAP, 2));
 		//
 		// btnExportJoYoKanJi
 		//
-		panel.add(btnExportJoYoKanJi = new JButton("Export 常用漢字"), WRAP);
+		panel.add(btnExportJoYoKanJi = new JButton("Export 常用漢字"), String.format("%1$s,span %2$s", WRAP, 2));
 		//
 		// Find the maximum width of the "java.awt.Component" instance from the field
 		// with "org.springframework.context.support.VoiceManager.Group" annotation with
@@ -3741,8 +3743,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
-		panel.add(btnExportMicrosoftSpeechObjectLibraryInformation = new JButton(
-				toString(append(btnExportMicrosoftSpeechObjectLibraryInformationName, "Information"))), WRAP);
+		panel.add(
+				btnExportMicrosoftSpeechObjectLibraryInformation = new JButton(
+						toString(append(btnExportMicrosoftSpeechObjectLibraryInformationName, "Information"))),
+				String.format("%1$s,span %2$s", WRAP, 2));
+		//
+		panel.add(btnCheckIpaSymbolJson = new JButton("Check IPA Symbol Json File"));
+		//
+		panel.add(jlIpaJsonFile = new JLabel(), WRAP);
 		//
 		final JPanel panel1 = new JPanel();
 		//
@@ -3756,12 +3764,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel1.add(btnExportBrowse = new JButton("Browse"));
 		//
-		panel.add(panel1);
+		panel.add(panel1, String.format("span %1$s", 2));
 		//
 		setEditable(false, tfDllPath, tfExportFile);
 		//
 		addActionListener(this, btnExportGaKuNenBeTsuKanJi, btnExportJoYoKanJi,
-				btnExportMicrosoftSpeechObjectLibraryInformation, btnExportCopy, btnExportBrowse, btnDllPathCopy);
+				btnExportMicrosoftSpeechObjectLibraryInformation, btnCheckIpaSymbolJson, btnExportCopy, btnExportBrowse,
+				btnDllPathCopy);
 		//
 		setEnabled(isInstalled(speechApi) && voiceIds != null, btnExportMicrosoftSpeechObjectLibraryInformation);
 		//
@@ -4563,6 +4572,57 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			actionPerformedForIpaSymbol(headless);
 			//
+		} else if (Objects.equals(source, btnCheckIpaSymbolJson)) {
+			//
+			MessageDigest md = null;
+			//
+			Integer length1 = null;
+			//
+			String hex1 = null;
+			//
+			try (final InputStream is = testAndApply(VoiceManager::exists, ipaJsonResource,
+					VoiceManager::getInputStream, null)) {
+				//
+				final byte[] digest = digest(md = MessageDigest.getInstance("SHA-512"),
+						testAndApply(Objects::nonNull, is, IOUtils::toByteArray, null));
+				//
+				length1 = digest != null ? Integer.valueOf(digest.length) : null;
+				//
+				hex1 = testAndApply(Objects::nonNull, digest, Hex::encodeHexString, null);
+				//
+			} catch (final IOException | NoSuchAlgorithmException e) {
+				//
+				errorOrAssertOrShowException(headless, e);
+				//
+			} // try
+				//
+			Integer length2 = null;
+			//
+			String hex2 = null;
+			//
+			try (final InputStream is = openStream(testAndApply(StringUtils::isNotBlank, ipaJsonUrl, URL::new, null))) {
+				//
+				final byte[] digest = digest(md, testAndApply(Objects::nonNull, is, IOUtils::toByteArray, null));
+				//
+				length2 = digest != null ? Integer.valueOf(digest.length) : null;
+				//
+				hex2 = testAndApply(Objects::nonNull, digest, Hex::encodeHexString, null);
+				//
+			} catch (final IOException e) {
+				//
+				errorOrAssertOrShowException(headless, e);
+				//
+			} // try
+				//
+			final boolean match = Objects.equals(length1, length2) && Objects.equals(hex1, hex2);
+			//
+			setText(jlIpaJsonFile, match ? "Matched" : "Not Matched");
+			//
+			if (jlIpaJsonFile != null) {
+				//
+				jlIpaJsonFile.setForeground(match ? Color.GREEN : Color.RED);
+				//
+			} // if
 		} // if
 			//
 	}
