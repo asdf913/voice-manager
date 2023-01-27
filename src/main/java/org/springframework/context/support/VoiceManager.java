@@ -2003,7 +2003,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 		{
 			//
-			setForeground(darker(Color.BLUE));
+			super.setForeground(darker(Color.BLUE));
 			//
 			setCursor(new Cursor(Cursor.HAND_CURSOR));
 			//
