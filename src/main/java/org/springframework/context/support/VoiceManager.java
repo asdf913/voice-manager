@@ -4616,15 +4616,19 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			final boolean match = Objects.equals(length1, length2) && Objects.equals(hex1, hex2);
 			//
-			setText(jlIpaJsonFile, match ? "Matched" : "Not Matched");
+			setText(jlIpaJsonFile, iif(match, "Matched", "Not Matched"));
 			//
 			if (jlIpaJsonFile != null) {
 				//
-				jlIpaJsonFile.setForeground(match ? Color.GREEN : Color.RED);
+				jlIpaJsonFile.setForeground(iif(match, Color.GREEN, Color.RED));
 				//
 			} // if
 		} // if
 			//
+	}
+
+	private static <T> T iif(final boolean condition, final T trueValue, final T falseValue) {
+		return condition ? trueValue : falseValue;
 	}
 
 	private static boolean exists(final Resource instance) {
