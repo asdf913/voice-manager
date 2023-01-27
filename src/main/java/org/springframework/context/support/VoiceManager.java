@@ -4620,7 +4620,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // try
 				//
-			final boolean match = Objects.equals(length1, length2) && Objects.equals(hex1, hex2);
+			final boolean match = Boolean.logicalAnd(Objects.equals(length1, length2), Objects.equals(hex1, hex2));
 			//
 			setText(jlIpaJsonFile, iif(match, "Matched", "Not Matched"));
 			//
