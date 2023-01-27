@@ -601,7 +601,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("IPA Symbol")
 	private AbstractButton btnIpaSymbol = null;
 
-	private AbstractButton cbUseTtsVoice, btnCheckIpaSymbolJson = null;
+	@Note("Check IPA Symbol Json File")
+	private AbstractButton btnCheckIpaSymbolJson = null;
+
+	private AbstractButton cbUseTtsVoice = null;
 
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.FIELD)
