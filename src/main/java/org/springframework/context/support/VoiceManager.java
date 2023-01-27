@@ -4580,51 +4580,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} else if (Objects.equals(source, btnCheckIpaSymbolJson)) {
 			//
-			MessageDigest md = null;
-			//
-			Integer length1 = null;
-			//
-			String hex1 = null;
-			//
-			try (final InputStream is = testAndApply(VoiceManager::exists, ipaJsonResource,
-					VoiceManager::getInputStream, null)) {
-				//
-				final byte[] digest = digest(md = MessageDigest.getInstance("SHA-512"),
-						testAndApply(Objects::nonNull, is, IOUtils::toByteArray, null));
-				//
-				length1 = digest != null ? Integer.valueOf(digest.length) : null;
-				//
-				hex1 = testAndApply(Objects::nonNull, digest, Hex::encodeHexString, null);
-				//
-			} catch (final IOException | NoSuchAlgorithmException e) {
-				//
-				errorOrAssertOrShowException(headless, e);
-				//
-			} // try
-				//
-			Integer length2 = null;
-			//
-			String hex2 = null;
-			//
-			try (final InputStream is = openStream(testAndApply(StringUtils::isNotBlank, ipaJsonUrl, URL::new, null))) {
-				//
-				final byte[] digest = digest(md, testAndApply(Objects::nonNull, is, IOUtils::toByteArray, null));
-				//
-				length2 = digest != null ? Integer.valueOf(digest.length) : null;
-				//
-				hex2 = testAndApply(Objects::nonNull, digest, Hex::encodeHexString, null);
-				//
-			} catch (final IOException e) {
-				//
-				errorOrAssertOrShowException(headless, e);
-				//
-			} // try
-				//
-			final boolean match = Boolean.logicalAnd(Objects.equals(length1, length2), Objects.equals(hex1, hex2));
-			//
-			setText(jlIpaJsonFile, iif(match, "Matched", "Not Matched"));
-			//
-			setForeground(jlIpaJsonFile, iif(match, Color.GREEN, Color.RED));
+			actionPerformedForCheckIpaSymbolJson(headless);
 			//
 		} // if
 			//
@@ -5181,6 +5137,56 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		} // if
 			//
 		setText(tfIpaSymbol, toString(get(map, getText(tfTextImport))));
+		//
+	}
+
+	private void actionPerformedForCheckIpaSymbolJson(final boolean headless) {
+		//
+		MessageDigest md = null;
+		//
+		Integer length1 = null;
+		//
+		String hex1 = null;
+		//
+		try (final InputStream is = testAndApply(VoiceManager::exists, ipaJsonResource,
+				VoiceManager::getInputStream, null)) {
+			//
+			final byte[] digest = digest(md = MessageDigest.getInstance("SHA-512"),
+					testAndApply(Objects::nonNull, is, IOUtils::toByteArray, null));
+			//
+			length1 = digest != null ? Integer.valueOf(digest.length) : null;
+			//
+			hex1 = testAndApply(Objects::nonNull, digest, Hex::encodeHexString, null);
+			//
+		} catch (final IOException | NoSuchAlgorithmException e) {
+			//
+			errorOrAssertOrShowException(headless, e);
+			//
+		} // try
+			//
+		Integer length2 = null;
+		//
+		String hex2 = null;
+		//
+		try (final InputStream is = openStream(testAndApply(StringUtils::isNotBlank, ipaJsonUrl, URL::new, null))) {
+			//
+			final byte[] digest = digest(md, testAndApply(Objects::nonNull, is, IOUtils::toByteArray, null));
+			//
+			length2 = digest != null ? Integer.valueOf(digest.length) : null;
+			//
+			hex2 = testAndApply(Objects::nonNull, digest, Hex::encodeHexString, null);
+			//
+		} catch (final IOException e) {
+			//
+			errorOrAssertOrShowException(headless, e);
+			//
+		} // try
+			//
+		final boolean match = Boolean.logicalAnd(Objects.equals(length1, length2), Objects.equals(hex1, hex2));
+		//
+		setText(jlIpaJsonFile, iif(match, "Matched", "Not Matched"));
+		//
+		setForeground(jlIpaJsonFile, iif(match, Color.GREEN, Color.RED));
 		//
 	}
 
