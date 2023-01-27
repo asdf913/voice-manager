@@ -2623,6 +2623,12 @@ class VoiceManagerTest {
 				//
 			} // if
 				//
+			if (instance != null) {
+				//
+				FieldUtils.writeDeclaredField(instance, "jlIpaJsonFile", new JLabel(), true);
+				//
+			} // if
+				//
 			Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnCheckIpaSymbolJson));
 			//
 		} // try

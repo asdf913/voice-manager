@@ -4621,11 +4621,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			setText(jlIpaJsonFile, iif(match, "Matched", "Not Matched"));
 			//
-			if (jlIpaJsonFile != null) {
-				//
-				jlIpaJsonFile.setForeground(iif(match, Color.GREEN, Color.RED));
-				//
-			} // if
+			setForeground(jlIpaJsonFile, iif(match, Color.GREEN, Color.RED));
+			//
 		} // if
 			//
 	}
@@ -7189,6 +7186,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static <K, V> Collection<Entry<K, V>> entries(final Multimap<K, V> instance) {
 		return instance != null ? instance.entries() : null;
+	}
+
+	private static void setForeground(final Component instance, final Color color) {
+		if (instance != null) {
+			instance.setForeground(color);
+		}
 	}
 
 	private static void setBackground(final Component instance, final Color color) {
