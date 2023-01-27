@@ -269,8 +269,8 @@ class VoiceManagerTest {
 			METHOD_CREATE_SHEET2, METHOD_ENTRIES, METHOD_GET_WORK_BOOK, METHOD_GET_OLE_ENTRY_NAMES,
 			METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE, METHOD_GET_DOCUMENT_ELEMENT, METHOD_GET_CHILD_NODES,
 			METHOD_GET_NAMED_ITEM, METHOD_GET_TEXT_CONTENT, METHOD_GET_NAME_FILE, METHOD_GET_NAME_CLASS,
-			METHOD_GET_PASS_WORD, METHOD_GET_SUPPLIER, METHOD_GET_LOOKUP, METHOD_GET_LIST, METHOD_GET_MAP,
-			METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK, METHOD_WRITE_VALUE_AS_STRING,
+			METHOD_GET_NAME_PACKAGE, METHOD_GET_PASS_WORD, METHOD_GET_SUPPLIER, METHOD_GET_LOOKUP, METHOD_GET_LIST,
+			METHOD_GET_MAP, METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK, METHOD_WRITE_VALUE_AS_STRING,
 			METHOD_CREATE_DRAWING_PATRIARCH, METHOD_GET_CREATION_HELPER, METHOD_CREATE_CELL_COMMENT,
 			METHOD_CREATE_CLIENT_ANCHOR, METHOD_CREATE_RICH_TEXT_STRING, METHOD_SET_CELL_COMMENT, METHOD_SET_AUTHOR,
 			METHOD_TEST_AND_ACCEPT_PREDICATE, METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_FIND_FIELDS_BY_VALUE,
@@ -637,6 +637,8 @@ class VoiceManagerTest {
 		(METHOD_GET_NAME_FILE = clz.getDeclaredMethod("getName", File.class)).setAccessible(true);
 		//
 		(METHOD_GET_NAME_CLASS = clz.getDeclaredMethod("getName", Class.class)).setAccessible(true);
+		//
+		(METHOD_GET_NAME_PACKAGE = clz.getDeclaredMethod("getName", Package.class)).setAccessible(true);
 		//
 		(METHOD_GET_PASS_WORD = clz.getDeclaredMethod("getPassword", Console.class)).setAccessible(true);
 		//
@@ -5795,6 +5797,8 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(getName((Class<?>) null));
 		//
+		Assertions.assertNull(getName((Package) null));
+		//
 		Assertions.assertNotNull(getName(new File(".")));
 		//
 	}
@@ -5816,6 +5820,20 @@ class VoiceManagerTest {
 	private static String getName(final Class<?> instance) throws Throwable {
 		try {
 			final Object obj = METHOD_GET_NAME_CLASS.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static String getName(final Package instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_NAME_PACKAGE.invoke(null, instance);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof String) {
