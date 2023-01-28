@@ -9138,7 +9138,7 @@ class VoiceManagerTest {
 		//
 		final Method generateOdfPresentationDocuments = CLASS_EXPORT_TASK != null
 				? CLASS_EXPORT_TASK.getDeclaredMethod("generateOdfPresentationDocuments", InputStream.class,
-						CLASS_BOOLEAN_MAP, String.class, Table.class, String.class)
+						CLASS_BOOLEAN_MAP, String.class, Table.class, String.class, String.class)
 				: null;
 		//
 		if (generateOdfPresentationDocuments != null) {
@@ -9147,10 +9147,10 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(invoke(generateOdfPresentationDocuments, null, null, null, null, null, null));
+		Assertions.assertNull(invoke(generateOdfPresentationDocuments, null, null, null, null, null, null, null));
 		//
 		Assertions.assertThrows(InvocationTargetException.class, () -> invoke(generateOdfPresentationDocuments, null,
-				null, null, null, ImmutableTable.of(EMPTY, EMPTY, new Voice()), null));
+				null, null, null, ImmutableTable.of(EMPTY, EMPTY, new Voice()), null, null));
 		//
 		// org.springframework.context.support.VoiceManager$ExportTask.newXPath(javax.xml.xpath.XPathFactory)
 		//
@@ -9257,7 +9257,7 @@ class VoiceManagerTest {
 		// org.springframework.context.support.VoiceManager$ExportTask.replaceText(javax.xml.xpath.XPath,org.w3c.dom.Node,domain.Voice)
 		//
 		final Method replaceText = CLASS_EXPORT_TASK != null
-				? CLASS_EXPORT_TASK.getDeclaredMethod("replaceText", CLASS_OBJECT_MAP)
+				? CLASS_EXPORT_TASK.getDeclaredMethod("replaceText", CLASS_OBJECT_MAP, String.class)
 				: null;
 		//
 		if (replaceText != null) {
@@ -9266,7 +9266,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(invoke(replaceText, null, (Object) null));
+		Assertions.assertNull(invoke(replaceText, null, null, null));
 		//
 		// org.springframework.context.support.VoiceManager$ExportTask.setPluginHref(org.springframework.context.support.VoiceManager$ObjectMap,java.lang.String,boolean,java.lang.String)
 		//
