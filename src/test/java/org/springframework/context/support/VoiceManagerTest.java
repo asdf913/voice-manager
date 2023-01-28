@@ -9139,8 +9139,7 @@ class VoiceManagerTest {
 		// org.springframework.context.support.VoiceManager$ExportTask.generateOdfPresentationDocuments(java.io.InputStream,boolean,com.google.common.collect.Table)
 		//
 		final Method generateOdfPresentationDocuments = CLASS_EXPORT_TASK != null
-				? CLASS_EXPORT_TASK.getDeclaredMethod("generateOdfPresentationDocuments", InputStream.class,
-						CLASS_BOOLEAN_MAP, CLASS_STRING_MAP, Table.class)
+				? CLASS_EXPORT_TASK.getDeclaredMethod("generateOdfPresentationDocuments", CLASS_OBJECT_MAP, Table.class)
 				: null;
 		//
 		if (generateOdfPresentationDocuments != null) {
@@ -9149,10 +9148,10 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(invoke(generateOdfPresentationDocuments, null, null, null, null, null));
+		Assertions.assertNull(invoke(generateOdfPresentationDocuments, null, null, null));
 		//
 		Assertions.assertThrows(InvocationTargetException.class, () -> invoke(generateOdfPresentationDocuments, null,
-				null, null, null, ImmutableTable.of(EMPTY, EMPTY, new Voice())));
+				null, ImmutableTable.of(EMPTY, EMPTY, new Voice())));
 		//
 		// org.springframework.context.support.VoiceManager$ExportTask.newXPath(javax.xml.xpath.XPathFactory)
 		//

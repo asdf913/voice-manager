@@ -9790,14 +9790,20 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					try (final InputStream is = getResourceAsStream(VoiceManager.class, exportPresentationTemplate)) {
 						//
-						final BooleanMap booleanMap = Reflection.newProxy(BooleanMap.class, new IH());
+						final IH ih = new IH();
+						//
+						// org.springframework.context.support.VoiceManager$BooleanMap
+						//
+						final BooleanMap booleanMap = Reflection.newProxy(BooleanMap.class, ih);
 						//
 						BooleanMap.setBoolean(booleanMap, EMBED_AUDIO_IN_PRESENTATION, embedAudioInPresentation);
 						//
 						BooleanMap.setBoolean(booleanMap, HIDE_AUDIO_IMAGE_IN_PRESENTATION,
 								hideAudioImageInPresentation);
 						//
-						final StringMap stringMap = Reflection.newProxy(StringMap.class, new IH());
+						// org.springframework.context.support.VoiceManager$StringMap
+						//
+						final StringMap stringMap = Reflection.newProxy(StringMap.class, ih);
 						//
 						StringMap.setString(stringMap, "folderInPresentation", folderInPresentation);
 						//
@@ -9805,7 +9811,17 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 						StringMap.setString(stringMap, "password", password);
 						//
-						generateOdfPresentationDocuments(is, booleanMap, stringMap, voiceFileNames);
+						// org.springframework.context.support.VoiceManager$ObjectMap
+						//
+						final ObjectMap objectMap = Reflection.newProxy(ObjectMap.class, ih);
+						//
+						ObjectMap.setObject(objectMap, InputStream.class, is);
+						//
+						ObjectMap.setObject(objectMap, BooleanMap.class, booleanMap);
+						//
+						ObjectMap.setObject(objectMap, StringMap.class, stringMap);
+						//
+						generateOdfPresentationDocuments(objectMap, voiceFileNames);
 						//
 					} // try
 						//
@@ -9935,8 +9951,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		}
 
-		private static void generateOdfPresentationDocuments(final InputStream is, final BooleanMap booleanMap,
-				final StringMap stringMap, final Table<String, String, Voice> table) throws Exception {
+		private static void generateOdfPresentationDocuments(final ObjectMap _objectMap,
+				final Table<String, String, Voice> table) throws Exception {
 			//
 			final Set<String> rowKeySet = rowKeySet(table);
 			//
@@ -9946,7 +9962,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-			final byte[] bs = testAndApply(Objects::nonNull, is, IOUtils::toByteArray, null);
+			final byte[] bs = testAndApply(Objects::nonNull, ObjectMap.getObject(_objectMap, InputStream.class),
+					IOUtils::toByteArray, null);
 			//
 			OdfPresentationDocument odfPd = null;
 			//
@@ -9974,10 +9991,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					ObjectMap.setObject(objectMap, Transformer.class, newTransformer(TransformerFactory.newInstance()));
 					//
-					ObjectMap.setObject(objectMap, BooleanMap.class, booleanMap);
+					ObjectMap.setObject(objectMap, BooleanMap.class, ObjectMap.getObject(_objectMap, BooleanMap.class));
 					//
 				} // if
 					//
+				final StringMap stringMap = ObjectMap.getObject(_objectMap, StringMap.class);
+				//
 				if ((odfPd = generateOdfPresentationDocument(objectMap, rowKey, table.row(rowKey),
 						StringMap.getString(stringMap, "folderInPresentation"),
 						StringMap.getString(stringMap, "messageDigestAlgorithm"))) != null) {
@@ -10264,8 +10283,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					if (!ObjectMap.containsObject(objectMap, MessageDigest.class)) {
 						//
-						ObjectMap.setObject(objectMap, MessageDigest.class, MessageDigest
-								.getInstance(StringUtils.defaultString(messageDigestAlgorithm, "SHA-513")));
+						ObjectMap.setObject(objectMap, MessageDigest.class,
+								MessageDigest.getInstance(StringUtils.defaultString(messageDigestAlgorithm, SHA_512)));
 						//
 					} // if
 						//
@@ -10843,6 +10862,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		} // if
 			//
 		et.voiceFileNames = voiceFileNames;
+		//
+		et.messageDigestAlgorithm = voiceManager != null ? voiceManager.messageDigestAlgorithm : null;
 		//
 		return et;
 		//
