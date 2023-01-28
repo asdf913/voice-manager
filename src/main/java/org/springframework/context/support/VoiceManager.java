@@ -9955,7 +9955,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		}
 
-		private static void generateOdfPresentationDocuments(final ObjectMap _objectMap,
+		private static void generateOdfPresentationDocuments(final ObjectMap om,
 				final Table<String, String, Voice> table) throws Exception {
 			//
 			final Set<String> rowKeySet = rowKeySet(table);
@@ -9966,7 +9966,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-			final byte[] bs = testAndApply(Objects::nonNull, ObjectMap.getObject(_objectMap, InputStream.class),
+			final byte[] bs = testAndApply(Objects::nonNull, ObjectMap.getObject(om, InputStream.class),
 					IOUtils::toByteArray, null);
 			//
 			OdfPresentationDocument odfPd = null;
@@ -9985,7 +9985,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			int maxElapsedStringLength = 0;
 			//
-			final StringMap stringMap = ObjectMap.getObject(_objectMap, StringMap.class);
+			final StringMap stringMap = ObjectMap.getObject(om, StringMap.class);
 			//
 			for (final String rowKey : rowKeySet) {
 				//
@@ -9997,7 +9997,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					ObjectMap.setObject(objectMap, Transformer.class, newTransformer(TransformerFactory.newInstance()));
 					//
-					ObjectMap.setObject(objectMap, BooleanMap.class, ObjectMap.getObject(_objectMap, BooleanMap.class));
+					ObjectMap.setObject(objectMap, BooleanMap.class, ObjectMap.getObject(om, BooleanMap.class));
 					//
 					ObjectMap.setObject(objectMap, StringMap.class, stringMap);
 					//
