@@ -9797,8 +9797,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						BooleanMap.setBoolean(booleanMap, HIDE_AUDIO_IMAGE_IN_PRESENTATION,
 								hideAudioImageInPresentation);
 						//
-						generateOdfPresentationDocuments(is, booleanMap, folderInPresentation, voiceFileNames, password,
-								messageDigestAlgorithm);
+						final StringMap stringMap = Reflection.newProxy(StringMap.class, new IH());
+						//
+						StringMap.setString(stringMap, "folderInPresentation", folderInPresentation);
+						//
+						StringMap.setString(stringMap, "messageDigestAlgorithm", messageDigestAlgorithm);
+						//
+						StringMap.setString(stringMap, "password", password);
+						//
+						generateOdfPresentationDocuments(is, booleanMap, stringMap, voiceFileNames);
 						//
 					} // try
 						//
@@ -9929,8 +9936,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		}
 
 		private static void generateOdfPresentationDocuments(final InputStream is, final BooleanMap booleanMap,
-				final String folderInPresentation, final Table<String, String, Voice> table, final String password,
-				final String messageDigestAlgorithm) throws Exception {
+				final StringMap stringMap, final Table<String, String, Voice> table) throws Exception {
 			//
 			final Set<String> rowKeySet = rowKeySet(table);
 			//
@@ -9972,8 +9978,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
-				if ((odfPd = generateOdfPresentationDocument(objectMap, rowKey, table.row(rowKey), folderInPresentation,
-						messageDigestAlgorithm)) != null) {
+				if ((odfPd = generateOdfPresentationDocument(objectMap, rowKey, table.row(rowKey),
+						StringMap.getString(stringMap, "folderInPresentation"),
+						StringMap.getString(stringMap, "messageDigestAlgorithm"))) != null) {
 					//
 					final String[] fileExtensions = getFileExtensions(ContentType.OPENDOCUMENT_PRESENTATION);
 					//
@@ -9987,8 +9994,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 						// Set "Password"
 						//
-					testAndAccept((a, b) -> StringUtils.isNotEmpty(b), odfPd.getPackage(), password,
-							(a, b) -> setPassword(a, b));
+					testAndAccept((a, b) -> StringUtils.isNotEmpty(b), odfPd.getPackage(),
+							StringMap.getString(stringMap, "password"), (a, b) -> setPassword(a, b));
 					//
 					odfPd.save(file = new File(rowKey, String.join(".",
 							StringUtils.substringAfter(rowKey, File.separatorChar),

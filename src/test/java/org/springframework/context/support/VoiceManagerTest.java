@@ -234,7 +234,7 @@ class VoiceManagerTest {
 
 	private static final int ONE = 1;
 
-	private static Class<?> CLASS_OBJECT_MAP, CLASS_BOOLEAN_MAP, CLASS_IH, CLASS_EXPORT_TASK = null;
+	private static Class<?> CLASS_OBJECT_MAP, CLASS_BOOLEAN_MAP, CLASS_STRING_MAP, CLASS_IH, CLASS_EXPORT_TASK = null;
 
 	private static Method METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_GET_FILE_EXTENSION_CONTENT_INFO,
 			METHOD_GET_FILE_EXTENSION_FILE_FORMAT, METHOD_GET_FILE_EXTENSION_FAILABLE_SUPPLIER, METHOD_DIGEST,
@@ -994,6 +994,8 @@ class VoiceManagerTest {
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
 		CLASS_EXPORT_TASK = Class.forName("org.springframework.context.support.VoiceManager$ExportTask");
+		//
+		CLASS_STRING_MAP = Class.forName("org.springframework.context.support.VoiceManager$StringMap");
 		//
 	}
 
@@ -9138,7 +9140,7 @@ class VoiceManagerTest {
 		//
 		final Method generateOdfPresentationDocuments = CLASS_EXPORT_TASK != null
 				? CLASS_EXPORT_TASK.getDeclaredMethod("generateOdfPresentationDocuments", InputStream.class,
-						CLASS_BOOLEAN_MAP, String.class, Table.class, String.class, String.class)
+						CLASS_BOOLEAN_MAP, CLASS_STRING_MAP, Table.class)
 				: null;
 		//
 		if (generateOdfPresentationDocuments != null) {
@@ -9147,10 +9149,10 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(invoke(generateOdfPresentationDocuments, null, null, null, null, null, null, null));
+		Assertions.assertNull(invoke(generateOdfPresentationDocuments, null, null, null, null, null));
 		//
 		Assertions.assertThrows(InvocationTargetException.class, () -> invoke(generateOdfPresentationDocuments, null,
-				null, null, null, ImmutableTable.of(EMPTY, EMPTY, new Voice()), null, null));
+				null, null, null, ImmutableTable.of(EMPTY, EMPTY, new Voice())));
 		//
 		// org.springframework.context.support.VoiceManager$ExportTask.newXPath(javax.xml.xpath.XPathFactory)
 		//
@@ -9894,11 +9896,11 @@ class VoiceManagerTest {
 	@Test
 	void testStringMap() throws Throwable {
 		//
-		final Class<?> clz = forName("org.springframework.context.support.VoiceManager$StringMap");
-		//
 		// org.springframework.context.support.VoiceManager$StringMap.getString(org.springframework.context.support.VoiceManager$StringMap,java.lang.String)
 		//
-		final Method getString = clz != null ? clz.getDeclaredMethod("getString", clz, String.class) : null;
+		final Method getString = CLASS_STRING_MAP != null
+				? CLASS_STRING_MAP.getDeclaredMethod("getString", CLASS_STRING_MAP, String.class)
+				: null;
 		//
 		if (getString != null) {
 			//
@@ -9908,13 +9910,14 @@ class VoiceManagerTest {
 			//
 		Assertions.assertNull(invoke(getString, null, null, null));
 		//
-		final Object stringMap = Reflection.newProxy(clz, createVoiceManagerIH());
+		final Object stringMap = Reflection.newProxy(CLASS_STRING_MAP, createVoiceManagerIH());
 		//
 		Assertions.assertThrows(InvocationTargetException.class, () -> invoke(getString, null, stringMap, null));
 		//
 		// org.springframework.context.support.VoiceManager$StringMap.setString(java.lang.String,java.lang.String)
 		//
-		final Method setString = clz != null ? clz.getDeclaredMethod("setString", clz, String.class, String.class)
+		final Method setString = CLASS_STRING_MAP != null
+				? CLASS_STRING_MAP.getDeclaredMethod("setString", CLASS_STRING_MAP, String.class, String.class)
 				: null;
 		//
 		if (setString != null) {
