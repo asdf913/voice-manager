@@ -398,6 +398,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static final String FOLDER_IN_PRESENTATION = "folderInPresentation";
 
+	private static final String MESSAGE_DIGEST_ALGORITHM = "messageDigestAlgorithm";
+
 	private static final Predicate<File> EMPTY_FILE_PREDICATE = f -> f != null && f.exists() && isFile(f)
 			&& longValue(length(f), 0) == 0;
 
@@ -5531,7 +5533,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			StringMap.setString(stringMap, "jlptFolderNamePrefix", getText(tfJlptFolderNamePrefix));
 			//
-			StringMap.setString(stringMap, "messageDigestAlgorithm", messageDigestAlgorithm);
+			StringMap.setString(stringMap, MESSAGE_DIGEST_ALGORITHM, messageDigestAlgorithm);
 			//
 			ObjectMap.setObject(objectMap, StringMap.class, stringMap);
 			//
@@ -9809,7 +9811,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 						StringMap.setString(stringMap, FOLDER_IN_PRESENTATION, folderInPresentation);
 						//
-						StringMap.setString(stringMap, "messageDigestAlgorithm", messageDigestAlgorithm);
+						StringMap.setString(stringMap, MESSAGE_DIGEST_ALGORITHM, messageDigestAlgorithm);
 						//
 						StringMap.setString(stringMap, "password", password);
 						//
@@ -10001,7 +10003,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				if ((odfPd = generateOdfPresentationDocument(objectMap, rowKey, table.row(rowKey),
 						StringMap.getString(stringMap, FOLDER_IN_PRESENTATION),
-						StringMap.getString(stringMap, "messageDigestAlgorithm"))) != null) {
+						StringMap.getString(stringMap, MESSAGE_DIGEST_ALGORITHM))) != null) {
 					//
 					final String[] fileExtensions = getFileExtensions(ContentType.OPENDOCUMENT_PRESENTATION);
 					//
@@ -10594,7 +10596,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				et.password = StringMap.getString(stringMap, "exportPassword");
 				//
-				et.messageDigestAlgorithm = StringMap.getString(stringMap, "messageDigestAlgorithm");
+				et.messageDigestAlgorithm = StringMap.getString(stringMap, MESSAGE_DIGEST_ALGORITHM);
 				//
 				es.submit(et);
 				//
