@@ -9985,6 +9985,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			int maxElapsedStringLength = 0;
 			//
+			final StringMap stringMap = ObjectMap.getObject(_objectMap, StringMap.class);
+			//
 			for (final String rowKey : rowKeySet) {
 				//
 				if (objectMap == null) {
@@ -9997,13 +9999,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					ObjectMap.setObject(objectMap, BooleanMap.class, ObjectMap.getObject(_objectMap, BooleanMap.class));
 					//
+					ObjectMap.setObject(objectMap, StringMap.class, stringMap);
+					//
 				} // if
 					//
-				final StringMap stringMap = ObjectMap.getObject(_objectMap, StringMap.class);
+				StringMap.setString(stringMap, "outputFolder", rowKey);
 				//
-				if ((odfPd = generateOdfPresentationDocument(objectMap, rowKey, table.row(rowKey),
-						StringMap.getString(stringMap, FOLDER_IN_PRESENTATION),
-						StringMap.getString(stringMap, MESSAGE_DIGEST_ALGORITHM))) != null) {
+				if ((odfPd = generateOdfPresentationDocument(objectMap, table.row(rowKey))) != null) {
 					//
 					final String[] fileExtensions = getFileExtensions(ContentType.OPENDOCUMENT_PRESENTATION);
 					//
@@ -10066,8 +10068,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		}
 
 		private static OdfPresentationDocument generateOdfPresentationDocument(final ObjectMap objectMap,
-				final String outputFolder, final Map<String, Voice> voices, final String folderInPresentation,
-				final String messageDigestAlgorithm) throws Exception {
+				final Map<String, Voice> voices) throws Exception {
 			//
 			OdfPresentationDocument newOdfPresentationDocument = null;
 			//
@@ -10106,6 +10107,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					final boolean hideAudioImageInPresentation = BooleanMap.getBoolean(
 							ObjectMap.getObject(objectMap, BooleanMap.class), HIDE_AUDIO_IMAGE_IN_PRESENTATION);
 					//
+					final StringMap stringMap = ObjectMap.getObject(objectMap, StringMap.class);
+					//
+					final String folderInPresentation = StringMap.getString(stringMap, FOLDER_IN_PRESENTATION);
+					//
 					for (final Entry<String, Voice> entry : entrySet) {
 						//
 						if (Boolean.logicalOr((voice = getValue(entry)) == null,
@@ -10136,7 +10141,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 						ObjectMap.setObject(objectMap, Voice.class, ObjectUtils.defaultIfNull(temp, voice));
 						//
-						replaceText(objectMap, messageDigestAlgorithm);
+						replaceText(objectMap, StringMap.getString(stringMap, MESSAGE_DIGEST_ALGORITHM));
 						//
 						// plugin
 						//
@@ -10160,7 +10165,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							new StreamResult(writer));
 					//
 					newOdfPresentationDocument = generateOdfPresentationDocument(VoiceManager.toString(writer),
-							outputFolder, keySet(voices), embedAudioInPresentation, folderInPresentation);
+							StringMap.getString(stringMap, "outputFolder"), keySet(voices), embedAudioInPresentation,
+							folderInPresentation);
 					//
 				} // if
 					//
