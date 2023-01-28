@@ -396,6 +396,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static final String SHA_512 = "SHA-512";
 
+	private static final String FOLDER_IN_PRESENTATION = "folderInPresentation";
+
 	private static final Predicate<File> EMPTY_FILE_PREDICATE = f -> f != null && f.exists() && isFile(f)
 			&& longValue(length(f), 0) == 0;
 
@@ -5525,7 +5527,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			StringMap.setString(stringMap, "exportPassword", getText(tfExportPassword));
 			//
-			StringMap.setString(stringMap, "folderInPresentation", folderInPresentation);
+			StringMap.setString(stringMap, FOLDER_IN_PRESENTATION, folderInPresentation);
 			//
 			StringMap.setString(stringMap, "jlptFolderNamePrefix", getText(tfJlptFolderNamePrefix));
 			//
@@ -9805,7 +9807,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 						final StringMap stringMap = Reflection.newProxy(StringMap.class, ih);
 						//
-						StringMap.setString(stringMap, "folderInPresentation", folderInPresentation);
+						StringMap.setString(stringMap, FOLDER_IN_PRESENTATION, folderInPresentation);
 						//
 						StringMap.setString(stringMap, "messageDigestAlgorithm", messageDigestAlgorithm);
 						//
@@ -9998,7 +10000,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				final StringMap stringMap = ObjectMap.getObject(_objectMap, StringMap.class);
 				//
 				if ((odfPd = generateOdfPresentationDocument(objectMap, rowKey, table.row(rowKey),
-						StringMap.getString(stringMap, "folderInPresentation"),
+						StringMap.getString(stringMap, FOLDER_IN_PRESENTATION),
 						StringMap.getString(stringMap, "messageDigestAlgorithm"))) != null) {
 					//
 					final String[] fileExtensions = getFileExtensions(ContentType.OPENDOCUMENT_PRESENTATION);
@@ -10588,7 +10590,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				et.exportPresentationTemplate = StringMap.getString(stringMap, "exportPresentationTemplate");
 				//
-				et.folderInPresentation = StringMap.getString(stringMap, "folderInPresentation");
+				et.folderInPresentation = StringMap.getString(stringMap, FOLDER_IN_PRESENTATION);
 				//
 				et.password = StringMap.getString(stringMap, "exportPassword");
 				//
