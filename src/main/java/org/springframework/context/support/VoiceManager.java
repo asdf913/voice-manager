@@ -4515,7 +4515,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} //
 			//
-		final boolean nonTest = isTestMode();
+		final boolean nonTest = !isTestMode();
 		//
 		// if the "source" is one of the value of the field annotated with
 		// "@SystemClipboard", pass the "source" to
@@ -4661,7 +4661,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	private static boolean isTestMode() {
-		return forName("org.junit.jupiter.api.Test") == null;
+		return forName("org.junit.jupiter.api.Test") != null;
 	}
 
 	private static <T> List<T> getObjectsByGroupAnnotation(final Object instance, final String group,
@@ -6649,7 +6649,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				if (voiceId == null) {
 					//
 					voiceId = Unit.with(
-							getIfNull(toString(getSelectedItem(cbmVoiceId)), () -> getVoiceIdForExecute(isTestMode())));
+							getIfNull(toString(getSelectedItem(cbmVoiceId)), () -> getVoiceIdForExecute(!isTestMode())));
 					//
 				} // if
 					//
@@ -7824,7 +7824,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final boolean headless = GraphicsEnvironment.isHeadless();
 		//
-		final boolean nonTest = isTestMode();
+		final boolean nonTest = !isTestMode();
 		//
 		final boolean nonHeadlessAndnonTest = !headless && nonTest;
 		//
