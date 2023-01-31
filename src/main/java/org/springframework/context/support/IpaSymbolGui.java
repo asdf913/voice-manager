@@ -35,7 +35,7 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 
 	private static final long serialVersionUID = 467011648930037863L;
 
-	private PropertyResolver propertyResolver = null;
+	private transient PropertyResolver propertyResolver = null;
 
 	private JTextComponent tfText, tfIpaSymbol = null;
 
