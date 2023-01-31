@@ -262,7 +262,7 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertyResolver;
-import org.springframework.core.io.InputStreamSource;
+import org.springframework.core.io.InputStreamSourceUtil;
 import org.springframework.core.io.Resource;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
@@ -4610,10 +4610,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null && instance.exists();
 	}
 
-	private static InputStream getInputStream(final InputStreamSource instance) throws IOException {
-		return instance != null ? instance.getInputStream() : null;
-	}
-
 	private void importByWorkbookFiles(final File[] fs, final boolean headless) {
 		//
 		File f = null;
@@ -5127,8 +5123,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		String hex1 = null;
 		//
-		try (final InputStream is = testAndApply(VoiceManager::exists, ipaJsonResource, VoiceManager::getInputStream,
-				null)) {
+		try (final InputStream is = testAndApply(VoiceManager::exists, ipaJsonResource,
+				InputStreamSourceUtil::getInputStream, null)) {
 			//
 			final byte[] digest = digest(
 					md = MessageDigest.getInstance(StringUtils.defaultIfBlank(messageDigestAlgorithm, SHA_512)),

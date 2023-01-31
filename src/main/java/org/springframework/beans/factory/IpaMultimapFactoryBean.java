@@ -21,7 +21,7 @@ import org.javatuples.valueintf.IValue0Util;
 import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.InputStreamSource;
+import org.springframework.core.io.InputStreamSourceUtil;
 import org.springframework.core.io.Resource;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -62,7 +62,7 @@ public class IpaMultimapFactoryBean implements FactoryBean<Multimap<String, Stri
 			try {
 				//
 				multimap = IValue0Util.getValue0(this.multimap = getMultimapUnitFromJson(objectMapper, testAndApply(
-						IpaMultimapFactoryBean::exists, resource, IpaMultimapFactoryBean::getInputStream, null)));
+						IpaMultimapFactoryBean::exists, resource, InputStreamSourceUtil::getInputStream, null)));
 				//
 			} catch (final IOException e) {
 				//
@@ -142,10 +142,6 @@ public class IpaMultimapFactoryBean implements FactoryBean<Multimap<String, Stri
 
 	private static boolean exists(final Resource instance) {
 		return instance != null && instance.exists();
-	}
-
-	private static InputStream getInputStream(final InputStreamSource instance) throws IOException {
-		return instance != null ? instance.getInputStream() : null;
 	}
 
 	private ObjectMapper getObjectMapper() {
