@@ -8828,8 +8828,8 @@ class VoiceManagerTest {
 		try (final InputStream is = new ByteArrayInputStream(
 				String.format("{\"%1$s\":\"%2$s\"}", key, value).getBytes())) {
 			//
-			Assertions.assertEquals(Unit.with(ImmutableMultimap.of(key, value)),
-					getMultimapUnitFromJson(objectMapper, is));
+			Assertions.assertEquals(toString(Unit.with(ImmutableMultimap.of(key, value))),
+					toString(getMultimapUnitFromJson(objectMapper, is)));
 			//
 		} // try
 			//
