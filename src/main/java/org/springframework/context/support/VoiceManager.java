@@ -289,6 +289,7 @@ import com.github.curiousoddman.rgxgen.RgxGen;
 import com.google.common.base.Functions;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Range;
@@ -758,7 +759,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private Duration jSoupParseTimeout = null;
 
-	private Unit<Map<?, ?>> ipaSymbolMap = null;
+	private Unit<Multimap<String, String>> ipaSymbolMultimap = null;
 
 	private String ipaJsonUrl = null;
 
@@ -4610,8 +4611,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.getInputStream() : null;
 	}
 
-	private static Unit<Map<?, ?>> getMapUnitFromJson(final ObjectMapper objectMapper, final InputStream is)
-			throws IOException {
+	private static Unit<Multimap<String, String>> getMultimapUnitFromJson(final ObjectMapper objectMapper,
+			final InputStream is) throws IOException {
 		//
 		final Object obj = objectMapper != null && is != null ? objectMapper.readValue(is, Object.class) : null;
 		//
@@ -4625,7 +4626,33 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} else if (obj instanceof Map) {
 			//
-			return Unit.with((Map<?, ?>) obj);
+			final Set<Entry<String, String>> entrySet = entrySet((Map) obj);
+			//
+			Multimap<String, String> multimap = null;
+			//
+			if (iterator(entrySet) != null) {
+				//
+				List<String> list = null;
+				//
+				for (final Entry<?, ?> en : entrySet) {
+					//
+					list = testAndApply(Objects::nonNull, StringUtils.split(toString(getValue(en)), ","),
+							Arrays::asList, null);
+					//
+					for (int i = 0; list != null && i < list.size(); i++) {
+						//
+						list.set(i, StringUtils.trim(list.get(i)));
+						//
+					} // for
+						//
+					putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), toString(getKey(en)),
+							list);
+					//
+				} // for
+					//
+			} // if
+				//
+			return Unit.with(multimap);
 			//
 		} // if
 			//
@@ -5116,13 +5143,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private void actionPerformedForIpaSymbol(final boolean headless) {
 		//
-		Map<?, ?> map = IValue0Util.getValue0(ipaSymbolMap);
+		Multimap<String, String> multimap = IValue0Util.getValue0(ipaSymbolMultimap);
 		//
-		if (ipaSymbolMap == null) {
+		if (ipaSymbolMultimap == null) {
 			//
 			try {
 				//
-				map = IValue0Util.getValue0(ipaSymbolMap = getMapUnitFromJson(objectMapper,
+				multimap = IValue0Util.getValue0(ipaSymbolMultimap = getMultimapUnitFromJson(objectMapper,
 						testAndApply(VoiceManager::exists, ipaJsonResource, VoiceManager::getInputStream, null)));
 				//
 			} catch (final IOException e) {
@@ -5133,11 +5160,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
-		if (ipaSymbolMap == null) {
+		if (ipaSymbolMultimap == null) {
 			//
 			try (final InputStream is = openStream(testAndApply(StringUtils::isNotBlank, ipaJsonUrl, URL::new, null))) {
 				//
-				map = IValue0Util.getValue0(ipaSymbolMap = getMapUnitFromJson(objectMapper,
+				multimap = IValue0Util.getValue0(ipaSymbolMultimap = getMultimapUnitFromJson(objectMapper,
 						openStream(testAndApply(StringUtils::isNotBlank, ipaJsonUrl, URL::new, null))));
 				//
 			} catch (final IOException e) {
@@ -5148,8 +5175,24 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
-		setText(tfIpaSymbol, toString(get(map, getText(tfTextImport))));
+		final Collection<String> values = multimap != null ? multimap.get(getText(tfTextImport)) : null;
 		//
+		final int size = IterableUtils.size(values);
+		//
+		if (size == 1) {
+			//
+			setText(tfIpaSymbol, toString(IterableUtils.get(values, 0)));
+			//
+		} else if (!headless && !isTestMode()) {
+			//
+			final JList<Object> list = new JList<>(values != null ? values.toArray() : null);
+			//
+			JOptionPane.showMessageDialog(null, list, "IPA", JOptionPane.PLAIN_MESSAGE);
+			//
+			setText(tfIpaSymbol, toString(list.getSelectedValue()));
+			//
+		} // if
+			//
 	}
 
 	private void actionPerformedForCheckIpaSymbolJson(final boolean headless) {
@@ -6648,8 +6691,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				if (voiceId == null) {
 					//
-					voiceId = Unit.with(
-							getIfNull(toString(getSelectedItem(cbmVoiceId)), () -> getVoiceIdForExecute(!isTestMode())));
+					voiceId = Unit.with(getIfNull(toString(getSelectedItem(cbmVoiceId)),
+							() -> getVoiceIdForExecute(!isTestMode())));
 					//
 				} // if
 					//
