@@ -292,6 +292,7 @@ import com.google.common.base.Stopwatch;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.MultimapUtil;
 import com.google.common.collect.Range;
 import com.google.common.collect.Table;
 import com.google.common.collect.TableUtil;
@@ -3114,7 +3115,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-			putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedListMultimap::create), matcher.group(1),
+			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedListMultimap::create),
+					matcher.group(1),
 					toList(map(stream(select(nextElementSibling(element.parent()), "a")), a -> ElementUtil.text(a))));
 			//
 		} // for
@@ -3191,12 +3193,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static <K> Set<K> keySet(final Multimap<K, ?> instance) {
 		return instance != null ? instance.keySet() : null;
-	}
-
-	private static <K, V> void putAll(final Multimap<K, V> instance, final K key, final Iterable<? extends V> values) {
-		if (instance != null) {
-			instance.putAll(key, values);
-		}
 	}
 
 	private JPanel createBatchImportPanel(final LayoutManager layoutManager) {

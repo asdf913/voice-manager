@@ -28,6 +28,7 @@ import org.springframework.core.io.ResourceUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.MultimapUtil;
 
 public class IpaMultimapFactoryBean implements FactoryBean<Multimap<String, String>> {
 
@@ -126,8 +127,8 @@ public class IpaMultimapFactoryBean implements FactoryBean<Multimap<String, Stri
 						//
 					} // for
 						//
-					putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), toString(getKey(en)),
-							list);
+					MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+							toString(getKey(en)), list);
 					//
 				} // for
 					//
@@ -180,12 +181,6 @@ public class IpaMultimapFactoryBean implements FactoryBean<Multimap<String, Stri
 	private static <T, R, E extends Throwable> R apply(final FailableFunction<T, R, E> instance, final T value)
 			throws E {
 		return instance != null ? instance.apply(value) : null;
-	}
-
-	private static <K, V> void putAll(final Multimap<K, V> instance, final K key, final Iterable<? extends V> values) {
-		if (instance != null) {
-			instance.putAll(key, values);
-		}
 	}
 
 	private static void errorOrAssertOrShowException(final boolean headless, final Throwable throwable) {

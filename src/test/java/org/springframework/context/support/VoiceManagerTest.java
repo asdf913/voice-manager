@@ -265,12 +265,12 @@ class VoiceManagerTest {
 			METHOD_GET_DATA_VALIDATION_HELPER, METHOD_CREATE_EXPLICIT_LIST_CONSTRAINT, METHOD_CREATE_VALIDATION,
 			METHOD_CREATE_EXPORT_TASK, METHOD_GET_TAB_INDEX_BY_TITLE, METHOD_GET_DECLARED_FIELD,
 			METHOD_GET_ABSOLUTE_PATH, METHOD_IS_ASSIGNABLE_FROM, METHOD_GET_ENUM_CONSTANTS, METHOD_LIST_FILES,
-			METHOD_GET_TYPE, METHOD_GET_COLUMN_NAME, METHOD_PUT_ALL_MULTI_MAP, METHOD_PUT_ALL_MAP, METHOD_CREATE_SHEET1,
-			METHOD_CREATE_SHEET2, METHOD_ENTRIES, METHOD_GET_WORK_BOOK, METHOD_GET_OLE_ENTRY_NAMES,
-			METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE, METHOD_GET_DOCUMENT_ELEMENT, METHOD_GET_CHILD_NODES,
-			METHOD_GET_NAMED_ITEM, METHOD_GET_TEXT_CONTENT, METHOD_GET_NAME_FILE, METHOD_GET_NAME_CLASS,
-			METHOD_GET_NAME_PACKAGE, METHOD_GET_PASS_WORD, METHOD_GET_SUPPLIER, METHOD_GET_LOOKUP, METHOD_GET_LIST,
-			METHOD_GET_MAP, METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK, METHOD_WRITE_VALUE_AS_STRING,
+			METHOD_GET_TYPE, METHOD_GET_COLUMN_NAME, METHOD_PUT_ALL_MAP, METHOD_CREATE_SHEET1, METHOD_CREATE_SHEET2,
+			METHOD_ENTRIES, METHOD_GET_WORK_BOOK, METHOD_GET_OLE_ENTRY_NAMES, METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE,
+			METHOD_GET_DOCUMENT_ELEMENT, METHOD_GET_CHILD_NODES, METHOD_GET_NAMED_ITEM, METHOD_GET_TEXT_CONTENT,
+			METHOD_GET_NAME_FILE, METHOD_GET_NAME_CLASS, METHOD_GET_NAME_PACKAGE, METHOD_GET_PASS_WORD,
+			METHOD_GET_SUPPLIER, METHOD_GET_LOOKUP, METHOD_GET_LIST, METHOD_GET_MAP,
+			METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK, METHOD_WRITE_VALUE_AS_STRING,
 			METHOD_CREATE_DRAWING_PATRIARCH, METHOD_GET_CREATION_HELPER, METHOD_CREATE_CELL_COMMENT,
 			METHOD_CREATE_CLIENT_ANCHOR, METHOD_CREATE_RICH_TEXT_STRING, METHOD_SET_CELL_COMMENT, METHOD_SET_AUTHOR,
 			METHOD_TEST_AND_ACCEPT_PREDICATE, METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_FIND_FIELDS_BY_VALUE,
@@ -603,9 +603,6 @@ class VoiceManagerTest {
 		(METHOD_GET_TYPE = clz.getDeclaredMethod("getType", Field.class)).setAccessible(true);
 		//
 		(METHOD_GET_COLUMN_NAME = clz.getDeclaredMethod("getColumnName", Class.class, Field.class)).setAccessible(true);
-		//
-		(METHOD_PUT_ALL_MULTI_MAP = clz.getDeclaredMethod("putAll", Multimap.class, Object.class, Iterable.class))
-				.setAccessible(true);
 		//
 		(METHOD_PUT_ALL_MAP = clz.getDeclaredMethod("putAll", Map.class, Map.class)).setAccessible(true);
 		//
@@ -1016,7 +1013,7 @@ class VoiceManagerTest {
 
 		private Iterator<Cell> cells = null;
 
-		private Boolean anyMatch, contains, multiMapPut, multiMapPutAll, isInstalled, isEmpty, exists = null;
+		private Boolean anyMatch, contains, multiMapPut, isInstalled, isEmpty, exists = null;
 
 		private String[] voiceIds = null;
 
@@ -1407,10 +1404,6 @@ class VoiceManagerTest {
 				} else if (Objects.equals(methodName, "keySet")) {
 					//
 					return keySet;
-					//
-				} else if (Objects.equals(methodName, "putAll")) {
-					//
-					return multiMapPutAll;
 					//
 				} else if (Objects.equals(methodName, "entries")) {
 					//
@@ -5509,21 +5502,6 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> putAll(null, null));
 		//
-		Assertions.assertDoesNotThrow(() -> putAll(null, null, null));
-		//
-		ih.multiMapPutAll = Boolean.FALSE;
-		//
-		Assertions.assertDoesNotThrow(() -> putAll(multimap, null, null));
-		//
-	}
-
-	private static <K, V> void putAll(final Multimap<K, V> instance, final K key, final Iterable<? extends V> values)
-			throws Throwable {
-		try {
-			METHOD_PUT_ALL_MULTI_MAP.invoke(null, instance, key, values);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	private static <K, V> void putAll(final Map<K, V> a, final Map<? extends K, ? extends V> b) throws Throwable {
