@@ -16,6 +16,7 @@ import java.util.function.Predicate;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0Util;
 import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
@@ -171,16 +172,12 @@ public class IpaMultimapFactoryBean implements FactoryBean<Multimap<String, Stri
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
 			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse) throws E {
-		return test(predicate, value) ? apply(functionTrue, value) : apply(functionFalse, value);
+		return test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
+				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
 	private static final <T> boolean test(final Predicate<T> instance, final T value) {
 		return instance != null && instance.test(value);
-	}
-
-	private static <T, R, E extends Throwable> R apply(final FailableFunction<T, R, E> instance, final T value)
-			throws E {
-		return instance != null ? instance.apply(value) : null;
 	}
 
 	private static void errorOrAssertOrShowException(final boolean headless, final Throwable throwable) {

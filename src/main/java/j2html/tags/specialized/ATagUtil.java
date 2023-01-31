@@ -10,6 +10,7 @@ import java.util.function.Predicate;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.ElementUtil;
 import org.jsoup.select.Elements;
@@ -29,9 +30,9 @@ public final class ATagUtil {
 			//
 			final Elements elements = ElementUtil.getElementsByTag(testAndApply(Objects::nonNull,
 					(is = openStream(testAndApply(Objects::nonNull, url, URL::new, null))) != null
-					? IOUtils.toString(is, StandardCharsets.UTF_8)
-					: null,
-			Jsoup::parse, null), "title");
+							? IOUtils.toString(is, StandardCharsets.UTF_8)
+							: null,
+					Jsoup::parse, null), "title");
 			//
 			(aTag = new ATag()).withText(
 					ElementUtil.text(IterableUtils.size(elements) == 1 ? IterableUtils.get(elements, 0) : null));
@@ -50,16 +51,12 @@ public final class ATagUtil {
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
 			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse) throws E {
-		return test(predicate, value) ? apply(functionTrue, value) : apply(functionFalse, value);
+		return test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
+				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
 	private static final <T> boolean test(final Predicate<T> instance, final T value) {
 		return instance != null && instance.test(value);
-	}
-
-	private static <T, R, E extends Throwable> R apply(final FailableFunction<T, R, E> instance, final T value)
-			throws E {
-		return instance != null ? instance.apply(value) : null;
 	}
 
 	private static InputStream openStream(final URL instance) throws IOException {
