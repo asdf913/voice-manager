@@ -289,7 +289,6 @@ import com.github.curiousoddman.rgxgen.RgxGen;
 import com.google.common.base.Functions;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Range;
@@ -1351,6 +1350,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		this.jSoupParseTimeout = testAndApply(StringUtils::isNotBlank, string, Duration::parse, null);
 		//
+	}
+
+	public void setIpaSymbolMultimap(final Multimap<String, String> ipaSymbolMultimap) {
+		this.ipaSymbolMultimap = Unit.with(ipaSymbolMultimap);
 	}
 
 	private static IValue0<Class<? extends Workbook>> getWorkbookClass(
@@ -4611,55 +4614,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.getInputStream() : null;
 	}
 
-	private static Unit<Multimap<String, String>> getMultimapUnitFromJson(final ObjectMapper objectMapper,
-			final InputStream is) throws IOException {
-		//
-		final Object obj = objectMapper != null && is != null ? objectMapper.readValue(is, Object.class) : null;
-		//
-		if (is == null) {
-			//
-			return null;
-			//
-		} else if (obj == null) {
-			//
-			return Unit.with(null);
-			//
-		} else if (obj instanceof Map) {
-			//
-			final Set<Entry<String, String>> entrySet = entrySet((Map) obj);
-			//
-			Multimap<String, String> multimap = null;
-			//
-			if (iterator(entrySet) != null) {
-				//
-				List<String> list = null;
-				//
-				for (final Entry<?, ?> en : entrySet) {
-					//
-					list = testAndApply(Objects::nonNull, StringUtils.split(toString(getValue(en)), ","),
-							Arrays::asList, null);
-					//
-					for (int i = 0; list != null && i < list.size(); i++) {
-						//
-						list.set(i, StringUtils.trim(list.get(i)));
-						//
-					} // for
-						//
-					putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), toString(getKey(en)),
-							list);
-					//
-				} // for
-					//
-			} // if
-				//
-			return Unit.with(multimap);
-			//
-		} // if
-			//
-		throw new IllegalArgumentException(toString(getClass(obj)));
-		//
-	}
-
 	private void importByWorkbookFiles(final File[] fs, final boolean headless) {
 		//
 		File f = null;
@@ -5143,38 +5097,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private void actionPerformedForIpaSymbol(final boolean headless) {
 		//
-		Multimap<String, String> multimap = IValue0Util.getValue0(ipaSymbolMultimap);
+		final Multimap<String, String> multimap = IValue0Util.getValue0(ipaSymbolMultimap);
 		//
-		if (ipaSymbolMultimap == null) {
-			//
-			try {
-				//
-				multimap = IValue0Util.getValue0(ipaSymbolMultimap = getMultimapUnitFromJson(objectMapper,
-						testAndApply(VoiceManager::exists, ipaJsonResource, VoiceManager::getInputStream, null)));
-				//
-			} catch (final IOException e) {
-				//
-				errorOrAssertOrShowException(headless, e);
-				//
-			} // try
-				//
-		} // if
-			//
-		if (ipaSymbolMultimap == null) {
-			//
-			try (final InputStream is = openStream(testAndApply(StringUtils::isNotBlank, ipaJsonUrl, URL::new, null))) {
-				//
-				multimap = IValue0Util.getValue0(ipaSymbolMultimap = getMultimapUnitFromJson(objectMapper,
-						openStream(testAndApply(StringUtils::isNotBlank, ipaJsonUrl, URL::new, null))));
-				//
-			} catch (final IOException e) {
-				//
-				errorOrAssertOrShowException(headless, e);
-				//
-			} // try
-				//
-		} // if
-			//
 		final Collection<String> values = multimap != null ? multimap.get(getText(tfTextImport)) : null;
 		//
 		final int size = IterableUtils.size(values);
