@@ -264,6 +264,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertyResolver;
 import org.springframework.core.io.InputStreamSourceUtil;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceUtil;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
@@ -4606,10 +4607,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return condition ? trueValue : falseValue;
 	}
 
-	private static boolean exists(final Resource instance) {
-		return instance != null && instance.exists();
-	}
-
 	private void importByWorkbookFiles(final File[] fs, final boolean headless) {
 		//
 		File f = null;
@@ -5123,7 +5120,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		String hex1 = null;
 		//
-		try (final InputStream is = testAndApply(VoiceManager::exists, ipaJsonResource,
+		try (final InputStream is = testAndApply(ResourceUtil::exists, ipaJsonResource,
 				InputStreamSourceUtil::getInputStream, null)) {
 			//
 			final byte[] digest = digest(

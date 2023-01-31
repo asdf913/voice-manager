@@ -46,6 +46,7 @@ import org.springframework.core.env.PropertySource;
 import org.springframework.core.env.PropertySources;
 import org.springframework.core.io.InputStreamSourceUtil;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceUtil;
 
 public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFactoryPostProcessor, Ordered {
 
@@ -324,10 +325,12 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 					//
 					if (s != null) {
 						//
-						testAndApply(Objects::nonNull, testAndApply(Objects::nonNull,
-								tableSql != null && tableSql.exists() ? InputStreamSourceUtil.getInputStream(tableSql)
-										: null,
-								x -> IOUtils.toString(x, tableSqlEncoding), null), x -> s.execute(x), null);
+						testAndApply(Objects::nonNull,
+								testAndApply(Objects::nonNull,
+										ResourceUtil.exists(tableSql) ? InputStreamSourceUtil.getInputStream(tableSql)
+												: null,
+										x -> IOUtils.toString(x, tableSqlEncoding), null),
+								x -> s.execute(x), null);
 						//
 					} // if
 						//

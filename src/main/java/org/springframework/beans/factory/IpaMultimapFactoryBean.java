@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamSourceUtil;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceUtil;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.LinkedHashMultimap;
@@ -61,8 +62,8 @@ public class IpaMultimapFactoryBean implements FactoryBean<Multimap<String, Stri
 			//
 			try {
 				//
-				multimap = IValue0Util.getValue0(this.multimap = getMultimapUnitFromJson(objectMapper, testAndApply(
-						IpaMultimapFactoryBean::exists, resource, InputStreamSourceUtil::getInputStream, null)));
+				multimap = IValue0Util.getValue0(this.multimap = getMultimapUnitFromJson(objectMapper,
+						testAndApply(ResourceUtil::exists, resource, InputStreamSourceUtil::getInputStream, null)));
 				//
 			} catch (final IOException e) {
 				//
@@ -138,10 +139,6 @@ public class IpaMultimapFactoryBean implements FactoryBean<Multimap<String, Stri
 			//
 		throw new IllegalArgumentException(toString(getClass(obj)));
 		//
-	}
-
-	private static boolean exists(final Resource instance) {
-		return instance != null && instance.exists();
 	}
 
 	private ObjectMapper getObjectMapper() {
