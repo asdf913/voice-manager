@@ -52,17 +52,17 @@ public class IpaMultimapFactoryBean implements FactoryBean<Multimap<String, Stri
 	@Override
 	public Multimap<String, String> getObject() throws Exception {
 		//
-		Multimap<String, String> multimap = IValue0Util.getValue0(this.multimap);
+		Multimap<String, String> mm = IValue0Util.getValue0(this.multimap);
 		//
-		final ObjectMapper objectMapper = getObjectMapper();
+		final ObjectMapper om = getObjectMapper();
 		//
 		final boolean headless = GraphicsEnvironment.isHeadless();
 		//
-		if (multimap == null) {
+		if (mm == null) {
 			//
 			try {
 				//
-				multimap = IValue0Util.getValue0(this.multimap = getMultimapUnitFromJson(objectMapper,
+				mm = IValue0Util.getValue0(this.multimap = getMultimapUnitFromJson(om,
 						testAndApply(ResourceUtil::exists, resource, InputStreamSourceUtil::getInputStream, null)));
 				//
 			} catch (final IOException e) {
@@ -73,11 +73,11 @@ public class IpaMultimapFactoryBean implements FactoryBean<Multimap<String, Stri
 				//
 		} // if
 			//
-		if (multimap == null) {
+		if (mm == null) {
 			//
 			try (final InputStream is = openStream(testAndApply(StringUtils::isNotBlank, url, URL::new, null))) {
 				//
-				multimap = IValue0Util.getValue0(this.multimap = getMultimapUnitFromJson(objectMapper,
+				mm = IValue0Util.getValue0(this.multimap = getMultimapUnitFromJson(om,
 						openStream(testAndApply(StringUtils::isNotBlank, url, URL::new, null))));
 				//
 			} catch (final IOException e) {
@@ -88,7 +88,7 @@ public class IpaMultimapFactoryBean implements FactoryBean<Multimap<String, Stri
 				//
 		} // if
 			//
-		return multimap;
+		return mm;
 		//
 	}
 
