@@ -5,6 +5,10 @@ import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -37,7 +41,16 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 
 	private transient PropertyResolver propertyResolver = null;
 
-	private JTextComponent tfText, tfIpaSymbol = null;
+	@Target(ElementType.FIELD)
+	@Retention(RetentionPolicy.RUNTIME)
+	private @interface Note {
+		String value();
+	}
+
+	@Note("Text")
+	private JTextComponent tfText = null;
+
+	private JTextComponent tfIpaSymbol = null;
 
 	private AbstractButton btnGetIpaSymbol = null;
 
