@@ -263,6 +263,7 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertyResolver;
+import org.springframework.core.env.PropertyResolverUtil;
 import org.springframework.core.io.InputStreamSourceUtil;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceUtil;
@@ -806,7 +807,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
-		final String audioFormat = getProperty(propertyResolver,
+		final String audioFormat = PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.audioFormat");
 		//
 		setSelectedItem(cbmAudioFormatWrite, audioFormat);
@@ -1619,8 +1620,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		final List<?> pages = cast(List.class, testAndApply(Objects::nonNull, jTabbedPane,
 				x -> Narcissus.getField(x, getDeclaredField(getClass(x), "pages")), null));
 		//
-		final Integer tabIndex = getTabIndexByTitle(pages, jTabbedPane,
-				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.tabTitle"));
+		final Integer tabIndex = getTabIndexByTitle(pages, jTabbedPane, PropertyResolverUtil
+				.getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.tabTitle"));
 		//
 		if (tabIndex != null) {
 			//
@@ -2211,7 +2212,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			testAndAccept((a, b) -> a != null && a.containsProperty(b), propertyResolver,
 					"net.miginfocom.swing.MigLayout.layoutConstraints",
-					(a, b) -> migLayout.setLayoutConstraints(getProperty(a, b)));
+					(a, b) -> migLayout.setLayoutConstraints(PropertyResolverUtil.getProperty(a, b)));
 			//
 			lm = migLayout;
 			//
@@ -2287,8 +2288,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(new JLabel("Text"));
 		//
 		panel.add(
-				tfTextTts = new JTextField(
-						getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.text")),
+				tfTextTts = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
+						"org.springframework.context.support.VoiceManager.text")),
 				String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, 3));
 		//
 		// Provider
@@ -2387,7 +2388,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				setEditable(false, tfSpeechRate);
 				//
 				setValue(jsSpeechRate,
-						getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.speechRate"),
+						PropertyResolverUtil.getProperty(propertyResolver,
+								"org.springframework.context.support.VoiceManager.speechRate"),
 						a -> stateChanged(new ChangeEvent(a)));
 				//
 				panel.add(new JLabel(""));
@@ -2417,7 +2419,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			panel.add(new JLabel(SPEECH_RATE));
 			//
 			panel.add(
-					tfSpeechRate = new JTextField(getProperty(propertyResolver,
+					tfSpeechRate = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
 							"org.springframework.context.support.VoiceManager.speechRate")),
 					String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, 3));
 			//
@@ -2436,9 +2438,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				testAndApply(VoiceManager::hasLowerBound, speechVolumeRange, VoiceManager::lowerEndpoint, null), 0),
 				intValue(upperEnpoint, 100)), String.format("%1$s,span %2$s", GROWX, 3));
 		//
-		setSpeechVolume(
-				valueOf(getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.speechVolume")),
-				upperEnpoint);
+		setSpeechVolume(valueOf(PropertyResolverUtil.getProperty(propertyResolver,
+				"org.springframework.context.support.VoiceManager.speechVolume")), upperEnpoint);
 		//
 		jsSpeechVolume.setMajorTickSpacing(10);
 		//
@@ -2542,7 +2543,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final String[] voiceIds = ObjectMap.getObject(objectMap, String[].class);
 		//
-		final String voiceId = getProperty(propertyResolver,
+		final String voiceId = PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.voiceId");
 		//
 		List<?> temp = toList(filter(testAndApply(Objects::nonNull, voiceIds, Arrays::stream, null),
@@ -2561,7 +2562,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
-		final String voiceLanguage = getProperty(propertyResolver,
+		final String voiceLanguage = PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.voiceLanguage");
 		//
 		if (StringUtils.isNotEmpty(voiceLanguage)) {
@@ -2764,8 +2765,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(new JLabel(LANGUAGE));
 		//
 		panel.add(
-				tfLanguage = new JTextField(
-						getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.language")),
+				tfLanguage = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
+						"org.springframework.context.support.VoiceManager.language")),
 				String.format("%1$s,span %2$s", GROWX, 11));
 		//
 		// Source
@@ -2773,8 +2774,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(new JLabel(SOURCE));
 		//
 		panel.add(
-				tfSource = new JTextField(
-						getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.source")),
+				tfSource = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
+						"org.springframework.context.support.VoiceManager.source")),
 				String.format("%1$s,span %2$s,wmin %3$s", GROWX, 4, 50));
 		//
 		// Kanji
@@ -2801,9 +2802,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(new JComboBox<>(cbmIsKanji = get(booleanComboBoxModelSupplier)));
 		//
 		setSelectedItem(cbmIsKanji,
-				testAndApply(StringUtils::isNotEmpty,
-						getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.isKanji"),
-						Boolean::valueOf, null));
+				testAndApply(StringUtils::isNotEmpty, PropertyResolverUtil.getProperty(propertyResolver,
+						"org.springframework.context.support.VoiceManager.isKanji"), Boolean::valueOf, null));
 		//
 		// 学年別漢字 GaKuNenBeTsuKanJi
 		//
@@ -2825,7 +2825,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				ArrayUtils.insert(0, toArray(gaKuNenBeTsuKanJiList, new String[] {}), (String) null),
 				DefaultComboBoxModel::new, x -> new DefaultComboBoxModel<>())), String.format("span %1$s", 2));
 		//
-		final String string = getProperty(propertyResolver,
+		final String string = PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.gaKuNenBeTsuKanJi");
 		//
 		if (StringUtils.isNotEmpty(string)) {
@@ -2842,17 +2842,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				String.format("%1$s,span %2$s", WRAP, 1));
 		//
 		setSelectedItem(cbmJoYoKanJi,
-				testAndApply(StringUtils::isNotEmpty,
-						getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.yoKoKanJi"),
-						Boolean::valueOf, null));
+				testAndApply(StringUtils::isNotEmpty, PropertyResolverUtil.getProperty(propertyResolver,
+						"org.springframework.context.support.VoiceManager.yoKoKanJi"), Boolean::valueOf, null));
 		//
 		// Text
 		//
 		panel.add(new JLabel("Text"));
 		//
 		panel.add(
-				tfTextImport = new JTextField(
-						getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.text")),
+				tfTextImport = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
+						"org.springframework.context.support.VoiceManager.text")),
 				String.format("%1$s,span %2$s", GROWX, 23));
 		//
 		tfTextImport.addKeyListener(this);
@@ -2910,13 +2909,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(new JLabel("IPA"));
 		//
 		panel.add(
-				tfIpaSymbol = new JTextField(
-						getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.ipaSymbol")),
+				tfIpaSymbol = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
+						"org.springframework.context.support.VoiceManager.ipaSymbol")),
 				String.format("%1$s,wmin %2$s,span %3$s", GROWX, 100, 2));
 		//
-		final List<Yomi> yomiList = toList(
-				filter(testAndApply(Objects::nonNull, yomis, Arrays::stream, null), y -> Objects.equals(name(y),
-						getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.yomi"))));
+		final List<Yomi> yomiList = toList(filter(testAndApply(Objects::nonNull, yomis, Arrays::stream, null),
+				y -> Objects.equals(name(y), PropertyResolverUtil.getProperty(propertyResolver,
+						"org.springframework.context.support.VoiceManager.yomi"))));
 		//
 		final int size = IterableUtils.size(yomiList);
 		//
@@ -2934,7 +2933,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.add(new JLabel("List(s)"));
 		//
-		final String tags = getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.listNames");
+		final String tags = PropertyResolverUtil.getProperty(propertyResolver,
+				"org.springframework.context.support.VoiceManager.listNames");
 		//
 		panel.add(tfListNames = new JTextField(tags), String.format("%1$s,span %2$s", GROWX, 9));
 		//
@@ -2963,16 +2963,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						DefaultComboBoxModel::new, x -> new DefaultComboBoxModel<String>())),
 				WRAP);
 		//
-		setSelectedItem(cbmJlptLevel,
-				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.jlptLevel"));
+		setSelectedItem(cbmJlptLevel, PropertyResolverUtil.getProperty(propertyResolver,
+				"org.springframework.context.support.VoiceManager.jlptLevel"));
 		//
 		// Romaji
 		//
 		panel.add(new JLabel("Romaji"));
 		//
 		panel.add(
-				tfRomaji = new JTextField(
-						getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.romaji")),
+				tfRomaji = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
+						"org.springframework.context.support.VoiceManager.romaji")),
 				String.format("%1$s,span %2$s", GROWX, 23));
 		//
 		panel.add(btnCopyRomaji = new JButton("Copy"), WRAP);
@@ -2982,8 +2982,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(new JLabel("Hiragana"));
 		//
 		panel.add(
-				tfHiragana = new JTextField(
-						getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.hiragana")),
+				tfHiragana = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
+						"org.springframework.context.support.VoiceManager.hiragana")),
 				String.format("%1$s,span %2$s", GROWX, 13));
 		//
 		panel.add(btnCopyHiragana = new JButton("Copy"));
@@ -2995,8 +2995,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(new JLabel("Katakana"), String.format("span %1$s", 2));
 		//
 		panel.add(
-				tfKatakana = new JTextField(
-						getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.katakana")),
+				tfKatakana = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
+						"org.springframework.context.support.VoiceManager.katakana")),
 				String.format("%1$s,span %2$s", GROWX, 6));
 		//
 		panel.add(btnCopyKatakana = new JButton("Copy"), WRAP);
@@ -3006,7 +3006,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(new JLabel("Pronunciation Page URL"), String.format("span %1$s", 2));
 		//
 		panel.add(
-				tfPronunciationPageUrl = new JTextField(getProperty(propertyResolver,
+				tfPronunciationPageUrl = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
 						"org.springframework.context.support.VoiceManager.pronunciationPageUrl")),
 				String.format("%1$s,span %2$s", GROWX, 20));
 		//
@@ -3020,8 +3020,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.add(cbUseTtsVoice = new JCheckBox("TTS Voice"));
 		//
-		cbUseTtsVoice.setSelected(Boolean.parseBoolean(
-				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.useTtsVoice")));
+		cbUseTtsVoice.setSelected(Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
+				"org.springframework.context.support.VoiceManager.useTtsVoice")));
 		//
 		// Audio Format
 		//
@@ -3213,8 +3213,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.add(cbImportFileTemplateGenerateBlankRow = new JCheckBox("Generate a Blank Row"));
 		//
-		cbImportFileTemplateGenerateBlankRow.setSelected(Boolean.parseBoolean(getProperty(propertyResolver,
-				"org.springframework.context.support.VoiceManager.importFileTemplateGenerateBlankRow")));
+		cbImportFileTemplateGenerateBlankRow
+				.setSelected(Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
+						"org.springframework.context.support.VoiceManager.importFileTemplateGenerateBlankRow")));
 		//
 		panel.add(btnImportFileTemplate = new JButton("Generate"), String.format("%1$s,span %2$s", WRAP, 3));
 		//
@@ -3437,9 +3438,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		setSelectedItem(
 				cbmEncryptionMode, orElse(
-						findFirst(
-								filter(Arrays.stream(encryptionModes),
-										x -> StringUtils.equalsIgnoreCase(name(x), getProperty(propertyResolver,
+						findFirst(filter(Arrays.stream(encryptionModes),
+								x -> StringUtils.equalsIgnoreCase(name(x),
+										PropertyResolverUtil.getProperty(propertyResolver,
 												"org.springframework.context.support.VoiceManager.encryptionMode")))),
 						null));
 		//
@@ -3456,9 +3457,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		setSelectedItem(
 				cbmCompressionLevel, orElse(
-						findFirst(
-								filter(Arrays.stream(compressionLevels),
-										x -> StringUtils.equalsIgnoreCase(name(x), getProperty(propertyResolver,
+						findFirst(filter(Arrays.stream(compressionLevels),
+								x -> StringUtils.equalsIgnoreCase(name(x),
+										PropertyResolverUtil.getProperty(propertyResolver,
 												"org.springframework.context.support.VoiceManager.compressionLevel")))),
 						null));
 		//
@@ -3467,7 +3468,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(new JLabel(PASSWORD), String.format("span %1$s", 4));
 		//
 		panel.add(
-				tfExportPassword = new JPasswordField(getProperty(propertyResolver,
+				tfExportPassword = new JPasswordField(PropertyResolverUtil.getProperty(propertyResolver,
 						"org.springframework.context.support.VoiceManager.exportPassword")),
 				String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, 2));
 		//
@@ -3475,21 +3476,22 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.add(cbOverMp3Title = new JCheckBox("Over Mp3 Title"), String.format("%1$s,span %2$s", WRAP, 2));
 		//
-		cbOverMp3Title.setSelected(Boolean.parseBoolean(
-				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.overMp3Title")));
+		cbOverMp3Title.setSelected(Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
+				"org.springframework.context.support.VoiceManager.overMp3Title")));
 		//
 		panel.add(new JLabel(), String.format("span %1$s", 4));
 		//
 		panel.add(cbOrdinalPositionAsFileNamePrefix = new JCheckBox("Ordinal Position As File Name Prefix"),
 				String.format("span %1$s", 4));
 		//
-		cbOrdinalPositionAsFileNamePrefix.setSelected(Boolean.parseBoolean(getProperty(propertyResolver,
-				"org.springframework.context.support.VoiceManager.ordinalPositionAsFileNamePrefix")));
+		cbOrdinalPositionAsFileNamePrefix
+				.setSelected(Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
+						"org.springframework.context.support.VoiceManager.ordinalPositionAsFileNamePrefix")));
 		//
 		panel.add(new JLabel("Prefix"));
 		//
 		panel.add(
-				tfOrdinalPositionFileNamePrefix = new JTextField(getProperty(propertyResolver,
+				tfOrdinalPositionFileNamePrefix = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
 						"org.springframework.context.support.VoiceManager.ordinalPositionFileNamePrefix")),
 				String.format("%1$s,%2$s", GROWX, WRAP));
 		//
@@ -3497,13 +3499,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.add(cbJlptAsFolder = new JCheckBox("JLPT As Folder"), String.format("span %1$s", 3));
 		//
-		cbJlptAsFolder.setSelected(Boolean.parseBoolean(
-				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.jlptAsFolder")));
+		cbJlptAsFolder.setSelected(Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
+				"org.springframework.context.support.VoiceManager.jlptAsFolder")));
 		//
 		panel.add(new JLabel("Folder Name Prefix"));
 		//
 		panel.add(
-				tfJlptFolderNamePrefix = new JTextField(getProperty(propertyResolver,
+				tfJlptFolderNamePrefix = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
 						"org.springframework.context.support.VoiceManager.jlptFolderNamePrefix")),
 				String.format("%1$s,wmin %2$s,span %3$s", WRAP, 100, 2));
 		//
@@ -3511,15 +3513,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.add(cbExportHtml = new JCheckBox("Export HTML"), String.format("span %1$s", 3));
 		//
-		cbExportHtml.setSelected(Boolean.parseBoolean(
-				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.exportHtml")));
+		cbExportHtml.setSelected(Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
+				"org.springframework.context.support.VoiceManager.exportHtml")));
 		//
 		// File Name
 		//
 		panel.add(new JLabel("File Name"));
 		//
 		panel.add(
-				tfExportHtmlFileName = new JTextField(getProperty(propertyResolver,
+				tfExportHtmlFileName = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
 						"org.springframework.context.support.VoiceManager.exportHtmlFileName")),
 				String.format("wmin %1$s,span %2$s", 100, 2));
 		//
@@ -3536,26 +3538,27 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.add(cbExportListHtml = new JCheckBox("Export List"));
 		//
-		cbExportListHtml.setSelected(Boolean.parseBoolean(
-				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.exportListHtml")));
+		cbExportListHtml.setSelected(Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
+				"org.springframework.context.support.VoiceManager.exportListHtml")));
 		//
 		// cbExportWebSpeechSynthesisHtml
 		//
 		panel.add(cbExportWebSpeechSynthesisHtml = new JCheckBox("Export Web Speech Synthesis HTML"));
 		//
-		cbExportWebSpeechSynthesisHtml.setSelected(Boolean.parseBoolean(getProperty(propertyResolver,
-				"org.springframework.context.support.VoiceManager.exportWebSpeechSynthesisHtml")));
+		cbExportWebSpeechSynthesisHtml
+				.setSelected(Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
+						"org.springframework.context.support.VoiceManager.exportWebSpeechSynthesisHtml")));
 		//
 		// ZIP
 		//
 		panel.add(cbExportHtmlAsZip = new JCheckBox("Zip"));
 		//
-		cbExportHtmlAsZip.setSelected(Boolean.parseBoolean(
-				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.exportListHtmlAsZip")));
+		cbExportHtmlAsZip.setSelected(Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
+				"org.springframework.context.support.VoiceManager.exportListHtmlAsZip")));
 		//
 		panel.add(cbExportHtmlRemoveAfterZip = new JCheckBox("Remove Html After Zip"), WRAP);
 		//
-		cbExportHtmlRemoveAfterZip.setSelected(Boolean.parseBoolean(getProperty(propertyResolver,
+		cbExportHtmlRemoveAfterZip.setSelected(Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.exportHtmlRemoveAfterZip")));
 		//
 		// Export List Sheet
@@ -3564,8 +3567,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.add(cbExportListSheet = new JCheckBox("Export List Sheet"), String.format("%1$s,span %2$s", WRAP, 3));
 		//
-		cbExportListSheet.setSelected(Boolean.parseBoolean(
-				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.exportListSheet")));
+		cbExportListSheet.setSelected(Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
+				"org.springframework.context.support.VoiceManager.exportListSheet")));
 		//
 		// Export JLPT Sheet
 		//
@@ -3573,8 +3576,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.add(cbExportJlptSheet = new JCheckBox("Export JLPT Sheet"), String.format("%1$s,span %2$s", WRAP, 3));
 		//
-		cbExportJlptSheet.setSelected(Boolean.parseBoolean(
-				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.exportJlptSheet")));
+		cbExportJlptSheet.setSelected(Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
+				"org.springframework.context.support.VoiceManager.exportJlptSheet")));
 		//
 		// Export Presentation
 		//
@@ -3584,20 +3587,21 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		setToolTipText(cbExportPresentation, "Open Document Format (odp) format, Libre Office is recommended");
 		//
-		cbExportPresentation.setSelected(Boolean.parseBoolean(
-				getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.exportPresentation")));
+		cbExportPresentation.setSelected(Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
+				"org.springframework.context.support.VoiceManager.exportPresentation")));
 		//
 		panel.add(cbEmbedAudioInPresentation = new JCheckBox("Emded Audio In Presentation"),
 				String.format("span %1$s", 3));
 		//
-		cbEmbedAudioInPresentation.setSelected(Boolean.parseBoolean(getProperty(propertyResolver,
+		cbEmbedAudioInPresentation.setSelected(Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.embedAudioInPresentation")));
 		//
 		panel.add(cbHideAudioImageInPresentation = new JCheckBox("Hide Audio Image In Presentation"),
 				String.format("%1$s,span %2$s", WRAP, 3));
 		//
-		cbHideAudioImageInPresentation.setSelected(Boolean.parseBoolean(getProperty(propertyResolver,
-				"org.springframework.context.support.VoiceManager.hideAudioImageInPresentation")));
+		cbHideAudioImageInPresentation
+				.setSelected(Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
+						"org.springframework.context.support.VoiceManager.hideAudioImageInPresentation")));
 		//
 		// Export Microsoft Access
 		//
@@ -3605,7 +3609,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.add(cbExportMicrosoftAccess = new JCheckBox("Export Microsoft Access"), String.format("span %1$s", 3));
 		//
-		cbExportMicrosoftAccess.setSelected(Boolean.parseBoolean(getProperty(propertyResolver,
+		cbExportMicrosoftAccess.setSelected(Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.exportMicrosoftAccess")));
 		//
 		final Map<?, ?> fileFormatDetails = new LinkedHashMap<>();
@@ -4481,10 +4485,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	private static String getProperty(final PropertyResolver instance, final String key) {
-		return instance != null ? instance.getProperty(key) : null;
-	}
-
 	@Override
 	public void actionPerformed(final ActionEvent evt) {
 		//
@@ -5341,7 +5341,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			try (final OutputStream os = new FileOutputStream(
 					file = new File(String.format("常用漢字_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.xlsx", new Date())))) {
 				//
-				final String url = getProperty(propertyResolver,
+				final String url = PropertyResolverUtil.getProperty(propertyResolver,
 						"org.springframework.context.support.VoiceManager.joYoKanJiPageUrl");
 				//
 				addProperty(
