@@ -1,6 +1,8 @@
 package org.springframework.context.support;
 
 import java.awt.GraphicsEnvironment;
+import java.awt.HeadlessException;
+import java.awt.Window;
 import java.io.PrintStream;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -20,10 +22,12 @@ import org.springframework.beans.factory.config.BeanDefinition;
 
 import com.google.common.reflect.Reflection;
 
+import io.github.toolfactory.narcissus.Narcissus;
+
 class MainTest {
 
 	private static Method METHOD_FOR_NAME, METHOD_GET_INSTANCE, METHOD_SHOW_MESSAGE_DIALOG_OR_PRINT_LN, METHOD_CAST,
-			METHOD_GET_BEAN_DEFINITION_NAMES, METHOD_GET_BEAN_CLASS_NAME = null;
+			METHOD_GET_BEAN_DEFINITION_NAMES, METHOD_GET_BEAN_CLASS_NAME, METHOD_PACK = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -45,6 +49,8 @@ class MainTest {
 		//
 		(METHOD_GET_BEAN_CLASS_NAME = clz.getDeclaredMethod("getBeanClassName", BeanDefinition.class))
 				.setAccessible(true);
+		//
+		(METHOD_PACK = clz.getDeclaredMethod("pack", Window.class)).setAccessible(true);
 		//
 	}
 
@@ -264,4 +270,31 @@ class MainTest {
 			throw e.getTargetException();
 		}
 	}
+
+	@Test
+	void testPack() {
+		//
+		Assertions.assertDoesNotThrow(() -> pack(null));
+		//
+		if (GraphicsEnvironment.isHeadless()) {
+			//
+			Assertions.assertThrows(HeadlessException.class,
+					() -> pack(cast(Window.class, Narcissus.allocateInstance(Window.class))));
+			//
+		} else {
+			//
+			Assertions.assertDoesNotThrow(() -> pack(new Window(null)));
+			//
+		} // if
+			//
+	}
+
+	private static void pack(final Window instance) throws Throwable {
+		try {
+			METHOD_PACK.invoke(null, instance);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
 }

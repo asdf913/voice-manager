@@ -91,12 +91,8 @@ public class Main {
 				//
 			final Object instance = getInstance(beanFactory, clz, x -> showMessageDialogOrPrintln(ps, x));
 			//
-			if (instance instanceof Window) {
-				//
-				((Window) instance).pack();
-				//
-			} // if
-				//
+			pack(cast(Window.class, instance));
+			//
 			if (instance instanceof Component) {
 				//
 				((Component) instance).setVisible(true);
@@ -105,6 +101,12 @@ public class Main {
 				//
 		} // try
 			//
+	}
+
+	private static void pack(final Window instance) {
+		if (instance != null) {
+			instance.pack();
+		}
 	}
 
 	private static String[] getBeanDefinitionNames(final ListableBeanFactory instance) {
