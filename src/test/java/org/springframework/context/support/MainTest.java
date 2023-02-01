@@ -26,8 +26,9 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class MainTest {
 
-	private static Method METHOD_FOR_NAME, METHOD_GET_INSTANCE, METHOD_SHOW_MESSAGE_DIALOG_OR_PRINT_LN, METHOD_CAST,
-			METHOD_GET_BEAN_DEFINITION_NAMES, METHOD_GET_BEAN_CLASS_NAME, METHOD_PACK = null;
+	private static Method METHOD_FOR_NAME, METHOD_TO_STRING, METHOD_GET_INSTANCE,
+			METHOD_SHOW_MESSAGE_DIALOG_OR_PRINT_LN, METHOD_CAST, METHOD_GET_BEAN_DEFINITION_NAMES,
+			METHOD_GET_BEAN_CLASS_NAME, METHOD_PACK = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -35,6 +36,8 @@ class MainTest {
 		final Class<?> clz = Main.class;
 		//
 		(METHOD_FOR_NAME = clz.getDeclaredMethod("forName", String.class)).setAccessible(true);
+		//
+		(METHOD_TO_STRING = clz.getDeclaredMethod("toString", Object.class)).setAccessible(true);
 		//
 		(METHOD_GET_INSTANCE = clz.getDeclaredMethod("getInstance", ListableBeanFactory.class, Class.class,
 				Consumer.class)).setAccessible(true);
@@ -127,7 +130,32 @@ class MainTest {
 			} else if (obj instanceof Class) {
 				return (Class<?>) obj;
 			}
-			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
+			throw new Throwable(toString(obj.getClass()));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testToString() throws Throwable {
+		//
+		Assertions.assertNull(toString(null));
+		//
+		final String empty = "";
+		//
+		Assertions.assertSame(empty, toString(empty));
+		//
+	}
+
+	private static String toString(final Object instance) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_STRING.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(toString(obj.getClass()));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -242,7 +270,7 @@ class MainTest {
 			} else if (obj instanceof String[]) {
 				return (String[]) obj;
 			}
-			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
+			throw new Throwable(toString(obj.getClass()));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -265,7 +293,7 @@ class MainTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
+			throw new Throwable(toString(obj.getClass()));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

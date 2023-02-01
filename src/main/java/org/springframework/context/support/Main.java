@@ -7,13 +7,13 @@ import java.io.PrintStream;
 import java.util.Map;
 import java.util.function.Consumer;
 
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
-import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.ListableBeanFactoryUtil;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -42,9 +42,9 @@ public class Main {
 			//
 			final PrintStream ps = cast(PrintStream.class, FieldUtils.readDeclaredStaticField(System.class, "out"));
 			//
+			final ConfigurableListableBeanFactory clbf = beanFactory.getBeanFactory();
+			//
 			if (clz == null) {
-				//
-				final ConfigurableListableBeanFactory clbf = beanFactory.getBeanFactory();
 				//
 				final String[] beanDefinitionNames = getBeanDefinitionNames(clbf);
 				//
@@ -83,6 +83,22 @@ public class Main {
 				//
 			if (clz == null) {
 				//
+				final String[] beanNames = beanFactory != null ? beanFactory.getBeanNamesForType(Component.class)
+						: null;
+				//
+				final JList<Object> list = beanNames != null ? new JList<>(beanNames) : new JList<>();
+				//
+				JOptionPane.showMessageDialog(null, list, "Component", JOptionPane.PLAIN_MESSAGE);
+				//
+				final String toString = toString(list.getSelectedValue());
+				//
+				clz = forName(
+						getBeanClassName(clbf != null && toString != null ? clbf.getBeanDefinition(toString) : null));
+				//
+			} // if
+				//
+			if (clz == null) {
+				//
 				showMessageDialogOrPrintln(ps, "java.lang.Class is null");
 				//
 				return;
@@ -101,6 +117,10 @@ public class Main {
 				//
 		} // try
 			//
+	}
+
+	private static String toString(final Object instance) {
+		return instance != null ? instance.toString() : null;
 	}
 
 	private static void pack(final Window instance) {
