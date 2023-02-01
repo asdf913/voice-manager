@@ -13,6 +13,7 @@ import java.util.function.Consumer;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.ListableBeanFactory;
 
@@ -20,8 +21,8 @@ import com.google.common.reflect.Reflection;
 
 class MainTest {
 
-	private static Method METHOD_FOR_NAME, METHOD_GET_INSTANCE, METHOD_SHOW_MESSAGE_DIALOG_OR_PRINT_LN,
-			METHOD_CAST = null;
+	private static Method METHOD_FOR_NAME, METHOD_GET_INSTANCE, METHOD_SHOW_MESSAGE_DIALOG_OR_PRINT_LN, METHOD_CAST,
+			METHOD_GET_BEAN_DEFINITION_NAMES = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -38,11 +39,16 @@ class MainTest {
 		//
 		(METHOD_CAST = clz.getDeclaredMethod("cast", Class.class, Object.class)).setAccessible(true);
 		//
+		(METHOD_GET_BEAN_DEFINITION_NAMES = clz.getDeclaredMethod("getBeanDefinitionNames", ListableBeanFactory.class))
+				.setAccessible(true);
+		//
 	}
 
 	private class IH implements InvocationHandler {
 
 		private Map<Object, Object> beansOfType = null;
+
+		private String[] beanDefinitionNames = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -55,6 +61,10 @@ class MainTest {
 					//
 					return beansOfType;
 					//
+				} else if (Objects.equals(methodName, "getBeanDefinitionNames")) {
+					//
+					return beanDefinitionNames;
+					//
 				} // if
 					//
 			} // if
@@ -63,6 +73,15 @@ class MainTest {
 			//
 		}
 
+	}
+
+	private IH ih = null;
+
+	@BeforeEach
+	void beforeEach() {
+		//
+		ih = new IH();
+		//
 	}
 
 	@Test
@@ -104,22 +123,33 @@ class MainTest {
 		//
 		Assertions.assertNull(getInstance(null, Object.class, null));
 		//
-		final IH ih = new IH();
-		//
 		final ListableBeanFactory beanFactory = Reflection.newProxy(ListableBeanFactory.class, ih);
 		//
 		Assertions.assertNull(getInstance(beanFactory, Object.class, null));
 		//
-		ih.beansOfType = Collections.emptyMap();
-		//
+		if (ih != null) {
+			//
+			ih.beansOfType = Collections.emptyMap();
+			//
+		} // if
+			//
 		Assertions.assertNull(getInstance(beanFactory, Object.class, null));
 		//
-		ih.beansOfType = new LinkedHashMap<>(Collections.singletonMap(null, null));
 		//
+		if (ih != null) {
+			//
+			ih.beansOfType = new LinkedHashMap<>(Collections.singletonMap(null, null));
+			//
+		} // if
+			//
 		Assertions.assertNull(getInstance(beanFactory, Object.class, null));
 		//
-		ih.beansOfType.put("", "");
-		//
+		if (ih != null) {
+			//
+			ih.beansOfType.put("", "");
+			//
+		} // if
+			//
 		Assertions.assertNull(getInstance(beanFactory, Object.class, null));
 		//
 	}
@@ -170,6 +200,29 @@ class MainTest {
 	private static <T> T cast(final Class<T> clz, final Object instance) throws Throwable {
 		try {
 			return (T) METHOD_CAST.invoke(null, clz, instance);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetBeanDefinitionNames() throws Throwable {
+		//
+		Assertions.assertNull(getBeanDefinitionNames(null));
+		//
+		Assertions.assertNull(getBeanDefinitionNames(Reflection.newProxy(ListableBeanFactory.class, ih)));
+		//
+	}
+
+	private static String[] getBeanDefinitionNames(final ListableBeanFactory instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_BEAN_DEFINITION_NAMES.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String[]) {
+				return (String[]) obj;
+			}
+			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

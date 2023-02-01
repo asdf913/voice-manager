@@ -45,7 +45,7 @@ public class Main {
 				//
 				final ConfigurableListableBeanFactory clbf = beanFactory.getBeanFactory();
 				//
-				final String[] beanDefinitionNames = clbf != null ? clbf.getBeanDefinitionNames() : null;
+				final String[] beanDefinitionNames = getBeanDefinitionNames(clbf);
 				//
 				BeanDefinition bd = null;
 				//
@@ -104,6 +104,10 @@ public class Main {
 				//
 		} // try
 			//
+	}
+
+	private static String[] getBeanDefinitionNames(final ListableBeanFactory instance) {
+		return instance != null ? instance.getBeanDefinitionNames() : null;
 	}
 
 	private static <T> T cast(final Class<T> clz, final Object instance) {
