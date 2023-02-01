@@ -21,7 +21,7 @@ public class Main {
 	private Main() {
 	}
 
-	public static void main(final String[] args) {
+	public static void main(final String[] args) throws IllegalAccessException {
 		//
 		try (final ConfigurableApplicationContext beanFactory = new ClassPathXmlApplicationContext(
 				"applicationContext.xml")) {
@@ -29,15 +29,17 @@ public class Main {
 			final Class<?> clz = forName(PropertyResolverUtil.getProperty(beanFactory.getEnvironment(),
 					"org.springframework.context.support.Main.class"));
 			//
+			final PrintStream ps = System.out;
+			//
 			if (clz == null) {
 				//
-				showMessageDialogOrPrintln(System.out, "java.lang.Class is null");
+				showMessageDialogOrPrintln(ps, "java.lang.Class is null");
 				//
 				return;
 				//
 			} // if
 				//
-			final Object instance = getInstance(beanFactory, clz, x -> showMessageDialogOrPrintln(System.out, x));
+			final Object instance = getInstance(beanFactory, clz, x -> showMessageDialogOrPrintln(ps, x));
 			//
 			if (instance instanceof Window) {
 				//
