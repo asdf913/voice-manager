@@ -201,9 +201,8 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 				//
 			} else if (!headless && !isTestMode()) {
 				//
-				final Object[] array = toArray(values);
-				//
-				final JList<Object> list = array != null ? new JList<>(array) : new JList<>();
+				final JList<Object> list = testAndApply(Objects::nonNull, toArray(values), JList::new,
+						x -> new JList<>());
 				//
 				JOptionPane.showMessageDialog(null, list, "IPA", JOptionPane.PLAIN_MESSAGE);
 				//
