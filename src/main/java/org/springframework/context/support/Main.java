@@ -23,6 +23,7 @@ import org.springframework.core.env.PropertyResolverUtil;
 
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.MultimapUtil;
 
 public class Main {
 
@@ -71,7 +72,7 @@ public class Main {
 						//
 				} // for
 					//
-				if (multimap != null && multimap.size() == 1) {
+				if (MultimapUtil.size(multimap) == 1) {
 					//
 					clz = forName(multimap.values().stream().map(Main::getBeanClassName)
 							.reduce((first, second) -> first).orElse(null));

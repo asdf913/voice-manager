@@ -10478,7 +10478,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				int coutner = 0;
 				//
-				size = multimap.size();
+				size = MultimapUtil.size(multimap);
 				//
 				numberOfOrdinalPositionDigit = Integer.valueOf(StringUtils.length(toString(
 						orElse(max(filter(map(stream(multimap.values()), x -> getOrdinalPosition(x)), Objects::nonNull),
@@ -10601,7 +10601,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		int coutner = 0;
 		//
-		final int size = multimap.size();
+		final int size = MultimapUtil.size(multimap);
 		//
 		final int numberOfOrdinalPositionDigit = Integer.valueOf(StringUtils.length(toString(
 				orElse(max(filter(map(stream(multimap.values()), x -> getOrdinalPosition(x)), Objects::nonNull),
