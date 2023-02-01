@@ -10,12 +10,19 @@ import java.util.function.Consumer;
 import javax.swing.JOptionPane;
 
 import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.ListableBeanFactoryUtil;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.PropertyResolverUtil;
+
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Multimap;
 
 public class Main {
 
@@ -27,11 +34,52 @@ public class Main {
 		try (final ConfigurableApplicationContext beanFactory = new ClassPathXmlApplicationContext(
 				"applicationContext.xml")) {
 			//
-			final Class<?> clz = forName(PropertyResolverUtil.getProperty(beanFactory.getEnvironment(),
-					"org.springframework.context.support.Main.class"));
+			final String string = PropertyResolverUtil.getProperty(beanFactory.getEnvironment(),
+					"org.springframework.context.support.Main.class");
+			//
+			Class<?> clz = forName(string);
 			//
 			final PrintStream ps = cast(PrintStream.class, FieldUtils.readDeclaredStaticField(System.class, "out"));
 			//
+			if (clz == null) {
+				//
+				final ConfigurableListableBeanFactory clbf = beanFactory.getBeanFactory();
+				//
+				final String[] beanDefinitionNames = clbf != null ? clbf.getBeanDefinitionNames() : null;
+				//
+				BeanDefinition bd = null;
+				//
+				String[] ss = null;
+				//
+				Multimap<String, BeanDefinition> multimap = null;
+				//
+				for (int i = 0; beanDefinitionNames != null && i < beanDefinitionNames.length; i++) {
+					//
+					if ((bd = clbf.getBeanDefinition(beanDefinitionNames[i])) == null) {
+						//
+						continue;
+						//
+					} // if
+						//
+					if ((ss = StringUtils.split(bd.getBeanClassName(), ".")) != null && ss.length > 0
+							&& StringUtils.equals(string, ss[ss.length - 1])
+							&& (multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create)) != null) {
+						//
+						multimap.put(string, bd);
+						//
+					} // if
+						//
+				} // for
+					//
+				if (multimap != null && multimap.size() == 1) {
+					//
+					clz = forName(multimap.values().stream().map(x -> x != null ? x.getBeanClassName() : null)
+							.reduce((first, second) -> first).orElse(null));
+					//
+				} // if
+					//
+			} // if
+				//
 			if (clz == null) {
 				//
 				showMessageDialogOrPrintln(ps, "java.lang.Class is null");
