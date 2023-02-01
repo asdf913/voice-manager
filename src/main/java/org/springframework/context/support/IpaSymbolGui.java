@@ -18,6 +18,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.EventObject;
 import java.util.Objects;
 import java.util.function.Predicate;
 
@@ -178,7 +179,7 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 	@Override
 	public void actionPerformed(final ActionEvent evt) {
 		//
-		final Object source = evt != null ? evt.getSource() : null;
+		final Object source = getSource(evt);
 		//
 		final boolean headless = GraphicsEnvironment.isHeadless();
 		//
@@ -270,6 +271,10 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 				//
 		} // if
 			//
+	}
+
+	private static Object getSource(final EventObject instance) {
+		return instance != null ? instance.getSource() : null;
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
