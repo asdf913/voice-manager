@@ -79,7 +79,7 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 
 	private Unit<Multimap<String, String>> ipaSymbolMultimap = null;
 
-	private Resource resource = null;
+	private transient Resource resource = null;
 
 	private String url = null;
 
