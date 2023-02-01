@@ -73,7 +73,10 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 
 	private JTextComponent tfIpaSymbol = null;
 
-	private AbstractButton btnGetIpaSymbol, btnCheckIpaSymbolJson = null;
+	@Note("Get IPA Symobl")
+	private AbstractButton btnGetIpaSymbol = null;
+
+	private AbstractButton btnCheckIpaSymbolJson = null;
 
 	private JLabel jlIpaJsonFile = null;
 
