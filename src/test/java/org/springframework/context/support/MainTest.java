@@ -20,7 +20,8 @@ import com.google.common.reflect.Reflection;
 
 class MainTest {
 
-	private static Method METHOD_FOR_NAME, METHOD_GET_INSTANCE, METHOD_SHOW_MESSAGE_DIALOG_OR_PRINT_LN = null;
+	private static Method METHOD_FOR_NAME, METHOD_GET_INSTANCE, METHOD_SHOW_MESSAGE_DIALOG_OR_PRINT_LN,
+			METHOD_CAST = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -34,6 +35,8 @@ class MainTest {
 		//
 		(METHOD_SHOW_MESSAGE_DIALOG_OR_PRINT_LN = clz.getDeclaredMethod("showMessageDialogOrPrintln", PrintStream.class,
 				Object.class)).setAccessible(true);
+		//
+		(METHOD_CAST = clz.getDeclaredMethod("cast", Class.class, Object.class)).setAccessible(true);
 		//
 	}
 
@@ -144,6 +147,29 @@ class MainTest {
 	private static void showMessageDialogOrPrintln(final PrintStream ps, final Object object) throws Throwable {
 		try {
 			METHOD_SHOW_MESSAGE_DIALOG_OR_PRINT_LN.invoke(null, ps, object);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCast() throws Throwable {
+		//
+		Assertions.assertNull(cast(null, null));
+		//
+		final Class<?> clz = Object.class;
+		//
+		Assertions.assertNull(cast(clz, null));
+		//
+		final Object object = new Object();
+		//
+		Assertions.assertSame(object, cast(clz, object));
+		//
+	}
+
+	private static <T> T cast(final Class<T> clz, final Object instance) throws Throwable {
+		try {
+			return (T) METHOD_CAST.invoke(null, clz, instance);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

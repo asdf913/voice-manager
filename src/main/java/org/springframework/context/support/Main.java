@@ -11,6 +11,7 @@ import javax.swing.JOptionPane;
 
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.ListableBeanFactoryUtil;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -21,7 +22,7 @@ public class Main {
 	private Main() {
 	}
 
-	public static void main(final String[] args) {
+	public static void main(final String[] args) throws IllegalAccessException {
 		//
 		try (final ConfigurableApplicationContext beanFactory = new ClassPathXmlApplicationContext(
 				"applicationContext.xml")) {
@@ -29,7 +30,7 @@ public class Main {
 			final Class<?> clz = forName(PropertyResolverUtil.getProperty(beanFactory.getEnvironment(),
 					"org.springframework.context.support.Main.class"));
 			//
-			final PrintStream ps = System.out;
+			final PrintStream ps = cast(PrintStream.class, FieldUtils.readDeclaredStaticField(System.class, "out"));
 			//
 			if (clz == null) {
 				//
@@ -55,6 +56,10 @@ public class Main {
 				//
 		} // try
 			//
+	}
+
+	private static <T> T cast(final Class<T> clz, final Object instance) {
+		return clz != null && clz.isInstance(instance) ? clz.cast(instance) : null;
 	}
 
 	private static void showMessageDialogOrPrintln(final PrintStream ps, final Object object) {
