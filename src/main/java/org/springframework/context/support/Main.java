@@ -1,7 +1,9 @@
 package org.springframework.context.support;
 
 import java.awt.Component;
+import java.awt.GraphicsEnvironment;
 import java.awt.Window;
+import java.io.PrintStream;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -29,13 +31,13 @@ public class Main {
 			//
 			if (clz == null) {
 				//
-				JOptionPane.showMessageDialog(null, "java.lang.Class is null");
+				showMessageDialogOrPrintln(System.out, "java.lang.Class is null");
 				//
 				return;
 				//
 			} // if
 				//
-			final Object instance = getInstance(beanFactory, clz, x -> JOptionPane.showMessageDialog(null, x));
+			final Object instance = getInstance(beanFactory, clz, x -> showMessageDialogOrPrintln(System.out, x));
 			//
 			if (instance instanceof Window) {
 				//
@@ -50,6 +52,20 @@ public class Main {
 			} // if
 				//
 		} // try
+			//
+	}
+
+	private static void showMessageDialogOrPrintln(final PrintStream ps, final Object object) {
+		//
+		if (!GraphicsEnvironment.isHeadless()) {
+			//
+			JOptionPane.showMessageDialog(null, object);
+			//
+		} else if (ps != null) {
+			//
+			ps.println(object);
+			//
+		} // if
 			//
 	}
 
