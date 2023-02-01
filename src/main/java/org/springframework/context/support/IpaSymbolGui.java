@@ -52,6 +52,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceUtil;
 
 import com.google.common.collect.Multimap;
+import com.google.common.collect.MultimapUtil;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -185,9 +186,8 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 		//
 		if (Objects.equals(source, btnGetIpaSymbol)) {
 			//
-			final Multimap<String, String> multimap = IValue0Util.getValue0(ipaSymbolMultimap);
-			//
-			final Collection<String> values = multimap != null ? multimap.get(getText(tfText)) : null;
+			final Collection<String> values = MultimapUtil.get(IValue0Util.getValue0(ipaSymbolMultimap),
+					getText(tfText));
 			//
 			final int size = IterableUtils.size(values);
 			//

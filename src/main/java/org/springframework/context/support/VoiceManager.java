@@ -5050,9 +5050,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private void actionPerformedForIpaSymbol(final boolean headless) {
 		//
-		final Multimap<String, String> multimap = IValue0Util.getValue0(ipaSymbolMultimap);
-		//
-		final Collection<String> values = multimap != null ? multimap.get(getText(tfTextImport)) : null;
+		final Collection<String> values = MultimapUtil.get(IValue0Util.getValue0(ipaSymbolMultimap),
+				getText(tfTextImport));
 		//
 		final int size = IterableUtils.size(values);
 		//
@@ -11265,7 +11264,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				for (final String key : multimap.keySet()) {
 					//
-					setSheet(workbook, createSheet(workbook, key), multimap.get(key));
+					setSheet(workbook, createSheet(workbook, key), MultimapUtil.get(multimap, key));
 					//
 				} // for
 					//
@@ -11299,7 +11298,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				} // if
 					//
 				setSheet(workbook, StringUtils.length(key) > 0 ? createSheet(workbook, key) : createSheet(workbook),
-						multimap.get(key));
+						MultimapUtil.get(multimap, key));
 				//
 			} // for
 				//
