@@ -83,8 +83,7 @@ public class Main {
 				//
 			if (clz == null) {
 				//
-				final String[] beanNames = beanFactory != null ? beanFactory.getBeanNamesForType(Component.class)
-						: null;
+				final String[] beanNames = getBeanNamesForType(beanFactory, Component.class);
 				//
 				final JList<Object> list = beanNames != null ? new JList<>(beanNames) : new JList<>();
 				//
@@ -127,6 +126,10 @@ public class Main {
 		if (instance != null) {
 			instance.pack();
 		}
+	}
+
+	private static String[] getBeanNamesForType(final ListableBeanFactory instance, final Class<?> type) {
+		return instance != null ? instance.getBeanNamesForType(type) : null;
 	}
 
 	private static String[] getBeanDefinitionNames(final ListableBeanFactory instance) {

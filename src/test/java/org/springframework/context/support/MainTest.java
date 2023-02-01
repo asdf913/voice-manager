@@ -27,8 +27,8 @@ import io.github.toolfactory.narcissus.Narcissus;
 class MainTest {
 
 	private static Method METHOD_FOR_NAME, METHOD_TO_STRING, METHOD_GET_INSTANCE,
-			METHOD_SHOW_MESSAGE_DIALOG_OR_PRINT_LN, METHOD_CAST, METHOD_GET_BEAN_DEFINITION_NAMES,
-			METHOD_GET_BEAN_CLASS_NAME, METHOD_PACK = null;
+			METHOD_SHOW_MESSAGE_DIALOG_OR_PRINT_LN, METHOD_CAST, METHOD_GET_BEAN_NAMES_FOR_TYPE,
+			METHOD_GET_BEAN_DEFINITION_NAMES, METHOD_GET_BEAN_CLASS_NAME, METHOD_PACK = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -47,6 +47,9 @@ class MainTest {
 		//
 		(METHOD_CAST = clz.getDeclaredMethod("cast", Class.class, Object.class)).setAccessible(true);
 		//
+		(METHOD_GET_BEAN_NAMES_FOR_TYPE = clz.getDeclaredMethod("getBeanNamesForType", ListableBeanFactory.class,
+				Class.class)).setAccessible(true);
+		//
 		(METHOD_GET_BEAN_DEFINITION_NAMES = clz.getDeclaredMethod("getBeanDefinitionNames", ListableBeanFactory.class))
 				.setAccessible(true);
 		//
@@ -61,7 +64,7 @@ class MainTest {
 
 		private Map<Object, Object> beansOfType = null;
 
-		private String[] beanDefinitionNames = null;
+		private String[] beanDefinitionNames, beanNamesForType = null;
 
 		private String beanClassName = null;
 
@@ -79,6 +82,10 @@ class MainTest {
 				} else if (Objects.equals(methodName, "getBeanDefinitionNames")) {
 					//
 					return beanDefinitionNames;
+					//
+				} else if (Objects.equals(methodName, "getBeanNamesForType") && args != null && args.length > 0) {
+					//
+					return beanNamesForType;
 					//
 				} // if
 					//
@@ -100,10 +107,12 @@ class MainTest {
 
 	private IH ih = null;
 
+	private ListableBeanFactory listableBeanFactory = null;
+
 	@BeforeEach
 	void beforeEach() {
 		//
-		ih = new IH();
+		listableBeanFactory = Reflection.newProxy(ListableBeanFactory.class, ih = new IH());
 		//
 	}
 
@@ -171,9 +180,7 @@ class MainTest {
 		//
 		Assertions.assertNull(getInstance(null, Object.class, null));
 		//
-		final ListableBeanFactory beanFactory = Reflection.newProxy(ListableBeanFactory.class, ih);
-		//
-		Assertions.assertNull(getInstance(beanFactory, Object.class, null));
+		Assertions.assertNull(getInstance(listableBeanFactory, Object.class, null));
 		//
 		if (ih != null) {
 			//
@@ -181,7 +188,7 @@ class MainTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(getInstance(beanFactory, Object.class, null));
+		Assertions.assertNull(getInstance(listableBeanFactory, Object.class, null));
 		//
 		//
 		if (ih != null) {
@@ -190,7 +197,7 @@ class MainTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(getInstance(beanFactory, Object.class, null));
+		Assertions.assertNull(getInstance(listableBeanFactory, Object.class, null));
 		//
 		if (ih != null) {
 			//
@@ -198,7 +205,7 @@ class MainTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(getInstance(beanFactory, Object.class, null));
+		Assertions.assertNull(getInstance(listableBeanFactory, Object.class, null));
 		//
 	}
 
@@ -254,11 +261,35 @@ class MainTest {
 	}
 
 	@Test
+	void testGetBeanNamesForType() throws Throwable {
+		//
+		Assertions.assertNull(getBeanNamesForType(null, null));
+		//
+		Assertions.assertNull(getBeanNamesForType(listableBeanFactory, null));
+		//
+	}
+
+	private static String[] getBeanNamesForType(final ListableBeanFactory instance, final Class<?> type)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_GET_BEAN_NAMES_FOR_TYPE.invoke(null, instance, type);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String[]) {
+				return (String[]) obj;
+			}
+			throw new Throwable(toString(obj.getClass()));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
 	void testGetBeanDefinitionNames() throws Throwable {
 		//
 		Assertions.assertNull(getBeanDefinitionNames(null));
 		//
-		Assertions.assertNull(getBeanDefinitionNames(Reflection.newProxy(ListableBeanFactory.class, ih)));
+		Assertions.assertNull(getBeanDefinitionNames(listableBeanFactory));
 		//
 	}
 
