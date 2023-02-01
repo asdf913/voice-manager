@@ -201,7 +201,7 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 				//
 			} else if (!headless && !isTestMode()) {
 				//
-				final Object[] array = values != null ? values.toArray() : null;
+				final Object[] array = toArray(values);
 				//
 				final JList<Object> list = array != null ? new JList<>(array) : new JList<>();
 				//
@@ -271,6 +271,10 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 				//
 		} // if
 			//
+	}
+
+	private static Object[] toArray(final Collection<?> instance) {
+		return instance != null ? instance.toArray() : null;
 	}
 
 	private static Object getSource(final EventObject instance) {
