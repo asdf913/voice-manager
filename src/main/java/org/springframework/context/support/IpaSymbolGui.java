@@ -199,7 +199,7 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 				//
 				setText(tfIpaSymbol, toString(IterableUtils.get(values, 0)));
 				//
-			} else if (!headless && !isTestMode()) {
+			} else if (Boolean.logicalAnd(!headless, !isTestMode())) {
 				//
 				final JList<Object> list = testAndApply(Objects::nonNull, toArray(values), JList::new,
 						x -> new JList<>());
