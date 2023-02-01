@@ -182,8 +182,6 @@ import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.core.env.PropertyResolver;
-import org.springframework.core.io.InputStreamSource;
-import org.springframework.core.io.Resource;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
@@ -1009,7 +1007,7 @@ class VoiceManagerTest {
 
 		private Iterator<Cell> cells = null;
 
-		private Boolean anyMatch, contains, multiMapPut, isInstalled, isEmpty, exists = null;
+		private Boolean anyMatch, contains, multiMapPut, isInstalled, isEmpty = null;
 
 		private String[] voiceIds = null;
 
@@ -1056,10 +1054,6 @@ class VoiceManagerTest {
 		private ResultSet resultSet = null;
 
 		private ResultSetMetaData resultSetMetaData = null;
-
-		private InputStream inputStream = null;
-
-		private IOException ioException = null;
 
 		private Map<Object, String> getProperties() {
 			if (properties == null) {
@@ -1138,20 +1132,6 @@ class VoiceManagerTest {
 				} else if (Objects.equals(methodName, "iterator")) {
 					//
 					return iterator;
-					//
-				} // if
-					//
-			} else if (proxy instanceof InputStreamSource) {
-				//
-				if (Objects.equals(methodName, "getInputStream")) {
-					//
-					if (ioException != null) {
-						//
-						throw ioException;
-						//
-					} // if
-						//
-					return inputStream;
 					//
 				} // if
 					//
@@ -1528,14 +1508,6 @@ class VoiceManagerTest {
 				if (Objects.equals(methodName, "getColumnCount")) {
 					//
 					return columnCount;
-					//
-				} // if
-					//
-			} else if (proxy instanceof Resource) {
-				//
-				if (Objects.equals(methodName, "exists")) {
-					//
-					return exists;
 					//
 				} // if
 					//
@@ -2520,106 +2492,8 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		final ActionEvent actionEventBtnIpaSymbol = new ActionEvent(btnIpaSymbol, 0, null);
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnIpaSymbol, 0, null)));
 		//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnIpaSymbol));
-		//
-		if (instance != null) {
-			//
-			instance.setIpaJsonUrl(EMPTY);
-			//
-		} // if
-			//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnIpaSymbol));
-		//
-		if (instance != null) {
-			//
-			instance.setIpaJsonUrl(" ");
-			//
-		} // if
-			//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnIpaSymbol));
-		//
-		if (instance != null) {
-			//
-			instance.setIpaJsonResource(Reflection.newProxy(Resource.class, ih));
-			//
-		} // if
-			//
-		if (ih != null) {
-			//
-			ih.exists = Boolean.FALSE;
-			//
-		} // if
-			//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnIpaSymbol));
-		//
-		try (final InputStream is = new ByteArrayInputStream("{}".getBytes())) {
-			//
-			if (ih != null) {
-				//
-				ih.exists = Boolean.TRUE;
-				//
-				ih.ioException = new IOException();
-				//
-			} // if
-				//
-			Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnIpaSymbol));
-			//
-		} // try
-			//
-		try (final InputStream is = new ByteArrayInputStream("{}".getBytes())) {
-			//
-			if (ih != null) {
-				//
-				ih.ioException = null;
-				//
-				ih.inputStream = is;
-				//
-			} // if
-				//
-			Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnIpaSymbol));
-			//
-		} // try
-			//
-			// btnCheckIpaSymbolJson
-			//
-		final AbstractButton btnCheckIpaSymbolJson = new JButton();
-		//
-		if (instance != null) {
-			//
-			FieldUtils.writeDeclaredField(instance, "btnCheckIpaSymbolJson", btnCheckIpaSymbolJson, true);
-			//
-		} // if
-			//
-		final ActionEvent actionEventBtnCheckIpaSymbolJson = new ActionEvent(btnCheckIpaSymbolJson, 0, null);
-		//
-		if (ih != null) {
-			//
-			ih.inputStream = null;
-			//
-		} // if
-			//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnCheckIpaSymbolJson));
-		//
-		try (final InputStream is = new ByteArrayInputStream("{}".getBytes())) {
-			//
-			if (ih != null) {
-				//
-				ih.inputStream = is;
-				//
-			} // if
-				//
-			if (instance != null) {
-				//
-				FieldUtils.writeDeclaredField(instance, "jlIpaJsonFile", new JLabel(), true);
-				//
-			} // if
-				//
-			Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnCheckIpaSymbolJson));
-			//
-		} // try
-			//
 	}
 
 	private static void actionPerformed(final ActionListener instance, final ActionEvent actionEvent) {

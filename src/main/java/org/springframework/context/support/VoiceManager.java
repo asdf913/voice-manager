@@ -264,9 +264,6 @@ import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertyResolver;
 import org.springframework.core.env.PropertyResolverUtil;
-import org.springframework.core.io.InputStreamSourceUtil;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceUtil;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
@@ -611,9 +608,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("IPA Symbol")
 	private AbstractButton btnIpaSymbol = null;
 
-	@Note("Check IPA Symbol Json File")
-	private AbstractButton btnCheckIpaSymbolJson = null;
-
 	private AbstractButton cbUseTtsVoice = null;
 
 	@Retention(RetentionPolicy.RUNTIME)
@@ -677,8 +671,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	@Note("List Count")
 	private JLabel jlListNameCount = null;
-
-	private JLabel jlIpaJsonFile = null;
 
 	@Note("Import Exception")
 	private DefaultTableModel tmImportException = null;
@@ -763,10 +755,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private Duration jSoupParseTimeout = null;
 
 	private Unit<Multimap<String, String>> ipaSymbolMultimap = null;
-
-	private String ipaJsonUrl = null;
-
-	private transient Resource ipaJsonResource = null;
 
 	private String messageDigestAlgorithm = null;
 
@@ -1102,14 +1090,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	public void setExportWebSpeechSynthesisHtmlTemplateFile(final String exportWebSpeechSynthesisHtmlTemplateFile) {
 		this.exportWebSpeechSynthesisHtmlTemplateFile = exportWebSpeechSynthesisHtmlTemplateFile;
-	}
-
-	public void setIpaJsonUrl(final String ipaJsonUrl) {
-		this.ipaJsonUrl = ipaJsonUrl;
-	}
-
-	public void setIpaJsonResource(final Resource ipaJsonResource) {
-		this.ipaJsonResource = ipaJsonResource;
 	}
 
 	public void setMessageDigestAlgorithm(final String messageDigestAlgorithm) {
@@ -3772,10 +3752,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						toString(append(btnExportMicrosoftSpeechObjectLibraryInformationName, "Information"))),
 				String.format("%1$s,span %2$s", WRAP, 2));
 		//
-		panel.add(btnCheckIpaSymbolJson = new JButton("Check IPA Symbol Json File"));
-		//
-		panel.add(jlIpaJsonFile = new JLabel(), WRAP);
-		//
 		final JPanel panel1 = new JPanel();
 		//
 		panel1.setLayout(cloneLayoutManager());
@@ -3793,8 +3769,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		setEditable(false, tfDllPath, tfExportFile);
 		//
 		addActionListener(this, btnExportGaKuNenBeTsuKanJi, btnExportJoYoKanJi,
-				btnExportMicrosoftSpeechObjectLibraryInformation, btnCheckIpaSymbolJson, btnExportCopy, btnExportBrowse,
-				btnDllPathCopy);
+				btnExportMicrosoftSpeechObjectLibraryInformation, btnExportCopy, btnExportBrowse, btnDllPathCopy);
 		//
 		setEnabled(isInstalled(speechApi) && voiceIds != null, btnExportMicrosoftSpeechObjectLibraryInformation);
 		//
@@ -4588,16 +4563,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			actionPerformedForIpaSymbol(headless);
 			//
-		} else if (Objects.equals(source, btnCheckIpaSymbolJson)) {
-			//
-			actionPerformedForCheckIpaSymbolJson(headless);
-			//
 		} // if
 			//
-	}
-
-	private static <T> T iif(final boolean condition, final T trueValue, final T falseValue) {
-		return condition ? trueValue : falseValue;
 	}
 
 	private void importByWorkbookFiles(final File[] fs, final boolean headless) {
@@ -5103,57 +5070,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
-	}
-
-	private void actionPerformedForCheckIpaSymbolJson(final boolean headless) {
-		//
-		MessageDigest md = null;
-		//
-		Integer length1 = null;
-		//
-		String hex1 = null;
-		//
-		try (final InputStream is = testAndApply(ResourceUtil::exists, ipaJsonResource,
-				InputStreamSourceUtil::getInputStream, null)) {
-			//
-			final byte[] digest = digest(
-					md = MessageDigest.getInstance(StringUtils.defaultIfBlank(messageDigestAlgorithm, SHA_512)),
-					testAndApply(Objects::nonNull, is, IOUtils::toByteArray, null));
-			//
-			length1 = digest != null ? Integer.valueOf(digest.length) : null;
-			//
-			hex1 = testAndApply(Objects::nonNull, digest, Hex::encodeHexString, null);
-			//
-		} catch (final IOException | NoSuchAlgorithmException e) {
-			//
-			errorOrAssertOrShowException(headless, e);
-			//
-		} // try
-			//
-		Integer length2 = null;
-		//
-		String hex2 = null;
-		//
-		try (final InputStream is = openStream(testAndApply(StringUtils::isNotBlank, ipaJsonUrl, URL::new, null))) {
-			//
-			final byte[] digest = digest(md, testAndApply(Objects::nonNull, is, IOUtils::toByteArray, null));
-			//
-			length2 = digest != null ? Integer.valueOf(digest.length) : null;
-			//
-			hex2 = testAndApply(Objects::nonNull, digest, Hex::encodeHexString, null);
-			//
-		} catch (final IOException e) {
-			//
-			errorOrAssertOrShowException(headless, e);
-			//
-		} // try
-			//
-		final boolean match = Boolean.logicalAnd(Objects.equals(length1, length2), Objects.equals(hex1, hex2));
-		//
-		setText(jlIpaJsonFile, iif(match, "Matched", "Not Matched"));
-		//
-		setForeground(jlIpaJsonFile, iif(match, Color.GREEN, Color.RED));
-		//
 	}
 
 	private static Integer getResponseCode(final HttpURLConnection instance) throws IOException {
@@ -7166,12 +7082,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static <K, V> Collection<Entry<K, V>> entries(final Multimap<K, V> instance) {
 		return instance != null ? instance.entries() : null;
-	}
-
-	private static void setForeground(final Component instance, final Color color) {
-		if (instance != null) {
-			instance.setForeground(color);
-		}
 	}
 
 	private static void setBackground(final Component instance, final Color color) {

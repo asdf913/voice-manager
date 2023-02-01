@@ -1,16 +1,25 @@
 package org.springframework.context.support;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Objects;
+import java.util.function.Predicate;
 
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
@@ -21,15 +30,25 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
 
+import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0Util;
+import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertyResolver;
 import org.springframework.core.env.PropertyResolverUtil;
+import org.springframework.core.io.InputStreamSourceUtil;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceUtil;
 
 import com.google.common.collect.Multimap;
 
@@ -38,6 +57,8 @@ import net.miginfocom.swing.MigLayout;
 public class IpaSymbolGui extends JFrame implements EnvironmentAware, InitializingBean, ActionListener {
 
 	private static final long serialVersionUID = 467011648930037863L;
+
+	private static Logger LOG = LoggerFactory.getLogger(IpaSymbolGui.class);
 
 	private transient PropertyResolver propertyResolver = null;
 
@@ -52,15 +73,35 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 
 	private JTextComponent tfIpaSymbol = null;
 
-	private AbstractButton btnGetIpaSymbol = null;
+	private AbstractButton btnGetIpaSymbol, btnCheckIpaSymbolJson = null;
+
+	private JLabel jlIpaJsonFile = null;
 
 	private Unit<Multimap<String, String>> ipaSymbolMultimap = null;
+
+	private Resource resource = null;
+
+	private String url = null;
+
+	private String messageDigestAlgorithm = null;
 
 	private IpaSymbolGui() {
 	}
 
 	public void setIpaSymbolMultimap(final Multimap<String, String> ipaSymbolMultimap) {
 		this.ipaSymbolMultimap = Unit.with(ipaSymbolMultimap);
+	}
+
+	public void setResource(final Resource resource) {
+		this.resource = resource;
+	}
+
+	public void setUrl(final String url) {
+		this.url = url;
+	}
+
+	public void setMessageDigestAlgorithm(final String messageDigestAlgorithm) {
+		this.messageDigestAlgorithm = messageDigestAlgorithm;
 	}
 
 	@Override
@@ -88,27 +129,57 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 		//
 		add(btnGetIpaSymbol = new JButton("Get IPA Symbol"), wrap);
 		//
-		btnGetIpaSymbol.addActionListener(this);
-		//
 		add(new JLabel("IPA"));
 		//
 		add(tfIpaSymbol = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
-				"org.springframework.context.support.IpaSymbolGui.ipaSymbol")));
+				"org.springframework.context.support.IpaSymbolGui.ipaSymbol")), wrap);
 		//
-		final Dimension preferredSize = btnGetIpaSymbol.getPreferredSize();
+		add(new JLabel(""));
+		//
+		add(btnCheckIpaSymbolJson = new JButton("Check IPA Symbol Json File"));
+		//
+		add(jlIpaJsonFile = new JLabel());
+		//
+		final Dimension preferredSize = Collections.max(
+				Arrays.asList(btnGetIpaSymbol.getPreferredSize(), btnCheckIpaSymbolJson.getPreferredSize()), (a, b) -> {
+					return a != null && b != null ? Double.compare(a.getWidth(), b.getWidth()) : 0;
+				});
 		//
 		if (preferredSize != null) {
 			//
-			setPreferredWidth((int) preferredSize.getWidth(), tfText, tfIpaSymbol);
+			setPreferredWidth((int) preferredSize.getWidth(), tfText, tfIpaSymbol, btnGetIpaSymbol,
+					btnCheckIpaSymbolJson);
 			//
 		} // if
+			//
+		addActionListener(this, btnGetIpaSymbol, btnCheckIpaSymbolJson);
+		//
+	}
+
+	private static void addActionListener(final ActionListener actionListener, final AbstractButton... abs) {
+		//
+		AbstractButton ab = null;
+		//
+		for (int i = 0; abs != null && i < abs.length; i++) {
+			//
+			if ((ab = abs[i]) == null) {
+				continue;
+			} // if
+				//
+			ab.addActionListener(actionListener);
+			//
+		} // for
 			//
 	}
 
 	@Override
-	public void actionPerformed(final ActionEvent e) {
+	public void actionPerformed(final ActionEvent evt) {
 		//
-		if (Objects.equals(e != null ? e.getSource() : null, btnGetIpaSymbol)) {
+		final Object source = evt != null ? evt.getSource() : null;
+		//
+		final boolean headless = GraphicsEnvironment.isHeadless();
+		//
+		if (Objects.equals(source, btnGetIpaSymbol)) {
 			//
 			final Multimap<String, String> multimap = IValue0Util.getValue0(ipaSymbolMultimap);
 			//
@@ -124,7 +195,7 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 				//
 				setText(tfIpaSymbol, toString(IterableUtils.get(values, 0)));
 				//
-			} else if (!GraphicsEnvironment.isHeadless() && !isTestMode()) {
+			} else if (!headless && !isTestMode()) {
 				//
 				final Object[] array = values != null ? values.toArray() : null;
 				//
@@ -136,8 +207,94 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 				//
 			} // if
 				//
+		} else if (Objects.equals(source, btnCheckIpaSymbolJson)) {
+			//
+			MessageDigest md = null;
+			//
+			byte[] bs = null;
+			//
+			Integer length1 = null;
+			//
+			String hex1 = null;
+			//
+			try (final InputStream is = testAndApply(ResourceUtil::exists, resource,
+					InputStreamSourceUtil::getInputStream, null)) {
+				//
+				length1 = (bs = testAndApply(Objects::nonNull, is, IOUtils::toByteArray, null)) != null
+						? Integer.valueOf(bs.length)
+						: null;
+				//
+				hex1 = testAndApply(Objects::nonNull,
+						digest(md = MessageDigest
+								.getInstance(StringUtils.defaultIfBlank(messageDigestAlgorithm, "SHA-512")), bs),
+						Hex::encodeHexString, null);
+				//
+			} catch (final IOException | NoSuchAlgorithmException e) {
+				//
+				errorOrAssertOrShowException(headless, e);
+				//
+			} // try
+				//
+			Integer length2 = null;
+			//
+			String hex2 = null;
+			//
+			try (final InputStream is = openStream(testAndApply(StringUtils::isNotBlank, url, URL::new, null))) {
+				//
+				length2 = (bs = testAndApply(Objects::nonNull, is, IOUtils::toByteArray, null)) != null
+						? Integer.valueOf(bs.length)
+						: null;
+				//
+				hex2 = testAndApply(Objects::nonNull, digest(md, bs), Hex::encodeHexString, null);
+				//
+			} catch (final IOException e) {
+				//
+				errorOrAssertOrShowException(headless, e);
+				//
+			} // try
+				//
+			if (jlIpaJsonFile != null) {
+				//
+				final boolean match = Boolean.logicalAnd(Objects.equals(length1, length2), Objects.equals(hex1, hex2));
+				//
+				jlIpaJsonFile.setText(iif(match, "Matched", "Not Matched"));
+				//
+				jlIpaJsonFile.setForeground(iif(match, Color.GREEN, Color.RED));
+				//
+				pack();
+				//
+			} // if
+				//
 		} // if
 			//
+	}
+
+	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse) throws E {
+		return test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
+				: FailableFunctionUtil.apply(functionFalse, value);
+	}
+
+	private static final <T> boolean test(final Predicate<T> instance, final T value) {
+		return instance != null && instance.test(value);
+	}
+
+	private static InputStream openStream(final URL instance) throws IOException {
+		return instance != null ? instance.openStream() : null;
+	}
+
+	private static byte[] digest(final MessageDigest instance, final byte[] input) {
+		return instance != null && input != null ? instance.digest(input) : null;
+	}
+
+	private static void errorOrAssertOrShowException(final boolean headless, final Throwable throwable) {
+		//
+		TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(headless, LOG, throwable);
+		//
+	}
+
+	private static <T> T iif(final boolean condition, final T trueValue, final T falseValue) {
+		return condition ? trueValue : falseValue;
 	}
 
 	private static String toString(final Object instance) {

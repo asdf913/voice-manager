@@ -52,6 +52,12 @@
 	</bean>
 
 	<!-- -->
+	<bean id="messageDigestAlgorithm" class="java.lang.String">
+		<constructor-arg index="0"
+			value="${org.springframework.context.support.VoiceManager.messageDigestAlgorithm}" />
+	</bean>
+
+	<!-- -->
 	<bean class="org.springframework.context.support.VoiceManager">
 		<property name="layout" ref="MigLayout" />
 		<property name="defaultCloseOperation"
@@ -115,10 +121,8 @@
 			value="${org.springframework.context.support.VoiceManager.workbookClass}" />
 		<property name="jSoupParseTimeout"
 			value="${org.springframework.context.support.VoiceManager.jSoupParseTimeout}" />
-		<property name="ipaJsonUrl" ref="ipaJsonUrl" />
-		<property name="ipaJsonResource" value="classpath:ipa.json" />
 		<property name="messageDigestAlgorithm"
-			value="${org.springframework.context.support.VoiceManager.messageDigestAlgorithm}" />
+			ref="messageDigestAlgorithm" />
 		<property name="ipaSymbolMultimap" ref="ipaMultimap" />
 	</bean>
 
@@ -128,6 +132,10 @@
 		<property name="defaultCloseOperation"
 			value="#{T(javax.swing.WindowConstants).EXIT_ON_CLOSE}" />
 		<property name="ipaSymbolMultimap" ref="ipaMultimap" />
+		<property name="url" ref="ipaJsonUrl" />
+		<property name="resource" value="classpath:ipa.json" />
+		<property name="messageDigestAlgorithm"
+			ref="messageDigestAlgorithm" />
 	</bean>
 
 	<bean id="DataSource" class="org.h2.jdbcx.JdbcConnectionPool"
