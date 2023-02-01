@@ -6102,7 +6102,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					put(map, "folder", voiceFolder);
 					//
-					put(map, "voices", multimap.get(key));
+					put(map, "voices", MultimapUtil.get(multimap, key));
 					//
 					final Collection<Entry<Object, Object>> entrySet = entrySet(parameters);
 					//
