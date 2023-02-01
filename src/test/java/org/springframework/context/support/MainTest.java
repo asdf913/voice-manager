@@ -16,13 +16,14 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.ListableBeanFactory;
+import org.springframework.beans.factory.config.BeanDefinition;
 
 import com.google.common.reflect.Reflection;
 
 class MainTest {
 
 	private static Method METHOD_FOR_NAME, METHOD_GET_INSTANCE, METHOD_SHOW_MESSAGE_DIALOG_OR_PRINT_LN, METHOD_CAST,
-			METHOD_GET_BEAN_DEFINITION_NAMES = null;
+			METHOD_GET_BEAN_DEFINITION_NAMES, METHOD_GET_BEAN_CLASS_NAME = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -42,6 +43,9 @@ class MainTest {
 		(METHOD_GET_BEAN_DEFINITION_NAMES = clz.getDeclaredMethod("getBeanDefinitionNames", ListableBeanFactory.class))
 				.setAccessible(true);
 		//
+		(METHOD_GET_BEAN_CLASS_NAME = clz.getDeclaredMethod("getBeanClassName", BeanDefinition.class))
+				.setAccessible(true);
+		//
 	}
 
 	private class IH implements InvocationHandler {
@@ -49,6 +53,8 @@ class MainTest {
 		private Map<Object, Object> beansOfType = null;
 
 		private String[] beanDefinitionNames = null;
+
+		private String beanClassName = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -64,6 +70,14 @@ class MainTest {
 				} else if (Objects.equals(methodName, "getBeanDefinitionNames")) {
 					//
 					return beanDefinitionNames;
+					//
+				} // if
+					//
+			} else if (proxy instanceof BeanDefinition) {
+				//
+				if (Objects.equals(methodName, "getBeanClassName")) {
+					//
+					return beanClassName;
 					//
 				} // if
 					//
@@ -228,4 +242,26 @@ class MainTest {
 		}
 	}
 
+	@Test
+	void testGetBeanClassName() throws Throwable {
+		//
+		Assertions.assertNull(getBeanClassName(null));
+		//
+		Assertions.assertNull(getBeanClassName(Reflection.newProxy(BeanDefinition.class, ih)));
+		//
+	}
+
+	private static String getBeanClassName(final BeanDefinition instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_BEAN_CLASS_NAME.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
 }

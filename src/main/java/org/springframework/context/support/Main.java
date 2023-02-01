@@ -61,7 +61,7 @@ public class Main {
 						//
 					} // if
 						//
-					if ((ss = StringUtils.split(bd.getBeanClassName(), ".")) != null && ss.length > 0
+					if ((ss = StringUtils.split(getBeanClassName(bd), ".")) != null && ss.length > 0
 							&& StringUtils.equals(string, ss[ss.length - 1])
 							&& (multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create)) != null) {
 						//
@@ -73,7 +73,7 @@ public class Main {
 					//
 				if (multimap != null && multimap.size() == 1) {
 					//
-					clz = forName(multimap.values().stream().map(x -> x != null ? x.getBeanClassName() : null)
+					clz = forName(multimap.values().stream().map(Main::getBeanClassName)
 							.reduce((first, second) -> first).orElse(null));
 					//
 				} // if
@@ -108,6 +108,10 @@ public class Main {
 
 	private static String[] getBeanDefinitionNames(final ListableBeanFactory instance) {
 		return instance != null ? instance.getBeanDefinitionNames() : null;
+	}
+
+	private static String getBeanClassName(final BeanDefinition instance) {
+		return instance != null ? instance.getBeanClassName() : null;
 	}
 
 	private static <T> T cast(final Class<T> clz, final Object instance) {
