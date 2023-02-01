@@ -21,7 +21,7 @@ public class Main {
 	private Main() {
 	}
 
-	public static void main(final String[] args) throws IllegalAccessException {
+	public static void main(final String[] args) {
 		//
 		try (final ConfigurableApplicationContext beanFactory = new ClassPathXmlApplicationContext(
 				"applicationContext.xml")) {
