@@ -256,20 +256,28 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 				//
 			} // try
 				//
-			if (jlIpaJsonFile != null) {
-				//
-				final boolean match = Boolean.logicalAnd(Objects.equals(length1, length2), Objects.equals(hex1, hex2));
-				//
-				jlIpaJsonFile.setText(iif(match, "Matched", "Not Matched"));
-				//
-				jlIpaJsonFile.setForeground(iif(match, Color.GREEN, Color.RED));
-				//
-				pack();
-				//
-			} // if
-				//
+			final boolean match = Boolean.logicalAnd(Objects.equals(length1, length2), Objects.equals(hex1, hex2));
+			//
+			setText(jlIpaJsonFile, iif(match, "Matched", "Not Matched"));
+			//
+			setForeground(jlIpaJsonFile, iif(match, Color.GREEN, Color.RED));
+			//
+			pack();
+			//
 		} // if
 			//
+	}
+
+	private static void setText(final JLabel instance, final String text) {
+		if (instance != null) {
+			instance.setText(text);
+		}
+	}
+
+	private static void setForeground(final Component instance, final Color color) {
+		if (instance != null) {
+			instance.setForeground(color);
+		}
 	}
 
 	private static Object[] toArray(final Collection<?> instance) {
