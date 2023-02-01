@@ -1,5 +1,6 @@
 package org.springframework.context.support;
 
+import java.awt.Component;
 import java.awt.GraphicsEnvironment;
 import java.awt.HeadlessException;
 import java.awt.Window;
@@ -12,6 +13,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
+
+import javax.swing.JTextField;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -29,8 +32,8 @@ class MainTest {
 
 	private static Method METHOD_FOR_NAME, METHOD_TO_STRING, METHOD_GET_INSTANCE,
 			METHOD_SHOW_MESSAGE_DIALOG_OR_PRINT_LN, METHOD_CAST, METHOD_GET_BEAN_NAMES_FOR_TYPE,
-			METHOD_GET_BEAN_DEFINITION_NAMES, METHOD_GET_BEAN_CLASS_NAME, METHOD_GET_BEAN_DEFINITION,
-			METHOD_PACK = null;
+			METHOD_GET_BEAN_DEFINITION_NAMES, METHOD_GET_BEAN_CLASS_NAME, METHOD_GET_BEAN_DEFINITION, METHOD_PACK,
+			METHOD_SET_VISIBLE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -62,6 +65,8 @@ class MainTest {
 				String.class)).setAccessible(true);
 		//
 		(METHOD_PACK = clz.getDeclaredMethod("pack", Window.class)).setAccessible(true);
+		//
+		(METHOD_SET_VISIBLE = clz.getDeclaredMethod("setVisible", Component.class, Boolean.TYPE)).setAccessible(true);
 		//
 	}
 
@@ -392,6 +397,23 @@ class MainTest {
 	private static void pack(final Window instance) throws Throwable {
 		try {
 			METHOD_PACK.invoke(null, instance);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetVisible() {
+		//
+		Assertions.assertDoesNotThrow(() -> setVisible(null, false));
+		//
+		Assertions.assertDoesNotThrow(() -> setVisible(new JTextField(), false));
+		//
+	}
+
+	private static void setVisible(final Component instance, boolean b) throws Throwable {
+		try {
+			METHOD_SET_VISIBLE.invoke(null, instance, b);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

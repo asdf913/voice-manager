@@ -107,12 +107,8 @@ public class Main {
 			//
 			pack(cast(Window.class, instance));
 			//
-			if (instance instanceof Component) {
-				//
-				((Component) instance).setVisible(true);
-				//
-			} // if
-				//
+			setVisible(cast(Component.class, instance), true);
+			//
 		} // try
 			//
 	}
@@ -124,6 +120,12 @@ public class Main {
 	private static void pack(final Window instance) {
 		if (instance != null) {
 			instance.pack();
+		}
+	}
+
+	private static void setVisible(final Component instance, boolean b) {
+		if (instance != null) {
+			instance.setVisible(b);
 		}
 	}
 
