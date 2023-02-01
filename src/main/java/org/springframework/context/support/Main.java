@@ -91,8 +91,7 @@ public class Main {
 				//
 				final String toString = toString(list.getSelectedValue());
 				//
-				clz = forName(
-						getBeanClassName(clbf != null && toString != null ? clbf.getBeanDefinition(toString) : null));
+				clz = forName(getBeanClassName(toString != null ? getBeanDefinition(clbf, toString) : null));
 				//
 			} // if
 				//
@@ -138,6 +137,11 @@ public class Main {
 
 	private static String getBeanClassName(final BeanDefinition instance) {
 		return instance != null ? instance.getBeanClassName() : null;
+	}
+
+	private static BeanDefinition getBeanDefinition(final ConfigurableListableBeanFactory instance,
+			final String beanName) {
+		return instance != null ? instance.getBeanDefinition(beanName) : null;
 	}
 
 	private static <T> T cast(final Class<T> clz, final Object instance) {
