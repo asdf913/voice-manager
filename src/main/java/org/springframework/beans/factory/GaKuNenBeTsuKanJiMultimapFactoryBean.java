@@ -148,15 +148,8 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 			final String message = ci != null ? ci.getMessage() : null;
 			//
 			if (Objects.equals("application/vnd.openxmlformats-officedocument", mimeType)
-					|| Objects.equals("OLE 2 Compound Document", message)) {
-				//
-				try (final InputStream is = InputStreamSourceUtil.getInputStream(resource)) {
-					//
-					mm = createMulitmapUnit(WorkbookFactory.create(is));
-					//
-				} // try
-					//
-			} else if (Objects.equals("application/zip", mimeType) && isXlsx(resource)) {
+					|| Objects.equals("OLE 2 Compound Document", message)
+					|| (Objects.equals("application/zip", mimeType) && isXlsx(resource))) {
 				//
 				try (final InputStream is = InputStreamSourceUtil.getInputStream(resource)) {
 					//
