@@ -260,6 +260,7 @@ import org.springframework.beans.factory.ListableBeanFactoryUtil;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactoryUtil;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertyResolver;
@@ -6874,7 +6875,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			for (final Entry<String, ByteConverter> en : entrySet) {
 				//
-				if (en == null || (bd = configurableListableBeanFactory.getBeanDefinition(getKey(en))) == null
+				if (en == null || (bd = ConfigurableListableBeanFactoryUtil
+						.getBeanDefinition(configurableListableBeanFactory, getKey(en))) == null
 						|| !bd.hasAttribute(attribute)) {
 					continue;
 				} // if
@@ -6905,7 +6907,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			for (final Entry<String, ByteConverter> en : entrySet) {
 				//
-				if (en == null || (bd = configurableListableBeanFactory.getBeanDefinition(getKey(en))) == null
+				if (en == null
+						|| (bd = ConfigurableListableBeanFactoryUtil.getBeanDefinition(configurableListableBeanFactory,
+								getKey(en))) == null
 						|| !bd.hasAttribute(attribute)
 						|| !Objects.equals(value, testAndApply(bd::hasAttribute, attribute, bd::getAttribute, null))) {
 					//

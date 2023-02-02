@@ -22,6 +22,7 @@ import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.ListableBeanFactoryUtil;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactoryUtil;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.PropertyResolverUtil;
 
@@ -60,7 +61,8 @@ public class Main {
 				//
 				for (int i = 0; beanDefinitionNames != null && i < beanDefinitionNames.length; i++) {
 					//
-					if ((bd = clbf.getBeanDefinition(beanDefinitionNames[i])) == null) {
+					if ((bd = ConfigurableListableBeanFactoryUtil.getBeanDefinition(clbf,
+							beanDefinitionNames[i])) == null) {
 						//
 						continue;
 						//
@@ -87,14 +89,13 @@ public class Main {
 				//
 			if (clz == null) {
 				//
-				final String[] beanNames = getBeanNamesForType(beanFactory, Component.class);
-				//
-				final JList<Object> list = testAndApply(Objects::nonNull, beanNames, JList::new, x -> new JList<>());
+				final JList<Object> list = testAndApply(Objects::nonNull,
+						getBeanNamesForType(beanFactory, Component.class), JList::new, x -> new JList<>());
 				//
 				JOptionPane.showMessageDialog(null, list, "Component", JOptionPane.PLAIN_MESSAGE);
 				//
 				clz = forName(getBeanClassName(testAndApply(Objects::nonNull, toString(getSelectedValue(list)),
-						x -> getBeanDefinition(clbf, x), null)));
+						x -> ConfigurableListableBeanFactoryUtil.getBeanDefinition(clbf, x), null)));
 				//
 			} // if
 				//
@@ -156,11 +157,6 @@ public class Main {
 
 	private static String getBeanClassName(final BeanDefinition instance) {
 		return instance != null ? instance.getBeanClassName() : null;
-	}
-
-	private static BeanDefinition getBeanDefinition(final ConfigurableListableBeanFactory instance,
-			final String beanName) {
-		return instance != null ? instance.getBeanDefinition(beanName) : null;
 	}
 
 	private static <T> T cast(final Class<T> clz, final Object instance) {

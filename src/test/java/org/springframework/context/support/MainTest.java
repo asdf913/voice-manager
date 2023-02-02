@@ -26,7 +26,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 
 import com.google.common.reflect.Reflection;
 
@@ -36,8 +35,8 @@ class MainTest {
 
 	private static Method METHOD_FOR_NAME, METHOD_TO_STRING, METHOD_GET_INSTANCE,
 			METHOD_SHOW_MESSAGE_DIALOG_OR_PRINT_LN, METHOD_CAST, METHOD_GET_BEAN_NAMES_FOR_TYPE,
-			METHOD_GET_BEAN_DEFINITION_NAMES, METHOD_GET_BEAN_CLASS_NAME, METHOD_GET_BEAN_DEFINITION, METHOD_PACK,
-			METHOD_SET_VISIBLE, METHOD_TEST_AND_APPLY, METHOD_GET_SELECTED_VALUE = null;
+			METHOD_GET_BEAN_DEFINITION_NAMES, METHOD_GET_BEAN_CLASS_NAME, METHOD_PACK, METHOD_SET_VISIBLE,
+			METHOD_TEST_AND_APPLY, METHOD_GET_SELECTED_VALUE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -65,9 +64,6 @@ class MainTest {
 		(METHOD_GET_BEAN_CLASS_NAME = clz.getDeclaredMethod("getBeanClassName", BeanDefinition.class))
 				.setAccessible(true);
 		//
-		(METHOD_GET_BEAN_DEFINITION = clz.getDeclaredMethod("getBeanDefinition", ConfigurableListableBeanFactory.class,
-				String.class)).setAccessible(true);
-		//
 		(METHOD_PACK = clz.getDeclaredMethod("pack", Window.class)).setAccessible(true);
 		//
 		(METHOD_SET_VISIBLE = clz.getDeclaredMethod("setVisible", Component.class, Boolean.TYPE)).setAccessible(true);
@@ -86,8 +82,6 @@ class MainTest {
 		private String[] beanDefinitionNames, beanNamesForType = null;
 
 		private String beanClassName = null;
-
-		private BeanDefinition beanDefinition = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -115,16 +109,6 @@ class MainTest {
 				if (Objects.equals(methodName, "getBeanClassName")) {
 					//
 					return beanClassName;
-					//
-				} // if
-					//
-			} // if
-				//
-			if (proxy instanceof ConfigurableListableBeanFactory) {
-				//
-				if (Objects.equals(methodName, "getBeanDefinition") && args != null && args.length > 0) {
-					//
-					return beanDefinition;
 					//
 				} // if
 					//
@@ -354,30 +338,6 @@ class MainTest {
 				return null;
 			} else if (obj instanceof String) {
 				return (String) obj;
-			}
-			throw new Throwable(toString(obj.getClass()));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetBeanDefinition() throws Throwable {
-		//
-		Assertions.assertNull(getBeanDefinition(null, null));
-		//
-		Assertions.assertNull(getBeanDefinition(Reflection.newProxy(ConfigurableListableBeanFactory.class, ih), null));
-		//
-	}
-
-	private static BeanDefinition getBeanDefinition(final ConfigurableListableBeanFactory instance,
-			final String beanName) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_BEAN_DEFINITION.invoke(null, instance, beanName);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof BeanDefinition) {
-				return (BeanDefinition) obj;
 			}
 			throw new Throwable(toString(obj.getClass()));
 		} catch (final InvocationTargetException e) {
