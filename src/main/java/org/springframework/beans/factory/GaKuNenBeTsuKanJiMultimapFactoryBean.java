@@ -147,9 +147,9 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 			//
 			final String message = getMessage(ci);
 			//
-			if (Objects.equals("application/vnd.openxmlformats-officedocument", mimeType)
-					|| Objects.equals("OLE 2 Compound Document", message)
-					|| Boolean.logicalAnd(Objects.equals("application/zip", mimeType), isXlsx(resource))) {
+			if (or(Objects.equals("application/vnd.openxmlformats-officedocument", mimeType),
+					Boolean.logicalAnd(Objects.equals("application/zip", mimeType), isXlsx(resource)),
+					Objects.equals("OLE 2 Compound Document", message))) {
 				//
 				try (final InputStream is = InputStreamSourceUtil.getInputStream(resource)) {
 					//
@@ -226,6 +226,30 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 		} // for
 			//
 		return multimap;
+		//
+	}
+
+	private static boolean or(final boolean a, final boolean b, final boolean... bs) {
+		//
+		boolean result = a || b;
+		//
+		if (result) {
+			//
+			return result;
+			//
+		} // if
+			//
+		for (int i = 0; bs != null && i < bs.length; i++) {
+			//
+			if (result |= bs[i]) {
+				//
+				return result;
+				//
+			} // if
+				//
+		} // for
+			//
+		return result;
 		//
 	}
 

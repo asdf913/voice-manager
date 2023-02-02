@@ -38,7 +38,7 @@ import com.google.common.reflect.Reflection;
 class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 
 	private static Method METHOD_GET_CLASS, METHOD_TO_STRING, METHOD_CREATE_MULIT_MAP_UNIT, METHOD_IS_XLSX,
-			METHOD_GET_STRING_VALUE = null;
+			METHOD_GET_STRING_VALUE, METHOD_OR = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -56,6 +56,8 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 		//
 		(METHOD_GET_STRING_VALUE = clz.getDeclaredMethod("getStringValue", org.odftoolkit.simple.table.Cell.class))
 				.setAccessible(true);
+		//
+		(METHOD_OR = clz.getDeclaredMethod("or", Boolean.TYPE, Boolean.TYPE, boolean[].class)).setAccessible(true);
 		//
 	}
 
@@ -540,6 +542,31 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 				return null;
 			} else if (obj instanceof String) {
 				return (String) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testOr() throws Throwable {
+		//
+		Assertions.assertTrue(or(true, false));
+		//
+		Assertions.assertTrue(or(false, true));
+		//
+		Assertions.assertFalse(or(false, false, null));
+		//
+		Assertions.assertTrue(or(false, false, true));
+		//
+	}
+
+	private static boolean or(final boolean a, final boolean b, final boolean... bs) throws Throwable {
+		try {
+			final Object obj = METHOD_OR.invoke(null, a, b, bs);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
