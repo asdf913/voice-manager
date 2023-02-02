@@ -3,6 +3,9 @@ package org.springframework.beans.factory;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 import java.net.URL;
 import java.time.Duration;
@@ -25,6 +28,7 @@ import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.poi.ss.usermodel.Row;
@@ -40,6 +44,7 @@ import org.jsoup.select.Elements;
 import org.odftoolkit.simple.SpreadsheetDocument;
 import org.odftoolkit.simple.table.Cell;
 import org.odftoolkit.simple.table.Table;
+import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
 import org.springframework.core.io.InputStreamSourceUtil;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceUtil;
@@ -307,7 +312,32 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 	}
 
 	private static ZipEntry getNextEntry(final ZipInputStream instance) throws IOException {
-		return instance != null ? instance.getNextEntry() : null;
+		//
+		Object obj = null;
+		//
+		try {
+			//
+			final Method method = ZipInputStream.class.getDeclaredMethod("getNextEntry");
+			//
+			obj = method != null && (Modifier.isStatic(method.getModifiers()) || instance != null)
+					? method.invoke(instance)
+					: null;
+			//
+		} catch (final NoSuchMethodException | IllegalAccessException e) {
+			//
+			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
+			//
+		} catch (final InvocationTargetException e) {
+			//
+			final Throwable targetException = e.getTargetException();
+			//
+			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(ObjectUtils.firstNonNull(
+					ExceptionUtils.getRootCause(targetException), targetException, ExceptionUtils.getRootCause(e), e));
+			//
+		} // try
+			//
+		return obj instanceof ZipEntry ? (ZipEntry) obj : null;
+		//
 	}
 
 	private static String getMimeType(final ContentInfo instance) {
