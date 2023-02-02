@@ -311,7 +311,7 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 		//
 	}
 
-	private static ZipEntry getNextEntry(final ZipInputStream instance) throws IOException {
+	private static ZipEntry getNextEntry(final ZipInputStream instance) {
 		//
 		Object obj = null;
 		//
