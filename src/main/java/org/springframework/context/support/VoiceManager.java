@@ -1341,6 +1341,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		this.ipaSymbolMultimap = Unit.with(ipaSymbolMultimap);
 	}
 
+	public void setGaKuNenBeTsuKanJiMultimap(final Multimap<String, String> gaKuNenBeTsuKanJiMultimap) {
+		this.gaKuNenBeTsuKanJiMultimap = Unit.with(gaKuNenBeTsuKanJiMultimap);
+	}
+
 	private static IValue0<Class<? extends Workbook>> getWorkbookClass(
 			final Map<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>> map,
 			final String string) {
@@ -2790,18 +2794,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.add(new JLabel("学年別漢字"));
 		//
-		Set<String> gaKuNenBeTsuKanJiList = null;
+		final Set<String> gaKuNenBeTsuKanJiList = keySet(IValue0Util.getValue0(gaKuNenBeTsuKanJiMultimap));
 		//
-		try {
-			//
-			gaKuNenBeTsuKanJiList = keySet(getGaKuNenBeTsuKanJiMultimap());
-			//
-		} catch (final IOException e) {
-			//
-			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
-			//
-		} // try
-			//
 		panel.add(new JComboBox<>(cbmGaKuNenBeTsuKanJi = testAndApply(Objects::nonNull,
 				ArrayUtils.insert(0, toArray(gaKuNenBeTsuKanJiList, new String[] {}), (String) null),
 				DefaultComboBoxModel::new, x -> new DefaultComboBoxModel<>())), String.format("span %1$s", 2));
@@ -3053,58 +3047,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private Multimap<String, String> getGaKuNenBeTsuKanJiMultimap() throws IOException {
-		//
-		if (gaKuNenBeTsuKanJiMultimap == null) {
-			//
-			gaKuNenBeTsuKanJiMultimap = Unit
-					.with(getGaKuNenBeTsuKanJiMultimap(gaKuNenBeTsuKanJiListPageUrl, jSoupParseTimeout));
-			//
-		} // if
-			//
-		return IValue0Util.getValue0(gaKuNenBeTsuKanJiMultimap);
-		//
-	}
-
 	private static <T> T get(final Supplier<T> instance) {
 		return instance != null ? instance.get() : null;
-	}
-
-	private static Multimap<String, String> getGaKuNenBeTsuKanJiMultimap(final String url, final Duration timeout)
-			throws IOException {
-		//
-		Multimap<String, String> multimap = null;
-		//
-		final Elements elements = selectXpath(
-				testAndApply(x -> StringUtils.equalsAnyIgnoreCase(getProtocol(x), "http", "https"),
-						testAndApply(Objects::nonNull, url, URL::new, null),
-						x -> Jsoup.parse(x, intValue(toMillis(timeout), 0)), null),
-				"//span[@class='mw-headline'][starts-with(.,'第')]");
-		//
-		org.jsoup.nodes.Element element = null;
-		//
-		Pattern pattern = null;
-		//
-		Matcher matcher = null;
-		//
-		for (int i = 0; i < IterableUtils.size(elements); i++) {
-			//
-			if ((element = get(elements, i)) == null || !matches(matcher = matcher(
-					pattern = ObjectUtils.getIfNull(pattern, () -> Pattern.compile("(第(\\d+)学年)（\\d+字）")),
-					ElementUtil.text(element))) || matcher == null || matcher.groupCount() <= 0) {
-				//
-				continue;
-				//
-			} // if
-				//
-			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedListMultimap::create),
-					matcher.group(1),
-					toList(map(stream(select(nextElementSibling(element.parent()), "a")), a -> ElementUtil.text(a))));
-			//
-		} // for
-			//
-		return multimap;
-		//
 	}
 
 	private static String getProtocol(final URL instance) {
@@ -4977,7 +4921,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			FileUtils.writeByteArrayToFile(jfc.getSelectedFile(),
 					createImportFileTemplateByteArray(isSelected(cbImportFileTemplateGenerateBlankRow), getJlptLevels(),
-							keySet(getGaKuNenBeTsuKanJiMultimap())));
+							keySet(IValue0Util.getValue0(gaKuNenBeTsuKanJiMultimap))));
 			//
 		} catch (final IOException e) {
 			//
@@ -5227,7 +5171,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				addProperty(
 						getCustomProperties(getProperties(cast(POIXMLDocument.class,
-								workbook = createWorkbook(Pair.of("学年", "漢字"), getGaKuNenBeTsuKanJiMultimap())))),
+								workbook = createWorkbook(Pair.of("学年", "漢字"),
+										IValue0Util.getValue0(gaKuNenBeTsuKanJiMultimap))))),
 						SOURCE, gaKuNenBeTsuKanJiListPageUrl);
 				//
 				write(workbook, os);
@@ -7009,19 +6954,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private void keyReleasedForTextImport(final JTextComponent jTextComponent) {
 		//
-		Multimap<String, String> gaKuNenBeTsuKanJiMultiMap = null;
-		//
-		try {
-			//
-			gaKuNenBeTsuKanJiMultiMap = getGaKuNenBeTsuKanJiMultimap();
-			//
-		} catch (final IOException e) {
-			//
-			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
-			//
-		} // try
-			//
-		keyReleasedForTextImport(gaKuNenBeTsuKanJiMultiMap, jTextComponent, cbmGaKuNenBeTsuKanJi);
+		keyReleasedForTextImport(IValue0Util.getValue0(gaKuNenBeTsuKanJiMultimap), jTextComponent,
+				cbmGaKuNenBeTsuKanJi);
 		//
 	}
 

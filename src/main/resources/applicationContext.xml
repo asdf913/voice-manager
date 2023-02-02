@@ -57,6 +57,13 @@
 			value="${org.springframework.context.support.VoiceManager.messageDigestAlgorithm}" />
 	</bean>
 
+
+	<!-- -->
+	<bean id="gaKuNenBeTsuKanJiListPageUrl" class="java.lang.String">
+		<constructor-arg index="0"
+			value="${org.springframework.context.support.VoiceManager.gaKuNenBeTsuKanJiListPageUrl}" />
+	</bean>
+
 	<!-- -->
 	<bean class="org.springframework.context.support.VoiceManager">
 		<property name="layout" ref="MigLayout" />
@@ -80,8 +87,17 @@
 			value="${org.springframework.context.support.VoiceManager.microsoftSpeechObjectLibraryAttributeNames}" />
 		<property name="jlptLevelPageUrl"
 			value="${org.springframework.context.support.VoiceManager.jlptLevelPageUrl}" />
+		<!-- -->
 		<property name="gaKuNenBeTsuKanJiListPageUrl"
-			value="${org.springframework.context.support.VoiceManager.gaKuNenBeTsuKanJiListPageUrl}" />
+			ref="gaKuNenBeTsuKanJiListPageUrl" />
+		<property name="gaKuNenBeTsuKanJiMultimap">
+			<bean
+				class="org.springframework.beans.factory.GaKuNenBeTsuKanJiMultimapFactoryBean">
+				<property name="url" ref="gaKuNenBeTsuKanJiListPageUrl" />
+				<property name="timeout"
+					value="#{T(java.time.Duration).parse('PT0S')}" />
+			</bean>
+		</property>
 		<property
 			name="microsoftSpeechPlatformRuntimeDownloadPageUrl"
 			value="${org.springframework.context.support.VoiceManager.microsoftSpeechPlatformRuntimeDownloadPageUrl}" />
