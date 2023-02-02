@@ -1,6 +1,7 @@
 package org.springframework.beans.factory;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
@@ -13,6 +14,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.poi.ss.usermodel.Cell;
@@ -24,6 +27,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.InputStreamSource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.ReflectionUtils;
@@ -33,7 +37,7 @@ import com.google.common.reflect.Reflection;
 
 class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 
-	private static Method METHOD_GET_CLASS, METHOD_TO_STRING, METHOD_CREATE_MULIT_MAP_UNIT = null;
+	private static Method METHOD_GET_CLASS, METHOD_TO_STRING, METHOD_CREATE_MULIT_MAP_UNIT, METHOD_IS_XLSX = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -46,6 +50,8 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 		//
 		(METHOD_CREATE_MULIT_MAP_UNIT = clz.getDeclaredMethod("createMulitmapUnit", Workbook.class))
 				.setAccessible(true);
+		//
+		(METHOD_IS_XLSX = clz.getDeclaredMethod("isXlsx", Resource.class)).setAccessible(true);
 		//
 	}
 
@@ -454,6 +460,60 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 				return null;
 			} else if (obj instanceof Unit) {
 				return (Unit) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testIsXlsx() throws Throwable {
+		//
+		Assertions.assertFalse(isXlsx(null));
+		//
+		final byte[] bs = "".getBytes();
+		//
+		try (final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+				final ZipOutputStream zos = new ZipOutputStream(baos)) {
+			//
+			final ZipEntry entry = new ZipEntry("");
+			//
+			zos.putNextEntry(entry);
+			//
+			zos.write(bs);
+			//
+			zos.closeEntry();
+			//
+			zos.close();
+			//
+			Assertions.assertFalse(isXlsx(new ByteArrayResource(baos.toByteArray())));
+			//
+		} // try
+			//
+		try (final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+				final ZipOutputStream zos = new ZipOutputStream(baos)) {
+			//
+			final ZipEntry entry = new ZipEntry("[Content_Types].xml");
+			//
+			zos.putNextEntry(entry);
+			//
+			zos.write(bs);
+			//
+			zos.closeEntry();
+			//
+			zos.close();
+			//
+			Assertions.assertFalse(isXlsx(new ByteArrayResource(baos.toByteArray())));
+			//
+		} // try
+	}
+
+	private static boolean isXlsx(final Resource resource) throws Throwable {
+		try {
+			final Object obj = METHOD_IS_XLSX.invoke(null, resource);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

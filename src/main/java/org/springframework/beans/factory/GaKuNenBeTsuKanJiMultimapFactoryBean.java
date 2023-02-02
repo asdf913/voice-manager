@@ -152,57 +152,7 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 					//
 			} else if (Objects.equals("application/zip", mimeType)) {
 				//
-				boolean contentTypeXmlFound = false;
-				//
-				try (final InputStream is = InputStreamSourceUtil.getInputStream(resource);
-						final ZipInputStream zis = new ZipInputStream(is)) {
-					//
-					ZipEntry ze = null;
-					//
-					while ((ze = zis.getNextEntry()) != null) {
-						//
-						if (contentTypeXmlFound = Objects.equals("[Content_Types].xml", ze.getName())) {
-							//
-							break;
-							//
-						} // if
-							//
-					} // while
-						//
-				} // try
-					//
-				boolean isXlsx = false;
-				//
-				if (contentTypeXmlFound) {
-					//
-					try (final InputStream is = InputStreamSourceUtil.getInputStream(resource)) {
-						//
-						try (final InputStream bais = testAndApply(Objects::nonNull,
-								ZipUtil.unpackEntry(is, "[Content_Types].xml"), ByteArrayInputStream::new, null)) {
-							//
-							final NodeList childNodes = getChildNodes(getDocumentElement(
-									parse(newDocumentBuilder(DocumentBuilderFactory.newDefaultInstance()), bais)));
-							//
-							for (int i = 0; i < getLength(childNodes); i++) {
-								//
-								if (Objects.equals(
-										"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml",
-										getTextContent(getNamedItem(getAttributes(item(childNodes, i)), "ContentType")))
-										&& (isXlsx = true)) {
-									//
-									break;
-									//
-								} // if
-									//
-							} // for
-								//
-						} // try
-							//
-					} // try
-						//
-				} // if
-					//
-				if (isXlsx) {
+				if (isXlsx(resource)) {
 					//
 					try (final InputStream is = InputStreamSourceUtil.getInputStream(resource)) {
 						//
@@ -253,6 +203,63 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 		} // for
 			//
 		return multimap;
+		//
+	}
+
+	private static boolean isXlsx(final Resource resource)
+			throws IOException, SAXException, ParserConfigurationException {
+		//
+		boolean contentTypeXmlFound = false;
+		//
+		try (final InputStream is = InputStreamSourceUtil.getInputStream(resource);
+				final ZipInputStream zis = testAndApply(Objects::nonNull, is, ZipInputStream::new, null)) {
+			//
+			ZipEntry ze = null;
+			//
+			while ((ze = zis != null ? zis.getNextEntry() : null) != null) {
+				//
+				if (contentTypeXmlFound = Objects.equals("[Content_Types].xml", ze.getName())) {
+					//
+					break;
+					//
+				} // if
+					//
+			} // while
+				//
+		} // try
+			//
+		boolean isXlsx = false;
+		//
+		if (contentTypeXmlFound) {
+			//
+			try (final InputStream is = InputStreamSourceUtil.getInputStream(resource)) {
+				//
+				try (final InputStream bais = testAndApply(x -> x != null && x.length > 0,
+						ZipUtil.unpackEntry(is, "[Content_Types].xml"), ByteArrayInputStream::new, null)) {
+					//
+					final NodeList childNodes = getChildNodes(getDocumentElement(
+							bais != null ? parse(newDocumentBuilder(DocumentBuilderFactory.newDefaultInstance()), bais)
+									: null));
+					//
+					for (int i = 0; i < getLength(childNodes); i++) {
+						//
+						if (Objects.equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml",
+								getTextContent(getNamedItem(getAttributes(item(childNodes, i)), "ContentType")))
+								&& (isXlsx = true)) {
+							//
+							break;
+							//
+						} // if
+							//
+					} // for
+						//
+				} // try
+					//
+			} // try
+				//
+		} // if
+			//
+		return isXlsx;
 		//
 	}
 
