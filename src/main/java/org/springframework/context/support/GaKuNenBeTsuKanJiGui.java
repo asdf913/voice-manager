@@ -239,22 +239,28 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 					//
 			} // for
 				//
-			final int size = CollectionUtils.size(list);
+			setSelectedItemByIterable(cbmGaKuNenBeTsuKanJi, list);
 			//
-			if (size == 1) {
-				//
-				setSelectedItem(cbmGaKuNenBeTsuKanJi, IterableUtils.get(list, 0));
-				//
-			} else if (size < 1) {
-				//
-				setSelectedItem(cbmGaKuNenBeTsuKanJi, null);
-				//
-			} else {
-				//
-				throw new IllegalStateException();
-				//
-			} // if
-				//
+		} // if
+			//
+	}
+
+	private static void setSelectedItemByIterable(final ComboBoxModel<?> cbm, final Iterable<?> iterable) {
+		//
+		final int size = IterableUtils.size(iterable);
+		//
+		if (size == 1) {
+			//
+			setSelectedItem(cbm, IterableUtils.get(iterable, 0));
+			//
+		} else if (size < 1) {
+			//
+			setSelectedItem(cbm, null);
+			//
+		} else {
+			//
+			throw new IllegalStateException();
+			//
 		} // if
 			//
 	}

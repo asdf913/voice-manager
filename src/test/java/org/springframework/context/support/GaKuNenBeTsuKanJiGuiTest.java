@@ -10,10 +10,12 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Objects;
 
+import javax.swing.ComboBoxModel;
 import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
 
@@ -32,7 +34,8 @@ import com.google.common.reflect.Reflection;
 
 class GaKuNenBeTsuKanJiGuiTest {
 
-	private static Method METHOD_CREATE_WORK_BOOK, METHOD_GET_CLASS, METHOD_TO_STRING = null;
+	private static Method METHOD_CREATE_WORK_BOOK, METHOD_GET_CLASS, METHOD_TO_STRING,
+			METHOD_SET_SELECTED_ITEM_BY_ITERABLE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -45,6 +48,9 @@ class GaKuNenBeTsuKanJiGuiTest {
 		(METHOD_GET_CLASS = clz.getDeclaredMethod("getClass", Object.class)).setAccessible(true);
 		//
 		(METHOD_TO_STRING = clz.getDeclaredMethod("toString", Object.class)).setAccessible(true);
+		//
+		(METHOD_SET_SELECTED_ITEM_BY_ITERABLE = clz.getDeclaredMethod("setSelectedItemByIterable", ComboBoxModel.class,
+				Iterable.class)).setAccessible(true);
 		//
 	}
 
@@ -306,6 +312,22 @@ class GaKuNenBeTsuKanJiGuiTest {
 				return (String) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetSelectedItemByIterable() {
+		//
+		Assertions.assertDoesNotThrow(() -> setSelectedItemByIterable(null, Collections.nCopies(2, null)));
+		//
+	}
+
+	private static void setSelectedItemByIterable(final ComboBoxModel<?> cbm, final Iterable<?> iterable)
+			throws Throwable {
+		try {
+			METHOD_SET_SELECTED_ITEM_BY_ITERABLE.invoke(null, cbm, iterable);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
