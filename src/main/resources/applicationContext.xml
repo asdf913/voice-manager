@@ -65,6 +65,16 @@
 	</bean>
 
 	<!-- -->
+	<bean id="GaKuNenBeTsuKanJiMultimap"
+		class="org.springframework.beans.factory.GaKuNenBeTsuKanJiMultimapFactoryBean">
+		<property name="resource"
+			value="classpath:GaKuNenBeTsuKanJi.xlsx" />
+		<property name="url" ref="gaKuNenBeTsuKanJiListPageUrl" />
+		<property name="timeout"
+			value="#{T(java.time.Duration).parse('PT0S')}" />
+	</bean>
+
+	<!-- -->
 	<bean class="org.springframework.context.support.VoiceManager">
 		<property name="layout" ref="MigLayout" />
 		<property name="defaultCloseOperation"
@@ -90,16 +100,8 @@
 		<!-- -->
 		<property name="gaKuNenBeTsuKanJiListPageUrl"
 			ref="gaKuNenBeTsuKanJiListPageUrl" />
-		<property name="gaKuNenBeTsuKanJiMultimap">
-			<bean
-				class="org.springframework.beans.factory.GaKuNenBeTsuKanJiMultimapFactoryBean">
-				<property name="resource"
-					value="classpath:GaKuNenBeTsuKanJi.xlsx" />
-				<property name="url" ref="gaKuNenBeTsuKanJiListPageUrl" />
-				<property name="timeout"
-					value="#{T(java.time.Duration).parse('PT0S')}" />
-			</bean>
-		</property>
+		<property name="gaKuNenBeTsuKanJiMultimap"
+			ref="GaKuNenBeTsuKanJiMultimap" />
 		<property
 			name="microsoftSpeechPlatformRuntimeDownloadPageUrl"
 			value="${org.springframework.context.support.VoiceManager.microsoftSpeechPlatformRuntimeDownloadPageUrl}" />
@@ -154,6 +156,16 @@
 		<property name="resource" value="classpath:ipa.json" />
 		<property name="messageDigestAlgorithm"
 			ref="messageDigestAlgorithm" />
+	</bean>
+
+	<!-- -->
+	<bean
+		class="org.springframework.context.support.GaKuNenBeTsuKanJiGui">
+		<property name="layout" ref="MigLayout" />
+		<property name="defaultCloseOperation"
+			value="#{T(javax.swing.WindowConstants).EXIT_ON_CLOSE}" />
+		<property name="gaKuNenBeTsuKanJiMultimap"
+			ref="GaKuNenBeTsuKanJiMultimap" />
 	</bean>
 
 	<bean id="DataSource" class="org.h2.jdbcx.JdbcConnectionPool"
