@@ -332,7 +332,9 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 					//
 				} // if
 					//
-				put(IValue0Util.getValue0(mm = ObjectUtils.getIfNull(mm, () -> Unit.with(LinkedHashMultimap.create()))),
+				MultimapUtil.put(
+						IValue0Util.getValue0(
+								mm = ObjectUtils.getIfNull(mm, () -> Unit.with(LinkedHashMultimap.create()))),
 						toString(row.getCell(0)), toString(row.getCell(1)));
 				//
 			} // for
@@ -363,19 +365,14 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 				//
 			} // if
 				//
-			put(IValue0Util.getValue0(mm = ObjectUtils.getIfNull(mm, () -> Unit.with(LinkedHashMultimap.create()))),
+			MultimapUtil.put(
+					IValue0Util.getValue0(mm = ObjectUtils.getIfNull(mm, () -> Unit.with(LinkedHashMultimap.create()))),
 					getStringValue(row.getCellByIndex(0)), getStringValue(row.getCellByIndex(1)));
 			//
 		} // for
 			//
 		return mm;
 		//
-	}
-
-	private static <K, V> void put(final Multimap<K, V> instance, final K key, final V value) {
-		if (instance != null) {
-			instance.put(key, value);
-		}
 	}
 
 	private static DocumentBuilder newDocumentBuilder(final DocumentBuilderFactory instance)

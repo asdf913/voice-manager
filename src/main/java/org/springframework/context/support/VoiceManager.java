@@ -5917,7 +5917,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				for (final String listName : listNames) {
 					//
-					put(multimap = ObjectUtils.getIfNull(multimap, LinkedListMultimap::create), listName, v);
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedListMultimap::create), listName,
+							v);
 					//
 				} // for
 					//
@@ -5937,7 +5938,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			for (final Voice v : voices) {
 				//
-				put(multimap = ObjectUtils.getIfNull(multimap, LinkedListMultimap::create), getJlptLevel(v), v);
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedListMultimap::create),
+						getJlptLevel(v), v);
 				//
 			} // for
 				//
@@ -10493,7 +10495,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					} // if
 						//
-					put(multimap = getIfNull(multimap, LinkedListMultimap::create), listName, voice);
+					MultimapUtil.put(multimap = getIfNull(multimap, LinkedListMultimap::create), listName, voice);
 					//
 				} // for
 					//
@@ -10521,7 +10523,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-			put(multimap = getIfNull(multimap, LinkedListMultimap::create), jlptLevel, v);
+			MultimapUtil.put(multimap = getIfNull(multimap, LinkedListMultimap::create), jlptLevel, v);
 			//
 		} // for
 			//
@@ -10604,12 +10606,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static void clear(final StringBuilder instance) {
 		if (instance != null) {
 			instance.delete(0, instance.length());
-		}
-	}
-
-	private static <K, V> void put(final Multimap<K, V> instance, final K key, final V value) {
-		if (instance != null) {
-			instance.put(key, value);
 		}
 	}
 

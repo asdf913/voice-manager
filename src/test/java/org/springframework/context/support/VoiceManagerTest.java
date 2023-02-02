@@ -255,7 +255,7 @@ class VoiceManagerTest {
 			METHOD_COPY_OBJECT_MAP, METHOD_DELETE, METHOD_DELETE_ON_EXIT, METHOD_CONVERT_LANGUAGE_CODE_TO_TEXT,
 			METHOD_IS_SELECTED, METHOD_SET_HIRAGANA_OR_KATAKANA, METHOD_SET_ROMAJI, METHOD_AND, METHOD_OR,
 			METHOD_CLEAR_DEFAULT_TABLE_MODEL, METHOD_CLEAR_STRING_BUILDER, METHOD_EXECUTE, METHOD_PUT_MAP,
-			METHOD_PUT_MULTI_MAP, METHOD_GET_BYTE_CONVERTER, METHOD_GET_PROPERTIES, METHOD_GET_CUSTOM_PROPERTIES,
+			METHOD_GET_BYTE_CONVERTER, METHOD_GET_PROPERTIES, METHOD_GET_CUSTOM_PROPERTIES,
 			METHOD_CONTAINS_CUSTOM_PROPERTIES, METHOD_CONTAINS_COLLECTION, METHOD_CONTAINS_LOOKUP, METHOD_GET_LPW_STR,
 			METHOD_GET_SHEET_NAME, METHOD_ACCEPT, METHOD_TO_ARRAY, METHOD_TO_LIST, METHOD_GET_ID, METHOD_SET_MAXIMUM,
 			METHOD_GET_CURRENT_SHEET_INDEX, METHOD_GET_JLPT_LEVELS, METHOD_PARSE_JLPT_PAGE_HTML,
@@ -523,9 +523,6 @@ class VoiceManagerTest {
 		(METHOD_EXECUTE = clz.getDeclaredMethod("execute", CLASS_OBJECT_MAP)).setAccessible(true);
 		//
 		(METHOD_PUT_MAP = clz.getDeclaredMethod("put", Map.class, Object.class, Object.class)).setAccessible(true);
-		//
-		(METHOD_PUT_MULTI_MAP = clz.getDeclaredMethod("put", Multimap.class, Object.class, Object.class))
-				.setAccessible(true);
 		//
 		(METHOD_GET_BYTE_CONVERTER = clz.getDeclaredMethod("getByteConverter", ConfigurableListableBeanFactory.class,
 				String.class, Object.class)).setAccessible(true);
@@ -4701,29 +4698,11 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> put((Map<?, ?>) null, null, null));
 		//
-		Assertions.assertDoesNotThrow(() -> put((Multimap<?, ?>) null, null, null));
-		//
-		if (ih != null) {
-			//
-			ih.multiMapPut = Boolean.FALSE;
-			//
-		} // if
-			//
-		Assertions.assertDoesNotThrow(() -> put(multimap, null, null));
-		//
 	}
 
 	private static <K, V> void put(final Map<K, V> instance, final K key, final V value) throws Throwable {
 		try {
 			METHOD_PUT_MAP.invoke(null, instance, key, value);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	private static <K, V> void put(final Multimap<K, V> instance, final K key, final V value) throws Throwable {
-		try {
-			METHOD_PUT_MULTI_MAP.invoke(null, instance, key, value);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
