@@ -166,6 +166,8 @@
 			value="#{T(javax.swing.WindowConstants).EXIT_ON_CLOSE}" />
 		<property name="gaKuNenBeTsuKanJiMultimap"
 			ref="GaKuNenBeTsuKanJiMultimap" />
+		<property name="gaKuNenBeTsuKanJiListPageUrl"
+			ref="gaKuNenBeTsuKanJiListPageUrl" />
 	</bean>
 
 	<bean id="DataSource" class="org.h2.jdbcx.JdbcConnectionPool"

@@ -638,10 +638,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	@ExportButton
 	@Group("Short Export Button")
-	private AbstractButton btnExportGaKuNenBeTsuKanJi = null;
-
-	@ExportButton
-	@Group("Short Export Button")
 	private AbstractButton btnExportJoYoKanJi = null;
 
 	@ExportButton
@@ -3660,12 +3656,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
-			// btnExportGaKuNenBeTsuKanJi
+			// btnExportJoYoKanJi
 			//
-		panel.add(btnExportGaKuNenBeTsuKanJi = new JButton("Export 学年別漢字"), String.format("%1$s,span %2$s", WRAP, 2));
-		//
-		// btnExportJoYoKanJi
-		//
 		panel.add(btnExportJoYoKanJi = new JButton("Export 常用漢字"), String.format("%1$s,span %2$s", WRAP, 2));
 		//
 		// Find the maximum width of the "java.awt.Component" instance from the field
@@ -3713,8 +3705,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		setEditable(false, tfDllPath, tfExportFile);
 		//
-		addActionListener(this, btnExportGaKuNenBeTsuKanJi, btnExportJoYoKanJi,
-				btnExportMicrosoftSpeechObjectLibraryInformation, btnExportCopy, btnExportBrowse, btnDllPathCopy);
+		addActionListener(this, btnExportJoYoKanJi, btnExportMicrosoftSpeechObjectLibraryInformation, btnExportCopy,
+				btnExportBrowse, btnDllPathCopy);
 		//
 		setEnabled(isInstalled(speechApi) && voiceIds != null, btnExportMicrosoftSpeechObjectLibraryInformation);
 		//
@@ -5160,40 +5152,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private void actionPerformedForExportButtons(final Object source, final boolean headless) {
 		//
-		if (Objects.equals(source, btnExportGaKuNenBeTsuKanJi)) {
-			//
-			File file = null;
-			//
-			Workbook workbook = null;
-			//
-			try (final OutputStream os = new FileOutputStream(
-					file = new File(String.format("学年別漢字_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.xlsx", new Date())))) {
-				//
-				addProperty(
-						getCustomProperties(getProperties(cast(POIXMLDocument.class,
-								workbook = createWorkbook(Pair.of("学年", "漢字"),
-										IValue0Util.getValue0(gaKuNenBeTsuKanJiMultimap))))),
-						SOURCE, gaKuNenBeTsuKanJiListPageUrl);
-				//
-				write(workbook, os);
-				//
-				setText(tfExportFile, getAbsolutePath(file));
-				//
-			} catch (final IOException e) {
-				//
-				errorOrAssertOrShowException(headless, e);
-				//
-			} finally {
-				//
-				IOUtils.closeQuietly(workbook);
-				//
-				testAndAccept(EMPTY_FILE_PREDICATE, file, FileUtils::deleteQuietly);
-				//
-			} // try
-				//
-			return;
-			//
-		} else if (Objects.equals(source, btnExportJoYoKanJi)) {
+		if (Objects.equals(source, btnExportJoYoKanJi)) {
 			//
 			File file = null;
 			//
@@ -10673,81 +10632,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		return et;
 		//
-	}
-
-	private static Workbook createWorkbook(final Pair<String, String> columnNames, final Multimap<?, ?> multimap) {
-		//
-		Workbook workbook = null;
-		//
-		Sheet sheet = null;
-		//
-		Row row = null;
-		//
-		if (multimap != null && multimap.entries() != null) {
-			//
-			for (final Entry<?, ?> en : multimap.entries()) {
-				//
-				if (en == null) {
-					//
-					continue;
-					//
-				} // if
-					//
-				if (sheet == null) {
-					//
-					sheet = createSheet(workbook = getIfNull(workbook, XSSFWorkbook::new));
-					//
-				} // if
-					//
-					// header
-					//
-				addHeaderRow(sheet, columnNames);
-				//
-				// content
-				//
-				if ((row = createRow(sheet, sheet.getLastRowNum() + 1)) == null) {
-					//
-					continue;
-					//
-				} // if
-					//
-				setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)), toString(getKey(en)));
-				//
-				setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)), toString(getValue(en)));
-				//
-			} // for
-				//
-		} // if
-			//
-		if (sheet != null && row != null) {
-			//
-			sheet.setAutoFilter(new CellRangeAddress(sheet.getFirstRowNum(), sheet.getLastRowNum() - 1,
-					row.getFirstCellNum(), row.getLastCellNum() - 1));
-			//
-		} // if
-			//
-		return workbook;
-		//
-	}
-
-	private static void addHeaderRow(final Sheet sheet, final Pair<String, String> columnNames) {
-		//
-		if (sheet != null && sheet.getLastRowNum() < 0) {
-			//
-			final Row row = createRow(sheet, sheet.getLastRowNum() + 1);
-			//
-			if (row == null) {
-				//
-				return;
-				//
-			} // if
-				//
-			setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)), getKey(columnNames));
-			//
-			setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)), getValue(columnNames));
-			//
-		} // if
-			//
 	}
 
 	private static Workbook createJoYoKanJiWorkbook(final String url, final Duration timeout) {
