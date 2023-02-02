@@ -93,6 +93,8 @@
 		<property name="gaKuNenBeTsuKanJiMultimap">
 			<bean
 				class="org.springframework.beans.factory.GaKuNenBeTsuKanJiMultimapFactoryBean">
+				<property name="resource"
+					value="classpath:GaKuNenBeTsuKanJi.xlsx" />
 				<property name="url" ref="gaKuNenBeTsuKanJiListPageUrl" />
 				<property name="timeout"
 					value="#{T(java.time.Duration).parse('PT0S')}" />

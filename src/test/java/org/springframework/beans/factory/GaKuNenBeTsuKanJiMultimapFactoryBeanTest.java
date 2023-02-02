@@ -1,21 +1,39 @@
 package org.springframework.beans.factory;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
 
+import org.apache.commons.collections4.IterableUtils;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.javatuples.Unit;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.core.io.InputStreamSource;
+import org.springframework.core.io.Resource;
+import org.springframework.util.ReflectionUtils;
 
 import com.google.common.collect.Multimap;
+import com.google.common.reflect.Reflection;
 
 class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 
-	private static Method METHOD_GET_CLASS, METHOD_TO_STRING = null;
+	private static Method METHOD_GET_CLASS, METHOD_TO_STRING, METHOD_CREATE_MULIT_MAP_UNIT = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -26,14 +44,128 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 		//
 		(METHOD_TO_STRING = clz.getDeclaredMethod("toString", Object.class)).setAccessible(true);
 		//
+		(METHOD_CREATE_MULIT_MAP_UNIT = clz.getDeclaredMethod("createMulitmapUnit", Workbook.class))
+				.setAccessible(true);
+		//
+	}
+
+	private static class IH implements InvocationHandler {
+
+		private Boolean exists, hasNext = null;
+
+		private InputStream inputStream = null;
+
+		private List<Sheet> sheets = null;
+
+		private List<Cell> cells = null;
+
+		private Iterator<?> iterator = null;
+
+		private String toString = null;
+
+		private List<Sheet> getSheets() {
+			if (sheets == null) {
+				sheets = new ArrayList<>();
+			}
+			return sheets;
+		}
+
+		private List<Cell> getCells() {
+			if (cells == null) {
+				cells = new ArrayList<>();
+			}
+			return cells;
+		}
+
+		@Override
+		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+			//
+			if (ReflectionUtils.isToStringMethod(method)) {
+				//
+				return toString;
+				//
+			} // if
+				//
+			final String methodName = method != null ? method.getName() : null;
+			//
+			if (proxy instanceof InputStreamSource) {
+				//
+				if (Objects.equals(methodName, "getInputStream")) {
+					//
+					return inputStream;
+					//
+				} // if
+					//
+			} else if (proxy instanceof Iterable) {
+				//
+				if (Objects.equals(methodName, "iterator")) {
+					//
+					return iterator;
+					//
+				} // if
+					//
+			} else if (proxy instanceof Iterator) {
+				//
+				if (Objects.equals(methodName, "hasNext")) {
+					//
+					return hasNext;
+					//
+				} // if
+					//
+			} // if
+				//
+			if (proxy instanceof Resource) {
+				//
+				if (Objects.equals(methodName, "exists")) {
+					//
+					return exists;
+					//
+				} // if
+					//
+			} else if (proxy instanceof Workbook) {
+				//
+				if (Objects.equals(methodName, "getNumberOfSheets")) {
+					//
+					return IterableUtils.size(getSheets());
+					//
+				} else if (Objects.equals(methodName, "getSheetAt") && args != null && args.length > 0
+						&& args[0] instanceof Number) {
+					//
+					return IterableUtils.get(getSheets(), ((Number) args[0]).intValue());
+					//
+				} // if
+					//
+			} else if (proxy instanceof Row) {
+				//
+				if (Objects.equals(methodName, "getCell") && args != null && args.length > 0
+						&& args[0] instanceof Number) {
+					//
+					return IterableUtils.get(getCells(), ((Number) args[0]).intValue());
+					//
+				} else if (Objects.equals(methodName, "getLastCellNum")) {
+					//
+					return Short.valueOf((short) IterableUtils.size(getCells()));
+					//
+				} // if
+					//
+			} // if
+				//
+			throw new Throwable(methodName);
+			//
+		}
+
 	}
 
 	private GaKuNenBeTsuKanJiMultimapFactoryBean instance = null;
+
+	private IH ih = null;
 
 	@BeforeEach
 	void beforeEach() {
 		//
 		instance = new GaKuNenBeTsuKanJiMultimapFactoryBean();
+		//
+		ih = new IH();
 		//
 	}
 
@@ -57,6 +189,40 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 			//
 		Assertions.assertThrows(MalformedURLException.class, () -> getObject(instance));
 		//
+		if (instance != null) {
+			//
+			instance.setResource(Reflection.newProxy(Resource.class, ih));
+			//
+		} // if
+			//
+		if (ih != null) {
+			//
+			ih.exists = Boolean.FALSE;
+			//
+		} // if
+			//
+		Assertions.assertThrows(MalformedURLException.class, () -> getObject(instance));
+		//
+		if (ih != null) {
+			//
+			ih.exists = Boolean.TRUE;
+			//
+		} // if
+			//
+		Assertions.assertThrows(MalformedURLException.class, () -> getObject(instance));
+		//
+		try (final InputStream is = new ByteArrayInputStream("".getBytes())) {
+			//
+			if (ih != null) {
+				//
+				ih.inputStream = is;
+				//
+			} // if
+				//
+			Assertions.assertThrows(MalformedURLException.class, () -> getObject(instance));
+			//
+		} // try
+			//
 	}
 
 	@Test
@@ -216,6 +382,83 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 
 	private static <T> T getObject(final FactoryBean<T> instance) throws Exception {
 		return instance != null ? instance.getObject() : null;
+	}
+
+	@Test
+	void testCreateMulitmapUnit() throws Throwable {
+		//
+		Assertions.assertNull(createMulitmapUnit(null));
+		//
+		final Workbook wb = Reflection.newProxy(Workbook.class, ih);
+		//
+		Assertions.assertNull(createMulitmapUnit(wb));
+		//
+		if (ih != null) {
+			//
+			ih.getSheets().add(null);
+			//
+		} // if
+			//
+		Assertions.assertNull(createMulitmapUnit(wb));
+		//
+		if (ih != null) {
+			//
+			ih.getSheets().set(0, Reflection.newProxy(Sheet.class, ih));
+			//
+		} // if
+			//
+		Assertions.assertNull(createMulitmapUnit(wb));
+		//
+		if (ih != null) {
+			//
+			ih.iterator = Collections.singleton(null).iterator();
+			//
+		} // if
+			//
+		Assertions.assertNull(createMulitmapUnit(wb));
+		//
+		final Row row = Reflection.newProxy(Row.class, ih);
+		//
+		if (ih != null) {
+			//
+			ih.iterator = Collections.singleton(row).iterator();
+			//
+		} // if
+			//
+		Assertions.assertNull(createMulitmapUnit(wb));
+		//
+		if (ih != null) {
+			//
+			ih.iterator = Collections.nCopies(2, row).iterator();
+			//
+		} // if
+			//
+		Assertions.assertNull(createMulitmapUnit(wb));
+		//
+		if (ih != null) {
+			//
+			ih.iterator = Collections.nCopies(2, row).iterator();
+			//
+			ih.cells = Collections.nCopies(2, Reflection.newProxy(Cell.class, ih));
+			//
+		} // if
+			//
+		Assertions.assertEquals("[{null=[null]}]", toString(createMulitmapUnit(wb)));
+		//
+	}
+
+	private static Unit<Multimap<String, String>> createMulitmapUnit(final Workbook wb) throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_MULIT_MAP_UNIT.invoke(null, wb);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Unit) {
+				return (Unit) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 }
