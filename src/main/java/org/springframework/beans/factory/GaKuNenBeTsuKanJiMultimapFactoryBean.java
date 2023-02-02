@@ -149,7 +149,7 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 			//
 			if (Objects.equals("application/vnd.openxmlformats-officedocument", mimeType)
 					|| Objects.equals("OLE 2 Compound Document", message)
-					|| (Objects.equals("application/zip", mimeType) && isXlsx(resource))) {
+					|| Boolean.logicalAnd(Objects.equals("application/zip", mimeType), isXlsx(resource))) {
 				//
 				try (final InputStream is = InputStreamSourceUtil.getInputStream(resource)) {
 					//
