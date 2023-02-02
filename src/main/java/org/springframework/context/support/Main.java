@@ -5,7 +5,9 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Window;
 import java.io.PrintStream;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -13,6 +15,8 @@ import javax.swing.JOptionPane;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.ListableBeanFactoryUtil;
@@ -85,13 +89,13 @@ public class Main {
 				//
 				final String[] beanNames = getBeanNamesForType(beanFactory, Component.class);
 				//
-				final JList<Object> list = beanNames != null ? new JList<>(beanNames) : new JList<>();
+				final JList<Object> list = testAndApply(Objects::nonNull, beanNames, JList::new, x -> new JList());
 				//
 				JOptionPane.showMessageDialog(null, list, "Component", JOptionPane.PLAIN_MESSAGE);
 				//
-				final String toString = toString(list.getSelectedValue());
-				//
-				clz = forName(getBeanClassName(toString != null ? getBeanDefinition(clbf, toString) : null));
+				clz = forName(getBeanClassName(
+						testAndApply(Objects::nonNull, toString(list != null ? list.getSelectedValue() : null),
+								x -> getBeanDefinition(clbf, x), null)));
 				//
 			} // if
 				//
@@ -111,6 +115,16 @@ public class Main {
 			//
 		} // try
 			//
+	}
+
+	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse) throws E {
+		return test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
+				: FailableFunctionUtil.apply(functionFalse, value);
+	}
+
+	private static final <T> boolean test(final Predicate<T> instance, final T value) {
+		return instance != null && instance.test(value);
 	}
 
 	private static String toString(final Object instance) {

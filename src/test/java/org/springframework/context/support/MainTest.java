@@ -13,9 +13,12 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 import javax.swing.JTextField;
 
+import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.jena.ext.com.google.common.base.Predicates;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,7 +36,7 @@ class MainTest {
 	private static Method METHOD_FOR_NAME, METHOD_TO_STRING, METHOD_GET_INSTANCE,
 			METHOD_SHOW_MESSAGE_DIALOG_OR_PRINT_LN, METHOD_CAST, METHOD_GET_BEAN_NAMES_FOR_TYPE,
 			METHOD_GET_BEAN_DEFINITION_NAMES, METHOD_GET_BEAN_CLASS_NAME, METHOD_GET_BEAN_DEFINITION, METHOD_PACK,
-			METHOD_SET_VISIBLE = null;
+			METHOD_SET_VISIBLE, METHOD_TEST_AND_APPLY = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -67,6 +70,9 @@ class MainTest {
 		(METHOD_PACK = clz.getDeclaredMethod("pack", Window.class)).setAccessible(true);
 		//
 		(METHOD_SET_VISIBLE = clz.getDeclaredMethod("setVisible", Component.class, Boolean.TYPE)).setAccessible(true);
+		//
+		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
+				FailableFunction.class, FailableFunction.class)).setAccessible(true);
 		//
 	}
 
@@ -414,6 +420,29 @@ class MainTest {
 	private static void setVisible(final Component instance, boolean b) throws Throwable {
 		try {
 			METHOD_SET_VISIBLE.invoke(null, instance, b);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testTestAndApply() throws Throwable {
+		//
+		Assertions.assertNull(testAndApply(null, null, null, null));
+		//
+		final FailableFunction<?, ?, ?> function = x -> x;
+		//
+		Assertions.assertNull(testAndApply(Predicates.alwaysTrue(), null, function, null));
+		//
+		Assertions.assertNull(testAndApply(Predicates.alwaysFalse(), null, function, null));
+		//
+	}
+
+	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse)
+			throws Throwable {
+		try {
+			return (R) METHOD_TEST_AND_APPLY.invoke(null, predicate, value, functionTrue, functionFalse);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
