@@ -145,7 +145,7 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 				//
 			final String mimeType = getMimeType(ci);
 			//
-			final String message = ci != null ? ci.getMessage() : null;
+			final String message = getMessage(ci);
 			//
 			if (Objects.equals("application/vnd.openxmlformats-officedocument", mimeType)
 					|| Objects.equals("OLE 2 Compound Document", message)
@@ -292,6 +292,10 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 
 	private static String getMimeType(final ContentInfo instance) {
 		return instance != null ? instance.getMimeType() : null;
+	}
+
+	private static String getMessage(final ContentInfo instance) {
+		return instance != null ? instance.getMessage() : null;
 	}
 
 	private static Unit<Multimap<String, String>> createMulitmapUnit(final Workbook wb) {
