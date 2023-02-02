@@ -15,6 +15,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
+import javax.swing.JList;
 import javax.swing.JTextField;
 
 import org.apache.commons.lang3.function.FailableFunction;
@@ -36,7 +37,7 @@ class MainTest {
 	private static Method METHOD_FOR_NAME, METHOD_TO_STRING, METHOD_GET_INSTANCE,
 			METHOD_SHOW_MESSAGE_DIALOG_OR_PRINT_LN, METHOD_CAST, METHOD_GET_BEAN_NAMES_FOR_TYPE,
 			METHOD_GET_BEAN_DEFINITION_NAMES, METHOD_GET_BEAN_CLASS_NAME, METHOD_GET_BEAN_DEFINITION, METHOD_PACK,
-			METHOD_SET_VISIBLE, METHOD_TEST_AND_APPLY = null;
+			METHOD_SET_VISIBLE, METHOD_TEST_AND_APPLY, METHOD_GET_SELECTED_VALUE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -73,6 +74,8 @@ class MainTest {
 		//
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
+		//
+		(METHOD_GET_SELECTED_VALUE = clz.getDeclaredMethod("getSelectedValue", JList.class)).setAccessible(true);
 		//
 	}
 
@@ -443,6 +446,23 @@ class MainTest {
 			throws Throwable {
 		try {
 			return (R) METHOD_TEST_AND_APPLY.invoke(null, predicate, value, functionTrue, functionFalse);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetSelectedValue() throws Throwable {
+		//
+		Assertions.assertNull(getSelectedValue(null));
+		//
+		Assertions.assertNull(getSelectedValue(new JList<>()));
+		//
+	}
+
+	private static <E> E getSelectedValue(final JList<E> instance) throws Throwable {
+		try {
+			return (E) METHOD_GET_SELECTED_VALUE.invoke(null, instance);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

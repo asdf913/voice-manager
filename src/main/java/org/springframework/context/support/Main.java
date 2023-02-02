@@ -93,9 +93,8 @@ public class Main {
 				//
 				JOptionPane.showMessageDialog(null, list, "Component", JOptionPane.PLAIN_MESSAGE);
 				//
-				clz = forName(getBeanClassName(
-						testAndApply(Objects::nonNull, toString(list != null ? list.getSelectedValue() : null),
-								x -> getBeanDefinition(clbf, x), null)));
+				clz = forName(getBeanClassName(testAndApply(Objects::nonNull, toString(getSelectedValue(list)),
+						x -> getBeanDefinition(clbf, x), null)));
 				//
 			} // if
 				//
@@ -115,6 +114,10 @@ public class Main {
 			//
 		} // try
 			//
+	}
+
+	private static <E> E getSelectedValue(final JList<E> instance) {
+		return instance != null ? instance.getSelectedValue() : null;
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
