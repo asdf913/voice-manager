@@ -89,7 +89,7 @@ public class Main {
 				//
 				final String[] beanNames = getBeanNamesForType(beanFactory, Component.class);
 				//
-				final JList<Object> list = testAndApply(Objects::nonNull, beanNames, JList::new, x -> new JList());
+				final JList<Object> list = testAndApply(Objects::nonNull, beanNames, JList::new, x -> new JList<>());
 				//
 				JOptionPane.showMessageDialog(null, list, "Component", JOptionPane.PLAIN_MESSAGE);
 				//
