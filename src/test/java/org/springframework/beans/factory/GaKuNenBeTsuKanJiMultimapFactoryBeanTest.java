@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.time.Duration;
@@ -43,7 +44,8 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 
 	private static Method METHOD_GET_CLASS, METHOD_TO_STRING, METHOD_CREATE_MULIT_MAP_UNIT_WORK_BOOK,
 			METHOD_CREATE_MULIT_MAP_UNIT_SPREAD_SHEET_DOCUMENT, METHOD_IS_XLSX, METHOD_GET_STRING_VALUE, METHOD_OR,
-			METHOD_GET_ROW_COUNT, METHOD_GET_SHEET_COUNT, METHOD_GET_SHEET_BY_INDEX = null;
+			METHOD_GET_ROW_COUNT, METHOD_GET_SHEET_COUNT, METHOD_GET_SHEET_BY_INDEX, METHOD_IS_STATIC,
+			METHOD_INVOKE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -73,6 +75,11 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 				.setAccessible(true);
 		//
 		(METHOD_GET_SHEET_BY_INDEX = clz.getDeclaredMethod("getSheetByIndex", SpreadsheetDocument.class, Integer.TYPE))
+				.setAccessible(true);
+		//
+		(METHOD_IS_STATIC = clz.getDeclaredMethod("isStatic", Member.class)).setAccessible(true);
+		//
+		(METHOD_INVOKE = clz.getDeclaredMethod("invoke", Method.class, Object.class, Object[].class))
 				.setAccessible(true);
 		//
 	}
@@ -657,6 +664,42 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 				return (Table) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testIsStatic() throws Throwable {
+		//
+		Assertions.assertFalse(isStatic(null));
+		//
+		Assertions.assertTrue(isStatic(Boolean.class.getDeclaredField("TRUE")));
+		//
+	}
+
+	private static boolean isStatic(final Member instance) throws Throwable {
+		try {
+			final Object obj = METHOD_IS_STATIC.invoke(null, instance);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testInvoke() throws Throwable {
+		//
+		Assertions.assertNull(invoke(null, null));
+		//
+	}
+
+	private static Object invoke(final Method method, final Object instance, final Object... args) throws Throwable {
+		try {
+			return METHOD_INVOKE.invoke(null, method, instance, args);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

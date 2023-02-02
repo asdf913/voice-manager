@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
@@ -319,9 +320,7 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 			//
 			final Method method = ZipInputStream.class.getDeclaredMethod("getNextEntry");
 			//
-			obj = method != null && (Modifier.isStatic(method.getModifiers()) || instance != null)
-					? method.invoke(instance)
-					: null;
+			obj = Boolean.logicalOr(isStatic(method), instance != null) ? invoke(method, instance) : null;
 			//
 		} catch (final NoSuchMethodException | IllegalAccessException e) {
 			//
@@ -338,6 +337,15 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 			//
 		return obj instanceof ZipEntry ? (ZipEntry) obj : null;
 		//
+	}
+
+	private static boolean isStatic(final Member instance) {
+		return instance != null && Modifier.isStatic(instance.getModifiers());
+	}
+
+	private static Object invoke(final Method method, final Object instance, final Object... args)
+			throws IllegalAccessException, InvocationTargetException {
+		return method != null ? method.invoke(instance, args) : null;
 	}
 
 	private static String getMimeType(final ContentInfo instance) {
