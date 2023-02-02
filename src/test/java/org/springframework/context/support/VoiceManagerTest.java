@@ -142,7 +142,6 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ooxml.POIXMLDocument;
 import org.apache.poi.ooxml.POIXMLProperties;
 import org.apache.poi.ooxml.POIXMLProperties.CustomProperties;
 import org.apache.poi.poifs.crypt.EncryptionMode;
@@ -252,19 +251,19 @@ class VoiceManagerTest {
 			METHOD_GET_METHODS_JAVA_CLASS, METHOD_COPY_OBJECT_MAP, METHOD_DELETE, METHOD_DELETE_ON_EXIT,
 			METHOD_CONVERT_LANGUAGE_CODE_TO_TEXT, METHOD_IS_SELECTED, METHOD_SET_HIRAGANA_OR_KATAKANA,
 			METHOD_SET_ROMAJI, METHOD_AND, METHOD_OR, METHOD_CLEAR_DEFAULT_TABLE_MODEL, METHOD_CLEAR_STRING_BUILDER,
-			METHOD_EXECUTE, METHOD_PUT_MAP, METHOD_GET_BYTE_CONVERTER, METHOD_GET_PROPERTIES,
-			METHOD_GET_CUSTOM_PROPERTIES, METHOD_CONTAINS_CUSTOM_PROPERTIES, METHOD_CONTAINS_COLLECTION,
-			METHOD_CONTAINS_LOOKUP, METHOD_GET_LPW_STR, METHOD_GET_SHEET_NAME, METHOD_ACCEPT, METHOD_TO_ARRAY,
-			METHOD_TO_LIST, METHOD_GET_ID, METHOD_SET_MAXIMUM, METHOD_GET_CURRENT_SHEET_INDEX, METHOD_GET_JLPT_LEVELS,
-			METHOD_PARSE_JLPT_PAGE_HTML, METHOD_GET_DATA_VALIDATION_HELPER, METHOD_CREATE_EXPLICIT_LIST_CONSTRAINT,
-			METHOD_CREATE_VALIDATION, METHOD_CREATE_EXPORT_TASK, METHOD_GET_TAB_INDEX_BY_TITLE,
-			METHOD_GET_DECLARED_FIELD, METHOD_GET_ABSOLUTE_PATH, METHOD_IS_ASSIGNABLE_FROM, METHOD_GET_ENUM_CONSTANTS,
-			METHOD_LIST_FILES, METHOD_GET_TYPE, METHOD_GET_COLUMN_NAME, METHOD_PUT_ALL_MAP, METHOD_CREATE_SHEET1,
-			METHOD_CREATE_SHEET2, METHOD_ENTRIES, METHOD_GET_WORK_BOOK, METHOD_GET_OLE_ENTRY_NAMES,
-			METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE, METHOD_GET_DOCUMENT_ELEMENT, METHOD_GET_CHILD_NODES,
-			METHOD_GET_NAMED_ITEM, METHOD_GET_TEXT_CONTENT, METHOD_GET_NAME_FILE, METHOD_GET_NAME_CLASS,
-			METHOD_GET_NAME_PACKAGE, METHOD_GET_PASS_WORD, METHOD_GET_SUPPLIER, METHOD_GET_LOOKUP, METHOD_GET_LIST,
-			METHOD_GET_MAP, METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK, METHOD_WRITE_VALUE_AS_STRING,
+			METHOD_EXECUTE, METHOD_PUT_MAP, METHOD_GET_BYTE_CONVERTER, METHOD_GET_CUSTOM_PROPERTIES,
+			METHOD_CONTAINS_CUSTOM_PROPERTIES, METHOD_CONTAINS_COLLECTION, METHOD_CONTAINS_LOOKUP, METHOD_GET_LPW_STR,
+			METHOD_GET_SHEET_NAME, METHOD_ACCEPT, METHOD_TO_ARRAY, METHOD_TO_LIST, METHOD_GET_ID, METHOD_SET_MAXIMUM,
+			METHOD_GET_CURRENT_SHEET_INDEX, METHOD_GET_JLPT_LEVELS, METHOD_PARSE_JLPT_PAGE_HTML,
+			METHOD_GET_DATA_VALIDATION_HELPER, METHOD_CREATE_EXPLICIT_LIST_CONSTRAINT, METHOD_CREATE_VALIDATION,
+			METHOD_CREATE_EXPORT_TASK, METHOD_GET_TAB_INDEX_BY_TITLE, METHOD_GET_DECLARED_FIELD,
+			METHOD_GET_ABSOLUTE_PATH, METHOD_IS_ASSIGNABLE_FROM, METHOD_GET_ENUM_CONSTANTS, METHOD_LIST_FILES,
+			METHOD_GET_TYPE, METHOD_GET_COLUMN_NAME, METHOD_PUT_ALL_MAP, METHOD_CREATE_SHEET1, METHOD_CREATE_SHEET2,
+			METHOD_ENTRIES, METHOD_GET_WORK_BOOK, METHOD_GET_OLE_ENTRY_NAMES, METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE,
+			METHOD_GET_DOCUMENT_ELEMENT, METHOD_GET_CHILD_NODES, METHOD_GET_NAMED_ITEM, METHOD_GET_TEXT_CONTENT,
+			METHOD_GET_NAME_FILE, METHOD_GET_NAME_CLASS, METHOD_GET_NAME_PACKAGE, METHOD_GET_PASS_WORD,
+			METHOD_GET_SUPPLIER, METHOD_GET_LOOKUP, METHOD_GET_LIST, METHOD_GET_MAP,
+			METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK, METHOD_WRITE_VALUE_AS_STRING,
 			METHOD_CREATE_DRAWING_PATRIARCH, METHOD_GET_CREATION_HELPER, METHOD_CREATE_CELL_COMMENT,
 			METHOD_CREATE_CLIENT_ANCHOR, METHOD_CREATE_RICH_TEXT_STRING, METHOD_SET_CELL_COMMENT, METHOD_SET_AUTHOR,
 			METHOD_TEST_AND_ACCEPT_PREDICATE, METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_FIND_FIELDS_BY_VALUE,
@@ -520,8 +519,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_GET_BYTE_CONVERTER = clz.getDeclaredMethod("getByteConverter", ConfigurableListableBeanFactory.class,
 				String.class, Object.class)).setAccessible(true);
-		//
-		(METHOD_GET_PROPERTIES = clz.getDeclaredMethod("getProperties", POIXMLDocument.class)).setAccessible(true);
 		//
 		(METHOD_GET_CUSTOM_PROPERTIES = clz.getDeclaredMethod("getCustomProperties", POIXMLProperties.class))
 				.setAccessible(true);
@@ -2934,14 +2931,8 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(getProperty((CustomProperties) null, null));
 		//
-		Assertions.assertNull(getProperty(getCustomProperties(getProperties(null)), null));
+		Assertions.assertNull(getProperty(getCustomProperties(null), null));
 		//
-		try (final XSSFWorkbook wb = new XSSFWorkbook()) {
-			//
-			Assertions.assertNull(getProperty(getCustomProperties(getProperties(wb)), null));
-			//
-		} // try
-			//
 	}
 
 	private static String getProperty(final CustomProperties instance, final String key) throws Throwable {
@@ -4669,20 +4660,6 @@ class VoiceManagerTest {
 		}
 	}
 
-	private static POIXMLProperties getProperties(final POIXMLDocument instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_PROPERTIES.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof POIXMLProperties) {
-				return (POIXMLProperties) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
 	private static CustomProperties getCustomProperties(final POIXMLProperties instance) throws Throwable {
 		try {
 			final Object obj = METHOD_GET_CUSTOM_PROPERTIES.invoke(null, instance);
@@ -4700,14 +4677,8 @@ class VoiceManagerTest {
 	@Test
 	void testContains() throws Throwable {
 		//
-		Assertions.assertFalse(contains(getCustomProperties(getProperties(null)), null));
+		Assertions.assertFalse(contains(getCustomProperties(null), null));
 		//
-		try (final XSSFWorkbook wb = new XSSFWorkbook()) {
-			//
-			Assertions.assertFalse(contains(getCustomProperties(getProperties(wb)), null));
-			//
-		} // try
-			//
 		Assertions.assertFalse(contains((Collection<?>) null, null));
 		//
 		final Collection<?> collection = Reflection.newProxy(Collection.class, ih);

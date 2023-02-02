@@ -208,6 +208,7 @@ import org.apache.poi.hssf.record.crypto.Biff8EncryptionKey;
 import org.apache.poi.hssf.usermodel.HSSFDataFormat;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ooxml.POIXMLDocument;
+import org.apache.poi.ooxml.POIXMLDocumentUtil;
 import org.apache.poi.ooxml.POIXMLProperties;
 import org.apache.poi.ooxml.POIXMLProperties.CustomProperties;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -5165,7 +5166,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						"org.springframework.context.support.VoiceManager.joYoKanJiPageUrl");
 				//
 				addProperty(
-						getCustomProperties(getProperties(
+						getCustomProperties(POIXMLDocumentUtil.getProperties(
 								cast(POIXMLDocument.class, workbook = createJoYoKanJiWorkbook(url, Duration.ZERO)))),
 						SOURCE, url);
 				//
@@ -6359,12 +6360,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			final POIXMLDocument poiXmlDocument = cast(POIXMLDocument.class, workbook);
 			//
-			final List<String> sheetExclued = toList(
-					map(stream(getObjectList(getObjectMapper(),
-							getLpwstr(testAndApply(VoiceManager::contains,
-									getCustomProperties(getProperties(poiXmlDocument)), "sheetExcluded",
-									VoiceManager::getProperty, null)))),
-							VoiceManager::toString));
+			final List<String> sheetExclued = toList(map(stream(getObjectList(getObjectMapper(),
+					getLpwstr(testAndApply(VoiceManager::contains,
+							getCustomProperties(POIXMLDocumentUtil.getProperties(poiXmlDocument)), "sheetExcluded",
+							VoiceManager::getProperty, null)))),
+					VoiceManager::toString));
 			//
 			ObjectMap.setObject(objectMap, File.class, file);
 			//
@@ -6418,8 +6418,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				ObjectMap.setObject(objectMap, ByteConverter.class,
 						getByteConverter(configurableListableBeanFactory, FORMAT,
 								getLpwstr(testAndApply(VoiceManager::contains,
-										getCustomProperties(getProperties(poiXmlDocument)), "audioFormat",
-										VoiceManager::getProperty, null))));
+										getCustomProperties(POIXMLDocumentUtil.getProperties(poiXmlDocument)),
+										"audioFormat", VoiceManager::getProperty, null))));
 				//
 				if (voiceId == null) {
 					//
@@ -6713,10 +6713,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static Integer getPhysicalNumberOfRows(final Sheet instance) {
 		return instance != null ? Integer.valueOf(instance.getPhysicalNumberOfRows()) : null;
-	}
-
-	private static POIXMLProperties getProperties(final POIXMLDocument instance) {
-		return instance != null ? instance.getProperties() : null;
 	}
 
 	private static CustomProperties getCustomProperties(final POIXMLProperties instance) {
@@ -8324,7 +8320,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			Jakaroma jakaroma = null;
 			//
 			final CustomProperties customProperties = getCustomProperties(
-					getProperties(ObjectMap.getObject(_objectMap, POIXMLDocument.class)));
+					POIXMLDocumentUtil.getProperties(ObjectMap.getObject(_objectMap, POIXMLDocument.class)));
 			//
 			final boolean hiraganaKatakanaConversion = BooleanUtils.toBooleanDefaultIfNull(
 					IValue0Util.getValue0(getBoolean(customProperties, "hiraganaKatakanaConversion")), false);

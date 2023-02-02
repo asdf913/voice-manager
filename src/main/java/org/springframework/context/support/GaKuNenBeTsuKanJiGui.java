@@ -46,6 +46,7 @@ import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.poi.ooxml.POIXMLDocument;
+import org.apache.poi.ooxml.POIXMLDocumentUtil;
 import org.apache.poi.ooxml.POIXMLProperties;
 import org.apache.poi.ooxml.POIXMLProperties.CustomProperties;
 import org.apache.poi.ss.usermodel.Cell;
@@ -258,7 +259,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 					file = new File(String.format("学年別漢字_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.xlsx", new Date())))) {
 				//
 				addProperty(
-						getCustomProperties(getProperties(cast(POIXMLDocument.class,
+						getCustomProperties(POIXMLDocumentUtil.getProperties(cast(POIXMLDocument.class,
 								workbook = createWorkbook(Pair.of("学年", "漢字"),
 										IValue0Util.getValue0(gaKuNenBeTsuKanJiMultimap))))),
 						"Source", gaKuNenBeTsuKanJiListPageUrl);
@@ -359,10 +360,6 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 			//
 		} // if
 			//
-	}
-
-	private static POIXMLProperties getProperties(final POIXMLDocument instance) {
-		return instance != null ? instance.getProperties() : null;
 	}
 
 	private static CustomProperties getCustomProperties(final POIXMLProperties instance) {
