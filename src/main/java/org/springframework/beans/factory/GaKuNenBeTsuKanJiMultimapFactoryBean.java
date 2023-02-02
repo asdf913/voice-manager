@@ -150,16 +150,12 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 					//
 				} // try
 					//
-			} else if (Objects.equals("application/zip", mimeType)) {
+			} else if (Objects.equals("application/zip", mimeType) && isXlsx(resource)) {
 				//
-				if (isXlsx(resource)) {
+				try (final InputStream is = InputStreamSourceUtil.getInputStream(resource)) {
 					//
-					try (final InputStream is = InputStreamSourceUtil.getInputStream(resource)) {
-						//
-						mm = createMulitmapUnit(WorkbookFactory.create(is));
-						//
-					} // try
-						//
+					mm = createMulitmapUnit(WorkbookFactory.create(is));
+					//
 				} // try
 					//
 			} // if
