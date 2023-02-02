@@ -138,11 +138,12 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 				ci = testAndApply(Objects::nonNull, testAndApply(Objects::nonNull, is, IOUtils::toByteArray, null),
 						new ContentInfoUtil()::findMatch, null);
 				//
-			} // for
+			} // try
 				//
 			final String mimeType = getMimeType(ci);
 			//
-			if (Objects.equals("application/vnd.openxmlformats-officedocument", mimeType)) {
+			if (Objects.equals("application/vnd.openxmlformats-officedocument", mimeType)
+					|| Objects.equals("OLE 2 Compound Document", ci != null ? ci.getMessage() : null)) {
 				//
 				try (final InputStream is = InputStreamSourceUtil.getInputStream(resource)) {
 					//
