@@ -11,6 +11,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -79,7 +83,16 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 
 	private transient PropertyResolver propertyResolver = null;
 
-	private JTextComponent tfText, tfExportFile = null;
+	@Target(ElementType.FIELD)
+	@Retention(RetentionPolicy.RUNTIME)
+	private @interface Note {
+		String value();
+	}
+
+	@Note("Text")
+	private JTextComponent tfText = null;
+
+	private JTextComponent tfExportFile = null;
 
 	private transient ComboBoxModel<String> cbmGaKuNenBeTsuKanJi = null;
 
