@@ -49,7 +49,6 @@ import java.security.MessageDigest;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.text.NumberFormat;
 import java.time.Duration;
 import java.util.Arrays;
@@ -181,7 +180,6 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
-import org.springframework.core.env.PropertyResolver;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
@@ -1004,11 +1002,9 @@ class VoiceManagerTest {
 
 		private Iterator<Cell> cells = null;
 
-		private Boolean anyMatch, contains, multiMapPut, isInstalled, isEmpty = null;
+		private Boolean anyMatch, contains, isInstalled, isEmpty = null;
 
 		private String[] voiceIds = null;
-
-		private Map<Object, String> properties = null;
 
 		private Iterator<?> iterator = null;
 
@@ -1024,7 +1020,7 @@ class VoiceManagerTest {
 
 		private Workbook workbook = null;
 
-		private Integer numberOfSheets, length, columnIndex, columnCount = null;
+		private Integer numberOfSheets, length, columnIndex = null;
 
 		private IntStream intStream = null;
 
@@ -1044,20 +1040,9 @@ class VoiceManagerTest {
 
 		private CellType cellType = null;
 
-		private Connection connection = null;
-
 		private PreparedStatement preparedStatement = null;
 
 		private ResultSet resultSet = null;
-
-		private ResultSetMetaData resultSetMetaData = null;
-
-		private Map<Object, String> getProperties() {
-			if (properties == null) {
-				properties = new LinkedHashMap<>();
-			}
-			return properties;
-		}
 
 		private Map<Object, BeanDefinition> getBeanDefinitions() {
 			if (beanDefinitions == null) {
@@ -1175,14 +1160,6 @@ class VoiceManagerTest {
 				} else if (Objects.equals(methodName, "isEmpty")) {
 					//
 					return isEmpty;
-					//
-				} // if
-					//
-			} else if (proxy instanceof PropertyResolver) {
-				//
-				if (Objects.equals(methodName, "getProperty") && args != null && args.length > 0) {
-					//
-					return MapUtils.getObject(getProperties(), args[0]);
 					//
 				} // if
 					//
@@ -1370,11 +1347,7 @@ class VoiceManagerTest {
 					//
 			} else if (proxy instanceof Multimap) {
 				//
-				if (Objects.equals(methodName, "put")) {
-					//
-					return multiMapPut;
-					//
-				} else if (Objects.equals(methodName, "keySet")) {
+				if (Objects.equals(methodName, "keySet")) {
 					//
 					return keySet;
 					//
@@ -1468,14 +1441,6 @@ class VoiceManagerTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof DataSource) {
-				//
-				if (Objects.equals(methodName, "getConnection")) {
-					//
-					return connection;
-					//
-				} // if
-					//
 			} else if (proxy instanceof Connection) {
 				//
 				if (Objects.equals(methodName, "prepareStatement")) {
@@ -1489,22 +1454,6 @@ class VoiceManagerTest {
 				if (Objects.equals(methodName, "executeQuery")) {
 					//
 					return resultSet;
-					//
-				} // if
-					//
-			} else if (proxy instanceof ResultSet) {
-				//
-				if (Objects.equals(methodName, "getMetaData")) {
-					//
-					return resultSetMetaData;
-					//
-				} // if
-					//
-			} else if (proxy instanceof ResultSetMetaData) {
-				//
-				if (Objects.equals(methodName, "getColumnCount")) {
-					//
-					return columnCount;
 					//
 				} // if
 					//
@@ -8065,8 +8014,6 @@ class VoiceManagerTest {
 		//
 		if (ih != null) {
 			//
-			ih.connection = Reflection.newProxy(Connection.class, ih);
-			//
 			ih.preparedStatement = Reflection.newProxy(PreparedStatement.class, ih);
 			//
 		} // if
@@ -8102,10 +8049,6 @@ class VoiceManagerTest {
 			ih.preparedStatement = Reflection.newProxy(PreparedStatement.class, ih);
 			//
 			ih.resultSet = Reflection.newProxy(ResultSet.class, ih);
-			//
-			ih.resultSetMetaData = Reflection.newProxy(ResultSetMetaData.class, ih);
-			//
-			ih.columnCount = Integer.valueOf(ZERO);
 			//
 		} // if
 			//
