@@ -37,6 +37,9 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
 import org.jsoup.select.Elements;
+import org.odftoolkit.simple.SpreadsheetDocument;
+import org.odftoolkit.simple.table.Cell;
+import org.odftoolkit.simple.table.Table;
 import org.springframework.core.io.InputStreamSourceUtil;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceUtil;
@@ -142,8 +145,10 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 				//
 			final String mimeType = getMimeType(ci);
 			//
+			final String message = ci != null ? ci.getMessage() : null;
+			//
 			if (Objects.equals("application/vnd.openxmlformats-officedocument", mimeType)
-					|| Objects.equals("OLE 2 Compound Document", ci != null ? ci.getMessage() : null)) {
+					|| Objects.equals("OLE 2 Compound Document", message)) {
 				//
 				try (final InputStream is = InputStreamSourceUtil.getInputStream(resource)) {
 					//
@@ -157,6 +162,34 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 					//
 					mm = createMulitmapUnit(WorkbookFactory.create(is));
 					//
+				} // try
+					//
+			} else if (Objects.equals("OpenDocument Spreadsheet", message)) {
+				//
+				try (final InputStream is = InputStreamSourceUtil.getInputStream(resource)) {
+					//
+					final SpreadsheetDocument ssd = SpreadsheetDocument.loadDocument(is);
+					//
+					final Table table = ssd != null && ssd.getSheetCount() > 0 ? ssd.getSheetByIndex(0) : null;
+					//
+					int rowNum = 0;
+					//
+					org.odftoolkit.simple.table.Row row = null;
+					//
+					for (int i = 0; table != null && i < table.getRowCount(); i++) {
+						//
+						if ((row = table.getRowByIndex(i)) == null || rowNum++ < 1) {
+							//
+							continue;
+							//
+						} // if
+							//
+						put(IValue0Util.getValue0(
+								mm = ObjectUtils.getIfNull(mm, () -> Unit.with(LinkedHashMultimap.create()))),
+								getStringValue(row.getCellByIndex(0)), getStringValue(row.getCellByIndex(1)));
+						//
+					} // for
+						//
 				} // try
 					//
 			} // if
@@ -201,6 +234,10 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 			//
 		return multimap;
 		//
+	}
+
+	private static String getStringValue(final Cell instance) {
+		return instance != null ? instance.getStringValue() : null;
 	}
 
 	private static boolean isXlsx(final Resource resource)
@@ -276,14 +313,14 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 			//
 			for (final Row row : sheet) {
 				//
-				if (row == null || rowNum++ == 0 || row.getLastCellNum() < 2
-						|| (mm = ObjectUtils.getIfNull(mm, () -> Unit.with(LinkedHashMultimap.create()))) == null) {
+				if (row == null || rowNum++ == 0 || row.getLastCellNum() < 2) {
 					//
 					continue;
 					//
 				} // if
 					//
-				put(IValue0Util.getValue0(mm), toString(row.getCell(0)), toString(row.getCell(1)));
+				put(IValue0Util.getValue0(mm = ObjectUtils.getIfNull(mm, () -> Unit.with(LinkedHashMultimap.create()))),
+						toString(row.getCell(0)), toString(row.getCell(1)));
 				//
 			} // for
 				//

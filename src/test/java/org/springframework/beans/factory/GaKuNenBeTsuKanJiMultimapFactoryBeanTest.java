@@ -37,7 +37,8 @@ import com.google.common.reflect.Reflection;
 
 class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 
-	private static Method METHOD_GET_CLASS, METHOD_TO_STRING, METHOD_CREATE_MULIT_MAP_UNIT, METHOD_IS_XLSX = null;
+	private static Method METHOD_GET_CLASS, METHOD_TO_STRING, METHOD_CREATE_MULIT_MAP_UNIT, METHOD_IS_XLSX,
+			METHOD_GET_STRING_VALUE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -52,6 +53,9 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 				.setAccessible(true);
 		//
 		(METHOD_IS_XLSX = clz.getDeclaredMethod("isXlsx", Resource.class)).setAccessible(true);
+		//
+		(METHOD_GET_STRING_VALUE = clz.getDeclaredMethod("getStringValue", org.odftoolkit.simple.table.Cell.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -507,6 +511,7 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 			Assertions.assertFalse(isXlsx(new ByteArrayResource(baos.toByteArray())));
 			//
 		} // try
+			//
 	}
 
 	private static boolean isXlsx(final Resource resource) throws Throwable {
@@ -514,6 +519,27 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 			final Object obj = METHOD_IS_XLSX.invoke(null, resource);
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetStringValue() throws Throwable {
+		//
+		Assertions.assertNull(getStringValue(null));
+		//
+	}
+
+	private static String getStringValue(final org.odftoolkit.simple.table.Cell instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_STRING_VALUE.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
