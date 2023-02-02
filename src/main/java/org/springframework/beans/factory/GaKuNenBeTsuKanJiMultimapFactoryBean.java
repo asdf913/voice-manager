@@ -140,7 +140,7 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 				//
 			} // for
 				//
-			final String mimeType = ci != null ? ci.getMimeType() : null;
+			final String mimeType = getMimeType(ci);
 			//
 			if (Objects.equals("application/vnd.openxmlformats-officedocument", mimeType)) {
 				//
@@ -179,6 +179,7 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 						//
 						try (final InputStream bais = testAndApply(Objects::nonNull,
 								ZipUtil.unpackEntry(is, "[Content_Types].xml"), ByteArrayInputStream::new, null)) {
+							//
 							final NodeList childNodes = getChildNodes(getDocumentElement(
 									parse(newDocumentBuilder(DocumentBuilderFactory.newDefaultInstance()), bais)));
 							//
@@ -253,6 +254,10 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 			//
 		return multimap;
 		//
+	}
+
+	private static String getMimeType(final ContentInfo instance) {
+		return instance != null ? instance.getMimeType() : null;
 	}
 
 	private static Unit<Multimap<String, String>> createMulitmapUnit(final Workbook wb) {
