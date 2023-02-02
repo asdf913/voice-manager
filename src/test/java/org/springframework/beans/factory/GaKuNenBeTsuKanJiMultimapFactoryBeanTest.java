@@ -27,6 +27,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.odftoolkit.simple.SpreadsheetDocument;
 import org.odftoolkit.simple.table.Table;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.InputStreamSource;
@@ -39,7 +40,8 @@ import com.google.common.reflect.Reflection;
 class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 
 	private static Method METHOD_GET_CLASS, METHOD_TO_STRING, METHOD_CREATE_MULIT_MAP_UNIT, METHOD_IS_XLSX,
-			METHOD_GET_STRING_VALUE, METHOD_OR, METHOD_GET_ROW_COUNT = null;
+			METHOD_GET_STRING_VALUE, METHOD_OR, METHOD_GET_ROW_COUNT, METHOD_GET_SHEET_COUNT,
+			METHOD_GET_SHEET_BY_INDEX = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -61,6 +63,12 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 		(METHOD_OR = clz.getDeclaredMethod("or", Boolean.TYPE, Boolean.TYPE, boolean[].class)).setAccessible(true);
 		//
 		(METHOD_GET_ROW_COUNT = clz.getDeclaredMethod("getRowCount", Table.class)).setAccessible(true);
+		//
+		(METHOD_GET_SHEET_COUNT = clz.getDeclaredMethod("getSheetCount", SpreadsheetDocument.class))
+				.setAccessible(true);
+		//
+		(METHOD_GET_SHEET_BY_INDEX = clz.getDeclaredMethod("getSheetByIndex", SpreadsheetDocument.class, Integer.TYPE))
+				.setAccessible(true);
 		//
 	}
 
@@ -589,6 +597,46 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 			final Object obj = METHOD_GET_ROW_COUNT.invoke(null, instance);
 			if (obj instanceof Integer) {
 				return ((Integer) obj).intValue();
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetSheetCount() throws Throwable {
+		//
+		Assertions.assertEquals(0, getSheetCount(null));
+		//
+	}
+
+	private static int getSheetCount(final SpreadsheetDocument instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_SHEET_COUNT.invoke(null, instance);
+			if (obj instanceof Integer) {
+				return ((Integer) obj).intValue();
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetSheetByIndex() throws Throwable {
+		//
+		Assertions.assertNull(getSheetByIndex(null, 0));
+		//
+	}
+
+	private static Table getSheetByIndex(final SpreadsheetDocument instance, final int index) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_SHEET_BY_INDEX.invoke(null, instance, index);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Table) {
+				return (Table) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

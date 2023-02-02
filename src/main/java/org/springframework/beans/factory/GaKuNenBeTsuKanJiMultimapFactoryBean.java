@@ -163,7 +163,7 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 					//
 					final SpreadsheetDocument ssd = SpreadsheetDocument.loadDocument(is);
 					//
-					final Table table = ssd != null && ssd.getSheetCount() > 0 ? ssd.getSheetByIndex(0) : null;
+					final Table table = getSheetCount(ssd) > 0 ? getSheetByIndex(ssd, 0) : null;
 					//
 					int rowNum = 0;
 					//
@@ -229,6 +229,14 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 			//
 		return multimap;
 		//
+	}
+
+	private static int getSheetCount(final SpreadsheetDocument instance) {
+		return instance != null ? instance.getSheetCount() : 0;
+	}
+
+	private static Table getSheetByIndex(final SpreadsheetDocument instance, final int index) {
+		return instance != null ? instance.getSheetByIndex(index) : null;
 	}
 
 	private static int getRowCount(final Table instance) {
