@@ -37,11 +37,13 @@ import org.springframework.util.ReflectionUtils;
 import com.google.common.collect.Multimap;
 import com.google.common.reflect.Reflection;
 
+import io.github.toolfactory.narcissus.Narcissus;
+
 class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 
-	private static Method METHOD_GET_CLASS, METHOD_TO_STRING, METHOD_CREATE_MULIT_MAP_UNIT, METHOD_IS_XLSX,
-			METHOD_GET_STRING_VALUE, METHOD_OR, METHOD_GET_ROW_COUNT, METHOD_GET_SHEET_COUNT,
-			METHOD_GET_SHEET_BY_INDEX = null;
+	private static Method METHOD_GET_CLASS, METHOD_TO_STRING, METHOD_CREATE_MULIT_MAP_UNIT_WORK_BOOK,
+			METHOD_CREATE_MULIT_MAP_UNIT_SPREAD_SHEET_DOCUMENT, METHOD_IS_XLSX, METHOD_GET_STRING_VALUE, METHOD_OR,
+			METHOD_GET_ROW_COUNT, METHOD_GET_SHEET_COUNT, METHOD_GET_SHEET_BY_INDEX = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -52,8 +54,11 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 		//
 		(METHOD_TO_STRING = clz.getDeclaredMethod("toString", Object.class)).setAccessible(true);
 		//
-		(METHOD_CREATE_MULIT_MAP_UNIT = clz.getDeclaredMethod("createMulitmapUnit", Workbook.class))
+		(METHOD_CREATE_MULIT_MAP_UNIT_WORK_BOOK = clz.getDeclaredMethod("createMulitmapUnit", Workbook.class))
 				.setAccessible(true);
+		//
+		(METHOD_CREATE_MULIT_MAP_UNIT_SPREAD_SHEET_DOCUMENT = clz.getDeclaredMethod("createMulitmapUnit",
+				SpreadsheetDocument.class)).setAccessible(true);
 		//
 		(METHOD_IS_XLSX = clz.getDeclaredMethod("isXlsx", Resource.class)).setAccessible(true);
 		//
@@ -74,7 +79,7 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 
 	private static class IH implements InvocationHandler {
 
-		private Boolean exists, hasNext = null;
+		private Boolean exists = null;
 
 		private InputStream inputStream = null;
 
@@ -124,14 +129,6 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 				if (Objects.equals(methodName, "iterator")) {
 					//
 					return iterator;
-					//
-				} // if
-					//
-			} else if (proxy instanceof Iterator) {
-				//
-				if (Objects.equals(methodName, "hasNext")) {
-					//
-					return hasNext;
 					//
 				} // if
 					//
@@ -410,7 +407,9 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 	@Test
 	void testCreateMulitmapUnit() throws Throwable {
 		//
-		Assertions.assertNull(createMulitmapUnit(null));
+		Assertions.assertNull(createMulitmapUnit((Workbook) null));
+		//
+		Assertions.assertNull(createMulitmapUnit((SpreadsheetDocument) null));
 		//
 		final Workbook wb = Reflection.newProxy(Workbook.class, ih);
 		//
@@ -468,11 +467,30 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 			//
 		Assertions.assertEquals("[{null=[null]}]", toString(createMulitmapUnit(wb)));
 		//
+		// org.odftoolkit.simple.SpreadsheetDocument
+		//
+		Assertions.assertNull(
+				createMulitmapUnit((SpreadsheetDocument) Narcissus.allocateInstance(SpreadsheetDocument.class)));
+		//
 	}
 
 	private static Unit<Multimap<String, String>> createMulitmapUnit(final Workbook wb) throws Throwable {
 		try {
-			final Object obj = METHOD_CREATE_MULIT_MAP_UNIT.invoke(null, wb);
+			final Object obj = METHOD_CREATE_MULIT_MAP_UNIT_WORK_BOOK.invoke(null, wb);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Unit) {
+				return (Unit) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static Unit<Multimap<String, String>> createMulitmapUnit(final SpreadsheetDocument ssd) throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_MULIT_MAP_UNIT_SPREAD_SHEET_DOCUMENT.invoke(null, ssd);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Unit) {

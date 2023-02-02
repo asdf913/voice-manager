@@ -161,29 +161,8 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 				//
 				try (final InputStream is = InputStreamSourceUtil.getInputStream(resource)) {
 					//
-					final Table table = testAndApply(x -> getSheetCount(x) > 0, SpreadsheetDocument.loadDocument(is),
-							x -> getSheetByIndex(x, 0), null);
+					mm = createMulitmapUnit(SpreadsheetDocument.loadDocument(is));
 					//
-					int rowNum = 0;
-					//
-					org.odftoolkit.simple.table.Row row = null;
-					//
-					final int rowCount = getRowCount(table);
-					//
-					for (int i = 0; i < rowCount; i++) {
-						//
-						if ((row = table.getRowByIndex(i)) == null || rowNum++ < 1) {
-							//
-							continue;
-							//
-						} // if
-							//
-						put(IValue0Util.getValue0(
-								mm = ObjectUtils.getIfNull(mm, () -> Unit.with(LinkedHashMultimap.create()))),
-								getStringValue(row.getCellByIndex(0)), getStringValue(row.getCellByIndex(1)));
-						//
-					} // for
-						//
 				} // try
 					//
 			} // if
@@ -359,6 +338,35 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 			} // for
 				//
 		} // if
+			//
+		return mm;
+		//
+	}
+
+	private static Unit<Multimap<String, String>> createMulitmapUnit(final SpreadsheetDocument ssd) {
+		//
+		Unit<Multimap<String, String>> mm = null;
+		//
+		final Table table = testAndApply(x -> getSheetCount(x) > 0, ssd, x -> getSheetByIndex(x, 0), null);
+		//
+		int rowNum = 0;
+		//
+		org.odftoolkit.simple.table.Row row = null;
+		//
+		final int rowCount = getRowCount(table);
+		//
+		for (int i = 0; i < rowCount; i++) {
+			//
+			if ((row = table.getRowByIndex(i)) == null || rowNum++ < 1) {
+				//
+				continue;
+				//
+			} // if
+				//
+			put(IValue0Util.getValue0(mm = ObjectUtils.getIfNull(mm, () -> Unit.with(LinkedHashMultimap.create()))),
+					getStringValue(row.getCellByIndex(0)), getStringValue(row.getCellByIndex(1)));
+			//
+		} // for
 			//
 		return mm;
 		//
