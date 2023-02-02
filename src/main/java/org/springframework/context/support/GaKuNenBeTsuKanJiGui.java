@@ -81,7 +81,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 
 	private JTextComponent tfText, tfExportFile = null;
 
-	private ComboBoxModel<String> cbmGaKuNenBeTsuKanJi = null;
+	private transient ComboBoxModel<String> cbmGaKuNenBeTsuKanJi = null;
 
 	private AbstractButton btnExport = null;
 
