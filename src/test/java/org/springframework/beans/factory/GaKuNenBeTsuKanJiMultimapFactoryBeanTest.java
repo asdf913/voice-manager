@@ -27,6 +27,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.odftoolkit.simple.table.Table;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.InputStreamSource;
 import org.springframework.core.io.Resource;
@@ -38,7 +39,7 @@ import com.google.common.reflect.Reflection;
 class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 
 	private static Method METHOD_GET_CLASS, METHOD_TO_STRING, METHOD_CREATE_MULIT_MAP_UNIT, METHOD_IS_XLSX,
-			METHOD_GET_STRING_VALUE, METHOD_OR = null;
+			METHOD_GET_STRING_VALUE, METHOD_OR, METHOD_GET_ROW_COUNT = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -58,6 +59,8 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 				.setAccessible(true);
 		//
 		(METHOD_OR = clz.getDeclaredMethod("or", Boolean.TYPE, Boolean.TYPE, boolean[].class)).setAccessible(true);
+		//
+		(METHOD_GET_ROW_COUNT = clz.getDeclaredMethod("getRowCount", Table.class)).setAccessible(true);
 		//
 	}
 
@@ -567,6 +570,25 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 			final Object obj = METHOD_OR.invoke(null, a, b, bs);
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetRowCount() throws Throwable {
+		//
+		Assertions.assertEquals(0, getRowCount(null));
+		//
+	}
+
+	private static int getRowCount(final Table instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_ROW_COUNT.invoke(null, instance);
+			if (obj instanceof Integer) {
+				return ((Integer) obj).intValue();
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

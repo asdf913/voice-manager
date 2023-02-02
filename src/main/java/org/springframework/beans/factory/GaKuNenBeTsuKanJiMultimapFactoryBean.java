@@ -169,7 +169,9 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 					//
 					org.odftoolkit.simple.table.Row row = null;
 					//
-					for (int i = 0; table != null && i < table.getRowCount(); i++) {
+					final int rowCount = getRowCount(table);
+					//
+					for (int i = 0; i < rowCount; i++) {
 						//
 						if ((row = table.getRowByIndex(i)) == null || rowNum++ < 1) {
 							//
@@ -227,6 +229,10 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 			//
 		return multimap;
 		//
+	}
+
+	private static int getRowCount(final Table instance) {
+		return instance != null ? instance.getRowCount() : 0;
 	}
 
 	private static boolean or(final boolean a, final boolean b, final boolean... bs) {
