@@ -259,7 +259,7 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 			//
 			ZipEntry ze = null;
 			//
-			while ((ze = zis != null ? zis.getNextEntry() : null) != null) {
+			while ((ze = getNextEntry(zis)) != null) {
 				//
 				if (contentTypeXmlFound = Objects.equals("[Content_Types].xml", ze.getName())) {
 					//
@@ -304,6 +304,10 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 			//
 		return isXlsx;
 		//
+	}
+
+	private static ZipEntry getNextEntry(final ZipInputStream instance) throws IOException {
+		return instance != null ? instance.getNextEntry() : null;
 	}
 
 	private static String getMimeType(final ContentInfo instance) {
