@@ -161,9 +161,8 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 				//
 				try (final InputStream is = InputStreamSourceUtil.getInputStream(resource)) {
 					//
-					final SpreadsheetDocument ssd = SpreadsheetDocument.loadDocument(is);
-					//
-					final Table table = getSheetCount(ssd) > 0 ? getSheetByIndex(ssd, 0) : null;
+					final Table table = testAndApply(x -> getSheetCount(x) > 0, SpreadsheetDocument.loadDocument(is),
+							x -> getSheetByIndex(x, 0), null);
 					//
 					int rowNum = 0;
 					//
