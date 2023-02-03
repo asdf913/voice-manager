@@ -142,7 +142,6 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ooxml.POIXMLProperties;
 import org.apache.poi.ooxml.POIXMLProperties.CustomProperties;
 import org.apache.poi.poifs.crypt.EncryptionMode;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
@@ -251,9 +250,9 @@ class VoiceManagerTest {
 			METHOD_GET_METHODS_JAVA_CLASS, METHOD_COPY_OBJECT_MAP, METHOD_DELETE, METHOD_DELETE_ON_EXIT,
 			METHOD_CONVERT_LANGUAGE_CODE_TO_TEXT, METHOD_IS_SELECTED, METHOD_SET_HIRAGANA_OR_KATAKANA,
 			METHOD_SET_ROMAJI, METHOD_AND, METHOD_OR, METHOD_CLEAR_DEFAULT_TABLE_MODEL, METHOD_CLEAR_STRING_BUILDER,
-			METHOD_EXECUTE, METHOD_PUT_MAP, METHOD_GET_BYTE_CONVERTER, METHOD_GET_CUSTOM_PROPERTIES,
-			METHOD_CONTAINS_CUSTOM_PROPERTIES, METHOD_CONTAINS_COLLECTION, METHOD_CONTAINS_LOOKUP, METHOD_GET_LPW_STR,
-			METHOD_GET_SHEET_NAME, METHOD_ACCEPT, METHOD_TO_ARRAY, METHOD_TO_LIST, METHOD_GET_ID, METHOD_SET_MAXIMUM,
+			METHOD_EXECUTE, METHOD_PUT_MAP, METHOD_GET_BYTE_CONVERTER, METHOD_CONTAINS_CUSTOM_PROPERTIES,
+			METHOD_CONTAINS_COLLECTION, METHOD_CONTAINS_LOOKUP, METHOD_GET_LPW_STR, METHOD_GET_SHEET_NAME,
+			METHOD_ACCEPT, METHOD_TO_ARRAY, METHOD_TO_LIST, METHOD_GET_ID, METHOD_SET_MAXIMUM,
 			METHOD_GET_CURRENT_SHEET_INDEX, METHOD_GET_JLPT_LEVELS, METHOD_PARSE_JLPT_PAGE_HTML,
 			METHOD_GET_DATA_VALIDATION_HELPER, METHOD_CREATE_EXPLICIT_LIST_CONSTRAINT, METHOD_CREATE_VALIDATION,
 			METHOD_CREATE_EXPORT_TASK, METHOD_GET_TAB_INDEX_BY_TITLE, METHOD_GET_DECLARED_FIELD,
@@ -519,9 +518,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_GET_BYTE_CONVERTER = clz.getDeclaredMethod("getByteConverter", ConfigurableListableBeanFactory.class,
 				String.class, Object.class)).setAccessible(true);
-		//
-		(METHOD_GET_CUSTOM_PROPERTIES = clz.getDeclaredMethod("getCustomProperties", POIXMLProperties.class))
-				.setAccessible(true);
 		//
 		(METHOD_CONTAINS_CUSTOM_PROPERTIES = clz.getDeclaredMethod("contains", CustomProperties.class, String.class))
 				.setAccessible(true);
@@ -2929,9 +2925,7 @@ class VoiceManagerTest {
 	@Test
 	void testGetProperty() throws Throwable {
 		//
-		Assertions.assertNull(getProperty((CustomProperties) null, null));
-		//
-		Assertions.assertNull(getProperty(getCustomProperties(null), null));
+		Assertions.assertNull(getProperty(null, null));
 		//
 	}
 
@@ -4660,24 +4654,8 @@ class VoiceManagerTest {
 		}
 	}
 
-	private static CustomProperties getCustomProperties(final POIXMLProperties instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_CUSTOM_PROPERTIES.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof CustomProperties) {
-				return (CustomProperties) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
 	@Test
 	void testContains() throws Throwable {
-		//
-		Assertions.assertFalse(contains(getCustomProperties(null), null));
 		//
 		Assertions.assertFalse(contains((Collection<?>) null, null));
 		//
