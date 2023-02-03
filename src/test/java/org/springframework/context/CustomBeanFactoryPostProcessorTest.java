@@ -3,6 +3,7 @@ package org.springframework.context;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
@@ -46,7 +47,7 @@ class CustomBeanFactoryPostProcessorTest {
 			METHOD_ADD_PROPERTY_SOURCE_TO_PROPERTY_SOURCES_TO_LAST_ITERABLE, METHOD_GET_SOURCE, METHOD_IS_STATIC,
 			METHOD_GET_MESSAGE, METHOD_GET_CLASS, METHOD_ERROR_OR_PRINT_STACK_TRACE, METHOD_GET_DECLARED_METHODS,
 			METHOD_FILTER, METHOD_TO_LIST, METHOD_TEST_AND_ACCEPT, METHOD_GET_NAME, METHOD_INVOKE, METHOD_ADD_LAST,
-			METHOD_POST_PROCESS_DATA_SOURCES, METHOD_TEST_AND_APPLY, METHOD_PRINT_LN = null;
+			METHOD_POST_PROCESS_DATA_SOURCES, METHOD_TEST_AND_APPLY, METHOD_PRINT_LN, METHOD_GET = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -169,6 +170,12 @@ class CustomBeanFactoryPostProcessorTest {
 		if ((METHOD_PRINT_LN = clz != null ? clz.getDeclaredMethod("println", Object.class) : null) != null) {
 			//
 			METHOD_PRINT_LN.setAccessible(true);
+			//
+		} // if
+			//
+		if ((METHOD_GET = clz != null ? clz.getDeclaredMethod("get", Field.class, Object.class) : null) != null) {
+			//
+			METHOD_GET.setAccessible(true);
 			//
 		} // if
 			//
@@ -712,6 +719,21 @@ class CustomBeanFactoryPostProcessorTest {
 	private static void println(final Object object) throws Throwable {
 		try {
 			METHOD_PRINT_LN.invoke(null, object);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGet() throws Throwable {
+		//
+		Assertions.assertNull(get(null, null));
+		//
+	}
+
+	private static Object get(final Field field, final Object instance) throws Throwable {
+		try {
+			return METHOD_GET.invoke(null, field, instance);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

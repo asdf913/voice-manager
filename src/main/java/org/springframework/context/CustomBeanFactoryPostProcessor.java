@@ -30,7 +30,6 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
-import org.apache.commons.lang3.reflect.MethodUtils;
 import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -132,7 +131,7 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 		//
 		try {
 			//
-			final Object out = f != null ? f.get(null) : null;
+			final Object out = get(f, null);
 			//
 			final List<Method> ms = toList(
 					filter(testAndApply(Objects::nonNull, getDeclaredMethods(getClass(out)), Arrays::stream, null),
@@ -164,6 +163,10 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 			//
 		} // try
 			//
+	}
+
+	private static Object get(final Field field, final Object instance) throws IllegalAccessException {
+		return field != null ? field.get(instance) : null;
 	}
 
 	private static void errorOrPrintStackTrace(final Logger logger, final Throwable a, final Throwable b) {
