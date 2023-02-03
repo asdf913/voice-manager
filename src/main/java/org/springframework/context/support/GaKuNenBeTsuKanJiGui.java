@@ -55,6 +55,7 @@ import org.apache.poi.ooxml.POIXMLPropertiesUtil;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.SheetUtil;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookUtil;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -335,7 +336,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 				//
 				// content
 				//
-				if ((row = createRow(sheet, sheet.getLastRowNum() + 1)) == null) {
+				if ((row = SheetUtil.createRow(sheet, sheet.getLastRowNum() + 1)) == null) {
 					//
 					continue;
 					//
@@ -364,7 +365,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 		//
 		if (sheet != null && sheet.getLastRowNum() < 0) {
 			//
-			final Row row = createRow(sheet, sheet.getLastRowNum() + 1);
+			final Row row = SheetUtil.createRow(sheet, sheet.getLastRowNum() + 1);
 			//
 			if (row == null) {
 				//
@@ -378,10 +379,6 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 			//
 		} // if
 			//
-	}
-
-	private static Row createRow(final Sheet instance, final int rownum) {
-		return instance != null ? instance.createRow(rownum) : null;
 	}
 
 	private static Cell createCell(final Row instance, final int column) {

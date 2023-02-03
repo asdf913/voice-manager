@@ -235,6 +235,7 @@ import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.RichTextString;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.SheetUtil;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.ss.usermodel.WorkbookUtil;
@@ -7787,7 +7788,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				if (row == null) {
 					//
-					row = createRow(sheet, 0);
+					row = SheetUtil.createRow(sheet, 0);
 					//
 				} // if
 					//
@@ -7822,7 +7823,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static void addImportFileTemplateBlankRow(final Sheet sheet, final List<Field> fs, final boolean headless,
 			final Collection<String> jlptValues, final Collection<String> gaKuNenBeTsuKanJiValues) {
 		//
-		final Row row = createRow(sheet, intValue(getPhysicalNumberOfRows(sheet), 0));
+		final Row row = SheetUtil.createRow(sheet, intValue(getPhysicalNumberOfRows(sheet), 0));
 		//
 		ObjectMap objectMap = null;
 		//
@@ -7966,10 +7967,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static Sheet createSheet(final Workbook instance, final String sheetname) {
 		return instance != null ? instance.createSheet(sheetname) : null;
-	}
-
-	private static Row createRow(final Sheet instance, final int rownum) {
-		return instance != null ? instance.createRow(rownum) : null;
 	}
 
 	private static DataValidationHelper getDataValidationHelper(final Sheet instance) {
@@ -10683,7 +10680,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		for (int i = 0; i < IterableUtils.size(domNodes); i++) {
 			//
 			if ((sheet = getIfNull(sheet, () -> createSheet(workbook, sheetName))) != null
-					&& (row = createRow(sheet, sheet.getLastRowNum() + 1)) == null) {
+					&& (row = SheetUtil.createRow(sheet, sheet.getLastRowNum() + 1)) == null) {
 				//
 				continue;
 				//
@@ -10747,7 +10744,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-			if (sheet != null && (row = createRow(sheet, sheet.getLastRowNum() + 1)) == null) {
+			if (sheet != null && (row = SheetUtil.createRow(sheet, sheet.getLastRowNum() + 1)) == null) {
 				//
 				continue;
 				//
@@ -10794,7 +10791,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static void setMicrosoftSpeechObjectLibrarySheetFirstRow(final Sheet sheet, final String[] columnNames) {
 		//
-		final Row row = sheet != null ? createRow(sheet, sheet.getLastRowNum() + 1) : null;
+		final Row row = sheet != null ? SheetUtil.createRow(sheet, sheet.getLastRowNum() + 1) : null;
 		//
 		if (row != null) {
 			//
@@ -10977,7 +10974,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			} // if
 				//
 			setCellValue(createCell(
-					row = getIfNull(row, () -> createRow(sheet, intValue(getPhysicalNumberOfRows(sheet), 0))),
+					row = getIfNull(row, () -> SheetUtil.createRow(sheet, intValue(getPhysicalNumberOfRows(sheet), 0))),
 					intValue(getPhysicalNumberOfCells(row), 0)), toString(value));
 			//
 		} // for
@@ -10996,7 +10993,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			for (int j = 0; fs != null && j < fs.size(); j++) {
 				//
-				setCellValue(createCell(row = getIfNull(row, () -> createRow(sheet, intValue(physicalNumberOfRows, 0))),
+				setCellValue(createCell(
+						row = getIfNull(row, () -> SheetUtil.createRow(sheet, intValue(physicalNumberOfRows, 0))),
 						intValue(getPhysicalNumberOfCells(row), 0)), getName(fs.get(j)));
 				//
 			} // for
@@ -11211,7 +11209,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final Sheet sheet = ObjectMap.getObject(objectMap, Sheet.class);
 		//
-		final Row row = sheet != null ? createRow(sheet, sheet.getLastRowNum() + 1) : null;
+		final Row row = sheet != null ? SheetUtil.createRow(sheet, sheet.getLastRowNum() + 1) : null;
 		//
 		ObjectMap.setObject(objectMap, Row.class, row);
 		//
@@ -11254,7 +11252,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		if (sheet != null && sheet.getLastRowNum() < 0) {
 			//
-			final Row row = createRow(sheet, 0);
+			final Row row = SheetUtil.createRow(sheet, 0);
 			//
 			for (int j = 0; fs != null && j < fs.length; j++) {
 				//
