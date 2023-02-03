@@ -181,7 +181,7 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 				//
 		} // if
 			//
-		final Elements elements = selectXpath(
+		final Elements elements = ElementUtil.selectXpath(
 				testAndApply(x -> StringUtils.equalsAnyIgnoreCase(getProtocol(x), "http", "https"),
 						testAndApply(Objects::nonNull, url, URL::new, null),
 						x -> Jsoup.parse(x, intValue(toMillis(timeout), 0)), null),
@@ -463,10 +463,6 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 
 	private static final <T> boolean test(final Predicate<T> instance, final T value) {
 		return instance != null && instance.test(value);
-	}
-
-	private static Elements selectXpath(final org.jsoup.nodes.Element instance, final String xpath) {
-		return instance != null ? instance.selectXpath(xpath) : null;
 	}
 
 	private static String getProtocol(final URL instance) {

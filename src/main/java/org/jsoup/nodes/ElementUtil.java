@@ -12,4 +12,8 @@ public interface ElementUtil {
 		return instance != null ? instance.getElementsByTag(tagName) : null;
 	}
 
+	static Elements selectXpath(final Element instance, final String xpath) {
+		return instance != null ? instance.selectXpath(xpath) : null;
+	}
+
 }

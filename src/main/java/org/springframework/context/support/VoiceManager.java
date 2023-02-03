@@ -3057,10 +3057,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.getProtocol() : null;
 	}
 
-	private static Elements selectXpath(final org.jsoup.nodes.Element instance, final String xpath) {
-		return instance != null ? instance.selectXpath(xpath) : null;
-	}
-
 	private static int getLength(final NodeList instance) {
 		return instance != null ? instance.getLength() : 0;
 	}
@@ -3806,7 +3802,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
-		final Elements h2s = selectXpath(document, "//h2[text()=\"Supported feature matrix\"]");
+		final Elements h2s = ElementUtil.selectXpath(document, "//h2[text()=\"Supported feature matrix\"]");
 		//
 		return html(nextElementSibling(IterableUtils.size(h2s) == 1 ? IterableUtils.get(h2s, 0) : null));
 		//
@@ -10606,7 +10602,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			// 本表
 			//
-			Elements elements = selectXpath(document, "//h3/span[text()=\"本表\"]/../following-sibling::table[1]/tbody");
+			Elements elements = ElementUtil.selectXpath(document,
+					"//h3/span[text()=\"本表\"]/../following-sibling::table[1]/tbody");
 			//
 			addJoYoKanJiSheet(workbook = getIfNull(workbook, XSSFWorkbook::new), "本表",
 					IterableUtils.size(elements) == 1 ? children(IterableUtils.get(elements, 0)) : null);
@@ -10614,7 +10611,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			// 付表
 			//
 			addJoYoKanJiSheet(workbook = getIfNull(workbook, XSSFWorkbook::new), "付表",
-					IterableUtils.size(elements = selectXpath(document,
+					IterableUtils.size(elements = ElementUtil.selectXpath(document,
 							"//h3/span[text()=\"付表\"]/../following-sibling::table[1]/tbody")) == 1
 									? children(IterableUtils.get(elements, 0))
 									: null);
@@ -10622,7 +10619,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			// 備考欄
 			//
 			addJoYoKanJiSheet(workbook = getIfNull(workbook, XSSFWorkbook::new), "備考欄",
-					IterableUtils.size(elements = selectXpath(document,
+					IterableUtils.size(elements = ElementUtil.selectXpath(document,
 							"//h3/span[text()=\"備考欄\"]/../following-sibling::table[1]/tbody")) == 1
 									? children(IterableUtils.get(elements, 0))
 									: null);
