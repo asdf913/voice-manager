@@ -15,7 +15,10 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -27,6 +30,7 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
@@ -44,6 +48,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
@@ -72,6 +77,8 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertyResolver;
 import org.springframework.core.env.PropertyResolverUtil;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
 
@@ -99,11 +106,15 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 
 	private transient ComboBoxModel<String> cbmGaKuNenBeTsuKanJi = null;
 
-	private AbstractButton btnExport = null;
+	private AbstractButton btnExport, btnCompare = null;
+
+	private JLabel jlCompare = null;
 
 	private Unit<Multimap<String, String>> gaKuNenBeTsuKanJiMultimap = null;
 
 	private String gaKuNenBeTsuKanJiListPageUrl = null;
+
+	private ObjectMapper objectMapper = null;
 
 	private GaKuNenBeTsuKanJiGui() {
 	}
@@ -152,11 +163,17 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 		//
 		add(btnExport = new JButton("Export 学年別漢字"), wrap);
 		//
-		btnExport.addActionListener(this);
-		//
 		add(new JLabel("Exported File"));
 		//
-		add(tfExportFile = new JTextField(), String.format("growx,span %1$s", 2));
+		add(tfExportFile = new JTextField(), String.format("growx,%1$s,span %2$s", wrap, 2));
+		//
+		add(new JLabel(""));
+		//
+		add(btnCompare = new JButton("Compare 学年別漢字"));
+		//
+		add(jlCompare = new JLabel());
+		//
+		addActionListener(this, btnExport, btnCompare);
 		//
 		final List<Component> cs = Arrays.asList(tfText, jcbGaKuNenBeTsuKanJi, btnExport);
 		//
@@ -169,6 +186,22 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 			setPreferredWidth((int) preferredSize.getWidth(), cs);
 			//
 		} // if
+			//
+	}
+
+	private static void addActionListener(final ActionListener actionListener, final AbstractButton... abs) {
+		//
+		AbstractButton ab = null;
+		//
+		for (int i = 0; abs != null && i < abs.length; i++) {
+			//
+			if ((ab = abs[i]) == null) {
+				continue;
+			} // if
+				//
+			ab.addActionListener(actionListener);
+			//
+		} // for
 			//
 	}
 
@@ -269,10 +302,19 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 			//
 	}
 
+	private ObjectMapper getObjectMapper() {
+		if (objectMapper == null) {
+			objectMapper = new ObjectMapper();
+		}
+		return objectMapper;
+	}
+
 	@Override
 	public void actionPerformed(final ActionEvent evt) {
 		//
-		if (Objects.equals(getSource(evt), btnExport)) {
+		final Object source = getSource(evt);
+		//
+		if (Objects.equals(source, btnExport)) {
 			//
 			File file = null;
 			//
@@ -305,8 +347,91 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 				//
 			} // try
 				//
+		} else if (Objects.equals(source, btnCompare)) {
+			//
+			setText(jlCompare, null);
+			//
+			final List<Method> ms = toList(filter(
+					testAndApply(Objects::nonNull,
+							getDeclaredMethods(
+									forName("org.springframework.beans.factory.GaKuNenBeTsuKanJiMultimapFactoryBean")),
+							Arrays::stream, null),
+					m -> m != null && Objects.equals(m.getName(), "createMultimapByUrl")
+							&& Arrays.equals(new Class<?>[] { String.class, Duration.class }, m.getParameterTypes())));
+			//
+			final int size = IterableUtils.size(ms);
+			//
+			if (size > 1) {
+				//
+				throw new IllegalStateException();
+				//
+			} // if
+				//
+			final Method m = size > 0 ? IterableUtils.get(ms, 0) : null;
+			//
+			try {
+				//
+				if (m != null) {
+					//
+					m.setAccessible(true);
+					//
+				} // if
+					//
+				final Multimap<?, ?> multimap = cast(Multimap.class,
+						m != null ? m.invoke(null, gaKuNenBeTsuKanJiListPageUrl, null) : null);
+				//
+				final ObjectMapper objectMapper = getObjectMapper();
+				//
+				setText(jlCompare,
+						Boolean.toString(Arrays.equals(writeValueAsBytes(objectMapper, MultimapUtil.entries(multimap)),
+								writeValueAsBytes(objectMapper,
+										MultimapUtil.entries(IValue0Util.getValue0(gaKuNenBeTsuKanJiMultimap))))));
+				//
+			} catch (final IllegalAccessException | JsonProcessingException e) {
+				//
+				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(GraphicsEnvironment.isHeadless(), LOG, e);
+				//
+			} catch (final InvocationTargetException e) {
+				//
+				final Throwable targetException = e.getTargetException();
+				//
+				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(
+						ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException), targetException,
+								ExceptionUtils.getRootCause(e), e));
+				//
+			} // try
+				//
 		} // if
 			//
+	}
+
+	private static <T> Stream<T> filter(final Stream<T> instance, final Predicate<? super T> predicate) {
+		//
+		return instance != null && (predicate != null || Proxy.isProxyClass(getClass(instance)))
+				? instance.filter(predicate)
+				: null;
+		//
+	}
+
+	private static <T> List<T> toList(final Stream<T> instance) {
+		return instance != null ? instance.toList() : null;
+	}
+
+	private static byte[] writeValueAsBytes(final ObjectMapper instance, final Object value)
+			throws JsonProcessingException {
+		return instance != null ? instance.writeValueAsBytes(value) : null;
+	}
+
+	private static Method[] getDeclaredMethods(final Class<?> instance) {
+		return instance != null ? instance.getDeclaredMethods() : null;
+	}
+
+	private static Class<?> forName(final String className) {
+		try {
+			return StringUtils.isNotBlank(className) ? Class.forName(className) : null;
+		} catch (final ClassNotFoundException e) {
+			return null;
+		}
 	}
 
 	private static Workbook createWorkbook(final Pair<String, String> columnNames, final Multimap<?, ?> multimap) {
@@ -459,6 +584,12 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 	}
 
 	private static void setText(final JTextComponent instance, final String text) {
+		if (instance != null) {
+			instance.setText(text);
+		}
+	}
+
+	private static void setText(final JLabel instance, final String text) {
 		if (instance != null) {
 			instance.setText(text);
 		}

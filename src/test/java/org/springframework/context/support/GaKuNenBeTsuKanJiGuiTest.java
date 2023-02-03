@@ -15,7 +15,10 @@ import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Objects;
 
+import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
 
@@ -60,6 +63,8 @@ class GaKuNenBeTsuKanJiGuiTest {
 
 		private Iterator<?> iterator = null;
 
+		private Integer size = null;
+
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
@@ -80,6 +85,14 @@ class GaKuNenBeTsuKanJiGuiTest {
 				if (Objects.equals(methodName, "entries")) {
 					//
 					return entries;
+					//
+				} // if
+					//
+			} else if (proxy instanceof Collection) {
+				//
+				if (Objects.equals(methodName, "size")) {
+					//
+					return size;
 					//
 				} // if
 					//
@@ -211,7 +224,7 @@ class GaKuNenBeTsuKanJiGuiTest {
 	}
 
 	@Test
-	void testActionPerformed() {
+	void testActionPerformed() throws IllegalAccessException {
 		//
 		Assertions.assertDoesNotThrow(() -> {
 			//
@@ -256,6 +269,38 @@ class GaKuNenBeTsuKanJiGuiTest {
 		Assertions.assertDoesNotThrow(() -> {
 			//
 			actionPerformed(instance, null);
+			//
+		});
+		//
+		final AbstractButton btnCompare = new JButton();
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "btnCompare", btnCompare, true);
+			//
+		} // if
+			//
+		ih.size = Integer.valueOf(0);
+		//
+		ih.iterator = Collections.emptyIterator();
+		//
+		final ActionEvent actionEvent = new ActionEvent(btnCompare, 0, null);
+		//
+		Assertions.assertDoesNotThrow(() -> {
+			//
+			actionPerformed(instance, actionEvent);
+			//
+		});
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "jlCompare", new JLabel(), true);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> {
+			//
+			actionPerformed(instance, actionEvent);
 			//
 		});
 		//

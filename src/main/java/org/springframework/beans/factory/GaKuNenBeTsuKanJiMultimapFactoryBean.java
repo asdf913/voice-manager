@@ -181,6 +181,13 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 				//
 		} // if
 			//
+		return createMultimapByUrl(url, timeout);
+		//
+	}
+
+	private static Multimap<String, String> createMultimapByUrl(final String url, final Duration timeout)
+			throws IOException {
+		//
 		final Elements elements = ElementUtil.selectXpath(
 				testAndApply(x -> StringUtils.equalsAnyIgnoreCase(getProtocol(x), "http", "https"),
 						testAndApply(Objects::nonNull, url, URL::new, null),
