@@ -46,7 +46,7 @@ class CustomBeanFactoryPostProcessorTest {
 			METHOD_ADD_PROPERTY_SOURCE_TO_PROPERTY_SOURCES_TO_LAST_ITERABLE, METHOD_GET_SOURCE, METHOD_IS_STATIC,
 			METHOD_GET_MESSAGE, METHOD_GET_CLASS, METHOD_ERROR_OR_PRINT_STACK_TRACE, METHOD_GET_DECLARED_METHODS,
 			METHOD_FILTER, METHOD_TO_LIST, METHOD_TEST_AND_ACCEPT, METHOD_GET_NAME, METHOD_INVOKE, METHOD_ADD_LAST,
-			METHOD_POST_PROCESS_DATA_SOURCES, METHOD_TEST_AND_APPLY = null;
+			METHOD_POST_PROCESS_DATA_SOURCES, METHOD_TEST_AND_APPLY, METHOD_PRINT_LN = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -163,6 +163,12 @@ class CustomBeanFactoryPostProcessorTest {
 				FailableFunction.class, FailableFunction.class) : null) != null) {
 			//
 			METHOD_TEST_AND_APPLY.setAccessible(true);
+			//
+		} // if
+			//
+		if ((METHOD_PRINT_LN = clz != null ? clz.getDeclaredMethod("println", Object.class) : null) != null) {
+			//
+			METHOD_PRINT_LN.setAccessible(true);
 			//
 		} // if
 			//
@@ -691,6 +697,21 @@ class CustomBeanFactoryPostProcessorTest {
 			throws Throwable {
 		try {
 			return (R) METHOD_TEST_AND_APPLY.invoke(null, predicate, value, functionTrue, functionFalse);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testPrintln() {
+		//
+		Assertions.assertDoesNotThrow(() -> println(null));
+		//
+	}
+
+	private static void println(final Object object) throws Throwable {
+		try {
+			METHOD_PRINT_LN.invoke(null, object);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

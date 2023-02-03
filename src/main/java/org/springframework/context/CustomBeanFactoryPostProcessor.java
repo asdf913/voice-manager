@@ -92,33 +92,8 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 			//
 		} else {
 			//
-			final List<Field> fs = toList(
-					filter(testAndApply(Objects::nonNull, System.class.getDeclaredFields(), Arrays::stream, null),
-							f -> f != null && Objects.equals(f.getType(), PrintStream.class)
-									&& Objects.equals(getName(f), "out")));
+			println("iniSection=" + iniSection);
 			//
-			final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
-			//
-			try {
-				//
-				// System.out.println
-				//
-				MethodUtils.invokeMethod(f != null ? f.get(null) : null, "println", "iniSection=" + iniSection);
-				//
-			} catch (final InvocationTargetException e) {
-				//
-				final Throwable targetException = e.getTargetException();
-				//
-				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(
-						ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException), targetException,
-								ExceptionUtils.getRootCause(e), e));
-				//
-			} catch (final ReflectiveOperationException e) {
-				//
-				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
-				//
-			} // try
-				//
 		} // if
 			//
 		addPropertySourceToPropertySourcesToLast(environment,
@@ -143,6 +118,50 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 				//
 			} // if
 				//
+		} // try
+			//
+	}
+
+	private static void println(final Object object) {
+		//
+		final List<Field> fs = toList(filter(
+				testAndApply(Objects::nonNull, System.class.getDeclaredFields(), Arrays::stream, null),
+				f -> f != null && Objects.equals(f.getType(), PrintStream.class) && Objects.equals(getName(f), "out")));
+		//
+		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		//
+		try {
+			//
+			final Object out = f != null ? f.get(null) : null;
+			//
+			final List<Method> ms = toList(
+					filter(testAndApply(Objects::nonNull, getDeclaredMethods(getClass(out)), Arrays::stream, null),
+							m -> m != null && Objects.equals(getName(m), "println")
+									&& Arrays.equals(m.getParameterTypes(), new Class<?>[] { Object.class })));
+			//
+			final int size = IterableUtils.size(ms);
+			//
+			if (size > 1) {
+				//
+				throw new IllegalStateException();
+				//
+			} // if
+				//
+				// System.out.println(java.lang.Object)
+				//
+			invoke(size > 0 ? IterableUtils.get(ms, 0) : null, out, object);
+			//
+		} catch (final InvocationTargetException e) {
+			//
+			final Throwable targetException = e.getTargetException();
+			//
+			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(ObjectUtils.firstNonNull(
+					ExceptionUtils.getRootCause(targetException), targetException, ExceptionUtils.getRootCause(e), e));
+			//
+		} catch (final ReflectiveOperationException e) {
+			//
+			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
+			//
 		} // try
 			//
 	}
