@@ -9594,7 +9594,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				throws IOException {
 			//
 			return objectMapper != null && clz != null
-					? objectMapper.readValue(objectMapper.writeValueAsBytes(instance), clz)
+					? objectMapper.readValue(ObjectMapperUtil.writeValueAsBytes(objectMapper, instance), clz)
 					: null;
 			//
 		}

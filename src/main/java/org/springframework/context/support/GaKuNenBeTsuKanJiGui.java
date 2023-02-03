@@ -82,6 +82,7 @@ import org.springframework.core.env.PropertyResolverUtil;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
 
@@ -388,8 +389,10 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 				//
 				final ObjectMapper om = getObjectMapper();
 				//
-				final boolean matched = Arrays.equals(writeValueAsBytes(om, MultimapUtil.entries(multimap)),
-						writeValueAsBytes(om, MultimapUtil.entries(IValue0Util.getValue0(gaKuNenBeTsuKanJiMultimap))));
+				final boolean matched = Arrays.equals(
+						ObjectMapperUtil.writeValueAsBytes(om, MultimapUtil.entries(multimap)),
+						ObjectMapperUtil.writeValueAsBytes(om,
+								MultimapUtil.entries(IValue0Util.getValue0(gaKuNenBeTsuKanJiMultimap))));
 				//
 				setText(jlCompare, matched ? "Matched" : "Not Matched");
 				//
@@ -440,11 +443,6 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 
 	private static <T> List<T> toList(final Stream<T> instance) {
 		return instance != null ? instance.toList() : null;
-	}
-
-	private static byte[] writeValueAsBytes(final ObjectMapper instance, final Object value)
-			throws JsonProcessingException {
-		return instance != null ? instance.writeValueAsBytes(value) : null;
 	}
 
 	private static Method[] getDeclaredMethods(final Class<?> instance) {

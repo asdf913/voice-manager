@@ -15,4 +15,8 @@ public interface ObjectMapperUtil {
 		//
 	}
 
+	static byte[] writeValueAsBytes(final ObjectMapper instance, final Object value) throws JsonProcessingException {
+		return instance != null ? instance.writeValueAsBytes(value) : null;
+	}
+
 }
