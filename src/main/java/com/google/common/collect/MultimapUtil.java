@@ -1,6 +1,7 @@
 package com.google.common.collect;
 
 import java.util.Collection;
+import java.util.Set;
 import java.util.Map.Entry;
 
 public interface MultimapUtil {
@@ -27,6 +28,10 @@ public interface MultimapUtil {
 
 	static <K, V> Collection<Entry<K, V>> entries(final Multimap<K, V> instance) {
 		return instance != null ? instance.entries() : null;
+	}
+
+	static <K> Set<K> keySet(final Multimap<K, ?> instance) {
+		return instance != null ? instance.keySet() : null;
 	}
 
 }

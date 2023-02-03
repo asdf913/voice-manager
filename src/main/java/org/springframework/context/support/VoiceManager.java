@@ -2796,7 +2796,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.add(new JLabel("学年別漢字"));
 		//
-		final Set<String> gaKuNenBeTsuKanJiList = keySet(IValue0Util.getValue0(gaKuNenBeTsuKanJiMultimap));
+		final Set<String> gaKuNenBeTsuKanJiList = MultimapUtil.keySet(IValue0Util.getValue0(gaKuNenBeTsuKanJiMultimap));
 		//
 		panel.add(new JComboBox<>(cbmGaKuNenBeTsuKanJi = testAndApply(Objects::nonNull,
 				ArrayUtils.insert(0, toArray(gaKuNenBeTsuKanJiList, new String[] {}), (String) null),
@@ -3113,10 +3113,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static Field[] getDeclaredFields(final Class<?> instance) {
 		return instance != null ? instance.getDeclaredFields() : null;
-	}
-
-	private static <K> Set<K> keySet(final Multimap<K, ?> instance) {
-		return instance != null ? instance.keySet() : null;
 	}
 
 	private JPanel createBatchImportPanel(final LayoutManager layoutManager) {
@@ -4915,7 +4911,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			FileUtils.writeByteArrayToFile(jfc.getSelectedFile(),
 					createImportFileTemplateByteArray(isSelected(cbImportFileTemplateGenerateBlankRow), getJlptLevels(),
-							keySet(IValue0Util.getValue0(gaKuNenBeTsuKanJiMultimap))));
+							MultimapUtil.keySet(IValue0Util.getValue0(gaKuNenBeTsuKanJiMultimap))));
 			//
 		} catch (final IOException e) {
 			//
@@ -5988,7 +5984,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			final Entry<?, UnaryOperator<Object>> filePair, final Map<Object, Object> parameters,
 			final Collection<File> files) throws IOException, TemplateException {
 		//
-		final Iterable<String> keySet = keySet(multimap);
+		final Iterable<String> keySet = MultimapUtil.keySet(multimap);
 		//
 		if (iterator(keySet) != null) {
 			//
@@ -11038,9 +11034,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			final Multimap<String, Voice> multimap = getVoiceMultimapByListName(voices);
 			//
-			if (multimap != null) {
+			final Set<String> keySet = MultimapUtil.keySet(multimap);
+			//
+			if (iterator(keySet) != null) {
 				//
-				for (final String key : multimap.keySet()) {
+				for (final String key : keySet) {
 					//
 					setSheet(workbook, createSheet(workbook, key), MultimapUtil.get(multimap, key));
 					//
@@ -11065,9 +11063,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final Multimap<String, Voice> multimap = getVoiceMultimapByJlpt(voices);
 		//
-		if (multimap != null) {
+		final Set<String> keySet = MultimapUtil.keySet(multimap);
+		//
+		if (iterator(keySet) != null) {
 			//
-			for (final String key : multimap.keySet()) {
+			for (final String key : keySet) {
 				//
 				if (key == null) {
 					//
