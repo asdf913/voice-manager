@@ -213,8 +213,8 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 			} // if
 				//
 			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedListMultimap::create),
-					matcher.group(1),
-					toList(map(stream(select(nextElementSibling(element.parent()), "a")), a -> ElementUtil.text(a))));
+					matcher.group(1), toList(map(stream(ElementUtil.select(nextElementSibling(element.parent()), "a")),
+							a -> ElementUtil.text(a))));
 			//
 		} // for
 			//
@@ -494,10 +494,6 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 
 	private static org.jsoup.nodes.Element nextElementSibling(final Element instance) {
 		return instance != null ? instance.nextElementSibling() : null;
-	}
-
-	private static Elements select(final Element instance, final String cssQuery) {
-		return instance != null ? instance.select(cssQuery) : null;
 	}
 
 	private static <E> Stream<E> stream(final Collection<E> instance) {

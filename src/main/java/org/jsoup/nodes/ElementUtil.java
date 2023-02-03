@@ -16,4 +16,8 @@ public interface ElementUtil {
 		return instance != null ? instance.selectXpath(xpath) : null;
 	}
 
+	static Elements select(final Element instance, final String cssQuery) {
+		return instance != null ? instance.select(cssQuery) : null;
+	}
+
 }

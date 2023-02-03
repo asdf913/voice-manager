@@ -154,9 +154,10 @@ public class JlptLevelListFactoryBean implements FactoryBean<List<String>> {
 		} // if
 			//
 		return toList(map(
-				stream(select(testAndApply(x -> StringUtils.equalsAnyIgnoreCase(getProtocol(x), "http", "https"),
-						testAndApply(StringUtils::isNotBlank, url, URL::new, null),
-						x -> Jsoup.parse(x, intValue(toMillis(timeout), 0)), null), ".thLeft[scope='col']")),
+				stream(ElementUtil
+						.select(testAndApply(x -> StringUtils.equalsAnyIgnoreCase(getProtocol(x), "http", "https"),
+								testAndApply(StringUtils::isNotBlank, url, URL::new, null),
+								x -> Jsoup.parse(x, intValue(toMillis(timeout), 0)), null), ".thLeft[scope='col']")),
 				ElementUtil::text));
 		//
 	}
@@ -180,10 +181,6 @@ public class JlptLevelListFactoryBean implements FactoryBean<List<String>> {
 
 	private static <E> Stream<E> stream(final Collection<E> instance) {
 		return instance != null ? instance.stream() : null;
-	}
-
-	private static Elements select(final Element instance, final String cssQuery) {
-		return instance != null ? instance.select(cssQuery) : null;
 	}
 
 	private static String getProtocol(final URL instance) {

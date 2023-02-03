@@ -3852,7 +3852,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // for
 				//
-			final Elements elements = select(testAndApply(Objects::nonNull,
+			final Elements elements = ElementUtil.select(testAndApply(Objects::nonNull,
 					(is = openStream(testAndApply(Objects::nonNull, url, URL::new, null))) != null
 							? IOUtils.toString(is, StandardCharsets.UTF_8)
 							: null,
@@ -3891,10 +3891,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return aTag;
 		//
-	}
-
-	private static Elements select(final org.jsoup.nodes.Element instance, final String cssQuery) {
-		return instance != null ? instance.select(cssQuery) : null;
 	}
 
 	private static String attr(final org.jsoup.nodes.Element instance, final String attributeKey) {
