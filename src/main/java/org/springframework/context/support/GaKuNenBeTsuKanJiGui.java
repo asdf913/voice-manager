@@ -106,7 +106,10 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 
 	private transient ComboBoxModel<String> cbmGaKuNenBeTsuKanJi = null;
 
-	private AbstractButton btnExport, btnCompare = null;
+	@Note("Expport")
+	private AbstractButton btnExport = null;
+
+	private AbstractButton btnCompare = null;
 
 	private JLabel jlCompare = null;
 
