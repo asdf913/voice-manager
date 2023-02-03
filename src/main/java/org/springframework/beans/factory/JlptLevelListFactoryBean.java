@@ -19,9 +19,7 @@ import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0Util;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
-import org.jsoup.select.Elements;
 import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
