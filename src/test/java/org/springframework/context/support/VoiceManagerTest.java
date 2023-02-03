@@ -257,7 +257,7 @@ class VoiceManagerTest {
 			METHOD_CREATE_VALIDATION, METHOD_CREATE_EXPORT_TASK, METHOD_GET_TAB_INDEX_BY_TITLE,
 			METHOD_GET_DECLARED_FIELD, METHOD_GET_ABSOLUTE_PATH, METHOD_IS_ASSIGNABLE_FROM, METHOD_GET_ENUM_CONSTANTS,
 			METHOD_LIST_FILES, METHOD_GET_TYPE, METHOD_GET_COLUMN_NAME, METHOD_PUT_ALL_MAP, METHOD_CREATE_SHEET,
-			METHOD_ENTRIES, METHOD_GET_WORK_BOOK, METHOD_GET_OLE_ENTRY_NAMES, METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE,
+			METHOD_GET_WORK_BOOK, METHOD_GET_OLE_ENTRY_NAMES, METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE,
 			METHOD_GET_DOCUMENT_ELEMENT, METHOD_GET_CHILD_NODES, METHOD_GET_NAMED_ITEM, METHOD_GET_TEXT_CONTENT,
 			METHOD_GET_NAME_FILE, METHOD_GET_NAME_CLASS, METHOD_GET_NAME_PACKAGE, METHOD_GET_PASS_WORD,
 			METHOD_GET_SUPPLIER, METHOD_GET_LOOKUP, METHOD_GET_LIST, METHOD_GET_MAP,
@@ -580,8 +580,6 @@ class VoiceManagerTest {
 		(METHOD_PUT_ALL_MAP = clz.getDeclaredMethod("putAll", Map.class, Map.class)).setAccessible(true);
 		//
 		(METHOD_CREATE_SHEET = clz.getDeclaredMethod("createSheet", Workbook.class, String.class)).setAccessible(true);
-		//
-		(METHOD_ENTRIES = clz.getDeclaredMethod("entries", Multimap.class)).setAccessible(true);
 		//
 		(METHOD_GET_WORK_BOOK = clz.getDeclaredMethod("getWorkbook", File.class)).setAccessible(true);
 		//
@@ -5172,27 +5170,6 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof Sheet) {
 				return (Sheet) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testEntries() throws Throwable {
-		//
-		Assertions.assertNull(entries(multimap));
-		//
-	}
-
-	private static <K, V> Collection<Entry<K, V>> entries(final Multimap<K, V> instance) throws Throwable {
-		try {
-			final Object obj = METHOD_ENTRIES.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Collection) {
-				return (Collection) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

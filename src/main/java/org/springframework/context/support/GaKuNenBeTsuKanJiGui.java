@@ -73,6 +73,7 @@ import org.springframework.core.env.PropertyResolver;
 import org.springframework.core.env.PropertyResolverUtil;
 
 import com.google.common.collect.Multimap;
+import com.google.common.collect.MultimapUtil;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -209,7 +210,8 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 		//
 		if (Objects.equals(source, tfText)) {
 			//
-			final Collection<Entry<String, String>> entries = entries(IValue0Util.getValue0(gaKuNenBeTsuKanJiMultimap));
+			final Collection<Entry<String, String>> entries = MultimapUtil
+					.entries(IValue0Util.getValue0(gaKuNenBeTsuKanJiMultimap));
 			//
 			if (iterator(entries) == null) {
 				//
@@ -315,9 +317,9 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 		//
 		Row row = null;
 		//
-		if (multimap != null && iterator(multimap.entries()) != null) {
+		if (iterator(MultimapUtil.entries(multimap)) != null) {
 			//
-			for (final Entry<?, ?> en : multimap.entries()) {
+			for (final Entry<?, ?> en : MultimapUtil.entries(multimap)) {
 				//
 				if (en == null) {
 					//
@@ -418,10 +420,6 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 
 	private static <T> T cast(final Class<T> clz, final Object value) {
 		return clz != null && clz.isInstance(value) ? clz.cast(value) : null;
-	}
-
-	private static <K, V> Collection<Entry<K, V>> entries(final Multimap<K, V> instance) {
-		return instance != null ? instance.entries() : null;
 	}
 
 	private static <T> Iterator<T> iterator(final Iterable<T> instance) {

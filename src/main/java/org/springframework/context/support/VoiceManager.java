@@ -6915,7 +6915,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static void keyReleasedForTextImport(final Multimap<String, String> multiMap,
 			final JTextComponent jTextComponent, final ComboBoxModel<String> comboBoxModel) {
 		//
-		final Collection<Entry<String, String>> entries = entries(multiMap);
+		final Collection<Entry<String, String>> entries = MultimapUtil.entries(multiMap);
 		//
 		if (iterator(entries) == null) {
 			//
@@ -6968,10 +6968,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static String writeValueAsString(final ObjectMapper instance, final Object value)
 			throws JsonProcessingException {
 		return instance != null ? instance.writeValueAsString(value) : null;
-	}
-
-	private static <K, V> Collection<Entry<K, V>> entries(final Multimap<K, V> instance) {
-		return instance != null ? instance.entries() : null;
 	}
 
 	private static void setBackground(final Component instance, final Color color) {
@@ -10345,7 +10341,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			final Multimap<String, Voice> multimap = createMultimapByListNames(voices);
 			//
-			Collection<Entry<String, Voice>> entries = entries(multimap);
+			Collection<Entry<String, Voice>> entries = MultimapUtil.entries(multimap);
 			//
 			if (iterator(entries) != null) {
 				//
@@ -10464,7 +10460,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		StringBuilder folder = null;
 		//
-		final Collection<Entry<String, Voice>> entries = entries(multimap);
+		final Collection<Entry<String, Voice>> entries = MultimapUtil.entries(multimap);
 		//
 		if (entries == null) {
 			//
