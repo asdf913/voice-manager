@@ -300,8 +300,6 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 				//
 			} // try
 				//
-			return;
-			//
 		} // if
 			//
 	}
