@@ -361,8 +361,8 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 							getDeclaredMethods(
 									forName("org.springframework.beans.factory.GaKuNenBeTsuKanJiMultimapFactoryBean")),
 							Arrays::stream, null),
-					m -> Objects.equals(getName(m), "createMultimapByUrl")
-							&& Arrays.equals(new Class<?>[] { String.class, Duration.class }, getParameterTypes(m))));
+					m -> Boolean.logicalAnd(Objects.equals(getName(m), "createMultimapByUrl"),
+							Arrays.equals(new Class<?>[] { String.class, Duration.class }, getParameterTypes(m)))));
 			//
 			final int size = IterableUtils.size(ms);
 			//
