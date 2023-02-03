@@ -240,8 +240,8 @@ class VoiceManagerTest {
 			METHOD_CREATE_WORK_BOOK_LIST, METHOD_CREATE_VOICE, METHOD_INVOKE, METHOD_ANNOTATION_TYPE, METHOD_FIND_FIRST,
 			METHOD_GET_DECLARED_METHODS, METHOD_FOR_NAME, METHOD_FILTER, METHOD_SET_TEXT, METHOD_GET_PREFERRED_WIDTH,
 			METHOD_IMPORT_VOICE1, METHOD_IMPORT_VOICE3, METHOD_IMPORT_VOICE5, METHOD_ADD_COLLECTION, METHOD_ADD_LIST,
-			METHOD_CREATE_IMPORT_FILE_TEMPLATE_BYTE_ARRAY, METHOD_SET_CELL_VALUE, METHOD_ANY_MATCH, METHOD_COLLECT,
-			METHOD_NAME, METHOD_GET_SELECTED_ITEM, METHOD_WRITE, METHOD_MATCHER, METHOD_SET_VALUE_J_PROGRESS_BAR,
+			METHOD_CREATE_IMPORT_FILE_TEMPLATE_BYTE_ARRAY, METHOD_ANY_MATCH, METHOD_COLLECT, METHOD_NAME,
+			METHOD_GET_SELECTED_ITEM, METHOD_WRITE, METHOD_MATCHER, METHOD_SET_VALUE_J_PROGRESS_BAR,
 			METHOD_SET_VALUE_J_SLIDER, METHOD_SET_STRING_J_PROGRESS_BAR, METHOD_SET_STRING_COMMENT,
 			METHOD_SET_TOOL_TIP_TEXT, METHOD_FORMAT, METHOD_CONTAINS_KEY, METHOD_VALUE_OF1, METHOD_VALUE_OF2,
 			METHOD_GET_CLASS, METHOD_CREATE_RANGE, METHOD_GET_PROVIDER_NAME, METHOD_GET_PROVIDER_VERSION,
@@ -420,8 +420,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_CREATE_IMPORT_FILE_TEMPLATE_BYTE_ARRAY = clz.getDeclaredMethod("createImportFileTemplateByteArray",
 				Boolean.TYPE, Collection.class, Collection.class)).setAccessible(true);
-		//
-		(METHOD_SET_CELL_VALUE = clz.getDeclaredMethod("setCellValue", Cell.class, String.class)).setAccessible(true);
 		//
 		(METHOD_ANY_MATCH = clz.getDeclaredMethod("anyMatch", Stream.class, Predicate.class)).setAccessible(true);
 		//
@@ -3660,21 +3658,6 @@ class VoiceManagerTest {
 				return (byte[]) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testSetCellValue() {
-		//
-		Assertions.assertDoesNotThrow(() -> setCellValue(null, null));
-		//
-	}
-
-	private static void setCellValue(final Cell instance, final String value) throws Throwable {
-		try {
-			METHOD_SET_CELL_VALUE.invoke(null, instance, value);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
