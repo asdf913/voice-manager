@@ -288,7 +288,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 												IValue0Util.getValue0(gaKuNenBeTsuKanJiMultimap))))),
 						"Source", gaKuNenBeTsuKanJiListPageUrl);
 				//
-				write(workbook, os);
+				WorkbookUtil.write(workbook, os);
 				//
 				setText(tfExportFile, getAbsolutePath(file));
 				//
@@ -380,16 +380,6 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 			CellUtil.setCellValue(RowUtil.createCell(row, Math.max(row.getLastCellNum(), 0)), getKey(columnNames));
 			//
 			CellUtil.setCellValue(RowUtil.createCell(row, Math.max(row.getLastCellNum(), 0)), getValue(columnNames));
-			//
-		} // if
-			//
-	}
-
-	private static void write(final Workbook instance, final OutputStream stream) throws IOException {
-		//
-		if (instance != null && (stream != null || Proxy.isProxyClass(getClass(instance)))) {
-			//
-			instance.write(stream);
 			//
 		} // if
 			//

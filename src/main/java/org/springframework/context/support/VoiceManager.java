@@ -1375,7 +1375,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			try (final Workbook wb = get(getValue(en));
 					final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
 				//
-				write(wb, baos);
+				WorkbookUtil.write(wb, baos);
 				//
 				if (Boolean
 						.logicalOr(
@@ -5175,7 +5175,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 								cast(POIXMLDocument.class, workbook = createJoYoKanJiWorkbook(url, Duration.ZERO)))),
 						SOURCE, url);
 				//
-				write(workbook, os);
+				WorkbookUtil.write(workbook, os);
 				//
 				setText(tfExportFile, getAbsolutePath(file));
 				//
@@ -5205,7 +5205,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			try (final OutputStream os = new FileOutputStream(file = new File(
 					String.format("MicrosoftSpeechObjectLibrary_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.xlsx", new Date())))) {
 				//
-				write(workbook = createMicrosoftSpeechObjectLibraryWorkbook(speechApi,
+				WorkbookUtil.write(workbook = createMicrosoftSpeechObjectLibraryWorkbook(speechApi,
 						microsoftSpeechObjectLibraryAttributeNames), os);
 				//
 				setText(tfExportFile, getAbsolutePath(file));
@@ -5334,7 +5334,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				BooleanMap.setBoolean(booleanMap, "exportJlptSheet", isSelected(cbExportJlptSheet));
 				//
-				write(workbook = createWorkbook(voices, booleanMap, workbookSupplier), os);
+				WorkbookUtil.write(workbook = createWorkbook(voices, booleanMap, workbookSupplier), os);
 				//
 				if (!(fileToBeDeleted = longValue(length(file), 0) == 0)) {
 					//
@@ -5545,7 +5545,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		try (final Workbook wb = get(supplier); final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
 			//
-			write(wb, baos);
+			WorkbookUtil.write(wb, baos);
 			//
 			if (Objects.equals(getMessage(new ContentInfoUtil().findMatch(baos.toByteArray())),
 					OLE_2_COMPOUND_DOCUMENT)) {
@@ -5804,7 +5804,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						final Workbook wb2 = new HSSFWorkbook(fs.getRoot(), true);
 						final OutputStream os = new FileOutputStream(file)) {
 					//
-					wb2.write(os);
+					WorkbookUtil.write(wb2, os);
 					//
 				} finally {
 					//
@@ -7731,16 +7731,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return a != null && b != null && a.isAssignableFrom(b);
 	}
 
-	private static void write(final Workbook instance, final OutputStream stream) throws IOException {
-		//
-		if (instance != null && (stream != null || Proxy.isProxyClass(getClass(instance)))) {
-			//
-			instance.write(stream);
-			//
-		} // if
-			//
-	}
-
 	private static Annotation[] getDeclaredAnnotations(final AnnotatedElement instance) {
 		return instance != null ? instance.getDeclaredAnnotations() : null;
 	}
@@ -7800,7 +7790,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-			write(workbook, baos);
+			WorkbookUtil.write(workbook, baos);
 			//
 			bs = toByteArray(baos);
 			//
