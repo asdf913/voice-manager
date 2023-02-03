@@ -95,8 +95,16 @@
 			value="${org.springframework.context.support.VoiceManager.mp3Tags}" />
 		<property name="microsoftSpeechObjectLibraryAttributeNames"
 			value="${org.springframework.context.support.VoiceManager.microsoftSpeechObjectLibraryAttributeNames}" />
-		<property name="jlptLevelPageUrl"
-			value="${org.springframework.context.support.VoiceManager.jlptLevelPageUrl}" />
+		<!-- -->
+		<property name="jlptLevels">
+			<bean
+				class="org.springframework.beans.factory.JlptLevelListFactoryBean">
+				<property name="url"
+					value="${org.springframework.context.support.VoiceManager.jlptLevelPageUrl}" />
+				<property name="timeout"
+					value="#{T(java.time.Duration).parse('PT0S')}" />
+			</bean>
+		</property>
 		<!-- -->
 		<property name="gaKuNenBeTsuKanJiListPageUrl"
 			ref="gaKuNenBeTsuKanJiListPageUrl" />

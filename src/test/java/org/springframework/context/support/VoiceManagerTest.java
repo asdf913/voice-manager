@@ -252,7 +252,7 @@ class VoiceManagerTest {
 			METHOD_CLEAR_STRING_BUILDER, METHOD_EXECUTE, METHOD_PUT_MAP, METHOD_GET_BYTE_CONVERTER,
 			METHOD_CONTAINS_CUSTOM_PROPERTIES, METHOD_CONTAINS_COLLECTION, METHOD_CONTAINS_LOOKUP, METHOD_GET_LPW_STR,
 			METHOD_GET_SHEET_NAME, METHOD_ACCEPT, METHOD_TO_ARRAY, METHOD_TO_LIST, METHOD_GET_ID, METHOD_SET_MAXIMUM,
-			METHOD_GET_CURRENT_SHEET_INDEX, METHOD_GET_JLPT_LEVELS, METHOD_GET_DATA_VALIDATION_HELPER,
+			METHOD_GET_CURRENT_SHEET_INDEX, METHOD_GET_DATA_VALIDATION_HELPER,
 			METHOD_CREATE_EXPLICIT_LIST_CONSTRAINT, METHOD_CREATE_VALIDATION, METHOD_CREATE_EXPORT_TASK,
 			METHOD_GET_TAB_INDEX_BY_TITLE, METHOD_GET_DECLARED_FIELD, METHOD_GET_ABSOLUTE_PATH,
 			METHOD_IS_ASSIGNABLE_FROM, METHOD_GET_ENUM_CONSTANTS, METHOD_LIST_FILES, METHOD_GET_TYPE,
@@ -537,9 +537,6 @@ class VoiceManagerTest {
 				.setAccessible(true);
 		//
 		(METHOD_GET_CURRENT_SHEET_INDEX = clz.getDeclaredMethod("getCurrentSheetIndex", Sheet.class))
-				.setAccessible(true);
-		//
-		(METHOD_GET_JLPT_LEVELS = clz.getDeclaredMethod("getJlptLevels", String.class, Duration.class))
 				.setAccessible(true);
 		//
 		(METHOD_GET_DATA_VALIDATION_HELPER = clz.getDeclaredMethod("getDataValidationHelper", Sheet.class))
@@ -4803,29 +4800,6 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof Integer) {
 				return (Integer) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetJlptLevels() throws Throwable {
-		//
-		Assertions.assertNull(getJlptLevels("", null));
-		//
-		Assertions.assertNull(getJlptLevels(SPACE, null));
-		//
-	}
-
-	private static List<String> getJlptLevels(final String urlString, final Duration timeout) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_JLPT_LEVELS.invoke(null, urlString, timeout);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof List) {
-				return (List) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

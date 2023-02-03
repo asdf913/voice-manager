@@ -703,8 +703,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private ObjectMapper objectMapper = null;
 
-	private String jlptLevelPageUrl = null;
-
 	@Url("https://ja.wikipedia.org/wiki/%E5%AD%A6%E5%B9%B4%E5%88%A5%E6%BC%A2%E5%AD%97%E9%85%8D%E5%BD%93%E8%A1%A8")
 	private String gaKuNenBeTsuKanJiListPageUrl = null;
 
@@ -1055,8 +1053,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	public void setJlptLevelPageUrl(final String jlptLevelPageUrl) {
-		this.jlptLevelPageUrl = jlptLevelPageUrl;
+	public void setJlptLevels(final List<String> jlptLevels) {
+		this.jlptLevels = Unit.with(jlptLevels);
 	}
 
 	public void setGaKuNenBeTsuKanJiListPageUrl(final String gaKuNenBeTsuKanJiListPageUrl) {
@@ -2930,7 +2928,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		panel.add(new JLabel("JLPT Level"));
 		//
-		final List<String> jlptLevelList = testAndApply(Objects::nonNull, getJlptLevels(), ArrayList::new, null);
+		final List<String> jlptLevelList = testAndApply(Objects::nonNull, IValue0Util.getValue0(jlptLevels),
+				ArrayList::new, null);
 		//
 		testAndAccept(CollectionUtils::isNotEmpty, jlptLevelList, x -> add(x, 0, null));
 		//
@@ -3980,36 +3979,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.getDeclaredClasses() : null;
 	}
 
-	private List<String> getJlptLevels() {
-		//
-		if (jlptLevels == null) {
-			//
-			try {
-				//
-				jlptLevels = Unit.with(getJlptLevels(jlptLevelPageUrl, jSoupParseTimeout));
-				//
-			} catch (final IOException e) {
-				//
-				throw toRuntimeException(e);
-				//
-			} // try
-				//
-		} // if
-			//
-		return IValue0Util.getValue0(jlptLevels);
-		//
-	}
-
-	private static List<String> getJlptLevels(final String urlString, final Duration timeout) throws IOException {
-		//
-		return toList(map(
-				stream(select(testAndApply(x -> StringUtils.equalsAnyIgnoreCase(getProtocol(x), "http", "https"),
-						testAndApply(StringUtils::isNotBlank, urlString, URL::new, null),
-						x -> Jsoup.parse(x, intValue(toMillis(timeout), 0)), null), ".thLeft[scope='col']")),
-				ElementUtil::text));
-		//
-	}
-
 	private static <E> Component getListCellRendererComponent(final ListCellRenderer<E> instance,
 			final JList<? extends E> list, final E value, final int index, final boolean isSelected,
 			final boolean cellHasFocus) {
@@ -4866,7 +4835,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		try {
 			//
 			FileUtils.writeByteArrayToFile(jfc.getSelectedFile(),
-					createImportFileTemplateByteArray(isSelected(cbImportFileTemplateGenerateBlankRow), getJlptLevels(),
+					createImportFileTemplateByteArray(isSelected(cbImportFileTemplateGenerateBlankRow),
+							IValue0Util.getValue0(jlptLevels),
 							MultimapUtil.keySet(IValue0Util.getValue0(gaKuNenBeTsuKanJiMultimap))));
 			//
 		} catch (final IOException e) {
