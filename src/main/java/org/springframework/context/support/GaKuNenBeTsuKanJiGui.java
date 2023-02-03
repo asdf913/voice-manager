@@ -381,7 +381,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 				} // if
 					//
 				final Multimap<?, ?> multimap = cast(Multimap.class,
-						m != null ? m.invoke(null, gaKuNenBeTsuKanJiListPageUrl, null) : null);
+						invoke(m, null, gaKuNenBeTsuKanJiListPageUrl, null));
 				//
 				final ObjectMapper om = getObjectMapper();
 				//
@@ -405,6 +405,11 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 				//
 		} // if
 			//
+	}
+
+	private static Object invoke(final Method method, final Object instance, final Object... args)
+			throws IllegalAccessException, InvocationTargetException {
+		return method != null ? method.invoke(instance, args) : null;
 	}
 
 	private static <T> Stream<T> filter(final Stream<T> instance, final Predicate<? super T> predicate) {

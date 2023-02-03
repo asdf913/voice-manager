@@ -38,7 +38,7 @@ import com.google.common.reflect.Reflection;
 class GaKuNenBeTsuKanJiGuiTest {
 
 	private static Method METHOD_CREATE_WORK_BOOK, METHOD_GET_CLASS, METHOD_TO_STRING,
-			METHOD_SET_SELECTED_ITEM_BY_ITERABLE = null;
+			METHOD_SET_SELECTED_ITEM_BY_ITERABLE, METHOD_INVOKE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -54,6 +54,9 @@ class GaKuNenBeTsuKanJiGuiTest {
 		//
 		(METHOD_SET_SELECTED_ITEM_BY_ITERABLE = clz.getDeclaredMethod("setSelectedItemByIterable", ComboBoxModel.class,
 				Iterable.class)).setAccessible(true);
+		//
+		(METHOD_INVOKE = clz.getDeclaredMethod("invoke", Method.class, Object.class, Object[].class))
+				.setAccessible(true);
 		//
 	}
 
@@ -374,6 +377,21 @@ class GaKuNenBeTsuKanJiGuiTest {
 			throws Throwable {
 		try {
 			METHOD_SET_SELECTED_ITEM_BY_ITERABLE.invoke(null, cbm, iterable);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testInvoke() throws Throwable {
+		//
+		Assertions.assertNull(invoke(null, null));
+		//
+	}
+
+	private static Object invoke(final Method method, final Object instance, final Object... args) throws Throwable {
+		try {
+			return METHOD_INVOKE.invoke(null, method, instance, args);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
