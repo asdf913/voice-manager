@@ -12,6 +12,8 @@ import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.javatuples.Unit;
+import org.javatuples.valueintf.IValue0Util;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
@@ -27,8 +29,58 @@ public class JlptLevelListFactoryBean implements FactoryBean<List<String>> {
 		this.url = url;
 	}
 
-	public void setTimeout(final Duration timeout) {
-		this.timeout = timeout;
+	public void setTimeout(final Object timeout) {
+		//
+		Unit<Duration> value = null;
+		//
+		if (timeout == null) {
+			//
+			value = Unit.with(null);
+			//
+		} else if (timeout instanceof Duration) {
+			//
+			value = Unit.with((Duration) timeout);
+			//
+		} else if (timeout instanceof Number) {
+			//
+			value = Unit.with(Duration.ofMillis(((Number) timeout).longValue()));
+			//
+		} // if
+			//
+		if (value != null) {
+			//
+			this.timeout = IValue0Util.getValue0(value);
+			//
+			return;
+			//
+		} // if
+			//
+		final String string = toString(timeout);
+		//
+		final Long l = valueOf(string);
+		//
+		if (l != null) {
+			//
+			setTimeout(l);
+			//
+		} else if (StringUtils.isNotBlank(string)) {
+			//
+			setTimeout(Duration.parse(string));
+			//
+		} // if
+			//
+	}
+
+	private static String toString(final Object instance) {
+		return instance != null ? instance.toString() : null;
+	}
+
+	private static Long valueOf(final String instance) {
+		try {
+			return StringUtils.isNotBlank(instance) ? Long.valueOf(instance) : null;
+		} catch (final NumberFormatException e) {
+			return null;
+		}
 	}
 
 	@Override
