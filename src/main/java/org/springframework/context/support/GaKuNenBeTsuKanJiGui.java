@@ -394,11 +394,11 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 						ObjectMapperUtil.writeValueAsBytes(om,
 								MultimapUtil.entries(IValue0Util.getValue0(gaKuNenBeTsuKanJiMultimap))));
 				//
-				setText(jlCompare, matched ? "Matched" : "Not Matched");
+				setText(jlCompare, iif(matched, "Matched", "Not Matched"));
 				//
 				if (jlCompare != null) {
 					//
-					jlCompare.setForeground(matched ? Color.GREEN : Color.RED);
+					jlCompare.setForeground(iif(matched, Color.GREEN, Color.RED));
 					//
 				} // if
 					//
@@ -418,6 +418,10 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 				//
 		} // if
 			//
+	}
+
+	private static <T> T iif(final boolean condition, final T trueValue, final T falseValue) {
+		return condition ? trueValue : falseValue;
 	}
 
 	private static boolean and(final boolean a, final boolean b, final boolean... bs) {

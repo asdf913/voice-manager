@@ -42,7 +42,7 @@ class GaKuNenBeTsuKanJiGuiTest {
 
 	private static Method METHOD_CREATE_WORK_BOOK, METHOD_GET_CLASS, METHOD_TO_STRING,
 			METHOD_SET_SELECTED_ITEM_BY_ITERABLE, METHOD_INVOKE, METHOD_GET_NAME, METHOD_GET_PARAMETER_TYPES,
-			METHOD_EXISTS, METHOD_AND = null;
+			METHOD_EXISTS, METHOD_AND, METHOD_IIF = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -69,6 +69,8 @@ class GaKuNenBeTsuKanJiGuiTest {
 		(METHOD_EXISTS = clz.getDeclaredMethod("exists", File.class)).setAccessible(true);
 		//
 		(METHOD_AND = clz.getDeclaredMethod("and", Boolean.TYPE, Boolean.TYPE, boolean[].class)).setAccessible(true);
+		//
+		(METHOD_IIF = clz.getDeclaredMethod("iif", Boolean.TYPE, Object.class, Object.class)).setAccessible(true);
 		//
 	}
 
@@ -490,6 +492,21 @@ class GaKuNenBeTsuKanJiGuiTest {
 				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testIif() throws Throwable {
+		//
+		Assertions.assertNull(iif(true, null, null));
+		//
+	}
+
+	private static <T> T iif(final boolean condition, final T trueValue, final T falseValue) throws Throwable {
+		try {
+			return (T) METHOD_IIF.invoke(null, condition, trueValue, falseValue);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
