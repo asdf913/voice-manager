@@ -237,6 +237,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.ss.usermodel.WorkbookUtil;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.util.LocaleID;
@@ -7780,7 +7781,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				if (sheet == null) {
 					//
-					sheet = createSheet(workbook = getIfNull(workbook, XSSFWorkbook::new));
+					sheet = WorkbookUtil.createSheet(workbook = getIfNull(workbook, XSSFWorkbook::new));
 					//
 				} // if
 					//
@@ -7961,10 +7962,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		if (instance != null) {
 			instance.addValidationData(dataValidation);
 		}
-	}
-
-	private static Sheet createSheet(final Workbook instance) {
-		return instance != null ? instance.createSheet() : null;
 	}
 
 	private static Sheet createSheet(final Workbook instance, final String sheetname) {
@@ -10746,7 +10743,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			if (sheet == null) {
 				//
 				setMicrosoftSpeechObjectLibrarySheetFirstRow(
-						sheet = createSheet(workbook = getIfNull(workbook, XSSFWorkbook::new)), as);
+						sheet = WorkbookUtil.createSheet(workbook = getIfNull(workbook, XSSFWorkbook::new)), as);
 				//
 			} // if
 				//
@@ -11060,7 +11057,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		Workbook workbook = null;
 		//
-		setSheet(workbook = getIfNull(workbook, supplier), createSheet(workbook), voices);
+		setSheet(workbook = getIfNull(workbook, supplier), WorkbookUtil.createSheet(workbook), voices);
 		//
 		if (BooleanMap.getBoolean(booleanMap, "exportListSheet")) {
 			//
@@ -11103,7 +11100,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
-				setSheet(workbook, StringUtils.length(key) > 0 ? createSheet(workbook, key) : createSheet(workbook),
+				setSheet(workbook,
+						StringUtils.length(key) > 0 ? createSheet(workbook, key) : WorkbookUtil.createSheet(workbook),
 						MultimapUtil.get(multimap, key));
 				//
 			} // for

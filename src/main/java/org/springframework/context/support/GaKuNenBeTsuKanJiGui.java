@@ -56,6 +56,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookUtil;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.javatuples.Unit;
@@ -324,7 +325,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 					//
 				if (sheet == null) {
 					//
-					sheet = createSheet(workbook = ObjectUtils.getIfNull(workbook, XSSFWorkbook::new));
+					sheet = WorkbookUtil.createSheet(workbook = ObjectUtils.getIfNull(workbook, XSSFWorkbook::new));
 					//
 				} // if
 					//
@@ -377,10 +378,6 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 			//
 		} // if
 			//
-	}
-
-	private static Sheet createSheet(final Workbook instance) {
-		return instance != null ? instance.createSheet() : null;
 	}
 
 	private static Row createRow(final Sheet instance, final int rownum) {
