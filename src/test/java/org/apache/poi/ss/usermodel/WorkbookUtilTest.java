@@ -2,17 +2,12 @@ package org.apache.poi.ss.usermodel;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.util.Objects;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.odftoolkit.simple.SpreadsheetDocument;
-import org.odftoolkit.simple.table.Table;
-import org.springframework.beans.factory.GaKuNenBeTsuKanJiMultimapFactoryBean;
-import org.springframework.core.io.Resource;
 
 import com.google.common.reflect.Reflection;
 
