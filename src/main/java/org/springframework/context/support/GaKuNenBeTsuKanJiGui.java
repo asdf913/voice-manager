@@ -1,5 +1,6 @@
 package org.springframework.context.support;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
@@ -387,10 +388,17 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 				//
 				final ObjectMapper om = getObjectMapper();
 				//
-				setText(jlCompare, Boolean.toString(
-						Arrays.equals(writeValueAsBytes(om, MultimapUtil.entries(multimap)), writeValueAsBytes(om,
-								MultimapUtil.entries(IValue0Util.getValue0(gaKuNenBeTsuKanJiMultimap))))));
+				final boolean matched = Arrays.equals(writeValueAsBytes(om, MultimapUtil.entries(multimap)),
+						writeValueAsBytes(om, MultimapUtil.entries(IValue0Util.getValue0(gaKuNenBeTsuKanJiMultimap))));
 				//
+				setText(jlCompare, matched ? "Matched" : "Not Matched");
+				//
+				if (jlCompare != null) {
+					//
+					jlCompare.setForeground(matched ? Color.GREEN : Color.RED);
+					//
+				} // if
+					//
 			} catch (final IllegalAccessException | JsonProcessingException e) {
 				//
 				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(GraphicsEnvironment.isHeadless(), LOG, e);
