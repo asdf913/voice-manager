@@ -3,6 +3,7 @@ package org.springframework.context;
 import java.awt.GraphicsEnvironment;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
@@ -135,8 +136,8 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 			//
 			final List<Method> ms = toList(
 					filter(testAndApply(Objects::nonNull, getDeclaredMethods(getClass(out)), Arrays::stream, null),
-							m -> m != null && Objects.equals(getName(m), "println")
-									&& Arrays.equals(m.getParameterTypes(), new Class<?>[] { Object.class })));
+							m -> Objects.equals(getName(m), "println")
+									&& Arrays.equals(getParameterTypes(m), new Class<?>[] { Object.class })));
 			//
 			final int size = IterableUtils.size(ms);
 			//
@@ -171,6 +172,10 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 
 	private static Object get(final Field field, final Object instance) throws IllegalAccessException {
 		return field != null ? field.get(instance) : null;
+	}
+
+	private static Class<?>[] getParameterTypes(final Executable instance) {
+		return instance != null ? instance.getParameterTypes() : null;
 	}
 
 	private static void errorOrPrintStackTrace(final Logger logger, final Throwable a, final Throwable b) {
