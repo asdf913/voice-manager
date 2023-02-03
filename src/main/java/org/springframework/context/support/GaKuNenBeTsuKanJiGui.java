@@ -383,12 +383,11 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 				final Multimap<?, ?> multimap = cast(Multimap.class,
 						m != null ? m.invoke(null, gaKuNenBeTsuKanJiListPageUrl, null) : null);
 				//
-				final ObjectMapper objectMapper = getObjectMapper();
+				final ObjectMapper om = getObjectMapper();
 				//
-				setText(jlCompare,
-						Boolean.toString(Arrays.equals(writeValueAsBytes(objectMapper, MultimapUtil.entries(multimap)),
-								writeValueAsBytes(objectMapper,
-										MultimapUtil.entries(IValue0Util.getValue0(gaKuNenBeTsuKanJiMultimap))))));
+				setText(jlCompare, Boolean.toString(
+						Arrays.equals(writeValueAsBytes(om, MultimapUtil.entries(multimap)), writeValueAsBytes(om,
+								MultimapUtil.entries(IValue0Util.getValue0(gaKuNenBeTsuKanJiMultimap))))));
 				//
 			} catch (final IllegalAccessException | JsonProcessingException e) {
 				//
