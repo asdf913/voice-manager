@@ -396,12 +396,8 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 				//
 				setText(jlCompare, iif(matched, "Matched", "Not Matched"));
 				//
-				if (jlCompare != null) {
-					//
-					jlCompare.setForeground(iif(matched, Color.GREEN, Color.RED));
-					//
-				} // if
-					//
+				setForeground(jlCompare, iif(matched, Color.GREEN, Color.RED));
+				//
 			} catch (final IllegalAccessException | JsonProcessingException e) {
 				//
 				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(GraphicsEnvironment.isHeadless(), LOG, e);
@@ -647,6 +643,12 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 	private static void setText(final JLabel instance, final String text) {
 		if (instance != null) {
 			instance.setText(text);
+		}
+	}
+
+	private static void setForeground(final Component instance, final Color color) {
+		if (instance != null) {
+			instance.setForeground(color);
 		}
 	}
 
