@@ -44,7 +44,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import java.net.URLConnection;
 import java.security.MessageDigest;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -253,11 +252,11 @@ class VoiceManagerTest {
 			METHOD_CLEAR_STRING_BUILDER, METHOD_EXECUTE, METHOD_PUT_MAP, METHOD_GET_BYTE_CONVERTER,
 			METHOD_CONTAINS_CUSTOM_PROPERTIES, METHOD_CONTAINS_COLLECTION, METHOD_CONTAINS_LOOKUP, METHOD_GET_LPW_STR,
 			METHOD_GET_SHEET_NAME, METHOD_ACCEPT, METHOD_TO_ARRAY, METHOD_TO_LIST, METHOD_GET_ID, METHOD_SET_MAXIMUM,
-			METHOD_GET_CURRENT_SHEET_INDEX, METHOD_GET_JLPT_LEVELS, METHOD_PARSE_JLPT_PAGE_HTML,
-			METHOD_GET_DATA_VALIDATION_HELPER, METHOD_CREATE_EXPLICIT_LIST_CONSTRAINT, METHOD_CREATE_VALIDATION,
-			METHOD_CREATE_EXPORT_TASK, METHOD_GET_TAB_INDEX_BY_TITLE, METHOD_GET_DECLARED_FIELD,
-			METHOD_GET_ABSOLUTE_PATH, METHOD_IS_ASSIGNABLE_FROM, METHOD_GET_ENUM_CONSTANTS, METHOD_LIST_FILES,
-			METHOD_GET_TYPE, METHOD_GET_COLUMN_NAME, METHOD_PUT_ALL_MAP, METHOD_CREATE_SHEET, METHOD_GET_WORK_BOOK,
+			METHOD_GET_CURRENT_SHEET_INDEX, METHOD_GET_JLPT_LEVELS, METHOD_GET_DATA_VALIDATION_HELPER,
+			METHOD_CREATE_EXPLICIT_LIST_CONSTRAINT, METHOD_CREATE_VALIDATION, METHOD_CREATE_EXPORT_TASK,
+			METHOD_GET_TAB_INDEX_BY_TITLE, METHOD_GET_DECLARED_FIELD, METHOD_GET_ABSOLUTE_PATH,
+			METHOD_IS_ASSIGNABLE_FROM, METHOD_GET_ENUM_CONSTANTS, METHOD_LIST_FILES, METHOD_GET_TYPE,
+			METHOD_GET_COLUMN_NAME, METHOD_PUT_ALL_MAP, METHOD_CREATE_SHEET, METHOD_GET_WORK_BOOK,
 			METHOD_GET_OLE_ENTRY_NAMES, METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE, METHOD_GET_DOCUMENT_ELEMENT,
 			METHOD_GET_CHILD_NODES, METHOD_GET_NAMED_ITEM, METHOD_GET_TEXT_CONTENT, METHOD_GET_NAME_FILE,
 			METHOD_GET_NAME_CLASS, METHOD_GET_NAME_PACKAGE, METHOD_GET_PASS_WORD, METHOD_GET_SUPPLIER,
@@ -271,11 +270,11 @@ class VoiceManagerTest {
 			METHOD_GET_RATE_FIELD_LIST, METHOD_ADD_CHANGE_LISTENER, METHOD_IS_ANNOTATION_PRESENT, METHOD_PROCESS,
 			METHOD_ENCODE_TO_STRING, METHOD_GET_VOICE_MULTI_MAP_BY_LIST_NAME, METHOD_GET_VOICE_MULTI_MAP_BY_JLPT,
 			METHOD_GET_TEMPLATE, METHOD_GET_FILE_EXTENSIONS, METHOD_CREATE_CELL_STYLE, METHOD_REDUCE,
-			METHOD_APPEND_STRING, METHOD_APPEND_CHAR, METHOD_GET_PROVIDER_PLATFORM, METHOD_OPEN_CONNECTION,
-			METHOD_GET_RESOURCE_AS_STREAM, METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH, METHOD_GET_ATTRIBUTES,
-			METHOD_GET_LENGTH, METHOD_ITEM, METHOD_GET_OS_VERSION_INFO_EX_MAP, METHOD_CREATE_JLPT_SHEET,
-			METHOD_ADD_JO_YO_KAN_JI_SHEET, METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2, METHOD_SET_VISIBLE,
-			METHOD_RANDOM_ALPHABETIC, METHOD_GET_MEDIA_FORMAT_LINK, METHOD_GET_EVENT_TYPE, METHOD_GET_PARENT_FILE,
+			METHOD_APPEND_STRING, METHOD_APPEND_CHAR, METHOD_GET_PROVIDER_PLATFORM, METHOD_GET_RESOURCE_AS_STREAM,
+			METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH, METHOD_GET_ATTRIBUTES, METHOD_GET_LENGTH, METHOD_ITEM,
+			METHOD_GET_OS_VERSION_INFO_EX_MAP, METHOD_CREATE_JLPT_SHEET, METHOD_ADD_JO_YO_KAN_JI_SHEET,
+			METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2, METHOD_SET_VISIBLE, METHOD_RANDOM_ALPHABETIC,
+			METHOD_GET_MEDIA_FORMAT_LINK, METHOD_GET_EVENT_TYPE, METHOD_GET_PARENT_FILE,
 			METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET,
 			METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET_FIRST_ROW, METHOD_EXPORT_JLPT,
 			METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT, METHOD_SET_SHEET_HEADER_ROW, METHOD_ENCRYPT,
@@ -540,9 +539,8 @@ class VoiceManagerTest {
 		(METHOD_GET_CURRENT_SHEET_INDEX = clz.getDeclaredMethod("getCurrentSheetIndex", Sheet.class))
 				.setAccessible(true);
 		//
-		(METHOD_GET_JLPT_LEVELS = clz.getDeclaredMethod("getJlptLevels", String.class)).setAccessible(true);
-		//
-		(METHOD_PARSE_JLPT_PAGE_HTML = clz.getDeclaredMethod("parseJlptPageHtml", String.class)).setAccessible(true);
+		(METHOD_GET_JLPT_LEVELS = clz.getDeclaredMethod("getJlptLevels", String.class, Duration.class))
+				.setAccessible(true);
 		//
 		(METHOD_GET_DATA_VALIDATION_HELPER = clz.getDeclaredMethod("getDataValidationHelper", Sheet.class))
 				.setAccessible(true);
@@ -709,8 +707,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_GET_PROVIDER_PLATFORM = clz.getDeclaredMethod("getProviderPlatform", Provider.class))
 				.setAccessible(true);
-		//
-		(METHOD_OPEN_CONNECTION = clz.getDeclaredMethod("openConnection", URL.class)).setAccessible(true);
 		//
 		(METHOD_GET_RESOURCE_AS_STREAM = clz.getDeclaredMethod("getResourceAsStream", Class.class, String.class))
 				.setAccessible(true);
@@ -4817,39 +4813,15 @@ class VoiceManagerTest {
 	@Test
 	void testGetJlptLevels() throws Throwable {
 		//
-		Assertions.assertNull(getJlptLevels(""));
+		Assertions.assertNull(getJlptLevels("", null));
 		//
-		Assertions.assertNull(getJlptLevels(SPACE));
+		Assertions.assertNull(getJlptLevels(SPACE, null));
 		//
 	}
 
-	private static List<String> getJlptLevels(final String urlString) throws Throwable {
+	private static List<String> getJlptLevels(final String urlString, final Duration timeout) throws Throwable {
 		try {
-			final Object obj = METHOD_GET_JLPT_LEVELS.invoke(null, urlString);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof List) {
-				return (List) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testParseJlptPageHtml() throws Throwable {
-		//
-		Assertions.assertNull(parseJlptPageHtml(""));
-		//
-		Assertions.assertEquals(Arrays.asList(Integer.toString(ZERO)),
-				parseJlptPageHtml(String.format("<th scope=\"col\" class=\"thLeft\">%1$s</th>", ZERO)));
-		//
-	}
-
-	private static List<String> parseJlptPageHtml(final String html) throws Throwable {
-		try {
-			final Object obj = METHOD_PARSE_JLPT_PAGE_HTML.invoke(null, html);
+			final Object obj = METHOD_GET_JLPT_LEVELS.invoke(null, urlString, timeout);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof List) {
@@ -6256,27 +6228,6 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof String) {
 				return (String) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testOpenConnection() throws Throwable {
-		//
-		Assertions.assertNotNull(openConnection(new File("pom.xml").toURI().toURL()));
-		//
-	}
-
-	private static URLConnection openConnection(final URL instance) throws Throwable {
-		try {
-			final Object obj = METHOD_OPEN_CONNECTION.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof URLConnection) {
-				return (URLConnection) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

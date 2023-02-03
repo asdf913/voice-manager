@@ -57,7 +57,6 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
@@ -3985,72 +3984,29 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		if (jlptLevels == null) {
 			//
-			jlptLevels = Unit.with(getJlptLevels(jlptLevelPageUrl));
-			//
+			try {
+				//
+				jlptLevels = Unit.with(getJlptLevels(jlptLevelPageUrl, jSoupParseTimeout));
+				//
+			} catch (final IOException e) {
+				//
+				throw toRuntimeException(e);
+				//
+			} // try
+				//
 		} // if
 			//
 		return IValue0Util.getValue0(jlptLevels);
 		//
 	}
 
-	private static List<String> getJlptLevels(final String urlString) {
+	private static List<String> getJlptLevels(final String urlString, final Duration timeout) throws IOException {
 		//
-		HttpURLConnection httpURLConnection = null;
-		//
-		try {
-			//
-			httpURLConnection = cast(HttpURLConnection.class,
-					openConnection(testAndApply(StringUtils::isNotBlank, urlString, URL::new, null)));
-			//
-		} catch (final IOException e) {
-			//
-			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
-			//
-		} // try
-			//
-		return getJlptLevels(httpURLConnection);
-		//
-	}
-
-	private static List<String> getJlptLevels(final HttpURLConnection httpURLConnection) {
-		//
-		String html = null;
-		//
-		try (final InputStream is = getInputStream(httpURLConnection)) {
-			//
-			html = testAndApply(Objects::nonNull, is, x -> IOUtils.toString(x, StandardCharsets.UTF_8), null);
-			//
-		} catch (final IOException e) {
-			//
-			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
-			//
-		} // try
-			//
-		return parseJlptPageHtml(html);
-		//
-	}
-
-	private static URLConnection openConnection(final URL instance) throws IOException {
-		return instance != null ? instance.openConnection() : null;
-	}
-
-	private static InputStream getInputStream(final HttpURLConnection instance) throws IOException {
-		return instance != null ? instance.getInputStream() : null;
-	}
-
-	private static List<String> parseJlptPageHtml(final String html) {
-		//
-		List<String> result = null;
-		//
-		final Matcher matcher = matcher(Pattern.compile("<th scope=\"col\" class=\"thLeft\">(\\w+)</th>"), html);
-		//
-		while (matcher != null && matcher.find() && matcher.groupCount() > 0) {
-			//
-			add(result = ObjectUtils.getIfNull(result, ArrayList::new), matcher.group(1));
-			//
-		} // while
-			//
-		return result;
+		return toList(map(
+				stream(select(testAndApply(x -> StringUtils.equalsAnyIgnoreCase(getProtocol(x), "http", "https"),
+						testAndApply(StringUtils::isNotBlank, urlString, URL::new, null),
+						x -> Jsoup.parse(x, intValue(toMillis(timeout), 0)), null), ".thLeft[scope='col']")),
+				ElementUtil::text));
 		//
 	}
 
