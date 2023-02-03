@@ -47,7 +47,8 @@ class CustomBeanFactoryPostProcessorTest {
 			METHOD_ADD_PROPERTY_SOURCE_TO_PROPERTY_SOURCES_TO_LAST_ITERABLE, METHOD_GET_SOURCE, METHOD_IS_STATIC,
 			METHOD_GET_MESSAGE, METHOD_GET_CLASS, METHOD_ERROR_OR_PRINT_STACK_TRACE, METHOD_GET_DECLARED_METHODS,
 			METHOD_FILTER, METHOD_TO_LIST, METHOD_TEST_AND_ACCEPT, METHOD_GET_NAME, METHOD_INVOKE, METHOD_ADD_LAST,
-			METHOD_POST_PROCESS_DATA_SOURCES, METHOD_TEST_AND_APPLY, METHOD_PRINT_LN, METHOD_GET = null;
+			METHOD_POST_PROCESS_DATA_SOURCES, METHOD_TEST_AND_APPLY, METHOD_PRINT_LN, METHOD_GET_TYPE,
+			METHOD_GET = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -170,6 +171,12 @@ class CustomBeanFactoryPostProcessorTest {
 		if ((METHOD_PRINT_LN = clz != null ? clz.getDeclaredMethod("println", Object.class) : null) != null) {
 			//
 			METHOD_PRINT_LN.setAccessible(true);
+			//
+		} // if
+			//
+		if ((METHOD_GET_TYPE = clz != null ? clz.getDeclaredMethod("getType", Field.class) : null) != null) {
+			//
+			METHOD_GET_TYPE.setAccessible(true);
 			//
 		} // if
 			//
@@ -392,7 +399,7 @@ class CustomBeanFactoryPostProcessorTest {
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
-			throw new Throwable(toString(getClass(instance)));
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -415,7 +422,7 @@ class CustomBeanFactoryPostProcessorTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(toString(getClass(instance)));
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -436,7 +443,7 @@ class CustomBeanFactoryPostProcessorTest {
 			} else if (obj instanceof Class) {
 				return (Class<?>) obj;
 			}
-			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
+			throw new Throwable(toString(obj.getClass()));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -493,7 +500,7 @@ class CustomBeanFactoryPostProcessorTest {
 			} else if (obj instanceof Method[]) {
 				return (Method[]) obj;
 			}
-			throw new Throwable(toString(getClass(instance)));
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -519,7 +526,7 @@ class CustomBeanFactoryPostProcessorTest {
 			} else if (obj instanceof Stream) {
 				return (Stream) obj;
 			}
-			throw new Throwable(toString(getClass(instance)));
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -540,7 +547,7 @@ class CustomBeanFactoryPostProcessorTest {
 			} else if (obj instanceof List) {
 				return (List) obj;
 			}
-			throw new Throwable(toString(getClass(instance)));
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -581,7 +588,7 @@ class CustomBeanFactoryPostProcessorTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(toString(getClass(instance)));
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -719,6 +726,27 @@ class CustomBeanFactoryPostProcessorTest {
 	private static void println(final Object object) throws Throwable {
 		try {
 			METHOD_PRINT_LN.invoke(null, object);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetType() throws Throwable {
+		//
+		Assertions.assertNull(getType(null));
+		//
+	}
+
+	private static Class<?> getType(final Field field) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_TYPE.invoke(null, field);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Class<?>) {
+				return (Class<?>) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

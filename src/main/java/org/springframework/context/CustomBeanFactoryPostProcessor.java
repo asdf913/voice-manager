@@ -123,9 +123,9 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 
 	private static void println(final Object object) {
 		//
-		final List<Field> fs = toList(filter(
-				testAndApply(Objects::nonNull, System.class.getDeclaredFields(), Arrays::stream, null),
-				f -> f != null && Objects.equals(f.getType(), PrintStream.class) && Objects.equals(getName(f), "out")));
+		final List<Field> fs = toList(
+				filter(testAndApply(Objects::nonNull, System.class.getDeclaredFields(), Arrays::stream, null),
+						f -> Objects.equals(getType(f), PrintStream.class) && Objects.equals(getName(f), "out")));
 		//
 		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
 		//
@@ -163,6 +163,10 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 			//
 		} // try
 			//
+	}
+
+	private static Class<?> getType(final Field field) {
+		return field != null ? field.getType() : null;
 	}
 
 	private static Object get(final Field field, final Object instance) throws IllegalAccessException {
