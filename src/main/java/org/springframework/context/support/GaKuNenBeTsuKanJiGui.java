@@ -51,7 +51,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.poi.ooxml.CustomPropertiesUtil;
 import org.apache.poi.ooxml.POIXMLDocument;
 import org.apache.poi.ooxml.POIXMLDocumentUtil;
-import org.apache.poi.ooxml.POIXMLProperties.CustomProperties;
 import org.apache.poi.ooxml.POIXMLPropertiesUtil;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
