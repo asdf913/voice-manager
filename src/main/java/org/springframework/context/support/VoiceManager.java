@@ -207,6 +207,7 @@ import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.hssf.record.crypto.Biff8EncryptionKey;
 import org.apache.poi.hssf.usermodel.HSSFDataFormat;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ooxml.CustomPropertiesUtil;
 import org.apache.poi.ooxml.POIXMLDocument;
 import org.apache.poi.ooxml.POIXMLDocumentUtil;
 import org.apache.poi.ooxml.POIXMLProperties.CustomProperties;
@@ -5165,7 +5166,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				final String url = PropertyResolverUtil.getProperty(propertyResolver,
 						"org.springframework.context.support.VoiceManager.joYoKanJiPageUrl");
 				//
-				addProperty(
+				CustomPropertiesUtil.addProperty(
 						POIXMLPropertiesUtil.getCustomProperties(POIXMLDocumentUtil.getProperties(
 								cast(POIXMLDocument.class, workbook = createJoYoKanJiWorkbook(url, Duration.ZERO)))),
 						SOURCE, url);
@@ -5708,12 +5709,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static void setListNames(final Voice instance, final Iterable<String> listNames) {
 		if (instance != null) {
 			instance.setListNames(listNames);
-		}
-	}
-
-	private static void addProperty(final CustomProperties instance, final String name, final String value) {
-		if (instance != null) {
-			instance.addProperty(name, value);
 		}
 	}
 
