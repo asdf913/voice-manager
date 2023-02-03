@@ -149,7 +149,7 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 				//
 				// System.out.println(java.lang.Object)
 				//
-			testAndAccept(x -> isStatic(x) || out != null, size > 0 ? IterableUtils.get(ms, 0) : null,
+			testAndAccept(x -> Boolean.logicalOr(isStatic(x), out != null), size > 0 ? IterableUtils.get(ms, 0) : null,
 					x -> invoke(x, out, object));
 			//
 		} catch (final InvocationTargetException e) {
