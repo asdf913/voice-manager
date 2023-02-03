@@ -221,7 +221,7 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 			//
 		try {
 			//
-			testAndAccept(m -> throwable != null || isStatic(m), method, m -> invoke(m, throwable));
+			testAndAccept(m -> Boolean.logicalOr(throwable != null, isStatic(m)), method, m -> invoke(m, throwable));
 			//
 		} catch (final InvocationTargetException e) {
 			//
