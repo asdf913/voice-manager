@@ -54,6 +54,7 @@ import org.apache.poi.ooxml.POIXMLDocumentUtil;
 import org.apache.poi.ooxml.POIXMLPropertiesUtil;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.RowUtil;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.SheetUtil;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -342,9 +343,9 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 					//
 				} // if
 					//
-				setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)), toString(getKey(en)));
+				setCellValue(RowUtil.createCell(row, Math.max(row.getLastCellNum(), 0)), toString(getKey(en)));
 				//
-				setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)), toString(getValue(en)));
+				setCellValue(RowUtil.createCell(row, Math.max(row.getLastCellNum(), 0)), toString(getValue(en)));
 				//
 			} // for
 				//
@@ -373,16 +374,12 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 				//
 			} // if
 				//
-			setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)), getKey(columnNames));
+			setCellValue(RowUtil.createCell(row, Math.max(row.getLastCellNum(), 0)), getKey(columnNames));
 			//
-			setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)), getValue(columnNames));
+			setCellValue(RowUtil.createCell(row, Math.max(row.getLastCellNum(), 0)), getValue(columnNames));
 			//
 		} // if
 			//
-	}
-
-	private static Cell createCell(final Row instance, final int column) {
-		return instance != null ? instance.createCell(column) : null;
 	}
 
 	private static void setCellValue(final Cell instance, final String value) {

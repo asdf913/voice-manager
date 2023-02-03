@@ -234,6 +234,7 @@ import org.apache.poi.ss.usermodel.Drawing;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.RichTextString;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.RowUtil;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.SheetUtil;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -7792,7 +7793,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
-				setCellValue(createCell(row, i), getName(f));
+				setCellValue(RowUtil.createCell(row, i), getName(f));
 				//
 			} // for
 				//
@@ -7841,7 +7842,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		for (int i = 0; i < IterableUtils.size(fs); i++) {
 			//
-			setCellValue(createCell(row, i), null);
+			setCellValue(RowUtil.createCell(row, i), null);
 			//
 			if (objectMap == null) {
 				//
@@ -7981,10 +7982,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static DataValidation createValidation(final DataValidationHelper instance,
 			final DataValidationConstraint constraint, final CellRangeAddressList cellRangeAddressList) {
 		return instance != null ? instance.createValidation(constraint, cellRangeAddressList) : null;
-	}
-
-	private static Cell createCell(final Row instance, final int column) {
-		return instance != null ? instance.createCell(column) : null;
 	}
 
 	private static void setCellValue(final Cell instance, final String value) {
@@ -10697,7 +10694,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
-				setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)), StringUtils.trim(textContent));
+				setCellValue(RowUtil.createCell(row, Math.max(row.getLastCellNum(), 0)), StringUtils.trim(textContent));
 				//
 			} // for
 				//
@@ -10750,9 +10747,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-			setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)), commonPrefix);
+			setCellValue(RowUtil.createCell(row, Math.max(row.getLastCellNum(), 0)), commonPrefix);
 			//
-			setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)),
+			setCellValue(RowUtil.createCell(row, Math.max(row.getLastCellNum(), 0)),
 					StringUtils.defaultIfBlank(testAndApply(StringUtils::contains, commonPrefix, voiceId = voiceIds[i],
 							StringUtils::substringAfter, null), voiceId));
 			//
@@ -10795,13 +10792,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		if (row != null) {
 			//
-			setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)), "Common Prefix");
+			setCellValue(RowUtil.createCell(row, Math.max(row.getLastCellNum(), 0)), "Common Prefix");
 			//
-			setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)), "ID");
+			setCellValue(RowUtil.createCell(row, Math.max(row.getLastCellNum(), 0)), "ID");
 			//
 			for (int j = 0; columnNames != null && j < columnNames.length; j++) {
 				//
-				setCellValue(createCell(row, Math.max(row.getLastCellNum(), 0)), columnNames[j]);
+				setCellValue(RowUtil.createCell(row, Math.max(row.getLastCellNum(), 0)), columnNames[j]);
 				//
 			} // for
 				//
@@ -10844,7 +10841,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			try {
 				//
-				setCellValue(cell = createCell(row, Math.max(row != null ? row.getLastCellNum() : 0, 0)),
+				setCellValue(cell = RowUtil.createCell(row, Math.max(row != null ? row.getLastCellNum() : 0, 0)),
 						value = getVoiceAttribute(ObjectMap.getObject(objectMap, SpeechApi.class), voiceId,
 								attribute = attributes[j]));
 				//
@@ -10973,7 +10970,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-			setCellValue(createCell(
+			setCellValue(RowUtil.createCell(
 					row = getIfNull(row, () -> SheetUtil.createRow(sheet, intValue(getPhysicalNumberOfRows(sheet), 0))),
 					intValue(getPhysicalNumberOfCells(row), 0)), toString(value));
 			//
@@ -10993,7 +10990,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			for (int j = 0; fs != null && j < fs.size(); j++) {
 				//
-				setCellValue(createCell(
+				setCellValue(RowUtil.createCell(
 						row = getIfNull(row, () -> SheetUtil.createRow(sheet, intValue(physicalNumberOfRows, 0))),
 						intValue(getPhysicalNumberOfCells(row), 0)), getName(fs.get(j)));
 				//
@@ -11238,7 +11235,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			ObjectMap.setObject(objectMap, Field.class, f);
 			//
-			ObjectMap.setObject(objectMap, Cell.class, createCell(row, j));
+			ObjectMap.setObject(objectMap, Cell.class, RowUtil.createCell(row, j));
 			//
 			setSheetCellValue(objectMap, f.get(ObjectMap.getObject(objectMap, Voice.class)), dataFormatClass,
 					dateFormatClass);
@@ -11256,7 +11253,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			for (int j = 0; fs != null && j < fs.length; j++) {
 				//
-				setCellValue(createCell(row, j), getColumnName(spreadsheetColumnClass, fs[j]));
+				setCellValue(RowUtil.createCell(row, j), getColumnName(spreadsheetColumnClass, fs[j]));
 				//
 			} // for
 				//
