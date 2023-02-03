@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.time.Duration;
+import java.util.Collection;
 import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
@@ -13,7 +14,9 @@ import org.junit.jupiter.api.Test;
 
 class JlptLevelListFactoryBeanTest {
 
-	private static Method METHOD_GET_CLASS, METHOD_TO_STRING = null;
+	private static final String EMPTY = "";
+
+	private static Method METHOD_GET_CLASS, METHOD_TO_STRING, METHOD_ADD = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -23,6 +26,8 @@ class JlptLevelListFactoryBeanTest {
 		(METHOD_GET_CLASS = clz.getDeclaredMethod("getClass", Object.class)).setAccessible(true);
 		//
 		(METHOD_TO_STRING = clz.getDeclaredMethod("toString", Object.class)).setAccessible(true);
+		//
+		(METHOD_ADD = clz.getDeclaredMethod("add", Collection.class, Object.class)).setAccessible(true);
 		//
 	}
 
@@ -122,7 +127,7 @@ class JlptLevelListFactoryBeanTest {
 			//
 			if (instance != null) {
 				//
-				instance.setTimeout("");
+				instance.setTimeout(EMPTY);
 				//
 			} // if
 				//
@@ -161,6 +166,113 @@ class JlptLevelListFactoryBeanTest {
 	}
 
 	@Test
+	void testSetValues() throws Throwable {
+		//
+		final Field values = JlptLevelListFactoryBean.class.getDeclaredField("values");
+		//
+		if (values != null) {
+			//
+			values.setAccessible(true);
+			//
+		} // if
+			//
+			// null
+			//
+		Assertions.assertDoesNotThrow(() -> {
+			//
+			if (instance != null) {
+				//
+				instance.setValues(null);
+				//
+			} // if
+				//
+		});
+		//
+		Assertions.assertEquals("[[null]]", toString(get(values, instance)));
+		//
+		// java.lang.String
+		//
+		Assertions.assertDoesNotThrow(() -> {
+			//
+			if (instance != null) {
+				//
+				instance.setValues(EMPTY);
+				//
+			} // if
+				//
+		});
+		//
+		Assertions.assertEquals("[[null]]", toString(get(values, instance)));
+		//
+		// java.util.List
+		//
+		Assertions.assertDoesNotThrow(() -> {
+			//
+			if (instance != null) {
+				//
+				instance.setValues(String.format("[%1$s]", EMPTY));
+				//
+			} // if
+				//
+		});
+		//
+		Assertions.assertEquals("[null]", toString(get(values, instance)));
+		//
+		// java.lang.Number
+		//
+		final Integer zero = Integer.valueOf(0);
+		//
+		Assertions.assertDoesNotThrow(() -> {
+			//
+			if (instance != null) {
+				//
+				instance.setValues(toString(zero));
+				//
+			} // if
+				//
+		});
+		//
+		Assertions.assertEquals(String.format("[[%1$s]]", zero), toString(get(values, instance)));
+		///
+		Assertions.assertDoesNotThrow(() -> {
+			//
+			if (instance != null) {
+				//
+				instance.setValues(String.format("[%1$s]", zero));
+				//
+			} // if
+				//
+		});
+		//
+		Assertions.assertEquals(String.format("[[%1$s]]", zero), toString(get(values, instance)));
+		//
+		// java.util.Map
+		//
+		Assertions.assertThrows(IllegalArgumentException.class, () -> {
+			//
+			if (instance != null) {
+				//
+				instance.setValues(String.format("{\"%1$s\":%1$s}", zero));
+				//
+			} // if
+				//
+		});
+		//
+		// Invalid Format
+		//
+		Assertions.assertThrows(RuntimeException.class, () -> {
+			//
+			if (instance != null) {
+				//
+				instance.setValues(String.format("{%1$s:%1$s}", zero));
+				//
+			} // if
+				//
+		});
+		//
+	}
+
+	@Test
 	void testToString() throws Throwable {
 		//
 		Assertions.assertNull(toString(null));
@@ -186,7 +298,7 @@ class JlptLevelListFactoryBeanTest {
 		//
 		Assertions.assertNull(getClass(null));
 		//
-		Assertions.assertEquals(String.class, getClass(""));
+		Assertions.assertEquals(String.class, getClass(EMPTY));
 		//
 	}
 
@@ -199,6 +311,21 @@ class JlptLevelListFactoryBeanTest {
 				return (Class<?>) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testAdd() {
+		//
+		Assertions.assertDoesNotThrow(() -> add(null, null));
+		//
+	}
+
+	private static <E> void add(final Collection<E> items, final E item) throws Throwable {
+		try {
+			METHOD_ADD.invoke(null, items, item);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

@@ -3,12 +3,16 @@ package org.springframework.beans.factory;
 import java.lang.reflect.Proxy;
 import java.net.URL;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
@@ -18,12 +22,19 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
 import org.jsoup.select.Elements;
+import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapperUtil;
 
 public class JlptLevelListFactoryBean implements FactoryBean<List<String>> {
 
 	private String url = null;
 
 	private Duration timeout = null;
+
+	private Unit<List<String>> values = null;
 
 	public void setUrl(final String url) {
 		this.url = url;
@@ -71,6 +82,56 @@ public class JlptLevelListFactoryBean implements FactoryBean<List<String>> {
 			//
 	}
 
+	public void setValues(final String string) {
+		//
+		try {
+			//
+			final Object object = ObjectMapperUtil.readValue(new ObjectMapper(), string, Object.class);
+			//
+			if (object instanceof Map) {
+				//
+				throw new IllegalArgumentException();
+				//
+			} else if (object instanceof Iterable) {
+				//
+				final Iterable<?> iterable = (Iterable<?>) object;
+				//
+				if (iterable != null) {
+					//
+					List<String> list = null;
+					//
+					for (final Object obj : iterable) {
+						//
+						add(list = ObjectUtils.getIfNull(list, ArrayList::new), toString(obj));
+						//
+					} // for
+						//
+					this.values = Unit.with(list);
+					//
+				} // if
+					//
+			} else {
+				//
+				this.values = Unit.with(Collections.singletonList(toString(object)));
+				//
+			} // if
+				//
+		} catch (final JsonProcessingException e) {
+			//
+			this.values = Unit.with(Collections.singletonList(string));
+			//
+			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
+			//
+		} // try
+			//
+	}
+
+	private static <E> void add(final Collection<E> items, final E item) {
+		if (items != null) {
+			items.add(item);
+		}
+	}
+
 	private static String toString(final Object instance) {
 		return instance != null ? instance.toString() : null;
 	}
@@ -86,6 +147,12 @@ public class JlptLevelListFactoryBean implements FactoryBean<List<String>> {
 	@Override
 	public List<String> getObject() throws Exception {
 		//
+		if (values != null) {
+			//
+			return IValue0Util.getValue0(values);
+			//
+		} // if
+			//
 		return toList(map(
 				stream(select(testAndApply(x -> StringUtils.equalsAnyIgnoreCase(getProtocol(x), "http", "https"),
 						testAndApply(StringUtils::isNotBlank, url, URL::new, null),

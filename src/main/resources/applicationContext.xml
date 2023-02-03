@@ -103,6 +103,8 @@
 					value="${org.springframework.context.support.VoiceManager.jlptLevelPageUrl}" />
 				<property name="timeout"
 					value="#{T(java.time.Duration).parse('PT0S')}" />
+				<property name="values"
+					value="${org.springframework.beans.factory.JlptLevelListFactoryBean.values}" />
 			</bean>
 		</property>
 		<!-- -->
