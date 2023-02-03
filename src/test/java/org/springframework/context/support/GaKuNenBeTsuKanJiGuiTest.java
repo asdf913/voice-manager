@@ -42,7 +42,7 @@ class GaKuNenBeTsuKanJiGuiTest {
 
 	private static Method METHOD_CREATE_WORK_BOOK, METHOD_GET_CLASS, METHOD_TO_STRING,
 			METHOD_SET_SELECTED_ITEM_BY_ITERABLE, METHOD_INVOKE, METHOD_GET_NAME, METHOD_GET_PARAMETER_TYPES,
-			METHOD_EXISTS = null;
+			METHOD_EXISTS, METHOD_AND = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -67,6 +67,8 @@ class GaKuNenBeTsuKanJiGuiTest {
 		(METHOD_GET_PARAMETER_TYPES = clz.getDeclaredMethod("getParameterTypes", Executable.class)).setAccessible(true);
 		//
 		(METHOD_EXISTS = clz.getDeclaredMethod("exists", File.class)).setAccessible(true);
+		//
+		(METHOD_AND = clz.getDeclaredMethod("and", Boolean.TYPE, Boolean.TYPE, boolean[].class)).setAccessible(true);
 		//
 	}
 
@@ -461,6 +463,29 @@ class GaKuNenBeTsuKanJiGuiTest {
 	private static boolean exists(final File instance) throws Throwable {
 		try {
 			final Object obj = METHOD_EXISTS.invoke(null, instance);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testAnd() throws Throwable {
+		//
+		Assertions.assertFalse(and(true, false));
+		//
+		Assertions.assertTrue(and(true, true, null));
+		//
+		Assertions.assertFalse(and(true, true, false));
+		//
+	}
+
+	private static boolean and(final boolean a, final boolean b, final boolean... bs) throws Throwable {
+		try {
+			final Object obj = METHOD_AND.invoke(null, a, b, bs);
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
