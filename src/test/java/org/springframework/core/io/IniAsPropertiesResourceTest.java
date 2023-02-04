@@ -16,6 +16,8 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
+import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -168,6 +170,8 @@ class IniAsPropertiesResourceTest {
 
 	}
 
+	private IniAsPropertiesResource instance = null;
+
 	private IH ih = null;
 
 	private Resource resource = null;
@@ -175,8 +179,87 @@ class IniAsPropertiesResourceTest {
 	@BeforeEach
 	void beforeEach() {
 		//
+		instance = new IniAsPropertiesResource(null);
+		//
 		resource = Reflection.newProxy(Resource.class, ih = new IH());
 		//
+	}
+
+	@Test
+	void testGetURL() {
+		//
+		Assertions.assertThrows(UnsupportedOperationException.class, () -> getURL(instance));
+		//
+	}
+
+	private static URL getURL(final Resource instance) throws IOException {
+		return instance != null ? instance.getURL() : null;
+	}
+
+	@Test
+	void testGetURI() {
+		//
+		Assertions.assertThrows(UnsupportedOperationException.class, () -> getURI(instance));
+		//
+	}
+
+	private static URI getURI(final Resource instance) throws IOException {
+		return instance != null ? instance.getURI() : null;
+	}
+
+	@Test
+	void testGetFile() {
+		//
+		Assertions.assertThrows(UnsupportedOperationException.class, () -> getFile(instance));
+		//
+	}
+
+	private static File getFile(final Resource instance) throws IOException {
+		return instance != null ? instance.getFile() : null;
+	}
+
+	@Test
+	void testContentLength() {
+		//
+		Assertions.assertThrows(UnsupportedOperationException.class, () -> contentLength(instance));
+		//
+	}
+
+	private static long contentLength(final Resource instance) throws IOException {
+		return instance != null ? instance.contentLength() : null;
+	}
+
+	@Test
+	void testLastModified() {
+		//
+		Assertions.assertThrows(UnsupportedOperationException.class, () -> lastModified(instance));
+		//
+	}
+
+	private static long lastModified(final Resource instance) throws IOException {
+		return instance != null ? instance.lastModified() : null;
+	}
+
+	@Test
+	void testCreateRelative() {
+		//
+		Assertions.assertThrows(UnsupportedOperationException.class, () -> createRelative(instance, null));
+		//
+	}
+
+	private static Resource createRelative(final Resource instance, final String relativePath) throws IOException {
+		return instance != null ? instance.createRelative(relativePath) : null;
+	}
+
+	@Test
+	void testGetDescription() {
+		//
+		Assertions.assertThrows(UnsupportedOperationException.class, () -> getDescription(instance));
+		//
+	}
+
+	private static String getDescription(final Resource instance) {
+		return instance != null ? instance.getDescription() : null;
 	}
 
 	@Test
@@ -184,9 +267,9 @@ class IniAsPropertiesResourceTest {
 		//
 		Assertions.assertNotNull(new IniAsPropertiesResource(null).getInputStream());
 		//
-		final IniAsPropertiesResource instance = new IniAsPropertiesResource(resource);
+		instance = new IniAsPropertiesResource(resource);
 		//
-		Assertions.assertNotNull(instance.getInputStream());
+		Assertions.assertNotNull(InputStreamSourceUtil.getInputStream(instance));
 		//
 		try (final InputStream is = new ByteArrayInputStream(EMPTY.getBytes())) {
 			//
@@ -196,7 +279,7 @@ class IniAsPropertiesResourceTest {
 				//
 			} // if
 				//
-			Assertions.assertNotNull(instance.getInputStream());
+			Assertions.assertNotNull(InputStreamSourceUtil.getInputStream(instance));
 			//
 		} // try
 			//
@@ -218,7 +301,7 @@ class IniAsPropertiesResourceTest {
 				//
 			} // if
 				//
-			Assertions.assertNotNull(instance.getInputStream());
+			Assertions.assertNotNull(InputStreamSourceUtil.getInputStream(instance));
 			//
 		} // try
 			//
@@ -563,10 +646,16 @@ class IniAsPropertiesResourceTest {
 	@Test
 	void testExists() throws Throwable {
 		//
-		Assertions.assertFalse(exists(null));
+		Assertions.assertThrows(UnsupportedOperationException.class, () -> exists(instance));
+		//
+		Assertions.assertFalse(exists((File) null));
 		//
 		Assertions.assertFalse(exists(new File("non_exists")));
 		//
+	}
+
+	private static boolean exists(final Resource instance) {
+		return instance != null && instance.exists();
 	}
 
 	private static boolean exists(final File instance) throws Throwable {
