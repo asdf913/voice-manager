@@ -7,6 +7,10 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.Collection;
@@ -43,7 +47,16 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 
 	private List<String> jlptLevels = null;
 
-	private AbstractButton btnExportJson, btnCopy = null;
+	@Target(ElementType.FIELD)
+	@Retention(RetentionPolicy.RUNTIME)
+	private @interface Note {
+		String value();
+	}
+
+	@Note("Export JSON")
+	private AbstractButton btnExportJson = null;
+
+	private AbstractButton btnCopy = null;
 
 	private JTextComponent tfJson = null;
 
