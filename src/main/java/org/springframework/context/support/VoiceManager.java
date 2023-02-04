@@ -10626,8 +10626,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				CellUtil.setCellValue(cell = RowUtil.createCell(row, Math.max(row.getLastCellNum(), 0)),
 						StringUtils.trim(textContent));
 				//
-				if ((cellStyle = createCellStyle(workbook)) != null && backGroundColor != null
-						&& StringUtils.isNotBlank(backGroundColorString = backGroundColor.getExpressionAsCSSString())) {
+				if ((cellStyle = createCellStyle(workbook)) != null
+						&& StringUtils.isNotBlank(backGroundColorString = getExpressionAsCSSString(backGroundColor))) {
 					//
 					cellStyle.setFillBackgroundColor(new XSSFColor(
 							new Color(Integer.parseInt(StringUtils.substring(backGroundColorString, 1), 16)),
@@ -10663,6 +10663,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static String getProperty(final CSSDeclaration instance) {
 		return instance != null ? instance.getProperty() : null;
+	}
+
+	private static String getExpressionAsCSSString(final CSSDeclaration instance) {
+		return instance != null ? instance.getExpressionAsCSSString() : null;
 	}
 
 	private static Workbook createMicrosoftSpeechObjectLibraryWorkbook(final SpeechApi speechApi,
