@@ -66,7 +66,10 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 	@Note("Export JSON")
 	private AbstractButton btnExportJson = null;
 
-	private AbstractButton btnCopy, btnCompare = null;
+	@Note("Copy")
+	private AbstractButton btnCopy = null;
+
+	private AbstractButton btnCompare = null;
 
 	private JTextComponent tfJson = null;
 
