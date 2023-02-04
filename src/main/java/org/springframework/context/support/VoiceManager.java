@@ -245,6 +245,7 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.util.LocaleID;
 import org.apache.poi.xssf.model.StylesTable;
+import org.apache.poi.xssf.usermodel.IndexedColorMap;
 import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFDataValidationHelper;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -10561,6 +10562,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final StylesTable stylesTable = getStylesSource(cast(XSSFWorkbook.class, workbook));
 		//
+		final IndexedColorMap indexedColorMap = stylesTable != null ? stylesTable.getIndexedColors() : null;
+		//
 		Sheet sheet = null;
 		//
 		Row row = null;
@@ -10623,12 +10626,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				CellUtil.setCellValue(cell = RowUtil.createCell(row, Math.max(row.getLastCellNum(), 0)),
 						StringUtils.trim(textContent));
 				//
-				if ((cellStyle = createCellStyle(workbook)) != null && stylesTable != null && backGroundColor != null) {
+				if ((cellStyle = createCellStyle(workbook)) != null && backGroundColor != null) {
 					//
-					cellStyle.setFillBackgroundColor(new XSSFColor(
-							new Color(Integer.parseInt(
-									StringUtils.substring(backGroundColor.getExpressionAsCSSString(), 1), 16)),
-							stylesTable.getIndexedColors()));
+					cellStyle
+							.setFillBackgroundColor(new XSSFColor(
+									new Color(Integer.parseInt(
+											StringUtils.substring(backGroundColor.getExpressionAsCSSString(), 1), 16)),
+									indexedColorMap));
 					//
 					cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 					//
