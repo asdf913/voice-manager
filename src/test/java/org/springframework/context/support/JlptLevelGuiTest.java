@@ -1,6 +1,10 @@
 package org.springframework.context.support;
 
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -10,6 +14,9 @@ import java.util.Collections;
 import java.util.Objects;
 import java.util.function.Predicate;
 
+import javax.swing.JTextField;
+
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,7 +27,8 @@ import com.google.common.reflect.Reflection;
 
 class JlptLevelGuiTest {
 
-	private static Method METHOD_TO_ARRAY, METHOD_GET_CLASS, METHOD_TEST = null;
+	private static Method METHOD_TO_ARRAY, METHOD_GET_CLASS, METHOD_TEST, METHOD_GET_PREFERRED_SIZE,
+			METHOD_SET_PREFERRED_WIDTH = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -32,6 +40,11 @@ class JlptLevelGuiTest {
 		(METHOD_GET_CLASS = clz.getDeclaredMethod("getClass", Object.class)).setAccessible(true);
 		//
 		(METHOD_TEST = clz.getDeclaredMethod("test", Predicate.class, Object.class)).setAccessible(true);
+		//
+		(METHOD_GET_PREFERRED_SIZE = clz.getDeclaredMethod("getPreferredSize", Component.class)).setAccessible(true);
+		//
+		(METHOD_SET_PREFERRED_WIDTH = clz.getDeclaredMethod("setPreferredWidth", Integer.TYPE, Iterable.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -103,6 +116,29 @@ class JlptLevelGuiTest {
 	}
 
 	@Test
+	void testActionPerformed() throws IllegalAccessException {
+		//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, null));
+		//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent("", 0, null)));
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "tfJson", new JTextField(), true);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, null));
+		//
+	}
+
+	private static void actionPerformed(final ActionListener instance, final ActionEvent e) {
+		if (instance != null) {
+			instance.actionPerformed(e);
+		}
+	}
+
+	@Test
 	void testToArray() throws Throwable {
 		//
 		Assertions.assertNull(toArray(Reflection.newProxy(Collection.class, new IH()), null));
@@ -162,6 +198,44 @@ class JlptLevelGuiTest {
 				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetPreferredSize() throws Throwable {
+		//
+		Assertions.assertNull(getPreferredSize(null));
+		//
+	}
+
+	private static Dimension getPreferredSize(final Component instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_PREFERRED_SIZE.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Dimension) {
+				return (Dimension) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetPreferredWidth() {
+		//
+		Assertions.assertDoesNotThrow(() -> setPreferredWidth(0, null));
+		//
+		Assertions.assertDoesNotThrow(() -> setPreferredWidth(0, Collections.singleton(null)));
+		//
+	}
+
+	private static void setPreferredWidth(final int width, final Iterable<Component> cs) throws Throwable {
+		try {
+			METHOD_SET_PREFERRED_WIDTH.invoke(null, width, cs);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
