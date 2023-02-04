@@ -37,6 +37,10 @@ import org.springframework.beans.factory.InitializingBean;
 
 import com.google.common.reflect.Reflection;
 
+import javassist.util.proxy.MethodHandler;
+import javassist.util.proxy.ProxyFactory;
+import javassist.util.proxy.ProxyObject;
+
 class JlptLevelGuiTest {
 
 	private static Method METHOD_TO_ARRAY, METHOD_GET_CLASS, METHOD_TEST, METHOD_GET_PREFERRED_SIZE,
@@ -119,6 +123,30 @@ class JlptLevelGuiTest {
 				if (Objects.equals(methodName, "filter")) {
 					//
 					return proxy;
+					//
+				} // if
+					//
+			} // if
+				//
+			throw new Throwable(methodName);
+			//
+		}
+
+	}
+
+	private static class MH implements MethodHandler {
+
+		@Override
+		public Object invoke(final Object self, final Method thisMethod, final Method proceed, final Object[] args)
+				throws Throwable {
+			//
+			final String methodName = getName(thisMethod);
+			//
+			if (self instanceof Component) {
+				//
+				if (Objects.equals(methodName, "getPreferredSize")) {
+					//
+					return null;
 					//
 				} // if
 					//
@@ -320,11 +348,33 @@ class JlptLevelGuiTest {
 	}
 
 	@Test
-	void testSetPreferredWidth() {
+	void testSetPreferredWidth()
+			throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
 		//
 		Assertions.assertDoesNotThrow(() -> setPreferredWidth(0, null));
 		//
 		Assertions.assertDoesNotThrow(() -> setPreferredWidth(0, Collections.singleton(null)));
+		//
+		// java.awt.Component.getPreferredSize() return null
+		//
+		final ProxyFactory proxyFactory = new ProxyFactory();
+		//
+		proxyFactory.setSuperclass(Component.class);
+		//
+		final Class<?> clz = proxyFactory.createClass();
+		//
+		final Constructor<?> constructor = clz != null ? clz.getDeclaredConstructor() : null;
+		//
+		final Object instance = constructor != null ? constructor.newInstance() : null;
+		//
+		if (instance instanceof ProxyObject) {
+			//
+			((ProxyObject) instance).setHandler(new MH());
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> setPreferredWidth(0,
+				Collections.singleton(instance instanceof Component ? (Component) instance : null)));
 		//
 	}
 
