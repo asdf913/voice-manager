@@ -217,13 +217,13 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 			//
 			final Clipboard clipboard = getSystemClipboard(getToolkit());
 			//
-			if (clipboard != null &&
-			//
-			// non test
-			//
+			if (Boolean.logicalAnd(clipboard != null,
+					//
+					// non test
+					//
 					forName("org.junit.jupiter.api.Test") == null
 			//
-			) {
+			)) {
 				//
 				clipboard.setContents(new StringSelection(getText(tfJson)), null);
 				//
