@@ -10593,6 +10593,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			tds = children(domNode = get(domNodes, i));
 			//
+			backGroundColorString = getExpressionAsCSSString(getCSSDeclarationByProperty(domNode, "background-color"));
+			//
 			for (int j = 0; j < IterableUtils.size(tds); j++) {
 				//
 				if ((matcher = matcher(pattern2 = getIfNull(pattern2, () -> Pattern.compile("\\[\\d+]")),
@@ -10607,8 +10609,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				// background-color
 				//
-				if (StringUtils.isNotBlank(backGroundColorString = getExpressionAsCSSString(
-						getCSSDeclarationByProperty(domNode, "background-color")))) {
+				if (StringUtils.isNotBlank(backGroundColorString)) {
 					//
 					setFillBackgroundColor(cellStyle = createCellStyle(workbook),
 							new XSSFColor(
