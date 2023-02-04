@@ -10560,9 +10560,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static void addJoYoKanJiSheet(final Workbook workbook, final String sheetName, final Elements domNodes) {
 		//
-		final StylesTable stylesTable = getStylesSource(cast(XSSFWorkbook.class, workbook));
-		//
-		final IndexedColorMap indexedColorMap = stylesTable != null ? stylesTable.getIndexedColors() : null;
+		final IndexedColorMap indexedColorMap = getIndexedColors(getStylesSource(cast(XSSFWorkbook.class, workbook)));
 		//
 		Sheet sheet = null;
 		//
@@ -10657,6 +10655,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static StylesTable getStylesSource(final XSSFWorkbook instance) {
 		return instance != null ? instance.getStylesSource() : null;
+	}
+
+	private static IndexedColorMap getIndexedColors(final StylesTable instance) {
+		return instance != null ? instance.getIndexedColors() : null;
 	}
 
 	private static String getProperty(final CSSDeclaration instance) {
