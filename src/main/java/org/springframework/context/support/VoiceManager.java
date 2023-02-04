@@ -5108,10 +5108,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				IOUtils.closeQuietly(workbook);
 				//
-				final int totalPhysicalNumberOfRows = mapToInt(StreamSupport.stream(spliterator(workbook), false),
-						x -> intValue(getPhysicalNumberOfRows(x), 0)).sum();
+				final IntStream intStream = mapToInt(testAndApply(Objects::nonNull, spliterator(workbook),
+						x -> StreamSupport.stream(x, false), null), x -> intValue(getPhysicalNumberOfRows(x), 0));
 				//
-				testAndAccept(x -> totalPhysicalNumberOfRows == 0, file, FileUtils::deleteQuietly);
+				final Integer totalPhysicalNumberOfRows = intStream != null ? Integer.valueOf(intStream.sum()) : null;
+				//
+				testAndAccept(x -> intValue(totalPhysicalNumberOfRows, 0) == 0, file, FileUtils::deleteQuietly);
 				//
 			} // try
 				//
@@ -10520,29 +10522,42 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					testAndApply(StringUtils::isNotBlank, url, URL::new, null),
 					x -> Jsoup.parse(x, intValue(toMillis(timeout), 0)), null);
 			//
+			final ObjectMap objectMap = Reflection.newProxy(ObjectMap.class, new IH());
+			//
+			ObjectMap.setObject(objectMap, Workbook.class, workbook = getIfNull(workbook, XSSFWorkbook::new));
+			//
+			final String xPathFormat = "//h3/span[text()=\"%1$s\"]/../following-sibling::table[1]/tbody";
+			//
+			String sheetName = null;
+			//
 			// 本表
 			//
-			Elements elements = ElementUtil.selectXpath(document,
-					"//h3/span[text()=\"本表\"]/../following-sibling::table[1]/tbody");
+			Elements elements = ElementUtil.selectXpath(document, String.format(xPathFormat, sheetName = "本表"));
 			//
-			addJoYoKanJiSheet(workbook = getIfNull(workbook, XSSFWorkbook::new), "本表",
+			ObjectMap.setObject(objectMap, Elements.class,
 					IterableUtils.size(elements) == 1 ? children(IterableUtils.get(elements, 0)) : null);
+			//
+			addJoYoKanJiSheet(objectMap, sheetName);
 			//
 			// 付表
 			//
-			addJoYoKanJiSheet(workbook = getIfNull(workbook, XSSFWorkbook::new), "付表",
+			ObjectMap.setObject(objectMap, Elements.class,
 					IterableUtils.size(elements = ElementUtil.selectXpath(document,
-							"//h3/span[text()=\"付表\"]/../following-sibling::table[1]/tbody")) == 1
+							String.format(xPathFormat, sheetName = "付表"))) == 1
 									? children(IterableUtils.get(elements, 0))
 									: null);
+			//
+			addJoYoKanJiSheet(objectMap, sheetName);
 			//
 			// 備考欄
 			//
-			addJoYoKanJiSheet(workbook = getIfNull(workbook, XSSFWorkbook::new), "備考欄",
+			ObjectMap.setObject(objectMap, Elements.class,
 					IterableUtils.size(elements = ElementUtil.selectXpath(document,
-							"//h3/span[text()=\"備考欄\"]/../following-sibling::table[1]/tbody")) == 1
+							String.format(xPathFormat, sheetName = "備考欄"))) == 1
 									? children(IterableUtils.get(elements, 0))
 									: null);
+			//
+			addJoYoKanJiSheet(objectMap, sheetName);
 			//
 		} catch (final IOException e) {
 			//
@@ -10558,7 +10573,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.children() : null;
 	}
 
-	private static void addJoYoKanJiSheet(final Workbook workbook, final String sheetName, final Elements domNodes) {
+	private static void addJoYoKanJiSheet(final ObjectMap objectMap, final String sheetName) {
+		//
+		final Workbook workbook = ObjectMap.getObject(objectMap, Workbook.class);
 		//
 		final IndexedColorMap indexedColorMap = getIndexedColors(getStylesSource(cast(XSSFWorkbook.class, workbook)));
 		//
@@ -10582,7 +10599,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		CellStyle cellStyle = null;
 		//
-		for (int i = 0; i < IterableUtils.size(domNodes); i++) {
+		final Elements elements = ObjectMap.getObject(objectMap, Elements.class);
+		//
+		for (int i = 0; i < IterableUtils.size(elements); i++) {
 			//
 			if ((sheet = getIfNull(sheet, () -> createSheet(workbook, sheetName))) != null
 					&& (row = SheetUtil.createRow(sheet, sheet.getLastRowNum() + 1)) == null) {
@@ -10591,7 +10610,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-			tds = children(domNode = get(domNodes, i));
+			tds = children(domNode = get(elements, i));
 			//
 			backGroundColorString = getExpressionAsCSSString(getCSSDeclarationByProperty(domNode, "background-color"));
 			//

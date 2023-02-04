@@ -168,7 +168,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
-import org.jsoup.select.Elements;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -283,8 +282,8 @@ class VoiceManagerTest {
 			METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET,
 			METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET_FIRST_ROW, METHOD_EXPORT_JLPT,
 			METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT, METHOD_SET_SHEET_HEADER_ROW, METHOD_ENCRYPT,
-			METHOD_GET_WORKBOOK_BY_ZIP_FILE, METHOD_GET_ENCRYPTION_TABLE_HTML, METHOD_NEXT_ELEMENT_SIBLING,
-			METHOD_HTML, METHOD_LENGTH, METHOD_CREATE_ZIP_FILE, METHOD_RETRIEVE_ALL_VOICES,
+			METHOD_GET_WORKBOOK_BY_ZIP_FILE, METHOD_GET_ENCRYPTION_TABLE_HTML, METHOD_NEXT_ELEMENT_SIBLING, METHOD_HTML,
+			METHOD_LENGTH, METHOD_CREATE_ZIP_FILE, METHOD_RETRIEVE_ALL_VOICES,
 			METHOD_SEARCH_VOICE_LIST_NAMES_BY_VOICE_ID, METHOD_SET_LIST_NAMES, METHOD_SET_SOURCE,
 			METHOD_GET_PHYSICAL_NUMBER_OF_ROWS, METHOD_EXPORT_HTML, METHOD_STREAM,
 			METHOD_ACTION_PERFORMED_FOR_SYSTEM_CLIPBOARD_ANNOTATED, METHOD_ACTION_PERFORMED_FOR_SPEECH_RATE,
@@ -731,8 +730,8 @@ class VoiceManagerTest {
 		(METHOD_CREATE_JLPT_SHEET = clz.getDeclaredMethod("createJlptSheet", Workbook.class, Iterable.class))
 				.setAccessible(true);
 		//
-		(METHOD_ADD_JO_YO_KAN_JI_SHEET = clz.getDeclaredMethod("addJoYoKanJiSheet", Workbook.class, String.class,
-				Elements.class)).setAccessible(true);
+		(METHOD_ADD_JO_YO_KAN_JI_SHEET = clz.getDeclaredMethod("addJoYoKanJiSheet", CLASS_OBJECT_MAP, String.class))
+				.setAccessible(true);
 		//
 		(METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2 = clz.getDeclaredMethod("errorOrAssertOrShowException", Boolean.TYPE,
 				Throwable.class)).setAccessible(true);
@@ -6406,14 +6405,13 @@ class VoiceManagerTest {
 	@Test
 	void testAddJoYoKanJiSheet() {
 		//
-		Assertions.assertDoesNotThrow(() -> addJoYoKanJiSheet(null, null, new Elements(Arrays.asList(null, element))));
+		Assertions.assertDoesNotThrow(() -> addJoYoKanJiSheet(null, null));
 		//
 	}
 
-	private static void addJoYoKanJiSheet(final Workbook workbook, final String sheetName, final Elements domNodes)
-			throws Throwable {
+	private static void addJoYoKanJiSheet(final Object objectMap, final String sheetName) throws Throwable {
 		try {
-			METHOD_ADD_JO_YO_KAN_JI_SHEET.invoke(null, workbook, sheetName, domNodes);
+			METHOD_ADD_JO_YO_KAN_JI_SHEET.invoke(null, objectMap, sheetName);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
