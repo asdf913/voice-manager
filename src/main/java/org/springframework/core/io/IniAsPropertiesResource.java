@@ -54,6 +54,8 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 public class IniAsPropertiesResource implements Resource, ApplicationEventPublisherAware, EnvironmentAware {
 
+	private static final String PROFILE = "profile";
+
 	private ApplicationEventPublisher applicationEventPublisher = null;
 
 	private Resource resource = null;
@@ -203,15 +205,15 @@ public class IniAsPropertiesResource implements Resource, ApplicationEventPublis
 	private static Unit<String> getSection(final boolean headless, final Map<?, ?> map,
 			final PropertyResolver propertyResolver, final Console console, final Collection<?> collection) {
 		//
-		if (map != null && map.containsKey("profile")) {
+		if (map != null && map.containsKey(PROFILE)) {
 			//
-			return Unit.with(toString(map.get("profile")));
+			return Unit.with(toString(map.get(PROFILE)));
 			//
 		} // if
 			//
-		if (propertyResolver != null && propertyResolver.containsProperty("profile")) {
+		if (propertyResolver != null && propertyResolver.containsProperty(PROFILE)) {
 			//
-			return Unit.with(PropertyResolverUtil.getProperty(propertyResolver, "profile"));
+			return Unit.with(PropertyResolverUtil.getProperty(propertyResolver, PROFILE));
 			//
 		} // if
 			//
