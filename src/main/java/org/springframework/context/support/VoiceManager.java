@@ -10576,10 +10576,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		org.jsoup.nodes.Element domNode = null;
 		//
-		String style = null;
-		//
-		CSSDeclaration backGroundColor = null;
-		//
 		String backGroundColorString = null;
 		//
 		Cell cell = null;
@@ -10595,21 +10591,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-				// background-color
-				//
-			backGroundColor = null;
-			//
-			if (Boolean.logicalAnd((domNode = get(domNodes, i)) != null,
-					StringUtils.isNotBlank(style = attr(domNode, "style")))) {
-				//
-				backGroundColor = testAndApply(x -> IterableUtils.size(x) == 1,
-						toList(filter(stream(CSSReaderDeclarationList.readFromString(style, ECSSVersion.CSS30)),
-								x -> Objects.equals(getProperty(x), "background-color"))),
-						x -> IterableUtils.get(x, 0), null);
-				//
-			} // if
-				//
-			tds = children(domNode);
+			tds = children(domNode = get(domNodes, i));
 			//
 			for (int j = 0; j < IterableUtils.size(tds); j++) {
 				//
@@ -10623,7 +10605,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				CellUtil.setCellValue(cell = RowUtil.createCell(row, Math.max(row.getLastCellNum(), 0)),
 						StringUtils.trim(textContent));
 				//
-				if (StringUtils.isNotBlank(backGroundColorString = getExpressionAsCSSString(backGroundColor))) {
+				// background-color
+				//
+				if (StringUtils.isNotBlank(backGroundColorString = getExpressionAsCSSString(
+						getCSSDeclarationByProperty(domNode, "background-color")))) {
 					//
 					setFillBackgroundColor(cellStyle = createCellStyle(workbook),
 							new XSSFColor(
@@ -10648,6 +10633,35 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
+	}
+
+	private static CSSDeclaration getCSSDeclarationByProperty(final org.jsoup.nodes.Element element,
+			final String property) {
+		//
+		final String style = attr(element, "style");
+		//
+		CSSDeclaration cssDeclaration = null;
+		//
+		if (StringUtils.isNotBlank(style)) {
+			//
+			final List<CSSDeclaration> cssDeclarations = toList(
+					filter(stream(CSSReaderDeclarationList.readFromString(style, ECSSVersion.CSS30)),
+							x -> Objects.equals(getProperty(x), property)));
+			//
+			final int size = IterableUtils.size(cssDeclarations);
+			//
+			if (size > 1) {
+				//
+				throw new IllegalStateException();
+				//
+			} // if
+				//
+			cssDeclaration = size == 1 ? IterableUtils.get(cssDeclarations, 0) : null;
+			//
+		} // if
+			//
+		return cssDeclaration;
+		//
 	}
 
 	private static StylesTable getStylesSource(final XSSFWorkbook instance) {

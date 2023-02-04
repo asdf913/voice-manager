@@ -283,7 +283,7 @@ class VoiceManagerTest {
 			METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET,
 			METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET_FIRST_ROW, METHOD_EXPORT_JLPT,
 			METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT, METHOD_SET_SHEET_HEADER_ROW, METHOD_ENCRYPT,
-			METHOD_GET_WORKBOOK_BY_ZIP_FILE, METHOD_ATTR, METHOD_GET_ENCRYPTION_TABLE_HTML, METHOD_NEXT_ELEMENT_SIBLING,
+			METHOD_GET_WORKBOOK_BY_ZIP_FILE, METHOD_GET_ENCRYPTION_TABLE_HTML, METHOD_NEXT_ELEMENT_SIBLING,
 			METHOD_HTML, METHOD_LENGTH, METHOD_CREATE_ZIP_FILE, METHOD_RETRIEVE_ALL_VOICES,
 			METHOD_SEARCH_VOICE_LIST_NAMES_BY_VOICE_ID, METHOD_SET_LIST_NAMES, METHOD_SET_SOURCE,
 			METHOD_GET_PHYSICAL_NUMBER_OF_ROWS, METHOD_EXPORT_HTML, METHOD_STREAM,
@@ -305,7 +305,7 @@ class VoiceManagerTest {
 			METHOD_GET_WRITER, METHOD_KEY_SET, METHOD_GET_WORK_BOOK_CLASS, METHOD_GET_SYSTEM_PRINT_STREAM_BY_FIELD_NAME,
 			METHOD_IF_ELSE, METHOD_GET_PAGE_TITLE, METHOD_SET_HIRAGANA_OR_KATAKANA_AND_ROMAJI, METHOD_APPLY,
 			METHOD_GET_SHEET_AT, METHOD_TO_MILLIS, METHOD_GET_EXPRESSION_AS_CSS_STRING,
-			METHOD_SET_FILL_BACKGROUND_COLOR, METHOD_SET_FILL_PATTERN = null;
+			METHOD_SET_FILL_BACKGROUND_COLOR, METHOD_SET_FILL_PATTERN, METHOD_GET_CSS_DECLARATION_BY_PROPERTY = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -769,8 +769,6 @@ class VoiceManagerTest {
 		(METHOD_GET_WORKBOOK_BY_ZIP_FILE = clz.getDeclaredMethod("getWorkbookByZipFile", File.class))
 				.setAccessible(true);
 		//
-		(METHOD_ATTR = clz.getDeclaredMethod("attr", org.jsoup.nodes.Element.class, String.class)).setAccessible(true);
-		//
 		(METHOD_GET_ENCRYPTION_TABLE_HTML = clz.getDeclaredMethod("getEncryptionTableHtml", URL.class, Duration.class))
 				.setAccessible(true);
 		//
@@ -956,6 +954,9 @@ class VoiceManagerTest {
 		//
 		(METHOD_SET_FILL_PATTERN = clz.getDeclaredMethod("setFillPattern", CellStyle.class, FillPatternType.class))
 				.setAccessible(true);
+		//
+		(METHOD_GET_CSS_DECLARATION_BY_PROPERTY = clz.getDeclaredMethod("getCSSDeclarationByProperty",
+				org.jsoup.nodes.Element.class, String.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -2931,8 +2932,6 @@ class VoiceManagerTest {
 	void testGetProperty() throws Throwable {
 		//
 		Assertions.assertNull(getProperty(null));
-		//
-		Assertions.assertSame(SPACE, getProperty(new CSSDeclaration(SPACE, new CSSExpression())));
 		//
 		Assertions.assertNull(getProperty(null, null));
 		//
@@ -6734,29 +6733,6 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testAttr() throws Throwable {
-		//
-		Assertions.assertNull(attr(null, null));
-		//
-		Assertions.assertEquals(EMPTY, attr(element, EMPTY));
-		//
-	}
-
-	private static String attr(final org.jsoup.nodes.Element instance, final String attributeKey) throws Throwable {
-		try {
-			final Object obj = METHOD_ATTR.invoke(null, instance, attributeKey);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testGetEncryptionTableHtml() throws Throwable {
 		//
 		final URL url = toURL(toURI(new File("pom.xml")));
@@ -8329,6 +8305,46 @@ class VoiceManagerTest {
 			throws Throwable {
 		try {
 			METHOD_SET_FILL_PATTERN.invoke(null, instance, fillPatternType);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetCSSDeclarationByProperty() throws Throwable {
+		//
+		Assertions.assertNull(getCSSDeclarationByProperty(null, null));
+		//
+		final String backGroundColor = "background-color";
+		//
+		if (element != null) {
+			//
+			element.attr("style", backGroundColor);
+			//
+		} // if
+			//
+		Assertions.assertNull(getCSSDeclarationByProperty(element, backGroundColor));
+		//
+		if (element != null) {
+			//
+			element.attr("style", StringUtils.joinWith(":", "background-color", "white"));
+			//
+		} // if
+			//
+		Assertions.assertNotNull(getCSSDeclarationByProperty(element, backGroundColor));
+		//
+	}
+
+	private static CSSDeclaration getCSSDeclarationByProperty(final org.jsoup.nodes.Element element,
+			final String property) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_CSS_DECLARATION_BY_PROPERTY.invoke(null, element, property);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof CSSDeclaration) {
+				return (CSSDeclaration) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
