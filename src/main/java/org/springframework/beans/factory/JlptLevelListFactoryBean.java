@@ -1,5 +1,6 @@
 package org.springframework.beans.factory;
 
+import java.io.IOException;
 import java.lang.reflect.Proxy;
 import java.net.URL;
 import java.time.Duration;
@@ -151,6 +152,12 @@ public class JlptLevelListFactoryBean implements FactoryBean<List<String>> {
 			//
 		} // if
 			//
+		return getObjectByUrl(url, timeout);
+		//
+	}
+
+	private static List<String> getObjectByUrl(final String url, final Duration timeout) throws IOException {
+		//
 		return toList(map(
 				stream(ElementUtil
 						.select(testAndApply(x -> StringUtils.equalsAnyIgnoreCase(getProtocol(x), "http", "https"),

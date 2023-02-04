@@ -13,11 +13,14 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
 
@@ -34,7 +37,8 @@ class JlptLevelGuiTest {
 
 	private static Method METHOD_TO_ARRAY, METHOD_GET_CLASS, METHOD_TEST, METHOD_GET_PREFERRED_SIZE,
 			METHOD_SET_PREFERRED_WIDTH, METHOD_FOR_NAME, METHOD_GET_TEXT, METHOD_GET_SYSTEM_CLIP_BOARD,
-			METHOD_ADD_ACTION_LISTENER = null;
+			METHOD_ADD_ACTION_LISTENER, METHOD_GET_DECLARED_METHODS, METHOD_FILTER, METHOD_TO_LIST,
+			METHOD_INVOKE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -61,6 +65,15 @@ class JlptLevelGuiTest {
 		(METHOD_ADD_ACTION_LISTENER = clz.getDeclaredMethod("addActionListener", ActionListener.class,
 				AbstractButton[].class)).setAccessible(true);
 		//
+		(METHOD_GET_DECLARED_METHODS = clz.getDeclaredMethod("getDeclaredMethods", Class.class)).setAccessible(true);
+		//
+		(METHOD_FILTER = clz.getDeclaredMethod("filter", Stream.class, Predicate.class)).setAccessible(true);
+		//
+		(METHOD_TO_LIST = clz.getDeclaredMethod("toList", Stream.class)).setAccessible(true);
+		//
+		(METHOD_INVOKE = clz.getDeclaredMethod("invoke", Method.class, Object.class, Object[].class))
+				.setAccessible(true);
+		//
 	}
 
 	private class IH implements InvocationHandler {
@@ -80,6 +93,14 @@ class JlptLevelGuiTest {
 					//
 				} // if
 					//
+			} else if (proxy instanceof Stream) {
+				//
+				if (Objects.equals(methodName, "filter")) {
+					//
+					return proxy;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(method != null ? method.getName() : null);
@@ -89,6 +110,8 @@ class JlptLevelGuiTest {
 	}
 
 	private JlptLevelGui instance = null;
+
+	private IH ih = null;
 
 	@BeforeEach
 	void beforeEach() throws ReflectiveOperationException {
@@ -107,6 +130,8 @@ class JlptLevelGuiTest {
 			//
 		} // if
 			//
+		ih = new IH();
+		//
 	}
 
 	@Test
@@ -157,6 +182,28 @@ class JlptLevelGuiTest {
 			//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnCopy, 0, null)));
 		//
+		// btnCompare
+		//
+		final AbstractButton btnCompare = new JButton();
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "btnCompare", btnCompare, true);
+			//
+		} // if
+			//
+		final ActionEvent actionEvent = new ActionEvent(btnCompare, 0, null);
+		//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEvent));
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "jlCompare", new JLabel(), true);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEvent));
+		//
 	}
 
 	private static void actionPerformed(final ActionListener instance, final ActionEvent e) {
@@ -168,7 +215,7 @@ class JlptLevelGuiTest {
 	@Test
 	void testToArray() throws Throwable {
 		//
-		Assertions.assertNull(toArray(Reflection.newProxy(Collection.class, new IH()), null));
+		Assertions.assertNull(toArray(Reflection.newProxy(Collection.class, ih), null));
 		//
 		Assertions.assertNull(toArray(Collections.emptyList(), null));
 		//
@@ -348,6 +395,91 @@ class JlptLevelGuiTest {
 			throws Throwable {
 		try {
 			METHOD_ADD_ACTION_LISTENER.invoke(null, actionListener, bs);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetDeclaredMethods() throws Throwable {
+		//
+		Assertions.assertNull(getDeclaredMethods(null));
+		//
+	}
+
+	private static Method[] getDeclaredMethods(final Class<?> instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_DECLARED_METHODS.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Method[]) {
+				return (Method[]) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testFilter() throws Throwable {
+		//
+		Assertions.assertNull(filter(null, null));
+		//
+		Assertions.assertNull(filter(Stream.empty(), null));
+		//
+		final Stream<?> stream = Reflection.newProxy(Stream.class, ih);
+		//
+		Assertions.assertSame(stream, filter(stream, null));
+		//
+	}
+
+	private static <T> Stream<T> filter(final Stream<T> instance, final Predicate<? super T> predicate)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_FILTER.invoke(null, instance, predicate);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Stream) {
+				return (Stream) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testToList() throws Throwable {
+		//
+		Assertions.assertNull(toList(null));
+		//
+	}
+
+	private static <T> List<T> toList(final Stream<T> instance) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_LIST.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof List) {
+				return (List) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testInvoke() throws Throwable {
+		//
+		Assertions.assertNull(invoke(null, null));
+		//
+	}
+
+	private static Object invoke(final Method method, final Object instance, final Object... args) throws Throwable {
+		try {
+			return METHOD_INVOKE.invoke(null, method, instance, args);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

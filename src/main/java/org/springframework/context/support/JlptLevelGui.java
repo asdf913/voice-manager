@@ -1,5 +1,6 @@
 package org.springframework.context.support;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -11,13 +12,17 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import javax.swing.AbstractButton;
 import javax.swing.DefaultComboBoxModel;
@@ -29,7 +34,10 @@ import javax.swing.JTextField;
 import javax.swing.ListModel;
 import javax.swing.text.JTextComponent;
 
+import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
@@ -47,6 +55,8 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 
 	private List<String> jlptLevels = null;
 
+	private String url = null;
+
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
 	private @interface Note {
@@ -56,9 +66,11 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 	@Note("Export JSON")
 	private AbstractButton btnExportJson = null;
 
-	private AbstractButton btnCopy = null;
+	private AbstractButton btnCopy, btnCompare = null;
 
 	private JTextComponent tfJson = null;
+
+	private JLabel jlCompare = null;
 
 	private ObjectMapper objectMapper = null;
 
@@ -67,6 +79,10 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 
 	public void setJlptLevels(final List<String> jlptLevels) {
 		this.jlptLevels = jlptLevels;
+	}
+
+	public void setUrl(final String url) {
+		this.url = url;
 	}
 
 	@Override
@@ -97,11 +113,17 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		//
 		add(tfJson = new JTextField());
 		//
-		add(btnCopy = new JButton("Copy"));
+		add(btnCopy = new JButton("Copy"), wrap);
 		//
-		addActionListener(this, btnExportJson, btnCopy);
+		add(new JLabel());
 		//
-		final List<Component> cs = Arrays.asList(jList, btnExportJson, tfJson);
+		add(btnCompare = new JButton("Compare JLPT Level(s)"));
+		//
+		add(jlCompare = new JLabel());
+		//
+		addActionListener(this, btnExportJson, btnCopy, btnCompare);
+		//
+		final List<Component> cs = Arrays.asList(jList, btnExportJson, tfJson, btnCompare);
 		//
 		final Dimension preferredSize = cs.stream().map(JlptLevelGui::getPreferredSize).max((a, b) -> {
 			return a != null && b != null ? Double.compare(a.getWidth(), b.getWidth()) : 0;
@@ -203,8 +225,86 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 				//
 			} // if
 				//
+		} else if (Objects.equals(source, btnCompare)) {
+			//
+			if (jlCompare != null) {
+				//
+				jlCompare.setText(null);
+				//
+			} // if
+				//
+			final List<Method> ms = toList(filter(
+					testAndApply(Objects::nonNull,
+							getDeclaredMethods(forName("org.springframework.beans.factory.JlptLevelListFactoryBean")),
+							Arrays::stream, null),
+					m -> m != null && Objects.equals(m.getName(), "getObjectByUrl")
+							&& Arrays.equals(new Class<?>[] { String.class, Duration.class }, m.getParameterTypes())));
+			//
+			final int size = IterableUtils.size(ms);
+			//
+			if (size > 1) {
+				//
+				throw new IllegalStateException();
+				//
+			} // if
+				//
+			final Method m = size > 0 ? IterableUtils.get(ms, 0) : null;
+			//
+			try {
+				//
+				if (m != null) {
+					//
+					m.setAccessible(true);
+					//
+				} // if
+					//
+				if (jlCompare != null) {
+					//
+					final boolean matched = Objects.equals(invoke(m, null, url, null), jlptLevels);
+					//
+					jlCompare.setText(matched ? "Matched" : "Not Matched");
+					//
+					jlCompare.setForeground(matched ? Color.GREEN : Color.RED);
+					//
+				} // if
+					//
+			} catch (final IllegalAccessException e) {
+				//
+				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
+				//
+			} catch (final InvocationTargetException e) {
+				//
+				final Throwable targetException = e.getTargetException();
+				//
+				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(
+						ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException), targetException,
+								ExceptionUtils.getRootCause(e), e));
+				//
+			} // try
+				//
 		} // if
 			//
+	}
+
+	private static Method[] getDeclaredMethods(final Class<?> instance) {
+		return instance != null ? instance.getDeclaredMethods() : null;
+	}
+
+	private static <T> Stream<T> filter(final Stream<T> instance, final Predicate<? super T> predicate) {
+		//
+		return instance != null && (predicate != null || Proxy.isProxyClass(getClass(instance)))
+				? instance.filter(predicate)
+				: null;
+		//
+	}
+
+	private static <T> List<T> toList(final Stream<T> instance) {
+		return instance != null ? instance.toList() : null;
+	}
+
+	private static Object invoke(final Method method, final Object instance, final Object... args)
+			throws IllegalAccessException, InvocationTargetException {
+		return method != null ? method.invoke(instance, args) : null;
 	}
 
 	private static Clipboard getSystemClipboard(final Toolkit instance) {

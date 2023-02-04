@@ -69,10 +69,15 @@
 	</bean>
 
 	<!-- -->
+	<bean id="JlptLevelPageUrl" class="java.lang.String">
+		<constructor-arg index="0"
+			value="${org.springframework.context.support.VoiceManager.jlptLevelPageUrl}" />
+	</bean>
+
+	<!-- -->
 	<bean id="JlptLevelList"
 		class="org.springframework.beans.factory.JlptLevelListFactoryBean">
-		<property name="url"
-			value="${org.springframework.context.support.VoiceManager.jlptLevelPageUrl}" />
+		<property name="url" ref="JlptLevelPageUrl" />
 		<property name="timeout"
 			value="#{T(java.time.Duration).parse('PT0S')}" />
 		<property name="values"
@@ -181,6 +186,7 @@
 		<property name="defaultCloseOperation"
 			value="#{T(javax.swing.WindowConstants).EXIT_ON_CLOSE}" />
 		<property name="jlptLevels" ref="JlptLevelList" />
+		<property name="url" ref="JlptLevelPageUrl" />
 	</bean>
 
 	<bean id="DataSource" class="org.h2.jdbcx.JdbcConnectionPool"
