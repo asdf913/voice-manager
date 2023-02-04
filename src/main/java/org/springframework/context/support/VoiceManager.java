@@ -10612,7 +10612,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			tds = children(domNode = get(elements, i));
 			//
-			backGroundColorString = getExpressionAsCSSString(getCSSDeclarationByProperty(domNode, "background-color"));
+			backGroundColorString = getExpressionAsCSSString(
+					getCSSDeclarationByAttributeAndCssProperty(domNode, "style", "background-color"));
 			//
 			for (int j = 0; j < IterableUtils.size(tds); j++) {
 				//
@@ -10655,10 +10656,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	private static CSSDeclaration getCSSDeclarationByProperty(final org.jsoup.nodes.Element element,
-			final String property) {
+	private static CSSDeclaration getCSSDeclarationByAttributeAndCssProperty(final org.jsoup.nodes.Element element,
+			final String attribute, final String cssProperty) {
 		//
-		final String style = attr(element, "style");
+		final String style = attr(element, attribute);
 		//
 		CSSDeclaration cssDeclaration = null;
 		//
@@ -10666,7 +10667,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			final List<CSSDeclaration> cssDeclarations = toList(
 					filter(stream(CSSReaderDeclarationList.readFromString(style, ECSSVersion.CSS30)),
-							x -> Objects.equals(getProperty(x), property)));
+							x -> Objects.equals(getProperty(x), cssProperty)));
 			//
 			final int size = IterableUtils.size(cssDeclarations);
 			//

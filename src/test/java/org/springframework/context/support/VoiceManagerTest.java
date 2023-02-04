@@ -304,7 +304,8 @@ class VoiceManagerTest {
 			METHOD_GET_WRITER, METHOD_KEY_SET, METHOD_GET_WORK_BOOK_CLASS, METHOD_GET_SYSTEM_PRINT_STREAM_BY_FIELD_NAME,
 			METHOD_IF_ELSE, METHOD_GET_PAGE_TITLE, METHOD_SET_HIRAGANA_OR_KATAKANA_AND_ROMAJI, METHOD_APPLY,
 			METHOD_GET_SHEET_AT, METHOD_TO_MILLIS, METHOD_GET_EXPRESSION_AS_CSS_STRING,
-			METHOD_SET_FILL_BACKGROUND_COLOR, METHOD_SET_FILL_PATTERN, METHOD_GET_CSS_DECLARATION_BY_PROPERTY = null;
+			METHOD_SET_FILL_BACKGROUND_COLOR, METHOD_SET_FILL_PATTERN,
+			METHOD_GETCSS_DECLARATION_BY_ATTRIBUTE_AND_CSS_PROPERTY = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -954,8 +955,9 @@ class VoiceManagerTest {
 		(METHOD_SET_FILL_PATTERN = clz.getDeclaredMethod("setFillPattern", CellStyle.class, FillPatternType.class))
 				.setAccessible(true);
 		//
-		(METHOD_GET_CSS_DECLARATION_BY_PROPERTY = clz.getDeclaredMethod("getCSSDeclarationByProperty",
-				org.jsoup.nodes.Element.class, String.class)).setAccessible(true);
+		(METHOD_GETCSS_DECLARATION_BY_ATTRIBUTE_AND_CSS_PROPERTY = clz.getDeclaredMethod(
+				"getCSSDeclarationByAttributeAndCssProperty", org.jsoup.nodes.Element.class, String.class,
+				String.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -8311,32 +8313,35 @@ class VoiceManagerTest {
 	@Test
 	void testGetCSSDeclarationByProperty() throws Throwable {
 		//
-		Assertions.assertNull(getCSSDeclarationByProperty(null, null));
+		Assertions.assertNull(getCSSDeclarationByAttributeAndCssProperty(null, null, null));
+		//
+		final String attribute = "style";
 		//
 		final String backGroundColor = "background-color";
 		//
 		if (element != null) {
 			//
-			element.attr("style", backGroundColor);
+			element.attr(attribute, backGroundColor);
 			//
 		} // if
 			//
-		Assertions.assertNull(getCSSDeclarationByProperty(element, backGroundColor));
+		Assertions.assertNull(getCSSDeclarationByAttributeAndCssProperty(element, attribute, backGroundColor));
 		//
 		if (element != null) {
 			//
-			element.attr("style", StringUtils.joinWith(":", "background-color", "white"));
+			element.attr(attribute, StringUtils.joinWith(":", "background-color", "white"));
 			//
 		} // if
 			//
-		Assertions.assertNotNull(getCSSDeclarationByProperty(element, backGroundColor));
+		Assertions.assertNotNull(getCSSDeclarationByAttributeAndCssProperty(element, attribute, backGroundColor));
 		//
 	}
 
-	private static CSSDeclaration getCSSDeclarationByProperty(final org.jsoup.nodes.Element element,
-			final String property) throws Throwable {
+	private static CSSDeclaration getCSSDeclarationByAttributeAndCssProperty(final org.jsoup.nodes.Element element,
+			final String attribute, final String cssProperty) throws Throwable {
 		try {
-			final Object obj = METHOD_GET_CSS_DECLARATION_BY_PROPERTY.invoke(null, element, property);
+			final Object obj = METHOD_GETCSS_DECLARATION_BY_ATTRIBUTE_AND_CSS_PROPERTY.invoke(null, element, attribute,
+					cssProperty);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof CSSDeclaration) {
