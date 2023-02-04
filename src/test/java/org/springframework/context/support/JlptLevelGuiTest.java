@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.ClipboardOwner;
+import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.reflect.Constructor;
@@ -39,8 +41,8 @@ class JlptLevelGuiTest {
 
 	private static Method METHOD_TO_ARRAY, METHOD_GET_CLASS, METHOD_TEST, METHOD_GET_PREFERRED_SIZE,
 			METHOD_SET_PREFERRED_WIDTH, METHOD_FOR_NAME, METHOD_GET_TEXT, METHOD_GET_SYSTEM_CLIP_BOARD,
-			METHOD_ADD_ACTION_LISTENER, METHOD_GET_DECLARED_METHODS, METHOD_FILTER, METHOD_TO_LIST, METHOD_INVOKE,
-			METHOD_IIF, METHOD_GET_NAME, METHOD_GET_PARAMETER_TYPES = null;
+			METHOD_SET_CONTENTS, METHOD_ADD_ACTION_LISTENER, METHOD_GET_DECLARED_METHODS, METHOD_FILTER, METHOD_TO_LIST,
+			METHOD_INVOKE, METHOD_IIF, METHOD_GET_NAME, METHOD_GET_PARAMETER_TYPES, METHOD_RUN = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -64,6 +66,9 @@ class JlptLevelGuiTest {
 		//
 		(METHOD_GET_SYSTEM_CLIP_BOARD = clz.getDeclaredMethod("getSystemClipboard", Toolkit.class)).setAccessible(true);
 		//
+		(METHOD_SET_CONTENTS = clz.getDeclaredMethod("setContents", Clipboard.class, Transferable.class,
+				ClipboardOwner.class)).setAccessible(true);
+		//
 		(METHOD_ADD_ACTION_LISTENER = clz.getDeclaredMethod("addActionListener", ActionListener.class,
 				AbstractButton[].class)).setAccessible(true);
 		//
@@ -82,6 +87,8 @@ class JlptLevelGuiTest {
 		//
 		(METHOD_GET_PARAMETER_TYPES = clz.getDeclaredMethod("getParameterTypes", Executable.class)).setAccessible(true);
 		//
+		(METHOD_RUN = clz.getDeclaredMethod("run", Boolean.TYPE, Runnable.class)).setAccessible(true);
+		//
 	}
 
 	private class IH implements InvocationHandler {
@@ -91,7 +98,13 @@ class JlptLevelGuiTest {
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
-			final String methodName = getName(method) ;
+			if (Objects.equals(Void.TYPE, method != null ? method.getReturnType() : null)) {
+				//
+				return null;
+				//
+			} // if
+				//
+			final String methodName = getName(method);
 			//
 			if (proxy instanceof Collection) {
 				//
@@ -374,6 +387,8 @@ class JlptLevelGuiTest {
 		//
 		Assertions.assertNull(getSystemClipboard(null));
 		//
+		Assertions.assertNotNull(getSystemClipboard(Toolkit.getDefaultToolkit()));
+		//
 	}
 
 	private static Clipboard getSystemClipboard(final Toolkit instance) throws Throwable {
@@ -385,6 +400,24 @@ class JlptLevelGuiTest {
 				return (Clipboard) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void tsetSetContents() {
+		//
+		Assertions.assertDoesNotThrow(() -> setContents(null, null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> setContents(new Clipboard(""), null, null));
+		//
+	}
+
+	private static void setContents(final Clipboard instance, final Transferable contents, final ClipboardOwner owner)
+			throws Throwable {
+		try {
+			METHOD_SET_CONTENTS.invoke(null, instance, contents, owner);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -545,6 +578,23 @@ class JlptLevelGuiTest {
 				return (Class<?>[]) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testRun() {
+		//
+		Assertions.assertDoesNotThrow(() -> run(true, null));
+		//
+		Assertions.assertDoesNotThrow(() -> run(true, Reflection.newProxy(Runnable.class, ih)));
+		//
+	}
+
+	private static void run(final boolean b, final Runnable runnable) throws Throwable {
+		try {
+			METHOD_RUN.invoke(null, b, runnable);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

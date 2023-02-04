@@ -5,7 +5,9 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.annotation.ElementType;
@@ -217,20 +219,9 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 				//
 		} else if (Objects.equals(source, btnCopy)) {
 			//
-			final Clipboard clipboard = getSystemClipboard(getToolkit());
+			run(forName("org.junit.jupiter.api.Test") == null,
+					() -> setContents(getSystemClipboard(getToolkit()), new StringSelection(getText(tfJson)), null));
 			//
-			if (Boolean.logicalAnd(clipboard != null,
-					//
-					// non test
-					//
-					forName("org.junit.jupiter.api.Test") == null
-			//
-			)) {
-				//
-				clipboard.setContents(new StringSelection(getText(tfJson)), null);
-				//
-			} // if
-				//
 		} else if (Objects.equals(source, btnCompare)) {
 			//
 			setText(jlCompare, null);
@@ -293,15 +284,11 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 	}
 
 	private static String getName(final Member instance) {
-		return instance != null
-				? instance.getName()
-						: null;
+		return instance != null ? instance.getName() : null;
 	}
 
 	private static Class<?>[] getParameterTypes(final Executable instance) {
-		return instance != null 
-				? instance.getParameterTypes()
-						: null;
+		return instance != null ? instance.getParameterTypes() : null;
 	}
 
 	private static <T> Stream<T> filter(final Stream<T> instance, final Predicate<? super T> predicate) {
@@ -323,6 +310,22 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 
 	private static Clipboard getSystemClipboard(final Toolkit instance) {
 		return instance != null ? instance.getSystemClipboard() : null;
+	}
+
+	private static void setContents(final Clipboard instance, final Transferable contents, final ClipboardOwner owner) {
+		if (instance != null) {
+			instance.setContents(contents, owner);
+		}
+	}
+
+	private static void run(final boolean b, final Runnable runnable) {
+		//
+		if (b && runnable != null) {
+			//
+			runnable.run();
+			//
+		} // if
+			//
 	}
 
 	private static Class<?> forName(final String className) {
