@@ -10578,8 +10578,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		String style = null;
 		//
-		List<CSSDeclaration> cssDeclarations = null;
-		//
 		CSSDeclaration backGroundColor = null;
 		//
 		String backGroundColorString = null;
@@ -10604,11 +10602,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			if (Boolean.logicalAnd((domNode = get(domNodes, i)) != null,
 					StringUtils.isNotBlank(style = attr(domNode, "style")))) {
 				//
-				backGroundColor = IterableUtils.size(cssDeclarations = toList(
-						filter(stream(CSSReaderDeclarationList.readFromString(style, ECSSVersion.CSS30)),
-								x -> Objects.equals(getProperty(x), "background-color")))) == 1
-										? IterableUtils.get(cssDeclarations, 0)
-										: null;
+				backGroundColor = testAndApply(x -> IterableUtils.size(x) == 1,
+						toList(filter(stream(CSSReaderDeclarationList.readFromString(style, ECSSVersion.CSS30)),
+								x -> Objects.equals(getProperty(x), "background-color"))),
+						x -> IterableUtils.get(x, 0), null);
 				//
 			} // if
 				//
