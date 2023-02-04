@@ -10626,14 +10626,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				CellUtil.setCellValue(cell = RowUtil.createCell(row, Math.max(row.getLastCellNum(), 0)),
 						StringUtils.trim(textContent));
 				//
-				if ((cellStyle = createCellStyle(workbook)) != null
-						&& StringUtils.isNotBlank(backGroundColorString = getExpressionAsCSSString(backGroundColor))) {
+				if (StringUtils.isNotBlank(backGroundColorString = getExpressionAsCSSString(backGroundColor))) {
 					//
-					cellStyle.setFillBackgroundColor(new XSSFColor(
-							new Color(Integer.parseInt(StringUtils.substring(backGroundColorString, 1), 16)),
-							indexedColorMap));
+					setFillBackgroundColor(cellStyle = createCellStyle(workbook),
+							new XSSFColor(
+									new Color(Integer.parseInt(StringUtils.substring(backGroundColorString, 1), 16)),
+									indexedColorMap));
 					//
-					cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+					setFillPattern(cellStyle, FillPatternType.SOLID_FOREGROUND);
 					//
 					setCellStyle(cell, cellStyle);
 					//
@@ -10659,6 +10659,19 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static IndexedColorMap getIndexedColors(final StylesTable instance) {
 		return instance != null ? instance.getIndexedColors() : null;
+	}
+
+	private static void setFillBackgroundColor(final CellStyle instance,
+			final org.apache.poi.ss.usermodel.Color color) {
+		if (instance != null) {
+			instance.setFillBackgroundColor(color);
+		}
+	}
+
+	private static void setFillPattern(final CellStyle instance, final FillPatternType fillPatternType) {
+		if (instance != null) {
+			instance.setFillPattern(fillPatternType);
+		}
 	}
 
 	private static String getProperty(final CSSDeclaration instance) {

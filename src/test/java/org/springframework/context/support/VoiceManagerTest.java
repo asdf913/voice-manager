@@ -155,6 +155,7 @@ import org.apache.poi.ss.usermodel.DataValidation;
 import org.apache.poi.ss.usermodel.DataValidationConstraint;
 import org.apache.poi.ss.usermodel.DataValidationHelper;
 import org.apache.poi.ss.usermodel.Drawing;
+import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.RichTextString;
 import org.apache.poi.ss.usermodel.Row;
@@ -303,7 +304,8 @@ class VoiceManagerTest {
 			METHOD_GET_WORKBOOK_CLASS_FAILABLE_SUPPLIER_MAP, METHOD_GET_DECLARED_CONSTRUCTOR, METHOD_NEW_INSTANCE,
 			METHOD_GET_WRITER, METHOD_KEY_SET, METHOD_GET_WORK_BOOK_CLASS, METHOD_GET_SYSTEM_PRINT_STREAM_BY_FIELD_NAME,
 			METHOD_IF_ELSE, METHOD_GET_PAGE_TITLE, METHOD_SET_HIRAGANA_OR_KATAKANA_AND_ROMAJI, METHOD_APPLY,
-			METHOD_GET_SHEET_AT, METHOD_TO_MILLIS, METHOD_GET_EXPRESSION_AS_CSS_STRING = null;
+			METHOD_GET_SHEET_AT, METHOD_TO_MILLIS, METHOD_GET_EXPRESSION_AS_CSS_STRING,
+			METHOD_SET_FILL_BACKGROUND_COLOR, METHOD_SET_FILL_PATTERN = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -949,6 +951,12 @@ class VoiceManagerTest {
 		(METHOD_GET_EXPRESSION_AS_CSS_STRING = clz.getDeclaredMethod("getExpressionAsCSSString", CSSDeclaration.class))
 				.setAccessible(true);
 		//
+		(METHOD_SET_FILL_BACKGROUND_COLOR = clz.getDeclaredMethod("setFillBackgroundColor", CellStyle.class,
+				org.apache.poi.ss.usermodel.Color.class)).setAccessible(true);
+		//
+		(METHOD_SET_FILL_PATTERN = clz.getDeclaredMethod("setFillPattern", CellStyle.class, FillPatternType.class))
+				.setAccessible(true);
+		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
 		CLASS_EXPORT_TASK = Class.forName("org.springframework.context.support.VoiceManager$ExportTask");
@@ -1479,6 +1487,8 @@ class VoiceManagerTest {
 
 	private Cell cell = null;
 
+	private CellStyle cellStyle = null;
+
 	private ObjectMapper objectMapper = null;
 
 	@BeforeEach
@@ -1527,6 +1537,8 @@ class VoiceManagerTest {
 		workbook = Reflection.newProxy(Workbook.class, ih);
 		//
 		cell = Reflection.newProxy(Cell.class, ih);
+		//
+		cellStyle = Reflection.newProxy(CellStyle.class, ih);
 		//
 	}
 
@@ -8281,6 +8293,42 @@ class VoiceManagerTest {
 				return (String) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetFillBackgroundColor() {
+		//
+		Assertions.assertDoesNotThrow(() -> setFillBackgroundColor(null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> setFillBackgroundColor(cellStyle, null));
+		//
+	}
+
+	private static void setFillBackgroundColor(final CellStyle instance, final org.apache.poi.ss.usermodel.Color color)
+			throws Throwable {
+		try {
+			METHOD_SET_FILL_BACKGROUND_COLOR.invoke(null, instance, color);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetFillPattern() {
+		//
+		Assertions.assertDoesNotThrow(() -> setFillPattern(null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> setFillPattern(cellStyle, null));
+		//
+	}
+
+	private static void setFillPattern(final CellStyle instance, final FillPatternType fillPatternType)
+			throws Throwable {
+		try {
+			METHOD_SET_FILL_PATTERN.invoke(null, instance, fillPatternType);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
