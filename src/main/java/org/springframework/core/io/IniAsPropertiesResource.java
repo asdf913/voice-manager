@@ -39,6 +39,7 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0Util;
 import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
+import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.context.PayloadApplicationEvent;
@@ -121,12 +122,8 @@ public class IniAsPropertiesResource implements Resource, ApplicationEventPublis
 		//
 		if (size == 0) {
 			//
-			if (applicationEventPublisher != null) {
-				//
-				applicationEventPublisher.publishEvent(new PayloadApplicationEvent<>("ini", Unit.with(null)));
-				//
-			} // if
-				//
+			publishEvent(applicationEventPublisher, new PayloadApplicationEvent<>("ini", Unit.with(null)));
+			//
 			return toInputStream(new Properties());
 			//
 		} else if (size == 1) {
@@ -140,12 +137,8 @@ public class IniAsPropertiesResource implements Resource, ApplicationEventPublis
 			properties.putAll(map.entrySet().stream()
 					.collect(Collectors.toMap(IniAsPropertiesResource::getKey, v -> toString(getValue(v)))));
 			//
-			if (applicationEventPublisher != null) {
-				//
-				applicationEventPublisher.publishEvent(new PayloadApplicationEvent<>("ini", Unit.with(sectionString)));
-				//
-			} // if
-				//
+			publishEvent(applicationEventPublisher, new PayloadApplicationEvent<>("ini", Unit.with(sectionString)));
+			//
 			return toInputStream(properties);
 			//
 		} // if
@@ -164,22 +157,14 @@ public class IniAsPropertiesResource implements Resource, ApplicationEventPublis
 				properties.putAll(map.entrySet().stream()
 						.collect(Collectors.toMap(IniAsPropertiesResource::getKey, v -> toString(getValue(v)))));
 				//
-				if (applicationEventPublisher != null) {
-					//
-					applicationEventPublisher.publishEvent(new PayloadApplicationEvent<>("ini", Unit.with(section)));
-					//
-				} // if
-					//
+				publishEvent(applicationEventPublisher, new PayloadApplicationEvent<>("ini", Unit.with(section)));
+				//
 				return toInputStream(properties);
 				//
 			} else {
 				//
-				if (applicationEventPublisher != null) {
-					//
-					applicationEventPublisher.publishEvent(new PayloadApplicationEvent<>("ini", Unit.with(null)));
-					//
-				} // if
-					//
+				publishEvent(applicationEventPublisher, new PayloadApplicationEvent<>("ini", Unit.with(null)));
+				//
 				return toInputStream(new Properties());
 				//
 			} // if
@@ -188,6 +173,12 @@ public class IniAsPropertiesResource implements Resource, ApplicationEventPublis
 			//
 		throw new UnsupportedOperationException();
 		//
+	}
+
+	private static void publishEvent(final ApplicationEventPublisher instance, final ApplicationEvent event) {
+		if (instance != null) {
+			instance.publishEvent(event);
+		}
 	}
 
 	private static boolean contains(final Collection<?> items, final Object item) {
