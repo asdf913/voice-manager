@@ -52,7 +52,6 @@
 			value="${org.springframework.context.support.VoiceManager.messageDigestAlgorithm}" />
 	</bean>
 
-
 	<!-- -->
 	<bean id="gaKuNenBeTsuKanJiListPageUrl" class="java.lang.String">
 		<constructor-arg index="0"
@@ -67,6 +66,17 @@
 		<property name="url" ref="gaKuNenBeTsuKanJiListPageUrl" />
 		<property name="timeout"
 			value="#{T(java.time.Duration).parse('PT0S')}" />
+	</bean>
+
+	<!-- -->
+	<bean id="JlptLevelList"
+		class="org.springframework.beans.factory.JlptLevelListFactoryBean">
+		<property name="url"
+			value="${org.springframework.context.support.VoiceManager.jlptLevelPageUrl}" />
+		<property name="timeout"
+			value="#{T(java.time.Duration).parse('PT0S')}" />
+		<property name="values"
+			value="${org.springframework.beans.factory.JlptLevelListFactoryBean.values}" />
 	</bean>
 
 	<!-- -->
@@ -91,17 +101,7 @@
 		<property name="microsoftSpeechObjectLibraryAttributeNames"
 			value="${org.springframework.context.support.VoiceManager.microsoftSpeechObjectLibraryAttributeNames}" />
 		<!-- -->
-		<property name="jlptLevels">
-			<bean
-				class="org.springframework.beans.factory.JlptLevelListFactoryBean">
-				<property name="url"
-					value="${org.springframework.context.support.VoiceManager.jlptLevelPageUrl}" />
-				<property name="timeout"
-					value="#{T(java.time.Duration).parse('PT0S')}" />
-				<property name="values"
-					value="${org.springframework.beans.factory.JlptLevelListFactoryBean.values}" />
-			</bean>
-		</property>
+		<property name="jlptLevels" ref="JlptLevelList" />
 		<!-- -->
 		<property name="gaKuNenBeTsuKanJiListPageUrl"
 			ref="gaKuNenBeTsuKanJiListPageUrl" />
@@ -173,6 +173,14 @@
 			ref="GaKuNenBeTsuKanJiMultimap" />
 		<property name="gaKuNenBeTsuKanJiListPageUrl"
 			ref="gaKuNenBeTsuKanJiListPageUrl" />
+	</bean>
+
+	<!-- -->
+	<bean class="org.springframework.context.support.JlptLevelGui">
+		<property name="layout" ref="MigLayout" />
+		<property name="defaultCloseOperation"
+			value="#{T(javax.swing.WindowConstants).EXIT_ON_CLOSE}" />
+		<property name="jlptLevels" ref="JlptLevelList" />
 	</bean>
 
 	<bean id="DataSource" class="org.h2.jdbcx.JdbcConnectionPool"
