@@ -231,12 +231,8 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 				//
 		} else if (Objects.equals(source, btnCompare)) {
 			//
-			if (jlCompare != null) {
-				//
-				jlCompare.setText(null);
-				//
-			} // if
-				//
+			setText(jlCompare, null);
+			//
 			final List<Method> ms = toList(filter(
 					testAndApply(Objects::nonNull,
 							getDeclaredMethods(forName("org.springframework.beans.factory.JlptLevelListFactoryBean")),
@@ -262,11 +258,11 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 					//
 				} // if
 					//
+				final boolean matched = Objects.equals(invoke(m, null, url, null), jlptLevels);
+				//
+				setText(jlCompare, matched ? "Matched" : "Not Matched");
+				//
 				if (jlCompare != null) {
-					//
-					final boolean matched = Objects.equals(invoke(m, null, url, null), jlptLevels);
-					//
-					jlCompare.setText(matched ? "Matched" : "Not Matched");
 					//
 					jlCompare.setForeground(matched ? Color.GREEN : Color.RED);
 					//
@@ -332,6 +328,12 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 	}
 
 	private static void setText(final JTextComponent instance, final String text) {
+		if (instance != null) {
+			instance.setText(text);
+		}
+	}
+
+	private static void setText(final JLabel instance, final String text) {
 		if (instance != null) {
 			instance.setText(text);
 		}
