@@ -42,17 +42,23 @@ import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
+import org.springframework.context.EnvironmentAware;
 import org.springframework.context.PayloadApplicationEvent;
+import org.springframework.core.env.Environment;
+import org.springframework.core.env.PropertyResolver;
+import org.springframework.core.env.PropertyResolverUtil;
 
 import com.github.vincentrussell.ini.Ini;
 
 import io.github.toolfactory.narcissus.Narcissus;
 
-public class IniAsPropertiesResource implements Resource, ApplicationEventPublisherAware {
+public class IniAsPropertiesResource implements Resource, ApplicationEventPublisherAware, EnvironmentAware {
 
 	private ApplicationEventPublisher applicationEventPublisher = null;
 
 	private Resource resource = null;
+
+	private PropertyResolver propertyResolver = null;
 
 	public IniAsPropertiesResource(final Resource resource) {
 		this.resource = resource;
@@ -61,6 +67,11 @@ public class IniAsPropertiesResource implements Resource, ApplicationEventPublis
 	@Override
 	public void setApplicationEventPublisher(final ApplicationEventPublisher applicationEventPublisher) {
 		this.applicationEventPublisher = applicationEventPublisher;
+	}
+
+	@Override
+	public void setEnvironment(final Environment environment) {
+		this.propertyResolver = environment;
 	}
 
 	@Override
@@ -145,8 +156,8 @@ public class IniAsPropertiesResource implements Resource, ApplicationEventPublis
 			//
 		if (size > 1) {
 			//
-			final String section = IValue0Util.getValue0(
-					getSection(GraphicsEnvironment.isHeadless(), System.getProperties(), System.console(), sections));
+			final String section = IValue0Util.getValue0(getSection(GraphicsEnvironment.isHeadless(),
+					System.getProperties(), propertyResolver, System.console(), sections));
 			//
 			if (contains(sections, section)) {
 				//
@@ -189,12 +200,18 @@ public class IniAsPropertiesResource implements Resource, ApplicationEventPublis
 		return items != null && items.contains(item);
 	}
 
-	private static Unit<String> getSection(final boolean headless, final Map<?, ?> map, final Console console,
-			final Collection<?> collection) {
+	private static Unit<String> getSection(final boolean headless, final Map<?, ?> map,
+			final PropertyResolver propertyResolver, final Console console, final Collection<?> collection) {
 		//
 		if (map != null && map.containsKey("profile")) {
 			//
 			return Unit.with(toString(map.get("profile")));
+			//
+		} // if
+			//
+		if (propertyResolver != null && propertyResolver.containsProperty("profile")) {
+			//
+			return Unit.with(PropertyResolverUtil.getProperty(propertyResolver, "profile"));
 			//
 		} // if
 			//

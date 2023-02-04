@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -33,6 +34,7 @@ import java.util.stream.Stream;
 import javax.swing.JComboBox;
 
 import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.jena.ext.com.google.common.base.Predicates;
@@ -42,6 +44,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.core.env.PropertyResolver;
 
 import com.google.common.reflect.Reflection;
 
@@ -64,8 +67,8 @@ class IniAsPropertiesResourceTest {
 		//
 		final Class<?> clz = IniAsPropertiesResource.class;
 		//
-		(METHOD_GET_SECTION = clz.getDeclaredMethod("getSection", Boolean.TYPE, Map.class, Console.class,
-				Collection.class)).setAccessible(true);
+		(METHOD_GET_SECTION = clz.getDeclaredMethod("getSection", Boolean.TYPE, Map.class, PropertyResolver.class,
+				Console.class, Collection.class)).setAccessible(true);
 		//
 		(METHOD_TO_STRING = clz.getDeclaredMethod("toString", Object.class)).setAccessible(true);
 		//
@@ -109,6 +112,15 @@ class IniAsPropertiesResourceTest {
 
 		private InputStream inputStream = null;
 
+		private Map<Object, Object> properties = null;
+
+		private Map<Object, Object> getProperties() {
+			if (properties == null) {
+				properties = new LinkedHashMap<>();
+			}
+			return properties;
+		}
+
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
@@ -140,10 +152,26 @@ class IniAsPropertiesResourceTest {
 					//
 				} // if
 					//
+			} else if (proxy instanceof PropertyResolver) {
+				//
+				if (Objects.equals(methodName, "containsProperty") && args != null && args.length > 0) {
+					//
+					return containsKey(getProperties(), args[0]);
+					//
+				} else if (Objects.equals(methodName, "getProperty") && args != null && args.length > 0) {
+					//
+					return MapUtils.getObject(getProperties(), args[0]);
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(methodName);
 			//
+		}
+
+		private static boolean containsKey(final Map<?, ?> instance, final Object key) {
+			return instance != null && instance.containsKey(key);
 		}
 
 	}
@@ -319,7 +347,23 @@ class IniAsPropertiesResourceTest {
 	@Test
 	void testGetSection() throws Throwable {
 		//
-		Assertions.assertNull(getSection(true, null, null, null));
+		Assertions.assertNull(getSection(true, null, null, null, null));
+		//
+		// org.springframework.core.env.PropertyResolver
+		//
+		final PropertyResolver propertyResolver = Reflection.newProxy(PropertyResolver.class, ih);
+		//
+		Assertions.assertNull(getSection(true, null, propertyResolver, null, null));
+		//
+		if (ih != null && ih.getProperties() != null) {
+			//
+			ih.getProperties().put("profile", "");
+			//
+		} // if
+			//
+		Assertions.assertEquals(Unit.with(""), getSection(true, null, propertyResolver, null, null));
+		//
+		// java.io.Console
 		//
 		Console console = System.console();
 		//
@@ -329,19 +373,19 @@ class IniAsPropertiesResourceTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(getSection(true, null, console, null));
+		Assertions.assertNull(getSection(true, null, null, console, null));
 		//
 		// java.io.Console.writeLock
 		//
 		Narcissus.setObjectField(console, Console.class.getDeclaredField("writeLock"), new Object());
 		//
-		Assertions.assertNull(getSection(true, null, console, null));
+		Assertions.assertNull(getSection(true, null, null, console, null));
 		//
 		// java.io.Console.readLock
 		//
 		Narcissus.setObjectField(console, Console.class.getDeclaredField("readLock"), new Object());
 		//
-		Assertions.assertNull(getSection(true, null, console, null));
+		Assertions.assertNull(getSection(true, null, null, console, null));
 		//
 		// java.io.Console.pw
 		//
@@ -351,13 +395,13 @@ class IniAsPropertiesResourceTest {
 			//
 		} // try
 			//
-		Assertions.assertNull(getSection(true, null, console, null));
+		Assertions.assertNull(getSection(true, null, null, console, null));
 		//
 		// java.io.Console.rcb
 		//
 		Narcissus.setObjectField(console, Console.class.getDeclaredField("rcb"), new char[1]);
 		//
-		Assertions.assertNull(getSection(true, null, console, null));
+		Assertions.assertNull(getSection(true, null, null, console, null));
 		//
 		// java.io.Console.reader
 		//
@@ -367,35 +411,35 @@ class IniAsPropertiesResourceTest {
 			//
 		} // try
 			//
-		Assertions.assertNull(getSection(true, null, console, null));
+		Assertions.assertNull(getSection(true, null, null, console, null));
 		//
 		try (final Reader reader = new StringReader(EMPTY)) {
 			//
 			Narcissus.setObjectField(console, Console.class.getDeclaredField("reader"), reader);
 			//
-			Assertions.assertEquals("[null]", toString(getSection(true, null, console, null)));
+			Assertions.assertEquals("[null]", toString(getSection(true, null, null, console, null)));
 			//
 		} // try
 			//
-		Assertions.assertNull(getSection(true, Collections.singletonMap(null, null), null, null));
+		Assertions.assertNull(getSection(true, Collections.singletonMap(null, null), null, null, null));
 		//
 		final Map<?, ?> map = Collections.singletonMap("profile", null);
 		//
-		Assertions.assertEquals("[null]", toString(getSection(true, map, null, null)));
+		Assertions.assertEquals("[null]", toString(getSection(true, map, null, null, null)));
 		//
-		Assertions.assertEquals("[null]", toString(getSection(true, map, null, Collections.emptySet())));
+		Assertions.assertEquals("[null]", toString(getSection(true, map, null, null, Collections.emptySet())));
 		//
-		Assertions.assertEquals("[null]", toString(getSection(true, map, null, Collections.singleton(null))));
+		Assertions.assertEquals("[null]", toString(getSection(true, map, null, null, Collections.singleton(null))));
 		//
 		Assertions.assertEquals("[null]",
-				toString(getSection(true, map, null, new ArrayList<>(Collections.singleton("1")))));
+				toString(getSection(true, map, null, null, new ArrayList<>(Collections.singleton("1")))));
 		//
 	}
 
-	private static Unit<String> getSection(final boolean headless, final Map<?, ?> map, final Console console,
-			final Collection<?> collection) throws Throwable {
+	private static Unit<String> getSection(final boolean headless, final Map<?, ?> map,
+			PropertyResolver propertyResolver, final Console console, final Collection<?> collection) throws Throwable {
 		try {
-			final Object obj = METHOD_GET_SECTION.invoke(null, headless, map, console, collection);
+			final Object obj = METHOD_GET_SECTION.invoke(null, headless, map, propertyResolver, console, collection);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Unit) {
