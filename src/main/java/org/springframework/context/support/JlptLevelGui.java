@@ -262,12 +262,8 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 				//
 				setText(jlCompare, matched ? "Matched" : "Not Matched");
 				//
-				if (jlCompare != null) {
-					//
-					jlCompare.setForeground(matched ? Color.GREEN : Color.RED);
-					//
-				} // if
-					//
+				setForeground(jlCompare, matched ? Color.GREEN : Color.RED);
+				//
 			} catch (final IllegalAccessException e) {
 				//
 				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
@@ -336,6 +332,12 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 	private static void setText(final JLabel instance, final String text) {
 		if (instance != null) {
 			instance.setText(text);
+		}
+	}
+
+	private static void setForeground(final Component instance, final Color color) {
+		if (instance != null) {
+			instance.setForeground(color);
 		}
 	}
 
