@@ -2,6 +2,9 @@ package org.springframework.context.support;
 
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.reflect.Proxy;
@@ -22,6 +25,7 @@ import javax.swing.JTextField;
 import javax.swing.ListModel;
 import javax.swing.text.JTextComponent;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
@@ -38,7 +42,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 
 	private List<String> jlptLevels = null;
 
-	private AbstractButton btnExportJson = null;
+	private AbstractButton btnExportJson, btnCopy = null;
 
 	private JTextComponent tfJson = null;
 
@@ -75,11 +79,13 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		//
 		add(btnExportJson = new JButton("Export JSON"), wrap);
 		//
-		btnExportJson.addActionListener(this);
-		//
 		add(new JLabel("JSON"));
 		//
 		add(tfJson = new JTextField());
+		//
+		add(btnCopy = new JButton("Copy"));
+		//
+		addActionListener(this, btnExportJson, btnCopy);
 		//
 		final List<Component> cs = Arrays.asList(jList, btnExportJson, tfJson);
 		//
@@ -92,6 +98,24 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 			setPreferredWidth((int) preferredSize.getWidth(), cs);
 			//
 		} // if
+			//
+	}
+
+	private static void addActionListener(final ActionListener actionListener, final AbstractButton... bs) {
+		//
+		AbstractButton b = null;
+		//
+		for (int i = 0; bs != null && i < bs.length; i++) {
+			//
+			if ((b = bs[i]) == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			b.addActionListener(actionListener);
+			//
+		} // for
 			//
 	}
 
@@ -135,7 +159,9 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 	@Override
 	public void actionPerformed(final ActionEvent evt) {
 		//
-		if (Objects.equals(evt != null ? evt.getSource() : null, btnExportJson)) {
+		final Object source = evt != null ? evt.getSource() : null;
+		//
+		if (Objects.equals(source, btnExportJson)) {
 			//
 			final ObjectMapper objectMapper = getObjectMapper();
 			//
@@ -149,8 +175,40 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 				//
 			} // try
 				//
+		} else if (Objects.equals(source, btnCopy)) {
+			//
+			final Clipboard clipboard = getSystemClipboard(getToolkit());
+			//
+			if (clipboard != null &&
+			//
+			// non test
+			//
+					forName("org.junit.jupiter.api.Test") == null
+			//
+			) {
+				//
+				clipboard.setContents(new StringSelection(getText(tfJson)), null);
+				//
+			} // if
+				//
 		} // if
 			//
+	}
+
+	private static Clipboard getSystemClipboard(final Toolkit instance) {
+		return instance != null ? instance.getSystemClipboard() : null;
+	}
+
+	private static Class<?> forName(final String className) {
+		try {
+			return StringUtils.isNotBlank(className) ? Class.forName(className) : null;
+		} catch (final ClassNotFoundException e) {
+			return null;
+		}
+	}
+
+	private static String getText(final JTextComponent instance) {
+		return instance != null ? instance.getText() : null;
 	}
 
 	private static void setText(final JTextComponent instance, final String text) {

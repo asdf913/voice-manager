@@ -3,6 +3,8 @@ package org.springframework.context.support;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.reflect.Constructor;
@@ -14,7 +16,10 @@ import java.util.Collections;
 import java.util.Objects;
 import java.util.function.Predicate;
 
+import javax.swing.AbstractButton;
+import javax.swing.JButton;
 import javax.swing.JTextField;
+import javax.swing.text.JTextComponent;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.jupiter.api.Assertions;
@@ -28,7 +33,8 @@ import com.google.common.reflect.Reflection;
 class JlptLevelGuiTest {
 
 	private static Method METHOD_TO_ARRAY, METHOD_GET_CLASS, METHOD_TEST, METHOD_GET_PREFERRED_SIZE,
-			METHOD_SET_PREFERRED_WIDTH = null;
+			METHOD_SET_PREFERRED_WIDTH, METHOD_FOR_NAME, METHOD_GET_TEXT, METHOD_GET_SYSTEM_CLIP_BOARD,
+			METHOD_ADD_ACTION_LISTENER = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -45,6 +51,15 @@ class JlptLevelGuiTest {
 		//
 		(METHOD_SET_PREFERRED_WIDTH = clz.getDeclaredMethod("setPreferredWidth", Integer.TYPE, Iterable.class))
 				.setAccessible(true);
+		//
+		(METHOD_FOR_NAME = clz.getDeclaredMethod("forName", String.class)).setAccessible(true);
+		//
+		(METHOD_GET_TEXT = clz.getDeclaredMethod("getText", JTextComponent.class)).setAccessible(true);
+		//
+		(METHOD_GET_SYSTEM_CLIP_BOARD = clz.getDeclaredMethod("getSystemClipboard", Toolkit.class)).setAccessible(true);
+		//
+		(METHOD_ADD_ACTION_LISTENER = clz.getDeclaredMethod("addActionListener", ActionListener.class,
+				AbstractButton[].class)).setAccessible(true);
 		//
 	}
 
@@ -129,6 +144,18 @@ class JlptLevelGuiTest {
 		} // if
 			//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, null));
+		//
+		// btnCopy
+		//
+		final AbstractButton btnCopy = new JButton();
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "btnCopy", btnCopy, true);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnCopy, 0, null)));
 		//
 	}
 
@@ -236,6 +263,91 @@ class JlptLevelGuiTest {
 	private static void setPreferredWidth(final int width, final Iterable<Component> cs) throws Throwable {
 		try {
 			METHOD_SET_PREFERRED_WIDTH.invoke(null, width, cs);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testForName() throws Throwable {
+		//
+		Assertions.assertNull(forName(null));
+		//
+		Assertions.assertNull(forName("a"));
+		//
+	}
+
+	private static Class<?> forName(final String className) throws Throwable {
+		try {
+			final Object obj = METHOD_FOR_NAME.invoke(null, className);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Class<?>) {
+				return (Class<?>) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetText() throws Throwable {
+		//
+		Assertions.assertNull(getText(null));
+		//
+		Assertions.assertEquals("", getText(new JTextField()));
+		//
+	}
+
+	private static String getText(final JTextComponent instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_TEXT.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetSystemClipboard() throws Throwable {
+		//
+		Assertions.assertNull(getSystemClipboard(null));
+		//
+	}
+
+	private static Clipboard getSystemClipboard(final Toolkit instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_SYSTEM_CLIP_BOARD.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Clipboard) {
+				return (Clipboard) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testAddActionListener() {
+		//
+		Assertions.assertDoesNotThrow(() -> addActionListener(null, (AbstractButton[]) null));
+		//
+		Assertions.assertDoesNotThrow(() -> addActionListener(null, (AbstractButton) null));
+		//
+	}
+
+	private static void addActionListener(final ActionListener actionListener, final AbstractButton... bs)
+			throws Throwable {
+		try {
+			METHOD_ADD_ACTION_LISTENER.invoke(null, actionListener, bs);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
