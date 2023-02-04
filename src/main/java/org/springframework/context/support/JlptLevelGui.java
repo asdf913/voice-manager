@@ -12,7 +12,9 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.lang.reflect.Executable;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.time.Duration;
@@ -237,8 +239,8 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 					testAndApply(Objects::nonNull,
 							getDeclaredMethods(forName("org.springframework.beans.factory.JlptLevelListFactoryBean")),
 							Arrays::stream, null),
-					m -> m != null && Objects.equals(m.getName(), "getObjectByUrl")
-							&& Arrays.equals(new Class<?>[] { String.class, Duration.class }, m.getParameterTypes())));
+					m -> Boolean.logicalAnd(Objects.equals(getName(m), "getObjectByUrl"),
+							Arrays.equals(new Class<?>[] { String.class, Duration.class }, getParameterTypes(m)))));
 			//
 			final int size = IterableUtils.size(ms);
 			//
@@ -288,6 +290,18 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 
 	private static Method[] getDeclaredMethods(final Class<?> instance) {
 		return instance != null ? instance.getDeclaredMethods() : null;
+	}
+
+	private static String getName(final Member instance) {
+		return instance != null
+				? instance.getName()
+						: null;
+	}
+
+	private static Class<?>[] getParameterTypes(final Executable instance) {
+		return instance != null 
+				? instance.getParameterTypes()
+						: null;
 	}
 
 	private static <T> Stream<T> filter(final Stream<T> instance, final Predicate<? super T> predicate) {

@@ -8,8 +8,10 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Executable;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Collections;
@@ -38,7 +40,7 @@ class JlptLevelGuiTest {
 	private static Method METHOD_TO_ARRAY, METHOD_GET_CLASS, METHOD_TEST, METHOD_GET_PREFERRED_SIZE,
 			METHOD_SET_PREFERRED_WIDTH, METHOD_FOR_NAME, METHOD_GET_TEXT, METHOD_GET_SYSTEM_CLIP_BOARD,
 			METHOD_ADD_ACTION_LISTENER, METHOD_GET_DECLARED_METHODS, METHOD_FILTER, METHOD_TO_LIST, METHOD_INVOKE,
-			METHOD_IIF = null;
+			METHOD_IIF, METHOD_GET_NAME, METHOD_GET_PARAMETER_TYPES = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -76,6 +78,10 @@ class JlptLevelGuiTest {
 		//
 		(METHOD_IIF = clz.getDeclaredMethod("iif", Boolean.TYPE, Object.class, Object.class)).setAccessible(true);
 		//
+		(METHOD_GET_NAME = clz.getDeclaredMethod("getName", Member.class)).setAccessible(true);
+		//
+		(METHOD_GET_PARAMETER_TYPES = clz.getDeclaredMethod("getParameterTypes", Executable.class)).setAccessible(true);
+		//
 	}
 
 	private class IH implements InvocationHandler {
@@ -85,7 +91,7 @@ class JlptLevelGuiTest {
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
-			final String methodName = method != null ? method.getName() : null;
+			final String methodName = getName(method) ;
 			//
 			if (proxy instanceof Collection) {
 				//
@@ -105,7 +111,7 @@ class JlptLevelGuiTest {
 					//
 			} // if
 				//
-			throw new Throwable(method != null ? method.getName() : null);
+			throw new Throwable(methodName);
 			//
 		}
 
@@ -497,6 +503,48 @@ class JlptLevelGuiTest {
 	private static <T> T iif(final boolean condition, final T trueValue, final T falseValue) throws Throwable {
 		try {
 			return (T) METHOD_IIF.invoke(null, condition, trueValue, falseValue);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetName() throws Throwable {
+		//
+		Assertions.assertNull(getName(null));
+		//
+	}
+
+	private static String getName(final Member instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_NAME.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetParameterTypes() throws Throwable {
+		//
+		Assertions.assertNull(getParameterTypes(null));
+		//
+	}
+
+	private static Class<?>[] getParameterTypes(final Executable instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_PARAMETER_TYPES.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Class<?>[]) {
+				return (Class<?>[]) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
