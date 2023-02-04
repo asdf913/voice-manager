@@ -10,6 +10,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.ListModel;
 
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
@@ -41,8 +42,10 @@ public class JlptLevelGui extends JFrame implements InitializingBean {
 			//
 		add(new JLabel("JLPT Level(s)"));
 		//
-		add(new JList<String>(testAndApply(Objects::nonNull, toArray(jlptLevels, new String[] {}),
-				DefaultComboBoxModel::new, x -> new DefaultComboBoxModel<String>())));
+		final ListModel<String> listModel = testAndApply(Objects::nonNull, toArray(jlptLevels, new String[] {}),
+				DefaultComboBoxModel::new, null);
+		//
+		add(listModel != null ? new JList<>(listModel) : new JList<>());
 		//
 	}
 
