@@ -260,9 +260,9 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 					//
 				final boolean matched = Objects.equals(invoke(m, null, url, null), jlptLevels);
 				//
-				setText(jlCompare, matched ? "Matched" : "Not Matched");
+				setText(jlCompare, iif(matched, "Matched", "Not Matched"));
 				//
-				setForeground(jlCompare, matched ? Color.GREEN : Color.RED);
+				setForeground(jlCompare, iif(matched, Color.GREEN, Color.RED));
 				//
 			} catch (final IllegalAccessException e) {
 				//
@@ -339,6 +339,10 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		if (instance != null) {
 			instance.setForeground(color);
 		}
+	}
+
+	private static <T> T iif(final boolean condition, final T trueValue, final T falseValue) {
+		return condition ? trueValue : falseValue;
 	}
 
 	private static <T> T[] toArray(final Collection<T> instance, final T[] array) {

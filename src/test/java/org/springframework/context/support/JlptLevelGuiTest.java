@@ -37,8 +37,8 @@ class JlptLevelGuiTest {
 
 	private static Method METHOD_TO_ARRAY, METHOD_GET_CLASS, METHOD_TEST, METHOD_GET_PREFERRED_SIZE,
 			METHOD_SET_PREFERRED_WIDTH, METHOD_FOR_NAME, METHOD_GET_TEXT, METHOD_GET_SYSTEM_CLIP_BOARD,
-			METHOD_ADD_ACTION_LISTENER, METHOD_GET_DECLARED_METHODS, METHOD_FILTER, METHOD_TO_LIST,
-			METHOD_INVOKE = null;
+			METHOD_ADD_ACTION_LISTENER, METHOD_GET_DECLARED_METHODS, METHOD_FILTER, METHOD_TO_LIST, METHOD_INVOKE,
+			METHOD_IIF = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -73,6 +73,8 @@ class JlptLevelGuiTest {
 		//
 		(METHOD_INVOKE = clz.getDeclaredMethod("invoke", Method.class, Object.class, Object[].class))
 				.setAccessible(true);
+		//
+		(METHOD_IIF = clz.getDeclaredMethod("iif", Boolean.TYPE, Object.class, Object.class)).setAccessible(true);
 		//
 	}
 
@@ -480,6 +482,21 @@ class JlptLevelGuiTest {
 	private static Object invoke(final Method method, final Object instance, final Object... args) throws Throwable {
 		try {
 			return METHOD_INVOKE.invoke(null, method, instance, args);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testIif() throws Throwable {
+		//
+		Assertions.assertNull(iif(false, null, null));
+		//
+	}
+
+	private static <T> T iif(final boolean condition, final T trueValue, final T falseValue) throws Throwable {
+		try {
+			return (T) METHOD_IIF.invoke(null, condition, trueValue, falseValue);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
