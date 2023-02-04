@@ -10598,7 +10598,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			backGroundColor = null;
 			//
-			if ((domNode = get(domNodes, i)) != null && StringUtils.isNotBlank(style = domNode.attr("style"))) {
+			if (Boolean.logicalAnd((domNode = get(domNodes, i)) != null,
+					StringUtils.isNotBlank(style = attr(domNode, "style")))) {
 				//
 				backGroundColor = IterableUtils.size(cssDeclarations = toList(
 						filter(stream(CSSReaderDeclarationList.readFromString(style, ECSSVersion.CSS30)),
