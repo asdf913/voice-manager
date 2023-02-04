@@ -203,6 +203,7 @@ import com.google.common.reflect.Reflection;
 import com.healthmarketscience.jackcess.Database;
 import com.healthmarketscience.jackcess.Database.FileFormat;
 import com.healthmarketscience.jackcess.impl.DatabaseImpl.FileFormatDetails;
+import com.helger.css.ECSSVersion;
 import com.helger.css.decl.CSSDeclaration;
 import com.helger.css.decl.CSSExpression;
 import com.j256.simplemagic.ContentInfo;
@@ -957,7 +958,7 @@ class VoiceManagerTest {
 		//
 		(METHOD_GETCSS_DECLARATION_BY_ATTRIBUTE_AND_CSS_PROPERTY = clz.getDeclaredMethod(
 				"getCSSDeclarationByAttributeAndCssProperty", org.jsoup.nodes.Element.class, String.class,
-				String.class)).setAccessible(true);
+				ECSSVersion.class, String.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -8313,7 +8314,7 @@ class VoiceManagerTest {
 	@Test
 	void testGetCSSDeclarationByProperty() throws Throwable {
 		//
-		Assertions.assertNull(getCSSDeclarationByAttributeAndCssProperty(null, null, null));
+		Assertions.assertNull(getCSSDeclarationByAttributeAndCssProperty(null, null, null, null));
 		//
 		final String attribute = "style";
 		//
@@ -8325,7 +8326,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(getCSSDeclarationByAttributeAndCssProperty(element, attribute, backGroundColor));
+		Assertions.assertNull(getCSSDeclarationByAttributeAndCssProperty(element, attribute, null, backGroundColor));
 		//
 		if (element != null) {
 			//
@@ -8333,15 +8334,15 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertNotNull(getCSSDeclarationByAttributeAndCssProperty(element, attribute, backGroundColor));
+		Assertions.assertNotNull(getCSSDeclarationByAttributeAndCssProperty(element, attribute, null, backGroundColor));
 		//
 	}
 
 	private static CSSDeclaration getCSSDeclarationByAttributeAndCssProperty(final org.jsoup.nodes.Element element,
-			final String attribute, final String cssProperty) throws Throwable {
+			final String attribute, final ECSSVersion ecssVersion, final String cssProperty) throws Throwable {
 		try {
 			final Object obj = METHOD_GETCSS_DECLARATION_BY_ATTRIBUTE_AND_CSS_PROPERTY.invoke(null, element, attribute,
-					cssProperty);
+					ecssVersion, cssProperty);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof CSSDeclaration) {

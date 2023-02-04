@@ -10526,6 +10526,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			ObjectMap.setObject(objectMap, Workbook.class, workbook = getIfNull(workbook, XSSFWorkbook::new));
 			//
+			ObjectMap.setObject(objectMap, ECSSVersion.class, ECSSVersion.CSS30);
+			//
 			final String xPathFormat = StringUtils.prependIfMissing(StringUtils.joinWith("/", "h3",
 					"span[text()=\"%1$s\"]", "..", "following-sibling::table[1]", "tbody"), "//");
 			//
@@ -10602,6 +10604,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final Elements elements = ObjectMap.getObject(objectMap, Elements.class);
 		//
+		final ECSSVersion eccsEcssVersion = ObjectUtils.defaultIfNull(ObjectMap.getObject(objectMap, ECSSVersion.class),
+				ECSSVersion.CSS30);
+		//
 		for (int i = 0; i < IterableUtils.size(elements); i++) {
 			//
 			if ((sheet = getIfNull(sheet, () -> createSheet(workbook, sheetName))) != null
@@ -10614,7 +10619,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			tds = children(domNode = get(elements, i));
 			//
 			backGroundColorString = getExpressionAsCSSString(
-					getCSSDeclarationByAttributeAndCssProperty(domNode, "style", "background-color"));
+					getCSSDeclarationByAttributeAndCssProperty(domNode, "style", eccsEcssVersion, "background-color"));
 			//
 			for (int j = 0; j < IterableUtils.size(tds); j++) {
 				//
@@ -10658,7 +10663,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	private static CSSDeclaration getCSSDeclarationByAttributeAndCssProperty(final org.jsoup.nodes.Element element,
-			final String attribute, final String cssProperty) {
+			final String attribute, final ECSSVersion ecssVersion, final String cssProperty) {
 		//
 		final String style = attr(element, attribute);
 		//
@@ -10666,9 +10671,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		if (StringUtils.isNotBlank(style)) {
 			//
-			final List<CSSDeclaration> cssDeclarations = toList(
-					filter(stream(CSSReaderDeclarationList.readFromString(style, ECSSVersion.CSS30)),
-							x -> Objects.equals(getProperty(x), cssProperty)));
+			final List<CSSDeclaration> cssDeclarations = toList(filter(
+					stream(CSSReaderDeclarationList.readFromString(style,
+							ObjectUtils.defaultIfNull(ecssVersion, ECSSVersion.CSS30))),
+					x -> Objects.equals(getProperty(x), cssProperty)));
 			//
 			final int size = IterableUtils.size(cssDeclarations);
 			//
