@@ -68,47 +68,47 @@ public class IniAsPropertiesResource implements Resource, ApplicationEventPublis
 		//
 		final Ini ini = new Ini();
 		//
-		URL url = null;
+		// org.springframework.core.io.UrlResource.url
 		//
-		if (resource != null) {
+		List<Field> fs = toList(filter(testAndApply(Objects::nonNull,
+				testAndApply(Objects::nonNull, getClass(resource), FieldUtils::getAllFields, null), Arrays::stream,
+				null), x -> Objects.equals(URL.class, getType(x))));
+		//
+		Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		//
+		setAccessible(f, true);
+		//
+		URLConnection urlConnection = null;
+		//
+		try {
 			//
-			final List<Field> fs = toList(filter(testAndApply(Objects::nonNull,
-					testAndApply(Objects::nonNull, getClass(resource), FieldUtils::getAllFields, null), Arrays::stream,
-					null), x -> Objects.equals(URL.class, getType(x))));
+			urlConnection = openConnection(
+					cast(URL.class, Boolean.logicalOr(isStatic(f), resource != null) ? get(f, resource) : null));
 			//
-			final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		} catch (final IllegalAccessException e) {
 			//
-			setAccessible(f, true);
+			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
 			//
-			try {
-				//
-				url = cast(URL.class, Boolean.logicalOr(isStatic(f), resource != null) ? get(f, resource) : null);
-				//
-			} catch (final IllegalAccessException e) {
-				//
-				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
-				//
-			} // try
-				//
-		} // if
+		} // try
 			//
-		if (url != null) {
+		if (urlConnection != null) {
 			//
-			final URLConnection urlConnection = url.openConnection();
+			// sun.net.www.protocol.file.FileURLConnection.file
 			//
-			final List<Field> fs = toList(filter(testAndApply(Objects::nonNull,
-					testAndApply(Objects::nonNull, getClass(urlConnection), FieldUtils::getAllFields, null),
-					Arrays::stream, null), f -> Objects.equals(File.class, getType(f))));
-			//
-			final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
-			//
-			if (exists(cast(File.class,
-					Boolean.logicalAnd(urlConnection != null, f != null) ? Narcissus.getObjectField(urlConnection, f)
-							: null))) {
+			if (exists(
+					cast(File.class,
+							Boolean.logicalAnd(urlConnection != null,
+									(f = testAndApply(x -> IterableUtils.size(x) == 1, fs = toList(filter(
+											testAndApply(Objects::nonNull,
+													testAndApply(Objects::nonNull, getClass(urlConnection),
+															FieldUtils::getAllFields, null),
+													Arrays::stream, null),
+											x -> Objects.equals(File.class, getType(x)))), x -> IterableUtils.get(x, 0),
+											null)) != null) ? Narcissus.getObjectField(urlConnection, f) : null))) {
 				//
 				testAndAccept(Objects::nonNull, InputStreamSourceUtil.getInputStream(resource), ini::load);
 				//
-			} // try
+			} // if
 				//
 		} else {
 			//
@@ -173,6 +173,10 @@ public class IniAsPropertiesResource implements Resource, ApplicationEventPublis
 			//
 		throw new UnsupportedOperationException();
 		//
+	}
+
+	private static URLConnection openConnection(final URL instance) throws IOException {
+		return instance != null ? instance.openConnection() : null;
 	}
 
 	private static void publishEvent(final ApplicationEventPublisher instance, final ApplicationEvent event) {
