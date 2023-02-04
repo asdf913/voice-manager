@@ -231,6 +231,7 @@ import org.apache.poi.ss.usermodel.DataValidation;
 import org.apache.poi.ss.usermodel.DataValidationConstraint;
 import org.apache.poi.ss.usermodel.DataValidationHelper;
 import org.apache.poi.ss.usermodel.Drawing;
+import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.RichTextString;
 import org.apache.poi.ss.usermodel.Row;
@@ -243,6 +244,8 @@ import org.apache.poi.ss.usermodel.WorkbookUtil;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.util.LocaleID;
+import org.apache.poi.xssf.model.StylesTable;
+import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFDataValidationHelper;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.eclipse.jetty.http.HttpStatus;
@@ -309,6 +312,9 @@ import com.healthmarketscience.jackcess.impl.DatabaseImpl;
 import com.healthmarketscience.jackcess.impl.DatabaseImpl.FileFormatDetails;
 import com.healthmarketscience.jackcess.impl.JetFormat;
 import com.healthmarketscience.jackcess.util.ImportUtil;
+import com.helger.css.ECSSVersion;
+import com.helger.css.decl.CSSDeclaration;
+import com.helger.css.reader.CSSReaderDeclarationList;
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
 import com.j256.simplemagic.ContentType;
@@ -10553,6 +10559,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static void addJoYoKanJiSheet(final Workbook workbook, final String sheetName, final Elements domNodes) {
 		//
+		final XSSFWorkbook xssfWorkbook = cast(XSSFWorkbook.class, workbook);
+		//
+		final StylesTable stylesTable = xssfWorkbook != null ? xssfWorkbook.getStylesSource() : null;
+		//
 		Sheet sheet = null;
 		//
 		Row row = null;
@@ -10565,6 +10575,18 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		Pattern pattern2 = null;
 		//
+		org.jsoup.nodes.Element domNode = null;
+		//
+		String style = null;
+		//
+		List<CSSDeclaration> cssDeclarations = null;
+		//
+		CSSDeclaration backGroundColor = null;
+		//
+		Cell cell = null;
+		//
+		CellStyle cellStyle = null;
+		//
 		for (int i = 0; i < IterableUtils.size(domNodes); i++) {
 			//
 			if ((sheet = getIfNull(sheet, () -> createSheet(workbook, sheetName))) != null
@@ -10574,7 +10596,21 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-			tds = children(get(domNodes, i));
+				// background-color
+				//
+			backGroundColor = null;
+			//
+			if ((domNode = get(domNodes, i)) != null && StringUtils.isNotBlank(style = domNode.attr("style"))) {
+				//
+				backGroundColor = IterableUtils.size(cssDeclarations = toList(
+						filter(stream(CSSReaderDeclarationList.readFromString(style, ECSSVersion.CSS30)),
+								x -> x != null && Objects.equals(x.getProperty(), "background-color")))) == 1
+										? IterableUtils.get(cssDeclarations, 0)
+										: null;
+				//
+			} // if
+				//
+			tds = children(domNode);
 			//
 			for (int j = 0; j < IterableUtils.size(tds); j++) {
 				//
@@ -10585,9 +10621,23 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
-				CellUtil.setCellValue(RowUtil.createCell(row, Math.max(row.getLastCellNum(), 0)),
+				CellUtil.setCellValue(cell = RowUtil.createCell(row, Math.max(row.getLastCellNum(), 0)),
 						StringUtils.trim(textContent));
 				//
+				if (cell != null && (cellStyle = createCellStyle(workbook)) != null && stylesTable != null
+						&& backGroundColor != null) {
+					//
+					cellStyle.setFillBackgroundColor(new XSSFColor(
+							new Color(Integer.parseInt(
+									StringUtils.substring(backGroundColor.getExpressionAsCSSString(), 1), 16)),
+							stylesTable.getIndexedColors()));
+					//
+					cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+					//
+					cell.setCellStyle(cellStyle);
+					//
+				} // if
+					//
 			} // for
 				//
 		} // for

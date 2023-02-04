@@ -274,6 +274,12 @@
 			<artifactId>java-ini-parser</artifactId>
 			<version>1.4</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.helger/ph-css -->
+		<dependency>
+			<groupId>com.helger</groupId>
+			<artifactId>ph-css</artifactId>
+			<version>7.0.0</version>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
