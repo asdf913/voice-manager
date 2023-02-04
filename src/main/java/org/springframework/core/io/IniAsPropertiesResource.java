@@ -24,7 +24,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Properties;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -41,23 +40,27 @@ import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.javatuples.Unit;
 import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
+import org.springframework.context.PayloadApplicationEvent;
 
 import com.github.vincentrussell.ini.Ini;
 
 import io.github.toolfactory.narcissus.Narcissus;
 
-public class IniAsPropertiesResource implements Resource {
+public class IniAsPropertiesResource implements Resource, ApplicationEventPublisherAware {
+
+	private ApplicationEventPublisher applicationEventPublisher = null;
 
 	private Resource resource = null;
-
-	private AtomicReference<Object> section = null;
 
 	public IniAsPropertiesResource(final Resource resource) {
 		this.resource = resource;
 	}
 
-	public void setSection(final AtomicReference<Object> section) {
-		this.section = section;
+	@Override
+	public void setApplicationEventPublisher(final ApplicationEventPublisher applicationEventPublisher) {
+		this.applicationEventPublisher = applicationEventPublisher;
 	}
 
 	@Override
@@ -125,8 +128,12 @@ public class IniAsPropertiesResource implements Resource {
 			//
 		if (CollectionUtils.isEmpty(sections)) {
 			//
-			set(section, Unit.with(null));
-			//
+			if (applicationEventPublisher != null) {
+				//
+				applicationEventPublisher.publishEvent(new PayloadApplicationEvent<>("ini", Unit.with(null)));
+				//
+			} // if
+				//
 			return toInputStream(new Properties());
 			//
 		} else if (size == 1) {
@@ -140,8 +147,12 @@ public class IniAsPropertiesResource implements Resource {
 			properties.putAll(map.entrySet().stream()
 					.collect(Collectors.toMap(IniAsPropertiesResource::getKey, v -> toString(getValue(v)))));
 			//
-			set(section, Unit.with(sectionString));
-			//
+			if (applicationEventPublisher != null) {
+				//
+				applicationEventPublisher.publishEvent(new PayloadApplicationEvent<>("ini", Unit.with(sectionString)));
+				//
+			} // if
+				//
 			return toInputStream(properties);
 			//
 		} // if
@@ -327,12 +338,6 @@ public class IniAsPropertiesResource implements Resource {
 
 	private static Object getSelectedItem(final JComboBox<?> instance) {
 		return instance != null ? instance.getSelectedItem() : null;
-	}
-
-	private static <V> void set(final AtomicReference<V> instance, final V newValue) {
-		if (instance != null) {
-			instance.set(newValue);
-		}
 	}
 
 	private static InputStream toInputStream(final Properties properties) throws IOException {

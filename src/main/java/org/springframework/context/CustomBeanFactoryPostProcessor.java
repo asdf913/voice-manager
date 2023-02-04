@@ -17,7 +17,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -49,7 +48,8 @@ import org.springframework.core.io.InputStreamSourceUtil;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceUtil;
 
-public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFactoryPostProcessor, Ordered {
+public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFactoryPostProcessor, Ordered,
+		ApplicationListener<PayloadApplicationEvent<?>> {
 
 	private static Logger LOG = LoggerFactory.getLogger(CustomBeanFactoryPostProcessor.class);
 
@@ -58,8 +58,6 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 	private Resource tableSql = null;
 
 	private String tableSqlEncoding = null;
-
-	private AtomicReference<Object> iniSection = null;
 
 	@Override
 	public int getOrder() {
@@ -71,6 +69,27 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 		this.environment = environment;
 	}
 
+	@Override
+	public void onApplicationEvent(final PayloadApplicationEvent<?> event) {
+		//
+		if (event != null && Objects.equals(event.getSource(), "ini")) {
+			//
+			final Object payload = event.getPayload();
+			//
+			if (LOG != null) {
+				//
+				LOG.info("iniSection={}", payload);
+				//
+			} else {
+				//
+				println("iniSection=" + payload);
+				//
+			} // if
+				//
+		} // if
+			//
+	}
+
 	public void setTableSql(final Resource tableSql) {
 		this.tableSql = tableSql;
 	}
@@ -79,23 +98,9 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 		this.tableSqlEncoding = tableSqlEncoding;
 	}
 
-	public void setIniSection(final AtomicReference<Object> iniSection) {
-		this.iniSection = iniSection;
-	}
-
 	@Override
 	public void postProcessBeanFactory(final ConfigurableListableBeanFactory beanFactory) {
 		//
-		if (LOG != null) {
-			//
-			LOG.info("iniSection={}", iniSection);
-			//
-		} else {
-			//
-			println("iniSection=" + iniSection);
-			//
-		} // if
-			//
 		addPropertySourceToPropertySourcesToLast(environment,
 				ListableBeanFactoryUtil.getBeansOfType(beanFactory, PropertySourcesPlaceholderConfigurer.class));
 		//

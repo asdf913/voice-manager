@@ -3,9 +3,6 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
 
-	<bean id="iniSection"
-		class="java.util.concurrent.atomic.AtomicReference"></bean>
-
 	<bean
 		class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
 		<property name="ignoreResourceNotFound" value="true" />
@@ -17,7 +14,6 @@
 					class="org.springframework.core.io.IniAsPropertiesResource">
 					<constructor-arg index="0"
 						value="file:configuration.ini" />
-					<property name="section" ref="iniSection" />
 				</bean>
 			</list>
 		</property>
@@ -28,7 +24,6 @@
 		<property name="tableSql" value="classpath:table.sql" />
 		<property name="tableSqlEncoding"
 			value="${org.springframework.context.CustomBeanFactoryPostProcessor.tableSqlEncoding}" />
-		<property name="iniSection" ref="iniSection" />
 	</bean>
 
 	<!-- -->

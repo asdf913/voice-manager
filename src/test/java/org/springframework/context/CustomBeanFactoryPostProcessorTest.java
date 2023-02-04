@@ -323,6 +323,25 @@ class CustomBeanFactoryPostProcessorTest {
 	}
 
 	@Test
+	void testOnApplicationEvent()
+			throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+		//
+		Assertions.assertDoesNotThrow(() -> onApplicationEvent(instance, null));
+		//
+		Assertions.assertDoesNotThrow(() -> onApplicationEvent(instance, new PayloadApplicationEvent<>("", "")));
+		//
+		Assertions.assertDoesNotThrow(() -> onApplicationEvent(instance, new PayloadApplicationEvent<>("ini", "")));
+		//
+	}
+
+	private static <E extends ApplicationEvent> void onApplicationEvent(final ApplicationListener<E> instance,
+			final E event) {
+		if (instance != null) {
+			instance.onApplicationEvent(event);
+		}
+	}
+
+	@Test
 	void testAddPropertySourceToPropertySourcesToLast() throws IllegalAccessException {
 		//
 		Assertions.assertDoesNotThrow(
