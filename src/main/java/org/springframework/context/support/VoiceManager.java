@@ -10526,7 +10526,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			ObjectMap.setObject(objectMap, Workbook.class, workbook = getIfNull(workbook, XSSFWorkbook::new));
 			//
-			final String xPathFormat = "//h3/span[text()=\"%1$s\"]/../following-sibling::table[1]/tbody";
+			final String xPathFormat = StringUtils.prependIfMissing(StringUtils.joinWith("/", "h3",
+					"span[text()=\"%1$s\"]", "..", "following-sibling::table[1]", "tbody"), "//");
 			//
 			String sheetName = null;
 			//
