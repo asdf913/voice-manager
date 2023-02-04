@@ -25,6 +25,13 @@ class ObjectMapperUtilTest {
 	}
 
 	@Test
+	void testWriteValueAsString() throws JsonProcessingException {
+		//
+		Assertions.assertNull(ObjectMapperUtil.writeValueAsString(null, null));
+		//
+	}
+
+	@Test
 	void testWriteValueAsBytes() throws JsonProcessingException {
 		//
 		Assertions.assertNull(ObjectMapperUtil.writeValueAsBytes(null, null));

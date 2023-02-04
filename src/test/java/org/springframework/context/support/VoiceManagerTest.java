@@ -190,6 +190,7 @@ import org.w3c.dom.NodeList;
 import org.zeroturnaround.zip.ZipUtil;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import com.google.common.base.Predicates;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableMultimap;
@@ -260,9 +261,9 @@ class VoiceManagerTest {
 			METHOD_GET_DOCUMENT_ELEMENT, METHOD_GET_CHILD_NODES, METHOD_GET_NAMED_ITEM, METHOD_GET_TEXT_CONTENT,
 			METHOD_GET_NAME_FILE, METHOD_GET_NAME_CLASS, METHOD_GET_NAME_PACKAGE, METHOD_GET_PASS_WORD,
 			METHOD_GET_SUPPLIER, METHOD_GET_LOOKUP, METHOD_GET_LIST, METHOD_GET_MAP,
-			METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK, METHOD_WRITE_VALUE_AS_STRING,
-			METHOD_CREATE_DRAWING_PATRIARCH, METHOD_GET_CREATION_HELPER, METHOD_CREATE_CELL_COMMENT,
-			METHOD_CREATE_CLIENT_ANCHOR, METHOD_CREATE_RICH_TEXT_STRING, METHOD_SET_CELL_COMMENT, METHOD_SET_AUTHOR,
+			METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK, METHOD_CREATE_DRAWING_PATRIARCH,
+			METHOD_GET_CREATION_HELPER, METHOD_CREATE_CELL_COMMENT, METHOD_CREATE_CLIENT_ANCHOR,
+			METHOD_CREATE_RICH_TEXT_STRING, METHOD_SET_CELL_COMMENT, METHOD_SET_AUTHOR,
 			METHOD_TEST_AND_ACCEPT_PREDICATE, METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_FIND_FIELDS_BY_VALUE,
 			METHOD_GET_DECLARED_FIELDS, METHOD_GET_DECLARING_CLASS, METHOD_GET_PACKAGE, METHOD_BROWSE, METHOD_TO_URI,
 			METHOD_STOP, METHOD_ELAPSED, METHOD_GET_DECLARED_CLASSES, METHOD_GET_DLL_PATH, METHOD_GET_RATE0,
@@ -612,9 +613,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK = clz
 				.getDeclaredMethod("createMicrosoftSpeechObjectLibraryWorkbook", SpeechApi.class, String[].class))
-				.setAccessible(true);
-		//
-		(METHOD_WRITE_VALUE_AS_STRING = clz.getDeclaredMethod("writeValueAsString", ObjectMapper.class, Object.class))
 				.setAccessible(true);
 		//
 		(METHOD_CREATE_DRAWING_PATRIARCH = clz.getDeclaredMethod("createDrawingPatriarch", Sheet.class))
@@ -1826,7 +1824,7 @@ class VoiceManagerTest {
 		//
 		set(mp3Tags, instance, null);
 		//
-		final String json = objectMapper != null ? objectMapper.writeValueAsString(Collections.singleton(EMPTY)) : null;
+		final String json = ObjectMapperUtil.writeValueAsString(objectMapper, Collections.singleton(EMPTY));
 		//
 		Assertions.assertDoesNotThrow(() -> instance.setMp3Tags(json));
 		//
@@ -5446,27 +5444,6 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof Workbook) {
 				return (Workbook) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testWriteValueAsString() throws Throwable {
-		//
-		Assertions.assertNull(writeValueAsString(null, null));
-		//
-	}
-
-	private static String writeValueAsString(final ObjectMapper instance, final Object value) throws Throwable {
-		try {
-			final Object obj = METHOD_WRITE_VALUE_AS_STRING.invoke(null, instance, value);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

@@ -6799,7 +6799,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				final List<?> list = getObjectList(om, getText(jtf));
 				//
-				setText(jlListNames, writeValueAsString(om, list));
+				setText(jlListNames, ObjectMapperUtil.writeValueAsString(om, list));
 				//
 				setText(jlListNameCount, Integer.toString(IterableUtils.size(list)));
 				//
@@ -6877,11 +6877,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
-	}
-
-	private static String writeValueAsString(final ObjectMapper instance, final Object value)
-			throws JsonProcessingException {
-		return instance != null ? instance.writeValueAsString(value) : null;
 	}
 
 	private static void setBackground(final Component instance, final Color color) {

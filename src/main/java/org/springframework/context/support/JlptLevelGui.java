@@ -33,6 +33,7 @@ import org.springframework.beans.factory.InitializingBean;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapperUtil;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -163,11 +164,9 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		//
 		if (Objects.equals(source, btnExportJson)) {
 			//
-			final ObjectMapper om = getObjectMapper();
-			//
 			try {
 				//
-				setText(tfJson, om != null ? om.writeValueAsString(jlptLevels) : null);
+				setText(tfJson, ObjectMapperUtil.writeValueAsString(getObjectMapper(), jlptLevels));
 				//
 			} catch (JsonProcessingException e) {
 				//

@@ -15,6 +15,10 @@ public interface ObjectMapperUtil {
 		//
 	}
 
+	static String writeValueAsString(final ObjectMapper instance, final Object value) throws JsonProcessingException {
+		return instance != null ? instance.writeValueAsString(value) : null;
+	}
+
 	static byte[] writeValueAsBytes(final ObjectMapper instance, final Object value) throws JsonProcessingException {
 		return instance != null ? instance.writeValueAsBytes(value) : null;
 	}
