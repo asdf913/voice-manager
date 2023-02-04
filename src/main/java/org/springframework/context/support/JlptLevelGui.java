@@ -163,11 +163,11 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		//
 		if (Objects.equals(source, btnExportJson)) {
 			//
-			final ObjectMapper objectMapper = getObjectMapper();
+			final ObjectMapper om = getObjectMapper();
 			//
 			try {
 				//
-				setText(tfJson, objectMapper != null ? objectMapper.writeValueAsString(jlptLevels) : null);
+				setText(tfJson, om != null ? om.writeValueAsString(jlptLevels) : null);
 				//
 			} catch (JsonProcessingException e) {
 				//
