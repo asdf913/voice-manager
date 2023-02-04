@@ -42,12 +42,6 @@ class JlptLevelGuiTest {
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
-			if (Objects.equals(method != null ? method.getReturnType() : null, Void.TYPE)) {
-				//
-				return null;
-				//
-			} // if
-				//
 			final String methodName = method != null ? method.getName() : null;
 			//
 			if (proxy instanceof Collection) {
@@ -55,7 +49,7 @@ class JlptLevelGuiTest {
 				if (Objects.equals(methodName, "toArray")) {
 					//
 					return array;
-//					/
+					//
 				} // if
 					//
 			} // if
