@@ -10584,6 +10584,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		CSSDeclaration backGroundColor = null;
 		//
+		String backGroundColorString = null;
+		//
 		Cell cell = null;
 		//
 		CellStyle cellStyle = null;
@@ -10626,13 +10628,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				CellUtil.setCellValue(cell = RowUtil.createCell(row, Math.max(row.getLastCellNum(), 0)),
 						StringUtils.trim(textContent));
 				//
-				if ((cellStyle = createCellStyle(workbook)) != null && backGroundColor != null) {
+				if ((cellStyle = createCellStyle(workbook)) != null && backGroundColor != null
+						&& StringUtils.isNotBlank(backGroundColorString = backGroundColor.getExpressionAsCSSString())) {
 					//
-					cellStyle
-							.setFillBackgroundColor(new XSSFColor(
-									new Color(Integer.parseInt(
-											StringUtils.substring(backGroundColor.getExpressionAsCSSString(), 1), 16)),
-									indexedColorMap));
+					cellStyle.setFillBackgroundColor(new XSSFColor(
+							new Color(Integer.parseInt(StringUtils.substring(backGroundColorString, 1), 16)),
+							indexedColorMap));
 					//
 					cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 					//
