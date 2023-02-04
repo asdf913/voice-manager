@@ -266,7 +266,7 @@ class VoiceManagerTest {
 			METHOD_GET_SUPPLIER, METHOD_GET_LOOKUP, METHOD_GET_LIST, METHOD_GET_MAP,
 			METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK, METHOD_CREATE_DRAWING_PATRIARCH,
 			METHOD_GET_CREATION_HELPER, METHOD_CREATE_CELL_COMMENT, METHOD_CREATE_CLIENT_ANCHOR,
-			METHOD_CREATE_RICH_TEXT_STRING, METHOD_SET_CELL_COMMENT, METHOD_SET_AUTHOR,
+			METHOD_CREATE_RICH_TEXT_STRING, METHOD_SET_CELL_COMMENT, METHOD_SET_CELL_STYLE, METHOD_SET_AUTHOR,
 			METHOD_TEST_AND_ACCEPT_PREDICATE, METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_FIND_FIELDS_BY_VALUE,
 			METHOD_GET_DECLARED_FIELDS, METHOD_GET_DECLARING_CLASS, METHOD_GET_PACKAGE, METHOD_BROWSE, METHOD_TO_URI,
 			METHOD_STOP, METHOD_ELAPSED, METHOD_GET_DECLARED_CLASSES, METHOD_GET_DLL_PATH, METHOD_GET_RATE0,
@@ -636,6 +636,9 @@ class VoiceManagerTest {
 				String.class)).setAccessible(true);
 		//
 		(METHOD_SET_CELL_COMMENT = clz.getDeclaredMethod("setCellComment", Cell.class, Comment.class))
+				.setAccessible(true);
+		//
+		(METHOD_SET_CELL_STYLE = clz.getDeclaredMethod("setCellStyle", Cell.class, CellStyle.class))
 				.setAccessible(true);
 		//
 		(METHOD_SET_AUTHOR = clz.getDeclaredMethod("setAuthor", Comment.class, String.class)).setAccessible(true);
@@ -1471,6 +1474,8 @@ class VoiceManagerTest {
 
 	private Workbook workbook = null;
 
+	private Cell cell = null;
+
 	private ObjectMapper objectMapper = null;
 
 	@BeforeEach
@@ -1517,6 +1522,8 @@ class VoiceManagerTest {
 		provider = Reflection.newProxy(Provider.class, ih);
 		//
 		workbook = Reflection.newProxy(Workbook.class, ih);
+		//
+		cell = Reflection.newProxy(Cell.class, ih);
 		//
 	}
 
@@ -3582,7 +3589,7 @@ class VoiceManagerTest {
 		//
 		this.ih.rows = Iterators.forArray(null, row);
 		//
-		this.ih.cells = Iterators.forArray(null, Reflection.newProxy(Cell.class, this.ih));
+		this.ih.cells = Iterators.forArray(null, cell);
 		//
 		this.ih.columnIndex = Integer.valueOf(0);
 		//
@@ -5570,6 +5577,21 @@ class VoiceManagerTest {
 	}
 
 	@Test
+	void testSetCellStyle() {
+		//
+		Assertions.assertDoesNotThrow(() -> setCellStyle(null, null));
+		//
+	}
+
+	private static void setCellStyle(final Cell instance, final CellStyle cellStyle) throws Throwable {
+		try {
+			METHOD_SET_CELL_STYLE.invoke(null, instance, cellStyle);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
 	void testSetAuthor() {
 		//
 		Assertions.assertDoesNotThrow(() -> setAuthor(null, null));
@@ -7381,8 +7403,7 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(getValueFromCell(objectMap));
 		//
-		Assertions.assertDoesNotThrow(
-				() -> invoke(setObject, objectMap, Cell.class, Reflection.newProxy(Cell.class, this.ih)));
+		Assertions.assertDoesNotThrow(() -> invoke(setObject, objectMap, Cell.class, cell));
 		//
 		Assertions.assertNull(getValueFromCell(objectMap));
 		//

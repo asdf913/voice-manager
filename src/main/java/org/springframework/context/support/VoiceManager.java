@@ -10623,8 +10623,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				CellUtil.setCellValue(cell = RowUtil.createCell(row, Math.max(row.getLastCellNum(), 0)),
 						StringUtils.trim(textContent));
 				//
-				if (cell != null && (cellStyle = createCellStyle(workbook)) != null && stylesTable != null
-						&& backGroundColor != null) {
+				if ((cellStyle = createCellStyle(workbook)) != null && stylesTable != null && backGroundColor != null) {
 					//
 					cellStyle.setFillBackgroundColor(new XSSFColor(
 							new Color(Integer.parseInt(
@@ -10633,7 +10632,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 					//
-					cell.setCellStyle(cellStyle);
+					setCellStyle(cell, cellStyle);
 					//
 				} // if
 					//
@@ -10996,6 +10995,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		}
 	}
 
+	private static void setCellStyle(final Cell instance, final CellStyle cellStyle) {
+		if (instance != null) {
+			instance.setCellStyle(cellStyle);
+		}
+	}
+
 	private static Workbook createWorkbook(final List<Voice> voices, final BooleanMap booleanMap,
 			final FailableSupplier<Workbook, RuntimeException> supplier)
 			throws IllegalAccessException, InvocationTargetException {
@@ -11252,7 +11257,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					cellStyle.setDataFormat(dataFormatIndex);
 					//
-					cell.setCellStyle(cellStyle);
+					setCellStyle(cell, cellStyle);
 					//
 				} // if
 					//
