@@ -18,7 +18,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -31,7 +30,6 @@ import java.util.stream.Stream;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.function.FailableConsumer;
@@ -39,6 +37,7 @@ import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.javatuples.Unit;
+import org.javatuples.valueintf.IValue0Util;
 import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
@@ -120,13 +119,7 @@ public class IniAsPropertiesResource implements Resource, ApplicationEventPublis
 		//
 		int size = IterableUtils.size(sections);
 		//
-		if (size > 1) {
-			//
-			size = getSection(GraphicsEnvironment.isHeadless(), System.getProperties(), System.console(), sections);
-			//
-		} // if
-			//
-		if (CollectionUtils.isEmpty(sections)) {
+		if (size == 0) {
 			//
 			if (applicationEventPublisher != null) {
 				//
@@ -157,17 +150,56 @@ public class IniAsPropertiesResource implements Resource, ApplicationEventPublis
 			//
 		} // if
 			//
+		if (size > 1) {
+			//
+			final String section = IValue0Util.getValue0(
+					getSection(GraphicsEnvironment.isHeadless(), System.getProperties(), System.console(), sections));
+			//
+			if (contains(sections, section)) {
+				//
+				final Map<String, Object> map = ini.getSectionSortedByKey(section);
+				//
+				final Properties properties = new Properties();
+				//
+				properties.putAll(map.entrySet().stream()
+						.collect(Collectors.toMap(IniAsPropertiesResource::getKey, v -> toString(getValue(v)))));
+				//
+				if (applicationEventPublisher != null) {
+					//
+					applicationEventPublisher.publishEvent(new PayloadApplicationEvent<>("ini", Unit.with(section)));
+					//
+				} // if
+					//
+				return toInputStream(properties);
+				//
+			} else {
+				//
+				if (applicationEventPublisher != null) {
+					//
+					applicationEventPublisher.publishEvent(new PayloadApplicationEvent<>("ini", Unit.with(null)));
+					//
+				} // if
+					//
+				return toInputStream(new Properties());
+				//
+			} // if
+				//
+		} // if
+			//
 		throw new UnsupportedOperationException();
 		//
 	}
 
-	private static int getSection(final boolean headless, final Map<?, ?> map, final Console console,
+	private static boolean contains(final Collection<?> items, final Object item) {
+		return items != null && items.contains(item);
+	}
+
+	private static Unit<String> getSection(final boolean headless, final Map<?, ?> map, final Console console,
 			final Collection<?> collection) {
 		//
-		if (map != null && map.containsKey("profile")
-				&& retainAll(collection, Collections.singleton(map.get("profile")))) {
+		if (map != null && map.containsKey("profile")) {
 			//
-			return IterableUtils.size(collection);
+			return Unit.with(toString(map.get("profile")));
 			//
 		} // if
 			//
@@ -181,12 +213,8 @@ public class IniAsPropertiesResource implements Resource, ApplicationEventPublis
 			//
 			JOptionPane.showMessageDialog(null, jcb, "Profile", JOptionPane.QUESTION_MESSAGE);
 			//
-			if (retainAll(collection, Collections.singleton(getSelectedItem(jcb)))) {
-				//
-				return IterableUtils.size(collection);
-				//
-			} // if
-				//
+			return Unit.with(toString(getSelectedItem(jcb)));
+			//
 		} else if (console != null) {
 			//
 			final List<Field> fs = toList(
@@ -240,15 +268,15 @@ public class IniAsPropertiesResource implements Resource, ApplicationEventPublis
 									toList(filter(fs.stream(), x -> Objects.equals(getName(x), "rcb"))),
 									x -> IterableUtils.get(x, 0), null)) != null
 					//
-					&& ready && retainAll(collection, Collections.singleton(console.readLine("Profile")))) {
+					&& ready) {
 				//
-				return IterableUtils.size(collection);
+				return Unit.with(console.readLine("Profile"));
 				//
 			} // if
 				//
 		} // if
 			//
-		return IterableUtils.size(collection);
+		return null;
 		//
 	}
 
@@ -318,10 +346,6 @@ public class IniAsPropertiesResource implements Resource, ApplicationEventPublis
 		if (test(predicate, value) && consumer != null) {
 			consumer.accept(value);
 		}
-	}
-
-	private static boolean retainAll(final Collection<?> a, final Collection<?> b) {
-		return a != null && a.retainAll(b);
 	}
 
 	private static Object[] toArray(final Collection<?> instance) {

@@ -34,10 +34,12 @@ import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.jena.ext.com.google.common.base.Predicates;
+import org.javatuples.Unit;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.context.ApplicationEventPublisher;
 
 import com.google.common.reflect.Reflection;
 
@@ -48,10 +50,12 @@ import javassist.util.proxy.ProxyObject;
 
 class IniAsPropertiesResourceTest {
 
+	private static final String EMPTY = "";
+
 	private static Method METHOD_GET_SECTION, METHOD_TO_STRING, METHOD_TEST_AND_APPLY, METHOD_FILTER, METHOD_TO_LIST,
 			METHOD_GET_NAME, METHOD_TEST_AND_ACCEPT, METHOD_IS_STATIC, METHOD_TO_INPUT_STREAM, METHOD_CAST,
 			METHOD_GET_TYPE, METHOD_GET_KEY, METHOD_GET_VALUE, METHOD_EXISTS, METHOD_TO_ARRAY, METHOD_READY,
-			METHOD_GET_SELECTED_ITEM = null;
+			METHOD_GET_SELECTED_ITEM, METHOD_CONTAINS = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -95,6 +99,8 @@ class IniAsPropertiesResourceTest {
 		//
 		(METHOD_GET_SELECTED_ITEM = clz.getDeclaredMethod("getSelectedItem", JComboBox.class)).setAccessible(true);
 		//
+		(METHOD_CONTAINS = clz.getDeclaredMethod("contains", Collection.class, Object.class)).setAccessible(true);
+		//
 	}
 
 	private class IH implements InvocationHandler {
@@ -104,6 +110,12 @@ class IniAsPropertiesResourceTest {
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
+			if (Objects.equals(Void.TYPE, method != null ? method.getReturnType() : null)) {
+				//
+				return null;
+				//
+			} // if
+				//
 			final String methodName = getName(method);
 			//
 			if (proxy instanceof Resource) {
@@ -176,7 +188,7 @@ class IniAsPropertiesResourceTest {
 		//
 		Assertions.assertNotNull(instance.getInputStream());
 		//
-		try (final InputStream is = new ByteArrayInputStream("".getBytes())) {
+		try (final InputStream is = new ByteArrayInputStream(EMPTY.getBytes())) {
 			//
 			if (ih != null) {
 				//
@@ -192,6 +204,24 @@ class IniAsPropertiesResourceTest {
 				new IniAsPropertiesResource(new UrlResource(getClass().getResource("/applicationContext.xml")))
 						.getInputStream());
 		//
+		try (final InputStream is = new ByteArrayInputStream(EMPTY.getBytes())) {
+			//
+			if (instance != null) {
+				//
+				instance.setApplicationEventPublisher(Reflection.newProxy(ApplicationEventPublisher.class, ih));
+				//
+			} // if
+				//
+			if (ih != null) {
+				//
+				ih.inputStream = is;
+				//
+			} // if
+				//
+			Assertions.assertNotNull(instance.getInputStream());
+			//
+		} // try
+			//
 	}
 
 	@Test
@@ -206,7 +236,7 @@ class IniAsPropertiesResourceTest {
 	@Test
 	void testGetSection() throws Throwable {
 		//
-		Assertions.assertEquals(0, getSection(true, null, null, null));
+		Assertions.assertNull(getSection(true, null, null, null));
 		//
 		Console console = System.console();
 		//
@@ -216,19 +246,19 @@ class IniAsPropertiesResourceTest {
 			//
 		} // if
 			//
-		Assertions.assertEquals(0, getSection(true, null, console, null));
+		Assertions.assertNull(getSection(true, null, console, null));
 		//
 		// java.io.Console.writeLock
 		//
 		Narcissus.setObjectField(console, Console.class.getDeclaredField("writeLock"), new Object());
 		//
-		Assertions.assertEquals(0, getSection(true, null, console, null));
+		Assertions.assertNull(getSection(true, null, console, null));
 		//
 		// java.io.Console.readLock
 		//
 		Narcissus.setObjectField(console, Console.class.getDeclaredField("readLock"), new Object());
 		//
-		Assertions.assertEquals(0, getSection(true, null, console, null));
+		Assertions.assertNull(getSection(true, null, console, null));
 		//
 		// java.io.Console.pw
 		//
@@ -238,52 +268,55 @@ class IniAsPropertiesResourceTest {
 			//
 		} // try
 			//
-		Assertions.assertEquals(0, getSection(true, null, console, null));
+		Assertions.assertNull(getSection(true, null, console, null));
 		//
 		// java.io.Console.rcb
 		//
 		Narcissus.setObjectField(console, Console.class.getDeclaredField("rcb"), new char[1]);
 		//
-		Assertions.assertEquals(0, getSection(true, null, console, null));
+		Assertions.assertNull(getSection(true, null, console, null));
 		//
 		// java.io.Console.reader
 		//
-		try (final Reader reader = new StringReader("")) {
+		try (final Reader reader = new StringReader(EMPTY)) {
 			//
 			Narcissus.setObjectField(console, Console.class.getDeclaredField("reader"), reader);
 			//
 		} // try
 			//
-		Assertions.assertEquals(0, getSection(true, null, console, null));
+		Assertions.assertNull(getSection(true, null, console, null));
 		//
-		try (final Reader reader = new StringReader("")) {
+		try (final Reader reader = new StringReader(EMPTY)) {
 			//
 			Narcissus.setObjectField(console, Console.class.getDeclaredField("reader"), reader);
 			//
-			Assertions.assertEquals(0, getSection(true, null, console, null));
+			Assertions.assertEquals("[null]", toString(getSection(true, null, console, null)));
 			//
 		} // try
 			//
-		Assertions.assertEquals(0, getSection(true, Collections.singletonMap(null, null), null, null));
+		Assertions.assertNull(getSection(true, Collections.singletonMap(null, null), null, null));
 		//
 		final Map<?, ?> map = Collections.singletonMap("profile", null);
 		//
-		Assertions.assertEquals(0, getSection(true, map, null, null));
+		Assertions.assertEquals("[null]", toString(getSection(true, map, null, null)));
 		//
-		Assertions.assertEquals(0, getSection(true, map, null, Collections.emptySet()));
+		Assertions.assertEquals("[null]", toString(getSection(true, map, null, Collections.emptySet())));
 		//
-		Assertions.assertEquals(1, getSection(true, map, null, Collections.singleton(null)));
+		Assertions.assertEquals("[null]", toString(getSection(true, map, null, Collections.singleton(null))));
 		//
-		Assertions.assertEquals(0, getSection(true, map, null, new ArrayList<>(Collections.singleton("1"))));
+		Assertions.assertEquals("[null]",
+				toString(getSection(true, map, null, new ArrayList<>(Collections.singleton("1")))));
 		//
 	}
 
-	private static int getSection(final boolean headless, final Map<?, ?> map, final Console console,
+	private static Unit<String> getSection(final boolean headless, final Map<?, ?> map, final Console console,
 			final Collection<?> collection) throws Throwable {
 		try {
 			final Object obj = METHOD_GET_SECTION.invoke(null, headless, map, console, collection);
-			if (obj instanceof Integer) {
-				return ((Integer) obj).intValue();
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Unit) {
+				return (Unit) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
@@ -624,6 +657,31 @@ class IniAsPropertiesResourceTest {
 	private static Object getSelectedItem(final JComboBox<?> instance) throws Throwable {
 		try {
 			return METHOD_GET_SELECTED_ITEM.invoke(null, instance);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testContains() throws Throwable {
+		//
+		Assertions.assertFalse(contains(null, null));
+		//
+		final Collection<?> collection = Collections.singleton(EMPTY);
+		//
+		Assertions.assertFalse(contains(collection, null));
+		//
+		Assertions.assertTrue(contains(collection, EMPTY));
+		//
+	}
+
+	private static boolean contains(final Collection<?> items, final Object item) throws Throwable {
+		try {
+			final Object obj = METHOD_CONTAINS.invoke(null, items, item);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
