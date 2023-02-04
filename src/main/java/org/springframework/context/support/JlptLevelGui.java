@@ -18,6 +18,7 @@ import java.lang.reflect.Proxy;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.EventObject;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
@@ -198,7 +199,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 	@Override
 	public void actionPerformed(final ActionEvent evt) {
 		//
-		final Object source = evt != null ? evt.getSource() : null;
+		final Object source = getSource(evt);
 		//
 		if (Objects.equals(source, btnExportJson)) {
 			//
@@ -287,6 +288,10 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 				//
 		} // if
 			//
+	}
+
+	private static Object getSource(final EventObject instance) {
+		return instance != null ? instance.getSource() : null;
 	}
 
 	private static Method[] getDeclaredMethods(final Class<?> instance) {
