@@ -10603,7 +10603,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				backGroundColor = IterableUtils.size(cssDeclarations = toList(
 						filter(stream(CSSReaderDeclarationList.readFromString(style, ECSSVersion.CSS30)),
-								x -> x != null && Objects.equals(x.getProperty(), "background-color")))) == 1
+								x -> Objects.equals(getProperty(x), "background-color")))) == 1
 										? IterableUtils.get(cssDeclarations, 0)
 										: null;
 				//
@@ -10653,6 +10653,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static StylesTable getStylesSource(final XSSFWorkbook instance) {
 		return instance != null ? instance.getStylesSource() : null;
+	}
+
+	private static String getProperty(final CSSDeclaration instance) {
+		return instance != null ? instance.getProperty() : null;
 	}
 
 	private static Workbook createMicrosoftSpeechObjectLibraryWorkbook(final SpeechApi speechApi,
