@@ -1,5 +1,6 @@
 package org.springframework.beans.factory;
 
+import java.io.InputStream;
 import java.net.URL;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import java.util.Objects;
 import java.util.function.Predicate;
 
 import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
@@ -18,6 +20,9 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
 import org.jsoup.select.Elements;
+import org.springframework.core.io.InputStreamSourceUtil;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceUtil;
 
 public class JoYoKanJiListFactoryBean implements FactoryBean<List<String>> {
 
@@ -25,13 +30,35 @@ public class JoYoKanJiListFactoryBean implements FactoryBean<List<String>> {
 
 	private Duration timeout = null;
 
+	private Resource resource = null;
+
 	public void setUrl(final String url) {
 		this.url = url;
+	}
+
+	public void setResource(final Resource resource) {
+		this.resource = resource;
 	}
 
 	@Override
 	public List<String> getObject() throws Exception {
 		//
+		if (ResourceUtil.exists(resource)) {
+			//
+			try (final InputStream is = InputStreamSourceUtil.getInputStream(resource)) {
+				//
+				final String string = testAndApply(Objects::nonNull, is, x -> IOUtils.toString(x, "utf-8"), null);
+				//
+				if (string != null) {
+					//
+					return string.chars().mapToObj(c -> String.valueOf((char) c)).toList();
+					//
+				} // if
+					//
+			} // if
+				//
+		} // if
+			//
 		final Document document = testAndApply(Objects::nonNull,
 				testAndApply(StringUtils::isNotBlank, url, URL::new, null),
 				x -> Jsoup.parse(x, intValue(toMillis(timeout), 0)), null);
