@@ -9031,7 +9031,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			final String methodName = getName(method);
 			//
-			if (proxy instanceof Runnable && Objects.equals(methodName, "run")) {
+			if (Boolean.logicalAnd(proxy instanceof Runnable, Objects.equals(methodName, "run"))) {
 				//
 				if (runnable == null) {
 					//
