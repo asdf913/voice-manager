@@ -448,7 +448,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		//
 		for (int i = 0; i < IterableUtils.size(elements); i++) {
 			//
-			if ((sheet = ObjectUtils.getIfNull(sheet, () -> createSheet(workbook, sheetName))) != null
+			if ((sheet = ObjectUtils.getIfNull(sheet, () -> WorkbookUtil.createSheet(workbook, sheetName))) != null
 					&& (row = SheetUtil.createRow(sheet, sheet.getLastRowNum() + 1)) == null) {
 				//
 				continue;
@@ -515,10 +515,6 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 
 	private static StylesTable getStylesSource(final XSSFWorkbook instance) {
 		return instance != null ? instance.getStylesSource() : null;
-	}
-
-	private static Sheet createSheet(final Workbook instance, final String sheetname) {
-		return instance != null ? instance.createSheet(sheetname) : null;
 	}
 
 	private static CSSDeclaration getCSSDeclarationByAttributeAndCssProperty(final org.jsoup.nodes.Element element,

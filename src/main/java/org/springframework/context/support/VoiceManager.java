@@ -7863,10 +7863,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		}
 	}
 
-	private static Sheet createSheet(final Workbook instance, final String sheetname) {
-		return instance != null ? instance.createSheet(sheetname) : null;
-	}
-
 	private static DataValidationHelper getDataValidationHelper(final Sheet instance) {
 		return instance != null ? instance.getDataValidationHelper() : null;
 	}
@@ -10646,7 +10642,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // for
 			//
-		ObjectMap.setObject(objectMap, Sheet.class, createSheet(workbook, "Locale ID"));
+		ObjectMap.setObject(objectMap, Sheet.class, WorkbookUtil.createSheet(workbook, "Locale ID"));
 		//
 		ObjectMap.setObject(objectMap, LocaleID[].class, LocaleID.values());
 		//
@@ -10948,7 +10944,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				for (final String key : keySet) {
 					//
-					setSheet(workbook, createSheet(workbook, key), MultimapUtil.get(multimap, key));
+					setSheet(workbook, WorkbookUtil.createSheet(workbook, key), MultimapUtil.get(multimap, key));
 					//
 				} // for
 					//
@@ -10983,9 +10979,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
-				setSheet(workbook,
-						StringUtils.length(key) > 0 ? createSheet(workbook, key) : WorkbookUtil.createSheet(workbook),
-						MultimapUtil.get(multimap, key));
+				setSheet(workbook, StringUtils.length(key) > 0 ? WorkbookUtil.createSheet(workbook, key)
+						: WorkbookUtil.createSheet(workbook), MultimapUtil.get(multimap, key));
 				//
 			} // for
 				//

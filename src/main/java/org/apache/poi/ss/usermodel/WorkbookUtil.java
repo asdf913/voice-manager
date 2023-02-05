@@ -10,6 +10,10 @@ public interface WorkbookUtil {
 		return instance != null ? instance.createSheet() : null;
 	}
 
+	static Sheet createSheet(final Workbook instance, final String sheetname) {
+		return instance != null ? instance.createSheet(sheetname) : null;
+	}
+
 	static void write(final Workbook instance, final OutputStream stream) throws IOException {
 		//
 		if (instance != null && (stream != null || Proxy.isProxyClass(getClass(instance)))) {
