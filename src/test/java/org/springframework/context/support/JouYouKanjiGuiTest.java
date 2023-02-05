@@ -14,10 +14,16 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
@@ -47,7 +53,8 @@ class JouYouKanjiGuiTest {
 	private static Method METHOD_GET_CLASS, METHOD_GET_DECLARED_FIELDS, METHOD_GET_TYPE, METHOD_NAME,
 			METHOD_GET_ECSS_VERSION_BY_MAJOR, METHOD_ADD_JOU_YOU_KAN_JI_SHEET, METHOD_CAST,
 			METHOD_GET_CSS_DECLARATION_BY_ATTRIBUTE_AND_CSS_PROPERTY, METHOD_SET_PREFERRED_WIDTH,
-			METHOD_GET_PREFERRED_SIZE = null;
+			METHOD_GET_PREFERRED_SIZE, METHOD_TO_LIST, METHOD_CONTAINS, METHOD_ADD, METHOD_SET_SELECTED_ITEM,
+			METHOD_TEST, METHOD_SET_TEXT = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -79,6 +86,19 @@ class JouYouKanjiGuiTest {
 				.setAccessible(true);
 		//
 		(METHOD_GET_PREFERRED_SIZE = clz.getDeclaredMethod("getPreferredSize", Component.class)).setAccessible(true);
+		//
+		(METHOD_TO_LIST = clz.getDeclaredMethod("toList", Stream.class)).setAccessible(true);
+		//
+		(METHOD_CONTAINS = clz.getDeclaredMethod("contains", Collection.class, Object.class)).setAccessible(true);
+		//
+		(METHOD_ADD = clz.getDeclaredMethod("add", Collection.class, Object.class)).setAccessible(true);
+		//
+		(METHOD_SET_SELECTED_ITEM = clz.getDeclaredMethod("setSelectedItem", ComboBoxModel.class, Object.class))
+				.setAccessible(true);
+		//
+		(METHOD_TEST = clz.getDeclaredMethod("test", Predicate.class, Object.class)).setAccessible(true);
+		//
+		(METHOD_SET_TEXT = clz.getDeclaredMethod("setText", JTextComponent.class, String.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.JouYouKanjiGui$IH");
 		//
@@ -562,6 +582,13 @@ class JouYouKanjiGuiTest {
 		}
 	}
 
+	@Test
+	void testCast() throws Throwable {
+		//
+		Assertions.assertNull(cast(null, null));
+		//
+	}
+
 	private static <T> T cast(final Class<T> clz, final Object value) throws Throwable {
 		try {
 			return (T) METHOD_CAST.invoke(null, clz, value);
@@ -645,6 +672,112 @@ class JouYouKanjiGuiTest {
 				return (Dimension) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testToList() throws Throwable {
+		//
+		Assertions.assertNull(toList(null));
+		//
+	}
+
+	private static <T> List<T> toList(final Stream<T> instance) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_LIST.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof List) {
+				return (List) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testContains() throws Throwable {
+		//
+		Assertions.assertFalse(contains(null, null));
+		//
+		Assertions.assertFalse(contains(Collections.emptyList(), null));
+		//
+	}
+
+	private static boolean contains(final Collection<?> items, final Object item) throws Throwable {
+		try {
+			final Object obj = METHOD_CONTAINS.invoke(null, items, item);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testAdd() {
+		//
+		Assertions.assertDoesNotThrow(() -> add(null, null));
+		//
+	}
+
+	private static <E> void add(final Collection<E> items, final E item) throws Throwable {
+		try {
+			METHOD_ADD.invoke(null, items, item);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetSelectedItem() {
+		//
+		Assertions.assertDoesNotThrow(() -> setSelectedItem(new DefaultComboBoxModel<>(), null));
+		//
+	}
+
+	private static void setSelectedItem(final ComboBoxModel<?> instance, final Object selectedItem) throws Throwable {
+		try {
+			METHOD_SET_SELECTED_ITEM.invoke(null, instance, selectedItem);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testTest() throws Throwable {
+		//
+		Assertions.assertFalse(test(null, null));
+		//
+	}
+
+	private static final <T> boolean test(final Predicate<T> instance, final T value) throws Throwable {
+		try {
+			final Object obj = METHOD_TEST.invoke(null, instance, value);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetText() {
+		//
+		Assertions.assertDoesNotThrow(() -> setText(new JTextField(), null));
+		//
+	}
+
+	private static void setText(final JTextComponent instance, final String text) throws Throwable {
+		try {
+			METHOD_SET_TEXT.invoke(null, instance, text);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
