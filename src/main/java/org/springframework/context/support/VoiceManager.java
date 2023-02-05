@@ -727,7 +727,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Url("https://poi.apache.org/encryption.html")
 	private String poiEncryptionPageUrl = null;
 
-	private IValue0<List<String>> jlptLevels = null;
+	private transient IValue0<List<String>> jlptLevels = null;
 
 	private transient LayoutManager layoutManager = null;
 
@@ -765,7 +765,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private String messageDigestAlgorithm = null;
 
-	private IValue0<List<String>> jouYouKanJiList = null;
+	private transient IValue0<List<String>> jouYouKanJiList = null;
 
 	private VoiceManager() {
 	}
