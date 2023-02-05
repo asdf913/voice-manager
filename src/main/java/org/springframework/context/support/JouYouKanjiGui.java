@@ -483,7 +483,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 					//
 					setFillPattern(cellStyle, FillPatternType.SOLID_FOREGROUND);
 					//
-					setCellStyle(cell, cellStyle);
+					CellUtil.setCellStyle(cell, cellStyle);
 					//
 				} // if
 					//
@@ -573,12 +573,6 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 	private static void setFillPattern(final CellStyle instance, final FillPatternType fillPatternType) {
 		if (instance != null) {
 			instance.setFillPattern(fillPatternType);
-		}
-	}
-
-	private static void setCellStyle(final Cell instance, final CellStyle cellStyle) {
-		if (instance != null) {
-			instance.setCellStyle(cellStyle);
 		}
 	}
 

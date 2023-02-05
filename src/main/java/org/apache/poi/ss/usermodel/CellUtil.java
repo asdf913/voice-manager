@@ -8,4 +8,10 @@ public interface CellUtil {
 		}
 	}
 
+	static void setCellStyle(final Cell instance, final CellStyle cellStyle) {
+		if (instance != null) {
+			instance.setCellStyle(cellStyle);
+		}
+	}
+
 }

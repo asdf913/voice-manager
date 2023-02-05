@@ -12,4 +12,11 @@ class CellUtilTest {
 		//
 	}
 
+	@Test
+	void testSetCellStyle() {
+		//
+		Assertions.assertDoesNotThrow(() -> CellUtil.setCellStyle(null, null));
+		//
+	}
+
 }

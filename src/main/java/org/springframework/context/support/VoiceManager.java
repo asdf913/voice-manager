@@ -10920,12 +10920,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		}
 	}
 
-	private static void setCellStyle(final Cell instance, final CellStyle cellStyle) {
-		if (instance != null) {
-			instance.setCellStyle(cellStyle);
-		}
-	}
-
 	private static Workbook createWorkbook(final List<Voice> voices, final BooleanMap booleanMap,
 			final FailableSupplier<Workbook, RuntimeException> supplier)
 			throws IllegalAccessException, InvocationTargetException {
@@ -11181,7 +11175,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					cellStyle.setDataFormat(dataFormatIndex);
 					//
-					setCellStyle(cell, cellStyle);
+					CellUtil.setCellStyle(cell, cellStyle);
 					//
 				} // if
 					//
