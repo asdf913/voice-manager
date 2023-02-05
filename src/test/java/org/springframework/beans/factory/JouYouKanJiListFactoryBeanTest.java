@@ -94,7 +94,7 @@ class JouYouKanJiListFactoryBeanTest {
 		//
 		if (instance != null) {
 			//
-			instance.setResource(new ClassPathResource("JoYoKanJi.txt"));
+			instance.setResource(new ClassPathResource("JouYouKanJi.txt"));
 			//
 		} // if
 			//
