@@ -233,7 +233,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		add(new JLabel("Text"));
 		//
 		add(tfText = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
-				"org.springframework.context.support.JouYouKanjiGui.text")));
+				"org.springframework.context.support.JouYouKanjiGui.text")), "wmin 100px");
 		//
 		tfText.addKeyListener(this);
 		//
@@ -336,6 +336,8 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 				WorkbookUtil.write(workbook, os);
 				//
 				setText(tfExportFile, getAbsolutePath(file));
+				//
+				pack();
 				//
 			} catch (final IOException e) {
 				//
