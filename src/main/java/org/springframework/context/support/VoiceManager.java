@@ -9247,7 +9247,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		voice.setIsKanji(cast(Boolean.class, getSelectedItem(instance.cbmIsKanji)));
 		//
-		voice.setJoYoKanji(cast(Boolean.class, getSelectedItem(instance.cbmJouYouKanJi)));
+		voice.setJouYouKanji(cast(Boolean.class, getSelectedItem(instance.cbmJouYouKanJi)));
 		//
 		voice.setGaKuNenBeTsuKanJi(toString(getSelectedItem(instance.cbmGaKuNenBeTsuKanJi)));
 		//

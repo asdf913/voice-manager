@@ -15,7 +15,7 @@
 		<result column="jlpt_level" property="jlptLevel" />
 		<result column="ipa_symbol" property="ipaSymbol" />
 		<result column="is_kanji" property="isKanji" />
-		<result column="jo_yo_kanji" property="joYoKanji" />
+		<result column="jo_yo_kanji" property="jouYouKanji" />
 		<result column="ga_ku_nen_be_tsu_kan_ji" property="gaKuNenBeTsuKanJi" />
 		<result column="pronunciation_page_url" property="pronunciationPageUrl" />
 	</resultMap>
@@ -58,7 +58,7 @@
 		keyProperty="id">
 		<if test="voice!=null">
 			insert into
-			voice(language,text,source,yomi,romaji,hiragana,katakana,file_path,file_length,file_digest_algorithm,file_digest,file_extension,create_ts,ordinal_position,jlpt_level,ipa_symbol,is_kanji,jo_yo_kanji,ga_ku_nen_be_tsu_kan_ji,pronunciation_page_url)values(#{voice.language},#{voice.text},#{voice.source},#{voice.yomi},#{voice.romaji},#{voice.hiragana},#{voice.katakana},#{voice.filePath},#{voice.fileLength},#{voice.fileDigestAlgorithm},#{voice.fileDigest},#{voice.fileExtension},#{voice.createTs},#{voice.ordinalPosition},#{voice.jlptLevel},#{voice.ipaSymbol},#{voice.isKanji},#{voice.joYoKanji},#{voice.gaKuNenBeTsuKanJi},#{voice.pronunciationPageUrl});
+			voice(language,text,source,yomi,romaji,hiragana,katakana,file_path,file_length,file_digest_algorithm,file_digest,file_extension,create_ts,ordinal_position,jlpt_level,ipa_symbol,is_kanji,jo_yo_kanji,ga_ku_nen_be_tsu_kan_ji,pronunciation_page_url)values(#{voice.language},#{voice.text},#{voice.source},#{voice.yomi},#{voice.romaji},#{voice.hiragana},#{voice.katakana},#{voice.filePath},#{voice.fileLength},#{voice.fileDigestAlgorithm},#{voice.fileDigest},#{voice.fileExtension},#{voice.createTs},#{voice.ordinalPosition},#{voice.jlptLevel},#{voice.ipaSymbol},#{voice.isKanji},#{voice.jouYouKanji},#{voice.gaKuNenBeTsuKanJi},#{voice.pronunciationPageUrl});
 		</if>
 	</insert>
 
@@ -83,7 +83,7 @@
 				,jlpt_level=#{voice.jlptLevel}
 				,ipa_symbol=#{voice.ipaSymbol}
 				,is_kanji=#{voice.isKanji}
-				,jo_yo_kanji=#{voice.joYoKanji}
+				,jo_yo_kanji=#{voice.jouYouKanji}
 				,ga_ku_nen_be_tsu_kan_ji=#{voice.gaKuNenBeTsuKanJi}
 				,pronunciation_page_url=#{voice.pronunciationPageUrl}
 			</set>

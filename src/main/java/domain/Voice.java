@@ -70,7 +70,7 @@ public class Voice {
 	private Boolean isKanji = null;
 
 	@ImportField
-	private Boolean joYoKanji = null;
+	private Boolean jouYouKanji = null;
 
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
@@ -263,8 +263,8 @@ public class Voice {
 		this.isKanji = isKanji;
 	}
 
-	public void setJoYoKanji(final Boolean joYoKanji) {
-		this.joYoKanji = joYoKanji;
+	public void setJouYouKanji(Boolean jouYouKanji) {
+		this.jouYouKanji = jouYouKanji;
 	}
 
 	public void setGaKuNenBeTsuKanJi(final String gaKuNenBeTsuKanJi) {
