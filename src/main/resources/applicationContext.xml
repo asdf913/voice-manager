@@ -85,6 +85,14 @@
 	</bean>
 
 	<!-- -->
+	<bean id="JouYouKanJiList"
+		class="org.springframework.beans.factory.JouYouKanJiListFactoryBean">
+		<property name="url"
+			value="${org.springframework.context.support.VoiceManager.jouYouKanJiPageUrl}" />
+		<property name="resource" value="classpath:JouYouKanJi.txt" />
+	</bean>
+
+	<!-- -->
 	<bean class="org.springframework.context.support.VoiceManager">
 		<property name="layout" ref="MigLayout" />
 		<property name="defaultCloseOperation"
@@ -155,14 +163,7 @@
 			ref="messageDigestAlgorithm" />
 		<property name="ipaSymbolMultimap" ref="ipaMultimap" />
 		<!-- -->
-		<property name="jouYouKanJiList">
-			<bean
-				class="org.springframework.beans.factory.JouYouKanJiListFactoryBean">
-				<property name="url"
-					value="${org.springframework.context.support.VoiceManager.jouYouKanJiPageUrl}" />
-				<property name="resource" value="classpath:JouYouKanJi.txt" />
-			</bean>
-		</property>
+		<property name="jouYouKanJiList" ref="JouYouKanJiList" />
 	</bean>
 
 	<!-- -->
@@ -196,6 +197,14 @@
 			value="#{T(javax.swing.WindowConstants).EXIT_ON_CLOSE}" />
 		<property name="jlptLevels" ref="JlptLevelList" />
 		<property name="url" ref="JlptLevelPageUrl" />
+	</bean>
+
+	<!-- -->
+	<bean class="org.springframework.context.support.JouYouKanjiGui">
+		<property name="layout" ref="MigLayout" />
+		<property name="defaultCloseOperation"
+			value="#{T(javax.swing.WindowConstants).EXIT_ON_CLOSE}" />
+		<property name="jouYouKanJiList" ref="JouYouKanJiList" />
 	</bean>
 
 	<bean id="DataSource" class="org.h2.jdbcx.JdbcConnectionPool"
