@@ -97,6 +97,7 @@ import org.springframework.core.env.PropertyResolver;
 import org.springframework.core.env.PropertyResolverUtil;
 
 import com.google.common.reflect.Reflection;
+import com.helger.commons.version.IHasVersion;
 import com.helger.commons.version.Version;
 import com.helger.css.ECSSVersion;
 import com.helger.css.decl.CSSDeclaration;
@@ -187,7 +188,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 				//
 				for (final ECSSVersion ev : evs) {
 					//
-					if (ev == null || (v = ev.getVersion()) == null || number.intValue() != v.getMajor()) {
+					if ((v = getVersion(ev)) == null || number.intValue() != v.getMajor()) {
 						//
 						continue;
 						//
@@ -215,6 +216,10 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 				//
 		} // if
 			//
+	}
+
+	private static Version getVersion(final IHasVersion instance) {
+		return instance != null ? instance.getVersion() : null;
 	}
 
 	private static String name(final Enum<?> instance) {

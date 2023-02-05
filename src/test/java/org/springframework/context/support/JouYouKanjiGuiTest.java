@@ -21,11 +21,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.InitializingBean;
 
+import com.helger.commons.version.IHasVersion;
+import com.helger.commons.version.Version;
 import com.helger.css.ECSSVersion;
 
 class JouYouKanjiGuiTest {
 
-	private static Method METHOD_GET_CLASS, METHOD_GET_DECLARED_FIELDS, METHOD_GET_TYPE, METHOD_NAME = null;
+	private static Method METHOD_GET_CLASS, METHOD_GET_DECLARED_FIELDS, METHOD_GET_TYPE, METHOD_NAME,
+			METHOD_GET_VERSION = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -39,6 +42,8 @@ class JouYouKanjiGuiTest {
 		(METHOD_GET_TYPE = clz.getDeclaredMethod("getType", Field.class)).setAccessible(true);
 		//
 		(METHOD_NAME = clz.getDeclaredMethod("name", Enum.class)).setAccessible(true);
+		//
+		(METHOD_GET_VERSION = clz.getDeclaredMethod("getVersion", IHasVersion.class)).setAccessible(true);
 		//
 	}
 
@@ -305,6 +310,27 @@ class JouYouKanjiGuiTest {
 				return null;
 			} else if (obj instanceof String) {
 				return (String) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetVersion() throws Throwable {
+		//
+		Assertions.assertNull(getVersion(null));
+		//
+	}
+
+	private static Version getVersion(final IHasVersion instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_VERSION.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Version) {
+				return (Version) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
