@@ -476,7 +476,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 				//
 				if (StringUtils.isNotBlank(backGroundColorString)) {
 					//
-					setFillBackgroundColor(cellStyle = createCellStyle(workbook),
+					setFillBackgroundColor(cellStyle = WorkbookUtil.createCellStyle(workbook),
 							new XSSFColor(
 									new Color(Integer.parseInt(StringUtils.substring(backGroundColorString, 1), 16)),
 									indexedColorMap));
@@ -557,10 +557,6 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 
 	private static Long toMillis(final Duration instance) {
 		return instance != null ? Long.valueOf(instance.toMillis()) : null;
-	}
-
-	private static CellStyle createCellStyle(final Workbook instance) {
-		return instance != null ? instance.createCellStyle() : null;
 	}
 
 	private static void setFillBackgroundColor(final CellStyle instance,

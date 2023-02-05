@@ -145,7 +145,6 @@ import org.apache.poi.ooxml.POIXMLProperties.CustomProperties;
 import org.apache.poi.poifs.crypt.EncryptionMode;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.CellValue;
 import org.apache.poi.ss.usermodel.ClientAnchor;
@@ -268,12 +267,12 @@ class VoiceManagerTest {
 			METHOD_GET_RATE_VOICE_MANAGER, METHOD_GET_RATE_FIELD_LIST, METHOD_ADD_CHANGE_LISTENER,
 			METHOD_IS_ANNOTATION_PRESENT, METHOD_PROCESS, METHOD_ENCODE_TO_STRING,
 			METHOD_GET_VOICE_MULTI_MAP_BY_LIST_NAME, METHOD_GET_VOICE_MULTI_MAP_BY_JLPT, METHOD_GET_TEMPLATE,
-			METHOD_GET_FILE_EXTENSIONS, METHOD_CREATE_CELL_STYLE, METHOD_REDUCE, METHOD_APPEND_STRING,
-			METHOD_APPEND_CHAR, METHOD_GET_PROVIDER_PLATFORM, METHOD_GET_RESOURCE_AS_STREAM,
-			METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH, METHOD_GET_ATTRIBUTES, METHOD_GET_LENGTH, METHOD_ITEM,
-			METHOD_GET_OS_VERSION_INFO_EX_MAP, METHOD_CREATE_JLPT_SHEET, METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2,
-			METHOD_SET_VISIBLE, METHOD_RANDOM_ALPHABETIC, METHOD_GET_MEDIA_FORMAT_LINK, METHOD_GET_EVENT_TYPE,
-			METHOD_GET_PARENT_FILE, METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET,
+			METHOD_GET_FILE_EXTENSIONS, METHOD_REDUCE, METHOD_APPEND_STRING, METHOD_APPEND_CHAR,
+			METHOD_GET_PROVIDER_PLATFORM, METHOD_GET_RESOURCE_AS_STREAM, METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH,
+			METHOD_GET_ATTRIBUTES, METHOD_GET_LENGTH, METHOD_ITEM, METHOD_GET_OS_VERSION_INFO_EX_MAP,
+			METHOD_CREATE_JLPT_SHEET, METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2, METHOD_SET_VISIBLE,
+			METHOD_RANDOM_ALPHABETIC, METHOD_GET_MEDIA_FORMAT_LINK, METHOD_GET_EVENT_TYPE, METHOD_GET_PARENT_FILE,
+			METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET,
 			METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET_FIRST_ROW, METHOD_EXPORT_JLPT,
 			METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT, METHOD_SET_SHEET_HEADER_ROW, METHOD_ENCRYPT,
 			METHOD_GET_WORKBOOK_BY_ZIP_FILE, METHOD_GET_ENCRYPTION_TABLE_HTML, METHOD_NEXT_ELEMENT_SIBLING, METHOD_HTML,
@@ -685,8 +684,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_GET_FILE_EXTENSIONS = clz.getDeclaredMethod("getFileExtensions", ContentType.class))
 				.setAccessible(true);
-		//
-		(METHOD_CREATE_CELL_STYLE = clz.getDeclaredMethod("createCellStyle", Workbook.class)).setAccessible(true);
 		//
 		(METHOD_REDUCE = clz.getDeclaredMethod("reduce", LongStream.class, Long.TYPE, LongBinaryOperator.class))
 				.setAccessible(true);
@@ -6056,27 +6053,6 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof String[]) {
 				return (String[]) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testCreateCellStyle() throws Throwable {
-		//
-		Assertions.assertNull(createCellStyle(null));
-		//
-	}
-
-	private static CellStyle createCellStyle(final Workbook instance) throws Throwable {
-		try {
-			final Object obj = METHOD_CREATE_CELL_STYLE.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof CellStyle) {
-				return (CellStyle) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

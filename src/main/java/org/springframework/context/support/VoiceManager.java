@@ -11165,7 +11165,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 									Arrays::stream, null),
 							x -> Objects.equals(getName(x), VALUE))),
 					null)) != null
-					&& (cellStyle = createCellStyle(ObjectMap.getObject(objectMap, Workbook.class))) != null) {
+					&& (cellStyle = WorkbookUtil
+							.createCellStyle(ObjectMap.getObject(objectMap, Workbook.class))) != null) {
 				//
 				m.setAccessible(true);
 				//
@@ -11214,10 +11215,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
-	}
-
-	private static CellStyle createCellStyle(final Workbook instance) {
-		return instance != null ? instance.createCellStyle() : null;
 	}
 
 	private static String getColumnName(final Class<?> spreadsheetColumnClass, final Field f)

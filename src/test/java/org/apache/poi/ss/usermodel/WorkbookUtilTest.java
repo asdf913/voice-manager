@@ -40,6 +40,13 @@ class WorkbookUtilTest {
 	}
 
 	@Test
+	void testCreateCellStyle() {
+		//
+		Assertions.assertDoesNotThrow(() -> WorkbookUtil.createCellStyle(null));
+		//
+	}
+
+	@Test
 	void testWrite() {
 		//
 		Assertions.assertDoesNotThrow(() -> WorkbookUtil.write(null, null));
