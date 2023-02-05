@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.io.Serializable;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -175,6 +176,7 @@ import org.apache.bcel.classfile.Utility;
 import org.apache.bcel.generic.ObjectType;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.collections4.IteratorUtils;
@@ -6344,6 +6346,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			IValue0<String> voiceId = null;
 			//
+			Collection<Object> throwableStackTraceHexs = null;
+			//
 			for (int i = 0; i < intValue(getNumberOfSheets(workbook), 0); i++) {
 				//
 				if (contains(sheetExclued, getSheetName(sheet = workbook.getSheetAt(i)))) {
@@ -6378,6 +6382,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 						voiceConsumer = getIfNull(voiceConsumer,
 								() -> new VoiceConsumer(tfCurrentProcessingVoice, numberOfVoiceProcessed))
+						//
+						, throwableStackTraceHexs = ObjectUtils.getIfNull(throwableStackTraceHexs, ArrayList::new)
 				//
 				);
 				//
@@ -8190,7 +8196,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static void importVoice(final Sheet sheet, final ObjectMap _objectMap, final String voiceId,
 			final BiConsumer<Voice, String> errorMessageConsumer, final BiConsumer<Voice, Throwable> throwableConsumer,
-			final Consumer<Voice> voiceConsumer)
+			final Consumer<Voice> voiceConsumer, final Collection<Object> throwableStackTraceHexs)
 			throws IllegalAccessException, IOException, InvocationTargetException, BaseException {
 		//
 		final File folder = getParentFile(ObjectMap.getObject(_objectMap, File.class));
@@ -8272,6 +8278,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				voice = null;
 				//
 				final ObjectMap objectMap = ObjectUtils.defaultIfNull(copyObjectMap(_objectMap), _objectMap);
+				//
+				IH ih = null;
 				//
 				for (final Cell cell : row) {
 					//
@@ -8431,7 +8439,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 						it.voiceConsumer = voiceConsumer;
 						//
-						es.submit(it);
+						// Wrap the java.lang.Runnable by a java.lang.reflect.Proxy
+						//
+						(ih = new IH()).runnable = it;
+						//
+						ih.throwableStackTraceHexs = throwableStackTraceHexs;
+						//
+						es.submit(ObjectUtils.defaultIfNull(Reflection.newProxy(Runnable.class, ih), it));
 						//
 					} else {
 						//
@@ -8961,6 +8975,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static class IH implements InvocationHandler {
 
+		private Collection<Object> throwableStackTraceHexs = null;
+
+		private static final AtomicInteger COUNTER = new AtomicInteger();
+
+		private Runnable runnable = null;
+
 		private Map<Object, Object> objects = null;
 
 		private Map<Object, Object> booleans = null;
@@ -9011,6 +9031,67 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			final String methodName = getName(method);
 			//
+			if (proxy instanceof Runnable) {
+				//
+				if (Objects.equals(methodName, "run")) {
+					//
+					if (runnable == null) {
+						//
+						throw new IllegalStateException("runnable is null");
+						//
+					} else if (runnable == proxy) {
+						//
+						throw new IllegalStateException("runnable==proxy");
+						//
+					} // if
+						//
+					try {
+						//
+						return VoiceManager.invoke(method, runnable, args);
+						//
+					} catch (final InvocationTargetException e) {
+						//
+						final Throwable targetExceptionRootCause = ExceptionUtils
+								.getRootCause(e != null ? e.getTargetException() : null);
+						//
+						if (targetExceptionRootCause != null) {
+							//
+							try (final Writer w = new StringWriter(); final PrintWriter ps = new PrintWriter(w)) {
+								//
+								targetExceptionRootCause.printStackTrace(ps);
+								//
+								final String hex = testAndApply(Objects::nonNull, getBytes(VoiceManager.toString(w)),
+										DigestUtils::sha512Hex, null);
+								//
+								if (!contains(throwableStackTraceHexs = ObjectUtils.getIfNull(throwableStackTraceHexs,
+										ArrayList::new), hex)) {
+									//
+									if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
+										//
+										LoggerUtil.error(LOG, null, targetExceptionRootCause);
+										//
+									} else {
+										//
+										targetExceptionRootCause.printStackTrace();
+										//
+									} // if
+										//
+									add(throwableStackTraceHexs, hex);
+									//
+								} // if
+									//
+							} // try
+								//
+						} // if
+							//
+						throw targetExceptionRootCause;
+						//
+					} // try
+						//
+				} // if
+					//
+			} // if
+				//
 			if (proxy instanceof ObjectMap) {
 				//
 				final IValue0<?> value = handleObjectMap(methodName, getObjects(), args);

@@ -421,7 +421,7 @@ class VoiceManagerTest {
 				BiConsumer.class)).setAccessible(true);
 		//
 		(METHOD_IMPORT_VOICE5 = clz.getDeclaredMethod("importVoice", Sheet.class, CLASS_OBJECT_MAP, String.class,
-				BiConsumer.class, BiConsumer.class, Consumer.class)).setAccessible(true);
+				BiConsumer.class, BiConsumer.class, Consumer.class, Collection.class)).setAccessible(true);
 		//
 		(METHOD_ADD_COLLECTION = clz.getDeclaredMethod("add", Collection.class, Object.class)).setAccessible(true);
 		//
@@ -3572,7 +3572,7 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> importVoice(null, null, null));
 		//
-		Assertions.assertDoesNotThrow(() -> importVoice(null, null, null, null, null, null));
+		Assertions.assertDoesNotThrow(() -> importVoice(null, null, null, null, null, null, null));
 		//
 		final Constructor<?> constructor = getDeclaredConstructor(CLASS_IH);
 		//
@@ -3617,13 +3617,13 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> importVoice(objectMap, null, null));
 		//
-		Assertions.assertDoesNotThrow(() -> importVoice(sheet, null, null, null, null, null));
+		Assertions.assertDoesNotThrow(() -> importVoice(sheet, null, null, null, null, null, null));
 		//
 		final Row row = Reflection.newProxy(Row.class, this.ih);
 		//
 		this.ih.rows = Iterators.forArray(null, row);
 		//
-		Assertions.assertDoesNotThrow(() -> importVoice(sheet, null, null, null, null, null));
+		Assertions.assertDoesNotThrow(() -> importVoice(sheet, null, null, null, null, null, null));
 		//
 		this.ih.rows = Iterators.forArray(null, row);
 		//
@@ -3631,7 +3631,7 @@ class VoiceManagerTest {
 		//
 		this.ih.columnIndex = Integer.valueOf(0);
 		//
-		Assertions.assertDoesNotThrow(() -> importVoice(sheet, null, null, null, null, null));
+		Assertions.assertDoesNotThrow(() -> importVoice(sheet, null, null, null, null, null, null));
 		//
 	}
 
@@ -3654,10 +3654,10 @@ class VoiceManagerTest {
 
 	private static void importVoice(final Sheet sheet, final Object _objectMap, final String voiceId,
 			final BiConsumer<Voice, String> errorMessageConsumer, final BiConsumer<Voice, Throwable> throwableConsumer,
-			final Consumer<Voice> voiceConsumer) throws Throwable {
+			final Consumer<Voice> voiceConsumer, final Collection<Object> throwableStackTraceHexs) throws Throwable {
 		try {
 			METHOD_IMPORT_VOICE5.invoke(null, sheet, _objectMap, voiceId, errorMessageConsumer, throwableConsumer,
-					voiceConsumer);
+					voiceConsumer, throwableStackTraceHexs);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -8548,6 +8548,22 @@ class VoiceManagerTest {
 			Assertions.assertNull(invoke(getSimpleName, null, (Object) null));
 			//
 			Assertions.assertEquals("byte[]", invoke(getSimpleName, null, clz));
+			//
+			// java.lang.Runnable
+			//
+			final Runnable runnable = Reflection.newProxy(Runnable.class, ih);
+			//
+			final Method run = Runnable.class.getDeclaredMethod("run");
+			//
+			Assertions.assertThrows(IllegalStateException.class, () -> ih.invoke(runnable, run, null));
+			//
+			FieldUtils.writeDeclaredField(ih, "runnable", runnable, true);
+			//
+			Assertions.assertThrows(IllegalStateException.class, () -> ih.invoke(runnable, run, null));
+			//
+			FieldUtils.writeDeclaredField(ih, "runnable", Reflection.newProxy(Runnable.class, ih), true);
+			//
+			Assertions.assertThrows(IllegalStateException.class, () -> ih.invoke(runnable, run, null));
 			//
 		} // if
 			//
