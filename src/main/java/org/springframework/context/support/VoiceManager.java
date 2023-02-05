@@ -9031,7 +9031,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			final String methodName = getName(method);
 			//
-			if (Boolean.logicalAnd(proxy instanceof Runnable, Objects.equals(methodName, "run"))) {
+			if (proxy instanceof Runnable) {
 				//
 				if (runnable == null) {
 					//
@@ -9043,51 +9043,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
-				try {
-					//
-					return VoiceManager.invoke(method, runnable, args);
-					//
-				} catch (final InvocationTargetException e) {
-					//
-					final Throwable targetExceptionRootCause = ExceptionUtils.getRootCause(e.getTargetException());
-					//
-					if (targetExceptionRootCause != null) {
-						//
-						try (final Writer w = new StringWriter(); final PrintWriter ps = new PrintWriter(w)) {
-							//
-							targetExceptionRootCause.printStackTrace(ps);
-							//
-							final String hex = testAndApply(Objects::nonNull, getBytes(VoiceManager.toString(w)),
-									DigestUtils::sha512Hex, null);
-							//
-							if (!contains(throwableStackTraceHexs = ObjectUtils.getIfNull(throwableStackTraceHexs,
-									ArrayList::new), hex)) {
-								//
-								if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-									//
-									LoggerUtil.error(LOG, null, targetExceptionRootCause);
-									//
-								} else {
-									//
-									targetExceptionRootCause.printStackTrace();
-									//
-								} // if
-									//
-								add(throwableStackTraceHexs, hex);
-								//
-							} // if
-								//
-						} // try
-							//
-					} // if
-						//
-					throw targetExceptionRootCause;
-					//
-				} // try
-					//
-			} // if
+				final IValue0<?> value = handleRunnable(method, runnable, args, throwableStackTraceHexs);
 				//
-			if (proxy instanceof ObjectMap) {
+				if (value != null) {
+					//
+					return IValue0Util.getValue0(value);
+					//
+				} // if
+					//
+			} else if (proxy instanceof ObjectMap) {
 				//
 				final IValue0<?> value = handleObjectMap(methodName, getObjects(), args);
 				//
@@ -9140,6 +9104,58 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			} // if
 				//
 			throw new Throwable(methodName);
+			//
+		}
+
+		private static IValue0<Object> handleRunnable(final Method method, final Runnable runnable, final Object[] args,
+				final Collection<Object> throwableStackTraceHexs) throws Throwable {
+			//
+			try {
+				//
+				if (Objects.equals(getName(method), "run")) {
+					//
+					return Unit.with(VoiceManager.invoke(method, runnable, args));
+					//
+				} // if
+					//
+			} catch (final InvocationTargetException e) {
+				//
+				final Throwable targetExceptionRootCause = ExceptionUtils.getRootCause(e.getTargetException());
+				//
+				if (targetExceptionRootCause != null) {
+					//
+					try (final Writer w = new StringWriter(); final PrintWriter ps = new PrintWriter(w)) {
+						//
+						targetExceptionRootCause.printStackTrace(ps);
+						//
+						final String hex = testAndApply(Objects::nonNull, getBytes(VoiceManager.toString(w)),
+								DigestUtils::sha512Hex, null);
+						//
+						if (!contains(throwableStackTraceHexs, hex)) {
+							//
+							if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
+								//
+								LoggerUtil.error(LOG, null, targetExceptionRootCause);
+								//
+							} else {
+								//
+								targetExceptionRootCause.printStackTrace();
+								//
+							} // if
+								//
+							add(throwableStackTraceHexs, hex);
+							//
+						} // if
+							//
+					} // try
+						//
+				} // if
+					//
+				throw targetExceptionRootCause;
+				//
+			} // try
+				//
+			return null;
 			//
 		}
 
