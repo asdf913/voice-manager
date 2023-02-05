@@ -3651,19 +3651,19 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		final IValue0<Object> dllPath = getDllPath(speechApiInstance);
 		//
+		JPanel panelDllPath = null;
+		//
 		if (dllPath != null) {
 			//
-			final JPanel panel1 = new JPanel();
+			(panelDllPath = new JPanel()).setLayout(cloneLayoutManager());
 			//
-			panel1.setLayout(cloneLayoutManager());
+			panelDllPath.setBorder(BorderFactory.createTitledBorder("Dll Path"));
 			//
-			panel1.setBorder(BorderFactory.createTitledBorder("Dll Path"));
+			panelDllPath.add(tfDllPath = new JTextField(toString(IValue0Util.getValue0(dllPath))));
 			//
-			panel1.add(tfDllPath = new JTextField(toString(IValue0Util.getValue0(dllPath))));
+			panelDllPath.add(btnDllPathCopy = new JButton("Copy"));
 			//
-			panel1.add(btnDllPathCopy = new JButton("Copy"));
-			//
-			panel.add(panel1, String.format("%1$s,span %2$s", WRAP, 2));
+			panel.add(panelDllPath, String.format("%1$s,span %2$s", WRAP, 2));
 			//
 		} // if
 			//
@@ -3700,19 +3700,19 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						toString(append(btnExportMicrosoftSpeechObjectLibraryInformationName, "Information"))),
 				String.format("%1$s,span %2$s", WRAP, 2));
 		//
-		final JPanel panel1 = new JPanel();
+		final JPanel panelFile = new JPanel();
 		//
-		panel1.setLayout(cloneLayoutManager());
+		panelFile.setLayout(cloneLayoutManager());
 		//
-		panel1.setBorder(BorderFactory.createTitledBorder("File"));
+		panelFile.setBorder(BorderFactory.createTitledBorder("File"));
 		//
-		panel1.add(tfExportFile = new JTextField(), String.format("wmin %1$s", 300));
+		panelFile.add(tfExportFile = new JTextField(), String.format("wmin %1$s", 300));
 		//
-		panel1.add(btnExportCopy = new JButton("Copy"));
+		panelFile.add(btnExportCopy = new JButton("Copy"));
 		//
-		panel1.add(btnExportBrowse = new JButton("Browse"));
+		panelFile.add(btnExportBrowse = new JButton("Browse"));
 		//
-		panel.add(panel1, String.format("span %1$s", 2));
+		panel.add(panelFile, String.format("span %1$s", 2));
 		//
 		setEditable(false, tfDllPath, tfExportFile);
 		//
@@ -3721,6 +3721,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		setEnabled(isInstalled(speechApi) && voiceIds != null, btnExportMicrosoftSpeechObjectLibraryInformation);
 		//
+		if (panelDllPath != null) {
+			//
+			setPreferredWidth((int) Math.max(getPreferredWidth(panelDllPath), getPreferredWidth(panelFile)),
+					panelDllPath, panelFile);
+			//
+		} // if
+			//
 		return panel;
 		//
 	}
