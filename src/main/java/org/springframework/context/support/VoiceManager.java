@@ -727,11 +727,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Url("https://poi.apache.org/encryption.html")
 	private String poiEncryptionPageUrl = null;
 
-	private Unit<List<String>> jlptLevels = null;
+	private IValue0<List<String>> jlptLevels = null;
 
 	private transient LayoutManager layoutManager = null;
 
-	private Unit<Multimap<String, String>> gaKuNenBeTsuKanJiMultimap = null;
+	private IValue0<Multimap<String, String>> gaKuNenBeTsuKanJiMultimap = null;
 
 	private transient IValue0<String> microsoftSpeechPlatformRuntimeLanguagesDownloadPageTitle = null;
 
@@ -761,9 +761,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private Duration jSoupParseTimeout = null;
 
-	private Unit<Multimap<String, String>> ipaSymbolMultimap = null;
+	private IValue0<Multimap<String, String>> ipaSymbolMultimap = null;
 
 	private String messageDigestAlgorithm = null;
+
+	private IValue0<List<String>> jouYouKanJiList = null;
 
 	private VoiceManager() {
 	}
@@ -1349,6 +1351,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	public void setGaKuNenBeTsuKanJiMultimap(final Multimap<String, String> gaKuNenBeTsuKanJiMultimap) {
 		this.gaKuNenBeTsuKanJiMultimap = Unit.with(gaKuNenBeTsuKanJiMultimap);
+	}
+
+	public void setJouYouKanJiList(final List<String> jouYouKanJiList) {
+		this.jouYouKanJiList = Unit.with(jouYouKanJiList);
 	}
 
 	private static IValue0<Class<? extends Workbook>> getWorkbookClass(
@@ -6715,7 +6721,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static ByteConverter getByteConverter(final ConfigurableListableBeanFactory configurableListableBeanFactory,
 			final String attribute, final Object value) {
 		//
-		Unit<ByteConverter> byteConverter = null;
+		IValue0<ByteConverter> byteConverter = null;
 		//
 		final Map<String, ByteConverter> byteConverters = ListableBeanFactoryUtil
 				.getBeansOfType(configurableListableBeanFactory, ByteConverter.class);
@@ -6833,6 +6839,25 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		keyReleasedForTextImport(IValue0Util.getValue0(gaKuNenBeTsuKanJiMultimap), jTextComponent,
 				cbmGaKuNenBeTsuKanJi);
 		//
+		// 常用漢字
+		//
+		final String text = getText(jTextComponent);
+		//
+		final List<String> list = IValue0Util.getValue0(jouYouKanJiList);
+		//
+		if (StringUtils.isEmpty(text) || CollectionUtils.isEmpty(list)) {
+			//
+			setSelectedItem(cbmJoYoKanJi, null);
+			//
+		} else if (jouYouKanJiList != null) {
+			//
+			setSelectedItem(cbmJoYoKanJi,
+					StringUtils.length(text) <= orElse(max(mapToInt(stream(list), StringUtils::length)), 0)
+							? contains(list, text)
+							: null);
+			//
+		} // if
+			//
 	}
 
 	private static void keyReleasedForTextImport(final Multimap<String, String> multiMap,
@@ -7739,7 +7764,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		DataValidationHelper dvh = null;
 		//
-		Unit<List<Boolean>> booleans = null;
+		IValue0<List<Boolean>> booleans = null;
 		//
 		final Class<?> classJlpt = forName("domain.Voice$JLPT");
 		//

@@ -2606,7 +2606,7 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> keyReleased(instance, keyEventTfListNames));
 		//
-		// btnCheckGaKuNenBeTsuKanJi
+		// tfTextImport
 		//
 		final JTextComponent tfTextImport = new JTextField();
 		//
@@ -2617,6 +2617,28 @@ class VoiceManagerTest {
 		} // if
 			//
 		final KeyEvent keyEventTfTextImport = new KeyEvent(tfTextImport, 0, 0, 0, 0, ' ');
+		//
+		Assertions.assertDoesNotThrow(() -> keyReleased(instance, keyEventTfTextImport));
+		//
+		setText(tfTextImport, SPACE);
+		//
+		Assertions.assertDoesNotThrow(() -> keyReleased(instance, keyEventTfTextImport));
+		//
+		// jouYouKanJiList
+		//
+		final Field jouYouKanJiList = getDeclaredField(getClass(instance), "jouYouKanJiList");
+		//
+		if (jouYouKanJiList != null) {
+			//
+			jouYouKanJiList.setAccessible(true);
+			//
+		} // if
+			//
+		set(jouYouKanJiList, instance, Unit.with(Collections.singletonList(null)));
+		//
+		Assertions.assertDoesNotThrow(() -> keyReleased(instance, keyEventTfTextImport));
+		//
+		set(jouYouKanJiList, instance, Unit.with(Collections.singletonList(SPACE)));
 		//
 		Assertions.assertDoesNotThrow(() -> keyReleased(instance, keyEventTfTextImport));
 		//
