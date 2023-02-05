@@ -210,6 +210,8 @@
 			value="#{T(javax.swing.WindowConstants).EXIT_ON_CLOSE}" />
 		<property name="jouYouKanJiList" ref="JouYouKanJiList" />
 		<property name="url" ref="JouYouKanJiPageUrl" />
+		<property name="ecssVersion"
+			value="${org.springframework.context.support.JouYouKanjiGui.ecssVersion}" />
 	</bean>
 
 	<bean id="DataSource" class="org.h2.jdbcx.JdbcConnectionPool"

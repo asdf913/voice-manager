@@ -97,6 +97,7 @@ import org.springframework.core.env.PropertyResolver;
 import org.springframework.core.env.PropertyResolverUtil;
 
 import com.google.common.reflect.Reflection;
+import com.helger.commons.version.Version;
 import com.helger.css.ECSSVersion;
 import com.helger.css.decl.CSSDeclaration;
 import com.helger.css.reader.CSSReaderDeclarationList;
@@ -128,6 +129,8 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 
 	private String url = null;
 
+	private ECSSVersion ecssVersion = null;
+
 	private JouYouKanjiGui() {
 	}
 
@@ -142,6 +145,80 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 
 	public void setUrl(final String url) {
 		this.url = url;
+	}
+
+	public void setEcssVersion(final Object object) throws NoSuchFieldException, IllegalAccessException {
+		//
+		if (object == null) {
+			//
+			this.ecssVersion = null;
+			//
+		} else if (object instanceof ECSSVersion ecssVersion) {
+			//
+			this.ecssVersion = ecssVersion;
+			//
+		} else if (object instanceof String string) {
+			//
+			final List<ECSSVersion> list = toList(
+					filter(testAndApply(Objects::nonNull, ECSSVersion.values(), Arrays::stream, null),
+							x -> StringUtils.contains(name(x), string)));
+			//
+			final int size = IterableUtils.size(list);
+			//
+			if (size > 1) {
+				//
+				throw new IllegalArgumentException();
+				//
+			} else if (size == 1) {
+				//
+				this.ecssVersion = IterableUtils.get(list, 0);
+				//
+			} // if
+				//
+		} else if (object instanceof Number number) {
+			//
+			final ECSSVersion[] evs = ECSSVersion.values();
+			//
+			if (evs != null) {
+				//
+				IValue0<ECSSVersion> iValue0 = null;
+				//
+				Version v = null;
+				//
+				for (final ECSSVersion ev : evs) {
+					//
+					if (ev == null || (v = ev.getVersion()) == null || number.intValue() != v.getMajor()) {
+						//
+						continue;
+						//
+					} // if
+						//
+					if (iValue0 == null) {
+						//
+						iValue0 = Unit.with(ev);
+						//
+					} else {
+						//
+						throw new IllegalArgumentException();
+						//
+					} // if
+						//
+				} // for
+					//
+				if (iValue0 != null) {
+					//
+					this.ecssVersion = IValue0Util.getValue0(iValue0);
+					//
+				} // if
+					//
+			} // if
+				//
+		} // if
+			//
+	}
+
+	private static String name(final Enum<?> instance) {
+		return instance != null ? instance.name() : null;
 	}
 
 	@Override
@@ -251,8 +328,9 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 					file = new File(String.format("常用漢字_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.xlsx", new Date())))) {
 				//
 				CustomPropertiesUtil.addProperty(
-						POIXMLPropertiesUtil.getCustomProperties(POIXMLDocumentUtil.getProperties(
-								cast(POIXMLDocument.class, workbook = createJouYouKanJiWorkbook(url, Duration.ZERO)))),
+						POIXMLPropertiesUtil
+								.getCustomProperties(POIXMLDocumentUtil.getProperties(cast(POIXMLDocument.class,
+										workbook = createJouYouKanJiWorkbook(url, Duration.ZERO, ecssVersion)))),
 						"Source", url);
 				//
 				WorkbookUtil.write(workbook, os);
@@ -367,7 +445,8 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 
 	}
 
-	private static Workbook createJouYouKanJiWorkbook(final String url, final Duration timeout) {
+	private static Workbook createJouYouKanJiWorkbook(final String url, final Duration timeout,
+			final ECSSVersion ecssVersion) {
 		//
 		Workbook workbook = null;
 		//
@@ -382,7 +461,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 			ObjectMap.setObject(objectMap, Workbook.class,
 					workbook = ObjectUtils.getIfNull(workbook, XSSFWorkbook::new));
 			//
-			ObjectMap.setObject(objectMap, ECSSVersion.class, ECSSVersion.CSS30);
+			ObjectMap.setObject(objectMap, ECSSVersion.class, ecssVersion);
 			//
 			final String xPathFormat = StringUtils.prependIfMissing(StringUtils.joinWith("/", "h3",
 					"span[text()=\"%1$s\"]", "..", "following-sibling::table[1]", "tbody"), "//");

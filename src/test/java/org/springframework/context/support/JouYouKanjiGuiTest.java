@@ -21,9 +21,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.InitializingBean;
 
+import com.helger.css.ECSSVersion;
+
 class JouYouKanjiGuiTest {
 
-	private static Method METHOD_GET_CLASS, METHOD_GET_DECLARED_FIELDS, METHOD_GET_TYPE = null;
+	private static Method METHOD_GET_CLASS, METHOD_GET_DECLARED_FIELDS, METHOD_GET_TYPE, METHOD_NAME = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -35,6 +37,8 @@ class JouYouKanjiGuiTest {
 		(METHOD_GET_DECLARED_FIELDS = clz.getDeclaredMethod("getDeclaredFields", Class.class)).setAccessible(true);
 		//
 		(METHOD_GET_TYPE = clz.getDeclaredMethod("getType", Field.class)).setAccessible(true);
+		//
+		(METHOD_NAME = clz.getDeclaredMethod("name", Enum.class)).setAccessible(true);
 		//
 	}
 
@@ -173,6 +177,54 @@ class JouYouKanjiGuiTest {
 	}
 
 	@Test
+	void testSetEcssVersion() throws NoSuchFieldException, IllegalAccessException {
+		//
+		final Field ecssVersion = JouYouKanjiGui.class.getDeclaredField("ecssVersion");
+		//
+		if (ecssVersion != null) {
+			//
+			ecssVersion.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> setEcssVersion(instance, null));
+		//
+		// com.helger.css.ECSSVersion
+		//
+		final ECSSVersion ev = ECSSVersion.CSS10;
+		//
+		Assertions.assertDoesNotThrow(() -> setEcssVersion(instance, ev));
+		//
+		Assertions.assertSame(ev, get(ecssVersion, instance));
+		//
+		// java.lang.String
+		//
+		Assertions.assertDoesNotThrow(() -> setEcssVersion(instance, "2"));
+		//
+		Assertions.assertSame(ECSSVersion.CSS21, get(ecssVersion, instance));
+		//
+		Assertions.assertThrows(IllegalArgumentException.class, () -> setEcssVersion(instance, "CSS"));
+		//
+		// java.lang.Integer
+		//
+		Assertions.assertDoesNotThrow(() -> setEcssVersion(instance, 3));
+		//
+		Assertions.assertSame(ECSSVersion.CSS30, get(ecssVersion, instance));
+		//
+	}
+
+	private static void setEcssVersion(final JouYouKanjiGui instance, final Object object)
+			throws NoSuchFieldException, IllegalAccessException {
+		if (instance != null) {
+			instance.setEcssVersion(object);
+		}
+	}
+
+	private static Object get(final Field field, final Object instance) throws IllegalAccessException {
+		return field != null ? field.get(instance) : null;
+	}
+
+	@Test
 	void testGetClass() throws Throwable {
 		//
 		Assertions.assertNull(getClass(null));
@@ -232,6 +284,27 @@ class JouYouKanjiGuiTest {
 				return null;
 			} else if (obj instanceof Class<?>) {
 				return (Class<?>) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testName() throws Throwable {
+		//
+		Assertions.assertNull(name(null));
+		//
+	}
+
+	private static String name(final Enum<?> instance) throws Throwable {
+		try {
+			final Object obj = METHOD_NAME.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
