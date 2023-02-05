@@ -375,8 +375,6 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 
 		<T> T getObject(final Class<T> key);
 
-		boolean containsObject(final Class<?> key);
-
 		<T> void setObject(final Class<T> key, final T value);
 
 		static <T> T getObject(final ObjectMap instance, final Class<T> key) {
