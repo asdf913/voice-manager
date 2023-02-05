@@ -154,9 +154,9 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 			//
 			this.ecssVersion = null;
 			//
-		} else if (object instanceof ECSSVersion ecssVersion) {
+		} else if (object instanceof ECSSVersion ev) {
 			//
-			this.ecssVersion = ecssVersion;
+			this.ecssVersion = ev;
 			//
 		} else if (object instanceof String string) {
 			//
