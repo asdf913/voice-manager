@@ -8977,8 +8977,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 		private Collection<Object> throwableStackTraceHexs = null;
 
-		private static final AtomicInteger COUNTER = new AtomicInteger();
-
 		private Runnable runnable = null;
 
 		private Map<Object, Object> objects = null;
