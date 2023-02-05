@@ -159,7 +159,7 @@
 			<bean
 				class="org.springframework.beans.factory.JouYouKanJiListFactoryBean">
 				<property name="url"
-					value="${org.springframework.context.support.VoiceManager.joYoKanJiPageUrl}" />
+					value="${org.springframework.context.support.VoiceManager.jouYouKanJiPageUrl}" />
 				<property name="resource" value="classpath:JoYoKanJi.txt" />
 			</bean>
 		</property>

@@ -5095,7 +5095,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					file = new File(String.format("常用漢字_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.xlsx", new Date())))) {
 				//
 				final String url = PropertyResolverUtil.getProperty(propertyResolver,
-						"org.springframework.context.support.VoiceManager.joYoKanJiPageUrl");
+						"org.springframework.context.support.VoiceManager.jouYouKanJiPageUrl");
 				//
 				CustomPropertiesUtil.addProperty(
 						POIXMLPropertiesUtil.getCustomProperties(POIXMLDocumentUtil.getProperties(
