@@ -48,13 +48,13 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 
 	private static final long serialVersionUID = 3076804232578596080L;
 
-	private PropertyResolver propertyResolver = null;
+	private transient PropertyResolver propertyResolver = null;
 
 	private JTextComponent tfText = null;
 
-	private ComboBoxModel<Boolean> cbmJouYouKanJi = null;
+	private transient ComboBoxModel<Boolean> cbmJouYouKanJi = null;
 
-	private IValue0<List<String>> jouYouKanJiList = null;
+	private transient IValue0<List<String>> jouYouKanJiList = null;
 
 	private JouYouKanjiGui() {
 	}
