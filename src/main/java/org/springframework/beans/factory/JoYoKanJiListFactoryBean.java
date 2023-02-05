@@ -1,5 +1,6 @@
 package org.springframework.beans.factory;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.time.Duration;
@@ -15,6 +16,9 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.javatuples.Unit;
+import org.javatuples.valueintf.IValue0;
+import org.javatuples.valueintf.IValue0Util;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -43,20 +47,12 @@ public class JoYoKanJiListFactoryBean implements FactoryBean<List<String>> {
 	@Override
 	public List<String> getObject() throws Exception {
 		//
-		if (ResourceUtil.exists(resource)) {
+		final IValue0<List<String>> iValue0 = getObject(resource);
+		//
+		if (iValue0 != null) {
 			//
-			try (final InputStream is = InputStreamSourceUtil.getInputStream(resource)) {
-				//
-				final String string = testAndApply(Objects::nonNull, is, x -> IOUtils.toString(x, "utf-8"), null);
-				//
-				if (string != null) {
-					//
-					return string.chars().mapToObj(c -> String.valueOf((char) c)).toList();
-					//
-				} // if
-					//
-			} // if
-				//
+			return IValue0Util.getValue0(iValue0);
+			//
 		} // if
 			//
 		final Document document = testAndApply(Objects::nonNull,
@@ -126,6 +122,28 @@ public class JoYoKanJiListFactoryBean implements FactoryBean<List<String>> {
 		} // for
 			//
 		return list;
+		//
+	}
+
+	private static IValue0<List<String>> getObject(final Resource resource) throws IOException {
+		//
+		if (ResourceUtil.exists(resource)) {
+			//
+			try (final InputStream is = InputStreamSourceUtil.getInputStream(resource)) {
+				//
+				final String string = testAndApply(Objects::nonNull, is, x -> IOUtils.toString(x, "utf-8"), null);
+				//
+				if (string != null) {
+					//
+					return Unit.with(string.chars().mapToObj(c -> String.valueOf((char) c)).toList());
+					//
+				} // if
+					//
+			} // if
+				//
+		} // if
+			//
+		return null;
 		//
 	}
 
