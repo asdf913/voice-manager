@@ -79,19 +79,8 @@ public class JoYoKanJiListFactoryBean implements FactoryBean<List<String>> {
 			//
 			if (columnIndex == null) {
 				//
-				for (int j = 0; j < IterableUtils.size(elements); j++) {
-					//
-					if (Boolean.logicalAnd(Objects.equals("th", tagName(element = IterableUtils.get(elements, j))),
-							Objects.equals("通用字体", ElementUtil.text(element)))) {
-						//
-						columnIndex = Integer.valueOf(j);
-						//
-						break;
-						//
-					} // if
-						//
-				} // for
-					//
+				columnIndex = getColumnIndex(elements);
+				//
 			} else {
 				//
 				for (int j = 0; j < IterableUtils.size(elements); j++) {
@@ -117,6 +106,25 @@ public class JoYoKanJiListFactoryBean implements FactoryBean<List<String>> {
 		} // for
 			//
 		return list;
+		//
+	}
+
+	private static Integer getColumnIndex(final List<Element> elements) {
+		//
+		Element element = null;
+		//
+		for (int j = 0; j < IterableUtils.size(elements); j++) {
+			//
+			if (Boolean.logicalAnd(Objects.equals("th", tagName(element = IterableUtils.get(elements, j))),
+					Objects.equals("通用字体", ElementUtil.text(element)))) {
+				//
+				return Integer.valueOf(j);
+				//
+			} // if
+				//
+		} // for
+			//
+		return null;
 		//
 	}
 

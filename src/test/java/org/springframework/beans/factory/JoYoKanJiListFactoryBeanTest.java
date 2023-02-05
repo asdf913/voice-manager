@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -20,13 +21,16 @@ import com.google.common.reflect.Reflection;
 
 class JoYoKanJiListFactoryBeanTest {
 
-	private static Method METHOD_TAG_NAME = null;
+	private static Method METHOD_TAG_NAME, METHOD_GET_COLUMN_INDEX = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
 		//
-		(METHOD_TAG_NAME = JoYoKanJiListFactoryBean.class.getDeclaredMethod("tagName", Element.class))
-				.setAccessible(true);
+		final Class<?> clz = JoYoKanJiListFactoryBean.class;
+		//
+		(METHOD_TAG_NAME = clz.getDeclaredMethod("tagName", Element.class)).setAccessible(true);
+		//
+		(METHOD_GET_COLUMN_INDEX = clz.getDeclaredMethod("getColumnIndex", List.class)).setAccessible(true);
 		//
 	}
 
@@ -132,6 +136,29 @@ class JoYoKanJiListFactoryBeanTest {
 				return null;
 			} else if (obj instanceof String) {
 				return (String) obj;
+			}
+			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetColumnIndex() throws Throwable {
+		//
+		Assertions.assertNull(getColumnIndex(null));
+		//
+		Assertions.assertNull(getColumnIndex(Arrays.asList(null, new Element("a"))));
+		//
+	}
+
+	private static Integer getColumnIndex(final List<Element> elements) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_COLUMN_INDEX.invoke(null, elements);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Integer) {
+				return (Integer) obj;
 			}
 			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
 		} catch (final InvocationTargetException e) {
