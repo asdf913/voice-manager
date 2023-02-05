@@ -5099,7 +5099,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				CustomPropertiesUtil.addProperty(
 						POIXMLPropertiesUtil.getCustomProperties(POIXMLDocumentUtil.getProperties(
-								cast(POIXMLDocument.class, workbook = createJoYoKanJiWorkbook(url, Duration.ZERO)))),
+								cast(POIXMLDocument.class, workbook = createJouYouKanJiWorkbook(url, Duration.ZERO)))),
 						SOURCE, url);
 				//
 				WorkbookUtil.write(workbook, os);
@@ -10537,7 +10537,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static Workbook createJoYoKanJiWorkbook(final String url, final Duration timeout) {
+	private static Workbook createJouYouKanJiWorkbook(final String url, final Duration timeout) {
 		//
 		Workbook workbook = null;
 		//
