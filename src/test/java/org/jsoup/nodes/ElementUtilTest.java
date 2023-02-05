@@ -12,4 +12,13 @@ class ElementUtilTest {
 		//
 	}
 
+	@Test
+	void testChildren() {
+		//
+		Assertions.assertNull(ElementUtil.children(null));
+		//
+		Assertions.assertNotNull(ElementUtil.children(new Element("a")));
+		//
+	}
+
 }

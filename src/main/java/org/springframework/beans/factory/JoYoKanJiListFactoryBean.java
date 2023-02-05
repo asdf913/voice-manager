@@ -23,7 +23,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
-import org.jsoup.select.Elements;
 import org.springframework.core.io.InputStreamSourceUtil;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceUtil;
@@ -89,7 +88,7 @@ public class JoYoKanJiListFactoryBean implements FactoryBean<List<String>> {
 		//
 		List<Element> trs = testAndApply(x -> IterableUtils.size(x) == 1,
 				ElementUtil.selectXpath(document, "//h3/span[text()=\"本表\"]/../following-sibling::table[1]/tbody"),
-				x -> children(IterableUtils.get(x, 0)), null);
+				x -> ElementUtil.children(IterableUtils.get(x, 0)), null);
 		//
 		Integer columnIndex = null;
 		//
@@ -103,7 +102,7 @@ public class JoYoKanJiListFactoryBean implements FactoryBean<List<String>> {
 		//
 		for (int i = 0; i < size; i++) {
 			//
-			elements = children(trs.get(i));
+			elements = ElementUtil.children(trs.get(i));
 			//
 			if (columnIndex == null) {
 				//
@@ -177,10 +176,6 @@ public class JoYoKanJiListFactoryBean implements FactoryBean<List<String>> {
 
 	private static int intValue(final Number instance, final int defaultValue) {
 		return instance != null ? instance.intValue() : defaultValue;
-	}
-
-	private static Elements children(final org.jsoup.nodes.Element instance) {
-		return instance != null ? instance.children() : null;
 	}
 
 	private static <E> void add(final Collection<E> items, final E item) {

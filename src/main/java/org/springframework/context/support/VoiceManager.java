@@ -10563,7 +10563,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			Elements elements = ElementUtil.selectXpath(document, String.format(xPathFormat, sheetName = "本表"));
 			//
 			ObjectMap.setObject(objectMap, Elements.class,
-					IterableUtils.size(elements) == 1 ? children(IterableUtils.get(elements, 0)) : null);
+					IterableUtils.size(elements) == 1 ? ElementUtil.children(IterableUtils.get(elements, 0)) : null);
 			//
 			addJoYoKanJiSheet(objectMap, sheetName);
 			//
@@ -10572,7 +10572,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			ObjectMap.setObject(objectMap, Elements.class,
 					IterableUtils.size(elements = ElementUtil.selectXpath(document,
 							String.format(xPathFormat, sheetName = "付表"))) == 1
-									? children(IterableUtils.get(elements, 0))
+									? ElementUtil.children(IterableUtils.get(elements, 0))
 									: null);
 			//
 			addJoYoKanJiSheet(objectMap, sheetName);
@@ -10582,7 +10582,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			ObjectMap.setObject(objectMap, Elements.class,
 					IterableUtils.size(elements = ElementUtil.selectXpath(document,
 							String.format(xPathFormat, sheetName = "備考欄"))) == 1
-									? children(IterableUtils.get(elements, 0))
+									? ElementUtil.children(IterableUtils.get(elements, 0))
 									: null);
 			//
 			addJoYoKanJiSheet(objectMap, sheetName);
@@ -10595,10 +10595,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return workbook;
 		//
-	}
-
-	private static Elements children(final org.jsoup.nodes.Element instance) {
-		return instance != null ? instance.children() : null;
 	}
 
 	private static void addJoYoKanJiSheet(final ObjectMap objectMap, final String sheetName) {
@@ -10641,7 +10637,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-			tds = children(domNode = get(elements, i));
+			tds = ElementUtil.children(domNode = get(elements, i));
 			//
 			backGroundColorString = getExpressionAsCSSString(
 					getCSSDeclarationByAttributeAndCssProperty(domNode, "style", eccsEcssVersion, "background-color"));

@@ -20,4 +20,8 @@ public interface ElementUtil {
 		return instance != null ? instance.select(cssQuery) : null;
 	}
 
+	static Elements children(final Element instance) {
+		return instance != null ? instance.children() : null;
+	}
+
 }
