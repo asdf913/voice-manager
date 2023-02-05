@@ -261,8 +261,6 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 				//
 			} // try
 				//
-			return;
-			//
 		} // if
 			//
 	}
