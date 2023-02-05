@@ -97,7 +97,7 @@ public class JoYoKanJiListFactoryBean implements FactoryBean<List<String>> {
 				//
 				for (int j = 0; j < elements.size(); j++) {
 					//
-					if ((element = elements.get(j)) == null || !Objects.equals("th", element.tagName())) {
+					if (!Objects.equals("th", tagName(element = elements.get(j)))) {
 						//
 						continue;
 						//
@@ -139,6 +139,10 @@ public class JoYoKanJiListFactoryBean implements FactoryBean<List<String>> {
 			//
 		return list;
 		//
+	}
+
+	private static String tagName(final Element instance) {
+		return instance != null ? instance.tagName() : null;
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
