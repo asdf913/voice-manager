@@ -2287,17 +2287,17 @@ class VoiceManagerTest {
 	@Test
 	void testActionPerformed2() throws IllegalAccessException, IOException {
 		//
-		// btnExportJoYoKanJi
+		// btnExportJouYouKanJi
 		//
-		final AbstractButton btnExportJoYoKanJi = new JButton();
+		final AbstractButton btnExportJouYouKanJi = new JButton();
 		//
 		if (instance != null) {
 			//
-			FieldUtils.writeDeclaredField(instance, "btnExportJoYoKanJi", btnExportJoYoKanJi, true);
+			FieldUtils.writeDeclaredField(instance, "btnExportJouYouKanJi", btnExportJouYouKanJi, true);
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnExportJoYoKanJi, 0, null)));
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnExportJouYouKanJi, 0, null)));
 		//
 		// btnDllPathCopy
 		//

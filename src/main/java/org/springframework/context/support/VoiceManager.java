@@ -650,7 +650,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	@ExportButton
 	@Group("Short Export Button")
-	private AbstractButton btnExportJoYoKanJi = null;
+	private AbstractButton btnExportJouYouKanJi = null;
 
 	@ExportButton
 	private AbstractButton btnExportMicrosoftSpeechObjectLibraryInformation = null;
@@ -3667,7 +3667,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			// btnExportJoYoKanJi
 			//
-		panel.add(btnExportJoYoKanJi = new JButton("Export 常用漢字"), String.format("%1$s,span %2$s", WRAP, 2));
+		panel.add(btnExportJouYouKanJi = new JButton("Export 常用漢字"), String.format("%1$s,span %2$s", WRAP, 2));
 		//
 		// Find the maximum width of the "java.awt.Component" instance from the field
 		// with "org.springframework.context.support.VoiceManager.Group" annotation with
@@ -3714,7 +3714,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		setEditable(false, tfDllPath, tfExportFile);
 		//
-		addActionListener(this, btnExportJoYoKanJi, btnExportMicrosoftSpeechObjectLibraryInformation, btnExportCopy,
+		addActionListener(this, btnExportJouYouKanJi, btnExportMicrosoftSpeechObjectLibraryInformation, btnExportCopy,
 				btnExportBrowse, btnDllPathCopy);
 		//
 		setEnabled(isInstalled(speechApi) && voiceIds != null, btnExportMicrosoftSpeechObjectLibraryInformation);
@@ -5085,7 +5085,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private void actionPerformedForExportButtons(final Object source, final boolean headless) {
 		//
-		if (Objects.equals(source, btnExportJoYoKanJi)) {
+		if (Objects.equals(source, btnExportJouYouKanJi)) {
 			//
 			File file = null;
 			//
