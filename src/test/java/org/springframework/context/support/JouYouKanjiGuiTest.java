@@ -73,6 +73,21 @@ class JouYouKanjiGuiTest {
 	}
 
 	@Test
+	void testActionPerformed() {
+		//
+		Assertions.assertDoesNotThrow(() -> {
+			//
+			if (instance != null) {
+				//
+				instance.actionPerformed(null);
+				//
+			} // if
+				//
+		});
+		//
+	}
+
+	@Test
 	void testKeyTyped() {
 		//
 		Assertions.assertDoesNotThrow(() -> {

@@ -208,7 +208,6 @@ import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.hssf.record.crypto.Biff8EncryptionKey;
 import org.apache.poi.hssf.usermodel.HSSFDataFormat;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ooxml.CustomPropertiesUtil;
 import org.apache.poi.ooxml.POIXMLDocument;
 import org.apache.poi.ooxml.POIXMLDocumentUtil;
 import org.apache.poi.ooxml.POIXMLProperties.CustomProperties;
@@ -233,7 +232,6 @@ import org.apache.poi.ss.usermodel.DataValidation;
 import org.apache.poi.ss.usermodel.DataValidationConstraint;
 import org.apache.poi.ss.usermodel.DataValidationHelper;
 import org.apache.poi.ss.usermodel.Drawing;
-import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.RichTextString;
 import org.apache.poi.ss.usermodel.Row;
@@ -246,9 +244,6 @@ import org.apache.poi.ss.usermodel.WorkbookUtil;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.util.LocaleID;
-import org.apache.poi.xssf.model.StylesTable;
-import org.apache.poi.xssf.usermodel.IndexedColorMap;
-import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFDataValidationHelper;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.eclipse.jetty.http.HttpStatus;
@@ -315,9 +310,6 @@ import com.healthmarketscience.jackcess.impl.DatabaseImpl;
 import com.healthmarketscience.jackcess.impl.DatabaseImpl.FileFormatDetails;
 import com.healthmarketscience.jackcess.impl.JetFormat;
 import com.healthmarketscience.jackcess.util.ImportUtil;
-import com.helger.css.ECSSVersion;
-import com.helger.css.decl.CSSDeclaration;
-import com.helger.css.reader.CSSReaderDeclarationList;
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
 import com.j256.simplemagic.ContentType;
@@ -649,10 +641,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Retention(RetentionPolicy.RUNTIME)
 	private @interface ExportButton {
 	}
-
-	@ExportButton
-	@Group("Short Export Button")
-	private AbstractButton btnExportJouYouKanJi = null;
 
 	@ExportButton
 	private AbstractButton btnExportMicrosoftSpeechObjectLibraryInformation = null;
@@ -3667,24 +3655,23 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
-			// btnExportJoYoKanJi
+			// Find the maximum width of the "java.awt.Component" instance from the field
+			// with "org.springframework.context.support.VoiceManager.Group" annotation with
+			// same value (i.e. "Short Export Button"),
+			// then set the maximum width to each "java.awt.Component" in the list.
 			//
-		panel.add(btnExportJouYouKanJi = new JButton("Export 常用漢字"), String.format("%1$s,span %2$s", WRAP, 2));
-		//
-		// Find the maximum width of the "java.awt.Component" instance from the field
-		// with "org.springframework.context.support.VoiceManager.Group" annotation with
-		// same value (i.e. "Short Export Button"),
-		// then set the maximum width to each "java.awt.Component" in the list.
-		//
 		final List<Component> cs = getObjectsByGroupAnnotation(this, "Short Export Button", Component.class);
 		//
-		setPreferredWidth(intValue(
-				getPreferredWidth(
-						Collections.max(cs, (a, b) -> ObjectUtils.compare(getPreferredWidth(a), getPreferredWidth(b)))),
-				0), cs);
-		//
-		// btnExportMicrosoftSpeechObjectLibraryInformation
-		//
+		if (CollectionUtils.isNotEmpty(cs)) {
+			//
+			setPreferredWidth(intValue(getPreferredWidth(
+					Collections.max(cs, (a, b) -> ObjectUtils.compare(getPreferredWidth(a), getPreferredWidth(b)))), 0),
+					cs);
+			//
+		} // if
+			//
+			// btnExportMicrosoftSpeechObjectLibraryInformation
+			//
 		final StringBuilder btnExportMicrosoftSpeechObjectLibraryInformationName = new StringBuilder("Export ");
 		//
 		if (StringUtils
@@ -3716,8 +3703,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		setEditable(false, tfDllPath, tfExportFile);
 		//
-		addActionListener(this, btnExportJouYouKanJi, btnExportMicrosoftSpeechObjectLibraryInformation, btnExportCopy,
-				btnExportBrowse, btnDllPathCopy);
+		addActionListener(this, btnExportMicrosoftSpeechObjectLibraryInformation, btnExportCopy, btnExportBrowse,
+				btnDllPathCopy);
 		//
 		setEnabled(isInstalled(speechApi) && voiceIds != null, btnExportMicrosoftSpeechObjectLibraryInformation);
 		//
@@ -5105,47 +5092,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private void actionPerformedForExportButtons(final Object source, final boolean headless) {
 		//
-		if (Objects.equals(source, btnExportJouYouKanJi)) {
-			//
-			File file = null;
-			//
-			Workbook workbook = null;
-			//
-			try (final OutputStream os = new FileOutputStream(
-					file = new File(String.format("常用漢字_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.xlsx", new Date())))) {
-				//
-				final String url = PropertyResolverUtil.getProperty(propertyResolver,
-						"org.springframework.context.support.VoiceManager.jouYouKanJiPageUrl");
-				//
-				CustomPropertiesUtil.addProperty(
-						POIXMLPropertiesUtil.getCustomProperties(POIXMLDocumentUtil.getProperties(
-								cast(POIXMLDocument.class, workbook = createJouYouKanJiWorkbook(url, Duration.ZERO)))),
-						SOURCE, url);
-				//
-				WorkbookUtil.write(workbook, os);
-				//
-				setText(tfExportFile, getAbsolutePath(file));
-				//
-			} catch (final IOException e) {
-				//
-				errorOrAssertOrShowException(headless, e);
-				//
-			} finally {
-				//
-				IOUtils.closeQuietly(workbook);
-				//
-				final IntStream intStream = mapToInt(testAndApply(Objects::nonNull, spliterator(workbook),
-						x -> StreamSupport.stream(x, false), null), x -> intValue(getPhysicalNumberOfRows(x), 0));
-				//
-				final Integer totalPhysicalNumberOfRows = intStream != null ? Integer.valueOf(intStream.sum()) : null;
-				//
-				testAndAccept(x -> intValue(totalPhysicalNumberOfRows, 0) == 0, file, FileUtils::deleteQuietly);
-				//
-			} // try
-				//
-			return;
-			//
-		} else if (Objects.equals(source, btnExportMicrosoftSpeechObjectLibraryInformation)) {
+		if (Objects.equals(source, btnExportMicrosoftSpeechObjectLibraryInformation)) {
 			//
 			File file = null;
 			//
@@ -10642,211 +10589,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		return et;
 		//
-	}
-
-	private static Workbook createJouYouKanJiWorkbook(final String url, final Duration timeout) {
-		//
-		Workbook workbook = null;
-		//
-		try {
-			//
-			final org.jsoup.nodes.Document document = testAndApply(Objects::nonNull,
-					testAndApply(StringUtils::isNotBlank, url, URL::new, null),
-					x -> Jsoup.parse(x, intValue(toMillis(timeout), 0)), null);
-			//
-			final ObjectMap objectMap = Reflection.newProxy(ObjectMap.class, new IH());
-			//
-			ObjectMap.setObject(objectMap, Workbook.class, workbook = getIfNull(workbook, XSSFWorkbook::new));
-			//
-			ObjectMap.setObject(objectMap, ECSSVersion.class, ECSSVersion.CSS30);
-			//
-			final String xPathFormat = StringUtils.prependIfMissing(StringUtils.joinWith("/", "h3",
-					"span[text()=\"%1$s\"]", "..", "following-sibling::table[1]", "tbody"), "//");
-			//
-			String sheetName = null;
-			//
-			// 本表
-			//
-			Elements elements = ElementUtil.selectXpath(document, String.format(xPathFormat, sheetName = "本表"));
-			//
-			ObjectMap.setObject(objectMap, Elements.class,
-					IterableUtils.size(elements) == 1 ? ElementUtil.children(IterableUtils.get(elements, 0)) : null);
-			//
-			addJouYouKanJiSheet(objectMap, sheetName);
-			//
-			// 付表
-			//
-			ObjectMap.setObject(objectMap, Elements.class,
-					IterableUtils.size(elements = ElementUtil.selectXpath(document,
-							String.format(xPathFormat, sheetName = "付表"))) == 1
-									? ElementUtil.children(IterableUtils.get(elements, 0))
-									: null);
-			//
-			addJouYouKanJiSheet(objectMap, sheetName);
-			//
-			// 備考欄
-			//
-			ObjectMap.setObject(objectMap, Elements.class,
-					IterableUtils.size(elements = ElementUtil.selectXpath(document,
-							String.format(xPathFormat, sheetName = "備考欄"))) == 1
-									? ElementUtil.children(IterableUtils.get(elements, 0))
-									: null);
-			//
-			addJouYouKanJiSheet(objectMap, sheetName);
-			//
-		} catch (final IOException e) {
-			//
-			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
-			//
-		} // try
-			//
-		return workbook;
-		//
-	}
-
-	private static void addJouYouKanJiSheet(final ObjectMap objectMap, final String sheetName) {
-		//
-		final Workbook workbook = ObjectMap.getObject(objectMap, Workbook.class);
-		//
-		final IndexedColorMap indexedColorMap = getIndexedColors(getStylesSource(cast(XSSFWorkbook.class, workbook)));
-		//
-		Sheet sheet = null;
-		//
-		Row row = null;
-		//
-		Elements tds = null;
-		//
-		String textContent = null;
-		//
-		Matcher matcher = null;
-		//
-		Pattern pattern2 = null;
-		//
-		org.jsoup.nodes.Element domNode = null;
-		//
-		String backGroundColorString = null;
-		//
-		Cell cell = null;
-		//
-		CellStyle cellStyle = null;
-		//
-		final Elements elements = ObjectMap.getObject(objectMap, Elements.class);
-		//
-		final ECSSVersion eccsEcssVersion = ObjectUtils.defaultIfNull(ObjectMap.getObject(objectMap, ECSSVersion.class),
-				ECSSVersion.CSS30);
-		//
-		for (int i = 0; i < IterableUtils.size(elements); i++) {
-			//
-			if ((sheet = getIfNull(sheet, () -> createSheet(workbook, sheetName))) != null
-					&& (row = SheetUtil.createRow(sheet, sheet.getLastRowNum() + 1)) == null) {
-				//
-				continue;
-				//
-			} // if
-				//
-			tds = ElementUtil.children(domNode = get(elements, i));
-			//
-			backGroundColorString = getExpressionAsCSSString(
-					getCSSDeclarationByAttributeAndCssProperty(domNode, "style", eccsEcssVersion, "background-color"));
-			//
-			for (int j = 0; j < IterableUtils.size(tds); j++) {
-				//
-				if ((matcher = matcher(pattern2 = getIfNull(pattern2, () -> Pattern.compile("\\[\\d+]")),
-						textContent = ElementUtil.text(get(tds, j)))) != null) {
-					//
-					textContent = matcher.replaceAll("");
-					//
-				} // if
-					//
-				CellUtil.setCellValue(cell = RowUtil.createCell(row, Math.max(row.getLastCellNum(), 0)),
-						StringUtils.trim(textContent));
-				//
-				// background-color
-				//
-				if (StringUtils.isNotBlank(backGroundColorString)) {
-					//
-					setFillBackgroundColor(cellStyle = createCellStyle(workbook),
-							new XSSFColor(
-									new Color(Integer.parseInt(StringUtils.substring(backGroundColorString, 1), 16)),
-									indexedColorMap));
-					//
-					setFillPattern(cellStyle, FillPatternType.SOLID_FOREGROUND);
-					//
-					setCellStyle(cell, cellStyle);
-					//
-				} // if
-					//
-			} // for
-				//
-		} // for
-			//
-		if (sheet != null && row != null && sheet.getFirstRowNum() < sheet.getLastRowNum()
-				&& row.getFirstCellNum() >= 0) {
-			//
-			sheet.setAutoFilter(new CellRangeAddress(sheet.getFirstRowNum(), sheet.getLastRowNum() - 1,
-					row.getFirstCellNum(), row.getLastCellNum() - 1));
-			//
-		} // if
-			//
-	}
-
-	private static CSSDeclaration getCSSDeclarationByAttributeAndCssProperty(final org.jsoup.nodes.Element element,
-			final String attribute, final ECSSVersion ecssVersion, final String cssProperty) {
-		//
-		final String style = attr(element, attribute);
-		//
-		CSSDeclaration cssDeclaration = null;
-		//
-		if (StringUtils.isNotBlank(style)) {
-			//
-			final List<CSSDeclaration> cssDeclarations = toList(filter(
-					stream(CSSReaderDeclarationList.readFromString(style,
-							ObjectUtils.defaultIfNull(ecssVersion, ECSSVersion.CSS30))),
-					x -> Objects.equals(getProperty(x), cssProperty)));
-			//
-			final int size = IterableUtils.size(cssDeclarations);
-			//
-			if (size > 1) {
-				//
-				throw new IllegalStateException();
-				//
-			} // if
-				//
-			cssDeclaration = size == 1 ? IterableUtils.get(cssDeclarations, 0) : null;
-			//
-		} // if
-			//
-		return cssDeclaration;
-		//
-	}
-
-	private static StylesTable getStylesSource(final XSSFWorkbook instance) {
-		return instance != null ? instance.getStylesSource() : null;
-	}
-
-	private static IndexedColorMap getIndexedColors(final StylesTable instance) {
-		return instance != null ? instance.getIndexedColors() : null;
-	}
-
-	private static void setFillBackgroundColor(final CellStyle instance,
-			final org.apache.poi.ss.usermodel.Color color) {
-		if (instance != null) {
-			instance.setFillBackgroundColor(color);
-		}
-	}
-
-	private static void setFillPattern(final CellStyle instance, final FillPatternType fillPatternType) {
-		if (instance != null) {
-			instance.setFillPattern(fillPatternType);
-		}
-	}
-
-	private static String getProperty(final CSSDeclaration instance) {
-		return instance != null ? instance.getProperty() : null;
-	}
-
-	private static String getExpressionAsCSSString(final CSSDeclaration instance) {
-		return instance != null ? instance.getExpressionAsCSSString() : null;
 	}
 
 	private static Workbook createMicrosoftSpeechObjectLibraryWorkbook(final SpeechApi speechApi,

@@ -155,7 +155,6 @@ import org.apache.poi.ss.usermodel.DataValidation;
 import org.apache.poi.ss.usermodel.DataValidationConstraint;
 import org.apache.poi.ss.usermodel.DataValidationHelper;
 import org.apache.poi.ss.usermodel.Drawing;
-import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.RichTextString;
 import org.apache.poi.ss.usermodel.Row;
@@ -203,9 +202,6 @@ import com.google.common.reflect.Reflection;
 import com.healthmarketscience.jackcess.Database;
 import com.healthmarketscience.jackcess.Database.FileFormat;
 import com.healthmarketscience.jackcess.impl.DatabaseImpl.FileFormatDetails;
-import com.helger.css.ECSSVersion;
-import com.helger.css.decl.CSSDeclaration;
-import com.helger.css.decl.CSSExpression;
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentType;
 import com.mpatric.mp3agic.ID3v1;
@@ -238,25 +234,24 @@ class VoiceManagerTest {
 			METHOD_GET_FILE_EXTENSION_FILE_FORMAT, METHOD_GET_FILE_EXTENSION_FAILABLE_SUPPLIER, METHOD_DIGEST,
 			METHOD_GET_MAPPER, METHOD_INSERT_OR_UPDATE, METHOD_SET_ENABLED_2, METHOD_SET_ENABLED_3,
 			METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_CAST, METHOD_INT_VALUE, METHOD_LONG_VALUE,
-			METHOD_GET_PROPERTY_CUSTOM_PROPERTIES, METHOD_GET_PROPERTY_CSS_DECLARATION, METHOD_PARSE_EXPRESSION,
-			METHOD_GET_VALUE, METHOD_GET_SOURCE_VOICE, METHOD_EXPORT, METHOD_MAP, METHOD_MAP_TO_INT, METHOD_MAP_TO_LONG,
-			METHOD_MAX_STREAM, METHOD_MAX_INT_STREAM, METHOD_OR_ELSE_OPTIONAL, METHOD_OR_ELSE_OPTIONAL_INT,
-			METHOD_FOR_EACH_STREAM, METHOD_FOR_EACH_ITERABLE, METHOD_CREATE_WORK_BOOK_LIST, METHOD_CREATE_VOICE,
-			METHOD_INVOKE, METHOD_ANNOTATION_TYPE, METHOD_FIND_FIRST, METHOD_GET_DECLARED_METHODS, METHOD_FOR_NAME,
-			METHOD_FILTER, METHOD_SET_TEXT, METHOD_GET_PREFERRED_WIDTH, METHOD_IMPORT_VOICE1, METHOD_IMPORT_VOICE3,
-			METHOD_IMPORT_VOICE5, METHOD_ADD_COLLECTION, METHOD_ADD_LIST, METHOD_CREATE_IMPORT_FILE_TEMPLATE_BYTE_ARRAY,
-			METHOD_ANY_MATCH, METHOD_COLLECT, METHOD_NAME, METHOD_GET_SELECTED_ITEM, METHOD_MATCHER,
-			METHOD_SET_VALUE_J_PROGRESS_BAR, METHOD_SET_VALUE_J_SLIDER, METHOD_SET_STRING_J_PROGRESS_BAR,
-			METHOD_SET_STRING_COMMENT, METHOD_SET_TOOL_TIP_TEXT, METHOD_FORMAT, METHOD_CONTAINS_KEY, METHOD_VALUE_OF1,
-			METHOD_VALUE_OF2, METHOD_GET_CLASS, METHOD_CREATE_RANGE, METHOD_GET_PROVIDER_NAME,
-			METHOD_GET_PROVIDER_VERSION, METHOD_WRITE_VOICE_TO_FILE, METHOD_GET_MP3_TAG_VALUE_FILE,
-			METHOD_GET_MP3_TAG_VALUE_LIST, METHOD_GET_MP3_TAG_PARIRS_ID3V1, METHOD_GET_METHODS_CLASS,
-			METHOD_GET_METHODS_JAVA_CLASS, METHOD_COPY_OBJECT_MAP, METHOD_DELETE, METHOD_DELETE_ON_EXIT,
-			METHOD_CONVERT_LANGUAGE_CODE_TO_TEXT, METHOD_IS_SELECTED, METHOD_SET_HIRAGANA_OR_KATAKANA,
-			METHOD_SET_ROMAJI, METHOD_AND, METHOD_OR, METHOD_CLEAR_DEFAULT_TABLE_MODEL, METHOD_CLEAR_STRING_BUILDER,
-			METHOD_EXECUTE, METHOD_PUT_MAP, METHOD_GET_BYTE_CONVERTER, METHOD_CONTAINS_CUSTOM_PROPERTIES,
-			METHOD_CONTAINS_COLLECTION, METHOD_CONTAINS_LOOKUP, METHOD_GET_LPW_STR, METHOD_GET_SHEET_NAME,
-			METHOD_ACCEPT, METHOD_TO_ARRAY, METHOD_TO_LIST, METHOD_GET_ID, METHOD_SET_MAXIMUM,
+			METHOD_GET_PROPERTY_CUSTOM_PROPERTIES, METHOD_PARSE_EXPRESSION, METHOD_GET_VALUE, METHOD_GET_SOURCE_VOICE,
+			METHOD_EXPORT, METHOD_MAP, METHOD_MAP_TO_INT, METHOD_MAP_TO_LONG, METHOD_MAX_STREAM, METHOD_MAX_INT_STREAM,
+			METHOD_OR_ELSE_OPTIONAL, METHOD_OR_ELSE_OPTIONAL_INT, METHOD_FOR_EACH_STREAM, METHOD_FOR_EACH_ITERABLE,
+			METHOD_CREATE_WORK_BOOK_LIST, METHOD_CREATE_VOICE, METHOD_INVOKE, METHOD_ANNOTATION_TYPE, METHOD_FIND_FIRST,
+			METHOD_GET_DECLARED_METHODS, METHOD_FOR_NAME, METHOD_FILTER, METHOD_SET_TEXT, METHOD_GET_PREFERRED_WIDTH,
+			METHOD_IMPORT_VOICE1, METHOD_IMPORT_VOICE3, METHOD_IMPORT_VOICE5, METHOD_ADD_COLLECTION, METHOD_ADD_LIST,
+			METHOD_CREATE_IMPORT_FILE_TEMPLATE_BYTE_ARRAY, METHOD_ANY_MATCH, METHOD_COLLECT, METHOD_NAME,
+			METHOD_GET_SELECTED_ITEM, METHOD_MATCHER, METHOD_SET_VALUE_J_PROGRESS_BAR, METHOD_SET_VALUE_J_SLIDER,
+			METHOD_SET_STRING_J_PROGRESS_BAR, METHOD_SET_STRING_COMMENT, METHOD_SET_TOOL_TIP_TEXT, METHOD_FORMAT,
+			METHOD_CONTAINS_KEY, METHOD_VALUE_OF1, METHOD_VALUE_OF2, METHOD_GET_CLASS, METHOD_CREATE_RANGE,
+			METHOD_GET_PROVIDER_NAME, METHOD_GET_PROVIDER_VERSION, METHOD_WRITE_VOICE_TO_FILE,
+			METHOD_GET_MP3_TAG_VALUE_FILE, METHOD_GET_MP3_TAG_VALUE_LIST, METHOD_GET_MP3_TAG_PARIRS_ID3V1,
+			METHOD_GET_METHODS_CLASS, METHOD_GET_METHODS_JAVA_CLASS, METHOD_COPY_OBJECT_MAP, METHOD_DELETE,
+			METHOD_DELETE_ON_EXIT, METHOD_CONVERT_LANGUAGE_CODE_TO_TEXT, METHOD_IS_SELECTED,
+			METHOD_SET_HIRAGANA_OR_KATAKANA, METHOD_SET_ROMAJI, METHOD_AND, METHOD_OR, METHOD_CLEAR_DEFAULT_TABLE_MODEL,
+			METHOD_CLEAR_STRING_BUILDER, METHOD_EXECUTE, METHOD_PUT_MAP, METHOD_GET_BYTE_CONVERTER,
+			METHOD_CONTAINS_CUSTOM_PROPERTIES, METHOD_CONTAINS_COLLECTION, METHOD_CONTAINS_LOOKUP, METHOD_GET_LPW_STR,
+			METHOD_GET_SHEET_NAME, METHOD_ACCEPT, METHOD_TO_ARRAY, METHOD_TO_LIST, METHOD_GET_ID, METHOD_SET_MAXIMUM,
 			METHOD_GET_CURRENT_SHEET_INDEX, METHOD_GET_DATA_VALIDATION_HELPER, METHOD_CREATE_EXPLICIT_LIST_CONSTRAINT,
 			METHOD_CREATE_VALIDATION, METHOD_CREATE_EXPORT_TASK, METHOD_GET_TAB_INDEX_BY_TITLE,
 			METHOD_GET_DECLARED_FIELD, METHOD_GET_ABSOLUTE_PATH, METHOD_IS_ASSIGNABLE_FROM, METHOD_GET_ENUM_CONSTANTS,
@@ -277,10 +272,9 @@ class VoiceManagerTest {
 			METHOD_GET_FILE_EXTENSIONS, METHOD_CREATE_CELL_STYLE, METHOD_REDUCE, METHOD_APPEND_STRING,
 			METHOD_APPEND_CHAR, METHOD_GET_PROVIDER_PLATFORM, METHOD_GET_RESOURCE_AS_STREAM,
 			METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH, METHOD_GET_ATTRIBUTES, METHOD_GET_LENGTH, METHOD_ITEM,
-			METHOD_GET_OS_VERSION_INFO_EX_MAP, METHOD_CREATE_JLPT_SHEET, METHOD_ADD_JOU_YOU_KAN_JI_SHEET,
-			METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2, METHOD_SET_VISIBLE, METHOD_RANDOM_ALPHABETIC,
-			METHOD_GET_MEDIA_FORMAT_LINK, METHOD_GET_EVENT_TYPE, METHOD_GET_PARENT_FILE,
-			METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET,
+			METHOD_GET_OS_VERSION_INFO_EX_MAP, METHOD_CREATE_JLPT_SHEET, METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2,
+			METHOD_SET_VISIBLE, METHOD_RANDOM_ALPHABETIC, METHOD_GET_MEDIA_FORMAT_LINK, METHOD_GET_EVENT_TYPE,
+			METHOD_GET_PARENT_FILE, METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET,
 			METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET_FIRST_ROW, METHOD_EXPORT_JLPT,
 			METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT, METHOD_SET_SHEET_HEADER_ROW, METHOD_ENCRYPT,
 			METHOD_GET_WORKBOOK_BY_ZIP_FILE, METHOD_GET_ENCRYPTION_TABLE_HTML, METHOD_NEXT_ELEMENT_SIBLING, METHOD_HTML,
@@ -304,9 +298,7 @@ class VoiceManagerTest {
 			METHOD_GET_WORKBOOK_CLASS_FAILABLE_SUPPLIER_MAP, METHOD_GET_DECLARED_CONSTRUCTOR, METHOD_NEW_INSTANCE,
 			METHOD_GET_WRITER, METHOD_KEY_SET, METHOD_GET_WORK_BOOK_CLASS, METHOD_GET_SYSTEM_PRINT_STREAM_BY_FIELD_NAME,
 			METHOD_IF_ELSE, METHOD_GET_PAGE_TITLE, METHOD_SET_HIRAGANA_OR_KATAKANA_AND_ROMAJI, METHOD_APPLY,
-			METHOD_GET_SHEET_AT, METHOD_TO_MILLIS, METHOD_GET_EXPRESSION_AS_CSS_STRING,
-			METHOD_SET_FILL_BACKGROUND_COLOR, METHOD_SET_FILL_PATTERN,
-			METHOD_GETCSS_DECLARATION_BY_ATTRIBUTE_AND_CSS_PROPERTY = null;
+			METHOD_GET_SHEET_AT, METHOD_TO_MILLIS = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -354,9 +346,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_GET_PROPERTY_CUSTOM_PROPERTIES = clz.getDeclaredMethod("getProperty", CustomProperties.class,
 				String.class)).setAccessible(true);
-		//
-		(METHOD_GET_PROPERTY_CSS_DECLARATION = clz.getDeclaredMethod("getProperty", CSSDeclaration.class))
-				.setAccessible(true);
 		//
 		(METHOD_PARSE_EXPRESSION = clz.getDeclaredMethod("parseExpression", ExpressionParser.class, String.class))
 				.setAccessible(true);
@@ -732,9 +721,6 @@ class VoiceManagerTest {
 		(METHOD_CREATE_JLPT_SHEET = clz.getDeclaredMethod("createJlptSheet", Workbook.class, Iterable.class))
 				.setAccessible(true);
 		//
-		(METHOD_ADD_JOU_YOU_KAN_JI_SHEET = clz.getDeclaredMethod("addJouYouKanJiSheet", CLASS_OBJECT_MAP, String.class))
-				.setAccessible(true);
-		//
 		(METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2 = clz.getDeclaredMethod("errorOrAssertOrShowException", Boolean.TYPE,
 				Throwable.class)).setAccessible(true);
 		//
@@ -946,19 +932,6 @@ class VoiceManagerTest {
 		(METHOD_GET_SHEET_AT = clz.getDeclaredMethod("getSheetAt", Workbook.class, Integer.TYPE)).setAccessible(true);
 		//
 		(METHOD_TO_MILLIS = clz.getDeclaredMethod("toMillis", Duration.class)).setAccessible(true);
-		//
-		(METHOD_GET_EXPRESSION_AS_CSS_STRING = clz.getDeclaredMethod("getExpressionAsCSSString", CSSDeclaration.class))
-				.setAccessible(true);
-		//
-		(METHOD_SET_FILL_BACKGROUND_COLOR = clz.getDeclaredMethod("setFillBackgroundColor", CellStyle.class,
-				org.apache.poi.ss.usermodel.Color.class)).setAccessible(true);
-		//
-		(METHOD_SET_FILL_PATTERN = clz.getDeclaredMethod("setFillPattern", CellStyle.class, FillPatternType.class))
-				.setAccessible(true);
-		//
-		(METHOD_GETCSS_DECLARATION_BY_ATTRIBUTE_AND_CSS_PROPERTY = clz.getDeclaredMethod(
-				"getCSSDeclarationByAttributeAndCssProperty", org.jsoup.nodes.Element.class, String.class,
-				ECSSVersion.class, String.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -1490,8 +1463,6 @@ class VoiceManagerTest {
 
 	private Cell cell = null;
 
-	private CellStyle cellStyle = null;
-
 	private ObjectMapper objectMapper = null;
 
 	@BeforeEach
@@ -1540,8 +1511,6 @@ class VoiceManagerTest {
 		workbook = Reflection.newProxy(Workbook.class, ih);
 		//
 		cell = Reflection.newProxy(Cell.class, ih);
-		//
-		cellStyle = Reflection.newProxy(CellStyle.class, ih);
 		//
 	}
 
@@ -2287,18 +2256,6 @@ class VoiceManagerTest {
 	@Test
 	void testActionPerformed2() throws IllegalAccessException, IOException {
 		//
-		// btnExportJouYouKanJi
-		//
-		final AbstractButton btnExportJouYouKanJi = new JButton();
-		//
-		if (instance != null) {
-			//
-			FieldUtils.writeDeclaredField(instance, "btnExportJouYouKanJi", btnExportJouYouKanJi, true);
-			//
-		} // if
-			//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnExportJouYouKanJi, 0, null)));
-		//
 		// btnDllPathCopy
 		//
 		final AbstractButton btnDllPathCopy = new JButton();
@@ -2955,8 +2912,6 @@ class VoiceManagerTest {
 	@Test
 	void testGetProperty() throws Throwable {
 		//
-		Assertions.assertNull(getProperty(null));
-		//
 		Assertions.assertNull(getProperty(null, null));
 		//
 	}
@@ -2964,20 +2919,6 @@ class VoiceManagerTest {
 	private static String getProperty(final CustomProperties instance, final String key) throws Throwable {
 		try {
 			final Object obj = METHOD_GET_PROPERTY_CUSTOM_PROPERTIES.invoke(null, instance, key);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	private static String getProperty(final CSSDeclaration instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_PROPERTY_CSS_DECLARATION.invoke(null, instance);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof String) {
@@ -6428,21 +6369,6 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testAddJouYouKanJiSheet() {
-		//
-		Assertions.assertDoesNotThrow(() -> addJouYouKanJiSheet(null, null));
-		//
-	}
-
-	private static void addJouYouKanJiSheet(final Object objectMap, final String sheetName) throws Throwable {
-		try {
-			METHOD_ADD_JOU_YOU_KAN_JI_SHEET.invoke(null, objectMap, sheetName);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testErrorOrAssertOrShowException() {
 		//
 		Assertions.assertDoesNotThrow(() -> errorOrAssertOrShowException(true, null));
@@ -8267,108 +8193,6 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof Long) {
 				return (Long) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetExpressionAsCSSString() throws Throwable {
-		//
-		Assertions.assertNull(getExpressionAsCSSString(null));
-		//
-		Assertions.assertEquals(EMPTY, getExpressionAsCSSString(new CSSDeclaration(SPACE, new CSSExpression())));
-		//
-	}
-
-	private static String getExpressionAsCSSString(final CSSDeclaration instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_EXPRESSION_AS_CSS_STRING.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testSetFillBackgroundColor() {
-		//
-		Assertions.assertDoesNotThrow(() -> setFillBackgroundColor(null, null));
-		//
-		Assertions.assertDoesNotThrow(() -> setFillBackgroundColor(cellStyle, null));
-		//
-	}
-
-	private static void setFillBackgroundColor(final CellStyle instance, final org.apache.poi.ss.usermodel.Color color)
-			throws Throwable {
-		try {
-			METHOD_SET_FILL_BACKGROUND_COLOR.invoke(null, instance, color);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testSetFillPattern() {
-		//
-		Assertions.assertDoesNotThrow(() -> setFillPattern(null, null));
-		//
-		Assertions.assertDoesNotThrow(() -> setFillPattern(cellStyle, null));
-		//
-	}
-
-	private static void setFillPattern(final CellStyle instance, final FillPatternType fillPatternType)
-			throws Throwable {
-		try {
-			METHOD_SET_FILL_PATTERN.invoke(null, instance, fillPatternType);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetCSSDeclarationByProperty() throws Throwable {
-		//
-		Assertions.assertNull(getCSSDeclarationByAttributeAndCssProperty(null, null, null, null));
-		//
-		final String attribute = "style";
-		//
-		final String backGroundColor = "background-color";
-		//
-		if (element != null) {
-			//
-			element.attr(attribute, backGroundColor);
-			//
-		} // if
-			//
-		Assertions.assertNull(getCSSDeclarationByAttributeAndCssProperty(element, attribute, null, backGroundColor));
-		//
-		if (element != null) {
-			//
-			element.attr(attribute, StringUtils.joinWith(":", "background-color", "white"));
-			//
-		} // if
-			//
-		Assertions.assertNotNull(getCSSDeclarationByAttributeAndCssProperty(element, attribute, null, backGroundColor));
-		//
-	}
-
-	private static CSSDeclaration getCSSDeclarationByAttributeAndCssProperty(final org.jsoup.nodes.Element element,
-			final String attribute, final ECSSVersion ecssVersion, final String cssProperty) throws Throwable {
-		try {
-			final Object obj = METHOD_GETCSS_DECLARATION_BY_ATTRIBUTE_AND_CSS_PROPERTY.invoke(null, element, attribute,
-					ecssVersion, cssProperty);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof CSSDeclaration) {
-				return (CSSDeclaration) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
