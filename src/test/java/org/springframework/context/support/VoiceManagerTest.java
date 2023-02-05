@@ -277,7 +277,7 @@ class VoiceManagerTest {
 			METHOD_GET_FILE_EXTENSIONS, METHOD_CREATE_CELL_STYLE, METHOD_REDUCE, METHOD_APPEND_STRING,
 			METHOD_APPEND_CHAR, METHOD_GET_PROVIDER_PLATFORM, METHOD_GET_RESOURCE_AS_STREAM,
 			METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH, METHOD_GET_ATTRIBUTES, METHOD_GET_LENGTH, METHOD_ITEM,
-			METHOD_GET_OS_VERSION_INFO_EX_MAP, METHOD_CREATE_JLPT_SHEET, METHOD_ADD_JO_YO_KAN_JI_SHEET,
+			METHOD_GET_OS_VERSION_INFO_EX_MAP, METHOD_CREATE_JLPT_SHEET, METHOD_ADD_JOU_YOU_KAN_JI_SHEET,
 			METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2, METHOD_SET_VISIBLE, METHOD_RANDOM_ALPHABETIC,
 			METHOD_GET_MEDIA_FORMAT_LINK, METHOD_GET_EVENT_TYPE, METHOD_GET_PARENT_FILE,
 			METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET,
@@ -732,7 +732,7 @@ class VoiceManagerTest {
 		(METHOD_CREATE_JLPT_SHEET = clz.getDeclaredMethod("createJlptSheet", Workbook.class, Iterable.class))
 				.setAccessible(true);
 		//
-		(METHOD_ADD_JO_YO_KAN_JI_SHEET = clz.getDeclaredMethod("addJoYoKanJiSheet", CLASS_OBJECT_MAP, String.class))
+		(METHOD_ADD_JOU_YOU_KAN_JI_SHEET = clz.getDeclaredMethod("addJouYouKanJiSheet", CLASS_OBJECT_MAP, String.class))
 				.setAccessible(true);
 		//
 		(METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2 = clz.getDeclaredMethod("errorOrAssertOrShowException", Boolean.TYPE,
@@ -6428,15 +6428,15 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testAddJoYoKanJiSheet() {
+	void testAddJouYouKanJiSheet() {
 		//
-		Assertions.assertDoesNotThrow(() -> addJoYoKanJiSheet(null, null));
+		Assertions.assertDoesNotThrow(() -> addJouYouKanJiSheet(null, null));
 		//
 	}
 
-	private static void addJoYoKanJiSheet(final Object objectMap, final String sheetName) throws Throwable {
+	private static void addJouYouKanJiSheet(final Object objectMap, final String sheetName) throws Throwable {
 		try {
-			METHOD_ADD_JO_YO_KAN_JI_SHEET.invoke(null, objectMap, sheetName);
+			METHOD_ADD_JOU_YOU_KAN_JI_SHEET.invoke(null, objectMap, sheetName);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

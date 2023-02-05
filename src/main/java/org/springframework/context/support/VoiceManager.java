@@ -10565,7 +10565,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			ObjectMap.setObject(objectMap, Elements.class,
 					IterableUtils.size(elements) == 1 ? ElementUtil.children(IterableUtils.get(elements, 0)) : null);
 			//
-			addJoYoKanJiSheet(objectMap, sheetName);
+			addJouYouKanJiSheet(objectMap, sheetName);
 			//
 			// 付表
 			//
@@ -10575,7 +10575,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 									? ElementUtil.children(IterableUtils.get(elements, 0))
 									: null);
 			//
-			addJoYoKanJiSheet(objectMap, sheetName);
+			addJouYouKanJiSheet(objectMap, sheetName);
 			//
 			// 備考欄
 			//
@@ -10585,7 +10585,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 									? ElementUtil.children(IterableUtils.get(elements, 0))
 									: null);
 			//
-			addJoYoKanJiSheet(objectMap, sheetName);
+			addJouYouKanJiSheet(objectMap, sheetName);
 			//
 		} catch (final IOException e) {
 			//
@@ -10597,7 +10597,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static void addJoYoKanJiSheet(final ObjectMap objectMap, final String sheetName) {
+	private static void addJouYouKanJiSheet(final ObjectMap objectMap, final String sheetName) {
 		//
 		final Workbook workbook = ObjectMap.getObject(objectMap, Workbook.class);
 		//
