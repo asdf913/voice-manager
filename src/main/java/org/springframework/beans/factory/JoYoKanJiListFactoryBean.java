@@ -47,14 +47,42 @@ public class JoYoKanJiListFactoryBean implements FactoryBean<List<String>> {
 	@Override
 	public List<String> getObject() throws Exception {
 		//
-		final IValue0<List<String>> iValue0 = getObject(resource);
+		IValue0<List<String>> iValue0 = getObject(resource);
 		//
-		if (iValue0 != null) {
+		if (iValue0 != null || (iValue0 = getObjectByUrl(url, timeout)) != null) {
 			//
 			return IValue0Util.getValue0(iValue0);
 			//
 		} // if
 			//
+		return null;
+		//
+	}
+
+	private static IValue0<List<String>> getObject(final Resource resource) throws IOException {
+		//
+		if (ResourceUtil.exists(resource)) {
+			//
+			try (final InputStream is = InputStreamSourceUtil.getInputStream(resource)) {
+				//
+				final String string = testAndApply(Objects::nonNull, is, x -> IOUtils.toString(x, "utf-8"), null);
+				//
+				if (string != null) {
+					//
+					return Unit.with(string.chars().mapToObj(c -> String.valueOf((char) c)).toList());
+					//
+				} // if
+					//
+			} // if
+				//
+		} // if
+			//
+		return null;
+		//
+	}
+
+	private static IValue0<List<String>> getObjectByUrl(final String url, final Duration timeout) throws IOException {
+		//
 		final Document document = testAndApply(Objects::nonNull,
 				testAndApply(StringUtils::isNotBlank, url, URL::new, null),
 				x -> Jsoup.parse(x, intValue(toMillis(timeout), 0)), null);
@@ -69,7 +97,7 @@ public class JoYoKanJiListFactoryBean implements FactoryBean<List<String>> {
 		//
 		Element element = null;
 		//
-		List<String> list = null;
+		IValue0<List<String>> list = null;
 		//
 		final int size = IterableUtils.size(trs);
 		//
@@ -94,7 +122,8 @@ public class JoYoKanJiListFactoryBean implements FactoryBean<List<String>> {
 						//
 					if (columnIndex.intValue() == j) {
 						//
-						add(list = ObjectUtils.getIfNull(list, ArrayList::new),
+						add(IValue0Util.getValue0(
+								list = ObjectUtils.getIfNull(list, () -> Unit.with(new ArrayList<String>()))),
 								StringUtils.substring(ElementUtil.text(element), 0, 1));
 						//
 					} // if
@@ -123,28 +152,6 @@ public class JoYoKanJiListFactoryBean implements FactoryBean<List<String>> {
 			} // if
 				//
 		} // for
-			//
-		return null;
-		//
-	}
-
-	private static IValue0<List<String>> getObject(final Resource resource) throws IOException {
-		//
-		if (ResourceUtil.exists(resource)) {
-			//
-			try (final InputStream is = InputStreamSourceUtil.getInputStream(resource)) {
-				//
-				final String string = testAndApply(Objects::nonNull, is, x -> IOUtils.toString(x, "utf-8"), null);
-				//
-				if (string != null) {
-					//
-					return Unit.with(string.chars().mapToObj(c -> String.valueOf((char) c)).toList());
-					//
-				} // if
-					//
-			} // if
-				//
-		} // if
 			//
 		return null;
 		//
