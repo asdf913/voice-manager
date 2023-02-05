@@ -4678,6 +4678,17 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			ObjectMap.setObject(objectMap, DefaultTableModel.class, tmImportException);
 			//
+			try {
+				//
+				ObjectMap.setObject(objectMap, MessageDigest.class,
+						MessageDigest.getInstance(StringUtils.defaultIfBlank(messageDigestAlgorithm, SHA_512)));
+				//
+			} catch (final NoSuchAlgorithmException e) {
+				//
+				throw toRuntimeException(e);
+				//
+			} // try
+				//
 			execute(objectMap);
 			//
 		} finally {
