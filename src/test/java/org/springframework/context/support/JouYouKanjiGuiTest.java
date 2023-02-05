@@ -3,6 +3,8 @@ package org.springframework.context.support;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.lang.invoke.TypeDescriptor.OfField;
@@ -143,16 +145,16 @@ class JouYouKanjiGuiTest {
 	@Test
 	void testActionPerformed() {
 		//
-		Assertions.assertDoesNotThrow(() -> {
-			//
-			if (instance != null) {
-				//
-				instance.actionPerformed(null);
-				//
-			} // if
-				//
-		});
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, null));
 		//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent("", 0, null)));
+		//
+	}
+
+	private static void actionPerformed(final ActionListener instance, final ActionEvent evt) {
+		if (instance != null) {
+			instance.actionPerformed(evt);
+		}
 	}
 
 	@Test
