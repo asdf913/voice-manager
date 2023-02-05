@@ -479,37 +479,27 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 			final String xPathFormat = StringUtils.prependIfMissing(StringUtils.joinWith("/", "h3",
 					"span[text()=\"%1$s\"]", "..", "following-sibling::table[1]", "tbody"), "//");
 			//
+			// h3
+			//
+			final List<Element> h3s = ElementUtil.select(document, "h3 .mw-headline");
+			//
 			String sheetName = null;
 			//
-			// 本表
-			//
-			Elements elements = ElementUtil.selectXpath(document, String.format(xPathFormat, sheetName = "本表"));
-			//
-			ObjectMap.setObject(objectMap, Elements.class,
-					IterableUtils.size(elements) == 1 ? ElementUtil.children(IterableUtils.get(elements, 0)) : null);
-			//
-			addJouYouKanJiSheet(objectMap, sheetName);
-			//
-			// 付表
-			//
-			ObjectMap.setObject(objectMap, Elements.class,
-					IterableUtils.size(elements = ElementUtil.selectXpath(document,
-							String.format(xPathFormat, sheetName = "付表"))) == 1
-									? ElementUtil.children(IterableUtils.get(elements, 0))
-									: null);
-			//
-			addJouYouKanJiSheet(objectMap, sheetName);
-			//
-			// 備考欄
-			//
-			ObjectMap.setObject(objectMap, Elements.class,
-					IterableUtils.size(elements = ElementUtil.selectXpath(document,
-							String.format(xPathFormat, sheetName = "備考欄"))) == 1
-									? ElementUtil.children(IterableUtils.get(elements, 0))
-									: null);
-			//
-			addJouYouKanJiSheet(objectMap, sheetName);
-			//
+			for (int i = 0; h3s != null && i < h3s.size(); i++) {
+				//
+				ObjectMap.setObject(objectMap, Elements.class,
+						//
+						testAndApply(x -> IterableUtils.size(x) == 1,
+								ElementUtil.selectXpath(document,
+										String.format(xPathFormat, sheetName = ElementUtil.text(h3s.get(i)))),
+								x -> ElementUtil.children(IterableUtils.get(x, 0)), null)
+				//
+				);
+				//
+				addJouYouKanJiSheet(objectMap, sheetName);
+				//
+			} // for
+				//
 		} catch (final IOException e) {
 			//
 			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
