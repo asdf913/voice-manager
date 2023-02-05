@@ -9049,8 +9049,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} catch (final InvocationTargetException e) {
 					//
-					final Throwable targetExceptionRootCause = ExceptionUtils
-							.getRootCause(e != null ? e.getTargetException() : null);
+					final Throwable targetExceptionRootCause = ExceptionUtils.getRootCause(e.getTargetException());
 					//
 					if (targetExceptionRootCause != null) {
 						//
