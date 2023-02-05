@@ -6,9 +6,12 @@ import java.net.URL;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.Predicate;
+import java.util.stream.StreamSupport;
 
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.io.IOUtils;
@@ -26,6 +29,9 @@ import org.jsoup.nodes.ElementUtil;
 import org.springframework.core.io.InputStreamSourceUtil;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceUtil;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JouYouKanJiListFactoryBean implements FactoryBean<List<String>> {
 
@@ -64,6 +70,32 @@ public class JouYouKanJiListFactoryBean implements FactoryBean<List<String>> {
 			//
 			try (final InputStream is = InputStreamSourceUtil.getInputStream(resource)) {
 				//
+				final Object object = testAndApply(Objects::nonNull, is,
+						x -> new ObjectMapper().readValue(x, Object.class), null);
+				//
+				if (object instanceof Map) {
+					//
+					throw new IllegalArgumentException();
+					//
+				} // if
+					//
+				if (object instanceof Iterable<?> iterable) {
+					//
+					return Unit.with(StreamSupport.stream(iterable.spliterator(), false)
+							.map(JouYouKanJiListFactoryBean::toString).toList());
+					//
+				} else if (is != null) {
+					//
+					return Unit.with(object != null ? Collections.singletonList(toString(object)) : null);
+					//
+				} // if
+					//
+			} catch (final JsonProcessingException e) {
+				//
+			} // try
+				//
+			try (final InputStream is = InputStreamSourceUtil.getInputStream(resource)) {
+				//
 				final String string = testAndApply(Objects::nonNull, is, x -> IOUtils.toString(x, "utf-8"), null);
 				//
 				if (string != null) {
@@ -72,7 +104,7 @@ public class JouYouKanJiListFactoryBean implements FactoryBean<List<String>> {
 					//
 				} // if
 					//
-			} // if
+			} // try
 				//
 		} // if
 			//
@@ -182,6 +214,10 @@ public class JouYouKanJiListFactoryBean implements FactoryBean<List<String>> {
 		if (items != null) {
 			items.add(item);
 		}
+	}
+
+	private static String toString(final Object instance) {
+		return instance != null ? instance.toString() : null;
 	}
 
 	@Override

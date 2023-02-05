@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.InputStreamSource;
 import org.springframework.core.io.Resource;
@@ -111,6 +113,48 @@ class JouYouKanJiListFactoryBeanTest {
 		ih.exists = Boolean.TRUE;
 		//
 		Assertions.assertNull(getObject(instance));
+		//
+		if (instance != null) {
+			//
+			instance.setResource(new ByteArrayResource("".getBytes()));
+			//
+		} // if
+			//
+		Assertions.assertEquals(Collections.emptyList(), getObject(instance));
+		//
+		if (instance != null) {
+			//
+			instance.setResource(new ByteArrayResource("null".getBytes()));
+			//
+		} // if
+			//
+		Assertions.assertNull(getObject(instance));
+		//
+		final int one = 1;
+		//
+		if (instance != null) {
+			//
+			instance.setResource(new ByteArrayResource(Integer.toString(one).getBytes()));
+			//
+		} // if
+			//
+		Assertions.assertEquals(Collections.singletonList(Integer.toString(one)), getObject(instance));
+		//
+		if (instance != null) {
+			//
+			instance.setResource(new ByteArrayResource("[]".getBytes()));
+			//
+		} // if
+			//
+		Assertions.assertEquals(Collections.emptyList(), getObject(instance));
+		//
+		if (instance != null) {
+			//
+			instance.setResource(new ByteArrayResource("{}".getBytes()));
+			//
+		} // if
+			//
+		Assertions.assertThrows(IllegalArgumentException.class, () -> getObject(instance));
 		//
 	}
 
