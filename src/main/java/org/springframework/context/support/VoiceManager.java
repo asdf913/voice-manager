@@ -9031,64 +9031,60 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			final String methodName = getName(method);
 			//
-			if (proxy instanceof Runnable) {
+			if (proxy instanceof Runnable && Objects.equals(methodName, "run")) {
 				//
-				if (Objects.equals(methodName, "run")) {
+				if (runnable == null) {
 					//
-					if (runnable == null) {
+					throw new IllegalStateException("runnable is null");
+					//
+				} else if (runnable == proxy) {
+					//
+					throw new IllegalStateException("runnable==proxy");
+					//
+				} // if
+					//
+				try {
+					//
+					return VoiceManager.invoke(method, runnable, args);
+					//
+				} catch (final InvocationTargetException e) {
+					//
+					final Throwable targetExceptionRootCause = ExceptionUtils
+							.getRootCause(e != null ? e.getTargetException() : null);
+					//
+					if (targetExceptionRootCause != null) {
 						//
-						throw new IllegalStateException("runnable is null");
-						//
-					} else if (runnable == proxy) {
-						//
-						throw new IllegalStateException("runnable==proxy");
-						//
-					} // if
-						//
-					try {
-						//
-						return VoiceManager.invoke(method, runnable, args);
-						//
-					} catch (final InvocationTargetException e) {
-						//
-						final Throwable targetExceptionRootCause = ExceptionUtils
-								.getRootCause(e != null ? e.getTargetException() : null);
-						//
-						if (targetExceptionRootCause != null) {
+						try (final Writer w = new StringWriter(); final PrintWriter ps = new PrintWriter(w)) {
 							//
-							try (final Writer w = new StringWriter(); final PrintWriter ps = new PrintWriter(w)) {
+							targetExceptionRootCause.printStackTrace(ps);
+							//
+							final String hex = testAndApply(Objects::nonNull, getBytes(VoiceManager.toString(w)),
+									DigestUtils::sha512Hex, null);
+							//
+							if (!contains(throwableStackTraceHexs = ObjectUtils.getIfNull(throwableStackTraceHexs,
+									ArrayList::new), hex)) {
 								//
-								targetExceptionRootCause.printStackTrace(ps);
-								//
-								final String hex = testAndApply(Objects::nonNull, getBytes(VoiceManager.toString(w)),
-										DigestUtils::sha512Hex, null);
-								//
-								if (!contains(throwableStackTraceHexs = ObjectUtils.getIfNull(throwableStackTraceHexs,
-										ArrayList::new), hex)) {
+								if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
 									//
-									if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
-										//
-										LoggerUtil.error(LOG, null, targetExceptionRootCause);
-										//
-									} else {
-										//
-										targetExceptionRootCause.printStackTrace();
-										//
-									} // if
-										//
-									add(throwableStackTraceHexs, hex);
+									LoggerUtil.error(LOG, null, targetExceptionRootCause);
+									//
+								} else {
+									//
+									targetExceptionRootCause.printStackTrace();
 									//
 								} // if
 									//
-							} // try
+								add(throwableStackTraceHexs, hex);
 								//
-						} // if
+							} // if
+								//
+						} // try
 							//
-						throw targetExceptionRootCause;
+					} // if
 						//
-					} // try
-						//
-				} // if
+					throw targetExceptionRootCause;
+					//
+				} // try
 					//
 			} // if
 				//
