@@ -9116,7 +9116,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 								//
 							} else {
 								//
-								targetExceptionRootCause.printStackTrace();
+								printStackTrace(targetExceptionRootCause);
 								//
 							} // if
 								//
@@ -9134,6 +9134,33 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			return null;
 			//
+		}
+
+		private static void printStackTrace(final Throwable throwable) {
+			//
+			final List<Method> ms = toList(filter(
+					testAndApply(Objects::nonNull, getDeclaredMethods(Throwable.class), Arrays::stream, null),
+					m -> m != null && StringUtils.equals(getName(m), "printStackTrace") && m.getParameterCount() == 0));
+			//
+			final Method method = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null);
+			//
+			try {
+				//
+				testAndAccept(m -> throwable != null || isStatic(m), method, m -> VoiceManager.invoke(m, throwable));
+				//
+			} catch (final InvocationTargetException e) {
+				//
+				final Throwable targetException = e.getTargetException();
+				//
+				printStackTrace(ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException), targetException,
+						ExceptionUtils.getRootCause(e), e));
+				//
+			} catch (final ReflectiveOperationException e) {
+				//
+				printStackTrace(throwable);
+				//
+			} // try
+				//
 		}
 
 		private static IValue0<Object> handleObjectMap(final String methodName, final Map<Object, Object> map,

@@ -8567,6 +8567,17 @@ class VoiceManagerTest {
 			//
 			Assertions.assertThrows(Throwable.class,
 					() -> ih.invoke(runnable, Object.class.getDeclaredMethod("toString"), null));
+			//
+			// printStackTrace(java.lang.Throwable)
+			//
+			final Method printStackTrace = CLASS_IH != null
+					? CLASS_IH.getDeclaredMethod("printStackTrace", Throwable.class)
+					: null;
+			//
+			Assertions.assertNull(invoke(printStackTrace, null, (Object) null));
+			//
+			Assertions.assertNull(invoke(printStackTrace, null, new Throwable()));
+			//
 		} // if
 			//
 	}
