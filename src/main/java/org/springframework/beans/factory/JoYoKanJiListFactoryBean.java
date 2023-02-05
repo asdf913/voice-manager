@@ -67,8 +67,6 @@ public class JoYoKanJiListFactoryBean implements FactoryBean<List<String>> {
 				ElementUtil.selectXpath(document, "//h3/span[text()=\"本表\"]/../following-sibling::table[1]/tbody"),
 				x -> children(IterableUtils.get(x, 0)), null);
 		//
-		Element tr = null;
-		//
 		Integer columnIndex = null;
 		//
 		List<Element> elements = null;
@@ -77,25 +75,17 @@ public class JoYoKanJiListFactoryBean implements FactoryBean<List<String>> {
 		//
 		List<String> list = null;
 		//
-		Element td = null;
-		//
 		final int size = IterableUtils.size(trs);
 		//
 		for (int i = 0; i < size; i++) {
 			//
-			if ((tr = trs.get(i)) == null) {
-				//
-				continue;
-				//
-			} // if
-				//
-			elements = children(tr);
+			elements = children(trs.get(i));
 			//
-			if (columnIndex == null && elements != null) {
+			if (columnIndex == null) {
 				//
-				for (int j = 0; j < elements.size(); j++) {
+				for (int j = 0; j < IterableUtils.size(elements); j++) {
 					//
-					if (!Objects.equals("th", tagName(element = elements.get(j)))) {
+					if (!Objects.equals("th", tagName(element = IterableUtils.get(elements, j)))) {
 						//
 						continue;
 						//
@@ -111,12 +101,12 @@ public class JoYoKanJiListFactoryBean implements FactoryBean<List<String>> {
 						//
 				} // for
 					//
-			} else if (columnIndex != null && (elements = children(tr)) != null) {
+			} else {
 				//
-				for (int j = 0; j < elements.size(); j++) {
+				for (int j = 0; j < IterableUtils.size(elements); j++) {
 					//
-					if ((td = elements.get(j)) == null
-							|| (columnIndex.intValue() - 1 == j && Objects.equals("0", ElementUtil.text(td)))) {
+					if ((element = IterableUtils.get(elements, j)) == null
+							|| (columnIndex.intValue() - 1 == j && Objects.equals("0", ElementUtil.text(element)))) {
 						//
 						break;
 						//
@@ -125,7 +115,7 @@ public class JoYoKanJiListFactoryBean implements FactoryBean<List<String>> {
 					if (columnIndex.intValue() == j) {
 						//
 						add(list = ObjectUtils.getIfNull(list, ArrayList::new),
-								StringUtils.substring(ElementUtil.text(td), 0, 1));
+								StringUtils.substring(ElementUtil.text(element), 0, 1));
 						//
 					} // if
 						//
