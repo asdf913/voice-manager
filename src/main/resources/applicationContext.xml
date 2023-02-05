@@ -155,9 +155,9 @@
 			ref="messageDigestAlgorithm" />
 		<property name="ipaSymbolMultimap" ref="ipaMultimap" />
 		<!-- -->
-		<property name="joYoKanJiList">
+		<property name="jouYouKanJiList">
 			<bean
-				class="org.springframework.beans.factory.JoYoKanJiListFactoryBean">
+				class="org.springframework.beans.factory.JouYouKanJiListFactoryBean">
 				<property name="url"
 					value="${org.springframework.context.support.VoiceManager.joYoKanJiPageUrl}" />
 				<property name="resource" value="classpath:JoYoKanJi.txt" />

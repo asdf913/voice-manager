@@ -27,7 +27,7 @@ import org.springframework.core.io.InputStreamSourceUtil;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceUtil;
 
-public class JoYoKanJiListFactoryBean implements FactoryBean<List<String>> {
+public class JouYouKanJiListFactoryBean implements FactoryBean<List<String>> {
 
 	private String url = null;
 

@@ -19,14 +19,14 @@ import org.springframework.core.io.Resource;
 
 import com.google.common.reflect.Reflection;
 
-class JoYoKanJiListFactoryBeanTest {
+class JouYouKanJiListFactoryBeanTest {
 
 	private static Method METHOD_TAG_NAME, METHOD_GET_COLUMN_INDEX = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
 		//
-		final Class<?> clz = JoYoKanJiListFactoryBean.class;
+		final Class<?> clz = JouYouKanJiListFactoryBean.class;
 		//
 		(METHOD_TAG_NAME = clz.getDeclaredMethod("tagName", Element.class)).setAccessible(true);
 		//
@@ -71,12 +71,12 @@ class JoYoKanJiListFactoryBeanTest {
 
 	}
 
-	private JoYoKanJiListFactoryBean instance = null;
+	private JouYouKanJiListFactoryBean instance = null;
 
 	@BeforeEach
 	void beforeEach() {
 		//
-		instance = new JoYoKanJiListFactoryBean();
+		instance = new JouYouKanJiListFactoryBean();
 		//
 	}
 
