@@ -85,6 +85,8 @@ import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
 import org.jsoup.select.Elements;
 import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
@@ -371,7 +373,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		//
 		try {
 			//
-			final org.jsoup.nodes.Document document = testAndApply(Objects::nonNull,
+			final Document document = testAndApply(Objects::nonNull,
 					testAndApply(StringUtils::isNotBlank, url, URL::new, null),
 					x -> Jsoup.parse(x, intValue(toMillis(timeout), 0)), null);
 			//
@@ -444,7 +446,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		//
 		Pattern pattern2 = null;
 		//
-		org.jsoup.nodes.Element domNode = null;
+		Element domNode = null;
 		//
 		String backGroundColorString = null;
 		//
@@ -528,7 +530,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		return instance != null ? instance.getStylesSource() : null;
 	}
 
-	private static CSSDeclaration getCSSDeclarationByAttributeAndCssProperty(final org.jsoup.nodes.Element element,
+	private static CSSDeclaration getCSSDeclarationByAttributeAndCssProperty(final Element element,
 			final String attribute, final ECSSVersion ecssVersion, final String cssProperty) {
 		//
 		final String style = ElementUtil.attr(element, attribute);
