@@ -1,5 +1,8 @@
 package com.fasterxml.jackson.databind;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -12,6 +15,13 @@ public interface ObjectMapperUtil {
 		return instance != null && StringUtils.isNotBlank(content) && valueType != null
 				? instance.readValue(content, valueType)
 				: null;
+		//
+	}
+
+	static <T> T readValue(final ObjectMapper instance, final InputStream src, final Class<T> valueType)
+			throws IOException {
+		//
+		return instance != null && src != null && valueType != null ? instance.readValue(src, valueType) : null;
 		//
 	}
 

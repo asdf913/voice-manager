@@ -32,6 +32,7 @@ import org.springframework.core.io.ResourceUtil;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapperUtil;
 
 public class JouYouKanJiListFactoryBean implements FactoryBean<List<String>> {
 
@@ -71,7 +72,7 @@ public class JouYouKanJiListFactoryBean implements FactoryBean<List<String>> {
 			try (final InputStream is = InputStreamSourceUtil.getInputStream(resource)) {
 				//
 				final Object object = testAndApply(Objects::nonNull, is,
-						x -> new ObjectMapper().readValue(x, Object.class), null);
+						x -> ObjectMapperUtil.readValue(new ObjectMapper(), x, Object.class), null);
 				//
 				if (object instanceof Map) {
 					//

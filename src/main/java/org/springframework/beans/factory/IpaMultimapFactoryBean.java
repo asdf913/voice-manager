@@ -27,6 +27,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceUtil;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
@@ -97,7 +98,7 @@ public class IpaMultimapFactoryBean implements FactoryBean<Multimap<String, Stri
 	private static Unit<Multimap<String, String>> getMultimapUnitFromJson(final ObjectMapper objectMapper,
 			final InputStream is) throws IOException {
 		//
-		final Object obj = objectMapper != null && is != null ? objectMapper.readValue(is, Object.class) : null;
+		final Object obj = is != null ? ObjectMapperUtil.readValue(objectMapper, is, Object.class) : null;
 		//
 		if (is == null) {
 			//
