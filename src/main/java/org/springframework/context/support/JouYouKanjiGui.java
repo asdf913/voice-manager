@@ -178,44 +178,50 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 				//
 		} else if (object instanceof Number number) {
 			//
-			final ECSSVersion[] evs = ECSSVersion.values();
+			final IValue0<ECSSVersion> iValue0 = getECSSVersionByMajor(ECSSVersion.values(), number);
 			//
-			if (evs != null) {
+			if (iValue0 != null) {
 				//
-				IValue0<ECSSVersion> iValue0 = null;
+				this.ecssVersion = IValue0Util.getValue0(iValue0);
 				//
-				Version v = null;
-				//
-				for (final ECSSVersion ev : evs) {
-					//
-					if ((v = getVersion(ev)) == null || number.intValue() != v.getMajor()) {
-						//
-						continue;
-						//
-					} // if
-						//
-					if (iValue0 == null) {
-						//
-						iValue0 = Unit.with(ev);
-						//
-					} else {
-						//
-						throw new IllegalArgumentException();
-						//
-					} // if
-						//
-				} // for
-					//
-				if (iValue0 != null) {
-					//
-					this.ecssVersion = IValue0Util.getValue0(iValue0);
-					//
-				} // if
-					//
 			} // if
 				//
 		} // if
 			//
+	}
+
+	private static IValue0<ECSSVersion> getECSSVersionByMajor(final ECSSVersion[] evs, final Number number) {
+		//
+		IValue0<ECSSVersion> iValue0 = null;
+		//
+		if (evs != null) {
+			//
+			Version v = null;
+			//
+			for (final ECSSVersion ev : evs) {
+				//
+				if ((v = getVersion(ev)) == null || number.intValue() != v.getMajor()) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if (iValue0 == null) {
+					//
+					iValue0 = Unit.with(ev);
+					//
+				} else {
+					//
+					throw new IllegalArgumentException();
+					//
+				} // if
+					//
+			} // for
+				//
+		} // if
+			//
+		return iValue0;
+		//
 	}
 
 	private static Version getVersion(final IHasVersion instance) {

@@ -15,20 +15,19 @@ import javax.swing.text.JTextComponent;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.javatuples.Unit;
+import org.javatuples.valueintf.IValue0;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.InitializingBean;
 
-import com.helger.commons.version.IHasVersion;
-import com.helger.commons.version.Version;
 import com.helger.css.ECSSVersion;
 
 class JouYouKanjiGuiTest {
 
 	private static Method METHOD_GET_CLASS, METHOD_GET_DECLARED_FIELDS, METHOD_GET_TYPE, METHOD_NAME,
-			METHOD_GET_VERSION = null;
+			METHOD_GET_ECSS_VERSION_BY_MAJOR = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -43,7 +42,8 @@ class JouYouKanjiGuiTest {
 		//
 		(METHOD_NAME = clz.getDeclaredMethod("name", Enum.class)).setAccessible(true);
 		//
-		(METHOD_GET_VERSION = clz.getDeclaredMethod("getVersion", IHasVersion.class)).setAccessible(true);
+		(METHOD_GET_ECSS_VERSION_BY_MAJOR = clz.getDeclaredMethod("getECSSVersionByMajor", ECSSVersion[].class,
+				Number.class)).setAccessible(true);
 		//
 	}
 
@@ -318,19 +318,25 @@ class JouYouKanjiGuiTest {
 	}
 
 	@Test
-	void testGetVersion() throws Throwable {
+	void testGetECSSVersionByMajor() throws Throwable {
 		//
-		Assertions.assertNull(getVersion(null));
+		Assertions.assertNull(getECSSVersionByMajor(null, null));
+		//
+		Assertions.assertNull(getECSSVersionByMajor(new ECSSVersion[] { null }, null));
+		//
+		Assertions.assertThrows(IllegalArgumentException.class,
+				() -> getECSSVersionByMajor(new ECSSVersion[] { ECSSVersion.CSS30, ECSSVersion.CSS30 }, 3));
 		//
 	}
 
-	private static Version getVersion(final IHasVersion instance) throws Throwable {
+	private static IValue0<ECSSVersion> getECSSVersionByMajor(final ECSSVersion[] evs, final Number number)
+			throws Throwable {
 		try {
-			final Object obj = METHOD_GET_VERSION.invoke(null, instance);
+			final Object obj = METHOD_GET_ECSS_VERSION_BY_MAJOR.invoke(null, evs, number);
 			if (obj == null) {
 				return null;
-			} else if (obj instanceof Version) {
-				return (Version) obj;
+			} else if (obj instanceof IValue0) {
+				return (IValue0) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
