@@ -513,7 +513,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private transient ComboBoxModel<Boolean> cbmIsKanji = null;
 
 	@Url("https://ja.wikipedia.org/wiki/%E5%B8%B8%E7%94%A8%E6%BC%A2%E5%AD%97%E4%B8%80%E8%A6%A7")
-	private transient ComboBoxModel<Boolean> cbmJoYoKanJi = null;
+	private transient ComboBoxModel<Boolean> cbmJouYouKanJi = null;
 
 	private transient ComboBoxModel<Method> cbmSpeakMethod = null;
 
@@ -2825,10 +2825,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		panel.add(new JLabel("常用漢字"));
 		//
-		panel.add(new JComboBox<>(cbmJoYoKanJi = get(booleanComboBoxModelSupplier)),
+		panel.add(new JComboBox<>(cbmJouYouKanJi = get(booleanComboBoxModelSupplier)),
 				String.format("%1$s,span %2$s", WRAP, 1));
 		//
-		setSelectedItem(cbmJoYoKanJi,
+		setSelectedItem(cbmJouYouKanJi,
 				testAndApply(StringUtils::isNotEmpty, PropertyResolverUtil.getProperty(propertyResolver,
 						"org.springframework.context.support.VoiceManager.yoKoKanJi"), Boolean::valueOf, null));
 		//
@@ -6847,11 +6847,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		if (StringUtils.isEmpty(text) || CollectionUtils.isEmpty(list)) {
 			//
-			setSelectedItem(cbmJoYoKanJi, null);
+			setSelectedItem(cbmJouYouKanJi, null);
 			//
 		} else if (jouYouKanJiList != null) {
 			//
-			setSelectedItem(cbmJoYoKanJi,
+			setSelectedItem(cbmJouYouKanJi,
 					StringUtils.length(text) <= orElse(max(mapToInt(stream(list), StringUtils::length)), 0)
 							? contains(list, text)
 							: null);
@@ -9247,7 +9247,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		voice.setIsKanji(cast(Boolean.class, getSelectedItem(instance.cbmIsKanji)));
 		//
-		voice.setJoYoKanji(cast(Boolean.class, getSelectedItem(instance.cbmJoYoKanJi)));
+		voice.setJoYoKanji(cast(Boolean.class, getSelectedItem(instance.cbmJouYouKanJi)));
 		//
 		voice.setGaKuNenBeTsuKanJi(toString(getSelectedItem(instance.cbmGaKuNenBeTsuKanJi)));
 		//
