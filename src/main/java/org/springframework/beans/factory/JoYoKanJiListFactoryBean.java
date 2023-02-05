@@ -105,8 +105,8 @@ public class JoYoKanJiListFactoryBean implements FactoryBean<List<String>> {
 				//
 				for (int j = 0; j < IterableUtils.size(elements); j++) {
 					//
-					if ((element = IterableUtils.get(elements, j)) == null
-							|| (columnIndex.intValue() - 1 == j && Objects.equals("0", ElementUtil.text(element)))) {
+					if ((element = IterableUtils.get(elements, j)) == null || Boolean.logicalAnd(
+							columnIndex.intValue() - 1 == j, Objects.equals("0", ElementUtil.text(element)))) {
 						//
 						break;
 						//
