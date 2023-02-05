@@ -524,7 +524,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 	private static CSSDeclaration getCSSDeclarationByAttributeAndCssProperty(final org.jsoup.nodes.Element element,
 			final String attribute, final ECSSVersion ecssVersion, final String cssProperty) {
 		//
-		final String style = attr(element, attribute);
+		final String style = ElementUtil.attr(element, attribute);
 		//
 		CSSDeclaration cssDeclaration = null;
 		//
@@ -553,10 +553,6 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 
 	private static String getProperty(final CSSDeclaration instance) {
 		return instance != null ? instance.getProperty() : null;
-	}
-
-	private static String attr(final org.jsoup.nodes.Element instance, final String attributeKey) {
-		return instance != null ? instance.attr(attributeKey) : null;
 	}
 
 	private static int intValue(final Number instance, final int defaultValue) {

@@ -24,4 +24,8 @@ public interface ElementUtil {
 		return instance != null ? instance.children() : null;
 	}
 
+	static String attr(final Element instance, final String attributeKey) {
+		return instance != null ? instance.attr(attributeKey) : null;
+	}
+
 }

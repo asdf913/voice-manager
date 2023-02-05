@@ -3886,7 +3886,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					(aTag = new ATag()).withText(textContent);
 					//
-					aTag.attr("href", attr(element, "href"));
+					aTag.attr("href", ElementUtil.attr(element, "href"));
 					//
 				} // for
 					//
@@ -3900,10 +3900,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return aTag;
 		//
-	}
-
-	private static String attr(final org.jsoup.nodes.Element instance, final String attributeKey) {
-		return instance != null ? instance.attr(attributeKey) : null;
 	}
 
 	private static InputStream openStream(final URL instance) throws IOException {

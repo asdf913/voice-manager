@@ -21,4 +21,13 @@ class ElementUtilTest {
 		//
 	}
 
+	@Test
+	void testAttr() {
+		//
+		Assertions.assertNull(ElementUtil.attr(null, null));
+		//
+		Assertions.assertNotNull(ElementUtil.attr(new Element("a"), ""));
+		//
+	}
+
 }
