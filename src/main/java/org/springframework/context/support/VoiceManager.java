@@ -9031,6 +9031,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			final String methodName = getName(method);
 			//
+			IValue0<?> value = null;
+			//
 			if (proxy instanceof Runnable) {
 				//
 				if (runnable == null) {
@@ -9043,64 +9045,34 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
-				final IValue0<?> value = handleRunnable(method, runnable, args, throwableStackTraceHexs);
+				value = handleRunnable(method, runnable, args, throwableStackTraceHexs);
 				//
-				if (value != null) {
-					//
-					return IValue0Util.getValue0(value);
-					//
-				} // if
-					//
 			} else if (proxy instanceof ObjectMap) {
 				//
-				final IValue0<?> value = handleObjectMap(methodName, getObjects(), args);
+				value = handleObjectMap(methodName, getObjects(), args);
 				//
-				if (value != null) {
-					//
-					return IValue0Util.getValue0(value);
-					//
-				} // if
-					//
 			} else if (proxy instanceof BooleanMap) {
 				//
-				final IValue0<?> value = handleBooleanMap(methodName, getBooleans(), args);
+				value = handleBooleanMap(methodName, getBooleans(), args);
 				//
-				if (value != null) {
-					//
-					return IValue0Util.getValue0(value);
-					//
-				} // if
-					//
 			} else if (proxy instanceof IntMap) {
 				//
-				final IValue0<?> value = handleIntMap(methodName, getIntMapObjects(), args);
+				value = handleIntMap(methodName, getIntMapObjects(), args);
 				//
-				if (value != null) {
-					//
-					return IValue0Util.getValue0(value);
-					//
-				} // if
-					//
 			} else if (proxy instanceof IntIntMap) {
 				//
-				final IValue0<?> value = handleIntIntMap(methodName, getIntIntMapObjects(), args);
+				value = handleIntIntMap(methodName, getIntIntMapObjects(), args);
 				//
-				if (value != null) {
-					//
-					return IValue0Util.getValue0(value);
-					//
-				} // if
-					//
 			} else if (proxy instanceof StringMap) {
 				//
-				final IValue0<?> value = handleStringMap(methodName, getStrings(), args);
+				value = handleStringMap(methodName, getStrings(), args);
 				//
-				if (value != null) {
-					//
-					return IValue0Util.getValue0(value);
-					//
-				} // if
-					//
+			} // if
+				//
+			if (value != null) {
+				//
+				return IValue0Util.getValue0(value);
+				//
 			} // if
 				//
 			throw new Throwable(methodName);

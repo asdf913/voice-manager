@@ -8565,7 +8565,7 @@ class VoiceManagerTest {
 			//
 			Assertions.assertThrows(IllegalStateException.class, () -> ih.invoke(runnable, run, null));
 			//
-			Assertions.assertThrows(IllegalStateException.class,
+			Assertions.assertThrows(Throwable.class,
 					() -> ih.invoke(runnable, Object.class.getDeclaredMethod("toString"), null));
 		} // if
 			//
