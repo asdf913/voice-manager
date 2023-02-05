@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS voice(
 	,jlpt_level              TEXT
 	,ipa_symbol              TEXT
 	,is_kanji                BOOLEAN
-	,jo_yo_kanji             BOOLEAN
+	,jou_you_kanji           BOOLEAN
 	,ga_ku_nen_be_tsu_kan_ji TEXT
 	,pronunciation_page_url  TEXT
 	,create_ts			     TIMESTAMP WITH TIME ZONE
