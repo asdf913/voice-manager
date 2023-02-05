@@ -81,7 +81,9 @@ public class JoYoKanJiListFactoryBean implements FactoryBean<List<String>> {
 		//
 		Element td = null;
 		//
-		for (int i = 0; trs != null && i < trs.size(); i++) {
+		final int size = IterableUtils.size(trs);
+		//
+		for (int i = 0; i < size; i++) {
 			//
 			if ((tr = trs.get(i)) == null) {
 				//
