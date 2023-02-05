@@ -81,13 +81,8 @@ public class JoYoKanJiListFactoryBean implements FactoryBean<List<String>> {
 				//
 				for (int j = 0; j < IterableUtils.size(elements); j++) {
 					//
-					if (!Objects.equals("th", tagName(element = IterableUtils.get(elements, j)))) {
-						//
-						continue;
-						//
-					} // if
-						//
-					if (Objects.equals("通用字体", ElementUtil.text(element))) {
+					if (Boolean.logicalAnd(Objects.equals("th", tagName(element = IterableUtils.get(elements, j))),
+							Objects.equals("通用字体", ElementUtil.text(element)))) {
 						//
 						columnIndex = Integer.valueOf(j);
 						//
