@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
@@ -45,6 +46,8 @@ class JlptVocabularyListFactoryBeanTest {
 
 		private Iterator<?> iterator = null;
 
+		private Object[] toArray = null;
+
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
@@ -79,6 +82,14 @@ class JlptVocabularyListFactoryBeanTest {
 				if (Objects.equals(methodName, "exists")) {
 					//
 					return exists;
+					//
+				} // if
+					//
+			} else if (proxy instanceof Collection) {
+				//
+				if (Objects.equals(methodName, "toArray")) {
+					//
+					return toArray;
 					//
 				} // if
 					//

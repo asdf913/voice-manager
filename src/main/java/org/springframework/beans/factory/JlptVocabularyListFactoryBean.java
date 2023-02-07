@@ -48,8 +48,16 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 
 	private Resource resource = null;
 
-	public void setUrls(final List<String> urls) {
-		this.urls = urls;
+	public void setUrls(final List<String> us) {
+		//
+		this.urls = testAndApply(x -> x != null && x.toArray() != null, us, ArrayList::new, null);
+		//
+		for (int i = 0; urls != null && i < urls.size(); i++) {
+			//
+			urls.set(i, StringUtils.trim(urls.get(i)));
+			//
+		} // for
+			//
 	}
 
 	public void setResource(final Resource resource) {
@@ -65,11 +73,9 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 			//
 			final String mimeType = getMimeType(ci);
 			//
-			final String message = getMessage(ci);
-			//
 			if (or(Objects.equals("application/vnd.openxmlformats-officedocument", mimeType),
 					Boolean.logicalAnd(Objects.equals("application/zip", mimeType), XlsxUtil.isXlsx(resource)),
-					Objects.equals("OLE 2 Compound Document", message))) {
+					Objects.equals("OLE 2 Compound Document", getMessage(ci)))) {
 				//
 				try (final InputStream is = InputStreamSourceUtil.getInputStream(resource);
 						final Workbook wb = testAndApply(Objects::nonNull, is, WorkbookFactory::create, null)) {
