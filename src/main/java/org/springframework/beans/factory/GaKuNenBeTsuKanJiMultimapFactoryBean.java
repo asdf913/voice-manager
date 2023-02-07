@@ -23,6 +23,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.ss.usermodel.WorkbookUtil;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0Util;
 import org.jsoup.Jsoup;
@@ -248,7 +249,7 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 		//
 		Unit<Multimap<String, String>> mm = null;
 		//
-		final Sheet sheet = wb != null && wb.getNumberOfSheets() > 0 ? wb.getSheetAt(0) : null;
+		final Sheet sheet = wb != null && wb.getNumberOfSheets() > 0 ? WorkbookUtil.getSheetAt(wb, 0) : null;
 		//
 		if (sheet != null && sheet.iterator() != null) {
 			//

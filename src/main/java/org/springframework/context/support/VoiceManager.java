@@ -5232,7 +5232,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					fileToBeDeleted = intValue(
 							getPhysicalNumberOfRows(testAndApply(x -> intValue(getNumberOfSheets(x), 0) == 1, workbook,
-									x -> getSheetAt(x, 0), null)),
+									x -> WorkbookUtil.getSheetAt(x, 0), null)),
 							0) == 0;
 					//
 				} // if
@@ -5407,10 +5407,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static Integer getNumberOfSheets(final Workbook instance) {
 		return instance != null ? Integer.valueOf(instance.getNumberOfSheets()) : null;
-	}
-
-	private static Sheet getSheetAt(final Workbook instance, final int index) {
-		return instance != null ? instance.getSheetAt(index) : null;
 	}
 
 	private void exportWebSpeechSynthesisHtml(final boolean condition, final ObjectMap objectMap,
@@ -6300,7 +6296,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			for (int i = 0; i < intValue(getNumberOfSheets(workbook), 0); i++) {
 				//
-				if (contains(sheetExclued, getSheetName(sheet = workbook.getSheetAt(i)))) {
+				if (contains(sheetExclued, getSheetName(sheet = WorkbookUtil.getSheetAt(workbook, i)))) {
 					//
 					continue;
 					//

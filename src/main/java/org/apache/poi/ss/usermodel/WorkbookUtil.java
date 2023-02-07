@@ -18,6 +18,10 @@ public interface WorkbookUtil {
 		return instance != null ? instance.createCellStyle() : null;
 	}
 
+	static Sheet getSheetAt(final Workbook instance, final int index) {
+		return instance != null ? instance.getSheetAt(index) : null;
+	}
+
 	static void write(final Workbook instance, final OutputStream stream) throws IOException {
 		//
 		if (instance != null && (stream != null || Proxy.isProxyClass(getClass(instance)))) {

@@ -47,6 +47,13 @@ class WorkbookUtilTest {
 	}
 
 	@Test
+	void testGetSheetAt() {
+		//
+		Assertions.assertDoesNotThrow(() -> WorkbookUtil.getSheetAt(null, 0));
+		//
+	}
+
+	@Test
 	void testWrite() {
 		//
 		Assertions.assertDoesNotThrow(() -> WorkbookUtil.write(null, null));

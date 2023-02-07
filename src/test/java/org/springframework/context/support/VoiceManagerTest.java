@@ -296,7 +296,7 @@ class VoiceManagerTest {
 			METHOD_GET_WORKBOOK_CLASS_FAILABLE_SUPPLIER_MAP, METHOD_GET_DECLARED_CONSTRUCTOR, METHOD_NEW_INSTANCE,
 			METHOD_GET_WRITER, METHOD_KEY_SET, METHOD_GET_WORK_BOOK_CLASS, METHOD_GET_SYSTEM_PRINT_STREAM_BY_FIELD_NAME,
 			METHOD_IF_ELSE, METHOD_GET_PAGE_TITLE, METHOD_SET_HIRAGANA_OR_KATAKANA_AND_ROMAJI, METHOD_APPLY,
-			METHOD_GET_SHEET_AT, METHOD_TO_MILLIS = null;
+			METHOD_TO_MILLIS = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -919,8 +919,6 @@ class VoiceManagerTest {
 				Boolean.TYPE, Boolean.TYPE, Voice.class, Jakaroma.class)).setAccessible(true);
 		//
 		(METHOD_APPLY = clz.getDeclaredMethod("apply", Function.class, Object.class)).setAccessible(true);
-		//
-		(METHOD_GET_SHEET_AT = clz.getDeclaredMethod("getSheetAt", Workbook.class, Integer.TYPE)).setAccessible(true);
 		//
 		(METHOD_TO_MILLIS = clz.getDeclaredMethod("toMillis", Duration.class)).setAccessible(true);
 		//
@@ -8079,29 +8077,6 @@ class VoiceManagerTest {
 	private static <T, R> R apply(final Function<T, R> instance, final T t) throws Throwable {
 		try {
 			return (R) METHOD_APPLY.invoke(null, instance, t);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetSheetAt() throws Throwable {
-		//
-		Assertions.assertNull(getSheetAt(null, ZERO));
-		//
-		Assertions.assertNull(getSheetAt(workbook, ZERO));
-		//
-	}
-
-	private static Sheet getSheetAt(final Workbook instance, final int index) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_SHEET_AT.invoke(null, instance, index);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Sheet) {
-				return (Sheet) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

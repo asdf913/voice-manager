@@ -26,6 +26,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.ss.usermodel.WorkbookUtil;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
@@ -74,14 +75,13 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 						final Workbook wb = testAndApply(Objects::nonNull, is, WorkbookFactory::create, null)) {
 					//
 					final IValue0<List<JlptVocabulary>> list = getJlptVocabularies(
-							wb != null && wb.getNumberOfSheets() == 1 ? wb.getSheetAt(0) : null);
+							wb != null && wb.getNumberOfSheets() == 1 ? WorkbookUtil.getSheetAt(wb, 0) : null);
 					//
 					if (list != null) {
 						//
 						return IValue0Util.getValue0(list);
 						//
 					} // if
-						//
 						//
 				} // try
 					//
