@@ -100,7 +100,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 				try (final InputStream is = InputStreamSourceUtil.getInputStream(resource);
 						final Workbook wb = testAndApply(Objects::nonNull, is, WorkbookFactory::create, null)) {
 					//
-					final IValue0<List<JlptVocabulary>> list = getObjectBySheet(
+					final IValue0<List<JlptVocabulary>> list = getJlptVocabularies(
 							wb != null && wb.getNumberOfSheets() == 1 ? wb.getSheetAt(0) : null);
 					//
 					if (list != null) {
@@ -120,7 +120,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		//
 	}
 
-	private static IValue0<List<JlptVocabulary>> getObjectBySheet(final Sheet sheet) throws IllegalAccessException {
+	private static IValue0<List<JlptVocabulary>> getJlptVocabularies(final Sheet sheet) throws IllegalAccessException {
 		//
 		IValue0<List<JlptVocabulary>> list = null;
 		//
@@ -134,9 +134,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 			//
 			Map<Integer, Field> fieldMap = null;
 			//
-			JlptVocabulary jv = null;
-			//
-			Field f = null;
+			IValue0<JlptVocabulary> jv = null;
 			//
 			for (final Row row : sheet) {
 				//
@@ -168,29 +166,49 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 					//
 				} // if
 					//
-				jv = null;
-				//
-				for (int i = 0; i < row.getPhysicalNumberOfCells(); i++) {
+				if ((jv = getJlptVocabulary(fieldMap, row)) != null) {
 					//
-					if ((f = MapUtils.getObject(fieldMap, Integer.valueOf(i))) == null) {
-						//
-						continue;
-						//
-					} // if
-						//
-					f.setAccessible(true);
+					add(IValue0Util.getValue0(list = ObjectUtils.getIfNull(list, () -> Unit.with(new ArrayList<>()))),
+							IValue0Util.getValue0(jv));
 					//
-					f.set(jv = ObjectUtils.getIfNull(jv, JlptVocabulary::new), getStringCellValue(row.getCell(i)));
+				} // if
 					//
-				} // for
-					//
-				add(IValue0Util.getValue0(list = ObjectUtils.getIfNull(list, () -> Unit.with(new ArrayList<>()))), jv);
-				//
 			} // for
 				//
 		} // if
 			//
 		return list;
+		//
+	}
+
+	private static IValue0<JlptVocabulary> getJlptVocabulary(final Map<Integer, Field> fieldMap, final Row row)
+			throws IllegalAccessException {
+		//
+		IValue0<JlptVocabulary> jv = null;
+		//
+		if (row != null && row.iterator() != null) {
+			//
+			Field f = null;
+			//
+			for (int i = 0; i < row.getPhysicalNumberOfCells(); i++) {
+				//
+				if ((f = MapUtils.getObject(fieldMap, Integer.valueOf(i))) == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				f.setAccessible(true);
+				//
+				f.set(ObjectUtils.getIfNull(
+						IValue0Util.getValue0(jv = ObjectUtils.getIfNull(jv, () -> Unit.with(new JlptVocabulary()))),
+						JlptVocabulary::new), getStringCellValue(row.getCell(i)));
+				//
+			} // for
+				//
+		} // if
+			//
+		return jv;
 		//
 	}
 
