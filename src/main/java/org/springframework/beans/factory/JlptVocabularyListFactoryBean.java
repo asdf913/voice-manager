@@ -98,7 +98,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 					Objects.equals("OLE 2 Compound Document", message))) {
 				//
 				try (final InputStream is = InputStreamSourceUtil.getInputStream(resource);
-						final Workbook wb = is != null ? WorkbookFactory.create(is) : null) {
+						final Workbook wb = testAndApply(Objects::nonNull, is, WorkbookFactory::create, null)) {
 					//
 					final Sheet sheet = wb != null && wb.getNumberOfSheets() == 1 ? wb.getSheetAt(0) : null;
 					//
