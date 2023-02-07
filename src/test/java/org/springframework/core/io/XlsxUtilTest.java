@@ -82,6 +82,8 @@ class XlsxUtilTest {
 		//
 		Assertions.assertFalse(isStatic(null));
 		//
+		Assertions.assertTrue(isStatic(Boolean.class.getDeclaredField("TRUE")));
+		//
 	}
 
 	private static boolean isStatic(final Member instance) throws Throwable {
