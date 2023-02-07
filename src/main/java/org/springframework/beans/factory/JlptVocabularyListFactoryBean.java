@@ -128,10 +128,6 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 			//
 			final AtomicBoolean first = new AtomicBoolean(true);
 			//
-			int size = 0;
-			//
-			List<Field> fs = null;
-			//
 			Map<Integer, Field> fieldMap = null;
 			//
 			IValue0<JlptVocabulary> jv = null;
