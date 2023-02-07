@@ -185,9 +185,16 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 				//
 		} // if
 			//
+		return getObjectByUrls(urls);
+		//
+	}
+
+	private static List<JlptVocabulary> getObjectByUrls(final List<String> urls)
+			throws CsvValidationException, IllegalAccessException, IOException {
+		//
 		List<JlptVocabulary> list = null;
 		//
-		if (urls != null) {
+		if (urls != null && urls.iterator() != null) {
 			//
 			List<JlptVocabulary> temp = null;
 			//

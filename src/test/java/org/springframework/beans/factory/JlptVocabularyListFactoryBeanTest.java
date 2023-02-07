@@ -7,6 +7,8 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
@@ -42,6 +44,8 @@ class JlptVocabularyListFactoryBeanTest {
 
 		private InputStream inputStream = null;
 
+		private Iterator<?> iterator = null;
+
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
@@ -58,6 +62,14 @@ class JlptVocabularyListFactoryBeanTest {
 					} // if
 						//
 					return inputStream;
+					//
+				} // if
+					//
+			} else if (proxy instanceof Iterable) {
+				//
+				if (Objects.equals(methodName, "iterator")) {
+					//
+					return iterator;
 					//
 				} // if
 					//
@@ -104,6 +116,16 @@ class JlptVocabularyListFactoryBeanTest {
 			//
 		} // if
 			//
+		final IH ih = new IH();
+		//
+		Assertions.assertNull(getObject(instance));
+		//
+		if (instance != null) {
+			//
+			instance.setUrls(Reflection.newProxy(List.class, ih));
+			//
+		} // if
+			//
 		Assertions.assertNull(getObject(instance));
 		//
 		// java.io.File.File
@@ -125,8 +147,6 @@ class JlptVocabularyListFactoryBeanTest {
 		Assertions.assertNotNull(getObject(instance));
 		//
 		// org.springframework.core.io.Resource
-		//
-		final IH ih = new IH();
 		//
 		if (instance != null) {
 			//
