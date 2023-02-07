@@ -437,7 +437,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 			//
 			final AtomicBoolean first = new AtomicBoolean(true);
 			//
-			while ((ss = csvReader != null ? csvReader.readNext() : null) != null) {
+			while ((ss = readNext(csvReader)) != null) {
 				//
 				if (first.getAndSet(false)) {
 					//
@@ -493,6 +493,10 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 
 	private static String getFile(final URL instance) {
 		return instance != null ? instance.getFile() : null;
+	}
+
+	private static String[] readNext(final CSVReader instance) throws CsvValidationException, IOException {
+		return instance != null ? instance.readNext() : null;
 	}
 
 	private static <K, V> void put(final Map<K, V> instance, final K key, final V value) {
