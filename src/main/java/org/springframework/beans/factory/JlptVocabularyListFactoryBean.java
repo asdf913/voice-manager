@@ -100,84 +100,15 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 				try (final InputStream is = InputStreamSourceUtil.getInputStream(resource);
 						final Workbook wb = testAndApply(Objects::nonNull, is, WorkbookFactory::create, null)) {
 					//
-					final Sheet sheet = wb != null && wb.getNumberOfSheets() == 1 ? wb.getSheetAt(0) : null;
+					final IValue0<List<JlptVocabulary>> list = getObjectBySheet(
+							wb != null && wb.getNumberOfSheets() == 1 ? wb.getSheetAt(0) : null);
 					//
-					IValue0<List<JlptVocabulary>> list = null;
-					//
-					if (sheet != null && sheet.iterator() != null) {
+					if (list != null) {
 						//
-						final AtomicBoolean first = new AtomicBoolean(true);
+						return IValue0Util.getValue0(list);
 						//
-						int size = 0;
-						//
-						List<Field> fs = null;
-						//
-						Map<Integer, Field> fieldMap = null;
-						//
-						JlptVocabulary jv = null;
-						//
-						Field f = null;
-						//
-						for (final Row row : sheet) {
-							//
-							if (row == null) {
-								//
-								continue;
-								//
-							} // if
-								//
-							if (first.getAndSet(false)) {
-								//
-								for (int i = 0; i < row.getPhysicalNumberOfCells(); i++) {
-									//
-									if ((size = IterableUtils
-											.size(fs = getFieldsByName(JlptVocabulary.class.getDeclaredFields(),
-													getStringCellValue(row.getCell(i))))) == 1) {
-										//
-										put(fieldMap = ObjectUtils.getIfNull(fieldMap, LinkedHashMap::new),
-												Integer.valueOf(i), IterableUtils.get(fs, 0));
-										//
-									} else if (size > 1) {
-										//
-										throw new IllegalStateException();
-										//
-									} // if
-										//
-								} // for
-									//
-								continue;
-								//
-							} // if
-								//
-							jv = null;
-							//
-							for (int i = 0; i < row.getPhysicalNumberOfCells(); i++) {
-								//
-								if ((f = MapUtils.getObject(fieldMap, Integer.valueOf(i))) == null) {
-									//
-									continue;
-									//
-								} // if
-									//
-								f.setAccessible(true);
-								//
-								f.set(jv = ObjectUtils.getIfNull(jv, JlptVocabulary::new),
-										getStringCellValue(row.getCell(i)));
-								//
-							} // for
-								//
-							add(IValue0Util.getValue0(
-									list = ObjectUtils.getIfNull(list, () -> Unit.with(new ArrayList<>()))), jv);
-							//
-						} // for
-							//
-						if (list != null) {
-							//
-							return IValue0Util.getValue0(list);
-							//
-						} // if
-							//
 					} // if
+						//
 						//
 				} // try
 					//
@@ -186,6 +117,80 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		} // if
 			//
 		return getObjectByUrls(urls);
+		//
+	}
+
+	private static IValue0<List<JlptVocabulary>> getObjectBySheet(final Sheet sheet) throws IllegalAccessException {
+		//
+		IValue0<List<JlptVocabulary>> list = null;
+		//
+		if (sheet != null && sheet.iterator() != null) {
+			//
+			final AtomicBoolean first = new AtomicBoolean(true);
+			//
+			int size = 0;
+			//
+			List<Field> fs = null;
+			//
+			Map<Integer, Field> fieldMap = null;
+			//
+			JlptVocabulary jv = null;
+			//
+			Field f = null;
+			//
+			for (final Row row : sheet) {
+				//
+				if (row == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if (first.getAndSet(false)) {
+					//
+					for (int i = 0; i < row.getPhysicalNumberOfCells(); i++) {
+						//
+						if ((size = IterableUtils.size(fs = getFieldsByName(JlptVocabulary.class.getDeclaredFields(),
+								getStringCellValue(row.getCell(i))))) == 1) {
+							//
+							put(fieldMap = ObjectUtils.getIfNull(fieldMap, LinkedHashMap::new), Integer.valueOf(i),
+									IterableUtils.get(fs, 0));
+							//
+						} else if (size > 1) {
+							//
+							throw new IllegalStateException();
+							//
+						} // if
+							//
+					} // for
+						//
+					continue;
+					//
+				} // if
+					//
+				jv = null;
+				//
+				for (int i = 0; i < row.getPhysicalNumberOfCells(); i++) {
+					//
+					if ((f = MapUtils.getObject(fieldMap, Integer.valueOf(i))) == null) {
+						//
+						continue;
+						//
+					} // if
+						//
+					f.setAccessible(true);
+					//
+					f.set(jv = ObjectUtils.getIfNull(jv, JlptVocabulary::new), getStringCellValue(row.getCell(i)));
+					//
+				} // for
+					//
+				add(IValue0Util.getValue0(list = ObjectUtils.getIfNull(list, () -> Unit.with(new ArrayList<>()))), jv);
+				//
+			} // for
+				//
+		} // if
+			//
+		return list;
 		//
 	}
 
