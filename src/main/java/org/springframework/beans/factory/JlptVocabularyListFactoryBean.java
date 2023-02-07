@@ -146,22 +146,8 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 					//
 				if (first.getAndSet(false)) {
 					//
-					for (int i = 0; i < row.getPhysicalNumberOfCells(); i++) {
-						//
-						if ((size = IterableUtils.size(fs = getFieldsByName(JlptVocabulary.class.getDeclaredFields(),
-								getStringCellValue(row.getCell(i))))) == 1) {
-							//
-							put(fieldMap = ObjectUtils.getIfNull(fieldMap, LinkedHashMap::new), Integer.valueOf(i),
-									IterableUtils.get(fs, 0));
-							//
-						} else if (size > 1) {
-							//
-							throw new IllegalStateException();
-							//
-						} // if
-							//
-					} // for
-						//
+					fieldMap = getFieldMap(row);
+					//
 					continue;
 					//
 				} // if
@@ -178,6 +164,34 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		} // if
 			//
 		return list;
+		//
+	}
+
+	private static Map<Integer, Field> getFieldMap(final Row row) {
+		//
+		int size = 0;
+		//
+		List<Field> fs = null;
+		//
+		Map<Integer, Field> fieldMap = null;
+		//
+		for (int i = 0; i < row.getPhysicalNumberOfCells(); i++) {
+			//
+			if ((size = IterableUtils.size(fs = getFieldsByName(JlptVocabulary.class.getDeclaredFields(),
+					getStringCellValue(row.getCell(i))))) == 1) {
+				//
+				put(fieldMap = ObjectUtils.getIfNull(fieldMap, LinkedHashMap::new), Integer.valueOf(i),
+						IterableUtils.get(fs, 0));
+				//
+			} else if (size > 1) {
+				//
+				throw new IllegalStateException();
+				//
+			} // if
+				//
+		} // for
+			//
+		return fieldMap;
 		//
 	}
 
