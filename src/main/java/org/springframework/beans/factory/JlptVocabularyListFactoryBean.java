@@ -421,8 +421,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 				final Reader r = testAndApply(Objects::nonNull, is, InputStreamReader::new, null);
 				final CSVReader csvReader = testAndApply(Objects::nonNull, r, CSVReader::new, null)) {
 			//
-			final String level = StringUtils
-					.substringAfterLast(StringUtils.substringBefore(url != null ? url.getFile() : null, '.'), '/');
+			final String level = StringUtils.substringAfterLast(StringUtils.substringBefore(getFile(url), '.'), '/');
 			//
 			String[] ss = null;
 			//
@@ -490,6 +489,10 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 
 	private static InputStream openStream(final URL instance) throws IOException {
 		return instance != null ? instance.openStream() : null;
+	}
+
+	private static String getFile(final URL instance) {
+		return instance != null ? instance.getFile() : null;
 	}
 
 	private static <K, V> void put(final Map<K, V> instance, final K key, final V value) {
