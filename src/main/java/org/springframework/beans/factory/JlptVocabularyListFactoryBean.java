@@ -412,7 +412,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		//
 		List<JlptVocabulary> list = null;
 		//
-		try (final InputStream is = url != null ? url.openStream() : null;
+		try (final InputStream is = openStream(url);
 				final Reader r = testAndApply(Objects::nonNull, is, InputStreamReader::new, null);
 				final CSVReader csvReader = testAndApply(Objects::nonNull, r, CSVReader::new, null)) {
 			//
@@ -481,6 +481,10 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 			//
 		return list;
 		//
+	}
+
+	private static InputStream openStream(final URL instance) throws IOException {
+		return instance != null ? instance.openStream() : null;
 	}
 
 	private static <K, V> void put(final Map<K, V> instance, final K key, final V value) {
