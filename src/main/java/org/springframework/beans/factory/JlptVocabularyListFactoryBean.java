@@ -453,10 +453,6 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 			//
 			String[] ss = null;
 			//
-			List<Field> fs = null;
-			//
-			int size = 0;
-			//
 			Map<Integer, Field> fieldMap = null;
 			//
 			JlptVocabulary jv = null;
@@ -469,22 +465,8 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 				//
 				if (first.getAndSet(false)) {
 					//
-					for (int i = 0; i < ss.length; i++) {
-						//
-						if ((size = IterableUtils
-								.size(fs = getFieldsByName(JlptVocabulary.class.getDeclaredFields(), ss[i]))) == 1) {
-							//
-							put(fieldMap = ObjectUtils.getIfNull(fieldMap, LinkedHashMap::new), Integer.valueOf(i),
-									IterableUtils.get(fs, 0));
-							//
-						} else if (size > 1) {
-							//
-							throw new IllegalStateException();
-							//
-						} // if
-							//
-					} // for
-						//
+					fieldMap = getFieldMap(ss);
+					//
 					continue;
 					//
 				} // if
@@ -512,6 +494,34 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		} // try
 			//
 		return list;
+		//
+	}
+
+	private static Map<Integer, Field> getFieldMap(final String[] ss) {
+		//
+		int size = 0;
+		//
+		List<Field> fs = null;
+		//
+		Map<Integer, Field> fieldMap = null;
+		//
+		for (int i = 0; i < ss.length; i++) {
+			//
+			if ((size = IterableUtils
+					.size(fs = getFieldsByName(JlptVocabulary.class.getDeclaredFields(), ss[i]))) == 1) {
+				//
+				put(fieldMap = ObjectUtils.getIfNull(fieldMap, LinkedHashMap::new), Integer.valueOf(i),
+						IterableUtils.get(fs, 0));
+				//
+			} else if (size > 1) {
+				//
+				throw new IllegalStateException();
+				//
+			} // if
+				//
+		} // for
+			//
+		return fieldMap;
 		//
 	}
 
