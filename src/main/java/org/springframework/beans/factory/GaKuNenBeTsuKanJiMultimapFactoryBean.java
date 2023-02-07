@@ -26,7 +26,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.collections4.IterableUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -48,6 +47,7 @@ import org.odftoolkit.simple.table.Table;
 import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
 import org.springframework.core.io.InputStreamSourceUtil;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceContentInfoUtil;
 import org.springframework.core.io.ResourceUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -61,7 +61,6 @@ import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
 import com.j256.simplemagic.ContentInfo;
-import com.j256.simplemagic.ContentInfoUtil;
 
 public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multimap<String, String>> {
 
@@ -140,15 +139,8 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 			//
 			Unit<Multimap<String, String>> mm = null;
 			//
-			ContentInfo ci = null;
+			final ContentInfo ci = ResourceContentInfoUtil.getContentInfo(resource);
 			//
-			try (final InputStream is = InputStreamSourceUtil.getInputStream(resource)) {
-				//
-				ci = testAndApply(Objects::nonNull, testAndApply(Objects::nonNull, is, IOUtils::toByteArray, null),
-						new ContentInfoUtil()::findMatch, null);
-				//
-			} // try
-				//
 			final String mimeType = getMimeType(ci);
 			//
 			final String message = getMessage(ci);
