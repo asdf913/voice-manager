@@ -408,13 +408,13 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 	private static List<JlptVocabulary> getJlptVocabularies(final String urlString)
 			throws IOException, CsvValidationException, IllegalAccessException {
 		//
-		final URL url = StringUtils.isNotBlank(urlString) ? new URL(urlString) : null;
+		final URL url = testAndApply(StringUtils::isNotBlank, urlString, URL::new, null);
 		//
 		List<JlptVocabulary> list = null;
 		//
 		try (final InputStream is = url != null ? url.openStream() : null;
-				final Reader r = is != null ? new InputStreamReader(is) : null;
-				final CSVReader csvReader = r != null ? new CSVReader(r) : null) {
+				final Reader r = testAndApply(Objects::nonNull, is, InputStreamReader::new, null);
+				final CSVReader csvReader = testAndApply(Objects::nonNull, r, CSVReader::new, null)) {
 			//
 			final String level = StringUtils
 					.substringAfterLast(StringUtils.substringBefore(url != null ? url.getFile() : null, '.'), '/');
