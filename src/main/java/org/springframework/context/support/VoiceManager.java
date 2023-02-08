@@ -142,6 +142,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
+import javax.swing.ListModel;
 import javax.swing.MutableComboBoxModel;
 import javax.swing.WindowConstants;
 import javax.swing.event.ChangeEvent;
@@ -6950,7 +6951,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final MutableComboBoxModel<JlptVocabulary> cbmJlptVocabulary = instance.cbmJlptVocabulary;
 		//
-		for (int i = (cbmJlptVocabulary != null ? cbmJlptVocabulary.getSize() : 0) - 1; i >= 0; i--) {
+		for (int i = getSize(cbmJlptVocabulary) - 1; i >= 0; i--) {
 			//
 			cbmJlptVocabulary.removeElementAt(i);
 			//
@@ -7004,7 +7005,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		IntList intList = null;
 		//
-		for (int i = 0; cbm != null && i < cbm.getSize(); i++) {
+		for (int i = 0; i < getSize(cbm); i++) {
 			//
 			if (StringUtils.equalsAnyIgnoreCase(cbm.getElementAt(i), string)
 					&& (intList = ObjectUtils.getIfNull(intList, IntList::new)) != null) {
@@ -7027,6 +7028,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
+	}
+
+	private static int getSize(final ListModel<?> instance) {
+		return instance != null ? instance.getSize() : 0;
 	}
 
 	@Override
