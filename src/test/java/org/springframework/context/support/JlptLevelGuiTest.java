@@ -48,6 +48,7 @@ import javax.swing.text.JTextComponent;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.jena.ext.com.google.common.base.Predicates;
+import org.apache.poi.util.IntList;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.junit.jupiter.api.Assertions;
@@ -66,13 +67,13 @@ import javassist.util.proxy.ProxyObject;
 
 class JlptLevelGuiTest {
 
-	private static Method METHOD_CAST, METHOD_TO_ARRAY, METHOD_GET_CLASS, METHOD_TEST, METHOD_GET_PREFERRED_SIZE,
-			METHOD_SET_PREFERRED_WIDTH, METHOD_FOR_NAME, METHOD_GET_TEXT, METHOD_GET_SYSTEM_CLIP_BOARD,
-			METHOD_SET_CONTENTS, METHOD_ADD_ACTION_LISTENER, METHOD_GET_DECLARED_METHODS, METHOD_FILTER, METHOD_TO_LIST,
-			METHOD_INVOKE, METHOD_IIF, METHOD_GET_NAME, METHOD_GET_PARAMETER_TYPES, METHOD_RUN,
-			METHOD_SET_JLPT_VOCABULARY_AND_LEVEL, METHOD_STREAM, METHOD_MAP, METHOD_GET_LEVEL, METHOD_FOR_EACH_STREAM,
-			METHOD_ADD_ELEMENT, METHOD_TEST_AND_ACCEPT, METHOD_BROWSE, METHOD_GET_LIST_CELL_RENDERER_COMPONENT,
-			METHOD_ADD_DOCUMENT_LISTENER, METHOD_SET_SELECTED_INDICES = null;
+	private static Method METHOD_CAST, METHOD_TO_ARRAY_COLLECTION, METHOD_TO_ARRAY_INT_LIST, METHOD_GET_CLASS,
+			METHOD_TEST, METHOD_GET_PREFERRED_SIZE, METHOD_SET_PREFERRED_WIDTH, METHOD_FOR_NAME, METHOD_GET_TEXT,
+			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_ADD_ACTION_LISTENER, METHOD_GET_DECLARED_METHODS,
+			METHOD_FILTER, METHOD_TO_LIST, METHOD_INVOKE, METHOD_IIF, METHOD_GET_NAME, METHOD_GET_PARAMETER_TYPES,
+			METHOD_RUN, METHOD_SET_JLPT_VOCABULARY_AND_LEVEL, METHOD_STREAM, METHOD_MAP, METHOD_GET_LEVEL,
+			METHOD_FOR_EACH_STREAM, METHOD_ADD_ELEMENT, METHOD_TEST_AND_ACCEPT, METHOD_BROWSE,
+			METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_ADD_DOCUMENT_LISTENER, METHOD_SET_SELECTED_INDICES = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -81,7 +82,10 @@ class JlptLevelGuiTest {
 		//
 		(METHOD_CAST = clz.getDeclaredMethod("cast", Class.class, Object.class)).setAccessible(true);
 		//
-		(METHOD_TO_ARRAY = clz.getDeclaredMethod("toArray", Collection.class, Object[].class)).setAccessible(true);
+		(METHOD_TO_ARRAY_COLLECTION = clz.getDeclaredMethod("toArray", Collection.class, Object[].class))
+				.setAccessible(true);
+		//
+		(METHOD_TO_ARRAY_INT_LIST = clz.getDeclaredMethod("toArray", IntList.class)).setAccessible(true);
 		//
 		(METHOD_GET_CLASS = clz.getDeclaredMethod("getClass", Object.class)).setAccessible(true);
 		//
@@ -590,6 +594,8 @@ class JlptLevelGuiTest {
 	@Test
 	void testToArray() throws Throwable {
 		//
+		Assertions.assertArrayEquals(new int[] {}, toArray(new IntList()));
+		//
 		Assertions.assertNull(toArray(Reflection.newProxy(Collection.class, ih), null));
 		//
 		Assertions.assertNull(toArray(Collections.emptyList(), null));
@@ -598,11 +604,25 @@ class JlptLevelGuiTest {
 
 	private static <T> T[] toArray(final Collection<T> instance, final T[] array) throws Throwable {
 		try {
-			final Object obj = METHOD_TO_ARRAY.invoke(null, instance, array);
+			final Object obj = METHOD_TO_ARRAY_COLLECTION.invoke(null, instance, array);
 			if (obj == null) {
 				return null;
 			}
 			return (T[]) obj;
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static int[] toArray(final IntList instance) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_ARRAY_INT_LIST.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof int[]) {
+				return (int[]) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
