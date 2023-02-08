@@ -2864,7 +2864,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					final JlptVocabulary value, final int index, final boolean isSelected, final boolean cellHasFocus) {
 				//
 				return VoiceManager.getListCellRendererComponent(((ListCellRenderer) render), list,
-						value != null ? String.join(" ", getKanji(value), getKana(value), value.getLevel()) : null,
+						testAndApply(Objects::nonNull, value,
+								x -> String.join(" ", getKanji(x), getKana(x), getLevel(x)), null),
 						index, isSelected, cellHasFocus);
 				//
 			}
@@ -6988,7 +6989,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				setSelectedItem(instance.cbmJlptLevel, null);
 				//
 				testAndAccept(x -> IterableUtils.size(x) == 1,
-						toList(map(stream(temp), x -> x != null ? x.getLevel() : null).distinct()),
+						toList(map(stream(temp), VoiceManager::getLevel).distinct()),
 						x -> setSelectedItemByString(cbmJlptLevel, IterableUtils.get(x, 0)));
 				//
 				return;
@@ -6997,7 +6998,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			testAndAccept(Objects::nonNull,
 					testAndApply(x -> IterableUtils.size(x) == 1, temp, x -> IterableUtils.get(x, 0), null),
-					x -> setSelectedItemByString(cbmJlptLevel, x != null ? x.getLevel() : null));
+					x -> setSelectedItemByString(cbmJlptLevel, getLevel(x)));
 			//
 		} // if
 			//
@@ -7009,6 +7010,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static String getKana(final JlptVocabulary instance) {
 		return instance != null ? instance.getKana() : null;
+	}
+
+	private static String getLevel(final JlptVocabulary instance) {
+		return instance != null ? instance.getLevel() : null;
 	}
 
 	private static void setSelectedItemByString(final ComboBoxModel<String> cbm, final String string) {

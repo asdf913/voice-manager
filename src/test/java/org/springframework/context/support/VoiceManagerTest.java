@@ -299,7 +299,8 @@ class VoiceManagerTest {
 			METHOD_GET_WORKBOOK_CLASS_FAILABLE_SUPPLIER_MAP, METHOD_GET_DECLARED_CONSTRUCTOR, METHOD_NEW_INSTANCE,
 			METHOD_GET_WRITER, METHOD_KEY_SET, METHOD_GET_WORK_BOOK_CLASS, METHOD_GET_SYSTEM_PRINT_STREAM_BY_FIELD_NAME,
 			METHOD_IF_ELSE, METHOD_GET_PAGE_TITLE, METHOD_SET_HIRAGANA_OR_KATAKANA_AND_ROMAJI, METHOD_APPLY,
-			METHOD_TO_MILLIS, METHOD_SET_JLPT_VOCABULARY_AND_LEVEL, METHOD_ADD_DOCUMENT_LISTENER = null;
+			METHOD_TO_MILLIS, METHOD_SET_JLPT_VOCABULARY_AND_LEVEL, METHOD_ADD_DOCUMENT_LISTENER,
+			METHOD_GET_LEVEL = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -930,6 +931,8 @@ class VoiceManagerTest {
 		//
 		(METHOD_ADD_DOCUMENT_LISTENER = clz.getDeclaredMethod("addDocumentListener", javax.swing.text.Document.class,
 				DocumentListener.class)).setAccessible(true);
+		//
+		(METHOD_GET_LEVEL = clz.getDeclaredMethod("getLevel", JlptVocabulary.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -8284,6 +8287,27 @@ class VoiceManagerTest {
 			throws Throwable {
 		try {
 			METHOD_ADD_DOCUMENT_LISTENER.invoke(null, instance, listener);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetLevel() throws Throwable {
+		//
+		Assertions.assertNull(getLevel(null));
+		//
+	}
+
+	private static String getLevel(final JlptVocabulary instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_LEVEL.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
