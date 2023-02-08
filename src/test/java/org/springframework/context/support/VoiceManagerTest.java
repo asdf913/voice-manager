@@ -2401,37 +2401,6 @@ class VoiceManagerTest {
 			//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnIpaSymbol, 0, null)));
 		//
-		// btnIpaSymbol
-		//
-		final AbstractButton btnVisitJMdictDB = new JButton();
-		//
-		if (instance != null) {
-			//
-			FieldUtils.writeDeclaredField(instance, "btnVisitJMdictDB", btnVisitJMdictDB, true);
-			//
-		} // if
-			//
-		final ActionEvent actionEventBtnVisitJMdictDB = new ActionEvent(btnVisitJMdictDB, 0, null);
-		//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnVisitJMdictDB));
-		//
-		if (instance != null) {
-			//
-			final JlptVocabulary jv = new JlptVocabulary();
-			//
-			// domain.JlptVocabulary.jmdictSeq
-			//
-			FieldUtils.writeDeclaredField(jv, "jmdictSeq", Integer.valueOf(1), true);
-			//
-			// org.springframework.context.support.VoiceManager.cbmJlptVocabulary
-			//
-			FieldUtils.writeDeclaredField(instance, "cbmJlptVocabulary",
-					new DefaultComboBoxModel<>(new JlptVocabulary[] { jv }), true);
-			//
-		} // if
-			//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnVisitJMdictDB));
-		//
 	}
 
 	private static void actionPerformed(final ActionListener instance, final ActionEvent actionEvent) {

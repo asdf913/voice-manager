@@ -288,7 +288,7 @@ class JlptLevelGuiTest {
 			//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, null));
 		//
-		// btnCopy
+		// org.springframework.context.support.JlptLevelGui.btnCopy
 		//
 		final AbstractButton btnCopy = new JButton();
 		//
@@ -300,7 +300,7 @@ class JlptLevelGuiTest {
 			//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnCopy, 0, null)));
 		//
-		// btnCompare
+		// org.springframework.context.support.JlptLevelGui.btnCompare
 		//
 		final AbstractButton btnCompare = new JButton();
 		//
@@ -310,9 +310,9 @@ class JlptLevelGuiTest {
 			//
 		} // if
 			//
-		final ActionEvent actionEvent = new ActionEvent(btnCompare, 0, null);
+		final ActionEvent actionEventBtnCompare = new ActionEvent(btnCompare, 0, null);
 		//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEvent));
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnCompare));
 		//
 		if (instance != null) {
 			//
@@ -320,7 +320,43 @@ class JlptLevelGuiTest {
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEvent));
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnCompare));
+		//
+		// org.springframework.context.support.JlptLevelGui.btnVisitJMdictDB
+		//
+		final AbstractButton btnVisitJMdictDB = new JButton();
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "btnVisitJMdictDB", btnVisitJMdictDB, true);
+			//
+		} // if
+			//
+		final ActionEvent actionEventBtnVisitJMdictDB = new ActionEvent(btnVisitJMdictDB, 0, null);
+		//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnVisitJMdictDB));
+		//
+		// org.springframework.context.support.JlptLevelGui.cbmJlptVocabulary
+		//
+		final MutableComboBoxModel<JlptVocabulary> cbmJlptVocabulary = new DefaultComboBoxModel<>();
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "cbmJlptVocabulary", cbmJlptVocabulary, true);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnVisitJMdictDB));
+		//
+		final JlptVocabulary jv = new JlptVocabulary();
+		//
+		// domain.JlptVocabulary.jmdictSeq
+		//
+		FieldUtils.writeDeclaredField(jv, "jmdictSeq", Integer.valueOf(1), true);
+		//
+		cbmJlptVocabulary.addElement(jv);
+		//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnVisitJMdictDB));
 		//
 	}
 

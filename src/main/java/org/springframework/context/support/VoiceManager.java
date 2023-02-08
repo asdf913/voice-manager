@@ -543,8 +543,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Group(SPEECH_RATE)
 	private AbstractButton btnSpeechRateFaster = null;
 
-	private AbstractButton btnVisitJMdictDB = null;
-
 	@Group("Conversion")
 	private AbstractButton btnConvertToRomaji = null;
 
@@ -2849,7 +2847,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(
 				tfTextImport = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
 						"org.springframework.context.support.VoiceManager.text")),
-				String.format("%1$s,span %2$s", GROWX, 18));
+				String.format("%1$s,span %2$s", GROWX, 20));
 		//
 		addDocumentListener(tfTextImportDocument = tfTextImport.getDocument(), this);
 		//
@@ -2873,8 +2871,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			}
 		});
-		//
-		panel.add(btnVisitJMdictDB = new JButton("Visit JMdict"), String.format("span %1$s", 2));
 		//
 		panel.add(btnConvertToRomaji = new JButton("Convert To Romaji"), String.format("%1$s", WRAP));
 		//
@@ -3083,7 +3079,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		} // if
 			//
 		addActionListener(this, btnExecute, btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji, btnCopyHiragana,
-				btnCopyKatakana, btnPronunciationPageUrlCheck, btnIpaSymbol, btnVisitJMdictDB);
+				btnCopyKatakana, btnPronunciationPageUrlCheck, btnIpaSymbol);
 		//
 		setEnabled(voiceIds != null, cbUseTtsVoice);
 		//
@@ -4473,28 +4469,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			actionPerformedForIpaSymbol(headless);
 			//
-		} else if (Objects.equals(source, btnVisitJMdictDB)) {
-			//
-			final Integer jmdictSeq = getJmdictSeq(cast(JlptVocabulary.class, getSelectedItem(cbmJlptVocabulary)));
-			//
-			if (Boolean.logicalAnd(jmdictSeq != null, nonTest)) {
-				//
-				try {
-					//
-					// TODO
-					//
-					browse(Desktop.getDesktop(), new URL(
-							String.format("https://www.edrdg.org/jmwsgi/entr.py?svc=jmdict&sid=&q=%1$s", jmdictSeq))
-							.toURI());
-					//
-				} catch (final IOException | URISyntaxException e) {
-					//
-					errorOrAssertOrShowException(headless, e);
-					//
-				} // try
-					//
-			} // if
-				//
 		} // if
 			//
 	}

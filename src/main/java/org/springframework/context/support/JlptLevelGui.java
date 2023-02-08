@@ -2,6 +2,7 @@ package org.springframework.context.support;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -12,6 +13,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.io.IOException;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -21,6 +23,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collection;
@@ -93,7 +98,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 	@Note("Copy")
 	private AbstractButton btnCopy = null;
 
-	private AbstractButton btnCompare = null;
+	private AbstractButton btnCompare, btnVisitJMdictDB = null;
 
 	private JTextComponent tfJson = null;
 
@@ -168,6 +173,10 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 
 		});
 		//
+		add(new JLabel());
+		//
+		add(btnVisitJMdictDB = new JButton("Visit JMdict"), wrap);
+		//
 		add(new JLabel("JLPT Level(s)"));
 		//
 		add(jlJlptLevel = (cbmJlptLevel = testAndApply(Objects::nonNull, toArray(jlptLevels, new String[] {}),
@@ -189,7 +198,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		//
 		add(jlCompare = new JLabel());
 		//
-		addActionListener(this, btnExportJson, btnCopy, btnCompare);
+		addActionListener(this, btnExportJson, btnCopy, btnCompare, btnVisitJMdictDB);
 		//
 		final List<Component> cs = Arrays.asList(jlJlptLevel, btnExportJson, tfJson, btnCompare, tfText);
 		//
@@ -346,8 +355,41 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 				//
 			} // try
 				//
-		} // if
+		} else if (Objects.equals(source, btnVisitJMdictDB)) {
 			//
+			final Integer jmdictSeq = getJmdictSeq(
+					cast(JlptVocabulary.class, cbmJlptVocabulary != null ? cbmJlptVocabulary.getSelectedItem() : null));
+			//
+			if (Boolean.logicalAnd(jmdictSeq != null, !isTestMode())) {
+				//
+				try {
+					//
+					// TODO
+					//
+					browse(Desktop.getDesktop(), new URL(
+							String.format("https://www.edrdg.org/jmwsgi/entr.py?svc=jmdict&sid=&q=%1$s", jmdictSeq))
+							.toURI());
+					//
+				} catch (final IOException | URISyntaxException e) {
+					//
+					TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
+					//
+				} // try
+					//
+			} // if
+				//
+		}
+		//
+	}
+
+	private static boolean isTestMode() {
+		return forName("org.junit.jupiter.api.Test") != null;
+	}
+
+	private static void browse(final Desktop instance, final URI uri) throws IOException {
+		if (instance != null) {
+			instance.browse(uri);
+		}
 	}
 
 	@Override
@@ -516,6 +558,10 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 
 	private static String getLevel(final JlptVocabulary instance) {
 		return instance != null ? instance.getLevel() : null;
+	}
+
+	private static Integer getJmdictSeq(final JlptVocabulary instance) {
+		return instance != null ? instance.getJmdictSeq() : null;
 	}
 
 	private static <T> void forEach(final Iterable<T> items, final Consumer<? super T> action) {
