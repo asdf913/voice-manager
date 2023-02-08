@@ -7031,6 +7031,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	@Override
 	public void changedUpdate(final DocumentEvent evt) {
+		//
 	}
 
 	private static void setBackground(final Component instance, final Color color) {
