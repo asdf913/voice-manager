@@ -10,6 +10,8 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -69,7 +71,7 @@ import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import domain.JlptVocabulary;
 import net.miginfocom.swing.MigLayout;
 
-public class JlptLevelGui extends JFrame implements InitializingBean, ActionListener, DocumentListener {
+public class JlptLevelGui extends JFrame implements InitializingBean, ActionListener, DocumentListener, ItemListener {
 
 	private static final long serialVersionUID = 1466869508176258464L;
 
@@ -109,6 +111,8 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 
 	private ComboBoxModel<String> cbmJlptLevel = null;
 
+	private JList<String> jlJlptLevel = null;
+
 	private JlptLevelGui() {
 	}
 
@@ -145,6 +149,8 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		//
 		add(jcbJlptVocabulary = new JComboBox<JlptVocabulary>(cbmJlptVocabulary = new DefaultComboBoxModel<>()), wrap);
 		//
+		jcbJlptVocabulary.addItemListener(this);
+		//
 		final ListCellRenderer<?> render = jcbJlptVocabulary.getRenderer();
 		//
 		jcbJlptVocabulary.setRenderer(new ListCellRenderer<JlptVocabulary>() {
@@ -164,12 +170,8 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		//
 		add(new JLabel("JLPT Level(s)"));
 		//
-		final ListModel<String> listModel = testAndApply(Objects::nonNull, toArray(jlptLevels, new String[] {}),
-				DefaultComboBoxModel::new, null);
-		//
-		final JList<String> jList = listModel != null ? new JList<>(listModel) : new JList<>();
-		//
-		add(jList, wrap);
+		add(jlJlptLevel = (cbmJlptLevel = testAndApply(Objects::nonNull, toArray(jlptLevels, new String[] {}),
+				DefaultComboBoxModel::new, null)) != null ? new JList<>(cbmJlptLevel) : new JList<>(), wrap);
 		//
 		add(new JLabel());
 		//
@@ -189,7 +191,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		//
 		addActionListener(this, btnExportJson, btnCopy, btnCompare);
 		//
-		final List<Component> cs = Arrays.asList(jList, btnExportJson, tfJson, btnCompare, tfText);
+		final List<Component> cs = Arrays.asList(jlJlptLevel, btnExportJson, tfJson, btnCompare, tfText);
 		//
 		final Dimension preferredSize = map(stream(cs), JlptLevelGui::getPreferredSize).max((a, b) -> {
 			return a != null && b != null ? Double.compare(a.getWidth(), b.getWidth()) : 0;
@@ -392,16 +394,20 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 			//
 		} // for
 			//
-		setSelectedItem(instance.cbmJlptLevel, null);
+		final JList<String> jlJlptLevel = instance.jlJlptLevel;
 		//
+		if (jlJlptLevel != null) {
+			//
+			jlJlptLevel.setSelectedIndices(new int[] {});
+			//
+		} // if
+			//
 		final IValue0<List<JlptVocabulary>> jlptVocabularyList = instance.jlptVocabularyList;
 		//
 		final List<JlptVocabulary> jlptVocabularies = IValue0Util.getValue0(jlptVocabularyList);
 		//
 		if (StringUtils.isNotEmpty(text) && CollectionUtils.isNotEmpty(jlptVocabularies)
 				&& jlptVocabularyList != null) {
-			//
-			final ComboBoxModel<String> cbmJlptLevel = instance.cbmJlptLevel;
 			//
 			final List<JlptVocabulary> temp = toList(filter(stream(jlptVocabularies),
 					x -> Boolean.logicalOr(Objects.equals(text, getKanji(x)), Objects.equals(text, getKana(x)))));
@@ -410,22 +416,75 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 			//
 			if (IterableUtils.size(temp) > 1) {
 				//
-				setSelectedItem(instance.cbmJlptLevel, null);
+				jlJlptLevel.setSelectedIndices(new int[] {});
 				//
 				testAndAccept(x -> IterableUtils.size(x) == 1,
-						toList(map(stream(temp), JlptLevelGui::getLevel).distinct()),
-						x -> setSelectedItemByString(cbmJlptLevel, IterableUtils.get(x, 0)));
+						toList(map(stream(temp), JlptLevelGui::getLevel).distinct()), x -> {
+							//
+							if (instance != null) {
+								//
+								instance.setJlptLevel(IterableUtils.get(x, 0));
+								//
+							} // if
+								//
+						});
 				//
 				return;
 				//
 			} // if
 				//
 			testAndAccept(Objects::nonNull,
-					testAndApply(x -> IterableUtils.size(x) == 1, temp, x -> IterableUtils.get(x, 0), null),
-					x -> setSelectedItemByString(cbmJlptLevel, getLevel(x)));
+					testAndApply(x -> IterableUtils.size(x) == 1, temp, x -> IterableUtils.get(x, 0), null), x -> {
+						//
+						if (instance != null) {
+							//
+							instance.setJlptLevel(getLevel(x));
+							//
+						} // if
+							//
+					});
 			//
 		} // if
 			//
+	}
+
+	@Override
+	public void itemStateChanged(final ItemEvent evt) {
+		//
+		if (Objects.equals(getSource(evt), jcbJlptVocabulary)) {
+			//
+			setJlptLevel(getLevel(cast(JlptVocabulary.class,
+					jcbJlptVocabulary != null ? jcbJlptVocabulary.getSelectedItem() : null)));
+			//
+		} // if
+			//
+	}
+
+	private void setJlptLevel(final String level) {
+		//
+		IntList intList = null;
+		//
+		for (int i = 0; jlJlptLevel != null && i < jlJlptLevel.getVisibleRowCount(); i++) {
+			//
+			if (StringUtils.equalsAnyIgnoreCase(jlJlptLevel.getModel().getElementAt(i), level)
+					&& (intList = ObjectUtils.getIfNull(intList, IntList::new)) != null) {
+				//
+				intList.add(i);
+				//
+			} // if
+				//
+		} // for
+			//
+		if (jlJlptLevel != null && intList != null) {
+			//
+			jlJlptLevel.setSelectedIndices(intList.toArray());
+			//
+		} // if
+			//
+	}
+
+	private static <T> T cast(final Class<T> clz, final Object value) {
+		return clz != null && clz.isInstance(value) ? clz.cast(value) : null;
 	}
 
 	private static Document getDocument(final DocumentEvent instance) {
@@ -434,12 +493,6 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 
 	private static int getSize(final ListModel<?> instance) {
 		return instance != null ? instance.getSize() : 0;
-	}
-
-	private static void setSelectedItem(final ComboBoxModel<?> instance, final Object selectedItem) {
-		if (instance != null) {
-			instance.setSelectedItem(selectedItem);
-		}
 	}
 
 	private static <E> Stream<E> stream(final Collection<E> instance) {
@@ -451,35 +504,6 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		return instance != null && (Proxy.isProxyClass(getClass(instance)) || mapper != null) ? instance.map(mapper)
 				: null;
 		//
-	}
-
-	private static void setSelectedItemByString(final ComboBoxModel<String> cbm, final String string) {
-		//
-		IntList intList = null;
-		//
-		for (int i = 0; i < getSize(cbm); i++) {
-			//
-			if (StringUtils.equalsAnyIgnoreCase(cbm.getElementAt(i), string)
-					&& (intList = ObjectUtils.getIfNull(intList, IntList::new)) != null) {
-				//
-				intList.add(i);
-				//
-			} // if
-				//
-		} // for
-			//
-		final int size = intList != null ? intList.size() : 0;
-		//
-		if (size > 1) {
-			//
-			throw new IllegalStateException();
-			//
-		} else if (size == 1 && cbm != null) {
-			//
-			setSelectedItem(cbm, cbm.getElementAt(intList.get(0)));
-			//
-		} // if
-			//
 	}
 
 	private static String getKanji(final JlptVocabulary instance) {
