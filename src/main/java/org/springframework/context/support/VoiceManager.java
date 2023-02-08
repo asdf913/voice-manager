@@ -7021,10 +7021,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.getLevel() : null;
 	}
 
-	private static Integer getJmdictSeq(final JlptVocabulary instance) {
-		return instance != null ? instance.getJmdictSeq() : null;
-	}
-
 	private static void setSelectedItemByString(final ComboBoxModel<String> cbm, final String string) {
 		//
 		IntList intList = null;
