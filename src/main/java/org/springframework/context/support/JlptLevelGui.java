@@ -362,7 +362,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 			//
 			final Integer jmdictSeq = getJmdictSeq(cast(JlptVocabulary.class, getSelectedItem(cbmJlptVocabulary)));
 			//
-			if (Boolean.logicalAnd(jmdictSeq != null, !isTestMode())) {
+			run(Boolean.logicalAnd(jmdictSeq != null, !isTestMode()), () -> {
 				//
 				try {
 					//
@@ -378,10 +378,10 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 					//
 				} // try
 					//
-			} // if
-				//
-		}
-		//
+			});
+			//
+		} // if
+			//
 	}
 
 	private static Object getSelectedItem(final ComboBoxModel<?> instance) {
