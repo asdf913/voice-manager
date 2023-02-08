@@ -50,7 +50,8 @@ class JlptVocabularyListFactoryBeanTest {
 
 	private static Method METHOD_FILTER, METHOD_GET_CLASS, METHOD_TO_LIST, METHOD_ANNOTATION_TYPE, METHOD_GET_NAME,
 			METHOD_TEST, METHOD_OR, METHOD_GET_STRING_CELL_VALUE, METHOD_ADD, METHOD_ADD_ALL, METHOD_PUT,
-			METHOD_GET_FIELDS_BY_NAME, METHOD_GET_INTEGER_VALUE, METHOD_INVOKE, METHOD_GET_DECLARED_ANNOTATIONS = null;
+			METHOD_GET_FIELDS_BY_NAME, METHOD_GET_INTEGER_VALUE, METHOD_INVOKE, METHOD_GET_DECLARED_ANNOTATIONS,
+			METHOD_GET_DECLARED_METHODS = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -89,6 +90,8 @@ class JlptVocabularyListFactoryBeanTest {
 		//
 		(METHOD_GET_DECLARED_ANNOTATIONS = clz.getDeclaredMethod("getDeclaredAnnotations", AnnotatedElement.class))
 				.setAccessible(true);
+		//
+		(METHOD_GET_DECLARED_METHODS = clz.getDeclaredMethod("getDeclaredMethods", Class.class)).setAccessible(true);
 		//
 	}
 
@@ -692,6 +695,27 @@ class JlptVocabularyListFactoryBeanTest {
 				return null;
 			} else if (obj instanceof Annotation[]) {
 				return (Annotation[]) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetDeclaredMethods() throws Throwable {
+		//
+		Assertions.assertNull(getDeclaredMethods(null));
+		//
+	}
+
+	private static Method[] getDeclaredMethods(final Class<?> instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_DECLARED_METHODS.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Method[]) {
+				return (Method[]) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
