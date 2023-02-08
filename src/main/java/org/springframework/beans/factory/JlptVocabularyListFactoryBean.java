@@ -4,16 +4,23 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.collections4.MapUtils;
@@ -21,6 +28,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
@@ -149,15 +157,22 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		//
 		List<Field> fs = null;
 		//
+		Entry<Integer, Field> entry = null;
+		//
 		Map<Integer, Field> fieldMap = null;
+		//
+		String stringCellValue = null;
 		//
 		for (int i = 0; i < row.getPhysicalNumberOfCells(); i++) {
 			//
+			entry = null;
+			//
+			// name
+			//
 			if ((size = IterableUtils.size(fs = getFieldsByName(JlptVocabulary.class.getDeclaredFields(),
-					getStringCellValue(row.getCell(i))))) == 1) {
+					stringCellValue = getStringCellValue(row.getCell(i))))) == 1) {
 				//
-				put(fieldMap = ObjectUtils.getIfNull(fieldMap, LinkedHashMap::new), Integer.valueOf(i),
-						IterableUtils.get(fs, 0));
+				entry = Pair.of(Integer.valueOf(i), IterableUtils.get(fs, 0));
 				//
 			} else if (size > 1) {
 				//
@@ -165,10 +180,53 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 				//
 			} // if
 				//
+				// domain.JlptVocabulary$ColumnName
+				//
+			if (entry == null && (size = IterableUtils.size(
+					fs = getFieldsByColumnName(JlptVocabulary.class.getDeclaredFields(), stringCellValue))) == 1) {
+				//
+				entry = Pair.of(Integer.valueOf(i), IterableUtils.get(fs, 0));
+				//
+			} else if (size > 1) {
+				//
+				throw new IllegalStateException();
+				//
+			} // if
+				//
+			if (entry != null) {
+				//
+				put(fieldMap = ObjectUtils.getIfNull(fieldMap, LinkedHashMap::new), entry.getKey(), entry.getValue());
+				//
+			} // if
+				//
 		} // for
 			//
 		return fieldMap;
 		//
+	}
+
+	private static <T> Stream<T> filter(final Stream<T> instance, final Predicate<? super T> predicate) {
+		//
+		return instance != null && (predicate != null || Proxy.isProxyClass(getClass(instance)))
+				? instance.filter(predicate)
+				: null;
+		//
+	}
+
+	private static <T> List<T> toList(final Stream<T> instance) {
+		return instance != null ? instance.toList() : null;
+	}
+
+	private static Class<?> getClass(final Object instance) {
+		return instance != null ? instance.getClass() : null;
+	}
+
+	private static Class<? extends Annotation> annotationType(final Annotation instance) {
+		return instance != null ? instance.annotationType() : null;
+	}
+
+	private static String getName(final Class<?> instance) {
+		return instance != null ? instance.getName() : null;
 	}
 
 	private static IValue0<JlptVocabulary> getJlptVocabulary(final Map<Integer, Field> fieldMap, final Row row)
@@ -208,6 +266,11 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 						//
 						f.set(jv, testAndApply(StringUtils::isNotBlank, getStringCellValue(cell), Integer::valueOf,
 								null));
+						//
+					} else if (Objects.equals(cellType, CellType.NUMERIC)) {
+						//
+						f.set(jv, testAndApply(Objects::nonNull, Double.valueOf(cell.getNumericCellValue()),
+								x -> x != null ? x.intValue() : null, null));
 						//
 					} else {
 						//
@@ -391,15 +454,18 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		//
 		List<Field> fs = null;
 		//
+		Entry<Integer, Field> entry = null;
+		//
 		Map<Integer, Field> fieldMap = null;
+		//
+		String s = null;
 		//
 		for (int i = 0; i < ss.length; i++) {
 			//
 			if ((size = IterableUtils
-					.size(fs = getFieldsByName(JlptVocabulary.class.getDeclaredFields(), ss[i]))) == 1) {
+					.size(fs = getFieldsByName(JlptVocabulary.class.getDeclaredFields(), s = ss[i]))) == 1) {
 				//
-				put(fieldMap = ObjectUtils.getIfNull(fieldMap, LinkedHashMap::new), Integer.valueOf(i),
-						IterableUtils.get(fs, 0));
+				entry = Pair.of(Integer.valueOf(i), IterableUtils.get(fs, 0));
 				//
 			} else if (size > 1) {
 				//
@@ -407,9 +473,29 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 				//
 			} // if
 				//
+				// domain.JlptVocabulary$ColumnName
+				//
+			if (entry == null && (size = IterableUtils
+					.size(fs = getFieldsByColumnName(JlptVocabulary.class.getDeclaredFields(), s))) == 1) {
+				//
+				entry = Pair.of(Integer.valueOf(i), IterableUtils.get(fs, 0));
+				//
+			} else if (size > 1) {
+				//
+				throw new IllegalStateException();
+				//
+			} // if
+				//
+			if (entry != null) {
+				//
+				put(fieldMap = ObjectUtils.getIfNull(fieldMap, LinkedHashMap::new), entry.getKey(), entry.getValue());
+				//
+			} // if
+				//
 		} // for
 			//
 		return fieldMap;
+
 		//
 	}
 
@@ -450,6 +536,69 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		} // for
 			//
 		return list;
+		//
+	}
+
+	private static List<Field> getFieldsByColumnName(final Field[] fs, final String columnName) {
+		//
+		return toList(filter(
+				testAndApply(Objects::nonNull, JlptVocabulary.class.getDeclaredFields(), Arrays::stream, null), f -> {
+					//
+					final List<Annotation> as = toList(filter(testAndApply(Objects::nonNull,
+							f != null ? f.getDeclaredAnnotations() : null, Arrays::stream, null), a -> {
+								//
+								if (Objects.equals("domain.JlptVocabulary$ColumnName", getName(annotationType(a)))) {
+									//
+									final List<Method> ms = toList(filter(
+											testAndApply(Objects::nonNull, annotationType(a).getMethods(),
+													Arrays::stream, null),
+											m -> m != null && Objects.equals("value", m.getName())));
+									//
+									final int sz = IterableUtils.size(ms);
+									//
+									final Method m = sz == 1 ? IterableUtils.get(ms, 0) : null;
+									//
+									if (m != null) {
+										//
+										m.setAccessible(true);
+										//
+									} // if
+										//
+									if (sz > 1) {
+										//
+										throw new IllegalStateException();
+										//
+									} // if
+										//
+									try {
+										//
+										return Objects.equals(m != null ? m.invoke(a) : null, columnName);
+										//
+									} catch (final IllegalAccessException | InvocationTargetException e) {
+										//
+										// TODO Auto-generated catch block
+										//
+										throw new RuntimeException(e);
+										//
+									} // try
+										//
+								} // if
+									//
+								return false;
+								//
+							}));
+					//
+					final int sz = IterableUtils.size(as);
+					//
+					if (sz > 1) {
+						//
+						throw new IllegalStateException();
+						//
+					} // if
+						//
+					return sz == 1;
+					//
+				}));
 		//
 	}
 

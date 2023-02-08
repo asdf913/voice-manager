@@ -21,7 +21,14 @@ public class JlptVocabulary {
 
 	private String kana = null;
 	
-	private Integer jmdict_seq = null;
+	@Target(ElementType.FIELD)
+	@Retention(RetentionPolicy.RUNTIME)
+	private @interface ColumnName {
+		String value();
+	}
+	
+	@ColumnName("jmdict_seq")
+	private Integer jmdictSeq = null;
 
 	public String getLevel() {
 		return level;

@@ -4,15 +4,22 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import org.apache.poi.EmptyFileException;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellUtil;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.RowUtil;
@@ -22,6 +29,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookUtil;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.InputStreamSource;
@@ -35,6 +43,42 @@ import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import com.google.common.reflect.Reflection;
 
 class JlptVocabularyListFactoryBeanTest {
+
+	private static Method METHOD_FILTER, METHOD_GET_CLASS, METHOD_TO_LIST, METHOD_ANNOTATION_TYPE, METHOD_GET_NAME,
+			METHOD_TEST, METHOD_OR, METHOD_GET_STRING_CELL_VALUE, METHOD_ADD, METHOD_ADD_ALL, METHOD_PUT,
+			METHOD_GET_FIELDS_BY_NAME = null;
+
+	@BeforeAll
+	static void beforeAll() throws ReflectiveOperationException {
+		//
+		final Class<?> clz = JlptVocabularyListFactoryBean.class;
+		//
+		(METHOD_FILTER = clz.getDeclaredMethod("filter", Stream.class, Predicate.class)).setAccessible(true);
+		//
+		(METHOD_GET_CLASS = clz.getDeclaredMethod("getClass", Object.class)).setAccessible(true);
+		//
+		(METHOD_TO_LIST = clz.getDeclaredMethod("toList", Stream.class)).setAccessible(true);
+		//
+		(METHOD_ANNOTATION_TYPE = clz.getDeclaredMethod("annotationType", Annotation.class)).setAccessible(true);
+		//
+		(METHOD_GET_NAME = clz.getDeclaredMethod("getName", Class.class)).setAccessible(true);
+		//
+		(METHOD_TEST = clz.getDeclaredMethod("test", Predicate.class, Object.class)).setAccessible(true);
+		//
+		(METHOD_OR = clz.getDeclaredMethod("or", Boolean.TYPE, Boolean.TYPE, boolean[].class)).setAccessible(true);
+		//
+		(METHOD_GET_STRING_CELL_VALUE = clz.getDeclaredMethod("getStringCellValue", Cell.class)).setAccessible(true);
+		//
+		(METHOD_ADD = clz.getDeclaredMethod("add", Collection.class, Object.class)).setAccessible(true);
+		//
+		(METHOD_ADD_ALL = clz.getDeclaredMethod("addAll", Collection.class, Collection.class)).setAccessible(true);
+		//
+		(METHOD_PUT = clz.getDeclaredMethod("put", Map.class, Object.class, Object.class)).setAccessible(true);
+		//
+		(METHOD_GET_FIELDS_BY_NAME = clz.getDeclaredMethod("getFieldsByName", Field[].class, String.class))
+				.setAccessible(true);
+		//
+	}
 
 	private static class IH implements InvocationHandler {
 
@@ -90,6 +134,14 @@ class JlptVocabularyListFactoryBeanTest {
 				if (Objects.equals(methodName, "toArray")) {
 					//
 					return toArray;
+					//
+				} // if
+					//
+			} else if (proxy instanceof Stream) {
+				//
+				if (Objects.equals(methodName, "filter")) {
+					//
+					return proxy;
 					//
 				} // if
 					//
@@ -253,6 +305,257 @@ class JlptVocabularyListFactoryBeanTest {
 
 	private static <T> T getObject(final FactoryBean<T> instance) throws Exception {
 		return instance != null ? instance.getObject() : null;
+	}
+
+	@Test
+	void testFilter() throws Throwable {
+		//
+		Assertions.assertNull(filter(null, null));
+		//
+		Assertions.assertNull(filter(Stream.empty(), null));
+		//
+		final Stream<?> steram = Reflection.newProxy(Stream.class, new IH());
+		//
+		Assertions.assertSame(steram, filter(steram, null));
+		//
+	}
+
+	private static <T> Stream<T> filter(final Stream<T> instance, final Predicate<? super T> predicate)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_FILTER.invoke(null, instance, predicate);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Stream) {
+				return (Stream) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetClass() throws Throwable {
+		//
+		Assertions.assertNull(getClass(null));
+		//
+	}
+
+	private static Class<?> getClass(final Object instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_CLASS.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Class) {
+				return (Class) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static String toString(final Object instance) {
+		return instance != null ? instance.toString() : null;
+	}
+
+	@Test
+	void testToList() throws Throwable {
+		//
+		Assertions.assertNull(toList(null));
+		//
+	}
+
+	private static <T> List<T> toList(final Stream<T> instance) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_LIST.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof List) {
+				return (List) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testAnnotationType() throws Throwable {
+		//
+		Assertions.assertNull(annotationType(null));
+		//
+	}
+
+	private static Class<? extends Annotation> annotationType(final Annotation instance) throws Throwable {
+		try {
+			final Object obj = METHOD_ANNOTATION_TYPE.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Class) {
+				return (Class) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetName() throws Throwable {
+		//
+		Assertions.assertNull(getName(null));
+		//
+	}
+
+	private static String getName(final Class<?> instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_NAME.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testTest() throws Throwable {
+		//
+		Assertions.assertFalse(test(null, null));
+		//
+	}
+
+	private static final <T> boolean test(final Predicate<T> instance, final T value) throws Throwable {
+		try {
+			final Object obj = METHOD_TEST.invoke(null, instance, value);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(obj != null && obj.getClass() != null ? obj.getClass().toString() : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testOr() throws Throwable {
+		//
+		Assertions.assertTrue(or(false, true));
+		//
+		Assertions.assertFalse(or(false, false, null));
+		//
+		Assertions.assertTrue(or(false, false, true));
+		//
+	}
+
+	private static boolean or(final boolean a, final boolean b, final boolean... bs) throws Throwable {
+		try {
+			final Object obj = METHOD_OR.invoke(null, a, b, bs);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(obj != null && obj.getClass() != null ? obj.getClass().toString() : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetStringCellValue() throws Throwable {
+		//
+		Assertions.assertNull(getStringCellValue(null));
+		//
+	}
+
+	private static String getStringCellValue(final Cell instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_STRING_CELL_VALUE.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testAdd() {
+		//
+		Assertions.assertDoesNotThrow(() -> add(null, null));
+		//
+	}
+
+	private static <E> void add(final Collection<E> items, final E item) throws Throwable {
+		try {
+			METHOD_ADD.invoke(null, items, item);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testAddAll() {
+		//
+		Assertions.assertDoesNotThrow(() -> addAll(null, null));
+		//
+	}
+
+	private static <E> void addAll(final Collection<E> a, final Collection<? extends E> b) throws Throwable {
+		try {
+			METHOD_ADD_ALL.invoke(null, a, b);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static Map<Integer, Field> getFieldMap(final String[] ss) {
+		return null;
+	}
+
+	@Test
+	void testPut() {
+		//
+		Assertions.assertDoesNotThrow(() -> put(null, null, null));
+		//
+	}
+
+	private static <K, V> void put(final Map<K, V> instance, final K key, final V value) throws Throwable {
+		try {
+			METHOD_PUT.invoke(null, instance, key, value);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetFieldsByName() throws Throwable {
+		//
+		Assertions.assertNull(getFieldsByName(null, null));
+		//
+		Assertions.assertNull(getFieldsByName(new Field[] { null }, null));
+		//
+	}
+
+	private static List<Field> getFieldsByName(final Field[] fs, final String name) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_FIELDS_BY_NAME.invoke(null, fs, name);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof List) {
+				return (List) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 }
