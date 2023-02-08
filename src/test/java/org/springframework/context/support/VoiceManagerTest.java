@@ -105,6 +105,8 @@ import javax.swing.ListCellRenderer;
 import javax.swing.MutableComboBoxModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkEvent.EventType;
 import javax.swing.table.DefaultTableModel;
@@ -205,6 +207,7 @@ import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentType;
 import com.mpatric.mp3agic.ID3v1;
 
+import domain.JlptVocabulary;
 import domain.Voice;
 import domain.VoiceList;
 import fr.free.nrw.jakaroma.Jakaroma;
@@ -296,7 +299,7 @@ class VoiceManagerTest {
 			METHOD_GET_WORKBOOK_CLASS_FAILABLE_SUPPLIER_MAP, METHOD_GET_DECLARED_CONSTRUCTOR, METHOD_NEW_INSTANCE,
 			METHOD_GET_WRITER, METHOD_KEY_SET, METHOD_GET_WORK_BOOK_CLASS, METHOD_GET_SYSTEM_PRINT_STREAM_BY_FIELD_NAME,
 			METHOD_IF_ELSE, METHOD_GET_PAGE_TITLE, METHOD_SET_HIRAGANA_OR_KATAKANA_AND_ROMAJI, METHOD_APPLY,
-			METHOD_TO_MILLIS = null;
+			METHOD_TO_MILLIS, METHOD_SET_JLPT_VOCABULARY_AND_LEVEL = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -922,6 +925,9 @@ class VoiceManagerTest {
 		//
 		(METHOD_TO_MILLIS = clz.getDeclaredMethod("toMillis", Duration.class)).setAccessible(true);
 		//
+		(METHOD_SET_JLPT_VOCABULARY_AND_LEVEL = clz.getDeclaredMethod("setJlptVocabularyAndLevel", VoiceManager.class))
+				.setAccessible(true);
+		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
 		CLASS_EXPORT_TASK = Class.forName("org.springframework.context.support.VoiceManager$ExportTask");
@@ -994,6 +1000,8 @@ class VoiceManagerTest {
 		private PreparedStatement preparedStatement = null;
 
 		private ResultSet resultSet = null;
+
+		private javax.swing.text.Document document = null;
 
 		private Map<Object, BeanDefinition> getBeanDefinitions() {
 			if (beanDefinitions == null) {
@@ -1408,6 +1416,14 @@ class VoiceManagerTest {
 					//
 				} // if
 					//
+			} else if (proxy instanceof DocumentEvent) {
+				//
+				if (Objects.equals(methodName, "getDocument")) {
+					//
+					return document;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(methodName);
@@ -1417,6 +1433,8 @@ class VoiceManagerTest {
 	}
 
 	private VoiceManager instance = null;
+
+	private ObjectMapper objectMapper = null;
 
 	private IH ih = null;
 
@@ -1452,7 +1470,9 @@ class VoiceManagerTest {
 
 	private Cell cell = null;
 
-	private ObjectMapper objectMapper = null;
+	private DocumentEvent documentEvent = null;
+
+	private javax.swing.text.Document document = null;
 
 	@BeforeEach
 	void beforeEach() throws Throwable {
@@ -1500,6 +1520,10 @@ class VoiceManagerTest {
 		workbook = Reflection.newProxy(Workbook.class, ih);
 		//
 		cell = Reflection.newProxy(Cell.class, ih);
+		//
+		documentEvent = Reflection.newProxy(DocumentEvent.class, ih);
+		//
+		document = Reflection.newProxy(javax.swing.text.Document.class, ih);
 		//
 	}
 
@@ -2593,6 +2617,130 @@ class VoiceManagerTest {
 	private static void keyReleased(final KeyListener instance, final KeyEvent keyEvent) {
 		if (instance != null) {
 			instance.keyReleased(keyEvent);
+		}
+	}
+
+	@Test
+	void testInsertUpdate() {
+		//
+		Assertions.assertDoesNotThrow(() -> insertUpdate(instance, null));
+		//
+		if (ih != null) {
+			//
+			ih.document = document;
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> insertUpdate(instance, documentEvent));
+		//
+	}
+
+	private static void insertUpdate(final DocumentListener instance, final DocumentEvent evt) {
+		if (instance != null) {
+			instance.insertUpdate(evt);
+		}
+	}
+
+	@Test
+	void testRemoveUpdate() throws Throwable {
+		//
+		Assertions.assertDoesNotThrow(() -> removeUpdate(instance, null));
+		//
+		if (ih != null) {
+			//
+			ih.document = document;
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> removeUpdate(instance, documentEvent));
+		//
+		// org.springframework.context.support.VoiceManager.tfTextImport
+		//
+		final String A = "A";
+		//
+		final JTextComponent tfTextImport = new JTextField(A);
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "tfTextImport", tfTextImport, true);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> removeUpdate(instance, null));
+		//
+		// org.springframework.context.support.VoiceManager.cbmJlptVocabulary
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "cbmJlptVocabulary", new DefaultComboBoxModel<>(), true);
+			//
+		} // if
+			//
+			// org.springframework.context.support.VoiceManager.jlptVocabularyList
+			//
+		final Field jlptVocabularyList = VoiceManager.class.getDeclaredField("jlptVocabularyList");
+		//
+		if (jlptVocabularyList != null) {
+			//
+			jlptVocabularyList.setAccessible(true);
+			//
+		} // if
+			//
+		set(jlptVocabularyList, instance, Unit.with(Collections.singletonList(null)));
+		//
+		Assertions.assertDoesNotThrow(() -> removeUpdate(instance, null));
+		//
+		final JlptVocabulary jv = new JlptVocabulary();
+		//
+		final List<JlptVocabulary> jvs = Collections.nCopies(2, jv);
+		//
+		set(jlptVocabularyList, instance, Unit.with(jvs));
+		//
+		Assertions.assertDoesNotThrow(() -> removeUpdate(instance, null));
+		//
+		// domain.JlptVocabulary.kana
+		//
+		FieldUtils.writeDeclaredField(jv, "kana", A, true);
+		//
+		Assertions.assertDoesNotThrow(() -> removeUpdate(instance, null));
+		//
+		// domain.JlptVocabulary.kanji
+		//
+		FieldUtils.writeDeclaredField(jv, "kanji", A, true);
+		//
+		Assertions.assertDoesNotThrow(() -> removeUpdate(instance, null));
+		//
+		// org.springframework.context.support.VoiceManager.cbmJlptLevel
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "cbmJlptLevel", new DefaultComboBoxModel<>(new String[] { null }),
+					true);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> removeUpdate(instance, null));
+		//
+		setText(tfTextImport, "B");
+		//
+		Assertions.assertDoesNotThrow(() -> removeUpdate(instance, null));
+		//
+		setText(tfTextImport, A);
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "cbmJlptLevel",
+					new DefaultComboBoxModel<>(new String[] { null, null }), true);
+			//
+		} // if
+			//
+		Assertions.assertThrows(IllegalStateException.class, () -> removeUpdate(instance, null));
+		//
+	}
+
+	private static void removeUpdate(final DocumentListener instance, final DocumentEvent evt) {
+		if (instance != null) {
+			instance.removeUpdate(evt);
 		}
 	}
 
@@ -8102,6 +8250,21 @@ class VoiceManagerTest {
 				return (Long) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetJlptVocabularyAndLevel() {
+		//
+		Assertions.assertDoesNotThrow(() -> setJlptVocabularyAndLevel(null));
+		//
+	}
+
+	private static void setJlptVocabularyAndLevel(final VoiceManager instance) throws Throwable {
+		try {
+			METHOD_SET_JLPT_VOCABULARY_AND_LEVEL.invoke(null, instance);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

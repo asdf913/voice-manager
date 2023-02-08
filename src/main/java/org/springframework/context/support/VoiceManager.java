@@ -146,6 +146,8 @@ import javax.swing.MutableComboBoxModel;
 import javax.swing.WindowConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkEvent.EventType;
 import javax.swing.table.DefaultTableModel;
@@ -243,6 +245,7 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.ss.usermodel.WorkbookUtil;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellRangeAddressList;
+import org.apache.poi.util.IntList;
 import org.apache.poi.util.LocaleID;
 import org.apache.poi.xssf.usermodel.XSSFDataValidationHelper;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -320,6 +323,7 @@ import com.mpatric.mp3agic.Mp3File;
 
 import de.sciss.jump3r.lowlevel.LameEncoder;
 import de.sciss.jump3r.mp3.Lame;
+import domain.JlptVocabulary;
 import domain.Voice;
 import domain.Voice.Yomi;
 import domain.VoiceList;
@@ -350,7 +354,7 @@ import net.sourceforge.javaflacencoder.FLACStreamOutputStream;
 import net.sourceforge.javaflacencoder.StreamConfiguration;
 
 public class VoiceManager extends JFrame implements ActionListener, ItemListener, ChangeListener, KeyListener,
-		EnvironmentAware, BeanFactoryPostProcessor, InitializingBean {
+		EnvironmentAware, BeanFactoryPostProcessor, InitializingBean, DocumentListener {
 
 	private static final long serialVersionUID = 6093437131552718994L;
 
@@ -518,6 +522,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private transient ComboBoxModel<CompressionLevel> cbmCompressionLevel = null;
 
 	private transient ComboBoxModel<FileFormat> cbmMicrosoftAccessFileFormat = null;
+
+	private transient MutableComboBoxModel<JlptVocabulary> cbmJlptVocabulary = null;
+
+	private javax.swing.text.Document tfTextImportDocument = null;
 
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.FIELD)
@@ -756,6 +764,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private String messageDigestAlgorithm = null;
 
 	private transient IValue0<List<String>> jouYouKanJiList = null;
+
+	private IValue0<List<JlptVocabulary>> jlptVocabularyList = null;
 
 	private VoiceManager() {
 	}
@@ -1345,6 +1355,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	public void setJouYouKanJiList(final List<String> jouYouKanJiList) {
 		this.jouYouKanJiList = Unit.with(jouYouKanJiList);
+	}
+
+	public void setJlptVocabularyList(final List<JlptVocabulary> jlptVocabularyList) {
+		this.jlptVocabularyList = Unit.with(jlptVocabularyList);
 	}
 
 	private static IValue0<Class<? extends Workbook>> getWorkbookClass(
@@ -2829,9 +2843,35 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(
 				tfTextImport = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
 						"org.springframework.context.support.VoiceManager.text")),
-				String.format("%1$s,span %2$s", GROWX, 23));
+				String.format("%1$s,span %2$s", GROWX, 20));
 		//
 		tfTextImport.addKeyListener(this);
+		//
+		if ((tfTextImportDocument = tfTextImport.getDocument()) != null) {
+			//
+			tfTextImportDocument.addDocumentListener(this);
+			//
+		} // if
+			//
+		final JComboBox<JlptVocabulary> jcbJlptVocabulary = new JComboBox<JlptVocabulary>(
+				cbmJlptVocabulary = new DefaultComboBoxModel<>());
+		//
+		panel.add(jcbJlptVocabulary, String.format("span %1$s", 3));
+		//
+		final ListCellRenderer<?> render = jcbJlptVocabulary.getRenderer();
+		//
+		jcbJlptVocabulary.setRenderer(new ListCellRenderer<JlptVocabulary>() {
+
+			@Override
+			public Component getListCellRendererComponent(final JList<? extends JlptVocabulary> list,
+					final JlptVocabulary value, final int index, final boolean isSelected, final boolean cellHasFocus) {
+				//
+				return render != null ? ((ListCellRenderer) render).getListCellRendererComponent(list,
+						value != null ? String.join(" ", value.getKanji(), value.getKana(), value.getLevel()) : null,
+						index, isSelected, cellHasFocus) : null;
+				//
+			}
+		});
 		//
 		panel.add(btnConvertToRomaji = new JButton("Convert To Romaji"), String.format("%1$s", WRAP));
 		//
@@ -6876,6 +6916,123 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
+	@Override
+	public void insertUpdate(final DocumentEvent evt) {
+		//
+		if (Objects.equals(getDocument(evt), tfTextImportDocument)) {
+			//
+			setJlptVocabularyAndLevel(this);
+			//
+		} // if
+			//
+	}
+
+	@Override
+	public void removeUpdate(final DocumentEvent evt) {
+		//
+		if (Objects.equals(getDocument(evt), tfTextImportDocument)) {
+			//
+			setJlptVocabularyAndLevel(this);
+			//
+		} // if
+			//
+	}
+
+	private static void setJlptVocabularyAndLevel(final VoiceManager instance) {
+		//
+		if (instance == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		final String text = getText(instance.tfTextImport);
+		//
+		final MutableComboBoxModel<JlptVocabulary> cbmJlptVocabulary = instance.cbmJlptVocabulary;
+		//
+		for (int i = (cbmJlptVocabulary != null ? cbmJlptVocabulary.getSize() : 0) - 1; i >= 0; i--) {
+			//
+			cbmJlptVocabulary.removeElementAt(i);
+			//
+		} // for
+			//
+		setSelectedItem(instance.cbmJlptLevel, null);
+		//
+		final IValue0<List<JlptVocabulary>> jlptVocabularyList = instance.jlptVocabularyList;
+		//
+		final List<JlptVocabulary> jlptVocabularies = IValue0Util.getValue0(jlptVocabularyList);
+		//
+		if (StringUtils.isNotEmpty(text) && CollectionUtils.isNotEmpty(jlptVocabularies)
+				&& jlptVocabularyList != null) {
+			//
+			final ComboBoxModel<String> cbmJlptLevel = instance.cbmJlptLevel;
+			//
+			final List<JlptVocabulary> temp = toList(filter(stream(jlptVocabularies),
+					x -> x != null && (Objects.equals(text, x.getKanji()) || Objects.equals(text, x.getKana()))));
+			//
+			forEach(temp, x -> {
+				//
+				if (cbmJlptVocabulary != null) {
+					//
+					cbmJlptVocabulary.addElement(x);
+					//
+				} // if
+					//
+			});
+			//
+			if (IterableUtils.size(temp) > 1) {
+				//
+				setSelectedItem(instance.cbmJlptLevel, null);
+				//
+				testAndAccept(x -> IterableUtils.size(x) == 1,
+						toList(map(stream(temp), x -> x != null ? x.getLevel() : null).distinct()),
+						x -> setSelectedItemByString(cbmJlptLevel, IterableUtils.get(x, 0)));
+				//
+				return;
+				//
+			} // if
+				//
+			testAndAccept(Objects::nonNull,
+					testAndApply(x -> IterableUtils.size(x) == 1, temp, x -> IterableUtils.get(x, 0), null),
+					x -> setSelectedItemByString(cbmJlptLevel, x != null ? x.getLevel() : null));
+			//
+		} // if
+			//
+	}
+
+	private static void setSelectedItemByString(final ComboBoxModel<String> cbm, final String string) {
+		//
+		IntList intList = null;
+		//
+		for (int i = 0; cbm != null && i < cbm.getSize(); i++) {
+			//
+			if (StringUtils.equalsAnyIgnoreCase(cbm.getElementAt(i), string)
+					&& (intList = ObjectUtils.getIfNull(intList, IntList::new)) != null) {
+				//
+				intList.add(i);
+				//
+			} // if
+				//
+		} // for
+			//
+		final int size = intList != null ? intList.size() : 0;
+		//
+		if (size > 1) {
+			//
+			throw new IllegalStateException();
+			//
+		} else if (size == 1 && cbm != null) {
+			//
+			setSelectedItem(cbm, cbm.getElementAt(intList.get(0)));
+			//
+		} // if
+			//
+	}
+
+	@Override
+	public void changedUpdate(final DocumentEvent evt) {
+	}
+
 	private static void setBackground(final Component instance, final Color color) {
 		if (instance != null) {
 			instance.setBackground(color);
@@ -6886,6 +7043,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		if (instance != null) {
 			instance.setText(text);
 		}
+	}
+
+	private static javax.swing.text.Document getDocument(final DocumentEvent instance) {
+		return instance != null ? instance.getDocument() : null;
 	}
 
 	private static interface ByteConverter {

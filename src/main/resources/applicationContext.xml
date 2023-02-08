@@ -168,6 +168,28 @@
 		<property name="ipaSymbolMultimap" ref="ipaMultimap" />
 		<!-- -->
 		<property name="jouYouKanJiList" ref="JouYouKanJiList" />
+		<!-- -->
+		<property name="jlptVocabularyList">
+			<bean
+				class="org.springframework.beans.factory.JlptVocabularyListFactoryBean">
+				<property name="urls">
+					<list>
+						<value>https://raw.githubusercontent.com/stephenmk/yomichan-jlpt-vocab/main/n1.csv
+						</value>
+						<value>https://raw.githubusercontent.com/stephenmk/yomichan-jlpt-vocab/main/n2.csv
+						</value>
+						<value>https://raw.githubusercontent.com/stephenmk/yomichan-jlpt-vocab/main/n3.csv
+						</value>
+						<value>https://raw.githubusercontent.com/stephenmk/yomichan-jlpt-vocab/main/n4.csv
+						</value>
+						<value>https://raw.githubusercontent.com/stephenmk/yomichan-jlpt-vocab/main/n5.csv
+						</value>
+					</list>
+				</property>
+				<property name="resource"
+					value="classpath:JlptVocabulary.xlsx" />
+			</bean>
+		</property>
 	</bean>
 
 	<!-- -->
