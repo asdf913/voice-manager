@@ -2866,9 +2866,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			public Component getListCellRendererComponent(final JList<? extends JlptVocabulary> list,
 					final JlptVocabulary value, final int index, final boolean isSelected, final boolean cellHasFocus) {
 				//
-				return render != null ? ((ListCellRenderer) render).getListCellRendererComponent(list,
+				return VoiceManager.getListCellRendererComponent(((ListCellRenderer) render), list,
 						value != null ? String.join(" ", value.getKanji(), value.getKana(), value.getLevel()) : null,
-						index, isSelected, cellHasFocus) : null;
+						index, isSelected, cellHasFocus);
 				//
 			}
 		});
