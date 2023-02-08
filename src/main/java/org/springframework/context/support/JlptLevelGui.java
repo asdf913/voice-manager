@@ -352,25 +352,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 				//
 		} else if (Objects.equals(source, btnVisitJMdictDB)) {
 			//
-			final Integer jmdictSeq = getJmdictSeq(cast(JlptVocabulary.class, getSelectedItem(cbmJlptVocabulary)));
-			//
-			run(Boolean.logicalAnd(jmdictSeq != null, !isTestMode()), () -> {
-				//
-				try {
-					//
-					// TODO
-					//
-					browse(Desktop.getDesktop(), new URL(
-							String.format("https://www.edrdg.org/jmwsgi/entr.py?svc=jmdict&sid=&q=%1$s", jmdictSeq))
-							.toURI());
-					//
-				} catch (final IOException | URISyntaxException e) {
-					//
-					TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
-					//
-				} // try
-					//
-			});
+			actionPerformedForBtnVisitJMdictDB();
 			//
 		} // if
 			//
@@ -388,6 +370,30 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 			//
 		} // try
 			//
+	}
+
+	private void actionPerformedForBtnVisitJMdictDB() {
+		//
+		final Integer jmdictSeq = getJmdictSeq(cast(JlptVocabulary.class, getSelectedItem(cbmJlptVocabulary)));
+		//
+		run(Boolean.logicalAnd(jmdictSeq != null, !isTestMode()), () -> {
+			//
+			try {
+				//
+				// TODO
+				//
+				browse(Desktop.getDesktop(),
+						new URL(String.format("https://www.edrdg.org/jmwsgi/entr.py?svc=jmdict&sid=&q=%1$s", jmdictSeq))
+								.toURI());
+				//
+			} catch (final IOException | URISyntaxException e) {
+				//
+				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
+				//
+			} // try
+				//
+		});
+		//
 	}
 
 	private static Object getSelectedItem(final ComboBoxModel<?> instance) {
