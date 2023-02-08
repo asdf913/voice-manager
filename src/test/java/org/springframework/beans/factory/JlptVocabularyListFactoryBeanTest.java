@@ -20,6 +20,7 @@ import java.util.stream.Stream;
 
 import org.apache.poi.EmptyFileException;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.CellUtil;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.RowUtil;
@@ -28,6 +29,8 @@ import org.apache.poi.ss.usermodel.SheetUtil;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookUtil;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.javatuples.Unit;
+import org.javatuples.valueintf.IValue0;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,7 +49,7 @@ class JlptVocabularyListFactoryBeanTest {
 
 	private static Method METHOD_FILTER, METHOD_GET_CLASS, METHOD_TO_LIST, METHOD_ANNOTATION_TYPE, METHOD_GET_NAME,
 			METHOD_TEST, METHOD_OR, METHOD_GET_STRING_CELL_VALUE, METHOD_ADD, METHOD_ADD_ALL, METHOD_PUT,
-			METHOD_GET_FIELDS_BY_NAME = null;
+			METHOD_GET_FIELDS_BY_NAME, METHOD_GET_INTEGER_VALUE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -78,6 +81,8 @@ class JlptVocabularyListFactoryBeanTest {
 		(METHOD_GET_FIELDS_BY_NAME = clz.getDeclaredMethod("getFieldsByName", Field[].class, String.class))
 				.setAccessible(true);
 		//
+		(METHOD_GET_INTEGER_VALUE = clz.getDeclaredMethod("getIntegerValue", Cell.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -91,6 +96,12 @@ class JlptVocabularyListFactoryBeanTest {
 		private Iterator<?> iterator = null;
 
 		private Object[] toArray = null;
+
+		private CellType cellType = null;
+
+		private String stringCellValue = null;
+
+		private Double numericCellValue = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -145,6 +156,21 @@ class JlptVocabularyListFactoryBeanTest {
 					//
 				} // if
 					//
+			} else if (proxy instanceof Cell) {
+				//
+				if (Objects.equals(methodName, "getCellType")) {
+					//
+					return cellType;
+					//
+				} else if (Objects.equals(methodName, "getStringCellValue")) {
+					//
+					return stringCellValue;
+					//
+				} else if (Objects.equals(methodName, "getNumericCellValue")) {
+					//
+					return numericCellValue;
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(methodName);
@@ -155,10 +181,14 @@ class JlptVocabularyListFactoryBeanTest {
 
 	private JlptVocabularyListFactoryBean instance = null;
 
+	private IH ih = null;
+
 	@BeforeEach
 	void beforeEach() {
 		//
 		instance = new JlptVocabularyListFactoryBean();
+		//
+		ih = new IH();
 		//
 	}
 
@@ -178,8 +208,6 @@ class JlptVocabularyListFactoryBeanTest {
 			//
 		} // if
 			//
-		final IH ih = new IH();
-		//
 		Assertions.assertNull(getObject(instance));
 		//
 		if (instance != null) {
@@ -218,14 +246,22 @@ class JlptVocabularyListFactoryBeanTest {
 			//
 		} // if
 			//
-		ih.exists = Boolean.TRUE;
-		//
+		if (ih != null) {
+			//
+			ih.exists = Boolean.TRUE;
+			//
+		} // if
+			//
 		Assertions.assertNull(getObject(instance));
 		//
 		try (final InputStream is = new ByteArrayInputStream("".getBytes())) {
 			//
-			ih.inputStream = is;
-			//
+			if (ih != null) {
+				//
+				ih.inputStream = is;
+				//
+			} // if
+				//
 			Assertions.assertNull(getObject(instance));
 			//
 		} // try
@@ -245,8 +281,12 @@ class JlptVocabularyListFactoryBeanTest {
 			//
 		try (final InputStream is = new ByteArrayInputStream(bs)) {
 			//
-			ih.inputStream = is;
-			//
+			if (ih != null) {
+				//
+				ih.inputStream = is;
+				//
+			} // if
+				//
 			Assertions.assertNull(getObject(instance));
 			//
 		} // try
@@ -280,10 +320,14 @@ class JlptVocabularyListFactoryBeanTest {
 			//
 		try (final InputStream is = new ByteArrayInputStream(bs)) {
 			//
-			ih.inputStream = is;
-			//
-			ih.reset = true;
-			//
+			if (ih != null) {
+				//
+				ih.inputStream = is;
+				//
+				ih.reset = true;
+				//
+			} // if
+				//
 			Assertions.assertEquals(String.format("[{\"level\":\"%1$s\"}]", level),
 					ObjectMapperUtil
 							.writeValueAsString(new ObjectMapper().setVisibility(PropertyAccessor.ALL, Visibility.ANY)
@@ -293,10 +337,14 @@ class JlptVocabularyListFactoryBeanTest {
 			//
 		try (final InputStream is = new ByteArrayInputStream(bs)) {
 			//
-			ih.inputStream = is;
-			//
-			ih.reset = false;
-			//
+			if (ih != null) {
+				//
+				ih.inputStream = is;
+				//
+				ih.reset = false;
+				//
+			} // if
+				//
 			Assertions.assertThrows(EmptyFileException.class, () -> getObject(instance));
 			//
 		} // try
@@ -551,6 +599,56 @@ class JlptVocabularyListFactoryBeanTest {
 				return null;
 			} else if (obj instanceof List) {
 				return (List) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetIntegerValue() throws Throwable {
+		//
+		Assertions.assertNull(getIntegerValue(null));
+		//
+		final Cell cell = Reflection.newProxy(Cell.class, ih);
+		//
+		Assertions.assertNull(getIntegerValue(cell));
+		//
+		// org.apache.poi.ss.usermodel.CellType.STRING
+		//
+		if (ih != null) {
+			//
+			ih.cellType = CellType.STRING;
+			//
+		} // if
+			//
+		Assertions.assertEquals(Unit.with(null), getIntegerValue(cell));
+		//
+		// org.apache.poi.ss.usermodel.CellType.NUMERIC
+		//
+		final Double one = Double.valueOf(1);
+		//
+		if (ih != null) {
+			//
+			ih.cellType = CellType.NUMERIC;
+			//
+			ih.numericCellValue = one;
+			//
+		} // if
+			//
+		Assertions.assertEquals(String.format("[%1$s]", one != null ? one.intValue() : null),
+				toString(getIntegerValue(cell)));
+		//
+	}
+
+	private static IValue0<Object> getIntegerValue(final Cell cell) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_INTEGER_VALUE.invoke(null, cell);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof IValue0) {
+				return (IValue0) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

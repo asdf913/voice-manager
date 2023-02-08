@@ -242,12 +242,12 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 			//
 			Cell cell = null;
 			//
-			CellType cellType = null;
+			IValue0<Object> value = null;
 			//
 			for (int i = 0; i < row.getPhysicalNumberOfCells(); i++) {
 				//
 				if ((f = MapUtils.getObject(fieldMap, Integer.valueOf(i))) == null || (cell = row.getCell(i)) == null
-						|| Objects.equals(CellType.BLANK, cellType = cell.getCellType())) {
+						|| Objects.equals(CellType.BLANK, cell.getCellType())) {
 					//
 					continue;
 					//
@@ -262,15 +262,9 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 				//
 				if (Objects.equals(f.getType(), Integer.class)) {
 					//
-					if (Objects.equals(cellType, CellType.STRING)) {
+					if ((value = getIntegerValue(cell)) != null) {
 						//
-						f.set(jv, testAndApply(StringUtils::isNotBlank, getStringCellValue(cell), Integer::valueOf,
-								null));
-						//
-					} else if (Objects.equals(cellType, CellType.NUMERIC)) {
-						//
-						f.set(jv, testAndApply(Objects::nonNull, Double.valueOf(cell.getNumericCellValue()),
-								x -> x != null ? x.intValue() : null, null));
+						f.set(jv, IValue0Util.getValue0(value));
 						//
 					} else {
 						//
@@ -289,6 +283,27 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		} // if
 			//
 		return ivalue0;
+		//
+	}
+
+	private static IValue0<Object> getIntegerValue(final Cell cell) {
+		//
+		final CellType cellType = cell != null ? cell.getCellType() : null;
+		//
+		IValue0<Object> result = null;
+		//
+		if (Objects.equals(cellType, CellType.STRING)) {
+			//
+			result = Unit.with(testAndApply(StringUtils::isNotBlank, getStringCellValue(cell), Integer::valueOf, null));
+			//
+		} else if (Objects.equals(cellType, CellType.NUMERIC)) {
+			//
+			result = Unit.with(testAndApply(Objects::nonNull, Double.valueOf(cell.getNumericCellValue()),
+					x -> x != null ? x.intValue() : null, null));
+			//
+		} // if
+			//
+		return result;
 		//
 	}
 
