@@ -2851,8 +2851,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						"org.springframework.context.support.VoiceManager.text")),
 				String.format("%1$s,span %2$s", GROWX, 18));
 		//
-		tfTextImport.addKeyListener(this);
-		//
 		addDocumentListener(tfTextImportDocument = tfTextImport.getDocument(), this);
 		//
 		(jcbJlptVocabulary = new JComboBox<JlptVocabulary>(cbmJlptVocabulary = new DefaultComboBoxModel<>()))
