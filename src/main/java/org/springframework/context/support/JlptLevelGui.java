@@ -394,6 +394,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 
 	@Override
 	public void changedUpdate(final DocumentEvent evt) {
+		//
 	}
 
 	@Override
