@@ -294,16 +294,8 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		//
 		if (Objects.equals(source, btnExportJson)) {
 			//
-			try {
-				//
-				setText(tfJson, ObjectMapperUtil.writeValueAsString(getObjectMapper(), jlptLevels));
-				//
-			} catch (final JsonProcessingException e) {
-				//
-				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
-				//
-			} // try
-				//
+			actionPerformedForBtnExportJson();
+			//
 		} else if (Objects.equals(source, btnCopy)) {
 			//
 			run(forName("org.junit.jupiter.api.Test") == null,
@@ -381,6 +373,20 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 			});
 			//
 		} // if
+			//
+	}
+
+	private void actionPerformedForBtnExportJson() {
+		//
+		try {
+			//
+			setText(tfJson, ObjectMapperUtil.writeValueAsString(getObjectMapper(), jlptLevels));
+			//
+		} catch (final JsonProcessingException e) {
+			//
+			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
+			//
+		} // try
 			//
 	}
 
