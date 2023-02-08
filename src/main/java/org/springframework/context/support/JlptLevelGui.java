@@ -106,15 +106,15 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 
 	private ObjectMapper objectMapper = null;
 
-	private Document tfTextDocument = null;
+	private transient Document tfTextDocument = null;
 
 	private JComboBox<JlptVocabulary> jcbJlptVocabulary = null;
 
-	private MutableComboBoxModel<JlptVocabulary> cbmJlptVocabulary = null;
+	private transient MutableComboBoxModel<JlptVocabulary> cbmJlptVocabulary = null;
 
-	private IValue0<List<JlptVocabulary>> jlptVocabularyList = null;
+	private transient IValue0<List<JlptVocabulary>> jlptVocabularyList = null;
 
-	private ComboBoxModel<String> cbmJlptLevel = null;
+	private transient ComboBoxModel<String> cbmJlptLevel = null;
 
 	private JList<String> jlJlptLevel = null;
 
