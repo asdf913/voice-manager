@@ -238,53 +238,49 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		//
 		IValue0<JlptVocabulary> ivalue0 = null;
 		//
-		if (row != null && row.iterator() != null) {
+		Field f = null;
+		//
+		JlptVocabulary jv = null;
+		//
+		Cell cell = null;
+		//
+		IValue0<Object> value = null;
+		//
+		for (int i = 0; row != null && i < row.getPhysicalNumberOfCells(); i++) {
 			//
-			Field f = null;
-			//
-			JlptVocabulary jv = null;
-			//
-			Cell cell = null;
-			//
-			IValue0<Object> value = null;
-			//
-			for (int i = 0; i < row.getPhysicalNumberOfCells(); i++) {
+			if ((f = MapUtils.getObject(fieldMap, Integer.valueOf(i))) == null || (cell = row.getCell(i)) == null
+					|| Objects.equals(CellType.BLANK, cell.getCellType())) {
 				//
-				if ((f = MapUtils.getObject(fieldMap, Integer.valueOf(i))) == null || (cell = row.getCell(i)) == null
-						|| Objects.equals(CellType.BLANK, cell.getCellType())) {
-					//
-					continue;
-					//
-				} // if
-					//
-				f.setAccessible(true);
+				continue;
 				//
-				jv = ObjectUtils.getIfNull(
-						IValue0Util.getValue0(
-								ivalue0 = ObjectUtils.getIfNull(ivalue0, () -> Unit.with(new JlptVocabulary()))),
-						JlptVocabulary::new);
+			} // if
 				//
-				if (Objects.equals(f.getType(), Integer.class)) {
+			f.setAccessible(true);
+			//
+			jv = ObjectUtils.getIfNull(
+					IValue0Util
+							.getValue0(ivalue0 = ObjectUtils.getIfNull(ivalue0, () -> Unit.with(new JlptVocabulary()))),
+					JlptVocabulary::new);
+			//
+			if (Objects.equals(f.getType(), Integer.class)) {
+				//
+				if ((value = getIntegerValue(cell)) != null) {
 					//
-					if ((value = getIntegerValue(cell)) != null) {
-						//
-						f.set(jv, IValue0Util.getValue0(value));
-						//
-					} else {
-						//
-						throw new UnsupportedOperationException();
-						//
-					} // if
-						//
+					f.set(jv, IValue0Util.getValue0(value));
+					//
 				} else {
 					//
-					f.set(jv, getStringCellValue(cell));
+					throw new UnsupportedOperationException();
 					//
 				} // if
 					//
-			} // for
+			} else {
 				//
-		} // if
+				f.set(jv, getStringCellValue(cell));
+				//
+			} // if
+				//
+		} // for
 			//
 		return ivalue0;
 		//
