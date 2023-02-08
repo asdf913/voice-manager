@@ -72,7 +72,7 @@ class JlptLevelGuiTest {
 			METHOD_INVOKE, METHOD_IIF, METHOD_GET_NAME, METHOD_GET_PARAMETER_TYPES, METHOD_RUN,
 			METHOD_SET_JLPT_VOCABULARY_AND_LEVEL, METHOD_STREAM, METHOD_MAP, METHOD_GET_LEVEL, METHOD_FOR_EACH_STREAM,
 			METHOD_ADD_ELEMENT, METHOD_TEST_AND_ACCEPT, METHOD_BROWSE, METHOD_GET_LIST_CELL_RENDERER_COMPONENT,
-			METHOD_ADD_DOCUMENT_LISTENER = null;
+			METHOD_ADD_DOCUMENT_LISTENER, METHOD_SET_SELECTED_INDICES = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -146,6 +146,9 @@ class JlptLevelGuiTest {
 		//
 		(METHOD_ADD_DOCUMENT_LISTENER = clz.getDeclaredMethod("addDocumentListener", Document.class,
 				DocumentListener.class)).setAccessible(true);
+		//
+		(METHOD_SET_SELECTED_INDICES = clz.getDeclaredMethod("setSelectedIndices", JList.class, int[].class))
+				.setAccessible(true);
 		//
 	}
 
@@ -1167,6 +1170,25 @@ class JlptLevelGuiTest {
 	private static void addDocumentListener(final Document instance, final DocumentListener listener) throws Throwable {
 		try {
 			METHOD_ADD_DOCUMENT_LISTENER.invoke(null, instance, listener);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetSelectedIndices() {
+		//
+		final JList<?> jList = new JList<>();
+		//
+		Assertions.assertDoesNotThrow(() -> setSelectedIndices(jList, null));
+		//
+		Assertions.assertDoesNotThrow(() -> setSelectedIndices(jList, new int[] {}));
+		//
+	}
+
+	private static void setSelectedIndices(final JList<?> instance, final int[] indices) throws Throwable {
+		try {
+			METHOD_SET_SELECTED_INDICES.invoke(null, instance, indices);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

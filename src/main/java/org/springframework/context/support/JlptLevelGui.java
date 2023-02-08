@@ -467,12 +467,8 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 			//
 		final JList<String> jlJlptLevel = instance.jlJlptLevel;
 		//
-		if (jlJlptLevel != null) {
-			//
-			jlJlptLevel.setSelectedIndices(new int[] {});
-			//
-		} // if
-			//
+		setSelectedIndices(jlJlptLevel, new int[] {});
+		//
 		final IValue0<List<JlptVocabulary>> jlptVocabularyList = instance.jlptVocabularyList;
 		//
 		final List<JlptVocabulary> jlptVocabularies = IValue0Util.getValue0(jlptVocabularyList);
@@ -487,7 +483,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 			//
 			if (IterableUtils.size(temp) > 1) {
 				//
-				jlJlptLevel.setSelectedIndices(new int[] {});
+				setSelectedIndices(jlJlptLevel, new int[] {});
 				//
 				testAndAccept(x -> IterableUtils.size(x) == 1,
 						toList(map(stream(temp), JlptLevelGui::getLevel).distinct()), x -> {
@@ -519,6 +515,12 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 			//
 	}
 
+	private static void setSelectedIndices(final JList<?> instance, final int[] indices) {
+		if (instance != null && indices != null) {
+			instance.setSelectedIndices(indices);
+		}
+	}
+
 	@Override
 	public void itemStateChanged(final ItemEvent evt) {
 		//
@@ -546,9 +548,9 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 				//
 		} // for
 			//
-		if (jlJlptLevel != null && intList != null) {
+		if (intList != null) {
 			//
-			jlJlptLevel.setSelectedIndices(intList.toArray());
+			setSelectedIndices(jlJlptLevel, intList.toArray());
 			//
 		} // if
 			//
