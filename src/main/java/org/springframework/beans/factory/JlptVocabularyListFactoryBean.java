@@ -22,6 +22,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -173,15 +174,22 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 	private static IValue0<JlptVocabulary> getJlptVocabulary(final Map<Integer, Field> fieldMap, final Row row)
 			throws IllegalAccessException {
 		//
-		IValue0<JlptVocabulary> jv = null;
+		IValue0<JlptVocabulary> ivalue0 = null;
 		//
 		if (row != null && row.iterator() != null) {
 			//
 			Field f = null;
 			//
+			JlptVocabulary jv = null;
+			//
+			Cell cell = null;
+			//
+			CellType cellType = null;
+			//
 			for (int i = 0; i < row.getPhysicalNumberOfCells(); i++) {
 				//
-				if ((f = MapUtils.getObject(fieldMap, Integer.valueOf(i))) == null) {
+				if ((f = MapUtils.getObject(fieldMap, Integer.valueOf(i))) == null || (cell = row.getCell(i)) == null
+						|| Objects.equals(CellType.BLANK, cellType = cell.getCellType())) {
 					//
 					continue;
 					//
@@ -189,15 +197,35 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 					//
 				f.setAccessible(true);
 				//
-				f.set(ObjectUtils.getIfNull(
-						IValue0Util.getValue0(jv = ObjectUtils.getIfNull(jv, () -> Unit.with(new JlptVocabulary()))),
-						JlptVocabulary::new), getStringCellValue(row.getCell(i)));
+				jv = ObjectUtils.getIfNull(
+						IValue0Util.getValue0(
+								ivalue0 = ObjectUtils.getIfNull(ivalue0, () -> Unit.with(new JlptVocabulary()))),
+						JlptVocabulary::new);
 				//
+				if (Objects.equals(f.getType(), Integer.class)) {
+					//
+					if (Objects.equals(cellType, CellType.STRING)) {
+						//
+						f.set(jv, testAndApply(StringUtils::isNotBlank, getStringCellValue(cell), Integer::valueOf,
+								null));
+						//
+					} else {
+						//
+						throw new UnsupportedOperationException();
+						//
+					} // if
+						//
+				} else {
+					//
+					f.set(jv, getStringCellValue(cell));
+					//
+				} // if
+					//
 			} // for
 				//
 		} // if
 			//
-		return jv;
+		return ivalue0;
 		//
 	}
 
@@ -301,6 +329,8 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 			//
 			String[] ss = null;
 			//
+			String s = null;
+			//
 			Map<Integer, Field> fieldMap = null;
 			//
 			JlptVocabulary jv = null;
@@ -331,8 +361,18 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 						//
 					f.setAccessible(true);
 					//
-					f.set(jv, ss[i]);
+					s = ss[i];
 					//
+					if (Objects.equals(f.getType(), Integer.class)) {
+						//
+						f.set(jv, testAndApply(StringUtils::isNotBlank, s, Integer::valueOf, null));
+						//
+					} else {
+						//
+						f.set(jv, s);
+						//
+					} // if
+						//
 				} // for
 					//
 				add(list = ObjectUtils.getIfNull(list, ArrayList::new), jv);

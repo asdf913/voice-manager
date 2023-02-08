@@ -20,6 +20,8 @@ public class JlptVocabulary {
 	private String kanji = null;
 
 	private String kana = null;
+	
+	private Integer jmdict_seq = null;
 
 	public String getLevel() {
 		return level;
