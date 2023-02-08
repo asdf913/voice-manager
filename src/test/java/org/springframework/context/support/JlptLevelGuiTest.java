@@ -15,28 +15,44 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import javax.swing.AbstractButton;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.swing.MutableComboBoxModel;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 
+import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.jena.ext.com.google.common.base.Predicates;
+import org.javatuples.Unit;
+import org.javatuples.valueintf.IValue0;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.util.ReflectionUtils;
 
 import com.google.common.reflect.Reflection;
 
+import domain.JlptVocabulary;
 import javassist.util.proxy.MethodHandler;
 import javassist.util.proxy.ProxyFactory;
 import javassist.util.proxy.ProxyObject;
@@ -46,7 +62,9 @@ class JlptLevelGuiTest {
 	private static Method METHOD_TO_ARRAY, METHOD_GET_CLASS, METHOD_TEST, METHOD_GET_PREFERRED_SIZE,
 			METHOD_SET_PREFERRED_WIDTH, METHOD_FOR_NAME, METHOD_GET_TEXT, METHOD_GET_SYSTEM_CLIP_BOARD,
 			METHOD_SET_CONTENTS, METHOD_ADD_ACTION_LISTENER, METHOD_GET_DECLARED_METHODS, METHOD_FILTER, METHOD_TO_LIST,
-			METHOD_INVOKE, METHOD_IIF, METHOD_GET_NAME, METHOD_GET_PARAMETER_TYPES, METHOD_RUN = null;
+			METHOD_INVOKE, METHOD_IIF, METHOD_GET_NAME, METHOD_GET_PARAMETER_TYPES, METHOD_RUN,
+			METHOD_SET_JLPT_VOCABULARY_AND_LEVEL, METHOD_STREAM, METHOD_MAP, METHOD_GET_LEVEL, METHOD_FOR_EACH_STREAM,
+			METHOD_ADD_ELEMENT, METHOD_TEST_AND_ACCEPT = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -93,11 +111,32 @@ class JlptLevelGuiTest {
 		//
 		(METHOD_RUN = clz.getDeclaredMethod("run", Boolean.TYPE, Runnable.class)).setAccessible(true);
 		//
+		(METHOD_SET_JLPT_VOCABULARY_AND_LEVEL = clz.getDeclaredMethod("setJlptVocabularyAndLevel", clz))
+				.setAccessible(true);
+		//
+		(METHOD_STREAM = clz.getDeclaredMethod("stream", Collection.class)).setAccessible(true);
+		//
+		(METHOD_MAP = clz.getDeclaredMethod("map", Stream.class, Function.class)).setAccessible(true);
+		//
+		(METHOD_GET_LEVEL = clz.getDeclaredMethod("getLevel", JlptVocabulary.class)).setAccessible(true);
+		//
+		(METHOD_FOR_EACH_STREAM = clz.getDeclaredMethod("forEach", Iterable.class, Consumer.class)).setAccessible(true);
+		//
+		(METHOD_ADD_ELEMENT = clz.getDeclaredMethod("addElement", MutableComboBoxModel.class, Object.class))
+				.setAccessible(true);
+		//
+		(METHOD_TEST_AND_ACCEPT = clz.getDeclaredMethod("testAndAccept", Predicate.class, Object.class, Consumer.class))
+				.setAccessible(true);
+		//
 	}
 
 	private class IH implements InvocationHandler {
 
 		private Object[] array = null;
+
+		private Document document = null;
+
+		private Iterator<?> iterator = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -108,8 +147,24 @@ class JlptLevelGuiTest {
 				//
 			} // if
 				//
+			if (ReflectionUtils.isEqualsMethod(method)) {
+				//
+				return false;
+				//
+			} // if
+				//
 			final String methodName = getName(method);
 			//
+			if (proxy instanceof Iterable) {
+				//
+				if (Objects.equals(methodName, "iterator")) {
+					//
+					return iterator;
+					//
+				} // if
+					//
+			} // if
+				//
 			if (proxy instanceof Collection) {
 				//
 				if (Objects.equals(methodName, "toArray")) {
@@ -123,6 +178,14 @@ class JlptLevelGuiTest {
 				if (Objects.equals(methodName, "filter")) {
 					//
 					return proxy;
+					//
+				} // if
+					//
+			} else if (proxy instanceof DocumentEvent) {
+				//
+				if (Objects.equals(methodName, "getDocument")) {
+					//
+					return document;
 					//
 				} // if
 					//
@@ -162,6 +225,10 @@ class JlptLevelGuiTest {
 
 	private IH ih = null;
 
+	private DocumentEvent documentEvent = null;
+
+	private Document document = null;
+
 	@BeforeEach
 	void beforeEach() throws ReflectiveOperationException {
 		//
@@ -179,7 +246,9 @@ class JlptLevelGuiTest {
 			//
 		} // if
 			//
-		ih = new IH();
+		documentEvent = Reflection.newProxy(DocumentEvent.class, ih = new IH());
+		//
+		document = Reflection.newProxy(Document.class, ih = new IH());
 		//
 	}
 
@@ -258,6 +327,138 @@ class JlptLevelGuiTest {
 	private static void actionPerformed(final ActionListener instance, final ActionEvent e) {
 		if (instance != null) {
 			instance.actionPerformed(e);
+		}
+	}
+
+	@Test
+	void testChangedUpdate() {
+		//
+		Assertions.assertDoesNotThrow(() -> {
+			//
+			if (instance != null) {
+				//
+				instance.changedUpdate(null);
+				//
+			} // if
+				//
+		});
+		//
+	}
+
+	@Test
+	void testInsertUpdate() throws IllegalAccessException {
+		//
+		Assertions.assertDoesNotThrow(() -> insertUpdate(instance, null));
+		//
+		if (ih != null) {
+			//
+			ih.document = document;
+			//
+		} // if
+			//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "tfTextDocument", document, true);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> insertUpdate(instance, documentEvent));
+		//
+	}
+
+	private static void insertUpdate(final DocumentListener instance, final DocumentEvent evt) {
+		if (instance != null) {
+			instance.insertUpdate(evt);
+		}
+	}
+
+	@Test
+	void testRemoveUpdate() throws IllegalAccessException {
+		//
+		Assertions.assertDoesNotThrow(() -> removeUpdate(instance, null));
+		//
+		if (ih != null) {
+			//
+			ih.document = document;
+			//
+		} // if
+			//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "tfTextDocument", document, true);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> removeUpdate(instance, documentEvent));
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "tfTextDocument", null, true);
+			//
+		} // if
+			//
+			// org.springframework.context.support.JlptLevelGui.cbmJlptVocabulary
+			//
+		final MutableComboBoxModel<JlptVocabulary> cbmJlptVocabulary = new DefaultComboBoxModel<>();
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "cbmJlptVocabulary", cbmJlptVocabulary, true);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> removeUpdate(instance, documentEvent));
+		//
+		final String A = "A";
+		//
+		// org.springframework.context.support.JlptLevelGui.tfText
+		//
+		final JTextComponent tfText = new JTextField(A);
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "tfText", tfText, true);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> removeUpdate(instance, documentEvent));
+		//
+		// org.springframework.context.support.JlptLevelGui.jlptVocabularyList
+		//
+		final JlptVocabulary jv = new JlptVocabulary();
+		//
+		final IValue0<List<JlptVocabulary>> jlptVocabularyList = Unit.with(Arrays.asList(null, jv));
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "jlptVocabularyList", jlptVocabularyList, true);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> removeUpdate(instance, documentEvent));
+		//
+		FieldUtils.writeDeclaredField(jv, "kanji", A, true);
+		//
+		Assertions.assertDoesNotThrow(() -> removeUpdate(instance, documentEvent));
+		//
+		// org.springframework.context.support.JlptLevelGui.cbmJlptLevel
+		//
+		final ComboBoxModel<String> cbmJlptLevel = new DefaultComboBoxModel<>();
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "cbmJlptLevel", cbmJlptLevel, true);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> removeUpdate(instance, documentEvent));
+		//
+
+	}
+
+	private static void removeUpdate(final DocumentListener instance, final DocumentEvent evt) {
+		if (instance != null) {
+			instance.removeUpdate(evt);
 		}
 	}
 
@@ -650,4 +851,145 @@ class JlptLevelGuiTest {
 		}
 	}
 
+	@Test
+	void testSetJlptVocabularyAndLevel() {
+		//
+		Assertions.assertDoesNotThrow(() -> setJlptVocabularyAndLevel(null));
+		//
+	}
+
+	private static void setJlptVocabularyAndLevel(final VoiceManager instance) throws Throwable {
+		try {
+			METHOD_SET_JLPT_VOCABULARY_AND_LEVEL.invoke(null, instance);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testStream() throws Throwable {
+		//
+		Assertions.assertNull(stream(null));
+		//
+	}
+
+	private static <T> Stream<T> stream(final Collection<T> instance) throws Throwable {
+		try {
+			final Object obj = METHOD_STREAM.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Stream) {
+				return (Stream) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testMap() throws Throwable {
+		//
+		Assertions.assertNull(map(null, null));
+		//
+	}
+
+	private static <T, R> Stream<R> map(final Stream<T> instance, final Function<? super T, ? extends R> mapper)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_MAP.invoke(null, instance, mapper);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Stream) {
+				return (Stream) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static void setSelectedItemByString(final ComboBoxModel<String> cbm, final String string) {
+	}
+
+	@Test
+	void testGetLevel() throws Throwable {
+		//
+		Assertions.assertNull(getLevel(null));
+		//
+	}
+
+	private static String getLevel(final JlptVocabulary instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_LEVEL.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testForEach() {
+		//
+		Assertions.assertDoesNotThrow(() -> forEach(null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> forEach(Collections.emptyList(), null));
+		//
+		final Iterable<?> iterable = Reflection.newProxy(Iterable.class, ih);
+		//
+		Assertions.assertDoesNotThrow(() -> forEach(iterable, null));
+		//
+		if (ih != null) {
+			//
+			ih.iterator = IteratorUtils.emptyIterator();
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> forEach(iterable, null));
+		//
+	}
+
+	private static <T> void forEach(final Iterable<T> instance, final Consumer<? super T> action) throws Throwable {
+		try {
+			METHOD_FOR_EACH_STREAM.invoke(null, instance, action);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testAddElement() {
+		//
+		Assertions.assertDoesNotThrow(() -> addElement(null, null));
+		//
+	}
+
+	private static <E> void addElement(final MutableComboBoxModel<E> instance, final E item) throws Throwable {
+		try {
+			METHOD_ADD_ELEMENT.invoke(null, instance, item);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testTestAndAccept() {
+		//
+		Assertions.assertDoesNotThrow(() -> testAndAccept(Predicates.alwaysTrue(), null, null));
+		//
+	}
+
+	private static <T, E extends Throwable> void testAndAccept(final Predicate<T> predicate, final T value,
+			final Consumer<T> consumer) throws Throwable {
+		try {
+			METHOD_TEST_AND_ACCEPT.invoke(null, predicate, value, consumer);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
 }
