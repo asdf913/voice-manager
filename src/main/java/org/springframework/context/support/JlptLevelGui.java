@@ -394,7 +394,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 				//
 			try {
 				//
-				browse(Desktop.getDesktop(), uriBuilder != null ? uriBuilder.toURI() : null);
+				browse(Desktop.getDesktop(), toURI(uriBuilder));
 				//
 			} catch (final IOException e) {
 				//
@@ -404,6 +404,10 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 				//
 		});
 		//
+	}
+
+	private static URI toURI(final URIBuilder instance) {
+		return instance != null ? instance.toURI() : null;
 	}
 
 	private static Object getSelectedItem(final ComboBoxModel<?> instance) {

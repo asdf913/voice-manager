@@ -57,6 +57,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.InitializingBean;
 
+import com.github.hal4j.uritemplate.URIBuilder;
 import com.google.common.reflect.Reflection;
 
 import domain.JlptVocabulary;
@@ -67,13 +68,16 @@ import javassist.util.proxy.ProxyObject;
 
 class JlptLevelGuiTest {
 
+	private static final String EMPTY = "";
+
 	private static Method METHOD_CAST, METHOD_TO_ARRAY_COLLECTION, METHOD_TO_ARRAY_INT_LIST, METHOD_GET_CLASS,
 			METHOD_TEST, METHOD_GET_PREFERRED_SIZE, METHOD_SET_PREFERRED_WIDTH, METHOD_FOR_NAME, METHOD_GET_TEXT,
 			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_ADD_ACTION_LISTENER, METHOD_GET_DECLARED_METHODS,
 			METHOD_FILTER, METHOD_TO_LIST, METHOD_INVOKE, METHOD_IIF, METHOD_GET_NAME, METHOD_GET_PARAMETER_TYPES,
 			METHOD_RUN, METHOD_SET_JLPT_VOCABULARY_AND_LEVEL, METHOD_STREAM, METHOD_MAP, METHOD_GET_LEVEL,
 			METHOD_FOR_EACH_STREAM, METHOD_ADD_ELEMENT, METHOD_TEST_AND_ACCEPT, METHOD_BROWSE,
-			METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_ADD_DOCUMENT_LISTENER, METHOD_SET_SELECTED_INDICES = null;
+			METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_ADD_DOCUMENT_LISTENER, METHOD_SET_SELECTED_INDICES,
+			METHOD_TO_URI = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -153,6 +157,8 @@ class JlptLevelGuiTest {
 		//
 		(METHOD_SET_SELECTED_INDICES = clz.getDeclaredMethod("setSelectedIndices", JList.class, int[].class))
 				.setAccessible(true);
+		//
+		(METHOD_TO_URI = clz.getDeclaredMethod("toURI", URIBuilder.class)).setAccessible(true);
 		//
 	}
 
@@ -316,7 +322,7 @@ class JlptLevelGuiTest {
 		//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, null));
 		//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent("", 0, null)));
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(EMPTY, 0, null)));
 		//
 		if (instance != null) {
 			//
@@ -544,7 +550,7 @@ class JlptLevelGuiTest {
 		//
 		if (itemEvent != null) {
 			//
-			itemEvent.setSource("");
+			itemEvent.setSource(EMPTY);
 			//
 		} // if
 			//
@@ -760,7 +766,7 @@ class JlptLevelGuiTest {
 		//
 		Assertions.assertNull(getText(null));
 		//
-		Assertions.assertEquals("", getText(new JTextField()));
+		Assertions.assertEquals(EMPTY, getText(new JTextField()));
 		//
 	}
 
@@ -806,7 +812,7 @@ class JlptLevelGuiTest {
 		//
 		Assertions.assertDoesNotThrow(() -> setContents(null, null, null));
 		//
-		Assertions.assertDoesNotThrow(() -> setContents(new Clipboard(""), null, null));
+		Assertions.assertDoesNotThrow(() -> setContents(new Clipboard(EMPTY), null, null));
 		//
 	}
 
@@ -1209,6 +1215,29 @@ class JlptLevelGuiTest {
 	private static void setSelectedIndices(final JList<?> instance, final int[] indices) throws Throwable {
 		try {
 			METHOD_SET_SELECTED_INDICES.invoke(null, instance, indices);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testToURI() throws Throwable {
+		//
+		Assertions.assertNull(toURI(null));
+		//
+		Assertions.assertEquals(new URI(EMPTY), toURI(URIBuilder.basedOn(EMPTY)));
+		//
+	}
+
+	private static URI toURI(final URIBuilder instance) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_URI.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof URI) {
+				return (URI) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
