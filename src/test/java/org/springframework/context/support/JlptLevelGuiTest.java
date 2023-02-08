@@ -10,6 +10,8 @@ import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Executable;
 import java.lang.reflect.InvocationHandler;
@@ -32,8 +34,11 @@ import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JTextField;
+import javax.swing.ListCellRenderer;
 import javax.swing.MutableComboBoxModel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -50,28 +55,31 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.util.ReflectionUtils;
 
 import com.google.common.reflect.Reflection;
 
 import domain.JlptVocabulary;
+import io.github.toolfactory.narcissus.Narcissus;
 import javassist.util.proxy.MethodHandler;
 import javassist.util.proxy.ProxyFactory;
 import javassist.util.proxy.ProxyObject;
 
 class JlptLevelGuiTest {
 
-	private static Method METHOD_TO_ARRAY, METHOD_GET_CLASS, METHOD_TEST, METHOD_GET_PREFERRED_SIZE,
+	private static Method METHOD_CAST, METHOD_TO_ARRAY, METHOD_GET_CLASS, METHOD_TEST, METHOD_GET_PREFERRED_SIZE,
 			METHOD_SET_PREFERRED_WIDTH, METHOD_FOR_NAME, METHOD_GET_TEXT, METHOD_GET_SYSTEM_CLIP_BOARD,
 			METHOD_SET_CONTENTS, METHOD_ADD_ACTION_LISTENER, METHOD_GET_DECLARED_METHODS, METHOD_FILTER, METHOD_TO_LIST,
 			METHOD_INVOKE, METHOD_IIF, METHOD_GET_NAME, METHOD_GET_PARAMETER_TYPES, METHOD_RUN,
 			METHOD_SET_JLPT_VOCABULARY_AND_LEVEL, METHOD_STREAM, METHOD_MAP, METHOD_GET_LEVEL, METHOD_FOR_EACH_STREAM,
-			METHOD_ADD_ELEMENT, METHOD_TEST_AND_ACCEPT, METHOD_BROWSE = null;
+			METHOD_ADD_ELEMENT, METHOD_TEST_AND_ACCEPT, METHOD_BROWSE, METHOD_GET_LIST_CELL_RENDERER_COMPONENT,
+			METHOD_ADD_DOCUMENT_LISTENER = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
 		//
 		final Class<?> clz = JlptLevelGui.class;
+		//
+		(METHOD_CAST = clz.getDeclaredMethod("cast", Class.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_TO_ARRAY = clz.getDeclaredMethod("toArray", Collection.class, Object[].class)).setAccessible(true);
 		//
@@ -132,6 +140,13 @@ class JlptLevelGuiTest {
 		//
 		(METHOD_BROWSE = clz.getDeclaredMethod("browse", Desktop.class, URI.class)).setAccessible(true);
 		//
+		(METHOD_GET_LIST_CELL_RENDERER_COMPONENT = clz.getDeclaredMethod("getListCellRendererComponent",
+				ListCellRenderer.class, JList.class, Object.class, Integer.TYPE, Boolean.TYPE, Boolean.TYPE))
+				.setAccessible(true);
+		//
+		(METHOD_ADD_DOCUMENT_LISTENER = clz.getDeclaredMethod("addDocumentListener", Document.class,
+				DocumentListener.class)).setAccessible(true);
+		//
 	}
 
 	private class IH implements InvocationHandler {
@@ -142,18 +157,14 @@ class JlptLevelGuiTest {
 
 		private Iterator<?> iterator = null;
 
+		private Component listCellRendererComponent = null;
+
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
 			if (Objects.equals(Void.TYPE, method != null ? method.getReturnType() : null)) {
 				//
 				return null;
-				//
-			} // if
-				//
-			if (ReflectionUtils.isEqualsMethod(method)) {
-				//
-				return false;
 				//
 			} // if
 				//
@@ -183,6 +194,10 @@ class JlptLevelGuiTest {
 					//
 					return proxy;
 					//
+				} else if (Objects.equals(methodName, "map")) {
+					//
+					return proxy;
+					//
 				} // if
 					//
 			} else if (proxy instanceof DocumentEvent) {
@@ -190,6 +205,14 @@ class JlptLevelGuiTest {
 				if (Objects.equals(methodName, "getDocument")) {
 					//
 					return document;
+					//
+				} // if
+					//
+			} else if (proxy instanceof ListCellRenderer) {
+				//
+				if (Objects.equals(methodName, "getListCellRendererComponent")) {
+					//
+					return listCellRendererComponent;
 					//
 				} // if
 					//
@@ -233,6 +256,8 @@ class JlptLevelGuiTest {
 
 	private Document document = null;
 
+	private Stream<?> stream = null;
+
 	@BeforeEach
 	void beforeEach() throws ReflectiveOperationException {
 		//
@@ -253,6 +278,8 @@ class JlptLevelGuiTest {
 		documentEvent = Reflection.newProxy(DocumentEvent.class, ih = new IH());
 		//
 		document = Reflection.newProxy(Document.class, ih = new IH());
+		//
+		stream = Reflection.newProxy(Stream.class, ih);
 		//
 	}
 
@@ -493,12 +520,67 @@ class JlptLevelGuiTest {
 			//
 		Assertions.assertDoesNotThrow(() -> removeUpdate(instance, documentEvent));
 		//
-
 	}
 
 	private static void removeUpdate(final DocumentListener instance, final DocumentEvent evt) {
 		if (instance != null) {
 			instance.removeUpdate(evt);
+		}
+	}
+
+	@Test
+	void testItemStateChanged() throws Throwable {
+		//
+		Assertions.assertDoesNotThrow(() -> itemStateChanged(instance, null));
+		//
+		final ItemEvent itemEvent = cast(ItemEvent.class, Narcissus.allocateInstance(ItemEvent.class));
+		//
+		if (itemEvent != null) {
+			//
+			itemEvent.setSource("");
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> itemStateChanged(instance, itemEvent));
+		//
+		// org.springframework.context.support.JlptLevelGui.jcbJlptVocabulary
+		//
+		final JComboBox<?> jcbJlptVocabulary = new JComboBox<>();
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "jcbJlptVocabulary", jcbJlptVocabulary, true);
+			//
+		} // if
+			//
+		if (itemEvent != null) {
+			//
+			itemEvent.setSource(jcbJlptVocabulary);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> itemStateChanged(instance, itemEvent));
+		//
+	}
+
+	private static void itemStateChanged(final ItemListener instance, final ItemEvent evt) {
+		if (instance != null) {
+			instance.itemStateChanged(evt);
+		}
+	}
+
+	@Test
+	void testCast() throws Throwable {
+		//
+		Assertions.assertNull(cast(null, null));
+		//
+	}
+
+	private static <T> T cast(final Class<T> clz, final Object value) throws Throwable {
+		try {
+			return (T) METHOD_CAST.invoke(null, clz, value);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
 		}
 	}
 
@@ -760,8 +842,6 @@ class JlptLevelGuiTest {
 		//
 		Assertions.assertNull(filter(Stream.empty(), null));
 		//
-		final Stream<?> stream = Reflection.newProxy(Stream.class, ih);
-		//
 		Assertions.assertSame(stream, filter(stream, null));
 		//
 	}
@@ -932,6 +1012,10 @@ class JlptLevelGuiTest {
 		//
 		Assertions.assertNull(map(null, null));
 		//
+		Assertions.assertNull(map(Stream.empty(), null));
+		//
+		Assertions.assertSame(stream, map(stream, null));
+		//
 	}
 
 	private static <T, R> Stream<R> map(final Stream<T> instance, final Function<? super T, ? extends R> mapper)
@@ -1040,6 +1124,49 @@ class JlptLevelGuiTest {
 	private static void browse(final Desktop instance, final URI uri) throws Throwable {
 		try {
 			METHOD_BROWSE.invoke(null, instance, uri);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetListCellRendererComponent() throws Throwable {
+		//
+		Assertions.assertNull(getListCellRendererComponent(null, null, null, 0, false, false));
+		//
+		final ListCellRenderer<?> listCellRenderer = Reflection.newProxy(ListCellRenderer.class, ih);
+		//
+		Assertions.assertNull(getListCellRendererComponent(listCellRenderer, null, null, 0, false, false));
+		//
+	}
+
+	private static <E> Component getListCellRendererComponent(final ListCellRenderer<E> instance,
+			final JList<? extends E> list, final E value, final int index, final boolean isSelected,
+			final boolean cellHasFocus) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_LIST_CELL_RENDERER_COMPONENT.invoke(null, instance, list, value, index,
+					isSelected, cellHasFocus);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Component) {
+				return (Component) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testAddDocumentListener() {
+		//
+		Assertions.assertDoesNotThrow(() -> addDocumentListener(null, null));
+		//
+	}
+
+	private static void addDocumentListener(final Document instance, final DocumentListener listener) throws Throwable {
+		try {
+			METHOD_ADD_DOCUMENT_LISTENER.invoke(null, instance, listener);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
