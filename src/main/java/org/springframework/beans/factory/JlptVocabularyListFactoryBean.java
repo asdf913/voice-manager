@@ -22,6 +22,7 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.commons.collections4.IterableUtils;
@@ -30,6 +31,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -562,22 +564,25 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 
 	private static List<Field> getFieldsByColumnName(final Field[] fs, final String columnName) {
 		//
-		return toList(filter(testAndApply(Objects::nonNull, fs, Arrays::stream, null), f -> {
+		return new FailableStream<Field>(testAndApply(Objects::nonNull, fs, Arrays::stream, null)).filter(f -> {
 			//
-			final List<Annotation> as = toList(
-					filter(testAndApply(Objects::nonNull, getDeclaredAnnotations(f), Arrays::stream, null), a -> {
-						//
-						final IValue0<Object> iValue0 = getColumnName(a);
-						//
-						if (iValue0 != null) {
-							//
-							return Objects.equals(IValue0Util.getValue0(iValue0), columnName);
-							//
-						} // if
-							//
-						return false;
-						//
-					}));
+			final List<Annotation> as = new FailableStream<>(
+					testAndApply(Objects::nonNull, getDeclaredAnnotations(f), Arrays::stream, null)).filter(
+
+							a -> {
+								//
+								final IValue0<Object> iValue0 = getColumnName(a);
+								//
+								if (iValue0 != null) {
+									//
+									return Objects.equals(IValue0Util.getValue0(iValue0), columnName);
+									//
+								} // if
+									//
+								return false;
+								//
+							})
+					.collect(Collectors.toList());
 			//
 			final int sz = IterableUtils.size(as);
 			//
@@ -589,11 +594,12 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 				//
 			return sz == 1;
 			//
-		}));
+		}).collect(Collectors.toList());
 		//
 	}
 
-	private static IValue0<Object> getColumnName(final Annotation a) {
+	private static IValue0<Object> getColumnName(final Annotation a)
+			throws IllegalAccessException, InvocationTargetException {
 		//
 		if (Objects.equals("domain.JlptVocabulary$ColumnName", getName(annotationType(a)))) {
 			//
@@ -606,18 +612,14 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 			//
 			if (m != null && Objects.equals(String.class, m.getReturnType()) && m.getParameterCount() == 0) {
 				//
-				try {
+				if (m != null) {
 					//
-					return Unit.with(invoke(m, a));
+					m.setAccessible(true);
 					//
-				} catch (final IllegalAccessException | InvocationTargetException e) {
+				} // if
 					//
-					// TODO Auto-generated catch block
-					//
-					throw new RuntimeException(e);
-					//
-				} // try
-					//
+				return Unit.with(invoke(m, a));
+				//
 			} // if
 				//
 				// Check if there is a "value()" defined in a.class
@@ -641,18 +643,8 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 				//
 			} // if
 				//
-			try {
-				//
-				return Unit.with(invoke(m, a));
-				//
-			} catch (final IllegalAccessException | InvocationTargetException e) {
-				//
-				// TODO Auto-generated catch block
-				//
-				throw new RuntimeException(e);
-				//
-			} // try
-				//
+			return Unit.with(invoke(m, a));
+			//
 		} // if
 			//
 		return null;
