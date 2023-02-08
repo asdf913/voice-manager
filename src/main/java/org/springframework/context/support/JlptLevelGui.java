@@ -231,7 +231,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		//
 	}
 
-	private static void addDocumentListener(final javax.swing.text.Document instance, final DocumentListener listener) {
+	private static void addDocumentListener(final Document instance, final DocumentListener listener) {
 		if (instance != null) {
 			instance.addDocumentListener(listener);
 		}
@@ -303,7 +303,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 			//
 		} else if (Objects.equals(source, btnCopy)) {
 			//
-			run(forName("org.junit.jupiter.api.Test") == null,
+			run(!isTestMode(),
 					() -> setContents(getSystemClipboard(getToolkit()), new StringSelection(getText(tfJson)), null));
 			//
 		} else if (Objects.equals(source, btnCompare)) {
