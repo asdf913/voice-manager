@@ -4477,9 +4477,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} else if (Objects.equals(source, btnVisitJMdictDB)) {
 			//
-			final JlptVocabulary jv = cast(JlptVocabulary.class, getSelectedItem(cbmJlptVocabulary));
-			//
-			final Integer jmdictSeq = jv != null ? jv.getJmdictSeq() : null;
+			final Integer jmdictSeq = getJmdictSeq(cast(JlptVocabulary.class, getSelectedItem(cbmJlptVocabulary)));
 			//
 			if (jmdictSeq != null && nonTest) {
 				//
@@ -7049,6 +7047,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static String getLevel(final JlptVocabulary instance) {
 		return instance != null ? instance.getLevel() : null;
+	}
+
+	private static Integer getJmdictSeq(final JlptVocabulary instance) {
+		return instance != null ? instance.getJmdictSeq() : null;
 	}
 
 	private static void setSelectedItemByString(final ComboBoxModel<String> cbm, final String string) {
