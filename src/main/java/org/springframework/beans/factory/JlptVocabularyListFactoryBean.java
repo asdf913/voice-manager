@@ -576,7 +576,8 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 									//
 									final int sz = IterableUtils.size(ms);
 									//
-									final Method m = sz == 1 ? IterableUtils.get(ms, 0) : null;
+									final Method m = testAndApply(x -> IterableUtils.size(x) == 1, ms,
+											x -> IterableUtils.get(x, 0), null);
 									//
 									if (m != null) {
 										//
