@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -49,7 +50,7 @@ class JlptVocabularyListFactoryBeanTest {
 
 	private static Method METHOD_FILTER, METHOD_GET_CLASS, METHOD_TO_LIST, METHOD_ANNOTATION_TYPE, METHOD_GET_NAME,
 			METHOD_TEST, METHOD_OR, METHOD_GET_STRING_CELL_VALUE, METHOD_ADD, METHOD_ADD_ALL, METHOD_PUT,
-			METHOD_GET_FIELDS_BY_NAME, METHOD_GET_INTEGER_VALUE, METHOD_INVOKE = null;
+			METHOD_GET_FIELDS_BY_NAME, METHOD_GET_INTEGER_VALUE, METHOD_INVOKE, METHOD_GET_DECLARED_ANNOTATIONS = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -84,6 +85,9 @@ class JlptVocabularyListFactoryBeanTest {
 		(METHOD_GET_INTEGER_VALUE = clz.getDeclaredMethod("getIntegerValue", Cell.class)).setAccessible(true);
 		//
 		(METHOD_INVOKE = clz.getDeclaredMethod("invoke", Method.class, Object.class, Object[].class))
+				.setAccessible(true);
+		//
+		(METHOD_GET_DECLARED_ANNOTATIONS = clz.getDeclaredMethod("getDeclaredAnnotations", AnnotatedElement.class))
 				.setAccessible(true);
 		//
 	}
@@ -669,6 +673,27 @@ class JlptVocabularyListFactoryBeanTest {
 	private static Object invoke(final Method method, final Object instance, final Object... args) throws Throwable {
 		try {
 			return METHOD_INVOKE.invoke(null, method, instance, args);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetDeclaredAnnotations() throws Throwable {
+		//
+		Assertions.assertNull(getDeclaredAnnotations(null));
+		//
+	}
+
+	private static Annotation[] getDeclaredAnnotations(final AnnotatedElement instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_DECLARED_ANNOTATIONS.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Annotation[]) {
+				return (Annotation[]) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

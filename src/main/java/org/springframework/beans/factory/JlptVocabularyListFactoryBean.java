@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
@@ -564,8 +565,8 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		return toList(filter(
 				testAndApply(Objects::nonNull, JlptVocabulary.class.getDeclaredFields(), Arrays::stream, null), f -> {
 					//
-					final List<Annotation> as = toList(filter(testAndApply(Objects::nonNull,
-							f != null ? f.getDeclaredAnnotations() : null, Arrays::stream, null), a -> {
+					final List<Annotation> as = toList(filter(
+							testAndApply(Objects::nonNull, getDeclaredAnnotations(f), Arrays::stream, null), a -> {
 								//
 								if (Objects.equals("domain.JlptVocabulary$ColumnName", getName(annotationType(a)))) {
 									//
@@ -619,6 +620,10 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 					//
 				}));
 		//
+	}
+
+	private static Annotation[] getDeclaredAnnotations(final AnnotatedElement instance) {
+		return instance != null ? instance.getDeclaredAnnotations() : null;
 	}
 
 	private static Object invoke(final Method method, final Object instance, final Object... args)
