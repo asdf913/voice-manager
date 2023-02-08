@@ -597,15 +597,39 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		//
 		if (Objects.equals("domain.JlptVocabulary$ColumnName", getName(annotationType(a)))) {
 			//
-			final List<Method> ms = toList(
-					filter(testAndApply(Objects::nonNull, annotationType(a).getMethods(), Arrays::stream, null),
-							m -> Objects.equals("value", getName(m))));
+			final Method[] ms = getDeclaredMethods(annotationType(a));
 			//
-			final int sz = IterableUtils.size(ms);
+			// Check if there is only one method defined in a.class which returns
+			// "java.lang.String"
 			//
-			final Method m = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null);
+			Method m = ms != null && ms.length == 1 ? ms[0] : null;
 			//
-			if (m != null) {
+			if (m != null && Objects.equals(String.class, m.getReturnType()) && m.getParameterCount() == 0) {
+				//
+				try {
+					//
+					return Unit.with(invoke(m, a));
+					//
+				} catch (final IllegalAccessException | InvocationTargetException e) {
+					//
+					// TODO Auto-generated catch block
+					//
+					throw new RuntimeException(e);
+					//
+				} // try
+					//
+			} // if
+				//
+				// Check if there is a "value()" defined in a.class
+				//
+			final List<Method> methods = toList(
+					filter(testAndApply(Objects::nonNull, annotationType(a).getDeclaredMethods(), Arrays::stream, null),
+							x -> x != null && Objects.equals("value", getName(x)) && x.getParameterCount() == 0));
+			//
+			final int sz = IterableUtils.size(methods);
+			//
+			if ((m = testAndApply(x -> IterableUtils.size(x) == 1, methods, x -> IterableUtils.get(x, 0),
+					null)) != null) {
 				//
 				m.setAccessible(true);
 				//
@@ -633,6 +657,10 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 			//
 		return null;
 		//
+	}
+
+	private static Method[] getDeclaredMethods(final Class<?> instance) throws SecurityException {
+		return instance != null ? instance.getDeclaredMethods() : null;
 	}
 
 	private static Annotation[] getDeclaredAnnotations(final AnnotatedElement instance) {
