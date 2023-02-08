@@ -525,7 +525,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private transient MutableComboBoxModel<JlptVocabulary> cbmJlptVocabulary = null;
 
-	private javax.swing.text.Document tfTextImportDocument = null;
+	private transient javax.swing.text.Document tfTextImportDocument = null;
 
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.FIELD)
@@ -765,7 +765,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private transient IValue0<List<String>> jouYouKanJiList = null;
 
-	private IValue0<List<JlptVocabulary>> jlptVocabularyList = null;
+	private transient IValue0<List<JlptVocabulary>> jlptVocabularyList = null;
 
 	private VoiceManager() {
 	}
