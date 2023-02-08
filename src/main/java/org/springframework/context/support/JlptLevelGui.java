@@ -24,8 +24,6 @@ import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collection;
@@ -72,6 +70,7 @@ import org.springframework.beans.factory.InitializingBean;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
+import com.github.hal4j.uritemplate.URIBuilder;
 
 import domain.JlptVocabulary;
 import net.miginfocom.swing.MigLayout;
@@ -378,15 +377,21 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		//
 		run(Boolean.logicalAnd(jmdictSeq != null, !isTestMode()), () -> {
 			//
+			// TODO
+			//
+			final URIBuilder uriBuilder = URIBuilder.basedOn("https://www.edrdg.org/jmwsgi/entr.py");
+			//
+			if (uriBuilder != null) {
+				//
+				uriBuilder.queryParam("q", jmdictSeq);
+				//
+			} // if
+				//
 			try {
 				//
-				// TODO
+				browse(Desktop.getDesktop(), uriBuilder != null ? uriBuilder.toURI() : null);
 				//
-				browse(Desktop.getDesktop(),
-						new URL(String.format("https://www.edrdg.org/jmwsgi/entr.py?svc=jmdict&sid=&q=%1$s", jmdictSeq))
-								.toURI());
-				//
-			} catch (final IOException | URISyntaxException e) {
+			} catch (final IOException e) {
 				//
 				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
 				//
@@ -405,7 +410,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 	}
 
 	private static void browse(final Desktop instance, final URI uri) throws IOException {
-		if (instance != null) {
+		if (instance != null && uri != null) {
 			instance.browse(uri);
 		}
 	}

@@ -1,6 +1,7 @@
 package org.springframework.context.support;
 
 import java.awt.Component;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
@@ -15,6 +16,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
+import java.net.URI;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -64,7 +66,7 @@ class JlptLevelGuiTest {
 			METHOD_SET_CONTENTS, METHOD_ADD_ACTION_LISTENER, METHOD_GET_DECLARED_METHODS, METHOD_FILTER, METHOD_TO_LIST,
 			METHOD_INVOKE, METHOD_IIF, METHOD_GET_NAME, METHOD_GET_PARAMETER_TYPES, METHOD_RUN,
 			METHOD_SET_JLPT_VOCABULARY_AND_LEVEL, METHOD_STREAM, METHOD_MAP, METHOD_GET_LEVEL, METHOD_FOR_EACH_STREAM,
-			METHOD_ADD_ELEMENT, METHOD_TEST_AND_ACCEPT = null;
+			METHOD_ADD_ELEMENT, METHOD_TEST_AND_ACCEPT, METHOD_BROWSE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -127,6 +129,8 @@ class JlptLevelGuiTest {
 		//
 		(METHOD_TEST_AND_ACCEPT = clz.getDeclaredMethod("testAndAccept", Predicate.class, Object.class, Consumer.class))
 				.setAccessible(true);
+		//
+		(METHOD_BROWSE = clz.getDeclaredMethod("browse", Desktop.class, URI.class)).setAccessible(true);
 		//
 	}
 
@@ -945,9 +949,6 @@ class JlptLevelGuiTest {
 		}
 	}
 
-	private static void setSelectedItemByString(final ComboBoxModel<String> cbm, final String string) {
-	}
-
 	@Test
 	void testGetLevel() throws Throwable {
 		//
@@ -1028,4 +1029,20 @@ class JlptLevelGuiTest {
 			throw e.getTargetException();
 		}
 	}
+
+	@Test
+	void testBrowse() {
+		//
+		Assertions.assertDoesNotThrow(() -> browse(Desktop.getDesktop(), null));
+		//
+	}
+
+	private static void browse(final Desktop instance, final URI uri) throws Throwable {
+		try {
+			METHOD_BROWSE.invoke(null, instance, uri);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
 }
