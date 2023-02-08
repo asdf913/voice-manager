@@ -781,30 +781,25 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		this.configurableListableBeanFactory = configurableListableBeanFactory;
 		//
-		// cbmAudioFormatWrite
-		//
-		MutableComboBoxModel<Object> mcbm = cast(MutableComboBoxModel.class, cbmAudioFormatWrite);
-		//
 		final Collection<?> formats = getByteConverterAttributeValues(configurableListableBeanFactory, FORMAT);
 		//
-		if (mcbm != null) {
-			//
-			mcbm.addElement(null);
-			//
-			forEach(formats, mcbm::addElement);
-			//
-		} // if
-			//
-			// cbmAudioFormatExecute
-			//
-		if ((mcbm = cast(MutableComboBoxModel.class, cbmAudioFormatExecute)) != null) {
-			//
-			mcbm.addElement(null);
-			//
-			forEach(formats, mcbm::addElement);
-			//
-		} // if
-			//
+		// cbmAudioFormatWrite
+		//
+		final MutableComboBoxModel<Object> mcbmAudioFormatWrite = cast(MutableComboBoxModel.class, cbmAudioFormatWrite);
+		//
+		addElement(mcbmAudioFormatWrite, null);
+		//
+		forEach(formats, x -> addElement(mcbmAudioFormatWrite, x));
+		//
+		// cbmAudioFormatExecute
+		//
+		final MutableComboBoxModel<Object> mcbmAudioFormatExecute = cast(MutableComboBoxModel.class,
+				cbmAudioFormatExecute);
+		//
+		addElement(mcbmAudioFormatExecute, null);
+		//
+		forEach(formats, x -> addElement(mcbmAudioFormatExecute, x));
+		//
 		final String audioFormat = PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.audioFormat");
 		//
@@ -812,6 +807,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		setSelectedItem(cbmAudioFormatExecute, audioFormat);
 		//
+	}
+
+	private static <E> void addElement(final MutableComboBoxModel<E> instance, final E item) {
+		if (instance != null) {
+			instance.addElement(item);
+		}
 	}
 
 	@Override
@@ -6974,15 +6975,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			final List<JlptVocabulary> temp = toList(filter(stream(jlptVocabularies),
 					x -> Boolean.logicalOr(Objects.equals(text, getKanji(x)), Objects.equals(text, getKana(x)))));
 			//
-			forEach(temp, x -> {
-				//
-				if (cbmJlptVocabulary != null) {
-					//
-					cbmJlptVocabulary.addElement(x);
-					//
-				} // if
-					//
-			});
+			forEach(temp, x -> addElement(cbmJlptVocabulary, x));
 			//
 			if (IterableUtils.size(temp) > 1) {
 				//
