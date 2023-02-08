@@ -20,13 +20,13 @@ public class JlptVocabulary {
 	private String kanji = null;
 
 	private String kana = null;
-	
+
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
 	private @interface ColumnName {
 		String value();
 	}
-	
+
 	@ColumnName("jmdict_seq")
 	private Integer jmdictSeq = null;
 
@@ -44,6 +44,10 @@ public class JlptVocabulary {
 
 	public String getKana() {
 		return kana;
+	}
+
+	public Integer getJmdictSeq() {
+		return jmdictSeq;
 	}
 
 }
