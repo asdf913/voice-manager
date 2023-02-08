@@ -16,7 +16,10 @@ public class JlptVocabulary {
 	@Note("level")
 	private String level = null;
 
-	private String kanji, kana = null;
+	@Note("kanji")
+	private String kanji = null;
+
+	private String kana = null;
 
 	public String getLevel() {
 		return level;
