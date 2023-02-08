@@ -6971,7 +6971,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			final ComboBoxModel<String> cbmJlptLevel = instance.cbmJlptLevel;
 			//
 			final List<JlptVocabulary> temp = toList(filter(stream(jlptVocabularies),
-					x -> Objects.equals(text, getKanji(x)) || Objects.equals(text, getKana(x))));
+					x -> Boolean.logicalOr(Objects.equals(text, getKanji(x)), Objects.equals(text, getKana(x)))));
 			//
 			forEach(temp, x -> {
 				//
