@@ -6997,6 +6997,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						toList(map(stream(temp), VoiceManager::getLevel).distinct()),
 						x -> setSelectedItemByString(cbmJlptLevel, IterableUtils.get(x, 0)));
 				//
+				if (instance != null && instance.jcbJlptVocabulary != null) {
+					//
+					instance.itemStateChanged(new ItemEvent(instance.jcbJlptVocabulary, 0, "", 0));
+					//
+				} // if
+					//
 				return;
 				//
 			} // if
@@ -7005,6 +7011,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					testAndApply(x -> IterableUtils.size(x) == 1, temp, x -> IterableUtils.get(x, 0), null),
 					x -> setSelectedItemByString(cbmJlptLevel, getLevel(x)));
 			//
+			if (instance != null && instance.jcbJlptVocabulary != null) {
+				//
+				instance.itemStateChanged(new ItemEvent(instance.jcbJlptVocabulary, 0, "", 0));
+				//
+			} // if
+				//
 		} // if
 			//
 	}
