@@ -225,6 +225,8 @@
 		<property name="jlptLevels" ref="JlptLevelList" />
 		<property name="url" ref="JlptLevelPageUrl" />
 		<property name="jlptVocabularyList" ref="JlptVocabularyList" />
+		<property name="jmDictUrl"
+			value="${org.springframework.context.support.JlptLevelGui.jmDictUrl}" />
 	</bean>
 
 	<!-- -->

@@ -120,6 +120,8 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 
 	private JList<String> jlJlptLevel = null;
 
+	private String jmDictUrl = null;
+
 	private JlptLevelGui() {
 	}
 
@@ -133,6 +135,10 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 
 	public void setJlptVocabularyList(final List<JlptVocabulary> jlptVocabularyList) {
 		this.jlptVocabularyList = Unit.with(jlptVocabularyList);
+	}
+
+	public void setJmDictUrl(final String jmDictUrl) {
+		this.jmDictUrl = jmDictUrl;
 	}
 
 	@Override
@@ -377,9 +383,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		//
 		run(Boolean.logicalAnd(jmdictSeq != null, !isTestMode()), () -> {
 			//
-			// TODO
-			//
-			final URIBuilder uriBuilder = URIBuilder.basedOn("https://www.edrdg.org/jmwsgi/entr.py");
+			final URIBuilder uriBuilder = testAndApply(Objects::nonNull, jmDictUrl, URIBuilder::basedOn, null);
 			//
 			if (uriBuilder != null) {
 				//
