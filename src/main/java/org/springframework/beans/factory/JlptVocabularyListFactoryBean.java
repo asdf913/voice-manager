@@ -7,6 +7,7 @@ import java.io.Reader;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.net.URL;
@@ -540,7 +541,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		//
 		for (int i = 0; fs != null && i < fs.length; i++) {
 			//
-			if ((f = fs[i]) == null || !Objects.equals(f.getName(), name)) {
+			if (!Objects.equals(getName(f = fs[i]), name)) {
 				//
 				continue;
 				//
@@ -554,6 +555,10 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		//
 	}
 
+	private static String getName(final Member instance) {
+		return instance != null ? instance.getName() : null;
+	}
+
 	private static List<Field> getFieldsByColumnName(final Field[] fs, final String columnName) {
 		//
 		return toList(filter(
@@ -564,10 +569,9 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 								//
 								if (Objects.equals("domain.JlptVocabulary$ColumnName", getName(annotationType(a)))) {
 									//
-									final List<Method> ms = toList(filter(
-											testAndApply(Objects::nonNull, annotationType(a).getMethods(),
-													Arrays::stream, null),
-											m -> m != null && Objects.equals("value", m.getName())));
+									final List<Method> ms = toList(
+											filter(testAndApply(Objects::nonNull, annotationType(a).getMethods(),
+													Arrays::stream, null), m -> Objects.equals("value", getName(m))));
 									//
 									final int sz = IterableUtils.size(ms);
 									//

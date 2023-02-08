@@ -588,7 +588,7 @@ class JlptVocabularyListFactoryBeanTest {
 		//
 		Assertions.assertNull(getFieldsByName(null, null));
 		//
-		Assertions.assertNull(getFieldsByName(new Field[] { null }, null));
+		Assertions.assertEquals("[null]", toString(getFieldsByName(new Field[] { null }, null)));
 		//
 	}
 
