@@ -4479,7 +4479,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			final Integer jmdictSeq = getJmdictSeq(cast(JlptVocabulary.class, getSelectedItem(cbmJlptVocabulary)));
 			//
-			if (jmdictSeq != null && nonTest) {
+			if (Boolean.logicalAnd(jmdictSeq != null, nonTest)) {
 				//
 				try {
 					//
