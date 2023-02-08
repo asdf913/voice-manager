@@ -562,64 +562,76 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 
 	private static List<Field> getFieldsByColumnName(final Field[] fs, final String columnName) {
 		//
-		return toList(filter(
-				testAndApply(Objects::nonNull, JlptVocabulary.class.getDeclaredFields(), Arrays::stream, null), f -> {
-					//
-					final List<Annotation> as = toList(filter(
-							testAndApply(Objects::nonNull, getDeclaredAnnotations(f), Arrays::stream, null), a -> {
-								//
-								if (Objects.equals("domain.JlptVocabulary$ColumnName", getName(annotationType(a)))) {
-									//
-									final List<Method> ms = toList(
-											filter(testAndApply(Objects::nonNull, annotationType(a).getMethods(),
-													Arrays::stream, null), m -> Objects.equals("value", getName(m))));
-									//
-									final int sz = IterableUtils.size(ms);
-									//
-									final Method m = testAndApply(x -> IterableUtils.size(x) == 1, ms,
-											x -> IterableUtils.get(x, 0), null);
-									//
-									if (m != null) {
-										//
-										m.setAccessible(true);
-										//
-									} // if
-										//
-									if (sz > 1) {
-										//
-										throw new IllegalStateException();
-										//
-									} // if
-										//
-									try {
-										//
-										return Objects.equals(invoke(m, a), columnName);
-										//
-									} catch (final IllegalAccessException | InvocationTargetException e) {
-										//
-										// TODO Auto-generated catch block
-										//
-										throw new RuntimeException(e);
-										//
-									} // try
-										//
-								} // if
-									//
-								return false;
-								//
-							}));
-					//
-					final int sz = IterableUtils.size(as);
-					//
-					if (sz > 1) {
+		return toList(filter(testAndApply(Objects::nonNull, fs, Arrays::stream, null), f -> {
+			//
+			final List<Annotation> as = toList(
+					filter(testAndApply(Objects::nonNull, getDeclaredAnnotations(f), Arrays::stream, null), a -> {
 						//
-						throw new IllegalStateException();
+						final IValue0<Object> iValue0 = getColumnName(a);
 						//
-					} // if
+						if (iValue0 != null) {
+							//
+							return Objects.equals(IValue0Util.getValue0(iValue0), columnName);
+							//
+						} // if
+							//
+						return false;
 						//
-					return sz == 1;
-					//
-				}));
+					}));
+			//
+			final int sz = IterableUtils.size(as);
+			//
+			if (sz > 1) {
+				//
+				throw new IllegalStateException();
+				//
+			} // if
+				//
+			return sz == 1;
+			//
+		}));
+		//
+	}
+
+	private static IValue0<Object> getColumnName(final Annotation a) {
+		//
+		if (Objects.equals("domain.JlptVocabulary$ColumnName", getName(annotationType(a)))) {
+			//
+			final List<Method> ms = toList(
+					filter(testAndApply(Objects::nonNull, annotationType(a).getMethods(), Arrays::stream, null),
+							m -> Objects.equals("value", getName(m))));
+			//
+			final int sz = IterableUtils.size(ms);
+			//
+			final Method m = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null);
+			//
+			if (m != null) {
+				//
+				m.setAccessible(true);
+				//
+			} // if
+				//
+			if (sz > 1) {
+				//
+				throw new IllegalStateException();
+				//
+			} // if
+				//
+			try {
+				//
+				return Unit.with(invoke(m, a));
+				//
+			} catch (final IllegalAccessException | InvocationTargetException e) {
+				//
+				// TODO Auto-generated catch block
+				//
+				throw new RuntimeException(e);
+				//
+			} // try
+				//
+		} // if
+			//
+		return null;
 		//
 	}
 
