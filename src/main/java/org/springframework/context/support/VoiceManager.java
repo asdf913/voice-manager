@@ -674,6 +674,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private JComboBox<Object> jcbVoiceId = null;
 
+	private JComboBox<JlptVocabulary> jcbJlptVocabulary = null;
+
 	@Note("List Name(s)")
 	private JLabel jlListNames = null;
 
@@ -2851,8 +2853,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		addDocumentListener(tfTextImportDocument = tfTextImport.getDocument(), this);
 		//
-		final JComboBox<JlptVocabulary> jcbJlptVocabulary = new JComboBox<JlptVocabulary>(
-				cbmJlptVocabulary = new DefaultComboBoxModel<>());
+		(jcbJlptVocabulary = new JComboBox<JlptVocabulary>(cbmJlptVocabulary = new DefaultComboBoxModel<>()))
+				.addItemListener(this);
 		//
 		panel.add(jcbJlptVocabulary, String.format("span %1$s", 3));
 		//
@@ -6667,7 +6669,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Override
 	public void itemStateChanged(final ItemEvent evt) {
 		//
-		if (Objects.equals(getSource(evt), jcbVoiceId)) {
+		final Object source = getSource(evt);
+		//
+		if (Objects.equals(source, jcbVoiceId)) {
 			//
 			try {
 				//
@@ -6684,6 +6688,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // try
 				//
+		} else if (Objects.equals(source, jcbJlptVocabulary)) {
+			//
+			final JlptVocabulary jv = cast(JlptVocabulary.class,
+					jcbJlptVocabulary != null ? jcbJlptVocabulary.getSelectedItem() : null);
+			//
+			if (jv != null) {
+				//
+				setSelectedItemByString(cbmJlptLevel, getLevel(jv));
+				//
+			} // if
 				//
 		} // if
 			//

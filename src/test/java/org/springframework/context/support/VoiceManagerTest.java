@@ -94,6 +94,7 @@ import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -2409,7 +2410,7 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testItemStateChanged() {
+	void testItemStateChanged() throws IllegalAccessException {
 		//
 		if (instance != null) {
 			//
@@ -2430,6 +2431,24 @@ class VoiceManagerTest {
 		ih.voiceAttribute = Integer.toString(LocaleID.AF.getLcid(), 16);
 		//
 		Assertions.assertDoesNotThrow(() -> itemStateChanged(instance, null));
+		//
+		// org.springframework.context.support.VoiceManager.jcbJlptVocabulary
+		//
+		final JComboBox<Object> jcbJlptVocabulary = new JComboBox<>();
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "jcbJlptVocabulary", jcbJlptVocabulary, true);
+			//
+		} // if
+			//
+		final ItemEvent itemEvent = new ItemEvent(jcbJlptVocabulary, ZERO, null, ZERO);
+		//
+		Assertions.assertDoesNotThrow(() -> itemStateChanged(instance, itemEvent));
+		//
+		jcbJlptVocabulary.addItem(new JlptVocabulary());
+		//
+		Assertions.assertDoesNotThrow(() -> itemStateChanged(instance, itemEvent));
 		//
 	}
 
