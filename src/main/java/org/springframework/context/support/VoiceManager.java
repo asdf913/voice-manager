@@ -2848,12 +2848,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		tfTextImport.addKeyListener(this);
 		//
-		if ((tfTextImportDocument = tfTextImport.getDocument()) != null) {
-			//
-			tfTextImportDocument.addDocumentListener(this);
-			//
-		} // if
-			//
+		addDocumentListener(tfTextImportDocument = tfTextImport.getDocument(), this);
+		//
 		final JComboBox<JlptVocabulary> jcbJlptVocabulary = new JComboBox<JlptVocabulary>(
 				cbmJlptVocabulary = new DefaultComboBoxModel<>());
 		//
@@ -3089,6 +3085,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		return panel;
 		//
+	}
+
+	private static void addDocumentListener(final javax.swing.text.Document instance, final DocumentListener listener) {
+		if (instance != null) {
+			instance.addDocumentListener(listener);
+		}
 	}
 
 	private static <T> T get(final Supplier<T> instance) {
