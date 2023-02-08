@@ -360,8 +360,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 				//
 		} else if (Objects.equals(source, btnVisitJMdictDB)) {
 			//
-			final Integer jmdictSeq = getJmdictSeq(
-					cast(JlptVocabulary.class, cbmJlptVocabulary != null ? cbmJlptVocabulary.getSelectedItem() : null));
+			final Integer jmdictSeq = getJmdictSeq(cast(JlptVocabulary.class, getSelectedItem(cbmJlptVocabulary)));
 			//
 			if (Boolean.logicalAnd(jmdictSeq != null, !isTestMode())) {
 				//
@@ -383,6 +382,10 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 				//
 		}
 		//
+	}
+
+	private static Object getSelectedItem(final ComboBoxModel<?> instance) {
+		return instance != null ? instance.getSelectedItem() : null;
 	}
 
 	private static boolean isTestMode() {
