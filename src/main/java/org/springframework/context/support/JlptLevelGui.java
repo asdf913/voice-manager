@@ -98,7 +98,10 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 	@Note("Copy")
 	private AbstractButton btnCopy = null;
 
-	private AbstractButton btnCompare, btnVisitJMdictDB = null;
+	@Note("Compre")
+	private AbstractButton btnCompare = null;
+
+	private AbstractButton btnVisitJMdictDB = null;
 
 	private JTextComponent tfJson = null;
 
