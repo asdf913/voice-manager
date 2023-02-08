@@ -591,7 +591,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 										//
 									try {
 										//
-										return Objects.equals(m != null ? m.invoke(a) : null, columnName);
+										return Objects.equals(invoke(m, a), columnName);
 										//
 									} catch (final IllegalAccessException | InvocationTargetException e) {
 										//
@@ -619,6 +619,11 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 					//
 				}));
 		//
+	}
+
+	private static Object invoke(final Method method, final Object instance, final Object... args)
+			throws IllegalAccessException, InvocationTargetException {
+		return method != null ? method.invoke(instance, args) : null;
 	}
 
 	@Override

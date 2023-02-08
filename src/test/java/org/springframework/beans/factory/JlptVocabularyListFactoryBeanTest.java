@@ -49,7 +49,7 @@ class JlptVocabularyListFactoryBeanTest {
 
 	private static Method METHOD_FILTER, METHOD_GET_CLASS, METHOD_TO_LIST, METHOD_ANNOTATION_TYPE, METHOD_GET_NAME,
 			METHOD_TEST, METHOD_OR, METHOD_GET_STRING_CELL_VALUE, METHOD_ADD, METHOD_ADD_ALL, METHOD_PUT,
-			METHOD_GET_FIELDS_BY_NAME, METHOD_GET_INTEGER_VALUE = null;
+			METHOD_GET_FIELDS_BY_NAME, METHOD_GET_INTEGER_VALUE, METHOD_INVOKE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -82,6 +82,9 @@ class JlptVocabularyListFactoryBeanTest {
 				.setAccessible(true);
 		//
 		(METHOD_GET_INTEGER_VALUE = clz.getDeclaredMethod("getIntegerValue", Cell.class)).setAccessible(true);
+		//
+		(METHOD_INVOKE = clz.getDeclaredMethod("invoke", Method.class, Object.class, Object[].class))
+				.setAccessible(true);
 		//
 	}
 
@@ -651,6 +654,21 @@ class JlptVocabularyListFactoryBeanTest {
 				return (IValue0) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testInvoke() throws Throwable {
+		//
+		Assertions.assertNull(invoke(null, null));
+		//
+	}
+
+	private static Object invoke(final Method method, final Object instance, final Object... args) throws Throwable {
+		try {
+			return METHOD_INVOKE.invoke(null, method, instance, args);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
