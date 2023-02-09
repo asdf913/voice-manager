@@ -56,8 +56,9 @@ class JlptVocabularyListFactoryBeanTest {
 
 	private static Method METHOD_FILTER, METHOD_GET_CLASS, METHOD_TO_STRING, METHOD_TO_LIST, METHOD_ANNOTATION_TYPE,
 			METHOD_GET_NAME, METHOD_TEST, METHOD_OR, METHOD_GET_STRING_CELL_VALUE, METHOD_ADD, METHOD_ADD_ALL,
-			METHOD_PUT, METHOD_GET_FIELDS_BY_NAME, METHOD_GET_INTEGER_VALUE, METHOD_GET_STRING_VALUE, METHOD_INVOKE,
-			METHOD_GET_DECLARED_ANNOTATIONS, METHOD_GET_DECLARED_METHODS, METHOD_IS_ASSIGNABLE_FROM = null;
+			METHOD_PUT, METHOD_GET_FIELDS_BY_NAME, METHOD_GET_INTEGER_VALUE, METHOD_GET_STRING_VALUE_CELL,
+			METHOD_GET_STRING_VALUE_CELL_VALUE, METHOD_INVOKE, METHOD_GET_DECLARED_ANNOTATIONS,
+			METHOD_GET_DECLARED_METHODS, METHOD_IS_ASSIGNABLE_FROM = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -94,7 +95,10 @@ class JlptVocabularyListFactoryBeanTest {
 		(METHOD_GET_INTEGER_VALUE = clz.getDeclaredMethod("getIntegerValue", Cell.class, FormulaEvaluator.class))
 				.setAccessible(true);
 		//
-		(METHOD_GET_STRING_VALUE = clz.getDeclaredMethod("getStringValue", Cell.class, FormulaEvaluator.class))
+		(METHOD_GET_STRING_VALUE_CELL = clz.getDeclaredMethod("getStringValue", Cell.class, FormulaEvaluator.class))
+				.setAccessible(true);
+		//
+		(METHOD_GET_STRING_VALUE_CELL_VALUE = clz.getDeclaredMethod("getStringValue", CellValue.class))
 				.setAccessible(true);
 		//
 		(METHOD_INVOKE = clz.getDeclaredMethod("invoke", Method.class, Object.class, Object[].class))
@@ -762,6 +766,8 @@ class JlptVocabularyListFactoryBeanTest {
 	@Test
 	void testGetStringValue() throws Throwable {
 		//
+		Assertions.assertNull(getStringValue(null));
+		//
 		Assertions.assertNull(getStringValue(null, null));
 		//
 		final double zero = 0;
@@ -817,11 +823,25 @@ class JlptVocabularyListFactoryBeanTest {
 	private static IValue0<String> getStringValue(final Cell cell, final FormulaEvaluator formulaEvaluator)
 			throws Throwable {
 		try {
-			final Object obj = METHOD_GET_STRING_VALUE.invoke(null, cell, formulaEvaluator);
+			final Object obj = METHOD_GET_STRING_VALUE_CELL.invoke(null, cell, formulaEvaluator);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof IValue0) {
 				return (IValue0) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static String getStringValue(final CellValue instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_STRING_VALUE_CELL_VALUE.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
