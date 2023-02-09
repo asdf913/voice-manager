@@ -91,7 +91,10 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 	@Note("Execute")
 	private AbstractButton btnExecute = null;
 
-	private AbstractButton btnPlayAudio, btnCopyPitchAccentImage = null;
+	@Note("Play Audio")
+	private AbstractButton btnPlayAudio = null;
+
+	private AbstractButton btnCopyPitchAccentImage = null;
 
 	private transient MutableComboBoxModel<Pronounication> mcbmPronounication = null;
 
