@@ -256,7 +256,9 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		//
 		CellType cellType = null;
 		//
-		for (int i = 0; row != null && i < row.getPhysicalNumberOfCells(); i++) {
+		final Integer physicalNumberOfCells = getPhysicalNumberOfCells(row);
+		//
+		for (int i = 0; ObjectUtils.compare(i, physicalNumberOfCells) < 0; i++) {
 			//
 			if (or((f = MapUtils.getObject(fieldMap, Integer.valueOf(i))) == null, (cell = row.getCell(i)) == null,
 					Objects.equals(CellType.BLANK, cellType = getCellType(cell)))) {
@@ -306,6 +308,10 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 			//
 		return ivalue0;
 		//
+	}
+
+	private static Integer getPhysicalNumberOfCells(final Row instance) {
+		return instance != null ? Integer.valueOf(instance.getPhysicalNumberOfCells()) : null;
 	}
 
 	private static void setAccessible(final AccessibleObject instance, final boolean flag) {
