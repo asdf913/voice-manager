@@ -269,12 +269,8 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 					//
 					pronounication.pitchAccentImage = createMergedBufferedImage(protocolAndHost, getImageSrcs(element));
 					//
-					if (mcbmPronounication != null) {
-						//
-						mcbmPronounication.addElement(pronounication);
-						//
-					} // if
-						//
+					addElement(mcbmPronounication, pronounication);
+					//
 				} // for
 					//
 				pack();
@@ -355,6 +351,12 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 				//
 		} // if
 			//
+	}
+
+	private static <E> void addElement(final MutableComboBoxModel<E> instance, final E item) {
+		if (instance != null) {
+			instance.addElement(item);
+		}
 	}
 
 	private static <V> void setValue(final Entry<?, V> instance, final V value) {

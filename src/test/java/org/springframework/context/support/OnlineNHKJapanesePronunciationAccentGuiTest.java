@@ -26,6 +26,7 @@ import java.util.function.Predicate;
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JTextField;
+import javax.swing.MutableComboBoxModel;
 import javax.swing.text.JTextComponent;
 
 import org.apache.commons.lang3.function.FailableFunction;
@@ -53,7 +54,8 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 
 	private static Method METHOD_CAST, METHOD_GET_SRC_MAP, METHOD_GET_IMAGE_SRCS, METHOD_CREATE_MERGED_BUFFERED_IMAGE,
 			METHOD_TEST_AND_APPLY, METHOD_GET_GRAPHICS, METHOD_GET_WIDTH, METHOD_GET_HEIGHT, METHOD_INT_VALUE,
-			METHOD_GET_TEXT, METHOD_TO_URI, METHOD_TO_URL, METHOD_SET_VALUE, METHOD_GET_VALUE = null;
+			METHOD_GET_TEXT, METHOD_TO_URI, METHOD_TO_URL, METHOD_SET_VALUE, METHOD_GET_VALUE,
+			METHOD_ADD_ELEMENT = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -90,6 +92,9 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		//
 		(METHOD_GET_VALUE = clz.getDeclaredMethod("getValue", Entry.class)).setAccessible(true);
 		//
+		(METHOD_ADD_ELEMENT = clz.getDeclaredMethod("addElement", MutableComboBoxModel.class, Object.class))
+				.setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -120,6 +125,14 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				if (Objects.equals(methodName, "getValue") || Objects.equals(methodName, "setValue")) {
 					//
 					return value;
+					//
+				} // if
+					//
+			} else if (proxy instanceof MutableComboBoxModel) {
+				//
+				if (Objects.equals(methodName, "addElement")) {
+					//
+					return null;
 					//
 				} // if
 					//
@@ -562,6 +575,23 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 	private static <V> V getValue(final Entry<?, V> instance) throws Throwable {
 		try {
 			return (V) METHOD_GET_VALUE.invoke(null, instance);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testAddElement() {
+		//
+		Assertions.assertDoesNotThrow(() -> addElement(null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> addElement(Reflection.newProxy(MutableComboBoxModel.class, ih), null));
+		//
+	}
+
+	private static <E> void addElement(final MutableComboBoxModel<E> instance, final E item) throws Throwable {
+		try {
+			METHOD_ADD_ELEMENT.invoke(null, instance, item);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
