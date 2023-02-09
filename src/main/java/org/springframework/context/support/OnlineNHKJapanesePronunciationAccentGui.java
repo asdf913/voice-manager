@@ -219,12 +219,11 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 			//
 			try {
 				//
-				final URL url = uri != null ? uri.toURL() : null;
+				final URL u = uri != null ? uri.toURL() : null;
 				//
-				final String protocolAndHost = url != null ? String.join("://", url.getProtocol(), url.getHost())
-						: null;
+				final String protocolAndHost = u != null ? String.join("://", u.getProtocol(), u.getHost()) : null;
 				//
-				final Document document = url != null ? Jsoup.parse(url, 0) : null;
+				final Document document = u != null ? Jsoup.parse(u, 0) : null;
 				//
 				final Elements elements = ElementUtil.select(document, "audio[title='発音図：']");
 				//
