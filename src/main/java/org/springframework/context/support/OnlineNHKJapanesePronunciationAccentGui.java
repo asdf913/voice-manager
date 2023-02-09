@@ -2,6 +2,7 @@ package org.springframework.context.support;
 
 import java.awt.Component;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
@@ -24,7 +25,6 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -451,7 +451,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 				//
 			} // if
 				//
-			if ((graphics = result != null ? result.getGraphics() : null) == null) {
+			if (graphics == null && (graphics = getGraphics(result)) == null) {
 				//
 				continue;
 				//
@@ -463,6 +463,10 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 			//
 		return result;
 		//
+	}
+
+	private static Graphics getGraphics(final Image instance) {
+		return instance != null ? instance.getGraphics() : null;
 	}
 
 }

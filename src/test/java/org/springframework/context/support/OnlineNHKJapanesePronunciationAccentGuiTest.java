@@ -1,6 +1,8 @@
 package org.springframework.context.support;
 
+import java.awt.Graphics;
 import java.awt.GraphicsEnvironment;
+import java.awt.Image;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
@@ -14,13 +16,13 @@ import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
 
 import org.apache.commons.lang3.function.FailableFunction;
-import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.jena.ext.com.google.common.base.Predicates;
 import org.jsoup.nodes.Element;
@@ -32,12 +34,16 @@ import org.springframework.beans.factory.InitializingBean;
 
 import com.google.common.reflect.Reflection;
 
+import javassist.util.proxy.MethodHandler;
+import javassist.util.proxy.ProxyFactory;
+import javassist.util.proxy.ProxyObject;
+
 class OnlineNHKJapanesePronunciationAccentGuiTest {
 
 	private static final String EMPTY = "";
 
 	private static Method METHOD_CAST, METHOD_GET_SRC_MAP, METHOD_GET_IMAGE_SRCS, METHOD_CREATE_MERGED_BUFFERED_IMAGE,
-			METHOD_TEST_AND_APPLY = null;
+			METHOD_TEST_AND_APPLY, METHOD_GET_GRAPHICS = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -56,6 +62,34 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
 		//
+		(METHOD_GET_GRAPHICS = clz.getDeclaredMethod("getGraphics", Image.class)).setAccessible(true);
+		//
+	}
+
+	private static class MH implements MethodHandler {
+
+		private Graphics graphics = null;
+
+		@Override
+		public Object invoke(final Object self, final Method thisMethod, final Method proceed, final Object[] args)
+				throws Throwable {
+			//
+			final String methodName = thisMethod != null ? thisMethod.getName() : null;
+			//
+			if (self instanceof Image) {
+				//
+				if (Objects.equals(methodName, "getGraphics")) {
+					//
+					return graphics;
+					//
+				} // if
+					//
+			} // if
+				//
+			throw new Throwable(methodName);
+			//
+		}
+
 	}
 
 	private OnlineNHKJapanesePronunciationAccentGui instance = null;
@@ -246,8 +280,43 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		}
 	}
 
-	private static final <T> boolean test(final Predicate<T> instance, final T value) {
-		return instance != null && instance.test(value);
+	@Test
+	void testGetGraphics() throws Throwable {
+		//
+		Assertions.assertNull(getGraphics(null));
+		//
+		final ProxyFactory proxyFactory = new ProxyFactory();
+		//
+		proxyFactory.setSuperclass(Image.class);
+		//
+		final Class<?> clz = proxyFactory.createClass();
+		//
+		final Constructor<?> constructor = clz != null ? clz.getDeclaredConstructor() : null;
+		//
+		final Object instance = constructor != null ? constructor.newInstance() : null;
+		//
+		if (instance instanceof ProxyObject) {
+			//
+			((ProxyObject) instance).setHandler(new MH());
+			//
+		} // if
+			//
+		Assertions.assertNull(getGraphics(cast(Image.class, instance)));
+		//
+	}
+
+	private static Graphics getGraphics(final Image instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_GRAPHICS.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Graphics) {
+				return (Graphics) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 	@Test
