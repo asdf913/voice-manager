@@ -236,15 +236,9 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 				//
 			final URIBuilder uriBuilder = testAndApply(Objects::nonNull, url, URIBuilder::basedOn, null);
 			//
-			if (uriBuilder != null) {
-				//
-				uriBuilder.relative(getText(tfText));
-				//
-			} // if
-				//
 			try {
 				//
-				final URL u = toURL(toURI(uriBuilder));
+				final URL u = toURL(toURI(relative(uriBuilder, getText(tfText))));
 				//
 				final String protocolAndHost = u != null ? String.join("://", u.getProtocol(), u.getHost()) : null;
 				//
@@ -385,6 +379,10 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 
 	private static URL toURL(final URI instance) throws MalformedURLException {
 		return instance != null ? instance.toURL() : null;
+	}
+
+	private static URIBuilder relative(final URIBuilder instance, final Object... pathSegments) {
+		return instance != null ? instance.relative(pathSegments) : null;
 	}
 
 	private static URI toURI(final URIBuilder instance) {

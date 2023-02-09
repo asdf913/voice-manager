@@ -56,8 +56,8 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 
 	private static Method METHOD_CAST, METHOD_GET_SRC_MAP, METHOD_GET_IMAGE_SRCS, METHOD_CREATE_MERGED_BUFFERED_IMAGE,
 			METHOD_TEST_AND_APPLY, METHOD_GET_GRAPHICS, METHOD_GET_WIDTH, METHOD_GET_HEIGHT, METHOD_INT_VALUE,
-			METHOD_GET_TEXT, METHOD_TO_URI, METHOD_TO_URL, METHOD_SET_VALUE, METHOD_GET_VALUE, METHOD_ADD_ELEMENT,
-			METHOD_REMOVE_ELEMENT_AT, METHOD_GET_SELECTED_ITEM, METHOD_GET_SIZE = null;
+			METHOD_GET_TEXT, METHOD_RELATIVE, METHOD_TO_URI, METHOD_TO_URL, METHOD_SET_VALUE, METHOD_GET_VALUE,
+			METHOD_ADD_ELEMENT, METHOD_REMOVE_ELEMENT_AT, METHOD_GET_SELECTED_ITEM, METHOD_GET_SIZE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -85,6 +85,8 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		(METHOD_INT_VALUE = clz.getDeclaredMethod("intValue", Number.class, Integer.TYPE)).setAccessible(true);
 		//
 		(METHOD_GET_TEXT = clz.getDeclaredMethod("getText", JTextComponent.class)).setAccessible(true);
+		//
+		(METHOD_RELATIVE = clz.getDeclaredMethod("relative", URIBuilder.class, Object[].class)).setAccessible(true);
 		//
 		(METHOD_TO_URI = clz.getDeclaredMethod("toURI", URIBuilder.class)).setAccessible(true);
 		//
@@ -535,6 +537,29 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				return null;
 			} else if (obj instanceof String) {
 				return (String) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testRelative() throws Throwable {
+		//
+		final URIBuilder uriBuilder = URIBuilder.basedOn("http://www.google.com");
+		//
+		Assertions.assertSame(uriBuilder, relative(uriBuilder));
+		//
+	}
+
+	private static URIBuilder relative(final URIBuilder instance, final Object... pathSegments) throws Throwable {
+		try {
+			final Object obj = METHOD_RELATIVE.invoke(null, instance, pathSegments);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof URIBuilder) {
+				return (URIBuilder) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
