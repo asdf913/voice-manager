@@ -17,6 +17,7 @@ import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URL;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -58,8 +59,8 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 	private static Method METHOD_CAST, METHOD_GET_SRC_MAP, METHOD_GET_IMAGE_SRCS, METHOD_CREATE_MERGED_BUFFERED_IMAGE,
 			METHOD_TEST_AND_APPLY, METHOD_GET_GRAPHICS, METHOD_GET_WIDTH, METHOD_GET_HEIGHT, METHOD_INT_VALUE,
 			METHOD_GET_TEXT, METHOD_RELATIVE, METHOD_TO_URI, METHOD_TO_URL, METHOD_SET_VALUE, METHOD_GET_VALUE,
-			METHOD_ADD_ELEMENT, METHOD_REMOVE_ELEMENT_AT, METHOD_GET_SELECTED_ITEM, METHOD_GET_SIZE,
-			METHOD_ENTRY_SET = null;
+			METHOD_ADD_ELEMENT, METHOD_REMOVE_ELEMENT_AT, METHOD_GET_SELECTED_ITEM, METHOD_GET_SIZE, METHOD_ENTRY_SET,
+			METHOD_ITERATOR = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -110,6 +111,8 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		//
 		(METHOD_ENTRY_SET = clz.getDeclaredMethod("entrySet", Map.class)).setAccessible(true);
 		//
+		(METHOD_ITERATOR = clz.getDeclaredMethod("iterator", Iterable.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -119,6 +122,8 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		private Object value, selectedItem = null;
 
 		private Set<Entry<?, ?>> entrySet = null;
+
+		private Iterator<?> iterator = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -136,6 +141,14 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				if (Objects.equals(methodName, "getSize")) {
 					//
 					return size;
+					//
+				} // if
+					//
+			} else if (proxy instanceof Iterable) {
+				//
+				if (Objects.equals(methodName, "iterator")) {
+					//
+					return iterator;
 					//
 				} // if
 					//
@@ -738,6 +751,27 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				return null;
 			} else if (obj instanceof Set) {
 				return (Set) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testIterator() throws Throwable {
+		//
+		Assertions.assertNull(iterator(Reflection.newProxy(Iterable.class, ih)));
+		//
+	}
+
+	private static <E> Iterator<E> iterator(final Iterable<E> instance) throws Throwable {
+		try {
+			final Object obj = METHOD_ITERATOR.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Iterator) {
+				return (Iterator) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

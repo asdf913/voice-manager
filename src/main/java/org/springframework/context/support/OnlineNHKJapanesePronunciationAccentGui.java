@@ -25,6 +25,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EventObject;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -285,7 +286,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 			//
 			final Set<Entry<String, String>> entrySet = entrySet(audioUrls);
 			//
-			if (entrySet != null && entrySet.iterator() != null) {
+			if (iterator(entrySet) != null) {
 				//
 				InputStream is = null;
 				//
@@ -349,6 +350,10 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 
 	private static <K, V> Set<Entry<K, V>> entrySet(final Map<K, V> instance) {
 		return instance != null ? instance.entrySet() : null;
+	}
+
+	private static <E> Iterator<E> iterator(final Iterable<E> instance) {
+		return instance != null ? instance.iterator() : null;
 	}
 
 	private static int getSize(final ListModel<?> instance) {
