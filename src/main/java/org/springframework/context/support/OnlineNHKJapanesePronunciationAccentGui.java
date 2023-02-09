@@ -48,6 +48,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
+import javax.swing.ListModel;
 import javax.swing.MutableComboBoxModel;
 import javax.swing.text.JTextComponent;
 
@@ -227,9 +228,9 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 		//
 		if (Objects.equals(source, btnExecute)) {
 			//
-			for (int i = (mcbmPronounication != null ? mcbmPronounication.getSize() : 0) - 1; i >= 0; i--) {
+			for (int i = getSize(mcbmPronounication) - 1; i >= 0; i--) {
 				//
-				mcbmPronounication.removeElementAt(i);
+				removeElementAt(mcbmPronounication, i);
 				//
 			} // for
 				//
@@ -352,6 +353,10 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 			//
 	}
 
+	private static int getSize(final ListModel<?> instance) {
+		return instance != null ? instance.getSize() : 0;
+	}
+
 	private static Object getSelectedItem(final ComboBoxModel<?> instance) {
 		return instance != null ? instance.getSelectedItem() : null;
 	}
@@ -359,6 +364,12 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 	private static <E> void addElement(final MutableComboBoxModel<E> instance, final E item) {
 		if (instance != null) {
 			instance.addElement(item);
+		}
+	}
+
+	private static void removeElementAt(final MutableComboBoxModel<?> instance, final int index) {
+		if (instance != null) {
+			instance.removeElementAt(index);
 		}
 	}
 

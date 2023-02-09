@@ -27,6 +27,7 @@ import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JTextField;
+import javax.swing.ListModel;
 import javax.swing.MutableComboBoxModel;
 import javax.swing.text.JTextComponent;
 
@@ -56,7 +57,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 	private static Method METHOD_CAST, METHOD_GET_SRC_MAP, METHOD_GET_IMAGE_SRCS, METHOD_CREATE_MERGED_BUFFERED_IMAGE,
 			METHOD_TEST_AND_APPLY, METHOD_GET_GRAPHICS, METHOD_GET_WIDTH, METHOD_GET_HEIGHT, METHOD_INT_VALUE,
 			METHOD_GET_TEXT, METHOD_TO_URI, METHOD_TO_URL, METHOD_SET_VALUE, METHOD_GET_VALUE, METHOD_ADD_ELEMENT,
-			METHOD_GET_SELECTED_ITEM = null;
+			METHOD_REMOVE_ELEMENT_AT, METHOD_GET_SELECTED_ITEM, METHOD_GET_SIZE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -96,21 +97,42 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		(METHOD_ADD_ELEMENT = clz.getDeclaredMethod("addElement", MutableComboBoxModel.class, Object.class))
 				.setAccessible(true);
 		//
+		(METHOD_REMOVE_ELEMENT_AT = clz.getDeclaredMethod("removeElementAt", MutableComboBoxModel.class, Integer.TYPE))
+				.setAccessible(true);
+		//
 		(METHOD_GET_SELECTED_ITEM = clz.getDeclaredMethod("getSelectedItem", ComboBoxModel.class)).setAccessible(true);
+		//
+		(METHOD_GET_SIZE = clz.getDeclaredMethod("getSize", ListModel.class)).setAccessible(true);
 		//
 	}
 
 	private static class IH implements InvocationHandler {
 
-		private Integer width, height = null;
+		private Integer width, height, size = null;
 
 		private Object value, selectedItem = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
+			if (Objects.equals(method != null ? method.getReturnType() : null, Void.TYPE)) {
+				//
+				return null;
+				//
+			} // if
+				//
 			final String methodName = method != null ? method.getName() : null;
 			//
+			if (proxy instanceof ListModel) {
+				//
+				if (Objects.equals(methodName, "getSize")) {
+					//
+					return size;
+					//
+				} // if
+					//
+			} // if
+				//
 			if (proxy instanceof ComboBoxModel) {
 				//
 				if (Objects.equals(methodName, "getSelectedItem")) {
@@ -138,14 +160,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				if (Objects.equals(methodName, "getValue") || Objects.equals(methodName, "setValue")) {
 					//
 					return value;
-					//
-				} // if
-					//
-			} else if (proxy instanceof MutableComboBoxModel) {
-				//
-				if (Objects.equals(methodName, "addElement")) {
-					//
-					return null;
 					//
 				} // if
 					//
@@ -191,6 +205,8 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 
 	private Entry<?, ?> entry = null;
 
+	private MutableComboBoxModel<?> mutableComboBoxModel = null;
+
 	@BeforeEach
 	void beforeEach() throws ReflectiveOperationException {
 		//
@@ -212,6 +228,8 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		renderedImage = Reflection.newProxy(RenderedImage.class, ih = new IH());
 		//
 		entry = Reflection.newProxy(Entry.class, ih);
+		//
+		mutableComboBoxModel = Reflection.newProxy(MutableComboBoxModel.class, ih);
 		//
 	}
 
@@ -598,13 +616,30 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		//
 		Assertions.assertDoesNotThrow(() -> addElement(null, null));
 		//
-		Assertions.assertDoesNotThrow(() -> addElement(Reflection.newProxy(MutableComboBoxModel.class, ih), null));
+		Assertions.assertDoesNotThrow(() -> addElement(mutableComboBoxModel, null));
 		//
 	}
 
 	private static <E> void addElement(final MutableComboBoxModel<E> instance, final E item) throws Throwable {
 		try {
 			METHOD_ADD_ELEMENT.invoke(null, instance, item);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testRemoveElementAt() {
+		//
+		Assertions.assertDoesNotThrow(() -> removeElementAt(null, 0));
+		//
+		Assertions.assertDoesNotThrow(() -> removeElementAt(mutableComboBoxModel, 0));
+		//
+	}
+
+	private static void removeElementAt(final MutableComboBoxModel<?> instance, final int index) throws Throwable {
+		try {
+			METHOD_REMOVE_ELEMENT_AT.invoke(null, instance, index);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -620,6 +655,31 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 	private static Object getSelectedItem(final ComboBoxModel<?> instance) throws Throwable {
 		try {
 			return METHOD_GET_SELECTED_ITEM.invoke(null, instance);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetSize() throws Throwable {
+		//
+		if (ih != null) {
+			//
+			ih.size = ONE;
+			//
+		} // if
+			//
+		Assertions.assertEquals(ONE, getSize(Reflection.newProxy(ListModel.class, ih)));
+		//
+	}
+
+	private static int getSize(final ListModel<?> instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_SIZE.invoke(null, instance);
+			if (obj instanceof Integer) {
+				return ((Integer) obj).intValue();
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
