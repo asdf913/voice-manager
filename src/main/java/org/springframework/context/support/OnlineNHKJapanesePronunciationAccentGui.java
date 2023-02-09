@@ -264,9 +264,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 						//
 					stream(((pronounication = new Pronounication()).audioUrls = getSrcMap(element)).entrySet())
 							.forEach(x -> {
-								if (x != null) {
-									x.setValue(String.join("", protocolAndHost, x.getValue()));
-								}
+								setValue(x, String.join("", protocolAndHost, getValue(x)));
 							});
 					//
 					pronounication.pitchAccentImage = createMergedBufferedImage(protocolAndHost, getImageSrcs(element));
@@ -310,7 +308,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 						//
 					try {
 						//
-						new Player(is = (new URL(entry.getValue()).openStream())).play();
+						new Player(is = (new URL(getValue(entry)).openStream())).play();
 						//
 					} catch (final JavaLayerException | IOException e) {
 						//
@@ -357,6 +355,16 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 				//
 		} // if
 			//
+	}
+
+	private static <V> void setValue(final Entry<?, V> instance, final V value) {
+		if (instance != null) {
+			instance.setValue(value);
+		}
+	}
+
+	private static <V> V getValue(final Entry<?, V> instance) {
+		return instance != null ? instance.getValue() : null;
 	}
 
 	private static URL toURL(final URI instance) throws MalformedURLException {

@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Map.Entry;
 import java.util.function.Predicate;
 
 import javax.swing.AbstractButton;
@@ -52,7 +53,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 
 	private static Method METHOD_CAST, METHOD_GET_SRC_MAP, METHOD_GET_IMAGE_SRCS, METHOD_CREATE_MERGED_BUFFERED_IMAGE,
 			METHOD_TEST_AND_APPLY, METHOD_GET_GRAPHICS, METHOD_GET_WIDTH, METHOD_GET_HEIGHT, METHOD_INT_VALUE,
-			METHOD_GET_TEXT, METHOD_TO_URI, METHOD_TO_URL = null;
+			METHOD_GET_TEXT, METHOD_TO_URI, METHOD_TO_URL, METHOD_SET_VALUE, METHOD_GET_VALUE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -85,11 +86,17 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		//
 		(METHOD_TO_URL = clz.getDeclaredMethod("toURL", URI.class)).setAccessible(true);
 		//
+		(METHOD_SET_VALUE = clz.getDeclaredMethod("setValue", Entry.class, Object.class)).setAccessible(true);
+		//
+		(METHOD_GET_VALUE = clz.getDeclaredMethod("getValue", Entry.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
 
 		private Integer width, height = null;
+
+		private Object value = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -105,6 +112,14 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				} else if (Objects.equals(methodName, "getHeight")) {
 					//
 					return height;
+					//
+				} // if
+					//
+			} else if (proxy instanceof Entry) {
+				//
+				if (Objects.equals(methodName, "getValue") || Objects.equals(methodName, "setValue")) {
+					//
+					return value;
 					//
 				} // if
 					//
@@ -148,6 +163,8 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 
 	private RenderedImage renderedImage = null;
 
+	private Entry<?, ?> entry = null;
+
 	@BeforeEach
 	void beforeEach() throws ReflectiveOperationException {
 		//
@@ -167,6 +184,8 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		} // if
 			//
 		renderedImage = Reflection.newProxy(RenderedImage.class, ih = new IH());
+		//
+		entry = Reflection.newProxy(Entry.class, ih);
 		//
 	}
 
@@ -509,6 +528,40 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				return (URL) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetValue() {
+		//
+		Assertions.assertDoesNotThrow(() -> setValue(null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> setValue(entry, null));
+		//
+	}
+
+	private static <V> void setValue(final Entry<?, V> instance, final V value) throws Throwable {
+		try {
+			METHOD_SET_VALUE.invoke(null, instance, value);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetValue() throws Throwable {
+		//
+		Assertions.assertNull(getValue(null));
+		//
+		Assertions.assertNull(getValue(entry));
+		//
+	}
+
+	private static <V> V getValue(final Entry<?, V> instance) throws Throwable {
+		try {
+			return (V) METHOD_GET_VALUE.invoke(null, instance);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
