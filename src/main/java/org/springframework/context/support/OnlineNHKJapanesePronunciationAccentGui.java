@@ -391,8 +391,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 		//
 	}
 
-	private static BufferedImage createMergedBufferedImage(final String urlString, final List<String> srcs)
-			throws IOException {
+	private static BufferedImage createMergedBufferedImage(final String urlString, final List<String> srcs) {
 		//
 		final FailableStream<String> fs = srcs != null ? new FailableStream<>(srcs.stream()) : null;
 		//
