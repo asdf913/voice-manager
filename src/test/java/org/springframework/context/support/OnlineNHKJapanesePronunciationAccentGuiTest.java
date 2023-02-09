@@ -22,6 +22,8 @@ import java.util.function.Predicate;
 
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
+import javax.swing.JTextField;
+import javax.swing.text.JTextComponent;
 
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -46,7 +48,8 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 	private static final int ONE = 1;
 
 	private static Method METHOD_CAST, METHOD_GET_SRC_MAP, METHOD_GET_IMAGE_SRCS, METHOD_CREATE_MERGED_BUFFERED_IMAGE,
-			METHOD_TEST_AND_APPLY, METHOD_GET_GRAPHICS, METHOD_GET_WIDTH, METHOD_GET_HEIGHT, METHOD_INT_VALUE = null;
+			METHOD_TEST_AND_APPLY, METHOD_GET_GRAPHICS, METHOD_GET_WIDTH, METHOD_GET_HEIGHT, METHOD_INT_VALUE,
+			METHOD_GET_TEXT = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -72,6 +75,8 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		(METHOD_GET_HEIGHT = clz.getDeclaredMethod("getHeight", RenderedImage.class)).setAccessible(true);
 		//
 		(METHOD_INT_VALUE = clz.getDeclaredMethod("intValue", Number.class, Integer.TYPE)).setAccessible(true);
+		//
+		(METHOD_GET_TEXT = clz.getDeclaredMethod("getText", JTextComponent.class)).setAccessible(true);
 		//
 	}
 
@@ -437,6 +442,29 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			final Object obj = METHOD_INT_VALUE.invoke(null, instance, defaultValue);
 			if (obj instanceof Integer) {
 				return ((Integer) obj).intValue();
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetText() throws Throwable {
+		//
+		Assertions.assertNull(getText(null));
+		//
+		Assertions.assertEquals(EMPTY, getText(new JTextField()));
+		//
+	}
+
+	private static String getText(final JTextComponent instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_TEXT.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

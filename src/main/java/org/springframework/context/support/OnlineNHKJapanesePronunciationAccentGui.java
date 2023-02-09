@@ -232,7 +232,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 			//
 			if (uriBuilder != null) {
 				//
-				uriBuilder.relative(tfText != null ? tfText.getText() : null);
+				uriBuilder.relative(getText(tfText));
 				//
 			} // if
 				//
@@ -355,6 +355,10 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 				//
 		} // if
 			//
+	}
+
+	private static String getText(final JTextComponent instance) {
+		return instance != null ? instance.getText() : null;
 	}
 
 	private static Object getSource(final EventObject instance) {
