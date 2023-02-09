@@ -240,6 +240,17 @@
 			value="${org.springframework.context.support.JouYouKanjiGui.ecssVersion}" />
 	</bean>
 
+	<!-- 広辞苑無料検索 NHK日本語発音アクセント辞典 -->
+	<!-- https://sakura-paris.org/dict/NHK日本語発音アクセント辞典/ -->
+	<bean
+		class="org.springframework.context.support.OnlineNHKJapanesePronunciationAccentGui">
+		<property name="layout" ref="MigLayout" />
+		<property name="defaultCloseOperation"
+			value="#{T(javax.swing.WindowConstants).EXIT_ON_CLOSE}" />
+		<property name="url"
+			value="${org.springframework.context.support.OnlineNHKJapanesePronunciationAccentGui.url}" />
+	</bean>
+
 	<bean id="DataSource" class="org.h2.jdbcx.JdbcConnectionPool"
 		factory-method="create">
 		<constructor-arg index="0"
