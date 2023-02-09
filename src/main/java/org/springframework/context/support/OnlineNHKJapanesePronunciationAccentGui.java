@@ -292,7 +292,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 				//
 				for (final Entry<String, String> entry : entrySet) {
 					//
-					if (entry == null || !Objects.equals("audio/wav", entry.getKey())) {
+					if (!Objects.equals("audio/wav", getKey(entry))) {
 						//
 						continue;
 						//
@@ -374,6 +374,10 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 		if (instance != null) {
 			instance.removeElementAt(index);
 		}
+	}
+
+	private static <K> K getKey(final Entry<K, ?> instance) {
+		return instance != null ? instance.getKey() : null;
 	}
 
 	private static <V> void setValue(final Entry<?, V> instance, final V value) {

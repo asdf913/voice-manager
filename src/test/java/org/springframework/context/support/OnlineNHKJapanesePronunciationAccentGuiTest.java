@@ -58,9 +58,9 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 
 	private static Method METHOD_CAST, METHOD_GET_SRC_MAP, METHOD_GET_IMAGE_SRCS, METHOD_CREATE_MERGED_BUFFERED_IMAGE,
 			METHOD_TEST_AND_APPLY, METHOD_GET_GRAPHICS, METHOD_GET_WIDTH, METHOD_GET_HEIGHT, METHOD_INT_VALUE,
-			METHOD_GET_TEXT, METHOD_RELATIVE, METHOD_TO_URI, METHOD_TO_URL, METHOD_SET_VALUE, METHOD_GET_VALUE,
-			METHOD_ADD_ELEMENT, METHOD_REMOVE_ELEMENT_AT, METHOD_GET_SELECTED_ITEM, METHOD_GET_SIZE, METHOD_ENTRY_SET,
-			METHOD_ITERATOR = null;
+			METHOD_GET_TEXT, METHOD_RELATIVE, METHOD_TO_URI, METHOD_TO_URL, METHOD_GET_KEY, METHOD_SET_VALUE,
+			METHOD_GET_VALUE, METHOD_ADD_ELEMENT, METHOD_REMOVE_ELEMENT_AT, METHOD_GET_SELECTED_ITEM, METHOD_GET_SIZE,
+			METHOD_ENTRY_SET, METHOD_ITERATOR = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -95,6 +95,8 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		//
 		(METHOD_TO_URL = clz.getDeclaredMethod("toURL", URI.class)).setAccessible(true);
 		//
+		(METHOD_GET_KEY = clz.getDeclaredMethod("getKey", Entry.class)).setAccessible(true);
+		//
 		(METHOD_SET_VALUE = clz.getDeclaredMethod("setValue", Entry.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_GET_VALUE = clz.getDeclaredMethod("getValue", Entry.class)).setAccessible(true);
@@ -119,7 +121,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 
 		private Integer width, height, size = null;
 
-		private Object value, selectedItem = null;
+		private Object key, value, selectedItem = null;
 
 		private Set<Entry<?, ?>> entrySet = null;
 
@@ -181,6 +183,10 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				if (Objects.equals(methodName, "getValue") || Objects.equals(methodName, "setValue")) {
 					//
 					return value;
+					//
+				} else if (Objects.equals(methodName, "getKey")) {
+					//
+					return key;
 					//
 				} // if
 					//
@@ -624,6 +630,23 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				return (URL) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetKey() throws Throwable {
+		//
+		Assertions.assertNull(getKey(null));
+		//
+		Assertions.assertNull(getKey(entry));
+		//
+	}
+
+	private static <K> K getKey(final Entry<K, ?> instance) throws Throwable {
+		try {
+			return (K) METHOD_GET_KEY.invoke(null, instance);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
