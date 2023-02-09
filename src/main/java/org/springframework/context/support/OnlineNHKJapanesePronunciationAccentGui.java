@@ -284,8 +284,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 				//
 		} else if (Objects.equals(source, btnPlayAudio)) {
 			//
-			final Pronounication pronounication = cast(Pronounication.class,
-					mcbmPronounication != null ? mcbmPronounication.getSelectedItem() : null);
+			final Pronounication pronounication = cast(Pronounication.class, getSelectedItem(mcbmPronounication));
 			//
 			final Map<String, String> audioUrls = pronounication != null ? pronounication.audioUrls : null;
 			//
