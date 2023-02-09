@@ -65,7 +65,6 @@ import org.springframework.beans.factory.InitializingBean;
 import com.github.hal4j.uritemplate.URIBuilder;
 import com.google.common.reflect.Reflection;
 
-import domain.JlptVocabulary.Note;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
 import net.miginfocom.swing.MigLayout;
@@ -465,7 +464,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 						//
 						// max height
 						//
-						, stream(bis).mapToInt(x -> x != null ? x.getHeight() : 0).reduce(Integer::max).orElse(0)
+						, stream(bis).mapToInt(x -> intValue(getHeight(x), 0)).reduce(Integer::max).orElse(0)
 						//
 						, BufferedImage.TYPE_INT_ARGB);
 				//
@@ -491,6 +490,10 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 
 	private static Integer getWidth(final RenderedImage instance) {
 		return instance != null ? Integer.valueOf(instance.getWidth()) : null;
+	}
+
+	private static Integer getHeight(final RenderedImage instance) {
+		return instance != null ? Integer.valueOf(instance.getHeight()) : null;
 	}
 
 	private static int intValue(final Number instance, final int defaultValue) {

@@ -46,7 +46,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 	private static final int ONE = 1;
 
 	private static Method METHOD_CAST, METHOD_GET_SRC_MAP, METHOD_GET_IMAGE_SRCS, METHOD_CREATE_MERGED_BUFFERED_IMAGE,
-			METHOD_TEST_AND_APPLY, METHOD_GET_GRAPHICS, METHOD_GET_WIDTH, METHOD_INT_VALUE = null;
+			METHOD_TEST_AND_APPLY, METHOD_GET_GRAPHICS, METHOD_GET_WIDTH, METHOD_GET_HEIGHT, METHOD_INT_VALUE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -69,13 +69,15 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		//
 		(METHOD_GET_WIDTH = clz.getDeclaredMethod("getWidth", RenderedImage.class)).setAccessible(true);
 		//
+		(METHOD_GET_HEIGHT = clz.getDeclaredMethod("getHeight", RenderedImage.class)).setAccessible(true);
+		//
 		(METHOD_INT_VALUE = clz.getDeclaredMethod("intValue", Number.class, Integer.TYPE)).setAccessible(true);
 		//
 	}
 
 	private static class IH implements InvocationHandler {
 
-		private Integer width = null;
+		private Integer width, height = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -87,6 +89,10 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				if (Objects.equals(methodName, "getWidth")) {
 					//
 					return width;
+					//
+				} else if (Objects.equals(methodName, "getHeight")) {
+					//
+					return height;
 					//
 				} // if
 					//
@@ -126,6 +132,10 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 
 	private OnlineNHKJapanesePronunciationAccentGui instance = null;
 
+	private IH ih = null;
+
+	private RenderedImage renderedImage = null;
+
 	@BeforeEach
 	void beforeEach() throws ReflectiveOperationException {
 		//
@@ -144,6 +154,8 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			//
 		} // if
 			//
+		renderedImage = Reflection.newProxy(RenderedImage.class, ih = new IH());
+		//
 	}
 
 	@Test
@@ -356,15 +368,48 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		//
 		Assertions.assertNull(getWidth(null));
 		//
-		final IH ih = new IH();
-		//
-		Assertions.assertEquals(ih.width = 0, getWidth(Reflection.newProxy(RenderedImage.class, ih)));
+		if (ih != null) {
+			//
+			ih.width = ONE;
+			//
+		} // if
+			//
+		Assertions.assertEquals(ONE, getWidth(renderedImage));
 		//
 	}
 
 	private static Integer getWidth(final RenderedImage instance) throws Throwable {
 		try {
 			final Object obj = METHOD_GET_WIDTH.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Integer) {
+				return (Integer) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetHeight() throws Throwable {
+		//
+		Assertions.assertNull(getHeight(null));
+		//
+		if (ih != null) {
+			//
+			ih.height = ONE;
+			//
+		} // if
+			//
+		Assertions.assertEquals(ONE, getHeight(renderedImage));
+		//
+	}
+
+	private static Integer getHeight(final RenderedImage instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_HEIGHT.invoke(null, instance);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Integer) {
