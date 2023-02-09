@@ -263,8 +263,8 @@ class VoiceManagerTest {
 			METHOD_GET_CHILD_NODES, METHOD_GET_NAMED_ITEM, METHOD_GET_TEXT_CONTENT, METHOD_GET_NAME_FILE,
 			METHOD_GET_NAME_CLASS, METHOD_GET_NAME_PACKAGE, METHOD_GET_PASS_WORD, METHOD_GET_SUPPLIER,
 			METHOD_GET_LOOKUP, METHOD_GET_LIST, METHOD_GET_MAP, METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK,
-			METHOD_CREATE_DRAWING_PATRIARCH, METHOD_GET_CREATION_HELPER, METHOD_CREATE_CELL_COMMENT,
-			METHOD_CREATE_CLIENT_ANCHOR, METHOD_CREATE_RICH_TEXT_STRING, METHOD_SET_CELL_COMMENT, METHOD_SET_AUTHOR,
+			METHOD_CREATE_DRAWING_PATRIARCH, METHOD_CREATE_CELL_COMMENT, METHOD_CREATE_CLIENT_ANCHOR,
+			METHOD_CREATE_RICH_TEXT_STRING, METHOD_SET_CELL_COMMENT, METHOD_SET_AUTHOR,
 			METHOD_TEST_AND_ACCEPT_PREDICATE, METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_FIND_FIELDS_BY_VALUE,
 			METHOD_GET_DECLARED_FIELDS, METHOD_GET_DECLARING_CLASS, METHOD_GET_PACKAGE, METHOD_BROWSE, METHOD_TO_URI,
 			METHOD_STOP, METHOD_ELAPSED, METHOD_GET_DECLARED_CLASSES, METHOD_GET_DLL_PATH, METHOD_GET_RATE0,
@@ -616,8 +616,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_CREATE_DRAWING_PATRIARCH = clz.getDeclaredMethod("createDrawingPatriarch", Sheet.class))
 				.setAccessible(true);
-		//
-		(METHOD_GET_CREATION_HELPER = clz.getDeclaredMethod("getCreationHelper", Workbook.class)).setAccessible(true);
 		//
 		(METHOD_CREATE_CELL_COMMENT = clz.getDeclaredMethod("createCellComment", Drawing.class, ClientAnchor.class))
 				.setAccessible(true);
@@ -5625,8 +5623,8 @@ class VoiceManagerTest {
 	@Test
 	void testSetCellComment() {
 		//
-		Assertions.assertDoesNotThrow(() -> setCellComment(null,
-				createCellComment(createDrawingPatriarch(null), createClientAnchor(getCreationHelper(null)))));
+		Assertions.assertDoesNotThrow(
+				() -> setCellComment(null, createCellComment(createDrawingPatriarch(null), createClientAnchor(null))));
 		//
 	}
 
@@ -5637,20 +5635,6 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof Drawing) {
 				return (Drawing) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	private static CreationHelper getCreationHelper(final Workbook instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_CREATION_HELPER.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof CreationHelper) {
-				return (CreationHelper) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

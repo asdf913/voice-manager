@@ -8455,7 +8455,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 						ObjectMap.setObject(objectMap, FormulaEvaluator.class,
 								formulaEvaluator = getIfNull(formulaEvaluator,
-										() -> createFormulaEvaluator(getCreationHelper(workbook))));
+										() -> createFormulaEvaluator(WorkbookUtil.getCreationHelper(workbook))));
 						//
 						ifElse((value = getValueFromCell(objectMap)) == null, () -> {
 							throw new IllegalStateException();
@@ -10904,7 +10904,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			if (creationHelper == null) {
 				//
-				creationHelper = getCreationHelper(workbook);
+				creationHelper = WorkbookUtil.getCreationHelper(workbook);
 				//
 			} // if
 				//
@@ -11080,10 +11080,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static Drawing<?> createDrawingPatriarch(final Sheet instance) {
 		return instance != null ? instance.createDrawingPatriarch() : null;
-	}
-
-	private static CreationHelper getCreationHelper(final Workbook instance) {
-		return instance != null ? instance.getCreationHelper() : null;
 	}
 
 	private static Comment createCellComment(final Drawing<?> instance, final ClientAnchor anchor) {

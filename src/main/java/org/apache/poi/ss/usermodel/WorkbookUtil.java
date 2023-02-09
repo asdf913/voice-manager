@@ -22,6 +22,10 @@ public interface WorkbookUtil {
 		return instance != null ? instance.getSheetAt(index) : null;
 	}
 
+	static CreationHelper getCreationHelper(final Workbook instance) {
+		return instance != null ? instance.getCreationHelper() : null;
+	}
+
 	static void write(final Workbook instance, final OutputStream stream) throws IOException {
 		//
 		if (instance != null && (stream != null || Proxy.isProxyClass(getClass(instance)))) {

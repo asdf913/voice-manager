@@ -97,7 +97,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 				try (final InputStream is = InputStreamSourceUtil.getInputStream(resource);
 						final Workbook wb = testAndApply(Objects::nonNull, is, WorkbookFactory::create, null)) {
 					//
-					final CreationHelper creationHelper = getCreationHelper(wb);
+					final CreationHelper creationHelper = WorkbookUtil.getCreationHelper(wb);
 					//
 					final IValue0<List<JlptVocabulary>> list = getJlptVocabularies(
 							wb != null && wb.getNumberOfSheets() == 1 ? WorkbookUtil.getSheetAt(wb, 0) : null,
@@ -117,10 +117,6 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 			//
 		return getObjectByUrls(urls);
 		//
-	}
-
-	private static CreationHelper getCreationHelper(final Workbook instance) {
-		return instance != null ? instance.getCreationHelper() : null;
 	}
 
 	private static IValue0<List<JlptVocabulary>> getJlptVocabularies(final Sheet sheet,

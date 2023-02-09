@@ -54,6 +54,13 @@ class WorkbookUtilTest {
 	}
 
 	@Test
+	void testGetCreationHelper() {
+		//
+		Assertions.assertNull(WorkbookUtil.getCreationHelper(null));
+		//
+	}
+
+	@Test
 	void testWrite() {
 		//
 		Assertions.assertDoesNotThrow(() -> WorkbookUtil.write(null, null));
