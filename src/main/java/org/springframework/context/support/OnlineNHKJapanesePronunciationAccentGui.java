@@ -10,6 +10,7 @@ import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationHandler;
@@ -446,7 +447,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 						//
 						// total width
 						//
-						stream(bis).mapToInt(x -> x != null ? x.getWidth() : 0).reduce(Integer::sum).orElse(0)
+						stream(bis).mapToInt(x -> intValue(getWidth(x), 0)).reduce(Integer::sum).orElse(0)
 						//
 						// max height
 						//
@@ -462,7 +463,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 				//
 			} // if
 				//
-			graphics.drawImage(bi, position != null ? position.getAndAdd(bi.getWidth()) : 0, 0, null);
+			graphics.drawImage(bi, position != null ? position.getAndAdd(intValue(getWidth(bi), 0)) : 0, 0, null);
 			//
 		} // for
 			//
@@ -472,6 +473,14 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 
 	private static Graphics getGraphics(final Image instance) {
 		return instance != null ? instance.getGraphics() : null;
+	}
+
+	private static Integer getWidth(final RenderedImage instance) {
+		return instance != null ? Integer.valueOf(instance.getWidth()) : null;
+	}
+
+	private static int intValue(final Number instance, final int defaultValue) {
+		return instance != null ? instance.intValue() : defaultValue;
 	}
 
 }

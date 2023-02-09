@@ -8,6 +8,7 @@ import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
 import java.io.UncheckedIOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
@@ -42,8 +43,10 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 
 	private static final String EMPTY = "";
 
+	private static final int ONE = 1;
+
 	private static Method METHOD_CAST, METHOD_GET_SRC_MAP, METHOD_GET_IMAGE_SRCS, METHOD_CREATE_MERGED_BUFFERED_IMAGE,
-			METHOD_TEST_AND_APPLY, METHOD_GET_GRAPHICS = null;
+			METHOD_TEST_AND_APPLY, METHOD_GET_GRAPHICS, METHOD_GET_WIDTH, METHOD_INT_VALUE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -64,6 +67,35 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		//
 		(METHOD_GET_GRAPHICS = clz.getDeclaredMethod("getGraphics", Image.class)).setAccessible(true);
 		//
+		(METHOD_GET_WIDTH = clz.getDeclaredMethod("getWidth", RenderedImage.class)).setAccessible(true);
+		//
+		(METHOD_INT_VALUE = clz.getDeclaredMethod("intValue", Number.class, Integer.TYPE)).setAccessible(true);
+		//
+	}
+
+	private static class IH implements InvocationHandler {
+
+		private Integer width = null;
+
+		@Override
+		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+			//
+			final String methodName = method != null ? method.getName() : null;
+			//
+			if (proxy instanceof RenderedImage) {
+				//
+				if (Objects.equals(methodName, "getWidth")) {
+					//
+					return width;
+					//
+				} // if
+					//
+			} // if
+				//
+			throw new Throwable(methodName);
+			//
+		}
+
 	}
 
 	private static class MH implements MethodHandler {
@@ -312,6 +344,54 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				return null;
 			} else if (obj instanceof Graphics) {
 				return (Graphics) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetWidth() throws Throwable {
+		//
+		Assertions.assertNull(getWidth(null));
+		//
+		final IH ih = new IH();
+		//
+		Assertions.assertEquals(ih.width = 0, getWidth(Reflection.newProxy(RenderedImage.class, ih)));
+		//
+	}
+
+	private static Integer getWidth(final RenderedImage instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_WIDTH.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Integer) {
+				return (Integer) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testIntValue() throws Throwable {
+		//
+		Assertions.assertEquals(ONE, intValue(null, ONE));
+		//
+		final int zero = 0;
+		//
+		Assertions.assertEquals(zero, intValue(Integer.valueOf(zero), ONE));
+		//
+	}
+
+	private static int intValue(final Number instance, final int defaultValue) throws Throwable {
+		try {
+			final Object obj = METHOD_INT_VALUE.invoke(null, instance, defaultValue);
+			if (obj instanceof Integer) {
+				return ((Integer) obj).intValue();
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
