@@ -38,6 +38,7 @@ import java.util.stream.Stream;
 
 import javax.imageio.ImageIO;
 import javax.swing.AbstractButton;
+import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -324,8 +325,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 				//
 		} else if (Objects.equals(source, btnCopyPitchAccentImage)) {
 			//
-			final Pronounication pronounication = cast(Pronounication.class,
-					mcbmPronounication != null ? mcbmPronounication.getSelectedItem() : null);
+			final Pronounication pronounication = cast(Pronounication.class, getSelectedItem(mcbmPronounication));
 			//
 			final BufferedImage pitchAccentImage = pronounication != null ? pronounication.pitchAccentImage : null;
 			//
@@ -351,6 +351,10 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 				//
 		} // if
 			//
+	}
+
+	private static Object getSelectedItem(final ComboBoxModel<?> instance) {
+		return instance != null ? instance.getSelectedItem() : null;
 	}
 
 	private static <E> void addElement(final MutableComboBoxModel<E> instance, final E item) {

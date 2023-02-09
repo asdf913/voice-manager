@@ -24,6 +24,7 @@ import java.util.Map.Entry;
 import java.util.function.Predicate;
 
 import javax.swing.AbstractButton;
+import javax.swing.ComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.MutableComboBoxModel;
@@ -54,8 +55,8 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 
 	private static Method METHOD_CAST, METHOD_GET_SRC_MAP, METHOD_GET_IMAGE_SRCS, METHOD_CREATE_MERGED_BUFFERED_IMAGE,
 			METHOD_TEST_AND_APPLY, METHOD_GET_GRAPHICS, METHOD_GET_WIDTH, METHOD_GET_HEIGHT, METHOD_INT_VALUE,
-			METHOD_GET_TEXT, METHOD_TO_URI, METHOD_TO_URL, METHOD_SET_VALUE, METHOD_GET_VALUE,
-			METHOD_ADD_ELEMENT = null;
+			METHOD_GET_TEXT, METHOD_TO_URI, METHOD_TO_URL, METHOD_SET_VALUE, METHOD_GET_VALUE, METHOD_ADD_ELEMENT,
+			METHOD_GET_SELECTED_ITEM = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -95,19 +96,31 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		(METHOD_ADD_ELEMENT = clz.getDeclaredMethod("addElement", MutableComboBoxModel.class, Object.class))
 				.setAccessible(true);
 		//
+		(METHOD_GET_SELECTED_ITEM = clz.getDeclaredMethod("getSelectedItem", ComboBoxModel.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
 
 		private Integer width, height = null;
 
-		private Object value = null;
+		private Object value, selectedItem = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
 			final String methodName = method != null ? method.getName() : null;
 			//
+			if (proxy instanceof ComboBoxModel) {
+				//
+				if (Objects.equals(methodName, "getSelectedItem")) {
+					//
+					return selectedItem;
+					//
+				} // if
+					//
+			} // if
+				//
 			if (proxy instanceof RenderedImage) {
 				//
 				if (Objects.equals(methodName, "getWidth")) {
@@ -592,6 +605,21 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 	private static <E> void addElement(final MutableComboBoxModel<E> instance, final E item) throws Throwable {
 		try {
 			METHOD_ADD_ELEMENT.invoke(null, instance, item);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetSelectedItem() throws Throwable {
+		//
+		Assertions.assertNull(getSelectedItem(Reflection.newProxy(ComboBoxModel.class, ih)));
+		//
+	}
+
+	private static Object getSelectedItem(final ComboBoxModel<?> instance) throws Throwable {
+		try {
+			return METHOD_GET_SELECTED_ITEM.invoke(null, instance);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
