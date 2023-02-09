@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
@@ -326,20 +327,15 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 			//
 			if (pitchAccentImage != null) {
 				//
-				final Clipboard clipboard = getSystemClipboard(Toolkit.getDefaultToolkit());
-				//
 				final IH ih = new IH();
 				//
 				ih.transferDataFlavors = new DataFlavor[] { DataFlavor.imageFlavor };
 				//
 				ih.transferData = pitchAccentImage;
 				//
-				if (clipboard != null) {
-					//
-					clipboard.setContents(Reflection.newProxy(Transferable.class, ih), null);
-					//
-				} // if
-					//
+				setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
+						Reflection.newProxy(Transferable.class, ih), null);
+				//
 			} // if
 				//
 		} // if
@@ -348,6 +344,12 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 
 	private static Clipboard getSystemClipboard(final Toolkit instance) {
 		return instance != null ? instance.getSystemClipboard() : null;
+	}
+
+	private static void setContents(final Clipboard instance, final Transferable contents, final ClipboardOwner owner) {
+		if (instance != null) {
+			instance.setContents(contents, owner);
+		}
 	}
 
 	private static <K, V> Set<Entry<K, V>> entrySet(final Map<K, V> instance) {

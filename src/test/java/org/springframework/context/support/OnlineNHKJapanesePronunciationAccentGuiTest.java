@@ -5,6 +5,7 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
@@ -62,7 +63,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			METHOD_TEST_AND_APPLY, METHOD_GET_GRAPHICS, METHOD_GET_WIDTH, METHOD_GET_HEIGHT, METHOD_INT_VALUE,
 			METHOD_GET_TEXT, METHOD_RELATIVE, METHOD_TO_URI, METHOD_TO_URL, METHOD_GET_KEY, METHOD_SET_VALUE,
 			METHOD_GET_VALUE, METHOD_ADD_ELEMENT, METHOD_REMOVE_ELEMENT_AT, METHOD_GET_SELECTED_ITEM, METHOD_GET_SIZE,
-			METHOD_ENTRY_SET, METHOD_ITERATOR, METHOD_GET_SYSTEM_CLIPBOARD = null;
+			METHOD_ENTRY_SET, METHOD_ITERATOR, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -117,7 +118,10 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		//
 		(METHOD_ITERATOR = clz.getDeclaredMethod("iterator", Iterable.class)).setAccessible(true);
 		//
-		(METHOD_GET_SYSTEM_CLIPBOARD = clz.getDeclaredMethod("getSystemClipboard", Toolkit.class)).setAccessible(true);
+		(METHOD_GET_SYSTEM_CLIP_BOARD = clz.getDeclaredMethod("getSystemClipboard", Toolkit.class)).setAccessible(true);
+		//
+		(METHOD_SET_CONTENTS = clz.getDeclaredMethod("setContents", Clipboard.class, Transferable.class,
+				ClipboardOwner.class)).setAccessible(true);
 		//
 	}
 
@@ -837,13 +841,31 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 
 	private static Clipboard getSystemClipboard(final Toolkit instance) throws Throwable {
 		try {
-			final Object obj = METHOD_GET_SYSTEM_CLIPBOARD.invoke(null, instance);
+			final Object obj = METHOD_GET_SYSTEM_CLIP_BOARD.invoke(null, instance);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Clipboard) {
 				return (Clipboard) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetContents() throws Throwable {
+		//
+		Assertions.assertDoesNotThrow(() -> setContents(null, null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> setContents(new Clipboard(null), null, null));
+		//
+	}
+
+	private static void setContents(final Clipboard instance, final Transferable contents, final ClipboardOwner owner)
+			throws Throwable {
+		try {
+			METHOD_SET_CONTENTS.invoke(null, instance, contents, owner);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
