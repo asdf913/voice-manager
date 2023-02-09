@@ -3,6 +3,8 @@ package org.springframework.context.support;
 import java.awt.Graphics;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
@@ -60,7 +62,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			METHOD_TEST_AND_APPLY, METHOD_GET_GRAPHICS, METHOD_GET_WIDTH, METHOD_GET_HEIGHT, METHOD_INT_VALUE,
 			METHOD_GET_TEXT, METHOD_RELATIVE, METHOD_TO_URI, METHOD_TO_URL, METHOD_GET_KEY, METHOD_SET_VALUE,
 			METHOD_GET_VALUE, METHOD_ADD_ELEMENT, METHOD_REMOVE_ELEMENT_AT, METHOD_GET_SELECTED_ITEM, METHOD_GET_SIZE,
-			METHOD_ENTRY_SET, METHOD_ITERATOR = null;
+			METHOD_ENTRY_SET, METHOD_ITERATOR, METHOD_GET_SYSTEM_CLIPBOARD = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -114,6 +116,8 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		(METHOD_ENTRY_SET = clz.getDeclaredMethod("entrySet", Map.class)).setAccessible(true);
 		//
 		(METHOD_ITERATOR = clz.getDeclaredMethod("iterator", Iterable.class)).setAccessible(true);
+		//
+		(METHOD_GET_SYSTEM_CLIPBOARD = clz.getDeclaredMethod("getSystemClipboard", Toolkit.class)).setAccessible(true);
 		//
 	}
 
@@ -210,6 +214,8 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 
 		private Graphics graphics = null;
 
+		private Clipboard systemClipboard = null;
+
 		@Override
 		public Object invoke(final Object self, final Method thisMethod, final Method proceed, final Object[] args)
 				throws Throwable {
@@ -224,6 +230,14 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 					//
 				} // if
 					//
+			} else if (self instanceof Toolkit) {
+				//
+				if (Objects.equals(methodName, "getSystemClipboard")) {
+					//
+					return systemClipboard;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(methodName);
@@ -235,6 +249,8 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 	private OnlineNHKJapanesePronunciationAccentGui instance = null;
 
 	private IH ih = null;
+
+	private MH mh = null;
 
 	private RenderedImage renderedImage = null;
 
@@ -260,6 +276,8 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			//
 		} // if
 			//
+		mh = new MH();
+		//
 		renderedImage = Reflection.newProxy(RenderedImage.class, ih = new IH());
 		//
 		entry = Reflection.newProxy(Entry.class, ih);
@@ -439,9 +457,15 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		//
 		Assertions.assertNull(getGraphics(null));
 		//
+		Assertions.assertNull(getGraphics(createProxy(Image.class, mh)));
+		//
+	}
+
+	private static <T> T createProxy(final Class<T> superClass, final MethodHandler mh) throws Throwable {
+		//
 		final ProxyFactory proxyFactory = new ProxyFactory();
 		//
-		proxyFactory.setSuperclass(Image.class);
+		proxyFactory.setSuperclass(superClass);
 		//
 		final Class<?> clz = proxyFactory.createClass();
 		//
@@ -451,11 +475,11 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		//
 		if (instance instanceof ProxyObject) {
 			//
-			((ProxyObject) instance).setHandler(new MH());
+			((ProxyObject) instance).setHandler(mh);
 			//
 		} // if
 			//
-		Assertions.assertNull(getGraphics(cast(Image.class, instance)));
+		return (T) cast(clz, instance);
 		//
 	}
 
@@ -795,6 +819,29 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				return null;
 			} else if (obj instanceof Iterator) {
 				return (Iterator) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetSystemClipboard() throws Throwable {
+		//
+		Assertions.assertNull(getSystemClipboard(null));
+		//
+		Assertions.assertNull(getSystemClipboard(createProxy(Toolkit.class, mh)));
+		//
+	}
+
+	private static Clipboard getSystemClipboard(final Toolkit instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_SYSTEM_CLIPBOARD.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Clipboard) {
+				return (Clipboard) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

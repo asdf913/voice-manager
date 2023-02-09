@@ -326,9 +326,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 			//
 			if (pitchAccentImage != null) {
 				//
-				final Toolkit toolkit = Toolkit.getDefaultToolkit();
-				//
-				final Clipboard clipboard = toolkit != null ? toolkit.getSystemClipboard() : null;
+				final Clipboard clipboard = getSystemClipboard(Toolkit.getDefaultToolkit());
 				//
 				final IH ih = new IH();
 				//
@@ -346,6 +344,10 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 				//
 		} // if
 			//
+	}
+
+	private static Clipboard getSystemClipboard(final Toolkit instance) {
+		return instance != null ? instance.getSystemClipboard() : null;
 	}
 
 	private static <K, V> Set<Entry<K, V>> entrySet(final Map<K, V> instance) {
