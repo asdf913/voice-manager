@@ -16,6 +16,7 @@ import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +24,10 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.imageio.ImageIO;
 import javax.swing.AbstractButton;
@@ -41,6 +45,8 @@ import javax.swing.text.JTextComponent;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -207,7 +213,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 				//
 			} // for
 				//
-			final URIBuilder uriBuilder = url != null ? URIBuilder.basedOn(url) : null;
+			final URIBuilder uriBuilder = testAndApply(Objects::nonNull, url, URIBuilder::basedOn, null);
 			//
 			if (uriBuilder != null) {
 				//
@@ -223,7 +229,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 				//
 				final String protocolAndHost = u != null ? String.join("://", u.getProtocol(), u.getHost()) : null;
 				//
-				final Document document = u != null ? Jsoup.parse(u, 0) : null;
+				final Document document = testAndApply(Objects::nonNull, u, x -> Jsoup.parse(x, 0), null);
 				//
 				final Elements elements = ElementUtil.select(document, "audio[title='発音図：']");
 				//
@@ -239,7 +245,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 						//
 					} // if
 						//
-					((pronounication = new Pronounication()).audioUrls = getSrcMap(element)).entrySet().stream()
+					stream(((pronounication = new Pronounication()).audioUrls = getSrcMap(element)).entrySet())
 							.forEach(x -> {
 								if (x != null) {
 									x.setValue(String.join("", protocolAndHost, x.getValue()));
@@ -336,6 +342,20 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 			//
 	}
 
+	private static <E> Stream<E> stream(final Collection<E> instance) {
+		return instance != null ? instance.stream() : null;
+	}
+
+	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse) throws E {
+		return test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
+				: FailableFunctionUtil.apply(functionFalse, value);
+	}
+
+	private static final <T> boolean test(final Predicate<T> instance, final T value) {
+		return instance != null && instance.test(value);
+	}
+
 	private static <T> T cast(final Class<T> clz, final Object instance) {
 		return clz != null && clz.isInstance(instance) ? clz.cast(instance) : null;
 	}
@@ -393,9 +413,9 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 
 	private static BufferedImage createMergedBufferedImage(final String urlString, final List<String> srcs) {
 		//
-		final FailableStream<String> fs = srcs != null ? new FailableStream<>(srcs.stream()) : null;
+		final FailableStream<String> fs = new FailableStream<>(stream(srcs));
 		//
-		final List<BufferedImage> bis = fs != null
+		final List<BufferedImage> bis = fs != null && fs.stream() != null
 				? fs.map(x -> ImageIO.read(new URL(String.join("/", urlString, x)))).collect(Collectors.toList())
 				: null;
 		//
@@ -421,11 +441,11 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 						//
 						// total width
 						//
-						bis.stream().mapToInt(x -> x != null ? x.getWidth() : 0).reduce(Integer::sum).orElse(0)
+						stream(bis).mapToInt(x -> x != null ? x.getWidth() : 0).reduce(Integer::sum).orElse(0)
 						//
 						// max height
 						//
-						, bis.stream().mapToInt(x -> x != null ? x.getHeight() : 0).reduce(Integer::max).orElse(0)
+						, stream(bis).mapToInt(x -> x != null ? x.getHeight() : 0).reduce(Integer::max).orElse(0)
 						//
 						, BufferedImage.TYPE_INT_ARGB);
 				//
