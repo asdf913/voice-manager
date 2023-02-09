@@ -259,10 +259,12 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		//
 		Class<?> type = null;
 		//
+		CellType cellType = null;
+		//
 		for (int i = 0; row != null && i < row.getPhysicalNumberOfCells(); i++) {
 			//
 			if ((f = MapUtils.getObject(fieldMap, Integer.valueOf(i))) == null || (cell = row.getCell(i)) == null
-					|| Objects.equals(CellType.BLANK, cell.getCellType())) {
+					|| Objects.equals(CellType.BLANK, cellType = getCellType(cell))) {
 				//
 				continue;
 				//
@@ -283,8 +285,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 					//
 				} else {
 					//
-					throw new UnsupportedOperationException(
-							String.format("type=%1$s,cellType=%2$s", type, cell != null ? cell.getCellType() : null));
+					throw new UnsupportedOperationException(String.format("type=%1$s,cellType=%2$s", type, cellType));
 					//
 				} // if
 					//
@@ -296,8 +297,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 					//
 				} else {
 					//
-					throw new UnsupportedOperationException(
-							String.format("type=%1$s,cellType=%2$s", type, cell != null ? cell.getCellType() : null));
+					throw new UnsupportedOperationException(String.format("type=%1$s,cellType=%2$s", type, cellType));
 					//
 				} // if
 					//
@@ -313,9 +313,13 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		//
 	}
 
+	private static CellType getCellType(final Cell instance) {
+		return instance != null ? instance.getCellType() : null;
+	}
+
 	private static IValue0<Integer> getIntegerValue(final Cell cell, final FormulaEvaluator formulaEvaluator) {
 		//
-		final CellType cellType = cell != null ? cell.getCellType() : null;
+		final CellType cellType = getCellType(cell);
 		//
 		IValue0<Integer> result = null;
 		//
@@ -362,7 +366,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 
 	private static IValue0<String> getStringValue(final Cell cell, final FormulaEvaluator formulaEvaluator) {
 		//
-		final CellType cellType = cell != null ? cell.getCellType() : null;
+		final CellType cellType = getCellType(cell);
 		//
 		IValue0<String> result = null;
 		//
