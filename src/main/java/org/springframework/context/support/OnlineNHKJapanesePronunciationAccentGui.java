@@ -13,6 +13,10 @@ import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.net.URI;
@@ -61,6 +65,7 @@ import org.springframework.beans.factory.InitializingBean;
 import com.github.hal4j.uritemplate.URIBuilder;
 import com.google.common.reflect.Reflection;
 
+import domain.JlptVocabulary.Note;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
 import net.miginfocom.swing.MigLayout;
@@ -78,7 +83,16 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 
 	private JTextComponent tfText = null;
 
-	private AbstractButton btnExecute, btnPlayAudio, btnCopyPitchAccentImage = null;
+	@Target(ElementType.FIELD)
+	@Retention(RetentionPolicy.RUNTIME)
+	private @interface Note {
+		String value();
+	}
+
+	@Note("Execute")
+	private AbstractButton btnExecute = null;
+
+	private AbstractButton btnPlayAudio, btnCopyPitchAccentImage = null;
 
 	private transient MutableComboBoxModel<Pronounication> mcbmPronounication = null;
 
