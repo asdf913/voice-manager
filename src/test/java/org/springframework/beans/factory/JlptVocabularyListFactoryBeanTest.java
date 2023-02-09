@@ -59,8 +59,8 @@ class JlptVocabularyListFactoryBeanTest {
 			METHOD_GET_NAME, METHOD_TEST, METHOD_OR, METHOD_GET_STRING_CELL_VALUE, METHOD_ADD, METHOD_ADD_ALL,
 			METHOD_PUT, METHOD_GET_FIELDS_BY_NAME, METHOD_GET_INTEGER_VALUE, METHOD_GET_STRING_VALUE_CELL,
 			METHOD_GET_STRING_VALUE_CELL_VALUE, METHOD_INVOKE, METHOD_GET_DECLARED_ANNOTATIONS,
-			METHOD_GET_DECLARED_METHODS, METHOD_IS_ASSIGNABLE_FROM, METHOD_SET_ACCESSIBLE, METHOD_SET,
-			METHOD_GET_TYPE = null;
+			METHOD_GET_DECLARED_METHODS, METHOD_IS_ASSIGNABLE_FROM, METHOD_SET_ACCESSIBLE, METHOD_SET, METHOD_GET_TYPE,
+			METHOD_GET_NUMBER_VALUE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -120,6 +120,8 @@ class JlptVocabularyListFactoryBeanTest {
 		(METHOD_SET = clz.getDeclaredMethod("set", Field.class, Object.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_GET_TYPE = clz.getDeclaredMethod("getType", Field.class)).setAccessible(true);
+		//
+		(METHOD_GET_NUMBER_VALUE = clz.getDeclaredMethod("getNumberValue", CellValue.class)).setAccessible(true);
 		//
 	}
 
@@ -982,6 +984,27 @@ class JlptVocabularyListFactoryBeanTest {
 				return null;
 			} else if (obj instanceof Class<?>) {
 				return (Class<?>) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetNumberValue() throws Throwable {
+		//
+		Assertions.assertNull(getNumberValue(null));
+		//
+	}
+
+	private static Double getNumberValue(final CellValue instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_NUMBER_VALUE.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Double) {
+				return (Double) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

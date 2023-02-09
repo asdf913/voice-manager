@@ -366,7 +366,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 			//
 			if (Objects.equals(cellValueType, CellType.NUMERIC)) {
 				//
-				final Double d = cellValue != null ? Double.valueOf(cellValue.getNumberValue()) : null;
+				final Double d = getNumberValue(cellValue);
 				//
 				result = Unit.with(d != null ? Integer.valueOf(d.intValue()) : null);
 				//
@@ -416,7 +416,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 				//
 			} else if (Objects.equals(cellValueType, CellType.NUMERIC)) {
 				//
-				result = Unit.with(cellValue != null ? Double.toString(cellValue.getNumberValue()) : null);
+				result = Unit.with(toString(getNumberValue(cellValue)));
 				//
 			} else if (Objects.equals(cellValueType, CellType.STRING)) {
 				//
@@ -439,6 +439,10 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 
 	private static String getStringValue(final CellValue instance) {
 		return instance != null ? instance.getStringValue() : null;
+	}
+
+	private static Double getNumberValue(final CellValue instance) {
+		return instance != null ? Double.valueOf(instance.getNumberValue()) : null;
 	}
 
 	private static CellValue evaluate(final FormulaEvaluator instance, final Cell cell) {
