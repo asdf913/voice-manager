@@ -321,6 +321,10 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		return instance != null ? instance.getCellType() : null;
 	}
 
+	private static CellType getCellType(final CellValue instance) {
+		return instance != null ? instance.getCellType() : null;
+	}
+
 	private static IValue0<Integer> getIntegerValue(final Cell cell, final FormulaEvaluator formulaEvaluator) {
 		//
 		final CellType cellType = getCellType(cell);
@@ -340,7 +344,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 			//
 			final CellValue cellValue = evaluate(formulaEvaluator, cell);
 			//
-			final CellType cellValueType = cellValue != null ? cellValue.getCellType() : null;
+			final CellType cellValueType = getCellType(cellValue);
 			//
 			if (Objects.equals(cellValueType, CellType.NUMERIC)) {
 				//
@@ -386,7 +390,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 			//
 			final CellValue cellValue = evaluate(formulaEvaluator, cell);
 			//
-			final CellType cellValueType = cellValue != null ? cellValue.getCellType() : null;
+			final CellType cellValueType = getCellType(cellValue);
 			//
 			if (Objects.equals(cellValueType, CellType.BOOLEAN)) {
 				//
