@@ -35,6 +35,9 @@ import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.CellValue;
+import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -93,8 +96,11 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 				try (final InputStream is = InputStreamSourceUtil.getInputStream(resource);
 						final Workbook wb = testAndApply(Objects::nonNull, is, WorkbookFactory::create, null)) {
 					//
+					final CreationHelper creationHelper = wb != null ? wb.getCreationHelper() : null;
+					//
 					final IValue0<List<JlptVocabulary>> list = getJlptVocabularies(
-							wb != null && wb.getNumberOfSheets() == 1 ? WorkbookUtil.getSheetAt(wb, 0) : null);
+							wb != null && wb.getNumberOfSheets() == 1 ? WorkbookUtil.getSheetAt(wb, 0) : null,
+							creationHelper != null ? creationHelper.createFormulaEvaluator() : null);
 					//
 					if (list != null) {
 						//
@@ -112,7 +118,8 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		//
 	}
 
-	private static IValue0<List<JlptVocabulary>> getJlptVocabularies(final Sheet sheet) throws IllegalAccessException {
+	private static IValue0<List<JlptVocabulary>> getJlptVocabularies(final Sheet sheet,
+			final FormulaEvaluator formulaEvaluator) throws IllegalAccessException {
 		//
 		IValue0<List<JlptVocabulary>> list = null;
 		//
@@ -140,7 +147,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 					//
 				} // if
 					//
-				if ((jv = getJlptVocabulary(fieldMap, row)) != null) {
+				if ((jv = getJlptVocabulary(fieldMap, row, formulaEvaluator)) != null) {
 					//
 					add(IValue0Util.getValue0(list = ObjectUtils.getIfNull(list, () -> Unit.with(new ArrayList<>()))),
 							IValue0Util.getValue0(jv));
@@ -233,8 +240,8 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		return instance != null ? instance.getName() : null;
 	}
 
-	private static IValue0<JlptVocabulary> getJlptVocabulary(final Map<Integer, Field> fieldMap, final Row row)
-			throws IllegalAccessException {
+	private static IValue0<JlptVocabulary> getJlptVocabulary(final Map<Integer, Field> fieldMap, final Row row,
+			final FormulaEvaluator formulaEvaluator) throws IllegalAccessException {
 		//
 		IValue0<JlptVocabulary> ivalue0 = null;
 		//
@@ -244,7 +251,9 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		//
 		Cell cell = null;
 		//
-		IValue0<Object> value = null;
+		IValue0<?> value = null;
+		//
+		Class<?> type = null;
 		//
 		for (int i = 0; row != null && i < row.getPhysicalNumberOfCells(); i++) {
 			//
@@ -262,21 +271,35 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 							.getValue0(ivalue0 = ObjectUtils.getIfNull(ivalue0, () -> Unit.with(new JlptVocabulary()))),
 					JlptVocabulary::new);
 			//
-			if (Objects.equals(f.getType(), Integer.class)) {
+			if (Objects.equals(type = f.getType(), Integer.class)) {
 				//
-				if ((value = getIntegerValue(cell)) != null) {
+				if ((value = getIntegerValue(cell, formulaEvaluator)) != null) {
 					//
 					f.set(jv, IValue0Util.getValue0(value));
 					//
 				} else {
 					//
-					throw new UnsupportedOperationException();
+					throw new UnsupportedOperationException(
+							String.format("type=%1$s,cellType=%2$s", type, cell != null ? cell.getCellType() : null));
+					//
+				} // if
+					//
+			} else if (type != null && CharSequence.class.isAssignableFrom(type)) {
+				//
+				if ((value = getStringValue(cell, formulaEvaluator)) != null) {
+					//
+					f.set(jv, IValue0Util.getValue0(value));
+					//
+				} else {
+					//
+					throw new UnsupportedOperationException(
+							String.format("type=%1$s,cellType=%2$s", type, cell != null ? cell.getCellType() : null));
 					//
 				} // if
 					//
 			} else {
 				//
-				f.set(jv, getStringCellValue(cell));
+				throw new UnsupportedOperationException();
 				//
 			} // if
 				//
@@ -286,11 +309,11 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		//
 	}
 
-	private static IValue0<Object> getIntegerValue(final Cell cell) {
+	private static IValue0<Integer> getIntegerValue(final Cell cell, final FormulaEvaluator formulaEvaluator) {
 		//
 		final CellType cellType = cell != null ? cell.getCellType() : null;
 		//
-		IValue0<Object> result = null;
+		IValue0<Integer> result = null;
 		//
 		if (Objects.equals(cellType, CellType.STRING)) {
 			//
@@ -301,10 +324,87 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 			result = Unit.with(testAndApply(Objects::nonNull, Double.valueOf(cell.getNumericCellValue()),
 					x -> x != null ? x.intValue() : null, null));
 			//
+		} else if (Objects.equals(cellType, CellType.FORMULA)) {
+			//
+			final CellValue cellValue = formulaEvaluator != null ? formulaEvaluator.evaluate(cell) : null;
+			//
+			final CellType cellValueType = cellValue != null ? cellValue.getCellType() : null;
+			//
+			if (Objects.equals(cellValueType, CellType.NUMERIC)) {
+				//
+				final Double d = cellValue != null ? Double.valueOf(cellValue.getNumberValue()) : null;
+				//
+				result = Unit.with(d != null ? Integer.valueOf(d.intValue()) : null);
+				//
+			} else if (Objects.equals(cellValueType, CellType.STRING)) {
+				//
+				result = Unit.with(testAndApply(StringUtils::isNotBlank,
+						cellValue != null ? cellValue.getStringValue() : null, Integer::valueOf, null));
+				//
+			} // if
+				//
+			if (result == null) {
+				//
+				throw new UnsupportedOperationException(
+						String.format("cellType=%1$s,cellValueType=%2$s", cellType, cellValueType));
+				//
+			} // if
+				//
 		} // if
 			//
 		return result;
 		//
+	}
+
+	private static IValue0<String> getStringValue(final Cell cell, final FormulaEvaluator formulaEvaluator) {
+		//
+		final CellType cellType = cell != null ? cell.getCellType() : null;
+		//
+		IValue0<String> result = null;
+		//
+		if (Objects.equals(cellType, CellType.STRING)) {
+			//
+			result = Unit.with(getStringCellValue(cell));
+			//
+		} else if (Objects.equals(cellType, CellType.NUMERIC)) {
+			//
+			result = Unit.with(toString(Double.valueOf(cell.getNumericCellValue())));
+			//
+		} else if (Objects.equals(cellType, CellType.FORMULA)) {
+			//
+			final CellValue cellValue = formulaEvaluator != null ? formulaEvaluator.evaluate(cell) : null;
+			//
+			final CellType cellValueType = cellValue != null ? cellValue.getCellType() : null;
+			//
+			if (Objects.equals(cellValueType, CellType.BOOLEAN)) {
+				//
+				result = Unit.with(cellValue != null ? Boolean.toString(cellValue.getBooleanValue()) : null);
+				//
+			} else if (Objects.equals(cellValueType, CellType.NUMERIC)) {
+				//
+				result = Unit.with(cellValue != null ? Double.toString(cellValue.getNumberValue()) : null);
+				//
+			} else if (Objects.equals(cellValueType, CellType.STRING)) {
+				//
+				result = Unit.with(cellValue != null ? cellValue.getStringValue() : null);
+				//
+			} // if
+				//
+			if (result == null) {
+				//
+				throw new UnsupportedOperationException(
+						String.format("cellType=%1$s,cellValueType=%2$s", cellType, cellValueType));
+				//
+			} // if
+				//
+		} // if
+			//
+		return result;
+		//
+	}
+
+	private static String toString(final Object instance) {
+		return instance != null ? instance.toString() : null;
 	}
 
 	private static List<JlptVocabulary> getObjectByUrls(final List<String> urls)
@@ -387,7 +487,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 	}
 
 	private static <E> void addAll(final Collection<E> a, final Collection<? extends E> b) {
-		if (a != null && b != null) {
+		if (a != null && (b != null || Proxy.isProxyClass(getClass(a)))) {
 			a.addAll(b);
 		}
 	}

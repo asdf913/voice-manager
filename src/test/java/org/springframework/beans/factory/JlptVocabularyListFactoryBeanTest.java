@@ -12,6 +12,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,8 @@ import org.apache.poi.EmptyFileException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.CellUtil;
+import org.apache.poi.ss.usermodel.CellValue;
+import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.RowUtil;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -44,14 +47,17 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
+import com.google.common.base.Predicates;
 import com.google.common.reflect.Reflection;
 
 class JlptVocabularyListFactoryBeanTest {
 
-	private static Method METHOD_FILTER, METHOD_GET_CLASS, METHOD_TO_LIST, METHOD_ANNOTATION_TYPE, METHOD_GET_NAME,
-			METHOD_TEST, METHOD_OR, METHOD_GET_STRING_CELL_VALUE, METHOD_ADD, METHOD_ADD_ALL, METHOD_PUT,
-			METHOD_GET_FIELDS_BY_NAME, METHOD_GET_INTEGER_VALUE, METHOD_INVOKE, METHOD_GET_DECLARED_ANNOTATIONS,
-			METHOD_GET_DECLARED_METHODS = null;
+	private static final String EMPTY = "";
+
+	private static Method METHOD_FILTER, METHOD_GET_CLASS, METHOD_TO_STRING, METHOD_TO_LIST, METHOD_ANNOTATION_TYPE,
+			METHOD_GET_NAME, METHOD_TEST, METHOD_OR, METHOD_GET_STRING_CELL_VALUE, METHOD_ADD, METHOD_ADD_ALL,
+			METHOD_PUT, METHOD_GET_FIELDS_BY_NAME, METHOD_GET_INTEGER_VALUE, METHOD_GET_STRING_VALUE, METHOD_INVOKE,
+			METHOD_GET_DECLARED_ANNOTATIONS, METHOD_GET_DECLARED_METHODS = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -61,6 +67,8 @@ class JlptVocabularyListFactoryBeanTest {
 		(METHOD_FILTER = clz.getDeclaredMethod("filter", Stream.class, Predicate.class)).setAccessible(true);
 		//
 		(METHOD_GET_CLASS = clz.getDeclaredMethod("getClass", Object.class)).setAccessible(true);
+		//
+		(METHOD_TO_STRING = clz.getDeclaredMethod("toString", Object.class)).setAccessible(true);
 		//
 		(METHOD_TO_LIST = clz.getDeclaredMethod("toList", Stream.class)).setAccessible(true);
 		//
@@ -83,7 +91,11 @@ class JlptVocabularyListFactoryBeanTest {
 		(METHOD_GET_FIELDS_BY_NAME = clz.getDeclaredMethod("getFieldsByName", Field[].class, String.class))
 				.setAccessible(true);
 		//
-		(METHOD_GET_INTEGER_VALUE = clz.getDeclaredMethod("getIntegerValue", Cell.class)).setAccessible(true);
+		(METHOD_GET_INTEGER_VALUE = clz.getDeclaredMethod("getIntegerValue", Cell.class, FormulaEvaluator.class))
+				.setAccessible(true);
+		//
+		(METHOD_GET_STRING_VALUE = clz.getDeclaredMethod("getStringValue", Cell.class, FormulaEvaluator.class))
+				.setAccessible(true);
 		//
 		(METHOD_INVOKE = clz.getDeclaredMethod("invoke", Method.class, Object.class, Object[].class))
 				.setAccessible(true);
@@ -97,7 +109,7 @@ class JlptVocabularyListFactoryBeanTest {
 
 	private static class IH implements InvocationHandler {
 
-		private Boolean exists = null;
+		private Boolean exists, addAll = null;
 
 		private boolean reset = true;
 
@@ -112,6 +124,8 @@ class JlptVocabularyListFactoryBeanTest {
 		private String stringCellValue = null;
 
 		private Double numericCellValue = null;
+
+		private CellValue evaluate = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -156,6 +170,10 @@ class JlptVocabularyListFactoryBeanTest {
 					//
 					return toArray;
 					//
+				} else if (Objects.equals(methodName, "addAll")) {
+					//
+					return addAll;
+					//
 				} // if
 					//
 			} else if (proxy instanceof Stream) {
@@ -181,6 +199,14 @@ class JlptVocabularyListFactoryBeanTest {
 					return numericCellValue;
 				} // if
 					//
+			} else if (proxy instanceof FormulaEvaluator) {
+				//
+				if (Objects.equals(methodName, "evaluate")) {
+					//
+					return evaluate;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(methodName);
@@ -193,12 +219,18 @@ class JlptVocabularyListFactoryBeanTest {
 
 	private IH ih = null;
 
+	private Cell cell = null;
+
+	private FormulaEvaluator formulaEvaluator = null;
+
 	@BeforeEach
 	void beforeEach() {
 		//
 		instance = new JlptVocabularyListFactoryBean();
 		//
-		ih = new IH();
+		cell = Reflection.newProxy(Cell.class, ih = new IH());
+		//
+		formulaEvaluator = Reflection.newProxy(FormulaEvaluator.class, ih);
 		//
 	}
 
@@ -214,7 +246,7 @@ class JlptVocabularyListFactoryBeanTest {
 		//
 		if (instance != null) {
 			//
-			instance.setUrls(Arrays.asList(null, "", " "));
+			instance.setUrls(Arrays.asList(null, EMPTY, " "));
 			//
 		} // if
 			//
@@ -264,7 +296,7 @@ class JlptVocabularyListFactoryBeanTest {
 			//
 		Assertions.assertNull(getObject(instance));
 		//
-		try (final InputStream is = new ByteArrayInputStream("".getBytes())) {
+		try (final InputStream is = new ByteArrayInputStream(EMPTY.getBytes())) {
 			//
 			if (ih != null) {
 				//
@@ -314,13 +346,13 @@ class JlptVocabularyListFactoryBeanTest {
 			//
 			CellUtil.setCellValue(RowUtil.createCell(row, 0), "level");
 			//
-			CellUtil.setCellValue(RowUtil.createCell(row, 1), "");
+			CellUtil.setCellValue(RowUtil.createCell(row, 1), EMPTY);
 			//
 			// Second Row
 			//
 			CellUtil.setCellValue(RowUtil.createCell(row = SheetUtil.createRow(sheet, 1), 0), level);
 			//
-			CellUtil.setCellValue(RowUtil.createCell(row, 1), "");
+			CellUtil.setCellValue(RowUtil.createCell(row, 1), EMPTY);
 			//
 			workbook.write(baos);
 			//
@@ -370,7 +402,11 @@ class JlptVocabularyListFactoryBeanTest {
 		//
 		Assertions.assertNull(filter(null, null));
 		//
-		Assertions.assertNull(filter(Stream.empty(), null));
+		final Stream<?> empty = Stream.empty();
+		//
+		Assertions.assertNull(filter(empty, null));
+		//
+		Assertions.assertNotNull(filter(empty, Predicates.alwaysTrue()));
 		//
 		final Stream<?> steram = Reflection.newProxy(Stream.class, new IH());
 		//
@@ -414,14 +450,33 @@ class JlptVocabularyListFactoryBeanTest {
 		}
 	}
 
-	private static String toString(final Object instance) {
-		return instance != null ? instance.toString() : null;
+	@Test
+	void testToString() throws Throwable {
+		//
+		Assertions.assertNull(toString(null));
+		//
+	}
+
+	private static String toString(final Object instance) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_STRING.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 	@Test
 	void testToList() throws Throwable {
 		//
 		Assertions.assertNull(toList(null));
+		//
+		Assertions.assertEquals(Collections.emptyList(), toList(Stream.empty()));
 		//
 	}
 
@@ -564,6 +619,16 @@ class JlptVocabularyListFactoryBeanTest {
 		//
 		Assertions.assertDoesNotThrow(() -> addAll(null, null));
 		//
+		Assertions.assertDoesNotThrow(() -> addAll(Collections.emptyList(), null));
+		//
+		if (ih != null) {
+			//
+			ih.addAll = Boolean.TRUE;
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> addAll(Reflection.newProxy(Collection.class, ih), null));
+		//
 	}
 
 	private static <E> void addAll(final Collection<E> a, final Collection<? extends E> b) throws Throwable {
@@ -572,10 +637,6 @@ class JlptVocabularyListFactoryBeanTest {
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
-	}
-
-	private static Map<Integer, Field> getFieldMap(final String[] ss) {
-		return null;
 	}
 
 	@Test
@@ -619,11 +680,9 @@ class JlptVocabularyListFactoryBeanTest {
 	@Test
 	void testGetIntegerValue() throws Throwable {
 		//
-		Assertions.assertNull(getIntegerValue(null));
+		Assertions.assertNull(getIntegerValue(null, null));
 		//
-		final Cell cell = Reflection.newProxy(Cell.class, ih);
-		//
-		Assertions.assertNull(getIntegerValue(cell));
+		Assertions.assertNull(getIntegerValue(cell, null));
 		//
 		// org.apache.poi.ss.usermodel.CellType.STRING
 		//
@@ -633,7 +692,7 @@ class JlptVocabularyListFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertEquals(Unit.with(null), getIntegerValue(cell));
+		Assertions.assertEquals(Unit.with(null), getIntegerValue(cell, null));
 		//
 		// org.apache.poi.ss.usermodel.CellType.NUMERIC
 		//
@@ -648,13 +707,114 @@ class JlptVocabularyListFactoryBeanTest {
 		} // if
 			//
 		Assertions.assertEquals(String.format("[%1$s]", one != null ? one.intValue() : null),
-				toString(getIntegerValue(cell)));
+				toString(getIntegerValue(cell, null)));
+		//
+		// org.apache.poi.ss.usermodel.CellType.NUMERIC
+		//
+		if (ih != null) {
+			//
+			ih.cellType = CellType.FORMULA;
+			//
+		} // if
+			//
+		Assertions.assertThrows(UnsupportedOperationException.class, () -> getIntegerValue(cell, null));
+		//
+		Assertions.assertThrows(UnsupportedOperationException.class, () -> getIntegerValue(cell, formulaEvaluator));
+		//
+		final int zero = 0;
+		//
+		if (ih != null) {
+			//
+			ih.evaluate = new CellValue(zero);
+			//
+		} // if
+			//
+		Assertions.assertEquals(Unit.with(Integer.valueOf(zero)), getIntegerValue(cell, formulaEvaluator));
+		//
+		if (ih != null) {
+			//
+			ih.evaluate = new CellValue(Integer.toString(zero));
+			//
+		} // if
+			//
+		Assertions.assertEquals(Unit.with(Integer.valueOf(zero)), getIntegerValue(cell, formulaEvaluator));
 		//
 	}
 
-	private static IValue0<Object> getIntegerValue(final Cell cell) throws Throwable {
+	private static IValue0<Integer> getIntegerValue(final Cell cell, final FormulaEvaluator formulaEvaluator)
+			throws Throwable {
 		try {
-			final Object obj = METHOD_GET_INTEGER_VALUE.invoke(null, cell);
+			final Object obj = METHOD_GET_INTEGER_VALUE.invoke(null, cell, formulaEvaluator);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof IValue0) {
+				return (IValue0) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetStringValue() throws Throwable {
+		//
+		Assertions.assertNull(getStringValue(null, null));
+		//
+		final double zero = 0;
+		//
+		if (ih != null) {
+			//
+			ih.cellType = CellType.NUMERIC;
+			//
+			ih.numericCellValue = Double.valueOf(zero);
+			//
+		} // if
+			//
+		Assertions.assertEquals(Unit.with(Double.toString(zero)), getStringValue(cell, null));
+		//
+		if (ih != null) {
+			//
+			ih.cellType = CellType.FORMULA;
+			//
+		} // if
+			//
+		Assertions.assertThrows(UnsupportedOperationException.class, () -> getStringValue(cell, null));
+		//
+		Assertions.assertThrows(UnsupportedOperationException.class, () -> getStringValue(cell, formulaEvaluator));
+		//
+		final boolean b = true;
+		//
+		if (ih != null) {
+			//
+			ih.evaluate = CellValue.valueOf(b);
+			//
+		} // if
+			//
+		Assertions.assertEquals(Unit.with(Boolean.toString(b)), getStringValue(cell, formulaEvaluator));
+		//
+		if (ih != null) {
+			//
+			ih.evaluate = new CellValue(zero);
+			//
+		} // if
+			//
+		Assertions.assertEquals(Unit.with(Double.toString(zero)), getStringValue(cell, formulaEvaluator));
+		//
+		if (ih != null) {
+			//
+			ih.evaluate = new CellValue(EMPTY);
+			//
+		} // if
+			//
+		Assertions.assertEquals(Unit.with(EMPTY), getStringValue(cell, formulaEvaluator));
+		//
+	}
+
+	private static IValue0<String> getStringValue(final Cell cell, final FormulaEvaluator formulaEvaluator)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_GET_STRING_VALUE.invoke(null, cell, formulaEvaluator);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof IValue0) {
