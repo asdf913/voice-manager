@@ -258,7 +258,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 						//
 					} // if
 						//
-					stream(((pronounication = new Pronounication()).audioUrls = getSrcMap(element)).entrySet())
+					stream(entrySet(((pronounication = new Pronounication()).audioUrls = getSrcMap(element))))
 							.forEach(x -> {
 								setValue(x, String.join("", protocolAndHost, getValue(x)));
 							});
@@ -283,7 +283,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 			//
 			final Map<String, String> audioUrls = pronounication != null ? pronounication.audioUrls : null;
 			//
-			final Set<Entry<String, String>> entrySet = audioUrls != null ? audioUrls.entrySet() : null;
+			final Set<Entry<String, String>> entrySet = entrySet(audioUrls);
 			//
 			if (entrySet != null && entrySet.iterator() != null) {
 				//
@@ -345,6 +345,10 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 				//
 		} // if
 			//
+	}
+
+	private static <K, V> Set<Entry<K, V>> entrySet(final Map<K, V> instance) {
+		return instance != null ? instance.entrySet() : null;
 	}
 
 	private static int getSize(final ListModel<?> instance) {

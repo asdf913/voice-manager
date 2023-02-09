@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.Map.Entry;
 import java.util.function.Predicate;
 
@@ -57,7 +58,8 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 	private static Method METHOD_CAST, METHOD_GET_SRC_MAP, METHOD_GET_IMAGE_SRCS, METHOD_CREATE_MERGED_BUFFERED_IMAGE,
 			METHOD_TEST_AND_APPLY, METHOD_GET_GRAPHICS, METHOD_GET_WIDTH, METHOD_GET_HEIGHT, METHOD_INT_VALUE,
 			METHOD_GET_TEXT, METHOD_RELATIVE, METHOD_TO_URI, METHOD_TO_URL, METHOD_SET_VALUE, METHOD_GET_VALUE,
-			METHOD_ADD_ELEMENT, METHOD_REMOVE_ELEMENT_AT, METHOD_GET_SELECTED_ITEM, METHOD_GET_SIZE = null;
+			METHOD_ADD_ELEMENT, METHOD_REMOVE_ELEMENT_AT, METHOD_GET_SELECTED_ITEM, METHOD_GET_SIZE,
+			METHOD_ENTRY_SET = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -106,6 +108,8 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		//
 		(METHOD_GET_SIZE = clz.getDeclaredMethod("getSize", ListModel.class)).setAccessible(true);
 		//
+		(METHOD_ENTRY_SET = clz.getDeclaredMethod("entrySet", Map.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -113,6 +117,8 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		private Integer width, height, size = null;
 
 		private Object value, selectedItem = null;
+
+		private Set<Entry<?, ?>> entrySet = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -162,6 +168,14 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				if (Objects.equals(methodName, "getValue") || Objects.equals(methodName, "setValue")) {
 					//
 					return value;
+					//
+				} // if
+					//
+			} else if (proxy instanceof Map) {
+				//
+				if (Objects.equals(methodName, "entrySet")) {
+					//
+					return entrySet;
 					//
 				} // if
 					//
@@ -703,6 +717,27 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			final Object obj = METHOD_GET_SIZE.invoke(null, instance);
 			if (obj instanceof Integer) {
 				return ((Integer) obj).intValue();
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testEntrySet() throws Throwable {
+		//
+		Assertions.assertNull(entrySet(Reflection.newProxy(Map.class, ih)));
+		//
+	}
+
+	private static <K, V> Set<Entry<K, V>> entrySet(final Map<K, V> instance) throws Throwable {
+		try {
+			final Object obj = METHOD_ENTRY_SET.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Set) {
+				return (Set) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
