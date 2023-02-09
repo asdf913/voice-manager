@@ -15,6 +15,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URI;
+import java.net.URL;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -51,7 +52,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 
 	private static Method METHOD_CAST, METHOD_GET_SRC_MAP, METHOD_GET_IMAGE_SRCS, METHOD_CREATE_MERGED_BUFFERED_IMAGE,
 			METHOD_TEST_AND_APPLY, METHOD_GET_GRAPHICS, METHOD_GET_WIDTH, METHOD_GET_HEIGHT, METHOD_INT_VALUE,
-			METHOD_GET_TEXT, METHOD_TO_URI = null;
+			METHOD_GET_TEXT, METHOD_TO_URI, METHOD_TO_URL = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -81,6 +82,8 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		(METHOD_GET_TEXT = clz.getDeclaredMethod("getText", JTextComponent.class)).setAccessible(true);
 		//
 		(METHOD_TO_URI = clz.getDeclaredMethod("toURI", URIBuilder.class)).setAccessible(true);
+		//
+		(METHOD_TO_URL = clz.getDeclaredMethod("toURL", URI.class)).setAccessible(true);
 		//
 	}
 
@@ -477,9 +480,9 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 	}
 
 	@Test
-	void testToURI() throws Throwable {
+	void testToURL() throws Throwable {
 		//
-		Assertions.assertNotNull(toURI(URIBuilder.basedOn("http://www.google.com")));
+		Assertions.assertNotNull(toURL(toURI(URIBuilder.basedOn("http://www.google.com"))));
 		//
 	}
 
@@ -490,6 +493,20 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				return null;
 			} else if (obj instanceof URI) {
 				return (URI) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static URL toURL(final URI instance) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_URL.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof URL) {
+				return (URL) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

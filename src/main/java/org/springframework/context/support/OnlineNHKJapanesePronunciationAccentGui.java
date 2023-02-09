@@ -19,6 +19,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
@@ -239,11 +240,9 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 				//
 			} // if
 				//
-			final URI uri = toURI(uriBuilder);
-			//
 			try {
 				//
-				final URL u = uri != null ? uri.toURL() : null;
+				final URL u = toURL(toURI(uriBuilder));
 				//
 				final String protocolAndHost = u != null ? String.join("://", u.getProtocol(), u.getHost()) : null;
 				//
@@ -358,6 +357,10 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 				//
 		} // if
 			//
+	}
+
+	private static URL toURL(final URI instance) throws MalformedURLException {
+		return instance != null ? instance.toURL() : null;
 	}
 
 	private static URI toURI(final URIBuilder instance) {
