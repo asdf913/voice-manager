@@ -242,7 +242,8 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 				//
 				final URL u = toURL(toURI(relative(uriBuilder, getText(tfText))));
 				//
-				final String protocolAndHost = u != null ? String.join("://", u.getProtocol(), u.getHost()) : null;
+				final String protocolAndHost = testAndApply(Objects::nonNull, u,
+						x -> String.join("://", getProtocol(x), getHost(u)), null);
 				//
 				final Document document = testAndApply(Objects::nonNull, u, x -> Jsoup.parse(x, 0), null);
 				//
@@ -340,6 +341,14 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 				//
 		} // if
 			//
+	}
+
+	private static String getProtocol(final URL instance) {
+		return instance != null ? instance.getProtocol() : null;
+	}
+
+	private static String getHost(final URL instance) {
+		return instance != null ? instance.getHost() : null;
 	}
 
 	private static Clipboard getSystemClipboard(final Toolkit instance) {

@@ -23,9 +23,9 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
-import java.util.Map.Entry;
 import java.util.function.Predicate;
 
 import javax.swing.AbstractButton;
@@ -63,7 +63,8 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			METHOD_TEST_AND_APPLY, METHOD_GET_GRAPHICS, METHOD_GET_WIDTH, METHOD_GET_HEIGHT, METHOD_INT_VALUE,
 			METHOD_GET_TEXT, METHOD_RELATIVE, METHOD_TO_URI, METHOD_TO_URL, METHOD_GET_KEY, METHOD_SET_VALUE,
 			METHOD_GET_VALUE, METHOD_ADD_ELEMENT, METHOD_REMOVE_ELEMENT_AT, METHOD_GET_SELECTED_ITEM, METHOD_GET_SIZE,
-			METHOD_ENTRY_SET, METHOD_ITERATOR, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS = null;
+			METHOD_ENTRY_SET, METHOD_ITERATOR, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_GET_PROTOCOL,
+			METHOD_GET_HOST = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -122,6 +123,10 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		//
 		(METHOD_SET_CONTENTS = clz.getDeclaredMethod("setContents", Clipboard.class, Transferable.class,
 				ClipboardOwner.class)).setAccessible(true);
+		//
+		(METHOD_GET_PROTOCOL = clz.getDeclaredMethod("getProtocol", URL.class)).setAccessible(true);
+		//
+		(METHOD_GET_HOST = clz.getDeclaredMethod("getHost", URL.class)).setAccessible(true);
 		//
 	}
 
@@ -866,6 +871,56 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			throws Throwable {
 		try {
 			METHOD_SET_CONTENTS.invoke(null, instance, contents, owner);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetProtocol() throws Throwable {
+		//
+		Assertions.assertNull(getProtocol(null));
+		//
+		final String protocol = "http";
+		//
+		Assertions.assertEquals(protocol, getProtocol(new URL(String.format("%1$s://www.google.com", protocol))));
+		//
+	}
+
+	private static String getProtocol(final URL instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_PROTOCOL.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetHost() throws Throwable {
+		//
+		Assertions.assertNull(getHost(null));
+		//
+		final String host = "www.google.com";
+		//
+		Assertions.assertEquals(host, getHost(new URL(String.format("http://%1$s", host))));
+		//
+	}
+
+	private static String getHost(final URL instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_HOST.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
