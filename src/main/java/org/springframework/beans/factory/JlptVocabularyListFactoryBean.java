@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -263,25 +264,25 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		//
 		for (int i = 0; row != null && i < row.getPhysicalNumberOfCells(); i++) {
 			//
-			if ((f = MapUtils.getObject(fieldMap, Integer.valueOf(i))) == null || (cell = row.getCell(i)) == null
-					|| Objects.equals(CellType.BLANK, cellType = getCellType(cell))) {
+			if (or((f = MapUtils.getObject(fieldMap, Integer.valueOf(i))) == null, (cell = row.getCell(i)) == null,
+					Objects.equals(CellType.BLANK, cellType = getCellType(cell)))) {
 				//
 				continue;
 				//
 			} // if
 				//
-			f.setAccessible(true);
+			setAccessible(f, true);
 			//
 			jv = ObjectUtils.getIfNull(
 					IValue0Util
 							.getValue0(ivalue0 = ObjectUtils.getIfNull(ivalue0, () -> Unit.with(new JlptVocabulary()))),
 					JlptVocabulary::new);
 			//
-			if (Objects.equals(type = f.getType(), Integer.class)) {
+			if (Objects.equals(type = getType(f), Integer.class)) {
 				//
 				if ((value = getIntegerValue(cell, formulaEvaluator)) != null) {
 					//
-					f.set(jv, IValue0Util.getValue0(value));
+					set(f, jv, IValue0Util.getValue0(value));
 					//
 				} else {
 					//
@@ -293,7 +294,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 				//
 				if ((value = getStringValue(cell, formulaEvaluator)) != null) {
 					//
-					f.set(jv, IValue0Util.getValue0(value));
+					set(f, jv, IValue0Util.getValue0(value));
 					//
 				} else {
 					//
@@ -311,6 +312,23 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 			//
 		return ivalue0;
 		//
+	}
+
+	private static void setAccessible(final AccessibleObject instance, final boolean flag) {
+		if (instance != null) {
+			instance.setAccessible(flag);
+		}
+	}
+
+	private static void set(final Field field, final Object instance, final Object value)
+			throws IllegalAccessException {
+		if (field != null) {
+			field.set(instance, value);
+		}
+	}
+
+	private static Class<?> getType(final Field instance) {
+		return instance != null ? instance.getType() : null;
 	}
 
 	private static boolean isAssignableFrom(final Class<?> a, final Class<?> b) {
@@ -561,17 +579,17 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 						//
 					} // if
 						//
-					f.setAccessible(true);
+					setAccessible(f, true);
 					//
 					s = ss[i];
 					//
-					if (Objects.equals(f.getType(), Integer.class)) {
+					if (Objects.equals(getType(f), Integer.class)) {
 						//
-						f.set(jv, testAndApply(StringUtils::isNotBlank, s, Integer::valueOf, null));
+						set(f, jv, testAndApply(StringUtils::isNotBlank, s, Integer::valueOf, null));
 						//
 					} else {
 						//
-						f.set(jv, s);
+						set(f, jv, s);
 						//
 					} // if
 						//
@@ -732,12 +750,8 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 			//
 			if (m != null && Objects.equals(String.class, m.getReturnType()) && m.getParameterCount() == 0) {
 				//
-				if (m != null) {
-					//
-					m.setAccessible(true);
-					//
-				} // if
-					//
+				setAccessible(m, true);
+				//
 				return Unit.with(invoke(m, a));
 				//
 			} // if
@@ -753,7 +767,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 			if ((m = testAndApply(x -> IterableUtils.size(x) == 1, methods, x -> IterableUtils.get(x, 0),
 					null)) != null) {
 				//
-				m.setAccessible(true);
+				setAccessible(m, true);
 				//
 			} // if
 				//

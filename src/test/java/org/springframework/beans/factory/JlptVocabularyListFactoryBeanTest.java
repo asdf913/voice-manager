@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
@@ -58,7 +59,8 @@ class JlptVocabularyListFactoryBeanTest {
 			METHOD_GET_NAME, METHOD_TEST, METHOD_OR, METHOD_GET_STRING_CELL_VALUE, METHOD_ADD, METHOD_ADD_ALL,
 			METHOD_PUT, METHOD_GET_FIELDS_BY_NAME, METHOD_GET_INTEGER_VALUE, METHOD_GET_STRING_VALUE_CELL,
 			METHOD_GET_STRING_VALUE_CELL_VALUE, METHOD_INVOKE, METHOD_GET_DECLARED_ANNOTATIONS,
-			METHOD_GET_DECLARED_METHODS, METHOD_IS_ASSIGNABLE_FROM = null;
+			METHOD_GET_DECLARED_METHODS, METHOD_IS_ASSIGNABLE_FROM, METHOD_SET_ACCESSIBLE, METHOD_SET,
+			METHOD_GET_TYPE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -111,6 +113,13 @@ class JlptVocabularyListFactoryBeanTest {
 		//
 		(METHOD_IS_ASSIGNABLE_FROM = clz.getDeclaredMethod("isAssignableFrom", Class.class, Class.class))
 				.setAccessible(true);
+		//
+		(METHOD_SET_ACCESSIBLE = clz.getDeclaredMethod("setAccessible", AccessibleObject.class, Boolean.TYPE))
+				.setAccessible(true);
+		//
+		(METHOD_SET = clz.getDeclaredMethod("set", Field.class, Object.class, Object.class)).setAccessible(true);
+		//
+		(METHOD_GET_TYPE = clz.getDeclaredMethod("getType", Field.class)).setAccessible(true);
 		//
 	}
 
@@ -922,6 +931,57 @@ class JlptVocabularyListFactoryBeanTest {
 			final Object obj = METHOD_IS_ASSIGNABLE_FROM.invoke(null, a, b);
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetAccessible() {
+		//
+		Assertions.assertDoesNotThrow(() -> setAccessible(null, false));
+		//
+	}
+
+	private static void setAccessible(final AccessibleObject instance, final boolean flag) throws Throwable {
+		try {
+			METHOD_SET_ACCESSIBLE.invoke(null, instance, flag);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSet() {
+		//
+		Assertions.assertDoesNotThrow(() -> set(null, null, null));
+		//
+	}
+
+	private static void set(final Field field, final Object instance, final Object value) throws Throwable {
+		try {
+			METHOD_SET.invoke(null, field, instance, value);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetType() throws Throwable {
+		//
+		Assertions.assertNull(getType(null));
+		//
+	}
+
+	private static Class<?> getType(final Field instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_TYPE.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Class<?>) {
+				return (Class<?>) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
