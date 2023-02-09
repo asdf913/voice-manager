@@ -57,7 +57,7 @@ class JlptVocabularyListFactoryBeanTest {
 	private static Method METHOD_FILTER, METHOD_GET_CLASS, METHOD_TO_STRING, METHOD_TO_LIST, METHOD_ANNOTATION_TYPE,
 			METHOD_GET_NAME, METHOD_TEST, METHOD_OR, METHOD_GET_STRING_CELL_VALUE, METHOD_ADD, METHOD_ADD_ALL,
 			METHOD_PUT, METHOD_GET_FIELDS_BY_NAME, METHOD_GET_INTEGER_VALUE, METHOD_GET_STRING_VALUE, METHOD_INVOKE,
-			METHOD_GET_DECLARED_ANNOTATIONS, METHOD_GET_DECLARED_METHODS = null;
+			METHOD_GET_DECLARED_ANNOTATIONS, METHOD_GET_DECLARED_METHODS, METHOD_IS_ASSIGNABLE_FROM = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -104,6 +104,9 @@ class JlptVocabularyListFactoryBeanTest {
 				.setAccessible(true);
 		//
 		(METHOD_GET_DECLARED_METHODS = clz.getDeclaredMethod("getDeclaredMethods", Class.class)).setAccessible(true);
+		//
+		(METHOD_IS_ASSIGNABLE_FROM = clz.getDeclaredMethod("isAssignableFrom", Class.class, Class.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -876,6 +879,29 @@ class JlptVocabularyListFactoryBeanTest {
 				return null;
 			} else if (obj instanceof Method[]) {
 				return (Method[]) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testIsAssignableFrom() throws Throwable {
+		//
+		Assertions.assertFalse(isAssignableFrom(null, null));
+		//
+		Assertions.assertFalse(isAssignableFrom(Object.class, null));
+		//
+		Assertions.assertFalse(isAssignableFrom(Iterable.class, CharSequence.class));
+		//
+	}
+
+	private static boolean isAssignableFrom(final Class<?> a, final Class<?> b) throws Throwable {
+		try {
+			final Object obj = METHOD_IS_ASSIGNABLE_FROM.invoke(null, a, b);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
