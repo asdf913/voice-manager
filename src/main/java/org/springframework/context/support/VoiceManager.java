@@ -231,6 +231,7 @@ import org.apache.poi.ss.usermodel.CellValue;
 import org.apache.poi.ss.usermodel.ClientAnchor;
 import org.apache.poi.ss.usermodel.Comment;
 import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.CreationHelperUtil;
 import org.apache.poi.ss.usermodel.DataValidation;
 import org.apache.poi.ss.usermodel.DataValidationConstraint;
 import org.apache.poi.ss.usermodel.DataValidationHelper;
@@ -8454,8 +8455,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 								objectMapper = getIfNull(objectMapper, ObjectMapper::new));
 						//
 						ObjectMap.setObject(objectMap, FormulaEvaluator.class,
-								formulaEvaluator = getIfNull(formulaEvaluator,
-										() -> createFormulaEvaluator(WorkbookUtil.getCreationHelper(workbook))));
+								formulaEvaluator = getIfNull(formulaEvaluator, () -> CreationHelperUtil
+										.createFormulaEvaluator(WorkbookUtil.getCreationHelper(workbook))));
 						//
 						ifElse((value = getValueFromCell(objectMap)) == null, () -> {
 							throw new IllegalStateException();
@@ -8767,10 +8768,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static Boolean getBooleanValue(final CellValue instance) {
 		return instance != null ? Boolean.valueOf(instance.getBooleanValue()) : null;
-	}
-
-	private static FormulaEvaluator createFormulaEvaluator(final CreationHelper instance) {
-		return instance != null ? instance.createFormulaEvaluator() : null;
 	}
 
 	private static File getParentFile(final File instance) {

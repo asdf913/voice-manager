@@ -286,12 +286,11 @@ class VoiceManagerTest {
 			METHOD_ACTION_PERFORMED_FOR_SYSTEM_CLIPBOARD_ANNOTATED, METHOD_ACTION_PERFORMED_FOR_SPEECH_RATE,
 			METHOD_ACTION_PERFORMED_FOR_CONVERSION, METHOD_TEST_AND_RUN, METHOD_TO_CHAR_ARRAY, METHOD_HAS_LOWER_BOUND,
 			METHOD_HAS_UPPER_BOUND, METHOD_LOWER_END_POINT, METHOD_UPPER_END_POINT, METHOD_GET_IF_NULL,
-			METHOD_SET_LANGUAGE, METHOD_GET_LANGUAGE, METHOD_GET_BOOLEAN_VALUE, METHOD_CREATE_FORMULA_EVALUATOR,
-			METHOD_GET_RESPONSE_CODE, METHOD_TO_RUNTIME_EXCEPTION, METHOD_GET_ALGORITHM,
-			METHOD_SET_PREFERRED_WIDTH_ARRAY, METHOD_SET_PREFERRED_WIDTH_ITERABLE, METHOD_GET_VALUE_FROM_CELL,
-			METHOD_GET_MP3_TAGS, METHOD_KEY_RELEASED_FOR_TEXT_IMPORT, METHOD_IS_STATIC,
-			METHOD_IMPORT_BY_WORK_BOOK_FILES, METHOD_ACTION_PERFORMED_FOR_EXPORT_BUTTONS,
-			METHOD_CREATE_MULTI_MAP_BY_LIST_NAMES, METHOD_GET_FIELD_BY_NAME,
+			METHOD_SET_LANGUAGE, METHOD_GET_LANGUAGE, METHOD_GET_BOOLEAN_VALUE, METHOD_GET_RESPONSE_CODE,
+			METHOD_TO_RUNTIME_EXCEPTION, METHOD_GET_ALGORITHM, METHOD_SET_PREFERRED_WIDTH_ARRAY,
+			METHOD_SET_PREFERRED_WIDTH_ITERABLE, METHOD_GET_VALUE_FROM_CELL, METHOD_GET_MP3_TAGS,
+			METHOD_KEY_RELEASED_FOR_TEXT_IMPORT, METHOD_IS_STATIC, METHOD_IMPORT_BY_WORK_BOOK_FILES,
+			METHOD_ACTION_PERFORMED_FOR_EXPORT_BUTTONS, METHOD_CREATE_MULTI_MAP_BY_LIST_NAMES, METHOD_GET_FIELD_BY_NAME,
 			METHOD_CREATE_PROVIDER_VERSION_J_TEXT_COMPONENT, METHOD_CREATE_PROVIDER_PLATFORM_J_TEXT_COMPONENT,
 			METHOD_SET_SPEECH_VOLUME, METHOD_VALUES, METHOD_EXPORT_MICROSOFT_ACCESS, METHOD_IMPORT_RESULT_SET,
 			METHOD_CREATE_VOICE_ID_WARNING_PANEL, METHOD_CREATE_MICROSOFT_WINDOWS_COMPATIBILITY_WARNING_J_PANEL,
@@ -814,9 +813,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_GET_BOOLEAN_VALUE = clz.getDeclaredMethod("getBooleanValue", CellValue.class)).setAccessible(true);
 		//
-		(METHOD_CREATE_FORMULA_EVALUATOR = clz.getDeclaredMethod("createFormulaEvaluator", CreationHelper.class))
-				.setAccessible(true);
-		//
 		(METHOD_GET_RESPONSE_CODE = clz.getDeclaredMethod("getResponseCode", HttpURLConnection.class))
 				.setAccessible(true);
 		//
@@ -991,8 +987,6 @@ class VoiceManagerTest {
 		private Collection<Entry<?, ?>> multiMapEntries = null;
 
 		private Node namedItem, parentNode, appendChild, removeChild, cloneNode, item = null;
-
-		private Sheet sheet = null;
 
 		private NamedNodeMap attributes = null;
 
@@ -1303,10 +1297,6 @@ class VoiceManagerTest {
 					//
 					return sheetName;
 					//
-				} else if (Objects.equals(methodName, "createSheet") || Objects.equals(methodName, "getSheetAt")) {
-					//
-					return sheet;
-					//
 				} // if
 					//
 			} else if (proxy instanceof Multimap) {
@@ -1392,14 +1382,6 @@ class VoiceManagerTest {
 					return contains;
 					//
 				} else if (Objects.equals(methodName, "get")) {
-					//
-					return null;
-					//
-				} // if
-					//
-			} else if (proxy instanceof CreationHelper) {
-				//
-				if (Objects.equals(methodName, "createFormulaEvaluator")) {
 					//
 					return null;
 					//
@@ -7271,29 +7253,6 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof Boolean) {
 				return (Boolean) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testCreateFormulaEvaluator() throws Throwable {
-		//
-		Assertions.assertNull(createFormulaEvaluator(null));
-		//
-		Assertions.assertNull(createFormulaEvaluator(Reflection.newProxy(CreationHelper.class, ih)));
-		//
-	}
-
-	private static FormulaEvaluator createFormulaEvaluator(final CreationHelper instance) throws Throwable {
-		try {
-			final Object obj = METHOD_CREATE_FORMULA_EVALUATOR.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof FormulaEvaluator) {
-				return (FormulaEvaluator) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

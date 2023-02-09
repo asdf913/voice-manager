@@ -37,7 +37,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.CellValue;
-import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.CreationHelperUtil;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -97,11 +97,9 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 				try (final InputStream is = InputStreamSourceUtil.getInputStream(resource);
 						final Workbook wb = testAndApply(Objects::nonNull, is, WorkbookFactory::create, null)) {
 					//
-					final CreationHelper creationHelper = WorkbookUtil.getCreationHelper(wb);
-					//
 					final IValue0<List<JlptVocabulary>> list = getJlptVocabularies(
 							wb != null && wb.getNumberOfSheets() == 1 ? WorkbookUtil.getSheetAt(wb, 0) : null,
-							creationHelper != null ? creationHelper.createFormulaEvaluator() : null);
+							CreationHelperUtil.createFormulaEvaluator(WorkbookUtil.getCreationHelper(wb)));
 					//
 					if (list != null) {
 						//
