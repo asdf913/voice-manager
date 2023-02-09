@@ -239,7 +239,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 				//
 			} // if
 				//
-			final URI uri = uriBuilder != null ? uriBuilder.toURI() : null;
+			final URI uri = toURI(uriBuilder);
 			//
 			try {
 				//
@@ -358,6 +358,10 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 				//
 		} // if
 			//
+	}
+
+	private static URI toURI(final URIBuilder instance) {
+		return instance != null ? instance.toURI() : null;
 	}
 
 	private static String getText(final JTextComponent instance) {
