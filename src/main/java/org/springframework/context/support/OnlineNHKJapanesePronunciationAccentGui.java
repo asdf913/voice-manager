@@ -58,6 +58,7 @@ import javax.swing.ListModel;
 import javax.swing.MutableComboBoxModel;
 import javax.swing.text.JTextComponent;
 
+import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -259,9 +260,9 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 				//
 				Element element = null;
 				//
-				for (int i = 0; elements != null && i < elements.size(); i++) {
+				for (int i = 0; i < IterableUtils.size(elements); i++) {
 					//
-					if ((element = elements.get(i)) == null) {
+					if ((element = IterableUtils.get(elements, i)) == null) {
 						//
 						continue;
 						//
@@ -509,9 +510,9 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 		//
 		Element element = null;
 		//
-		for (int i = 0; children != null && i < children.size(); i++) {
+		for (int i = 0; i < IterableUtils.size(children); i++) {
 			//
-			if ((element = children.get(i)) == null) {
+			if ((element = IterableUtils.get(children, i)) == null) {
 				//
 				continue;
 				//
@@ -568,9 +569,9 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 		//
 		BufferedImage bi = null;
 		//
-		for (int i = 0; bis != null && i < bis.size(); i++) {
+		for (int i = 0; i < IterableUtils.size(bis); i++) {
 			//
-			if ((bi = bis.get(i)) == null) {
+			if ((bi = IterableUtils.get(bis, i)) == null) {
 				//
 				continue;
 				//
