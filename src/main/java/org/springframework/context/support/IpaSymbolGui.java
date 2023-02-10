@@ -12,6 +12,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.lang.reflect.Field;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -19,6 +20,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EventObject;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 
@@ -37,6 +39,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0Util;
 import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
@@ -54,6 +57,7 @@ import org.springframework.core.io.ResourceUtil;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
 
+import io.github.toolfactory.narcissus.Narcissus;
 import net.miginfocom.swing.MigLayout;
 
 public class IpaSymbolGui extends JFrame implements EnvironmentAware, InitializingBean, ActionListener {
@@ -123,6 +127,21 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 			//
 		} // if
 			//
+			// If "java.awt.Container.component" is null, return this method immediately
+			//
+			// The below check is for "-Djava.awt.headless=true"
+			//
+		final List<Field> fs = FieldUtils.getAllFieldsList(getClass(this)).stream()
+				.filter(f -> f != null && Objects.equals(f.getName(), "component")).toList();
+		//
+		final Field f = IterableUtils.size(fs) == 1 ? IterableUtils.get(fs, 0) : null;
+		//
+		if (f != null && Narcissus.getObjectField(this, f) == null) {
+			//
+			return;
+			//
+		} // if
+			//
 		final String wrap = "wrap";
 		//
 		add(new JLabel("Text"));
@@ -161,6 +180,10 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 		//
 	}
 
+	private static Class<?> getClass(final Object instance) {
+		return instance != null ? instance.getClass() : null;
+	}
+
 	private static void addActionListener(final ActionListener actionListener, final AbstractButton... abs) {
 		//
 		AbstractButton ab = null;
@@ -168,7 +191,9 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 		for (int i = 0; abs != null && i < abs.length; i++) {
 			//
 			if ((ab = abs[i]) == null) {
+				//
 				continue;
+				//
 			} // if
 				//
 			ab.addActionListener(actionListener);
@@ -262,8 +287,12 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 			//
 			setForeground(jlIpaJsonFile, iif(match, Color.GREEN, Color.RED));
 			//
-			pack();
-			//
+			if (!GraphicsEnvironment.isHeadless()) {
+				//
+				pack();
+				//
+			} // if
+				//
 		} // if
 			//
 	}
@@ -299,7 +328,22 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 	}
 
 	private static InputStream openStream(final URL instance) throws IOException {
+		//
+		// Check if "handler" field in "java.net.URL" class is null or not
+		//
+		final Field f = testAndApply(x -> IterableUtils.size(x) == 1,
+				Arrays.stream(URL.class.getDeclaredFields())
+						.filter(x -> x != null && Objects.equals(x.getName(), "handler")).toList(),
+				x -> IterableUtils.get(x, 0), null);
+		//
+		if (instance != null && f != null && Narcissus.getObjectField(instance, f) == null) {
+			//
+			return null;
+			//
+		} // if
+			//
 		return instance != null ? instance.openStream() : null;
+		//
 	}
 
 	private static byte[] digest(final MessageDigest instance, final byte[] input) {
