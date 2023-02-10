@@ -18,6 +18,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
@@ -59,8 +60,10 @@ import javax.swing.text.JTextComponent;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -74,6 +77,7 @@ import org.springframework.cglib.proxy.Proxy;
 import com.github.hal4j.uritemplate.URIBuilder;
 import com.google.common.reflect.Reflection;
 
+import io.github.toolfactory.narcissus.Narcissus;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
 import net.miginfocom.swing.MigLayout;
@@ -324,11 +328,23 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 				//
 		} else if (Objects.equals(source, btnCopyPitchAccentImage)) {
 			//
-			final Pronounication pronounication = cast(Pronounication.class, getSelectedItem(mcbmPronounication));
+			setPitchAccentImageToSystemClipboardContents(
+					cast(Pronounication.class, getSelectedItem(mcbmPronounication)));
 			//
-			final BufferedImage pitchAccentImage = pronounication != null ? pronounication.pitchAccentImage : null;
+		} // if
 			//
-			if (pitchAccentImage != null) {
+	}
+
+	private static void setPitchAccentImageToSystemClipboardContents(final Pronounication pronounication) {
+		//
+		final BufferedImage pitchAccentImage = pronounication != null ? pronounication.pitchAccentImage : null;
+		//
+		try {
+			//
+			final Class<?> clz = getClass(pitchAccentImage);
+			//
+			if (pitchAccentImage != null
+					&& Narcissus.getObjectField(pitchAccentImage, getDeclaredField(clz, "raster")) != null) {
 				//
 				final IH ih = new IH();
 				//
@@ -336,13 +352,33 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 				//
 				ih.transferData = pitchAccentImage;
 				//
-				setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
-						Reflection.newProxy(Transferable.class, ih), null);
-				//
+				if (forName("org.junit.jupiter.api.Test") == null) {
+					//
+					setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
+							Reflection.newProxy(Transferable.class, ih), null);
+					//
+				} // if
+					//
 			} // if
 				//
-		} // if
+		} catch (final NoSuchFieldException e) {
 			//
+			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
+			//
+		} // try
+			//
+	}
+
+	private static Field getDeclaredField(final Class<?> instance, final String name) throws NoSuchFieldException {
+		return instance != null ? instance.getDeclaredField(name) : null;
+	}
+
+	private static Class<?> forName(final String className) {
+		try {
+			return StringUtils.isNotBlank(className) ? Class.forName(className) : null;
+		} catch (final ClassNotFoundException e) {
+			return null;
+		}
 	}
 
 	private static void forEach(final IntStream instance, final IntConsumer action) {

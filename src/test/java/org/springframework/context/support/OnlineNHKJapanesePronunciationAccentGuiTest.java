@@ -14,11 +14,13 @@ import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.UncheckedIOException;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -39,6 +41,8 @@ import javax.swing.ListModel;
 import javax.swing.MutableComboBoxModel;
 import javax.swing.text.JTextComponent;
 
+import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.jena.ext.com.google.common.base.Predicates;
@@ -52,6 +56,7 @@ import org.springframework.beans.factory.InitializingBean;
 import com.github.hal4j.uritemplate.URIBuilder;
 import com.google.common.reflect.Reflection;
 
+import io.github.toolfactory.narcissus.Narcissus;
 import javassist.util.proxy.MethodHandler;
 import javassist.util.proxy.ProxyFactory;
 import javassist.util.proxy.ProxyObject;
@@ -62,12 +67,16 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 
 	private static final int ONE = 1;
 
+	private static Class<?> CLASS_PRONOUNICATION = null;
+
 	private static Method METHOD_CAST, METHOD_GET_SRC_MAP, METHOD_GET_CLASS, METHOD_GET_IMAGE_SRCS,
 			METHOD_CREATE_MERGED_BUFFERED_IMAGE, METHOD_TEST_AND_APPLY, METHOD_GET_GRAPHICS, METHOD_GET_WIDTH,
 			METHOD_GET_HEIGHT, METHOD_INT_VALUE, METHOD_GET_TEXT, METHOD_RELATIVE, METHOD_TO_URI, METHOD_TO_URL,
 			METHOD_GET_KEY, METHOD_SET_VALUE, METHOD_GET_VALUE, METHOD_ADD_ELEMENT, METHOD_REMOVE_ELEMENT_AT,
 			METHOD_GET_SELECTED_ITEM, METHOD_GET_SIZE, METHOD_ENTRY_SET, METHOD_ITERATOR, METHOD_GET_SYSTEM_CLIP_BOARD,
-			METHOD_SET_CONTENTS, METHOD_GET_PROTOCOL, METHOD_GET_HOST, METHOD_FOR_EACH, METHOD_MAP = null;
+			METHOD_SET_CONTENTS, METHOD_GET_PROTOCOL, METHOD_GET_HOST, METHOD_FOR_EACH, METHOD_MAP,
+			METHOD_SET_PITCH_ACCENT_IMAGE_TO_SYSTEM_CLIPBOARD_CONTENTS, METHOD_GET_DECLARED_FIELD,
+			METHOD_FOR_NAME = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -136,6 +145,17 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		(METHOD_FOR_EACH = clz.getDeclaredMethod("forEach", IntStream.class, IntConsumer.class)).setAccessible(true);
 		//
 		(METHOD_MAP = clz.getDeclaredMethod("map", IntStream.class, IntUnaryOperator.class)).setAccessible(true);
+		//
+		(METHOD_SET_PITCH_ACCENT_IMAGE_TO_SYSTEM_CLIPBOARD_CONTENTS = clz.getDeclaredMethod(
+				"setPitchAccentImageToSystemClipboardContents",
+				CLASS_PRONOUNICATION = Class.forName(
+						"org.springframework.context.support.OnlineNHKJapanesePronunciationAccentGui$Pronounication")))
+				.setAccessible(true);
+		//
+		(METHOD_GET_DECLARED_FIELD = clz.getDeclaredMethod("getDeclaredField", Class.class, String.class))
+				.setAccessible(true);
+		//
+		(METHOD_FOR_NAME = clz.getDeclaredMethod("forName", String.class)).setAccessible(true);
 		//
 	}
 
@@ -985,6 +1005,103 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				return null;
 			} else if (obj instanceof IntStream) {
 				return (IntStream) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetPitchAccentImageToSystemClipboardContents() throws Throwable {
+		//
+		final List<Constructor<?>> cs = testAndApply(Objects::nonNull,
+				CLASS_PRONOUNICATION != null ? CLASS_PRONOUNICATION.getDeclaredConstructors() : null, Arrays::stream,
+				null).filter(c -> c != null && c.getParameterCount() == 0).toList();
+		//
+		final Constructor<?> constructor = IterableUtils.size(cs) == 1 ? IterableUtils.get(cs, 0) : null;
+		//
+		if (constructor != null) {
+			//
+			constructor.setAccessible(true);
+			//
+		} // if
+			//
+		final Object pronounication = constructor != null ? constructor.newInstance() : null;
+		//
+		Assertions.assertDoesNotThrow(() -> setPitchAccentImageToSystemClipboardContents(pronounication));
+		//
+		// org.springframework.context.support.OnlineNHKJapanesePronunciationAccentGui$Pronounication.pitchAccentImage
+		//
+		final Field pitchAccentImage = CLASS_PRONOUNICATION != null
+				? CLASS_PRONOUNICATION.getDeclaredField("pitchAccentImage")
+				: null;
+		//
+		if (pitchAccentImage != null) {
+			//
+			pitchAccentImage.setAccessible(true);
+			//
+			pitchAccentImage.set(pronounication, Narcissus.allocateInstance(BufferedImage.class));
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> setPitchAccentImageToSystemClipboardContents(pronounication));
+		//
+		if (pitchAccentImage != null) {
+			//
+			pitchAccentImage.set(pronounication, new BufferedImage(ONE, ONE, BufferedImage.TYPE_4BYTE_ABGR));
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> setPitchAccentImageToSystemClipboardContents(pronounication));
+		//
+	}
+
+	private static void setPitchAccentImageToSystemClipboardContents(final Object pronounication) throws Throwable {
+		try {
+			METHOD_SET_PITCH_ACCENT_IMAGE_TO_SYSTEM_CLIPBOARD_CONTENTS.invoke(null, pronounication);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetDeclaredField() throws Throwable {
+		//
+		Assertions.assertNull(getDeclaredField(null, null));
+		//
+	}
+
+	private static Field getDeclaredField(final Class<?> instance, final String name) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_DECLARED_FIELD.invoke(null, instance, name);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Field) {
+				return (Field) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testForName() throws Throwable {
+		//
+		Assertions.assertNull(forName(null));
+		//
+		Assertions.assertNull(forName(Integer.toString(ONE)));
+		//
+	}
+
+	private static Class<?> forName(final String className) throws Throwable {
+		try {
+			final Object obj = METHOD_FOR_NAME.invoke(null, className);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Class) {
+				return (Class<?>) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
