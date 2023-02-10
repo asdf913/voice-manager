@@ -450,6 +450,14 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		//
 		Assertions.assertDoesNotThrow(() -> afterPropertiesSet(instance));
 		//
+		if (instance != null) {
+			//
+			instance.setImageFormatOrders(Arrays.asList("png","jpeg"));
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> afterPropertiesSet(instance));
+		//
 	}
 
 	private static void afterPropertiesSet(final InitializingBean instance) throws Exception {

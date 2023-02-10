@@ -137,11 +137,21 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 
 	private JLabel jlSavePitchAccentImage = null;
 
+	private List<String> imageFormatOrders = null;
+
 	private OnlineNHKJapanesePronunciationAccentGui() {
 	}
 
 	public void setUrl(final String url) {
 		this.url = url;
+	}
+
+	public void setImageFormatOrders(final List<String> imageFormatOrders) {
+		//
+		// TODO
+		//
+		this.imageFormatOrders = imageFormatOrders;
+		//
 	}
 
 	@Override
@@ -251,7 +261,29 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 			//
 		if (classNames != null) {
 			//
-			Collections.sort(classNames);
+			classNames.sort((a, b) -> {
+				//
+				final int ia = imageFormatOrders != null ? imageFormatOrders.indexOf(a) : -1;
+				//
+				final int ib = imageFormatOrders != null ? imageFormatOrders.indexOf(b) : -1;
+				//
+				if (ia >= 0 && ib >= 0) {
+					//
+					return Integer.compare(ia, ib);
+					//
+				} else if (ia >= 0) {
+					//
+					return -1;
+					//
+				} else if (ib >= 0) {
+					//
+					return 1;
+					//
+				} // if
+					//
+				return ObjectUtils.compare(a, b);
+				//
+			});
 			//
 		} // if
 			//
