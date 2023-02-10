@@ -211,30 +211,8 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 		//
 		if (Objects.equals(source, btnGetIpaSymbol)) {
 			//
-			final Collection<String> values = MultimapUtil.get(IValue0Util.getValue0(ipaSymbolMultimap),
-					getText(tfText));
+			setIpaSymbolTextField(headless);
 			//
-			final int size = IterableUtils.size(values);
-			//
-			if (size == 0) {
-				//
-				setText(tfIpaSymbol, null);
-				//
-			} else if (size == 1) {
-				//
-				setText(tfIpaSymbol, toString(IterableUtils.get(values, 0)));
-				//
-			} else if (Boolean.logicalAnd(!headless, !isTestMode())) {
-				//
-				final JList<Object> list = testAndApply(Objects::nonNull, toArray(values), JList::new,
-						x -> new JList<>());
-				//
-				JOptionPane.showMessageDialog(null, list, "IPA", JOptionPane.PLAIN_MESSAGE);
-				//
-				setText(tfIpaSymbol, toString(list.getSelectedValue()));
-				//
-			} // if
-				//
 		} else if (Objects.equals(source, btnCheckIpaSymbolJson)) {
 			//
 			MessageDigest md = null;
@@ -293,6 +271,32 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 				//
 			} // if
 				//
+		} // if
+			//
+	}
+
+	private void setIpaSymbolTextField(final boolean headless) {
+		//
+		final Collection<String> values = MultimapUtil.get(IValue0Util.getValue0(ipaSymbolMultimap), getText(tfText));
+		//
+		final int size = IterableUtils.size(values);
+		//
+		if (size == 0) {
+			//
+			setText(tfIpaSymbol, null);
+			//
+		} else if (size == 1) {
+			//
+			setText(tfIpaSymbol, toString(IterableUtils.get(values, 0)));
+			//
+		} else if (Boolean.logicalAnd(!headless, !isTestMode())) {
+			//
+			final JList<Object> list = testAndApply(Objects::nonNull, toArray(values), JList::new, x -> new JList<>());
+			//
+			JOptionPane.showMessageDialog(null, list, "IPA", JOptionPane.PLAIN_MESSAGE);
+			//
+			setText(tfIpaSymbol, toString(list.getSelectedValue()));
+			//
 		} // if
 			//
 	}
