@@ -59,7 +59,6 @@ import javax.swing.MutableComboBoxModel;
 import javax.swing.text.JTextComponent;
 
 import org.apache.commons.collections4.IterableUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
@@ -305,37 +304,43 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 		//
 		if (iterator(entrySet) != null) {
 			//
-			InputStream is = null;
-			//
 			for (final Entry<String, String> entry : entrySet) {
 				//
-				if (!Objects.equals("audio/wav", getKey(entry))) {
-					//
-					continue;
-					//
-				} // if
-					//
 				try {
 					//
-					play(testAndApply(Objects::nonNull,
-							is = openStream(testAndApply(Objects::nonNull, getValue(entry), URL::new, null)),
-							Player::new, null));
-					//
+					if (playAudio(getKey(entry), getValue(entry)) != null) {
+						//
+						break;
+						//
+					} // if
 				} catch (final JavaLayerException | IOException e) {
 					//
 					TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
 					//
-				} finally {
+				} // if
 					//
-					IOUtils.closeQuietly(is);
-					//
-				} // try
-					//
-				break;
-				//
 			} // for
 				//
 		} // if
+			//
+	}
+
+	private static Object playAudio(final Object key, final String value)
+			throws MalformedURLException, JavaLayerException, IOException {
+		//
+		if (Objects.equals("audio/wav", key)) {
+			//
+			return null;
+			//
+		} // if
+			//
+		try (final InputStream is = openStream(testAndApply(Objects::nonNull, value, URL::new, null))) {
+			//
+			play(testAndApply(Objects::nonNull, is, Player::new, null));
+			//
+			return "";
+			//
+		} // try
 			//
 	}
 
