@@ -28,4 +28,8 @@ public interface ElementUtil {
 		return instance != null ? instance.attr(attributeKey) : null;
 	}
 
+	static Element nextElementSibling(final Element instance) {
+		return instance != null ? instance.nextElementSibling() : null;
+	}
+
 }

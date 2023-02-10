@@ -30,4 +30,11 @@ class ElementUtilTest {
 		//
 	}
 
+	@Test
+	void testNextElementSibling() {
+		//
+		Assertions.assertNull(ElementUtil.nextElementSibling(new Element("a")));
+		//
+	}
+
 }

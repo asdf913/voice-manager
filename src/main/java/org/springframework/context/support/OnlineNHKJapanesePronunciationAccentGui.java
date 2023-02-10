@@ -549,7 +549,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 		//
 		Element temp = element, nextElement = null;
 		//
-		while ((nextElement = temp != null ? temp.nextElementSibling() : null) != null
+		while ((nextElement = ElementUtil.nextElementSibling(temp)) != null
 				&& !Objects.equals("audio", nextElement.tagName())) {
 			//
 			if ((srcs = ObjectUtils.getIfNull(srcs, ArrayList::new)) != null) {
