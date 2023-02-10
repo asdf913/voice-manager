@@ -42,7 +42,6 @@ import java.util.function.IntConsumer;
 import java.util.function.IntUnaryOperator;
 import java.util.function.Predicate;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
@@ -57,7 +56,6 @@ import javax.swing.MutableComboBoxModel;
 import javax.swing.text.JTextComponent;
 
 import org.apache.commons.collections4.IterableUtils;
-import org.apache.commons.compress.archivers.dump.DumpArchiveConstants.COMPRESSION_TYPE;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -68,7 +66,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.cglib.proxy.Proxy;
 
 import com.github.hal4j.uritemplate.URIBuilder;
 import com.google.common.reflect.Reflection;
