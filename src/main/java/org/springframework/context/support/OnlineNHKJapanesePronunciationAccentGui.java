@@ -245,10 +245,9 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 								ImageWriterSpi.class),
 						x -> Narcissus.getField(x, getDeclaredField(getClass(x), "map")), null));
 		//
-		final List<String> classNames = testAndApply(
-				Objects::nonNull, stream(imageWriterSpis.keySet())
-						.map(x -> x instanceof Class<?> ? ((Class<?>) x).getName() : null).toList(),
-				ArrayList::new, null);
+		final List<String> classNames = testAndApply(Objects::nonNull,
+				stream(imageWriterSpis.keySet()).map(x -> getName(cast(Class.class, x))).toList(), ArrayList::new,
+				null);
 		//
 		final String commonPrefix = StringUtils.getCommonPrefix(classNames.toArray(new String[] {}));
 		//
@@ -311,6 +310,10 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 		//
 		pack();
 		//
+	}
+
+	private static String getName(final Class<?> instance) {
+		return instance != null ? instance.getName() : null;
 	}
 
 	private static void addActionListener(final ActionListener actionListener, final AbstractButton... bs) {
