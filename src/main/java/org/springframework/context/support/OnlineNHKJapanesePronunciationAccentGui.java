@@ -535,8 +535,13 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 	private static void saveAudio(final boolean headless, final Pronounication pronounication,
 			final Object audioFormat) {
 		//
-		final Map<String, String> audioUrls = testAndApply(Objects::nonNull,
-				pronounication != null ? pronounication.audioUrls : null, LinkedHashMap::new, null);
+		saveAudio(headless, testAndApply(Objects::nonNull, pronounication != null ? pronounication.audioUrls : null,
+				LinkedHashMap::new, null), audioFormat);
+		//
+	}
+
+	private static void saveAudio(final boolean headless, final Map<String, String> audioUrls,
+			final Object audioFormat) {
 		//
 		final JFileChooser jfc = new JFileChooser(".");
 		//
