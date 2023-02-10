@@ -11,6 +11,7 @@ import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.awt.image.ImageObserver;
 import java.awt.image.RenderedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -80,7 +81,8 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			METHOD_GET_SIZE, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_GET_PROTOCOL, METHOD_GET_HOST,
 			METHOD_FOR_EACH, METHOD_MAP, METHOD_SET_PITCH_ACCENT_IMAGE_TO_SYSTEM_CLIPBOARD_CONTENTS,
 			METHOD_SAVE_PITCH_ACCENT_IMAGE, METHOD_PLAY_AUDIO, METHOD_GET_DECLARED_FIELD, METHOD_FOR_NAME,
-			METHOD_OPEN_STREAM, METHOD_PLAY, METHOD_ADD_ACTION_LISTENER, METHOD_GET, METHOD_SET_TEXT = null;
+			METHOD_OPEN_STREAM, METHOD_PLAY, METHOD_ADD_ACTION_LISTENER, METHOD_GET, METHOD_SET_TEXT,
+			METHOD_DRAW_IMAGE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -172,6 +174,9 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		(METHOD_GET = clz.getDeclaredMethod("get", Map.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_SET_TEXT = clz.getDeclaredMethod("setText", JLabel.class, String.class)).setAccessible(true);
+		//
+		(METHOD_DRAW_IMAGE = clz.getDeclaredMethod("drawImage", Graphics.class, Image.class, Integer.TYPE, Integer.TYPE,
+				ImageObserver.class)).setAccessible(true);
 		//
 	}
 
@@ -294,6 +299,8 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 
 		private Clipboard systemClipboard = null;
 
+		private Boolean drawImage = null;
+
 		@Override
 		public Object invoke(final Object self, final Method thisMethod, final Method proceed, final Object[] args)
 				throws Throwable {
@@ -313,6 +320,14 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				if (Objects.equals(methodName, "getSystemClipboard")) {
 					//
 					return systemClipboard;
+					//
+				} // if
+					//
+			} else if (self instanceof Graphics) {
+				//
+				if (Objects.equals(methodName, "drawImage")) {
+					//
+					return drawImage;
 					//
 				} // if
 					//
@@ -1116,8 +1131,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			//
 		} // if
 			//
-//		Assertions.assertDoesNotThrow(() -> setPitchAccentImageToSystemClipboardContents(pronounication));
-		//
 	}
 
 	private void savePitchAccentImage(final Object pronounication) throws Throwable {
@@ -1322,6 +1335,44 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 	private static void setText(final JLabel instance, final String text) throws Throwable {
 		try {
 			METHOD_SET_TEXT.invoke(null, instance, text);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testDrawImage() throws Throwable {
+		//
+		Assertions.assertDoesNotThrow(() -> drawImage(null, null, 0, 0, null));
+		//
+		boolean b = true;
+		//
+		if (mh != null) {
+			//
+			mh.drawImage = Boolean.valueOf(b);
+			//
+		} // if
+			//
+		Assertions.assertEquals(b, drawImage(createProxy(Graphics.class, mh), null, 0, 0, null));
+		//
+		if (mh != null) {
+			//
+			mh.drawImage = Boolean.valueOf(b = false);
+			//
+		} // if
+			//
+		Assertions.assertEquals(b, drawImage(createProxy(Graphics.class, mh), null, 0, 0, null));
+		//
+	}
+
+	private static boolean drawImage(final Graphics instance, final Image image, final int x, final int y,
+			final ImageObserver observer) throws Throwable {
+		try {
+			final Object obj = METHOD_DRAW_IMAGE.invoke(null, instance, image, x, y, observer);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

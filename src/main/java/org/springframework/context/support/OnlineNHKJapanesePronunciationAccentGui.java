@@ -12,6 +12,7 @@ import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.awt.image.ImageObserver;
 import java.awt.image.RenderedImage;
 import java.io.IOException;
 import java.io.InputStream;
@@ -767,13 +768,13 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 				//
 			} // if
 				//
-			if (graphics == null && (graphics = getGraphics(result)) == null) {
+			if (graphics == null) {
 				//
-				continue;
+				graphics = getGraphics(result);
 				//
 			} // if
 				//
-			graphics.drawImage(bi, position != null ? position.getAndAdd(intValue(getWidth(bi), 0)) : 0, 0, null);
+			drawImage(graphics, bi, position != null ? position.getAndAdd(intValue(getWidth(bi), 0)) : 0, 0, null);
 			//
 		} // for
 			//
@@ -783,6 +784,11 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 
 	private static Graphics getGraphics(final Image instance) {
 		return instance != null ? instance.getGraphics() : null;
+	}
+
+	private static boolean drawImage(final Graphics instance, final Image image, final int x, final int y,
+			final ImageObserver observer) {
+		return instance != null && instance.drawImage(image, x, y, observer);
 	}
 
 	private static Integer getWidth(final RenderedImage instance) {
