@@ -78,7 +78,8 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			METHOD_SET_VALUE, METHOD_GET_VALUE, METHOD_ADD_ELEMENT, METHOD_REMOVE_ELEMENT_AT, METHOD_GET_SELECTED_ITEM,
 			METHOD_GET_SIZE, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_GET_PROTOCOL, METHOD_GET_HOST,
 			METHOD_FOR_EACH, METHOD_MAP, METHOD_SET_PITCH_ACCENT_IMAGE_TO_SYSTEM_CLIPBOARD_CONTENTS, METHOD_PLAY_AUDIO,
-			METHOD_GET_DECLARED_FIELD, METHOD_FOR_NAME, METHOD_OPEN_STREAM, METHOD_PLAY = null;
+			METHOD_GET_DECLARED_FIELD, METHOD_FOR_NAME, METHOD_OPEN_STREAM, METHOD_PLAY,
+			METHOD_ADD_ACTION_LISTENER = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -158,6 +159,9 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		(METHOD_OPEN_STREAM = clz.getDeclaredMethod("openStream", URL.class)).setAccessible(true);
 		//
 		(METHOD_PLAY = clz.getDeclaredMethod("play", Player.class)).setAccessible(true);
+		//
+		(METHOD_ADD_ACTION_LISTENER = clz.getDeclaredMethod("addActionListener", ActionListener.class,
+				AbstractButton[].class)).setAccessible(true);
 		//
 	}
 
@@ -392,6 +396,19 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			//
 		Assertions
 				.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnCopyPitchAccentImage, 0, null)));
+		//
+		// btnSavePitchAccentImage
+		//
+		final AbstractButton btnSavePitchAccentImage = new JButton();
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "btnSavePitchAccentImage", btnSavePitchAccentImage, true);
+			//
+		} // if
+			//
+		Assertions
+				.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnSavePitchAccentImage, 0, null)));
 		//
 	}
 
@@ -1160,6 +1177,24 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 	private static void play(final Player instance) throws Throwable {
 		try {
 			METHOD_PLAY.invoke(null, instance);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testAddActionListener() {
+		//
+		Assertions.assertDoesNotThrow(() -> addActionListener(null, (AbstractButton[]) null));
+		//
+		Assertions.assertDoesNotThrow(() -> addActionListener(null, (AbstractButton) null));
+		//
+	}
+
+	private static void addActionListener(final ActionListener actionListener, final AbstractButton... bs)
+			throws Throwable {
+		try {
+			METHOD_ADD_ACTION_LISTENER.invoke(null, actionListener, bs);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

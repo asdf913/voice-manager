@@ -49,6 +49,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -106,7 +107,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 	@Note("Play Audio")
 	private AbstractButton btnPlayAudio = null;
 
-	private AbstractButton btnCopyPitchAccentImage = null;
+	private AbstractButton btnCopyPitchAccentImage, btnSavePitchAccentImage = null;
 
 	private transient MutableComboBoxModel<Pronounication> mcbmPronounication = null;
 
@@ -130,7 +131,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 		//
 		final String growx = "growx";
 		//
-		add(tfText = new JTextField(), String.format("%1$s,wmin %2$s", growx, "100px"));
+		add(tfText = new JTextField(), String.format("%1$s,wmin %2$s,span %3$s", growx, "100px", 2));
 		//
 		final String wrap = "wrap";
 		//
@@ -168,18 +169,38 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 
 		});
 		//
-		add(jcbPronounication, growx);
+		add(jcbPronounication, String.format("%1$s,span %2$s", growx, 2));
 		//
-		add(btnPlayAudio = new JButton("Play"));
+		add(btnPlayAudio = new JButton("Play"), wrap);
 		//
-		btnPlayAudio.addActionListener(this);
+		add(new JLabel("Image"));
 		//
-		add(btnCopyPitchAccentImage = new JButton("Copy Pitch Accent Image"));
+		add(btnCopyPitchAccentImage = new JButton("Copy Image"));
 		//
-		btnCopyPitchAccentImage.addActionListener(this);
+		add(btnSavePitchAccentImage = new JButton("Save Image"));
+		//
+		addActionListener(this, btnPlayAudio, btnCopyPitchAccentImage, btnSavePitchAccentImage);
 		//
 		pack();
 		//
+	}
+
+	private static void addActionListener(final ActionListener actionListener, final AbstractButton... bs) {
+		//
+		AbstractButton b = null;
+		//
+		for (int i = 0; bs != null && i < bs.length; i++) {
+			//
+			if ((b = bs[i]) == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			b.addActionListener(actionListener);
+			//
+		} // for
+			//
 	}
 
 	private static <E> Component getListCellRendererComponent(final ListCellRenderer<E> instance,
@@ -294,6 +315,34 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 			setPitchAccentImageToSystemClipboardContents(
 					cast(Pronounication.class, getSelectedItem(mcbmPronounication)));
 			//
+		} else if (Objects.equals(source, btnSavePitchAccentImage)) {
+			//
+			final Pronounication pronounication = cast(Pronounication.class, getSelectedItem(mcbmPronounication));
+			//
+			final BufferedImage pitchAccentImage = pronounication != null ? pronounication.pitchAccentImage : null;
+			//
+			if (pitchAccentImage != null) {
+				//
+				final JFileChooser jfc = new JFileChooser(".");
+				//
+				if (jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+					//
+					try {
+						//
+						// TODO
+						//
+						ImageIO.write(pitchAccentImage, "png", jfc.getSelectedFile());
+						//
+					} catch (final IOException e) {
+						//
+						TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
+						//
+					} // try
+						//
+				} // if
+					//
+			} // if
+				//
 		} // if
 			//
 	}
