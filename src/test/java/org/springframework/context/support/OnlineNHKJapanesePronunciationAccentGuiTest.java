@@ -84,9 +84,9 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			METHOD_SET_VALUE, METHOD_GET_VALUE, METHOD_ADD_ELEMENT, METHOD_REMOVE_ELEMENT_AT, METHOD_GET_SELECTED_ITEM,
 			METHOD_GET_SIZE, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_GET_PROTOCOL, METHOD_GET_HOST,
 			METHOD_FOR_EACH, METHOD_MAP, METHOD_SET_PITCH_ACCENT_IMAGE_TO_SYSTEM_CLIPBOARD_CONTENTS,
-			METHOD_SAVE_PITCH_ACCENT_IMAGE, METHOD_PLAY_AUDIO, METHOD_GET_DECLARED_FIELD, METHOD_FOR_NAME,
-			METHOD_OPEN_STREAM, METHOD_PLAY, METHOD_ADD_ACTION_LISTENER, METHOD_GET, METHOD_SET_TEXT, METHOD_DRAW_IMAGE,
-			METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_SAVE_FILE, METHOD_CONTAINS_KEY = null;
+			METHOD_SAVE_PITCH_ACCENT_IMAGE, METHOD_PLAY_AUDIO, METHOD_PRONOUNICATION_CHANGED, METHOD_GET_DECLARED_FIELD,
+			METHOD_FOR_NAME, METHOD_OPEN_STREAM, METHOD_PLAY, METHOD_ADD_ACTION_LISTENER, METHOD_GET, METHOD_SET_TEXT,
+			METHOD_DRAW_IMAGE, METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_SAVE_FILE, METHOD_CONTAINS_KEY = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -163,6 +163,9 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		//
 		(METHOD_PLAY_AUDIO = clz.getDeclaredMethod("playAudio", CLASS_PRONOUNICATION)).setAccessible(true);
 		//
+		(METHOD_PRONOUNICATION_CHANGED = clz.getDeclaredMethod("pronounicationChanged", CLASS_PRONOUNICATION,
+				MutableComboBoxModel.class)).setAccessible(true);
+		//
 		(METHOD_GET_DECLARED_FIELD = clz.getDeclaredMethod("getDeclaredField", Class.class, String.class))
 				.setAccessible(true);
 		//
@@ -202,7 +205,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 
 		private Iterator<?> iterator = null;
 
-		private Boolean hasNext, containsKey = null;
+		private Boolean hasNext, containsKey, isEmpty = null;
 
 		private Component component = null;
 
@@ -252,6 +255,10 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				if (Objects.equals(methodName, "get")) {
 					//
 					return get;
+					//
+				} else if (Objects.equals(methodName, "isEmpty")) {
+					//
+					return isEmpty;
 					//
 				} // if
 					//
@@ -1243,6 +1250,36 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 	private static void playAudio(final Object pronounication) throws Throwable {
 		try {
 			METHOD_PLAY_AUDIO.invoke(null, pronounication);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testPronounicationChanged() throws Throwable {
+		//
+		Assertions.assertDoesNotThrow(() -> pronounicationChanged(pronounication, null));
+		//
+		if (pronounication != null) {
+			//
+			FieldUtils.writeDeclaredField(pronounication, "audioUrls", map, true);
+			//
+		} // if
+			//
+		if (ih != null) {
+			//
+			ih.isEmpty = Boolean.FALSE;
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> pronounicationChanged(pronounication, null));
+		//
+	}
+
+	private static void pronounicationChanged(final Object pronounication,
+			final MutableComboBoxModel<String> mcbmAudioFormat) throws Throwable {
+		try {
+			METHOD_PRONOUNICATION_CHANGED.invoke(null, pronounication, mcbmAudioFormat);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

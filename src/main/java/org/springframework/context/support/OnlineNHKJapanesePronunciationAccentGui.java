@@ -477,20 +477,8 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 			//
 		} else if (Objects.equals(source, jcbPronounication)) {
 			//
-			forEach(reverseRange(0, getSize(mcbmAudioFormat)), i -> removeElementAt(mcbmAudioFormat, i));
+			pronounicationChanged(cast(Pronounication.class, getSelectedItem(mcbmPronounication)), mcbmAudioFormat);
 			//
-			final Pronounication pronounication = cast(Pronounication.class, getSelectedItem(mcbmPronounication));
-			//
-			final Map<String, String> audioUrls = pronounication != null ? pronounication.audioUrls : null;
-			//
-			if (MapUtils.isNotEmpty(audioUrls)) {
-				//
-				addElement(mcbmAudioFormat, null);
-				//
-				audioUrls.forEach((k, v) -> addElement(mcbmAudioFormat, k));
-				//
-			} // if
-				//
 		} // if
 			//
 	}
@@ -652,6 +640,23 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 					//
 			} // if
 				//
+		} // if
+			//
+	}
+
+	private static void pronounicationChanged(final Pronounication pronounication,
+			final MutableComboBoxModel<String> mcbmAudioFormat) {
+		//
+		forEach(reverseRange(0, getSize(mcbmAudioFormat)), i -> removeElementAt(mcbmAudioFormat, i));
+		//
+		final Map<String, String> audioUrls = pronounication != null ? pronounication.audioUrls : null;
+		//
+		if (MapUtils.isNotEmpty(audioUrls)) {
+			//
+			addElement(mcbmAudioFormat, null);
+			//
+			audioUrls.forEach((k, v) -> addElement(mcbmAudioFormat, k));
+			//
 		} // if
 			//
 	}
