@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.EventObject;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -258,34 +259,30 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 			//
 		} // if
 			//
-		if (classNames != null) {
+		sort(classNames, (a, b) -> {
 			//
-			classNames.sort((a, b) -> {
-				//
-				final int ia = imageFormatOrders != null ? imageFormatOrders.indexOf(a) : -1;
-				//
-				final int ib = imageFormatOrders != null ? imageFormatOrders.indexOf(b) : -1;
-				//
-				if (ia >= 0 && ib >= 0) {
-					//
-					return Integer.compare(ia, ib);
-					//
-				} else if (ia >= 0) {
-					//
-					return -1;
-					//
-				} else if (ib >= 0) {
-					//
-					return 1;
-					//
-				} // if
-					//
-				return ObjectUtils.compare(a, b);
-				//
-			});
+			final int ia = imageFormatOrders != null ? imageFormatOrders.indexOf(a) : -1;
 			//
-		} // if
+			final int ib = imageFormatOrders != null ? imageFormatOrders.indexOf(b) : -1;
 			//
+			if (ia >= 0 && ib >= 0) {
+				//
+				return Integer.compare(ia, ib);
+				//
+			} else if (ia >= 0) {
+				//
+				return -1;
+				//
+			} else if (ib >= 0) {
+				//
+				return 1;
+				//
+			} // if
+				//
+			return ObjectUtils.compare(a, b);
+			//
+		});
+		//
 		final MutableComboBoxModel<String> mcbm = new DefaultComboBoxModel<>();
 		//
 		add(new JComboBox<>(mcbm), growx);
@@ -314,6 +311,17 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 
 	private static String getName(final Class<?> instance) {
 		return instance != null ? instance.getName() : null;
+	}
+
+	private static <E> void sort(final List<E> instance, final Comparator<? super E> comparator) {
+		//
+		if (instance != null
+				&& (Proxy.isProxyClass(getClass(instance)) || (instance.size() > 1 && comparator != null))) {
+			//
+			instance.sort(comparator);
+			//
+		} // if
+			//
 	}
 
 	private static void addActionListener(final ActionListener actionListener, final AbstractButton... bs) {

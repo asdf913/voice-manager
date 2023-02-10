@@ -26,8 +26,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -52,6 +55,7 @@ import javax.swing.MutableComboBoxModel;
 import javax.swing.text.JTextComponent;
 
 import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.compress.archivers.dump.DumpArchiveConstants.COMPRESSION_TYPE;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.jena.ext.com.google.common.base.Predicates;
@@ -88,8 +92,8 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			METHOD_SAVE_PITCH_ACCENT_IMAGE, METHOD_PLAY_AUDIO, METHOD_SAVE_AUDIO, METHOD_PRONOUNICATION_CHANGED,
 			METHOD_GET_DECLARED_FIELD, METHOD_FOR_NAME, METHOD_OPEN_STREAM, METHOD_PLAY, METHOD_ADD_ACTION_LISTENER,
 			METHOD_GET, METHOD_SET_TEXT, METHOD_SET_FORE_GROUND, METHOD_DRAW_IMAGE,
-			METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_SAVE_FILE, METHOD_CONTAINS_KEY, METHOD_IIF,
-			METHOD_GET_NAME = null;
+			METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_SAVE_FILE, METHOD_CONTAINS_KEY, METHOD_IIF, METHOD_GET_NAME,
+			METHOD_SORT = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -206,6 +210,8 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		//
 		(METHOD_GET_NAME = clz.getDeclaredMethod("getName", Class.class)).setAccessible(true);
 		//
+		(METHOD_SORT = clz.getDeclaredMethod("sort", List.class, Comparator.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -249,7 +255,9 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof Iterator) {
+			} // if
+				//
+			if (proxy instanceof Iterator) {
 				//
 				if (Objects.equals(methodName, "hasNext")) {
 					//
@@ -274,6 +282,14 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 					return isEmpty;
 					//
 				} else if (Objects.equals(methodName, "size")) {
+					//
+					return size;
+					//
+				} // if
+					//
+			} else if (proxy instanceof Collection) {
+				//
+				if (Objects.equals(methodName, "size")) {
 					//
 					return size;
 					//
@@ -1671,6 +1687,33 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				return (String) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSort() {
+		//
+		Assertions.assertDoesNotThrow(() -> sort(null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> sort(Collections.emptyList(), null));
+		//
+		Assertions.assertDoesNotThrow(() -> sort(new ArrayList<>(Collections.nCopies(2, null)), null));
+		//
+		if (ih != null) {
+			//
+			ih.size = Integer.valueOf(0);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> sort(Reflection.newProxy(List.class, ih), null));
+		//
+	}
+
+	private static <E> void sort(final List<E> instance, final Comparator<? super E> comparator) throws Throwable {
+		try {
+			METHOD_SORT.invoke(null, instance, comparator);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
