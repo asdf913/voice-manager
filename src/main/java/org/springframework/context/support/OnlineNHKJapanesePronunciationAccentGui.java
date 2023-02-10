@@ -2,6 +2,7 @@ package org.springframework.context.support;
 
 import java.awt.Component;
 import java.awt.Graphics;
+import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -67,6 +68,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -131,6 +133,21 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 		if (!(getLayout() instanceof MigLayout)) {
 			//
 			setLayout(new MigLayout());
+			//
+		} // if
+			//
+			// If "java.awt.Container.component" is null, return this method immediately
+			//
+			// The below check is for "-Djava.awt.headless=true"
+			//
+		final List<Field> fs = stream(FieldUtils.getAllFieldsList(getClass(this)))
+				.filter(f -> f != null && Objects.equals(f.getName(), "component")).toList();
+		//
+		final Field f = IterableUtils.size(fs) == 1 ? IterableUtils.get(fs, 0) : null;
+		//
+		if (f != null && Narcissus.getObjectField(this, f) == null) {
+			//
+			return;
 			//
 		} // if
 			//
@@ -266,7 +283,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 		//
 	}
 
-	private static class Pronounication {
+	public static class Pronounication {
 
 		private Map<String, String> audioUrls = null;
 
@@ -352,8 +369,12 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 					//
 				} // for
 					//
-				pack();
-				//
+				if (!GraphicsEnvironment.isHeadless()) {
+					//
+					pack();
+					//
+				} // if
+					//
 			} catch (final IOException e) {
 				//
 				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
@@ -371,34 +392,8 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 			//
 		} else if (Objects.equals(source, btnSavePitchAccentImage)) {
 			//
-			final Pronounication pronounication = cast(Pronounication.class, getSelectedItem(mcbmPronounication));
+			savePitchAccentImage(cast(Pronounication.class, getSelectedItem(mcbmPronounication)));
 			//
-			final BufferedImage pitchAccentImage = pronounication != null ? pronounication.pitchAccentImage : null;
-			//
-			if (pitchAccentImage != null) {
-				//
-				final JFileChooser jfc = new JFileChooser(".");
-				//
-				if (jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-					//
-					try {
-						//
-						setText(jlSavePitchAccentImage,
-								ImageIO.write(pitchAccentImage, toString(getSelectedItem(mcbmImageFormat)),
-										jfc.getSelectedFile()) ? "Saved" : "Not Saved");
-						//
-						pack();
-						//
-					} catch (final IOException e) {
-						//
-						TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
-						//
-					} // try
-						//
-				} // if
-					//
-			} // if
-				//
 		} // if
 			//
 	}
@@ -472,33 +467,81 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 		//
 		final BufferedImage pitchAccentImage = pronounication != null ? pronounication.pitchAccentImage : null;
 		//
+		Object raster = null;
+		//
 		try {
 			//
-			final Class<?> clz = getClass(pitchAccentImage);
+			raster = testAndApply(Objects::nonNull, pitchAccentImage,
+					x -> Narcissus.getObjectField(x, getDeclaredField(getClass(x), "raster")), null);
 			//
-			if (pitchAccentImage != null
-					&& Narcissus.getObjectField(pitchAccentImage, getDeclaredField(clz, "raster")) != null) {
-				//
-				final IH ih = new IH();
-				//
-				ih.transferDataFlavors = new DataFlavor[] { DataFlavor.imageFlavor };
-				//
-				ih.transferData = pitchAccentImage;
-				//
-				if (forName("org.junit.jupiter.api.Test") == null) {
-					//
-					setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
-							Reflection.newProxy(Transferable.class, ih), null);
-					//
-				} // if
-					//
-			} // if
-				//
 		} catch (final NoSuchFieldException e) {
 			//
 			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
 			//
 		} // try
+			//
+		if (pitchAccentImage != null && raster != null) {
+			//
+			final IH ih = new IH();
+			//
+			ih.transferDataFlavors = new DataFlavor[] { DataFlavor.imageFlavor };
+			//
+			ih.transferData = pitchAccentImage;
+			//
+			if (forName("org.junit.jupiter.api.Test") == null) {
+				//
+				setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
+						Reflection.newProxy(Transferable.class, ih), null);
+				//
+			} // if
+				//
+		} // if
+			//
+	}
+
+	private void savePitchAccentImage(final Pronounication pronounication) {
+		//
+		final BufferedImage pitchAccentImage = pronounication != null ? pronounication.pitchAccentImage : null;
+		//
+		Object raster = null;
+		//
+		try {
+			//
+			raster = testAndApply(Objects::nonNull, pitchAccentImage,
+					x -> Narcissus.getObjectField(x, getDeclaredField(getClass(x), "raster")), null);
+			//
+		} catch (final NoSuchFieldException e) {
+			//
+			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
+			//
+		} // try
+			//
+		if (pitchAccentImage != null && raster != null) {
+			//
+			final JFileChooser jfc = new JFileChooser(".");
+			//
+			if (!GraphicsEnvironment.isHeadless() && jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+				//
+				try {
+					//
+					setText(jlSavePitchAccentImage, ImageIO.write(pitchAccentImage,
+							toString(getSelectedItem(mcbmImageFormat)), jfc.getSelectedFile()) ? "Saved" : "Not Saved");
+					//
+					if (!GraphicsEnvironment.isHeadless()) {
+						//
+						pack();
+						//
+					} // if
+						//
+				} catch (final IOException e) {
+					//
+					TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
+					//
+				} // try
+					//
+			} // if
+				//
+		} // if
 			//
 	}
 

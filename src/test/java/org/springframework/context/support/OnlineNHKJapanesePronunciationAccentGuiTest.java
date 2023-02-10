@@ -78,9 +78,9 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			METHOD_GET_HEIGHT, METHOD_INT_VALUE, METHOD_GET_TEXT, METHOD_RELATIVE, METHOD_TO_URI, METHOD_TO_URL,
 			METHOD_SET_VALUE, METHOD_GET_VALUE, METHOD_ADD_ELEMENT, METHOD_REMOVE_ELEMENT_AT, METHOD_GET_SELECTED_ITEM,
 			METHOD_GET_SIZE, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_GET_PROTOCOL, METHOD_GET_HOST,
-			METHOD_FOR_EACH, METHOD_MAP, METHOD_SET_PITCH_ACCENT_IMAGE_TO_SYSTEM_CLIPBOARD_CONTENTS, METHOD_PLAY_AUDIO,
-			METHOD_GET_DECLARED_FIELD, METHOD_FOR_NAME, METHOD_OPEN_STREAM, METHOD_PLAY, METHOD_ADD_ACTION_LISTENER,
-			METHOD_GET, METHOD_SET_TEXT = null;
+			METHOD_FOR_EACH, METHOD_MAP, METHOD_SET_PITCH_ACCENT_IMAGE_TO_SYSTEM_CLIPBOARD_CONTENTS,
+			METHOD_SAVE_PITCH_ACCENT_IMAGE, METHOD_PLAY_AUDIO, METHOD_GET_DECLARED_FIELD, METHOD_FOR_NAME,
+			METHOD_OPEN_STREAM, METHOD_PLAY, METHOD_ADD_ACTION_LISTENER, METHOD_GET, METHOD_SET_TEXT = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -152,6 +152,9 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 						"org.springframework.context.support.OnlineNHKJapanesePronunciationAccentGui$Pronounication")))
 				.setAccessible(true);
 		//
+		(METHOD_SAVE_PITCH_ACCENT_IMAGE = clz.getDeclaredMethod("savePitchAccentImage", CLASS_PRONOUNICATION))
+				.setAccessible(true);
+		//
 		(METHOD_PLAY_AUDIO = clz.getDeclaredMethod("playAudio", CLASS_PRONOUNICATION)).setAccessible(true);
 		//
 		(METHOD_GET_DECLARED_FIELD = clz.getDeclaredMethod("getDeclaredField", Class.class, String.class))
@@ -176,7 +179,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 
 		private Integer width, height, size = null;
 
-		private Object key, value, selectedItem = null;
+		private Object key, value, selectedItem, get = null;
 
 		private Set<Entry<?, ?>> entrySet = null;
 
@@ -222,6 +225,14 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 					} // if
 						//
 					return iterator != null && iterator.hasNext();
+					//
+				} // if
+					//
+			} else if (proxy instanceof Map) {
+				//
+				if (Objects.equals(methodName, "get")) {
+					//
+					return get;
 					//
 				} // if
 					//
@@ -319,13 +330,15 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 
 	private MH mh = null;
 
+	private Object pronounication = null;
+
 	private RenderedImage renderedImage = null;
 
 	private Entry<?, ?> entry = null;
 
 	private MutableComboBoxModel<?> mutableComboBoxModel = null;
 
-	private Object pronounication = null;
+	private Map<?, ?> map = null;
 
 	@BeforeEach
 	void beforeEach() throws Throwable {
@@ -343,7 +356,12 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				//
 			instance = constructor != null ? constructor.newInstance() : null;
 			//
-		} // if
+		} else {
+			//
+			instance = cast(OnlineNHKJapanesePronunciationAccentGui.class,
+					Narcissus.allocateInstance(OnlineNHKJapanesePronunciationAccentGui.class));
+			//
+		} //
 			//
 		mh = new MH();
 		//
@@ -354,6 +372,8 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		entry = Reflection.newProxy(Entry.class, ih);
 		//
 		mutableComboBoxModel = Reflection.newProxy(MutableComboBoxModel.class, ih);
+		//
+		map = Reflection.newProxy(Map.class, ih);
 		//
 	}
 
@@ -1072,6 +1092,43 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 	}
 
 	@Test
+	void testSavePitchAccentImage() throws Throwable {
+		//
+		Assertions.assertDoesNotThrow(() -> savePitchAccentImage(pronounication));
+		//
+		// org.springframework.context.support.OnlineNHKJapanesePronunciationAccentGui$Pronounication.pitchAccentImage
+		//
+		final Field pitchAccentImage = getDeclaredField(CLASS_PRONOUNICATION, "pitchAccentImage");
+		//
+		if (pitchAccentImage != null) {
+			//
+			pitchAccentImage.setAccessible(true);
+			//
+			pitchAccentImage.set(pronounication, Narcissus.allocateInstance(BufferedImage.class));
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> savePitchAccentImage(pronounication));
+		//
+		if (pitchAccentImage != null) {
+			//
+			pitchAccentImage.set(pronounication, new BufferedImage(ONE, ONE, BufferedImage.TYPE_4BYTE_ABGR));
+			//
+		} // if
+			//
+//		Assertions.assertDoesNotThrow(() -> setPitchAccentImageToSystemClipboardContents(pronounication));
+		//
+	}
+
+	private void savePitchAccentImage(final Object pronounication) throws Throwable {
+		try {
+			METHOD_SAVE_PITCH_ACCENT_IMAGE.invoke(instance, pronounication);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
 	void testPlayAudio() throws Throwable {
 		//
 		Assertions.assertDoesNotThrow(() -> playAudio(pronounication));
@@ -1084,7 +1141,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			//
 			audioUrls.setAccessible(true);
 			//
-			audioUrls.set(pronounication, Reflection.newProxy(Map.class, ih));
+			audioUrls.set(pronounication, map);
 			//
 		} // if
 			//
@@ -1215,6 +1272,12 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		//
 		Assertions.assertDoesNotThrow(() -> addActionListener(null, (AbstractButton) null));
 		//
+		if (GraphicsEnvironment.isHeadless()) {
+			//
+			Assertions.assertDoesNotThrow(() -> addActionListener(null, new JButton()));
+			//
+		} // if
+			//
 	}
 
 	private static void addActionListener(final ActionListener actionListener, final AbstractButton... bs)
@@ -1231,6 +1294,12 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		//
 		Assertions.assertNull(get(null, null));
 		//
+		if (GraphicsEnvironment.isHeadless()) {
+			//
+			Assertions.assertNull(get(map, null));
+			//
+		} // if
+			//
 	}
 
 	private static <V> V get(final Map<?, V> instance, final Object key) throws Throwable {
