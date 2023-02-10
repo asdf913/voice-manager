@@ -260,7 +260,29 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 			//
 		} // if
 			//
-		sort(classNames, (a, b) -> {
+		sort(classNames, createImageFormatComparator(imageFormatOrders));
+		//
+		final MutableComboBoxModel<String> mcbm = new DefaultComboBoxModel<>();
+		//
+		add(new JComboBox<>(mcbm), growx);
+		//
+		forEach(classNames, x -> mcbm.addElement(x));
+		//
+		cbmImageFormat = mcbm;
+		//
+		add(btnSavePitchAccentImage = new JButton("Save Image"));
+		//
+		add(jlSavePitchAccentImage = new JLabel());
+		//
+		addActionListener(this, btnPlayAudio, btnSaveAudio, btnCopyPitchAccentImage, btnSavePitchAccentImage);
+		//
+		pack();
+		//
+	}
+
+	private static Comparator<String> createImageFormatComparator(final List<?> imageFormatOrders) {
+		//
+		return (a, b) -> {
 			//
 			final int ia = imageFormatOrders != null ? imageFormatOrders.indexOf(a) : -1;
 			//
@@ -282,23 +304,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 				//
 			return ObjectUtils.compare(a, b);
 			//
-		});
-		//
-		final MutableComboBoxModel<String> mcbm = new DefaultComboBoxModel<>();
-		//
-		add(new JComboBox<>(mcbm), growx);
-		//
-		forEach(classNames, x -> mcbm.addElement(x));
-		//
-		cbmImageFormat = mcbm;
-		//
-		add(btnSavePitchAccentImage = new JButton("Save Image"));
-		//
-		add(jlSavePitchAccentImage = new JLabel());
-		//
-		addActionListener(this, btnPlayAudio, btnSaveAudio, btnCopyPitchAccentImage, btnSavePitchAccentImage);
-		//
-		pack();
+		};
 		//
 	}
 

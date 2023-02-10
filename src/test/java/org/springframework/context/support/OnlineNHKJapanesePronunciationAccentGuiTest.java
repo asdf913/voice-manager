@@ -58,6 +58,7 @@ import javax.swing.text.JTextComponent;
 
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.compress.archivers.dump.DumpArchiveConstants.COMPRESSION_TYPE;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.jena.ext.com.google.common.base.Predicates;
@@ -96,7 +97,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			METHOD_PLAY_AUDIO, METHOD_SAVE_AUDIO, METHOD_PRONOUNICATION_CHANGED, METHOD_GET_DECLARED_FIELD,
 			METHOD_FOR_NAME, METHOD_OPEN_STREAM, METHOD_PLAY, METHOD_ADD_ACTION_LISTENER, METHOD_GET, METHOD_SET_TEXT,
 			METHOD_SET_FORE_GROUND, METHOD_DRAW_IMAGE, METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_SAVE_FILE,
-			METHOD_CONTAINS_KEY, METHOD_IIF, METHOD_GET_NAME, METHOD_SORT = null;
+			METHOD_CONTAINS_KEY, METHOD_IIF, METHOD_GET_NAME, METHOD_SORT, METHOD_CREATE_IMAGE_FORMAT_COMPARATOR = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -218,6 +219,9 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		(METHOD_GET_NAME = clz.getDeclaredMethod("getName", Class.class)).setAccessible(true);
 		//
 		(METHOD_SORT = clz.getDeclaredMethod("sort", List.class, Comparator.class)).setAccessible(true);
+		//
+		(METHOD_CREATE_IMAGE_FORMAT_COMPARATOR = clz.getDeclaredMethod("createImageFormatComparator", List.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -474,14 +478,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		//
 		Assertions.assertDoesNotThrow(() -> afterPropertiesSet(instance));
 		//
-		Assertions.assertDoesNotThrow(() -> afterPropertiesSet(instance));
-		//
-		if (instance != null) {
-			//
-			instance.setImageFormatOrders(Arrays.asList("png", "jpeg"));
-			//
-		} // if
-			//
 		Assertions.assertDoesNotThrow(() -> afterPropertiesSet(instance));
 		//
 	}
@@ -1733,6 +1729,31 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 	private static <E> void sort(final List<E> instance, final Comparator<? super E> comparator) throws Throwable {
 		try {
 			METHOD_SORT.invoke(null, instance, comparator);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCreateImageFormatComparator() throws Throwable {
+		//
+		final List<String> list = Arrays.asList("bmp", "jpeg", "tiff", "png", "wbmp", "gif");
+		//
+		sort(list, createImageFormatComparator(Arrays.asList("png", "jpeg", "gif")));
+		//
+		Assertions.assertEquals("png,jpeg,gif,bmp,tiff,wbmp", StringUtils.join(list, ','));
+		//
+	}
+
+	private static Comparator<String> createImageFormatComparator(final List<?> imageFormatOrders) throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_IMAGE_FORMAT_COMPARATOR.invoke(null, imageFormatOrders);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Comparator) {
+				return (Comparator) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
