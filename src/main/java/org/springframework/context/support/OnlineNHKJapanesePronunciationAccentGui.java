@@ -128,7 +128,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 
 	private transient MutableComboBoxModel<String> mcbmAudioFormat = null;
 
-	private ComboBoxModel<String> cbmImageFormat = null;
+	private transient ComboBoxModel<String> cbmImageFormat = null;
 
 	private JComboBox<Pronounication> jcbPronounication = null;
 
