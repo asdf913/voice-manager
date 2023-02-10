@@ -444,13 +444,13 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 			//
 			if (iterator(entrySet) != null) {
 				//
-				for (final String url : audioUrls.values()) {
+				for (final String u : audioUrls.values()) {
 					//
 					if (jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
 						//
 						try {
 							//
-							saveFile(jfc.getSelectedFile(), url);
+							saveFile(jfc.getSelectedFile(), u);
 							//
 						} catch (final IOException e) {
 							//
