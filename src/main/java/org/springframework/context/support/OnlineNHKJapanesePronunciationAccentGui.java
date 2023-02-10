@@ -535,13 +535,8 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 	private static void saveAudio(final boolean headless, final Pronounication pronounication,
 			final Object audioFormat) {
 		//
-		saveAudio(headless, testAndApply(Objects::nonNull, pronounication != null ? pronounication.audioUrls : null,
-				LinkedHashMap::new, null), audioFormat);
-		//
-	}
-
-	private static void saveAudio(final boolean headless, final Map<String, String> audioUrls,
-			final Object audioFormat) {
+		final Map<String, String> audioUrls = testAndApply(Objects::nonNull,
+				pronounication != null ? pronounication.audioUrls : null, LinkedHashMap::new, null);
 		//
 		final JFileChooser jfc = new JFileChooser(".");
 		//
@@ -565,13 +560,17 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 			//
 		} // if
 			//
-		final Set<Entry<String, String>> entrySet = entrySet(audioUrls);
+		saveAudio(headless, jfc, audioUrls != null ? audioUrls.values() : null);
 		//
-		if (iterator(entrySet) != null) {
+	}
+
+	private static void saveAudio(final boolean headless, final JFileChooser jfc, final Iterable<String> audioUrls) {
+		//
+		if (iterator(audioUrls) != null) {
 			//
-			for (final String u : audioUrls.values()) {
+			for (final String u : audioUrls) {
 				//
-				if (!headless && jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+				if (!headless && jfc != null && jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
 					//
 					try {
 						//
