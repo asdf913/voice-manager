@@ -201,6 +201,10 @@ class JouYouKanjiGuiTest {
 					//
 					return intStream;
 					//
+				} else if (Objects.equals(methodName, "filter")) {
+					//
+					return proxy;
+					//
 				} // if
 					//
 			} // if
@@ -1300,7 +1304,7 @@ class JouYouKanjiGuiTest {
 		//
 		Assertions.assertNull(filter(Stream.empty(), null));
 		//
-		Assertions.assertNull(filter(stream, null));
+		Assertions.assertSame(stream, filter(stream, null));
 		//
 	}
 
