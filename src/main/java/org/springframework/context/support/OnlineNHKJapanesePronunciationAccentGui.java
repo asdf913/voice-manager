@@ -530,12 +530,8 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 					setText(jlSavePitchAccentImage, ImageIO.write(pitchAccentImage,
 							toString(getSelectedItem(mcbmImageFormat)), jfc.getSelectedFile()) ? "Saved" : "Not Saved");
 					//
-					if (!GraphicsEnvironment.isHeadless()) {
-						//
-						pack();
-						//
-					} // if
-						//
+					pack();
+					//
 				} catch (final IOException e) {
 					//
 					TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
