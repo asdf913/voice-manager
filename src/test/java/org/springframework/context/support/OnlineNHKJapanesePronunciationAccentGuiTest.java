@@ -86,7 +86,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			METHOD_FOR_EACH, METHOD_MAP, METHOD_SET_PITCH_ACCENT_IMAGE_TO_SYSTEM_CLIPBOARD_CONTENTS,
 			METHOD_SAVE_PITCH_ACCENT_IMAGE, METHOD_PLAY_AUDIO, METHOD_GET_DECLARED_FIELD, METHOD_FOR_NAME,
 			METHOD_OPEN_STREAM, METHOD_PLAY, METHOD_ADD_ACTION_LISTENER, METHOD_GET, METHOD_SET_TEXT, METHOD_DRAW_IMAGE,
-			METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_SAVE_FILE = null;
+			METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_SAVE_FILE, METHOD_CONTAINS_KEY = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -188,6 +188,8 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		//
 		(METHOD_SAVE_FILE = clz.getDeclaredMethod("saveFile", File.class, String.class)).setAccessible(true);
 		//
+		(METHOD_CONTAINS_KEY = clz.getDeclaredMethod("containsKey", Map.class, Object.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -200,7 +202,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 
 		private Iterator<?> iterator = null;
 
-		private Boolean hasNext = null;
+		private Boolean hasNext, containsKey = null;
 
 		private Component component = null;
 
@@ -294,6 +296,10 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				if (Objects.equals(methodName, "entrySet")) {
 					//
 					return entrySet;
+					//
+				} else if (Objects.equals(methodName, "containsKey")) {
+					//
+					return containsKey;
 					//
 				} // if
 					//
@@ -1463,6 +1469,39 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 	private static void saveFile(final File file, final String url) throws Throwable {
 		try {
 			METHOD_SAVE_FILE.invoke(null, file, url);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testContainsKey() throws Throwable {
+		//
+		if (ih != null) {
+			//
+			ih.containsKey = Boolean.FALSE;
+			//
+		} // if
+			//
+		Assertions.assertFalse(containsKey(map, null));
+		//
+		if (ih != null) {
+			//
+			ih.containsKey = Boolean.TRUE;
+			//
+		} // if
+			//
+		Assertions.assertTrue(containsKey(map, null));
+		//
+	}
+
+	private static boolean containsKey(final Map<?, ?> instance, final Object key) throws Throwable {
+		try {
+			final Object obj = METHOD_CONTAINS_KEY.invoke(null, instance, key);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

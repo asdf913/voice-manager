@@ -420,13 +420,13 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 			//
 			final JFileChooser jfc = new JFileChooser(".");
 			//
-			if (audioUrls != null && audioUrls.containsKey(audioFormat)) {
+			if (containsKey(audioUrls, audioFormat)) {
 				//
 				if (jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
 					//
 					try {
 						//
-						saveFile(jfc.getSelectedFile(), audioUrls.get(audioFormat));
+						saveFile(jfc.getSelectedFile(), get(audioUrls, audioFormat));
 						//
 					} catch (final IOException e) {
 						//
@@ -493,6 +493,10 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 				//
 		} // if
 			//
+	}
+
+	private static boolean containsKey(final Map<?, ?> instance, final Object key) {
+		return instance != null && instance.containsKey(key);
 	}
 
 	private static void saveFile(final File file, final String url) throws IOException {
