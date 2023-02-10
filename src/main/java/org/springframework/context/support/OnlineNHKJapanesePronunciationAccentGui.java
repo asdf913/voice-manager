@@ -14,6 +14,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.awt.image.RenderedImage;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.ElementType;
@@ -65,6 +66,8 @@ import javax.swing.MutableComboBoxModel;
 import javax.swing.text.JTextComponent;
 
 import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
@@ -111,7 +114,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 	private AbstractButton btnExecute = null;
 
 	@Note("Play Audio")
-	private AbstractButton btnPlayAudio = null;
+	private AbstractButton btnPlayAudio, btnSaveAudio = null;
 
 	@Note("Copy Pitch Accent Image")
 	private AbstractButton btnCopyPitchAccentImage = null;
@@ -120,7 +123,11 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 
 	private transient MutableComboBoxModel<Pronounication> mcbmPronounication = null;
 
-	private transient ComboBoxModel<String> mcbmImageFormat = null;
+	private transient MutableComboBoxModel<String> mcbmAudioFormat = null;
+
+	private ComboBoxModel<String> cbmImageFormat = null;
+
+	private JComboBox<Pronounication> jcbPronounication = null;
 
 	private JLabel jlSavePitchAccentImage = null;
 
@@ -159,7 +166,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 		//
 		final String growx = "growx";
 		//
-		add(tfText = new JTextField(), String.format("%1$s,wmin %2$s,span %3$s", growx, "100px", 2));
+		add(tfText = new JTextField(), String.format("%1$s,wmin %2$s,span %3$s", growx, "100px", 2 + 1));
 		//
 		final String wrap = "wrap";
 		//
@@ -169,8 +176,8 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 		//
 		add(new JLabel(""));
 		//
-		final JComboBox<Pronounication> jcbPronounication = new JComboBox<>(
-				mcbmPronounication = new DefaultComboBoxModel<>());
+		(jcbPronounication = new JComboBox<>(mcbmPronounication = new DefaultComboBoxModel<>()))
+				.addActionListener(this);
 		//
 		final ListCellRenderer<?> render = jcbPronounication.getRenderer();
 		//
@@ -197,13 +204,19 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 
 		});
 		//
-		add(jcbPronounication, String.format("%1$s,span %2$s", growx, 2));
+		add(jcbPronounication, String.format("%1$s,%2$s,span %3$s", wrap, growx, 2 + 1));
 		//
-		add(btnPlayAudio = new JButton("Play"), wrap);
+		add(new JLabel("Audio"));
+		//
+		add(btnPlayAudio = new JButton("Play"));
+		//
+		add(new JComboBox<>(mcbmAudioFormat = new DefaultComboBoxModel<>()), String.format("%1$s,span %2$s", growx, 2));
+		//
+		add(btnSaveAudio = new JButton("Save"), wrap);
 		//
 		add(new JLabel("Image"));
 		//
-		add(btnCopyPitchAccentImage = new JButton("Copy Image"));
+		add(btnCopyPitchAccentImage = new JButton("Copy Image"), String.format("span %1$s", 2));
 		//
 		// Image Format
 		//
@@ -232,7 +245,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 			//
 		final MutableComboBoxModel<String> mcbm = new DefaultComboBoxModel<>();
 		//
-		add(new JComboBox<>(mcbm));
+		add(new JComboBox<>(mcbm), growx);
 		//
 		if (classNames != null) {
 			//
@@ -244,13 +257,13 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 			//
 		} // if
 			//
-		mcbmImageFormat = mcbm;
+		cbmImageFormat = mcbm;
 		//
 		add(btnSavePitchAccentImage = new JButton("Save Image"));
 		//
 		add(jlSavePitchAccentImage = new JLabel());
 		//
-		addActionListener(this, btnPlayAudio, btnCopyPitchAccentImage, btnSavePitchAccentImage);
+		addActionListener(this, btnPlayAudio, btnSaveAudio, btnCopyPitchAccentImage, btnSavePitchAccentImage);
 		//
 		pack();
 		//
@@ -287,7 +300,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 		//
 	}
 
-	public static class Pronounication {
+	private static class Pronounication {
 
 		private Map<String, String> audioUrls = null;
 
@@ -336,6 +349,10 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 			// Remove all element(s) in "mcbmPronounication"
 			//
 			forEach(reverseRange(0, getSize(mcbmPronounication)), i -> removeElementAt(mcbmPronounication, i));
+			//
+			// Remove all element(s) in "mcbmAudioFormat"
+			//
+			forEach(reverseRange(0, getSize(mcbmAudioFormat)), i -> removeElementAt(mcbmAudioFormat, i));
 			//
 			final URIBuilder uriBuilder = testAndApply(Objects::nonNull, url, URIBuilder::basedOn, null);
 			//
@@ -389,6 +406,63 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 			//
 			playAudio(cast(Pronounication.class, getSelectedItem(mcbmPronounication)));
 			//
+		} else if (Objects.equals(source, btnSaveAudio)) {
+			//
+			final Pronounication pronounication = cast(Pronounication.class, getSelectedItem(mcbmPronounication));
+			//
+			final Map<String, String> audioUrls = testAndApply(Objects::nonNull,
+					pronounication != null ? pronounication.audioUrls : null, LinkedHashMap::new, null);
+			//
+			final Object audioFormat = getSelectedItem(mcbmAudioFormat);
+			//
+			final JFileChooser jfc = new JFileChooser(".");
+			//
+			if (audioUrls != null && audioUrls.containsKey(audioFormat)) {
+				//
+				if (jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+					//
+					try {
+						//
+						saveFile(jfc.getSelectedFile(), audioUrls.get(audioFormat));
+						//
+					} catch (final IOException e) {
+						//
+						TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
+						//
+					} // try
+						//
+				} // if
+					//
+				return;
+				//
+			} // if
+				//
+			final Set<Entry<String, String>> entrySet = entrySet(audioUrls);
+			//
+			if (iterator(entrySet) != null) {
+				//
+				for (final String url : audioUrls.values()) {
+					//
+					if (jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+						//
+						try {
+							//
+							saveFile(jfc.getSelectedFile(), url);
+							//
+						} catch (final IOException e) {
+							//
+							TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
+							//
+						} // try
+							//
+					} // if
+						//
+					return;
+					//
+				} // for
+					//
+			} // if
+				//
 		} else if (Objects.equals(source, btnCopyPitchAccentImage)) {
 			//
 			setPitchAccentImageToSystemClipboardContents(
@@ -398,7 +472,37 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 			//
 			savePitchAccentImage(cast(Pronounication.class, getSelectedItem(mcbmPronounication)));
 			//
+		} else if (Objects.equals(source, jcbPronounication)) {
+			//
+			forEach(reverseRange(0, getSize(mcbmAudioFormat)), i -> removeElementAt(mcbmAudioFormat, i));
+			//
+			final Pronounication pronounication = cast(Pronounication.class, getSelectedItem(mcbmPronounication));
+			//
+			final Map<String, String> audioUrls = pronounication != null ? pronounication.audioUrls : null;
+			//
+			if (MapUtils.isNotEmpty(audioUrls)) {
+				//
+				addElement(mcbmAudioFormat, null);
+				//
+				audioUrls.forEach((k, v) -> addElement(mcbmAudioFormat, k));
+				//
+			} // if
+				//
 		} // if
+			//
+	}
+
+	private static void saveFile(final File file, final String url) throws IOException {
+		//
+		try (final InputStream is = openStream(testAndApply(Objects::nonNull, url, URL::new, null))) {
+			//
+			if (file != null) {
+				//
+				FileUtils.copyInputStreamToFile(is, file);
+				//
+			} // if
+				//
+		} // try
 			//
 	}
 
@@ -431,7 +535,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 					//
 					TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
 					//
-				} // if
+				} // try
 					//
 			} // for
 				//
@@ -529,7 +633,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 				try {
 					//
 					setText(jlSavePitchAccentImage, ImageIO.write(pitchAccentImage,
-							toString(getSelectedItem(mcbmImageFormat)), jfc.getSelectedFile()) ? "Saved" : "Not Saved");
+							toString(getSelectedItem(cbmImageFormat)), jfc.getSelectedFile()) ? "Saved" : "Not Saved");
 					//
 					pack();
 					//

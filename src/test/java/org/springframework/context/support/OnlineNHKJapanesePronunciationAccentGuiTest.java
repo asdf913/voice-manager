@@ -1,5 +1,6 @@
 package org.springframework.context.support;
 
+import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
@@ -40,8 +41,11 @@ import java.util.stream.IntStream;
 import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JTextField;
+import javax.swing.ListCellRenderer;
 import javax.swing.ListModel;
 import javax.swing.MutableComboBoxModel;
 import javax.swing.text.JTextComponent;
@@ -81,8 +85,8 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			METHOD_GET_SIZE, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_GET_PROTOCOL, METHOD_GET_HOST,
 			METHOD_FOR_EACH, METHOD_MAP, METHOD_SET_PITCH_ACCENT_IMAGE_TO_SYSTEM_CLIPBOARD_CONTENTS,
 			METHOD_SAVE_PITCH_ACCENT_IMAGE, METHOD_PLAY_AUDIO, METHOD_GET_DECLARED_FIELD, METHOD_FOR_NAME,
-			METHOD_OPEN_STREAM, METHOD_PLAY, METHOD_ADD_ACTION_LISTENER, METHOD_GET, METHOD_SET_TEXT,
-			METHOD_DRAW_IMAGE = null;
+			METHOD_OPEN_STREAM, METHOD_PLAY, METHOD_ADD_ACTION_LISTENER, METHOD_GET, METHOD_SET_TEXT, METHOD_DRAW_IMAGE,
+			METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_SAVE_FILE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -178,6 +182,12 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		(METHOD_DRAW_IMAGE = clz.getDeclaredMethod("drawImage", Graphics.class, Image.class, Integer.TYPE, Integer.TYPE,
 				ImageObserver.class)).setAccessible(true);
 		//
+		(METHOD_GET_LIST_CELL_RENDERER_COMPONENT = clz.getDeclaredMethod("getListCellRendererComponent",
+				ListCellRenderer.class, JList.class, Object.class, Integer.TYPE, Boolean.TYPE, Boolean.TYPE))
+				.setAccessible(true);
+		//
+		(METHOD_SAVE_FILE = clz.getDeclaredMethod("saveFile", File.class, String.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -191,6 +201,8 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		private Iterator<?> iterator = null;
 
 		private Boolean hasNext = null;
+
+		private Component component = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -282,6 +294,14 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				if (Objects.equals(methodName, "entrySet")) {
 					//
 					return entrySet;
+					//
+				} // if
+					//
+			} else if (proxy instanceof ListCellRenderer) {
+				//
+				if (Objects.equals(methodName, "getListCellRendererComponent")) {
+					//
+					return component;
 					//
 				} // if
 					//
@@ -451,6 +471,30 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			//
 		Assertions
 				.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnSavePitchAccentImage, 0, null)));
+		//
+		// btnSaveAudio
+		//
+		final AbstractButton btnSaveAudio = new JButton();
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "btnSaveAudio", btnSaveAudio, true);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnSaveAudio, 0, null)));
+		//
+		// jcbPronounication
+		//
+		final JComboBox<?> jcbPronounication = new JComboBox();
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "jcbPronounication", jcbPronounication, true);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(jcbPronounication, 0, null)));
 		//
 	}
 
@@ -1373,6 +1417,52 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetListCellRendererComponent() throws Throwable {
+		//
+		Assertions.assertNull(getListCellRendererComponent(null, null, null, 0, false, false));
+		//
+		if (GraphicsEnvironment.isHeadless()) {
+			//
+			Assertions.assertNull(getListCellRendererComponent(Reflection.newProxy(ListCellRenderer.class, ih), null,
+					null, 0, false, false));
+			//
+		} // if
+			//
+	}
+
+	private static <E> Component getListCellRendererComponent(final ListCellRenderer<E> instance,
+			final JList<? extends E> list, final E value, final int index, final boolean isSelected,
+			final boolean cellHasFocus) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_LIST_CELL_RENDERER_COMPONENT.invoke(null, instance, list, value, index,
+					isSelected, cellHasFocus);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Component) {
+				return (Component) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSaveFile() {
+		//
+		Assertions.assertDoesNotThrow(() -> saveFile(null, null));
+		//
+	}
+
+	private static void saveFile(final File file, final String url) throws Throwable {
+		try {
+			METHOD_SAVE_FILE.invoke(null, file, url);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
