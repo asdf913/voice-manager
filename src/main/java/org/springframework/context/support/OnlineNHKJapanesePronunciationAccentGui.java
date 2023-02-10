@@ -34,8 +34,11 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.IntConsumer;
+import java.util.function.IntUnaryOperator;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import javax.imageio.ImageIO;
@@ -66,6 +69,7 @@ import org.jsoup.nodes.ElementUtil;
 import org.jsoup.select.Elements;
 import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.cglib.proxy.Proxy;
 
 import com.github.hal4j.uritemplate.URIBuilder;
 import com.google.common.reflect.Reflection;
@@ -230,12 +234,10 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 		//
 		if (Objects.equals(source, btnExecute)) {
 			//
-			for (int i = getSize(mcbmPronounication) - 1; i >= 0; i--) {
-				//
-				removeElementAt(mcbmPronounication, i);
-				//
-			} // for
-				//
+			// Remove all element(s) in "mcbmPronounication"
+			//
+			forEach(reverseRange(0, getSize(mcbmPronounication)), i -> removeElementAt(mcbmPronounication, i));
+			//
 			final URIBuilder uriBuilder = testAndApply(Objects::nonNull, url, URIBuilder::basedOn, null);
 			//
 			try {
@@ -341,6 +343,28 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 				//
 		} // if
 			//
+	}
+
+	private static void forEach(final IntStream instance, final IntConsumer action) {
+		if (instance != null && (action != null || Proxy.isProxyClass(getClass(instance)))) {
+			instance.forEach(action);
+		}
+	}
+
+	private static Class<?> getClass(final Object instance) {
+		return instance != null ? instance.getClass() : null;
+	}
+
+	/**
+	 * @see <a href="https://stackoverflow.com/a/24011264">list - Java 8 stream
+	 *      reverse order - Stack Overflow</a>
+	 */
+	private static IntStream reverseRange(final int from, final int to) {
+		return map(IntStream.range(from, to), i -> to - i + from - 1);
+	}
+
+	private static IntStream map(final IntStream instance, final IntUnaryOperator mapper) {
+		return instance != null ? instance.map(mapper) : instance;
 	}
 
 	private static String getProtocol(final URL instance) {

@@ -26,7 +26,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.IntConsumer;
+import java.util.function.IntUnaryOperator;
 import java.util.function.Predicate;
+import java.util.stream.IntStream;
 
 import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
@@ -59,12 +62,12 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 
 	private static final int ONE = 1;
 
-	private static Method METHOD_CAST, METHOD_GET_SRC_MAP, METHOD_GET_IMAGE_SRCS, METHOD_CREATE_MERGED_BUFFERED_IMAGE,
-			METHOD_TEST_AND_APPLY, METHOD_GET_GRAPHICS, METHOD_GET_WIDTH, METHOD_GET_HEIGHT, METHOD_INT_VALUE,
-			METHOD_GET_TEXT, METHOD_RELATIVE, METHOD_TO_URI, METHOD_TO_URL, METHOD_GET_KEY, METHOD_SET_VALUE,
-			METHOD_GET_VALUE, METHOD_ADD_ELEMENT, METHOD_REMOVE_ELEMENT_AT, METHOD_GET_SELECTED_ITEM, METHOD_GET_SIZE,
-			METHOD_ENTRY_SET, METHOD_ITERATOR, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_GET_PROTOCOL,
-			METHOD_GET_HOST = null;
+	private static Method METHOD_CAST, METHOD_GET_SRC_MAP, METHOD_GET_CLASS, METHOD_GET_IMAGE_SRCS,
+			METHOD_CREATE_MERGED_BUFFERED_IMAGE, METHOD_TEST_AND_APPLY, METHOD_GET_GRAPHICS, METHOD_GET_WIDTH,
+			METHOD_GET_HEIGHT, METHOD_INT_VALUE, METHOD_GET_TEXT, METHOD_RELATIVE, METHOD_TO_URI, METHOD_TO_URL,
+			METHOD_GET_KEY, METHOD_SET_VALUE, METHOD_GET_VALUE, METHOD_ADD_ELEMENT, METHOD_REMOVE_ELEMENT_AT,
+			METHOD_GET_SELECTED_ITEM, METHOD_GET_SIZE, METHOD_ENTRY_SET, METHOD_ITERATOR, METHOD_GET_SYSTEM_CLIP_BOARD,
+			METHOD_SET_CONTENTS, METHOD_GET_PROTOCOL, METHOD_GET_HOST, METHOD_FOR_EACH, METHOD_MAP = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -74,6 +77,8 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		(METHOD_CAST = clz.getDeclaredMethod("cast", Class.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_GET_SRC_MAP = clz.getDeclaredMethod("getSrcMap", Element.class)).setAccessible(true);
+		//
+		(METHOD_GET_CLASS = clz.getDeclaredMethod("getClass", Object.class)).setAccessible(true);
 		//
 		(METHOD_GET_IMAGE_SRCS = clz.getDeclaredMethod("getImageSrcs", Element.class)).setAccessible(true);
 		//
@@ -127,6 +132,10 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		(METHOD_GET_PROTOCOL = clz.getDeclaredMethod("getProtocol", URL.class)).setAccessible(true);
 		//
 		(METHOD_GET_HOST = clz.getDeclaredMethod("getHost", URL.class)).setAccessible(true);
+		//
+		(METHOD_FOR_EACH = clz.getDeclaredMethod("forEach", IntStream.class, IntConsumer.class)).setAccessible(true);
+		//
+		(METHOD_MAP = clz.getDeclaredMethod("map", IntStream.class, IntUnaryOperator.class)).setAccessible(true);
 		//
 	}
 
@@ -388,8 +397,25 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		}
 	}
 
-	private static Class<?> getClass(final Object instance) {
-		return instance != null ? instance.getClass() : null;
+	@Test
+	void testGetClass() throws Throwable {
+		//
+		Assertions.assertNull(getClass(null));
+		//
+	}
+
+	private static Class<?> getClass(final Object instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_CLASS.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Class) {
+				return (Class<?>) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 	private static String toString(final Object instance) {
@@ -919,6 +945,46 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				return null;
 			} else if (obj instanceof String) {
 				return (String) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testForEach() {
+		//
+		Assertions.assertDoesNotThrow(() -> forEach(null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> forEach(IntStream.empty(), null));
+		//
+		Assertions.assertDoesNotThrow(() -> forEach(Reflection.newProxy(IntStream.class, ih), null));
+		//
+	}
+
+	private static void forEach(final IntStream instance, final IntConsumer action) throws Throwable {
+		try {
+			METHOD_FOR_EACH.invoke(null, instance, action);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testMap() throws Throwable {
+		//
+		Assertions.assertNull(map(null, null));
+		//
+	}
+
+	private static IntStream map(final IntStream instance, final IntUnaryOperator mapper) throws Throwable {
+		try {
+			final Object obj = METHOD_MAP.invoke(null, instance, mapper);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof IntStream) {
+				return (IntStream) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
