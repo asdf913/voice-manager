@@ -176,7 +176,7 @@ public class JouYouKanJiListFactoryBean implements FactoryBean<List<String>> {
 		//
 		for (int j = 0; j < IterableUtils.size(elements); j++) {
 			//
-			if (Boolean.logicalAnd(Objects.equals("th", tagName(element = IterableUtils.get(elements, j))),
+			if (Boolean.logicalAnd(Objects.equals("th", ElementUtil.tagName(element = IterableUtils.get(elements, j))),
 					Objects.equals("通用字体", ElementUtil.text(element)))) {
 				//
 				return Integer.valueOf(j);
@@ -187,10 +187,6 @@ public class JouYouKanJiListFactoryBean implements FactoryBean<List<String>> {
 			//
 		return null;
 		//
-	}
-
-	private static String tagName(final Element instance) {
-		return instance != null ? instance.tagName() : null;
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,

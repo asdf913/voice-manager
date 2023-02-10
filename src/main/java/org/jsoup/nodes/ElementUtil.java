@@ -32,4 +32,8 @@ public interface ElementUtil {
 		return instance != null ? instance.nextElementSibling() : null;
 	}
 
+	static String tagName(final Element instance) {
+		return instance != null ? instance.tagName() : null;
+	}
+
 }
