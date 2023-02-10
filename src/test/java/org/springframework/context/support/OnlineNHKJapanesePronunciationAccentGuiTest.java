@@ -12,6 +12,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -42,7 +45,6 @@ import javax.swing.MutableComboBoxModel;
 import javax.swing.text.JTextComponent;
 
 import org.apache.commons.collections4.IterableUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.jena.ext.com.google.common.base.Predicates;
@@ -60,6 +62,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 import javassist.util.proxy.MethodHandler;
 import javassist.util.proxy.ProxyFactory;
 import javassist.util.proxy.ProxyObject;
+import javazoom.jl.player.Player;
 
 class OnlineNHKJapanesePronunciationAccentGuiTest {
 
@@ -72,11 +75,10 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 	private static Method METHOD_CAST, METHOD_GET_SRC_MAP, METHOD_GET_CLASS, METHOD_GET_IMAGE_SRCS,
 			METHOD_CREATE_MERGED_BUFFERED_IMAGE, METHOD_TEST_AND_APPLY, METHOD_GET_GRAPHICS, METHOD_GET_WIDTH,
 			METHOD_GET_HEIGHT, METHOD_INT_VALUE, METHOD_GET_TEXT, METHOD_RELATIVE, METHOD_TO_URI, METHOD_TO_URL,
-			METHOD_GET_KEY, METHOD_SET_VALUE, METHOD_GET_VALUE, METHOD_ADD_ELEMENT, METHOD_REMOVE_ELEMENT_AT,
-			METHOD_GET_SELECTED_ITEM, METHOD_GET_SIZE, METHOD_ENTRY_SET, METHOD_ITERATOR, METHOD_GET_SYSTEM_CLIP_BOARD,
-			METHOD_SET_CONTENTS, METHOD_GET_PROTOCOL, METHOD_GET_HOST, METHOD_FOR_EACH, METHOD_MAP,
-			METHOD_SET_PITCH_ACCENT_IMAGE_TO_SYSTEM_CLIPBOARD_CONTENTS, METHOD_GET_DECLARED_FIELD,
-			METHOD_FOR_NAME = null;
+			METHOD_SET_VALUE, METHOD_GET_VALUE, METHOD_ADD_ELEMENT, METHOD_REMOVE_ELEMENT_AT, METHOD_GET_SELECTED_ITEM,
+			METHOD_GET_SIZE, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_GET_PROTOCOL, METHOD_GET_HOST,
+			METHOD_FOR_EACH, METHOD_MAP, METHOD_SET_PITCH_ACCENT_IMAGE_TO_SYSTEM_CLIPBOARD_CONTENTS, METHOD_PLAY_AUDIO,
+			METHOD_GET_DECLARED_FIELD, METHOD_FOR_NAME, METHOD_OPEN_STREAM, METHOD_PLAY = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -113,8 +115,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		//
 		(METHOD_TO_URL = clz.getDeclaredMethod("toURL", URI.class)).setAccessible(true);
 		//
-		(METHOD_GET_KEY = clz.getDeclaredMethod("getKey", Entry.class)).setAccessible(true);
-		//
 		(METHOD_SET_VALUE = clz.getDeclaredMethod("setValue", Entry.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_GET_VALUE = clz.getDeclaredMethod("getValue", Entry.class)).setAccessible(true);
@@ -128,10 +128,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		(METHOD_GET_SELECTED_ITEM = clz.getDeclaredMethod("getSelectedItem", ComboBoxModel.class)).setAccessible(true);
 		//
 		(METHOD_GET_SIZE = clz.getDeclaredMethod("getSize", ListModel.class)).setAccessible(true);
-		//
-		(METHOD_ENTRY_SET = clz.getDeclaredMethod("entrySet", Map.class)).setAccessible(true);
-		//
-		(METHOD_ITERATOR = clz.getDeclaredMethod("iterator", Iterable.class)).setAccessible(true);
 		//
 		(METHOD_GET_SYSTEM_CLIP_BOARD = clz.getDeclaredMethod("getSystemClipboard", Toolkit.class)).setAccessible(true);
 		//
@@ -152,10 +148,16 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 						"org.springframework.context.support.OnlineNHKJapanesePronunciationAccentGui$Pronounication")))
 				.setAccessible(true);
 		//
+		(METHOD_PLAY_AUDIO = clz.getDeclaredMethod("playAudio", CLASS_PRONOUNICATION)).setAccessible(true);
+		//
 		(METHOD_GET_DECLARED_FIELD = clz.getDeclaredMethod("getDeclaredField", Class.class, String.class))
 				.setAccessible(true);
 		//
 		(METHOD_FOR_NAME = clz.getDeclaredMethod("forName", String.class)).setAccessible(true);
+		//
+		(METHOD_OPEN_STREAM = clz.getDeclaredMethod("openStream", URL.class)).setAccessible(true);
+		//
+		(METHOD_PLAY = clz.getDeclaredMethod("play", Player.class)).setAccessible(true);
 		//
 	}
 
@@ -168,6 +170,8 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		private Set<Entry<?, ?>> entrySet = null;
 
 		private Iterator<?> iterator = null;
+
+		private Boolean hasNext = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -193,6 +197,20 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				if (Objects.equals(methodName, "iterator")) {
 					//
 					return iterator;
+					//
+				} // if
+					//
+			} else if (proxy instanceof Iterator) {
+				//
+				if (Objects.equals(methodName, "hasNext")) {
+					//
+					if (iterator == proxy) {
+						//
+						return hasNext;
+						//
+					} // if
+						//
+					return iterator != null && iterator.hasNext();
 					//
 				} // if
 					//
@@ -296,8 +314,10 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 
 	private MutableComboBoxModel<?> mutableComboBoxModel = null;
 
+	private Object pronounication = null;
+
 	@BeforeEach
-	void beforeEach() throws ReflectiveOperationException {
+	void beforeEach() throws Throwable {
 		//
 		if (!GraphicsEnvironment.isHeadless()) {
 			//
@@ -315,6 +335,8 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		} // if
 			//
 		mh = new MH();
+		//
+		pronounication = createPronounication();
 		//
 		renderedImage = Reflection.newProxy(RenderedImage.class, ih = new IH());
 		//
@@ -715,23 +737,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 	}
 
 	@Test
-	void testGetKey() throws Throwable {
-		//
-		Assertions.assertNull(getKey(null));
-		//
-		Assertions.assertNull(getKey(entry));
-		//
-	}
-
-	private static <K> K getKey(final Entry<K, ?> instance) throws Throwable {
-		try {
-			return (K) METHOD_GET_KEY.invoke(null, instance);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testSetValue() {
 		//
 		Assertions.assertDoesNotThrow(() -> setValue(null, null));
@@ -752,8 +757,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 	void testGetValue() throws Throwable {
 		//
 		Assertions.assertNull(getValue(null));
-		//
-		Assertions.assertNull(getValue(entry));
 		//
 	}
 
@@ -832,48 +835,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			final Object obj = METHOD_GET_SIZE.invoke(null, instance);
 			if (obj instanceof Integer) {
 				return ((Integer) obj).intValue();
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testEntrySet() throws Throwable {
-		//
-		Assertions.assertNull(entrySet(Reflection.newProxy(Map.class, ih)));
-		//
-	}
-
-	private static <K, V> Set<Entry<K, V>> entrySet(final Map<K, V> instance) throws Throwable {
-		try {
-			final Object obj = METHOD_ENTRY_SET.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Set) {
-				return (Set) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testIterator() throws Throwable {
-		//
-		Assertions.assertNull(iterator(Reflection.newProxy(Iterable.class, ih)));
-		//
-	}
-
-	private static <E> Iterator<E> iterator(final Iterable<E> instance) throws Throwable {
-		try {
-			final Object obj = METHOD_ITERATOR.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Iterator) {
-				return (Iterator) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
@@ -1015,27 +976,11 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 	@Test
 	void testSetPitchAccentImageToSystemClipboardContents() throws Throwable {
 		//
-		final List<Constructor<?>> cs = testAndApply(Objects::nonNull,
-				CLASS_PRONOUNICATION != null ? CLASS_PRONOUNICATION.getDeclaredConstructors() : null, Arrays::stream,
-				null).filter(c -> c != null && c.getParameterCount() == 0).toList();
-		//
-		final Constructor<?> constructor = IterableUtils.size(cs) == 1 ? IterableUtils.get(cs, 0) : null;
-		//
-		if (constructor != null) {
-			//
-			constructor.setAccessible(true);
-			//
-		} // if
-			//
-		final Object pronounication = constructor != null ? constructor.newInstance() : null;
-		//
 		Assertions.assertDoesNotThrow(() -> setPitchAccentImageToSystemClipboardContents(pronounication));
 		//
 		// org.springframework.context.support.OnlineNHKJapanesePronunciationAccentGui$Pronounication.pitchAccentImage
 		//
-		final Field pitchAccentImage = CLASS_PRONOUNICATION != null
-				? CLASS_PRONOUNICATION.getDeclaredField("pitchAccentImage")
-				: null;
+		final Field pitchAccentImage = getDeclaredField(CLASS_PRONOUNICATION, "pitchAccentImage");
 		//
 		if (pitchAccentImage != null) {
 			//
@@ -1057,9 +1002,84 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		//
 	}
 
+	private static Object createPronounication() throws Throwable {
+		//
+		final List<Constructor<?>> cs = testAndApply(Objects::nonNull,
+				CLASS_PRONOUNICATION != null ? CLASS_PRONOUNICATION.getDeclaredConstructors() : null, Arrays::stream,
+				null).filter(c -> c != null && c.getParameterCount() == 0).toList();
+		//
+		final Constructor<?> constructor = IterableUtils.size(cs) == 1 ? IterableUtils.get(cs, 0) : null;
+		//
+		if (constructor != null) {
+			//
+			constructor.setAccessible(true);
+			//
+		} // if
+			//
+		return constructor != null ? constructor.newInstance() : null;
+		//
+	}
+
 	private static void setPitchAccentImageToSystemClipboardContents(final Object pronounication) throws Throwable {
 		try {
 			METHOD_SET_PITCH_ACCENT_IMAGE_TO_SYSTEM_CLIPBOARD_CONTENTS.invoke(null, pronounication);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testPlayAudio() throws Throwable {
+		//
+		Assertions.assertDoesNotThrow(() -> playAudio(pronounication));
+		//
+		// org.springframework.context.support.OnlineNHKJapanesePronunciationAccentGui$Pronounication.audioUrls
+		//
+		final Field audioUrls = getDeclaredField(CLASS_PRONOUNICATION, "audioUrls");
+		//
+		if (audioUrls != null) {
+			//
+			audioUrls.setAccessible(true);
+			//
+			audioUrls.set(pronounication, Reflection.newProxy(Map.class, ih));
+			//
+		} // if
+			//
+		if (ih != null) {
+			//
+			ih.entrySet = Reflection.newProxy(Set.class, ih);
+			//
+			ih.iterator = Reflection.newProxy(Iterator.class, ih);
+			//
+			ih.hasNext = Boolean.FALSE;
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> playAudio(pronounication));
+		//
+		if (ih != null) {
+			//
+			ih.entrySet = Collections.singleton(null);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> playAudio(pronounication));
+		//
+		if (ih != null) {
+			//
+			ih.entrySet = Collections.singleton(entry);
+			//
+			ih.key = "audio/wav";
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> playAudio(pronounication));
+		//
+	}
+
+	private static void playAudio(final Object pronounication) throws Throwable {
+		try {
+			METHOD_PLAY_AUDIO.invoke(null, pronounication);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1104,6 +1124,42 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				return (Class<?>) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testOpenStream() throws Throwable {
+		//
+		Assertions.assertNotNull(openStream(new File("pom.xml").toURI().toURL()));
+		//
+	}
+
+	private static InputStream openStream(final URL instance) throws Throwable {
+		try {
+			final Object obj = METHOD_OPEN_STREAM.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof InputStream) {
+				return (InputStream) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testPlay() {
+		//
+		Assertions.assertDoesNotThrow(() -> play(new Player(new ByteArrayInputStream("".getBytes()))));
+		//
+	}
+
+	private static void play(final Player instance) throws Throwable {
+		try {
+			METHOD_PLAY.invoke(null, instance);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

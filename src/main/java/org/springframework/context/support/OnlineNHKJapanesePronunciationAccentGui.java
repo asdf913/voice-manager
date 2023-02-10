@@ -289,44 +289,8 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 				//
 		} else if (Objects.equals(source, btnPlayAudio)) {
 			//
-			final Pronounication pronounication = cast(Pronounication.class, getSelectedItem(mcbmPronounication));
+			playAudio(cast(Pronounication.class, getSelectedItem(mcbmPronounication)));
 			//
-			final Map<String, String> audioUrls = pronounication != null ? pronounication.audioUrls : null;
-			//
-			final Set<Entry<String, String>> entrySet = entrySet(audioUrls);
-			//
-			if (iterator(entrySet) != null) {
-				//
-				InputStream is = null;
-				//
-				for (final Entry<String, String> entry : entrySet) {
-					//
-					if (!Objects.equals("audio/wav", getKey(entry))) {
-						//
-						continue;
-						//
-					} // if
-						//
-					try {
-						//
-						new Player(is = (new URL(getValue(entry)).openStream())).play();
-						//
-					} catch (final JavaLayerException | IOException e) {
-						//
-						TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
-						//
-					} finally {
-						//
-						IOUtils.closeQuietly(is);
-						//
-					} // try
-						//
-					break;
-					//
-				} // for
-					//
-			} // if
-				//
 		} else if (Objects.equals(source, btnCopyPitchAccentImage)) {
 			//
 			setPitchAccentImageToSystemClipboardContents(
@@ -334,6 +298,56 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 			//
 		} // if
 			//
+	}
+
+	private static void playAudio(final Pronounication pronounication) {
+		//
+		final Set<Entry<String, String>> entrySet = entrySet(pronounication != null ? pronounication.audioUrls : null);
+		//
+		if (iterator(entrySet) != null) {
+			//
+			InputStream is = null;
+			//
+			for (final Entry<String, String> entry : entrySet) {
+				//
+				if (!Objects.equals("audio/wav", getKey(entry))) {
+					//
+					continue;
+					//
+				} // if
+					//
+				try {
+					//
+					play(testAndApply(Objects::nonNull,
+							is = openStream(testAndApply(Objects::nonNull, getValue(entry), URL::new, null)),
+							Player::new, null));
+					//
+				} catch (final JavaLayerException | IOException e) {
+					//
+					TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
+					//
+				} finally {
+					//
+					IOUtils.closeQuietly(is);
+					//
+				} // try
+					//
+				break;
+				//
+			} // for
+				//
+		} // if
+			//
+	}
+
+	private static InputStream openStream(final URL instance) throws IOException {
+		return instance != null ? instance.openStream() : null;
+	}
+
+	private static void play(final Player instance) throws JavaLayerException {
+		if (instance != null) {
+			instance.play();
+		}
 	}
 
 	private static void setPitchAccentImageToSystemClipboardContents(final Pronounication pronounication) {
