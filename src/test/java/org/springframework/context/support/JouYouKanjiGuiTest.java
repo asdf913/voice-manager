@@ -13,13 +13,21 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.OptionalInt;
+import java.util.Spliterator;
 import java.util.function.Predicate;
+import java.util.function.ToIntFunction;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import javax.swing.ComboBoxModel;
@@ -28,7 +36,14 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
 
+import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.xssf.model.StylesTable;
+import org.apache.poi.xssf.usermodel.IndexedColorMap;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.jsoup.nodes.Element;
@@ -38,15 +53,22 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.InitializingBean;
 
+import com.google.common.base.Predicates;
 import com.google.common.reflect.Reflection;
 import com.helger.css.ECSSVersion;
 import com.helger.css.decl.CSSDeclaration;
+import com.helger.css.decl.CSSExpression;
 
+import io.github.toolfactory.narcissus.Narcissus;
 import javassist.util.proxy.MethodHandler;
 import javassist.util.proxy.ProxyFactory;
 import javassist.util.proxy.ProxyObject;
 
 class JouYouKanjiGuiTest {
+
+	private static final String EMPTY = "";
+
+	private static final int ONE = 1;
 
 	private static Class<?> CLASS_OBJECT_MAP, CLASS_IH = null;
 
@@ -54,7 +76,11 @@ class JouYouKanjiGuiTest {
 			METHOD_GET_ECSS_VERSION_BY_MAJOR, METHOD_ADD_JOU_YOU_KAN_JI_SHEET, METHOD_CAST,
 			METHOD_GET_CSS_DECLARATION_BY_ATTRIBUTE_AND_CSS_PROPERTY, METHOD_SET_PREFERRED_WIDTH,
 			METHOD_GET_PREFERRED_SIZE, METHOD_TO_LIST, METHOD_CONTAINS, METHOD_ADD, METHOD_SET_SELECTED_ITEM,
-			METHOD_TEST, METHOD_SET_TEXT = null;
+			METHOD_TEST, METHOD_SET_TEXT, METHOD_GET_BOOLEAN_VALUES, METHOD_TO_ARRAY, METHOD_MATCHER,
+			METHOD_GET_EXPRESSION_AS_CSS_STRING, METHOD_GET_INDEXED_COLORS, METHOD_GET_STYLES_SOURCE,
+			METHOD_GET_PROPERTY, METHOD_INT_VALUE, METHOD_TO_MILLIS, METHOD_SET_FILL_BACK_GROUND_COLOR,
+			METHOD_SET_FILL_PATTERN, METHOD_SPLITERATOR, METHOD_TEST_AND_ACCEPT, METHOD_STREAM, METHOD_MAP_TO_INT,
+			METHOD_MAX, METHOD_OR_ELSE, METHOD_FILTER = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -100,8 +126,89 @@ class JouYouKanjiGuiTest {
 		//
 		(METHOD_SET_TEXT = clz.getDeclaredMethod("setText", JTextComponent.class, String.class)).setAccessible(true);
 		//
+		(METHOD_GET_BOOLEAN_VALUES = clz.getDeclaredMethod("getBooleanValues")).setAccessible(true);
+		//
+		(METHOD_TO_ARRAY = clz.getDeclaredMethod("toArray", Collection.class, Object[].class)).setAccessible(true);
+		//
+		(METHOD_MATCHER = clz.getDeclaredMethod("matcher", Pattern.class, CharSequence.class)).setAccessible(true);
+		//
+		(METHOD_GET_EXPRESSION_AS_CSS_STRING = clz.getDeclaredMethod("getExpressionAsCSSString", CSSDeclaration.class))
+				.setAccessible(true);
+		//
+		(METHOD_GET_INDEXED_COLORS = clz.getDeclaredMethod("getIndexedColors", StylesTable.class)).setAccessible(true);
+		//
+		(METHOD_GET_STYLES_SOURCE = clz.getDeclaredMethod("getStylesSource", XSSFWorkbook.class)).setAccessible(true);
+		//
+		(METHOD_GET_PROPERTY = clz.getDeclaredMethod("getProperty", CSSDeclaration.class)).setAccessible(true);
+		//
+		(METHOD_INT_VALUE = clz.getDeclaredMethod("intValue", Number.class, Integer.TYPE)).setAccessible(true);
+		//
+		(METHOD_TO_MILLIS = clz.getDeclaredMethod("toMillis", Duration.class)).setAccessible(true);
+		//
+		(METHOD_SET_FILL_BACK_GROUND_COLOR = clz.getDeclaredMethod("setFillBackgroundColor", CellStyle.class,
+				org.apache.poi.ss.usermodel.Color.class)).setAccessible(true);
+		//
+		(METHOD_SET_FILL_PATTERN = clz.getDeclaredMethod("setFillPattern", CellStyle.class, FillPatternType.class))
+				.setAccessible(true);
+		//
+		(METHOD_SPLITERATOR = clz.getDeclaredMethod("spliterator", Iterable.class)).setAccessible(true);
+		//
+		(METHOD_TEST_AND_ACCEPT = clz.getDeclaredMethod("testAndAccept", Predicate.class, Object.class,
+				FailableConsumer.class)).setAccessible(true);
+		//
+		(METHOD_STREAM = clz.getDeclaredMethod("stream", Collection.class)).setAccessible(true);
+		//
+		(METHOD_MAP_TO_INT = clz.getDeclaredMethod("mapToInt", Stream.class, ToIntFunction.class)).setAccessible(true);
+		//
+		(METHOD_MAX = clz.getDeclaredMethod("max", IntStream.class)).setAccessible(true);
+		//
+		(METHOD_OR_ELSE = clz.getDeclaredMethod("orElse", OptionalInt.class, Integer.TYPE)).setAccessible(true);
+		//
+		(METHOD_FILTER = clz.getDeclaredMethod("filter", Stream.class, Predicate.class)).setAccessible(true);
+		//
 		CLASS_IH = Class.forName("org.springframework.context.support.JouYouKanjiGui$IH");
 		//
+	}
+
+	private static class IH implements InvocationHandler {
+
+		private Spliterator<?> spliterator = null;
+
+		private IntStream intStream = null;
+
+		@Override
+		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+			//
+			if (Objects.equals(method != null ? method.getReturnType() : null, Void.TYPE)) {
+				//
+				return null;
+				//
+			} // if
+				//
+			final String methodName = method != null ? method.getName() : null;
+			//
+			if (proxy instanceof Iterable) {
+				//
+				if (Objects.equals(methodName, "spliterator")) {
+					//
+					return spliterator;
+					//
+				} // if
+					//
+			} else if (proxy instanceof Stream) {
+				//
+				if (Objects.equals(methodName, "mapToInt")) {
+					//
+					return intStream;
+					//
+				} // if
+					//
+			} // if
+				//
+			throw new Throwable(methodName);
+			//
+		}
+
 	}
 
 	private static class MH implements MethodHandler {
@@ -130,8 +237,14 @@ class JouYouKanjiGuiTest {
 
 	private JouYouKanjiGui instance = null;
 
+	private IH ih = null;
+
+	private CellStyle cellStyle = null;
+
+	private Stream<?> stream = null;
+
 	@BeforeEach
-	void beforeEach() throws ReflectiveOperationException {
+	void beforeEach() throws Throwable {
 		//
 		if (!GraphicsEnvironment.isHeadless()) {
 			//
@@ -145,8 +258,16 @@ class JouYouKanjiGuiTest {
 				//
 			instance = constructor != null ? constructor.newInstance() : null;
 			//
+		} else {
+			//
+			instance = cast(JouYouKanjiGui.class, Narcissus.allocateInstance(JouYouKanjiGui.class));
+			//
 		} // if
 			//
+		cellStyle = Reflection.newProxy(CellStyle.class, ih = new IH());
+		//
+		stream = Reflection.newProxy(Stream.class, ih);
+		//
 	}
 
 	@Test
@@ -167,7 +288,7 @@ class JouYouKanjiGuiTest {
 		//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, null));
 		//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent("", 0, null)));
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(EMPTY, 0, null)));
 		//
 	}
 
@@ -778,6 +899,421 @@ class JouYouKanjiGuiTest {
 	private static void setText(final JTextComponent instance, final String text) throws Throwable {
 		try {
 			METHOD_SET_TEXT.invoke(null, instance, text);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetBooleanValues() throws Throwable {
+		//
+		if (GraphicsEnvironment.isHeadless()) {
+			//
+			Assertions.assertNotNull(getBooleanValues());
+			//
+		} // if
+	}
+
+	private static List<Boolean> getBooleanValues() throws Throwable {
+		try {
+			final Object obj = METHOD_GET_BOOLEAN_VALUES.invoke(null);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof List) {
+				return (List) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testToArray() throws Throwable {
+		//
+		Assertions.assertNull(toArray(null, null));
+		//
+		Assertions.assertNull(toArray(Collections.emptyList(), null));
+		//
+		final Object[] array = new Object[] {};
+		//
+		Assertions.assertArrayEquals(array, toArray(Collections.emptyList(), array));
+		//
+	}
+
+	private static <T> T[] toArray(final Collection<T> instance, final T[] array) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_ARRAY.invoke(null, instance, array);
+			if (obj == null) {
+				return null;
+			}
+			return (T[]) obj;
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testMatcher() throws Throwable {
+		//
+		Assertions.assertNull(matcher(null, null));
+		//
+		final Pattern pattern = Pattern.compile("\\d+");
+		//
+		Assertions.assertNull(matcher(pattern, null));
+		//
+		Assertions.assertNotNull(matcher(pattern, EMPTY));
+		//
+	}
+
+	private static Matcher matcher(final Pattern pattern, final CharSequence input) throws Throwable {
+		try {
+			final Object obj = METHOD_MATCHER.invoke(null, pattern, input);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Matcher) {
+				return (Matcher) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetExpressionAsCSSString() throws Throwable {
+		//
+		Assertions.assertNull(getExpressionAsCSSString(null));
+		//
+		final CSSDeclaration cssDeclaration = cast(CSSDeclaration.class,
+				Narcissus.allocateInstance(CSSDeclaration.class));
+		//
+		Assertions.assertNull(getExpressionAsCSSString(cssDeclaration));
+		//
+		Assertions.assertNull(getExpressionAsCSSString(setExpression(cssDeclaration,
+				cast(CSSExpression.class, Narcissus.allocateInstance(CSSExpression.class)))));
+		//
+		Assertions.assertEquals(EMPTY, getExpressionAsCSSString(setExpression(cssDeclaration, new CSSExpression())));
+		//
+	}
+
+	private static CSSDeclaration setExpression(final CSSDeclaration instance, final CSSExpression aExpression) {
+		return instance != null ? instance.setExpression(aExpression) : null;
+	}
+
+	private static String getExpressionAsCSSString(final CSSDeclaration instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_EXPRESSION_AS_CSS_STRING.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetIndexedColors() throws Throwable {
+		//
+		Assertions.assertNull(getIndexedColors(cast(StylesTable.class, Narcissus.allocateInstance(StylesTable.class))));
+		//
+	}
+
+	private static IndexedColorMap getIndexedColors(final StylesTable instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_INDEXED_COLORS.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (IndexedColorMap) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetStylesSource() throws Throwable {
+		//
+		Assertions
+				.assertNull(getStylesSource(cast(XSSFWorkbook.class, Narcissus.allocateInstance(XSSFWorkbook.class))));
+		//
+	}
+
+	private static StylesTable getStylesSource(final XSSFWorkbook instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_STYLES_SOURCE.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof StylesTable) {
+				return (StylesTable) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetProperty() throws Throwable {
+		//
+		Assertions.assertNull(getProperty(null));
+		//
+		Assertions
+				.assertNull(getProperty(cast(CSSDeclaration.class, Narcissus.allocateInstance(CSSDeclaration.class))));
+		//
+	}
+
+	private static String getProperty(final CSSDeclaration instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_PROPERTY.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testIntValue() throws Throwable {
+		//
+		Assertions.assertEquals(ONE, intValue(null, ONE));
+		//
+	}
+
+	private static int intValue(final Number instance, final int defaultValue) throws Throwable {
+		try {
+			final Object obj = METHOD_INT_VALUE.invoke(null, instance, defaultValue);
+			if (obj instanceof Integer) {
+				return ((Integer) obj).intValue();
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testToMillis() throws Throwable {
+		//
+		Assertions.assertNull(toMillis(null));
+		//
+		Assertions.assertEquals(Long.valueOf(0),
+				toMillis(cast(Duration.class, Narcissus.allocateInstance(Duration.class))));
+		//
+	}
+
+	private static Long toMillis(final Duration instance) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_MILLIS.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Long) {
+				return (Long) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetFillBackgroundColor() {
+		//
+		Assertions.assertDoesNotThrow(() -> setFillBackgroundColor(null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> setFillBackgroundColor(cellStyle, null));
+		//
+	}
+
+	private static void setFillBackgroundColor(final CellStyle instance, final org.apache.poi.ss.usermodel.Color color)
+			throws Throwable {
+		try {
+			METHOD_SET_FILL_BACK_GROUND_COLOR.invoke(null, instance, color);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetFillPattern() {
+		//
+		Assertions.assertDoesNotThrow(() -> setFillPattern(null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> setFillPattern(cellStyle, null));
+		//
+	}
+
+	private static void setFillPattern(final CellStyle instance, final FillPatternType fillPatternType)
+			throws Throwable {
+		try {
+			METHOD_SET_FILL_PATTERN.invoke(null, instance, fillPatternType);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSpliterator() throws Throwable {
+		//
+		Assertions.assertNull(spliterator(null));
+		//
+		Assertions.assertNull(spliterator(Reflection.newProxy(Iterable.class, ih)));
+		//
+	}
+
+	private static <T> Spliterator<T> spliterator(final Iterable<T> instance) throws Throwable {
+		try {
+			final Object obj = METHOD_SPLITERATOR.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Spliterator) {
+				return (Spliterator) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testTestAndAccept() {
+		//
+		Assertions.assertDoesNotThrow(() -> testAndAccept(null, null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> testAndAccept(Predicates.alwaysTrue(), null, null));
+		//
+	}
+
+	private static <T, E extends Throwable> void testAndAccept(final Predicate<T> predicate, final T value,
+			final FailableConsumer<T, E> consumer) throws Throwable {
+		try {
+			METHOD_TEST_AND_ACCEPT.invoke(null, predicate, value, consumer);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static Integer getPhysicalNumberOfRows(final Sheet instance) {
+		return instance != null ? Integer.valueOf(instance.getPhysicalNumberOfRows()) : null;
+	}
+
+	@Test
+	void testStream() throws Throwable {
+		//
+		Assertions.assertNull(stream(null));
+		//
+	}
+
+	private static <E> Stream<E> stream(final Collection<E> instance) throws Throwable {
+		try {
+			final Object obj = METHOD_STREAM.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Stream) {
+				return (Stream) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testMapToInt() throws Throwable {
+		//
+		Assertions.assertNull(mapToInt(null, null));
+		//
+		Assertions.assertNull(mapToInt(Stream.empty(), null));
+		//
+		Assertions.assertNull(mapToInt(stream, null));
+		//
+	}
+
+	private static <T> IntStream mapToInt(final Stream<T> instance, final ToIntFunction<? super T> mapper)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_MAP_TO_INT.invoke(null, instance, mapper);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof IntStream) {
+				return (IntStream) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testMax() throws Throwable {
+		//
+		Assertions.assertNull(max(null));
+		//
+	}
+
+	private static OptionalInt max(final IntStream instance) throws Throwable {
+		try {
+			final Object obj = METHOD_MAX.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof OptionalInt) {
+				return (OptionalInt) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testOrElse() throws Throwable {
+		//
+		Assertions.assertEquals(ONE, orElse(null, ONE));
+		//
+	}
+
+	private static int orElse(final OptionalInt instance, final int other) throws Throwable {
+		try {
+			final Object obj = METHOD_OR_ELSE.invoke(null, instance, other);
+			if (obj instanceof Integer) {
+				return ((Integer) obj).intValue();
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testFilter() throws Throwable {
+		//
+		Assertions.assertNull(filter(null, null));
+		//
+		Assertions.assertNull(filter(Stream.empty(), null));
+		//
+		Assertions.assertNull(filter(stream, null));
+		//
+	}
+
+	private static <T> Stream<T> filter(final Stream<T> instance, final Predicate<? super T> predicate)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_FILTER.invoke(null, instance, predicate);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Stream) {
+				return (Stream) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

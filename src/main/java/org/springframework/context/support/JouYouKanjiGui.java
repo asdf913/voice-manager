@@ -3,6 +3,7 @@ package org.springframework.context.support;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -62,6 +63,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.poi.ooxml.CustomPropertiesUtil;
 import org.apache.poi.ooxml.POIXMLDocument;
 import org.apache.poi.ooxml.POIXMLDocumentUtil;
@@ -101,8 +103,10 @@ import com.helger.commons.version.IHasVersion;
 import com.helger.commons.version.Version;
 import com.helger.css.ECSSVersion;
 import com.helger.css.decl.CSSDeclaration;
+import com.helger.css.decl.CSSExpression;
 import com.helger.css.reader.CSSReaderDeclarationList;
 
+import io.github.toolfactory.narcissus.Narcissus;
 import net.miginfocom.swing.MigLayout;
 
 public class JouYouKanjiGui extends JFrame implements EnvironmentAware, InitializingBean, KeyListener, ActionListener {
@@ -241,6 +245,21 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 			//
 		} // if
 			//
+			// If "java.awt.Container.component" is null, return this method immediately
+			//
+			// The below check is for "-Djava.awt.headless=true"
+			//
+		final List<Field> fs = toList(filter(stream(FieldUtils.getAllFieldsList(getClass(this))),
+				f -> f != null && Objects.equals(f.getName(), "component")));
+		//
+		final Field f = IterableUtils.size(fs) == 1 ? IterableUtils.get(fs, 0) : null;
+		//
+		if (f != null && Narcissus.getObjectField(this, f) == null) {
+			//
+			return;
+			//
+		} // if
+			//
 		add(new JLabel("Text"));
 		//
 		add(tfText = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
@@ -348,8 +367,12 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 				//
 				setText(tfExportFile, getAbsolutePath(file));
 				//
-				pack();
-				//
+				if (!GraphicsEnvironment.isHeadless()) {
+					//
+					pack();
+					//
+				} // if
+					//
 			} catch (final IOException e) {
 				//
 				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
@@ -599,7 +622,36 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 	}
 
 	private static String getExpressionAsCSSString(final CSSDeclaration instance) {
-		return instance != null ? instance.getExpressionAsCSSString() : null;
+		//
+		final CSSExpression cssExpression = instance != null ? instance.getExpression() : null;
+		//
+		final List<Field> fs = toList(
+				filter(testAndApply(Objects::nonNull, getDeclaredFields(getClass(cssExpression)), Arrays::stream, null),
+						f -> f != null && Objects.equals(f.getName(), "m_aMembers")));
+		//
+		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		//
+		try {
+			//
+			if (f != null) {
+				//
+				f.setAccessible(true);
+				//
+			} // if
+				//
+			if (f != null && f.get(cssExpression) == null) {
+				//
+				return null;
+				//
+			} // if
+		} catch (final IllegalAccessException e) {
+			//
+			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
+			//
+		} // try
+			//
+		return instance != null && cssExpression != null ? instance.getExpressionAsCSSString() : null;
+		//
 	}
 
 	private static IndexedColorMap getIndexedColors(final StylesTable instance) {
@@ -746,7 +798,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 
 	private static <T> Stream<T> filter(final Stream<T> instance, final Predicate<? super T> predicate) {
 		//
-		return instance != null && (predicate != null || Proxy.isProxyClass(getClass(instance)))
+		return instance != null && (Proxy.isProxyClass(getClass(instance)) || predicate != null)
 				? instance.filter(predicate)
 				: null;
 		//
