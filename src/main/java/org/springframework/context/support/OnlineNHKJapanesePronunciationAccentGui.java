@@ -681,7 +681,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 		//
 		Map<String, String> map = null;
 		//
-		final Elements children = input != null ? input.children() : null;
+		final Elements children = ElementUtil.children(input);
 		//
 		Element element = null;
 		//
