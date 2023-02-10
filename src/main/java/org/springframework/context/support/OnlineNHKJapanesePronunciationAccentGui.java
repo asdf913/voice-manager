@@ -43,6 +43,9 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import javax.imageio.ImageIO;
+import javax.imageio.spi.IIORegistry;
+import javax.imageio.spi.ImageWriterSpi;
+import javax.imageio.spi.ServiceRegistry;
 import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
@@ -111,6 +114,10 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 
 	private transient MutableComboBoxModel<Pronounication> mcbmPronounication = null;
 
+	private ComboBoxModel<String> mcbmImageFormat = null;
+
+	private JLabel jlSavePitchAccentImage = null;
+
 	private OnlineNHKJapanesePronunciationAccentGui() {
 	}
 
@@ -177,7 +184,50 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 		//
 		add(btnCopyPitchAccentImage = new JButton("Copy Image"));
 		//
+		// Image Format
+		//
+		final Map<?, ?> imageWriterSpis = cast(Map.class,
+				testAndApply(
+						Objects::nonNull, get(
+								cast(Map.class,
+										Narcissus.getObjectField(IIORegistry.getDefaultInstance(),
+												getDeclaredField(ServiceRegistry.class, "categoryMap"))),
+								ImageWriterSpi.class),
+						x -> Narcissus.getField(x, getDeclaredField(getClass(x), "map")), null));
+		//
+		final List<String> classNames = testAndApply(
+				Objects::nonNull, stream(imageWriterSpis.keySet())
+						.map(x -> x instanceof Class<?> ? ((Class<?>) x).getName() : null).toList(),
+				ArrayList::new, null);
+		//
+		final String commonPrefix = StringUtils.getCommonPrefix(classNames.toArray(new String[] {}));
+		//
+		for (int i = 0; classNames != null && i < classNames.size(); i++) {
+			//
+			classNames.set(i, StringUtils
+					.substringBefore(StringUtils.replace(IterableUtils.get(classNames, i), commonPrefix, ""), '.'));
+			//
+		} // if
+			//
+		final MutableComboBoxModel<String> mcbm = new DefaultComboBoxModel<>();
+		//
+		add(new JComboBox<>(mcbm));
+		//
+		if (classNames != null) {
+			//
+			classNames.forEach(x -> {
+				//
+				mcbm.addElement(x);
+				//
+			});
+			//
+		} // if
+			//
+		mcbmImageFormat = mcbm;
+		//
 		add(btnSavePitchAccentImage = new JButton("Save Image"));
+		//
+		add(jlSavePitchAccentImage = new JLabel());
 		//
 		addActionListener(this, btnPlayAudio, btnCopyPitchAccentImage, btnSavePitchAccentImage);
 		//
@@ -201,6 +251,10 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 			//
 		} // for
 			//
+	}
+
+	private static <V> V get(final Map<?, V> instance, final Object key) {
+		return instance != null ? instance.get(key) : null;
 	}
 
 	private static <E> Component getListCellRendererComponent(final ListCellRenderer<E> instance,
@@ -329,9 +383,11 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 					//
 					try {
 						//
-						// TODO
+						setText(jlSavePitchAccentImage,
+								ImageIO.write(pitchAccentImage, toString(getSelectedItem(mcbmImageFormat)),
+										jfc.getSelectedFile()) ? "Saved" : "Not Saved");
 						//
-						ImageIO.write(pitchAccentImage, "png", jfc.getSelectedFile());
+						pack();
 						//
 					} catch (final IOException e) {
 						//
@@ -345,6 +401,16 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 				//
 		} // if
 			//
+	}
+
+	private static void setText(final JLabel instance, final String text) {
+		if (instance != null) {
+			instance.setText(text);
+		}
+	}
+
+	private static String toString(final Object instance) {
+		return instance != null ? instance.toString() : null;
 	}
 
 	private static void playAudio(final Pronounication pronounication) {
@@ -655,7 +721,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 						//
 						, stream(bis).mapToInt(x -> intValue(getHeight(x), 0)).reduce(Integer::max).orElse(0)
 						//
-						, BufferedImage.TYPE_INT_ARGB);
+						, BufferedImage.TYPE_INT_RGB);
 				//
 			} // if
 				//

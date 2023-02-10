@@ -39,6 +39,7 @@ import java.util.stream.IntStream;
 import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.ListModel;
 import javax.swing.MutableComboBoxModel;
@@ -72,14 +73,14 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 
 	private static Class<?> CLASS_PRONOUNICATION = null;
 
-	private static Method METHOD_CAST, METHOD_GET_SRC_MAP, METHOD_GET_CLASS, METHOD_GET_IMAGE_SRCS,
+	private static Method METHOD_CAST, METHOD_GET_SRC_MAP, METHOD_GET_CLASS, METHOD_TO_STRING, METHOD_GET_IMAGE_SRCS,
 			METHOD_CREATE_MERGED_BUFFERED_IMAGE, METHOD_TEST_AND_APPLY, METHOD_GET_GRAPHICS, METHOD_GET_WIDTH,
 			METHOD_GET_HEIGHT, METHOD_INT_VALUE, METHOD_GET_TEXT, METHOD_RELATIVE, METHOD_TO_URI, METHOD_TO_URL,
 			METHOD_SET_VALUE, METHOD_GET_VALUE, METHOD_ADD_ELEMENT, METHOD_REMOVE_ELEMENT_AT, METHOD_GET_SELECTED_ITEM,
 			METHOD_GET_SIZE, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_GET_PROTOCOL, METHOD_GET_HOST,
 			METHOD_FOR_EACH, METHOD_MAP, METHOD_SET_PITCH_ACCENT_IMAGE_TO_SYSTEM_CLIPBOARD_CONTENTS, METHOD_PLAY_AUDIO,
-			METHOD_GET_DECLARED_FIELD, METHOD_FOR_NAME, METHOD_OPEN_STREAM, METHOD_PLAY,
-			METHOD_ADD_ACTION_LISTENER = null;
+			METHOD_GET_DECLARED_FIELD, METHOD_FOR_NAME, METHOD_OPEN_STREAM, METHOD_PLAY, METHOD_ADD_ACTION_LISTENER,
+			METHOD_GET, METHOD_SET_TEXT = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -91,6 +92,8 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		(METHOD_GET_SRC_MAP = clz.getDeclaredMethod("getSrcMap", Element.class)).setAccessible(true);
 		//
 		(METHOD_GET_CLASS = clz.getDeclaredMethod("getClass", Object.class)).setAccessible(true);
+		//
+		(METHOD_TO_STRING = clz.getDeclaredMethod("toString", Object.class)).setAccessible(true);
 		//
 		(METHOD_GET_IMAGE_SRCS = clz.getDeclaredMethod("getImageSrcs", Element.class)).setAccessible(true);
 		//
@@ -162,6 +165,10 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		//
 		(METHOD_ADD_ACTION_LISTENER = clz.getDeclaredMethod("addActionListener", ActionListener.class,
 				AbstractButton[].class)).setAccessible(true);
+		//
+		(METHOD_GET = clz.getDeclaredMethod("get", Map.class, Object.class)).setAccessible(true);
+		//
+		(METHOD_SET_TEXT = clz.getDeclaredMethod("setText", JLabel.class, String.class)).setAccessible(true);
 		//
 	}
 
@@ -477,8 +484,27 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		}
 	}
 
-	private static String toString(final Object instance) {
-		return instance != null ? instance.toString() : null;
+	@Test
+	void testToString() throws Throwable {
+		//
+		Assertions.assertNull(toString(null));
+		//
+		Assertions.assertSame(EMPTY, toString(EMPTY));
+		//
+	}
+
+	private static String toString(final Object instance) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_STRING.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 	@Test
@@ -1195,6 +1221,38 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			throws Throwable {
 		try {
 			METHOD_ADD_ACTION_LISTENER.invoke(null, actionListener, bs);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGet() throws Throwable {
+		//
+		Assertions.assertNull(get(null, null));
+		//
+	}
+
+	private static <V> V get(final Map<?, V> instance, final Object key) throws Throwable {
+		try {
+			return (V) METHOD_GET.invoke(null, instance, key);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetText() {
+		//
+		Assertions.assertDoesNotThrow(() -> setText(null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> setText(new JLabel(), null));
+		//
+	}
+
+	private static void setText(final JLabel instance, final String text) throws Throwable {
+		try {
+			METHOD_SET_TEXT.invoke(null, instance, text);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
