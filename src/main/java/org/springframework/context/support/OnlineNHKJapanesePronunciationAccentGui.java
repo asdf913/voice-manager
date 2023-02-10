@@ -533,7 +533,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 				//
 			if ((map = ObjectUtils.getIfNull(map, LinkedHashMap::new)) != null) {
 				//
-				map.put(element.attr("type"), element.attr("src"));
+				map.put(ElementUtil.attr(element, "type"), ElementUtil.attr(element, "src"));
 				//
 			} // if
 				//
