@@ -325,8 +325,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 			//
 	}
 
-	private static Object playAudio(final Object key, final String value)
-			throws MalformedURLException, JavaLayerException, IOException {
+	private static Object playAudio(final Object key, final String value) throws JavaLayerException, IOException {
 		//
 		if (Objects.equals("audio/wav", key)) {
 			//
