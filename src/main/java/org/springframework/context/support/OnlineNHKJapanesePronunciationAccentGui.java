@@ -661,9 +661,9 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 					final boolean result = ImageIO.write(pitchAccentImage, toString(getSelectedItem(cbmImageFormat)),
 							jfc.getSelectedFile());
 					//
-					setText(jlSavePitchAccentImage, result ? "Saved" : "Not Saved");
+					setText(jlSavePitchAccentImage, iif(result, "Saved", "Not Saved"));
 					//
-					setForeground(jlSavePitchAccentImage, result ? Color.GREEN : Color.RED);
+					setForeground(jlSavePitchAccentImage, iif(result, Color.GREEN, Color.RED));
 					//
 					pack();
 					//
@@ -677,6 +677,10 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 				//
 		} // if
 			//
+	}
+
+	private static <T> T iif(final boolean condition, final T trueValue, final T falseValue) {
+		return condition ? trueValue : falseValue;
 	}
 
 	private static void pronounicationChanged(final Pronounication pronounication,
