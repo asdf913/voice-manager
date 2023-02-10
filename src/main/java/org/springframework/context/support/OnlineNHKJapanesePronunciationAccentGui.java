@@ -347,6 +347,8 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 		//
 		final Object source = getSource(evt);
 		//
+		final boolean headless = GraphicsEnvironment.isHeadless();
+		//
 		if (Objects.equals(source, btnExecute)) {
 			//
 			// Remove all element(s) in "mcbmPronounication"
@@ -393,7 +395,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 					//
 				} // for
 					//
-				if (!GraphicsEnvironment.isHeadless()) {
+				if (!headless) {
 					//
 					pack();
 					//
@@ -411,61 +413,9 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 			//
 		} else if (Objects.equals(source, btnSaveAudio)) {
 			//
-			final Pronounication pronounication = cast(Pronounication.class, getSelectedItem(mcbmPronounication));
+			saveAudio(headless, cast(Pronounication.class, getSelectedItem(mcbmPronounication)),
+					getSelectedItem(mcbmAudioFormat));
 			//
-			final Map<String, String> audioUrls = testAndApply(Objects::nonNull,
-					pronounication != null ? pronounication.audioUrls : null, LinkedHashMap::new, null);
-			//
-			final Object audioFormat = getSelectedItem(mcbmAudioFormat);
-			//
-			final JFileChooser jfc = new JFileChooser(".");
-			//
-			if (containsKey(audioUrls, audioFormat)) {
-				//
-				if (jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-					//
-					try {
-						//
-						saveFile(jfc.getSelectedFile(), get(audioUrls, audioFormat));
-						//
-					} catch (final IOException e) {
-						//
-						TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
-						//
-					} // try
-						//
-				} // if
-					//
-				return;
-				//
-			} // if
-				//
-			final Set<Entry<String, String>> entrySet = entrySet(audioUrls);
-			//
-			if (iterator(entrySet) != null) {
-				//
-				for (final String u : audioUrls.values()) {
-					//
-					if (jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-						//
-						try {
-							//
-							saveFile(jfc.getSelectedFile(), u);
-							//
-						} catch (final IOException e) {
-							//
-							TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
-							//
-						} // try
-							//
-					} // if
-						//
-					return;
-					//
-				} // for
-					//
-			} // if
-				//
 		} else if (Objects.equals(source, btnCopyPitchAccentImage)) {
 			//
 			setPitchAccentImageToSystemClipboardContents(
@@ -564,6 +514,60 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 		if (instance != null) {
 			instance.play();
 		}
+	}
+
+	private static void saveAudio(final boolean headless, final Pronounication pronounication,
+			final Object audioFormat) {
+		//
+		final Map<String, String> audioUrls = testAndApply(Objects::nonNull,
+				pronounication != null ? pronounication.audioUrls : null, LinkedHashMap::new, null);
+		//
+		final JFileChooser jfc = new JFileChooser(".");
+		//
+		if (containsKey(audioUrls, audioFormat)) {
+			//
+			if (!headless && jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+				//
+				try {
+					//
+					saveFile(jfc.getSelectedFile(), get(audioUrls, audioFormat));
+					//
+				} catch (final IOException e) {
+					//
+					TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
+					//
+				} // try
+					//
+			} // if
+				//
+			return;
+			//
+		} // if
+			//
+		final Set<Entry<String, String>> entrySet = entrySet(audioUrls);
+		//
+		if (iterator(entrySet) != null) {
+			//
+			for (final String u : audioUrls.values()) {
+				//
+				if (!headless && jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+					//
+					try {
+						//
+						saveFile(jfc.getSelectedFile(), u);
+						//
+					} catch (final IOException e) {
+						//
+						TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
+						//
+					} // try
+						//
+				} // if
+					//
+			} // for
+				//
+		} // if
+			//
 	}
 
 	private static void setPitchAccentImageToSystemClipboardContents(final Pronounication pronounication) {

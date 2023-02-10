@@ -84,9 +84,10 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			METHOD_SET_VALUE, METHOD_GET_VALUE, METHOD_ADD_ELEMENT, METHOD_REMOVE_ELEMENT_AT, METHOD_GET_SELECTED_ITEM,
 			METHOD_GET_SIZE, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_GET_PROTOCOL, METHOD_GET_HOST,
 			METHOD_FOR_EACH, METHOD_MAP, METHOD_SET_PITCH_ACCENT_IMAGE_TO_SYSTEM_CLIPBOARD_CONTENTS,
-			METHOD_SAVE_PITCH_ACCENT_IMAGE, METHOD_PLAY_AUDIO, METHOD_PRONOUNICATION_CHANGED, METHOD_GET_DECLARED_FIELD,
-			METHOD_FOR_NAME, METHOD_OPEN_STREAM, METHOD_PLAY, METHOD_ADD_ACTION_LISTENER, METHOD_GET, METHOD_SET_TEXT,
-			METHOD_DRAW_IMAGE, METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_SAVE_FILE, METHOD_CONTAINS_KEY = null;
+			METHOD_SAVE_PITCH_ACCENT_IMAGE, METHOD_PLAY_AUDIO, METHOD_SAVE_AUDIO, METHOD_PRONOUNICATION_CHANGED,
+			METHOD_GET_DECLARED_FIELD, METHOD_FOR_NAME, METHOD_OPEN_STREAM, METHOD_PLAY, METHOD_ADD_ACTION_LISTENER,
+			METHOD_GET, METHOD_SET_TEXT, METHOD_DRAW_IMAGE, METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_SAVE_FILE,
+			METHOD_CONTAINS_KEY = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -162,6 +163,9 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				.setAccessible(true);
 		//
 		(METHOD_PLAY_AUDIO = clz.getDeclaredMethod("playAudio", CLASS_PRONOUNICATION)).setAccessible(true);
+		//
+		(METHOD_SAVE_AUDIO = clz.getDeclaredMethod("saveAudio", Boolean.TYPE, CLASS_PRONOUNICATION, Object.class))
+				.setAccessible(true);
 		//
 		(METHOD_PRONOUNICATION_CHANGED = clz.getDeclaredMethod("pronounicationChanged", CLASS_PRONOUNICATION,
 				MutableComboBoxModel.class)).setAccessible(true);
@@ -259,6 +263,10 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				} else if (Objects.equals(methodName, "isEmpty")) {
 					//
 					return isEmpty;
+					//
+				} else if (Objects.equals(methodName, "size")) {
+					//
+					return size;
 					//
 				} // if
 					//
@@ -1250,6 +1258,52 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 	private static void playAudio(final Object pronounication) throws Throwable {
 		try {
 			METHOD_PLAY_AUDIO.invoke(null, pronounication);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSaveAudio() throws Throwable {
+		//
+		// org.springframework.context.support.OnlineNHKJapanesePronunciationAccentGui$Pronounication.audioUrls
+		//
+		final Field audioUrls = getDeclaredField(CLASS_PRONOUNICATION, "audioUrls");
+		//
+		if (audioUrls != null) {
+			//
+			audioUrls.setAccessible(true);
+			//
+			audioUrls.set(pronounication, map);
+			//
+		} // if
+			//
+		if (ih != null) {
+			//
+			ih.size = Integer.valueOf(0);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> saveAudio(true, pronounication, null));
+		//
+		if (ih != null) {
+			//
+			ih.size = Integer.valueOf(1);
+			//
+			ih.entrySet = Collections.singleton(entry);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> saveAudio(true, pronounication, null));
+		//
+		Assertions.assertDoesNotThrow(() -> saveAudio(true, pronounication, EMPTY));
+		//
+	}
+
+	private static void saveAudio(final boolean headless, final Object pronounication, final Object audioFormat)
+			throws Throwable {
+		try {
+			METHOD_SAVE_AUDIO.invoke(null, headless, pronounication, audioFormat);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
