@@ -1,5 +1,6 @@
 package org.springframework.context.support;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.GraphicsEnvironment;
@@ -458,6 +459,12 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 		}
 	}
 
+	private static void setForeground(final Component instance, final Color color) {
+		if (instance != null) {
+			instance.setForeground(color);
+		}
+	}
+
 	private static String toString(final Object instance) {
 		return instance != null ? instance.toString() : null;
 	}
@@ -651,8 +658,12 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 				//
 				try {
 					//
-					setText(jlSavePitchAccentImage, ImageIO.write(pitchAccentImage,
-							toString(getSelectedItem(cbmImageFormat)), jfc.getSelectedFile()) ? "Saved" : "Not Saved");
+					final boolean result = ImageIO.write(pitchAccentImage, toString(getSelectedItem(cbmImageFormat)),
+							jfc.getSelectedFile());
+					//
+					setText(jlSavePitchAccentImage, result ? "Saved" : "Not Saved");
+					//
+					setForeground(jlSavePitchAccentImage, result ? Color.GREEN : Color.RED);
 					//
 					pack();
 					//
