@@ -42,6 +42,7 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 import java.util.function.IntConsumer;
 import java.util.function.IntUnaryOperator;
 import java.util.function.Predicate;
@@ -287,16 +288,8 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 		//
 		add(new JComboBox<>(mcbm), growx);
 		//
-		if (classNames != null) {
-			//
-			classNames.forEach(x -> {
-				//
-				mcbm.addElement(x);
-				//
-			});
-			//
-		} // if
-			//
+		forEach(classNames, x -> mcbm.addElement(x));
+		//
 		cbmImageFormat = mcbm;
 		//
 		add(btnSavePitchAccentImage = new JButton("Save Image"));
@@ -759,6 +752,12 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 			return StringUtils.isNotBlank(className) ? Class.forName(className) : null;
 		} catch (final ClassNotFoundException e) {
 			return null;
+		}
+	}
+
+	private static <T> void forEach(final Iterable<T> instance, final Consumer<? super T> action) {
+		if (instance != null && (action != null || Proxy.isProxyClass(getClass(instance)))) {
+			instance.forEach(action);
 		}
 	}
 
