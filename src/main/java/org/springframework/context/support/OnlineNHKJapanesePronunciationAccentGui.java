@@ -114,7 +114,10 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 	private AbstractButton btnExecute = null;
 
 	@Note("Play Audio")
-	private AbstractButton btnPlayAudio, btnSaveAudio = null;
+	private AbstractButton btnPlayAudio = null;
+
+	@Note("Save Audio")
+	private AbstractButton btnSaveAudio = null;
 
 	@Note("Copy Pitch Accent Image")
 	private AbstractButton btnCopyPitchAccentImage = null;
