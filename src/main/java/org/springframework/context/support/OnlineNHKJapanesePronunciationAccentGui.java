@@ -31,6 +31,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.EventObject;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -245,6 +246,12 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 			//
 			classNames.set(i, StringUtils
 					.substringBefore(StringUtils.replace(IterableUtils.get(classNames, i), commonPrefix, ""), '.'));
+			//
+		} // if
+			//
+		if (classNames != null) {
+			//
+			Collections.sort(classNames);
 			//
 		} // if
 			//
