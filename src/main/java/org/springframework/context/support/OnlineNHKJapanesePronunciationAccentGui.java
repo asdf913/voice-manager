@@ -28,6 +28,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.EventObject;
 import java.util.Iterator;
@@ -507,7 +508,22 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 	}
 
 	private static InputStream openStream(final URL instance) throws IOException {
+		//
+		// Check if "handler" field in "java.net.URL" class is null or not
+		//
+		final Field f = testAndApply(x -> IterableUtils.size(x) == 1,
+				Arrays.stream(URL.class.getDeclaredFields())
+						.filter(x -> x != null && Objects.equals(x.getName(), "handler")).toList(),
+				x -> IterableUtils.get(x, 0), null);
+		//
+		if (instance != null && f != null && Narcissus.getObjectField(instance, f) == null) {
+			//
+			return null;
+			//
+		} // if
+			//
 		return instance != null ? instance.openStream() : null;
+		//
 	}
 
 	private static void play(final Player instance) throws JavaLayerException {
