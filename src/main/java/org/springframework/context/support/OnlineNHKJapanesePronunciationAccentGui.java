@@ -22,6 +22,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -31,6 +32,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.EventObject;
 import java.util.Iterator;
@@ -48,6 +50,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import javax.imageio.ImageIO;
 import javax.imageio.spi.IIORegistry;
@@ -78,6 +81,9 @@ import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
+import org.javatuples.Unit;
+import org.javatuples.valueintf.IValue0;
+import org.javatuples.valueintf.IValue0Util;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -87,6 +93,9 @@ import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.cglib.proxy.Proxy;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import com.github.hal4j.uritemplate.URIBuilder;
 import com.google.common.reflect.Reflection;
 
@@ -147,12 +156,79 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 		this.url = url;
 	}
 
-	public void setImageFormatOrders(final List<String> imageFormatOrders) {
+	public void setImageFormatOrders(final Object object) {
 		//
-		// TODO
+		IValue0<List<String>> value = null;
 		//
-		this.imageFormatOrders = imageFormatOrders;
+		final Class<?> clz = getClass(object);
 		//
+		if (object == null) {
+			//
+			value = Unit.with(null);
+			//
+		} else if (object instanceof List) {
+			//
+			value = Unit
+					.with(stream(((List<?>) object)).map(OnlineNHKJapanesePronunciationAccentGui::toString).toList());
+			//
+		} else if (object instanceof Iterable) {
+			//
+			value = Unit.with(StreamSupport.stream(((Iterable<?>) object).spliterator(), false)
+					.map(OnlineNHKJapanesePronunciationAccentGui::toString).toList());
+			//
+		} else if (clz != null && clz.isArray()) {
+			//
+			if (Objects.equals(clz.getComponentType(), Character.TYPE)) {
+				//
+				setImageFormatOrders(new String((char[]) object));
+				//
+				return;
+				//
+			} // if
+				//
+			value = Unit.with(IntStream.range(0, Array.getLength(object)).mapToObj(i -> Array.get(object, i))
+					.map(OnlineNHKJapanesePronunciationAccentGui::toString).toList());
+			//
+		} else if (object instanceof String) {
+			//
+			final String string = (String) object;
+			//
+			try {
+				//
+				final Object obj = ObjectMapperUtil.readValue(new ObjectMapper(), string, Object.class);
+				//
+				if (obj != null) {
+					//
+					setImageFormatOrders(obj);
+					//
+					return;
+					//
+				} // if
+					//
+			} catch (final JsonProcessingException e) {
+				//
+				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
+				//
+			} // try
+				//
+			value = Unit.with(Collections.singletonList(string));
+			//
+		} else if (object instanceof Number || object instanceof Boolean) {
+			//
+			value = Unit.with(Collections.singletonList(toString(object)));
+			//
+		} // if
+			//
+		if (value != null) {
+			//
+			this.imageFormatOrders = IValue0Util.getValue0(value);
+			//
+		} else {
+			//
+			throw new UnsupportedOperationException(toString(clz));
+			//
+		} // if
+			//
 	}
 
 	@Override

@@ -249,24 +249,8 @@
 			value="#{T(javax.swing.WindowConstants).EXIT_ON_CLOSE}" />
 		<property name="url"
 			value="${org.springframework.context.support.OnlineNHKJapanesePronunciationAccentGui.url}" />
-		<property name="imageFormatOrders">
-			<!-- org.apache.commons.lang3.StringUtils.split(java.lang.String,java.lang.String) -->
-			<bean
-				class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
-				<property name="targetClass"
-					value="org.apache.commons.lang3.StringUtils" />
-				<property name="targetMethod" value="split" />
-				<property name="arguments">
-					<list>
-						<bean class="java.lang.String">
-							<constructor-arg
-								value="${org.springframework.context.support.OnlineNHKJapanesePronunciationAccentGui.imageFormatOrders}" />
-						</bean>
-						<value>,</value>
-					</list>
-				</property>
-			</bean>
-		</property>
+		<property name="imageFormatOrders"
+			value="${org.springframework.context.support.OnlineNHKJapanesePronunciationAccentGui.imageFormatOrders}" />
 	</bean>
 
 	<bean id="DataSource" class="org.h2.jdbcx.JdbcConnectionPool"

@@ -486,6 +486,121 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 	}
 
 	@Test
+	void testSetImageFormatOrders() throws Throwable {
+		//
+		final Field imageFormatOrders = OnlineNHKJapanesePronunciationAccentGui.class
+				.getDeclaredField("imageFormatOrders");
+		//
+		if (imageFormatOrders != null) {
+			//
+			imageFormatOrders.setAccessible(true);
+			//
+		} // if
+			//
+			// null
+			//
+		Assertions.assertDoesNotThrow(() -> setImageFormatOrders(instance, null));
+		//
+		Assertions.assertNull(get(imageFormatOrders, instance));
+		//
+		// java.lang.Iterable
+		//
+		final Iterable<String> iterable = Collections.emptySet();
+		//
+		Assertions.assertDoesNotThrow(() -> setImageFormatOrders(instance, iterable));
+		//
+		final List<String> emptyList = Collections.emptyList();
+		//
+		Assertions.assertEquals(emptyList, get(imageFormatOrders, instance));
+		//
+		// java.lang.String[]
+		//
+		final String[] ss = new String[] { Integer.toString(ONE) };
+		//
+		Assertions.assertDoesNotThrow(() -> setImageFormatOrders(instance, ss));
+		//
+		Assertions.assertEquals(Arrays.asList(ss), get(imageFormatOrders, instance));
+		//
+		// int[]
+		//
+		Assertions.assertDoesNotThrow(() -> setImageFormatOrders(instance, new int[] { ONE }));
+		//
+		Assertions.assertEquals(Arrays.asList(Integer.toString(ONE)), get(imageFormatOrders, instance));
+		//
+		// short[]
+		//
+		Assertions.assertDoesNotThrow(() -> setImageFormatOrders(instance, new short[] { ONE }));
+		//
+		Assertions.assertEquals(Arrays.asList(Integer.toString(ONE)), get(imageFormatOrders, instance));
+		//
+		// double[]
+		//
+		Assertions.assertDoesNotThrow(() -> setImageFormatOrders(instance, new double[] { ONE }));
+		//
+		Assertions.assertEquals(Arrays.asList(Double.toString(Integer.valueOf(ONE).doubleValue())),
+				get(imageFormatOrders, instance));
+		//
+		// float[]
+		//
+		Assertions.assertDoesNotThrow(() -> setImageFormatOrders(instance, new float[] { ONE }));
+		//
+		Assertions.assertEquals(Arrays.asList(Double.toString(Integer.valueOf(ONE).doubleValue())),
+				get(imageFormatOrders, instance));
+		//
+		// byte[]
+		//
+		Assertions.assertDoesNotThrow(() -> setImageFormatOrders(instance, new byte[] { ONE }));
+		//
+		Assertions.assertEquals(Arrays.asList(Integer.toString(ONE)), get(imageFormatOrders, instance));
+		//
+		// char[]
+		//
+		final char[] chars = Integer.toString(ONE).toCharArray();
+		//
+		Assertions.assertDoesNotThrow(() -> setImageFormatOrders(instance, chars));
+		//
+		Assertions.assertEquals(Arrays.asList(Integer.toString(ONE)), get(imageFormatOrders, instance));
+		//
+		// java.lang.Object[]
+		//
+		final Object object = new Object();
+		//
+		Assertions.assertDoesNotThrow(() -> setImageFormatOrders(instance, new Object[] { object }));
+		//
+		Assertions.assertEquals(Arrays.asList(toString(object)), get(imageFormatOrders, instance));
+		//
+		// java.lang.String
+		//
+		Assertions.assertDoesNotThrow(() -> setImageFormatOrders(instance, EMPTY));
+		//
+		Assertions.assertEquals(Collections.singletonList(EMPTY), get(imageFormatOrders, instance));
+		//
+		Assertions.assertDoesNotThrow(() -> setImageFormatOrders(instance, "[]"));
+		//
+		Assertions.assertEquals(emptyList, get(imageFormatOrders, instance));
+		//
+		Assertions.assertThrows(UnsupportedOperationException.class, () -> setImageFormatOrders(instance, "{}"));
+		//
+		final boolean b = true;
+		//
+		Assertions.assertDoesNotThrow(() -> setImageFormatOrders(instance, Boolean.toString(b)));
+		//
+		Assertions.assertEquals(Collections.singletonList(Boolean.toString(b)), get(imageFormatOrders, instance));
+		//
+	}
+
+	private static Object get(final Field field, final Object instance) throws IllegalAccessException {
+		return field != null ? field.get(instance) : null;
+	}
+
+	private static void setImageFormatOrders(final OnlineNHKJapanesePronunciationAccentGui instance,
+			final Object object) {
+		if (instance != null) {
+			instance.setImageFormatOrders(object);
+		}
+	}
+
+	@Test
 	void testActionPerformed() throws IllegalAccessException {
 		//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, null));
@@ -1497,7 +1612,9 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 	@Test
 	void testGet() throws Throwable {
 		//
-		Assertions.assertNull(get(null, null));
+		Assertions.assertNull(get((Map<?, ?>) null, null));
+		//
+		Assertions.assertNull(get((Field) null, null));
 		//
 		if (GraphicsEnvironment.isHeadless()) {
 			//
