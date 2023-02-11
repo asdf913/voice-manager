@@ -2,6 +2,7 @@ package org.springframework.context.support;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
@@ -97,8 +98,8 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			METHOD_FOR_NAME, METHOD_OPEN_STREAM, METHOD_PLAY, METHOD_ADD_ACTION_LISTENER, METHOD_GET_MAP,
 			METHOD_GET_FIELD, METHOD_SET_TEXT, METHOD_SET_FORE_GROUND, METHOD_DRAW_IMAGE,
 			METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_SAVE_FILE, METHOD_CONTAINS_KEY, METHOD_IIF, METHOD_GET_NAME,
-			METHOD_SORT, METHOD_CREATE_IMAGE_FORMAT_COMPARATOR, METHOD_IS_ANNOTATION_PRESENT,
-			METHOD_GET_ANNOTATION = null;
+			METHOD_SORT, METHOD_CREATE_IMAGE_FORMAT_COMPARATOR, METHOD_IS_ANNOTATION_PRESENT, METHOD_GET_ANNOTATION,
+			METHOD_GET_PREFERRED_SIZE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -231,6 +232,8 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		//
 		(METHOD_GET_ANNOTATION = clz.getDeclaredMethod("getAnnotation", AnnotatedElement.class, Class.class))
 				.setAccessible(true);
+		//
+		(METHOD_GET_PREFERRED_SIZE = clz.getDeclaredMethod("getPreferredSize", Component.class)).setAccessible(true);
 		//
 	}
 
@@ -1656,7 +1659,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 
 	private static Object get(final Field field, final Object instance) throws Throwable {
 		try {
-			return METHOD_GET_FIELD.invoke(null,field,instance);
+			return METHOD_GET_FIELD.invoke(null, field, instance);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1942,6 +1945,27 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				return null;
 			} else if (annotationClass != null && annotationClass.isInstance(obj)) {
 				return annotationClass.cast(obj);
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetPreferredSize() throws Throwable {
+		//
+		Assertions.assertNull(getPreferredSize(null));
+		//
+	}
+
+	private static Dimension getPreferredSize(final Component instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_PREFERRED_SIZE.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Dimension) {
+				return (Dimension) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

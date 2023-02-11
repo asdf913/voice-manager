@@ -376,7 +376,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 		//
 		final Double maxPreferredSizeWidth = stream(cs).map(x -> {
 			//
-			final Dimension pd = x != null ? x.getPreferredSize() : null;
+			final Dimension pd = getPreferredSize(x);
 			//
 			return pd != null ? pd.getWidth() : null;
 			//
@@ -386,7 +386,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 			//
 			forEach(cs, c -> {
 				//
-				final Dimension pd = c != null ? c.getPreferredSize() : null;
+				final Dimension pd = getPreferredSize(c);
 				//
 				if (pd != null) {
 					//
@@ -400,6 +400,10 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 			//
 		pack();
 		//
+	}
+
+	private static Dimension getPreferredSize(final Component instance) {
+		return instance != null ? instance.getPreferredSize() : null;
 	}
 
 	private static Object get(final Field field, final Object instance) throws IllegalAccessException {
