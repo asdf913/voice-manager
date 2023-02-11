@@ -94,10 +94,11 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			METHOD_FOR_EACH_ITERABLE, METHOD_FOR_EACH_INT_STREAM, METHOD_MAP,
 			METHOD_SET_PITCH_ACCENT_IMAGE_TO_SYSTEM_CLIPBOARD_CONTENTS, METHOD_SAVE_PITCH_ACCENT_IMAGE,
 			METHOD_PLAY_AUDIO, METHOD_SAVE_AUDIO, METHOD_PRONOUNICATION_CHANGED, METHOD_GET_DECLARED_FIELD,
-			METHOD_FOR_NAME, METHOD_OPEN_STREAM, METHOD_PLAY, METHOD_ADD_ACTION_LISTENER, METHOD_GET, METHOD_SET_TEXT,
-			METHOD_SET_FORE_GROUND, METHOD_DRAW_IMAGE, METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_SAVE_FILE,
-			METHOD_CONTAINS_KEY, METHOD_IIF, METHOD_GET_NAME, METHOD_SORT, METHOD_CREATE_IMAGE_FORMAT_COMPARATOR,
-			METHOD_IS_ANNOTATION_PRESENT, METHOD_GET_ANNOTATION = null;
+			METHOD_FOR_NAME, METHOD_OPEN_STREAM, METHOD_PLAY, METHOD_ADD_ACTION_LISTENER, METHOD_GET_MAP,
+			METHOD_GET_FIELD, METHOD_SET_TEXT, METHOD_SET_FORE_GROUND, METHOD_DRAW_IMAGE,
+			METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_SAVE_FILE, METHOD_CONTAINS_KEY, METHOD_IIF, METHOD_GET_NAME,
+			METHOD_SORT, METHOD_CREATE_IMAGE_FORMAT_COMPARATOR, METHOD_IS_ANNOTATION_PRESENT,
+			METHOD_GET_ANNOTATION = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -196,7 +197,9 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		(METHOD_ADD_ACTION_LISTENER = clz.getDeclaredMethod("addActionListener", ActionListener.class,
 				AbstractButton[].class)).setAccessible(true);
 		//
-		(METHOD_GET = clz.getDeclaredMethod("get", Map.class, Object.class)).setAccessible(true);
+		(METHOD_GET_MAP = clz.getDeclaredMethod("get", Map.class, Object.class)).setAccessible(true);
+		//
+		(METHOD_GET_FIELD = clz.getDeclaredMethod("get", Field.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_SET_TEXT = clz.getDeclaredMethod("setText", JLabel.class, String.class)).setAccessible(true);
 		//
@@ -610,10 +613,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		//
 		Assertions.assertEquals(Collections.singletonList(Boolean.toString(b)), get(imageFormatOrders, instance));
 		//
-	}
-
-	private static Object get(final Field field, final Object instance) throws IllegalAccessException {
-		return field != null ? field.get(instance) : null;
 	}
 
 	private static void setImageFormatOrders(final OnlineNHKJapanesePronunciationAccentGui instance,
@@ -1649,7 +1648,15 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 
 	private static <V> V get(final Map<?, V> instance, final Object key) throws Throwable {
 		try {
-			return (V) METHOD_GET.invoke(null, instance, key);
+			return (V) METHOD_GET_MAP.invoke(null, instance, key);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static Object get(final Field field, final Object instance) throws Throwable {
+		try {
+			return METHOD_GET_FIELD.invoke(null,field,instance);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

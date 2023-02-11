@@ -372,7 +372,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 				testAndApply(Objects::nonNull, getClass().getDeclaredFields(), Arrays::stream, null).filter(x -> Objects
 						.equals(value(isAnnotationPresent(x, Group.class) ? getAnnotation(x, Group.class) : null),
 								"LastComponentInRow")))
-				.map(x -> cast(Component.class, x != null ? x.get(this) : null)).collect(Collectors.toList());
+				.map(x -> cast(Component.class, get(x, this))).collect(Collectors.toList());
 		//
 		final Double maxPreferredSizeWidth = stream(cs).map(x -> {
 			//
@@ -400,6 +400,10 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 			//
 		pack();
 		//
+	}
+
+	private static Object get(final Field field, final Object instance) throws IllegalAccessException {
+		return field != null ? field.get(instance) : null;
 	}
 
 	private static String value(final Group instance) {
