@@ -369,13 +369,10 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 		// "org.springframework.context.support.OnlineNHKJapanesePronunciationAccentGui$Group"
 		//
 		final Collection<Component> cs = new FailableStream<>(
-				testAndApply(Objects::nonNull, getClass().getDeclaredFields(), Arrays::stream, null).filter(x -> {
-					//
-					final Group group = isAnnotationPresent(x, Group.class) ? getAnnotation(x, Group.class) : null;
-					//
-					return Objects.equals(group != null ? group.value() : null, "LastComponentInRow");
-					//
-				})).map(x -> cast(Component.class, x != null ? x.get(this) : null)).collect(Collectors.toList());
+				testAndApply(Objects::nonNull, getClass().getDeclaredFields(), Arrays::stream, null).filter(x -> Objects
+						.equals(value(isAnnotationPresent(x, Group.class) ? getAnnotation(x, Group.class) : null),
+								"LastComponentInRow")))
+				.map(x -> cast(Component.class, x != null ? x.get(this) : null)).collect(Collectors.toList());
 		//
 		final Double maxPreferredSizeWidth = stream(cs).map(x -> {
 			//
@@ -403,6 +400,10 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 			//
 		pack();
 		//
+	}
+
+	private static String value(final Group instance) {
+		return instance != null ? instance.value() : null;
 	}
 
 	private static boolean isAnnotationPresent(final AnnotatedElement instance,
