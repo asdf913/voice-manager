@@ -486,7 +486,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 	}
 
 	@Test
-	void testSetImageFormatOrders() throws Throwable {
+	void testSetImageFormatOrders1() throws Throwable {
 		//
 		final Field imageFormatOrders = OnlineNHKJapanesePronunciationAccentGui.class
 				.getDeclaredField("imageFormatOrders");
@@ -581,6 +581,20 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		//
 		Assertions.assertThrows(UnsupportedOperationException.class, () -> setImageFormatOrders(instance, "{}"));
 		//
+	}
+
+	@Test
+	void testSetImageFormatOrders2() throws Throwable {
+		//
+		final Field imageFormatOrders = OnlineNHKJapanesePronunciationAccentGui.class
+				.getDeclaredField("imageFormatOrders");
+		//
+		if (imageFormatOrders != null) {
+			//
+			imageFormatOrders.setAccessible(true);
+			//
+		} // if
+			//
 		final boolean b = true;
 		//
 		Assertions.assertDoesNotThrow(() -> setImageFormatOrders(instance, Boolean.toString(b)));
