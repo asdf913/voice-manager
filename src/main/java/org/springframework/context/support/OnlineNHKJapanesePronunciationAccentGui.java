@@ -26,6 +26,7 @@ import java.lang.annotation.Target;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -255,7 +256,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 			// The below check is for "-Djava.awt.headless=true"
 			//
 		final List<Field> fs = stream(FieldUtils.getAllFieldsList(getClass(this)))
-				.filter(f -> f != null && Objects.equals(f.getName(), "component")).toList();
+				.filter(f -> Objects.equals(getName(f), "component")).toList();
 		//
 		final Field f = IterableUtils.size(fs) == 1 ? IterableUtils.get(fs, 0) : null;
 		//
@@ -403,6 +404,10 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 		//
 	}
 
+	private static String getName(final Member instance) {
+		return instance != null ? instance.getName() : null;
+	}
+
 	private static Comparator<String> createImageFormatComparator(final List<?> imageFormatOrders) {
 		//
 		return (a, b) -> {
@@ -494,7 +499,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
-			final String methodName = method != null ? method.getName() : null;
+			final String methodName = getName(method);
 			//
 			if (proxy instanceof Transferable) {
 				//
@@ -690,9 +695,9 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 		//
 		// Check if "handler" field in "java.net.URL" class is null or not
 		//
-		final Field f = testAndApply(x -> IterableUtils.size(x) == 1,
-				Arrays.stream(URL.class.getDeclaredFields())
-						.filter(x -> x != null && Objects.equals(x.getName(), "handler")).toList(),
+		final Field f = testAndApply(
+				x -> IterableUtils.size(x) == 1, Arrays.stream(URL.class.getDeclaredFields())
+						.filter(x -> Objects.equals(getName(x), "handler")).toList(),
 				x -> IterableUtils.get(x, 0), null);
 		//
 		if (instance != null && f != null && Narcissus.getObjectField(instance, f) == null) {
