@@ -213,7 +213,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 				//
 			value = Unit.with(Collections.singletonList(string));
 			//
-		} else if (object instanceof Number || object instanceof Boolean) {
+		} else if (Boolean.logicalOr(object instanceof Number, object instanceof Boolean)) {
 			//
 			value = Unit.with(Collections.singletonList(toString(object)));
 			//
