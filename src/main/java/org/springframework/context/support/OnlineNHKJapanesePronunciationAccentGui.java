@@ -19,10 +19,12 @@ import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
@@ -369,8 +371,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 		final Collection<Component> cs = new FailableStream<>(
 				testAndApply(Objects::nonNull, getClass().getDeclaredFields(), Arrays::stream, null).filter(x -> {
 					//
-					final Group group = x != null && x.isAnnotationPresent(Group.class) ? x.getAnnotation(Group.class)
-							: null;
+					final Group group = isAnnotationPresent(x, Group.class) ? getAnnotation(x, Group.class) : null;
 					//
 					return Objects.equals(group != null ? group.value() : null, "LastComponentInRow");
 					//
@@ -402,6 +403,16 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 			//
 		pack();
 		//
+	}
+
+	private static boolean isAnnotationPresent(final AnnotatedElement instance,
+			final Class<? extends Annotation> annotationClass) {
+		return instance != null && annotationClass != null && instance.isAnnotationPresent(annotationClass);
+	}
+
+	private static <T extends Annotation> T getAnnotation(final AnnotatedElement instance,
+			final Class<T> annotationClass) {
+		return instance != null && annotationClass != null ? instance.getAnnotation(annotationClass) : null;
 	}
 
 	private static String getName(final Member instance) {

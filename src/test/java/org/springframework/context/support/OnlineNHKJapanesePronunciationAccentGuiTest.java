@@ -19,6 +19,8 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
@@ -94,7 +96,8 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			METHOD_PLAY_AUDIO, METHOD_SAVE_AUDIO, METHOD_PRONOUNICATION_CHANGED, METHOD_GET_DECLARED_FIELD,
 			METHOD_FOR_NAME, METHOD_OPEN_STREAM, METHOD_PLAY, METHOD_ADD_ACTION_LISTENER, METHOD_GET, METHOD_SET_TEXT,
 			METHOD_SET_FORE_GROUND, METHOD_DRAW_IMAGE, METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_SAVE_FILE,
-			METHOD_CONTAINS_KEY, METHOD_IIF, METHOD_GET_NAME, METHOD_SORT, METHOD_CREATE_IMAGE_FORMAT_COMPARATOR = null;
+			METHOD_CONTAINS_KEY, METHOD_IIF, METHOD_GET_NAME, METHOD_SORT, METHOD_CREATE_IMAGE_FORMAT_COMPARATOR,
+			METHOD_IS_ANNOTATION_PRESENT, METHOD_GET_ANNOTATION = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -218,6 +221,12 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		(METHOD_SORT = clz.getDeclaredMethod("sort", List.class, Comparator.class)).setAccessible(true);
 		//
 		(METHOD_CREATE_IMAGE_FORMAT_COMPARATOR = clz.getDeclaredMethod("createImageFormatComparator", List.class))
+				.setAccessible(true);
+		//
+		(METHOD_IS_ANNOTATION_PRESENT = clz.getDeclaredMethod("isAnnotationPresent", AnnotatedElement.class,
+				Class.class)).setAccessible(true);
+		//
+		(METHOD_GET_ANNOTATION = clz.getDeclaredMethod("getAnnotation", AnnotatedElement.class, Class.class))
 				.setAccessible(true);
 		//
 	}
@@ -1880,6 +1889,52 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				return null;
 			} else if (obj instanceof Comparator) {
 				return (Comparator) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testIsAnnotationPresent() throws Throwable {
+		//
+		Assertions.assertFalse(isAnnotationPresent(null, null));
+		//
+		Assertions.assertFalse(isAnnotationPresent(Object.class, null));
+		//
+	}
+
+	private static boolean isAnnotationPresent(final AnnotatedElement instance,
+			final Class<? extends Annotation> annotationClass) throws Throwable {
+		try {
+			final Object obj = METHOD_IS_ANNOTATION_PRESENT.invoke(null, instance, annotationClass);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetAnnotation() throws Throwable {
+		//
+		Assertions.assertNull(getAnnotation(null, null));
+		//
+		Assertions.assertNull(getAnnotation(Object.class, null));
+		//
+	}
+
+	private static <T extends Annotation> T getAnnotation(final AnnotatedElement instance,
+			final Class<T> annotationClass) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_ANNOTATION.invoke(null, instance, annotationClass);
+			if (obj == null) {
+				return null;
+			} else if (annotationClass != null && annotationClass.isInstance(obj)) {
+				return annotationClass.cast(obj);
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
