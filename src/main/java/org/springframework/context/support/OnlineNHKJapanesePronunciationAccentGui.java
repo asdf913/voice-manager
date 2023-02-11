@@ -2,6 +2,7 @@ package org.springframework.context.support;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
@@ -123,18 +124,27 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 		String value();
 	}
 
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target(ElementType.FIELD)
+	private @interface Group {
+		String value();
+	}
+
 	@Note("Execute")
+	@Group("LastComponentInRow")
 	private AbstractButton btnExecute = null;
 
 	@Note("Play Audio")
 	private AbstractButton btnPlayAudio = null;
 
 	@Note("Save Audio")
+	@Group("LastComponentInRow")
 	private AbstractButton btnSaveAudio = null;
 
 	@Note("Copy Pitch Accent Image")
 	private AbstractButton btnCopyPitchAccentImage = null;
 
+	@Group("LastComponentInRow")
 	private AbstractButton btnSavePitchAccentImage = null;
 
 	private transient MutableComboBoxModel<Pronounication> mcbmPronounication = null;
@@ -351,6 +361,44 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 		//
 		addActionListener(this, btnPlayAudio, btnSaveAudio, btnCopyPitchAccentImage, btnSavePitchAccentImage);
 		//
+		// Get the max "width" of "java.awt.Component.getPreferredSize()" of
+		// "java.awt.Component" from field(s) annotated by
+		// "org.springframework.context.support.OnlineNHKJapanesePronunciationAccentGui$Group"
+		//
+		final Collection<Component> cs = new FailableStream<>(
+				testAndApply(Objects::nonNull, getClass().getDeclaredFields(), Arrays::stream, null).filter(x -> {
+					//
+					final Group group = x != null && x.isAnnotationPresent(Group.class) ? x.getAnnotation(Group.class)
+							: null;
+					//
+					return Objects.equals(group != null ? group.value() : null, "LastComponentInRow");
+					//
+				})).map(x -> cast(Component.class, x != null ? x.get(this) : null)).collect(Collectors.toList());
+		//
+		final Double maxPreferredSizeWidth = stream(cs).map(x -> {
+			//
+			final Dimension pd = x != null ? x.getPreferredSize() : null;
+			//
+			return pd != null ? pd.getWidth() : null;
+			//
+		}).max(ObjectUtils::compare).orElse(null);
+		//
+		if (maxPreferredSizeWidth != null) {
+			//
+			forEach(cs, c -> {
+				//
+				final Dimension pd = c != null ? c.getPreferredSize() : null;
+				//
+				if (pd != null) {
+					//
+					c.setPreferredSize(new Dimension(maxPreferredSizeWidth.intValue(), (int) pd.getHeight()));
+					//
+				} // if
+					//
+			});
+			//
+		} // if
+			//
 		pack();
 		//
 	}
