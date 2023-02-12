@@ -327,29 +327,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 		//
 		// Image Format
 		//
-		final Map<?, ?> imageWriterSpis = cast(Map.class,
-				testAndApply(
-						Objects::nonNull, get(
-								cast(Map.class,
-										Narcissus.getObjectField(IIORegistry.getDefaultInstance(),
-												getDeclaredField(ServiceRegistry.class, "categoryMap"))),
-								ImageWriterSpi.class),
-						x -> Narcissus.getField(x, getDeclaredField(getClass(x), "map")), null));
-		//
-		final List<String> classNames = testAndApply(Objects::nonNull,
-				stream(imageWriterSpis.keySet()).map(x -> getName(cast(Class.class, x))).toList(), ArrayList::new,
-				null);
-		//
-		final String commonPrefix = StringUtils.getCommonPrefix(classNames.toArray(new String[] {}));
-		//
-		for (int i = 0; classNames != null && i < classNames.size(); i++) {
-			//
-			classNames.set(i, StringUtils
-					.substringBefore(StringUtils.replace(IterableUtils.get(classNames, i), commonPrefix, ""), '.'));
-			//
-		} // if
-			//
-		sort(classNames, createImageFormatComparator(imageFormatOrders));
+		final List<String> classNames = getImageFormats(imageFormatOrders);
 		//
 		final MutableComboBoxModel<String> mcbm = new DefaultComboBoxModel<>();
 		//
@@ -395,6 +373,37 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 		} // if
 			//
 		pack();
+		//
+	}
+
+	private static List<String> getImageFormats(final List<?> imageFormatOrders) throws NoSuchFieldException {
+		//
+		final Map<?, ?> imageWriterSpis = cast(Map.class,
+				testAndApply(
+						Objects::nonNull, get(
+								cast(Map.class,
+										Narcissus.getObjectField(IIORegistry.getDefaultInstance(),
+												getDeclaredField(ServiceRegistry.class, "categoryMap"))),
+								ImageWriterSpi.class),
+						x -> Narcissus.getField(x, getDeclaredField(getClass(x), "map")), null));
+		//
+		final List<String> classNames = testAndApply(Objects::nonNull,
+				stream(imageWriterSpis != null ? imageWriterSpis.keySet() : null)
+						.map(x -> getName(cast(Class.class, x))).toList(),
+				ArrayList::new, null);
+		//
+		final String commonPrefix = StringUtils.getCommonPrefix(classNames.toArray(new String[] {}));
+		//
+		for (int i = 0; classNames != null && i < classNames.size(); i++) {
+			//
+			classNames.set(i, StringUtils
+					.substringBefore(StringUtils.replace(IterableUtils.get(classNames, i), commonPrefix, ""), '.'));
+			//
+		} // if
+			//
+		sort(classNames, createImageFormatComparator(imageFormatOrders));
+		//
+		return classNames;
 		//
 	}
 
