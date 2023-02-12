@@ -27,6 +27,13 @@
 	</bean>
 
 	<!-- -->
+	<bean
+		class="org.springframework.beans.config.CustomBeanPostProcessor">
+		<property name="defaultCloseOperation"
+			value="#{T(javax.swing.WindowConstants).EXIT_ON_CLOSE}" />
+	</bean>
+
+	<!-- -->
 	<bean id="MigLayout"
 		class="org.springframework.beans.factory.MigLayoutFactoryBean">
 		<property name="arguments"
@@ -120,8 +127,6 @@
 	<!-- -->
 	<bean class="org.springframework.context.support.VoiceManager">
 		<property name="layout" ref="MigLayout" />
-		<property name="defaultCloseOperation"
-			value="#{T(javax.swing.WindowConstants).EXIT_ON_CLOSE}" />
 		<property name="title"
 			value="${org.springframework.context.support.VoiceManager.title}" />
 		<property name="sqlSessionFactory" ref="SqlSessionFactory" />
@@ -196,8 +201,6 @@
 	<!-- -->
 	<bean class="org.springframework.context.support.IpaSymbolGui">
 		<property name="layout" ref="MigLayout" />
-		<property name="defaultCloseOperation"
-			value="#{T(javax.swing.WindowConstants).EXIT_ON_CLOSE}" />
 		<property name="ipaSymbolMultimap" ref="ipaMultimap" />
 		<property name="url" ref="ipaJsonUrl" />
 		<property name="resource" value="classpath:ipa.json" />
@@ -209,8 +212,6 @@
 	<bean
 		class="org.springframework.context.support.GaKuNenBeTsuKanJiGui">
 		<property name="layout" ref="MigLayout" />
-		<property name="defaultCloseOperation"
-			value="#{T(javax.swing.WindowConstants).EXIT_ON_CLOSE}" />
 		<property name="gaKuNenBeTsuKanJiMultimap"
 			ref="GaKuNenBeTsuKanJiMultimap" />
 		<property name="gaKuNenBeTsuKanJiListPageUrl"
@@ -220,8 +221,6 @@
 	<!-- -->
 	<bean class="org.springframework.context.support.JlptLevelGui">
 		<property name="layout" ref="MigLayout" />
-		<property name="defaultCloseOperation"
-			value="#{T(javax.swing.WindowConstants).EXIT_ON_CLOSE}" />
 		<property name="jlptLevels" ref="JlptLevelList" />
 		<property name="url" ref="JlptLevelPageUrl" />
 		<property name="jlptVocabularyList" ref="JlptVocabularyList" />
@@ -232,8 +231,6 @@
 	<!-- -->
 	<bean class="org.springframework.context.support.JouYouKanjiGui">
 		<property name="layout" ref="MigLayout" />
-		<property name="defaultCloseOperation"
-			value="#{T(javax.swing.WindowConstants).EXIT_ON_CLOSE}" />
 		<property name="jouYouKanJiList" ref="JouYouKanJiList" />
 		<property name="url" ref="JouYouKanJiPageUrl" />
 		<property name="ecssVersion"
@@ -245,8 +242,6 @@
 	<bean
 		class="org.springframework.context.support.OnlineNHKJapanesePronunciationAccentGui">
 		<property name="layout" ref="MigLayout" />
-		<property name="defaultCloseOperation"
-			value="#{T(javax.swing.WindowConstants).EXIT_ON_CLOSE}" />
 		<property name="url"
 			value="${org.springframework.context.support.OnlineNHKJapanesePronunciationAccentGui.url}" />
 		<property name="imageFormatOrders"
