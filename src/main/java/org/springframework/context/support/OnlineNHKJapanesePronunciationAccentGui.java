@@ -13,6 +13,7 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.geom.Dimension2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.awt.image.RenderedImage;
@@ -374,13 +375,8 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 								"LastComponentInRow")))
 				.map(x -> cast(Component.class, get(x, this))).collect(Collectors.toList());
 		//
-		final Double maxPreferredSizeWidth = stream(cs).map(x -> {
-			//
-			final Dimension pd = getPreferredSize(x);
-			//
-			return pd != null ? pd.getWidth() : null;
-			//
-		}).max(ObjectUtils::compare).orElse(null);
+		final Double maxPreferredSizeWidth = stream(cs).map(x -> getWidth(getPreferredSize(x)))
+				.max(ObjectUtils::compare).orElse(null);
 		//
 		if (maxPreferredSizeWidth != null) {
 			//
@@ -404,6 +400,10 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 
 	private static Dimension getPreferredSize(final Component instance) {
 		return instance != null ? instance.getPreferredSize() : null;
+	}
+
+	private static Double getWidth(final Dimension2D instance) {
+		return instance != null ? Double.valueOf(instance.getWidth()) : null;
 	}
 
 	private static Object get(final Field field, final Object instance) throws IllegalAccessException {

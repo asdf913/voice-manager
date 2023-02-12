@@ -13,6 +13,7 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.geom.Dimension2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.awt.image.RenderedImage;
@@ -88,10 +89,11 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 	private static Class<?> CLASS_PRONOUNICATION = null;
 
 	private static Method METHOD_CAST, METHOD_GET_SRC_MAP, METHOD_GET_CLASS, METHOD_TO_STRING, METHOD_GET_IMAGE_SRCS,
-			METHOD_CREATE_MERGED_BUFFERED_IMAGE, METHOD_TEST_AND_APPLY, METHOD_GET_GRAPHICS, METHOD_GET_WIDTH,
-			METHOD_GET_HEIGHT, METHOD_INT_VALUE, METHOD_GET_TEXT, METHOD_RELATIVE, METHOD_TO_URI, METHOD_TO_URL,
-			METHOD_SET_VALUE, METHOD_GET_VALUE, METHOD_ADD_ELEMENT, METHOD_REMOVE_ELEMENT_AT, METHOD_GET_SELECTED_ITEM,
-			METHOD_GET_SIZE, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_GET_PROTOCOL, METHOD_GET_HOST,
+			METHOD_CREATE_MERGED_BUFFERED_IMAGE, METHOD_TEST_AND_APPLY, METHOD_GET_GRAPHICS,
+			METHOD_GET_WIDTH_RENDERED_IMAGE, METHOD_GET_WIDTH_DIMENSION_2D, METHOD_GET_HEIGHT, METHOD_INT_VALUE,
+			METHOD_GET_TEXT, METHOD_RELATIVE, METHOD_TO_URI, METHOD_TO_URL, METHOD_SET_VALUE, METHOD_GET_VALUE,
+			METHOD_ADD_ELEMENT, METHOD_REMOVE_ELEMENT_AT, METHOD_GET_SELECTED_ITEM, METHOD_GET_SIZE,
+			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_GET_PROTOCOL, METHOD_GET_HOST,
 			METHOD_FOR_EACH_ITERABLE, METHOD_FOR_EACH_INT_STREAM, METHOD_MAP,
 			METHOD_SET_PITCH_ACCENT_IMAGE_TO_SYSTEM_CLIPBOARD_CONTENTS, METHOD_SAVE_PITCH_ACCENT_IMAGE,
 			METHOD_PLAY_AUDIO, METHOD_SAVE_AUDIO, METHOD_PRONOUNICATION_CHANGED, METHOD_GET_DECLARED_FIELD,
@@ -124,7 +126,9 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		//
 		(METHOD_GET_GRAPHICS = clz.getDeclaredMethod("getGraphics", Image.class)).setAccessible(true);
 		//
-		(METHOD_GET_WIDTH = clz.getDeclaredMethod("getWidth", RenderedImage.class)).setAccessible(true);
+		(METHOD_GET_WIDTH_RENDERED_IMAGE = clz.getDeclaredMethod("getWidth", RenderedImage.class)).setAccessible(true);
+		//
+		(METHOD_GET_WIDTH_DIMENSION_2D = clz.getDeclaredMethod("getWidth", Dimension2D.class)).setAccessible(true);
 		//
 		(METHOD_GET_HEIGHT = clz.getDeclaredMethod("getHeight", RenderedImage.class)).setAccessible(true);
 		//
@@ -897,7 +901,9 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 	@Test
 	void testGetWidth() throws Throwable {
 		//
-		Assertions.assertNull(getWidth(null));
+		Assertions.assertNull(getWidth((RenderedImage) null));
+		//
+		Assertions.assertNull(getWidth((Dimension2D) null));
 		//
 		if (ih != null) {
 			//
@@ -911,11 +917,25 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 
 	private static Integer getWidth(final RenderedImage instance) throws Throwable {
 		try {
-			final Object obj = METHOD_GET_WIDTH.invoke(null, instance);
+			final Object obj = METHOD_GET_WIDTH_RENDERED_IMAGE.invoke(null, instance);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Integer) {
 				return (Integer) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static Double getWidth(final Dimension2D instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_WIDTH_DIMENSION_2D.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Double) {
+				return (Double) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
