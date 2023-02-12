@@ -356,22 +356,18 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 		final Double maxPreferredSizeWidth = stream(cs).map(x -> getWidth(getPreferredSize(x)))
 				.max(ObjectUtils::compare).orElse(null);
 		//
-		if (maxPreferredSizeWidth != null) {
+		forEach(cs, c -> {
 			//
-			forEach(cs, c -> {
+			final Dimension pd = getPreferredSize(c);
+			//
+			if (c != null && pd != null && maxPreferredSizeWidth != null) {
 				//
-				final Dimension pd = getPreferredSize(c);
+				c.setPreferredSize(new Dimension(maxPreferredSizeWidth.intValue(), (int) pd.getHeight()));
 				//
-				if (pd != null) {
-					//
-					c.setPreferredSize(new Dimension(maxPreferredSizeWidth.intValue(), (int) pd.getHeight()));
-					//
-				} // if
-					//
-			});
-			//
-		} // if
-			//
+			} // if
+				//
+		});
+		//
 		pack();
 		//
 	}
