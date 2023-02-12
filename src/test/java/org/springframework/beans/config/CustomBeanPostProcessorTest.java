@@ -1,10 +1,14 @@
 package org.springframework.beans.config;
 
+import java.awt.GraphicsEnvironment;
+
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import io.github.toolfactory.narcissus.Narcissus;
 
 class CustomBeanPostProcessorTest {
 
@@ -15,8 +19,24 @@ class CustomBeanPostProcessorTest {
 		//
 		Assertions.assertNull(instance.postProcessBeforeInitialization(null, null));
 		//
-		final JFrame jFrame = new JFrame();
+		JFrame jFrame = null;
 		//
+		if (!GraphicsEnvironment.isHeadless()) {
+			//
+			jFrame = new JFrame();
+			//
+		} else {
+			//
+			final Object object = Narcissus.allocateInstance(JFrame.class);
+			//
+			if (object instanceof JFrame) {
+				//
+				jFrame = (JFrame) object;
+				//
+			} // if
+				//
+		} // if
+			//
 		Assertions.assertSame(jFrame, instance.postProcessBeforeInitialization(jFrame, null));
 		//
 		instance.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
