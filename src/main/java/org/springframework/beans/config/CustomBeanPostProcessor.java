@@ -144,7 +144,7 @@ public class CustomBeanPostProcessor implements BeanPostProcessor {
 				//
 				if (obj instanceof Number) {
 					//
-					value = Unit.with(Integer.valueOf(((Number) obj).intValue()));
+					return Unit.with(Integer.valueOf(((Number) obj).intValue()));
 					//
 				} // if
 					//
@@ -158,29 +158,25 @@ public class CustomBeanPostProcessor implements BeanPostProcessor {
 			//
 		JsonProcessingException jpe = null;
 		//
-		if (value == null) {
+		try {
 			//
-			try {
+			final Object obj = ObjectMapperUtil.readValue(new ObjectMapper(), string, Object.class);
+			//
+			if (obj instanceof Number) {
 				//
-				final Object obj = ObjectMapperUtil.readValue(new ObjectMapper(), string, Object.class);
+				value = Unit.with(Integer.valueOf(((Number) cs).intValue()));
 				//
-				if (obj instanceof Number) {
-					//
-					value = Unit.with(Integer.valueOf(((Number) cs).intValue()));
-					//
-				} else if (obj != null) {
-					//
-					throw new IllegalArgumentException(toString(getClass(obj)));
-					//
-				} // if
-					//
-			} catch (final JsonProcessingException e) {
+			} else if (obj != null) {
 				//
-				jpe = e;
+				throw new IllegalArgumentException(toString(getClass(obj)));
 				//
-			} // try
+			} // if
 				//
-		} // if
+		} catch (final JsonProcessingException e) {
+			//
+			jpe = e;
+			//
+		} // try
 			//
 		if (value != null) {
 			//
