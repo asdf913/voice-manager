@@ -97,17 +97,13 @@ public class CustomBeanPostProcessor implements BeanPostProcessor {
 			//
 		final String string = toString(cs);
 		//
-		IValue0<Number> value = null;
+		// java.lang.Integer.valueOf(java.lang.String)
 		//
 		NumberFormatException nfe = null;
 		//
-		IllegalAccessException iae = null;
-		//
-		JsonProcessingException jpe = null;
-		//
 		try {
 			//
-			value = Unit.with(Integer.valueOf(string));
+			return Unit.with(Integer.valueOf(string));
 			//
 		} catch (final NumberFormatException e) {
 			//
@@ -115,51 +111,53 @@ public class CustomBeanPostProcessor implements BeanPostProcessor {
 			//
 		} // try
 			//
-		if (value == null) {
+		List<Field> fs = FieldUtils.getAllFieldsList(JFrame.class).stream()
+				.filter(f -> StringUtils.equalsIgnoreCase(getName(f), string)).toList();
+		//
+		int size = IterableUtils.size(fs);
+		//
+		if (size != 1) {
 			//
-			List<Field> fs = FieldUtils.getAllFieldsList(JFrame.class).stream()
-					.filter(f -> StringUtils.equalsIgnoreCase(getName(f), string)).toList();
+			size = IterableUtils.size(fs = Arrays.stream(JFrame.class.getInterfaces()).map(FieldUtils::getAllFieldsList)
+					.flatMap(Collection::stream).filter(f -> StringUtils.equalsIgnoreCase(getName(f), string))
+					.toList());
 			//
-			int size = IterableUtils.size(fs);
+		} // if
 			//
-			if (size != 1) {
-				//
-				size = IterableUtils.size(fs = Arrays.stream(JFrame.class.getInterfaces())
-						.map(FieldUtils::getAllFieldsList).flatMap(Collection::stream)
-						.filter(f -> StringUtils.equalsIgnoreCase(getName(f), string)).toList());
-				//
-			} // if
-				//
-			if (size > 1) {
-				//
-				throw new IllegalArgumentException("size=" + size);
-				//
-			} // if
-				//
-			final Field f = size == 1 ? IterableUtils.get(fs, 0) : null;
+		if (size > 1) {
 			//
-			if (f != null && Modifier.isStatic(f.getModifiers())) {
+			throw new IllegalArgumentException("size=" + size);
+			//
+		} // if
+			//
+		final Field f = size == 1 ? IterableUtils.get(fs, 0) : null;
+		//
+		IValue0<Number> value = null;
+		//
+		IllegalAccessException iae = null;
+		//
+		if (f != null && Modifier.isStatic(f.getModifiers())) {
+			//
+			try {
 				//
-				try {
+				final Object obj = f.get(null);
+				//
+				if (obj instanceof Number) {
 					//
-					final Object obj = f.get(null);
+					value = Unit.with(Integer.valueOf(((Number) obj).intValue()));
 					//
-					if (obj instanceof Number) {
-						//
-						value = Unit.with(Integer.valueOf(((Number) obj).intValue()));
-						//
-					} // if
-						//
-				} catch (final IllegalAccessException e) {
+				} // if
 					//
-					iae = e;
-					//
-				} // try
-					//
-			} // if
+			} catch (final IllegalAccessException e) {
+				//
+				iae = e;
+				//
+			} // try
 				//
 		} // if
 			//
+		JsonProcessingException jpe = null;
+		//
 		if (value == null) {
 			//
 			try {
