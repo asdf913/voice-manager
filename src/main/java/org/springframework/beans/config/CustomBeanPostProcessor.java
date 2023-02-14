@@ -46,6 +46,16 @@ public class CustomBeanPostProcessor implements BeanPostProcessor {
 			//
 		} else if (object instanceof CharSequence) {
 			//
+			try {
+				//
+				value = getDefaultCloseOperation((CharSequence) object);
+				//
+			} catch (final JsonProcessingException | IllegalAccessException e) {
+				//
+				exception = Unit.with(e);
+				//
+			} // try
+				//
 			final String string = toString(object);
 			//
 			try {
@@ -55,6 +65,53 @@ public class CustomBeanPostProcessor implements BeanPostProcessor {
 			} catch (final NumberFormatException e) {
 				//
 				exception = Unit.with(e);
+				//
+			} // try
+				//
+		} // if
+			//
+		if (value != null) {
+			//
+			this.defaultCloseOperation = IValue0Util.getValue0(value);
+			//
+		} else if (exception != null) {
+			//
+			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(IValue0Util.getValue0(exception));
+			//
+		} else {
+			//
+			throw new IllegalArgumentException(toString(getClass(IValue0Util.getValue0(value))));
+			//
+		} // if
+			//
+	}
+
+	private static IValue0<Number> getDefaultCloseOperation(final CharSequence cs)
+			throws IllegalAccessException, JsonProcessingException {
+		//
+		IValue0<Number> value = null;
+		//
+		NumberFormatException nfe = null;
+		//
+		IllegalAccessException iae = null;
+		//
+		JsonProcessingException jpe = null;
+		//
+		if (cs == null) {
+			//
+			value = Unit.with(null);
+			//
+		} else {
+			//
+			final String string = toString(cs);
+			//
+			try {
+				//
+				value = Unit.with(Integer.valueOf(string));
+				//
+			} catch (final NumberFormatException e) {
+				//
+				nfe = e;
 				//
 			} // try
 				//
@@ -95,7 +152,7 @@ public class CustomBeanPostProcessor implements BeanPostProcessor {
 							//
 					} catch (final IllegalAccessException e) {
 						//
-						exception = Unit.with(e);
+						iae = e;
 						//
 					} // try
 						//
@@ -111,7 +168,7 @@ public class CustomBeanPostProcessor implements BeanPostProcessor {
 					//
 					if (obj instanceof Number) {
 						//
-						value = Unit.with(Integer.valueOf(((Number) object).intValue()));
+						value = Unit.with(Integer.valueOf(((Number) cs).intValue()));
 						//
 					} else if (obj != null) {
 						//
@@ -121,7 +178,7 @@ public class CustomBeanPostProcessor implements BeanPostProcessor {
 						//
 				} catch (final JsonProcessingException e) {
 					//
-					exception = Unit.with(e);
+					jpe = e;
 					//
 				} // try
 					//
@@ -131,11 +188,19 @@ public class CustomBeanPostProcessor implements BeanPostProcessor {
 			//
 		if (value != null) {
 			//
-			this.defaultCloseOperation = IValue0Util.getValue0(value);
+			return value;
 			//
-		} else if (exception != null) {
+		} else if (nfe != null) {
 			//
-			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(IValue0Util.getValue0(exception));
+			throw nfe;
+			//
+		} else if (iae != null) {
+			//
+			throw iae;
+			//
+		} else if (jpe != null) {
+			//
+			throw jpe;
 			//
 		} else {
 			//
