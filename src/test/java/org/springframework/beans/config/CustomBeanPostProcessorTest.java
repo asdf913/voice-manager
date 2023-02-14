@@ -18,7 +18,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class CustomBeanPostProcessorTest {
 
-	private static Method METHOD_GET_NAME, METHOD_GET_CLASS, METHOD_TO_STRING = null;
+	private static Method METHOD_GET_NAME, METHOD_GET_CLASS, METHOD_TO_STRING, METHOD_IS_STATIC, METHOD_GET = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -31,10 +31,14 @@ class CustomBeanPostProcessorTest {
 		//
 		(METHOD_TO_STRING = clz.getDeclaredMethod("toString", Object.class)).setAccessible(true);
 		//
+		(METHOD_IS_STATIC = clz.getDeclaredMethod("isStatic", Member.class)).setAccessible(true);
+		//
+		(METHOD_GET = clz.getDeclaredMethod("get", Field.class, Object.class)).setAccessible(true);
+		//
 	}
 
 	@Test
-	void testPostProcessBeforeInitialization() throws NoSuchFieldException, IllegalAccessException {
+	void testPostProcessBeforeInitialization() throws Throwable {
 		//
 		final CustomBeanPostProcessor instance = new CustomBeanPostProcessor();
 		//
@@ -107,10 +111,6 @@ class CustomBeanPostProcessorTest {
 		//
 	}
 
-	private static Object get(final Field field, final Object instance) throws IllegalAccessException {
-		return field != null ? field.get(instance) : null;
-	}
-
 	@Test
 	void testGetName() throws Throwable {
 		//
@@ -155,6 +155,40 @@ class CustomBeanPostProcessorTest {
 				return (String) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testIsStatic() throws Throwable {
+		//
+		Assertions.assertFalse(isStatic(Object.class.getDeclaredMethod("toString")));
+		//
+	}
+
+	private static boolean isStatic(final Member instance) throws Throwable {
+		try {
+			final Object obj = METHOD_IS_STATIC.invoke(null, instance);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGet() throws Throwable {
+		//
+		Assertions.assertNull(get(null, null));
+		//
+	}
+
+	private static Object get(final Field field, final Object instance) throws Throwable {
+		try {
+			return METHOD_GET.invoke(null, field, instance);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

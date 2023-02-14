@@ -136,11 +136,11 @@ public class CustomBeanPostProcessor implements BeanPostProcessor {
 		//
 		IllegalAccessException iae = null;
 		//
-		if (f != null && Modifier.isStatic(f.getModifiers())) {
+		if (isStatic(f)) {
 			//
 			try {
 				//
-				final Object obj = f.get(null);
+				final Object obj = get(f, null);
 				//
 				if (obj instanceof Number) {
 					//
@@ -214,6 +214,14 @@ public class CustomBeanPostProcessor implements BeanPostProcessor {
 
 	private static String getName(final Member instance) {
 		return instance != null ? instance.getName() : null;
+	}
+
+	private static boolean isStatic(final Member instance) {
+		return instance != null && Modifier.isStatic(instance.getModifiers());
+	}
+
+	private static Object get(final Field field, final Object instance) throws IllegalAccessException {
+		return field != null ? field.get(instance) : null;
 	}
 
 	@Override
