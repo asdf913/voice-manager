@@ -45,7 +45,7 @@ public class CustomBeanPostProcessor implements BeanPostProcessor {
 			//
 		} else if (object instanceof CharSequence) {
 			//
-			final String string = object != null ? object.toString() : null;
+			final String string = toString(object);
 			//
 			try {
 				//
@@ -114,7 +114,7 @@ public class CustomBeanPostProcessor implements BeanPostProcessor {
 						//
 					} else if (obj != null) {
 						//
-						throw new IllegalArgumentException(obj.getClass() != null ? obj.getClass().toString() : null);
+						throw new IllegalArgumentException(obj != null ? toString(obj.getClass()) : null);
 						//
 					} // if
 						//
@@ -140,12 +140,14 @@ public class CustomBeanPostProcessor implements BeanPostProcessor {
 			//
 			final Object obj = IValue0Util.getValue0(value);
 			//
-			final Class<?> clz = obj != null ? obj.getClass() : null;
-			//
-			throw new IllegalArgumentException(clz != null ? clz.toString() : null);
+			throw new IllegalArgumentException(toString(obj != null ? obj.getClass() : null));
 			//
 		} // if
 			//
+	}
+
+	private static String toString(final Object instance) {
+		return instance != null ? instance.toString() : null;
 	}
 
 	@Override
