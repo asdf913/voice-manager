@@ -136,25 +136,21 @@ public class CustomBeanPostProcessor implements BeanPostProcessor {
 		//
 		IllegalAccessException iae = null;
 		//
-		if (isStatic(f)) {
+		try {
 			//
-			try {
+			final Object obj = isStatic(f) ? get(f, null) : null;
+			//
+			if (obj instanceof Number) {
 				//
-				final Object obj = get(f, null);
+				return Unit.with(Integer.valueOf(((Number) obj).intValue()));
 				//
-				if (obj instanceof Number) {
-					//
-					return Unit.with(Integer.valueOf(((Number) obj).intValue()));
-					//
-				} // if
-					//
-			} catch (final IllegalAccessException e) {
+			} // if
 				//
-				iae = e;
-				//
-			} // try
-				//
-		} // if
+		} catch (final IllegalAccessException e) {
+			//
+			iae = e;
+			//
+		} // try
 			//
 		JsonProcessingException jpe = null;
 		//
