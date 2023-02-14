@@ -114,7 +114,7 @@ public class CustomBeanPostProcessor implements BeanPostProcessor {
 						//
 					} else if (obj != null) {
 						//
-						throw new IllegalArgumentException(obj != null ? toString(obj.getClass()) : null);
+						throw new IllegalArgumentException(toString(getClass(obj)));
 						//
 					} // if
 						//
@@ -138,9 +138,7 @@ public class CustomBeanPostProcessor implements BeanPostProcessor {
 			//
 		} else {
 			//
-			final Object obj = IValue0Util.getValue0(value);
-			//
-			throw new IllegalArgumentException(toString(obj != null ? obj.getClass() : null));
+			throw new IllegalArgumentException(toString(getClass(IValue0Util.getValue0(value))));
 			//
 		} // if
 			//
@@ -148,6 +146,10 @@ public class CustomBeanPostProcessor implements BeanPostProcessor {
 
 	private static String toString(final Object instance) {
 		return instance != null ? instance.toString() : null;
+	}
+
+	private static Class<?> getClass(final Object instance) {
+		return instance != null ? instance.getClass() : null;
 	}
 
 	@Override
