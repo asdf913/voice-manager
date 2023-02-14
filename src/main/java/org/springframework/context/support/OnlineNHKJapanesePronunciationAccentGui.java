@@ -97,6 +97,10 @@ import org.jsoup.select.Elements;
 import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.cglib.proxy.Proxy;
+import org.springframework.context.EnvironmentAware;
+import org.springframework.core.env.Environment;
+import org.springframework.core.env.PropertyResolver;
+import org.springframework.core.env.PropertyResolverUtil;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -114,9 +118,12 @@ import net.miginfocom.swing.MigLayout;
  *      "https://sakura-paris.org/dict/NHK%E6%97%A5%E6%9C%AC%E8%AA%9E%E7%99%BA%E9%9F%B3%E3%82%A2%E3%82%AF%E3%82%BB%E3%83%B3%E3%83%88%E8%BE%9E%E5%85%B8/">広辞苑無料検索
  *      NHK日本語発音アクセント辞典</a>
  */
-public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements InitializingBean, ActionListener {
+public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
+		implements InitializingBean, ActionListener, EnvironmentAware {
 
 	private static final long serialVersionUID = 6227192813388400801L;
+
+	private PropertyResolver propertyResolver = null;
 
 	private String url = null;
 
@@ -164,6 +171,11 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 	private List<String> imageFormatOrders = null;
 
 	private OnlineNHKJapanesePronunciationAccentGui() {
+	}
+
+	@Override
+	public void setEnvironment(final Environment environment) {
+		this.propertyResolver = environment;
 	}
 
 	public void setUrl(final String url) {
@@ -273,7 +285,9 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame implements I
 		//
 		final String growx = "growx";
 		//
-		add(tfText = new JTextField(), String.format("%1$s,wmin %2$s,span %3$s", growx, "100px", 2 + 1));
+		add(tfText = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
+				"org.springframework.context.support.OnlineNHKJapanesePronunciationAccentGui.text")),
+				String.format("%1$s,wmin %2$s,span %3$s", growx, "100px", 2 + 1));
 		//
 		final String wrap = "wrap";
 		//
