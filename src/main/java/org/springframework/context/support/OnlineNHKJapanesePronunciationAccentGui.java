@@ -123,7 +123,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 
 	private static final long serialVersionUID = 6227192813388400801L;
 
-	private PropertyResolver propertyResolver = null;
+	private transient PropertyResolver propertyResolver = null;
 
 	private String url = null;
 
