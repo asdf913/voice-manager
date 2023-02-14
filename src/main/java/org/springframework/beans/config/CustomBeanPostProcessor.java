@@ -1,6 +1,7 @@
 package org.springframework.beans.config;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Member;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.Collection;
@@ -60,7 +61,7 @@ public class CustomBeanPostProcessor implements BeanPostProcessor {
 			if (value == null) {
 				//
 				List<Field> fs = FieldUtils.getAllFieldsList(JFrame.class).stream()
-						.filter(f -> f != null && StringUtils.equalsIgnoreCase(f.getName(), string)).toList();
+						.filter(f -> StringUtils.equalsIgnoreCase(getName(f), string)).toList();
 				//
 				int size = IterableUtils.size(fs);
 				//
@@ -68,7 +69,7 @@ public class CustomBeanPostProcessor implements BeanPostProcessor {
 					//
 					size = IterableUtils.size(fs = Arrays.stream(JFrame.class.getInterfaces())
 							.map(FieldUtils::getAllFieldsList).flatMap(Collection::stream)
-							.filter(f -> f != null && StringUtils.equalsIgnoreCase(f.getName(), string)).toList());
+							.filter(f -> StringUtils.equalsIgnoreCase(getName(f), string)).toList());
 					//
 				} // if
 					//
@@ -150,6 +151,10 @@ public class CustomBeanPostProcessor implements BeanPostProcessor {
 
 	private static Class<?> getClass(final Object instance) {
 		return instance != null ? instance.getClass() : null;
+	}
+
+	private static String getName(final Member instance) {
+		return instance != null ? instance.getName() : null;
 	}
 
 	@Override
