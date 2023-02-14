@@ -89,6 +89,14 @@ public class CustomBeanPostProcessor implements BeanPostProcessor {
 	private static IValue0<Number> getDefaultCloseOperation(final CharSequence cs)
 			throws IllegalAccessException, JsonProcessingException {
 		//
+		if (cs == null) {
+			//
+			return Unit.with(null);
+			//
+		} // if
+			//
+		final String string = toString(cs);
+		//
 		IValue0<Number> value = null;
 		//
 		NumberFormatException nfe = null;
@@ -97,92 +105,82 @@ public class CustomBeanPostProcessor implements BeanPostProcessor {
 		//
 		JsonProcessingException jpe = null;
 		//
-		if (cs == null) {
+		try {
 			//
-			value = Unit.with(null);
+			value = Unit.with(Integer.valueOf(string));
 			//
-		} else {
+		} catch (final NumberFormatException e) {
 			//
-			final String string = toString(cs);
+			nfe = e;
 			//
-			try {
+		} // try
+			//
+		if (value == null) {
+			//
+			List<Field> fs = FieldUtils.getAllFieldsList(JFrame.class).stream()
+					.filter(f -> StringUtils.equalsIgnoreCase(getName(f), string)).toList();
+			//
+			int size = IterableUtils.size(fs);
+			//
+			if (size != 1) {
 				//
-				value = Unit.with(Integer.valueOf(string));
+				size = IterableUtils.size(fs = Arrays.stream(JFrame.class.getInterfaces())
+						.map(FieldUtils::getAllFieldsList).flatMap(Collection::stream)
+						.filter(f -> StringUtils.equalsIgnoreCase(getName(f), string)).toList());
 				//
-			} catch (final NumberFormatException e) {
-				//
-				nfe = e;
-				//
-			} // try
-				//
-			if (value == null) {
-				//
-				List<Field> fs = FieldUtils.getAllFieldsList(JFrame.class).stream()
-						.filter(f -> StringUtils.equalsIgnoreCase(getName(f), string)).toList();
-				//
-				int size = IterableUtils.size(fs);
-				//
-				if (size != 1) {
-					//
-					size = IterableUtils.size(fs = Arrays.stream(JFrame.class.getInterfaces())
-							.map(FieldUtils::getAllFieldsList).flatMap(Collection::stream)
-							.filter(f -> StringUtils.equalsIgnoreCase(getName(f), string)).toList());
-					//
-				} // if
-					//
-				if (size > 1) {
-					//
-					throw new IllegalArgumentException("size=" + size);
-					//
-				} // if
-					//
-				final Field f = size == 1 ? IterableUtils.get(fs, 0) : null;
-				//
-				if (f != null && Modifier.isStatic(f.getModifiers())) {
-					//
-					try {
-						//
-						final Object obj = f.get(null);
-						//
-						if (obj instanceof Number) {
-							//
-							value = Unit.with(Integer.valueOf(((Number) obj).intValue()));
-							//
-						} // if
-							//
-					} catch (final IllegalAccessException e) {
-						//
-						iae = e;
-						//
-					} // try
-						//
-				} // if
-					//
 			} // if
 				//
-			if (value == null) {
+			if (size > 1) {
+				//
+				throw new IllegalArgumentException("size=" + size);
+				//
+			} // if
+				//
+			final Field f = size == 1 ? IterableUtils.get(fs, 0) : null;
+			//
+			if (f != null && Modifier.isStatic(f.getModifiers())) {
 				//
 				try {
 					//
-					final Object obj = ObjectMapperUtil.readValue(new ObjectMapper(), string, Object.class);
+					final Object obj = f.get(null);
 					//
 					if (obj instanceof Number) {
 						//
-						value = Unit.with(Integer.valueOf(((Number) cs).intValue()));
-						//
-					} else if (obj != null) {
-						//
-						throw new IllegalArgumentException(toString(getClass(obj)));
+						value = Unit.with(Integer.valueOf(((Number) obj).intValue()));
 						//
 					} // if
 						//
-				} catch (final JsonProcessingException e) {
+				} catch (final IllegalAccessException e) {
 					//
-					jpe = e;
+					iae = e;
 					//
 				} // try
 					//
 			} // if
+				//
+		} // if
+			//
+		if (value == null) {
+			//
+			try {
+				//
+				final Object obj = ObjectMapperUtil.readValue(new ObjectMapper(), string, Object.class);
+				//
+				if (obj instanceof Number) {
+					//
+					value = Unit.with(Integer.valueOf(((Number) cs).intValue()));
+					//
+				} else if (obj != null) {
+					//
+					throw new IllegalArgumentException(toString(getClass(obj)));
+					//
+				} // if
+					//
+			} catch (final JsonProcessingException e) {
+				//
+				jpe = e;
+				//
+			} // try
 				//
 		} // if
 			//
@@ -202,12 +200,10 @@ public class CustomBeanPostProcessor implements BeanPostProcessor {
 			//
 			throw jpe;
 			//
-		} else {
-			//
-			throw new IllegalArgumentException(toString(getClass(IValue0Util.getValue0(value))));
-			//
 		} // if
 			//
+		throw new IllegalArgumentException(toString(getClass(IValue0Util.getValue0(value))));
+		//
 	}
 
 	private static String toString(final Object instance) {
