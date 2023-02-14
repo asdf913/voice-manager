@@ -30,7 +30,7 @@
 	<bean
 		class="org.springframework.beans.config.CustomBeanPostProcessor">
 		<property name="defaultCloseOperation"
-			value="#{T(javax.swing.WindowConstants).EXIT_ON_CLOSE}" />
+			value="${org.springframework.beans.config.CustomBeanPostProcessor.defaultCloseOperation}" />
 	</bean>
 
 	<!-- -->
