@@ -178,10 +178,6 @@ public class CustomBeanPostProcessor implements BeanPostProcessor {
 			//
 			return value;
 			//
-		} else if (nfe != null) {
-			//
-			throw nfe;
-			//
 		} else if (iae != null) {
 			//
 			throw iae;
@@ -189,6 +185,10 @@ public class CustomBeanPostProcessor implements BeanPostProcessor {
 		} else if (jpe != null) {
 			//
 			throw jpe;
+			//
+		} else if (nfe != null) {
+			//
+			throw nfe;
 			//
 		} // if
 			//
