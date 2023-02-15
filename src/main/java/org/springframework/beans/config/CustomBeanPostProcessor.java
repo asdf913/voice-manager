@@ -5,15 +5,11 @@ import java.awt.Frame;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Modifier;
-import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
-import java.util.function.IntConsumer;
-import java.util.function.IntUnaryOperator;
 import java.util.function.Predicate;
-import java.util.stream.IntStream;
 
 import javax.swing.JFrame;
 
@@ -301,28 +297,33 @@ public class CustomBeanPostProcessor implements BeanPostProcessor, EnvironmentAw
 			//
 			// javax.swing.JFrame
 			//
-		final JFrame jFrame = cast(JFrame.class, bean);
+		setDefaultCloseOperation(cast(JFrame.class, bean), propertyResolver, defaultCloseOperation);
+		//
+		return bean;
+		//
+	}
+
+	private static void setDefaultCloseOperation(final JFrame jFrame, final PropertyResolver propertyResolver,
+			final Number defaultCloseOperation) {
 		//
 		if (jFrame != null) {
 			//
-			forEach(reverseRange(0, StringUtils.length(sb)), sb::deleteCharAt);
+			final StringBuilder sb = new StringBuilder(StringUtils.defaultString(getName(getClass(jFrame))));
 			//
-			if (StringUtils.isNotEmpty(sb.append(StringUtils.defaultString(className)))) {
-				//
-				sb.append('.');
-				//
-				sb.append("defaultCloseOperation");
-				//
-			} // if
-				//
+			sb.append('.');
+			//
+			sb.append("defaultCloseOperation");
+			//
 			Exception exception = null;
 			//
 			Number defaultCloseOperationNumber = null;
 			//
 			try {
 				//
+				final String key = toString(sb);
+				//
 				defaultCloseOperationNumber = IValue0Util
-						.getValue0(PropertyResolverUtil.containsProperty(propertyResolver, key = toString(sb))
+						.getValue0(PropertyResolverUtil.containsProperty(propertyResolver, key)
 								? getDefaultCloseOperation(PropertyResolverUtil.getProperty(propertyResolver, key))
 								: null);
 				//
@@ -354,30 +355,6 @@ public class CustomBeanPostProcessor implements BeanPostProcessor, EnvironmentAw
 				//
 		} // if
 			//
-		return bean;
-		//
-	}
-
-	/**
-	 * @see <a href="https://stackoverflow.com/a/24011264">list - Java 8 stream
-	 *      reverse order - Stack Overflow</a>
-	 */
-	private static IntStream reverseRange(final int from, final int to) {
-		return map(IntStream.range(from, to), i -> to - i + from - 1);
-	}
-
-	private static IntStream map(final IntStream instance, final IntUnaryOperator mapper) {
-		return instance != null
-				? instance.map(mapper) 
-						: instance;
-	}
-
-	private static void forEach(final IntStream instance, final IntConsumer action) {
-		if (instance != null
-				&& (Proxy.isProxyClass(getClass(instance))
-				||action != null )) {
-			instance.forEach(action);
-		}
 	}
 
 	private static <T> T cast(final Class<T> clz, final Object instance) {
