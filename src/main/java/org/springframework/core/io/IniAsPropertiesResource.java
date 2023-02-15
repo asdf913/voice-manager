@@ -211,7 +211,7 @@ public class IniAsPropertiesResource implements Resource, ApplicationEventPublis
 			//
 		} // if
 			//
-		if (propertyResolver != null && propertyResolver.containsProperty(PROFILE)) {
+		if (PropertyResolverUtil.containsProperty(propertyResolver, PROFILE)) {
 			//
 			return Unit.with(PropertyResolverUtil.getProperty(propertyResolver, PROFILE));
 			//

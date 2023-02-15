@@ -2313,7 +2313,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			final MigLayout migLayout = new MigLayout();
 			//
-			testAndAccept((a, b) -> a != null && a.containsProperty(b), propertyResolver,
+			testAndAccept((a, b) -> PropertyResolverUtil.containsProperty(a, b), propertyResolver,
 					"net.miginfocom.swing.MigLayout.layoutConstraints",
 					(a, b) -> migLayout.setLayoutConstraints(PropertyResolverUtil.getProperty(a, b)));
 			//

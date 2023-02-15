@@ -250,7 +250,7 @@ public class CustomBeanPostProcessor implements BeanPostProcessor, EnvironmentAw
 			//
 		final String key = toString(sb);
 		//
-		if (frame != null && propertyResolver != null && propertyResolver.containsProperty(key)) {
+		if (frame != null && PropertyResolverUtil.containsProperty(propertyResolver, key)) {
 			//
 			try {
 				//
