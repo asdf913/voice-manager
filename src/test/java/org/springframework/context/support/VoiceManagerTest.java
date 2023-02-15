@@ -999,6 +999,8 @@ class VoiceManagerTest {
 
 		private javax.swing.text.Document document = null;
 
+		private Collection<?> values = null;
+
 		private Map<Object, BeanDefinition> getBeanDefinitions() {
 			if (beanDefinitions == null) {
 				beanDefinitions = new LinkedHashMap<>();
@@ -1115,6 +1117,10 @@ class VoiceManagerTest {
 				} else if (Objects.equals(methodName, "isEmpty")) {
 					//
 					return isEmpty;
+					//
+				} else if (Objects.equals(methodName, "values")) {
+					//
+					return values;
 					//
 				} // if
 					//

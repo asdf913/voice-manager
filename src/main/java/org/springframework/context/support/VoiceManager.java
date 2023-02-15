@@ -270,6 +270,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.ListableBeanFactoryUtil;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
+import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactoryUtil;
 import org.springframework.context.EnvironmentAware;
@@ -782,6 +783,73 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Override
 	public void postProcessBeanFactory(final ConfigurableListableBeanFactory configurableListableBeanFactory) {
 		//
+		final Collection<BeanPostProcessor> bpps = values(
+				ListableBeanFactoryUtil.getBeansOfType(configurableListableBeanFactory, BeanPostProcessor.class));
+		//
+		// If there is a "org.springframework.beans.factory.config.BeanPostProcessor"
+		// with "defaultCloseOperation" field and the field could be cast as a
+		// "java.lang.Number" instance, pass the "intValue()" of the "java.lang.Number"
+		// instance to the "javax.swing.JFrame.setDefaultCloseOperation(int)" method
+		//
+		if (iterator(bpps) != null) {
+			//
+			List<Field> fs = null;
+			//
+			Field f = null;
+			//
+			Number number = null;
+			//
+			boolean setted = false;
+			//
+			for (final Object obj : bpps) {
+				//
+				if (obj == null || (fs = toList(
+						filter(testAndApply(Objects::nonNull, getDeclaredFields(getClass(obj)), Arrays::stream, null),
+								x -> Objects.equals(getName(x), "defaultCloseOperation")))) == null
+						|| fs.isEmpty()) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if (fs.size() > 1) {
+					//
+					throw new IllegalStateException();
+					//
+				} // if
+					//
+				if ((f = fs.size() == 1 ? fs.get(0) : null) != null) {
+					//
+					f.setAccessible(true);
+					//
+					try {
+						//
+						if ((number = cast(Number.class, get(f, obj))) != null) {
+							//
+							if (!setted) {
+								//
+								setDefaultCloseOperation(number.intValue());
+								//
+							} else {
+								//
+								throw new IllegalStateException();
+								//
+							} // if
+								//
+						} // if
+							//
+					} catch (final IllegalAccessException e) {
+						//
+						TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
+						//
+					} // try
+						//
+				} // if
+					//
+			} // for
+				//
+		} // if
+			//
 		this.configurableListableBeanFactory = configurableListableBeanFactory;
 		//
 		final Collection<?> formats = getByteConverterAttributeValues(configurableListableBeanFactory, FORMAT);
@@ -810,6 +878,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		setSelectedItem(cbmAudioFormatExecute, audioFormat);
 		//
+	}
+
+	private static Object get(final Field field, final Object instance) throws IllegalAccessException {
+		return field != null ? field.get(instance) : null;
 	}
 
 	private static <E> void addElement(final MutableComboBoxModel<E> instance, final E item) {
