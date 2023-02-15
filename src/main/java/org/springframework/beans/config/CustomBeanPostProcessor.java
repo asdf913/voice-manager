@@ -1,5 +1,7 @@
 package org.springframework.beans.config;
 
+import java.awt.Component;
+import java.awt.Frame;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Modifier;
@@ -18,12 +20,25 @@ import org.javatuples.valueintf.IValue0Util;
 import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.context.EnvironmentAware;
+import org.springframework.core.env.Environment;
+import org.springframework.core.env.PropertyResolver;
+import org.springframework.core.env.PropertyResolverUtil;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
 
-public class CustomBeanPostProcessor implements BeanPostProcessor {
+import io.github.toolfactory.narcissus.Narcissus;
+
+public class CustomBeanPostProcessor implements BeanPostProcessor, EnvironmentAware {
+
+	private PropertyResolver propertyResolver = null;
+
+	@Override
+	public void setEnvironment(final Environment environment) {
+		this.propertyResolver = environment;
+	}
 
 	/**
 	 * @see javax.swing.JFrame#setDefaultCloseOperation(int)
@@ -219,6 +234,44 @@ public class CustomBeanPostProcessor implements BeanPostProcessor {
 	@Override
 	public Object postProcessBeforeInitialization(final Object bean, final String beanName) throws BeansException {
 		//
+		final Frame frame = bean instanceof JFrame ? (JFrame) bean : null;
+		//
+		final Class<?> clz = getClass(bean);
+		//
+		final StringBuilder sb = new StringBuilder(StringUtils.defaultString(clz != null ? clz.getName() : null));
+		//
+		if (StringUtils.isNotEmpty(sb)) {
+			//
+			sb.append('.');
+			//
+			sb.append("title");
+			//
+		} // if
+			//
+		final String key = toString(sb);
+		//
+		if (frame != null && propertyResolver != null && propertyResolver.containsProperty(key)) {
+			//
+			try {
+				//
+				final Field objectLock = Component.class.getDeclaredField("objectLock");
+				//
+				if (objectLock != null && Narcissus.getObjectField(bean, objectLock) == null) {
+					//
+					Narcissus.setObjectField(bean, objectLock, new Object());
+					//
+				} // if
+					//
+			} catch (final NoSuchFieldException e) {
+				//
+				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
+				//
+			} // try
+				//
+			frame.setTitle(PropertyResolverUtil.getProperty(propertyResolver, key));
+			//
+		} // if
+			//
 		final JFrame jFrame = bean instanceof JFrame ? (JFrame) bean : null;
 		//
 		if (jFrame != null && defaultCloseOperation != null) {

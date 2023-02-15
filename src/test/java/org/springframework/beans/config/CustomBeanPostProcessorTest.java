@@ -2,17 +2,26 @@ package org.springframework.beans.config;
 
 import java.awt.GraphicsEnvironment;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.springframework.core.env.Environment;
+import org.springframework.core.env.PropertyResolver;
+
+import com.google.common.base.Objects;
+import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
 
@@ -35,6 +44,46 @@ class CustomBeanPostProcessorTest {
 		//
 		(METHOD_GET = clz.getDeclaredMethod("get", Field.class, Object.class)).setAccessible(true);
 		//
+	}
+
+	private static class IH implements InvocationHandler {
+
+		private Map<Object, Object> properties = null;
+
+		private Map<Object, Object> getProperties() {
+			if (properties == null) {
+				properties = new LinkedHashMap<>();
+			}
+			return properties;
+		}
+
+		@Override
+		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+			//
+			final String methodName = method != null ? method.getName() : null;
+			//
+			if (proxy instanceof PropertyResolver) {
+				//
+				if (Objects.equal(methodName, "containsProperty") && args != null && args.length > 0) {
+					//
+					return containsKey(getProperties(), args[0]);
+					//
+				} else if (Objects.equal(methodName, "getProperty") && args != null && args.length > 0) {
+					//
+					return MapUtils.getObject(getProperties(), args[0]);
+					//
+				} // if
+					//
+			} // if
+				//
+			throw new Throwable(methodName);
+			//
+		}
+
+		private static boolean containsKey(final Map<?, ?> instance, final Object key) {
+			return instance != null && instance.containsKey(key);
+		}
+
 	}
 
 	@Test
@@ -80,6 +129,10 @@ class CustomBeanPostProcessorTest {
 		//
 		Assertions.assertSame(jFrame, instance.postProcessBeforeInitialization(jFrame, null));
 		//
+		instance.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+		//
+		Assertions.assertSame(jFrame, instance.postProcessBeforeInitialization(jFrame, null));
+		//
 		// null
 		//
 		instance.setDefaultCloseOperation(null);
@@ -108,6 +161,20 @@ class CustomBeanPostProcessorTest {
 		// java.lang.Boolean
 		//
 		Assertions.assertThrows(IllegalArgumentException.class, () -> instance.setDefaultCloseOperation(Boolean.TRUE));
+		//
+		// org.springframework.core.env.PropertyResolver
+		//
+		final IH ih = new IH();
+		//
+		instance.setEnvironment(Reflection.newProxy(Environment.class, ih));
+		//
+		Assertions.assertSame(jFrame, instance.postProcessBeforeInitialization(jFrame, null));
+		//
+		final String empty = "";
+		//
+		ih.getProperties().put(StringUtils.joinWith(".", JFrame.class.getName(), "title"), empty);
+		//
+		Assertions.assertSame(jFrame, instance.postProcessBeforeInitialization(jFrame, null));
 		//
 	}
 
