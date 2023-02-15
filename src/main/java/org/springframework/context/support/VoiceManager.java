@@ -844,60 +844,64 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		IValue0<Number> result = null;
 		//
-		List<Field> fs = null;
-		//
-		Field f = null;
-		//
-		Number number = null;
-		//
 		for (final Object obj : values) {
 			//
-			if (obj == null || (fs = toList(
-					filter(testAndApply(Objects::nonNull, getDeclaredFields(getClass(obj)), Arrays::stream, null),
-							x -> Objects.equals(getName(x), "defaultCloseOperation")))) == null
-					|| fs.isEmpty()) {
+			try {
 				//
-				continue;
-				//
-			} // if
-				//
-			if (fs.size() > 1) {
-				//
-				throw new IllegalStateException();
-				//
-			} // if
-				//
-			if ((f = fs.size() == 1 ? fs.get(0) : null) != null) {
-				//
-				f.setAccessible(true);
-				//
-				try {
+				if (result == null) {
 					//
-					if ((number = cast(Number.class, get(f, obj))) != null) {
-						//
-						if (result == null) {
-							//
-							result = Unit.with(number);
-							//
-						} else {
-							//
-							throw new IllegalStateException();
-							//
-						} // if
-							//
-					} // if
-						//
-				} catch (final IllegalAccessException e) {
+					result = getDefaultCloseOperation(obj, toList(filter(
+							testAndApply(Objects::nonNull, getDeclaredFields(getClass(obj)), Arrays::stream, null),
+							x -> Objects.equals(getName(x), "defaultCloseOperation"))));
 					//
-					TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
+				} else {
 					//
-				} // try
+					throw new IllegalStateException();
 					//
-			} // if
+				} // if
+					//
+			} catch (final IllegalAccessException e) {
+				//
+				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
+				//
+			} // try
 				//
 		} // for
 			//
 		return IValue0Util.getValue0(result);
+		//
+	}
+
+	private static IValue0<Number> getDefaultCloseOperation(final Object instnace, final Iterable<Field> fs)
+			throws IllegalAccessException {
+		//
+		final int size = IterableUtils.size(fs);
+		//
+		if (size > 1) {
+			//
+			throw new IllegalStateException();
+			//
+		} // if
+			//
+		IValue0<Number> result = null;
+		//
+		final Field f = size == 1 ? IterableUtils.get(fs, 0) : null;
+		//
+		if (f != null) {
+			//
+			f.setAccessible(true);
+			//
+			final Number number = cast(Number.class, get(f, instnace));
+			//
+			if (number != null || isAssignableFrom(Number.class, f.getType())) {
+				//
+				result = Unit.with(number);
+				//
+			} // if
+				//
+		} // if
+			//
+		return result;
 		//
 	}
 
