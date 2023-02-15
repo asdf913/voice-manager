@@ -5,11 +5,15 @@ import java.awt.Frame;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
+import java.util.function.IntConsumer;
+import java.util.function.IntUnaryOperator;
 import java.util.function.Predicate;
+import java.util.stream.IntStream;
 
 import javax.swing.JFrame;
 
@@ -301,12 +305,8 @@ public class CustomBeanPostProcessor implements BeanPostProcessor, EnvironmentAw
 		//
 		if (jFrame != null) {
 			//
-			if (StringUtils.isNotEmpty(sb)) {
-				//
-				sb.delete(0, StringUtils.length(sb));
-				//
-			} // if
-				//
+			forEach(reverseRange(0, StringUtils.length(sb)), sb::deleteCharAt);
+			//
 			if (StringUtils.isNotEmpty(sb.append(StringUtils.defaultString(className)))) {
 				//
 				sb.append('.');
@@ -356,6 +356,28 @@ public class CustomBeanPostProcessor implements BeanPostProcessor, EnvironmentAw
 			//
 		return bean;
 		//
+	}
+
+	/**
+	 * @see <a href="https://stackoverflow.com/a/24011264">list - Java 8 stream
+	 *      reverse order - Stack Overflow</a>
+	 */
+	private static IntStream reverseRange(final int from, final int to) {
+		return map(IntStream.range(from, to), i -> to - i + from - 1);
+	}
+
+	private static IntStream map(final IntStream instance, final IntUnaryOperator mapper) {
+		return instance != null
+				? instance.map(mapper) 
+						: instance;
+	}
+
+	private static void forEach(final IntStream instance, final IntConsumer action) {
+		if (instance != null
+				&& (Proxy.isProxyClass(getClass(instance))
+				||action != null )) {
+			instance.forEach(action);
+		}
 	}
 
 	private static <T> T cast(final Class<T> clz, final Object instance) {

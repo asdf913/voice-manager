@@ -8,7 +8,10 @@ import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.IntConsumer;
+import java.util.function.IntUnaryOperator;
 import java.util.function.Predicate;
+import java.util.stream.IntStream;
 
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
@@ -17,6 +20,7 @@ import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertyResolver;
@@ -29,7 +33,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 class CustomBeanPostProcessorTest {
 
 	private static Method METHOD_GET_NAME, METHOD_GET_CLASS, METHOD_TO_STRING, METHOD_IS_STATIC, METHOD_GET,
-			METHOD_CAST, METHOD_TEST = null;
+			METHOD_CAST, METHOD_TEST, METHOD_MAP, METHOD_FOR_EACH = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -50,6 +54,10 @@ class CustomBeanPostProcessorTest {
 		//
 		(METHOD_TEST = clz.getDeclaredMethod("test", Predicate.class, Object.class)).setAccessible(true);
 		//
+		(METHOD_MAP = clz.getDeclaredMethod("map", IntStream.class, IntUnaryOperator.class)).setAccessible(true);
+		//
+		(METHOD_FOR_EACH = clz.getDeclaredMethod("forEach", IntStream.class, IntConsumer.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -66,6 +74,12 @@ class CustomBeanPostProcessorTest {
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
+			if (Objects.equal(Void.TYPE, method != null ? method.getReturnType() : null)) {
+				//
+				return null;
+				//
+			} // if
+				//
 			final String methodName = method != null ? method.getName() : null;
 			//
 			if (proxy instanceof PropertyResolver) {
@@ -90,6 +104,15 @@ class CustomBeanPostProcessorTest {
 			return instance != null && instance.containsKey(key);
 		}
 
+	}
+
+	private IH ih = null;
+
+	@BeforeEach
+	void beforeEach() {
+		//
+		ih = new IH();
+		//
 	}
 
 	@Test
@@ -170,8 +193,6 @@ class CustomBeanPostProcessorTest {
 		//
 		// org.springframework.core.env.PropertyResolver
 		//
-		final IH ih = new IH();
-		//
 		instance.setEnvironment(Reflection.newProxy(Environment.class, ih));
 		//
 		Assertions.assertSame(jFrame, instance.postProcessBeforeInitialization(jFrame, null));
@@ -180,21 +201,33 @@ class CustomBeanPostProcessorTest {
 		//
 		final String empty = "";
 		//
-		ih.getProperties().put(StringUtils.joinWith(".", JFrame.class.getName(), "title"), empty);
-		//
+		if (ih != null) {
+			//
+			ih.getProperties().put(StringUtils.joinWith(".", JFrame.class.getName(), "title"), empty);
+			//
+		} // if
+			//
 		Assertions.assertSame(jFrame, instance.postProcessBeforeInitialization(jFrame, null));
 		//
 		// defaultCloseOperation
 		//
-		ih.getProperties().put(StringUtils.joinWith(".", JFrame.class.getName(), "defaultCloseOperation"),
-				Integer.toString(WindowConstants.EXIT_ON_CLOSE));
-		//
+		if (ih != null) {
+			//
+			ih.getProperties().put(StringUtils.joinWith(".", JFrame.class.getName(), "defaultCloseOperation"),
+					Integer.toString(WindowConstants.EXIT_ON_CLOSE));
+			//
+		} // if
+			//
 		Assertions.assertSame(jFrame, instance.postProcessBeforeInitialization(jFrame, null));
 		//
 		instance.setDefaultCloseOperation(null);
 		//
-		ih.getProperties().put(StringUtils.joinWith(".", JFrame.class.getName(), "defaultCloseOperation"), "A");
-		//
+		if (ih != null) {
+			//
+			ih.getProperties().put(StringUtils.joinWith(".", JFrame.class.getName(), "defaultCloseOperation"), "A");
+			//
+		} // if
+			//
 		Assertions.assertThrows(RuntimeException.class,
 				() -> instance.postProcessBeforeInitialization(Narcissus.allocateInstance(JFrame.class), null));
 		//
@@ -312,6 +345,49 @@ class CustomBeanPostProcessorTest {
 				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testMap() throws Throwable {
+		//
+		Assertions.assertNull(map(null, null));
+		//
+	}
+
+	private static IntStream map(final IntStream instance, final IntUnaryOperator mapper) throws Throwable {
+		try {
+			final Object obj = METHOD_MAP.invoke(null, instance, mapper);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof IntStream) {
+				return (IntStream) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testForEach() {
+		//
+		Assertions.assertDoesNotThrow(() -> forEach(null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> forEach(Reflection.newProxy(IntStream.class, ih), null));
+		//
+		Assertions.assertDoesNotThrow(() -> forEach(IntStream.empty(), null));
+		//
+		Assertions.assertDoesNotThrow(() -> forEach(IntStream.empty(), x -> {
+		}));
+		//
+	}
+
+	private static void forEach(final IntStream instance, final IntConsumer action) throws Throwable {
+		try {
+			METHOD_FOR_EACH.invoke(null, instance, action);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
