@@ -8,6 +8,7 @@ import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.Predicate;
 
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
@@ -28,7 +29,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 class CustomBeanPostProcessorTest {
 
 	private static Method METHOD_GET_NAME, METHOD_GET_CLASS, METHOD_TO_STRING, METHOD_IS_STATIC, METHOD_GET,
-			METHOD_CAST = null;
+			METHOD_CAST, METHOD_TEST = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -46,6 +47,8 @@ class CustomBeanPostProcessorTest {
 		(METHOD_GET = clz.getDeclaredMethod("get", Field.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_CAST = clz.getDeclaredMethod("cast", Class.class, Object.class)).setAccessible(true);
+		//
+		(METHOD_TEST = clz.getDeclaredMethod("test", Predicate.class, Object.class)).setAccessible(true);
 		//
 	}
 
@@ -290,6 +293,25 @@ class CustomBeanPostProcessorTest {
 	private static <T> T cast(final Class<T> clz, final Object instance) throws Throwable {
 		try {
 			return (T) METHOD_CAST.invoke(null, clz, instance);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testTest() throws Throwable {
+		//
+		Assertions.assertFalse(test(null, null));
+		//
+	}
+
+	private static final <T> boolean test(final Predicate<T> instance, final T value) throws Throwable {
+		try {
+			final Object obj = METHOD_TEST.invoke(null, instance, value);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

@@ -8,6 +8,8 @@ import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 import javax.swing.JFrame;
 
@@ -118,7 +120,7 @@ public class CustomBeanPostProcessor implements BeanPostProcessor, EnvironmentAw
 		//
 		try {
 			//
-			return StringUtils.isNotBlank(string) ? Unit.with(Integer.valueOf(string)) : null;
+			return testAndApply(StringUtils::isNotBlank, string, x -> Unit.with(Integer.valueOf(x)), null);
 			//
 		} catch (final NumberFormatException e) {
 			//
@@ -145,7 +147,7 @@ public class CustomBeanPostProcessor implements BeanPostProcessor, EnvironmentAw
 			//
 		} // if
 			//
-		final Field f = size == 1 ? IterableUtils.get(fs, 0) : null;
+		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
 		//
 		IValue0<Number> value = null;
 		//
@@ -229,6 +231,19 @@ public class CustomBeanPostProcessor implements BeanPostProcessor, EnvironmentAw
 
 	private static Object get(final Field field, final Object instance) throws IllegalAccessException {
 		return field != null ? field.get(instance) : null;
+	}
+
+	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+			final Function<T, R> functionTrue, final Function<T, R> functionFalse) throws E {
+		return test(predicate, value) ? apply(functionTrue, value) : apply(functionFalse, value);
+	}
+
+	private static final <T> boolean test(final Predicate<T> instance, final T value) {
+		return instance != null && instance.test(value);
+	}
+
+	private static <R, T> R apply(final Function<T, R> instance, final T value) {
+		return instance != null ? instance.apply(value) : null;
 	}
 
 	@Override
