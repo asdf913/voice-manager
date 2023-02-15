@@ -850,7 +850,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				if (result == null) {
 					//
-					result = getDefaultCloseOperation(obj, toList(filter(
+					result = getNumber(obj, toList(filter(
 							testAndApply(Objects::nonNull, getDeclaredFields(getClass(obj)), Arrays::stream, null),
 							x -> Objects.equals(getName(x), "defaultCloseOperation"))));
 					//
@@ -872,7 +872,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static IValue0<Number> getDefaultCloseOperation(final Object instnace, final Iterable<Field> fs)
+	private static IValue0<Number> getNumber(final Object instnace, final Iterable<Field> fs)
 			throws IllegalAccessException {
 		//
 		final int size = IterableUtils.size(fs);
