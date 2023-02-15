@@ -257,11 +257,7 @@ public class CustomBeanPostProcessor implements BeanPostProcessor, EnvironmentAw
 		//
 		final Frame frame = cast(JFrame.class, bean);
 		//
-		final Class<?> clz = getClass(bean);
-		//
-		final String className = getName(clz);
-		//
-		final StringBuilder sb = new StringBuilder(StringUtils.defaultString(className));
+		final StringBuilder sb = new StringBuilder(StringUtils.defaultString(getName(getClass(bean))));
 		//
 		if (StringUtils.isNotEmpty(sb)) {
 			//
@@ -271,7 +267,7 @@ public class CustomBeanPostProcessor implements BeanPostProcessor, EnvironmentAw
 			//
 		} // if
 			//
-		String key = toString(sb);
+		final String key = toString(sb);
 		//
 		if (frame != null && PropertyResolverUtil.containsProperty(propertyResolver, key)) {
 			//
