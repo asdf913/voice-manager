@@ -783,71 +783,20 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Override
 	public void postProcessBeanFactory(final ConfigurableListableBeanFactory configurableListableBeanFactory) {
 		//
-		final Collection<BeanPostProcessor> bpps = values(
-				ListableBeanFactoryUtil.getBeansOfType(configurableListableBeanFactory, BeanPostProcessor.class));
+		// If the
+		// "org.springframework.context.support.VoiceManager.getDefaultCloseOperation(java.lang.Iterable)"
+		// return a "java.lang.Number" instance, pass the value of
+		// "java.lang.Number.intValue()" of
+		// the "java.lang.Number" instance to the
+		// "javax.swing.JFrame.setDefaultCloseOperation(int)" method
 		//
-		// If there is a "org.springframework.beans.factory.config.BeanPostProcessor"
-		// with "defaultCloseOperation" field and the field could be cast as a
-		// "java.lang.Number" instance, pass the "intValue()" of the "java.lang.Number"
-		// instance to the "javax.swing.JFrame.setDefaultCloseOperation(int)" method
+		final Number defaultCloseOperation = getDefaultCloseOperation(values(
+				ListableBeanFactoryUtil.getBeansOfType(configurableListableBeanFactory, BeanPostProcessor.class)));
 		//
-		if (iterator(bpps) != null) {
+		if (defaultCloseOperation != null) {
 			//
-			List<Field> fs = null;
+			setDefaultCloseOperation(defaultCloseOperation.intValue());
 			//
-			Field f = null;
-			//
-			Number number = null;
-			//
-			boolean setted = false;
-			//
-			for (final Object obj : bpps) {
-				//
-				if (obj == null || (fs = toList(
-						filter(testAndApply(Objects::nonNull, getDeclaredFields(getClass(obj)), Arrays::stream, null),
-								x -> Objects.equals(getName(x), "defaultCloseOperation")))) == null
-						|| fs.isEmpty()) {
-					//
-					continue;
-					//
-				} // if
-					//
-				if (fs.size() > 1) {
-					//
-					throw new IllegalStateException();
-					//
-				} // if
-					//
-				if ((f = fs.size() == 1 ? fs.get(0) : null) != null) {
-					//
-					f.setAccessible(true);
-					//
-					try {
-						//
-						if ((number = cast(Number.class, get(f, obj))) != null) {
-							//
-							if (!setted) {
-								//
-								setDefaultCloseOperation(number.intValue());
-								//
-							} else {
-								//
-								throw new IllegalStateException();
-								//
-							} // if
-								//
-						} // if
-							//
-					} catch (final IllegalAccessException e) {
-						//
-						TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
-						//
-					} // try
-						//
-				} // if
-					//
-			} // for
-				//
 		} // if
 			//
 		this.configurableListableBeanFactory = configurableListableBeanFactory;
@@ -877,6 +826,78 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		setSelectedItem(cbmAudioFormatWrite, audioFormat);
 		//
 		setSelectedItem(cbmAudioFormatExecute, audioFormat);
+		//
+	}
+
+	/**
+	 * If there is a object in "values" with "defaultCloseOperation" field and the
+	 * field could be cast as a "java.lang.Number" instance, return the field value
+	 * 
+	 */
+	private static Number getDefaultCloseOperation(final Iterable<?> values) {
+		//
+		if (iterator(values) == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		IValue0<Number> result = null;
+		//
+		List<Field> fs = null;
+		//
+		Field f = null;
+		//
+		Number number = null;
+		//
+		for (final Object obj : values) {
+			//
+			if (obj == null || (fs = toList(
+					filter(testAndApply(Objects::nonNull, getDeclaredFields(getClass(obj)), Arrays::stream, null),
+							x -> Objects.equals(getName(x), "defaultCloseOperation")))) == null
+					|| fs.isEmpty()) {
+				//
+				continue;
+				//
+			} // if
+				//
+			if (fs.size() > 1) {
+				//
+				throw new IllegalStateException();
+				//
+			} // if
+				//
+			if ((f = fs.size() == 1 ? fs.get(0) : null) != null) {
+				//
+				f.setAccessible(true);
+				//
+				try {
+					//
+					if ((number = cast(Number.class, get(f, obj))) != null) {
+						//
+						if (result == null) {
+							//
+							result = Unit.with(number);
+							//
+						} else {
+							//
+							throw new IllegalStateException();
+							//
+						} // if
+							//
+					} // if
+						//
+				} catch (final IllegalAccessException e) {
+					//
+					TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
+					//
+				} // try
+					//
+			} // if
+				//
+		} // for
+			//
+		return IValue0Util.getValue0(result);
 		//
 	}
 
