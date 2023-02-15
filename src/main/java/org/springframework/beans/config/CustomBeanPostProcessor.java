@@ -221,6 +221,10 @@ public class CustomBeanPostProcessor implements BeanPostProcessor, EnvironmentAw
 		return instance != null ? instance.getClass() : null;
 	}
 
+	private static String getName(final Class<?> instance) {
+		return instance != null ? instance.getName() : null;
+	}
+
 	private static String getName(final Member instance) {
 		return instance != null ? instance.getName() : null;
 	}
@@ -255,7 +259,7 @@ public class CustomBeanPostProcessor implements BeanPostProcessor, EnvironmentAw
 		//
 		final Class<?> clz = getClass(bean);
 		//
-		final String className = clz != null ? clz.getName() : null;
+		final String className = getName(clz);
 		//
 		final StringBuilder sb = new StringBuilder(StringUtils.defaultString(className));
 		//
