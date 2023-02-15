@@ -118,7 +118,7 @@ public class CustomBeanPostProcessor implements BeanPostProcessor, EnvironmentAw
 		//
 		try {
 			//
-			return Unit.with(Integer.valueOf(string));
+			return StringUtils.isNotBlank(string) ? Unit.with(Integer.valueOf(string)) : null;
 			//
 		} catch (final NumberFormatException e) {
 			//
@@ -234,11 +234,15 @@ public class CustomBeanPostProcessor implements BeanPostProcessor, EnvironmentAw
 	@Override
 	public Object postProcessBeforeInitialization(final Object bean, final String beanName) throws BeansException {
 		//
+		// java.awt.Frame
+		//
 		final Frame frame = bean instanceof JFrame ? (JFrame) bean : null;
 		//
 		final Class<?> clz = getClass(bean);
 		//
-		final StringBuilder sb = new StringBuilder(StringUtils.defaultString(clz != null ? clz.getName() : null));
+		final String className = clz != null ? clz.getName() : null;
+		//
+		final StringBuilder sb = new StringBuilder(StringUtils.defaultString(className));
 		//
 		if (StringUtils.isNotEmpty(sb)) {
 			//
@@ -248,7 +252,7 @@ public class CustomBeanPostProcessor implements BeanPostProcessor, EnvironmentAw
 			//
 		} // if
 			//
-		final String key = toString(sb);
+		String key = toString(sb);
 		//
 		if (frame != null && PropertyResolverUtil.containsProperty(propertyResolver, key)) {
 			//
@@ -272,12 +276,63 @@ public class CustomBeanPostProcessor implements BeanPostProcessor, EnvironmentAw
 			//
 		} // if
 			//
+			// javax.swing.JFrame
+			//
 		final JFrame jFrame = bean instanceof JFrame ? (JFrame) bean : null;
 		//
-		if (jFrame != null && defaultCloseOperation != null) {
+		if (jFrame != null) {
 			//
-			jFrame.setDefaultCloseOperation(defaultCloseOperation.intValue());
+			if (StringUtils.isNotEmpty(sb)) {
+				//
+				sb.delete(0, StringUtils.length(sb));
+				//
+			} // if
+				//
+			if (StringUtils.isNotEmpty(sb.append(StringUtils.defaultString(className)))) {
+				//
+				sb.append('.');
+				//
+				sb.append("defaultCloseOperation");
+				//
+			} // if
+				//
+			Exception exception = null;
 			//
+			Number defaultCloseOperationNumber = null;
+			//
+			try {
+				//
+				defaultCloseOperationNumber = IValue0Util
+						.getValue0(PropertyResolverUtil.containsProperty(propertyResolver, key = toString(sb))
+								? getDefaultCloseOperation(PropertyResolverUtil.getProperty(propertyResolver, key))
+								: null);
+				//
+			} catch (final JsonProcessingException | IllegalAccessException e) {
+				//
+				exception = e;
+				//
+			} // try
+				//
+			if (defaultCloseOperationNumber != null) {
+				//
+				jFrame.setDefaultCloseOperation(defaultCloseOperationNumber.intValue());
+				//
+			} else if (defaultCloseOperation != null) {
+				//
+				jFrame.setDefaultCloseOperation(defaultCloseOperation.intValue());
+				//
+			} else if (exception != null) {
+				//
+				if (exception instanceof RuntimeException) {
+					//
+					throw (RuntimeException) exception;
+					//
+				} // if
+					//
+				throw new RuntimeException(exception);
+				//
+			} // if
+				//
 		} // if
 			//
 		return bean;

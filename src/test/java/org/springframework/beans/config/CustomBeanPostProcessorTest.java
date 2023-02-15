@@ -170,11 +170,27 @@ class CustomBeanPostProcessorTest {
 		//
 		Assertions.assertSame(jFrame, instance.postProcessBeforeInitialization(jFrame, null));
 		//
+		// title
+		//
 		final String empty = "";
 		//
 		ih.getProperties().put(StringUtils.joinWith(".", JFrame.class.getName(), "title"), empty);
 		//
 		Assertions.assertSame(jFrame, instance.postProcessBeforeInitialization(jFrame, null));
+		//
+		// defaultCloseOperation
+		//
+		ih.getProperties().put(StringUtils.joinWith(".", JFrame.class.getName(), "defaultCloseOperation"),
+				Integer.toString(WindowConstants.EXIT_ON_CLOSE));
+		//
+		Assertions.assertSame(jFrame, instance.postProcessBeforeInitialization(jFrame, null));
+		//
+		instance.setDefaultCloseOperation(null);
+		//
+		ih.getProperties().put(StringUtils.joinWith(".", JFrame.class.getName(), "defaultCloseOperation"), "A");
+		//
+		Assertions.assertThrows(RuntimeException.class,
+				() -> instance.postProcessBeforeInitialization(Narcissus.allocateInstance(JFrame.class), null));
 		//
 	}
 
