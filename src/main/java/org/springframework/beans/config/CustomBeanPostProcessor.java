@@ -236,7 +236,7 @@ public class CustomBeanPostProcessor implements BeanPostProcessor, EnvironmentAw
 		//
 		// java.awt.Frame
 		//
-		final Frame frame = bean instanceof JFrame ? (JFrame) bean : null;
+		final Frame frame = cast(JFrame.class, bean);
 		//
 		final Class<?> clz = getClass(bean);
 		//
@@ -278,7 +278,7 @@ public class CustomBeanPostProcessor implements BeanPostProcessor, EnvironmentAw
 			//
 			// javax.swing.JFrame
 			//
-		final JFrame jFrame = bean instanceof JFrame ? (JFrame) bean : null;
+		final JFrame jFrame = cast(JFrame.class, bean);
 		//
 		if (jFrame != null) {
 			//
@@ -337,6 +337,10 @@ public class CustomBeanPostProcessor implements BeanPostProcessor, EnvironmentAw
 			//
 		return bean;
 		//
+	}
+
+	private static <T> T cast(final Class<T> clz, final Object instance) {
+		return clz != null && clz.isInstance(instance) ? clz.cast(instance) : null;
 	}
 
 }
