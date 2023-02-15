@@ -2062,7 +2062,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				f.setAccessible(true);
 				//
-				return f.get(speechApi);
+				return get(f, speechApi);
 				//
 			} // if
 				//
@@ -3244,7 +3244,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-			add(list = ObjectUtils.getIfNull(list, ArrayList::new), cast(Boolean.class, f.get(null)));
+			add(list = ObjectUtils.getIfNull(list, ArrayList::new), cast(Boolean.class, get(f, null)));
 			//
 		} // for
 			//
@@ -4090,7 +4090,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			try {
 				//
-				dllPath = Unit.with(invoke(m, f.get(null)));
+				dllPath = Unit.with(invoke(m, get(f, null)));
 				//
 			} catch (final IllegalAccessException e) {
 				//
@@ -5969,7 +5969,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-			if ((fieldValue = isStatic(f) ? f.get(null)
+			if ((fieldValue = isStatic(f) ? get(f, null)
 					: testAndApply((a, b) -> b != null, f, instance, (a, b) -> FieldUtils.readField(a, b),
 							null)) != value
 					|| !Objects.equals(fieldValue, value)) {
@@ -6359,7 +6359,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
 		//
-		return cast(PrintStream.class, f != null ? f.get(null) : null);
+		return cast(PrintStream.class, get(f, null));
 		//
 	}
 
@@ -7901,7 +7901,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				try {
 					//
-					final Number number = cast(Number.class, f.get(null));
+					final Number number = cast(Number.class, get(f, null));
 					//
 					return number != null ? Integer.valueOf(number.intValue()) : null;
 					//
@@ -9859,7 +9859,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				f.setAccessible(true);
 				//
-				f.set(instance, StringUtils.defaultString(VoiceManager.toString(f.get(instance))));
+				f.set(instance, StringUtils.defaultString(VoiceManager.toString(get(f, instance))));
 				//
 			} // if
 				//
@@ -11122,7 +11122,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 			} else {
 				//
-				value = f.get(instance);
+				value = get(f, instance);
 				//
 			} // if
 				//
@@ -11349,7 +11349,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			f.setAccessible(true);
 			//
-			return Unit.with(f.get(instance));
+			return Unit.with(get(f, instance));
 			//
 		} // if
 			//
@@ -11392,7 +11392,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			ObjectMap.setObject(objectMap, Cell.class, RowUtil.createCell(row, j));
 			//
-			setSheetCellValue(objectMap, f.get(ObjectMap.getObject(objectMap, Voice.class)), dataFormatClass,
+			setSheetCellValue(objectMap, get(f, ObjectMap.getObject(objectMap, Voice.class)), dataFormatClass,
 					dateFormatClass);
 			//
 		} // for
