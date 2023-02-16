@@ -212,7 +212,7 @@ import com.j256.simplemagic.ContentType;
 import com.mpatric.mp3agic.ID3v1;
 
 import domain.JlptVocabulary;
-import domain.Pronounication;
+import domain.Pronunciation;
 import domain.Voice;
 import domain.VoiceList;
 import fr.free.nrw.jakaroma.Jakaroma;
@@ -941,12 +941,12 @@ class VoiceManagerTest {
 		//
 		(METHOD_ADD_ALL = clz.getDeclaredMethod("addAll", Collection.class, Collection.class)).setAccessible(true);
 		//
-		(METHOD_PLAY_AUDIO = clz.getDeclaredMethod("playAudio", Pronounication.class, Object.class))
+		(METHOD_PLAY_AUDIO = clz.getDeclaredMethod("playAudio", Pronunciation.class, Object.class))
 				.setAccessible(true);
 		//
 		(METHOD_PLAY = clz.getDeclaredMethod("play", Player.class)).setAccessible(true);
 		//
-		(METHOD_PRONOUNICATION_CHANGED = clz.getDeclaredMethod("pronounicationChanged", Pronounication.class,
+		(METHOD_PRONOUNICATION_CHANGED = clz.getDeclaredMethod("pronounicationChanged", Pronunciation.class,
 				MutableComboBoxModel.class)).setAccessible(true);
 		//
 		(METHOD_REMOVE_ELEMENT_AT = clz.getDeclaredMethod("removeElementAt", MutableComboBoxModel.class, Integer.TYPE))
@@ -8413,17 +8413,17 @@ class VoiceManagerTest {
 	@Test
 	void testPlayAudio() {
 		//
-		final Pronounication pronounication = new Pronounication();
+		final Pronunciation pronunciation = new Pronunciation();
 		//
-		pronounication.setAudioUrls(Collections.singletonMap(null, null));
+		pronunciation.setAudioUrls(Collections.singletonMap(null, null));
 		//
-		Assertions.assertDoesNotThrow(() -> playAudio(pronounication, null));
+		Assertions.assertDoesNotThrow(() -> playAudio(pronunciation, null));
 		//
 	}
 
-	private static void playAudio(final Pronounication pronounication, final Object audioFormat) throws Throwable {
+	private static void playAudio(final Pronunciation pronunciation, final Object audioFormat) throws Throwable {
 		try {
-			METHOD_PLAY_AUDIO.invoke(null, pronounication, audioFormat);
+			METHOD_PLAY_AUDIO.invoke(null, pronunciation, audioFormat);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -8447,18 +8447,18 @@ class VoiceManagerTest {
 	@Test
 	void testPronounicationChanged() {
 		//
-		final Pronounication pronounication = new Pronounication();
+		final Pronunciation pronunciation = new Pronunciation();
 		//
-		pronounication.setAudioUrls(Collections.singletonMap(null, null));
+		pronunciation.setAudioUrls(Collections.singletonMap(null, null));
 		//
-		Assertions.assertDoesNotThrow(() -> pronounicationChanged(pronounication, null));
+		Assertions.assertDoesNotThrow(() -> pronounicationChanged(pronunciation, null));
 		//
 	}
 
-	private static void pronounicationChanged(final Pronounication pronounication,
+	private static void pronounicationChanged(final Pronunciation pronunciation,
 			final MutableComboBoxModel<String> mcbmAudioFormat) throws Throwable {
 		try {
-			METHOD_PRONOUNICATION_CHANGED.invoke(null, pronounication, mcbmAudioFormat);
+			METHOD_PRONOUNICATION_CHANGED.invoke(null, pronunciation, mcbmAudioFormat);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

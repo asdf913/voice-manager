@@ -334,7 +334,7 @@ import com.mpatric.mp3agic.Mp3File;
 import de.sciss.jump3r.lowlevel.LameEncoder;
 import de.sciss.jump3r.mp3.Lame;
 import domain.JlptVocabulary;
-import domain.Pronounication;
+import domain.Pronunciation;
 import domain.Voice;
 import domain.Voice.Yomi;
 import domain.VoiceList;
@@ -539,13 +539,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private transient MutableComboBoxModel<JlptVocabulary> cbmJlptVocabulary = null;
 
-	private transient MutableComboBoxModel<Pronounication> mcbmPronounication = null;
+	private transient MutableComboBoxModel<Pronunciation> mcbmPronounication = null;
 
 	private transient MutableComboBoxModel<String> mcbmPronounicationAudioFormat = null;
 
 	private transient javax.swing.text.Document tfTextImportDocument = null;
 
-	private JComboBox<Pronounication> jcbPronounication = null;
+	private JComboBox<Pronunciation> jcbPronounication = null;
 
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.FIELD)
@@ -3227,13 +3227,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.add(btnCheckPronounication = new JButton("Check"));
 		//
-		final ListCellRenderer<? super Pronounication> lcrPronounication = jcbPronounication.getRenderer();
+		final ListCellRenderer<? super Pronunciation> lcrPronounication = jcbPronounication.getRenderer();
 		//
 		jcbPronounication.setRenderer(new ListCellRenderer<>() {
 
 			@Override
-			public Component getListCellRendererComponent(final JList<? extends Pronounication> list,
-					final Pronounication value, final int index, boolean isSelected, boolean cellHasFocus) {
+			public Component getListCellRendererComponent(final JList<? extends Pronunciation> list,
+					final Pronunciation value, final int index, boolean isSelected, boolean cellHasFocus) {
 				//
 				final BufferedImage pitchAccentImage = value != null ? value.getPitchAccentImage() : null;
 				//
@@ -4728,7 +4728,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			try {
 				//
-				final List<Pronounication> pronounications = FailableFunctionUtil
+				final List<Pronunciation> pronounications = FailableFunctionUtil
 						.apply(onlineNHKJapanesePronunciationsAccentFailableFunction, getText(tfTextImport));
 				//
 				if (CollectionUtils.isNotEmpty(pronounications)) {
@@ -4747,22 +4747,22 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} else if (Objects.equals(source, jcbPronounication)) {
 			//
-			pronounicationChanged(cast(Pronounication.class, getSelectedItem(mcbmPronounication)),
+			pronounicationChanged(cast(Pronunciation.class, getSelectedItem(mcbmPronounication)),
 					mcbmPronounicationAudioFormat);
 			//
 		} else if (Objects.equals(source, btnPlayPronounicationAudio)) {
 			//
-			playAudio(cast(Pronounication.class, getSelectedItem(mcbmPronounication)),
+			playAudio(cast(Pronunciation.class, getSelectedItem(mcbmPronounication)),
 					getSelectedItem(mcbmPronounicationAudioFormat));
 			//
 		} // if
 			//
 	}
 
-	private static void playAudio(final Pronounication pronounication, final Object audioFormat) {
+	private static void playAudio(final Pronunciation pronunciation, final Object audioFormat) {
 		//
 		final Set<Entry<String, String>> entrySet = entrySet(
-				pronounication != null ? pronounication.getAudioUrls() : null);
+				pronunciation != null ? pronunciation.getAudioUrls() : null);
 		//
 		if (iterator(entrySet) != null) {
 			//
@@ -4805,12 +4805,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		}
 	}
 
-	private static void pronounicationChanged(final Pronounication pronounication,
+	private static void pronounicationChanged(final Pronunciation pronunciation,
 			final MutableComboBoxModel<String> mcbmAudioFormat) {
 		//
 		forEach(reverseRange(0, getSize(mcbmAudioFormat)), i -> removeElementAt(mcbmAudioFormat, i));
 		//
-		final Map<String, String> audioUrls = pronounication != null ? pronounication.getAudioUrls() : null;
+		final Map<String, String> audioUrls = pronunciation != null ? pronunciation.getAudioUrls() : null;
 		//
 		if (MapUtils.isNotEmpty(audioUrls)) {
 			//

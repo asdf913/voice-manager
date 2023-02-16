@@ -97,7 +97,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import com.google.common.reflect.Reflection;
 
-import domain.Pronounication;
+import domain.Pronunciation;
 import io.github.toolfactory.narcissus.Narcissus;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
@@ -149,13 +149,13 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 	@Group("LastComponentInRow")
 	private AbstractButton btnSavePitchAccentImage = null;
 
-	private transient MutableComboBoxModel<Pronounication> mcbmPronounication = null;
+	private transient MutableComboBoxModel<Pronunciation> mcbmPronounication = null;
 
 	private transient MutableComboBoxModel<String> mcbmAudioFormat = null;
 
 	private transient ComboBoxModel<String> cbmImageFormat = null;
 
-	private JComboBox<Pronounication> jcbPronounication = null;
+	private JComboBox<Pronunciation> jcbPronounication = null;
 
 	private JLabel jlSavePitchAccentImage = null;
 
@@ -297,8 +297,8 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		jcbPronounication.setRenderer(new ListCellRenderer<>() {
 
 			@Override
-			public Component getListCellRendererComponent(final JList<? extends Pronounication> list,
-					final Pronounication value, final int index, final boolean isSelected, final boolean cellHasFocus) {
+			public Component getListCellRendererComponent(final JList<? extends Pronunciation> list,
+					final Pronunciation value, final int index, final boolean isSelected, final boolean cellHasFocus) {
 				//
 				final BufferedImage pitchAccentImage = value != null ? value.getPitchAccentImage() : null;
 				//
@@ -563,7 +563,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			//
 			try {
 				//
-				final List<Pronounication> pronounications = FailableFunctionUtil
+				final List<Pronunciation> pronounications = FailableFunctionUtil
 						.apply(onlineNHKJapanesePronunciationsAccentFailableFunction, getText(tfText));
 				//
 				forEach(pronounications, x -> addElement(mcbmPronounication, x));
@@ -582,25 +582,25 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 				//
 		} else if (Objects.equals(source, btnPlayAudio)) {
 			//
-			playAudio(cast(Pronounication.class, getSelectedItem(mcbmPronounication)));
+			playAudio(cast(Pronunciation.class, getSelectedItem(mcbmPronounication)));
 			//
 		} else if (Objects.equals(source, btnSaveAudio)) {
 			//
-			saveAudio(headless, cast(Pronounication.class, getSelectedItem(mcbmPronounication)),
+			saveAudio(headless, cast(Pronunciation.class, getSelectedItem(mcbmPronounication)),
 					getSelectedItem(mcbmAudioFormat));
 			//
 		} else if (Objects.equals(source, btnCopyPitchAccentImage)) {
 			//
 			setPitchAccentImageToSystemClipboardContents(
-					cast(Pronounication.class, getSelectedItem(mcbmPronounication)));
+					cast(Pronunciation.class, getSelectedItem(mcbmPronounication)));
 			//
 		} else if (Objects.equals(source, btnSavePitchAccentImage)) {
 			//
-			savePitchAccentImage(cast(Pronounication.class, getSelectedItem(mcbmPronounication)));
+			savePitchAccentImage(cast(Pronunciation.class, getSelectedItem(mcbmPronounication)));
 			//
 		} else if (Objects.equals(source, jcbPronounication)) {
 			//
-			pronounicationChanged(cast(Pronounication.class, getSelectedItem(mcbmPronounication)), mcbmAudioFormat);
+			pronounicationChanged(cast(Pronunciation.class, getSelectedItem(mcbmPronounication)), mcbmAudioFormat);
 			//
 		} // if
 			//
@@ -640,10 +640,10 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		return instance != null ? instance.toString() : null;
 	}
 
-	private static void playAudio(final Pronounication pronounication) {
+	private static void playAudio(final Pronunciation pronunciation) {
 		//
 		final Set<Entry<String, String>> entrySet = entrySet(
-				pronounication != null ? pronounication.getAudioUrls() : null);
+				pronunciation != null ? pronunciation.getAudioUrls() : null);
 		//
 		if (iterator(entrySet) != null) {
 			//
@@ -711,11 +711,11 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		}
 	}
 
-	private static void saveAudio(final boolean headless, final Pronounication pronounication,
+	private static void saveAudio(final boolean headless, final Pronunciation pronunciation,
 			final Object audioFormat) {
 		//
 		final Map<String, String> audioUrls = testAndApply(Objects::nonNull,
-				pronounication != null ? pronounication.getAudioUrls() : null, LinkedHashMap::new, null);
+				pronunciation != null ? pronunciation.getAudioUrls() : null, LinkedHashMap::new, null);
 		//
 		final JFileChooser jfc = new JFileChooser(".");
 		//
@@ -769,9 +769,9 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			//
 	}
 
-	private static void setPitchAccentImageToSystemClipboardContents(final Pronounication pronounication) {
+	private static void setPitchAccentImageToSystemClipboardContents(final Pronunciation pronunciation) {
 		//
-		final BufferedImage pitchAccentImage = pronounication != null ? pronounication.getPitchAccentImage() : null;
+		final BufferedImage pitchAccentImage = pronunciation != null ? pronunciation.getPitchAccentImage() : null;
 		//
 		Object raster = null;
 		//
@@ -805,9 +805,9 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			//
 	}
 
-	private void savePitchAccentImage(final Pronounication pronounication) {
+	private void savePitchAccentImage(final Pronunciation pronunciation) {
 		//
-		final BufferedImage pitchAccentImage = pronounication != null ? pronounication.getPitchAccentImage() : null;
+		final BufferedImage pitchAccentImage = pronunciation != null ? pronunciation.getPitchAccentImage() : null;
 		//
 		Object raster = null;
 		//
@@ -855,12 +855,12 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		return condition ? trueValue : falseValue;
 	}
 
-	private static void pronounicationChanged(final Pronounication pronounication,
+	private static void pronounicationChanged(final Pronunciation pronunciation,
 			final MutableComboBoxModel<String> mcbmAudioFormat) {
 		//
 		forEach(reverseRange(0, getSize(mcbmAudioFormat)), i -> removeElementAt(mcbmAudioFormat, i));
 		//
-		final Map<String, String> audioUrls = pronounication != null ? pronounication.getAudioUrls() : null;
+		final Map<String, String> audioUrls = pronunciation != null ? pronunciation.getAudioUrls() : null;
 		//
 		if (MapUtils.isNotEmpty(audioUrls)) {
 			//

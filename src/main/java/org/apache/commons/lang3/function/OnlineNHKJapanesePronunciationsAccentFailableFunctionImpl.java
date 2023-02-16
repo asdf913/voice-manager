@@ -39,7 +39,7 @@ import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
 
 import com.github.hal4j.uritemplate.URIBuilder;
 
-import domain.Pronounication;
+import domain.Pronunciation;
 
 public class OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl
 		implements OnlineNHKJapanesePronunciationsAccentFailableFunction {
@@ -51,9 +51,9 @@ public class OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl
 	}
 
 	@Override
-	public List<Pronounication> apply(final String input) throws IOException {
+	public List<Pronunciation> apply(final String input) throws IOException {
 		//
-		List<Pronounication> list = null;
+		List<Pronunciation> list = null;
 		//
 		final URIBuilder uriBuilder = testAndApply(Objects::nonNull, url, URIBuilder::basedOn, null);
 		//
@@ -68,7 +68,7 @@ public class OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl
 			//
 			final Elements elements = ElementUtil.select(document, "audio[title='発音図：']");
 			//
-			Pronounication pronounication = null;
+			Pronunciation pronunciation = null;
 			//
 			Element element = null;
 			//
@@ -82,15 +82,15 @@ public class OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl
 					//
 				} // if
 					//
-				(pronounication = new Pronounication()).setAudioUrls(audioUrls = getSrcMap(element));
+				(pronunciation = new Pronunciation()).setAudioUrls(audioUrls = getSrcMap(element));
 				//
 				forEach(entrySet(audioUrls), x -> {
 					setValue(x, String.join("", protocolAndHost, getValue(x)));
 				});
 				//
-				pronounication.setPitchAccentImage(createMergedBufferedImage(protocolAndHost, getImageSrcs(element)));
+				pronunciation.setPitchAccentImage(createMergedBufferedImage(protocolAndHost, getImageSrcs(element)));
 				//
-				add(list = ObjectUtils.getIfNull(list, ArrayList::new), pronounication);
+				add(list = ObjectUtils.getIfNull(list, ArrayList::new), pronunciation);
 				//
 			} // for
 				//

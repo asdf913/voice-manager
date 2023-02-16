@@ -65,7 +65,7 @@ import org.springframework.beans.factory.InitializingBean;
 
 import com.google.common.reflect.Reflection;
 
-import domain.Pronounication;
+import domain.Pronunciation;
 import io.github.toolfactory.narcissus.Narcissus;
 import javassist.util.proxy.MethodHandler;
 import javassist.util.proxy.ProxyFactory;
@@ -131,18 +131,18 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		(METHOD_MAP = clz.getDeclaredMethod("map", IntStream.class, IntUnaryOperator.class)).setAccessible(true);
 		//
 		(METHOD_SET_PITCH_ACCENT_IMAGE_TO_SYSTEM_CLIPBOARD_CONTENTS = clz
-				.getDeclaredMethod("setPitchAccentImageToSystemClipboardContents", Pronounication.class))
+				.getDeclaredMethod("setPitchAccentImageToSystemClipboardContents", Pronunciation.class))
 				.setAccessible(true);
 		//
-		(METHOD_SAVE_PITCH_ACCENT_IMAGE = clz.getDeclaredMethod("savePitchAccentImage", Pronounication.class))
+		(METHOD_SAVE_PITCH_ACCENT_IMAGE = clz.getDeclaredMethod("savePitchAccentImage", Pronunciation.class))
 				.setAccessible(true);
 		//
-		(METHOD_PLAY_AUDIO = clz.getDeclaredMethod("playAudio", Pronounication.class)).setAccessible(true);
+		(METHOD_PLAY_AUDIO = clz.getDeclaredMethod("playAudio", Pronunciation.class)).setAccessible(true);
 		//
-		(METHOD_SAVE_AUDIO = clz.getDeclaredMethod("saveAudio", Boolean.TYPE, Pronounication.class, Object.class))
+		(METHOD_SAVE_AUDIO = clz.getDeclaredMethod("saveAudio", Boolean.TYPE, Pronunciation.class, Object.class))
 				.setAccessible(true);
 		//
-		(METHOD_PRONOUNICATION_CHANGED = clz.getDeclaredMethod("pronounicationChanged", Pronounication.class,
+		(METHOD_PRONOUNICATION_CHANGED = clz.getDeclaredMethod("pronounicationChanged", Pronunciation.class,
 				MutableComboBoxModel.class)).setAccessible(true);
 		//
 		(METHOD_GET_DECLARED_FIELD = clz.getDeclaredMethod("getDeclaredField", Class.class, String.class))
@@ -359,7 +359,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 
 	private MH mh = null;
 
-	private Pronounication pronounication = null;
+	private Pronunciation pronunciation = null;
 
 	private JLabel jLabel = null;
 
@@ -394,7 +394,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			//
 		mh = new MH();
 		//
-		pronounication = new Pronounication();
+		pronunciation = new Pronunciation();
 		//
 		jLabel = new JLabel();
 		//
@@ -937,38 +937,38 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 	@Test
 	void testSetPitchAccentImageToSystemClipboardContents() throws Throwable {
 		//
-		Assertions.assertDoesNotThrow(() -> setPitchAccentImageToSystemClipboardContents(pronounication));
+		Assertions.assertDoesNotThrow(() -> setPitchAccentImageToSystemClipboardContents(pronunciation));
 		//
 		// org.springframework.context.support.OnlineNHKJapanesePronunciationAccentGui$Pronounication.pitchAccentImage
 		//
-		if (pronounication != null) {
+		if (pronunciation != null) {
 			//
-			pronounication
+			pronunciation
 					.setPitchAccentImage(cast(BufferedImage.class, Narcissus.allocateInstance(BufferedImage.class)));
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> setPitchAccentImageToSystemClipboardContents(pronounication));
+		Assertions.assertDoesNotThrow(() -> setPitchAccentImageToSystemClipboardContents(pronunciation));
 		//
-		if (pronounication != null) {
+		if (pronunciation != null) {
 			//
-			pronounication.setPitchAccentImage(new BufferedImage(ONE, ONE, BufferedImage.TYPE_4BYTE_ABGR));
+			pronunciation.setPitchAccentImage(new BufferedImage(ONE, ONE, BufferedImage.TYPE_4BYTE_ABGR));
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> setPitchAccentImageToSystemClipboardContents(pronounication));
+		Assertions.assertDoesNotThrow(() -> setPitchAccentImageToSystemClipboardContents(pronunciation));
 		//
 	}
 
 	private static Object createPronounicatio2n() {
 		//
-		return new Pronounication();
+		return new Pronunciation();
 		//
 	}
 
-	private static void setPitchAccentImageToSystemClipboardContents(final Object pronounication) throws Throwable {
+	private static void setPitchAccentImageToSystemClipboardContents(final Object pronunciation) throws Throwable {
 		try {
-			METHOD_SET_PITCH_ACCENT_IMAGE_TO_SYSTEM_CLIPBOARD_CONTENTS.invoke(null, pronounication);
+			METHOD_SET_PITCH_ACCENT_IMAGE_TO_SYSTEM_CLIPBOARD_CONTENTS.invoke(null, pronunciation);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -977,36 +977,36 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 	@Test
 	void testSavePitchAccentImage() throws Throwable {
 		//
-		Assertions.assertDoesNotThrow(() -> savePitchAccentImage(pronounication));
+		Assertions.assertDoesNotThrow(() -> savePitchAccentImage(pronunciation));
 		//
 		// org.springframework.context.support.OnlineNHKJapanesePronunciationAccentGui$Pronounication.pitchAccentImage
 		//
-		if (pronounication != null) {
+		if (pronunciation != null) {
 			//
-			pronounication
+			pronunciation
 					.setPitchAccentImage(cast(BufferedImage.class, Narcissus.allocateInstance(BufferedImage.class)));
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> savePitchAccentImage(pronounication));
+		Assertions.assertDoesNotThrow(() -> savePitchAccentImage(pronunciation));
 		//
-		if (pronounication != null) {
+		if (pronunciation != null) {
 			//
-			pronounication.setPitchAccentImage(new BufferedImage(ONE, ONE, BufferedImage.TYPE_4BYTE_ABGR));
+			pronunciation.setPitchAccentImage(new BufferedImage(ONE, ONE, BufferedImage.TYPE_4BYTE_ABGR));
 			//
 		} // if
 			//
 		if (GraphicsEnvironment.isHeadless()) {
 			//
-			Assertions.assertDoesNotThrow(() -> savePitchAccentImage(pronounication));
+			Assertions.assertDoesNotThrow(() -> savePitchAccentImage(pronunciation));
 			//
 		} // if
 			//
 	}
 
-	private void savePitchAccentImage(final Object pronounication) throws Throwable {
+	private void savePitchAccentImage(final Object pronunciation) throws Throwable {
 		try {
-			METHOD_SAVE_PITCH_ACCENT_IMAGE.invoke(instance, pronounication);
+			METHOD_SAVE_PITCH_ACCENT_IMAGE.invoke(instance, pronunciation);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1015,13 +1015,13 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 	@Test
 	void testPlayAudio() throws Throwable {
 		//
-		Assertions.assertDoesNotThrow(() -> playAudio(pronounication));
+		Assertions.assertDoesNotThrow(() -> playAudio(pronunciation));
 		//
 		// org.springframework.context.support.OnlineNHKJapanesePronunciationAccentGui$Pronounication.audioUrls
 		//
-		if (pronounication != null) {
+		if (pronunciation != null) {
 			//
-			pronounication.setAudioUrls((Map) map);
+			pronunciation.setAudioUrls((Map) map);
 			//
 		} // if
 			//
@@ -1035,7 +1035,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> playAudio(pronounication));
+		Assertions.assertDoesNotThrow(() -> playAudio(pronunciation));
 		//
 		if (ih != null) {
 			//
@@ -1043,7 +1043,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> playAudio(pronounication));
+		Assertions.assertDoesNotThrow(() -> playAudio(pronunciation));
 		//
 		if (ih != null) {
 			//
@@ -1053,13 +1053,13 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> playAudio(pronounication));
+		Assertions.assertDoesNotThrow(() -> playAudio(pronunciation));
 		//
 	}
 
-	private static void playAudio(final Object pronounication) throws Throwable {
+	private static void playAudio(final Object pronunciation) throws Throwable {
 		try {
-			METHOD_PLAY_AUDIO.invoke(null, pronounication);
+			METHOD_PLAY_AUDIO.invoke(null, pronunciation);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1070,9 +1070,9 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		//
 		// org.springframework.context.support.OnlineNHKJapanesePronunciationAccentGui$Pronounication.audioUrls
 		//
-		if (pronounication != null) {
+		if (pronunciation != null) {
 			//
-			pronounication.setAudioUrls((Map) map);
+			pronunciation.setAudioUrls((Map) map);
 			//
 		} // if
 			//
@@ -1082,7 +1082,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> saveAudio(true, pronounication, null));
+		Assertions.assertDoesNotThrow(() -> saveAudio(true, pronunciation, null));
 		//
 		if (ih != null) {
 			//
@@ -1092,16 +1092,16 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> saveAudio(true, pronounication, null));
+		Assertions.assertDoesNotThrow(() -> saveAudio(true, pronunciation, null));
 		//
-		Assertions.assertDoesNotThrow(() -> saveAudio(true, pronounication, EMPTY));
+		Assertions.assertDoesNotThrow(() -> saveAudio(true, pronunciation, EMPTY));
 		//
 	}
 
-	private static void saveAudio(final boolean headless, final Object pronounication, final Object audioFormat)
+	private static void saveAudio(final boolean headless, final Object pronunciation, final Object audioFormat)
 			throws Throwable {
 		try {
-			METHOD_SAVE_AUDIO.invoke(null, headless, pronounication, audioFormat);
+			METHOD_SAVE_AUDIO.invoke(null, headless, pronunciation, audioFormat);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1110,11 +1110,11 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 	@Test
 	void testPronounicationChanged() throws Throwable {
 		//
-		Assertions.assertDoesNotThrow(() -> pronounicationChanged(pronounication, null));
+		Assertions.assertDoesNotThrow(() -> pronounicationChanged(pronunciation, null));
 		//
-		if (pronounication != null) {
+		if (pronunciation != null) {
 			//
-			FieldUtils.writeDeclaredField(pronounication, "audioUrls", map, true);
+			FieldUtils.writeDeclaredField(pronunciation, "audioUrls", map, true);
 			//
 		} // if
 			//
@@ -1124,14 +1124,14 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> pronounicationChanged(pronounication, null));
+		Assertions.assertDoesNotThrow(() -> pronounicationChanged(pronunciation, null));
 		//
 	}
 
-	private static void pronounicationChanged(final Object pronounication,
+	private static void pronounicationChanged(final Object pronunciation,
 			final MutableComboBoxModel<String> mcbmAudioFormat) throws Throwable {
 		try {
-			METHOD_PRONOUNICATION_CHANGED.invoke(null, pronounication, mcbmAudioFormat);
+			METHOD_PRONOUNICATION_CHANGED.invoke(null, pronunciation, mcbmAudioFormat);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

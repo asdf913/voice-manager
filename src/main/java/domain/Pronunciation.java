@@ -3,7 +3,7 @@ package domain;
 import java.awt.image.BufferedImage;
 import java.util.Map;
 
-public class Pronounication {
+public class Pronunciation {
 
 	private Map<String, String> audioUrls = null;
 
