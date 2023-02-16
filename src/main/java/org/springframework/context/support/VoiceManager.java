@@ -7,6 +7,7 @@ import java.awt.Cursor;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.FocusTraversalPolicy;
+import java.awt.Frame;
 import java.awt.GraphicsEnvironment;
 import java.awt.LayoutManager;
 import java.awt.Toolkit;
@@ -792,13 +793,67 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		// the "java.lang.Number" instance to the
 		// "javax.swing.JFrame.setDefaultCloseOperation(int)" method
 		//
-		final Number defaultCloseOperation = getDefaultCloseOperation(values(
-				ListableBeanFactoryUtil.getBeansOfType(configurableListableBeanFactory, BeanPostProcessor.class)));
+		final Iterable<?> bpps = values(
+				ListableBeanFactoryUtil.getBeansOfType(configurableListableBeanFactory, BeanPostProcessor.class));
+		//
+		final Number defaultCloseOperation = getDefaultCloseOperation(bpps);
 		//
 		if (defaultCloseOperation != null) {
 			//
 			setDefaultCloseOperation(defaultCloseOperation.intValue());
 			//
+		} // if
+			//
+		if (bpps != null && iterator(bpps) != null) {
+			//
+			Collection<Method> ms = null;
+			//
+			for (final Object obj : bpps) {
+				//
+				addAll(ms = ObjectUtils.getIfNull(ms, ArrayList::new),
+						toList(filter(
+								testAndApply(Objects::nonNull, getDeclaredMethods(getClass(obj)), Arrays::stream, null),
+								m -> Objects.equals(getName(m), "setTitle") && Arrays.equals(getParameterTypes(m),
+										new Class<?>[] { Frame.class, PropertyResolver.class }))));
+				//
+			} // for
+				//
+			final int size = IterableUtils.size(ms);
+			//
+			if (size > 1) {
+				//
+				throw new IllegalStateException();
+				//
+			} // if
+				//
+			final Method m = size == 1 ? IterableUtils.get(ms, 0) : null;
+			//
+			if (m != null) {
+				//
+				m.setAccessible(true);
+				//
+				final boolean headless = GraphicsEnvironment.isHeadless();
+				//
+				try {
+					//
+					m.invoke(null, this, propertyResolver);
+					//
+				} catch (final IllegalAccessException e) {
+					//
+					errorOrAssertOrShowException(headless, e);
+					//
+				} catch (final InvocationTargetException e) {
+					//
+					final Throwable targetException = e.getTargetException();
+					//
+					errorOrAssertOrShowException(headless,
+							ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException), targetException,
+									ExceptionUtils.getRootCause(e), e));
+					//
+				} // try
+					//
+			} // if
+				//
 		} // if
 			//
 		this.configurableListableBeanFactory = configurableListableBeanFactory;
@@ -829,6 +884,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		setSelectedItem(cbmAudioFormatExecute, audioFormat);
 		//
+	}
+
+	private static <E> void addAll(final Collection<E> a, final Collection<? extends E> b) {
+		if (a != null && (b != null || Proxy.isProxyClass(getClass(a)))) {
+			a.addAll(b);
+		}
 	}
 
 	/**

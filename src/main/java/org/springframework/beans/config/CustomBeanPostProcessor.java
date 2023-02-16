@@ -253,23 +253,19 @@ public class CustomBeanPostProcessor implements BeanPostProcessor, EnvironmentAw
 	@Override
 	public Object postProcessBeforeInitialization(final Object bean, final String beanName) throws BeansException {
 		//
-		final Class<?> clz = getClass(bean);
-		//
 		// java.awt.Frame
 		//
-		final Frame frame = cast(JFrame.class, bean);
+		setTitle(cast(JFrame.class, bean), propertyResolver);
 		//
-		final StringBuilder sb = new StringBuilder(StringUtils.defaultString(getName(clz)));
+		// javax.swing.JFrame
 		//
-		if (StringUtils.isNotEmpty(sb)) {
-			//
-			sb.append('.');
-			//
-			sb.append("title");
-			//
-		} // if
-			//
-		final String key = toString(sb);
+		setDefaultCloseOperation(cast(JFrame.class, bean), propertyResolver, defaultCloseOperation);
+		//
+		return bean;
+		//
+	}
+
+	private static void setTitle(final Frame frame, final PropertyResolver propertyResolver) {
 		//
 		if (frame != null) {
 			//
@@ -286,9 +282,9 @@ public class CustomBeanPostProcessor implements BeanPostProcessor, EnvironmentAw
 				//
 				final Field objectLock = Component.class.getDeclaredField("objectLock");
 				//
-				if (objectLock != null && Narcissus.getObjectField(bean, objectLock) == null) {
+				if (objectLock != null && Narcissus.getObjectField(frame, objectLock) == null) {
 					//
-					Narcissus.setObjectField(bean, objectLock, new Object());
+					Narcissus.setObjectField(frame, objectLock, new Object());
 					//
 				} // if
 					//
@@ -298,6 +294,20 @@ public class CustomBeanPostProcessor implements BeanPostProcessor, EnvironmentAw
 				//
 			} // try
 				//
+			final Class<?> clz = getClass(frame);
+			//
+			final StringBuilder sb = new StringBuilder(StringUtils.defaultString(getName(clz)));
+			//
+			if (StringUtils.isNotEmpty(sb)) {
+				//
+				sb.append('.');
+				//
+				sb.append("title");
+				//
+			} // if
+				//
+			final String key = toString(sb);
+			//
 			if (PropertyResolverUtil.containsProperty(propertyResolver, key)) {
 				//
 				frame.setTitle(PropertyResolverUtil.getProperty(propertyResolver, key));
@@ -316,12 +326,6 @@ public class CustomBeanPostProcessor implements BeanPostProcessor, EnvironmentAw
 				//
 		} // if
 			//
-			// javax.swing.JFrame
-			//
-		setDefaultCloseOperation(cast(JFrame.class, bean), propertyResolver, defaultCloseOperation);
-		//
-		return bean;
-		//
 	}
 
 	private static void setDefaultCloseOperation(final JFrame jFrame, final PropertyResolver propertyResolver,

@@ -50,6 +50,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.text.NumberFormat;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Base64.Encoder;
@@ -299,8 +300,8 @@ class VoiceManagerTest {
 			METHOD_GET_WORKBOOK_CLASS_FAILABLE_SUPPLIER_MAP, METHOD_GET_DECLARED_CONSTRUCTOR, METHOD_NEW_INSTANCE,
 			METHOD_GET_WRITER, METHOD_KEY_SET, METHOD_GET_WORK_BOOK_CLASS, METHOD_GET_SYSTEM_PRINT_STREAM_BY_FIELD_NAME,
 			METHOD_IF_ELSE, METHOD_GET_PAGE_TITLE, METHOD_SET_HIRAGANA_OR_KATAKANA_AND_ROMAJI, METHOD_APPLY,
-			METHOD_TO_MILLIS, METHOD_SET_JLPT_VOCABULARY_AND_LEVEL, METHOD_ADD_DOCUMENT_LISTENER,
-			METHOD_GET_LEVEL = null;
+			METHOD_TO_MILLIS, METHOD_SET_JLPT_VOCABULARY_AND_LEVEL, METHOD_ADD_DOCUMENT_LISTENER, METHOD_GET_LEVEL,
+			METHOD_ADD_ALL = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -926,6 +927,8 @@ class VoiceManagerTest {
 		//
 		(METHOD_GET_LEVEL = clz.getDeclaredMethod("getLevel", JlptVocabulary.class)).setAccessible(true);
 		//
+		(METHOD_ADD_ALL = clz.getDeclaredMethod("addAll", Collection.class, Collection.class)).setAccessible(true);
+		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
 		CLASS_EXPORT_TASK = Class.forName("org.springframework.context.support.VoiceManager$ExportTask");
@@ -957,7 +960,7 @@ class VoiceManagerTest {
 
 		private Iterator<Cell> cells = null;
 
-		private Boolean anyMatch, contains, isInstalled, isEmpty = null;
+		private Boolean anyMatch, contains, addAll, isInstalled, isEmpty = null;
 
 		private String[] voiceIds = null;
 
@@ -1105,6 +1108,10 @@ class VoiceManagerTest {
 				} else if (Objects.equals(methodName, "contains")) {
 					//
 					return contains;
+					//
+				} else if (Objects.equals(methodName, "addAll")) {
+					//
+					return addAll;
 					//
 				} // if
 					//
@@ -1464,6 +1471,8 @@ class VoiceManagerTest {
 
 	private javax.swing.text.Document document = null;
 
+	private Collection<?> collection = null;
+
 	@BeforeEach
 	void beforeEach() throws Throwable {
 		//
@@ -1514,6 +1523,8 @@ class VoiceManagerTest {
 		documentEvent = Reflection.newProxy(DocumentEvent.class, ih);
 		//
 		document = Reflection.newProxy(javax.swing.text.Document.class, ih);
+		//
+		collection = Reflection.newProxy(Collection.class, ih);
 		//
 	}
 
@@ -4734,8 +4745,6 @@ class VoiceManagerTest {
 		//
 		Assertions.assertFalse(contains((Collection<?>) null, null));
 		//
-		final Collection<?> collection = Reflection.newProxy(Collection.class, ih);
-		//
 		Assertions.assertEquals(ih.contains = Boolean.FALSE, Boolean.valueOf(contains(collection, null)));
 		//
 		Assertions.assertEquals(ih.contains = Boolean.TRUE, Boolean.valueOf(contains(collection, null)));
@@ -4855,7 +4864,7 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(toArray(Collections.emptyList(), null));
 		//
-		Assertions.assertNull(toArray(Reflection.newProxy(Collection.class, ih), null));
+		Assertions.assertNull(toArray(collection, null));
 		//
 	}
 
@@ -8252,6 +8261,35 @@ class VoiceManagerTest {
 				return (String) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testAddAll() {
+		//
+		Assertions.assertDoesNotThrow(() -> addAll(null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> addAll(Collections.emptyList(), null));
+		//
+		final Collection<Object> collection = new ArrayList<>();
+		//
+		Assertions.assertDoesNotThrow(() -> addAll(collection, collection));
+		//
+		if (ih != null) {
+			//
+			ih.addAll = Boolean.FALSE;
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> addAll(collection, null));
+		//
+	}
+
+	private static <E> void addAll(final Collection<E> a, final Collection<? extends E> b) throws Throwable {
+		try {
+			METHOD_ADD_ALL.invoke(null, a, b);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
