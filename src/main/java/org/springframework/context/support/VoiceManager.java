@@ -791,7 +791,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private transient IValue0<List<JlptVocabulary>> jlptVocabularyList = null;
 
-	private OnlineNHKJapanesePronunciationsAccentFailableFunction onlineNHKJapanesePronunciationsAccentFailableFunction = null;
+	private transient OnlineNHKJapanesePronunciationsAccentFailableFunction onlineNHKJapanesePronunciationsAccentFailableFunction = null;
 
 	private VoiceManager() {
 	}
