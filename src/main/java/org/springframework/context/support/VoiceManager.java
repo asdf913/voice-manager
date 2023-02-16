@@ -673,7 +673,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@ExportButton
 	private AbstractButton btnExportMicrosoftSpeechObjectLibraryInformation = null;
 
-	private AbstractButton btnCheckPronounication, btnPlayPronounicationAudio = null;
+	@Note("Check Pronounication")
+	private AbstractButton btnCheckPronounication = null;
+
+	private AbstractButton btnPlayPronounicationAudio = null;
 
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
