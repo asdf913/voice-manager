@@ -3,9 +3,7 @@ package org.springframework.context.support;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.GraphicsEnvironment;
-import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.ClipboardOwner;
@@ -15,8 +13,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Dimension2D;
 import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
-import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,8 +27,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
-import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,7 +41,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.function.IntConsumer;
 import java.util.function.IntUnaryOperator;
@@ -84,16 +77,12 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.apache.commons.lang3.function.OnlineNHKJapanesePronunciationsAccentFailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.nodes.ElementUtil;
-import org.jsoup.select.Elements;
 import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
 import org.springframework.beans.config.Title;
 import org.springframework.beans.factory.InitializingBean;
@@ -106,9 +95,9 @@ import org.springframework.core.env.PropertyResolverUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
-import com.github.hal4j.uritemplate.URIBuilder;
 import com.google.common.reflect.Reflection;
 
+import domain.Pronounication;
 import io.github.toolfactory.narcissus.Narcissus;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
@@ -127,9 +116,9 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 
 	private transient PropertyResolver propertyResolver = null;
 
-	private String url = null;
-
 	private JTextComponent tfText = null;
+
+	private OnlineNHKJapanesePronunciationsAccentFailableFunction onlineNHKJapanesePronunciationsAccentFailableFunction = null;
 
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
@@ -180,8 +169,9 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		this.propertyResolver = environment;
 	}
 
-	public void setUrl(final String url) {
-		this.url = url;
+	public void setOnlineNHKJapanesePronunciationsAccentFailableFunction(
+			final OnlineNHKJapanesePronunciationsAccentFailableFunction onlineNHKJapanesePronunciationsAccentFailableFunction) {
+		this.onlineNHKJapanesePronunciationsAccentFailableFunction = onlineNHKJapanesePronunciationsAccentFailableFunction;
 	}
 
 	public void setImageFormatOrders(final Object object) {
@@ -310,7 +300,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			public Component getListCellRendererComponent(final JList<? extends Pronounication> list,
 					final Pronounication value, final int index, final boolean isSelected, final boolean cellHasFocus) {
 				//
-				final BufferedImage pitchAccentImage = value != null ? value.pitchAccentImage : null;
+				final BufferedImage pitchAccentImage = value != null ? value.getPitchAccentImage() : null;
 				//
 				if (pitchAccentImage != null) {
 					//
@@ -523,14 +513,6 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		//
 	}
 
-	private static class Pronounication {
-
-		private Map<String, String> audioUrls = null;
-
-		private BufferedImage pitchAccentImage = null;
-
-	}
-
 	private static class IH implements InvocationHandler {
 
 		private DataFlavor[] transferDataFlavors = null;
@@ -579,42 +561,13 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			//
 			forEach(reverseRange(0, getSize(mcbmAudioFormat)), i -> removeElementAt(mcbmAudioFormat, i));
 			//
-			final URIBuilder uriBuilder = testAndApply(Objects::nonNull, url, URIBuilder::basedOn, null);
-			//
 			try {
 				//
-				final URL u = toURL(toURI(relative(uriBuilder, getText(tfText))));
+				final List<Pronounication> pronounications = FailableFunctionUtil
+						.apply(onlineNHKJapanesePronunciationsAccentFailableFunction, getText(tfText));
 				//
-				final String protocolAndHost = testAndApply(Objects::nonNull, u,
-						x -> String.join("://", getProtocol(x), getHost(u)), null);
+				forEach(pronounications, x -> addElement(mcbmPronounication, x));
 				//
-				final Document document = testAndApply(Objects::nonNull, u, x -> Jsoup.parse(x, 0), null);
-				//
-				final Elements elements = ElementUtil.select(document, "audio[title='発音図：']");
-				//
-				Pronounication pronounication = null;
-				//
-				Element element = null;
-				//
-				for (int i = 0; i < IterableUtils.size(elements); i++) {
-					//
-					if ((element = IterableUtils.get(elements, i)) == null) {
-						//
-						continue;
-						//
-					} // if
-						//
-					stream(entrySet(((pronounication = new Pronounication()).audioUrls = getSrcMap(element))))
-							.forEach(x -> {
-								setValue(x, String.join("", protocolAndHost, getValue(x)));
-							});
-					//
-					pronounication.pitchAccentImage = createMergedBufferedImage(protocolAndHost, getImageSrcs(element));
-					//
-					addElement(mcbmPronounication, pronounication);
-					//
-				} // for
-					//
 				if (!headless) {
 					//
 					pack();
@@ -689,7 +642,8 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 
 	private static void playAudio(final Pronounication pronounication) {
 		//
-		final Set<Entry<String, String>> entrySet = entrySet(pronounication != null ? pronounication.audioUrls : null);
+		final Set<Entry<String, String>> entrySet = entrySet(
+				pronounication != null ? pronounication.getAudioUrls() : null);
 		//
 		if (iterator(entrySet) != null) {
 			//
@@ -761,7 +715,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			final Object audioFormat) {
 		//
 		final Map<String, String> audioUrls = testAndApply(Objects::nonNull,
-				pronounication != null ? pronounication.audioUrls : null, LinkedHashMap::new, null);
+				pronounication != null ? pronounication.getAudioUrls() : null, LinkedHashMap::new, null);
 		//
 		final JFileChooser jfc = new JFileChooser(".");
 		//
@@ -817,7 +771,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 
 	private static void setPitchAccentImageToSystemClipboardContents(final Pronounication pronounication) {
 		//
-		final BufferedImage pitchAccentImage = pronounication != null ? pronounication.pitchAccentImage : null;
+		final BufferedImage pitchAccentImage = pronounication != null ? pronounication.getPitchAccentImage() : null;
 		//
 		Object raster = null;
 		//
@@ -853,7 +807,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 
 	private void savePitchAccentImage(final Pronounication pronounication) {
 		//
-		final BufferedImage pitchAccentImage = pronounication != null ? pronounication.pitchAccentImage : null;
+		final BufferedImage pitchAccentImage = pronounication != null ? pronounication.getPitchAccentImage() : null;
 		//
 		Object raster = null;
 		//
@@ -906,7 +860,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		//
 		forEach(reverseRange(0, getSize(mcbmAudioFormat)), i -> removeElementAt(mcbmAudioFormat, i));
 		//
-		final Map<String, String> audioUrls = pronounication != null ? pronounication.audioUrls : null;
+		final Map<String, String> audioUrls = pronounication != null ? pronounication.getAudioUrls() : null;
 		//
 		if (MapUtils.isNotEmpty(audioUrls)) {
 			//
@@ -958,14 +912,6 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		return instance != null ? instance.map(mapper) : instance;
 	}
 
-	private static String getProtocol(final URL instance) {
-		return instance != null ? instance.getProtocol() : null;
-	}
-
-	private static String getHost(final URL instance) {
-		return instance != null ? instance.getHost() : null;
-	}
-
 	private static Clipboard getSystemClipboard(final Toolkit instance) {
 		return instance != null ? instance.getSystemClipboard() : null;
 	}
@@ -1008,26 +954,8 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		return instance != null ? instance.getKey() : null;
 	}
 
-	private static <V> void setValue(final Entry<?, V> instance, final V value) {
-		if (instance != null) {
-			instance.setValue(value);
-		}
-	}
-
 	private static <V> V getValue(final Entry<?, V> instance) {
 		return instance != null ? instance.getValue() : null;
-	}
-
-	private static URL toURL(final URI instance) throws MalformedURLException {
-		return instance != null ? instance.toURL() : null;
-	}
-
-	private static URIBuilder relative(final URIBuilder instance, final Object... pathSegments) {
-		return instance != null ? instance.relative(pathSegments) : null;
-	}
-
-	private static URI toURI(final URIBuilder instance) {
-		return instance != null ? instance.toURI() : null;
 	}
 
 	private static String getText(final JTextComponent instance) {
@@ -1054,132 +982,6 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 
 	private static <T> T cast(final Class<T> clz, final Object instance) {
 		return clz != null && clz.isInstance(instance) ? clz.cast(instance) : null;
-	}
-
-	private static Map<String, String> getSrcMap(final Element input) {
-		//
-		Map<String, String> map = null;
-		//
-		final Elements children = ElementUtil.children(input);
-		//
-		Element element = null;
-		//
-		for (int i = 0; i < IterableUtils.size(children); i++) {
-			//
-			if ((element = IterableUtils.get(children, i)) == null) {
-				//
-				continue;
-				//
-			} // if
-				//
-			if ((map = ObjectUtils.getIfNull(map, LinkedHashMap::new)) != null) {
-				//
-				map.put(ElementUtil.attr(element, "type"), ElementUtil.attr(element, "src"));
-				//
-			} // if
-				//
-		} // for
-			//
-		return map;
-		//
-	}
-
-	private static List<String> getImageSrcs(final Element element) {
-		//
-		List<String> srcs = null;
-		//
-		Element temp = element, nextElement = null;
-		//
-		while ((nextElement = ElementUtil.nextElementSibling(temp)) != null
-				&& !Objects.equals("audio", ElementUtil.tagName(nextElement))) {
-			//
-			if ((srcs = ObjectUtils.getIfNull(srcs, ArrayList::new)) != null) {
-				//
-				srcs.add(nextElement.attr("src"));
-				//
-			} // if
-				//
-			temp = nextElement;
-			//
-		} // while
-			//
-		return srcs;
-		//
-	}
-
-	private static BufferedImage createMergedBufferedImage(final String urlString, final List<String> srcs) {
-		//
-		final FailableStream<String> fs = new FailableStream<>(stream(srcs));
-		//
-		final List<BufferedImage> bis = fs != null && fs.stream() != null
-				? fs.map(x -> ImageIO.read(new URL(String.join("/", urlString, x)))).collect(Collectors.toList())
-				: null;
-		//
-		BufferedImage result = null;
-		//
-		Graphics graphics = null;
-		//
-		final AtomicInteger position = new AtomicInteger(0);
-		//
-		BufferedImage bi = null;
-		//
-		for (int i = 0; i < IterableUtils.size(bis); i++) {
-			//
-			if ((bi = IterableUtils.get(bis, i)) == null) {
-				//
-				continue;
-				//
-			} // if
-				//
-			if (result == null) {
-				//
-				result = new BufferedImage(
-						//
-						// total width
-						//
-						stream(bis).mapToInt(x -> intValue(getWidth(x), 0)).reduce(Integer::sum).orElse(0)
-						//
-						// max height
-						//
-						, stream(bis).mapToInt(x -> intValue(getHeight(x), 0)).reduce(Integer::max).orElse(0)
-						//
-						, BufferedImage.TYPE_INT_RGB);
-				//
-			} // if
-				//
-			if (graphics == null) {
-				//
-				graphics = getGraphics(result);
-				//
-			} // if
-				//
-			drawImage(graphics, bi, position != null ? position.getAndAdd(intValue(getWidth(bi), 0)) : 0, 0, null);
-			//
-		} // for
-			//
-		return result;
-		//
-	}
-
-	private static Graphics getGraphics(final Image instance) {
-		return instance != null ? instance.getGraphics() : null;
-	}
-
-	private static boolean drawImage(final Graphics instance, final Image image, final int x, final int y,
-			final ImageObserver observer) {
-		return instance != null && instance.drawImage(image, x, y, observer);
-	}
-
-	private static Integer getWidth(final RenderedImage instance) {
-		return instance != null ? Integer.valueOf(instance.getWidth()) : null;
-	}
-
-	private static Integer getHeight(final RenderedImage instance) {
-		return instance != null ? Integer.valueOf(instance.getHeight()) : null;
-	}
-
-	private static int intValue(final Number instance, final int defaultValue) {
-		return instance != null ? instance.intValue() : defaultValue;
 	}
 
 }

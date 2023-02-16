@@ -240,10 +240,16 @@
 	<bean
 		class="org.springframework.context.support.OnlineNHKJapanesePronunciationAccentGui">
 		<property name="layout" ref="MigLayout" />
-		<property name="url"
-			value="${org.springframework.context.support.OnlineNHKJapanesePronunciationAccentGui.url}" />
 		<property name="imageFormatOrders"
 			value="${org.springframework.context.support.OnlineNHKJapanesePronunciationAccentGui.imageFormatOrders}" />
+		<property
+			name="onlineNHKJapanesePronunciationsAccentFailableFunction">
+			<bean
+				class="org.apache.commons.lang3.function.OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl">
+				<property name="url"
+					value="${org.apache.commons.lang3.function.OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl.url}" />
+			</bean>
+		</property>
 	</bean>
 
 	<bean id="DataSource" class="org.h2.jdbcx.JdbcConnectionPool"

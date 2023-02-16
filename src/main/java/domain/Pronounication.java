@@ -13,8 +13,16 @@ public class Pronounication {
 		this.audioUrls = audioUrls;
 	}
 
+	public Map<String, String> getAudioUrls() {
+		return audioUrls;
+	}
+
 	public void setPitchAccentImage(final BufferedImage pitchAccentImage) {
 		this.pitchAccentImage = pitchAccentImage;
+	}
+
+	public BufferedImage getPitchAccentImage() {
+		return pitchAccentImage;
 	}
 
 }
