@@ -273,6 +273,15 @@ public class CustomBeanPostProcessor implements BeanPostProcessor, EnvironmentAw
 		//
 		if (frame != null) {
 			//
+			// if the "bean" is a subclass of "java.awt.Component" and its instantiation is
+			// done by
+			// "io.github.toolfactory.narcissus.Narcissus.allocateInstance(java.lang.Class)"
+			// (i.e. no constructor is being called), the "objectLock" field in
+			// "java.awt.Component" class will be null.
+			//
+			// The below code assign a "java.lang.Object" instance to the field if the field
+			// refers to null
+			//
 			try {
 				//
 				final Field objectLock = Component.class.getDeclaredField("objectLock");
