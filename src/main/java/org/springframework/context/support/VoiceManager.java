@@ -24,6 +24,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.Console;
@@ -98,6 +99,8 @@ import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.IntConsumer;
+import java.util.function.IntUnaryOperator;
 import java.util.function.LongBinaryOperator;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -124,6 +127,7 @@ import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -201,6 +205,7 @@ import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.function.FailableRunnable;
 import org.apache.commons.lang3.function.FailableSupplier;
+import org.apache.commons.lang3.function.OnlineNHKJapanesePronunciationsAccentFailableFunction;
 import org.apache.commons.lang3.math.Fraction;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
@@ -329,6 +334,7 @@ import com.mpatric.mp3agic.Mp3File;
 import de.sciss.jump3r.lowlevel.LameEncoder;
 import de.sciss.jump3r.mp3.Lame;
 import domain.JlptVocabulary;
+import domain.Pronounication;
 import domain.Voice;
 import domain.Voice.Yomi;
 import domain.VoiceList;
@@ -347,6 +353,8 @@ import j2html.tags.ContainerTag;
 import j2html.tags.Tag;
 import j2html.tags.specialized.ATag;
 import j2html.tags.specialized.ATagUtil;
+import javazoom.jl.decoder.JavaLayerException;
+import javazoom.jl.player.Player;
 import jnafilechooser.api.WindowsFolderBrowser;
 import mapper.VoiceMapper;
 import net.lingala.zip4j.model.ZipParameters;
@@ -531,7 +539,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private transient MutableComboBoxModel<JlptVocabulary> cbmJlptVocabulary = null;
 
+	private transient MutableComboBoxModel<Pronounication> mcbmPronounication = null;
+
+	private transient MutableComboBoxModel<String> mcbmPronounicationAudioFormat = null;
+
 	private transient javax.swing.text.Document tfTextImportDocument = null;
+
+	private JComboBox<Pronounication> jcbPronounication = null;
 
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.FIELD)
@@ -659,6 +673,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@ExportButton
 	private AbstractButton btnExportMicrosoftSpeechObjectLibraryInformation = null;
 
+	private AbstractButton btnCheckPronounication, btnPlayPronounicationAudio = null;
+
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
 	private @interface Note {
@@ -774,6 +790,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private transient IValue0<List<String>> jouYouKanJiList = null;
 
 	private transient IValue0<List<JlptVocabulary>> jlptVocabularyList = null;
+
+	private OnlineNHKJapanesePronunciationsAccentFailableFunction onlineNHKJapanesePronunciationsAccentFailableFunction = null;
 
 	private VoiceManager() {
 	}
@@ -1527,6 +1545,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		this.jlptVocabularyList = Unit.with(jlptVocabularyList);
 	}
 
+	public void setOnlineNHKJapanesePronunciationsAccentFailableFunction(
+			final OnlineNHKJapanesePronunciationsAccentFailableFunction onlineNHKJapanesePronunciationsAccentFailableFunction) {
+		this.onlineNHKJapanesePronunciationsAccentFailableFunction = onlineNHKJapanesePronunciationsAccentFailableFunction;
+	}
+
 	private static IValue0<Class<? extends Workbook>> getWorkbookClass(
 			final Map<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>> map,
 			final String string) {
@@ -2238,10 +2261,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				final Spliterator<?> spliterator = spliterator(cast(Iterable.class, testAndApply(Objects::nonNull,
 						instance, x -> FieldUtils.readField(x, "children", true), null)));
 				//
-				return testAndApply(Objects::nonNull,
-						toList(map(
-								testAndApply(Objects::nonNull, spliterator, x -> StreamSupport.stream(x, false), null),
-								VoiceManager::toString)),
+				final Stream<?> stream = testAndApply(Objects::nonNull, spliterator,
+						x -> StreamSupport.stream(x, false), null);
+				//
+				return testAndApply(Objects::nonNull, toList(map(stream, VoiceManager::toString)),
 						x -> String.join("", x), null);
 				//
 			} catch (final IllegalAccessException e) {
@@ -2259,12 +2282,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				final Spliterator<?> spliterator = spliterator(cast(Iterable.class, testAndApply(Objects::nonNull,
 						instance, x -> FieldUtils.readField(x, "attributes", true), null)));
 				//
-				final List<Attribute> as = toList(filter(
-						map(testAndApply(Objects::nonNull, spliterator, x -> StreamSupport.stream(x, false), null),
-								x -> cast(Attribute.class, x)),
-						a -> {
-							return Objects.equals(name, a != null ? a.getName() : null);
-						}));
+				final Stream<?> stream = testAndApply(Objects::nonNull, spliterator,
+						x -> StreamSupport.stream(x, false), null);
+				//
+				final List<Attribute> as = toList(filter(map(stream, x -> cast(Attribute.class, x)), a -> {
+					return Objects.equals(name, a != null ? a.getName() : null);
+				}));
 				//
 				if (as == null || as.isEmpty()) {
 					//
@@ -3181,14 +3204,69 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.add(btnCopyKatakana = new JButton("Copy"), WRAP);
 		//
+		// Pronunciation
+		//
+		panel.add(new JLabel("Pronunciation"), String.format("span %1$s", 2));
+		//
+		// TODO
+		//
+		(jcbPronounication = new JComboBox<>(mcbmPronounication = new DefaultComboBoxModel<>()))
+				.addActionListener(this);
+		//
+		// Set height
+		//
+		final Dimension pd = jcbPronounication.getPreferredSize();
+		//
+		if (pd != null) {
+			//
+			jcbPronounication.setPreferredSize(new Dimension((int) pd.getWidth(), 33));
+			//
+		} // if
+			//
+		panel.add(jcbPronounication, String.format("%1$s,span %2$s", GROWX, 2));
+		//
+		panel.add(btnCheckPronounication = new JButton("Check"));
+		//
+		final ListCellRenderer<? super Pronounication> lcrPronounication = jcbPronounication.getRenderer();
+		//
+		jcbPronounication.setRenderer(new ListCellRenderer<>() {
+
+			@Override
+			public Component getListCellRendererComponent(final JList<? extends Pronounication> list,
+					final Pronounication value, final int index, boolean isSelected, boolean cellHasFocus) {
+				//
+				final BufferedImage pitchAccentImage = value != null ? value.getPitchAccentImage() : null;
+				//
+				if (pitchAccentImage != null) {
+					//
+					return VoiceManager.getListCellRendererComponent(((ListCellRenderer) lcrPronounication), list,
+							new ImageIcon(pitchAccentImage), index, isSelected, cellHasFocus);
+					//
+				} // if
+					//
+				return VoiceManager.getListCellRendererComponent(((ListCellRenderer) lcrPronounication), list,
+						new ImageIcon(), index, isSelected, cellHasFocus);
+				//
+			}
+		});
+		//
+		final JComboBox<String> jcbPronounicatioAudioFormat = new JComboBox<>(
+				mcbmPronounicationAudioFormat = new DefaultComboBoxModel<>());
+		//
+		setPreferredWidth(94, jcbPronounicatioAudioFormat);
+		//
+		panel.add(jcbPronounicatioAudioFormat, String.format("span %1$s", 2));
+		//
+		panel.add(btnPlayPronounicationAudio = new JButton("Play"), WRAP);
+		//
 		// Pronunciation Page URL
 		//
-		panel.add(new JLabel("Pronunciation Page URL"), String.format("span %1$s", 2));
+		panel.add(new JLabel("Pronunciation Page URL"), String.format("span %1$s", 3));
 		//
 		panel.add(
 				tfPronunciationPageUrl = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
 						"org.springframework.context.support.VoiceManager.pronunciationPageUrl")),
-				String.format("%1$s,span %2$s", GROWX, 20));
+				String.format("%1$s,span %2$s", GROWX, 19));
 		//
 		panel.add(new JLabel("Status"));
 		//
@@ -3242,7 +3320,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		} // if
 			//
 		addActionListener(this, btnExecute, btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji, btnCopyHiragana,
-				btnCopyKatakana, btnPronunciationPageUrlCheck, btnIpaSymbol);
+				btnCopyKatakana, btnPronunciationPageUrlCheck, btnIpaSymbol, btnCheckPronounication,
+				btnPlayPronounicationAudio);
 		//
 		setEnabled(voiceIds != null, cbUseTtsVoice);
 		//
@@ -4197,9 +4276,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final Class<?> nameClass = forName("domain.Voice$Name");
 		//
+		final Stream<Field> stream = testAndApply(Objects::nonNull, getDeclaredFields(Yomi.class), Arrays::stream,
+				null);
+		//
 		final List<Pair<String, String>> pairs = toList(
 				//
-				filter(map(testAndApply(Objects::nonNull, getDeclaredFields(Yomi.class), Arrays::stream, null), f -> {
+				filter(map(stream, f -> {
 					//
 					final List<?> objects = toList(stream(new FailableStream<>(
 							filter(testAndApply(Objects::nonNull, getDeclaredAnnotations(f), Arrays::stream, null),
@@ -4408,6 +4490,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null && (Proxy.isProxyClass(getClass(instance)) || mapper != null) ? instance.map(mapper)
 				: null;
 		//
+	}
+
+	private static IntStream map(final IntStream instance, final IntUnaryOperator mapper) {
+		return instance != null && (Proxy.isProxyClass(getClass(instance)) || mapper != null) ? instance.map(mapper)
+				: instance;
 	}
 
 	private static <T> IntStream mapToInt(final Stream<T> instance, final ToIntFunction<? super T> mapper) {
@@ -4628,8 +4715,125 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			actionPerformedForIpaSymbol(headless);
 			//
+		} else if (Objects.equals(source, btnCheckPronounication)) {
+			//
+			// Remove all element(s) in "mcbmPronounication"
+			//
+			forEach(reverseRange(0, getSize(mcbmPronounication)), i -> removeElementAt(mcbmPronounication, i));
+			//
+			// Remove all element(s) in "mcbmPronounicationAudioFormat"
+			//
+			forEach(reverseRange(0, getSize(mcbmPronounicationAudioFormat)),
+					i -> removeElementAt(mcbmPronounicationAudioFormat, i));
+			//
+			try {
+				//
+				final List<Pronounication> pronounications = FailableFunctionUtil
+						.apply(onlineNHKJapanesePronunciationsAccentFailableFunction, getText(tfTextImport));
+				//
+				if (CollectionUtils.isNotEmpty(pronounications)) {
+					//
+					pronounications.add(0, null);
+					//
+				} // if
+					//
+				forEach(pronounications, x -> addElement(mcbmPronounication, x));
+				//
+			} catch (final IOException e) {
+				//
+				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
+				//
+			} // try
+				//
+		} else if (Objects.equals(source, jcbPronounication)) {
+			//
+			pronounicationChanged(cast(Pronounication.class, getSelectedItem(mcbmPronounication)),
+					mcbmPronounicationAudioFormat);
+			//
+		} else if (Objects.equals(source, btnPlayPronounicationAudio)) {
+			//
+			playAudio(cast(Pronounication.class, getSelectedItem(mcbmPronounication)),
+					getSelectedItem(mcbmPronounicationAudioFormat));
+			//
 		} // if
 			//
+	}
+
+	private static void playAudio(final Pronounication pronounication, final Object audioFormat) {
+		//
+		final Set<Entry<String, String>> entrySet = entrySet(
+				pronounication != null ? pronounication.getAudioUrls() : null);
+		//
+		if (iterator(entrySet) != null) {
+			//
+			for (final Entry<String, String> entry : entrySet) {
+				//
+				try {
+					//
+					if (Objects.equals(audioFormat, getKey(entry)) && playAudio(getValue(entry)) != null) {
+						//
+						break;
+						//
+					} // if
+				} catch (final JavaLayerException | IOException e) {
+					//
+					TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
+					//
+				} // try
+					//
+			} // for
+				//
+		} // if
+			//
+	}
+
+	private static Object playAudio(final String value) throws JavaLayerException, IOException {
+		//
+		try (final InputStream is = openStream(testAndApply(Objects::nonNull, value, URL::new, null))) {
+			//
+			play(testAndApply(Objects::nonNull, is, Player::new, null));
+			//
+			return "";
+			//
+		} // try
+			//
+	}
+
+	private static void play(final Player instance) throws JavaLayerException {
+		if (instance != null) {
+			instance.play();
+		}
+	}
+
+	private static void pronounicationChanged(final Pronounication pronounication,
+			final MutableComboBoxModel<String> mcbmAudioFormat) {
+		//
+		forEach(reverseRange(0, getSize(mcbmAudioFormat)), i -> removeElementAt(mcbmAudioFormat, i));
+		//
+		final Map<String, String> audioUrls = pronounication != null ? pronounication.getAudioUrls() : null;
+		//
+		if (MapUtils.isNotEmpty(audioUrls)) {
+			//
+			addElement(mcbmAudioFormat, null);
+			//
+			audioUrls.forEach((k, v) -> addElement(mcbmAudioFormat, k));
+			//
+		} // if
+			//
+	}
+
+	private static void removeElementAt(final MutableComboBoxModel<?> instance, final int index) {
+		if (instance != null) {
+			instance.removeElementAt(index);
+		}
+	}
+
+	/**
+	 * @see <a href="https://stackoverflow.com/a/24011264">list - Java 8 stream
+	 *      reverse order - Stack Overflow</a>
+	 */
+	private static IntStream reverseRange(final int from, final int to) {
+		return map(IntStream.range(from, to), i -> to - i + from - 1);
 	}
 
 	private void importByWorkbookFiles(final File[] fs, final boolean headless) {
@@ -4775,6 +4979,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private void actionPerformedForExecute(final boolean headless, final boolean nonTest) {
 		//
+		// TODO
+		//
+		// Handle the case if "Pronunciation" is selected
+		//
 		forEach(Stream.of(tfFile, tfFileLength, tfFileDigest), x -> setText(x, null));
 		//
 		File file = null;
@@ -4800,11 +5008,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				deleteOnExit(file = generateTtsAudioFile(headless, voiceId, voice));
 				//
-			} catch (IllegalAccessException e) {
+			} catch (final IllegalAccessException e) {
 				//
 				errorOrAssertOrShowException(headless, e);
 				//
-			} catch (InvocationTargetException e) {
+			} catch (final InvocationTargetException e) {
 				//
 				final Throwable targetException = e.getTargetException();
 				//
@@ -8193,9 +8401,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static void addValidationDataForEnum(final ObjectMap objectMap, final Class<?> type, final int index) {
 		//
-		final List<String> strings = toList(
-				map(testAndApply(Objects::nonNull, getEnumConstants(type), Arrays::stream, null),
-						x -> x instanceof Enum ? name((Enum<?>) x) : toString(x)));
+		final Stream<?> stream = testAndApply(Objects::nonNull, getEnumConstants(type), Arrays::stream, null);
+		//
+		final List<String> strings = toList(map(stream, x -> x instanceof Enum ? name((Enum<?>) x) : toString(x)));
 		//
 		final DataValidationHelper dvh = ObjectMap.getObject(objectMap, DataValidationHelper.class);
 		//
@@ -9678,6 +9886,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
+	}
+
+	private static void forEach(final IntStream instance, final IntConsumer action) {
+		if (instance != null && (action != null || Proxy.isProxyClass(getClass(instance)))) {
+			instance.forEach(action);
+		}
 	}
 
 	private static class ExportTask implements Runnable {

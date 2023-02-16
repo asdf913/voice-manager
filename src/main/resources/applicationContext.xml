@@ -194,6 +194,10 @@
 		<property name="jouYouKanJiList" ref="JouYouKanJiList" />
 		<!-- -->
 		<property name="jlptVocabularyList" ref="JlptVocabularyList" />
+		<!-- -->
+		<property
+			name="onlineNHKJapanesePronunciationsAccentFailableFunction"
+			ref="OnlineNHKJapanesePronunciationsAccentFailableFunction" />
 	</bean>
 
 	<!-- -->
@@ -235,6 +239,13 @@
 			value="${org.springframework.context.support.JouYouKanjiGui.ecssVersion}" />
 	</bean>
 
+	<!-- -->
+	<bean id="OnlineNHKJapanesePronunciationsAccentFailableFunction"
+		class="org.apache.commons.lang3.function.OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl">
+		<property name="url"
+			value="${org.apache.commons.lang3.function.OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl.url}" />
+	</bean>
+
 	<!-- 広辞苑無料検索 NHK日本語発音アクセント辞典 -->
 	<!-- https://sakura-paris.org/dict/NHK日本語発音アクセント辞典/ -->
 	<bean
@@ -243,13 +254,8 @@
 		<property name="imageFormatOrders"
 			value="${org.springframework.context.support.OnlineNHKJapanesePronunciationAccentGui.imageFormatOrders}" />
 		<property
-			name="onlineNHKJapanesePronunciationsAccentFailableFunction">
-			<bean
-				class="org.apache.commons.lang3.function.OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl">
-				<property name="url"
-					value="${org.apache.commons.lang3.function.OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl.url}" />
-			</bean>
-		</property>
+			name="onlineNHKJapanesePronunciationsAccentFailableFunction"
+			ref="OnlineNHKJapanesePronunciationsAccentFailableFunction" />
 	</bean>
 
 	<bean id="DataSource" class="org.h2.jdbcx.JdbcConnectionPool"

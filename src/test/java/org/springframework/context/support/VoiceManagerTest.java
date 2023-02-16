@@ -73,6 +73,8 @@ import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.IntConsumer;
+import java.util.function.IntUnaryOperator;
 import java.util.function.LongBinaryOperator;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -210,6 +212,7 @@ import com.j256.simplemagic.ContentType;
 import com.mpatric.mp3agic.ID3v1;
 
 import domain.JlptVocabulary;
+import domain.Pronounication;
 import domain.Voice;
 import domain.VoiceList;
 import fr.free.nrw.jakaroma.Jakaroma;
@@ -219,6 +222,7 @@ import freemarker.template.Template;
 import freemarker.template.Version;
 import io.github.toolfactory.narcissus.Narcissus;
 import j2html.tags.specialized.ATag;
+import javazoom.jl.player.Player;
 import mapper.VoiceMapper;
 import net.miginfocom.swing.MigLayout;
 
@@ -239,11 +243,12 @@ class VoiceManagerTest {
 			METHOD_GET_MAPPER, METHOD_INSERT_OR_UPDATE, METHOD_SET_ENABLED_2, METHOD_SET_ENABLED_3,
 			METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_CAST, METHOD_INT_VALUE, METHOD_LONG_VALUE,
 			METHOD_GET_PROPERTY_CUSTOM_PROPERTIES, METHOD_PARSE_EXPRESSION, METHOD_GET_VALUE, METHOD_GET_SOURCE_VOICE,
-			METHOD_EXPORT, METHOD_MAP, METHOD_MAP_TO_INT, METHOD_MAP_TO_LONG, METHOD_MAX_STREAM, METHOD_MAX_INT_STREAM,
-			METHOD_OR_ELSE_OPTIONAL, METHOD_OR_ELSE_OPTIONAL_INT, METHOD_FOR_EACH_STREAM, METHOD_FOR_EACH_ITERABLE,
-			METHOD_CREATE_WORK_BOOK_LIST, METHOD_CREATE_VOICE, METHOD_INVOKE, METHOD_ANNOTATION_TYPE, METHOD_FIND_FIRST,
-			METHOD_GET_DECLARED_METHODS, METHOD_FOR_NAME, METHOD_FILTER, METHOD_SET_TEXT, METHOD_GET_PREFERRED_WIDTH,
-			METHOD_IMPORT_VOICE1, METHOD_IMPORT_VOICE3, METHOD_IMPORT_VOICE5, METHOD_ADD_COLLECTION, METHOD_ADD_LIST,
+			METHOD_EXPORT, METHOD_MAP_STREAM, METHOD_MAP_INT_STREAM, METHOD_MAP_TO_INT, METHOD_MAP_TO_LONG,
+			METHOD_MAX_STREAM, METHOD_MAX_INT_STREAM, METHOD_OR_ELSE_OPTIONAL, METHOD_OR_ELSE_OPTIONAL_INT,
+			METHOD_FOR_EACH_STREAM, METHOD_FOR_EACH_ITERABLE, METHOD_FOR_EACH_INT_STREAM, METHOD_CREATE_WORK_BOOK_LIST,
+			METHOD_CREATE_VOICE, METHOD_INVOKE, METHOD_ANNOTATION_TYPE, METHOD_FIND_FIRST, METHOD_GET_DECLARED_METHODS,
+			METHOD_FOR_NAME, METHOD_FILTER, METHOD_SET_TEXT, METHOD_GET_PREFERRED_WIDTH, METHOD_IMPORT_VOICE1,
+			METHOD_IMPORT_VOICE3, METHOD_IMPORT_VOICE5, METHOD_ADD_COLLECTION, METHOD_ADD_LIST,
 			METHOD_CREATE_IMPORT_FILE_TEMPLATE_BYTE_ARRAY, METHOD_ANY_MATCH, METHOD_COLLECT, METHOD_NAME,
 			METHOD_GET_SELECTED_ITEM, METHOD_MATCHER, METHOD_SET_VALUE_J_PROGRESS_BAR, METHOD_SET_VALUE_J_SLIDER,
 			METHOD_SET_STRING_J_PROGRESS_BAR, METHOD_SET_STRING_COMMENT, METHOD_SET_TOOL_TIP_TEXT, METHOD_FORMAT,
@@ -301,7 +306,8 @@ class VoiceManagerTest {
 			METHOD_GET_WRITER, METHOD_KEY_SET, METHOD_GET_WORK_BOOK_CLASS, METHOD_GET_SYSTEM_PRINT_STREAM_BY_FIELD_NAME,
 			METHOD_IF_ELSE, METHOD_GET_PAGE_TITLE, METHOD_SET_HIRAGANA_OR_KATAKANA_AND_ROMAJI, METHOD_APPLY,
 			METHOD_TO_MILLIS, METHOD_SET_JLPT_VOCABULARY_AND_LEVEL, METHOD_ADD_DOCUMENT_LISTENER, METHOD_GET_LEVEL,
-			METHOD_ADD_ALL = null;
+			METHOD_ADD_ALL, METHOD_PLAY_AUDIO, METHOD_PLAY, METHOD_PRONOUNICATION_CHANGED,
+			METHOD_REMOVE_ELEMENT_AT = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -362,7 +368,10 @@ class VoiceManagerTest {
 				CLASS_OBJECT_MAP = Class.forName("org.springframework.context.support.VoiceManager$ObjectMap")))
 				.setAccessible(true);
 		//
-		(METHOD_MAP = clz.getDeclaredMethod("map", Stream.class, Function.class)).setAccessible(true);
+		(METHOD_MAP_STREAM = clz.getDeclaredMethod("map", Stream.class, Function.class)).setAccessible(true);
+		//
+		(METHOD_MAP_INT_STREAM = clz.getDeclaredMethod("map", IntStream.class, IntUnaryOperator.class))
+				.setAccessible(true);
 		//
 		(METHOD_MAP_TO_INT = clz.getDeclaredMethod("mapToInt", Stream.class, ToIntFunction.class)).setAccessible(true);
 		//
@@ -381,6 +390,9 @@ class VoiceManagerTest {
 		(METHOD_FOR_EACH_STREAM = clz.getDeclaredMethod("forEach", Stream.class, Consumer.class)).setAccessible(true);
 		//
 		(METHOD_FOR_EACH_ITERABLE = clz.getDeclaredMethod("forEach", Iterable.class, FailableConsumer.class))
+				.setAccessible(true);
+		//
+		(METHOD_FOR_EACH_INT_STREAM = clz.getDeclaredMethod("forEach", IntStream.class, IntConsumer.class))
 				.setAccessible(true);
 		//
 		(METHOD_CREATE_WORK_BOOK_LIST = clz.getDeclaredMethod("createWorkbook", List.class,
@@ -929,6 +941,17 @@ class VoiceManagerTest {
 		//
 		(METHOD_ADD_ALL = clz.getDeclaredMethod("addAll", Collection.class, Collection.class)).setAccessible(true);
 		//
+		(METHOD_PLAY_AUDIO = clz.getDeclaredMethod("playAudio", Pronounication.class, Object.class))
+				.setAccessible(true);
+		//
+		(METHOD_PLAY = clz.getDeclaredMethod("play", Player.class)).setAccessible(true);
+		//
+		(METHOD_PRONOUNICATION_CHANGED = clz.getDeclaredMethod("pronounicationChanged", Pronounication.class,
+				MutableComboBoxModel.class)).setAccessible(true);
+		//
+		(METHOD_REMOVE_ELEMENT_AT = clz.getDeclaredMethod("removeElementAt", MutableComboBoxModel.class, Integer.TYPE))
+				.setAccessible(true);
+		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
 		CLASS_EXPORT_TASK = Class.forName("org.springframework.context.support.VoiceManager$ExportTask");
@@ -1188,6 +1211,14 @@ class VoiceManagerTest {
 				} else if (Objects.equals(methodName, "mapToLong")) {
 					//
 					return longStream;
+					//
+				} // if
+					//
+			} else if (proxy instanceof IntStream) {
+				//
+				if (Objects.equals(IntStream.class, returnType)) {
+					//
+					return proxy;
 					//
 				} // if
 					//
@@ -2395,6 +2426,56 @@ class VoiceManagerTest {
 			//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnIpaSymbol, 0, null)));
 		//
+		// btnCheckPronounication
+		//
+		final AbstractButton btnCheckPronounication = new JButton();
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "btnCheckPronounication", btnCheckPronounication, true);
+			//
+		} // if
+			//
+		final ActionEvent actionEventBtnCheckPronounication = new ActionEvent(btnCheckPronounication, 0, null);
+		//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnCheckPronounication));
+		//
+		// mcbmPronounication
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "mcbmPronounication",
+					new DefaultComboBoxModel<>(new Object[] { null }), true);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnCheckPronounication));
+		//
+		// jcbPronounication
+		//
+		final JComboBox<?> jcbPronounication = new JComboBox();
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "jcbPronounication", jcbPronounication, true);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(jcbPronounication, 0, null)));
+		//
+		// btnPlayPronounicationAudio
+		//
+		final AbstractButton btnPlayPronounicationAudio = new JButton();
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "btnPlayPronounicationAudio", btnPlayPronounicationAudio, true);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(
+				() -> actionPerformed(instance, new ActionEvent(btnPlayPronounicationAudio, 0, null)));
+		//
 	}
 
 	private static void actionPerformed(final ActionListener instance, final ActionEvent actionEvent) {
@@ -3209,22 +3290,44 @@ class VoiceManagerTest {
 	@Test
 	void testMap() throws Throwable {
 		//
-		Assertions.assertNull(map(null, null));
+		Assertions.assertNull(map((Stream<?>) null, null));
+		//
+		Assertions.assertNull(map((IntStream) null, null));
 		//
 		Assertions.assertSame(stream, map(stream, null));
 		//
 		Assertions.assertNull(map(Stream.empty(), null));
+		//
+		IntStream intStream = IntStream.empty();
+		//
+		Assertions.assertSame(intStream, map(intStream, null));
+		//
+		Assertions.assertSame(intStream = Reflection.newProxy(IntStream.class, ih), map(intStream, null));
 		//
 	}
 
 	private static <T, R> Stream<R> map(final Stream<T> instance, final Function<? super T, ? extends R> mapper)
 			throws Throwable {
 		try {
-			final Object obj = METHOD_MAP.invoke(null, instance, mapper);
+			final Object obj = METHOD_MAP_STREAM.invoke(null, instance, mapper);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Stream) {
 				return (Stream) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static IntStream map(final IntStream instance, final IntUnaryOperator mapper) throws Throwable {
+		try {
+			final Object obj = METHOD_MAP_INT_STREAM.invoke(null, instance, mapper);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof IntStream) {
+				return (IntStream) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
@@ -3361,6 +3464,8 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> forEach((Stream<?>) null, null));
 		//
+		Assertions.assertDoesNotThrow(() -> forEach((IntStream) null, null));
+		//
 		Assertions.assertDoesNotThrow(() -> forEach(Stream.empty(), null));
 		//
 		Assertions.assertDoesNotThrow(() -> forEach(Stream.empty(), x -> {
@@ -3377,6 +3482,8 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> forEach(iterable, null));
 		//
+		Assertions.assertDoesNotThrow(() -> forEach(Reflection.newProxy(IntStream.class, ih), null));
+		//
 	}
 
 	private static <T> void forEach(final Stream<T> instance, final Consumer<? super T> action) throws Throwable {
@@ -3391,6 +3498,14 @@ class VoiceManagerTest {
 			final FailableConsumer<? super T, E> action) throws Throwable {
 		try {
 			METHOD_FOR_EACH_ITERABLE.invoke(null, instance, action);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static void forEach(final IntStream instance, final IntConsumer action) throws Throwable {
+		try {
+			METHOD_FOR_EACH_INT_STREAM.invoke(null, instance, action);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -8290,6 +8405,75 @@ class VoiceManagerTest {
 	private static <E> void addAll(final Collection<E> a, final Collection<? extends E> b) throws Throwable {
 		try {
 			METHOD_ADD_ALL.invoke(null, a, b);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testPlayAudio() {
+		//
+		final Pronounication pronounication = new Pronounication();
+		//
+		pronounication.setAudioUrls(Collections.singletonMap(null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> playAudio(pronounication, null));
+		//
+	}
+
+	private static void playAudio(final Pronounication pronounication, final Object audioFormat) throws Throwable {
+		try {
+			METHOD_PLAY_AUDIO.invoke(null, pronounication, audioFormat);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testPlay() {
+		//
+		Assertions.assertDoesNotThrow(() -> play(cast(Player.class, Narcissus.allocateInstance(Player.class))));
+		//
+	}
+
+	private static void play(final Player instance) throws Throwable {
+		try {
+			METHOD_PLAY.invoke(null, instance);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testPronounicationChanged() {
+		//
+		final Pronounication pronounication = new Pronounication();
+		//
+		pronounication.setAudioUrls(Collections.singletonMap(null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> pronounicationChanged(pronounication, null));
+		//
+	}
+
+	private static void pronounicationChanged(final Pronounication pronounication,
+			final MutableComboBoxModel<String> mcbmAudioFormat) throws Throwable {
+		try {
+			METHOD_PRONOUNICATION_CHANGED.invoke(null, pronounication, mcbmAudioFormat);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testRemoveElementAt() {
+		//
+		Assertions.assertDoesNotThrow(() -> removeElementAt(null, 0));
+		//
+	}
+
+	private static void removeElementAt(final MutableComboBoxModel<?> instance, final int index) throws Throwable {
+		try {
+			METHOD_REMOVE_ELEMENT_AT.invoke(null, instance, index);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
