@@ -253,11 +253,13 @@ public class CustomBeanPostProcessor implements BeanPostProcessor, EnvironmentAw
 	@Override
 	public Object postProcessBeforeInitialization(final Object bean, final String beanName) throws BeansException {
 		//
+		final Class<?> clz = getClass(bean);
+		//
 		// java.awt.Frame
 		//
 		final Frame frame = cast(JFrame.class, bean);
 		//
-		final StringBuilder sb = new StringBuilder(StringUtils.defaultString(getName(getClass(bean))));
+		final StringBuilder sb = new StringBuilder(StringUtils.defaultString(getName(clz)));
 		//
 		if (StringUtils.isNotEmpty(sb)) {
 			//
@@ -269,7 +271,7 @@ public class CustomBeanPostProcessor implements BeanPostProcessor, EnvironmentAw
 			//
 		final String key = toString(sb);
 		//
-		if (frame != null && PropertyResolverUtil.containsProperty(propertyResolver, key)) {
+		if (frame != null) {
 			//
 			try {
 				//
@@ -287,8 +289,22 @@ public class CustomBeanPostProcessor implements BeanPostProcessor, EnvironmentAw
 				//
 			} // try
 				//
-			frame.setTitle(PropertyResolverUtil.getProperty(propertyResolver, key));
-			//
+			if (PropertyResolverUtil.containsProperty(propertyResolver, key)) {
+				//
+				frame.setTitle(PropertyResolverUtil.getProperty(propertyResolver, key));
+				//
+			} else if (clz != null && clz.isAnnotationPresent(Title.class)) {
+				//
+				final Title title = clz.getAnnotation(Title.class);
+				//
+				if (title != null) {
+					//
+					frame.setTitle(title.value());
+					//
+				} // if
+					//
+			} // if
+				//
 		} // if
 			//
 			// javax.swing.JFrame

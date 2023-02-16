@@ -73,6 +73,7 @@ import org.javatuples.valueintf.IValue0Util;
 import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.config.Title;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
@@ -87,6 +88,7 @@ import com.google.common.collect.MultimapUtil;
 
 import net.miginfocom.swing.MigLayout;
 
+@Title("学年別漢字")
 public class GaKuNenBeTsuKanJiGui extends JFrame
 		implements EnvironmentAware, InitializingBean, KeyListener, ActionListener {
 

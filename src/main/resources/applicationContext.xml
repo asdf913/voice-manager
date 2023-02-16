@@ -127,8 +127,6 @@
 	<!-- -->
 	<bean class="org.springframework.context.support.VoiceManager">
 		<property name="layout" ref="MigLayout" />
-		<property name="title"
-			value="${org.springframework.context.support.VoiceManager.title}" />
 		<property name="sqlSessionFactory" ref="SqlSessionFactory" />
 		<property name="voiceFolder"
 			value="${org.springframework.context.support.VoiceManager.voiceFolder}" />

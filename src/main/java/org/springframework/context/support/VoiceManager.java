@@ -266,6 +266,7 @@ import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
+import org.springframework.beans.config.Title;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.ListableBeanFactoryUtil;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -356,6 +357,7 @@ import net.sourceforge.javaflacencoder.FLACEncoder;
 import net.sourceforge.javaflacencoder.FLACStreamOutputStream;
 import net.sourceforge.javaflacencoder.StreamConfiguration;
 
+@Title("Voice Manager")
 public class VoiceManager extends JFrame implements ActionListener, ItemListener, ChangeListener, KeyListener,
 		EnvironmentAware, BeanFactoryPostProcessor, InitializingBean, DocumentListener {
 

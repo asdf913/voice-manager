@@ -65,6 +65,7 @@ import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
 import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
+import org.springframework.beans.config.Title;
 import org.springframework.beans.factory.InitializingBean;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -75,6 +76,7 @@ import com.github.hal4j.uritemplate.URIBuilder;
 import domain.JlptVocabulary;
 import net.miginfocom.swing.MigLayout;
 
+@Title("JLPT Level")
 public class JlptLevelGui extends JFrame implements InitializingBean, ActionListener, DocumentListener, ItemListener {
 
 	private static final long serialVersionUID = 1466869508176258464L;

@@ -92,6 +92,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
 import org.jsoup.select.Elements;
 import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
+import org.springframework.beans.config.Title;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
@@ -109,6 +110,7 @@ import com.helger.css.reader.CSSReaderDeclarationList;
 import io.github.toolfactory.narcissus.Narcissus;
 import net.miginfocom.swing.MigLayout;
 
+@Title("常用漢字")
 public class JouYouKanjiGui extends JFrame implements EnvironmentAware, InitializingBean, KeyListener, ActionListener {
 
 	private static final long serialVersionUID = 3076804232578596080L;

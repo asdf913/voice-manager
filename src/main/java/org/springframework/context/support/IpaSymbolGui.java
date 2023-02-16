@@ -45,6 +45,7 @@ import org.javatuples.valueintf.IValue0Util;
 import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.config.Title;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
@@ -60,6 +61,7 @@ import com.google.common.collect.MultimapUtil;
 import io.github.toolfactory.narcissus.Narcissus;
 import net.miginfocom.swing.MigLayout;
 
+@Title("IPA Symbol")
 public class IpaSymbolGui extends JFrame implements EnvironmentAware, InitializingBean, ActionListener {
 
 	private static final long serialVersionUID = 467011648930037863L;

@@ -95,6 +95,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
 import org.jsoup.select.Elements;
 import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
+import org.springframework.beans.config.Title;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.cglib.proxy.Proxy;
 import org.springframework.context.EnvironmentAware;
@@ -118,6 +119,7 @@ import net.miginfocom.swing.MigLayout;
  *      "https://sakura-paris.org/dict/NHK%E6%97%A5%E6%9C%AC%E8%AA%9E%E7%99%BA%E9%9F%B3%E3%82%A2%E3%82%AF%E3%82%BB%E3%83%B3%E3%83%88%E8%BE%9E%E5%85%B8/">広辞苑無料検索
  *      NHK日本語発音アクセント辞典</a>
  */
+@Title("NHK日本語発音アクセント辞典")
 public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		implements InitializingBean, ActionListener, EnvironmentAware {
 
