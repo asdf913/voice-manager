@@ -118,7 +118,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 
 	private JTextComponent tfText = null;
 
-	private OnlineNHKJapanesePronunciationsAccentFailableFunction onlineNHKJapanesePronunciationsAccentFailableFunction = null;
+	private transient OnlineNHKJapanesePronunciationsAccentFailableFunction onlineNHKJapanesePronunciationsAccentFailableFunction = null;
 
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
