@@ -88,7 +88,8 @@ public class OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl
 					setValue(x, String.join("", protocolAndHost, getValue(x)));
 				});
 				//
-				pronunciation.setPitchAccentImage(createMergedBufferedImage(protocolAndHost, getImageSrcs(element)));
+				pronunciation.setPitchAccentImage(
+						createMergedBufferedImage(protocolAndHost, getImageSrcs(element), BufferedImage.TYPE_INT_RGB));
 				//
 				add(list = ObjectUtils.getIfNull(list, ArrayList::new), pronunciation);
 				//
@@ -155,7 +156,8 @@ public class OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl
 		//
 	}
 
-	private static BufferedImage createMergedBufferedImage(final String urlString, final List<String> srcs) {
+	private static BufferedImage createMergedBufferedImage(final String urlString, final List<String> srcs,
+			final int imageType) {
 		//
 		final FailableStream<String> fs = new FailableStream<>(stream(srcs));
 		//
@@ -191,7 +193,7 @@ public class OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl
 						//
 						, stream(bis).mapToInt(x -> intValue(getHeight(x), 0)).reduce(Integer::max).orElse(0)
 						//
-						, BufferedImage.TYPE_INT_RGB);
+						, imageType);
 				//
 			} // if
 				//

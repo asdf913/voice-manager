@@ -64,7 +64,7 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 		(METHOD_GET_IMAGE_SRCS = clz.getDeclaredMethod("getImageSrcs", Element.class)).setAccessible(true);
 		//
 		(METHOD_CREATE_MERGED_BUFFERED_IMAGE = clz.getDeclaredMethod("createMergedBufferedImage", String.class,
-				List.class)).setAccessible(true);
+				List.class, Integer.TYPE)).setAccessible(true);
 		//
 		(METHOD_GET_GRAPHICS = clz.getDeclaredMethod("getGraphics", Image.class)).setAccessible(true);
 		//
@@ -406,17 +406,17 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 	@Test
 	void testCreateMergedBufferedImage() throws Throwable {
 		//
-		Assertions.assertNull(createMergedBufferedImage(null, null));
+		Assertions.assertNull(createMergedBufferedImage(null, null, 0));
 		//
 		Assertions.assertThrows(UncheckedIOException.class,
-				() -> createMergedBufferedImage(null, Collections.singletonList(null)));
+				() -> createMergedBufferedImage(null, Collections.singletonList(null), 0));
 		//
 	}
 
-	private static BufferedImage createMergedBufferedImage(final String urlString, final List<String> srcs)
-			throws Throwable {
+	private static BufferedImage createMergedBufferedImage(final String urlString, final List<String> srcs,
+			final int imageType) throws Throwable {
 		try {
-			final Object obj = METHOD_CREATE_MERGED_BUFFERED_IMAGE.invoke(null, urlString, srcs);
+			final Object obj = METHOD_CREATE_MERGED_BUFFERED_IMAGE.invoke(null, urlString, srcs, imageType);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof BufferedImage) {
