@@ -545,7 +545,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private transient javax.swing.text.Document tfTextImportDocument = null;
 
-	private JComboBox<Pronunciation> jcbPronounication = null;
+	private JComboBox<Pronunciation> jcbPronunciation = null;
 
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.FIELD)
@@ -3213,25 +3213,25 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		// TODO
 		//
-		(jcbPronounication = new JComboBox<>(mcbmPronunciation = new DefaultComboBoxModel<>())).addActionListener(this);
+		(jcbPronunciation = new JComboBox<>(mcbmPronunciation = new DefaultComboBoxModel<>())).addActionListener(this);
 		//
 		// Set height
 		//
-		final Dimension pd = jcbPronounication.getPreferredSize();
+		final Dimension pd = jcbPronunciation.getPreferredSize();
 		//
 		if (pd != null) {
 			//
-			jcbPronounication.setPreferredSize(new Dimension((int) pd.getWidth(), 33));
+			jcbPronunciation.setPreferredSize(new Dimension((int) pd.getWidth(), 33));
 			//
 		} // if
 			//
-		panel.add(jcbPronounication, String.format("%1$s,span %2$s", GROWX, 2));
+		panel.add(jcbPronunciation, String.format("%1$s,span %2$s", GROWX, 2));
 		//
 		panel.add(btnCheckPronounication = new JButton("Check"));
 		//
-		final ListCellRenderer<? super Pronunciation> lcrPronounication = jcbPronounication.getRenderer();
+		final ListCellRenderer<? super Pronunciation> lcrPronounication = jcbPronunciation.getRenderer();
 		//
-		jcbPronounication.setRenderer(new ListCellRenderer<>() {
+		jcbPronunciation.setRenderer(new ListCellRenderer<>() {
 
 			@Override
 			public Component getListCellRendererComponent(final JList<? extends Pronunciation> list,
@@ -4751,7 +4751,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // try
 				//
-		} else if (Objects.equals(source, jcbPronounication)) {
+		} else if (Objects.equals(source, jcbPronunciation)) {
 			//
 			pronounicationChanged(cast(Pronunciation.class, getSelectedItem(mcbmPronunciation)),
 					mcbmPronounicationAudioFormat);

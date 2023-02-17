@@ -2454,17 +2454,17 @@ class VoiceManagerTest {
 			//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnCheckPronounication));
 		//
-		// jcbPronounication
+		// jcbPronunciation
 		//
-		final JComboBox<?> jcbPronounication = new JComboBox();
+		final JComboBox<?> jcbPronunciation = new JComboBox();
 		//
 		if (instance != null) {
 			//
-			FieldUtils.writeDeclaredField(instance, "jcbPronounication", jcbPronounication, true);
+			FieldUtils.writeDeclaredField(instance, "jcbPronunciation", jcbPronunciation, true);
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(jcbPronounication, 0, null)));
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(jcbPronunciation, 0, null)));
 		//
 		// btnPlayPronunciationAudio
 		//
