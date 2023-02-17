@@ -2466,18 +2466,18 @@ class VoiceManagerTest {
 			//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(jcbPronounication, 0, null)));
 		//
-		// btnPlayPronounicationAudio
+		// btnPlayPronunciationAudio
 		//
-		final AbstractButton btnPlayPronounicationAudio = new JButton();
+		final AbstractButton btnPlayPronunciationAudio = new JButton();
 		//
 		if (instance != null) {
 			//
-			FieldUtils.writeDeclaredField(instance, "btnPlayPronounicationAudio", btnPlayPronounicationAudio, true);
+			FieldUtils.writeDeclaredField(instance, "btnPlayPronunciationAudio", btnPlayPronunciationAudio, true);
 			//
 		} // if
 			//
 		Assertions.assertDoesNotThrow(
-				() -> actionPerformed(instance, new ActionEvent(btnPlayPronounicationAudio, 0, null)));
+				() -> actionPerformed(instance, new ActionEvent(btnPlayPronunciationAudio, 0, null)));
 		//
 	}
 

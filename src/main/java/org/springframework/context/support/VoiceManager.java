@@ -676,7 +676,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("Check Pronounication")
 	private AbstractButton btnCheckPronounication = null;
 
-	private AbstractButton btnPlayPronounicationAudio = null;
+	private AbstractButton btnPlayPronunciationAudio = null;
 
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
@@ -3260,7 +3260,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.add(jcbPronounicatioAudioFormat, String.format("span %1$s", 2));
 		//
-		panel.add(btnPlayPronounicationAudio = new JButton("Play"), WRAP);
+		panel.add(btnPlayPronunciationAudio = new JButton("Play"), WRAP);
 		//
 		// Pronunciation Page URL
 		//
@@ -3324,7 +3324,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		addActionListener(this, btnExecute, btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji, btnCopyHiragana,
 				btnCopyKatakana, btnPronunciationPageUrlCheck, btnIpaSymbol, btnCheckPronounication,
-				btnPlayPronounicationAudio);
+				btnPlayPronunciationAudio);
 		//
 		setEnabled(voiceIds != null, cbUseTtsVoice);
 		//
@@ -4757,7 +4757,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			pronounicationChanged(cast(Pronunciation.class, getSelectedItem(mcbmPronounication)),
 					mcbmPronounicationAudioFormat);
 			//
-		} else if (Objects.equals(source, btnPlayPronounicationAudio)) {
+		} else if (Objects.equals(source, btnPlayPronunciationAudio)) {
 			//
 			playAudio(cast(Pronunciation.class, getSelectedItem(mcbmPronounication)),
 					getSelectedItem(mcbmPronounicationAudioFormat));
