@@ -8528,7 +8528,7 @@ class VoiceManagerTest {
 	@Test
 	void testActionPerformedForBtnImport() {
 		//
-		Assertions.assertDoesNotThrow(() -> actionPerformedForBtnImport(false));
+		Assertions.assertDoesNotThrow(() -> actionPerformedForBtnImport(true));
 		//
 	}
 
