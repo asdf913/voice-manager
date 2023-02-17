@@ -4738,34 +4738,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} else if (Objects.equals(source, btnCheckPronounication)) {
 			//
-			// Remove all element(s) in "mcbmPronounication"
+			actionPerformedForBtnCheckPronounication();
 			//
-			forEach(reverseRange(0, getSize(mcbmPronunciation)), i -> removeElementAt(mcbmPronunciation, i));
-			//
-			// Remove all element(s) in "mcbmPronounicationAudioFormat"
-			//
-			forEach(reverseRange(0, getSize(mcbmPronounicationAudioFormat)),
-					i -> removeElementAt(mcbmPronounicationAudioFormat, i));
-			//
-			try {
-				//
-				final List<Pronunciation> pronounications = FailableFunctionUtil
-						.apply(onlineNHKJapanesePronunciationsAccentFailableFunction, getText(tfTextImport));
-				//
-				if (CollectionUtils.isNotEmpty(pronounications)) {
-					//
-					pronounications.add(0, null);
-					//
-				} // if
-					//
-				forEach(pronounications, x -> addElement(mcbmPronunciation, x));
-				//
-			} catch (final IOException e) {
-				//
-				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
-				//
-			} // try
-				//
 		} else if (Objects.equals(source, jcbPronunciation)) {
 			//
 			pronounicationChanged(cast(Pronunciation.class, getSelectedItem(mcbmPronunciation)),
@@ -5849,6 +5823,38 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			importVoice(jfc.getSelectedFile());
 			//
 		} // if
+			//
+	}
+
+	private void actionPerformedForBtnCheckPronounication() {
+		//
+		// Remove all element(s) in "mcbmPronounication"
+		//
+		forEach(reverseRange(0, getSize(mcbmPronunciation)), i -> removeElementAt(mcbmPronunciation, i));
+		//
+		// Remove all element(s) in "mcbmPronounicationAudioFormat"
+		//
+		forEach(reverseRange(0, getSize(mcbmPronounicationAudioFormat)),
+				i -> removeElementAt(mcbmPronounicationAudioFormat, i));
+		//
+		try {
+			//
+			final List<Pronunciation> pronounications = FailableFunctionUtil
+					.apply(onlineNHKJapanesePronunciationsAccentFailableFunction, getText(tfTextImport));
+			//
+			if (CollectionUtils.isNotEmpty(pronounications)) {
+				//
+				pronounications.add(0, null);
+				//
+			} // if
+				//
+			forEach(pronounications, x -> addElement(mcbmPronunciation, x));
+			//
+		} catch (final IOException e) {
+			//
+			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
+			//
+		} // try
 			//
 	}
 
