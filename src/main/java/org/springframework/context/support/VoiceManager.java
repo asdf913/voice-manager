@@ -3215,6 +3215,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		(jcbPronunciation = new JComboBox<>(mcbmPronunciation = new DefaultComboBoxModel<>())).addActionListener(this);
 		//
+		jcbPronunciation.setRenderer(createPronunciationListCellRenderer(jcbPronunciation.getRenderer()));
+		//
 		// Set height
 		//
 		final Dimension pd = jcbPronunciation.getPreferredSize();
@@ -3228,29 +3230,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(jcbPronunciation, String.format("%1$s,span %2$s", GROWX, 2));
 		//
 		panel.add(btnCheckPronounication = new JButton("Check"));
-		//
-		final ListCellRenderer<? super Pronunciation> lcrPronounication = jcbPronunciation.getRenderer();
-		//
-		jcbPronunciation.setRenderer(new ListCellRenderer<>() {
-
-			@Override
-			public Component getListCellRendererComponent(final JList<? extends Pronunciation> list,
-					final Pronunciation value, final int index, boolean isSelected, boolean cellHasFocus) {
-				//
-				final BufferedImage pitchAccentImage = getPitchAccentImage(value);
-				//
-				if (pitchAccentImage != null) {
-					//
-					return VoiceManager.getListCellRendererComponent(((ListCellRenderer) lcrPronounication), list,
-							new ImageIcon(pitchAccentImage), index, isSelected, cellHasFocus);
-					//
-				} // if
-					//
-				return VoiceManager.getListCellRendererComponent(((ListCellRenderer) lcrPronounication), list,
-						new ImageIcon(), index, isSelected, cellHasFocus);
-				//
-			}
-		});
 		//
 		final JComboBox<String> jcbPronounicatioAudioFormat = new JComboBox<>(
 				mcbmPronounicationAudioFormat = new DefaultComboBoxModel<>());
@@ -3330,6 +3309,50 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		setEnabled(false, tfPronunciationPageStatusCode);
 		//
 		return panel;
+		//
+	}
+
+	private static ListCellRenderer<Pronunciation> createPronunciationListCellRenderer(final ListCellRenderer<?> lcr) {
+		//
+		return new ListCellRenderer<>() {
+
+			@Override
+			public Component getListCellRendererComponent(final JList<? extends Pronunciation> list,
+					final Pronunciation value, final int index, boolean isSelected, boolean cellHasFocus) {
+				//
+				final BufferedImage pitchAccentImage = getPitchAccentImage(value);
+				//
+				// If the "java.awt.image.BufferedImage" instance is instantiated by
+				// "io.github.toolfactory.narcissus.Narcissus.allocateInstance(java.lang.Class)",
+				// check if the "raster" field in the "java.awt.image.BufferedImage" instance is
+				// not null
+				//
+				Object raster = null;
+				//
+				try {
+					//
+					raster = testAndApply(Objects::nonNull, pitchAccentImage,
+							x -> Narcissus.getObjectField(x, getDeclaredField(VoiceManager.getClass(x), "raster")),
+							null);
+					//
+				} catch (final NoSuchFieldException e) {
+					//
+					TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
+					//
+				} // try
+					//
+				if (pitchAccentImage != null && raster != null) {
+					//
+					return VoiceManager.getListCellRendererComponent(((ListCellRenderer) lcr), list,
+							new ImageIcon(pitchAccentImage), index, isSelected, cellHasFocus);
+					//
+				} // if
+					//
+				return VoiceManager.getListCellRendererComponent(((ListCellRenderer) lcr), list, new ImageIcon(), index,
+						isSelected, cellHasFocus);
+				//
+			}
+		};
 		//
 	}
 

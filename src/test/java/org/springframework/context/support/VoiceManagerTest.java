@@ -101,6 +101,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JSlider;
@@ -308,7 +309,8 @@ class VoiceManagerTest {
 			METHOD_IF_ELSE, METHOD_GET_PAGE_TITLE, METHOD_SET_HIRAGANA_OR_KATAKANA_AND_ROMAJI, METHOD_APPLY,
 			METHOD_TO_MILLIS, METHOD_SET_JLPT_VOCABULARY_AND_LEVEL, METHOD_ADD_DOCUMENT_LISTENER, METHOD_GET_LEVEL,
 			METHOD_ADD_ALL, METHOD_PLAY_AUDIO, METHOD_PLAY, METHOD_PRONOUNICATION_CHANGED, METHOD_REMOVE_ELEMENT_AT,
-			METHOD_GET_PITCH_ACCENT_IMAGE, METHOD_ACTION_PERFORMED_FOR_BTN_IMPORT = null;
+			METHOD_ACTION_PERFORMED_FOR_BTN_IMPORT, METHOD_CREATE_PRONUNCIATION_LIST_CELL_RENDERER,
+			METHOD_GET_LIST_CELL_RENDERER_COMPONENT = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -952,10 +954,14 @@ class VoiceManagerTest {
 		(METHOD_REMOVE_ELEMENT_AT = clz.getDeclaredMethod("removeElementAt", MutableComboBoxModel.class, Integer.TYPE))
 				.setAccessible(true);
 		//
-		(METHOD_GET_PITCH_ACCENT_IMAGE = clz.getDeclaredMethod("getPitchAccentImage", Pronunciation.class))
+		(METHOD_ACTION_PERFORMED_FOR_BTN_IMPORT = clz.getDeclaredMethod("actionPerformedForBtnImport", Boolean.TYPE))
 				.setAccessible(true);
 		//
-		(METHOD_ACTION_PERFORMED_FOR_BTN_IMPORT = clz.getDeclaredMethod("actionPerformedForBtnImport", Boolean.TYPE))
+		(METHOD_CREATE_PRONUNCIATION_LIST_CELL_RENDERER = clz.getDeclaredMethod("createPronunciationListCellRenderer",
+				ListCellRenderer.class)).setAccessible(true);
+		//
+		(METHOD_GET_LIST_CELL_RENDERER_COMPONENT = clz.getDeclaredMethod("getListCellRendererComponent",
+				ListCellRenderer.class, JList.class, Object.class, Integer.TYPE, Boolean.TYPE, Boolean.TYPE))
 				.setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
@@ -8503,29 +8509,6 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testGetPitchAccentImage() throws Throwable {
-		//
-		Assertions.assertNull(getPitchAccentImage(null));
-		//
-		Assertions.assertNull(getPitchAccentImage(new Pronunciation()));
-		//
-	}
-
-	private static BufferedImage getPitchAccentImage(final Pronunciation instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_PITCH_ACCENT_IMAGE.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof BufferedImage) {
-				return (BufferedImage) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testActionPerformedForBtnImport() {
 		//
 		Assertions.assertDoesNotThrow(() -> actionPerformedForBtnImport(true));
@@ -8535,6 +8518,55 @@ class VoiceManagerTest {
 	private void actionPerformedForBtnImport(final boolean headless) throws Throwable {
 		try {
 			METHOD_ACTION_PERFORMED_FOR_BTN_IMPORT.invoke(instance, headless);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCreatePronunciationListCellRenderer() throws Throwable {
+		//
+		final ListCellRenderer<Pronunciation> lcr = createPronunciationListCellRenderer(null);
+		//
+		Assertions.assertNull(getListCellRendererComponent(lcr, null, null, ONE, false, false));
+		//
+		final Pronunciation pronunciation = new Pronunciation();
+		//
+		Assertions.assertNull(getListCellRendererComponent(lcr, null, pronunciation, ONE, false, false));
+		//
+		pronunciation.setPitchAccentImage(cast(BufferedImage.class, Narcissus.allocateInstance(BufferedImage.class)));
+		//
+		Assertions.assertNull(getListCellRendererComponent(lcr, null, pronunciation, ONE, false, false));
+		//
+	}
+
+	private static ListCellRenderer<Pronunciation> createPronunciationListCellRenderer(final ListCellRenderer<?> lcr)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_PRONUNCIATION_LIST_CELL_RENDERER.invoke(null, lcr);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof ListCellRenderer) {
+				return (ListCellRenderer) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static <E> Component getListCellRendererComponent(final ListCellRenderer<E> instance,
+			final JList<? extends E> list, final E value, final int index, final boolean isSelected,
+			final boolean cellHasFocus) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_LIST_CELL_RENDERER_COMPONENT.invoke(null, instance, list, value, index,
+					isSelected, cellHasFocus);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Component) {
+				return (Component) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
