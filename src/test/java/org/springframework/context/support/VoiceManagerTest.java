@@ -2443,11 +2443,11 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnCheckPronounication));
 		//
-		// mcbmPronounication
+		// mcbmPronunciation
 		//
 		if (instance != null) {
 			//
-			FieldUtils.writeDeclaredField(instance, "mcbmPronounication",
+			FieldUtils.writeDeclaredField(instance, "mcbmPronunciation",
 					new DefaultComboBoxModel<>(new Object[] { null }), true);
 			//
 		} // if

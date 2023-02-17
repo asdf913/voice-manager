@@ -539,7 +539,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private transient MutableComboBoxModel<JlptVocabulary> cbmJlptVocabulary = null;
 
-	private transient MutableComboBoxModel<Pronunciation> mcbmPronounication = null;
+	private transient MutableComboBoxModel<Pronunciation> mcbmPronunciation = null;
 
 	private transient MutableComboBoxModel<String> mcbmPronounicationAudioFormat = null;
 
@@ -3213,8 +3213,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		// TODO
 		//
-		(jcbPronounication = new JComboBox<>(mcbmPronounication = new DefaultComboBoxModel<>()))
-				.addActionListener(this);
+		(jcbPronounication = new JComboBox<>(mcbmPronunciation = new DefaultComboBoxModel<>())).addActionListener(this);
 		//
 		// Set height
 		//
@@ -4726,7 +4725,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			// Remove all element(s) in "mcbmPronounication"
 			//
-			forEach(reverseRange(0, getSize(mcbmPronounication)), i -> removeElementAt(mcbmPronounication, i));
+			forEach(reverseRange(0, getSize(mcbmPronunciation)), i -> removeElementAt(mcbmPronunciation, i));
 			//
 			// Remove all element(s) in "mcbmPronounicationAudioFormat"
 			//
@@ -4744,7 +4743,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
-				forEach(pronounications, x -> addElement(mcbmPronounication, x));
+				forEach(pronounications, x -> addElement(mcbmPronunciation, x));
 				//
 			} catch (final IOException e) {
 				//
@@ -4754,12 +4753,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} else if (Objects.equals(source, jcbPronounication)) {
 			//
-			pronounicationChanged(cast(Pronunciation.class, getSelectedItem(mcbmPronounication)),
+			pronounicationChanged(cast(Pronunciation.class, getSelectedItem(mcbmPronunciation)),
 					mcbmPronounicationAudioFormat);
 			//
 		} else if (Objects.equals(source, btnPlayPronunciationAudio)) {
 			//
-			playAudio(cast(Pronunciation.class, getSelectedItem(mcbmPronounication)),
+			playAudio(cast(Pronunciation.class, getSelectedItem(mcbmPronunciation)),
 					getSelectedItem(mcbmPronounicationAudioFormat));
 			//
 		} // if
