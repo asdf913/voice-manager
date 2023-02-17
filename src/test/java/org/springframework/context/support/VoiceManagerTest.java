@@ -308,7 +308,7 @@ class VoiceManagerTest {
 			METHOD_IF_ELSE, METHOD_GET_PAGE_TITLE, METHOD_SET_HIRAGANA_OR_KATAKANA_AND_ROMAJI, METHOD_APPLY,
 			METHOD_TO_MILLIS, METHOD_SET_JLPT_VOCABULARY_AND_LEVEL, METHOD_ADD_DOCUMENT_LISTENER, METHOD_GET_LEVEL,
 			METHOD_ADD_ALL, METHOD_PLAY_AUDIO, METHOD_PLAY, METHOD_PRONOUNICATION_CHANGED, METHOD_REMOVE_ELEMENT_AT,
-			METHOD_GET_PITCH_ACCENT_IMAGE = null;
+			METHOD_GET_PITCH_ACCENT_IMAGE, METHOD_ACTION_PERFORMED_FOR_BTN_IMPORT = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -953,6 +953,9 @@ class VoiceManagerTest {
 				.setAccessible(true);
 		//
 		(METHOD_GET_PITCH_ACCENT_IMAGE = clz.getDeclaredMethod("getPitchAccentImage", Pronunciation.class))
+				.setAccessible(true);
+		//
+		(METHOD_ACTION_PERFORMED_FOR_BTN_IMPORT = clz.getDeclaredMethod("actionPerformedForBtnImport", Boolean.TYPE))
 				.setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
@@ -2479,6 +2482,23 @@ class VoiceManagerTest {
 		Assertions.assertDoesNotThrow(
 				() -> actionPerformed(instance, new ActionEvent(btnPlayPronunciationAudio, 0, null)));
 		//
+		// btnPlayPronunciationAudio
+		//
+		if (GraphicsEnvironment.isHeadless()) {
+			//
+			final AbstractButton btnImport = new JButton();
+			//
+			if (instance != null) {
+				//
+				FieldUtils.writeDeclaredField(instance, "btnImport", btnImport, true);
+				//
+			} // if
+				//
+				//
+			Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnImport, 0, null)));
+			//
+		} // if
+			//
 	}
 
 	private static void actionPerformed(final ActionListener instance, final ActionEvent actionEvent) {
@@ -8500,6 +8520,21 @@ class VoiceManagerTest {
 				return (BufferedImage) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testActionPerformedForBtnImport() {
+		//
+		Assertions.assertDoesNotThrow(() -> actionPerformedForBtnImport(false));
+		//
+	}
+
+	private void actionPerformedForBtnImport(final boolean headless) throws Throwable {
+		try {
+			METHOD_ACTION_PERFORMED_FOR_BTN_IMPORT.invoke(instance, headless);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

@@ -4695,16 +4695,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} else if (Objects.equals(source, btnImport)) {
 			//
-			final JFileChooser jfc = new JFileChooser(".");
+			actionPerformedForBtnImport(headless);
 			//
-			jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-			//
-			if (jfc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-				//
-				importVoice(jfc.getSelectedFile());
-				//
-			} // if
-				//
 		} else if (Objects.equals(source, btnImportWithinFolder)) {
 			//
 			importByWorkbookFiles(
@@ -5820,6 +5812,20 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			testAndAccept(EMPTY_FILE_PREDICATE, file, FileUtils::deleteQuietly);
 			//
 		} // try
+			//
+	}
+
+	private void actionPerformedForBtnImport(final boolean headless) {
+		//
+		final JFileChooser jfc = new JFileChooser(".");
+		//
+		jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		//
+		if (!headless && jfc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+			//
+			importVoice(jfc.getSelectedFile());
+			//
+		} // if
 			//
 	}
 
