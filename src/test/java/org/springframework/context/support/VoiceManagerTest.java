@@ -19,6 +19,7 @@ import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.Console;
@@ -306,8 +307,8 @@ class VoiceManagerTest {
 			METHOD_GET_WRITER, METHOD_KEY_SET, METHOD_GET_WORK_BOOK_CLASS, METHOD_GET_SYSTEM_PRINT_STREAM_BY_FIELD_NAME,
 			METHOD_IF_ELSE, METHOD_GET_PAGE_TITLE, METHOD_SET_HIRAGANA_OR_KATAKANA_AND_ROMAJI, METHOD_APPLY,
 			METHOD_TO_MILLIS, METHOD_SET_JLPT_VOCABULARY_AND_LEVEL, METHOD_ADD_DOCUMENT_LISTENER, METHOD_GET_LEVEL,
-			METHOD_ADD_ALL, METHOD_PLAY_AUDIO, METHOD_PLAY, METHOD_PRONOUNICATION_CHANGED,
-			METHOD_REMOVE_ELEMENT_AT = null;
+			METHOD_ADD_ALL, METHOD_PLAY_AUDIO, METHOD_PLAY, METHOD_PRONOUNICATION_CHANGED, METHOD_REMOVE_ELEMENT_AT,
+			METHOD_GET_PITCH_ACCENT_IMAGE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -941,8 +942,7 @@ class VoiceManagerTest {
 		//
 		(METHOD_ADD_ALL = clz.getDeclaredMethod("addAll", Collection.class, Collection.class)).setAccessible(true);
 		//
-		(METHOD_PLAY_AUDIO = clz.getDeclaredMethod("playAudio", Pronunciation.class, Object.class))
-				.setAccessible(true);
+		(METHOD_PLAY_AUDIO = clz.getDeclaredMethod("playAudio", Pronunciation.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_PLAY = clz.getDeclaredMethod("play", Player.class)).setAccessible(true);
 		//
@@ -950,6 +950,9 @@ class VoiceManagerTest {
 				MutableComboBoxModel.class)).setAccessible(true);
 		//
 		(METHOD_REMOVE_ELEMENT_AT = clz.getDeclaredMethod("removeElementAt", MutableComboBoxModel.class, Integer.TYPE))
+				.setAccessible(true);
+		//
+		(METHOD_GET_PITCH_ACCENT_IMAGE = clz.getDeclaredMethod("getPitchAccentImage", Pronunciation.class))
 				.setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
@@ -8474,6 +8477,29 @@ class VoiceManagerTest {
 	private static void removeElementAt(final MutableComboBoxModel<?> instance, final int index) throws Throwable {
 		try {
 			METHOD_REMOVE_ELEMENT_AT.invoke(null, instance, index);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetPitchAccentImage() throws Throwable {
+		//
+		Assertions.assertNull(getPitchAccentImage(null));
+		//
+		Assertions.assertNull(getPitchAccentImage(new Pronunciation()));
+		//
+	}
+
+	private static BufferedImage getPitchAccentImage(final Pronunciation instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_PITCH_ACCENT_IMAGE.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof BufferedImage) {
+				return (BufferedImage) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

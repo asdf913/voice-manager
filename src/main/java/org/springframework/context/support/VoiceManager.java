@@ -3238,7 +3238,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			public Component getListCellRendererComponent(final JList<? extends Pronunciation> list,
 					final Pronunciation value, final int index, boolean isSelected, boolean cellHasFocus) {
 				//
-				final BufferedImage pitchAccentImage = value != null ? value.getPitchAccentImage() : null;
+				final BufferedImage pitchAccentImage = getPitchAccentImage(value);
 				//
 				if (pitchAccentImage != null) {
 					//
@@ -3332,6 +3332,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		return panel;
 		//
+	}
+
+	private static BufferedImage getPitchAccentImage(final Pronunciation instance) {
+		return instance != null ? instance.getPitchAccentImage() : null;
 	}
 
 	private static void addDocumentListener(final javax.swing.text.Document instance, final DocumentListener listener) {
