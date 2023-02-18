@@ -177,7 +177,7 @@ public class OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl
 			//
 		} else {
 			//
-			throw new IllegalArgumentException(toString(object != null ? object.getClass() : null));
+			throw new IllegalArgumentException(toString(getClass(object)));
 			//
 		} //
 			//
