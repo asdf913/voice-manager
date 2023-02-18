@@ -36,6 +36,9 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
+import org.javatuples.Unit;
+import org.javatuples.valueintf.IValue0;
+import org.javatuples.valueintf.IValue0Util;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -99,74 +102,15 @@ public class OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl
 			//
 		} else if (object instanceof CharSequence) {
 			//
-			final String string = toString(object);
+			final IValue0<Integer> value = getImageType((CharSequence) object);
 			//
-			if (StringUtils.isEmpty(string)) {
+			if (value != null) {
 				//
-				this.imageType = null;
+				this.imageType = IValue0Util.getValue0(value);
 				//
-				return;
+			} else {
 				//
-			} // if
-				//
-			NumberFormatException nfe = null;
-			//
-			try {
-				//
-				this.imageType = Integer.valueOf(string);
-				//
-			} catch (final NumberFormatException e) {
-				//
-				nfe = e;
-				//
-			} // try
-				//
-			if (this.imageType == null) {
-				//
-				final List<Field> fs = toList(filter(
-						testAndApply(Objects::nonNull, BufferedImage.class.getDeclaredFields(), Arrays::stream, null),
-						f -> {
-							//
-							final Class<?> type = getType(f);
-							//
-							return and(isStatic(f), Boolean.logicalOr(isAssignableFrom(Number.class, type),
-									(isPrimitive(type) && ArrayUtils.contains(new Class<?>[] { Byte.TYPE, Short.TYPE,
-											Integer.TYPE, Long.TYPE, Float.TYPE, Double.TYPE }, type))),
-									Objects.equals(getName(f), string));
-							//
-						}));
-				//
-				final int size = IterableUtils.size(fs);
-				//
-				if (size > 1) {
-					//
-					throw new IllegalStateException();
-					//
-				} //
-					//
-				try {
-					//
-					final Object obj = testAndApply(OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl::isStatic,
-							testAndApply(x -> size == 1, fs, x -> IterableUtils.get(x, 0), null), x -> get(x, null),
-							null);
-					//
-					if (obj instanceof Number) {
-						//
-						this.imageType = Integer.valueOf(((Number) obj).intValue());
-						//
-					} // if
-						//
-				} catch (final IllegalAccessException e) {
-					//
-					TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
-					//
-				} // try
-					//
-			} // if
-				//
-			if (this.imageType == null && nfe != null) {
-				//
-				throw nfe;
+				throw new IllegalStateException();
 				//
 			} // if
 				//
@@ -180,6 +124,70 @@ public class OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl
 			//
 		} // if
 			//
+	}
+
+	private static IValue0<Integer> getImageType(final CharSequence cs) {
+		//
+		final String string = toString(cs);
+		//
+		if (StringUtils.isEmpty(string)) {
+			//
+			return Unit.with(null);
+			//
+		} // if
+			//
+		NumberFormatException nfe = null;
+		//
+		try {
+			//
+			return Unit.with(Integer.valueOf(string));
+			//
+		} catch (final NumberFormatException e) {
+			//
+			nfe = e;
+			//
+		} // try
+			//
+		final List<Field> fs = toList(filter(
+				testAndApply(Objects::nonNull, BufferedImage.class.getDeclaredFields(), Arrays::stream, null), f -> {
+					//
+					final Class<?> type = getType(f);
+					//
+					return and(isStatic(f),
+							Boolean.logicalOr(isAssignableFrom(Number.class, type),
+									(isPrimitive(type) && ArrayUtils.contains(new Class<?>[] { Byte.TYPE, Short.TYPE,
+											Integer.TYPE, Long.TYPE, Float.TYPE, Double.TYPE }, type))),
+							Objects.equals(getName(f), string));
+					//
+				}));
+		//
+		final int size = IterableUtils.size(fs);
+		//
+		if (size > 1) {
+			//
+			throw new IllegalStateException();
+			//
+		} //
+			//
+		try {
+			//
+			final Object obj = testAndApply(OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl::isStatic,
+					testAndApply(x -> size == 1, fs, x -> IterableUtils.get(x, 0), null), x -> get(x, null), null);
+			//
+			if (obj instanceof Number) {
+				//
+				return Unit.with(Integer.valueOf(((Number) obj).intValue()));
+				//
+			} // if
+				//
+		} catch (final IllegalAccessException e) {
+			//
+			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
+			//
+		} // try
+			//
+		throw nfe;
+		//
 	}
 
 	private static boolean and(final boolean a, final boolean b, final boolean... bs) {
