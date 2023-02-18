@@ -145,11 +145,11 @@ public class OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl
 					//
 				} //
 					//
-				final Field f = testAndApply(x -> size == 1, fs, x -> IterableUtils.get(x, 0), null);
-				//
 				try {
 					//
-					final Object obj = Boolean.logicalAnd(f != null, isStatic(f)) ? get(f, null) : null;
+					final Object obj = testAndApply(OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl::isStatic,
+							testAndApply(x -> size == 1, fs, x -> IterableUtils.get(x, 0), null), x -> get(x, null),
+							null);
 					//
 					if (obj instanceof Number) {
 						//
