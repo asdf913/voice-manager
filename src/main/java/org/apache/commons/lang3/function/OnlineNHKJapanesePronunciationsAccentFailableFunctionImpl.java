@@ -129,10 +129,10 @@ public class OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl
 							//
 							final Class<?> type = getType(f);
 							//
-							return isStatic(f) && Boolean.logicalOr(isAssignableFrom(Number.class, type),
+							return and(isStatic(f), Boolean.logicalOr(isAssignableFrom(Number.class, type),
 									(isPrimitive(type) && ArrayUtils.contains(new Class<?>[] { Byte.TYPE, Short.TYPE,
-											Integer.TYPE, Long.TYPE, Float.TYPE, Double.TYPE }, type)))
-									&& Objects.equals(getName(f), string);
+											Integer.TYPE, Long.TYPE, Float.TYPE, Double.TYPE }, type))),
+									Objects.equals(getName(f), string));
 							//
 						}));
 				//
@@ -178,8 +178,32 @@ public class OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl
 			//
 			throw new IllegalArgumentException(toString(getClass(object)));
 			//
-		} //
+		} // if
 			//
+	}
+
+	private static boolean and(final boolean a, final boolean b, final boolean... bs) {
+		//
+		boolean result = a && b;
+		//
+		if (!result) {
+			//
+			return false;
+			//
+		} // if
+			//
+		for (int i = 0; bs != null && i < bs.length; i++) {
+			//
+			if (!(result &= bs[i])) {
+				//
+				return false;
+				//
+			} // if
+				//
+		} // for
+			//
+		return result;
+		//
 	}
 
 	private static boolean isStatic(final Member instance) {

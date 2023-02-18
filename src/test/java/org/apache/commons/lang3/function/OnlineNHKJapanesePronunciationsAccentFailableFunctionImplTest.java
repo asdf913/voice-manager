@@ -51,7 +51,7 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 			METHOD_CREATE_MERGED_BUFFERED_IMAGE, METHOD_GET_GRAPHICS, METHOD_DRAW_IMAGE, METHOD_GET_WIDTH,
 			METHOD_GET_HEIGHT, METHOD_INT_VALUE, METHOD_FOR_EACH, METHOD_SET_VALUE, METHOD_GET_VALUE, METHOD_ENTRY_SET,
 			METHOD_GET_PROTOCOL, METHOD_GET_HOST, METHOD_TEST, METHOD_ADD, METHOD_FILTER, METHOD_TO_LIST,
-			METHOD_GET_NAME, METHOD_GET_TYPE, METHOD_IS_ASSIGNABLE_FROM, METHOD_IS_PRIMITIVE = null;
+			METHOD_GET_NAME, METHOD_GET_TYPE, METHOD_IS_ASSIGNABLE_FROM, METHOD_IS_PRIMITIVE, METHOD_AND = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -110,6 +110,8 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 				.setAccessible(true);
 		//
 		(METHOD_IS_PRIMITIVE = clz.getDeclaredMethod("isPrimitive", Class.class)).setAccessible(true);
+		//
+		(METHOD_AND = clz.getDeclaredMethod("and", Boolean.TYPE, Boolean.TYPE, boolean[].class)).setAccessible(true);
 		//
 	}
 
@@ -932,6 +934,27 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 	private static boolean isPrimitive(final Class<?> instance) throws Throwable {
 		try {
 			final Object obj = METHOD_IS_PRIMITIVE.invoke(null, instance);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testAnd() throws Throwable {
+		//
+		Assertions.assertFalse(and(true, false));
+		//
+		Assertions.assertFalse(and(true, true, null));
+		//
+	}
+
+	private static boolean and(final boolean a, final boolean b, final boolean... bs) throws Throwable {
+		try {
+			final Object obj = METHOD_AND.invoke(null, a, b, bs);
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
