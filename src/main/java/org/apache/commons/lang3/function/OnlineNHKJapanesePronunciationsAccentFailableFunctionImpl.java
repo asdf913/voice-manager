@@ -123,19 +123,19 @@ public class OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl
 				//
 			if (this.imageType == null) {
 				//
-				final List<Field> fs = toList(
-						filter(testAndApply(Objects::nonNull, BufferedImage.class.getDeclaredFields(), Arrays::stream,
-								null),
-								f -> f != null
-										&& isStatic(f) && f
-												.getType() != null
-										&& (Number.class.isAssignableFrom(f.getType())
-												|| (f.getType().isPrimitive()
-														&& ArrayUtils.contains(
-																new Class<?>[] { Byte.TYPE, Short.TYPE, Integer.TYPE,
-																		Long.TYPE, Float.TYPE, Double.TYPE },
-																f.getType())))
-										&& Objects.equals(getName(f), string)));
+				final List<Field> fs = toList(filter(
+						testAndApply(Objects::nonNull, BufferedImage.class.getDeclaredFields(), Arrays::stream, null),
+						f -> {
+							//
+							final Class<?> type = getType(f);
+							//
+							return isStatic(f)
+									&& (isAssignableFrom(Number.class, type) || (isPrimitive(type)
+											&& ArrayUtils.contains(new Class<?>[] { Byte.TYPE, Short.TYPE, Integer.TYPE,
+													Long.TYPE, Float.TYPE, Double.TYPE }, type)))
+									&& Objects.equals(getName(f), string);
+							//
+						}));
 				//
 				final int size = IterableUtils.size(fs);
 				//
@@ -177,6 +177,18 @@ public class OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl
 
 	private static boolean isStatic(final Member instance) {
 		return instance != null && Modifier.isStatic(instance.getModifiers());
+	}
+
+	private static Class<?> getType(final Field instance) {
+		return instance != null ? instance.getType() : null;
+	}
+
+	private static boolean isAssignableFrom(final Class<?> a, final Class<?> b) {
+		return a != null && b != null && a.isAssignableFrom(b);
+	}
+
+	private static boolean isPrimitive(final Class<?> instance) {
+		return instance != null && instance.isPrimitive();
 	}
 
 	private static String toString(final Object instance) {

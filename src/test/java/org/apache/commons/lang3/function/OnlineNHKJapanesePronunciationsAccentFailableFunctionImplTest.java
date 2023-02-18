@@ -51,7 +51,7 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 			METHOD_CREATE_MERGED_BUFFERED_IMAGE, METHOD_GET_GRAPHICS, METHOD_DRAW_IMAGE, METHOD_GET_WIDTH,
 			METHOD_GET_HEIGHT, METHOD_INT_VALUE, METHOD_FOR_EACH, METHOD_SET_VALUE, METHOD_GET_VALUE, METHOD_ENTRY_SET,
 			METHOD_GET_PROTOCOL, METHOD_GET_HOST, METHOD_TEST, METHOD_ADD, METHOD_FILTER, METHOD_TO_LIST,
-			METHOD_GET_NAME = null;
+			METHOD_GET_NAME, METHOD_GET_TYPE, METHOD_IS_ASSIGNABLE_FROM, METHOD_IS_PRIMITIVE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -103,6 +103,13 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 		(METHOD_TO_LIST = clz.getDeclaredMethod("toList", Stream.class)).setAccessible(true);
 		//
 		(METHOD_GET_NAME = clz.getDeclaredMethod("getName", Member.class)).setAccessible(true);
+		//
+		(METHOD_GET_TYPE = clz.getDeclaredMethod("getType", Field.class)).setAccessible(true);
+		//
+		(METHOD_IS_ASSIGNABLE_FROM = clz.getDeclaredMethod("isAssignableFrom", Class.class, Class.class))
+				.setAccessible(true);
+		//
+		(METHOD_IS_PRIMITIVE = clz.getDeclaredMethod("isPrimitive", Class.class)).setAccessible(true);
 		//
 	}
 
@@ -858,6 +865,71 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 				return null;
 			} else if (obj instanceof String) {
 				return (String) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetType() throws Throwable {
+		//
+		Assertions.assertNull(getType(null));
+		//
+	}
+
+	private static Class<?> getType(final Field instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_TYPE.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Class) {
+				return (Class<?>) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testIsAssignableFrom() throws Throwable {
+		//
+		Assertions.assertFalse(isAssignableFrom(null, null));
+		//
+		Assertions.assertFalse(isAssignableFrom(Object.class, null));
+		//
+		Assertions.assertTrue(isAssignableFrom(Object.class, Object.class));
+		//
+	}
+
+	private static boolean isAssignableFrom(final Class<?> a, final Class<?> b) throws Throwable {
+		try {
+			final Object obj = METHOD_IS_ASSIGNABLE_FROM.invoke(null, a, b);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testIsPrimitive() throws Throwable {
+		//
+		Assertions.assertFalse(isPrimitive(null));
+		//
+		Assertions.assertFalse(isPrimitive(Object.class));
+		//
+	}
+
+	private static boolean isPrimitive(final Class<?> instance) throws Throwable {
+		try {
+			final Object obj = METHOD_IS_PRIMITIVE.invoke(null, instance);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
