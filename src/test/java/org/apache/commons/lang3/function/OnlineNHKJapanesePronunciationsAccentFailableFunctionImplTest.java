@@ -10,8 +10,10 @@ import java.awt.image.RenderedImage;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
@@ -25,11 +27,9 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
-import javax.swing.ComboBoxModel;
-import javax.swing.ListCellRenderer;
-import javax.swing.ListModel;
-
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -47,19 +47,24 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 
 	private static final int ONE = 1;
 
-	private static Method METHOD_GET_SRC_MAP, METHOD_GET_CLASS, METHOD_GET_IMAGE_SRCS,
+	private static Method METHOD_GET, METHOD_GET_SRC_MAP, METHOD_GET_CLASS, METHOD_TO_STRING, METHOD_GET_IMAGE_SRCS,
 			METHOD_CREATE_MERGED_BUFFERED_IMAGE, METHOD_GET_GRAPHICS, METHOD_DRAW_IMAGE, METHOD_GET_WIDTH,
 			METHOD_GET_HEIGHT, METHOD_INT_VALUE, METHOD_FOR_EACH, METHOD_SET_VALUE, METHOD_GET_VALUE, METHOD_ENTRY_SET,
-			METHOD_GET_PROTOCOL, METHOD_GET_HOST, METHOD_TEST, METHOD_ADD = null;
+			METHOD_GET_PROTOCOL, METHOD_GET_HOST, METHOD_TEST, METHOD_ADD, METHOD_FILTER, METHOD_TO_LIST,
+			METHOD_GET_NAME = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
 		//
 		final Class<?> clz = OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl.class;
 		//
+		(METHOD_GET = clz.getDeclaredMethod("get", Field.class, Object.class)).setAccessible(true);
+		//
 		(METHOD_GET_SRC_MAP = clz.getDeclaredMethod("getSrcMap", Element.class)).setAccessible(true);
 		//
 		(METHOD_GET_CLASS = clz.getDeclaredMethod("getClass", Object.class)).setAccessible(true);
+		//
+		(METHOD_TO_STRING = clz.getDeclaredMethod("toString", Object.class)).setAccessible(true);
 		//
 		(METHOD_GET_IMAGE_SRCS = clz.getDeclaredMethod("getImageSrcs", Element.class)).setAccessible(true);
 		//
@@ -93,6 +98,12 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 		//
 		(METHOD_ADD = clz.getDeclaredMethod("add", Collection.class, Object.class)).setAccessible(true);
 		//
+		(METHOD_FILTER = clz.getDeclaredMethod("filter", Stream.class, Predicate.class)).setAccessible(true);
+		//
+		(METHOD_TO_LIST = clz.getDeclaredMethod("toList", Stream.class)).setAccessible(true);
+		//
+		(METHOD_GET_NAME = clz.getDeclaredMethod("getName", Member.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -120,69 +131,11 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 				//
 			final String methodName = method != null ? method.getName() : null;
 			//
-			if (proxy instanceof ListModel) {
-				//
-				if (Objects.equals(methodName, "getSize")) {
-					//
-					return size;
-					//
-				} // if
-					//
-			} else if (proxy instanceof Iterable) {
+			if (proxy instanceof Iterable) {
 				//
 				if (Objects.equals(methodName, "iterator")) {
 					//
 					return iterator;
-					//
-				} // if
-					//
-			} // if
-				//
-			if (proxy instanceof Iterator) {
-				//
-				if (Objects.equals(methodName, "hasNext")) {
-					//
-					if (iterator == proxy) {
-						//
-						return hasNext;
-						//
-					} // if
-						//
-					return iterator != null && iterator.hasNext();
-					//
-				} // if
-					//
-			} else if (proxy instanceof Map) {
-				//
-				if (Objects.equals(methodName, "get")) {
-					//
-					return get;
-					//
-				} else if (Objects.equals(methodName, "isEmpty")) {
-					//
-					return isEmpty;
-					//
-				} else if (Objects.equals(methodName, "size")) {
-					//
-					return size;
-					//
-				} // if
-					//
-			} else if (proxy instanceof Collection) {
-				//
-				if (Objects.equals(methodName, "size")) {
-					//
-					return size;
-					//
-				} // if
-					//
-			} // if
-				//
-			if (proxy instanceof ComboBoxModel) {
-				//
-				if (Objects.equals(methodName, "getSelectedItem")) {
-					//
-					return selectedItem;
 					//
 				} // if
 					//
@@ -206,10 +159,6 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 					//
 					return value;
 					//
-				} else if (Objects.equals(methodName, "getKey")) {
-					//
-					return key;
-					//
 				} // if
 					//
 			} else if (proxy instanceof Map) {
@@ -218,17 +167,13 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 					//
 					return entrySet;
 					//
-				} else if (Objects.equals(methodName, "containsKey")) {
-					//
-					return containsKey;
-					//
 				} // if
 					//
-			} else if (proxy instanceof ListCellRenderer) {
+			} else if (proxy instanceof Stream) {
 				//
-				if (Objects.equals(methodName, "getListCellRendererComponent")) {
+				if (Objects.equals(methodName, "filter")) {
 					//
-					return component;
+					return proxy;
 					//
 				} // if
 					//
@@ -337,6 +282,84 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 	}
 
 	@Test
+	void testSetBufferedImageType() throws Throwable {
+		//
+		final Field imageType = OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl.class
+				.getDeclaredField("imageType");
+		//
+		Assertions.assertDoesNotThrow(() -> setImageType(instance, null));
+		//
+		Assertions.assertNull(get(imageType, instance));
+		//
+		// java.lang.Number
+		//
+		final Integer I = Integer.valueOf(ONE);
+		//
+		Assertions.assertDoesNotThrow(() -> setImageType(instance, I));
+		//
+		Assertions.assertEquals(I, get(imageType, instance));
+		//
+		// java.lang.String
+		//
+		Assertions.assertDoesNotThrow(() -> setImageType(instance, Integer.toString(ONE)));
+		//
+		Assertions.assertEquals(I, get(imageType, instance));
+		//
+		if (imageType != null) {
+			//
+			imageType.setAccessible(true);
+			//
+		} // if
+			//
+		set(imageType, instance, null);
+		//
+		Assertions.assertDoesNotThrow(() -> setImageType(instance, ""));
+		//
+		Assertions.assertNull(get(imageType, instance));
+		//
+		final String string = "TYPE_INT_ARGB";
+		//
+		Assertions.assertDoesNotThrow(() -> setImageType(instance, string));
+		//
+		Assertions.assertEquals(FieldUtils.readDeclaredStaticField(BufferedImage.class, string),
+				get(imageType, instance));
+		//
+		set(imageType, instance, null);
+		//
+		Assertions.assertThrows(NumberFormatException.class, () -> setImageType(instance, " "));
+		//
+	}
+
+	private static void set(final Field field, final Object instance, final Object value)
+			throws IllegalArgumentException, IllegalAccessException {
+		if (field != null) {
+			field.set(instance, value);
+		}
+	}
+
+	private static void setImageType(final OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl instance,
+			final Object object) {
+		if (instance != null) {
+			instance.setImageType(object);
+		}
+	}
+
+	@Test
+	void testGet() throws Throwable {
+		//
+		Assertions.assertNull(get(null, null));
+		//
+	}
+
+	private static Object get(final Field field, final Object instance) throws Throwable {
+		try {
+			return METHOD_GET.invoke(null, field, instance);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
 	void testGetSrcMap() throws Throwable {
 		//
 		Assertions.assertNull(getSrcMap(null));
@@ -378,8 +401,25 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 		}
 	}
 
-	private static String toString(final Object instance) {
-		return instance != null ? instance.toString() : null;
+	@Test
+	void testToString() throws Throwable {
+		//
+		Assertions.assertNull(toString(null));
+		//
+	}
+
+	private static String toString(final Object instance) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_STRING.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 	@Test
@@ -752,6 +792,74 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 	private static <E> void add(final Collection<E> items, final E item) throws Throwable {
 		try {
 			METHOD_ADD.invoke(null, items, item);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testFilter() throws Throwable {
+		//
+		Assertions.assertNull(filter(null, null));
+		//
+		final Stream<?> steram = Reflection.newProxy(Stream.class, ih);
+		//
+		Assertions.assertSame(steram, filter(steram, null));
+		//
+	}
+
+	private static <T> Stream<T> filter(final Stream<T> instance, final Predicate<? super T> predicate)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_FILTER.invoke(null, instance, predicate);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Stream) {
+				return (Stream) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testToList() throws Throwable {
+		//
+		Assertions.assertNull(toList(null));
+		//
+	}
+
+	private static <T> List<T> toList(final Stream<T> instance) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_LIST.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof List) {
+				return (List) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetName() throws Throwable {
+		//
+		Assertions.assertNull(getName(null));
+		//
+	}
+
+	private static String getName(final Member instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_NAME.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

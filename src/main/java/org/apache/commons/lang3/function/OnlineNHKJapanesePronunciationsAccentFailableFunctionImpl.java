@@ -6,11 +6,15 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.awt.image.RenderedImage;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Member;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -28,7 +32,9 @@ import java.util.stream.Stream;
 import javax.imageio.ImageIO;
 
 import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -46,8 +52,151 @@ public class OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl
 
 	private String url = null;
 
+	private Integer imageType = null;
+
 	public void setUrl(final String url) {
 		this.url = url;
+	}
+
+	/**
+	 * The value should be one of the below.
+	 * 
+	 * @see java.awt.image.BufferedImage#TYPE_CUSTOM
+	 * 
+	 * @see java.awt.image.BufferedImage#TYPE_INT_ARGB
+	 * 
+	 * @see java.awt.image.BufferedImage#TYPE_INT_ARGB_PRE
+	 * 
+	 * @see java.awt.image.BufferedImage#TYPE_INT_BGR
+	 * 
+	 * @see java.awt.image.BufferedImage#TYPE_3BYTE_BGR
+	 * 
+	 * @see java.awt.image.BufferedImage#TYPE_4BYTE_ABGR
+	 * 
+	 * @see java.awt.image.BufferedImage#TYPE_4BYTE_ABGR_PRE
+	 * 
+	 * @see java.awt.image.BufferedImage#TYPE_USHORT_565_RGB
+	 * 
+	 * @see java.awt.image.BufferedImage#TYPE_USHORT_555_RGB
+	 * 
+	 * @see java.awt.image.BufferedImage#TYPE_BYTE_GRAY
+	 * 
+	 * @see java.awt.image.BufferedImage#TYPE_USHORT_GRAY
+	 * 
+	 * @see java.awt.image.BufferedImage#TYPE_BYTE_BINARY
+	 * 
+	 * @see java.awt.image.BufferedImage#TYPE_BYTE_INDEXED
+	 */
+	public void setImageType(final Object object) {
+		//
+		if (object == null) {
+			//
+			this.imageType = null;
+			//
+		} else if (object instanceof Number) {
+			//
+			this.imageType = Integer.valueOf(((Number) object).intValue());
+			//
+		} else if (object instanceof CharSequence) {
+			//
+			final String string = toString(object);
+			//
+			if (StringUtils.isEmpty(string)) {
+				//
+				this.imageType = null;
+				//
+				return;
+				//
+			} // if
+				//
+			NumberFormatException nfe = null;
+			//
+			try {
+				//
+				this.imageType = Integer.valueOf(string);
+				//
+			} catch (final NumberFormatException e) {
+				//
+				nfe = e;
+				//
+			} // try
+				//
+			if (this.imageType == null) {
+				//
+				final List<Field> fs = toList(
+						filter(testAndApply(Objects::nonNull, BufferedImage.class.getDeclaredFields(), Arrays::stream,
+								null),
+								f -> f != null
+										&& Modifier.isStatic(f.getModifiers()) && f
+												.getType() != null
+										&& (Number.class.isAssignableFrom(f.getType())
+												|| (f.getType().isPrimitive()
+														&& ArrayUtils.contains(
+																new Class<?>[] { Byte.TYPE, Short.TYPE, Integer.TYPE,
+																		Long.TYPE, Float.TYPE, Double.TYPE },
+																f.getType())))
+										&& Objects.equals(getName(f), string)));
+				//
+				final int size = IterableUtils.size(fs);
+				//
+				if (size > 1) {
+					//
+					throw new IllegalStateException();
+					//
+				} //
+					//
+				final Field f = testAndApply(x -> size == 1, fs, x -> IterableUtils.get(x, 0), null);
+				//
+				try {
+					//
+					final Object obj = f != null && Modifier.isStatic(f.getModifiers()) ? get(f, null) : null;
+					//
+					if (obj instanceof Number) {
+						//
+						this.imageType = Integer.valueOf(((Number) obj).intValue());
+						//
+					} // if
+						//
+				} catch (final IllegalAccessException e) {
+					//
+					TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
+					//
+				} // try
+					//
+			} // if
+				//
+			if (this.imageType == null & nfe != null) {
+				//
+				throw nfe;
+				//
+			} // if
+				//
+		} // if
+			//
+	}
+
+	private static String toString(final Object instance) {
+		return instance != null ? instance.toString() : null;
+	}
+
+	private static <T> Stream<T> filter(final Stream<T> instance, final Predicate<? super T> predicate) {
+		//
+		return instance != null && (predicate != null || Proxy.isProxyClass(getClass(instance)))
+				? instance.filter(predicate)
+				: null;
+		//
+	}
+
+	private static <T> List<T> toList(final Stream<T> instance) {
+		return instance != null ? instance.toList() : null;
+	}
+
+	private static String getName(final Member instance) {
+		return instance != null ? instance.getName() : null;
+	}
+
+	private static Object get(final Field field, final Object instance) throws IllegalAccessException {
+		return field != null ? field.get(instance) : null;
 	}
 
 	@Override
@@ -88,8 +237,8 @@ public class OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl
 					setValue(x, String.join("", protocolAndHost, getValue(x)));
 				});
 				//
-				pronunciation.setPitchAccentImage(
-						createMergedBufferedImage(protocolAndHost, getImageSrcs(element), BufferedImage.TYPE_INT_RGB));
+				pronunciation.setPitchAccentImage(createMergedBufferedImage(protocolAndHost, getImageSrcs(element),
+						intValue(imageType, BufferedImage.TYPE_INT_RGB)));
 				//
 				add(list = ObjectUtils.getIfNull(list, ArrayList::new), pronunciation);
 				//

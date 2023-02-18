@@ -244,6 +244,8 @@
 		class="org.apache.commons.lang3.function.OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl">
 		<property name="url"
 			value="${org.apache.commons.lang3.function.OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl.url}" />
+		<property name="imageType"
+			value="${org.apache.commons.lang3.function.OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl.imageType}" />
 	</bean>
 
 	<!-- 広辞苑無料検索 NHK日本語発音アクセント辞典 -->
