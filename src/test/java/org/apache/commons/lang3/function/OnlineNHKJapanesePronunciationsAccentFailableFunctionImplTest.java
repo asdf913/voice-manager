@@ -293,6 +293,8 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 	@Test
 	void testSetImageType() throws Throwable {
 		//
+		Assertions.assertThrows(IllegalArgumentException.class, () -> setImageType(instance, Collections.emptyList()));
+		//
 		final Field imageType = OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl.class
 				.getDeclaredField("imageType");
 		//
