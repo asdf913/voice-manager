@@ -165,7 +165,7 @@ public class OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl
 					//
 			} // if
 				//
-			if (this.imageType == null & nfe != null) {
+			if (this.imageType == null && nfe != null) {
 				//
 				throw nfe;
 				//
