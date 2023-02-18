@@ -289,7 +289,7 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 	}
 
 	@Test
-	void testSetBufferedImageType() throws Throwable {
+	void testSetImageType() throws Throwable {
 		//
 		final Field imageType = OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl.class
 				.getDeclaredField("imageType");
@@ -324,16 +324,20 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 		//
 		Assertions.assertNull(get(imageType, instance));
 		//
-		final String string = "TYPE_INT_ARGB";
-		//
-		Assertions.assertDoesNotThrow(() -> setImageType(instance, string));
-		//
-		Assertions.assertEquals(FieldUtils.readDeclaredStaticField(BufferedImage.class, string),
-				get(imageType, instance));
-		//
 		set(imageType, instance, null);
 		//
 		Assertions.assertThrows(NumberFormatException.class, () -> setImageType(instance, " "));
+		//
+		// char[]
+		//
+		set(imageType, instance, null);
+		//
+		final String string = "TYPE_INT_ARGB";
+		//
+		Assertions.assertDoesNotThrow(() -> setImageType(instance, string != null ? string.toCharArray() : null));
+		//
+		Assertions.assertEquals(FieldUtils.readDeclaredStaticField(BufferedImage.class, string),
+				get(imageType, instance));
 		//
 	}
 

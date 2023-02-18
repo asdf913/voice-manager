@@ -171,7 +171,15 @@ public class OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl
 				//
 			} // if
 				//
-		} // if
+		} else if (object instanceof char[]) {
+			//
+			setImageType(new String((char[]) object));
+			//
+		} else {
+			//
+			throw new IllegalArgumentException(toString(object != null ? object.getClass() : null));
+			//
+		} //
 			//
 	}
 
