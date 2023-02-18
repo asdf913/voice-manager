@@ -127,7 +127,7 @@ public class OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl
 						filter(testAndApply(Objects::nonNull, BufferedImage.class.getDeclaredFields(), Arrays::stream,
 								null),
 								f -> f != null
-										&& Modifier.isStatic(f.getModifiers()) && f
+										&& isStatic(f) && f
 												.getType() != null
 										&& (Number.class.isAssignableFrom(f.getType())
 												|| (f.getType().isPrimitive()
@@ -149,7 +149,7 @@ public class OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl
 				//
 				try {
 					//
-					final Object obj = f != null && Modifier.isStatic(f.getModifiers()) ? get(f, null) : null;
+					final Object obj = Boolean.logicalAnd(f != null, isStatic(f)) ? get(f, null) : null;
 					//
 					if (obj instanceof Number) {
 						//
@@ -173,6 +173,10 @@ public class OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl
 				//
 		} // if
 			//
+	}
+
+	private static boolean isStatic(final Member instance) {
+		return instance != null && Modifier.isStatic(instance.getModifiers());
 	}
 
 	private static String toString(final Object instance) {
