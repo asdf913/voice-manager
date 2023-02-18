@@ -166,7 +166,6 @@ public class LoggerUtil {
 
 	private static <T> List<T> toList(final Stream<T> instance) {
 		return instance != null ? instance.toList() : null;
-
 	}
 
 	private static <T> Stream<T> filter(final Stream<T> instance, final Predicate<? super T> predicate) {
