@@ -40,6 +40,7 @@ import java.util.function.IntConsumer;
 import java.util.function.IntUnaryOperator;
 import java.util.function.Predicate;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
@@ -87,7 +88,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			METHOD_GET_FIELD, METHOD_SET_TEXT, METHOD_SET_FORE_GROUND, METHOD_GET_LIST_CELL_RENDERER_COMPONENT,
 			METHOD_SAVE_FILE, METHOD_CONTAINS_KEY, METHOD_IIF, METHOD_GET_NAME, METHOD_SORT,
 			METHOD_CREATE_IMAGE_FORMAT_COMPARATOR, METHOD_IS_ANNOTATION_PRESENT, METHOD_GET_ANNOTATION,
-			METHOD_GET_PREFERRED_SIZE = null;
+			METHOD_GET_PREFERRED_SIZE, METHOD_STREAM, METHOD_FILTER, METHOD_TO_LIST = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -190,6 +191,12 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				.setAccessible(true);
 		//
 		(METHOD_GET_PREFERRED_SIZE = clz.getDeclaredMethod("getPreferredSize", Component.class)).setAccessible(true);
+		//
+		(METHOD_STREAM = clz.getDeclaredMethod("stream", Collection.class)).setAccessible(true);
+		//
+		(METHOD_FILTER = clz.getDeclaredMethod("filter", Stream.class, Predicate.class)).setAccessible(true);
+		//
+		(METHOD_TO_LIST = clz.getDeclaredMethod("toList", Stream.class)).setAccessible(true);
 		//
 	}
 
@@ -1537,6 +1544,74 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				return null;
 			} else if (obj instanceof Dimension) {
 				return (Dimension) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testStream() throws Throwable {
+		//
+		Assertions.assertNull(stream(null));
+		//
+	}
+
+	private static <E> Stream<E> stream(final Collection<E> instance) throws Throwable {
+		try {
+			final Object obj = METHOD_STREAM.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Stream) {
+				return (Stream) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testFilter() throws Throwable {
+		//
+		Assertions.assertNull(filter(null, null));
+		//
+		Assertions.assertNull(filter(Stream.empty(), null));
+		//
+		Assertions.assertNull(filter(Reflection.newProxy(Stream.class, ih), null));
+		//
+	}
+
+	private static <T> Stream<T> filter(final Stream<T> instance, final Predicate<? super T> predicate)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_FILTER.invoke(null, instance, predicate);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Stream) {
+				return (Stream) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testToList() throws Throwable {
+		//
+		Assertions.assertNull(toList(null));
+		//
+	}
+
+	private static <T> List<T> toList(final Stream<T> instance) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_LIST.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof List) {
+				return (List) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
