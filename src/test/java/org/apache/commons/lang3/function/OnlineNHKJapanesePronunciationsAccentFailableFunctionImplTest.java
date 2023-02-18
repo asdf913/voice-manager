@@ -1,6 +1,5 @@
 package org.apache.commons.lang3.function;
 
-import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
@@ -117,17 +116,13 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 
 	private static class IH implements InvocationHandler {
 
-		private Integer width, height, size = null;
+		private Integer width, height = null;
 
-		private Object key, value, selectedItem, get = null;
+		private Object value = null;
 
 		private Set<Entry<?, ?>> entrySet = null;
 
 		private Iterator<?> iterator = null;
-
-		private Boolean hasNext, containsKey, isEmpty = null;
-
-		private Component component = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
