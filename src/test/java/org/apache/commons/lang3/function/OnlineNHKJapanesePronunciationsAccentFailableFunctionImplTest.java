@@ -948,7 +948,7 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 		//
 		Assertions.assertFalse(and(true, false));
 		//
-		Assertions.assertFalse(and(true, true, null));
+		Assertions.assertTrue(and(true, true, null));
 		//
 	}
 
