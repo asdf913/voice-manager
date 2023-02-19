@@ -6,15 +6,11 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.awt.image.RenderedImage;
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.lang.reflect.Member;
-import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -32,13 +28,8 @@ import java.util.stream.Stream;
 import javax.imageio.ImageIO;
 
 import org.apache.commons.collections4.IterableUtils;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
-import org.javatuples.Unit;
-import org.javatuples.valueintf.IValue0;
-import org.javatuples.valueintf.IValue0Util;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -90,168 +81,8 @@ public class OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl
 	 * 
 	 * @see java.awt.image.BufferedImage#TYPE_BYTE_INDEXED
 	 */
-	public void setImageType(final Object object) {
-		//
-		if (object == null) {
-			//
-			this.imageType = null;
-			//
-		} else if (object instanceof Number) {
-			//
-			this.imageType = Integer.valueOf(((Number) object).intValue());
-			//
-		} else if (object instanceof CharSequence) {
-			//
-			final IValue0<Integer> value = getImageType((CharSequence) object);
-			//
-			if (value != null) {
-				//
-				this.imageType = IValue0Util.getValue0(value);
-				//
-			} else {
-				//
-				throw new IllegalStateException();
-				//
-			} // if
-				//
-		} else if (object instanceof char[]) {
-			//
-			setImageType(new String((char[]) object));
-			//
-		} else {
-			//
-			throw new IllegalArgumentException(toString(getClass(object)));
-			//
-		} // if
-			//
-	}
-
-	private static IValue0<Integer> getImageType(final CharSequence cs) {
-		//
-		final String string = toString(cs);
-		//
-		if (StringUtils.isEmpty(string)) {
-			//
-			return Unit.with(null);
-			//
-		} // if
-			//
-		NumberFormatException nfe = null;
-		//
-		try {
-			//
-			return Unit.with(Integer.valueOf(string));
-			//
-		} catch (final NumberFormatException e) {
-			//
-			nfe = e;
-			//
-		} // try
-			//
-		final List<Field> fs = toList(filter(
-				testAndApply(Objects::nonNull, BufferedImage.class.getDeclaredFields(), Arrays::stream, null), f -> {
-					//
-					final Class<?> type = getType(f);
-					//
-					return and(isStatic(f),
-							Boolean.logicalOr(isAssignableFrom(Number.class, type),
-									(isPrimitive(type) && ArrayUtils.contains(new Class<?>[] { Byte.TYPE, Short.TYPE,
-											Integer.TYPE, Long.TYPE, Float.TYPE, Double.TYPE }, type))),
-							Objects.equals(getName(f), string));
-					//
-				}));
-		//
-		final int size = IterableUtils.size(fs);
-		//
-		if (size > 1) {
-			//
-			throw new IllegalStateException();
-			//
-		} //
-			//
-		try {
-			//
-			final Object obj = testAndApply(OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl::isStatic,
-					testAndApply(x -> size == 1, fs, x -> IterableUtils.get(x, 0), null), x -> get(x, null), null);
-			//
-			if (obj instanceof Number) {
-				//
-				return Unit.with(Integer.valueOf(((Number) obj).intValue()));
-				//
-			} // if
-				//
-		} catch (final IllegalAccessException e) {
-			//
-			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
-			//
-		} // try
-			//
-		throw nfe;
-		//
-	}
-
-	private static boolean and(final boolean a, final boolean b, final boolean... bs) {
-		//
-		boolean result = a && b;
-		//
-		if (!result) {
-			//
-			return false;
-			//
-		} // if
-			//
-		for (int i = 0; bs != null && i < bs.length; i++) {
-			//
-			if (!(result &= bs[i])) {
-				//
-				return false;
-				//
-			} // if
-				//
-		} // for
-			//
-		return result;
-		//
-	}
-
-	private static boolean isStatic(final Member instance) {
-		return instance != null && Modifier.isStatic(instance.getModifiers());
-	}
-
-	private static Class<?> getType(final Field instance) {
-		return instance != null ? instance.getType() : null;
-	}
-
-	private static boolean isAssignableFrom(final Class<?> a, final Class<?> b) {
-		return a != null && b != null && a.isAssignableFrom(b);
-	}
-
-	private static boolean isPrimitive(final Class<?> instance) {
-		return instance != null && instance.isPrimitive();
-	}
-
-	private static String toString(final Object instance) {
-		return instance != null ? instance.toString() : null;
-	}
-
-	private static <T> Stream<T> filter(final Stream<T> instance, final Predicate<? super T> predicate) {
-		//
-		return instance != null && (predicate != null || Proxy.isProxyClass(getClass(instance)))
-				? instance.filter(predicate)
-				: null;
-		//
-	}
-
-	private static <T> List<T> toList(final Stream<T> instance) {
-		return instance != null ? instance.toList() : null;
-	}
-
-	private static String getName(final Member instance) {
-		return instance != null ? instance.getName() : null;
-	}
-
-	private static Object get(final Field field, final Object instance) throws IllegalAccessException {
-		return field != null ? field.get(instance) : null;
+	public void setImageType(final Integer imageType) {
+		this.imageType = imageType;
 	}
 
 	@Override

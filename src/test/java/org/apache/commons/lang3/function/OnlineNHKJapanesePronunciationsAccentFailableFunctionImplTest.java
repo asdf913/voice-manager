@@ -12,7 +12,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
@@ -26,9 +25,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
 
-import org.apache.commons.lang3.reflect.FieldUtils;
 import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -46,24 +43,19 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 
 	private static final int ONE = 1;
 
-	private static Method METHOD_GET, METHOD_GET_SRC_MAP, METHOD_GET_CLASS, METHOD_TO_STRING, METHOD_GET_IMAGE_SRCS,
+	private static Method METHOD_GET_SRC_MAP, METHOD_GET_CLASS, METHOD_GET_IMAGE_SRCS,
 			METHOD_CREATE_MERGED_BUFFERED_IMAGE, METHOD_GET_GRAPHICS, METHOD_DRAW_IMAGE, METHOD_GET_WIDTH,
 			METHOD_GET_HEIGHT, METHOD_INT_VALUE, METHOD_FOR_EACH, METHOD_SET_VALUE, METHOD_GET_VALUE, METHOD_ENTRY_SET,
-			METHOD_GET_PROTOCOL, METHOD_GET_HOST, METHOD_TEST, METHOD_ADD, METHOD_FILTER, METHOD_TO_LIST,
-			METHOD_GET_NAME, METHOD_GET_TYPE, METHOD_IS_ASSIGNABLE_FROM, METHOD_IS_PRIMITIVE, METHOD_AND = null;
+			METHOD_GET_PROTOCOL, METHOD_GET_HOST, METHOD_TEST, METHOD_ADD = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
 		//
 		final Class<?> clz = OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl.class;
 		//
-		(METHOD_GET = clz.getDeclaredMethod("get", Field.class, Object.class)).setAccessible(true);
-		//
 		(METHOD_GET_SRC_MAP = clz.getDeclaredMethod("getSrcMap", Element.class)).setAccessible(true);
 		//
 		(METHOD_GET_CLASS = clz.getDeclaredMethod("getClass", Object.class)).setAccessible(true);
-		//
-		(METHOD_TO_STRING = clz.getDeclaredMethod("toString", Object.class)).setAccessible(true);
 		//
 		(METHOD_GET_IMAGE_SRCS = clz.getDeclaredMethod("getImageSrcs", Element.class)).setAccessible(true);
 		//
@@ -97,21 +89,6 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 		//
 		(METHOD_ADD = clz.getDeclaredMethod("add", Collection.class, Object.class)).setAccessible(true);
 		//
-		(METHOD_FILTER = clz.getDeclaredMethod("filter", Stream.class, Predicate.class)).setAccessible(true);
-		//
-		(METHOD_TO_LIST = clz.getDeclaredMethod("toList", Stream.class)).setAccessible(true);
-		//
-		(METHOD_GET_NAME = clz.getDeclaredMethod("getName", Member.class)).setAccessible(true);
-		//
-		(METHOD_GET_TYPE = clz.getDeclaredMethod("getType", Field.class)).setAccessible(true);
-		//
-		(METHOD_IS_ASSIGNABLE_FROM = clz.getDeclaredMethod("isAssignableFrom", Class.class, Class.class))
-				.setAccessible(true);
-		//
-		(METHOD_IS_PRIMITIVE = clz.getDeclaredMethod("isPrimitive", Class.class)).setAccessible(true);
-		//
-		(METHOD_AND = clz.getDeclaredMethod("and", Boolean.TYPE, Boolean.TYPE, boolean[].class)).setAccessible(true);
-		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -127,12 +104,6 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
-			if (Objects.equals(method != null ? method.getReturnType() : null, Void.TYPE)) {
-				//
-				return null;
-				//
-			} // if
-				//
 			final String methodName = method != null ? method.getName() : null;
 			//
 			if (proxy instanceof Iterable) {
@@ -170,14 +141,6 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 				if (Objects.equals(methodName, "entrySet")) {
 					//
 					return entrySet;
-					//
-				} // if
-					//
-			} else if (proxy instanceof Stream) {
-				//
-				if (Objects.equals(methodName, "filter")) {
-					//
-					return proxy;
 					//
 				} // if
 					//
@@ -288,11 +251,15 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 	@Test
 	void testSetImageType() throws Throwable {
 		//
-		Assertions.assertThrows(IllegalArgumentException.class, () -> setImageType(instance, Collections.emptyList()));
-		//
 		final Field imageType = OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl.class
 				.getDeclaredField("imageType");
 		//
+		if (imageType != null) {
+			//
+			imageType.setAccessible(true);
+			//
+		} // if
+			//
 		Assertions.assertDoesNotThrow(() -> setImageType(instance, null));
 		//
 		Assertions.assertNull(get(imageType, instance));
@@ -305,68 +272,17 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 		//
 		Assertions.assertEquals(I, get(imageType, instance));
 		//
-		// java.lang.String
-		//
-		Assertions.assertDoesNotThrow(() -> setImageType(instance, Integer.toString(ONE)));
-		//
-		Assertions.assertEquals(I, get(imageType, instance));
-		//
-		if (imageType != null) {
-			//
-			imageType.setAccessible(true);
-			//
-		} // if
-			//
-		set(imageType, instance, null);
-		//
-		Assertions.assertDoesNotThrow(() -> setImageType(instance, ""));
-		//
-		Assertions.assertNull(get(imageType, instance));
-		//
-		set(imageType, instance, null);
-		//
-		Assertions.assertThrows(NumberFormatException.class, () -> setImageType(instance, " "));
-		//
-		// char[]
-		//
-		set(imageType, instance, null);
-		//
-		final String string = "TYPE_INT_ARGB";
-		//
-		Assertions.assertDoesNotThrow(() -> setImageType(instance, string != null ? string.toCharArray() : null));
-		//
-		Assertions.assertEquals(FieldUtils.readDeclaredStaticField(BufferedImage.class, string),
-				get(imageType, instance));
-		//
-	}
-
-	private static void set(final Field field, final Object instance, final Object value)
-			throws IllegalArgumentException, IllegalAccessException {
-		if (field != null) {
-			field.set(instance, value);
-		}
 	}
 
 	private static void setImageType(final OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl instance,
-			final Object object) {
+			final Integer imageType) {
 		if (instance != null) {
-			instance.setImageType(object);
+			instance.setImageType(imageType);
 		}
 	}
 
-	@Test
-	void testGet() throws Throwable {
-		//
-		Assertions.assertNull(get(null, null));
-		//
-	}
-
-	private static Object get(final Field field, final Object instance) throws Throwable {
-		try {
-			return METHOD_GET.invoke(null, field, instance);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
+	private static Object get(final Field field, final Object instance) throws IllegalAccessException {
+		return field != null ? field.get(instance) : null;
 	}
 
 	@Test
@@ -411,25 +327,8 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 		}
 	}
 
-	@Test
-	void testToString() throws Throwable {
-		//
-		Assertions.assertNull(toString(null));
-		//
-	}
-
-	private static String toString(final Object instance) throws Throwable {
-		try {
-			final Object obj = METHOD_TO_STRING.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
+	private static String toString(final Object instance) {
+		return instance != null ? instance.toString() : null;
 	}
 
 	@Test
@@ -802,160 +701,6 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 	private static <E> void add(final Collection<E> items, final E item) throws Throwable {
 		try {
 			METHOD_ADD.invoke(null, items, item);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testFilter() throws Throwable {
-		//
-		Assertions.assertNull(filter(null, null));
-		//
-		final Stream<?> steram = Reflection.newProxy(Stream.class, ih);
-		//
-		Assertions.assertSame(steram, filter(steram, null));
-		//
-	}
-
-	private static <T> Stream<T> filter(final Stream<T> instance, final Predicate<? super T> predicate)
-			throws Throwable {
-		try {
-			final Object obj = METHOD_FILTER.invoke(null, instance, predicate);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Stream) {
-				return (Stream) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testToList() throws Throwable {
-		//
-		Assertions.assertNull(toList(null));
-		//
-	}
-
-	private static <T> List<T> toList(final Stream<T> instance) throws Throwable {
-		try {
-			final Object obj = METHOD_TO_LIST.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof List) {
-				return (List) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetName() throws Throwable {
-		//
-		Assertions.assertNull(getName(null));
-		//
-	}
-
-	private static String getName(final Member instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_NAME.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetType() throws Throwable {
-		//
-		Assertions.assertNull(getType(null));
-		//
-	}
-
-	private static Class<?> getType(final Field instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_TYPE.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Class) {
-				return (Class<?>) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testIsAssignableFrom() throws Throwable {
-		//
-		Assertions.assertFalse(isAssignableFrom(null, null));
-		//
-		Assertions.assertFalse(isAssignableFrom(Object.class, null));
-		//
-		Assertions.assertTrue(isAssignableFrom(Object.class, Object.class));
-		//
-	}
-
-	private static boolean isAssignableFrom(final Class<?> a, final Class<?> b) throws Throwable {
-		try {
-			final Object obj = METHOD_IS_ASSIGNABLE_FROM.invoke(null, a, b);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testIsPrimitive() throws Throwable {
-		//
-		Assertions.assertFalse(isPrimitive(null));
-		//
-		Assertions.assertFalse(isPrimitive(Object.class));
-		//
-	}
-
-	private static boolean isPrimitive(final Class<?> instance) throws Throwable {
-		try {
-			final Object obj = METHOD_IS_PRIMITIVE.invoke(null, instance);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testAnd() throws Throwable {
-		//
-		Assertions.assertFalse(and(true, false));
-		//
-		Assertions.assertTrue(and(true, true, null));
-		//
-	}
-
-	private static boolean and(final boolean a, final boolean b, final boolean... bs) throws Throwable {
-		try {
-			final Object obj = METHOD_AND.invoke(null, a, b, bs);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
-			}
-			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

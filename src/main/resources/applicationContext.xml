@@ -244,8 +244,13 @@
 		class="org.apache.commons.lang3.function.OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl">
 		<property name="url"
 			value="${org.apache.commons.lang3.function.OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl.url}" />
-		<property name="imageType"
-			value="${org.apache.commons.lang3.function.OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl.imageType}" />
+		<property name="imageType">
+			<bean
+				class="org.springframework.beans.factory.BufferedImageTypeFactoryBean">
+				<property name="value"
+					value="${java.awt.image.BufferedImage.imageType}" />
+			</bean>
+		</property>
 	</bean>
 
 	<!-- 広辞苑無料検索 NHK日本語発音アクセント辞典 -->
