@@ -319,7 +319,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			public Component getListCellRendererComponent(final JList<? extends Pronunciation> list,
 					final Pronunciation value, final int index, final boolean isSelected, final boolean cellHasFocus) {
 				//
-				final BufferedImage pitchAccentImage = value != null ? value.getPitchAccentImage() : null;
+				final BufferedImage pitchAccentImage = getPitchAccentImage(value);
 				//
 				if (pitchAccentImage != null) {
 					//
@@ -353,6 +353,9 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		// Image Format
 		//
 		final List<String> classNames = getImageFormats(imageFormatOrders);
+		//
+		// Filter out unsupported image format in "Image Format" drop down list (i.e.
+		// "javax.imageio.ImageIO.write(java.awt.image.RenderedImage,java.lang.String,java.io.OutputStream)"
 		//
 		if (bufferedImageType != null) {
 			//
@@ -415,6 +418,10 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		//
 		pack();
 		//
+	}
+
+	private static BufferedImage getPitchAccentImage(final Pronunciation instnace) {
+		return instnace != null ? instnace.getPitchAccentImage() : null;
 	}
 
 	private static List<String> getImageFormats(final List<?> imageFormatOrders) throws NoSuchFieldException {
@@ -808,7 +815,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 
 	private static void setPitchAccentImageToSystemClipboardContents(final Pronunciation pronunciation) {
 		//
-		final BufferedImage pitchAccentImage = pronunciation != null ? pronunciation.getPitchAccentImage() : null;
+		final BufferedImage pitchAccentImage = getPitchAccentImage(pronunciation);
 		//
 		Object raster = null;
 		//
@@ -844,7 +851,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 
 	private void savePitchAccentImage(final Pronunciation pronunciation) {
 		//
-		final BufferedImage pitchAccentImage = pronunciation != null ? pronunciation.getPitchAccentImage() : null;
+		final BufferedImage pitchAccentImage = getPitchAccentImage(pronunciation);
 		//
 		Object raster = null;
 		//
