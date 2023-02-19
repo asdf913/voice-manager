@@ -395,10 +395,10 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		// "java.awt.Component" from field(s) annotated by
 		// "org.springframework.context.support.OnlineNHKJapanesePronunciationAccentGui$Group"
 		//
-		final Collection<Component> cs = new FailableStream<>(filter(
-				testAndApply(Objects::nonNull, getClass().getDeclaredFields(), Arrays::stream, null),
-				x -> Objects.equals(value(isAnnotationPresent(x, Group.class) ? getAnnotation(x, Group.class) : null),
-						"LastComponentInRow")))
+		final Collection<Component> cs = new FailableStream<>(
+				filter(testAndApply(Objects::nonNull, getClass().getDeclaredFields(), Arrays::stream, null),
+						x -> Objects.equals(value(testAndApply(y -> isAnnotationPresent(y, Group.class), x,
+								y -> getAnnotation(y, Group.class), null)), "LastComponentInRow")))
 				.map(x -> cast(Component.class, get(x, this))).collect(Collectors.toList());
 		//
 		final Double maxPreferredSizeWidth = stream(cs).map(x -> getWidth(getPreferredSize(x)))
