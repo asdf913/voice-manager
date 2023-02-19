@@ -181,6 +181,11 @@ import org.apache.bcel.classfile.CodeUtil;
 import org.apache.bcel.classfile.FieldOrMethod;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Utility;
+import org.apache.bcel.generic.ICONST;
+import org.apache.bcel.generic.IF_ICMPGE;
+import org.apache.bcel.generic.Instruction;
+import org.apache.bcel.generic.InstructionList;
+import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.ObjectType;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.codec.binary.Hex;
@@ -1098,34 +1103,28 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		Integer result = null;
 		//
-		if (method != null) {
+		final MethodGen mg = testAndApply(Objects::nonNull, method, x -> new MethodGen(x, null, null), null);
+		//
+		final InstructionList il = mg != null ? mg.getInstructionList() : null;
+		//
+		final Instruction[] instructions = il != null ? il.getInstructions() : null;
+		//
+		ICONST iconst = null;
+		//
+		Number value = null;
+		//
+		for (int i = 0; instructions != null && i < instructions.length; i++) {
 			//
-			final byte[] bs = CodeUtil.getCode(method.getCode());
-			//
-			final String[] lines = StringUtils
-					.split(StringUtils.trim(Utility.codeToString(bs, method.getConstantPool(), 0, length(bs))), '\n');
-			//
-			Pattern pattern1 = null, pattern2 = null;
-			//
-			Matcher matcher = null;
-			//
-			for (int i = 0; lines != null && i < lines.length; i++) {
+			if ((iconst = cast(ICONST.class, instructions[i])) != null && i < instructions.length - 1
+					&& instructions[i + 1] instanceof IF_ICMPGE && (value = iconst.getValue()) != null) {
 				//
-				if (//
-				matches(matcher(pattern1 = ObjectUtils.getIfNull(pattern1,
-						() -> Pattern.compile("^\\d+:\\s+if_icmpge\\s+#\\d+$")), lines[i]))
-						//
-						&& matches((matcher = matcher(pattern2 = ObjectUtils.getIfNull(pattern2,
-								() -> Pattern.compile("^\\d+:\\s+iconst_(\\d+)$")), lines[i - 1])))
-						&& matcher.groupCount() > 0 && (result = valueOf(matcher.group(1))) != null) {
-					//
-					break;
-					//
-				} // if
-					//
-			} // for
+				result = Integer.valueOf(value.intValue());
 				//
-		} // if
+				break;
+				//
+			} // if
+				//
+		} // for
 			//
 		return result;
 		//
