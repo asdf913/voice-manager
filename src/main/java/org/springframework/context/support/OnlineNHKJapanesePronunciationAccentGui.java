@@ -298,7 +298,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		//
 		add(tfText = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.OnlineNHKJapanesePronunciationAccentGui.text")),
-				String.format("%1$s,wmin %2$s,span %3$s", growx, "100px", 2 + 1));
+				String.format("%1$s,wmin %2$s,span %3$s", growx, "100px", 3));
 		//
 		final String wrap = "wrap";
 		//
@@ -336,7 +336,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 
 		});
 		//
-		add(jcbPronounication, String.format("%1$s,%2$s,span %3$s", wrap, growx, 2 + 1));
+		add(jcbPronounication, String.format("%1$s,%2$s,span %3$s", wrap, growx, 3));
 		//
 		add(new JLabel("Audio"));
 		//
