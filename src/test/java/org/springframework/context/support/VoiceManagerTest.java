@@ -127,6 +127,8 @@ import javax.xml.xpath.XPathFactory;
 
 import org.apache.bcel.classfile.FieldOrMethod;
 import org.apache.bcel.classfile.JavaClass;
+import org.apache.bcel.generic.ICONST;
+import org.apache.bcel.generic.Instruction;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -280,10 +282,12 @@ class VoiceManagerTest {
 			METHOD_IS_ANNOTATION_PRESENT, METHOD_PROCESS, METHOD_ENCODE_TO_STRING,
 			METHOD_GET_VOICE_MULTI_MAP_BY_LIST_NAME, METHOD_GET_VOICE_MULTI_MAP_BY_JLPT, METHOD_GET_TEMPLATE,
 			METHOD_GET_FILE_EXTENSIONS, METHOD_REDUCE, METHOD_APPEND_STRING, METHOD_APPEND_CHAR,
-			METHOD_GET_PROVIDER_PLATFORM, METHOD_GET_RESOURCE_AS_STREAM, METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH,
-			METHOD_GET_ATTRIBUTES, METHOD_GET_LENGTH, METHOD_ITEM, METHOD_GET_OS_VERSION_INFO_EX_MAP,
-			METHOD_CREATE_JLPT_SHEET, METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2, METHOD_SET_VISIBLE,
-			METHOD_RANDOM_ALPHABETIC, METHOD_GET_MEDIA_FORMAT_LINK, METHOD_GET_EVENT_TYPE, METHOD_GET_PARENT_FILE,
+			METHOD_GET_PROVIDER_PLATFORM, METHOD_GET_RESOURCE_AS_STREAM,
+			METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH_METHOD,
+			METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH_INSTRUCTION_ARRAY, METHOD_GET_ATTRIBUTES, METHOD_GET_LENGTH,
+			METHOD_ITEM, METHOD_GET_OS_VERSION_INFO_EX_MAP, METHOD_CREATE_JLPT_SHEET,
+			METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2, METHOD_SET_VISIBLE, METHOD_RANDOM_ALPHABETIC,
+			METHOD_GET_MEDIA_FORMAT_LINK, METHOD_GET_EVENT_TYPE, METHOD_GET_PARENT_FILE,
 			METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET,
 			METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET_FIRST_ROW, METHOD_EXPORT_JLPT,
 			METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT, METHOD_SET_SHEET_HEADER_ROW, METHOD_ENCRYPT,
@@ -716,8 +720,11 @@ class VoiceManagerTest {
 		(METHOD_GET_RESOURCE_AS_STREAM = clz.getDeclaredMethod("getResourceAsStream", Class.class, String.class))
 				.setAccessible(true);
 		//
-		(METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH = clz.getDeclaredMethod("getTempFileMinimumPrefixLength",
+		(METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH_METHOD = clz.getDeclaredMethod("getTempFileMinimumPrefixLength",
 				org.apache.bcel.classfile.Method.class)).setAccessible(true);
+		//
+		(METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH_INSTRUCTION_ARRAY = clz
+				.getDeclaredMethod("getTempFileMinimumPrefixLength", Instruction[].class)).setAccessible(true);
 		//
 		(METHOD_GET_ATTRIBUTES = clz.getDeclaredMethod("getAttributes", Node.class)).setAccessible(true);
 		//
@@ -6459,14 +6466,37 @@ class VoiceManagerTest {
 	@Test
 	void testGetTempFileMinimumPrefixLength() throws Throwable {
 		//
-		Assertions.assertNull(getTempFileMinimumPrefixLength(null));
+		Assertions.assertNull(getTempFileMinimumPrefixLength((org.apache.bcel.classfile.Method) null));
+		//
+		Assertions.assertNull(getTempFileMinimumPrefixLength((Instruction[]) null));
+		//
+		final ICONST iconst = new ICONST(0);
+		//
+		Assertions.assertNull(getTempFileMinimumPrefixLength(new Instruction[] { iconst }));
+		//
+		Assertions.assertNull(getTempFileMinimumPrefixLength(new Instruction[] { iconst, null }));
 		//
 	}
 
 	private static Integer getTempFileMinimumPrefixLength(final org.apache.bcel.classfile.Method method)
 			throws Throwable {
 		try {
-			final Object obj = METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH.invoke(null, method);
+			final Object obj = METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH_METHOD.invoke(null, method);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Integer) {
+				return (Integer) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static Integer getTempFileMinimumPrefixLength(final Instruction[] instructions) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH_INSTRUCTION_ARRAY.invoke(null,
+					(Object) instructions);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Integer) {
