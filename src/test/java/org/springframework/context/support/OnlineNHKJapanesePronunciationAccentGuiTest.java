@@ -418,6 +418,12 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		//
 		Assertions.assertDoesNotThrow(() -> afterPropertiesSet(instance));
 		//
+		if (instance != null) {
+			//
+			instance.setBufferedImageType(BufferedImage.TYPE_INT_RGB);
+			//
+		} // if
+			//
 		Assertions.assertDoesNotThrow(() -> afterPropertiesSet(instance));
 		//
 	}

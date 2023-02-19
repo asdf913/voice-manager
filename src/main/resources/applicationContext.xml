@@ -240,17 +240,18 @@
 	</bean>
 
 	<!-- -->
+	<bean id="BufferedImageType"
+		class="org.springframework.beans.factory.BufferedImageTypeFactoryBean">
+		<property name="value"
+			value="${java.awt.image.BufferedImage.imageType}" />
+	</bean>
+
+	<!-- -->
 	<bean id="OnlineNHKJapanesePronunciationsAccentFailableFunction"
 		class="org.apache.commons.lang3.function.OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl">
 		<property name="url"
 			value="${org.apache.commons.lang3.function.OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl.url}" />
-		<property name="imageType">
-			<bean
-				class="org.springframework.beans.factory.BufferedImageTypeFactoryBean">
-				<property name="value"
-					value="${java.awt.image.BufferedImage.imageType}" />
-			</bean>
-		</property>
+		<property name="imageType" ref="BufferedImageType" />
 	</bean>
 
 	<!-- 広辞苑無料検索 NHK日本語発音アクセント辞典 -->
@@ -263,6 +264,7 @@
 		<property
 			name="onlineNHKJapanesePronunciationsAccentFailableFunction"
 			ref="OnlineNHKJapanesePronunciationsAccentFailableFunction" />
+		<property name="bufferedImageType" ref="BufferedImageType" />
 	</bean>
 
 	<bean id="DataSource" class="org.h2.jdbcx.JdbcConnectionPool"

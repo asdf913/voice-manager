@@ -13,6 +13,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Dimension2D;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -114,6 +115,8 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 
 	private static final long serialVersionUID = 6227192813388400801L;
 
+	private Integer bufferedImageType = null;
+
 	private transient PropertyResolver propertyResolver = null;
 
 	private JTextComponent tfText = null;
@@ -167,6 +170,10 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 	@Override
 	public void setEnvironment(final Environment environment) {
 		this.propertyResolver = environment;
+	}
+
+	public void setBufferedImageType(final Integer bufferedImageType) {
+		this.bufferedImageType = bufferedImageType;
 	}
 
 	public void setOnlineNHKJapanesePronunciationsAccentFailableFunction(
@@ -347,6 +354,26 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		//
 		final List<String> classNames = getImageFormats(imageFormatOrders);
 		//
+		if (bufferedImageType != null) {
+			//
+			final BufferedImage bi = new BufferedImage(1, 1, bufferedImageType.intValue());
+			//
+			for (int i = IterableUtils.size(classNames) - 1; i >= 0; i--) {
+				//
+				try (final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+					//
+					if (!ImageIO.write(bi, IterableUtils.get(classNames, i), baos)) {
+						//
+						classNames.remove(i);
+						//
+					} // if
+						//
+				} // try
+					//
+			} // for
+				//
+		} // if
+			//
 		final MutableComboBoxModel<String> mcbm = new DefaultComboBoxModel<>();
 		//
 		add(new JComboBox<>(mcbm), growx);
