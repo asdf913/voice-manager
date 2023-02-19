@@ -1130,10 +1130,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static int length(final byte[] instance) {
-		return instance != null ? instance.length : 0;
-	}
-
 	private static InputStream getResourceAsStream(final Class<?> instance, final String name) {
 		return instance != null && name != null ? instance.getResourceAsStream(name) : null;
 	}
@@ -7834,6 +7830,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // try
 				//
+		}
+
+		private static int length(final byte[] instance) {
+			return instance != null ? instance.length : 0;
 		}
 
 		private static String getName(final FieldOrMethod instance) {
