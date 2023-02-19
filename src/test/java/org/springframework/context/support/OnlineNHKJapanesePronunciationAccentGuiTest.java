@@ -88,7 +88,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			METHOD_GET_FIELD, METHOD_SET_TEXT, METHOD_SET_FORE_GROUND, METHOD_GET_LIST_CELL_RENDERER_COMPONENT,
 			METHOD_SAVE_FILE, METHOD_CONTAINS_KEY, METHOD_IIF, METHOD_GET_NAME, METHOD_SORT,
 			METHOD_CREATE_IMAGE_FORMAT_COMPARATOR, METHOD_IS_ANNOTATION_PRESENT, METHOD_GET_ANNOTATION,
-			METHOD_GET_PREFERRED_SIZE, METHOD_STREAM, METHOD_FILTER, METHOD_TO_LIST = null;
+			METHOD_GET_PREFERRED_SIZE, METHOD_STREAM, METHOD_FILTER, METHOD_TO_LIST, METHOD_SET_PREFERRED_SIZE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -197,6 +197,9 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		(METHOD_FILTER = clz.getDeclaredMethod("filter", Stream.class, Predicate.class)).setAccessible(true);
 		//
 		(METHOD_TO_LIST = clz.getDeclaredMethod("toList", Stream.class)).setAccessible(true);
+		//
+		(METHOD_SET_PREFERRED_SIZE = clz.getDeclaredMethod("setPreferredSize", Component.class, Dimension.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -1620,6 +1623,21 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				return (List) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetPreferredSize() {
+		//
+		Assertions.assertDoesNotThrow(() -> setPreferredSize(null, null));
+		//
+	}
+
+	private static void setPreferredSize(final Component instance, final Dimension preferredSize) throws Throwable {
+		try {
+			METHOD_SET_PREFERRED_SIZE.invoke(null, instance, preferredSize);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

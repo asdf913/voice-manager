@@ -408,9 +408,9 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			//
 			final Dimension pd = getPreferredSize(c);
 			//
-			if (c != null && pd != null && maxPreferredSizeWidth != null) {
+			if (pd != null && maxPreferredSizeWidth != null) {
 				//
-				c.setPreferredSize(new Dimension(maxPreferredSizeWidth.intValue(), (int) pd.getHeight()));
+				setPreferredSize(c, new Dimension(maxPreferredSizeWidth.intValue(), (int) pd.getHeight()));
 				//
 			} // if
 				//
@@ -418,6 +418,12 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		//
 		pack();
 		//
+	}
+
+	private static void setPreferredSize(final Component instance, final Dimension preferredSize) {
+		if (instance != null) {
+			instance.setPreferredSize(preferredSize);
+		}
 	}
 
 	private static BufferedImage getPitchAccentImage(final Pronunciation instnace) {
