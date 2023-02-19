@@ -281,10 +281,10 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			//
 			// The below check is for "-Djava.awt.headless=true"
 			//
-		final List<Field> fs = toList(filter(stream(FieldUtils.getAllFieldsList(getClass(this))),
-				f -> Objects.equals(getName(f), "component")));
-		//
-		final Field f = IterableUtils.size(fs) == 1 ? IterableUtils.get(fs, 0) : null;
+		final Field f = testAndApply(x -> IterableUtils.size(x) == 1,
+				toList(filter(stream(FieldUtils.getAllFieldsList(getClass(this))),
+						x -> Objects.equals(getName(x), "component"))),
+				x -> IterableUtils.get(x, 0), null);
 		//
 		if (f != null && Narcissus.getObjectField(this, f) == null) {
 			//
