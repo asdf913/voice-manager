@@ -361,11 +361,13 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			//
 			final BufferedImage bi = new BufferedImage(1, 1, bufferedImageType.intValue());
 			//
+			String className = null;
+			//
 			for (int i = IterableUtils.size(classNames) - 1; i >= 0; i--) {
 				//
 				try (final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
 					//
-					if (!ImageIO.write(bi, IterableUtils.get(classNames, i), baos)) {
+					if ((className = IterableUtils.get(classNames, i)) != null && !ImageIO.write(bi, className, baos)) {
 						//
 						classNames.remove(i);
 						//
