@@ -127,6 +127,7 @@ import javax.xml.xpath.XPathFactory;
 
 import org.apache.bcel.classfile.FieldOrMethod;
 import org.apache.bcel.classfile.JavaClass;
+import org.apache.bcel.generic.ConstantPushInstruction;
 import org.apache.bcel.generic.ICONST;
 import org.apache.bcel.generic.Instruction;
 import org.apache.commons.codec.binary.Hex;
@@ -9534,9 +9535,8 @@ class VoiceManagerTest {
 		//
 		// getName(org.apache.bcel.classfile.FieldOrMethod)
 		//
-		final Method getName = clz != null ? clz.getDeclaredMethod("getName", FieldOrMethod.class) : null;
-		//
-		Assertions.assertNull(invoke(getName, instance, (Object) null));
+		Assertions.assertNull(invoke(clz != null ? clz.getDeclaredMethod("getName", FieldOrMethod.class) : null,
+				instance, (Object) null));
 		//
 		// createQuality(java.lang.String[])
 		//
@@ -9545,6 +9545,12 @@ class VoiceManagerTest {
 		Assertions.assertNull(invoke(createQuality, instance, (Object) null));
 		//
 		Assertions.assertNull(invoke(createQuality, instance, new String[] { null }));
+		//
+		// getValue(org.apache.bcel.generic.ConstantPushInstruction)
+		//
+		Assertions.assertNull(
+				invoke(clz != null ? clz.getDeclaredMethod("getValue", ConstantPushInstruction.class) : null, instance,
+						(Object) null));
 		//
 	}
 

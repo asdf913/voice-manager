@@ -181,10 +181,14 @@ import org.apache.bcel.classfile.CodeUtil;
 import org.apache.bcel.classfile.FieldOrMethod;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Utility;
+import org.apache.bcel.generic.BIPUSH;
+import org.apache.bcel.generic.ConstantPoolGen;
+import org.apache.bcel.generic.ConstantPushInstruction;
 import org.apache.bcel.generic.ICONST;
 import org.apache.bcel.generic.IF_ICMPGE;
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InstructionListUtil;
+import org.apache.bcel.generic.LDC;
 import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.MethodGenUtil;
 import org.apache.bcel.generic.ObjectType;
@@ -7778,6 +7782,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		}
 
+		/**
+		 * @see <a href=
+		 *      "https://github.com/Sciss/jump3r/blob/master/src/main/java/de/sciss/jump3r/lowlevel/LameEncoder.java#L598">de.sciss.jump3r.lowlevel.LameEncoder.string2quality(java.lang.String,int)</a>
+		 * 
+		 * @see de.sciss.jump3r.lowlevel.LameEncoder#string2quality(java.lang.String,int)
+		 */
 		private static Map<String, Integer> createQualityMap() throws IOException {
 			//
 			Map<String, Integer> map = null;
@@ -7794,34 +7804,38 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				org.apache.bcel.classfile.Method m = null;
 				//
-				byte[] bs = null;
+				String key = null;
 				//
-				String line, key = null;
+				Instruction[] instructions = null;
 				//
-				String[] lines = null;
+				Instruction instruction = null;
 				//
-				Matcher matcher = null;
+				Number value = null;
 				//
 				for (int i = 0; i < IterableUtils.size(ms); i++) {
 					//
-					if ((m = VoiceManager.get(ms, i)) == null) {
-						//
-						continue;
-						//
-					} // if
-						//
-					lines = StringUtils.split(StringUtils.trim(Utility.codeToString(bs = CodeUtil.getCode(m.getCode()),
-							m.getConstantPool(), 0, length(bs))), '\n');
+					instructions = InstructionListUtil
+							.getInstructions(MethodGenUtil.getInstructionList(testAndApply(Objects::nonNull,
+									m = IterableUtils.get(ms, i), x -> new MethodGen(x, null, null), null)));
 					//
-					for (int j = 0; lines != null && j < lines.length; j++) {
+					for (int j = 0; instructions != null && j < instructions.length; j++) {
 						//
-						if (matches(matcher = matcher(PATTERN_LDC_STRING, line = lines[j]))
-								&& matcher.groupCount() > 0) {
-							key = matcher.group(1);
-						} else if (matches(matcher = matcher(PATTERN_BI_PUSH, line)) && matcher.groupCount() > 0) {
-							put(map = getIfNull(map, LinkedHashMap::new), key, valueOf(matcher.group(1)));
-						} else if (matches(matcher = matcher(PATTERN_ICONST, line)) && matcher.groupCount() > 0) {
-							put(map = getIfNull(map, LinkedHashMap::new), key, valueOf(matcher.group(1)));
+						if ((instruction = instructions[j]) instanceof LDC ldc) {
+							//
+							key = VoiceManager.toString(ldc != null
+									? ldc.getValue(testAndApply(Objects::nonNull,
+											m != null ? m.getConstantPool() : null, x -> new ConstantPoolGen(x), null))
+									: null);
+							//
+						} else if (instruction instanceof BIPUSH biPush) {
+							//
+							put(map = getIfNull(map, LinkedHashMap::new), key,
+									(value = getValue(biPush)) != null ? value.intValue() : null);
+							//
+						} else if (instruction instanceof ICONST iConst) {
+							//
+							put(map = getIfNull(map, LinkedHashMap::new), key,
+									(value = getValue(iConst)) != null ? value.intValue() : null);
 						} // if
 							//
 					} // for
@@ -7832,6 +7846,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // try
 				//
+		}
+
+		private static Number getValue(final ConstantPushInstruction instance) {
+			return instance != null ? instance.getValue() : null;
 		}
 
 		private static int length(final byte[] instance) {
