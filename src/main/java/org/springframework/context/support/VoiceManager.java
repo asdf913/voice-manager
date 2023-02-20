@@ -186,6 +186,7 @@ import org.apache.bcel.generic.IF_ICMPGE;
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InstructionList;
 import org.apache.bcel.generic.MethodGen;
+import org.apache.bcel.generic.MethodGenUtil;
 import org.apache.bcel.generic.ObjectType;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.codec.binary.Hex;
@@ -1101,9 +1102,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static Integer getTempFileMinimumPrefixLength(final org.apache.bcel.classfile.Method method) {
 		//
-		final MethodGen mg = testAndApply(Objects::nonNull, method, x -> new MethodGen(x, null, null), null);
-		//
-		final InstructionList il = mg != null ? mg.getInstructionList() : null;
+		final InstructionList il = MethodGenUtil
+				.getInstructionList(testAndApply(Objects::nonNull, method, x -> new MethodGen(x, null, null), null));
 		//
 		return getTempFileMinimumPrefixLength(il != null ? il.getInstructions() : null);
 		//
