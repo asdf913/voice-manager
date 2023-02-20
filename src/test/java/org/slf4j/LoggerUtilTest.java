@@ -5,8 +5,6 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
@@ -15,6 +13,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
+import org.apache.bcel.generic.ATHROW;
+import org.apache.bcel.generic.Instruction;
+import org.apache.bcel.generic.RETURN;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -27,9 +28,9 @@ import com.google.common.reflect.Reflection;
 
 class LoggerUtilTest {
 
-	private static Method METHOD_MATCHER, METHOD_MATCHES, METHOD_TO_LIST, METHOD_IS_EMPTY, METHOD_FILTER,
-			METHOD_TEST_AND_APPLY, METHOD_PRINT_STACK_TRACE, METHOD_GET_DECLARED_METHODS, METHOD_GET_NAME,
-			METHOD_SET_ACCESSIBLE, METHOD_TEST_AND_ACCEPT, METHOD_IS_STATIC, METHOD_INVOKE = null;
+	private static Method METHOD_MATCHER, METHOD_MATCHES, METHOD_TO_LIST, METHOD_FILTER, METHOD_TEST_AND_APPLY,
+			METHOD_PRINT_STACK_TRACE, METHOD_GET_DECLARED_METHODS, METHOD_GET_NAME, METHOD_SET_ACCESSIBLE,
+			METHOD_TEST_AND_ACCEPT, METHOD_IS_STATIC, METHOD_INVOKE, METHOD_IS_EMPTY_METHOD = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -41,8 +42,6 @@ class LoggerUtilTest {
 		(METHOD_MATCHES = clz.getDeclaredMethod("matches", Matcher.class)).setAccessible(true);
 		//
 		(METHOD_TO_LIST = clz.getDeclaredMethod("toList", Stream.class)).setAccessible(true);
-		//
-		(METHOD_IS_EMPTY = clz.getDeclaredMethod("isEmpty", Collection.class)).setAccessible(true);
 		//
 		(METHOD_FILTER = clz.getDeclaredMethod("filter", Stream.class, Predicate.class)).setAccessible(true);
 		//
@@ -65,6 +64,8 @@ class LoggerUtilTest {
 		//
 		(METHOD_INVOKE = clz.getDeclaredMethod("invoke", Method.class, Object.class, Object[].class))
 				.setAccessible(true);
+		//
+		(METHOD_IS_EMPTY_METHOD = clz.getDeclaredMethod("isEmptyMethod", Instruction[].class)).setAccessible(true);
 		//
 	}
 
@@ -162,27 +163,6 @@ class LoggerUtilTest {
 	private static boolean matches(final Matcher instance) throws Throwable {
 		try {
 			final Object obj = METHOD_MATCHES.invoke(null, instance);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testIsEmpty() throws Throwable {
-		//
-		Assertions.assertTrue(isEmpty(Collections.emptySet()));
-		//
-		Assertions.assertFalse(isEmpty(Collections.singleton(null)));
-		//
-	}
-
-	private static boolean isEmpty(final Collection<?> instance) throws Throwable {
-		try {
-			final Object obj = METHOD_IS_EMPTY.invoke(null, instance);
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
@@ -380,6 +360,35 @@ class LoggerUtilTest {
 	private static Object invoke(final Method method, final Object instance, Object... args) throws Throwable {
 		try {
 			return METHOD_INVOKE.invoke(null, method, instance, args);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testIsEmptymethod() throws Throwable {
+		//
+		Assertions.assertTrue(isEmptyMethod(null));
+		//
+		Assertions.assertTrue(isEmptyMethod(new Instruction[] {}));
+		//
+		Assertions.assertTrue(isEmptyMethod(new Instruction[] { null }));
+		//
+		Assertions.assertFalse(isEmptyMethod(new Instruction[] { null, null }));
+		//
+		Assertions.assertTrue(isEmptyMethod(new Instruction[] { new RETURN() }));
+		//
+		Assertions.assertFalse(isEmptyMethod(new Instruction[] { new ATHROW() }));
+		//
+	}
+
+	private static boolean isEmptyMethod(final Instruction[] is) throws Throwable {
+		try {
+			final Object obj = METHOD_IS_EMPTY_METHOD.invoke(null, (Object) is);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

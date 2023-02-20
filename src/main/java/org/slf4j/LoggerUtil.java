@@ -8,7 +8,6 @@ import java.lang.reflect.Member;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
@@ -19,11 +18,14 @@ import java.util.stream.Stream;
 
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.ClassParserUtil;
-import org.apache.bcel.classfile.CodeUtil;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
-import org.apache.bcel.classfile.Utility;
+import org.apache.bcel.generic.Instruction;
+import org.apache.bcel.generic.InstructionList;
+import org.apache.bcel.generic.MethodGen;
+import org.apache.bcel.generic.RETURN;
 import org.apache.bcel.generic.Type;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -70,7 +72,7 @@ public class LoggerUtil {
 			//
 		} // try
 			//
-		return isEmpty(toList(filter(testAndApply(Objects::nonNull, ms, Arrays::stream, null), m -> {
+		return CollectionUtils.isNotEmpty(toList(filter(testAndApply(Objects::nonNull, ms, Arrays::stream, null), m -> {
 			//
 			if (m == null || !Objects.equals(Type.VOID, m.getReturnType()) || matches(matcher(PATTERN, m.getName()))) {
 				//
@@ -78,14 +80,16 @@ public class LoggerUtil {
 				//
 			} // if
 				//
-			final byte[] bs = CodeUtil.getCode(m.getCode());
+			final InstructionList il = new MethodGen(m, null, null).getInstructionList();
 			//
-			return !Objects.equals(
-					StringUtils.trim(Utility.codeToString(bs, m.getConstantPool(), 0, bs != null ? bs.length : 0)),
-					"0:    return");
+			return isEmptyMethod(il != null ? il.getInstructions() : null);
 			//
 		})));
 		//
+	}
+
+	private static boolean isEmptyMethod(final Instruction[] is) {
+		return is == null || is.length == 0 || (is.length == 1 && (is[0] == null || is[0] instanceof RETURN));
 	}
 
 	private static void printStackTrace(final Throwable throwable) {
@@ -158,10 +162,6 @@ public class LoggerUtil {
 
 	private static boolean matches(final Matcher instance) {
 		return instance != null && instance.matches();
-	}
-
-	private static boolean isEmpty(final Collection<?> instance) {
-		return instance != null && instance.isEmpty();
 	}
 
 	private static <T> List<T> toList(final Stream<T> instance) {
