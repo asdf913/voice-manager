@@ -7589,13 +7589,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 		private static final Pattern PATTERN_LDC_NUMBER = Pattern.compile("^\\d+:\\s+ldc\\s+[^\\s]+\\s+\\(\\d+\\)?");
 
-		private static final Pattern PATTERN_LDC_STRING = Pattern
-				.compile("^\\d+:\\s+ldc\\s+\"([^\"]+)\"\\s+\\(\\d+\\)$");
-
-		private static final Pattern PATTERN_BI_PUSH = Pattern.compile("^\\d+:\\s+bipush\\s+(\\d+)$");
-
-		private static final Pattern PATTERN_ICONST = Pattern.compile("^\\d+:\\s+iconst_(\\d+)$");
-
 		@Note("Bitrate")
 		private Integer bitRate = null;
 
