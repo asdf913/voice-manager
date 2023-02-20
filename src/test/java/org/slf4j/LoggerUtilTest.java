@@ -5,7 +5,6 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -21,6 +20,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.slf4j.helpers.NOPLogger;
 
 import com.google.common.base.Predicates;
 import com.google.common.reflect.Reflection;
@@ -110,6 +110,8 @@ class LoggerUtilTest {
 	void testIsNOPLogger() {
 		//
 		Assertions.assertFalse(LoggerUtil.isNOPLogger(null));
+		//
+		Assertions.assertTrue(LoggerUtil.isNOPLogger(NOPLogger.NOP_LOGGER));
 		//
 	}
 
