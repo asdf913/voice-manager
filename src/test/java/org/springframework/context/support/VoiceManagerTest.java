@@ -125,6 +125,7 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.xpath.XPathFactory;
 
+import org.apache.bcel.classfile.ConstantPool;
 import org.apache.bcel.classfile.FieldOrMethod;
 import org.apache.bcel.generic.ConstantPushInstruction;
 import org.apache.bcel.generic.ICONST;
@@ -9537,6 +9538,16 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(invoke(clz != null ? clz.getDeclaredMethod("getConstantPool", FieldOrMethod.class) : null,
 				instance, (Object) null));
+		//
+		// createQualityMap(org.apache.bcel.classfile.ConstantPool,org.apache.bcel.generic.Instruction[])
+		//
+		final Method createQualityMap = clz != null
+				? clz.getDeclaredMethod("createQualityMap", ConstantPool.class, Instruction[].class)
+				: null;
+		//
+		Assertions.assertNull(invoke(createQualityMap, instance, null, null));
+		//
+		Assertions.assertNull(invoke(createQualityMap, instance, null, new Instruction[] { null }));
 		//
 	}
 

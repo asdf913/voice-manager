@@ -7794,39 +7794,28 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				org.apache.bcel.classfile.Method m = null;
 				//
-				String key = null;
+				IValue0<Map<String, Integer>> temp = null;
 				//
-				Instruction[] instructions = null;
-				//
-				Instruction instruction = null;
-				//
-				Number value = null;
+				boolean found = false;
 				//
 				for (int i = 0; i < IterableUtils.size(ms); i++) {
 					//
-					instructions = InstructionListUtil
-							.getInstructions(MethodGenUtil.getInstructionList(testAndApply(Objects::nonNull,
-									m = IterableUtils.get(ms, i), x -> new MethodGen(x, null, null), null)));
-					//
-					for (int j = 0; instructions != null && j < instructions.length; j++) {
+					if (found) {
 						//
-						if ((instruction = instructions[j]) instanceof LDC ldc) {
-							//
-							key = VoiceManager.toString(ldc != null ? ldc.getValue(testAndApply(Objects::nonNull,
-									getConstantPool(m), x -> new ConstantPoolGen(x), null)) : null);
-							//
-						} else if (instruction instanceof BIPUSH biPush) {
-							//
-							put(map = getIfNull(map, LinkedHashMap::new), key,
-									(value = getValue(biPush)) != null ? value.intValue() : null);
-							//
-						} else if (instruction instanceof ICONST iConst) {
-							//
-							put(map = getIfNull(map, LinkedHashMap::new), key,
-									(value = getValue(iConst)) != null ? value.intValue() : null);
-						} // if
-							//
-					} // for
+						throw new IllegalStateException();
+						//
+					} // if
+						//
+					if ((temp = createQualityMap(getConstantPool(m = IterableUtils.get(ms, i)),
+							InstructionListUtil
+									.getInstructions(MethodGenUtil.getInstructionList(testAndApply(Objects::nonNull, m,
+											x -> new MethodGen(x, null, null), null))))) != null) {
+						//
+						map = IValue0Util.getValue0(temp);
+						//
+						found = true;
+						//
+					} // if
 						//
 				} // for
 					//
@@ -7834,6 +7823,43 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // try
 				//
+		}
+
+		private static IValue0<Map<String, Integer>> createQualityMap(final ConstantPool constantPool,
+				final Instruction[] instructions) {
+			//
+			IValue0<Map<String, Integer>> result = null;
+			//
+			String key = null;
+			//
+			Instruction instruction = null;
+			//
+			Number value = null;
+			//
+			for (int i = 0; instructions != null && i < instructions.length; i++) {
+				//
+				if ((instruction = instructions[i]) instanceof LDC ldc) {
+					//
+					key = VoiceManager.toString(ldc != null
+							? ldc.getValue(
+									testAndApply(Objects::nonNull, constantPool, x -> new ConstantPoolGen(x), null))
+							: null);
+					//
+				} else if (instruction instanceof BIPUSH biPush) {
+					//
+					put(IValue0Util.getValue0(result = getIfNull(result, () -> Unit.with(new LinkedHashMap<>()))), key,
+							(value = getValue(biPush)) != null ? value.intValue() : null);
+					//
+				} else if (instruction instanceof ICONST iConst) {
+					//
+					put(IValue0Util.getValue0(result = getIfNull(result, () -> Unit.with(new LinkedHashMap<>()))), key,
+							(value = getValue(iConst)) != null ? value.intValue() : null);
+				} // if
+					//
+			} // for
+				//
+			return result;
+			//
 		}
 
 		private static final ConstantPool getConstantPool(final FieldOrMethod instance) {
