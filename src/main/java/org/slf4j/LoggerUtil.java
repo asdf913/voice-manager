@@ -22,6 +22,7 @@ import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InstructionList;
+import org.apache.bcel.generic.InstructionListUtil;
 import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.MethodGenUtil;
 import org.apache.bcel.generic.RETURN;
@@ -81,9 +82,8 @@ public class LoggerUtil {
 				//
 			} // if
 				//
-			final InstructionList il = MethodGenUtil.getInstructionList(new MethodGen(m, null, null));
-			//
-			return isEmptyMethod(il != null ? il.getInstructions() : null);
+			return isEmptyMethod(InstructionListUtil
+					.getInstructions(MethodGenUtil.getInstructionList(new MethodGen(m, null, null))));
 			//
 		})));
 		//
