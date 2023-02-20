@@ -19,6 +19,7 @@ import java.util.stream.Stream;
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.ClassParserUtil;
 import org.apache.bcel.classfile.JavaClass;
+import org.apache.bcel.classfile.JavaClassUtil;
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InstructionList;
@@ -55,18 +56,14 @@ public class LoggerUtil {
 		//
 		final Class<?> clz = getClass(instance);
 		//
-		JavaClass javaClass = null;
-		//
 		Method[] ms = null;
 		//
 		try (final InputStream is = clz != null
 				? clz.getResourceAsStream(String.format("/%1$s.class", StringUtils.replace(clz.getName(), ".", "/")))
 				: null) {
 			//
-			ms = (javaClass = ClassParserUtil
-					.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null))) != null
-							? javaClass.getMethods()
-							: null;
+			ms = JavaClassUtil.getMethods(
+					ClassParserUtil.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null)));
 			//
 		} catch (final IOException e) {
 			//

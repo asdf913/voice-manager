@@ -126,7 +126,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.xpath.XPathFactory;
 
 import org.apache.bcel.classfile.FieldOrMethod;
-import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.generic.ConstantPushInstruction;
 import org.apache.bcel.generic.ICONST;
 import org.apache.bcel.generic.Instruction;
@@ -260,12 +259,12 @@ class VoiceManagerTest {
 			METHOD_CONTAINS_KEY, METHOD_VALUE_OF1, METHOD_VALUE_OF2, METHOD_GET_CLASS, METHOD_CREATE_RANGE,
 			METHOD_GET_PROVIDER_NAME, METHOD_GET_PROVIDER_VERSION, METHOD_WRITE_VOICE_TO_FILE,
 			METHOD_GET_MP3_TAG_VALUE_FILE, METHOD_GET_MP3_TAG_VALUE_LIST, METHOD_GET_MP3_TAG_PARIRS_ID3V1,
-			METHOD_GET_METHODS_CLASS, METHOD_GET_METHODS_JAVA_CLASS, METHOD_COPY_OBJECT_MAP, METHOD_DELETE,
-			METHOD_DELETE_ON_EXIT, METHOD_CONVERT_LANGUAGE_CODE_TO_TEXT, METHOD_IS_SELECTED,
-			METHOD_SET_HIRAGANA_OR_KATAKANA, METHOD_SET_ROMAJI, METHOD_AND, METHOD_OR, METHOD_CLEAR_DEFAULT_TABLE_MODEL,
-			METHOD_CLEAR_STRING_BUILDER, METHOD_EXECUTE, METHOD_PUT_MAP, METHOD_GET_BYTE_CONVERTER,
-			METHOD_CONTAINS_CUSTOM_PROPERTIES, METHOD_CONTAINS_COLLECTION, METHOD_CONTAINS_LOOKUP, METHOD_GET_LPW_STR,
-			METHOD_GET_SHEET_NAME, METHOD_ACCEPT, METHOD_TO_ARRAY, METHOD_TO_LIST, METHOD_GET_ID, METHOD_SET_MAXIMUM,
+			METHOD_GET_METHODS_CLASS, METHOD_COPY_OBJECT_MAP, METHOD_DELETE, METHOD_DELETE_ON_EXIT,
+			METHOD_CONVERT_LANGUAGE_CODE_TO_TEXT, METHOD_IS_SELECTED, METHOD_SET_HIRAGANA_OR_KATAKANA,
+			METHOD_SET_ROMAJI, METHOD_AND, METHOD_OR, METHOD_CLEAR_DEFAULT_TABLE_MODEL, METHOD_CLEAR_STRING_BUILDER,
+			METHOD_EXECUTE, METHOD_PUT_MAP, METHOD_GET_BYTE_CONVERTER, METHOD_CONTAINS_CUSTOM_PROPERTIES,
+			METHOD_CONTAINS_COLLECTION, METHOD_CONTAINS_LOOKUP, METHOD_GET_LPW_STR, METHOD_GET_SHEET_NAME,
+			METHOD_ACCEPT, METHOD_TO_ARRAY, METHOD_TO_LIST, METHOD_GET_ID, METHOD_SET_MAXIMUM,
 			METHOD_GET_CURRENT_SHEET_INDEX, METHOD_GET_DATA_VALIDATION_HELPER, METHOD_CREATE_EXPLICIT_LIST_CONSTRAINT,
 			METHOD_CREATE_VALIDATION, METHOD_CREATE_EXPORT_TASK, METHOD_GET_TAB_INDEX_BY_TITLE,
 			METHOD_GET_DECLARED_FIELD, METHOD_GET_ABSOLUTE_PATH, METHOD_IS_ASSIGNABLE_FROM, METHOD_GET_ENUM_CONSTANTS,
@@ -496,8 +495,6 @@ class VoiceManagerTest {
 				.setAccessible(true);
 		//
 		(METHOD_GET_METHODS_CLASS = clz.getDeclaredMethod("getMethods", Class.class)).setAccessible(true);
-		//
-		(METHOD_GET_METHODS_JAVA_CLASS = clz.getDeclaredMethod("getMethods", JavaClass.class)).setAccessible(true);
 		//
 		(METHOD_COPY_OBJECT_MAP = clz.getDeclaredMethod("copyObjectMap", CLASS_OBJECT_MAP)).setAccessible(true);
 		//
@@ -4451,8 +4448,6 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(getMethods((Class<?>) null));
 		//
-		Assertions.assertNull(getMethods((JavaClass) null));
-		//
 	}
 
 	private static Method[] getMethods(final Class<?> instance) throws Throwable {
@@ -4462,20 +4457,6 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof Method[]) {
 				return (Method[]) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	private static org.apache.bcel.classfile.Method[] getMethods(final JavaClass instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_METHODS_JAVA_CLASS.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof org.apache.bcel.classfile.Method[]) {
-				return (org.apache.bcel.classfile.Method[]) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

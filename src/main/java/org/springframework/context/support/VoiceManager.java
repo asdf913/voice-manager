@@ -179,7 +179,7 @@ import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.ClassParserUtil;
 import org.apache.bcel.classfile.CodeUtil;
 import org.apache.bcel.classfile.FieldOrMethod;
-import org.apache.bcel.classfile.JavaClass;
+import org.apache.bcel.classfile.JavaClassUtil;
 import org.apache.bcel.classfile.Utility;
 import org.apache.bcel.generic.BIPUSH;
 import org.apache.bcel.generic.ConstantPoolGen;
@@ -1050,7 +1050,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			final List<org.apache.bcel.classfile.Method> ms = toList(filter(
 					testAndApply(Objects::nonNull,
-							getMethods(ClassParserUtil
+							JavaClassUtil.getMethods(ClassParserUtil
 									.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null))),
 							Arrays::stream, null),
 					m -> m != null && Objects.equals(m.getName(), "createTempFile")
@@ -1138,10 +1138,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static InputStream getResourceAsStream(final Class<?> instance, final String name) {
 		return instance != null && name != null ? instance.getResourceAsStream(name) : null;
-	}
-
-	private static org.apache.bcel.classfile.Method[] getMethods(final JavaClass instance) {
-		return instance != null ? instance.getMethods() : null;
 	}
 
 	private static void setSelectedItem(final ComboBoxModel<?> instance, final Object selectedItem) {
@@ -7708,7 +7704,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			try (final InputStream is = getResourceAsStream(clz,
 					String.format("/%1$s.class", StringUtils.replace(VoiceManager.getName(clz), ".", "/")))) {
 				//
-				final org.apache.bcel.classfile.Method[] ms = getMethods(
+				final org.apache.bcel.classfile.Method[] ms = JavaClassUtil.getMethods(
 						ClassParserUtil.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null)));
 				//
 				org.apache.bcel.classfile.Method m = null;
@@ -7798,7 +7794,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					String.format("/%1$s.class", StringUtils.replace(VoiceManager.getName(clz), ".", "/")))) {
 				//
 				final List<org.apache.bcel.classfile.Method> ms = toList(filter(testAndApply(Objects::nonNull,
-						getMethods(ClassParserUtil
+						JavaClassUtil.getMethods(ClassParserUtil
 								.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null))),
 						Arrays::stream, null), x -> Objects.equals(getName(x), "string2quality")));
 				//
@@ -7858,10 +7854,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 		private static String getName(final FieldOrMethod instance) {
 			return instance != null ? instance.getName() : null;
-		}
-
-		private static org.apache.bcel.classfile.Method[] getMethods(final JavaClass instance) {
-			return instance != null ? instance.getMethods() : null;
 		}
 
 		@Override
