@@ -178,6 +178,7 @@ import javax.xml.xpath.XPathFactory;
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.ClassParserUtil;
 import org.apache.bcel.classfile.CodeUtil;
+import org.apache.bcel.classfile.ConstantPool;
 import org.apache.bcel.classfile.FieldOrMethod;
 import org.apache.bcel.classfile.JavaClassUtil;
 import org.apache.bcel.classfile.Utility;
@@ -7724,7 +7725,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					put(map = getIfNull(map, LinkedHashMap::new), Integer.valueOf(i),
 							createQuality(StringUtils
 									.split(StringUtils.trim(Utility.codeToString(bs = CodeUtil.getCode(m.getCode()),
-											m.getConstantPool(), 0, length(bs))), '\n')));
+											getConstantPool(m), 0, length(bs))), '\n')));
 					//
 				} // for
 					//
@@ -7818,10 +7819,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 						if ((instruction = instructions[j]) instanceof LDC ldc) {
 							//
-							key = VoiceManager.toString(ldc != null
-									? ldc.getValue(testAndApply(Objects::nonNull,
-											m != null ? m.getConstantPool() : null, x -> new ConstantPoolGen(x), null))
-									: null);
+							key = VoiceManager.toString(ldc != null ? ldc.getValue(testAndApply(Objects::nonNull,
+									getConstantPool(m), x -> new ConstantPoolGen(x), null)) : null);
 							//
 						} else if (instruction instanceof BIPUSH biPush) {
 							//
@@ -7842,6 +7841,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // try
 				//
+		}
+
+		private static final ConstantPool getConstantPool(final FieldOrMethod instance) {
+			return instance != null ? instance.getConstantPool() : null;
 		}
 
 		private static Number getValue(final ConstantPushInstruction instance) {

@@ -9533,6 +9533,11 @@ class VoiceManagerTest {
 				invoke(clz != null ? clz.getDeclaredMethod("getValue", ConstantPushInstruction.class) : null, instance,
 						(Object) null));
 		//
+		// getConstantPool(org.apache.bcel.classfile.FieldOrMethod)
+		//
+		Assertions.assertNull(invoke(clz != null ? clz.getDeclaredMethod("getConstantPool", FieldOrMethod.class) : null,
+				instance, (Object) null));
+		//
 	}
 
 	@Test
