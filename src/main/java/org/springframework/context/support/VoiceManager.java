@@ -5855,9 +5855,19 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			final List<Pronunciation> pronounications = FailableFunctionUtil
 					.apply(onlineNHKJapanesePronunciationsAccentFailableFunction, getText(tfTextImport));
 			//
+			final IValue0<Pronunciation> pronunciation = IterableUtils.size(pronounications) == 1
+					? Unit.with(IterableUtils.get(pronounications, 0))
+					: null;
+			//
 			if (CollectionUtils.isNotEmpty(pronounications)) {
 				//
 				pronounications.add(0, null);
+				//
+			} // if
+				//
+			if (pronunciation != null) {
+				//
+				setSelectedItem(mcbmPronunciation, IValue0Util.getValue0(pronunciation));
 				//
 			} // if
 				//
