@@ -1,6 +1,8 @@
 package org.springframework.beans.config;
 
 import java.awt.GraphicsEnvironment;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -30,7 +32,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 class CustomBeanPostProcessorTest {
 
 	private static Method METHOD_GET_NAME, METHOD_GET_CLASS, METHOD_TO_STRING, METHOD_IS_STATIC, METHOD_GET,
-			METHOD_CAST, METHOD_TEST = null;
+			METHOD_CAST, METHOD_TEST, METHOD_IS_ANNOTATION_PRESENT, METHOD_GET_ANNOTATION = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -50,6 +52,12 @@ class CustomBeanPostProcessorTest {
 		(METHOD_CAST = clz.getDeclaredMethod("cast", Class.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_TEST = clz.getDeclaredMethod("test", Predicate.class, Object.class)).setAccessible(true);
+		//
+		(METHOD_IS_ANNOTATION_PRESENT = clz.getDeclaredMethod("isAnnotationPresent", AnnotatedElement.class,
+				Class.class)).setAccessible(true);
+		//
+		(METHOD_GET_ANNOTATION = clz.getDeclaredMethod("getAnnotation", AnnotatedElement.class, Class.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -351,4 +359,55 @@ class CustomBeanPostProcessorTest {
 		}
 	}
 
+	@Test
+	void testIsAnnotationPresent() throws Throwable {
+		//
+		Assertions.assertFalse(isAnnotationPresent(null, null));
+		//
+		Assertions.assertFalse(isAnnotationPresent(Object.class, null));
+		//
+		Assertions.assertTrue(
+				isAnnotationPresent(CustomBeanPostProcessorTest.class.getDeclaredMethod("beforeAll"), BeforeAll.class));
+		//
+	}
+
+	private static boolean isAnnotationPresent(final AnnotatedElement instance,
+			final Class<? extends Annotation> annotationClass) throws Throwable {
+		try {
+			final Object obj = METHOD_IS_ANNOTATION_PRESENT.invoke(null, instance, annotationClass);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetAnnotation() throws Throwable {
+		//
+		Assertions.assertNull(getAnnotation(null, null));
+		//
+		Assertions.assertNull(getAnnotation(Object.class, null));
+		//
+		Assertions.assertNotNull(
+				getAnnotation(CustomBeanPostProcessorTest.class.getDeclaredMethod("beforeAll"), BeforeAll.class));
+		//
+	}
+
+	private static <T extends Annotation> T getAnnotation(final AnnotatedElement instance,
+			final Class<T> annotationClass) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_ANNOTATION.invoke(null, instance, annotationClass);
+			if (obj == null) {
+				return null;
+			} else if (annotationClass != null && annotationClass.isInstance(obj)) {
+				return annotationClass.cast(obj);
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
 }

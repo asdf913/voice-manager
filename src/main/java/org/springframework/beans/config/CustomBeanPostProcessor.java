@@ -2,6 +2,8 @@ package org.springframework.beans.config;
 
 import java.awt.Component;
 import java.awt.Frame;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Modifier;
@@ -328,9 +330,9 @@ public class CustomBeanPostProcessor implements BeanPostProcessor, EnvironmentAw
 				//
 				frame.setTitle(PropertyResolverUtil.getProperty(propertyResolver, key));
 				//
-			} else if (clz != null && clz.isAnnotationPresent(Title.class)) {
+			} else if (isAnnotationPresent(clz, Title.class)) {
 				//
-				final Title title = clz.getAnnotation(Title.class);
+				final Title title = getAnnotation(clz, Title.class);
 				//
 				if (title != null) {
 					//
@@ -342,6 +344,16 @@ public class CustomBeanPostProcessor implements BeanPostProcessor, EnvironmentAw
 				//
 		} // if
 			//
+	}
+
+	private static boolean isAnnotationPresent(final AnnotatedElement instance,
+			final Class<? extends Annotation> annotationClass) {
+		return instance != null && annotationClass != null && instance.isAnnotationPresent(annotationClass);
+	}
+
+	private static <T extends Annotation> T getAnnotation(final AnnotatedElement instance,
+			final Class<T> annotationClass) {
+		return instance != null && annotationClass != null ? instance.getAnnotation(annotationClass) : null;
 	}
 
 	private static void setDefaultCloseOperation(final JFrame jFrame, final PropertyResolver propertyResolver,
