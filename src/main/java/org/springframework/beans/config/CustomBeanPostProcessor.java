@@ -294,6 +294,22 @@ public class CustomBeanPostProcessor implements BeanPostProcessor, EnvironmentAw
 				//
 			} // try
 				//
+				// If there is a "java.awt.Frame.title" property found in
+				// "org.springframework.core.env.PropertyResolver" instance and the
+				// corresponding value is not empty, pass the corresponding value to the
+				// "java.awt.Frame.setTitle(java.lang.String)" method
+				//
+			final String defaultTitle = testAndApply(x -> PropertyResolverUtil.containsProperty(propertyResolver, x),
+					"java.awt.Frame.title", x -> PropertyResolverUtil.getProperty(propertyResolver, x), null);
+			//
+			if (StringUtils.isNotEmpty(defaultTitle)) {
+				//
+				frame.setTitle(defaultTitle);
+				//
+				return;
+				//
+			} // if
+				//
 			final Class<?> clz = getClass(frame);
 			//
 			final StringBuilder sb = new StringBuilder(StringUtils.defaultString(getName(clz)));

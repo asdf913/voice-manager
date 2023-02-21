@@ -202,6 +202,14 @@ class CustomBeanPostProcessorTest {
 			//
 		Assertions.assertSame(jFrame, instance.postProcessBeforeInitialization(jFrame, null));
 		//
+		if (ih != null) {
+			//
+			ih.getProperties().put("java.awt.Frame.title", " ");
+			//
+		} // if
+			//
+		Assertions.assertSame(jFrame, instance.postProcessBeforeInitialization(jFrame, null));
+		//
 		// defaultCloseOperation
 		//
 		if (ih != null) {
