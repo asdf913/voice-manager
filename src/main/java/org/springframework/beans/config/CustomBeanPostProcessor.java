@@ -1,6 +1,7 @@
 package org.springframework.beans.config;
 
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Frame;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
@@ -10,6 +11,7 @@ import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -22,7 +24,6 @@ import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
 import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
@@ -253,11 +254,11 @@ public class CustomBeanPostProcessor implements BeanPostProcessor, EnvironmentAw
 	}
 
 	@Override
-	public Object postProcessBeforeInitialization(final Object bean, final String beanName) throws BeansException {
+	public Object postProcessBeforeInitialization(final Object bean, final String beanName) {
 		//
 		// java.awt.Frame
 		//
-		setTitle(cast(JFrame.class, bean), propertyResolver);
+		setTitle(cast(Frame.class, bean), propertyResolver);
 		//
 		// javax.swing.JFrame
 		//
@@ -265,6 +266,76 @@ public class CustomBeanPostProcessor implements BeanPostProcessor, EnvironmentAw
 		//
 		return bean;
 		//
+	}
+
+	@Override
+	public Object postProcessAfterInitialization(final Object bean, final String beanName) {
+		//
+		// java.awt.Component
+		//
+		setPreferredWidth(cast(Component.class, bean), propertyResolver);
+		//
+		return bean;
+		//
+	}
+
+	private static void setPreferredWidth(final Component component, final PropertyResolver propertyResolver) {
+		//
+		IValue0<Number> widthIvalue0 = null;
+		//
+		String string = null;
+		//
+		if (StringUtils
+				.isNotEmpty(string = testAndApply(x -> PropertyResolverUtil.containsProperty(propertyResolver, x),
+						"java.awt.Component.preferredSize.width",
+						x -> PropertyResolverUtil.getProperty(propertyResolver, x), null))) {
+			//
+			widthIvalue0 = testAndApply(Objects::nonNull, valueOf(string), Unit::with, null);
+			//
+		} // if
+			//
+		final Class<?> clz = getClass(component);
+		//
+		final StringBuilder sb = new StringBuilder(StringUtils.defaultString(getName(clz)));
+		//
+		if (StringUtils.isNotEmpty(sb)) {
+			//
+			sb.append('.');
+			//
+			sb.append("preferredSize.width");
+			//
+		} // if
+			//
+		final String key = toString(sb);
+		//
+		if (widthIvalue0 == null && StringUtils
+				.isNotEmpty(string = testAndApply(x -> PropertyResolverUtil.containsProperty(propertyResolver, x),
+						toString(key), x -> PropertyResolverUtil.getProperty(propertyResolver, x), null))) {
+			//
+			widthIvalue0 = testAndApply(Objects::nonNull, valueOf(string), Unit::with, null);
+			//
+		} // if
+			//
+		final Dimension pd = component != null ? component.getPreferredSize() : null;
+		//
+		final Number width = IValue0Util.getValue0(widthIvalue0);
+		//
+		if (component != null && width != null && pd != null) {
+			//
+			ensureObjectLockNotNull(component);
+			//
+			component.setPreferredSize(new Dimension(width.intValue(), (int) pd.getHeight()));
+			//
+		} // if
+			//
+	}
+
+	private static Integer valueOf(final String instance) {
+		try {
+			return StringUtils.isNotBlank(instance) ? Integer.valueOf(instance) : null;
+		} catch (final NumberFormatException e) {
+			return null;
+		}
 	}
 
 	private static void setTitle(final Frame frame, final PropertyResolver propertyResolver) {

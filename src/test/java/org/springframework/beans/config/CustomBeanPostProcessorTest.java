@@ -1,9 +1,12 @@
 package org.springframework.beans.config;
 
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.GraphicsEnvironment;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -23,17 +26,23 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertyResolver;
 
 import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
+import javassist.util.proxy.MethodHandler;
+import javassist.util.proxy.ProxyFactory;
+import javassist.util.proxy.ProxyObject;
 
 class CustomBeanPostProcessorTest {
 
 	private static Method METHOD_GET_NAME, METHOD_GET_CLASS, METHOD_TO_STRING, METHOD_IS_STATIC, METHOD_GET,
-			METHOD_CAST, METHOD_TEST, METHOD_IS_ANNOTATION_PRESENT, METHOD_GET_ANNOTATION, METHOD_SET_TITLE = null;
+			METHOD_CAST, METHOD_TEST, METHOD_IS_ANNOTATION_PRESENT, METHOD_GET_ANNOTATION, METHOD_SET_TITLE,
+			METHOD_VALUE_OF = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -61,6 +70,8 @@ class CustomBeanPostProcessorTest {
 				.setAccessible(true);
 		//
 		(METHOD_SET_TITLE = clz.getDeclaredMethod("setTitle", Frame.class, Title.class)).setAccessible(true);
+		//
+		(METHOD_VALUE_OF = clz.getDeclaredMethod("valueOf", String.class)).setAccessible(true);
 		//
 	}
 
@@ -120,23 +131,46 @@ class CustomBeanPostProcessorTest {
 
 	}
 
+	private static class MH implements MethodHandler {
+
+		private Dimension preferredSize = null;
+
+		@Override
+		public Object invoke(final Object self, final Method thisMethod, final Method proceed, final Object[] args)
+				throws Throwable {
+			//
+			final String methodName = thisMethod != null ? thisMethod.getName() : null;
+			//
+			if (self instanceof Component) {
+				//
+				if (Objects.equals(methodName, "getPreferredSize")) {
+					//
+					return preferredSize;
+					//
+				} // if
+					//
+			} // if
+				//
+			throw new Throwable(methodName);
+			//
+		}
+
+	}
+
+	private CustomBeanPostProcessor instance = null;
+
 	private IH ih = null;
+
+	private Environment environment = null;
+
+	private JFrame jFrame = null;
 
 	@BeforeEach
 	void beforeEach() {
 		//
-		ih = new IH();
+		instance = new CustomBeanPostProcessor();
 		//
-	}
-
-	@Test
-	void testPostProcessBeforeInitialization() throws Throwable {
-		//
-		final CustomBeanPostProcessor instance = new CustomBeanPostProcessor();
-		//
-		Assertions.assertNull(instance.postProcessBeforeInitialization(null, null));
-		//
-		JFrame jFrame = null;
+		environment = Reflection.newProxy(Environment.class, ih = new IH());
 		//
 		if (!GraphicsEnvironment.isHeadless()) {
 			//
@@ -154,7 +188,14 @@ class CustomBeanPostProcessorTest {
 				//
 		} // if
 			//
-		Assertions.assertSame(jFrame, instance.postProcessBeforeInitialization(jFrame, null));
+	}
+
+	@Test
+	void testPostProcessBeforeInitialization() throws Throwable {
+		//
+		Assertions.assertNull(postProcessBeforeInitialization(instance, null, null));
+		//
+		Assertions.assertSame(jFrame, postProcessBeforeInitialization(instance, jFrame, null));
 		//
 		// javax.swing.WindowConstants.EXIT_ON_CLOSE
 		//
@@ -170,11 +211,11 @@ class CustomBeanPostProcessorTest {
 			//
 		Assertions.assertEquals(WindowConstants.EXIT_ON_CLOSE, get(defaultCloseOperation, instance));
 		//
-		Assertions.assertSame(jFrame, instance.postProcessBeforeInitialization(jFrame, null));
+		Assertions.assertSame(jFrame, postProcessBeforeInitialization(instance, jFrame, null));
 		//
 		instance.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 		//
-		Assertions.assertSame(jFrame, instance.postProcessBeforeInitialization(jFrame, null));
+		Assertions.assertSame(jFrame, postProcessBeforeInitialization(instance, jFrame, null));
 		//
 		// null
 		//
@@ -188,7 +229,7 @@ class CustomBeanPostProcessorTest {
 		//
 		Assertions.assertEquals(WindowConstants.DO_NOTHING_ON_CLOSE, get(defaultCloseOperation, instance));
 		//
-		Assertions.assertSame(jFrame, instance.postProcessBeforeInitialization(jFrame, null));
+		Assertions.assertSame(jFrame, postProcessBeforeInitialization(instance, jFrame, null));
 		//
 		Assertions.assertThrows(IllegalArgumentException.class,
 				() -> instance.setDefaultCloseOperation(StringUtils.wrap(Integer.toString(0), "\"")));
@@ -199,7 +240,7 @@ class CustomBeanPostProcessorTest {
 		//
 		Assertions.assertEquals(WindowConstants.EXIT_ON_CLOSE, get(defaultCloseOperation, instance));
 		//
-		Assertions.assertSame(jFrame, instance.postProcessBeforeInitialization(jFrame, null));
+		Assertions.assertSame(jFrame, postProcessBeforeInitialization(instance, jFrame, null));
 		//
 		// java.lang.Boolean
 		//
@@ -207,9 +248,9 @@ class CustomBeanPostProcessorTest {
 		//
 		// org.springframework.core.env.PropertyResolver
 		//
-		instance.setEnvironment(Reflection.newProxy(Environment.class, ih));
+		setEnvironment(instance, environment);
 		//
-		Assertions.assertSame(jFrame, instance.postProcessBeforeInitialization(jFrame, null));
+		Assertions.assertSame(jFrame, postProcessBeforeInitialization(instance, jFrame, null));
 		//
 		// title
 		//
@@ -221,7 +262,7 @@ class CustomBeanPostProcessorTest {
 			//
 		} // if
 			//
-		Assertions.assertSame(jFrame, instance.postProcessBeforeInitialization(jFrame, null));
+		Assertions.assertSame(jFrame, postProcessBeforeInitialization(instance, jFrame, null));
 		//
 		if (ih != null) {
 			//
@@ -229,7 +270,7 @@ class CustomBeanPostProcessorTest {
 			//
 		} // if
 			//
-		Assertions.assertSame(jFrame, instance.postProcessBeforeInitialization(jFrame, null));
+		Assertions.assertSame(jFrame, postProcessBeforeInitialization(instance, jFrame, null));
 		//
 		// defaultCloseOperation
 		//
@@ -240,7 +281,7 @@ class CustomBeanPostProcessorTest {
 			//
 		} // if
 			//
-		Assertions.assertSame(jFrame, instance.postProcessBeforeInitialization(jFrame, null));
+		Assertions.assertSame(jFrame, postProcessBeforeInitialization(instance, jFrame, null));
 		//
 		instance.setDefaultCloseOperation(null);
 		//
@@ -251,8 +292,87 @@ class CustomBeanPostProcessorTest {
 		} // if
 			//
 		Assertions.assertThrows(RuntimeException.class,
-				() -> instance.postProcessBeforeInitialization(Narcissus.allocateInstance(JFrame.class), null));
+				() -> postProcessBeforeInitialization(instance, Narcissus.allocateInstance(JFrame.class), null));
 		//
+	}
+
+	private static Object postProcessBeforeInitialization(final BeanPostProcessor instance, final Object bean,
+			final String beanName) {
+		return instance != null ? instance.postProcessBeforeInitialization(bean, beanName) : null;
+	}
+
+	private static void setEnvironment(final EnvironmentAware instance, final Environment environment) {
+		if (instance != null) {
+			instance.setEnvironment(environment);
+		}
+	}
+
+	@Test
+	void testPostProcessAfterInitialization() throws ReflectiveOperationException {
+		//
+		// org.springframework.core.env.PropertyResolver
+		//
+		setEnvironment(instance, environment);
+		//
+		// setPreferredWidth
+		//
+		Assertions.assertNull(postProcessAfterInitialization(instance, null, null));
+		//
+		if (ih != null) {
+			//
+			ih.getProperties().put(StringUtils.joinWith(".", JFrame.class.getName(), "preferredSize.width"),
+					Integer.toString(1));
+			//
+		} // if
+			//
+		Assertions.assertSame(jFrame, postProcessAfterInitialization(instance, jFrame, null));
+		//
+		if (ih != null) {
+			//
+			ih.getProperties().remove(StringUtils.joinWith(".", JFrame.class.getName(), "defaultCloseOperation"));
+			//
+			final Map<Object, Object> properties = ih.properties;
+			//
+			if (properties != null) {
+				//
+				properties.put("java.awt.Component.preferredSize.width",
+						properties.remove(StringUtils.joinWith(".", JFrame.class.getName(), "preferredSize.width")));
+				//
+			} // if
+				//
+		} // if
+			//
+		Assertions.assertSame(jFrame, postProcessAfterInitialization(instance, jFrame, null));
+		//
+		Assertions.assertNotNull(
+				postProcessAfterInitialization(instance, Narcissus.allocateInstance(JFrame.class), null));
+		//
+		// Create a "java.awt.Component" instance which
+		// "java.awt.Component.getPreferredSize()" method returns null
+		//
+		final ProxyFactory proxyFactory = new ProxyFactory();
+		//
+		proxyFactory.setSuperclass(Component.class);
+		//
+		final Class<?> clz = proxyFactory.createClass();
+		//
+		final Constructor<?> constructor = clz != null ? clz.getDeclaredConstructor() : null;
+		//
+		final Object object = constructor != null ? constructor.newInstance() : null;
+		//
+		if (object instanceof ProxyObject) {
+			//
+			((ProxyObject) object).setHandler(new MH());
+			//
+		} // if
+			//
+		Assertions.assertSame(object, postProcessAfterInitialization(instance, object, null));
+		//
+	}
+
+	private static Object postProcessAfterInitialization(final BeanPostProcessor instance, final Object bean,
+			final String beanName) {
+		return instance != null ? instance.postProcessAfterInitialization(bean, beanName) : null;
 	}
 
 	@Test
@@ -457,6 +577,29 @@ class CustomBeanPostProcessorTest {
 	private static void setTitle(final Frame frame, final Title title) throws Throwable {
 		try {
 			METHOD_SET_TITLE.invoke(null, frame, title);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testValueOf() throws Throwable {
+		//
+		Assertions.assertNull(valueOf(null));
+		//
+		Assertions.assertNull(valueOf("A"));
+		//
+	}
+
+	private static Integer valueOf(final String instance) throws Throwable {
+		try {
+			final Object obj = METHOD_VALUE_OF.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Integer) {
+				return ((Integer) obj);
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
