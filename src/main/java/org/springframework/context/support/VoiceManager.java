@@ -7754,18 +7754,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} else if (Boolean.logicalAnd(in instanceof LDC, index != null)) {
 					//
-					if (count == null) {
-						//
-						count = Integer.valueOf(0);
-						//
-					} // if
-						//
-					if (count != null) {
-						//
-						count = Integer.valueOf(count.intValue() + 1);
-						//
-					} // if
-						//
+					count = Integer.valueOf(intValue(count, 0) + 1);
+					//
 					if (i < ins.length - 2 && ins[i + 2] instanceof ASTORE) {
 						//
 						break;
