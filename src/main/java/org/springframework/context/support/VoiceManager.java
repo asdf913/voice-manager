@@ -3034,7 +3034,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(
 				tfTextImport = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
 						"org.springframework.context.support.VoiceManager.text")),
-				String.format("%1$s,span %2$s", GROWX, 20));
+				String.format("%1$s,span %2$s", GROWX, 18));
 		//
 		addDocumentListener(tfTextImportDocument = tfTextImport.getDocument(), this);
 		//
@@ -3059,6 +3059,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			}
 		});
+		//
+		panel.add(btnCheckPronunciation = new JButton("Pronunciation"), String.format("span %1$s", 2));
 		//
 		panel.add(btnConvertToRomaji = new JButton("Convert To Romaji"), String.format("%1$s", WRAP));
 		//
@@ -3226,16 +3228,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
-		panel.add(jcbPronunciation, String.format("%1$s,span %2$s", GROWX, 2));
-		//
-		panel.add(btnCheckPronunciation = new JButton("Check"));
+		panel.add(jcbPronunciation, String.format("%1$s,span %2$s", GROWX, 3));
 		//
 		final JComboBox<String> jcbPronounicatioAudioFormat = new JComboBox<>(
 				mcbmPronounicationAudioFormat = new DefaultComboBoxModel<>());
 		//
 		setPreferredWidth(94, jcbPronounicatioAudioFormat);
 		//
-		panel.add(jcbPronounicatioAudioFormat, String.format("span %1$s", 2));
+		panel.add(jcbPronounicatioAudioFormat);
 		//
 		panel.add(btnPlayPronunciationAudio = new JButton("Play"), WRAP);
 		//
