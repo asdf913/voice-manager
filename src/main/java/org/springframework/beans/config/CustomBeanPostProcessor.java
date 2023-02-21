@@ -271,36 +271,13 @@ public class CustomBeanPostProcessor implements BeanPostProcessor, EnvironmentAw
 		//
 		if (frame != null) {
 			//
-			// if the "bean" is a subclass of "java.awt.Component" and its instantiation is
-			// done by
-			// "io.github.toolfactory.narcissus.Narcissus.allocateInstance(java.lang.Class)"
-			// (i.e. no constructor is being called), the "objectLock" field in
-			// "java.awt.Component" class will be null.
+			ensureObjectLockNotNull(frame);
 			//
-			// The below code assign a "java.lang.Object" instance to the field if the field
-			// refers to null
+			// If there is a "java.awt.Frame.title" property found in
+			// "org.springframework.core.env.PropertyResolver" instance and the
+			// corresponding value is not empty, pass the corresponding value to the
+			// "java.awt.Frame.setTitle(java.lang.String)" method
 			//
-			try {
-				//
-				final Field objectLock = Component.class.getDeclaredField("objectLock");
-				//
-				if (objectLock != null && Narcissus.getObjectField(frame, objectLock) == null) {
-					//
-					Narcissus.setObjectField(frame, objectLock, new Object());
-					//
-				} // if
-					//
-			} catch (final NoSuchFieldException e) {
-				//
-				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
-				//
-			} // try
-				//
-				// If there is a "java.awt.Frame.title" property found in
-				// "org.springframework.core.env.PropertyResolver" instance and the
-				// corresponding value is not empty, pass the corresponding value to the
-				// "java.awt.Frame.setTitle(java.lang.String)" method
-				//
 			final String defaultTitle = testAndApply(x -> PropertyResolverUtil.containsProperty(propertyResolver, x),
 					"java.awt.Frame.title", x -> PropertyResolverUtil.getProperty(propertyResolver, x), null);
 			//
@@ -332,16 +309,50 @@ public class CustomBeanPostProcessor implements BeanPostProcessor, EnvironmentAw
 				//
 			} else if (isAnnotationPresent(clz, Title.class)) {
 				//
-				final Title title = getAnnotation(clz, Title.class);
+				setTitle(frame, getAnnotation(clz, Title.class));
 				//
-				if (title != null) {
-					//
-					frame.setTitle(title.value());
-					//
-				} // if
-					//
 			} // if
 				//
+		} // if
+			//
+	}
+
+	/**
+	 * 
+	 * If the "instance" is a subclass of "java.awt.Component" and its instantiation
+	 * is done by
+	 * "io.github.toolfactory.narcissus.Narcissus.allocateInstance(java.lang.Class)"
+	 * (i.e. no constructor is being called), the "objectLock" field in
+	 * "java.awt.Component" class will be null and this method will assign a new
+	 * "java.lang.Object" instance to the "objectLock" field in "java.awt.Component"
+	 * 
+	 */
+	private static void ensureObjectLockNotNull(final Object instance) {
+		//
+		try {
+			//
+			final Field objectLock = Component.class.getDeclaredField("objectLock");
+			//
+			if (objectLock != null && Narcissus.getObjectField(instance, objectLock) == null) {
+				//
+				Narcissus.setObjectField(instance, objectLock, new Object());
+				//
+			} // if
+				//
+		} catch (final NoSuchFieldException e) {
+			//
+			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
+			//
+		} // try
+			//
+	}
+
+	private static void setTitle(final Frame frame, final Title title) {
+		//
+		if (frame != null && title != null) {
+			//
+			frame.setTitle(title.value());
+			//
 		} // if
 			//
 	}

@@ -1,5 +1,6 @@
 package org.springframework.beans.config;
 
+import java.awt.Frame;
 import java.awt.GraphicsEnvironment;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
@@ -10,6 +11,7 @@ import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 import javax.swing.JFrame;
@@ -24,7 +26,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertyResolver;
 
-import com.google.common.base.Objects;
 import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
@@ -32,7 +33,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 class CustomBeanPostProcessorTest {
 
 	private static Method METHOD_GET_NAME, METHOD_GET_CLASS, METHOD_TO_STRING, METHOD_IS_STATIC, METHOD_GET,
-			METHOD_CAST, METHOD_TEST, METHOD_IS_ANNOTATION_PRESENT, METHOD_GET_ANNOTATION = null;
+			METHOD_CAST, METHOD_TEST, METHOD_IS_ANNOTATION_PRESENT, METHOD_GET_ANNOTATION, METHOD_SET_TITLE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -59,11 +60,15 @@ class CustomBeanPostProcessorTest {
 		(METHOD_GET_ANNOTATION = clz.getDeclaredMethod("getAnnotation", AnnotatedElement.class, Class.class))
 				.setAccessible(true);
 		//
+		(METHOD_SET_TITLE = clz.getDeclaredMethod("setTitle", Frame.class, Title.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
 
 		private Map<Object, Object> properties = null;
+
+		private String value = null;
 
 		private Map<Object, Object> getProperties() {
 			if (properties == null) {
@@ -75,7 +80,7 @@ class CustomBeanPostProcessorTest {
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
-			if (Objects.equal(Void.TYPE, method != null ? method.getReturnType() : null)) {
+			if (Objects.equals(Void.TYPE, method != null ? method.getReturnType() : null)) {
 				//
 				return null;
 				//
@@ -85,13 +90,21 @@ class CustomBeanPostProcessorTest {
 			//
 			if (proxy instanceof PropertyResolver) {
 				//
-				if (Objects.equal(methodName, "containsProperty") && args != null && args.length > 0) {
+				if (Objects.equals(methodName, "containsProperty") && args != null && args.length > 0) {
 					//
 					return containsKey(getProperties(), args[0]);
 					//
-				} else if (Objects.equal(methodName, "getProperty") && args != null && args.length > 0) {
+				} else if (Objects.equals(methodName, "getProperty") && args != null && args.length > 0) {
 					//
 					return MapUtils.getObject(getProperties(), args[0]);
+					//
+				} // if
+					//
+			} else if (proxy instanceof Title) {
+				//
+				if (Objects.equals(methodName, "value")) {
+					//
+					return value;
 					//
 				} // if
 					//
@@ -410,4 +423,43 @@ class CustomBeanPostProcessorTest {
 			throw e.getTargetException();
 		}
 	}
+
+	@Test
+	void testSetTitle() throws Throwable {
+		//
+		Assertions.assertDoesNotThrow(() -> setTitle(null, null));
+		//
+		final boolean headless = GraphicsEnvironment.isHeadless();
+		//
+		final Frame frame = headless ? cast(Frame.class, Narcissus.allocateInstance(Frame.class)) : new Frame();
+		//
+		Assertions.assertDoesNotThrow(() -> setTitle(frame, null));
+		//
+		if (headless) {
+			//
+			final Method method = CustomBeanPostProcessor.class.getDeclaredMethod("ensureObjectLockNotNull",
+					Object.class);
+			//
+			if (method != null) {
+				//
+				method.setAccessible(true);
+				//
+				method.invoke(null, frame);
+				//
+			} // if
+				//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> setTitle(frame, Reflection.newProxy(Title.class, ih)));
+		//
+	}
+
+	private static void setTitle(final Frame frame, final Title title) throws Throwable {
+		try {
+			METHOD_SET_TITLE.invoke(null, frame, title);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
 }
