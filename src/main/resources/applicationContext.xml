@@ -198,6 +198,9 @@
 		<property
 			name="onlineNHKJapanesePronunciationsAccentFailableFunction"
 			ref="OnlineNHKJapanesePronunciationsAccentFailableFunction" />
+		<!-- -->
+		<property name="preferredPronunciationAudioFormat"
+			value="${org.springframework.context.support.VoiceManager.preferredPronunciationAudioFormat}" />
 	</bean>
 
 	<!-- -->

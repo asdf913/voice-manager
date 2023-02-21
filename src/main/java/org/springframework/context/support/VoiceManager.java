@@ -808,6 +808,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private transient OnlineNHKJapanesePronunciationsAccentFailableFunction onlineNHKJapanesePronunciationsAccentFailableFunction = null;
 
+	private String preferredPronunciationAudioFormat = null;
+
 	private VoiceManager() {
 	}
 
@@ -1550,6 +1552,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	public void setOnlineNHKJapanesePronunciationsAccentFailableFunction(
 			final OnlineNHKJapanesePronunciationsAccentFailableFunction onlineNHKJapanesePronunciationsAccentFailableFunction) {
 		this.onlineNHKJapanesePronunciationsAccentFailableFunction = onlineNHKJapanesePronunciationsAccentFailableFunction;
+	}
+
+	public void setPreferredPronunciationAudioFormat(final String preferredPronunciationAudioFormat) {
+		this.preferredPronunciationAudioFormat = preferredPronunciationAudioFormat;
 	}
 
 	private static IValue0<Class<? extends Workbook>> getWorkbookClass(
@@ -4742,7 +4748,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		} else if (Objects.equals(source, jcbPronunciation)) {
 			//
 			pronounicationChanged(cast(Pronunciation.class, getSelectedItem(mcbmPronunciation)),
-					mcbmPronounicationAudioFormat);
+					mcbmPronounicationAudioFormat, preferredPronunciationAudioFormat);
 			//
 		} else if (Objects.equals(source, btnPlayPronunciationAudio)) {
 			//
@@ -4800,9 +4806,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	private static void pronounicationChanged(final Pronunciation pronunciation,
-			final MutableComboBoxModel<String> mcbmAudioFormat) {
+			final MutableComboBoxModel<String> mcbmAudioFormat, final String preferredPronunciationAudioFormat) {
 		//
 		forEach(reverseRange(0, getSize(mcbmAudioFormat)), i -> removeElementAt(mcbmAudioFormat, i));
+		//
+		setSelectedItem(mcbmAudioFormat, null);
 		//
 		final Map<String, String> audioUrls = pronunciation != null ? pronunciation.getAudioUrls() : null;
 		//
@@ -4811,6 +4819,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			addElement(mcbmAudioFormat, null);
 			//
 			audioUrls.forEach((k, v) -> addElement(mcbmAudioFormat, k));
+			//
+		} // if
+			//
+		if (containsKey(audioUrls, preferredPronunciationAudioFormat)) {
+			//
+			setSelectedItem(mcbmAudioFormat, preferredPronunciationAudioFormat);
 			//
 		} // if
 			//

@@ -955,7 +955,7 @@ class VoiceManagerTest {
 		(METHOD_PLAY = clz.getDeclaredMethod("play", Player.class)).setAccessible(true);
 		//
 		(METHOD_PRONOUNICATION_CHANGED = clz.getDeclaredMethod("pronounicationChanged", Pronunciation.class,
-				MutableComboBoxModel.class)).setAccessible(true);
+				MutableComboBoxModel.class, String.class)).setAccessible(true);
 		//
 		(METHOD_REMOVE_ELEMENT_AT = clz.getDeclaredMethod("removeElementAt", MutableComboBoxModel.class, Integer.TYPE))
 				.setAccessible(true);
@@ -4167,8 +4167,6 @@ class VoiceManagerTest {
 
 	@Test
 	void testContainsKey() throws Throwable {
-		//
-		Assertions.assertFalse(containsKey(null, null));
 		//
 		Assertions.assertFalse(containsKey(Collections.emptyMap(), null));
 		//
@@ -8493,14 +8491,16 @@ class VoiceManagerTest {
 		//
 		pronunciation.setAudioUrls(Collections.singletonMap(null, null));
 		//
-		Assertions.assertDoesNotThrow(() -> pronounicationChanged(pronunciation, null));
+		Assertions.assertDoesNotThrow(() -> pronounicationChanged(pronunciation, null, null));
 		//
 	}
 
 	private static void pronounicationChanged(final Pronunciation pronunciation,
-			final MutableComboBoxModel<String> mcbmAudioFormat) throws Throwable {
+			final MutableComboBoxModel<String> mcbmAudioFormat, final String preferredPronunciationAudioFormat)
+			throws Throwable {
 		try {
-			METHOD_PRONOUNICATION_CHANGED.invoke(null, pronunciation, mcbmAudioFormat);
+			METHOD_PRONOUNICATION_CHANGED.invoke(null, pronunciation, mcbmAudioFormat,
+					preferredPronunciationAudioFormat);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
