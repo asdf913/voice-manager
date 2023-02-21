@@ -685,8 +685,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@ExportButton
 	private AbstractButton btnExportMicrosoftSpeechObjectLibraryInformation = null;
 
-	@Note("Check Pronounication")
-	private AbstractButton btnCheckPronounication = null;
+	@Note("Check Pronunciation")
+	private AbstractButton btnCheckPronunciation = null;
 
 	private AbstractButton btnPlayPronunciationAudio = null;
 
@@ -3228,7 +3228,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		panel.add(jcbPronunciation, String.format("%1$s,span %2$s", GROWX, 2));
 		//
-		panel.add(btnCheckPronounication = new JButton("Check"));
+		panel.add(btnCheckPronunciation = new JButton("Check"));
 		//
 		final JComboBox<String> jcbPronounicatioAudioFormat = new JComboBox<>(
 				mcbmPronounicationAudioFormat = new DefaultComboBoxModel<>());
@@ -3300,7 +3300,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		} // if
 			//
 		addActionListener(this, btnExecute, btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji, btnCopyHiragana,
-				btnCopyKatakana, btnPronunciationPageUrlCheck, btnIpaSymbol, btnCheckPronounication,
+				btnCopyKatakana, btnPronunciationPageUrlCheck, btnIpaSymbol, btnCheckPronunciation,
 				btnPlayPronunciationAudio);
 		//
 		setEnabled(voiceIds != null, cbUseTtsVoice);
@@ -4735,7 +4735,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			actionPerformedForIpaSymbol(headless);
 			//
-		} else if (Objects.equals(source, btnCheckPronounication)) {
+		} else if (Objects.equals(source, btnCheckPronunciation)) {
 			//
 			actionPerformedForBtnCheckPronounication();
 			//

@@ -2446,17 +2446,17 @@ class VoiceManagerTest {
 		//
 		// btnCheckPronounication
 		//
-		final AbstractButton btnCheckPronounication = new JButton();
+		final AbstractButton btnCheckPronunciation = new JButton();
 		//
 		if (instance != null) {
 			//
-			FieldUtils.writeDeclaredField(instance, "btnCheckPronounication", btnCheckPronounication, true);
+			FieldUtils.writeDeclaredField(instance, "btnCheckPronunciation", btnCheckPronunciation, true);
 			//
 		} // if
 			//
-		final ActionEvent actionEventBtnCheckPronounication = new ActionEvent(btnCheckPronounication, 0, null);
+		final ActionEvent actionEventBtnCheckPronunciation = new ActionEvent(btnCheckPronunciation, 0, null);
 		//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnCheckPronounication));
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnCheckPronunciation));
 		//
 		// mcbmPronunciation
 		//
@@ -2467,7 +2467,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnCheckPronounication));
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnCheckPronunciation));
 		//
 		// jcbPronunciation
 		//
