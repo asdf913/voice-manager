@@ -326,6 +326,7 @@ public class CustomBeanPostProcessor implements BeanPostProcessor, EnvironmentAw
 	 * "java.awt.Component" class will be null and this method will assign a new
 	 * "java.lang.Object" instance to the "objectLock" field in "java.awt.Component"
 	 * 
+	 * @see io.github.toolfactory.narcissus.Narcissus#allocateInstance(java.lang.Class)
 	 */
 	private static void ensureObjectLockNotNull(final Object instance) {
 		//
