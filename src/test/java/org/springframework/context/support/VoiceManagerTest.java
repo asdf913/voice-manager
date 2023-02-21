@@ -9520,13 +9520,13 @@ class VoiceManagerTest {
 		Assertions.assertNull(invoke(clz != null ? clz.getDeclaredMethod("getName", FieldOrMethod.class) : null,
 				instance, (Object) null));
 		//
-		// createQuality(java.lang.String[])
+		// createQuality(org.apache.bcel.generic.Instruction[])
 		//
-		final Method createQuality = clz != null ? clz.getDeclaredMethod("createQuality", String[].class) : null;
+		final Method createQuality = clz != null ? clz.getDeclaredMethod("createQuality", Instruction[].class) : null;
 		//
 		Assertions.assertNull(invoke(createQuality, instance, (Object) null));
 		//
-		Assertions.assertNull(invoke(createQuality, instance, new String[] { null }));
+		Assertions.assertNull(invoke(createQuality, instance, new Instruction[] { null }));
 		//
 		// getValue(org.apache.bcel.generic.ConstantPushInstruction)
 		//

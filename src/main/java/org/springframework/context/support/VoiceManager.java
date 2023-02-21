@@ -175,13 +175,13 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import org.apache.bcel.Const;
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.ClassParserUtil;
-import org.apache.bcel.classfile.CodeUtil;
 import org.apache.bcel.classfile.ConstantPool;
 import org.apache.bcel.classfile.FieldOrMethod;
 import org.apache.bcel.classfile.JavaClassUtil;
-import org.apache.bcel.classfile.Utility;
+import org.apache.bcel.generic.ASTORE;
 import org.apache.bcel.generic.BIPUSH;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.ConstantPushInstruction;
@@ -192,6 +192,7 @@ import org.apache.bcel.generic.InstructionListUtil;
 import org.apache.bcel.generic.LDC;
 import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.MethodGenUtil;
+import org.apache.bcel.generic.NEWARRAY;
 import org.apache.bcel.generic.ObjectType;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.codec.binary.Hex;
@@ -7691,6 +7692,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		}
 
+		/**
+		 * @see <a href=
+		 *      "https://github.com/Sciss/jump3r/blob/master/src/main/java/de/sciss/jump3r/mp3/Lame.java#L1067">de.sciss.jump3r.mp3.Lame.lame_init_params(de.sciss.jump3r.mp3.LameGlobalFlags)</a>
+		 * 
+		 * @see de.sciss.jump3r.mp3.Lame#lame_init_params(de.sciss.jump3r.mp3.LameGlobalFlags)
+		 */
 		private static Range<Integer> createQualityRange() throws IOException {
 			//
 			final Class<?> clz = Lame.class;
@@ -7701,24 +7708,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				final org.apache.bcel.classfile.Method[] ms = JavaClassUtil.getMethods(
 						ClassParserUtil.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null)));
 				//
-				org.apache.bcel.classfile.Method m = null;
-				//
-				byte[] bs = null;
-				//
 				Map<Integer, Integer> map = null;
 				//
 				for (int i = 0; ms != null && i < ms.length; i++) {
 					//
-					if ((m = ms[i]) == null) {
-						//
-						continue;
-						//
-					} // if
-						//
 					put(map = getIfNull(map, LinkedHashMap::new), Integer.valueOf(i),
-							createQuality(StringUtils
-									.split(StringUtils.trim(Utility.codeToString(bs = CodeUtil.getCode(m.getCode()),
-											getConstantPool(m), 0, length(bs))), '\n')));
+							createQuality(InstructionListUtil.getInstructions(MethodGenUtil.getInstructionList(
+									testAndApply(Objects::nonNull, ms[i], x -> new MethodGen(x, null, null), null)))));
 					//
 				} // for
 					//
@@ -7741,34 +7737,46 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		}
 
-		private static Integer createQuality(final String[] lines) {
+		private static Integer createQuality(final Instruction[] ins) {
 			//
-			String line = null;
+			Instruction in = null;
 			//
-			Integer index1 = null, index2 = null, count = null;
+			Integer index = null, count = null;
 			//
-			for (int j = 0; lines != null && j < lines.length; j++) {
+			final int length = ins != null ? ins.length : 0;
+			//
+			for (int i = 0; ins != null && i < length; i++) {
 				//
-				if ((line = lines[j]) == null) {
+				if ((in = ins[i]) instanceof NEWARRAY newArray && newArray != null
+						&& newArray.getTypecode() == Const.T_FLOAT) {
 					//
-					continue;
+					index = Integer.valueOf(i);
 					//
-				} // if
+				} else if (in instanceof LDC ldc && index != null) {
 					//
-				if (index1 == null && matches(matcher(PATTERN_NEW_ARRAY_FLOAT, line))) {
-					index1 = Integer.valueOf(j);
-				} else if (index2 == null && matches(matcher(PATTERN_VBR_Q, line))) {
-					index2 = Integer.valueOf(j);
-					break;
-				} // if
-					//
-				if (index1 != null && matches(matcher(PATTERN_LDC_NUMBER, line))) {
-					count = Integer.valueOf(intValue(count, 0) + 1);
+					if (count == null) {
+						//
+						count = Integer.valueOf(0);
+						//
+					} // if
+						//
+					if (count != null) {
+						//
+						count = Integer.valueOf(count.intValue() + 1);
+						//
+					} // if
+						//
+					if (i < ins.length - 2 && ins[i + 2] instanceof ASTORE) {
+						//
+						break;
+						//
+					} // if
+						//
 				} // if
 					//
 			} // for
 				//
-			return count;
+			return count != null ? Integer.valueOf(count.intValue()) : null;
 			//
 		}
 
