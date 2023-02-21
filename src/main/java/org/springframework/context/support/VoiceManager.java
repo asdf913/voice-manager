@@ -4737,7 +4737,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} else if (Objects.equals(source, btnCheckPronunciation)) {
 			//
-			actionPerformedForBtnCheckPronounication();
+			actionPerformedForBtnCheckPronunciation();
 			//
 		} else if (Objects.equals(source, jcbPronunciation)) {
 			//
@@ -5825,7 +5825,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	private void actionPerformedForBtnCheckPronounication() {
+	private void actionPerformedForBtnCheckPronunciation() {
 		//
 		// Remove all element(s) in "mcbmPronounication"
 		//
