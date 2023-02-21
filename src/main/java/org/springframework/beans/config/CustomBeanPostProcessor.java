@@ -279,11 +279,69 @@ public class CustomBeanPostProcessor implements BeanPostProcessor, EnvironmentAw
 		//
 	}
 
+	private static enum PlusOrMinus {
+
+		PLUS('+'), MINUS('-');
+
+		private Character character = null;
+
+		private PlusOrMinus(final char c) {
+			//
+			this.character = Character.valueOf(c);
+			//
+		}
+
+		private static PlusOrMinus valueOf(final char c) {
+			//
+			return valueOf(values(), c);
+			//
+		}
+
+		private static PlusOrMinus valueOf(final PlusOrMinus[] vs, final char c) {
+			//
+			if (vs != null) {
+				//
+				IValue0<PlusOrMinus> result = null;
+				//
+				for (final PlusOrMinus v : vs) {
+					//
+					if (v != null && v.character != null && v.character.charValue() == c) {
+						//
+						if (result == null) {
+							//
+							result = Unit.with(v);
+							//
+						} else {
+							//
+							throw new IllegalStateException();
+							//
+						} // if
+							//
+					} // if
+						//
+				} // for
+					//
+				if (result != null) {
+					//
+					return IValue0Util.getValue0(result);
+					//
+				} // if
+					//
+			} // if
+				//
+			return null;
+			//
+		}
+
+	}
+
 	private static void setPreferredWidth(final Component component, final PropertyResolver propertyResolver) {
 		//
 		IValue0<Number> widthIvalue0 = null;
 		//
 		String string = null;
+		//
+		PlusOrMinus pm = null;
 		//
 		if (StringUtils
 				.isNotEmpty(string = testAndApply(x -> PropertyResolverUtil.containsProperty(propertyResolver, x),
@@ -291,6 +349,8 @@ public class CustomBeanPostProcessor implements BeanPostProcessor, EnvironmentAw
 						x -> PropertyResolverUtil.getProperty(propertyResolver, x), null))) {
 			//
 			widthIvalue0 = testAndApply(Objects::nonNull, valueOf(string), Unit::with, null);
+			//
+			pm = PlusOrMinus.valueOf(string.charAt(0));
 			//
 		} // if
 			//
@@ -314,6 +374,8 @@ public class CustomBeanPostProcessor implements BeanPostProcessor, EnvironmentAw
 			//
 			widthIvalue0 = testAndApply(Objects::nonNull, valueOf(string), Unit::with, null);
 			//
+			pm = PlusOrMinus.valueOf(string.charAt(0));
+			//
 		} // if
 			//
 		final Dimension pd = component != null ? component.getPreferredSize() : null;
@@ -324,7 +386,9 @@ public class CustomBeanPostProcessor implements BeanPostProcessor, EnvironmentAw
 			//
 			ensureObjectLockNotNull(component);
 			//
-			component.setPreferredSize(new Dimension(width.intValue(), (int) pd.getHeight()));
+			component.setPreferredSize(
+					new Dimension((int) (pm != null ? pd.getWidth() + width.doubleValue() : width.doubleValue()),
+							(int) pd.getHeight()));
 			//
 		} // if
 			//

@@ -6,22 +6,29 @@ import java.awt.Frame;
 import java.awt.GraphicsEnvironment;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
+import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -347,6 +354,23 @@ class CustomBeanPostProcessorTest {
 		Assertions.assertNotNull(
 				postProcessAfterInitialization(instance, Narcissus.allocateInstance(JFrame.class), null));
 		//
+		if (ih != null) {
+			//
+			final Map<Object, Object> properties = ih.properties;
+			//
+			if (properties != null) {
+				//
+				properties.put("java.awt.Component.preferredSize.width", "+1");
+				//
+			} // if
+				//
+		} // if
+			//
+		Assertions.assertSame(jFrame, postProcessAfterInitialization(instance, jFrame, null));
+		//
+		Assertions.assertNotNull(
+				postProcessAfterInitialization(instance, Narcissus.allocateInstance(JFrame.class), null));
+		//
 		// Create a "java.awt.Component" instance which
 		// "java.awt.Component.getPreferredSize()" method returns null
 		//
@@ -603,6 +627,57 @@ class CustomBeanPostProcessorTest {
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
+	}
+
+	@Test
+	void testPlusOrMinus() throws Throwable {
+		//
+		final Class<?> clz = Class.forName("org.springframework.beans.config.CustomBeanPostProcessor$PlusOrMinus");
+		//
+		final Enum<?> en = clz != null && clz.isEnum() ? Arrays.stream(clz.getEnumConstants())
+				.map(x -> x instanceof Enum ? (Enum<?>) x : null).filter(Objects::nonNull).findFirst().orElse(null)
+				: null;
+		//
+		final List<Method> ms = new FailableStream<>(Arrays.stream(clz.getDeclaredMethods()))
+				.filter(m -> m != null && Objects.equals(getName(m), "valueOf") && m.getParameterCount() == 2)
+				.collect(Collectors.toList());
+		//
+		// org.springframework.beans.config.CustomBeanPostProcessor$PlusOrMinus.valueOf(org.springframework.beans.config.CustomBeanPostProcessor$PlusOrMinus[],char)
+		//
+		final Method valueOf = IterableUtils.size(ms) == 1 ? IterableUtils.get(ms, 0) : null;
+		//
+		if (valueOf != null) {
+			//
+			valueOf.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertNull(valueOf != null ? valueOf.invoke(null, null, ' ') : null);
+		//
+		final Object[] objects = cast(Object[].class, Array.newInstance(clz, 2));
+		//
+		Assertions.assertNull(valueOf != null ? valueOf.invoke(null, objects, ' ') : null);
+		//
+		Arrays.fill(objects, en);
+		//
+		Assertions.assertThrows(IllegalStateException.class, () -> {
+			//
+			if (valueOf != null) {
+				//
+				try {
+					//
+					valueOf.invoke(null, objects, FieldUtils.readDeclaredField(en, "character", true));
+					//
+				} catch (final InvocationTargetException e) {
+					//
+					throw e.getTargetException();
+					//
+				} // try
+					//
+			} // if
+				//
+		});
+		//
 	}
 
 }
