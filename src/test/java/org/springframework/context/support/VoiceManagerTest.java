@@ -1024,7 +1024,7 @@ class VoiceManagerTest {
 
 		private Expression expression = null;
 
-		private Object value, min, max, selectedItem = null;
+		private Object value, min, max, selectedItem, nodeValue = null;
 
 		private Iterator<Row> rows = null;
 
@@ -1440,6 +1440,10 @@ class VoiceManagerTest {
 				} else if (Objects.equals(methodName, "getAttributes")) {
 					//
 					return attributes;
+					//
+				} else if (Objects.equals(methodName, "getNodeValue")) {
+					//
+					return nodeValue;
 					//
 				} // if
 					//
@@ -9660,6 +9664,22 @@ class VoiceManagerTest {
 		Assertions.assertNull(invoke(setNodeValue, null, null, null));
 		//
 		Assertions.assertNull(invoke(setNodeValue, null, node, null));
+		//
+		// org.springframework.context.support.VoiceManager$ExportTask.getNodeValue(org.w3c.dom.Node)
+		//
+		final Method getNodeValue = CLASS_EXPORT_TASK != null
+				? CLASS_EXPORT_TASK.getDeclaredMethod("getNodeValue", Node.class)
+				: null;
+		//
+		if (getNodeValue != null) {
+			//
+			getNodeValue.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertNull(invoke(getNodeValue, null, (Object) null));
+		//
+		Assertions.assertNull(invoke(getNodeValue, null, node));
 		//
 	}
 
