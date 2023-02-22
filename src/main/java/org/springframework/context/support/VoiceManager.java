@@ -813,6 +813,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private String preferredPronunciationAudioFormat = null;
 
+	private Duration presentationSlideDuration = null;
+
 	private VoiceManager() {
 	}
 
@@ -1559,6 +1561,45 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	public void setPreferredPronunciationAudioFormat(final String preferredPronunciationAudioFormat) {
 		this.preferredPronunciationAudioFormat = preferredPronunciationAudioFormat;
+	}
+
+	public void setPresentationSlideDuration(final Object object) {
+		//
+		IValue0<Duration> value = null;
+		//
+		if (object == null) {
+			//
+			value = Unit.with(null);
+			//
+		} else if (object instanceof Duration) {
+			//
+			value = Unit.with((Duration) object);
+			//
+		} else if (object instanceof Number) {
+			//
+			value = Unit.with(Duration.ofMillis(intValue((Number) object, 0)));
+			//
+		} else if (object instanceof CharSequence) {
+			//
+			value = Unit.with(testAndApply(StringUtils::isNotEmpty, (CharSequence) object, Duration::parse, null));
+			//
+		} else if (object instanceof char[]) {
+			//
+			value = Unit.with(testAndApply(StringUtils::isNotEmpty,
+					testAndApply(Objects::nonNull, (char[]) object, String::new, null), Duration::parse, null));
+			//
+		} // if
+			//
+		if (value != null) {
+			//
+			this.presentationSlideDuration = IValue0Util.getValue0(value);
+			//
+		} else {
+			//
+			throw new IllegalArgumentException(toString(getClass(object)));
+			//
+		} // if
+			//
 	}
 
 	private static IValue0<Class<? extends Workbook>> getWorkbookClass(
@@ -5705,6 +5746,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			StringMap.setString(stringMap, MESSAGE_DIGEST_ALGORITHM, messageDigestAlgorithm);
 			//
 			ObjectMap.setObject(objectMap, StringMap.class, stringMap);
+			//
+			ObjectMap.setObject(objectMap, Duration.class, presentationSlideDuration);
 			//
 			export(voices, outputFolderFileNameExpressions, objectMap);
 			//
@@ -10124,6 +10167,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 		private String messageDigestAlgorithm = null;
 
+		private Duration presentationSlideDuration = null;// TODO
+
 		@Override
 		public void run() {
 			//
@@ -10272,6 +10317,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						ObjectMap.setObject(objectMap, BooleanMap.class, booleanMap);
 						//
 						ObjectMap.setObject(objectMap, StringMap.class, stringMap);
+						//
+						ObjectMap.setObject(objectMap, Duration.class, presentationSlideDuration);
 						//
 						generateOdfPresentationDocuments(objectMap, voiceFileNames);
 						//
@@ -10447,6 +10494,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					ObjectMap.setObject(objectMap, BooleanMap.class, ObjectMap.getObject(om, BooleanMap.class));
 					//
+					ObjectMap.setObject(objectMap, Duration.class, ObjectMap.getObject(om, Duration.class));
+					//
 					ObjectMap.setObject(objectMap, StringMap.class, stringMap);
 					//
 				} // if
@@ -10561,6 +10610,28 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					Node attribute = null;
 					//
+					// Default Slide Duration
+					//
+					final Node style = cast(Node.class, evaluate(xp,
+							"/*/*[local-name()='automatic-styles']/*[local-name()='style']/@*[local-name()='name']",
+							document, XPathConstants.NODE));
+					//
+					if (style != null && Objects.equals(style.getNodeValue(), "dp1")) {
+						//
+						final Node durationAttribute = cast(Node.class,
+								evaluate(xp, "../*[local-name()='drawing-page-properties']/@*[local-name()='duration']",
+										style, XPathConstants.NODE));
+						//
+						final Duration duration = ObjectMap.getObject(objectMap, Duration.class);
+						//
+						if (durationAttribute != null && duration != null) {
+							//
+							durationAttribute.setNodeValue(VoiceManager.toString(duration));
+							//
+						} // if
+							//
+					} // if
+						//
 					for (final Entry<String, Voice> entry : entrySet) {
 						//
 						if (Boolean.logicalOr((voice = getValue(entry)) == null,
@@ -11064,6 +11135,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				et.messageDigestAlgorithm = StringMap.getString(stringMap, MESSAGE_DIGEST_ALGORITHM);
 				//
+				et.presentationSlideDuration = ObjectMap.getObject(objectMap, Duration.class);
+				//
 				es.submit(et);
 				//
 			} // for
@@ -11241,6 +11314,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
+			if (!ObjectMap.containsObject(objectMap, Duration.class)) {
+				//
+				ObjectMap.setObject(objectMap, Duration.class, null);
+				//
+			} // if
+				//
 			ObjectMap.setObject(objectMap, Voice.class, getValue(en));
 			//
 			clear(folder = getIfNull(folder, StringBuilder::new));
@@ -11328,6 +11407,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		et.voiceFileNames = voiceFileNames;
 		//
 		et.messageDigestAlgorithm = voiceManager != null ? voiceManager.messageDigestAlgorithm : null;
+		//
+		et.presentationSlideDuration = ObjectMap.getObject(objectMap, Duration.class);
 		//
 		return et;
 		//

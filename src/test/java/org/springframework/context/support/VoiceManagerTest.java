@@ -1,5 +1,7 @@
 package org.springframework.context.support;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
@@ -1697,6 +1699,73 @@ class VoiceManagerTest {
 			//
 		Assertions.assertEquals(FileFormat.GENERIC_JET4, get(microsoftAccessFileFormat, instance));
 		//
+	}
+
+	@Test
+	void testSetPresentationSlideDuration() throws NoSuchFieldException, IllegalAccessException {
+		//
+		final Field presentationSlideDuration = VoiceManager.class.getDeclaredField("presentationSlideDuration");
+		//
+		if (presentationSlideDuration != null) {
+			//
+			presentationSlideDuration.setAccessible(true);
+			//
+		} // if
+			//
+			// null
+			//
+		Assertions.assertDoesNotThrow(() -> setPresentationSlideDuration(instance, null));
+		//
+		Assertions.assertNull(get(presentationSlideDuration, instance));
+		//
+		// java.lang.Number
+		//
+		Assertions.assertDoesNotThrow(() -> setPresentationSlideDuration(instance, Integer.valueOf(ONE)));
+		//
+		Assertions.assertEquals(Duration.ofMillis(ONE), get(presentationSlideDuration, instance));
+		//
+		// java.lang.CharSequence
+		//
+		Assertions.assertDoesNotThrow(() -> setPresentationSlideDuration(instance, EMPTY));
+		//
+		Assertions.assertNull(get(presentationSlideDuration, instance));
+		//
+		final String string = String.format("PT%1$sS", ONE);
+		//
+		Assertions.assertDoesNotThrow(() -> setPresentationSlideDuration(instance, string));
+		//
+		final Duration duration = Duration.ofSeconds(ONE);
+		//
+		Assertions.assertEquals(duration, get(presentationSlideDuration, instance));
+		//
+		// java.time.Duration
+		//
+		Assertions.assertDoesNotThrow(() -> setPresentationSlideDuration(instance, duration));
+		//
+		Assertions.assertSame(duration, get(presentationSlideDuration, instance));
+		//
+		// char[]
+		//
+		Assertions.assertDoesNotThrow(() -> setPresentationSlideDuration(instance, new char[] {}));
+		//
+		Assertions.assertNull(get(presentationSlideDuration, instance));
+		//
+		Assertions.assertDoesNotThrow(
+				() -> setPresentationSlideDuration(instance, string != null ? string.toCharArray() : null));
+		//
+		Assertions.assertEquals(duration, get(presentationSlideDuration, instance));
+		//
+		// java.lang.Object
+		//
+		Assertions.assertThrows(IllegalArgumentException.class,
+				() -> setPresentationSlideDuration(instance, new Object()));
+		//
+	}
+
+	private static void setPresentationSlideDuration(final VoiceManager instance, final Object object) {
+		if (instance != null) {
+			instance.setPresentationSlideDuration(object);
+		}
 	}
 
 	@Test

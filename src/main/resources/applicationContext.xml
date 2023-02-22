@@ -201,6 +201,9 @@
 		<!-- -->
 		<property name="preferredPronunciationAudioFormat"
 			value="${org.springframework.context.support.VoiceManager.preferredPronunciationAudioFormat}" />
+		<!-- -->
+		<property name="presentationSlideDuration"
+			value="${org.springframework.context.support.VoiceManager.presentationSlideDuration}" />
 	</bean>
 
 	<!-- -->
