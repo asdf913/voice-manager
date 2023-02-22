@@ -5024,7 +5024,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			try {
 				//
-				deleteOnExit(file = generateTtsAudioFile(nonTest, headless, voice));
+				deleteOnExit(file = generateTtsAudioFile(headless, nonTest, voice));
 				//
 			} catch (final IllegalAccessException e) {
 				//
