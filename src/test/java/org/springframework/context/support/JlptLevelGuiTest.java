@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
+import java.awt.HeadlessException;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.ClipboardOwner;
@@ -12,6 +13,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Executable;
 import java.lang.reflect.InvocationHandler;
@@ -28,6 +30,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.swing.AbstractButton;
@@ -45,8 +48,24 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 
+import org.apache.bcel.classfile.ClassParser;
+import org.apache.bcel.classfile.ClassParserUtil;
+import org.apache.bcel.classfile.JavaClass;
+import org.apache.bcel.generic.ATHROW;
+import org.apache.bcel.generic.ConstantPoolGen;
+import org.apache.bcel.generic.DUP;
+import org.apache.bcel.generic.INVOKESPECIAL;
+import org.apache.bcel.generic.Instruction;
+import org.apache.bcel.generic.InstructionListUtil;
+import org.apache.bcel.generic.MethodGen;
+import org.apache.bcel.generic.MethodGenUtil;
+import org.apache.bcel.generic.NEW;
+import org.apache.bcel.generic.ObjectType;
 import org.apache.commons.collections.IteratorUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.apache.jena.ext.com.google.common.base.Predicates;
 import org.apache.poi.util.IntList;
 import org.javatuples.Unit;
@@ -72,10 +91,10 @@ class JlptLevelGuiTest {
 
 	private static Method METHOD_CAST, METHOD_TO_ARRAY_COLLECTION, METHOD_TO_ARRAY_INT_LIST, METHOD_GET_CLASS,
 			METHOD_TEST, METHOD_GET_PREFERRED_SIZE, METHOD_SET_PREFERRED_WIDTH, METHOD_FOR_NAME, METHOD_GET_TEXT,
-			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_ADD_ACTION_LISTENER, METHOD_GET_DECLARED_METHODS,
-			METHOD_FILTER, METHOD_TO_LIST, METHOD_INVOKE, METHOD_IIF, METHOD_GET_NAME, METHOD_GET_PARAMETER_TYPES,
-			METHOD_RUN, METHOD_SET_JLPT_VOCABULARY_AND_LEVEL, METHOD_STREAM, METHOD_MAP, METHOD_GET_LEVEL,
-			METHOD_FOR_EACH_STREAM, METHOD_ADD_ELEMENT, METHOD_TEST_AND_ACCEPT, METHOD_BROWSE,
+			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_TEST_AND_APPLY, METHOD_SET_CONTENTS, METHOD_ADD_ACTION_LISTENER,
+			METHOD_GET_DECLARED_METHODS, METHOD_FILTER, METHOD_TO_LIST, METHOD_INVOKE, METHOD_IIF, METHOD_GET_NAME,
+			METHOD_GET_PARAMETER_TYPES, METHOD_RUN, METHOD_SET_JLPT_VOCABULARY_AND_LEVEL, METHOD_STREAM, METHOD_MAP,
+			METHOD_GET_LEVEL, METHOD_FOR_EACH_STREAM, METHOD_ADD_ELEMENT, METHOD_TEST_AND_ACCEPT, METHOD_BROWSE,
 			METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_ADD_DOCUMENT_LISTENER, METHOD_SET_SELECTED_INDICES,
 			METHOD_TO_URI = null;
 
@@ -111,6 +130,9 @@ class JlptLevelGuiTest {
 		//
 		(METHOD_ADD_ACTION_LISTENER = clz.getDeclaredMethod("addActionListener", ActionListener.class,
 				AbstractButton[].class)).setAccessible(true);
+		//
+		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
+				FailableFunction.class, FailableFunction.class)).setAccessible(true);
 		//
 		(METHOD_GET_DECLARED_METHODS = clz.getDeclaredMethod("getDeclaredMethods", Class.class)).setAccessible(true);
 		//
@@ -789,8 +811,86 @@ class JlptLevelGuiTest {
 		//
 		Assertions.assertNull(getSystemClipboard(null));
 		//
-		Assertions.assertNotNull(getSystemClipboard(Toolkit.getDefaultToolkit()));
+		final Toolkit toolkit = Toolkit.getDefaultToolkit();
 		//
+		final Class<?> clz = getClass(toolkit);
+		//
+		final Class<? extends Throwable> throwableClassByGetSystemClipboard = getThrowingThrowableClass(clz,
+				clz != null ? clz.getDeclaredMethod("getSystemClipboard") : null);
+		//
+		if (throwableClassByGetSystemClipboard != null) {
+			//
+			Assertions.assertThrows(throwableClassByGetSystemClipboard, () -> getSystemClipboard(toolkit));
+			//
+		} else {
+			//
+			Assertions.assertNotNull(getSystemClipboard(toolkit));
+			//
+		} // if
+			//
+	}
+
+	private static Class<? extends Throwable> getThrowingThrowableClass(final Class<?> clz, final Method method)
+			throws Throwable {
+		//
+		try (final InputStream is = clz != null
+				? clz.getResourceAsStream(
+						String.format("/%1$s.class", StringUtils.replace(clz != null ? clz.getName() : null, ".", "/")))
+				: null) {
+			//
+			final JavaClass javaClass = ClassParserUtil
+					.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null));
+			//
+			final org.apache.bcel.classfile.Method m = javaClass != null
+					? testAndApply(Objects::nonNull, method, javaClass::getMethod, null)
+					: null;
+			//
+			final Instruction[] instructions = InstructionListUtil.getInstructions(MethodGenUtil
+					.getInstructionList(testAndApply(Objects::nonNull, m, x -> new MethodGen(x, null, null), null)));
+			//
+			ObjectType objectType = null;
+			//
+			String className = null;
+			//
+			if (!Objects.equals(
+					new FailableStream<>(testAndApply(Objects::nonNull, instructions, Arrays::stream, null))
+							.map(JlptLevelGuiTest::getClass).collect(Collectors.toList()),
+					Arrays.asList(NEW.class, DUP.class, INVOKESPECIAL.class, ATHROW.class))) {
+				//
+				return null;
+				//
+			} // if
+				//
+			for (int i = 0; instructions != null && i < instructions.length; i++) {
+				//
+				if ((instructions[i]) instanceof NEW _new) {
+					//
+					className = (objectType = _new != null
+							? _new.getLoadClassType(new ConstantPoolGen(m != null ? m.getConstantPool() : null))
+							: null) != null ? objectType.getClassName() : null;
+					//
+				} // if
+					//
+			} // for
+				//
+			final Class<?> classTemp = forName(className);
+			//
+			return classTemp != null && Throwable.class.isAssignableFrom(classTemp)
+					? (Class<? extends Throwable>) classTemp
+					: null;
+			//
+		} // try
+			//
+	}
+
+	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse)
+			throws Throwable {
+		try {
+			return (R) METHOD_TEST_AND_APPLY.invoke(null, predicate, value, functionTrue, functionFalse);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 	private static Clipboard getSystemClipboard(final Toolkit instance) throws Throwable {
@@ -1146,8 +1246,16 @@ class JlptLevelGuiTest {
 	@Test
 	void testBrowse() {
 		//
-		Assertions.assertDoesNotThrow(() -> browse(Desktop.getDesktop(), null));
-		//
+		if (GraphicsEnvironment.isHeadless()) {
+			//
+			Assertions.assertThrows(HeadlessException.class, () -> browse(Desktop.getDesktop(), null));
+			//
+		} else {
+			//
+			Assertions.assertDoesNotThrow(() -> browse(Desktop.getDesktop(), null));
+			//
+		} // of
+			//
 	}
 
 	private static void browse(final Desktop instance, final URI uri) throws Throwable {

@@ -86,6 +86,7 @@ import java.util.function.UnaryOperator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collector;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
@@ -126,11 +127,24 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.xpath.XPathFactory;
 
+import org.apache.bcel.classfile.ClassParser;
+import org.apache.bcel.classfile.ClassParserUtil;
 import org.apache.bcel.classfile.ConstantPool;
 import org.apache.bcel.classfile.FieldOrMethod;
+import org.apache.bcel.classfile.JavaClass;
+import org.apache.bcel.classfile.JavaClassUtil;
+import org.apache.bcel.generic.ATHROW;
+import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.ConstantPushInstruction;
+import org.apache.bcel.generic.DUP;
 import org.apache.bcel.generic.ICONST;
+import org.apache.bcel.generic.INVOKESPECIAL;
 import org.apache.bcel.generic.Instruction;
+import org.apache.bcel.generic.InstructionListUtil;
+import org.apache.bcel.generic.MethodGen;
+import org.apache.bcel.generic.MethodGenUtil;
+import org.apache.bcel.generic.NEW;
+import org.apache.bcel.generic.ObjectType;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -2091,7 +2105,12 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testActionPerformed1() throws IllegalAccessException {
+	void testActionPerformed1() throws Throwable {
+		//
+		final Class<?> clz = getClass(instance != null ? instance.getToolkit() : null);
+		//
+		final Class<? extends Throwable> throwableClassByGetSystemClipboard = getThrowingThrowableClass(clz,
+				clz != null ? clz.getDeclaredMethod("getSystemClipboard") : null);
 		//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(EMPTY, 0, null)));
 		//
@@ -2137,9 +2156,10 @@ class VoiceManagerTest {
 		//
 		final ActionEvent actionEventBtnCopyRomaji = new ActionEvent(btnCopyRomaji, 0, null);
 		//
-		if (headless) {
+		if (throwableClassByGetSystemClipboard != null) {
 			//
-			Assertions.assertThrows(HeadlessException.class, () -> actionPerformed(instance, actionEventBtnCopyRomaji));
+			Assertions.assertThrows(throwableClassByGetSystemClipboard,
+					() -> actionPerformed(instance, actionEventBtnCopyRomaji));
 			//
 		} else {
 			//
@@ -2157,9 +2177,9 @@ class VoiceManagerTest {
 			//
 		final ActionEvent actionEventBtnCopyHiragana = new ActionEvent(btnCopyHiragana, 0, null);
 		//
-		if (headless) {
+		if (throwableClassByGetSystemClipboard != null) {
 			//
-			Assertions.assertThrows(HeadlessException.class,
+			Assertions.assertThrows(throwableClassByGetSystemClipboard,
 					() -> actionPerformed(instance, actionEventBtnCopyHiragana));
 			//
 		} else {
@@ -2350,8 +2370,58 @@ class VoiceManagerTest {
 		//
 	}
 
+	private static Class<? extends Throwable> getThrowingThrowableClass(final Class<?> clz, final Method method)
+			throws Throwable {
+		//
+		try (final InputStream is = clz != null
+				? clz.getResourceAsStream(String.format("/%1$s.class", StringUtils.replace(getName(clz), ".", "/")))
+				: null) {
+			//
+			final JavaClass javaClass = ClassParserUtil
+					.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null));
+			//
+			final org.apache.bcel.classfile.Method m = javaClass != null
+					? testAndApply(Objects::nonNull, method, javaClass::getMethod, null)
+					: null;
+			//
+			final Instruction[] instructions = InstructionListUtil.getInstructions(MethodGenUtil
+					.getInstructionList(testAndApply(Objects::nonNull, m, x -> new MethodGen(x, null, null), null)));
+			//
+			ObjectType objectType = null;
+			//
+			String className = null;
+			//
+			if (!Objects.equals(
+					new FailableStream<>(testAndApply(Objects::nonNull, instructions, Arrays::stream, null))
+							.map(VoiceManagerTest::getClass).collect(Collectors.toList()),
+					Arrays.asList(NEW.class, DUP.class, INVOKESPECIAL.class, ATHROW.class))) {
+				//
+				return null;
+				//
+			} // if
+				//
+			for (int i = 0; instructions != null && i < instructions.length; i++) {
+				//
+				if ((instructions[i]) instanceof NEW _new) {
+					//
+					className = (objectType = _new != null
+							? _new.getLoadClassType(new ConstantPoolGen(m != null ? m.getConstantPool() : null))
+							: null) != null ? objectType.getClassName() : null;
+					//
+				} // if
+					//
+			} // for
+				//
+			final Class<?> classTemp = forName(className);
+			//
+			return isAssignableFrom(Throwable.class, classTemp) ? (Class<? extends Throwable>) classTemp : null;
+			//
+		} // try
+			//
+	}
+
 	@Test
-	void testActionPerformed2() throws IllegalAccessException, IOException {
+	void testActionPerformed2() throws Throwable {
 		//
 		// btnCopyKatakana
 		//
@@ -2365,11 +2435,14 @@ class VoiceManagerTest {
 			//
 		final ActionEvent actionEventBtnCopyKatakana = new ActionEvent(btnCopyKatakana, 0, null);
 		//
-		final boolean headless = GraphicsEnvironment.isHeadless();
+		final Class<?> clz = getClass(instance != null ? instance.getToolkit() : null);
 		//
-		if (headless) {
+		final Class<? extends Throwable> throwableClassByGetSystemClipboard = getThrowingThrowableClass(clz,
+				clz != null ? clz.getDeclaredMethod("getSystemClipboard") : null);
+		//
+		if (throwableClassByGetSystemClipboard != null) {
 			//
-			Assertions.assertThrows(HeadlessException.class,
+			Assertions.assertThrows(throwableClassByGetSystemClipboard,
 					() -> actionPerformed(instance, actionEventBtnCopyKatakana));
 			//
 		} else {
@@ -2393,6 +2466,8 @@ class VoiceManagerTest {
 				new ActionEvent(btnExportMicrosoftSpeechObjectLibraryInformation, 0, null)));
 		//
 		// btnImport
+		//
+		final boolean headless = GraphicsEnvironment.isHeadless();
 		//
 		if (headless) {
 			//
@@ -2421,9 +2496,9 @@ class VoiceManagerTest {
 			//
 		final ActionEvent actionEventBtnDllPathCopy = new ActionEvent(btnDllPathCopy, 0, null);
 		//
-		if (headless) {
+		if (throwableClassByGetSystemClipboard != null) {
 			//
-			Assertions.assertThrows(HeadlessException.class,
+			Assertions.assertThrows(throwableClassByGetSystemClipboard,
 					() -> actionPerformed(instance, actionEventBtnDllPathCopy));
 			//
 		} else {
@@ -2456,9 +2531,10 @@ class VoiceManagerTest {
 			//
 		final ActionEvent actionEventBtnExportCopy = new ActionEvent(btnExportCopy, 0, null);
 		//
-		if (headless) {
+		if (throwableClassByGetSystemClipboard != null) {
 			//
-			Assertions.assertThrows(HeadlessException.class, () -> actionPerformed(instance, actionEventBtnExportCopy));
+			Assertions.assertThrows(throwableClassByGetSystemClipboard,
+					() -> actionPerformed(instance, actionEventBtnExportCopy));
 			//
 		} else {
 			//
@@ -2524,48 +2600,24 @@ class VoiceManagerTest {
 			//
 		final ActionEvent actionEventBtnExecute = new ActionEvent(btnExecute, 0, null);
 		//
-		if (headless) {
-			//
-			Assertions.assertThrows(HeadlessException.class, () -> actionPerformed(instance, actionEventBtnExecute));
-			//
-		} else {
-			//
-			Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnExecute));
-			//
-		} // if
-			//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnExecute));
+		//
 		if (instance != null) {
 			//
 			FieldUtils.writeDeclaredField(instance, "speechApi", speechApi, true);
 			//
 		} // if
 			//
-		if (headless) {
-			//
-			Assertions.assertThrows(HeadlessException.class, () -> actionPerformed(instance, actionEventBtnExecute));
-			//
-		} else {
-			//
-			Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnExecute));
-			//
-		} // if
-			//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnExecute));
+		//
 		if (instance != null) {
 			//
 			FieldUtils.writeDeclaredField(instance, "voiceIds", new String[] { Integer.toString(ZERO) }, true);
 			//
 		} // if
 			//
-		if (headless) {
-			//
-			Assertions.assertThrows(HeadlessException.class, () -> actionPerformed(instance, actionEventBtnExecute));
-			//
-		} else {
-			//
-			Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnExecute));
-			//
-		} // if
-			//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnExecute));
+		//
 		if (instance != null) {
 			//
 			FieldUtils.writeDeclaredField(instance, "cbmVoiceId", new DefaultComboBoxModel<>(new Object[] { ZERO }),
@@ -7289,11 +7341,16 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testActionPerformedForSystemClipboardAnnotated() {
+	void testActionPerformedForSystemClipboardAnnotated() throws Throwable {
 		//
-		if (GraphicsEnvironment.isHeadless()) {
+		final Class<?> clz = getClass(instance != null ? instance.getToolkit() : null);
+		//
+		final Class<? extends Throwable> throwableClassByGetSystemClipboard = getThrowingThrowableClass(clz,
+				clz != null ? clz.getDeclaredMethod("getSystemClipboard") : null);
+		//
+		if (throwableClassByGetSystemClipboard != null) {
 			//
-			Assertions.assertThrows(HeadlessException.class,
+			Assertions.assertThrows(throwableClassByGetSystemClipboard,
 					() -> actionPerformedForSystemClipboardAnnotated(false, EMPTY));
 			//
 		} else {

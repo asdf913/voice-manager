@@ -1,5 +1,6 @@
 package org.springframework.context;
 
+import java.awt.GraphicsEnvironment;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,6 +42,8 @@ import org.springframework.core.io.InputStreamSource;
 import org.springframework.core.io.Resource;
 
 import com.google.common.reflect.Reflection;
+
+import io.github.toolfactory.narcissus.Narcissus;
 
 class CustomBeanFactoryPostProcessorTest {
 
@@ -481,14 +484,23 @@ class CustomBeanFactoryPostProcessorTest {
 	}
 
 	@Test
-	void testErrorOrPrintStackTrace() throws IllegalAccessException {
+	void testErrorOrPrintStackTrace() throws IllegalAccessException, NoSuchFieldException {
 		//
 		Assertions.assertDoesNotThrow(() -> errorOrPrintStackTrace(null, null, null));
 		//
 		final Throwable throwable = new Throwable();
 		//
-		FieldUtils.writeDeclaredField(throwable, "stackTrace", new StackTraceElement[0], true);
-		//
+		if (GraphicsEnvironment.isHeadless()) {
+			//
+			Narcissus.setObjectField(throwable, Throwable.class.getDeclaredField("stackTrace"),
+					new StackTraceElement[0]);
+			//
+		} else {
+			//
+			FieldUtils.writeDeclaredField(throwable, "stackTrace", new StackTraceElement[0], true);
+			//
+		} // if
+			//
 		Assertions.assertDoesNotThrow(() -> errorOrPrintStackTrace(null, throwable, null));
 		//
 		Assertions.assertDoesNotThrow(() -> errorOrPrintStackTrace(null, null, throwable));

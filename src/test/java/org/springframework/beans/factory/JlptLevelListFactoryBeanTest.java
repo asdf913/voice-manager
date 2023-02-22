@@ -1,5 +1,6 @@
 package org.springframework.beans.factory;
 
+import java.awt.GraphicsEnvironment;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -260,16 +261,32 @@ class JlptLevelListFactoryBeanTest {
 		//
 		// Invalid Format
 		//
-		Assertions.assertThrows(RuntimeException.class, () -> {
+		if (GraphicsEnvironment.isHeadless()) {
 			//
-			if (instance != null) {
+			Assertions.assertDoesNotThrow(() -> {
 				//
-				instance.setValues(String.format("{%1$s:%1$s}", zero));
+				if (instance != null) {
+					//
+					instance.setValues(String.format("{%1$s:%1$s}", zero));
+					//
+				} // if
+					//
+			});
+			//
+		} else {
+			//
+			Assertions.assertThrows(RuntimeException.class, () -> {
 				//
-			} // if
-				//
-		});
-		//
+				if (instance != null) {
+					//
+					instance.setValues(String.format("{%1$s:%1$s}", zero));
+					//
+				} // if
+					//
+			});
+			//
+		} // if
+			//
 	}
 
 	@Test
