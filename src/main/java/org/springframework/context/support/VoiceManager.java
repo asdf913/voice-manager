@@ -1024,7 +1024,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			init();
 			//
-		} catch (final NoSuchFieldException | IllegalAccessException e) {
+		} catch (final NoSuchFieldException e) {
 			//
 			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
 			//
@@ -1726,7 +1726,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		}
 	}
 
-	private void init() throws NoSuchFieldException, IllegalAccessException {
+	private void init() throws NoSuchFieldException {
 		//
 		final JTabbedPane jTabbedPane = new JTabbedPane();
 		//
