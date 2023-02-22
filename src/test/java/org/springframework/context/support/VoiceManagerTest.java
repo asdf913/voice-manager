@@ -2990,11 +2990,11 @@ class VoiceManagerTest {
 			//
 		Assertions.assertDoesNotThrow(() -> removeUpdate(instance, null));
 		//
-		// org.springframework.context.support.VoiceManager.cbmJlptVocabulary
+		// org.springframework.context.support.VoiceManager.mcbmJlptVocabulary
 		//
 		if (instance != null) {
 			//
-			FieldUtils.writeDeclaredField(instance, "cbmJlptVocabulary", new DefaultComboBoxModel<>(), true);
+			FieldUtils.writeDeclaredField(instance, "mcbmJlptVocabulary", new DefaultComboBoxModel<>(), true);
 			//
 		} // if
 			//

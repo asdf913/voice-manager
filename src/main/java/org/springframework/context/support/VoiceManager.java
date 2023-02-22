@@ -552,7 +552,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private transient ComboBoxModel<FileFormat> cbmMicrosoftAccessFileFormat = null;
 
-	private transient MutableComboBoxModel<JlptVocabulary> cbmJlptVocabulary = null;
+	private transient MutableComboBoxModel<JlptVocabulary> mcbmJlptVocabulary = null;
 
 	private transient MutableComboBoxModel<Pronunciation> mcbmPronunciation = null;
 
@@ -3060,7 +3060,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		addDocumentListener(tfTextImportDocument = tfTextImport.getDocument(), this);
 		//
-		(jcbJlptVocabulary = new JComboBox<JlptVocabulary>(cbmJlptVocabulary = new DefaultComboBoxModel<>()))
+		(jcbJlptVocabulary = new JComboBox<JlptVocabulary>(mcbmJlptVocabulary = new DefaultComboBoxModel<>()))
 				.addItemListener(this);
 		//
 		panel.add(jcbJlptVocabulary, String.format("span %1$s", 3));
@@ -7474,7 +7474,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		final String text = getText(instance.tfTextImport);
 		//
-		final MutableComboBoxModel<JlptVocabulary> cbmJlptVocabulary = instance.cbmJlptVocabulary;
+		final MutableComboBoxModel<JlptVocabulary> cbmJlptVocabulary = instance.mcbmJlptVocabulary;
 		//
 		for (int i = getSize(cbmJlptVocabulary) - 1; i >= 0; i--) {
 			//
