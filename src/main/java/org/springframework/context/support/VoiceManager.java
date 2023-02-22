@@ -4993,46 +4993,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		forEach(Stream.of(tfFile, tfFileLength, tfFileDigest), x -> setText(x, null));
 		//
-		File file = null;
+		// try to retrieve the "Pronunciation" Audio File
+		//
+		File file = getPronunciationAudioFileByAudioFormat(
+				cast(Pronunciation.class, getSelectedItem(mcbmPronunciation)),
+				getSelectedItem(mcbmPronounicationAudioFormat));
+		//
+		deleteOnExit(file);
 		//
 		final Voice voice = createVoice(getObjectMapper(), this);
 		//
-		// Handle the case if "Pronunciation" is selected and "Pronunciation Audio
-		// Format" is selected
-		//
-		final Pronunciation pronunciation = cast(Pronunciation.class, getSelectedItem(mcbmPronunciation));
-		//
-		URL url = null;
-		//
-		try {
-			//
-			url = testAndApply(Objects::nonNull,
-					get(getAudioUrls(pronunciation), getSelectedItem(mcbmPronounicationAudioFormat)), URL::new, null);
-			//
-		} catch (final MalformedURLException e) {
-			//
-			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
-			//
-		} // try
-			//
-		try (final InputStream is = openStream(url)) {
-			//
-			if (and(Objects::nonNull, is, file = testAndApply(Objects::nonNull,
-					StringUtils.substringAfterLast(getFile(url), '/'), File::new, null))) {
-				//
-				FileUtils.copyInputStreamToFile(is, file);
-				//
-				deleteOnExit(file);
-				//
-			} // if
-				//
-		} catch (final IOException e) {
-			//
-			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
-			//
-		} // try
-			//
-			//
 		if (file == null) {
 			//
 			if (isSelected(cbUseTtsVoice)) {
@@ -5149,6 +5119,47 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // try
 			//
+	}
+
+	/**
+	 * Handle the case if "Pronunciation" is selected and "Pronunciation Audio
+	 * Format" is selected
+	 */
+	private static File getPronunciationAudioFileByAudioFormat(final Pronunciation pronunciation,
+			final Object pronounicationAudioFormat) {
+		//
+		URL url = null;
+		//
+		try {
+			//
+			url = testAndApply(StringUtils::isNotBlank, get(getAudioUrls(pronunciation), pronounicationAudioFormat),
+					URL::new, null);
+			//
+		} catch (final MalformedURLException e) {
+			//
+			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
+			//
+		} // try
+			//
+		final File file = testAndApply(Objects::nonNull, StringUtils.substringAfterLast(getFile(url), '/'), File::new,
+				null);
+		//
+		try (final InputStream is = openStream(url)) {
+			//
+			if (and(Objects::nonNull, is, file)) {
+				//
+				FileUtils.copyInputStreamToFile(is, file);
+				//
+			} // if
+				//
+		} catch (final IOException e) {
+			//
+			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
+			//
+		} // try
+			//
+		return file;
+		//
 	}
 
 	private static String getFile(final URL instance) {

@@ -243,6 +243,8 @@ class VoiceManagerTest {
 
 	private static Class<?> CLASS_OBJECT_MAP, CLASS_BOOLEAN_MAP, CLASS_STRING_MAP, CLASS_IH, CLASS_EXPORT_TASK = null;
 
+	private static Integer TEMP_FILE_MINIMUM_PREFIX_LENGTH = null;
+
 	private static Method METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_GET_FILE_EXTENSION_CONTENT_INFO,
 			METHOD_GET_FILE_EXTENSION_FILE_FORMAT, METHOD_GET_FILE_EXTENSION_FAILABLE_SUPPLIER, METHOD_DIGEST,
 			METHOD_GET_MAPPER, METHOD_INSERT_OR_UPDATE, METHOD_SET_ENABLED_2, METHOD_SET_ENABLED_3,
@@ -315,10 +317,11 @@ class VoiceManagerTest {
 			METHOD_TO_MILLIS, METHOD_SET_JLPT_VOCABULARY_AND_LEVEL, METHOD_ADD_DOCUMENT_LISTENER, METHOD_GET_LEVEL,
 			METHOD_ADD_ALL, METHOD_PLAY_AUDIO, METHOD_PLAY, METHOD_PRONOUNICATION_CHANGED, METHOD_REMOVE_ELEMENT_AT,
 			METHOD_ACTION_PERFORMED_FOR_BTN_IMPORT, METHOD_CREATE_PRONUNCIATION_LIST_CELL_RENDERER,
-			METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_GET_FILE = null;
+			METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_GET_FILE,
+			METHOD_GET_PRONUNCIATION_AUDIO_FILE_BY_AUDIO_FORMAT = null;
 
 	@BeforeAll
-	static void beforeAll() throws ReflectiveOperationException {
+	static void beforeAll() throws Throwable {
 		//
 		final Class<?> clz = VoiceManager.class;
 		//
@@ -972,11 +975,18 @@ class VoiceManagerTest {
 		//
 		(METHOD_GET_FILE = clz.getDeclaredMethod("getFile", URL.class)).setAccessible(true);
 		//
+		(METHOD_GET_PRONUNCIATION_AUDIO_FILE_BY_AUDIO_FORMAT = clz
+				.getDeclaredMethod("getPronunciationAudioFileByAudioFormat", Pronunciation.class, Object.class))
+				.setAccessible(true);
+		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
 		CLASS_EXPORT_TASK = Class.forName("org.springframework.context.support.VoiceManager$ExportTask");
 		//
 		CLASS_STRING_MAP = Class.forName("org.springframework.context.support.VoiceManager$StringMap");
+		//
+		TEMP_FILE_MINIMUM_PREFIX_LENGTH = Integer.valueOf(intValue(cast(Number.class,
+				FieldUtils.readDeclaredStaticField(VoiceManager.class, "TEMP_FILE_MINIMUM_PREFIX_LENGTH", true)), 3));
 		//
 	}
 
@@ -5373,8 +5383,7 @@ class VoiceManagerTest {
 	@Test
 	void testGetWorkbook() throws Throwable {
 		//
-		final int tempFileMinimumPrefixLength = intValue(cast(Number.class,
-				FieldUtils.readDeclaredStaticField(VoiceManager.class, "TEMP_FILE_MINIMUM_PREFIX_LENGTH", true)), 3);
+		final int tempFileMinimumPrefixLength = intValue(TEMP_FILE_MINIMUM_PREFIX_LENGTH, 3);
 		//
 		final File folder = new File(".");
 		//
@@ -8603,6 +8612,52 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof String) {
 				return (String) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetPronunciationAudioFileByAudioFormat() throws Throwable {
+		//
+		final Pronunciation pronunciation = new Pronunciation();
+		//
+		final Map<String, String> audioUrls = new LinkedHashMap<>(Collections.singletonMap(null, EMPTY));
+		//
+		pronunciation.setAudioUrls(audioUrls);
+		//
+		Assertions.assertNull(getPronunciationAudioFileByAudioFormat(pronunciation, null));
+		//
+		audioUrls.put(null, SPACE);
+		//
+		Assertions.assertNull(getPronunciationAudioFileByAudioFormat(pronunciation, null));
+		//
+		final File file = File.createTempFile(
+				RandomStringUtils.randomAlphanumeric(intValue(TEMP_FILE_MINIMUM_PREFIX_LENGTH, 3)), null);
+		//
+		deleteOnExit(file);
+		//
+		audioUrls.put(null, file != null ? toString(toURL(toURI(file))) : null);
+		//
+		final File result = getPronunciationAudioFileByAudioFormat(pronunciation, null);
+		//
+		deleteOnExit(result);
+		//
+		Assertions.assertEquals(getName(file), getName(result));
+		//
+	}
+
+	private static File getPronunciationAudioFileByAudioFormat(final Pronunciation pronunciation,
+			final Object pronounicationAudioFormat) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_PRONUNCIATION_AUDIO_FILE_BY_AUDIO_FORMAT.invoke(null, pronunciation,
+					pronounicationAudioFormat);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof File) {
+				return (File) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
