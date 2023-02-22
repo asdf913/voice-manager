@@ -439,6 +439,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static final String MESSAGE_DIGEST_ALGORITHM = "messageDigestAlgorithm";
 
+	private static final String COMPONENT = "component";
+
 	private static final Predicate<File> EMPTY_FILE_PREDICATE = f -> f != null && f.exists() && isFile(f)
 			&& longValue(length(f), 0) == 0;
 
@@ -1795,7 +1797,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			// If the "component" field in "ava.awt.Container" class is null, call "return"
 			// at once and stop the rest statement(s).
 			//
-		if (Narcissus.getObjectField(this, Container.class.getDeclaredField("component")) == null) {
+		if (Narcissus.getObjectField(this, Container.class.getDeclaredField(COMPONENT)) == null) {
 			//
 			return;
 			//
@@ -1869,7 +1871,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		forEach(toList(map(
 				new FailableStream<>(stream(pages))
-						.map(x -> Narcissus.getObjectField(x, getDeclaredField(getClass(x), "component"))).stream(),
+						.map(x -> Narcissus.getObjectField(x, getDeclaredField(getClass(x), COMPONENT))).stream(),
 				x -> cast(Container.class, x))), c -> {
 					//
 					// https://stackoverflow.com/questions/35508128/setting-personalized-focustraversalpolicy-on-tab-in-jtabbedpane
@@ -2029,7 +2031,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			if (f == null) {
 				//
-				f = getDeclaredField(getClass(page), "component");
+				f = getDeclaredField(getClass(page), COMPONENT);
 				//
 			} // if
 				//
