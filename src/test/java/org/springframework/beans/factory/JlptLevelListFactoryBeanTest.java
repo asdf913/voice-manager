@@ -179,43 +179,19 @@ class JlptLevelListFactoryBeanTest {
 			//
 			// null
 			//
-		Assertions.assertDoesNotThrow(() -> {
-			//
-			if (instance != null) {
-				//
-				instance.setValues(null);
-				//
-			} // if
-				//
-		});
+		Assertions.assertDoesNotThrow(() -> setValues(instance, null));
 		//
 		Assertions.assertEquals("[[null]]", toString(get(values, instance)));
 		//
 		// java.lang.String
 		//
-		Assertions.assertDoesNotThrow(() -> {
-			//
-			if (instance != null) {
-				//
-				instance.setValues(EMPTY);
-				//
-			} // if
-				//
-		});
+		Assertions.assertDoesNotThrow(() -> setValues(instance, EMPTY));
 		//
 		Assertions.assertEquals("[[null]]", toString(get(values, instance)));
 		//
 		// java.util.List
 		//
-		Assertions.assertDoesNotThrow(() -> {
-			//
-			if (instance != null) {
-				//
-				instance.setValues(String.format("[%1$s]", EMPTY));
-				//
-			} // if
-				//
-		});
+		Assertions.assertDoesNotThrow(() -> setValues(instance, String.format("[%1$s]", EMPTY)));
 		//
 		Assertions.assertEquals("[null]", toString(get(values, instance)));
 		//
@@ -223,70 +199,38 @@ class JlptLevelListFactoryBeanTest {
 		//
 		final Integer zero = Integer.valueOf(0);
 		//
-		Assertions.assertDoesNotThrow(() -> {
-			//
-			if (instance != null) {
-				//
-				instance.setValues(toString(zero));
-				//
-			} // if
-				//
-		});
+		Assertions.assertDoesNotThrow(() -> setValues(instance, toString(zero)));
 		//
 		Assertions.assertEquals(String.format("[[%1$s]]", zero), toString(get(values, instance)));
 		///
-		Assertions.assertDoesNotThrow(() -> {
-			//
-			if (instance != null) {
-				//
-				instance.setValues(String.format("[%1$s]", zero));
-				//
-			} // if
-				//
-		});
+		Assertions.assertDoesNotThrow(() -> setValues(instance, String.format("[%1$s]", zero)));
 		//
 		Assertions.assertEquals(String.format("[[%1$s]]", zero), toString(get(values, instance)));
 		//
 		// java.util.Map
 		//
-		Assertions.assertThrows(IllegalArgumentException.class, () -> {
-			//
-			if (instance != null) {
-				//
-				instance.setValues(String.format("{\"%1$s\":%1$s}", zero));
-				//
-			} // if
-				//
-		});
+		Assertions.assertThrows(IllegalArgumentException.class,
+				() -> setValues(instance, String.format("{\"%1$s\":%1$s}", zero)));
 		//
 		// Invalid Format
 		//
 		if (GraphicsEnvironment.isHeadless()) {
 			//
-			Assertions.assertDoesNotThrow(() -> {
-				//
-				if (instance != null) {
-					//
-					instance.setValues(String.format("{%1$s:%1$s}", zero));
-					//
-				} // if
-					//
-			});
+			Assertions.assertDoesNotThrow(() -> setValues(instance, String.format("{%1$s:%1$s}", zero)));
 			//
 		} else {
 			//
-			Assertions.assertThrows(RuntimeException.class, () -> {
-				//
-				if (instance != null) {
-					//
-					instance.setValues(String.format("{%1$s:%1$s}", zero));
-					//
-				} // if
-					//
-			});
+			Assertions.assertThrows(RuntimeException.class,
+					() -> setValues(instance, String.format("{%1$s:%1$s}", zero)));
 			//
 		} // if
 			//
+	}
+
+	private static void setValues(final JlptLevelListFactoryBean instance, final String string) {
+		if (instance != null) {
+			instance.setValues(string);
+		}
 	}
 
 	@Test
