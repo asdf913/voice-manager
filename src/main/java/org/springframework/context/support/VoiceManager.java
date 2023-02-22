@@ -7539,6 +7539,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			setJlptVocabularyAndLevel(this);
 			//
+			// Remove all element(s) in "mcbmPronounication"
+			//
+			forEach(reverseRange(0, getSize(mcbmPronunciation)), i -> removeElementAt(mcbmPronunciation, i));
+			//
 		} // if
 			//
 	}
@@ -7549,6 +7553,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		if (Objects.equals(getDocument(evt), tfTextImportDocument)) {
 			//
 			setJlptVocabularyAndLevel(this);
+			//
+			// Remove all element(s) in "mcbmPronounication"
+			//
+			forEach(reverseRange(0, getSize(mcbmPronunciation)), i -> removeElementAt(mcbmPronunciation, i));
 			//
 		} // if
 			//
