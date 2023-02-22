@@ -68,15 +68,7 @@ class JlptLevelListFactoryBeanTest {
 			//
 			// null
 			//
-		Assertions.assertDoesNotThrow(() -> {
-			//
-			if (instance != null) {
-				//
-				instance.setTimeout(null);
-				//
-			} // if
-				//
-		});
+		Assertions.assertDoesNotThrow(() -> setTimeout(instance, null));
 		//
 		Assertions.assertNull(get(timeout, instance));
 		//
@@ -84,15 +76,7 @@ class JlptLevelListFactoryBeanTest {
 		//
 		final Duration duration = Duration.ZERO;
 		//
-		Assertions.assertDoesNotThrow(() -> {
-			//
-			if (instance != null) {
-				//
-				instance.setTimeout(duration);
-				//
-			} // if
-				//
-		});
+		Assertions.assertDoesNotThrow(() -> setTimeout(instance, duration));
 		//
 		Assertions.assertSame(duration, get(timeout, instance));
 		//
@@ -100,66 +84,32 @@ class JlptLevelListFactoryBeanTest {
 		//
 		final long l = 1;
 		//
-		Assertions.assertDoesNotThrow(() -> {
-			//
-			if (instance != null) {
-				//
-				instance.setTimeout(Long.valueOf(l));
-				//
-			} // if
-				//
-		});
+		Assertions.assertDoesNotThrow(() -> setTimeout(instance, Long.valueOf(l)));
 		//
-		Assertions.assertDoesNotThrow(() -> {
-			//
-			if (instance != null) {
-				//
-				instance.setTimeout(Long.toString(l));
-				//
-			} // if
-				//
-		});
+		Assertions.assertDoesNotThrow(() -> setTimeout(instance, Long.toString(l)));
 		//
 		Assertions.assertEquals(Duration.ofMillis(l), get(timeout, instance));
 		//
 		// java.lang.String
 		//
-		Assertions.assertDoesNotThrow(() -> {
-			//
-			if (instance != null) {
-				//
-				instance.setTimeout(EMPTY);
-				//
-			} // if
-				//
-		});
+		Assertions.assertDoesNotThrow(() -> setTimeout(instance, EMPTY));
 		//
 		Assertions.assertEquals(Duration.ofMillis(l), get(timeout, instance));
 		//
-		Assertions.assertDoesNotThrow(() -> {
-			//
-			if (instance != null) {
-				//
-				instance.setTimeout(" ");
-				//
-			} // if
-				//
-		});
+		Assertions.assertDoesNotThrow(() -> setTimeout(instance, " "));
 		//
 		Assertions.assertEquals(Duration.ofMillis(l), get(timeout, instance));
 		//
-		Assertions.assertDoesNotThrow(() -> {
-			//
-			if (instance != null) {
-				//
-				instance.setTimeout(String.format("PT%1$sS", l));
-				//
-			} // if
-				//
-		});
+		Assertions.assertDoesNotThrow(() -> setTimeout(instance, String.format("PT%1$sS", l)));
 		//
 		Assertions.assertEquals(Duration.ofMillis(l * 1000), get(timeout, instance));
 		//
+	}
+
+	private static void setTimeout(final JlptLevelListFactoryBean instance, final Object object) {
+		if (instance != null) {
+			instance.setTimeout(object);
+		}
 	}
 
 	private static Object get(final Field field, final Object instance) throws IllegalAccessException {
