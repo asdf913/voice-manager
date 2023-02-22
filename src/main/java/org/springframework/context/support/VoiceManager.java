@@ -73,6 +73,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
@@ -1597,17 +1598,42 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} else if (object instanceof CharSequence) {
 			//
-			value = Unit.with(testAndApply(StringUtils::isNotEmpty, (CharSequence) object, Duration::parse, null));
+			final String string = toString(object);
+			//
+			DateTimeParseException dpe = null;
+			//
+			try {
+				//
+				return Unit.with(parse(string));
+				//
+			} catch (final DateTimeParseException e) {
+				//
+				dpe = e;
+				//
+			} // try
+				//
+			final Number number = valueOf(string);
+			//
+			if (number != null) {
+				//
+				return toDurationIvalue0(number);
+				//
+			} // if
+				//
+			throw dpe;
 			//
 		} else if (object instanceof char[]) {
 			//
-			value = Unit.with(testAndApply(StringUtils::isNotEmpty,
-					testAndApply(Objects::nonNull, (char[]) object, String::new, null), Duration::parse, null));
+			return toDurationIvalue0(testAndApply(Objects::nonNull, (char[]) object, String::new, null));
 			//
 		} // if
 			//
 		return value;
 		//
+	}
+
+	private static Duration parse(CharSequence text) {
+		return StringUtils.isNotEmpty(text) ? Duration.parse(text) : null;
 	}
 
 	private static IValue0<Class<? extends Workbook>> getWorkbookClass(

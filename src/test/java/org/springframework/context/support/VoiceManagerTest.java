@@ -52,6 +52,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.text.NumberFormat;
 import java.time.Duration;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
@@ -1714,13 +1715,13 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-			// java.lang.Number
+			// java.lang.CharSequence
 			//
-		Assertions.assertDoesNotThrow(() -> setPresentationSlideDuration(instance, Integer.valueOf(ONE)));
+		Assertions.assertThrows(DateTimeParseException.class, () -> setPresentationSlideDuration(instance, "A"));
+		//
+		Assertions.assertDoesNotThrow(() -> setPresentationSlideDuration(instance, Integer.toString(ONE)));
 		//
 		Assertions.assertEquals(Duration.ofMillis(ONE), get(presentationSlideDuration, instance));
-		//
-		// java.lang.CharSequence
 		//
 		Assertions.assertDoesNotThrow(() -> setPresentationSlideDuration(instance, EMPTY));
 		//
