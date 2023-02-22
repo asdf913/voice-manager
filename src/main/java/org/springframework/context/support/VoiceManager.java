@@ -57,6 +57,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -4987,87 +4988,124 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private void actionPerformedForExecute(final boolean headless, final boolean nonTest) {
 		//
-		// TODO
-		//
-		// Handle the case if "Pronunciation" is selected
-		//
 		forEach(Stream.of(tfFile, tfFileLength, tfFileDigest), x -> setText(x, null));
 		//
 		File file = null;
 		//
 		final Voice voice = createVoice(getObjectMapper(), this);
 		//
-		if (isSelected(cbUseTtsVoice)) {
+		// Handle the case if "Pronunciation" is selected and "Pronunciation Audio
+		// Format" is selected
+		//
+		final Pronunciation pronunciation = cast(Pronunciation.class, getSelectedItem(mcbmPronunciation));
+		//
+		URL url = null;
+		//
+		try {
 			//
-			final String voiceId = getVoiceIdForExecute(nonTest);
+			url = testAndApply(Objects::nonNull, get(pronunciation != null ? pronunciation.getAudioUrls() : null,
+					getSelectedItem(mcbmPronounicationAudioFormat)), URL::new, null);
 			//
-			if (voiceId == null) {
+		} catch (final MalformedURLException e) {
+			//
+			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
+			//
+		} // try
+			//
+		try (final InputStream is = openStream(url)) {
+			//
+			if (is != null && (file = testAndApply(Objects::nonNull,
+					StringUtils.substringAfterLast(url != null ? url.getFile() : null, "/"), File::new,
+					null)) != null) {
 				//
-				// Show "Please select a Voice" message if this method is not run under test
-				// case
+				FileUtils.copyInputStreamToFile(is, file);
 				//
-				testAndRun(nonTest, () -> JOptionPane.showMessageDialog(null, "Please select a Voice"));
-				//
-				return;
+				deleteOnExit(file);
 				//
 			} // if
 				//
-			try {
-				//
-				deleteOnExit(file = generateTtsAudioFile(headless, voiceId, voice));
-				//
-			} catch (final IllegalAccessException e) {
-				//
-				errorOrAssertOrShowException(headless, e);
-				//
-			} catch (final InvocationTargetException e) {
-				//
-				final Throwable targetException = e.getTargetException();
-				//
-				errorOrAssertOrShowException(headless,
-						ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException), targetException,
-								ExceptionUtils.getRootCause(e), e));
-				//
-			} // try
-				//
-		} else {
+		} catch (final IOException e) {
 			//
-			final JFileChooser jfc = new JFileChooser(".");
+			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
 			//
-			jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		} // try
 			//
-			if (jfc.showOpenDialog(null) != JFileChooser.APPROVE_OPTION) {
+			//
+		if (file == null) {
+			//
+			if (isSelected(cbUseTtsVoice)) {
 				//
-				clear(tmImportException);
+				final String voiceId = getVoiceIdForExecute(nonTest);
 				//
-				ifElse(tmImportException != null,
-						() -> addRow(tmImportException,
-								new Object[] { getText(voice), getRomaji(voice), NO_FILE_SELECTED }),
-						() -> JOptionPane.showMessageDialog(null, NO_FILE_SELECTED));
+				if (voiceId == null) {
+					//
+					// Show "Please select a Voice" message if this method is not run under test
+					// case
+					//
+					testAndRun(nonTest, () -> JOptionPane.showMessageDialog(null, "Please select a Voice"));
+					//
+					return;
+					//
+				} // if
+					//
+				try {
+					//
+					deleteOnExit(file = generateTtsAudioFile(headless, voiceId, voice));
+					//
+				} catch (final IllegalAccessException e) {
+					//
+					errorOrAssertOrShowException(headless, e);
+					//
+				} catch (final InvocationTargetException e) {
+					//
+					final Throwable targetException = e.getTargetException();
+					//
+					errorOrAssertOrShowException(headless,
+							ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException), targetException,
+									ExceptionUtils.getRootCause(e), e));
+					//
+				} // try
+					//
+			} else {
 				//
-				return;
+				final JFileChooser jfc = new JFileChooser(".");
 				//
+				jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				//
+				if (jfc.showOpenDialog(null) != JFileChooser.APPROVE_OPTION) {
+					//
+					clear(tmImportException);
+					//
+					ifElse(tmImportException != null,
+							() -> addRow(tmImportException,
+									new Object[] { getText(voice), getRomaji(voice), NO_FILE_SELECTED }),
+							() -> JOptionPane.showMessageDialog(null, NO_FILE_SELECTED));
+					//
+					return;
+					//
+				} // if
+					//
+				try {
+					//
+					setSource(voice,
+							StringUtils.defaultIfBlank(getSource(voice), getMp3TagValue(file = jfc.getSelectedFile(),
+									x -> StringUtils.isNotBlank(toString(x)), mp3Tags)));
+					//
+				} catch (final IOException | BaseException | IllegalAccessException e) {
+					//
+					errorOrAssertOrShowException(headless, e);
+					//
+				} catch (final InvocationTargetException e) {
+					//
+					final Throwable targetException = e.getTargetException();
+					//
+					errorOrAssertOrShowException(headless,
+							ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException), targetException,
+									ExceptionUtils.getRootCause(e), e));
+					//
+				} // try
+					//
 			} // if
-				//
-			try {
-				//
-				setSource(voice,
-						StringUtils.defaultIfBlank(getSource(voice), getMp3TagValue(file = jfc.getSelectedFile(),
-								x -> StringUtils.isNotBlank(toString(x)), mp3Tags)));
-				//
-			} catch (final IOException | BaseException | IllegalAccessException e) {
-				//
-				errorOrAssertOrShowException(headless, e);
-				//
-			} catch (final InvocationTargetException e) {
-				//
-				final Throwable targetException = e.getTargetException();
-				//
-				errorOrAssertOrShowException(headless,
-						ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException), targetException,
-								ExceptionUtils.getRootCause(e), e));
-				//
-			} // try
 				//
 		} // if
 			//
