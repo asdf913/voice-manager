@@ -6,6 +6,7 @@ import java.awt.Container;
 import java.awt.Desktop;
 import java.awt.FocusTraversalPolicy;
 import java.awt.GraphicsEnvironment;
+import java.awt.HeadlessException;
 import java.awt.ItemSelectable;
 import java.awt.LayoutManager;
 import java.awt.Toolkit;
@@ -318,7 +319,7 @@ class VoiceManagerTest {
 			METHOD_ADD_ALL, METHOD_PLAY_AUDIO, METHOD_PLAY, METHOD_PRONOUNICATION_CHANGED, METHOD_REMOVE_ELEMENT_AT,
 			METHOD_ACTION_PERFORMED_FOR_BTN_IMPORT, METHOD_CREATE_PRONUNCIATION_LIST_CELL_RENDERER,
 			METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_GET_FILE,
-			METHOD_GET_PRONUNCIATION_AUDIO_FILE_BY_AUDIO_FORMAT = null;
+			METHOD_GET_PRONUNCIATION_AUDIO_FILE_BY_AUDIO_FORMAT, METHOD_GET_AUDIO_FILE = null;
 
 	@BeforeAll
 	static void beforeAll() throws Throwable {
@@ -978,6 +979,9 @@ class VoiceManagerTest {
 		(METHOD_GET_PRONUNCIATION_AUDIO_FILE_BY_AUDIO_FORMAT = clz
 				.getDeclaredMethod("getPronunciationAudioFileByAudioFormat", Pronunciation.class, Object.class))
 				.setAccessible(true);
+		//
+		(METHOD_GET_AUDIO_FILE = clz.getDeclaredMethod("getAudioFile", Boolean.TYPE, Voice.class,
+				DefaultTableModel.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -8654,6 +8658,34 @@ class VoiceManagerTest {
 		try {
 			final Object obj = METHOD_GET_PRONUNCIATION_AUDIO_FILE_BY_AUDIO_FORMAT.invoke(null, pronunciation,
 					pronounicationAudioFormat);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof File) {
+				return (File) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetAudioFile() throws Throwable {
+		//
+		Assertions.assertNull(getAudioFile(true, null, null));
+		//
+		if (GraphicsEnvironment.isHeadless()) {
+			//
+			Assertions.assertThrows(HeadlessException.class, () -> getAudioFile(false, null, null));
+			//
+		} // if
+			//
+	}
+
+	private static File getAudioFile(final boolean headless, final Voice voice,
+			final DefaultTableModel defaultTableModel) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_AUDIO_FILE.invoke(null, headless, voice, defaultTableModel);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof File) {

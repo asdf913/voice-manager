@@ -5027,28 +5027,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 			} else {
 				//
-				final JFileChooser jfc = new JFileChooser(".");
-				//
-				jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-				//
-				if (jfc.showOpenDialog(null) != JFileChooser.APPROVE_OPTION) {
-					//
-					clear(tmImportException);
-					//
-					ifElse(tmImportException != null,
-							() -> addRow(tmImportException,
-									new Object[] { getText(voice), getRomaji(voice), NO_FILE_SELECTED }),
-							() -> JOptionPane.showMessageDialog(null, NO_FILE_SELECTED));
-					//
-					return;
-					//
-				} // if
-					//
 				try {
 					//
 					setSource(voice,
-							StringUtils.defaultIfBlank(getSource(voice), getMp3TagValue(file = jfc.getSelectedFile(),
-									x -> StringUtils.isNotBlank(toString(x)), mp3Tags)));
+							StringUtils.defaultIfBlank(getSource(voice),
+									getMp3TagValue(file = getAudioFile(headless, voice, tmImportException),
+											x -> StringUtils.isNotBlank(toString(x)), mp3Tags)));
 					//
 				} catch (final IOException | BaseException | IllegalAccessException e) {
 					//
@@ -5106,6 +5090,30 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // try
 			//
+	}
+
+	private static File getAudioFile(final boolean headless, final Voice voice,
+			final DefaultTableModel defaultTableModel) {
+		//
+		final JFileChooser jfc = new JFileChooser(".");
+		//
+		jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		//
+		if (!headless && jfc.showOpenDialog(null) != JFileChooser.APPROVE_OPTION) {
+			//
+			clear(defaultTableModel);
+			//
+			ifElse(defaultTableModel != null,
+					() -> addRow(defaultTableModel,
+							new Object[] { getText(voice), getRomaji(voice), NO_FILE_SELECTED }),
+					() -> JOptionPane.showMessageDialog(null, NO_FILE_SELECTED));
+			//
+			return null;
+			//
+		} // if
+			//
+		return jfc.getSelectedFile();
+		//
 	}
 
 	/**
