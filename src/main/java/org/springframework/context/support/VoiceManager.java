@@ -513,7 +513,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private JTextComponent tfFile, tfPhraseCounter, tfPhraseTotal, tfJlptFolderNamePrefix,
 			tfOrdinalPositionFileNamePrefix, tfIpaSymbol, tfExportFile, tfElapsed, tfDllPath, tfExportHtmlFileName,
-			tfExportPassword, tfPronunciationPageUrl, tfPronunciationPageStatusCode = null;
+			tfExportPassword, tfPronunciationPageUrl, tfPronunciationPageStatusCode, tfPresentationSlideDuration = null;
 
 	private transient ComboBoxModel<Yomi> cbmYomi = null;
 
@@ -1565,6 +1565,22 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	public void setPresentationSlideDuration(final Object object) {
 		//
+		final IValue0<Duration> value = toDurationIvalue0(object);
+		//
+		if (value != null) {
+			//
+			this.presentationSlideDuration = IValue0Util.getValue0(value);
+			//
+		} else {
+			//
+			throw new IllegalArgumentException(toString(getClass(object)));
+			//
+		} // if
+			//
+	}
+
+	private static IValue0<Duration> toDurationIvalue0(final Object object) {
+		//
 		IValue0<Duration> value = null;
 		//
 		if (object == null) {
@@ -1590,16 +1606,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
-		if (value != null) {
-			//
-			this.presentationSlideDuration = IValue0Util.getValue0(value);
-			//
-		} else {
-			//
-			throw new IllegalArgumentException(toString(getClass(object)));
-			//
-		} // if
-			//
+		return value;
+		//
 	}
 
 	private static IValue0<Class<? extends Workbook>> getWorkbookClass(
@@ -3854,7 +3862,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		cbExportHtmlAsZip.setSelected(Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.exportListHtmlAsZip")));
 		//
-		panel.add(cbExportHtmlRemoveAfterZip = new JCheckBox("Remove Html After Zip"), WRAP);
+		panel.add(cbExportHtmlRemoveAfterZip = new JCheckBox("Remove Html After Zip"),
+				String.format("%1$s,span %2$s", WRAP, 2));
 		//
 		cbExportHtmlRemoveAfterZip.setSelected(Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.exportHtmlRemoveAfterZip")));
@@ -3895,11 +3904,18 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				"org.springframework.context.support.VoiceManager.embedAudioInPresentation")));
 		//
 		panel.add(cbHideAudioImageInPresentation = new JCheckBox("Hide Audio Image In Presentation"),
-				String.format("%1$s,span %2$s", WRAP, 3));
+				String.format("span %1$s", 2));
 		//
 		cbHideAudioImageInPresentation
 				.setSelected(Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
 						"org.springframework.context.support.VoiceManager.hideAudioImageInPresentation")));
+		//
+		panel.add(new JLabel("Presentation Slide Duration"), String.format("span %1$s", 2));
+		//
+		panel.add(
+				tfPresentationSlideDuration = new JTextField(
+						StringUtils.defaultString(toString(presentationSlideDuration))),
+				String.format("%1$s,wmin %2$spx", WRAP, 100));
 		//
 		// Export Microsoft Access
 		//
@@ -5747,7 +5763,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			ObjectMap.setObject(objectMap, StringMap.class, stringMap);
 			//
-			ObjectMap.setObject(objectMap, Duration.class, presentationSlideDuration);
+			// presentationSlideDuration
+			//
+			ObjectMap.setObject(objectMap, Duration.class,
+					ObjectUtils.defaultIfNull(
+							IValue0Util.getValue0(toDurationIvalue0(getText(tfPresentationSlideDuration))),
+							presentationSlideDuration));
 			//
 			export(voices, outputFolderFileNameExpressions, objectMap);
 			//
@@ -10167,7 +10188,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 		private String messageDigestAlgorithm = null;
 
-		private Duration presentationSlideDuration = null;// TODO
+		private Duration presentationSlideDuration = null;
 
 		@Override
 		public void run() {

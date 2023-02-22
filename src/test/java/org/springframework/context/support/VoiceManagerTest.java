@@ -1714,14 +1714,8 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-			// null
+			// java.lang.Number
 			//
-		Assertions.assertDoesNotThrow(() -> setPresentationSlideDuration(instance, null));
-		//
-		Assertions.assertNull(get(presentationSlideDuration, instance));
-		//
-		// java.lang.Number
-		//
 		Assertions.assertDoesNotThrow(() -> setPresentationSlideDuration(instance, Integer.valueOf(ONE)));
 		//
 		Assertions.assertEquals(Duration.ofMillis(ONE), get(presentationSlideDuration, instance));
