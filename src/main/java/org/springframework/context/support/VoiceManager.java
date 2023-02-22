@@ -3250,7 +3250,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
-		panel.add(jcbPronunciation, String.format("%1$s,span %2$s", GROWX, 3));
+		panel.add(jcbPronunciation, String.format("%1$s,span %2$s", GROWX, 4));
 		//
 		final JComboBox<String> jcbPronounicatioAudioFormat = new JComboBox<>(
 				mcbmPronounicationAudioFormat = new DefaultComboBoxModel<>());
