@@ -10559,12 +10559,24 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					final String folderInPresentation = StringMap.getString(stringMap, FOLDER_IN_PRESENTATION);
 					//
+					Node attribute = null;
+					//
 					for (final Entry<String, Voice> entry : entrySet) {
 						//
 						if (Boolean.logicalOr((voice = getValue(entry)) == null,
 								(pageCloned = cloneNode(page, true)) == null)) {
 							//
 							continue;
+							//
+						} // if
+							//
+							// Set Slide Name
+							//
+						if ((attribute = getNamedItem(getAttributes(pageCloned), "draw:name")) != null) {
+							//
+							// TODO
+							//
+							attribute.setNodeValue(voice.getText());
 							//
 						} // if
 							//
