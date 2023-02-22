@@ -1022,7 +1022,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			init();
 			//
-		} catch (final NoSuchFieldException e) {
+		} catch (final NoSuchFieldException | IllegalAccessException e) {
 			//
 			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
 			//
@@ -1724,7 +1724,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		}
 	}
 
-	private void init() throws NoSuchFieldException {
+	private void init() throws NoSuchFieldException, IllegalAccessException {
 		//
 		final JTabbedPane jTabbedPane = new JTabbedPane();
 		//
@@ -1785,6 +1785,19 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				testAndAccept(y -> !(y instanceof MigLayout), lm, y -> add(x));
 				//
 			});
+			//
+		} // if
+			//
+			// If the instance is instantiated by
+			// "io.github.toolfactory.narcissus.Narcissus.allocateInstance(java.lang.Class)",
+			// the "component" field in "ava.awt.Container" class will be null.
+			//
+			// If the "component" field in "ava.awt.Container" class is null, call "return"
+			// at once and stop the rest statement(s).
+			//
+		if (Narcissus.getObjectField(this, Container.class.getDeclaredField("component")) == null) {
+			//
+			return;
 			//
 		} // if
 			//

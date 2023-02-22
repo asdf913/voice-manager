@@ -1553,7 +1553,8 @@ class VoiceManagerTest {
 			//
 		objectMapper = new ObjectMapper();
 		//
-		instance = !GraphicsEnvironment.isHeadless() ? newInstance(constructor) : null;
+		instance = !GraphicsEnvironment.isHeadless() ? newInstance(constructor)
+				: cast(VoiceManager.class, Narcissus.allocateInstance(VoiceManager.class));
 		//
 		sqlSessionFactory = Reflection.newProxy(SqlSessionFactory.class, ih = new IH());
 		//
@@ -1816,16 +1817,34 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertThrows(IllegalArgumentException.class, () -> instance.afterPropertiesSet());
+		final boolean headless = GraphicsEnvironment.isHeadless();
 		//
+		if (headless) {
+			//
+			Assertions.assertDoesNotThrow(() -> instance.afterPropertiesSet());
+			//
+		} else {
+			//
+			Assertions.assertThrows(IllegalArgumentException.class, () -> instance.afterPropertiesSet());
+			//
+		} // if
+			//
 		instance.setSpeechApi(speechApi);
 		//
 		ih.voiceIds = new String[] {};
 		//
 		ih.isInstalled = Boolean.FALSE;
 		//
-		Assertions.assertThrows(IllegalArgumentException.class, () -> instance.afterPropertiesSet());
-		//
+		if (headless) {
+			//
+			Assertions.assertDoesNotThrow(() -> instance.afterPropertiesSet());
+			//
+		} else {
+			//
+			Assertions.assertThrows(IllegalArgumentException.class, () -> instance.afterPropertiesSet());
+			//
+		} // if
+			//
 		ih.isInstalled = Boolean.TRUE;
 		//
 		Assertions.assertDoesNotThrow(() -> instance.afterPropertiesSet());
@@ -2114,8 +2133,20 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnCopyRomaji, 0, null)));
+		final boolean headless = GraphicsEnvironment.isHeadless();
 		//
+		final ActionEvent actionEventBtnCopyRomaji = new ActionEvent(btnCopyRomaji, 0, null);
+		//
+		if (headless) {
+			//
+			Assertions.assertThrows(HeadlessException.class, () -> actionPerformed(instance, actionEventBtnCopyRomaji));
+			//
+		} else {
+			//
+			Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnCopyRomaji));
+			//
+		} // if
+			//
 		final AbstractButton btnCopyHiragana = new JButton();
 		//
 		if (instance != null) {
@@ -2124,8 +2155,19 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnCopyHiragana, 0, null)));
+		final ActionEvent actionEventBtnCopyHiragana = new ActionEvent(btnCopyHiragana, 0, null);
 		//
+		if (headless) {
+			//
+			Assertions.assertThrows(HeadlessException.class,
+					() -> actionPerformed(instance, actionEventBtnCopyHiragana));
+			//
+		} else {
+			//
+			Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnCopyHiragana));
+			//
+		} // if
+			//
 		final AbstractButton btnCopyKatakana = new JButton();
 		//
 		if (instance != null) {
@@ -2134,10 +2176,21 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnCopyKatakana, 0, null)));
+		final ActionEvent actionEventBtnCopyKatakana = new ActionEvent(btnCopyKatakana, 0, null);
 		//
-		// btnExport
-		//
+		if (headless) {
+			//
+			Assertions.assertThrows(HeadlessException.class,
+					() -> actionPerformed(instance, actionEventBtnCopyKatakana));
+			//
+		} else {
+			//
+			Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnCopyKatakana));
+			//
+		} // if
+			//
+			// btnExport
+			//
 		final AbstractButton btnExport = new JButton();
 		//
 		if (instance != null) {
@@ -2345,10 +2398,23 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnDllPathCopy, 0, null)));
+		final boolean headless = GraphicsEnvironment.isHeadless();
 		//
-		// btnExportBrowse
+		final ActionEvent actionEventBtnDllPathCopy = new ActionEvent(btnDllPathCopy, 0, null);
 		//
+		if (headless) {
+			//
+			Assertions.assertThrows(HeadlessException.class,
+					() -> actionPerformed(instance, actionEventBtnDllPathCopy));
+			//
+		} else {
+			//
+			Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnDllPathCopy));
+			//
+		} // if
+			//
+			// btnExportBrowse
+			//
 		final AbstractButton btnExportBrowse = new JButton();
 		//
 		if (instance != null) {
@@ -2369,10 +2435,20 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnExportCopy, 0, null)));
+		final ActionEvent actionEventBtnExportCopy = new ActionEvent(btnExportCopy, 0, null);
 		//
-		// btnPronunciationPageUrlCheck
-		//
+		if (headless) {
+			//
+			Assertions.assertThrows(HeadlessException.class, () -> actionPerformed(instance, actionEventBtnExportCopy));
+			//
+		} else {
+			//
+			Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnExportCopy));
+			//
+		} // if
+			//
+			// btnPronunciationPageUrlCheck
+			//
 		final AbstractButton btnPronunciationPageUrlCheck = new JButton();
 		//
 		if (instance != null) {
@@ -2400,11 +2476,19 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> setText(tfPronunciationPageUrl, "a"));
 		//
-		Assertions.assertThrows(RuntimeException.class,
-				() -> actionPerformed(instance, actionEventBtnPronunciationPageUrlCheck));
-		//
-		// btnExecute
-		//
+		if (headless) {
+			//
+			Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnPronunciationPageUrlCheck));
+			//
+		} else {
+			//
+			Assertions.assertThrows(RuntimeException.class,
+					() -> actionPerformed(instance, actionEventBtnPronunciationPageUrlCheck));
+			//
+		} // if
+			//
+			// btnExecute
+			//
 		final AbstractButton btnExecute = new JButton();
 		//
 		if (instance != null) {
@@ -2421,24 +2505,48 @@ class VoiceManagerTest {
 			//
 		final ActionEvent actionEventBtnExecute = new ActionEvent(btnExecute, 0, null);
 		//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnExecute));
-		//
+		if (headless) {
+			//
+			Assertions.assertThrows(HeadlessException.class, () -> actionPerformed(instance, actionEventBtnExecute));
+			//
+		} else {
+			//
+			Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnExecute));
+			//
+		} // if
+			//
 		if (instance != null) {
 			//
 			FieldUtils.writeDeclaredField(instance, "speechApi", speechApi, true);
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnExecute));
-		//
+		if (headless) {
+			//
+			Assertions.assertThrows(HeadlessException.class, () -> actionPerformed(instance, actionEventBtnExecute));
+			//
+		} else {
+			//
+			Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnExecute));
+			//
+		} // if
+			//
 		if (instance != null) {
 			//
 			FieldUtils.writeDeclaredField(instance, "voiceIds", new String[] { Integer.toString(ZERO) }, true);
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnExecute));
-		//
+		if (headless) {
+			//
+			Assertions.assertThrows(HeadlessException.class, () -> actionPerformed(instance, actionEventBtnExecute));
+			//
+		} else {
+			//
+			Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnExecute));
+			//
+		} // if
+			//
 		if (instance != null) {
 			//
 			FieldUtils.writeDeclaredField(instance, "cbmVoiceId", new DefaultComboBoxModel<>(new Object[] { ZERO }),
@@ -3635,16 +3743,8 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(createVoice(null, null));
 		//
-		if (GraphicsEnvironment.isHeadless()) {
-			//
-			Assertions.assertNull(createVoice(null, instance));
-			//
-		} else {
-			//
-			Assertions.assertNotNull(createVoice(null, instance));
-			//
-		} // if
-			//
+		Assertions.assertNotNull(createVoice(null, instance));
+		//
 	}
 
 	private static Voice createVoice(final ObjectMapper objectMapper, final VoiceManager instance) throws Throwable {
@@ -7189,9 +7289,18 @@ class VoiceManagerTest {
 	@Test
 	void testActionPerformedForSystemClipboardAnnotated() {
 		//
-		Assertions.assertThrows(IllegalStateException.class,
-				() -> actionPerformedForSystemClipboardAnnotated(false, EMPTY));
-		//
+		if (GraphicsEnvironment.isHeadless()) {
+			//
+			Assertions.assertThrows(HeadlessException.class,
+					() -> actionPerformedForSystemClipboardAnnotated(false, EMPTY));
+			//
+		} else {
+			//
+			Assertions.assertThrows(IllegalStateException.class,
+					() -> actionPerformedForSystemClipboardAnnotated(false, EMPTY));
+			//
+		} // if
+			//
 	}
 
 	private void actionPerformedForSystemClipboardAnnotated(final boolean nonTest, final Object source)
@@ -8308,9 +8417,17 @@ class VoiceManagerTest {
 		//
 		Assertions.assertEquals(Unit.with(null), getPageTitle(SPACE, null));
 		//
-		Assertions.assertThrows(RuntimeException.class,
-				() -> getPageTitle(toString(new File("pom.xml").toURI().toURL()), null));
-		//
+		if (GraphicsEnvironment.isHeadless()) {
+			//
+			Assertions.assertDoesNotThrow(() -> getPageTitle(toString(new File("pom.xml").toURI().toURL()), null));
+			//
+		} else {
+			//
+			Assertions.assertThrows(RuntimeException.class,
+					() -> getPageTitle(toString(new File("pom.xml").toURI().toURL()), null));
+			//
+		} // if
+			//
 	}
 
 	private static Unit<String> getPageTitle(final String url, final Duration timeout) throws Throwable {
@@ -9998,8 +10115,16 @@ class VoiceManagerTest {
 			//
 			Assertions.assertNull(focusTraversalPolicy.getInitialComponent(null));
 			//
-			Assertions.assertSame(instance, focusTraversalPolicy.getInitialComponent(instance));
-			//
+			if (GraphicsEnvironment.isHeadless()) {
+				//
+				Assertions.assertNull(focusTraversalPolicy.getInitialComponent(instance));
+				//
+			} else {
+				//
+				Assertions.assertSame(instance, focusTraversalPolicy.getInitialComponent(instance));
+				//
+			} // if
+				//
 		} // if
 			//
 	}
