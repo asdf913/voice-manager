@@ -11308,12 +11308,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-			if (!ObjectMap.containsObject(objectMap, Duration.class)) {
+				// java.time.Duration
 				//
-				ObjectMap.setObject(objectMap, Duration.class, null);
-				//
-			} // if
-				//
+			testAndAccept((a, b) -> !ObjectMap.containsObject(a, b), objectMap, Duration.class,
+					(a, b) -> ObjectMap.setObject(a, b, null));
+			//
 			ObjectMap.setObject(objectMap, Voice.class, getValue(en));
 			//
 			clear(folder = getIfNull(folder, StringBuilder::new));
