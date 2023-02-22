@@ -10616,15 +10616,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					if (Objects.equals(getNodeValue(style), "dp1")) {
 						//
-						final Node durationAttribute = cast(Node.class,
-								evaluate(xp, "../*[local-name()='drawing-page-properties']/@*[local-name()='duration']",
-										style, XPathConstants.NODE));
-						//
 						final Duration duration = ObjectMap.getObject(objectMap, Duration.class);
 						//
 						if (duration != null) {
 							//
-							setNodeValue(durationAttribute, VoiceManager.toString(duration));
+							setNodeValue(cast(Node.class,
+									evaluate(xp,
+											"../*[local-name()='drawing-page-properties']/@*[local-name()='duration']",
+											style, XPathConstants.NODE)),
+									VoiceManager.toString(duration));
 							//
 						} // if
 							//
