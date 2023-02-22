@@ -5007,22 +5007,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			if (isSelected(cbUseTtsVoice)) {
 				//
-				final String voiceId = getVoiceIdForExecute(nonTest);
-				//
-				if (voiceId == null) {
-					//
-					// Show "Please select a Voice" message if this method is not run under test
-					// case
-					//
-					testAndRun(nonTest, () -> JOptionPane.showMessageDialog(null, "Please select a Voice"));
-					//
-					return;
-					//
-				} // if
-					//
 				try {
 					//
-					deleteOnExit(file = generateTtsAudioFile(headless, voiceId, voice));
+					deleteOnExit(file = generateTtsAudioFile(nonTest, headless, voice));
 					//
 				} catch (final IllegalAccessException e) {
 					//
@@ -5241,9 +5228,22 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private File generateTtsAudioFile(final boolean headless, final String voiceId, final Voice voice)
+	private File generateTtsAudioFile(final boolean headless, final boolean nonTest, final Voice voice)
 			throws IllegalAccessException, InvocationTargetException {
 		//
+		final String voiceId = getVoiceIdForExecute(nonTest);
+		//
+		if (voiceId == null) {
+			//
+			// Show "Please select a Voice" message if this method is not run under test
+			// case
+			//
+			testAndRun(nonTest, () -> JOptionPane.showMessageDialog(null, "Please select a Voice"));
+			//
+			return null;
+			//
+		} // if
+			//
 		File file = null;
 		//
 		if (speechApi != null) {
