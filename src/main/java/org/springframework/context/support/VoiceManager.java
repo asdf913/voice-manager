@@ -4762,8 +4762,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static void playAudio(final Pronunciation pronunciation, final Object audioFormat) {
 		//
-		final Set<Entry<String, String>> entrySet = entrySet(
-				pronunciation != null ? pronunciation.getAudioUrls() : null);
+		final Set<Entry<String, String>> entrySet = entrySet(getAudioUrls(pronunciation));
 		//
 		if (iterator(entrySet) != null) {
 			//
@@ -4786,6 +4785,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
+	}
+
+	private static Map<String, String> getAudioUrls(final Pronunciation instnace) {
+		return instnace != null ? instnace.getAudioUrls() : null;
 	}
 
 	private static Object playAudio(final String value) throws JavaLayerException, IOException {
@@ -4813,7 +4816,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		setSelectedItem(mcbmAudioFormat, null);
 		//
-		final Map<String, String> audioUrls = pronunciation != null ? pronunciation.getAudioUrls() : null;
+		final Map<String, String> audioUrls = getAudioUrls(pronunciation);
 		//
 		if (MapUtils.isNotEmpty(audioUrls)) {
 			//
@@ -5003,8 +5006,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		try {
 			//
-			url = testAndApply(Objects::nonNull, get(pronunciation != null ? pronunciation.getAudioUrls() : null,
-					getSelectedItem(mcbmPronounicationAudioFormat)), URL::new, null);
+			url = testAndApply(Objects::nonNull,
+					get(getAudioUrls(pronunciation), getSelectedItem(mcbmPronounicationAudioFormat)), URL::new, null);
 			//
 		} catch (final MalformedURLException e) {
 			//
