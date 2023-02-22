@@ -1,7 +1,5 @@
 package org.springframework.context.support;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
@@ -9646,6 +9644,22 @@ class VoiceManagerTest {
 		} // if
 			//
 		Assertions.assertNull(invoke(getProgressBarExport, null, instance));
+		//
+		// org.springframework.context.support.VoiceManager$ExportTask.setNodeValue(org.w3c.dom.Node,java.lang.String)
+		//
+		final Method setNodeValue = CLASS_EXPORT_TASK != null
+				? CLASS_EXPORT_TASK.getDeclaredMethod("setNodeValue", Node.class, String.class)
+				: null;
+		//
+		if (setNodeValue != null) {
+			//
+			setNodeValue.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertNull(invoke(setNodeValue, null, null, null));
+		//
+		Assertions.assertNull(invoke(setNodeValue, null, node, null));
 		//
 	}
 

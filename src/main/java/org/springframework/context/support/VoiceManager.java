@@ -10608,8 +10608,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					final String folderInPresentation = StringMap.getString(stringMap, FOLDER_IN_PRESENTATION);
 					//
-					Node attribute = null;
-					//
 					// Default Slide Duration
 					//
 					final Node style = cast(Node.class, evaluate(xp,
@@ -10624,9 +10622,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 						final Duration duration = ObjectMap.getObject(objectMap, Duration.class);
 						//
-						if (durationAttribute != null && duration != null) {
+						if (duration != null) {
 							//
-							durationAttribute.setNodeValue(VoiceManager.toString(duration));
+							setNodeValue(durationAttribute, VoiceManager.toString(duration));
 							//
 						} // if
 							//
@@ -10641,18 +10639,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 						} // if
 							//
-							// Set Slide Name
-							//
-						if ((attribute = getNamedItem(getAttributes(pageCloned), "draw:name")) != null) {
-							//
 							// TODO
 							//
-							attribute.setNodeValue(voice.getText());
+							// Set Slide Name
 							//
-						} // if
-							//
-							// p
-							//
+						setNodeValue(getNamedItem(getAttributes(pageCloned), "draw:name"), voice.getText());
+						//
+						// p
+						//
 						ObjectMap.setObject(objectMap, Node.class, pageCloned);
 						//
 						if (!ObjectMap.containsObject(objectMap, ObjectMapper.class)) {
@@ -10934,20 +10928,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				} // if
 					//
 				for (int j = 0; j < attributes.getLength(); j++) {
-
-					if ((attribute = attributes.item(j)) == null) {
-						//
-						continue;
-						//
-					} // if
-						//
-					if (matches(matcher(pattern, getNodeName(attribute)))) {
+					//
+					if (matches(matcher(pattern, getNodeName(attribute = attributes.item(j))))) {
 						//
 						clear(sb = getIfNull(sb, StringBuilder::new));
 						//
-						attribute
-								.setNodeValue(
-										VoiceManager.toString(append(
+						setNodeValue(attribute,
+								VoiceManager
+										.toString(append(
 												append(append(sb,
 														Boolean.logicalAnd(embedAudioInPresentation,
 																StringUtils.isNotBlank(folder)) ? folder : ".."),
@@ -10960,6 +10948,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 			} // for
 				//
+		}
+
+		private static void setNodeValue(final Node instance, final String nodeValue) {
+			if (instance != null) {
+				instance.setNodeValue(nodeValue);
+			}
 		}
 
 		private static String getNodeName(final Node instance) {
