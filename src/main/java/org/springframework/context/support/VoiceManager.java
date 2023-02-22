@@ -5017,8 +5017,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		try (final InputStream is = openStream(url)) {
 			//
-			if (is != null && (file = testAndApply(Objects::nonNull, StringUtils.substringAfterLast(getFile(url), '/'),
-					File::new, null)) != null) {
+			if (and(Objects::nonNull, is, file = testAndApply(Objects::nonNull,
+					StringUtils.substringAfterLast(getFile(url), '/'), File::new, null))) {
 				//
 				FileUtils.copyInputStreamToFile(is, file);
 				//
