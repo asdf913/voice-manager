@@ -5016,52 +5016,52 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final Voice voice = createVoice(getObjectMapper(), this);
 		//
-		if (file == null) {
+		final boolean useTtsVoice = isSelected(cbUseTtsVoice);
+		//
+		if (file == null && useTtsVoice) {
 			//
-			if (isSelected(cbUseTtsVoice)) {
+			try {
 				//
-				try {
-					//
-					deleteOnExit(file = generateTtsAudioFile(nonTest, headless, voice));
-					//
-				} catch (final IllegalAccessException e) {
-					//
-					errorOrAssertOrShowException(headless, e);
-					//
-				} catch (final InvocationTargetException e) {
-					//
-					final Throwable targetException = e.getTargetException();
-					//
-					errorOrAssertOrShowException(headless,
-							ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException), targetException,
-									ExceptionUtils.getRootCause(e), e));
-					//
-				} // try
-					//
-			} else {
+				deleteOnExit(file = generateTtsAudioFile(nonTest, headless, voice));
 				//
-				try {
-					//
-					setSource(voice,
-							StringUtils.defaultIfBlank(getSource(voice),
-									getMp3TagValue(file = getAudioFile(headless, voice, tmImportException),
-											x -> StringUtils.isNotBlank(toString(x)), mp3Tags)));
-					//
-				} catch (final IOException | BaseException | IllegalAccessException e) {
-					//
-					errorOrAssertOrShowException(headless, e);
-					//
-				} catch (final InvocationTargetException e) {
-					//
-					final Throwable targetException = e.getTargetException();
-					//
-					errorOrAssertOrShowException(headless,
-							ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException), targetException,
-									ExceptionUtils.getRootCause(e), e));
-					//
-				} // try
-					//
-			} // if
+			} catch (final IllegalAccessException e) {
+				//
+				errorOrAssertOrShowException(headless, e);
+				//
+			} catch (final InvocationTargetException e) {
+				//
+				final Throwable targetException = e.getTargetException();
+				//
+				errorOrAssertOrShowException(headless,
+						ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException), targetException,
+								ExceptionUtils.getRootCause(e), e));
+				//
+			} // try
+				//
+		} // if
+			//
+		if (file == null && !useTtsVoice) {
+			//
+			try {
+				//
+				setSource(voice,
+						StringUtils.defaultIfBlank(getSource(voice),
+								getMp3TagValue(file = getAudioFile(headless, voice, tmImportException),
+										x -> StringUtils.isNotBlank(toString(x)), mp3Tags)));
+				//
+			} catch (final IOException | BaseException | IllegalAccessException e) {
+				//
+				errorOrAssertOrShowException(headless, e);
+				//
+			} catch (final InvocationTargetException e) {
+				//
+				final Throwable targetException = e.getTargetException();
+				//
+				errorOrAssertOrShowException(headless,
+						ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException), targetException,
+								ExceptionUtils.getRootCause(e), e));
+				//
+			} // try
 				//
 		} // if
 			//
