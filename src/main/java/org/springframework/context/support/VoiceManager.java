@@ -7564,11 +7564,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		final String text = getText(instance.tfTextImport);
 		//
-		final MutableComboBoxModel<JlptVocabulary> cbmJlptVocabulary = instance.mcbmJlptVocabulary;
+		final MutableComboBoxModel<JlptVocabulary> mcbmJlptVocabulary = instance.mcbmJlptVocabulary;
 		//
-		for (int i = getSize(cbmJlptVocabulary) - 1; i >= 0; i--) {
+		for (int i = getSize(mcbmJlptVocabulary) - 1; i >= 0; i--) {
 			//
-			cbmJlptVocabulary.removeElementAt(i);
+			mcbmJlptVocabulary.removeElementAt(i);
 			//
 		} // for
 			//
@@ -7586,7 +7586,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			final List<JlptVocabulary> temp = toList(filter(stream(jlptVocabularies),
 					x -> Boolean.logicalOr(Objects.equals(text, getKanji(x)), Objects.equals(text, getKana(x)))));
 			//
-			forEach(temp, x -> addElement(cbmJlptVocabulary, x));
+			forEach(temp, x -> addElement(mcbmJlptVocabulary, x));
 			//
 			if (IterableUtils.size(temp) > 1) {
 				//
