@@ -2301,20 +2301,6 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnSpeak));
 		//
-		// btnExportMicrosoftSpeechObjectLibraryInformation
-		//
-		final AbstractButton btnExportMicrosoftSpeechObjectLibraryInformation = new JButton();
-		//
-		if (instance != null) {
-			//
-			FieldUtils.writeDeclaredField(instance, "btnExportMicrosoftSpeechObjectLibraryInformation",
-					btnExportMicrosoftSpeechObjectLibraryInformation, true);
-			//
-		} // if
-			//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance,
-				new ActionEvent(btnExportMicrosoftSpeechObjectLibraryInformation, 0, null)));
-		//
 		// btnSpeechRateSlower
 		//
 		final AbstractButton btnSpeechRateSlower = new JButton();
@@ -2388,8 +2374,39 @@ class VoiceManagerTest {
 	@Test
 	void testActionPerformed2() throws IllegalAccessException, IOException {
 		//
-		// btnDllPathCopy
+		// btnExportMicrosoftSpeechObjectLibraryInformation
 		//
+		final AbstractButton btnExportMicrosoftSpeechObjectLibraryInformation = new JButton();
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "btnExportMicrosoftSpeechObjectLibraryInformation",
+					btnExportMicrosoftSpeechObjectLibraryInformation, true);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance,
+				new ActionEvent(btnExportMicrosoftSpeechObjectLibraryInformation, 0, null)));
+		//
+		// btnImport
+		//
+		if (GraphicsEnvironment.isHeadless()) {
+			//
+			final AbstractButton btnImport = new JButton();
+			//
+			if (instance != null) {
+				//
+				FieldUtils.writeDeclaredField(instance, "btnImport", btnImport, true);
+				//
+			} // if
+				//
+				//
+			Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnImport, 0, null)));
+			//
+		} // if
+			//
+			// btnDllPathCopy
+			//
 		final AbstractButton btnDllPathCopy = new JButton();
 		//
 		if (instance != null) {
@@ -2618,23 +2635,6 @@ class VoiceManagerTest {
 		Assertions.assertDoesNotThrow(
 				() -> actionPerformed(instance, new ActionEvent(btnPlayPronunciationAudio, 0, null)));
 		//
-		// btnPlayPronunciationAudio
-		//
-		if (GraphicsEnvironment.isHeadless()) {
-			//
-			final AbstractButton btnImport = new JButton();
-			//
-			if (instance != null) {
-				//
-				FieldUtils.writeDeclaredField(instance, "btnImport", btnImport, true);
-				//
-			} // if
-				//
-				//
-			Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnImport, 0, null)));
-			//
-		} // if
-			//
 	}
 
 	private static void actionPerformed(final ActionListener instance, final ActionEvent actionEvent) {
