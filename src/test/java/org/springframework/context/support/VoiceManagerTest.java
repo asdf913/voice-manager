@@ -2168,27 +2168,6 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		final AbstractButton btnCopyKatakana = new JButton();
-		//
-		if (instance != null) {
-			//
-			FieldUtils.writeDeclaredField(instance, "btnCopyKatakana", btnCopyKatakana, true);
-			//
-		} // if
-			//
-		final ActionEvent actionEventBtnCopyKatakana = new ActionEvent(btnCopyKatakana, 0, null);
-		//
-		if (headless) {
-			//
-			Assertions.assertThrows(HeadlessException.class,
-					() -> actionPerformed(instance, actionEventBtnCopyKatakana));
-			//
-		} else {
-			//
-			Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnCopyKatakana));
-			//
-		} // if
-			//
 			// btnExport
 			//
 		final AbstractButton btnExport = new JButton();
@@ -2374,8 +2353,33 @@ class VoiceManagerTest {
 	@Test
 	void testActionPerformed2() throws IllegalAccessException, IOException {
 		//
-		// btnExportMicrosoftSpeechObjectLibraryInformation
+		// btnCopyKatakana
 		//
+		final AbstractButton btnCopyKatakana = new JButton();
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "btnCopyKatakana", btnCopyKatakana, true);
+			//
+		} // if
+			//
+		final ActionEvent actionEventBtnCopyKatakana = new ActionEvent(btnCopyKatakana, 0, null);
+		//
+		final boolean headless = GraphicsEnvironment.isHeadless();
+		//
+		if (headless) {
+			//
+			Assertions.assertThrows(HeadlessException.class,
+					() -> actionPerformed(instance, actionEventBtnCopyKatakana));
+			//
+		} else {
+			//
+			Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnCopyKatakana));
+			//
+		} // if
+			//
+			// btnExportMicrosoftSpeechObjectLibraryInformation
+			//
 		final AbstractButton btnExportMicrosoftSpeechObjectLibraryInformation = new JButton();
 		//
 		if (instance != null) {
@@ -2390,7 +2394,7 @@ class VoiceManagerTest {
 		//
 		// btnImport
 		//
-		if (GraphicsEnvironment.isHeadless()) {
+		if (headless) {
 			//
 			final AbstractButton btnImport = new JButton();
 			//
@@ -2415,8 +2419,6 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		final boolean headless = GraphicsEnvironment.isHeadless();
-		//
 		final ActionEvent actionEventBtnDllPathCopy = new ActionEvent(btnDllPathCopy, 0, null);
 		//
 		if (headless) {
