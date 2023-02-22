@@ -132,7 +132,6 @@ import org.apache.bcel.classfile.ClassParserUtil;
 import org.apache.bcel.classfile.ConstantPool;
 import org.apache.bcel.classfile.FieldOrMethod;
 import org.apache.bcel.classfile.JavaClass;
-import org.apache.bcel.classfile.JavaClassUtil;
 import org.apache.bcel.generic.ATHROW;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.ConstantPushInstruction;
@@ -2423,36 +2422,8 @@ class VoiceManagerTest {
 	@Test
 	void testActionPerformed2() throws Throwable {
 		//
-		// btnCopyKatakana
+		// btnExportMicrosoftSpeechObjectLibraryInformation
 		//
-		final AbstractButton btnCopyKatakana = new JButton();
-		//
-		if (instance != null) {
-			//
-			FieldUtils.writeDeclaredField(instance, "btnCopyKatakana", btnCopyKatakana, true);
-			//
-		} // if
-			//
-		final ActionEvent actionEventBtnCopyKatakana = new ActionEvent(btnCopyKatakana, 0, null);
-		//
-		final Class<?> clz = getClass(instance != null ? instance.getToolkit() : null);
-		//
-		final Class<? extends Throwable> throwableClassByGetSystemClipboard = getThrowingThrowableClass(clz,
-				clz != null ? clz.getDeclaredMethod("getSystemClipboard") : null);
-		//
-		if (throwableClassByGetSystemClipboard != null) {
-			//
-			Assertions.assertThrows(throwableClassByGetSystemClipboard,
-					() -> actionPerformed(instance, actionEventBtnCopyKatakana));
-			//
-		} else {
-			//
-			Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnCopyKatakana));
-			//
-		} // if
-			//
-			// btnExportMicrosoftSpeechObjectLibraryInformation
-			//
 		final AbstractButton btnExportMicrosoftSpeechObjectLibraryInformation = new JButton();
 		//
 		if (instance != null) {
@@ -2495,6 +2466,11 @@ class VoiceManagerTest {
 		} // if
 			//
 		final ActionEvent actionEventBtnDllPathCopy = new ActionEvent(btnDllPathCopy, 0, null);
+		//
+		final Class<?> clz = getClass(instance != null ? instance.getToolkit() : null);
+		//
+		final Class<? extends Throwable> throwableClassByGetSystemClipboard = getThrowingThrowableClass(clz,
+				clz != null ? clz.getDeclaredMethod("getSystemClipboard") : null);
 		//
 		if (throwableClassByGetSystemClipboard != null) {
 			//
@@ -2689,6 +2665,39 @@ class VoiceManagerTest {
 		Assertions.assertDoesNotThrow(
 				() -> actionPerformed(instance, new ActionEvent(btnPlayPronunciationAudio, 0, null)));
 		//
+	}
+
+	@Test
+	void testActionPerformed3() throws Throwable {
+
+		// btnCopyKatakana
+		//
+		final AbstractButton btnCopyKatakana = new JButton();
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "btnCopyKatakana", btnCopyKatakana, true);
+			//
+		} // if
+			//
+		final ActionEvent actionEventBtnCopyKatakana = new ActionEvent(btnCopyKatakana, 0, null);
+		//
+		final Class<?> clz = getClass(instance != null ? instance.getToolkit() : null);
+		//
+		final Class<? extends Throwable> throwableClassByGetSystemClipboard = getThrowingThrowableClass(clz,
+				clz != null ? clz.getDeclaredMethod("getSystemClipboard") : null);
+		//
+		if (throwableClassByGetSystemClipboard != null) {
+			//
+			Assertions.assertThrows(throwableClassByGetSystemClipboard,
+					() -> actionPerformed(instance, actionEventBtnCopyKatakana));
+			//
+		} else {
+			//
+			Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnCopyKatakana));
+			//
+		} // if
+			//
 	}
 
 	private static void actionPerformed(final ActionListener instance, final ActionEvent actionEvent) {
