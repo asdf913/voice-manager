@@ -315,7 +315,7 @@ class VoiceManagerTest {
 			METHOD_TO_MILLIS, METHOD_SET_JLPT_VOCABULARY_AND_LEVEL, METHOD_ADD_DOCUMENT_LISTENER, METHOD_GET_LEVEL,
 			METHOD_ADD_ALL, METHOD_PLAY_AUDIO, METHOD_PLAY, METHOD_PRONOUNICATION_CHANGED, METHOD_REMOVE_ELEMENT_AT,
 			METHOD_ACTION_PERFORMED_FOR_BTN_IMPORT, METHOD_CREATE_PRONUNCIATION_LIST_CELL_RENDERER,
-			METHOD_GET_LIST_CELL_RENDERER_COMPONENT = null;
+			METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_GET_FILE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -969,6 +969,8 @@ class VoiceManagerTest {
 		(METHOD_GET_LIST_CELL_RENDERER_COMPONENT = clz.getDeclaredMethod("getListCellRendererComponent",
 				ListCellRenderer.class, JList.class, Object.class, Integer.TYPE, Boolean.TYPE, Boolean.TYPE))
 				.setAccessible(true);
+		//
+		(METHOD_GET_FILE = clz.getDeclaredMethod("getFile", URL.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -8578,6 +8580,29 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof Component) {
 				return (Component) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetFile() throws Throwable {
+		//
+		Assertions.assertNull(getFile(null));
+		//
+		Assertions.assertNull(getFile(cast(URL.class, Narcissus.allocateInstance(URL.class))));
+		//
+	}
+
+	private static String getFile(final URL instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_FILE.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

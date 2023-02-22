@@ -5017,9 +5017,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		try (final InputStream is = openStream(url)) {
 			//
-			if (is != null && (file = testAndApply(Objects::nonNull,
-					StringUtils.substringAfterLast(url != null ? url.getFile() : null, "/"), File::new,
-					null)) != null) {
+			if (is != null && (file = testAndApply(Objects::nonNull, StringUtils.substringAfterLast(getFile(url), '/'),
+					File::new, null)) != null) {
 				//
 				FileUtils.copyInputStreamToFile(is, file);
 				//
@@ -5150,6 +5149,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // try
 			//
+	}
+
+	private static String getFile(final URL instance) {
+		return instance != null ? instance.getFile() : null;
 	}
 
 	private static <E extends Throwable> void ifElse(final boolean condition, final FailableRunnable<E> runnableTrue,
