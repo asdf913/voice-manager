@@ -20,6 +20,9 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.javatuples.Unit;
+import org.javatuples.valueintf.IValue0;
+import org.javatuples.valueintf.IValue0Util;
 import org.jsoup.Jsoup;
 import org.jsoup.helper.ProtocolUtil;
 import org.jsoup.nodes.Element;
@@ -62,34 +65,14 @@ public class YojijukugoMultimapFactoryBean implements FactoryBean<Multimap<Strin
 				try (final InputStream is = new ByteArrayInputStream(bs);
 						final Workbook wb = WorkbookFactory.create(is)) {
 					//
-					final Sheet sheet = wb != null && wb.getNumberOfSheets() == 1 ? wb.getSheetAt(0) : null;
+					final IValue0<Multimap<String, String>> value = createMultimap(wb);
 					//
-					final AtomicBoolean first = new AtomicBoolean(true);
-					//
-					if (iterator(sheet) != null) {
+					if (value != null) {
 						//
-						Multimap<String, String> multimap = null;
-						//
-						for (final Row row : sheet) {
-							//
-							if (row == null || row.getPhysicalNumberOfCells() < 2 || first == null
-									|| first.getAndSet(false)) {
-								//
-								continue;
-								//
-							} // if
-								//
-							MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedListMultimap::create),
-									toString(row.getCell(0)), toString(row.getCell(1)));
-							//
-						} // if
-							//
-						return multimap;
+						return IValue0Util.getValue0(value);
 						//
 					} // if
 						//
-					return null;
-					//
 				} // try
 					//
 			} // if
@@ -97,6 +80,38 @@ public class YojijukugoMultimapFactoryBean implements FactoryBean<Multimap<Strin
 		} // if
 			//
 		return createMultimapByUrl(url, ProtocolUtil.getAllowProtocols());
+		//
+	}
+
+	private static IValue0<Multimap<String, String>> createMultimap(final Workbook wb) {
+		//
+		final Sheet sheet = wb != null && wb.getNumberOfSheets() == 1 ? wb.getSheetAt(0) : null;
+		//
+		final AtomicBoolean first = new AtomicBoolean(true);
+		//
+		if (iterator(sheet) != null) {
+			//
+			IValue0<Multimap<String, String>> multimap = null;
+			//
+			for (final Row row : sheet) {
+				//
+				if (row == null || row.getPhysicalNumberOfCells() < 2 || first == null || first.getAndSet(false)) {
+					//
+					continue;
+					//
+				} // if
+					//
+				MultimapUtil.put(IValue0Util.getValue0(
+						multimap = ObjectUtils.getIfNull(multimap, () -> Unit.with(LinkedListMultimap.create()))),
+						toString(row.getCell(0)), toString(row.getCell(1)));
+				//
+			} // if
+				//
+			return multimap;
+			//
+		} // if
+			//
+		return null;
 		//
 	}
 

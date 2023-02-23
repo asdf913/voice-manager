@@ -12,6 +12,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.javatuples.valueintf.IValue0;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,7 +26,7 @@ import com.j256.simplemagic.ContentInfo;
 class YojijukugoMultimapFactoryBeanTest {
 
 	private static Method METHOD_TO_STRING, METHOD_TEST, METHOD_GET_CONTENT_AS_BYTE_ARRAY, METHOD_GET_MIME_TYPE,
-			METHOD_CREATE_MULTI_MAP_BY_URL = null;
+			METHOD_CREATE_MULTI_MAP_BY_URL, METHOD_CREATE_MULTI_MAP = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -43,6 +44,8 @@ class YojijukugoMultimapFactoryBeanTest {
 		//
 		(METHOD_CREATE_MULTI_MAP_BY_URL = clz.getDeclaredMethod("createMultimapByUrl", String.class, String[].class))
 				.setAccessible(true);
+		//
+		(METHOD_CREATE_MULTI_MAP = clz.getDeclaredMethod("createMultimap", Workbook.class)).setAccessible(true);
 		//
 	}
 
@@ -254,7 +257,7 @@ class YojijukugoMultimapFactoryBeanTest {
 		//
 		Assertions.assertThrows(MalformedURLException.class, () -> createMultimapByUrl(url, new String[] {}));
 		//
-		Assertions.assertThrows(MalformedURLException.class, () -> createMultimapByUrl(url, new String[] {"file"}));
+		Assertions.assertThrows(MalformedURLException.class, () -> createMultimapByUrl(url, new String[] { "file" }));
 		//
 	}
 
@@ -266,6 +269,27 @@ class YojijukugoMultimapFactoryBeanTest {
 				return null;
 			} else if (obj instanceof Multimap) {
 				return (Multimap) obj;
+			}
+			throw new Throwable(obj != null ? toString(obj.getClass()) : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCreateMultimap() throws Throwable {
+		//
+		Assertions.assertNull(createMultimap(null));
+		//
+	}
+
+	private static IValue0<Multimap<String, String>> createMultimap(final Workbook wb) throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_MULTI_MAP.invoke(null, wb);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof IValue0) {
+				return (IValue0) obj;
 			}
 			throw new Throwable(obj != null ? toString(obj.getClass()) : null);
 		} catch (final InvocationTargetException e) {
