@@ -37,8 +37,8 @@ public class YojijukugoMultimapFactoryBean implements FactoryBean<Multimap<Strin
 		final URL u = testAndApply(StringUtils::isNotBlank, url, URL::new, null);
 		//
 		final Elements tables = ElementUtil.getElementsByTag(
-				u != null && (allowProtocols == null || allowProtocols.length == 0
-						|| StringUtils.equalsAnyIgnoreCase(u.getProtocol(), allowProtocols)) ? Jsoup.parse(u, 0) : null,
+				allowProtocols == null || allowProtocols.length == 0
+						|| StringUtils.equalsAnyIgnoreCase(getProtocol(u), allowProtocols) ? Jsoup.parse(u, 0) : null,
 				"table");
 		//
 		Element tr, a = null;
@@ -93,6 +93,10 @@ public class YojijukugoMultimapFactoryBean implements FactoryBean<Multimap<Strin
 			//
 		return multimap;
 		//
+	}
+
+	private static String getProtocol(final URL instance) {
+		return instance != null ? instance.getProtocol() : null;
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
