@@ -157,6 +157,7 @@ import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableRunnable;
 import org.apache.commons.lang3.function.FailableSupplier;
+import org.apache.commons.lang3.function.OnlineNHKJapanesePronunciationsAccentFailableFunction;
 import org.apache.commons.lang3.math.Fraction;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
@@ -271,7 +272,8 @@ class VoiceManagerTest {
 			METHOD_FOR_EACH_STREAM, METHOD_FOR_EACH_ITERABLE, METHOD_FOR_EACH_INT_STREAM, METHOD_CREATE_WORK_BOOK_LIST,
 			METHOD_CREATE_VOICE, METHOD_INVOKE, METHOD_ANNOTATION_TYPE, METHOD_FIND_FIRST, METHOD_GET_DECLARED_METHODS,
 			METHOD_FOR_NAME, METHOD_FILTER, METHOD_SET_TEXT, METHOD_GET_PREFERRED_WIDTH, METHOD_IMPORT_VOICE1,
-			METHOD_IMPORT_VOICE3, METHOD_IMPORT_VOICE5, METHOD_IMPORT_VOICE_BY_SPEECH_API, METHOD_ADD_COLLECTION,
+			METHOD_IMPORT_VOICE3, METHOD_IMPORT_VOICE5, METHOD_IMPORT_VOICE_BY_SPEECH_API,
+			METHOD_IMPORT_VOICE_BY_ONLINE_NHK_JAPANESE_PRONUNCIATIONS_ACCENT_FAILABLE_FUNCTION, METHOD_ADD_COLLECTION,
 			METHOD_ADD_LIST, METHOD_CREATE_IMPORT_FILE_TEMPLATE_BYTE_ARRAY, METHOD_ANY_MATCH, METHOD_COLLECT,
 			METHOD_NAME, METHOD_GET_SELECTED_ITEM, METHOD_MATCHER, METHOD_SET_VALUE_J_PROGRESS_BAR,
 			METHOD_SET_VALUE_J_SLIDER, METHOD_SET_STRING_J_PROGRESS_BAR, METHOD_SET_STRING_COMMENT,
@@ -453,6 +455,10 @@ class VoiceManagerTest {
 		//
 		(METHOD_IMPORT_VOICE_BY_SPEECH_API = clz.getDeclaredMethod("importVoiceBySpeechApi", CLASS_OBJECT_MAP,
 				String.class, String.class)).setAccessible(true);
+		//
+		(METHOD_IMPORT_VOICE_BY_ONLINE_NHK_JAPANESE_PRONUNCIATIONS_ACCENT_FAILABLE_FUNCTION = clz.getDeclaredMethod(
+				"importVoiceByOnlineNHKJapanesePronunciationsAccentFailableFunction", CLASS_OBJECT_MAP, String.class))
+				.setAccessible(true);
 		//
 		(METHOD_ADD_COLLECTION = clz.getDeclaredMethod("add", Collection.class, Object.class)).setAccessible(true);
 		//
@@ -1082,6 +1088,8 @@ class VoiceManagerTest {
 
 		private byte[] convertedByteArray = null;
 
+		private List<Pronunciation> pronunciations = null;
+
 		private Map<Object, BeanDefinition> getBeanDefinitions() {
 			if (beanDefinitions == null) {
 				beanDefinitions = new LinkedHashMap<>();
@@ -1124,6 +1132,14 @@ class VoiceManagerTest {
 				if (Objects.equals(methodName, "getBeansOfType")) {
 					//
 					return beansOfType;
+					//
+				} // if
+					//
+			} else if (proxy instanceof OnlineNHKJapanesePronunciationsAccentFailableFunction) {
+				//
+				if (Objects.equals(methodName, "apply")) {
+					//
+					return pronunciations;
 					//
 				} // if
 					//
@@ -4155,6 +4171,8 @@ class VoiceManagerTest {
 		//
 		final Class<?> clz = getClass(objectMap);
 		//
+		// org.springframework.context.support.VoiceManager$ObjectMap.setObject(java.lang.Class,java.lang.Object)
+		//
 		final Method setObject = clz != null ? clz.getDeclaredMethod("setObject", Class.class, Object.class) : null;
 		//
 		if (setObject != null) {
@@ -4162,6 +4180,8 @@ class VoiceManagerTest {
 			setObject.setAccessible(true);
 			//
 		} // if
+			//
+			// org.springframework.context.support.VoiceManager$ImportTask
 			//
 		invoke(setObject, objectMap, CLASS_IMPORT_TASK, Narcissus.allocateInstance(CLASS_IMPORT_TASK));
 		//
@@ -4205,6 +4225,105 @@ class VoiceManagerTest {
 			throws Throwable {
 		try {
 			METHOD_IMPORT_VOICE_BY_SPEECH_API.invoke(null, objectMap, filePath, voiceId);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testImportVoiceByOnlineNHKJapanesePronunciationsAccentFailableFunction() throws Throwable {
+		//
+		Assertions.assertDoesNotThrow(
+				() -> importVoiceByOnlineNHKJapanesePronunciationsAccentFailableFunction(null, null));
+		//
+		// org.springframework.context.support.VoiceManager$ObjectMap
+		//
+		final Object objectMap = Reflection.newProxy(CLASS_OBJECT_MAP, createVoiceManagerIH());
+		//
+		Assertions.assertThrows(IllegalStateException.class,
+				() -> importVoiceByOnlineNHKJapanesePronunciationsAccentFailableFunction(objectMap, null));
+		//
+		final Class<?> clz = getClass(objectMap);
+		//
+		// org.springframework.context.support.VoiceManager$ObjectMap.setObject(java.lang.Class,java.lang.Object)
+		//
+		final Method setObject = clz != null ? clz.getDeclaredMethod("setObject", Class.class, Object.class) : null;
+		//
+		if (setObject != null) {
+			//
+			setObject.setAccessible(true);
+			//
+		} // if
+			//
+			// org.springframework.context.support.VoiceManager
+			//
+		invoke(setObject, objectMap, VoiceManager.class, null);
+		//
+		Assertions.assertThrows(IllegalStateException.class,
+				() -> importVoiceByOnlineNHKJapanesePronunciationsAccentFailableFunction(objectMap, null));
+		//
+		// org.springframework.context.support.VoiceManager$ImportTask
+		//
+		invoke(setObject, objectMap, CLASS_IMPORT_TASK, Narcissus.allocateInstance(CLASS_IMPORT_TASK));
+		//
+		Assertions.assertDoesNotThrow(
+				() -> importVoiceByOnlineNHKJapanesePronunciationsAccentFailableFunction(objectMap, null));
+		//
+		// org.springframework.context.support.VoiceManager
+		//
+		if (instance != null) {
+			//
+			instance.setOnlineNHKJapanesePronunciationsAccentFailableFunction(
+					Reflection.newProxy(OnlineNHKJapanesePronunciationsAccentFailableFunction.class, ih));
+			//
+		} // if
+			//
+		invoke(setObject, objectMap, VoiceManager.class, instance);
+		//
+		final Pronunciation pronunciation = new Pronunciation();
+		//
+		if (ih != null) {
+			//
+			ih.pronunciations = Collections.singletonList(pronunciation);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(
+				() -> importVoiceByOnlineNHKJapanesePronunciationsAccentFailableFunction(objectMap, null));
+		//
+		pronunciation.setAudioUrls(Collections.singletonMap(null, null));
+		//
+		Assertions.assertDoesNotThrow(
+				() -> importVoiceByOnlineNHKJapanesePronunciationsAccentFailableFunction(objectMap, null));
+		//
+		pronunciation.setAudioUrls(Collections.singletonMap(null, EMPTY));
+		//
+		Assertions.assertDoesNotThrow(
+				() -> importVoiceByOnlineNHKJapanesePronunciationsAccentFailableFunction(objectMap, null));
+		//
+		pronunciation.setAudioUrls(Collections.singletonMap(null, SPACE));
+		//
+		Assertions.assertDoesNotThrow(
+				() -> importVoiceByOnlineNHKJapanesePronunciationsAccentFailableFunction(objectMap, null));
+		//
+		pronunciation.setAudioUrls(Collections.singletonMap(null, "A"));
+		//
+		Assertions.assertThrows(MalformedURLException.class,
+				() -> importVoiceByOnlineNHKJapanesePronunciationsAccentFailableFunction(objectMap, null));
+		//
+		pronunciation.setAudioUrls(Collections.singletonMap(null, toString(toURL(toURI(new File("pom.xml"))))));
+		//
+		Assertions.assertDoesNotThrow(
+				() -> importVoiceByOnlineNHKJapanesePronunciationsAccentFailableFunction(objectMap, null));
+		//
+
+	}
+
+	private static void importVoiceByOnlineNHKJapanesePronunciationsAccentFailableFunction(final Object objectMap,
+			final String filePath) throws Throwable {
+		try {
+			METHOD_IMPORT_VOICE_BY_ONLINE_NHK_JAPANESE_PRONUNCIATIONS_ACCENT_FAILABLE_FUNCTION.invoke(null, objectMap,
+					filePath);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

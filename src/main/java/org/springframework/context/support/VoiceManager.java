@@ -9169,39 +9169,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 								//
 								if (Objects.equals(Boolean.FALSE, voice.getTts())) {
 									//
-									if ((pronunciation = testAndApply(x -> IterableUtils.size(x) == 1,
-											FailableFunctionUtil.apply(vm != null
-													? vm.onlineNHKJapanesePronunciationsAccentFailableFunction
-													: null, voice.getText()),
-											x -> IterableUtils.get(x, 0), null)) != null) {
-										//
-										if (StringUtils.isBlank(audioUrl = testAndApply((m, k) -> containsKey(m, k),
-												audioUrls = pronunciation.getAudioUrls(),
-												vm != null ? vm.preferredPronunciationAudioFormat : null,
-												(m, k) -> get(m, k), null))) {
-											//
-											entry = testAndApply(CollectionUtils::isNotEmpty, entrySet(audioUrls),
-													x -> IterableUtils.get(x, 0), null);
-											//
-											audioUrl = getValue(entry);
-											//
-										} // if
-											//
-										try (final InputStream is = openStream(
-												testAndApply(Objects::nonNull, audioUrl, URL::new, null))) {
-											//
-											if (is != null && (it.file = createTempFile(
-													randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH),
-													filePath)) != null) {
-												//
-												FileUtils.copyInputStreamToFile(is, it.file);
-												//
-											} // if
-												//
-										} // try
-											//
-									} // if
-										//
+									importVoiceByOnlineNHKJapanesePronunciationsAccentFailableFunction(objectMap,
+											filePath);
+									//
 								} // if
 									//
 								if (it.file == null && isInstalled(speechApi = getIfNull(speechApi,
@@ -9255,6 +9225,52 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			shutdown(es);
 			//
 		} // try
+			//
+	}
+
+	private static void importVoiceByOnlineNHKJapanesePronunciationsAccentFailableFunction(final ObjectMap objectMap,
+			final String filePath) throws IOException, IllegalAccessException, InvocationTargetException {
+		//
+		final VoiceManager vm = ObjectMap.getObject(objectMap, VoiceManager.class);
+		//
+		final ImportTask it = ObjectMap.getObject(objectMap, ImportTask.class);
+		//
+		final Pronunciation pronunciation = testAndApply(x -> IterableUtils.size(x) == 1,
+				FailableFunctionUtil.apply(vm != null ? vm.onlineNHKJapanesePronunciationsAccentFailableFunction : null,
+						getText(it != null ? it.voice : null)),
+				x -> IterableUtils.get(x, 0), null);
+		//
+		if (pronunciation != null) {
+			//
+			Map<String, String> audioUrls = null;
+			//
+			String audioUrl = null;
+			//
+			if (StringUtils.isBlank(
+					audioUrl = testAndApply((m, k) -> containsKey(m, k), audioUrls = pronunciation.getAudioUrls(),
+							vm != null ? vm.preferredPronunciationAudioFormat : null, (m, k) -> get(m, k), null))) {
+				//
+				final Entry<String, String> entry = testAndApply(CollectionUtils::isNotEmpty, entrySet(audioUrls),
+						x -> IterableUtils.get(x, 0), null);
+				//
+				audioUrl = getValue(entry);
+				//
+			} // if
+				//
+			try (final InputStream is = openStream(testAndApply(StringUtils::isNotBlank, audioUrl, URL::new, null))) {
+				//
+				if (is != null && (it.file = createTempFile(randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH),
+						filePath)) != null) {
+					//
+					FileUtils.copyInputStreamToFile(is, it.file);
+					//
+					deleteOnExit(it.file);
+					//
+				} // if
+					//
+			} // try
+				//
+		} // if
 			//
 	}
 
