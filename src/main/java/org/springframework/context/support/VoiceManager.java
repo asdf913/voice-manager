@@ -4887,7 +4887,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			final String text = getText(tfTextImport);
 			//
-			if (yojijukugoMultimap != null && yojijukugoMultimap.containsKey(text)) {
+			if (containsKey(yojijukugoMultimap, text)) {
 				//
 				final Collection<Object> collection = MultimapUtil.get(yojijukugoMultimap, text);
 				//
@@ -4901,6 +4901,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
+	}
+
+	private static boolean containsKey(final Multimap<?, ?> instance, final Object key) {
+		return instance != null && instance.containsKey(key);
 	}
 
 	private static void playAudio(final Pronunciation pronunciation, final Object audioFormat) {

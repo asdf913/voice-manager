@@ -280,19 +280,20 @@ class VoiceManagerTest {
 			METHOD_ADD_LIST, METHOD_CREATE_IMPORT_FILE_TEMPLATE_BYTE_ARRAY, METHOD_ANY_MATCH, METHOD_COLLECT,
 			METHOD_NAME, METHOD_GET_SELECTED_ITEM, METHOD_MATCHER, METHOD_SET_VALUE_J_PROGRESS_BAR,
 			METHOD_SET_VALUE_J_SLIDER, METHOD_SET_STRING_J_PROGRESS_BAR, METHOD_SET_STRING_COMMENT,
-			METHOD_SET_TOOL_TIP_TEXT, METHOD_FORMAT, METHOD_CONTAINS_KEY, METHOD_VALUE_OF1, METHOD_VALUE_OF2,
-			METHOD_GET_CLASS, METHOD_CREATE_RANGE, METHOD_GET_PROVIDER_NAME, METHOD_GET_PROVIDER_VERSION,
-			METHOD_WRITE_VOICE_TO_FILE, METHOD_GET_MP3_TAG_VALUE_FILE, METHOD_GET_MP3_TAG_VALUE_LIST,
-			METHOD_GET_MP3_TAG_PARIRS_ID3V1, METHOD_GET_METHODS_CLASS, METHOD_COPY_OBJECT_MAP, METHOD_DELETE,
-			METHOD_DELETE_ON_EXIT, METHOD_CONVERT_LANGUAGE_CODE_TO_TEXT, METHOD_IS_SELECTED,
-			METHOD_SET_HIRAGANA_OR_KATAKANA, METHOD_SET_ROMAJI, METHOD_AND, METHOD_OR, METHOD_CLEAR_DEFAULT_TABLE_MODEL,
-			METHOD_CLEAR_STRING_BUILDER, METHOD_EXECUTE, METHOD_PUT_MAP, METHOD_GET_BYTE_CONVERTER,
-			METHOD_CONTAINS_CUSTOM_PROPERTIES, METHOD_CONTAINS_COLLECTION, METHOD_CONTAINS_LOOKUP, METHOD_GET_LPW_STR,
-			METHOD_GET_SHEET_NAME, METHOD_ACCEPT, METHOD_TO_ARRAY, METHOD_TO_LIST, METHOD_GET_ID, METHOD_SET_MAXIMUM,
-			METHOD_GET_CURRENT_SHEET_INDEX, METHOD_GET_DATA_VALIDATION_HELPER, METHOD_CREATE_EXPLICIT_LIST_CONSTRAINT,
-			METHOD_CREATE_VALIDATION, METHOD_CREATE_EXPORT_TASK, METHOD_GET_TAB_INDEX_BY_TITLE,
-			METHOD_GET_DECLARED_FIELD, METHOD_GET_ABSOLUTE_PATH, METHOD_IS_ASSIGNABLE_FROM, METHOD_GET_ENUM_CONSTANTS,
-			METHOD_LIST_FILES, METHOD_GET_TYPE, METHOD_GET_COLUMN_NAME, METHOD_PUT_ALL_MAP, METHOD_GET_WORK_BOOK,
+			METHOD_SET_TOOL_TIP_TEXT, METHOD_FORMAT, METHOD_CONTAINS_KEY_MAP, METHOD_CONTAINS_KEY_MULTI_MAP,
+			METHOD_VALUE_OF1, METHOD_VALUE_OF2, METHOD_GET_CLASS, METHOD_CREATE_RANGE, METHOD_GET_PROVIDER_NAME,
+			METHOD_GET_PROVIDER_VERSION, METHOD_WRITE_VOICE_TO_FILE, METHOD_GET_MP3_TAG_VALUE_FILE,
+			METHOD_GET_MP3_TAG_VALUE_LIST, METHOD_GET_MP3_TAG_PARIRS_ID3V1, METHOD_GET_METHODS_CLASS,
+			METHOD_COPY_OBJECT_MAP, METHOD_DELETE, METHOD_DELETE_ON_EXIT, METHOD_CONVERT_LANGUAGE_CODE_TO_TEXT,
+			METHOD_IS_SELECTED, METHOD_SET_HIRAGANA_OR_KATAKANA, METHOD_SET_ROMAJI, METHOD_AND, METHOD_OR,
+			METHOD_CLEAR_DEFAULT_TABLE_MODEL, METHOD_CLEAR_STRING_BUILDER, METHOD_EXECUTE, METHOD_PUT_MAP,
+			METHOD_GET_BYTE_CONVERTER, METHOD_CONTAINS_CUSTOM_PROPERTIES, METHOD_CONTAINS_COLLECTION,
+			METHOD_CONTAINS_LOOKUP, METHOD_GET_LPW_STR, METHOD_GET_SHEET_NAME, METHOD_ACCEPT, METHOD_TO_ARRAY,
+			METHOD_TO_LIST, METHOD_GET_ID, METHOD_SET_MAXIMUM, METHOD_GET_CURRENT_SHEET_INDEX,
+			METHOD_GET_DATA_VALIDATION_HELPER, METHOD_CREATE_EXPLICIT_LIST_CONSTRAINT, METHOD_CREATE_VALIDATION,
+			METHOD_CREATE_EXPORT_TASK, METHOD_GET_TAB_INDEX_BY_TITLE, METHOD_GET_DECLARED_FIELD,
+			METHOD_GET_ABSOLUTE_PATH, METHOD_IS_ASSIGNABLE_FROM, METHOD_GET_ENUM_CONSTANTS, METHOD_LIST_FILES,
+			METHOD_GET_TYPE, METHOD_GET_COLUMN_NAME, METHOD_PUT_ALL_MAP, METHOD_GET_WORK_BOOK,
 			METHOD_GET_OLE_ENTRY_NAMES, METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE, METHOD_GET_DOCUMENT_ELEMENT,
 			METHOD_GET_CHILD_NODES, METHOD_GET_NAMED_ITEM, METHOD_GET_TEXT_CONTENT, METHOD_GET_NAME_FILE,
 			METHOD_GET_NAME_CLASS, METHOD_GET_NAME_PACKAGE, METHOD_GET_PASS_WORD, METHOD_GET_SUPPLIER,
@@ -503,7 +504,10 @@ class VoiceManagerTest {
 		//
 		(METHOD_FORMAT = clz.getDeclaredMethod("format", NumberFormat.class, Double.TYPE)).setAccessible(true);
 		//
-		(METHOD_CONTAINS_KEY = clz.getDeclaredMethod("containsKey", Map.class, Object.class)).setAccessible(true);
+		(METHOD_CONTAINS_KEY_MAP = clz.getDeclaredMethod("containsKey", Map.class, Object.class)).setAccessible(true);
+		//
+		(METHOD_CONTAINS_KEY_MULTI_MAP = clz.getDeclaredMethod("containsKey", Multimap.class, Object.class))
+				.setAccessible(true);
 		//
 		(METHOD_VALUE_OF1 = clz.getDeclaredMethod("valueOf", String.class)).setAccessible(true);
 		//
@@ -2776,7 +2780,7 @@ class VoiceManagerTest {
 
 	@Test
 	void testActionPerformed3() throws Throwable {
-
+		//
 		// btnCopyKatakana
 		//
 		final AbstractButton btnCopyKatakana = new JButton();
@@ -2805,6 +2809,18 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
+			// btnConvertToHiragana
+			//
+		final AbstractButton btnConvertToHiragana = new JButton();
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "btnConvertToHiragana", btnConvertToHiragana, true);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnConvertToHiragana, 0, null)));
+		//
 	}
 
 	private static void actionPerformed(final ActionListener instance, final ActionEvent actionEvent) {
@@ -4701,15 +4717,35 @@ class VoiceManagerTest {
 	@Test
 	void testContainsKey() throws Throwable {
 		//
+		// org.springframework.context.support.VoiceManager.containsKey(java.util.Map,java.lang.Object)
+		//
 		Assertions.assertFalse(containsKey(Collections.emptyMap(), null));
 		//
 		Assertions.assertTrue(containsKey(Collections.singletonMap(null, null), null));
+		//
+		// org.springframework.context.support.VoiceManager.containsKey(com.google.common.collect.Multimap,java.lang.Object)
+		//
+		Assertions.assertFalse(containsKey(ImmutableMultimap.of(), null));
+		//
+		Assertions.assertTrue(containsKey(ImmutableMultimap.of(EMPTY, EMPTY), EMPTY));
 		//
 	}
 
 	private static boolean containsKey(final Map<?, ?> instance, final Object key) throws Throwable {
 		try {
-			final Object obj = METHOD_CONTAINS_KEY.invoke(null, instance, key);
+			final Object obj = METHOD_CONTAINS_KEY_MAP.invoke(null, instance, key);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static boolean containsKey(final Multimap<?, ?> instance, final Object key) throws Throwable {
+		try {
+			final Object obj = METHOD_CONTAINS_KEY_MULTI_MAP.invoke(null, instance, key);
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
