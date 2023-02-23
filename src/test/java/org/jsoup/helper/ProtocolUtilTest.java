@@ -93,9 +93,7 @@ class ProtocolUtilTest {
 		//
 		Assertions.assertNull(getAllowProtocols(new Instruction[] { ldc }, null));
 		//
-		final IFNE ifne = new IFNE(null);
-		//
-		Assertions.assertNull(getAllowProtocols(new Instruction[] { ldc, null, ifne }, null));
+		Assertions.assertNull(getAllowProtocols(new Instruction[] { ldc, null, new IFNE(null) }, null));
 		//
 	}
 
