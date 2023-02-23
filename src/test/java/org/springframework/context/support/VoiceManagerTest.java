@@ -72,6 +72,7 @@ import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
@@ -269,11 +270,11 @@ class VoiceManagerTest {
 			METHOD_GET_PROPERTY_CUSTOM_PROPERTIES, METHOD_GET_VALUE, METHOD_GET_SOURCE_VOICE, METHOD_EXPORT,
 			METHOD_MAP_STREAM, METHOD_MAP_INT_STREAM, METHOD_MAP_TO_INT, METHOD_MAP_TO_LONG, METHOD_MAX_STREAM,
 			METHOD_MAX_INT_STREAM, METHOD_OR_ELSE_OPTIONAL, METHOD_OR_ELSE_OPTIONAL_INT, METHOD_FOR_EACH_STREAM,
-			METHOD_FOR_EACH_ITERABLE, METHOD_FOR_EACH_INT_STREAM, METHOD_CREATE_WORK_BOOK_LIST, METHOD_CREATE_VOICE,
-			METHOD_INVOKE, METHOD_ANNOTATION_TYPE, METHOD_FIND_FIRST, METHOD_GET_DECLARED_METHODS, METHOD_FOR_NAME,
-			METHOD_FILTER, METHOD_SET_TEXT, METHOD_GET_PREFERRED_WIDTH, METHOD_IMPORT_VOICE1,
-			METHOD_IMPORT_VOICE_OBJECT_MAP_BI_CONSUMER, METHOD_IMPORT_VOICE_OBJECT_MAP_FILE, METHOD_IMPORT_VOICE5,
-			METHOD_IMPORT_VOICE_BY_SPEECH_API,
+			METHOD_FOR_EACH_ITERABLE, METHOD_FOR_EACH_INT_STREAM, METHOD_CREATE_WORK_BOOK_LIST,
+			METHOD_CREATE_VOICE_OBJECT_MAPPER, METHOD_CREATE_VOICE_OBJECT_MAP, METHOD_INVOKE, METHOD_ANNOTATION_TYPE,
+			METHOD_FIND_FIRST, METHOD_GET_DECLARED_METHODS, METHOD_FOR_NAME, METHOD_FILTER, METHOD_SET_TEXT,
+			METHOD_GET_PREFERRED_WIDTH, METHOD_IMPORT_VOICE1, METHOD_IMPORT_VOICE_OBJECT_MAP_BI_CONSUMER,
+			METHOD_IMPORT_VOICE_OBJECT_MAP_FILE, METHOD_IMPORT_VOICE5, METHOD_IMPORT_VOICE_BY_SPEECH_API,
 			METHOD_IMPORT_VOICE_BY_ONLINE_NHK_JAPANESE_PRONUNCIATIONS_ACCENT_FAILABLE_FUNCTION, METHOD_ADD_COLLECTION,
 			METHOD_ADD_LIST, METHOD_CREATE_IMPORT_FILE_TEMPLATE_BYTE_ARRAY, METHOD_ANY_MATCH, METHOD_COLLECT,
 			METHOD_NAME, METHOD_GET_SELECTED_ITEM, METHOD_MATCHER, METHOD_SET_VALUE_J_PROGRESS_BAR,
@@ -426,8 +427,11 @@ class VoiceManagerTest {
 				CLASS_BOOLEAN_MAP = Class.forName("org.springframework.context.support.VoiceManager$BooleanMap"),
 				FailableSupplier.class)).setAccessible(true);
 		//
-		(METHOD_CREATE_VOICE = clz.getDeclaredMethod("createVoice", ObjectMapper.class, VoiceManager.class))
-				.setAccessible(true);
+		(METHOD_CREATE_VOICE_OBJECT_MAPPER = clz.getDeclaredMethod("createVoice", ObjectMapper.class,
+				VoiceManager.class)).setAccessible(true);
+		//
+		(METHOD_CREATE_VOICE_OBJECT_MAP = clz.getDeclaredMethod("createVoice", CLASS_OBJECT_MAP, Boolean.TYPE,
+				AtomicReference.class)).setAccessible(true);
 		//
 		(METHOD_INVOKE = clz.getDeclaredMethod("invoke", Method.class, Object.class, Object[].class))
 				.setAccessible(true);
@@ -3886,11 +3890,80 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNotNull(createVoice(null, instance));
 		//
+		// org.springframework.context.support.VoiceManager.ObjectMap
+		//
+		final Object objectMap = Reflection.newProxy(CLASS_OBJECT_MAP, createVoiceManagerIH());
+		//
+		final Class<?> clz = getClass(objectMap);
+		//
+		// org.springframework.context.support.VoiceManager$ObjectMap.setObject(java.lang.Class,java.lang.Object)
+		//
+		final Method setObject = clz != null ? clz.getDeclaredMethod("setObject", Class.class, Object.class) : null;
+		//
+		if (setObject != null) {
+			//
+			setObject.setAccessible(true);
+			//
+		} // if
+			//
+		invoke(setObject, objectMap, Row.class, Reflection.newProxy(Row.class, ih));
+		//
+		Assertions.assertNull(createVoice(objectMap, true, null));
+		//
+		final List<Cell> cells = Arrays.asList(null, Reflection.newProxy(Cell.class, ih));
+		//
+		if (ih != null) {
+			//
+			ih.cells = iterator(cells);
+			//
+			ih.columnIndex = Integer.valueOf(ZERO);
+			//
+		} // if
+			//
+		Assertions.assertNull(createVoice(objectMap, true, null));
+		//
+		final AtomicReference<?> arintMap = new AtomicReference<>();
+
+		if (ih != null) {
+			//
+			ih.cells = iterator(cells);
+			//
+		} // if
+			//
+		Assertions.assertNull(createVoice(objectMap, true, arintMap));
+		//
+		if (ih != null) {
+			//
+			ih.cells = iterator(cells);
+			//
+		} // if
+			//
+		Assertions.assertNull(createVoice(objectMap, false, arintMap));
+		//
+	}
+
+	private static <E> Iterator<E> iterator(final Iterable<E> instance) {
+		return instance != null ? instance.iterator() : null;
 	}
 
 	private static Voice createVoice(final ObjectMapper objectMapper, final VoiceManager instance) throws Throwable {
 		try {
-			final Object obj = METHOD_CREATE_VOICE.invoke(null, objectMapper, instance);
+			final Object obj = METHOD_CREATE_VOICE_OBJECT_MAPPER.invoke(null, objectMapper, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Voice) {
+				return (Voice) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static Voice createVoice(final Object objectMap, final boolean first, final AtomicReference<?> arintMap)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_VOICE_OBJECT_MAP.invoke(null, objectMap, first, arintMap);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Voice) {
@@ -8174,7 +8247,7 @@ class VoiceManagerTest {
 		//
 		if (ih != null) {
 			//
-			ih.iterator = Collections.singleton(null).iterator();
+			ih.iterator = iterator(Collections.singleton(null));
 			//
 		} // if
 			//
@@ -8186,7 +8259,7 @@ class VoiceManagerTest {
 		//
 		if (ih != null) {
 			//
-			ih.iterator = Collections.singleton(voice).iterator();
+			ih.iterator = iterator(Collections.singleton(voice));
 			//
 		} // if
 			//
@@ -8196,7 +8269,7 @@ class VoiceManagerTest {
 		//
 		if (ih != null) {
 			//
-			ih.iterator = Collections.singleton(voice).iterator();
+			ih.iterator = iterator(Collections.singleton(voice));
 			//
 		} // if
 			//

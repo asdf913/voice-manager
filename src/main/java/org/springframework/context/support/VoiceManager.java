@@ -97,6 +97,7 @@ import java.util.Spliterator;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
@@ -8998,8 +8999,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final File folder = getParentFile(ObjectMap.getObject(_objectMap, File.class));
 		//
-		IntMap<Field> intMap = null;
-		//
 		ExecutorService es = null;
 		//
 		try {
@@ -9012,13 +9011,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			boolean first = true;
 			//
-			Field[] fs = null;
-			//
 			Voice voice = null;
-			//
-			Field f = null;
-			//
-			int columnIndex;
 			//
 			ImportTask it = null;
 			//
@@ -9050,66 +9043,34 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			FormulaEvaluator formulaEvaluator = null;
 			//
-			IValue0<?> value = null;
+			AtomicReference<IntMap<Field>> arIntMap = null;
+			//
+			IH ih = null;
 			//
 			for (final Row row : sheet) {
 				//
 				if (iterator(row) == null) {
+					//
 					continue;
+					//
 				} // if
 					//
-				voice = null;
-				//
 				final ObjectMap objectMap = ObjectUtils.defaultIfNull(copyObjectMap(_objectMap), _objectMap);
 				//
-				IH ih = null;
+				ObjectMap.setObject(objectMap, Row.class, row);
 				//
-				for (final Cell cell : row) {
-					//
-					if (cell == null) {
+				ObjectMap.setObject(objectMap, ObjectMapper.class,
+						objectMapper = getIfNull(objectMapper, ObjectMapper::new));
+				//
+				ObjectMap.setObject(objectMap, FormulaEvaluator.class, formulaEvaluator = getIfNull(formulaEvaluator,
+						() -> CreationHelperUtil.createFormulaEvaluator(WorkbookUtil.getCreationHelper(workbook))));
+				//
+				setHiraganaOrKatakanaAndRomaji(hiraganaKatakanaConversion, hiraganaRomajiConversion,
 						//
-						continue;
+						voice = createVoice(objectMap, first,
+								arIntMap = ObjectUtils.getIfNull(arIntMap, AtomicReference::new))
 						//
-					} // if
-						//
-					if (first) {
-						//
-						IntMap.setObject(intMap = getIfNull(intMap, () -> Reflection.newProxy(IntMap.class, new IH())),
-								cell.getColumnIndex(),
-								orElse(findFirst(testAndApply(Objects::nonNull,
-										fs = getIfNull(fs, () -> FieldUtils.getAllFields(Voice.class)), Arrays::stream,
-										null)
-										.filter(field -> Objects.equals(getName(field), cell.getStringCellValue()))),
-										null));
-						//
-					} else if (IntMap.containsKey(intMap, columnIndex = cell.getColumnIndex())
-							&& (f = IntMap.getObject(intMap, columnIndex)) != null) {
-						//
-						f.setAccessible(true);
-						//
-						ObjectMap.setObject(objectMap, Field.class, f);
-						//
-						ObjectMap.setObject(objectMap, Cell.class, cell);
-						//
-						ObjectMap.setObject(objectMap, ObjectMapper.class,
-								objectMapper = getIfNull(objectMapper, ObjectMapper::new));
-						//
-						ObjectMap.setObject(objectMap, FormulaEvaluator.class,
-								formulaEvaluator = getIfNull(formulaEvaluator, () -> CreationHelperUtil
-										.createFormulaEvaluator(WorkbookUtil.getCreationHelper(workbook))));
-						//
-						ifElse((value = getValueFromCell(objectMap)) == null, () -> {
-							throw new IllegalStateException();
-						}, null);
-						//
-						f.set(voice = getIfNull(voice, Voice::new), IValue0Util.getValue0(value));
-						//
-					} // if
-						//
-				} // for
-					//
-				setHiraganaOrKatakanaAndRomaji(hiraganaKatakanaConversion, hiraganaRomajiConversion, voice,
-						jakaroma = ObjectUtils.getIfNull(jakaroma,
+						, jakaroma = ObjectUtils.getIfNull(jakaroma,
 								() -> ObjectMap.getObject(objectMap, Jakaroma.class)));
 				//
 				if (first) {
@@ -9178,6 +9139,72 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // try
 			//
+	}
+
+	private static Voice createVoice(final ObjectMap objectMap, final boolean first,
+			final AtomicReference<IntMap<Field>> arintMap) throws IllegalAccessException {
+		//
+		Voice voice = null;
+		//
+		final Row row = ObjectMap.getObject(objectMap, Row.class);
+		//
+		if (row != null && iterator(row) != null) {
+			//
+			IntMap<Field> intMap = arintMap != null ? arintMap.get() : null;
+			//
+			int columnIndex = 0;
+			//
+			Field f = null;
+			//
+			IValue0<?> value = null;
+			//
+			for (final Cell cell : row) {
+				//
+				if (cell == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if (first) {
+					//
+					IntMap.setObject(
+							intMap = ObjectUtils.getIfNull(intMap, () -> Reflection.newProxy(IntMap.class, new IH())),
+							cell.getColumnIndex(),
+							orElse(findFirst(testAndApply(Objects::nonNull, FieldUtils.getAllFields(Voice.class),
+									Arrays::stream, null)
+									.filter(field -> Objects.equals(getName(field), cell.getStringCellValue()))),
+									null));
+					//
+					if (arintMap != null) {
+						//
+						arintMap.set(intMap);
+						//
+					} // if
+						//
+				} else if (IntMap.containsKey(intMap, columnIndex = cell.getColumnIndex())
+						&& (f = IntMap.getObject(intMap, columnIndex)) != null) {
+					//
+					f.setAccessible(true);
+					//
+					ObjectMap.setObject(objectMap, Field.class, f);
+					//
+					ObjectMap.setObject(objectMap, Cell.class, cell);
+					//
+					ifElse((value = getValueFromCell(objectMap)) == null, () -> {
+						throw new IllegalStateException();
+					}, null);
+					//
+					f.set(voice = getIfNull(voice, Voice::new), IValue0Util.getValue0(value));
+					//
+				} // if
+					//
+			} // for
+				//
+		} // if
+			//
+		return voice;
+		//
 	}
 
 	private static void importVoice(final ObjectMap objectMap, final File folder, final String voiceId)
