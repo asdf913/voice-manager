@@ -281,4 +281,8 @@ public class Voice {
 		return tts;
 	}
 
+	public void setTts(final Boolean tts) {
+		this.tts = tts;
+	}
+
 }

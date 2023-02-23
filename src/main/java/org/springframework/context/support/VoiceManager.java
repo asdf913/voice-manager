@@ -9310,13 +9310,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
+		final Voice voice = it.voice;
+		//
 		if ((it.file = createTempFile(randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH), filePath)) != null) {
 			//
 			ObjectMap.setObject(objectMap, File.class, it.file);
 			//
 			final VoiceManager vm = ObjectMap.getObject(objectMap, VoiceManager.class);
 			//
-			writeVoiceToFile(objectMap, getText(it.voice),
+			writeVoiceToFile(objectMap, getText(voice),
 					//
 					// voiceId
 					//
@@ -9342,13 +9344,19 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
-		setSource(it.voice, StringUtils.defaultIfBlank(getSource(it.voice),
+		if (voice != null) {
+			//
+			voice.setTts(Boolean.TRUE);
+			//
+		} // if
+			//
+		setSource(voice, StringUtils.defaultIfBlank(getSource(voice),
 				getProviderName(ObjectMap.getObject(objectMap, Provider.class))));
 		//
 		try {
 			//
-			setLanguage(it.voice,
-					StringUtils.defaultIfBlank(getLanguage(it.voice), convertLanguageCodeToText(
+			setLanguage(voice,
+					StringUtils.defaultIfBlank(getLanguage(voice), convertLanguageCodeToText(
 							getVoiceAttribute(ObjectMap.getObject(objectMap, SpeechApi.class), voiceId, LANGUAGE),
 							16)));
 			//

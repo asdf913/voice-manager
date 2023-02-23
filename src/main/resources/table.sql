@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS voice(
 	,jou_you_kanji           BOOLEAN
 	,ga_ku_nen_be_tsu_kan_ji TEXT
 	,pronunciation_page_url  TEXT
+	,tts                     BOOLEAN
 	,create_ts			     TIMESTAMP WITH TIME ZONE
 	,update_ts			     TIMESTAMP WITH TIME ZONE
 );
