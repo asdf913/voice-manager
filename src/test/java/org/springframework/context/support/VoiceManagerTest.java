@@ -9529,20 +9529,6 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(invoke(putTemplate, null, new StringTemplateLoader(), EMPTY, EMPTY));
 		//
-		// org.springframework.context.support.VoiceManager$ExportTask.describe(java.lang.Object)
-		//
-		final Method describe = CLASS_EXPORT_TASK != null
-				? CLASS_EXPORT_TASK.getDeclaredMethod("describe", Object.class)
-				: null;
-		//
-		if (describe != null) {
-			//
-			describe.setAccessible(true);
-			//
-		} // if
-			//
-		Assertions.assertNull(invoke(describe, null, (Object) null));
-		//
 		// org.springframework.context.support.VoiceManager$ExportTask.clone(com.fasterxml.jackson.databind.ObjectMapper,java.lang.Class,java.lang.Object)
 		//
 		final Method clone = CLASS_EXPORT_TASK != null
@@ -9779,6 +9765,25 @@ class VoiceManagerTest {
 		//
 		Assertions.assertEquals(String.format("%1$s (%2$s)", text, String.join(" ", hiragana, romaji)),
 				invoke(getSlideName, null, voice));
+		//
+	}
+
+	@Test
+	void testExportTask3() throws Throwable {
+		//
+		// org.springframework.context.support.VoiceManager$ExportTask.describe(java.lang.Object)
+		//
+		final Method describe = CLASS_EXPORT_TASK != null
+				? CLASS_EXPORT_TASK.getDeclaredMethod("describe", Object.class)
+				: null;
+		//
+		if (describe != null) {
+			//
+			describe.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertNull(invoke(describe, null, (Object) null));
 		//
 	}
 
