@@ -9176,12 +9176,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 									.filter(field -> Objects.equals(getName(field), cell.getStringCellValue()))),
 									null));
 					//
-					if (arintMap != null) {
-						//
-						arintMap.set(intMap);
-						//
-					} // if
-						//
+					set(arintMap, intMap);
+					//
 				} else if (IntMap.containsKey(intMap, columnIndex = cell.getColumnIndex())
 						&& (f = IntMap.getObject(intMap, columnIndex)) != null) {
 					//
@@ -9209,6 +9205,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static <V> V get(final AtomicReference<V> instance) {
 		return instance != null ? instance.get() : null;
+	}
+
+	private static <V> void set(final AtomicReference<V> instance, final V value) {
+		if (instance != null) {
+			instance.set(value);
+		}
 	}
 
 	private static void importVoice(final ObjectMap objectMap, final File folder, final String voiceId)
