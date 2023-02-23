@@ -1,6 +1,10 @@
 package org.springframework.beans.factory;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.net.URL;
+import java.util.Objects;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -10,28 +14,87 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.jsoup.Jsoup;
 import org.jsoup.helper.ProtocolUtil;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
 import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceUtil;
 
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
+import com.j256.simplemagic.ContentInfo;
+import com.j256.simplemagic.ContentInfoUtil;
 
 public class YojijukugoMultimapFactoryBean implements FactoryBean<Multimap<String, String>> {
 
 	private String url = null;
 
+	private Resource resource = null;
+
 	public void setUrl(final String url) {
 		this.url = url;
+	}
+
+	public void setResource(final Resource resource) {
+		this.resource = resource;
 	}
 
 	@Override
 	public Multimap<String, String> getObject() throws Exception {
 		//
+		if (ResourceUtil.exists(resource)) {
+			//
+			final byte[] bs = resource != null ? resource.getContentAsByteArray() : null;
+			//
+			final ContentInfo ci = testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch, null);
+			//
+			if (Objects.equals("application/vnd.openxmlformats-officedocument", ci != null ? ci.getMimeType() : null)) {
+				//
+				try (final InputStream is = new ByteArrayInputStream(bs);
+						final Workbook wb = WorkbookFactory.create(is)) {
+					//
+					final Sheet sheet = wb != null && wb.getNumberOfSheets() == 1 ? wb.getSheetAt(0) : null;
+					//
+					final AtomicBoolean first = new AtomicBoolean(true);
+					//
+					if (sheet != null && sheet.iterator() != null) {
+						//
+						Multimap<String, String> multimap = null;
+						//
+						for (final Row row : sheet) {
+							//
+							if (row == null || row.getPhysicalNumberOfCells() < 2 || first == null
+									|| first.getAndSet(false)) {
+								//
+								continue;
+								//
+							} // if
+								//
+							MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedListMultimap::create),
+									toString(row.getCell(0)), toString(row.getCell(1)));
+							//
+						} // if
+							//
+						return multimap;
+						//
+					} // if
+						//
+					return null;
+					//
+				} // try
+					//
+			} // if
+				//
+		} // if
+			//
 		final String[] allowProtocols = ProtocolUtil.getAllowProtocols();
 		//
 		final Elements tables = ElementUtil.getElementsByTag(
@@ -88,6 +151,10 @@ public class YojijukugoMultimapFactoryBean implements FactoryBean<Multimap<Strin
 			//
 		return multimap;
 		//
+	}
+
+	private static String toString(final Object instance) {
+		return instance != null ? instance.toString() : null;
 	}
 
 	private static String getProtocol(final URL instance) {
