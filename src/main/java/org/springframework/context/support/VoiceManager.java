@@ -9141,42 +9141,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 						if ((it.voice = voice) != null) {
 							//
-							final VoiceManager vm = voiceManager = getIfNull(voiceManager,
-									() -> ObjectMap.getObject(objectMap, VoiceManager.class));
+							ObjectMap.setObject(objectMap, ImportTask.class, it);
 							//
-							if (StringUtils.isNotBlank(filePath = getFilePath(voice))) {
-								//
-								if (!(it.file = new File(filePath)).exists()) {
-									//
-									it.file = new File(folder, filePath);
-									//
-								} // if
-									//
-								setSource(it.voice,
-										StringUtils.defaultIfBlank(getSource(voice),
-												getMp3TagValue(it.file, x -> StringUtils.isNotBlank(toString(x)),
-														mp3Tags = getIfNull(mp3Tags, () -> getMp3Tags(vm)))));
-								//
-							} else {
-								//
-								if (Objects.equals(Boolean.FALSE, voice.getTts())) {
-									//
-									importVoiceByOnlineNHKJapanesePronunciationsAccentFailableFunction(objectMap,
-											filePath);
-									//
-								} // if
-									//
-								if (it.file == null && isInstalled(speechApi = getIfNull(speechApi,
-										() -> ObjectMap.getObject(objectMap, SpeechApi.class)))) {
-									//
-									ObjectMap.setObject(objectMap, ImportTask.class, it);
-									//
-									importVoiceBySpeechApi(objectMap, filePath, voiceId);
-									//
-								} // if
-									//
-							} // if
-								//
+							importVoice(objectMap, folder, voiceId);
+							//
 						} // if
 							//
 						it.objectMap = ObjectUtils.defaultIfNull(copyObjectMap(objectMap), objectMap);
@@ -9217,6 +9185,48 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			shutdown(es);
 			//
 		} // try
+			//
+	}
+
+	private static void importVoice(final ObjectMap objectMap, final File folder, final String voiceId)
+			throws IllegalAccessException, InvocationTargetException, BaseException, IOException {
+		//
+		final VoiceManager vm = ObjectMap.getObject(objectMap, VoiceManager.class);
+		//
+		final ImportTask it = ObjectMap.getObject(objectMap, ImportTask.class);
+		//
+		final Voice voice = it != null ? it.voice : null;
+		//
+		final String filePath = getFilePath(voice);
+		//
+		if (StringUtils.isNotBlank(filePath)) {
+			//
+			if (!(it.file = new File(filePath)).exists() && !(it.file = new File(folder, filePath)).exists()) {
+				//
+				it.file = null;
+				//
+			} // if
+				//
+			setSource(it.voice, StringUtils.defaultIfBlank(getSource(voice),
+					getMp3TagValue(it.file, x -> StringUtils.isNotBlank(toString(x)), getMp3Tags(vm))));
+			//
+		} else {
+			//
+			if (Objects.equals(Boolean.FALSE, voice != null ? voice.getTts() : null)) {
+				//
+				importVoiceByOnlineNHKJapanesePronunciationsAccentFailableFunction(objectMap, filePath);
+				//
+			} // if
+				//
+			if ((it == null || it.file == null) && isInstalled(ObjectMap.getObject(objectMap, SpeechApi.class))) {
+				//
+				ObjectMap.setObject(objectMap, ImportTask.class, it);
+				//
+				importVoiceBySpeechApi(objectMap, filePath, voiceId);
+				//
+			} // if
+				//
+		} // if
 			//
 	}
 

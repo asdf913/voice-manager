@@ -266,13 +266,14 @@ class VoiceManagerTest {
 			METHOD_GET_FILE_EXTENSION_FILE_FORMAT, METHOD_GET_FILE_EXTENSION_FAILABLE_SUPPLIER, METHOD_DIGEST,
 			METHOD_GET_MAPPER, METHOD_INSERT_OR_UPDATE, METHOD_SET_ENABLED_2, METHOD_SET_ENABLED_3,
 			METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_CAST, METHOD_INT_VALUE, METHOD_LONG_VALUE,
-			METHOD_GET_PROPERTY_CUSTOM_PROPERTIES, METHOD_PARSE_EXPRESSION, METHOD_GET_VALUE, METHOD_GET_SOURCE_VOICE,
-			METHOD_EXPORT, METHOD_MAP_STREAM, METHOD_MAP_INT_STREAM, METHOD_MAP_TO_INT, METHOD_MAP_TO_LONG,
-			METHOD_MAX_STREAM, METHOD_MAX_INT_STREAM, METHOD_OR_ELSE_OPTIONAL, METHOD_OR_ELSE_OPTIONAL_INT,
-			METHOD_FOR_EACH_STREAM, METHOD_FOR_EACH_ITERABLE, METHOD_FOR_EACH_INT_STREAM, METHOD_CREATE_WORK_BOOK_LIST,
-			METHOD_CREATE_VOICE, METHOD_INVOKE, METHOD_ANNOTATION_TYPE, METHOD_FIND_FIRST, METHOD_GET_DECLARED_METHODS,
-			METHOD_FOR_NAME, METHOD_FILTER, METHOD_SET_TEXT, METHOD_GET_PREFERRED_WIDTH, METHOD_IMPORT_VOICE1,
-			METHOD_IMPORT_VOICE3, METHOD_IMPORT_VOICE5, METHOD_IMPORT_VOICE_BY_SPEECH_API,
+			METHOD_GET_PROPERTY_CUSTOM_PROPERTIES, METHOD_GET_VALUE, METHOD_GET_SOURCE_VOICE, METHOD_EXPORT,
+			METHOD_MAP_STREAM, METHOD_MAP_INT_STREAM, METHOD_MAP_TO_INT, METHOD_MAP_TO_LONG, METHOD_MAX_STREAM,
+			METHOD_MAX_INT_STREAM, METHOD_OR_ELSE_OPTIONAL, METHOD_OR_ELSE_OPTIONAL_INT, METHOD_FOR_EACH_STREAM,
+			METHOD_FOR_EACH_ITERABLE, METHOD_FOR_EACH_INT_STREAM, METHOD_CREATE_WORK_BOOK_LIST, METHOD_CREATE_VOICE,
+			METHOD_INVOKE, METHOD_ANNOTATION_TYPE, METHOD_FIND_FIRST, METHOD_GET_DECLARED_METHODS, METHOD_FOR_NAME,
+			METHOD_FILTER, METHOD_SET_TEXT, METHOD_GET_PREFERRED_WIDTH, METHOD_IMPORT_VOICE1,
+			METHOD_IMPORT_VOICE_OBJECT_MAP_BI_CONSUMER, METHOD_IMPORT_VOICE_OBJECT_MAP_FILE, METHOD_IMPORT_VOICE5,
+			METHOD_IMPORT_VOICE_BY_SPEECH_API,
 			METHOD_IMPORT_VOICE_BY_ONLINE_NHK_JAPANESE_PRONUNCIATIONS_ACCENT_FAILABLE_FUNCTION, METHOD_ADD_COLLECTION,
 			METHOD_ADD_LIST, METHOD_CREATE_IMPORT_FILE_TEMPLATE_BYTE_ARRAY, METHOD_ANY_MATCH, METHOD_COLLECT,
 			METHOD_NAME, METHOD_GET_SELECTED_ITEM, METHOD_MATCHER, METHOD_SET_VALUE_J_PROGRESS_BAR,
@@ -447,8 +448,11 @@ class VoiceManagerTest {
 		//
 		(METHOD_IMPORT_VOICE1 = clz.getDeclaredMethod("importVoice", File.class)).setAccessible(true);
 		//
-		(METHOD_IMPORT_VOICE3 = clz.getDeclaredMethod("importVoice", CLASS_OBJECT_MAP, BiConsumer.class,
-				BiConsumer.class)).setAccessible(true);
+		(METHOD_IMPORT_VOICE_OBJECT_MAP_BI_CONSUMER = clz.getDeclaredMethod("importVoice", CLASS_OBJECT_MAP,
+				BiConsumer.class, BiConsumer.class)).setAccessible(true);
+		//
+		(METHOD_IMPORT_VOICE_OBJECT_MAP_FILE = clz.getDeclaredMethod("importVoice", CLASS_OBJECT_MAP, File.class,
+				String.class)).setAccessible(true);
 		//
 		(METHOD_IMPORT_VOICE5 = clz.getDeclaredMethod("importVoice", Sheet.class, CLASS_OBJECT_MAP, String.class,
 				BiConsumer.class, BiConsumer.class, Consumer.class, Collection.class)).setAccessible(true);
@@ -1583,6 +1587,8 @@ class VoiceManagerTest {
 
 	private Collection<?> collection = null;
 
+	private OnlineNHKJapanesePronunciationsAccentFailableFunction onlineNHKJapanesePronunciationsAccentFailableFunction = null;
+
 	@BeforeEach
 	void beforeEach() throws Throwable {
 		//
@@ -1636,6 +1642,9 @@ class VoiceManagerTest {
 		document = Reflection.newProxy(javax.swing.text.Document.class, ih);
 		//
 		collection = Reflection.newProxy(Collection.class, ih);
+		//
+		onlineNHKJapanesePronunciationsAccentFailableFunction = Reflection
+				.newProxy(OnlineNHKJapanesePronunciationsAccentFailableFunction.class, ih);
 		//
 	}
 
@@ -4065,7 +4074,9 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> importVoice(null));
 		//
-		Assertions.assertDoesNotThrow(() -> importVoice(null, null, null));
+		Assertions.assertDoesNotThrow(() -> importVoice(null, (BiConsumer) null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> importVoice(null, (File) null, null));
 		//
 		Assertions.assertDoesNotThrow(() -> importVoice(null, null, null, null, null, null, null));
 		//
@@ -4081,7 +4092,7 @@ class VoiceManagerTest {
 		//
 		final Object objectMap = Reflection.newProxy(CLASS_OBJECT_MAP, ih);
 		//
-		Assertions.assertThrows(IllegalStateException.class, () -> importVoice(objectMap, null, null));
+		Assertions.assertThrows(IllegalStateException.class, () -> importVoice(objectMap, (BiConsumer) null, null));
 		//
 		final Map<?, ?> objects = cast(Map.class, FieldUtils.readDeclaredField(ih, "objects", true));
 		//
@@ -4089,11 +4100,11 @@ class VoiceManagerTest {
 		//
 		put(((Map) objects), Voice.class, null);
 		//
-		Assertions.assertDoesNotThrow(() -> importVoice(objectMap, null, null));
+		Assertions.assertDoesNotThrow(() -> importVoice(objectMap, (BiConsumer) null, null));
 		//
 		put(((Map) objects), File.class, new File("NON_EXISTS"));
 		//
-		Assertions.assertDoesNotThrow(() -> importVoice(objectMap, null, null));
+		Assertions.assertDoesNotThrow(() -> importVoice(objectMap, (BiConsumer) null, null));
 		//
 		put(((Map) objects), File.class, new File("pom.xml"));
 		//
@@ -4110,7 +4121,7 @@ class VoiceManagerTest {
 			//
 		put(((Map) objects), File.class, file);
 		//
-		Assertions.assertDoesNotThrow(() -> importVoice(objectMap, null, null));
+		Assertions.assertDoesNotThrow(() -> importVoice(objectMap, (BiConsumer) null, null));
 		//
 		Assertions.assertDoesNotThrow(() -> importVoice(sheet, null, null, null, null, null, null));
 		//
@@ -4128,120 +4139,9 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> importVoice(sheet, null, null, null, null, null, null));
 		//
-	}
-
-	private void importVoice(final File file) throws Throwable {
-		try {
-			METHOD_IMPORT_VOICE1.invoke(instance, file);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	private static void importVoice(final Object objectMap, final BiConsumer<Voice, String> errorMessageConsumer,
-			final BiConsumer<Voice, Throwable> throwableConsumer) throws Throwable {
-		try {
-			METHOD_IMPORT_VOICE3.invoke(null, objectMap, errorMessageConsumer, throwableConsumer);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	private static void importVoice(final Sheet sheet, final Object _objectMap, final String voiceId,
-			final BiConsumer<Voice, String> errorMessageConsumer, final BiConsumer<Voice, Throwable> throwableConsumer,
-			final Consumer<Voice> voiceConsumer, final Collection<Object> throwableStackTraceHexs) throws Throwable {
-		try {
-			METHOD_IMPORT_VOICE5.invoke(null, sheet, _objectMap, voiceId, errorMessageConsumer, throwableConsumer,
-					voiceConsumer, throwableStackTraceHexs);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testImportVoiceBySpeechApi() throws Throwable {
+		// org.springframework.context.support.VoiceManager$importVoice(org.springframework.context.support.VoiceManager$ObjectMap,java.io.File,java.lang.String)
 		//
-		Assertions.assertDoesNotThrow(() -> importVoiceBySpeechApi(null, null, null));
-		//
-		// org.springframework.context.support.VoiceManager$ObjectMap
-		//
-		final Object objectMap = Reflection.newProxy(CLASS_OBJECT_MAP, createVoiceManagerIH());
-		//
-		Assertions.assertThrows(IllegalStateException.class, () -> importVoiceBySpeechApi(objectMap, null, null));
-		//
-		final Class<?> clz = getClass(objectMap);
-		//
-		// org.springframework.context.support.VoiceManager$ObjectMap.setObject(java.lang.Class,java.lang.Object)
-		//
-		final Method setObject = clz != null ? clz.getDeclaredMethod("setObject", Class.class, Object.class) : null;
-		//
-		if (setObject != null) {
-			//
-			setObject.setAccessible(true);
-			//
-		} // if
-			//
-			// org.springframework.context.support.VoiceManager$ImportTask
-			//
-		invoke(setObject, objectMap, CLASS_IMPORT_TASK, Narcissus.allocateInstance(CLASS_IMPORT_TASK));
-		//
-		Assertions.assertThrows(IllegalStateException.class, () -> importVoiceBySpeechApi(objectMap, null, null));
-		//
-		// org.springframework.context.support.VoiceManager
-		//
-		invoke(setObject, objectMap, VoiceManager.class, null);
-		//
-		Assertions.assertThrows(IllegalStateException.class, () -> importVoiceBySpeechApi(objectMap, null, null));
-		//
-		invoke(setObject, objectMap, VoiceManager.class, instance);
-		//
-		Assertions.assertThrows(IllegalStateException.class, () -> importVoiceBySpeechApi(objectMap, null, null));
-		//
-		// org.springframework.context.support.SpeechApi
-		//
-		invoke(setObject, objectMap, SpeechApi.class, speechApi);
-		//
-		Assertions.assertThrows(IllegalStateException.class, () -> importVoiceBySpeechApi(objectMap, null, null));
-		//
-		// org.springframework.context.support.VoiceManager$ByteConverter
-		//
-		invoke(setObject, objectMap, CLASS_BYTE_CONVERTER, null);
-		//
-		Assertions.assertThrows(IllegalStateException.class, () -> importVoiceBySpeechApi(objectMap, null, null));
-		//
-		invoke(setObject, objectMap, CLASS_BYTE_CONVERTER, Reflection.newProxy(CLASS_BYTE_CONVERTER, ih));
-		//
-		Assertions.assertThrows(IllegalStateException.class, () -> importVoiceBySpeechApi(objectMap, null, null));
-		//
-		// org.springframework.context.support.Provider
-		//
-		invoke(setObject, objectMap, Provider.class, Reflection.newProxy(Provider.class, ih));
-		//
-		Assertions.assertDoesNotThrow(() -> importVoiceBySpeechApi(objectMap, null, null));
-		//
-	}
-
-	private static void importVoiceBySpeechApi(final Object objectMap, final String filePath, final String voiceId)
-			throws Throwable {
-		try {
-			METHOD_IMPORT_VOICE_BY_SPEECH_API.invoke(null, objectMap, filePath, voiceId);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testImportVoiceByOnlineNHKJapanesePronunciationsAccentFailableFunction() throws Throwable {
-		//
-		Assertions.assertDoesNotThrow(
-				() -> importVoiceByOnlineNHKJapanesePronunciationsAccentFailableFunction(null, null));
-		//
-		// org.springframework.context.support.VoiceManager$ObjectMap
-		//
-		final Object objectMap = Reflection.newProxy(CLASS_OBJECT_MAP, createVoiceManagerIH());
-		//
-		Assertions.assertThrows(IllegalStateException.class,
-				() -> importVoiceByOnlineNHKJapanesePronunciationsAccentFailableFunction(objectMap, null));
+		Assertions.assertThrows(IllegalStateException.class, () -> importVoice(objectMap, (File) null, null));
 		//
 		final Class<?> clz = getClass(objectMap);
 		//
@@ -4259,62 +4159,202 @@ class VoiceManagerTest {
 			//
 		invoke(setObject, objectMap, VoiceManager.class, null);
 		//
-		Assertions.assertThrows(IllegalStateException.class,
-				() -> importVoiceByOnlineNHKJapanesePronunciationsAccentFailableFunction(objectMap, null));
+		Assertions.assertThrows(IllegalStateException.class, () -> importVoice(objectMap, (File) null, null));
 		//
-		// org.springframework.context.support.VoiceManager$ImportTask
+		// org.springframework.context.support.VoiceManager$ImortTask
 		//
-		invoke(setObject, objectMap, CLASS_IMPORT_TASK, Narcissus.allocateInstance(CLASS_IMPORT_TASK));
+		invoke(setObject, objectMap, CLASS_IMPORT_TASK, null);
 		//
-		Assertions.assertDoesNotThrow(
-				() -> importVoiceByOnlineNHKJapanesePronunciationsAccentFailableFunction(objectMap, null));
+		Assertions.assertThrows(IllegalStateException.class, () -> importVoice(objectMap, (File) null, null));
 		//
-		// org.springframework.context.support.VoiceManager
+		// org.springframework.context.support.SpeechApi
+		//
+		invoke(setObject, objectMap, SpeechApi.class, null);
+		//
+		Assertions.assertDoesNotThrow(() -> importVoice(objectMap, (File) null, null));// TODO
+		//
+		// org.springframework.context.support.VoiceManager$ImortTask
+		//
+		final Object importTask = Narcissus.allocateInstance(CLASS_IMPORT_TASK);
+		//
+		invoke(setObject, objectMap, CLASS_IMPORT_TASK, importTask);
+		//
+		Assertions.assertDoesNotThrow(() -> importVoice(objectMap, (File) null, null));
+		//
+		// org.springframework.context.support.VoiceManager$ImortTask.voice
+		//
+		final Voice voice = new Voice();
+		//
+		if (importTask != null) {
+			//
+			FieldUtils.writeDeclaredField(importTask, "voice", voice, true);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> importVoice(objectMap, (File) null, null));
+		//
+		// org.springframework.context.support.SpeechApi
+		//
+		invoke(setObject, objectMap, SpeechApi.class, speechApi);
+		//
+		if (this.ih != null) {
+			//
+			this.ih.isInstalled = Boolean.FALSE;
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> importVoice(objectMap, (File) null, null));
+		//
+		if (this.ih != null) {
+			//
+			this.ih.isInstalled = Boolean.TRUE;
+			//
+		} // if
+			//
+			// org.springframework.context.support.VoiceManager$ByteConverter
+			//
+		invoke(setObject, objectMap, CLASS_BYTE_CONVERTER, Reflection.newProxy(CLASS_BYTE_CONVERTER, this.ih));
+		//
+		// org.springframework.context.support.Provider
+		//
+		invoke(setObject, objectMap, Provider.class, Reflection.newProxy(Provider.class, this.ih));
+		//
+		Assertions.assertDoesNotThrow(() -> importVoice(objectMap, (File) null, null));
+		//
+		// domain.Voice.tts
+		//
+		FieldUtils.writeDeclaredField(voice, "tts", Boolean.FALSE, true);
+		//
+		Assertions.assertDoesNotThrow(() -> importVoice(objectMap, (File) null, null));
+		//
+		// org.springframework.context.support.VoiceManager.onlineNHKJapanesePronunciationsAccentFailableFunction
 		//
 		if (instance != null) {
 			//
 			instance.setOnlineNHKJapanesePronunciationsAccentFailableFunction(
-					Reflection.newProxy(OnlineNHKJapanesePronunciationsAccentFailableFunction.class, ih));
+					onlineNHKJapanesePronunciationsAccentFailableFunction);
 			//
 		} // if
 			//
 		invoke(setObject, objectMap, VoiceManager.class, instance);
 		//
+		Assertions.assertDoesNotThrow(() -> importVoice(objectMap, (File) null, null));
+		//
 		final Pronunciation pronunciation = new Pronunciation();
 		//
-		if (ih != null) {
+		if (this.ih != null) {
 			//
-			ih.pronunciations = Collections.singletonList(pronunciation);
+			this.ih.pronunciations = Collections.singletonList(pronunciation);
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(
-				() -> importVoiceByOnlineNHKJapanesePronunciationsAccentFailableFunction(objectMap, null));
+		Assertions.assertDoesNotThrow(() -> importVoice(objectMap, (File) null, null));
 		//
-		pronunciation.setAudioUrls(Collections.singletonMap(null, null));
-		//
-		Assertions.assertDoesNotThrow(
-				() -> importVoiceByOnlineNHKJapanesePronunciationsAccentFailableFunction(objectMap, null));
-		//
-		pronunciation.setAudioUrls(Collections.singletonMap(null, EMPTY));
-		//
-		Assertions.assertDoesNotThrow(
-				() -> importVoiceByOnlineNHKJapanesePronunciationsAccentFailableFunction(objectMap, null));
-		//
-		pronunciation.setAudioUrls(Collections.singletonMap(null, SPACE));
-		//
-		Assertions.assertDoesNotThrow(
-				() -> importVoiceByOnlineNHKJapanesePronunciationsAccentFailableFunction(objectMap, null));
-		//
-		pronunciation.setAudioUrls(Collections.singletonMap(null, "A"));
-		//
-		Assertions.assertThrows(MalformedURLException.class,
-				() -> importVoiceByOnlineNHKJapanesePronunciationsAccentFailableFunction(objectMap, null));
+		// domain.Pronunciation.audioUrls
 		//
 		pronunciation.setAudioUrls(Collections.singletonMap(null, toString(toURL(toURI(new File("pom.xml"))))));
 		//
+		Assertions.assertDoesNotThrow(() -> importVoice(objectMap, (File) null, null));
+		//
+		// domain.Voice.filePath
+		//
+		voice.setFilePath("non-exist-file");
+		//
+		Assertions.assertDoesNotThrow(() -> importVoice(objectMap, (File) null, null));
+		//
+	}
+
+	private void importVoice(final File file) throws Throwable {
+		try {
+			METHOD_IMPORT_VOICE1.invoke(instance, file);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static void importVoice(final Object objectMap, final BiConsumer<Voice, String> errorMessageConsumer,
+			final BiConsumer<Voice, Throwable> throwableConsumer) throws Throwable {
+		try {
+			METHOD_IMPORT_VOICE_OBJECT_MAP_BI_CONSUMER.invoke(null, objectMap, errorMessageConsumer, throwableConsumer);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static void importVoice(final Sheet sheet, final Object _objectMap, final String voiceId,
+			final BiConsumer<Voice, String> errorMessageConsumer, final BiConsumer<Voice, Throwable> throwableConsumer,
+			final Consumer<Voice> voiceConsumer, final Collection<Object> throwableStackTraceHexs) throws Throwable {
+		try {
+			METHOD_IMPORT_VOICE5.invoke(null, sheet, _objectMap, voiceId, errorMessageConsumer, throwableConsumer,
+					voiceConsumer, throwableStackTraceHexs);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static void importVoice(final Object objectMap, final File folder, final String voiceId) throws Throwable {
+		try {
+			METHOD_IMPORT_VOICE_OBJECT_MAP_FILE.invoke(null, objectMap, folder, voiceId);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testImportVoiceBySpeechApi() throws Throwable {
+		//
+		Assertions.assertDoesNotThrow(() -> importVoiceBySpeechApi(null, null, null));
+		//
+		// org.springframework.context.support.VoiceManager$ObjectMap
+		//
+		final Object objectMap = Reflection.newProxy(CLASS_OBJECT_MAP, createVoiceManagerIH());
+		//
+		final Class<?> clz = getClass(objectMap);
+		//
+		// org.springframework.context.support.VoiceManager$ObjectMap.setObject(java.lang.Class,java.lang.Object)
+		//
+		final Method setObject = clz != null ? clz.getDeclaredMethod("setObject", Class.class, Object.class) : null;
+		//
+		if (setObject != null) {
+			//
+			setObject.setAccessible(true);
+			//
+		} // if
+			//
+			// org.springframework.context.support.VoiceManager$ImportTask
+			//
+		invoke(setObject, objectMap, CLASS_IMPORT_TASK, Narcissus.allocateInstance(CLASS_IMPORT_TASK));
+		//
+		// org.springframework.context.support.VoiceManager
+		//
+		invoke(setObject, objectMap, VoiceManager.class, instance);
+		//
+		// org.springframework.context.support.SpeechApi
+		//
+		invoke(setObject, objectMap, SpeechApi.class, speechApi);
+		//
+		// org.springframework.context.support.VoiceManager$ByteConverter
+		//
+		invoke(setObject, objectMap, CLASS_BYTE_CONVERTER, null);
+		//
+		Assertions.assertThrows(IllegalStateException.class, () -> importVoiceBySpeechApi(objectMap, null, null));
+		//
+	}
+
+	private static void importVoiceBySpeechApi(final Object objectMap, final String filePath, final String voiceId)
+			throws Throwable {
+		try {
+			METHOD_IMPORT_VOICE_BY_SPEECH_API.invoke(null, objectMap, filePath, voiceId);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testImportVoiceByOnlineNHKJapanesePronunciationsAccentFailableFunction() throws Throwable {
+		//
 		Assertions.assertDoesNotThrow(
-				() -> importVoiceByOnlineNHKJapanesePronunciationsAccentFailableFunction(objectMap, null));
+				() -> importVoiceByOnlineNHKJapanesePronunciationsAccentFailableFunction(null, null));
 		//
 
 	}
