@@ -24,8 +24,8 @@ import com.google.common.reflect.Reflection;
 class ProtocolUtilTest {
 
 	private static Method METHOD_GET_ALLOW_PROTOCOLS_CLASS, METHOD_GET_ALLOW_PROTOCOLS_INSTRUCTION_ARRAY,
-			METHOD_GET_CLASS, METHOD_TO_STRING, METHOD_CONTAINS, METHOD_ADD, METHOD_TO_ARRAY, METHOD_MAP,
-			METHOD_TEST = null;
+			METHOD_GET_CLASS, METHOD_TO_STRING, METHOD_CONTAINS, METHOD_ADD, METHOD_TO_ARRAY, METHOD_MAP, METHOD_TEST,
+			METHOD_GET_DECLARED_METHOD = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -51,6 +51,9 @@ class ProtocolUtilTest {
 		(METHOD_MAP = clz.getDeclaredMethod("map", Stream.class, Function.class)).setAccessible(true);
 		//
 		(METHOD_TEST = clz.getDeclaredMethod("test", Predicate.class, Object.class)).setAccessible(true);
+		//
+		(METHOD_GET_DECLARED_METHOD = clz.getDeclaredMethod("getDeclaredMethod", Class.class, String.class,
+				Class[].class)).setAccessible(true);
 		//
 	}
 
@@ -255,6 +258,28 @@ class ProtocolUtilTest {
 			final Object obj = METHOD_TEST.invoke(null, instance, value);
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetDeclaredMethod() throws Throwable {
+		//
+		Assertions.assertNull(getDeclaredMethod(null, null, null));
+		//
+	}
+
+	private static Method getDeclaredMethod(final Class<?> clz, final String name, final Class<?>... parameterTypes)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_GET_DECLARED_METHOD.invoke(null, clz, name, parameterTypes);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Method) {
+				return (Method) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

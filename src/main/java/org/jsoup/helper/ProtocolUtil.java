@@ -2,6 +2,7 @@ package org.jsoup.helper;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -69,9 +70,9 @@ public interface ProtocolUtil {
 			final JavaClass javaClass = ClassParserUtil
 					.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null));
 			//
-			final org.apache.bcel.classfile.Method m = javaClass != null ? javaClass.getMethod(clz != null
-					? clz.getDeclaredMethod("execute", HttpConnection.Request.class, HttpConnection.Response.class)
-					: null) : null;
+			final org.apache.bcel.classfile.Method m = javaClass != null ? javaClass.getMethod(
+					getDeclaredMethod(clz, "execute", HttpConnection.Request.class, HttpConnection.Response.class))
+					: null;
 			//
 			return getAllowProtocols(
 					InstructionListUtil.getInstructions(MethodGenUtil.getInstructionList(
@@ -80,6 +81,11 @@ public interface ProtocolUtil {
 			//
 		} // try
 			//
+	}
+
+	private static Method getDeclaredMethod(final Class<?> clz, final String name, final Class<?>... parameterTypes)
+			throws NoSuchMethodException {
+		return clz != null ? clz.getDeclaredMethod(name, parameterTypes) : null;
 	}
 
 	private static <T, R> R testAndApply(final Predicate<T> predicate, final T value, final Function<T, R> functionTrue,
