@@ -593,8 +593,8 @@ class VoiceManagerTest {
 		(METHOD_CREATE_EXPORT_TASK = clz.getDeclaredMethod("createExportTask", CLASS_OBJECT_MAP, Integer.class,
 				Integer.class, Integer.class, Map.class, Table.class)).setAccessible(true);
 		//
-		(METHOD_GET_TAB_INDEX_BY_TITLE = clz.getDeclaredMethod("getTabIndexByTitle", List.class, Object.class,
-				Object.class)).setAccessible(true);
+		(METHOD_GET_TAB_INDEX_BY_TITLE = clz.getDeclaredMethod("getTabIndexByTitle", List.class, Object.class))
+				.setAccessible(true);
 		//
 		(METHOD_GET_DECLARED_FIELD = clz.getDeclaredMethod("getDeclaredField", Class.class, String.class))
 				.setAccessible(true);
@@ -5512,14 +5512,13 @@ class VoiceManagerTest {
 	@Test
 	void testGetTabIndexByTitle() throws Throwable {
 		//
-		Assertions.assertNull(getTabIndexByTitle(Collections.singletonList(null), null, null));
+		Assertions.assertNull(getTabIndexByTitle(Collections.singletonList(null), null));
 		//
 	}
 
-	private static Integer getTabIndexByTitle(final List<?> pages, final Object jTabbedPane, final Object title)
-			throws Throwable {
+	private static Integer getTabIndexByTitle(final List<?> pages, final Object title) throws Throwable {
 		try {
-			final Object obj = METHOD_GET_TAB_INDEX_BY_TITLE.invoke(null, pages, jTabbedPane, title);
+			final Object obj = METHOD_GET_TAB_INDEX_BY_TITLE.invoke(null, pages, title);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Integer) {

@@ -1909,8 +1909,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		final List<?> pages = cast(List.class, testAndApply(Objects::nonNull, jTabbedPane,
 				x -> Narcissus.getField(x, getDeclaredField(getClass(x), "pages")), null));
 		//
-		final Integer tabIndex = getTabIndexByTitle(pages, jTabbedPane, PropertyResolverUtil
-				.getProperty(propertyResolver, "org.springframework.context.support.VoiceManager.tabTitle"));
+		final Integer tabIndex = getTabIndexByTitle(pages, PropertyResolverUtil.getProperty(propertyResolver,
+				"org.springframework.context.support.VoiceManager.tabTitle"));
 		//
 		if (tabIndex != null) {
 			//
@@ -2414,8 +2414,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	}
 
-	private static Integer getTabIndexByTitle(final List<?> pages, final Object jTabbedPane, final Object title)
-			throws NoSuchFieldException {
+	private static Integer getTabIndexByTitle(final List<?> pages, final Object title) throws NoSuchFieldException {
 		//
 		Integer tabIndex = null;
 		//
