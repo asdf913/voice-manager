@@ -698,7 +698,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("IPA Symbol")
 	private AbstractButton btnIpaSymbol = null;
 
-	private AbstractButton cbUseTtsVoice, btnConvertToHiragana = null;
+	@Note("TTS Voice")
+	private AbstractButton cbUseTtsVoice = null;
+
+	private AbstractButton btnConvertToHiragana = null;
 
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.FIELD)
