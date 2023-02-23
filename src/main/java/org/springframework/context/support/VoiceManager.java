@@ -9024,14 +9024,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			NumberFormat percentNumberFormat = null;
 			//
-			String filePath = null;
-			//
-			VoiceManager voiceManager = null;
-			//
-			String[] mp3Tags = null;
-			//
-			SpeechApi speechApi = null;
-			//
 			Jakaroma jakaroma = null;
 			//
 			final CustomProperties customProperties = POIXMLPropertiesUtil.getCustomProperties(
