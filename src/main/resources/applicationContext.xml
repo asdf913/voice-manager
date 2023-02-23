@@ -204,6 +204,15 @@
 		<!-- -->
 		<property name="presentationSlideDuration"
 			value="${org.springframework.context.support.VoiceManager.presentationSlideDuration}" />
+		<!-- -->
+		<property name="yojijukugoMultimap">
+			<bean
+				class="org.springframework.beans.factory.YojijukugoMultimapFactoryBean">
+				<property name="url"
+					value="${org.springframework.beans.factory.YojijukugoMultimapFactoryBean.url}" />
+				<property name="resource" value="classpath:yojijukugo.xlsx" />
+			</bean>
+		</property>
 	</bean>
 
 	<!-- -->

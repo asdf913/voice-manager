@@ -679,7 +679,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("IPA Symbol")
 	private AbstractButton btnIpaSymbol = null;
 
-	private AbstractButton cbUseTtsVoice = null;
+	private AbstractButton cbUseTtsVoice, btnConvertToHiragana = null;
 
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.FIELD)
@@ -835,6 +835,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private String preferredPronunciationAudioFormat = null;
 
 	private Duration presentationSlideDuration = null;
+
+	private Multimap<Object, Object> yojijukugoMultimap = null;
 
 	private VoiceManager() {
 	}
@@ -1653,6 +1655,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static Duration parse(CharSequence text) {
 		return StringUtils.isNotEmpty(text) ? Duration.parse(text) : null;
+	}
+
+	public void setYojijukugoMultimap(final Multimap<Object, Object> yojijukugoMultimap) {
+		this.yojijukugoMultimap = yojijukugoMultimap;
 	}
 
 	private static IValue0<Class<? extends Workbook>> getWorkbookClass(
@@ -3151,7 +3157,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(
 				tfTextImport = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
 						"org.springframework.context.support.VoiceManager.text")),
-				String.format("%1$s,span %2$s", GROWX, 18));
+				String.format("%1$s,span %2$s", GROWX, 18 - 1 - 1));
 		//
 		addDocumentListener(tfTextImportDocument = tfTextImport.getDocument(), this);
 		//
@@ -3178,6 +3184,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		});
 		//
 		panel.add(btnCheckPronunciation = new JButton("Pronunciation"), String.format(SPAN_ONLY_FORMAT, 2));
+		//
+		panel.add(btnConvertToHiragana = new JButton("Convert To Hiragana"), String.format(SPAN_ONLY_FORMAT, 2));
 		//
 		panel.add(btnConvertToRomaji = new JButton("Convert To Romaji"), String.format("%1$s", WRAP));
 		//
@@ -3416,9 +3424,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
-		addActionListener(this, btnExecute, btnConvertToRomaji, btnConvertToKatakana, btnCopyRomaji, btnCopyHiragana,
-				btnCopyKatakana, btnPronunciationPageUrlCheck, btnIpaSymbol, btnCheckPronunciation,
-				btnPlayPronunciationAudio);
+		addActionListener(this, btnExecute, btnConvertToRomaji, btnConvertToHiragana, btnConvertToKatakana,
+				btnCopyRomaji, btnCopyHiragana, btnCopyKatakana, btnPronunciationPageUrlCheck, btnIpaSymbol,
+				btnCheckPronunciation, btnPlayPronunciationAudio);
 		//
 		setEnabled(voiceIds != null, cbUseTtsVoice);
 		//
@@ -4875,6 +4883,22 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			playAudio(cast(Pronunciation.class, getSelectedItem(mcbmPronunciation)),
 					getSelectedItem(mcbmPronounicationAudioFormat));
 			//
+		} else if (Objects.equals(source, btnConvertToHiragana)) {
+			//
+			final String text = getText(tfTextImport);
+			//
+			if (yojijukugoMultimap != null && yojijukugoMultimap.containsKey(text)) {
+				//
+				final Collection<Object> collection = MultimapUtil.get(yojijukugoMultimap, text);
+				//
+				if (IterableUtils.size(collection) == 1) {
+					//
+					setText(tfHiragana, toString(IterableUtils.get(collection, 0)));
+					//
+				} // if
+					//
+			} // if
+				//
 		} // if
 			//
 	}
@@ -5674,8 +5698,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			pair = Pair.of(tfKatakana, testAndApply(Objects::nonNull, getText(tfHiragana),
 					x -> KanaConverter.convertKana(x, KanaConverter.OP_ZEN_HIRA_TO_ZEN_KATA), null));
 			//
-		}
-		//
+		} // if
+			//
 		if (pair != null) {
 			//
 			setText(getKey(pair), getValue(pair));

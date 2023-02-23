@@ -17,6 +17,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ByteArrayResource;
 
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 
 class YojijukugoMultimapFactoryBeanTest {
@@ -130,7 +131,7 @@ class YojijukugoMultimapFactoryBeanTest {
 			//
 		instance.setResource(new ByteArrayResource(bs));
 		//
-		Assertions.assertNull(toString(getObject(instance)));
+		Assertions.assertEquals("{=[]}", toString(getObject(instance)));
 		//
 	}
 
