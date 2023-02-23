@@ -245,7 +245,7 @@ class ProtocolUtilTest {
 	}
 
 	@Test
-	void testTtest() throws Throwable {
+	void testTest() throws Throwable {
 		//
 		Assertions.assertFalse(test(null, null));
 		//
