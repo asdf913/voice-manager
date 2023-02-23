@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Iterator;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
@@ -65,7 +66,7 @@ public class YojijukugoMultimapFactoryBean implements FactoryBean<Multimap<Strin
 					//
 					final AtomicBoolean first = new AtomicBoolean(true);
 					//
-					if (sheet != null && sheet.iterator() != null) {
+					if (iterator(sheet) != null) {
 						//
 						Multimap<String, String> multimap = null;
 						//
@@ -151,6 +152,10 @@ public class YojijukugoMultimapFactoryBean implements FactoryBean<Multimap<Strin
 			//
 		return multimap;
 		//
+	}
+
+	private static <T> Iterator<T> iterator(final Iterable<T> instance) {
+		return instance != null ? instance.iterator() : null;
 	}
 
 	private static String getMimeType(final ContentInfo instance) {
