@@ -445,6 +445,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static final String COMPONENT = "component";
 
+	private static final String PRONUNCIATION = "Pronunciation";
+
 	/**
 	 * @see java.lang.String#format(java.lang.String,java.lang.Object...)
 	 * 
@@ -581,7 +583,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private transient javax.swing.text.Document tfTextImportDocument = null;
 
-	@Group("Pronunciation")
+	@Group(PRONUNCIATION)
 	private JComboBox<Pronunciation> jcbPronunciation = null;
 
 	@Retention(RetentionPolicy.RUNTIME)
@@ -674,7 +676,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("Browse Button For Export Function")
 	private AbstractButton btnExportBrowse = null;
 
-	@Group("Pronunciation")
+	@Group(PRONUNCIATION)
 	@Note("Check Pronunciation Page")
 	private AbstractButton btnPronunciationPageUrlCheck = null;
 
@@ -711,11 +713,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@ExportButton
 	private AbstractButton btnExportMicrosoftSpeechObjectLibraryInformation = null;
 
-	@Group("Pronunciation")
+	@Group(PRONUNCIATION)
 	@Note("Check Pronunciation")
 	private AbstractButton btnCheckPronunciation = null;
 
-	@Group("Pronunciation")
+	@Group(PRONUNCIATION)
 	private AbstractButton btnPlayPronunciationAudio = null;
 
 	@Target(ElementType.FIELD)
@@ -3187,7 +3189,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			}
 		});
 		//
-		panel.add(btnCheckPronunciation = new JButton("Pronunciation"), String.format(SPAN_ONLY_FORMAT, 2));
+		panel.add(btnCheckPronunciation = new JButton(PRONUNCIATION), String.format(SPAN_ONLY_FORMAT, 2));
 		//
 		panel.add(btnConvertToHiragana = new JButton("Convert To Hiragana"), String.format(SPAN_ONLY_FORMAT, 2));
 		//
@@ -3339,7 +3341,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		// Pronunciation
 		//
-		panel.add(new JLabel("Pronunciation"), String.format(SPAN_ONLY_FORMAT, 2));
+		panel.add(new JLabel(PRONUNCIATION), String.format(SPAN_ONLY_FORMAT, 2));
 		//
 		// TODO
 		//
@@ -4830,7 +4832,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				() -> actionPerformedForConversion(source));
 		//
 		// Pronunciation
-		testAndRun(contains(getObjectsByGroupAnnotation(this, "Pronunciation"), source),
+		testAndRun(contains(getObjectsByGroupAnnotation(this, PRONUNCIATION), source),
 				() -> actionPerformedForPronunciation(source));
 		//
 		if (Objects.equals(source, btnSpeak)) {
