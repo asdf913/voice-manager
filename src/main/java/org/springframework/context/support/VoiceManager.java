@@ -581,6 +581,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private transient javax.swing.text.Document tfTextImportDocument = null;
 
+	@Group("Pronunciation")
 	private JComboBox<Pronunciation> jcbPronunciation = null;
 
 	@Retention(RetentionPolicy.RUNTIME)
@@ -673,6 +674,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("Browse Button For Export Function")
 	private AbstractButton btnExportBrowse = null;
 
+	@Group("Pronunciation")
 	@Note("Check Pronunciation Page")
 	private AbstractButton btnPronunciationPageUrlCheck = null;
 
@@ -709,9 +711,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@ExportButton
 	private AbstractButton btnExportMicrosoftSpeechObjectLibraryInformation = null;
 
+	@Group("Pronunciation")
 	@Note("Check Pronunciation")
 	private AbstractButton btnCheckPronunciation = null;
 
+	@Group("Pronunciation")
 	private AbstractButton btnPlayPronunciationAudio = null;
 
 	@Target(ElementType.FIELD)
@@ -4825,6 +4829,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		testAndRun(contains(getObjectsByGroupAnnotation(this, "Conversion"), source),
 				() -> actionPerformedForConversion(source));
 		//
+		// Pronunciation
+		testAndRun(contains(getObjectsByGroupAnnotation(this, "Pronunciation"), source),
+				() -> actionPerformedForPronunciation(source));
+		//
 		if (Objects.equals(source, btnSpeak)) {
 			//
 			actionPerformedForSpeak(headless);
@@ -4861,27 +4869,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					, headless);
 			//
-		} else if (Objects.equals(source, btnPronunciationPageUrlCheck)) {
-			//
-			actionPerformedForPronunciationPageUrlCheck(headless);
-			//
 		} else if (Objects.equals(source, btnIpaSymbol)) {
 			//
 			actionPerformedForIpaSymbol(headless);
-			//
-		} else if (Objects.equals(source, btnCheckPronunciation)) {
-			//
-			actionPerformedForBtnCheckPronunciation();
-			//
-		} else if (Objects.equals(source, jcbPronunciation)) {
-			//
-			pronounicationChanged(cast(Pronunciation.class, getSelectedItem(mcbmPronunciation)),
-					mcbmPronounicationAudioFormat, preferredPronunciationAudioFormat);
-			//
-		} else if (Objects.equals(source, btnPlayPronunciationAudio)) {
-			//
-			playAudio(cast(Pronunciation.class, getSelectedItem(mcbmPronunciation)),
-					getSelectedItem(mcbmPronounicationAudioFormat));
 			//
 		} else if (Objects.equals(source, btnConvertToHiragana)) {
 			//
@@ -5707,6 +5697,40 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		if (pair != null) {
 			//
 			setText(getKey(pair), getValue(pair));
+			//
+			return;
+			//
+		} // if
+			//
+		throw new IllegalStateException();
+		//
+	}
+
+	private void actionPerformedForPronunciation(final Object source) {
+		//
+		if (Objects.equals(source, jcbPronunciation)) {
+			//
+			pronounicationChanged(cast(Pronunciation.class, getSelectedItem(mcbmPronunciation)),
+					mcbmPronounicationAudioFormat, preferredPronunciationAudioFormat);
+			//
+			return;
+			//
+		} else if (Objects.equals(source, btnPronunciationPageUrlCheck)) {
+			//
+			actionPerformedForPronunciationPageUrlCheck(GraphicsEnvironment.isHeadless());
+			//
+			return;
+			//
+		} else if (Objects.equals(source, btnCheckPronunciation)) {
+			//
+			actionPerformedForBtnCheckPronunciation();
+			//
+			return;
+			//
+		} else if (Objects.equals(source, btnPlayPronunciationAudio)) {
+			//
+			playAudio(cast(Pronunciation.class, getSelectedItem(mcbmPronunciation)),
+					getSelectedItem(mcbmPronounicationAudioFormat));
 			//
 			return;
 			//
