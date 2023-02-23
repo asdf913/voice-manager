@@ -10286,7 +10286,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				for (final Entry<String, String> folderFileNamePattern : entrySet) {
 					//
 					if (folderFileNamePattern == null || (key = getKey(folderFileNamePattern)) == null
-							|| StringUtils.isBlank(value = getValue(folderFileNamePattern))
+							|| StringUtils.isBlank(value = VoiceManager.getValue(folderFileNamePattern))
 							|| !(fileSource = testAndApply(Objects::nonNull,
 									voiceFolder = getIfNull(voiceFolder, () -> getVoiceFolder(voiceManager)),
 									x -> new File(x, filePath), x -> new File(filePath))).exists()) {
@@ -10409,6 +10409,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // try
 				//
+		}
+
+		private static Object getValue(final ExpressionParser spelExpressionParser,
+				final EvaluationContext evaluationContext, final String expression) {
+			//
+			return VoiceManager.getValue(parseExpression(spelExpressionParser, expression), evaluationContext);
+			//
 		}
 
 		private static String getOutputFolder(final VoiceManager instance) {
@@ -10702,7 +10709,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					for (final Entry<String, Voice> entry : entrySet) {
 						//
-						if (Boolean.logicalOr((voice = getValue(entry)) == null,
+						if (Boolean.logicalOr((voice = VoiceManager.getValue(entry)) == null,
 								(pageCloned = cloneNode(page, true)) == null)) {
 							//
 							continue;
@@ -12255,13 +12262,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null && (predicate != null || Proxy.isProxyClass(getClass(instance)))
 				? instance.filter(predicate)
 				: null;
-		//
-	}
-
-	private static Object getValue(final ExpressionParser spelExpressionParser,
-			final EvaluationContext evaluationContext, final String expression) {
-		//
-		return getValue(parseExpression(spelExpressionParser, expression), evaluationContext);
 		//
 	}
 
