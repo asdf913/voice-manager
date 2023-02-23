@@ -9060,6 +9060,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			IValue0<?> value = null;
 			//
+			Pronunciation pronunciation = null;
+			//
+			Map<String, String> audioUrls = null;
+			//
+			String audioUrl = null;
+			//
+			Entry<String, String> entry = null;
+			//
 			for (final Row row : sheet) {
 				//
 				if (iterator(row) == null) {
@@ -9159,7 +9167,44 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 								//
 							} else {
 								//
-								if (isInstalled(speechApi = getIfNull(speechApi,
+								if (Objects.equals(Boolean.FALSE, voice.getTts())) {
+									//
+									if ((pronunciation = testAndApply(x -> IterableUtils.size(x) == 1,
+											FailableFunctionUtil.apply(vm != null
+													? vm.onlineNHKJapanesePronunciationsAccentFailableFunction
+													: null, voice.getText()),
+											x -> IterableUtils.get(x, 0), null)) != null) {
+										//
+										if (StringUtils.isBlank(audioUrl = testAndApply((m, k) -> containsKey(m, k),
+												audioUrls = pronunciation.getAudioUrls(),
+												vm != null ? vm.preferredPronunciationAudioFormat : null,
+												(m, k) -> get(m, k), null))) {
+											//
+											entry = testAndApply(CollectionUtils::isNotEmpty, entrySet(audioUrls),
+													x -> IterableUtils.get(x, 0), null);
+											//
+											audioUrl = getValue(entry);
+											//
+										} // if
+											//
+										try (final InputStream is = openStream(
+												testAndApply(Objects::nonNull, audioUrl, URL::new, null))) {
+											//
+											if (is != null && (it.file = createTempFile(
+													randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH),
+													filePath)) != null) {
+												//
+												FileUtils.copyInputStreamToFile(is, it.file);
+												//
+											} // if
+												//
+										} // try
+											//
+									} // if
+										//
+								} // if
+									//
+								if (it.file == null && isInstalled(speechApi = getIfNull(speechApi,
 										() -> ObjectMap.getObject(objectMap, SpeechApi.class)))) {
 									//
 									ObjectMap.setObject(objectMap, ImportTask.class, it);

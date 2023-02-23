@@ -115,6 +115,8 @@ public class Voice {
 
 	private String pronunciationPageUrl = null;
 
+	private Boolean tts = null;
+
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
 	private @interface DateFormat {
@@ -273,6 +275,10 @@ public class Voice {
 
 	public void setPronunciationPageUrl(final String pronunciationPageUrl) {
 		this.pronunciationPageUrl = pronunciationPageUrl;
+	}
+
+	public Boolean getTts() {
+		return tts;
 	}
 
 }
