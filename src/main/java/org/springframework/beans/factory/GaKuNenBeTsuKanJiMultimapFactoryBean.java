@@ -27,6 +27,7 @@ import org.apache.poi.ss.usermodel.WorkbookUtil;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0Util;
 import org.jsoup.Jsoup;
+import org.jsoup.helper.ProtocolUtil;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
 import org.jsoup.select.Elements;
@@ -164,7 +165,7 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 			throws IOException {
 		//
 		final Elements elements = ElementUtil.selectXpath(
-				testAndApply(x -> StringUtils.equalsAnyIgnoreCase(getProtocol(x), "http", "https"),
+				testAndApply(x -> StringUtils.equalsAnyIgnoreCase(getProtocol(x), ProtocolUtil.getAllowProtocols()),
 						testAndApply(Objects::nonNull, url, URL::new, null),
 						x -> Jsoup.parse(x, intValue(toMillis(timeout), 0)), null),
 				"//span[@class='mw-headline'][starts-with(.,'第')]");

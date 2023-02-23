@@ -20,6 +20,7 @@ import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0Util;
 import org.jsoup.Jsoup;
+import org.jsoup.helper.ProtocolUtil;
 import org.jsoup.nodes.ElementUtil;
 import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
 
@@ -158,12 +159,16 @@ public class JlptLevelListFactoryBean implements FactoryBean<List<String>> {
 
 	private static List<String> getObjectByUrl(final String url, final Duration timeout) throws IOException {
 		//
-		return toList(map(
-				stream(ElementUtil
-						.select(testAndApply(x -> StringUtils.equalsAnyIgnoreCase(getProtocol(x), "http", "https"),
-								testAndApply(StringUtils::isNotBlank, url, URL::new, null),
-								x -> Jsoup.parse(x, intValue(toMillis(timeout), 0)), null), ".thLeft[scope='col']")),
-				ElementUtil::text));
+		return toList(
+				map(stream(
+						ElementUtil.select(
+								testAndApply(
+										x -> StringUtils.equalsAnyIgnoreCase(getProtocol(x),
+												ProtocolUtil.getAllowProtocols()),
+										testAndApply(StringUtils::isNotBlank, url, URL::new, null),
+										x -> Jsoup.parse(x, intValue(toMillis(timeout), 0)), null),
+								".thLeft[scope='col']")),
+						ElementUtil::text));
 		//
 	}
 
