@@ -9150,7 +9150,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		if (row != null && iterator(row) != null) {
 			//
-			IntMap<Field> intMap = arintMap != null ? arintMap.get() : null;
+			IntMap<Field> intMap = get(arintMap);
 			//
 			int columnIndex = 0;
 			//
@@ -9205,6 +9205,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return voice;
 		//
+	}
+
+	private static <V> V get(final AtomicReference<V> instance) {
+		return instance != null ? instance.get() : null;
 	}
 
 	private static void importVoice(final ObjectMap objectMap, final File folder, final String voiceId)
