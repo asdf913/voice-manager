@@ -1,10 +1,14 @@
 package org.jsoup.helper;
 
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 import org.apache.bcel.classfile.ConstantPool;
 import org.apache.bcel.generic.IFNE;
@@ -14,10 +18,12 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import com.google.common.reflect.Reflection;
+
 class ProtocolUtilTest {
 
 	private static Method METHOD_GET_ALLOW_PROTOCOLS_CLASS, METHOD_GET_ALLOW_PROTOCOLS_INSTRUCTION_ARRAY,
-			METHOD_GET_CLASS, METHOD_TO_STRING, METHOD_CONTAINS, METHOD_ADD, METHOD_TO_ARRAY = null;
+			METHOD_GET_CLASS, METHOD_TO_STRING, METHOD_CONTAINS, METHOD_ADD, METHOD_TO_ARRAY, METHOD_MAP = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -40,6 +46,33 @@ class ProtocolUtilTest {
 		//
 		(METHOD_TO_ARRAY = clz.getDeclaredMethod("toArray", Collection.class, Object[].class)).setAccessible(true);
 		//
+		(METHOD_MAP = clz.getDeclaredMethod("map", Stream.class, Function.class)).setAccessible(true);
+		//
+	}
+
+	private static class IH implements InvocationHandler {
+
+		private Stream<?> stream = null;
+
+		@Override
+		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+			//
+			final String methodName = method != null ? method.getName() : null;
+			//
+			if (proxy instanceof Stream) {
+				//
+				if (Objects.equals(methodName, "map")) {
+					//
+					return stream;
+					//
+				} // if
+					//
+			} // if
+				//
+			throw new Throwable(methodName);
+			//
+		}
+
 	}
 
 	@Test
@@ -177,6 +210,30 @@ class ProtocolUtilTest {
 	private static <T> T[] toArray(final Collection<T> instance, final T[] array) throws Throwable {
 		try {
 			return (T[]) METHOD_TO_ARRAY.invoke(null, instance, array);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testMap() throws Throwable {
+		//
+		Assertions.assertNull(map(Stream.empty(), null));
+		//
+		Assertions.assertNull(map(Reflection.newProxy(Stream.class, new IH()), null));
+		//
+	}
+
+	private static <T, R> Stream<R> map(final Stream<T> instance, final Function<? super T, ? extends R> mapper)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_MAP.invoke(null, instance, mapper);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Stream) {
+				return (Stream) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

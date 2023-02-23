@@ -6,6 +6,8 @@ import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.ClassParserUtil;
@@ -115,8 +117,23 @@ public interface ProtocolUtil {
 				//
 		} // for
 			//
-		return list != null ? list.stream().map(ProtocolUtil::toString).toList() : null;
+		return toList(map(stream(list), ProtocolUtil::toString));
 		//
+	}
+
+	private static <E> Stream<E> stream(final Collection<E> instance) {
+		return instance != null ? instance.stream() : null;
+	}
+
+	private static <T, R> Stream<R> map(final Stream<T> instance, final Function<? super T, ? extends R> mapper) {
+		//
+		return instance != null && (Proxy.isProxyClass(getClass(instance)) || mapper != null) ? instance.map(mapper)
+				: null;
+		//
+	}
+
+	private static <T> List<T> toList(final Stream<T> instance) {
+		return instance != null ? instance.toList() : null;
 	}
 
 	private static boolean contains(final Collection<?> items, final Object item) {
