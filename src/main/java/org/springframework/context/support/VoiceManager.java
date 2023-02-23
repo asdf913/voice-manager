@@ -9060,14 +9060,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			IValue0<?> value = null;
 			//
-			Pronunciation pronunciation = null;
-			//
-			Map<String, String> audioUrls = null;
-			//
-			String audioUrl = null;
-			//
-			Entry<String, String> entry = null;
-			//
 			for (final Row row : sheet) {
 				//
 				if (iterator(row) == null) {
