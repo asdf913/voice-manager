@@ -10707,10 +10707,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					} // if
 						//
-					StringBuilder name = null;
-					//
-					String string = null;
-					//
 					for (final Entry<String, Voice> entry : entrySet) {
 						//
 						if (Boolean.logicalOr((voice = VoiceManager.getValue(entry)) == null,
@@ -10722,36 +10718,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 							// Set Slide Name
 							//
-						clear(name = ObjectUtils.getIfNull(name, StringBuilder::new));
-						//
-						// text
-						//
-						final String text = getText(voice);
-						//
-						if (StringUtils.isNotBlank(text)) {
-							//
-							append(name, text);
-							//
-						} // if
-							//
-						// hiragana and romaji
-						//
-						if (StringUtils.isNotBlank(string = StringUtils
-								.trim(collect(filter(stream(Arrays.asList(getHiragana(voice), getRomaji(voice))),
-										StringUtils::isNotBlank), Collectors.joining(" "))))) {
-							//
-							append(name, ' ');
-							//
-							append(name, '(');
-							//
-							append(name, string);
-							//
-							append(name, ')');
-							//
-						} // if
-							//
-							//
-						setNodeValue(getNamedItem(getAttributes(pageCloned), "draw:name"), VoiceManager.toString(name));
+						setNodeValue(getNamedItem(getAttributes(pageCloned), "draw:name"), getSlideName(voice));
 						//
 						// p
 						//
@@ -10806,6 +10773,52 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			} // try
 				//
 			return newOdfPresentationDocument;
+			//
+		}
+
+		private static String getSlideName(final Voice voice) {
+			//
+			StringBuilder sb = null;
+			//
+			// text
+			//
+			final String text = getText(voice);
+			//
+			if (StringUtils.isNotBlank(text)) {
+				//
+				append(sb = ObjectUtils.getIfNull(sb, StringBuilder::new), text);
+				//
+			} // if
+				//
+				// hiragana and romaji
+				//
+			final String string = StringUtils.trim(collect(
+					filter(stream(Arrays.asList(getHiragana(voice), getRomaji(voice))), StringUtils::isNotBlank),
+					Collectors.joining(" ")));
+			//
+			if (StringUtils.isNotBlank(string)) {
+				//
+				final int length = StringUtils.length(sb = ObjectUtils.getIfNull(sb, StringBuilder::new));
+				//
+				if (StringUtils.isNotBlank(sb)) {
+					//
+					append(sb, ' ');
+					//
+					append(sb, '(');
+					//
+				} // if
+					//
+				append(sb, string);
+				//
+				if (length > 0) {
+					//
+					append(sb, ')');
+					//
+				} // if
+					//
+			} // if
+				//
+			return VoiceManager.toString(sb);
 			//
 		}
 

@@ -9745,6 +9745,41 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(invoke(getNodeValue, null, node));
 		//
+		// org.springframework.context.support.VoiceManager$ExportTask.getSlideName(domain.Voice)
+		//
+		final Method getSlideName = CLASS_EXPORT_TASK != null
+				? CLASS_EXPORT_TASK.getDeclaredMethod("getSlideName", Voice.class)
+				: null;
+		//
+		if (getSlideName != null) {
+			//
+			getSlideName.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertNull(invoke(getSlideName, null, (Object) null));
+		//
+		final Voice voice = new Voice();
+		//
+		final String hiragana = "H";
+		//
+		voice.setHiragana(hiragana);
+		//
+		Assertions.assertEquals(hiragana, invoke(getSlideName, null, voice));
+		//
+		final String romaji = "R";
+		//
+		voice.setRomaji(romaji);
+		//
+		Assertions.assertEquals(String.join(" ", hiragana, romaji), invoke(getSlideName, null, voice));
+		//
+		final String text = "T";
+		//
+		voice.setText(text);
+		//
+		Assertions.assertEquals(String.format("%1$s (%2$s)", text, String.join(" ", hiragana, romaji)),
+				invoke(getSlideName, null, voice));
+		//
 	}
 
 	private static void run(final Runnable instance) {
