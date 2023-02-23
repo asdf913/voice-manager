@@ -6,7 +6,9 @@ import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import org.apache.bcel.classfile.ClassParser;
@@ -64,21 +66,33 @@ public interface ProtocolUtil {
 			//
 			// org.jsoup.helper.HttpConnection$Response.execute(org.jsoup.helper.HttpConnection$Request,org.jsoup.helper.HttpConnection$Response)
 			//
-			final java.lang.reflect.Method method = clz != null
+			final JavaClass javaClass = ClassParserUtil
+					.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null));
+			//
+			final org.apache.bcel.classfile.Method m = javaClass != null ? javaClass.getMethod(clz != null
 					? clz.getDeclaredMethod("execute", HttpConnection.Request.class, HttpConnection.Response.class)
-					: null;
-			//
-			final JavaClass javaClass = ClassParserUtil.parse(is != null ? new ClassParser(is, null) : null);
-			//
-			final org.apache.bcel.classfile.Method m = javaClass != null ? javaClass.getMethod(method) : null;
+					: null) : null;
 			//
 			return getAllowProtocols(
-					InstructionListUtil.getInstructions(
-							MethodGenUtil.getInstructionList(m != null ? new MethodGen(m, null, null) : null)),
+					InstructionListUtil.getInstructions(MethodGenUtil.getInstructionList(
+							testAndApply(Objects::nonNull, m, x -> new MethodGen(x, null, null), null))),
 					m != null ? m.getConstantPool() : null);
 			//
 		} // try
 			//
+	}
+
+	private static <T, R> R testAndApply(final Predicate<T> predicate, final T value, final Function<T, R> functionTrue,
+			final Function<T, R> functionFalse) {
+		return test(predicate, value) ? apply(functionTrue, value) : apply(functionFalse, value);
+	}
+
+	private static <T> boolean test(final Predicate<T> instance, final T value) {
+		return instance != null && instance.test(value);
+	}
+
+	private static <T, R> R apply(final Function<T, R> instance, final T value) {
+		return instance != null ? instance.apply(value) : null;
 	}
 
 	private static List<String> getAllowProtocols(final Instruction[] is, final ConstantPool cp) {
@@ -97,7 +111,8 @@ public interface ProtocolUtil {
 				//
 				if (cpg == null) {
 					//
-					cpg = ObjectUtils.getIfNull(cpg, () -> cp != null ? new ConstantPoolGen(cp) : null);
+					cpg = ObjectUtils.getIfNull(cpg,
+							() -> testAndApply(Objects::nonNull, cp, ConstantPoolGen::new, null));
 					//
 				} // if
 					//
