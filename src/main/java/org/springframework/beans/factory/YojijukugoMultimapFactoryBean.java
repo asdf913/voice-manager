@@ -50,15 +50,15 @@ public class YojijukugoMultimapFactoryBean implements FactoryBean<Multimap<Strin
 		//
 		Multimap<String, String> multimap = null;
 		//
-		for (int i = 0; tables != null && i < tables.size(); i++) {
+		for (int i = 0; i < IterableUtils.size(tables); i++) {
 			//
-			if ((trs = ElementUtil.getElementsByTag(tables.get(i), "tr")) == null) {
+			if ((trs = ElementUtil.getElementsByTag(IterableUtils.get(tables, i), "tr")) == null) {
 				//
 				continue;
 				//
 			} // if
 				//
-			for (int j = 0; j < trs.size(); j++) {
+			for (int j = 0; j < IterableUtils.size(trs); j++) {
 				//
 				if ((tr = IterableUtils.get(trs, j)) == null || tr.childNodeSize() < 2
 						|| (as = ElementUtil.getElementsByTag(tr, "a")) == null || as == null || as.isEmpty()
