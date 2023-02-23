@@ -1,6 +1,7 @@
 package org.springframework.beans.factory;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Objects;
@@ -52,7 +53,7 @@ public class YojijukugoMultimapFactoryBean implements FactoryBean<Multimap<Strin
 		//
 		if (ResourceUtil.exists(resource)) {
 			//
-			final byte[] bs = resource != null ? resource.getContentAsByteArray() : null;
+			final byte[] bs = getContentAsByteArray(resource);
 			//
 			final ContentInfo ci = testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch, null);
 			//
@@ -151,6 +152,10 @@ public class YojijukugoMultimapFactoryBean implements FactoryBean<Multimap<Strin
 			//
 		return multimap;
 		//
+	}
+
+	private static byte[] getContentAsByteArray(final Resource instance) throws IOException {
+		return instance != null ? instance.getContentAsByteArray() : null;
 	}
 
 	private static String toString(final Object instance) {

@@ -16,13 +16,14 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 
 class YojijukugoMultimapFactoryBeanTest {
 
-	private static Method METHOD_TO_STRING, METHOD_TEST = null;
+	private static Method METHOD_TO_STRING, METHOD_TEST, METHOD_GET_CONTENT_AS_BYTE_ARRAY = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -32,6 +33,9 @@ class YojijukugoMultimapFactoryBeanTest {
 		(METHOD_TO_STRING = clz.getDeclaredMethod("toString", Object.class)).setAccessible(true);
 		//
 		(METHOD_TEST = clz.getDeclaredMethod("test", Predicate.class, Object.class)).setAccessible(true);
+		//
+		(METHOD_GET_CONTENT_AS_BYTE_ARRAY = clz.getDeclaredMethod("getContentAsByteArray", Resource.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -181,6 +185,27 @@ class YojijukugoMultimapFactoryBeanTest {
 				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(obj != null && obj.getClass() != null ? obj.getClass().toString() : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetContentAsByteArray() throws Throwable {
+		//
+		Assertions.assertNull(getContentAsByteArray(null));
+		//
+	}
+
+	private static byte[] getContentAsByteArray(final Resource instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_CONTENT_AS_BYTE_ARRAY.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof byte[]) {
+				return (byte[]) obj;
+			}
+			throw new Throwable(obj != null ? toString(obj.getClass()) : null);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
