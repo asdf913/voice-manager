@@ -59,8 +59,10 @@ public class YojijukugoMultimapFactoryBean implements FactoryBean<Multimap<Strin
 			//
 			final byte[] bs = getContentAsByteArray(resource);
 			//
-			if (Objects.equals("application/vnd.openxmlformats-officedocument",
-					getMimeType(testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch, null)))) {
+			final ContentInfo ci = testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch, null);
+			//
+			if (Objects.equals("application/vnd.openxmlformats-officedocument", getMimeType(ci))
+					|| Objects.equals("OLE 2 Compound Document", ci != null ? ci.getMessage() : null)) {
 				//
 				try (final InputStream is = new ByteArrayInputStream(bs);
 						final Workbook wb = WorkbookFactory.create(is)) {
