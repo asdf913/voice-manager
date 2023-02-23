@@ -266,7 +266,7 @@ class ProtocolUtilTest {
 	@Test
 	void testGetDeclaredMethod() throws Throwable {
 		//
-		Assertions.assertNull(getDeclaredMethod(null, null, null));
+		Assertions.assertNull(getDeclaredMethod(null, null));
 		//
 	}
 
