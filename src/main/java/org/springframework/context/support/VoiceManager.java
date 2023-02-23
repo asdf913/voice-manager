@@ -2414,7 +2414,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	}
 
-	private static Integer getTabIndexByTitle(final List<?> pages, final Object title) throws NoSuchFieldException {
+	private static Integer getTabIndexByTitle(final List<?> pages, final Object title) {
 		//
 		Integer tabIndex = null;
 		//
