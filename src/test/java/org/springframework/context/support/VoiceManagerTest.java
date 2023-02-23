@@ -256,7 +256,8 @@ class VoiceManagerTest {
 
 	private static final int ONE = 1;
 
-	private static Class<?> CLASS_OBJECT_MAP, CLASS_BOOLEAN_MAP, CLASS_STRING_MAP, CLASS_IH, CLASS_EXPORT_TASK = null;
+	private static Class<?> CLASS_OBJECT_MAP, CLASS_BOOLEAN_MAP, CLASS_STRING_MAP, CLASS_IH, CLASS_EXPORT_TASK,
+			CLASS_IMPORT_TASK, CLASS_BYTE_CONVERTER = null;
 
 	private static Integer TEMP_FILE_MINIMUM_PREFIX_LENGTH = null;
 
@@ -270,19 +271,19 @@ class VoiceManagerTest {
 			METHOD_FOR_EACH_STREAM, METHOD_FOR_EACH_ITERABLE, METHOD_FOR_EACH_INT_STREAM, METHOD_CREATE_WORK_BOOK_LIST,
 			METHOD_CREATE_VOICE, METHOD_INVOKE, METHOD_ANNOTATION_TYPE, METHOD_FIND_FIRST, METHOD_GET_DECLARED_METHODS,
 			METHOD_FOR_NAME, METHOD_FILTER, METHOD_SET_TEXT, METHOD_GET_PREFERRED_WIDTH, METHOD_IMPORT_VOICE1,
-			METHOD_IMPORT_VOICE3, METHOD_IMPORT_VOICE5, METHOD_ADD_COLLECTION, METHOD_ADD_LIST,
-			METHOD_CREATE_IMPORT_FILE_TEMPLATE_BYTE_ARRAY, METHOD_ANY_MATCH, METHOD_COLLECT, METHOD_NAME,
-			METHOD_GET_SELECTED_ITEM, METHOD_MATCHER, METHOD_SET_VALUE_J_PROGRESS_BAR, METHOD_SET_VALUE_J_SLIDER,
-			METHOD_SET_STRING_J_PROGRESS_BAR, METHOD_SET_STRING_COMMENT, METHOD_SET_TOOL_TIP_TEXT, METHOD_FORMAT,
-			METHOD_CONTAINS_KEY, METHOD_VALUE_OF1, METHOD_VALUE_OF2, METHOD_GET_CLASS, METHOD_CREATE_RANGE,
-			METHOD_GET_PROVIDER_NAME, METHOD_GET_PROVIDER_VERSION, METHOD_WRITE_VOICE_TO_FILE,
-			METHOD_GET_MP3_TAG_VALUE_FILE, METHOD_GET_MP3_TAG_VALUE_LIST, METHOD_GET_MP3_TAG_PARIRS_ID3V1,
-			METHOD_GET_METHODS_CLASS, METHOD_COPY_OBJECT_MAP, METHOD_DELETE, METHOD_DELETE_ON_EXIT,
-			METHOD_CONVERT_LANGUAGE_CODE_TO_TEXT, METHOD_IS_SELECTED, METHOD_SET_HIRAGANA_OR_KATAKANA,
-			METHOD_SET_ROMAJI, METHOD_AND, METHOD_OR, METHOD_CLEAR_DEFAULT_TABLE_MODEL, METHOD_CLEAR_STRING_BUILDER,
-			METHOD_EXECUTE, METHOD_PUT_MAP, METHOD_GET_BYTE_CONVERTER, METHOD_CONTAINS_CUSTOM_PROPERTIES,
-			METHOD_CONTAINS_COLLECTION, METHOD_CONTAINS_LOOKUP, METHOD_GET_LPW_STR, METHOD_GET_SHEET_NAME,
-			METHOD_ACCEPT, METHOD_TO_ARRAY, METHOD_TO_LIST, METHOD_GET_ID, METHOD_SET_MAXIMUM,
+			METHOD_IMPORT_VOICE3, METHOD_IMPORT_VOICE5, METHOD_IMPORT_VOICE_BY_SPEECH_API, METHOD_ADD_COLLECTION,
+			METHOD_ADD_LIST, METHOD_CREATE_IMPORT_FILE_TEMPLATE_BYTE_ARRAY, METHOD_ANY_MATCH, METHOD_COLLECT,
+			METHOD_NAME, METHOD_GET_SELECTED_ITEM, METHOD_MATCHER, METHOD_SET_VALUE_J_PROGRESS_BAR,
+			METHOD_SET_VALUE_J_SLIDER, METHOD_SET_STRING_J_PROGRESS_BAR, METHOD_SET_STRING_COMMENT,
+			METHOD_SET_TOOL_TIP_TEXT, METHOD_FORMAT, METHOD_CONTAINS_KEY, METHOD_VALUE_OF1, METHOD_VALUE_OF2,
+			METHOD_GET_CLASS, METHOD_CREATE_RANGE, METHOD_GET_PROVIDER_NAME, METHOD_GET_PROVIDER_VERSION,
+			METHOD_WRITE_VOICE_TO_FILE, METHOD_GET_MP3_TAG_VALUE_FILE, METHOD_GET_MP3_TAG_VALUE_LIST,
+			METHOD_GET_MP3_TAG_PARIRS_ID3V1, METHOD_GET_METHODS_CLASS, METHOD_COPY_OBJECT_MAP, METHOD_DELETE,
+			METHOD_DELETE_ON_EXIT, METHOD_CONVERT_LANGUAGE_CODE_TO_TEXT, METHOD_IS_SELECTED,
+			METHOD_SET_HIRAGANA_OR_KATAKANA, METHOD_SET_ROMAJI, METHOD_AND, METHOD_OR, METHOD_CLEAR_DEFAULT_TABLE_MODEL,
+			METHOD_CLEAR_STRING_BUILDER, METHOD_EXECUTE, METHOD_PUT_MAP, METHOD_GET_BYTE_CONVERTER,
+			METHOD_CONTAINS_CUSTOM_PROPERTIES, METHOD_CONTAINS_COLLECTION, METHOD_CONTAINS_LOOKUP, METHOD_GET_LPW_STR,
+			METHOD_GET_SHEET_NAME, METHOD_ACCEPT, METHOD_TO_ARRAY, METHOD_TO_LIST, METHOD_GET_ID, METHOD_SET_MAXIMUM,
 			METHOD_GET_CURRENT_SHEET_INDEX, METHOD_GET_DATA_VALIDATION_HELPER, METHOD_CREATE_EXPLICIT_LIST_CONSTRAINT,
 			METHOD_CREATE_VALIDATION, METHOD_CREATE_EXPORT_TASK, METHOD_GET_TAB_INDEX_BY_TITLE,
 			METHOD_GET_DECLARED_FIELD, METHOD_GET_ABSOLUTE_PATH, METHOD_IS_ASSIGNABLE_FROM, METHOD_GET_ENUM_CONSTANTS,
@@ -452,6 +453,9 @@ class VoiceManagerTest {
 		//
 		(METHOD_IMPORT_VOICE5 = clz.getDeclaredMethod("importVoice", Sheet.class, CLASS_OBJECT_MAP, String.class,
 				BiConsumer.class, BiConsumer.class, Consumer.class, Collection.class)).setAccessible(true);
+		//
+		(METHOD_IMPORT_VOICE_BY_SPEECH_API = clz.getDeclaredMethod("importVoiceBySpeechApi", CLASS_OBJECT_MAP,
+				String.class, String.class)).setAccessible(true);
 		//
 		(METHOD_ADD_COLLECTION = clz.getDeclaredMethod("add", Collection.class, Object.class)).setAccessible(true);
 		//
@@ -1001,7 +1005,11 @@ class VoiceManagerTest {
 		//
 		CLASS_EXPORT_TASK = Class.forName("org.springframework.context.support.VoiceManager$ExportTask");
 		//
+		CLASS_IMPORT_TASK = Class.forName("org.springframework.context.support.VoiceManager$ImportTask");
+		//
 		CLASS_STRING_MAP = Class.forName("org.springframework.context.support.VoiceManager$StringMap");
+		//
+		CLASS_BYTE_CONVERTER = Class.forName("org.springframework.context.support.VoiceManager$ByteConverter");
 		//
 		TEMP_FILE_MINIMUM_PREFIX_LENGTH = Integer.valueOf(intValue(cast(Number.class,
 				FieldUtils.readDeclaredStaticField(VoiceManager.class, "TEMP_FILE_MINIMUM_PREFIX_LENGTH", true)), 3));
@@ -1031,7 +1039,7 @@ class VoiceManagerTest {
 
 		private Iterator<Cell> cells = null;
 
-		private Boolean anyMatch, contains, addAll, isInstalled, isEmpty = null;
+		private Boolean anyMatch, contains, isInstalled, isEmpty = null;
 
 		private String[] voiceIds = null;
 
@@ -1074,6 +1082,8 @@ class VoiceManagerTest {
 		private javax.swing.text.Document document = null;
 
 		private Collection<?> values = null;
+
+		private byte[] convertedByteArray = null;
 
 		private Map<Object, BeanDefinition> getBeanDefinitions() {
 			if (beanDefinitions == null) {
@@ -1179,10 +1189,6 @@ class VoiceManagerTest {
 				} else if (Objects.equals(methodName, "contains")) {
 					//
 					return contains;
-					//
-				} else if (Objects.equals(methodName, "addAll")) {
-					//
-					return addAll;
 					//
 				} // if
 					//
@@ -1501,6 +1507,14 @@ class VoiceManagerTest {
 				if (Objects.equals(methodName, "getDocument")) {
 					//
 					return document;
+					//
+				} // if
+					//
+			} else if (isAssignableFrom(CLASS_BYTE_CONVERTER, VoiceManagerTest.getClass(proxy))) {
+				//
+				if (Objects.equals(methodName, "convert")) {
+					//
+					return convertedByteArray;
 					//
 				} // if
 					//
@@ -4156,6 +4170,74 @@ class VoiceManagerTest {
 	}
 
 	@Test
+	void testImportVoiceBySpeechApi() throws Throwable {
+		//
+		Assertions.assertDoesNotThrow(() -> importVoiceBySpeechApi(null, null, null));
+		//
+		// org.springframework.context.support.VoiceManager$ObjectMap
+		//
+		final Object objectMap = Reflection.newProxy(CLASS_OBJECT_MAP, createVoiceManagerIH());
+		//
+		Assertions.assertThrows(IllegalStateException.class, () -> importVoiceBySpeechApi(objectMap, null, null));
+		//
+		final Class<?> clz = getClass(objectMap);
+		//
+		final Method setObject = clz != null ? clz.getDeclaredMethod("setObject", Class.class, Object.class) : null;
+		//
+		if (setObject != null) {
+			//
+			setObject.setAccessible(true);
+			//
+		} // if
+			//
+		invoke(setObject, objectMap, CLASS_IMPORT_TASK, Narcissus.allocateInstance(CLASS_IMPORT_TASK));
+		//
+		Assertions.assertThrows(IllegalStateException.class, () -> importVoiceBySpeechApi(objectMap, null, null));
+		//
+		// org.springframework.context.support.VoiceManager
+		//
+		invoke(setObject, objectMap, VoiceManager.class, null);
+		//
+		Assertions.assertThrows(IllegalStateException.class, () -> importVoiceBySpeechApi(objectMap, null, null));
+		//
+		invoke(setObject, objectMap, VoiceManager.class, instance);
+		//
+		Assertions.assertThrows(IllegalStateException.class, () -> importVoiceBySpeechApi(objectMap, null, null));
+		//
+		// org.springframework.context.support.SpeechApi
+		//
+		invoke(setObject, objectMap, SpeechApi.class, speechApi);
+		//
+		Assertions.assertThrows(IllegalStateException.class, () -> importVoiceBySpeechApi(objectMap, null, null));
+		//
+		// org.springframework.context.support.VoiceManager$ByteConverter
+		//
+		invoke(setObject, objectMap, CLASS_BYTE_CONVERTER, null);
+		//
+		Assertions.assertThrows(IllegalStateException.class, () -> importVoiceBySpeechApi(objectMap, null, null));
+		//
+		invoke(setObject, objectMap, CLASS_BYTE_CONVERTER, Reflection.newProxy(CLASS_BYTE_CONVERTER, ih));
+		//
+		Assertions.assertThrows(IllegalStateException.class, () -> importVoiceBySpeechApi(objectMap, null, null));
+		//
+		// org.springframework.context.support.Provider
+		//
+		invoke(setObject, objectMap, Provider.class, Reflection.newProxy(Provider.class, ih));
+		//
+		Assertions.assertDoesNotThrow(() -> importVoiceBySpeechApi(objectMap, null, null));
+		//
+	}
+
+	private static void importVoiceBySpeechApi(final Object objectMap, final String filePath, final String voiceId)
+			throws Throwable {
+		try {
+			METHOD_IMPORT_VOICE_BY_SPEECH_API.invoke(null, objectMap, filePath, voiceId);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
 	void testAdd() {
 		//
 		Assertions.assertDoesNotThrow(() -> add(null, null));
@@ -5495,12 +5577,6 @@ class VoiceManagerTest {
 	void testIsAssignableFrom() throws Throwable {
 		//
 		Assertions.assertFalse(isAssignableFrom(null, null));
-		//
-		Assertions.assertFalse(isAssignableFrom(Object.class, null));
-		//
-		Assertions.assertTrue(isAssignableFrom(CharSequence.class, String.class));
-		//
-		Assertions.assertFalse(isAssignableFrom(String.class, CharSequence.class));
 		//
 	}
 
@@ -8698,12 +8774,6 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> addAll(collection, collection));
 		//
-		if (ih != null) {
-			//
-			ih.addAll = Boolean.FALSE;
-			//
-		} // if
-			//
 		Assertions.assertDoesNotThrow(() -> addAll(collection, null));
 		//
 	}
@@ -9172,9 +9242,7 @@ class VoiceManagerTest {
 	@Test
 	void testImportTask() throws Throwable {
 		//
-		final Class<?> clz = forName("org.springframework.context.support.VoiceManager$ImportTask");
-		//
-		final Constructor<?> constructor = getDeclaredConstructor(clz);
+		final Constructor<?> constructor = getDeclaredConstructor(CLASS_IMPORT_TASK);
 		//
 		if (constructor != null) {
 			//
@@ -9192,8 +9260,8 @@ class VoiceManagerTest {
 		//
 		// org.springframework.context.support.VoiceManager.ImportTask.infoOrPrintln(org.slf4j.Logger,java.io.PrintStream,java.lang.String)
 		//
-		final Method infoOrPrintln = clz != null
-				? clz.getDeclaredMethod("infoOrPrintln", Logger.class, PrintStream.class, String.class)
+		final Method infoOrPrintln = CLASS_IMPORT_TASK != null
+				? CLASS_IMPORT_TASK.getDeclaredMethod("infoOrPrintln", Logger.class, PrintStream.class, String.class)
 				: null;
 		//
 		Assertions.assertNull(invoke(infoOrPrintln, instance, null, null, null));
@@ -9206,7 +9274,9 @@ class VoiceManagerTest {
 			//
 			// org.springframework.context.support.VoiceManager.ImportTask.add(org.apache.commons.lang3.math.Fraction,org.apache.commons.lang3.math.Fraction)
 			//
-		final Method add = clz != null ? clz.getDeclaredMethod("add", Fraction.class, Fraction.class) : null;
+		final Method add = CLASS_IMPORT_TASK != null
+				? CLASS_IMPORT_TASK.getDeclaredMethod("add", Fraction.class, Fraction.class)
+				: null;
 		//
 		Assertions.assertNull(invoke(add, instance, null, null));
 		//

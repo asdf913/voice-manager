@@ -9151,60 +9151,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 								if (isInstalled(speechApi = getIfNull(speechApi,
 										() -> ObjectMap.getObject(objectMap, SpeechApi.class)))) {
 									//
-									if ((it.file = createTempFile(randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH),
-											filePath)) != null) {
-										//
-										ObjectMap.setObject(objectMap, File.class, it.file);
-										//
-										writeVoiceToFile(objectMap, getText(voice),
-												//
-												// voiceId
-												//
-												voiceId
-												//
-												// rate
-												//
-												, getRate(vm),
-												//
-												// volume
-												//
-												Math.min(Math.max(intValue(
-														getValue(jsSpeechVolume = getIfNull(jsSpeechVolume,
-																() -> ObjectMap.getObject(_objectMap, JSlider.class))),
-														100), 0), 100)
-										//
-										);
-										//
-										if ((byteConverter = getIfNull(byteConverter,
-												() -> ObjectMap.getObject(objectMap, ByteConverter.class))) != null) {
-											//
-											FileUtils.writeByteArrayToFile(it.file,
-													byteConverter.convert(FileUtils.readFileToByteArray(it.file)));
-											//
-										} // if
-											//
-										deleteOnExit(it.file);
-										//
-									} // if
-										//
-									setSource(it.voice,
-											StringUtils.defaultIfBlank(getSource(voice),
-													getProviderName(provider = getIfNull(provider,
-															() -> ObjectMap.getObject(objectMap, Provider.class)))));
+									ObjectMap.setObject(objectMap, ImportTask.class, it);
 									//
-									try {
-										//
-										setLanguage(it.voice,
-												StringUtils.defaultIfBlank(getLanguage(it.voice),
-														convertLanguageCodeToText(
-																getVoiceAttribute(speechApi, voiceId, LANGUAGE), 16)));
-										//
-									} catch (final Error e) {
-										//
-										TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
-										//
-									} // try
-										//
+									importVoiceBySpeechApi(objectMap, filePath, voiceId);
+									//
 								} // if
 									//
 							} // if
@@ -9247,6 +9197,67 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		} finally {
 			//
 			shutdown(es);
+			//
+		} // try
+			//
+	}
+
+	private static void importVoiceBySpeechApi(final ObjectMap objectMap, final String filePath, final String voiceId)
+			throws IllegalAccessException, InvocationTargetException, IOException {
+		//
+		final ImportTask it = ObjectMap.getObject(objectMap, ImportTask.class);
+		//
+		if (it == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		if ((it.file = createTempFile(randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH), filePath)) != null) {
+			//
+			ObjectMap.setObject(objectMap, File.class, it.file);
+			//
+			final VoiceManager vm = ObjectMap.getObject(objectMap, VoiceManager.class);
+			//
+			writeVoiceToFile(objectMap, getText(it.voice),
+					//
+					// voiceId
+					//
+					voiceId
+					//
+					// rate
+					//
+					, getRate(vm),
+					//
+					// volume
+					//
+					Math.min(Math.max(intValue(getValue(vm != null ? vm.jsSpeechVolume : null), 100), 0), 100)
+			//
+			);
+			//
+			final ByteConverter byteConverter = ObjectMap.getObject(objectMap, ByteConverter.class);
+			//
+			testAndAccept(Objects::nonNull,
+					byteConverter != null ? byteConverter.convert(FileUtils.readFileToByteArray(it.file)) : null,
+					x -> FileUtils.writeByteArrayToFile(it.file, x));
+			//
+			deleteOnExit(it.file);
+			//
+		} // if
+			//
+		setSource(it.voice, StringUtils.defaultIfBlank(getSource(it.voice),
+				getProviderName(ObjectMap.getObject(objectMap, Provider.class))));
+		//
+		try {
+			//
+			setLanguage(it.voice,
+					StringUtils.defaultIfBlank(getLanguage(it.voice), convertLanguageCodeToText(
+							getVoiceAttribute(ObjectMap.getObject(objectMap, SpeechApi.class), voiceId, LANGUAGE),
+							16)));
+			//
+		} catch (final Error e) {
+			//
+			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
 			//
 		} // try
 			//
