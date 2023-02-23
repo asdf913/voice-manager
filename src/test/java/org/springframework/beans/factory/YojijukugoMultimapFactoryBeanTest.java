@@ -18,12 +18,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 
-import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
+import com.j256.simplemagic.ContentInfo;
 
 class YojijukugoMultimapFactoryBeanTest {
 
-	private static Method METHOD_TO_STRING, METHOD_TEST, METHOD_GET_CONTENT_AS_BYTE_ARRAY = null;
+	private static Method METHOD_TO_STRING, METHOD_TEST, METHOD_GET_CONTENT_AS_BYTE_ARRAY, METHOD_GET_MIME_TYPE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -36,6 +36,8 @@ class YojijukugoMultimapFactoryBeanTest {
 		//
 		(METHOD_GET_CONTENT_AS_BYTE_ARRAY = clz.getDeclaredMethod("getContentAsByteArray", Resource.class))
 				.setAccessible(true);
+		//
+		(METHOD_GET_MIME_TYPE = clz.getDeclaredMethod("getMimeType", ContentInfo.class)).setAccessible(true);
 		//
 	}
 
@@ -204,6 +206,27 @@ class YojijukugoMultimapFactoryBeanTest {
 				return null;
 			} else if (obj instanceof byte[]) {
 				return (byte[]) obj;
+			}
+			throw new Throwable(obj != null ? toString(obj.getClass()) : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetMimeType() throws Throwable {
+		//
+		Assertions.assertNull(getMimeType(null));
+		//
+	}
+
+	private static String getMimeType(final ContentInfo instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_MIME_TYPE.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
 			}
 			throw new Throwable(obj != null ? toString(obj.getClass()) : null);
 		} catch (final InvocationTargetException e) {

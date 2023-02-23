@@ -55,9 +55,8 @@ public class YojijukugoMultimapFactoryBean implements FactoryBean<Multimap<Strin
 			//
 			final byte[] bs = getContentAsByteArray(resource);
 			//
-			final ContentInfo ci = testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch, null);
-			//
-			if (Objects.equals("application/vnd.openxmlformats-officedocument", ci != null ? ci.getMimeType() : null)) {
+			if (Objects.equals("application/vnd.openxmlformats-officedocument",
+					getMimeType(testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch, null)))) {
 				//
 				try (final InputStream is = new ByteArrayInputStream(bs);
 						final Workbook wb = WorkbookFactory.create(is)) {
@@ -152,6 +151,10 @@ public class YojijukugoMultimapFactoryBean implements FactoryBean<Multimap<Strin
 			//
 		return multimap;
 		//
+	}
+
+	private static String getMimeType(final ContentInfo instance) {
+		return instance != null ? instance.getMimeType() : null;
 	}
 
 	private static byte[] getContentAsByteArray(final Resource instance) throws IOException {
