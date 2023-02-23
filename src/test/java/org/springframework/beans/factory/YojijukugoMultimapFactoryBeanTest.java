@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.MalformedURLException;
 import java.util.function.Predicate;
 import java.util.stream.IntStream;
 
@@ -23,7 +24,8 @@ import com.j256.simplemagic.ContentInfo;
 
 class YojijukugoMultimapFactoryBeanTest {
 
-	private static Method METHOD_TO_STRING, METHOD_TEST, METHOD_GET_CONTENT_AS_BYTE_ARRAY, METHOD_GET_MIME_TYPE = null;
+	private static Method METHOD_TO_STRING, METHOD_TEST, METHOD_GET_CONTENT_AS_BYTE_ARRAY, METHOD_GET_MIME_TYPE,
+			METHOD_CREATE_MULTI_MAP_BY_URL = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -38,6 +40,9 @@ class YojijukugoMultimapFactoryBeanTest {
 				.setAccessible(true);
 		//
 		(METHOD_GET_MIME_TYPE = clz.getDeclaredMethod("getMimeType", ContentInfo.class)).setAccessible(true);
+		//
+		(METHOD_CREATE_MULTI_MAP_BY_URL = clz.getDeclaredMethod("createMultimapByUrl", String.class, String[].class))
+				.setAccessible(true);
 		//
 	}
 
@@ -63,7 +68,7 @@ class YojijukugoMultimapFactoryBeanTest {
 		//
 		Assertions.assertNull(getObject(instance));
 		//
-		instance.setUrl(new File("pom.xml").toURI().toURL().toString());
+		instance.setUrl(toString(new File("pom.xml").toURI().toURL()));
 		//
 		Assertions.assertNull(getObject(instance));
 		//
@@ -227,6 +232,40 @@ class YojijukugoMultimapFactoryBeanTest {
 				return null;
 			} else if (obj instanceof String) {
 				return (String) obj;
+			}
+			throw new Throwable(obj != null ? toString(obj.getClass()) : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCreateMultimapByUrl() throws Throwable {
+		//
+		Assertions.assertNull(createMultimapByUrl(null, null));
+		//
+		Assertions.assertNull(createMultimapByUrl("", null));
+		//
+		Assertions.assertNull(createMultimapByUrl(" ", null));
+		//
+		final String url = toString(new File("pom.xml").toURI().toURL());
+		//
+		Assertions.assertThrows(MalformedURLException.class, () -> createMultimapByUrl(url, null));
+		//
+		Assertions.assertThrows(MalformedURLException.class, () -> createMultimapByUrl(url, new String[] {}));
+		//
+		Assertions.assertThrows(MalformedURLException.class, () -> createMultimapByUrl(url, new String[] {"file"}));
+		//
+	}
+
+	private static Multimap<String, String> createMultimapByUrl(final String url, final String[] allowProtocols)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_MULTI_MAP_BY_URL.invoke(null, url, allowProtocols);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Multimap) {
+				return (Multimap) obj;
 			}
 			throw new Throwable(obj != null ? toString(obj.getClass()) : null);
 		} catch (final InvocationTargetException e) {

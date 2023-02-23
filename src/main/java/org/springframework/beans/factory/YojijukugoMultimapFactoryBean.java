@@ -96,12 +96,17 @@ public class YojijukugoMultimapFactoryBean implements FactoryBean<Multimap<Strin
 				//
 		} // if
 			//
-		final String[] allowProtocols = ProtocolUtil.getAllowProtocols();
+		return createMultimapByUrl(url, ProtocolUtil.getAllowProtocols());
+		//
+	}
+
+	private static Multimap<String, String> createMultimapByUrl(final String url, final String[] allowProtocols)
+			throws IOException {
 		//
 		final Elements tables = ElementUtil.getElementsByTag(
 				testAndApply(
-						x -> allowProtocols == null || allowProtocols.length == 0
-								|| StringUtils.equalsAnyIgnoreCase(getProtocol(x), allowProtocols),
+						x -> x != null && (allowProtocols == null || allowProtocols.length == 0
+								|| StringUtils.equalsAnyIgnoreCase(getProtocol(x), allowProtocols)),
 						testAndApply(StringUtils::isNotBlank, url, URL::new, null), x -> Jsoup.parse(x, 0), null),
 				"table");
 		//
