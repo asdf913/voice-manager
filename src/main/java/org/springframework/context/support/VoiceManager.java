@@ -10707,6 +10707,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					} // if
 						//
+					StringBuilder name = null;
+					//
+					String string = null;
+					//
 					for (final Entry<String, Voice> entry : entrySet) {
 						//
 						if (Boolean.logicalOr((voice = VoiceManager.getValue(entry)) == null,
@@ -10716,11 +10720,38 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 						} // if
 							//
-							// TODO
-							//
 							// Set Slide Name
 							//
-						setNodeValue(getNamedItem(getAttributes(pageCloned), "draw:name"), voice.getText());
+						clear(name = ObjectUtils.getIfNull(name, StringBuilder::new));
+						//
+						// text
+						//
+						final String text = getText(voice);
+						//
+						if (StringUtils.isNotBlank(text)) {
+							//
+							append(name, text);
+							//
+						} // if
+							//
+						// hiragana and romaji
+						//
+						if (StringUtils.isNotBlank(string = StringUtils
+								.trim(collect(filter(stream(Arrays.asList(getHiragana(voice), getRomaji(voice))),
+										StringUtils::isNotBlank), Collectors.joining(" "))))) {
+							//
+							append(name, ' ');
+							//
+							append(name, '(');
+							//
+							append(name, string);
+							//
+							append(name, ')');
+							//
+						} // if
+							//
+							//
+						setNodeValue(getNamedItem(getAttributes(pageCloned), "draw:name"), VoiceManager.toString(name));
 						//
 						// p
 						//
