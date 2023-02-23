@@ -442,6 +442,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static final String COMPONENT = "component";
 
+	/**
+	 * @see java.lang.String#format(java.lang.String,java.lang.Object...)
+	 * 
+	 * @see java.lang.Class#getResourceAsStream(java.lang.String)
+	 */
+	private static final String CLASS_RESOURCE_FORMAT = "/%1$s.class";
+
 	private static final Predicate<File> EMPTY_FILE_PREDICATE = f -> f != null && f.exists() && isFile(f)
 			&& longValue(length(f), 0) == 0;
 
@@ -937,7 +944,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	/**
 	 * If there is a object in "values" with "defaultCloseOperation" field and the
 	 * field could be cast as a "java.lang.Number" instance, return the field value
-	 * 
 	 */
 	private static Number getDefaultCloseOperation(final Iterable<?> values) {
 		//
@@ -1053,7 +1059,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		final Class<?> clz = File.class;
 		//
 		try (final InputStream is = getResourceAsStream(clz,
-				String.format("/%1$s.class", StringUtils.replace(getName(clz), ".", "/")))) {
+				String.format(CLASS_RESOURCE_FORMAT, StringUtils.replace(getName(clz), ".", "/")))) {
 			//
 			final Object[] objectTypes = map(Stream.of("java.lang.String", "java.lang.String", "java.io.File"),
 					ObjectType::getInstance).toArray();
@@ -7901,7 +7907,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			final Class<?> clz = Lame.class;
 			//
 			try (final InputStream is = getResourceAsStream(clz,
-					String.format("/%1$s.class", StringUtils.replace(VoiceManager.getName(clz), ".", "/")))) {
+					String.format(CLASS_RESOURCE_FORMAT, StringUtils.replace(VoiceManager.getName(clz), ".", "/")))) {
 				//
 				final org.apache.bcel.classfile.Method[] ms = JavaClassUtil.getMethods(
 						ClassParserUtil.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null)));
@@ -7981,7 +7987,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			final Class<?> clz = LameEncoder.class;
 			//
 			try (final InputStream is = getResourceAsStream(clz,
-					String.format("/%1$s.class", StringUtils.replace(VoiceManager.getName(clz), ".", "/")))) {
+					String.format(CLASS_RESOURCE_FORMAT, StringUtils.replace(VoiceManager.getName(clz), ".", "/")))) {
 				//
 				final List<org.apache.bcel.classfile.Method> ms = toList(filter(testAndApply(Objects::nonNull,
 						JavaClassUtil.getMethods(ClassParserUtil
