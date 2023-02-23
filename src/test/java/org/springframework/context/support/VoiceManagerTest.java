@@ -383,9 +383,6 @@ class VoiceManagerTest {
 		(METHOD_GET_PROPERTY_CUSTOM_PROPERTIES = clz.getDeclaredMethod("getProperty", CustomProperties.class,
 				String.class)).setAccessible(true);
 		//
-		(METHOD_PARSE_EXPRESSION = clz.getDeclaredMethod("parseExpression", ExpressionParser.class, String.class))
-				.setAccessible(true);
-		//
 		(METHOD_GET_VALUE = clz.getDeclaredMethod("getValue", Expression.class, EvaluationContext.class))
 				.setAccessible(true);
 		//
@@ -3462,30 +3459,6 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof String) {
 				return (String) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testParseExpression() throws Throwable {
-		//
-		Assertions.assertNull(parseExpression(null, null));
-		//
-		Assertions.assertNull(parseExpression(Reflection.newProxy(ExpressionParser.class, ih), null));
-		//
-	}
-
-	private static Expression parseExpression(final ExpressionParser instance, final String expressionString)
-			throws Throwable {
-		try {
-			final Object obj = METHOD_PARSE_EXPRESSION.invoke(null, instance, expressionString);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Expression) {
-				return (Expression) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
@@ -9784,6 +9757,22 @@ class VoiceManagerTest {
 		} // if
 			//
 		Assertions.assertNull(invoke(describe, null, (Object) null));
+		//
+		// org.springframework.context.support.VoiceManager$ExportTask.parseExpression(org.springframework.expression.ExpressionParser,java.lang.String)
+		//
+		final Method parseExpression = CLASS_EXPORT_TASK != null
+				? CLASS_EXPORT_TASK.getDeclaredMethod("parseExpression", ExpressionParser.class, String.class)
+				: null;
+		//
+		if (parseExpression != null) {
+			//
+			parseExpression.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertNull(invoke(parseExpression, null, null, null));
+		//
+		Assertions.assertNull(invoke(parseExpression, null, Reflection.newProxy(ExpressionParser.class, ih), null));
 		//
 	}
 

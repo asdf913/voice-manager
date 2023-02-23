@@ -10418,6 +10418,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		}
 
+		private static Expression parseExpression(final ExpressionParser instance, final String expressionString) {
+			return instance != null ? instance.parseExpression(expressionString) : null;
+		}
+
 		private static String getOutputFolder(final VoiceManager instance) {
 			return instance != null ? instance.outputFolder : null;
 		}
@@ -12319,10 +12323,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static String toString(final Object instance) {
 		return instance != null ? instance.toString() : null;
-	}
-
-	private static Expression parseExpression(final ExpressionParser instance, final String expressionString) {
-		return instance != null ? instance.parseExpression(expressionString) : null;
 	}
 
 	private static Object getValue(final Expression instance, final EvaluationContext evaluationContext) {
