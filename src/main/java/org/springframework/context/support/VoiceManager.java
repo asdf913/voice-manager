@@ -623,12 +623,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private AbstractButton btnExecute = null;
 
 	@Note("Import File Template")
+	@Group("Import")
 	private AbstractButton btnImportFileTemplate = null;
 
 	@Note("Import a single Spread Sheet File")
+	@Group("Import")
 	private AbstractButton btnImport = null;
 
 	@Note("Import Spread Sheet File(s) within a specified folder")
+	@Group("Import")
 	private AbstractButton btnImportWithinFolder = null;
 
 	@Note("Over MP3 Title")
@@ -4838,8 +4841,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				() -> actionPerformedForConversion(source));
 		//
 		// Pronunciation
+		//
 		testAndRun(contains(getObjectsByGroupAnnotation(this, PRONUNCIATION), source),
 				() -> actionPerformedForPronunciation(source));
+		//
+		// Import
+		//
+		testAndRun(contains(getObjectsByGroupAnnotation(this, "Import"), source),
+				() -> actionPerformedForImport(source, headless));
 		//
 		if (Objects.equals(source, btnSpeak)) {
 			//
@@ -4860,22 +4869,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		} else if (Objects.equals(source, btnExport)) {
 			//
 			actionPerformedForExport(headless);
-			//
-		} else if (Objects.equals(source, btnImportFileTemplate)) {
-			//
-			actionPerformedForImportFileTemplate(headless);
-			//
-		} else if (Objects.equals(source, btnImport)) {
-			//
-			actionPerformedForBtnImport(headless);
-			//
-		} else if (Objects.equals(source, btnImportWithinFolder)) {
-			//
-			importByWorkbookFiles(
-					//
-					listFiles(new WindowsFolderBrowser().showDialog(this))
-					//
-					, headless);
 			//
 		} else if (Objects.equals(source, btnIpaSymbol)) {
 			//
@@ -5739,6 +5732,36 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			playAudio(cast(Pronunciation.class, getSelectedItem(mcbmPronunciation)),
 					getSelectedItem(mcbmPronounicationAudioFormat));
+			//
+			return;
+			//
+		} // if
+			//
+		throw new IllegalStateException();
+		//
+	}
+
+	private void actionPerformedForImport(final Object source, final boolean headless) {
+		//
+		if (Objects.equals(source, btnImportFileTemplate)) {
+			//
+			actionPerformedForImportFileTemplate(headless);
+
+			return;
+			//
+		} else if (Objects.equals(source, btnImport)) {
+			//
+			actionPerformedForBtnImport(headless);
+			//
+			return;
+			//
+		} else if (Objects.equals(source, btnImportWithinFolder)) {
+			//
+			importByWorkbookFiles(
+					//
+					listFiles(new WindowsFolderBrowser().showDialog(this))
+					//
+					, headless);
 			//
 			return;
 			//
