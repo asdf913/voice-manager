@@ -534,12 +534,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("List Name(s)")
 	private JTextComponent tfListNames = null;
 
-	@Note("List Name(s)")
+	@Note("DLL Path")
 	private JTextComponent tfDllPath = null;
 
-	private JTextComponent tfFile, tfPhraseTotal, tfPhraseCounter, tfJlptFolderNamePrefix,
-			tfOrdinalPositionFileNamePrefix, tfIpaSymbol, tfExportFile, tfElapsed, tfExportHtmlFileName,
-			tfExportPassword, tfPronunciationPageUrl, tfPronunciationPageStatusCode, tfPresentationSlideDuration = null;
+	@Note("JLPT Folder Name Prefix")
+	private JTextComponent tfJlptFolderNamePrefix = null;
+
+	private JTextComponent tfFile, tfPhraseCounter, tfPhraseTotal, tfOrdinalPositionFileNamePrefix, tfIpaSymbol,
+			tfExportFile, tfElapsed, tfExportHtmlFileName, tfExportPassword, tfPronunciationPageUrl,
+			tfPronunciationPageStatusCode, tfPresentationSlideDuration = null;
 
 	private transient ComboBoxModel<Yomi> cbmYomi = null;
 
