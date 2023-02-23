@@ -543,8 +543,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("IPA Symbol")
 	private JTextComponent tfIpaSymbol = null;
 
-	private JTextComponent tfFile, tfPhraseTotal, tfPhraseCounter, tfOrdinalPositionFileNamePrefix, tfExportFile,
-			tfElapsed, tfExportHtmlFileName, tfExportPassword, tfPronunciationPageUrl, tfPronunciationPageStatusCode,
+	@Note("Elapsed")
+	private JTextComponent tfElapsed = null;
+
+	private JTextComponent tfFile, tfPhraseCounter, tfPhraseTotal, tfOrdinalPositionFileNamePrefix, tfExportFile,
+			tfExportHtmlFileName, tfExportPassword, tfPronunciationPageUrl, tfPronunciationPageStatusCode,
 			tfPresentationSlideDuration = null;
 
 	private transient ComboBoxModel<Yomi> cbmYomi = null;
