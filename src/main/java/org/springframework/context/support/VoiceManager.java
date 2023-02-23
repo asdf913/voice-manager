@@ -9011,15 +9011,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			VoiceManager voiceManager = null;
 			//
-			Provider provider = null;
-			//
-			JSlider jsSpeechVolume = null;
-			//
 			String[] mp3Tags = null;
 			//
 			SpeechApi speechApi = null;
-			//
-			ByteConverter byteConverter = null;
 			//
 			Jakaroma jakaroma = null;
 			//
