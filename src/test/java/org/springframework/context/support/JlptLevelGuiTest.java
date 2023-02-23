@@ -50,6 +50,7 @@ import javax.swing.text.JTextComponent;
 
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.ClassParserUtil;
+import org.apache.bcel.classfile.FieldOrMethodUtil;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.generic.ATHROW;
 import org.apache.bcel.generic.ConstantPoolGen;
@@ -866,7 +867,7 @@ class JlptLevelGuiTest {
 				if ((instructions[i]) instanceof NEW _new) {
 					//
 					className = (objectType = _new != null
-							? _new.getLoadClassType(new ConstantPoolGen(m != null ? m.getConstantPool() : null))
+							? _new.getLoadClassType(new ConstantPoolGen(FieldOrMethodUtil.getConstantPool(m)))
 							: null) != null ? objectType.getClassName() : null;
 					//
 				} // if

@@ -183,6 +183,7 @@ import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.ClassParserUtil;
 import org.apache.bcel.classfile.ConstantPool;
 import org.apache.bcel.classfile.FieldOrMethod;
+import org.apache.bcel.classfile.FieldOrMethodUtil;
 import org.apache.bcel.classfile.JavaClassUtil;
 import org.apache.bcel.generic.ASTORE;
 import org.apache.bcel.generic.BIPUSH;
@@ -8023,7 +8024,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					} // if
 						//
-					if ((temp = createQualityMap(getConstantPool(m = IterableUtils.get(ms, i)),
+					if ((temp = createQualityMap(FieldOrMethodUtil.getConstantPool(m = IterableUtils.get(ms, i)),
 							InstructionListUtil
 									.getInstructions(MethodGenUtil.getInstructionList(testAndApply(Objects::nonNull, m,
 											x -> new MethodGen(x, null, null), null))))) != null) {
@@ -8077,10 +8078,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			return result;
 			//
-		}
-
-		private static final ConstantPool getConstantPool(final FieldOrMethod instance) {
-			return instance != null ? instance.getConstantPool() : null;
 		}
 
 		private static Number getValue(final ConstantPushInstruction instance) {

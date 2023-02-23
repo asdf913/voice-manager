@@ -15,6 +15,7 @@ import java.util.stream.Stream;
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.ClassParserUtil;
 import org.apache.bcel.classfile.ConstantPool;
+import org.apache.bcel.classfile.FieldOrMethodUtil;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.generic.ATHROW;
 import org.apache.bcel.generic.ConstantPoolGen;
@@ -77,7 +78,7 @@ public interface ProtocolUtil {
 			return getAllowProtocols(
 					InstructionListUtil.getInstructions(MethodGenUtil.getInstructionList(
 							testAndApply(Objects::nonNull, m, x -> new MethodGen(x, null, null), null))),
-					m != null ? m.getConstantPool() : null);
+					FieldOrMethodUtil.getConstantPool(m));
 			//
 		} // try
 			//

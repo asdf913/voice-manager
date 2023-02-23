@@ -133,6 +133,7 @@ import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.ClassParserUtil;
 import org.apache.bcel.classfile.ConstantPool;
 import org.apache.bcel.classfile.FieldOrMethod;
+import org.apache.bcel.classfile.FieldOrMethodUtil;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.generic.ATHROW;
 import org.apache.bcel.generic.ConstantPoolGen;
@@ -2510,7 +2511,7 @@ class VoiceManagerTest {
 				if ((instructions[i]) instanceof NEW _new) {
 					//
 					className = (objectType = _new != null
-							? _new.getLoadClassType(new ConstantPoolGen(m != null ? m.getConstantPool() : null))
+							? _new.getLoadClassType(new ConstantPoolGen(FieldOrMethodUtil.getConstantPool(m)))
 							: null) != null ? objectType.getClassName() : null;
 					//
 				} // if
@@ -10258,11 +10259,6 @@ class VoiceManagerTest {
 		Assertions.assertNull(
 				invoke(clz != null ? clz.getDeclaredMethod("getValue", ConstantPushInstruction.class) : null, instance,
 						(Object) null));
-		//
-		// getConstantPool(org.apache.bcel.classfile.FieldOrMethod)
-		//
-		Assertions.assertNull(invoke(clz != null ? clz.getDeclaredMethod("getConstantPool", FieldOrMethod.class) : null,
-				instance, (Object) null));
 		//
 		// createQualityMap(org.apache.bcel.classfile.ConstantPool,org.apache.bcel.generic.Instruction[])
 		//
