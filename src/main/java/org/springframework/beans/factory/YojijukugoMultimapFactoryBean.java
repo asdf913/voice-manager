@@ -1,12 +1,15 @@
 package org.springframework.beans.factory;
 
 import java.net.URL;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.helper.ProtocolUtil;
 import org.jsoup.nodes.Element;
@@ -31,7 +34,7 @@ public class YojijukugoMultimapFactoryBean implements FactoryBean<Multimap<Strin
 		//
 		final String[] allowProtocols = ProtocolUtil.getAllowProtocols();
 		//
-		final URL u = url != null ? new URL(url) : null;
+		final URL u = testAndApply(StringUtils::isNotBlank, url, URL::new, null);
 		//
 		final Elements tables = ElementUtil.getElementsByTag(
 				u != null && (allowProtocols == null || allowProtocols.length == 0
@@ -62,7 +65,7 @@ public class YojijukugoMultimapFactoryBean implements FactoryBean<Multimap<Strin
 				//
 				if ((tr = IterableUtils.get(trs, j)) == null || tr.childNodeSize() < 2
 						|| (as = ElementUtil.getElementsByTag(tr, "a")) == null || as == null || as.isEmpty()
-						|| (a = as.get(0)) == null) {
+						|| (a = IterableUtils.get(as, 0)) == null) {
 					//
 					continue;
 					//
@@ -71,6 +74,7 @@ public class YojijukugoMultimapFactoryBean implements FactoryBean<Multimap<Strin
 				if (pattern == null) {
 					//
 					pattern = Pattern.compile("[ぁ-ん]+");
+					//
 				} // if
 					//
 					// hiragana
@@ -89,6 +93,16 @@ public class YojijukugoMultimapFactoryBean implements FactoryBean<Multimap<Strin
 			//
 		return multimap;
 		//
+	}
+
+	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse) throws E {
+		return test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
+				: FailableFunctionUtil.apply(functionFalse, value);
+	}
+
+	private static <T> boolean test(final Predicate<T> instance, final T value) {
+		return instance != null && instance.test(value);
 	}
 
 	@Override
