@@ -34,11 +34,11 @@ public class YojijukugoMultimapFactoryBean implements FactoryBean<Multimap<Strin
 		//
 		final String[] allowProtocols = ProtocolUtil.getAllowProtocols();
 		//
-		final URL u = testAndApply(StringUtils::isNotBlank, url, URL::new, null);
-		//
 		final Elements tables = ElementUtil.getElementsByTag(
-				allowProtocols == null || allowProtocols.length == 0
-						|| StringUtils.equalsAnyIgnoreCase(getProtocol(u), allowProtocols) ? Jsoup.parse(u, 0) : null,
+				testAndApply(
+						x -> allowProtocols == null || allowProtocols.length == 0
+								|| StringUtils.equalsAnyIgnoreCase(getProtocol(x), allowProtocols),
+						testAndApply(StringUtils::isNotBlank, url, URL::new, null), x -> Jsoup.parse(x, 0), null),
 				"table");
 		//
 		Element tr, a = null;
