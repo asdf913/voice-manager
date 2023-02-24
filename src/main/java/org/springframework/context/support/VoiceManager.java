@@ -4885,26 +4885,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} else if (Objects.equals(source, btnConvertToHiragana)) {
 			//
-			final String text = getText(tfTextImport);
+			actionPerformedForKanjiToToHiraganaConversion();
 			//
-			if (containsKey(yojijukugoMultimap, text)) {
-				//
-				final Collection<Object> collection = MultimapUtil.get(yojijukugoMultimap, text);
-				//
-				if (IterableUtils.size(collection) == 1) {
-					//
-					setText(tfHiragana, toString(IterableUtils.get(collection, 0)));
-					//
-				} // if
-					//
-			} // if
-				//
 		} // if
 			//
-	}
-
-	private static boolean containsKey(final Multimap<?, ?> instance, final Object key) {
-		return instance != null && instance.containsKey(key);
 	}
 
 	private static void playAudio(final Pronunciation pronunciation, final Object audioFormat) {
@@ -5572,6 +5556,28 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
+	}
+
+	private void actionPerformedForKanjiToToHiraganaConversion() {
+		//
+		final String text = getText(tfTextImport);
+		//
+		if (containsKey(yojijukugoMultimap, text)) {
+			//
+			final Collection<Object> collection = MultimapUtil.get(yojijukugoMultimap, text);
+			//
+			if (IterableUtils.size(collection) == 1) {
+				//
+				setText(tfHiragana, toString(IterableUtils.get(collection, 0)));
+				//
+			} // if
+				//
+		} // if
+			//
+	}
+
+	private static boolean containsKey(final Multimap<?, ?> instance, final Object key) {
+		return instance != null && instance.containsKey(key);
 	}
 
 	private static Integer getResponseCode(final HttpURLConnection instance) throws IOException {

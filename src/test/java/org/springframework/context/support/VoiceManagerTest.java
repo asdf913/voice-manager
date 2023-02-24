@@ -223,6 +223,7 @@ import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableTable;
 import com.google.common.collect.Iterators;
+import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Range;
 import com.google.common.collect.Table;
@@ -2819,7 +2820,29 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnConvertToHiragana, 0, null)));
+		final ActionEvent actionEventBtnConvertToHiragana = new ActionEvent(btnConvertToHiragana, 0, null);
+		//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnConvertToHiragana));
+		//
+		final Multimap<Object, Object> multimap = LinkedHashMultimap.create();
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "tfTextImport", new JTextField(), true);
+			//
+			FieldUtils.writeDeclaredField(instance, "yojijukugoMultimap", multimap, true);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnConvertToHiragana));
+		//
+		if (multimap != null) {
+			//
+			multimap.putAll("", Arrays.asList(null, null));
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnConvertToHiragana));
 		//
 	}
 
