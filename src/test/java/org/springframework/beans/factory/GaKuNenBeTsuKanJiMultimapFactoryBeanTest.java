@@ -38,8 +38,8 @@ import io.github.toolfactory.narcissus.Narcissus;
 class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 
 	private static Method METHOD_GET_CLASS, METHOD_TO_STRING, METHOD_CREATE_MULIT_MAP_UNIT_WORK_BOOK,
-			METHOD_CREATE_MULIT_MAP_UNIT_SPREAD_SHEET_DOCUMENT, METHOD_GET_STRING_VALUE, METHOD_OR,
-			METHOD_GET_ROW_COUNT, METHOD_GET_SHEET_COUNT, METHOD_GET_SHEET_BY_INDEX = null;
+			METHOD_CREATE_MULIT_MAP_UNIT_SPREAD_SHEET_DOCUMENT, METHOD_OR, METHOD_GET_ROW_COUNT, METHOD_GET_SHEET_COUNT,
+			METHOD_GET_SHEET_BY_INDEX = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -55,9 +55,6 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 		//
 		(METHOD_CREATE_MULIT_MAP_UNIT_SPREAD_SHEET_DOCUMENT = clz.getDeclaredMethod("createMulitmapUnit",
 				SpreadsheetDocument.class)).setAccessible(true);
-		//
-		(METHOD_GET_STRING_VALUE = clz.getDeclaredMethod("getStringValue", org.odftoolkit.simple.table.Cell.class))
-				.setAccessible(true);
 		//
 		(METHOD_OR = clz.getDeclaredMethod("or", Boolean.TYPE, Boolean.TYPE, boolean[].class)).setAccessible(true);
 		//
@@ -489,27 +486,6 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 				return null;
 			} else if (obj instanceof Unit) {
 				return (Unit) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetStringValue() throws Throwable {
-		//
-		Assertions.assertNull(getStringValue(null));
-		//
-	}
-
-	private static String getStringValue(final org.odftoolkit.simple.table.Cell instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_STRING_VALUE.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

@@ -30,7 +30,7 @@ import org.jsoup.nodes.ElementUtil;
 import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
 import org.odftoolkit.simple.SpreadsheetDocument;
-import org.odftoolkit.simple.table.Cell;
+import org.odftoolkit.simple.table.CellUtil;
 import org.odftoolkit.simple.table.Table;
 import org.springframework.core.io.InputStreamSourceUtil;
 import org.springframework.core.io.Resource;
@@ -153,8 +153,8 @@ public class YojijukugoMultimapFactoryBean implements FactoryBean<Multimap<Strin
 			//
 			if ((row = table.getRowByIndex(i)) == null
 					//
-					|| StringUtils.isEmpty(text = getStringValue(row.getCellByIndex(0)))
-					|| StringUtils.isEmpty(hiragana = getStringValue(row.getCellByIndex(1)))
+					|| StringUtils.isEmpty(text = CellUtil.getStringValue(row.getCellByIndex(0)))
+					|| StringUtils.isEmpty(hiragana = CellUtil.getStringValue(row.getCellByIndex(1)))
 					//
 					|| first == null || first.getAndSet(false)) {
 				//
@@ -171,10 +171,6 @@ public class YojijukugoMultimapFactoryBean implements FactoryBean<Multimap<Strin
 			//
 		return multimap;
 		//
-	}
-
-	private static String getStringValue(final Cell instance) {
-		return instance != null ? instance.getStringValue() : null;
 	}
 
 	private static Multimap<String, String> createMultimapByUrl(final String url, final String[] allowProtocols)

@@ -32,7 +32,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
 import org.jsoup.select.Elements;
 import org.odftoolkit.simple.SpreadsheetDocument;
-import org.odftoolkit.simple.table.Cell;
+import org.odftoolkit.simple.table.CellUtil;
 import org.odftoolkit.simple.table.Table;
 import org.springframework.core.io.InputStreamSourceUtil;
 import org.springframework.core.io.Resource;
@@ -235,10 +235,6 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 		//
 	}
 
-	private static String getStringValue(final Cell instance) {
-		return instance != null ? instance.getStringValue() : null;
-	}
-
 	private static String getMimeType(final ContentInfo instance) {
 		return instance != null ? instance.getMimeType() : null;
 	}
@@ -300,7 +296,7 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 				//
 			MultimapUtil.put(
 					IValue0Util.getValue0(mm = ObjectUtils.getIfNull(mm, () -> Unit.with(LinkedHashMultimap.create()))),
-					getStringValue(row.getCellByIndex(0)), getStringValue(row.getCellByIndex(1)));
+					CellUtil.getStringValue(row.getCellByIndex(0)), CellUtil.getStringValue(row.getCellByIndex(1)));
 			//
 		} // for
 			//
