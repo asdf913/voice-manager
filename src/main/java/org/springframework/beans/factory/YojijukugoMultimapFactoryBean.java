@@ -29,8 +29,13 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
 import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
+import org.odftoolkit.simple.SpreadsheetDocument;
+import org.odftoolkit.simple.table.Cell;
+import org.odftoolkit.simple.table.Table;
+import org.springframework.core.io.InputStreamSourceUtil;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceUtil;
+import org.springframework.core.io.XlsxUtil;
 
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
@@ -61,15 +66,30 @@ public class YojijukugoMultimapFactoryBean implements FactoryBean<Multimap<Strin
 			//
 			final ContentInfo ci = testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch, null);
 			//
+			final String message = ci != null ? ci.getMessage() : null;
+			//
+			IValue0<Multimap<String, String>> value = null;
+			//
 			if (Objects.equals("application/vnd.openxmlformats-officedocument", getMimeType(ci))
-					|| Objects.equals("OLE 2 Compound Document", ci != null ? ci.getMessage() : null)) {
+					|| Objects.equals("OLE 2 Compound Document", message) || XlsxUtil.isXlsx(resource)) {
 				//
 				try (final InputStream is = new ByteArrayInputStream(bs);
 						final Workbook wb = WorkbookFactory.create(is)) {
 					//
-					final IValue0<Multimap<String, String>> value = createMultimap(wb);
+					if ((value = createMultimap(wb)) != null) {
+						//
+						return IValue0Util.getValue0(value);
+						//
+					} // if
+						//
+				} // try
 					//
-					if (value != null) {
+			} else if (Objects.equals("OpenDocument Spreadsheet", message)) {
+				//
+				try (final InputStream is = InputStreamSourceUtil.getInputStream(resource);
+						final SpreadsheetDocument ssd = SpreadsheetDocument.loadDocument(is)) {
+					//
+					if ((value = createMultimap(ssd)) != null) {
 						//
 						return IValue0Util.getValue0(value);
 						//
@@ -115,6 +135,46 @@ public class YojijukugoMultimapFactoryBean implements FactoryBean<Multimap<Strin
 			//
 		return null;
 		//
+	}
+
+	private static IValue0<Multimap<String, String>> createMultimap(final SpreadsheetDocument ssd) {
+		//
+		final Table table = ssd != null && ssd.getSheetCount() == 1 ? ssd.getSheetByIndex(0) : null;
+		//
+		final AtomicBoolean first = new AtomicBoolean(true);
+		//
+		IValue0<Multimap<String, String>> multimap = null;
+		//
+		org.odftoolkit.simple.table.Row row = null;
+		//
+		String text, hiragana = null;
+		//
+		for (int i = 0; table != null && i < table.getRowCount(); i++) {
+			//
+			if ((row = table.getRowByIndex(i)) == null
+					//
+					|| StringUtils.isEmpty(text = getStringValue(row.getCellByIndex(0)))
+					|| StringUtils.isEmpty(hiragana = getStringValue(row.getCellByIndex(1)))
+					//
+					|| first == null || first.getAndSet(false)) {
+				//
+				continue;
+				//
+			} // if
+				//
+			MultimapUtil.put(
+					IValue0Util.getValue0(
+							multimap = ObjectUtils.getIfNull(multimap, () -> Unit.with(LinkedListMultimap.create()))),
+					text, hiragana);
+			//
+		} // for
+			//
+		return multimap;
+		//
+	}
+
+	private static String getStringValue(final Cell instance) {
+		return instance != null ? instance.getStringValue() : null;
 	}
 
 	private static Multimap<String, String> createMultimapByUrl(final String url, final String[] allowProtocols)

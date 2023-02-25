@@ -17,7 +17,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.odftoolkit.simple.SpreadsheetDocument;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
 import com.google.common.collect.Multimap;
@@ -26,7 +28,8 @@ import com.j256.simplemagic.ContentInfo;
 class YojijukugoMultimapFactoryBeanTest {
 
 	private static Method METHOD_TO_STRING, METHOD_TEST, METHOD_GET_CONTENT_AS_BYTE_ARRAY, METHOD_GET_MIME_TYPE,
-			METHOD_CREATE_MULTI_MAP_BY_URL, METHOD_CREATE_MULTI_MAP = null;
+			METHOD_CREATE_MULTI_MAP_BY_URL, METHOD_CREATE_MULTI_MAP_WORK_BOOK,
+			METHOD_CREATE_MULTI_MAP_SPREAD_SHEET_DOCUMENT = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -45,7 +48,11 @@ class YojijukugoMultimapFactoryBeanTest {
 		(METHOD_CREATE_MULTI_MAP_BY_URL = clz.getDeclaredMethod("createMultimapByUrl", String.class, String[].class))
 				.setAccessible(true);
 		//
-		(METHOD_CREATE_MULTI_MAP = clz.getDeclaredMethod("createMultimap", Workbook.class)).setAccessible(true);
+		(METHOD_CREATE_MULTI_MAP_WORK_BOOK = clz.getDeclaredMethod("createMultimap", Workbook.class))
+				.setAccessible(true);
+		//
+		(METHOD_CREATE_MULTI_MAP_SPREAD_SHEET_DOCUMENT = clz.getDeclaredMethod("createMultimap",
+				SpreadsheetDocument.class)).setAccessible(true);
 		//
 	}
 
@@ -146,6 +153,12 @@ class YojijukugoMultimapFactoryBeanTest {
 		instance.setResource(new ByteArrayResource(bs));
 		//
 		Assertions.assertEquals("{=[]}", toString(getObject(instance)));
+		//
+		// org.odftoolkit.simple.SpreadsheetDocument
+		//
+		instance.setResource(new ClassPathResource("yojijukugo.ods"));
+		//
+		Assertions.assertNotNull(getObject(instance));
 		//
 	}
 
@@ -279,13 +292,41 @@ class YojijukugoMultimapFactoryBeanTest {
 	@Test
 	void testCreateMultimap() throws Throwable {
 		//
-		Assertions.assertNull(createMultimap(null));
+		Assertions.assertNull(createMultimap((Workbook) null));
 		//
+		Assertions.assertNull(createMultimap((SpreadsheetDocument) null));
+		//
+		try (final SpreadsheetDocument ssd = SpreadsheetDocument.newSpreadsheetDocument()) {
+			//
+			if (ssd != null) {
+				//
+				ssd.addTable();
+				//
+			} // if
+				//
+			Assertions.assertNull(createMultimap(ssd));
+			//
+		} // if
+			//
 	}
 
 	private static IValue0<Multimap<String, String>> createMultimap(final Workbook wb) throws Throwable {
 		try {
-			final Object obj = METHOD_CREATE_MULTI_MAP.invoke(null, wb);
+			final Object obj = METHOD_CREATE_MULTI_MAP_WORK_BOOK.invoke(null, wb);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof IValue0) {
+				return (IValue0) obj;
+			}
+			throw new Throwable(obj != null ? toString(obj.getClass()) : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static IValue0<Multimap<String, String>> createMultimap(final SpreadsheetDocument ssd) throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_MULTI_MAP_SPREAD_SHEET_DOCUMENT.invoke(null, ssd);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof IValue0) {
