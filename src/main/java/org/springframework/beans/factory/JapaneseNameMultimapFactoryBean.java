@@ -8,6 +8,7 @@ import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
@@ -61,9 +62,9 @@ public class JapaneseNameMultimapFactoryBean implements FactoryBean<Multimap<Str
 		//
 		List<String> strings = null;
 		//
-		for (int i = 0; tds != null && i < tds.size(); i++) {
+		for (int i = 0; i < IterableUtils.size(tds); i++) {
 			//
-			if ((td = tds.get(i)) == null || (divs = td.select("div")) == null || divs.isEmpty()
+			if ((divs = ElementUtil.select(td = IterableUtils.get(tds, i), "div")) == null || divs.isEmpty()
 					|| divs.iterator() == null || (table = ObjectUtils.getIfNull(table, HashBasedTable::create)) == null
 					|| (multimap = ObjectUtils.getIfNull(multimap, LinkedListMultimap::create)) == null) {
 				//
