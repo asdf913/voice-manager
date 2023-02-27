@@ -48,17 +48,9 @@ public class JapaneseNameMultimapFactoryBean implements FactoryBean<Multimap<Str
 		//
 		Table<String, String, String> table = null;
 		//
-		Multimap<String, String> multimap = null;
-		//
-		String text, hiragana = null;
-		//
-		Element nextElementSibling = null;
+		Multimap<String, String> multimap = null, temp = null;
 		//
 		Pattern pattern = null;
-		//
-		Matcher matcher = null;
-		//
-		List<String> strings = null;
 		//
 		for (int i = 0; i < IterableUtils.size(tds); i++) {
 			//
@@ -69,46 +61,67 @@ public class JapaneseNameMultimapFactoryBean implements FactoryBean<Multimap<Str
 				continue;
 				//
 			} // if
-				//
+			//
 			for (final Element div : divs) {
 				//
-				if (div == null) {
+				if ((temp = createMultimap(div,
+						pattern = ObjectUtils.getIfNull(pattern, () -> Pattern.compile("^\\((.+)\\)$")))) == null) {
 					//
 					continue;
 					//
 				} // if
 					//
-				nextElementSibling = div;
+				multimap.putAll(temp);
 				//
-				while ((nextElementSibling = nextElementSibling.nextElementSibling()) != null
-						&& !Objects.equals(nextElementSibling.tagName(), "div")) {
-					//
-					if ((pattern = ObjectUtils.getIfNull(pattern, () -> Pattern.compile("^\\((.+)\\)$"))) != null
-							&& (matcher = pattern
-									.matcher(StringUtils.substringAfter(text = nextElementSibling.text(), ' '))) != null
-							&& matcher.matches() && matcher.groupCount() == 1
-							&& (strings = Arrays.stream(StringUtils.split(matcher.group(1), '/')).map(StringUtils::trim)
-									.toList()) != null
-							&& strings.iterator() != null) {
-						//
-						for (final String s : strings) {
-							//
-							table.put(div.text(), s, hiragana = StringUtils.substringBefore(text, ' '));
-							//
-							multimap.put(s, hiragana);
-							//
-						} // for
-							//
-					} // if
-						//
-				} // while
-					//
 			} // for
 				//
 		} // for
 			//
 		return multimap;
 		//
+	}
+
+	private static Multimap<String, String> createMultimap(final Element input, final Pattern pattern) {
+		//
+		Element nextElementSibling = input;
+		//
+		Matcher matcher = null;
+		//
+		String text = null;
+		//
+		List<String> strings = null;
+		//
+		Multimap<String, String> multimap = null;
+		//
+		while ((nextElementSibling = nextElementSibling != null ? nextElementSibling.nextElementSibling()
+				: null) != null && !Objects.equals(nextElementSibling.tagName(), "div")) {
+			//
+			if (pattern != null
+					&& (matcher = pattern
+							.matcher(StringUtils.substringAfter(text = nextElementSibling.text(), ' '))) != null
+					&& matcher.matches() && matcher.groupCount() == 1 && (strings = Arrays
+							.stream(StringUtils.split(matcher.group(1), '/')).map(StringUtils::trim).toList()) != null
+					&& strings.iterator() != null) {
+				//
+				for (final String s : strings) {
+					//
+					put(multimap = ObjectUtils.getIfNull(multimap, LinkedListMultimap::create), s,
+							StringUtils.substringBefore(text, ' '));
+					//
+				} // for
+					//
+			} // if
+				//
+		} // while
+			//
+		return multimap;
+		//
+	}
+
+	private static <K, V> void put(final Multimap<K, V> instance, final K key, final V value) {
+		if (instance != null) {
+			instance.put(key, value);
+		}
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
