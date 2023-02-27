@@ -44,8 +44,6 @@ public class JapaneseNameMultimapFactoryBean implements FactoryBean<Multimap<Str
 						testAndApply(StringUtils::isNotBlank, url, URL::new, null), x -> Jsoup.parse(x, 0), null),
 				"table td");
 		//
-		Element td = null;
-		//
 		Elements divs = null;
 		//
 		Table<String, String, String> table = null;
@@ -64,7 +62,7 @@ public class JapaneseNameMultimapFactoryBean implements FactoryBean<Multimap<Str
 		//
 		for (int i = 0; i < IterableUtils.size(tds); i++) {
 			//
-			if ((divs = ElementUtil.select(td = IterableUtils.get(tds, i), "div")) == null || divs.isEmpty()
+			if ((divs = ElementUtil.select(IterableUtils.get(tds, i), "div")) == null || divs.isEmpty()
 					|| divs.iterator() == null || (table = ObjectUtils.getIfNull(table, HashBasedTable::create)) == null
 					|| (multimap = ObjectUtils.getIfNull(multimap, LinkedListMultimap::create)) == null) {
 				//
