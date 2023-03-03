@@ -1,17 +1,25 @@
 package org.springframework.beans.factory;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
+import java.util.stream.IntStream;
 
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.javatuples.valueintf.IValue0;
 import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.core.io.ByteArrayResource;
 
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
@@ -20,18 +28,24 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class JapaneseNameMultimapFactoryBeanTest {
 
-	private static Method METHOD_TEST, METHOD_GET_PROTOCOL, METHOD_CREATE_MULTI_MAP, METHOD_PUT = null;
+	private static Method METHOD_TO_STRING, METHOD_TEST, METHOD_GET_PROTOCOL, METHOD_CREATE_MULTI_MAP_ELEMENT,
+			METHOD_CREATE_MULTI_MAP_WORK_BOOK, METHOD_PUT = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
 		//
 		final Class<?> clz = JapaneseNameMultimapFactoryBean.class;
 		//
+		(METHOD_TO_STRING = clz.getDeclaredMethod("toString", Object.class)).setAccessible(true);
+		//
 		(METHOD_TEST = clz.getDeclaredMethod("test", Predicate.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_GET_PROTOCOL = clz.getDeclaredMethod("getProtocol", URL.class)).setAccessible(true);
 		//
-		(METHOD_CREATE_MULTI_MAP = clz.getDeclaredMethod("createMultimap", Element.class, Pattern.class))
+		(METHOD_CREATE_MULTI_MAP_ELEMENT = clz.getDeclaredMethod("createMultimap", Element.class, Pattern.class))
+				.setAccessible(true);
+		//
+		(METHOD_CREATE_MULTI_MAP_WORK_BOOK = clz.getDeclaredMethod("createMultimap", Workbook.class))
 				.setAccessible(true);
 		//
 		(METHOD_PUT = clz.getDeclaredMethod("put", Multimap.class, Object.class, Object.class)).setAccessible(true);
@@ -48,13 +62,93 @@ class JapaneseNameMultimapFactoryBeanTest {
 	}
 
 	@Test
-	void testGetObject() throws Exception {
+	void testGetObject() throws Throwable {
 		//
 		Assertions.assertNull(getObject(instance));
 		//
 		instance.setUrl(new File("pom.xml").toURI().toURL().toString());
 		//
 		Assertions.assertNull(getObject(instance));
+		//
+		byte[] bs = null;
+		//
+		try (final Workbook wb = new XSSFWorkbook(); final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+			//
+			wb.write(baos);
+			//
+			bs = baos.toByteArray();
+			//
+		} // try
+			//
+		if (instance != null) {
+			//
+			instance.setResource(new ByteArrayResource(bs));
+			//
+		} // if
+			//
+			// 1 Sheet and 1 Row
+			//
+		try (final Workbook wb = new XSSFWorkbook(); final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+			//
+			final Sheet sheet = wb.createSheet();
+			//
+			if (sheet != null) {
+				//
+				sheet.createRow(sheet.getPhysicalNumberOfRows());
+				//
+			} // if
+				//
+			wb.write(baos);
+			//
+			bs = baos.toByteArray();
+			//
+		} // try
+			//
+		if (instance != null) {
+			//
+			instance.setResource(new ByteArrayResource(bs));
+			//
+		} // if
+			//
+		Assertions.assertNull(getObject(instance));
+		//
+		// 2 Row(s) with 2 Cell(s) respectively
+		//
+		try (final Workbook wb = new XSSFWorkbook(); final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+			//
+			final Sheet sheet = wb.createSheet();
+			//
+			// First Row
+			//
+			Row row = sheet != null ? sheet.createRow(sheet.getPhysicalNumberOfRows()) : null;
+			//
+			if (row != null) {
+				//
+				IntStream.range(0, 2).forEach(row::createCell);
+				//
+			} // if
+				//
+				// Second Row
+				//
+			if ((row = sheet != null ? sheet.createRow(sheet.getPhysicalNumberOfRows()) : null) != null) {
+				//
+				IntStream.range(0, 2).forEach(row::createCell);
+				//
+			} // if
+				//
+			wb.write(baos);
+			//
+			bs = baos.toByteArray();
+			//
+		} // try
+			//
+		if (instance != null) {
+			//
+			instance.setResource(new ByteArrayResource(bs));
+			//
+		} // if
+			//
+		Assertions.assertEquals("{=[]}", toString(getObject(instance)));
 		//
 	}
 
@@ -67,6 +161,27 @@ class JapaneseNameMultimapFactoryBeanTest {
 		//
 		Assertions.assertEquals(Multimap.class, instance != null ? instance.getObjectType() : null);
 		//
+	}
+
+	@Test
+	void testToString() throws Throwable {
+		//
+		Assertions.assertNull(toString(null));
+		//
+	}
+
+	private static String toString(final Object instance) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_STRING.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(obj != null && obj.getClass() != null ? obj.getClass().toString() : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 	@Test
@@ -116,6 +231,8 @@ class JapaneseNameMultimapFactoryBeanTest {
 	@Test
 	void testCreateMultimap() throws Throwable {
 		//
+		Assertions.assertNull(createMultimap(null));
+		//
 		Assertions.assertNull(createMultimap(null, null));
 		//
 		Assertions.assertNull(createMultimap(cast(Element.class, Narcissus.allocateInstance(Element.class)), null));
@@ -129,11 +246,25 @@ class JapaneseNameMultimapFactoryBeanTest {
 	private static Multimap<String, String> createMultimap(final Element input, final Pattern pattern)
 			throws Throwable {
 		try {
-			final Object obj = METHOD_CREATE_MULTI_MAP.invoke(null, input, pattern);
+			final Object obj = METHOD_CREATE_MULTI_MAP_ELEMENT.invoke(null, input, pattern);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Multimap) {
 				return (Multimap) obj;
+			}
+			throw new Throwable(obj != null && obj.getClass() != null ? obj.getClass().toString() : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static IValue0<Multimap<String, String>> createMultimap(final Workbook wb) throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_MULTI_MAP_WORK_BOOK.invoke(null, wb);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof IValue0) {
+				return (IValue0) obj;
 			}
 			throw new Throwable(obj != null && obj.getClass() != null ? obj.getClass().toString() : null);
 		} catch (final InvocationTargetException e) {
