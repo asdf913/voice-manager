@@ -5608,7 +5608,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static IValue0<?> getIValue0ByKey(final Iterable<Multimap> multimaps, final Object key) {
 		//
-		if (multimaps != null && iterator(multimaps) != null) {
+		if (multimaps == null || iterator(multimaps) == null) {
 			//
 			return null;
 			//
