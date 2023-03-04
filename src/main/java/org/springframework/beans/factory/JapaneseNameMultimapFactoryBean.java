@@ -1,6 +1,7 @@
 package org.springframework.beans.factory;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Arrays;
@@ -59,7 +60,7 @@ public class JapaneseNameMultimapFactoryBean implements FactoryBean<Multimap<Str
 		//
 		if (ResourceUtil.exists(resource)) {
 			//
-			final byte[] bs = resource != null ? resource.getContentAsByteArray() : null;
+			final byte[] bs = getContentAsByteArray(resource);
 			//
 			IValue0<Multimap<String, String>> value = null;
 			//
@@ -126,6 +127,10 @@ public class JapaneseNameMultimapFactoryBean implements FactoryBean<Multimap<Str
 			//
 		return multimap;
 		//
+	}
+
+	private static byte[] getContentAsByteArray(final Resource instance) throws IOException {
+		return instance != null ? instance.getContentAsByteArray() : null;
 	}
 
 	private static String getMimeType(final ContentInfo instance) {
