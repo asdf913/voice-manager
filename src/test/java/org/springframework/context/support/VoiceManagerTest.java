@@ -206,6 +206,7 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.core.AttributeAccessor;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
@@ -341,7 +342,8 @@ class VoiceManagerTest {
 			METHOD_ADD_ALL, METHOD_PLAY_AUDIO, METHOD_PLAY, METHOD_PRONOUNICATION_CHANGED, METHOD_REMOVE_ELEMENT_AT,
 			METHOD_ACTION_PERFORMED_FOR_BTN_IMPORT, METHOD_CREATE_PRONUNCIATION_LIST_CELL_RENDERER,
 			METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_GET_FILE,
-			METHOD_GET_PRONUNCIATION_AUDIO_FILE_BY_AUDIO_FORMAT, METHOD_GET_AUDIO_FILE, METHOD_GET_BEAN = null;
+			METHOD_GET_PRONUNCIATION_AUDIO_FILE_BY_AUDIO_FORMAT, METHOD_GET_AUDIO_FILE, METHOD_GET_BEAN,
+			METHOD_IS_ALL_ATTRIBUTES_MATCHED = null;
 
 	@BeforeAll
 	static void beforeAll() throws Throwable {
@@ -1020,6 +1022,9 @@ class VoiceManagerTest {
 		//
 		(METHOD_GET_BEAN = clz.getDeclaredMethod("getBean", BeanFactory.class, String.class)).setAccessible(true);
 		//
+		(METHOD_IS_ALL_ATTRIBUTES_MATCHED = clz.getDeclaredMethod("isAllAttributesMatched", Map.class,
+				AttributeAccessor.class)).setAccessible(true);
+		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
 		CLASS_EXPORT_TASK = Class.forName("org.springframework.context.support.VoiceManager$ExportTask");
@@ -1052,7 +1057,7 @@ class VoiceManagerTest {
 
 		private Expression expression = null;
 
-		private Object value, min, max, selectedItem, nodeValue, bean = null;
+		private Object value, min, max, selectedItem, nodeValue, bean, key = null;
 
 		private Iterator<Row> rows = null;
 
@@ -1108,6 +1113,8 @@ class VoiceManagerTest {
 
 		private String[] beanDefinitionNames = null;
 
+		private Map<?, ?> attributeMap = null;
+
 		private Map<Object, BeanDefinition> getBeanDefinitions() {
 			if (beanDefinitions == null) {
 				beanDefinitions = new LinkedHashMap<>();
@@ -1120,6 +1127,13 @@ class VoiceManagerTest {
 				beanDefinitionAttributes = new LinkedHashMap<>();
 			}
 			return beanDefinitionAttributes;
+		}
+
+		private Map<?, ?> getAttributeMap() {
+			if (attributeMap == null) {
+				attributeMap = new LinkedHashMap<>();
+			}
+			return attributeMap;
 		}
 
 		@Override
@@ -1554,6 +1568,31 @@ class VoiceManagerTest {
 					return document;
 					//
 				} // if
+					//
+			} else if (proxy instanceof Entry) {
+				//
+				if (Objects.equals(methodName, "getKey")) {
+					//
+					return key;
+					//
+				} else if (Objects.equals(methodName, "getValue")) {
+					//
+					return value;
+					//
+				} // if
+					//
+			} else if (proxy instanceof AttributeAccessor) {
+				//
+				if (Objects.equals(methodName, "hasAttribute") && args != null && args.length > 0) {
+					//
+					return containsKey(getAttributeMap(), args[0]);
+					//
+				} else if (Objects.equals(methodName, "getAttribute") && args != null && args.length > 0) {
+					//
+					return get(getAttributeMap(), args[0]);
+					//
+				} // if
+					//
 					//
 			} else if (isAssignableFrom(CLASS_BYTE_CONVERTER, VoiceManagerTest.getClass(proxy))) {
 				//
@@ -9332,6 +9371,66 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof File) {
 				return (File) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testIsAllAttributesMatched() throws Throwable {
+		//
+		Assertions.assertTrue(isAllAttributesMatched(null, null));
+		//
+		final Map<?, ?> map = Reflection.newProxy(Map.class, ih);
+		//
+		Assertions.assertTrue(isAllAttributesMatched(map, null));
+		//
+		if (ih != null) {
+			//
+			ih.entrySet = Collections.singleton(null);
+			//
+		} // if
+			//
+		Assertions.assertTrue(isAllAttributesMatched(map, null));
+		//
+		if (ih != null) {
+			//
+			ih.entrySet = Collections.singleton(Reflection.newProxy(Entry.class, ih));
+			//
+		} // if
+			//
+		Assertions.assertTrue(isAllAttributesMatched(map, null));
+		//
+		final AttributeAccessor aa = Reflection.newProxy(AttributeAccessor.class, ih);
+		//
+		Assertions.assertFalse(isAllAttributesMatched(map, aa));
+		//
+		if (ih != null) {
+			//
+			put(ih.getAttributeMap(), null, null);
+			//
+		} // if
+			//
+		Assertions.assertTrue(isAllAttributesMatched(map, aa));
+		//
+		if (ih != null) {
+			//
+			ih.value = EMPTY;
+			//
+		} // if
+			//
+		Assertions.assertFalse(isAllAttributesMatched(map, aa));
+		//
+	}
+
+	private static boolean isAllAttributesMatched(final Map<?, ?> attributes, final AttributeAccessor aa)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_IS_ALL_ATTRIBUTES_MATCHED.invoke(null, attributes, aa);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

@@ -301,6 +301,7 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactoryUtil;
 import org.springframework.context.EnvironmentAware;
+import org.springframework.core.AttributeAccessor;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertyResolver;
 import org.springframework.core.env.PropertyResolverUtil;
@@ -1001,8 +1002,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		String beanDefinitionName = null;
 		//
-		boolean attributesMatched = true;
-		//
 		for (int i = 0; beanDefinitionNames != null && i < beanDefinitionNames.length; i++) {
 			//
 			if ((bd = instnace.getBeanDefinition(beanDefinitionName = beanDefinitionNames[i])) == null) {
@@ -1013,40 +1012,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			if (((isAssignableFrom(FactoryBean.class, clz = forName(bd.getBeanClassName()))
 					&& (fb = cast(FactoryBean.class, Narcissus.allocateInstance(clz))) != null
-					&& isAssignableFrom(classToBeFound, fb.getObjectType()))
-					|| isAssignableFrom(classToBeFound, clz))) {
+					&& isAssignableFrom(classToBeFound, fb.getObjectType())) || isAssignableFrom(classToBeFound, clz))
+					&& isAllAttributesMatched(attributes, bd)) {
 				//
-				attributesMatched = true;
-				//
-				if (attributes != null && iterator(attributes.entrySet()) != null) {
-					//
-					for (final Entry<?, ?> entry : attributes.entrySet()) {
-						//
-						if (entry == null) {
-							//
-							continue;
-							//
-						} // if
-							//
-						if (!bd.hasAttribute(toString(getKey(entry)))
-								|| !Objects.equals(bd.getAttribute(toString(getKey(entry))), getValue(entry))) {
-							//
-							attributesMatched = false;
-							//
-							break;
-							//
-						} // if
-							//
-					} // for
-						//
-				} // if
-					//
-				if (!attributesMatched) {
-					//
-					continue;
-					//
-				} // if
-					//
 				add(multimapBeanDefinitionNames = ObjectUtils.getIfNull(multimapBeanDefinitionNames, ArrayList::new),
 						beanDefinitionName);
 				//
@@ -1055,6 +1023,33 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		} // for
 			//
 		return multimapBeanDefinitionNames;
+		//
+	}
+
+	private static boolean isAllAttributesMatched(final Map<?, ?> attributes, final AttributeAccessor aa) {
+		//
+		if (attributes != null && iterator(attributes.entrySet()) != null) {
+			//
+			for (final Entry<?, ?> entry : attributes.entrySet()) {
+				//
+				if (entry == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if (aa != null && (!aa.hasAttribute(toString(getKey(entry)))
+						|| !Objects.equals(aa.getAttribute(toString(getKey(entry))), getValue(entry)))) {
+					//
+					return false;
+					//
+				} // if
+					//
+			} // for
+				//
+		} // if
+			//
+		return true;
 		//
 	}
 
