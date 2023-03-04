@@ -5608,35 +5608,37 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static IValue0<?> getIValue0ByKey(final Iterable<Multimap> multimaps, final Object key) {
 		//
-		IValue0<?> iValue0 = null;
-		//
 		if (multimaps != null && iterator(multimaps) != null) {
 			//
-			for (final Multimap multimap : multimaps) {
+			return null;
+			//
+		} // if
+			//
+		IValue0<?> iValue0 = null;
+		//
+		for (final Multimap multimap : multimaps) {
+			//
+			if (containsKey(multimap, key)) {
 				//
-				if (containsKey(multimap, key)) {
+				final Collection<?> collection = MultimapUtil.get(multimap, key);
+				//
+				if (IterableUtils.size(collection) == 1) {
 					//
-					final Collection<?> collection = MultimapUtil.get(multimap, key);
-					//
-					if (IterableUtils.size(collection) == 1) {
+					if (iValue0 == null) {
 						//
-						if (iValue0 == null) {
-							//
-							iValue0 = Unit.with(IterableUtils.get(collection, 0));
-							//
-						} else {
-							//
-							throw new IllegalStateException();
-							//
-						} // if
-							//
+						iValue0 = Unit.with(IterableUtils.get(collection, 0));
+						//
+					} else {
+						//
+						throw new IllegalStateException();
+						//
 					} // if
 						//
 				} // if
 					//
-			} // for
+			} // if
 				//
-		} // if
+		} // for
 			//
 		return iValue0;
 		//
