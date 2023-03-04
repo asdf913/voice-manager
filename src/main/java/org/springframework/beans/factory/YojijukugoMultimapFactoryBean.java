@@ -62,7 +62,7 @@ public class YojijukugoMultimapFactoryBean implements FactoryBean<Multimap<Strin
 		//
 		if (ResourceUtil.exists(resource)) {
 			//
-			final byte[] bs = getContentAsByteArray(resource);
+			final byte[] bs = ResourceUtil.getContentAsByteArray(resource);
 			//
 			final ContentInfo ci = testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch, null);
 			//
@@ -238,10 +238,6 @@ public class YojijukugoMultimapFactoryBean implements FactoryBean<Multimap<Strin
 
 	private static String getMimeType(final ContentInfo instance) {
 		return instance != null ? instance.getMimeType() : null;
-	}
-
-	private static byte[] getContentAsByteArray(final Resource instance) throws IOException {
-		return instance != null ? instance.getContentAsByteArray() : null;
 	}
 
 	private static String toString(final Object instance) {
