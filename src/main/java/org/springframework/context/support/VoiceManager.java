@@ -1003,8 +1003,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						&& (fb = cast(FactoryBean.class, Narcissus.allocateInstance(clz))) != null
 						&& isAssignableFrom(Multimap.class, fb.getObjectType()))
 						|| isAssignableFrom(Multimap.class, clz))
-						&& Objects.equals(testAndApply(bd::hasAttribute, "value", bd::getAttribute, null),
-								"hiragana")) {
+						&& Objects.equals(testAndApply(bd::hasAttribute, VALUE, bd::getAttribute, null), "hiragana")) {
 					//
 					add(multimapBeanDefinitionNames = ObjectUtils.getIfNull(multimapBeanDefinitionNames,
 							ArrayList::new), beanDefinitionName);
