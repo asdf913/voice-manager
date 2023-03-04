@@ -76,6 +76,14 @@
 	</bean>
 
 	<!-- -->
+	<bean id="JapaneseNameMultimap"
+		class="org.springframework.beans.factory.JapaneseNameMultimapFactoryBean">
+		<property name="resource" value="classpath:JapaneseName.xlsx" />
+		<property name="url"
+			value="${org.springframework.beans.factory.JapaneseNameMultimapFactoryBean.url}" />
+	</bean>
+
+	<!-- -->
 	<bean id="JlptLevelPageUrl" class="java.lang.String">
 		<constructor-arg index="0"
 			value="${org.springframework.context.support.VoiceManager.jlptLevelPageUrl}" />
