@@ -293,6 +293,7 @@ import org.springframework.beans.config.Title;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.ListableBeanFactoryUtil;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
@@ -978,9 +979,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		// "com.google.common.collect.Multimap" and the "Bean Definition" has "value"
 		// attribute which value is "hiragana"
 		//
-		final String[] beanDefinitionNames = configurableListableBeanFactory != null
-				? configurableListableBeanFactory.getBeanDefinitionNames()
-				: null;
+		final String[] beanDefinitionNames = getBeanDefinitionNames(configurableListableBeanFactory);
 		//
 		List<String> multimapBeanDefinitionNames = null;
 		//
@@ -1018,6 +1017,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		multimaps = toList(map(stream(multimapBeanDefinitionNames),
 				x -> cast(Multimap.class, getBean(configurableListableBeanFactory, x))));
 		//
+	}
+
+	private static String[] getBeanDefinitionNames(final ListableBeanFactory instance) {
+		return instance != null ? instance.getBeanDefinitionNames() : null;
 	}
 
 	private static Object getBean(final BeanFactory instance, final String name) {
