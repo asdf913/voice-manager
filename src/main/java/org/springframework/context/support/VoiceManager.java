@@ -290,6 +290,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
 import org.springframework.beans.config.Title;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.ListableBeanFactoryUtil;
@@ -1014,9 +1015,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
-		multimaps = toList(map(stream(multimapBeanDefinitionNames), x -> cast(Multimap.class,
-				configurableListableBeanFactory != null ? configurableListableBeanFactory.getBean(x) : null)));
+		multimaps = toList(map(stream(multimapBeanDefinitionNames),
+				x -> cast(Multimap.class, getBean(configurableListableBeanFactory, x))));
 		//
+	}
+
+	private static Object getBean(final BeanFactory instance, final String name) {
+		return instance != null ? instance.getBean(name) : null;
 	}
 
 	private static <E> void addAll(final Collection<E> a, final Collection<? extends E> b) {
