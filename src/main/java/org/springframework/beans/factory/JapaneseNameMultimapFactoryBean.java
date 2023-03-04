@@ -64,8 +64,10 @@ public class JapaneseNameMultimapFactoryBean implements FactoryBean<Multimap<Str
 			//
 			IValue0<Multimap<String, String>> value = null;
 			//
-			if (Objects.equals("application/vnd.openxmlformats-officedocument",
-					getMimeType(testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch, null)))
+			final ContentInfo ci = testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch, null);
+			//
+			if (Objects.equals("application/vnd.openxmlformats-officedocument", getMimeType(ci))
+					|| Objects.equals("OLE 2 Compound Document", ci != null ? ci.getMessage() : null)
 					|| XlsxUtil.isXlsx(resource)) {
 				//
 				try (final InputStream is = new ByteArrayInputStream(bs);

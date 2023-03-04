@@ -10,6 +10,7 @@ import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -21,6 +22,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
@@ -87,14 +89,10 @@ class JapaneseNameMultimapFactoryBeanTest {
 			//
 		} // try
 			//
-		if (instance != null) {
-			//
-			instance.setResource(new ByteArrayResource(bs));
-			//
-		} // if
-			//
-			// 1 Sheet and 1 Row
-			//
+		setResource(instance, new ByteArrayResource(bs));
+		//
+		// 1 Sheet and 1 Row
+		//
 		try (final Workbook wb = new XSSFWorkbook(); final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
 			//
 			final Sheet sheet = wb.createSheet();
@@ -111,12 +109,8 @@ class JapaneseNameMultimapFactoryBeanTest {
 			//
 		} // try
 			//
-		if (instance != null) {
-			//
-			instance.setResource(new ByteArrayResource(bs));
-			//
-		} // if
-			//
+		setResource(instance, new ByteArrayResource(bs));
+		//
 		Assertions.assertNull(getObject(instance));
 		//
 		// 2 Row(s) with 2 Cell(s) respectively
@@ -149,14 +143,30 @@ class JapaneseNameMultimapFactoryBeanTest {
 			//
 		} // try
 			//
-		if (instance != null) {
-			//
-			instance.setResource(new ByteArrayResource(bs));
-			//
-		} // if
-			//
+		setResource(instance, new ByteArrayResource(bs));
+		//
 		Assertions.assertEquals("{=[]}", toString(getObject(instance)));
 		//
+		// xls
+		//
+		try (final Workbook wb = new HSSFWorkbook(); final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+			//
+			wb.write(baos);
+			//
+			bs = baos.toByteArray();
+			//
+		} // try
+			//
+		setResource(instance, new ByteArrayResource(bs));
+		//
+		Assertions.assertNull(getObject(instance));
+		//
+	}
+
+	private static void setResource(final JapaneseNameMultimapFactoryBean instance, final Resource resource) {
+		if (instance != null) {
+			instance.setResource(resource);
+		}
 	}
 
 	private static <T> T getObject(final FactoryBean<T> instance) throws Exception {
