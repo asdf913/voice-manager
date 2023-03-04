@@ -4968,8 +4968,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} else if (Objects.equals(source, btnConvertToHiragana)) {
 			//
-			testAndAccept(Objects::nonNull, getIValue0ByKey(multimaps, getText(tfTextImport)),
-					x -> setText(tfHiragana, toString(IValue0Util.getValue0(x))));
+			testAndAccept(Objects::nonNull, getIValue0ByKey(multimaps, getText(tfTextImport), vs -> {
+				//
+				final JList<?> jList = testAndApply(Objects::nonNull, vs != null ? vs.toArray() : null, JList::new,
+						x -> new JList<>());
+				//
+				return JOptionPane.showConfirmDialog(null, jList, "Hiragana",
+						JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION ? Unit.with(jList.getSelectedValue())
+								: null;
+				//
+			}), x -> setText(tfHiragana, toString(IValue0Util.getValue0(x))));
 			//
 		} // if
 			//
@@ -5642,7 +5650,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	private static IValue0<?> getIValue0ByKey(final Iterable<Multimap> multimaps, final Object key) {
+	private static IValue0<?> getIValue0ByKey(final Iterable<Multimap> multimaps, final Object key,
+			final Function<Collection<?>, IValue0<?>> function) {
 		//
 		if (multimaps == null || iterator(multimaps) == null) {
 			//
@@ -5652,13 +5661,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		IValue0<?> iValue0 = null;
 		//
+		int size = 0;
+		//
 		for (final Multimap multimap : multimaps) {
 			//
 			if (containsKey(multimap, key)) {
 				//
 				final Collection<?> collection = MultimapUtil.get(multimap, key);
 				//
-				if (IterableUtils.size(collection) == 1) {
+				if ((size = IterableUtils.size(collection)) == 1) {
 					//
 					if (iValue0 == null) {
 						//
@@ -5670,6 +5681,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					} // if
 						//
+				} else if (size > 1 && function != null) {
+					//
+					iValue0 = function.apply(collection);
+					//
 				} // if
 					//
 			} // if
