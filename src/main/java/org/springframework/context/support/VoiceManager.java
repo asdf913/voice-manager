@@ -4934,7 +4934,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} else if (Objects.equals(source, btnConvertToHiragana)) {
 			//
-			actionPerformedForKanjiToToHiraganaConversion();
+			testAndAccept(Objects::nonNull, getIValue0ByKey(multimaps, getText(tfTextImport)),
+					x -> setText(tfHiragana, toString(IValue0Util.getValue0(x))));
 			//
 		} // if
 			//
@@ -5607,19 +5608,17 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	private void actionPerformedForKanjiToToHiraganaConversion() {
+	private static IValue0<?> getIValue0ByKey(final Iterable<Multimap> multimaps, final Object key) {
 		//
 		IValue0<?> iValue0 = null;
 		//
 		if (multimaps != null && iterator(multimaps) != null) {
 			//
-			final String text = getText(tfTextImport);
-			//
 			for (final Multimap multimap : multimaps) {
 				//
-				if (containsKey(multimap, text)) {
+				if (containsKey(multimap, key)) {
 					//
-					final Collection<?> collection = MultimapUtil.get(multimap, text);
+					final Collection<?> collection = MultimapUtil.get(multimap, key);
 					//
 					if (IterableUtils.size(collection) == 1) {
 						//
@@ -5641,12 +5640,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
-		if (iValue0 != null) {
-			//
-			setText(tfHiragana, toString(IValue0Util.getValue0(iValue0)));
-			//
-		} // if
-			//
+		return iValue0;
+		//
 	}
 
 	private static boolean containsKey(final Multimap<?, ?> instance, final Object key) {
