@@ -5606,11 +5606,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private void actionPerformedForKanjiToToHiraganaConversion() {
 		//
+		IValue0<?> iValue0 = null;
+		//
 		if (multimaps != null && iterator(multimaps) != null) {
 			//
 			final String text = getText(tfTextImport);
-			//
-			IValue0<?> iValue0 = null;
 			//
 			for (final Multimap multimap : multimaps) {
 				//
@@ -5636,12 +5636,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 			} // for
 				//
-			if (iValue0 != null) {
-				//
-				setText(tfHiragana, toString(IValue0Util.getValue0(iValue0)));
-				//
-			} // if
-				//
+		} // if
+			//
+		if (iValue0 != null) {
+			//
+			setText(tfHiragana, toString(IValue0Util.getValue0(iValue0)));
+			//
 		} // if
 			//
 	}
