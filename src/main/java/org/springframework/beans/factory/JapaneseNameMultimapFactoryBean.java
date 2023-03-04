@@ -1,6 +1,7 @@
 package org.springframework.beans.factory;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Arrays;
@@ -82,7 +83,12 @@ public class JapaneseNameMultimapFactoryBean implements FactoryBean<Multimap<Str
 				//
 		} // if
 			//
-		final String[] allowProtocols = ProtocolUtil.getAllowProtocols();
+		return createMultimapByUrl(url, ProtocolUtil.getAllowProtocols());
+		//
+	}
+
+	private static Multimap<String, String> createMultimapByUrl(final String url, final String[] allowProtocols)
+			throws IOException {
 		//
 		final Elements tds = ElementUtil.select(
 				testAndApply(

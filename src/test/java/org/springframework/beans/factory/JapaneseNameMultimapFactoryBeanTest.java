@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
@@ -30,7 +31,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 class JapaneseNameMultimapFactoryBeanTest {
 
 	private static Method METHOD_TO_STRING, METHOD_TEST, METHOD_GET_PROTOCOL, METHOD_CREATE_MULTI_MAP_ELEMENT,
-			METHOD_CREATE_MULTI_MAP_WORK_BOOK, METHOD_PUT, METHOD_GET_MIME_TYPE = null;
+			METHOD_CREATE_MULTI_MAP_WORK_BOOK, METHOD_PUT, METHOD_GET_MIME_TYPE, METHOD_CREATE_MULTI_MAP_BY_URL = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -52,6 +53,9 @@ class JapaneseNameMultimapFactoryBeanTest {
 		(METHOD_PUT = clz.getDeclaredMethod("put", Multimap.class, Object.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_GET_MIME_TYPE = clz.getDeclaredMethod("getMimeType", ContentInfo.class)).setAccessible(true);
+		//
+		(METHOD_CREATE_MULTI_MAP_BY_URL = clz.getDeclaredMethod("createMultimapByUrl", String.class, String[].class))
+				.setAccessible(true);
 		//
 	}
 
@@ -306,6 +310,32 @@ class JapaneseNameMultimapFactoryBeanTest {
 				return null;
 			} else if (obj instanceof String) {
 				return (String) obj;
+			}
+			throw new Throwable(obj != null ? toString(obj.getClass()) : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCreateMultimapByUrl() throws Throwable {
+		//
+		final String url = toString(new File("pom.xml").toURI().toURL());
+		//
+		Assertions.assertThrows(MalformedURLException.class, () -> createMultimapByUrl(url, null));
+		//
+		Assertions.assertThrows(MalformedURLException.class, () -> createMultimapByUrl(url, new String[] {}));
+		//
+	}
+
+	private static Multimap<String, String> createMultimapByUrl(final String url, final String[] allowProtocols)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_MULTI_MAP_BY_URL.invoke(null, url, allowProtocols);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Multimap) {
+				return (Multimap) obj;
 			}
 			throw new Throwable(obj != null ? toString(obj.getClass()) : null);
 		} catch (final InvocationTargetException e) {
