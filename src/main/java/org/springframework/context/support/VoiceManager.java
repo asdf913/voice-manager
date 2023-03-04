@@ -983,36 +983,34 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		List<String> multimapBeanDefinitionNames = null;
 		//
-		if (beanDefinitionNames != null) {
+		BeanDefinition bd = null;
+		//
+		Class<?> clz = null;
+		//
+		FactoryBean<?> fb = null;
+		//
+		String beanDefinitionName = null;
+		//
+		for (int i = 0; beanDefinitionNames != null && i < beanDefinitionNames.length; i++) {
 			//
-			BeanDefinition bd = null;
-			//
-			Class<?> clz = null;
-			//
-			FactoryBean<?> fb = null;
-			//
-			for (final String beanDefinitionName : beanDefinitionNames) {
+			if ((bd = configurableListableBeanFactory
+					.getBeanDefinition(beanDefinitionName = beanDefinitionNames[i])) == null) {
 				//
-				if ((bd = configurableListableBeanFactory.getBeanDefinition(beanDefinitionName)) == null) {
-					//
-					continue;
-					//
-				} // if
-					//
-				if (((isAssignableFrom(FactoryBean.class, clz = forName(bd.getBeanClassName()))
-						&& (fb = cast(FactoryBean.class, Narcissus.allocateInstance(clz))) != null
-						&& isAssignableFrom(Multimap.class, fb.getObjectType()))
-						|| isAssignableFrom(Multimap.class, clz))
-						&& Objects.equals(testAndApply(bd::hasAttribute, VALUE, bd::getAttribute, null), "hiragana")) {
-					//
-					add(multimapBeanDefinitionNames = ObjectUtils.getIfNull(multimapBeanDefinitionNames,
-							ArrayList::new), beanDefinitionName);
-					//
-				} // if
-					//
-			} // for
+				continue;
 				//
-		} // if
+			} // if
+				//
+			if (((isAssignableFrom(FactoryBean.class, clz = forName(bd.getBeanClassName()))
+					&& (fb = cast(FactoryBean.class, Narcissus.allocateInstance(clz))) != null
+					&& isAssignableFrom(Multimap.class, fb.getObjectType())) || isAssignableFrom(Multimap.class, clz))
+					&& Objects.equals(testAndApply(bd::hasAttribute, VALUE, bd::getAttribute, null), "hiragana")) {
+				//
+				add(multimapBeanDefinitionNames = ObjectUtils.getIfNull(multimapBeanDefinitionNames, ArrayList::new),
+						beanDefinitionName);
+				//
+			} // if
+				//
+		} // for
 			//
 		multimaps = toList(map(stream(multimapBeanDefinitionNames),
 				x -> cast(Multimap.class, getBean(configurableListableBeanFactory, x))));
