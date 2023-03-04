@@ -223,7 +223,6 @@ import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableTable;
 import com.google.common.collect.Iterators;
-import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Range;
 import com.google.common.collect.Table;
@@ -1104,6 +1103,8 @@ class VoiceManagerTest {
 
 		private List<Pronunciation> pronunciations = null;
 
+		private String[] beanDefinitionNames = null;
+
 		private Map<Object, BeanDefinition> getBeanDefinitions() {
 			if (beanDefinitions == null) {
 				beanDefinitions = new LinkedHashMap<>();
@@ -1146,6 +1147,10 @@ class VoiceManagerTest {
 				if (Objects.equals(methodName, "getBeansOfType")) {
 					//
 					return beansOfType;
+					//
+				} else if (Objects.equals(methodName, "getBeanDefinitionNames")) {
+					//
+					return beanDefinitionNames;
 					//
 				} // if
 					//
@@ -2824,24 +2829,36 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnConvertToHiragana));
 		//
-		final Multimap<Object, Object> multimap = LinkedHashMultimap.create();
+		// org.springframework.context.support.VoiceManager.multimaps
 		//
 		if (instance != null) {
 			//
-			FieldUtils.writeDeclaredField(instance, "tfTextImport", new JTextField(), true);
-			//
-			FieldUtils.writeDeclaredField(instance, "yojijukugoMultimap", multimap, true);
+			FieldUtils.writeDeclaredField(instance, "multimaps", Reflection.newProxy(Collection.class, ih), true);
 			//
 		} // if
 			//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnConvertToHiragana));
 		//
-		if (multimap != null) {
+		final List<Multimap<?, ?>> multimaps = new ArrayList<>(Collections.singleton(null));
+		//
+		if (instance != null) {
 			//
-			multimap.putAll("", Arrays.asList(null, null));
+			FieldUtils.writeDeclaredField(instance, "multimaps", multimaps, true);
 			//
 		} // if
 			//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnConvertToHiragana));
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "tfTextImport", new JTextField(), true);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnConvertToHiragana));
+		//
+		multimaps.set(0, ImmutableMultimap.of(EMPTY, EMPTY));
+		//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnConvertToHiragana));
 		//
 	}

@@ -76,11 +76,20 @@
 	</bean>
 
 	<!-- -->
-	<bean id="JapaneseNameMultimap"
+	<bean
 		class="org.springframework.beans.factory.JapaneseNameMultimapFactoryBean">
+		<meta key="value" value="hiragana" />
 		<property name="resource" value="classpath:JapaneseName.xlsx" />
 		<property name="url"
 			value="${org.springframework.beans.factory.JapaneseNameMultimapFactoryBean.url}" />
+	</bean>
+
+	<bean
+		class="org.springframework.beans.factory.YojijukugoMultimapFactoryBean">
+		<meta key="value" value="hiragana" />
+		<property name="url"
+			value="${org.springframework.beans.factory.YojijukugoMultimapFactoryBean.url}" />
+		<property name="resource" value="classpath:yojijukugo.xlsx" />
 	</bean>
 
 	<!-- -->
@@ -212,15 +221,6 @@
 		<!-- -->
 		<property name="presentationSlideDuration"
 			value="${org.springframework.context.support.VoiceManager.presentationSlideDuration}" />
-		<!-- -->
-		<property name="yojijukugoMultimap">
-			<bean
-				class="org.springframework.beans.factory.YojijukugoMultimapFactoryBean">
-				<property name="url"
-					value="${org.springframework.beans.factory.YojijukugoMultimapFactoryBean.url}" />
-				<property name="resource" value="classpath:yojijukugo.xlsx" />
-			</bean>
-		</property>
 	</bean>
 
 	<!-- -->

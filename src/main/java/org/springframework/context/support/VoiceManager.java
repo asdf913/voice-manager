@@ -290,6 +290,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
 import org.springframework.beans.config.Title;
+import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.ListableBeanFactoryUtil;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -860,7 +861,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private Duration presentationSlideDuration = null;
 
-	private Multimap<Object, Object> yojijukugoMultimap = null;
+	private Collection<Multimap> multimaps = null;
 
 	private VoiceManager() {
 	}
@@ -971,6 +972,51 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		setSelectedItem(cbmAudioFormatWrite, audioFormat);
 		//
 		setSelectedItem(cbmAudioFormatExecute, audioFormat);
+		//
+		// Get the "Bean Definition" which class could be assigned as a
+		// "com.google.common.collect.Multimap" and the "Bean Definition" has "value"
+		// attribute which value is "hiragana"
+		//
+		final String[] beanDefinitionNames = configurableListableBeanFactory != null
+				? configurableListableBeanFactory.getBeanDefinitionNames()
+				: null;
+		//
+		List<String> multimapBeanDefinitionNames = null;
+		//
+		if (beanDefinitionNames != null) {
+			//
+			BeanDefinition bd = null;
+			//
+			Class<?> clz = null;
+			//
+			FactoryBean<?> fb = null;
+			//
+			for (final String beanDefinitionName : beanDefinitionNames) {
+				//
+				if ((bd = configurableListableBeanFactory.getBeanDefinition(beanDefinitionName)) == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if (((isAssignableFrom(FactoryBean.class, clz = forName(bd.getBeanClassName()))
+						&& (fb = cast(FactoryBean.class, Narcissus.allocateInstance(clz))) != null
+						&& isAssignableFrom(Multimap.class, fb.getObjectType()))
+						|| isAssignableFrom(Multimap.class, clz))
+						&& Objects.equals(testAndApply(bd::hasAttribute, "value", bd::getAttribute, null),
+								"hiragana")) {
+					//
+					add(multimapBeanDefinitionNames = ObjectUtils.getIfNull(multimapBeanDefinitionNames,
+							ArrayList::new), beanDefinitionName);
+					//
+				} // if
+					//
+			} // for
+				//
+		} // if
+			//
+		multimaps = toList(map(stream(multimapBeanDefinitionNames), x -> cast(Multimap.class,
+				configurableListableBeanFactory != null ? configurableListableBeanFactory.getBean(x) : null)));
 		//
 	}
 
@@ -1679,10 +1725,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static Duration parse(CharSequence text) {
 		return StringUtils.isNotEmpty(text) ? Duration.parse(text) : null;
-	}
-
-	public void setYojijukugoMultimap(final Multimap<Object, Object> yojijukugoMultimap) {
-		this.yojijukugoMultimap = yojijukugoMultimap;
 	}
 
 	private static IValue0<Class<? extends Workbook>> getWorkbookClass(
@@ -5560,15 +5602,39 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private void actionPerformedForKanjiToToHiraganaConversion() {
 		//
-		final String text = getText(tfTextImport);
-		//
-		if (containsKey(yojijukugoMultimap, text)) {
+		if (multimaps != null && iterator(multimaps) != null) {
 			//
-			final Collection<Object> collection = MultimapUtil.get(yojijukugoMultimap, text);
+			final String text = getText(tfTextImport);
 			//
-			if (IterableUtils.size(collection) == 1) {
+			IValue0<?> iValue0 = null;
+			//
+			for (final Multimap multimap : multimaps) {
 				//
-				setText(tfHiragana, toString(IterableUtils.get(collection, 0)));
+				if (containsKey(multimap, text)) {
+					//
+					final Collection<?> collection = MultimapUtil.get(multimap, text);
+					//
+					if (IterableUtils.size(collection) == 1) {
+						//
+						if (iValue0 == null) {
+							//
+							iValue0 = Unit.with(IterableUtils.get(collection, 0));
+							//
+						} else {
+							//
+							throw new IllegalStateException();
+							//
+						} // if
+							//
+					} // if
+						//
+				} // if
+					//
+			} // for
+				//
+			if (iValue0 != null) {
+				//
+				setText(tfHiragana, toString(IValue0Util.getValue0(iValue0)));
 				//
 			} // if
 				//
