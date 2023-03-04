@@ -979,9 +979,19 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		// "com.google.common.collect.Multimap" and the "Bean Definition" has "value"
 		// attribute which value is "hiragana"
 		//
-		final String[] beanDefinitionNames = getBeanDefinitionNames(configurableListableBeanFactory);
+		multimaps = toList(map(
+				stream(getBeanDefinitionNamesByClassAndAttributes(configurableListableBeanFactory, Multimap.class,
+						Collections.singletonMap(VALUE, "hiragana"))),
+				x -> cast(Multimap.class, getBean(configurableListableBeanFactory, x))));
+		//
+	}
+
+	private static List<String> getBeanDefinitionNamesByClassAndAttributes(
+			final ConfigurableListableBeanFactory instnace, final Class<?> classToBeFound, final Map<?, ?> attributes) {
 		//
 		List<String> multimapBeanDefinitionNames = null;
+		//
+		final String[] beanDefinitionNames = getBeanDefinitionNames(instnace);
 		//
 		BeanDefinition bd = null;
 		//
@@ -991,10 +1001,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		String beanDefinitionName = null;
 		//
+		boolean attributesMatched = true;
+		//
 		for (int i = 0; beanDefinitionNames != null && i < beanDefinitionNames.length; i++) {
 			//
-			if ((bd = configurableListableBeanFactory
-					.getBeanDefinition(beanDefinitionName = beanDefinitionNames[i])) == null) {
+			if ((bd = instnace.getBeanDefinition(beanDefinitionName = beanDefinitionNames[i])) == null) {
 				//
 				continue;
 				//
@@ -1002,9 +1013,40 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			if (((isAssignableFrom(FactoryBean.class, clz = forName(bd.getBeanClassName()))
 					&& (fb = cast(FactoryBean.class, Narcissus.allocateInstance(clz))) != null
-					&& isAssignableFrom(Multimap.class, fb.getObjectType())) || isAssignableFrom(Multimap.class, clz))
-					&& Objects.equals(testAndApply(bd::hasAttribute, VALUE, bd::getAttribute, null), "hiragana")) {
+					&& isAssignableFrom(classToBeFound, fb.getObjectType()))
+					|| isAssignableFrom(classToBeFound, clz))) {
 				//
+				attributesMatched = true;
+				//
+				if (attributes != null && iterator(attributes.entrySet()) != null) {
+					//
+					for (final Entry<?, ?> entry : attributes.entrySet()) {
+						//
+						if (entry == null) {
+							//
+							continue;
+							//
+						} // if
+							//
+						if (!bd.hasAttribute(toString(getKey(entry)))
+								|| !Objects.equals(bd.getAttribute(toString(getKey(entry))), getValue(entry))) {
+							//
+							attributesMatched = false;
+							//
+							break;
+							//
+						} // if
+							//
+					} // for
+						//
+				} // if
+					//
+				if (!attributesMatched) {
+					//
+					continue;
+					//
+				} // if
+					//
 				add(multimapBeanDefinitionNames = ObjectUtils.getIfNull(multimapBeanDefinitionNames, ArrayList::new),
 						beanDefinitionName);
 				//
@@ -1012,8 +1054,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // for
 			//
-		multimaps = toList(map(stream(multimapBeanDefinitionNames),
-				x -> cast(Multimap.class, getBean(configurableListableBeanFactory, x))));
+		return multimapBeanDefinitionNames;
 		//
 	}
 
