@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.core.io.ClassPathResource;
 
 import com.google.common.collect.Multimap;
 
@@ -61,6 +62,14 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 		} // if
 			//
 		Assertions.assertNull(getObject(instance));
+		//
+		if (instance != null) {
+			//
+			instance.setResource(new ClassPathResource("AccentDictionaryForJapaneseEducation.xlsx"));
+			//
+		} // if
+			//
+		Assertions.assertNotNull(getObject(instance));
 		//
 	}
 

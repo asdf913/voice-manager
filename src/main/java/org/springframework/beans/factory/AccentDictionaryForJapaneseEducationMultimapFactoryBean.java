@@ -1,7 +1,10 @@
 package org.springframework.beans.factory;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
+import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -10,19 +13,37 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.javatuples.Unit;
+import org.javatuples.valueintf.IValue0;
+import org.javatuples.valueintf.IValue0Util;
 import org.jsoup.Jsoup;
 import org.jsoup.helper.ProtocolUtil;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
 import org.jsoup.select.Elements;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceUtil;
+import org.springframework.core.io.XlsxUtil;
 
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
+import com.j256.simplemagic.ContentInfo;
+import com.j256.simplemagic.ContentInfoUtil;
 
 public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements FactoryBean<Multimap<String, String>> {
 
+	private Resource resource = null;
+
 	private String url = null;
+
+	public void setResource(final Resource resource) {
+		this.resource = resource;
+	}
 
 	public void setUrl(final String url) {
 		this.url = url;
@@ -31,6 +52,73 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 	@Override
 	public Multimap<String, String> getObject() throws Exception {
 		//
+		if (ResourceUtil.exists(resource)) {
+			//
+			final byte[] bs = ResourceUtil.getContentAsByteArray(resource);
+			//
+			final ContentInfo ci = testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch, null);
+			//
+			if (Objects.equals("application/vnd.openxmlformats-officedocument", ci != null ? ci.getMimeType() : null)
+					|| XlsxUtil.isXlsx(resource)) {
+				//
+				try (final InputStream is = new ByteArrayInputStream(bs);
+						final Workbook wb = WorkbookFactory.create(is)) {
+					//
+					if (wb != null) {
+						//
+						IValue0<Multimap<String, String>> value = null;
+						//
+						boolean firstRow = true;
+						//
+						for (final Sheet sheet : wb) {
+							//
+							if (sheet == null) {
+								//
+								continue;
+								//
+							} // if
+								//
+							firstRow = true;
+							//
+							for (final Row row : sheet) {
+								//
+								if (row == null) {
+									//
+									continue;
+									//
+								} // if
+									//
+								if (firstRow) {
+									//
+									firstRow = false;
+									//
+									continue;
+									//
+								} // if
+									//
+								MultimapUtil.put(
+										IValue0Util.getValue0(value = ObjectUtils.getIfNull(value,
+												() -> Unit.with(LinkedHashMultimap.create()))),
+										row.getCell(0).getStringCellValue(), row.getCell(1).getStringCellValue());
+								//
+							} // for
+								//
+						} // for
+							//
+						if (value != null) {
+							//
+							return IValue0Util.getValue0(value);
+							//
+						} // if
+							//
+					} // if
+						//
+				} // try
+					//
+			} // if
+				//
+		} // if
+			//
 		final String[] allowProtocols = ProtocolUtil.getAllowProtocols();
 		//
 		final Elements as = ElementUtil.select(
