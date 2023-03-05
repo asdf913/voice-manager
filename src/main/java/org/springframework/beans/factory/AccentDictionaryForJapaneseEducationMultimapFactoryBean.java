@@ -11,6 +11,7 @@ import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -228,9 +229,11 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 		//
 		String[] ss = null;
 		//
-		for (int i = 0; tds != null && i < tds.size(); i++) {
+		final int size = IterableUtils.size(tds);
+		//
+		for (int i = 0; i < size; i++) {
 			//
-			if ((td = tds.get(i)) == null || (td.childrenSize() > 0 && (firstChild = td.child(0)) != null
+			if ((td = IterableUtils.get(tds, i)) == null || (td.childrenSize() > 0 && (firstChild = td.child(0)) != null
 					&& StringUtils.equalsIgnoreCase("script", ElementUtil.tagName(firstChild)))) {
 				//
 				continue;
