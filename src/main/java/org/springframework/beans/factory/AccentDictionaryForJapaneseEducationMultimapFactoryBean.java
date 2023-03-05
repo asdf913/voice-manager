@@ -89,41 +89,60 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 		//
 		if (wb != null && wb.iterator() != null) {
 			//
-			boolean firstRow = true;
+			Multimap<String, String> multimap = null;
 			//
 			for (final Sheet sheet : wb) {
 				//
-				if (sheet == null || sheet.iterator() == null) {
+				if (sheet == null || sheet.iterator() == null || (multimap = createMultimap(sheet)) == null) {
 					//
 					continue;
 					//
 				} // if
 					//
-				firstRow = true;
+				putAll(IValue0Util.getValue0(
+						value = ObjectUtils.getIfNull(value, () -> Unit.with(LinkedHashMultimap.create()))), multimap);
 				//
-				for (final Row row : sheet) {
+			} // for
+				//
+		} // if
+			//
+		return value;
+		//
+	}
+
+	private static <K, V> void putAll(final Multimap<K, V> a, final Multimap<? extends K, ? extends V> b) {
+		if (a != null) {
+			a.putAll(b);
+		}
+	}
+
+	private static Multimap<String, String> createMultimap(final Sheet sheet) {
+		//
+		Multimap<String, String> value = null;
+		//
+		if (sheet != null && sheet.iterator() != null) {
+			//
+			boolean firstRow = true;
+			//
+			for (final Row row : sheet) {
+				//
+				if (row == null) {
 					//
-					if (row == null) {
-						//
-						continue;
-						//
-					} // if
-						//
-					if (firstRow) {
-						//
-						firstRow = false;
-						//
-						continue;
-						//
-					} // if
-						//
-					MultimapUtil.put(
-							IValue0Util.getValue0(
-									value = ObjectUtils.getIfNull(value, () -> Unit.with(LinkedHashMultimap.create()))),
-							row.getCell(0).getStringCellValue(), row.getCell(1).getStringCellValue());
+					continue;
 					//
-				} // for
+				} // if
 					//
+				if (firstRow) {
+					//
+					firstRow = false;
+					//
+					continue;
+					//
+				} // if
+					//
+				MultimapUtil.put(value = ObjectUtils.getIfNull(value, LinkedHashMultimap::create),
+						row.getCell(0).getStringCellValue(), row.getCell(1).getStringCellValue());
+				//
 			} // for
 				//
 		} // if

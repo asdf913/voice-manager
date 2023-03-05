@@ -31,8 +31,8 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 	private static final String EMPTY = "";
 
 	private static Method METHOD_CREATE_MULTI_MAP_STRING, METHOD_MATCHER, METHOD_MATCHES, METHOD_GROUP_COUNT,
-			METHOD_GROUP, METHOD_GET_MIME_TYPE, METHOD_CREATE_MULTI_MAP_BY_URL,
-			METHOD_CREATE_MULTI_MAP_WORK_BOOK = null;
+			METHOD_GROUP, METHOD_GET_MIME_TYPE, METHOD_CREATE_MULTI_MAP_BY_URL, METHOD_CREATE_MULTI_MAP_WORK_BOOK,
+			METHOD_CREATE_MULTI_MAP_SHEET, METHOD_PUT_ALL = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -57,6 +57,10 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 		//
 		(METHOD_CREATE_MULTI_MAP_WORK_BOOK = clz.getDeclaredMethod("createMultimap", Workbook.class))
 				.setAccessible(true);
+		//
+		(METHOD_CREATE_MULTI_MAP_SHEET = clz.getDeclaredMethod("createMultimap", Sheet.class)).setAccessible(true);
+		//
+		(METHOD_PUT_ALL = clz.getDeclaredMethod("putAll", Multimap.class, Multimap.class)).setAccessible(true);
 		//
 	}
 
@@ -181,7 +185,9 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 	@Test
 	void testCreateMultimap() throws Throwable {
 		//
-		Assertions.assertNull(createMultimap(null));
+		Assertions.assertNull(createMultimap((Workbook) null));
+		//
+		// createMultimap(org.apache.poi.ss.usermodel.Sheet)
 		//
 		final Workbook wb = Reflection.newProxy(Workbook.class, ih);
 		//
@@ -195,13 +201,23 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 			//
 		Assertions.assertNull(createMultimap(wb));
 		//
+		// createMultimap(org.apache.poi.ss.usermodel.Sheet)
+		//
+		Assertions.assertNull(createMultimap((Sheet) null));
+		//
+		final Sheet sheet = Reflection.newProxy(Sheet.class, ih);
+		//
+		Assertions.assertNull(createMultimap(sheet));
+		//
 		if (ih != null) {
 			//
-			ih.iteratorSheet = Iterators.singletonIterator(Reflection.newProxy(Sheet.class, ih));
+			ih.iteratorRow = Iterators.singletonIterator(null);
 			//
 		} // if
 			//
-		Assertions.assertNull(createMultimap(wb));
+		Assertions.assertNull(createMultimap(sheet));
+		//
+		// createMultimap(java.lang.String,java.lang.String[])
 		//
 		Assertions.assertNull(createMultimap(null, null));
 		//
@@ -241,6 +257,20 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 				return null;
 			} else if (obj instanceof IValue0) {
 				return (IValue0) obj;
+			}
+			throw new Throwable(obj != null && obj.getClass() != null ? obj.getClass().toString() : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static Multimap<String, String> createMultimap(final Sheet sheet) throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_MULTI_MAP_SHEET.invoke(null, sheet);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Multimap) {
+				return (Multimap) obj;
 			}
 			throw new Throwable(obj != null && obj.getClass() != null ? obj.getClass().toString() : null);
 		} catch (final InvocationTargetException e) {
@@ -388,6 +418,22 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 				return (Multimap) obj;
 			}
 			throw new Throwable(obj != null && obj.getClass() != null ? obj.getClass().toString() : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testPutAll() {
+		//
+		Assertions.assertDoesNotThrow(() -> putAll(null, null));
+		//
+	}
+
+	private static <K, V> void putAll(final Multimap<K, V> a, final Multimap<? extends K, ? extends V> b)
+			throws Throwable {
+		try {
+			METHOD_PUT_ALL.invoke(null, a, b);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
