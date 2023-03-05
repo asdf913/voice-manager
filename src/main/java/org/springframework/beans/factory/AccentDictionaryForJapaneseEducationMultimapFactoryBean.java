@@ -240,17 +240,9 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 				//
 			} // if
 				//
-			if (matches(matcher = matcher(pattern = ObjectUtils.getIfNull(pattern, () -> {
-				//
-				if (StringUtils.isNotBlank(unicodeBlock)) {
-					//
-					return Pattern.compile(String.format("(\\p{In%1$s}+)\\s+\\((.+)\\)", unicodeBlock));
-					//
-				} // if
-					//
-				return Pattern.compile("(.+)\\s+\\((.+)\\)");
-				//
-			}), td.text())) && groupCount(matcher) > 1 && (ss = StringUtils.split(group(matcher, 2), '/')) != null) {
+			if (matches(matcher = matcher(pattern = ObjectUtils.getIfNull(pattern, () -> createPattern(unicodeBlock)),
+					td.text())) && groupCount(matcher) > 1
+					&& (ss = StringUtils.split(group(matcher, 2), '/')) != null) {
 				//
 				for (final String s : ss) {
 					//
@@ -264,6 +256,21 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 		} // for
 			//
 		return multimap;
+		//
+	}
+
+	/**
+	 * @see java.lang.Character.UnicodeBlock
+	 */
+	private static Pattern createPattern(final String unicodeBlock) {
+		//
+		if (StringUtils.isNotBlank(unicodeBlock)) {
+			//
+			return Pattern.compile(String.format("(\\p{In%1$s}+)\\s+\\((.+)\\)", unicodeBlock));
+			//
+		} // if
+			//
+		return Pattern.compile("(.+)\\s+\\((.+)\\)");
 		//
 	}
 

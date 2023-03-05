@@ -33,7 +33,7 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 
 	private static Method METHOD_CREATE_MULTI_MAP_STRING, METHOD_MATCHER, METHOD_MATCHES, METHOD_GROUP_COUNT,
 			METHOD_GROUP, METHOD_GET_MIME_TYPE, METHOD_CREATE_MULTI_MAP_BY_URL, METHOD_CREATE_MULTI_MAP_WORK_BOOK,
-			METHOD_CREATE_MULTI_MAP_SHEET, METHOD_PUT_ALL, METHOD_GET_AND_SET = null;
+			METHOD_CREATE_MULTI_MAP_SHEET, METHOD_PUT_ALL, METHOD_GET_AND_SET, METHOD_CREATE_PATTERN = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -65,6 +65,8 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 		//
 		(METHOD_GET_AND_SET = clz.getDeclaredMethod("getAndSet", AtomicBoolean.class, Boolean.TYPE))
 				.setAccessible(true);
+		//
+		(METHOD_CREATE_PATTERN = clz.getDeclaredMethod("createPattern", String.class)).setAccessible(true);
 		//
 	}
 
@@ -457,6 +459,35 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 				return null;
 			} else if (obj instanceof Boolean) {
 				return (Boolean) obj;
+			}
+			throw new Throwable(obj != null && obj.getClass() != null ? obj.getClass().toString() : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCreatePattern() throws Throwable {
+		//
+		Assertions.assertNotNull(createPattern(null));
+		//
+		Assertions.assertNotNull(createPattern(""));
+		//
+		Assertions.assertNotNull(createPattern(" "));
+		//
+		Assertions.assertNotNull(createPattern(" "));
+		//
+		Assertions.assertNotNull(createPattern("Hiragana"));
+		//
+	}
+
+	private static Pattern createPattern(final String unicodeBlock) throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_PATTERN.invoke(null, unicodeBlock);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Pattern) {
+				return (Pattern) obj;
 			}
 			throw new Throwable(obj != null && obj.getClass() != null ? obj.getClass().toString() : null);
 		} catch (final InvocationTargetException e) {
