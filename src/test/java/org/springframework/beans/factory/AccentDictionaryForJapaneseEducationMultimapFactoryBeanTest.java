@@ -5,17 +5,23 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
+import java.util.Iterator;
 import java.util.Objects;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.javatuples.valueintf.IValue0;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 
+import com.google.common.collect.Iterators;
 import com.google.common.collect.Multimap;
 import com.google.common.reflect.Reflection;
 import com.j256.simplemagic.ContentInfo;
@@ -24,15 +30,16 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 
 	private static final String EMPTY = "";
 
-	private static Method METHOD_CREATE_MULTI_MAP, METHOD_MATCHER, METHOD_MATCHES, METHOD_GROUP_COUNT, METHOD_GROUP,
-			METHOD_GET_MIME_TYPE, METHOD_CREATE_MULTI_MAP_BY_URL = null;
+	private static Method METHOD_CREATE_MULTI_MAP_STRING, METHOD_MATCHER, METHOD_MATCHES, METHOD_GROUP_COUNT,
+			METHOD_GROUP, METHOD_GET_MIME_TYPE, METHOD_CREATE_MULTI_MAP_BY_URL,
+			METHOD_CREATE_MULTI_MAP_WORK_BOOK = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
 		//
 		final Class<?> clz = AccentDictionaryForJapaneseEducationMultimapFactoryBean.class;
 		//
-		(METHOD_CREATE_MULTI_MAP = clz.getDeclaredMethod("createMultimap", String.class, String[].class))
+		(METHOD_CREATE_MULTI_MAP_STRING = clz.getDeclaredMethod("createMultimap", String.class, String[].class))
 				.setAccessible(true);
 		//
 		(METHOD_MATCHER = clz.getDeclaredMethod("matcher", Pattern.class, String.class)).setAccessible(true);
@@ -48,6 +55,9 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 		(METHOD_CREATE_MULTI_MAP_BY_URL = clz.getDeclaredMethod("createMultimapByUrl", String.class, String[].class))
 				.setAccessible(true);
 		//
+		(METHOD_CREATE_MULTI_MAP_WORK_BOOK = clz.getDeclaredMethod("createMultimap", Workbook.class))
+				.setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -56,11 +66,33 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 
 		private String group = null;
 
+		private Iterator<Sheet> iteratorSheet = null;
+
+		private Iterator<Row> iteratorRow = null;
+
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
 			final String methodName = method != null ? method.getName() : null;
 			//
+			if (proxy instanceof Workbook) {
+				//
+				if (Objects.equals(methodName, "iterator")) {
+					//
+					return iteratorSheet;
+					//
+				} // if
+					//
+			} else if (proxy instanceof Sheet) {
+				//
+				if (Objects.equals(methodName, "iterator")) {
+					//
+					return iteratorRow;
+					//
+				} // if
+					//
+			} // if
+				//
 			if (proxy instanceof MatchResult) {
 				//
 				if (Objects.equals(methodName, "groupCount")) {
@@ -149,6 +181,28 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 	@Test
 	void testCreateMultimap() throws Throwable {
 		//
+		Assertions.assertNull(createMultimap(null));
+		//
+		final Workbook wb = Reflection.newProxy(Workbook.class, ih);
+		//
+		Assertions.assertNull(createMultimap(wb));
+		//
+		if (ih != null) {
+			//
+			ih.iteratorSheet = Iterators.singletonIterator(null);
+			//
+		} // if
+			//
+		Assertions.assertNull(createMultimap(wb));
+		//
+		if (ih != null) {
+			//
+			ih.iteratorSheet = Iterators.singletonIterator(Reflection.newProxy(Sheet.class, ih));
+			//
+		} // if
+			//
+		Assertions.assertNull(createMultimap(wb));
+		//
 		Assertions.assertNull(createMultimap(null, null));
 		//
 		Assertions.assertNull(createMultimap(EMPTY, null));
@@ -168,11 +222,25 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 	private static Multimap<String, String> createMultimap(final String url, final String[] allowProtocols)
 			throws Throwable {
 		try {
-			final Object obj = METHOD_CREATE_MULTI_MAP.invoke(null, url, allowProtocols);
+			final Object obj = METHOD_CREATE_MULTI_MAP_STRING.invoke(null, url, allowProtocols);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Multimap) {
 				return (Multimap) obj;
+			}
+			throw new Throwable(obj != null && obj.getClass() != null ? obj.getClass().toString() : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static IValue0<Multimap<String, String>> createMultimap(final Workbook wb) throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_MULTI_MAP_WORK_BOOK.invoke(null, wb);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof IValue0) {
+				return (IValue0) obj;
 			}
 			throw new Throwable(obj != null && obj.getClass() != null ? obj.getClass().toString() : null);
 		} catch (final InvocationTargetException e) {

@@ -64,54 +64,14 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 				try (final InputStream is = new ByteArrayInputStream(bs);
 						final Workbook wb = WorkbookFactory.create(is)) {
 					//
-					if (wb != null) {
+					final IValue0<Multimap<String, String>> value = createMultimap(wb);
+					//
+					if (value != null) {
 						//
-						IValue0<Multimap<String, String>> value = null;
+						return IValue0Util.getValue0(value);
 						//
-						boolean firstRow = true;
-						//
-						for (final Sheet sheet : wb) {
-							//
-							if (sheet == null) {
-								//
-								continue;
-								//
-							} // if
-								//
-							firstRow = true;
-							//
-							for (final Row row : sheet) {
-								//
-								if (row == null) {
-									//
-									continue;
-									//
-								} // if
-									//
-								if (firstRow) {
-									//
-									firstRow = false;
-									//
-									continue;
-									//
-								} // if
-									//
-								MultimapUtil.put(
-										IValue0Util.getValue0(value = ObjectUtils.getIfNull(value,
-												() -> Unit.with(LinkedHashMultimap.create()))),
-										row.getCell(0).getStringCellValue(), row.getCell(1).getStringCellValue());
-								//
-							} // for
-								//
-						} // for
-							//
-						if (value != null) {
-							//
-							return IValue0Util.getValue0(value);
-							//
-						} // if
-							//
 					} // if
+						//
 						//
 				} // try
 					//
@@ -120,6 +80,55 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 		} // if
 			//
 		return createMultimapByUrl(url, ProtocolUtil.getAllowProtocols());
+		//
+	}
+
+	private static IValue0<Multimap<String, String>> createMultimap(final Workbook wb) {
+		//
+		IValue0<Multimap<String, String>> value = null;
+		//
+		if (wb != null && wb.iterator() != null) {
+			//
+			boolean firstRow = true;
+			//
+			for (final Sheet sheet : wb) {
+				//
+				if (sheet == null || sheet.iterator() == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				firstRow = true;
+				//
+				for (final Row row : sheet) {
+					//
+					if (row == null) {
+						//
+						continue;
+						//
+					} // if
+						//
+					if (firstRow) {
+						//
+						firstRow = false;
+						//
+						continue;
+						//
+					} // if
+						//
+					MultimapUtil.put(
+							IValue0Util.getValue0(
+									value = ObjectUtils.getIfNull(value, () -> Unit.with(LinkedHashMultimap.create()))),
+							row.getCell(0).getStringCellValue(), row.getCell(1).getStringCellValue());
+					//
+				} // for
+					//
+			} // for
+				//
+		} // if
+			//
+		return value;
 		//
 	}
 
