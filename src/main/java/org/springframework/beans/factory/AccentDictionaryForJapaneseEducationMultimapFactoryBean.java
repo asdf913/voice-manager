@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Objects;
 import java.util.function.Predicate;
+import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -194,15 +195,15 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 				//
 			} // if
 				//
-			if ((matcher = matcher(
+			if (matches(matcher = matcher(
 					pattern = ObjectUtils.getIfNull(pattern, () -> Pattern.compile("(\\p{InHiragana}+)\\s+\\((.+)\\)")),
-					td.text())) != null && matcher.matches() && matcher.groupCount() > 1
-					&& (ss = StringUtils.split(matcher.group(2), '/')) != null) {
+					td.text())) && groupCount(matcher) > 1
+					&& (ss = StringUtils.split(group(matcher, 2), '/')) != null) {
 				//
 				for (final String s : ss) {
 					//
 					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							StringUtils.trim(s), matcher.group(1));
+							StringUtils.trim(s), group(matcher, 1));
 					//
 				} // for
 					//
@@ -216,6 +217,18 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 
 	private static Matcher matcher(final Pattern instance, final String input) {
 		return instance != null && input != null ? instance.matcher(input) : null;
+	}
+
+	private static boolean matches(final Matcher instance) {
+		return instance != null && instance.matches();
+	}
+
+	private static int groupCount(final MatchResult instance) {
+		return instance != null ? instance.groupCount() : 0;
+	}
+
+	private static String group(final MatchResult instance, final int group) {
+		return instance != null ? instance.group(group) : null;
 	}
 
 	@Override

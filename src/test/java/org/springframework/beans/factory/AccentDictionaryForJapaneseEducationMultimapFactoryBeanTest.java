@@ -1,9 +1,12 @@
 package org.springframework.beans.factory;
 
 import java.io.File;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
+import java.util.Objects;
+import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,12 +17,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 
 import com.google.common.collect.Multimap;
+import com.google.common.reflect.Reflection;
 
 class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 
 	private static final String EMPTY = "";
 
-	private static Method METHOD_CREATE_MULTI_MAP, METHOD_MATCHER = null;
+	private static Method METHOD_CREATE_MULTI_MAP, METHOD_MATCHER, METHOD_MATCHES, METHOD_GROUP_COUNT,
+			METHOD_GROUP = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -31,14 +36,57 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 		//
 		(METHOD_MATCHER = clz.getDeclaredMethod("matcher", Pattern.class, String.class)).setAccessible(true);
 		//
+		(METHOD_MATCHES = clz.getDeclaredMethod("matches", Matcher.class)).setAccessible(true);
+		//
+		(METHOD_GROUP_COUNT = clz.getDeclaredMethod("groupCount", MatchResult.class)).setAccessible(true);
+		//
+		(METHOD_GROUP = clz.getDeclaredMethod("group", MatchResult.class, Integer.TYPE)).setAccessible(true);
+		//
+	}
+
+	private static class IH implements InvocationHandler {
+
+		private Integer groupCount = null;
+
+		private String group = null;
+
+		@Override
+		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+			//
+			final String methodName = method != null ? method.getName() : null;
+			//
+			if (proxy instanceof MatchResult) {
+				//
+				if (Objects.equals(methodName, "groupCount")) {
+					//
+					return groupCount;
+					//
+				} else if (Objects.equals(methodName, "group")) {
+					//
+					return group;
+					//
+				} // if
+					//
+			} // if
+				//
+			throw new Throwable(methodName);
+			//
+		}
+
 	}
 
 	private AccentDictionaryForJapaneseEducationMultimapFactoryBean instance = null;
+
+	private MatchResult matchResult = null;
+
+	private IH ih = null;
 
 	@BeforeEach
 	void beforeEach() {
 		//
 		instance = new AccentDictionaryForJapaneseEducationMultimapFactoryBean();
+		//
+		matchResult = Reflection.newProxy(MatchResult.class, ih = new IH());
 		//
 	}
 
@@ -131,11 +179,7 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 		//
 		Assertions.assertNull(matcher(null, null));
 		//
-		final Pattern pattern = Pattern.compile("\\d+");
-		//
-		Assertions.assertNull(matcher(pattern, null));
-		//
-		Assertions.assertNotNull(matcher(pattern, EMPTY));
+		Assertions.assertNull(matcher(Pattern.compile("\\d+"), null));
 		//
 	}
 
@@ -146,6 +190,81 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 				return null;
 			} else if (obj instanceof Matcher) {
 				return (Matcher) obj;
+			}
+			throw new Throwable(obj != null && obj.getClass() != null ? obj.getClass().toString() : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testMatches() throws Throwable {
+		//
+		Assertions.assertFalse(matches(null));
+		//
+		final Pattern pattern = Pattern.compile("\\d+");
+		//
+		Assertions.assertFalse(matches(matcher(pattern, EMPTY)));
+		//
+		Assertions.assertTrue(matches(matcher(pattern, "1")));
+		//
+	}
+
+	private static boolean matches(final Matcher instance) throws Throwable {
+		try {
+			final Object obj = METHOD_MATCHES.invoke(null, instance);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(obj != null && obj.getClass() != null ? obj.getClass().toString() : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGroupCount() throws Throwable {
+		//
+		Assertions.assertEquals(0, groupCount(null));
+		//
+		if (ih != null) {
+			//
+			ih.groupCount = Integer.valueOf(0);
+			//
+		} // if
+			//
+		Assertions.assertEquals(0, groupCount(matchResult));
+		//
+	}
+
+	private static int groupCount(final MatchResult instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GROUP_COUNT.invoke(null, instance);
+			if (obj instanceof Integer) {
+				return ((Integer) obj).intValue();
+			}
+			throw new Throwable(obj != null && obj.getClass() != null ? obj.getClass().toString() : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGroup() throws Throwable {
+		//
+		Assertions.assertNull(group(null, 0));
+		//
+		Assertions.assertNull(group(matchResult, 0));
+		//
+	}
+
+	private static String group(final MatchResult instance, final int group) throws Throwable {
+		try {
+			final Object obj = METHOD_GROUP.invoke(null, instance, group);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
 			}
 			throw new Throwable(obj != null && obj.getClass() != null ? obj.getClass().toString() : null);
 		} catch (final InvocationTargetException e) {
