@@ -189,7 +189,7 @@ public class JapaneseNameMultimapFactoryBean implements FactoryBean<Multimap<Str
 		Multimap<String, String> multimap = null;
 		//
 		while ((nextElementSibling = nextElementSibling != null ? nextElementSibling.nextElementSibling()
-				: null) != null && !Objects.equals(nextElementSibling.tagName(), "div")) {
+				: null) != null && !Objects.equals(ElementUtil.tagName(nextElementSibling), "div")) {
 			//
 			if (pattern != null
 					&& (matcher = pattern
