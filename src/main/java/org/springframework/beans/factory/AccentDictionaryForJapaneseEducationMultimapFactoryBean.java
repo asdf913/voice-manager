@@ -57,9 +57,8 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 			//
 			final byte[] bs = ResourceUtil.getContentAsByteArray(resource);
 			//
-			final ContentInfo ci = testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch, null);
-			//
-			if (Objects.equals("application/vnd.openxmlformats-officedocument", ci != null ? ci.getMimeType() : null)
+			if (Objects.equals("application/vnd.openxmlformats-officedocument",
+					getMimeType(testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch, null)))
 					|| XlsxUtil.isXlsx(resource)) {
 				//
 				try (final InputStream is = new ByteArrayInputStream(bs);
@@ -152,6 +151,10 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 			//
 		return result;
 		//
+	}
+
+	private static String getMimeType(final ContentInfo instance) {
+		return instance != null ? instance.getMimeType() : null;
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,

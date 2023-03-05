@@ -18,13 +18,14 @@ import org.springframework.core.io.ClassPathResource;
 
 import com.google.common.collect.Multimap;
 import com.google.common.reflect.Reflection;
+import com.j256.simplemagic.ContentInfo;
 
 class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 
 	private static final String EMPTY = "";
 
-	private static Method METHOD_CREATE_MULTI_MAP, METHOD_MATCHER, METHOD_MATCHES, METHOD_GROUP_COUNT,
-			METHOD_GROUP = null;
+	private static Method METHOD_CREATE_MULTI_MAP, METHOD_MATCHER, METHOD_MATCHES, METHOD_GROUP_COUNT, METHOD_GROUP,
+			METHOD_GET_MIME_TYPE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -41,6 +42,8 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 		(METHOD_GROUP_COUNT = clz.getDeclaredMethod("groupCount", MatchResult.class)).setAccessible(true);
 		//
 		(METHOD_GROUP = clz.getDeclaredMethod("group", MatchResult.class, Integer.TYPE)).setAccessible(true);
+		//
+		(METHOD_GET_MIME_TYPE = clz.getDeclaredMethod("getMimeType", ContentInfo.class)).setAccessible(true);
 		//
 	}
 
@@ -261,6 +264,27 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 	private static String group(final MatchResult instance, final int group) throws Throwable {
 		try {
 			final Object obj = METHOD_GROUP.invoke(null, instance, group);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(obj != null && obj.getClass() != null ? obj.getClass().toString() : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetMimeType() throws Throwable {
+		//
+		Assertions.assertNull(getMimeType(null));
+		//
+	}
+
+	private static String getMimeType(final ContentInfo instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_MIME_TYPE.invoke(null, instance);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof String) {
