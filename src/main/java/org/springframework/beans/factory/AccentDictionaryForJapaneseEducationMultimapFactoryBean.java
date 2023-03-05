@@ -108,19 +108,15 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 				//
 			if ((pattern = ObjectUtils.getIfNull(pattern,
 					() -> Pattern.compile("(\\p{InHiragana}+)\\s+\\((.+)\\)"))) != null
-					&& (matcher = pattern.matcher(td.text())) != null && matcher.matches()
-					&& matcher.groupCount() > 1) {
+					&& (matcher = pattern.matcher(td.text())) != null && matcher.matches() && matcher.groupCount() > 1
+					&& (ss = StringUtils.split(matcher.group(2), '/')) != null) {
 				//
-				if ((ss = StringUtils.split(matcher.group(2), '/')) != null) {
+				for (final String s : ss) {
 					//
-					for (final String s : ss) {
-						//
-						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-								StringUtils.trim(s), matcher.group(1));
-						//
-					} // for
-						//
-				} // if
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+							StringUtils.trim(s), matcher.group(1));
+					//
+				} // for
 					//
 			} // if
 				//
