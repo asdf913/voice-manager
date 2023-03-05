@@ -92,6 +92,15 @@
 		<property name="resource" value="classpath:yojijukugo.xlsx" />
 	</bean>
 
+	<bean
+		class="org.springframework.beans.factory.AccentDictionaryForJapaneseEducationMultimapFactoryBean">
+		<meta key="value" value="hiragana" />
+		<property name="url"
+			value="${org.springframework.beans.factory.AccentDictionaryForJapaneseEducationMultimapFactoryBean.url}" />
+		<property name="resource"
+			value="classpath:AccentDictionaryForJapaneseEducation.xlsx" />
+	</bean>
+
 	<!-- -->
 	<bean id="JlptLevelPageUrl" class="java.lang.String">
 		<constructor-arg index="0"
