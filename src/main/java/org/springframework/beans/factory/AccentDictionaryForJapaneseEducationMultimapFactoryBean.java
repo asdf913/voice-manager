@@ -194,9 +194,9 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 				//
 			} // if
 				//
-			if ((pattern = ObjectUtils.getIfNull(pattern,
-					() -> Pattern.compile("(\\p{InHiragana}+)\\s+\\((.+)\\)"))) != null
-					&& (matcher = pattern.matcher(td.text())) != null && matcher.matches() && matcher.groupCount() > 1
+			if ((matcher = matcher(
+					pattern = ObjectUtils.getIfNull(pattern, () -> Pattern.compile("(\\p{InHiragana}+)\\s+\\((.+)\\)")),
+					td.text())) != null && matcher.matches() && matcher.groupCount() > 1
 					&& (ss = StringUtils.split(matcher.group(2), '/')) != null) {
 				//
 				for (final String s : ss) {
@@ -212,6 +212,10 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 			//
 		return multimap;
 		//
+	}
+
+	private static Matcher matcher(final Pattern instance, final String input) {
+		return instance != null && input != null ? instance.matcher(input) : null;
 	}
 
 	@Override

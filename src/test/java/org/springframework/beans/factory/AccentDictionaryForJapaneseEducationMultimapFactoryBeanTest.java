@@ -4,6 +4,8 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -15,13 +17,19 @@ import com.google.common.collect.Multimap;
 
 class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 
-	private static Method METHOD_CREATE_MULTI_MAP = null;
+	private static final String EMPTY = "";
+
+	private static Method METHOD_CREATE_MULTI_MAP, METHOD_MATCHER = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
 		//
-		(METHOD_CREATE_MULTI_MAP = AccentDictionaryForJapaneseEducationMultimapFactoryBean.class
-				.getDeclaredMethod("createMultimap", String.class, String[].class)).setAccessible(true);
+		final Class<?> clz = AccentDictionaryForJapaneseEducationMultimapFactoryBean.class;
+		//
+		(METHOD_CREATE_MULTI_MAP = clz.getDeclaredMethod("createMultimap", String.class, String[].class))
+				.setAccessible(true);
+		//
+		(METHOD_MATCHER = clz.getDeclaredMethod("matcher", Pattern.class, String.class)).setAccessible(true);
 		//
 	}
 
@@ -41,7 +49,7 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 		//
 		if (instance != null) {
 			//
-			instance.setUrl("");
+			instance.setUrl(EMPTY);
 			//
 		} // if
 			//
@@ -89,7 +97,7 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 		//
 		Assertions.assertNull(createMultimap(null, null));
 		//
-		Assertions.assertNull(createMultimap("", null));
+		Assertions.assertNull(createMultimap(EMPTY, null));
 		//
 		Assertions.assertNull(createMultimap(" ", null));
 		//
@@ -111,6 +119,33 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 				return null;
 			} else if (obj instanceof Multimap) {
 				return (Multimap) obj;
+			}
+			throw new Throwable(obj != null && obj.getClass() != null ? obj.getClass().toString() : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testMatcher() throws Throwable {
+		//
+		Assertions.assertNull(matcher(null, null));
+		//
+		final Pattern pattern = Pattern.compile("\\d+");
+		//
+		Assertions.assertNull(matcher(pattern, null));
+		//
+		Assertions.assertNotNull(matcher(pattern, EMPTY));
+		//
+	}
+
+	private static Matcher matcher(final Pattern instance, final String input) throws Throwable {
+		try {
+			final Object obj = METHOD_MATCHER.invoke(null, instance, input);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Matcher) {
+				return (Matcher) obj;
 			}
 			throw new Throwable(obj != null && obj.getClass() != null ? obj.getClass().toString() : null);
 		} catch (final InvocationTargetException e) {
