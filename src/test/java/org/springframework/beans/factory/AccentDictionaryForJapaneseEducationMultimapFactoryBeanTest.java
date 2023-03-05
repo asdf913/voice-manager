@@ -406,16 +406,16 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 		//
 		final String url = new File("pom.xml").toURI().toURL().toString();
 		//
-		Assertions.assertThrows(MalformedURLException.class, () -> createMultimapByUrl(url, null));
+		Assertions.assertThrows(MalformedURLException.class, () -> createMultimapByUrl(url, null, null));
 		//
-		Assertions.assertThrows(MalformedURLException.class, () -> createMultimapByUrl(url, new String[] {}));
+		Assertions.assertThrows(MalformedURLException.class, () -> createMultimapByUrl(url, new String[] {}, null));
 		//
 	}
 
-	private static Multimap<String, String> createMultimapByUrl(final String url, final String[] allowProtocols)
-			throws Throwable {
+	private static Multimap<String, String> createMultimapByUrl(final String url, final String[] allowProtocols,
+			final String unicodeBlock) throws Throwable {
 		try {
-			final Object obj = METHOD_CREATE_MULTI_MAP_BY_URL.invoke(null, url, allowProtocols);
+			final Object obj = METHOD_CREATE_MULTI_MAP_BY_URL.invoke(null, url, allowProtocols, unicodeBlock);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Multimap) {
