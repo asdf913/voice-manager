@@ -99,6 +99,7 @@
 			value="${org.springframework.beans.factory.AccentDictionaryForJapaneseEducationMultimapFactoryBean.url}" />
 		<property name="resource"
 			value="classpath:AccentDictionaryForJapaneseEducation.xlsx" />
+		<property name="unicodeBlock" value="Hiragana" />
 	</bean>
 
 	<!-- -->

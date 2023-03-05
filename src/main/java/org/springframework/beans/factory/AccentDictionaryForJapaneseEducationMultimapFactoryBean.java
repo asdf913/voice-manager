@@ -44,12 +44,18 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 
 	private String url = null;
 
+	private String unicodeBlock = null;
+
 	public void setResource(final Resource resource) {
 		this.resource = resource;
 	}
 
 	public void setUrl(final String url) {
 		this.url = url;
+	}
+
+	public void setUnicodeBlock(final String unicodeBlock) {
+		this.unicodeBlock = unicodeBlock;
 	}
 
 	@Override
@@ -81,7 +87,7 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 				//
 		} // if
 			//
-		return createMultimapByUrl(url, ProtocolUtil.getAllowProtocols());
+		return createMultimapByUrl(url, ProtocolUtil.getAllowProtocols(), unicodeBlock);
 		//
 	}
 
@@ -151,8 +157,8 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 		return instance != null ? Boolean.valueOf(instance.getAndSet(newValue)) : null;
 	}
 
-	private static Multimap<String, String> createMultimapByUrl(final String url, final String[] allowProtocols)
-			throws IOException {
+	private static Multimap<String, String> createMultimapByUrl(final String url, final String[] allowProtocols,
+			final String unicodeBlock) throws IOException {
 		//
 		final Elements as = ElementUtil.select(
 				testAndApply(
@@ -174,7 +180,7 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 			} // if
 				//
 			if ((result = ObjectUtils.getIfNull(result, LinkedHashMultimap::create)) != null
-					&& (temp = createMultimap(a.absUrl("href"), allowProtocols)) != null) {
+					&& (temp = createMultimap(a.absUrl("href"), allowProtocols, unicodeBlock)) != null) {
 				//
 				result.putAll(temp);
 				//
@@ -200,8 +206,8 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 		return instance != null && instance.test(value);
 	}
 
-	private static Multimap<String, String> createMultimap(final String url, final String[] allowProtocols)
-			throws IOException {
+	private static Multimap<String, String> createMultimap(final String url, final String[] allowProtocols,
+			final String unicodeBlock) throws IOException {
 		//
 		final Elements tds = ElementUtil.getElementsByTag(
 				testAndApply(
@@ -231,10 +237,17 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 				//
 			} // if
 				//
-			if (matches(matcher = matcher(
-					pattern = ObjectUtils.getIfNull(pattern, () -> Pattern.compile("(\\p{InHiragana}+)\\s+\\((.+)\\)")),
-					td.text())) && groupCount(matcher) > 1
-					&& (ss = StringUtils.split(group(matcher, 2), '/')) != null) {
+			if (matches(matcher = matcher(pattern = ObjectUtils.getIfNull(pattern, () -> {
+				//
+				if (StringUtils.isNotBlank(unicodeBlock)) {
+					//
+					return Pattern.compile(String.format("(\\p{In%1$s}+)\\s+\\((.+)\\)", unicodeBlock));
+					//
+				} // if
+					//
+				return Pattern.compile("(.+)\\s+\\((.+)\\)");
+				//
+			}), td.text())) && groupCount(matcher) > 1 && (ss = StringUtils.split(group(matcher, 2), '/')) != null) {
 				//
 				for (final String s : ss) {
 					//

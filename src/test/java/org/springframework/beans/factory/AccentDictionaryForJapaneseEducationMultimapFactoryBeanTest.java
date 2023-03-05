@@ -40,8 +40,8 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 		//
 		final Class<?> clz = AccentDictionaryForJapaneseEducationMultimapFactoryBean.class;
 		//
-		(METHOD_CREATE_MULTI_MAP_STRING = clz.getDeclaredMethod("createMultimap", String.class, String[].class))
-				.setAccessible(true);
+		(METHOD_CREATE_MULTI_MAP_STRING = clz.getDeclaredMethod("createMultimap", String.class, String[].class,
+				String.class)).setAccessible(true);
 		//
 		(METHOD_MATCHER = clz.getDeclaredMethod("matcher", Pattern.class, String.class)).setAccessible(true);
 		//
@@ -53,8 +53,8 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 		//
 		(METHOD_GET_MIME_TYPE = clz.getDeclaredMethod("getMimeType", ContentInfo.class)).setAccessible(true);
 		//
-		(METHOD_CREATE_MULTI_MAP_BY_URL = clz.getDeclaredMethod("createMultimapByUrl", String.class, String[].class))
-				.setAccessible(true);
+		(METHOD_CREATE_MULTI_MAP_BY_URL = clz.getDeclaredMethod("createMultimapByUrl", String.class, String[].class,
+				String.class)).setAccessible(true);
 		//
 		(METHOD_CREATE_MULTI_MAP_WORK_BOOK = clz.getDeclaredMethod("createMultimap", Workbook.class))
 				.setAccessible(true);
@@ -223,26 +223,26 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 		//
 		// createMultimap(java.lang.String,java.lang.String[])
 		//
-		Assertions.assertNull(createMultimap(null, null));
+		Assertions.assertNull(createMultimap(null, null, null));
 		//
-		Assertions.assertNull(createMultimap(EMPTY, null));
+		Assertions.assertNull(createMultimap(EMPTY, null, null));
 		//
-		Assertions.assertNull(createMultimap(" ", null));
+		Assertions.assertNull(createMultimap(" ", null, null));
 		//
 		final String url = new File("pom.xml").toURI().toURL().toString();
 		//
-		Assertions.assertThrows(MalformedURLException.class, () -> createMultimap(url, null));
+		Assertions.assertThrows(MalformedURLException.class, () -> createMultimap(url, null, null));
 		//
-		Assertions.assertThrows(MalformedURLException.class, () -> createMultimap(url, new String[] {}));
+		Assertions.assertThrows(MalformedURLException.class, () -> createMultimap(url, new String[] {}, null));
 		//
-		Assertions.assertNull(createMultimap(url, new String[] { "http" }));
+		Assertions.assertNull(createMultimap(url, new String[] { "http" }, null));
 		//
 	}
 
-	private static Multimap<String, String> createMultimap(final String url, final String[] allowProtocols)
-			throws Throwable {
+	private static Multimap<String, String> createMultimap(final String url, final String[] allowProtocols,
+			final String unicodeBlock) throws Throwable {
 		try {
-			final Object obj = METHOD_CREATE_MULTI_MAP_STRING.invoke(null, url, allowProtocols);
+			final Object obj = METHOD_CREATE_MULTI_MAP_STRING.invoke(null, url, allowProtocols, unicodeBlock);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Multimap) {
