@@ -5004,7 +5004,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				for (int i = 0; i < array.length; i++) {
 					//
-					if ((pw = ObjectUtils.getIfNull(pw, () -> console != null ? console.writer() : null)) != null) {
+					if ((pw = ObjectUtils.getIfNull(pw, () -> writer(console))) != null) {
 						//
 						pw.println(i + " " + array[i]);
 						//
@@ -5027,6 +5027,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		};
 		//
+	}
+
+	private static PrintWriter writer(final Console instance) {
+		return instance != null ? instance.writer() : null;
 	}
 
 	private static void playAudio(final Pronunciation pronunciation, final Object audioFormat) {

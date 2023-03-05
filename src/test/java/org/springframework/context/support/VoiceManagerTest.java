@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.annotation.Annotation;
@@ -343,7 +344,7 @@ class VoiceManagerTest {
 			METHOD_ACTION_PERFORMED_FOR_BTN_IMPORT, METHOD_CREATE_PRONUNCIATION_LIST_CELL_RENDERER,
 			METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_GET_FILE,
 			METHOD_GET_PRONUNCIATION_AUDIO_FILE_BY_AUDIO_FORMAT, METHOD_GET_AUDIO_FILE, METHOD_GET_BEAN,
-			METHOD_IS_ALL_ATTRIBUTES_MATCHED, METHOD_CREATE_FUNCTION_FOR_BTN_CONVERT_TO_HIRAGANA = null;
+			METHOD_IS_ALL_ATTRIBUTES_MATCHED, METHOD_CREATE_FUNCTION_FOR_BTN_CONVERT_TO_HIRAGANA, METHOD_WRITER = null;
 
 	@BeforeAll
 	static void beforeAll() throws Throwable {
@@ -1027,6 +1028,8 @@ class VoiceManagerTest {
 		//
 		(METHOD_CREATE_FUNCTION_FOR_BTN_CONVERT_TO_HIRAGANA = clz
 				.getDeclaredMethod("createFunctionForBtnConvertToHiragana")).setAccessible(true);
+		//
+		(METHOD_WRITER = clz.getDeclaredMethod("writer", Console.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -9467,6 +9470,33 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof Function) {
 				return (Function) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testWriter() throws Throwable {
+		//
+		if (!GraphicsEnvironment.isHeadless()) {
+			//
+			Assertions.assertNull(writer(null));
+			//
+		} // if
+			//
+		Assertions.assertNull(writer(cast(Console.class, Narcissus.allocateInstance(Console.class))));
+		//
+	}
+
+	private static PrintWriter writer(final Console instance) throws Throwable {
+		try {
+			final Object obj = METHOD_WRITER.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof PrintWriter) {
+				return (PrintWriter) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
