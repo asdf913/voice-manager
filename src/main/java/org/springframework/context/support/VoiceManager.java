@@ -5004,12 +5004,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				for (int i = 0; i < array.length; i++) {
 					//
-					if ((pw = ObjectUtils.getIfNull(pw, () -> writer(console))) != null) {
-						//
-						pw.println(i + " " + array[i]);
-						//
-					} // if
-						//
+					println(pw = ObjectUtils.getIfNull(pw, () -> writer(console)), i + " " + array[i]);
+					//
 				} // for
 					//
 				final Integer index = valueOf(readLine(console, "Item"));
@@ -5027,6 +5023,29 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		};
 		//
+	}
+
+	private static void println(final PrintWriter instance, final String string) {
+		//
+		Object lock = null;
+		//
+		try {
+			//
+			lock = testAndApply(Objects::nonNull, instance,
+					x -> Narcissus.getObjectField(x, Writer.class.getDeclaredField("lock")), null);
+			//
+		} catch (final NoSuchFieldException e) {
+			//
+			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
+			//
+		} // try
+			//
+		if (instance != null && lock != null) {
+			//
+			instance.println(string);
+			//
+		} // if
+			//
 	}
 
 	private static PrintWriter writer(final Console instance) {

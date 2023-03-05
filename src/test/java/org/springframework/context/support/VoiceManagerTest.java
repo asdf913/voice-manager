@@ -345,7 +345,7 @@ class VoiceManagerTest {
 			METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_GET_FILE,
 			METHOD_GET_PRONUNCIATION_AUDIO_FILE_BY_AUDIO_FORMAT, METHOD_GET_AUDIO_FILE, METHOD_GET_BEAN,
 			METHOD_IS_ALL_ATTRIBUTES_MATCHED, METHOD_CREATE_FUNCTION_FOR_BTN_CONVERT_TO_HIRAGANA, METHOD_WRITER,
-			METHOD_READ_LINE = null;
+			METHOD_READ_LINE, METHOD_PRINT_LN = null;
 
 	@BeforeAll
 	static void beforeAll() throws Throwable {
@@ -1034,6 +1034,8 @@ class VoiceManagerTest {
 		//
 		(METHOD_READ_LINE = clz.getDeclaredMethod("readLine", Console.class, String.class, Object[].class))
 				.setAccessible(true);
+		//
+		(METHOD_PRINT_LN = clz.getDeclaredMethod("println", PrintWriter.class, String.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -9536,6 +9538,34 @@ class VoiceManagerTest {
 				return (String) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testPrintln() throws Throwable {
+		//
+		if (!GraphicsEnvironment.isHeadless()) {
+			//
+			Assertions.assertDoesNotThrow(() -> println(null, null));
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(
+				() -> println(cast(PrintWriter.class, Narcissus.allocateInstance(PrintWriter.class)), null));
+		//
+		try (final OutputStream os = new ByteArrayOutputStream(); final PrintWriter pw = new PrintWriter(os)) {
+			//
+			Assertions.assertDoesNotThrow(() -> println(pw, null));
+			//
+		} // try
+			//
+	}
+
+	private static void println(final PrintWriter instance, final String x) throws Throwable {
+		try {
+			METHOD_PRINT_LN.invoke(null, instance, x);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
