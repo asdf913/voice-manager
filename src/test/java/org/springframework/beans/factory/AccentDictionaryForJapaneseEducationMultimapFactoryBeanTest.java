@@ -7,6 +7,7 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.util.Iterator;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -32,7 +33,7 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 
 	private static Method METHOD_CREATE_MULTI_MAP_STRING, METHOD_MATCHER, METHOD_MATCHES, METHOD_GROUP_COUNT,
 			METHOD_GROUP, METHOD_GET_MIME_TYPE, METHOD_CREATE_MULTI_MAP_BY_URL, METHOD_CREATE_MULTI_MAP_WORK_BOOK,
-			METHOD_CREATE_MULTI_MAP_SHEET, METHOD_PUT_ALL = null;
+			METHOD_CREATE_MULTI_MAP_SHEET, METHOD_PUT_ALL, METHOD_GET_AND_SET = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -61,6 +62,9 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 		(METHOD_CREATE_MULTI_MAP_SHEET = clz.getDeclaredMethod("createMultimap", Sheet.class)).setAccessible(true);
 		//
 		(METHOD_PUT_ALL = clz.getDeclaredMethod("putAll", Multimap.class, Multimap.class)).setAccessible(true);
+		//
+		(METHOD_GET_AND_SET = clz.getDeclaredMethod("getAndSet", AtomicBoolean.class, Boolean.TYPE))
+				.setAccessible(true);
 		//
 	}
 
@@ -434,6 +438,27 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 			throws Throwable {
 		try {
 			METHOD_PUT_ALL.invoke(null, a, b);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetAndSet() throws Throwable {
+		//
+		Assertions.assertNull(getAndSet(null, false));
+		//
+	}
+
+	private static Boolean getAndSet(final AtomicBoolean instance, final boolean newValue) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_AND_SET.invoke(null, instance, newValue);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Boolean) {
+				return (Boolean) obj;
+			}
+			throw new Throwable(obj != null && obj.getClass() != null ? obj.getClass().toString() : null);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

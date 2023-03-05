@@ -5,11 +5,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
@@ -122,19 +124,13 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 		//
 		if (sheet != null && sheet.iterator() != null) {
 			//
-			boolean firstRow = true;
+			AtomicBoolean firstRow = null;
 			//
 			for (final Row row : sheet) {
 				//
-				if (row == null) {
-					//
-					continue;
-					//
-				} // if
-					//
-				if (firstRow) {
-					//
-					firstRow = false;
+				if (row == null || BooleanUtils.toBooleanDefaultIfNull(
+						getAndSet((firstRow = ObjectUtils.getIfNull(firstRow, () -> new AtomicBoolean(true))), false),
+						false)) {
 					//
 					continue;
 					//
@@ -149,6 +145,10 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 			//
 		return value;
 		//
+	}
+
+	private static Boolean getAndSet(final AtomicBoolean instance, final boolean newValue) {
+		return instance != null ? Boolean.valueOf(instance.getAndSet(newValue)) : null;
 	}
 
 	private static Multimap<String, String> createMultimapByUrl(final String url, final String[] allowProtocols)
