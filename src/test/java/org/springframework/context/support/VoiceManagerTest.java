@@ -344,7 +344,8 @@ class VoiceManagerTest {
 			METHOD_ACTION_PERFORMED_FOR_BTN_IMPORT, METHOD_CREATE_PRONUNCIATION_LIST_CELL_RENDERER,
 			METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_GET_FILE,
 			METHOD_GET_PRONUNCIATION_AUDIO_FILE_BY_AUDIO_FORMAT, METHOD_GET_AUDIO_FILE, METHOD_GET_BEAN,
-			METHOD_IS_ALL_ATTRIBUTES_MATCHED, METHOD_CREATE_FUNCTION_FOR_BTN_CONVERT_TO_HIRAGANA, METHOD_WRITER = null;
+			METHOD_IS_ALL_ATTRIBUTES_MATCHED, METHOD_CREATE_FUNCTION_FOR_BTN_CONVERT_TO_HIRAGANA, METHOD_WRITER,
+			METHOD_READ_LINE = null;
 
 	@BeforeAll
 	static void beforeAll() throws Throwable {
@@ -1030,6 +1031,9 @@ class VoiceManagerTest {
 				.getDeclaredMethod("createFunctionForBtnConvertToHiragana")).setAccessible(true);
 		//
 		(METHOD_WRITER = clz.getDeclaredMethod("writer", Console.class)).setAccessible(true);
+		//
+		(METHOD_READ_LINE = clz.getDeclaredMethod("readLine", Console.class, String.class, Object[].class))
+				.setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -9497,6 +9501,39 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof PrintWriter) {
 				return (PrintWriter) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testReadLine() throws Throwable {
+		//
+		if (!GraphicsEnvironment.isHeadless()) {
+			//
+			Assertions.assertNull(readLine(null, null));
+			//
+		} // if
+			//
+		final Console console = cast(Console.class, Narcissus.allocateInstance(Console.class));
+		//
+		Assertions.assertNull(readLine(console, null));
+		//
+		Narcissus.setObjectField(console, Console.class.getDeclaredField("writeLock"), new Object());
+		//
+		Assertions.assertNull(readLine(console, null));
+		//
+	}
+
+	private static String readLine(final Console instance, final String fmt, final Object... args) throws Throwable {
+		try {
+			final Object obj = METHOD_READ_LINE.invoke(null, instance, fmt, args);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

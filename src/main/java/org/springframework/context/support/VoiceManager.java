@@ -5012,7 +5012,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 				} // for
 					//
-				final Integer index = valueOf(console != null ? console.readLine("Item") : null);
+				final Integer index = valueOf(readLine(console, "Item"));
 				//
 				return index != null && index >= 0 && index.intValue() < array.length
 						? Unit.with(array[index.intValue()])
@@ -5031,6 +5031,28 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static PrintWriter writer(final Console instance) {
 		return instance != null ? instance.writer() : null;
+	}
+
+	private static String readLine(final Console instance, final String fmt, final Object... args) {
+		//
+		Object writeLock = null, readLock = null;
+		//
+		try {
+			//
+			writeLock = testAndApply(Objects::nonNull, instance,
+					x -> Narcissus.getObjectField(x, Console.class.getDeclaredField("writeLock")), null);
+			//
+			readLock = testAndApply(Objects::nonNull, instance,
+					x -> Narcissus.getObjectField(x, Console.class.getDeclaredField("readLock")), null);
+			//
+		} catch (final NoSuchFieldException e) {
+			//
+			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
+			//
+		} // try
+			//
+		return instance != null && writeLock != null && readLock != null ? instance.readLine(fmt, args) : null;
+		//
 	}
 
 	private static void playAudio(final Pronunciation pronunciation, final Object audioFormat) {
