@@ -25,7 +25,7 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 	private static final String EMPTY = "";
 
 	private static Method METHOD_CREATE_MULTI_MAP, METHOD_MATCHER, METHOD_MATCHES, METHOD_GROUP_COUNT, METHOD_GROUP,
-			METHOD_GET_MIME_TYPE = null;
+			METHOD_GET_MIME_TYPE, METHOD_CREATE_MULTI_MAP_BY_URL = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -44,6 +44,9 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 		(METHOD_GROUP = clz.getDeclaredMethod("group", MatchResult.class, Integer.TYPE)).setAccessible(true);
 		//
 		(METHOD_GET_MIME_TYPE = clz.getDeclaredMethod("getMimeType", ContentInfo.class)).setAccessible(true);
+		//
+		(METHOD_CREATE_MULTI_MAP_BY_URL = clz.getDeclaredMethod("createMultimapByUrl", String.class, String[].class))
+				.setAccessible(true);
 		//
 	}
 
@@ -152,13 +155,13 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 		//
 		Assertions.assertNull(createMultimap(" ", null));
 		//
-		Assertions.assertThrows(MalformedURLException.class,
-				() -> createMultimap(new File("pom.xml").toURI().toURL().toString(), null));
+		final String url = new File("pom.xml").toURI().toURL().toString();
 		//
-		Assertions.assertThrows(MalformedURLException.class,
-				() -> createMultimap(new File("pom.xml").toURI().toURL().toString(), new String[] {}));
+		Assertions.assertThrows(MalformedURLException.class, () -> createMultimap(url, null));
 		//
-		Assertions.assertNull(createMultimap(new File("pom.xml").toURI().toURL().toString(), new String[] { "http" }));
+		Assertions.assertThrows(MalformedURLException.class, () -> createMultimap(url, new String[] {}));
+		//
+		Assertions.assertNull(createMultimap(url, new String[] { "http" }));
 		//
 	}
 
@@ -289,6 +292,32 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 				return null;
 			} else if (obj instanceof String) {
 				return (String) obj;
+			}
+			throw new Throwable(obj != null && obj.getClass() != null ? obj.getClass().toString() : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCreateMultimapByUrl() throws MalformedURLException {
+		//
+		final String url = new File("pom.xml").toURI().toURL().toString();
+		//
+		Assertions.assertThrows(MalformedURLException.class, () -> createMultimapByUrl(url, null));
+		//
+		Assertions.assertThrows(MalformedURLException.class, () -> createMultimapByUrl(url, new String[] {}));
+		//
+	}
+
+	private static Multimap<String, String> createMultimapByUrl(final String url, final String[] allowProtocols)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_MULTI_MAP_BY_URL.invoke(null, url, allowProtocols);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Multimap) {
+				return (Multimap) obj;
 			}
 			throw new Throwable(obj != null && obj.getClass() != null ? obj.getClass().toString() : null);
 		} catch (final InvocationTargetException e) {

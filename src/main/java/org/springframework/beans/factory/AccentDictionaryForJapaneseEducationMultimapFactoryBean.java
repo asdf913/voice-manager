@@ -119,7 +119,12 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 				//
 		} // if
 			//
-		final String[] allowProtocols = ProtocolUtil.getAllowProtocols();
+		return createMultimapByUrl(url, ProtocolUtil.getAllowProtocols());
+		//
+	}
+
+	private static Multimap<String, String> createMultimapByUrl(final String url, final String[] allowProtocols)
+			throws IOException {
 		//
 		final Elements as = ElementUtil.select(
 				testAndApply(
