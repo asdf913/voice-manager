@@ -200,7 +200,7 @@ public class JapaneseNameMultimapFactoryBean implements FactoryBean<Multimap<Str
 				//
 				for (final String s : strings) {
 					//
-					put(multimap = ObjectUtils.getIfNull(multimap, LinkedListMultimap::create), s,
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedListMultimap::create), s,
 							StringUtils.substringBefore(text, ' '));
 					//
 				} // for
@@ -211,12 +211,6 @@ public class JapaneseNameMultimapFactoryBean implements FactoryBean<Multimap<Str
 			//
 		return multimap;
 		//
-	}
-
-	private static <K, V> void put(final Multimap<K, V> instance, final K key, final V value) {
-		if (instance != null) {
-			instance.put(key, value);
-		}
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,

@@ -24,7 +24,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 
-import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.j256.simplemagic.ContentInfo;
 
@@ -33,7 +32,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 class JapaneseNameMultimapFactoryBeanTest {
 
 	private static Method METHOD_TO_STRING, METHOD_TEST, METHOD_GET_PROTOCOL, METHOD_CREATE_MULTI_MAP_ELEMENT,
-			METHOD_CREATE_MULTI_MAP_WORK_BOOK, METHOD_PUT, METHOD_GET_MIME_TYPE, METHOD_CREATE_MULTI_MAP_BY_URL = null;
+			METHOD_CREATE_MULTI_MAP_WORK_BOOK, METHOD_GET_MIME_TYPE, METHOD_CREATE_MULTI_MAP_BY_URL = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -51,8 +50,6 @@ class JapaneseNameMultimapFactoryBeanTest {
 		//
 		(METHOD_CREATE_MULTI_MAP_WORK_BOOK = clz.getDeclaredMethod("createMultimap", Workbook.class))
 				.setAccessible(true);
-		//
-		(METHOD_PUT = clz.getDeclaredMethod("put", Multimap.class, Object.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_GET_MIME_TYPE = clz.getDeclaredMethod("getMimeType", ContentInfo.class)).setAccessible(true);
 		//
@@ -284,23 +281,6 @@ class JapaneseNameMultimapFactoryBeanTest {
 				return (IValue0) obj;
 			}
 			throw new Throwable(obj != null && obj.getClass() != null ? obj.getClass().toString() : null);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testPut() {
-		//
-		Assertions.assertDoesNotThrow(() -> put(null, null, null));
-		//
-		Assertions.assertDoesNotThrow(() -> put(LinkedHashMultimap.create(), null, null));
-		//
-	}
-
-	private static <K, V> void put(final Multimap<K, V> instance, final K key, final V value) throws Throwable {
-		try {
-			METHOD_PUT.invoke(null, instance, key, value);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
