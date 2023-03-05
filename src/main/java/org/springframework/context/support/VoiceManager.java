@@ -1843,6 +1843,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.stream() : null;
 	}
 
+	private static Object[] toArray(final Collection<?> instance) {
+		return instance != null ? instance.toArray() : null;
+	}
+
 	private static <T> T[] toArray(final Collection<T> instance, final T[] array) {
 		//
 		return instance != null && (array != null || Proxy.isProxyClass(getClass(instance))) ? instance.toArray(array)
@@ -4968,19 +4972,61 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} else if (Objects.equals(source, btnConvertToHiragana)) {
 			//
-			testAndAccept(Objects::nonNull, getIValue0ByKey(multimaps, getText(tfTextImport), vs -> {
-				//
-				final JList<?> jList = testAndApply(Objects::nonNull, vs != null ? vs.toArray() : null, JList::new,
-						x -> new JList<>());
-				//
-				return JOptionPane.showConfirmDialog(null, jList, "Hiragana",
-						JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION ? Unit.with(jList.getSelectedValue())
-								: null;
-				//
-			}), x -> setText(tfHiragana, toString(IValue0Util.getValue0(x))));
+			testAndAccept(Objects::nonNull,
+					getIValue0ByKey(multimaps, getText(tfTextImport), createFunctionForBtnConvertToHiragana()),
+					x -> setText(tfHiragana, toString(IValue0Util.getValue0(x))));
 			//
 		} // if
 			//
+	}
+
+	private static Function<Collection<?>, IValue0<?>> createFunctionForBtnConvertToHiragana() {
+		//
+		return vs -> {
+			//
+			final Object[] array = toArray(vs);
+			//
+			if (array == null || array.length == 0) {
+				//
+				return null;
+				//
+			} else if (array.length == 1) {
+				//
+				return Unit.with(array[0]);
+				//
+			} // if
+				//
+			if (GraphicsEnvironment.isHeadless()) {
+				//
+				final Console console = System.console();
+				//
+				PrintWriter pw = null;
+				//
+				for (int i = 0; i < array.length; i++) {
+					//
+					if ((pw = ObjectUtils.getIfNull(pw, () -> console != null ? console.writer() : null)) != null) {
+						//
+						pw.println(i + " " + array[i]);
+						//
+					} // if
+						//
+				} // for
+					//
+				final Integer index = valueOf(console != null ? console.readLine("Item") : null);
+				//
+				return index != null && index >= 0 && index.intValue() < array.length
+						? Unit.with(array[index.intValue()])
+						: null;
+				//
+			} // if
+				//
+			final JList<?> jList = testAndApply(Objects::nonNull, array, JList::new, x -> new JList<>());
+			//
+			return JOptionPane.showConfirmDialog(null, jList, "Hiragana",
+					JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION ? Unit.with(jList.getSelectedValue()) : null;
+			//
+		};
+		//
 	}
 
 	private static void playAudio(final Pronunciation pronunciation, final Object audioFormat) {
@@ -5640,7 +5686,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} else if (!headless && !isTestMode()) {
 			//
-			final JList<Object> list = new JList<>(values != null ? values.toArray() : null);
+			final JList<Object> list = new JList<>(toArray(values));
 			//
 			JOptionPane.showMessageDialog(null, list, "IPA", JOptionPane.PLAIN_MESSAGE);
 			//
