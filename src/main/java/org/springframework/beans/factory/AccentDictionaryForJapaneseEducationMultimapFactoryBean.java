@@ -300,18 +300,20 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 			//
 			set(arPattern, pattern);
 			//
-			final Matcher matcher = matcher(pattern, text);
+			pair = getPair(pattern, text);
 			//
-			if (matches(matcher) && groupCount(matcher) > 1) {
-				//
-				pair = Pair.with(groupCount(matcher) > 1 ? StringUtils.split(group(matcher, 2), '/') : null,
-						group(matcher, 1));
-				//
-			} // if
-				//
 		} // if
 			//
 		return pair;
+		//
+	}
+
+	private static Pair<String[], String> getPair(final Pattern pattern, final String text) {
+		//
+		final Matcher matcher = matcher(pattern, text);
+		//
+		return matches(matcher) && groupCount(matcher) > 1 ? Pair.with(
+				groupCount(matcher) > 1 ? StringUtils.split(group(matcher, 2), '/') : null, group(matcher, 1)) : null;
 		//
 	}
 
@@ -325,7 +327,7 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 		}
 	}
 
-	private static Matcher matcher(final Pattern instance, final String input) {
+	private static Matcher matcher(final Pattern instance, final CharSequence input) {
 		return instance != null && input != null ? instance.matcher(input) : null;
 	}
 

@@ -35,8 +35,7 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 
 	private static Method METHOD_CREATE_MULTI_MAP_STRING, METHOD_MATCHER, METHOD_MATCHES, METHOD_GROUP_COUNT,
 			METHOD_GROUP, METHOD_GET_MIME_TYPE, METHOD_CREATE_MULTI_MAP_BY_URL, METHOD_CREATE_MULTI_MAP_WORK_BOOK,
-			METHOD_CREATE_MULTI_MAP_SHEET, METHOD_PUT_ALL, METHOD_GET_AND_SET, METHOD_CREATE_PATTERN,
-			METHOD_GET_PAIR = null;
+			METHOD_CREATE_MULTI_MAP_SHEET, METHOD_PUT_ALL, METHOD_GET_AND_SET, METHOD_GET_PAIR = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -46,7 +45,7 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 		(METHOD_CREATE_MULTI_MAP_STRING = clz.getDeclaredMethod("createMultimap", String.class, String[].class,
 				String.class)).setAccessible(true);
 		//
-		(METHOD_MATCHER = clz.getDeclaredMethod("matcher", Pattern.class, String.class)).setAccessible(true);
+		(METHOD_MATCHER = clz.getDeclaredMethod("matcher", Pattern.class, CharSequence.class)).setAccessible(true);
 		//
 		(METHOD_MATCHES = clz.getDeclaredMethod("matches", Matcher.class)).setAccessible(true);
 		//
@@ -297,7 +296,7 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 		//
 	}
 
-	private static Matcher matcher(final Pattern instance, final String input) throws Throwable {
+	private static Matcher matcher(final Pattern instance, final CharSequence input) throws Throwable {
 		try {
 			final Object obj = METHOD_MATCHER.invoke(null, instance, input);
 			if (obj == null) {
