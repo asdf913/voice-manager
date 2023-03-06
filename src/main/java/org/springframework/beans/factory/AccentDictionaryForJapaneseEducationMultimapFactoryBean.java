@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Predicate;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
@@ -21,6 +22,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.javatuples.Pair;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
@@ -221,8 +223,6 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 		//
 		Element firstChild = null;
 		//
-		Pattern pattern = null;
-		//
 		Matcher matcher = null;
 		//
 		Multimap<String, String> multimap = null;
@@ -231,27 +231,29 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 		//
 		final int size = IterableUtils.size(tds);
 		//
+		Pair<String[], String> pair = null;
+		//
+		AtomicReference<Pattern> arPattern = null;
+		//
 		for (int i = 0; i < size; i++) {
 			//
-			if ((td = IterableUtils.get(tds, i)) == null || (td.childrenSize() > 0 && (firstChild = td.child(0)) != null
-					&& StringUtils.equalsIgnoreCase("script", ElementUtil.tagName(firstChild)))) {
+			if ((td = IterableUtils.get(tds, i)) == null
+					|| (td.childrenSize() > 0 && (firstChild = td.child(0)) != null
+							&& StringUtils.equalsIgnoreCase("script", ElementUtil.tagName(firstChild)))
+					|| (pair = getPair(ElementUtil.text(td), unicodeBlock,
+							arPattern = ObjectUtils.getIfNull(arPattern, AtomicReference::new))) == null
+					|| (ss = pair.getValue0()) == null) {
 				//
 				continue;
 				//
 			} // if
 				//
-			if (matches(matcher = matcher(pattern = ObjectUtils.getIfNull(pattern, () -> createPattern(unicodeBlock)),
-					td.text())) && groupCount(matcher) > 1
-					&& (ss = StringUtils.split(group(matcher, 2), '/')) != null) {
+			for (final String s : ss) {
 				//
-				for (final String s : ss) {
-					//
-					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							StringUtils.trim(s), group(matcher, 1));
-					//
-				} // for
-					//
-			} // if
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						StringUtils.trim(s), group(matcher, 1));
+				//
+			} // for
 				//
 		} // for
 			//
@@ -259,18 +261,61 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 		//
 	}
 
-	/**
-	 * @see java.lang.Character.UnicodeBlock
-	 */
-	private static Pattern createPattern(final String unicodeBlock) {
+	private static Pair<String[], String> getPair(final String text, final String unicodeBlock,
+			final AtomicReference<Pattern> arPattern) {
 		//
-		if (StringUtils.isNotBlank(unicodeBlock)) {
+		Pair<String[], String> pair = null;
+		//
+		if (StringUtils.isBlank(unicodeBlock)) {
 			//
-			return Pattern.compile(String.format("(\\p{In%1$s}+)\\s+\\((.+)\\)", unicodeBlock));
+			final int index = StringUtils.indexOf(text, '(');
 			//
+			IValue0<String> key = null;
+			//
+			if (index > 0) {
+				//
+				key = Unit.with(StringUtils.trim(StringUtils.substring(text, 0, index)));
+				//
+			} // if
+				//
+			if (key != null) {
+				//
+				final StringBuilder sb = new StringBuilder(
+						StringUtils.defaultString(StringUtils.substringAfter(text, '(')));
+				//
+				if (sb.length() > 0 && sb.charAt(sb.length() - 1) == ')') {
+					//
+					sb.deleteCharAt(sb.length() - 1);
+					//
+				} // if
+					//
+				pair = Pair.with(StringUtils.split(sb.toString(), '/'), IValue0Util.getValue0(key));
+				//
+			} // if
+				//
+		} else {
+			//
+			final Pattern pattern = ObjectUtils.getIfNull(arPattern != null ? arPattern.get() : null,
+					() -> Pattern.compile(String.format("(\\p{In%1$s}+)\\s+\\((.+)\\)", unicodeBlock)));
+			//
+			if (arPattern != null) {
+				//
+				arPattern.set(pattern);
+				//
+			} // if
+				//
+			final Matcher matcher = matcher(pattern, text);
+			//
+			if (matches(matcher) && groupCount(matcher) > 1) {
+				//
+				pair = Pair.with(groupCount(matcher) > 1 ? StringUtils.split(group(matcher, 2), '/') : null,
+						group(matcher, 1));
+				//
+			} // if
+				//
 		} // if
 			//
-		return Pattern.compile("(.+)\\s+\\((.+)\\)");
+		return pair;
 		//
 	}
 

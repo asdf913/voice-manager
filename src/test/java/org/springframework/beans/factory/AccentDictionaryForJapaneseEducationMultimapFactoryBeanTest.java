@@ -8,6 +8,7 @@ import java.net.MalformedURLException;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -15,6 +16,7 @@ import java.util.regex.Pattern;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.javatuples.Pair;
 import org.javatuples.valueintf.IValue0;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -33,7 +35,8 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 
 	private static Method METHOD_CREATE_MULTI_MAP_STRING, METHOD_MATCHER, METHOD_MATCHES, METHOD_GROUP_COUNT,
 			METHOD_GROUP, METHOD_GET_MIME_TYPE, METHOD_CREATE_MULTI_MAP_BY_URL, METHOD_CREATE_MULTI_MAP_WORK_BOOK,
-			METHOD_CREATE_MULTI_MAP_SHEET, METHOD_PUT_ALL, METHOD_GET_AND_SET, METHOD_CREATE_PATTERN = null;
+			METHOD_CREATE_MULTI_MAP_SHEET, METHOD_PUT_ALL, METHOD_GET_AND_SET, METHOD_CREATE_PATTERN,
+			METHOD_GET_PAIR = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -66,7 +69,8 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 		(METHOD_GET_AND_SET = clz.getDeclaredMethod("getAndSet", AtomicBoolean.class, Boolean.TYPE))
 				.setAccessible(true);
 		//
-		(METHOD_CREATE_PATTERN = clz.getDeclaredMethod("createPattern", String.class)).setAccessible(true);
+		(METHOD_GET_PAIR = clz.getDeclaredMethod("getPair", String.class, String.class, AtomicReference.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -467,27 +471,32 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 	}
 
 	@Test
-	void testCreatePattern() throws Throwable {
+	void testGetPair() throws Throwable {
 		//
-		Assertions.assertNotNull(createPattern(null));
+		Assertions.assertNull(getPair(null, null, null));
 		//
-		Assertions.assertNotNull(createPattern(""));
+		Assertions.assertNotNull(getPair("あう (会う / 合う / 遭う)", null, null));
 		//
-		Assertions.assertNotNull(createPattern(" "));
+		Assertions.assertNotNull(getPair("あう (会う / 合う / 遭う", null, null));
 		//
-		Assertions.assertNotNull(createPattern(" "));
+		Assertions.assertNull(getPair(null, "Hiragana", null));
 		//
-		Assertions.assertNotNull(createPattern("Hiragana"));
+		final AtomicReference<Pattern> arPattern = new AtomicReference<>();
+		//
+		Assertions.assertNull(getPair(null, "Hiragana", arPattern));
+		//
+		Assertions.assertNotNull(getPair("あう (会う / 合う / 遭う)", "Hiragana", arPattern));
 		//
 	}
 
-	private static Pattern createPattern(final String unicodeBlock) throws Throwable {
+	private static Pair<String[], String> getPair(final String text, final String unicodeBlock,
+			final AtomicReference<Pattern> arPattern) throws Throwable {
 		try {
-			final Object obj = METHOD_CREATE_PATTERN.invoke(null, unicodeBlock);
+			final Object obj = METHOD_GET_PAIR.invoke(null, text, unicodeBlock, arPattern);
 			if (obj == null) {
 				return null;
-			} else if (obj instanceof Pattern) {
-				return (Pattern) obj;
+			} else if (obj instanceof Pair) {
+				return (Pair) obj;
 			}
 			throw new Throwable(obj != null && obj.getClass() != null ? obj.getClass().toString() : null);
 		} catch (final InvocationTargetException e) {
