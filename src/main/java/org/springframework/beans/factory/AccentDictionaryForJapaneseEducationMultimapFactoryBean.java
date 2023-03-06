@@ -298,12 +298,8 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 			final Pattern pattern = ObjectUtils.getIfNull(get(arPattern),
 					() -> Pattern.compile(String.format("(\\p{In%1$s}+)\\s+\\((.+)\\)", unicodeBlock)));
 			//
-			if (arPattern != null) {
-				//
-				arPattern.set(pattern);
-				//
-			} // if
-				//
+			set(arPattern, pattern);
+			//
 			final Matcher matcher = matcher(pattern, text);
 			//
 			if (matches(matcher) && groupCount(matcher) > 1) {
@@ -321,6 +317,12 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 
 	private static <V> V get(final AtomicReference<V> instnace) {
 		return instnace != null ? instnace.get() : null;
+	}
+
+	private static <V> void set(final AtomicReference<V> instnace, final V newValue) {
+		if (instnace != null) {
+			instnace.set(newValue);
+		}
 	}
 
 	private static Matcher matcher(final Pattern instance, final String input) {
