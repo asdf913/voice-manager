@@ -312,8 +312,9 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 		//
 		final Matcher matcher = matcher(pattern, text);
 		//
-		return matches(matcher) && groupCount(matcher) > 1 ? Pair.with(
-				groupCount(matcher) > 1 ? StringUtils.split(group(matcher, 2), '/') : null, group(matcher, 1)) : null;
+		final String[] ss = groupCount(matcher) > 1 ? StringUtils.split(group(matcher, 2), '/') : null;
+		//
+		return matches(matcher) && groupCount(matcher) > 1 ? Pair.with(ss, group(matcher, 1)) : null;
 		//
 	}
 
