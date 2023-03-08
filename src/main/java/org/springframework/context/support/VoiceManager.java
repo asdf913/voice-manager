@@ -705,7 +705,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("TTS Voice")
 	private AbstractButton cbUseTtsVoice = null;
 
-	private AbstractButton btnConvertToHiragana = null;
+	private AbstractButton btnConvertToHiraganaOrKatakana = null;
 
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.FIELD)
@@ -864,7 +864,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private Duration presentationSlideDuration = null;
 
-	private Collection<Multimap> multimaps = null;
+	private Collection<Multimap> multimapHiragana, multimapKatakana = null;
 
 	private VoiceManager() {
 	}
@@ -980,9 +980,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		// "com.google.common.collect.Multimap" and the "Bean Definition" has "value"
 		// attribute which value is "hiragana"
 		//
-		multimaps = toList(map(
+		multimapHiragana = toList(map(
 				stream(getBeanDefinitionNamesByClassAndAttributes(configurableListableBeanFactory, Multimap.class,
 						Collections.singletonMap(VALUE, "hiragana"))),
+				x -> cast(Multimap.class, getBean(configurableListableBeanFactory, x))));
+		//
+		multimapKatakana = toList(map(
+				stream(getBeanDefinitionNamesByClassAndAttributes(configurableListableBeanFactory, Multimap.class,
+						Collections.singletonMap(VALUE, "katakana"))),
 				x -> cast(Multimap.class, getBean(configurableListableBeanFactory, x))));
 		//
 	}
@@ -3268,7 +3273,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(
 				tfTextImport = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
 						"org.springframework.context.support.VoiceManager.text")),
-				String.format("%1$s,span %2$s", GROWX, 18 - 1 - 1));
+				String.format("%1$s,span %2$s", GROWX, 18));
 		//
 		addDocumentListener(tfTextImportDocument = tfTextImport.getDocument(), this);
 		//
@@ -3294,9 +3299,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			}
 		});
 		//
-		panel.add(btnCheckPronunciation = new JButton(PRONUNCIATION), String.format(SPAN_ONLY_FORMAT, 2));
+		panel.add(btnCheckPronunciation = new JButton(PRONUNCIATION), String.format("%1$s,span %2$s", WRAP, 2));
 		//
-		panel.add(btnConvertToHiragana = new JButton("Convert To Hiragana"), String.format(SPAN_ONLY_FORMAT, 2));
+		panel.add(new JLabel());
+		//
+		panel.add(btnConvertToHiraganaOrKatakana = new JButton("Convert To Hiragana or Katakana"),
+				String.format(SPAN_ONLY_FORMAT, 3));
 		//
 		panel.add(btnConvertToRomaji = new JButton("Convert To Romaji"), String.format("%1$s", WRAP));
 		//
@@ -3427,7 +3435,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(
 				tfHiragana = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
 						"org.springframework.context.support.VoiceManager.hiragana")),
-				String.format("%1$s,span %2$s", GROWX, 13));
+				String.format("%1$s,span %2$s", GROWX, 9));
 		//
 		panel.add(btnCopyHiragana = new JButton("Copy"));
 		//
@@ -3440,7 +3448,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(
 				tfKatakana = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
 						"org.springframework.context.support.VoiceManager.katakana")),
-				String.format("%1$s,span %2$s", GROWX, 6));
+				String.format("%1$s,span %2$s", GROWX, 10));
 		//
 		panel.add(btnCopyKatakana = new JButton("Copy"), WRAP);
 		//
@@ -3535,7 +3543,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
-		addActionListener(this, btnExecute, btnConvertToRomaji, btnConvertToHiragana, btnConvertToKatakana,
+		addActionListener(this, btnExecute, btnConvertToRomaji, btnConvertToHiraganaOrKatakana, btnConvertToKatakana,
 				btnCopyRomaji, btnCopyHiragana, btnCopyKatakana, btnPronunciationPageUrlCheck, btnIpaSymbol,
 				btnCheckPronunciation, btnPlayPronunciationAudio);
 		//
@@ -4970,17 +4978,40 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			actionPerformedForIpaSymbol(headless);
 			//
-		} else if (Objects.equals(source, btnConvertToHiragana)) {
+		} else if (Objects.equals(source, btnConvertToHiraganaOrKatakana)) {
 			//
-			testAndAccept(Objects::nonNull,
-					getIValue0ByKey(multimaps, getText(tfTextImport), createFunctionForBtnConvertToHiragana()),
-					x -> setText(tfHiragana, toString(IValue0Util.getValue0(x))));
+			final String textImport = getText(tfTextImport);
 			//
+			// Hiragana
+			//
+			final IValue0<?> ivHiragana = getIValue0ByKey(multimapHiragana, textImport,
+					createFunctionForBtnConvertToHiraganaOrKatakana("Hiragana"));
+			//
+			final IValue0<?> ivKatakana = getIValue0ByKey(multimapKatakana, textImport,
+					createFunctionForBtnConvertToHiraganaOrKatakana("Katakana"));
+			//
+			if (ivHiragana != null && ivKatakana != null) {
+				//
+				setText(tfHiragana, toString(IValue0Util.getValue0(ivHiragana)));
+				//
+				setText(tfKatakana, toString(IValue0Util.getValue0(ivKatakana)));
+				//
+			} else if (ivHiragana != null) {
+				//
+				setText(tfHiragana, toString(IValue0Util.getValue0(ivHiragana)));
+				//
+			} else if (ivKatakana != null) {
+				//
+				setText(tfKatakana, toString(IValue0Util.getValue0(ivKatakana)));
+				//
+			} // if
+				//
 		} // if
 			//
 	}
 
-	private static Function<Collection<?>, IValue0<?>> createFunctionForBtnConvertToHiragana() {
+	private static Function<Collection<?>, IValue0<?>> createFunctionForBtnConvertToHiraganaOrKatakana(
+			final String title) {
 		//
 		return vs -> {
 			//
@@ -5018,7 +5049,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			final JList<?> jList = testAndApply(Objects::nonNull, array, JList::new, x -> new JList<>());
 			//
-			return JOptionPane.showConfirmDialog(null, jList, "Hiragana",
+			return JOptionPane.showConfirmDialog(null, jList, title,
 					JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION ? Unit.with(jList.getSelectedValue()) : null;
 			//
 		};

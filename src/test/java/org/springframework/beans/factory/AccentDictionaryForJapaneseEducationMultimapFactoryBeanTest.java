@@ -172,7 +172,7 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 		//
 		if (instance != null) {
 			//
-			instance.setResource(new ClassPathResource("AccentDictionaryForJapaneseEducation.xlsx"));
+			instance.setResource(new ClassPathResource("AccentDictionaryForJapaneseEducationHiragana.xlsx"));
 			//
 		} // if
 			//

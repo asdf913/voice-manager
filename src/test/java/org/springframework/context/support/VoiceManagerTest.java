@@ -1028,7 +1028,8 @@ class VoiceManagerTest {
 				AttributeAccessor.class)).setAccessible(true);
 		//
 		(METHOD_CREATE_FUNCTION_FOR_BTN_CONVERT_TO_HIRAGANA = clz
-				.getDeclaredMethod("createFunctionForBtnConvertToHiragana")).setAccessible(true);
+				.getDeclaredMethod("createFunctionForBtnConvertToHiraganaOrKatakana", String.class))
+				.setAccessible(true);
 		//
 		(METHOD_WRITER = clz.getDeclaredMethod("writer", Console.class)).setAccessible(true);
 		//
@@ -2885,37 +2886,40 @@ class VoiceManagerTest {
 			//
 			// btnConvertToHiragana
 			//
-		final AbstractButton btnConvertToHiragana = new JButton();
+		final AbstractButton btnConvertToHiraganaOrKatakana = new JButton();
 		//
 		if (instance != null) {
 			//
-			FieldUtils.writeDeclaredField(instance, "btnConvertToHiragana", btnConvertToHiragana, true);
+			FieldUtils.writeDeclaredField(instance, "btnConvertToHiraganaOrKatakana", btnConvertToHiraganaOrKatakana,
+					true);
 			//
 		} // if
 			//
-		final ActionEvent actionEventBtnConvertToHiragana = new ActionEvent(btnConvertToHiragana, 0, null);
+		final ActionEvent actionEventBtnConvertToHiraganaOrKatakana = new ActionEvent(btnConvertToHiraganaOrKatakana, 0,
+				null);
 		//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnConvertToHiragana));
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnConvertToHiraganaOrKatakana));
 		//
 		// org.springframework.context.support.VoiceManager.multimaps
 		//
 		if (instance != null) {
 			//
-			FieldUtils.writeDeclaredField(instance, "multimaps", Reflection.newProxy(Collection.class, ih), true);
+			FieldUtils.writeDeclaredField(instance, "multimapHiragana", Reflection.newProxy(Collection.class, ih),
+					true);
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnConvertToHiragana));
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnConvertToHiraganaOrKatakana));
 		//
 		final List<Multimap<?, ?>> multimaps = new ArrayList<>(Collections.singleton(null));
 		//
 		if (instance != null) {
 			//
-			FieldUtils.writeDeclaredField(instance, "multimaps", multimaps, true);
+			FieldUtils.writeDeclaredField(instance, "multimapHiragana", multimaps, true);
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnConvertToHiragana));
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnConvertToHiraganaOrKatakana));
 		//
 		if (instance != null) {
 			//
@@ -2923,11 +2927,11 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnConvertToHiragana));
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnConvertToHiraganaOrKatakana));
 		//
 		multimaps.set(0, ImmutableMultimap.of(EMPTY, EMPTY));
 		//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnConvertToHiragana));
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnConvertToHiraganaOrKatakana));
 		//
 	}
 
@@ -9451,9 +9455,9 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testCreateFunctionForBtnConvertToHiragana() throws Throwable {
+	void testCreateFunctionForBtnConvertToHiraganaOrKatakana() throws Throwable {
 		//
-		final Function<Collection<?>, IValue0<?>> function = createFunctionForBtnConvertToHiragana();
+		final Function<Collection<?>, IValue0<?>> function = createFunctionForBtnConvertToHiraganaOrKatakana(null);
 		//
 		Assertions.assertNull(apply(function, null));
 		//
@@ -9469,9 +9473,10 @@ class VoiceManagerTest {
 			//
 	}
 
-	private static Function<Collection<?>, IValue0<?>> createFunctionForBtnConvertToHiragana() throws Throwable {
+	private static Function<Collection<?>, IValue0<?>> createFunctionForBtnConvertToHiraganaOrKatakana(
+			final String title) throws Throwable {
 		try {
-			final Object obj = METHOD_CREATE_FUNCTION_FOR_BTN_CONVERT_TO_HIRAGANA.invoke(null);
+			final Object obj = METHOD_CREATE_FUNCTION_FOR_BTN_CONVERT_TO_HIRAGANA.invoke(null, title);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Function) {
