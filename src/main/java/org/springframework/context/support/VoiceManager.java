@@ -3306,7 +3306,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(btnConvertToHiraganaOrKatakana = new JButton("Convert To Hiragana or Katakana"),
 				String.format(SPAN_ONLY_FORMAT, 3));
 		//
-		panel.add(btnConvertToRomaji = new JButton("Convert To Romaji"), String.format("%1$s", WRAP));
+		panel.add(btnConvertToRomaji = new JButton("Convert To Romaji"), String.format("%1$s,span %2$s", WRAP, 2));
 		//
 		// Yomi
 		//
@@ -3361,7 +3361,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(
 				tfIpaSymbol = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
 						"org.springframework.context.support.VoiceManager.ipaSymbol")),
-				String.format("%1$s,wmin %2$s,span %3$s", GROWX, 100, 2));
+				String.format("%1$s,wmin %2$s,wmax %3$s,span %4$s", GROWX, 100, 200, 2));
 		//
 		final List<Yomi> yomiList = toList(filter(testAndApply(Objects::nonNull, yomis, Arrays::stream, null),
 				y -> Objects.equals(name(y), PropertyResolverUtil.getProperty(propertyResolver,
@@ -3472,14 +3472,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
-		panel.add(jcbPronunciation, String.format("%1$s,span %2$s", GROWX, 4));
+		panel.add(jcbPronunciation, String.format("%1$s,span %2$s", GROWX, 3));
 		//
-		final JComboBox<String> jcbPronounicatioAudioFormat = new JComboBox<>(
-				mcbmPronounicationAudioFormat = new DefaultComboBoxModel<>());
-		//
-		setPreferredWidth(94, jcbPronounicatioAudioFormat);
-		//
-		panel.add(jcbPronounicatioAudioFormat);
+		panel.add(new JComboBox<>(mcbmPronounicationAudioFormat = new DefaultComboBoxModel<>()),
+				String.format("wmin %1$s", 94));
 		//
 		panel.add(btnPlayPronunciationAudio = new JButton("Play"), WRAP);
 		//
