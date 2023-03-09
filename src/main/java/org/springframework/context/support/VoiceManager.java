@@ -4987,6 +4987,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			final IValue0<?> ivHiragana = getIValue0ByKey(multimapHiragana, textImport,
 					createFunctionForBtnConvertToHiraganaOrKatakana("Hiragana"));
 			//
+			// Katakana
+			//
 			final IValue0<?> ivKatakana = getIValue0ByKey(multimapKatakana, textImport,
 					createFunctionForBtnConvertToHiraganaOrKatakana("Katakana"));
 			//
