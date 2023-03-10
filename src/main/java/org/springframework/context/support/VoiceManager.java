@@ -470,6 +470,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	 */
 	private static final String SPAN_ONLY_FORMAT = "span %1$s";
 
+	/**
+	 * @see java.lang.String#format(java.lang.String,java.lang.Object...)
+	 * 
+	 * @see net.miginfocom.layout.ConstraintParser#parseComponentConstraint(java.lang.String)
+	 * 
+	 * @see <a href=
+	 *      "https://github.com/mikaelgrev/miglayout/blob/master/core/src/main/java/net/miginfocom/layout/ConstraintParser.java#L780">net.miginfocom.layout.ConstraintParser.parseComponentConstraint(java.lang.String)&nbsp;Line&nbsp;534&nbsp;at&nbsp;master&nbsp;·&nbsp;mikaelgrev/miglayout</a>
+	 */
+	private static final String WMIN_ONLY_FORMAT = "wmin %1$s";
+
 	private static final Predicate<File> EMPTY_FILE_PREDICATE = f -> f != null && f.exists() && isFile(f)
 			&& longValue(length(f), 0) == 0;
 
@@ -3477,7 +3487,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		panel.add(jcbPronunciation, String.format("%1$s,span %2$s", GROWX, 3));
 		//
 		panel.add(new JComboBox<>(mcbmPronounicationAudioFormat = new DefaultComboBoxModel<>()),
-				String.format("wmin %1$s", 94));
+				String.format(WMIN_ONLY_FORMAT, 94));
 		//
 		panel.add(btnPlayPronunciationAudio = new JButton("Play"), WRAP);
 		//
@@ -3492,7 +3502,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.add(new JLabel("Status"));
 		//
-		panel.add(tfPronunciationPageStatusCode = new JTextField(), String.format("wmin %1$s", 30));
+		panel.add(tfPronunciationPageStatusCode = new JTextField(), String.format(WMIN_ONLY_FORMAT, 30));
 		//
 		panel.add(btnPronunciationPageUrlCheck = new JButton("Check"), WRAP);
 		//
@@ -4259,7 +4269,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panelFile.setBorder(BorderFactory.createTitledBorder("File"));
 		//
-		panelFile.add(tfExportFile = new JTextField(), String.format("wmin %1$s", 300));
+		panelFile.add(tfExportFile = new JTextField(), String.format(WMIN_ONLY_FORMAT, 300));
 		//
 		panelFile.add(btnExportCopy = new JButton("Copy"));
 		//
