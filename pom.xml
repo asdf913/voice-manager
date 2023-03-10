@@ -272,7 +272,7 @@
 		<dependency>
 			<groupId>com.github.vincentrussell</groupId>
 			<artifactId>java-ini-parser</artifactId>
-			<version>1.4</version>
+			<version>1.5</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.helger/ph-css -->
 		<dependency>
