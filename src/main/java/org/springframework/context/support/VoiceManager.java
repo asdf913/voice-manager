@@ -5426,12 +5426,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			pitchAccentImageBs.setMimeType(getMimeType(ci));
 			//
-			if (voice != null) {
-				//
-				voice.setPitchAccentImage(pitchAccentImageBs);
-				//
-			} // if
-				//
+			setPitchAccentImage(voice, pitchAccentImageBs);
+			//
 		} // if
 			//
 		SqlSession sqlSession = null;
@@ -5472,6 +5468,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // try
 			//
+	}
+
+	private static void setPitchAccentImage(final Voice instance, final ByteArray pitchAccentImage) {
+		if (instance != null) {
+			instance.setPitchAccentImage(pitchAccentImage);
+		}
 	}
 
 	private static File getAudioFile(final boolean headless, final Voice voice,

@@ -241,6 +241,7 @@ import domain.JlptVocabulary;
 import domain.Pronunciation;
 import domain.Voice;
 import domain.VoiceList;
+import domain.Voice.ByteArray;
 import fr.free.nrw.jakaroma.Jakaroma;
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.StringTemplateLoader;
@@ -345,7 +346,7 @@ class VoiceManagerTest {
 			METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_GET_FILE,
 			METHOD_GET_PRONUNCIATION_AUDIO_FILE_BY_AUDIO_FORMAT, METHOD_GET_AUDIO_FILE, METHOD_GET_BEAN,
 			METHOD_IS_ALL_ATTRIBUTES_MATCHED, METHOD_CREATE_FUNCTION_FOR_BTN_CONVERT_TO_HIRAGANA, METHOD_WRITER,
-			METHOD_READ_LINE, METHOD_PRINT_LN = null;
+			METHOD_READ_LINE, METHOD_PRINT_LN, METHOD_SET_PITCH_ACCENT_IMAGE = null;
 
 	@BeforeAll
 	static void beforeAll() throws Throwable {
@@ -1037,6 +1038,9 @@ class VoiceManagerTest {
 				.setAccessible(true);
 		//
 		(METHOD_PRINT_LN = clz.getDeclaredMethod("println", PrintWriter.class, String.class)).setAccessible(true);
+		//
+		(METHOD_SET_PITCH_ACCENT_IMAGE = clz.getDeclaredMethod("setPitchAccentImage", Voice.class, ByteArray.class))
+				.setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -9571,6 +9575,23 @@ class VoiceManagerTest {
 	private static void println(final PrintWriter instance, final String x) throws Throwable {
 		try {
 			METHOD_PRINT_LN.invoke(null, instance, x);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetPitchAccentImage() {
+		//
+		Assertions.assertDoesNotThrow(() -> setPitchAccentImage(null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> setPitchAccentImage(new Voice(), null));
+		//
+	}
+
+	private static void setPitchAccentImage(final Voice instance, final ByteArray pitchAccentImage) throws Throwable {
+		try {
+			METHOD_SET_PITCH_ACCENT_IMAGE.invoke(null, instance, pitchAccentImage);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
