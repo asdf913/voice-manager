@@ -129,6 +129,24 @@ public class Voice {
 	@DateFormat("yyyy-MM-dd HH:mm:ss Z")
 	private Date updateTs = null;
 
+	public static class ByteArray {
+
+		private byte[] byteArray = null;
+
+		private String mimeType = null;
+
+		public void setByteArray(final byte[] byteArray) {
+			this.byteArray = byteArray;
+		}
+
+		public void setMimeType(final String mimeType) {
+			this.mimeType = mimeType;
+		}
+
+	}
+
+	private ByteArray pitchAccentImage = null;
+
 	public void setId(final Integer id) {
 		this.id = id;
 	}
@@ -283,6 +301,10 @@ public class Voice {
 
 	public void setTts(final Boolean tts) {
 		this.tts = tts;
+	}
+
+	public void setPitchAccentImage(final ByteArray pitchAccentImage) {
+		this.pitchAccentImage = pitchAccentImage;
 	}
 
 }

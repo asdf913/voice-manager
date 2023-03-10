@@ -121,6 +121,7 @@ import java.util.stream.StreamSupport;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -357,6 +358,7 @@ import de.sciss.jump3r.mp3.Lame;
 import domain.JlptVocabulary;
 import domain.Pronunciation;
 import domain.Voice;
+import domain.Voice.ByteArray;
 import domain.Voice.Yomi;
 import domain.VoiceList;
 import fr.free.nrw.jakaroma.Jakaroma;
@@ -5392,6 +5394,43 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 								ExceptionUtils.getRootCause(e), e));
 				//
 			} // try
+				//
+		} // if
+			//
+			// Pronunciation PitchAccentImage
+			//
+		final BufferedImage pitchAccentImage = getPitchAccentImage(
+				cast(Pronunciation.class, getSelectedItem(mcbmPronunciation)));
+		//
+		if (pitchAccentImage != null) {
+			//
+			byte[] bs = null;
+			//
+			ContentInfo ci = null;
+			//
+			try (final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+				//
+				ImageIO.write(pitchAccentImage, "PNG", baos);
+				//
+				ci = new ContentInfoUtil().findMatch(bs = toByteArray(baos));
+				//
+			} catch (final IOException e) {
+				//
+				errorOrAssertOrShowException(headless, e);
+				//
+			} // try
+				//
+			final ByteArray pitchAccentImageBs = new ByteArray();
+			//
+			pitchAccentImageBs.setByteArray(bs);
+			//
+			pitchAccentImageBs.setMimeType(getMimeType(ci));
+			//
+			if (voice != null) {
+				//
+				voice.setPitchAccentImage(pitchAccentImageBs);
+				//
+			} // if
 				//
 		} // if
 			//
