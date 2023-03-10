@@ -145,6 +145,13 @@ public class Voice {
 
 	}
 
+	@Target(ElementType.FIELD)
+	@Retention(RetentionPolicy.RUNTIME)
+	private @interface Visibility {
+		boolean value();
+	}
+
+	@Visibility(false)
 	private ByteArray pitchAccentImage = null;
 
 	public void setId(final Integer id) {

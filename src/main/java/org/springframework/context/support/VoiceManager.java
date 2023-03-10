@@ -225,6 +225,7 @@ import org.apache.commons.lang3.function.FailableSupplier;
 import org.apache.commons.lang3.function.OnlineNHKJapanesePronunciationsAccentFailableFunction;
 import org.apache.commons.lang3.math.Fraction;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.lang3.reflect.MethodUtils;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.ibatis.session.Configuration;
@@ -12431,6 +12432,70 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				if (voice == null) {
 					//
 					continue;
+					//
+				} // if
+					//
+				if (fs == null) {
+					//
+					// TODO
+					//
+					final boolean headless = GraphicsEnvironment.isHeadless();
+					//
+					// Filter out the "java.lang.reflect.Field" instance(s) which is/are annotated
+					// by "domain.Voice$Visibility" and its "values" method return "false"
+					//
+					fs = toArray(toList(filter(
+							testAndApply(x -> x != null, FieldUtils.getAllFields(Voice.class), Arrays::stream, null),
+							f -> {
+								//
+								final Annotation[] as = getDeclaredAnnotations(f);
+								//
+								Annotation a = null;
+								//
+								for (int i = 0; as != null && i < as.length; i++) {
+									//
+									if ((a = as[i]) == null) {
+										//
+										continue;
+										//
+									} // if
+										//
+									if (Objects.equals("domain.Voice$Visibility", getName(annotationType(a)))) {
+										//
+										try {
+											//
+											final Boolean visible = cast(Boolean.class,
+													MethodUtils.invokeMethod(a, "value"));
+											//
+											if (visible != null) {
+												//
+												return visible.booleanValue();
+												//
+											} // if
+												//
+										} catch (final NoSuchMethodException | IllegalAccessException e) {
+											//
+											errorOrAssertOrShowException(headless, e);
+											//
+										} catch (final InvocationTargetException e) {
+											//
+											final Throwable targetException = e.getTargetException();
+											//
+											errorOrAssertOrShowException(headless,
+													ObjectUtils.firstNonNull(
+															ExceptionUtils.getRootCause(targetException),
+															targetException, ExceptionUtils.getRootCause(e), e));
+											//
+										} // try
+											//
+									} // if
+										//
+								} // for
+									//
+								return true;
+								//
+							} //
+					)), new Field[] {});
 					//
 				} // if
 					//
