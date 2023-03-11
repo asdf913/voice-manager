@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 
+import javax.annotation.Nullable;
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -383,6 +384,7 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 		return forName("org.junit.jupiter.api.Test") != null;
 	}
 
+	@Nullable
 	private static Class<?> forName(final String className) {
 		try {
 			return StringUtils.isNotBlank(className) ? Class.forName(className) : null;

@@ -9,6 +9,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
+import javax.annotation.Nullable;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 
@@ -155,10 +156,12 @@ public class Main {
 		return instance != null ? instance.getBeanDefinitionNames() : null;
 	}
 
+	@Nullable
 	private static String getBeanClassName(final BeanDefinition instance) {
 		return instance != null ? instance.getBeanClassName() : null;
 	}
 
+	@Nullable
 	private static <T> T cast(final Class<T> clz, final Object instance) {
 		return clz != null && clz.isInstance(instance) ? clz.cast(instance) : null;
 	}
@@ -177,6 +180,7 @@ public class Main {
 			//
 	}
 
+	@Nullable
 	private static Class<?> forName(final String className) {
 		try {
 			return StringUtils.isNotBlank(className) ? Class.forName(className) : null;
@@ -185,6 +189,7 @@ public class Main {
 		}
 	}
 
+	@Nullable
 	private static Object getInstance(final ListableBeanFactory beanFactory, final Class<?> clz,
 			final Consumer<String> consumer) {
 		//

@@ -460,6 +460,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		return instance != null ? instance.toString() : null;
 	}
 
+	@Nullable
 	private static List<JlptVocabulary> getObjectByUrls(final List<String> urls)
 			throws CsvValidationException, IllegalAccessException, IOException {
 		//

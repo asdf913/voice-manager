@@ -13,6 +13,8 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
@@ -136,6 +138,7 @@ public class JlptLevelListFactoryBean implements FactoryBean<List<String>> {
 		return instance != null ? instance.toString() : null;
 	}
 
+	@Nullable
 	private static Long valueOf(final String instance) {
 		try {
 			return StringUtils.isNotBlank(instance) ? Long.valueOf(instance) : null;

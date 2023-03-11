@@ -8,6 +8,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+import javax.annotation.Nullable;
+
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
@@ -37,6 +39,7 @@ public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean {
 		//
 	}
 
+	@Nullable
 	private static IValue0<Boolean> IsWindows10OrGreater() {
 		//
 		try {
@@ -124,6 +127,7 @@ public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean {
 	}
 
 	@Override
+	@Nullable
 	public String getVoiceAttribute(final String voiceId, final String attribute) {
 		//
 		return instance != null ? instance.getVoiceAttribute(voiceId, attribute) : null;
@@ -139,6 +143,7 @@ public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean {
 		//
 	}
 
+	@Nullable
 	private static <T> T cast(final Class<T> clz, final Object value) {
 		return clz != null && clz.isInstance(value) ? clz.cast(value) : null;
 	}

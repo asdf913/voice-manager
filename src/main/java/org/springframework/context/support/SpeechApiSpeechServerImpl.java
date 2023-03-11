@@ -2,6 +2,8 @@ package org.springframework.context.support;
 
 import java.io.File;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
@@ -18,6 +20,7 @@ public class SpeechApiSpeechServerImpl implements SpeechApi, Provider, Lookup, I
 
 		Jna INSTANCE = cast(Jna.class, Native.load("MicrosoftSpeechApi.dll", Jna.class));
 
+		@Nullable
 		private static <T> T cast(final Class<T> clz, final Object value) {
 			return clz != null && clz.isInstance(value) ? clz.cast(value) : null;
 		}
@@ -80,6 +83,7 @@ public class SpeechApiSpeechServerImpl implements SpeechApi, Provider, Lookup, I
 			//
 	}
 
+	@Nullable
 	private static int[] toIntArray(final String text) {
 		//
 		final char[] cs = text != null ? text.toCharArray() : null;
@@ -123,6 +127,7 @@ public class SpeechApiSpeechServerImpl implements SpeechApi, Provider, Lookup, I
 	}
 
 	@Override
+	@Nullable
 	public String getVoiceAttribute(final String voiceId, final String attribute) {
 		//
 		return Jna.INSTANCE != null ? Jna.INSTANCE.getVoiceAttribute(voiceId, attribute) : null;
@@ -130,6 +135,7 @@ public class SpeechApiSpeechServerImpl implements SpeechApi, Provider, Lookup, I
 	}
 
 	@Override
+	@Nullable
 	public String getProviderName() {
 		//
 		return Jna.INSTANCE != null ? Jna.INSTANCE.getProviderName() : null;
@@ -137,6 +143,7 @@ public class SpeechApiSpeechServerImpl implements SpeechApi, Provider, Lookup, I
 	}
 
 	@Override
+	@Nullable
 	public String getProviderVersion() {
 		//
 		return Jna.INSTANCE != null ? Jna.INSTANCE.getProviderVersion() : null;
@@ -144,6 +151,7 @@ public class SpeechApiSpeechServerImpl implements SpeechApi, Provider, Lookup, I
 	}
 
 	@Override
+	@Nullable
 	public String getProviderPlatform() {
 		//
 		return Jna.INSTANCE != null ? Jna.INSTANCE.getProviderPlatform() : null;

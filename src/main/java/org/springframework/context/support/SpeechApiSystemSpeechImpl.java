@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Predicate;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
@@ -45,6 +47,7 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider, Lookup, I
 
 		Jna INSTANCE = cast(Jna.class, Native.load("MicrosoftSpeechApi10.dll", Jna.class));
 
+		@Nullable
 		private static <T> T cast(final Class<T> clz, final Object value) {
 			return clz != null && clz.isInstance(value) ? clz.cast(value) : null;
 		}
@@ -124,6 +127,7 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider, Lookup, I
 			//
 	}
 
+	@Nullable
 	private static int[] toIntArray(final String text) {
 		//
 		final char[] cs = text != null ? text.toCharArray() : null;
@@ -167,6 +171,7 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider, Lookup, I
 	}
 
 	@Override
+	@Nullable
 	public String getVoiceAttribute(final String voiceId, final String attribute) {
 		//
 		return Jna.INSTANCE != null ? Jna.INSTANCE.getVoiceAttribute(voiceId, attribute) : null;
@@ -197,6 +202,7 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider, Lookup, I
 		//
 	}
 
+	@Nullable
 	private static Map<String, String> getVersionInfoMap2(final ResourceEntry[] res) throws IOException {
 		//
 		ResourceEntry re = null;
@@ -286,6 +292,7 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider, Lookup, I
 	}
 
 	@Override
+	@Nullable
 	public String getProviderPlatform() {
 		//
 		return Jna.INSTANCE != null ? Jna.INSTANCE.getProviderPlatform() : null;

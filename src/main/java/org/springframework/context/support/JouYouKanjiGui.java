@@ -43,6 +43,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+import javax.annotation.Nullable;
 import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
@@ -196,6 +197,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 			//
 	}
 
+	@Nullable
 	private static IValue0<ECSSVersion> getECSSVersionByMajor(final ECSSVersion[] evs, final Number number) {
 		//
 		IValue0<ECSSVersion> iValue0 = null;
@@ -427,6 +429,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		}
 
 		@Override
+		@Nullable
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
 			final String methodName = method != null ? method.getName() : null;
@@ -663,6 +666,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		return instance != null ? instance.getStylesSource() : null;
 	}
 
+	@Nullable
 	private static CSSDeclaration getCSSDeclarationByAttributeAndCssProperty(final Element element,
 			final String attribute, final ECSSVersion ecssVersion, final String cssProperty) {
 		//
@@ -809,6 +813,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		return instance != null ? instance.toList() : null;
 	}
 
+	@Nullable
 	private static <T> T cast(final Class<T> clz, final Object value) {
 		return clz != null && clz.isInstance(value) ? clz.cast(value) : null;
 	}

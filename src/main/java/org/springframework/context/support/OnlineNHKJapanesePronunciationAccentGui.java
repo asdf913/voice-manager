@@ -51,6 +51,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
 import javax.imageio.spi.IIORegistry;
 import javax.imageio.spi.ImageWriterSpi;
@@ -722,6 +723,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			//
 	}
 
+	@Nullable
 	private static Object playAudio(final Object key, final String value) throws JavaLayerException, IOException {
 		//
 		if (Objects.equals("audio/wav", key)) {
@@ -928,6 +930,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		return instance != null ? instance.getDeclaredField(name) : null;
 	}
 
+	@Nullable
 	private static Class<?> forName(final String className) {
 		try {
 			return StringUtils.isNotBlank(className) ? Class.forName(className) : null;
@@ -1032,6 +1035,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		return instance != null && instance.test(value);
 	}
 
+	@Nullable
 	private static <T> T cast(final Class<T> clz, final Object instance) {
 		return clz != null && clz.isInstance(instance) ? clz.cast(instance) : null;
 	}
