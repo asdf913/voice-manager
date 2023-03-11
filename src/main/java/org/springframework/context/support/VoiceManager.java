@@ -566,10 +566,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private JTextComponent tfElapsed = null;
 
 	@Nullable
-	private JTextComponent tfFile, tfPhraseCounter, tfPhraseTotal, tfOrdinalPositionFileNamePrefix, tfExportFile = null;
+	private JTextComponent tfFile, tfPhraseCounter, tfPhraseTotal, tfOrdinalPositionFileNamePrefix, tfExportFile,
+			tfExportHtmlFileName = null;
 
-	private JTextComponent tfExportHtmlFileName, tfExportPassword, tfPronunciationPageUrl,
-			tfPronunciationPageStatusCode, tfPresentationSlideDuration = null;
+	private JTextComponent tfExportPassword, tfPronunciationPageUrl, tfPronunciationPageStatusCode,
+			tfPresentationSlideDuration = null;
 
 	private transient ComboBoxModel<Yomi> cbmYomi = null;
 
@@ -5352,6 +5353,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
+	@Nullable
 	private static List<?> getObjectsByGroupAnnotation(final Object instance, final String group) {
 		//
 		return toList(stream(new FailableStream<>(filter(
@@ -12767,6 +12769,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
+	@Nullable
 	private static List<Field> getVisibileVoiceFields() {
 		//
 		return toList(stream(new FailableStream<>(
