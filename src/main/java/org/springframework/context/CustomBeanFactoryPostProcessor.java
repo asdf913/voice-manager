@@ -279,7 +279,7 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 			//
 	}
 
-	private static final <T> boolean test(final Predicate<T> instance, final T value) {
+	private static final <T> boolean test(final Predicate<T> instance, @Nullable final T value) {
 		return instance != null && instance.test(value);
 	}
 

@@ -3190,7 +3190,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	private static <E> E get(final List<E> instance, final int index) {
+	private static <E> E get(@Nullable final List<E> instance, final int index) {
 		return instance != null ? instance.get(index) : null;
 	}
 
@@ -3697,7 +3697,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static Field[] getDeclaredFields(final Class<?> instance) {
+	private static Field[] getDeclaredFields(@Nullable final Class<?> instance) {
 		return instance != null ? instance.getDeclaredFields() : null;
 	}
 
@@ -4867,7 +4867,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		}
 	}
 
-	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, @Nullable final T value,
 			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
 			throws E {
 		return test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
@@ -5166,7 +5166,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	private static Map<String, String> getAudioUrls(final Pronunciation instnace) {
+	private static Map<String, String> getAudioUrls(@Nullable final Pronunciation instnace) {
 		return instnace != null ? instnace.getAudioUrls() : null;
 	}
 
@@ -5719,7 +5719,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static File createTempFile(final String prefix, final String suffix)
+	private static File createTempFile(final String prefix, @Nullable final String suffix)
 			throws IllegalAccessException, InvocationTargetException {
 		//
 		final List<Method> ms = toList(
@@ -7066,7 +7066,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static void process(final Template instance, final Object dataModel, final Writer out)
+	private static void process(final Template instance, @Nullable final Object dataModel, final Writer out)
 			throws TemplateException, IOException {
 		//
 		if (instance != null && out != null) {
@@ -7640,7 +7640,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.getName() : null;
 	}
 
-	private static String getMimeType(final ContentInfo instance) {
+	private static String getMimeType(@Nullable final ContentInfo instance) {
 		return instance != null ? instance.getMimeType() : null;
 	}
 
@@ -9095,8 +9095,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	private static void addValidationDataForBoolean(final ObjectMap objectMap, final IValue0<List<Boolean>> booleans,
-			final int index) {
+	private static void addValidationDataForBoolean(final ObjectMap objectMap,
+			@Nullable final IValue0<List<Boolean>> booleans, final int index) {
 		//
 		final Collection<Boolean> bs = IValue0Util.getValue0(booleans);
 		//
@@ -9185,11 +9185,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 		<T> void setObject(final Class<T> key, final T value);
 
-		static <T> T getObject(final ObjectMap instance, final Class<T> key) {
+		static <T> T getObject(@Nullable final ObjectMap instance, final Class<T> key) {
 			return instance != null ? instance.getObject(key) : null;
 		}
 
-		static <T> void setObject(final ObjectMap instance, final Class<T> key, final T value) {
+		static <T> void setObject(@Nullable final ObjectMap instance, final Class<T> key, final T value) {
 			if (instance != null) {
 				instance.setObject(key, value);
 			}
@@ -9347,7 +9347,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		}
 
-		private static Fraction add(final Fraction a, final Fraction b) {
+		private static Fraction add(@Nullable final Fraction a, final Fraction b) {
 			return a != null && b != null ? a.add(b) : a;
 		}
 
@@ -10115,7 +10115,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.name() : null;
 	}
 
-	private static <E> void add(final Collection<E> items, final E item) {
+	private static <E> void add(final Collection<E> items, @Nullable final E item) {
 		if (items != null) {
 			items.add(item);
 		}
@@ -10701,7 +10701,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	private static <T, E extends Throwable> void forEach(final Iterable<T> items,
+	private static <T, E extends Throwable> void forEach(@Nullable final Iterable<T> items,
 			final FailableConsumer<? super T, E> action) throws E {
 		//
 		if (iterator(items) != null && (action != null || Proxy.isProxyClass(getClass(items)))) {
@@ -11006,7 +11006,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			}
 		}
 
-		private static void showPharse(final VoiceManager voiceManager, final Fraction pharse) {
+		private static void showPharse(final VoiceManager voiceManager, @Nullable final Fraction pharse) {
 			//
 			if (voiceManager != null && pharse != null) {
 				//
@@ -12646,8 +12646,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	private static void setSheetHeaderRow(final Sheet sheet, final Field[] fs, final Class<?> spreadsheetColumnClass)
-			throws IllegalAccessException, InvocationTargetException {
+	private static void setSheetHeaderRow(final Sheet sheet, final Field[] fs,
+			@Nullable final Class<?> spreadsheetColumnClass) throws IllegalAccessException, InvocationTargetException {
 		//
 		if (sheet != null && sheet.getLastRowNum() < 0) {
 			//
@@ -12664,7 +12664,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	private static void setSheetCellValue(final ObjectMap objectMap, final Object value, final Class<?> dataFormatClass,
-			final Class<?> dateFormatClass) throws IllegalAccessException, InvocationTargetException {
+			@Nullable final Class<?> dateFormatClass) throws IllegalAccessException, InvocationTargetException {
 		//
 		final Field field = ObjectMap.getObject(objectMap, Field.class);
 		//
@@ -13006,7 +13006,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@Nullable
-	private static String getFileExtension(final ContentInfo ci) {
+	private static String getFileExtension(@Nullable final ContentInfo ci) {
 		//
 		final String message = getMessage(ci);
 		//
@@ -13087,7 +13087,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		}
 	}
 
-	private static void setText(final JTextComponent instance, final String text) {
+	private static void setText(final JTextComponent instance, @Nullable final String text) {
 		if (instance != null) {
 			instance.setText(text);
 		}
