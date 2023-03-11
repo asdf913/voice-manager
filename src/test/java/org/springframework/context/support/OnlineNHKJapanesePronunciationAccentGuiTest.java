@@ -1644,7 +1644,9 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		//
 		Assertions.assertNull(filter(Stream.empty(), null));
 		//
-		Assertions.assertNull(filter(Reflection.newProxy(Stream.class, ih), null));
+		final Stream<?> stream = Reflection.newProxy(Stream.class, ih);
+		//
+		Assertions.assertSame(stream, filter(stream, null));
 		//
 	}
 

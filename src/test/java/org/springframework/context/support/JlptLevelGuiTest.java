@@ -1364,7 +1364,7 @@ class JlptLevelGuiTest {
 
 	private static void removeElementAt(final MutableComboBoxModel<?> instnace, final int index) throws Throwable {
 		try {
-			METHOD_REMOVE_ELEMENT_AT.invoke(null, index);
+			METHOD_REMOVE_ELEMENT_AT.invoke(null, instnace, index);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
