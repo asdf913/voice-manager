@@ -12440,40 +12440,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					// Filter out the "java.lang.reflect.Field" instance(s) which is/are annotated
 					// by "domain.Voice$Visibility" and its "values" method return "false"
 					//
-					fs = toArray(toList(stream(new FailableStream<>(
-							testAndApply(x -> x != null, FieldUtils.getAllFields(Voice.class), Arrays::stream, null))
-							.filter(f -> {
-								//
-								final Annotation[] as = getDeclaredAnnotations(f);
-								//
-								Annotation a = null;
-								//
-								for (int i = 0; as != null && i < as.length; i++) {
-									//
-									if ((a = as[i]) == null) {
-										//
-										continue;
-										//
-									} // if
-										//
-									if (Objects.equals("domain.Voice$Visibility", getName(annotationType(a)))) {
-										//
-										final Boolean visible = cast(Boolean.class, MethodUtils.invokeMethod(a, VALUE));
-										//
-										if (visible != null) {
-											//
-											return visible.booleanValue();
-											//
-										} // if
-											//
-									} // if
-										//
-								} // for
-									//
-								return true;
-								//
-							} //
-							))), new Field[] {});
+					fs = toArray(getVisibileVoiceFields(), new Field[] {});
 					//
 				} // if
 					//
@@ -12531,6 +12498,44 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
+	}
+
+	private static List<Field> getVisibileVoiceFields() {
+		//
+		return toList(stream(new FailableStream<>(
+				testAndApply(x -> x != null, FieldUtils.getAllFields(Voice.class), Arrays::stream, null)).filter(f -> {
+					//
+					final Annotation[] as = getDeclaredAnnotations(f);
+					//
+					Annotation a = null;
+					//
+					for (int i = 0; as != null && i < as.length; i++) {
+						//
+						if ((a = as[i]) == null) {
+							//
+							continue;
+							//
+						} // if
+							//
+						if (Objects.equals("domain.Voice$Visibility", getName(annotationType(a)))) {
+							//
+							final Boolean visible = cast(Boolean.class, MethodUtils.invokeMethod(a, VALUE));
+							//
+							if (visible != null) {
+								//
+								return visible.booleanValue();
+								//
+							} // if
+								//
+						} // if
+							//
+					} // for
+						//
+					return true;
+					//
+				} //
+		)));
+		//
 	}
 
 	private static IValue0<Object> getWriter(final Object instance) throws IllegalAccessException {
