@@ -18,11 +18,9 @@ import java.util.stream.Stream;
 
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.ClassParserUtil;
-import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.JavaClassUtil;
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.Instruction;
-import org.apache.bcel.generic.InstructionList;
 import org.apache.bcel.generic.InstructionListUtil;
 import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.MethodGenUtil;
