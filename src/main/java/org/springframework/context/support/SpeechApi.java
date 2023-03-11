@@ -10,8 +10,8 @@ public interface SpeechApi {
 
 	public void speak(@Nullable final String text, @Nullable final String voiceId, final int rate, final int volume);
 
-	public void writeVoiceToFile(@Nullable final String text, final String voiceId, final int rate, final int volume,
-			final File file);
+	public void writeVoiceToFile(@Nullable final String text, @Nullable final String voiceId, final int rate,
+			final int volume, @Nullable final File file);
 
 	public String[] getVoiceIds();
 

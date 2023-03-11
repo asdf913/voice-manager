@@ -4275,7 +4275,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@Nullable
-	private static <V> V get(final Map<?, V> instance, @Nullable final Object key) {
+	private static <V> V get(@Nullable final Map<?, V> instance, @Nullable final Object key) {
 		return instance != null ? instance.get(key) : null;
 	}
 
@@ -5988,7 +5988,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static boolean containsKey(final Multimap<?, ?> instance, final Object key) {
+	private static boolean containsKey(final Multimap<?, ?> instance, @Nullable final Object key) {
 		return instance != null && instance.containsKey(key);
 	}
 
@@ -6846,8 +6846,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.toCharArray() : null;
 	}
 
-	private static void encrypt(final File file, @Nullable final EncryptionMode encryptionMode, final String password)
-			throws IOException, InvalidFormatException, GeneralSecurityException {
+	private static void encrypt(final File file, @Nullable final EncryptionMode encryptionMode,
+			@Nullable final String password) throws IOException, InvalidFormatException, GeneralSecurityException {
 		//
 		try (final InputStream is = testAndApply(x -> x != null && x.length > 0,
 				testAndApply(Objects::nonNull, file, FileUtils::readFileToByteArray, null), ByteArrayInputStream::new,
@@ -6947,7 +6947,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@Nullable
-	private static Multimap<String, Voice> getVoiceMultimapByListName(final Iterable<Voice> voices) {
+	private static Multimap<String, Voice> getVoiceMultimapByListName(@Nullable final Iterable<Voice> voices) {
 		//
 		Multimap<String, Voice> multimap = null;
 		//
@@ -7894,8 +7894,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@Nullable
-	private static String convert(@Nullable final Jakaroma instance, final String input, final boolean trailingSpace,
-			final boolean capitalizeWords) {
+	private static String convert(@Nullable final Jakaroma instance, @Nullable final String input,
+			final boolean trailingSpace, final boolean capitalizeWords) {
 		return instance != null ? instance.convert(input, trailingSpace, capitalizeWords) : null;
 	}
 
@@ -9548,7 +9548,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	}
 
-	private static void setValue(final JProgressBar instance, final int n) {
+	private static void setValue(@Nullable final JProgressBar instance, final int n) {
 		if (instance != null) {
 			instance.setValue(n);
 		}
@@ -10503,7 +10503,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.getAlgorithm() : null;
 	}
 
-	private static <T, U> void accept(@Nullable final BiConsumer<T, U> instance, final T t, final U u) {
+	private static <T, U> void accept(@Nullable final BiConsumer<T, U> instance, @Nullable final T t,
+			@Nullable final U u) {
 		if (instance != null) {
 			instance.accept(t, u);
 		}
@@ -11776,13 +11777,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		}
 
 		private static void putTemplate(final StringTemplateLoader instance, final String name,
-				final String templateContent) {
+				@Nullable final String templateContent) {
 			if (instance != null) {
 				instance.putTemplate(name, templateContent);
 			}
 		}
 
-		private static void setPluginHref(final ObjectMap objectMap, final String key,
+		private static void setPluginHref(final ObjectMap objectMap, @Nullable final String key,
 				final boolean embedAudioInPresentation, final String folder) throws XPathExpressionException {
 			//
 			final NodeList plugins = cast(NodeList.class,
@@ -11855,13 +11856,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			return instance != null ? instance.getParentNode() : null;
 		}
 
-		private static void appendChild(final Node instance, final Node child) throws DOMException {
+		private static void appendChild(@Nullable final Node instance, final Node child) throws DOMException {
 			if (instance != null) {
 				instance.appendChild(child);
 			}
 		}
 
-		private static void removeChild(@Nullable final Node instance, final Node child) throws DOMException {
+		private static void removeChild(@Nullable final Node instance, @Nullable final Node child) throws DOMException {
 			if (instance != null) {
 				instance.removeChild(child);
 			}
@@ -12625,19 +12626,19 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.createRichTextString(text) : null;
 	}
 
-	private static void setString(@Nullable final Comment instance, final RichTextString string) {
+	private static void setString(@Nullable final Comment instance, @Nullable final RichTextString string) {
 		if (instance != null) {
 			instance.setString(string);
 		}
 	}
 
-	private static void setAuthor(final Comment instance, final String string) {
+	private static void setAuthor(@Nullable final Comment instance, final String string) {
 		if (instance != null) {
 			instance.setAuthor(string);
 		}
 	}
 
-	private static void setCellComment(final Cell instance, final Comment comment) {
+	private static void setCellComment(final Cell instance, @Nullable final Comment comment) {
 		if (instance != null) {
 			instance.setCellComment(comment);
 		}
@@ -12679,7 +12680,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static void createJlptSheet(final Workbook workbook, final Iterable<Voice> voices)
+	private static void createJlptSheet(final Workbook workbook, @Nullable final Iterable<Voice> voices)
 			throws IllegalAccessException, InvocationTargetException {
 		//
 		final Multimap<String, Voice> multimap = getVoiceMultimapByJlpt(voices);
@@ -13157,7 +13158,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.getValue(evaluationContext) : null;
 	}
 
-	private static void insertOrUpdate(@Nullable final VoiceMapper instance, final Voice voice) {
+	private static void insertOrUpdate(@Nullable final VoiceMapper instance, @Nullable final Voice voice) {
 		//
 		if (instance != null) {
 			//

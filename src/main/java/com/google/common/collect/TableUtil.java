@@ -4,7 +4,8 @@ import javax.annotation.Nullable;
 
 public interface TableUtil {
 
-	static <R, C, V> void put(final Table<R, C, V> instance, final R rowKey, final C columnKey, final V value) {
+	static <R, C, V> void put(final Table<R, C, V> instance, final R rowKey, final C columnKey,
+			@Nullable final V value) {
 		if (instance != null) {
 			instance.put(rowKey, columnKey, value);
 		}
