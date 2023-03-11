@@ -3074,7 +3074,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	@Nullable
 	private static JTextComponent createProviderPlatformJTextComponent(final boolean isInstalled,
-			final Provider provider) {
+			@Nullable final Provider provider) {
 		//
 		try {
 			//
@@ -4502,7 +4502,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	private static StringBuilder append(final StringBuilder instance, final String string) {
-		return instance != null ? instance.append(string) : null;+--+
+		return instance != null ? instance.append(string) : null;
 	}
 
 	private static StringBuilder append(final StringBuilder instance, final char c) {
