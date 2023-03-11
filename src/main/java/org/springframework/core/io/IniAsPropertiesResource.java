@@ -108,17 +108,14 @@ public class IniAsPropertiesResource implements Resource, ApplicationEventPublis
 			//
 			// sun.net.www.protocol.file.FileURLConnection.file
 			//
-			if (exists(
-					cast(File.class,
-							Boolean.logicalAnd(urlConnection != null,
-									(f = testAndApply(x -> IterableUtils.size(x) == 1, toList(filter(
-											testAndApply(Objects::nonNull,
-													testAndApply(Objects::nonNull, getClass(urlConnection),
-															FieldUtils::getAllFields, null),
-													Arrays::stream, null),
-											x -> Objects.equals(File.class, getType(
-													x)))), x -> IterableUtils.get(x, 0),
-											null)) != null) ? Narcissus.getObjectField(urlConnection, f) : null))) {
+			final List<Field> fs2 = toList(filter(testAndApply(Objects::nonNull,
+					testAndApply(Objects::nonNull, getClass(urlConnection), FieldUtils::getAllFields, null),
+					Arrays::stream, null), x -> Objects.equals(File.class, getType(x))));
+			//
+			if (exists(cast(File.class,
+					Boolean.logicalAnd(urlConnection != null, (f = testAndApply(x -> IterableUtils.size(x) == 1, fs2,
+							x -> IterableUtils.get(x, 0), null)) != null) ? Narcissus.getObjectField(urlConnection, f)
+									: null))) {
 				//
 				testAndAccept(Objects::nonNull, InputStreamSourceUtil.getInputStream(resource), ini::load);
 				//
