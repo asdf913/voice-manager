@@ -98,7 +98,7 @@ public class IpaMultimapFactoryBean implements FactoryBean<Multimap<String, Stri
 	}
 
 	private static Unit<Multimap<String, String>> getMultimapUnitFromJson(final ObjectMapper objectMapper,
-			final InputStream is) throws IOException {
+			@Nullable final InputStream is) throws IOException {
 		//
 		final Object obj = is != null ? ObjectMapperUtil.readValue(objectMapper, is, Object.class) : null;
 		//
@@ -153,23 +153,23 @@ public class IpaMultimapFactoryBean implements FactoryBean<Multimap<String, Stri
 		return objectMapper;
 	}
 
-	private static <K, V> Set<Entry<K, V>> entrySet(final Map<K, V> instance) {
+	private static <K, V> Set<Entry<K, V>> entrySet(@Nullable final Map<K, V> instance) {
 		return instance != null ? instance.entrySet() : null;
 	}
 
-	private static <T> Iterator<T> iterator(final Iterable<T> instance) {
+	private static <T> Iterator<T> iterator(@Nullable final Iterable<T> instance) {
 		return instance != null ? instance.iterator() : null;
 	}
 
-	private static <K> K getKey(final Entry<K, ?> instance) {
+	private static <K> K getKey(@Nullable final Entry<K, ?> instance) {
 		return instance != null ? instance.getKey() : null;
 	}
 
-	private static <V> V getValue(final Entry<?, V> instance) {
+	private static <V> V getValue(@Nullable final Entry<?, V> instance) {
 		return instance != null ? instance.getValue() : null;
 	}
 
-	private static String toString(final Object instance) {
+	private static String toString(@Nullable final Object instance) {
 		return instance != null ? instance.toString() : null;
 	}
 
@@ -190,11 +190,11 @@ public class IpaMultimapFactoryBean implements FactoryBean<Multimap<String, Stri
 		//
 	}
 
-	private static InputStream openStream(final URL instance) throws IOException {
+	private static InputStream openStream(@Nullable final URL instance) throws IOException {
 		return instance != null ? instance.openStream() : null;
 	}
 
-	private static Class<?> getClass(final Object instance) {
+	private static Class<?> getClass(@Nullable final Object instance) {
 		return instance != null ? instance.getClass() : null;
 	}
 

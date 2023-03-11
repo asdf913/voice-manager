@@ -182,7 +182,7 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 		//
 	}
 
-	private static Class<?> getClass(final Object instance) {
+	private static Class<?> getClass(@Nullable final Object instance) {
 		return instance != null ? instance.getClass() : null;
 	}
 
@@ -315,11 +315,11 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 		}
 	}
 
-	private static Object[] toArray(final Collection<?> instance) {
+	private static Object[] toArray(@Nullable final Collection<?> instance) {
 		return instance != null ? instance.toArray() : null;
 	}
 
-	private static Object getSource(final EventObject instance) {
+	private static Object getSource(@Nullable final EventObject instance) {
 		return instance != null ? instance.getSource() : null;
 	}
 
@@ -367,11 +367,11 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 		return condition ? trueValue : falseValue;
 	}
 
-	private static String toString(final Object instance) {
+	private static String toString(@Nullable final Object instance) {
 		return instance != null ? instance.toString() : null;
 	}
 
-	private static String getText(final JTextComponent instance) {
+	private static String getText(@Nullable final JTextComponent instance) {
 		return instance != null ? instance.getText() : null;
 	}
 
@@ -414,7 +414,7 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 			//
 	}
 
-	private static Dimension getPreferredSize(final Component instance) {
+	private static Dimension getPreferredSize(@Nullable final Component instance) {
 		return instance != null ? instance.getPreferredSize() : null;
 	}
 

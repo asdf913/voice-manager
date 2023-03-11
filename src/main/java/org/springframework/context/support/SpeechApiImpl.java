@@ -19,6 +19,7 @@ public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean {
 
 	private SpeechApi instance = null;
 
+	@Nullable
 	private SpeechApi getInstance() {
 		//
 		if (instance == null) {

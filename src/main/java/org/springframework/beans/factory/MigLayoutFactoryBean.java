@@ -30,7 +30,7 @@ public class MigLayoutFactoryBean implements FactoryBean<MigLayout> {
 
 	private String[] arguments = null;
 
-	public void setArguments(final Object value) throws JsonProcessingException {
+	public void setArguments(@Nullable final Object value) throws JsonProcessingException {
 		//
 		if (value == null) {
 			//
@@ -157,7 +157,7 @@ public class MigLayoutFactoryBean implements FactoryBean<MigLayout> {
 		//
 	}
 
-	private static IValue0<Object> getIValue0(final double[] ds) {
+	private static IValue0<Object> getIValue0(@Nullable final double[] ds) {
 		//
 		final String[] strings = ds != null ? new String[ds.length] : null;
 		//
@@ -171,7 +171,7 @@ public class MigLayoutFactoryBean implements FactoryBean<MigLayout> {
 		//
 	}
 
-	private static IValue0<Object> getIValue0(final float[] fs) {
+	private static IValue0<Object> getIValue0(@Nullable final float[] fs) {
 		//
 		final String[] strings = fs != null ? new String[fs.length] : null;
 		//
@@ -185,7 +185,7 @@ public class MigLayoutFactoryBean implements FactoryBean<MigLayout> {
 		//
 	}
 
-	private static IValue0<Object> getIValue0(final byte[] bs) {
+	private static IValue0<Object> getIValue0(@Nullable final byte[] bs) {
 		//
 		final String[] strings = bs != null ? new String[bs.length] : null;
 		//
@@ -199,7 +199,7 @@ public class MigLayoutFactoryBean implements FactoryBean<MigLayout> {
 		//
 	}
 
-	private static IValue0<Object> getIValue0(final boolean[] bs) {
+	private static IValue0<Object> getIValue0(@Nullable final boolean[] bs) {
 		//
 		final String[] strings = bs != null ? new String[bs.length] : null;
 		//
@@ -213,7 +213,7 @@ public class MigLayoutFactoryBean implements FactoryBean<MigLayout> {
 		//
 	}
 
-	private static Class<?> getClass(final Object instance) {
+	private static Class<?> getClass(@Nullable final Object instance) {
 		return instance != null ? instance.getClass() : null;
 	}
 
@@ -224,7 +224,7 @@ public class MigLayoutFactoryBean implements FactoryBean<MigLayout> {
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
-	private static String toString(final Object instance) {
+	private static String toString(@Nullable final Object instance) {
 		return instance != null ? instance.toString() : null;
 	}
 
@@ -271,7 +271,7 @@ public class MigLayoutFactoryBean implements FactoryBean<MigLayout> {
 		//
 	}
 
-	private static int length(final Object[] instance) {
+	private static int length(@Nullable final Object[] instance) {
 		return instance != null ? instance.length : 0;
 	}
 

@@ -64,7 +64,7 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 		this.url = url;
 	}
 
-	public void setTimeout(final Object timeout) {
+	public void setTimeout(@Nullable final Object timeout) {
 		//
 		Unit<Duration> value = null;
 		//
@@ -106,7 +106,7 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 			//
 	}
 
-	private static String toString(final Object instance) {
+	private static String toString(@Nullable final Object instance) {
 		return instance != null ? instance.toString() : null;
 	}
 
@@ -202,15 +202,15 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 		//
 	}
 
-	private static int getSheetCount(final SpreadsheetDocument instance) {
+	private static int getSheetCount(@Nullable final SpreadsheetDocument instance) {
 		return instance != null ? instance.getSheetCount() : 0;
 	}
 
-	private static Table getSheetByIndex(final SpreadsheetDocument instance, final int index) {
+	private static Table getSheetByIndex(@Nullable final SpreadsheetDocument instance, final int index) {
 		return instance != null ? instance.getSheetByIndex(index) : null;
 	}
 
-	private static int getRowCount(final Table instance) {
+	private static int getRowCount(@Nullable final Table instance) {
 		return instance != null ? instance.getRowCount() : 0;
 	}
 
@@ -238,11 +238,11 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 		//
 	}
 
-	private static String getMimeType(final ContentInfo instance) {
+	private static String getMimeType(@Nullable final ContentInfo instance) {
 		return instance != null ? instance.getMimeType() : null;
 	}
 
-	private static String getMessage(final ContentInfo instance) {
+	private static String getMessage(@Nullable final ContentInfo instance) {
 		return instance != null ? instance.getMessage() : null;
 	}
 
@@ -319,15 +319,15 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 		return instance != null && instance.test(value);
 	}
 
-	private static String getProtocol(final URL instance) {
+	private static String getProtocol(@Nullable final URL instance) {
 		return instance != null ? instance.getProtocol() : null;
 	}
 
-	private static Long toMillis(final Duration instance) {
+	private static Long toMillis(@Nullable final Duration instance) {
 		return instance != null ? Long.valueOf(instance.toMillis()) : null;
 	}
 
-	private static int intValue(final Number instance, final int defaultValue) {
+	private static int intValue(@Nullable final Number instance, final int defaultValue) {
 		return instance != null ? instance.intValue() : defaultValue;
 	}
 
@@ -339,7 +339,7 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 		return instance != null && instance.matches();
 	}
 
-	private static <E> Stream<E> stream(final Collection<E> instance) {
+	private static <E> Stream<E> stream(@Nullable final Collection<E> instance) {
 		return instance != null ? instance.stream() : null;
 	}
 
@@ -350,11 +350,11 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 		//
 	}
 
-	private static Class<?> getClass(final Object instance) {
+	private static Class<?> getClass(@Nullable final Object instance) {
 		return instance != null ? instance.getClass() : null;
 	}
 
-	private static <T> List<T> toList(final Stream<T> instance) {
+	private static <T> List<T> toList(@Nullable final Stream<T> instance) {
 		return instance != null ? instance.toList() : null;
 	}
 

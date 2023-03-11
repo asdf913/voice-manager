@@ -131,46 +131,46 @@ public interface XlsxUtil {
 		return instance != null && Modifier.isStatic(instance.getModifiers());
 	}
 
-	private static Object invoke(final Method method, final Object instance, final Object... args)
+	private static Object invoke(@Nullable final Method method, final Object instance, final Object... args)
 			throws IllegalAccessException, InvocationTargetException {
 		return method != null ? method.invoke(instance, args) : null;
 	}
 
-	private static DocumentBuilder newDocumentBuilder(final DocumentBuilderFactory instance)
+	private static DocumentBuilder newDocumentBuilder(@Nullable final DocumentBuilderFactory instance)
 			throws ParserConfigurationException {
 		return instance != null ? instance.newDocumentBuilder() : null;
 	}
 
-	private static Document parse(final DocumentBuilder instance, final InputStream is)
+	private static Document parse(@Nullable final DocumentBuilder instance, final InputStream is)
 			throws SAXException, IOException {
 		return instance != null ? instance.parse(is) : null;
 	}
 
-	private static Element getDocumentElement(final Document instance) {
+	private static Element getDocumentElement(@Nullable final Document instance) {
 		return instance != null ? instance.getDocumentElement() : null;
 	}
 
-	private static NodeList getChildNodes(final Node instance) {
+	private static NodeList getChildNodes(@Nullable final Node instance) {
 		return instance != null ? instance.getChildNodes() : null;
 	}
 
-	private static int getLength(final NodeList instance) {
+	private static int getLength(@Nullable final NodeList instance) {
 		return instance != null ? instance.getLength() : 0;
 	}
 
-	private static Node item(final NodeList instance, final int index) {
+	private static Node item(@Nullable final NodeList instance, final int index) {
 		return instance != null ? instance.item(index) : null;
 	}
 
-	private static NamedNodeMap getAttributes(final Node instance) {
+	private static NamedNodeMap getAttributes(@Nullable final Node instance) {
 		return instance != null ? instance.getAttributes() : null;
 	}
 
-	private static Node getNamedItem(final NamedNodeMap instance, final String name) {
+	private static Node getNamedItem(@Nullable final NamedNodeMap instance, final String name) {
 		return instance != null ? instance.getNamedItem(name) : null;
 	}
 
-	private static String getTextContent(final Node instance) {
+	private static String getTextContent(@Nullable final Node instance) {
 		return instance != null ? instance.getTextContent() : null;
 	}
 

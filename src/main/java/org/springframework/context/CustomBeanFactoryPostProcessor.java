@@ -173,19 +173,20 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 			//
 	}
 
-	private static Class<?> getType(final Field field) {
+	private static Class<?> getType(@Nullable final Field field) {
 		return field != null ? field.getType() : null;
 	}
 
-	private static Object get(final Field field, @Nullable final Object instance) throws IllegalAccessException {
+	private static Object get(@Nullable final Field field, @Nullable final Object instance)
+			throws IllegalAccessException {
 		return field != null ? field.get(instance) : null;
 	}
 
-	private static Class<?>[] getParameterTypes(final Executable instance) {
+	private static Class<?>[] getParameterTypes(@Nullable final Executable instance) {
 		return instance != null ? instance.getParameterTypes() : null;
 	}
 
-	private static void errorOrPrintStackTrace(final Logger logger, final Throwable a, final Throwable b) {
+	private static void errorOrPrintStackTrace(final Logger logger, @Nullable final Throwable a, final Throwable b) {
 		//
 		if (Boolean.logicalAnd(logger != null, !LoggerUtil.isNOPLogger(logger))) {
 			//
@@ -248,7 +249,7 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 		return instance != null && Modifier.isStatic(instance.getModifiers());
 	}
 
-	private static Method[] getDeclaredMethods(final Class<?> instance) {
+	private static Method[] getDeclaredMethods(@Nullable final Class<?> instance) {
 		return instance != null ? instance.getDeclaredMethods() : null;
 	}
 
@@ -260,11 +261,11 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 		//
 	}
 
-	private static Class<?> getClass(final Object instance) {
+	private static Class<?> getClass(@Nullable final Object instance) {
 		return instance != null ? instance.getClass() : null;
 	}
 
-	private static <T> List<T> toList(final Stream<T> instance) {
+	private static <T> List<T> toList(@Nullable final Stream<T> instance) {
 		return instance != null ? instance.toList() : null;
 	}
 
@@ -283,16 +284,16 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 		return instance != null && instance.test(value);
 	}
 
-	private static String getName(final Member instance) {
+	private static String getName(@Nullable final Member instance) {
 		return instance != null ? instance.getName() : null;
 	}
 
-	private static Object invoke(final Method method, final Object instance, Object... args)
+	private static Object invoke(@Nullable final Method method, final Object instance, Object... args)
 			throws IllegalAccessException, InvocationTargetException {
 		return method != null ? method.invoke(instance, args) : null;
 	}
 
-	private static String getMessage(final Throwable instance) {
+	private static String getMessage(@Nullable final Throwable instance) {
 		return instance != null ? instance.getMessage() : null;
 	}
 
@@ -336,12 +337,12 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 			//
 	}
 
-	private static PropertySources getAppliedPropertySources(final PropertySourcesPlaceholderConfigurer instance)
-			throws IllegalStateException {
+	private static PropertySources getAppliedPropertySources(
+			@Nullable final PropertySourcesPlaceholderConfigurer instance) throws IllegalStateException {
 		return instance != null ? instance.getAppliedPropertySources() : null;
 	}
 
-	private static <T> T getSource(final PropertySource<T> instance) {
+	private static <T> T getSource(@Nullable final PropertySource<T> instance) {
 		return instance != null ? instance.getSource() : null;
 	}
 
@@ -381,11 +382,11 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 			//
 	}
 
-	private static Connection getConnection(final DataSource instance) throws SQLException {
+	private static Connection getConnection(@Nullable final DataSource instance) throws SQLException {
 		return instance != null ? instance.getConnection() : null;
 	}
 
-	private static Statement createStatement(final Connection instance) throws SQLException {
+	private static Statement createStatement(@Nullable final Connection instance) throws SQLException {
 		return instance != null ? instance.createStatement() : null;
 	}
 

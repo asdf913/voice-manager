@@ -85,7 +85,7 @@ public class SpeechApiSpeechServerImpl implements SpeechApi, Provider, Lookup, I
 	}
 
 	@Nullable
-	private static int[] toIntArray(final String text) {
+	private static int[] toIntArray(@Nullable final String text) {
 		//
 		final char[] cs = text != null ? text.toCharArray() : null;
 		//
@@ -107,7 +107,7 @@ public class SpeechApiSpeechServerImpl implements SpeechApi, Provider, Lookup, I
 
 	@Override
 	public void writeVoiceToFile(final String text, final String voiceId, final int rate, final int volume,
-			final File file) {
+			@Nullable final File file) {
 		//
 		if (Jna.INSTANCE != null) {
 			//

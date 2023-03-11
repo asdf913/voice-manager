@@ -160,7 +160,7 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 		//
 	}
 
-	private static Boolean getAndSet(final AtomicBoolean instance, final boolean newValue) {
+	private static Boolean getAndSet(@Nullable final AtomicBoolean instance, final boolean newValue) {
 		return instance != null ? Boolean.valueOf(instance.getAndSet(newValue)) : null;
 	}
 
@@ -199,7 +199,7 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 		//
 	}
 
-	private static String getMimeType(final ContentInfo instance) {
+	private static String getMimeType(@Nullable final ContentInfo instance) {
 		return instance != null ? instance.getMimeType() : null;
 	}
 
@@ -325,7 +325,7 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 		//
 	}
 
-	private static <V> V get(final AtomicReference<V> instnace) {
+	private static <V> V get(@Nullable final AtomicReference<V> instnace) {
 		return instnace != null ? instnace.get() : null;
 	}
 
@@ -343,7 +343,7 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 		return instance != null && instance.matches();
 	}
 
-	private static int groupCount(final MatchResult instance) {
+	private static int groupCount(@Nullable final MatchResult instance) {
 		return instance != null ? instance.groupCount() : 0;
 	}
 

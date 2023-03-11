@@ -221,11 +221,11 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 		//
 	}
 
-	private static Class<?> getClass(final Object instance) {
+	private static Class<?> getClass(@Nullable final Object instance) {
 		return instance != null ? instance.getClass() : null;
 	}
 
-	private static String toString(final Object instance) {
+	private static String toString(@Nullable final Object instance) {
 		return instance != null ? instance.toString() : null;
 	}
 
@@ -442,11 +442,11 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 		//
 	}
 
-	private static String getName(final Member instance) {
+	private static String getName(@Nullable final Member instance) {
 		return instance != null ? instance.getName() : null;
 	}
 
-	private static Class<?>[] getParameterTypes(final Executable instance) {
+	private static Class<?>[] getParameterTypes(@Nullable final Executable instance) {
 		return instance != null ? instance.getParameterTypes() : null;
 	}
 
@@ -463,7 +463,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 		//
 	}
 
-	private static <T> List<T> toList(final Stream<T> instance) {
+	private static <T> List<T> toList(@Nullable final Stream<T> instance) {
 		return instance != null ? instance.toList() : null;
 	}
 
@@ -557,7 +557,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 			//
 	}
 
-	private static String getAbsolutePath(final File instance) {
+	private static String getAbsolutePath(@Nullable final File instance) {
 		return instance != null ? instance.getAbsolutePath() : null;
 	}
 
@@ -569,11 +569,11 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 		return instance != null && instance.isFile();
 	}
 
-	private static Long length(final File instance) {
+	private static Long length(@Nullable final File instance) {
 		return instance != null ? Long.valueOf(instance.length()) : null;
 	}
 
-	private static long longValue(final Number instance, final long defaultValue) {
+	private static long longValue(@Nullable final Number instance, final long defaultValue) {
 		return instance != null ? instance.longValue() : defaultValue;
 	}
 
@@ -589,15 +589,15 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 		return clz != null && clz.isInstance(value) ? clz.cast(value) : null;
 	}
 
-	private static <T> Iterator<T> iterator(final Iterable<T> instance) {
+	private static <T> Iterator<T> iterator(@Nullable final Iterable<T> instance) {
 		return instance != null ? instance.iterator() : null;
 	}
 
-	private static <K> K getKey(final Entry<K, ?> instance) {
+	private static <K> K getKey(@Nullable final Entry<K, ?> instance) {
 		return instance != null ? instance.getKey() : null;
 	}
 
-	private static <V> V getValue(final Entry<?, V> instance) {
+	private static <V> V getValue(@Nullable final Entry<?, V> instance) {
 		return instance != null ? instance.getValue() : null;
 	}
 
@@ -617,7 +617,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 		}
 	}
 
-	private static Object getSource(final EventObject instance) {
+	private static Object getSource(@Nullable final EventObject instance) {
 		return instance != null ? instance.getSource() : null;
 	}
 
@@ -676,7 +676,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 			//
 	}
 
-	private static Dimension getPreferredSize(final Component instance) {
+	private static Dimension getPreferredSize(@Nullable final Component instance) {
 		return instance != null ? instance.getPreferredSize() : null;
 	}
 

@@ -129,7 +129,7 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider, Lookup, I
 	}
 
 	@Nullable
-	private static int[] toIntArray(final String text) {
+	private static int[] toIntArray(@Nullable final String text) {
 		//
 		final char[] cs = text != null ? text.toCharArray() : null;
 		//
@@ -151,7 +151,7 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider, Lookup, I
 
 	@Override
 	public void writeVoiceToFile(final String text, final String voiceId, final int rate, final int volume,
-			final File file) {
+			@Nullable final File file) {
 		//
 		if (Jna.INSTANCE != null) {
 			//
@@ -195,7 +195,7 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider, Lookup, I
 	}
 
 	@Nullable
-	private static Map<String, String> getVersionInfoMap(final PE pe) throws IOException {
+	private static Map<String, String> getVersionInfoMap(@Nullable final PE pe) throws IOException {
 		//
 		final ImageData id = pe != null ? pe.getImageData() : null;
 		//
@@ -249,7 +249,7 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider, Lookup, I
 		}
 	}
 
-	private static StringFileInfo getStringFileInfo(final VersionInfo instance) {
+	private static StringFileInfo getStringFileInfo(@Nullable final VersionInfo instance) {
 		return instance != null ? instance.getStringFileInfo() : null;
 	}
 
@@ -290,7 +290,7 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider, Lookup, I
 			//
 	}
 
-	private static <V> V get(final Map<?, V> instance, final Object key) {
+	private static <V> V get(@Nullable final Map<?, V> instance, final Object key) {
 		return instance != null ? instance.get(key) : null;
 	}
 

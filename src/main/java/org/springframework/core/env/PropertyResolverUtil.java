@@ -9,7 +9,7 @@ public interface PropertyResolverUtil {
 	}
 
 	@Nullable
-	static String getProperty(final PropertyResolver instance, final String key) {
+	static String getProperty(@Nullable final PropertyResolver instance, final String key) {
 		return instance != null ? instance.getProperty(key) : null;
 	}
 

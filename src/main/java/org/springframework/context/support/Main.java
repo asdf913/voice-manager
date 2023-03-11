@@ -118,7 +118,7 @@ public class Main {
 			//
 	}
 
-	private static <E> E getSelectedValue(final JList<E> instance) {
+	private static <E> E getSelectedValue(@Nullable final JList<E> instance) {
 		return instance != null ? instance.getSelectedValue() : null;
 	}
 
@@ -133,7 +133,7 @@ public class Main {
 		return instance != null && instance.test(value);
 	}
 
-	private static String toString(final Object instance) {
+	private static String toString(@Nullable final Object instance) {
 		return instance != null ? instance.toString() : null;
 	}
 
@@ -149,16 +149,16 @@ public class Main {
 		}
 	}
 
-	private static String[] getBeanNamesForType(final ListableBeanFactory instance, final Class<?> type) {
+	private static String[] getBeanNamesForType(@Nullable final ListableBeanFactory instance, final Class<?> type) {
 		return instance != null ? instance.getBeanNamesForType(type) : null;
 	}
 
-	private static String[] getBeanDefinitionNames(final ListableBeanFactory instance) {
+	private static String[] getBeanDefinitionNames(@Nullable final ListableBeanFactory instance) {
 		return instance != null ? instance.getBeanDefinitionNames() : null;
 	}
 
 	@Nullable
-	private static String getBeanClassName(final BeanDefinition instance) {
+	private static String getBeanClassName(@Nullable final BeanDefinition instance) {
 		return instance != null ? instance.getBeanClassName() : null;
 	}
 
@@ -191,7 +191,7 @@ public class Main {
 	}
 
 	@Nullable
-	private static Object getInstance(final ListableBeanFactory beanFactory, final Class<?> clz,
+	private static Object getInstance(final ListableBeanFactory beanFactory, @Nullable final Class<?> clz,
 			final Consumer<String> consumer) {
 		//
 		if (clz == null) {

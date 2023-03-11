@@ -227,19 +227,19 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		//
 	}
 
-	private static <T> List<T> toList(final Stream<T> instance) {
+	private static <T> List<T> toList(@Nullable final Stream<T> instance) {
 		return instance != null ? instance.toList() : null;
 	}
 
-	private static Class<?> getClass(final Object instance) {
+	private static Class<?> getClass(@Nullable final Object instance) {
 		return instance != null ? instance.getClass() : null;
 	}
 
-	private static Class<? extends Annotation> annotationType(final Annotation instance) {
+	private static Class<? extends Annotation> annotationType(@Nullable final Annotation instance) {
 		return instance != null ? instance.annotationType() : null;
 	}
 
-	private static String getName(final Class<?> instance) {
+	private static String getName(@Nullable final Class<?> instance) {
 		return instance != null ? instance.getName() : null;
 	}
 
@@ -315,7 +315,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		//
 	}
 
-	private static Integer getPhysicalNumberOfCells(final Row instance) {
+	private static Integer getPhysicalNumberOfCells(@Nullable final Row instance) {
 		return instance != null ? Integer.valueOf(instance.getPhysicalNumberOfCells()) : null;
 	}
 
@@ -332,7 +332,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		}
 	}
 
-	private static Class<?> getType(final Field instance) {
+	private static Class<?> getType(@Nullable final Field instance) {
 		return instance != null ? instance.getType() : null;
 	}
 
@@ -340,11 +340,11 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		return a != null && b != null && a.isAssignableFrom(b);
 	}
 
-	private static CellType getCellType(final Cell instance) {
+	private static CellType getCellType(@Nullable final Cell instance) {
 		return instance != null ? instance.getCellType() : null;
 	}
 
-	private static CellType getCellType(final CellValue instance) {
+	private static CellType getCellType(@Nullable final CellValue instance) {
 		return instance != null ? instance.getCellType() : null;
 	}
 
@@ -444,19 +444,19 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		//
 	}
 
-	private static String getStringValue(final CellValue instance) {
+	private static String getStringValue(@Nullable final CellValue instance) {
 		return instance != null ? instance.getStringValue() : null;
 	}
 
-	private static Double getNumberValue(final CellValue instance) {
+	private static Double getNumberValue(@Nullable final CellValue instance) {
 		return instance != null ? Double.valueOf(instance.getNumberValue()) : null;
 	}
 
-	private static CellValue evaluate(final FormulaEvaluator instance, final Cell cell) {
+	private static CellValue evaluate(@Nullable final FormulaEvaluator instance, final Cell cell) {
 		return instance != null ? instance.evaluate(cell) : null;
 	}
 
-	private static String toString(final Object instance) {
+	private static String toString(@Nullable final Object instance) {
 		return instance != null ? instance.toString() : null;
 	}
 
@@ -499,11 +499,11 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		return instance != null && instance.test(value);
 	}
 
-	private static String getMimeType(final ContentInfo instance) {
+	private static String getMimeType(@Nullable final ContentInfo instance) {
 		return instance != null ? instance.getMimeType() : null;
 	}
 
-	private static String getMessage(final ContentInfo instance) {
+	private static String getMessage(@Nullable final ContentInfo instance) {
 		return instance != null ? instance.getMessage() : null;
 	}
 
@@ -531,7 +531,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		//
 	}
 
-	private static String getStringCellValue(final Cell instance) {
+	private static String getStringCellValue(@Nullable final Cell instance) {
 		return instance != null ? instance.getStringCellValue() : null;
 	}
 
@@ -669,15 +669,15 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		//
 	}
 
-	private static InputStream openStream(final URL instance) throws IOException {
+	private static InputStream openStream(@Nullable final URL instance) throws IOException {
 		return instance != null ? instance.openStream() : null;
 	}
 
-	private static String getFile(final URL instance) {
+	private static String getFile(@Nullable final URL instance) {
 		return instance != null ? instance.getFile() : null;
 	}
 
-	private static String[] readNext(final CSVReader instance) throws CsvValidationException, IOException {
+	private static String[] readNext(@Nullable final CSVReader instance) throws CsvValidationException, IOException {
 		return instance != null ? instance.readNext() : null;
 	}
 
@@ -710,7 +710,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		//
 	}
 
-	private static String getName(final Member instance) {
+	private static String getName(@Nullable final Member instance) {
 		return instance != null ? instance.getName() : null;
 	}
 
@@ -800,15 +800,15 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		//
 	}
 
-	private static Method[] getDeclaredMethods(final Class<?> instance) throws SecurityException {
+	private static Method[] getDeclaredMethods(@Nullable final Class<?> instance) throws SecurityException {
 		return instance != null ? instance.getDeclaredMethods() : null;
 	}
 
-	private static Annotation[] getDeclaredAnnotations(final AnnotatedElement instance) {
+	private static Annotation[] getDeclaredAnnotations(@Nullable final AnnotatedElement instance) {
 		return instance != null ? instance.getDeclaredAnnotations() : null;
 	}
 
-	private static Object invoke(final Method method, final Object instance, final Object... args)
+	private static Object invoke(@Nullable final Method method, final Object instance, final Object... args)
 			throws IllegalAccessException, InvocationTargetException {
 		return method != null ? method.invoke(instance, args) : null;
 	}

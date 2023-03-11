@@ -240,15 +240,15 @@ public class YojijukugoMultimapFactoryBean implements FactoryBean<Multimap<Strin
 		return instance != null ? instance.iterator() : null;
 	}
 
-	private static String getMimeType(final ContentInfo instance) {
+	private static String getMimeType(@Nullable final ContentInfo instance) {
 		return instance != null ? instance.getMimeType() : null;
 	}
 
-	private static String toString(final Object instance) {
+	private static String toString(@Nullable final Object instance) {
 		return instance != null ? instance.toString() : null;
 	}
 
-	private static String getProtocol(final URL instance) {
+	private static String getProtocol(@Nullable final URL instance) {
 		return instance != null ? instance.getProtocol() : null;
 	}
 

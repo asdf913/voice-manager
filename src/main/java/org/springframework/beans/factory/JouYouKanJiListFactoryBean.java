@@ -206,11 +206,11 @@ public class JouYouKanJiListFactoryBean implements FactoryBean<List<String>> {
 		return instance != null && instance.test(value);
 	}
 
-	private static Long toMillis(final Duration instance) {
+	private static Long toMillis(@Nullable final Duration instance) {
 		return instance != null ? Long.valueOf(instance.toMillis()) : null;
 	}
 
-	private static int intValue(final Number instance, final int defaultValue) {
+	private static int intValue(@Nullable final Number instance, final int defaultValue) {
 		return instance != null ? instance.intValue() : defaultValue;
 	}
 
@@ -220,7 +220,7 @@ public class JouYouKanJiListFactoryBean implements FactoryBean<List<String>> {
 		}
 	}
 
-	private static String toString(final Object instance) {
+	private static String toString(@Nullable final Object instance) {
 		return instance != null ? instance.toString() : null;
 	}
 

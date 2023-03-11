@@ -155,7 +155,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		this.url = url;
 	}
 
-	public void setEcssVersion(final Object object) {
+	public void setEcssVersion(@Nullable final Object object) {
 		//
 		if (object == null) {
 			//
@@ -232,11 +232,11 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		//
 	}
 
-	private static Version getVersion(final IHasVersion instance) {
+	private static Version getVersion(@Nullable final IHasVersion instance) {
 		return instance != null ? instance.getVersion() : null;
 	}
 
-	private static String name(final Enum<?> instance) {
+	private static String name(@Nullable final Enum<?> instance) {
 		return instance != null ? instance.name() : null;
 	}
 
@@ -329,11 +329,11 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		//
 	}
 
-	private static Field[] getDeclaredFields(final Class<?> instance) {
+	private static Field[] getDeclaredFields(@Nullable final Class<?> instance) {
 		return instance != null ? instance.getDeclaredFields() : null;
 	}
 
-	private static Class<?> getType(final Field instance) {
+	private static Class<?> getType(@Nullable final Field instance) {
 		return instance != null ? instance.getType() : null;
 	}
 
@@ -403,7 +403,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 
 		<T> void setObject(final Class<T> key, final T value);
 
-		static <T> T getObject(final ObjectMap instance, final Class<T> key) {
+		static <T> T getObject(@Nullable final ObjectMap instance, final Class<T> key) {
 			return instance != null ? instance.getObject(key) : null;
 		}
 
@@ -430,7 +430,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 
 		@Override
 		@Nullable
-		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+		public Object invoke(final Object proxy, @Nullable final Method method, final Object[] args) throws Throwable {
 			//
 			final String methodName = method != null ? method.getName() : null;
 			//
@@ -471,7 +471,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 			return instance != null && instance.isArray();
 		}
 
-		private static String getSimpleName(final Class<?> instance) {
+		private static String getSimpleName(@Nullable final Class<?> instance) {
 			return instance != null ? instance.getSimpleName() : null;
 		}
 
@@ -658,7 +658,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		//
 	}
 
-	private static IndexedColorMap getIndexedColors(final StylesTable instance) {
+	private static IndexedColorMap getIndexedColors(@Nullable final StylesTable instance) {
 		return instance != null ? instance.getIndexedColors() : null;
 	}
 
@@ -697,15 +697,15 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		//
 	}
 
-	private static String getProperty(final CSSDeclaration instance) {
+	private static String getProperty(@Nullable final CSSDeclaration instance) {
 		return instance != null ? instance.getProperty() : null;
 	}
 
-	private static int intValue(final Number instance, final int defaultValue) {
+	private static int intValue(@Nullable final Number instance, final int defaultValue) {
 		return instance != null ? instance.intValue() : defaultValue;
 	}
 
-	private static Long toMillis(final Duration instance) {
+	private static Long toMillis(@Nullable final Duration instance) {
 		return instance != null ? Long.valueOf(instance.toMillis()) : null;
 	}
 
@@ -722,7 +722,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		}
 	}
 
-	private static String getAbsolutePath(final File instance) {
+	private static String getAbsolutePath(@Nullable final File instance) {
 		return instance != null ? instance.getAbsolutePath() : null;
 	}
 
@@ -737,7 +737,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		}
 	}
 
-	private static Integer getPhysicalNumberOfRows(final Sheet instance) {
+	private static Integer getPhysicalNumberOfRows(@Nullable final Sheet instance) {
 		return instance != null ? Integer.valueOf(instance.getPhysicalNumberOfRows()) : null;
 	}
 
@@ -781,7 +781,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 			//
 	}
 
-	private static <E> Stream<E> stream(final Collection<E> instance) {
+	private static <E> Stream<E> stream(@Nullable final Collection<E> instance) {
 		return instance != null ? instance.stream() : null;
 	}
 
@@ -793,11 +793,11 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		//
 	}
 
-	private static OptionalInt max(final IntStream instance) {
+	private static OptionalInt max(@Nullable final IntStream instance) {
 		return instance != null ? instance.max() : null;
 	}
 
-	private static int orElse(final OptionalInt instance, final int other) {
+	private static int orElse(@Nullable final OptionalInt instance, final int other) {
 		return instance != null ? instance.orElse(other) : other;
 	}
 
@@ -809,7 +809,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		//
 	}
 
-	private static <T> List<T> toList(final Stream<T> instance) {
+	private static <T> List<T> toList(@Nullable final Stream<T> instance) {
 		return instance != null ? instance.toList() : null;
 	}
 
@@ -834,7 +834,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		}
 	}
 
-	private static Object getSource(final EventObject instance) {
+	private static Object getSource(@Nullable final EventObject instance) {
 		return instance != null ? instance.getSource() : null;
 	}
 
@@ -849,7 +849,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		return instance != null && instance.test(value);
 	}
 
-	private static String getText(final JTextComponent instance) {
+	private static String getText(@Nullable final JTextComponent instance) {
 		return instance != null ? instance.getText() : null;
 	}
 
@@ -881,11 +881,11 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 			//
 	}
 
-	private static <T> Iterator<T> iterator(final Iterable<T> instance) {
+	private static <T> Iterator<T> iterator(@Nullable final Iterable<T> instance) {
 		return instance != null ? instance.iterator() : null;
 	}
 
-	private static Dimension getPreferredSize(final Component instance) {
+	private static Dimension getPreferredSize(@Nullable final Component instance) {
 		return instance != null ? instance.getPreferredSize() : null;
 	}
 

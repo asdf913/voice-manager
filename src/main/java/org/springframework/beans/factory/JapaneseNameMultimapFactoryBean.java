@@ -138,7 +138,7 @@ public class JapaneseNameMultimapFactoryBean implements FactoryBean<Multimap<Str
 		//
 	}
 
-	private static String getMimeType(final ContentInfo instance) {
+	private static String getMimeType(@Nullable final ContentInfo instance) {
 		return instance != null ? instance.getMimeType() : null;
 	}
 
@@ -175,7 +175,7 @@ public class JapaneseNameMultimapFactoryBean implements FactoryBean<Multimap<Str
 		//
 	}
 
-	private static String toString(final Object instance) {
+	private static String toString(@Nullable final Object instance) {
 		return instance != null ? instance.toString() : null;
 	}
 
@@ -228,7 +228,7 @@ public class JapaneseNameMultimapFactoryBean implements FactoryBean<Multimap<Str
 		return instance != null && instance.test(value);
 	}
 
-	private static String getProtocol(final URL instance) {
+	private static String getProtocol(@Nullable final URL instance) {
 		return instance != null ? instance.getProtocol() : null;
 	}
 

@@ -42,7 +42,7 @@ public class JlptLevelListFactoryBean implements FactoryBean<List<String>> {
 		this.url = url;
 	}
 
-	public void setTimeout(final Object timeout) {
+	public void setTimeout(@Nullable final Object timeout) {
 		//
 		Unit<Duration> value = null;
 		//
@@ -134,7 +134,7 @@ public class JlptLevelListFactoryBean implements FactoryBean<List<String>> {
 		}
 	}
 
-	private static String toString(final Object instance) {
+	private static String toString(@Nullable final Object instance) {
 		return instance != null ? instance.toString() : null;
 	}
 
@@ -175,7 +175,7 @@ public class JlptLevelListFactoryBean implements FactoryBean<List<String>> {
 		//
 	}
 
-	private static <T> List<T> toList(final Stream<T> instance) {
+	private static <T> List<T> toList(@Nullable final Stream<T> instance) {
 		//
 		return instance != null ? instance.toList() : null;
 		//
@@ -188,23 +188,23 @@ public class JlptLevelListFactoryBean implements FactoryBean<List<String>> {
 		//
 	}
 
-	private static Class<?> getClass(final Object instance) {
+	private static Class<?> getClass(@Nullable final Object instance) {
 		return instance != null ? instance.getClass() : null;
 	}
 
-	private static <E> Stream<E> stream(final Collection<E> instance) {
+	private static <E> Stream<E> stream(@Nullable final Collection<E> instance) {
 		return instance != null ? instance.stream() : null;
 	}
 
-	private static String getProtocol(final URL instance) {
+	private static String getProtocol(@Nullable final URL instance) {
 		return instance != null ? instance.getProtocol() : null;
 	}
 
-	private static Long toMillis(final Duration instance) {
+	private static Long toMillis(@Nullable final Duration instance) {
 		return instance != null ? Long.valueOf(instance.toMillis()) : null;
 	}
 
-	private static int intValue(final Number instance, final int defaultValue) {
+	private static int intValue(@Nullable final Number instance, final int defaultValue) {
 		return instance != null ? instance.intValue() : defaultValue;
 	}
 
