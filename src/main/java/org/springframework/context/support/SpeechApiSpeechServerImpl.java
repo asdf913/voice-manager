@@ -72,7 +72,7 @@ public class SpeechApiSpeechServerImpl implements SpeechApi, Provider, Lookup, I
 	}
 
 	@Override
-	public void speak(final String text, final String voiceId, final int rate, final int volume) {
+	public void speak(@Nullable final String text, @Nullable final String voiceId, final int rate, final int volume) {
 		//
 		if (Jna.INSTANCE != null) {
 			//
@@ -106,8 +106,8 @@ public class SpeechApiSpeechServerImpl implements SpeechApi, Provider, Lookup, I
 	}
 
 	@Override
-	public void writeVoiceToFile(final String text, final String voiceId, final int rate, final int volume,
-			@Nullable final File file) {
+	public void writeVoiceToFile(@Nullable final String text, @Nullable final String voiceId, final int rate,
+			final int volume, @Nullable final File file) {
 		//
 		if (Jna.INSTANCE != null) {
 			//
@@ -129,7 +129,7 @@ public class SpeechApiSpeechServerImpl implements SpeechApi, Provider, Lookup, I
 
 	@Override
 	@Nullable
-	public String getVoiceAttribute(final String voiceId, final String attribute) {
+	public String getVoiceAttribute(@Nullable final String voiceId, final String attribute) {
 		//
 		return Jna.INSTANCE != null ? Jna.INSTANCE.getVoiceAttribute(voiceId, attribute) : null;
 		//
