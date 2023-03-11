@@ -24,6 +24,8 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -71,6 +73,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 import javassist.util.proxy.MethodHandler;
 import javassist.util.proxy.ProxyFactory;
 import javassist.util.proxy.ProxyObject;
+import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
 
 class OnlineNHKJapanesePronunciationAccentGuiTest {
@@ -1221,10 +1224,25 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 	}
 
 	@Test
-	void testPlay() {
+	void testPlay() throws Throwable {
 		//
-		Assertions.assertDoesNotThrow(() -> play(new Player(new ByteArrayInputStream("".getBytes()))));
-		//
+		try (final ByteArrayInputStream bais = new ByteArrayInputStream("".getBytes())) {
+			//
+			final FileSystem fs = FileSystems.getDefault();
+			//
+			if (Objects.equals("sun.nio.fs.WindowsFileSystemProvider",
+					getName(getClass(fs != null ? fs.provider() : null)))) {
+				//
+				Assertions.assertDoesNotThrow(() -> play(new Player(bais)));
+				//
+			} else {
+				//
+				Assertions.assertThrows(JavaLayerException.class, () -> play(new Player(bais)));
+				//
+			} // if
+				//
+		} // try
+			//
 	}
 
 	private static void play(final Player instance) throws Throwable {
