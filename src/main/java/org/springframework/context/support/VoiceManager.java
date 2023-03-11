@@ -1167,11 +1167,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static Object get(final Field field, final Object instance) throws IllegalAccessException {
+	private static Object get(final Field field, @Nullable final Object instance) throws IllegalAccessException {
 		return field != null ? field.get(instance) : null;
 	}
 
-	private static <E> void addElement(final MutableComboBoxModel<E> instance, final E item) {
+	private static <E> void addElement(final MutableComboBoxModel<E> instance, @Nullable final E item) {
 		if (instance != null) {
 			instance.addElement(item);
 		}
@@ -1376,7 +1376,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	private static <K, V> Set<Entry<K, V>> entrySet(final Map<K, V> instance) {
+	private static <K, V> Set<Entry<K, V>> entrySet(@Nullable final Map<K, V> instance) {
 		return instance != null ? instance.entrySet() : null;
 	}
 
@@ -1395,7 +1395,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.getValue() : null;
 	}
 
-	private static <K, V> void put(final Map<K, V> instance, final K key, final V value) {
+	private static <K, V> void put(final Map<K, V> instance, @Nullable final K key, final V value) {
 		if (instance != null) {
 			instance.put(key, value);
 		}
@@ -1940,7 +1940,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	private static Class<?> getClass(final Object instance) {
+	private static Class<?> getClass(@Nullable final Object instance) {
 		return instance != null ? instance.getClass() : null;
 	}
 
@@ -3643,7 +3643,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.getProtocol() : null;
 	}
 
-	private static int getLength(final NodeList instance) {
+	private static int getLength(@Nullable final NodeList instance) {
 		return instance != null ? instance.getLength() : 0;
 	}
 
@@ -4837,7 +4837,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.max() : null;
 	}
 
-	private static <T> T orElse(final Optional<T> instance, final T other) {
+	private static <T> T orElse(final Optional<T> instance, @Nullable final T other) {
 		return instance != null ? instance.orElse(other) : null;
 	}
 
@@ -4876,7 +4876,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static <T, U, R, E extends Throwable> R testAndApply(final BiPredicate<T, U> predicate, final T t,
 			final U u, final FailableBiFunction<T, U, R, E> functionTrue,
-			final FailableBiFunction<T, U, R, E> functionFalse) throws E {
+			@Nullable final FailableBiFunction<T, U, R, E> functionFalse) throws E {
 		return predicate != null && predicate.test(t, u) ? apply(functionTrue, t, u) : apply(functionFalse, t, u);
 	}
 
@@ -4901,7 +4901,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	private static int intValue(final Number instance, final int defaultValue) {
+	private static int intValue(@Nullable final Number instance, final int defaultValue) {
 		return instance != null ? instance.intValue() : defaultValue;
 	}
 
@@ -5139,7 +5139,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static void playAudio(final Pronunciation pronunciation, final Object audioFormat) {
+	private static void playAudio(@Nullable final Pronunciation pronunciation, final Object audioFormat) {
 		//
 		final Set<Entry<String, String>> entrySet = entrySet(getAudioUrls(pronunciation));
 		//
@@ -5581,7 +5581,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	private static <E extends Throwable> void ifElse(final boolean condition, final FailableRunnable<E> runnableTrue,
-			final FailableRunnable<E> runnableFalse) throws E {
+			@Nullable final FailableRunnable<E> runnableFalse) throws E {
 		//
 		if (condition) {
 			//
@@ -7658,7 +7658,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		}
 	}
 
-	private static boolean contains(final Collection<?> items, final Object item) {
+	private static boolean contains(@Nullable final Collection<?> items, final Object item) {
 		return items != null && items.contains(item);
 	}
 
@@ -8118,7 +8118,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static void setBackground(final Component instance, final Color color) {
+	private static void setBackground(@Nullable final Component instance, final Color color) {
 		if (instance != null) {
 			instance.setBackground(color);
 		}
@@ -8218,7 +8218,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	}
 
-	private static byte[] toByteArray(final ByteArrayOutputStream instance) {
+	private static byte[] toByteArray(@Nullable final ByteArrayOutputStream instance) {
 		return instance != null ? instance.toByteArray() : null;
 	}
 
@@ -8280,7 +8280,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		}
 
-		public void setVbr(final Object vbr) {
+		public void setVbr(@Nullable final Object vbr) {
 			//
 			if (vbr == null) {
 				//
@@ -10105,7 +10105,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static void shutdown(final ExecutorService instance) {
+	private static void shutdown(@Nullable final ExecutorService instance) {
 		if (instance != null) {
 			instance.shutdown();
 		}
@@ -11495,7 +11495,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		}
 
-		private static void replaceTextContent(final ObjectMap objectMap, final Map<?, ?> map) {
+		private static void replaceTextContent(final ObjectMap objectMap, @Nullable final Map<?, ?> map) {
 			//
 			final freemarker.template.Configuration configuration = ObjectMap.getObject(objectMap,
 					freemarker.template.Configuration.class);
@@ -12844,7 +12844,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static Object invoke(final Method method, final Object instance, Object... args)
+	private static Object invoke(final Method method, @Nullable final Object instance, Object... args)
 			throws IllegalAccessException, InvocationTargetException {
 		return method != null ? method.invoke(instance, args) : null;
 	}
@@ -12898,7 +12898,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.openSession() : null;
 	}
 
-	private static String toString(final Object instance) {
+	private static String toString(@Nullable final Object instance) {
 		return instance != null ? instance.toString() : null;
 	}
 

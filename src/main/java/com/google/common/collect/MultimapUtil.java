@@ -21,7 +21,7 @@ public interface MultimapUtil {
 		}
 	}
 
-	static <K, V> Collection<V> get(final Multimap<K, V> instance, final K key) {
+	static <K, V> Collection<V> get(@Nullable final Multimap<K, V> instance, final K key) {
 		return instance != null ? instance.get(key) : null;
 	}
 
@@ -29,11 +29,11 @@ public interface MultimapUtil {
 		return instance != null ? instance.size() : 0;
 	}
 
-	static <K, V> Collection<Entry<K, V>> entries(final Multimap<K, V> instance) {
+	static <K, V> Collection<Entry<K, V>> entries(@Nullable final Multimap<K, V> instance) {
 		return instance != null ? instance.entries() : null;
 	}
 
-	static <K> Set<K> keySet(final Multimap<K, ?> instance) {
+	static <K> Set<K> keySet(@Nullable final Multimap<K, ?> instance) {
 		return instance != null ? instance.keySet() : null;
 	}
 

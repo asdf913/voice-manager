@@ -940,7 +940,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		}
 	}
 
-	private static <T> void forEach(final Iterable<T> instance, final Consumer<? super T> action) {
+	private static <T> void forEach(@Nullable final Iterable<T> instance, final Consumer<? super T> action) {
 		if (instance != null && (action != null || Proxy.isProxyClass(getClass(instance)))) {
 			instance.forEach(action);
 		}
@@ -1034,7 +1034,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
-	private static final <T> boolean test(final Predicate<T> instance, final T value) {
+	private static final <T> boolean test(final Predicate<T> instance, @Nullable final T value) {
 		return instance != null && instance.test(value);
 	}
 

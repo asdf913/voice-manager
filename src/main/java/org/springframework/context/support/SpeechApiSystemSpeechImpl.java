@@ -59,7 +59,7 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider, Lookup, I
 				final int volume);
 
 		public void writeVoiceToFile(@Nullable final int[] text, final int textLength, final String voiceId,
-				final int rate, final int volume, final int[] fileName, final int fileNameLength);
+				final int rate, final int volume, @Nullable final int[] fileName, final int fileNameLength);
 
 		public String getVoiceIds(final String requiredAttributes, final String optionalAttributes);
 

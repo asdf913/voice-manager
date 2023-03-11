@@ -656,7 +656,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		return instance != null ? instance.toList() : null;
 	}
 
-	private static Object invoke(@Nullable final Method method, final Object instance, final Object... args)
+	private static Object invoke(@Nullable final Method method, @Nullable final Object instance, final Object... args)
 			throws IllegalAccessException, InvocationTargetException {
 		return method != null ? method.invoke(instance, args) : null;
 	}

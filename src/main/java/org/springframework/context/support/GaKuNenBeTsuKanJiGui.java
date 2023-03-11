@@ -450,7 +450,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 		return instance != null ? instance.getParameterTypes() : null;
 	}
 
-	private static Object invoke(final Method method, final Object instance, final Object... args)
+	private static Object invoke(final Method method, @Nullable final Object instance, final Object... args)
 			throws IllegalAccessException, InvocationTargetException {
 		return method != null ? method.invoke(instance, args) : null;
 	}

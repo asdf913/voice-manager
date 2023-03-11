@@ -353,7 +353,7 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 		//
 	}
 
-	private static byte[] digest(final MessageDigest instance, final byte[] input) {
+	private static byte[] digest(@Nullable final MessageDigest instance, final byte[] input) {
 		return instance != null && input != null ? instance.digest(input) : null;
 	}
 
