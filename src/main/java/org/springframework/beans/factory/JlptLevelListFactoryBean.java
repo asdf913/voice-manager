@@ -161,6 +161,7 @@ public class JlptLevelListFactoryBean implements FactoryBean<List<String>> {
 		//
 	}
 
+	@Nullable
 	private static List<String> getObjectByUrl(final String url, final Duration timeout) throws IOException {
 		//
 		return toList(

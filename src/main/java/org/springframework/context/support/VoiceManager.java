@@ -567,9 +567,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	@Nullable
 	private JTextComponent tfFile, tfPhraseCounter, tfPhraseTotal, tfOrdinalPositionFileNamePrefix, tfExportFile,
-			tfExportHtmlFileName, tfExportPassword = null;
+			tfExportHtmlFileName, tfExportPassword, tfPronunciationPageUrl = null;
 
-	private JTextComponent tfPronunciationPageUrl, tfPronunciationPageStatusCode, tfPresentationSlideDuration = null;
+	private JTextComponent tfPronunciationPageStatusCode, tfPresentationSlideDuration = null;
 
 	private transient ComboBoxModel<Yomi> cbmYomi = null;
 
@@ -886,6 +886,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private Duration presentationSlideDuration = null;
 
+	@Nullable
 	private transient Collection<Multimap> multimapHiragana, multimapKatakana = null;
 
 	private VoiceManager() {
@@ -5350,6 +5351,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return forName("org.junit.jupiter.api.Test") != null;
 	}
 
+	@Nullable
 	private static <T> List<T> getObjectsByGroupAnnotation(final Object instance, final String group,
 			final Class<T> clz) {
 		//
@@ -9347,6 +9349,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
+	@Nullable
 	private static <T, R, A> R collect(@Nullable final Stream<T> instance, final Collector<? super T, A, R> collector) {
 		//
 		return instance != null && (collector != null || Proxy.isProxyClass(getClass(instance)))
