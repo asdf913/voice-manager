@@ -808,8 +808,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private transient SpeechApi speechApi = null;
 
 	@Note("MP3 Tag(s)")
+	@Nullable
 	private String[] mp3Tags = null;
 
+	@Nullable
 	private String[] microsoftSpeechObjectLibraryAttributeNames = null;
 
 	private transient ConfigurableListableBeanFactory configurableListableBeanFactory = null;
