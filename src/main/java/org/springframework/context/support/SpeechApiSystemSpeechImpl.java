@@ -52,18 +52,18 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider, Lookup, I
 			return clz != null && clz.isInstance(value) ? clz.cast(value) : null;
 		}
 
-		public void speak(@Nullable final int[] text, final int length, final String voiceId, final int rate,
+		public void speak(@Nullable final int[] text, final int length, @Nullable final String voiceId, final int rate,
 				final int volume);
 
 		public void speakSsml(@Nullable final int[] text, final int length, final String voiceId, final int rate,
 				final int volume);
 
-		public void writeVoiceToFile(@Nullable final int[] text, final int textLength, final String voiceId,
+		public void writeVoiceToFile(@Nullable final int[] text, final int textLength, @Nullable final String voiceId,
 				final int rate, final int volume, @Nullable final int[] fileName, final int fileNameLength);
 
 		public String getVoiceIds(final String requiredAttributes, final String optionalAttributes);
 
-		public String getVoiceAttribute(final String voiceId, final String attribute);
+		public String getVoiceAttribute(@Nullable final String voiceId, final String attribute);
 
 		public String getProviderPlatform();
 

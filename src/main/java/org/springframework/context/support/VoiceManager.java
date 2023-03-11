@@ -1094,7 +1094,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.getBean(name) : null;
 	}
 
-	private static <E> void addAll(final Collection<E> a, final Collection<? extends E> b) {
+	private static <E> void addAll(final Collection<E> a, @Nullable final Collection<? extends E> b) {
 		if (a != null && (b != null || Proxy.isProxyClass(getClass(a)))) {
 			a.addAll(b);
 		}
@@ -1144,7 +1144,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@Nullable
-	private static IValue0<Number> getNumber(@Nullable final Object instnace, final Iterable<Field> fs)
+	private static IValue0<Number> getNumber(@Nullable final Object instnace, @Nullable final Iterable<Field> fs)
 			throws IllegalAccessException {
 		//
 		final int size = IterableUtils.size(fs);
@@ -1906,7 +1906,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.toArray() : null;
 	}
 
-	private static <T> T[] toArray(final Collection<T> instance, final T[] array) {
+	private static <T> T[] toArray(@Nullable final Collection<T> instance, final T[] array) {
 		//
 		return instance != null && (array != null || Proxy.isProxyClass(getClass(instance))) ? instance.toArray(array)
 				: null;
@@ -4265,7 +4265,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static <T> Optional<T> reduce(final Stream<T> instance, final BinaryOperator<T> accumulator) {
+	private static <T> Optional<T> reduce(@Nullable final Stream<T> instance, final BinaryOperator<T> accumulator) {
 		return instance != null ? instance.reduce(accumulator) : null;
 	}
 
@@ -4903,7 +4903,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				: instance;
 	}
 
-	private static <T> IntStream mapToInt(final Stream<T> instance, final ToIntFunction<? super T> mapper) {
+	private static <T> IntStream mapToInt(@Nullable final Stream<T> instance, final ToIntFunction<? super T> mapper) {
 		//
 		return instance != null && (Proxy.isProxyClass(getClass(instance)) || mapper != null)
 				? instance.mapToInt(mapper)
@@ -6274,7 +6274,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	private void actionPerformedForExport(final FailableSupplier<Workbook, RuntimeException> workbookSupplier)
+	private void actionPerformedForExport(@Nullable final FailableSupplier<Workbook, RuntimeException> workbookSupplier)
 			throws IOException, IllegalAccessException, InvocationTargetException, InvalidFormatException,
 			GeneralSecurityException, TemplateException, SQLException {
 		//
@@ -6805,7 +6805,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.getSource() : null;
 	}
 
-	private static void setListNames(final Voice instance, final Iterable<String> listNames) {
+	private static void setListNames(final Voice instance, @Nullable final Iterable<String> listNames) {
 		if (instance != null) {
 			instance.setListNames(listNames);
 		}
@@ -8237,7 +8237,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	private static <T> Stream<T> distinct(final Stream<T> instance) {
+	private static <T> Stream<T> distinct(@Nullable final Stream<T> instance) {
 		return instance != null ? instance.distinct() : null;
 	}
 
@@ -9574,7 +9574,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		}
 	}
 
-	private static void setString(final JProgressBar instance, final String string) {
+	private static void setString(@Nullable final JProgressBar instance, final String string) {
 		if (instance != null) {
 			instance.setString(string);
 		}
@@ -11669,7 +11669,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		}
 
-		private static <T, A> A[] toArray(final Stream<T> instance, final IntFunction<A[]> generator) {
+		private static <T, A> A[] toArray(@Nullable final Stream<T> instance, final IntFunction<A[]> generator) {
 			return instance != null ? instance.toArray(generator) : null;
 		}
 
@@ -12543,7 +12543,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	private static <T> Stream<T> sorted(final Stream<T> instance, final Comparator<? super T> comparator) {
+	private static <T> Stream<T> sorted(@Nullable final Stream<T> instance, final Comparator<? super T> comparator) {
 		return instance != null ? instance.sorted(comparator) : null;
 	}
 
@@ -13384,7 +13384,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		}
 	}
 
-	private static boolean matches(final Matcher instance) {
+	private static boolean matches(@Nullable final Matcher instance) {
 		return instance != null && instance.matches();
 	}
 
@@ -13398,7 +13398,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.getSource() : null;
 	}
 
-	private static void setPreferredWidth(final int width, final Component... cs) {
+	private static void setPreferredWidth(final int width, @Nullable final Component... cs) {
 		//
 		Component c = null;
 		//

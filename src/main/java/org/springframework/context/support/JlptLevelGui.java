@@ -229,7 +229,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 			//
 	}
 
-	private static <T> Optional<T> max(final Stream<T> instance, final Comparator<? super T> comparator) {
+	private static <T> Optional<T> max(@Nullable final Stream<T> instance, final Comparator<? super T> comparator) {
 		//
 		return instance != null && (Proxy.isProxyClass(getClass(instance)) || comparator != null)
 				? instance.max(comparator)
@@ -538,7 +538,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 			//
 	}
 
-	private static <T> Stream<T> distinct(final Stream<T> instance) {
+	private static <T> Stream<T> distinct(@Nullable final Stream<T> instance) {
 		return instance != null ? instance.distinct() : null;
 	}
 

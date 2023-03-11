@@ -438,7 +438,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		//
 	}
 
-	private static <T> Optional<T> max(final Stream<T> instance, final Comparator<? super T> comparator) {
+	private static <T> Optional<T> max(@Nullable final Stream<T> instance, final Comparator<? super T> comparator) {
 		//
 		return instance != null && (Proxy.isProxyClass(getClass(instance)) || comparator != null)
 				? instance.max(comparator)
