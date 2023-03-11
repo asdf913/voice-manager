@@ -173,6 +173,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		jcbJlptVocabulary.setRenderer(new ListCellRenderer<JlptVocabulary>() {
 
 			@Override
+			@Nullable
 			public Component getListCellRendererComponent(final JList<? extends JlptVocabulary> list,
 					final JlptVocabulary value, final int index, final boolean isSelected, final boolean cellHasFocus) {
 				//
