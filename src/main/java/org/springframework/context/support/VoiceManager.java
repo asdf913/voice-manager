@@ -526,6 +526,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private JTextComponent tfProviderVersion = null;
 
 	@Note("Provider Platform")
+	@Nullable
 	private JTextComponent tfProviderPlatform = null;
 
 	@Note("Speech Language Code")
@@ -564,7 +565,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("Elapsed")
 	private JTextComponent tfElapsed = null;
 
-	private JTextComponent tfFile, tfPhraseCounter, tfPhraseTotal, tfOrdinalPositionFileNamePrefix, tfExportFile,
+	@Nullable
+	private JTextComponent tfFile = null;
+
+	private JTextComponent tfPhraseCounter, tfPhraseTotal, tfOrdinalPositionFileNamePrefix, tfExportFile,
 			tfExportHtmlFileName, tfExportPassword, tfPronunciationPageUrl, tfPronunciationPageStatusCode,
 			tfPresentationSlideDuration = null;
 
@@ -858,6 +862,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private transient IValue0<Map<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>>> workbookClassFailableSupplierMap = null;
 
+	@Nullable
 	private Class<?> workbookClass = null;
 
 	private transient Map<Object, Object> exportWebSpeechSynthesisHtmlTemplateProperties = null;
@@ -1586,6 +1591,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					Collectors.toMap(Functions.identity(), x -> new FailableSupplier<Workbook, RuntimeException>() {
 
 						@Override
+						@Nullable
 						public Workbook get() throws RuntimeException {
 							try {
 								//
@@ -8139,6 +8145,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static class AudioToFlacByteConverter implements ByteConverter {
 
+		@Nullable
 		private Integer audioStreamEncoderByteArrayLength = null;
 
 		public void setAudioStreamEncoderByteArrayLength(final Object audioStreamEncoderByteArrayLength) {
@@ -8228,9 +8235,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		private static final Pattern PATTERN_LDC_NUMBER = Pattern.compile("^\\d+:\\s+ldc\\s+[^\\s]+\\s+\\(\\d+\\)?");
 
 		@Note("Bitrate")
+		@Nullable
 		private Integer bitRate = null;
 
 		@Note("Quality")
+		@Nullable
 		private Integer quality = null;
 
 		private Boolean vbr = null;
