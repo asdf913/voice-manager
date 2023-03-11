@@ -34,4 +34,8 @@ public interface MultimapUtil {
 		return instance != null ? instance.keySet() : null;
 	}
 
+	static <V> Collection<V> values(final Multimap<?, V> instance) {
+		return instance != null ? instance.values() : null;
+	}
+
 }

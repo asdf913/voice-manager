@@ -4,7 +4,6 @@ import java.awt.Component;
 import java.awt.GraphicsEnvironment;
 import java.awt.Window;
 import java.io.PrintStream;
-import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -82,8 +81,8 @@ public class Main {
 					//
 				if (MultimapUtil.size(multimap) == 1) {
 					//
-					clz = forName(values(multimap).stream().map(Main::getBeanClassName).reduce((first, second) -> first)
-							.orElse(null));
+					clz = forName(MultimapUtil.values(multimap).stream().map(Main::getBeanClassName)
+							.reduce((first, second) -> first).orElse(null));
 					//
 				} // if
 					//
@@ -117,10 +116,6 @@ public class Main {
 			//
 		} // try
 			//
-	}
-
-	private static <V> Collection<V> values(final Multimap<?, V> instance) {
-		return instance != null ? instance.values() : null;
 	}
 
 	private static <E> E getSelectedValue(final JList<E> instance) {

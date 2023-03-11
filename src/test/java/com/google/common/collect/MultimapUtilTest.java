@@ -12,4 +12,11 @@ class MultimapUtilTest {
 		//
 	}
 
+	@Test
+	void testvalues() {
+		//
+		Assertions.assertNull(MultimapUtil.values(null));
+		//
+	}
+
 }

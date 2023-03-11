@@ -6543,10 +6543,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.values() : null;
 	}
 
-	private static <V> Collection<V> values(final Multimap<?, V> instance) {
-		return instance != null ? instance.values() : null;
-	}
-
 	private static void exportMicrosoftAccess(final ObjectMap objectMap, final Iterable<DataSource> dss)
 			throws IOException, SQLException {
 		//
@@ -11812,8 +11808,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				size = MultimapUtil.size(multimap);
 				//
 				numberOfOrdinalPositionDigit = Integer.valueOf(StringUtils.length(toString(
-						orElse(max(filter(map(stream(values(multimap)), x -> getOrdinalPosition(x)), Objects::nonNull),
-								ObjectUtils::compare), null))));
+						orElse(max(filter(map(stream(MultimapUtil.values(multimap)), x -> getOrdinalPosition(x)),
+								Objects::nonNull), ObjectUtils::compare), null))));
 				//
 				final AtomicInteger numerator = new AtomicInteger(1);
 				//
@@ -11935,9 +11931,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final int size = MultimapUtil.size(multimap);
 		//
-		final int numberOfOrdinalPositionDigit = Integer.valueOf(StringUtils.length(
-				toString(orElse(max(filter(map(stream(values(multimap)), x -> getOrdinalPosition(x)), Objects::nonNull),
-						ObjectUtils::compare), null))));
+		final int numberOfOrdinalPositionDigit = Integer.valueOf(StringUtils.length(toString(orElse(
+				max(filter(map(stream(MultimapUtil.values(multimap)), x -> getOrdinalPosition(x)), Objects::nonNull),
+						ObjectUtils::compare),
+				null))));
 		//
 		EvaluationContext evaluationContext = testAndApply(c -> ObjectMap.containsObject(objectMap, c),
 				EvaluationContext.class, c -> ObjectMap.getObject(objectMap, c), null);
