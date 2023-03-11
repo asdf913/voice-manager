@@ -27,6 +27,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.annotation.Nullable;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 
@@ -392,6 +393,7 @@ public class IniAsPropertiesResource implements Resource, ApplicationEventPublis
 			//
 	}
 
+	@Nullable
 	private static <T> T cast(final Class<T> clz, final Object instance) {
 		return clz != null && clz.isInstance(instance) ? clz.cast(instance) : null;
 	}

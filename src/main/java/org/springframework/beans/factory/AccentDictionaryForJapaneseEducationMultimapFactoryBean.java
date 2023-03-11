@@ -12,6 +12,8 @@ import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.ObjectUtils;
@@ -94,6 +96,7 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 		//
 	}
 
+	@Nullable
 	private static IValue0<Multimap<String, String>> createMultimap(final Workbook wb) {
 		//
 		IValue0<Multimap<String, String>> value = null;
@@ -127,6 +130,7 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 		}
 	}
 
+	@Nullable
 	private static Multimap<String, String> createMultimap(final Sheet sheet) {
 		//
 		Multimap<String, String> value = null;
@@ -261,6 +265,7 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 		//
 	}
 
+	@Nullable
 	private static Pair<String[], String> getPair(final String text, final String unicodeBlock,
 			final AtomicReference<Pattern> arPattern) {
 		//
@@ -308,6 +313,7 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 		//
 	}
 
+	@Nullable
 	private static Pair<String[], String> getPair(final Pattern pattern, final String text) {
 		//
 		final Matcher matcher = matcher(pattern, text);

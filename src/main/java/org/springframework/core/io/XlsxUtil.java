@@ -12,6 +12,7 @@ import java.util.function.Predicate;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import javax.annotation.Nullable;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -97,6 +98,7 @@ public interface XlsxUtil {
 		return instance != null && instance.test(value);
 	}
 
+	@Nullable
 	private static ZipEntry getNextEntry(final ZipInputStream instance) {
 		//
 		Object obj = null;

@@ -26,6 +26,8 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.ObjectUtils;
@@ -117,6 +119,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		//
 	}
 
+	@Nullable
 	private static IValue0<List<JlptVocabulary>> getJlptVocabularies(final Sheet sheet,
 			final FormulaEvaluator formulaEvaluator) throws IllegalAccessException {
 		//
@@ -161,6 +164,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		//
 	}
 
+	@Nullable
 	private static Map<Integer, Field> getFieldMap(final Row row) {
 		//
 		int size = 0;
@@ -239,6 +243,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		return instance != null ? instance.getName() : null;
 	}
 
+	@Nullable
 	private static IValue0<JlptVocabulary> getJlptVocabulary(final Map<Integer, Field> fieldMap, final Row row,
 			final FormulaEvaluator formulaEvaluator) throws IllegalAccessException {
 		//
@@ -343,6 +348,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		return instance != null ? instance.getCellType() : null;
 	}
 
+	@Nullable
 	private static IValue0<Integer> getIntegerValue(final Cell cell, final FormulaEvaluator formulaEvaluator) {
 		//
 		final CellType cellType = getCellType(cell);
@@ -390,6 +396,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		//
 	}
 
+	@Nullable
 	private static IValue0<String> getStringValue(final Cell cell, final FormulaEvaluator formulaEvaluator) {
 		//
 		final CellType cellType = getCellType(cell);
@@ -609,6 +616,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		//
 	}
 
+	@Nullable
 	private static Map<Integer, Field> getFieldMap(final String[] ss) {
 		//
 		int size = 0;
@@ -656,7 +664,6 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		} // for
 			//
 		return fieldMap;
-
 		//
 	}
 
@@ -678,6 +685,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		}
 	}
 
+	@Nullable
 	private static List<Field> getFieldsByName(final Field[] fs, final String name) {
 		//
 		List<Field> list = null;
@@ -740,6 +748,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		//
 	}
 
+	@Nullable
 	private static IValue0<Object> getColumnName(final Annotation a)
 			throws IllegalAccessException, InvocationTargetException {
 		//

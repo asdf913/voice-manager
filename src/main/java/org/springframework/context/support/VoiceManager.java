@@ -121,6 +121,7 @@ import java.util.stream.StreamSupport;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -8655,6 +8656,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
+	@Nullable
 	private static List<Pair<String, ?>> getMp3TagParirs(final ID3v1 id3v1, final String... attributes)
 			throws IllegalAccessException, InvocationTargetException {
 		//
@@ -9777,6 +9779,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.mp3Tags : null;
 	}
 
+	@Nullable
 	private static IValue0<?> getValueFromCell(final ObjectMap objectMap) {
 		//
 		final Field f = ObjectMap.getObject(objectMap, Field.class);
@@ -9873,6 +9876,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
+	@Nullable
 	private static IValue0<Boolean> getBooleanValueFromCell(final ObjectMap objectMap) {
 		//
 		final FormulaEvaluator formulaEvaluator = ObjectMap.getObject(objectMap, FormulaEvaluator.class);
@@ -9923,6 +9927,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.getFilePath() : null;
 	}
 
+	@Nullable
 	private static Integer getCurrentSheetIndex(final Sheet sheet) {
 		//
 		Integer currentSheetIndex = null;
@@ -10357,6 +10362,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		}
 
+		@Nullable
 		private static IValue0<Object> handleRunnable(final Method method, final Runnable runnable, final Object[] args,
 				final Collection<Object> throwableStackTraceHexs) throws Throwable {
 			//
@@ -10436,6 +10442,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		}
 
+		@Nullable
 		private static IValue0<Object> handleObjectMap(final String methodName, final Map<Object, Object> map,
 				final Object[] args) {
 			//
@@ -10468,6 +10475,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		}
 
+		@Nullable
 		private static IValue0<Object> handleBooleanMap(final String methodName, final Map<Object, Object> map,
 				final Object[] args) {
 			//
@@ -10495,6 +10503,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		}
 
+		@Nullable
 		private static IValue0<Object> handleIntMap(final String methodName, final Map<Object, Object> map,
 				final Object[] args) {
 			//
@@ -11807,6 +11816,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
+	@Nullable
 	private static Multimap<String, Voice> createMultimapByListNames(final Iterable<Voice> voices) {
 		//
 		Multimap<String, Voice> multimap = null;
@@ -12231,6 +12241,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
+	@Nullable
 	private static Row addLocaleIdRow(final ObjectMap objectMap, final List<Field> fs, final Object instance)
 			throws IllegalAccessException {
 		//
@@ -12817,6 +12828,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.getDeclaredMethods() : null;
 	}
 
+	@Nullable
 	private static Class<?> forName(final String className) {
 		try {
 			return StringUtils.isNotBlank(className) ? Class.forName(className) : null;
@@ -12845,6 +12857,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.toString() : null;
 	}
 
+	@Nullable
 	private static Object getValue(final Expression instance, final EvaluationContext evaluationContext) {
 		return instance != null ? instance.getValue(evaluationContext) : null;
 	}
@@ -12947,6 +12960,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null && input != null ? instance.digest(input) : null;
 	}
 
+	@Nullable
 	private static String getFileExtension(final ContentInfo ci) {
 		//
 		final String message = getMessage(ci);

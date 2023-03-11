@@ -14,6 +14,8 @@ import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.StreamSupport;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ObjectUtils;
@@ -66,6 +68,7 @@ public class JouYouKanJiListFactoryBean implements FactoryBean<List<String>> {
 		//
 	}
 
+	@Nullable
 	private static IValue0<List<String>> getObject(final Resource resource) throws IOException {
 		//
 		if (ResourceUtil.exists(resource)) {
@@ -172,6 +175,7 @@ public class JouYouKanJiListFactoryBean implements FactoryBean<List<String>> {
 		//
 	}
 
+	@Nullable
 	private static Integer getColumnIndex(final List<Element> elements) {
 		//
 		Element element = null;

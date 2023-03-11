@@ -14,6 +14,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -108,6 +110,7 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 		return instance != null ? instance.toString() : null;
 	}
 
+	@Nullable
 	private static Long valueOf(final String instance) {
 		try {
 			return StringUtils.isNotBlank(instance) ? Long.valueOf(instance) : null;
@@ -243,6 +246,7 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 		return instance != null ? instance.getMessage() : null;
 	}
 
+	@Nullable
 	private static Unit<Multimap<String, String>> createMulitmapUnit(final Workbook wb) {
 		//
 		Unit<Multimap<String, String>> mm = null;

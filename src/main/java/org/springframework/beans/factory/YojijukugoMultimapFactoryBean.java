@@ -11,6 +11,8 @@ import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -105,6 +107,7 @@ public class YojijukugoMultimapFactoryBean implements FactoryBean<Multimap<Strin
 		//
 	}
 
+	@Nullable
 	private static IValue0<Multimap<String, String>> createMultimap(final Workbook wb) {
 		//
 		final Sheet sheet = wb != null && wb.getNumberOfSheets() == 1 ? wb.getSheetAt(0) : null;
@@ -137,6 +140,7 @@ public class YojijukugoMultimapFactoryBean implements FactoryBean<Multimap<Strin
 		//
 	}
 
+	@Nullable
 	private static IValue0<Multimap<String, String>> createMultimap(final SpreadsheetDocument ssd) {
 		//
 		final Table table = ssd != null && ssd.getSheetCount() == 1 ? ssd.getSheetByIndex(0) : null;

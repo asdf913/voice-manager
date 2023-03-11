@@ -12,6 +12,8 @@ import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -140,6 +142,7 @@ public class JapaneseNameMultimapFactoryBean implements FactoryBean<Multimap<Str
 		return instance != null ? instance.getMimeType() : null;
 	}
 
+	@Nullable
 	private static IValue0<Multimap<String, String>> createMultimap(final Workbook wb) {
 		//
 		final Sheet sheet = wb != null && wb.getNumberOfSheets() == 1 ? wb.getSheetAt(0) : null;
@@ -176,6 +179,7 @@ public class JapaneseNameMultimapFactoryBean implements FactoryBean<Multimap<Str
 		return instance != null ? instance.toString() : null;
 	}
 
+	@Nullable
 	private static Multimap<String, String> createMultimap(final Element input, final Pattern pattern) {
 		//
 		Element nextElementSibling = input;
