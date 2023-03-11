@@ -2,6 +2,9 @@ package com.google.common.collect;
 
 import java.util.Collection;
 import java.util.Set;
+
+import javax.annotation.Nullable;
+
 import java.util.Map.Entry;
 
 public interface MultimapUtil {
@@ -22,7 +25,7 @@ public interface MultimapUtil {
 		return instance != null ? instance.get(key) : null;
 	}
 
-	static int size(final Multimap<?, ?> instance) {
+	static int size(@Nullable final Multimap<?, ?> instance) {
 		return instance != null ? instance.size() : 0;
 	}
 
@@ -34,7 +37,7 @@ public interface MultimapUtil {
 		return instance != null ? instance.keySet() : null;
 	}
 
-	static <V> Collection<V> values(final Multimap<?, V> instance) {
+	static <V> Collection<V> values(@Nullable final Multimap<?, V> instance) {
 		return instance != null ? instance.values() : null;
 	}
 

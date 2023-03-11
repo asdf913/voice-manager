@@ -287,7 +287,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 			//
 	}
 
-	private static void setSelectedItemByIterable(final ComboBoxModel<?> cbm, final Iterable<?> iterable) {
+	private static void setSelectedItemByIterable(final ComboBoxModel<?> cbm, @Nullable final Iterable<?> iterable) {
 		//
 		final int size = IterableUtils.size(iterable);
 		//
@@ -577,7 +577,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 		return instance != null ? instance.longValue() : defaultValue;
 	}
 
-	private static <T, E extends Throwable> void testAndAccept(final Predicate<T> predicate, final T value,
+	private static <T, E extends Throwable> void testAndAccept(final Predicate<T> predicate, @Nullable final T value,
 			final FailableConsumer<T, E> consumer) throws E {
 		if (test(predicate, value) && consumer != null) {
 			consumer.accept(value);
@@ -585,7 +585,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 	}
 
 	@Nullable
-	private static <T> T cast(final Class<T> clz, final Object value) {
+	private static <T> T cast(final Class<T> clz, @Nullable final Object value) {
 		return clz != null && clz.isInstance(value) ? clz.cast(value) : null;
 	}
 
@@ -611,7 +611,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 		}
 	}
 
-	private static void setSelectedItem(final ComboBoxModel<?> instance, final Object selectedItem) {
+	private static void setSelectedItem(final ComboBoxModel<?> instance, @Nullable final Object selectedItem) {
 		if (instance != null) {
 			instance.setSelectedItem(selectedItem);
 		}
@@ -631,7 +631,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 		return instance != null && instance.test(value);
 	}
 
-	private static String getText(final JTextComponent instance) {
+	private static String getText(@Nullable final JTextComponent instance) {
 		return instance != null ? instance.getText() : null;
 	}
 
@@ -641,7 +641,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 		}
 	}
 
-	private static void setText(final JLabel instance, final String text) {
+	private static void setText(final JLabel instance, @Nullable final String text) {
 		if (instance != null) {
 			instance.setText(text);
 		}

@@ -100,7 +100,7 @@ public class SpeechApiSpeechServerImpl implements SpeechApi, Provider, Lookup, I
 		//
 	}
 
-	private static int length(final int[] instance) {
+	private static int length(@Nullable final int[] instance) {
 		return instance != null ? instance.length : 0;
 	}
 

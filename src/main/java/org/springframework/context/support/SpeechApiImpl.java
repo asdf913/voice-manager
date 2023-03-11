@@ -145,7 +145,7 @@ public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean {
 	}
 
 	@Nullable
-	private static <T> T cast(final Class<T> clz, final Object value) {
+	private static <T> T cast(final Class<T> clz, @Nullable final Object value) {
 		return clz != null && clz.isInstance(value) ? clz.cast(value) : null;
 	}
 

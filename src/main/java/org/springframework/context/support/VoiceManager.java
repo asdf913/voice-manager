@@ -2519,7 +2519,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			return instance != null ? instance.getValue() : null;
 		}
 
-		private static String getChildrenAsString(final ContainerTag<?> instance) {
+		private static String getChildrenAsString(@Nullable final ContainerTag<?> instance) {
 			//
 			try {
 				//
@@ -4868,7 +4868,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
-			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse) throws E {
+			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
+			throws E {
 		return test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
@@ -6947,8 +6948,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	 * https://github.com/apache/commons-lang/blob/master/src/main/java/org/apache/
 	 * commons/lang3/ObjectUtils.java#L597
 	 */
-	private static <T, E extends Throwable> T getIfNull(final T object, final FailableSupplier<T, E> defaultSupplier)
-			throws E {
+	private static <T, E extends Throwable> T getIfNull(@Nullable final T object,
+			final FailableSupplier<T, E> defaultSupplier) throws E {
 		return object != null ? object : get(defaultSupplier);
 	}
 
@@ -8915,7 +8916,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.getRate() : null;
 	}
 
-	private static boolean isAssignableFrom(final Class<?> a, final Class<?> b) {
+	private static boolean isAssignableFrom(final Class<?> a, @Nullable final Class<?> b) {
 		return a != null && b != null && a.isAssignableFrom(b);
 	}
 
@@ -12873,7 +12874,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@Nullable
-	private static Class<?> forName(final String className) {
+	private static Class<?> forName(@Nullable final String className) {
 		try {
 			return StringUtils.isNotBlank(className) ? Class.forName(className) : null;
 		} catch (final ClassNotFoundException e) {

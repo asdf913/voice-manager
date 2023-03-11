@@ -625,7 +625,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		return pattern != null && input != null ? pattern.matcher(input) : null;
 	}
 
-	private static String getExpressionAsCSSString(final CSSDeclaration instance) {
+	private static String getExpressionAsCSSString(@Nullable final CSSDeclaration instance) {
 		//
 		final CSSExpression cssExpression = instance != null ? instance.getExpression() : null;
 		//
@@ -662,7 +662,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		return instance != null ? instance.getIndexedColors() : null;
 	}
 
-	private static StylesTable getStylesSource(final XSSFWorkbook instance) {
+	private static StylesTable getStylesSource(@Nullable final XSSFWorkbook instance) {
 		return instance != null ? instance.getStylesSource() : null;
 	}
 
@@ -726,7 +726,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		return instance != null ? instance.getAbsolutePath() : null;
 	}
 
-	private static <T> Spliterator<T> spliterator(final Iterable<T> instance) {
+	private static <T> Spliterator<T> spliterator(@Nullable final Iterable<T> instance) {
 		return instance != null ? instance.spliterator() : null;
 	}
 
@@ -828,7 +828,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		}
 	}
 
-	private static void setSelectedItem(final ComboBoxModel<?> instance, final Object selectedItem) {
+	private static void setSelectedItem(final ComboBoxModel<?> instance, @Nullable final Object selectedItem) {
 		if (instance != null) {
 			instance.setSelectedItem(selectedItem);
 		}
@@ -839,7 +839,8 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
-			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse) throws E {
+			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
+			throws E {
 		return test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}

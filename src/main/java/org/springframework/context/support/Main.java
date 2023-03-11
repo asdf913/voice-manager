@@ -123,7 +123,8 @@ public class Main {
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
-			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse) throws E {
+			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
+			throws E {
 		return test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
@@ -136,13 +137,13 @@ public class Main {
 		return instance != null ? instance.toString() : null;
 	}
 
-	private static void pack(final Window instance) {
+	private static void pack(@Nullable final Window instance) {
 		if (instance != null) {
 			instance.pack();
 		}
 	}
 
-	private static void setVisible(final Component instance, boolean b) {
+	private static void setVisible(@Nullable final Component instance, boolean b) {
 		if (instance != null) {
 			instance.setVisible(b);
 		}
@@ -162,7 +163,7 @@ public class Main {
 	}
 
 	@Nullable
-	private static <T> T cast(final Class<T> clz, final Object instance) {
+	private static <T> T cast(final Class<T> clz, @Nullable final Object instance) {
 		return clz != null && clz.isInstance(instance) ? clz.cast(instance) : null;
 	}
 
@@ -181,7 +182,7 @@ public class Main {
 	}
 
 	@Nullable
-	private static Class<?> forName(final String className) {
+	private static Class<?> forName(@Nullable final String className) {
 		try {
 			return StringUtils.isNotBlank(className) ? Class.forName(className) : null;
 		} catch (final ClassNotFoundException e) {

@@ -555,7 +555,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			//
 	}
 
-	private static <V> V get(final Map<?, V> instance, final Object key) {
+	private static <V> V get(@Nullable final Map<?, V> instance, final Object key) {
 		return instance != null ? instance.get(key) : null;
 	}
 
@@ -695,7 +695,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		return instance != null ? instance.toString() : null;
 	}
 
-	private static void playAudio(final Pronunciation pronunciation) {
+	private static void playAudio(@Nullable final Pronunciation pronunciation) {
 		//
 		final Set<Entry<String, String>> entrySet = entrySet(
 				pronunciation != null ? pronunciation.getAudioUrls() : null);
@@ -766,7 +766,8 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		}
 	}
 
-	private static void saveAudio(final boolean headless, final Pronunciation pronunciation, final Object audioFormat) {
+	private static void saveAudio(final boolean headless, @Nullable final Pronunciation pronunciation,
+			final Object audioFormat) {
 		//
 		final Map<String, String> audioUrls = testAndApply(Objects::nonNull,
 				pronunciation != null ? pronunciation.getAudioUrls() : null, LinkedHashMap::new, null);
@@ -823,7 +824,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			//
 	}
 
-	private static void setPitchAccentImageToSystemClipboardContents(final Pronunciation pronunciation) {
+	private static void setPitchAccentImageToSystemClipboardContents(@Nullable final Pronunciation pronunciation) {
 		//
 		final BufferedImage pitchAccentImage = getPitchAccentImage(pronunciation);
 		//
@@ -859,7 +860,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			//
 	}
 
-	private void savePitchAccentImage(final Pronunciation pronunciation) {
+	private void savePitchAccentImage(@Nullable final Pronunciation pronunciation) {
 		//
 		final BufferedImage pitchAccentImage = getPitchAccentImage(pronunciation);
 		//
@@ -909,7 +910,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		return condition ? trueValue : falseValue;
 	}
 
-	private static void pronounicationChanged(final Pronunciation pronunciation,
+	private static void pronounicationChanged(@Nullable final Pronunciation pronunciation,
 			final MutableComboBoxModel<String> mcbmAudioFormat) {
 		//
 		forEach(reverseRange(0, getSize(mcbmAudioFormat)), i -> removeElementAt(mcbmAudioFormat, i));
@@ -993,7 +994,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		return instance != null ? instance.getSelectedItem() : null;
 	}
 
-	private static <E> void addElement(final MutableComboBoxModel<E> instance, final E item) {
+	private static <E> void addElement(final MutableComboBoxModel<E> instance, @Nullable final E item) {
 		if (instance != null) {
 			instance.addElement(item);
 		}
@@ -1026,7 +1027,8 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
-			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse) throws E {
+			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
+			throws E {
 		return test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}

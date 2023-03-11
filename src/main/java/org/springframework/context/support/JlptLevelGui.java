@@ -558,7 +558,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		//
 	}
 
-	private static int[] toArray(final IntList instance) {
+	private static int[] toArray(@Nullable final IntList instance) {
 		return instance != null ? instance.toArray() : null;
 	}
 
@@ -594,11 +594,11 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		return instance != null ? instance.getKana() : null;
 	}
 
-	private static String getLevel(final JlptVocabulary instance) {
+	private static String getLevel(@Nullable final JlptVocabulary instance) {
 		return instance != null ? instance.getLevel() : null;
 	}
 
-	private static Integer getJmdictSeq(final JlptVocabulary instance) {
+	private static Integer getJmdictSeq(@Nullable final JlptVocabulary instance) {
 		return instance != null ? instance.getJmdictSeq() : null;
 	}
 
@@ -700,7 +700,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		}
 	}
 
-	private static void setText(final JLabel instance, final String text) {
+	private static void setText(final JLabel instance, @Nullable final String text) {
 		if (instance != null) {
 			instance.setText(text);
 		}
@@ -728,7 +728,8 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
-			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse) throws E {
+			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
+			throws E {
 		return test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
