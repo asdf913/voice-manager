@@ -224,11 +224,11 @@ public class OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl
 						//
 						// total width
 						//
-						reduce(mapToInt(stream(bis), x -> intValue(getWidth(x), 0)), Integer::sum).orElse(0)
+						orElse(reduce(mapToInt(stream(bis), x -> intValue(getWidth(x), 0)), Integer::sum), 0)
 						//
 						// max height
 						//
-						, reduce(mapToInt(stream(bis), x -> intValue(getHeight(x), 0)), Integer::max).orElse(0)
+						, orElse(reduce(mapToInt(stream(bis), x -> intValue(getHeight(x), 0)), Integer::max), 0)
 						//
 						, imageType);
 				//
@@ -260,6 +260,10 @@ public class OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl
 		//
 		return instance != null && (Proxy.isProxyClass(getClass(instance)) || op != null) ? instance.reduce(op) : null;
 		//
+	}
+
+	private static int orElse(final OptionalInt instance, final int other) {
+		return instance != null ? instance.orElse(other) : other;
 	}
 
 	private static <E> void add(final Collection<E> items, final E item) {

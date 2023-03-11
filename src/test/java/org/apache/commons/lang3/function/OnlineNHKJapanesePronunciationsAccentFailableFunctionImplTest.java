@@ -46,12 +46,13 @@ import javassist.util.proxy.ProxyObject;
 
 class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 
-	private static final int ONE = 1;
+	private static final int ZERO = 0, ONE = 1;
 
 	private static Method METHOD_GET_SRC_MAP, METHOD_GET_CLASS, METHOD_GET_IMAGE_SRCS,
 			METHOD_CREATE_MERGED_BUFFERED_IMAGE, METHOD_GET_GRAPHICS, METHOD_DRAW_IMAGE, METHOD_GET_WIDTH,
 			METHOD_GET_HEIGHT, METHOD_INT_VALUE, METHOD_FOR_EACH, METHOD_SET_VALUE, METHOD_GET_VALUE, METHOD_ENTRY_SET,
-			METHOD_GET_PROTOCOL, METHOD_GET_HOST, METHOD_TEST, METHOD_ADD, METHOD_MAP_TO_INT, METHOD_REDUCE = null;
+			METHOD_GET_PROTOCOL, METHOD_GET_HOST, METHOD_TEST, METHOD_ADD, METHOD_MAP_TO_INT, METHOD_REDUCE,
+			METHOD_OR_ELSE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -97,6 +98,8 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 		(METHOD_MAP_TO_INT = clz.getDeclaredMethod("mapToInt", Stream.class, ToIntFunction.class)).setAccessible(true);
 		//
 		(METHOD_REDUCE = clz.getDeclaredMethod("reduce", IntStream.class, IntBinaryOperator.class)).setAccessible(true);
+		//
+		(METHOD_OR_ELSE = clz.getDeclaredMethod("orElse", OptionalInt.class, Integer.TYPE)).setAccessible(true);
 		//
 	}
 
@@ -384,10 +387,10 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 	@Test
 	void testCreateMergedBufferedImage() throws Throwable {
 		//
-		Assertions.assertNull(createMergedBufferedImage(null, null, 0));
+		Assertions.assertNull(createMergedBufferedImage(null, null, ZERO));
 		//
 		Assertions.assertThrows(UncheckedIOException.class,
-				() -> createMergedBufferedImage(null, Collections.singletonList(null), 0));
+				() -> createMergedBufferedImage(null, Collections.singletonList(null), ZERO));
 		//
 	}
 
@@ -454,7 +457,7 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 	@Test
 	void testDrawImage() throws Throwable {
 		//
-		Assertions.assertDoesNotThrow(() -> drawImage(null, null, 0, 0, null));
+		Assertions.assertDoesNotThrow(() -> drawImage(null, null, ZERO, ZERO, null));
 		//
 		boolean b = true;
 		//
@@ -464,7 +467,7 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 			//
 		} // if
 			//
-		Assertions.assertEquals(b, drawImage(createProxy(Graphics.class, mh), null, 0, 0, null));
+		Assertions.assertEquals(b, drawImage(createProxy(Graphics.class, mh), null, ZERO, ZERO, null));
 		//
 		if (mh != null) {
 			//
@@ -472,7 +475,7 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 			//
 		} // if
 			//
-		Assertions.assertEquals(b, drawImage(createProxy(Graphics.class, mh), null, 0, 0, null));
+		Assertions.assertEquals(b, drawImage(createProxy(Graphics.class, mh), null, ZERO, ZERO, null));
 		//
 	}
 
@@ -552,7 +555,7 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 		//
 		Assertions.assertEquals(ONE, intValue(null, ONE));
 		//
-		final int zero = 0;
+		final int zero = ZERO;
 		//
 		Assertions.assertEquals(zero, intValue(Integer.valueOf(zero), ONE));
 		//
@@ -744,7 +747,7 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 		//
 		Assertions.assertNull(mapToInt(stream, null));
 		//
-		Assertions.assertNotNull(mapToInt(stream, x -> 0));
+		Assertions.assertNotNull(mapToInt(stream, x -> ZERO));
 		//
 		Assertions.assertNull(mapToInt(Reflection.newProxy(Stream.class, ih), null));
 		//
@@ -787,6 +790,27 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 				return null;
 			} else if (obj instanceof OptionalInt) {
 				return (OptionalInt) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testOrElse() throws Throwable {
+		//
+		Assertions.assertEquals(ONE, orElse(null, ONE));
+		//
+		Assertions.assertEquals(ONE, orElse(OptionalInt.empty(), ONE));
+		//
+	}
+
+	private static int orElse(final OptionalInt instance, final int other) throws Throwable {
+		try {
+			final Object obj = METHOD_OR_ELSE.invoke(null, instance, other);
+			if (obj instanceof Integer) {
+				return ((Integer) obj).intValue();
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
