@@ -22,8 +22,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.OptionalInt;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.IntBinaryOperator;
 import java.util.function.Predicate;
 import java.util.function.ToIntFunction;
 import java.util.stream.IntStream;
@@ -49,7 +51,7 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 	private static Method METHOD_GET_SRC_MAP, METHOD_GET_CLASS, METHOD_GET_IMAGE_SRCS,
 			METHOD_CREATE_MERGED_BUFFERED_IMAGE, METHOD_GET_GRAPHICS, METHOD_DRAW_IMAGE, METHOD_GET_WIDTH,
 			METHOD_GET_HEIGHT, METHOD_INT_VALUE, METHOD_FOR_EACH, METHOD_SET_VALUE, METHOD_GET_VALUE, METHOD_ENTRY_SET,
-			METHOD_GET_PROTOCOL, METHOD_GET_HOST, METHOD_TEST, METHOD_ADD, METHOD_MAP_TO_INT = null;
+			METHOD_GET_PROTOCOL, METHOD_GET_HOST, METHOD_TEST, METHOD_ADD, METHOD_MAP_TO_INT, METHOD_REDUCE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -94,6 +96,8 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 		//
 		(METHOD_MAP_TO_INT = clz.getDeclaredMethod("mapToInt", Stream.class, ToIntFunction.class)).setAccessible(true);
 		//
+		(METHOD_REDUCE = clz.getDeclaredMethod("reduce", IntStream.class, IntBinaryOperator.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -107,6 +111,8 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 		private Iterator<?> iterator = null;
 
 		private IntStream intStream = null;
+
+		private OptionalInt optionalInt = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -156,6 +162,14 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 				if (Objects.equals(methodName, "mapToInt")) {
 					//
 					return intStream;
+					//
+				} // if
+					//
+			} else if (proxy instanceof IntStream) {
+				//
+				if (Objects.equals(methodName, "reduce")) {
+					//
+					return optionalInt;
 					//
 				} // if
 					//
@@ -744,6 +758,35 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 				return null;
 			} else if (obj instanceof IntStream) {
 				return (IntStream) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testReduce() throws Throwable {
+		//
+		Assertions.assertNull(reduce(null, null));
+		//
+		final IntStream intStream = IntStream.empty();
+		//
+		Assertions.assertNull(reduce(intStream, null));
+		//
+		Assertions.assertEquals(OptionalInt.empty(), reduce(intStream, Integer::sum));
+		//
+		Assertions.assertNull(reduce(Reflection.newProxy(IntStream.class, ih), null));
+		//
+	}
+
+	private static OptionalInt reduce(final IntStream instance, final IntBinaryOperator op) throws Throwable {
+		try {
+			final Object obj = METHOD_REDUCE.invoke(null, instance, op);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof OptionalInt) {
+				return (OptionalInt) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

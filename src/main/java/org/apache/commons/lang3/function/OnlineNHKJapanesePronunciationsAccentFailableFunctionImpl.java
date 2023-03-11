@@ -18,9 +18,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.OptionalInt;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
+import java.util.function.IntBinaryOperator;
 import java.util.function.Predicate;
 import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
@@ -222,11 +224,11 @@ public class OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl
 						//
 						// total width
 						//
-						mapToInt(stream(bis), x -> intValue(getWidth(x), 0)).reduce(Integer::sum).orElse(0)
+						reduce(mapToInt(stream(bis), x -> intValue(getWidth(x), 0)), Integer::sum).orElse(0)
 						//
 						// max height
 						//
-						, mapToInt(stream(bis), x -> intValue(getHeight(x), 0)).reduce(Integer::max).orElse(0)
+						, reduce(mapToInt(stream(bis), x -> intValue(getHeight(x), 0)), Integer::max).orElse(0)
 						//
 						, imageType);
 				//
@@ -251,6 +253,12 @@ public class OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl
 		return instance != null && (Proxy.isProxyClass(getClass(instance)) || mapper != null)
 				? instance.mapToInt(mapper)
 				: null;
+		//
+	}
+
+	private static OptionalInt reduce(final IntStream instance, final IntBinaryOperator op) {
+		//
+		return instance != null && (Proxy.isProxyClass(getClass(instance)) || op != null) ? instance.reduce(op) : null;
 		//
 	}
 
