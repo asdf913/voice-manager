@@ -2580,7 +2580,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@Nullable
-	private static Integer getTabIndexByTitle(final List<?> pages, final Object title) {
+	private static Integer getTabIndexByTitle(@Nullable final List<?> pages, final Object title) {
 		//
 		Integer tabIndex = null;
 		//
@@ -3112,7 +3112,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		}
 	}
 
-	private static String getProviderPlatform(final Provider instance) {
+	private static String getProviderPlatform(@Nullable final Provider instance) {
 		return instance != null ? instance.getProviderPlatform() : null;
 	}
 
@@ -5897,7 +5897,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null && instance.containsKey(key);
 	}
 
-	private static Integer getResponseCode(final HttpURLConnection instance) throws IOException {
+	private static Integer getResponseCode(@Nullable final HttpURLConnection instance) throws IOException {
 		return instance != null ? Integer.valueOf(instance.getResponseCode()) : null;
 	}
 
@@ -8746,7 +8746,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.getProviderName() : null;
 	}
 
-	private static String getProviderVersion(final Provider instance) {
+	private static String getProviderVersion(@Nullable final Provider instance) {
 		return instance != null ? instance.getProviderVersion() : null;
 	}
 
