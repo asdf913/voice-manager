@@ -3,6 +3,7 @@ package org.springframework.beans.factory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -97,7 +98,8 @@ public class JouYouKanJiListFactoryBean implements FactoryBean<List<String>> {
 				//
 			try (final InputStream is = InputStreamSourceUtil.getInputStream(resource)) {
 				//
-				final String string = testAndApply(Objects::nonNull, is, x -> IOUtils.toString(x, "utf-8"), null);
+				final String string = testAndApply(Objects::nonNull, is,
+						x -> IOUtils.toString(x, StandardCharsets.UTF_8), null);
 				//
 				if (string != null) {
 					//

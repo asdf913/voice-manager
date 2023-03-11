@@ -4378,7 +4378,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		if (document == null) {
 			//
 			document = testAndApply(Objects::nonNull,
-					testAndApply(Objects::nonNull, url, x -> IOUtils.toString(x, "utf-8"), null), Jsoup::parse, null);
+					testAndApply(Objects::nonNull, url, x -> IOUtils.toString(x, StandardCharsets.UTF_8), null),
+					Jsoup::parse, null);
 			//
 		} // if
 			//
