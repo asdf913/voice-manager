@@ -27,10 +27,12 @@ import java.net.URI;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.EventObject;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -216,8 +218,8 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		//
 		final List<Component> cs = Arrays.asList(jlJlptLevel, btnExportJson, tfJson, btnCompare, tfText);
 		//
-		final Dimension preferredSize = map(stream(cs), JlptLevelGui::getPreferredSize)
-				.max((a, b) -> a != null && b != null ? Double.compare(a.getWidth(), b.getWidth()) : 0).orElse(null);
+		final Dimension preferredSize = max(map(stream(cs), JlptLevelGui::getPreferredSize),
+				(a, b) -> a != null && b != null ? Double.compare(a.getWidth(), b.getWidth()) : 0).orElse(null);
 		//
 		if (preferredSize != null) {
 			//
@@ -225,6 +227,14 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 			//
 		} // if
 			//
+	}
+
+	private static <T> Optional<T> max(final Stream<T> instance, final Comparator<? super T> comparator) {
+		//
+		return instance != null && (Proxy.isProxyClass(getClass(instance)) || comparator != null)
+				? instance.max(comparator)
+				: null;
+		//
 	}
 
 	@Nullable
@@ -499,7 +509,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 				setSelectedIndices(jlJlptLevel, new int[] {});
 				//
 				testAndAccept(x -> IterableUtils.size(x) == 1,
-						toList(map(stream(temp), JlptLevelGui::getLevel).distinct()), x -> {
+						toList(distinct(map(stream(temp), JlptLevelGui::getLevel))), x -> {
 							//
 							if (instance != null) {
 								//
@@ -526,6 +536,10 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 			//
 		} // if
 			//
+	}
+
+	private static <T> Stream<T> distinct(final Stream<T> instance) {
+		return instance != null ? instance.distinct() : null;
 	}
 
 	private static void removeElementAt(@Nullable final MutableComboBoxModel<?> instnace, final int index) {

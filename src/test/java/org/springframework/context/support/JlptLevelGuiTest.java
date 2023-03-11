@@ -24,9 +24,11 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -97,7 +99,7 @@ class JlptLevelGuiTest {
 			METHOD_GET_PARAMETER_TYPES, METHOD_RUN, METHOD_SET_JLPT_VOCABULARY_AND_LEVEL, METHOD_STREAM, METHOD_MAP,
 			METHOD_GET_LEVEL, METHOD_FOR_EACH_STREAM, METHOD_ADD_ELEMENT, METHOD_TEST_AND_ACCEPT, METHOD_BROWSE,
 			METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_ADD_DOCUMENT_LISTENER, METHOD_SET_SELECTED_INDICES,
-			METHOD_TO_URI, METHOD_REMOVE_ELEMENT_AT = null;
+			METHOD_TO_URI, METHOD_REMOVE_ELEMENT_AT, METHOD_DISTINCT, METHOD_MAX = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -186,6 +188,10 @@ class JlptLevelGuiTest {
 		(METHOD_REMOVE_ELEMENT_AT = clz.getDeclaredMethod("removeElementAt", MutableComboBoxModel.class, Integer.TYPE))
 				.setAccessible(true);
 		//
+		(METHOD_DISTINCT = clz.getDeclaredMethod("distinct", Stream.class)).setAccessible(true);
+		//
+		(METHOD_MAX = clz.getDeclaredMethod("max", Stream.class, Comparator.class)).setAccessible(true);
+		//
 	}
 
 	private class IH implements InvocationHandler {
@@ -197,6 +203,8 @@ class JlptLevelGuiTest {
 		private Iterator<?> iterator = null;
 
 		private Component listCellRendererComponent = null;
+
+		private Optional<?> max = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -236,6 +244,10 @@ class JlptLevelGuiTest {
 				} else if (Objects.equals(methodName, "map")) {
 					//
 					return proxy;
+					//
+				} else if (Objects.equals(methodName, "max")) {
+					//
+					return max;
 					//
 				} // if
 					//
@@ -1365,6 +1377,55 @@ class JlptLevelGuiTest {
 	private static void removeElementAt(final MutableComboBoxModel<?> instnace, final int index) throws Throwable {
 		try {
 			METHOD_REMOVE_ELEMENT_AT.invoke(null, instnace, index);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testDistinct() throws Throwable {
+		//
+		Assertions.assertNull(distinct(null));
+		//
+		Assertions.assertNotNull(distinct(Stream.empty()));
+		//
+	}
+
+	private static <T> Stream<T> distinct(final Stream<T> instance) throws Throwable {
+		try {
+			final Object obj = METHOD_DISTINCT.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Stream) {
+				return (Stream) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testMax() throws Throwable {
+		//
+		Assertions.assertNull(max(null, null));
+		//
+		Assertions.assertNull(max(Stream.empty(), null));
+		//
+		Assertions.assertNull(max(Reflection.newProxy(Stream.class, ih), null));
+		//
+	}
+
+	private static <T> Optional<T> max(final Stream<T> instance, final Comparator<? super T> comparator)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_MAX.invoke(null, instance, comparator);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Optional) {
+				return (Optional) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

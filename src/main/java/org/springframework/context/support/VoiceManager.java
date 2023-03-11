@@ -100,9 +100,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
+import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntConsumer;
+import java.util.function.IntFunction;
 import java.util.function.IntUnaryOperator;
 import java.util.function.LongBinaryOperator;
 import java.util.function.Predicate;
@@ -1224,8 +1226,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		try (final InputStream is = getResourceAsStream(clz,
 				String.format(CLASS_RESOURCE_FORMAT, StringUtils.replace(getName(clz), ".", "/")))) {
 			//
-			final Object[] objectTypes = map(Stream.of("java.lang.String", "java.lang.String", "java.io.File"),
-					ObjectType::getInstance).toArray();
+			final Object[] objectTypes = toArray(
+					map(Stream.of("java.lang.String", "java.lang.String", "java.io.File"), ObjectType::getInstance));
 			//
 			final List<org.apache.bcel.classfile.Method> ms = toList(filter(
 					testAndApply(Objects::nonNull,
@@ -1255,6 +1257,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return result;
 		//
+	}
+
+	private static Object[] toArray(final Stream<?> instance) {
+		return instance != null ? instance.toArray() : null;
 	}
 
 	private static void errorOrAssertOrShowException(final boolean headless, final Throwable throwable) {
@@ -4224,10 +4230,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		mafflcr.listCellRenderer = (ListCellRenderer) jcbFileFormat.getRenderer();
 		//
-		mafflcr.commonPrefix = orElse(filter(
+		mafflcr.commonPrefix = orElse(reduce(filter(
 				map(map(map(testAndApply(Objects::nonNull, fileFormats, Arrays::stream, null),
 						DatabaseImpl::getFileFormatDetails), VoiceManager::getFormat), VoiceManager::toString),
-				Objects::nonNull).reduce(StringUtils::getCommonPrefix), null);
+				Objects::nonNull), StringUtils::getCommonPrefix), null);
 		//
 		jcbFileFormat.setRenderer(mafflcr);
 		//
@@ -4257,6 +4263,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		return panel;
 		//
+	}
+
+	private static <T> Optional<T> reduce(final Stream<T> instance, final BinaryOperator<T> accumulator) {
+		return instance != null ? instance.reduce(accumulator) : null;
 	}
 
 	private static <K, V> void putAll(final Map<K, V> a, final Map<? extends K, ? extends V> b) {
@@ -8200,7 +8210,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				setSelectedItem(instance.cbmJlptLevel, null);
 				//
 				testAndAccept(x -> IterableUtils.size(x) == 1,
-						toList(map(stream(temp), VoiceManager::getLevel).distinct()),
+						toList(distinct(map(stream(temp), VoiceManager::getLevel))),
 						x -> setSelectedItemByString(cbmJlptLevel, IterableUtils.get(x, 0)));
 				//
 				if (instance != null && instance.jcbJlptVocabulary != null) {
@@ -8225,6 +8235,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
+	}
+
+	private static <T> Stream<T> distinct(final Stream<T> instance) {
+		return instance != null ? instance.distinct() : null;
 	}
 
 	@Nullable
@@ -11639,9 +11653,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				if (embedAudioInPresentation) {
 					//
-					ZipUtil.addEntries(file, map(stream(voiceLKeySet),
-							x -> new FileSource(String.join("/", folderInPresentation, x), new File(outputFolder, x)))
-							.toArray(ZipEntrySource[]::new));
+					ZipUtil.addEntries(file, toArray(map(stream(voiceLKeySet),
+							x -> new FileSource(String.join("/", folderInPresentation, x), new File(outputFolder, x))),
+							ZipEntrySource[]::new));
 					//
 				} // if
 					//
@@ -11653,6 +11667,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			return newOdfPresentationDocument;
 			//
+		}
+
+		private static <T, A> A[] toArray(final Stream<T> instance, final IntFunction<A[]> generator) {
+			return instance != null ? instance.toArray(generator) : null;
 		}
 
 		private static void replaceText(final ObjectMap objectMap, @Nullable final String messageDigestAlgorithm)
@@ -12496,11 +12514,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			if (fs == null) {
 				//
-				fs = toList(filter(
+				fs = toList(sorted(filter(
 						testAndApply(Objects::nonNull, FieldUtils.getAllFields(LocaleID.class), Arrays::stream, null),
 						x -> x != null && !Objects.equals(getType(x), getDeclaringClass(x)) && !x.isSynthetic()
-								&& !isStatic(x))
-						.sorted((a, b) -> StringUtils.compare(getName(getPackage(getDeclaringClass(a))),
+								&& !isStatic(x)),
+						(a, b) -> StringUtils.compare(getName(getPackage(getDeclaringClass(a))),
 								getName(getPackage(getDeclaringClass(b))))));
 				//
 			} // if
@@ -12523,6 +12541,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
+	}
+
+	private static <T> Stream<T> sorted(final Stream<T> instance, final Comparator<? super T> comparator) {
+		return instance != null ? instance.sorted(comparator) : null;
 	}
 
 	@Nullable

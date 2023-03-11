@@ -42,6 +42,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -418,8 +419,8 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 								y -> getAnnotation(y, Group.class), null)), "LastComponentInRow")))
 				.map(x -> cast(Component.class, get(x, this))).collect(Collectors.toList());
 		//
-		final Double maxPreferredSizeWidth = map(stream(cs), x -> getWidth(getPreferredSize(x)))
-				.max(ObjectUtils::compare).orElse(null);
+		final Double maxPreferredSizeWidth = max(map(stream(cs), x -> getWidth(getPreferredSize(x))),
+				ObjectUtils::compare).orElse(null);
 		//
 		forEach(cs, c -> {
 			//
@@ -434,6 +435,14 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		});
 		//
 		pack();
+		//
+	}
+
+	private static <T> Optional<T> max(final Stream<T> instance, final Comparator<? super T> comparator) {
+		//
+		return instance != null && (Proxy.isProxyClass(getClass(instance)) || comparator != null)
+				? instance.max(comparator)
+				: null;
 		//
 	}
 
