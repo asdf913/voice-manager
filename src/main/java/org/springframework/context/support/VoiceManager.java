@@ -4230,9 +4230,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		mafflcr.listCellRenderer = (ListCellRenderer) jcbFileFormat.getRenderer();
 		//
+		final Stream<FileFormat> ffs = testAndApply(Objects::nonNull, fileFormats, Arrays::stream, null);
+		//
 		mafflcr.commonPrefix = orElse(reduce(filter(
-				map(map(map(testAndApply(Objects::nonNull, fileFormats, Arrays::stream, null),
-						DatabaseImpl::getFileFormatDetails), VoiceManager::getFormat), VoiceManager::toString),
+				map(map(map(ffs, DatabaseImpl::getFileFormatDetails), VoiceManager::getFormat), VoiceManager::toString),
 				Objects::nonNull), StringUtils::getCommonPrefix), null);
 		//
 		jcbFileFormat.setRenderer(mafflcr);
