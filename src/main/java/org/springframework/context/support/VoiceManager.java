@@ -1906,6 +1906,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.toArray() : null;
 	}
 
+	@Nullable
 	private static <T> T[] toArray(@Nullable final Collection<T> instance, final T[] array) {
 		//
 		return instance != null && (array != null || Proxy.isProxyClass(getClass(instance))) ? instance.toArray(array)
@@ -4266,6 +4267,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
+	@Nullable
 	private static <T> Optional<T> reduce(@Nullable final Stream<T> instance, final BinaryOperator<T> accumulator) {
 		return instance != null ? instance.reduce(accumulator) : null;
 	}
@@ -4904,6 +4906,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				: instance;
 	}
 
+	@Nullable
 	private static <T> IntStream mapToInt(@Nullable final Stream<T> instance, final ToIntFunction<? super T> mapper) {
 		//
 		return instance != null && (Proxy.isProxyClass(getClass(instance)) || mapper != null)
@@ -8238,6 +8241,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
+	@Nullable
 	private static <T> Stream<T> distinct(@Nullable final Stream<T> instance) {
 		return instance != null ? instance.distinct() : null;
 	}
@@ -11670,6 +11674,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		}
 
+		@Nullable
 		private static <T, A> A[] toArray(@Nullable final Stream<T> instance, final IntFunction<A[]> generator) {
 			return instance != null ? instance.toArray(generator) : null;
 		}
@@ -12544,6 +12549,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
+	@Nullable
 	private static <T> Stream<T> sorted(@Nullable final Stream<T> instance, final Comparator<? super T> comparator) {
 		return instance != null ? instance.sorted(comparator) : null;
 	}
