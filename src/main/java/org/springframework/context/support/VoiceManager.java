@@ -833,7 +833,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private transient LayoutManager layoutManager = null;
 
-	private IValue0<Multimap<String, String>> gaKuNenBeTsuKanJiMultimap = null;
+	private transient IValue0<Multimap<String, String>> gaKuNenBeTsuKanJiMultimap = null;
 
 	private transient IValue0<String> microsoftSpeechPlatformRuntimeLanguagesDownloadPageTitle = null;
 
@@ -863,7 +863,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private Duration jSoupParseTimeout = null;
 
-	private IValue0<Multimap<String, String>> ipaSymbolMultimap = null;
+	private transient IValue0<Multimap<String, String>> ipaSymbolMultimap = null;
 
 	private String messageDigestAlgorithm = null;
 
@@ -877,7 +877,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private Duration presentationSlideDuration = null;
 
-	private Collection<Multimap> multimapHiragana, multimapKatakana = null;
+	private transient Collection<Multimap> multimapHiragana, multimapKatakana = null;
 
 	private VoiceManager() {
 	}
