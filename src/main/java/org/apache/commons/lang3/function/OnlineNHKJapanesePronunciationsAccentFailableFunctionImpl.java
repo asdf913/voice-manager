@@ -22,7 +22,9 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import javax.imageio.ImageIO;
@@ -220,11 +222,11 @@ public class OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl
 						//
 						// total width
 						//
-						stream(bis).mapToInt(x -> intValue(getWidth(x), 0)).reduce(Integer::sum).orElse(0)
+						mapToInt(stream(bis), x -> intValue(getWidth(x), 0)).reduce(Integer::sum).orElse(0)
 						//
 						// max height
 						//
-						, stream(bis).mapToInt(x -> intValue(getHeight(x), 0)).reduce(Integer::max).orElse(0)
+						, mapToInt(stream(bis), x -> intValue(getHeight(x), 0)).reduce(Integer::max).orElse(0)
 						//
 						, imageType);
 				//
@@ -241,6 +243,14 @@ public class OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl
 		} // for
 			//
 		return result;
+		//
+	}
+
+	private static <T> IntStream mapToInt(final Stream<T> instance, final ToIntFunction<? super T> mapper) {
+		//
+		return instance != null && (Proxy.isProxyClass(getClass(instance)) || mapper != null)
+				? instance.mapToInt(mapper)
+				: null;
 		//
 	}
 

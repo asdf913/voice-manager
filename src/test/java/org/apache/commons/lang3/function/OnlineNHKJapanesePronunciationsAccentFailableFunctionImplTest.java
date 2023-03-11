@@ -25,6 +25,9 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.function.ToIntFunction;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.Assertions;
@@ -46,7 +49,7 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 	private static Method METHOD_GET_SRC_MAP, METHOD_GET_CLASS, METHOD_GET_IMAGE_SRCS,
 			METHOD_CREATE_MERGED_BUFFERED_IMAGE, METHOD_GET_GRAPHICS, METHOD_DRAW_IMAGE, METHOD_GET_WIDTH,
 			METHOD_GET_HEIGHT, METHOD_INT_VALUE, METHOD_FOR_EACH, METHOD_SET_VALUE, METHOD_GET_VALUE, METHOD_ENTRY_SET,
-			METHOD_GET_PROTOCOL, METHOD_GET_HOST, METHOD_TEST, METHOD_ADD = null;
+			METHOD_GET_PROTOCOL, METHOD_GET_HOST, METHOD_TEST, METHOD_ADD, METHOD_MAP_TO_INT = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -89,6 +92,8 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 		//
 		(METHOD_ADD = clz.getDeclaredMethod("add", Collection.class, Object.class)).setAccessible(true);
 		//
+		(METHOD_MAP_TO_INT = clz.getDeclaredMethod("mapToInt", Stream.class, ToIntFunction.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -100,6 +105,8 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 		private Set<Entry<?, ?>> entrySet = null;
 
 		private Iterator<?> iterator = null;
+
+		private IntStream intStream = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -141,6 +148,14 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 				if (Objects.equals(methodName, "entrySet")) {
 					//
 					return entrySet;
+					//
+				} // if
+					//
+			} else if (proxy instanceof Stream) {
+				//
+				if (Objects.equals(methodName, "mapToInt")) {
+					//
+					return intStream;
 					//
 				} // if
 					//
@@ -701,6 +716,36 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 	private static <E> void add(final Collection<E> items, final E item) throws Throwable {
 		try {
 			METHOD_ADD.invoke(null, items, item);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testMapToInt() throws Throwable {
+		//
+		Assertions.assertNull(mapToInt(null, null));
+		//
+		final Stream<?> stream = Stream.empty();
+		//
+		Assertions.assertNull(mapToInt(stream, null));
+		//
+		Assertions.assertNotNull(mapToInt(stream, x -> 0));
+		//
+		Assertions.assertNull(mapToInt(Reflection.newProxy(Stream.class, ih), null));
+		//
+	}
+
+	private static <T> IntStream mapToInt(final Stream<T> instance, final ToIntFunction<? super T> mapper)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_MAP_TO_INT.invoke(null, instance, mapper);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof IntStream) {
+				return (IntStream) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
