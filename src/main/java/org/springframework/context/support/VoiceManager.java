@@ -2011,7 +2011,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			testAndAccept(Objects::nonNull, jPanelWarning, x -> {
 				//
-				testAndAccept(y -> y instanceof MigLayout, lm, y -> add(x, WRAP));
+				testAndAccept(MigLayout.class::isInstance, lm, y -> add(x, WRAP));
 				//
 				testAndAccept(y -> !(y instanceof MigLayout), lm, y -> add(x));
 				//
@@ -2051,8 +2051,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		final Double preferredHeight = getMaxPagePreferredHeight(jTabbedPane);
 		//
 		final freemarker.template.Configuration configuration = ObjectUtils.getIfNull(freeMarkerConfiguration,
-				() -> new freemarker.template.Configuration(ObjectUtils.getIfNull(freeMarkerVersion,
-						() -> freemarker.template.Configuration.getVersion())));
+				() -> new freemarker.template.Configuration(
+						ObjectUtils.getIfNull(freeMarkerVersion, freemarker.template.Configuration::getVersion)));
 		//
 		testAndAccept(x -> getTemplateLoader(configuration) == null, configuration,
 				x -> setTemplateLoader(x, new ClassTemplateLoader(VoiceManager.class, "/")));
@@ -2648,7 +2648,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			final MigLayout migLayout = new MigLayout();
 			//
-			testAndAccept((a, b) -> PropertyResolverUtil.containsProperty(a, b), propertyResolver,
+			testAndAccept(PropertyResolverUtil::containsProperty, propertyResolver,
 					"net.miginfocom.swing.MigLayout.layoutConstraints",
 					(a, b) -> migLayout.setLayoutConstraints(PropertyResolverUtil.getProperty(a, b)));
 			//
@@ -6888,8 +6888,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			} // if
 				//
 			if ((fieldValue = isStatic(f) ? get(f, null)
-					: testAndApply((a, b) -> b != null, f, instance, (a, b) -> FieldUtils.readField(a, b),
-							null)) != value
+					: testAndApply((a, b) -> b != null, f, instance, FieldUtils::readField, null)) != value
 					|| !Objects.equals(fieldValue, value)) {
 				//
 				continue;
@@ -6897,7 +6896,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			} // if
 				//
 			testAndAccept((a, b) -> !contains(a, b), list = ObjectUtils.getIfNull(list, ArrayList::new), f,
-					(a, b) -> add(a, b), null);
+					VoiceManager::add, null);
 			//
 		} // for
 			//
@@ -8449,8 +8448,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				if ((instruction = instructions[i]) instanceof LDC ldc) {
 					//
 					key = VoiceManager.toString(ldc != null
-							? ldc.getValue(
-									testAndApply(Objects::nonNull, constantPool, x -> new ConstantPoolGen(x), null))
+							? ldc.getValue(testAndApply(Objects::nonNull, constantPool, ConstantPoolGen::new, null))
 							: null);
 					//
 				} else if (instruction instanceof BIPUSH biPush) {
@@ -9662,8 +9660,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			String audioUrl = null;
 			//
 			if (StringUtils.isBlank(
-					audioUrl = testAndApply((m, k) -> containsKey(m, k), audioUrls = pronunciation.getAudioUrls(),
-							vm != null ? vm.preferredPronunciationAudioFormat : null, (m, k) -> get(m, k), null))) {
+					audioUrl = testAndApply(VoiceManager::containsKey, audioUrls = pronunciation.getAudioUrls(),
+							vm != null ? vm.preferredPronunciationAudioFormat : null, VoiceManager::get, null))) {
 				//
 				final Entry<String, String> entry = testAndApply(CollectionUtils::isNotEmpty, entrySet(audioUrls),
 						x -> IterableUtils.get(x, 0), null);
@@ -9769,7 +9767,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			// org.springframework.context.support.VoiceManager.setRomaji(domain.Voice,fr.free.nrw.jakaroma.Jakaroma)
 			//
-			testAndAccept((a, b) -> hiraganaRomajiConversion, voice, jakaroma, (a, b) -> setRomaji(a, b));
+			testAndAccept((a, b) -> hiraganaRomajiConversion, voice, jakaroma, VoiceManager::setRomaji);
 			//
 		} // if
 			///
@@ -11089,7 +11087,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						// Set "Password"
 						//
 					testAndAccept((a, b) -> StringUtils.isNotEmpty(b), odfPd.getPackage(),
-							StringMap.getString(stringMap, "password"), (a, b) -> setPassword(a, b));
+							StringMap.getString(stringMap, "password"), ExportTask::setPassword);
 					//
 					odfPd.save(file = new File(rowKey, String.join(".",
 							StringUtils.substringAfter(rowKey, File.separatorChar),

@@ -191,7 +191,7 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedListMultimap::create),
 					matcher.group(1),
 					toList(map(stream(ElementUtil.select(ElementUtil.nextElementSibling(element.parent()), "a")),
-							a -> ElementUtil.text(a))));
+							ElementUtil::text)));
 			//
 		} // for
 			//

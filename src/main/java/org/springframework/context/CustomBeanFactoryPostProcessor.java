@@ -368,7 +368,7 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 										ResourceUtil.exists(tableSql) ? InputStreamSourceUtil.getInputStream(tableSql)
 												: null,
 										x -> IOUtils.toString(x, tableSqlEncoding), null),
-								x -> s.execute(x), null);
+								s::execute, null);
 						//
 					} // if
 						//

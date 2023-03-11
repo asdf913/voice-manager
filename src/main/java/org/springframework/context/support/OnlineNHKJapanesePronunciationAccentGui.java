@@ -383,7 +383,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		//
 		add(new JComboBox<>(mcbm), growx);
 		//
-		forEach(classNames, x -> mcbm.addElement(x));
+		forEach(classNames, mcbm::addElement);
 		//
 		cbmImageFormat = mcbm;
 		//
