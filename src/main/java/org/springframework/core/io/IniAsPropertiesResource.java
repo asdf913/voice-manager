@@ -320,7 +320,7 @@ public class IniAsPropertiesResource implements Resource, ApplicationEventPublis
 	}
 
 	@Nullable
-	private static Object get(@Nullable final Field field, final Object instance)
+	private static Object get(@Nullable final Field field, @Nullable final Object instance)
 			throws IllegalArgumentException, IllegalAccessException {
 		return field != null ? field.get(instance) : null;
 	}

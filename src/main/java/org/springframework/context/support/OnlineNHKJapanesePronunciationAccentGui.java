@@ -575,7 +575,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 	}
 
 	@Nullable
-	private static <V> V get(final Map<?, V> instance, @Nullable final Object key) {
+	private static <V> V get(@Nullable final Map<?, V> instance, @Nullable final Object key) {
 		return instance != null ? instance.get(key) : null;
 	}
 

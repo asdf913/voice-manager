@@ -2576,7 +2576,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		}
 
 		@Nullable
-		private static Attribute getAttributeByName(final Tag<?> instance, final String name) {
+		private static Attribute getAttributeByName(@Nullable final Tag<?> instance, final String name) {
 			//
 			try {
 				//
@@ -13230,7 +13230,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		}
 	}
 
-	private static void setUpdateTs(final Voice instance, final Date updateTs) {
+	private static void setUpdateTs(@Nullable final Voice instance, final Date updateTs) {
 		if (instance != null) {
 			instance.setUpdateTs(updateTs);
 		}
