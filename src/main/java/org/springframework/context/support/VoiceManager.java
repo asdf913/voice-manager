@@ -9901,8 +9901,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			try (final InputStream is = openStream(testAndApply(StringUtils::isNotBlank, audioUrl, URL::new, null))) {
 				//
-				if (is != null && (it.file = createTempFile(randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH),
-						filePath)) != null) {
+				if (is != null && it != null
+						&& (it.file = createTempFile(randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH),
+								filePath)) != null) {
 					//
 					FileUtils.copyInputStreamToFile(is, it.file);
 					//
@@ -12336,7 +12337,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			CellUtil.setCellValue(RowUtil.createCell(row, Math.max(row != null ? row.getLastCellNum() : null, 0)),
 					commonPrefix);
 			//
-			CellUtil.setCellValue(RowUtil.createCell(row, Math.max(row.getLastCellNum(), 0)),
+			CellUtil.setCellValue(RowUtil.createCell(row, Math.max(row != null ? row.getLastCellNum() : 0, 0)),
 					StringUtils.defaultIfBlank(testAndApply(StringUtils::contains, commonPrefix, voiceId = voiceIds[i],
 							StringUtils::substringAfter, null), voiceId));
 			//
