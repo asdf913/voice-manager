@@ -71,7 +71,7 @@ class JouYouKanjiGuiTest {
 
 	private static Class<?> CLASS_OBJECT_MAP, CLASS_IH = null;
 
-	private static Method METHOD_GET_CLASS, METHOD_GET_DECLARED_FIELDS, METHOD_GET_TYPE, METHOD_NAME,
+	private static Method METHOD_GET, METHOD_GET_CLASS, METHOD_GET_DECLARED_FIELDS, METHOD_GET_TYPE, METHOD_NAME,
 			METHOD_GET_ECSS_VERSION_BY_MAJOR, METHOD_ADD_JOU_YOU_KAN_JI_SHEET, METHOD_CAST,
 			METHOD_GET_CSS_DECLARATION_BY_ATTRIBUTE_AND_CSS_PROPERTY, METHOD_SET_PREFERRED_WIDTH,
 			METHOD_GET_PREFERRED_SIZE, METHOD_TO_LIST, METHOD_CONTAINS, METHOD_ADD, METHOD_SET_SELECTED_ITEM,
@@ -85,6 +85,8 @@ class JouYouKanjiGuiTest {
 	static void beforeAll() throws ReflectiveOperationException {
 		//
 		final Class<?> clz = JouYouKanjiGui.class;
+		//
+		(METHOD_GET = clz.getDeclaredMethod("get", Field.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_GET_CLASS = clz.getDeclaredMethod("getClass", Object.class)).setAccessible(true);
 		//
@@ -387,7 +389,7 @@ class JouYouKanjiGuiTest {
 	}
 
 	@Test
-	void testSetEcssVersion() throws NoSuchFieldException, IllegalAccessException {
+	void testSetEcssVersion() throws Throwable {
 		//
 		final Field ecssVersion = JouYouKanjiGui.class.getDeclaredField("ecssVersion");
 		//
@@ -430,8 +432,19 @@ class JouYouKanjiGuiTest {
 		}
 	}
 
-	private static Object get(final Field field, final Object instance) throws IllegalAccessException {
-		return field != null ? field.get(instance) : null;
+	@Test
+	void testGet() throws Throwable {
+		//
+		Assertions.assertNull(get(null, null));
+		//
+	}
+
+	private static Object get(final Field field, final Object instance) throws Throwable {
+		try {
+			return METHOD_GET.invoke(null, field, instance);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 	@Test

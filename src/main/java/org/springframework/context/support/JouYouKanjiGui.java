@@ -325,12 +325,16 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 				//
 			} // if
 				//
-			add(list = ObjectUtils.getIfNull(list, ArrayList::new), cast(Boolean.class, f.get(null)));
+			add(list = ObjectUtils.getIfNull(list, ArrayList::new), cast(Boolean.class, get(f, null)));
 			//
 		} // for
 			//
 		return list;
 		//
+	}
+
+	private static Object get(final Field field, final Object instance) throws IllegalAccessException {
+		return field != null ? field.get(instance) : null;
 	}
 
 	@Nullable
@@ -599,7 +603,8 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 					//
 				} // if
 					//
-				CellUtil.setCellValue(cell = RowUtil.createCell(row, Math.max(row.getLastCellNum(), 0)),
+				CellUtil.setCellValue(
+						cell = RowUtil.createCell(row, Math.max(row != null ? row.getLastCellNum() : 0, 0)),
 						StringUtils.trim(textContent));
 				//
 				// background-color
@@ -654,7 +659,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 				//
 			} // if
 				//
-			if (f != null && f.get(cssExpression) == null) {
+			if (f != null && get(f, cssExpression) == null) {
 				//
 				return null;
 				//

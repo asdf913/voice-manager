@@ -474,7 +474,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		//
 		for (int i = getSize(cbmJlptVocabulary) - 1; i >= 0; i--) {
 			//
-			cbmJlptVocabulary.removeElementAt(i);
+			removeElementAt(cbmJlptVocabulary, i);
 			//
 		} // for
 			//
@@ -526,6 +526,12 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 			//
 		} // if
 			//
+	}
+
+	private static void removeElementAt(final MutableComboBoxModel<?> instnace, final int index) {
+		if (instnace != null) {
+			instnace.removeElementAt(index);
+		}
 	}
 
 	private static void setSelectedIndices(@Nullable final JList<?> instance, final int[] indices) {

@@ -97,7 +97,7 @@ class JlptLevelGuiTest {
 			METHOD_GET_PARAMETER_TYPES, METHOD_RUN, METHOD_SET_JLPT_VOCABULARY_AND_LEVEL, METHOD_STREAM, METHOD_MAP,
 			METHOD_GET_LEVEL, METHOD_FOR_EACH_STREAM, METHOD_ADD_ELEMENT, METHOD_TEST_AND_ACCEPT, METHOD_BROWSE,
 			METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_ADD_DOCUMENT_LISTENER, METHOD_SET_SELECTED_INDICES,
-			METHOD_TO_URI = null;
+			METHOD_TO_URI, METHOD_REMOVE_ELEMENT_AT = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -182,6 +182,9 @@ class JlptLevelGuiTest {
 				.setAccessible(true);
 		//
 		(METHOD_TO_URI = clz.getDeclaredMethod("toURI", URIBuilder.class)).setAccessible(true);
+		//
+		(METHOD_REMOVE_ELEMENT_AT = clz.getDeclaredMethod("removeElementAt", MutableComboBoxModel.class, Integer.TYPE))
+				.setAccessible(true);
 		//
 	}
 
@@ -1347,6 +1350,21 @@ class JlptLevelGuiTest {
 				return (URI) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testRemoveElementAt() {
+		//
+		Assertions.assertDoesNotThrow(() -> removeElementAt(null, 0));
+		//
+	}
+
+	private static void removeElementAt(final MutableComboBoxModel<?> instnace, final int index) throws Throwable {
+		try {
+			METHOD_REMOVE_ELEMENT_AT.invoke(null, index);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

@@ -28,6 +28,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -43,6 +44,7 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.IntConsumer;
 import java.util.function.IntUnaryOperator;
 import java.util.function.Predicate;
@@ -88,7 +90,6 @@ import org.javatuples.valueintf.IValue0Util;
 import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
 import org.springframework.beans.config.Title;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.cglib.proxy.Proxy;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertyResolver;
@@ -190,6 +191,13 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		//
 	}
 
+	private static <T, R> Stream<R> map(final Stream<T> instance, final Function<? super T, ? extends R> mapper) {
+		//
+		return instance != null && (Proxy.isProxyClass(getClass(instance)) || mapper != null) ? instance.map(mapper)
+				: null;
+		//
+	}
+
 	@Nullable
 	private static <T> List<T> toList(@Nullable final Stream<T> instance) {
 		return instance != null ? instance.toList() : null;
@@ -208,12 +216,12 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		} else if (object instanceof List) {
 			//
 			value = Unit
-					.with(toList(stream(((List<?>) object)).map(OnlineNHKJapanesePronunciationAccentGui::toString)));
+					.with(toList(map(stream(((List<?>) object)), OnlineNHKJapanesePronunciationAccentGui::toString)));
 			//
 		} else if (object instanceof Iterable) {
 			//
-			value = Unit.with(toList(StreamSupport.stream(((Iterable<?>) object).spliterator(), false)
-					.map(OnlineNHKJapanesePronunciationAccentGui::toString)));
+			value = Unit.with(toList(map(StreamSupport.stream(((Iterable<?>) object).spliterator(), false),
+					OnlineNHKJapanesePronunciationAccentGui::toString)));
 			//
 		} else if (clz != null && clz.isArray()) {
 			//
@@ -225,8 +233,9 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 				//
 			} // if
 				//
-			value = Unit.with(toList(IntStream.range(0, Array.getLength(object)).mapToObj(i -> Array.get(object, i))
-					.map(OnlineNHKJapanesePronunciationAccentGui::toString)));
+			value = Unit
+					.with(toList(map(IntStream.range(0, Array.getLength(object)).mapToObj(i -> Array.get(object, i)),
+							OnlineNHKJapanesePronunciationAccentGui::toString)));
 			//
 		} else if (object instanceof String) {
 			//
@@ -406,7 +415,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 								y -> getAnnotation(y, Group.class), null)), "LastComponentInRow")))
 				.map(x -> cast(Component.class, get(x, this))).collect(Collectors.toList());
 		//
-		final Double maxPreferredSizeWidth = stream(cs).map(x -> getWidth(getPreferredSize(x)))
+		final Double maxPreferredSizeWidth = map(stream(cs), x -> getWidth(getPreferredSize(x)))
 				.max(ObjectUtils::compare).orElse(null);
 		//
 		forEach(cs, c -> {
@@ -448,8 +457,8 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 						x -> Narcissus.getField(x, getDeclaredField(getClass(x), "map")), null));
 		//
 		final List<String> classNames = testAndApply(Objects::nonNull,
-				toList(stream(imageWriterSpis != null ? imageWriterSpis.keySet() : null)
-						.map(x -> getName(cast(Class.class, x)))),
+				toList(map(stream(imageWriterSpis != null ? imageWriterSpis.keySet() : null),
+						x -> getName(cast(Class.class, x)))),
 				ArrayList::new, null);
 		//
 		final String commonPrefix = StringUtils.getCommonPrefix(classNames.toArray(new String[] {}));
