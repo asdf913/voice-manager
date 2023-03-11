@@ -120,7 +120,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 	}
 
 	@Nullable
-	private static IValue0<List<JlptVocabulary>> getJlptVocabularies(final Sheet sheet,
+	private static IValue0<List<JlptVocabulary>> getJlptVocabularies(@Nullable final Sheet sheet,
 			final FormulaEvaluator formulaEvaluator) throws IllegalAccessException {
 		//
 		IValue0<List<JlptVocabulary>> list = null;
@@ -244,8 +244,8 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 	}
 
 	@Nullable
-	private static IValue0<JlptVocabulary> getJlptVocabulary(final Map<Integer, Field> fieldMap, final Row row,
-			final FormulaEvaluator formulaEvaluator) throws IllegalAccessException {
+	private static IValue0<JlptVocabulary> getJlptVocabulary(@Nullable final Map<Integer, Field> fieldMap,
+			final Row row, final FormulaEvaluator formulaEvaluator) throws IllegalAccessException {
 		//
 		IValue0<JlptVocabulary> ivalue0 = null;
 		//

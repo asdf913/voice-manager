@@ -27,10 +27,11 @@ public class SpeechApiSpeechServerImpl implements SpeechApi, Provider, Lookup, I
 
 		public boolean isInstalled();
 
-		public void speak(final int[] text, final int length, final String voiceId, final int rate, final int volume);
+		public void speak(@Nullable final int[] text, final int length, final String voiceId, final int rate,
+				final int volume);
 
-		public void writeVoiceToFile(final int[] text, final int textLength, final String voiceId, final int rate,
-				final int volume, final int[] fileName, final int fileNameLength);
+		public void writeVoiceToFile(@Nullable final int[] text, final int textLength, final String voiceId,
+				final int rate, final int volume, final int[] fileName, final int fileNameLength);
 
 		public String getVoiceIds(final String requiredAttributes, final String optionalAttributes);
 

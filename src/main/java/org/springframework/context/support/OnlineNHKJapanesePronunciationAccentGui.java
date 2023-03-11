@@ -429,7 +429,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		}
 	}
 
-	private static BufferedImage getPitchAccentImage(final Pronunciation instnace) {
+	private static BufferedImage getPitchAccentImage(@Nullable final Pronunciation instnace) {
 		return instnace != null ? instnace.getPitchAccentImage() : null;
 	}
 
@@ -972,13 +972,14 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		return instance != null ? instance.getSystemClipboard() : null;
 	}
 
-	private static void setContents(final Clipboard instance, final Transferable contents, final ClipboardOwner owner) {
+	private static void setContents(final Clipboard instance, final Transferable contents,
+			@Nullable final ClipboardOwner owner) {
 		if (instance != null) {
 			instance.setContents(contents, owner);
 		}
 	}
 
-	private static <K, V> Set<Entry<K, V>> entrySet(final Map<K, V> instance) {
+	private static <K, V> Set<Entry<K, V>> entrySet(@Nullable final Map<K, V> instance) {
 		return instance != null ? instance.entrySet() : null;
 	}
 
@@ -1022,11 +1023,11 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		return instance != null ? instance.getSource() : null;
 	}
 
-	private static <E> Stream<E> stream(final Collection<E> instance) {
+	private static <E> Stream<E> stream(@Nullable final Collection<E> instance) {
 		return instance != null ? instance.stream() : null;
 	}
 
-	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, @Nullable final T value,
 			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
 			throws E {
 		return test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)

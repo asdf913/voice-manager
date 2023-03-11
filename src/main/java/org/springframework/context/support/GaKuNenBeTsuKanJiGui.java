@@ -467,7 +467,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 		return instance != null ? instance.toList() : null;
 	}
 
-	private static Method[] getDeclaredMethods(final Class<?> instance) {
+	private static Method[] getDeclaredMethods(@Nullable final Class<?> instance) {
 		return instance != null ? instance.getDeclaredMethods() : null;
 	}
 
@@ -622,12 +622,13 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
-			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse) throws E {
+			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
+			throws E {
 		return test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
-	private static final <T> boolean test(final Predicate<T> instance, final T value) {
+	private static final <T> boolean test(final Predicate<T> instance, @Nullable final T value) {
 		return instance != null && instance.test(value);
 	}
 

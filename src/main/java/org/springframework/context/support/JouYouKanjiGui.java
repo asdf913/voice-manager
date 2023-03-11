@@ -344,7 +344,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		//
 	}
 
-	private static Class<?> getClass(final Object instance) {
+	private static Class<?> getClass(@Nullable final Object instance) {
 		return instance != null ? instance.getClass() : null;
 	}
 
@@ -730,7 +730,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		return instance != null ? instance.spliterator() : null;
 	}
 
-	private static <T, E extends Throwable> void testAndAccept(final Predicate<T> predicate, final T value,
+	private static <T, E extends Throwable> void testAndAccept(final Predicate<T> predicate, @Nullable final T value,
 			final FailableConsumer<T, E> consumer) throws E {
 		if (test(predicate, value) && consumer != null) {
 			consumer.accept(value);
@@ -822,7 +822,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		return items != null && items.contains(item);
 	}
 
-	private static <E> void add(final Collection<E> items, final E item) {
+	private static <E> void add(final Collection<E> items, @Nullable final E item) {
 		if (items != null) {
 			items.add(item);
 		}
@@ -838,7 +838,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		return instance != null ? instance.getSource() : null;
 	}
 
-	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, @Nullable final T value,
 			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
 			throws E {
 		return test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)

@@ -1309,7 +1309,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null && name != null ? instance.getResourceAsStream(name) : null;
 	}
 
-	private static void setSelectedItem(final ComboBoxModel<?> instance, final Object selectedItem) {
+	private static void setSelectedItem(final ComboBoxModel<?> instance, @Nullable final Object selectedItem) {
 		if (instance != null) {
 			instance.setSelectedItem(selectedItem);
 		}
@@ -1870,7 +1870,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.keySet() : null;
 	}
 
-	private static <E> Stream<E> stream(final Collection<E> instance) {
+	private static <E> Stream<E> stream(@Nullable final Collection<E> instance) {
 		return instance != null ? instance.stream() : null;
 	}
 
@@ -5188,7 +5188,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		}
 	}
 
-	private static void pronounicationChanged(final Pronunciation pronunciation,
+	private static void pronounicationChanged(@Nullable final Pronunciation pronunciation,
 			final MutableComboBoxModel<String> mcbmAudioFormat, final String preferredPronunciationAudioFormat) {
 		//
 		forEach(reverseRange(0, getSize(mcbmAudioFormat)), i -> removeElementAt(mcbmAudioFormat, i));
@@ -5539,7 +5539,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	 * Handle the case if "Pronunciation" is selected and "Pronunciation Audio
 	 * Format" is selected
 	 */
-	private static File getPronunciationAudioFileByAudioFormat(final Pronunciation pronunciation,
+	private static File getPronunciationAudioFileByAudioFormat(@Nullable final Pronunciation pronunciation,
 			final Object pronounicationAudioFormat) {
 		//
 		URL url = null;
@@ -6608,7 +6608,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	private static void importResultSet(final ObjectMap objectMap, final Iterable<String> tableNames)
+	private static void importResultSet(final ObjectMap objectMap, @Nullable final Iterable<String> tableNames)
 			throws IOException, SQLException {
 		//
 		final Database db = ObjectMap.getObject(objectMap, Database.class);

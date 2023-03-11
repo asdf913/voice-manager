@@ -187,7 +187,7 @@ public class IniAsPropertiesResource implements Resource, ApplicationEventPublis
 		//
 	}
 
-	private static URLConnection openConnection(final URL instance) throws IOException {
+	private static URLConnection openConnection(@Nullable final URL instance) throws IOException {
 		return instance != null ? instance.openConnection() : null;
 	}
 
@@ -305,7 +305,7 @@ public class IniAsPropertiesResource implements Resource, ApplicationEventPublis
 		return instance != null ? instance.getValue() : null;
 	}
 
-	private static boolean exists(final File instance) {
+	private static boolean exists(@Nullable final File instance) {
 		return instance != null && instance.exists();
 	}
 
@@ -370,7 +370,7 @@ public class IniAsPropertiesResource implements Resource, ApplicationEventPublis
 		return instance != null && Modifier.isStatic(instance.getModifiers());
 	}
 
-	private static boolean ready(final Reader instance) throws IOException {
+	private static boolean ready(@Nullable final Reader instance) throws IOException {
 		return instance != null && instance.ready();
 	}
 
@@ -395,7 +395,7 @@ public class IniAsPropertiesResource implements Resource, ApplicationEventPublis
 	}
 
 	@Nullable
-	private static <T> T cast(final Class<T> clz, final Object instance) {
+	private static <T> T cast(final Class<T> clz, @Nullable final Object instance) {
 		return clz != null && clz.isInstance(instance) ? clz.cast(instance) : null;
 	}
 

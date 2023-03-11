@@ -177,7 +177,7 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 		return field != null ? field.getType() : null;
 	}
 
-	private static Object get(final Field field, final Object instance) throws IllegalAccessException {
+	private static Object get(final Field field, @Nullable final Object instance) throws IllegalAccessException {
 		return field != null ? field.get(instance) : null;
 	}
 
@@ -390,8 +390,8 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
-			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
-			throws E {
+			@Nullable final FailableFunction<T, R, E> functionTrue,
+			@Nullable final FailableFunction<T, R, E> functionFalse) throws E {
 		return predicate != null && predicate.test(value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}

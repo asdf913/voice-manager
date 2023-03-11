@@ -191,7 +191,7 @@ public class BufferedImageTypeFactoryBean implements FactoryBean<Integer> {
 		return instance != null ? instance.toList() : null;
 	}
 
-	private static Class<?> getClass(final Object instance) {
+	private static Class<?> getClass(@Nullable final Object instance) {
 		return instance != null ? instance.getClass() : null;
 	}
 

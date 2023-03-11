@@ -521,7 +521,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 			//
 	}
 
-	private static void setSelectedIndices(final JList<?> instance, final int[] indices) {
+	private static void setSelectedIndices(@Nullable final JList<?> instance, final int[] indices) {
 		if (instance != null && indices != null) {
 			instance.setSelectedIndices(indices);
 		}
@@ -632,7 +632,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		return instance != null ? instance.getSource() : null;
 	}
 
-	private static Method[] getDeclaredMethods(final Class<?> instance) {
+	private static Method[] getDeclaredMethods(@Nullable final Class<?> instance) {
 		return instance != null ? instance.getDeclaredMethods() : null;
 	}
 
@@ -656,7 +656,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		return instance != null ? instance.toList() : null;
 	}
 
-	private static Object invoke(final Method method, final Object instance, final Object... args)
+	private static Object invoke(@Nullable final Method method, final Object instance, final Object... args)
 			throws IllegalAccessException, InvocationTargetException {
 		return method != null ? method.invoke(instance, args) : null;
 	}

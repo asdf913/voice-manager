@@ -52,13 +52,14 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider, Lookup, I
 			return clz != null && clz.isInstance(value) ? clz.cast(value) : null;
 		}
 
-		public void speak(final int[] text, final int length, final String voiceId, final int rate, final int volume);
-
-		public void speakSsml(final int[] text, final int length, final String voiceId, final int rate,
+		public void speak(@Nullable final int[] text, final int length, final String voiceId, final int rate,
 				final int volume);
 
-		public void writeVoiceToFile(final int[] text, final int textLength, final String voiceId, final int rate,
-				final int volume, final int[] fileName, final int fileNameLength);
+		public void speakSsml(@Nullable final int[] text, final int length, final String voiceId, final int rate,
+				final int volume);
+
+		public void writeVoiceToFile(@Nullable final int[] text, final int textLength, final String voiceId,
+				final int rate, final int volume, final int[] fileName, final int fileNameLength);
 
 		public String getVoiceIds(final String requiredAttributes, final String optionalAttributes);
 
@@ -252,7 +253,7 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider, Lookup, I
 		return instance != null ? instance.getStringFileInfo() : null;
 	}
 
-	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, @Nullable final T value,
 			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
 			throws E {
 		return predicate != null && predicate.test(value) ? FailableFunctionUtil.apply(functionTrue, value)
