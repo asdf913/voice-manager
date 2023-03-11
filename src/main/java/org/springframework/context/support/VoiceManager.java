@@ -2363,7 +2363,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-		} catch (final IllegalAccessException | InvocationTargetException | InstantiationException e) {
+		} catch (final IllegalAccessException | InvocationTargetException | InstantiationException
+				| NoSuchMethodException e) {
 			//
 		} // try
 			//
@@ -2372,7 +2373,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	private static Object getOsVersionInfoEx()
-			throws InstantiationException, IllegalAccessException, InvocationTargetException {
+			throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
 		//
 		final Class<?> clz = forName("com.sun.jna.platform.win32.Kernel32");
 		//
@@ -2393,9 +2394,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						m -> Objects.equals(getName(m), "GetVersionEx")
 								&& Arrays.equals(new Class[] { clzOsVersionInfoEx }, getParameterTypes(m))));
 		//
-		Method m = IterableUtils.size(ms) == 1 ? get(ms, 0) : null;
+		final Method m = IterableUtils.size(ms) == 1 ? get(ms, 0) : null;
 		//
-		final Object osVersionInfoEx = clzOsVersionInfoEx != null ? clzOsVersionInfoEx.newInstance() : null;
+		final Object osVersionInfoEx = newInstance(getDeclaredConstructor(clzOsVersionInfoEx));
 		//
 		return Objects.equals(Boolean.TRUE, invoke(m, FieldUtils.readStaticField(f), osVersionInfoEx)) ? osVersionInfoEx
 				: null;
