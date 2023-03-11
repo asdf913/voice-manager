@@ -183,6 +183,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		this.onlineNHKJapanesePronunciationsAccentFailableFunction = onlineNHKJapanesePronunciationsAccentFailableFunction;
 	}
 
+	@Nullable
 	private static <T> Stream<T> filter(@Nullable final Stream<T> instance, final Predicate<? super T> predicate) {
 		//
 		return instance != null && (predicate != null || Proxy.isProxyClass(getClass(instance)))
@@ -191,6 +192,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		//
 	}
 
+	@Nullable
 	private static <T, R> Stream<R> map(@Nullable final Stream<T> instance,
 			final Function<? super T, ? extends R> mapper) {
 		//

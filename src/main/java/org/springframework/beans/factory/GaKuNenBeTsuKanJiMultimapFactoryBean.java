@@ -352,6 +352,7 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 		return instance != null ? instance.stream() : null;
 	}
 
+	@Nullable
 	private static <T, R> Stream<R> map(@Nullable final Stream<T> instance,
 			final Function<? super T, ? extends R> mapper) {
 		//

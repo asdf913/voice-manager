@@ -333,6 +333,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		//
 	}
 
+	@Nullable
 	private static Object get(@Nullable final Field field, @Nullable final Object instance)
 			throws IllegalAccessException {
 		return field != null ? field.get(instance) : null;
@@ -348,6 +349,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		return instance != null ? instance.getType() : null;
 	}
 
+	@Nullable
 	private static <T> T[] toArray(@Nullable final Collection<T> instance, final T[] array) {
 		//
 		return instance != null && (array != null || Proxy.isProxyClass(getClass(instance))) ? instance.toArray(array)
@@ -828,6 +830,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		return instance != null ? instance.orElse(other) : other;
 	}
 
+	@Nullable
 	private static <T> Stream<T> filter(@Nullable final Stream<T> instance, final Predicate<? super T> predicate) {
 		//
 		return instance != null && (Proxy.isProxyClass(getClass(instance)) || predicate != null)

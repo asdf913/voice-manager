@@ -595,6 +595,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		return instance != null ? instance.stream() : null;
 	}
 
+	@Nullable
 	private static <T, R> Stream<R> map(@Nullable final Stream<T> instance,
 			final Function<? super T, ? extends R> mapper) {
 		//

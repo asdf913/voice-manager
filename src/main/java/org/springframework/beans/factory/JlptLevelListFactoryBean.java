@@ -181,6 +181,7 @@ public class JlptLevelListFactoryBean implements FactoryBean<List<String>> {
 		return instance != null ? instance.toList() : null;
 	}
 
+	@Nullable
 	private static <T, R> Stream<R> map(@Nullable final Stream<T> instance,
 			final Function<? super T, ? extends R> mapper) {
 		//

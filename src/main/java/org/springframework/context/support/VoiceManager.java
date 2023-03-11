@@ -567,10 +567,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	@Nullable
 	private JTextComponent tfFile, tfPhraseCounter, tfPhraseTotal, tfOrdinalPositionFileNamePrefix, tfExportFile,
-			tfExportHtmlFileName = null;
+			tfExportHtmlFileName, tfExportPassword = null;
 
-	private JTextComponent tfExportPassword, tfPronunciationPageUrl, tfPronunciationPageStatusCode,
-			tfPresentationSlideDuration = null;
+	private JTextComponent tfPronunciationPageUrl, tfPronunciationPageStatusCode, tfPresentationSlideDuration = null;
 
 	private transient ComboBoxModel<Yomi> cbmYomi = null;
 
@@ -1318,6 +1317,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
+	@Nullable
 	private static InputStream getResourceAsStream(@Nullable final Class<?> instance, final String name) {
 		return instance != null && name != null ? instance.getResourceAsStream(name) : null;
 	}
@@ -4878,6 +4878,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		}
 	}
 
+	@Nullable
 	private static <T, R> Stream<R> map(@Nullable final Stream<T> instance,
 			final Function<? super T, ? extends R> mapper) {
 		//
@@ -4907,6 +4908,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
+	@Nullable
 	private static <T> Optional<T> max(@Nullable final Stream<T> instance, final Comparator<? super T> comparator) {
 		//
 		return instance != null && (Proxy.isProxyClass(getClass(instance)) || comparator != null)
@@ -8294,7 +8296,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	private static interface ByteConverter {
-		
+
 		@Nullable
 		byte[] convert(final byte[] source);
 
@@ -9818,6 +9820,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
+	@Nullable
 	private static String getStringCellValue(@Nullable final Cell instance) {
 		return instance != null ? instance.getStringCellValue() : null;
 	}
@@ -10086,6 +10089,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
+	@Nullable
 	private static Double getNumericCellValue(@Nullable final Cell instance) {
 		return instance != null ? Double.valueOf(instance.getNumericCellValue()) : null;
 	}
@@ -13131,6 +13135,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		}
 	}
 
+	@Nullable
 	private static <T> Stream<T> filter(@Nullable final Stream<T> instance, final Predicate<? super T> predicate) {
 		//
 		return instance != null && (predicate != null || Proxy.isProxyClass(getClass(instance)))
@@ -13258,6 +13263,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.getMapper(type, sqlSession) : null;
 	}
 
+	@Nullable
 	private static byte[] digest(@Nullable final MessageDigest instance, @Nullable final byte[] input) {
 		return instance != null && input != null ? instance.digest(input) : null;
 	}
@@ -13331,6 +13337,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
+	@Nullable
 	private static Matcher matcher(final Pattern pattern, @Nullable final CharSequence input) {
 		return pattern != null && input != null ? pattern.matcher(input) : null;
 	}
