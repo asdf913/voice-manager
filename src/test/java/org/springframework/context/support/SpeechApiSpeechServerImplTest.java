@@ -3,6 +3,10 @@ package org.springframework.context.support;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.spi.FileSystemProvider;
+import java.util.Objects;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -19,12 +23,23 @@ class SpeechApiSpeechServerImplTest {
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
 		//
-		final Class<?> clz = Class.forName("org.springframework.context.support.SpeechApiSpeechServerImpl$Jna");
+		final FileSystem fs = FileSystems.getDefault();
 		//
-		if ((METHOD_CAST = clz != null ? clz.getDeclaredMethod("cast", Class.class, Object.class) : null) != null) {
+		final FileSystemProvider fsp = fs != null ? fs.provider() : null;
+		//
+		Class<?> clz = fsp != null ? fsp.getClass() : null;
+		//
+		if (Objects.equals("sun.nio.fs.WindowsFileSystemProvider", clz != null ? clz.getName() : null)) {
 			//
-			METHOD_CAST.setAccessible(true);
-			//
+			if ((METHOD_CAST = (clz = Class
+					.forName("org.springframework.context.support.SpeechApiSpeechServerImpl$Jna")) != null
+							? clz.getDeclaredMethod("cast", Class.class, Object.class)
+							: null) != null) {
+				//
+				METHOD_CAST.setAccessible(true);
+				//
+			} // if
+				//
 		} // if
 			//
 	}

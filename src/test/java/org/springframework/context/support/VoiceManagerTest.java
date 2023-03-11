@@ -47,6 +47,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
 import java.security.MessageDigest;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -240,8 +242,8 @@ import com.mpatric.mp3agic.ID3v1;
 import domain.JlptVocabulary;
 import domain.Pronunciation;
 import domain.Voice;
-import domain.VoiceList;
 import domain.Voice.ByteArray;
+import domain.VoiceList;
 import fr.free.nrw.jakaroma.Jakaroma;
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.StringTemplateLoader;
@@ -7240,8 +7242,19 @@ class VoiceManagerTest {
 	@Test
 	void testGetOsVersionInfoExMap() throws Throwable {
 		//
-		Assertions.assertNotNull(getOsVersionInfoExMap());
+		final FileSystem fs = FileSystems.getDefault();
 		//
+		if (Objects.equals("sun.nio.fs.WindowsFileSystemProvider",
+				getName(getClass(fs != null ? fs.provider() : null)))) {
+			//
+			Assertions.assertNotNull(getOsVersionInfoExMap());
+			//
+		} else {
+			//
+			Assertions.assertThrows(UnsatisfiedLinkError.class, () -> getOsVersionInfoExMap());
+			//
+		} // if
+			//
 	}
 
 	private static Map<String, Object> getOsVersionInfoExMap() throws Throwable {
