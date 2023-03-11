@@ -566,10 +566,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private JTextComponent tfElapsed = null;
 
 	@Nullable
-	private JTextComponent tfFile, tfPhraseCounter = null;
+	private JTextComponent tfFile, tfPhraseCounter, tfPhraseTotal = null;
 
-	private JTextComponent tfPhraseTotal, tfOrdinalPositionFileNamePrefix, tfExportFile, tfExportHtmlFileName,
-			tfExportPassword, tfPronunciationPageUrl, tfPronunciationPageStatusCode, tfPresentationSlideDuration = null;
+	private JTextComponent tfOrdinalPositionFileNamePrefix, tfExportFile, tfExportHtmlFileName, tfExportPassword,
+			tfPronunciationPageUrl, tfPronunciationPageStatusCode, tfPresentationSlideDuration = null;
 
 	private transient ComboBoxModel<Yomi> cbmYomi = null;
 
