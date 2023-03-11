@@ -2540,7 +2540,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		}
 
-		private JLabelLink(final ATag aTag) {
+		private JLabelLink(@Nullable final ATag aTag) {
 			//
 			super(getChildrenAsString(aTag));
 			//
@@ -6979,7 +6979,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@Nullable
-	private static Multimap<String, Voice> getVoiceMultimapByJlpt(final Iterable<Voice> voices) {
+	private static Multimap<String, Voice> getVoiceMultimapByJlpt(@Nullable final Iterable<Voice> voices) {
 		//
 		Multimap<String, Voice> multimap = null;
 		//
@@ -9397,7 +9397,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 		String getString(final String key);
 
-		void setString(final String key, final String value);
+		void setString(final String key, @Nullable final String value);
 
 		@Nullable
 		static String getString(@Nullable final StringMap instance, final String key) {
@@ -9560,7 +9560,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		}
 	}
 
-	private static void setToolTipText(final JComponent instance, final String toolTipText) {
+	private static void setToolTipText(@Nullable final JComponent instance, final String toolTipText) {
 		if (instance != null) {
 			instance.setToolTipText(toolTipText);
 		}
@@ -11617,7 +11617,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 		private static OdfPresentationDocument generateOdfPresentationDocument(final String string,
 				@Nullable final String outputFolder, final Collection<String> voiceLKeySet,
-				final boolean embedAudioInPresentation, final String folderInPresentation) throws Exception {
+				final boolean embedAudioInPresentation, @Nullable final String folderInPresentation) throws Exception {
 			//
 			OdfPresentationDocument newOdfPresentationDocument = null;
 			//
@@ -11784,7 +11784,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		}
 
 		private static void setPluginHref(final ObjectMap objectMap, @Nullable final String key,
-				final boolean embedAudioInPresentation, final String folder) throws XPathExpressionException {
+				final boolean embedAudioInPresentation, @Nullable final String folder) throws XPathExpressionException {
 			//
 			final NodeList plugins = cast(NodeList.class,
 					evaluate(ObjectMap.getObject(objectMap, XPath.class),
@@ -11856,7 +11856,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			return instance != null ? instance.getParentNode() : null;
 		}
 
-		private static void appendChild(@Nullable final Node instance, final Node child) throws DOMException {
+		private static void appendChild(@Nullable final Node instance, @Nullable final Node child) throws DOMException {
 			if (instance != null) {
 				instance.appendChild(child);
 			}
@@ -12632,7 +12632,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		}
 	}
 
-	private static void setAuthor(@Nullable final Comment instance, final String string) {
+	private static void setAuthor(@Nullable final Comment instance, @Nullable final String string) {
 		if (instance != null) {
 			instance.setAuthor(string);
 		}
@@ -13218,13 +13218,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	private static void setId(final Voice instance, final Integer id) {
+	private static void setId(@Nullable final Voice instance, final Integer id) {
 		if (instance != null) {
 			instance.setId(id);
 		}
 	}
 
-	private static void setCreateTs(final Voice instance, final Date createTs) {
+	private static void setCreateTs(@Nullable final Voice instance, final Date createTs) {
 		if (instance != null) {
 			instance.setCreateTs(createTs);
 		}
