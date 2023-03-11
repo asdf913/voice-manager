@@ -507,7 +507,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
-	private static final <T> boolean test(final Predicate<T> instance, final T value) {
+	private static final <T> boolean test(final Predicate<T> instance, @Nullable final T value) {
 		return instance != null && instance.test(value);
 	}
 
@@ -550,7 +550,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		return instance != null ? instance.getStringCellValue() : null;
 	}
 
-	private static <E> void add(final Collection<E> items, final E item) {
+	private static <E> void add(final Collection<E> items, @Nullable final E item) {
 		if (items != null) {
 			items.add(item);
 		}
@@ -734,7 +734,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		return instance != null ? instance.getName() : null;
 	}
 
-	private static List<Field> getFieldsByColumnName(final Field[] fs, final String columnName) {
+	private static List<Field> getFieldsByColumnName(final Field[] fs, @Nullable final String columnName) {
 		//
 		return new FailableStream<Field>(testAndApply(Objects::nonNull, fs, Arrays::stream, null)).filter(f -> {
 			//

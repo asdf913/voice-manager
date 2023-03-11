@@ -266,7 +266,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		return instance != null ? instance.getPreferredSize() : null;
 	}
 
-	private static void setPreferredWidth(final int width, final Iterable<Component> cs) {
+	private static void setPreferredWidth(final int width, @Nullable final Iterable<Component> cs) {
 		//
 		if (iterator(cs) != null) {
 			//
@@ -765,7 +765,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
-	private static final <T> boolean test(final Predicate<T> instance, final T value) {
+	private static final <T> boolean test(final Predicate<T> instance, @Nullable final T value) {
 		return instance != null && instance.test(value);
 	}
 

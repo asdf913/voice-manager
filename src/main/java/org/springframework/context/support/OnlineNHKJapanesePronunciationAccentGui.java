@@ -682,7 +682,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			//
 	}
 
-	private static boolean containsKey(@Nullable final Map<?, ?> instance, final Object key) {
+	private static boolean containsKey(@Nullable final Map<?, ?> instance, @Nullable final Object key) {
 		return instance != null && instance.containsKey(key);
 	}
 
@@ -746,7 +746,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 	}
 
 	@Nullable
-	private static Object playAudio(@Nullable final Object key, final String value)
+	private static Object playAudio(@Nullable final Object key, @Nullable final String value)
 			throws JavaLayerException, IOException {
 		//
 		if (Objects.equals("audio/wav", key)) {

@@ -1818,7 +1818,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	@Nullable
 	private static IValue0<Class<? extends Workbook>> getWorkbookClass(
-			final Map<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>> map,
+			@Nullable final Map<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>> map,
 			final String string) {
 		//
 		final Set<Entry<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>>> entrySet = entrySet(
@@ -4275,7 +4275,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@Nullable
-	private static <V> V get(@Nullable final Map<?, V> instance, final Object key) {
+	private static <V> V get(final Map<?, V> instance, @Nullable final Object key) {
 		return instance != null ? instance.get(key) : null;
 	}
 
@@ -4573,7 +4573,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@Nullable
-	private static StringBuilder append(@Nullable final StringBuilder instance, final String string) {
+	private static StringBuilder append(@Nullable final StringBuilder instance, @Nullable final String string) {
 		return instance != null ? instance.append(string) : null;
 	}
 
@@ -4842,7 +4842,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static Range<Integer> createRange(final Integer minValue, final Integer maxValue) {
+	private static Range<Integer> createRange(@Nullable final Integer minValue, @Nullable final Integer maxValue) {
 		//
 		if (minValue != null && maxValue != null) {
 			return Range.open(minValue.intValue(), maxValue.intValue());
@@ -4856,7 +4856,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static boolean containsKey(@Nullable final Map<?, ?> instance, final Object key) {
+	private static boolean containsKey(@Nullable final Map<?, ?> instance, @Nullable final Object key) {
 		return instance != null && instance.containsKey(key);
 	}
 
@@ -4870,7 +4870,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@Nullable
-	private static Integer valueOf(final String instance, final int base) {
+	private static Integer valueOf(@Nullable final String instance, final int base) {
 		try {
 			return StringUtils.isNotBlank(instance) ? Integer.valueOf(instance, base) : null;
 		} catch (final NumberFormatException e) {
@@ -4968,7 +4968,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	@Nullable
 	private static <T, U, R, E extends Throwable> R apply(@Nullable final FailableBiFunction<T, U, R, E> instance,
-			final T t, final U u) throws E {
+			final T t, @Nullable final U u) throws E {
 		return instance != null ? instance.apply(t, u) : null;
 	}
 
@@ -5260,7 +5260,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instnace != null ? instnace.getAudioUrls() : null;
 	}
 
-	private static Object playAudio(final String value) throws JavaLayerException, IOException {
+	private static Object playAudio(@Nullable final String value) throws JavaLayerException, IOException {
 		//
 		try (final InputStream is = openStream(testAndApply(Objects::nonNull, value, URL::new, null))) {
 			//
@@ -5997,7 +5997,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? Integer.valueOf(instance.getResponseCode()) : null;
 	}
 
-	private static void setLanguage(final Voice instance, final String language) {
+	private static void setLanguage(@Nullable final Voice instance, final String language) {
 		if (instance != null) {
 			instance.setLanguage(language);
 		}
@@ -6780,7 +6780,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static void setSource(@Nullable final Voice instance, final String source) {
+	private static void setSource(@Nullable final Voice instance, @Nullable final String source) {
 		if (instance != null) {
 			instance.setSource(source);
 		}
@@ -7296,7 +7296,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		} // if
 	}
 
-	private static <T, U> boolean test(final BiPredicate<T, U> instance, final T t, final U u) {
+	private static <T, U> boolean test(final BiPredicate<T, U> instance, final T t, @Nullable final U u) {
 		return instance != null && instance.test(t, u);
 	}
 
@@ -8805,13 +8805,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	private static void delete(final File instance) {
+	private static void delete(@Nullable final File instance) {
 		if (instance != null) {
 			instance.delete();
 		}
 	}
 
-	private static void deleteOnExit(final File instance) {
+	private static void deleteOnExit(@Nullable final File instance) {
 		if (instance != null) {
 			instance.deleteOnExit();
 		}
@@ -9005,8 +9005,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	private static void writeVoiceToFile(final ObjectMap objectMap, @Nullable final String text, final String voiceId,
-			final Integer rate, final Integer volume) {
+	private static void writeVoiceToFile(final ObjectMap objectMap, @Nullable final String text,
+			@Nullable final String voiceId, @Nullable final Integer rate, final Integer volume) {
 		//
 		final SpeechApi speechApi = ObjectMap.getObject(objectMap, SpeechApi.class);
 		//
@@ -9314,7 +9314,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	private static void addValidationData(final Sheet instance, final DataValidation dataValidation) {
+	private static void addValidationData(final Sheet instance, @Nullable final DataValidation dataValidation) {
 		if (instance != null) {
 			instance.addValidationData(dataValidation);
 		}
@@ -9577,7 +9577,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 		boolean containsKey(final int key);
 
-		void setObject(final int key, final T value);
+		void setObject(final int key, @Nullable final T value);
 
 		@Nullable
 		static <T> T getObject(@Nullable final IntMap<T> instance, final int key) {
@@ -9606,7 +9606,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	}
 
-	private static void importVoice(final Sheet sheet, final ObjectMap _objectMap, final String voiceId,
+	private static void importVoice(@Nullable final Sheet sheet, final ObjectMap _objectMap, final String voiceId,
 			final BiConsumer<Voice, String> errorMessageConsumer, final BiConsumer<Voice, Throwable> throwableConsumer,
 			final Consumer<Voice> voiceConsumer, final Collection<Object> throwableStackTraceHexs)
 			throws IllegalAccessException, IOException, InvocationTargetException, BaseException {
@@ -9817,7 +9817,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static String getStringCellValue(final Cell instance) {
+	private static String getStringCellValue(@Nullable final Cell instance) {
 		return instance != null ? instance.getStringCellValue() : null;
 	}
 
@@ -10465,7 +10465,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	private static boolean checkImportFile(@Nullable final File file, final Voice voice,
+	private static boolean checkImportFile(@Nullable final File file, @Nullable final Voice voice,
 			final BiConsumer<Voice, String> errorMessageConsumer) {
 		//
 		if (file == null) {
@@ -11208,7 +11208,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		}
 
-		private static <T> T clone(final ObjectMapper objectMapper, final Class<T> clz, final T instance)
+		private static <T> T clone(final ObjectMapper objectMapper, final Class<T> clz, @Nullable final T instance)
 				throws IOException {
 			//
 			return objectMapper != null && clz != null
@@ -11223,7 +11223,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			}
 		}
 
-		private static void showPharse(final VoiceManager voiceManager, @Nullable final Fraction pharse) {
+		private static void showPharse(@Nullable final VoiceManager voiceManager, @Nullable final Fraction pharse) {
 			//
 			if (voiceManager != null && pharse != null) {
 				//
@@ -11534,7 +11534,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		}
 
 		@Nullable
-		private static String getSlideName(final Voice voice) {
+		private static String getSlideName(@Nullable final Voice voice) {
 			//
 			StringBuilder sb = null;
 			//
@@ -11615,7 +11615,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		}
 
 		private static OdfPresentationDocument generateOdfPresentationDocument(final String string,
-				final String outputFolder, final Collection<String> voiceLKeySet,
+				@Nullable final String outputFolder, final Collection<String> voiceLKeySet,
 				final boolean embedAudioInPresentation, final String folderInPresentation) throws Exception {
 			//
 			OdfPresentationDocument newOdfPresentationDocument = null;
@@ -11646,7 +11646,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		}
 
-		private static void replaceText(final ObjectMap objectMap, final String messageDigestAlgorithm)
+		private static void replaceText(final ObjectMap objectMap, @Nullable final String messageDigestAlgorithm)
 				throws XPathExpressionException, NoSuchAlgorithmException {
 			//
 			final NodeList ps = cast(NodeList.class,
@@ -11829,7 +11829,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		}
 
-		private static void setNodeValue(final Node instance, final String nodeValue) {
+		private static void setNodeValue(@Nullable final Node instance, @Nullable final String nodeValue) {
 			if (instance != null) {
 				instance.setNodeValue(nodeValue);
 			}
@@ -11861,7 +11861,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			}
 		}
 
-		private static void removeChild(final Node instance, final Node child) throws DOMException {
+		private static void removeChild(@Nullable final Node instance, final Node child) throws DOMException {
 			if (instance != null) {
 				instance.removeChild(child);
 			}
@@ -12611,7 +12611,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@Nullable
-	private static Comment createCellComment(@Nullable final Drawing<?> instance, final ClientAnchor anchor) {
+	private static Comment createCellComment(@Nullable final Drawing<?> instance, @Nullable final ClientAnchor anchor) {
 		return instance != null ? instance.createCellComment(anchor) : null;
 	}
 
@@ -12625,7 +12625,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.createRichTextString(text) : null;
 	}
 
-	private static void setString(final Comment instance, final RichTextString string) {
+	private static void setString(@Nullable final Comment instance, final RichTextString string) {
 		if (instance != null) {
 			instance.setString(string);
 		}
@@ -12705,7 +12705,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	private static void setSheet(final Workbook workbook, final Sheet sheet, final Iterable<Voice> voices)
+	private static void setSheet(final Workbook workbook, final Sheet sheet, @Nullable final Iterable<Voice> voices)
 			throws IllegalAccessException, InvocationTargetException {
 		//
 		ObjectMap objectMap = null;
@@ -13157,7 +13157,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.getValue(evaluationContext) : null;
 	}
 
-	private static void insertOrUpdate(final VoiceMapper instance, final Voice voice) {
+	private static void insertOrUpdate(@Nullable final VoiceMapper instance, final Voice voice) {
 		//
 		if (instance != null) {
 			//
@@ -13256,7 +13256,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.getMapper(type, sqlSession) : null;
 	}
 
-	private static byte[] digest(final MessageDigest instance, final byte[] input) {
+	private static byte[] digest(@Nullable final MessageDigest instance, @Nullable final byte[] input) {
 		return instance != null && input != null ? instance.digest(input) : null;
 	}
 
@@ -13329,7 +13329,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static Matcher matcher(final Pattern pattern, final CharSequence input) {
+	private static Matcher matcher(final Pattern pattern, @Nullable final CharSequence input) {
 		return pattern != null && input != null ? pattern.matcher(input) : null;
 	}
 
