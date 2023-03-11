@@ -128,7 +128,7 @@ public class JlptLevelListFactoryBean implements FactoryBean<List<String>> {
 			//
 	}
 
-	private static <E> void add(final Collection<E> items, final E item) {
+	private static <E> void add(final Collection<E> items, @Nullable final E item) {
 		if (items != null) {
 			items.add(item);
 		}
@@ -140,7 +140,7 @@ public class JlptLevelListFactoryBean implements FactoryBean<List<String>> {
 	}
 
 	@Nullable
-	private static Long valueOf(final String instance) {
+	private static Long valueOf(@Nullable final String instance) {
 		try {
 			return StringUtils.isNotBlank(instance) ? Long.valueOf(instance) : null;
 		} catch (final NumberFormatException e) {
@@ -181,7 +181,8 @@ public class JlptLevelListFactoryBean implements FactoryBean<List<String>> {
 		return instance != null ? instance.toList() : null;
 	}
 
-	private static <T, R> Stream<R> map(final Stream<T> instance, final Function<? super T, ? extends R> mapper) {
+	private static <T, R> Stream<R> map(@Nullable final Stream<T> instance,
+			final Function<? super T, ? extends R> mapper) {
 		//
 		return instance != null && (Proxy.isProxyClass(getClass(instance)) || mapper != null) ? instance.map(mapper)
 				: null;

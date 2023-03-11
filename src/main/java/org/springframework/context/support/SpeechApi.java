@@ -2,13 +2,15 @@ package org.springframework.context.support;
 
 import java.io.File;
 
+import javax.annotation.Nullable;
+
 public interface SpeechApi {
 
 	public boolean isInstalled();
 
-	public void speak(final String text, final String voiceId, final int rate, final int volume);
+	public void speak(@Nullable final String text, final String voiceId, final int rate, final int volume);
 
-	public void writeVoiceToFile(final String text, final String voiceId, final int rate, final int volume,
+	public void writeVoiceToFile(@Nullable final String text, final String voiceId, final int rate, final int volume,
 			final File file);
 
 	public String[] getVoiceIds();

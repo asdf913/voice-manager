@@ -333,7 +333,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		//
 	}
 
-	private static Object get(final Field field, final Object instance) throws IllegalAccessException {
+	private static Object get(final Field field, @Nullable final Object instance) throws IllegalAccessException {
 		return field != null ? field.get(instance) : null;
 	}
 
@@ -347,7 +347,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		return instance != null ? instance.getType() : null;
 	}
 
-	private static <T> T[] toArray(final Collection<T> instance, final T[] array) {
+	private static <T> T[] toArray(@Nullable final Collection<T> instance, final T[] array) {
 		//
 		return instance != null && (array != null || Proxy.isProxyClass(getClass(instance))) ? instance.toArray(array)
 				: null;
@@ -827,7 +827,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		return instance != null ? instance.orElse(other) : other;
 	}
 
-	private static <T> Stream<T> filter(final Stream<T> instance, final Predicate<? super T> predicate) {
+	private static <T> Stream<T> filter(@Nullable final Stream<T> instance, final Predicate<? super T> predicate) {
 		//
 		return instance != null && (Proxy.isProxyClass(getClass(instance)) || predicate != null)
 				? instance.filter(predicate)
@@ -841,7 +841,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 	}
 
 	@Nullable
-	private static <T> T cast(final Class<T> clz, final Object value) {
+	private static <T> T cast(final Class<T> clz, @Nullable final Object value) {
 		return clz != null && clz.isInstance(value) ? clz.cast(value) : null;
 	}
 

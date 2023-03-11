@@ -183,7 +183,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		this.onlineNHKJapanesePronunciationsAccentFailableFunction = onlineNHKJapanesePronunciationsAccentFailableFunction;
 	}
 
-	private static <T> Stream<T> filter(final Stream<T> instance, final Predicate<? super T> predicate) {
+	private static <T> Stream<T> filter(@Nullable final Stream<T> instance, final Predicate<? super T> predicate) {
 		//
 		return instance != null && (predicate != null || Proxy.isProxyClass(getClass(instance)))
 				? instance.filter(predicate)
@@ -191,7 +191,8 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		//
 	}
 
-	private static <T, R> Stream<R> map(final Stream<T> instance, final Function<? super T, ? extends R> mapper) {
+	private static <T, R> Stream<R> map(@Nullable final Stream<T> instance,
+			final Function<? super T, ? extends R> mapper) {
 		//
 		return instance != null && (Proxy.isProxyClass(getClass(instance)) || mapper != null) ? instance.map(mapper)
 				: null;
@@ -745,7 +746,8 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 	}
 
 	@Nullable
-	private static Object playAudio(final Object key, final String value) throws JavaLayerException, IOException {
+	private static Object playAudio(@Nullable final Object key, final String value)
+			throws JavaLayerException, IOException {
 		//
 		if (Objects.equals("audio/wav", key)) {
 			//
@@ -789,7 +791,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 	}
 
 	private static void saveAudio(final boolean headless, @Nullable final Pronunciation pronunciation,
-			final Object audioFormat) {
+			@Nullable final Object audioFormat) {
 		//
 		final Map<String, String> audioUrls = testAndApply(Objects::nonNull,
 				pronunciation != null ? pronunciation.getAudioUrls() : null, LinkedHashMap::new, null);
@@ -820,7 +822,8 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		//
 	}
 
-	private static void saveAudio(final boolean headless, final JFileChooser jfc, final Iterable<String> audioUrls) {
+	private static void saveAudio(final boolean headless, final JFileChooser jfc,
+			@Nullable final Iterable<String> audioUrls) {
 		//
 		if (iterator(audioUrls) != null) {
 			//
@@ -970,7 +973,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		}
 	}
 
-	private static void forEach(final IntStream instance, final IntConsumer action) {
+	private static void forEach(@Nullable final IntStream instance, final IntConsumer action) {
 		if (instance != null && (action != null || Proxy.isProxyClass(getClass(instance)))) {
 			instance.forEach(action);
 		}
@@ -1000,7 +1003,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		return instance != null ? instance.getSystemClipboard() : null;
 	}
 
-	private static void setContents(final Clipboard instance, final Transferable contents,
+	private static void setContents(@Nullable final Clipboard instance, final Transferable contents,
 			@Nullable final ClipboardOwner owner) {
 		if (instance != null) {
 			instance.setContents(contents, owner);
@@ -1076,7 +1079,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 	}
 
 	@Nullable
-	private static <T> T cast(final Class<T> clz, final Object instance) {
+	private static <T> T cast(final Class<T> clz, @Nullable final Object instance) {
 		return clz != null && clz.isInstance(instance) ? clz.cast(instance) : null;
 	}
 

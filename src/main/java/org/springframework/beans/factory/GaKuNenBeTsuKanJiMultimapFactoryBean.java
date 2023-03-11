@@ -112,7 +112,7 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 	}
 
 	@Nullable
-	private static Long valueOf(final String instance) {
+	private static Long valueOf(@Nullable final String instance) {
 		try {
 			return StringUtils.isNotBlank(instance) ? Long.valueOf(instance) : null;
 		} catch (final NumberFormatException e) {
@@ -352,7 +352,8 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 		return instance != null ? instance.stream() : null;
 	}
 
-	private static <T, R> Stream<R> map(final Stream<T> instance, final Function<? super T, ? extends R> mapper) {
+	private static <T, R> Stream<R> map(@Nullable final Stream<T> instance,
+			final Function<? super T, ? extends R> mapper) {
 		//
 		return instance != null && (Proxy.isProxyClass(getClass(instance)) || mapper != null) ? instance.map(mapper)
 				: null;

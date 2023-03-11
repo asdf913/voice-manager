@@ -327,7 +327,7 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 	}
 
 	@Nullable
-	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, @Nullable final T value,
 			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
 			throws E {
 		return test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
@@ -359,7 +359,7 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 	}
 
 	@Nullable
-	private static byte[] digest(@Nullable final MessageDigest instance, final byte[] input) {
+	private static byte[] digest(@Nullable final MessageDigest instance, @Nullable final byte[] input) {
 		return instance != null && input != null ? instance.digest(input) : null;
 	}
 

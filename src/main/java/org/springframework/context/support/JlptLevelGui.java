@@ -528,13 +528,13 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 			//
 	}
 
-	private static void removeElementAt(final MutableComboBoxModel<?> instnace, final int index) {
+	private static void removeElementAt(@Nullable final MutableComboBoxModel<?> instnace, final int index) {
 		if (instnace != null) {
 			instnace.removeElementAt(index);
 		}
 	}
 
-	private static void setSelectedIndices(@Nullable final JList<?> instance, final int[] indices) {
+	private static void setSelectedIndices(@Nullable final JList<?> instance, @Nullable final int[] indices) {
 		if (instance != null && indices != null) {
 			instance.setSelectedIndices(indices);
 		}
@@ -552,7 +552,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 			//
 	}
 
-	private void setJlptLevel(final String level) {
+	private void setJlptLevel(@Nullable final String level) {
 		//
 		IntList intList = null;
 		//
@@ -577,7 +577,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 	}
 
 	@Nullable
-	private static <T> T cast(final Class<T> clz, final Object value) {
+	private static <T> T cast(final Class<T> clz, @Nullable final Object value) {
 		return clz != null && clz.isInstance(value) ? clz.cast(value) : null;
 	}
 
@@ -595,7 +595,8 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		return instance != null ? instance.stream() : null;
 	}
 
-	private static <T, R> Stream<R> map(final Stream<T> instance, final Function<? super T, ? extends R> mapper) {
+	private static <T, R> Stream<R> map(@Nullable final Stream<T> instance,
+			final Function<? super T, ? extends R> mapper) {
 		//
 		return instance != null && (Proxy.isProxyClass(getClass(instance)) || mapper != null) ? instance.map(mapper)
 				: null;
@@ -757,7 +758,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 	}
 
 	@Nullable
-	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, @Nullable final T value,
 			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
 			throws E {
 		return test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)

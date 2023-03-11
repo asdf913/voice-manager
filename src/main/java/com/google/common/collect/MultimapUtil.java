@@ -9,19 +9,20 @@ import java.util.Map.Entry;
 
 public interface MultimapUtil {
 
-	static <K, V> void put(final Multimap<K, V> instance, final K key, final V value) {
+	static <K, V> void put(final Multimap<K, V> instance, @Nullable final K key, @Nullable final V value) {
 		if (instance != null) {
 			instance.put(key, value);
 		}
 	}
 
-	static <K, V> void putAll(final Multimap<K, V> instance, final K key, final Iterable<? extends V> values) {
+	static <K, V> void putAll(final Multimap<K, V> instance, @Nullable final K key,
+			final Iterable<? extends V> values) {
 		if (instance != null) {
 			instance.putAll(key, values);
 		}
 	}
 
-	static <K, V> Collection<V> get(@Nullable final Multimap<K, V> instance, final K key) {
+	static <K, V> Collection<V> get(@Nullable final Multimap<K, V> instance, @Nullable final K key) {
 		return instance != null ? instance.get(key) : null;
 	}
 

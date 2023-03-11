@@ -322,7 +322,7 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 	}
 
 	private static void addPropertySourceToPropertySourcesToLast(final Environment environment,
-			final Iterable<PropertySource<?>> propertySources) {
+			@Nullable final Iterable<PropertySource<?>> propertySources) {
 		//
 		if (propertySources != null && propertySources.iterator() != null) {
 			//
@@ -357,7 +357,8 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 		return instance != null ? instance.getSource() : null;
 	}
 
-	private static void addLast(final MutablePropertySources instance, final PropertySource<?> propertySource) {
+	private static void addLast(final MutablePropertySources instance,
+			@Nullable final PropertySource<?> propertySource) {
 		if (instance != null) {
 			instance.addLast(propertySource);
 		}
