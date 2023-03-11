@@ -479,6 +479,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 			return instance != null && instance.isArray();
 		}
 
+		@Nullable
 		private static String getSimpleName(@Nullable final Class<?> instance) {
 			return instance != null ? instance.getSimpleName() : null;
 		}

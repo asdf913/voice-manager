@@ -545,6 +545,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		//
 	}
 
+	@Nullable
 	private static String getStringCellValue(@Nullable final Cell instance) {
 		return instance != null ? instance.getStringCellValue() : null;
 	}
@@ -561,6 +562,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		}
 	}
 
+	@Nullable
 	private static List<JlptVocabulary> getJlptVocabularies(final String urlString)
 			throws IOException, CsvValidationException, IllegalAccessException {
 		//

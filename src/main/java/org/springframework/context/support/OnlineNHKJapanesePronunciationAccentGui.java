@@ -318,6 +318,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		jcbPronounication.setRenderer(new ListCellRenderer<>() {
 
 			@Override
+			@Nullable
 			public Component getListCellRendererComponent(final JList<? extends Pronunciation> list,
 					final Pronunciation value, final int index, final boolean isSelected, final boolean cellHasFocus) {
 				//
@@ -975,6 +976,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 	 * @see <a href="https://stackoverflow.com/a/24011264">list - Java 8 stream
 	 *      reverse order - Stack Overflow</a>
 	 */
+	@Nullable
 	private static IntStream reverseRange(final int from, final int to) {
 		return map(IntStream.range(from, to), i -> to - i + from - 1);
 	}

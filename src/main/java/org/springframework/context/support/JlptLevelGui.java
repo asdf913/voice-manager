@@ -226,6 +226,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 			//
 	}
 
+	@Nullable
 	private static <E> Component getListCellRendererComponent(@Nullable final ListCellRenderer<E> instance,
 			final JList<? extends E> list, final E value, final int index, final boolean isSelected,
 			final boolean cellHasFocus) {
@@ -259,6 +260,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 			//
 	}
 
+	@Nullable
 	private static Dimension getPreferredSize(@Nullable final Component instance) {
 		return instance != null ? instance.getPreferredSize() : null;
 	}
@@ -285,6 +287,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 			//
 	}
 
+	@Nullable
 	private static <T> Iterator<T> iterator(@Nullable final Iterable<T> instance) {
 		return instance != null ? instance.iterator() : null;
 	}
@@ -409,10 +412,12 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		//
 	}
 
+	@Nullable
 	private static URI toURI(@Nullable final URIBuilder instance) {
 		return instance != null ? instance.toURI() : null;
 	}
 
+	@Nullable
 	private static Object getSelectedItem(@Nullable final ComboBoxModel<?> instance) {
 		return instance != null ? instance.getSelectedItem() : null;
 	}
@@ -559,6 +564,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		//
 	}
 
+	@Nullable
 	private static int[] toArray(@Nullable final IntList instance) {
 		return instance != null ? instance.toArray() : null;
 	}

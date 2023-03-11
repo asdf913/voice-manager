@@ -841,6 +841,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private transient IValue0<Multimap<String, String>> gaKuNenBeTsuKanJiMultimap = null;
 
+	@Nullable
 	private transient IValue0<String> microsoftSpeechPlatformRuntimeLanguagesDownloadPageTitle = null;
 
 	@Note("Export HTML Template File")
@@ -1404,6 +1405,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.getKey() : null;
 	}
 
+	@Nullable
 	private static <V> V getValue(@Nullable final Entry<?, V> instance) {
 		return instance != null ? instance.getValue() : null;
 	}
@@ -2496,6 +2498,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
+	@Nullable
 	private static Long toMillis(@Nullable final Duration instance) {
 		return instance != null ? Long.valueOf(instance.toMillis()) : null;
 	}
@@ -2504,6 +2507,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 		private static final long serialVersionUID = 8848505138795752227L;
 
+		@Nullable
 		private String url = null;
 
 		{
@@ -3408,6 +3412,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		jcbYomi.setRenderer(new ListCellRenderer<Object>() {
 
 			@Override
+			@Nullable
 			public Component getListCellRendererComponent(final JList<?> list, final Object value, final int index,
 					final boolean isSelected, final boolean cellHasFocus) {
 				//
@@ -3628,6 +3633,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return new ListCellRenderer<>() {
 
 			@Override
+			@Nullable
 			public Component getListCellRendererComponent(final JList<? extends Pronunciation> list,
 					final Pronunciation value, final int index, boolean isSelected, boolean cellHasFocus) {
 				//
@@ -3896,6 +3902,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		private ListCellRenderer<Object> listCellRenderer = null;
 
 		@Override
+		@Nullable
 		public Component getListCellRendererComponent(final JList<?> list, final Object value, final int index,
 				final boolean isSelected, final boolean cellHasFocus) {
 			//
@@ -3968,6 +3975,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		jcbClass.setRenderer(new ListCellRenderer<>() {
 
 			@Override
+			@Nullable
 			public Component getListCellRendererComponent(final JList<? extends Class> list, final Class value,
 					final int index, final boolean isSelected, final boolean cellHasFocus) {
 				//
@@ -4728,6 +4736,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		private String commonPrefix = null;
 
 		@Override
+		@Nullable
 		public Component getListCellRendererComponent(final JList<? extends Object> list, final Object value,
 				final int index, final boolean isSelected, final boolean cellHasFocus) {
 			//
@@ -4950,6 +4959,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return predicate != null && predicate.test(t, u) ? apply(functionTrue, t, u) : apply(functionFalse, t, u);
 	}
 
+	@Nullable
 	private static <T, U, R, E extends Throwable> R apply(@Nullable final FailableBiFunction<T, U, R, E> instance,
 			final T t, final U u) throws E {
 		return instance != null ? instance.apply(t, u) : null;
@@ -5730,6 +5740,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
+	@Nullable
 	private File generateTtsAudioFile(final boolean headless, final boolean nonTest, final Voice voice)
 			throws IllegalAccessException, InvocationTargetException {
 		//
@@ -6750,6 +6761,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.getTableNames() : null;
 	}
 
+	@Nullable
 	private static String getLongestString(final String[] ss) {
 		//
 		return orElse(max(testAndApply(Objects::nonNull, ss, Arrays::stream, null),
@@ -7113,6 +7125,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
+	@Nullable
 	private static <T, R> R apply(@Nullable final Function<T, R> instance, final T t) {
 		return instance != null ? instance.apply(t) : null;
 	}
@@ -8659,6 +8672,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		}
 
 		@Override
+		@Nullable
 		public byte[] convert(final byte[] source) {
 			//
 			LameEncoder encoder = null;
@@ -8884,6 +8898,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
+	@Nullable
 	private static String getProviderName(@Nullable final Provider instance) {
 		return instance != null ? instance.getProviderName() : null;
 	}
@@ -9501,6 +9516,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		}
 
+		@Nullable
 		private static Fraction add(@Nullable final Fraction a, @Nullable final Fraction b) {
 			return a != null && b != null ? a.add(b) : a;
 		}
@@ -10202,6 +10218,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.getRomaji() : null;
 	}
 
+	@Nullable
 	private static String getHiragana(@Nullable final Voice instance) {
 		return instance != null ? instance.getHiragana() : null;
 	}
@@ -10458,6 +10475,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
+	@Nullable
 	private static String getAlgorithm(@Nullable final MessageDigest instance) {
 		return instance != null ? instance.getAlgorithm() : null;
 	}
@@ -11492,6 +11510,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		}
 
+		@Nullable
 		private static String getSlideName(final Voice voice) {
 			//
 			StringBuilder sb = null;
@@ -12777,6 +12796,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
+	@Nullable
 	private static IValue0<Object> getWriter(final Object instance) throws IllegalAccessException {
 		//
 		final List<Field> fs = toList(filter(testAndApply(Objects::nonNull,
@@ -13205,6 +13225,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.getId() : null;
 	}
 
+	@Nullable
 	private static <T> T getMapper(@Nullable final Configuration instance, final Class<T> type,
 			final SqlSession sqlSession) {
 		return instance != null ? instance.getMapper(type, sqlSession) : null;
@@ -13286,6 +13307,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return pattern != null && input != null ? pattern.matcher(input) : null;
 	}
 
+	@Nullable
 	private static Clipboard getSystemClipboard(@Nullable final Toolkit instance) {
 		return instance != null ? instance.getSystemClipboard() : null;
 	}
@@ -13306,10 +13328,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null && instance.matches();
 	}
 
+	@Nullable
 	private static String getText(@Nullable final JTextComponent instance) {
 		return instance != null ? instance.getText() : null;
 	}
 
+	@Nullable
 	private static Object getSource(@Nullable final EventObject instance) {
 		return instance != null ? instance.getSource() : null;
 	}
@@ -13356,6 +13380,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
+	@Nullable
 	private static Double getPreferredWidth(@Nullable final Component c) {
 		//
 		final Dimension d = getPreferredSize(c);
@@ -13369,6 +13394,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.getPreferredSize() : null;
 	}
 
+	@Nullable
 	private static Double getPreferredHeight(@Nullable final Component c) {
 		//
 		final Dimension d = getPreferredSize(c);

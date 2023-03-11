@@ -221,10 +221,12 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 		//
 	}
 
+	@Nullable
 	private static Class<?> getClass(@Nullable final Object instance) {
 		return instance != null ? instance.getClass() : null;
 	}
 
+	@Nullable
 	private static String toString(@Nullable final Object instance) {
 		return instance != null ? instance.toString() : null;
 	}
