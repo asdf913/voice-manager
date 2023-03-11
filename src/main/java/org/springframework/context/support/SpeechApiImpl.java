@@ -92,7 +92,7 @@ public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean {
 	}
 
 	@Override
-	public void speak(final String text, final String voiceId, final int rate, final int volume) {
+	public void speak(@Nullable final String text, @Nullable final String voiceId, final int rate, final int volume) {
 		//
 		final SpeechApi speechApi = getInstance();
 		//
@@ -105,8 +105,8 @@ public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean {
 	}
 
 	@Override
-	public void writeVoiceToFile(final String text, final String voiceId, final int rate, final int volume,
-			final File file) {
+	public void writeVoiceToFile(@Nullable final String text, @Nullable final String voiceId, final int rate,
+			final int volume, @Nullable final File file) {
 		//
 		final SpeechApi speechApi = getInstance();
 		//
@@ -130,7 +130,7 @@ public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean {
 
 	@Override
 	@Nullable
-	public String getVoiceAttribute(final String voiceId, final String attribute) {
+	public String getVoiceAttribute(@Nullable final String voiceId, final String attribute) {
 		//
 		return instance != null ? instance.getVoiceAttribute(voiceId, attribute) : null;
 		//
