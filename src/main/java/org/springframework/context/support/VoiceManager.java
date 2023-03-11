@@ -5545,7 +5545,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			final ByteArray pitchAccentImageBs = new ByteArray();
 			//
-			pitchAccentImageBs.setByteArray(bs);
+			pitchAccentImageBs.setContent(bs);
 			//
 			pitchAccentImageBs.setMimeType(getMimeType(ci));
 			//

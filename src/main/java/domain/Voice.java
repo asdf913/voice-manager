@@ -131,12 +131,12 @@ public class Voice {
 
 	public static class ByteArray {
 
-		private byte[] byteArray = null;
+		private byte[] content = null;
 
 		private String mimeType = null;
 
-		public void setByteArray(final byte[] byteArray) {
-			this.byteArray = byteArray;
+		public void setContent(final byte[] content) {
+			this.content = content;
 		}
 
 		public void setMimeType(final String mimeType) {
