@@ -12465,7 +12465,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 										try {
 											//
 											final Boolean visible = cast(Boolean.class,
-													MethodUtils.invokeMethod(a, "value"));
+													MethodUtils.invokeMethod(a, VALUE));
 											//
 											if (visible != null) {
 												//
