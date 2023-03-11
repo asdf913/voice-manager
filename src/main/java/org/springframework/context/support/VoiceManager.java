@@ -2802,9 +2802,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final Lookup lookup = cast(Lookup.class, speechApiInstance);
 		//
-		final Predicate<String> predicate = (a) -> contains(lookup, "rate", a);
+		final Predicate<String> predicate = a -> contains(lookup, "rate", a);
 		//
-		final FailableFunction<String, Object, RuntimeException> function = (a) -> get(lookup, "rate", a);
+		final FailableFunction<String, Object, RuntimeException> function = a -> get(lookup, "rate", a);
 		//
 		if (Boolean.logicalAnd(test(predicate, "min"), test(predicate, "max"))) {
 			//
