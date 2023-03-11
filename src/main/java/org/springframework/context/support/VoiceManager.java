@@ -12437,16 +12437,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				if (fs == null) {
 					//
-					// TODO
-					//
-					final boolean headless = GraphicsEnvironment.isHeadless();
-					//
 					// Filter out the "java.lang.reflect.Field" instance(s) which is/are annotated
 					// by "domain.Voice$Visibility" and its "values" method return "false"
 					//
-					fs = toArray(toList(filter(
-							testAndApply(x -> x != null, FieldUtils.getAllFields(Voice.class), Arrays::stream, null),
-							f -> {
+					fs = toArray(toList(stream(new FailableStream<>(
+							testAndApply(x -> x != null, FieldUtils.getAllFields(Voice.class), Arrays::stream, null))
+							.filter(f -> {
 								//
 								final Annotation[] as = getDeclaredAnnotations(f);
 								//
@@ -12462,31 +12458,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 										//
 									if (Objects.equals("domain.Voice$Visibility", getName(annotationType(a)))) {
 										//
-										try {
+										final Boolean visible = cast(Boolean.class, MethodUtils.invokeMethod(a, VALUE));
+										//
+										if (visible != null) {
 											//
-											final Boolean visible = cast(Boolean.class,
-													MethodUtils.invokeMethod(a, VALUE));
+											return visible.booleanValue();
 											//
-											if (visible != null) {
-												//
-												return visible.booleanValue();
-												//
-											} // if
-												//
-										} catch (final NoSuchMethodException | IllegalAccessException e) {
-											//
-											errorOrAssertOrShowException(headless, e);
-											//
-										} catch (final InvocationTargetException e) {
-											//
-											final Throwable targetException = e.getTargetException();
-											//
-											errorOrAssertOrShowException(headless,
-													ObjectUtils.firstNonNull(
-															ExceptionUtils.getRootCause(targetException),
-															targetException, ExceptionUtils.getRootCause(e), e));
-											//
-										} // try
+										} // if
 											//
 									} // if
 										//
@@ -12495,7 +12473,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 								return true;
 								//
 							} //
-					)), new Field[] {});
+							))), new Field[] {});
 					//
 				} // if
 					//
