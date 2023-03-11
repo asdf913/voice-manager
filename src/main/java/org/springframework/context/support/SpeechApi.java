@@ -13,8 +13,10 @@ public interface SpeechApi {
 	public void writeVoiceToFile(@Nullable final String text, @Nullable final String voiceId, final int rate,
 			final int volume, @Nullable final File file);
 
+	@Nullable
 	public String[] getVoiceIds();
 
+	@Nullable
 	public String getVoiceAttribute(@Nullable final String voiceId, final String attribute);
 
 }

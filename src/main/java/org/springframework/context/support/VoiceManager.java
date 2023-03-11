@@ -8294,7 +8294,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	private static interface ByteConverter {
-
+		
+		@Nullable
 		byte[] convert(final byte[] source);
 
 	}
