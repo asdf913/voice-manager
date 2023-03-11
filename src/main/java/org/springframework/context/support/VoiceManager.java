@@ -12435,25 +12435,20 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
-				if (fs == null) {
-					//
 					// Filter out the "java.lang.reflect.Field" instance(s) which is/are annotated
 					// by "domain.Voice$Visibility" and its "values" method return "false"
 					//
-					fs = toArray(getVisibileVoiceFields(), new Field[] {});
-					//
-				} // if
-					//
-				testAndAccept(Objects::nonNull, fs = getIfNull(fs, () -> FieldUtils.getAllFields(Voice.class)), a -> {
-					//
-					Arrays.sort(a, (x, y) -> {
-						//
-						return Integer.compare(ArrayUtils.indexOf(fieldOrder, getName(x)),
-								ArrayUtils.indexOf(fieldOrder, getName(y)));
-						//
-					});
-					//
-				});
+				testAndAccept(Objects::nonNull,
+						fs = getIfNull(fs, () -> toArray(getVisibileVoiceFields(), new Field[] {})), a -> {
+							//
+							Arrays.sort(a, (x, y) -> {
+								//
+								return Integer.compare(ArrayUtils.indexOf(fieldOrder, getName(x)),
+										ArrayUtils.indexOf(fieldOrder, getName(y)));
+								//
+							});
+							//
+						});
 				//
 				// header
 				//
