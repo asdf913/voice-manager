@@ -2477,11 +2477,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					try {
 						//
-						testAndAccept(Objects::nonNull, testAndApply(Objects::nonNull, url, URI::new, null), x -> {
-							//
-							browse(Desktop.getDesktop(), x);
-							//
-						});
+						testAndAccept(Objects::nonNull, testAndApply(Objects::nonNull, url, URI::new, null),
+								x -> browse(Desktop.getDesktop(), x));
 						//
 					} catch (final IOException | URISyntaxException e) {
 						//
@@ -2538,9 +2535,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				final Stream<?> stream = testAndApply(Objects::nonNull, spliterator,
 						x -> StreamSupport.stream(x, false), null);
 				//
-				final List<Attribute> as = toList(filter(map(stream, x -> cast(Attribute.class, x)), a -> {
-					return Objects.equals(name, a != null ? a.getName() : null);
-				}));
+				final List<Attribute> as = toList(filter(map(stream, x -> cast(Attribute.class, x)),
+						a -> Objects.equals(name, a != null ? a.getName() : null)));
 				//
 				if (as == null || as.isEmpty()) {
 					//
@@ -4113,10 +4109,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		try {
 			//
-			testAndAccept(Objects::nonNull, cast(Map.class,
-					FieldUtils.readDeclaredStaticField(DatabaseImpl.class, "FILE_FORMAT_DETAILS", true)), x -> {
-						putAll(fileFormatDetails, x);
-					});
+			testAndAccept(Objects::nonNull,
+					cast(Map.class,
+							FieldUtils.readDeclaredStaticField(DatabaseImpl.class, "FILE_FORMAT_DETAILS", true)),
+					x -> putAll(fileFormatDetails, x));
 			//
 		} catch (final IllegalAccessException e) {
 			//
@@ -12440,16 +12436,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					// by "domain.Voice$Visibility" and its "values" method return "false"
 					//
 				testAndAccept(Objects::nonNull,
-						fs = getIfNull(fs, () -> toArray(getVisibileVoiceFields(), new Field[] {})), a -> {
-							//
-							Arrays.sort(a, (x, y) -> {
-								//
-								return Integer.compare(ArrayUtils.indexOf(fieldOrder, getName(x)),
-										ArrayUtils.indexOf(fieldOrder, getName(y)));
-								//
-							});
-							//
-						});
+						fs = getIfNull(fs, () -> toArray(getVisibileVoiceFields(), new Field[] {})), a ->
+						//
+						Arrays.sort(a, (x, y) -> Integer.compare(ArrayUtils.indexOf(fieldOrder, getName(x)),
+								ArrayUtils.indexOf(fieldOrder, getName(y))))
+				//
+				);
 				//
 				// header
 				//

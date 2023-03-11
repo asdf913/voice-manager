@@ -186,9 +186,8 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 		//
 		final List<Component> cs = Arrays.asList(tfText, jcbGaKuNenBeTsuKanJi, btnExport);
 		//
-		final Dimension preferredSize = cs.stream().map(GaKuNenBeTsuKanJiGui::getPreferredSize).max((a, b) -> {
-			return a != null && b != null ? Double.compare(a.getWidth(), b.getWidth()) : 0;
-		}).orElse(null);
+		final Dimension preferredSize = cs.stream().map(GaKuNenBeTsuKanJiGui::getPreferredSize)
+				.max((a, b) -> a != null && b != null ? Double.compare(a.getWidth(), b.getWidth()) : 0).orElse(null);
 		//
 		if (preferredSize != null) {
 			//

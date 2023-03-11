@@ -167,9 +167,8 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 		add(jlIpaJsonFile = new JLabel());
 		//
 		final Dimension preferredSize = Collections.max(
-				Arrays.asList(btnGetIpaSymbol.getPreferredSize(), btnCheckIpaSymbolJson.getPreferredSize()), (a, b) -> {
-					return a != null && b != null ? Double.compare(a.getWidth(), b.getWidth()) : 0;
-				});
+				Arrays.asList(btnGetIpaSymbol.getPreferredSize(), btnCheckIpaSymbolJson.getPreferredSize()),
+				(a, b) -> a != null && b != null ? Double.compare(a.getWidth(), b.getWidth()) : 0);
 		//
 		if (preferredSize != null) {
 			//

@@ -119,9 +119,7 @@ public class OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl
 					//
 				(pronunciation = new Pronunciation()).setAudioUrls(audioUrls = getSrcMap(element));
 				//
-				forEach(entrySet(audioUrls), x -> {
-					setValue(x, String.join("", protocolAndHost, getValue(x)));
-				});
+				forEach(entrySet(audioUrls), x -> setValue(x, String.join("", protocolAndHost, getValue(x))));
 				//
 				pronunciation.setPitchAccentImage(createMergedBufferedImage(protocolAndHost, getImageSrcs(element),
 						intValue(imageType, BufferedImage.TYPE_INT_RGB)));

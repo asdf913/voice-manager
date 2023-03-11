@@ -213,9 +213,8 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		//
 		final List<Component> cs = Arrays.asList(jlJlptLevel, btnExportJson, tfJson, btnCompare, tfText);
 		//
-		final Dimension preferredSize = map(stream(cs), JlptLevelGui::getPreferredSize).max((a, b) -> {
-			return a != null && b != null ? Double.compare(a.getWidth(), b.getWidth()) : 0;
-		}).orElse(null);
+		final Dimension preferredSize = map(stream(cs), JlptLevelGui::getPreferredSize)
+				.max((a, b) -> a != null && b != null ? Double.compare(a.getWidth(), b.getWidth()) : 0).orElse(null);
 		//
 		if (preferredSize != null) {
 			//
