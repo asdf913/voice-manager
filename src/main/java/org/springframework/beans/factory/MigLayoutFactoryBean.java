@@ -28,6 +28,7 @@ import net.miginfocom.swing.MigLayout;
 
 public class MigLayoutFactoryBean implements FactoryBean<MigLayout> {
 
+	@Nullable
 	private String[] arguments = null;
 
 	public void setArguments(@Nullable final Object value) throws JsonProcessingException {
@@ -213,6 +214,7 @@ public class MigLayoutFactoryBean implements FactoryBean<MigLayout> {
 		//
 	}
 
+	@Nullable
 	private static Class<?> getClass(@Nullable final Object instance) {
 		return instance != null ? instance.getClass() : null;
 	}
@@ -224,6 +226,7 @@ public class MigLayoutFactoryBean implements FactoryBean<MigLayout> {
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
+	@Nullable
 	private static String toString(@Nullable final Object instance) {
 		return instance != null ? instance.toString() : null;
 	}

@@ -91,6 +91,7 @@ public class JapaneseNameMultimapFactoryBean implements FactoryBean<Multimap<Str
 		//
 	}
 
+	@Nullable
 	private static Multimap<String, String> createMultimapByUrl(final String url, final String[] allowProtocols)
 			throws IOException {
 		//
@@ -138,6 +139,7 @@ public class JapaneseNameMultimapFactoryBean implements FactoryBean<Multimap<Str
 		//
 	}
 
+	@Nullable
 	private static String getMimeType(@Nullable final ContentInfo instance) {
 		return instance != null ? instance.getMimeType() : null;
 	}
@@ -175,6 +177,7 @@ public class JapaneseNameMultimapFactoryBean implements FactoryBean<Multimap<Str
 		//
 	}
 
+	@Nullable
 	private static String toString(@Nullable final Object instance) {
 		return instance != null ? instance.toString() : null;
 	}
@@ -229,6 +232,7 @@ public class JapaneseNameMultimapFactoryBean implements FactoryBean<Multimap<Str
 		return instance != null && instance.test(value);
 	}
 
+	@Nullable
 	private static String getProtocol(@Nullable final URL instance) {
 		return instance != null ? instance.getProtocol() : null;
 	}

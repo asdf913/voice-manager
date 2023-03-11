@@ -173,15 +173,18 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 			//
 	}
 
+	@Nullable
 	private static Class<?> getType(@Nullable final Field field) {
 		return field != null ? field.getType() : null;
 	}
 
+	@Nullable
 	private static Object get(@Nullable final Field field, @Nullable final Object instance)
 			throws IllegalAccessException {
 		return field != null ? field.get(instance) : null;
 	}
 
+	@Nullable
 	private static Class<?>[] getParameterTypes(@Nullable final Executable instance) {
 		return instance != null ? instance.getParameterTypes() : null;
 	}
@@ -249,6 +252,7 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 		return instance != null && Modifier.isStatic(instance.getModifiers());
 	}
 
+	@Nullable
 	private static Method[] getDeclaredMethods(@Nullable final Class<?> instance) {
 		return instance != null ? instance.getDeclaredMethods() : null;
 	}
@@ -261,10 +265,12 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 		//
 	}
 
+	@Nullable
 	private static Class<?> getClass(@Nullable final Object instance) {
 		return instance != null ? instance.getClass() : null;
 	}
 
+	@Nullable
 	private static <T> List<T> toList(@Nullable final Stream<T> instance) {
 		return instance != null ? instance.toList() : null;
 	}
@@ -284,15 +290,18 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 		return instance != null && instance.test(value);
 	}
 
+	@Nullable
 	private static String getName(@Nullable final Member instance) {
 		return instance != null ? instance.getName() : null;
 	}
 
+	@Nullable
 	private static Object invoke(@Nullable final Method method, final Object instance, Object... args)
 			throws IllegalAccessException, InvocationTargetException {
 		return method != null ? method.invoke(instance, args) : null;
 	}
 
+	@Nullable
 	private static String getMessage(@Nullable final Throwable instance) {
 		return instance != null ? instance.getMessage() : null;
 	}
@@ -337,11 +346,13 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 			//
 	}
 
+	@Nullable
 	private static PropertySources getAppliedPropertySources(
 			@Nullable final PropertySourcesPlaceholderConfigurer instance) throws IllegalStateException {
 		return instance != null ? instance.getAppliedPropertySources() : null;
 	}
 
+	@Nullable
 	private static <T> T getSource(@Nullable final PropertySource<T> instance) {
 		return instance != null ? instance.getSource() : null;
 	}
@@ -382,10 +393,12 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 			//
 	}
 
+	@Nullable
 	private static Connection getConnection(@Nullable final DataSource instance) throws SQLException {
 		return instance != null ? instance.getConnection() : null;
 	}
 
+	@Nullable
 	private static Statement createStatement(@Nullable final Connection instance) throws SQLException {
 		return instance != null ? instance.createStatement() : null;
 	}

@@ -97,6 +97,7 @@ public class IpaMultimapFactoryBean implements FactoryBean<Multimap<String, Stri
 		//
 	}
 
+	@Nullable
 	private static Unit<Multimap<String, String>> getMultimapUnitFromJson(final ObjectMapper objectMapper,
 			@Nullable final InputStream is) throws IOException {
 		//
@@ -153,22 +154,27 @@ public class IpaMultimapFactoryBean implements FactoryBean<Multimap<String, Stri
 		return objectMapper;
 	}
 
+	@Nullable
 	private static <K, V> Set<Entry<K, V>> entrySet(@Nullable final Map<K, V> instance) {
 		return instance != null ? instance.entrySet() : null;
 	}
 
+	@Nullable
 	private static <T> Iterator<T> iterator(@Nullable final Iterable<T> instance) {
 		return instance != null ? instance.iterator() : null;
 	}
 
+	@Nullable
 	private static <K> K getKey(@Nullable final Entry<K, ?> instance) {
 		return instance != null ? instance.getKey() : null;
 	}
 
+	@Nullable
 	private static <V> V getValue(@Nullable final Entry<?, V> instance) {
 		return instance != null ? instance.getValue() : null;
 	}
 
+	@Nullable
 	private static String toString(@Nullable final Object instance) {
 		return instance != null ? instance.toString() : null;
 	}
@@ -190,10 +196,12 @@ public class IpaMultimapFactoryBean implements FactoryBean<Multimap<String, Stri
 		//
 	}
 
+	@Nullable
 	private static InputStream openStream(@Nullable final URL instance) throws IOException {
 		return instance != null ? instance.openStream() : null;
 	}
 
+	@Nullable
 	private static Class<?> getClass(@Nullable final Object instance) {
 		return instance != null ? instance.getClass() : null;
 	}

@@ -106,6 +106,7 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 			//
 	}
 
+	@Nullable
 	private static String toString(@Nullable final Object instance) {
 		return instance != null ? instance.toString() : null;
 	}
@@ -164,6 +165,7 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 		//
 	}
 
+	@Nullable
 	private static Multimap<String, String> createMultimapByUrl(final String url, final Duration timeout)
 			throws IOException {
 		//
@@ -206,6 +208,7 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 		return instance != null ? instance.getSheetCount() : 0;
 	}
 
+	@Nullable
 	private static Table getSheetByIndex(@Nullable final SpreadsheetDocument instance, final int index) {
 		return instance != null ? instance.getSheetByIndex(index) : null;
 	}
@@ -238,10 +241,12 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 		//
 	}
 
+	@Nullable
 	private static String getMimeType(@Nullable final ContentInfo instance) {
 		return instance != null ? instance.getMimeType() : null;
 	}
 
+	@Nullable
 	private static String getMessage(@Nullable final ContentInfo instance) {
 		return instance != null ? instance.getMessage() : null;
 	}
@@ -278,6 +283,7 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 		//
 	}
 
+	@Nullable
 	private static Unit<Multimap<String, String>> createMulitmapUnit(final SpreadsheetDocument ssd) {
 		//
 		Unit<Multimap<String, String>> mm = null;
@@ -319,10 +325,12 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 		return instance != null && instance.test(value);
 	}
 
+	@Nullable
 	private static String getProtocol(@Nullable final URL instance) {
 		return instance != null ? instance.getProtocol() : null;
 	}
 
+	@Nullable
 	private static Long toMillis(@Nullable final Duration instance) {
 		return instance != null ? Long.valueOf(instance.toMillis()) : null;
 	}
@@ -339,6 +347,7 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 		return instance != null && instance.matches();
 	}
 
+	@Nullable
 	private static <E> Stream<E> stream(@Nullable final Collection<E> instance) {
 		return instance != null ? instance.stream() : null;
 	}
@@ -350,10 +359,12 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 		//
 	}
 
+	@Nullable
 	private static Class<?> getClass(@Nullable final Object instance) {
 		return instance != null ? instance.getClass() : null;
 	}
 
+	@Nullable
 	private static <T> List<T> toList(@Nullable final Stream<T> instance) {
 		return instance != null ? instance.toList() : null;
 	}

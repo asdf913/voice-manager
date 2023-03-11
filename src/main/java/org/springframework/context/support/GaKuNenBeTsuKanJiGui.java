@@ -442,14 +442,17 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 		//
 	}
 
+	@Nullable
 	private static String getName(@Nullable final Member instance) {
 		return instance != null ? instance.getName() : null;
 	}
 
+	@Nullable
 	private static Class<?>[] getParameterTypes(@Nullable final Executable instance) {
 		return instance != null ? instance.getParameterTypes() : null;
 	}
 
+	@Nullable
 	private static Object invoke(@Nullable final Method method, @Nullable final Object instance, final Object... args)
 			throws IllegalAccessException, InvocationTargetException {
 		return method != null ? method.invoke(instance, args) : null;
@@ -463,10 +466,12 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 		//
 	}
 
+	@Nullable
 	private static <T> List<T> toList(@Nullable final Stream<T> instance) {
 		return instance != null ? instance.toList() : null;
 	}
 
+	@Nullable
 	private static Method[] getDeclaredMethods(@Nullable final Class<?> instance) {
 		return instance != null ? instance.getDeclaredMethods() : null;
 	}
@@ -557,6 +562,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 			//
 	}
 
+	@Nullable
 	private static String getAbsolutePath(@Nullable final File instance) {
 		return instance != null ? instance.getAbsolutePath() : null;
 	}
@@ -569,6 +575,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 		return instance != null && instance.isFile();
 	}
 
+	@Nullable
 	private static Long length(@Nullable final File instance) {
 		return instance != null ? Long.valueOf(instance.length()) : null;
 	}
@@ -594,10 +601,12 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 		return instance != null ? instance.iterator() : null;
 	}
 
+	@Nullable
 	private static <K> K getKey(@Nullable final Entry<K, ?> instance) {
 		return instance != null ? instance.getKey() : null;
 	}
 
+	@Nullable
 	private static <V> V getValue(@Nullable final Entry<?, V> instance) {
 		return instance != null ? instance.getValue() : null;
 	}
@@ -618,6 +627,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 		}
 	}
 
+	@Nullable
 	private static Object getSource(@Nullable final EventObject instance) {
 		return instance != null ? instance.getSource() : null;
 	}
@@ -633,6 +643,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 		return instance != null && instance.test(value);
 	}
 
+	@Nullable
 	private static String getText(@Nullable final JTextComponent instance) {
 		return instance != null ? instance.getText() : null;
 	}
@@ -677,6 +688,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 			//
 	}
 
+	@Nullable
 	private static Dimension getPreferredSize(@Nullable final Component instance) {
 		return instance != null ? instance.getPreferredSize() : null;
 	}

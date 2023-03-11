@@ -132,25 +132,30 @@ public interface XlsxUtil {
 		return instance != null && Modifier.isStatic(instance.getModifiers());
 	}
 
+	@Nullable
 	private static Object invoke(@Nullable final Method method, final Object instance, final Object... args)
 			throws IllegalAccessException, InvocationTargetException {
 		return method != null ? method.invoke(instance, args) : null;
 	}
 
+	@Nullable
 	private static DocumentBuilder newDocumentBuilder(@Nullable final DocumentBuilderFactory instance)
 			throws ParserConfigurationException {
 		return instance != null ? instance.newDocumentBuilder() : null;
 	}
 
+	@Nullable
 	private static Document parse(@Nullable final DocumentBuilder instance, final InputStream is)
 			throws SAXException, IOException {
 		return instance != null ? instance.parse(is) : null;
 	}
 
+	@Nullable
 	private static Element getDocumentElement(@Nullable final Document instance) {
 		return instance != null ? instance.getDocumentElement() : null;
 	}
 
+	@Nullable
 	private static NodeList getChildNodes(@Nullable final Node instance) {
 		return instance != null ? instance.getChildNodes() : null;
 	}
@@ -159,18 +164,22 @@ public interface XlsxUtil {
 		return instance != null ? instance.getLength() : 0;
 	}
 
+	@Nullable
 	private static Node item(@Nullable final NodeList instance, final int index) {
 		return instance != null ? instance.item(index) : null;
 	}
 
+	@Nullable
 	private static NamedNodeMap getAttributes(@Nullable final Node instance) {
 		return instance != null ? instance.getAttributes() : null;
 	}
 
+	@Nullable
 	private static Node getNamedItem(@Nullable final NamedNodeMap instance, final String name) {
 		return instance != null ? instance.getNamedItem(name) : null;
 	}
 
+	@Nullable
 	private static String getTextContent(@Nullable final Node instance) {
 		return instance != null ? instance.getTextContent() : null;
 	}

@@ -118,6 +118,7 @@ public class JouYouKanJiListFactoryBean implements FactoryBean<List<String>> {
 		//
 	}
 
+	@Nullable
 	private static IValue0<List<String>> getObjectByUrl(final String url, final Duration timeout) throws IOException {
 		//
 		final Document document = testAndApply(Objects::nonNull,
@@ -207,6 +208,7 @@ public class JouYouKanJiListFactoryBean implements FactoryBean<List<String>> {
 		return instance != null && instance.test(value);
 	}
 
+	@Nullable
 	private static Long toMillis(@Nullable final Duration instance) {
 		return instance != null ? Long.valueOf(instance.toMillis()) : null;
 	}
@@ -221,6 +223,7 @@ public class JouYouKanJiListFactoryBean implements FactoryBean<List<String>> {
 		}
 	}
 
+	@Nullable
 	private static String toString(@Nullable final Object instance) {
 		return instance != null ? instance.toString() : null;
 	}

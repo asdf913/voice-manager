@@ -164,6 +164,7 @@ public class BufferedImageTypeFactoryBean implements FactoryBean<Integer> {
 		//
 	}
 
+	@Nullable
 	private static String toString(@Nullable final Object instance) {
 		return instance != null ? instance.toString() : null;
 	}
@@ -187,6 +188,7 @@ public class BufferedImageTypeFactoryBean implements FactoryBean<Integer> {
 		//
 	}
 
+	@Nullable
 	private static <T> List<T> toList(@Nullable final Stream<T> instance) {
 		return instance != null ? instance.toList() : null;
 	}
@@ -199,10 +201,12 @@ public class BufferedImageTypeFactoryBean implements FactoryBean<Integer> {
 		return instance != null && Modifier.isStatic(instance.getModifiers());
 	}
 
+	@Nullable
 	private static Object get(@Nullable final Field field, final Object instance) throws IllegalAccessException {
 		return field != null ? field.get(instance) : null;
 	}
 
+	@Nullable
 	private static Class<?> getType(@Nullable final Field instance) {
 		return instance != null ? instance.getType() : null;
 	}
@@ -215,6 +219,7 @@ public class BufferedImageTypeFactoryBean implements FactoryBean<Integer> {
 		return instance != null && instance.isPrimitive();
 	}
 
+	@Nullable
 	private static String getName(@Nullable final Member instance) {
 		return instance != null ? instance.getName() : null;
 	}

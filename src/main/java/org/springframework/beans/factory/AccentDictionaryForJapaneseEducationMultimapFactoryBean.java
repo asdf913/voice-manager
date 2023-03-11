@@ -160,10 +160,12 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 		//
 	}
 
+	@Nullable
 	private static Boolean getAndSet(@Nullable final AtomicBoolean instance, final boolean newValue) {
 		return instance != null ? Boolean.valueOf(instance.getAndSet(newValue)) : null;
 	}
 
+	@Nullable
 	private static Multimap<String, String> createMultimapByUrl(final String url, final String[] allowProtocols,
 			final String unicodeBlock) throws IOException {
 		//
@@ -199,6 +201,7 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 		//
 	}
 
+	@Nullable
 	private static String getMimeType(@Nullable final ContentInfo instance) {
 		return instance != null ? instance.getMimeType() : null;
 	}
@@ -214,6 +217,7 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 		return instance != null && instance.test(value);
 	}
 
+	@Nullable
 	private static Multimap<String, String> createMultimap(final String url, final String[] allowProtocols,
 			final String unicodeBlock) throws IOException {
 		//
@@ -325,6 +329,7 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 		//
 	}
 
+	@Nullable
 	private static <V> V get(@Nullable final AtomicReference<V> instnace) {
 		return instnace != null ? instnace.get() : null;
 	}
@@ -347,6 +352,7 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 		return instance != null ? instance.groupCount() : 0;
 	}
 
+	@Nullable
 	private static String group(@Nullable final MatchResult instance, final int group) {
 		return instance != null ? instance.group(group) : null;
 	}

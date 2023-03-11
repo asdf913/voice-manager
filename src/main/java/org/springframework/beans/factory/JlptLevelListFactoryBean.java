@@ -134,6 +134,7 @@ public class JlptLevelListFactoryBean implements FactoryBean<List<String>> {
 		}
 	}
 
+	@Nullable
 	private static String toString(@Nullable final Object instance) {
 		return instance != null ? instance.toString() : null;
 	}
@@ -175,10 +176,9 @@ public class JlptLevelListFactoryBean implements FactoryBean<List<String>> {
 		//
 	}
 
+	@Nullable
 	private static <T> List<T> toList(@Nullable final Stream<T> instance) {
-		//
 		return instance != null ? instance.toList() : null;
-		//
 	}
 
 	private static <T, R> Stream<R> map(final Stream<T> instance, final Function<? super T, ? extends R> mapper) {
@@ -188,18 +188,22 @@ public class JlptLevelListFactoryBean implements FactoryBean<List<String>> {
 		//
 	}
 
+	@Nullable
 	private static Class<?> getClass(@Nullable final Object instance) {
 		return instance != null ? instance.getClass() : null;
 	}
 
+	@Nullable
 	private static <E> Stream<E> stream(@Nullable final Collection<E> instance) {
 		return instance != null ? instance.stream() : null;
 	}
 
+	@Nullable
 	private static String getProtocol(@Nullable final URL instance) {
 		return instance != null ? instance.getProtocol() : null;
 	}
 
+	@Nullable
 	private static Long toMillis(@Nullable final Duration instance) {
 		return instance != null ? Long.valueOf(instance.toMillis()) : null;
 	}

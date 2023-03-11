@@ -179,6 +179,7 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider, Lookup, I
 		//
 	}
 
+	@Nullable
 	private Map<String, String> versionInfoMap = null;
 
 	private Map<String, String> getVersionInfoMap() throws IOException {
@@ -249,6 +250,7 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider, Lookup, I
 		}
 	}
 
+	@Nullable
 	private static StringFileInfo getStringFileInfo(@Nullable final VersionInfo instance) {
 		return instance != null ? instance.getStringFileInfo() : null;
 	}
@@ -290,6 +292,7 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider, Lookup, I
 			//
 	}
 
+	@Nullable
 	private static <V> V get(@Nullable final Map<?, V> instance, final Object key) {
 		return instance != null ? instance.get(key) : null;
 	}

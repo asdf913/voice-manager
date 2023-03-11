@@ -568,6 +568,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		return clz != null && clz.isInstance(value) ? clz.cast(value) : null;
 	}
 
+	@Nullable
 	private static Document getDocument(@Nullable final DocumentEvent instance) {
 		return instance != null ? instance.getDocument() : null;
 	}
@@ -576,6 +577,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		return instance != null ? instance.getSize() : 0;
 	}
 
+	@Nullable
 	private static <E> Stream<E> stream(@Nullable final Collection<E> instance) {
 		return instance != null ? instance.stream() : null;
 	}
@@ -587,18 +589,22 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		//
 	}
 
+	@Nullable
 	private static String getKanji(@Nullable final JlptVocabulary instance) {
 		return instance != null ? instance.getKanji() : null;
 	}
 
+	@Nullable
 	private static String getKana(@Nullable final JlptVocabulary instance) {
 		return instance != null ? instance.getKana() : null;
 	}
 
+	@Nullable
 	private static String getLevel(@Nullable final JlptVocabulary instance) {
 		return instance != null ? instance.getLevel() : null;
 	}
 
+	@Nullable
 	private static Integer getJmdictSeq(@Nullable final JlptVocabulary instance) {
 		return instance != null ? instance.getJmdictSeq() : null;
 	}
@@ -629,18 +635,22 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		}
 	}
 
+	@Nullable
 	private static Object getSource(@Nullable final EventObject instance) {
 		return instance != null ? instance.getSource() : null;
 	}
 
+	@Nullable
 	private static Method[] getDeclaredMethods(@Nullable final Class<?> instance) {
 		return instance != null ? instance.getDeclaredMethods() : null;
 	}
 
+	@Nullable
 	private static String getName(@Nullable final Member instance) {
 		return instance != null ? instance.getName() : null;
 	}
 
+	@Nullable
 	private static Class<?>[] getParameterTypes(@Nullable final Executable instance) {
 		return instance != null ? instance.getParameterTypes() : null;
 	}
@@ -653,15 +663,18 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		//
 	}
 
+	@Nullable
 	private static <T> List<T> toList(@Nullable final Stream<T> instance) {
 		return instance != null ? instance.toList() : null;
 	}
 
+	@Nullable
 	private static Object invoke(@Nullable final Method method, @Nullable final Object instance, final Object... args)
 			throws IllegalAccessException, InvocationTargetException {
 		return method != null ? method.invoke(instance, args) : null;
 	}
 
+	@Nullable
 	private static Clipboard getSystemClipboard(@Nullable final Toolkit instance) {
 		return instance != null ? instance.getSystemClipboard() : null;
 	}
@@ -691,6 +704,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		}
 	}
 
+	@Nullable
 	private static String getText(@Nullable final JTextComponent instance) {
 		return instance != null ? instance.getText() : null;
 	}
@@ -724,6 +738,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		//
 	}
 
+	@Nullable
 	private static Class<?> getClass(@Nullable final Object instance) {
 		return instance != null ? instance.getClass() : null;
 	}

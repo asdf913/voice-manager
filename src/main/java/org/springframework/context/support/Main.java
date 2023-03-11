@@ -118,6 +118,7 @@ public class Main {
 			//
 	}
 
+	@Nullable
 	private static <E> E getSelectedValue(@Nullable final JList<E> instance) {
 		return instance != null ? instance.getSelectedValue() : null;
 	}
@@ -133,6 +134,7 @@ public class Main {
 		return instance != null && instance.test(value);
 	}
 
+	@Nullable
 	private static String toString(@Nullable final Object instance) {
 		return instance != null ? instance.toString() : null;
 	}
@@ -149,10 +151,12 @@ public class Main {
 		}
 	}
 
+	@Nullable
 	private static String[] getBeanNamesForType(@Nullable final ListableBeanFactory instance, final Class<?> type) {
 		return instance != null ? instance.getBeanNamesForType(type) : null;
 	}
 
+	@Nullable
 	private static String[] getBeanDefinitionNames(@Nullable final ListableBeanFactory instance) {
 		return instance != null ? instance.getBeanDefinitionNames() : null;
 	}

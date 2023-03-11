@@ -187,6 +187,7 @@ public class IniAsPropertiesResource implements Resource, ApplicationEventPublis
 		//
 	}
 
+	@Nullable
 	private static URLConnection openConnection(@Nullable final URL instance) throws IOException {
 		return instance != null ? instance.openConnection() : null;
 	}
@@ -201,6 +202,7 @@ public class IniAsPropertiesResource implements Resource, ApplicationEventPublis
 		return items != null && items.contains(item);
 	}
 
+	@Nullable
 	private static Unit<String> getSection(final boolean headless, final Map<?, ?> map,
 			final PropertyResolver propertyResolver, final Console console, final Collection<?> collection) {
 		//
@@ -293,14 +295,17 @@ public class IniAsPropertiesResource implements Resource, ApplicationEventPublis
 		//
 	}
 
+	@Nullable
 	private static String toString(@Nullable final Object instance) {
 		return instance != null ? instance.toString() : null;
 	}
 
+	@Nullable
 	private static <K> K getKey(@Nullable final Entry<K, ?> instance) {
 		return instance != null ? instance.getKey() : null;
 	}
 
+	@Nullable
 	private static <V> V getValue(@Nullable final Entry<?, V> instance) {
 		return instance != null ? instance.getValue() : null;
 	}
@@ -309,10 +314,12 @@ public class IniAsPropertiesResource implements Resource, ApplicationEventPublis
 		return instance != null && instance.exists();
 	}
 
+	@Nullable
 	private static Class<?> getType(@Nullable final Field instance) {
 		return instance != null ? instance.getType() : null;
 	}
 
+	@Nullable
 	private static Object get(@Nullable final Field field, final Object instance)
 			throws IllegalArgumentException, IllegalAccessException {
 		return field != null ? field.get(instance) : null;
@@ -343,14 +350,17 @@ public class IniAsPropertiesResource implements Resource, ApplicationEventPublis
 		//
 	}
 
+	@Nullable
 	private static Class<?> getClass(@Nullable final Object instance) {
 		return instance != null ? instance.getClass() : null;
 	}
 
+	@Nullable
 	private static <T> List<T> toList(@Nullable final Stream<T> instance) {
 		return instance != null ? instance.toList() : null;
 	}
 
+	@Nullable
 	private static String getName(@Nullable final Member instance) {
 		return instance != null ? instance.getName() : null;
 	}
@@ -362,6 +372,7 @@ public class IniAsPropertiesResource implements Resource, ApplicationEventPublis
 		}
 	}
 
+	@Nullable
 	private static Object[] toArray(@Nullable final Collection<?> instance) {
 		return instance != null ? instance.toArray() : null;
 	}
@@ -374,6 +385,7 @@ public class IniAsPropertiesResource implements Resource, ApplicationEventPublis
 		return instance != null && instance.ready();
 	}
 
+	@Nullable
 	private static Object getSelectedItem(@Nullable final JComboBox<?> instance) {
 		return instance != null ? instance.getSelectedItem() : null;
 	}

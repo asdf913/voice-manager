@@ -190,6 +190,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		//
 	}
 
+	@Nullable
 	private static <T> List<T> toList(@Nullable final Stream<T> instance) {
 		return instance != null ? instance.toList() : null;
 	}
@@ -429,6 +430,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		}
 	}
 
+	@Nullable
 	private static BufferedImage getPitchAccentImage(@Nullable final Pronunciation instnace) {
 		return instnace != null ? instnace.getPitchAccentImage() : null;
 	}
@@ -464,18 +466,22 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		//
 	}
 
+	@Nullable
 	private static Dimension getPreferredSize(@Nullable final Component instance) {
 		return instance != null ? instance.getPreferredSize() : null;
 	}
 
+	@Nullable
 	private static Double getWidth(@Nullable final Dimension2D instance) {
 		return instance != null ? Double.valueOf(instance.getWidth()) : null;
 	}
 
+	@Nullable
 	private static Object get(@Nullable final Field field, final Object instance) throws IllegalAccessException {
 		return field != null ? field.get(instance) : null;
 	}
 
+	@Nullable
 	private static String value(@Nullable final Group instance) {
 		return instance != null ? instance.value() : null;
 	}
@@ -490,6 +496,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		return instance != null && annotationClass != null ? instance.getAnnotation(annotationClass) : null;
 	}
 
+	@Nullable
 	private static String getName(@Nullable final Member instance) {
 		return instance != null ? instance.getName() : null;
 	}
@@ -522,6 +529,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		//
 	}
 
+	@Nullable
 	private static String getName(@Nullable final Class<?> instance) {
 		return instance != null ? instance.getName() : null;
 	}
@@ -555,10 +563,12 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			//
 	}
 
+	@Nullable
 	private static <V> V get(@Nullable final Map<?, V> instance, final Object key) {
 		return instance != null ? instance.get(key) : null;
 	}
 
+	@Nullable
 	private static <E> Component getListCellRendererComponent(@Nullable final ListCellRenderer<E> instance,
 			final JList<? extends E> list, final E value, final int index, final boolean isSelected,
 			final boolean cellHasFocus) {
@@ -691,6 +701,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		}
 	}
 
+	@Nullable
 	private static String toString(@Nullable final Object instance) {
 		return instance != null ? instance.toString() : null;
 	}
@@ -742,6 +753,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			//
 	}
 
+	@Nullable
 	private static InputStream openStream(@Nullable final URL instance) throws IOException {
 		//
 		// Check if "handler" field in "java.net.URL" class is null or not
@@ -927,6 +939,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			//
 	}
 
+	@Nullable
 	private static Field getDeclaredField(@Nullable final Class<?> instance, final String name)
 			throws NoSuchFieldException {
 		return instance != null ? instance.getDeclaredField(name) : null;
@@ -953,6 +966,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		}
 	}
 
+	@Nullable
 	private static Class<?> getClass(@Nullable final Object instance) {
 		return instance != null ? instance.getClass() : null;
 	}
@@ -965,10 +979,12 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		return map(IntStream.range(from, to), i -> to - i + from - 1);
 	}
 
+	@Nullable
 	private static IntStream map(@Nullable final IntStream instance, final IntUnaryOperator mapper) {
 		return instance != null ? instance.map(mapper) : instance;
 	}
 
+	@Nullable
 	private static Clipboard getSystemClipboard(@Nullable final Toolkit instance) {
 		return instance != null ? instance.getSystemClipboard() : null;
 	}
@@ -980,10 +996,12 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		}
 	}
 
+	@Nullable
 	private static <K, V> Set<Entry<K, V>> entrySet(@Nullable final Map<K, V> instance) {
 		return instance != null ? instance.entrySet() : null;
 	}
 
+	@Nullable
 	private static <E> Iterator<E> iterator(@Nullable final Iterable<E> instance) {
 		return instance != null ? instance.iterator() : null;
 	}
@@ -992,6 +1010,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		return instance != null ? instance.getSize() : 0;
 	}
 
+	@Nullable
 	private static Object getSelectedItem(@Nullable final ComboBoxModel<?> instance) {
 		return instance != null ? instance.getSelectedItem() : null;
 	}
@@ -1008,22 +1027,27 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		}
 	}
 
+	@Nullable
 	private static <K> K getKey(@Nullable final Entry<K, ?> instance) {
 		return instance != null ? instance.getKey() : null;
 	}
 
+	@Nullable
 	private static <V> V getValue(@Nullable final Entry<?, V> instance) {
 		return instance != null ? instance.getValue() : null;
 	}
 
+	@Nullable
 	private static String getText(@Nullable final JTextComponent instance) {
 		return instance != null ? instance.getText() : null;
 	}
 
+	@Nullable
 	private static Object getSource(@Nullable final EventObject instance) {
 		return instance != null ? instance.getSource() : null;
 	}
 
+	@Nullable
 	private static <E> Stream<E> stream(@Nullable final Collection<E> instance) {
 		return instance != null ? instance.stream() : null;
 	}

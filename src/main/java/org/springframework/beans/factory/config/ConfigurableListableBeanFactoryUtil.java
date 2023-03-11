@@ -4,6 +4,7 @@ import javax.annotation.Nullable;
 
 public interface ConfigurableListableBeanFactoryUtil {
 
+	@Nullable
 	static BeanDefinition getBeanDefinition(@Nullable final ConfigurableListableBeanFactory instance,
 			final String beanName) {
 		return instance != null ? instance.getBeanDefinition(beanName) : null;

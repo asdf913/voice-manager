@@ -182,6 +182,7 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 		//
 	}
 
+	@Nullable
 	private static Class<?> getClass(@Nullable final Object instance) {
 		return instance != null ? instance.getClass() : null;
 	}
@@ -315,10 +316,12 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 		}
 	}
 
+	@Nullable
 	private static Object[] toArray(@Nullable final Collection<?> instance) {
 		return instance != null ? instance.toArray() : null;
 	}
 
+	@Nullable
 	private static Object getSource(@Nullable final EventObject instance) {
 		return instance != null ? instance.getSource() : null;
 	}
@@ -335,6 +338,7 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 		return instance != null && instance.test(value);
 	}
 
+	@Nullable
 	private static InputStream openStream(@Nullable final URL instance) throws IOException {
 		//
 		// Check if "handler" field in "java.net.URL" class is null or not
@@ -354,6 +358,7 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 		//
 	}
 
+	@Nullable
 	private static byte[] digest(@Nullable final MessageDigest instance, final byte[] input) {
 		return instance != null && input != null ? instance.digest(input) : null;
 	}
@@ -368,10 +373,12 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 		return condition ? trueValue : falseValue;
 	}
 
+	@Nullable
 	private static String toString(@Nullable final Object instance) {
 		return instance != null ? instance.toString() : null;
 	}
 
+	@Nullable
 	private static String getText(@Nullable final JTextComponent instance) {
 		return instance != null ? instance.getText() : null;
 	}
@@ -415,6 +422,7 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 			//
 	}
 
+	@Nullable
 	private static Dimension getPreferredSize(@Nullable final Component instance) {
 		return instance != null ? instance.getPreferredSize() : null;
 	}
