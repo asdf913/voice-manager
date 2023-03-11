@@ -6,7 +6,7 @@ import javax.annotation.Nullable;
 
 public interface ResourceUtil {
 
-	static boolean exists(final Resource instance) {
+	static boolean exists(@Nullable final Resource instance) {
 		return instance != null && instance.exists();
 	}
 

@@ -4,7 +4,7 @@ import javax.annotation.Nullable;
 
 public interface PropertyResolverUtil {
 
-	static boolean containsProperty(final PropertyResolver instance, final String key) {
+	static boolean containsProperty(@Nullable final PropertyResolver instance, final String key) {
 		return instance != null && instance.containsProperty(key);
 	}
 

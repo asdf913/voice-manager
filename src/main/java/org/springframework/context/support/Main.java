@@ -130,7 +130,7 @@ public class Main {
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
-	private static final <T> boolean test(final Predicate<T> instance, @Nullable final T value) {
+	private static final <T> boolean test(@Nullable final Predicate<T> instance, @Nullable final T value) {
 		return instance != null && instance.test(value);
 	}
 
@@ -167,11 +167,11 @@ public class Main {
 	}
 
 	@Nullable
-	private static <T> T cast(final Class<T> clz, @Nullable final Object instance) {
+	private static <T> T cast(@Nullable final Class<T> clz, @Nullable final Object instance) {
 		return clz != null && clz.isInstance(instance) ? clz.cast(instance) : null;
 	}
 
-	private static void showMessageDialogOrPrintln(final PrintStream ps, final Object object) {
+	private static void showMessageDialogOrPrintln(@Nullable final PrintStream ps, final Object object) {
 		//
 		if (!GraphicsEnvironment.isHeadless()) {
 			//
@@ -235,7 +235,7 @@ public class Main {
 		//
 	}
 
-	private static <T> void accept(final Consumer<T> instance, final T value) {
+	private static <T> void accept(@Nullable final Consumer<T> instance, final T value) {
 		if (instance != null) {
 			instance.accept(value);
 		}

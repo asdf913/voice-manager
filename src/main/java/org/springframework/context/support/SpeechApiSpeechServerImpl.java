@@ -21,7 +21,7 @@ public class SpeechApiSpeechServerImpl implements SpeechApi, Provider, Lookup, I
 		Jna INSTANCE = cast(Jna.class, Native.load("MicrosoftSpeechApi.dll", Jna.class));
 
 		@Nullable
-		private static <T> T cast(final Class<T> clz, final Object value) {
+		private static <T> T cast(@Nullable final Class<T> clz, final Object value) {
 			return clz != null && clz.isInstance(value) ? clz.cast(value) : null;
 		}
 
@@ -58,6 +58,7 @@ public class SpeechApiSpeechServerImpl implements SpeechApi, Provider, Lookup, I
 		//
 	}
 
+	@Nullable
 	private Table<Object, Object, Object> getTable() {
 		//
 		return table = ObjectUtils.getIfNull(table, HashBasedTable::create);

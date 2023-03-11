@@ -9,13 +9,13 @@ import java.util.Map.Entry;
 
 public interface MultimapUtil {
 
-	static <K, V> void put(final Multimap<K, V> instance, @Nullable final K key, @Nullable final V value) {
+	static <K, V> void put(@Nullable final Multimap<K, V> instance, @Nullable final K key, @Nullable final V value) {
 		if (instance != null) {
 			instance.put(key, value);
 		}
 	}
 
-	static <K, V> void putAll(final Multimap<K, V> instance, @Nullable final K key,
+	static <K, V> void putAll(@Nullable final Multimap<K, V> instance, @Nullable final K key,
 			@Nullable final Iterable<? extends V> values) {
 		if (instance != null) {
 			instance.putAll(key, values);
