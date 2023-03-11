@@ -113,6 +113,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 
 	private transient Document tfTextDocument = null;
 
+	@Nullable
 	private JComboBox<JlptVocabulary> jcbJlptVocabulary = null;
 
 	private transient MutableComboBoxModel<JlptVocabulary> cbmJlptVocabulary = null;
@@ -727,6 +728,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		return instance != null ? instance.getClass() : null;
 	}
 
+	@Nullable
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
 			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
 			throws E {

@@ -180,7 +180,7 @@ public class JapaneseNameMultimapFactoryBean implements FactoryBean<Multimap<Str
 	}
 
 	@Nullable
-	private static Multimap<String, String> createMultimap(final Element input, final Pattern pattern) {
+	private static Multimap<String, String> createMultimap(@Nullable final Element input, final Pattern pattern) {
 		//
 		Element nextElementSibling = input;
 		//
@@ -217,6 +217,7 @@ public class JapaneseNameMultimapFactoryBean implements FactoryBean<Multimap<Str
 		//
 	}
 
+	@Nullable
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
 			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
 			throws E {

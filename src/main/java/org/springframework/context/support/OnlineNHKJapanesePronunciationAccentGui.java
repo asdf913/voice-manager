@@ -742,7 +742,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			//
 	}
 
-	private static InputStream openStream(final URL instance) throws IOException {
+	private static InputStream openStream(@Nullable final URL instance) throws IOException {
 		//
 		// Check if "handler" field in "java.net.URL" class is null or not
 		//
@@ -1028,6 +1028,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		return instance != null ? instance.stream() : null;
 	}
 
+	@Nullable
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, @Nullable final T value,
 			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
 			throws E {

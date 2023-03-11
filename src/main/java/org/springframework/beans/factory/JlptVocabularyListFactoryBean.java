@@ -448,10 +448,12 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		return instance != null ? instance.getStringValue() : null;
 	}
 
+	@Nullable
 	private static Double getNumberValue(@Nullable final CellValue instance) {
 		return instance != null ? Double.valueOf(instance.getNumberValue()) : null;
 	}
 
+	@Nullable
 	private static CellValue evaluate(@Nullable final FormulaEvaluator instance, final Cell cell) {
 		return instance != null ? instance.evaluate(cell) : null;
 	}

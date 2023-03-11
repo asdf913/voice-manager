@@ -323,6 +323,7 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 		return instance != null ? instance.getSource() : null;
 	}
 
+	@Nullable
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
 			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
 			throws E {
@@ -334,7 +335,7 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 		return instance != null && instance.test(value);
 	}
 
-	private static InputStream openStream(final URL instance) throws IOException {
+	private static InputStream openStream(@Nullable final URL instance) throws IOException {
 		//
 		// Check if "handler" field in "java.net.URL" class is null or not
 		//

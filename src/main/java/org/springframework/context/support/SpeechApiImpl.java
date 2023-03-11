@@ -119,6 +119,7 @@ public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean {
 	}
 
 	@Override
+	@Nullable
 	public String[] getVoiceIds() {
 		//
 		final SpeechApi speechApi = getInstance();

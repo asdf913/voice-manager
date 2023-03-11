@@ -29,6 +29,7 @@ public interface MultimapUtil {
 		return instance != null ? instance.size() : 0;
 	}
 
+	@Nullable
 	static <K, V> Collection<Entry<K, V>> entries(@Nullable final Multimap<K, V> instance) {
 		return instance != null ? instance.entries() : null;
 	}

@@ -838,6 +838,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		return instance != null ? instance.getSource() : null;
 	}
 
+	@Nullable
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, @Nullable final T value,
 			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
 			throws E {
