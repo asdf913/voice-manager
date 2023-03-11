@@ -83,7 +83,7 @@ public class IniAsPropertiesResource implements Resource, ApplicationEventPublis
 		//
 		// org.springframework.core.io.UrlResource.url
 		//
-		List<Field> fs = toList(filter(testAndApply(Objects::nonNull,
+		final List<Field> fs = toList(filter(testAndApply(Objects::nonNull,
 				testAndApply(Objects::nonNull, getClass(resource), FieldUtils::getAllFields, null), Arrays::stream,
 				null), x -> Objects.equals(URL.class, getType(x))));
 		//
@@ -111,12 +111,13 @@ public class IniAsPropertiesResource implements Resource, ApplicationEventPublis
 			if (exists(
 					cast(File.class,
 							Boolean.logicalAnd(urlConnection != null,
-									(f = testAndApply(x -> IterableUtils.size(x) == 1, fs = toList(filter(
+									(f = testAndApply(x -> IterableUtils.size(x) == 1, toList(filter(
 											testAndApply(Objects::nonNull,
 													testAndApply(Objects::nonNull, getClass(urlConnection),
 															FieldUtils::getAllFields, null),
 													Arrays::stream, null),
-											x -> Objects.equals(File.class, getType(x)))), x -> IterableUtils.get(x, 0),
+											x -> Objects.equals(File.class, getType(
+													x)))), x -> IterableUtils.get(x, 0),
 											null)) != null) ? Narcissus.getObjectField(urlConnection, f) : null))) {
 				//
 				testAndAccept(Objects::nonNull, InputStreamSourceUtil.getInputStream(resource), ini::load);
