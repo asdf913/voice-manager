@@ -589,6 +589,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 		return clz != null && clz.isInstance(value) ? clz.cast(value) : null;
 	}
 
+	@Nullable
 	private static <T> Iterator<T> iterator(@Nullable final Iterable<T> instance) {
 		return instance != null ? instance.iterator() : null;
 	}

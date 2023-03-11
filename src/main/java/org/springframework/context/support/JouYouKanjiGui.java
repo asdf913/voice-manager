@@ -785,6 +785,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		return instance != null ? instance.stream() : null;
 	}
 
+	@Nullable
 	private static <T> IntStream mapToInt(final Stream<T> instance, final ToIntFunction<? super T> mapper) {
 		//
 		return instance != null && (Proxy.isProxyClass(getClass(instance)) || mapper != null)
