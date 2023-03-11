@@ -16,6 +16,8 @@ import org.junit.jupiter.api.condition.EnabledIf;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.OS;
 
+import io.github.toolfactory.narcissus.Narcissus;
+
 class SpeechApiSpeechServerImplTest {
 
 	private static Method METHOD_CAST = null;
@@ -124,10 +126,14 @@ class SpeechApiSpeechServerImplTest {
 	@Test
 	void testCast() throws Throwable {
 		//
-		Assertions.assertNull(cast(null, null));
-		//
-		Assertions.assertNull(cast(Object.class, null));
-		//
+		if (METHOD_CAST != null) {
+			//
+			Assertions.assertNull(cast(null, null));
+			//
+			Assertions.assertNull(cast(Object.class, null));
+			//
+		} // if
+			//
 	}
 
 	private static <T> T cast(final Class<T> clz, final Object value) throws Throwable {

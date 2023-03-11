@@ -23,6 +23,7 @@ import com.kichik.pecoff4j.PE;
 import com.kichik.pecoff4j.ResourceEntry;
 
 class SpeechApiSystemSpeechImplTest {
+	private static Class<?> CLASS_JNA = null;
 
 	private static Method METHOD_CAST, METHOD_TEST_AND_APPLY, METHOD_GET_VERSION_INFO_MAP0,
 			METHOD_GET_VERSION_INFO_MAP_PE, METHOD_GET_VERSION_INFO_MAP2, METHOD_GET, METHOD_PUT = null;
@@ -38,9 +39,9 @@ class SpeechApiSystemSpeechImplTest {
 		//
 		if (Objects.equals("sun.nio.fs.WindowsFileSystemProvider", clz != null ? clz.getName() : null)) {
 			//
-			if ((METHOD_CAST = (clz = Class
+			if ((METHOD_CAST = (CLASS_JNA = Class
 					.forName("org.springframework.context.support.SpeechApiSystemSpeechImpl$Jna")) != null
-							? clz.getDeclaredMethod("cast", Class.class, Object.class)
+							? CLASS_JNA.getDeclaredMethod("cast", Class.class, Object.class)
 							: null) != null) {
 				//
 				METHOD_CAST.setAccessible(true);
@@ -170,10 +171,14 @@ class SpeechApiSystemSpeechImplTest {
 	@Test
 	void testCast() throws Throwable {
 		//
-		Assertions.assertNull(cast(null, null));
-		//
-		Assertions.assertNull(cast(Object.class, null));
-		//
+		if (METHOD_CAST != null) {
+			//
+			Assertions.assertNull(cast(null, null));
+			//
+			Assertions.assertNull(cast(Object.class, null));
+			//
+		} // if
+			//
 	}
 
 	private static <T> T cast(final Class<T> clz, final Object value) throws Throwable {
@@ -206,8 +211,12 @@ class SpeechApiSystemSpeechImplTest {
 	@Test
 	void testGetVersionInfoMap() throws Throwable {
 		//
-		Assertions.assertSame(getVersionInfoMap(), getVersionInfoMap());
-		//
+		if (CLASS_JNA != null) {
+			//
+			Assertions.assertSame(getVersionInfoMap(), getVersionInfoMap());
+			//
+		} // if
+			//
 		Assertions.assertNull(getVersionInfoMap((PE) null));
 		//
 		Assertions.assertNull(getVersionInfoMap((ResourceEntry[]) null));
@@ -232,10 +241,14 @@ class SpeechApiSystemSpeechImplTest {
 			} else if (obj instanceof Map) {
 				return (Map) obj;
 			}
-			throw new Throwable(toString(obj != null ? obj.getClass() : null));
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
+	}
+
+	private static Class<?> getClass(final Object instance) {
+		return instance != null ? instance.getClass() : null;
 	}
 
 	private static Map<String, String> getVersionInfoMap(final PE pe) throws Throwable {
@@ -246,7 +259,7 @@ class SpeechApiSystemSpeechImplTest {
 			} else if (obj instanceof Map) {
 				return (Map) obj;
 			}
-			throw new Throwable(toString(obj != null ? obj.getClass() : null));
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -260,7 +273,7 @@ class SpeechApiSystemSpeechImplTest {
 			} else if (obj instanceof Map) {
 				return (Map) obj;
 			}
-			throw new Throwable(toString(obj != null ? obj.getClass() : null));
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
