@@ -193,6 +193,7 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider, Lookup, I
 		//
 	}
 
+	@Nullable
 	private static Map<String, String> getVersionInfoMap(final PE pe) throws IOException {
 		//
 		final ImageData id = pe != null ? pe.getImageData() : null;

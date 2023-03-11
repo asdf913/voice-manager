@@ -135,6 +135,7 @@ public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean {
 	}
 
 	@Override
+	@Nullable
 	public String getProviderName() {
 		//
 		final Provider provider = cast(Provider.class, getInstance());
@@ -149,6 +150,7 @@ public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean {
 	}
 
 	@Override
+	@Nullable
 	public String getProviderVersion() {
 		//
 		final Provider provider = cast(Provider.class, getInstance());
@@ -158,6 +160,7 @@ public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean {
 	}
 
 	@Override
+	@Nullable
 	public String getProviderPlatform() {
 		//
 		final Provider provider = cast(Provider.class, getInstance());

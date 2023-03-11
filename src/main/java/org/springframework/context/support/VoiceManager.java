@@ -1939,6 +1939,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.getClass() : null;
 	}
 
+	@Nullable
 	private static <T> T cast(final Class<T> clz, final Object value) {
 		return clz != null && clz.isInstance(value) ? clz.cast(value) : null;
 	}
@@ -4731,6 +4732,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
+	@Nullable
 	private static Integer toInteger(final Object object) {
 		//
 		Integer integer = null;
@@ -8461,6 +8463,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		}
 
+		@Nullable
 		private static IValue0<Map<String, Integer>> createQualityMap(final ConstantPool constantPool,
 				final Instruction[] instructions) {
 			//
