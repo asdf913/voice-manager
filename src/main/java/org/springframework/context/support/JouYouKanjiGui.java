@@ -154,7 +154,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		this.url = url;
 	}
 
-	public void setEcssVersion(final Object object) throws NoSuchFieldException, IllegalAccessException {
+	public void setEcssVersion(final Object object) {
 		//
 		if (object == null) {
 			//
