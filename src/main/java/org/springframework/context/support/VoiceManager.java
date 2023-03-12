@@ -10832,7 +10832,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 		@Nullable
 		private static IValue0<Object> handleIntIntMap(final String methodName, final Map<Object, Object> map,
-				final Object[] args) {
+				@Nullable final Object[] args) {
 			//
 			if (Objects.equals(methodName, "getInt") && args != null && args.length > 0) {
 				//

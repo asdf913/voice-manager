@@ -339,7 +339,7 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 		return instance != null ? instance.intValue() : defaultValue;
 	}
 
-	private static Matcher matcher(@Nullable final Pattern pattern, final CharSequence input) {
+	private static Matcher matcher(@Nullable final Pattern pattern, @Nullable final CharSequence input) {
 		return pattern != null && input != null ? pattern.matcher(input) : null;
 	}
 
