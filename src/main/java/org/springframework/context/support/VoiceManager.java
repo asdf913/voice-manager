@@ -1782,9 +1782,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			value = Unit.with(null);
 			//
-		} else if (object instanceof Duration) {
+		} else if (object instanceof Duration duration) {
 			//
-			value = Unit.with((Duration) object);
+			value = Unit.with(duration);
 			//
 		} else if (object instanceof Number) {
 			//
