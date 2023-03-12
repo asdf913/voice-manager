@@ -97,7 +97,16 @@ public class Voice {
 	@JLPT
 	private String jlptLevel = null;
 
-	private String fileDigestAlgorithm, fileDigest, fileExtension = null;
+	@Target(ElementType.FIELD)
+	@Retention(RetentionPolicy.RUNTIME)
+	private @interface Note {
+		String value();
+	}
+
+	@Note("File Digest Algorithm")
+	private String fileDigestAlgorithm = null;
+
+	private String fileDigest, fileExtension = null;
 
 	private Iterable<String> listNames = null;
 
