@@ -8930,7 +8930,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@Nullable
-	private static List<Pair<String, ?>> getMp3TagParirs(final File file, final String... attributes)
+	private static List<Pair<String, ?>> getMp3TagParirs(@Nullable final File file, final String... attributes)
 			throws BaseException, IOException, IllegalAccessException, InvocationTargetException {
 		//
 		if (Objects.equals("mp3", getFileExtension(cast(ContentInfo.class,
