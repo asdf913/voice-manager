@@ -198,7 +198,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 			//
 	}
 
-	private static void addActionListener(final ActionListener actionListener, final AbstractButton... abs) {
+	private static void addActionListener(final ActionListener actionListener, @Nullable final AbstractButton... abs) {
 		//
 		AbstractButton ab = null;
 		//
@@ -214,7 +214,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 			//
 	}
 
-	private static <T> T[] toArray(final Collection<T> instance, final T[] array) {
+	private static <T> T[] toArray(@Nullable final Collection<T> instance, @Nullable final T[] array) {
 		//
 		return instance != null && (array != null || Proxy.isProxyClass(getClass(instance))) ? instance.toArray(array)
 				: null;
@@ -420,7 +420,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 		return condition ? trueValue : falseValue;
 	}
 
-	private static boolean and(final boolean a, final boolean b, final boolean... bs) {
+	private static boolean and(final boolean a, final boolean b, @Nullable final boolean... bs) {
 		//
 		boolean result = a && b;
 		//
@@ -460,7 +460,8 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 		return method != null ? method.invoke(instance, args) : null;
 	}
 
-	private static <T> Stream<T> filter(final Stream<T> instance, final Predicate<? super T> predicate) {
+	private static <T> Stream<T> filter(@Nullable final Stream<T> instance,
+			@Nullable final Predicate<? super T> predicate) {
 		//
 		return instance != null && (predicate != null || Proxy.isProxyClass(getClass(instance)))
 				? instance.filter(predicate)
@@ -544,7 +545,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 		//
 	}
 
-	private static void addHeaderRow(final Sheet sheet, final Pair<String, String> columnNames) {
+	private static void addHeaderRow(@Nullable final Sheet sheet, final Pair<String, String> columnNames) {
 		//
 		if (sheet != null && sheet.getLastRowNum() < 0) {
 			//
@@ -569,11 +570,11 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 		return instance != null ? instance.getAbsolutePath() : null;
 	}
 
-	private static boolean exists(final File instance) {
+	private static boolean exists(@Nullable final File instance) {
 		return instance != null && instance.exists();
 	}
 
-	private static boolean isFile(final File instance) {
+	private static boolean isFile(@Nullable final File instance) {
 		return instance != null && instance.isFile();
 	}
 
@@ -587,14 +588,14 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 	}
 
 	private static <T, E extends Throwable> void testAndAccept(final Predicate<T> predicate, @Nullable final T value,
-			final FailableConsumer<T, E> consumer) throws E {
+			@Nullable final FailableConsumer<T, E> consumer) throws E {
 		if (test(predicate, value) && consumer != null) {
 			consumer.accept(value);
 		}
 	}
 
 	@Nullable
-	private static <T> T cast(final Class<T> clz, @Nullable final Object value) {
+	private static <T> T cast(@Nullable final Class<T> clz, @Nullable final Object value) {
 		return clz != null && clz.isInstance(value) ? clz.cast(value) : null;
 	}
 
@@ -613,17 +614,18 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 		return instance != null ? instance.getValue() : null;
 	}
 
-	private static boolean contains(final Collection<?> items, final Object item) {
+	private static boolean contains(@Nullable final Collection<?> items, final Object item) {
 		return items != null && items.contains(item);
 	}
 
-	private static <E> void add(final Collection<E> items, final E item) {
+	private static <E> void add(@Nullable final Collection<E> items, final E item) {
 		if (items != null) {
 			items.add(item);
 		}
 	}
 
-	private static void setSelectedItem(final ComboBoxModel<?> instance, @Nullable final Object selectedItem) {
+	private static void setSelectedItem(@Nullable final ComboBoxModel<?> instance,
+			@Nullable final Object selectedItem) {
 		if (instance != null) {
 			instance.setSelectedItem(selectedItem);
 		}
@@ -641,7 +643,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
-	private static final <T> boolean test(final Predicate<T> instance, @Nullable final T value) {
+	private static final <T> boolean test(@Nullable final Predicate<T> instance, @Nullable final T value) {
 		return instance != null && instance.test(value);
 	}
 
@@ -650,19 +652,19 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 		return instance != null ? instance.getText() : null;
 	}
 
-	private static void setText(final JTextComponent instance, final String text) {
+	private static void setText(@Nullable final JTextComponent instance, final String text) {
 		if (instance != null) {
 			instance.setText(text);
 		}
 	}
 
-	private static void setText(final JLabel instance, @Nullable final String text) {
+	private static void setText(@Nullable final JLabel instance, @Nullable final String text) {
 		if (instance != null) {
 			instance.setText(text);
 		}
 	}
 
-	private static void setForeground(final Component instance, final Color color) {
+	private static void setForeground(@Nullable final Component instance, final Color color) {
 		if (instance != null) {
 			instance.setForeground(color);
 		}

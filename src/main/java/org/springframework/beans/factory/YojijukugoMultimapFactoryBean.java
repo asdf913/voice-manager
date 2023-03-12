@@ -108,7 +108,7 @@ public class YojijukugoMultimapFactoryBean implements FactoryBean<Multimap<Strin
 	}
 
 	@Nullable
-	private static IValue0<Multimap<String, String>> createMultimap(final Workbook wb) {
+	private static IValue0<Multimap<String, String>> createMultimap(@Nullable final Workbook wb) {
 		//
 		final Sheet sheet = wb != null && wb.getNumberOfSheets() == 1 ? wb.getSheetAt(0) : null;
 		//
@@ -141,7 +141,7 @@ public class YojijukugoMultimapFactoryBean implements FactoryBean<Multimap<Strin
 	}
 
 	@Nullable
-	private static IValue0<Multimap<String, String>> createMultimap(final SpreadsheetDocument ssd) {
+	private static IValue0<Multimap<String, String>> createMultimap(@Nullable final SpreadsheetDocument ssd) {
 		//
 		final Table table = ssd != null && ssd.getSheetCount() == 1 ? ssd.getSheetByIndex(0) : null;
 		//
@@ -264,7 +264,7 @@ public class YojijukugoMultimapFactoryBean implements FactoryBean<Multimap<Strin
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
-	private static <T> boolean test(final Predicate<T> instance, final T value) {
+	private static <T> boolean test(@Nullable final Predicate<T> instance, final T value) {
 		return instance != null && instance.test(value);
 	}
 

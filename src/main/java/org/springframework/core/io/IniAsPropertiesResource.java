@@ -198,13 +198,13 @@ public class IniAsPropertiesResource implements Resource, ApplicationEventPublis
 		}
 	}
 
-	private static boolean contains(final Collection<?> items, final Object item) {
+	private static boolean contains(@Nullable final Collection<?> items, final Object item) {
 		return items != null && items.contains(item);
 	}
 
 	@Nullable
-	private static Unit<String> getSection(final boolean headless, final Map<?, ?> map,
-			final PropertyResolver propertyResolver, final Console console, final Collection<?> collection) {
+	private static Unit<String> getSection(final boolean headless, @Nullable final Map<?, ?> map,
+			final PropertyResolver propertyResolver, @Nullable final Console console, final Collection<?> collection) {
 		//
 		if (map != null && map.containsKey(PROFILE)) {
 			//
@@ -325,7 +325,7 @@ public class IniAsPropertiesResource implements Resource, ApplicationEventPublis
 		return field != null ? field.get(instance) : null;
 	}
 
-	private static void setAccessible(final AccessibleObject instance, final boolean flag) {
+	private static void setAccessible(@Nullable final AccessibleObject instance, final boolean flag) {
 		if (instance != null) {
 			instance.setAccessible(flag);
 		}
@@ -338,11 +338,12 @@ public class IniAsPropertiesResource implements Resource, ApplicationEventPublis
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
-	private static final <T> boolean test(final Predicate<T> instance, @Nullable final T value) {
+	private static final <T> boolean test(@Nullable final Predicate<T> instance, @Nullable final T value) {
 		return instance != null && instance.test(value);
 	}
 
-	private static <T> Stream<T> filter(final Stream<T> instance, final Predicate<? super T> predicate) {
+	private static <T> Stream<T> filter(@Nullable final Stream<T> instance,
+			@Nullable final Predicate<? super T> predicate) {
 		//
 		return instance != null && (predicate != null || Proxy.isProxyClass(getClass(instance)))
 				? instance.filter(predicate)
@@ -366,7 +367,7 @@ public class IniAsPropertiesResource implements Resource, ApplicationEventPublis
 	}
 
 	private static <T, E extends Throwable> void testAndAccept(final Predicate<T> predicate, final T value,
-			final FailableConsumer<T, E> consumer) throws E {
+			@Nullable final FailableConsumer<T, E> consumer) throws E {
 		if (test(predicate, value) && consumer != null) {
 			consumer.accept(value);
 		}
@@ -377,7 +378,7 @@ public class IniAsPropertiesResource implements Resource, ApplicationEventPublis
 		return instance != null ? instance.toArray() : null;
 	}
 
-	private static boolean isStatic(final Member instance) {
+	private static boolean isStatic(@Nullable final Member instance) {
 		return instance != null && Modifier.isStatic(instance.getModifiers());
 	}
 
@@ -390,7 +391,7 @@ public class IniAsPropertiesResource implements Resource, ApplicationEventPublis
 		return instance != null ? instance.getSelectedItem() : null;
 	}
 
-	private static InputStream toInputStream(final Properties properties) throws IOException {
+	private static InputStream toInputStream(@Nullable final Properties properties) throws IOException {
 		//
 		try (final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
 			//
@@ -407,7 +408,7 @@ public class IniAsPropertiesResource implements Resource, ApplicationEventPublis
 	}
 
 	@Nullable
-	private static <T> T cast(final Class<T> clz, @Nullable final Object instance) {
+	private static <T> T cast(@Nullable final Class<T> clz, @Nullable final Object instance) {
 		return clz != null && clz.isInstance(instance) ? clz.cast(instance) : null;
 	}
 

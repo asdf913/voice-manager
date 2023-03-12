@@ -217,7 +217,7 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 		return instance != null ? instance.getRowCount() : 0;
 	}
 
-	private static boolean or(final boolean a, final boolean b, final boolean... bs) {
+	private static boolean or(final boolean a, final boolean b, @Nullable final boolean... bs) {
 		//
 		boolean result = a || b;
 		//
@@ -252,7 +252,7 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 	}
 
 	@Nullable
-	private static Unit<Multimap<String, String>> createMulitmapUnit(final Workbook wb) {
+	private static Unit<Multimap<String, String>> createMulitmapUnit(@Nullable final Workbook wb) {
 		//
 		Unit<Multimap<String, String>> mm = null;
 		//
@@ -321,7 +321,7 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
-	private static final <T> boolean test(final Predicate<T> instance, final T value) {
+	private static final <T> boolean test(@Nullable final Predicate<T> instance, final T value) {
 		return instance != null && instance.test(value);
 	}
 
@@ -339,11 +339,11 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 		return instance != null ? instance.intValue() : defaultValue;
 	}
 
-	private static Matcher matcher(final Pattern pattern, final CharSequence input) {
+	private static Matcher matcher(@Nullable final Pattern pattern, final CharSequence input) {
 		return pattern != null && input != null ? pattern.matcher(input) : null;
 	}
 
-	private static boolean matches(final Matcher instance) {
+	private static boolean matches(@Nullable final Matcher instance) {
 		return instance != null && instance.matches();
 	}
 
@@ -354,7 +354,7 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 
 	@Nullable
 	private static <T, R> Stream<R> map(@Nullable final Stream<T> instance,
-			final Function<? super T, ? extends R> mapper) {
+			@Nullable final Function<? super T, ? extends R> mapper) {
 		//
 		return instance != null && (Proxy.isProxyClass(getClass(instance)) || mapper != null) ? instance.map(mapper)
 				: null;

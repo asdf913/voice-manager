@@ -199,7 +199,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 	}
 
 	@Nullable
-	private static IValue0<ECSSVersion> getECSSVersionByMajor(final ECSSVersion[] evs, final Number number) {
+	private static IValue0<ECSSVersion> getECSSVersionByMajor(@Nullable final ECSSVersion[] evs, final Number number) {
 		//
 		IValue0<ECSSVersion> iValue0 = null;
 		//
@@ -350,7 +350,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 	}
 
 	@Nullable
-	private static <T> T[] toArray(@Nullable final Collection<T> instance, final T[] array) {
+	private static <T> T[] toArray(@Nullable final Collection<T> instance, @Nullable final T[] array) {
 		//
 		return instance != null && (array != null || Proxy.isProxyClass(getClass(instance))) ? instance.toArray(array)
 				: null;
@@ -422,7 +422,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 			return instance != null ? instance.getObject(key) : null;
 		}
 
-		static <T> void setObject(final ObjectMap instance, final Class<T> key, final T value) {
+		static <T> void setObject(@Nullable final ObjectMap instance, final Class<T> key, final T value) {
 			if (instance != null) {
 				instance.setObject(key, value);
 			}
@@ -445,7 +445,8 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 
 		@Override
 		@Nullable
-		public Object invoke(final Object proxy, @Nullable final Method method, final Object[] args) throws Throwable {
+		public Object invoke(final Object proxy, @Nullable final Method method, @Nullable final Object[] args)
+				throws Throwable {
 			//
 			final String methodName = method != null ? method.getName() : null;
 			//
@@ -478,11 +479,11 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 			//
 		}
 
-		private static boolean containsKey(final Map<?, ?> instance, final Object key) {
+		private static boolean containsKey(@Nullable final Map<?, ?> instance, final Object key) {
 			return instance != null && instance.containsKey(key);
 		}
 
-		private static boolean isArray(final OfField<?> instance) {
+		private static boolean isArray(@Nullable final OfField<?> instance) {
 			return instance != null && instance.isArray();
 		}
 
@@ -491,7 +492,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 			return instance != null ? instance.getSimpleName() : null;
 		}
 
-		private static <K, V> void put(final Map<K, V> instance, final K key, final V value) {
+		private static <K, V> void put(@Nullable final Map<K, V> instance, final K key, final V value) {
 			if (instance != null) {
 				instance.put(key, value);
 			}
@@ -639,7 +640,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 			//
 	}
 
-	private static Matcher matcher(final Pattern pattern, final CharSequence input) {
+	private static Matcher matcher(@Nullable final Pattern pattern, @Nullable final CharSequence input) {
 		return pattern != null && input != null ? pattern.matcher(input) : null;
 	}
 
@@ -732,14 +733,14 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		return instance != null ? Long.valueOf(instance.toMillis()) : null;
 	}
 
-	private static void setFillBackgroundColor(final CellStyle instance,
+	private static void setFillBackgroundColor(@Nullable final CellStyle instance,
 			final org.apache.poi.ss.usermodel.Color color) {
 		if (instance != null) {
 			instance.setFillBackgroundColor(color);
 		}
 	}
 
-	private static void setFillPattern(final CellStyle instance, final FillPatternType fillPatternType) {
+	private static void setFillPattern(@Nullable final CellStyle instance, final FillPatternType fillPatternType) {
 		if (instance != null) {
 			instance.setFillPattern(fillPatternType);
 		}
@@ -756,7 +757,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 	}
 
 	private static <T, E extends Throwable> void testAndAccept(final Predicate<T> predicate, @Nullable final T value,
-			final FailableConsumer<T, E> consumer) throws E {
+			@Nullable final FailableConsumer<T, E> consumer) throws E {
 		if (test(predicate, value) && consumer != null) {
 			consumer.accept(value);
 		}
@@ -813,7 +814,8 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 	}
 
 	@Nullable
-	private static <T> IntStream mapToInt(final Stream<T> instance, final ToIntFunction<? super T> mapper) {
+	private static <T> IntStream mapToInt(@Nullable final Stream<T> instance,
+			@Nullable final ToIntFunction<? super T> mapper) {
 		//
 		return instance != null && (Proxy.isProxyClass(getClass(instance)) || mapper != null)
 				? instance.mapToInt(mapper)
@@ -831,7 +833,8 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 	}
 
 	@Nullable
-	private static <T> Stream<T> filter(@Nullable final Stream<T> instance, final Predicate<? super T> predicate) {
+	private static <T> Stream<T> filter(@Nullable final Stream<T> instance,
+			@Nullable final Predicate<? super T> predicate) {
 		//
 		return instance != null && (Proxy.isProxyClass(getClass(instance)) || predicate != null)
 				? instance.filter(predicate)
@@ -845,21 +848,22 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 	}
 
 	@Nullable
-	private static <T> T cast(final Class<T> clz, @Nullable final Object value) {
+	private static <T> T cast(@Nullable final Class<T> clz, @Nullable final Object value) {
 		return clz != null && clz.isInstance(value) ? clz.cast(value) : null;
 	}
 
-	private static boolean contains(final Collection<?> items, final Object item) {
+	private static boolean contains(@Nullable final Collection<?> items, final Object item) {
 		return items != null && items.contains(item);
 	}
 
-	private static <E> void add(final Collection<E> items, @Nullable final E item) {
+	private static <E> void add(@Nullable final Collection<E> items, @Nullable final E item) {
 		if (items != null) {
 			items.add(item);
 		}
 	}
 
-	private static void setSelectedItem(final ComboBoxModel<?> instance, @Nullable final Object selectedItem) {
+	private static void setSelectedItem(@Nullable final ComboBoxModel<?> instance,
+			@Nullable final Object selectedItem) {
 		if (instance != null) {
 			instance.setSelectedItem(selectedItem);
 		}
@@ -878,7 +882,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
-	private static final <T> boolean test(final Predicate<T> instance, @Nullable final T value) {
+	private static final <T> boolean test(@Nullable final Predicate<T> instance, @Nullable final T value) {
 		return instance != null && instance.test(value);
 	}
 
@@ -887,7 +891,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		return instance != null ? instance.getText() : null;
 	}
 
-	private static void setText(final JTextComponent instance, final String text) {
+	private static void setText(@Nullable final JTextComponent instance, final String text) {
 		if (instance != null) {
 			instance.setText(text);
 		}

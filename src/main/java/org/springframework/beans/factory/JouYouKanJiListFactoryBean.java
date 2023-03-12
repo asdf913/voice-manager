@@ -204,7 +204,7 @@ public class JouYouKanJiListFactoryBean implements FactoryBean<List<String>> {
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
-	private static final <T> boolean test(final Predicate<T> instance, final T value) {
+	private static final <T> boolean test(@Nullable final Predicate<T> instance, final T value) {
 		return instance != null && instance.test(value);
 	}
 
@@ -217,7 +217,7 @@ public class JouYouKanJiListFactoryBean implements FactoryBean<List<String>> {
 		return instance != null ? instance.intValue() : defaultValue;
 	}
 
-	private static <E> void add(final Collection<E> items, final E item) {
+	private static <E> void add(@Nullable final Collection<E> items, final E item) {
 		if (items != null) {
 			items.add(item);
 		}

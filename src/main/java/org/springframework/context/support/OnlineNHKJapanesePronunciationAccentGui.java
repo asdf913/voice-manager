@@ -185,7 +185,8 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 	}
 
 	@Nullable
-	private static <T> Stream<T> filter(@Nullable final Stream<T> instance, final Predicate<? super T> predicate) {
+	private static <T> Stream<T> filter(@Nullable final Stream<T> instance,
+			@Nullable final Predicate<? super T> predicate) {
 		//
 		return instance != null && (predicate != null || Proxy.isProxyClass(getClass(instance)))
 				? instance.filter(predicate)
@@ -195,7 +196,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 
 	@Nullable
 	private static <T, R> Stream<R> map(@Nullable final Stream<T> instance,
-			final Function<? super T, ? extends R> mapper) {
+			@Nullable final Function<? super T, ? extends R> mapper) {
 		//
 		return instance != null && (Proxy.isProxyClass(getClass(instance)) || mapper != null) ? instance.map(mapper)
 				: null;
@@ -439,7 +440,8 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 	}
 
 	@Nullable
-	private static <T> Optional<T> max(@Nullable final Stream<T> instance, final Comparator<? super T> comparator) {
+	private static <T> Optional<T> max(@Nullable final Stream<T> instance,
+			@Nullable final Comparator<? super T> comparator) {
 		//
 		return instance != null && (Proxy.isProxyClass(getClass(instance)) || comparator != null)
 				? instance.max(comparator)
@@ -447,7 +449,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		//
 	}
 
-	private static void setPreferredSize(final Component instance, final Dimension preferredSize) {
+	private static void setPreferredSize(@Nullable final Component instance, final Dimension preferredSize) {
 		if (instance != null) {
 			instance.setPreferredSize(preferredSize);
 		}
@@ -509,13 +511,13 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		return instance != null ? instance.value() : null;
 	}
 
-	private static boolean isAnnotationPresent(final AnnotatedElement instance,
-			final Class<? extends Annotation> annotationClass) {
+	private static boolean isAnnotationPresent(@Nullable final AnnotatedElement instance,
+			@Nullable final Class<? extends Annotation> annotationClass) {
 		return instance != null && annotationClass != null && instance.isAnnotationPresent(annotationClass);
 	}
 
-	private static <T extends Annotation> T getAnnotation(final AnnotatedElement instance,
-			final Class<T> annotationClass) {
+	private static <T extends Annotation> T getAnnotation(@Nullable final AnnotatedElement instance,
+			@Nullable final Class<T> annotationClass) {
 		return instance != null && annotationClass != null ? instance.getAnnotation(annotationClass) : null;
 	}
 
@@ -557,7 +559,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		return instance != null ? instance.getName() : null;
 	}
 
-	private static <E> void sort(final List<E> instance, final Comparator<? super E> comparator) {
+	private static <E> void sort(@Nullable final List<E> instance, @Nullable final Comparator<? super E> comparator) {
 		//
 		if (instance != null
 				&& (Proxy.isProxyClass(getClass(instance)) || (instance.size() > 1 && comparator != null))) {
@@ -568,7 +570,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			//
 	}
 
-	private static void addActionListener(final ActionListener actionListener, final AbstractButton... bs) {
+	private static void addActionListener(final ActionListener actionListener, @Nullable final AbstractButton... bs) {
 		//
 		AbstractButton b = null;
 		//
@@ -698,7 +700,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		return instance != null && instance.containsKey(key);
 	}
 
-	private static void saveFile(final File file, final String url) throws IOException {
+	private static void saveFile(@Nullable final File file, final String url) throws IOException {
 		//
 		try (final InputStream is = openStream(testAndApply(Objects::nonNull, url, URL::new, null))) {
 			//
@@ -712,13 +714,13 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			//
 	}
 
-	private static void setText(final JLabel instance, final String text) {
+	private static void setText(@Nullable final JLabel instance, final String text) {
 		if (instance != null) {
 			instance.setText(text);
 		}
 	}
 
-	private static void setForeground(final Component instance, final Color color) {
+	private static void setForeground(@Nullable final Component instance, final Color color) {
 		if (instance != null) {
 			instance.setForeground(color);
 		}
@@ -796,7 +798,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		//
 	}
 
-	private static void play(final Player instance) throws JavaLayerException {
+	private static void play(@Nullable final Player instance) throws JavaLayerException {
 		if (instance != null) {
 			instance.play();
 		}
@@ -834,7 +836,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		//
 	}
 
-	private static void saveAudio(final boolean headless, final JFileChooser jfc,
+	private static void saveAudio(final boolean headless, @Nullable final JFileChooser jfc,
 			@Nullable final Iterable<String> audioUrls) {
 		//
 		if (iterator(audioUrls) != null) {
@@ -979,13 +981,13 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		}
 	}
 
-	private static <T> void forEach(@Nullable final Iterable<T> instance, final Consumer<? super T> action) {
+	private static <T> void forEach(@Nullable final Iterable<T> instance, @Nullable final Consumer<? super T> action) {
 		if (instance != null && (action != null || Proxy.isProxyClass(getClass(instance)))) {
 			instance.forEach(action);
 		}
 	}
 
-	private static void forEach(@Nullable final IntStream instance, final IntConsumer action) {
+	private static void forEach(@Nullable final IntStream instance, @Nullable final IntConsumer action) {
 		if (instance != null && (action != null || Proxy.isProxyClass(getClass(instance)))) {
 			instance.forEach(action);
 		}
@@ -1041,13 +1043,13 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		return instance != null ? instance.getSelectedItem() : null;
 	}
 
-	private static <E> void addElement(final MutableComboBoxModel<E> instance, @Nullable final E item) {
+	private static <E> void addElement(@Nullable final MutableComboBoxModel<E> instance, @Nullable final E item) {
 		if (instance != null) {
 			instance.addElement(item);
 		}
 	}
 
-	private static void removeElementAt(final MutableComboBoxModel<?> instance, final int index) {
+	private static void removeElementAt(@Nullable final MutableComboBoxModel<?> instance, final int index) {
 		if (instance != null) {
 			instance.removeElementAt(index);
 		}
@@ -1086,12 +1088,12 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
-	private static final <T> boolean test(final Predicate<T> instance, @Nullable final T value) {
+	private static final <T> boolean test(@Nullable final Predicate<T> instance, @Nullable final T value) {
 		return instance != null && instance.test(value);
 	}
 
 	@Nullable
-	private static <T> T cast(final Class<T> clz, @Nullable final Object instance) {
+	private static <T> T cast(@Nullable final Class<T> clz, @Nullable final Object instance) {
 		return clz != null && clz.isInstance(instance) ? clz.cast(instance) : null;
 	}
 

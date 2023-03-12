@@ -71,7 +71,7 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 	}
 
 	@Override
-	public void onApplicationEvent(final PayloadApplicationEvent<?> event) {
+	public void onApplicationEvent(@Nullable final PayloadApplicationEvent<?> event) {
 		//
 		if (event != null && Objects.equals(event.getSource(), "ini")) {
 			//
@@ -189,7 +189,8 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 		return instance != null ? instance.getParameterTypes() : null;
 	}
 
-	private static void errorOrPrintStackTrace(final Logger logger, @Nullable final Throwable a, final Throwable b) {
+	private static void errorOrPrintStackTrace(final Logger logger, @Nullable final Throwable a,
+			@Nullable final Throwable b) {
 		//
 		if (Boolean.logicalAnd(logger != null, !LoggerUtil.isNOPLogger(logger))) {
 			//
@@ -248,7 +249,7 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 			//
 	}
 
-	private static boolean isStatic(final Member instance) {
+	private static boolean isStatic(@Nullable final Member instance) {
 		return instance != null && Modifier.isStatic(instance.getModifiers());
 	}
 
@@ -257,7 +258,8 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 		return instance != null ? instance.getDeclaredMethods() : null;
 	}
 
-	private static <T> Stream<T> filter(final Stream<T> instance, final Predicate<? super T> predicate) {
+	private static <T> Stream<T> filter(@Nullable final Stream<T> instance,
+			@Nullable final Predicate<? super T> predicate) {
 		//
 		return instance != null && (predicate != null || Proxy.isProxyClass(getClass(instance)))
 				? instance.filter(predicate)
@@ -276,7 +278,7 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 	}
 
 	private static <T, E extends Throwable> void testAndAccept(final Predicate<T> predicate, @Nullable final T value,
-			final FailableConsumer<T, E> consumer) throws E {
+			@Nullable final FailableConsumer<T, E> consumer) throws E {
 		//
 		if (test(predicate, value) && consumer != null) {
 			//
@@ -286,7 +288,7 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 			//
 	}
 
-	private static final <T> boolean test(final Predicate<T> instance, @Nullable final T value) {
+	private static final <T> boolean test(@Nullable final Predicate<T> instance, @Nullable final T value) {
 		return instance != null && instance.test(value);
 	}
 
@@ -307,7 +309,7 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 	}
 
 	private static void addPropertySourceToPropertySourcesToLast(final Environment environment,
-			final Map<?, PropertySourcesPlaceholderConfigurer> propertySourcesPlaceholderConfigurers) {
+			@Nullable final Map<?, PropertySourcesPlaceholderConfigurer> propertySourcesPlaceholderConfigurers) {
 		//
 		if (propertySourcesPlaceholderConfigurers != null && propertySourcesPlaceholderConfigurers.values() != null) {
 			//
@@ -357,14 +359,14 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 		return instance != null ? instance.getSource() : null;
 	}
 
-	private static void addLast(final MutablePropertySources instance,
+	private static void addLast(@Nullable final MutablePropertySources instance,
 			@Nullable final PropertySource<?> propertySource) {
 		if (instance != null) {
 			instance.addLast(propertySource);
 		}
 	}
 
-	private static void postProcessDatasources(final Map<?, DataSource> dataSources, final Resource tableSql,
+	private static void postProcessDatasources(@Nullable final Map<?, DataSource> dataSources, final Resource tableSql,
 			final String tableSqlEncoding) throws SQLException, IOException {
 		//
 		if (dataSources != null && dataSources.values() != null) {
@@ -404,9 +406,10 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 		return instance != null ? instance.createStatement() : null;
 	}
 
-	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, @Nullable final T value,
-			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
-			throws E {
+	@Nullable
+	private static <T, R, E extends Throwable> R testAndApply(@Nullable final Predicate<T> predicate,
+			@Nullable final T value, final FailableFunction<T, R, E> functionTrue,
+			@Nullable final FailableFunction<T, R, E> functionFalse) throws E {
 		return predicate != null && predicate.test(value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}

@@ -219,7 +219,8 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		//
 	}
 
-	private static <T> Stream<T> filter(final Stream<T> instance, final Predicate<? super T> predicate) {
+	private static <T> Stream<T> filter(@Nullable final Stream<T> instance,
+			@Nullable final Predicate<? super T> predicate) {
 		//
 		return instance != null && (predicate != null || Proxy.isProxyClass(getClass(instance)))
 				? instance.filter(predicate)
@@ -324,13 +325,13 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		return instance != null ? Integer.valueOf(instance.getPhysicalNumberOfCells()) : null;
 	}
 
-	private static void setAccessible(final AccessibleObject instance, final boolean flag) {
+	private static void setAccessible(@Nullable final AccessibleObject instance, final boolean flag) {
 		if (instance != null) {
 			instance.setAccessible(flag);
 		}
 	}
 
-	private static void set(final Field field, final Object instance, final Object value)
+	private static void set(@Nullable final Field field, final Object instance, final Object value)
 			throws IllegalAccessException {
 		if (field != null) {
 			field.set(instance, value);
@@ -342,7 +343,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		return instance != null ? instance.getType() : null;
 	}
 
-	private static boolean isAssignableFrom(final Class<?> a, final Class<?> b) {
+	private static boolean isAssignableFrom(@Nullable final Class<?> a, @Nullable final Class<?> b) {
 		return a != null && b != null && a.isAssignableFrom(b);
 	}
 
@@ -473,7 +474,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 	}
 
 	@Nullable
-	private static List<JlptVocabulary> getObjectByUrls(final List<String> urls)
+	private static List<JlptVocabulary> getObjectByUrls(@Nullable final List<String> urls)
 			throws CsvValidationException, IllegalAccessException, IOException {
 		//
 		List<JlptVocabulary> list = null;
@@ -500,6 +501,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		//
 	}
 
+	@Nullable
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, @Nullable final T value,
 			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
 			throws E {
@@ -507,7 +509,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
-	private static final <T> boolean test(final Predicate<T> instance, @Nullable final T value) {
+	private static final <T> boolean test(@Nullable final Predicate<T> instance, @Nullable final T value) {
 		return instance != null && instance.test(value);
 	}
 
@@ -521,7 +523,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		return instance != null ? instance.getMessage() : null;
 	}
 
-	private static boolean or(final boolean a, final boolean b, final boolean... bs) {
+	private static boolean or(final boolean a, final boolean b, @Nullable final boolean... bs) {
 		//
 		boolean result = a || b;
 		//
@@ -550,13 +552,13 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		return instance != null ? instance.getStringCellValue() : null;
 	}
 
-	private static <E> void add(final Collection<E> items, @Nullable final E item) {
+	private static <E> void add(@Nullable final Collection<E> items, @Nullable final E item) {
 		if (items != null) {
 			items.add(item);
 		}
 	}
 
-	private static <E> void addAll(final Collection<E> a, final Collection<? extends E> b) {
+	private static <E> void addAll(@Nullable final Collection<E> a, @Nullable final Collection<? extends E> b) {
 		if (a != null && (b != null || Proxy.isProxyClass(getClass(a)))) {
 			a.addAll(b);
 		}
@@ -700,14 +702,14 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		return instance != null ? instance.readNext() : null;
 	}
 
-	private static <K, V> void put(final Map<K, V> instance, final K key, final V value) {
+	private static <K, V> void put(@Nullable final Map<K, V> instance, final K key, final V value) {
 		if (instance != null) {
 			instance.put(key, value);
 		}
 	}
 
 	@Nullable
-	private static List<Field> getFieldsByName(final Field[] fs, @Nullable final String name) {
+	private static List<Field> getFieldsByName(@Nullable final Field[] fs, @Nullable final String name) {
 		//
 		List<Field> list = null;
 		//

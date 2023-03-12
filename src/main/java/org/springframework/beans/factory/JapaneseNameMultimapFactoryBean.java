@@ -145,7 +145,7 @@ public class JapaneseNameMultimapFactoryBean implements FactoryBean<Multimap<Str
 	}
 
 	@Nullable
-	private static IValue0<Multimap<String, String>> createMultimap(final Workbook wb) {
+	private static IValue0<Multimap<String, String>> createMultimap(@Nullable final Workbook wb) {
 		//
 		final Sheet sheet = wb != null && wb.getNumberOfSheets() == 1 ? wb.getSheetAt(0) : null;
 		//
@@ -183,7 +183,8 @@ public class JapaneseNameMultimapFactoryBean implements FactoryBean<Multimap<Str
 	}
 
 	@Nullable
-	private static Multimap<String, String> createMultimap(@Nullable final Element input, final Pattern pattern) {
+	private static Multimap<String, String> createMultimap(@Nullable final Element input,
+			@Nullable final Pattern pattern) {
 		//
 		Element nextElementSibling = input;
 		//
@@ -228,7 +229,7 @@ public class JapaneseNameMultimapFactoryBean implements FactoryBean<Multimap<Str
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
-	private static <T> boolean test(final Predicate<T> instance, final T value) {
+	private static <T> boolean test(@Nullable final Predicate<T> instance, final T value) {
 		return instance != null && instance.test(value);
 	}
 

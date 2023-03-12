@@ -230,7 +230,8 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 	}
 
 	@Nullable
-	private static <T> Optional<T> max(@Nullable final Stream<T> instance, final Comparator<? super T> comparator) {
+	private static <T> Optional<T> max(@Nullable final Stream<T> instance,
+			@Nullable final Comparator<? super T> comparator) {
 		//
 		return instance != null && (Proxy.isProxyClass(getClass(instance)) || comparator != null)
 				? instance.max(comparator)
@@ -248,13 +249,13 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		//
 	}
 
-	private static void addDocumentListener(final Document instance, final DocumentListener listener) {
+	private static void addDocumentListener(@Nullable final Document instance, final DocumentListener listener) {
 		if (instance != null) {
 			instance.addDocumentListener(listener);
 		}
 	}
 
-	private static void addActionListener(final ActionListener actionListener, final AbstractButton... bs) {
+	private static void addActionListener(final ActionListener actionListener, @Nullable final AbstractButton... bs) {
 		//
 		AbstractButton b = null;
 		//
@@ -438,7 +439,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		return forName("org.junit.jupiter.api.Test") != null;
 	}
 
-	private static void browse(final Desktop instance, final URI uri) throws IOException {
+	private static void browse(@Nullable final Desktop instance, @Nullable final URI uri) throws IOException {
 		if (instance != null && uri != null) {
 			instance.browse(uri);
 		}
@@ -593,7 +594,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 	}
 
 	@Nullable
-	private static <T> T cast(final Class<T> clz, @Nullable final Object value) {
+	private static <T> T cast(@Nullable final Class<T> clz, @Nullable final Object value) {
 		return clz != null && clz.isInstance(value) ? clz.cast(value) : null;
 	}
 
@@ -613,7 +614,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 
 	@Nullable
 	private static <T, R> Stream<R> map(@Nullable final Stream<T> instance,
-			final Function<? super T, ? extends R> mapper) {
+			@Nullable final Function<? super T, ? extends R> mapper) {
 		//
 		return instance != null && (Proxy.isProxyClass(getClass(instance)) || mapper != null) ? instance.map(mapper)
 				: null;
@@ -640,7 +641,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		return instance != null ? instance.getJmdictSeq() : null;
 	}
 
-	private static <T> void forEach(final Iterable<T> items, final Consumer<? super T> action) {
+	private static <T> void forEach(final Iterable<T> items, @Nullable final Consumer<? super T> action) {
 		//
 		if (iterator(items) != null && (action != null || Proxy.isProxyClass(getClass(items)))) {
 			//
@@ -654,13 +655,14 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 			//
 	}
 
-	private static <E> void addElement(final MutableComboBoxModel<E> instance, final E item) {
+	private static <E> void addElement(@Nullable final MutableComboBoxModel<E> instance, final E item) {
 		if (instance != null) {
 			instance.addElement(item);
 		}
 	}
 
-	private static <T> void testAndAccept(final Predicate<T> predicate, final T value, final Consumer<T> consumer) {
+	private static <T> void testAndAccept(final Predicate<T> predicate, final T value,
+			@Nullable final Consumer<T> consumer) {
 		if (test(predicate, value) && consumer != null) {
 			consumer.accept(value);
 		}
@@ -686,7 +688,8 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		return instance != null ? instance.getParameterTypes() : null;
 	}
 
-	private static <T> Stream<T> filter(final Stream<T> instance, final Predicate<? super T> predicate) {
+	private static <T> Stream<T> filter(@Nullable final Stream<T> instance,
+			@Nullable final Predicate<? super T> predicate) {
 		//
 		return instance != null && (predicate != null || Proxy.isProxyClass(getClass(instance)))
 				? instance.filter(predicate)
@@ -710,13 +713,14 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		return instance != null ? instance.getSystemClipboard() : null;
 	}
 
-	private static void setContents(final Clipboard instance, final Transferable contents, final ClipboardOwner owner) {
+	private static void setContents(@Nullable final Clipboard instance, final Transferable contents,
+			final ClipboardOwner owner) {
 		if (instance != null) {
 			instance.setContents(contents, owner);
 		}
 	}
 
-	private static void run(final boolean b, final Runnable runnable) {
+	private static void run(final boolean b, @Nullable final Runnable runnable) {
 		//
 		if (b && runnable != null) {
 			//
@@ -740,19 +744,19 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		return instance != null ? instance.getText() : null;
 	}
 
-	private static void setText(final JTextComponent instance, final String text) {
+	private static void setText(@Nullable final JTextComponent instance, final String text) {
 		if (instance != null) {
 			instance.setText(text);
 		}
 	}
 
-	private static void setText(final JLabel instance, @Nullable final String text) {
+	private static void setText(@Nullable final JLabel instance, @Nullable final String text) {
 		if (instance != null) {
 			instance.setText(text);
 		}
 	}
 
-	private static void setForeground(final Component instance, final Color color) {
+	private static void setForeground(@Nullable final Component instance, final Color color) {
 		if (instance != null) {
 			instance.setForeground(color);
 		}
@@ -762,7 +766,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		return condition ? trueValue : falseValue;
 	}
 
-	private static <T> T[] toArray(final Collection<T> instance, final T[] array) {
+	private static <T> T[] toArray(@Nullable final Collection<T> instance, @Nullable final T[] array) {
 		//
 		return instance != null && (array != null || Proxy.isProxyClass(getClass(instance))) ? instance.toArray(array)
 				: null;
@@ -782,7 +786,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
-	private static final <T> boolean test(final Predicate<T> instance, @Nullable final T value) {
+	private static final <T> boolean test(@Nullable final Predicate<T> instance, @Nullable final T value) {
 		return instance != null && instance.test(value);
 	}
 

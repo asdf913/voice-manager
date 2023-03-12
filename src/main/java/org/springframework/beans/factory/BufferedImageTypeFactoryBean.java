@@ -176,11 +176,12 @@ public class BufferedImageTypeFactoryBean implements FactoryBean<Integer> {
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
-	private static final <T> boolean test(final Predicate<T> instance, final T value) {
+	private static final <T> boolean test(@Nullable final Predicate<T> instance, final T value) {
 		return instance != null && instance.test(value);
 	}
 
-	private static <T> Stream<T> filter(final Stream<T> instance, final Predicate<? super T> predicate) {
+	private static <T> Stream<T> filter(@Nullable final Stream<T> instance,
+			@Nullable final Predicate<? super T> predicate) {
 		//
 		return instance != null && (predicate != null || Proxy.isProxyClass(getClass(instance)))
 				? instance.filter(predicate)
@@ -198,7 +199,7 @@ public class BufferedImageTypeFactoryBean implements FactoryBean<Integer> {
 		return instance != null ? instance.getClass() : null;
 	}
 
-	private static boolean isStatic(final Member instance) {
+	private static boolean isStatic(@Nullable final Member instance) {
 		return instance != null && Modifier.isStatic(instance.getModifiers());
 	}
 
@@ -212,11 +213,11 @@ public class BufferedImageTypeFactoryBean implements FactoryBean<Integer> {
 		return instance != null ? instance.getType() : null;
 	}
 
-	private static boolean isAssignableFrom(final Class<?> a, final Class<?> b) {
+	private static boolean isAssignableFrom(@Nullable final Class<?> a, @Nullable final Class<?> b) {
 		return a != null && b != null && a.isAssignableFrom(b);
 	}
 
-	private static boolean isPrimitive(final Class<?> instance) {
+	private static boolean isPrimitive(@Nullable final Class<?> instance) {
 		return instance != null && instance.isPrimitive();
 	}
 
@@ -225,7 +226,7 @@ public class BufferedImageTypeFactoryBean implements FactoryBean<Integer> {
 		return instance != null ? instance.getName() : null;
 	}
 
-	private static boolean and(final boolean a, final boolean b, final boolean... bs) {
+	private static boolean and(final boolean a, final boolean b, @Nullable final boolean... bs) {
 		//
 		boolean result = a && b;
 		//

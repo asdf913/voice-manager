@@ -48,7 +48,7 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider, Lookup, I
 		Jna INSTANCE = cast(Jna.class, Native.load("MicrosoftSpeechApi10.dll", Jna.class));
 
 		@Nullable
-		private static <T> T cast(final Class<T> clz, final Object value) {
+		private static <T> T cast(@Nullable final Class<T> clz, final Object value) {
 			return clz != null && clz.isInstance(value) ? clz.cast(value) : null;
 		}
 
@@ -88,6 +88,7 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider, Lookup, I
 		//
 	}
 
+	@Nullable
 	private Table<Object, Object, Object> getTable() {
 		//
 		return table = ObjectUtils.getIfNull(table, HashBasedTable::create);
@@ -206,7 +207,7 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider, Lookup, I
 	}
 
 	@Nullable
-	private static Map<String, String> getVersionInfoMap2(final ResourceEntry[] res) throws IOException {
+	private static Map<String, String> getVersionInfoMap2(@Nullable final ResourceEntry[] res) throws IOException {
 		//
 		ResourceEntry re = null;
 		//
@@ -244,7 +245,7 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider, Lookup, I
 		//
 	}
 
-	private static <K, V> void put(final Map<K, V> instance, final K key, final V value) {
+	private static <K, V> void put(@Nullable final Map<K, V> instance, final K key, final V value) {
 		if (instance != null) {
 			instance.put(key, value);
 		}
@@ -255,9 +256,9 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider, Lookup, I
 		return instance != null ? instance.getStringFileInfo() : null;
 	}
 
-	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, @Nullable final T value,
-			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
-			throws E {
+	private static <T, R, E extends Throwable> R testAndApply(@Nullable final Predicate<T> predicate,
+			@Nullable final T value, final FailableFunction<T, R, E> functionTrue,
+			@Nullable final FailableFunction<T, R, E> functionFalse) throws E {
 		return predicate != null && predicate.test(value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}

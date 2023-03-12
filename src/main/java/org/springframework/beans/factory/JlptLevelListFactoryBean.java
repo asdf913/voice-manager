@@ -128,7 +128,7 @@ public class JlptLevelListFactoryBean implements FactoryBean<List<String>> {
 			//
 	}
 
-	private static <E> void add(final Collection<E> items, @Nullable final E item) {
+	private static <E> void add(@Nullable final Collection<E> items, @Nullable final E item) {
 		if (items != null) {
 			items.add(item);
 		}
@@ -184,7 +184,7 @@ public class JlptLevelListFactoryBean implements FactoryBean<List<String>> {
 
 	@Nullable
 	private static <T, R> Stream<R> map(@Nullable final Stream<T> instance,
-			final Function<? super T, ? extends R> mapper) {
+			@Nullable final Function<? super T, ? extends R> mapper) {
 		//
 		return instance != null && (Proxy.isProxyClass(getClass(instance)) || mapper != null) ? instance.map(mapper)
 				: null;
@@ -222,7 +222,7 @@ public class JlptLevelListFactoryBean implements FactoryBean<List<String>> {
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
-	private static final <T> boolean test(final Predicate<T> instance, final T value) {
+	private static final <T> boolean test(@Nullable final Predicate<T> instance, final T value) {
 		return instance != null && instance.test(value);
 	}
 

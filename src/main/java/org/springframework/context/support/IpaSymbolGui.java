@@ -187,7 +187,7 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 		return instance != null ? instance.getClass() : null;
 	}
 
-	private static void addActionListener(final ActionListener actionListener, final AbstractButton... abs) {
+	private static void addActionListener(final ActionListener actionListener, @Nullable final AbstractButton... abs) {
 		//
 		AbstractButton ab = null;
 		//
@@ -304,13 +304,13 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 			//
 	}
 
-	private static void setText(final JLabel instance, final String text) {
+	private static void setText(@Nullable final JLabel instance, final String text) {
 		if (instance != null) {
 			instance.setText(text);
 		}
 	}
 
-	private static void setForeground(final Component instance, final Color color) {
+	private static void setForeground(@Nullable final Component instance, final Color color) {
 		if (instance != null) {
 			instance.setForeground(color);
 		}
@@ -334,7 +334,7 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
-	private static final <T> boolean test(final Predicate<T> instance, @Nullable final T value) {
+	private static final <T> boolean test(@Nullable final Predicate<T> instance, @Nullable final T value) {
 		return instance != null && instance.test(value);
 	}
 
@@ -383,7 +383,7 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 		return instance != null ? instance.getText() : null;
 	}
 
-	private static void setText(final JTextComponent instance, @Nullable final String text) {
+	private static void setText(@Nullable final JTextComponent instance, @Nullable final String text) {
 		if (instance != null) {
 			instance.setText(text);
 		}
@@ -402,7 +402,7 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 		}
 	}
 
-	private static void setPreferredWidth(final int width, final Component... cs) {
+	private static void setPreferredWidth(final int width, @Nullable final Component... cs) {
 		//
 		Component c = null;
 		//

@@ -97,7 +97,7 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 	}
 
 	@Nullable
-	private static IValue0<Multimap<String, String>> createMultimap(final Workbook wb) {
+	private static IValue0<Multimap<String, String>> createMultimap(@Nullable final Workbook wb) {
 		//
 		IValue0<Multimap<String, String>> value = null;
 		//
@@ -131,7 +131,7 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 	}
 
 	@Nullable
-	private static Multimap<String, String> createMultimap(final Sheet sheet) {
+	private static Multimap<String, String> createMultimap(@Nullable final Sheet sheet) {
 		//
 		Multimap<String, String> value = null;
 		//
@@ -213,7 +213,7 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
-	private static final <T> boolean test(final Predicate<T> instance, final T value) {
+	private static final <T> boolean test(@Nullable final Predicate<T> instance, final T value) {
 		return instance != null && instance.test(value);
 	}
 
@@ -334,17 +334,17 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 		return instnace != null ? instnace.get() : null;
 	}
 
-	private static <V> void set(final AtomicReference<V> instnace, final V newValue) {
+	private static <V> void set(@Nullable final AtomicReference<V> instnace, final V newValue) {
 		if (instnace != null) {
 			instnace.set(newValue);
 		}
 	}
 
-	private static Matcher matcher(final Pattern instance, final CharSequence input) {
+	private static Matcher matcher(@Nullable final Pattern instance, @Nullable final CharSequence input) {
 		return instance != null && input != null ? instance.matcher(input) : null;
 	}
 
-	private static boolean matches(final Matcher instance) {
+	private static boolean matches(@Nullable final Matcher instance) {
 		return instance != null && instance.matches();
 	}
 
