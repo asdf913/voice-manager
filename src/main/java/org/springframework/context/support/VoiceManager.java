@@ -5340,6 +5340,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	 * @see <a href="https://stackoverflow.com/a/24011264">list - Java 8 stream
 	 *      reverse order - Stack Overflow</a>
 	 */
+	@Nullable
 	private static IntStream reverseRange(final int from, final int to) {
 		return map(IntStream.range(from, to), i -> to - i + from - 1);
 	}
