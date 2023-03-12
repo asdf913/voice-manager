@@ -893,6 +893,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Nullable
 	private transient Collection<Multimap> multimapHiragana = null;
 
+	@Nullable
 	@Note("Katakana")
 	private transient Collection<Multimap> multimapKatakana = null;
 
