@@ -3227,7 +3227,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			final Integer i = cast(Integer.class, invoke(method, instance));
 			//
-			if (i != null) {
+			if (instance != null && i != null) {
 				//
 				instance.setValue(i.intValue());
 				//
