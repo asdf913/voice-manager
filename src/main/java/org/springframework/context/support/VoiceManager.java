@@ -1261,7 +1261,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static Object[] toArray(final Stream<?> instance) {
+	private static Object[] toArray(@Nullable final Stream<?> instance) {
 		return instance != null ? instance.toArray() : null;
 	}
 
