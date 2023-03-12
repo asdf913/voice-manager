@@ -349,6 +349,7 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 			//
 	}
 
+	@Nullable
 	private static MutablePropertySources getPropertySources(@Nullable final ConfigurableEnvironment instance) {
 		return instance != null ? instance.getPropertySources() : null;
 	}
