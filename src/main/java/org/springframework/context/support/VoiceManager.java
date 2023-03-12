@@ -573,9 +573,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("Phrase Counter")
 	private JTextComponent tfPhraseCounter = null;
 
+	@Note("Phrase Total")
+	private JTextComponent tfPhraseTotal = null;
+
 	@Nullable
-	private JTextComponent tfPhraseTotal, tfOrdinalPositionFileNamePrefix, tfExportFile, tfExportHtmlFileName,
-			tfExportPassword, tfPronunciationPageUrl, tfPronunciationPageStatusCode = null;
+	private JTextComponent tfOrdinalPositionFileNamePrefix, tfExportFile, tfExportHtmlFileName, tfExportPassword,
+			tfPronunciationPageUrl, tfPronunciationPageStatusCode = null;
 
 	private JTextComponent tfPresentationSlideDuration = null;
 
