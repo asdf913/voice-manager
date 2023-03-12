@@ -109,7 +109,10 @@ public class Voice {
 	@Note("File Digest Algorithm")
 	private String fileDigestAlgorithm = null;
 
-	private String fileDigest, fileExtension = null;
+	@Note("File Digest")
+	private String fileDigest = null;
+
+	private String fileExtension = null;
 
 	private Iterable<String> listNames = null;
 
