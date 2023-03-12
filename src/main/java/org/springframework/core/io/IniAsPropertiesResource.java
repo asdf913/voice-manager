@@ -192,7 +192,7 @@ public class IniAsPropertiesResource implements Resource, ApplicationEventPublis
 		return instance != null ? instance.openConnection() : null;
 	}
 
-	private static void publishEvent(final ApplicationEventPublisher instance, final ApplicationEvent event) {
+	private static void publishEvent(@Nullable final ApplicationEventPublisher instance, final ApplicationEvent event) {
 		if (instance != null) {
 			instance.publishEvent(event);
 		}
