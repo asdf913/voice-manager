@@ -22,7 +22,7 @@ public interface MultimapUtil {
 		}
 	}
 
-	static <K, V> void putAll(final Multimap<K, V> a, final Multimap<? extends K, ? extends V> b) {
+	static <K, V> void putAll(@Nullable final Multimap<K, V> a, @Nullable final Multimap<? extends K, ? extends V> b) {
 		if (a != null && b != null) {
 			a.putAll(b);
 		}
