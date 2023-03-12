@@ -25,6 +25,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.Console;
@@ -5573,37 +5574,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			// Pronunciation PitchAccentImage
 			//
-		final BufferedImage pitchAccentImage = getPitchAccentImage(
+		final RenderedImage pitchAccentImage = getPitchAccentImage(
 				cast(Pronunciation.class, getSelectedItem(mcbmPronunciation)));
 		//
-		if (pitchAccentImage != null) {
-			//
-			byte[] bs = null;
-			//
-			ContentInfo ci = null;
-			//
-			try (final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-				//
-				ImageIO.write(pitchAccentImage, "PNG", baos);
-				//
-				ci = new ContentInfoUtil().findMatch(bs = toByteArray(baos));
-				//
-			} catch (final IOException e) {
-				//
-				errorOrAssertOrShowException(headless, e);
-				//
-			} // try
-				//
-			final ByteArray pitchAccentImageBs = new ByteArray();
-			//
-			pitchAccentImageBs.setContent(bs);
-			//
-			pitchAccentImageBs.setMimeType(getMimeType(ci));
-			//
-			setPitchAccentImage(voice, pitchAccentImageBs);
-			//
-		} // if
-			//
+		testAndAccept(x -> pitchAccentImage != null, createByteArray(pitchAccentImage, "PNG"// TODO
+				, headless), x -> setPitchAccentImage(voice, x));
+		//
 		SqlSession sqlSession = null;
 		//
 		try {
@@ -5642,6 +5618,38 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // try
 			//
+	}
+
+	private static ByteArray createByteArray(final RenderedImage image, final String format, final boolean headless) {
+		//
+		byte[] bs = null;
+		//
+		ContentInfo ci = null;
+		//
+		try (final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+			//
+			if (image != null && format != null) {
+				//
+				ImageIO.write(image, format, baos);
+				//
+			} // if
+				//
+			ci = new ContentInfoUtil().findMatch(bs = toByteArray(baos));
+			//
+		} catch (final IOException e) {
+			//
+			errorOrAssertOrShowException(headless, e);
+			//
+		} // try
+			//
+		final ByteArray byteArray = new ByteArray();
+		//
+		byteArray.setContent(bs);
+		//
+		byteArray.setMimeType(getMimeType(ci));
+		//
+		return byteArray;
+		//
 	}
 
 	private static void setPitchAccentImage(@Nullable final Voice instance, final ByteArray pitchAccentImage) {

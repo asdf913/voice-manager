@@ -21,6 +21,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.Console;
@@ -223,6 +224,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.zeroturnaround.zip.ZipUtil;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import com.google.common.base.Predicates;
@@ -351,7 +354,7 @@ class VoiceManagerTest {
 			METHOD_GET_PRONUNCIATION_AUDIO_FILE_BY_AUDIO_FORMAT, METHOD_GET_AUDIO_FILE, METHOD_GET_BEAN,
 			METHOD_IS_ALL_ATTRIBUTES_MATCHED, METHOD_CREATE_FUNCTION_FOR_BTN_CONVERT_TO_HIRAGANA, METHOD_WRITER,
 			METHOD_READ_LINE, METHOD_PRINT_LN, METHOD_SET_PITCH_ACCENT_IMAGE, METHOD_GET_STRING_CELL_VALUE,
-			METHOD_GET_NUMERIC_CELL_VALUE, METHOD_SET_AUTO_FILTER = null;
+			METHOD_GET_NUMERIC_CELL_VALUE, METHOD_SET_AUTO_FILTER, METHOD_CREATE_BYTE_ARRAY = null;
 
 	@BeforeAll
 	static void beforeAll() throws Throwable {
@@ -1052,6 +1055,9 @@ class VoiceManagerTest {
 		(METHOD_GET_NUMERIC_CELL_VALUE = clz.getDeclaredMethod("getNumericCellValue", Cell.class)).setAccessible(true);
 		//
 		(METHOD_SET_AUTO_FILTER = clz.getDeclaredMethod("setAutoFilter", Sheet.class)).setAccessible(true);
+		//
+		(METHOD_CREATE_BYTE_ARRAY = clz.getDeclaredMethod("createByteArray", RenderedImage.class, String.class,
+				Boolean.TYPE)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -9709,6 +9715,40 @@ class VoiceManagerTest {
 	private static void setAutoFilter(final Sheet sheet) throws Throwable {
 		try {
 			METHOD_SET_AUTO_FILTER.invoke(null, sheet);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCreateByteArray() throws Throwable {
+		//
+		if (objectMapper != null) {
+			//
+			objectMapper.setVisibility(PropertyAccessor.ALL, Visibility.ANY);
+			//
+		} // if
+			//
+		final RenderedImage renderedImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
+		//
+		Assertions.assertEquals("{\"content\":\"\",\"mimeType\":\"application/octet-stream\"}",
+				ObjectMapperUtil.writeValueAsString(objectMapper, createByteArray(renderedImage, null, false)));
+		//
+		Assertions.assertEquals("{\"content\":\"\",\"mimeType\":\"application/octet-stream\"}",
+				ObjectMapperUtil.writeValueAsString(objectMapper, createByteArray(renderedImage, EMPTY, false)));
+		//
+	}
+
+	private static ByteArray createByteArray(final RenderedImage image, final String format, final boolean headless)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_BYTE_ARRAY.invoke(null, image, format, headless);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof ByteArray) {
+				return (ByteArray) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
