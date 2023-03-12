@@ -11257,11 +11257,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		}
 
-		private static Integer getNumerator(final Fraction instnace) {
+		private static Integer getNumerator(@Nullable final Fraction instnace) {
 			return instnace != null ? instnace.getNumerator() : null;
 		}
 
-		private static Integer getDenominator(final Fraction instnace) {
+		private static Integer getDenominator(@Nullable final Fraction instnace) {
 			return instnace != null ? instnace.getDenominator() : null;
 		}
 
