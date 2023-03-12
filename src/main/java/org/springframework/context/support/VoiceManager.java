@@ -6014,7 +6014,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static boolean containsKey(final Multimap<?, ?> instance, @Nullable final Object key) {
+	private static boolean containsKey(@Nullable final Multimap<?, ?> instance, @Nullable final Object key) {
 		return instance != null && instance.containsKey(key);
 	}
 
@@ -6817,7 +6817,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static String getSource(@Nullable final Voice instance) {
 		return instance != null ? instance.getSource() : null;
 	}
-	
+
 	private static void setListNames(@Nullable final Voice instance, @Nullable final Iterable<String> listNames) {
 		if (instance != null) {
 			instance.setListNames(listNames);
