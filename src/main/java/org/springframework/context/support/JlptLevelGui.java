@@ -646,7 +646,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		return instance != null ? instance.getJmdictSeq() : null;
 	}
 
-	private static <T> void forEach(final Iterable<T> items, @Nullable final Consumer<? super T> action) {
+	private static <T> void forEach(@Nullable final Iterable<T> items, @Nullable final Consumer<? super T> action) {
 		//
 		if (iterator(items) != null && (action != null || Proxy.isProxyClass(getClass(items)))) {
 			//

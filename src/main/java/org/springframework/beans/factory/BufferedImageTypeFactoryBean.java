@@ -169,6 +169,7 @@ public class BufferedImageTypeFactoryBean implements FactoryBean<Integer> {
 		return instance != null ? instance.toString() : null;
 	}
 
+	@Nullable
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
 			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
 			throws E {

@@ -11237,7 +11237,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			return instance != null ? instance.progressBarExport : null;
 		}
 
-		private static void setStringFieldDefaultValue(final Object instance) throws IllegalAccessException {
+		private static void setStringFieldDefaultValue(@Nullable final Object instance) throws IllegalAccessException {
 			//
 			final Field[] fs = getDeclaredFields(VoiceManager.getClass(instance));
 			//
