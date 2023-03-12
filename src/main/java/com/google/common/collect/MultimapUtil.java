@@ -17,8 +17,14 @@ public interface MultimapUtil {
 
 	static <K, V> void putAll(@Nullable final Multimap<K, V> instance, @Nullable final K key,
 			@Nullable final Iterable<? extends V> values) {
-		if (instance != null) {
+		if (instance != null && values != null) {
 			instance.putAll(key, values);
+		}
+	}
+
+	static <K, V> void putAll(final Multimap<K, V> a, final Multimap<? extends K, ? extends V> b) {
+		if (a != null && b != null) {
+			a.putAll(b);
 		}
 	}
 

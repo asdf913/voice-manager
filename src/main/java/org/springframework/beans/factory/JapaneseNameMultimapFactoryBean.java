@@ -129,7 +129,7 @@ public class JapaneseNameMultimapFactoryBean implements FactoryBean<Multimap<Str
 					//
 				} // if
 					//
-				multimap.putAll(temp);
+				MultimapUtil.putAll(multimap, temp);
 				//
 			} // for
 				//

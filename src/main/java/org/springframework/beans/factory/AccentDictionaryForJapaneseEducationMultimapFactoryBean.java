@@ -113,8 +113,10 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 					//
 				} // if
 					//
-				putAll(IValue0Util.getValue0(
-						value = ObjectUtils.getIfNull(value, () -> Unit.with(LinkedHashMultimap.create()))), multimap);
+				MultimapUtil.putAll(
+						IValue0Util.getValue0(
+								value = ObjectUtils.getIfNull(value, () -> Unit.with(LinkedHashMultimap.create()))),
+						multimap);
 				//
 			} // for
 				//
@@ -122,12 +124,6 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 			//
 		return value;
 		//
-	}
-
-	private static <K, V> void putAll(final Multimap<K, V> a, final Multimap<? extends K, ? extends V> b) {
-		if (a != null) {
-			a.putAll(b);
-		}
 	}
 
 	@Nullable

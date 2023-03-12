@@ -19,4 +19,26 @@ class MultimapUtilTest {
 		//
 	}
 
+	@Test
+	void testPut() {
+		//
+		Assertions.assertDoesNotThrow(() -> MultimapUtil.put(null, null, null));
+		//
+	}
+
+	@Test
+	void testPutAll() {
+		//
+		Assertions.assertDoesNotThrow(() -> MultimapUtil.putAll(null, null));
+		//
+		final Multimap<?, ?> multimap = LinkedHashMultimap.create();
+		//
+		Assertions.assertDoesNotThrow(() -> MultimapUtil.putAll(multimap, null));
+		//
+		Assertions.assertDoesNotThrow(() -> MultimapUtil.putAll(null, null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> MultimapUtil.putAll(multimap, null, null));
+		//
+	}
+
 }
