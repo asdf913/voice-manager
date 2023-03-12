@@ -272,7 +272,7 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider, Lookup, I
 			//
 		} catch (final Exception e) {
 			//
-			throw e instanceof RuntimeException ? (RuntimeException) e : new RuntimeException(e);
+			throw e instanceof RuntimeException re ? re : new RuntimeException(e);
 			//
 		} // try
 			//
@@ -287,7 +287,7 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider, Lookup, I
 			//
 		} catch (final Exception e) {
 			//
-			throw e instanceof RuntimeException ? (RuntimeException) e : new RuntimeException(e);
+			throw e instanceof RuntimeException re ? re : new RuntimeException(e);
 			//
 		} // try
 			//

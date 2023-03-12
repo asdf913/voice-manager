@@ -242,9 +242,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 					.with(toList(map(IntStream.range(0, Array.getLength(object)).mapToObj(i -> Array.get(object, i)),
 							OnlineNHKJapanesePronunciationAccentGui::toString)));
 			//
-		} else if (object instanceof String) {
-			//
-			final String string = (String) object;
+		} else if (object instanceof String string)  {
 			//
 			try {
 				//

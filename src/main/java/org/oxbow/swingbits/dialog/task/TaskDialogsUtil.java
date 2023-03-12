@@ -209,9 +209,9 @@ public class TaskDialogsUtil {
 
 	private static RuntimeException toRuntimeException(final Throwable instance) {
 		//
-		if (instance instanceof RuntimeException) {
+		if (instance instanceof RuntimeException re) {
 			//
-			return (RuntimeException) instance;
+			return re;
 			//
 		} else if (instance instanceof Throwable) {
 			//

@@ -337,9 +337,9 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 					//
 				} // if
 					//
-				if (environment instanceof ConfigurableEnvironment) {
+				if (environment instanceof ConfigurableEnvironment ce) {
 					//
-					addLast(((ConfigurableEnvironment) environment).getPropertySources(), ps);
+					addLast(getPropertySources(ce), ps);
 					//
 				} // if
 					//
@@ -347,6 +347,10 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 				//
 		} // if
 			//
+	}
+
+	private static MutablePropertySources getPropertySources(final ConfigurableEnvironment instance) {
+		return instance != null ? instance.getPropertySources() : null;
 	}
 
 	@Nullable

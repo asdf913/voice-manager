@@ -1283,9 +1283,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Nullable
 	private static RuntimeException toRuntimeException(final Throwable instance) {
 		//
-		if (instance instanceof RuntimeException) {
+		if (instance instanceof RuntimeException re) {
 			//
-			return (RuntimeException) instance;
+			return re;
 			//
 		} else if (instance instanceof Throwable) {
 			//
@@ -1541,9 +1541,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	public void setFreeMarkerVersion(final Object value) {
 		//
-		if (value instanceof Version) {
+		if (value instanceof Version version) {
 			//
-			this.freeMarkerVersion = (Version) value;
+			this.freeMarkerVersion = version;
 			//
 		} else if (value instanceof CharSequence) {
 			//
@@ -1587,9 +1587,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	public void setMicrosoftAccessFileFormat(final Object object) {
 		//
-		if (object instanceof FileFormat) {
+		if (object instanceof FileFormat fileFormat) {
 			//
-			this.microsoftAccessFileFormat = (FileFormat) object;
+			this.microsoftAccessFileFormat = fileFormat;
 			//
 			return;
 			//
@@ -1702,9 +1702,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			return;
 			//
-		} else if (object instanceof Duration) {
+		} else if (object instanceof Duration duration) {
 			//
-			this.jSoupParseTimeout = (Duration) object;
+			this.jSoupParseTimeout = duration;
 			//
 			return;
 			//
@@ -1816,9 +1816,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			throw dpe;
 			//
-		} else if (object instanceof char[]) {
+		} else if (object instanceof char[] cs) {
 			//
-			return toDurationIvalue0(testAndApply(Objects::nonNull, (char[]) object, String::new, null));
+			return toDurationIvalue0(testAndApply(Objects::nonNull, cs, String::new, null));
 			//
 		} // if
 			//
@@ -2726,9 +2726,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			lm = migLayout;
 			//
-		} else if (lm instanceof Serializable) {
+		} else if (lm instanceof Serializable serializable) {
 			//
-			lm = cast(LayoutManager.class, SerializationUtils.clone((Serializable) lm));
+			lm = cast(LayoutManager.class, SerializationUtils.clone(serializable));
 			//
 		} // if
 			//
@@ -4848,9 +4848,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		Integer integer = null;
 		//
-		if (object instanceof Integer) {
+		if (object instanceof Integer i) {
 			//
-			integer = (Integer) object;
+			integer = i;
 			//
 		} else if (object instanceof Number) {
 			//
@@ -8479,8 +8479,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			final Object object = FieldUtils.readDeclaredStaticField(LameEncoder.class, "DEFAULT_QUALITY", true);
 			//
-			if (object instanceof Integer) {
-				return (Integer) object;
+			if (object instanceof Integer integer) {
+				return integer;
 			} // if
 				//
 			return null;
@@ -8493,9 +8493,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				this.vbr = null;
 				//
-			} else if (vbr instanceof Boolean) {
+			} else if (vbr instanceof Boolean b) {
 				//
-				this.vbr = (Boolean) vbr;
+				this.vbr = b;
 				//
 			} else {
 				//

@@ -72,9 +72,9 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 			//
 			value = Unit.with(null);
 			//
-		} else if (timeout instanceof Duration) {
+		} else if (timeout instanceof Duration duration) {
 			//
-			value = Unit.with((Duration) timeout);
+			value = Unit.with(duration);
 			//
 		} else if (timeout instanceof Number) {
 			//

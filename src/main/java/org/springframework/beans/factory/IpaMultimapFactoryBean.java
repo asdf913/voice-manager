@@ -111,9 +111,9 @@ public class IpaMultimapFactoryBean implements FactoryBean<Multimap<String, Stri
 			//
 			return Unit.with(null);
 			//
-		} else if (obj instanceof Map) {
+		} else if (obj instanceof Map map) {
 			//
-			final Set<Entry<String, String>> entrySet = entrySet((Map) obj);
+			final Set<Entry<String, String>> entrySet = entrySet(map);
 			//
 			Multimap<String, String> multimap = null;
 			//

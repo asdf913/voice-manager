@@ -124,7 +124,7 @@ public interface XlsxUtil {
 			//
 		} // try
 			//
-		return obj instanceof ZipEntry ? (ZipEntry) obj : null;
+		return obj instanceof ZipEntry ze ? ze : null;
 		//
 	}
 

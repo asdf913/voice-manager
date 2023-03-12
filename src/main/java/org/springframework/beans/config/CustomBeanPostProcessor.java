@@ -64,11 +64,11 @@ public class CustomBeanPostProcessor implements BeanPostProcessor, EnvironmentAw
 			//
 			value = Unit.with(Integer.valueOf(((Number) object).intValue()));
 			//
-		} else if (object instanceof CharSequence) {
+		} else if (object instanceof CharSequence cs) {
 			//
 			try {
 				//
-				value = getDefaultCloseOperation((CharSequence) object);
+				value = getDefaultCloseOperation(cs);
 				//
 			} catch (final JsonProcessingException | IllegalAccessException e) {
 				//
@@ -543,9 +543,9 @@ public class CustomBeanPostProcessor implements BeanPostProcessor, EnvironmentAw
 				//
 			} else if (exception != null) {
 				//
-				if (exception instanceof RuntimeException) {
+				if (exception instanceof RuntimeException re) {
 					//
-					throw (RuntimeException) exception;
+					throw re;
 					//
 				} // if
 					//

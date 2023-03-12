@@ -41,9 +41,9 @@ public class MigLayoutFactoryBean implements FactoryBean<MigLayout> {
 			//
 		} // if
 			//
-		if (value instanceof String[]) {
+		if (value instanceof String[] ss) {
 			//
-			this.arguments = (String[]) value;
+			this.arguments = ss;
 			//
 			return;
 			//

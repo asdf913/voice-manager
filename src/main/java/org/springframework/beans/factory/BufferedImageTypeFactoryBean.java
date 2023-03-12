@@ -76,9 +76,9 @@ public class BufferedImageTypeFactoryBean implements FactoryBean<Integer> {
 			//
 			result = Unit.with(Integer.valueOf(((Number) value).intValue()));
 			//
-		} else if (value instanceof CharSequence) {
+		} else if (value instanceof CharSequence cs) {
 			//
-			result = getImageType((CharSequence) value);
+			result = getImageType(cs);
 			//
 		} else if (value instanceof char[]) {
 			//

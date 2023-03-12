@@ -33,6 +33,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.MutablePropertySources;
 import org.springframework.core.env.PropertySource;
@@ -52,7 +53,7 @@ class CustomBeanFactoryPostProcessorTest {
 			METHOD_GET_MESSAGE, METHOD_GET_CLASS, METHOD_ERROR_OR_PRINT_STACK_TRACE, METHOD_GET_DECLARED_METHODS,
 			METHOD_FILTER, METHOD_TO_LIST, METHOD_TEST_AND_ACCEPT, METHOD_GET_NAME, METHOD_INVOKE, METHOD_ADD_LAST,
 			METHOD_POST_PROCESS_DATA_SOURCES, METHOD_TEST_AND_APPLY, METHOD_PRINT_LN, METHOD_GET_TYPE, METHOD_GET,
-			METHOD_GET_PARAMETER_TYPES = null;
+			METHOD_GET_PARAMETER_TYPES, METHOD_GET_PROPERTY_SOURCES = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -197,6 +198,14 @@ class CustomBeanFactoryPostProcessorTest {
 			//
 		} // if
 			//
+		if ((METHOD_GET_PROPERTY_SOURCES = clz != null
+				? clz.getDeclaredMethod("getPropertySources", ConfigurableEnvironment.class)
+				: null) != null) {
+			//
+			METHOD_GET_PROPERTY_SOURCES.setAccessible(true);
+			//
+		} // if
+			//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -212,6 +221,8 @@ class CustomBeanFactoryPostProcessorTest {
 		private InputStream inputStream = null;
 
 		private Collection<?> values = null;
+
+		private MutablePropertySources propertySources = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -287,6 +298,14 @@ class CustomBeanFactoryPostProcessorTest {
 				if (Objects.equals(methodName, "values")) {
 					//
 					return values;
+					//
+				} // if
+					//
+			} else if (proxy instanceof ConfigurableEnvironment) {
+				//
+				if (Objects.equals(methodName, "getPropertySources")) {
+					//
+					return propertySources;
 					//
 				} // if
 					//
@@ -820,6 +839,29 @@ class CustomBeanFactoryPostProcessorTest {
 				return null;
 			} else if (obj instanceof Class<?>[]) {
 				return (Class<?>[]) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetPropertySources() throws Throwable {
+		//
+		Assertions.assertNull(getPropertySources(null));
+		//
+		Assertions.assertNull(getPropertySources(Reflection.newProxy(ConfigurableEnvironment.class, ih)));
+		//
+	}
+
+	private static MutablePropertySources getPropertySources(final ConfigurableEnvironment instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_PROPERTY_SOURCES.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof MutablePropertySources) {
+				return (MutablePropertySources) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
