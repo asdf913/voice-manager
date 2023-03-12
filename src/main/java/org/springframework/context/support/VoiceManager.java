@@ -5620,7 +5620,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	private static ByteArray createByteArray(final RenderedImage image, final String format, final boolean headless) {
+	private static ByteArray createByteArray(@Nullable final RenderedImage image, final String format,
+			final boolean headless) {
 		//
 		byte[] bs = null;
 		//
@@ -8896,7 +8897,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@Nullable
-	private static String getMp3TagValue(final File file, final Predicate<Object> predicate, final String... attributes)
+	private static String getMp3TagValue(@Nullable final File file, final Predicate<Object> predicate,
+			final String... attributes)
 			throws BaseException, IOException, IllegalAccessException, InvocationTargetException {
 		//
 		return getMp3TagValue(getMp3TagParirs(file, attributes), predicate);
