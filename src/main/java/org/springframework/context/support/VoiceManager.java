@@ -5620,7 +5620,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	private static ByteArray createByteArray(@Nullable final RenderedImage image, final String format,
+	private static ByteArray createByteArray(@Nullable final RenderedImage image, @Nullable final String format,
 			final boolean headless) {
 		//
 		byte[] bs = null;
