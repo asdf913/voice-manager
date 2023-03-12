@@ -39,7 +39,10 @@ import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.SheetUtil;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.model.StylesTable;
 import org.apache.poi.xssf.usermodel.IndexedColorMap;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -79,7 +82,7 @@ class JouYouKanjiGuiTest {
 			METHOD_GET_EXPRESSION_AS_CSS_STRING, METHOD_GET_INDEXED_COLORS, METHOD_GET_STYLES_SOURCE,
 			METHOD_GET_PROPERTY, METHOD_INT_VALUE, METHOD_TO_MILLIS, METHOD_SET_FILL_BACK_GROUND_COLOR,
 			METHOD_SET_FILL_PATTERN, METHOD_SPLITERATOR, METHOD_TEST_AND_ACCEPT, METHOD_STREAM, METHOD_MAP_TO_INT,
-			METHOD_MAX, METHOD_OR_ELSE, METHOD_FILTER = null;
+			METHOD_MAX, METHOD_OR_ELSE, METHOD_FILTER, METHOD_SET_AUTO_FILTER = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -167,6 +170,8 @@ class JouYouKanjiGuiTest {
 		//
 		(METHOD_FILTER = clz.getDeclaredMethod("filter", Stream.class, Predicate.class)).setAccessible(true);
 		//
+		(METHOD_SET_AUTO_FILTER = clz.getDeclaredMethod("setAutoFilter", Sheet.class)).setAccessible(true);
+		//
 		CLASS_IH = Class.forName("org.springframework.context.support.JouYouKanjiGui$IH");
 		//
 	}
@@ -176,6 +181,12 @@ class JouYouKanjiGuiTest {
 		private Spliterator<?> spliterator = null;
 
 		private IntStream intStream = null;
+
+		private Integer firstRowNum, lastRowNum = null;
+
+		private Row row = null;
+
+		private Short firstCellNum = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -196,7 +207,9 @@ class JouYouKanjiGuiTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof Stream) {
+			} // if
+				//
+			if (proxy instanceof Stream) {
 				//
 				if (Objects.equals(methodName, "mapToInt")) {
 					//
@@ -205,6 +218,30 @@ class JouYouKanjiGuiTest {
 				} else if (Objects.equals(methodName, "filter")) {
 					//
 					return proxy;
+					//
+				} // if
+					//
+			} else if (proxy instanceof Sheet) {
+				//
+				if (Objects.equals(methodName, "getFirstRowNum")) {
+					//
+					return firstRowNum;
+					//
+				} else if (Objects.equals(methodName, "getLastRowNum")) {
+					//
+					return lastRowNum;
+					//
+				} else if (Objects.equals(methodName, "getRow")) {
+					//
+					return row;
+					//
+				} // if
+					//
+			} else if (proxy instanceof Row) {
+				//
+				if (Objects.equals(methodName, "getFirstCellNum")) {
+					//
+					return firstCellNum;
 					//
 				} // if
 					//
@@ -1330,6 +1367,55 @@ class JouYouKanjiGuiTest {
 				return (Stream) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetAutoFilter() throws Throwable {
+		//
+		try (final Workbook wb = new XSSFWorkbook()) {
+			//
+			final Sheet sheet = wb.createSheet();
+			//
+			Assertions.assertDoesNotThrow(() -> setAutoFilter(sheet));
+			//
+			SheetUtil.createRow(sheet, sheet != null ? sheet.getPhysicalNumberOfRows() : 0);
+			//
+			Assertions.assertDoesNotThrow(() -> setAutoFilter(sheet));
+			//
+			SheetUtil.createRow(sheet, sheet != null ? sheet.getPhysicalNumberOfRows() : 0);
+			//
+			final Row row = sheet != null ? sheet.getRow(sheet.getLastRowNum()) : null;
+			//
+			if (row != null) {
+				//
+				row.createCell(row.getPhysicalNumberOfCells());
+				//
+			} // if
+				//
+			Assertions.assertDoesNotThrow(() -> setAutoFilter(sheet));
+			//
+		} // try
+			//
+		if (ih != null) {
+			//
+			ih.row = Reflection.newProxy(Row.class, ih);
+			//
+			ih.firstRowNum = Integer.valueOf(intValue(ih.lastRowNum = Integer.valueOf(ONE), 0) - 1);
+			//
+			ih.firstCellNum = Short.valueOf((short) -1);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> setAutoFilter(Reflection.newProxy(Sheet.class, ih)));
+		//
+	}
+
+	private static void setAutoFilter(final Sheet sheet) throws Throwable {
+		try {
+			METHOD_SET_AUTO_FILTER.invoke(null, sheet);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

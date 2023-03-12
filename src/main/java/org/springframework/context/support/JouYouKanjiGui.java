@@ -630,6 +630,14 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 				//
 		} // for
 			//
+		setAutoFilter(sheet);
+		//
+	}
+
+	private static void setAutoFilter(final Sheet sheet) {
+		//
+		final Row row = sheet != null ? sheet.getRow(sheet.getLastRowNum()) : null;
+		//
 		if (sheet != null && row != null && sheet.getFirstRowNum() < sheet.getLastRowNum()
 				&& row.getFirstCellNum() >= 0) {
 			//
