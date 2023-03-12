@@ -191,6 +191,7 @@ import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.RichTextString;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.SheetUtil;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookUtil;
 import org.apache.poi.ss.util.CellRangeAddressList;
@@ -350,7 +351,7 @@ class VoiceManagerTest {
 			METHOD_GET_PRONUNCIATION_AUDIO_FILE_BY_AUDIO_FORMAT, METHOD_GET_AUDIO_FILE, METHOD_GET_BEAN,
 			METHOD_IS_ALL_ATTRIBUTES_MATCHED, METHOD_CREATE_FUNCTION_FOR_BTN_CONVERT_TO_HIRAGANA, METHOD_WRITER,
 			METHOD_READ_LINE, METHOD_PRINT_LN, METHOD_SET_PITCH_ACCENT_IMAGE, METHOD_GET_STRING_CELL_VALUE,
-			METHOD_GET_NUMERIC_CELL_VALUE = null;
+			METHOD_GET_NUMERIC_CELL_VALUE, METHOD_SET_AUTO_FILTER = null;
 
 	@BeforeAll
 	static void beforeAll() throws Throwable {
@@ -1049,6 +1050,8 @@ class VoiceManagerTest {
 		(METHOD_GET_STRING_CELL_VALUE = clz.getDeclaredMethod("getStringCellValue", Cell.class)).setAccessible(true);
 		//
 		(METHOD_GET_NUMERIC_CELL_VALUE = clz.getDeclaredMethod("getNumericCellValue", Cell.class)).setAccessible(true);
+		//
+		(METHOD_SET_AUTO_FILTER = clz.getDeclaredMethod("setAutoFilter", Sheet.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -9669,6 +9672,43 @@ class VoiceManagerTest {
 				return (Double) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetAutoFilter() throws Throwable {
+		//
+		try (final Workbook wb = new XSSFWorkbook()) {
+			//
+			final Sheet sheet = wb.createSheet();
+			//
+			Assertions.assertDoesNotThrow(() -> setAutoFilter(sheet));
+			//
+			SheetUtil.createRow(sheet, sheet != null ? sheet.getPhysicalNumberOfRows() : 0);
+			//
+			Assertions.assertDoesNotThrow(() -> setAutoFilter(sheet));
+			//
+			SheetUtil.createRow(sheet, sheet != null ? sheet.getPhysicalNumberOfRows() : 0);
+			//
+			final Row row = sheet != null ? sheet.getRow(sheet.getLastRowNum()) : null;
+			//
+			if (row != null) {
+				//
+				row.createCell(row.getPhysicalNumberOfCells());
+				//
+			} // if
+				//
+			Assertions.assertDoesNotThrow(() -> setAutoFilter(sheet));
+			//
+		} // try
+			//
+	}
+
+	private static void setAutoFilter(final Sheet sheet) throws Throwable {
+		try {
+			METHOD_SET_AUTO_FILTER.invoke(null, sheet);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

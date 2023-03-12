@@ -12470,15 +12470,23 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		setLocaleIdSheet(objectMap);
 		//
-		if (sheet != null && row != null) {
+		setAutoFilter(sheet);
+		//
+		return workbook;
+		//
+	}
+
+	private static void setAutoFilter(final Sheet sheet) {
+		//
+		final Row row = sheet != null ? sheet.getRow(sheet.getLastRowNum()) : null;
+		//
+		if (sheet != null && row != null && sheet.getFirstRowNum() < sheet.getLastRowNum()) {
 			//
 			sheet.setAutoFilter(new CellRangeAddress(sheet.getFirstRowNum(), sheet.getLastRowNum() - 1,
 					row.getFirstCellNum(), row.getLastCellNum() - 1));
 			//
 		} // if
 			//
-		return workbook;
-		//
 	}
 
 	private static void setMicrosoftSpeechObjectLibrarySheetFirstRow(@Nullable final Sheet sheet,
