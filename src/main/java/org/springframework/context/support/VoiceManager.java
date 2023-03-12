@@ -8516,8 +8516,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			final Object object = FieldUtils.readDeclaredStaticField(LameEncoder.class, "DEFAULT_VBR", true);
 			//
-			if (object instanceof Boolean) {
-				return (Boolean) object;
+			if (object instanceof Boolean b) {
+				return b;
 			} // if
 				//
 			return null;
