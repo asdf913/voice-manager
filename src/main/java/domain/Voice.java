@@ -16,7 +16,16 @@ import java.util.Date;
 		"jlptLevel" })
 public class Voice {
 
-	private Integer id, ordinalPosition = null;
+	private Integer id = null;
+
+	@Target(ElementType.FIELD)
+	@Retention(RetentionPolicy.RUNTIME)
+	private @interface Note {
+		String value();
+	}
+
+	@Note("Ordinal Position")
+	private Integer ordinalPosition = null;
 
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
@@ -96,12 +105,6 @@ public class Voice {
 	@ImportField
 	@JLPT
 	private String jlptLevel = null;
-
-	@Target(ElementType.FIELD)
-	@Retention(RetentionPolicy.RUNTIME)
-	private @interface Note {
-		String value();
-	}
 
 	@Note("File Digest Algorithm")
 	private String fileDigestAlgorithm = null;
