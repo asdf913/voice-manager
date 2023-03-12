@@ -9373,7 +9373,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	@Nullable
 	private static DataValidationConstraint createExplicitListConstraint(@Nullable final DataValidationHelper instance,
-			final String[] listOfValues) {
+			@Nullable final String[] listOfValues) {
 		return instance != null ? instance.createExplicitListConstraint(listOfValues) : null;
 	}
 

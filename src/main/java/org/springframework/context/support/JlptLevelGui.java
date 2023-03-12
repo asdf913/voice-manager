@@ -670,7 +670,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		}
 	}
 
-	private static <T> void testAndAccept(final Predicate<T> predicate, final T value,
+	private static <T> void testAndAccept(final Predicate<T> predicate, @Nullable final T value,
 			@Nullable final Consumer<T> consumer) {
 		if (test(predicate, value) && consumer != null) {
 			consumer.accept(value);
