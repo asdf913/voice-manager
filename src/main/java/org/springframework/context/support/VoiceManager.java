@@ -11194,7 +11194,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 						if (counter.intValue() == count.intValue() && pharse != null) {
 							//
-							FieldUtils.writeDeclaredField(pharse, "numerator", pharse.getNumerator() + 1, true);
+							FieldUtils.writeDeclaredField(pharse, "numerator", intValue(getNumerator(pharse), 0) + 1,
+									true);
 							//
 						} // if
 							//
@@ -11204,7 +11205,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				showPharse(voiceManager, pharse);
 				//
-				if (pharse != null && pharse.getNumerator() == pharse.getDenominator() && Objects.equals(counter, count)
+				if (Objects.equals(getNumerator(pharse), getDenominator(pharse)) && Objects.equals(counter, count)
 						&& exportPresentation) {
 					//
 					try (final InputStream is = getResourceAsStream(VoiceManager.class, exportPresentationTemplate)) {
@@ -11254,6 +11255,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // try
 				//
+		}
+
+		private static Integer getNumerator(final Fraction instnace) {
+			return instnace != null ? instnace.getNumerator() : null;
+		}
+
+		private static Integer getDenominator(final Fraction instnace) {
+			return instnace != null ? instnace.getDenominator() : null;
 		}
 
 		@Nullable
@@ -11326,11 +11335,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 		private static void showPharse(@Nullable final VoiceManager voiceManager, @Nullable final Fraction pharse) {
 			//
-			if (voiceManager != null && pharse != null) {
+			if (voiceManager != null) {
 				//
-				setText(voiceManager.tfPhraseCounter, VoiceManager.toString(pharse.getNumerator()));
+				setText(voiceManager.tfPhraseCounter, VoiceManager.toString(getNumerator(pharse)));
 				//
-				setText(voiceManager.tfPhraseTotal, VoiceManager.toString(pharse.getDenominator()));
+				setText(voiceManager.tfPhraseTotal, VoiceManager.toString(getDenominator(pharse)));
 				//
 			} //
 				//
