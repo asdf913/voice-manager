@@ -8711,7 +8711,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		}
 
 		@Nullable
-		private static Object getValue(final LDC instance, final ConstantPoolGen cpg) {
+		private static Object getValue(@Nullable final LDC instance, @Nullable final ConstantPoolGen cpg) {
 			return instance != null && cpg != null && cpg.getConstantPool() != null
 					&& cpg.getConstantPool().getConstant(instance.getIndex()) != null ? instance.getValue(cpg) : null;
 		}
