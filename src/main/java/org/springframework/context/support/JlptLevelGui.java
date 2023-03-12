@@ -239,6 +239,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		//
 	}
 
+	@Nullable
 	private static <T> T orElse(@Nullable final Optional<T> instance, @Nullable final T other) {
 		return instance != null ? instance.orElse(other) : null;
 	}
@@ -696,6 +697,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		return instance != null ? instance.getParameterTypes() : null;
 	}
 
+	@Nullable
 	private static <T> Stream<T> filter(@Nullable final Stream<T> instance,
 			@Nullable final Predicate<? super T> predicate) {
 		//
@@ -774,6 +776,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		return condition ? trueValue : falseValue;
 	}
 
+	@Nullable
 	private static <T> T[] toArray(@Nullable final Collection<T> instance, @Nullable final T[] array) {
 		//
 		return instance != null && (array != null || Proxy.isProxyClass(getClass(instance))) ? instance.toArray(array)

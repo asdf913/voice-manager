@@ -640,6 +640,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 			//
 	}
 
+	@Nullable
 	private static Matcher matcher(@Nullable final Pattern pattern, @Nullable final CharSequence input) {
 		return pattern != null && input != null ? pattern.matcher(input) : null;
 	}

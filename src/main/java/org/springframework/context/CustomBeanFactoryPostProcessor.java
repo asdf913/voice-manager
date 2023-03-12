@@ -258,6 +258,7 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 		return instance != null ? instance.getDeclaredMethods() : null;
 	}
 
+	@Nullable
 	private static <T> Stream<T> filter(@Nullable final Stream<T> instance,
 			@Nullable final Predicate<? super T> predicate) {
 		//

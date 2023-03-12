@@ -336,6 +336,7 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 		}
 	}
 
+	@Nullable
 	private static Matcher matcher(@Nullable final Pattern instance, @Nullable final CharSequence input) {
 		return instance != null && input != null ? instance.matcher(input) : null;
 	}

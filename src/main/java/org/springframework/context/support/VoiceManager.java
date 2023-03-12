@@ -4921,6 +4921,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
+	@Nullable
 	private static <T> LongStream mapToLong(@Nullable final Stream<T> instance,
 			@Nullable final ToLongFunction<? super T> mapper) {
 		//
@@ -7252,6 +7253,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
+	@Nullable
 	private static String encodeToString(@Nullable final Encoder instance, @Nullable final byte[] src) {
 		return instance != null && src != null ? instance.encodeToString(src) : null;
 	}
@@ -11256,6 +11258,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		}
 
+		@Nullable
 		private static <T> T clone(@Nullable final ObjectMapper objectMapper, @Nullable final Class<T> clz,
 				@Nullable final T instance) throws IOException {
 			//
@@ -11284,6 +11287,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		}
 
+		@Nullable
 		private static <T> Optional<T> min(@Nullable final Stream<T> instance,
 				@Nullable final Comparator<? super T> comparator) {
 			//

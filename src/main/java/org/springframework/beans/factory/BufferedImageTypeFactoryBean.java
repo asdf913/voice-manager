@@ -180,6 +180,7 @@ public class BufferedImageTypeFactoryBean implements FactoryBean<Integer> {
 		return instance != null && instance.test(value);
 	}
 
+	@Nullable
 	private static <T> Stream<T> filter(@Nullable final Stream<T> instance,
 			@Nullable final Predicate<? super T> predicate) {
 		//

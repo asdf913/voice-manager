@@ -214,6 +214,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 			//
 	}
 
+	@Nullable
 	private static <T> T[] toArray(@Nullable final Collection<T> instance, @Nullable final T[] array) {
 		//
 		return instance != null && (array != null || Proxy.isProxyClass(getClass(instance))) ? instance.toArray(array)
@@ -460,6 +461,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 		return method != null ? method.invoke(instance, args) : null;
 	}
 
+	@Nullable
 	private static <T> Stream<T> filter(@Nullable final Stream<T> instance,
 			@Nullable final Predicate<? super T> predicate) {
 		//
