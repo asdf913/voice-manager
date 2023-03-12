@@ -449,6 +449,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		//
 	}
 
+	@Nullable
 	private static <T> T orElse(@Nullable final Optional<T> instance, @Nullable final T other) {
 		return instance != null ? instance.orElse(other) : null;
 	}
@@ -520,6 +521,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		return instance != null && annotationClass != null && instance.isAnnotationPresent(annotationClass);
 	}
 
+	@Nullable
 	private static <T extends Annotation> T getAnnotation(@Nullable final AnnotatedElement instance,
 			@Nullable final Class<T> annotationClass) {
 		return instance != null && annotationClass != null ? instance.getAnnotation(annotationClass) : null;
