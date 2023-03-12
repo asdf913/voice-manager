@@ -11680,32 +11680,39 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				@Nullable final String outputFolder, final Collection<String> voiceLKeySet,
 				final boolean embedAudioInPresentation, @Nullable final String folderInPresentation) throws Exception {
 			//
-			OdfPresentationDocument newOdfPresentationDocument = null;
+			final File file = createTempFile(randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH), null);
 			//
-			if ((newOdfPresentationDocument = OdfPresentationDocument.newPresentationDocument()) != null) {
+			try (final OdfPresentationDocument newOdfPresentationDocument = OdfPresentationDocument
+					.newPresentationDocument()) {
 				//
-				final File file = createTempFile(randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH), null);
-				//
-				newOdfPresentationDocument.save(file);
-				//
-				ZipUtil.replaceEntry(file, "content.xml", getBytes(string));
-				//
-				if (embedAudioInPresentation) {
+				if (newOdfPresentationDocument != null) {
 					//
-					ZipUtil.addEntries(file, toArray(map(stream(voiceLKeySet),
-							x -> new FileSource(String.join("/", folderInPresentation, x), new File(outputFolder, x))),
-							ZipEntrySource[]::new));
+					newOdfPresentationDocument.save(file);
+					//
+					ZipUtil.replaceEntry(file, "content.xml", getBytes(string));
+					//
+					if (embedAudioInPresentation) {
+						//
+						ZipUtil.addEntries(file,
+								toArray(map(stream(voiceLKeySet),
+										x -> new FileSource(String.join("/", folderInPresentation, x),
+												new File(outputFolder, x))),
+										ZipEntrySource[]::new));
+						//
+					} // if
+						//
+					return OdfPresentationDocument.loadDocument(file);
 					//
 				} // if
 					//
-				newOdfPresentationDocument = OdfPresentationDocument.loadDocument(file);
+				return newOdfPresentationDocument;
+				//
+			} finally {
 				//
 				delete(file);
 				//
-			} // if
+			} // try
 				//
-			return newOdfPresentationDocument;
-			//
 		}
 
 		@Nullable
