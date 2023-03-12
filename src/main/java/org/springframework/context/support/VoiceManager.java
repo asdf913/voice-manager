@@ -8133,7 +8133,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			if (!contains(list = getIfNull(list, ArrayList::new), key = getKey(en))) {
 				//
-				add(list = getIfNull(list, ArrayList::new), key);
+				add(list, key);
 				//
 			} else {
 				//
