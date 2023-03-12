@@ -3220,7 +3220,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	private static void setValue(final JSlider instance, @Nullable final Method method,
+	private static void setValue(@Nullable final JSlider instance, @Nullable final Method method,
 			final Consumer<JSlider> consumer, final boolean headless) {
 		//
 		try {
@@ -4977,9 +4977,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@Nullable
-	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, @Nullable final T value,
-			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
-			throws E {
+	private static <T, R, E extends Throwable> R testAndApply(@Nullable final Predicate<T> predicate,
+			@Nullable final T value, final FailableFunction<T, R, E> functionTrue,
+			@Nullable final FailableFunction<T, R, E> functionFalse) throws E {
 		return test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
@@ -6836,7 +6836,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	private static void createZipFile(final ObjectMap objectMap, @Nullable final String password,
-			final Iterable<File> files) throws IOException {
+			@Nullable final Iterable<File> files) throws IOException {
 		//
 		final ZipParameters zipParameters = new ZipParameters();
 		//
@@ -12577,8 +12577,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@Nullable
-	private static Row addLocaleIdRow(@Nullable final ObjectMap objectMap, final List<Field> fs, final Object instance)
-			throws IllegalAccessException {
+	private static Row addLocaleIdRow(@Nullable final ObjectMap objectMap, @Nullable final List<Field> fs,
+			final Object instance) throws IllegalAccessException {
 		//
 		final Method methodIsAccessible = ObjectMap.getObject(objectMap, Method.class);
 		//
