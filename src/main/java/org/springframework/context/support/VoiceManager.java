@@ -567,8 +567,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("Elapsed")
 	private JTextComponent tfElapsed = null;
 
+	@Note("File")
+	private JTextComponent tfFile = null;
+
 	@Nullable
-	private JTextComponent tfFile, tfPhraseCounter, tfPhraseTotal, tfOrdinalPositionFileNamePrefix, tfExportFile,
+	private JTextComponent tfPhraseCounter, tfPhraseTotal, tfOrdinalPositionFileNamePrefix, tfExportFile,
 			tfExportHtmlFileName, tfExportPassword, tfPronunciationPageUrl, tfPronunciationPageStatusCode = null;
 
 	private JTextComponent tfPresentationSlideDuration = null;
@@ -5240,7 +5243,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Nullable
 	private static String readLine(@Nullable final Console instance, final String fmt, final Object... args) {
 		//
-		Object writeLock = null, readLock = null;
+		// java.io.Console.writeLock
+		//
+		Object writeLock = null;
+		//
+		// java.io.Console.readLock
+		//
+		Object readLock = null;
 		//
 		try {
 			//
@@ -8595,7 +8604,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			Instruction in = null;
 			//
-			Integer index = null, count = null;
+			// index
+			//
+			Integer index = null;
+			//
+			// count
+			//
+			Integer count = null;
 			//
 			final int length = ins != null ? ins.length : 0;
 			//
@@ -11075,9 +11090,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				setVariable(evaluationContext, VOICE, ObjectUtils.defaultIfNull(v, voice));
 				//
+				// key
+				//
 				String key = null;
 				//
-				String value, ordinalPositionString, voiceFolder = null;
+				// value
+				//
+				String value = null;
+				//
+				String ordinalPositionString, voiceFolder = null;
 				//
 				StringBuilder fileName = null;
 				//
@@ -12495,7 +12516,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		Comment comment = null;
 		//
-		String attribute, value = null;
+		// attribute
+		//
+		String attribute = null;
+		//
+		// value
+		//
+		String value = null;
 		//
 		for (int j = 0; attributes != null && j < attributes.length; j++) {
 			//

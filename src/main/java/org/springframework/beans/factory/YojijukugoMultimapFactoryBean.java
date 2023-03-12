@@ -151,7 +151,13 @@ public class YojijukugoMultimapFactoryBean implements FactoryBean<Multimap<Strin
 		//
 		org.odftoolkit.simple.table.Row row = null;
 		//
-		String text, hiragana = null;
+		// text
+		//
+		String text = null;
+		//
+		// hiragana
+		//
+		String hiragana = null;
 		//
 		for (int i = 0; table != null && i < table.getRowCount(); i++) {
 			//
