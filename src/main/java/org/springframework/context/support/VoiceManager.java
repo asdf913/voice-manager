@@ -8689,9 +8689,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				if ((instruction = instructions[i]) instanceof LDC ldc) {
 					//
-					key = VoiceManager.toString(ldc != null
-							? ldc.getValue(testAndApply(Objects::nonNull, constantPool, ConstantPoolGen::new, null))
-							: null);
+					key = VoiceManager.toString(
+							getValue(ldc, testAndApply(Objects::nonNull, constantPool, ConstantPoolGen::new, null)));
 					//
 				} else if (instruction instanceof BIPUSH biPush) {
 					//
@@ -8708,6 +8707,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			return result;
 			//
+		}
+
+		private static Object getValue(final LDC instance, final ConstantPoolGen cpg) {
+			return instance != null && cpg != null && cpg.getConstantPool() != null
+					&& cpg.getConstantPool().getConstant(instance.getIndex()) != null ? instance.getValue(cpg) : null;
 		}
 
 		@Nullable

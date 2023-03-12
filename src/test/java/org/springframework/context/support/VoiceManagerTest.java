@@ -146,6 +146,7 @@ import org.apache.bcel.generic.ICONST;
 import org.apache.bcel.generic.INVOKESPECIAL;
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InstructionListUtil;
+import org.apache.bcel.generic.LDC;
 import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.MethodGenUtil;
 import org.apache.bcel.generic.NEW;
@@ -10719,6 +10720,19 @@ class VoiceManagerTest {
 		Assertions.assertNull(invoke(createQualityMap, instance, null, null));
 		//
 		Assertions.assertNull(invoke(createQualityMap, instance, null, new Instruction[] { null }));
+		//
+		// getValue(org.apache.bcel.generic.LDC,org.apache.bcel.generic.ConstantPoolGen)
+		//
+		final Method getValue = clz != null ? clz.getDeclaredMethod("getValue", LDC.class, ConstantPoolGen.class)
+				: null;
+		//
+		Assertions.assertNull(invoke(getValue, instance, null, null));
+		//
+		final LDC ldc = new LDC(0);
+		//
+		Assertions.assertNull(invoke(getValue, instance, ldc, null));
+		//
+		Assertions.assertNull(invoke(getValue, instance, ldc, new ConstantPoolGen()));
 		//
 	}
 
