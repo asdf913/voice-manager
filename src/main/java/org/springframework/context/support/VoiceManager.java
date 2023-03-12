@@ -891,7 +891,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private Duration presentationSlideDuration = null;
 
 	@Nullable
-	private transient Collection<Multimap> multimapHiragana, multimapKatakana = null;
+	private transient Collection<Multimap> multimapHiragana = null;
+
+	@Note("Katakana")
+	private transient Collection<Multimap> multimapKatakana = null;
 
 	private VoiceManager() {
 	}
