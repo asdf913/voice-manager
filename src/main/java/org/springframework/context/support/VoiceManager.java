@@ -11205,8 +11205,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				showPharse(voiceManager, pharse);
 				//
-				if (Objects.equals(getNumerator(pharse), getDenominator(pharse)) && Objects.equals(counter, count)
-						&& exportPresentation) {
+				if (Boolean.logicalAnd(Objects.equals(getNumerator(pharse), getDenominator(pharse)),
+						Objects.equals(counter, count)) && exportPresentation) {
 					//
 					try (final InputStream is = getResourceAsStream(VoiceManager.class, exportPresentationTemplate)) {
 						//
