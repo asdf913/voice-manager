@@ -11192,7 +11192,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 						setString(progressBar, string);
 						//
-						if (counter.intValue() == count.intValue() && pharse != null) {
+						if (Boolean.logicalAnd(counter.intValue() == count.intValue(), pharse != null)) {
 							//
 							FieldUtils.writeDeclaredField(pharse, "numerator", intValue(getNumerator(pharse), 0) + 1,
 									true);
