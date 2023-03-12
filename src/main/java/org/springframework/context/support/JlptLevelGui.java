@@ -218,8 +218,8 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		//
 		final List<Component> cs = Arrays.asList(jlJlptLevel, btnExportJson, tfJson, btnCompare, tfText);
 		//
-		final Dimension preferredSize = max(map(stream(cs), JlptLevelGui::getPreferredSize),
-				(a, b) -> a != null && b != null ? Double.compare(a.getWidth(), b.getWidth()) : 0).orElse(null);
+		final Dimension preferredSize = orElse(max(map(stream(cs), JlptLevelGui::getPreferredSize),
+				(a, b) -> a != null && b != null ? Double.compare(a.getWidth(), b.getWidth()) : 0), null);
 		//
 		if (preferredSize != null) {
 			//
@@ -237,6 +237,10 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 				? instance.max(comparator)
 				: null;
 		//
+	}
+
+	private static <T> T orElse(final Optional<T> instance, final T other) {
+		return instance != null ? instance.orElse(other) : null;
 	}
 
 	@Nullable
@@ -647,8 +651,12 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 			//
 			for (final T item : items) {
 				//
-				action.accept(item);
-				//
+				if (action != null) {
+					//
+					action.accept(item);
+					//
+				} // if
+					//
 			} // for
 				//
 		} // if

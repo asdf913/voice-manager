@@ -420,8 +420,8 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 								y -> getAnnotation(y, Group.class), null)), "LastComponentInRow")))
 				.map(x -> cast(Component.class, get(x, this))).collect(Collectors.toList());
 		//
-		final Double maxPreferredSizeWidth = max(map(stream(cs), x -> getWidth(getPreferredSize(x))),
-				ObjectUtils::compare).orElse(null);
+		final Double maxPreferredSizeWidth = orElse(
+				max(map(stream(cs), x -> getWidth(getPreferredSize(x))), ObjectUtils::compare), null);
 		//
 		forEach(cs, c -> {
 			//
@@ -447,6 +447,10 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 				? instance.max(comparator)
 				: null;
 		//
+	}
+
+	private static <T> T orElse(final Optional<T> instance, final T other) {
+		return instance != null ? instance.orElse(other) : null;
 	}
 
 	private static void setPreferredSize(@Nullable final Component instance, final Dimension preferredSize) {
