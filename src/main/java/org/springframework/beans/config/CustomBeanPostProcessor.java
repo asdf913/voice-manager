@@ -60,9 +60,9 @@ public class CustomBeanPostProcessor implements BeanPostProcessor, EnvironmentAw
 			//
 			value = Unit.with(null);
 			//
-		} else if (object instanceof Number) {
+		} else if (object instanceof Number number) {
 			//
-			value = Unit.with(Integer.valueOf(((Number) object).intValue()));
+			value = Unit.with(Integer.valueOf(intValue(number, 0)));
 			//
 		} else if (object instanceof CharSequence cs) {
 			//
@@ -104,6 +104,10 @@ public class CustomBeanPostProcessor implements BeanPostProcessor, EnvironmentAw
 			//
 		} // if
 			//
+	}
+
+	private static int intValue(final Number instance, final int defaultValue) {
+		return instance != null ? instance.intValue() : defaultValue;
 	}
 
 	private static IValue0<Number> getDefaultCloseOperation(final CharSequence cs)
@@ -160,9 +164,9 @@ public class CustomBeanPostProcessor implements BeanPostProcessor, EnvironmentAw
 			//
 			final Object obj = isStatic(f) ? get(f, null) : null;
 			//
-			if (obj instanceof Number) {
+			if (obj instanceof Number number) {
 				//
-				return Unit.with(Integer.valueOf(((Number) obj).intValue()));
+				return Unit.with(Integer.valueOf(intValue(number, 0)));
 				//
 			} // if
 				//
@@ -178,9 +182,9 @@ public class CustomBeanPostProcessor implements BeanPostProcessor, EnvironmentAw
 			//
 			final Object obj = ObjectMapperUtil.readValue(new ObjectMapper(), string, Object.class);
 			//
-			if (obj instanceof Number) {
+			if (obj instanceof Number number) {
 				//
-				value = Unit.with(Integer.valueOf(((Number) cs).intValue()));
+				value = Unit.with(Integer.valueOf(intValue(number, 0)));
 				//
 			} else if (obj != null) {
 				//
@@ -539,7 +543,7 @@ public class CustomBeanPostProcessor implements BeanPostProcessor, EnvironmentAw
 				//
 			} else if (defaultCloseOperation != null) {
 				//
-				jFrame.setDefaultCloseOperation(defaultCloseOperation.intValue());
+				jFrame.setDefaultCloseOperation(intValue(defaultCloseOperation, 0));
 				//
 			} else if (exception != null) {
 				//

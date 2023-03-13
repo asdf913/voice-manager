@@ -1559,9 +1559,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			this.freeMarkerVersion = new Version(toString(value));
 			//
-		} else if (value instanceof Number) {
+		} else if (value instanceof Number number) {
 			//
-			this.freeMarkerVersion = new Version(((Number) value).intValue());
+			this.freeMarkerVersion = new Version(intValue(number, 0));
 			//
 		} // if
 			//
@@ -1718,9 +1718,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			return;
 			//
-		} else if (object instanceof Number) {
+		} else if (object instanceof Number number) {
 			//
-			this.jSoupParseTimeout = Duration.ofMillis(((Number) object).longValue());
+			this.jSoupParseTimeout = Duration.ofMillis(longValue(number, 0));
 			//
 			return;
 			//
@@ -1796,9 +1796,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			value = Unit.with(duration);
 			//
-		} else if (object instanceof Number) {
+		} else if (object instanceof Number number) {
 			//
-			value = Unit.with(Duration.ofMillis(intValue((Number) object, 0)));
+			value = Unit.with(Duration.ofMillis(intValue(number, 0)));
 			//
 		} else if (object instanceof CharSequence) {
 			//
@@ -4862,9 +4862,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			integer = i;
 			//
-		} else if (object instanceof Number) {
+		} else if (object instanceof Number number) {
 			//
-			integer = Integer.valueOf(((Number) object).intValue());
+			integer = Integer.valueOf(intValue(number, 0));
 			//
 		} else {
 			//
@@ -5036,6 +5036,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static long longValue(@Nullable final Number instance, final long defaultValue) {
 		return instance != null ? instance.longValue() : defaultValue;
+	}
+
+	private static double doubleValue(final Number instance, final double defaultValue) {
+		return instance != null ? instance.doubleValue() : defaultValue;
 	}
 
 	private static void addActionListener(final ActionListener actionListener, @Nullable final AbstractButton... abs) {
@@ -9548,8 +9552,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				infoOrPrintln(LOG, getSystemPrintStreamByFieldName("out"),
 						String.format("%1$s %2$s/%3$s (%4$s) %5$s/%6$s",
 								percentage != null
-										? StringUtils.leftPad(format(percentNumberFormat, percentage.doubleValue()), 5,
-												' ')
+										? StringUtils.leftPad(format(percentNumberFormat, doubleValue(percentage, 0)),
+												5, ' ')
 										: null,
 								StringUtils.leftPad(VoiceManager.toString(sheetCurrent),
 										StringUtils.length(
@@ -13078,7 +13082,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		Annotation a = null;
 		//
-		if (value instanceof Number) {
+		if (value instanceof Number number) {
 			//
 			CellStyle cellStyle = null;
 			//
@@ -13111,7 +13115,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 			} // if
 				//
-			cell.setCellValue(((Number) value).doubleValue());
+			cell.setCellValue(doubleValue(number, 0));
 			//
 		} else if (value instanceof Date) {
 			//

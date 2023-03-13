@@ -39,7 +39,7 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 
 	private static Method METHOD_GET_CLASS, METHOD_TO_STRING, METHOD_CREATE_MULIT_MAP_UNIT_WORK_BOOK,
 			METHOD_CREATE_MULIT_MAP_UNIT_SPREAD_SHEET_DOCUMENT, METHOD_OR, METHOD_GET_ROW_COUNT, METHOD_GET_SHEET_COUNT,
-			METHOD_GET_SHEET_BY_INDEX = null;
+			METHOD_GET_SHEET_BY_INDEX, METHOD_LONG_VALUE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -65,6 +65,8 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 		//
 		(METHOD_GET_SHEET_BY_INDEX = clz.getDeclaredMethod("getSheetByIndex", SpreadsheetDocument.class, Integer.TYPE))
 				.setAccessible(true);
+		//
+		(METHOD_LONG_VALUE = clz.getDeclaredMethod("longValue", Number.class, Long.TYPE)).setAccessible(true);
 		//
 	}
 
@@ -570,6 +572,27 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 				return null;
 			} else if (obj instanceof Table) {
 				return (Table) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testLongValue() throws Throwable {
+		//
+		final long l = 0;
+		//
+		Assertions.assertEquals(l, longValue(null, l));
+		//
+	}
+
+	private static long longValue(final Number instance, final long defaultValue) throws Throwable {
+		try {
+			final Object obj = METHOD_LONG_VALUE.invoke(null, instance, defaultValue);
+			if (obj instanceof Long) {
+				return ((Long) obj).longValue();
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

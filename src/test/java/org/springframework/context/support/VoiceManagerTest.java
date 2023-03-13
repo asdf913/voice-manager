@@ -1,5 +1,7 @@
 package org.springframework.context.support;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
@@ -354,7 +356,7 @@ class VoiceManagerTest {
 			METHOD_GET_PRONUNCIATION_AUDIO_FILE_BY_AUDIO_FORMAT, METHOD_GET_AUDIO_FILE, METHOD_GET_BEAN,
 			METHOD_IS_ALL_ATTRIBUTES_MATCHED, METHOD_CREATE_FUNCTION_FOR_BTN_CONVERT_TO_HIRAGANA, METHOD_WRITER,
 			METHOD_READ_LINE, METHOD_PRINT_LN, METHOD_SET_PITCH_ACCENT_IMAGE, METHOD_GET_STRING_CELL_VALUE,
-			METHOD_GET_NUMERIC_CELL_VALUE, METHOD_SET_AUTO_FILTER, METHOD_CREATE_BYTE_ARRAY = null;
+			METHOD_GET_NUMERIC_CELL_VALUE, METHOD_SET_AUTO_FILTER, METHOD_CREATE_BYTE_ARRAY, METHOD_DOUBLE_VALUE = null;
 
 	@BeforeAll
 	static void beforeAll() throws Throwable {
@@ -1058,6 +1060,8 @@ class VoiceManagerTest {
 		//
 		(METHOD_CREATE_BYTE_ARRAY = clz.getDeclaredMethod("createByteArray", RenderedImage.class, String.class,
 				Boolean.TYPE)).setAccessible(true);
+		//
+		(METHOD_DOUBLE_VALUE = clz.getDeclaredMethod("doubleValue", Number.class, Double.TYPE)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -9747,6 +9751,27 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof ByteArray) {
 				return (ByteArray) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testDoubleValue() throws Throwable {
+		//
+		final double d = 0;
+		//
+		Assertions.assertEquals(d, doubleValue(null, d));
+		//
+	}
+
+	private static double doubleValue(final Number instance, final double defaultValue) throws Throwable {
+		try {
+			final Object obj = METHOD_DOUBLE_VALUE.invoke(null, instance, defaultValue);
+			if (obj instanceof Double) {
+				return ((Double) obj).doubleValue();
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

@@ -25,7 +25,7 @@ class BufferedImageTypeFactoryBeanTest {
 
 	private static Method METHOD_TEST_AND_APPLY, METHOD_GET_CLASS, METHOD_TO_STRING, METHOD_IS_STATIC, METHOD_GET,
 			METHOD_GET_TYPE, METHOD_FILTER, METHOD_TO_LIST, METHOD_IS_ASSIGNABLE_FROM, METHOD_IS_PRIMITIVE,
-			METHOD_GET_NAME, METHOD_AND = null;
+			METHOD_GET_NAME, METHOD_AND, METHOD_INT_VALUE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -57,6 +57,8 @@ class BufferedImageTypeFactoryBeanTest {
 		(METHOD_IS_PRIMITIVE = clz.getDeclaredMethod("isPrimitive", Class.class)).setAccessible(true);
 		//
 		(METHOD_AND = clz.getDeclaredMethod("and", Boolean.TYPE, Boolean.TYPE, boolean[].class)).setAccessible(true);
+		//
+		(METHOD_INT_VALUE = clz.getDeclaredMethod("intValue", Number.class, Integer.TYPE)).setAccessible(true);
 		//
 	}
 
@@ -401,6 +403,27 @@ class BufferedImageTypeFactoryBeanTest {
 			final Object obj = METHOD_AND.invoke(null, a, b, bs);
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testIntValue() throws Throwable {
+		//
+		final int integer = 0;
+		//
+		Assertions.assertEquals(integer, intValue(null, integer));
+		//
+	}
+
+	private static int intValue(final Number instance, final int defaultValue) throws Throwable {
+		try {
+			final Object obj = METHOD_INT_VALUE.invoke(null, instance, defaultValue);
+			if (obj instanceof Integer) {
+				return ((Integer) obj).intValue();
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

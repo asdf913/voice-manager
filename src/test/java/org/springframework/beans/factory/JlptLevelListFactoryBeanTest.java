@@ -17,7 +17,7 @@ class JlptLevelListFactoryBeanTest {
 
 	private static final String EMPTY = "";
 
-	private static Method METHOD_GET_CLASS, METHOD_TO_STRING, METHOD_ADD = null;
+	private static Method METHOD_GET_CLASS, METHOD_TO_STRING, METHOD_ADD, METHOD_LONG_VALUE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -29,6 +29,8 @@ class JlptLevelListFactoryBeanTest {
 		(METHOD_TO_STRING = clz.getDeclaredMethod("toString", Object.class)).setAccessible(true);
 		//
 		(METHOD_ADD = clz.getDeclaredMethod("add", Collection.class, Object.class)).setAccessible(true);
+		//
+		(METHOD_LONG_VALUE = clz.getDeclaredMethod("longValue", Number.class, Long.TYPE)).setAccessible(true);
 		//
 	}
 
@@ -237,6 +239,27 @@ class JlptLevelListFactoryBeanTest {
 	private static <E> void add(final Collection<E> items, final E item) throws Throwable {
 		try {
 			METHOD_ADD.invoke(null, items, item);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testLongValue() throws Throwable {
+		//
+		final long l = 0;
+		//
+		Assertions.assertEquals(l, longValue(null, l));
+		//
+	}
+
+	private static long longValue(final Number instance, final long defaultValue) throws Throwable {
+		try {
+			final Object obj = METHOD_LONG_VALUE.invoke(null, instance, defaultValue);
+			if (obj instanceof Long) {
+				return ((Long) obj).longValue();
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

@@ -49,7 +49,7 @@ class CustomBeanPostProcessorTest {
 
 	private static Method METHOD_GET_NAME, METHOD_GET_CLASS, METHOD_TO_STRING, METHOD_IS_STATIC, METHOD_GET,
 			METHOD_CAST, METHOD_TEST, METHOD_IS_ANNOTATION_PRESENT, METHOD_GET_ANNOTATION, METHOD_SET_TITLE,
-			METHOD_VALUE_OF = null;
+			METHOD_VALUE_OF, METHOD_INT_VALUE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -79,6 +79,8 @@ class CustomBeanPostProcessorTest {
 		(METHOD_SET_TITLE = clz.getDeclaredMethod("setTitle", Frame.class, Title.class)).setAccessible(true);
 		//
 		(METHOD_VALUE_OF = clz.getDeclaredMethod("valueOf", String.class)).setAccessible(true);
+		//
+		(METHOD_INT_VALUE = clz.getDeclaredMethod("intValue", Number.class, Integer.TYPE)).setAccessible(true);
 		//
 	}
 
@@ -622,6 +624,27 @@ class CustomBeanPostProcessorTest {
 				return null;
 			} else if (obj instanceof Integer) {
 				return ((Integer) obj);
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testIntValue() throws Throwable {
+		//
+		final int integer = 0;
+		//
+		Assertions.assertEquals(integer, intValue(null, integer));
+		//
+	}
+
+	private static int intValue(final Number instance, final int defaultValue) throws Throwable {
+		try {
+			final Object obj = METHOD_INT_VALUE.invoke(null, instance, defaultValue);
+			if (obj instanceof Integer) {
+				return ((Integer) obj).intValue();
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
