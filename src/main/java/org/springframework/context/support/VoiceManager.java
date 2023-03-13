@@ -5666,6 +5666,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
+	@Nullable
 	private static List<String> getImageFormats() throws NoSuchFieldException {
 		//
 		final Map<?, ?> imageWriterSpis = cast(Map.class,
