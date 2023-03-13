@@ -11257,7 +11257,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		}
 
-		private static boolean and(final boolean a, final boolean b, final boolean... bs) {
+		private static boolean and(final boolean a, final boolean b, @Nullable final boolean... bs) {
 			//
 			boolean result = a && b;
 			//
