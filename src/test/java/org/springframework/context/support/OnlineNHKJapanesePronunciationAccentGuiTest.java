@@ -94,7 +94,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_SAVE_FILE, METHOD_CONTAINS_KEY, METHOD_IIF, METHOD_GET_NAME,
 			METHOD_SORT, METHOD_CREATE_IMAGE_FORMAT_COMPARATOR, METHOD_IS_ANNOTATION_PRESENT, METHOD_GET_ANNOTATION,
 			METHOD_GET_PREFERRED_SIZE, METHOD_STREAM, METHOD_FILTER, METHOD_TO_LIST, METHOD_SET_PREFERRED_SIZE,
-			METHOD_MAX = null;
+			METHOD_MAX, METHOD_TO_ARRAY = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -212,6 +212,8 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		//
 		(METHOD_MAX = clz.getDeclaredMethod("max", Stream.class, Comparator.class)).setAccessible(true);
 		//
+		(METHOD_TO_ARRAY = clz.getDeclaredMethod("toArray", Collection.class, Object[].class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -231,6 +233,8 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		private Stream<?> stream = null;
 
 		private Optional<?> max = null;
+
+		private Object[] toArray = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -348,6 +352,14 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				} else if (Objects.equals(methodName, "max")) {
 					//
 					return max;
+					//
+				} // if
+					//
+			} else if (proxy instanceof Collection) {
+				//
+				if (Objects.equals(methodName, "toArray")) {
+					//
+					return toArray;
 					//
 				} // if
 					//
@@ -1732,6 +1744,27 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				return (Optional) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testToArray() throws Throwable {
+		//
+		Assertions.assertNull(toArray(null, null));
+		//
+		Collection<?> collection = Collections.emptyList();
+		//
+		Assertions.assertNull(toArray(collection, null));
+		//
+		Assertions.assertNull(toArray(collection = Reflection.newProxy(Collection.class, ih), null));
+		//
+	}
+
+	private static <T> T[] toArray(final Collection<T> instance, final T[] array) throws Throwable {
+		try {
+			return (T[]) METHOD_TO_ARRAY.invoke(null, instance, array);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

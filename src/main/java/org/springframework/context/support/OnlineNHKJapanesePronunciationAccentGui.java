@@ -242,7 +242,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 					.with(toList(map(IntStream.range(0, Array.getLength(object)).mapToObj(i -> Array.get(object, i)),
 							OnlineNHKJapanesePronunciationAccentGui::toString)));
 			//
-		} else if (object instanceof String string)  {
+		} else if (object instanceof String string) {
 			//
 			try {
 				//
@@ -479,7 +479,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 						x -> getName(cast(Class.class, x)))),
 				ArrayList::new, null);
 		//
-		final String commonPrefix = StringUtils.getCommonPrefix(classNames.toArray(new String[] {}));
+		final String commonPrefix = StringUtils.getCommonPrefix(toArray(classNames, new String[] {}));
 		//
 		for (int i = 0; classNames != null && i < classNames.size(); i++) {
 			//
@@ -491,6 +491,13 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		sort(classNames, createImageFormatComparator(imageFormatOrders));
 		//
 		return classNames;
+		//
+	}
+
+	private static <T> T[] toArray(final Collection<T> instance, final T[] array) {
+		//
+		return instance != null && (array != null || Proxy.isProxyClass(getClass(instance))) ? instance.toArray(array)
+				: null;
 		//
 	}
 
