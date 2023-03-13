@@ -5645,7 +5645,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	private static String getImageFormat(final IValue0<String> iValue0,
+	private static String getImageFormat(@Nullable final IValue0<String> iValue0,
 			@Nullable final Collection<String> imageFormats) {
 		//
 		String imageFormat = null;
