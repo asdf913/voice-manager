@@ -463,6 +463,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		return instnace != null ? instnace.getPitchAccentImage() : null;
 	}
 
+	@Nullable
 	private static List<String> getImageFormats(final List<?> imageFormatOrders) throws NoSuchFieldException {
 		//
 		final Map<?, ?> imageWriterSpis = cast(Map.class,
@@ -494,6 +495,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		//
 	}
 
+	@Nullable
 	private static <T> T[] toArray(@Nullable final Collection<T> instance, @Nullable final T[] array) {
 		//
 		return instance != null && (array != null || Proxy.isProxyClass(getClass(instance))) ? instance.toArray(array)
