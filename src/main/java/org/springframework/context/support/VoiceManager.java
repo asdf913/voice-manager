@@ -11176,29 +11176,25 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // for
 					//
-				if (counter != null) {
+				testAndAccept((a, b) -> b != null,
+						progressBar = getIfNull(progressBar, () -> getProgressBarExport(voiceManager)), counter,
+						(a, b) -> setValue(a, intValue(b, 0)));
+				//
+				if (counter != null && count != null) {
 					//
-					setValue(progressBar = getIfNull(progressBar, () -> getProgressBarExport(voiceManager)),
-							counter.intValue());
+					setMaximum(progressBar, count.intValue());
 					//
-					if (count != null) {
+					final String string = String.format("%1$s/%2$s (%3$s)", counter, count,
+							format(percentNumberFormat, counter.intValue() * 1.0 / count.intValue()));
+					//
+					setToolTipText(progressBar, string);
+					//
+					setString(progressBar, string);
+					//
+					if (Boolean.logicalAnd(counter.intValue() == count.intValue(), pharse != null)) {
 						//
-						setMaximum(progressBar, count.intValue());
+						FieldUtils.writeDeclaredField(pharse, "numerator", intValue(getNumerator(pharse), 0) + 1, true);
 						//
-						final String string = String.format("%1$s/%2$s (%3$s)", counter, count,
-								format(percentNumberFormat, counter.intValue() * 1.0 / count.intValue()));
-						//
-						setToolTipText(progressBar, string);
-						//
-						setString(progressBar, string);
-						//
-						if (Boolean.logicalAnd(counter.intValue() == count.intValue(), pharse != null)) {
-							//
-							FieldUtils.writeDeclaredField(pharse, "numerator", intValue(getNumerator(pharse), 0) + 1,
-									true);
-							//
-						} // if
-							//
 					} // if
 						//
 				} // if
