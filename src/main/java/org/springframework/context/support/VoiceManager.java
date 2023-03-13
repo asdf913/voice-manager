@@ -913,7 +913,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("Katakana")
 	private transient Collection<Multimap> multimapKatakana = null;
 
-	private IValue0<String> imageFormat = null;
+	private transient IValue0<String> imageFormat = null;
 
 	private VoiceManager() {
 	}
