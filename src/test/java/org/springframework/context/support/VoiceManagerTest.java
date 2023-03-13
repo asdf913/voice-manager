@@ -118,6 +118,7 @@ import javax.swing.JSlider;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
+import javax.swing.ListModel;
 import javax.swing.MutableComboBoxModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -356,7 +357,8 @@ class VoiceManagerTest {
 			METHOD_GET_PRONUNCIATION_AUDIO_FILE_BY_AUDIO_FORMAT, METHOD_GET_AUDIO_FILE, METHOD_GET_BEAN,
 			METHOD_IS_ALL_ATTRIBUTES_MATCHED, METHOD_CREATE_FUNCTION_FOR_BTN_CONVERT_TO_HIRAGANA, METHOD_WRITER,
 			METHOD_READ_LINE, METHOD_PRINT_LN, METHOD_SET_PITCH_ACCENT_IMAGE, METHOD_GET_STRING_CELL_VALUE,
-			METHOD_GET_NUMERIC_CELL_VALUE, METHOD_SET_AUTO_FILTER, METHOD_CREATE_BYTE_ARRAY, METHOD_DOUBLE_VALUE = null;
+			METHOD_GET_NUMERIC_CELL_VALUE, METHOD_SET_AUTO_FILTER, METHOD_CREATE_BYTE_ARRAY, METHOD_DOUBLE_VALUE,
+			METHOD_GET_ELEMENT_AT = null;
 
 	@BeforeAll
 	static void beforeAll() throws Throwable {
@@ -1062,6 +1064,9 @@ class VoiceManagerTest {
 				Boolean.TYPE)).setAccessible(true);
 		//
 		(METHOD_DOUBLE_VALUE = clz.getDeclaredMethod("doubleValue", Number.class, Double.TYPE)).setAccessible(true);
+		//
+		(METHOD_GET_ELEMENT_AT = clz.getDeclaredMethod("getElementAt", ListModel.class, Integer.TYPE))
+				.setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -9774,6 +9779,21 @@ class VoiceManagerTest {
 				return ((Double) obj).doubleValue();
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetElementAt() throws Throwable {
+		//
+		Assertions.assertNull(getElementAt(null, ONE));
+		//
+	}
+
+	private static <E> E getElementAt(final ListModel<E> instance, final int index) throws Throwable {
+		try {
+			return (E) METHOD_GET_ELEMENT_AT.invoke(null, instance, index);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

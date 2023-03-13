@@ -8315,7 +8315,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		for (int i = 0; i < getSize(cbm); i++) {
 			//
-			if (StringUtils.equalsAnyIgnoreCase(cbm.getElementAt(i), string)
+			if (StringUtils.equalsAnyIgnoreCase(getElementAt(cbm, i), string)
 					&& (intList = ObjectUtils.getIfNull(intList, IntList::new)) != null) {
 				//
 				intList.add(i);
@@ -8330,12 +8330,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			throw new IllegalStateException();
 			//
-		} else if (size == 1 && cbm != null) {
+		} else if (size == 1) {
 			//
-			setSelectedItem(cbm, cbm.getElementAt(intList.get(0)));
+			setSelectedItem(cbm, getElementAt(cbm, intList.get(0)));
 			//
 		} // if
 			//
+	}
+
+	private static <E> E getElementAt(final ListModel<E> instance, final int index) {
+		return instance != null ? instance.getElementAt(index) : null;
 	}
 
 	private static int getSize(@Nullable final ListModel<?> instance) {
