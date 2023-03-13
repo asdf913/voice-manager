@@ -11191,12 +11191,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					setString(progressBar, string);
 					//
-					if (Boolean.logicalAnd(counter.intValue() == count.intValue(), pharse != null)) {
-						//
-						FieldUtils.writeDeclaredField(pharse, "numerator", intValue(getNumerator(pharse), 0) + 1, true);
-						//
-					} // if
-						//
+					// increment "numerator" in "org.apache.commons.lang3.math.Fraction" class by 1
+					//
+					testAndAccept(x -> Boolean.logicalAnd(counter.intValue() == count.intValue(), x != null), pharse,
+							x -> FieldUtils.writeDeclaredField(x, "numerator", intValue(getNumerator(x), 0) + 1, true));
+					//
 				} // if
 					//
 				showPharse(voiceManager, pharse);
