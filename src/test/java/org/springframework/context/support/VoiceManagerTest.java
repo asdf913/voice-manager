@@ -356,7 +356,7 @@ class VoiceManagerTest {
 			METHOD_IS_ALL_ATTRIBUTES_MATCHED, METHOD_CREATE_FUNCTION_FOR_BTN_CONVERT_TO_HIRAGANA, METHOD_WRITER,
 			METHOD_READ_LINE, METHOD_PRINT_LN, METHOD_SET_PITCH_ACCENT_IMAGE, METHOD_GET_STRING_CELL_VALUE,
 			METHOD_GET_NUMERIC_CELL_VALUE, METHOD_SET_AUTO_FILTER, METHOD_CREATE_BYTE_ARRAY, METHOD_DOUBLE_VALUE,
-			METHOD_GET_ELEMENT_AT = null;
+			METHOD_GET_ELEMENT_AT, METHOD_GET_IMAGE_FORMAT = null;
 
 	@BeforeAll
 	static void beforeAll() throws Throwable {
@@ -1064,6 +1064,9 @@ class VoiceManagerTest {
 		(METHOD_DOUBLE_VALUE = clz.getDeclaredMethod("doubleValue", Number.class, Double.TYPE)).setAccessible(true);
 		//
 		(METHOD_GET_ELEMENT_AT = clz.getDeclaredMethod("getElementAt", ListModel.class, Integer.TYPE))
+				.setAccessible(true);
+		//
+		(METHOD_GET_IMAGE_FORMAT = clz.getDeclaredMethod("getImageFormat", IValue0.class, Collection.class))
 				.setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
@@ -9818,6 +9821,27 @@ class VoiceManagerTest {
 	private static <E> E getElementAt(final ListModel<E> instance, final int index) throws Throwable {
 		try {
 			return (E) METHOD_GET_ELEMENT_AT.invoke(null, instance, index);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetImageFormat() throws Throwable {
+		//
+		Assertions.assertNull(getImageFormat(null, null));
+		//
+	}
+
+	private static String getImageFormat(final IValue0<String> iValue0, final Collection<String> imageFormats) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_IMAGE_FORMAT.invoke(null, iValue0, imageFormats);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

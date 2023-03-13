@@ -5593,39 +5593,18 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		final RenderedImage pitchAccentImage = getPitchAccentImage(
 				cast(Pronunciation.class, getSelectedItem(mcbmPronunciation)));
 		//
-		// imageFormat
-		//
-		String imageFormatFinal = null;
-		//
-		if (imageFormat != null) {
+		try {
 			//
-			imageFormatFinal = IValue0Util.getValue0(imageFormat);
+			testAndAccept(x -> pitchAccentImage != null,
+					createByteArray(pitchAccentImage, getImageFormat(imageFormat, getImageFormats()), headless),
+					x -> setPitchAccentImage(voice, x));
 			//
-		} else {
+		} catch (final NoSuchFieldException e) {
 			//
-			List<String> imageFormats = null;
+			throw toRuntimeException(e);
 			//
-			try {
-				//
-				imageFormats = getImageFormats();
-				//
-			} catch (final NoSuchFieldException e) {
-				//
-				throw toRuntimeException(e);
-				//
-			} // try
-				//
-			if (CollectionUtils.isNotEmpty(imageFormats)) {
-				//
-				imageFormatFinal = IterableUtils.get(imageFormats, 0);
-				//
-			} // if
-				//
-		} // if
+		} // try
 			//
-		testAndAccept(x -> pitchAccentImage != null, createByteArray(pitchAccentImage, imageFormatFinal, headless),
-				x -> setPitchAccentImage(voice, x));
-		//
 		SqlSession sqlSession = null;
 		//
 		try {
@@ -5664,6 +5643,28 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // try
 			//
+	}
+
+	private static String getImageFormat(final IValue0<String> iValue0, final Collection<String> imageFormats) {
+		//
+		String imageFormat = null;
+		//
+		if (iValue0 != null) {
+			//
+			imageFormat = IValue0Util.getValue0(iValue0);
+			//
+		} else {
+			//
+			if (CollectionUtils.isNotEmpty(imageFormats)) {
+				//
+				imageFormat = IterableUtils.get(imageFormats, 0);
+				//
+			} // if
+				//
+		} // if
+			//
+		return imageFormat;
+		//
 	}
 
 	@Nullable
