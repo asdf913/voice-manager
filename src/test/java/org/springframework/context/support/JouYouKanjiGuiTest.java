@@ -604,7 +604,9 @@ class JouYouKanjiGuiTest {
 		//
 		Assertions.assertDoesNotThrow(() -> addJouYouKanJiSheet(null, null));
 		//
-		Assertions.assertThrows(IllegalStateException.class, () -> addJouYouKanJiSheet(createObjectMap(), null));
+		final Object objectMap = createObjectMap();
+		//
+		Assertions.assertThrows(IllegalStateException.class, () -> addJouYouKanJiSheet(objectMap, null));
 		//
 	}
 

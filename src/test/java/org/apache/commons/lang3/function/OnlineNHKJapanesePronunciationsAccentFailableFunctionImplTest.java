@@ -389,8 +389,9 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 		//
 		Assertions.assertNull(createMergedBufferedImage(null, null, ZERO));
 		//
-		Assertions.assertThrows(UncheckedIOException.class,
-				() -> createMergedBufferedImage(null, Collections.singletonList(null), ZERO));
+		final List<String> list = Collections.singletonList(null);
+		//
+		Assertions.assertThrows(UncheckedIOException.class, () -> createMergedBufferedImage(null, list, ZERO));
 		//
 	}
 

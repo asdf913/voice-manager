@@ -1262,16 +1262,10 @@ class JlptLevelGuiTest {
 	@Test
 	void testBrowse() {
 		//
-		if (GraphicsEnvironment.isHeadless()) {
-			//
-			Assertions.assertThrows(HeadlessException.class, () -> browse(Desktop.getDesktop(), null));
-			//
-		} else {
-			//
-			Assertions.assertDoesNotThrow(() -> browse(Desktop.getDesktop(), null));
-			//
-		} // of
-			//
+		final Desktop desktop = !GraphicsEnvironment.isHeadless() ? Desktop.getDesktop() : null;
+		//
+		Assertions.assertDoesNotThrow(() -> browse(desktop, null));
+		//
 	}
 
 	private static void browse(final Desktop instance, final URI uri) throws Throwable {

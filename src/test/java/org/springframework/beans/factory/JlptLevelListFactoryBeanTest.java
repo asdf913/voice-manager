@@ -161,8 +161,9 @@ class JlptLevelListFactoryBeanTest {
 		//
 		// java.util.Map
 		//
-		Assertions.assertThrows(IllegalArgumentException.class,
-				() -> setValues(instance, String.format("{\"%1$s\":%1$s}", zero)));
+		final String string1 = String.format("{\"%1$s\":%1$s}", zero);
+		//
+		Assertions.assertThrows(IllegalArgumentException.class, () -> setValues(instance, string1));
 		//
 		// Invalid Format
 		//
@@ -172,8 +173,9 @@ class JlptLevelListFactoryBeanTest {
 			//
 		} else {
 			//
-			Assertions.assertThrows(RuntimeException.class,
-					() -> setValues(instance, String.format("{%1$s:%1$s}", zero)));
+			final String string2 = String.format("{%1$s:%1$s}", zero);
+			//
+			Assertions.assertThrows(RuntimeException.class, () -> setValues(instance, string2));
 			//
 		} // if
 			//

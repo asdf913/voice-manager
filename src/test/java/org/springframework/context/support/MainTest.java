@@ -346,14 +346,15 @@ class MainTest {
 	}
 
 	@Test
-	void testPack() {
+	void testPack() throws Throwable {
 		//
 		Assertions.assertDoesNotThrow(() -> pack(null));
 		//
 		if (GraphicsEnvironment.isHeadless()) {
 			//
-			Assertions.assertThrows(HeadlessException.class,
-					() -> pack(cast(Window.class, Narcissus.allocateInstance(Window.class))));
+			final Window window = cast(Window.class, Narcissus.allocateInstance(Window.class));
+			//
+			Assertions.assertThrows(HeadlessException.class, () -> pack(window));
 			//
 		} else {
 			//

@@ -240,8 +240,9 @@ class CustomBeanPostProcessorTest {
 		//
 		Assertions.assertSame(jFrame, postProcessBeforeInitialization(instance, jFrame, null));
 		//
-		Assertions.assertThrows(IllegalArgumentException.class,
-				() -> instance.setDefaultCloseOperation(StringUtils.wrap(Integer.toString(0), "\"")));
+		final String string = StringUtils.wrap(Integer.toString(0), "\"");
+		//
+		Assertions.assertThrows(IllegalArgumentException.class, () -> instance.setDefaultCloseOperation(string));
 		//
 		// EXIT_ON_CLOSE
 		//
@@ -300,8 +301,9 @@ class CustomBeanPostProcessorTest {
 			//
 		} // if
 			//
-		Assertions.assertThrows(RuntimeException.class,
-				() -> postProcessBeforeInitialization(instance, Narcissus.allocateInstance(JFrame.class), null));
+		final Object object = Narcissus.allocateInstance(JFrame.class);
+		//
+		Assertions.assertThrows(RuntimeException.class, () -> postProcessBeforeInitialization(instance, object, null));
 		//
 	}
 

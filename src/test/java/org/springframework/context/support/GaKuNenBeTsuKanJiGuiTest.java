@@ -382,8 +382,9 @@ class GaKuNenBeTsuKanJiGuiTest {
 	@Test
 	void testSetSelectedItemByIterable() {
 		//
-		Assertions.assertThrows(IllegalStateException.class,
-				() -> setSelectedItemByIterable(null, Collections.nCopies(2, null)));
+		final Collection<?> collection = Collections.nCopies(2, null);
+		//
+		Assertions.assertThrows(IllegalStateException.class, () -> setSelectedItemByIterable(null, collection));
 		//
 	}
 

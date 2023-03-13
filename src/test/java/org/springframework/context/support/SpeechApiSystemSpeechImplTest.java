@@ -126,7 +126,9 @@ class SpeechApiSystemSpeechImplTest {
 		//
 		Assertions.assertThrows(Error.class, () -> instance.writeVoiceToFile(null, null, 0, 0, null));
 		//
-		Assertions.assertThrows(Error.class, () -> instance.writeVoiceToFile(null, null, 0, 0, new File(".")));
+		final File file = new File(".");
+		//
+		Assertions.assertThrows(Error.class, () -> instance.writeVoiceToFile(null, null, 0, 0, file));
 		//
 	}
 
