@@ -6534,6 +6534,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				put(map, "voices", voices);
 				//
+				put(map, "Base64Encoder", Base64.getEncoder());
+				//
 				try (final Writer writer = new StringWriter()) {
 					//
 					ObjectMap.setObject(objectMap, Writer.class, writer);
@@ -7241,6 +7243,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					put(map, "folder", voiceFolder);
 					//
 					put(map, "voices", MultimapUtil.get(multimap, key));
+					//
+					put(map, "Base64Encoder", Base64.getEncoder());
 					//
 					final Collection<Entry<Object, Object>> entrySet = entrySet(parameters);
 					//

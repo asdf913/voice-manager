@@ -150,8 +150,16 @@ public class Voice {
 
 		private String mimeType = null;
 
+		public byte[] getContent() {
+			return content;
+		}
+
 		public void setContent(final byte[] content) {
 			this.content = content;
+		}
+
+		public String getMimeType() {
+			return mimeType;
 		}
 
 		public void setMimeType(final String mimeType) {
@@ -323,6 +331,10 @@ public class Voice {
 
 	public void setTts(final Boolean tts) {
 		this.tts = tts;
+	}
+
+	public ByteArray getPitchAccentImage() {
+		return pitchAccentImage;
 	}
 
 	public void setPitchAccentImage(final ByteArray pitchAccentImage) {

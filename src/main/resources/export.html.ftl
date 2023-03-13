@@ -26,6 +26,11 @@
 								<td>
 									${voice.text!""}&nbsp;(${voice.romaji!""})
 								</td>
+								<td>
+									<#if voice.pitchAccentImage??>
+										<#if Base64Encoder??><img src="data:${voice.pitchAccentImage.mimeType};base64,${Base64Encoder.encodeToString(voice.pitchAccentImage.content)}"/><#else><!--Base64Encoder NOT FOUND--></#if>
+									</#if>
+								</td>
 								<td colspan="4">
 									<#if statics??>
 										<#assign mimeTypeAndBase64EncodedString=statics["org.springframework.context.support.VoiceManager"].getMimeTypeAndBase64EncodedString(folder,voice.filePath!"")>
