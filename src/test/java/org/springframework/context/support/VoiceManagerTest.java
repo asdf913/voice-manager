@@ -1910,8 +1910,9 @@ class VoiceManagerTest {
 		//
 		// java.lang.Object
 		//
-		Assertions.assertThrows(IllegalArgumentException.class,
-				() -> setPresentationSlideDuration(instance, new Object()));
+		final Object object = new Object();
+		//
+		Assertions.assertThrows(IllegalArgumentException.class, () -> setPresentationSlideDuration(instance, object));
 		//
 	}
 
@@ -2038,8 +2039,10 @@ class VoiceManagerTest {
 		//
 		Assertions.assertEquals(emptyMap, get(outputFolderFileNameExpressions, instance));
 		//
+		final String string = Integer.toString(ONE);
+		//
 		Assertions.assertThrows(IllegalArgumentException.class,
-				() -> instance.setOutputFolderFileNameExpressions(Integer.toString(ONE)));
+				() -> instance.setOutputFolderFileNameExpressions(string));
 		//
 	}
 
@@ -2253,14 +2256,20 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(get(exportWebSpeechSynthesisHtmlTemplateProperties, instance));
 		//
-		Assertions.assertThrows(IllegalArgumentException.class,
-				() -> instance.setExportWebSpeechSynthesisHtmlTemplateProperties(Integer.valueOf(ZERO)));
+		final Integer integer = Integer.valueOf(ZERO);
 		//
 		Assertions.assertThrows(IllegalArgumentException.class,
-				() -> instance.setExportWebSpeechSynthesisHtmlTemplateProperties(new Date()));
+				() -> instance.setExportWebSpeechSynthesisHtmlTemplateProperties(integer));
+		//
+		final Date date = new Date();
 		//
 		Assertions.assertThrows(IllegalArgumentException.class,
-				() -> instance.setExportWebSpeechSynthesisHtmlTemplateProperties(Calendar.getInstance()));
+				() -> instance.setExportWebSpeechSynthesisHtmlTemplateProperties(date));
+		//
+		final Calendar calendar = Calendar.getInstance();
+		//
+		Assertions.assertThrows(IllegalArgumentException.class,
+				() -> instance.setExportWebSpeechSynthesisHtmlTemplateProperties(calendar));
 		//
 		// java.util.Map
 		//
@@ -3474,7 +3483,9 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(getMapper(null, null, null));
 		//
-		Assertions.assertThrows(BindingException.class, () -> getMapper(new Configuration(), null, null));
+		final Configuration configuration = new Configuration();
+		//
+		Assertions.assertThrows(BindingException.class, () -> getMapper(configuration, null, null));
 		//
 	}
 
@@ -3740,9 +3751,12 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertThrows(IllegalStateException.class, () -> export(voices,
-				Collections.singletonMap(EMPTY, "true"),
-				Reflection.newProxy(CLASS_OBJECT_MAP, cast(InvocationHandler.class, newInstance(constructor)))));
+		final Map<String, String> map = Collections.singletonMap(EMPTY, "true");
+		//
+		final Object objectMap = Reflection.newProxy(CLASS_OBJECT_MAP,
+				cast(InvocationHandler.class, newInstance(constructor)));
+		//
+		Assertions.assertThrows(IllegalStateException.class, () -> export(voices, map, objectMap));
 		//
 
 	}
@@ -5255,9 +5269,10 @@ class VoiceManagerTest {
 		//
 		final LocaleID localeId = LocaleID.JA_JP;
 		//
+		final Integer lcid = localeId != null ? Integer.valueOf(localeId.getLcid()) : null;
+		//
 		Assertions.assertThrows(IllegalStateException.class,
-				() -> convertLanguageCodeToText(new LocaleID[] { localeId, localeId },
-						localeId != null ? Integer.valueOf(localeId.getLcid()) : null));
+				() -> convertLanguageCodeToText(new LocaleID[] { localeId, localeId }, lcid));
 		//
 	}
 
@@ -6804,7 +6819,9 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(getRate((List) null));
 		//
-		Assertions.assertThrows(IllegalStateException.class, () -> getRate(Collections.nCopies(2, null)));
+		final List<Field> list = Collections.nCopies(2, null);
+		//
+		Assertions.assertThrows(IllegalStateException.class, () -> getRate(list));
 		//
 	}
 
@@ -9033,8 +9050,9 @@ class VoiceManagerTest {
 			//
 		} else {
 			//
-			Assertions.assertThrows(RuntimeException.class,
-					() -> getPageTitle(toString(new File("pom.xml").toURI().toURL()), null));
+			final String string = toString(new File("pom.xml").toURI().toURL());
+			//
+			Assertions.assertThrows(RuntimeException.class, () -> getPageTitle(string, null));
 			//
 		} // if
 			//
