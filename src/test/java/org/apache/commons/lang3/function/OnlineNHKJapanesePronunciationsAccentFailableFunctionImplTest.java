@@ -48,7 +48,9 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 
 	private static final int ZERO = 0, ONE = 1;
 
-	private static Method METHOD_GET_SRC_MAP, METHOD_GET_CLASS, METHOD_GET_IMAGE_SRCS,
+	private static final String EMPTY = "";
+
+	private static Method METHOD_GET_SRC_MAP, METHOD_TO_STRING, METHOD_GET_CLASS, METHOD_GET_IMAGE_SRCS,
 			METHOD_CREATE_MERGED_BUFFERED_IMAGE, METHOD_GET_GRAPHICS, METHOD_DRAW_IMAGE, METHOD_GET_WIDTH,
 			METHOD_GET_HEIGHT, METHOD_INT_VALUE, METHOD_FOR_EACH, METHOD_SET_VALUE, METHOD_GET_VALUE, METHOD_ENTRY_SET,
 			METHOD_GET_PROTOCOL, METHOD_GET_HOST, METHOD_TEST, METHOD_ADD, METHOD_MAP_TO_INT, METHOD_REDUCE,
@@ -60,6 +62,8 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 		final Class<?> clz = OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl.class;
 		//
 		(METHOD_GET_SRC_MAP = clz.getDeclaredMethod("getSrcMap", Element.class)).setAccessible(true);
+		//
+		(METHOD_TO_STRING = clz.getDeclaredMethod("toString", Object.class)).setAccessible(true);
 		//
 		(METHOD_GET_CLASS = clz.getDeclaredMethod("getClass", Object.class)).setAccessible(true);
 		//
@@ -272,7 +276,7 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 		//
 		if (instance != null) {
 			//
-			instance.setUrl("");
+			instance.setUrl(EMPTY);
 			//
 		} // if
 			//
@@ -339,6 +343,29 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 	}
 
 	@Test
+	void testToString() throws Throwable {
+		//
+		Assertions.assertNull(toString(null));
+		//
+		Assertions.assertSame(EMPTY, toString(EMPTY));
+		//
+	}
+
+	private static String toString(final Object instance) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_STRING.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
 	void testGetClass() throws Throwable {
 		//
 		Assertions.assertNull(getClass(null));
@@ -357,10 +384,6 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
-	}
-
-	private static String toString(final Object instance) {
-		return instance != null ? instance.toString() : null;
 	}
 
 	@Test

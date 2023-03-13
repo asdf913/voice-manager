@@ -121,7 +121,9 @@ public class OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl
 					//
 				} // if
 					//
-				(pronunciation = new Pronunciation()).setAudioUrls(audioUrls = getSrcMap(element));
+				(pronunciation = new Pronunciation()).setPageUrl(toString(u));
+				//
+				pronunciation.setAudioUrls(audioUrls = getSrcMap(element));
 				//
 				forEach(entrySet(audioUrls), x -> setValue(x, String.join("", protocolAndHost, getValue(x))));
 				//
@@ -140,6 +142,10 @@ public class OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl
 			//
 		return list;
 		//
+	}
+
+	private static String toString(final Object instance) {
+		return instance != null ? instance.toString() : null;
 	}
 
 	private static Map<String, String> getSrcMap(final Element input) {

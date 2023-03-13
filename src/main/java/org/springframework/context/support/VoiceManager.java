@@ -5346,7 +5346,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	private static void pronounicationChanged(@Nullable final Pronunciation pronunciation,
-			final MutableComboBoxModel<String> mcbmAudioFormat, final String preferredPronunciationAudioFormat) {
+			final MutableComboBoxModel<String> mcbmAudioFormat, final String preferredPronunciationAudioFormat,
+			final JTextComponent jtc) {
 		//
 		forEach(reverseRange(0, getSize(mcbmAudioFormat)), i -> removeElementAt(mcbmAudioFormat, i));
 		//
@@ -5365,6 +5366,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		if (containsKey(audioUrls, preferredPronunciationAudioFormat)) {
 			//
 			setSelectedItem(mcbmAudioFormat, preferredPronunciationAudioFormat);
+			//
+		} // if
+			//
+		final String pageUrl = pronunciation != null ? pronunciation.getPageUrl() : null;
+		//
+		if (StringUtils.isNotBlank(pageUrl)) {
+			//
+			setText(jtc, pageUrl);
 			//
 		} // if
 			//
@@ -6281,7 +6290,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		if (Objects.equals(source, jcbPronunciation)) {
 			//
 			pronounicationChanged(cast(Pronunciation.class, getSelectedItem(mcbmPronunciation)),
-					mcbmPronounicationAudioFormat, preferredPronunciationAudioFormat);
+					mcbmPronounicationAudioFormat, preferredPronunciationAudioFormat, tfPronunciationPageUrl);
 			//
 			return;
 			//

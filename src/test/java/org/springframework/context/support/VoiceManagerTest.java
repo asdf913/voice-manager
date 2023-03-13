@@ -1009,7 +1009,7 @@ class VoiceManagerTest {
 		(METHOD_PLAY = clz.getDeclaredMethod("play", Player.class)).setAccessible(true);
 		//
 		(METHOD_PRONOUNICATION_CHANGED = clz.getDeclaredMethod("pronounicationChanged", Pronunciation.class,
-				MutableComboBoxModel.class, String.class)).setAccessible(true);
+				MutableComboBoxModel.class, String.class, JTextComponent.class)).setAccessible(true);
 		//
 		(METHOD_REMOVE_ELEMENT_AT = clz.getDeclaredMethod("removeElementAt", MutableComboBoxModel.class, Integer.TYPE))
 				.setAccessible(true);
@@ -9254,16 +9254,20 @@ class VoiceManagerTest {
 		//
 		pronunciation.setAudioUrls(Collections.singletonMap(null, null));
 		//
-		Assertions.assertDoesNotThrow(() -> pronounicationChanged(pronunciation, null, null));
+		Assertions.assertDoesNotThrow(() -> pronounicationChanged(pronunciation, null, null, null));
+		//
+		pronunciation.setPageUrl("A");
+		//
+		Assertions.assertDoesNotThrow(() -> pronounicationChanged(pronunciation, null, null, null));
 		//
 	}
 
 	private static void pronounicationChanged(final Pronunciation pronunciation,
-			final MutableComboBoxModel<String> mcbmAudioFormat, final String preferredPronunciationAudioFormat)
-			throws Throwable {
+			final MutableComboBoxModel<String> mcbmAudioFormat, final String preferredPronunciationAudioFormat,
+			final JTextComponent jtc) throws Throwable {
 		try {
 			METHOD_PRONOUNICATION_CHANGED.invoke(null, pronunciation, mcbmAudioFormat,
-					preferredPronunciationAudioFormat);
+					preferredPronunciationAudioFormat, jtc);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -9833,7 +9837,8 @@ class VoiceManagerTest {
 		//
 	}
 
-	private static String getImageFormat(final IValue0<String> iValue0, final Collection<String> imageFormats) throws Throwable {
+	private static String getImageFormat(final IValue0<String> iValue0, final Collection<String> imageFormats)
+			throws Throwable {
 		try {
 			final Object obj = METHOD_GET_IMAGE_FORMAT.invoke(null, iValue0, imageFormats);
 			if (obj == null) {
