@@ -120,7 +120,7 @@ public class YojijukugoMultimapFactoryBean implements FactoryBean<Multimap<Strin
 			//
 			for (final Row row : sheet) {
 				//
-				if (row == null || row.getPhysicalNumberOfCells() < 2 || first == null || first.getAndSet(false)) {
+				if (row == null || row.getPhysicalNumberOfCells() < 2 || first.getAndSet(false)) {
 					//
 					continue;
 					//
@@ -166,7 +166,7 @@ public class YojijukugoMultimapFactoryBean implements FactoryBean<Multimap<Strin
 					|| StringUtils.isEmpty(text = CellUtil.getStringValue(row.getCellByIndex(0)))
 					|| StringUtils.isEmpty(hiragana = CellUtil.getStringValue(row.getCellByIndex(1)))
 					//
-					|| first == null || first.getAndSet(false)) {
+					|| first.getAndSet(false)) {
 				//
 				continue;
 				//
@@ -180,6 +180,7 @@ public class YojijukugoMultimapFactoryBean implements FactoryBean<Multimap<Strin
 		} // for
 			//
 		return multimap;
+
 		//
 	}
 

@@ -157,7 +157,7 @@ public class JapaneseNameMultimapFactoryBean implements FactoryBean<Multimap<Str
 			//
 			for (final Row row : sheet) {
 				//
-				if (row == null || row.getPhysicalNumberOfCells() < 2 || first == null || first.getAndSet(false)) {
+				if (row == null || row.getPhysicalNumberOfCells() < 2 || first.getAndSet(false)) {
 					//
 					continue;
 					//
