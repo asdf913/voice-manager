@@ -106,7 +106,7 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 			//
 	}
 
-	private static long longValue(final Number instance, final long defaultValue) {
+	private static long longValue(@Nullable final Number instance, final long defaultValue) {
 		return instance != null ? instance.longValue() : defaultValue;
 	}
 

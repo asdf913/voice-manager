@@ -5038,7 +5038,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.longValue() : defaultValue;
 	}
 
-	private static double doubleValue(final Number instance, final double defaultValue) {
+	private static double doubleValue(@Nullable final Number instance, final double defaultValue) {
 		return instance != null ? instance.doubleValue() : defaultValue;
 	}
 

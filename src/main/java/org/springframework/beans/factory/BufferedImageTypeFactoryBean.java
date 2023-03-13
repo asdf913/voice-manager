@@ -100,7 +100,7 @@ public class BufferedImageTypeFactoryBean implements FactoryBean<Integer> {
 		//
 	}
 
-	private static int intValue(final Number instance, final int defaultValue) {
+	private static int intValue(@Nullable final Number instance, final int defaultValue) {
 		return instance != null ? instance.intValue() : defaultValue;
 	}
 
