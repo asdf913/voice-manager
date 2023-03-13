@@ -11205,8 +11205,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				showPharse(voiceManager, pharse);
 				//
-				if (Boolean.logicalAnd(Objects.equals(getNumerator(pharse), getDenominator(pharse)),
-						Objects.equals(counter, count)) && exportPresentation) {
+				if (and(Objects.equals(getNumerator(pharse), getDenominator(pharse)), Objects.equals(counter, count),
+						exportPresentation)) {
 					//
 					try (final InputStream is = getResourceAsStream(VoiceManager.class, exportPresentationTemplate)) {
 						//
@@ -11255,6 +11255,30 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // try
 				//
+		}
+
+		private static boolean and(final boolean a, final boolean b, final boolean... bs) {
+			//
+			boolean result = a && b;
+			//
+			if (!result) {
+				//
+				return false;
+				//
+			} // if
+				//
+			for (int i = 0; bs != null && i < bs.length; i++) {
+				//
+				if (!(result &= bs[i])) {
+					//
+					return false;
+					//
+				} // if
+					//
+			} // for
+				//
+			return result;
+			//
 		}
 
 		@Nullable

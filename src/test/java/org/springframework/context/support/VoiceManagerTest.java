@@ -10539,6 +10539,20 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(invoke(parseExpression, null, Reflection.newProxy(ExpressionParser.class, ih), null));
 		//
+		// org.springframework.context.support.VoiceManager$ExportTask.and(boolean,boolean,boolean...)
+		//
+		final Method and = CLASS_EXPORT_TASK != null
+				? CLASS_EXPORT_TASK.getDeclaredMethod("and", Boolean.TYPE, Boolean.TYPE, boolean[].class)
+				: null;
+		//
+		Assertions.assertEquals(Boolean.FALSE, invoke(and, null, Boolean.TRUE, Boolean.FALSE, null));
+		//
+		Assertions.assertEquals(Boolean.TRUE, invoke(and, null, Boolean.TRUE, Boolean.TRUE, null));
+		//
+		Assertions.assertEquals(Boolean.FALSE, invoke(and, null, Boolean.TRUE, Boolean.TRUE, new boolean[] { false }));
+		//
+		Assertions.assertEquals(Boolean.TRUE, invoke(and, null, Boolean.TRUE, Boolean.TRUE, new boolean[] { true }));
+		//
 	}
 
 	private static void run(final Runnable instance) {
