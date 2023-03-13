@@ -2832,6 +2832,14 @@ class VoiceManagerTest {
 			//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnExecute));
 		//
+		if (instance != null) {
+			//
+			instance.setImageFormat(null);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnExecute));
+		//
 		// btnIpaSymbol
 		//
 		final AbstractButton btnIpaSymbol = new JButton();

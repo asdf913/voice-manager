@@ -126,6 +126,9 @@ import java.util.zip.ZipFile;
 
 import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
+import javax.imageio.spi.IIORegistry;
+import javax.imageio.spi.ImageWriterSpi;
+import javax.imageio.spi.ServiceRegistry;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -909,6 +912,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Nullable
 	@Note("Katakana")
 	private transient Collection<Multimap> multimapKatakana = null;
+
+	private IValue0<String> imageFormat = null;
 
 	private VoiceManager() {
 	}
@@ -1842,6 +1847,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Nullable
 	private static Duration parse(CharSequence text) {
 		return StringUtils.isNotEmpty(text) ? Duration.parse(text) : null;
+	}
+
+	public void setImageFormat(final String imageFormat) {
+		this.imageFormat = Unit.with(imageFormat);
 	}
 
 	@Nullable
@@ -5584,8 +5593,38 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		final RenderedImage pitchAccentImage = getPitchAccentImage(
 				cast(Pronunciation.class, getSelectedItem(mcbmPronunciation)));
 		//
-		testAndAccept(x -> pitchAccentImage != null, createByteArray(pitchAccentImage, "PNG"// TODO
-				, headless), x -> setPitchAccentImage(voice, x));
+		// imageFormat
+		//
+		String imageFormatFinal = null;
+		//
+		if (imageFormat != null) {
+			//
+			imageFormatFinal = IValue0Util.getValue0(imageFormat);
+			//
+		} else {
+			//
+			List<String> imageFormats = null;
+			//
+			try {
+				//
+				imageFormats = getImageFormats();
+				//
+			} catch (final NoSuchFieldException e) {
+				//
+				throw toRuntimeException(e);
+				//
+			} // try
+				//
+			if (CollectionUtils.isNotEmpty(imageFormats)) {
+				//
+				imageFormatFinal = IterableUtils.get(imageFormats, 0);
+				//
+			} // if
+				//
+		} // if
+			//
+		testAndAccept(x -> pitchAccentImage != null, createByteArray(pitchAccentImage, imageFormatFinal, headless),
+				x -> setPitchAccentImage(voice, x));
 		//
 		SqlSession sqlSession = null;
 		//
@@ -5625,6 +5664,33 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // try
 			//
+	}
+
+	private static List<String> getImageFormats() throws NoSuchFieldException {
+		//
+		final Map<?, ?> imageWriterSpis = cast(Map.class,
+				testAndApply(
+						Objects::nonNull, get(
+								cast(Map.class,
+										Narcissus.getObjectField(IIORegistry.getDefaultInstance(),
+												getDeclaredField(ServiceRegistry.class, "categoryMap"))),
+								ImageWriterSpi.class),
+						x -> Narcissus.getField(x, getDeclaredField(getClass(x), "map")), null));
+		//
+		final List<String> classNames = testAndApply(Objects::nonNull,
+				toList(map(stream(keySet(imageWriterSpis)), x -> getName(cast(Class.class, x)))), ArrayList::new, null);
+		//
+		final String commonPrefix = StringUtils.getCommonPrefix(toArray(classNames, new String[] {}));
+		//
+		for (int i = 0; classNames != null && i < classNames.size(); i++) {
+			//
+			classNames.set(i, StringUtils
+					.substringBefore(StringUtils.replace(IterableUtils.get(classNames, i), commonPrefix, ""), '.'));
+			//
+		} // if
+			//
+		return classNames;
+		//
 	}
 
 	private static ByteArray createByteArray(@Nullable final RenderedImage image, @Nullable final String format,
