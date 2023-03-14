@@ -64,8 +64,12 @@ public class JapanRailwayEastMapFactoryBean implements FactoryBean<Map<String, S
 					//
 				if (result.containsKey(key = entry.getKey())) {
 					//
-					throw new IllegalStateException();
-					//
+					if (!Objects.equals(result.get(key), entry.getValue())) {
+						//
+						throw new IllegalStateException(entry.toString());
+						//
+					} // if
+						//
 				} // if
 					//
 				result.put(key, entry.getValue());
