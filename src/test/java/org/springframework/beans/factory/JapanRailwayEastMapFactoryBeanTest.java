@@ -9,7 +9,6 @@ import java.net.ConnectException;
 import java.util.Collections;
 import java.util.Map;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.javatuples.Pair;
 import org.jsoup.Jsoup;
@@ -59,14 +58,8 @@ class JapanRailwayEastMapFactoryBeanTest {
 			//
 		Assertions.assertEquals(Collections.emptyMap(), getObject(instance));
 		//
-		final File file = File.createTempFile(RandomStringUtils.randomAlphanumeric(3), null);
+		final File file = new File("pom.xml");
 		//
-		if (file != null) {
-			//
-			file.deleteOnExit();
-			//
-		} // if
-			//
 		final String url = file != null ? file.toURI().toURL().toString() : null;
 		//
 		if (instance != null) {
