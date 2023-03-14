@@ -109,20 +109,26 @@ public class JapanRailwayEastMapFactoryBean implements FactoryBean<Map<String, S
 			//
 		UrlValidator urlValidator = null;
 		//
-		Map<String, String> result = null, temp = null;
-		//
-		String key = null;
+		Map<String, String> result = null;
 		//
 		for (int i = 0; urls != null && i < urls.length; i++) {
 			//
-			if ((result = ObjectUtils.getIfNull(result, LinkedHashMap::new)) == null || (temp = createMap(urls[i],
-					urlValidator = ObjectUtils.getIfNull(urlValidator, UrlValidator::getInstance))) == null) {
-				//
-				continue;
-				//
-			} // if
-				//
-			for (final Entry<String, String> entry : temp.entrySet()) {
+			merge(result = ObjectUtils.getIfNull(result, LinkedHashMap::new),
+					createMap(urls[i], urlValidator = ObjectUtils.getIfNull(urlValidator, UrlValidator::getInstance)));
+			//
+		} // for
+			//
+		return result;
+		//
+	}
+
+	private static <K, V> void merge(final Map<K, V> a, final Map<K, V> b) {
+		//
+		K key = null;
+		//
+		if (b != null && b.entrySet() != null && b.entrySet().iterator() != null) {
+			//
+			for (final Entry<K, V> entry : b.entrySet()) {
 				//
 				if (entry == null) {
 					//
@@ -130,20 +136,18 @@ public class JapanRailwayEastMapFactoryBean implements FactoryBean<Map<String, S
 					//
 				} // if
 					//
-				if (result.containsKey(key = entry.getKey()) && !Objects.equals(result.get(key), entry.getValue())) {
+				if (a != null && a.containsKey(key = entry.getKey()) && !Objects.equals(a.get(key), entry.getValue())) {
 					//
 					throw new IllegalStateException(entry.toString());
 					//
 				} // if
 					//
-				put(result, key, entry.getValue());
+				put(a, key, entry.getValue());
 				//
 			} // for
 				//
-		} // for
+		} // if
 			//
-		return result;
-		//
 	}
 
 	private static String getMimeType(final ContentInfo instance) {
