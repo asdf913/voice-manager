@@ -1,6 +1,7 @@
 package org.springframework.beans.factory;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
@@ -10,6 +11,11 @@ import java.util.Collections;
 import java.util.Map;
 
 import org.apache.commons.validator.routines.UrlValidator;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.javatuples.Pair;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
@@ -17,6 +23,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.core.io.ByteArrayResource;
 
 class JapanRailwayEastMapFactoryBeanTest {
 
@@ -70,6 +77,66 @@ class JapanRailwayEastMapFactoryBeanTest {
 			//
 		Assertions.assertEquals(Collections.emptyMap(), getObject(instance));
 		//
+		if (instance != null) {
+			//
+			instance.setResource(new ByteArrayResource("".getBytes()));
+			//
+		} // if
+			//
+		Assertions.assertNotNull(getObject(instance));
+		//
+		try (final Workbook wb = new XSSFWorkbook(); final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+			//
+			wb.write(baos);
+			//
+			if (instance != null) {
+				//
+				instance.setResource(new ByteArrayResource(baos.toByteArray()));
+				//
+			} // if
+				//
+			Assertions.assertNotNull(getObject(instance));
+			//
+		} // try
+			//
+		try (final Workbook wb = new XSSFWorkbook(); final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+			//
+			final Sheet sheet = wb.createSheet();
+			//
+			for (int i = 0; sheet != null && i < 1; i++) {
+				//
+				sheet.createRow(sheet.getPhysicalNumberOfRows());
+				//
+			} // for
+				//
+			final Row row = sheet != null ? sheet.createRow(sheet.getPhysicalNumberOfRows()) : null;
+			//
+			Cell cell = null;
+			//
+			for (int i = 0; row != null && i < 2; i++) {
+				//
+				if ((cell = row.createCell(row.getPhysicalNumberOfCells())) == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				cell.setCellValue(Integer.toString(i));
+				//
+			} // for
+				//
+			wb.write(baos);
+			//
+			if (instance != null) {
+				//
+				instance.setResource(new ByteArrayResource(baos.toByteArray()));
+				//
+			} // if
+				//
+			Assertions.assertEquals(Collections.singletonMap("0", "1"), getObject(instance));
+			//
+		} // try
+			//
 	}
 
 	private static <T> T getObject(final FactoryBean<T> instnace) throws Exception {

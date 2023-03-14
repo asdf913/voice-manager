@@ -1,5 +1,6 @@
 package org.springframework.beans.factory;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
@@ -20,17 +22,35 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.validator.routines.UrlValidator;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.javatuples.Pair;
+import org.javatuples.Unit;
+import org.javatuples.valueintf.IValue0;
+import org.javatuples.valueintf.IValue0Util;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceUtil;
 
+import com.j256.simplemagic.ContentInfo;
+import com.j256.simplemagic.ContentInfoUtil;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
 
 public class JapanRailwayEastMapFactoryBean implements FactoryBean<Map<String, String>> {
 
+	private Resource resource = null;
+
 	private String[] urls = null;
+
+	public void setResource(final Resource resource) {
+		this.resource = resource;
+	}
 
 	public void setUrls(final String[] urls) {
 		this.urls = urls;
@@ -39,6 +59,56 @@ public class JapanRailwayEastMapFactoryBean implements FactoryBean<Map<String, S
 	@Override
 	public Map<String, String> getObject() throws Exception {
 		//
+		if (ResourceUtil.exists(resource)) {
+			//
+			final byte[] bs = ResourceUtil.getContentAsByteArray(resource);
+			//
+			final ContentInfo ci = new ContentInfoUtil().findMatch(bs);
+			//
+			final String mimeType = ci != null ? ci.getMimeType() : null;
+			//
+			IValue0<Map<String, String>> result = null;
+			//
+			if (Objects.equals("application/vnd.openxmlformats-officedocument", mimeType)) {
+				//
+				try (final InputStream is = new ByteArrayInputStream(bs);
+						final Workbook wb = testAndApply(Objects::nonNull, is, WorkbookFactory::create, null)) {
+					//
+					final Sheet sheet = wb != null && wb.getNumberOfSheets() == 1 ? wb.getSheetAt(0) : null;
+					//
+					if (sheet != null) {
+						//
+						final AtomicBoolean first = new AtomicBoolean(true);
+						//
+						for (final Row row : sheet) {
+							//
+							if (row == null || first.getAndSet(false) || row.getPhysicalNumberOfCells() < 2
+									|| (result = ObjectUtils.getIfNull(result,
+											() -> Unit.with(new LinkedHashMap<>()))) == null) {
+								//
+								continue;
+								//
+							} // if
+								//
+							put(IValue0Util.getValue0(result), getStringCellValue(row.getCell(0)),
+									getStringCellValue(row.getCell(1)));
+							//
+						} // for
+							//
+					} // if
+						//
+				} // try
+					//
+				if (result != null) {
+					//
+					return IValue0Util.getValue0(result);
+					//
+				} // if
+					//
+			} // if
+				//
+		} // if
+			//
 		UrlValidator urlValidator = null;
 		//
 		Map<String, String> result = null, temp = null;
@@ -72,7 +142,7 @@ public class JapanRailwayEastMapFactoryBean implements FactoryBean<Map<String, S
 						//
 				} // if
 					//
-				result.put(key, entry.getValue());
+				put(result, key, entry.getValue());
 				//
 			} // for
 				//
@@ -80,6 +150,16 @@ public class JapanRailwayEastMapFactoryBean implements FactoryBean<Map<String, S
 			//
 		return result;
 		//
+	}
+
+	private static String getStringCellValue(final Cell instance) {
+		return instance != null ? instance.getStringCellValue() : null;
+	}
+
+	private static <K, V> void put(final Map<K, V> instance, final K key, final V value) {
+		if (instance != null) {
+			instance.put(key, value);
+		}
 	}
 
 	@Nullable
@@ -129,7 +209,7 @@ public class JapanRailwayEastMapFactoryBean implements FactoryBean<Map<String, S
 					//
 				} // if
 					//
-				map.put(key, pair.getValue1());
+				put(map, key, pair.getValue1());
 				//
 			} // while
 				//
