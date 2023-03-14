@@ -62,47 +62,12 @@ public class JapanRailwayEastMapFactoryBean implements FactoryBean<Map<String, S
 		//
 		if (ResourceUtil.exists(resource)) {
 			//
-			final byte[] bs = ResourceUtil.getContentAsByteArray(resource);
+			final IValue0<Map<String, String>> result = createMap(resource);
 			//
-			IValue0<Map<String, String>> result = null;
-			//
-			if (Objects.equals("application/vnd.openxmlformats-officedocument",
-					getMimeType(new ContentInfoUtil().findMatch(bs)))) {
+			if (result != null) {
 				//
-				try (final InputStream is = new ByteArrayInputStream(bs);
-						final Workbook wb = testAndApply(Objects::nonNull, is, WorkbookFactory::create, null)) {
-					//
-					final Sheet sheet = wb != null && wb.getNumberOfSheets() == 1 ? wb.getSheetAt(0) : null;
-					//
-					if (sheet != null) {
-						//
-						final AtomicBoolean first = new AtomicBoolean(true);
-						//
-						for (final Row row : sheet) {
-							//
-							if (row == null || first.getAndSet(false) || row.getPhysicalNumberOfCells() < 2
-									|| (result = ObjectUtils.getIfNull(result,
-											() -> Unit.with(new LinkedHashMap<>()))) == null) {
-								//
-								continue;
-								//
-							} // if
-								//
-							put(IValue0Util.getValue0(result), getStringCellValue(row.getCell(0)),
-									getStringCellValue(row.getCell(1)));
-							//
-						} // for
-							//
-					} // if
-						//
-				} // try
-					//
-				if (result != null) {
-					//
-					return IValue0Util.getValue0(result);
-					//
-				} // if
-					//
+				return IValue0Util.getValue0(result);
+				//
 			} // if
 				//
 		} // if
@@ -117,6 +82,49 @@ public class JapanRailwayEastMapFactoryBean implements FactoryBean<Map<String, S
 					createMap(urls[i], urlValidator = ObjectUtils.getIfNull(urlValidator, UrlValidator::getInstance)));
 			//
 		} // for
+			//
+		return result;
+		//
+	}
+
+	private static IValue0<Map<String, String>> createMap(final Resource resource) throws IOException {
+		//
+		final byte[] bs = ResourceUtil.getContentAsByteArray(resource);
+		//
+		IValue0<Map<String, String>> result = null;
+		//
+		if (Objects.equals("application/vnd.openxmlformats-officedocument",
+				getMimeType(new ContentInfoUtil().findMatch(bs)))) {
+			//
+			try (final InputStream is = new ByteArrayInputStream(bs);
+					final Workbook wb = testAndApply(Objects::nonNull, is, WorkbookFactory::create, null)) {
+				//
+				final Sheet sheet = wb != null && wb.getNumberOfSheets() == 1 ? wb.getSheetAt(0) : null;
+				//
+				if (sheet != null) {
+					//
+					final AtomicBoolean first = new AtomicBoolean(true);
+					//
+					for (final Row row : sheet) {
+						//
+						if (row == null || first.getAndSet(false) || row.getPhysicalNumberOfCells() < 2
+								|| (result = ObjectUtils.getIfNull(result,
+										() -> Unit.with(new LinkedHashMap<>()))) == null) {
+							//
+							continue;
+							//
+						} // if
+							//
+						put(IValue0Util.getValue0(result), getStringCellValue(row.getCell(0)),
+								getStringCellValue(row.getCell(1)));
+						//
+					} // for
+						//
+				} // if
+					//
+			} // try
+				//
+		} // if
 			//
 		return result;
 		//
