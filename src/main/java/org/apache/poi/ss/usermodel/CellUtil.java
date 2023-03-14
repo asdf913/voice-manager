@@ -14,4 +14,8 @@ public interface CellUtil {
 		}
 	}
 
+	static String getStringCellValue(final Cell instance) {
+		return instance != null ? instance.getStringCellValue() : null;
+	}
+
 }

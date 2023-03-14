@@ -38,6 +38,7 @@ import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.CellUtil;
 import org.apache.poi.ss.usermodel.CellValue;
 import org.apache.poi.ss.usermodel.CreationHelperUtil;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
@@ -185,7 +186,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 			// name
 			//
 			if ((size = IterableUtils.size(fs = getFieldsByName(JlptVocabulary.class.getDeclaredFields(),
-					stringCellValue = getStringCellValue(row.getCell(i))))) == 1) {
+					stringCellValue = CellUtil.getStringCellValue(row.getCell(i))))) == 1) {
 				//
 				entry = Pair.of(Integer.valueOf(i), IterableUtils.get(fs, 0));
 				//
@@ -368,7 +369,8 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		//
 		if (Objects.equals(cellType, CellType.STRING)) {
 			//
-			result = Unit.with(testAndApply(StringUtils::isNotBlank, getStringCellValue(cell), Integer::valueOf, null));
+			result = Unit.with(
+					testAndApply(StringUtils::isNotBlank, CellUtil.getStringCellValue(cell), Integer::valueOf, null));
 			//
 		} else if (Objects.equals(cellType, CellType.NUMERIC)) {
 			//
@@ -416,7 +418,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		//
 		if (Objects.equals(cellType, CellType.STRING)) {
 			//
-			result = Unit.with(getStringCellValue(cell));
+			result = Unit.with(CellUtil.getStringCellValue(cell));
 			//
 		} else if (Objects.equals(cellType, CellType.NUMERIC)) {
 			//
@@ -547,11 +549,6 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 			//
 		return result;
 		//
-	}
-
-	@Nullable
-	private static String getStringCellValue(@Nullable final Cell instance) {
-		return instance != null ? instance.getStringCellValue() : null;
 	}
 
 	private static <E> void add(@Nullable final Collection<E> items, @Nullable final E item) {

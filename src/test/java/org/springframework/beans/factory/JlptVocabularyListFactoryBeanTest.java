@@ -56,11 +56,11 @@ class JlptVocabularyListFactoryBeanTest {
 	private static final String EMPTY = "";
 
 	private static Method METHOD_FILTER, METHOD_GET_CLASS, METHOD_TO_STRING, METHOD_TO_LIST, METHOD_ANNOTATION_TYPE,
-			METHOD_GET_NAME, METHOD_TEST, METHOD_OR, METHOD_GET_STRING_CELL_VALUE, METHOD_ADD, METHOD_ADD_ALL,
-			METHOD_PUT, METHOD_GET_FIELDS_BY_NAME, METHOD_GET_INTEGER_VALUE, METHOD_GET_STRING_VALUE_CELL,
-			METHOD_GET_STRING_VALUE_CELL_VALUE, METHOD_INVOKE, METHOD_GET_DECLARED_ANNOTATIONS,
-			METHOD_GET_DECLARED_METHODS, METHOD_IS_ASSIGNABLE_FROM, METHOD_SET_ACCESSIBLE, METHOD_SET, METHOD_GET_TYPE,
-			METHOD_GET_NUMBER_VALUE, METHOD_GET_PHYSICAL_NUMBER_OF_CELLS = null;
+			METHOD_GET_NAME, METHOD_TEST, METHOD_OR, METHOD_ADD, METHOD_ADD_ALL, METHOD_PUT, METHOD_GET_FIELDS_BY_NAME,
+			METHOD_GET_INTEGER_VALUE, METHOD_GET_STRING_VALUE_CELL, METHOD_GET_STRING_VALUE_CELL_VALUE, METHOD_INVOKE,
+			METHOD_GET_DECLARED_ANNOTATIONS, METHOD_GET_DECLARED_METHODS, METHOD_IS_ASSIGNABLE_FROM,
+			METHOD_SET_ACCESSIBLE, METHOD_SET, METHOD_GET_TYPE, METHOD_GET_NUMBER_VALUE,
+			METHOD_GET_PHYSICAL_NUMBER_OF_CELLS = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -82,8 +82,6 @@ class JlptVocabularyListFactoryBeanTest {
 		(METHOD_TEST = clz.getDeclaredMethod("test", Predicate.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_OR = clz.getDeclaredMethod("or", Boolean.TYPE, Boolean.TYPE, boolean[].class)).setAccessible(true);
-		//
-		(METHOD_GET_STRING_CELL_VALUE = clz.getDeclaredMethod("getStringCellValue", Cell.class)).setAccessible(true);
 		//
 		(METHOD_ADD = clz.getDeclaredMethod("add", Collection.class, Object.class)).setAccessible(true);
 		//
@@ -594,27 +592,6 @@ class JlptVocabularyListFactoryBeanTest {
 				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(obj != null && obj.getClass() != null ? obj.getClass().toString() : null);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetStringCellValue() throws Throwable {
-		//
-		Assertions.assertNull(getStringCellValue(null));
-		//
-	}
-
-	private static String getStringCellValue(final Cell instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_STRING_CELL_VALUE.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

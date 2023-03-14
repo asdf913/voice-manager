@@ -23,6 +23,7 @@ import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellUtil;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -116,8 +117,8 @@ public class EastJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<
 							//
 						} // if
 							//
-						put(IValue0Util.getValue0(result), getStringCellValue(row.getCell(0)),
-								getStringCellValue(row.getCell(1)));
+						put(IValue0Util.getValue0(result), CellUtil.getStringCellValue(row.getCell(0)),
+								CellUtil.getStringCellValue(row.getCell(1)));
 						//
 					} // for
 						//
@@ -162,11 +163,6 @@ public class EastJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<
 	@Nullable
 	private static String getMimeType(@Nullable final ContentInfo instance) {
 		return instance != null ? instance.getMimeType() : null;
-	}
-
-	@Nullable
-	private static String getStringCellValue(@Nullable final Cell instance) {
-		return instance != null ? instance.getStringCellValue() : null;
 	}
 
 	private static <K, V> void put(@Nullable final Map<K, V> instance, @Nullable final K key, @Nullable final V value) {

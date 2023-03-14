@@ -9972,7 +9972,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							cell.getColumnIndex(),
 							orElse(findFirst(testAndApply(Objects::nonNull, FieldUtils.getAllFields(Voice.class),
 									Arrays::stream, null)
-									.filter(field -> Objects.equals(getName(field), getStringCellValue(cell)))), null));
+									.filter(field -> Objects.equals(getName(field),
+											CellUtil.getStringCellValue(cell)))),
+									null));
 					//
 					set(arintMap, intMap);
 					//
@@ -9999,11 +10001,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return voice;
 		//
-	}
-
-	@Nullable
-	private static String getStringCellValue(@Nullable final Cell instance) {
-		return instance != null ? instance.getStringCellValue() : null;
 	}
 
 	@Nullable
@@ -10220,7 +10217,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} else {
 				//
-				value = Unit.with(getStringCellValue(cell));
+				value = Unit.with(CellUtil.getStringCellValue(cell));
 				//
 			} // if
 				//
@@ -10229,7 +10226,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					final String name = name(cast(Enum.class, e));
 					//
-					final String stringCellValue = getStringCellValue(cell);
+					final String stringCellValue = CellUtil.getStringCellValue(cell);
 					//
 					return Objects.equals(name, stringCellValue) || (StringUtils.isNotEmpty(stringCellValue)
 							&& StringUtils.startsWithIgnoreCase(name, stringCellValue));
@@ -10252,9 +10249,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} else if (Objects.equals(type, Iterable.class)) {
 			//
-			value = Unit.with(toList(map(
-					stream(getObjectList(ObjectMap.getObject(objectMap, ObjectMapper.class), getStringCellValue(cell))),
-					VoiceManager::toString)));
+			value = Unit.with(toList(map(stream(getObjectList(ObjectMap.getObject(objectMap, ObjectMapper.class),
+					CellUtil.getStringCellValue(cell))), VoiceManager::toString)));
 			//
 		} else if (Objects.equals(type, Integer.class)) {
 			//
@@ -10291,7 +10287,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} else {
 			//
-			value = Unit.with(valueOf(getStringCellValue(cell)));
+			value = Unit.with(valueOf(CellUtil.getStringCellValue(cell)));
 			//
 		} // if
 			//
@@ -10320,7 +10316,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			value = Unit.with(getBooleanValue(formulaEvaluator.evaluate(cell)));
 			//
-		} else if (StringUtils.isNotEmpty(string = getStringCellValue(cell))) {
+		} else if (StringUtils.isNotEmpty(string = CellUtil.getStringCellValue(cell))) {
 			//
 			value = Unit.with(Boolean.valueOf(string));
 			//

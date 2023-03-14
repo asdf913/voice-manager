@@ -356,9 +356,9 @@ class VoiceManagerTest {
 			METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_GET_FILE,
 			METHOD_GET_PRONUNCIATION_AUDIO_FILE_BY_AUDIO_FORMAT, METHOD_GET_AUDIO_FILE, METHOD_GET_BEAN,
 			METHOD_IS_ALL_ATTRIBUTES_MATCHED, METHOD_CREATE_FUNCTION_FOR_BTN_CONVERT_TO_HIRAGANA, METHOD_WRITER,
-			METHOD_READ_LINE, METHOD_PRINT_LN, METHOD_SET_PITCH_ACCENT_IMAGE, METHOD_GET_STRING_CELL_VALUE,
-			METHOD_GET_NUMERIC_CELL_VALUE, METHOD_SET_AUTO_FILTER, METHOD_CREATE_BYTE_ARRAY, METHOD_DOUBLE_VALUE,
-			METHOD_GET_ELEMENT_AT, METHOD_GET_IMAGE_FORMAT = null;
+			METHOD_READ_LINE, METHOD_PRINT_LN, METHOD_SET_PITCH_ACCENT_IMAGE, METHOD_GET_NUMERIC_CELL_VALUE,
+			METHOD_SET_AUTO_FILTER, METHOD_CREATE_BYTE_ARRAY, METHOD_DOUBLE_VALUE, METHOD_GET_ELEMENT_AT,
+			METHOD_GET_IMAGE_FORMAT = null;
 
 	@BeforeAll
 	static void beforeAll() throws Throwable {
@@ -1053,8 +1053,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_SET_PITCH_ACCENT_IMAGE = clz.getDeclaredMethod("setPitchAccentImage", Voice.class, ByteArray.class))
 				.setAccessible(true);
-		//
-		(METHOD_GET_STRING_CELL_VALUE = clz.getDeclaredMethod("getStringCellValue", Cell.class)).setAccessible(true);
 		//
 		(METHOD_GET_NUMERIC_CELL_VALUE = clz.getDeclaredMethod("getNumericCellValue", Cell.class)).setAccessible(true);
 		//
@@ -9664,27 +9662,6 @@ class VoiceManagerTest {
 	private static void setPitchAccentImage(final Voice instance, final ByteArray pitchAccentImage) throws Throwable {
 		try {
 			METHOD_SET_PITCH_ACCENT_IMAGE.invoke(null, instance, pitchAccentImage);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetStringCellValue() throws Throwable {
-		//
-		Assertions.assertNull(getStringCellValue(null));
-		//
-	}
-
-	private static String getStringCellValue(final Cell instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_STRING_CELL_VALUE.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

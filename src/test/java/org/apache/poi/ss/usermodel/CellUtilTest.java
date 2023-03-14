@@ -19,4 +19,11 @@ class CellUtilTest {
 		//
 	}
 
+	@Test
+	void testGetStringCellValue() {
+		//
+		Assertions.assertNull(CellUtil.getStringCellValue(null));
+		//
+	}
+
 }

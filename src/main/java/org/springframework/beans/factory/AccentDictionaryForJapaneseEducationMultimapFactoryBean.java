@@ -20,6 +20,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.apache.poi.ss.usermodel.CellUtil;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -146,7 +147,7 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 				} // if
 					//
 				MultimapUtil.put(value = ObjectUtils.getIfNull(value, LinkedHashMultimap::create),
-						row.getCell(0).getStringCellValue(), row.getCell(1).getStringCellValue());
+						CellUtil.getStringCellValue(row.getCell(0)), CellUtil.getStringCellValue(row.getCell(1)));
 				//
 			} // for
 				//
