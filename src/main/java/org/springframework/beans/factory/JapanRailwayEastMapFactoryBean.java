@@ -87,6 +87,7 @@ public class JapanRailwayEastMapFactoryBean implements FactoryBean<Map<String, S
 		//
 	}
 
+	@Nullable
 	private static IValue0<Map<String, String>> createMap(final Resource resource) throws IOException {
 		//
 		final byte[] bs = ResourceUtil.getContentAsByteArray(resource);
