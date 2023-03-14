@@ -143,7 +143,7 @@ public class JapanRailwayEastMapFactoryBean implements FactoryBean<Map<String, S
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
-	private static Pair<String, String> createPair(final String urlString) throws IOException, CsvValidationException {
+	private static Pair<String, String> createPair(final String urlString) throws IOException {
 		//
 		final Element element = testAndApply(Objects::nonNull,
 				testAndApply(StringUtils::isNotBlank, urlString, URL::new, null), x -> Jsoup.parse(x, 0), null);
@@ -153,7 +153,7 @@ public class JapanRailwayEastMapFactoryBean implements FactoryBean<Map<String, S
 	}
 
 	@Nullable
-	private static Pair<String, String> createPair(final Element document) throws IOException, CsvValidationException {
+	private static Pair<String, String> createPair(final Element document) {
 		//
 		Pair<String, String> pair = null;
 		//
