@@ -122,7 +122,7 @@ public class JapanRailwayEastMapFactoryBean implements FactoryBean<Map<String, S
 		//
 	}
 
-	private static <K, V> void merge(final Map<K, V> a, final Map<K, V> b) {
+	private static <K, V> void merge(final Map<K, V> a, @Nullable final Map<K, V> b) {
 		//
 		K key = null;
 		//
