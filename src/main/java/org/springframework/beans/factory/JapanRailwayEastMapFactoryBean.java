@@ -21,6 +21,7 @@ import org.apache.commons.validator.routines.UrlValidator;
 import org.javatuples.Pair;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.ElementUtil;
 
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
@@ -155,7 +156,7 @@ public class JapanRailwayEastMapFactoryBean implements FactoryBean<Map<String, S
 		//
 		// text
 		//
-		List<Element> elements = document != null ? document.select(".station_name01") : null;
+		List<Element> elements = ElementUtil.select(document, ".station_name01");
 		//
 		Element element = IterableUtils.size(elements) == 1 ? IterableUtils.get(elements, 0) : null;
 		//
@@ -167,7 +168,7 @@ public class JapanRailwayEastMapFactoryBean implements FactoryBean<Map<String, S
 			//
 			// hiragana
 			//
-		if ((element = IterableUtils.size(elements = document != null ? document.select(".station_name02") : null) == 1
+		if ((element = IterableUtils.size(elements = ElementUtil.select(document, ".station_name02")) == 1
 				? IterableUtils.get(elements, 0)
 				: null) != null && (pair = ObjectUtils.getIfNull(pair, () -> new Pair<>(null, null))) != null) {
 			//
