@@ -7307,7 +7307,7 @@ class VoiceManagerTest {
 			//
 		} else {
 			//
-			Assertions.assertThrows(UnsatisfiedLinkError.class, () -> getOsVersionInfoExMap());
+			Assertions.assertThrows(NoClassDefFoundError.class, () -> getOsVersionInfoExMap());
 			//
 		} // if
 			//
