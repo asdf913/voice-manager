@@ -57,6 +57,7 @@ import org.springframework.core.io.XlsxUtil;
 
 import com.j256.simplemagic.ContentInfo;
 import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderUtil;
 import com.opencsv.exceptions.CsvValidationException;
 
 import domain.JlptVocabulary;
@@ -591,7 +592,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 			//
 			final AtomicBoolean first = new AtomicBoolean(true);
 			//
-			while ((ss = readNext(csvReader)) != null) {
+			while ((ss = CSVReaderUtil.readNext(csvReader)) != null) {
 				//
 				if (first.getAndSet(false)) {
 					//
@@ -696,11 +697,6 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 	@Nullable
 	private static String getFile(@Nullable final URL instance) {
 		return instance != null ? instance.getFile() : null;
-	}
-
-	@Nullable
-	private static String[] readNext(@Nullable final CSVReader instance) throws CsvValidationException, IOException {
-		return instance != null ? instance.readNext() : null;
 	}
 
 	private static <K, V> void put(@Nullable final Map<K, V> instance, final K key, final V value) {

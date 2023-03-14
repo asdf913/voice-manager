@@ -40,6 +40,7 @@ import org.springframework.core.io.ResourceUtil;
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
 import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderUtil;
 import com.opencsv.exceptions.CsvValidationException;
 
 public class JapanRailwayEastMapFactoryBean implements FactoryBean<Map<String, String>> {
@@ -189,7 +190,7 @@ public class JapanRailwayEastMapFactoryBean implements FactoryBean<Map<String, S
 			//
 			Pair<String, String> pair = null;
 			//
-			while ((line = csvReader != null ? csvReader.readNext() : null) != null) {
+			while ((line = CSVReaderUtil.readNext(csvReader)) != null) {
 				//
 				if (line.length < 6 || urlValidator == null || !urlValidator.isValid(u = line[5])
 						|| (pair = createPair(u)) == null
