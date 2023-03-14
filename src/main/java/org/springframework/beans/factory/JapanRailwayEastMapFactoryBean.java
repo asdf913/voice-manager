@@ -93,6 +93,7 @@ public class JapanRailwayEastMapFactoryBean implements FactoryBean<Map<String, S
 		//
 	}
 
+	@Nullable
 	private static Map<String, String> createMap(final InputStream is, final UrlValidator urlValidator)
 			throws IOException, CsvValidationException {
 		//
@@ -133,6 +134,7 @@ public class JapanRailwayEastMapFactoryBean implements FactoryBean<Map<String, S
 		//
 	}
 
+	@Nullable
 	private static InputStream openStream(@Nullable final URL instance) throws IOException {
 		return instance != null ? instance.openStream() : null;
 	}
@@ -144,6 +146,7 @@ public class JapanRailwayEastMapFactoryBean implements FactoryBean<Map<String, S
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
+	@Nullable
 	private static Pair<String, String> createPair(final String urlString) throws IOException {
 		//
 		final Element element = testAndApply(Objects::nonNull,
