@@ -154,6 +154,7 @@ public class JapanRailwayEastMapFactoryBean implements FactoryBean<Map<String, S
 		return instance != null ? instance.getMimeType() : null;
 	}
 
+	@Nullable
 	private static String getStringCellValue(@Nullable final Cell instance) {
 		return instance != null ? instance.getStringCellValue() : null;
 	}
