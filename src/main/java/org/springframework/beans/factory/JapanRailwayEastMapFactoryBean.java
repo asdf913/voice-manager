@@ -150,7 +150,7 @@ public class JapanRailwayEastMapFactoryBean implements FactoryBean<Map<String, S
 			//
 	}
 
-	private static String getMimeType(final ContentInfo instance) {
+	private static String getMimeType(@Nullable final ContentInfo instance) {
 		return instance != null ? instance.getMimeType() : null;
 	}
 
