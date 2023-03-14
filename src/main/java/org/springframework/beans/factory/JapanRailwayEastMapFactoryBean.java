@@ -168,7 +168,7 @@ public class JapanRailwayEastMapFactoryBean implements FactoryBean<Map<String, S
 		return instance != null ? instance.getStringCellValue() : null;
 	}
 
-	private static <K, V> void put(@Nullable final Map<K, V> instance, final K key, @Nullable final V value) {
+	private static <K, V> void put(@Nullable final Map<K, V> instance, @Nullable final K key, @Nullable final V value) {
 		if (instance != null) {
 			instance.put(key, value);
 		}
