@@ -149,7 +149,7 @@ public class JapanRailwayEastMapFactoryBean implements FactoryBean<Map<String, S
 		//
 	}
 
-	private static String getStringCellValue(final Cell instance) {
+	private static String getStringCellValue(@Nullable final Cell instance) {
 		return instance != null ? instance.getStringCellValue() : null;
 	}
 
