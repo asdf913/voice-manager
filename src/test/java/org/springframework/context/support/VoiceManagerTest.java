@@ -271,6 +271,8 @@ class VoiceManagerTest {
 
 	private static final int ONE = 1;
 
+	private static final int TWO = 2;
+
 	private static Class<?> CLASS_OBJECT_MAP, CLASS_BOOLEAN_MAP, CLASS_STRING_MAP, CLASS_IH, CLASS_EXPORT_TASK,
 			CLASS_IMPORT_TASK, CLASS_BYTE_CONVERTER = null;
 
@@ -1802,9 +1804,9 @@ class VoiceManagerTest {
 		//
 		Assertions.assertThrows(IllegalArgumentException.class, () -> instance.setFreeMarkerVersion(new int[] {}));
 		//
-		Assertions.assertDoesNotThrow(() -> instance.setFreeMarkerVersion(new int[] { ONE, 2, 3 }));
+		Assertions.assertDoesNotThrow(() -> instance.setFreeMarkerVersion(new int[] { ONE, TWO, 3 }));
 		//
-		Assertions.assertEquals(new Version(ONE, 2, 3), get(freeMarkerVersion, instance));
+		Assertions.assertEquals(new Version(ONE, TWO, 3), get(freeMarkerVersion, instance));
 		//
 	}
 
@@ -3303,7 +3305,7 @@ class VoiceManagerTest {
 		//
 		final JlptVocabulary jv = new JlptVocabulary();
 		//
-		final List<JlptVocabulary> jvs = Collections.nCopies(2, jv);
+		final List<JlptVocabulary> jvs = Collections.nCopies(TWO, jv);
 		//
 		set(jlptVocabularyList, instance, Unit.with(jvs));
 		//
@@ -4052,7 +4054,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertNotNull(createWorkbook(Collections.nCopies(2, voice), booleanMap, XSSFWorkbook::new));
+		Assertions.assertNotNull(createWorkbook(Collections.nCopies(TWO, voice), booleanMap, XSSFWorkbook::new));
 		//
 	}
 
@@ -5819,7 +5821,7 @@ class VoiceManagerTest {
 		//
 		Assertions.assertEquals(Integer.valueOf(ZERO), getCurrentSheetIndex(sheet));
 		//
-		ih.numberOfSheets = Integer.valueOf(2);
+		ih.numberOfSheets = Integer.valueOf(TWO);
 		//
 		Assertions.assertThrows(IllegalStateException.class, () -> getCurrentSheetIndex(sheet));
 		//
@@ -6828,7 +6830,7 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(getRate((List) null));
 		//
-		final List<Field> list = Collections.nCopies(2, null);
+		final List<Field> list = Collections.nCopies(TWO, null);
 		//
 		Assertions.assertThrows(IllegalStateException.class, () -> getRate(list));
 		//
@@ -7380,7 +7382,7 @@ class VoiceManagerTest {
 	@Test
 	void testRandomAlphabetic() throws Throwable {
 		//
-		Assertions.assertNotEquals(randomAlphabetic(ONE), randomAlphabetic(ONE));
+		Assertions.assertNotEquals(randomAlphabetic(TWO), randomAlphabetic(TWO));
 		//
 	}
 
@@ -9541,7 +9543,7 @@ class VoiceManagerTest {
 		//
 		if (GraphicsEnvironment.isHeadless()) {
 			//
-			Assertions.assertNull(apply(function, Collections.nCopies(2, null)));
+			Assertions.assertNull(apply(function, Collections.nCopies(TWO, null)));
 			//
 		} // if
 			//
@@ -9972,10 +9974,8 @@ class VoiceManagerTest {
 			//
 			Assertions.assertThrows(Throwable.class, () -> ih.invoke(intIntMap, intIntMapSetInt, empty));
 			//
-			final Integer two = Integer.valueOf(2);
-			//
 			Assertions.assertDoesNotThrow(
-					() -> ih.invoke(intIntMap, intIntMapSetInt, new Object[] { Integer.valueOf(ONE), two }));
+					() -> ih.invoke(intIntMap, intIntMapSetInt, new Object[] { Integer.valueOf(ONE), TWO }));
 			//
 			// org.springframework.context.support.VoiceManager$IntIntMap.containsKey(int)
 			//
@@ -10792,7 +10792,7 @@ class VoiceManagerTest {
 				"StreamConfiguration[bitsPerSample=1,channelCount=2,maxBlockSize=4096,minBlockSize=4096,sampleRate=0,validConfig=true]",
 				ToStringBuilder.reflectionToString(
 						invoke(clz != null ? clz.getDeclaredMethod("createStreamConfiguration", AudioFormat.class)
-								: null, null, new AudioFormat(0, 1, 2, true, false)),
+								: null, null, new AudioFormat(ZERO, ONE, TWO, true, false)),
 						ToStringStyle.SHORT_PREFIX_STYLE));
 		//
 	}
