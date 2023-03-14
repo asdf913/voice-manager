@@ -43,7 +43,7 @@ import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderUtil;
 import com.opencsv.exceptions.CsvValidationException;
 
-public class JapanRailwayEastMapFactoryBean implements FactoryBean<Map<String, String>> {
+public class EastJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<Map<String, String>> {
 
 	private Resource resource = null;
 

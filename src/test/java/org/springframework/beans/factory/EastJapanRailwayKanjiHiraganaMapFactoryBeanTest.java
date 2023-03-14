@@ -34,7 +34,7 @@ import org.springframework.core.io.ByteArrayResource;
 import com.google.common.reflect.Reflection;
 import com.j256.simplemagic.ContentInfo;
 
-class JapanRailwayEastMapFactoryBeanTest {
+class EastJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 
 	private static Method METHOD_CREATE_MAP, METHOD_CREATE_PAIR_STRING, METHOD_CREATE_PAIR_ELEMENT,
 			METHOD_GET_MIME_TYPE, METHOD_MERGE = null;
@@ -42,7 +42,7 @@ class JapanRailwayEastMapFactoryBeanTest {
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
 		//
-		final Class<?> clz = JapanRailwayEastMapFactoryBean.class;
+		final Class<?> clz = EastJapanRailwayKanjiHiraganaMapFactoryBean.class;
 		//
 		(METHOD_CREATE_MAP = clz.getDeclaredMethod("createMap", InputStream.class, UrlValidator.class))
 				.setAccessible(true);
@@ -94,12 +94,12 @@ class JapanRailwayEastMapFactoryBeanTest {
 
 	}
 
-	private JapanRailwayEastMapFactoryBean instance = null;
+	private EastJapanRailwayKanjiHiraganaMapFactoryBean instance = null;
 
 	@BeforeEach
 	void beforeEach() {
 		//
-		instance = new JapanRailwayEastMapFactoryBean();
+		instance = new EastJapanRailwayKanjiHiraganaMapFactoryBean();
 		//
 	}
 
