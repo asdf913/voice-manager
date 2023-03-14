@@ -12,6 +12,8 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.Predicate;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -150,6 +152,7 @@ public class JapanRailwayEastMapFactoryBean implements FactoryBean<Map<String, S
 		//
 	}
 
+	@Nullable
 	private static Pair<String, String> createPair(final Element document) throws IOException, CsvValidationException {
 		//
 		Pair<String, String> pair = null;
