@@ -143,6 +143,7 @@ public class JapanRailwayEastMapFactoryBean implements FactoryBean<Map<String, S
 		return instance != null ? instance.openStream() : null;
 	}
 
+	@Nullable
 	private static <T, R, E extends Throwable> R testAndApply(@Nullable final Predicate<T> predicate, final T value,
 			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
 			throws E {
