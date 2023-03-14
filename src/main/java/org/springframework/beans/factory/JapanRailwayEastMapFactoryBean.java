@@ -82,6 +82,7 @@ public class JapanRailwayEastMapFactoryBean implements FactoryBean<Map<String, S
 		//
 	}
 
+	@Nullable
 	private static Map<String, String> createMap(@Nullable final String url, final UrlValidator urlValidator)
 			throws IOException, CsvValidationException {
 		//
