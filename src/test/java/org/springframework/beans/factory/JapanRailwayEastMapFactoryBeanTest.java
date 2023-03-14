@@ -25,9 +25,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ByteArrayResource;
 
+import com.j256.simplemagic.ContentInfo;
+
 class JapanRailwayEastMapFactoryBeanTest {
 
-	private static Method METHOD_CREATE_MAP, METHOD_CREATE_PAIR_STRING, METHOD_CREATE_PAIR_ELEMENT = null;
+	private static Method METHOD_CREATE_MAP, METHOD_CREATE_PAIR_STRING, METHOD_CREATE_PAIR_ELEMENT,
+			METHOD_GET_MIME_TYPE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -40,6 +43,8 @@ class JapanRailwayEastMapFactoryBeanTest {
 		(METHOD_CREATE_PAIR_STRING = clz.getDeclaredMethod("createPair", String.class)).setAccessible(true);
 		//
 		(METHOD_CREATE_PAIR_ELEMENT = clz.getDeclaredMethod("createPair", Element.class)).setAccessible(true);
+		//
+		(METHOD_GET_MIME_TYPE = clz.getDeclaredMethod("getMimeType", ContentInfo.class)).setAccessible(true);
 		//
 	}
 
@@ -239,6 +244,27 @@ class JapanRailwayEastMapFactoryBeanTest {
 				return null;
 			} else if (obj instanceof Pair) {
 				return (Pair) obj;
+			}
+			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetMimeType() throws Throwable {
+		//
+		Assertions.assertNull(getMimeType(null));
+		//
+	}
+
+	private static String getMimeType(final ContentInfo instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_MIME_TYPE.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
 			}
 			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
 		} catch (final InvocationTargetException e) {

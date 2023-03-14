@@ -64,13 +64,10 @@ public class JapanRailwayEastMapFactoryBean implements FactoryBean<Map<String, S
 			//
 			final byte[] bs = ResourceUtil.getContentAsByteArray(resource);
 			//
-			final ContentInfo ci = new ContentInfoUtil().findMatch(bs);
-			//
-			final String mimeType = ci != null ? ci.getMimeType() : null;
-			//
 			IValue0<Map<String, String>> result = null;
 			//
-			if (Objects.equals("application/vnd.openxmlformats-officedocument", mimeType)) {
+			if (Objects.equals("application/vnd.openxmlformats-officedocument",
+					getMimeType(new ContentInfoUtil().findMatch(bs)))) {
 				//
 				try (final InputStream is = new ByteArrayInputStream(bs);
 						final Workbook wb = testAndApply(Objects::nonNull, is, WorkbookFactory::create, null)) {
@@ -147,6 +144,10 @@ public class JapanRailwayEastMapFactoryBean implements FactoryBean<Map<String, S
 			//
 		return result;
 		//
+	}
+
+	private static String getMimeType(final ContentInfo instance) {
+		return instance != null ? instance.getMimeType() : null;
 	}
 
 	private static String getStringCellValue(@Nullable final Cell instance) {
