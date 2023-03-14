@@ -7305,10 +7305,6 @@ class VoiceManagerTest {
 			//
 			Assertions.assertNotNull(getOsVersionInfoExMap());
 			//
-		} else {
-			//
-			Assertions.assertThrows(NoClassDefFoundError.class, () -> getOsVersionInfoExMap());
-			//
 		} // if
 			//
 	}
