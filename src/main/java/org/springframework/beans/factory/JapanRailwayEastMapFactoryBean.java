@@ -94,7 +94,7 @@ public class JapanRailwayEastMapFactoryBean implements FactoryBean<Map<String, S
 	}
 
 	@Nullable
-	private static Map<String, String> createMap(final InputStream is, final UrlValidator urlValidator)
+	private static Map<String, String> createMap(final InputStream is, @Nullable final UrlValidator urlValidator)
 			throws IOException, CsvValidationException {
 		//
 		Map<String, String> map = null;
@@ -110,7 +110,7 @@ public class JapanRailwayEastMapFactoryBean implements FactoryBean<Map<String, S
 			//
 			while ((line = csvReader != null ? csvReader.readNext() : null) != null) {
 				//
-				if (line == null || line.length < 6 || urlValidator == null || !urlValidator.isValid(u = line[5])
+				if (line.length < 6 || urlValidator == null || !urlValidator.isValid(u = line[5])
 						|| (pair = createPair(u)) == null
 						|| (map = ObjectUtils.getIfNull(map, LinkedHashMap::new)) == null) {
 					//
