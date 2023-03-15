@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -40,6 +42,7 @@ import org.springframework.core.io.ResourceUtil;
 import org.springframework.core.io.XlsxUtil;
 import org.xml.sax.SAXException;
 
+import com.google.common.reflect.Reflection;
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
 import com.opencsv.CSVReader;
@@ -90,6 +93,66 @@ public class EastJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<
 		//
 	}
 
+	private static interface ObjectIntMap<K> {
+
+		void put(final K key, final int value);
+
+		int get(final K key);
+
+		boolean containsKey(final K key);
+
+	}
+
+	private static class IH implements InvocationHandler {
+
+		private Map<Object, Object> map = null;
+
+		private Map<Object, Object> getMap() {
+			if (map == null) {
+				map = new LinkedHashMap<>();
+			}
+			return map;
+		}
+
+		@Override
+		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+			//
+			final String methodName = method != null ? method.getName() : null;
+			//
+			if (proxy instanceof ObjectIntMap) {
+				//
+				if (Objects.equals(methodName, "put") && args != null && args.length > 1) {
+					//
+					put(getMap(), args[0], args[1]);
+					//
+					return null;
+					//
+				} else if (Objects.equals(methodName, "get") && args != null && args.length > 0) {
+					//
+					final Object key = args[0];
+					//
+					if (!getMap().containsKey(key)) {
+						//
+						throw new IllegalStateException();
+						//
+					} // if
+						//
+					return getMap().get(key);
+					//
+				} else if (Objects.equals(methodName, "containsKey") && args != null && args.length > 0) {
+					//
+					return getMap().containsKey(args[0]);
+					//
+				} // if
+					//
+			} // if
+				//
+			throw new Throwable(methodName);
+			//
+		}
+
+	}
+
 	@Nullable
 	private static IValue0<Map<String, String>> createMap(final Resource resource)
 			throws IOException, SAXException, ParserConfigurationException {
@@ -111,22 +174,51 @@ public class EastJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<
 				//
 				final Sheet sheet = wb != null && wb.getNumberOfSheets() == 1 ? wb.getSheetAt(0) : null;
 				//
+				ObjectIntMap<String> objectIntMap = null;
+				//
 				if (sheet != null) {
 					//
 					final AtomicBoolean first = new AtomicBoolean(true);
 					//
 					for (final Row row : sheet) {
 						//
-						if (row == null || first.getAndSet(false) || row.getPhysicalNumberOfCells() < 2
-								|| (result = ObjectUtils.getIfNull(result,
-										() -> Unit.with(new LinkedHashMap<>()))) == null) {
+						if (row == null) {
 							//
 							continue;
 							//
 						} // if
 							//
-						put(IValue0Util.getValue0(result), CellUtil.getStringCellValue(row.getCell(0)),
-								CellUtil.getStringCellValue(row.getCell(1)));
+						if (first.getAndSet(false)) {
+							//
+							if (objectIntMap == null
+									&& (objectIntMap = Reflection.newProxy(ObjectIntMap.class, new IH())) != null) {
+								//
+								for (int i = 0; i < IterableUtils.size(row); i++) {
+									//
+									objectIntMap.put(CellUtil.getStringCellValue(row.getCell(i)), i);
+									//
+								} // for
+									//
+							} // if
+								//
+							continue;
+							//
+						} // if
+							//
+						if (objectIntMap == null || (result = ObjectUtils.getIfNull(result,
+								() -> Unit.with(new LinkedHashMap<>()))) == null
+						//
+						// TODO
+						//
+								|| !objectIntMap.containsKey("kanji") || !objectIntMap.containsKey("hiragana")) {
+							//
+							continue;
+							//
+						} // if
+							//
+						put(IValue0Util.getValue0(result),
+								CellUtil.getStringCellValue(row.getCell(objectIntMap.get("kanji"))),
+								CellUtil.getStringCellValue(row.getCell(objectIntMap.get("hiragana"))));
 						//
 					} // for
 						//

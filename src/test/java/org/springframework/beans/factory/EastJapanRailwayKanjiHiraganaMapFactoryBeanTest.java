@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -162,13 +163,21 @@ class EastJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 			//
 			final Sheet sheet = WorkbookUtil.createSheet(wb);
 			//
+			Row row = null;
+			//
 			for (int i = 0; sheet != null && i < 1; i++) {
 				//
-				SheetUtil.createRow(sheet, sheet.getPhysicalNumberOfRows());
+				row = SheetUtil.createRow(sheet, sheet.getPhysicalNumberOfRows());
 				//
+				for (int j = 0; row != null && j < 2; j++) {
+					//
+					CellUtil.setCellValue(RowUtil.createCell(row, row.getPhysicalNumberOfCells()), Integer.toString(i));
+					//
+				} // for
+					//
 			} // for
 				//
-			final Row row = sheet != null ? SheetUtil.createRow(sheet, sheet.getPhysicalNumberOfRows()) : null;
+			row = sheet != null ? SheetUtil.createRow(sheet, sheet.getPhysicalNumberOfRows()) : null;
 			//
 			for (int i = 0; row != null && i < 2; i++) {
 				//
@@ -184,7 +193,7 @@ class EastJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 				//
 			} // if
 				//
-			Assertions.assertEquals(Collections.singletonMap("0", "1"), getObject(instance));
+			Assertions.assertEquals(Collections.emptyMap(), getObject(instance));
 			//
 		} // try
 			//
@@ -194,13 +203,21 @@ class EastJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 			//
 			final Sheet sheet = WorkbookUtil.createSheet(wb);
 			//
+			Row row = null;
+			//
 			for (int i = 0; sheet != null && i < 1; i++) {
 				//
-				SheetUtil.createRow(sheet, sheet.getPhysicalNumberOfRows());
+				row = SheetUtil.createRow(sheet, sheet.getPhysicalNumberOfRows());
 				//
+				for (int j = 0; row != null && j < 2; j++) {
+					//
+					CellUtil.setCellValue(RowUtil.createCell(row, row.getPhysicalNumberOfCells()), Integer.toString(i));
+					//
+				} // for
+					//
 			} // for
 				//
-			final Row row = sheet != null ? SheetUtil.createRow(sheet, sheet.getPhysicalNumberOfRows()) : null;
+			row = sheet != null ? SheetUtil.createRow(sheet, sheet.getPhysicalNumberOfRows()) : null;
 			//
 			for (int i = 0; row != null && i < 2; i++) {
 				//
@@ -216,7 +233,7 @@ class EastJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 				//
 			} // if
 				//
-			Assertions.assertEquals(Collections.singletonMap("0", "1"), getObject(instance));
+			Assertions.assertEquals(Collections.emptyMap(), getObject(instance));
 			//
 		} // try
 			//
@@ -410,6 +427,65 @@ class EastJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
+	}
+
+	@Test
+	void testIH() throws ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException,
+			InvocationTargetException {
+		//
+		Class<?> clz = Class
+				.forName("org.springframework.beans.factory.EastJapanRailwayKanjiHiraganaMapFactoryBean$IH");
+		//
+		final Constructor<?> constructor = clz != null ? clz.getDeclaredConstructor() : null;
+		//
+		if (constructor != null) {
+			//
+			constructor.setAccessible(true);
+			//
+		} // if
+			//
+		final Object object = constructor != null ? constructor.newInstance() : null;
+		//
+		final InvocationHandler ih = object instanceof InvocationHandler ? (InvocationHandler) object : null;
+		//
+		if (ih != null) {
+			//
+			Assertions.assertThrows(Throwable.class, () -> ih.invoke(null, null, null));
+			//
+			// org.springframework.beans.factory.EastJapanRailwayKanjiHiraganaMapFactoryBean$ObjectIntMap
+			//
+			final Object objectIntMap = Reflection.newProxy(clz = Class.forName(
+					"org.springframework.beans.factory.EastJapanRailwayKanjiHiraganaMapFactoryBean$ObjectIntMap"), ih);
+			//
+			// org.springframework.beans.factory.EastJapanRailwayKanjiHiraganaMapFactoryBean$ObjectIntMap.put(java.lang.Object,int)
+			//
+			final Method put = clz != null ? clz.getDeclaredMethod("put", Object.class, Integer.TYPE) : null;
+			//
+			Assertions.assertThrows(Throwable.class, () -> ih.invoke(objectIntMap, put, null));
+			//
+			Assertions.assertThrows(Throwable.class, () -> ih.invoke(objectIntMap, put, new Object[] {}));
+			//
+			// org.springframework.beans.factory.EastJapanRailwayKanjiHiraganaMapFactoryBean$ObjectIntMap.get(java.lang.Object)
+			//
+			final Method get = clz != null ? clz.getDeclaredMethod("get", Object.class) : null;
+			//
+			Assertions.assertThrows(Throwable.class, () -> ih.invoke(objectIntMap, get, null));
+			//
+			Assertions.assertThrows(Throwable.class, () -> ih.invoke(objectIntMap, get, new Object[] {}));
+			//
+			Assertions.assertThrows(IllegalStateException.class,
+					() -> ih.invoke(objectIntMap, get, new Object[] { null }));
+			//
+			// org.springframework.beans.factory.EastJapanRailwayKanjiHiraganaMapFactoryBean$ObjectIntMap.containsKey(java.lang.Object)
+			//
+			final Method containsKey = clz != null ? clz.getDeclaredMethod("containsKey", Object.class) : null;
+			//
+			Assertions.assertThrows(Throwable.class, () -> ih.invoke(objectIntMap, containsKey, null));
+			//
+			Assertions.assertThrows(Throwable.class, () -> ih.invoke(objectIntMap, containsKey, new Object[] {}));
+			//
+		} // if
+			//
 	}
 
 }
