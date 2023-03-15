@@ -17,10 +17,14 @@ import java.util.Objects;
 import java.util.Set;
 
 import org.apache.commons.validator.routines.UrlValidator;
-import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.CellUtil;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.RowUtil;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.SheetUtil;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookUtil;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.javatuples.Pair;
 import org.jsoup.Jsoup;
@@ -37,7 +41,7 @@ import com.j256.simplemagic.ContentInfo;
 class EastJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 
 	private static Method METHOD_CREATE_MAP, METHOD_CREATE_PAIR_STRING, METHOD_CREATE_PAIR_ELEMENT,
-			METHOD_GET_MIME_TYPE, METHOD_MERGE = null;
+			METHOD_GET_MIME_TYPE, METHOD_GET_MESSAGE, METHOD_MERGE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -52,6 +56,8 @@ class EastJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 		(METHOD_CREATE_PAIR_ELEMENT = clz.getDeclaredMethod("createPair", Element.class)).setAccessible(true);
 		//
 		(METHOD_GET_MIME_TYPE = clz.getDeclaredMethod("getMimeType", ContentInfo.class)).setAccessible(true);
+		//
+		(METHOD_GET_MESSAGE = clz.getDeclaredMethod("getMessage", ContentInfo.class)).setAccessible(true);
 		//
 		(METHOD_MERGE = clz.getDeclaredMethod("merge", Map.class, Map.class)).setAccessible(true);
 		//
@@ -150,29 +156,55 @@ class EastJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 			//
 		} // try
 			//
+			// org.apache.poi.xssf.usermodel.XSSFWorkbook
+			//
 		try (final Workbook wb = new XSSFWorkbook(); final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
 			//
-			final Sheet sheet = wb.createSheet();
+			final Sheet sheet = WorkbookUtil.createSheet(wb);
 			//
 			for (int i = 0; sheet != null && i < 1; i++) {
 				//
-				sheet.createRow(sheet.getPhysicalNumberOfRows());
+				SheetUtil.createRow(sheet, sheet.getPhysicalNumberOfRows());
 				//
 			} // for
 				//
-			final Row row = sheet != null ? sheet.createRow(sheet.getPhysicalNumberOfRows()) : null;
-			//
-			Cell cell = null;
+			final Row row = sheet != null ? SheetUtil.createRow(sheet, sheet.getPhysicalNumberOfRows()) : null;
 			//
 			for (int i = 0; row != null && i < 2; i++) {
 				//
-				if ((cell = row.createCell(row.getPhysicalNumberOfCells())) == null) {
-					//
-					continue;
-					//
-				} // if
-					//
-				cell.setCellValue(Integer.toString(i));
+				CellUtil.setCellValue(RowUtil.createCell(row, row.getPhysicalNumberOfCells()), Integer.toString(i));
+				//
+			} // for
+				//
+			wb.write(baos);
+			//
+			if (instance != null) {
+				//
+				instance.setResource(new ByteArrayResource(baos.toByteArray()));
+				//
+			} // if
+				//
+			Assertions.assertEquals(Collections.singletonMap("0", "1"), getObject(instance));
+			//
+		} // try
+			//
+			// org.apache.poi.xssf.usermodel.HSSFWorkbook
+			//
+		try (final Workbook wb = new HSSFWorkbook(); final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+			//
+			final Sheet sheet = WorkbookUtil.createSheet(wb);
+			//
+			for (int i = 0; sheet != null && i < 1; i++) {
+				//
+				SheetUtil.createRow(sheet, sheet.getPhysicalNumberOfRows());
+				//
+			} // for
+				//
+			final Row row = sheet != null ? SheetUtil.createRow(sheet, sheet.getPhysicalNumberOfRows()) : null;
+			//
+			for (int i = 0; row != null && i < 2; i++) {
+				//
+				CellUtil.setCellValue(RowUtil.createCell(row, row.getPhysicalNumberOfCells()), Integer.toString(i));
 				//
 			} // for
 				//
@@ -307,6 +339,27 @@ class EastJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 	private static String getMimeType(final ContentInfo instance) throws Throwable {
 		try {
 			final Object obj = METHOD_GET_MIME_TYPE.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetMessage() throws Throwable {
+		//
+		Assertions.assertNull(getMessage(null));
+		//
+	}
+
+	private static String getMessage(final ContentInfo instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_MESSAGE.invoke(null, instance);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof String) {

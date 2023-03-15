@@ -94,8 +94,10 @@ public class EastJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<
 		//
 		IValue0<Map<String, String>> result = null;
 		//
-		if (Objects.equals("application/vnd.openxmlformats-officedocument",
-				getMimeType(new ContentInfoUtil().findMatch(bs)))) {
+		final ContentInfo ci = new ContentInfoUtil().findMatch(bs);
+		//
+		if (Objects.equals("application/vnd.openxmlformats-officedocument", getMimeType(ci))
+				|| Objects.equals("OLE 2 Compound Document", getMessage(ci))) {
 			//
 			try (final InputStream is = new ByteArrayInputStream(bs);
 					final Workbook wb = testAndApply(Objects::nonNull, is, WorkbookFactory::create, null)) {
@@ -162,6 +164,10 @@ public class EastJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<
 	@Nullable
 	private static String getMimeType(@Nullable final ContentInfo instance) {
 		return instance != null ? instance.getMimeType() : null;
+	}
+
+	private static String getMessage(final ContentInfo instance) {
+		return instance != null ? instance.getMessage() : null;
 	}
 
 	private static <K, V> void put(@Nullable final Map<K, V> instance, @Nullable final K key, @Nullable final V value) {
