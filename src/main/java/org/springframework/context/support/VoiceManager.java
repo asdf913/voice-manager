@@ -5176,40 +5176,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} else if (Objects.equals(source, btnConvertToHiraganaOrKatakana)) {
 			//
-			final String textImport = getText(tfTextImport);
+			actionPerformedForBtnConvertToHiraganaOrKatakana();
 			//
-			// Hiragana
-			//
-			IValue0<?> ivHiragana = getIValue0ByKey(multimapHiragana, textImport,
-					createFunctionForBtnConvertToHiraganaOrKatakana("Hiragana"));
-			//
-			if (ivHiragana == null) {
-				//
-				ivHiragana = getIValue0FromMapsByKey(mapHiragana, textImport);
-				//
-			} // if
-				//
-				// Katakana
-				//
-			final IValue0<?> ivKatakana = getIValue0ByKey(multimapKatakana, textImport,
-					createFunctionForBtnConvertToHiraganaOrKatakana("Katakana"));
-			//
-			if (ivHiragana != null && ivKatakana != null) {
-				//
-				setText(tfHiragana, toString(IValue0Util.getValue0(ivHiragana)));
-				//
-				setText(tfKatakana, toString(IValue0Util.getValue0(ivKatakana)));
-				//
-			} else if (ivHiragana != null) {
-				//
-				setText(tfHiragana, toString(IValue0Util.getValue0(ivHiragana)));
-				//
-			} else if (ivKatakana != null) {
-				//
-				setText(tfKatakana, toString(IValue0Util.getValue0(ivKatakana)));
-				//
-			} // if
-				//
 		} // if
 			//
 	}
@@ -6106,6 +6074,44 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			JOptionPane.showMessageDialog(null, list, "IPA", JOptionPane.PLAIN_MESSAGE);
 			//
 			setText(tfIpaSymbol, toString(list.getSelectedValue()));
+			//
+		} // if
+			//
+	}
+
+	private void actionPerformedForBtnConvertToHiraganaOrKatakana() {
+		//
+		final String textImport = getText(tfTextImport);
+		//
+		// Hiragana
+		//
+		IValue0<?> ivHiragana = getIValue0ByKey(multimapHiragana, textImport,
+				createFunctionForBtnConvertToHiraganaOrKatakana("Hiragana"));
+		//
+		if (ivHiragana == null) {
+			//
+			ivHiragana = getIValue0FromMapsByKey(mapHiragana, textImport);
+			//
+		} // if
+			//
+			// Katakana
+			//
+		final IValue0<?> ivKatakana = getIValue0ByKey(multimapKatakana, textImport,
+				createFunctionForBtnConvertToHiraganaOrKatakana("Katakana"));
+		//
+		if (ivHiragana != null && ivKatakana != null) {
+			//
+			setText(tfHiragana, toString(IValue0Util.getValue0(ivHiragana)));
+			//
+			setText(tfKatakana, toString(IValue0Util.getValue0(ivKatakana)));
+			//
+		} else if (ivHiragana != null) {
+			//
+			setText(tfHiragana, toString(IValue0Util.getValue0(ivHiragana)));
+			//
+		} else if (ivKatakana != null) {
+			//
+			setText(tfKatakana, toString(IValue0Util.getValue0(ivKatakana)));
 			//
 		} // if
 			//
