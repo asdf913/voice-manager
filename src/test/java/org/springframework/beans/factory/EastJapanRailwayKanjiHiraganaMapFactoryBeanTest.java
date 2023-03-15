@@ -43,7 +43,8 @@ import com.j256.simplemagic.ContentInfo;
 class EastJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 
 	private static Method METHOD_CREATE_MAP_INPUT_STREAM, METHOD_CREATE_MAP_SHEET, METHOD_CREATE_PAIR_STRING,
-			METHOD_CREATE_PAIR_ELEMENT, METHOD_GET_MIME_TYPE, METHOD_GET_MESSAGE, METHOD_MERGE = null;
+			METHOD_CREATE_PAIR_ELEMENT, METHOD_GET_MIME_TYPE, METHOD_GET_MESSAGE, METHOD_MERGE,
+			METHOD_CONTAINS_KEY = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -65,6 +66,8 @@ class EastJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 		(METHOD_GET_MESSAGE = clz.getDeclaredMethod("getMessage", ContentInfo.class)).setAccessible(true);
 		//
 		(METHOD_MERGE = clz.getDeclaredMethod("merge", Map.class, Map.class)).setAccessible(true);
+		//
+		(METHOD_CONTAINS_KEY = clz.getDeclaredMethod("containsKey", Map.class, Object.class)).setAccessible(true);
 		//
 	}
 
@@ -469,6 +472,27 @@ class EastJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 	private static <K, V> void merge(final Map<K, V> a, final Map<K, V> b) throws Throwable {
 		try {
 			METHOD_MERGE.invoke(null, a, b);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testContainsKey() throws Throwable {
+		//
+		Assertions.assertFalse(containsKey(null, null));
+		//
+		Assertions.assertTrue(containsKey(Collections.singletonMap(null, null), null));
+		//
+	}
+
+	private static boolean containsKey(final Map<?, ?> instance, final Object key) throws Throwable {
+		try {
+			final Object obj = METHOD_CONTAINS_KEY.invoke(null, instance, key);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(obj != null && obj.getClass() != null ? obj.getClass().toString() : null);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

@@ -145,7 +145,7 @@ public class EastJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<
 					//
 					final Object key = args[0];
 					//
-					if (!getMap().containsKey(key)) {
+					if (!containsKey(getMap(), key)) {
 						//
 						throw new IllegalStateException();
 						//
@@ -155,7 +155,7 @@ public class EastJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<
 					//
 				} else if (Objects.equals(methodName, "containsKey") && args != null && args.length > 0) {
 					//
-					return getMap().containsKey(args[0]);
+					return containsKey(getMap(), args[0]);
 					//
 				} // if
 					//
@@ -288,6 +288,10 @@ public class EastJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<
 			//
 	}
 
+	private static boolean containsKey(final Map<?, ?> instance, final Object key) {
+		return instance != null && instance.containsKey(key);
+	}
+
 	@Nullable
 	private static String getMimeType(@Nullable final ContentInfo instance) {
 		return instance != null ? instance.getMimeType() : null;
@@ -345,7 +349,7 @@ public class EastJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<
 					//
 				} // if
 					//
-				if (map.containsKey(key = pair.getValue0())) {
+				if (containsKey(map, key = pair.getValue0())) {
 					//
 					throw new IllegalStateException();
 					//
