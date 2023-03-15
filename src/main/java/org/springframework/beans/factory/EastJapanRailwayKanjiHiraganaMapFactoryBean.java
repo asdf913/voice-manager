@@ -115,7 +115,7 @@ public class EastJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<
 		}
 
 		@Override
-		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+		public Object invoke(final Object proxy, @Nullable final Method method, final Object[] args) throws Throwable {
 			//
 			final String methodName = method != null ? method.getName() : null;
 			//
