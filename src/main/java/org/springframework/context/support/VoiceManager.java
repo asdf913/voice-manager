@@ -6156,7 +6156,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static IValue0<?> getIValue0FromMapsByKey(final Iterable<Map> maps, final Object key) {
+	private static IValue0<?> getIValue0FromMapsByKey(final Iterable<Map> maps, @Nullable final Object key) {
 		//
 		if (maps == null || iterator(maps) == null) {
 			//
