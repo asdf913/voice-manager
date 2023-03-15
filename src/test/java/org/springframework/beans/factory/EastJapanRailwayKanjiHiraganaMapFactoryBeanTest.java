@@ -28,6 +28,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookUtil;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.javatuples.Pair;
+import org.javatuples.valueintf.IValue0;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.Assertions;
@@ -41,16 +42,18 @@ import com.j256.simplemagic.ContentInfo;
 
 class EastJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 
-	private static Method METHOD_CREATE_MAP, METHOD_CREATE_PAIR_STRING, METHOD_CREATE_PAIR_ELEMENT,
-			METHOD_GET_MIME_TYPE, METHOD_GET_MESSAGE, METHOD_MERGE = null;
+	private static Method METHOD_CREATE_MAP_INPUT_STREAM, METHOD_CREATE_MAP_SHEET, METHOD_CREATE_PAIR_STRING,
+			METHOD_CREATE_PAIR_ELEMENT, METHOD_GET_MIME_TYPE, METHOD_GET_MESSAGE, METHOD_MERGE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
 		//
 		final Class<?> clz = EastJapanRailwayKanjiHiraganaMapFactoryBean.class;
 		//
-		(METHOD_CREATE_MAP = clz.getDeclaredMethod("createMap", InputStream.class, UrlValidator.class))
+		(METHOD_CREATE_MAP_INPUT_STREAM = clz.getDeclaredMethod("createMap", InputStream.class, UrlValidator.class))
 				.setAccessible(true);
+		//
+		(METHOD_CREATE_MAP_SHEET = clz.getDeclaredMethod("createMap", Sheet.class)).setAccessible(true);
 		//
 		(METHOD_CREATE_PAIR_STRING = clz.getDeclaredMethod("createPair", String.class)).setAccessible(true);
 		//
@@ -103,10 +106,14 @@ class EastJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 
 	private EastJapanRailwayKanjiHiraganaMapFactoryBean instance = null;
 
+	private IH ih = null;
+
 	@BeforeEach
 	void beforeEach() {
 		//
 		instance = new EastJapanRailwayKanjiHiraganaMapFactoryBean();
+		//
+		ih = new IH();
 		//
 	}
 
@@ -253,6 +260,8 @@ class EastJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 	@Test
 	void testCreateMap() throws Throwable {
 		//
+		// createMap(java.io.InputStream,org.apache.commons.validator.routines.UrlValidator)
+		//
 		try (final InputStream is = new ByteArrayInputStream("1,2,3,4,5".getBytes())) {
 			//
 			Assertions.assertNull(createMap(is, null));
@@ -279,16 +288,44 @@ class EastJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 			//
 		} // try
 			//
+			// createMap(org.apache.poi.ss.usermodel.Sheet)
+			//
+		final Sheet sheet = Reflection.newProxy(Sheet.class, ih);
+		//
+		Assertions.assertNull(createMap(sheet));
+		//
+		if (ih != null) {
+			//
+			ih.iterator = Collections.singleton(null).iterator();
+			//
+		} // if
+			//
+		Assertions.assertNull(createMap(sheet));
+		//
 	}
 
 	private static Map<String, String> createMap(final InputStream is, final UrlValidator urlValidator)
 			throws Throwable {
 		try {
-			final Object obj = METHOD_CREATE_MAP.invoke(null, is, urlValidator);
+			final Object obj = METHOD_CREATE_MAP_INPUT_STREAM.invoke(null, is, urlValidator);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Map) {
 				return (Map) obj;
+			}
+			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static IValue0<Map<String, String>> createMap(final Sheet sheet) throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_MAP_SHEET.invoke(null, sheet);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof IValue0) {
+				return (IValue0) obj;
 			}
 			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
 		} catch (final InvocationTargetException e) {
@@ -397,18 +434,24 @@ class EastJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 		//
 		Assertions.assertDoesNotThrow(() -> merge(null, singletonMap));
 		//
-		final IH ih = new IH();
-		//
 		final Map<?, ?> map = Reflection.newProxy(Map.class, ih);
 		//
 		Assertions.assertDoesNotThrow(() -> merge(null, map));
 		//
-		ih.entrySet = Reflection.newProxy(Set.class, ih);
-		//
+		if (ih != null) {
+			//
+			ih.entrySet = Reflection.newProxy(Set.class, ih);
+			//
+		} // if
+			//
 		Assertions.assertDoesNotThrow(() -> merge(null, map));
 		//
-		ih.entrySet = Collections.singleton(null);
-		//
+		if (ih != null) {
+			//
+			ih.entrySet = Collections.singleton(null);
+			//
+		} // if
+			//
 		Assertions.assertDoesNotThrow(() -> merge(null, map));
 		//
 		Assertions.assertDoesNotThrow(() -> merge(new LinkedHashMap<>(singletonMap), singletonMap));

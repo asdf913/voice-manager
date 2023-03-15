@@ -174,59 +174,65 @@ public class EastJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<
 			try (final InputStream is = new ByteArrayInputStream(bs);
 					final Workbook wb = testAndApply(Objects::nonNull, is, WorkbookFactory::create, null)) {
 				//
-				final Sheet sheet = wb != null && wb.getNumberOfSheets() == 1 ? wb.getSheetAt(0) : null;
+				result = createMap(wb != null && wb.getNumberOfSheets() == 1 ? wb.getSheetAt(0) : null);
 				//
-				ObjectIntMap<String> objectIntMap = null;
+			} // try
 				//
-				if (sheet != null) {
+		} // if
+			//
+		return result;
+		//
+	}
+
+	private static IValue0<Map<String, String>> createMap(final Sheet sheet) {
+		//
+		IValue0<Map<String, String>> result = null;
+		//
+		ObjectIntMap<String> objectIntMap = null;
+		//
+		if (sheet != null && sheet.iterator() != null) {
+			//
+			final AtomicBoolean first = new AtomicBoolean(true);
+			//
+			for (final Row row : sheet) {
+				//
+				if (row == null) {
 					//
-					final AtomicBoolean first = new AtomicBoolean(true);
+					continue;
 					//
-					for (final Row row : sheet) {
+				} // if
+					//
+				if (first.getAndSet(false)) {
+					//
+					if ((objectIntMap = Reflection.newProxy(ObjectIntMap.class, new IH())) != null) {
 						//
-						if (row == null) {
+						for (int i = 0; i < IterableUtils.size(row); i++) {
 							//
-							continue;
+							objectIntMap.put(CellUtil.getStringCellValue(row.getCell(i)), i);
 							//
-						} // if
+						} // for
 							//
-						if (first.getAndSet(false)) {
-							//
-							if (objectIntMap == null
-									&& (objectIntMap = Reflection.newProxy(ObjectIntMap.class, new IH())) != null) {
-								//
-								for (int i = 0; i < IterableUtils.size(row); i++) {
-									//
-									objectIntMap.put(CellUtil.getStringCellValue(row.getCell(i)), i);
-									//
-								} // for
-									//
-							} // if
-								//
-							continue;
-							//
-						} // if
-							//
-						if (objectIntMap == null || (result = ObjectUtils.getIfNull(result,
-								() -> Unit.with(new LinkedHashMap<>()))) == null
+					} // if
+						//
+					continue;
+					//
+				} // if
+					//
+				if (objectIntMap == null
+						|| (result = ObjectUtils.getIfNull(result, () -> Unit.with(new LinkedHashMap<>()))) == null
 						//
 						// TODO
 						//
-								|| !objectIntMap.containsKey("kanji") || !objectIntMap.containsKey("hiragana")) {
-							//
-							continue;
-							//
-						} // if
-							//
-						put(IValue0Util.getValue0(result),
-								CellUtil.getStringCellValue(row.getCell(objectIntMap.get("kanji"))),
-								CellUtil.getStringCellValue(row.getCell(objectIntMap.get("hiragana"))));
-						//
-					} // for
-						//
+						|| !objectIntMap.containsKey("kanji") || !objectIntMap.containsKey("hiragana")) {
+					//
+					continue;
+					//
 				} // if
 					//
-			} // try
+				put(IValue0Util.getValue0(result), CellUtil.getStringCellValue(row.getCell(objectIntMap.get("kanji"))),
+						CellUtil.getStringCellValue(row.getCell(objectIntMap.get("hiragana"))));
+				//
+			} // for
 				//
 		} // if
 			//
