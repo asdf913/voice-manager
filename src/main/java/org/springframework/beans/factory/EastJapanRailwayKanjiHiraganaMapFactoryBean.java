@@ -104,7 +104,7 @@ public class EastJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<
 		//
 		if (Objects.equals("application/vnd.openxmlformats-officedocument", mimeType)
 				|| Objects.equals("OLE 2 Compound Document", getMessage(ci))
-				|| (Objects.equals("application/zip", mimeType) && XlsxUtil.isXlsx(resource))) {
+				|| Boolean.logicalAnd(Objects.equals("application/zip", mimeType), XlsxUtil.isXlsx(resource))) {
 			//
 			try (final InputStream is = new ByteArrayInputStream(bs);
 					final Workbook wb = testAndApply(Objects::nonNull, is, WorkbookFactory::create, null)) {
