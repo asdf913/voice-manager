@@ -358,7 +358,7 @@ class VoiceManagerTest {
 			METHOD_IS_ALL_ATTRIBUTES_MATCHED, METHOD_CREATE_FUNCTION_FOR_BTN_CONVERT_TO_HIRAGANA, METHOD_WRITER,
 			METHOD_READ_LINE, METHOD_PRINT_LN, METHOD_SET_PITCH_ACCENT_IMAGE, METHOD_GET_NUMERIC_CELL_VALUE,
 			METHOD_SET_AUTO_FILTER, METHOD_CREATE_BYTE_ARRAY, METHOD_DOUBLE_VALUE, METHOD_GET_ELEMENT_AT,
-			METHOD_GET_IMAGE_FORMAT = null;
+			METHOD_GET_IMAGE_FORMAT, METHOD_GET_I_VALUE0_FROM_MAPS_BY_KEY = null;
 
 	@BeforeAll
 	static void beforeAll() throws Throwable {
@@ -1068,6 +1068,9 @@ class VoiceManagerTest {
 		//
 		(METHOD_GET_IMAGE_FORMAT = clz.getDeclaredMethod("getImageFormat", IValue0.class, Collection.class))
 				.setAccessible(true);
+		//
+		(METHOD_GET_I_VALUE0_FROM_MAPS_BY_KEY = clz.getDeclaredMethod("getIValue0FromMapsByKey", Iterable.class,
+				Object.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -9820,6 +9823,55 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof String) {
 				return (String) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetIValue0FromMapsByKey() throws Throwable {
+		//
+		final Iterable iterable = Reflection.newProxy(Iterable.class, ih);
+		//
+		Assertions.assertNull(getIValue0FromMapsByKey(iterable, null));
+		//
+		if (ih != null) {
+			//
+			ih.iterator = iterator(Collections.singleton(null));
+			//
+		} // if
+			//
+		Assertions.assertNull(getIValue0FromMapsByKey(iterable, null));
+		//
+		final Map<?, ?> map = Collections.singletonMap(null, null);
+		//
+		if (ih != null) {
+			//
+			ih.iterator = iterator(Collections.singleton(map));
+			//
+		} // if
+			//
+		Assertions.assertEquals(Unit.with(null), getIValue0FromMapsByKey(iterable, null));
+		//
+		if (ih != null) {
+			//
+			ih.iterator = iterator(Collections.nCopies(2, map));
+			//
+		} // if
+			//
+		Assertions.assertThrows(IllegalStateException.class, () -> getIValue0FromMapsByKey(iterable, null));
+		//
+	}
+
+	private static IValue0<?> getIValue0FromMapsByKey(final Iterable<Map> maps, final Object key) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_I_VALUE0_FROM_MAPS_BY_KEY.invoke(null, maps, key);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof IValue0) {
+				return (IValue0) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

@@ -916,6 +916,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("Katakana")
 	private transient Collection<Multimap> multimapKatakana = null;
 
+	private transient Collection<Map> mapHiragana = null;
+
 	private transient IValue0<String> imageFormat = null;
 
 	private VoiceManager() {
@@ -1037,10 +1039,23 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						Collections.singletonMap(VALUE, "hiragana"))),
 				x -> cast(Multimap.class, getBean(configurableListableBeanFactory, x))));
 		//
+		// Get the "Bean Definition" which class could be assigned as a
+		// "com.google.common.collect.Multimap" and the "Bean Definition" has "value"
+		// attribute which value is "katakana"
+		//
 		multimapKatakana = toList(map(
 				stream(getBeanDefinitionNamesByClassAndAttributes(configurableListableBeanFactory, Multimap.class,
 						Collections.singletonMap(VALUE, "katakana"))),
 				x -> cast(Multimap.class, getBean(configurableListableBeanFactory, x))));
+		//
+		// Get the "Bean Definition" which class could be assigned as a "java.util.Map"
+		// and the "Bean Definition" has "value" attribute which value
+		// is "hiragana"
+		//
+		mapHiragana = toList(map(
+				stream(getBeanDefinitionNamesByClassAndAttributes(configurableListableBeanFactory, Map.class,
+						Collections.singletonMap(VALUE, "hiragana"))),
+				x -> cast(Map.class, getBean(configurableListableBeanFactory, x))));
 		//
 	}
 
@@ -5164,11 +5179,17 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			// Hiragana
 			//
-			final IValue0<?> ivHiragana = getIValue0ByKey(multimapHiragana, textImport,
+			IValue0<?> ivHiragana = getIValue0ByKey(multimapHiragana, textImport,
 					createFunctionForBtnConvertToHiraganaOrKatakana("Hiragana"));
 			//
-			// Katakana
-			//
+			if (ivHiragana == null) {
+				//
+				ivHiragana = getIValue0FromMapsByKey(mapHiragana, textImport);
+				//
+			} // if
+				//
+				// Katakana
+				//
 			final IValue0<?> ivKatakana = getIValue0ByKey(multimapKatakana, textImport,
 					createFunctionForBtnConvertToHiraganaOrKatakana("Katakana"));
 			//
@@ -6124,6 +6145,38 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				} else if (size > 1 && function != null) {
 					//
 					iValue0 = function.apply(collection);
+					//
+				} // if
+					//
+			} // if
+				//
+		} // for
+			//
+		return iValue0;
+		//
+	}
+
+	private static IValue0<?> getIValue0FromMapsByKey(final Iterable<Map> maps, final Object key) {
+		//
+		if (maps == null || iterator(maps) == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		IValue0<?> iValue0 = null;
+		//
+		for (final Map map : maps) {
+			//
+			if (containsKey(map, key)) {
+				//
+				if (iValue0 == null) {
+					//
+					iValue0 = Unit.with(get(map, key));
+					//
+				} else {
+					//
+					throw new IllegalStateException();
 					//
 				} // if
 					//
