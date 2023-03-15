@@ -916,6 +916,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("Katakana")
 	private transient Collection<Multimap> multimapKatakana = null;
 
+	@Nullable
 	private transient Collection<Map> mapHiragana = null;
 
 	private transient IValue0<String> imageFormat = null;
@@ -6156,6 +6157,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
+	@Nullable
 	private static IValue0<?> getIValue0FromMapsByKey(@Nullable final Iterable<Map> maps, @Nullable final Object key) {
 		//
 		if (maps == null || iterator(maps) == null) {
