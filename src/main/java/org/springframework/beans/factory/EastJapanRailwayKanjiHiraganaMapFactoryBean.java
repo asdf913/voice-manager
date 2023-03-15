@@ -15,6 +15,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ObjectUtils;
@@ -36,6 +37,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceUtil;
+import org.springframework.core.io.XlsxUtil;
+import org.xml.sax.SAXException;
 
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
@@ -88,7 +91,8 @@ public class EastJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<
 	}
 
 	@Nullable
-	private static IValue0<Map<String, String>> createMap(final Resource resource) throws IOException {
+	private static IValue0<Map<String, String>> createMap(final Resource resource)
+			throws IOException, SAXException, ParserConfigurationException {
 		//
 		final byte[] bs = ResourceUtil.getContentAsByteArray(resource);
 		//
@@ -96,8 +100,11 @@ public class EastJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<
 		//
 		final ContentInfo ci = new ContentInfoUtil().findMatch(bs);
 		//
-		if (Objects.equals("application/vnd.openxmlformats-officedocument", getMimeType(ci))
-				|| Objects.equals("OLE 2 Compound Document", getMessage(ci))) {
+		final String mimeType = getMimeType(ci);
+		//
+		if (Objects.equals("application/vnd.openxmlformats-officedocument", mimeType)
+				|| Objects.equals("OLE 2 Compound Document", getMessage(ci))
+				|| (Objects.equals("application/zip", mimeType) && XlsxUtil.isXlsx(resource))) {
 			//
 			try (final InputStream is = new ByteArrayInputStream(bs);
 					final Workbook wb = testAndApply(Objects::nonNull, is, WorkbookFactory::create, null)) {
