@@ -233,6 +233,7 @@ public class EastJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<
 		//
 	}
 
+	@Nullable
 	private static ObjectIntMap<String> createObjectIntMap(final Row row) {
 		//
 		final ObjectIntMap<String> objectIntMap = Reflection.newProxy(ObjectIntMap.class, new IH());
