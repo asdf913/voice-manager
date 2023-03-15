@@ -205,16 +205,8 @@ public class EastJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<
 					//
 				if (first.getAndSet(false)) {
 					//
-					if ((objectIntMap = Reflection.newProxy(ObjectIntMap.class, new IH())) != null) {
-						//
-						for (int i = 0; i < IterableUtils.size(row); i++) {
-							//
-							objectIntMap.put(CellUtil.getStringCellValue(row.getCell(i)), i);
-							//
-						} // for
-							//
-					} // if
-						//
+					objectIntMap = createObjectIntMap(row);
+					//
 					continue;
 					//
 				} // if
@@ -239,6 +231,19 @@ public class EastJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<
 			//
 		return result;
 		//
+	}
+
+	private static ObjectIntMap<String> createObjectIntMap(final Row row) {
+		//
+		final ObjectIntMap<String> objectIntMap = Reflection.newProxy(ObjectIntMap.class, new IH());
+		//
+		for (int i = 0; objectIntMap != null && i < IterableUtils.size(row); i++) {
+			//
+			objectIntMap.put(CellUtil.getStringCellValue(row.getCell(i)), i);
+			//
+		} // for
+			//
+		return objectIntMap;
 	}
 
 	private static <K, V> void merge(@Nullable final Map<K, V> a, @Nullable final Map<K, V> b) {
