@@ -288,7 +288,7 @@ public class EastJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<
 			//
 	}
 
-	private static boolean containsKey(final Map<?, ?> instance, final Object key) {
+	private static boolean containsKey(@Nullable final Map<?, ?> instance, final Object key) {
 		return instance != null && instance.containsKey(key);
 	}
 
