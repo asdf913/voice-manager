@@ -53,7 +53,8 @@ class EastJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 		(METHOD_CREATE_MAP_INPUT_STREAM = clz.getDeclaredMethod("createMap", InputStream.class, UrlValidator.class))
 				.setAccessible(true);
 		//
-		(METHOD_CREATE_MAP_SHEET = clz.getDeclaredMethod("createMap", Sheet.class)).setAccessible(true);
+		(METHOD_CREATE_MAP_SHEET = clz.getDeclaredMethod("createMap", Sheet.class, String.class, String.class))
+				.setAccessible(true);
 		//
 		(METHOD_CREATE_PAIR_STRING = clz.getDeclaredMethod("createPair", String.class)).setAccessible(true);
 		//
@@ -292,7 +293,7 @@ class EastJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 			//
 		final Sheet sheet = Reflection.newProxy(Sheet.class, ih);
 		//
-		Assertions.assertNull(createMap(sheet));
+		Assertions.assertNull(createMap(sheet, null, null));
 		//
 		if (ih != null) {
 			//
@@ -300,7 +301,7 @@ class EastJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(createMap(sheet));
+		Assertions.assertNull(createMap(sheet, null, null));
 		//
 	}
 
@@ -319,9 +320,10 @@ class EastJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 		}
 	}
 
-	private static IValue0<Map<String, String>> createMap(final Sheet sheet) throws Throwable {
+	private static IValue0<Map<String, String>> createMap(final Sheet sheet, final String kanjiColumnName,
+			final String hiraganaColumnName) throws Throwable {
 		try {
-			final Object obj = METHOD_CREATE_MAP_SHEET.invoke(null, sheet);
+			final Object obj = METHOD_CREATE_MAP_SHEET.invoke(null, sheet, kanjiColumnName, hiraganaColumnName);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof IValue0) {

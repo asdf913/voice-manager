@@ -55,6 +55,10 @@ public class EastJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<
 
 	private String[] urls = null;
 
+	private String kanjiColumnName = null;
+
+	private String hiraganaColumnName = null;
+
 	public void setResource(final Resource resource) {
 		this.resource = resource;
 	}
@@ -63,12 +67,20 @@ public class EastJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<
 		this.urls = urls;
 	}
 
+	public void setKanjiColumnName(final String kanjiColumnName) {
+		this.kanjiColumnName = kanjiColumnName;
+	}
+
+	public void setHiraganaColumnName(final String hiraganaColumnName) {
+		this.hiraganaColumnName = hiraganaColumnName;
+	}
+
 	@Override
 	public Map<String, String> getObject() throws Exception {
 		//
 		if (ResourceUtil.exists(resource)) {
 			//
-			final IValue0<Map<String, String>> result = createMap(resource);
+			final IValue0<Map<String, String>> result = createMap(resource, kanjiColumnName, hiraganaColumnName);
 			//
 			if (result != null) {
 				//
@@ -156,8 +168,8 @@ public class EastJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<
 	}
 
 	@Nullable
-	private static IValue0<Map<String, String>> createMap(final Resource resource)
-			throws IOException, SAXException, ParserConfigurationException {
+	private static IValue0<Map<String, String>> createMap(final Resource resource, final String kanjiColumnName,
+			final String hiraganaColumnName) throws IOException, SAXException, ParserConfigurationException {
 		//
 		final byte[] bs = ResourceUtil.getContentAsByteArray(resource);
 		//
@@ -174,7 +186,8 @@ public class EastJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<
 			try (final InputStream is = new ByteArrayInputStream(bs);
 					final Workbook wb = testAndApply(Objects::nonNull, is, WorkbookFactory::create, null)) {
 				//
-				result = createMap(wb != null && wb.getNumberOfSheets() == 1 ? wb.getSheetAt(0) : null);
+				result = createMap(wb != null && wb.getNumberOfSheets() == 1 ? wb.getSheetAt(0) : null, kanjiColumnName,
+						hiraganaColumnName);
 				//
 			} // try
 				//
@@ -185,7 +198,8 @@ public class EastJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<
 	}
 
 	@Nullable
-	private static IValue0<Map<String, String>> createMap(@Nullable final Sheet sheet) {
+	private static IValue0<Map<String, String>> createMap(@Nullable final Sheet sheet, final String kanjiColumnName,
+			final String hiraganaColumnName) {
 		//
 		IValue0<Map<String, String>> result = null;
 		//
@@ -213,17 +227,16 @@ public class EastJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<
 					//
 				if (objectIntMap == null
 						|| (result = ObjectUtils.getIfNull(result, () -> Unit.with(new LinkedHashMap<>()))) == null
-						//
-						// TODO
-						//
-						|| !objectIntMap.containsKey("kanji") || !objectIntMap.containsKey("hiragana")) {
+						|| !objectIntMap.containsKey(kanjiColumnName)
+						|| !objectIntMap.containsKey(hiraganaColumnName)) {
 					//
 					continue;
 					//
 				} // if
 					//
-				put(IValue0Util.getValue0(result), CellUtil.getStringCellValue(row.getCell(objectIntMap.get("kanji"))),
-						CellUtil.getStringCellValue(row.getCell(objectIntMap.get("hiragana"))));
+				put(IValue0Util.getValue0(result),
+						CellUtil.getStringCellValue(row.getCell(objectIntMap.get(kanjiColumnName))),
+						CellUtil.getStringCellValue(row.getCell(objectIntMap.get(hiraganaColumnName))));
 				//
 			} // for
 				//
