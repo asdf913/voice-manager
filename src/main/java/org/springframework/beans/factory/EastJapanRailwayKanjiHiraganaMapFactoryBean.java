@@ -156,7 +156,7 @@ public class EastJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<
 	}
 
 	@Nullable
-	private static IValue0<Map<String, String>> createMap(@Nullable final Resource resource)
+	private static IValue0<Map<String, String>> createMap(final Resource resource)
 			throws IOException, SAXException, ParserConfigurationException {
 		//
 		final byte[] bs = ResourceUtil.getContentAsByteArray(resource);
@@ -184,7 +184,7 @@ public class EastJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<
 		//
 	}
 
-	private static IValue0<Map<String, String>> createMap(final Sheet sheet) {
+	private static IValue0<Map<String, String>> createMap(@Nullable final Sheet sheet) {
 		//
 		IValue0<Map<String, String>> result = null;
 		//
