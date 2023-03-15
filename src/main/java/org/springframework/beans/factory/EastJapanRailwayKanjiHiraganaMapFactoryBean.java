@@ -184,6 +184,7 @@ public class EastJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<
 		//
 	}
 
+	@Nullable
 	private static IValue0<Map<String, String>> createMap(@Nullable final Sheet sheet) {
 		//
 		IValue0<Map<String, String>> result = null;
