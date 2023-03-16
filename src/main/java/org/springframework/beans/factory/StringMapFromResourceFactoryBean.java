@@ -263,8 +263,8 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 						keyColumnName, (a, b) -> RowUtil.getCell(row, a.get(IValue0Util.getValue0(b))),
 						null)) == null) {
 					//
-					cellKey = testAndApply(x -> row != null && row.getPhysicalNumberOfCells() > 0, row,
-							x -> RowUtil.getCell(row, 0), null);
+					cellKey = testAndApply(x -> getPhysicalNumberOfCells(row, 0) > 0, row, x -> RowUtil.getCell(row, 0),
+							null);
 					//
 				} // if
 					//
@@ -275,7 +275,7 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 						valueColumnName, (a, b) -> RowUtil.getCell(row, a.get(IValue0Util.getValue0(b))),
 						null)) == null) {
 					//
-					cellValue = testAndApply(x -> row != null && row.getPhysicalNumberOfCells() > 1, row,
+					cellValue = testAndApply(x -> getPhysicalNumberOfCells(row, 0) > 1, row,
 							x -> RowUtil.getCell(row, 1), null);
 					//
 				} // if
@@ -289,6 +289,10 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 			//
 		return result;
 		//
+	}
+
+	private static int getPhysicalNumberOfCells(final Row instance, final int defaultValue) {
+		return instance != null ? instance.getPhysicalNumberOfCells() : defaultValue;
 	}
 
 	@Nullable

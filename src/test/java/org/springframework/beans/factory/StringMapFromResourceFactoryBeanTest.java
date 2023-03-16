@@ -28,15 +28,20 @@ import com.google.common.reflect.Reflection;
 
 class StringMapFromResourceFactoryBeanTest {
 
-	private static Method METHOD_TEST_AND_ACCEPT = null;
+	private static Method METHOD_TEST_AND_ACCEPT, METHOD_GET_PHYSICAL_NUMBER_OF_CELLS = null;
 
 	private static Class<?> CLASS_OBJECT_INT_MAP = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
 		//
-		(METHOD_TEST_AND_ACCEPT = StringMapFromResourceFactoryBean.class.getDeclaredMethod("testAndAccept",
-				TriPredicate.class, Object.class, Object.class, Object.class, TriConsumer.class)).setAccessible(true);
+		final Class<?> clz = StringMapFromResourceFactoryBean.class;
+		//
+		(METHOD_TEST_AND_ACCEPT = clz.getDeclaredMethod("testAndAccept", TriPredicate.class, Object.class, Object.class,
+				Object.class, TriConsumer.class)).setAccessible(true);
+		//
+		(METHOD_GET_PHYSICAL_NUMBER_OF_CELLS = clz.getDeclaredMethod("getPhysicalNumberOfCells", Row.class,
+				Integer.TYPE)).setAccessible(true);
 		//
 		CLASS_OBJECT_INT_MAP = Class
 				.forName("org.springframework.beans.factory.StringMapFromResourceFactoryBean$ObjectIntMap");
@@ -254,6 +259,27 @@ class StringMapFromResourceFactoryBeanTest {
 			final TriConsumer<A, B, C> consumer) throws Throwable {
 		try {
 			METHOD_TEST_AND_ACCEPT.invoke(null, predicate, a, b, c, consumer);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetPhysicalNumberOfCells() throws Throwable {
+		//
+		final int zero = 0;
+		//
+		Assertions.assertEquals(zero, getPhysicalNumberOfCells(null, zero));
+		//
+	}
+
+	private static int getPhysicalNumberOfCells(final Row instance, final int defaultValue) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_PHYSICAL_NUMBER_OF_CELLS.invoke(null, instance, defaultValue);
+			if (obj instanceof Number) {
+				return ((Number) obj).intValue();
+			}
+			throw new Throwable(obj != null && obj.getClass() != null ? obj.getClass().toString() : null);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
