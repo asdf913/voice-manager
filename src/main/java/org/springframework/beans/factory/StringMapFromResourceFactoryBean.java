@@ -333,8 +333,8 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 		return instance != null ? instance.apply(t, u) : null;
 	}
 
-	private static <A, B, C> void testAndAccept(final TriPredicate<A, B, C> predicate, final A a, final B b, final C c,
-			final TriConsumer<A, B, C> consumer) {
+	private static <A, B, C> void testAndAccept(@Nullable final TriPredicate<A, B, C> predicate, final A a, final B b,
+			final C c, @Nullable final TriConsumer<A, B, C> consumer) {
 		if (predicate != null && predicate.test(a, b, c) && consumer != null) {
 			consumer.accept(a, b, c);
 		}
