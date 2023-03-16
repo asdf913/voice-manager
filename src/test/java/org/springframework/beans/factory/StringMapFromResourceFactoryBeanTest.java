@@ -1,6 +1,8 @@
 package org.springframework.beans.factory;
 
 import java.io.ByteArrayOutputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Map;
 import java.util.stream.IntStream;
@@ -14,10 +16,23 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookUtil;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.meeuw.functional.TriConsumer;
+import org.meeuw.functional.TriPredicate;
 import org.springframework.core.io.ByteArrayResource;
 
 class StringMapFromResourceFactoryBeanTest {
+
+	private static Method METHOD_TEST_AND_ACCEPT = null;
+
+	@BeforeAll
+	static void beforeAll() throws ReflectiveOperationException {
+		//
+		(METHOD_TEST_AND_ACCEPT = StringMapFromResourceFactoryBean.class.getDeclaredMethod("testAndAccept",
+				TriPredicate.class, Object.class, Object.class, Object.class, TriConsumer.class)).setAccessible(true);
+		//
+	}
 
 	@Test
 	void testGetObject() throws Exception {
@@ -190,6 +205,24 @@ class StringMapFromResourceFactoryBeanTest {
 			//
 		} // try
 			//
+	}
+
+	@Test
+	void testTestAndAccept() {
+		//
+		Assertions.assertDoesNotThrow(() -> testAndAccept(null, null, null, null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> testAndAccept((a, b, c) -> true, null, null, null, null));
+		//
+	}
+
+	private static <A, B, C> void testAndAccept(final TriPredicate<A, B, C> predicate, final A a, final B b, final C c,
+			final TriConsumer<A, B, C> consumer) throws Throwable {
+		try {
+			METHOD_TEST_AND_ACCEPT.invoke(null, predicate, a, b, c, consumer);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 }

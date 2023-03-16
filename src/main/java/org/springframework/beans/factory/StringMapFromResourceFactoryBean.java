@@ -30,6 +30,8 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
+import org.meeuw.functional.TriConsumer;
+import org.meeuw.functional.TriPredicate;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceUtil;
 import org.springframework.core.io.XlsxUtil;
@@ -270,13 +272,9 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 					//
 				} // if
 					//
-				if (cellKey != null && cellValue != null) {
-					//
-					put(IValue0Util.getValue0(result), CellUtil.getStringCellValue(cellKey),
-							CellUtil.getStringCellValue(cellValue));
-					//
-				} // if
-					//
+				testAndAccept((a, b, c) -> b != null && c != null, IValue0Util.getValue0(result), cellKey, cellValue,
+						(a, b, c) -> put(a, CellUtil.getStringCellValue(b), CellUtil.getStringCellValue(c)));
+				//
 			} // for
 				//
 		} // if
@@ -328,6 +326,13 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 
 	private static <R, T, U> R apply(@Nullable BiFunction<T, U, R> instance, final T t, final U u) {
 		return instance != null ? instance.apply(t, u) : null;
+	}
+
+	private static <A, B, C> void testAndAccept(final TriPredicate<A, B, C> predicate, final A a, final B b, final C c,
+			final TriConsumer<A, B, C> consumer) {
+		if (predicate != null && predicate.test(a, b, c) && consumer != null) {
+			consumer.accept(a, b, c);
+		}
 	}
 
 }

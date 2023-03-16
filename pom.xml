@@ -300,6 +300,12 @@
 			<artifactId>jlayer</artifactId>
 			<version>1.0.1</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.meeuw.util/mihxil-functional -->
+		<dependency>
+			<groupId>org.meeuw.util</groupId>
+			<artifactId>mihxil-functional</artifactId>
+			<version>1.7</version>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
