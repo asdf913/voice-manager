@@ -113,7 +113,7 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 		}
 
 		@Override
-		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+		public Object invoke(final Object proxy, @Nullable final Method method, final Object[] args) throws Throwable {
 			//
 			final String methodName = method != null ? method.getName() : null;
 			//
@@ -294,11 +294,11 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 		return objectIntMap;
 	}
 
-	private static String getMimeType(final ContentInfo instance) {
+	private static String getMimeType(@Nullable final ContentInfo instance) {
 		return instance != null ? instance.getMimeType() : null;
 	}
 
-	private static String getMessage(final ContentInfo instance) {
+	private static String getMessage(@Nullable final ContentInfo instance) {
 		return instance != null ? instance.getMessage() : null;
 	}
 
@@ -320,7 +320,7 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 		return predicate != null && predicate.test(t, u) ? apply(functionTrue, t, u) : apply(functionFalse, t, u);
 	}
 
-	private static <R, T, U> R apply(BiFunction<T, U, R> instance, final T t, final U u) {
+	private static <R, T, U> R apply(@Nullable BiFunction<T, U, R> instance, final T t, final U u) {
 		return instance != null ? instance.apply(t, u) : null;
 	}
 
