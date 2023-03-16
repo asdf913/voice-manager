@@ -13,12 +13,14 @@ import java.util.stream.IntStream;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.RowUtil;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookUtil;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -32,8 +34,8 @@ import com.google.common.reflect.Reflection;
 
 class StringMapFromResourceFactoryBeanTest {
 
-	private static Method METHOD_TEST_AND_ACCEPT, METHOD_GET_PHYSICAL_NUMBER_OF_CELLS, METHOD_TEST,
-			METHOD_CREATE_MAP = null;
+	private static Method METHOD_TEST_AND_ACCEPT, METHOD_GET_PHYSICAL_NUMBER_OF_CELLS, METHOD_TEST, METHOD_CREATE_MAP,
+			METHOD_GET_VALUE_CELL = null;
 
 	private static Class<?> CLASS_OBJECT_INT_MAP = null;
 
@@ -53,8 +55,10 @@ class StringMapFromResourceFactoryBeanTest {
 		(METHOD_CREATE_MAP = clz.getDeclaredMethod("createMap", Sheet.class, IValue0.class, IValue0.class))
 				.setAccessible(true);
 		//
-		CLASS_OBJECT_INT_MAP = Class
-				.forName("org.springframework.beans.factory.StringMapFromResourceFactoryBean$ObjectIntMap");
+		(METHOD_GET_VALUE_CELL = clz.getDeclaredMethod("getValueCell", Row.class,
+				CLASS_OBJECT_INT_MAP = Class
+						.forName("org.springframework.beans.factory.StringMapFromResourceFactoryBean$ObjectIntMap"),
+				IValue0.class)).setAccessible(true);
 		//
 	}
 
@@ -63,6 +67,8 @@ class StringMapFromResourceFactoryBeanTest {
 		private Boolean containsKey = null;
 
 		private Iterator<?> iterator = null;
+
+		private Integer integer = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -74,6 +80,10 @@ class StringMapFromResourceFactoryBeanTest {
 				if (Objects.equals(methodName, "containsKey")) {
 					//
 					return containsKey;
+					//
+				} else if (Objects.equals(methodName, "get")) {
+					//
+					return integer;
 					//
 				} // if
 					//
@@ -360,6 +370,40 @@ class StringMapFromResourceFactoryBeanTest {
 	}
 
 	@Test
+	void testGetValueCell() throws Throwable {
+		//
+		Assertions.assertNull(getValueCell(null, null, Unit.with(null)));
+		//
+		final Object objectIntMap = Reflection.newProxy(CLASS_OBJECT_INT_MAP, ih);
+		//
+		if (ih != null) {
+			//
+			ih.containsKey = Boolean.TRUE;
+			//
+			ih.integer = Integer.valueOf(0);
+			//
+		} // if
+			//
+		Assertions.assertNull(getValueCell(null, objectIntMap, Unit.with(null)));
+		//
+	}
+
+	private static Cell getValueCell(final Row row, final Object objectIntMap, final IValue0<String> columnName)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_GET_VALUE_CELL.invoke(null, row, objectIntMap, columnName);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Cell) {
+				return (Cell) obj;
+			}
+			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
 	void testObjectIntMap()
 			throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
 		//
@@ -367,17 +411,9 @@ class StringMapFromResourceFactoryBeanTest {
 				? CLASS_OBJECT_INT_MAP.getDeclaredMethod("containsKey", CLASS_OBJECT_INT_MAP, Object.class)
 				: null;
 		//
-		Assertions.assertEquals(Boolean.FALSE, containsKey != null ? containsKey.invoke(null, null, null) : null);
-		//
-		final IH ih = new IH();
-		//
-		final Object objectIntMap = Reflection.newProxy(CLASS_OBJECT_INT_MAP, ih);
-		//
-		Assertions.assertEquals(ih.containsKey = Boolean.FALSE,
-				containsKey != null ? containsKey.invoke(null, objectIntMap, null) : null);
-		//
-		Assertions.assertEquals(ih.containsKey = Boolean.TRUE,
-				containsKey != null ? containsKey.invoke(null, objectIntMap, null) : null);
+		Assertions.assertEquals(ih != null ? ih.containsKey = Boolean.FALSE : null,
+				containsKey != null ? containsKey.invoke(null, Reflection.newProxy(CLASS_OBJECT_INT_MAP, ih), null)
+						: null);
 		//
 	}
 

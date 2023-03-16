@@ -253,7 +253,7 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 		//
 		final AtomicBoolean first = new AtomicBoolean(true);
 		//
-		Cell cellKey, cellValue = null;
+		Cell cellKey = null;
 		//
 		for (final Row row : sheet) {
 			//
@@ -289,23 +289,30 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 				//
 			} // if
 				//
-				// value
-				//
-			if ((cellValue = testAndApply((a, b) -> b != null && ObjectIntMap.containsKey(a, IValue0Util.getValue0(b)),
-					objectIntMap, valueColumnName, (a, b) -> RowUtil.getCell(row, a.get(IValue0Util.getValue0(b))),
-					null)) == null) {
-				//
-				cellValue = testAndApply(x -> getPhysicalNumberOfCells(row, 0) > 1, row, x -> RowUtil.getCell(row, 1),
-						null);
-				//
-			} // if
-				//
-			testAndAccept((a, b, c) -> and(Objects::nonNull, b, c), IValue0Util.getValue0(result), cellKey, cellValue,
+			testAndAccept((a, b, c) -> and(Objects::nonNull, b, c), IValue0Util.getValue0(result), cellKey,
+					getValueCell(row, objectIntMap, valueColumnName),
 					(a, b, c) -> put(a, CellUtil.getStringCellValue(b), CellUtil.getStringCellValue(c)));
 			//
 		} // for
 			//
 		return result;
+		//
+	}
+
+	private static Cell getValueCell(final Row row, final ObjectIntMap<String> objectIntMap,
+			final IValue0<String> columnName) {
+		//
+		Cell cell = null;
+		//
+		if ((cell = testAndApply((a, b) -> b != null && ObjectIntMap.containsKey(a, IValue0Util.getValue0(b)),
+				objectIntMap, columnName, (a, b) -> RowUtil.getCell(row, a.get(IValue0Util.getValue0(b))),
+				null)) == null) {
+			//
+			cell = testAndApply(x -> getPhysicalNumberOfCells(row, 0) > 1, row, x -> RowUtil.getCell(row, 1), null);
+			//
+		} // if
+			//
+		return cell;
 		//
 	}
 
