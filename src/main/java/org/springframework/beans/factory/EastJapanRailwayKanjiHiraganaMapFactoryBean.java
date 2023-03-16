@@ -1,23 +1,18 @@
 package org.springframework.beans.factory;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ObjectUtils;
@@ -25,69 +20,34 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.validator.routines.UrlValidator;
-import org.apache.poi.ss.usermodel.CellUtil;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.javatuples.Pair;
-import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceUtil;
-import org.springframework.core.io.XlsxUtil;
-import org.xml.sax.SAXException;
 
-import com.google.common.reflect.Reflection;
-import com.j256.simplemagic.ContentInfo;
-import com.j256.simplemagic.ContentInfoUtil;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderUtil;
 import com.opencsv.exceptions.CsvValidationException;
 
-public class EastJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<Map<String, String>> {
-
-	private Resource resource = null;
+public class EastJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFromResourceFactoryBean {
 
 	private String[] urls = null;
-
-	private String kanjiColumnName = null;
-
-	private String hiraganaColumnName = null;
-
-	public void setResource(final Resource resource) {
-		this.resource = resource;
-	}
 
 	public void setUrls(final String[] urls) {
 		this.urls = urls;
 	}
 
-	public void setKanjiColumnName(final String kanjiColumnName) {
-		this.kanjiColumnName = kanjiColumnName;
-	}
-
-	public void setHiraganaColumnName(final String hiraganaColumnName) {
-		this.hiraganaColumnName = hiraganaColumnName;
-	}
-
 	@Override
 	public Map<String, String> getObject() throws Exception {
 		//
-		if (ResourceUtil.exists(resource)) {
+		final IValue0<Map<String, String>> iValue0 = getIvalue0();
+		//
+		if (iValue0 != null) {
 			//
-			final IValue0<Map<String, String>> result = createMap(resource, kanjiColumnName, hiraganaColumnName);
+			return IValue0Util.getValue0(iValue0);
 			//
-			if (result != null) {
-				//
-				return IValue0Util.getValue0(result);
-				//
-			} // if
-				//
 		} // if
 			//
 		UrlValidator urlValidator = null;
@@ -103,161 +63,6 @@ public class EastJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<
 			//
 		return result;
 		//
-	}
-
-	private static interface ObjectIntMap<K> {
-
-		void put(final K key, final int value);
-
-		int get(final K key);
-
-		boolean containsKey(final K key);
-
-	}
-
-	private static class IH implements InvocationHandler {
-
-		private Map<Object, Object> map = null;
-
-		private Map<Object, Object> getMap() {
-			if (map == null) {
-				map = new LinkedHashMap<>();
-			}
-			return map;
-		}
-
-		@Override
-		@Nullable
-		public Object invoke(final Object proxy, @Nullable final Method method, @Nullable final Object[] args)
-				throws Throwable {
-			//
-			final String methodName = method != null ? method.getName() : null;
-			//
-			if (proxy instanceof ObjectIntMap) {
-				//
-				if (Objects.equals(methodName, "put") && args != null && args.length > 1) {
-					//
-					put(getMap(), args[0], args[1]);
-					//
-					return null;
-					//
-				} else if (Objects.equals(methodName, "get") && args != null && args.length > 0) {
-					//
-					final Object key = args[0];
-					//
-					if (!containsKey(getMap(), key)) {
-						//
-						throw new IllegalStateException();
-						//
-					} // if
-						//
-					return getMap().get(key);
-					//
-				} else if (Objects.equals(methodName, "containsKey") && args != null && args.length > 0) {
-					//
-					return containsKey(getMap(), args[0]);
-					//
-				} // if
-					//
-			} // if
-				//
-			throw new Throwable(methodName);
-			//
-		}
-
-	}
-
-	@Nullable
-	private static IValue0<Map<String, String>> createMap(final Resource resource, final String kanjiColumnName,
-			final String hiraganaColumnName) throws IOException, SAXException, ParserConfigurationException {
-		//
-		final byte[] bs = ResourceUtil.getContentAsByteArray(resource);
-		//
-		IValue0<Map<String, String>> result = null;
-		//
-		final ContentInfo ci = new ContentInfoUtil().findMatch(bs);
-		//
-		final String mimeType = getMimeType(ci);
-		//
-		if (Objects.equals("application/vnd.openxmlformats-officedocument", mimeType)
-				|| Objects.equals("OLE 2 Compound Document", getMessage(ci))
-				|| Boolean.logicalAnd(Objects.equals("application/zip", mimeType), XlsxUtil.isXlsx(resource))) {
-			//
-			try (final InputStream is = new ByteArrayInputStream(bs);
-					final Workbook wb = testAndApply(Objects::nonNull, is, WorkbookFactory::create, null)) {
-				//
-				result = createMap(wb != null && wb.getNumberOfSheets() == 1 ? wb.getSheetAt(0) : null, kanjiColumnName,
-						hiraganaColumnName);
-				//
-			} // try
-				//
-		} // if
-			//
-		return result;
-		//
-	}
-
-	@Nullable
-	private static IValue0<Map<String, String>> createMap(@Nullable final Sheet sheet, final String kanjiColumnName,
-			final String hiraganaColumnName) {
-		//
-		IValue0<Map<String, String>> result = null;
-		//
-		ObjectIntMap<String> objectIntMap = null;
-		//
-		if (sheet != null && sheet.iterator() != null) {
-			//
-			final AtomicBoolean first = new AtomicBoolean(true);
-			//
-			for (final Row row : sheet) {
-				//
-				if (row == null) {
-					//
-					continue;
-					//
-				} // if
-					//
-				if (first.getAndSet(false)) {
-					//
-					objectIntMap = createObjectIntMap(row);
-					//
-					continue;
-					//
-				} // if
-					//
-				if (objectIntMap == null
-						|| (result = ObjectUtils.getIfNull(result, () -> Unit.with(new LinkedHashMap<>()))) == null
-						|| !objectIntMap.containsKey(kanjiColumnName)
-						|| !objectIntMap.containsKey(hiraganaColumnName)) {
-					//
-					continue;
-					//
-				} // if
-					//
-				put(IValue0Util.getValue0(result),
-						CellUtil.getStringCellValue(row.getCell(objectIntMap.get(kanjiColumnName))),
-						CellUtil.getStringCellValue(row.getCell(objectIntMap.get(hiraganaColumnName))));
-				//
-			} // for
-				//
-		} // if
-			//
-		return result;
-		//
-	}
-
-	@Nullable
-	private static ObjectIntMap<String> createObjectIntMap(final Row row) {
-		//
-		final ObjectIntMap<String> objectIntMap = Reflection.newProxy(ObjectIntMap.class, new IH());
-		//
-		for (int i = 0; objectIntMap != null && i < IterableUtils.size(row); i++) {
-			//
-			objectIntMap.put(CellUtil.getStringCellValue(row.getCell(i)), i);
-			//
-		} // for
-			//
-		return objectIntMap;
 	}
 
 	private static <K, V> void merge(@Nullable final Map<K, V> a, @Nullable final Map<K, V> b) {
@@ -290,16 +95,6 @@ public class EastJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<
 
 	private static boolean containsKey(@Nullable final Map<?, ?> instance, final Object key) {
 		return instance != null && instance.containsKey(key);
-	}
-
-	@Nullable
-	private static String getMimeType(@Nullable final ContentInfo instance) {
-		return instance != null ? instance.getMimeType() : null;
-	}
-
-	@Nullable
-	private static String getMessage(@Nullable final ContentInfo instance) {
-		return instance != null ? instance.getMessage() : null;
 	}
 
 	private static <K, V> void put(@Nullable final Map<K, V> instance, @Nullable final K key, @Nullable final V value) {
@@ -417,11 +212,6 @@ public class EastJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<
 			//
 		return pair;
 		//
-	}
-
-	@Override
-	public Class<?> getObjectType() {
-		return Map.class;
 	}
 
 }

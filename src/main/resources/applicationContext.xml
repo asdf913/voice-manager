@@ -124,10 +124,10 @@
 	<bean
 		class="org.springframework.beans.factory.EastJapanRailwayKanjiHiraganaMapFactoryBean">
 		<meta key="value" value="hiragana" />
-		<property name="kanjiColumnName"
-			value="${org.springframework.beans.factory.EastJapanRailwayKanjiHiraganaMapFactoryBean.kanjiColumnName}" />
-		<property name="hiraganaColumnName"
-			value="${org.springframework.beans.factory.EastJapanRailwayKanjiHiraganaMapFactoryBean.hiraganaColumnName}" />
+		<property name="keyColumnName"
+			value="${org.springframework.beans.factory.EastJapanRailwayKanjiHiraganaMapFactoryBean.keyColumnName}" />
+		<property name="valueColumnName"
+			value="${org.springframework.beans.factory.EastJapanRailwayKanjiHiraganaMapFactoryBean.valueColumnName}" />
 		<property name="resource"
 			value="classpath:EastJapanRailway.xlsx" />
 	</bean>
