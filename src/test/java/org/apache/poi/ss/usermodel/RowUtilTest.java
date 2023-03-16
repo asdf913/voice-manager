@@ -12,4 +12,11 @@ class RowUtilTest {
 		//
 	}
 
+	@Test
+	void testGetCell() {
+		//
+		Assertions.assertNull(RowUtil.getCell(null, 0));
+		//
+	}
+
 }

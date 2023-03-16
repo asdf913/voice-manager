@@ -20,6 +20,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.RowUtil;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
@@ -165,7 +166,7 @@ public class JapaneseNameMultimapFactoryBean implements FactoryBean<Multimap<Str
 					//
 				MultimapUtil.put(IValue0Util.getValue0(
 						multimap = ObjectUtils.getIfNull(multimap, () -> Unit.with(LinkedListMultimap.create()))),
-						toString(row.getCell(0)), toString(row.getCell(1)));
+						toString(RowUtil.getCell(row, 0)), toString(RowUtil.getCell(row, 1)));
 				//
 			} // if
 				//

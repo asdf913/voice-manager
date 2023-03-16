@@ -23,6 +23,7 @@ import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellUtil;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.RowUtil;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
@@ -249,11 +250,11 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 					// key
 					//
 				if ((cellKey = testAndApply((a, b) -> a != null && b != null && a.containsKey(IValue0Util.getValue0(b)),
-						objectIntMap, keyColumnName, (a, b) -> getCell(row, a.get(IValue0Util.getValue0(b))),
+						objectIntMap, keyColumnName, (a, b) -> RowUtil.getCell(row, a.get(IValue0Util.getValue0(b))),
 						null)) == null) {
 					//
 					cellKey = testAndApply(x -> row != null && row.getPhysicalNumberOfCells() > 0, row,
-							x -> getCell(row, 0), null);
+							x -> RowUtil.getCell(row, 0), null);
 					//
 				} // if
 					//
@@ -261,10 +262,11 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 					//
 				if ((cellValue = testAndApply(
 						(a, b) -> a != null && b != null && a.containsKey(IValue0Util.getValue0(b)), objectIntMap,
-						valueColumnName, (a, b) -> getCell(row, a.get(IValue0Util.getValue0(b))), null)) == null) {
+						valueColumnName, (a, b) -> RowUtil.getCell(row, a.get(IValue0Util.getValue0(b))),
+						null)) == null) {
 					//
 					cellValue = testAndApply(x -> row != null && row.getPhysicalNumberOfCells() > 1, row,
-							x -> getCell(row, 1), null);
+							x -> RowUtil.getCell(row, 1), null);
 					//
 				} // if
 					//
@@ -283,17 +285,13 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 		//
 	}
 
-	private static Cell getCell(final Row instance, final int cellnum) {
-		return instance != null ? instance.getCell(cellnum) : null;
-	}
-
 	private static ObjectIntMap<String> createObjectIntMap(final Row row) {
 		//
 		final ObjectIntMap<String> objectIntMap = Reflection.newProxy(ObjectIntMap.class, new IH());
 		//
 		for (int i = 0; objectIntMap != null && i < IterableUtils.size(row); i++) {
 			//
-			objectIntMap.put(CellUtil.getStringCellValue(getCell(row, i)), i);
+			objectIntMap.put(CellUtil.getStringCellValue(RowUtil.getCell(row, i)), i);
 			//
 		} // for
 			//

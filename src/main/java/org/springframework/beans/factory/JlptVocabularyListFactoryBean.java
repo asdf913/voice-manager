@@ -43,6 +43,7 @@ import org.apache.poi.ss.usermodel.CellValue;
 import org.apache.poi.ss.usermodel.CreationHelperUtil;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.RowUtil;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
@@ -186,7 +187,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 			// name
 			//
 			if ((size = IterableUtils.size(fs = getFieldsByName(JlptVocabulary.class.getDeclaredFields(),
-					stringCellValue = CellUtil.getStringCellValue(row.getCell(i))))) == 1) {
+					stringCellValue = CellUtil.getStringCellValue(RowUtil.getCell(row, i))))) == 1) {
 				//
 				entry = Pair.of(Integer.valueOf(i), IterableUtils.get(fs, 0));
 				//
@@ -273,7 +274,8 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		//
 		for (int i = 0; ObjectUtils.compare(i, physicalNumberOfCells) < 0; i++) {
 			//
-			if (or((f = MapUtils.getObject(fieldMap, Integer.valueOf(i))) == null, (cell = row.getCell(i)) == null,
+			if (or((f = MapUtils.getObject(fieldMap, Integer.valueOf(i))) == null,
+					(cell = RowUtil.getCell(row, i)) == null,
 					Objects.equals(CellType.BLANK, cellType = getCellType(cell)))) {
 				//
 				continue;

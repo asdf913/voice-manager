@@ -6,4 +6,8 @@ public interface RowUtil {
 		return instance != null ? instance.createCell(column) : null;
 	}
 
+	static Cell getCell(final Row instance, final int cellnum) {
+		return instance != null ? instance.getCell(cellnum) : null;
+	}
+
 }
