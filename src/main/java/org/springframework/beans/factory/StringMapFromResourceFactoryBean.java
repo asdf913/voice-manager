@@ -101,7 +101,11 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 
 		int get(final K key);
 
-		boolean containsKey(final K key);
+		boolean containsKey(final Object key);
+
+		static <K> boolean containsKey(final ObjectIntMap<?> instance, final Object key) {
+			return instance != null && instance.containsKey(key);
+		}
 
 	}
 
@@ -251,8 +255,9 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 					//
 					// key
 					//
-				if ((cellKey = testAndApply((a, b) -> a != null && b != null && a.containsKey(IValue0Util.getValue0(b)),
-						objectIntMap, keyColumnName, (a, b) -> RowUtil.getCell(row, a.get(IValue0Util.getValue0(b))),
+				if ((cellKey = testAndApply(
+						(a, b) -> b != null && ObjectIntMap.containsKey(a, IValue0Util.getValue0(b)), objectIntMap,
+						keyColumnName, (a, b) -> RowUtil.getCell(row, a.get(IValue0Util.getValue0(b))),
 						null)) == null) {
 					//
 					cellKey = testAndApply(x -> row != null && row.getPhysicalNumberOfCells() > 0, row,
@@ -263,7 +268,7 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 					// value
 					//
 				if ((cellValue = testAndApply(
-						(a, b) -> a != null && b != null && a.containsKey(IValue0Util.getValue0(b)), objectIntMap,
+						(a, b) -> b != null && ObjectIntMap.containsKey(a, IValue0Util.getValue0(b)), objectIntMap,
 						valueColumnName, (a, b) -> RowUtil.getCell(row, a.get(IValue0Util.getValue0(b))),
 						null)) == null) {
 					//

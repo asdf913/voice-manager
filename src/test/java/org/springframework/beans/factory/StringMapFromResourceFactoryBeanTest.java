@@ -1,10 +1,12 @@
 package org.springframework.beans.factory;
 
 import java.io.ByteArrayOutputStream;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.IntStream;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -22,9 +24,13 @@ import org.meeuw.functional.TriConsumer;
 import org.meeuw.functional.TriPredicate;
 import org.springframework.core.io.ByteArrayResource;
 
+import com.google.common.reflect.Reflection;
+
 class StringMapFromResourceFactoryBeanTest {
 
 	private static Method METHOD_TEST_AND_ACCEPT = null;
+
+	private static Class<?> CLASS_OBJECT_INT_MAP = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -32,6 +38,34 @@ class StringMapFromResourceFactoryBeanTest {
 		(METHOD_TEST_AND_ACCEPT = StringMapFromResourceFactoryBean.class.getDeclaredMethod("testAndAccept",
 				TriPredicate.class, Object.class, Object.class, Object.class, TriConsumer.class)).setAccessible(true);
 		//
+		CLASS_OBJECT_INT_MAP = Class
+				.forName("org.springframework.beans.factory.StringMapFromResourceFactoryBean$ObjectIntMap");
+		//
+	}
+
+	private static class IH implements InvocationHandler {
+
+		private Boolean containsKey = null;
+
+		@Override
+		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+			//
+			final String methodName = method != null ? method.getName() : null;
+			//
+			if (method != null && Objects.equals(CLASS_OBJECT_INT_MAP, method.getDeclaringClass())) {
+				//
+				if (Objects.equals(methodName, "containsKey")) {
+					//
+					return containsKey;
+					//
+				} // if
+					//
+			} // if
+				//
+			throw new Throwable(methodName);
+			//
+		}
+
 	}
 
 	@Test
@@ -223,6 +257,28 @@ class StringMapFromResourceFactoryBeanTest {
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
+	}
+
+	@Test
+	void testObjectIntMap()
+			throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+		//
+		final Method containsKey = CLASS_OBJECT_INT_MAP != null
+				? CLASS_OBJECT_INT_MAP.getDeclaredMethod("containsKey", CLASS_OBJECT_INT_MAP, Object.class)
+				: null;
+		//
+		Assertions.assertEquals(Boolean.FALSE, containsKey != null ? containsKey.invoke(null, null, null) : null);
+		//
+		final IH ih = new IH();
+		//
+		final Object objectIntMap = Reflection.newProxy(CLASS_OBJECT_INT_MAP, ih);
+		//
+		Assertions.assertEquals(ih.containsKey = Boolean.FALSE,
+				containsKey != null ? containsKey.invoke(null, objectIntMap, null) : null);
+		//
+		Assertions.assertEquals(ih.containsKey = Boolean.TRUE,
+				containsKey != null ? containsKey.invoke(null, objectIntMap, null) : null);
+		//
 	}
 
 }
