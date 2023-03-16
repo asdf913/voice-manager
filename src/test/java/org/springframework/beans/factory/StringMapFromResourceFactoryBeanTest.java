@@ -7,6 +7,7 @@ import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Predicate;
 import java.util.stream.IntStream;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -28,7 +29,7 @@ import com.google.common.reflect.Reflection;
 
 class StringMapFromResourceFactoryBeanTest {
 
-	private static Method METHOD_TEST_AND_ACCEPT, METHOD_GET_PHYSICAL_NUMBER_OF_CELLS = null;
+	private static Method METHOD_TEST_AND_ACCEPT, METHOD_GET_PHYSICAL_NUMBER_OF_CELLS, METHOD_TEST = null;
 
 	private static Class<?> CLASS_OBJECT_INT_MAP = null;
 
@@ -42,6 +43,8 @@ class StringMapFromResourceFactoryBeanTest {
 		//
 		(METHOD_GET_PHYSICAL_NUMBER_OF_CELLS = clz.getDeclaredMethod("getPhysicalNumberOfCells", Row.class,
 				Integer.TYPE)).setAccessible(true);
+		//
+		(METHOD_TEST = clz.getDeclaredMethod("test", Predicate.class, Object.class)).setAccessible(true);
 		//
 		CLASS_OBJECT_INT_MAP = Class
 				.forName("org.springframework.beans.factory.StringMapFromResourceFactoryBean$ObjectIntMap");
@@ -278,6 +281,25 @@ class StringMapFromResourceFactoryBeanTest {
 			final Object obj = METHOD_GET_PHYSICAL_NUMBER_OF_CELLS.invoke(null, instance, defaultValue);
 			if (obj instanceof Number) {
 				return ((Number) obj).intValue();
+			}
+			throw new Throwable(obj != null && obj.getClass() != null ? obj.getClass().toString() : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testTest() throws Throwable {
+		//
+		Assertions.assertFalse(test(null, null));
+		//
+	}
+
+	private static <T> boolean test(final Predicate<T> instance, final T value) throws Throwable {
+		try {
+			final Object obj = METHOD_TEST.invoke(null, instance, value);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(obj != null && obj.getClass() != null ? obj.getClass().toString() : null);
 		} catch (final InvocationTargetException e) {

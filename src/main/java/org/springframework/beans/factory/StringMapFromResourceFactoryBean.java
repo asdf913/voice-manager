@@ -280,8 +280,8 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 					//
 				} // if
 					//
-				testAndAccept((a, b, c) -> b != null && c != null, IValue0Util.getValue0(result), cellKey, cellValue,
-						(a, b, c) -> put(a, CellUtil.getStringCellValue(b), CellUtil.getStringCellValue(c)));
+				testAndAccept((a, b, c) -> and(Objects::nonNull, b, c), IValue0Util.getValue0(result), cellKey,
+						cellValue, (a, b, c) -> put(a, CellUtil.getStringCellValue(b), CellUtil.getStringCellValue(c)));
 				//
 			} // for
 				//
@@ -289,6 +289,14 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 			//
 		return result;
 		//
+	}
+
+	private static <T> boolean and(final Predicate<T> predicate, final T a, final T b) {
+		return test(predicate, a) && test(predicate, b);
+	}
+
+	private static <T> boolean test(final Predicate<T> instance, final T value) {
+		return instance != null && instance.test(value);
 	}
 
 	private static int getPhysicalNumberOfCells(final Row instance, final int defaultValue) {
@@ -328,7 +336,7 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 	private static <T, R, E extends Throwable> R testAndApply(@Nullable final Predicate<T> predicate, final T value,
 			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
 			throws E {
-		return predicate != null && predicate.test(value) ? FailableFunctionUtil.apply(functionTrue, value)
+		return test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
