@@ -113,7 +113,8 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 		}
 
 		@Override
-		public Object invoke(final Object proxy, @Nullable final Method method, final Object[] args) throws Throwable {
+		public Object invoke(final Object proxy, @Nullable final Method method, @Nullable final Object[] args)
+				throws Throwable {
 			//
 			final String methodName = method != null ? method.getName() : null;
 			//
@@ -208,8 +209,8 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 		//
 	}
 
-	private static IValue0<Map<String, String>> createMap(final Sheet sheet, final IValue0<String> keyColumnName,
-			final IValue0<String> valueColumnName) {
+	private static IValue0<Map<String, String>> createMap(@Nullable final Sheet sheet,
+			final IValue0<String> keyColumnName, final IValue0<String> valueColumnName) {
 		//
 		IValue0<Map<String, String>> result = null;
 		//
@@ -302,19 +303,19 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 		return instance != null ? instance.getMessage() : null;
 	}
 
-	private static <K, V> void put(final Map<K, V> instance, final K key, final V value) {
+	private static <K, V> void put(@Nullable final Map<K, V> instance, final K key, final V value) {
 		if (instance != null) {
 			instance.put(key, value);
 		}
 	}
 
-	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+	private static <T, R, E extends Throwable> R testAndApply(@Nullable final Predicate<T> predicate, final T value,
 			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse) throws E {
 		return predicate != null && predicate.test(value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
-	private static <T, U, R, E extends Throwable> R testAndApply(final BiPredicate<T, U> predicate, final T t,
+	private static <T, U, R, E extends Throwable> R testAndApply(@Nullable final BiPredicate<T, U> predicate, final T t,
 			final U u, final BiFunction<T, U, R> functionTrue, @Nullable final BiFunction<T, U, R> functionFalse)
 			throws E {
 		return predicate != null && predicate.test(t, u) ? apply(functionTrue, t, u) : apply(functionFalse, t, u);
