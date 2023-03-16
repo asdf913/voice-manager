@@ -31,6 +31,7 @@ import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceUtil;
+import org.springframework.core.io.XlsxUtil;
 import org.xml.sax.SAXException;
 
 import com.google.common.reflect.Reflection;
@@ -165,7 +166,8 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 		final String mimeType = getMimeType(ci);
 		//
 		if (Objects.equals("application/vnd.openxmlformats-officedocument", mimeType)
-				|| Objects.equals("OLE 2 Compound Document", getMessage(ci))) {
+				|| Objects.equals("OLE 2 Compound Document", getMessage(ci))
+				|| XlsxUtil.isXlsx(resource)) {
 			//
 			try (final InputStream is = new ByteArrayInputStream(bs);
 					final Workbook wb = testAndApply(Objects::nonNull, is, WorkbookFactory::create, null)) {
