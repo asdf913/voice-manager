@@ -58,10 +58,14 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 		String value();
 	}
 
-	private IValue0<String> sheetName, valueColumnName = null;
+	@Note("Sheet Name")
+	private IValue0<String> sheetName = null;
 
 	@Note("Key Column Name")
 	private IValue0<String> keyColumnName = null;
+
+	@Note("Value Column Name")
+	private IValue0<String> valueColumnName = null;
 
 	public void setResource(final Resource resource) {
 		this.resource = resource;
