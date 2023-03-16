@@ -43,6 +43,7 @@ import com.j256.simplemagic.ContentInfoUtil;
 
 public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryBean<String, String> {
 
+	@Nullable
 	private IValue0<Map<String, String>> iValue0 = null;
 
 	private Resource resource = null;
