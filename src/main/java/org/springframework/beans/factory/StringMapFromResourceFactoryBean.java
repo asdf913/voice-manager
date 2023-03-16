@@ -121,6 +121,7 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 		}
 
 		@Override
+		@Nullable
 		public Object invoke(final Object proxy, @Nullable final Method method, @Nullable final Object[] args)
 				throws Throwable {
 			//
@@ -160,6 +161,7 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 
 	}
 
+	@Nullable
 	private static IValue0<Map<String, String>> createMap(final Resource resource, final IValue0<String> sheetName,
 			final IValue0<String> keyColumnName, final IValue0<String> valueColumnName)
 			throws IOException, SAXException, ParserConfigurationException {
@@ -217,6 +219,7 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 		//
 	}
 
+	@Nullable
 	private static IValue0<Map<String, String>> createMap(@Nullable final Sheet sheet,
 			final IValue0<String> keyColumnName, final IValue0<String> valueColumnName) {
 		//
@@ -288,6 +291,7 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 		//
 	}
 
+	@Nullable
 	private static ObjectIntMap<String> createObjectIntMap(final Row row) {
 		//
 		final ObjectIntMap<String> objectIntMap = Reflection.newProxy(ObjectIntMap.class, new IH());
@@ -301,10 +305,12 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 		return objectIntMap;
 	}
 
+	@Nullable
 	private static String getMimeType(@Nullable final ContentInfo instance) {
 		return instance != null ? instance.getMimeType() : null;
 	}
 
+	@Nullable
 	private static String getMessage(@Nullable final ContentInfo instance) {
 		return instance != null ? instance.getMessage() : null;
 	}
@@ -329,6 +335,7 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 		return predicate != null && predicate.test(t, u) ? apply(functionTrue, t, u) : apply(functionFalse, t, u);
 	}
 
+	@Nullable
 	private static <R, T, U> R apply(@Nullable BiFunction<T, U, R> instance, final T t, final U u) {
 		return instance != null ? instance.apply(t, u) : null;
 	}
