@@ -273,6 +273,8 @@ class VoiceManagerTest {
 
 	private static final int TWO = 2;
 
+	private static final int THREE = 3;
+
 	private static Class<?> CLASS_OBJECT_MAP, CLASS_BOOLEAN_MAP, CLASS_STRING_MAP, CLASS_IH, CLASS_EXPORT_TASK,
 			CLASS_IMPORT_TASK, CLASS_BYTE_CONVERTER = null;
 
@@ -1083,7 +1085,8 @@ class VoiceManagerTest {
 		CLASS_BYTE_CONVERTER = Class.forName("org.springframework.context.support.VoiceManager$ByteConverter");
 		//
 		TEMP_FILE_MINIMUM_PREFIX_LENGTH = Integer.valueOf(intValue(cast(Number.class,
-				FieldUtils.readDeclaredStaticField(VoiceManager.class, "TEMP_FILE_MINIMUM_PREFIX_LENGTH", true)), 3));
+				FieldUtils.readDeclaredStaticField(VoiceManager.class, "TEMP_FILE_MINIMUM_PREFIX_LENGTH", true)),
+				THREE));
 		//
 	}
 
@@ -1805,9 +1808,9 @@ class VoiceManagerTest {
 		//
 		Assertions.assertThrows(IllegalArgumentException.class, () -> instance.setFreeMarkerVersion(new int[] {}));
 		//
-		Assertions.assertDoesNotThrow(() -> instance.setFreeMarkerVersion(new int[] { ONE, TWO, 3 }));
+		Assertions.assertDoesNotThrow(() -> instance.setFreeMarkerVersion(new int[] { ONE, TWO, THREE }));
 		//
-		Assertions.assertEquals(new Version(ONE, TWO, 3), get(freeMarkerVersion, instance));
+		Assertions.assertEquals(new Version(ONE, TWO, THREE), get(freeMarkerVersion, instance));
 		//
 	}
 
@@ -4375,7 +4378,7 @@ class VoiceManagerTest {
 		Assertions.assertDoesNotThrow(() -> importVoice(objectMap, (v, m) -> {
 		}, null));
 		//
-		final File file = File.createTempFile(RandomStringUtils.randomAlphabetic(3), null);
+		final File file = File.createTempFile(RandomStringUtils.randomAlphabetic(THREE), null);
 		//
 		if (file != null) {
 			//
@@ -5244,7 +5247,8 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> delete(null));
 		//
-		Assertions.assertDoesNotThrow(() -> delete(File.createTempFile(RandomStringUtils.randomAlphabetic(3), null)));
+		Assertions
+				.assertDoesNotThrow(() -> delete(File.createTempFile(RandomStringUtils.randomAlphabetic(THREE), null)));
 		//
 	}
 
@@ -5262,7 +5266,7 @@ class VoiceManagerTest {
 		Assertions.assertDoesNotThrow(() -> deleteOnExit(null));
 		//
 		Assertions.assertDoesNotThrow(
-				() -> deleteOnExit(File.createTempFile(RandomStringUtils.randomAlphabetic(3), null)));
+				() -> deleteOnExit(File.createTempFile(RandomStringUtils.randomAlphabetic(THREE), null)));
 		//
 	}
 
@@ -6108,7 +6112,7 @@ class VoiceManagerTest {
 	@Test
 	void testGetWorkbook() throws Throwable {
 		//
-		final int tempFileMinimumPrefixLength = intValue(TEMP_FILE_MINIMUM_PREFIX_LENGTH, 3);
+		final int tempFileMinimumPrefixLength = intValue(TEMP_FILE_MINIMUM_PREFIX_LENGTH, THREE);
 		//
 		final File folder = new File(".");
 		//
@@ -7383,7 +7387,7 @@ class VoiceManagerTest {
 	@Test
 	void testRandomAlphabetic() throws Throwable {
 		//
-		Assertions.assertNotEquals(randomAlphabetic(TWO), randomAlphabetic(TWO));
+		Assertions.assertNotEquals(randomAlphabetic(THREE), randomAlphabetic(THREE));
 		//
 	}
 
@@ -7586,7 +7590,7 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> encrypt(null, null, null));
 		//
-		final File file = File.createTempFile(randomAlphabetic(3), null);
+		final File file = File.createTempFile(randomAlphabetic(THREE), null);
 		//
 		deleteOnExit(file);
 		//
@@ -7630,7 +7634,7 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(getWorkbookByZipFile(new File("pom.xml")));
 		//
-		final File file = File.createTempFile(randomAlphabetic(3), null);
+		final File file = File.createTempFile(randomAlphabetic(THREE), null);
 		//
 		deleteOnExit(file);
 		//
@@ -9390,7 +9394,7 @@ class VoiceManagerTest {
 		Assertions.assertNull(getPronunciationAudioFileByAudioFormat(pronunciation, null));
 		//
 		final File file = File.createTempFile(
-				RandomStringUtils.randomAlphanumeric(intValue(TEMP_FILE_MINIMUM_PREFIX_LENGTH, 3)), null);
+				RandomStringUtils.randomAlphanumeric(intValue(TEMP_FILE_MINIMUM_PREFIX_LENGTH, THREE)), null);
 		//
 		deleteOnExit(file);
 		//
