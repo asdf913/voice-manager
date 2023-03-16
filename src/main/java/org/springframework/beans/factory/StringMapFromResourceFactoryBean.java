@@ -324,7 +324,7 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 		return instance != null && instance.test(value);
 	}
 
-	private static int getPhysicalNumberOfCells(final Row instance, final int defaultValue) {
+	private static int getPhysicalNumberOfCells(@Nullable final Row instance, final int defaultValue) {
 		return instance != null ? instance.getPhysicalNumberOfCells() : defaultValue;
 	}
 
