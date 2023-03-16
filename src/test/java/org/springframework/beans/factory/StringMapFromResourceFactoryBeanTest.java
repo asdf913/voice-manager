@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Predicate;
@@ -18,8 +19,10 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookUtil;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.javatuples.valueintf.IValue0;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.meeuw.functional.TriConsumer;
 import org.meeuw.functional.TriPredicate;
@@ -29,7 +32,8 @@ import com.google.common.reflect.Reflection;
 
 class StringMapFromResourceFactoryBeanTest {
 
-	private static Method METHOD_TEST_AND_ACCEPT, METHOD_GET_PHYSICAL_NUMBER_OF_CELLS, METHOD_TEST = null;
+	private static Method METHOD_TEST_AND_ACCEPT, METHOD_GET_PHYSICAL_NUMBER_OF_CELLS, METHOD_TEST,
+			METHOD_CREATE_MAP = null;
 
 	private static Class<?> CLASS_OBJECT_INT_MAP = null;
 
@@ -46,6 +50,9 @@ class StringMapFromResourceFactoryBeanTest {
 		//
 		(METHOD_TEST = clz.getDeclaredMethod("test", Predicate.class, Object.class)).setAccessible(true);
 		//
+		(METHOD_CREATE_MAP = clz.getDeclaredMethod("createMap", Sheet.class, IValue0.class, IValue0.class))
+				.setAccessible(true);
+		//
 		CLASS_OBJECT_INT_MAP = Class
 				.forName("org.springframework.beans.factory.StringMapFromResourceFactoryBean$ObjectIntMap");
 		//
@@ -54,6 +61,8 @@ class StringMapFromResourceFactoryBeanTest {
 	private static class IH implements InvocationHandler {
 
 		private Boolean containsKey = null;
+
+		private Iterator<?> iterator = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -70,10 +79,29 @@ class StringMapFromResourceFactoryBeanTest {
 					//
 			} // if
 				//
+			if (proxy instanceof Iterable) {
+				//
+				if (Objects.equals(methodName, "iterator")) {
+					//
+					return iterator;
+					//
+				} // if
+					//
+			} // if
+				//
 			throw new Throwable(methodName);
 			//
 		}
 
+	}
+
+	private IH ih = null;
+
+	@BeforeEach
+	void beforeEach() {
+		//
+		ih = new IH();
+		//
 	}
 
 	@Test
@@ -302,6 +330,30 @@ class StringMapFromResourceFactoryBeanTest {
 				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(obj != null && obj.getClass() != null ? obj.getClass().toString() : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCreateMap() throws Throwable {
+		//
+		Assertions.assertNull(createMap(null, null, null));
+		//
+		Assertions.assertNull(createMap(Reflection.newProxy(Sheet.class, ih), null, null));
+		//
+	}
+
+	private static IValue0<Map<String, String>> createMap(final Sheet sheet, final IValue0<String> keyColumnName,
+			final IValue0<String> valueColumnName) throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_MAP.invoke(null, sheet, keyColumnName, valueColumnName);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof IValue0) {
+				return (IValue0) obj;
+			}
+			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

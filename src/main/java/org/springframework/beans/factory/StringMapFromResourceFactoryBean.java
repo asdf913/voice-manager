@@ -223,69 +223,69 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 	private static IValue0<Map<String, String>> createMap(@Nullable final Sheet sheet,
 			final IValue0<String> keyColumnName, final IValue0<String> valueColumnName) {
 		//
+		if (sheet == null || sheet.iterator() == null) {
+			//
+			return null;
+			//
+		} // if
+			//
 		IValue0<Map<String, String>> result = null;
 		//
 		ObjectIntMap<String> objectIntMap = null;
 		//
-		if (sheet != null && sheet.iterator() != null) {
+		final AtomicBoolean first = new AtomicBoolean(true);
+		//
+		Cell cellKey, cellValue = null;
+		//
+		for (final Row row : sheet) {
 			//
-			final AtomicBoolean first = new AtomicBoolean(true);
+			if (row == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			if (first.getAndSet(false)) {
+				//
+				objectIntMap = createObjectIntMap(row);
+				//
+				continue;
+				//
+			} // if
+				//
+			if (objectIntMap == null
+					|| (result = ObjectUtils.getIfNull(result, () -> Unit.with(new LinkedHashMap<>()))) == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+				// key
+				//
+			if ((cellKey = testAndApply((a, b) -> b != null && ObjectIntMap.containsKey(a, IValue0Util.getValue0(b)),
+					objectIntMap, keyColumnName, (a, b) -> RowUtil.getCell(row, a.get(IValue0Util.getValue0(b))),
+					null)) == null) {
+				//
+				cellKey = testAndApply(x -> getPhysicalNumberOfCells(row, 0) > 0, row, x -> RowUtil.getCell(row, 0),
+						null);
+				//
+			} // if
+				//
+				// value
+				//
+			if ((cellValue = testAndApply((a, b) -> b != null && ObjectIntMap.containsKey(a, IValue0Util.getValue0(b)),
+					objectIntMap, valueColumnName, (a, b) -> RowUtil.getCell(row, a.get(IValue0Util.getValue0(b))),
+					null)) == null) {
+				//
+				cellValue = testAndApply(x -> getPhysicalNumberOfCells(row, 0) > 1, row, x -> RowUtil.getCell(row, 1),
+						null);
+				//
+			} // if
+				//
+			testAndAccept((a, b, c) -> and(Objects::nonNull, b, c), IValue0Util.getValue0(result), cellKey, cellValue,
+					(a, b, c) -> put(a, CellUtil.getStringCellValue(b), CellUtil.getStringCellValue(c)));
 			//
-			Cell cellKey, cellValue = null;
-			//
-			for (final Row row : sheet) {
-				//
-				if (row == null) {
-					//
-					continue;
-					//
-				} // if
-					//
-				if (first.getAndSet(false)) {
-					//
-					objectIntMap = createObjectIntMap(row);
-					//
-					continue;
-					//
-				} // if
-					//
-				if (objectIntMap == null
-						|| (result = ObjectUtils.getIfNull(result, () -> Unit.with(new LinkedHashMap<>()))) == null) {
-					//
-					continue;
-					//
-				} // if
-					//
-					// key
-					//
-				if ((cellKey = testAndApply(
-						(a, b) -> b != null && ObjectIntMap.containsKey(a, IValue0Util.getValue0(b)), objectIntMap,
-						keyColumnName, (a, b) -> RowUtil.getCell(row, a.get(IValue0Util.getValue0(b))),
-						null)) == null) {
-					//
-					cellKey = testAndApply(x -> getPhysicalNumberOfCells(row, 0) > 0, row, x -> RowUtil.getCell(row, 0),
-							null);
-					//
-				} // if
-					//
-					// value
-					//
-				if ((cellValue = testAndApply(
-						(a, b) -> b != null && ObjectIntMap.containsKey(a, IValue0Util.getValue0(b)), objectIntMap,
-						valueColumnName, (a, b) -> RowUtil.getCell(row, a.get(IValue0Util.getValue0(b))),
-						null)) == null) {
-					//
-					cellValue = testAndApply(x -> getPhysicalNumberOfCells(row, 0) > 1, row,
-							x -> RowUtil.getCell(row, 1), null);
-					//
-				} // if
-					//
-				testAndAccept((a, b, c) -> and(Objects::nonNull, b, c), IValue0Util.getValue0(result), cellKey,
-						cellValue, (a, b, c) -> put(a, CellUtil.getStringCellValue(b), CellUtil.getStringCellValue(c)));
-				//
-			} // for
-				//
-		} // if
+		} // for
 			//
 		return result;
 		//
