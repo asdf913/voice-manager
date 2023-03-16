@@ -166,8 +166,7 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 		final String mimeType = getMimeType(ci);
 		//
 		if (Objects.equals("application/vnd.openxmlformats-officedocument", mimeType)
-				|| Objects.equals("OLE 2 Compound Document", getMessage(ci))
-				|| XlsxUtil.isXlsx(resource)) {
+				|| Objects.equals("OLE 2 Compound Document", getMessage(ci)) || XlsxUtil.isXlsx(resource)) {
 			//
 			try (final InputStream is = new ByteArrayInputStream(bs);
 					final Workbook wb = testAndApply(Objects::nonNull, is, WorkbookFactory::create, null)) {
@@ -311,13 +310,13 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 		}
 	}
 
-	@Nullable
 	private static <T, R, E extends Throwable> R testAndApply(@Nullable final Predicate<T> predicate, final T value,
 			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse) throws E {
 		return predicate != null && predicate.test(value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
+	@Nullable
 	private static <T, U, R, E extends Throwable> R testAndApply(@Nullable final BiPredicate<T, U> predicate, final T t,
 			final U u, final BiFunction<T, U, R> functionTrue, @Nullable final BiFunction<T, U, R> functionFalse)
 			throws E {
