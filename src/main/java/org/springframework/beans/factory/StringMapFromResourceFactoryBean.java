@@ -162,9 +162,9 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 	}
 
 	@Nullable
-	private static IValue0<Map<String, String>> createMap(final Resource resource, final IValue0<String> sheetName,
-			final IValue0<String> keyColumnName, final IValue0<String> valueColumnName)
-			throws IOException, SAXException, ParserConfigurationException {
+	private static IValue0<Map<String, String>> createMap(final Resource resource,
+			@Nullable final IValue0<String> sheetName, final IValue0<String> keyColumnName,
+			final IValue0<String> valueColumnName) throws IOException, SAXException, ParserConfigurationException {
 		//
 		final byte[] bs = ResourceUtil.getContentAsByteArray(resource);
 		//
