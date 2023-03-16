@@ -103,7 +103,7 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 
 		boolean containsKey(final Object key);
 
-		static <K> boolean containsKey(final ObjectIntMap<?> instance, final Object key) {
+		static boolean containsKey(final ObjectIntMap<?> instance, final Object key) {
 			return instance != null && instance.containsKey(key);
 		}
 
