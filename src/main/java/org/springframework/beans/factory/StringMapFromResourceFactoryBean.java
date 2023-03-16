@@ -295,7 +295,7 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 		return test(predicate, a) && test(predicate, b);
 	}
 
-	private static <T> boolean test(final Predicate<T> instance, final T value) {
+	private static <T> boolean test(@Nullable final Predicate<T> instance, final T value) {
 		return instance != null && instance.test(value);
 	}
 
