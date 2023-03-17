@@ -398,7 +398,7 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 	}
 
 	@Nullable
-	private static <R, T, U> R apply(@Nullable BiFunction<T, U, R> instance, final T t, final U u) {
+	private static <R, T, U> R apply(@Nullable BiFunction<T, U, R> instance, final T t, @Nullable final U u) {
 		return instance != null ? instance.apply(t, u) : null;
 	}
 
