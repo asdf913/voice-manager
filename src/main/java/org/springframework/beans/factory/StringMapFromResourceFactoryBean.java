@@ -320,6 +320,7 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 		//
 	}
 
+	@Nullable
 	private static Cell getValueCell(final Row row, final ObjectIntMap<String> objectIntMap,
 			final Pair<String, Integer> valueColumnNameAndIndex) {
 		//
