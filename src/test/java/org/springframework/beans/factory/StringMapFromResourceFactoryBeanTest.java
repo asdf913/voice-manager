@@ -1,6 +1,7 @@
 package org.springframework.beans.factory;
 
 import java.io.ByteArrayOutputStream;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -20,7 +21,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookUtil;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.javatuples.Unit;
+import org.javatuples.Pair;
 import org.javatuples.valueintf.IValue0;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -52,13 +53,13 @@ class StringMapFromResourceFactoryBeanTest {
 		//
 		(METHOD_TEST = clz.getDeclaredMethod("test", Predicate.class, Object.class)).setAccessible(true);
 		//
-		(METHOD_CREATE_MAP = clz.getDeclaredMethod("createMap", Sheet.class, IValue0.class, IValue0.class))
+		(METHOD_CREATE_MAP = clz.getDeclaredMethod("createMap", Sheet.class, IValue0.class, Pair.class))
 				.setAccessible(true);
 		//
 		(METHOD_GET_VALUE_CELL = clz.getDeclaredMethod("getValueCell", Row.class,
 				CLASS_OBJECT_INT_MAP = Class
 						.forName("org.springframework.beans.factory.StringMapFromResourceFactoryBean$ObjectIntMap"),
-				IValue0.class)).setAccessible(true);
+				Pair.class)).setAccessible(true);
 		//
 	}
 
@@ -105,10 +106,14 @@ class StringMapFromResourceFactoryBeanTest {
 
 	}
 
+	private StringMapFromResourceFactoryBean instance = null;
+
 	private IH ih = null;
 
 	@BeforeEach
 	void beforeEach() {
+		//
+		instance = new StringMapFromResourceFactoryBean();
 		//
 		ih = new IH();
 		//
@@ -117,15 +122,17 @@ class StringMapFromResourceFactoryBeanTest {
 	@Test
 	void testGetObject() throws Exception {
 		//
-		final StringMapFromResourceFactoryBean instance = new StringMapFromResourceFactoryBean();
+		Assertions.assertNull(getObject(instance));
 		//
-		Assertions.assertNull(instance.getObject());
-		//
-		instance.setResource(new ByteArrayResource("".getBytes()));
-		//
+		if (instance != null) {
+			//
+			instance.setResource(new ByteArrayResource("".getBytes()));
+			//
+		} // if
+			//
 		FieldUtils.writeDeclaredField(instance, "iValue0", null, true);
 		//
-		Assertions.assertNull(instance.getObject());
+		Assertions.assertNull(getObject(instance));
 		//
 		// org.springframework.beans.factory.HSSFWorkbook
 		//
@@ -133,11 +140,15 @@ class StringMapFromResourceFactoryBeanTest {
 			//
 			wb.write(baos);
 			//
-			instance.setResource(new ByteArrayResource(baos.toByteArray()));
-			//
+			if (instance != null) {
+				//
+				instance.setResource(new ByteArrayResource(baos.toByteArray()));
+				//
+			} // if
+				//
 			FieldUtils.writeDeclaredField(instance, "iValue0", null, true);
 			//
-			Assertions.assertThrows(IllegalArgumentException.class, () -> instance.getObject());
+			Assertions.assertThrows(IllegalArgumentException.class, () -> getObject(instance));
 			//
 		} // try
 			//
@@ -147,11 +158,15 @@ class StringMapFromResourceFactoryBeanTest {
 			//
 			wb.write(baos);
 			//
-			instance.setResource(new ByteArrayResource(baos.toByteArray()));
-			//
+			if (instance != null) {
+				//
+				instance.setResource(new ByteArrayResource(baos.toByteArray()));
+				//
+			} // if
+				//
 			FieldUtils.writeDeclaredField(instance, "iValue0", null, true);
 			//
-			Assertions.assertThrows(IllegalArgumentException.class, () -> instance.getObject());
+			Assertions.assertThrows(IllegalArgumentException.class, () -> getObject(instance));
 			//
 		} // try
 			//
@@ -161,11 +176,15 @@ class StringMapFromResourceFactoryBeanTest {
 			//
 			wb.write(baos);
 			//
-			instance.setResource(new ByteArrayResource(baos.toByteArray()));
-			//
+			if (instance != null) {
+				//
+				instance.setResource(new ByteArrayResource(baos.toByteArray()));
+				//
+			} // if
+				//
 			FieldUtils.writeDeclaredField(instance, "iValue0", null, true);
 			//
-			Assertions.assertThrows(IllegalArgumentException.class, () -> instance.getObject());
+			Assertions.assertThrows(IllegalArgumentException.class, () -> getObject(instance));
 			//
 		} // try
 			//
@@ -175,11 +194,15 @@ class StringMapFromResourceFactoryBeanTest {
 			//
 			wb.write(baos);
 			//
-			instance.setResource(new ByteArrayResource(baos.toByteArray()));
-			//
+			if (instance != null) {
+				//
+				instance.setResource(new ByteArrayResource(baos.toByteArray()));
+				//
+			} // if
+				//
 			FieldUtils.writeDeclaredField(instance, "iValue0", null, true);
 			//
-			Assertions.assertNull(instance.getObject());
+			Assertions.assertNull(getObject(instance));
 			//
 		} // try
 			//
@@ -199,11 +222,15 @@ class StringMapFromResourceFactoryBeanTest {
 			//
 			wb.write(baos);
 			//
-			instance.setResource(new ByteArrayResource(baos.toByteArray()));
-			//
+			if (instance != null) {
+				//
+				instance.setResource(new ByteArrayResource(baos.toByteArray()));
+				//
+			} // if
+				//
 			FieldUtils.writeDeclaredField(instance, "iValue0", null, true);
 			//
-			Assertions.assertEquals(Collections.emptyMap(), instance.getObject());
+			Assertions.assertEquals(Collections.emptyMap(), getObject(instance));
 			//
 		} // try
 			//
@@ -221,11 +248,15 @@ class StringMapFromResourceFactoryBeanTest {
 			//
 			wb.write(baos);
 			//
-			instance.setResource(new ByteArrayResource(baos.toByteArray()));
-			//
+			if (instance != null) {
+				//
+				instance.setResource(new ByteArrayResource(baos.toByteArray()));
+				//
+			} // if
+				//
 			FieldUtils.writeDeclaredField(instance, "iValue0", null, true);
 			//
-			Assertions.assertEquals(Collections.emptyMap(), instance.getObject());
+			Assertions.assertEquals(Collections.emptyMap(), getObject(instance));
 			//
 		} // try
 			//
@@ -243,15 +274,19 @@ class StringMapFromResourceFactoryBeanTest {
 			//
 			wb.write(baos);
 			//
-			instance.setResource(new ByteArrayResource(baos.toByteArray()));
-			//
+			if (instance != null) {
+				//
+				instance.setResource(new ByteArrayResource(baos.toByteArray()));
+				//
+			} // if
+				//
 			FieldUtils.writeDeclaredField(instance, "iValue0", null, true);
 			//
-			final Map<String, String> map = instance.getObject();
+			final Map<String, String> map = getObject(instance);
 			//
-			Assertions.assertEquals(Collections.singletonMap("", ""), map);
+			Assertions.assertEquals(Collections.emptyMap(), map);
 			//
-			Assertions.assertSame(map, instance.getObject());
+			Assertions.assertSame(map, getObject(instance));
 			//
 		} // try
 			//
@@ -259,15 +294,23 @@ class StringMapFromResourceFactoryBeanTest {
 		//
 		try (final Workbook wb = new XSSFWorkbook(); final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
 			//
-			instance.setSheetName(sheetName);
-			//
+			if (instance != null) {
+				//
+				instance.setSheetName(sheetName);
+				//
+			} // if
+				//
 			wb.write(baos);
 			//
-			instance.setResource(new ByteArrayResource(baos.toByteArray()));
+			if (instance != null) {
+				//
+				instance.setResource(new ByteArrayResource(baos.toByteArray()));
+				//
+			}
 			//
 			FieldUtils.writeDeclaredField(instance, "iValue0", null, true);
 			//
-			Assertions.assertThrows(IllegalArgumentException.class, () -> instance.getObject());
+			Assertions.assertThrows(IllegalArgumentException.class, () -> getObject(instance));
 			//
 		} // try
 			//
@@ -277,14 +320,110 @@ class StringMapFromResourceFactoryBeanTest {
 			//
 			wb.write(baos);
 			//
-			instance.setResource(new ByteArrayResource(baos.toByteArray()));
-			//
+			if (instance != null) {
+				//
+				instance.setResource(new ByteArrayResource(baos.toByteArray()));
+				//
+			} // if
+				//
 			FieldUtils.writeDeclaredField(instance, "iValue0", null, true);
 			//
-			Assertions.assertNull(instance.getObject());
+			Assertions.assertNull(getObject(instance));
 			//
 		} // try
 			//
+	}
+
+	private static <T> T getObject(final FactoryBean<T> instance) throws Exception {
+		return instance != null ? instance.getObject() : null;
+	}
+
+	@Test
+	void testSetValueColumnName() throws NoSuchFieldException, IllegalAccessException {
+		//
+		final Field valueColumnNameAndIndex = StringMapFromResourceFactoryBean.class
+				.getDeclaredField("valueColumnNameAndIndex");
+		//
+		if (valueColumnNameAndIndex != null) {
+			//
+			valueColumnNameAndIndex.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> {
+			//
+			if (instance != null) {
+				//
+				instance.setValueColumnName(null);
+				//
+			} // if
+				//
+		});
+		//
+		final Object before = valueColumnNameAndIndex != null ? valueColumnNameAndIndex.get(instance) : null;
+		//
+		Assertions.assertEquals(Pair.with(null, null), before);
+		//
+		Assertions.assertDoesNotThrow(() -> {
+			//
+			if (instance != null) {
+				//
+				instance.setValueColumnName(null);
+				//
+			} // if
+				//
+		});
+		//
+		final Object after = valueColumnNameAndIndex != null ? valueColumnNameAndIndex.get(instance) : null;
+		//
+		Assertions.assertEquals(before, after);
+		//
+		Assertions.assertNotSame(before, after);
+		//
+	}
+
+	@Test
+	void testSetValueColumnIndex() throws NoSuchFieldException, IllegalAccessException {
+		//
+		final Field valueColumnNameAndIndex = StringMapFromResourceFactoryBean.class
+				.getDeclaredField("valueColumnNameAndIndex");
+		//
+		if (valueColumnNameAndIndex != null) {
+			//
+			valueColumnNameAndIndex.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> {
+			//
+			if (instance != null) {
+				//
+				instance.setValueColumnIndex(null);
+				//
+			} // if
+				//
+		});
+		//
+		final Object before = valueColumnNameAndIndex != null ? valueColumnNameAndIndex.get(instance) : null;
+		//
+		Assertions.assertEquals(Pair.with(null, null), before);
+		//
+		Assertions.assertDoesNotThrow(() -> {
+			//
+			if (instance != null) {
+				//
+				instance.setValueColumnIndex(null);
+				//
+			} // if
+				//
+		});
+		//
+		final Object after = valueColumnNameAndIndex != null ? valueColumnNameAndIndex.get(instance) : null;
+		//
+		Assertions.assertEquals(before, after);
+		//
+		Assertions.assertNotSame(before, after);
+		//
 	}
 
 	@Test
@@ -292,7 +431,12 @@ class StringMapFromResourceFactoryBeanTest {
 		//
 		Assertions.assertDoesNotThrow(() -> testAndAccept(null, null, null, null, null));
 		//
-		Assertions.assertDoesNotThrow(() -> testAndAccept((a, b, c) -> true, null, null, null, null));
+		final TriPredicate<?, ?, ?> triPredicate = (a, b, c) -> true;
+		//
+		Assertions.assertDoesNotThrow(() -> testAndAccept(triPredicate, null, null, null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> testAndAccept(triPredicate, null, null, null, (a, b, c) -> {
+		}));
 		//
 	}
 
@@ -372,7 +516,7 @@ class StringMapFromResourceFactoryBeanTest {
 	@Test
 	void testGetValueCell() throws Throwable {
 		//
-		Assertions.assertNull(getValueCell(null, null, Unit.with(null)));
+		Assertions.assertNull(getValueCell(null, null, Pair.with(null, null)));
 		//
 		final Object objectIntMap = Reflection.newProxy(CLASS_OBJECT_INT_MAP, ih);
 		//
@@ -384,14 +528,16 @@ class StringMapFromResourceFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(getValueCell(null, objectIntMap, Unit.with(null)));
+		Assertions.assertNull(getValueCell(null, objectIntMap, Pair.with(null, null)));
+		//
+		Assertions.assertNull(getValueCell(null, objectIntMap, Pair.with(null, Integer.valueOf(0))));
 		//
 	}
 
-	private static Cell getValueCell(final Row row, final Object objectIntMap, final IValue0<String> columnName)
-			throws Throwable {
+	private static Cell getValueCell(final Row row, final Object objectIntMap,
+			final Pair<String, Integer> valueColumnNameAndIndex) throws Throwable {
 		try {
-			final Object obj = METHOD_GET_VALUE_CELL.invoke(null, row, objectIntMap, columnName);
+			final Object obj = METHOD_GET_VALUE_CELL.invoke(null, row, objectIntMap, valueColumnNameAndIndex);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Cell) {

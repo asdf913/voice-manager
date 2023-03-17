@@ -31,6 +31,7 @@ import org.apache.poi.ss.usermodel.RowUtil;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.javatuples.Pair;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
@@ -65,7 +66,7 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 	private IValue0<String> keyColumnName = null;
 
 	@Note("Value Column Name")
-	private IValue0<String> valueColumnName = null;
+	private Pair<String, Integer> valueColumnNameAndIndex = null;
 
 	public void setResource(final Resource resource) {
 		this.resource = resource;
@@ -79,8 +80,26 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 		this.keyColumnName = Unit.with(keyColumnName);
 	}
 
-	public void setValueColumnName(final String valueColumnName) {
-		this.valueColumnName = Unit.with(valueColumnName);
+	public void setValueColumnName(final String name) {
+		//
+		if ((valueColumnNameAndIndex = ObjectUtils.getIfNull(valueColumnNameAndIndex,
+				() -> Pair.with(name, null))) != null) {
+			//
+			valueColumnNameAndIndex = valueColumnNameAndIndex.setAt0(name);
+			//
+		} // if
+			//
+	}
+
+	public void setValueColumnIndex(final Integer index) {
+		//
+		if ((valueColumnNameAndIndex = ObjectUtils.getIfNull(valueColumnNameAndIndex,
+				() -> Pair.with(null, index))) != null) {
+			//
+			valueColumnNameAndIndex = valueColumnNameAndIndex.setAt1(index);
+			//
+		} // if
+			//
 	}
 
 	@Override
@@ -97,7 +116,8 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 			//
 			try {
 				//
-				iValue0 = ResourceUtil.exists(resource) ? createMap(resource, sheetName, keyColumnName, valueColumnName)
+				iValue0 = ResourceUtil.exists(resource)
+						? createMap(resource, sheetName, keyColumnName, valueColumnNameAndIndex)
 						: null;
 				//
 			} catch (final IOException | SAXException | ParserConfigurationException e) {
@@ -182,7 +202,8 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 	@Nullable
 	private static IValue0<Map<String, String>> createMap(final Resource resource,
 			@Nullable final IValue0<String> sheetName, final IValue0<String> keyColumnName,
-			final IValue0<String> valueColumnName) throws IOException, SAXException, ParserConfigurationException {
+			final Pair<String, Integer> valueColumnNameAndIndex)
+			throws IOException, SAXException, ParserConfigurationException {
 		//
 		final byte[] bs = ResourceUtil.getContentAsByteArray(resource);
 		//
@@ -227,7 +248,7 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 					//
 				} // if
 					//
-				result = createMap(sheet, keyColumnName, valueColumnName);
+				result = createMap(sheet, keyColumnName, valueColumnNameAndIndex);
 				//
 			} // try
 				//
@@ -239,7 +260,7 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 
 	@Nullable
 	private static IValue0<Map<String, String>> createMap(@Nullable final Sheet sheet,
-			final IValue0<String> keyColumnName, final IValue0<String> valueColumnName) {
+			final IValue0<String> keyColumnName, final Pair<String, Integer> valueColumnNameAndIndex) {
 		//
 		if (sheet == null || sheet.iterator() == null) {
 			//
@@ -290,7 +311,7 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 			} // if
 				//
 			testAndAccept((a, b, c) -> and(Objects::nonNull, b, c), IValue0Util.getValue0(result), cellKey,
-					getValueCell(row, objectIntMap, valueColumnName),
+					getValueCell(row, objectIntMap, valueColumnNameAndIndex),
 					(a, b, c) -> put(a, CellUtil.getStringCellValue(b), CellUtil.getStringCellValue(c)));
 			//
 		} // for
@@ -300,15 +321,18 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 	}
 
 	private static Cell getValueCell(final Row row, final ObjectIntMap<String> objectIntMap,
-			final IValue0<String> columnName) {
+			final Pair<String, Integer> valueColumnNameAndIndex) {
 		//
 		Cell cell = null;
 		//
+		final Integer index = valueColumnNameAndIndex != null ? valueColumnNameAndIndex.getValue1() : null;
+		//
 		if ((cell = testAndApply((a, b) -> b != null && ObjectIntMap.containsKey(a, IValue0Util.getValue0(b)),
-				objectIntMap, columnName, (a, b) -> RowUtil.getCell(row, a.get(IValue0Util.getValue0(b))),
-				null)) == null) {
+				objectIntMap, valueColumnNameAndIndex, (a, b) -> RowUtil.getCell(row, a.get(IValue0Util.getValue0(b))),
+				null)) == null && index != null) {
 			//
-			cell = testAndApply(x -> getPhysicalNumberOfCells(row, 0) > 1, row, x -> RowUtil.getCell(row, 1), null);
+			cell = testAndApply(x -> getPhysicalNumberOfCells(row, 0) >= index.intValue(), row,
+					x -> RowUtil.getCell(row, index.intValue()), null);
 			//
 		} // if
 			//

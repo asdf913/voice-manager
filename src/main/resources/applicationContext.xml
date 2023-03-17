@@ -128,6 +128,7 @@
 			value="${org.springframework.beans.factory.EastJapanRailwayKanjiHiraganaMapFactoryBean.keyColumnName}" />
 		<property name="valueColumnName"
 			value="${org.springframework.beans.factory.EastJapanRailwayKanjiHiraganaMapFactoryBean.valueColumnName}" />
+		<property name="valueColumnIndex" value="1" />
 		<property name="resource"
 			value="classpath:EastJapanRailway.xlsx" />
 	</bean>
