@@ -921,6 +921,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Nullable
 	private transient Collection<Map> mapHiragana = null;
 
+	@Nullable
 	private Collection<Map> mapRomaji = null;
 
 	private transient IValue0<String> imageFormat = null;
