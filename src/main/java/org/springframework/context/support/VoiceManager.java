@@ -488,6 +488,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	 */
 	private static final String WMIN_ONLY_FORMAT = "wmin %1$s";
 
+	private static final String ROMAJI_WITH_FIRST_CAPTICALIZED_LETTER = "Romaji";
+
 	private static final Predicate<File> EMPTY_FILE_PREDICATE = f -> f != null && f.exists() && isFile(f)
 			&& longValue(length(f), 0) == 0;
 
@@ -516,7 +518,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("Katakana")
 	private JTextComponent tfKatakana = null;
 
-	@Note("Romaji")
+	@Note(ROMAJI_WITH_FIRST_CAPTICALIZED_LETTER)
 	private JTextComponent tfRomaji = null;
 
 	@Note("Speech Rate")
@@ -3567,7 +3569,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		// Romaji
 		//
-		panel.add(new JLabel("Romaji"));
+		panel.add(new JLabel(ROMAJI_WITH_FIRST_CAPTICALIZED_LETTER));
 		//
 		panel.add(
 				tfRomaji = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
@@ -3890,10 +3892,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel.add(new JLabel("Import Exception"));
 		//
-		panel.add(
-				scp = new JScrollPane(new JTable(
-						tmImportException = new DefaultTableModel(new Object[] { "Text", "Romaji", "Exception" }, 0))),
-				wrap);
+		panel.add(scp = new JScrollPane(new JTable(tmImportException = new DefaultTableModel(
+				new Object[] { "Text", ROMAJI_WITH_FIRST_CAPTICALIZED_LETTER, "Exception" }, 0))), wrap);
 		//
 		if ((d = getPreferredSize(scp)) != null) {
 			//
@@ -6344,8 +6344,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				final JList<?> list = new JList<>(new Object[] { null, IValue0Util.getValue0(iValue0), romaji });
 				//
-				if (!GraphicsEnvironment.isHeadless() && JOptionPane.showConfirmDialog(null, list, "Romaji",
-						JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+				if (!GraphicsEnvironment.isHeadless() && JOptionPane.showConfirmDialog(null, list,
+						ROMAJI_WITH_FIRST_CAPTICALIZED_LETTER, JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 					//
 					setText(tfRomaji, toString(list.getSelectedValue()));
 					//
