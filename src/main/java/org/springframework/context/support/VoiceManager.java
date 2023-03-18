@@ -917,7 +917,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private transient Collection<Multimap> multimapKatakana = null;
 
 	@Nullable
-	private transient Collection<Map> mapHiragana = null;
+	private transient Collection<Map> mapHiragana, mapRomaji = null;
 
 	private transient IValue0<String> imageFormat = null;
 
@@ -1056,6 +1056,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		mapHiragana = toList(map(
 				stream(getBeanDefinitionNamesByClassAndAttributes(configurableListableBeanFactory, Map.class,
 						Collections.singletonMap(VALUE, "hiragana"))),
+				x -> cast(Map.class, getBean(configurableListableBeanFactory, x))));
+		//
+		// Get the "Bean Definition" which class could be assigned as a "java.util.Map"
+		// and the "Bean Definition" has "value" attribute which value
+		// is "hiragana"
+		//
+		mapRomaji = toList(map(
+				stream(getBeanDefinitionNamesByClassAndAttributes(configurableListableBeanFactory, Map.class,
+						Collections.singletonMap(VALUE, "romaji"))),
 				x -> cast(Map.class, getBean(configurableListableBeanFactory, x))));
 		//
 	}
@@ -6324,8 +6333,29 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		if (Objects.equals(source, btnConvertToRomaji)) {
 			//
-			pair = Pair.of(tfRomaji, convert(jakaroma = ObjectUtils.getIfNull(jakaroma, Jakaroma::new),
-					getText(tfTextImport), false, false));
+			final String string = getText(tfTextImport);
+			//
+			final IValue0<?> iValue0 = getIValue0FromMapsByKey(mapRomaji, string);
+			//
+			final String romaji = convert(jakaroma = ObjectUtils.getIfNull(jakaroma, Jakaroma::new), string, false,
+					false);
+			//
+			if (iValue0 != null && StringUtils.isNotBlank(romaji)) {
+				//
+				final JList<?> list = new JList<>(new Object[] { null, IValue0Util.getValue0(iValue0), romaji });
+				//
+				if (!GraphicsEnvironment.isHeadless() && JOptionPane.showConfirmDialog(null, list, "Romaji",
+						JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+					//
+					setText(tfRomaji, toString(list.getSelectedValue()));
+					//
+					return;
+					//
+				} // if
+					//
+			} // if
+				//
+			pair = Pair.of(tfRomaji, romaji);
 			//
 		} else if (Objects.equals(source, btnConvertToKatakana)) {
 			//

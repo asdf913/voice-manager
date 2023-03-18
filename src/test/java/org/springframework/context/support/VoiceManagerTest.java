@@ -7967,10 +7967,30 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testActionPerformedForConversion() {
+	void testActionPerformedForConversion() throws IllegalAccessException {
 		//
 		Assertions.assertThrows(IllegalStateException.class, () -> actionPerformedForConversion(EMPTY));
 		//
+		FieldUtils.writeDeclaredField(instance, "mapRomaji",
+				Collections.singleton(Collections.singletonMap(null, null)), true);
+		//
+		Assertions.assertDoesNotThrow(() -> actionPerformedForConversion(null));
+		//
+		if (GraphicsEnvironment.isHeadless()) {
+			//
+			final String string = "一";
+			//
+			final JTextComponent tfTextImport = new JTextField(string);
+			//
+			FieldUtils.writeDeclaredField(instance, "tfTextImport", tfTextImport, true);
+			//
+			FieldUtils.writeDeclaredField(instance, "mapRomaji",
+					Collections.singleton(Collections.singletonMap(string, null)), true);
+			//
+			Assertions.assertDoesNotThrow(() -> actionPerformedForConversion(null));
+			//
+		} // if
+			//
 	}
 
 	private void actionPerformedForConversion(final Object source) throws Throwable {
