@@ -7976,21 +7976,17 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> actionPerformedForConversion(null));
 		//
-		if (GraphicsEnvironment.isHeadless()) {
-			//
-			final String string = "一";
-			//
-			final JTextComponent tfTextImport = new JTextField(string);
-			//
-			FieldUtils.writeDeclaredField(instance, "tfTextImport", tfTextImport, true);
-			//
-			FieldUtils.writeDeclaredField(instance, "mapRomaji",
-					Collections.singleton(Collections.singletonMap(string, null)), true);
-			//
-			Assertions.assertDoesNotThrow(() -> actionPerformedForConversion(null));
-			//
-		} // if
-			//
+		final String string = "一";
+		//
+		final JTextComponent tfTextImport = new JTextField(string);
+		//
+		FieldUtils.writeDeclaredField(instance, "tfTextImport", tfTextImport, true);
+		//
+		FieldUtils.writeDeclaredField(instance, "mapRomaji",
+				Collections.singleton(Collections.singletonMap(string, null)), true);
+		//
+		Assertions.assertDoesNotThrow(() -> actionPerformedForConversion(null));
+		//
 	}
 
 	private void actionPerformedForConversion(final Object source) throws Throwable {

@@ -278,6 +278,16 @@
 		<!-- -->
 		<property name="imageFormat"
 			value="${org.springframework.context.support.VoiceManager.imageFormat}" />
+		<!-- -->
+		<property name="allowedRomajiCharacters">
+			<bean
+				class="org.springframework.beans.factory.AllowedRomajiCharacterArrayFactoryBean">
+				<property name="url"
+					value="${org.springframework.beans.factory.AllowedRomajiCharacterArrayFactoryBean.url}" />
+				<property name="allowedRomajiCharacters"
+					value="${org.springframework.beans.factory.AllowedRomajiCharacterArrayFactoryBean.allowedRomajiCharacters}" />
+			</bean>
+		</property>
 	</bean>
 
 	<!-- -->

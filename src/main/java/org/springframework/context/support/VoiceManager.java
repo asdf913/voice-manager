@@ -926,6 +926,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private transient IValue0<String> imageFormat = null;
 
+	private char[] allowedRomajiCharacters = null;
+
 	private VoiceManager() {
 	}
 
@@ -1884,6 +1886,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	public void setImageFormat(final String imageFormat) {
 		this.imageFormat = Unit.with(imageFormat);
+	}
+
+	public void setAllowedRomajiCharacters(final char[] allowedRomajiCharacters) {
+		this.allowedRomajiCharacters = allowedRomajiCharacters;
 	}
 
 	@Nullable
@@ -6345,7 +6351,25 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			if (iValue0 != null && StringUtils.isNotBlank(romaji)) {
 				//
-				final JList<?> list = new JList<>(new Object[] { null, IValue0Util.getValue0(iValue0), romaji });
+				final List<Object> objects = new ArrayList<>(Collections.singleton(IValue0Util.getValue0(iValue0)));
+				//
+				if (romaji != null && romaji.chars()
+						.allMatch(i -> (allowedRomajiCharacters == null || allowedRomajiCharacters.length == 0)
+								&& ArrayUtils.contains(allowedRomajiCharacters, (char) i))) {
+					//
+					objects.add(romaji);
+					//
+				} // if
+					//
+				if (IterableUtils.size(objects) == 1) {
+					//
+					setText(tfRomaji, toString(IterableUtils.get(objects, 0)));
+					//
+					return;
+					//
+				} // if
+					//
+				final JList<?> list = new JList<>(toArray(objects));
 				//
 				if (!GraphicsEnvironment.isHeadless() && JOptionPane.showConfirmDialog(null, list,
 						ROMAJI_WITH_FIRST_CAPTICALIZED_LETTER, JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
