@@ -6414,7 +6414,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.chars() : null;
 	}
 
-	private static boolean allMatch(final IntStream instance, final IntPredicate predicate) {
+	private static boolean allMatch(@Nullable final IntStream instance, final IntPredicate predicate) {
 		return instance != null && instance.allMatch(predicate);
 	}
 
