@@ -6377,8 +6377,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			final List<Object> objects = new ArrayList<>(Collections.singleton(IValue0Util.getValue0(iValue0)));
 			//
-			if (romaji != null && romaji.chars()
-					.allMatch(i -> (allowedRomajiCharacters == null || allowedRomajiCharacters.length == 0)
+			final IntStream intStream = chars(romaji);
+			//
+			if (intStream != null
+					&& intStream.allMatch(i -> (allowedRomajiCharacters == null || allowedRomajiCharacters.length == 0)
 							&& ArrayUtils.contains(allowedRomajiCharacters, (char) i))) {
 				//
 				objects.add(romaji);
@@ -6408,6 +6410,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		setText(tfRomaji, romaji);
 		//
+	}
+
+	private static IntStream chars(final CharSequence instance) {
+		return instance != null ? instance.chars() : null;
 	}
 
 	private void actionPerformedForPronunciation(final Object source) {

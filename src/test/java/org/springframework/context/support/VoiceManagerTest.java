@@ -360,7 +360,7 @@ class VoiceManagerTest {
 			METHOD_IS_ALL_ATTRIBUTES_MATCHED, METHOD_CREATE_FUNCTION_FOR_BTN_CONVERT_TO_HIRAGANA, METHOD_WRITER,
 			METHOD_READ_LINE, METHOD_PRINT_LN, METHOD_SET_PITCH_ACCENT_IMAGE, METHOD_GET_NUMERIC_CELL_VALUE,
 			METHOD_SET_AUTO_FILTER, METHOD_CREATE_BYTE_ARRAY, METHOD_DOUBLE_VALUE, METHOD_GET_ELEMENT_AT,
-			METHOD_GET_IMAGE_FORMAT, METHOD_GET_I_VALUE0_FROM_MAPS_BY_KEY = null;
+			METHOD_GET_IMAGE_FORMAT, METHOD_GET_I_VALUE0_FROM_MAPS_BY_KEY, METHOD_CHARS = null;
 
 	@BeforeAll
 	static void beforeAll() throws Throwable {
@@ -1073,6 +1073,8 @@ class VoiceManagerTest {
 		//
 		(METHOD_GET_I_VALUE0_FROM_MAPS_BY_KEY = clz.getDeclaredMethod("getIValue0FromMapsByKey", Iterable.class,
 				Object.class)).setAccessible(true);
+		//
+		(METHOD_CHARS = clz.getDeclaredMethod("chars", CharSequence.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -9892,6 +9894,27 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof IValue0) {
 				return (IValue0) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testChars() throws Throwable {
+		//
+		Assertions.assertNull(chars(null));
+		//
+	}
+
+	private static IntStream chars(final CharSequence instance) throws Throwable {
+		try {
+			final Object obj = METHOD_CHARS.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof IntStream) {
+				return (IntStream) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
