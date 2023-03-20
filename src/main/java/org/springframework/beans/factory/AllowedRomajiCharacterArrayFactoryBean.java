@@ -97,7 +97,7 @@ public class AllowedRomajiCharacterArrayFactoryBean implements FactoryBean<char[
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
-	private static final <T> boolean test(final Predicate<T> instance, final T value) {
+	private static final <T> boolean test(@Nullable final Predicate<T> instance, final T value) {
 		return instance != null && instance.test(value);
 	}
 
