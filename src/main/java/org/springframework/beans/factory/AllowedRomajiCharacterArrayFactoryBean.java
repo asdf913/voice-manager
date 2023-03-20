@@ -86,7 +86,7 @@ public class AllowedRomajiCharacterArrayFactoryBean implements FactoryBean<char[
 		//
 	}
 
-	private static char[] toCharArray(final String instance) {
+	private static char[] toCharArray(@Nullable final String instance) {
 		return instance != null ? instance.toCharArray() : null;
 	}
 
