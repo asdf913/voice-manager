@@ -10,6 +10,9 @@ import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.javatuples.Unit;
+import org.javatuples.valueintf.IValue0;
+import org.javatuples.valueintf.IValue0Util;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -19,13 +22,25 @@ public class AllowedRomajiCharacterArrayFactoryBean implements FactoryBean<char[
 
 	private String url = null;
 
+	private IValue0<char[]> allowedRomajiCharacters = null;
+
 	public void setUrl(final String url) {
 		this.url = url;
+	}
+
+	public void setAllowedRomajiCharacters(final char[] allowedRomajiCharacters) {
+		this.allowedRomajiCharacters = Unit.with(allowedRomajiCharacters);
 	}
 
 	@Override
 	public char[] getObject() throws Exception {
 		//
+		if (allowedRomajiCharacters != null) {
+			//
+			return IValue0Util.getValue0(allowedRomajiCharacters);
+			//
+		} // if
+			//
 		final Document document = testAndApply(Objects::nonNull, testAndApply(Objects::nonNull, url, URL::new, null),
 				x -> Jsoup.parse(x, 0), null);
 		//

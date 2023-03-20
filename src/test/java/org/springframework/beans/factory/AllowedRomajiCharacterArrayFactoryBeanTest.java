@@ -20,6 +20,14 @@ class AllowedRomajiCharacterArrayFactoryBeanTest {
 		//
 		Assertions.assertNull(instance != null ? instance.getObject() : null);
 		//
+		if (instance != null) {
+			//
+			instance.setAllowedRomajiCharacters(null);
+			//
+		} // if
+			//
+		Assertions.assertNull(instance != null ? instance.getObject() : null);
+		//
 	}
 
 	@Test
