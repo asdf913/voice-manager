@@ -82,6 +82,7 @@ import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntConsumer;
+import java.util.function.IntPredicate;
 import java.util.function.IntUnaryOperator;
 import java.util.function.LongBinaryOperator;
 import java.util.function.Predicate;
@@ -360,7 +361,7 @@ class VoiceManagerTest {
 			METHOD_IS_ALL_ATTRIBUTES_MATCHED, METHOD_CREATE_FUNCTION_FOR_BTN_CONVERT_TO_HIRAGANA, METHOD_WRITER,
 			METHOD_READ_LINE, METHOD_PRINT_LN, METHOD_SET_PITCH_ACCENT_IMAGE, METHOD_GET_NUMERIC_CELL_VALUE,
 			METHOD_SET_AUTO_FILTER, METHOD_CREATE_BYTE_ARRAY, METHOD_DOUBLE_VALUE, METHOD_GET_ELEMENT_AT,
-			METHOD_GET_IMAGE_FORMAT, METHOD_GET_I_VALUE0_FROM_MAPS_BY_KEY, METHOD_CHARS = null;
+			METHOD_GET_IMAGE_FORMAT, METHOD_GET_I_VALUE0_FROM_MAPS_BY_KEY, METHOD_CHARS, METHOD_ALL_MATCH = null;
 
 	@BeforeAll
 	static void beforeAll() throws Throwable {
@@ -1075,6 +1076,8 @@ class VoiceManagerTest {
 				Object.class)).setAccessible(true);
 		//
 		(METHOD_CHARS = clz.getDeclaredMethod("chars", CharSequence.class)).setAccessible(true);
+		//
+		(METHOD_ALL_MATCH = clz.getDeclaredMethod("allMatch", IntStream.class, IntPredicate.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -9915,6 +9918,27 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof IntStream) {
 				return (IntStream) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testAllMatch() throws Throwable {
+		//
+		Assertions.assertFalse(allMatch(null, null));
+		//
+		Assertions.assertTrue(allMatch(IntStream.of(0), x -> true));
+		//
+	}
+
+	private static boolean allMatch(final IntStream instance, final IntPredicate predicate) throws Throwable {
+		try {
+			final Object obj = METHOD_ALL_MATCH.invoke(null, instance, predicate);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

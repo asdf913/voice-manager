@@ -106,6 +106,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntConsumer;
 import java.util.function.IntFunction;
+import java.util.function.IntPredicate;
 import java.util.function.IntUnaryOperator;
 import java.util.function.LongBinaryOperator;
 import java.util.function.Predicate;
@@ -6377,11 +6378,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			final List<Object> objects = new ArrayList<>(Collections.singleton(IValue0Util.getValue0(iValue0)));
 			//
-			final IntStream intStream = chars(romaji);
-			//
-			if (intStream != null
-					&& intStream.allMatch(i -> (allowedRomajiCharacters == null || allowedRomajiCharacters.length == 0)
-							&& ArrayUtils.contains(allowedRomajiCharacters, (char) i))) {
+			if (allMatch(chars(romaji), i -> (allowedRomajiCharacters == null || allowedRomajiCharacters.length == 0)
+					&& ArrayUtils.contains(allowedRomajiCharacters, (char) i))) {
 				//
 				objects.add(romaji);
 				//
@@ -6414,6 +6412,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static IntStream chars(@Nullable final CharSequence instance) {
 		return instance != null ? instance.chars() : null;
+	}
+
+	private static boolean allMatch(final IntStream instance, final IntPredicate predicate) {
+		return instance != null && instance.allMatch(predicate);
 	}
 
 	private void actionPerformedForPronunciation(final Object source) {
