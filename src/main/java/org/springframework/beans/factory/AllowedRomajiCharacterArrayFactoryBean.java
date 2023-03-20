@@ -66,13 +66,13 @@ public class AllowedRomajiCharacterArrayFactoryBean implements FactoryBean<char[
 				//
 				for (final Element c : element.children()) {
 					//
-					if (c == null || (sb = ObjectUtils.getIfNull(sb, StringBuilder::new)) == null) {
+					if ((sb = ObjectUtils.getIfNull(sb, StringBuilder::new)) == null) {
 						//
 						continue;
 						//
 					} // if
 						//
-					sb.append(c.text());
+					sb.append(ElementUtil.text(c));
 					//
 				} // for
 					//
