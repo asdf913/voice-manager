@@ -6410,6 +6410,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
+	@Nullable
 	private static IntStream chars(@Nullable final CharSequence instance) {
 		return instance != null ? instance.chars() : null;
 	}
