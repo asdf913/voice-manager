@@ -43,12 +43,10 @@ public class AllowedRomajiCharacterArrayFactoryBean implements FactoryBean<char[
 			//
 		} // if
 			//
-		final Document document = testAndApply(Objects::nonNull, testAndApply(Objects::nonNull, url, URL::new, null),
-				x -> Jsoup.parse(x, 0), null);
-		//
-		final List<Element> elements = ElementUtil.select(document, ".mw-selflink.selflink");
-		//
-		Element element = CollectionUtils.isNotEmpty(elements) ? IterableUtils.get(elements, 0) : null;
+		Element element = testAndApply(CollectionUtils::isNotEmpty,
+				ElementUtil.select(testAndApply(Objects::nonNull, testAndApply(Objects::nonNull, url, URL::new, null),
+						x -> Jsoup.parse(x, 0), null), ".mw-selflink.selflink"),
+				x -> IterableUtils.get(x, 0), null);
 		//
 		while (element != null && (element.nextElementSibling()) == null) {
 			//
