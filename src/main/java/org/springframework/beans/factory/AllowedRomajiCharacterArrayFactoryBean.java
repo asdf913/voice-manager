@@ -1,7 +1,6 @@
 package org.springframework.beans.factory;
 
 import java.net.URL;
-import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 
@@ -16,7 +15,6 @@ import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
 
