@@ -6342,47 +6342,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		if (Objects.equals(source, btnConvertToRomaji)) {
 			//
-			final String string = getText(tfTextImport);
+			actionPerformedForBtnConvertToRomaji();
 			//
-			final IValue0<?> iValue0 = getIValue0FromMapsByKey(mapRomaji, string);
-			//
-			final String romaji = convert(jakaroma = ObjectUtils.getIfNull(jakaroma, Jakaroma::new), string, false,
-					false);
-			//
-			if (iValue0 != null && StringUtils.isNotBlank(romaji)) {
-				//
-				final List<Object> objects = new ArrayList<>(Collections.singleton(IValue0Util.getValue0(iValue0)));
-				//
-				if (romaji != null && romaji.chars()
-						.allMatch(i -> (allowedRomajiCharacters == null || allowedRomajiCharacters.length == 0)
-								&& ArrayUtils.contains(allowedRomajiCharacters, (char) i))) {
-					//
-					objects.add(romaji);
-					//
-				} // if
-					//
-				if (IterableUtils.size(objects) == 1) {
-					//
-					setText(tfRomaji, toString(IterableUtils.get(objects, 0)));
-					//
-					return;
-					//
-				} // if
-					//
-				final JList<?> list = new JList<>(toArray(objects));
-				//
-				if (!GraphicsEnvironment.isHeadless() && JOptionPane.showConfirmDialog(null, list,
-						ROMAJI_WITH_FIRST_CAPTICALIZED_LETTER, JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-					//
-					setText(tfRomaji, toString(list.getSelectedValue()));
-					//
-					return;
-					//
-				} // if
-					//
-			} // if
-				//
-			pair = Pair.of(tfRomaji, romaji);
+			return;
 			//
 		} else if (Objects.equals(source, btnConvertToKatakana)) {
 			//
@@ -6400,6 +6362,51 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		} // if
 			//
 		throw new IllegalStateException();
+		//
+	}
+
+	private void actionPerformedForBtnConvertToRomaji() {
+		//
+		final String string = getText(tfTextImport);
+		//
+		final IValue0<?> iValue0 = getIValue0FromMapsByKey(mapRomaji, string);
+		//
+		final String romaji = convert(jakaroma = ObjectUtils.getIfNull(jakaroma, Jakaroma::new), string, false, false);
+		//
+		if (iValue0 != null && StringUtils.isNotBlank(romaji)) {
+			//
+			final List<Object> objects = new ArrayList<>(Collections.singleton(IValue0Util.getValue0(iValue0)));
+			//
+			if (romaji != null && romaji.chars()
+					.allMatch(i -> (allowedRomajiCharacters == null || allowedRomajiCharacters.length == 0)
+							&& ArrayUtils.contains(allowedRomajiCharacters, (char) i))) {
+				//
+				objects.add(romaji);
+				//
+			} // if
+				//
+			if (IterableUtils.size(objects) == 1) {
+				//
+				setText(tfRomaji, toString(IterableUtils.get(objects, 0)));
+				//
+				return;
+				//
+			} // if
+				//
+			final JList<?> list = new JList<>(toArray(objects));
+			//
+			if (!GraphicsEnvironment.isHeadless() && JOptionPane.showConfirmDialog(null, list,
+					ROMAJI_WITH_FIRST_CAPTICALIZED_LETTER, JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+				//
+				setText(tfRomaji, toString(list.getSelectedValue()));
+				//
+				return;
+				//
+			} // if
+				//
+		} // if
+			//
+		setText(tfRomaji, romaji);
 		//
 	}
 
