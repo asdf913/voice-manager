@@ -10,15 +10,20 @@ import org.junit.jupiter.api.Test;
 
 class AllowedRomajiCharacterArrayFactoryBeanTest {
 
-	private static Method METHOD_TO_CHAR_ARRAY = null;
+	private static final String EMPTY = "";
+
+	private static Method METHOD_TO_CHAR_ARRAY, METHOD_TO_STRING = null;
 
 	private AllowedRomajiCharacterArrayFactoryBean instance = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
 		//
-		(METHOD_TO_CHAR_ARRAY = AllowedRomajiCharacterArrayFactoryBean.class.getDeclaredMethod("toCharArray",
-				String.class)).setAccessible(true);
+		final Class<?> clz = AllowedRomajiCharacterArrayFactoryBean.class;
+		//
+		(METHOD_TO_CHAR_ARRAY = clz.getDeclaredMethod("toCharArray", String.class)).setAccessible(true);
+		//
+		(METHOD_TO_STRING = clz.getDeclaredMethod("toString", Object.class)).setAccessible(true);
 		//
 	}
 
@@ -54,7 +59,7 @@ class AllowedRomajiCharacterArrayFactoryBeanTest {
 	@Test
 	void testToCharArray() throws Throwable {
 		//
-		Assertions.assertArrayEquals(new char[] {}, toCharArray(""));
+		Assertions.assertArrayEquals(new char[] {}, toCharArray(EMPTY));
 		//
 	}
 
@@ -71,4 +76,26 @@ class AllowedRomajiCharacterArrayFactoryBeanTest {
 			throw e.getTargetException();
 		}
 	}
+
+	@Test
+	void testToString() throws Throwable {
+		//
+		Assertions.assertSame(EMPTY, toString(EMPTY));
+		//
+	}
+
+	private static String toString(final Object instance) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_STRING.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
 }
