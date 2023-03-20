@@ -1,12 +1,26 @@
 package org.springframework.beans.factory;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class AllowedRomajiCharacterArrayFactoryBeanTest {
 
+	private static Method METHOD_TO_CHAR_ARRAY = null;
+
 	private AllowedRomajiCharacterArrayFactoryBean instance = null;
+
+	@BeforeAll
+	static void beforeAll() throws NoSuchMethodException {
+		//
+		(METHOD_TO_CHAR_ARRAY = AllowedRomajiCharacterArrayFactoryBean.class.getDeclaredMethod("toCharArray",
+				String.class)).setAccessible(true);
+		//
+	}
 
 	@BeforeEach
 	void beforeEach() {
@@ -37,4 +51,24 @@ class AllowedRomajiCharacterArrayFactoryBeanTest {
 		//
 	}
 
+	@Test
+	void testToCharArray() throws Throwable {
+		//
+		Assertions.assertArrayEquals(new char[] {}, toCharArray(""));
+		//
+	}
+
+	private static char[] toCharArray(final String instance) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_CHAR_ARRAY.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof char[]) {
+				return (char[]) obj;
+			}
+			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
 }
