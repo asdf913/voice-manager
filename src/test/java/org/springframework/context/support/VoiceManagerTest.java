@@ -9886,7 +9886,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertThrows(IllegalStateException.class, () -> getIValue0FromMapsByKey(iterable, null));
+		Assertions.assertDoesNotThrow(() -> getIValue0FromMapsByKey(iterable, null));
 		//
 	}
 

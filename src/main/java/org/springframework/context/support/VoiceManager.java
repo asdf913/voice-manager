@@ -6193,15 +6193,19 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		IValue0<?> iValue0 = null;
 		//
+		Object value = null;
+		//
 		for (final Map map : maps) {
 			//
 			if (containsKey(map, key)) {
 				//
+				value = get(map, key);
+				//
 				if (iValue0 == null) {
 					//
-					iValue0 = Unit.with(get(map, key));
+					iValue0 = Unit.with(value);
 					//
-				} else {
+				} else if (!Objects.equals(IValue0Util.getValue0(iValue0), value)) {
 					//
 					throw new IllegalStateException();
 					//
