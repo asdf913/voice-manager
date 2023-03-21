@@ -158,6 +158,18 @@
 		<property name="resource"
 			value="classpath:EastJapanRailway.xlsx" />
 	</bean>
+	
+	<bean
+		class="org.springframework.beans.factory.StringMapFromResourceFactoryBean">
+		<meta key="value" value="romaji" />
+		<property name="keyColumnName"
+			value="${org.springframework.beans.factory.StringMapFromResourceFactoryBean.keyColumnName}" />
+		<property name="valueColumnName"
+			value="${org.springframework.beans.factory.StringMapFromResourceFactoryBean.valueColumnName}" />
+		<property name="valueColumnIndex" value="2" />
+		<property name="resource"
+			value="classpath:CentralJapanRailway.xlsx" />
+	</bean>
 
 	<!-- -->
 	<bean id="JlptLevelPageUrl" class="java.lang.String">
