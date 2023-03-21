@@ -6378,12 +6378,26 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final String romaji = convert(jakaroma = ObjectUtils.getIfNull(jakaroma, Jakaroma::new), string, false, false);
 		//
-		if (iValue0 != null && StringUtils.isNotBlank(romaji)) {
+		if (iValue0 != null && StringUtils.isNotEmpty(toString(IValue0Util.getValue0(iValue0)))
+				&& StringUtils.isNotBlank(romaji)) {
 			//
 			final List<Object> objects = new ArrayList<>(Collections.singleton(IValue0Util.getValue0(iValue0)));
 			//
-			if (allMatch(chars(romaji), i -> (allowedRomajiCharacters == null || allowedRomajiCharacters.length == 0)
-					&& ArrayUtils.contains(allowedRomajiCharacters, (char) i))) {
+			final char[] cs = toCharArray(romaji);
+			//
+			boolean allCharacterAllowed = true;
+			//
+			for (int i = 0; cs != null && allowedRomajiCharacters != null && i < cs.length; i++) {
+				//
+				if (!(allCharacterAllowed = ArrayUtils.contains(allowedRomajiCharacters, cs[i]))) {
+					//
+					break;
+					//
+				} // if
+					//
+			} // for
+				//
+			if (allCharacterAllowed && !contains(objects, romaji)) {
 				//
 				objects.add(romaji);
 				//
@@ -6412,15 +6426,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		setText(tfRomaji, romaji);
 		//
-	}
-
-	@Nullable
-	private static IntStream chars(@Nullable final CharSequence instance) {
-		return instance != null ? instance.chars() : null;
-	}
-
-	private static boolean allMatch(@Nullable final IntStream instance, final IntPredicate predicate) {
-		return instance != null && instance.allMatch(predicate);
 	}
 
 	private void actionPerformedForPronunciation(final Object source) {
