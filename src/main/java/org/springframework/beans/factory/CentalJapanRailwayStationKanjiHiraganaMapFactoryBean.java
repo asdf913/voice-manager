@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Predicate;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
@@ -62,11 +64,11 @@ public class CentalJapanRailwayStationKanjiHiraganaMapFactoryBean implements Fac
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
-	private static InputStream openStream(final URL instance) throws IOException {
+	private static InputStream openStream(@Nullable final URL instance) throws IOException {
 		return instance != null ? instance.openStream() : null;
 	}
 
-	private static String toString(final Object instance) {
+	private static String toString(@Nullable final Object instance) {
 		return instance != null ? instance.toString() : null;
 	}
 
