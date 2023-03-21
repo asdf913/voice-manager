@@ -13,14 +13,14 @@ import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.core.JsonParseException;
 
-class CentalJapanRailwayStationKanjiHiraganaMapFactoryBeanTest {
+class CentralJapanRailwayStationKanjiHiraganaMapFactoryBeanTest {
 
 	private static Method METHOD_TO_STRING, METHOD_GET, METHOD_CAST = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
 		//
-		final Class<?> clz = CentalJapanRailwayStationKanjiHiraganaMapFactoryBean.class;
+		final Class<?> clz = CentralJapanRailwayStationKanjiHiraganaMapFactoryBean.class;
 		//
 		(METHOD_TO_STRING = clz.getDeclaredMethod("toString", Object.class)).setAccessible(true);
 		//
@@ -30,12 +30,12 @@ class CentalJapanRailwayStationKanjiHiraganaMapFactoryBeanTest {
 		//
 	}
 
-	private CentalJapanRailwayStationKanjiHiraganaMapFactoryBean instance = null;
+	private CentralJapanRailwayStationKanjiHiraganaMapFactoryBean instance = null;
 
 	@BeforeEach
 	void beforeEach() {
 		//
-		instance = new CentalJapanRailwayStationKanjiHiraganaMapFactoryBean();
+		instance = new CentralJapanRailwayStationKanjiHiraganaMapFactoryBean();
 		//
 	}
 
