@@ -58,14 +58,17 @@ public class ToykoMetroKanjiHiraganaMapFactoryBean implements FactoryBean<Map<St
 		//
 	}
 
+	@Nullable
 	private static String text(final TextNode instance) throws IllegalAccessException {
 		return instance != null && FieldUtils.readField(instance, "value", true) != null ? instance.text() : null;
 	}
 
+	@Nullable
 	private static String text(final Element instance) throws IllegalAccessException {
 		return instance != null && FieldUtils.readField(instance, "childNodes", true) != null ? instance.text() : null;
 	}
 
+	@Nullable
 	private static <T> T cast(final Class<T> clz, final Object value) {
 		return clz != null && clz.isInstance(value) ? clz.cast(value) : null;
 	}
