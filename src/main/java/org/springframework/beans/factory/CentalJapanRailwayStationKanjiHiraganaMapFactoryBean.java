@@ -32,9 +32,9 @@ public class CentalJapanRailwayStationKanjiHiraganaMapFactoryBean implements Fac
 		Object object = ObjectMapperUtil.readValue(new ObjectMapper(),
 				openStream(testAndApply(StringUtils::isNotBlank, url, URL::new, null)), Object.class);
 		//
-		final Map<?, ?> temp = object instanceof Map<?, ?> m ? m : null;
-		//
-		final List<?> list = (object = temp != null ? temp.get("station") : null) instanceof List<?> l ? l : null;
+		final List<?> list = (object = get(object instanceof Map<?, ?> m ? m : null, "station")) instanceof List<?> l
+				? l
+				: null;
 		//
 		Map<String, String> map = null;
 		//
@@ -55,6 +55,10 @@ public class CentalJapanRailwayStationKanjiHiraganaMapFactoryBean implements Fac
 			//
 		return map;
 		//
+	}
+
+	private static <V> V get(final Map<?, V> instance, final Object key) {
+		return instance != null ? instance.get(key) : null;
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
