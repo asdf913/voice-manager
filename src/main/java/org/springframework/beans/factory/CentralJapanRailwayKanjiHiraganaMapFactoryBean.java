@@ -65,7 +65,7 @@ public class CentralJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFro
 		//
 	}
 
-	private static <T> T cast(final Class<T> clz, final Object instance) {
+	private static <T> T cast(@Nullable final Class<T> clz, final Object instance) {
 		return clz != null && clz.isInstance(instance) ? clz.cast(instance) : null;
 	}
 
