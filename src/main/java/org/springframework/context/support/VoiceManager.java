@@ -6382,21 +6382,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			final List<Object> objects = new ArrayList<>(Collections.singleton(IValue0Util.getValue0(iValue0)));
 			//
-			final char[] cs = toCharArray(romaji);
-			//
-			boolean allCharacterAllowed = true;
-			//
-			for (int i = 0; cs != null && allowedRomajiCharacters != null && i < cs.length; i++) {
-				//
-				if (!(allCharacterAllowed = ArrayUtils.contains(allowedRomajiCharacters, cs[i]))) {
-					//
-					break;
-					//
-				} // if
-					//
-			} // for
-				//
-			if (allCharacterAllowed && !contains(objects, romaji)) {
+			if (isAllCharactersAllowed(romaji, allowedRomajiCharacters) && !contains(objects, romaji)) {
 				//
 				objects.add(romaji);
 				//
@@ -6424,6 +6410,24 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		} // if
 			//
 		setText(tfRomaji, romaji);
+		//
+	}
+
+	private static boolean isAllCharactersAllowed(final CharSequence cs, final char[] allowedChars) {
+		//
+		boolean allCharacterAllowed = true;
+		//
+		for (int i = 0; cs != null && allowedChars != null && allowedChars.length > 0 && i < cs.length(); i++) {
+			//
+			if (!(allCharacterAllowed = ArrayUtils.contains(allowedChars, cs.charAt(i)))) {
+				//
+				break;
+				//
+			} // if
+				//
+		} // for
+			//
+		return allCharacterAllowed;
 		//
 	}
 

@@ -1,5 +1,7 @@
 package org.springframework.context.support;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
@@ -360,7 +362,7 @@ class VoiceManagerTest {
 			METHOD_IS_ALL_ATTRIBUTES_MATCHED, METHOD_CREATE_FUNCTION_FOR_BTN_CONVERT_TO_HIRAGANA, METHOD_WRITER,
 			METHOD_READ_LINE, METHOD_PRINT_LN, METHOD_SET_PITCH_ACCENT_IMAGE, METHOD_GET_NUMERIC_CELL_VALUE,
 			METHOD_SET_AUTO_FILTER, METHOD_CREATE_BYTE_ARRAY, METHOD_DOUBLE_VALUE, METHOD_GET_ELEMENT_AT,
-			METHOD_GET_IMAGE_FORMAT, METHOD_GET_I_VALUE0_FROM_MAPS_BY_KEY = null;
+			METHOD_GET_IMAGE_FORMAT, METHOD_GET_I_VALUE0_FROM_MAPS_BY_KEY, METHOD_IS_ALL_CHARACTERS_ALLOWED = null;
 
 	@BeforeAll
 	static void beforeAll() throws Throwable {
@@ -1073,6 +1075,9 @@ class VoiceManagerTest {
 		//
 		(METHOD_GET_I_VALUE0_FROM_MAPS_BY_KEY = clz.getDeclaredMethod("getIValue0FromMapsByKey", Iterable.class,
 				Object.class)).setAccessible(true);
+		//
+		(METHOD_IS_ALL_CHARACTERS_ALLOWED = clz.getDeclaredMethod("isAllCharactersAllowed", CharSequence.class,
+				char[].class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -9892,6 +9897,35 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof IValue0) {
 				return (IValue0) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testIsAllCharactersAllowed() throws Throwable {
+		//
+		Assertions.assertTrue(isAllCharactersAllowed(null, null));
+		//
+		Assertions.assertTrue(isAllCharactersAllowed(EMPTY, null));
+		//
+		Assertions.assertTrue(isAllCharactersAllowed(EMPTY, new char[] {}));
+		//
+		final String string = StringUtils.repeat(' ', 1);
+		//
+		Assertions.assertTrue(isAllCharactersAllowed(string, new char[] { ' ' }));
+		//
+		Assertions.assertFalse(isAllCharactersAllowed(string, new char[] { 'A' }));
+		//
+	}
+
+	private static boolean isAllCharactersAllowed(final CharSequence cs, final char[] allowedChars) throws Throwable {
+		try {
+			final Object obj = METHOD_IS_ALL_CHARACTERS_ALLOWED.invoke(null, cs, allowedChars);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
