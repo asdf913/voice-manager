@@ -14,11 +14,13 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.javatuples.valueintf.IValue0;
+import org.javatuples.valueintf.IValue0Util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
 
-public class CentralJapanRailwayStationKanjiHiraganaMapFactoryBean implements FactoryBean<Map<String, String>> {
+public class CentralJapanRailwayStationKanjiHiraganaMapFactoryBean extends StringMapFromResourceFactoryBean {
 
 	private String url = null;
 
@@ -29,6 +31,14 @@ public class CentralJapanRailwayStationKanjiHiraganaMapFactoryBean implements Fa
 	@Override
 	public Map<String, String> getObject() throws Exception {
 		//
+		final IValue0<Map<String, String>> iValue0 = getIvalue0();
+		//
+		if (iValue0 != null) {
+			//
+			return IValue0Util.getValue0(iValue0);
+			//
+		} // if
+			//
 		final List<?> list = cast(List.class,
 				get(ObjectMapperUtil.readValue(new ObjectMapper(),
 						openStream(testAndApply(StringUtils::isNotBlank, url, URL::new, null)),
@@ -78,11 +88,6 @@ public class CentralJapanRailwayStationKanjiHiraganaMapFactoryBean implements Fa
 	@Nullable
 	private static String toString(@Nullable final Object instance) {
 		return instance != null ? instance.toString() : null;
-	}
-
-	@Override
-	public Class<?> getObjectType() {
-		return Map.class;
 	}
 
 }
