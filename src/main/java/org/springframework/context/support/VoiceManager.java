@@ -6413,7 +6413,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static boolean isAllCharactersAllowed(final CharSequence cs, final char[] allowedChars) {
+	private static boolean isAllCharactersAllowed(@Nullable final CharSequence cs,
+			@Nullable final char[] allowedChars) {
 		//
 		boolean allCharacterAllowed = true;
 		//
