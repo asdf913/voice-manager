@@ -20,7 +20,7 @@ import org.javatuples.valueintf.IValue0Util;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
 
-public class CentralJapanRailwayStationKanjiHiraganaMapFactoryBean extends StringMapFromResourceFactoryBean {
+public class CentralJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFromResourceFactoryBean {
 
 	private String url = null;
 
