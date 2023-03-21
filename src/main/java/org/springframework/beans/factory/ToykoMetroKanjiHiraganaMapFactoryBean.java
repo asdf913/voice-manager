@@ -59,21 +59,21 @@ public class ToykoMetroKanjiHiraganaMapFactoryBean implements FactoryBean<Map<St
 	}
 
 	@Nullable
-	private static String text(final TextNode instance) throws IllegalAccessException {
+	private static String text(@Nullable final TextNode instance) throws IllegalAccessException {
 		return instance != null && FieldUtils.readField(instance, "value", true) != null ? instance.text() : null;
 	}
 
 	@Nullable
-	private static String text(final Element instance) throws IllegalAccessException {
+	private static String text(@Nullable final Element instance) throws IllegalAccessException {
 		return instance != null && FieldUtils.readField(instance, "childNodes", true) != null ? instance.text() : null;
 	}
 
 	@Nullable
-	private static <T> T cast(final Class<T> clz, final Object value) {
+	private static <T> T cast(@Nullable final Class<T> clz, final Object value) {
 		return clz != null && clz.isInstance(value) ? clz.cast(value) : null;
 	}
 
-	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+	private static <T, R, E extends Throwable> R testAndApply(@Nullable final Predicate<T> predicate, final T value,
 			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
 			throws E {
 		return predicate != null && predicate.test(value) ? FailableFunctionUtil.apply(functionTrue, value)
