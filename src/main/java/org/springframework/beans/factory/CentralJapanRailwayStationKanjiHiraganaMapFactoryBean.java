@@ -18,7 +18,7 @@ import org.apache.commons.lang3.function.FailableFunctionUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
 
-public class CentralJapanRailwayStationKanjiHiraganaMapFactoryBean extends StringMapFromResourceFactoryBean {
+public class CentralJapanRailwayStationKanjiHiraganaMapFactoryBean implements FactoryBean<Map<String, String>> {
 
 	private String url = null;
 
@@ -78,6 +78,11 @@ public class CentralJapanRailwayStationKanjiHiraganaMapFactoryBean extends Strin
 	@Nullable
 	private static String toString(@Nullable final Object instance) {
 		return instance != null ? instance.toString() : null;
+	}
+
+	@Override
+	public Class<?> getObjectType() {
+		return Map.class;
 	}
 
 }
