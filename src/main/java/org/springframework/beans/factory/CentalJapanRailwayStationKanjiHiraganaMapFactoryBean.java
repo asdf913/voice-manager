@@ -29,9 +29,10 @@ public class CentalJapanRailwayStationKanjiHiraganaMapFactoryBean implements Fac
 	@Override
 	public Map<String, String> getObject() throws Exception {
 		//
-		final List<?> list = (get(ObjectMapperUtil.readValue(new ObjectMapper(),
-				openStream(testAndApply(StringUtils::isNotBlank, url, URL::new, null)),
-				Object.class) instanceof Map<?, ?> m ? m : null, "station")) instanceof List<?> l ? l : null;
+		final List<?> list = cast(List.class,
+				get(ObjectMapperUtil.readValue(new ObjectMapper(),
+						openStream(testAndApply(StringUtils::isNotBlank, url, URL::new, null)),
+						Object.class) instanceof Map<?, ?> m ? m : null, "station"));
 		//
 		Map<String, String> map = null;
 		//
@@ -52,6 +53,10 @@ public class CentalJapanRailwayStationKanjiHiraganaMapFactoryBean implements Fac
 			//
 		return map;
 		//
+	}
+
+	private static <T> T cast(final Class<T> clz, final Object instance) {
+		return clz != null && clz.isInstance(instance) ? clz.cast(instance) : null;
 	}
 
 	private static <V> V get(@Nullable final Map<?, V> instance, final Object key) {

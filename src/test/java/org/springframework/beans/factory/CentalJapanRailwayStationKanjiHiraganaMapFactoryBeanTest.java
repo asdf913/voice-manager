@@ -15,7 +15,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 
 class CentalJapanRailwayStationKanjiHiraganaMapFactoryBeanTest {
 
-	private static Method METHOD_TO_STRING, METHOD_GET = null;
+	private static Method METHOD_TO_STRING, METHOD_GET, METHOD_CAST = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -25,6 +25,8 @@ class CentalJapanRailwayStationKanjiHiraganaMapFactoryBeanTest {
 		(METHOD_TO_STRING = clz.getDeclaredMethod("toString", Object.class)).setAccessible(true);
 		//
 		(METHOD_GET = clz.getDeclaredMethod("get", Map.class, Object.class)).setAccessible(true);
+		//
+		(METHOD_CAST = clz.getDeclaredMethod("cast", Class.class, Object.class)).setAccessible(true);
 		//
 	}
 
@@ -115,4 +117,22 @@ class CentalJapanRailwayStationKanjiHiraganaMapFactoryBeanTest {
 		}
 	}
 
+	@Test
+	void testCast() throws Throwable {
+		//
+		Assertions.assertNull(cast(null, null));
+		//
+		final Object object = new Object();
+		//
+		Assertions.assertSame(object, cast(Object.class, object));
+		//
+	}
+
+	private static <T> T cast(final Class<T> clz, final Object instance) throws Throwable {
+		try {
+			return (T) METHOD_CAST.invoke(null, clz, instance);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
 }
