@@ -133,6 +133,19 @@
 			value="classpath:EastJapanRailway.xlsx" />
 	</bean>
 
+	<!-- -->
+	<bean
+		class="org.springframework.beans.factory.CentralJapanRailwayKanjiHiraganaMapFactoryBean">
+		<meta key="value" value="hiragana" />
+		<property name="keyColumnName"
+			value="${org.springframework.beans.factory.CentralJapanRailwayKanjiHiraganaMapFactoryBean.keyColumnName}" />
+		<property name="valueColumnName"
+			value="${org.springframework.beans.factory.CentralJapanRailwayKanjiHiraganaMapFactoryBean.valueColumnName}" />
+		<property name="valueColumnIndex" value="1" />
+		<property name="resource"
+			value="classpath:CentralJapanRailway.xlsx" />
+	</bean>
+
 	<!-- romaji -->
 	<bean
 		class="org.springframework.beans.factory.StringMapFromResourceFactoryBean">
