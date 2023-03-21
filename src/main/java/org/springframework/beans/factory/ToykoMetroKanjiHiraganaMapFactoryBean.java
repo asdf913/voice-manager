@@ -73,6 +73,7 @@ public class ToykoMetroKanjiHiraganaMapFactoryBean implements FactoryBean<Map<St
 		return clz != null && clz.isInstance(value) ? clz.cast(value) : null;
 	}
 
+	@Nullable
 	private static <T, R, E extends Throwable> R testAndApply(@Nullable final Predicate<T> predicate, final T value,
 			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
 			throws E {
