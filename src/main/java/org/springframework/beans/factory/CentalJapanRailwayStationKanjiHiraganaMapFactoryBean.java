@@ -29,12 +29,9 @@ public class CentalJapanRailwayStationKanjiHiraganaMapFactoryBean implements Fac
 	@Override
 	public Map<String, String> getObject() throws Exception {
 		//
-		Object object = ObjectMapperUtil.readValue(new ObjectMapper(),
-				openStream(testAndApply(StringUtils::isNotBlank, url, URL::new, null)), Object.class);
-		//
-		final List<?> list = (object = get(object instanceof Map<?, ?> m ? m : null, "station")) instanceof List<?> l
-				? l
-				: null;
+		final List<?> list = (get(ObjectMapperUtil.readValue(new ObjectMapper(),
+				openStream(testAndApply(StringUtils::isNotBlank, url, URL::new, null)),
+				Object.class) instanceof Map<?, ?> m ? m : null, "station")) instanceof List<?> l ? l : null;
 		//
 		Map<String, String> map = null;
 		//
