@@ -154,6 +154,12 @@
 		<meta key="value" value="hiragana" />
 		<property name="url"
 			value="${org.springframework.beans.factory.ToykoMetroKanjiHiraganaMapFactoryBean.url}" />
+		<property name="keyColumnName"
+			value="${org.springframework.beans.factory.ToykoMetroKanjiHiraganaMapFactoryBean.keyColumnName}" />
+		<property name="valueColumnName"
+			value="${org.springframework.beans.factory.ToykoMetroKanjiHiraganaMapFactoryBean.valueColumnName}" />
+		<property name="valueColumnIndex" value="1" />
+		<property name="resource" value="classpath:TokyoMetro.xlsx" />
 	</bean>
 
 	<!-- romaji -->
