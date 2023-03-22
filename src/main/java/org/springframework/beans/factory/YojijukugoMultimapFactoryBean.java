@@ -231,8 +231,8 @@ public class YojijukugoMultimapFactoryBean implements FactoryBean<Multimap<Strin
 						&& (pattern = ObjectUtils.getIfNull(pattern, () -> Pattern.compile("[ぁ-ん]+"))) != null
 						&& (matcher = pattern.matcher(nextSibling.outerHtml())) != null && matcher.find()) {
 					//
-					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedListMultimap::create), a.text(),
-							matcher.group());
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedListMultimap::create),
+							ElementUtil.text(a), matcher.group());
 					//
 				} // if
 					//

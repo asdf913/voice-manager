@@ -2,13 +2,11 @@ package org.springframework.beans.factory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Collections;
 import java.util.Map;
 import java.util.function.Predicate;
 
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
-import org.jsoup.nodes.Element;
 import org.jsoup.nodes.TextNode;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -20,7 +18,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class ToykoMetroKanjiHiraganaMapFactoryBeanTest {
 
-	private static Method METHOD_TEXT_TEXT_NODE, METHOD_TEXT_ELEMENT, METHOD_CAST, METHOD_TEST_AND_APPLY = null;
+	private static Method METHOD_TEXT_TEXT_NODE, METHOD_CAST, METHOD_TEST_AND_APPLY = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -28,8 +26,6 @@ class ToykoMetroKanjiHiraganaMapFactoryBeanTest {
 		final Class<?> clz = ToykoMetroKanjiHiraganaMapFactoryBean.class;
 		//
 		(METHOD_TEXT_TEXT_NODE = clz.getDeclaredMethod("text", TextNode.class)).setAccessible(true);
-		//
-		(METHOD_TEXT_ELEMENT = clz.getDeclaredMethod("text", Element.class)).setAccessible(true);
 		//
 		(METHOD_CAST = clz.getDeclaredMethod("cast", Class.class, Object.class)).setAccessible(true);
 		//
@@ -78,37 +74,11 @@ class ToykoMetroKanjiHiraganaMapFactoryBeanTest {
 		//
 		Assertions.assertSame(string, text(textNode));
 		//
-		// org.jsoup.nodes.Element
-		//
-		Assertions.assertNull(text((Element) null));
-		//
-		final Element element = cast(Element.class, Narcissus.allocateInstance(Element.class));
-		//
-		Assertions.assertNull(text(element));
-		//
-		FieldUtils.writeField(element, "childNodes", Collections.singletonList(null), true);
-		//
-		Assertions.assertEquals("", text(element));
-		//
 	}
 
 	private static String text(final TextNode instnace) throws Throwable {
 		try {
 			final Object obj = METHOD_TEXT_TEXT_NODE.invoke(null, instnace);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	private static String text(final Element instnace) throws Throwable {
-		try {
-			final Object obj = METHOD_TEXT_ELEMENT.invoke(null, instnace);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof String) {

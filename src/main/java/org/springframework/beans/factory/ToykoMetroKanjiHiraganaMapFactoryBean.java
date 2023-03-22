@@ -16,6 +16,7 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.ElementUtil;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 
@@ -50,7 +51,8 @@ public class ToykoMetroKanjiHiraganaMapFactoryBean implements FactoryBean<Map<St
 				//
 			} // if
 				//
-			map.put(text(cast(TextNode.class, childNodes.get(0))), text(cast(Element.class, childNodes.get(1))));
+			map.put(text(cast(TextNode.class, childNodes.get(0))),
+					ElementUtil.text(cast(Element.class, childNodes.get(1))));
 			//
 		} // for
 			//
@@ -61,11 +63,6 @@ public class ToykoMetroKanjiHiraganaMapFactoryBean implements FactoryBean<Map<St
 	@Nullable
 	private static String text(@Nullable final TextNode instance) throws IllegalAccessException {
 		return instance != null && FieldUtils.readField(instance, "value", true) != null ? instance.text() : null;
-	}
-
-	@Nullable
-	private static String text(@Nullable final Element instance) throws IllegalAccessException {
-		return instance != null && FieldUtils.readField(instance, "childNodes", true) != null ? instance.text() : null;
 	}
 
 	@Nullable

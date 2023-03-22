@@ -196,7 +196,7 @@ public class EastJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFromRe
 		//
 		if (element != null) {
 			//
-			pair = new Pair<>(element.text(), null);
+			pair = new Pair<>(ElementUtil.text(element), null);
 			//
 		} // if
 			//
@@ -206,7 +206,7 @@ public class EastJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFromRe
 				? IterableUtils.get(elements, 0)
 				: null) != null && (pair = ObjectUtils.getIfNull(pair, () -> new Pair<>(null, null))) != null) {
 			//
-			pair = pair.setAt1(element.text());
+			pair = pair.setAt1(ElementUtil.text(element));
 			//
 		} // if
 			//
