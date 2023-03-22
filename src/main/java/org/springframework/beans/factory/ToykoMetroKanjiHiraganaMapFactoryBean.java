@@ -41,10 +41,9 @@ public class ToykoMetroKanjiHiraganaMapFactoryBean extends StringMapFromResource
 			//
 		} // if
 			//
-		final Document document = testAndApply(Objects::nonNull, testAndApply(Objects::nonNull, url, URL::new, null),
-				x -> Jsoup.parse(x, 0), null);
-		//
-		final List<Element> es = document != null ? document.select(".v2_linkStationListLink") : null;
+		final List<Element> es = ElementUtil.select(testAndApply(Objects::nonNull,
+				testAndApply(Objects::nonNull, url, URL::new, null), x -> Jsoup.parse(x, 0), null),
+				".v2_linkStationListLink");
 		//
 		Element e = null;
 		//
