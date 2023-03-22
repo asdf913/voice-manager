@@ -8,6 +8,9 @@ public final class ElementUtil {
 
 	private static final String CHILD_NODES = "childNodes";
 
+	private ElementUtil() {
+	}
+
 	public static String text(final Element instance) {
 		//
 		try {
