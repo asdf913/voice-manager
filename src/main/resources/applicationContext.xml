@@ -162,6 +162,17 @@
 		<property name="resource" value="classpath:TokyoMetro.xlsx" />
 	</bean>
 
+	<!--ToeiChikatetsu - hiragana -->
+	<bean
+		class="org.springframework.beans.factory.StringMapFromResourceFactoryBean">
+		<meta key="value" value="hiragana" />
+		<property name="keyColumnName" value="kanji" />
+		<property name="valueColumnName" value="hiragana" />
+		<property name="valueColumnIndex" value="1" />
+		<property name="resource"
+			value="classpath:ToeiChikatetsu.xlsx" />
+	</bean>
+
 	<!-- romaji -->
 	<bean
 		class="org.springframework.beans.factory.StringMapFromResourceFactoryBean">
@@ -185,6 +196,17 @@
 		<property name="valueColumnIndex" value="2" />
 		<property name="resource"
 			value="classpath:CentralJapanRailway.xlsx" />
+	</bean>
+
+	<!--ToeiChikatetsu - romaji -->
+	<bean
+		class="org.springframework.beans.factory.StringMapFromResourceFactoryBean">
+		<meta key="value" value="romaji" />
+		<property name="keyColumnName" value="kanji" />
+		<property name="valueColumnName" value="romaji" />
+		<property name="valueColumnIndex" value="2" />
+		<property name="resource"
+			value="classpath:ToeiChikatetsu.xlsx" />
 	</bean>
 
 	<!-- -->
