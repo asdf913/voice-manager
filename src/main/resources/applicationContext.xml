@@ -137,6 +137,8 @@
 	<bean
 		class="org.springframework.beans.factory.CentralJapanRailwayKanjiHiraganaMapFactoryBean">
 		<meta key="value" value="hiragana" />
+		<property name="url"
+			value="${org.springframework.beans.factory.CentralJapanRailwayKanjiHiraganaMapFactoryBean.url}" />
 		<property name="keyColumnName"
 			value="${org.springframework.beans.factory.CentralJapanRailwayKanjiHiraganaMapFactoryBean.keyColumnName}" />
 		<property name="valueColumnName"
@@ -158,7 +160,7 @@
 		<property name="resource"
 			value="classpath:EastJapanRailway.xlsx" />
 	</bean>
-	
+
 	<bean
 		class="org.springframework.beans.factory.StringMapFromResourceFactoryBean">
 		<meta key="value" value="romaji" />
