@@ -1,5 +1,7 @@
 package org.jsoup.nodes;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.jsoup.select.Elements;
@@ -26,6 +28,7 @@ public final class ElementUtil {
 			//
 	}
 
+	@Nullable
 	public static Elements getElementsByTag(final Element instance, final String tagName) {
 		//
 		try {
@@ -45,6 +48,7 @@ public final class ElementUtil {
 		return instance != null && xpath != null ? instance.selectXpath(xpath) : null;
 	}
 
+	@Nullable
 	public static Elements select(final Element instance, final String cssQuery) {
 		//
 		try {
@@ -61,6 +65,7 @@ public final class ElementUtil {
 			//
 	}
 
+	@Nullable
 	public static Elements children(final Element instance) {
 		//
 		try {
