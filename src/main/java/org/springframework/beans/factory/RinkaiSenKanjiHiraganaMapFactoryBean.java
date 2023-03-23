@@ -19,6 +19,7 @@ import org.apache.commons.lang3.tuple.MutablePair;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
+import org.jsoup.nodes.NodeUtil;
 
 public class RinkaiSenKanjiHiraganaMapFactoryBean implements FactoryBean<Map<String, String>> {
 
@@ -34,15 +35,13 @@ public class RinkaiSenKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		final List<Element> es = ElementUtil.select(testAndApply(Objects::nonNull,
 				testAndApply(Objects::nonNull, url, URL::new, null), x -> Jsoup.parse(x, 0), null), ".stationnav a");
 		//
-		Element e = null;
-		//
 		Map<String, String> map = null;
 		//
 		Entry<String, String> entry = null;
 		//
 		for (int i = 0; es != null && i < es.size(); i++) {
 			//
-			if ((e = es.get(i)) == null || (entry = createEntry(e.absUrl("href"))) == null
+			if ((entry = createEntry(NodeUtil.absUrl(es.get(i), "href"))) == null
 					|| (map = ObjectUtils.getIfNull(map, LinkedHashMap::new)) == null) {
 				//
 				continue;

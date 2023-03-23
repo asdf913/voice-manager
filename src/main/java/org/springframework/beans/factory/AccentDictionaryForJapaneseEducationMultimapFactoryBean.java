@@ -34,6 +34,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.helper.ProtocolUtil;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
+import org.jsoup.nodes.NodeUtil;
 import org.jsoup.select.Elements;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceUtil;
@@ -175,20 +176,13 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 						testAndApply(StringUtils::isNotBlank, url, URL::new, null), x -> Jsoup.parse(x, 0), null),
 				".menu a");
 		//
-		Element a = null;
-		//
 		Multimap<String, String> result = null, temp = null;
 		//
 		for (int i = 0; as != null && i < as.size(); i++) {
 			//
-			if ((a = as.get(i)) == null) {
-				//
-				continue;
-				//
-			} // if
-				//
 			if ((result = ObjectUtils.getIfNull(result, LinkedHashMultimap::create)) != null
-					&& (temp = createMultimap(a.absUrl("href"), allowProtocols, unicodeBlock)) != null) {
+					&& (temp = createMultimap(NodeUtil.absUrl(as.get(i), "href"), allowProtocols,
+							unicodeBlock)) != null) {
 				//
 				result.putAll(temp);
 				//
