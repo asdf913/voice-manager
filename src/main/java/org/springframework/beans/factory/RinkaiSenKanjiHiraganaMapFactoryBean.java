@@ -56,6 +56,7 @@ public class RinkaiSenKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		//
 	}
 
+	@Nullable
 	private static Entry<String, String> createEntry(final String url) throws IOException {
 		//
 		MutablePair<String, String> pair = null;
