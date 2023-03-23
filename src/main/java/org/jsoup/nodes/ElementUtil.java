@@ -103,4 +103,19 @@ public final class ElementUtil {
 			//
 	}
 
+	public static Element child(final Element instance, final int index) {
+		//
+		try {
+			//
+			return instance != null && FieldUtils.readField(instance, CHILD_NODES, true) != null ? instance.child(index)
+					: null;
+			//
+		} catch (final IllegalAccessException e) {
+			//
+			return null;
+			//
+		} // try
+			//
+	}
+
 }

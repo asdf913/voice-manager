@@ -95,4 +95,13 @@ class ElementUtilTest {
 		//
 	}
 
+	@Test
+	void testChild() {
+		//
+		Assertions.assertNull(ElementUtil.child(null, 0));
+		//
+		Assertions.assertNull(ElementUtil.child(element, 0));
+		//
+	}
+
 }

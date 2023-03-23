@@ -77,13 +77,13 @@ public class RinkaiSenKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		if ((size = e != null ? e.childrenSize() : 0) > 0
 				&& (pair = ObjectUtils.getIfNull(pair, MutablePair::new)) != null) {
 			//
-			pair.setLeft(ElementUtil.text(e.child(0)));
+			pair.setLeft(ElementUtil.text(ElementUtil.child(e, 0)));
 			//
 		} // if
 			//
 		if (size > 1 && (pair = ObjectUtils.getIfNull(pair, MutablePair::new)) != null) {
 			//
-			pair.setRight(ElementUtil.text(e.child(1)));
+			pair.setRight(ElementUtil.text(ElementUtil.child(e, 1)));
 			//
 		} // if
 			//
