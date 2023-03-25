@@ -209,6 +209,14 @@
 			value="classpath:ToeiChikatetsu.xlsx" />
 	</bean>
 
+	<!-- RinkaiSen - romaji -->
+	<bean
+		class="org.springframework.beans.factory.RinkaiSenKanjRomajiMapFactoryBean">
+		<meta key="value" value="romaji" />
+		<property name="url"
+			value="${org.springframework.beans.factory.RinkaiSenKanjRomajiMapFactoryBean.url}" />
+	</bean>
+
 	<!-- -->
 	<bean id="JlptLevelPageUrl" class="java.lang.String">
 		<constructor-arg index="0"
