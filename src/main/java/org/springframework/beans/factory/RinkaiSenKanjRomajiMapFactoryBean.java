@@ -66,8 +66,6 @@ public class RinkaiSenKanjRomajiMapFactoryBean implements FactoryBean<Map<String
 		//
 		int size = IterableUtils.size(es);
 		//
-		final Element e = size > 0 ? IterableUtils.get(es, 0) : null;
-		//
 		if (size > 0 && (pair = ObjectUtils.getIfNull(pair, MutablePair::new)) != null) {
 			//
 			pair.setLeft(ElementUtil.text(IterableUtils.get(es, 0)));
