@@ -16,12 +16,14 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.tuple.MutablePair;
+import org.javatuples.valueintf.IValue0;
+import org.javatuples.valueintf.IValue0Util;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
 import org.jsoup.nodes.NodeUtil;
 
-public class RinkaiSenKanjRomajiMapFactoryBean implements FactoryBean<Map<String, String>> {
+public class RinkaiSenKanjRomajiMapFactoryBean extends StringMapFromResourceFactoryBean {
 
 	private String url = null;
 
@@ -32,6 +34,14 @@ public class RinkaiSenKanjRomajiMapFactoryBean implements FactoryBean<Map<String
 	@Override
 	public Map<String, String> getObject() throws Exception {
 		//
+		final IValue0<Map<String, String>> iValue0 = getIvalue0();
+		//
+		if (iValue0 != null) {
+			//
+			return IValue0Util.getValue0(iValue0);
+			//
+		} // if
+			//
 		final List<Element> es = ElementUtil.select(testAndApply(Objects::nonNull,
 				testAndApply(Objects::nonNull, url, URL::new, null), x -> Jsoup.parse(x, 0), null), ".stationnav a");
 		//
@@ -87,11 +97,6 @@ public class RinkaiSenKanjRomajiMapFactoryBean implements FactoryBean<Map<String
 			throws E {
 		return predicate != null && predicate.test(value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
-	}
-
-	@Override
-	public Class<?> getObjectType() {
-		return Map.class;
 	}
 
 }
