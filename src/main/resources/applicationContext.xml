@@ -173,6 +173,14 @@
 			value="classpath:ToeiChikatetsu.xlsx" />
 	</bean>
 
+	<!-- ToeiChikatetsu - hiragana -->
+	<bean
+		class="org.springframework.beans.factory.OdakyuKanjiHiraganaMapFactoryBean">
+		<meta key="value" value="hiragana" />
+		<property name="url"
+			value="${org.springframework.beans.factory.OdakyuKanjiHiraganaMapFactoryBean.url}" />
+	</bean>
+
 	<!-- romaji -->
 	<bean
 		class="org.springframework.beans.factory.StringMapFromResourceFactoryBean">
