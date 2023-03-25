@@ -38,6 +38,8 @@ public class OdakyuKanjiHiraganaMapFactoryBean implements FactoryBean<Map<String
 		//
 		Iterable<Element> children = null;
 		//
+		String key, value = null;
+		//
 		for (int i = 0; es != null && i < es.size(); i++) {
 			//
 			if ((e = es.get(i)) == null || IterableUtils.size(children = e.children()) < 1
@@ -47,7 +49,16 @@ public class OdakyuKanjiHiraganaMapFactoryBean implements FactoryBean<Map<String
 				//
 			} // if
 				//
-			map.put(ElementUtil.text(IterableUtils.get(children, 1)), ElementUtil.text(IterableUtils.get(children, 0)));
+			value = ElementUtil.text(IterableUtils.get(children, 0));
+			//
+			if (map.containsKey(key = ElementUtil.text(IterableUtils.get(children, 1)))
+					&& Objects.equals(map.get(key), value)) {
+				//
+				throw new IllegalStateException();
+				//
+			} // if
+				//
+			map.put(key, value);
 			//
 		} // for
 			//
