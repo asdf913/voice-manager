@@ -13,14 +13,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.meeuw.functional.Predicates;
 
-class RinkaiSenKanjiHiraganaMapFactoryBeanTest {
+class RinkaiSenKanjiRomajiMapFactoryBeanTest {
 
 	private static Method METHOD_CREATE_ENTRY, METHOD_TEST_AND_APPLY = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
 		//
-		final Class<?> clz = RinkaiSenKanjiHiraganaMapFactoryBean.class;
+		final Class<?> clz = RinkaiSenKanjRomajiMapFactoryBean.class;
 		//
 		(METHOD_CREATE_ENTRY = clz.getDeclaredMethod("createEntry", String.class)).setAccessible(true);
 		//
@@ -29,12 +29,12 @@ class RinkaiSenKanjiHiraganaMapFactoryBeanTest {
 		//
 	}
 
-	private RinkaiSenKanjiHiraganaMapFactoryBean instance = null;
+	private RinkaiSenKanjRomajiMapFactoryBean instance = null;
 
 	@BeforeEach
 	void beforeEach() {
 		//
-		instance = new RinkaiSenKanjiHiraganaMapFactoryBean();
+		instance = new RinkaiSenKanjRomajiMapFactoryBean();
 		//
 	}
 

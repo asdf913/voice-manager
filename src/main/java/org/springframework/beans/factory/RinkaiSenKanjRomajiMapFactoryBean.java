@@ -21,7 +21,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
 import org.jsoup.nodes.NodeUtil;
 
-public class RinkaiSenKanjiHiraganaMapFactoryBean implements FactoryBean<Map<String, String>> {
+public class RinkaiSenKanjRomajiMapFactoryBean implements FactoryBean<Map<String, String>> {
 
 	private String url = null;
 
