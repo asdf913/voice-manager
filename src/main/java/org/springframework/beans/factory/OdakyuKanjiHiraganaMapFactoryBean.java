@@ -40,13 +40,8 @@ public class OdakyuKanjiHiraganaMapFactoryBean implements FactoryBean<Map<String
 		//
 		for (int i = 0; es != null && i < es.size(); i++) {
 			//
-			if ((e = es.get(i)) == null || IterableUtils.size(children = e.children()) < 1) {
-				//
-				continue;
-				//
-			} // if
-				//
-			if ((map = ObjectUtils.getIfNull(map, LinkedHashMap::new)) == null) {
+			if ((e = es.get(i)) == null || IterableUtils.size(children = e.children()) < 1
+					|| (map = ObjectUtils.getIfNull(map, LinkedHashMap::new)) == null) {
 				//
 				continue;
 				//
