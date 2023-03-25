@@ -62,28 +62,21 @@ public class RinkaiSenKanjRomajiMapFactoryBean implements FactoryBean<Map<String
 		MutablePair<String, String> pair = null;
 		//
 		final List<Element> es = ElementUtil.select(testAndApply(Objects::nonNull,
-				testAndApply(Objects::nonNull, url, URL::new, null), x -> Jsoup.parse(x, 0), null), ".stationnav a");
+				testAndApply(Objects::nonNull, url, URL::new, null), x -> Jsoup.parse(x, 0), null), "[class^=\"ttl\"]");
 		//
 		int size = IterableUtils.size(es);
 		//
-		if (size > 1) {
-			//
-			throw new IllegalStateException();
-			//
-		} // if
-			//
-		final Element e = size == 1 ? IterableUtils.get(es, 0) : null;
+		final Element e = size > 0 ? IterableUtils.get(es, 0) : null;
 		//
-		if ((size = e != null ? e.childrenSize() : 0) > 0
-				&& (pair = ObjectUtils.getIfNull(pair, MutablePair::new)) != null) {
+		if (size > 0 && (pair = ObjectUtils.getIfNull(pair, MutablePair::new)) != null) {
 			//
-			pair.setLeft(ElementUtil.text(ElementUtil.child(e, 0)));
+			pair.setLeft(ElementUtil.text(IterableUtils.get(es, 0)));
 			//
 		} // if
 			//
 		if (size > 1 && (pair = ObjectUtils.getIfNull(pair, MutablePair::new)) != null) {
 			//
-			pair.setRight(ElementUtil.text(ElementUtil.child(e, 1)));
+			pair.setRight(ElementUtil.text(IterableUtils.get(es, 1)));
 			//
 		} // if
 			//
