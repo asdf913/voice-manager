@@ -117,6 +117,7 @@ public class MapReportGui extends JFrame
 		//
 	}
 
+	@Nullable 
 	private static Class<?> getClass(@Nullable final Object instance) {
 		return instance != null ? instance.getClass() : null;
 	}
@@ -296,14 +297,17 @@ public class MapReportGui extends JFrame
 		//
 	}
 
+	@Nullable
 	private static <K> K getKey(@Nullable final Entry<K, ?> instance) {
 		return instance != null ? instance.getKey() : null;
 	}
 
+	@Nullable
 	private static <V> V getValue(@Nullable final Entry<?, V> instance) {
 		return instance != null ? instance.getValue() : null;
 	}
 
+	@Nullable
 	private static String toString(@Nullable final Object instance) {
 		return instance != null ? instance.toString() : null;
 	}
