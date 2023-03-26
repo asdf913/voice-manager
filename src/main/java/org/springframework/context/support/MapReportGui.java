@@ -204,13 +204,13 @@ public class MapReportGui extends JFrame
 			//
 	}
 
-	private static void removeRow(final DefaultTableModel instance, final int row) {
+	private static void removeRow(@Nullable final DefaultTableModel instance, final int row) {
 		if (instance != null) {
 			instance.removeRow(row);
 		}
 	}
 
-	private static void addRow(final DefaultTableModel instance, final Object[] rowData) {
+	private static void addRow(@Nullable final DefaultTableModel instance, final Object[] rowData) {
 		if (instance != null) {
 			instance.addRow(rowData);
 		}
