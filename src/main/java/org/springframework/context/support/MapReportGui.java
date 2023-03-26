@@ -26,6 +26,7 @@ import javax.swing.table.TableModel;
 import javax.swing.text.JTextComponent;
 
 import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -164,7 +165,7 @@ public class MapReportGui extends JFrame
 			//
 			for (int i = 0; i < IterableUtils.size(beanNames); i++) {
 				//
-				if ((map = ObjectUtils.getIfNull(map, LinkedHashMap::new)) == null || (m = cast(Map.class,
+				if ((m = cast(Map.class,
 						configurableListableBeanFactory.getBean(IterableUtils.get(beanNames, i)))) == null) {
 					//
 					continue;
@@ -179,11 +180,11 @@ public class MapReportGui extends JFrame
 						//
 					} // if
 						//
-					if (!map.containsKey(key = entry.getKey())) {
+					if (!containsKey(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), key = entry.getKey())) {
 						//
-						map.put(entry.getKey(), entry.getValue());
+						put(map, entry.getKey(), entry.getValue());
 						//
-					} else if (!Objects.equals(valueOld = map.get(key), valueNew = entry.getValue())) {
+					} else if (!Objects.equals(valueOld = MapUtils.getObject(map, key), valueNew = entry.getValue())) {
 						//
 						dtm.addRow(new Object[] { key, valueOld, valueNew });
 						//
@@ -195,6 +196,16 @@ public class MapReportGui extends JFrame
 				//
 		} // if
 			//
+	}
+
+	private static boolean containsKey(final Map<?, ?> instance, final Object key) {
+		return instance != null && instance.containsKey(key);
+	}
+
+	private static <K, V> void put(final Map<K, V> instance, final K key, final V value) {
+		if (instance != null) {
+			instance.put(key, value);
+		}
 	}
 
 	private static Integer getRowCount(final TableModel instance) {
