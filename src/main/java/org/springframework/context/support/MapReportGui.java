@@ -200,6 +200,7 @@ public class MapReportGui extends JFrame
 		return instance != null ? instance.getSource() : null;
 	}
 
+	@Nullable
 	private static List<String> getBeanDefinitionNamesByClassAndAttributes(
 			final ConfigurableListableBeanFactory instnace, final Class<?> classToBeFound, final Map<?, ?> attributes) {
 		//
@@ -249,6 +250,7 @@ public class MapReportGui extends JFrame
 		return a != null && b != null && a.isAssignableFrom(b);
 	}
 
+	@Nullable
 	private static Class<?> forName(@Nullable final String className) {
 		try {
 			return StringUtils.isNotBlank(className) ? Class.forName(className) : null;
@@ -257,6 +259,7 @@ public class MapReportGui extends JFrame
 		}
 	}
 
+	@Nullable
 	private static <T> T cast(final Class<T> clz, final Object value) {
 		return clz != null && clz.isInstance(value) ? clz.cast(value) : null;
 	}
