@@ -36,7 +36,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 class MapReportGuiTest {
 
 	private static Method METHOD_CAST, METHOD_IS_ALL_ATTRIBUTES_MATCHED, METHOD_GET_CLASS, METHOD_CONTAINS_KEY,
-			METHOD_PUT = null;
+			METHOD_PUT, METHOD_REMOVE_ROW, METHOD_ADD_ROW = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -53,6 +53,11 @@ class MapReportGuiTest {
 		(METHOD_CONTAINS_KEY = clz.getDeclaredMethod("containsKey", Map.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_PUT = clz.getDeclaredMethod("put", Map.class, Object.class, Object.class)).setAccessible(true);
+		//
+		(METHOD_REMOVE_ROW = clz.getDeclaredMethod("removeRow", DefaultTableModel.class, Integer.TYPE))
+				.setAccessible(true);
+		//
+		(METHOD_ADD_ROW = clz.getDeclaredMethod("addRow", DefaultTableModel.class, Object[].class)).setAccessible(true);
 		//
 	}
 
@@ -373,6 +378,38 @@ class MapReportGuiTest {
 	private static <K, V> void put(final Map<K, V> instance, final K key, final V value) throws Throwable {
 		try {
 			METHOD_PUT.invoke(null, instance, key, value);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testRemoveRow() {
+		//
+		Assertions.assertDoesNotThrow(() -> removeRow(null, 0));
+		//
+	}
+
+	private static void removeRow(final DefaultTableModel instance, final int row) throws Throwable {
+		try {
+			METHOD_REMOVE_ROW.invoke(null, instance, row);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testAddRow() {
+		//
+		Assertions.assertDoesNotThrow(() -> addRow(null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> addRow(new DefaultTableModel(), null));
+		//
+	}
+
+	private static void addRow(final DefaultTableModel instance, final Object[] rowData) throws Throwable {
+		try {
+			METHOD_ADD_ROW.invoke(null, instance, rowData);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

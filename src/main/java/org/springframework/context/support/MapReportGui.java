@@ -158,7 +158,7 @@ public class MapReportGui extends JFrame
 			//
 		for (int j = intValue(getRowCount(dtm), 0) - 1; j >= 0; j--) {
 			//
-			dtm.removeRow(j);
+			removeRow(dtm, j);
 			//
 		} // for
 			//
@@ -194,7 +194,7 @@ public class MapReportGui extends JFrame
 					//
 				} else if (!Objects.equals(valueOld = MapUtils.getObject(map, key), valueNew = entry.getValue())) {
 					//
-					dtm.addRow(new Object[] { key, valueOld, valueNew });
+					addRow(dtm, new Object[] { key, valueOld, valueNew });
 					//
 				} // if
 					//
@@ -202,6 +202,18 @@ public class MapReportGui extends JFrame
 				//
 		} // for
 			//
+	}
+
+	private static void removeRow(final DefaultTableModel instance, final int row) {
+		if (instance != null) {
+			instance.removeRow(row);
+		}
+	}
+
+	private static void addRow(final DefaultTableModel instance, final Object[] rowData) {
+		if (instance != null) {
+			instance.addRow(rowData);
+		}
 	}
 
 	private static boolean containsKey(final Map<?, ?> instance, final Object key) {
