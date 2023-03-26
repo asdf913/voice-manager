@@ -185,6 +185,14 @@
 		<property name="resource" value="classpath:Odakyu.xlsx" />
 	</bean>
 
+	<!-- Kyushu Railway - hiragana -->
+	<bean
+		class="org.springframework.beans.factory.KyushuRailwayKanjiHiraganaMapFactoryBean">
+		<meta key="value" value="hiragana" />
+		<property name="url"
+			value="${org.springframework.beans.factory.KyushuRailwayKanjiHiraganaMapFactoryBean.url}" />
+	</bean>
+
 	<!-- romaji -->
 	<bean
 		class="org.springframework.beans.factory.StringMapFromResourceFactoryBean">
