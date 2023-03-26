@@ -161,10 +161,10 @@ public class MapReportGui extends JFrame
 			//
 			Object key, valueOld, valueNew = null;
 			//
-			for (int i = 0; beanNames != null && i < beanNames.size(); i++) {
+			for (int i = 0; i < IterableUtils.size(beanNames); i++) {
 				//
-				if ((map = ObjectUtils.getIfNull(map, LinkedHashMap::new)) == null
-						|| (m = cast(Map.class, configurableListableBeanFactory.getBean(beanNames.get(i)))) == null) {
+				if ((map = ObjectUtils.getIfNull(map, LinkedHashMap::new)) == null || (m = cast(Map.class,
+						configurableListableBeanFactory.getBean(IterableUtils.get(beanNames, i)))) == null) {
 					//
 					continue;
 					//
