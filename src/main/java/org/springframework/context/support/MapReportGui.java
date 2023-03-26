@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 
+import javax.annotation.Nullable;
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -244,11 +245,11 @@ public class MapReportGui extends JFrame
 		}
 	}
 
-	private static boolean isAssignableFrom(final Class<?> a, final Class<?> b) {
+	private static boolean isAssignableFrom(final Class<?> a, @Nullable final Class<?> b) {
 		return a != null && b != null && a.isAssignableFrom(b);
 	}
 
-	private static Class<?> forName(final String className) {
+	private static Class<?> forName(@Nullable final String className) {
 		try {
 			return StringUtils.isNotBlank(className) ? Class.forName(className) : null;
 		} catch (final ClassNotFoundException e) {
