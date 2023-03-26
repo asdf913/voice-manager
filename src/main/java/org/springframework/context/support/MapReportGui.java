@@ -22,6 +22,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import javax.swing.text.JTextComponent;
 
 import org.apache.commons.collections4.IterableUtils;
@@ -146,7 +147,7 @@ public class MapReportGui extends JFrame
 				//
 				// Remove all row(s)
 				//
-			for (int j = (dtm != null ? dtm.getRowCount() : 0) - 1; j >= 0; j--) {
+			for (int j = intValue(getRowCount(dtm), 0) - 1; j >= 0; j--) {
 				//
 				dtm.removeRow(j);
 				//
@@ -194,6 +195,14 @@ public class MapReportGui extends JFrame
 				//
 		} // if
 			//
+	}
+
+	private static Integer getRowCount(final TableModel instance) {
+		return instance != null ? Integer.valueOf(instance.getRowCount()) : null;
+	}
+
+	private static int intValue(final Number instance, final int defaultValue) {
+		return instance != null ? instance.intValue() : defaultValue;
 	}
 
 	@Nullable
