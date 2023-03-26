@@ -1,8 +1,10 @@
 package org.springframework.context.support;
 
+import java.awt.Component;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.geom.Dimension2D;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -36,7 +38,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 class MapReportGuiTest {
 
 	private static Method METHOD_CAST, METHOD_IS_ALL_ATTRIBUTES_MATCHED, METHOD_GET_CLASS, METHOD_CONTAINS_KEY,
-			METHOD_PUT, METHOD_REMOVE_ROW, METHOD_ADD_ROW = null;
+			METHOD_PUT, METHOD_REMOVE_ROW, METHOD_ADD_ROW, METHOD_GET_PREFERRED_WIDTH, METHOD_DOUBLE_VALUE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -58,6 +60,10 @@ class MapReportGuiTest {
 				.setAccessible(true);
 		//
 		(METHOD_ADD_ROW = clz.getDeclaredMethod("addRow", DefaultTableModel.class, Object[].class)).setAccessible(true);
+		//
+		(METHOD_GET_PREFERRED_WIDTH = clz.getDeclaredMethod("getPreferredWidth", Component.class)).setAccessible(true);
+		//
+		(METHOD_DOUBLE_VALUE = clz.getDeclaredMethod("doubleValue", Number.class, Double.TYPE)).setAccessible(true);
 		//
 	}
 
@@ -410,6 +416,48 @@ class MapReportGuiTest {
 	private static void addRow(final DefaultTableModel instance, final Object[] rowData) throws Throwable {
 		try {
 			METHOD_ADD_ROW.invoke(null, instance, rowData);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetPreferredWidth() throws Throwable {
+		//
+		Assertions.assertNull(getPreferredWidth(null));
+		//
+	}
+
+	private static Double getPreferredWidth(final Component instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_PREFERRED_WIDTH.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Double) {
+				return (Double) obj;
+			}
+			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testDoubleValue() throws Throwable {
+		//
+		final double d = 1.2;
+		//
+		Assertions.assertEquals(d, doubleValue(null, d));
+		//
+	}
+
+	private static double doubleValue(final Number instance, final double defaultValue) throws Throwable {
+		try {
+			final Object obj = METHOD_DOUBLE_VALUE.invoke(null, instance, defaultValue);
+			if (obj instanceof Double) {
+				return ((Double) obj).doubleValue();
+			}
+			throw new Throwable(obj != null && obj.getClass() != null ? obj.getClass().toString() : null);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

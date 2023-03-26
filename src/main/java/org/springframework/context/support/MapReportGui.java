@@ -1,7 +1,10 @@
 package org.springframework.context.support;
 
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.geom.Dimension2D;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -102,21 +105,45 @@ public class MapReportGui extends JFrame
 			//
 		} // if
 			//
-		final String wrap = "wrap";
+		final JLabel label = new JLabel("Attribute JSON");
 		//
-		add(new JLabel("Attribute JSON"));
+		add(label);
 		//
 		add(tfAttributeJson = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
-				"org.springframework.context.support.MapReportGui.attributeJson")),
-				String.format("%1$s,wmin %2$s", wrap, 100));
+				"org.springframework.context.support.MapReportGui.attributeJson")), "growx");
 		//
-		add(btnExecute = new JButton("Execute"), wrap);
-		//
-		add(new JScrollPane(new JTable(dtm = new DefaultTableModel(new Object[] { "Key", "Old", "New" }, 0))),
-				String.format("span %1$s", 2));
+		add(btnExecute = new JButton("Execute"), "wrap");
 		//
 		btnExecute.addActionListener(this);
 		//
+		final JScrollPane jsp = new JScrollPane(
+				new JTable(dtm = new DefaultTableModel(new Object[] { "Key", "Old", "New" }, 0)));
+		//
+		add(jsp, String.format("span %1$s", 3));
+		//
+		final Dimension pd = tfAttributeJson.getPreferredSize();
+		//
+		if (pd != null) {
+			//
+			pd.setSize(doubleValue(getPreferredWidth(jsp), 0) - doubleValue(getPreferredWidth(label), 0)
+					- doubleValue(getPreferredWidth(btnExecute), 0) - 14, pd.getHeight());
+			//
+		} // if
+			//
+		tfAttributeJson.setPreferredSize(pd);
+		//
+	}
+
+	private static Double getPreferredWidth(final Component instance) {
+		//
+		final Dimension2D pd = instance != null ? instance.getPreferredSize() : null;
+		//
+		return pd != null ? Double.valueOf(pd.getWidth()) : null;
+		//
+	}
+
+	private static double doubleValue(final Number instance, final double defaultValue) {
+		return instance != null ? instance.doubleValue() : defaultValue;
 	}
 
 	@Nullable
