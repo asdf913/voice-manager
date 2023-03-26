@@ -117,7 +117,7 @@ public class MapReportGui extends JFrame
 		//
 	}
 
-	private static Class<?> getClass(final Object instance) {
+	private static Class<?> getClass(@Nullable final Object instance) {
 		return instance != null ? instance.getClass() : null;
 	}
 
@@ -202,7 +202,8 @@ public class MapReportGui extends JFrame
 
 	@Nullable
 	private static List<String> getBeanDefinitionNamesByClassAndAttributes(
-			final ConfigurableListableBeanFactory instnace, final Class<?> classToBeFound, final Map<?, ?> attributes) {
+			@Nullable final ConfigurableListableBeanFactory instnace, final Class<?> classToBeFound,
+			final Map<?, ?> attributes) {
 		//
 		List<String> multimapBeanDefinitionNames = null;
 		//
@@ -291,19 +292,19 @@ public class MapReportGui extends JFrame
 		//
 	}
 
-	private static <K> K getKey(final Entry<K, ?> instance) {
+	private static <K> K getKey(@Nullable final Entry<K, ?> instance) {
 		return instance != null ? instance.getKey() : null;
 	}
 
-	private static <V> V getValue(final Entry<?, V> instance) {
+	private static <V> V getValue(@Nullable final Entry<?, V> instance) {
 		return instance != null ? instance.getValue() : null;
 	}
 
-	private static String toString(final Object instance) {
+	private static String toString(@Nullable final Object instance) {
 		return instance != null ? instance.toString() : null;
 	}
 
-	private static <T> Iterator<T> iterator(final Iterable<T> instance) {
+	private static <T> Iterator<T> iterator(@Nullable final Iterable<T> instance) {
 		return instance != null ? instance.iterator() : null;
 	}
 
