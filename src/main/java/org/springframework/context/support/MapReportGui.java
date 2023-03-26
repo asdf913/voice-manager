@@ -200,7 +200,7 @@ public class MapReportGui extends JFrame
 		return instance != null ? instance.getSource() : null;
 	}
 
-	private static String getText(final JTextComponent instance) {
+	private static String getText(@Nullable final JTextComponent instance) {
 		return instance != null ? instance.getText() : null;
 	}
 
