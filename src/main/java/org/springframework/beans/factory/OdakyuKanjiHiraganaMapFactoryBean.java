@@ -42,8 +42,6 @@ public class OdakyuKanjiHiraganaMapFactoryBean extends StringMapFromResourceFact
 				testAndApply(Objects::nonNull, url, URL::new, null), x -> Jsoup.parse(x, 0), null),
 				".stationTimetableAiueo-name");
 		//
-		Element e = null;
-		//
 		Map<String, String> map = null;
 		//
 		Iterable<Element> children = null;
@@ -52,7 +50,7 @@ public class OdakyuKanjiHiraganaMapFactoryBean extends StringMapFromResourceFact
 		//
 		for (int i = 0; es != null && i < es.size(); i++) {
 			//
-			if ((e = es.get(i)) == null || IterableUtils.size(children = e.children()) < 1
+			if (IterableUtils.size(children = ElementUtil.children(es.get(i))) < 1
 					|| (map = ObjectUtils.getIfNull(map, LinkedHashMap::new)) == null) {
 				//
 				continue;

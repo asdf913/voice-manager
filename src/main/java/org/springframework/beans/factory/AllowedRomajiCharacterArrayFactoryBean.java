@@ -58,9 +58,9 @@ public class AllowedRomajiCharacterArrayFactoryBean implements FactoryBean<char[
 		//
 		do {
 			//
-			if (element != null && element.children() != null) {
+			if (ElementUtil.children(element) != null) {
 				//
-				for (final Element c : element.children()) {
+				for (final Element c : ElementUtil.children(element)) {
 					//
 					if ((sb = ObjectUtils.getIfNull(sb, StringBuilder::new)) == null) {
 						//
