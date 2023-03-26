@@ -129,72 +129,78 @@ public class MapReportGui extends JFrame
 		//
 		if (Objects.equals(getSource(evt), btnExecute)) {
 			//
-			Object object = null;
+			actionPerformedForBtnExecute();
 			//
-			try {
-				//
-				if ((object = ObjectMapperUtil.readValue(new ObjectMapper(), getText(tfAttributeJson),
-						Object.class)) != null && !(object instanceof Map)) {
-					//
-					throw new IllegalStateException();
-					//
-				} // if
-					//
-			} catch (final JsonProcessingException e) {
-				//
-				throw new RuntimeException(e);
-				//
-			} // try
-				//
-				// Remove all row(s)
-				//
-			for (int j = intValue(getRowCount(dtm), 0) - 1; j >= 0; j--) {
-				//
-				dtm.removeRow(j);
-				//
-			} // for
-				//
-			final List<String> beanNames = getBeanDefinitionNamesByClassAndAttributes(configurableListableBeanFactory,
-					Map.class, cast(Map.class, object));
+		} // if
 			//
-			Map<Object, Object> map = null;
+	}
+
+	private void actionPerformedForBtnExecute() {
+		//
+		Object object = null;
+		//
+		try {
 			//
-			Map<?, ?> m = null;
-			//
-			Object key, valueOld, valueNew = null;
-			//
-			for (int i = 0; i < IterableUtils.size(beanNames); i++) {
+			if ((object = ObjectMapperUtil.readValue(new ObjectMapper(), getText(tfAttributeJson),
+					Object.class)) != null && !(object instanceof Map)) {
 				//
-				if ((m = cast(Map.class,
-						configurableListableBeanFactory.getBean(IterableUtils.get(beanNames, i)))) == null) {
+				throw new IllegalStateException();
+				//
+			} // if
+				//
+		} catch (final JsonProcessingException e) {
+			//
+			throw new RuntimeException(e);
+			//
+		} // try
+			//
+			// Remove all row(s)
+			//
+		for (int j = intValue(getRowCount(dtm), 0) - 1; j >= 0; j--) {
+			//
+			dtm.removeRow(j);
+			//
+		} // for
+			//
+		final List<String> beanNames = getBeanDefinitionNamesByClassAndAttributes(configurableListableBeanFactory,
+				Map.class, cast(Map.class, object));
+		//
+		Map<Object, Object> map = null;
+		//
+		Map<?, ?> m = null;
+		//
+		Object key, valueOld, valueNew = null;
+		//
+		for (int i = 0; i < IterableUtils.size(beanNames); i++) {
+			//
+			if ((m = cast(Map.class,
+					configurableListableBeanFactory.getBean(IterableUtils.get(beanNames, i)))) == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			for (final Entry<?, ?> entry : m.entrySet()) {
+				//
+				if (entry == null) {
 					//
 					continue;
 					//
 				} // if
 					//
-				for (final Entry<?, ?> entry : m.entrySet()) {
+				if (!containsKey(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), key = entry.getKey())) {
 					//
-					if (entry == null) {
-						//
-						continue;
-						//
-					} // if
-						//
-					if (!containsKey(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), key = entry.getKey())) {
-						//
-						put(map, entry.getKey(), entry.getValue());
-						//
-					} else if (!Objects.equals(valueOld = MapUtils.getObject(map, key), valueNew = entry.getValue())) {
-						//
-						dtm.addRow(new Object[] { key, valueOld, valueNew });
-						//
-					} // if
-						//
-				} // for
+					put(map, entry.getKey(), entry.getValue());
+					//
+				} else if (!Objects.equals(valueOld = MapUtils.getObject(map, key), valueNew = entry.getValue())) {
+					//
+					dtm.addRow(new Object[] { key, valueOld, valueNew });
+					//
+				} // if
 					//
 			} // for
 				//
-		} // if
+		} // for
 			//
 	}
 
