@@ -53,9 +53,9 @@ public class MapReportGui extends JFrame
 
 	private static final long serialVersionUID = 467011648930037863L;
 
-	private PropertyResolver propertyResolver = null;
+	private transient PropertyResolver propertyResolver = null;
 
-	private ConfigurableListableBeanFactory configurableListableBeanFactory = null;
+	private transient ConfigurableListableBeanFactory configurableListableBeanFactory = null;
 
 	private JTextComponent tfAttributeJson = null;
 
