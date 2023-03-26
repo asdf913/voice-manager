@@ -11,11 +11,13 @@ import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.javatuples.valueintf.IValue0;
+import org.javatuples.valueintf.IValue0Util;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
 
-public class KyushuRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<Map<String, String>> {
+public class KyushuRailwayKanjiHiraganaMapFactoryBean extends StringMapFromResourceFactoryBean {
 
 	private String url = null;
 
@@ -26,6 +28,14 @@ public class KyushuRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<Map
 	@Override
 	public Map<String, String> getObject() throws Exception {
 		//
+		final IValue0<Map<String, String>> iValue0 = getIvalue0();
+		//
+		if (iValue0 != null) {
+			//
+			return IValue0Util.getValue0(iValue0);
+			//
+		} // if
+			//
 		final List<Element> es = ElementUtil.select(testAndApply(Objects::nonNull,
 				testAndApply(Objects::nonNull, url, URL::new, null), x -> Jsoup.parse(x, 0), null), "a");
 		//
@@ -34,6 +44,8 @@ public class KyushuRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<Map
 		Iterable<Element> children = null;
 		//
 		String key, value = null;
+		//
+		Element firstElement = null;
 		//
 		for (int i = 0; es != null && i < es.size(); i++) {
 			//
@@ -44,7 +56,7 @@ public class KyushuRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<Map
 				//
 			} // if
 				//
-			if (!Objects.equals(ElementUtil.tagName(IterableUtils.get(children, 0)), "em")) {
+			if (!Objects.equals(ElementUtil.tagName(firstElement = IterableUtils.get(children, 0)), "em")) {
 				//
 				continue;
 				//
@@ -52,8 +64,7 @@ public class KyushuRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<Map
 				//
 			value = ElementUtil.text(IterableUtils.get(children, 1));
 			//
-			if (map.containsKey(key = ElementUtil.text(IterableUtils.get(children, 0)))
-					&& !Objects.equals(map.get(key), value)) {
+			if (map.containsKey(key = ElementUtil.text(firstElement)) && !Objects.equals(map.get(key), value)) {
 				//
 				throw new IllegalStateException();
 				//
@@ -71,11 +82,6 @@ public class KyushuRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<Map
 			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse) throws E {
 		return predicate != null && predicate.test(value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
-	}
-
-	@Override
-	public Class<?> getObjectType() {
-		return Map.class;
 	}
 
 }
