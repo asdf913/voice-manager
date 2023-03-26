@@ -261,11 +261,12 @@ public class MapReportGui extends JFrame
 	}
 
 	@Nullable
-	private static <T> T cast(final Class<T> clz, final Object value) {
+	private static <T> T cast(@Nullable final Class<T> clz, final Object value) {
 		return clz != null && clz.isInstance(value) ? clz.cast(value) : null;
 	}
 
-	private static boolean isAllAttributesMatched(final Map<?, ?> attributes, final AttributeAccessor aa) {
+	private static boolean isAllAttributesMatched(@Nullable final Map<?, ?> attributes,
+			@Nullable final AttributeAccessor aa) {
 		//
 		if (attributes != null && iterator(attributes.entrySet()) != null) {
 			//
@@ -304,6 +305,7 @@ public class MapReportGui extends JFrame
 		return instance != null ? instance.toString() : null;
 	}
 
+	@Nullable
 	private static <T> Iterator<T> iterator(@Nullable final Iterable<T> instance) {
 		return instance != null ? instance.iterator() : null;
 	}
