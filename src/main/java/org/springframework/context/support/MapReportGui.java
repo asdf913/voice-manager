@@ -235,7 +235,7 @@ public class MapReportGui extends JFrame
 	@Nullable
 	private static List<String> getBeanDefinitionNamesByClassAndAttributes(
 			@Nullable final ConfigurableListableBeanFactory instnace, final Class<?> classToBeFound,
-			final Map<?, ?> attributes) {
+			@Nullable final Map<?, ?> attributes) {
 		//
 		List<String> multimapBeanDefinitionNames = null;
 		//
