@@ -490,6 +490,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static final String ROMAJI_WITH_FIRST_CAPTICALIZED_LETTER = "Romaji";
 
+	private static final String HIRAGANA_WITH_FIRST_CAPTICALIZED_LETTER = "Hiragana";
+
 	private static final Predicate<File> EMPTY_FILE_PREDICATE = f -> f != null && f.exists() && isFile(f)
 			&& longValue(length(f), 0) == 0;
 
@@ -512,7 +514,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("Text in Import Pnael")
 	private JTextComponent tfTextImport = null;
 
-	@Note("Hiragana")
+	@Note(HIRAGANA_WITH_FIRST_CAPTICALIZED_LETTER)
 	private JTextComponent tfHiragana = null;
 
 	@Note("Katakana")
@@ -1071,7 +1073,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		mapRomaji = toList(map(
 				stream(getBeanDefinitionNamesByClassAndAttributes(configurableListableBeanFactory, Map.class,
-						Collections.singletonMap(VALUE, "romaji"))),
+						Collections.singletonMap(VALUE, ROMAJI_WITH_FIRST_CAPTICALIZED_LETTER))),
 				x -> cast(Map.class, getBean(configurableListableBeanFactory, x))));
 		//
 	}
@@ -3589,7 +3591,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		// Hiragana
 		//
-		panel.add(new JLabel("Hiragana"));
+		panel.add(new JLabel(HIRAGANA_WITH_FIRST_CAPTICALIZED_LETTER));
 		//
 		panel.add(
 				tfHiragana = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
@@ -6104,12 +6106,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		// Hiragana
 		//
 		IValue0<?> ivHiragana = getIValue0ByKey(multimapHiragana, textImport,
-				createFunctionForBtnConvertToHiraganaOrKatakana("Hiragana"));
+				createFunctionForBtnConvertToHiraganaOrKatakana(HIRAGANA_WITH_FIRST_CAPTICALIZED_LETTER));
 		//
 		if (ivHiragana == null) {
 			//
 			ivHiragana = getIValue0FromMapsByKey(mapHiragana, textImport,
-					createFunctionForBtnConvertToHiraganaOrKatakana("Hiragana"));
+					createFunctionForBtnConvertToHiraganaOrKatakana(HIRAGANA_WITH_FIRST_CAPTICALIZED_LETTER));
 			//
 		} // if
 			//
@@ -6384,7 +6386,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		final String string = getText(tfTextImport);
 		//
 		final IValue0<?> iValue0 = getIValue0FromMapsByKey(mapRomaji, string,
-				createFunctionForBtnConvertToHiraganaOrKatakana("Romaji"));
+				createFunctionForBtnConvertToHiraganaOrKatakana(ROMAJI_WITH_FIRST_CAPTICALIZED_LETTER));
 		//
 		final String romaji = convert(jakaroma = ObjectUtils.getIfNull(jakaroma, Jakaroma::new), string, false, false);
 		//
