@@ -182,17 +182,11 @@ public class MapReportGui extends JFrame
 				//
 			for (final Entry<?, ?> entry : m.entrySet()) {
 				//
-				if (entry == null) {
+				if (!containsKey(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), key = getKey(entry))) {
 					//
-					continue;
+					put(map, key, getValue(entry));
 					//
-				} // if
-					//
-				if (!containsKey(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), key = entry.getKey())) {
-					//
-					put(map, entry.getKey(), entry.getValue());
-					//
-				} else if (!Objects.equals(valueOld = MapUtils.getObject(map, key), valueNew = entry.getValue())) {
+				} else if (!Objects.equals(valueOld = MapUtils.getObject(map, key), valueNew = getValue(entry))) {
 					//
 					addRow(dtm, new Object[] { key, valueOld, valueNew });
 					//
