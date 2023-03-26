@@ -117,7 +117,7 @@ public class MapReportGui extends JFrame
 		//
 	}
 
-	@Nullable 
+	@Nullable
 	private static Class<?> getClass(@Nullable final Object instance) {
 		return instance != null ? instance.getClass() : null;
 	}
@@ -196,6 +196,7 @@ public class MapReportGui extends JFrame
 			//
 	}
 
+	@Nullable
 	private static Object getSource(@Nullable final EventObject instance) {
 		return instance != null ? instance.getSource() : null;
 	}
