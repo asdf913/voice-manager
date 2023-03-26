@@ -456,6 +456,11 @@
 		<property name="bufferedImageType" ref="BufferedImageType" />
 	</bean>
 
+	<!-- -->
+	<bean class="org.springframework.context.support.MapReportGui">
+		<property name="layout" ref="MigLayout" />
+	</bean>
+
 	<bean id="DataSource" class="org.h2.jdbcx.JdbcConnectionPool"
 		factory-method="create">
 		<constructor-arg index="0"
