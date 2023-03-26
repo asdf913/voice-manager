@@ -36,8 +36,11 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class MapReportGuiTest {
 
-	private static Method METHOD_CAST, METHOD_IS_ALL_ATTRIBUTES_MATCHED, METHOD_GET_CLASS, METHOD_CONTAINS_KEY,
-			METHOD_PUT, METHOD_REMOVE_ROW, METHOD_ADD_ROW, METHOD_GET_PREFERRED_WIDTH, METHOD_DOUBLE_VALUE = null;
+	private static final String EMPTY = "";
+
+	private static Method METHOD_CAST, METHOD_IS_ALL_ATTRIBUTES_MATCHED, METHOD_GET_CLASS, METHOD_TO_STRING,
+			METHOD_CONTAINS_KEY, METHOD_PUT, METHOD_REMOVE_ROW, METHOD_ADD_ROW, METHOD_GET_PREFERRED_WIDTH,
+			METHOD_DOUBLE_VALUE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -50,6 +53,8 @@ class MapReportGuiTest {
 				AttributeAccessor.class)).setAccessible(true);
 		//
 		(METHOD_GET_CLASS = clz.getDeclaredMethod("getClass", Object.class)).setAccessible(true);
+		//
+		(METHOD_TO_STRING = clz.getDeclaredMethod("toString", Object.class)).setAccessible(true);
 		//
 		(METHOD_CONTAINS_KEY = clz.getDeclaredMethod("containsKey", Map.class, Object.class)).setAccessible(true);
 		//
@@ -198,7 +203,7 @@ class MapReportGuiTest {
 		//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, null));
 		//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent("", 0, null)));
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(EMPTY, 0, null)));
 		//
 		final JTextComponent tfAttributeJson = new JTextField();
 		//
@@ -310,7 +315,7 @@ class MapReportGuiTest {
 			//
 		Assertions.assertTrue(isAllAttributesMatched(Collections.singletonMap(null, null), aa));
 		//
-		Assertions.assertFalse(isAllAttributesMatched(Collections.singletonMap(null, ""), aa));
+		Assertions.assertFalse(isAllAttributesMatched(Collections.singletonMap(null, EMPTY), aa));
 		//
 	}
 
@@ -321,7 +326,7 @@ class MapReportGuiTest {
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
-			throw new Throwable(obj != null && obj.getClass() != null ? obj.getClass().toString() : null);
+			throw new Throwable(obj != null ? toString(obj.getClass()) : null);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -342,7 +347,28 @@ class MapReportGuiTest {
 			} else if (obj instanceof Class) {
 				return (Class<?>) obj;
 			}
-			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
+			throw new Throwable(toString(obj.getClass()));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testToString() throws Throwable {
+		//
+		Assertions.assertSame(EMPTY, toString(EMPTY));
+		//
+	}
+
+	private static String toString(final Object instance) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_STRING.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(toString(obj.getClass()));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -365,7 +391,7 @@ class MapReportGuiTest {
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
-			throw new Throwable(obj != null && obj.getClass() != null ? obj.getClass().toString() : null);
+			throw new Throwable(obj != null ? toString(obj.getClass()) : null);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -435,7 +461,7 @@ class MapReportGuiTest {
 			} else if (obj instanceof Double) {
 				return (Double) obj;
 			}
-			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
+			throw new Throwable(toString(obj.getClass()));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -456,7 +482,7 @@ class MapReportGuiTest {
 			if (obj instanceof Double) {
 				return ((Double) obj).doubleValue();
 			}
-			throw new Throwable(obj != null && obj.getClass() != null ? obj.getClass().toString() : null);
+			throw new Throwable(obj != null ? toString(obj.getClass()) : null);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
