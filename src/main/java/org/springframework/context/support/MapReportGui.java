@@ -134,7 +134,7 @@ public class MapReportGui extends JFrame
 		//
 	}
 
-	private static Double getPreferredWidth(final Component instance) {
+	private static Double getPreferredWidth(@Nullable final Component instance) {
 		//
 		final Dimension2D pd = instance != null ? instance.getPreferredSize() : null;
 		//
@@ -142,7 +142,7 @@ public class MapReportGui extends JFrame
 		//
 	}
 
-	private static double doubleValue(final Number instance, final double defaultValue) {
+	private static double doubleValue(@Nullable final Number instance, final double defaultValue) {
 		return instance != null ? instance.doubleValue() : defaultValue;
 	}
 
