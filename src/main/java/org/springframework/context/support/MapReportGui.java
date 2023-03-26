@@ -214,6 +214,7 @@ public class MapReportGui extends JFrame
 		}
 	}
 
+	@Nullable
 	private static Integer getRowCount(@Nullable final TableModel instance) {
 		return instance != null ? Integer.valueOf(instance.getRowCount()) : null;
 	}
