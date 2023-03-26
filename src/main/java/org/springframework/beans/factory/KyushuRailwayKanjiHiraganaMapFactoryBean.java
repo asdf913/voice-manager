@@ -52,13 +52,8 @@ public class KyushuRailwayKanjiHiraganaMapFactoryBean extends StringMapFromResou
 		for (int i = 0; es != null && i < es.size(); i++) {
 			//
 			if (IterableUtils.size(children = ElementUtil.children(es.get(i))) < 2
-					|| (map = ObjectUtils.getIfNull(map, LinkedHashMap::new)) == null) {
-				//
-				continue;
-				//
-			} // if
-				//
-			if (!Objects.equals(ElementUtil.tagName(firstElement = IterableUtils.get(children, 0)), "em")) {
+					|| (map = ObjectUtils.getIfNull(map, LinkedHashMap::new)) == null
+					|| !Objects.equals(ElementUtil.tagName(firstElement = IterableUtils.get(children, 0)), "em")) {
 				//
 				continue;
 				//
