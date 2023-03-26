@@ -241,13 +241,13 @@ public class MapReportGui extends JFrame
 		//
 	}
 
-	private static <E> void add(final Collection<E> items, final E item) {
+	private static <E> void add(@Nullable final Collection<E> items, final E item) {
 		if (items != null) {
 			items.add(item);
 		}
 	}
 
-	private static boolean isAssignableFrom(final Class<?> a, @Nullable final Class<?> b) {
+	private static boolean isAssignableFrom(@Nullable final Class<?> a, @Nullable final Class<?> b) {
 		return a != null && b != null && a.isAssignableFrom(b);
 	}
 
