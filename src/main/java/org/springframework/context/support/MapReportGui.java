@@ -130,9 +130,8 @@ public class MapReportGui extends JFrame
 			//
 			try {
 				//
-				if ((object = ObjectMapperUtil.readValue(new ObjectMapper(),
-						tfAttributeJson != null ? tfAttributeJson.getText() : null, Object.class)) != null
-						&& !(object instanceof Map)) {
+				if ((object = ObjectMapperUtil.readValue(new ObjectMapper(), getText(tfAttributeJson),
+						Object.class)) != null && !(object instanceof Map)) {
 					//
 					throw new IllegalStateException();
 					//
@@ -198,6 +197,10 @@ public class MapReportGui extends JFrame
 
 	private static Object getSource(@Nullable final EventObject instance) {
 		return instance != null ? instance.getSource() : null;
+	}
+
+	private static String getText(final JTextComponent instance) {
+		return instance != null ? instance.getText() : null;
 	}
 
 	@Nullable
