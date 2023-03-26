@@ -196,7 +196,7 @@ public class MapReportGui extends JFrame
 			//
 	}
 
-	private static Object getSource(final EventObject instance) {
+	private static Object getSource(@Nullable final EventObject instance) {
 		return instance != null ? instance.getSource() : null;
 	}
 
