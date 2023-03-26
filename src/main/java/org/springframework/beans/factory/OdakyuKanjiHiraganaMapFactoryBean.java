@@ -60,7 +60,7 @@ public class OdakyuKanjiHiraganaMapFactoryBean extends StringMapFromResourceFact
 			value = ElementUtil.text(IterableUtils.get(children, 0));
 			//
 			if (map.containsKey(key = ElementUtil.text(IterableUtils.get(children, 1)))
-					&& Objects.equals(map.get(key), value)) {
+					&& !Objects.equals(map.get(key), value)) {
 				//
 				throw new IllegalStateException();
 				//
