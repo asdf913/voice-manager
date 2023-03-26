@@ -459,6 +459,7 @@
 	<!-- -->
 	<bean class="org.springframework.context.support.MapReportGui">
 		<property name="layout" ref="MigLayout" />
+		<property name="defaultCloseOperation" value="3" />
 	</bean>
 
 	<bean id="DataSource" class="org.h2.jdbcx.JdbcConnectionPool"
