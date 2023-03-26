@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.EventObject;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -122,7 +123,7 @@ public class MapReportGui extends JFrame
 	@Override
 	public void actionPerformed(final ActionEvent evt) {
 		//
-		if (Objects.equals(evt != null ? evt.getSource() : null, btnExecute)) {
+		if (Objects.equals(getSource(evt), btnExecute)) {
 			//
 			Object object = null;
 			//
@@ -192,6 +193,10 @@ public class MapReportGui extends JFrame
 				//
 		} // if
 			//
+	}
+
+	private static Object getSource(final EventObject instance) {
+		return instance != null ? instance.getSource() : null;
 	}
 
 	private static List<String> getBeanDefinitionNamesByClassAndAttributes(
