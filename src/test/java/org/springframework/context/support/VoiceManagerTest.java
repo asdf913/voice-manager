@@ -1074,7 +1074,7 @@ class VoiceManagerTest {
 				.setAccessible(true);
 		//
 		(METHOD_GET_I_VALUE0_FROM_MAPS_BY_KEY = clz.getDeclaredMethod("getIValue0FromMapsByKey", Iterable.class,
-				Object.class)).setAccessible(true);
+				Object.class, Function.class)).setAccessible(true);
 		//
 		(METHOD_IS_ALL_CHARACTERS_ALLOWED = clz.getDeclaredMethod("isAllCharactersAllowed", CharSequence.class,
 				char[].class)).setAccessible(true);
@@ -9860,7 +9860,7 @@ class VoiceManagerTest {
 		//
 		final Iterable iterable = Reflection.newProxy(Iterable.class, ih);
 		//
-		Assertions.assertNull(getIValue0FromMapsByKey(iterable, null));
+		Assertions.assertNull(getIValue0FromMapsByKey(iterable, null, null));
 		//
 		if (ih != null) {
 			//
@@ -9868,7 +9868,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(getIValue0FromMapsByKey(iterable, null));
+		Assertions.assertNull(getIValue0FromMapsByKey(iterable, null, null));
 		//
 		final Map<?, ?> map = Collections.singletonMap(null, null);
 		//
@@ -9878,7 +9878,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertEquals(Unit.with(null), getIValue0FromMapsByKey(iterable, null));
+		Assertions.assertEquals(Unit.with(null), getIValue0FromMapsByKey(iterable, null, null));
 		//
 		if (ih != null) {
 			//
@@ -9886,13 +9886,14 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> getIValue0FromMapsByKey(iterable, null));
+		Assertions.assertDoesNotThrow(() -> getIValue0FromMapsByKey(iterable, null, null));
 		//
 	}
 
-	private static IValue0<?> getIValue0FromMapsByKey(final Iterable<Map> maps, final Object key) throws Throwable {
+	private static IValue0<?> getIValue0FromMapsByKey(final Iterable<Map> maps, final Object key,
+			final Function<Collection<?>, IValue0<?>> function) throws Throwable {
 		try {
-			final Object obj = METHOD_GET_I_VALUE0_FROM_MAPS_BY_KEY.invoke(null, maps, key);
+			final Object obj = METHOD_GET_I_VALUE0_FROM_MAPS_BY_KEY.invoke(null, maps, key, function);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof IValue0) {

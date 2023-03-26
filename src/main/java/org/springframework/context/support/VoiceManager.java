@@ -6108,7 +6108,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		if (ivHiragana == null) {
 			//
-			ivHiragana = getIValue0FromMapsByKey(mapHiragana, textImport);
+			ivHiragana = getIValue0FromMapsByKey(mapHiragana, textImport,
+					createFunctionForBtnConvertToHiraganaOrKatakana("Hiragana"));
 			//
 		} // if
 			//
@@ -6182,7 +6183,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@Nullable
-	private static IValue0<?> getIValue0FromMapsByKey(@Nullable final Iterable<Map> maps, @Nullable final Object key) {
+	private static IValue0<?> getIValue0FromMapsByKey(@Nullable final Iterable<Map> maps, @Nullable final Object key,
+			final Function<Collection<?>, IValue0<?>> function) {
 		//
 		if (maps == null || iterator(maps) == null) {
 			//
@@ -6206,6 +6208,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} else if (!Objects.equals(IValue0Util.getValue0(iValue0), value)) {
 					//
+					final IValue0<?> iv0 = apply(function, Arrays.asList(IValue0Util.getValue0(iValue0), value));
+					//
+					if (iv0 != null) {
+						//
+						return iv0;
+						//
+					} //
+						//
 					throw new IllegalStateException();
 					//
 				} // if
@@ -6373,7 +6383,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final String string = getText(tfTextImport);
 		//
-		final IValue0<?> iValue0 = getIValue0FromMapsByKey(mapRomaji, string);
+		final IValue0<?> iValue0 = getIValue0FromMapsByKey(mapRomaji, string,
+				createFunctionForBtnConvertToHiraganaOrKatakana("Romaji"));
 		//
 		final String romaji = convert(jakaroma = ObjectUtils.getIfNull(jakaroma, Jakaroma::new), string, false, false);
 		//
