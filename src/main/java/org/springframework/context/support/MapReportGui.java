@@ -208,11 +208,11 @@ public class MapReportGui extends JFrame
 		}
 	}
 
-	private static Integer getRowCount(final TableModel instance) {
+	private static Integer getRowCount(@Nullable final TableModel instance) {
 		return instance != null ? Integer.valueOf(instance.getRowCount()) : null;
 	}
 
-	private static int intValue(final Number instance, final int defaultValue) {
+	private static int intValue(@Nullable final Number instance, final int defaultValue) {
 		return instance != null ? instance.intValue() : defaultValue;
 	}
 
