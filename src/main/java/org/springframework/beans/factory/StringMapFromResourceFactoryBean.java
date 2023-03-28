@@ -328,7 +328,7 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 	}
 
 	@Nullable
-	private static String getString(@Nullable final Cell cell, final FormulaEvaluator formulaEvaluator) {
+	private static String getString(@Nullable final Cell cell, @Nullable final FormulaEvaluator formulaEvaluator) {
 		//
 		if (cell == null) {
 			//
