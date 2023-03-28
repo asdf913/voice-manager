@@ -321,7 +321,7 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 		//
 	}
 
-	private static String getString(final Cell cell) {
+	private static String getString(@Nullable final Cell cell) {
 		//
 		if (cell == null) {
 			//
