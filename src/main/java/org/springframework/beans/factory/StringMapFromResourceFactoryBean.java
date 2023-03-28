@@ -341,6 +341,10 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 			//
 			iv = Unit.with(Double.toString(cell.getNumericCellValue()));
 			//
+		} else if (Objects.equals(cellType, CellType.BOOLEAN)) {
+			//
+			iv = Unit.with(Boolean.toString(cell.getBooleanCellValue()));
+			//
 		} // if
 			//
 		if (iv == null) {

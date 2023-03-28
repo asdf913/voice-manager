@@ -80,6 +80,8 @@ class StringMapFromResourceFactoryBeanTest {
 
 		private Double numericCellValue = null;
 
+		private Boolean booleanCellValue = null;
+
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
@@ -120,6 +122,10 @@ class StringMapFromResourceFactoryBeanTest {
 				} else if (Objects.equals(methodName, "getNumericCellValue")) {
 					//
 					return numericCellValue;
+					//
+				} else if (Objects.equals(methodName, "getBooleanCellValue")) {
+					//
+					return booleanCellValue;
 					//
 				} // if
 					//
@@ -602,6 +608,18 @@ class StringMapFromResourceFactoryBeanTest {
 		} // if
 			//
 		Assertions.assertEquals(d != null ? d.toString() : null, getString(cell));
+		//
+		final Boolean b = Boolean.TRUE;
+		//
+		if (ih != null) {
+			//
+			ih.cellType = CellType.BOOLEAN;
+			//
+			ih.booleanCellValue = b;
+			//
+		} // if
+			//
+		Assertions.assertEquals(b != null ? b.toString() : null, getString(cell));
 		//
 	}
 
