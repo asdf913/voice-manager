@@ -15,6 +15,7 @@ import java.util.stream.IntStream;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.RowUtil;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -36,7 +37,7 @@ import com.google.common.reflect.Reflection;
 class StringMapFromResourceFactoryBeanTest {
 
 	private static Method METHOD_TEST_AND_ACCEPT, METHOD_GET_PHYSICAL_NUMBER_OF_CELLS, METHOD_TEST, METHOD_CREATE_MAP,
-			METHOD_GET_VALUE_CELL = null;
+			METHOD_GET_VALUE_CELL, METHOD_GET_STRING = null;
 
 	private static Class<?> CLASS_OBJECT_INT_MAP = null;
 
@@ -56,6 +57,8 @@ class StringMapFromResourceFactoryBeanTest {
 		(METHOD_CREATE_MAP = clz.getDeclaredMethod("createMap", Sheet.class, IValue0.class, Pair.class))
 				.setAccessible(true);
 		//
+		(METHOD_GET_STRING = clz.getDeclaredMethod("getString", Cell.class)).setAccessible(true);
+		//
 		(METHOD_GET_VALUE_CELL = clz.getDeclaredMethod("getValueCell", Row.class,
 				CLASS_OBJECT_INT_MAP = Class
 						.forName("org.springframework.beans.factory.StringMapFromResourceFactoryBean$ObjectIntMap"),
@@ -70,6 +73,12 @@ class StringMapFromResourceFactoryBeanTest {
 		private Iterator<?> iterator = null;
 
 		private Integer integer = null;
+
+		private CellType cellType = null;
+
+		private String stringCellValue = null;
+
+		private Double numericCellValue = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -95,6 +104,22 @@ class StringMapFromResourceFactoryBeanTest {
 				if (Objects.equals(methodName, "iterator")) {
 					//
 					return iterator;
+					//
+				} // if
+					//
+			} else if (proxy instanceof Cell) {
+				//
+				if (Objects.equals(methodName, "getCellType")) {
+					//
+					return cellType;
+					//
+				} else if (Objects.equals(methodName, "getStringCellValue")) {
+					//
+					return stringCellValue;
+					//
+				} else if (Objects.equals(methodName, "getNumericCellValue")) {
+					//
+					return numericCellValue;
 					//
 				} // if
 					//
@@ -542,6 +567,51 @@ class StringMapFromResourceFactoryBeanTest {
 				return null;
 			} else if (obj instanceof Cell) {
 				return (Cell) obj;
+			}
+			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetString() throws Throwable {
+		//
+		Assertions.assertNull(getString(null));
+		//
+		final Cell cell = Reflection.newProxy(Cell.class, ih);
+		//
+		Assertions.assertThrows(IllegalStateException.class, () -> getString(cell));
+		//
+		if (ih != null) {
+			//
+			ih.cellType = CellType.STRING;
+			//
+		} // if
+			//
+		Assertions.assertNull(getString(cell));
+		//
+		final Double d = Double.valueOf(1.2);
+		//
+		if (ih != null) {
+			//
+			ih.cellType = CellType.NUMERIC;
+			//
+			ih.numericCellValue = d;
+			//
+		} // if
+			//
+		Assertions.assertEquals(d != null ? d.toString() : null, getString(cell));
+		//
+	}
+
+	private static String getString(final Cell cell) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_STRING.invoke(null, cell);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
 			}
 			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
 		} catch (final InvocationTargetException e) {

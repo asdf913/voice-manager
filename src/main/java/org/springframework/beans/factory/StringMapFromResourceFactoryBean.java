@@ -25,6 +25,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.CellUtil;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.RowUtil;
@@ -312,11 +313,43 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 				//
 			testAndAccept((a, b, c) -> and(Objects::nonNull, b, c), IValue0Util.getValue0(result), cellKey,
 					getValueCell(row, objectIntMap, valueColumnNameAndIndex),
-					(a, b, c) -> put(a, CellUtil.getStringCellValue(b), CellUtil.getStringCellValue(c)));
+					(a, b, c) -> put(a, getString(b), getString(c)));
 			//
 		} // for
 			//
 		return result;
+		//
+	}
+
+	private static String getString(final Cell cell) {
+		//
+		if (cell == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		final CellType cellType = cell.getCellType();
+		//
+		IValue0<String> iv = null;
+		//
+		if (Objects.equals(cellType, CellType.STRING)) {
+			//
+			iv = Unit.with(CellUtil.getStringCellValue(cell));
+			//
+		} else if (Objects.equals(cellType, CellType.NUMERIC)) {
+			//
+			iv = Unit.with(Double.toString(cell.getNumericCellValue()));
+			//
+		} // if
+			//
+		if (iv == null) {
+			//
+			throw new IllegalStateException(cellType != null ? cellType.toString() : null);
+			//
+		} // if
+			//
+		return IValue0Util.getValue0(iv);
 		//
 	}
 
