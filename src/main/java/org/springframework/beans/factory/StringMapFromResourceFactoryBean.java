@@ -362,7 +362,7 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 				//
 			} else if (Objects.equals(cellType, CellType.STRING)) {
 				//
-				iv = Unit.with(cellValue.getStringValue());
+				iv = Unit.with(getStringValue(cellValue));
 				//
 			} // if
 				//
@@ -376,6 +376,10 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 			//
 		return IValue0Util.getValue0(iv);
 		//
+	}
+
+	private static String getStringValue(final CellValue instance) {
+		return instance != null ? instance.getStringValue() : null;
 	}
 
 	@Nullable
