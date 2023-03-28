@@ -27,11 +27,15 @@ import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.CellUtil;
+import org.apache.poi.ss.usermodel.CellValue;
+import org.apache.poi.ss.usermodel.CreationHelperUtil;
+import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.RowUtil;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.ss.usermodel.WorkbookUtil;
 import org.javatuples.Pair;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
@@ -249,7 +253,8 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 					//
 				} // if
 					//
-				result = createMap(sheet, keyColumnName, valueColumnNameAndIndex);
+				result = createMap(sheet, CreationHelperUtil.createFormulaEvaluator(WorkbookUtil.getCreationHelper(wb)),
+						keyColumnName, valueColumnNameAndIndex);
 				//
 			} // try
 				//
@@ -261,7 +266,8 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 
 	@Nullable
 	private static IValue0<Map<String, String>> createMap(@Nullable final Sheet sheet,
-			final IValue0<String> keyColumnName, final Pair<String, Integer> valueColumnNameAndIndex) {
+			final FormulaEvaluator formulaEvaluator, final IValue0<String> keyColumnName,
+			final Pair<String, Integer> valueColumnNameAndIndex) {
 		//
 		if (sheet == null || sheet.iterator() == null) {
 			//
@@ -313,7 +319,7 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 				//
 			testAndAccept((a, b, c) -> and(Objects::nonNull, b, c), IValue0Util.getValue0(result), cellKey,
 					getValueCell(row, objectIntMap, valueColumnNameAndIndex),
-					(a, b, c) -> put(a, getString(b), getString(c)));
+					(a, b, c) -> put(a, getString(b, formulaEvaluator), getString(c, formulaEvaluator)));
 			//
 		} // for
 			//
@@ -321,7 +327,7 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 		//
 	}
 
-	private static String getString(@Nullable final Cell cell) {
+	private static String getString(@Nullable final Cell cell, final FormulaEvaluator formulaEvaluator) {
 		//
 		if (cell == null) {
 			//
@@ -329,7 +335,7 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 			//
 		} // if
 			//
-		final CellType cellType = cell.getCellType();
+		CellType cellType = cell.getCellType();
 		//
 		IValue0<String> iv = null;
 		//
@@ -345,6 +351,20 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 			//
 			iv = Unit.with(Boolean.toString(cell.getBooleanCellValue()));
 			//
+		} else if (Objects.equals(cellType, CellType.FORMULA)) {
+			//
+			final CellValue cellValue = formulaEvaluator != null ? formulaEvaluator.evaluate(cell) : null;
+			//
+			if (Objects.equals(cellType = cellValue != null ? cellValue.getCellType() : null, CellType.BOOLEAN)) {
+				//
+				iv = Unit.with(Boolean.toString(cellValue.getBooleanValue()));
+				//
+			} else if (Objects.equals(cellType, CellType.STRING)) {
+				//
+				iv = Unit.with(cellValue.getStringValue());
+				//
+			} // if
+				//
 		} // if
 			//
 		if (iv == null) {

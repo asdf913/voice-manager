@@ -16,6 +16,8 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.CellValue;
+import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.RowUtil;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -54,10 +56,11 @@ class StringMapFromResourceFactoryBeanTest {
 		//
 		(METHOD_TEST = clz.getDeclaredMethod("test", Predicate.class, Object.class)).setAccessible(true);
 		//
-		(METHOD_CREATE_MAP = clz.getDeclaredMethod("createMap", Sheet.class, IValue0.class, Pair.class))
-				.setAccessible(true);
+		(METHOD_CREATE_MAP = clz.getDeclaredMethod("createMap", Sheet.class, FormulaEvaluator.class, IValue0.class,
+				Pair.class)).setAccessible(true);
 		//
-		(METHOD_GET_STRING = clz.getDeclaredMethod("getString", Cell.class)).setAccessible(true);
+		(METHOD_GET_STRING = clz.getDeclaredMethod("getString", Cell.class, FormulaEvaluator.class))
+				.setAccessible(true);
 		//
 		(METHOD_GET_VALUE_CELL = clz.getDeclaredMethod("getValueCell", Row.class,
 				CLASS_OBJECT_INT_MAP = Class
@@ -81,6 +84,8 @@ class StringMapFromResourceFactoryBeanTest {
 		private Double numericCellValue = null;
 
 		private Boolean booleanCellValue = null;
+
+		private CellValue cellValue = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -126,6 +131,14 @@ class StringMapFromResourceFactoryBeanTest {
 				} else if (Objects.equals(methodName, "getBooleanCellValue")) {
 					//
 					return booleanCellValue;
+					//
+				} // if
+					//
+			} else if (proxy instanceof FormulaEvaluator) {
+				//
+				if (Objects.equals(methodName, "evaluate")) {
+					//
+					return cellValue;
 					//
 				} // if
 					//
@@ -523,16 +536,16 @@ class StringMapFromResourceFactoryBeanTest {
 	@Test
 	void testCreateMap() throws Throwable {
 		//
-		Assertions.assertNull(createMap(null, null, null));
+		Assertions.assertNull(createMap(null, null, null, null));
 		//
-		Assertions.assertNull(createMap(Reflection.newProxy(Sheet.class, ih), null, null));
+		Assertions.assertNull(createMap(Reflection.newProxy(Sheet.class, ih), null, null, null));
 		//
 	}
 
-	private static IValue0<Map<String, String>> createMap(final Sheet sheet, final IValue0<String> keyColumnName,
-			final IValue0<String> valueColumnName) throws Throwable {
+	private static IValue0<Map<String, String>> createMap(final Sheet sheet, final FormulaEvaluator formulaEvaluator,
+			final IValue0<String> keyColumnName, final IValue0<String> valueColumnName) throws Throwable {
 		try {
-			final Object obj = METHOD_CREATE_MAP.invoke(null, sheet, keyColumnName, valueColumnName);
+			final Object obj = METHOD_CREATE_MAP.invoke(null, sheet, formulaEvaluator, keyColumnName, valueColumnName);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof IValue0) {
@@ -583,11 +596,11 @@ class StringMapFromResourceFactoryBeanTest {
 	@Test
 	void testGetString() throws Throwable {
 		//
-		Assertions.assertNull(getString(null));
+		Assertions.assertNull(getString(null, null));
 		//
 		final Cell cell = Reflection.newProxy(Cell.class, ih);
 		//
-		Assertions.assertThrows(IllegalStateException.class, () -> getString(cell));
+		Assertions.assertThrows(IllegalStateException.class, () -> getString(cell, null));
 		//
 		if (ih != null) {
 			//
@@ -595,7 +608,7 @@ class StringMapFromResourceFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(getString(cell));
+		Assertions.assertNull(getString(cell, null));
 		//
 		final Double d = Double.valueOf(1.2);
 		//
@@ -607,7 +620,7 @@ class StringMapFromResourceFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertEquals(d != null ? d.toString() : null, getString(cell));
+		Assertions.assertEquals(d != null ? d.toString() : null, getString(cell, null));
 		//
 		final Boolean b = Boolean.TRUE;
 		//
@@ -619,13 +632,33 @@ class StringMapFromResourceFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertEquals(b != null ? b.toString() : null, getString(cell));
+		Assertions.assertEquals(b != null ? b.toString() : null, getString(cell, null));
+		//
+		if (ih != null) {
+			//
+			ih.cellType = CellType.FORMULA;
+			//
+		} // if
+			//
+		Assertions.assertThrows(IllegalStateException.class, () -> getString(cell, null));
+		//
+		final FormulaEvaluator formulaEvaluator = Reflection.newProxy(FormulaEvaluator.class, ih);
+		//
+		Assertions.assertThrows(IllegalStateException.class, () -> getString(cell, formulaEvaluator));
+		//
+		if (ih != null) {
+			//
+			ih.cellValue = new CellValue(null);
+			//
+		} // if
+			//
+		Assertions.assertNull(getString(cell, formulaEvaluator));
 		//
 	}
 
-	private static String getString(final Cell cell) throws Throwable {
+	private static String getString(final Cell cell, final FormulaEvaluator formulaEvaluator) throws Throwable {
 		try {
-			final Object obj = METHOD_GET_STRING.invoke(null, cell);
+			final Object obj = METHOD_GET_STRING.invoke(null, cell, formulaEvaluator);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof String) {
