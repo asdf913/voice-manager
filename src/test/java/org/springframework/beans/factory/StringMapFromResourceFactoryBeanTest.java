@@ -41,7 +41,7 @@ class StringMapFromResourceFactoryBeanTest {
 
 	private static Method METHOD_TEST_AND_ACCEPT, METHOD_GET_PHYSICAL_NUMBER_OF_CELLS, METHOD_TO_STRING, METHOD_TEST,
 			METHOD_CREATE_MAP, METHOD_GET_VALUE_CELL_AND_FORMULA_EVALUATOR, METHOD_GET_STRING_FORMULA_ERROR,
-			METHOD_GET_STRING_VALUE, METHOD_GET_VALUE_CELL = null;
+			METHOD_GET_VALUE_CELL = null;
 
 	private static Class<?> CLASS_OBJECT_INT_MAP = null;
 
@@ -67,8 +67,6 @@ class StringMapFromResourceFactoryBeanTest {
 				FormulaEvaluator.class)).setAccessible(true);
 		//
 		(METHOD_GET_STRING_FORMULA_ERROR = clz.getDeclaredMethod("getString", FormulaError.class)).setAccessible(true);
-		//
-		(METHOD_GET_STRING_VALUE = clz.getDeclaredMethod("getStringValue", CellValue.class)).setAccessible(true);
 		//
 		(METHOD_GET_VALUE_CELL = clz.getDeclaredMethod("getValueCell", Row.class,
 				CLASS_OBJECT_INT_MAP = Class
@@ -730,27 +728,6 @@ class StringMapFromResourceFactoryBeanTest {
 	private static String getString(final FormulaError instance) throws Throwable {
 		try {
 			final Object obj = METHOD_GET_STRING_FORMULA_ERROR.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(toString(obj.getClass()));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetStringValue() throws Throwable {
-		//
-		Assertions.assertNull(getStringValue(null));
-		//
-	}
-
-	private static String getStringValue(final CellValue instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_STRING_VALUE.invoke(null, instance);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof String) {

@@ -390,7 +390,7 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 			//
 		} else if (Objects.equals(cellType, CellType.STRING)) {
 			//
-			iv = Unit.with(getStringValue(cellValue));
+			iv = Unit.with(CellValueUtil.getStringValue(cellValue));
 			//
 		} else if (Objects.equals(cellType, CellType.ERROR)) {
 			//
@@ -425,11 +425,6 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 	@Nullable
 	private static String getString(@Nullable final FormulaError instance) {
 		return instance != null ? instance.getString() : null;
-	}
-
-	@Nullable
-	private static String getStringValue(@Nullable final CellValue instance) {
-		return instance != null ? instance.getStringValue() : null;
 	}
 
 	@Nullable
