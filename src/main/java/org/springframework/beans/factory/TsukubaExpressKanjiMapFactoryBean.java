@@ -35,6 +35,7 @@ public class TsukubaExpressKanjiMapFactoryBean implements FactoryBean<Map<String
 
 	private String url = null;
 
+	@Nullable
 	private RomajiOrHiragana romajiOrHiragana = null;
 
 	public void setUrl(final String url) {
