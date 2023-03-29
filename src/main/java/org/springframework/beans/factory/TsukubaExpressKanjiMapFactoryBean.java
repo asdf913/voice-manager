@@ -124,6 +124,7 @@ public class TsukubaExpressKanjiMapFactoryBean implements FactoryBean<Map<String
 		return Map.class;
 	}
 
+	@Nullable
 	private static Entry<String, String> createEntry(final String url, final RomajiOrHiragana roh) throws IOException {
 		//
 		final Element document = testAndApply(Objects::nonNull, testAndApply(Objects::nonNull, url, URL::new, null),
