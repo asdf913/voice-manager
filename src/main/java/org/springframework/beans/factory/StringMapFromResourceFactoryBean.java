@@ -356,7 +356,7 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 			//
 		} else if (Objects.equals(cellType, CellType.FORMULA)) {
 			//
-			final CellValue cellValue = formulaEvaluator != null ? formulaEvaluator.evaluate(cell) : null;
+			final CellValue cellValue = evaluate(formulaEvaluator, cell);
 			//
 			if (Objects.equals(cellType = cellValue != null ? cellValue.getCellType() : null, CellType.BOOLEAN)) {
 				//
@@ -388,6 +388,10 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 			//
 		return IValue0Util.getValue0(iv);
 		//
+	}
+
+	private static CellValue evaluate(final FormulaEvaluator instance, final Cell cell) {
+		return instance != null ? instance.evaluate(cell) : null;
 	}
 
 	@Nullable
