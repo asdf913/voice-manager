@@ -22,6 +22,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.poi.ss.usermodel.Cell;
@@ -29,6 +30,7 @@ import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.CellUtil;
 import org.apache.poi.ss.usermodel.CellValue;
 import org.apache.poi.ss.usermodel.CreationHelperUtil;
+import org.apache.poi.ss.usermodel.FormulaError;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.RowUtil;
@@ -363,6 +365,16 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 			} else if (Objects.equals(cellType, CellType.STRING)) {
 				//
 				iv = Unit.with(getStringValue(cellValue));
+				//
+			} else if (Objects.equals(cellType, CellType.ERROR)) {
+				//
+				final FormulaError formulaError = FormulaError.isValidCode(cellValue.getErrorValue())
+						? FormulaError.forInt(cellValue.getErrorValue())
+						: null;
+				//
+				final String string = formulaError != null ? formulaError.getString() : null;
+				//
+				iv = Unit.with(StringUtils.isNotBlank(string) ? string : Byte.toString(cellValue.getErrorValue()));
 				//
 			} // if
 				//

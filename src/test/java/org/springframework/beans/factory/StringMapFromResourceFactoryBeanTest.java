@@ -656,6 +656,22 @@ class StringMapFromResourceFactoryBeanTest {
 			//
 		Assertions.assertNull(getString(cell, formulaEvaluator));
 		//
+		if (ih != null) {
+			//
+			ih.cellValue = CellValue.getError(0);
+			//
+		} // if
+			//
+		Assertions.assertEquals("#NULL!", getString(cell, formulaEvaluator));
+		//
+		if (ih != null) {
+			//
+			ih.cellValue = CellValue.getError(Integer.MAX_VALUE);
+			//
+		} // if
+			//
+		Assertions.assertEquals("(no error)", getString(cell, formulaEvaluator));
+		//
 	}
 
 	private static String getString(final Cell cell, final FormulaEvaluator formulaEvaluator) throws Throwable {
