@@ -342,7 +342,7 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 		//
 		IValue0<String> iv = null;
 		//
-		if (Objects.equals(cellType, CellType.STRING)) {
+		if (Objects.equals(cellType, CellType.STRING) || Objects.equals(cellType, CellType.BLANK)) {
 			//
 			iv = Unit.with(CellUtil.getStringCellValue(cell));
 			//

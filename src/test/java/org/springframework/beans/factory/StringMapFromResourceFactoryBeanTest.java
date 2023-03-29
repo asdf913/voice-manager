@@ -641,6 +641,14 @@ class StringMapFromResourceFactoryBeanTest {
 			//
 		Assertions.assertNull(getString(cell, null));
 		//
+		if (ih != null) {
+			//
+			ih.cellType = CellType.BLANK;
+			//
+		} // if
+			//
+		Assertions.assertNull(getString(cell, null));
+		//
 		final Double d = Double.valueOf(1.2);
 		//
 		if (ih != null) {
