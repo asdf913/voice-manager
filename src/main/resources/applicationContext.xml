@@ -198,6 +198,15 @@
 			value="classpath:KyushuRailway.xlsx" />
 	</bean>
 
+	<!-- Tsukuba Express - hiragana -->
+	<bean
+		class="org.springframework.beans.factory.TsukubaExpressKanjiMapFactoryBean">
+		<meta key="value" value="hiragana" />
+		<property name="url"
+			value="${org.springframework.beans.factory.TsukubaExpressKanjiMapFactoryBean.url}" />
+		<property name="romajiOrHiragana" value="hiragana" />
+	</bean>
+
 	<!-- romaji -->
 	<bean
 		class="org.springframework.beans.factory.StringMapFromResourceFactoryBean">
