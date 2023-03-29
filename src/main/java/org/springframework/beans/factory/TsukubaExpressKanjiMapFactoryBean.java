@@ -166,7 +166,7 @@ public class TsukubaExpressKanjiMapFactoryBean implements FactoryBean<Map<String
 				//
 			} // if
 				//
-			ss.add(s);
+			add(ss, s);
 			//
 		} // for
 			//
@@ -182,6 +182,12 @@ public class TsukubaExpressKanjiMapFactoryBean implements FactoryBean<Map<String
 
 	private static boolean contains(@Nullable final Collection<?> items, final Object item) {
 		return items != null && items.contains(item);
+	}
+
+	private static <T> void add(final Collection<T> items, final T item) {
+		if (items != null) {
+			items.add(item);
+		}
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(@Nullable final Predicate<T> predicate, final T value,
