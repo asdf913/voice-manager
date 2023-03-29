@@ -380,12 +380,16 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 			//
 		if (iv == null) {
 			//
-			throw new IllegalStateException(cellType != null ? cellType.toString() : null);
+			throw new IllegalStateException(toString(cellType));
 			//
 		} // if
 			//
 		return IValue0Util.getValue0(iv);
 		//
+	}
+
+	private static String toString(final Object instance) {
+		return instance != null ? instance.toString() : null;
 	}
 
 	@Nullable
