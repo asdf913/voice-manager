@@ -358,7 +358,7 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 			//
 			final CellValue cellValue = evaluate(formulaEvaluator, cell);
 			//
-			if (Objects.equals(cellType = cellValue != null ? cellValue.getCellType() : null, CellType.BOOLEAN)) {
+			if (Objects.equals(cellType = getCellType(cellValue), CellType.BOOLEAN)) {
 				//
 				iv = Unit.with(Boolean.toString(cellValue.getBooleanValue()));
 				//
@@ -393,6 +393,10 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 	@Nullable
 	private static CellValue evaluate(@Nullable final FormulaEvaluator instance, final Cell cell) {
 		return instance != null ? instance.evaluate(cell) : null;
+	}
+
+	private static CellType getCellType(final CellValue instance) {
+		return instance != null ? instance.getCellType() : null;
 	}
 
 	@Nullable
