@@ -200,10 +200,17 @@
 
 	<!-- Tsukuba Express - hiragana -->
 	<bean
+		id="org.springframework.beans.factory.TsukubaExpressKanjiMapFactoryBean.url"
+		class="java.lang.String">
+		<constructor-arg
+			value="${org.springframework.beans.factory.TsukubaExpressKanjiMapFactoryBean.url}" />
+	</bean>
+
+	<bean
 		class="org.springframework.beans.factory.TsukubaExpressKanjiMapFactoryBean">
 		<meta key="value" value="hiragana" />
 		<property name="url"
-			value="${org.springframework.beans.factory.TsukubaExpressKanjiMapFactoryBean.url}" />
+			ref="org.springframework.beans.factory.TsukubaExpressKanjiMapFactoryBean.url" />
 		<property name="romajiOrHiragana" value="hiragana" />
 		<property name="keyColumnName" value="kanji" />
 		<property name="valueColumnName" value="hiragana" />
@@ -257,6 +264,20 @@
 		<property name="valueColumnName" value="romaji" />
 		<property name="valueColumnIndex" value="1" />
 		<property name="resource" value="classpath:RinkaiSen.xlsx" />
+	</bean>
+
+	<!-- Tsukuba Express - romaji -->
+	<bean
+		class="org.springframework.beans.factory.TsukubaExpressKanjiMapFactoryBean">
+		<meta key="value" value="romaji" />
+		<property name="url"
+			ref="org.springframework.beans.factory.TsukubaExpressKanjiMapFactoryBean.url" />
+		<property name="romajiOrHiragana" value="romaji" />
+		<property name="keyColumnName" value="kanji" />
+		<property name="valueColumnName" value="romaji" />
+		<property name="valueColumnIndex" value="2" />
+		<property name="resource"
+			value="classpath:TsukubaExpress.xlsx" />
 	</bean>
 
 	<!-- -->
