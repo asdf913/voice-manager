@@ -390,6 +390,7 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 		//
 	}
 
+	@Nullable
 	private static String getStringValue(@Nullable final CellValue instance) {
 		return instance != null ? instance.getStringValue() : null;
 	}
