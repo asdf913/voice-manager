@@ -390,7 +390,7 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 		//
 	}
 
-	private static CellValue evaluate(final FormulaEvaluator instance, final Cell cell) {
+	private static CellValue evaluate(@Nullable final FormulaEvaluator instance, final Cell cell) {
 		return instance != null ? instance.evaluate(cell) : null;
 	}
 
