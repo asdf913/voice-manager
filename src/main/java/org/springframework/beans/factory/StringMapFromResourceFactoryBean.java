@@ -397,7 +397,7 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 		return instance != null ? instance.getCellType() : null;
 	}
 
-	private static String getString(final FormulaError instance) {
+	private static String getString(@Nullable final FormulaError instance) {
 		return instance != null ? instance.getString() : null;
 	}
 
