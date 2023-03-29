@@ -17,6 +17,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.CellValue;
+import org.apache.poi.ss.usermodel.FormulaError;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.RowUtil;
@@ -39,7 +40,8 @@ import com.google.common.reflect.Reflection;
 class StringMapFromResourceFactoryBeanTest {
 
 	private static Method METHOD_TEST_AND_ACCEPT, METHOD_GET_PHYSICAL_NUMBER_OF_CELLS, METHOD_TEST, METHOD_CREATE_MAP,
-			METHOD_GET_VALUE_CELL, METHOD_GET_STRING, METHOD_GET_STRING_VALUE = null;
+			METHOD_GET_VALUE_CELL_AND_FORMULA_EVALUATOR, METHOD_GET_STRING_FORMULA_ERROR, METHOD_GET_STRING_VALUE,
+			METHOD_GET_VALUE_CELL = null;
 
 	private static Class<?> CLASS_OBJECT_INT_MAP = null;
 
@@ -59,8 +61,10 @@ class StringMapFromResourceFactoryBeanTest {
 		(METHOD_CREATE_MAP = clz.getDeclaredMethod("createMap", Sheet.class, FormulaEvaluator.class, IValue0.class,
 				Pair.class)).setAccessible(true);
 		//
-		(METHOD_GET_STRING = clz.getDeclaredMethod("getString", Cell.class, FormulaEvaluator.class))
-				.setAccessible(true);
+		(METHOD_GET_VALUE_CELL_AND_FORMULA_EVALUATOR = clz.getDeclaredMethod("getString", Cell.class,
+				FormulaEvaluator.class)).setAccessible(true);
+		//
+		(METHOD_GET_STRING_FORMULA_ERROR = clz.getDeclaredMethod("getString", FormulaError.class)).setAccessible(true);
 		//
 		(METHOD_GET_STRING_VALUE = clz.getDeclaredMethod("getStringValue", CellValue.class)).setAccessible(true);
 		//
@@ -672,11 +676,27 @@ class StringMapFromResourceFactoryBeanTest {
 			//
 		Assertions.assertEquals("(no error)", getString(cell, formulaEvaluator));
 		//
+		Assertions.assertNull(getString(null));
+		//
 	}
 
 	private static String getString(final Cell cell, final FormulaEvaluator formulaEvaluator) throws Throwable {
 		try {
-			final Object obj = METHOD_GET_STRING.invoke(null, cell, formulaEvaluator);
+			final Object obj = METHOD_GET_VALUE_CELL_AND_FORMULA_EVALUATOR.invoke(null, cell, formulaEvaluator);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static String getString(final FormulaError instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_STRING_FORMULA_ERROR.invoke(null, instance);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof String) {

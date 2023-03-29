@@ -368,11 +368,9 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 				//
 			} else if (Objects.equals(cellType, CellType.ERROR)) {
 				//
-				final FormulaError formulaError = FormulaError.isValidCode(cellValue.getErrorValue())
+				final String string = getString(FormulaError.isValidCode(cellValue.getErrorValue())
 						? FormulaError.forInt(cellValue.getErrorValue())
-						: null;
-				//
-				final String string = formulaError != null ? formulaError.getString() : null;
+						: null);
 				//
 				iv = Unit.with(StringUtils.isNotBlank(string) ? string : Byte.toString(cellValue.getErrorValue()));
 				//
@@ -397,6 +395,10 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 
 	private static CellType getCellType(@Nullable final CellValue instance) {
 		return instance != null ? instance.getCellType() : null;
+	}
+
+	private static String getString(final FormulaError instance) {
+		return instance != null ? instance.getString() : null;
 	}
 
 	@Nullable
