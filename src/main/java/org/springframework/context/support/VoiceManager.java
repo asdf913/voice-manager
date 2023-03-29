@@ -6230,6 +6230,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
+	@Nullable
 	private static Collection<Object> getValueCollectionByKey(@Nullable final Iterable<Map> maps, final Object key) {
 		//
 		if (maps == null || iterator(maps) == null) {
