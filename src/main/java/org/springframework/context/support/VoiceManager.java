@@ -6231,7 +6231,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@Nullable
-	private static Collection<Object> getValueCollectionByKey(@Nullable final Iterable<Map> maps, final Object key) {
+	private static Collection<Object> getValueCollectionByKey(@Nullable final Iterable<Map> maps,
+			@Nullable final Object key) {
 		//
 		if (maps == null || iterator(maps) == null) {
 			//
@@ -7477,7 +7478,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@Nullable
-	private static <T, R> R apply(@Nullable final Function<T, R> instance, final T t) {
+	private static <T, R> R apply(@Nullable final Function<T, R> instance, @Nullable final T t) {
 		return instance != null ? instance.apply(t) : null;
 	}
 
