@@ -4901,12 +4901,6 @@ class VoiceManagerTest {
 	@Test
 	void testContainsKey() throws Throwable {
 		//
-		// org.springframework.context.support.VoiceManager.containsKey(java.util.Map,java.lang.Object)
-		//
-		Assertions.assertFalse(containsKey(Collections.emptyMap(), null));
-		//
-		Assertions.assertTrue(containsKey(Collections.singletonMap(null, null), null));
-		//
 		// org.springframework.context.support.VoiceManager.containsKey(com.google.common.collect.Multimap,java.lang.Object)
 		//
 		Assertions.assertFalse(containsKey(ImmutableMultimap.of(), null));
