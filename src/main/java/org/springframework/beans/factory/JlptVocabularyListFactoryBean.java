@@ -276,7 +276,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 			//
 			if (or((f = MapUtils.getObject(fieldMap, Integer.valueOf(i))) == null,
 					(cell = RowUtil.getCell(row, i)) == null,
-					Objects.equals(CellType.BLANK, cellType = getCellType(cell)))) {
+					Objects.equals(CellType.BLANK, cellType = CellUtil.getCellType(cell)))) {
 				//
 				continue;
 				//
@@ -353,11 +353,6 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 	}
 
 	@Nullable
-	private static CellType getCellType(@Nullable final Cell instance) {
-		return instance != null ? instance.getCellType() : null;
-	}
-
-	@Nullable
 	private static CellType getCellType(@Nullable final CellValue instance) {
 		return instance != null ? instance.getCellType() : null;
 	}
@@ -365,7 +360,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 	@Nullable
 	private static IValue0<Integer> getIntegerValue(final Cell cell, final FormulaEvaluator formulaEvaluator) {
 		//
-		final CellType cellType = getCellType(cell);
+		final CellType cellType = CellUtil.getCellType(cell);
 		//
 		IValue0<Integer> result = null;
 		//
@@ -414,7 +409,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 	@Nullable
 	private static IValue0<String> getStringValue(final Cell cell, final FormulaEvaluator formulaEvaluator) {
 		//
-		final CellType cellType = getCellType(cell);
+		final CellType cellType = CellUtil.getCellType(cell);
 		//
 		IValue0<String> result = null;
 		//

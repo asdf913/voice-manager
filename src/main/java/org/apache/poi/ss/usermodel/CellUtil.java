@@ -18,4 +18,8 @@ public interface CellUtil {
 		return instance != null ? instance.getStringCellValue() : null;
 	}
 
+	static CellType getCellType(final Cell instance) {
+		return instance != null ? instance.getCellType() : null;
+	}
+
 }
