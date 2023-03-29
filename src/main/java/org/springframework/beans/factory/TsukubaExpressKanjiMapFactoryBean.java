@@ -12,6 +12,8 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.Predicate;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -39,7 +41,7 @@ public class TsukubaExpressKanjiMapFactoryBean implements FactoryBean<Map<String
 		this.url = url;
 	}
 
-	public void setRomajiOrHiragana(final Object instance) {
+	public void setRomajiOrHiragana(@Nullable final Object instance) {
 		//
 		if (instance == null) {
 			//
