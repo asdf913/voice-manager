@@ -146,6 +146,7 @@ public class TsukubaExpressKanjiMapFactoryBean implements FactoryBean<Map<String
 		//
 	}
 
+	@Nullable
 	private static String getString(final Iterable<Element> es) {
 		//
 		List<String> ss = null;
