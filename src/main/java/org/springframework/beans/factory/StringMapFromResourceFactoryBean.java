@@ -410,6 +410,7 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 		//
 	}
 
+	@Nullable
 	private static String toString(@Nullable final Object instance) {
 		return instance != null ? instance.toString() : null;
 	}
