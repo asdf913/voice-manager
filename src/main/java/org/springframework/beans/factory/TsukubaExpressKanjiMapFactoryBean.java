@@ -20,12 +20,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.tuple.MutablePair;
+import org.javatuples.valueintf.IValue0;
+import org.javatuples.valueintf.IValue0Util;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
 import org.jsoup.nodes.NodeUtil;
 
-public class TsukubaExpressKanjiMapFactoryBean implements FactoryBean<Map<String, String>> {
+public class TsukubaExpressKanjiMapFactoryBean extends StringMapFromResourceFactoryBean {
 
 	private static enum RomajiOrHiragana {
 
@@ -97,6 +99,14 @@ public class TsukubaExpressKanjiMapFactoryBean implements FactoryBean<Map<String
 	@Override
 	public Map<String, String> getObject() throws Exception {
 		//
+		final IValue0<Map<String, String>> iValue0 = getIvalue0();
+		//
+		if (iValue0 != null) {
+			//
+			return IValue0Util.getValue0(iValue0);
+			//
+		} // if
+			//
 		final List<Element> es = ElementUtil.select(testAndApply(Objects::nonNull,
 				testAndApply(Objects::nonNull, url, URL::new, null), x -> Jsoup.parse(x, 0), null), ".station_list a");
 		//
@@ -119,11 +129,6 @@ public class TsukubaExpressKanjiMapFactoryBean implements FactoryBean<Map<String
 			//
 		return map;
 		//
-	}
-
-	@Override
-	public Class<?> getObjectType() {
-		return Map.class;
 	}
 
 	@Nullable
