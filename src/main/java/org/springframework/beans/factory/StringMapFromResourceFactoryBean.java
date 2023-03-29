@@ -338,7 +338,7 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 			//
 		} // if
 			//
-		CellType cellType = cell.getCellType();
+		final CellType cellType = cell.getCellType();
 		//
 		IValue0<String> iv = null;
 		//
