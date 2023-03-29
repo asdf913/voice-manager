@@ -89,6 +89,7 @@ public class TsukubaExpressKanjiMapFactoryBean implements FactoryBean<Map<String
 			//
 	}
 
+	@Nullable
 	private static String name(@Nullable final Enum<?> instance) {
 		return instance != null ? instance.name() : null;
 	}
