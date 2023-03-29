@@ -40,6 +40,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.CellUtil;
 import org.apache.poi.ss.usermodel.CellValue;
+import org.apache.poi.ss.usermodel.CellValueUtil;
 import org.apache.poi.ss.usermodel.CreationHelperUtil;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Row;
@@ -353,11 +354,6 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 	}
 
 	@Nullable
-	private static CellType getCellType(@Nullable final CellValue instance) {
-		return instance != null ? instance.getCellType() : null;
-	}
-
-	@Nullable
 	private static IValue0<Integer> getIntegerValue(final Cell cell, final FormulaEvaluator formulaEvaluator) {
 		//
 		final CellType cellType = CellUtil.getCellType(cell);
@@ -378,7 +374,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 			//
 			final CellValue cellValue = evaluate(formulaEvaluator, cell);
 			//
-			final CellType cellValueType = getCellType(cellValue);
+			final CellType cellValueType = CellValueUtil.getCellType(cellValue);
 			//
 			if (Objects.equals(cellValueType, CellType.NUMERIC)) {
 				//
@@ -425,7 +421,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 			//
 			final CellValue cellValue = evaluate(formulaEvaluator, cell);
 			//
-			final CellType cellValueType = getCellType(cellValue);
+			final CellType cellValueType = CellValueUtil.getCellType(cellValue);
 			//
 			if (Objects.equals(cellValueType, CellType.BOOLEAN)) {
 				//
