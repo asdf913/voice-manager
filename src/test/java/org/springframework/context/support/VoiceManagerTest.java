@@ -1,7 +1,5 @@
 package org.springframework.context.support;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
@@ -362,7 +360,8 @@ class VoiceManagerTest {
 			METHOD_IS_ALL_ATTRIBUTES_MATCHED, METHOD_CREATE_FUNCTION_FOR_BTN_CONVERT_TO_HIRAGANA, METHOD_WRITER,
 			METHOD_READ_LINE, METHOD_PRINT_LN, METHOD_SET_PITCH_ACCENT_IMAGE, METHOD_GET_NUMERIC_CELL_VALUE,
 			METHOD_SET_AUTO_FILTER, METHOD_CREATE_BYTE_ARRAY, METHOD_DOUBLE_VALUE, METHOD_GET_ELEMENT_AT,
-			METHOD_GET_IMAGE_FORMAT, METHOD_GET_I_VALUE0_FROM_MAPS_BY_KEY, METHOD_IS_ALL_CHARACTERS_ALLOWED = null;
+			METHOD_GET_IMAGE_FORMAT, METHOD_GET_I_VALUE0_FROM_MAPS_BY_KEY, METHOD_IS_ALL_CHARACTERS_ALLOWED,
+			METHOD_GET_VALUE_COLLECTION_BY_KEY = null;
 
 	@BeforeAll
 	static void beforeAll() throws Throwable {
@@ -1078,6 +1077,9 @@ class VoiceManagerTest {
 		//
 		(METHOD_IS_ALL_CHARACTERS_ALLOWED = clz.getDeclaredMethod("isAllCharactersAllowed", CharSequence.class,
 				char[].class)).setAccessible(true);
+		//
+		(METHOD_GET_VALUE_COLLECTION_BY_KEY = clz.getDeclaredMethod("getValueCollectionByKey", Iterable.class,
+				Object.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -9927,6 +9929,40 @@ class VoiceManagerTest {
 			final Object obj = METHOD_IS_ALL_CHARACTERS_ALLOWED.invoke(null, cs, allowedChars);
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetValueCollectionByKey() throws Throwable {
+		//
+		Assertions.assertNull(getValueCollectionByKey(null, null));
+		//
+		Assertions.assertNull(getValueCollectionByKey(Reflection.newProxy(Iterable.class, ih), null));
+		//
+		Assertions.assertNull(getValueCollectionByKey(Collections.emptySet(), null));
+		//
+		Assertions.assertNull(getValueCollectionByKey(Collections.singleton(null), null));
+		//
+		final Iterable<Map> maps = Collections.singleton(Collections.singletonMap(null, null));
+		//
+		Assertions.assertNull(getValueCollectionByKey(maps, EMPTY));
+		//
+		Assertions.assertEquals(Collections.singletonList(null), getValueCollectionByKey(maps, null));
+		//
+	}
+
+	private static Collection<Object> getValueCollectionByKey(final Iterable<Map> maps, final Object key)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_GET_VALUE_COLLECTION_BY_KEY.invoke(null, maps, key);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Collection) {
+				return (Collection) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

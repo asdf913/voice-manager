@@ -6210,21 +6210,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} else if (!Objects.equals(IValue0Util.getValue0(iValue0), value)) {
 					//
-					Collection<Object> vs = null;
-					//
-					for (final Map<?, ?> m : maps) {
-						//
-						if (m == null || !containsKey(m, key)) {
-							//
-							continue;
-							//
-						} // if
-							//
-						add(vs = ObjectUtils.getIfNull(vs, ArrayList::new), get(m, key));
-						//
-					} // for
-						//
-					final IValue0<?> iv0 = apply(function, vs);
+					final IValue0<?> iv0 = apply(function, getValueCollectionByKey(maps, key));
 					//
 					if (iv0 != null) {
 						//
@@ -6241,6 +6227,32 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		} // for
 			//
 		return iValue0;
+		//
+	}
+
+	private static Collection<Object> getValueCollectionByKey(final Iterable<Map> maps, final Object key) {
+		//
+		if (maps == null || iterator(maps) == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		Collection<Object> vs = null;
+		//
+		for (final Map<?, ?> m : maps) {
+			//
+			if (m == null || !containsKey(m, key)) {
+				//
+				continue;
+				//
+			} // if
+				//
+			add(vs = ObjectUtils.getIfNull(vs, ArrayList::new), get(m, key));
+			//
+		} // for
+			//
+		return vs;
 		//
 	}
 
