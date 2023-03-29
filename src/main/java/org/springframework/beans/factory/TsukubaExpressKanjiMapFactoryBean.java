@@ -60,7 +60,7 @@ public class TsukubaExpressKanjiMapFactoryBean implements FactoryBean<Map<String
 			} else {
 				//
 				final List<RomajiOrHiragana> rohs = Arrays.stream(RomajiOrHiragana.values())
-						.filter(x -> StringUtils.startsWithIgnoreCase(x != null ? x.name() : null, string)).toList();
+						.filter(x -> StringUtils.startsWithIgnoreCase(name(x), string)).toList();
 				//
 				if (IterableUtils.size(rohs) > 1) {
 					//
@@ -86,6 +86,10 @@ public class TsukubaExpressKanjiMapFactoryBean implements FactoryBean<Map<String
 			//
 		} // if
 			//
+	}
+
+	private static String name(final Enum<?> instance) {
+		return instance != null ? instance.name() : null;
 	}
 
 	@Override
