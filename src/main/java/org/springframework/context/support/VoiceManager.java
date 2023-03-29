@@ -6210,7 +6210,21 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} else if (!Objects.equals(IValue0Util.getValue0(iValue0), value)) {
 					//
-					final IValue0<?> iv0 = apply(function, Arrays.asList(IValue0Util.getValue0(iValue0), value));
+					Collection<Object> vs = null;
+					//
+					for (final Map<?, ?> m : maps) {
+						//
+						if (m == null || !containsKey(m, key)) {
+							//
+							continue;
+							//
+						} // if
+							//
+						add(vs = ObjectUtils.getIfNull(vs, ArrayList::new), get(m, key));
+						//
+					} // for
+						//
+					final IValue0<?> iv0 = apply(function, vs);
 					//
 					if (iv0 != null) {
 						//
