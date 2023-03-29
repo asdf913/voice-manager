@@ -356,26 +356,8 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 			//
 		} else if (Objects.equals(cellType, CellType.FORMULA)) {
 			//
-			final CellValue cellValue = evaluate(formulaEvaluator, cell);
+			iv = getString(evaluate(formulaEvaluator, cell));
 			//
-			if (Objects.equals(cellType = getCellType(cellValue), CellType.BOOLEAN)) {
-				//
-				iv = Unit.with(Boolean.toString(cellValue.getBooleanValue()));
-				//
-			} else if (Objects.equals(cellType, CellType.STRING)) {
-				//
-				iv = Unit.with(getStringValue(cellValue));
-				//
-			} else if (Objects.equals(cellType, CellType.ERROR)) {
-				//
-				final String string = getString(FormulaError.isValidCode(cellValue.getErrorValue())
-						? FormulaError.forInt(cellValue.getErrorValue())
-						: null);
-				//
-				iv = Unit.with(StringUtils.isNotBlank(string) ? string : Byte.toString(cellValue.getErrorValue()));
-				//
-			} // if
-				//
 		} // if
 			//
 		if (iv == null) {
@@ -385,6 +367,46 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 		} // if
 			//
 		return IValue0Util.getValue0(iv);
+		//
+	}
+
+	private static IValue0<String> getString(final CellValue cellValue) {
+		//
+		if (cellValue == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		final CellType cellType = getCellType(cellValue);
+		//
+		IValue0<String> iv = null;
+		//
+		if (Objects.equals(cellType, CellType.BOOLEAN)) {
+			//
+			iv = Unit.with(Boolean.toString(cellValue.getBooleanValue()));
+			//
+		} else if (Objects.equals(cellType, CellType.STRING)) {
+			//
+			iv = Unit.with(getStringValue(cellValue));
+			//
+		} else if (Objects.equals(cellType, CellType.ERROR)) {
+			//
+			final String string = getString(
+					FormulaError.isValidCode(cellValue.getErrorValue()) ? FormulaError.forInt(cellValue.getErrorValue())
+							: null);
+			//
+			iv = Unit.with(StringUtils.isNotBlank(string) ? string : Byte.toString(cellValue.getErrorValue()));
+			//
+		} // if
+			//
+		if (iv == null) {
+			//
+			throw new IllegalStateException(toString(cellType));
+			//
+		} // if
+			//
+		return iv;
 		//
 	}
 
