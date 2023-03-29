@@ -186,7 +186,7 @@ public class TsukubaExpressKanjiMapFactoryBean implements FactoryBean<Map<String
 		return items != null && items.contains(item);
 	}
 
-	private static <T> void add(final Collection<T> items, final T item) {
+	private static <T> void add(@Nullable final Collection<T> items, final T item) {
 		if (items != null) {
 			items.add(item);
 		}
