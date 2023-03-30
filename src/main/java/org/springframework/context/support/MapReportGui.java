@@ -256,6 +256,7 @@ public class MapReportGui extends JFrame
 		return predicate != null && predicate.test(value) ? apply(functionTrue, value) : apply(functionFalse, value);
 	}
 
+	@Nullable
 	private static <T, R> R apply(@Nullable final Function<T, R> instance, final T value) {
 		return instance != null ? instance.apply(value) : null;
 	}
@@ -398,6 +399,7 @@ public class MapReportGui extends JFrame
 			//
 	}
 
+	@Nullable
 	private static Multimap<?, ?> createMultimapWithMultipleValues(@Nullable final Multimap<?, ?> mm) {
 		//
 		Multimap<?, ?> mm2 = null;
