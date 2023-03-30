@@ -163,7 +163,7 @@ public class MapReportGui extends JFrame
 		//
 	}
 
-	private static void addActionListener(final ActionListener actionListener, final AbstractButton... abs) {
+	private static void addActionListener(final ActionListener actionListener, @Nullable final AbstractButton... abs) {
 		//
 		AbstractButton ab = null;
 		//
@@ -246,7 +246,8 @@ public class MapReportGui extends JFrame
 		return instance != null ? instance.getSystemClipboard() : null;
 	}
 
-	private static void setContents(final Clipboard instance, final Transferable contents, final ClipboardOwner owner) {
+	private static void setContents(@Nullable final Clipboard instance, final Transferable contents,
+			final ClipboardOwner owner) {
 		if (instance != null && forName("org.junit.jupiter.api.Assertions") == null) {
 			instance.setContents(contents, owner);
 		}
