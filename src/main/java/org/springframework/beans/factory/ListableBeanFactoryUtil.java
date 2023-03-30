@@ -11,6 +11,7 @@ public interface ListableBeanFactoryUtil {
 		return instance != null ? instance.getBeansOfType(type) : null;
 	}
 
+	@Nullable
 	static String[] getBeanDefinitionNames(@Nullable final ListableBeanFactory instance) {
 		return instance != null ? instance.getBeanDefinitionNames() : null;
 	}
