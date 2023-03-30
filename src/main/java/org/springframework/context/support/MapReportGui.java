@@ -2,6 +2,12 @@ package org.springframework.context.support;
 
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.GraphicsEnvironment;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.ClipboardOwner;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Dimension2D;
@@ -15,11 +21,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.function.Predicate;
-import java.util.function.ToIntFunction;
 import java.util.Objects;
 import java.util.OptionalInt;
 import java.util.Set;
+import java.util.function.Predicate;
+import java.util.function.ToIntFunction;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -40,6 +46,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
 import org.springframework.beans.config.Title;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryUtil;
@@ -78,7 +85,7 @@ public class MapReportGui extends JFrame
 
 	private JTextComponent tfAttributeJson = null;
 
-	private AbstractButton btnExecute = null;
+	private AbstractButton btnExecute, btnCopy = null;
 
 	private JTable jTable = null;
 
@@ -128,14 +135,20 @@ public class MapReportGui extends JFrame
 		add(tfAttributeJson = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.MapReportGui.attributeJson")), "growx");
 		//
-		add(btnExecute = new JButton("Execute"), "wrap");
+		final String wrap = "wrap";
 		//
-		btnExecute.addActionListener(this);
+		add(btnExecute = new JButton("Execute"), wrap);
 		//
 		final JScrollPane jsp = new JScrollPane(
 				jTable = new JTable(dtm = new DefaultTableModel(new Object[] { "Key", "Old", "New" }, 0)));
 		//
-		add(jsp, String.format("span %1$s", 3));
+		add(jsp, String.format("%1$s,span %2$s", wrap, 3));
+		//
+		add(new JLabel(), String.format("span %1$s", 2));
+		//
+		add(btnCopy = new JButton("Copy"));
+		//
+		addActionListener(this, btnExecute, btnCopy);
 		//
 		final Dimension pd = tfAttributeJson.getPreferredSize();
 		//
@@ -148,6 +161,24 @@ public class MapReportGui extends JFrame
 			//
 		tfAttributeJson.setPreferredSize(pd);
 		//
+	}
+
+	private static void addActionListener(final ActionListener actionListener, final AbstractButton... abs) {
+		//
+		AbstractButton ab = null;
+		//
+		for (int i = 0; abs != null && i < abs.length; i++) {
+			//
+			if ((ab = abs[i]) == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			ab.addActionListener(actionListener);
+			//
+		} // for
+			//
 	}
 
 	@Nullable
@@ -186,12 +217,39 @@ public class MapReportGui extends JFrame
 	@Override
 	public void actionPerformed(final ActionEvent evt) {
 		//
-		if (Objects.equals(getSource(evt), btnExecute)) {
+		final Object source = getSource(evt);
+		//
+		if (Objects.equals(source, btnExecute)) {
 			//
 			actionPerformedForBtnExecute();
 			//
+		} else if (Objects.equals(source, btnCopy)) {
+			//
+			try {
+				//
+				setContents(!GraphicsEnvironment.isHeadless() ? getSystemClipboard(Toolkit.getDefaultToolkit()) : null,
+						new StringSelection(ObjectMapperUtil.writeValueAsString(new ObjectMapper(),
+								dtm != null ? dtm.getDataVector() : null)),
+						null);
+				//
+			} catch (final JsonProcessingException e) {
+				//
+				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
+				//
+			} // try
+				//
 		} // if
 			//
+	}
+
+	private static Clipboard getSystemClipboard(final Toolkit instance) {
+		return instance != null ? instance.getSystemClipboard() : null;
+	}
+
+	private static void setContents(final Clipboard instance, final Transferable contents, final ClipboardOwner owner) {
+		if (instance != null && forName("org.junit.jupiter.api.Assertions") == null) {
+			instance.setContents(contents, owner);
+		}
 	}
 
 	private void actionPerformedForBtnExecute() {

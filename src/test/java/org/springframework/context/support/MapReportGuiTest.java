@@ -1,7 +1,13 @@
 package org.springframework.context.support;
 
 import java.awt.Component;
+import java.awt.Graphics;
 import java.awt.GraphicsEnvironment;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.ClipboardOwner;
+import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.reflect.Constructor;
@@ -22,6 +28,9 @@ import java.util.function.ToIntFunction;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import javax.annotation.Nullable;
+import javax.swing.AbstractButton;
+import javax.swing.JButton;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
@@ -42,6 +51,9 @@ import com.google.common.collect.Multimap;
 import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
+import javassist.util.proxy.MethodHandler;
+import javassist.util.proxy.ProxyFactory;
+import javassist.util.proxy.ProxyObject;
 
 class MapReportGuiTest {
 
@@ -50,8 +62,8 @@ class MapReportGuiTest {
 	private static Method METHOD_CAST, METHOD_IS_ALL_ATTRIBUTES_MATCHED, METHOD_GET_CLASS, METHOD_TO_STRING,
 			METHOD_REMOVE_ROW, METHOD_ADD_ROW, METHOD_GET_PREFERRED_WIDTH, METHOD_DOUBLE_VALUE, METHOD_AS_MAP,
 			METHOD_GET_VALUES, METHOD_OR_ELSE, METHOD_MAX, METHOD_MAP_TO_INT, METHOD_CREATE_MULTI_MAP, METHOD_ADD,
-			METHOD_IS_ASSIGNABLE_FROM, METHOD_GET_KEY, METHOD_GET_VALUE, METHOD_FOR_NAME, METHOD_FILTER,
-			METHOD_TO_LIST = null;
+			METHOD_IS_ASSIGNABLE_FROM, METHOD_GET_KEY, METHOD_GET_VALUE, METHOD_FOR_NAME, METHOD_FILTER, METHOD_TO_LIST,
+			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_ADD_ACTION_LISTENER = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -103,6 +115,14 @@ class MapReportGuiTest {
 		(METHOD_FILTER = clz.getDeclaredMethod("filter", Stream.class, Predicate.class)).setAccessible(true);
 		//
 		(METHOD_TO_LIST = clz.getDeclaredMethod("toList", Stream.class)).setAccessible(true);
+		//
+		(METHOD_GET_SYSTEM_CLIP_BOARD = clz.getDeclaredMethod("getSystemClipboard", Toolkit.class)).setAccessible(true);
+		//
+		(METHOD_SET_CONTENTS = clz.getDeclaredMethod("setContents", Clipboard.class, Transferable.class,
+				ClipboardOwner.class)).setAccessible(true);
+		//
+		(METHOD_ADD_ACTION_LISTENER = clz.getDeclaredMethod("addActionListener", ActionListener.class,
+				AbstractButton[].class)).setAccessible(true);
 		//
 	}
 
@@ -223,6 +243,32 @@ class MapReportGuiTest {
 
 	}
 
+	private static class MH implements MethodHandler {
+
+		private Clipboard clipboard = null;
+
+		@Override
+		public Object invoke(final Object self, final Method thisMethod, final Method proceed, final Object[] args)
+				throws Throwable {
+			//
+			final String methodName = thisMethod != null ? thisMethod.getName() : null;
+			//
+			if (self instanceof Toolkit) {
+				//
+				if (Objects.equals(methodName, "getSystemClipboard")) {
+					//
+					return clipboard;
+					//
+				} // if
+					//
+			} // if
+				//
+			throw new Throwable(methodName);
+			//
+		}
+
+	}
+
 	private MapReportGui instance = null;
 
 	private IH ih = null;
@@ -321,6 +367,12 @@ class MapReportGuiTest {
 		FieldUtils.writeDeclaredField(instance, "jTable", new JTable(), true);
 		//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, null));
+		//
+		final AbstractButton btnCopy = new JButton();
+		//
+		FieldUtils.writeDeclaredField(instance, "btnCopy", btnCopy, true);
+		//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnCopy, 0, null)));
 		//
 	}
 
@@ -804,6 +856,91 @@ class MapReportGuiTest {
 				return (List) obj;
 			}
 			throw new Throwable(toString(obj.getClass()));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetSystemClipboard() throws Throwable {
+		//
+		Assertions.assertNull(getSystemClipboard(null));
+		//
+		if (GraphicsEnvironment.isHeadless()) {
+			//
+			final ProxyFactory proxyFactory = new ProxyFactory();
+			//
+			proxyFactory.setSuperclass(Toolkit.class);
+			//
+			final Class<?> clz = proxyFactory.createClass();
+			//
+			final Constructor<?> constructor = clz != null ? clz.getDeclaredConstructor() : null;
+			//
+			final Object instance = constructor != null ? constructor.newInstance() : null;
+			//
+			final MH mh = new MH();
+			//
+			if (instance instanceof ProxyObject) {
+				//
+				((ProxyObject) instance).setHandler(mh);
+				//
+			} // if
+				//
+			Assertions.assertNull(getSystemClipboard(cast(Toolkit.class, instance)));
+			//
+		} // if
+			//
+	}
+
+	private static Clipboard getSystemClipboard(final Toolkit instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_SYSTEM_CLIP_BOARD.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Clipboard) {
+				return (Clipboard) obj;
+			}
+			throw new Throwable(toString(obj.getClass()));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetContents() throws Throwable {
+		//
+		Assertions.assertDoesNotThrow(() -> setContents(null, null, null));
+		//
+		if (GraphicsEnvironment.isHeadless()) {
+			//
+			Assertions.assertDoesNotThrow(() -> setContents(new Clipboard(null), null, null));
+			//
+		} // if
+			//
+	}
+
+	private static void setContents(final Clipboard instance, final Transferable contents, final ClipboardOwner owner)
+			throws Throwable {
+		try {
+			METHOD_SET_CONTENTS.invoke(null, instance, contents, owner);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testAddActionListener() throws Throwable {
+		//
+		Assertions.assertDoesNotThrow(() -> addActionListener(null, (AbstractButton[]) null));
+		//
+		Assertions.assertDoesNotThrow(() -> addActionListener(null, null, new JButton()));
+		//
+	}
+
+	private static void addActionListener(final ActionListener actionListener, final AbstractButton... abs)
+			throws Throwable {
+		try {
+			METHOD_ADD_ACTION_LISTENER.invoke(null, actionListener, abs);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
