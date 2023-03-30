@@ -12,6 +12,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -47,7 +48,10 @@ import org.springframework.core.AttributeAccessor;
 
 import com.google.common.base.Functions;
 import com.google.common.base.Predicates;
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.MultimapUtil;
 import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
@@ -64,7 +68,7 @@ class MapReportGuiTest {
 			METHOD_GET_VALUES, METHOD_OR_ELSE, METHOD_MAX, METHOD_MAP_TO_INT, METHOD_CREATE_MULTI_MAP, METHOD_ADD,
 			METHOD_IS_ASSIGNABLE_FROM, METHOD_GET_KEY, METHOD_GET_VALUE, METHOD_FOR_NAME, METHOD_FILTER, METHOD_TO_LIST,
 			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_ADD_ACTION_LISTENER, METHOD_MAP, METHOD_LENGTH,
-			METHOD_TEST_AND_APPLY = null;
+			METHOD_TEST_AND_APPLY, METHOD_CREATE_MULTIMAP_WITH_MULTIPLE_VALUES = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -131,6 +135,9 @@ class MapReportGuiTest {
 		//
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class, Function.class,
 				Function.class)).setAccessible(true);
+		//
+		(METHOD_CREATE_MULTIMAP_WITH_MULTIPLE_VALUES = clz.getDeclaredMethod("createMultimapWithMultipleValues",
+				Multimap.class)).setAccessible(true);
 		//
 	}
 
@@ -1018,6 +1025,33 @@ class MapReportGuiTest {
 			final Function<T, R> functionTrue, final Function<T, R> functionFalse) throws Throwable {
 		try {
 			return (R) METHOD_TEST_AND_APPLY.invoke(null, predicate, value, functionTrue, functionFalse);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCreateMultimapWithMultipleValues() throws Throwable {
+		//
+		Assertions.assertNull(createMultimapWithMultipleValues(ImmutableMultimap.of(EMPTY, EMPTY)));
+		//
+		final Multimap<Object, Object> multimap = LinkedHashMultimap.create();
+		//
+		MultimapUtil.putAll(multimap, EMPTY, Arrays.asList(1, 2));
+		//
+		Assertions.assertEquals("{=[1, 2]}", toString(createMultimapWithMultipleValues(multimap)));
+		//
+	}
+
+	private static Multimap<?, ?> createMultimapWithMultipleValues(final Multimap<?, ?> mm) throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_MULTIMAP_WITH_MULTIPLE_VALUES.invoke(null, mm);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Multimap) {
+				return (Multimap) obj;
+			}
+			throw new Throwable(toString(obj.getClass()));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

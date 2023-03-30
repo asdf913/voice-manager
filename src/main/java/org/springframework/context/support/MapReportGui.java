@@ -352,33 +352,11 @@ public class MapReportGui extends JFrame
 			//
 		} // for
 			//
-		final Collection<Map<?, ?>> maps = (Collection) getValues(configurableListableBeanFactory, Map.class,
-				getBeanDefinitionNamesByClassAndAttributes(configurableListableBeanFactory, Map.class,
-						cast(Map.class, object)));
+		final Multimap<?, ?> mm2 = createMultimapWithMultipleValues(
+				createMultimap((Collection) getValues(configurableListableBeanFactory, Map.class,
+						getBeanDefinitionNamesByClassAndAttributes(configurableListableBeanFactory, Map.class,
+								cast(Map.class, object)))));
 		//
-		final Multimap<?, ?> mm = createMultimap(maps);
-		//
-		Multimap<?, ?> mm2 = null;
-		//
-		if (mm != null) {
-			//
-			Collection<?> values = null;
-			//
-			for (final Object key : mm.keySet()) {
-				//
-				if (IterableUtils.size(values = ((Multimap) mm).get(key)) <= 1
-						|| (mm2 = ObjectUtils.getIfNull(mm2, LinkedHashMultimap::create)) == null) {
-					//
-					continue;
-					//
-				} // if
-					//
-				((Multimap) mm2).putAll(key, values);
-				//
-			} // for
-				//
-		} // if
-			//
 		final List<String> columns = new ArrayList<>(Collections.singleton("Key"));
 		//
 		columns.addAll(toList(IntStream
@@ -413,6 +391,35 @@ public class MapReportGui extends JFrame
 		} // if
 			//
 		setModel(jTable, dtm);
+		//
+	}
+
+	private static Multimap<?, ?> createMultimapWithMultipleValues(final Multimap<?, ?> mm) {
+		//
+		Multimap<?, ?> mm2 = null;
+		//
+		final Set<?> keySet = MultimapUtil.keySet(mm);
+		//
+		if (iterator(keySet) != null) {
+			//
+			Collection<?> values = null;
+			//
+			for (final Object key : keySet) {
+				//
+				if (IterableUtils.size(values = MultimapUtil.get((Multimap) mm, key)) <= 1
+						|| (mm2 = ObjectUtils.getIfNull(mm2, LinkedHashMultimap::create)) == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				((Multimap) mm2).putAll(key, values);
+				//
+			} // for
+				//
+		} // if
+			//
+		return mm2;
 		//
 	}
 
