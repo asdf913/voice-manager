@@ -150,7 +150,8 @@ public class MapReportGui extends JFrame
 		//
 	}
 
-	private static <T> Stream<T> filter(@Nullable final Stream<T> instance, final Predicate<? super T> predicate) {
+	private static <T> Stream<T> filter(@Nullable final Stream<T> instance,
+			@Nullable final Predicate<? super T> predicate) {
 		//
 		return instance != null && (Proxy.isProxyClass(getClass(instance)) || predicate != null)
 				? instance.filter(predicate)
