@@ -10,7 +10,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
@@ -39,8 +38,7 @@ class MapReportGuiTest {
 	private static final String EMPTY = "";
 
 	private static Method METHOD_CAST, METHOD_IS_ALL_ATTRIBUTES_MATCHED, METHOD_GET_CLASS, METHOD_TO_STRING,
-			METHOD_CONTAINS_KEY, METHOD_PUT, METHOD_REMOVE_ROW, METHOD_ADD_ROW, METHOD_GET_PREFERRED_WIDTH,
-			METHOD_DOUBLE_VALUE = null;
+			METHOD_REMOVE_ROW, METHOD_ADD_ROW, METHOD_GET_PREFERRED_WIDTH, METHOD_DOUBLE_VALUE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -55,10 +53,6 @@ class MapReportGuiTest {
 		(METHOD_GET_CLASS = clz.getDeclaredMethod("getClass", Object.class)).setAccessible(true);
 		//
 		(METHOD_TO_STRING = clz.getDeclaredMethod("toString", Object.class)).setAccessible(true);
-		//
-		(METHOD_CONTAINS_KEY = clz.getDeclaredMethod("containsKey", Map.class, Object.class)).setAccessible(true);
-		//
-		(METHOD_PUT = clz.getDeclaredMethod("put", Map.class, Object.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_REMOVE_ROW = clz.getDeclaredMethod("removeRow", DefaultTableModel.class, Integer.TYPE))
 				.setAccessible(true);
@@ -369,46 +363,6 @@ class MapReportGuiTest {
 				return (String) obj;
 			}
 			throw new Throwable(toString(obj.getClass()));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testContainsKey() throws Throwable {
-		//
-		Assertions.assertFalse(containsKey(null, null));
-		//
-		Assertions.assertFalse(containsKey(Collections.emptyMap(), null));
-		//
-		Assertions.assertTrue(containsKey(Collections.singletonMap(null, null), null));
-		//
-	}
-
-	private static boolean containsKey(final Map<?, ?> instance, final Object key) throws Throwable {
-		try {
-			final Object obj = METHOD_CONTAINS_KEY.invoke(null, instance, key);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
-			}
-			throw new Throwable(obj != null ? toString(obj.getClass()) : null);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGet() throws Throwable {
-		//
-		Assertions.assertDoesNotThrow(() -> put(null, null, null));
-		//
-		Assertions.assertDoesNotThrow(() -> put(new LinkedHashMap<>(), null, null));
-		//
-	}
-
-	private static <K, V> void put(final Map<K, V> instance, final K key, final V value) throws Throwable {
-		try {
-			METHOD_PUT.invoke(null, instance, key, value);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

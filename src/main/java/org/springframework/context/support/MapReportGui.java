@@ -10,11 +10,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EventObject;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.stream.IntStream;
 
 import javax.annotation.Nullable;
 import javax.swing.AbstractButton;
@@ -29,7 +29,7 @@ import javax.swing.table.TableModel;
 import javax.swing.text.JTextComponent;
 
 import org.apache.commons.collections4.IterableUtils;
-import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -51,6 +51,9 @@ import org.springframework.core.env.PropertyResolverUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.MultimapUtil;
 
 import io.github.toolfactory.narcissus.Narcissus;
 import net.miginfocom.swing.MigLayout;
@@ -68,6 +71,8 @@ public class MapReportGui extends JFrame
 	private JTextComponent tfAttributeJson = null;
 
 	private AbstractButton btnExecute = null;
+
+	private JTable jTable = null;
 
 	private DefaultTableModel dtm = null;
 
@@ -120,7 +125,7 @@ public class MapReportGui extends JFrame
 		btnExecute.addActionListener(this);
 		//
 		final JScrollPane jsp = new JScrollPane(
-				new JTable(dtm = new DefaultTableModel(new Object[] { "Key", "Old", "New" }, 0)));
+				jTable = new JTable(dtm = new DefaultTableModel(new Object[] { "Key", "Old", "New" }, 0)));
 		//
 		add(jsp, String.format("span %1$s", 3));
 		//
@@ -216,9 +221,7 @@ public class MapReportGui extends JFrame
 			//
 		if (maps != null) {
 			//
-			Map<Object, Object> map = null;
-			//
-			Object key, valueOld, valueNew = null;
+			Multimap<?, ?> mm = null;
 			//
 			for (final Map<?, ?> t : maps) {
 				//
@@ -230,20 +233,61 @@ public class MapReportGui extends JFrame
 					//
 				for (final Entry<?, ?> entry : t.entrySet()) {
 					//
-					if (!containsKey(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), key = getKey(entry))) {
+					if (entry == null) {
 						//
-						put(map, key, getValue(entry));
-						//
-					} else if (!Objects.equals(valueOld = MapUtils.getObject(map, key), valueNew = getValue(entry))) {
-						//
-						addRow(dtm, new Object[] { key, valueOld, valueNew });
+						continue;
 						//
 					} // if
 						//
-				} // for
+					MultimapUtil.put(((Multimap) (mm = ObjectUtils.getIfNull(mm, LinkedHashMultimap::create))),
+							getKey(entry), getValue(entry));
+				} // if
 					//
 			} // for
 				//
+			Multimap<?, ?> mm2 = null;
+			//
+			if (mm != null) {
+				//
+				Collection<?> values = null;
+				//
+				for (final Object key : mm.keySet()) {
+					//
+					if (IterableUtils.size(values = ((Multimap) mm).get(key)) <= 1
+							|| (mm2 = ObjectUtils.getIfNull(mm2, LinkedHashMultimap::create)) == null) {
+						//
+						continue;
+						//
+					} // if
+						//
+					((Multimap) mm2).putAll(key, values);
+					//
+				} // for
+					//
+			} // if
+				//
+			final int maxSize = mm2.asMap().entrySet().stream().mapToInt(x -> IterableUtils.size(getValue(x))).max()
+					.orElse(0);
+			//
+			final List<String> columns = new ArrayList<>(
+					IntStream.range(0, maxSize).mapToObj(x -> String.format("Value %1$s", x + 1)).toList());
+			//
+			columns.add(0, "Key");
+			//
+			dtm = new DefaultTableModel(columns.toArray(), 0);
+			//
+			if (mm2 != null) {
+				//
+				for (final Object key : mm2.keySet()) {
+					//
+					addRow(dtm, ArrayUtils.addAll(new Object[] { key }, ((Multimap) mm).get(key).toArray()));
+					//
+				} // for
+					//
+			} // if
+				//
+			jTable.setModel(dtm);
+			//
 		} // if
 			//
 	}
@@ -257,16 +301,6 @@ public class MapReportGui extends JFrame
 	private static void addRow(@Nullable final DefaultTableModel instance, final Object[] rowData) {
 		if (instance != null) {
 			instance.addRow(rowData);
-		}
-	}
-
-	private static boolean containsKey(@Nullable final Map<?, ?> instance, @Nullable final Object key) {
-		return instance != null && instance.containsKey(key);
-	}
-
-	private static <K, V> void put(@Nullable final Map<K, V> instance, @Nullable final K key, @Nullable final V value) {
-		if (instance != null) {
-			instance.put(key, value);
 		}
 	}
 
