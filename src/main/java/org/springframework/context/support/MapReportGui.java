@@ -9,6 +9,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.EventObject;
 import java.util.Iterator;
 import java.util.List;
@@ -231,13 +232,11 @@ public class MapReportGui extends JFrame
 				//
 		} // if
 			//
-		final int maxSize = orElse(max(mapToInt(stream(entrySet(asMap(mm2))), x -> IterableUtils.size(getValue(x)))),
-				0);
+		final List<String> columns = new ArrayList<>(Collections.singleton("Key"));
 		//
-		final List<String> columns = new ArrayList<>(
-				IntStream.range(0, maxSize).mapToObj(x -> String.format("Value %1$s", x + 1)).toList());
-		//
-		columns.add(0, "Key");
+		columns.addAll(IntStream
+				.range(0, orElse(max(mapToInt(stream(entrySet(asMap(mm2))), x -> IterableUtils.size(getValue(x)))), 0))
+				.mapToObj(x -> String.format("Value %1$s", x + 1)).toList());
 		//
 		dtm = new DefaultTableModel(columns.toArray(), 0);
 		//
