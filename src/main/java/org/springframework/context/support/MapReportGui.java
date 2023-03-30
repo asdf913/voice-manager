@@ -28,6 +28,7 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.OptionalInt;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.ToIntFunction;
 import java.util.stream.IntStream;
@@ -50,6 +51,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.poi.util.IntList;
 import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
 import org.springframework.beans.config.Title;
 import org.springframework.beans.factory.BeanFactory;
@@ -105,6 +107,8 @@ public class MapReportGui extends JFrame
 	private JTable jTable = null;
 
 	private DefaultTableModel dtm = null;
+
+	private IntList jTableRowColumnCount = null;
 
 	private MapReportGui() {
 	}
@@ -242,10 +246,29 @@ public class MapReportGui extends JFrame
 			//
 			try {
 				//
+				final List<List<Object>> lists = toList(map(stream(dtm != null ? dtm.getDataVector() : null),
+						x -> x != null ? new ArrayList<Object>(x) : null));
+				//
+				List<?> list = null;
+				//
+				for (int i = 0; lists != null && i < lists.size() && jTableRowColumnCount != null; i++) {
+					//
+					if ((list = lists.get(i)) == null && i >= jTableRowColumnCount.size()) {
+						//
+						continue;
+						//
+					} // if
+						//
+					for (int j = list.size() - 1; j >= jTableRowColumnCount.get(i); j--) {
+						//
+						list.remove(j);
+						//
+					} // for
+						//
+				} // for
+					//
 				setContents(!GraphicsEnvironment.isHeadless() ? getSystemClipboard(Toolkit.getDefaultToolkit()) : null,
-						new StringSelection(ObjectMapperUtil.writeValueAsString(getObjectMapper(),
-								dtm != null ? dtm.getDataVector() : null)),
-						null);
+						new StringSelection(ObjectMapperUtil.writeValueAsString(getObjectMapper(), lists)), null);
 				//
 			} catch (final JsonProcessingException e) {
 				//
@@ -255,6 +278,13 @@ public class MapReportGui extends JFrame
 				//
 		} // if
 			//
+	}
+
+	private static <T, R> Stream<R> map(final Stream<T> instance, final Function<? super T, ? extends R> mapper) {
+		//
+		return instance != null && (Proxy.isProxyClass(getClass(instance)) || mapper != null) ? instance.map(mapper)
+				: null;
+		//
 	}
 
 	private ObjectMapper getObjectMapper() {
@@ -338,11 +368,32 @@ public class MapReportGui extends JFrame
 		//
 		dtm = new DefaultTableModel(columns.toArray(), 0);
 		//
-		if (mm2 != null) {
+		int[] sizes = null;
+		//
+		Set<?> keySet = mm2 != null ? mm2.keySet() : null;
+		//
+		if (keySet != null && iterator(keySet) != null) {
 			//
-			for (final Object key : mm2.keySet()) {
+			Object[] os = null;
+			//
+			if (jTableRowColumnCount == null) {
 				//
-				addRow(dtm, ArrayUtils.addAll(new Object[] { key }, MultimapUtil.get((Multimap) mm2, key).toArray()));
+				jTableRowColumnCount = new IntList();
+				//
+			} // if
+				//
+			jTableRowColumnCount.clear();
+			//
+			for (final Object key : keySet) {
+				//
+				addRow(dtm,
+						os = ArrayUtils.addAll(new Object[] { key }, MultimapUtil.get((Multimap) mm2, key).toArray()));
+				//
+				if (sizes == null) {
+					sizes = new int[IterableUtils.size(keySet)];
+				} //
+					//
+				jTableRowColumnCount.add(os != null ? os.length : 0);
 				//
 			} // for
 				//
