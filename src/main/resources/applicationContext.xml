@@ -286,6 +286,10 @@
 		<meta key="value" value="romaji" />
 		<property name="url"
 			value="${org.springframework.beans.factory.SeibuRailwayKanjiRomajiMapFactoryBean.url}" />
+		<property name="keyColumnName" value="kanji" />
+		<property name="valueColumnName" value="romaji" />
+		<property name="valueColumnIndex" value="1" />
+		<property name="resource" value="classpath:SeibuRailway.xlsx" />
 	</bean>
 
 	<!-- -->
