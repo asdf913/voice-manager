@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Dimension2D;
 import java.lang.reflect.Field;
+import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EventObject;
@@ -13,8 +14,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.ToIntFunction;
 import java.util.Objects;
+import java.util.OptionalInt;
+import java.util.Set;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 import javax.swing.AbstractButton;
@@ -203,19 +208,96 @@ public class MapReportGui extends JFrame
 				getBeanDefinitionNamesByClassAndAttributes(configurableListableBeanFactory, Map.class,
 						cast(Map.class, object)));
 		//
-		if (maps != null) {
+		final Multimap<?, ?> mm = createMultimap(maps);
+		//
+		Multimap<?, ?> mm2 = null;
+		//
+		if (mm != null) {
 			//
-			Multimap<?, ?> mm = null;
+			Collection<?> values = null;
 			//
-			for (final Map<?, ?> t : maps) {
+			for (final Object key : mm.keySet()) {
 				//
-				if (t == null || t.entrySet() == null || iterator(t.entrySet()) == null) {
+				if (IterableUtils.size(values = ((Multimap) mm).get(key)) <= 1
+						|| (mm2 = ObjectUtils.getIfNull(mm2, LinkedHashMultimap::create)) == null) {
 					//
 					continue;
 					//
 				} // if
 					//
-				for (final Entry<?, ?> entry : t.entrySet()) {
+				((Multimap) mm2).putAll(key, values);
+				//
+			} // for
+				//
+		} // if
+			//
+		final int maxSize = orElse(max(mapToInt(stream(entrySet(asMap(mm2))), x -> IterableUtils.size(getValue(x)))),
+				0);
+		//
+		final List<String> columns = new ArrayList<>(
+				IntStream.range(0, maxSize).mapToObj(x -> String.format("Value %1$s", x + 1)).toList());
+		//
+		columns.add(0, "Key");
+		//
+		dtm = new DefaultTableModel(columns.toArray(), 0);
+		//
+		if (mm2 != null) {
+			//
+			for (final Object key : mm2.keySet()) {
+				//
+				addRow(dtm, ArrayUtils.addAll(new Object[] { key }, ((Multimap) mm).get(key).toArray()));
+				//
+			} // for
+				//
+		} // if
+			//
+		if (jTable != null) {
+			//
+			jTable.setModel(dtm);
+			//
+		} // if
+			//
+	}
+
+	private static int orElse(final OptionalInt instance, final int other) {
+		return instance != null ? instance.orElse(other) : other;
+	}
+
+	private static OptionalInt max(final IntStream instance) {
+		return instance != null ? instance.max() : null;
+	}
+
+	private static <T> IntStream mapToInt(final Stream<T> instance, final ToIntFunction<? super T> mapper) {
+		//
+		return instance != null && (Proxy.isProxyClass(getClass(instance)) || mapper != null)
+				? instance.mapToInt(mapper)
+				: null;
+		//
+	}
+
+	private static <E> Stream<E> stream(final Collection<E> instance) {
+		return instance != null ? instance.stream() : null;
+	}
+
+	private static <K, V> Set<Map.Entry<K, V>> entrySet(final Map<K, V> instance) {
+		return instance != null ? instance.entrySet() : null;
+	}
+
+	private static Multimap<?, ?> createMultimap(final Iterable<Map<?, ?>> maps) {
+		//
+		Multimap<?, ?> mm = null;
+		//
+		if (maps != null && iterator(maps) != null) {
+			//
+			for (final Map<?, ?> t : maps) {
+				//
+				if (t == null || iterator(entrySet(t)) == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				for (final Entry<?, ?> entry : entrySet(t)) {
 					//
 					if (entry == null) {
 						//
@@ -229,51 +311,10 @@ public class MapReportGui extends JFrame
 					//
 			} // for
 				//
-			Multimap<?, ?> mm2 = null;
-			//
-			if (mm != null) {
-				//
-				Collection<?> values = null;
-				//
-				for (final Object key : mm.keySet()) {
-					//
-					if (IterableUtils.size(values = ((Multimap) mm).get(key)) <= 1
-							|| (mm2 = ObjectUtils.getIfNull(mm2, LinkedHashMultimap::create)) == null) {
-						//
-						continue;
-						//
-					} // if
-						//
-					((Multimap) mm2).putAll(key, values);
-					//
-				} // for
-					//
-			} // if
-				//
-			final int maxSize = asMap(mm2).entrySet().stream().mapToInt(x -> IterableUtils.size(getValue(x))).max()
-					.orElse(0);
-			//
-			final List<String> columns = new ArrayList<>(
-					IntStream.range(0, maxSize).mapToObj(x -> String.format("Value %1$s", x + 1)).toList());
-			//
-			columns.add(0, "Key");
-			//
-			dtm = new DefaultTableModel(columns.toArray(), 0);
-			//
-			if (mm2 != null) {
-				//
-				for (final Object key : mm2.keySet()) {
-					//
-					addRow(dtm, ArrayUtils.addAll(new Object[] { key }, ((Multimap) mm).get(key).toArray()));
-					//
-				} // for
-					//
-			} // if
-				//
-			jTable.setModel(dtm);
-			//
 		} // if
 			//
+		return mm;
+		//
 	}
 
 	@Nullable
@@ -405,9 +446,9 @@ public class MapReportGui extends JFrame
 	private static boolean isAllAttributesMatched(@Nullable final Map<?, ?> attributes,
 			@Nullable final AttributeAccessor aa) {
 		//
-		if (attributes != null && iterator(attributes.entrySet()) != null) {
+		if (iterator(entrySet(attributes)) != null) {
 			//
-			for (final Entry<?, ?> entry : attributes.entrySet()) {
+			for (final Entry<?, ?> entry : entrySet(attributes)) {
 				//
 				if (entry == null) {
 					//
