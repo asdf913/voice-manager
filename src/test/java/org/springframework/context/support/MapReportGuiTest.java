@@ -46,8 +46,8 @@ class MapReportGuiTest {
 
 	private static Method METHOD_CAST, METHOD_IS_ALL_ATTRIBUTES_MATCHED, METHOD_GET_CLASS, METHOD_TO_STRING,
 			METHOD_REMOVE_ROW, METHOD_ADD_ROW, METHOD_GET_PREFERRED_WIDTH, METHOD_DOUBLE_VALUE, METHOD_AS_MAP,
-			METHOD_GET_VALUES, METHOD_OR_ELSE, METHOD_MAX, METHOD_MAP_TO_INT, METHOD_STREAM, METHOD_CREATE_MULTI_MAP,
-			METHOD_ADD, METHOD_IS_ASSIGNABLE_FROM, METHOD_GET_KEY, METHOD_GET_VALUE, METHOD_FOR_NAME = null;
+			METHOD_GET_VALUES, METHOD_OR_ELSE, METHOD_MAX, METHOD_MAP_TO_INT, METHOD_CREATE_MULTI_MAP, METHOD_ADD,
+			METHOD_IS_ASSIGNABLE_FROM, METHOD_GET_KEY, METHOD_GET_VALUE, METHOD_FOR_NAME = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -82,8 +82,6 @@ class MapReportGuiTest {
 		(METHOD_MAX = clz.getDeclaredMethod("max", IntStream.class)).setAccessible(true);
 		//
 		(METHOD_MAP_TO_INT = clz.getDeclaredMethod("mapToInt", Stream.class, ToIntFunction.class)).setAccessible(true);
-		//
-		(METHOD_STREAM = clz.getDeclaredMethod("stream", Collection.class)).setAccessible(true);
 		//
 		(METHOD_CREATE_MULTI_MAP = clz.getDeclaredMethod("createMultimap", Iterable.class)).setAccessible(true);
 		//
@@ -620,27 +618,6 @@ class MapReportGuiTest {
 				return null;
 			} else if (obj instanceof IntStream) {
 				return (IntStream) obj;
-			}
-			throw new Throwable(toString(obj.getClass()));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testSteram() throws Throwable {
-		//
-		Assertions.assertNotNull(stream(Collections.emptyList()));
-		//
-	}
-
-	private static <E> Stream<E> stream(final Collection<E> instance) throws Throwable {
-		try {
-			final Object obj = METHOD_STREAM.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Stream) {
-				return (Stream) obj;
 			}
 			throw new Throwable(toString(obj.getClass()));
 		} catch (final InvocationTargetException e) {

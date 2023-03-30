@@ -108,7 +108,7 @@ public class MapReportGui extends JFrame
 			//
 			// The below check is for "-Djava.awt.headless=true"
 			//
-		final List<Field> fs = FieldUtils.getAllFieldsList(getClass(this)).stream()
+		final List<Field> fs = stream(FieldUtils.getAllFieldsList(getClass(this)))
 				.filter(f -> f != null && Objects.equals(f.getName(), "component")).toList();
 		//
 		final Field f = IterableUtils.size(fs) == 1 ? IterableUtils.get(fs, 0) : null;
@@ -308,6 +308,7 @@ public class MapReportGui extends JFrame
 						//
 					MultimapUtil.put(((Multimap) (mm = ObjectUtils.getIfNull(mm, LinkedHashMultimap::create))),
 							getKey(entry), getValue(entry));
+					//
 				} // if
 					//
 			} // for
