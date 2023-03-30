@@ -209,7 +209,6 @@ import org.junit.jupiter.api.Test;
 import org.odftoolkit.odfdom.pkg.OdfPackage;
 import org.openxmlformats.schemas.officeDocument.x2006.customProperties.CTProperty;
 import org.slf4j.Logger;
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -356,7 +355,7 @@ class VoiceManagerTest {
 			METHOD_ADD_ALL, METHOD_PLAY_AUDIO, METHOD_PLAY, METHOD_PRONOUNICATION_CHANGED, METHOD_REMOVE_ELEMENT_AT,
 			METHOD_ACTION_PERFORMED_FOR_BTN_IMPORT, METHOD_CREATE_PRONUNCIATION_LIST_CELL_RENDERER,
 			METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_GET_FILE,
-			METHOD_GET_PRONUNCIATION_AUDIO_FILE_BY_AUDIO_FORMAT, METHOD_GET_AUDIO_FILE, METHOD_GET_BEAN,
+			METHOD_GET_PRONUNCIATION_AUDIO_FILE_BY_AUDIO_FORMAT, METHOD_GET_AUDIO_FILE,
 			METHOD_IS_ALL_ATTRIBUTES_MATCHED, METHOD_CREATE_FUNCTION_FOR_BTN_CONVERT_TO_HIRAGANA, METHOD_WRITER,
 			METHOD_READ_LINE, METHOD_PRINT_LN, METHOD_SET_PITCH_ACCENT_IMAGE, METHOD_GET_NUMERIC_CELL_VALUE,
 			METHOD_SET_AUTO_FILTER, METHOD_CREATE_BYTE_ARRAY, METHOD_DOUBLE_VALUE, METHOD_GET_ELEMENT_AT,
@@ -1038,8 +1037,6 @@ class VoiceManagerTest {
 		(METHOD_GET_AUDIO_FILE = clz.getDeclaredMethod("getAudioFile", Boolean.TYPE, Voice.class,
 				DefaultTableModel.class)).setAccessible(true);
 		//
-		(METHOD_GET_BEAN = clz.getDeclaredMethod("getBean", BeanFactory.class, String.class)).setAccessible(true);
-		//
 		(METHOD_IS_ALL_ATTRIBUTES_MATCHED = clz.getDeclaredMethod("isAllAttributesMatched", Map.class,
 				AttributeAccessor.class)).setAccessible(true);
 		//
@@ -1114,7 +1111,7 @@ class VoiceManagerTest {
 
 		private Expression expression = null;
 
-		private Object value, min, max, selectedItem, nodeValue, bean, key = null;
+		private Object value, min, max, selectedItem, nodeValue, key = null;
 
 		private Iterator<Row> rows = null;
 
@@ -1216,16 +1213,6 @@ class VoiceManagerTest {
 				//
 				return null;
 				//
-			} // if
-				//
-			if (proxy instanceof BeanFactory) {
-				//
-				if (Objects.equals(methodName, "getBean")) {
-					//
-					return bean;
-					//
-				} // if
-					//
 			} // if
 				//
 			if (proxy instanceof ListableBeanFactory) {
@@ -9458,29 +9445,6 @@ class VoiceManagerTest {
 			final DefaultTableModel defaultTableModel) throws Throwable {
 		try {
 			final Object obj = METHOD_GET_AUDIO_FILE.invoke(null, headless, voice, defaultTableModel);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof File) {
-				return (File) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetBean() throws Throwable {
-		//
-		Assertions.assertNull(getBean(null, null));
-		//
-		Assertions.assertNull(getBean(configurableListableBeanFactory, null));
-		//
-	}
-
-	private static Object getBean(final BeanFactory instance, final String name) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_BEAN.invoke(null, instance, name);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof File) {

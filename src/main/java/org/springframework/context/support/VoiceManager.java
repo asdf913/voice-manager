@@ -299,7 +299,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
 import org.springframework.beans.config.Title;
-import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryUtil;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.ListableBeanFactory;
@@ -1047,7 +1047,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		multimapHiragana = toList(map(
 				stream(getBeanDefinitionNamesByClassAndAttributes(configurableListableBeanFactory, Multimap.class,
 						Collections.singletonMap(VALUE, "hiragana"))),
-				x -> cast(Multimap.class, getBean(configurableListableBeanFactory, x))));
+				x -> cast(Multimap.class, BeanFactoryUtil.getBean(configurableListableBeanFactory, x))));
 		//
 		// Get the "Bean Definition" which class could be assigned as a "java.util.Map"
 		// and the "Bean Definition" has "value" attribute which value
@@ -1056,7 +1056,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		mapHiragana = toList(map(
 				stream(getBeanDefinitionNamesByClassAndAttributes(configurableListableBeanFactory, Map.class,
 						Collections.singletonMap(VALUE, "hiragana"))),
-				x -> cast(Map.class, getBean(configurableListableBeanFactory, x))));
+				x -> cast(Map.class, BeanFactoryUtil.getBean(configurableListableBeanFactory, x))));
 		//
 		// Get the "Bean Definition" which class could be assigned as a
 		// "com.google.common.collect.Multimap" and the "Bean Definition" has "value"
@@ -1065,7 +1065,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		multimapKatakana = toList(map(
 				stream(getBeanDefinitionNamesByClassAndAttributes(configurableListableBeanFactory, Multimap.class,
 						Collections.singletonMap(VALUE, "katakana"))),
-				x -> cast(Multimap.class, getBean(configurableListableBeanFactory, x))));
+				x -> cast(Multimap.class, BeanFactoryUtil.getBean(configurableListableBeanFactory, x))));
 		//
 		// Get the "Bean Definition" which class could be assigned as a "java.util.Map"
 		// and the "Bean Definition" has "value" attribute which value
@@ -1074,7 +1074,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		mapRomaji = toList(map(
 				stream(getBeanDefinitionNamesByClassAndAttributes(configurableListableBeanFactory, Map.class,
 						Collections.singletonMap(VALUE, "romaji"))),
-				x -> cast(Map.class, getBean(configurableListableBeanFactory, x))));
+				x -> cast(Map.class, BeanFactoryUtil.getBean(configurableListableBeanFactory, x))));
 		//
 	}
 
@@ -1148,11 +1148,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Nullable
 	private static String[] getBeanDefinitionNames(@Nullable final ListableBeanFactory instance) {
 		return instance != null ? instance.getBeanDefinitionNames() : null;
-	}
-
-	@Nullable
-	private static Object getBean(@Nullable final BeanFactory instance, final String name) {
-		return instance != null ? instance.getBean(name) : null;
 	}
 
 	private static <E> void addAll(@Nullable final Collection<E> a, @Nullable final Collection<? extends E> b) {

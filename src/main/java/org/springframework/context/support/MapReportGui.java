@@ -34,6 +34,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.springframework.beans.config.Title;
+import org.springframework.beans.factory.BeanFactoryUtil;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -201,8 +202,8 @@ public class MapReportGui extends JFrame
 		//
 		for (int i = 0; i < IterableUtils.size(beanNames); i++) {
 			//
-			if ((m = cast(Map.class,
-					configurableListableBeanFactory.getBean(IterableUtils.get(beanNames, i)))) == null) {
+			if ((m = cast(Map.class, BeanFactoryUtil.getBean(configurableListableBeanFactory,
+					IterableUtils.get(beanNames, i)))) == null) {
 				//
 				continue;
 				//
