@@ -187,7 +187,7 @@ public class MapReportGui extends JFrame
 		//
 		AbstractButton ab = null;
 		//
-		for (int i = 0; abs != null && i < abs.length; i++) {
+		for (int i = 0; abs != null && i < length(abs); i++) {
 			//
 			if ((ab = abs[i]) == null) {
 				//
@@ -395,7 +395,7 @@ public class MapReportGui extends JFrame
 				addRow(dtm,
 						os = ArrayUtils.addAll(new Object[] { key }, MultimapUtil.get((Multimap) mm2, key).toArray()));
 				//
-				jTableRowColumnCount.add(os != null ? os.length : 0);
+				jTableRowColumnCount.add(length(os));
 				//
 			} // for
 				//
@@ -403,6 +403,10 @@ public class MapReportGui extends JFrame
 			//
 		setModel(jTable, dtm);
 		//
+	}
+
+	private static int length(final Object[] instance) {
+		return instance != null ? instance.length : 0;
 	}
 
 	private static void setModel(@Nullable final JTable instnace, final TableModel dataModel) {
@@ -553,7 +557,7 @@ public class MapReportGui extends JFrame
 		//
 		String beanDefinitionName = null;
 		//
-		for (int i = 0; beanDefinitionNames != null && i < beanDefinitionNames.length; i++) {
+		for (int i = 0; beanDefinitionNames != null && i < length(beanDefinitionNames); i++) {
 			//
 			if ((bd = ConfigurableListableBeanFactoryUtil.getBeanDefinition(instnace,
 					beanDefinitionName = beanDefinitionNames[i])) == null) {

@@ -61,7 +61,8 @@ class MapReportGuiTest {
 			METHOD_REMOVE_ROW, METHOD_ADD_ROW, METHOD_GET_PREFERRED_WIDTH, METHOD_DOUBLE_VALUE, METHOD_AS_MAP,
 			METHOD_GET_VALUES, METHOD_OR_ELSE, METHOD_MAX, METHOD_MAP_TO_INT, METHOD_CREATE_MULTI_MAP, METHOD_ADD,
 			METHOD_IS_ASSIGNABLE_FROM, METHOD_GET_KEY, METHOD_GET_VALUE, METHOD_FOR_NAME, METHOD_FILTER, METHOD_TO_LIST,
-			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_ADD_ACTION_LISTENER, METHOD_MAP = null;
+			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_ADD_ACTION_LISTENER, METHOD_MAP,
+			METHOD_LENGTH = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -123,6 +124,8 @@ class MapReportGuiTest {
 				AbstractButton[].class)).setAccessible(true);
 		//
 		(METHOD_MAP = clz.getDeclaredMethod("map", Stream.class, Function.class)).setAccessible(true);
+		//
+		(METHOD_LENGTH = clz.getDeclaredMethod("length", Object[].class)).setAccessible(true);
 		//
 	}
 
@@ -971,6 +974,25 @@ class MapReportGuiTest {
 				return (Stream) obj;
 			}
 			throw new Throwable(toString(obj.getClass()));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testLength() throws Throwable {
+		//
+		Assertions.assertEquals(0, length(null));
+		//
+	}
+
+	private static int length(final Object[] instance) throws Throwable {
+		try {
+			final Object obj = METHOD_LENGTH.invoke(null, (Object) instance);
+			if (obj instanceof Integer) {
+				return ((Integer) obj).intValue();
+			}
+			throw new Throwable(toString(obj != null ? obj.getClass() : null));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
