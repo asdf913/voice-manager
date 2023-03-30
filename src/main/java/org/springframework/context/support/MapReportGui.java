@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.Predicate;
 import java.util.function.ToIntFunction;
 import java.util.Objects;
 import java.util.OptionalInt;
@@ -109,8 +110,8 @@ public class MapReportGui extends JFrame
 			//
 			// The below check is for "-Djava.awt.headless=true"
 			//
-		final List<Field> fs = stream(FieldUtils.getAllFieldsList(getClass(this)))
-				.filter(f -> f != null && Objects.equals(f.getName(), "component")).toList();
+		final List<Field> fs = filter(stream(FieldUtils.getAllFieldsList(getClass(this))),
+				f -> f != null && Objects.equals(f.getName(), "component")).toList();
 		//
 		final Field f = IterableUtils.size(fs) == 1 ? IterableUtils.get(fs, 0) : null;
 		//
@@ -146,6 +147,14 @@ public class MapReportGui extends JFrame
 		} // if
 			//
 		tfAttributeJson.setPreferredSize(pd);
+		//
+	}
+
+	private static <T> Stream<T> filter(final Stream<T> instance, final Predicate<? super T> predicate) {
+		//
+		return instance != null && (Proxy.isProxyClass(getClass(instance)) || predicate != null)
+				? instance.filter(predicate)
+				: null;
 		//
 	}
 

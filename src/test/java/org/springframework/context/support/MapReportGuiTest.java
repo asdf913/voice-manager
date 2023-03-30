@@ -16,6 +16,7 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.OptionalInt;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.function.ToIntFunction;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -47,7 +48,7 @@ class MapReportGuiTest {
 	private static Method METHOD_CAST, METHOD_IS_ALL_ATTRIBUTES_MATCHED, METHOD_GET_CLASS, METHOD_TO_STRING,
 			METHOD_REMOVE_ROW, METHOD_ADD_ROW, METHOD_GET_PREFERRED_WIDTH, METHOD_DOUBLE_VALUE, METHOD_AS_MAP,
 			METHOD_GET_VALUES, METHOD_OR_ELSE, METHOD_MAX, METHOD_MAP_TO_INT, METHOD_CREATE_MULTI_MAP, METHOD_ADD,
-			METHOD_IS_ASSIGNABLE_FROM, METHOD_GET_KEY, METHOD_GET_VALUE, METHOD_FOR_NAME = null;
+			METHOD_IS_ASSIGNABLE_FROM, METHOD_GET_KEY, METHOD_GET_VALUE, METHOD_FOR_NAME, METHOD_FILTER = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -95,6 +96,8 @@ class MapReportGuiTest {
 		(METHOD_GET_VALUE = clz.getDeclaredMethod("getValue", Entry.class)).setAccessible(true);
 		//
 		(METHOD_FOR_NAME = clz.getDeclaredMethod("forName", String.class)).setAccessible(true);
+		//
+		(METHOD_FILTER = clz.getDeclaredMethod("filter", Stream.class, Predicate.class)).setAccessible(true);
 		//
 	}
 
@@ -201,6 +204,10 @@ class MapReportGuiTest {
 					//
 					return intStream;
 					//
+				} else if (Objects.equals(methodName, "filter")) {
+					//
+					return proxy;
+					//
 				} // if
 					//
 			} // if
@@ -214,6 +221,8 @@ class MapReportGuiTest {
 	private MapReportGui instance = null;
 
 	private IH ih = null;
+
+	private Stream<?> stream = null;
 
 	@BeforeEach
 	void beforeEach() throws Throwable {
@@ -236,7 +245,7 @@ class MapReportGuiTest {
 			//
 		} // if
 			//
-		ih = new IH();
+		stream = Reflection.newProxy(Stream.class, ih = new IH());
 		//
 	}
 
@@ -604,7 +613,7 @@ class MapReportGuiTest {
 		//
 		Assertions.assertNull(mapToInt(Stream.empty(), null));
 		//
-		Assertions.assertNull(mapToInt(Reflection.newProxy(Stream.class, ih), null));
+		Assertions.assertNull(mapToInt(stream, null));
 		//
 		Assertions.assertNotNull(mapToInt(Stream.empty(), x -> 0));
 		//
@@ -737,6 +746,32 @@ class MapReportGuiTest {
 				return null;
 			} else if (obj instanceof Class) {
 				return (Class) obj;
+			}
+			throw new Throwable(toString(obj.getClass()));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testFilter() throws Throwable {
+		//
+		Assertions.assertNull(filter(null, null));
+		//
+		Assertions.assertNull(filter(Stream.empty(), null));
+		//
+		Assertions.assertSame(stream, filter(stream, null));
+		//
+	}
+
+	private static <T> Stream<T> filter(final Stream<T> instance, final Predicate<? super T> predicate)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_FILTER.invoke(null, instance, predicate);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Stream) {
+				return (Stream) obj;
 			}
 			throw new Throwable(toString(obj.getClass()));
 		} catch (final InvocationTargetException e) {
