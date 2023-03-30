@@ -108,7 +108,7 @@ public class MapReportGui extends JFrame
 
 	private DefaultTableModel dtm = null;
 
-	private IntList jTableRowColumnCount = null;
+	private transient IntList jTableRowColumnCount = null;
 
 	private MapReportGui() {
 	}
