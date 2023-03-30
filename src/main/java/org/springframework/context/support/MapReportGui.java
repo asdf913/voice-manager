@@ -268,7 +268,8 @@ public class MapReportGui extends JFrame
 		return instance != null ? instance.max() : null;
 	}
 
-	private static <T> IntStream mapToInt(final Stream<T> instance, final ToIntFunction<? super T> mapper) {
+	private static <T> IntStream mapToInt(@Nullable final Stream<T> instance,
+			@Nullable final ToIntFunction<? super T> mapper) {
 		//
 		return instance != null && (Proxy.isProxyClass(getClass(instance)) || mapper != null)
 				? instance.mapToInt(mapper)
