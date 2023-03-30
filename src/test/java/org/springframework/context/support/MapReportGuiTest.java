@@ -11,6 +11,7 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
@@ -48,7 +49,8 @@ class MapReportGuiTest {
 	private static Method METHOD_CAST, METHOD_IS_ALL_ATTRIBUTES_MATCHED, METHOD_GET_CLASS, METHOD_TO_STRING,
 			METHOD_REMOVE_ROW, METHOD_ADD_ROW, METHOD_GET_PREFERRED_WIDTH, METHOD_DOUBLE_VALUE, METHOD_AS_MAP,
 			METHOD_GET_VALUES, METHOD_OR_ELSE, METHOD_MAX, METHOD_MAP_TO_INT, METHOD_CREATE_MULTI_MAP, METHOD_ADD,
-			METHOD_IS_ASSIGNABLE_FROM, METHOD_GET_KEY, METHOD_GET_VALUE, METHOD_FOR_NAME, METHOD_FILTER = null;
+			METHOD_IS_ASSIGNABLE_FROM, METHOD_GET_KEY, METHOD_GET_VALUE, METHOD_FOR_NAME, METHOD_FILTER,
+			METHOD_TO_LIST = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -98,6 +100,8 @@ class MapReportGuiTest {
 		(METHOD_FOR_NAME = clz.getDeclaredMethod("forName", String.class)).setAccessible(true);
 		//
 		(METHOD_FILTER = clz.getDeclaredMethod("filter", Stream.class, Predicate.class)).setAccessible(true);
+		//
+		(METHOD_TO_LIST = clz.getDeclaredMethod("toList", Stream.class)).setAccessible(true);
 		//
 	}
 
@@ -772,6 +776,27 @@ class MapReportGuiTest {
 				return null;
 			} else if (obj instanceof Stream) {
 				return (Stream) obj;
+			}
+			throw new Throwable(toString(obj.getClass()));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testToList() throws Throwable {
+		//
+		Assertions.assertNull(toList(null));
+		//
+	}
+
+	private static <T> List<T> toList(final Stream<T> instance) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_LIST.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof List) {
+				return (List) obj;
 			}
 			throw new Throwable(toString(obj.getClass()));
 		} catch (final InvocationTargetException e) {

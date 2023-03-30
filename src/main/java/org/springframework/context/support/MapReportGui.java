@@ -110,8 +110,8 @@ public class MapReportGui extends JFrame
 			//
 			// The below check is for "-Djava.awt.headless=true"
 			//
-		final List<Field> fs = filter(stream(FieldUtils.getAllFieldsList(getClass(this))),
-				f -> f != null && Objects.equals(f.getName(), "component")).toList();
+		final List<Field> fs = toList(filter(stream(FieldUtils.getAllFieldsList(getClass(this))),
+				f -> f != null && Objects.equals(f.getName(), "component")));
 		//
 		final Field f = IterableUtils.size(fs) == 1 ? IterableUtils.get(fs, 0) : null;
 		//
@@ -158,6 +158,10 @@ public class MapReportGui extends JFrame
 				? instance.filter(predicate)
 				: null;
 		//
+	}
+
+	private static <T> List<T> toList(final Stream<T> instance) {
+		return instance != null ? instance.toList() : null;
 	}
 
 	@Nullable
@@ -245,9 +249,9 @@ public class MapReportGui extends JFrame
 			//
 		final List<String> columns = new ArrayList<>(Collections.singleton("Key"));
 		//
-		columns.addAll(IntStream
+		columns.addAll(toList(IntStream
 				.range(0, orElse(max(mapToInt(stream(entrySet(asMap(mm2))), x -> IterableUtils.size(getValue(x)))), 0))
-				.mapToObj(x -> String.format("Value %1$s", x + 1)).toList());
+				.mapToObj(x -> String.format("Value %1$s", x + 1))));
 		//
 		dtm = new DefaultTableModel(columns.toArray(), 0);
 		//
