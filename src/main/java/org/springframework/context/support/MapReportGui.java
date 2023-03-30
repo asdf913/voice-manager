@@ -160,6 +160,7 @@ public class MapReportGui extends JFrame
 		//
 	}
 
+	@Nullable
 	private static <T> List<T> toList(@Nullable final Stream<T> instance) {
 		return instance != null ? instance.toList() : null;
 	}
