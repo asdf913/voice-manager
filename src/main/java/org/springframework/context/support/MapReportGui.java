@@ -412,7 +412,7 @@ public class MapReportGui extends JFrame
 		//
 	}
 
-	private static void setModel(final JTable instnace, final TableModel dataModel) {
+	private static void setModel(@Nullable final JTable instnace, final TableModel dataModel) {
 		if (instnace != null) {
 			instnace.setModel(dataModel);
 		}
