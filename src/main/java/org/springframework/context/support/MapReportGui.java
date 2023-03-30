@@ -402,12 +402,14 @@ public class MapReportGui extends JFrame
 				//
 		} // if
 			//
-		if (jTable != null) {
-			//
-			jTable.setModel(dtm);
-			//
-		} // if
-			//
+		setModel(jTable, dtm);
+		//
+	}
+
+	private static void setModel(final JTable instnace, final TableModel dataModel) {
+		if (instnace != null) {
+			instnace.setModel(dataModel);
+		}
 	}
 
 	private static int orElse(@Nullable final OptionalInt instance, final int other) {
