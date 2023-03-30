@@ -280,6 +280,14 @@
 			value="classpath:TsukubaExpress.xlsx" />
 	</bean>
 
+	<!-- Seibu Railway - romaji -->
+	<bean
+		class="org.springframework.beans.factory.SeibuRailwayKanjiRomajiMapFactoryBean">
+		<meta key="value" value="romaji" />
+		<property name="url"
+			value="${org.springframework.beans.factory.SeibuRailwayKanjiRomajiMapFactoryBean.url}" />
+	</bean>
+
 	<!-- -->
 	<bean id="JlptLevelPageUrl" class="java.lang.String">
 		<constructor-arg index="0"
