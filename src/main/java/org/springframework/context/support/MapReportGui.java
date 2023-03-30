@@ -260,7 +260,7 @@ public class MapReportGui extends JFrame
 			//
 			for (final Object key : mm2.keySet()) {
 				//
-				addRow(dtm, ArrayUtils.addAll(new Object[] { key }, ((Multimap) mm).get(key).toArray()));
+				addRow(dtm, ArrayUtils.addAll(new Object[] { key }, MultimapUtil.get((Multimap) mm2, key).toArray()));
 				//
 			} // for
 				//
