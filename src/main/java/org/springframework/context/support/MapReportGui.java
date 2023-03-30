@@ -260,7 +260,7 @@ public class MapReportGui extends JFrame
 	}
 
 	private static void setContents(@Nullable final Clipboard instance, final Transferable contents,
-			final ClipboardOwner owner) {
+			@Nullable final ClipboardOwner owner) {
 		if (instance != null && forName("org.junit.jupiter.api.Assertions") == null) {
 			instance.setContents(contents, owner);
 		}
