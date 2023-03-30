@@ -398,7 +398,7 @@ public class MapReportGui extends JFrame
 			//
 	}
 
-	private static Multimap<?, ?> createMultimapWithMultipleValues(final Multimap<?, ?> mm) {
+	private static Multimap<?, ?> createMultimapWithMultipleValues(@Nullable final Multimap<?, ?> mm) {
 		//
 		Multimap<?, ?> mm2 = null;
 		//
