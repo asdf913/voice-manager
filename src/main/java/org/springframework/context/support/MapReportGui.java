@@ -40,6 +40,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactoryUtil;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.AttributeAccessor;
 import org.springframework.core.env.Environment;
@@ -287,7 +288,8 @@ public class MapReportGui extends JFrame
 		//
 		for (int i = 0; beanDefinitionNames != null && i < beanDefinitionNames.length; i++) {
 			//
-			if ((bd = instnace.getBeanDefinition(beanDefinitionName = beanDefinitionNames[i])) == null) {
+			if ((bd = ConfigurableListableBeanFactoryUtil.getBeanDefinition(instnace,
+					beanDefinitionName = beanDefinitionNames[i])) == null) {
 				//
 				continue;
 				//

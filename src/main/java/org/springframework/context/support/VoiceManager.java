@@ -1096,7 +1096,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		for (int i = 0; beanDefinitionNames != null && i < beanDefinitionNames.length; i++) {
 			//
-			if ((bd = instnace.getBeanDefinition(beanDefinitionName = beanDefinitionNames[i])) == null) {
+			if ((bd = ConfigurableListableBeanFactoryUtil.getBeanDefinition(instnace,
+					beanDefinitionName = beanDefinitionNames[i])) == null) {
 				//
 				continue;
 				//
