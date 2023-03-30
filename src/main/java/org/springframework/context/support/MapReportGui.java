@@ -281,6 +281,7 @@ public class MapReportGui extends JFrame
 			//
 	}
 
+	@Nullable
 	private static Vector<Vector> getDataVector(@Nullable final DefaultTableModel instance) {
 		return instance != null ? instance.getDataVector() : null;
 	}
