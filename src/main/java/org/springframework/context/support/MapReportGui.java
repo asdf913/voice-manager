@@ -255,6 +255,7 @@ public class MapReportGui extends JFrame
 			//
 	}
 
+	@Nullable
 	private static Clipboard getSystemClipboard(@Nullable final Toolkit instance) {
 		return instance != null ? instance.getSystemClipboard() : null;
 	}
