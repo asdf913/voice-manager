@@ -22,6 +22,7 @@ import java.util.function.ToIntFunction;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.JTextComponent;
@@ -315,6 +316,10 @@ class MapReportGuiTest {
 			//
 		} // if
 			//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, null));
+		//
+		FieldUtils.writeDeclaredField(instance, "jTable", new JTable(), true);
+		//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, null));
 		//
 	}
