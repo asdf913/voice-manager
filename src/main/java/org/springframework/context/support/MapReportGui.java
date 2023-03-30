@@ -87,6 +87,8 @@ public class MapReportGui extends JFrame
 
 	private transient ConfigurableListableBeanFactory configurableListableBeanFactory = null;
 
+	private ObjectMapper objectMapper = null;
+
 	private JTextComponent tfAttributeJson = null;
 
 	@Target(ElementType.FIELD)
@@ -241,7 +243,7 @@ public class MapReportGui extends JFrame
 			try {
 				//
 				setContents(!GraphicsEnvironment.isHeadless() ? getSystemClipboard(Toolkit.getDefaultToolkit()) : null,
-						new StringSelection(ObjectMapperUtil.writeValueAsString(new ObjectMapper(),
+						new StringSelection(ObjectMapperUtil.writeValueAsString(getObjectMapper(),
 								dtm != null ? dtm.getDataVector() : null)),
 						null);
 				//
@@ -253,6 +255,13 @@ public class MapReportGui extends JFrame
 				//
 		} // if
 			//
+	}
+
+	private ObjectMapper getObjectMapper() {
+		if (objectMapper == null) {
+			objectMapper = new ObjectMapper();
+		}
+		return objectMapper;
 	}
 
 	@Nullable
@@ -273,8 +282,8 @@ public class MapReportGui extends JFrame
 		//
 		try {
 			//
-			if ((object = ObjectMapperUtil.readValue(new ObjectMapper(), getText(tfAttributeJson),
-					Object.class)) != null && !(object instanceof Map)) {
+			if ((object = ObjectMapperUtil.readValue(getObjectMapper(), getText(tfAttributeJson), Object.class)) != null
+					&& !(object instanceof Map)) {
 				//
 				throw new IllegalStateException();
 				//
