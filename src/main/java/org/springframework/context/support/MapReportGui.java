@@ -376,8 +376,6 @@ public class MapReportGui extends JFrame
 		//
 		dtm = new DefaultTableModel(columns.toArray(), 0);
 		//
-		int[] sizes = null;
-		//
 		final Set<?> keySet = MultimapUtil.keySet(mm2);
 		//
 		if (keySet != null && iterator(keySet) != null) {
@@ -397,12 +395,6 @@ public class MapReportGui extends JFrame
 				addRow(dtm,
 						os = ArrayUtils.addAll(new Object[] { key }, MultimapUtil.get((Multimap) mm2, key).toArray()));
 				//
-				if (sizes == null) {
-					//
-					sizes = new int[IterableUtils.size(keySet)];
-					//
-				} // if
-					//
 				jTableRowColumnCount.add(os != null ? os.length : 0);
 				//
 			} // for
