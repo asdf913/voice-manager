@@ -245,38 +245,8 @@ public class MapReportGui extends JFrame
 			//
 		} else if (Objects.equals(source, btnCopy)) {
 			//
-			try {
-				//
-				final List<List<Object>> lists = toList(
-						map(stream(getDataVector(dtm)), x -> testAndApply(Objects::nonNull, x, ArrayList::new, null)));
-				//
-				List<?> list = null;
-				//
-				for (int i = 0; i < IterableUtils.size(lists) && jTableRowColumnCount != null; i++) {
-					//
-					if ((list = IterableUtils.get(lists, i)) == null || i >= jTableRowColumnCount.size()) {
-						//
-						continue;
-						//
-					} // if
-						//
-					for (int j = IterableUtils.size(list) - 1; j >= jTableRowColumnCount.get(i); j--) {
-						//
-						list.remove(j);
-						//
-					} // for
-						//
-				} // for
-					//
-				setContents(!GraphicsEnvironment.isHeadless() ? getSystemClipboard(Toolkit.getDefaultToolkit()) : null,
-						new StringSelection(ObjectMapperUtil.writeValueAsString(getObjectMapper(), lists)), null);
-				//
-			} catch (final JsonProcessingException e) {
-				//
-				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
-				//
-			} // try
-				//
+			actionPerformedForBtnCopy();
+			//
 		} // if
 			//
 	}
@@ -390,6 +360,42 @@ public class MapReportGui extends JFrame
 			//
 		setModel(jTable, dtm);
 		//
+	}
+
+	private void actionPerformedForBtnCopy() {
+		//
+		try {
+			//
+			final List<List<Object>> lists = toList(
+					map(stream(getDataVector(dtm)), x -> testAndApply(Objects::nonNull, x, ArrayList::new, null)));
+			//
+			List<?> list = null;
+			//
+			for (int i = 0; i < IterableUtils.size(lists) && jTableRowColumnCount != null; i++) {
+				//
+				if ((list = IterableUtils.get(lists, i)) == null || i >= jTableRowColumnCount.size()) {
+					//
+					continue;
+					//
+				} // if
+					//
+				for (int j = IterableUtils.size(list) - 1; j >= jTableRowColumnCount.get(i); j--) {
+					//
+					list.remove(j);
+					//
+				} // for
+					//
+			} // for
+				//
+			setContents(!GraphicsEnvironment.isHeadless() ? getSystemClipboard(Toolkit.getDefaultToolkit()) : null,
+					new StringSelection(ObjectMapperUtil.writeValueAsString(getObjectMapper(), lists)), null);
+			//
+		} catch (final JsonProcessingException e) {
+			//
+			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
+			//
+		} // try
+			//
 	}
 
 	private static Multimap<?, ?> createMultimapWithMultipleValues(final Multimap<?, ?> mm) {
