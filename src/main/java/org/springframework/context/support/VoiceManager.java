@@ -1049,6 +1049,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						Collections.singletonMap(VALUE, "hiragana"))),
 				x -> cast(Multimap.class, getBean(configurableListableBeanFactory, x))));
 		//
+		// Get the "Bean Definition" which class could be assigned as a "java.util.Map"
+		// and the "Bean Definition" has "value" attribute which value
+		// is "hiragana"
+		//
+		mapHiragana = toList(map(
+				stream(getBeanDefinitionNamesByClassAndAttributes(configurableListableBeanFactory, Map.class,
+						Collections.singletonMap(VALUE, "hiragana"))),
+				x -> cast(Map.class, getBean(configurableListableBeanFactory, x))));
+		//
 		// Get the "Bean Definition" which class could be assigned as a
 		// "com.google.common.collect.Multimap" and the "Bean Definition" has "value"
 		// attribute which value is "katakana"
@@ -1060,20 +1069,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		// Get the "Bean Definition" which class could be assigned as a "java.util.Map"
 		// and the "Bean Definition" has "value" attribute which value
-		// is "hiragana"
-		//
-		mapHiragana = toList(map(
-				stream(getBeanDefinitionNamesByClassAndAttributes(configurableListableBeanFactory, Map.class,
-						Collections.singletonMap(VALUE, "hiragana"))),
-				x -> cast(Map.class, getBean(configurableListableBeanFactory, x))));
-		//
-		// Get the "Bean Definition" which class could be assigned as a "java.util.Map"
-		// and the "Bean Definition" has "value" attribute which value
-		// is "hiragana"
+		// is "romaji"
 		//
 		mapRomaji = toList(map(
 				stream(getBeanDefinitionNamesByClassAndAttributes(configurableListableBeanFactory, Map.class,
-						Collections.singletonMap(VALUE, ROMAJI_WITH_FIRST_CAPTICALIZED_LETTER))),
+						Collections.singletonMap(VALUE, "romaji"))),
 				x -> cast(Map.class, getBean(configurableListableBeanFactory, x))));
 		//
 	}
