@@ -259,11 +259,11 @@ public class MapReportGui extends JFrame
 			//
 	}
 
-	private static int orElse(final OptionalInt instance, final int other) {
+	private static int orElse(@Nullable final OptionalInt instance, final int other) {
 		return instance != null ? instance.orElse(other) : other;
 	}
 
-	private static OptionalInt max(final IntStream instance) {
+	private static OptionalInt max(@Nullable final IntStream instance) {
 		return instance != null ? instance.max() : null;
 	}
 
@@ -275,11 +275,11 @@ public class MapReportGui extends JFrame
 		//
 	}
 
-	private static <E> Stream<E> stream(final Collection<E> instance) {
+	private static <E> Stream<E> stream(@Nullable final Collection<E> instance) {
 		return instance != null ? instance.stream() : null;
 	}
 
-	private static <K, V> Set<Map.Entry<K, V>> entrySet(final Map<K, V> instance) {
+	private static <K, V> Set<Map.Entry<K, V>> entrySet(@Nullable final Map<K, V> instance) {
 		return instance != null ? instance.entrySet() : null;
 	}
 
