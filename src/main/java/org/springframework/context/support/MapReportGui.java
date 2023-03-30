@@ -281,7 +281,7 @@ public class MapReportGui extends JFrame
 			//
 	}
 
-	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+	private static <T, R, E extends Throwable> R testAndApply(@Nullable final Predicate<T> predicate, final T value,
 			final Function<T, R> functionTrue, final Function<T, R> functionFalse) throws E {
 		return predicate != null && predicate.test(value) ? apply(functionTrue, value) : apply(functionFalse, value);
 	}
