@@ -286,7 +286,7 @@ public class MapReportGui extends JFrame
 		return predicate != null && predicate.test(value) ? apply(functionTrue, value) : apply(functionFalse, value);
 	}
 
-	private static <T, R> R apply(final Function<T, R> instance, final T value) {
+	private static <T, R> R apply(@Nullable final Function<T, R> instance, final T value) {
 		return instance != null ? instance.apply(value) : null;
 	}
 
