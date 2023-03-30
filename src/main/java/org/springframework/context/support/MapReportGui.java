@@ -283,6 +283,7 @@ public class MapReportGui extends JFrame
 		return instance != null ? instance.entrySet() : null;
 	}
 
+	@Nullable
 	private static Multimap<?, ?> createMultimap(@Nullable final Iterable<Map<?, ?>> maps) {
 		//
 		Multimap<?, ?> mm = null;
@@ -341,6 +342,7 @@ public class MapReportGui extends JFrame
 		//
 	}
 
+	@Nullable
 	private static <K, V> Map<K, Collection<V>> asMap(@Nullable final Multimap<K, V> instance) {
 		return instance != null ? instance.asMap() : null;
 	}
