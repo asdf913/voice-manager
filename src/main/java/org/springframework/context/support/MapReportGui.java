@@ -377,7 +377,7 @@ public class MapReportGui extends JFrame
 		//
 		int[] sizes = null;
 		//
-		final Set<?> keySet = mm2 != null ? mm2.keySet() : null;
+		final Set<?> keySet = MultimapUtil.keySet(mm2);
 		//
 		if (keySet != null && iterator(keySet) != null) {
 			//
