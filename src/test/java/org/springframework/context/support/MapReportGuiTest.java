@@ -8,6 +8,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -20,11 +21,15 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.JTextComponent;
 
+import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryUtil;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -40,7 +45,8 @@ class MapReportGuiTest {
 	private static final String EMPTY = "";
 
 	private static Method METHOD_CAST, METHOD_IS_ALL_ATTRIBUTES_MATCHED, METHOD_GET_CLASS, METHOD_TO_STRING,
-			METHOD_REMOVE_ROW, METHOD_ADD_ROW, METHOD_GET_PREFERRED_WIDTH, METHOD_DOUBLE_VALUE, METHOD_AS_MAP = null;
+			METHOD_REMOVE_ROW, METHOD_ADD_ROW, METHOD_GET_PREFERRED_WIDTH, METHOD_DOUBLE_VALUE, METHOD_AS_MAP,
+			METHOD_GET_VALUES = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -67,6 +73,9 @@ class MapReportGuiTest {
 		//
 		(METHOD_AS_MAP = clz.getDeclaredMethod("asMap", Multimap.class)).setAccessible(true);
 		//
+		(METHOD_GET_VALUES = clz.getDeclaredMethod("getValues", BeanFactory.class, Class.class, Iterable.class))
+				.setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -83,7 +92,7 @@ class MapReportGuiTest {
 
 		private Boolean hasAttribute = null;
 
-		private Object attribute = null;
+		private Object attribute, bean = null;
 
 		private Map<?, ?> asMap = null;
 
@@ -92,6 +101,16 @@ class MapReportGuiTest {
 			//
 			final String methodName = method != null ? method.getName() : null;
 			//
+			if (proxy instanceof BeanFactory) {
+				//
+				if (Objects.equals(methodName, "getBean")) {
+					//
+					return bean;
+					//
+				} // if
+					//
+			} // if
+				//
 			if (proxy instanceof ListableBeanFactory) {
 				//
 				if (Objects.equals(methodName, "getBeanDefinitionNames")) {
@@ -472,6 +491,35 @@ class MapReportGuiTest {
 				return null;
 			} else if (obj instanceof Map) {
 				return (Map) obj;
+			}
+			throw new Throwable(toString(obj.getClass()));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetValues() throws Throwable {
+		//
+		final BeanFactory beanFactory = Reflection.newProxy(BeanFactory.class, ih);
+		//
+		final Iterable<String> strings = Collections.singleton(null);
+		//
+		Assertions.assertNull(getValues(beanFactory, null, strings));
+		//
+		Assertions.assertEquals(Collections.singletonList(ih != null ? ih.bean = Collections.emptyMap() : null),
+				getValues(beanFactory, Map.class, strings));
+		//
+	}
+
+	private static <V> Collection<V> getValues(final BeanFactory beanFactory, final Class<V> clz,
+			final Iterable<String> beanNames) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_VALUES.invoke(null, beanFactory, clz, beanNames);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Collection) {
+				return (Collection) obj;
 			}
 			throw new Throwable(toString(obj.getClass()));
 		} catch (final InvocationTargetException e) {

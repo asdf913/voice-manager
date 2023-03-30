@@ -34,6 +34,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.springframework.beans.config.Title;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryUtil;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
@@ -198,27 +199,10 @@ public class MapReportGui extends JFrame
 			//
 		} // for
 			//
-		final List<String> beanNames = getBeanDefinitionNamesByClassAndAttributes(configurableListableBeanFactory,
-				Map.class, cast(Map.class, object));
+		final Collection<Map<?, ?>> maps = (Collection) getValues(configurableListableBeanFactory, Map.class,
+				getBeanDefinitionNamesByClassAndAttributes(configurableListableBeanFactory, Map.class,
+						cast(Map.class, object)));
 		//
-		Map<?, ?> m = null;
-		//
-		Collection<Map<?, ?>> maps = null;
-		//
-		for (int i = 0; i < IterableUtils.size(beanNames); i++) {
-			//
-			if ((m = cast(Map.class,
-					BeanFactoryUtil.getBean(configurableListableBeanFactory, IterableUtils.get(beanNames, i)))) == null
-					|| (maps = ObjectUtils.getIfNull(maps, ArrayList::new)) == null) {
-				//
-				continue;
-				//
-			} // if
-				//
-			maps.add(m);
-			//
-		} // for
-			//
 		if (maps != null) {
 			//
 			Multimap<?, ?> mm = null;
@@ -290,6 +274,30 @@ public class MapReportGui extends JFrame
 			//
 		} // if
 			//
+	}
+
+	private static <V> Collection<V> getValues(final BeanFactory beanFactory, final Class<V> clz,
+			final Iterable<String> beanNames) {
+		//
+		Collection<V> vs = null;
+		//
+		V v = null;
+		//
+		for (int i = 0; i < IterableUtils.size(beanNames); i++) {
+			//
+			if ((v = cast(clz, BeanFactoryUtil.getBean(beanFactory, IterableUtils.get(beanNames, i)))) == null
+					|| (vs = ObjectUtils.getIfNull(vs, ArrayList::new)) == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			vs.add(v);
+			//
+		} // for
+			//
+		return vs;
+		//
 	}
 
 	private static <K, V> Map<K, Collection<V>> asMap(final Multimap<K, V> instance) {
