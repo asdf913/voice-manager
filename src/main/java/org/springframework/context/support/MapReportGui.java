@@ -283,7 +283,7 @@ public class MapReportGui extends JFrame
 		return instance != null ? instance.entrySet() : null;
 	}
 
-	private static Multimap<?, ?> createMultimap(final Iterable<Map<?, ?>> maps) {
+	private static Multimap<?, ?> createMultimap(@Nullable final Iterable<Map<?, ?>> maps) {
 		//
 		Multimap<?, ?> mm = null;
 		//
@@ -425,9 +425,7 @@ public class MapReportGui extends JFrame
 	}
 
 	private static boolean isAssignableFrom(@Nullable final Class<?> a, @Nullable final Class<?> b) {
-		return a != null
-				&& b != null
-				&& a.isAssignableFrom(b);
+		return a != null && b != null && a.isAssignableFrom(b);
 	}
 
 	@Nullable
