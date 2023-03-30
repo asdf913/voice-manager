@@ -253,7 +253,7 @@ public class MapReportGui extends JFrame
 				//
 				for (int i = 0; lists != null && i < lists.size() && jTableRowColumnCount != null; i++) {
 					//
-					if ((list = lists.get(i)) == null && i >= jTableRowColumnCount.size()) {
+					if ((list = lists.get(i)) == null || i >= jTableRowColumnCount.size()) {
 						//
 						continue;
 						//
