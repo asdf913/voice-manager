@@ -8,6 +8,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
@@ -29,6 +30,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.core.AttributeAccessor;
 
+import com.google.common.collect.Multimap;
 import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
@@ -38,7 +40,7 @@ class MapReportGuiTest {
 	private static final String EMPTY = "";
 
 	private static Method METHOD_CAST, METHOD_IS_ALL_ATTRIBUTES_MATCHED, METHOD_GET_CLASS, METHOD_TO_STRING,
-			METHOD_REMOVE_ROW, METHOD_ADD_ROW, METHOD_GET_PREFERRED_WIDTH, METHOD_DOUBLE_VALUE = null;
+			METHOD_REMOVE_ROW, METHOD_ADD_ROW, METHOD_GET_PREFERRED_WIDTH, METHOD_DOUBLE_VALUE, METHOD_AS_MAP = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -63,6 +65,8 @@ class MapReportGuiTest {
 		//
 		(METHOD_DOUBLE_VALUE = clz.getDeclaredMethod("doubleValue", Number.class, Double.TYPE)).setAccessible(true);
 		//
+		(METHOD_AS_MAP = clz.getDeclaredMethod("asMap", Multimap.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -80,6 +84,8 @@ class MapReportGuiTest {
 		private Boolean hasAttribute = null;
 
 		private Object attribute = null;
+
+		private Map<?, ?> asMap = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -137,6 +143,14 @@ class MapReportGuiTest {
 				} else if (Objects.equals(methodName, "getAttribute")) {
 					//
 					return attribute;
+					//
+				} // if
+					//
+			} else if (proxy instanceof Multimap) {
+				//
+				if (Objects.equals(methodName, "asMap")) {
+					//
+					return asMap;
 					//
 				} // if
 					//
@@ -437,6 +451,29 @@ class MapReportGuiTest {
 				return ((Double) obj).doubleValue();
 			}
 			throw new Throwable(obj != null ? toString(obj.getClass()) : null);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testAsMap() throws Throwable {
+		//
+		Assertions.assertNull(asMap(null));
+		//
+		Assertions.assertNull(asMap(Reflection.newProxy(Multimap.class, ih)));
+		//
+	}
+
+	private static <K, V> Map<K, Collection<V>> asMap(final Multimap<K, V> instance) throws Throwable {
+		try {
+			final Object obj = METHOD_AS_MAP.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Map) {
+				return (Map) obj;
+			}
+			throw new Throwable(toString(obj.getClass()));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

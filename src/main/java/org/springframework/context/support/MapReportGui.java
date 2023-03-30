@@ -266,7 +266,7 @@ public class MapReportGui extends JFrame
 					//
 			} // if
 				//
-			final int maxSize = mm2.asMap().entrySet().stream().mapToInt(x -> IterableUtils.size(getValue(x))).max()
+			final int maxSize = asMap(mm2).entrySet().stream().mapToInt(x -> IterableUtils.size(getValue(x))).max()
 					.orElse(0);
 			//
 			final List<String> columns = new ArrayList<>(
@@ -290,6 +290,10 @@ public class MapReportGui extends JFrame
 			//
 		} // if
 			//
+	}
+
+	private static <K, V> Map<K, Collection<V>> asMap(final Multimap<K, V> instance) {
+		return instance != null ? instance.asMap() : null;
 	}
 
 	private static void removeRow(@Nullable final DefaultTableModel instance, final int row) {
