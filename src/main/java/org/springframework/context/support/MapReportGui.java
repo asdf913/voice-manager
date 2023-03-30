@@ -37,6 +37,7 @@ import org.springframework.beans.config.Title;
 import org.springframework.beans.factory.BeanFactoryUtil;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.ListableBeanFactoryUtil;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -276,7 +277,7 @@ public class MapReportGui extends JFrame
 		//
 		List<String> multimapBeanDefinitionNames = null;
 		//
-		final String[] beanDefinitionNames = instnace != null ? instnace.getBeanDefinitionNames() : null;
+		final String[] beanDefinitionNames = ListableBeanFactoryUtil.getBeanDefinitionNames(instnace);
 		//
 		BeanDefinition bd = null;
 		//

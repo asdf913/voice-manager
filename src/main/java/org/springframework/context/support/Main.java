@@ -52,7 +52,7 @@ public class Main {
 			//
 			if (clz == null) {
 				//
-				final String[] beanDefinitionNames = getBeanDefinitionNames(clbf);
+				final String[] beanDefinitionNames = ListableBeanFactoryUtil.getBeanDefinitionNames(clbf);
 				//
 				BeanDefinition bd = null;
 				//
@@ -154,11 +154,6 @@ public class Main {
 	@Nullable
 	private static String[] getBeanNamesForType(@Nullable final ListableBeanFactory instance, final Class<?> type) {
 		return instance != null ? instance.getBeanNamesForType(type) : null;
-	}
-
-	@Nullable
-	private static String[] getBeanDefinitionNames(@Nullable final ListableBeanFactory instance) {
-		return instance != null ? instance.getBeanDefinitionNames() : null;
 	}
 
 	@Nullable

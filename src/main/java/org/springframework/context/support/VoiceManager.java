@@ -1084,7 +1084,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		List<String> multimapBeanDefinitionNames = null;
 		//
-		final String[] beanDefinitionNames = getBeanDefinitionNames(instnace);
+		final String[] beanDefinitionNames = ListableBeanFactoryUtil.getBeanDefinitionNames(instnace);
 		//
 		BeanDefinition bd = null;
 		//
@@ -1144,11 +1144,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return true;
 		//
-	}
-
-	@Nullable
-	private static String[] getBeanDefinitionNames(@Nullable final ListableBeanFactory instance) {
-		return instance != null ? instance.getBeanDefinitionNames() : null;
 	}
 
 	private static <E> void addAll(@Nullable final Collection<E> a, @Nullable final Collection<? extends E> b) {

@@ -35,8 +35,8 @@ class MainTest {
 
 	private static Method METHOD_FOR_NAME, METHOD_TO_STRING, METHOD_GET_INSTANCE,
 			METHOD_SHOW_MESSAGE_DIALOG_OR_PRINT_LN, METHOD_CAST, METHOD_GET_BEAN_NAMES_FOR_TYPE,
-			METHOD_GET_BEAN_DEFINITION_NAMES, METHOD_GET_BEAN_CLASS_NAME, METHOD_PACK, METHOD_SET_VISIBLE,
-			METHOD_TEST_AND_APPLY, METHOD_GET_SELECTED_VALUE = null;
+			METHOD_GET_BEAN_CLASS_NAME, METHOD_PACK, METHOD_SET_VISIBLE, METHOD_TEST_AND_APPLY,
+			METHOD_GET_SELECTED_VALUE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -58,9 +58,6 @@ class MainTest {
 		(METHOD_GET_BEAN_NAMES_FOR_TYPE = clz.getDeclaredMethod("getBeanNamesForType", ListableBeanFactory.class,
 				Class.class)).setAccessible(true);
 		//
-		(METHOD_GET_BEAN_DEFINITION_NAMES = clz.getDeclaredMethod("getBeanDefinitionNames", ListableBeanFactory.class))
-				.setAccessible(true);
-		//
 		(METHOD_GET_BEAN_CLASS_NAME = clz.getDeclaredMethod("getBeanClassName", BeanDefinition.class))
 				.setAccessible(true);
 		//
@@ -79,7 +76,7 @@ class MainTest {
 
 		private Map<Object, Object> beansOfType = null;
 
-		private String[] beanDefinitionNames, beanNamesForType = null;
+		private String[] beanNamesForType = null;
 
 		private String beanClassName = null;
 
@@ -93,10 +90,6 @@ class MainTest {
 				if (Objects.equals(methodName, "getBeansOfType") && args != null && args.length > 0) {
 					//
 					return beansOfType;
-					//
-				} else if (Objects.equals(methodName, "getBeanDefinitionNames")) {
-					//
-					return beanDefinitionNames;
 					//
 				} else if (Objects.equals(methodName, "getBeanNamesForType") && args != null && args.length > 0) {
 					//
@@ -288,29 +281,6 @@ class MainTest {
 			throws Throwable {
 		try {
 			final Object obj = METHOD_GET_BEAN_NAMES_FOR_TYPE.invoke(null, instance, type);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String[]) {
-				return (String[]) obj;
-			}
-			throw new Throwable(toString(obj.getClass()));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetBeanDefinitionNames() throws Throwable {
-		//
-		Assertions.assertNull(getBeanDefinitionNames(null));
-		//
-		Assertions.assertNull(getBeanDefinitionNames(listableBeanFactory));
-		//
-	}
-
-	private static String[] getBeanDefinitionNames(final ListableBeanFactory instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_BEAN_DEFINITION_NAMES.invoke(null, instance);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof String[]) {
