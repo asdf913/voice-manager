@@ -28,6 +28,7 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.OptionalInt;
 import java.util.Set;
+import java.util.Vector;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.ToIntFunction;
@@ -246,8 +247,8 @@ public class MapReportGui extends JFrame
 			//
 			try {
 				//
-				final List<List<Object>> lists = toList(map(stream(dtm != null ? dtm.getDataVector() : null),
-						x -> x != null ? new ArrayList<Object>(x) : null));
+				final List<List<Object>> lists = toList(
+						map(stream(getDataVector(dtm)), x -> x != null ? new ArrayList<Object>(x) : null));
 				//
 				List<?> list = null;
 				//
@@ -278,6 +279,10 @@ public class MapReportGui extends JFrame
 				//
 		} // if
 			//
+	}
+
+	private static Vector<Vector> getDataVector(final DefaultTableModel instance) {
+		return instance != null ? instance.getDataVector() : null;
 	}
 
 	private static <T, R> Stream<R> map(@Nullable final Stream<T> instance,
