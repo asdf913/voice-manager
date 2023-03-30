@@ -267,6 +267,7 @@ public class MapReportGui extends JFrame
 		return instance != null ? instance.max() : null;
 	}
 
+	@Nullable
 	private static <T> IntStream mapToInt(@Nullable final Stream<T> instance,
 			@Nullable final ToIntFunction<? super T> mapper) {
 		//
