@@ -45,6 +45,8 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.core.AttributeAccessor;
 
+import com.google.common.base.Functions;
+import com.google.common.base.Predicates;
 import com.google.common.collect.Multimap;
 import com.google.common.reflect.Reflection;
 
@@ -61,8 +63,8 @@ class MapReportGuiTest {
 			METHOD_REMOVE_ROW, METHOD_ADD_ROW, METHOD_GET_PREFERRED_WIDTH, METHOD_DOUBLE_VALUE, METHOD_AS_MAP,
 			METHOD_GET_VALUES, METHOD_OR_ELSE, METHOD_MAX, METHOD_MAP_TO_INT, METHOD_CREATE_MULTI_MAP, METHOD_ADD,
 			METHOD_IS_ASSIGNABLE_FROM, METHOD_GET_KEY, METHOD_GET_VALUE, METHOD_FOR_NAME, METHOD_FILTER, METHOD_TO_LIST,
-			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_ADD_ACTION_LISTENER, METHOD_MAP,
-			METHOD_LENGTH = null;
+			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_ADD_ACTION_LISTENER, METHOD_MAP, METHOD_LENGTH,
+			METHOD_TEST_AND_APPLY = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -126,6 +128,9 @@ class MapReportGuiTest {
 		(METHOD_MAP = clz.getDeclaredMethod("map", Stream.class, Function.class)).setAccessible(true);
 		//
 		(METHOD_LENGTH = clz.getDeclaredMethod("length", Object[].class)).setAccessible(true);
+		//
+		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class, Function.class,
+				Function.class)).setAccessible(true);
 		//
 	}
 
@@ -993,6 +998,26 @@ class MapReportGuiTest {
 				return ((Integer) obj).intValue();
 			}
 			throw new Throwable(toString(obj != null ? obj.getClass() : null));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testTestAndApply() throws Throwable {
+		//
+		Assertions.assertNull(testAndApply(null, null, null, null));
+		//
+		Assertions.assertNull(testAndApply(Predicates.alwaysTrue(), null, Functions.identity(), null));
+		//
+		Assertions.assertNull(testAndApply(Predicates.alwaysFalse(), null, null, null));
+		//
+	}
+
+	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+			final Function<T, R> functionTrue, final Function<T, R> functionFalse) throws Throwable {
+		try {
+			return (R) METHOD_TEST_AND_APPLY.invoke(null, predicate, value, functionTrue, functionFalse);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

@@ -51,6 +51,8 @@ import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.poi.util.IntList;
 import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
@@ -248,7 +250,7 @@ public class MapReportGui extends JFrame
 			try {
 				//
 				final List<List<Object>> lists = toList(
-						map(stream(getDataVector(dtm)), x -> x != null ? new ArrayList<Object>(x) : null));
+						map(stream(getDataVector(dtm)), x -> testAndApply(Objects::nonNull, x, ArrayList::new, null)));
 				//
 				List<?> list = null;
 				//
@@ -279,6 +281,15 @@ public class MapReportGui extends JFrame
 				//
 		} // if
 			//
+	}
+
+	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+			final Function<T, R> functionTrue, final Function<T, R> functionFalse) throws E {
+		return predicate != null && predicate.test(value) ? apply(functionTrue, value) : apply(functionFalse, value);
+	}
+
+	private static <T, R> R apply(final Function<T, R> instance, final T value) {
+		return instance != null ? instance.apply(value) : null;
 	}
 
 	@Nullable
