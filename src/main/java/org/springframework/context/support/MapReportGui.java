@@ -252,15 +252,15 @@ public class MapReportGui extends JFrame
 				//
 				List<?> list = null;
 				//
-				for (int i = 0; lists != null && i < lists.size() && jTableRowColumnCount != null; i++) {
+				for (int i = 0; i < IterableUtils.size(lists) && jTableRowColumnCount != null; i++) {
 					//
-					if ((list = lists.get(i)) == null || i >= jTableRowColumnCount.size()) {
+					if ((list = IterableUtils.get(lists, i)) == null || i >= jTableRowColumnCount.size()) {
 						//
 						continue;
 						//
 					} // if
 						//
-					for (int j = list.size() - 1; j >= jTableRowColumnCount.get(i); j--) {
+					for (int j = IterableUtils.size(list) - 1; j >= jTableRowColumnCount.get(i); j--) {
 						//
 						list.remove(j);
 						//
