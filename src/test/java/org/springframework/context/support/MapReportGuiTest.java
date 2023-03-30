@@ -46,7 +46,8 @@ class MapReportGuiTest {
 
 	private static Method METHOD_CAST, METHOD_IS_ALL_ATTRIBUTES_MATCHED, METHOD_GET_CLASS, METHOD_TO_STRING,
 			METHOD_REMOVE_ROW, METHOD_ADD_ROW, METHOD_GET_PREFERRED_WIDTH, METHOD_DOUBLE_VALUE, METHOD_AS_MAP,
-			METHOD_GET_VALUES, METHOD_OR_ELSE, METHOD_MAX, METHOD_MAP_TO_INT, METHOD_STREAM = null;
+			METHOD_GET_VALUES, METHOD_OR_ELSE, METHOD_MAX, METHOD_MAP_TO_INT, METHOD_STREAM, METHOD_CREATE_MULTI_MAP,
+			METHOD_ADD, METHOD_IS_ASSIGNABLE_FROM, METHOD_GET_KEY, METHOD_GET_VALUE, METHOD_FOR_NAME = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -83,6 +84,19 @@ class MapReportGuiTest {
 		(METHOD_MAP_TO_INT = clz.getDeclaredMethod("mapToInt", Stream.class, ToIntFunction.class)).setAccessible(true);
 		//
 		(METHOD_STREAM = clz.getDeclaredMethod("stream", Collection.class)).setAccessible(true);
+		//
+		(METHOD_CREATE_MULTI_MAP = clz.getDeclaredMethod("createMultimap", Iterable.class)).setAccessible(true);
+		//
+		(METHOD_ADD = clz.getDeclaredMethod("add", Collection.class, Object.class)).setAccessible(true);
+		//
+		(METHOD_IS_ASSIGNABLE_FROM = clz.getDeclaredMethod("isAssignableFrom", Class.class, Class.class))
+				.setAccessible(true);
+		//
+		(METHOD_GET_KEY = clz.getDeclaredMethod("getKey", Entry.class)).setAccessible(true);
+		//
+		(METHOD_GET_VALUE = clz.getDeclaredMethod("getValue", Entry.class)).setAccessible(true);
+		//
+		(METHOD_FOR_NAME = clz.getDeclaredMethod("forName", String.class)).setAccessible(true);
 		//
 	}
 
@@ -627,6 +641,125 @@ class MapReportGuiTest {
 				return null;
 			} else if (obj instanceof Stream) {
 				return (Stream) obj;
+			}
+			throw new Throwable(toString(obj.getClass()));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testcreateMultimap() throws Throwable {
+		//
+		Assertions.assertNull(createMultimap(Reflection.newProxy(Iterable.class, ih)));
+		//
+		Assertions.assertNull(createMultimap(Collections.singleton(null)));
+		//
+		Assertions.assertNull(createMultimap(Collections.singleton(Reflection.newProxy(Map.class, ih))));
+		//
+		Assertions.assertEquals("{null=[null]}",
+				toString(createMultimap(Collections.singleton(Collections.singletonMap(null, null)))));
+		//
+	}
+
+	private static Multimap<?, ?> createMultimap(final Iterable<Map<?, ?>> maps) throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_MULTI_MAP.invoke(null, maps);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Multimap) {
+				return (Multimap) obj;
+			}
+			throw new Throwable(toString(obj.getClass()));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testAdd() {
+		//
+		Assertions.assertDoesNotThrow(() -> add(null, null));
+		//
+	}
+
+	private static <E> void add(final Collection<E> items, final E item) throws Throwable {
+		try {
+			METHOD_ADD.invoke(null, items, item);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testIsAssignableFrom() throws Throwable {
+		//
+		Assertions.assertFalse(isAssignableFrom(null, null));
+		//
+		Assertions.assertTrue(isAssignableFrom(Object.class, Object.class));
+		//
+		Assertions.assertFalse(isAssignableFrom(String.class, Object.class));
+		//
+	}
+
+	private static boolean isAssignableFrom(final Class<?> a, final Class<?> b) throws Throwable {
+		try {
+			final Object obj = METHOD_IS_ASSIGNABLE_FROM.invoke(null, a, b);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(toString(obj != null ? obj.getClass() : null));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetKey() throws Throwable {
+		//
+		Assertions.assertNull(getKey(null));
+		//
+	}
+
+	private static <K> K getKey(final Entry<K, ?> instance) throws Throwable {
+		try {
+			return (K) METHOD_GET_KEY.invoke(null, instance);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetValue() throws Throwable {
+		//
+		Assertions.assertNull(getValue(null));
+		//
+	}
+
+	private static <V> V getValue(final Entry<?, V> instance) throws Throwable {
+		try {
+			return (V) METHOD_GET_VALUE.invoke(null, instance);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testForName() throws Throwable {
+		//
+		Assertions.assertNull(forName("A"));
+		//
+		Assertions.assertSame(Object.class, forName("java.lang.Object"));
+		//
+	}
+
+	private static Class<?> forName(final String className) throws Throwable {
+		try {
+			final Object obj = METHOD_FOR_NAME.invoke(null, className);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Class) {
+				return (Class) obj;
 			}
 			throw new Throwable(toString(obj.getClass()));
 		} catch (final InvocationTargetException e) {

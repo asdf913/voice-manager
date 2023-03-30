@@ -327,14 +327,13 @@ public class MapReportGui extends JFrame
 		//
 		for (int i = 0; i < IterableUtils.size(beanNames); i++) {
 			//
-			if ((v = cast(clz, BeanFactoryUtil.getBean(beanFactory, IterableUtils.get(beanNames, i)))) == null
-					|| (vs = ObjectUtils.getIfNull(vs, ArrayList::new)) == null) {
+			if ((v = cast(clz, BeanFactoryUtil.getBean(beanFactory, IterableUtils.get(beanNames, i)))) == null) {
 				//
 				continue;
 				//
 			} // if
 				//
-			vs.add(v);
+			add(vs = ObjectUtils.getIfNull(vs, ArrayList::new), v);
 			//
 		} // for
 			//
@@ -426,7 +425,9 @@ public class MapReportGui extends JFrame
 	}
 
 	private static boolean isAssignableFrom(@Nullable final Class<?> a, @Nullable final Class<?> b) {
-		return a != null && b != null && a.isAssignableFrom(b);
+		return a != null
+				&& b != null
+				&& a.isAssignableFrom(b);
 	}
 
 	@Nullable
