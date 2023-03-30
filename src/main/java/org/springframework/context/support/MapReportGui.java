@@ -196,36 +196,55 @@ public class MapReportGui extends JFrame
 		final List<String> beanNames = getBeanDefinitionNamesByClassAndAttributes(configurableListableBeanFactory,
 				Map.class, cast(Map.class, object));
 		//
-		Map<Object, Object> map = null;
-		//
 		Map<?, ?> m = null;
 		//
-		Object key, valueOld, valueNew = null;
+		Collection<Map<?, ?>> maps = null;
 		//
 		for (int i = 0; i < IterableUtils.size(beanNames); i++) {
 			//
-			if ((m = cast(Map.class, BeanFactoryUtil.getBean(configurableListableBeanFactory,
-					IterableUtils.get(beanNames, i)))) == null) {
+			if ((m = cast(Map.class,
+					BeanFactoryUtil.getBean(configurableListableBeanFactory, IterableUtils.get(beanNames, i)))) == null
+					|| (maps = ObjectUtils.getIfNull(maps, ArrayList::new)) == null) {
 				//
 				continue;
 				//
 			} // if
 				//
-			for (final Entry<?, ?> entry : m.entrySet()) {
+			maps.add(m);
+			//
+		} // for
+			//
+		if (maps != null) {
+			//
+			Map<Object, Object> map = null;
+			//
+			Object key, valueOld, valueNew = null;
+			//
+			for (final Map<?, ?> t : maps) {
 				//
-				if (!containsKey(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), key = getKey(entry))) {
+				if (t == null || t.entrySet() == null || iterator(t.entrySet()) == null) {
 					//
-					put(map, key, getValue(entry));
-					//
-				} else if (!Objects.equals(valueOld = MapUtils.getObject(map, key), valueNew = getValue(entry))) {
-					//
-					addRow(dtm, new Object[] { key, valueOld, valueNew });
+					continue;
 					//
 				} // if
 					//
+				for (final Entry<?, ?> entry : t.entrySet()) {
+					//
+					if (!containsKey(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), key = getKey(entry))) {
+						//
+						put(map, key, getValue(entry));
+						//
+					} else if (!Objects.equals(valueOld = MapUtils.getObject(map, key), valueNew = getValue(entry))) {
+						//
+						addRow(dtm, new Object[] { key, valueOld, valueNew });
+						//
+					} // if
+						//
+				} // for
+					//
 			} // for
 				//
-		} // for
+		} // if
 			//
 	}
 
