@@ -159,7 +159,7 @@ public class MapReportGui extends JFrame
 		//
 		add(new JLabel(), String.format("span %1$s", 2));
 		//
-		add(btnCopy = new JButton("Copy"));
+		add(btnCopy = new JButton("Copy"), "growx");
 		//
 		addActionListener(this, btnExecute, btnCopy);
 		//
