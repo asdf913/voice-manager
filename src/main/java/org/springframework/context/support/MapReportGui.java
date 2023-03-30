@@ -276,6 +276,7 @@ public class MapReportGui extends JFrame
 			//
 	}
 
+	@Nullable
 	private static <V> Collection<V> getValues(final BeanFactory beanFactory, final Class<V> clz,
 			final Iterable<String> beanNames) {
 		//
