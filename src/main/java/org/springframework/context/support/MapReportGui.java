@@ -300,7 +300,7 @@ public class MapReportGui extends JFrame
 		//
 	}
 
-	private static <K, V> Map<K, Collection<V>> asMap(final Multimap<K, V> instance) {
+	private static <K, V> Map<K, Collection<V>> asMap(@Nullable final Multimap<K, V> instance) {
 		return instance != null ? instance.asMap() : null;
 	}
 
