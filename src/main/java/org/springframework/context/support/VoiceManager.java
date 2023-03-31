@@ -279,6 +279,7 @@ import org.apache.poi.ss.usermodel.WorkbookUtil;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.util.IntList;
+import org.apache.poi.util.IntListUtil;
 import org.apache.poi.util.LocaleID;
 import org.apache.poi.xssf.usermodel.XSSFDataValidationHelper;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -8582,10 +8583,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		for (int i = 0; i < getSize(cbm); i++) {
 			//
-			if (StringUtils.equalsAnyIgnoreCase(getElementAt(cbm, i), string)
-					&& (intList = ObjectUtils.getIfNull(intList, IntList::new)) != null) {
+			if (StringUtils.equalsAnyIgnoreCase(getElementAt(cbm, i), string)) {
 				//
-				intList.add(i);
+				IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), i);
 				//
 			} // if
 				//

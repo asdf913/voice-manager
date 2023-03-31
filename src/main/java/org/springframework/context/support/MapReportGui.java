@@ -54,6 +54,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.poi.util.IntList;
+import org.apache.poi.util.IntListUtil;
 import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
 import org.springframework.beans.config.Title;
 import org.springframework.beans.factory.BeanFactory;
@@ -355,7 +356,7 @@ public class MapReportGui extends JFrame
 				addRow(dtm,
 						os = ArrayUtils.addAll(new Object[] { key }, MultimapUtil.get((Multimap) mm, key).toArray()));
 				//
-				jTableRowColumnCount.add(length(os));
+				IntListUtil.add(jTableRowColumnCount, length(os));
 				//
 			} // for
 				//

@@ -64,6 +64,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.poi.util.IntList;
+import org.apache.poi.util.IntListUtil;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
@@ -580,10 +581,9 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		//
 		for (int i = 0; jlJlptLevel != null && i < jlJlptLevel.getVisibleRowCount(); i++) {
 			//
-			if (StringUtils.equalsAnyIgnoreCase(jlJlptLevel.getModel().getElementAt(i), level)
-					&& (intList = ObjectUtils.getIfNull(intList, IntList::new)) != null) {
+			if (StringUtils.equalsAnyIgnoreCase(jlJlptLevel.getModel().getElementAt(i), level)) {
 				//
-				intList.add(i);
+				IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), i);
 				//
 			} // if
 				//
