@@ -33,6 +33,7 @@ import java.util.stream.Stream;
 
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
@@ -54,6 +55,8 @@ import org.springframework.core.AttributeAccessor;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertyResolver;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.google.common.base.Functions;
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableMultimap;
@@ -74,7 +77,8 @@ class MapReportGuiTest {
 			METHOD_GET_VALUES, METHOD_OR_ELSE, METHOD_MAX, METHOD_MAP_TO_INT, METHOD_CREATE_MULTI_MAP, METHOD_ADD,
 			METHOD_IS_ASSIGNABLE_FROM, METHOD_GET_KEY, METHOD_GET_VALUE, METHOD_FOR_NAME, METHOD_FILTER, METHOD_TO_LIST,
 			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_ADD_ACTION_LISTENER, METHOD_MAP, METHOD_LENGTH,
-			METHOD_TEST_AND_APPLY, METHOD_CREATE_MULTIMAP, METHOD_CLEAR, METHOD_TEST_AND_ACCEPT = null;
+			METHOD_TEST_AND_APPLY, METHOD_CREATE_MULTIMAP, METHOD_CLEAR, METHOD_TEST_AND_ACCEPT,
+			METHOD_WRITER_WITH_DEFAULT_PRETTY_PRINTER, METHOD_WRITER = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -149,6 +153,11 @@ class MapReportGuiTest {
 		//
 		(METHOD_TEST_AND_ACCEPT = clz.getDeclaredMethod("testAndAccept", BiPredicate.class, Object.class, Object.class,
 				BiConsumer.class)).setAccessible(true);
+		//
+		(METHOD_WRITER_WITH_DEFAULT_PRETTY_PRINTER = clz.getDeclaredMethod("writerWithDefaultPrettyPrinter",
+				ObjectMapper.class)).setAccessible(true);
+		//
+		(METHOD_WRITER = clz.getDeclaredMethod("writer", ObjectMapper.class)).setAccessible(true);
 		//
 	}
 
@@ -460,6 +469,16 @@ class MapReportGuiTest {
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnCopy, 0, null)));
 		//
 		FieldUtils.writeDeclaredField(instance, "dtm", null, true);
+		//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnCopy, 0, null)));
+		//
+		final AbstractButton cbPrettyJson = new JCheckBox();
+		//
+		FieldUtils.writeDeclaredField(instance, "cbPrettyJson", cbPrettyJson, true);
+		//
+		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnCopy, 0, null)));
+		//
+		cbPrettyJson.setSelected(true);
 		//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnCopy, 0, null)));
 		//
@@ -1197,6 +1216,48 @@ class MapReportGuiTest {
 			final BiConsumer<T, U> consumer) throws Throwable {
 		try {
 			METHOD_TEST_AND_ACCEPT.invoke(null, predicate, t, u, consumer);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testWriterWithDefaultPrettyPrinter() throws Throwable {
+		//
+		Assertions.assertNull(writerWithDefaultPrettyPrinter(null));
+		//
+	}
+
+	private static ObjectWriter writerWithDefaultPrettyPrinter(final ObjectMapper instance) throws Throwable {
+		try {
+			final Object obj = METHOD_WRITER_WITH_DEFAULT_PRETTY_PRINTER.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof ObjectWriter) {
+				return (ObjectWriter) obj;
+			}
+			throw new Throwable(toString(obj.getClass()));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testWriter() throws Throwable {
+		//
+		Assertions.assertNull(writer(null));
+		//
+	}
+
+	private static ObjectWriter writer(final ObjectMapper instance) throws Throwable {
+		try {
+			final Object obj = METHOD_WRITER.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof ObjectWriter) {
+				return (ObjectWriter) obj;
+			}
+			throw new Throwable(toString(obj.getClass()));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

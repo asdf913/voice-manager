@@ -78,6 +78,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.SerializationConfig;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
@@ -421,10 +422,9 @@ public class MapReportGui extends JFrame
 				//
 			final ObjectMapper om = ObjectUtils.getIfNull(getObjectMapper(), ObjectMapper::new);
 			//
-			final ObjectWriter ow = om != null
-					? cbPrettyJson != null && cbPrettyJson.isSelected() ? om.writerWithDefaultPrettyPrinter()
-							: om.writer()
-					: null;
+			final ObjectWriter ow = cbPrettyJson != null && cbPrettyJson.isSelected()
+					? writerWithDefaultPrettyPrinter(om)
+					: writer(om);
 			//
 			setContents(!GraphicsEnvironment.isHeadless() ? getSystemClipboard(Toolkit.getDefaultToolkit()) : null,
 					new StringSelection(ow != null ? ow.writeValueAsString(lists) : null), null);
@@ -435,6 +435,14 @@ public class MapReportGui extends JFrame
 			//
 		} // try
 			//
+	}
+
+	private static ObjectWriter writerWithDefaultPrettyPrinter(final ObjectMapper instance) {
+		return instance != null ? instance.writerWithDefaultPrettyPrinter() : null;
+	}
+
+	private static ObjectWriter writer(final ObjectMapper instance) {
+		return instance != null ? instance.writer() : null;
 	}
 
 	@Nullable
