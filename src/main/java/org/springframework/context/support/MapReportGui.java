@@ -206,8 +206,8 @@ public class MapReportGui extends JFrame
 		//
 	}
 
-	private static <T, U> void testAndAccept(final BiPredicate<T, U> predicate, final T t, final U u,
-			final BiConsumer<T, U> consumer) {
+	private static <T, U> void testAndAccept(@Nullable final BiPredicate<T, U> predicate, final T t, final U u,
+			@Nullable final BiConsumer<T, U> consumer) {
 		if (predicate != null && predicate.test(t, u) && consumer != null) {
 			consumer.accept(t, u);
 		}
