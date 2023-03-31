@@ -436,11 +436,11 @@ public class MapReportGui extends JFrame
 			//
 	}
 
-	private static ObjectWriter writerWithDefaultPrettyPrinter(final ObjectMapper instance) {
+	private static ObjectWriter writerWithDefaultPrettyPrinter(@Nullable final ObjectMapper instance) {
 		return instance != null ? instance.writerWithDefaultPrettyPrinter() : null;
 	}
 
-	private static ObjectWriter writer(final ObjectMapper instance) {
+	private static ObjectWriter writer(@Nullable final ObjectMapper instance) {
 		return instance != null ? instance.writer() : null;
 	}
 
