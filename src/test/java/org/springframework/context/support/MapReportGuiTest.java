@@ -578,6 +578,14 @@ class MapReportGuiTest {
 		//
 		Assertions.assertEquals(d, doubleValue(null, d));
 		//
+		if (GraphicsEnvironment.isHeadless()) {
+			//
+			final double d1 = 2.3;
+			//
+			Assertions.assertEquals(d1, doubleValue(Double.valueOf(d1), d));
+			//
+		} // if
+			//
 	}
 
 	private static double doubleValue(final Number instance, final double defaultValue) throws Throwable {
