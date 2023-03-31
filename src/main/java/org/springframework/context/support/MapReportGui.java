@@ -108,7 +108,10 @@ public class MapReportGui extends JFrame
 	@Note("Execute")
 	private AbstractButton btnExecute = null;
 
-	private AbstractButton btnCopy, cbPrettyJson = null;
+	@Note("Copy")
+	private AbstractButton btnCopy = null;
+
+	private AbstractButton cbPrettyJson = null;
 
 	private JTable jTable = null;
 
