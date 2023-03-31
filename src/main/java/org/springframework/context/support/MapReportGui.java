@@ -401,7 +401,7 @@ public class MapReportGui extends JFrame
 			//
 	}
 
-	private static Multimap<?, ?> createMultimap(final Multimap<?, ?> mm,
+	private static Multimap<?, ?> createMultimap(@Nullable final Multimap<?, ?> mm,
 			final BiPredicate<Multimap<?, ?>, Object> biPredicate) {
 		//
 		Multimap<?, ?> mm2 = null;
