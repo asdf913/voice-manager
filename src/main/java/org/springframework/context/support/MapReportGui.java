@@ -436,6 +436,7 @@ public class MapReportGui extends JFrame
 			//
 	}
 
+	@Nullable
 	private static String writeValueAsString(@Nullable final ObjectWriter instance, @Nullable final Object value)
 			throws JsonProcessingException {
 		return instance != null ? instance.writeValueAsString(value) : null;
