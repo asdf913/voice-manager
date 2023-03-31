@@ -16,12 +16,14 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.OptionalInt;
 import java.util.Set;
+import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -36,6 +38,7 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.JTextComponent;
 
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.poi.util.IntList;
 import org.junit.jupiter.api.Assertions;
@@ -43,10 +46,13 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.core.AttributeAccessor;
+import org.springframework.core.env.Environment;
+import org.springframework.core.env.PropertyResolver;
 
 import com.google.common.base.Functions;
 import com.google.common.base.Predicates;
@@ -68,7 +74,7 @@ class MapReportGuiTest {
 			METHOD_GET_VALUES, METHOD_OR_ELSE, METHOD_MAX, METHOD_MAP_TO_INT, METHOD_CREATE_MULTI_MAP, METHOD_ADD,
 			METHOD_IS_ASSIGNABLE_FROM, METHOD_GET_KEY, METHOD_GET_VALUE, METHOD_FOR_NAME, METHOD_FILTER, METHOD_TO_LIST,
 			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_ADD_ACTION_LISTENER, METHOD_MAP, METHOD_LENGTH,
-			METHOD_TEST_AND_APPLY, METHOD_CREATE_MULTIMAP, METHOD_CLEAR = null;
+			METHOD_TEST_AND_APPLY, METHOD_CREATE_MULTIMAP, METHOD_CLEAR, METHOD_TEST_AND_ACCEPT = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -141,6 +147,9 @@ class MapReportGuiTest {
 		//
 		(METHOD_CLEAR = clz.getDeclaredMethod("clear", IntList.class)).setAccessible(true);
 		//
+		(METHOD_TEST_AND_ACCEPT = clz.getDeclaredMethod("testAndAccept", BiPredicate.class, Object.class, Object.class,
+				BiConsumer.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -162,6 +171,15 @@ class MapReportGuiTest {
 		private Map<?, ?> asMap = null;
 
 		private IntStream intStream = null;
+
+		private Map<Object, Object> prorperties = null;
+
+		private Map<Object, Object> getProrperties() {
+			if (prorperties == null) {
+				prorperties = new LinkedHashMap<>();
+			}
+			return prorperties;
+		}
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -252,6 +270,20 @@ class MapReportGuiTest {
 					//
 				} // if
 					//
+			} else if (proxy instanceof PropertyResolver) {
+				//
+				if (Objects.equals(methodName, "getProperty") && args != null && args.length > 0) {
+					//
+					return MapUtils.getObject(getProrperties(), args[0]);
+					//
+				} else if (Objects.equals(methodName, "containsProperty") && args != null && args.length > 0) {
+					//
+					final Map<?, ?> map = getProrperties();
+					//
+					return map != null && map.containsKey(args[0]);
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(methodName);
@@ -334,16 +366,38 @@ class MapReportGuiTest {
 	@Test
 	void testAfterPropertiesSet() {
 		//
-		Assertions.assertDoesNotThrow(() -> {
-			//
-			if (instance != null) {
-				//
-				instance.afterPropertiesSet();
-				//
-			} //
-				//
-		});
+		Assertions.assertDoesNotThrow(() -> afterPropertiesSet(instance));
 		//
+		if (instance != null) {
+			//
+			instance.setEnvironment(Reflection.newProxy(Environment.class, ih));
+			//
+		} // if
+			//
+		final Map<Object, Object> properties = ih != null ? ih.getProrperties() : null;
+		//
+		if (properties != null) {
+			//
+			properties.put("org.springframework.context.support.MapReportGui.prettyJson", null);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> afterPropertiesSet(instance));
+		//
+		if (properties != null) {
+			//
+			properties.put("org.springframework.context.support.MapReportGui.prettyJson", "true");
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> afterPropertiesSet(instance));
+		//
+	}
+
+	private static void afterPropertiesSet(final InitializingBean instance) throws Exception {
+		if (instance != null) {
+			instance.afterPropertiesSet();
+		}
 	}
 
 	@Test
@@ -1116,6 +1170,33 @@ class MapReportGuiTest {
 	private static void clear(final IntList instance) throws Throwable {
 		try {
 			METHOD_CLEAR.invoke(null, instance);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testTestAndAccept() {
+		//
+		Assertions.assertDoesNotThrow(() -> testAndAccept(null, null, null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> testAndAccept((a, b) -> true, null, null, null));
+		//
+		if (GraphicsEnvironment.isHeadless()) {
+			//
+			Assertions.assertDoesNotThrow(() -> testAndAccept((a, b) -> false, null, null, null));
+			//
+			Assertions.assertDoesNotThrow(() -> testAndAccept((a, b) -> true, null, null, (a, b) -> {
+			}));
+			//
+		} // if
+			//
+	}
+
+	private static <T, U> void testAndAccept(final BiPredicate<T, U> predicate, final T t, final U u,
+			final BiConsumer<T, U> consumer) throws Throwable {
+		try {
+			METHOD_TEST_AND_ACCEPT.invoke(null, predicate, t, u, consumer);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

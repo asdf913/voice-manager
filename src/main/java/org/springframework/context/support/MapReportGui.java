@@ -29,6 +29,7 @@ import java.util.Objects;
 import java.util.OptionalInt;
 import java.util.Set;
 import java.util.Vector;
+import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -39,6 +40,7 @@ import java.util.stream.Stream;
 import javax.annotation.Nullable;
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
@@ -75,6 +77,7 @@ import org.springframework.core.env.PropertyResolverUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
@@ -105,7 +108,7 @@ public class MapReportGui extends JFrame
 	@Note("Execute")
 	private AbstractButton btnExecute = null;
 
-	private AbstractButton btnCopy = null;
+	private AbstractButton btnCopy, cbPrettyJson = null;
 
 	private JTable jTable = null;
 
@@ -166,7 +169,22 @@ public class MapReportGui extends JFrame
 		//
 		add(jsp, String.format("%1$s,span %2$s", wrap, 3));
 		//
-		add(new JLabel(), String.format("span %1$s", 2));
+		add(new JLabel());
+		//
+		add(cbPrettyJson = new JCheckBox("Pretty JSON"), "al right");
+		//
+		testAndAccept(PropertyResolverUtil::containsProperty, propertyResolver,
+				"org.springframework.context.support.MapReportGui.prettyJson", (a, b) -> {
+					//
+					final String string = PropertyResolverUtil.getProperty(a, b);
+					//
+					if (StringUtils.isNotBlank(string)) {
+						//
+						cbPrettyJson.setSelected(Boolean.valueOf(string));
+						//
+					} // if
+						//
+				});
 		//
 		add(btnCopy = new JButton("Copy"), "growx");
 		//
@@ -183,6 +201,13 @@ public class MapReportGui extends JFrame
 			//
 		tfAttributeJson.setPreferredSize(pd);
 		//
+	}
+
+	private static <T, U> void testAndAccept(final BiPredicate<T, U> predicate, final T t, final U u,
+			final BiConsumer<T, U> consumer) {
+		if (predicate != null && predicate.test(t, u) && consumer != null) {
+			consumer.accept(t, u);
+		}
 	}
 
 	private static void addActionListener(final ActionListener actionListener, @Nullable final AbstractButton... abs) {
@@ -391,8 +416,15 @@ public class MapReportGui extends JFrame
 					//
 			} // for
 				//
+			final ObjectMapper om = ObjectUtils.getIfNull(getObjectMapper(), ObjectMapper::new);
+			//
+			final ObjectWriter ow = om != null
+					? cbPrettyJson != null && cbPrettyJson.isSelected() ? om.writerWithDefaultPrettyPrinter()
+							: om.writer()
+					: null;
+			//
 			setContents(!GraphicsEnvironment.isHeadless() ? getSystemClipboard(Toolkit.getDefaultToolkit()) : null,
-					new StringSelection(ObjectMapperUtil.writeValueAsString(getObjectMapper(), lists)), null);
+					new StringSelection(ow != null ? ow.writeValueAsString(lists) : null), null);
 			//
 		} catch (final JsonProcessingException e) {
 			//
