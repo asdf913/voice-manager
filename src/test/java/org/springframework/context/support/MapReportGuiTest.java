@@ -37,6 +37,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.text.JTextComponent;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.poi.util.IntList;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -67,7 +68,7 @@ class MapReportGuiTest {
 			METHOD_GET_VALUES, METHOD_OR_ELSE, METHOD_MAX, METHOD_MAP_TO_INT, METHOD_CREATE_MULTI_MAP, METHOD_ADD,
 			METHOD_IS_ASSIGNABLE_FROM, METHOD_GET_KEY, METHOD_GET_VALUE, METHOD_FOR_NAME, METHOD_FILTER, METHOD_TO_LIST,
 			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_ADD_ACTION_LISTENER, METHOD_MAP, METHOD_LENGTH,
-			METHOD_TEST_AND_APPLY, METHOD_CREATE_MULTIMAP = null;
+			METHOD_TEST_AND_APPLY, METHOD_CREATE_MULTIMAP, METHOD_CLEAR = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -137,6 +138,8 @@ class MapReportGuiTest {
 		//
 		(METHOD_CREATE_MULTIMAP = clz.getDeclaredMethod("createMultimap", Multimap.class, BiPredicate.class))
 				.setAccessible(true);
+		//
+		(METHOD_CLEAR = clz.getDeclaredMethod("clear", IntList.class)).setAccessible(true);
 		//
 	}
 
@@ -1096,6 +1099,23 @@ class MapReportGuiTest {
 				return (Multimap) obj;
 			}
 			throw new Throwable(toString(obj.getClass()));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testClear() {
+		//
+		Assertions.assertDoesNotThrow(() -> clear(null));
+		//
+		Assertions.assertDoesNotThrow(() -> clear(new IntList()));
+		//
+	}
+
+	private static void clear(final IntList instance) throws Throwable {
+		try {
+			METHOD_CLEAR.invoke(null, instance);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

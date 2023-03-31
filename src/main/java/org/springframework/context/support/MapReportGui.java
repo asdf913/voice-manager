@@ -343,13 +343,7 @@ public class MapReportGui extends JFrame
 			//
 			Object[] os = null;
 			//
-			if (jTableRowColumnCount == null) {
-				//
-				jTableRowColumnCount = new IntList();
-				//
-			} // if
-				//
-			jTableRowColumnCount.clear();
+			clear(jTableRowColumnCount = ObjectUtils.getIfNull(jTableRowColumnCount, IntList::new));
 			//
 			for (final Object key : keySet) {
 				//
@@ -364,6 +358,12 @@ public class MapReportGui extends JFrame
 			//
 		setModel(jTable, dtm);
 		//
+	}
+
+	private static void clear(final IntList instance) {
+		if (instance != null) {
+			instance.clear();
+		}
 	}
 
 	private void actionPerformedForBtnCopy() {
