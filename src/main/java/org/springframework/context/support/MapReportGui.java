@@ -29,6 +29,7 @@ import java.util.Objects;
 import java.util.OptionalInt;
 import java.util.Set;
 import java.util.Vector;
+import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.ToIntFunction;
@@ -321,20 +322,21 @@ public class MapReportGui extends JFrame
 			//
 		} // for
 			//
-		final Multimap<?, ?> mm2 = createMultimapWithMultipleValues(
+		final Multimap<?, ?> mm = createMultimap(
 				createMultimap((Collection) getValues(configurableListableBeanFactory, Map.class,
 						getBeanDefinitionNamesByClassAndAttributes(configurableListableBeanFactory, Map.class,
-								cast(Map.class, object)))));
+								cast(Map.class, object)))),
+				(a, b) -> IterableUtils.size(MultimapUtil.get((Multimap) a, b)) > 1);
 		//
 		final List<String> columns = new ArrayList<>(Collections.singleton("Key"));
 		//
 		columns.addAll(toList(IntStream
-				.range(0, orElse(max(mapToInt(stream(entrySet(asMap(mm2))), x -> IterableUtils.size(getValue(x)))), 0))
+				.range(0, orElse(max(mapToInt(stream(entrySet(asMap(mm))), x -> IterableUtils.size(getValue(x)))), 0))
 				.mapToObj(x -> String.format("Value %1$s", x + 1))));
 		//
 		dtm = new DefaultTableModel(columns.toArray(), 0);
 		//
-		final Set<?> keySet = MultimapUtil.keySet(mm2);
+		final Set<?> keySet = MultimapUtil.keySet(mm);
 		//
 		if (keySet != null && iterator(keySet) != null) {
 			//
@@ -351,7 +353,7 @@ public class MapReportGui extends JFrame
 			for (final Object key : keySet) {
 				//
 				addRow(dtm,
-						os = ArrayUtils.addAll(new Object[] { key }, MultimapUtil.get((Multimap) mm2, key).toArray()));
+						os = ArrayUtils.addAll(new Object[] { key }, MultimapUtil.get((Multimap) mm, key).toArray()));
 				//
 				jTableRowColumnCount.add(length(os));
 				//
@@ -399,8 +401,8 @@ public class MapReportGui extends JFrame
 			//
 	}
 
-	@Nullable
-	private static Multimap<?, ?> createMultimapWithMultipleValues(@Nullable final Multimap<?, ?> mm) {
+	private static Multimap<?, ?> createMultimap(final Multimap<?, ?> mm,
+			final BiPredicate<Multimap<?, ?>, Object> biPredicate) {
 		//
 		Multimap<?, ?> mm2 = null;
 		//
@@ -408,18 +410,16 @@ public class MapReportGui extends JFrame
 		//
 		if (iterator(keySet) != null) {
 			//
-			Collection<?> values = null;
-			//
 			for (final Object key : keySet) {
 				//
-				if (IterableUtils.size(values = MultimapUtil.get((Multimap) mm, key)) <= 1
+				if ((biPredicate != null && !biPredicate.test(mm, key))
 						|| (mm2 = ObjectUtils.getIfNull(mm2, LinkedHashMultimap::create)) == null) {
 					//
 					continue;
 					//
 				} // if
 					//
-				((Multimap) mm2).putAll(key, values);
+				((Multimap) mm2).putAll(key, MultimapUtil.get((Multimap) mm, key));
 				//
 			} // for
 				//

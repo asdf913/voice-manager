@@ -12,7 +12,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -22,6 +21,7 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.OptionalInt;
 import java.util.Set;
+import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.ToIntFunction;
@@ -49,9 +49,7 @@ import org.springframework.core.AttributeAccessor;
 import com.google.common.base.Functions;
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
-import com.google.common.collect.MultimapUtil;
 import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
@@ -68,7 +66,7 @@ class MapReportGuiTest {
 			METHOD_GET_VALUES, METHOD_OR_ELSE, METHOD_MAX, METHOD_MAP_TO_INT, METHOD_CREATE_MULTI_MAP, METHOD_ADD,
 			METHOD_IS_ASSIGNABLE_FROM, METHOD_GET_KEY, METHOD_GET_VALUE, METHOD_FOR_NAME, METHOD_FILTER, METHOD_TO_LIST,
 			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_ADD_ACTION_LISTENER, METHOD_MAP, METHOD_LENGTH,
-			METHOD_TEST_AND_APPLY, METHOD_CREATE_MULTIMAP_WITH_MULTIPLE_VALUES = null;
+			METHOD_TEST_AND_APPLY, METHOD_CREATE_MULTIMAP = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -136,8 +134,8 @@ class MapReportGuiTest {
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class, Function.class,
 				Function.class)).setAccessible(true);
 		//
-		(METHOD_CREATE_MULTIMAP_WITH_MULTIPLE_VALUES = clz.getDeclaredMethod("createMultimapWithMultipleValues",
-				Multimap.class)).setAccessible(true);
+		(METHOD_CREATE_MULTIMAP = clz.getDeclaredMethod("createMultimap", Multimap.class, BiPredicate.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -1031,21 +1029,22 @@ class MapReportGuiTest {
 	}
 
 	@Test
-	void testCreateMultimapWithMultipleValues() throws Throwable {
+	void testCreateMultimap() throws Throwable {
 		//
-		Assertions.assertNull(createMultimapWithMultipleValues(ImmutableMultimap.of(EMPTY, EMPTY)));
+		final Multimap<?, ?> multimap = ImmutableMultimap.of(EMPTY, EMPTY);
 		//
-		final Multimap<Object, Object> multimap = LinkedHashMultimap.create();
+		Assertions.assertNull(createMultimap(multimap, (a, b) -> false));
 		//
-		MultimapUtil.putAll(multimap, EMPTY, Arrays.asList(1, 2));
+		Assertions.assertEquals("{=[]}", toString(createMultimap(multimap, null)));
 		//
-		Assertions.assertEquals("{=[1, 2]}", toString(createMultimapWithMultipleValues(multimap)));
+		Assertions.assertEquals("{=[]}", toString(createMultimap(multimap, (a, b) -> true)));
 		//
 	}
 
-	private static Multimap<?, ?> createMultimapWithMultipleValues(final Multimap<?, ?> mm) throws Throwable {
+	private static Multimap<?, ?> createMultimap(final Multimap<?, ?> mm,
+			final BiPredicate<Multimap<?, ?>, Object> biPredicate) throws Throwable {
 		try {
-			final Object obj = METHOD_CREATE_MULTIMAP_WITH_MULTIPLE_VALUES.invoke(null, mm);
+			final Object obj = METHOD_CREATE_MULTIMAP.invoke(null, mm, biPredicate);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Multimap) {
