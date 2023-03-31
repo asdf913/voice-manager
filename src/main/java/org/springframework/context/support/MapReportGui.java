@@ -360,7 +360,7 @@ public class MapReportGui extends JFrame
 		//
 	}
 
-	private static void clear(final IntList instance) {
+	private static void clear(@Nullable final IntList instance) {
 		if (instance != null) {
 			instance.clear();
 		}
