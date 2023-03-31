@@ -421,12 +421,12 @@ public class MapReportGui extends JFrame
 				//
 			final ObjectMapper om = ObjectUtils.getIfNull(getObjectMapper(), ObjectMapper::new);
 			//
-			final ObjectWriter ow = cbPrettyJson != null && cbPrettyJson.isSelected()
-					? writerWithDefaultPrettyPrinter(om)
-					: writer(om);
-			//
 			setContents(!GraphicsEnvironment.isHeadless() ? getSystemClipboard(Toolkit.getDefaultToolkit()) : null,
-					new StringSelection(ow != null ? ow.writeValueAsString(lists) : null), null);
+					new StringSelection(writeValueAsString(
+							cbPrettyJson != null && cbPrettyJson.isSelected() ? writerWithDefaultPrettyPrinter(om)
+									: writer(om),
+							lists)),
+					null);
 			//
 		} catch (final JsonProcessingException e) {
 			//
@@ -434,6 +434,11 @@ public class MapReportGui extends JFrame
 			//
 		} // try
 			//
+	}
+
+	private static String writeValueAsString(final ObjectWriter instance, final Object value)
+			throws JsonProcessingException {
+		return instance != null ? instance.writeValueAsString(value) : null;
 	}
 
 	@Nullable

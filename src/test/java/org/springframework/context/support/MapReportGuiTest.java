@@ -78,7 +78,7 @@ class MapReportGuiTest {
 			METHOD_IS_ASSIGNABLE_FROM, METHOD_GET_KEY, METHOD_GET_VALUE, METHOD_FOR_NAME, METHOD_FILTER, METHOD_TO_LIST,
 			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_ADD_ACTION_LISTENER, METHOD_MAP, METHOD_LENGTH,
 			METHOD_TEST_AND_APPLY, METHOD_CREATE_MULTIMAP, METHOD_CLEAR, METHOD_TEST_AND_ACCEPT,
-			METHOD_WRITER_WITH_DEFAULT_PRETTY_PRINTER, METHOD_WRITER = null;
+			METHOD_WRITER_WITH_DEFAULT_PRETTY_PRINTER, METHOD_WRITER, METHOD_WRITE_VALUE_AS_STRING = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -158,6 +158,9 @@ class MapReportGuiTest {
 				ObjectMapper.class)).setAccessible(true);
 		//
 		(METHOD_WRITER = clz.getDeclaredMethod("writer", ObjectMapper.class)).setAccessible(true);
+		//
+		(METHOD_WRITE_VALUE_AS_STRING = clz.getDeclaredMethod("writeValueAsString", ObjectWriter.class, Object.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -1256,6 +1259,27 @@ class MapReportGuiTest {
 				return null;
 			} else if (obj instanceof ObjectWriter) {
 				return (ObjectWriter) obj;
+			}
+			throw new Throwable(toString(obj.getClass()));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testWriteValueAsString() throws Throwable {
+		//
+		Assertions.assertNull(writeValueAsString(null, null));
+		//
+	}
+
+	private static String writeValueAsString(final ObjectWriter instance, final Object value) throws Throwable {
+		try {
+			final Object obj = METHOD_WRITE_VALUE_AS_STRING.invoke(null, instance, value);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
 			}
 			throw new Throwable(toString(obj.getClass()));
 		} catch (final InvocationTargetException e) {
