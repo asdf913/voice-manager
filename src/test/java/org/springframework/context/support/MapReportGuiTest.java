@@ -1,6 +1,7 @@
 package org.springframework.context.support;
 
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -260,6 +261,8 @@ class MapReportGuiTest {
 
 		private Clipboard clipboard = null;
 
+		private Dimension preferredSize = null;
+
 		@Override
 		public Object invoke(final Object self, final Method thisMethod, final Method proceed, final Object[] args)
 				throws Throwable {
@@ -274,6 +277,14 @@ class MapReportGuiTest {
 					//
 				} // if
 					//
+			} else if (self instanceof Component) {
+				//
+				if (Objects.equals(methodName, "getPreferredSize")) {
+					//
+					return preferredSize;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(methodName);
@@ -285,6 +296,8 @@ class MapReportGuiTest {
 	private MapReportGui instance = null;
 
 	private IH ih = null;
+
+	private MH mh = null;
 
 	private Stream<?> stream = null;
 
@@ -310,6 +323,8 @@ class MapReportGuiTest {
 		} // if
 			//
 		stream = Reflection.newProxy(Stream.class, ih = new IH());
+		//
+		mh = new MH();
 		//
 	}
 
@@ -555,6 +570,24 @@ class MapReportGuiTest {
 		//
 		Assertions.assertNull(getPreferredWidth(null));
 		//
+		if (GraphicsEnvironment.isHeadless()) {
+			//
+			final Component component = createProxy(Component.class, mh);
+			//
+			Assertions.assertNull(getPreferredWidth(component));
+			//
+			final double width = 1.0;
+			//
+			if (mh != null) {
+				//
+				mh.preferredSize = new Dimension((int) width, 2);
+				//
+			} // if
+				//
+			Assertions.assertEquals(width, getPreferredWidth(component));
+			//
+		} // if
+			//
 	}
 
 	private static Double getPreferredWidth(final Component instance) throws Throwable {
@@ -893,28 +926,32 @@ class MapReportGuiTest {
 		//
 		if (GraphicsEnvironment.isHeadless()) {
 			//
-			final ProxyFactory proxyFactory = new ProxyFactory();
-			//
-			proxyFactory.setSuperclass(Toolkit.class);
-			//
-			final Class<?> clz = proxyFactory.createClass();
-			//
-			final Constructor<?> constructor = clz != null ? clz.getDeclaredConstructor() : null;
-			//
-			final Object instance = constructor != null ? constructor.newInstance() : null;
-			//
-			final MH mh = new MH();
-			//
-			if (instance instanceof ProxyObject) {
-				//
-				((ProxyObject) instance).setHandler(mh);
-				//
-			} // if
-				//
-			Assertions.assertNull(getSystemClipboard(cast(Toolkit.class, instance)));
+			Assertions.assertNull(getSystemClipboard(createProxy(Toolkit.class, mh)));
 			//
 		} // if
 			//
+	}
+
+	private static <T> T createProxy(final Class<T> c, final MethodHandler mh) throws Throwable {
+		//
+		final ProxyFactory proxyFactory = new ProxyFactory();
+		//
+		proxyFactory.setSuperclass(c);
+		//
+		final Class<?> clz = proxyFactory.createClass();
+		//
+		final Constructor<?> constructor = clz != null ? clz.getDeclaredConstructor() : null;
+		//
+		final Object instance = constructor != null ? constructor.newInstance() : null;
+		//
+		if (instance instanceof ProxyObject) {
+			//
+			((ProxyObject) instance).setHandler(mh);
+			//
+		} // if
+			//
+		return cast(c, instance);
+		//
 	}
 
 	private static Clipboard getSystemClipboard(final Toolkit instance) throws Throwable {
