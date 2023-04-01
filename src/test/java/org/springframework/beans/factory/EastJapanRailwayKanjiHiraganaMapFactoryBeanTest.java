@@ -2,6 +2,7 @@ package org.springframework.beans.factory;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -20,6 +21,7 @@ import org.javatuples.Pair;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.AssertionsUtil;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -164,7 +166,9 @@ class EastJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 			//
 		try (final InputStream is = new ByteArrayInputStream("1,2,3,4,5,http://127.0.0.1".getBytes())) {
 			//
-			Assertions.assertThrows(ConnectException.class, () -> createMap(is, urlValidator));
+			AssertionsUtil.assertThrowsAndEquals(ConnectException.class,
+					"{localizedMessage=Connection refused: connect, suppressed=[], message=Connection refused: connect}",
+					() -> createMap(is, urlValidator));
 			//
 		} // try
 			//
@@ -236,7 +240,7 @@ class EastJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 	}
 
 	@Test
-	void testMerge() {
+	void testMerge() throws IOException {
 		//
 		Assertions.assertDoesNotThrow(() -> merge(null, null));
 		//
@@ -270,7 +274,8 @@ class EastJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 
 		final Map<String, String> b = Collections.singletonMap(null, "");
 		//
-		Assertions.assertThrows(IllegalStateException.class, () -> merge(a, b));
+		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class,
+				"{localizedMessage=null=, suppressed=[], message=null=}", () -> merge(a, b));
 		//
 	}
 

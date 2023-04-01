@@ -13,6 +13,7 @@ import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.AssertionsUtil;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -129,7 +130,8 @@ class TsukubaExpressKanjiMapFactoryBeanTest {
 	@Test
 	void testCreateEntry() throws Throwable {
 		//
-		Assertions.assertThrows(IllegalArgumentException.class, () -> createEntry(null, null));
+		AssertionsUtil.assertThrowsAndEquals(IllegalArgumentException.class, "{suppressed=[]}",
+				() -> createEntry(null, null));
 		//
 		if (CLASS_ROMAJI_OR_HIRAGANA != null && CLASS_ROMAJI_OR_HIRAGANA.isEnum()) {
 			//

@@ -11,6 +11,7 @@ import java.util.Objects;
 
 import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.AssertionsUtil;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -151,7 +152,8 @@ class JouYouKanJiListFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertThrows(IllegalArgumentException.class, () -> getObject(instance));
+		AssertionsUtil.assertThrowsAndEquals(IllegalArgumentException.class, "{suppressed=[]}",
+				() -> getObject(instance));
 		//
 	}
 

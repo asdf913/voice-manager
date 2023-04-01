@@ -40,6 +40,7 @@ import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.jena.ext.com.google.common.base.Predicates;
 import org.javatuples.Unit;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.AssertionsUtil;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -214,9 +215,10 @@ class IniAsPropertiesResourceTest {
 	}
 
 	@Test
-	void testGetURL() {
+	void testGetURL() throws IOException {
 		//
-		Assertions.assertThrows(UnsupportedOperationException.class, () -> getURL(instance));
+		AssertionsUtil.assertThrowsAndEquals(UnsupportedOperationException.class, "{suppressed=[]}",
+				() -> getURL(instance));
 		//
 	}
 
@@ -225,9 +227,10 @@ class IniAsPropertiesResourceTest {
 	}
 
 	@Test
-	void testGetURI() {
+	void testGetURI() throws IOException {
 		//
-		Assertions.assertThrows(UnsupportedOperationException.class, () -> getURI(instance));
+		AssertionsUtil.assertThrowsAndEquals(UnsupportedOperationException.class, "{suppressed=[]}",
+				() -> getURI(instance));
 		//
 	}
 
@@ -236,9 +239,10 @@ class IniAsPropertiesResourceTest {
 	}
 
 	@Test
-	void testGetFile() {
+	void testGetFile() throws IOException {
 		//
-		Assertions.assertThrows(UnsupportedOperationException.class, () -> getFile(instance));
+		AssertionsUtil.assertThrowsAndEquals(UnsupportedOperationException.class, "{suppressed=[]}",
+				() -> getFile(instance));
 		//
 	}
 
@@ -247,9 +251,10 @@ class IniAsPropertiesResourceTest {
 	}
 
 	@Test
-	void testContentLength() {
+	void testContentLength() throws IOException {
 		//
-		Assertions.assertThrows(UnsupportedOperationException.class, () -> contentLength(instance));
+		AssertionsUtil.assertThrowsAndEquals(UnsupportedOperationException.class, "{suppressed=[]}",
+				() -> contentLength(instance));
 		//
 	}
 
@@ -258,9 +263,10 @@ class IniAsPropertiesResourceTest {
 	}
 
 	@Test
-	void testLastModified() {
+	void testLastModified() throws IOException {
 		//
-		Assertions.assertThrows(UnsupportedOperationException.class, () -> lastModified(instance));
+		AssertionsUtil.assertThrowsAndEquals(UnsupportedOperationException.class, "{suppressed=[]}",
+				() -> lastModified(instance));
 		//
 	}
 
@@ -269,9 +275,10 @@ class IniAsPropertiesResourceTest {
 	}
 
 	@Test
-	void testCreateRelative() {
+	void testCreateRelative() throws IOException {
 		//
-		Assertions.assertThrows(UnsupportedOperationException.class, () -> createRelative(instance, null));
+		AssertionsUtil.assertThrowsAndEquals(UnsupportedOperationException.class, "{suppressed=[]}",
+				() -> createRelative(instance, null));
 		//
 	}
 
@@ -280,9 +287,10 @@ class IniAsPropertiesResourceTest {
 	}
 
 	@Test
-	void testGetDescription() {
+	void testGetDescription() throws IOException {
 		//
-		Assertions.assertThrows(UnsupportedOperationException.class, () -> getDescription(instance));
+		AssertionsUtil.assertThrowsAndEquals(UnsupportedOperationException.class, "{suppressed=[]}",
+				() -> getDescription(instance));
 		//
 	}
 
@@ -690,7 +698,8 @@ class IniAsPropertiesResourceTest {
 	@Test
 	void testExists() throws Throwable {
 		//
-		Assertions.assertThrows(UnsupportedOperationException.class, () -> exists(instance));
+		AssertionsUtil.assertThrowsAndEquals(UnsupportedOperationException.class, "{suppressed=[]}",
+				() -> exists(instance));
 		//
 		Assertions.assertFalse(exists((File) null));
 		//

@@ -1,6 +1,7 @@
 package org.springframework.beans.factory;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -19,6 +20,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.javatuples.Pair;
 import org.javatuples.valueintf.IValue0;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.AssertionsUtil;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -234,9 +236,13 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 		//
 		final String url = new File("pom.xml").toURI().toURL().toString();
 		//
-		Assertions.assertThrows(MalformedURLException.class, () -> createMultimap(url, null, null));
+		AssertionsUtil.assertThrowsAndEquals(MalformedURLException.class,
+				"{localizedMessage=Only http & https protocols supported, suppressed=[], message=Only http & https protocols supported}",
+				() -> createMultimap(url, null, null));
 		//
-		Assertions.assertThrows(MalformedURLException.class, () -> createMultimap(url, new String[] {}, null));
+		AssertionsUtil.assertThrowsAndEquals(MalformedURLException.class,
+				"{localizedMessage=Only http & https protocols supported, suppressed=[], message=Only http & https protocols supported}",
+				() -> createMultimap(url, new String[] {}, null));
 		//
 		Assertions.assertNull(createMultimap(url, new String[] { "http" }, null));
 		//
@@ -405,13 +411,17 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 	}
 
 	@Test
-	void testCreateMultimapByUrl() throws MalformedURLException {
+	void testCreateMultimapByUrl() throws IOException {
 		//
 		final String url = new File("pom.xml").toURI().toURL().toString();
 		//
-		Assertions.assertThrows(MalformedURLException.class, () -> createMultimapByUrl(url, null, null));
+		AssertionsUtil.assertThrowsAndEquals(MalformedURLException.class,
+				"{localizedMessage=Only http & https protocols supported, suppressed=[], message=Only http & https protocols supported}",
+				() -> createMultimapByUrl(url, null, null));
 		//
-		Assertions.assertThrows(MalformedURLException.class, () -> createMultimapByUrl(url, new String[] {}, null));
+		AssertionsUtil.assertThrowsAndEquals(MalformedURLException.class,
+				"{localizedMessage=Only http & https protocols supported, suppressed=[], message=Only http & https protocols supported}",
+				() -> createMultimapByUrl(url, new String[] {}, null));
 		//
 	}
 

@@ -14,6 +14,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.javatuples.valueintf.IValue0;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.AssertionsUtil;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -240,11 +241,17 @@ class YojijukugoMultimapFactoryBeanTest {
 		//
 		final String url = toString(new File("pom.xml").toURI().toURL());
 		//
-		Assertions.assertThrows(MalformedURLException.class, () -> createMultimapByUrl(url, null));
+		AssertionsUtil.assertThrowsAndEquals(MalformedURLException.class,
+				"{localizedMessage=Only http & https protocols supported, suppressed=[], message=Only http & https protocols supported}",
+				() -> createMultimapByUrl(url, null));
 		//
-		Assertions.assertThrows(MalformedURLException.class, () -> createMultimapByUrl(url, new String[] {}));
+		AssertionsUtil.assertThrowsAndEquals(MalformedURLException.class,
+				"{localizedMessage=Only http & https protocols supported, suppressed=[], message=Only http & https protocols supported}",
+				() -> createMultimapByUrl(url, new String[] {}));
 		//
-		Assertions.assertThrows(MalformedURLException.class, () -> createMultimapByUrl(url, new String[] { "file" }));
+		AssertionsUtil.assertThrowsAndEquals(MalformedURLException.class,
+				"{localizedMessage=Only http & https protocols supported, suppressed=[], message=Only http & https protocols supported}",
+				() -> createMultimapByUrl(url, new String[] { "file" }));
 		//
 	}
 

@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Executable;
 import java.lang.reflect.InvocationHandler;
@@ -29,6 +30,7 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.AssertionsUtil;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -380,11 +382,12 @@ class GaKuNenBeTsuKanJiGuiTest {
 	}
 
 	@Test
-	void testSetSelectedItemByIterable() {
+	void testSetSelectedItemByIterable() throws IOException {
 		//
 		final Collection<?> collection = Collections.nCopies(2, null);
 		//
-		Assertions.assertThrows(IllegalStateException.class, () -> setSelectedItemByIterable(null, collection));
+		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class, "{suppressed=[]}",
+				() -> setSelectedItemByIterable(null, collection));
 		//
 	}
 

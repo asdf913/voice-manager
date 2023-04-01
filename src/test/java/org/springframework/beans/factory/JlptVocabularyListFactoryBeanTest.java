@@ -37,6 +37,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.AssertionsUtil;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -402,7 +403,9 @@ class JlptVocabularyListFactoryBeanTest {
 				//
 			} // if
 				//
-			Assertions.assertThrows(EmptyFileException.class, () -> getObject(instance));
+			AssertionsUtil.assertThrowsAndEquals(EmptyFileException.class,
+					"{localizedMessage=The supplied file was empty (zero bytes long), suppressed=[], message=The supplied file was empty (zero bytes long)}",
+					() -> getObject(instance));
 			//
 		} // try
 			//
@@ -711,9 +714,13 @@ class JlptVocabularyListFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertThrows(UnsupportedOperationException.class, () -> getIntegerValue(cell, null));
+		AssertionsUtil.assertThrowsAndEquals(UnsupportedOperationException.class,
+				"{localizedMessage=cellType=FORMULA,cellValueType=null, suppressed=[], message=cellType=FORMULA,cellValueType=null}",
+				() -> getIntegerValue(cell, null));
 		//
-		Assertions.assertThrows(UnsupportedOperationException.class, () -> getIntegerValue(cell, formulaEvaluator));
+		AssertionsUtil.assertThrowsAndEquals(UnsupportedOperationException.class,
+				"{localizedMessage=cellType=FORMULA,cellValueType=null, suppressed=[], message=cellType=FORMULA,cellValueType=null}",
+				() -> getIntegerValue(cell, formulaEvaluator));
 		//
 		final int zero = 0;
 		//
@@ -773,9 +780,13 @@ class JlptVocabularyListFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertThrows(UnsupportedOperationException.class, () -> getStringValue(cell, null));
+		AssertionsUtil.assertThrowsAndEquals(UnsupportedOperationException.class,
+				"{localizedMessage=cellType=FORMULA,cellValueType=null, suppressed=[], message=cellType=FORMULA,cellValueType=null}",
+				() -> getStringValue(cell, null));
 		//
-		Assertions.assertThrows(UnsupportedOperationException.class, () -> getStringValue(cell, formulaEvaluator));
+		AssertionsUtil.assertThrowsAndEquals(UnsupportedOperationException.class,
+				"{localizedMessage=cellType=FORMULA,cellValueType=null, suppressed=[], message=cellType=FORMULA,cellValueType=null}",
+				() -> getStringValue(cell, formulaEvaluator));
 		//
 		final boolean b = true;
 		//

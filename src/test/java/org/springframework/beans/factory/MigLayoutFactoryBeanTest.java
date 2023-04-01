@@ -1,5 +1,6 @@
 package org.springframework.beans.factory;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -12,6 +13,7 @@ import org.apache.commons.lang3.function.FailableFunction;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.AssertionsUtil;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -113,13 +115,15 @@ class MigLayoutFactoryBeanTest {
 	}
 
 	@Test
-	void testSetArguments2() throws ReflectiveOperationException {
+	void testSetArguments2() throws ReflectiveOperationException, IOException {
 		//
 		Assertions.assertDoesNotThrow(() -> instance.setArguments("null"));
 		//
 		Assertions.assertNull(get(FIELD_ARGUMENTS, instance));
 		//
-		Assertions.assertThrows(IllegalArgumentException.class, () -> instance.setArguments("{}"));
+		AssertionsUtil.assertThrowsAndEquals(IllegalArgumentException.class,
+				"{localizedMessage=class java.util.LinkedHashMap, suppressed=[], message=class java.util.LinkedHashMap}",
+				() -> instance.setArguments("{}"));
 		//
 	}
 
@@ -160,7 +164,9 @@ class MigLayoutFactoryBeanTest {
 		//
 		instance.setArguments(new String[] { "", "", "", "" });
 		//
-		Assertions.assertThrows(IllegalStateException.class, () -> instance.getObject());
+		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class,
+				"{localizedMessage=java.lang.reflect.Constructor is null, suppressed=[], message=java.lang.reflect.Constructor is null}",
+				() -> instance.getObject());
 		//
 	}
 

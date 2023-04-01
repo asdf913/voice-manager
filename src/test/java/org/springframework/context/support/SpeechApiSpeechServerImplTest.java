@@ -1,6 +1,7 @@
 package org.springframework.context.support;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.file.FileSystem;
@@ -9,14 +10,13 @@ import java.nio.file.spi.FileSystemProvider;
 import java.util.Objects;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.AssertionsUtil;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIf;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.OS;
-
-import io.github.toolfactory.narcissus.Narcissus;
 
 class SpeechApiSpeechServerImplTest {
 
@@ -64,9 +64,9 @@ class SpeechApiSpeechServerImplTest {
 	@Test
 	@EnabledOnOs(OS.WINDOWS)
 	@EnabledIf("isInstalled")
-	void testSpeak() {
+	void testSpeak() throws IOException {
 		//
-		Assertions.assertThrows(Error.class, () -> instance.speak(null, null, 0, 0));
+		AssertionsUtil.assertThrowsAndEquals(Error.class, "", () -> instance.speak(null, null, 0, 0));
 		//
 		Assertions.assertDoesNotThrow(() -> instance.speak("1", null, 0, 0));
 		//
@@ -74,13 +74,17 @@ class SpeechApiSpeechServerImplTest {
 
 	@Test
 	@EnabledOnOs(OS.WINDOWS)
-	void testWriteVoiceToFile() {
+	void testWriteVoiceToFile() throws IOException {
 		//
-		Assertions.assertThrows(Error.class, () -> instance.writeVoiceToFile(null, null, 0, 0, null));
+		AssertionsUtil.assertThrowsAndEquals(Error.class,
+				"{localizedMessage=Invalid memory access, suppressed=[], message=Invalid memory access}",
+				() -> instance.writeVoiceToFile(null, null, 0, 0, null));
 		//
 		final File file = new File(".");
 		//
-		Assertions.assertThrows(Error.class, () -> instance.writeVoiceToFile(null, null, 0, 0, file));
+		AssertionsUtil.assertThrowsAndEquals(Error.class,
+				"{localizedMessage=Invalid memory access, suppressed=[], message=Invalid memory access}",
+				() -> instance.writeVoiceToFile(null, null, 0, 0, file));
 		//
 	}
 
@@ -151,7 +155,8 @@ class SpeechApiSpeechServerImplTest {
 		//
 		if (instance != null) {
 			//
-			Assertions.assertThrows(IllegalStateException.class, () -> instance.get("volume", "min"));
+			AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class, "{suppressed=[]}",
+					() -> instance.get("volume", "min"));
 			//
 			instance.afterPropertiesSet();
 			//

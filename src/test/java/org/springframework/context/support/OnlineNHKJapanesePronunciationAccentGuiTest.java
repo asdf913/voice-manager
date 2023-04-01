@@ -63,6 +63,7 @@ import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.jena.ext.com.google.common.base.Predicates;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.AssertionsUtil;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -573,7 +574,9 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		//
 		Assertions.assertEquals(emptyList, get(imageFormatOrders, instance));
 		//
-		Assertions.assertThrows(UnsupportedOperationException.class, () -> setImageFormatOrders(instance, "{}"));
+		AssertionsUtil.assertThrowsAndEquals(UnsupportedOperationException.class,
+				"{localizedMessage=class java.util.LinkedHashMap, suppressed=[], message=class java.util.LinkedHashMap}",
+				() -> setImageFormatOrders(instance, "{}"));
 		//
 	}
 
@@ -1297,7 +1300,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				//
 			} else {
 				//
-				Assertions.assertThrows(JavaLayerException.class, () -> play(new Player(bais)));
+				AssertionsUtil.assertThrowsAndEquals(JavaLayerException.class, "", () -> play(new Player(bais)));
 				//
 			} // if
 				//
@@ -1787,7 +1790,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		final InvocationHandler ih = cast(InvocationHandler.class,
 				constructor != null ? constructor.newInstance() : null);
 		//
-		Assertions.assertThrows(Throwable.class, () -> invoke(ih, null, null, null));
+		AssertionsUtil.assertThrowsAndEquals(Throwable.class, "{suppressed=[]}", () -> invoke(ih, null, null, null));
 		//
 		final Transferable transferable = Reflection.newProxy(Transferable.class, ih);
 		//

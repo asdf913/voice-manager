@@ -1,5 +1,6 @@
 package org.oxbow.swingbits.dialog.task;
 
+import java.io.IOException;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Executable;
 import java.lang.reflect.InvocationHandler;
@@ -15,6 +16,7 @@ import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.jena.ext.com.google.common.base.Predicates;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.AssertionsUtil;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -93,7 +95,7 @@ class TaskDialogsUtilTest {
 	}
 
 	@Test
-	void testErrorOrPrintStackTraceOrAssertOrShowException() {
+	void testErrorOrPrintStackTraceOrAssertOrShowException() throws IOException {
 		//
 		Assertions.assertDoesNotThrow(
 				() -> TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(true, null, null));
@@ -106,7 +108,8 @@ class TaskDialogsUtilTest {
 		Assertions.assertDoesNotThrow(
 				() -> TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(true, null, throwable));
 		//
-		Assertions.assertThrows(RuntimeException.class,
+		AssertionsUtil.assertThrowsAndEquals(RuntimeException.class,
+				"{localizedMessage=org.opentest4j.AssertionFailedError: Unexpected exception thrown: java.lang.Throwable, suppressed=[], message=org.opentest4j.AssertionFailedError: Unexpected exception thrown: java.lang.Throwable}",
 				() -> TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(false, null, throwable));
 		//
 	}

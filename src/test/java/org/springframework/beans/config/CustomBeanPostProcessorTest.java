@@ -30,6 +30,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.AssertionsUtil;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -242,7 +243,9 @@ class CustomBeanPostProcessorTest {
 		//
 		final String string = StringUtils.wrap(Integer.toString(0), "\"");
 		//
-		Assertions.assertThrows(IllegalArgumentException.class, () -> instance.setDefaultCloseOperation(string));
+		AssertionsUtil.assertThrowsAndEquals(IllegalArgumentException.class,
+				"{localizedMessage=class java.lang.String, suppressed=[], message=class java.lang.String}",
+				() -> instance.setDefaultCloseOperation(string));
 		//
 		// EXIT_ON_CLOSE
 		//
@@ -254,7 +257,8 @@ class CustomBeanPostProcessorTest {
 		//
 		// java.lang.Boolean
 		//
-		Assertions.assertThrows(IllegalArgumentException.class, () -> instance.setDefaultCloseOperation(Boolean.TRUE));
+		AssertionsUtil.assertThrowsAndEquals(IllegalArgumentException.class, "{suppressed=[]}",
+				() -> instance.setDefaultCloseOperation(Boolean.TRUE));
 		//
 		// org.springframework.core.env.PropertyResolver
 		//
@@ -301,9 +305,11 @@ class CustomBeanPostProcessorTest {
 			//
 		} // if
 			//
-		final Object object = Narcissus.allocateInstance(JFrame.class);
-		//
-		Assertions.assertThrows(RuntimeException.class, () -> postProcessBeforeInitialization(instance, object, null));
+		AssertionsUtil.assertThrowsAndEquals(RuntimeException.class, String.join("\n",
+				"{localizedMessage=com.fasterxml.jackson.core.JsonParseException: Unrecognized token 'A': was expecting (JSON String, Number, Array, Object or token 'null', 'true' or 'false')",
+				" at [Source: (String)\"A\"; line: 1, column: 2], suppressed=[], message=com.fasterxml.jackson.core.JsonParseException: Unrecognized token 'A': was expecting (JSON String, Number, Array, Object or token 'null', 'true' or 'false')",
+				" at [Source: (String)\"A\"; line: 1, column: 2]}"),
+				() -> postProcessBeforeInitialization(instance, Narcissus.allocateInstance(JFrame.class), null));
 		//
 	}
 
@@ -685,7 +691,7 @@ class CustomBeanPostProcessorTest {
 		//
 		Arrays.fill(objects, en);
 		//
-		Assertions.assertThrows(IllegalStateException.class, () -> {
+		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class, "{suppressed=[]}", () -> {
 			//
 			if (valueOf != null) {
 				//

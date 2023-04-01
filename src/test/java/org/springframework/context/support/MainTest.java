@@ -21,6 +21,7 @@ import javax.swing.JTextField;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.jena.ext.com.google.common.base.Predicates;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.AssertionsUtil;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -324,7 +325,7 @@ class MainTest {
 			//
 			final Window window = cast(Window.class, Narcissus.allocateInstance(Window.class));
 			//
-			Assertions.assertThrows(HeadlessException.class, () -> pack(window));
+			AssertionsUtil.assertThrowsAndEquals(HeadlessException.class, "{suppressed=[]}", () -> pack(window));
 			//
 		} else {
 			//

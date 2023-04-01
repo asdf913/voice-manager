@@ -33,6 +33,7 @@ import java.util.stream.Stream;
 
 import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.AssertionsUtil;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -414,7 +415,9 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 		//
 		final List<String> list = Collections.singletonList(null);
 		//
-		Assertions.assertThrows(UncheckedIOException.class, () -> createMergedBufferedImage(null, list, ZERO));
+		AssertionsUtil.assertThrowsAndEquals(UncheckedIOException.class,
+				"{localizedMessage=java.net.MalformedURLException: no protocol: null/null, suppressed=[], message=java.net.MalformedURLException: no protocol: null/null}",
+				() -> createMergedBufferedImage(null, list, ZERO));
 		//
 	}
 

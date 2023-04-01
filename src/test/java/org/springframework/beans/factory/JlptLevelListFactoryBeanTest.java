@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.AssertionsUtil;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -161,9 +162,8 @@ class JlptLevelListFactoryBeanTest {
 		//
 		// java.util.Map
 		//
-		final String string1 = String.format("{\"%1$s\":%1$s}", zero);
-		//
-		Assertions.assertThrows(IllegalArgumentException.class, () -> setValues(instance, string1));
+		AssertionsUtil.assertThrowsAndEquals(IllegalArgumentException.class, "{suppressed=[]}",
+				() -> setValues(instance, String.format("{\"%1$s\":%1$s}", zero)));
 		//
 		// Invalid Format
 		//
@@ -173,9 +173,13 @@ class JlptLevelListFactoryBeanTest {
 			//
 		} else {
 			//
-			final String string2 = String.format("{%1$s:%1$s}", zero);
-			//
-			Assertions.assertThrows(RuntimeException.class, () -> setValues(instance, string2));
+			AssertionsUtil.assertThrowsAndEquals(RuntimeException.class, String.join("\n",
+					"{localizedMessage=org.opentest4j.AssertionFailedError: Unexpected character ('0' (code 48)): was expecting double-quote to start field name",
+					" at [Source: (String)\"{0:0}\"; line: 1, column: 3] ==> Unexpected exception thrown: com.fasterxml.jackson.core.JsonParseException: Unexpected character ('0' (code 48)): was expecting double-quote to start field name",
+					" at [Source: (String)\"{0:0}\"; line: 1, column: 3], suppressed=[], message=org.opentest4j.AssertionFailedError: Unexpected character ('0' (code 48)): was expecting double-quote to start field name",
+					" at [Source: (String)\"{0:0}\"; line: 1, column: 3] ==> Unexpected exception thrown: com.fasterxml.jackson.core.JsonParseException: Unexpected character ('0' (code 48)): was expecting double-quote to start field name",
+					" at [Source: (String)\"{0:0}\"; line: 1, column: 3]}"),
+					() -> setValues(instance, String.format("{%1$s:%1$s}", zero)));
 			//
 		} // if
 			//

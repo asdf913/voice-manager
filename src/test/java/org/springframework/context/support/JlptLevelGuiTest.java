@@ -4,7 +4,6 @@ import java.awt.Component;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
-import java.awt.HeadlessException;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.ClipboardOwner;
@@ -74,6 +73,7 @@ import org.apache.poi.util.IntList;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.AssertionsUtil;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -836,7 +836,8 @@ class JlptLevelGuiTest {
 		//
 		if (throwableClassByGetSystemClipboard != null) {
 			//
-			Assertions.assertThrows(throwableClassByGetSystemClipboard, () -> getSystemClipboard(toolkit));
+			AssertionsUtil.assertThrowsAndEquals(throwableClassByGetSystemClipboard, "{suppressed=[]}",
+					() -> getSystemClipboard(toolkit));
 			//
 		} else {
 			//

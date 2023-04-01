@@ -21,6 +21,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.javatuples.Unit;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.AssertionsUtil;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -200,7 +201,8 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertThrows(MalformedURLException.class, () -> getObject(instance));
+		AssertionsUtil.assertThrowsAndEquals(MalformedURLException.class,
+				"{localizedMessage=no protocol: A, suppressed=[], message=no protocol: A}", () -> getObject(instance));
 		//
 		if (instance != null) {
 			//
@@ -214,7 +216,8 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertThrows(MalformedURLException.class, () -> getObject(instance));
+		AssertionsUtil.assertThrowsAndEquals(MalformedURLException.class,
+				"{localizedMessage=no protocol: A, suppressed=[], message=no protocol: A}", () -> getObject(instance));
 		//
 		if (ih != null) {
 			//
@@ -222,7 +225,8 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertThrows(MalformedURLException.class, () -> getObject(instance));
+		AssertionsUtil.assertThrowsAndEquals(MalformedURLException.class,
+				"{localizedMessage=no protocol: A, suppressed=[], message=no protocol: A}", () -> getObject(instance));
 		//
 		try (final InputStream is = new ByteArrayInputStream("".getBytes())) {
 			//
@@ -232,7 +236,9 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 				//
 			} // if
 				//
-			Assertions.assertThrows(MalformedURLException.class, () -> getObject(instance));
+			AssertionsUtil.assertThrowsAndEquals(MalformedURLException.class,
+					"{localizedMessage=no protocol: A, suppressed=[], message=no protocol: A}",
+					() -> getObject(instance));
 			//
 		} // try
 			//

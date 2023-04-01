@@ -50,6 +50,7 @@ import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.AssertionsUtil;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -452,7 +453,8 @@ class JouYouKanjiGuiTest {
 		//
 		Assertions.assertSame(ECSSVersion.CSS21, get(ecssVersion, instance));
 		//
-		Assertions.assertThrows(IllegalArgumentException.class, () -> setEcssVersion(instance, "CSS"));
+		AssertionsUtil.assertThrowsAndEquals(IllegalArgumentException.class, "{suppressed=[]}",
+				() -> setEcssVersion(instance, "CSS"));
 		//
 		// java.lang.Integer
 		//
@@ -579,7 +581,7 @@ class JouYouKanjiGuiTest {
 		//
 		Assertions.assertNull(getECSSVersionByMajor(new ECSSVersion[] { null }, null));
 		//
-		Assertions.assertThrows(IllegalArgumentException.class,
+		AssertionsUtil.assertThrowsAndEquals(IllegalArgumentException.class, "{suppressed=[]}",
 				() -> getECSSVersionByMajor(new ECSSVersion[] { ECSSVersion.CSS30, ECSSVersion.CSS30 }, 3));
 		//
 	}
@@ -606,7 +608,9 @@ class JouYouKanjiGuiTest {
 		//
 		final Object objectMap = createObjectMap();
 		//
-		Assertions.assertThrows(IllegalStateException.class, () -> addJouYouKanJiSheet(objectMap, null));
+		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class,
+				"{localizedMessage=Key [interface org.apache.poi.ss.usermodel.Workbook] Not Found, suppressed=[], message=Key [interface org.apache.poi.ss.usermodel.Workbook] Not Found}",
+				() -> addJouYouKanJiSheet(objectMap, null));
 		//
 	}
 
@@ -645,7 +649,9 @@ class JouYouKanjiGuiTest {
 		//
 		final Method m = method;
 		//
-		Assertions.assertThrows(IllegalStateException.class, () -> invoke(m, null, objectMap, String[].class));
+		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class,
+				"{localizedMessage=Key [String[]] Not Found, suppressed=[], message=Key [String[]] Not Found}",
+				() -> invoke(m, null, objectMap, String[].class));
 		//
 	}
 
@@ -654,7 +660,7 @@ class JouYouKanjiGuiTest {
 		//
 		final InvocationHandler ih = createInvocationHandler();
 		//
-		Assertions.assertThrows(Throwable.class, () -> ih.invoke(null, null, null));
+		AssertionsUtil.assertThrowsAndEquals(Throwable.class, "{suppressed=[]}", () -> ih.invoke(null, null, null));
 		//
 		final Object objectMap = createObjectMap();
 		//
@@ -663,9 +669,13 @@ class JouYouKanjiGuiTest {
 		final Method getObject = CLASS_OBJECT_MAP != null ? CLASS_OBJECT_MAP.getDeclaredMethod("getObject", Class.class)
 				: null;
 		//
-		Assertions.assertThrows(Throwable.class, () -> ih.invoke(objectMap, getObject, null));
+		AssertionsUtil.assertThrowsAndEquals(Throwable.class,
+				"{localizedMessage=getObject, suppressed=[], message=getObject}",
+				() -> ih.invoke(objectMap, getObject, null));
 		//
-		Assertions.assertThrows(Throwable.class, () -> ih.invoke(objectMap, getObject, new Object[] {}));
+		AssertionsUtil.assertThrowsAndEquals(Throwable.class,
+				"{localizedMessage=getObject, suppressed=[], message=getObject}",
+				() -> ih.invoke(objectMap, getObject, new Object[] {}));
 		//
 		// org.springframework.context.support.JouYouKanjiGui$ObjectMap.setObject(java.lang.Class,java.lang.Object)
 		//
@@ -673,9 +683,13 @@ class JouYouKanjiGuiTest {
 				? CLASS_OBJECT_MAP.getDeclaredMethod("setObject", Class.class, Object.class)
 				: null;
 		//
-		Assertions.assertThrows(Throwable.class, () -> ih.invoke(objectMap, setObject, null));
+		AssertionsUtil.assertThrowsAndEquals(Throwable.class,
+				"{localizedMessage=setObject, suppressed=[], message=setObject}",
+				() -> ih.invoke(objectMap, setObject, null));
 		//
-		Assertions.assertThrows(Throwable.class, () -> ih.invoke(objectMap, setObject, new Object[] {}));
+		AssertionsUtil.assertThrowsAndEquals(Throwable.class,
+				"{localizedMessage=setObject, suppressed=[], message=setObject}",
+				() -> ih.invoke(objectMap, setObject, new Object[] {}));
 		//
 		// org.springframework.context.support.JouYouKanjiGui$IH.containsKey(java.lang.Map,java.lang.Object)
 		//

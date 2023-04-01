@@ -203,6 +203,7 @@ import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.AssertionsUtil;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -1770,7 +1771,7 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testSetFreeMarkerVersion() throws NoSuchFieldException, IllegalAccessException {
+	void testSetFreeMarkerVersion() throws NoSuchFieldException, IllegalAccessException, IOException {
 		//
 		final Field freeMarkerVersion = VoiceManager.class.getDeclaredField("freeMarkerVersion");
 		//
@@ -1800,7 +1801,8 @@ class VoiceManagerTest {
 		//
 		set(freeMarkerVersion, instance, null);
 		//
-		Assertions.assertThrows(IllegalArgumentException.class, () -> instance.setFreeMarkerVersion(new int[] {}));
+		AssertionsUtil.assertThrowsAndEquals(IllegalArgumentException.class, "{suppressed=[]}",
+				() -> instance.setFreeMarkerVersion(new int[] {}));
 		//
 		Assertions.assertDoesNotThrow(() -> instance.setFreeMarkerVersion(new int[] { ONE, TWO, THREE }));
 		//
@@ -1837,7 +1839,8 @@ class VoiceManagerTest {
 		//
 		if (instance != null) {
 			//
-			Assertions.assertThrows(IllegalArgumentException.class, () -> instance.setMicrosoftAccessFileFormat("V2"));
+			AssertionsUtil.assertThrowsAndEquals(IllegalArgumentException.class, "{suppressed=[]}",
+					() -> instance.setMicrosoftAccessFileFormat("V2"));
 			//
 		} // if
 			//
@@ -1862,7 +1865,7 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testSetPresentationSlideDuration() throws NoSuchFieldException, IllegalAccessException {
+	void testSetPresentationSlideDuration() throws NoSuchFieldException, IllegalAccessException, IOException {
 		//
 		final Field presentationSlideDuration = VoiceManager.class.getDeclaredField("presentationSlideDuration");
 		//
@@ -1874,7 +1877,9 @@ class VoiceManagerTest {
 			//
 			// java.lang.CharSequence
 			//
-		Assertions.assertThrows(DateTimeParseException.class, () -> setPresentationSlideDuration(instance, "A"));
+		AssertionsUtil.assertThrowsAndEquals(DateTimeParseException.class,
+				"{parsedString=A, localizedMessage=Text cannot be parsed to a Duration, errorIndex=0, suppressed=[], message=Text cannot be parsed to a Duration}",
+				() -> setPresentationSlideDuration(instance, "A"));
 		//
 		Assertions.assertDoesNotThrow(() -> setPresentationSlideDuration(instance, Integer.toString(ONE)));
 		//
@@ -1911,9 +1916,9 @@ class VoiceManagerTest {
 		//
 		// java.lang.Object
 		//
-		final Object object = new Object();
-		//
-		Assertions.assertThrows(IllegalArgumentException.class, () -> setPresentationSlideDuration(instance, object));
+		AssertionsUtil.assertThrowsAndEquals(IllegalArgumentException.class,
+				"{localizedMessage=class java.lang.Object, suppressed=[], message=class java.lang.Object}",
+				() -> setPresentationSlideDuration(instance, new Object()));
 		//
 	}
 
@@ -2040,15 +2045,14 @@ class VoiceManagerTest {
 		//
 		Assertions.assertEquals(emptyMap, get(outputFolderFileNameExpressions, instance));
 		//
-		final String string = Integer.toString(ONE);
-		//
-		Assertions.assertThrows(IllegalArgumentException.class,
-				() -> instance.setOutputFolderFileNameExpressions(string));
+		AssertionsUtil.assertThrowsAndEquals(IllegalArgumentException.class,
+				"{localizedMessage=class java.lang.Integer, suppressed=[], message=class java.lang.Integer}",
+				() -> instance.setOutputFolderFileNameExpressions(Integer.toString(ONE)));
 		//
 	}
 
 	@Test
-	void testAfterPropertiesSet() {
+	void testAfterPropertiesSet() throws IOException {
 		//
 		if (instance == null) {
 			//
@@ -2064,7 +2068,9 @@ class VoiceManagerTest {
 			//
 		} else {
 			//
-			Assertions.assertThrows(IllegalArgumentException.class, () -> instance.afterPropertiesSet());
+			AssertionsUtil.assertThrowsAndEquals(IllegalArgumentException.class,
+					"{localizedMessage=cannot add to layout: unknown constraint: wrap, suppressed=[], message=cannot add to layout: unknown constraint: wrap}",
+					() -> instance.afterPropertiesSet());
 			//
 		} // if
 			//
@@ -2080,7 +2086,9 @@ class VoiceManagerTest {
 			//
 		} else {
 			//
-			Assertions.assertThrows(IllegalArgumentException.class, () -> instance.afterPropertiesSet());
+			AssertionsUtil.assertThrowsAndEquals(IllegalArgumentException.class,
+					"{localizedMessage=cannot add to layout: unknown constraint: wrap, suppressed=[], message=cannot add to layout: unknown constraint: wrap}",
+					() -> instance.afterPropertiesSet());
 			//
 		} // if
 			//
@@ -2167,7 +2175,9 @@ class VoiceManagerTest {
 		//
 		Assertions.assertTrue(Objects.deepEquals(new String[] { EMPTY }, get(mp3Tags, instance)));
 		//
-		Assertions.assertThrows(IllegalArgumentException.class, () -> instance.setMp3Tags("{}"));
+		AssertionsUtil.assertThrowsAndEquals(IllegalArgumentException.class,
+				"{localizedMessage=class java.util.LinkedHashMap, suppressed=[], message=class java.util.LinkedHashMap}",
+				() -> instance.setMp3Tags("{}"));
 		//
 	}
 
@@ -2238,7 +2248,8 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testSetExportWebSpeechSynthesisHtmlTemplateProperties() throws NoSuchFieldException, IllegalAccessException {
+	void testSetExportWebSpeechSynthesisHtmlTemplateProperties()
+			throws NoSuchFieldException, IllegalAccessException, IOException {
 		//
 		Field exportWebSpeechSynthesisHtmlTemplateProperties = VoiceManager.class
 				.getDeclaredField("exportWebSpeechSynthesisHtmlTemplateProperties");
@@ -2259,17 +2270,17 @@ class VoiceManagerTest {
 		//
 		final Integer integer = Integer.valueOf(ZERO);
 		//
-		Assertions.assertThrows(IllegalArgumentException.class,
+		AssertionsUtil.assertThrowsAndEquals(IllegalArgumentException.class, "{suppressed=[]}",
 				() -> instance.setExportWebSpeechSynthesisHtmlTemplateProperties(integer));
 		//
 		final Date date = new Date();
 		//
-		Assertions.assertThrows(IllegalArgumentException.class,
+		AssertionsUtil.assertThrowsAndEquals(IllegalArgumentException.class, "{suppressed=[]}",
 				() -> instance.setExportWebSpeechSynthesisHtmlTemplateProperties(date));
 		//
 		final Calendar calendar = Calendar.getInstance();
 		//
-		Assertions.assertThrows(IllegalArgumentException.class,
+		AssertionsUtil.assertThrowsAndEquals(IllegalArgumentException.class, "{suppressed=[]}",
 				() -> instance.setExportWebSpeechSynthesisHtmlTemplateProperties(calendar));
 		//
 		// java.util.Map
@@ -2383,13 +2394,11 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		final boolean headless = GraphicsEnvironment.isHeadless();
-		//
 		final ActionEvent actionEventBtnCopyRomaji = new ActionEvent(btnCopyRomaji, 0, null);
 		//
 		if (throwableClassByGetSystemClipboard != null) {
 			//
-			Assertions.assertThrows(throwableClassByGetSystemClipboard,
+			AssertionsUtil.assertThrowsAndEquals(throwableClassByGetSystemClipboard, "{suppressed=[]}",
 					() -> actionPerformed(instance, actionEventBtnCopyRomaji));
 			//
 		} else {
@@ -2410,7 +2419,7 @@ class VoiceManagerTest {
 		//
 		if (throwableClassByGetSystemClipboard != null) {
 			//
-			Assertions.assertThrows(throwableClassByGetSystemClipboard,
+			AssertionsUtil.assertThrowsAndEquals(throwableClassByGetSystemClipboard, "{suppressed=[]}",
 					() -> actionPerformed(instance, actionEventBtnCopyHiragana));
 			//
 		} else {
@@ -2706,7 +2715,7 @@ class VoiceManagerTest {
 		//
 		if (throwableClassByGetSystemClipboard != null) {
 			//
-			Assertions.assertThrows(throwableClassByGetSystemClipboard,
+			AssertionsUtil.assertThrowsAndEquals(throwableClassByGetSystemClipboard, "{suppressed=[]}",
 					() -> actionPerformed(instance, actionEventBtnDllPathCopy));
 			//
 		} else {
@@ -2741,7 +2750,7 @@ class VoiceManagerTest {
 		//
 		if (throwableClassByGetSystemClipboard != null) {
 			//
-			Assertions.assertThrows(throwableClassByGetSystemClipboard,
+			AssertionsUtil.assertThrowsAndEquals(throwableClassByGetSystemClipboard, "{suppressed=[]}",
 					() -> actionPerformed(instance, actionEventBtnExportCopy));
 			//
 		} else {
@@ -2785,7 +2794,8 @@ class VoiceManagerTest {
 			//
 		} else {
 			//
-			Assertions.assertThrows(RuntimeException.class,
+			AssertionsUtil.assertThrowsAndEquals(RuntimeException.class,
+					"{localizedMessage=org.opentest4j.AssertionFailedError: no protocol: a ==> Unexpected exception thrown: java.net.MalformedURLException: no protocol: a, suppressed=[], message=org.opentest4j.AssertionFailedError: no protocol: a ==> Unexpected exception thrown: java.net.MalformedURLException: no protocol: a}",
 					() -> actionPerformed(instance, actionEventBtnPronunciationPageUrlCheck));
 			//
 		} // if
@@ -2929,7 +2939,7 @@ class VoiceManagerTest {
 		//
 		if (throwableClassByGetSystemClipboard != null) {
 			//
-			Assertions.assertThrows(throwableClassByGetSystemClipboard,
+			AssertionsUtil.assertThrowsAndEquals(throwableClassByGetSystemClipboard, "{suppressed=[]}",
 					() -> actionPerformed(instance, actionEventBtnCopyKatakana));
 			//
 		} else {
@@ -3345,7 +3355,8 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertThrows(IllegalStateException.class, () -> removeUpdate(instance, null));
+		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class, "{suppressed=[]}",
+				() -> removeUpdate(instance, null));
 		//
 	}
 
@@ -3494,7 +3505,9 @@ class VoiceManagerTest {
 		//
 		final Configuration configuration = new Configuration();
 		//
-		Assertions.assertThrows(BindingException.class, () -> getMapper(configuration, null, null));
+		AssertionsUtil.assertThrowsAndEquals(BindingException.class,
+				"{localizedMessage=Type null is not known to the MapperRegistry., suppressed=[], message=Type null is not known to the MapperRegistry.}",
+				() -> getMapper(configuration, null, null));
 		//
 	}
 
@@ -3765,7 +3778,9 @@ class VoiceManagerTest {
 		final Object objectMap = Reflection.newProxy(CLASS_OBJECT_MAP,
 				cast(InvocationHandler.class, newInstance(constructor)));
 		//
-		Assertions.assertThrows(IllegalStateException.class, () -> export(voices, map, objectMap));
+		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class,
+				"{localizedMessage=Key [interface org.springframework.context.support.VoiceManager$BooleanMap] Not Found, suppressed=[], message=Key [interface org.springframework.context.support.VoiceManager$BooleanMap] Not Found}",
+				() -> export(voices, map, objectMap));
 		//
 
 	}
@@ -4353,7 +4368,9 @@ class VoiceManagerTest {
 		//
 		final Object objectMap = Reflection.newProxy(CLASS_OBJECT_MAP, ih);
 		//
-		Assertions.assertThrows(IllegalStateException.class, () -> importVoice(objectMap, (BiConsumer) null, null));
+		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class,
+				"{localizedMessage=Key [class java.io.File] Not Found, suppressed=[], message=Key [class java.io.File] Not Found}",
+				() -> importVoice(objectMap, (BiConsumer) null, null));
 		//
 		final Map<?, ?> objects = cast(Map.class, FieldUtils.readDeclaredField(ih, "objects", true));
 		//
@@ -4402,7 +4419,9 @@ class VoiceManagerTest {
 		//
 		// org.springframework.context.support.VoiceManager$importVoice(org.springframework.context.support.VoiceManager$ObjectMap,java.io.File,java.lang.String)
 		//
-		Assertions.assertThrows(IllegalStateException.class, () -> importVoice(objectMap, (File) null, null));
+		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class,
+				"{localizedMessage=Key [class org.springframework.context.support.VoiceManager] Not Found, suppressed=[], message=Key [class org.springframework.context.support.VoiceManager] Not Found}",
+				() -> importVoice(objectMap, (File) null, null));
 		//
 		final Class<?> clz = getClass(objectMap);
 		//
@@ -4420,13 +4439,17 @@ class VoiceManagerTest {
 			//
 		invoke(setObject, objectMap, VoiceManager.class, null);
 		//
-		Assertions.assertThrows(IllegalStateException.class, () -> importVoice(objectMap, (File) null, null));
+		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class,
+				"{localizedMessage=Key [class org.springframework.context.support.VoiceManager$ImportTask] Not Found, suppressed=[], message=Key [class org.springframework.context.support.VoiceManager$ImportTask] Not Found}",
+				() -> importVoice(objectMap, (File) null, null));
 		//
 		// org.springframework.context.support.VoiceManager$ImortTask
 		//
 		invoke(setObject, objectMap, CLASS_IMPORT_TASK, null);
 		//
-		Assertions.assertThrows(IllegalStateException.class, () -> importVoice(objectMap, (File) null, null));
+		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class,
+				"{localizedMessage=Key [interface org.springframework.context.support.SpeechApi] Not Found, suppressed=[], message=Key [interface org.springframework.context.support.SpeechApi] Not Found}",
+				() -> importVoice(objectMap, (File) null, null));
 		//
 		// org.springframework.context.support.SpeechApi
 		//
@@ -4598,7 +4621,9 @@ class VoiceManagerTest {
 		//
 		invoke(setObject, objectMap, CLASS_BYTE_CONVERTER, null);
 		//
-		Assertions.assertThrows(IllegalStateException.class, () -> importVoiceBySpeechApi(objectMap, null, null));
+		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class,
+				"{localizedMessage=Key [interface org.springframework.context.support.Provider] Not Found, suppressed=[], message=Key [interface org.springframework.context.support.Provider] Not Found}",
+				() -> importVoiceBySpeechApi(objectMap, null, null));
 		//
 	}
 
@@ -4785,7 +4810,7 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testSetValue() {
+	void testSetValue() throws IOException {
 		//
 		Assertions.assertDoesNotThrow(() -> setValue(new JProgressBar(), 0));
 		//
@@ -4799,7 +4824,9 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> setValue(jSlider, "max", null));
 		//
-		Assertions.assertThrows(IllegalStateException.class, () -> setValue(jSlider, "ma", null));
+		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class,
+				"{localizedMessage=getMaximum,getMajorTickSpacing, suppressed=[], message=getMaximum,getMajorTickSpacing}",
+				() -> setValue(jSlider, "ma", null));
 		//
 		Assertions.assertDoesNotThrow(() -> setValue(jSlider, Integer.toString(jSlider.getMinimum() - 1), null));
 		//
@@ -5275,7 +5302,7 @@ class VoiceManagerTest {
 		//
 		final Integer lcid = localeId != null ? Integer.valueOf(localeId.getLcid()) : null;
 		//
-		Assertions.assertThrows(IllegalStateException.class,
+		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class, "{suppressed=[]}",
 				() -> convertLanguageCodeToText(new LocaleID[] { localeId, localeId }, lcid));
 		//
 	}
@@ -5594,7 +5621,7 @@ class VoiceManagerTest {
 		//
 		put(ih.getBeanDefinitionAttributes(), format, null);
 		//
-		Assertions.assertThrows(IllegalStateException.class,
+		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class, "{suppressed=[]}",
 				() -> getByteConverter(configurableListableBeanFactory, format, null));
 		//
 	}
@@ -5816,7 +5843,8 @@ class VoiceManagerTest {
 		//
 		ih.numberOfSheets = Integer.valueOf(TWO);
 		//
-		Assertions.assertThrows(IllegalStateException.class, () -> getCurrentSheetIndex(sheet));
+		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class, "{suppressed=[]}",
+				() -> getCurrentSheetIndex(sheet));
 		//
 	}
 
@@ -6825,7 +6853,7 @@ class VoiceManagerTest {
 		//
 		final List<Field> list = Collections.nCopies(TWO, null);
 		//
-		Assertions.assertThrows(IllegalStateException.class, () -> getRate(list));
+		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class, "{suppressed=[]}", () -> getRate(list));
 		//
 	}
 
@@ -7918,12 +7946,12 @@ class VoiceManagerTest {
 		//
 		if (throwableClassByGetSystemClipboard != null) {
 			//
-			Assertions.assertThrows(throwableClassByGetSystemClipboard,
+			AssertionsUtil.assertThrowsAndEquals(throwableClassByGetSystemClipboard, "{suppressed=[]}",
 					() -> actionPerformedForSystemClipboardAnnotated(false, EMPTY));
 			//
 		} else {
 			//
-			Assertions.assertThrows(IllegalStateException.class,
+			AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class, "{suppressed=[]}",
 					() -> actionPerformedForSystemClipboardAnnotated(false, EMPTY));
 			//
 		} // if
@@ -7940,9 +7968,10 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testActionPerformedForSpeechRate() {
+	void testActionPerformedForSpeechRate() throws IOException {
 		//
-		Assertions.assertThrows(IllegalStateException.class, () -> actionPerformedForSpeechRate(EMPTY));
+		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class, "{suppressed=[]}",
+				() -> actionPerformedForSpeechRate(EMPTY));
 		//
 	}
 
@@ -7955,9 +7984,10 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testActionPerformedForConversion() throws IllegalAccessException {
+	void testActionPerformedForConversion() throws IllegalAccessException, IOException {
 		//
-		Assertions.assertThrows(IllegalStateException.class, () -> actionPerformedForConversion(EMPTY));
+		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class, "{suppressed=[]}",
+				() -> actionPerformedForConversion(EMPTY));
 		//
 		FieldUtils.writeDeclaredField(instance, "mapRomaji",
 				Collections.singleton(Collections.singletonMap(null, null)), true);
@@ -8455,9 +8485,10 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testActionPerformedForExportButtons() {
+	void testActionPerformedForExportButtons() throws IOException {
 		//
-		Assertions.assertThrows(IllegalStateException.class, () -> actionPerformedForExportButtons(EMPTY, false));
+		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class, "{suppressed=[]}",
+				() -> actionPerformedForExportButtons(EMPTY, false));
 		//
 	}
 
@@ -9068,7 +9099,9 @@ class VoiceManagerTest {
 			//
 			final String string = toString(new File("pom.xml").toURI().toURL());
 			//
-			Assertions.assertThrows(RuntimeException.class, () -> getPageTitle(string, null));
+			AssertionsUtil.assertThrowsAndEquals(RuntimeException.class,
+					"{localizedMessage=org.opentest4j.AssertionFailedError: Only http & https protocols supported ==> Unexpected exception thrown: java.net.MalformedURLException: Only http & https protocols supported, suppressed=[], message=org.opentest4j.AssertionFailedError: Only http & https protocols supported ==> Unexpected exception thrown: java.net.MalformedURLException: Only http & https protocols supported}",
+					() -> getPageTitle(string, null));
 			//
 		} // if
 			//
@@ -9435,7 +9468,8 @@ class VoiceManagerTest {
 		//
 		if (GraphicsEnvironment.isHeadless()) {
 			//
-			Assertions.assertThrows(HeadlessException.class, () -> getAudioFile(false, null, null));
+			AssertionsUtil.assertThrowsAndEquals(HeadlessException.class, "{suppressed=[]}",
+					() -> getAudioFile(false, null, null));
 			//
 		} // if
 			//
@@ -9935,7 +9969,7 @@ class VoiceManagerTest {
 		//
 		if (ih != null) {
 			//
-			Assertions.assertThrows(Throwable.class, () -> ih.invoke(null, null, null));
+			AssertionsUtil.assertThrowsAndEquals(Throwable.class, "{suppressed=[]}", () -> ih.invoke(null, null, null));
 			//
 			// org.springframework.context.support.VoiceManager$ObjectMap.getObject(java.lang.Class)
 			//
@@ -9945,11 +9979,15 @@ class VoiceManagerTest {
 			//
 			final Object objectMap = Reflection.newProxy(CLASS_OBJECT_MAP, ih);
 			//
-			Assertions.assertThrows(Throwable.class, () -> ih.invoke(objectMap, getObject, null));
+			AssertionsUtil.assertThrowsAndEquals(Throwable.class,
+					"{localizedMessage=getObject, suppressed=[], message=getObject}",
+					() -> ih.invoke(objectMap, getObject, null));
 			//
 			final Object[] empty = new Object[] {};
 			//
-			Assertions.assertThrows(Throwable.class, () -> ih.invoke(objectMap, getObject, empty));
+			AssertionsUtil.assertThrowsAndEquals(Throwable.class,
+					"{localizedMessage=getObject, suppressed=[], message=getObject}",
+					() -> ih.invoke(objectMap, getObject, empty));
 			//
 			// org.springframework.context.support.VoiceManager$ObjectMap.containsObject(java.lang.Class)
 			//
@@ -9957,9 +9995,13 @@ class VoiceManagerTest {
 					? CLASS_OBJECT_MAP.getDeclaredMethod("containsObject", Class.class)
 					: null;
 			//
-			Assertions.assertThrows(Throwable.class, () -> ih.invoke(objectMap, containsObject, null));
+			AssertionsUtil.assertThrowsAndEquals(Throwable.class,
+					"{localizedMessage=containsObject, suppressed=[], message=containsObject}",
+					() -> ih.invoke(objectMap, containsObject, null));
 			//
-			Assertions.assertThrows(Throwable.class, () -> ih.invoke(objectMap, containsObject, empty));
+			AssertionsUtil.assertThrowsAndEquals(Throwable.class,
+					"{localizedMessage=containsObject, suppressed=[], message=containsObject}",
+					() -> ih.invoke(objectMap, containsObject, empty));
 			//
 			Assertions.assertEquals(Boolean.FALSE, ih.invoke(objectMap, containsObject, new Object[] { null }));
 			//
@@ -9969,9 +10011,13 @@ class VoiceManagerTest {
 					? CLASS_OBJECT_MAP.getDeclaredMethod("setObject", Class.class, Object.class)
 					: null;
 			//
-			Assertions.assertThrows(Throwable.class, () -> ih.invoke(objectMap, setObject, null));
+			AssertionsUtil.assertThrowsAndEquals(Throwable.class,
+					"{localizedMessage=setObject, suppressed=[], message=setObject}",
+					() -> ih.invoke(objectMap, setObject, null));
 			//
-			Assertions.assertThrows(Throwable.class, () -> ih.invoke(objectMap, setObject, empty));
+			AssertionsUtil.assertThrowsAndEquals(Throwable.class,
+					"{localizedMessage=setObject, suppressed=[], message=setObject}",
+					() -> ih.invoke(objectMap, setObject, empty));
 			//
 			// org.springframework.context.support.VoiceManager$BooleanMap.setBoolean(java.lang.String,boolean)
 			//
@@ -9981,9 +10027,13 @@ class VoiceManagerTest {
 					? CLASS_BOOLEAN_MAP.getDeclaredMethod("setBoolean", String.class, Boolean.TYPE)
 					: null;
 			//
-			Assertions.assertThrows(Throwable.class, () -> ih.invoke(booleanMap, setBoolean, null));
+			AssertionsUtil.assertThrowsAndEquals(Throwable.class,
+					"{localizedMessage=setBoolean, suppressed=[], message=setBoolean}",
+					() -> ih.invoke(booleanMap, setBoolean, null));
 			//
-			Assertions.assertThrows(Throwable.class, () -> ih.invoke(booleanMap, setBoolean, empty));
+			AssertionsUtil.assertThrowsAndEquals(Throwable.class,
+					"{localizedMessage=setBoolean, suppressed=[], message=setBoolean}",
+					() -> ih.invoke(booleanMap, setBoolean, empty));
 			//
 			Assertions.assertDoesNotThrow(() -> ih.invoke(booleanMap, setBoolean, new Object[] { null, null }));
 			//
@@ -9997,11 +10047,17 @@ class VoiceManagerTest {
 					? classIntMap.getDeclaredMethod("getObject", Integer.TYPE)
 					: null;
 			//
-			Assertions.assertThrows(Throwable.class, () -> ih.invoke(intMap, intMapGetObject, null));
+			AssertionsUtil.assertThrowsAndEquals(Throwable.class,
+					"{localizedMessage=getObject, suppressed=[], message=getObject}",
+					() -> ih.invoke(intMap, intMapGetObject, null));
 			//
-			Assertions.assertThrows(Throwable.class, () -> ih.invoke(intMap, intMapGetObject, empty));
+			AssertionsUtil.assertThrowsAndEquals(Throwable.class,
+					"{localizedMessage=getObject, suppressed=[], message=getObject}",
+					() -> ih.invoke(intMap, intMapGetObject, empty));
 			//
-			Assertions.assertThrows(Throwable.class, () -> ih.invoke(intMap, intMapGetObject, new String[] { null }));
+			AssertionsUtil.assertThrowsAndEquals(Throwable.class,
+					"{localizedMessage=Key [null] Not Found, suppressed=[], message=Key [null] Not Found}",
+					() -> ih.invoke(intMap, intMapGetObject, new String[] { null }));
 			//
 			// org.springframework.context.support.VoiceManager$IntMap.containsKey(int)
 			//
@@ -10009,9 +10065,13 @@ class VoiceManagerTest {
 					? classIntMap.getDeclaredMethod("containsKey", Integer.TYPE)
 					: null;
 			//
-			Assertions.assertThrows(Throwable.class, () -> ih.invoke(intMap, intMapContainsKey, null));
+			AssertionsUtil.assertThrowsAndEquals(Throwable.class,
+					"{localizedMessage=containsKey, suppressed=[], message=containsKey}",
+					() -> ih.invoke(intMap, intMapContainsKey, null));
 			//
-			Assertions.assertThrows(Throwable.class, () -> ih.invoke(intMap, intMapContainsKey, empty));
+			AssertionsUtil.assertThrowsAndEquals(Throwable.class,
+					"{localizedMessage=containsKey, suppressed=[], message=containsKey}",
+					() -> ih.invoke(intMap, intMapContainsKey, empty));
 			//
 			Assertions.assertEquals(Boolean.FALSE, ih.invoke(intMap, intMapContainsKey, new String[] { null }));
 			//
@@ -10021,9 +10081,13 @@ class VoiceManagerTest {
 					? classIntMap.getDeclaredMethod("setObject", Integer.TYPE, Object.class)
 					: null;
 			//
-			Assertions.assertThrows(Throwable.class, () -> ih.invoke(intMap, intMapSetObject, null));
+			AssertionsUtil.assertThrowsAndEquals(Throwable.class,
+					"{localizedMessage=setObject, suppressed=[], message=setObject}",
+					() -> ih.invoke(intMap, intMapSetObject, null));
 			//
-			Assertions.assertThrows(Throwable.class, () -> ih.invoke(intMap, intMapSetObject, empty));
+			AssertionsUtil.assertThrowsAndEquals(Throwable.class,
+					"{localizedMessage=setObject, suppressed=[], message=setObject}",
+					() -> ih.invoke(intMap, intMapSetObject, empty));
 			//
 		} // if
 			//
@@ -10046,11 +10110,15 @@ class VoiceManagerTest {
 			//
 			final Object intIntMap = Reflection.newProxy(classIntIntMap, ih);
 			//
-			Assertions.assertThrows(Throwable.class, () -> ih.invoke(intIntMap, intIntMapSetInt, null));
+			AssertionsUtil.assertThrowsAndEquals(Throwable.class,
+					"{localizedMessage=setInt, suppressed=[], message=setInt}",
+					() -> ih.invoke(intIntMap, intIntMapSetInt, null));
 			//
 			final Object[] empty = new Object[] {};
 			//
-			Assertions.assertThrows(Throwable.class, () -> ih.invoke(intIntMap, intIntMapSetInt, empty));
+			AssertionsUtil.assertThrowsAndEquals(Throwable.class,
+					"{localizedMessage=setInt, suppressed=[], message=setInt}",
+					() -> ih.invoke(intIntMap, intIntMapSetInt, empty));
 			//
 			Assertions.assertDoesNotThrow(
 					() -> ih.invoke(intIntMap, intIntMapSetInt, new Object[] { Integer.valueOf(ONE), TWO }));
@@ -10061,9 +10129,13 @@ class VoiceManagerTest {
 					? classIntIntMap.getDeclaredMethod("containsKey", Integer.TYPE)
 					: null;
 			//
-			Assertions.assertThrows(Throwable.class, () -> ih.invoke(intIntMap, intIntMapContainsKey, null));
+			AssertionsUtil.assertThrowsAndEquals(Throwable.class,
+					"{localizedMessage=containsKey, suppressed=[], message=containsKey}",
+					() -> ih.invoke(intIntMap, intIntMapContainsKey, null));
 			//
-			Assertions.assertThrows(Throwable.class, () -> ih.invoke(intIntMap, intIntMapContainsKey, empty));
+			AssertionsUtil.assertThrowsAndEquals(Throwable.class,
+					"{localizedMessage=containsKey, suppressed=[], message=containsKey}",
+					() -> ih.invoke(intIntMap, intIntMapContainsKey, empty));
 			//
 			Assertions.assertEquals(Boolean.TRUE,
 					ih.invoke(intIntMap, intIntMapContainsKey, new Object[] { Integer.valueOf(ONE) }));
@@ -10105,19 +10177,27 @@ class VoiceManagerTest {
 			//
 			final Method run = Runnable.class.getDeclaredMethod("run");
 			//
-			Assertions.assertThrows(IllegalStateException.class, () -> ih.invoke(runnable, run, null));
+			AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class,
+					"{localizedMessage=runnable is null, suppressed=[], message=runnable is null}",
+					() -> ih.invoke(runnable, run, null));
 			//
 			FieldUtils.writeDeclaredField(ih, "runnable", runnable, true);
 			//
-			Assertions.assertThrows(IllegalStateException.class, () -> ih.invoke(runnable, run, null));
+			AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class,
+					"{localizedMessage=runnable==proxy, suppressed=[], message=runnable==proxy}",
+					() -> ih.invoke(runnable, run, null));
 			//
 			FieldUtils.writeDeclaredField(ih, "runnable", Reflection.newProxy(Runnable.class, ih), true);
 			//
-			Assertions.assertThrows(IllegalStateException.class, () -> ih.invoke(runnable, run, null));
+			AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class,
+					"{localizedMessage=runnable==proxy, suppressed=[], message=runnable==proxy}",
+					() -> ih.invoke(runnable, run, null));
 			//
 			final Method toString = Object.class.getDeclaredMethod("toString");
 			//
-			Assertions.assertThrows(Throwable.class, () -> ih.invoke(runnable, toString, null));
+			AssertionsUtil.assertThrowsAndEquals(Throwable.class,
+					"{localizedMessage=toString, suppressed=[], message=toString}",
+					() -> ih.invoke(runnable, toString, null));
 			//
 			// printStackTrace(java.lang.Throwable)
 			//
@@ -10268,8 +10348,9 @@ class VoiceManagerTest {
 			//
 		Assertions.assertNull(invoke(generateOdfPresentationDocuments, null, null, null));
 		//
-		Assertions.assertThrows(InvocationTargetException.class, () -> invoke(generateOdfPresentationDocuments, null,
-				null, ImmutableTable.of(EMPTY, EMPTY, new Voice())));
+		AssertionsUtil.assertThrowsAndEquals(InvocationTargetException.class, "{suppressed=[]}",
+				() -> invoke(generateOdfPresentationDocuments, null, null,
+						ImmutableTable.of(EMPTY, EMPTY, new Voice())));
 		//
 		// org.springframework.context.support.VoiceManager$ExportTask.newXPath(javax.xml.xpath.XPathFactory)
 		//
@@ -10898,19 +10979,21 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(invoke(convert, instance, new byte[] {}));
 		//
-		Assertions.assertThrows(RuntimeException.class, () -> {
-			//
-			try {
-				//
-				invoke(convert, instance, new byte[] { 0 });
-				//
-			} catch (final InvocationTargetException e) {
-				//
-				throw e.getTargetException();
-				//
-			} // try
-				//
-		});
+		AssertionsUtil.assertThrowsAndEquals(RuntimeException.class,
+				"{localizedMessage=javax.sound.sampled.UnsupportedAudioFileException: Stream of unsupported format, suppressed=[], message=javax.sound.sampled.UnsupportedAudioFileException: Stream of unsupported format}",
+				() -> {
+					//
+					try {
+						//
+						invoke(convert, instance, new byte[] { 0 });
+						//
+					} catch (final InvocationTargetException e) {
+						//
+						throw e.getTargetException();
+						//
+					} // try
+						//
+				});
 		//
 		// setBitRate(java.lang.Object)
 		//
@@ -10945,19 +11028,21 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(invoke(setQuality, instance, "-1"));
 		//
-		Assertions.assertThrows(IllegalStateException.class, () -> {
-			//
-			try {
-				//
-				invoke(afterPropertiesSet, instance);
-				//
-			} catch (final InvocationTargetException e) {
-				//
-				throw e.getTargetException();
-				//
-			} // try
-				//
-		});
+		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class,
+				"{localizedMessage=Under VBR,\"quality\" cound be with in 0 to 9, suppressed=[], message=Under VBR,\"quality\" cound be with in 0 to 9}",
+				() -> {
+					//
+					try {
+						//
+						invoke(afterPropertiesSet, instance);
+						//
+					} catch (final InvocationTargetException e) {
+						//
+						throw e.getTargetException();
+						//
+					} // try
+						//
+				});
 		//
 		// getName(org.apache.bcel.classfile.FieldOrMethod)
 		//
@@ -11159,7 +11244,8 @@ class VoiceManagerTest {
 		//
 		final Object stringMap = Reflection.newProxy(CLASS_STRING_MAP, createVoiceManagerIH());
 		//
-		Assertions.assertThrows(InvocationTargetException.class, () -> invoke(getString, null, stringMap, null));
+		AssertionsUtil.assertThrowsAndEquals(InvocationTargetException.class, "{suppressed=[]}",
+				() -> invoke(getString, null, stringMap, null));
 		//
 		// org.springframework.context.support.VoiceManager$StringMap.setString(java.lang.String,java.lang.String)
 		//
