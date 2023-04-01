@@ -2388,29 +2388,8 @@ class VoiceManagerTest {
 			//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnConvertToKatakana));
 		//
-		final AbstractButton btnCopyHiragana = new JButton();
+		// btnExport
 		//
-		if (instance != null) {
-			//
-			FieldUtils.writeDeclaredField(instance, "btnCopyHiragana", btnCopyHiragana, true);
-			//
-		} // if
-			//
-		final ActionEvent actionEventBtnCopyHiragana = new ActionEvent(btnCopyHiragana, 0, null);
-		//
-		if (throwableClassByGetSystemClipboard != null) {
-			//
-			AssertionsUtil.assertThrowsAndEquals(throwableClassByGetSystemClipboard, "{}",
-					() -> actionPerformed(instance, actionEventBtnCopyHiragana));
-			//
-		} else {
-			//
-			Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnCopyHiragana));
-			//
-		} // if
-			//
-			// btnExport
-			//
 		final AbstractButton btnExport = new JButton();
 		//
 		if (instance != null) {
@@ -2694,31 +2673,8 @@ class VoiceManagerTest {
 			//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnExportBrowse, 0, null)));
 		//
-		// btnExportCopy
+		// btnPronunciationPageUrlCheck
 		//
-		final AbstractButton btnExportCopy = new JButton();
-		//
-		if (instance != null) {
-			//
-			FieldUtils.writeDeclaredField(instance, "btnExportCopy", btnExportCopy, true);
-			//
-		} // if
-			//
-		final ActionEvent actionEventBtnExportCopy = new ActionEvent(btnExportCopy, 0, null);
-		//
-		if (throwableClassByGetSystemClipboard != null) {
-			//
-			AssertionsUtil.assertThrowsAndEquals(throwableClassByGetSystemClipboard, "{}",
-					() -> actionPerformed(instance, actionEventBtnExportCopy));
-			//
-		} else {
-			//
-			Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnExportCopy));
-			//
-		} // if
-			//
-			// btnPronunciationPageUrlCheck
-			//
 		final AbstractButton btnPronunciationPageUrlCheck = new JButton();
 		//
 		if (instance != null) {
@@ -3002,6 +2958,50 @@ class VoiceManagerTest {
 		} else {
 			//
 			Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnDllPathCopy));
+			//
+		} // if
+			//
+			// btnExportCopy
+			//
+		final AbstractButton btnExportCopy = new JButton();
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "btnExportCopy", btnExportCopy, true);
+			//
+		} // if
+			//
+		final ActionEvent actionEventBtnExportCopy = new ActionEvent(btnExportCopy, 0, null);
+		//
+		if (throwableClassByGetSystemClipboard != null) {
+			//
+			AssertionsUtil.assertThrowsAndEquals(throwableClassByGetSystemClipboard, "{}",
+					() -> actionPerformed(instance, actionEventBtnExportCopy));
+			//
+		} else {
+			//
+			Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnExportCopy));
+			//
+		} // if
+			//
+		final AbstractButton btnCopyHiragana = new JButton();
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "btnCopyHiragana", btnCopyHiragana, true);
+			//
+		} // if
+			//
+		final ActionEvent actionEventBtnCopyHiragana = new ActionEvent(btnCopyHiragana, 0, null);
+		//
+		if (throwableClassByGetSystemClipboard != null) {
+			//
+			AssertionsUtil.assertThrowsAndEquals(throwableClassByGetSystemClipboard, "{}",
+					() -> actionPerformed(instance, actionEventBtnCopyHiragana));
+			//
+		} else {
+			//
+			Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnCopyHiragana));
 			//
 		} // if
 			//
