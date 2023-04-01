@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
+import java.awt.HeadlessException;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.ClipboardOwner;
@@ -20,6 +21,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.net.URI;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -77,8 +80,6 @@ import org.junit.jupiter.api.AssertionsUtil;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.EnabledOnOs;
-import org.junit.jupiter.api.condition.OS;
 import org.springframework.beans.factory.InitializingBean;
 
 import com.github.hal4j.uritemplate.URIBuilder;
@@ -825,7 +826,6 @@ class JlptLevelGuiTest {
 	}
 
 	@Test
-	@EnabledOnOs(OS.WINDOWS)
 	void testGetSystemClipboard() throws Throwable {
 		//
 		Assertions.assertNull(getSystemClipboard(null));
@@ -839,15 +839,35 @@ class JlptLevelGuiTest {
 		//
 		if (throwableClassByGetSystemClipboard != null) {
 			//
-			AssertionsUtil.assertThrowsAndEquals(throwableClassByGetSystemClipboard, "{}",
-					() -> getSystemClipboard(toolkit));
+			final FileSystem fs = FileSystems.getDefault();
 			//
+			final org.junit.jupiter.api.function.Executable executable = () -> getSystemClipboard(toolkit);
+			//
+			if (Objects.equals("sun.nio.fs.WindowsFileSystemProvider",
+					getName(getClass(fs != null ? fs.provider() : null)))) {
+				//
+				AssertionsUtil.assertThrowsAndEquals(throwableClassByGetSystemClipboard, "{}", executable);
+				//
+			} else {
+				//
+				AssertionsUtil.assertThrowsAndEquals(HeadlessException.class,
+						String.format("{localizedMessage=%1$s, message=%1$s}",
+								Narcissus.invokeStaticMethod(
+										GraphicsEnvironment.class.getDeclaredMethod("getHeadlessMessage"))),
+						executable);
+				//
+			} // if
+				//
 		} else {
 			//
 			Assertions.assertNotNull(getSystemClipboard(toolkit));
 			//
 		} // if
 			//
+	}
+
+	private static String getName(final Class<?> instance) {
+		return instance != null ? instance.getName() : null;
 	}
 
 	private static Class<? extends Throwable> getThrowingThrowableClass(final Class<?> clz, final Method method)
@@ -1064,7 +1084,7 @@ class JlptLevelGuiTest {
 	@Test
 	void testGetName() throws Throwable {
 		//
-		Assertions.assertNull(getName(null));
+		Assertions.assertNull(getName((Member) null));
 		//
 	}
 
