@@ -207,8 +207,7 @@ import org.junit.jupiter.api.AssertionsUtil;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.EnabledOnOs;
-import org.junit.jupiter.api.condition.OS;
+import org.junit.jupiter.api.function.Executable;
 import org.odftoolkit.odfdom.pkg.OdfPackage;
 import org.openxmlformats.schemas.officeDocument.x2006.customProperties.CTProperty;
 import org.slf4j.Logger;
@@ -2886,13 +2885,14 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	@EnabledOnOs(OS.WINDOWS)
 	void testActionPerformed4() throws Throwable {
 		//
 		final Class<?> clz = getClass(instance != null ? instance.getToolkit() : null);
 		//
 		final Class<? extends Throwable> throwableClassByGetSystemClipboard = getThrowingThrowableClass(clz,
 				clz != null ? clz.getDeclaredMethod("getSystemClipboard") : null);
+		//
+		// btnCopyRomaji
 		//
 		final AbstractButton btnCopyRomaji = new JButton();
 		//
@@ -2902,16 +2902,24 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		final ActionEvent actionEventBtnCopyRomaji = new ActionEvent(btnCopyRomaji, 0, null);
+		Executable executable = () -> actionPerformed(instance, new ActionEvent(btnCopyRomaji, 0, null));
 		//
 		if (throwableClassByGetSystemClipboard != null) {
 			//
-			AssertionsUtil.assertThrowsAndEquals(throwableClassByGetSystemClipboard, "{}",
-					() -> actionPerformed(instance, actionEventBtnCopyRomaji));
-			//
+			if (isUnderWindows()) {
+				//
+				AssertionsUtil.assertThrowsAndEquals(throwableClassByGetSystemClipboard, "{}", executable);
+				//
+			} else {
+				//
+				AssertionsUtil.assertThrowsAndEquals(throwableClassByGetSystemClipboard,
+						String.format("{localizedMessage=%1$s, message=%1$s}", getHeadlessMessage()), executable);
+				//
+			} // if
+				//
 		} else {
 			//
-			Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnCopyRomaji));
+			Assertions.assertDoesNotThrow(executable);
 			//
 		} // if
 			//
@@ -2925,16 +2933,24 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		final ActionEvent actionEventBtnCopyKatakana = new ActionEvent(btnCopyKatakana, 0, null);
+		executable = () -> actionPerformed(instance, new ActionEvent(btnCopyKatakana, 0, null));
 		//
 		if (throwableClassByGetSystemClipboard != null) {
 			//
-			AssertionsUtil.assertThrowsAndEquals(throwableClassByGetSystemClipboard, "{}",
-					() -> actionPerformed(instance, actionEventBtnCopyKatakana));
-			//
+			if (isUnderWindows()) {
+				//
+				AssertionsUtil.assertThrowsAndEquals(throwableClassByGetSystemClipboard, "{}", executable);
+				//
+			} else {
+				//
+				AssertionsUtil.assertThrowsAndEquals(HeadlessException.class,
+						String.format("{localizedMessage=%1$s, message=%1$s}", getHeadlessMessage()), executable);
+				//
+			} // if
+				//
 		} else {
 			//
-			Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnCopyKatakana));
+			Assertions.assertDoesNotThrow(executable);
 			//
 		} // if
 			//
@@ -2948,16 +2964,24 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		final ActionEvent actionEventBtnDllPathCopy = new ActionEvent(btnDllPathCopy, 0, null);
+		executable = () -> actionPerformed(instance, new ActionEvent(btnDllPathCopy, 0, null));
 		//
 		if (throwableClassByGetSystemClipboard != null) {
 			//
-			AssertionsUtil.assertThrowsAndEquals(throwableClassByGetSystemClipboard, "{}",
-					() -> actionPerformed(instance, actionEventBtnDllPathCopy));
-			//
+			if (isUnderWindows()) {
+				//
+				AssertionsUtil.assertThrowsAndEquals(throwableClassByGetSystemClipboard, "{}", executable);
+				//
+			} else {
+				//
+				AssertionsUtil.assertThrowsAndEquals(HeadlessException.class,
+						String.format("{localizedMessage=%1$s, message=%1$s}", getHeadlessMessage()), executable);
+				//
+			} // if
+				//
 		} else {
 			//
-			Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnDllPathCopy));
+			Assertions.assertDoesNotThrow(executable);
 			//
 		} // if
 			//
@@ -2971,16 +2995,24 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		final ActionEvent actionEventBtnExportCopy = new ActionEvent(btnExportCopy, 0, null);
+		executable = () -> actionPerformed(instance, new ActionEvent(btnExportCopy, 0, null));
 		//
 		if (throwableClassByGetSystemClipboard != null) {
 			//
-			AssertionsUtil.assertThrowsAndEquals(throwableClassByGetSystemClipboard, "{}",
-					() -> actionPerformed(instance, actionEventBtnExportCopy));
-			//
+			if (isUnderWindows()) {
+				//
+				AssertionsUtil.assertThrowsAndEquals(throwableClassByGetSystemClipboard, "{}", executable);
+				//
+			} else {
+				//
+				AssertionsUtil.assertThrowsAndEquals(HeadlessException.class,
+						String.format("{localizedMessage=%1$s, message=%1$s}", getHeadlessMessage()), executable);
+				//
+			} // if
+				//
 		} else {
 			//
-			Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnExportCopy));
+			Assertions.assertDoesNotThrow(executable);
 			//
 		} // if
 			//
@@ -2992,19 +3024,31 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		final ActionEvent actionEventBtnCopyHiragana = new ActionEvent(btnCopyHiragana, 0, null);
+		executable = () -> actionPerformed(instance, new ActionEvent(btnCopyHiragana, 0, null));
 		//
 		if (throwableClassByGetSystemClipboard != null) {
 			//
-			AssertionsUtil.assertThrowsAndEquals(throwableClassByGetSystemClipboard, "{}",
-					() -> actionPerformed(instance, actionEventBtnCopyHiragana));
-			//
+			if (isUnderWindows()) {
+				//
+				AssertionsUtil.assertThrowsAndEquals(throwableClassByGetSystemClipboard, "{}", executable);
+				//
+			} else {
+				//
+				AssertionsUtil.assertThrowsAndEquals(HeadlessException.class,
+						String.format("{localizedMessage=%1$s, message=%1$s}", getHeadlessMessage()), executable);
+				//
+			} // if
+				//
 		} else {
 			//
-			Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnCopyHiragana));
+			Assertions.assertDoesNotThrow(executable);
 			//
 		} // if
 			//
+	}
+
+	private static Object getHeadlessMessage() throws NoSuchMethodException {
+		return Narcissus.invokeStaticMethod(GraphicsEnvironment.class.getDeclaredMethod("getHeadlessMessage"));
 	}
 
 	private static void actionPerformed(final ActionListener instance, final ActionEvent actionEvent) {
@@ -7327,15 +7371,21 @@ class VoiceManagerTest {
 	@Test
 	void testGetOsVersionInfoExMap() throws Throwable {
 		//
-		final FileSystem fs = FileSystems.getDefault();
-		//
-		if (Objects.equals("sun.nio.fs.WindowsFileSystemProvider",
-				getName(getClass(fs != null ? fs.provider() : null)))) {
+		if (isUnderWindows()) {
 			//
 			Assertions.assertNotNull(getOsVersionInfoExMap());
 			//
 		} // if
 			//
+	}
+
+	private static boolean isUnderWindows() throws Throwable {
+		//
+		final FileSystem fs = FileSystems.getDefault();
+		//
+		return Objects.equals("sun.nio.fs.WindowsFileSystemProvider",
+				getName(getClass(fs != null ? fs.provider() : null)));
+		//
 	}
 
 	private static Map<String, Object> getOsVersionInfoExMap() throws Throwable {
@@ -7943,7 +7993,6 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	@EnabledOnOs(OS.WINDOWS)
 	void testActionPerformedForSystemClipboardAnnotated() throws Throwable {
 		//
 		final Class<?> clz = getClass(instance != null ? instance.getToolkit() : null);
@@ -7951,15 +8000,24 @@ class VoiceManagerTest {
 		final Class<? extends Throwable> throwableClassByGetSystemClipboard = getThrowingThrowableClass(clz,
 				clz != null ? clz.getDeclaredMethod("getSystemClipboard") : null);
 		//
+		final Executable executable = () -> actionPerformedForSystemClipboardAnnotated(false, EMPTY);
+		//
 		if (throwableClassByGetSystemClipboard != null) {
 			//
-			AssertionsUtil.assertThrowsAndEquals(throwableClassByGetSystemClipboard, "{}",
-					() -> actionPerformedForSystemClipboardAnnotated(false, EMPTY));
-			//
+			if (isUnderWindows()) {
+				//
+				AssertionsUtil.assertThrowsAndEquals(throwableClassByGetSystemClipboard, "{}", executable);
+				//
+			} else {
+				//
+				AssertionsUtil.assertThrowsAndEquals(throwableClassByGetSystemClipboard,
+						String.format("{localizedMessage=%1$s, message=%1$s}", getHeadlessMessage()), executable);
+				//
+			} // if
+				//
 		} else {
 			//
-			AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class, "{}",
-					() -> actionPerformedForSystemClipboardAnnotated(false, EMPTY));
+			AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class, "{}", executable);
 			//
 		} // if
 			//
@@ -9469,15 +9527,25 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	@EnabledOnOs(OS.WINDOWS)
 	void testGetAudioFile() throws Throwable {
 		//
 		Assertions.assertNull(getAudioFile(true, null, null));
 		//
 		if (GraphicsEnvironment.isHeadless()) {
 			//
-			AssertionsUtil.assertThrowsAndEquals(HeadlessException.class, "{}", () -> getAudioFile(false, null, null));
+			final Executable executable = () -> getAudioFile(false, null, null);
 			//
+			if (isUnderWindows()) {
+				//
+				AssertionsUtil.assertThrowsAndEquals(HeadlessException.class, "{}", executable);
+				//
+			} else {
+				//
+				AssertionsUtil.assertThrowsAndEquals(HeadlessException.class,
+						String.format("{localizedMessage=%1$s, message=%1$s}", getHeadlessMessage()), executable);
+				//
+			} // if
+				//
 		} // if
 			//
 	}
