@@ -8,6 +8,8 @@ import java.io.PrintStream;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -19,6 +21,7 @@ import javax.swing.JList;
 import javax.swing.JTextField;
 
 import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.reflect.MethodUtils;
 import org.apache.jena.ext.com.google.common.base.Predicates;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.AssertionsUtil;
@@ -319,7 +322,6 @@ class MainTest {
 	}
 
 	@Test
-	@EnabledOnOs(OS.WINDOWS)
 	void testPack() throws Throwable {
 		//
 		Assertions.assertDoesNotThrow(() -> pack(null));
@@ -328,14 +330,37 @@ class MainTest {
 			//
 			final Window window = cast(Window.class, Narcissus.allocateInstance(Window.class));
 			//
-			AssertionsUtil.assertThrowsAndEquals(HeadlessException.class, "{}", () -> pack(window));
+			final FileSystem fs = FileSystems.getDefault();
 			//
+			if (Objects.equals("sun.nio.fs.WindowsFileSystemProvider",
+					getName(getClass(fs != null ? fs.provider() : null)))) {
+				//
+				AssertionsUtil.assertThrowsAndEquals(HeadlessException.class, "{}", () -> pack(window));
+				//
+			} else {
+				//
+				AssertionsUtil.assertThrowsAndEquals(HeadlessException.class,
+						String.format("{localizedMessage=%1$s, message=%1$s}",
+								Narcissus.invokeStaticMethod(
+										GraphicsEnvironment.class.getDeclaredMethod("getHeadlessMessage"))),
+						() -> pack(window));
+				//
+			} // if
+				//
 		} else {
 			//
 			Assertions.assertDoesNotThrow(() -> pack(new Window(null)));
 			//
 		} // if
 			//
+	}
+
+	private static Class<?> getClass(final Object instance) {
+		return instance != null ? instance.getClass() : null;
+	}
+
+	private static String getName(final Class<?> instance) {
+		return instance != null ? instance.getName() : null;
 	}
 
 	private static void pack(final Window instance) throws Throwable {
