@@ -21,15 +21,12 @@ import javax.swing.JList;
 import javax.swing.JTextField;
 
 import org.apache.commons.lang3.function.FailableFunction;
-import org.apache.commons.lang3.reflect.MethodUtils;
 import org.apache.jena.ext.com.google.common.base.Predicates;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.AssertionsUtil;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.EnabledOnOs;
-import org.junit.jupiter.api.condition.OS;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
 
