@@ -67,6 +67,8 @@ import org.junit.jupiter.api.AssertionsUtil;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 import org.springframework.beans.factory.InitializingBean;
 
 import com.google.common.reflect.Reflection;
@@ -1287,6 +1289,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 	}
 
 	@Test
+	@EnabledOnOs(OS.WINDOWS)
 	void testPlay() throws Throwable {
 		//
 		try (final ByteArrayInputStream bais = new ByteArrayInputStream("".getBytes())) {

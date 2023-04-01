@@ -2677,36 +2677,13 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-			// btnDllPathCopy
-			//
-		final AbstractButton btnDllPathCopy = new JButton();
-		//
-		if (instance != null) {
-			//
-			FieldUtils.writeDeclaredField(instance, "btnDllPathCopy", btnDllPathCopy, true);
-			//
-		} // if
-			//
-		final ActionEvent actionEventBtnDllPathCopy = new ActionEvent(btnDllPathCopy, 0, null);
-		//
 		final Class<?> clz = getClass(instance != null ? instance.getToolkit() : null);
 		//
 		final Class<? extends Throwable> throwableClassByGetSystemClipboard = getThrowingThrowableClass(clz,
 				clz != null ? clz.getDeclaredMethod("getSystemClipboard") : null);
 		//
-		if (throwableClassByGetSystemClipboard != null) {
-			//
-			AssertionsUtil.assertThrowsAndEquals(throwableClassByGetSystemClipboard, "{}",
-					() -> actionPerformed(instance, actionEventBtnDllPathCopy));
-			//
-		} else {
-			//
-			Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnDllPathCopy));
-			//
-		} // if
-			//
-			// btnExportBrowse
-			//
+		// btnExportBrowse
+		//
 		final AbstractButton btnExportBrowse = new JButton();
 		//
 		if (instance != null) {
@@ -2901,36 +2878,8 @@ class VoiceManagerTest {
 	@Test
 	void testActionPerformed3() throws Throwable {
 		//
-		// btnCopyKatakana
+		// btnConvertToHiragana
 		//
-		final AbstractButton btnCopyKatakana = new JButton();
-		//
-		if (instance != null) {
-			//
-			FieldUtils.writeDeclaredField(instance, "btnCopyKatakana", btnCopyKatakana, true);
-			//
-		} // if
-			//
-		final ActionEvent actionEventBtnCopyKatakana = new ActionEvent(btnCopyKatakana, 0, null);
-		//
-		final Class<?> clz = getClass(instance != null ? instance.getToolkit() : null);
-		//
-		final Class<? extends Throwable> throwableClassByGetSystemClipboard = getThrowingThrowableClass(clz,
-				clz != null ? clz.getDeclaredMethod("getSystemClipboard") : null);
-		//
-		if (throwableClassByGetSystemClipboard != null) {
-			//
-			AssertionsUtil.assertThrowsAndEquals(throwableClassByGetSystemClipboard, "{}",
-					() -> actionPerformed(instance, actionEventBtnCopyKatakana));
-			//
-		} else {
-			//
-			Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnCopyKatakana));
-			//
-		} // if
-			//
-			// btnConvertToHiragana
-			//
 		final AbstractButton btnConvertToHiraganaOrKatakana = new JButton();
 		//
 		if (instance != null) {
@@ -3007,6 +2956,52 @@ class VoiceManagerTest {
 		} else {
 			//
 			Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnCopyRomaji));
+			//
+		} // if
+			//
+			// btnCopyKatakana
+			//
+		final AbstractButton btnCopyKatakana = new JButton();
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "btnCopyKatakana", btnCopyKatakana, true);
+			//
+		} // if
+			//
+		final ActionEvent actionEventBtnCopyKatakana = new ActionEvent(btnCopyKatakana, 0, null);
+		//
+		if (throwableClassByGetSystemClipboard != null) {
+			//
+			AssertionsUtil.assertThrowsAndEquals(throwableClassByGetSystemClipboard, "{}",
+					() -> actionPerformed(instance, actionEventBtnCopyKatakana));
+			//
+		} else {
+			//
+			Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnCopyKatakana));
+			//
+		} // if
+			//
+			// btnDllPathCopy
+			//
+		final AbstractButton btnDllPathCopy = new JButton();
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "btnDllPathCopy", btnDllPathCopy, true);
+			//
+		} // if
+			//
+		final ActionEvent actionEventBtnDllPathCopy = new ActionEvent(btnDllPathCopy, 0, null);
+		//
+		if (throwableClassByGetSystemClipboard != null) {
+			//
+			AssertionsUtil.assertThrowsAndEquals(throwableClassByGetSystemClipboard, "{}",
+					() -> actionPerformed(instance, actionEventBtnDllPathCopy));
+			//
+		} else {
+			//
+			Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnDllPathCopy));
 			//
 		} // if
 			//
@@ -7948,6 +7943,7 @@ class VoiceManagerTest {
 	}
 
 	@Test
+	@EnabledOnOs(OS.WINDOWS)
 	void testActionPerformedForSystemClipboardAnnotated() throws Throwable {
 		//
 		final Class<?> clz = getClass(instance != null ? instance.getToolkit() : null);
@@ -9473,6 +9469,7 @@ class VoiceManagerTest {
 	}
 
 	@Test
+	@EnabledOnOs(OS.WINDOWS)
 	void testGetAudioFile() throws Throwable {
 		//
 		Assertions.assertNull(getAudioFile(true, null, null));
