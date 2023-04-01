@@ -453,7 +453,7 @@ class JouYouKanjiGuiTest {
 		//
 		Assertions.assertSame(ECSSVersion.CSS21, get(ecssVersion, instance));
 		//
-		AssertionsUtil.assertThrowsAndEquals(IllegalArgumentException.class, "{suppressed=[]}",
+		AssertionsUtil.assertThrowsAndEquals(IllegalArgumentException.class, "{}",
 				() -> setEcssVersion(instance, "CSS"));
 		//
 		// java.lang.Integer
@@ -581,7 +581,7 @@ class JouYouKanjiGuiTest {
 		//
 		Assertions.assertNull(getECSSVersionByMajor(new ECSSVersion[] { null }, null));
 		//
-		AssertionsUtil.assertThrowsAndEquals(IllegalArgumentException.class, "{suppressed=[]}",
+		AssertionsUtil.assertThrowsAndEquals(IllegalArgumentException.class, "{}",
 				() -> getECSSVersionByMajor(new ECSSVersion[] { ECSSVersion.CSS30, ECSSVersion.CSS30 }, 3));
 		//
 	}
@@ -609,7 +609,7 @@ class JouYouKanjiGuiTest {
 		final Object objectMap = createObjectMap();
 		//
 		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class,
-				"{localizedMessage=Key [interface org.apache.poi.ss.usermodel.Workbook] Not Found, suppressed=[], message=Key [interface org.apache.poi.ss.usermodel.Workbook] Not Found}",
+				"{localizedMessage=Key [interface org.apache.poi.ss.usermodel.Workbook] Not Found, message=Key [interface org.apache.poi.ss.usermodel.Workbook] Not Found}",
 				() -> addJouYouKanJiSheet(objectMap, null));
 		//
 	}
@@ -650,7 +650,7 @@ class JouYouKanjiGuiTest {
 		final Method m = method;
 		//
 		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class,
-				"{localizedMessage=Key [String[]] Not Found, suppressed=[], message=Key [String[]] Not Found}",
+				"{localizedMessage=Key [String[]] Not Found, message=Key [String[]] Not Found}",
 				() -> invoke(m, null, objectMap, String[].class));
 		//
 	}
@@ -660,7 +660,7 @@ class JouYouKanjiGuiTest {
 		//
 		final InvocationHandler ih = createInvocationHandler();
 		//
-		AssertionsUtil.assertThrowsAndEquals(Throwable.class, "{suppressed=[]}", () -> ih.invoke(null, null, null));
+		AssertionsUtil.assertThrowsAndEquals(Throwable.class, "{}", () -> ih.invoke(null, null, null));
 		//
 		final Object objectMap = createObjectMap();
 		//
@@ -669,12 +669,10 @@ class JouYouKanjiGuiTest {
 		final Method getObject = CLASS_OBJECT_MAP != null ? CLASS_OBJECT_MAP.getDeclaredMethod("getObject", Class.class)
 				: null;
 		//
-		AssertionsUtil.assertThrowsAndEquals(Throwable.class,
-				"{localizedMessage=getObject, suppressed=[], message=getObject}",
+		AssertionsUtil.assertThrowsAndEquals(Throwable.class, "{localizedMessage=getObject, message=getObject}",
 				() -> ih.invoke(objectMap, getObject, null));
 		//
-		AssertionsUtil.assertThrowsAndEquals(Throwable.class,
-				"{localizedMessage=getObject, suppressed=[], message=getObject}",
+		AssertionsUtil.assertThrowsAndEquals(Throwable.class, "{localizedMessage=getObject, message=getObject}",
 				() -> ih.invoke(objectMap, getObject, new Object[] {}));
 		//
 		// org.springframework.context.support.JouYouKanjiGui$ObjectMap.setObject(java.lang.Class,java.lang.Object)
@@ -683,12 +681,10 @@ class JouYouKanjiGuiTest {
 				? CLASS_OBJECT_MAP.getDeclaredMethod("setObject", Class.class, Object.class)
 				: null;
 		//
-		AssertionsUtil.assertThrowsAndEquals(Throwable.class,
-				"{localizedMessage=setObject, suppressed=[], message=setObject}",
+		AssertionsUtil.assertThrowsAndEquals(Throwable.class, "{localizedMessage=setObject, message=setObject}",
 				() -> ih.invoke(objectMap, setObject, null));
 		//
-		AssertionsUtil.assertThrowsAndEquals(Throwable.class,
-				"{localizedMessage=setObject, suppressed=[], message=setObject}",
+		AssertionsUtil.assertThrowsAndEquals(Throwable.class, "{localizedMessage=setObject, message=setObject}",
 				() -> ih.invoke(objectMap, setObject, new Object[] {}));
 		//
 		// org.springframework.context.support.JouYouKanjiGui$IH.containsKey(java.lang.Map,java.lang.Object)

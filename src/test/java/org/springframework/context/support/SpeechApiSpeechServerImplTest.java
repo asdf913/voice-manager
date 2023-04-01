@@ -77,13 +77,13 @@ class SpeechApiSpeechServerImplTest {
 	void testWriteVoiceToFile() throws IOException {
 		//
 		AssertionsUtil.assertThrowsAndEquals(Error.class,
-				"{localizedMessage=Invalid memory access, suppressed=[], message=Invalid memory access}",
+				"{localizedMessage=Invalid memory access, message=Invalid memory access}",
 				() -> instance.writeVoiceToFile(null, null, 0, 0, null));
 		//
 		final File file = new File(".");
 		//
 		AssertionsUtil.assertThrowsAndEquals(Error.class,
-				"{localizedMessage=Invalid memory access, suppressed=[], message=Invalid memory access}",
+				"{localizedMessage=Invalid memory access, message=Invalid memory access}",
 				() -> instance.writeVoiceToFile(null, null, 0, 0, file));
 		//
 	}
@@ -155,7 +155,7 @@ class SpeechApiSpeechServerImplTest {
 		//
 		if (instance != null) {
 			//
-			AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class, "{suppressed=[]}",
+			AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class, "{}",
 					() -> instance.get("volume", "min"));
 			//
 			instance.afterPropertiesSet();

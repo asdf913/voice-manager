@@ -109,7 +109,7 @@ class TaskDialogsUtilTest {
 				() -> TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(true, null, throwable));
 		//
 		AssertionsUtil.assertThrowsAndEquals(RuntimeException.class,
-				"{localizedMessage=org.opentest4j.AssertionFailedError: Unexpected exception thrown: java.lang.Throwable, suppressed=[], message=org.opentest4j.AssertionFailedError: Unexpected exception thrown: java.lang.Throwable}",
+				"{localizedMessage=org.opentest4j.AssertionFailedError: Unexpected exception thrown: java.lang.Throwable, message=org.opentest4j.AssertionFailedError: Unexpected exception thrown: java.lang.Throwable}",
 				() -> TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(false, null, throwable));
 		//
 	}

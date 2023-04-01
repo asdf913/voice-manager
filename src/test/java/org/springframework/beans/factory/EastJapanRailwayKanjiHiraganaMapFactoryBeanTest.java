@@ -167,7 +167,7 @@ class EastJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 		try (final InputStream is = new ByteArrayInputStream("1,2,3,4,5,http://127.0.0.1".getBytes())) {
 			//
 			AssertionsUtil.assertThrowsAndEquals(ConnectException.class,
-					"{localizedMessage=Connection refused: connect, suppressed=[], message=Connection refused: connect}",
+					"{localizedMessage=Connection refused: connect, message=Connection refused: connect}",
 					() -> createMap(is, urlValidator));
 			//
 		} // try
@@ -275,7 +275,7 @@ class EastJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 		final Map<String, String> b = Collections.singletonMap(null, "");
 		//
 		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class,
-				"{localizedMessage=null=, suppressed=[], message=null=}", () -> merge(a, b));
+				"{localizedMessage=null=, message=null=}", () -> merge(a, b));
 		//
 	}
 

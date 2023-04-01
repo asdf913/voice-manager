@@ -836,7 +836,7 @@ class JlptLevelGuiTest {
 		//
 		if (throwableClassByGetSystemClipboard != null) {
 			//
-			AssertionsUtil.assertThrowsAndEquals(throwableClassByGetSystemClipboard, "{suppressed=[]}",
+			AssertionsUtil.assertThrowsAndEquals(throwableClassByGetSystemClipboard, "{}",
 					() -> getSystemClipboard(toolkit));
 			//
 		} else {

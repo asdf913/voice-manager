@@ -202,7 +202,7 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 		} // if
 			//
 		AssertionsUtil.assertThrowsAndEquals(MalformedURLException.class,
-				"{localizedMessage=no protocol: A, suppressed=[], message=no protocol: A}", () -> getObject(instance));
+				"{localizedMessage=no protocol: A, message=no protocol: A}", () -> getObject(instance));
 		//
 		if (instance != null) {
 			//
@@ -217,7 +217,7 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 		} // if
 			//
 		AssertionsUtil.assertThrowsAndEquals(MalformedURLException.class,
-				"{localizedMessage=no protocol: A, suppressed=[], message=no protocol: A}", () -> getObject(instance));
+				"{localizedMessage=no protocol: A, message=no protocol: A}", () -> getObject(instance));
 		//
 		if (ih != null) {
 			//
@@ -226,7 +226,7 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 		} // if
 			//
 		AssertionsUtil.assertThrowsAndEquals(MalformedURLException.class,
-				"{localizedMessage=no protocol: A, suppressed=[], message=no protocol: A}", () -> getObject(instance));
+				"{localizedMessage=no protocol: A, message=no protocol: A}", () -> getObject(instance));
 		//
 		try (final InputStream is = new ByteArrayInputStream("".getBytes())) {
 			//
@@ -237,7 +237,7 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 			} // if
 				//
 			AssertionsUtil.assertThrowsAndEquals(MalformedURLException.class,
-					"{localizedMessage=no protocol: A, suppressed=[], message=no protocol: A}",
+					"{localizedMessage=no protocol: A, message=no protocol: A}",
 					() -> getObject(instance));
 			//
 		} // try

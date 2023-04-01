@@ -237,11 +237,11 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 		final String url = new File("pom.xml").toURI().toURL().toString();
 		//
 		AssertionsUtil.assertThrowsAndEquals(MalformedURLException.class,
-				"{localizedMessage=Only http & https protocols supported, suppressed=[], message=Only http & https protocols supported}",
+				"{localizedMessage=Only http & https protocols supported, message=Only http & https protocols supported}",
 				() -> createMultimap(url, null, null));
 		//
 		AssertionsUtil.assertThrowsAndEquals(MalformedURLException.class,
-				"{localizedMessage=Only http & https protocols supported, suppressed=[], message=Only http & https protocols supported}",
+				"{localizedMessage=Only http & https protocols supported, message=Only http & https protocols supported}",
 				() -> createMultimap(url, new String[] {}, null));
 		//
 		Assertions.assertNull(createMultimap(url, new String[] { "http" }, null));
@@ -416,11 +416,11 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 		final String url = new File("pom.xml").toURI().toURL().toString();
 		//
 		AssertionsUtil.assertThrowsAndEquals(MalformedURLException.class,
-				"{localizedMessage=Only http & https protocols supported, suppressed=[], message=Only http & https protocols supported}",
+				"{localizedMessage=Only http & https protocols supported, message=Only http & https protocols supported}",
 				() -> createMultimapByUrl(url, null, null));
 		//
 		AssertionsUtil.assertThrowsAndEquals(MalformedURLException.class,
-				"{localizedMessage=Only http & https protocols supported, suppressed=[], message=Only http & https protocols supported}",
+				"{localizedMessage=Only http & https protocols supported, message=Only http & https protocols supported}",
 				() -> createMultimapByUrl(url, new String[] {}, null));
 		//
 	}

@@ -325,7 +325,7 @@ class MainTest {
 			//
 			final Window window = cast(Window.class, Narcissus.allocateInstance(Window.class));
 			//
-			AssertionsUtil.assertThrowsAndEquals(HeadlessException.class, "{suppressed=[]}", () -> pack(window));
+			AssertionsUtil.assertThrowsAndEquals(HeadlessException.class, "{}", () -> pack(window));
 			//
 		} else {
 			//

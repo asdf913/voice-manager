@@ -575,7 +575,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		Assertions.assertEquals(emptyList, get(imageFormatOrders, instance));
 		//
 		AssertionsUtil.assertThrowsAndEquals(UnsupportedOperationException.class,
-				"{localizedMessage=class java.util.LinkedHashMap, suppressed=[], message=class java.util.LinkedHashMap}",
+				"{localizedMessage=class java.util.LinkedHashMap, message=class java.util.LinkedHashMap}",
 				() -> setImageFormatOrders(instance, "{}"));
 		//
 	}
@@ -1790,7 +1790,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		final InvocationHandler ih = cast(InvocationHandler.class,
 				constructor != null ? constructor.newInstance() : null);
 		//
-		AssertionsUtil.assertThrowsAndEquals(Throwable.class, "{suppressed=[]}", () -> invoke(ih, null, null, null));
+		AssertionsUtil.assertThrowsAndEquals(Throwable.class, "{}", () -> invoke(ih, null, null, null));
 		//
 		final Transferable transferable = Reflection.newProxy(Transferable.class, ih);
 		//

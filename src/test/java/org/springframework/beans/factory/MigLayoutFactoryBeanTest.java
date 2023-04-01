@@ -122,7 +122,7 @@ class MigLayoutFactoryBeanTest {
 		Assertions.assertNull(get(FIELD_ARGUMENTS, instance));
 		//
 		AssertionsUtil.assertThrowsAndEquals(IllegalArgumentException.class,
-				"{localizedMessage=class java.util.LinkedHashMap, suppressed=[], message=class java.util.LinkedHashMap}",
+				"{localizedMessage=class java.util.LinkedHashMap, message=class java.util.LinkedHashMap}",
 				() -> instance.setArguments("{}"));
 		//
 	}
@@ -165,7 +165,7 @@ class MigLayoutFactoryBeanTest {
 		instance.setArguments(new String[] { "", "", "", "" });
 		//
 		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class,
-				"{localizedMessage=java.lang.reflect.Constructor is null, suppressed=[], message=java.lang.reflect.Constructor is null}",
+				"{localizedMessage=java.lang.reflect.Constructor is null, message=java.lang.reflect.Constructor is null}",
 				() -> instance.getObject());
 		//
 	}

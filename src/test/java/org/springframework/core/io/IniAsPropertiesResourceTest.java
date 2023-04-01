@@ -217,8 +217,7 @@ class IniAsPropertiesResourceTest {
 	@Test
 	void testGetURL() throws IOException {
 		//
-		AssertionsUtil.assertThrowsAndEquals(UnsupportedOperationException.class, "{suppressed=[]}",
-				() -> getURL(instance));
+		AssertionsUtil.assertThrowsAndEquals(UnsupportedOperationException.class, "{}", () -> getURL(instance));
 		//
 	}
 
@@ -229,8 +228,7 @@ class IniAsPropertiesResourceTest {
 	@Test
 	void testGetURI() throws IOException {
 		//
-		AssertionsUtil.assertThrowsAndEquals(UnsupportedOperationException.class, "{suppressed=[]}",
-				() -> getURI(instance));
+		AssertionsUtil.assertThrowsAndEquals(UnsupportedOperationException.class, "{}", () -> getURI(instance));
 		//
 	}
 
@@ -241,8 +239,7 @@ class IniAsPropertiesResourceTest {
 	@Test
 	void testGetFile() throws IOException {
 		//
-		AssertionsUtil.assertThrowsAndEquals(UnsupportedOperationException.class, "{suppressed=[]}",
-				() -> getFile(instance));
+		AssertionsUtil.assertThrowsAndEquals(UnsupportedOperationException.class, "{}", () -> getFile(instance));
 		//
 	}
 
@@ -253,8 +250,7 @@ class IniAsPropertiesResourceTest {
 	@Test
 	void testContentLength() throws IOException {
 		//
-		AssertionsUtil.assertThrowsAndEquals(UnsupportedOperationException.class, "{suppressed=[]}",
-				() -> contentLength(instance));
+		AssertionsUtil.assertThrowsAndEquals(UnsupportedOperationException.class, "{}", () -> contentLength(instance));
 		//
 	}
 
@@ -265,8 +261,7 @@ class IniAsPropertiesResourceTest {
 	@Test
 	void testLastModified() throws IOException {
 		//
-		AssertionsUtil.assertThrowsAndEquals(UnsupportedOperationException.class, "{suppressed=[]}",
-				() -> lastModified(instance));
+		AssertionsUtil.assertThrowsAndEquals(UnsupportedOperationException.class, "{}", () -> lastModified(instance));
 		//
 	}
 
@@ -277,7 +272,7 @@ class IniAsPropertiesResourceTest {
 	@Test
 	void testCreateRelative() throws IOException {
 		//
-		AssertionsUtil.assertThrowsAndEquals(UnsupportedOperationException.class, "{suppressed=[]}",
+		AssertionsUtil.assertThrowsAndEquals(UnsupportedOperationException.class, "{}",
 				() -> createRelative(instance, null));
 		//
 	}
@@ -289,8 +284,7 @@ class IniAsPropertiesResourceTest {
 	@Test
 	void testGetDescription() throws IOException {
 		//
-		AssertionsUtil.assertThrowsAndEquals(UnsupportedOperationException.class, "{suppressed=[]}",
-				() -> getDescription(instance));
+		AssertionsUtil.assertThrowsAndEquals(UnsupportedOperationException.class, "{}", () -> getDescription(instance));
 		//
 	}
 
@@ -698,8 +692,7 @@ class IniAsPropertiesResourceTest {
 	@Test
 	void testExists() throws Throwable {
 		//
-		AssertionsUtil.assertThrowsAndEquals(UnsupportedOperationException.class, "{suppressed=[]}",
-				() -> exists(instance));
+		AssertionsUtil.assertThrowsAndEquals(UnsupportedOperationException.class, "{}", () -> exists(instance));
 		//
 		Assertions.assertFalse(exists((File) null));
 		//

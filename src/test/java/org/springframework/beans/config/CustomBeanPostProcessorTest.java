@@ -244,7 +244,7 @@ class CustomBeanPostProcessorTest {
 		final String string = StringUtils.wrap(Integer.toString(0), "\"");
 		//
 		AssertionsUtil.assertThrowsAndEquals(IllegalArgumentException.class,
-				"{localizedMessage=class java.lang.String, suppressed=[], message=class java.lang.String}",
+				"{localizedMessage=class java.lang.String, message=class java.lang.String}",
 				() -> instance.setDefaultCloseOperation(string));
 		//
 		// EXIT_ON_CLOSE
@@ -257,7 +257,7 @@ class CustomBeanPostProcessorTest {
 		//
 		// java.lang.Boolean
 		//
-		AssertionsUtil.assertThrowsAndEquals(IllegalArgumentException.class, "{suppressed=[]}",
+		AssertionsUtil.assertThrowsAndEquals(IllegalArgumentException.class, "{}",
 				() -> instance.setDefaultCloseOperation(Boolean.TRUE));
 		//
 		// org.springframework.core.env.PropertyResolver
@@ -307,7 +307,7 @@ class CustomBeanPostProcessorTest {
 			//
 		AssertionsUtil.assertThrowsAndEquals(RuntimeException.class, String.join("\n",
 				"{localizedMessage=com.fasterxml.jackson.core.JsonParseException: Unrecognized token 'A': was expecting (JSON String, Number, Array, Object or token 'null', 'true' or 'false')",
-				" at [Source: (String)\"A\"; line: 1, column: 2], suppressed=[], message=com.fasterxml.jackson.core.JsonParseException: Unrecognized token 'A': was expecting (JSON String, Number, Array, Object or token 'null', 'true' or 'false')",
+				" at [Source: (String)\"A\"; line: 1, column: 2], message=com.fasterxml.jackson.core.JsonParseException: Unrecognized token 'A': was expecting (JSON String, Number, Array, Object or token 'null', 'true' or 'false')",
 				" at [Source: (String)\"A\"; line: 1, column: 2]}"),
 				() -> postProcessBeforeInitialization(instance, Narcissus.allocateInstance(JFrame.class), null));
 		//
@@ -691,7 +691,7 @@ class CustomBeanPostProcessorTest {
 		//
 		Arrays.fill(objects, en);
 		//
-		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class, "{suppressed=[]}", () -> {
+		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class, "{}", () -> {
 			//
 			if (valueOf != null) {
 				//

@@ -200,7 +200,7 @@ class StringMapFromResourceFactoryBeanTest {
 			FieldUtils.writeDeclaredField(instance, "iValue0", null, true);
 			//
 			AssertionsUtil.assertThrowsAndEquals(IllegalArgumentException.class,
-					"{localizedMessage=There is no sheet in the workbook, suppressed=[], message=There is no sheet in the workbook}",
+					"{localizedMessage=There is no sheet in the workbook, message=There is no sheet in the workbook}",
 					() -> getObject(instance));
 			//
 		} // try
@@ -220,7 +220,7 @@ class StringMapFromResourceFactoryBeanTest {
 			FieldUtils.writeDeclaredField(instance, "iValue0", null, true);
 			//
 			AssertionsUtil.assertThrowsAndEquals(IllegalArgumentException.class,
-					"{localizedMessage=There is no sheet in the workbook, suppressed=[], message=There is no sheet in the workbook}",
+					"{localizedMessage=There is no sheet in the workbook, message=There is no sheet in the workbook}",
 					() -> getObject(instance));
 			//
 		} // try
@@ -240,7 +240,7 @@ class StringMapFromResourceFactoryBeanTest {
 			FieldUtils.writeDeclaredField(instance, "iValue0", null, true);
 			//
 			AssertionsUtil.assertThrowsAndEquals(IllegalArgumentException.class,
-					"{localizedMessage=There are more than one sheet in the workbook, suppressed=[], message=There are more than one sheet in the workbook}",
+					"{localizedMessage=There are more than one sheet in the workbook, message=There are more than one sheet in the workbook}",
 					() -> getObject(instance));
 			//
 		} // try
@@ -368,7 +368,7 @@ class StringMapFromResourceFactoryBeanTest {
 			FieldUtils.writeDeclaredField(instance, "iValue0", null, true);
 			//
 			AssertionsUtil.assertThrowsAndEquals(IllegalArgumentException.class,
-					"{localizedMessage=Sheet [ ] not found, suppressed=[], message=Sheet [ ] not found}",
+					"{localizedMessage=Sheet [ ] not found, message=Sheet [ ] not found}",
 					() -> getObject(instance));
 			//
 		} // try
@@ -638,7 +638,7 @@ class StringMapFromResourceFactoryBeanTest {
 		//
 		final Cell cell = Reflection.newProxy(Cell.class, ih);
 		//
-		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class, "{suppressed=[]}",
+		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class, "{}",
 				() -> getString(cell, null));
 		//
 		if (ih != null) {
@@ -688,12 +688,12 @@ class StringMapFromResourceFactoryBeanTest {
 		} // if
 			//
 		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class,
-				"{localizedMessage=FORMULA, suppressed=[], message=FORMULA}", () -> getString(cell, null));
+				"{localizedMessage=FORMULA, message=FORMULA}", () -> getString(cell, null));
 		//
 		final FormulaEvaluator formulaEvaluator = Reflection.newProxy(FormulaEvaluator.class, ih);
 		//
 		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class,
-				"{localizedMessage=FORMULA, suppressed=[], message=FORMULA}", () -> getString(cell, formulaEvaluator));
+				"{localizedMessage=FORMULA, message=FORMULA}", () -> getString(cell, formulaEvaluator));
 		//
 		if (ih != null) {
 			//

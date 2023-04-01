@@ -416,7 +416,7 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 		final List<String> list = Collections.singletonList(null);
 		//
 		AssertionsUtil.assertThrowsAndEquals(UncheckedIOException.class,
-				"{localizedMessage=java.net.MalformedURLException: no protocol: null/null, suppressed=[], message=java.net.MalformedURLException: no protocol: null/null}",
+				"{localizedMessage=java.net.MalformedURLException: no protocol: null/null, message=java.net.MalformedURLException: no protocol: null/null}",
 				() -> createMergedBufferedImage(null, list, ZERO));
 		//
 	}

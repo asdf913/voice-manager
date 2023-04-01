@@ -386,7 +386,7 @@ class GaKuNenBeTsuKanJiGuiTest {
 		//
 		final Collection<?> collection = Collections.nCopies(2, null);
 		//
-		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class, "{suppressed=[]}",
+		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class, "{}",
 				() -> setSelectedItemByIterable(null, collection));
 		//
 	}

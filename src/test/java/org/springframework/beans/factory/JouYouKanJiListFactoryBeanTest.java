@@ -152,7 +152,7 @@ class JouYouKanJiListFactoryBeanTest {
 			//
 		} // if
 			//
-		AssertionsUtil.assertThrowsAndEquals(IllegalArgumentException.class, "{suppressed=[]}",
+		AssertionsUtil.assertThrowsAndEquals(IllegalArgumentException.class, "{}",
 				() -> getObject(instance));
 		//
 	}

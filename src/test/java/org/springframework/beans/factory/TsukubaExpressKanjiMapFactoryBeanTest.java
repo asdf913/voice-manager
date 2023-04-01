@@ -130,7 +130,7 @@ class TsukubaExpressKanjiMapFactoryBeanTest {
 	@Test
 	void testCreateEntry() throws Throwable {
 		//
-		AssertionsUtil.assertThrowsAndEquals(IllegalArgumentException.class, "{suppressed=[]}",
+		AssertionsUtil.assertThrowsAndEquals(IllegalArgumentException.class, "{}",
 				() -> createEntry(null, null));
 		//
 		if (CLASS_ROMAJI_OR_HIRAGANA != null && CLASS_ROMAJI_OR_HIRAGANA.isEnum()) {

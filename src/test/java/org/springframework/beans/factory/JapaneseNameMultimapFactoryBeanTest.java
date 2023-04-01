@@ -314,11 +314,11 @@ class JapaneseNameMultimapFactoryBeanTest {
 		final String url = toString(new File("pom.xml").toURI().toURL());
 		//
 		AssertionsUtil.assertThrowsAndEquals(MalformedURLException.class,
-				"{localizedMessage=Only http & https protocols supported, suppressed=[], message=Only http & https protocols supported}",
+				"{localizedMessage=Only http & https protocols supported, message=Only http & https protocols supported}",
 				() -> createMultimapByUrl(url, null));
 		//
 		AssertionsUtil.assertThrowsAndEquals(MalformedURLException.class,
-				"{localizedMessage=Only http & https protocols supported, suppressed=[], message=Only http & https protocols supported}",
+				"{localizedMessage=Only http & https protocols supported, message=Only http & https protocols supported}",
 				() -> createMultimapByUrl(url, new String[] {}));
 		//
 	}

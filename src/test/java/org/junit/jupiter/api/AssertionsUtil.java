@@ -35,7 +35,7 @@ public class AssertionsUtil {
 	public static <T extends Throwable> void assertThrowsAndEquals(final Class<T> expectedType, final String json,
 			final Executable executable) throws IOException {
 		//
-		assertThrowsAndEquals(expectedType, json, executable, getObjectMapper(), "stackTrace");
+		assertThrowsAndEquals(expectedType, json, executable, getObjectMapper(), "stackTrace", "suppressed");
 		//
 	}
 

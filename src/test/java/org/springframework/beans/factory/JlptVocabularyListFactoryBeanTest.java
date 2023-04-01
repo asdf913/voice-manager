@@ -404,7 +404,7 @@ class JlptVocabularyListFactoryBeanTest {
 			} // if
 				//
 			AssertionsUtil.assertThrowsAndEquals(EmptyFileException.class,
-					"{localizedMessage=The supplied file was empty (zero bytes long), suppressed=[], message=The supplied file was empty (zero bytes long)}",
+					"{localizedMessage=The supplied file was empty (zero bytes long), message=The supplied file was empty (zero bytes long)}",
 					() -> getObject(instance));
 			//
 		} // try
@@ -715,11 +715,11 @@ class JlptVocabularyListFactoryBeanTest {
 		} // if
 			//
 		AssertionsUtil.assertThrowsAndEquals(UnsupportedOperationException.class,
-				"{localizedMessage=cellType=FORMULA,cellValueType=null, suppressed=[], message=cellType=FORMULA,cellValueType=null}",
+				"{localizedMessage=cellType=FORMULA,cellValueType=null, message=cellType=FORMULA,cellValueType=null}",
 				() -> getIntegerValue(cell, null));
 		//
 		AssertionsUtil.assertThrowsAndEquals(UnsupportedOperationException.class,
-				"{localizedMessage=cellType=FORMULA,cellValueType=null, suppressed=[], message=cellType=FORMULA,cellValueType=null}",
+				"{localizedMessage=cellType=FORMULA,cellValueType=null, message=cellType=FORMULA,cellValueType=null}",
 				() -> getIntegerValue(cell, formulaEvaluator));
 		//
 		final int zero = 0;
@@ -781,11 +781,11 @@ class JlptVocabularyListFactoryBeanTest {
 		} // if
 			//
 		AssertionsUtil.assertThrowsAndEquals(UnsupportedOperationException.class,
-				"{localizedMessage=cellType=FORMULA,cellValueType=null, suppressed=[], message=cellType=FORMULA,cellValueType=null}",
+				"{localizedMessage=cellType=FORMULA,cellValueType=null, message=cellType=FORMULA,cellValueType=null}",
 				() -> getStringValue(cell, null));
 		//
 		AssertionsUtil.assertThrowsAndEquals(UnsupportedOperationException.class,
-				"{localizedMessage=cellType=FORMULA,cellValueType=null, suppressed=[], message=cellType=FORMULA,cellValueType=null}",
+				"{localizedMessage=cellType=FORMULA,cellValueType=null, message=cellType=FORMULA,cellValueType=null}",
 				() -> getStringValue(cell, formulaEvaluator));
 		//
 		final boolean b = true;
