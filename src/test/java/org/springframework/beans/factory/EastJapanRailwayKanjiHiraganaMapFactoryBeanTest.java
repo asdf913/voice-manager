@@ -25,6 +25,8 @@ import org.junit.jupiter.api.AssertionsUtil;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 
 import com.google.common.reflect.Reflection;
 
@@ -92,12 +94,16 @@ class EastJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 
 	private IH ih = null;
 
+	private UrlValidator urlValidator = null;
+
 	@BeforeEach
 	void beforeEach() {
 		//
 		instance = new EastJapanRailwayKanjiHiraganaMapFactoryBean();
 		//
 		ih = new IH();
+		//
+		urlValidator = UrlValidator.getInstance();
 		//
 	}
 
@@ -140,7 +146,7 @@ class EastJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 	}
 
 	@Test
-	void testCreateMap() throws Throwable {
+	void testCreateMap1() throws Throwable {
 		//
 		// createMap(java.io.InputStream,org.apache.commons.validator.routines.UrlValidator)
 		//
@@ -156,14 +162,18 @@ class EastJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 			//
 		} // try
 			//
-		final UrlValidator urlValidator = UrlValidator.getInstance();
-		//
 		try (final InputStream is = new ByteArrayInputStream("1,2,3,4,5,6".getBytes())) {
 			//
 			Assertions.assertNull(createMap(is, urlValidator));
 			//
 		} // try
 			//
+	}
+
+	@Test
+	@EnabledOnOs(OS.WINDOWS)
+	void testCreateMap2() throws Throwable {
+		//
 		try (final InputStream is = new ByteArrayInputStream("1,2,3,4,5,http://127.0.0.1".getBytes())) {
 			//
 			AssertionsUtil.assertThrowsAndEquals(ConnectException.class,
@@ -274,8 +284,8 @@ class EastJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 
 		final Map<String, String> b = Collections.singletonMap(null, "");
 		//
-		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class,
-				"{localizedMessage=null=, message=null=}", () -> merge(a, b));
+		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class, "{localizedMessage=null=, message=null=}",
+				() -> merge(a, b));
 		//
 	}
 

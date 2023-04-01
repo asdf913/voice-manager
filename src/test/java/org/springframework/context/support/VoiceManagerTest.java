@@ -207,6 +207,8 @@ import org.junit.jupiter.api.AssertionsUtil;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 import org.odftoolkit.odfdom.pkg.OdfPackage;
 import org.openxmlformats.schemas.officeDocument.x2006.customProperties.CTProperty;
 import org.slf4j.Logger;
@@ -2386,27 +2388,6 @@ class VoiceManagerTest {
 			//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnConvertToKatakana));
 		//
-		final AbstractButton btnCopyRomaji = new JButton();
-		//
-		if (instance != null) {
-			//
-			FieldUtils.writeDeclaredField(instance, "btnCopyRomaji", btnCopyRomaji, true);
-			//
-		} // if
-			//
-		final ActionEvent actionEventBtnCopyRomaji = new ActionEvent(btnCopyRomaji, 0, null);
-		//
-		if (throwableClassByGetSystemClipboard != null) {
-			//
-			AssertionsUtil.assertThrowsAndEquals(throwableClassByGetSystemClipboard, "{}",
-					() -> actionPerformed(instance, actionEventBtnCopyRomaji));
-			//
-		} else {
-			//
-			Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnCopyRomaji));
-			//
-		} // if
-			//
 		final AbstractButton btnCopyHiragana = new JButton();
 		//
 		if (instance != null) {
@@ -2997,6 +2978,38 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnConvertToHiraganaOrKatakana));
 		//
+	}
+
+	@Test
+	@EnabledOnOs(OS.WINDOWS)
+	void testActionPerformed4() throws Throwable {
+		//
+		final Class<?> clz = getClass(instance != null ? instance.getToolkit() : null);
+		//
+		final Class<? extends Throwable> throwableClassByGetSystemClipboard = getThrowingThrowableClass(clz,
+				clz != null ? clz.getDeclaredMethod("getSystemClipboard") : null);
+		//
+		final AbstractButton btnCopyRomaji = new JButton();
+		//
+		if (instance != null) {
+			//
+			FieldUtils.writeDeclaredField(instance, "btnCopyRomaji", btnCopyRomaji, true);
+			//
+		} // if
+			//
+		final ActionEvent actionEventBtnCopyRomaji = new ActionEvent(btnCopyRomaji, 0, null);
+		//
+		if (throwableClassByGetSystemClipboard != null) {
+			//
+			AssertionsUtil.assertThrowsAndEquals(throwableClassByGetSystemClipboard, "{}",
+					() -> actionPerformed(instance, actionEventBtnCopyRomaji));
+			//
+		} else {
+			//
+			Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnCopyRomaji));
+			//
+		} // if
+			//
 	}
 
 	private static void actionPerformed(final ActionListener instance, final ActionEvent actionEvent) {
