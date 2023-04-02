@@ -67,8 +67,7 @@ import org.junit.jupiter.api.AssertionsUtil;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.EnabledOnOs;
-import org.junit.jupiter.api.condition.OS;
+import org.junit.jupiter.api.function.Executable;
 import org.springframework.beans.factory.InitializingBean;
 
 import com.google.common.reflect.Reflection;
@@ -1289,21 +1288,24 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 	}
 
 	@Test
-	@EnabledOnOs(OS.WINDOWS)
 	void testPlay() throws Throwable {
 		//
 		try (final ByteArrayInputStream bais = new ByteArrayInputStream("".getBytes())) {
 			//
 			final FileSystem fs = FileSystems.getDefault();
 			//
+			final Executable executable = () -> play(new Player(bais));
+			//
 			if (Objects.equals("sun.nio.fs.WindowsFileSystemProvider",
 					getName(getClass(fs != null ? fs.provider() : null)))) {
 				//
-				Assertions.assertDoesNotThrow(() -> play(new Player(bais)));
+				Assertions.assertDoesNotThrow(executable);
 				//
 			} else {
 				//
-				AssertionsUtil.assertThrowsAndEquals(JavaLayerException.class, "", () -> play(new Player(bais)));
+				AssertionsUtil.assertThrowsAndEquals(JavaLayerException.class,
+						"{localizedMessage=Cannot create AudioDevice, suppressed=[], message=Cannot create AudioDevice}",
+						executable);
 				//
 			} // if
 				//
