@@ -1304,8 +1304,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			} else {
 				//
 				AssertionsUtil.assertThrowsAndEquals(JavaLayerException.class,
-						"{localizedMessage=Cannot create AudioDevice, suppressed=[], message=Cannot create AudioDevice}",
-						executable);
+						"{localizedMessage=Cannot create AudioDevice, message=Cannot create AudioDevice}", executable);
 				//
 			} // if
 				//
