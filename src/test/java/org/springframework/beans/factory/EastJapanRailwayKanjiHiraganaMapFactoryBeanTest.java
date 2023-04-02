@@ -8,6 +8,9 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.ConnectException;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.spi.FileSystemProvider;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -25,8 +28,7 @@ import org.junit.jupiter.api.AssertionsUtil;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.EnabledOnOs;
-import org.junit.jupiter.api.condition.OS;
+import org.junit.jupiter.api.function.Executable;
 
 import com.google.common.reflect.Reflection;
 
@@ -171,15 +173,31 @@ class EastJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 	}
 
 	@Test
-	@EnabledOnOs(OS.WINDOWS)
 	void testCreateMap2() throws Throwable {
 		//
 		try (final InputStream is = new ByteArrayInputStream("1,2,3,4,5,http://127.0.0.1".getBytes())) {
 			//
-			AssertionsUtil.assertThrowsAndEquals(ConnectException.class,
-					"{localizedMessage=Connection refused: connect, message=Connection refused: connect}",
-					() -> createMap(is, urlValidator));
+			final FileSystem fs = FileSystems.getDefault();
 			//
+			final FileSystemProvider fsp = fs != null ? fs.provider() : null;
+			//
+			final Class<?> clz = fsp != null ? fsp.getClass() : null;
+			//
+			final Executable executable = () -> createMap(is, urlValidator);
+			//
+			if (Objects.equals("sun.nio.fs.WindowsFileSystemProvider", clz != null ? clz.getName() : null)) {
+				//
+				AssertionsUtil.assertThrowsAndEquals(ConnectException.class,
+						"{localizedMessage=Connection refused: connect, message=Connection refused: connect}",
+						executable);
+				//
+			} else {
+				//
+				AssertionsUtil.assertThrowsAndEquals(ConnectException.class,
+						"{localizedMessage=Connection refused, message=Connection refused}", executable);
+				//
+			} // if
+				//
 		} // try
 			//
 	}
