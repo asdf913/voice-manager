@@ -45,7 +45,7 @@ public class TokyuKanjiMapFactoryBean implements FactoryBean<Map<String, String>
 		this.url = url;
 	}
 
-	public void setRomajiOrHiragana(final Object instance) {
+	public void setRomajiOrHiragana(@Nullable final Object instance) {
 		//
 		if (instance == null) {
 			//
@@ -225,7 +225,8 @@ public class TokyuKanjiMapFactoryBean implements FactoryBean<Map<String, String>
 		}
 	}
 
-	private static boolean isAllCharacterInSameUnicodeBlock(final String string, final UnicodeBlock unicodeBlock) {
+	private static boolean isAllCharacterInSameUnicodeBlock(@Nullable final String string,
+			final UnicodeBlock unicodeBlock) {
 		//
 		final char[] cs = string != null ? string.toCharArray() : null;
 		//
