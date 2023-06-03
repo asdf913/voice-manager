@@ -110,7 +110,7 @@ public class TokyuKanjiMapFactoryBean implements FactoryBean<Map<String, String>
 	}
 
 	@Nullable
-	private static Map<String, String> getObject(final Iterable<Element> es, final Object romajiOrHiragana)
+	private static Map<String, String> getObject(@Nullable final Iterable<Element> es, final Object romajiOrHiragana)
 			throws IOException {
 		//
 		Map<String, String> map = null;
@@ -159,7 +159,7 @@ public class TokyuKanjiMapFactoryBean implements FactoryBean<Map<String, String>
 	}
 
 	@Nullable
-	private static Map<RomajiOrHiragana, String> getRomajiOrHiraganaMap(final Iterable<Element> es) {
+	private static Map<RomajiOrHiragana, String> getRomajiOrHiraganaMap(@Nullable final Iterable<Element> es) {
 		//
 		Map<RomajiOrHiragana, String> map = null;
 		//
@@ -214,11 +214,11 @@ public class TokyuKanjiMapFactoryBean implements FactoryBean<Map<String, String>
 		}
 	}
 
-	private static boolean containsKey(final Map<?, ?> instance, final Object key) {
+	private static boolean containsKey(@Nullable final Map<?, ?> instance, final Object key) {
 		return instance != null && instance.containsKey(key);
 	}
 
-	private static <K, V> void put(final Map<K, V> instance, final K key, final V value) {
+	private static <K, V> void put(@Nullable final Map<K, V> instance, final K key, final V value) {
 		if (instance != null) {
 			instance.put(key, value);
 		}
@@ -249,7 +249,7 @@ public class TokyuKanjiMapFactoryBean implements FactoryBean<Map<String, String>
 		//
 	}
 
-	private static boolean contains(final Collection<?> items, final Object item) {
+	private static boolean contains(@Nullable final Collection<?> items, final Object item) {
 		return items != null && items.contains(item);
 	}
 
@@ -260,21 +260,21 @@ public class TokyuKanjiMapFactoryBean implements FactoryBean<Map<String, String>
 		} // if
 	}
 
-	private static <T, U> void accept(final BiConsumer<T, U> instance, final T t, final U u) {
+	private static <T, U> void accept(@Nullable final BiConsumer<T, U> instance, final T t, final U u) {
 		if (instance != null) {
 			instance.accept(t, u);
 		}
 	}
 
-	private static final <T> boolean test(final Predicate<T> instance, final T value) {
+	private static final <T> boolean test(@Nullable final Predicate<T> instance, final T value) {
 		return instance != null && instance.test(value);
 	}
 
-	private static <T, U> boolean test(final BiPredicate<T, U> instance, final T t, final U u) {
+	private static <T, U> boolean test(@Nullable final BiPredicate<T, U> instance, final T t, final U u) {
 		return instance != null && instance.test(t, u);
 	}
 
-	private static <E> void add(final Collection<E> items, final E item) {
+	private static <E> void add(@Nullable final Collection<E> items, final E item) {
 		if (items != null) {
 			items.add(item);
 		}
