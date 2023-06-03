@@ -159,8 +159,7 @@ public class TokyuKanjiMapFactoryBean implements FactoryBean<Map<String, String>
 	}
 
 	@Nullable
-	private static Map<RomajiOrHiragana, String> getRomajiOrHiraganaMap(final Iterable<Element> es)
-			throws MalformedURLException, IOException {
+	private static Map<RomajiOrHiragana, String> getRomajiOrHiraganaMap(final Iterable<Element> es) {
 		//
 		Map<RomajiOrHiragana, String> map = null;
 		//
