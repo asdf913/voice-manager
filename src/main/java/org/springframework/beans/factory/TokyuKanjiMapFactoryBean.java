@@ -199,8 +199,8 @@ public class TokyuKanjiMapFactoryBean implements FactoryBean<Map<String, String>
 		//
 	}
 
-	private static <T, U, V> void testAndAccept(final TriPredicate<T, U, V> pridicate, final T t, final U u, final V v,
-			final TriConsumer<T, U, V> consumerTrue, final TriConsumer<T, U, V> consumerFalse) {
+	private static <T, U, V> void testAndAccept(@Nullable final TriPredicate<T, U, V> pridicate, final T t, final U u,
+			final V v, final TriConsumer<T, U, V> consumerTrue, final TriConsumer<T, U, V> consumerFalse) {
 		if (pridicate != null && pridicate.test(t, u, v)) {
 			accept(consumerTrue, t, u, v);
 		} else {
@@ -208,7 +208,8 @@ public class TokyuKanjiMapFactoryBean implements FactoryBean<Map<String, String>
 		}
 	}
 
-	private static <T, U, V> void accept(final TriConsumer<T, U, V> instance, final T t, final U u, final V v) {
+	private static <T, U, V> void accept(@Nullable final TriConsumer<T, U, V> instance, final T t, final U u,
+			final V v) {
 		if (instance != null) {
 			instance.accept(t, u, v);
 		}
