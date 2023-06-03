@@ -24,7 +24,7 @@ class TokyuKanjiMapFactoryBeanTest {
 
 	private static Method METHOD_GET_OBJECT, METHOD_GET_ROMAJI_OR_HIRAGANA_MAP, METHOD_CONTAINS_KEY, METHOD_PUT,
 			METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK, METHOD_CONTAINS, METHOD_ACCEPT, METHOD_TEST, METHOD_ADD,
-			METHOD_TEST_AND_APPLY = null;
+			METHOD_TEST_AND_APPLY, METHOD_NAME = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -55,6 +55,8 @@ class TokyuKanjiMapFactoryBeanTest {
 		//
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
+		//
+		(METHOD_NAME = clz.getDeclaredMethod("name", Enum.class)).setAccessible(true);
 		//
 	}
 
@@ -363,6 +365,27 @@ class TokyuKanjiMapFactoryBeanTest {
 			throws Throwable {
 		try {
 			return (R) METHOD_TEST_AND_APPLY.invoke(null, predicate, value, functionTrue, functionFalse);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void tesetName() throws Throwable {
+		//
+		Assertions.assertNull(name(null));
+		//
+	}
+
+	private static String name(final Enum<?> instance) throws Throwable {
+		try {
+			final Object obj = METHOD_NAME.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(toString(obj != null ? obj.getClass() : null));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
