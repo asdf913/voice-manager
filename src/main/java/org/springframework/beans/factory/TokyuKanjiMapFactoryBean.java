@@ -96,6 +96,7 @@ public class TokyuKanjiMapFactoryBean implements FactoryBean<Map<String, String>
 			//
 	}
 
+	@Nullable
 	private static String name(@Nullable final Enum<?> instance) {
 		return instance != null ? instance.name() : null;
 	}
