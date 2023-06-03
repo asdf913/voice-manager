@@ -38,6 +38,7 @@ public class TokyuKanjiMapFactoryBean implements FactoryBean<Map<String, String>
 
 	private String url = null;
 
+	@Nullable
 	private RomajiOrHiragana romajiOrHiragana = null;
 
 	public void setUrl(final String url) {
@@ -148,6 +149,7 @@ public class TokyuKanjiMapFactoryBean implements FactoryBean<Map<String, String>
 		//
 	}
 
+	@Nullable
 	private static Map<RomajiOrHiragana, String> getRomajiOrHiraganaMap(final String url) throws IOException {
 		//
 		return getRomajiOrHiraganaMap(ElementUtil.select(testAndApply(Objects::nonNull,
