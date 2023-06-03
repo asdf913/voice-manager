@@ -16,6 +16,8 @@ import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -107,6 +109,7 @@ public class TokyuKanjiMapFactoryBean implements FactoryBean<Map<String, String>
 		//
 	}
 
+	@Nullable
 	private static Map<String, String> getObject(final Iterable<Element> es, final Object romajiOrHiragana)
 			throws IOException {
 		//
@@ -155,6 +158,7 @@ public class TokyuKanjiMapFactoryBean implements FactoryBean<Map<String, String>
 		//
 	}
 
+	@Nullable
 	private static Map<RomajiOrHiragana, String> getRomajiOrHiraganaMap(final Iterable<Element> es)
 			throws MalformedURLException, IOException {
 		//
