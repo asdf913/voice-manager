@@ -2,7 +2,6 @@ package org.springframework.beans.factory;
 
 import java.io.IOException;
 import java.lang.Character.UnicodeBlock;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -149,8 +148,7 @@ public class TokyuKanjiMapFactoryBean implements FactoryBean<Map<String, String>
 		//
 	}
 
-	private static Map<RomajiOrHiragana, String> getRomajiOrHiraganaMap(final String url)
-			throws MalformedURLException, IOException {
+	private static Map<RomajiOrHiragana, String> getRomajiOrHiraganaMap(final String url) throws IOException {
 		//
 		return getRomajiOrHiraganaMap(ElementUtil.select(testAndApply(Objects::nonNull,
 				testAndApply(StringUtils::isNotEmpty, url, URL::new, null), x -> Jsoup.parse(x, 0), null),
