@@ -218,7 +218,7 @@ public class TokyuKanjiMapFactoryBean implements FactoryBean<Map<String, String>
 		return instance != null && instance.containsKey(key);
 	}
 
-	private static <K, V> void put(@Nullable final Map<K, V> instance, final K key, final V value) {
+	private static <K, V> void put(@Nullable final Map<K, V> instance, @Nullable final K key, final V value) {
 		if (instance != null) {
 			instance.put(key, value);
 		}
