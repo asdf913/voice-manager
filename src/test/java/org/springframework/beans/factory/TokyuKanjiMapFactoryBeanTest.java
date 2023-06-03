@@ -17,8 +17,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.meeuw.functional.TriConsumer;
-import org.meeuw.functional.TriPredicate;
 
 import com.google.common.base.Predicates;
 
@@ -26,7 +24,7 @@ class TokyuKanjiMapFactoryBeanTest {
 
 	private static Method METHOD_GET_OBJECT, METHOD_GET_ROMAJI_OR_HIRAGANA_MAP, METHOD_CONTAINS_KEY, METHOD_PUT,
 			METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK, METHOD_CONTAINS, METHOD_ACCEPT, METHOD_TEST, METHOD_ADD,
-			METHOD_TEST_AND_APPLY, METHOD_NAME, METHOD_TEST_AND_ACCEPT = null;
+			METHOD_TEST_AND_APPLY, METHOD_NAME = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -59,9 +57,6 @@ class TokyuKanjiMapFactoryBeanTest {
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
 		//
 		(METHOD_NAME = clz.getDeclaredMethod("name", Enum.class)).setAccessible(true);
-		//
-		(METHOD_TEST_AND_ACCEPT = clz.getDeclaredMethod("testAndAccept", TriPredicate.class, Object.class, Object.class,
-				Object.class, TriConsumer.class, TriConsumer.class)).setAccessible(true);
 		//
 	}
 
@@ -391,24 +386,6 @@ class TokyuKanjiMapFactoryBeanTest {
 				return (String) obj;
 			}
 			throw new Throwable(toString(obj != null ? obj.getClass() : null));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testTestAndAccept() {
-		//
-		Assertions.assertDoesNotThrow(() -> testAndAccept(null, null, null, null, null, null));
-		//
-		Assertions.assertDoesNotThrow(() -> testAndAccept((a, b, c) -> true, null, null, null, null, null));
-		//
-	}
-
-	private static <T, U, V> void testAndAccept(final TriPredicate<T, U, V> pridicate, final T t, final U u, final V v,
-			final TriConsumer<T, U, V> consumerTrue, final TriConsumer<T, U, V> consumerFalse) throws Throwable {
-		try {
-			METHOD_TEST_AND_ACCEPT.invoke(null, pridicate, t, u, v, consumerTrue, consumerFalse);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

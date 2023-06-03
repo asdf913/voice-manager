@@ -25,8 +25,6 @@ import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
-import org.meeuw.functional.TriConsumer;
-import org.meeuw.functional.TriPredicate;
 
 public class TokyuKanjiMapFactoryBean implements FactoryBean<Map<String, String>> {
 
@@ -162,58 +160,58 @@ public class TokyuKanjiMapFactoryBean implements FactoryBean<Map<String, String>
 	@Nullable
 	private static Map<RomajiOrHiragana, String> getRomajiOrHiraganaMap(@Nullable final Iterable<Element> es) {
 		//
+		if (es == null) {
+			//
+			return null;
+			//
+		} // if
+			//
 		Map<RomajiOrHiragana, String> map = null;
 		//
-		if (es != null) {
+		String classString = null;
+		//
+		RomajiOrHiragana romajiOrHiragana = null;
+		//
+		for (final Element e : es) {
 			//
-			String classString = null;
-			//
-			for (final Element e : es) {
+			if (e == null) {
 				//
-				if (e == null) {
+				continue;
+				//
+			} // if
+				//
+			if (StringUtils.equalsIgnoreCase(classString = e.attr("class"), "name-sub01")) {
+				//
+				if (containsKey(map = ObjectUtils.getIfNull(map, LinkedHashMap::new),
+						romajiOrHiragana = RomajiOrHiragana.ROMAJI)) {
 					//
-					continue;
+					throw new IllegalStateException();
+					//
+				} else {
+					//
+					put(map, romajiOrHiragana, e.text());
 					//
 				} // if
 					//
-				if (StringUtils.equalsIgnoreCase(classString = e.attr("class"), "name-sub01")) {
+			} else if (StringUtils.equalsIgnoreCase(classString, "name-sub02")) {
+				//
+				if (containsKey(map = ObjectUtils.getIfNull(map, LinkedHashMap::new),
+						romajiOrHiragana = RomajiOrHiragana.HIRAGANA)) {
 					//
-					testAndAccept((a, b, c) -> containsKey(a, b), map = ObjectUtils.getIfNull(map, LinkedHashMap::new),
-							RomajiOrHiragana.ROMAJI, e.text(), (a, b, c) -> {
-								throw new IllegalStateException();
-							}, (a, b, c) -> put(a, b, c));
+					throw new IllegalStateException();
 					//
-				} else if (StringUtils.equalsIgnoreCase(classString, "name-sub02")) {
+				} else {
 					//
-					testAndAccept((a, b, c) -> containsKey(a, b), map = ObjectUtils.getIfNull(map, LinkedHashMap::new),
-							RomajiOrHiragana.HIRAGANA, e.text(), (a, b, c) -> {
-								throw new IllegalStateException();
-							}, (a, b, c) -> put(a, b, c));
+					put(map, romajiOrHiragana, e.text());
 					//
 				} // if
 					//
-			} // for
+			} // if
 				//
-		} // if
+		} // for
 			//
 		return map;
 		//
-	}
-
-	private static <T, U, V> void testAndAccept(@Nullable final TriPredicate<T, U, V> pridicate, final T t, final U u,
-			final V v, final TriConsumer<T, U, V> consumerTrue, final TriConsumer<T, U, V> consumerFalse) {
-		if (pridicate != null && pridicate.test(t, u, v)) {
-			accept(consumerTrue, t, u, v);
-		} else {
-			accept(consumerFalse, t, u, v);
-		}
-	}
-
-	private static <T, U, V> void accept(@Nullable final TriConsumer<T, U, V> instance, final T t, final U u,
-			final V v) {
-		if (instance != null) {
-			instance.accept(t, u, v);
-		}
 	}
 
 	private static boolean containsKey(@Nullable final Map<?, ?> instance, final Object key) {
