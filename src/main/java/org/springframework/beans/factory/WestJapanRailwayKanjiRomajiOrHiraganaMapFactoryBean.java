@@ -1,0 +1,362 @@
+package org.springframework.beans.factory;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.lang.Character.UnicodeBlock;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.Set;
+import java.util.function.BiConsumer;
+import java.util.function.BiPredicate;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+
+import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.lang3.tuple.ImmutableTriple;
+import org.apache.commons.lang3.tuple.Triple;
+
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table;
+import com.google.common.collect.Table.Cell;
+import com.google.common.collect.TableUtil;
+
+public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements FactoryBean<Map<String, String>> {
+
+	private String url = null;
+
+	private UnicodeBlock unicodeBlock = null;
+
+	public void setUrl(final String url) {
+		this.url = url;
+	}
+
+	public void setUnicodeBlock(final Object instance) throws IllegalAccessException {
+		//
+		if (instance == null) {
+			//
+			this.unicodeBlock = null;
+			//
+		} else if (instance instanceof UnicodeBlock unicodeBlock) {
+			//
+			this.unicodeBlock = unicodeBlock;
+			//
+		} else if (instance instanceof String string) {
+			//
+			if (StringUtils.isBlank(string)) {
+				//
+				setUnicodeBlock(null);
+				//
+			} else {
+				//
+				final List<Field> fs = Arrays.stream(UnicodeBlock.class.getDeclaredFields())
+						.filter(f -> StringUtils.startsWithIgnoreCase(f != null ? f.getName() : null, string)).toList();
+				//
+				final int size = IterableUtils.size(fs);
+				//
+				if (size > 1) {
+					//
+					throw new IllegalStateException();
+					//
+				} else if (size == 0) {
+					//
+					return;
+					//
+				} // if
+					//
+				final Field f = IterableUtils.get(fs, 0);
+				//
+				if (f == null || !Modifier.isStatic(f.getModifiers())) {
+					//
+					return;
+					//
+				} else if (!isAssignableFrom(f.getType(), UnicodeBlock.class)) {
+					//
+					throw new IllegalStateException();
+					//
+				} // if
+					//
+				this.unicodeBlock = cast(UnicodeBlock.class, f.get(0));
+				//
+			} // if
+				//
+		} else if (instance instanceof char[] cs) {
+			//
+			setUnicodeBlock(new String(cs));
+			//
+		} else if (instance instanceof byte[] bs) {
+			//
+			setUnicodeBlock(new String(bs));
+			//
+		} else {
+			//
+			throw new IllegalArgumentException(instance.toString());
+			//
+		} // if
+			//
+	}
+
+	private static boolean isAssignableFrom(final Class<?> a, final Class<?> b) {
+		return a != null && b != null && a.isAssignableFrom(b);
+	}
+
+	private static <T> T cast(final Class<T> clz, final Object instance) {
+		return clz != null && clz.isInstance(instance) ? clz.cast(instance) : null;
+	}
+
+	@Override
+	public Map<String, String> getObject() throws Exception {
+		//
+		Table<String, UnicodeBlock, String> table = null;
+		//
+		try (final InputStream is = openStream(testAndApply(StringUtils::isNotBlank, this.url, URL::new, null));
+				final Reader r = testAndApply(Objects::nonNull, is, InputStreamReader::new, null)) {
+			//
+			final ScriptEngine se = new ScriptEngineManager().getEngineByName("JavaScript");
+			//
+			if (se != null && r != null) {
+				//
+				se.eval(r);
+				//
+			} // if
+				//
+			table = createTable(cast(Object[].class,
+					testAndApply(Objects::nonNull,
+							testAndApply(Objects::nonNull, se != null ? se.get("d") : null,
+									x -> FieldUtils.readField(x, "sobj", true), null),
+							x -> FieldUtils.readField(x, "objectSpill", true), null)));
+			//
+		} // try
+			//
+		final Set<Cell<String, UnicodeBlock, String>> cells = table != null ? table.cellSet() : null;
+		//
+		return cells != null
+				? cells.stream().filter(c -> Objects.equals(c != null ? c.getColumnKey() : null, unicodeBlock)).collect(
+						Collectors.toMap(c -> c != null ? c.getRowKey() : null, c -> c != null ? c.getValue() : null))
+				: null;
+		//
+	}
+
+	private static InputStream openStream(final URL instance) throws IOException {
+		return instance != null ? instance.openStream() : null;
+	}
+
+	private static Table<String, UnicodeBlock, String> createTable(final Object[] os) throws IllegalAccessException {
+		//
+		Table<String, UnicodeBlock, String> table = null;
+		//
+		Object o = null;
+		//
+		Field[] fs = null;
+		//
+		List<Triple<String, UnicodeBlock, String>> triples = null;
+		//
+		for (int i = 0; os != null && i < os.length; i++) {
+			//
+			if ((o = os[i]) == null || o.getClass() == null || (fs = o.getClass().getDeclaredFields()) == null
+					|| (triples = getTriples(fs, o)) == null || triples.isEmpty()) {
+				//
+				continue;
+				//
+			} // if
+				//
+			for (final Triple<String, UnicodeBlock, String> triple : triples) {
+				//
+				if (triple == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				TableUtil.put(table = ObjectUtils.getIfNull(table, HashBasedTable::create), triple.getLeft(),
+						triple.getMiddle(), triple.getRight());
+				//
+			} // for
+				//
+		} // for
+			//
+		return table;
+		//
+	}
+
+	private static List<Triple<String, UnicodeBlock, String>> getTriples(final Field[] fs, final Object instance)
+			throws IllegalArgumentException, IllegalAccessException {
+		//
+		Field f = null;
+		//
+		Object temp = null;
+		//
+		List<UnicodeBlock> unicodeBlocks = null;
+		//
+		String s = null;
+		//
+		Map<UnicodeBlock, String> map = null;
+		//
+		for (int i = 0; fs != null && i < fs.length; i++) {
+			//
+			if ((f = fs[i]) == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			f.setAccessible(true);
+			//
+			if (!isInstance(CharSequence.class, temp = f.get(instance))) {
+				//
+				continue;
+				//
+			} // if
+				//
+			if ((unicodeBlocks = getUnicodeBlocks(s = toString(temp))) == null || unicodeBlocks.isEmpty()) {
+				//
+				continue;
+				//
+			} // if
+				//
+			if (unicodeBlocks.size() > 1) {
+				//
+				return null;
+				//
+			} // if
+				//
+			put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), unicodeBlocks.get(0), s);
+			//
+		} // for
+			//
+		List<Triple<String, UnicodeBlock, String>> triples = null;
+		//
+		if (map != null) {
+			//
+			if (!map.containsKey(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)) {
+				//
+				return null;
+				//
+			} // if
+				//
+			final String kanji = map.get(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS);
+			//
+			for (final Entry<UnicodeBlock, String> en : map.entrySet()) {
+				//
+				if (en == null || Objects.equals(en.getKey(), UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if (!contains(Arrays.asList(UnicodeBlock.HIRAGANA, UnicodeBlock.BASIC_LATIN), en.getKey())) {
+					//
+					throw new IllegalStateException();
+					//
+				} // if
+					//
+				add(triples = ObjectUtils.getIfNull(triples, ArrayList::new),
+						new ImmutableTriple<>(kanji, en.getKey(), en.getValue()));
+				//
+			} // for
+				//
+		} // if
+			//
+		return triples;
+		//
+	}
+
+	private static List<UnicodeBlock> getUnicodeBlocks(final String string) {
+		//
+		final char[] cs = string != null ? string.toCharArray() : null;
+		//
+		if (cs != null) {
+			//
+			List<UnicodeBlock> unicodeBlocks = null;
+			//
+			for (final char c : cs) {
+				//
+				testAndAccept((a, b) -> b != null && !contains(a, b),
+						unicodeBlocks = ObjectUtils.getIfNull(unicodeBlocks, ArrayList::new), UnicodeBlock.of(c),
+						WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean::add);
+				//
+			} // for
+				//
+			return unicodeBlocks;
+			//
+		} // if
+			//
+		return null;
+		//
+	}
+
+	private static <T, U> void testAndAccept(final BiPredicate<T, U> instance, final T t, final U u,
+			final BiConsumer<T, U> consumer) {
+		if (test(instance, t, u)) {
+			accept(consumer, t, u);
+		} // if
+	}
+
+	private static <T, U> boolean test(final BiPredicate<T, U> instance, final T t, final U u) {
+		return instance != null && instance.test(t, u);
+	}
+
+	private static <T, U> void accept(final BiConsumer<T, U> instance, final T t, final U u) {
+		if (instance != null) {
+			instance.accept(t, u);
+		}
+	}
+
+	private static String toString(final Object instance) {
+		return instance != null ? instance.toString() : null;
+	}
+
+	private static boolean isInstance(final Class<?> clz, final Object instance) {
+		return clz != null && clz.isInstance(instance);
+	}
+
+	private static <K, V> void put(final Map<K, V> instance, final K key, final V value) {
+		if (instance != null) {
+			instance.put(key, value);
+		}
+	}
+
+	private static boolean contains(final Collection<?> items, final Object item) {
+		return items != null && items.contains(item);
+	}
+
+	private static <E> void add(final Collection<E> items, final E item) {
+		if (items != null) {
+			items.add(item);
+		}
+	}
+
+	@Override
+	public Class<?> getObjectType() {
+		return Map.class;
+	}
+
+	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse) throws E {
+		return test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
+				: FailableFunctionUtil.apply(functionFalse, value);
+	}
+
+	private static final <T> boolean test(final Predicate<T> instance, final T value) {
+		return instance != null && instance.test(value);
+	}
+
+}

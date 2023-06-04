@@ -306,6 +306,12 @@
 			<artifactId>mihxil-functional</artifactId>
 			<version>1.9</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.openjdk.nashorn/nashorn-core -->
+		<dependency>
+			<groupId>org.openjdk.nashorn</groupId>
+			<artifactId>nashorn-core</artifactId>
+			<version>15.4</version>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
