@@ -220,13 +220,8 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Fact
 				//
 			f.setAccessible(true);
 			//
-			if (!isInstance(CharSequence.class, temp = f.get(instance))) {
-				//
-				continue;
-				//
-			} // if
-				//
-			if ((unicodeBlocks = getUnicodeBlocks(s = toString(temp))) == null || unicodeBlocks.isEmpty()) {
+			if (!isInstance(CharSequence.class, temp = f.get(instance))
+					|| (unicodeBlocks = getUnicodeBlocks(s = toString(temp))) == null || unicodeBlocks.isEmpty()) {
 				//
 				continue;
 				//
