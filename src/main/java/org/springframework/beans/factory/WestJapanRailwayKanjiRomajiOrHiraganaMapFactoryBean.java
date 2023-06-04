@@ -193,7 +193,8 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Fact
 		return instance != null ? instance.openStream() : null;
 	}
 
-	private static Table<String, UnicodeBlock, String> createTable(final Object[] os) throws IllegalAccessException {
+	private static Table<String, UnicodeBlock, String> createTable(@Nullable final Object[] os)
+			throws IllegalAccessException {
 		//
 		Table<String, UnicodeBlock, String> table = null;
 		//
