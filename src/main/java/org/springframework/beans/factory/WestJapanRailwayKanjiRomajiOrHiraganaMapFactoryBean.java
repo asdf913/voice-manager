@@ -166,8 +166,8 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Fact
 			} // if
 				//
 			table = createTable(cast(Object[].class,
-					testAndApply(Objects::nonNull,
-							testAndApply(Objects::nonNull, se != null ? se.get("d") : null,
+					testAndApply(
+							Objects::nonNull, testAndApply(Objects::nonNull, get(se, "d"),
 									x -> FieldUtils.readField(x, "sobj", true), null),
 							x -> FieldUtils.readField(x, "objectSpill", true), null)));
 			//
@@ -178,6 +178,10 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Fact
 		return cells != null ? cells.stream().filter(c -> Objects.equals(getColumnKey(c), unicodeBlock))
 				.collect(Collectors.toMap(c -> getRowKey(c), c -> getValue(c))) : null;
 		//
+	}
+
+	private static Object get(final ScriptEngine instance, final String key) {
+		return instance != null ? instance.get(key) : null;
 	}
 
 	@Nullable

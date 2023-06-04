@@ -19,6 +19,8 @@ import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
+import javax.script.ScriptEngine;
+
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.tuple.Triple;
 import org.junit.jupiter.api.Assertions;
@@ -38,7 +40,7 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 			METHOD_GET_UNICODE_BLOCKS, METHOD_TEST, METHOD_ACCEPT, METHOD_IS_INSTANCE, METHOD_CONTAINS, METHOD_PUT,
 			METHOD_ADD, METHOD_IS_ASSIGNABLE_FROM, METHOD_OPEN_STREAM, METHOD_GET_TRIPLES_1, METHOD_GET_TRIPLES_2,
 			METHOD_GET_NAME_METHOD, METHOD_GET_NAME_MODULE, METHOD_GET_ROW_KEY, METHOD_GET_COLUMN_KEY, METHOD_GET_VALUE,
-			METHOD_GET_MODULE = null;
+			METHOD_GET_MODULE, METHOD_GET = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -90,6 +92,8 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 		(METHOD_GET_VALUE = clz.getDeclaredMethod("getValue", Cell.class)).setAccessible(true);
 		//
 		(METHOD_GET_MODULE = clz.getDeclaredMethod("getModule", Class.class)).setAccessible(true);
+		//
+		(METHOD_GET = clz.getDeclaredMethod("get", ScriptEngine.class, String.class)).setAccessible(true);
 		//
 	}
 
@@ -643,6 +647,23 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 				return (Module) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGet() throws Throwable {
+		//
+		Assertions.assertNull(get((Field) null, null));
+		//
+		Assertions.assertNull(get((ScriptEngine) null, null));
+		//
+	}
+
+	private static Object get(final ScriptEngine instance, final String key) throws Throwable {
+		try {
+			return METHOD_GET.invoke(null, instance, key);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
