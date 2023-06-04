@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.Character.UnicodeBlock;
 import java.lang.reflect.Field;
+import java.lang.reflect.Member;
 import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.util.ArrayList;
@@ -71,7 +72,7 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Fact
 			} else {
 				//
 				final List<Field> fs = Arrays.stream(UnicodeBlock.class.getDeclaredFields())
-						.filter(f -> StringUtils.startsWithIgnoreCase(f != null ? f.getName() : null, string)).toList();
+						.filter(f -> StringUtils.startsWithIgnoreCase(getName(f), string)).toList();
 				//
 				final int size = IterableUtils.size(fs);
 				//
@@ -115,6 +116,10 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Fact
 			//
 		} // if
 			//
+	}
+
+	private static String getName(final Member instance) {
+		return instance != null ? instance.getName() : null;
 	}
 
 	private static boolean isAssignableFrom(final Class<?> a, final Class<?> b) {
