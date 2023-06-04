@@ -156,11 +156,21 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Fact
 			//
 		final Set<Cell<String, UnicodeBlock, String>> cells = table != null ? table.cellSet() : null;
 		//
-		return cells != null
-				? cells.stream().filter(c -> Objects.equals(c != null ? c.getColumnKey() : null, unicodeBlock)).collect(
-						Collectors.toMap(c -> c != null ? c.getRowKey() : null, c -> c != null ? c.getValue() : null))
-				: null;
+		return cells != null ? cells.stream().filter(c -> Objects.equals(getColumnKey(c), unicodeBlock))
+				.collect(Collectors.toMap(c -> getRowKey(c), c -> getValue(c))) : null;
 		//
+	}
+
+	private static <R> R getRowKey(final Cell<R, ?, ?> instance) {
+		return instance != null ? instance.getRowKey() : null;
+	}
+
+	private static <C> C getColumnKey(final Cell<?, C, ?> instance) {
+		return instance != null ? instance.getColumnKey() : null;
+	}
+
+	private static <V> V getValue(final Cell<?, ?, V> instance) {
+		return instance != null ? instance.getValue() : null;
 	}
 
 	private static InputStream openStream(final URL instance) throws IOException {
