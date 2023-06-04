@@ -249,8 +249,6 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Fact
 		//
 		Map<UnicodeBlock, String> map = null;
 		//
-		Module module = null;
-		//
 		for (int i = 0; fs != null && i < fs.length; i++) {
 			//
 			if ((f = fs[i]) == null) {
@@ -259,7 +257,7 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Fact
 				//
 			} // if
 				//
-			if ((module = getModule(f.getDeclaringClass())) != null && Objects.equals(module.getName(), "java.base")) {
+			if (Objects.equals(getName(getModule(f.getDeclaringClass())), "java.base")) {
 				//
 				temp = Modifier.isStatic(f.getModifiers()) ? Narcissus.getStaticField(f)
 						: Narcissus.getField(instance, f);
@@ -293,8 +291,12 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Fact
 		//
 	}
 
-	private static Module getModule(final Class<?> instance) {
+	private static Module getModule(@Nullable final Class<?> instance) {
 		return instance != null ? instance.getModule() : null;
+	}
+
+	private static String getName(final Module instance) {
+		return instance != null ? instance.getName() : null;
 	}
 
 	@Nullable

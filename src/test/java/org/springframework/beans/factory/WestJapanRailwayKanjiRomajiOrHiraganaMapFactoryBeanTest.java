@@ -37,7 +37,8 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 	private static Method METHOD_TO_STRING, METHOD_CAST, METHOD_TEST_AND_APPLY, METHOD_CREATE_TABLE,
 			METHOD_GET_UNICODE_BLOCKS, METHOD_TEST, METHOD_ACCEPT, METHOD_IS_INSTANCE, METHOD_CONTAINS, METHOD_PUT,
 			METHOD_ADD, METHOD_IS_ASSIGNABLE_FROM, METHOD_OPEN_STREAM, METHOD_GET_TRIPLES_1, METHOD_GET_TRIPLES_2,
-			METHOD_GET_NAME, METHOD_GET_ROW_KEY, METHOD_GET_COLUMN_KEY, METHOD_GET_VALUE, METHOD_GET_MODULE = null;
+			METHOD_GET_NAME_METHOD, METHOD_GET_NAME_MODULE, METHOD_GET_ROW_KEY, METHOD_GET_COLUMN_KEY, METHOD_GET_VALUE,
+			METHOD_GET_MODULE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -78,7 +79,9 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 		//
 		(METHOD_GET_TRIPLES_2 = clz.getDeclaredMethod("getTriples", Field[].class, Object.class)).setAccessible(true);
 		//
-		(METHOD_GET_NAME = clz.getDeclaredMethod("getName", Member.class)).setAccessible(true);
+		(METHOD_GET_NAME_METHOD = clz.getDeclaredMethod("getName", Member.class)).setAccessible(true);
+		//
+		(METHOD_GET_NAME_MODULE = clz.getDeclaredMethod("getName", Module.class)).setAccessible(true);
 		//
 		(METHOD_GET_ROW_KEY = clz.getDeclaredMethod("getRowKey", Cell.class)).setAccessible(true);
 		//
@@ -539,13 +542,29 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 	@Test
 	void testGetName() throws Throwable {
 		//
-		Assertions.assertNull(getName(null));
+		Assertions.assertNull(getName((Member) null));
+		//
+		Assertions.assertNull(getName((Module) null));
 		//
 	}
 
 	private static String getName(final Member instance) throws Throwable {
 		try {
-			final Object obj = METHOD_GET_NAME.invoke(null, instance);
+			final Object obj = METHOD_GET_NAME_METHOD.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static String getName(final Module instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_NAME_MODULE.invoke(null, instance);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof String) {
