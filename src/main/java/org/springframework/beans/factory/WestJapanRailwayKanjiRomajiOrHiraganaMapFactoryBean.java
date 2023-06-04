@@ -122,12 +122,12 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Fact
 		return instance != null ? instance.getName() : null;
 	}
 
-	private static boolean isAssignableFrom(final Class<?> a, final Class<?> b) {
+	private static boolean isAssignableFrom(@Nullable final Class<?> a, @Nullable final Class<?> b) {
 		return a != null && b != null && a.isAssignableFrom(b);
 	}
 
-	@Nullable 
-	private static <T> T cast(final Class<T> clz, final Object instance) {
+	@Nullable
+	private static <T> T cast(@Nullable final Class<T> clz, final Object instance) {
 		return clz != null && clz.isInstance(instance) ? clz.cast(instance) : null;
 	}
 
@@ -217,8 +217,8 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Fact
 	}
 
 	@Nullable
-	private static List<Triple<String, UnicodeBlock, String>> getTriples(final Field[] fs, final Object instance)
-			throws IllegalArgumentException, IllegalAccessException {
+	private static List<Triple<String, UnicodeBlock, String>> getTriples(@Nullable final Field[] fs,
+			final Object instance) throws IllegalArgumentException, IllegalAccessException {
 		//
 		Field f = null;
 		//
@@ -348,11 +348,11 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Fact
 		} // if
 	}
 
-	private static <T, U> boolean test(final BiPredicate<T, U> instance, final T t, final U u) {
+	private static <T, U> boolean test(@Nullable final BiPredicate<T, U> instance, final T t, final U u) {
 		return instance != null && instance.test(t, u);
 	}
 
-	private static <T, U> void accept(final BiConsumer<T, U> instance, final T t, final U u) {
+	private static <T, U> void accept(@Nullable final BiConsumer<T, U> instance, final T t, final U u) {
 		if (instance != null) {
 			instance.accept(t, u);
 		}
@@ -362,21 +362,21 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Fact
 		return instance != null ? instance.toString() : null;
 	}
 
-	private static boolean isInstance(final Class<?> clz, final Object instance) {
+	private static boolean isInstance(@Nullable final Class<?> clz, final Object instance) {
 		return clz != null && clz.isInstance(instance);
 	}
 
-	private static <K, V> void put(final Map<K, V> instance, final K key, final V value) {
+	private static <K, V> void put(@Nullable final Map<K, V> instance, final K key, final V value) {
 		if (instance != null) {
 			instance.put(key, value);
 		}
 	}
 
-	private static boolean contains(final Collection<?> items, final Object item) {
+	private static boolean contains(@Nullable final Collection<?> items, final Object item) {
 		return items != null && items.contains(item);
 	}
 
-	private static <E> void add(final Collection<E> items, final E item) {
+	private static <E> void add(@Nullable final Collection<E> items, final E item) {
 		if (items != null) {
 			items.add(item);
 		}
@@ -394,7 +394,7 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Fact
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
-	private static final <T> boolean test(final Predicate<T> instance, final T value) {
+	private static final <T> boolean test(@Nullable final Predicate<T> instance, final T value) {
 		return instance != null && instance.test(value);
 	}
 
