@@ -173,11 +173,15 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Fact
 			//
 		} // try
 			//
-		final Set<Cell<String, UnicodeBlock, String>> cells = table != null ? table.cellSet() : null;
+		final Set<Cell<String, UnicodeBlock, String>> cells = cellSet(table);
 		//
 		return cells != null ? cells.stream().filter(c -> Objects.equals(getColumnKey(c), unicodeBlock))
 				.collect(Collectors.toMap(c -> getRowKey(c), c -> getValue(c))) : null;
 		//
+	}
+
+	private static <R, C, V> Set<Cell<R, C, V>> cellSet(final Table<R, C, V> instance) {
+		return instance != null ? instance.cellSet() : null;
 	}
 
 	private static Object get(final ScriptEngine instance, final String key) {

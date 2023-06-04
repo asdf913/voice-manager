@@ -15,6 +15,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
@@ -40,7 +41,7 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 			METHOD_GET_UNICODE_BLOCKS, METHOD_TEST, METHOD_ACCEPT, METHOD_IS_INSTANCE, METHOD_CONTAINS, METHOD_PUT,
 			METHOD_ADD, METHOD_IS_ASSIGNABLE_FROM, METHOD_OPEN_STREAM, METHOD_GET_TRIPLES_1, METHOD_GET_TRIPLES_2,
 			METHOD_GET_NAME_METHOD, METHOD_GET_NAME_MODULE, METHOD_GET_ROW_KEY, METHOD_GET_COLUMN_KEY, METHOD_GET_VALUE,
-			METHOD_GET_MODULE, METHOD_GET = null;
+			METHOD_GET_MODULE, METHOD_GET, METHOD_CELL_SET = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -94,6 +95,8 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 		(METHOD_GET_MODULE = clz.getDeclaredMethod("getModule", Class.class)).setAccessible(true);
 		//
 		(METHOD_GET = clz.getDeclaredMethod("get", ScriptEngine.class, String.class)).setAccessible(true);
+		//
+		(METHOD_CELL_SET = clz.getDeclaredMethod("cellSet", Table.class)).setAccessible(true);
 		//
 	}
 
@@ -664,6 +667,27 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 	private static Object get(final ScriptEngine instance, final String key) throws Throwable {
 		try {
 			return METHOD_GET.invoke(null, instance, key);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCellSet() throws Throwable {
+		//
+		Assertions.assertEquals(Collections.emptySet(), cellSet(ImmutableTable.of()));
+		//
+	}
+
+	private static <R, C, V> Set<Cell<R, C, V>> cellSet(final Table<R, C, V> instance) throws Throwable {
+		try {
+			final Object obj = METHOD_CELL_SET.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Set) {
+				return (Set) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
