@@ -40,6 +40,8 @@ import com.google.common.collect.Table;
 import com.google.common.collect.Table.Cell;
 import com.google.common.collect.TableUtil;
 
+import io.github.toolfactory.narcissus.Narcissus;
+
 public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements FactoryBean<Map<String, String>> {
 
 	private String url = null;
@@ -211,6 +213,10 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Fact
 		//
 		Map<UnicodeBlock, String> map = null;
 		//
+		Class<?> declaringClass = null;
+		//
+		Module module = null;
+		//
 		for (int i = 0; fs != null && i < fs.length; i++) {
 			//
 			if ((f = fs[i]) == null) {
@@ -219,10 +225,22 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Fact
 				//
 			} // if
 				//
-			f.setAccessible(true);
-			//
-			if (!isInstance(CharSequence.class, temp = f.get(instance))
-					|| (unicodeBlocks = getUnicodeBlocks(s = toString(temp))) == null || unicodeBlocks.isEmpty()) {
+			if ((declaringClass = f.getDeclaringClass()) != null && (module = declaringClass.getModule()) != null
+					&& Objects.equals(module.getName(), "java.base")) {
+				//
+				temp = Modifier.isStatic(f.getModifiers()) ? Narcissus.getStaticField(f)
+						: Narcissus.getField(instance, f);
+				//
+			} else {
+				//
+				f.setAccessible(true);
+				//
+				temp = f.get(instance);
+				//
+			} // if
+				//
+			if (!isInstance(CharSequence.class, temp) || (unicodeBlocks = getUnicodeBlocks(s = toString(temp))) == null
+					|| unicodeBlocks.isEmpty()) {
 				//
 				continue;
 				//
