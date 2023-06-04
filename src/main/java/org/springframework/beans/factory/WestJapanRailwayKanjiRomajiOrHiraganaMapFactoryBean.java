@@ -133,7 +133,7 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Fact
 			//
 	}
 
-	private static String getName(final Member instance) {
+	private static String getName(@Nullable final Member instance) {
 		return instance != null ? instance.getName() : null;
 	}
 
@@ -177,15 +177,15 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Fact
 		//
 	}
 
-	private static <R> R getRowKey(final Cell<R, ?, ?> instance) {
+	private static <R> R getRowKey(@Nullable final Cell<R, ?, ?> instance) {
 		return instance != null ? instance.getRowKey() : null;
 	}
 
-	private static <C> C getColumnKey(final Cell<?, C, ?> instance) {
+	private static <C> C getColumnKey(@Nullable final Cell<?, C, ?> instance) {
 		return instance != null ? instance.getColumnKey() : null;
 	}
 
-	private static <V> V getValue(final Cell<?, ?, V> instance) {
+	private static <V> V getValue(@Nullable final Cell<?, ?, V> instance) {
 		return instance != null ? instance.getValue() : null;
 	}
 
@@ -193,6 +193,7 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Fact
 		return instance != null ? instance.openStream() : null;
 	}
 
+	@Nullable
 	private static Table<String, UnicodeBlock, String> createTable(@Nullable final Object[] os)
 			throws IllegalAccessException {
 		//
