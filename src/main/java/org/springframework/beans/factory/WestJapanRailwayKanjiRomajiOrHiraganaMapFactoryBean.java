@@ -301,6 +301,7 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Fact
 		return instance != null ? instance.getModule() : null;
 	}
 
+	@Nullable
 	private static String getName(@Nullable final Module instance) {
 		return instance != null ? instance.getName() : null;
 	}
