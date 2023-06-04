@@ -37,7 +37,7 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 	private static Method METHOD_TO_STRING, METHOD_CAST, METHOD_TEST_AND_APPLY, METHOD_CREATE_TABLE,
 			METHOD_GET_UNICODE_BLOCKS, METHOD_TEST, METHOD_ACCEPT, METHOD_IS_INSTANCE, METHOD_CONTAINS, METHOD_PUT,
 			METHOD_ADD, METHOD_IS_ASSIGNABLE_FROM, METHOD_OPEN_STREAM, METHOD_GET_TRIPLES_1, METHOD_GET_TRIPLES_2,
-			METHOD_GET_NAME, METHOD_GET_ROW_KEY, METHOD_GET_COLUMN_KEY, METHOD_GET_VALUE = null;
+			METHOD_GET_NAME, METHOD_GET_ROW_KEY, METHOD_GET_COLUMN_KEY, METHOD_GET_VALUE, METHOD_GET_MODULE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -85,6 +85,8 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 		(METHOD_GET_COLUMN_KEY = clz.getDeclaredMethod("getColumnKey", Cell.class)).setAccessible(true);
 		//
 		(METHOD_GET_VALUE = clz.getDeclaredMethod("getValue", Cell.class)).setAccessible(true);
+		//
+		(METHOD_GET_MODULE = clz.getDeclaredMethod("getModule", Class.class)).setAccessible(true);
 		//
 	}
 
@@ -601,6 +603,27 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 	private static <V> V getValue(final Cell<?, ?, V> instance) throws Throwable {
 		try {
 			return (V) METHOD_GET_VALUE.invoke(null, instance);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetModule() throws Throwable {
+		//
+		Assertions.assertNull(getModule(null));
+		//
+	}
+
+	private static Module getModule(final Class<?> instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_MODULE.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Module) {
+				return (Module) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
