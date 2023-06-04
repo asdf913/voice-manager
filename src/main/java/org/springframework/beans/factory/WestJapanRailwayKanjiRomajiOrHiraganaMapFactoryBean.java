@@ -50,6 +50,7 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Fact
 
 	private String url = null;
 
+	@Nullable
 	private UnicodeBlock unicodeBlock = null;
 
 	public void setUrl(final String url) {
@@ -189,6 +190,7 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Fact
 		return instance != null ? instance.getValue() : null;
 	}
 
+	@Nullable
 	private static InputStream openStream(@Nullable final URL instance) throws IOException {
 		return instance != null ? instance.openStream() : null;
 	}
@@ -295,6 +297,7 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Fact
 		return instance != null ? instance.getModule() : null;
 	}
 
+	@Nullable
 	private static List<Triple<String, UnicodeBlock, String>> getTriples(
 			@Nullable final Map<UnicodeBlock, String> map) {
 		//
@@ -377,6 +380,7 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Fact
 		}
 	}
 
+	@Nullable
 	private static String toString(@Nullable final Object instance) {
 		return instance != null ? instance.toString() : null;
 	}
