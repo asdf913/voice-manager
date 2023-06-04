@@ -1726,6 +1726,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} else if (size > 1) {
 			//
+			final IValue0<Class<? extends Workbook>> iValue0 = getWorkbookClass(map, "xlsx");
+			//
+			if (iValue0 != null) {
+				//
+				workbookClass = IValue0Util.getValue0(iValue0);
+				//
+				return;
+				//
+			} // if
+				//
 			throw new IllegalArgumentException();
 			//
 		} // if
