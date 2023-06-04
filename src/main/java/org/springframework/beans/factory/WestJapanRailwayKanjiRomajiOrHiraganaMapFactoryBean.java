@@ -55,9 +55,9 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Fact
 			//
 			this.unicodeBlock = null;
 			//
-		} else if (instance instanceof UnicodeBlock unicodeBlock) {
+		} else if (instance instanceof UnicodeBlock ub) {
 			//
-			this.unicodeBlock = unicodeBlock;
+			this.unicodeBlock = ub;
 			//
 		} else if (instance instanceof String string) {
 			//
