@@ -26,7 +26,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
 
-public class TokyuKanjiHiraganaMapFactoryBean implements FactoryBean<Map<String, String>> {
+public class TokyuKanjiRomajiOrHiraganaMapFactoryBean implements FactoryBean<Map<String, String>> {
 
 	private static enum RomajiOrHiragana {
 
@@ -237,7 +237,7 @@ public class TokyuKanjiHiraganaMapFactoryBean implements FactoryBean<Map<String,
 				//
 				testAndAccept((a, b) -> b != null && !contains(a, b),
 						unicodeBlocks = ObjectUtils.getIfNull(unicodeBlocks, ArrayList::new), UnicodeBlock.of(c),
-						TokyuKanjiHiraganaMapFactoryBean::add);
+						TokyuKanjiRomajiOrHiraganaMapFactoryBean::add);
 				//
 			} // for
 				//
