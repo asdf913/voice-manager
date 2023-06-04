@@ -322,22 +322,24 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Fact
 				//
 			final String kanji = map.get(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS);
 			//
+			UnicodeBlock key = null;
+			//
 			for (final Entry<UnicodeBlock, String> en : map.entrySet()) {
 				//
-				if (en == null || Objects.equals(en.getKey(), UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)) {
+				if (en == null || Objects.equals(key = en.getKey(), UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)) {
 					//
 					continue;
 					//
 				} // if
 					//
-				if (!contains(Arrays.asList(UnicodeBlock.HIRAGANA, UnicodeBlock.BASIC_LATIN), en.getKey())) {
+				if (!contains(Arrays.asList(UnicodeBlock.HIRAGANA, UnicodeBlock.BASIC_LATIN), key)) {
 					//
 					throw new IllegalStateException();
 					//
 				} // if
 					//
 				add(triples = ObjectUtils.getIfNull(triples, ArrayList::new),
-						new ImmutableTriple<>(kanji, en.getKey(), en.getValue()));
+						new ImmutableTriple<>(kanji, key, en.getValue()));
 				//
 			} // for
 				//
