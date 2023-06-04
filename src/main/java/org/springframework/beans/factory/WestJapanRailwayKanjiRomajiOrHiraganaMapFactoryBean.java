@@ -135,6 +135,7 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Fact
 			//
 	}
 
+	@Nullable
 	private static String getName(@Nullable final Member instance) {
 		return instance != null ? instance.getName() : null;
 	}
@@ -179,14 +180,17 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Fact
 		//
 	}
 
+	@Nullable
 	private static <R> R getRowKey(@Nullable final Cell<R, ?, ?> instance) {
 		return instance != null ? instance.getRowKey() : null;
 	}
 
+	@Nullable
 	private static <C> C getColumnKey(@Nullable final Cell<?, C, ?> instance) {
 		return instance != null ? instance.getColumnKey() : null;
 	}
 
+	@Nullable
 	private static <V> V getValue(@Nullable final Cell<?, ?, V> instance) {
 		return instance != null ? instance.getValue() : null;
 	}
