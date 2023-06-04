@@ -173,7 +173,7 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Fact
 		return instance != null ? instance.getValue() : null;
 	}
 
-	private static InputStream openStream(final URL instance) throws IOException {
+	private static InputStream openStream(@Nullable final URL instance) throws IOException {
 		return instance != null ? instance.openStream() : null;
 	}
 
@@ -314,7 +314,7 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Fact
 		//
 	}
 
-	private static List<UnicodeBlock> getUnicodeBlocks(final String string) {
+	private static List<UnicodeBlock> getUnicodeBlocks(@Nullable final String string) {
 		//
 		final char[] cs = string != null ? string.toCharArray() : null;
 		//
@@ -355,7 +355,7 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Fact
 		}
 	}
 
-	private static String toString(final Object instance) {
+	private static String toString(@Nullable final Object instance) {
 		return instance != null ? instance.toString() : null;
 	}
 
