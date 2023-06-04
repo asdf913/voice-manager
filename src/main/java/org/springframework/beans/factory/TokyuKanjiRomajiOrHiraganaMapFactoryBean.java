@@ -22,11 +22,13 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.javatuples.valueintf.IValue0;
+import org.javatuples.valueintf.IValue0Util;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
 
-public class TokyuKanjiRomajiOrHiraganaMapFactoryBean implements FactoryBean<Map<String, String>> {
+public class TokyuKanjiRomajiOrHiraganaMapFactoryBean extends StringMapFromResourceFactoryBean {
 
 	private static enum RomajiOrHiragana {
 
@@ -102,6 +104,14 @@ public class TokyuKanjiRomajiOrHiraganaMapFactoryBean implements FactoryBean<Map
 	@Override
 	public Map<String, String> getObject() throws Exception {
 		//
+		final IValue0<Map<String, String>> iValue0 = getIvalue0();
+		//
+		if (iValue0 != null) {
+			//
+			return IValue0Util.getValue0(iValue0);
+			//
+		} // if
+			//
 		return getObject(ElementUtil.select(testAndApply(Objects::nonNull,
 				testAndApply(Objects::nonNull, url, URL::new, null), x -> Jsoup.parse(x, 0), null), ".mod-change-link"),
 				romajiOrHiragana);

@@ -299,6 +299,10 @@
 		<property name="url"
 			value="${org.springframework.beans.factory.TokyuKanjiRomajiOrHiraganaMapFactoryBean.url}" />
 		<property name="romajiOrHiragana" value="ROMAJI" />
+		<property name="keyColumnName" value="kanji" />
+		<property name="valueColumnName" value="romaji" />
+		<property name="valueColumnIndex" value="1" />
+		<property name="resource" value="classpath:TokyuRailway.xlsx" />
 	</bean>
 
 	<bean
@@ -307,6 +311,10 @@
 		<property name="url"
 			value="${org.springframework.beans.factory.TokyuKanjiRomajiOrHiraganaMapFactoryBean.url}" />
 		<property name="romajiOrHiragana" value="HIRAGANA" />
+		<property name="keyColumnName" value="kanji" />
+		<property name="valueColumnName" value="hiragana" />
+		<property name="valueColumnIndex" value="2" />
+		<property name="resource" value="classpath:TokyuRailway.xlsx" />
 	</bean>
 
 	<!-- -->
