@@ -293,7 +293,8 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Fact
 		return instance != null ? instance.getModule() : null;
 	}
 
-	private static List<Triple<String, UnicodeBlock, String>> getTriples(final Map<UnicodeBlock, String> map) {
+	private static List<Triple<String, UnicodeBlock, String>> getTriples(
+			@Nullable final Map<UnicodeBlock, String> map) {
 		//
 		List<Triple<String, UnicodeBlock, String>> triples = null;
 		//
@@ -403,6 +404,7 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Fact
 		return Map.class;
 	}
 
+	@Nullable
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
 			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
 			throws E {
