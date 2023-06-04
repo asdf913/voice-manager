@@ -5,3 +5,5 @@
 /voice-manager/target
 /target/
 /bin/
+/.classpath
+/.project
