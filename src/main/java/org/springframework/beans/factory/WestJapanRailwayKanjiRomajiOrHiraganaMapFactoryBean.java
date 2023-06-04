@@ -93,6 +93,7 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Fact
 			//
 	}
 
+	@Nullable
 	private static IValue0<UnicodeBlock> getUnicodeBlock(final String string) throws IllegalAccessException {
 		//
 		if (StringUtils.isBlank(string)) {
