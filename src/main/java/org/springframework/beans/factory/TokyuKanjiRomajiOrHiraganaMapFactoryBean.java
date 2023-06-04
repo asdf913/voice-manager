@@ -134,7 +134,9 @@ public class TokyuKanjiRomajiOrHiraganaMapFactoryBean extends StringMapFromResou
 			//
 			for (final Element e : es) {
 				//
-				if (e == null || !isAllCharacterInSameUnicodeBlock(text = e.text(), UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)
+				if (e == null
+						|| !isAllCharacterInSameUnicodeBlock(text = ElementUtil.text(e),
+								UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)
 						|| (a = e.selectFirst("a")) == null || (temp = getRomajiOrHiraganaMap(a.absUrl("href"))) == null
 						|| temp.isEmpty()) {
 					//
@@ -199,7 +201,7 @@ public class TokyuKanjiRomajiOrHiraganaMapFactoryBean extends StringMapFromResou
 					//
 				} else {
 					//
-					put(map, romajiOrHiragana, e.text());
+					put(map, romajiOrHiragana, ElementUtil.text(e));
 					//
 				} // if
 					//
@@ -212,7 +214,7 @@ public class TokyuKanjiRomajiOrHiraganaMapFactoryBean extends StringMapFromResou
 					//
 				} else {
 					//
-					put(map, romajiOrHiragana, e.text());
+					put(map, romajiOrHiragana, ElementUtil.text(e));
 					//
 				} // if
 					//
