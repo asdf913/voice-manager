@@ -20,7 +20,7 @@ import org.junit.jupiter.api.Test;
 
 import com.google.common.base.Predicates;
 
-class TokyuKanjiMapFactoryBeanTest {
+class TokyuKanjiHiraganaMapFactoryBeanTest {
 
 	private static Method METHOD_GET_OBJECT, METHOD_GET_ROMAJI_OR_HIRAGANA_MAP, METHOD_CONTAINS_KEY, METHOD_PUT,
 			METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK, METHOD_CONTAINS, METHOD_ACCEPT, METHOD_TEST, METHOD_ADD,
@@ -29,7 +29,7 @@ class TokyuKanjiMapFactoryBeanTest {
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
 		//
-		final Class<?> clz = TokyuKanjiMapFactoryBean.class;
+		final Class<?> clz = TokyuKanjiHiraganaMapFactoryBean.class;
 		//
 		(METHOD_GET_OBJECT = clz.getDeclaredMethod("getObject", Iterable.class, Object.class)).setAccessible(true);
 		//
@@ -60,19 +60,19 @@ class TokyuKanjiMapFactoryBeanTest {
 		//
 	}
 
-	private TokyuKanjiMapFactoryBean instance = null;
+	private TokyuKanjiHiraganaMapFactoryBean instance = null;
 
 	@BeforeEach
 	void beforeEach() {
 		//
-		instance = new TokyuKanjiMapFactoryBean();
+		instance = new TokyuKanjiHiraganaMapFactoryBean();
 		//
 	}
 
 	@Test
 	void testSetUrl() throws NoSuchFieldException, IllegalAccessException {
 		//
-		final Field url = TokyuKanjiMapFactoryBean.class.getDeclaredField("url");
+		final Field url = TokyuKanjiHiraganaMapFactoryBean.class.getDeclaredField("url");
 		//
 		if (url != null) {
 			//
@@ -95,7 +95,7 @@ class TokyuKanjiMapFactoryBeanTest {
 	@Test
 	void testSetRomajiOrHiragana() throws NoSuchFieldException, IllegalAccessException {
 		//
-		final Field romajiOrHiragana = TokyuKanjiMapFactoryBean.class.getDeclaredField("romajiOrHiragana");
+		final Field romajiOrHiragana = TokyuKanjiHiraganaMapFactoryBean.class.getDeclaredField("romajiOrHiragana");
 		//
 		if (romajiOrHiragana != null) {
 			//
