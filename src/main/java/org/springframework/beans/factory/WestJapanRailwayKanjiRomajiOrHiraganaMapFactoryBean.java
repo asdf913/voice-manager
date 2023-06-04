@@ -126,6 +126,7 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Fact
 		return a != null && b != null && a.isAssignableFrom(b);
 	}
 
+	@Nullable 
 	private static <T> T cast(final Class<T> clz, final Object instance) {
 		return clz != null && clz.isInstance(instance) ? clz.cast(instance) : null;
 	}
@@ -215,6 +216,7 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Fact
 		//
 	}
 
+	@Nullable
 	private static List<Triple<String, UnicodeBlock, String>> getTriples(final Field[] fs, final Object instance)
 			throws IllegalArgumentException, IllegalAccessException {
 		//
@@ -314,6 +316,7 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Fact
 		//
 	}
 
+	@Nullable
 	private static List<UnicodeBlock> getUnicodeBlocks(@Nullable final String string) {
 		//
 		final char[] cs = string != null ? string.toCharArray() : null;
