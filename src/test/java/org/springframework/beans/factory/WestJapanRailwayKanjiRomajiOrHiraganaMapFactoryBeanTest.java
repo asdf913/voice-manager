@@ -9,6 +9,7 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
@@ -30,7 +31,8 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 
 	private static Method METHOD_TO_STRING, METHOD_CAST, METHOD_TEST_AND_APPLY, METHOD_CREATE_TABLE,
 			METHOD_GET_UNICODE_BLOCKS, METHOD_TEST, METHOD_ACCEPT, METHOD_IS_INSTANCE, METHOD_CONTAINS, METHOD_PUT,
-			METHOD_ADD, METHOD_IS_ASSIGNABLE_FROM, METHOD_OPEN_STREAM, METHOD_GET_TRIPLES = null;
+			METHOD_ADD, METHOD_IS_ASSIGNABLE_FROM, METHOD_OPEN_STREAM, METHOD_GET_TRIPLES_1,
+			METHOD_GET_TRIPLES_2 = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -67,7 +69,9 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 		//
 		(METHOD_OPEN_STREAM = clz.getDeclaredMethod("openStream", URL.class)).setAccessible(true);
 		//
-		(METHOD_GET_TRIPLES = clz.getDeclaredMethod("getTriples", Field[].class, Object.class)).setAccessible(true);
+		(METHOD_GET_TRIPLES_1 = clz.getDeclaredMethod("getTriples", Map.class)).setAccessible(true);
+		//
+		(METHOD_GET_TRIPLES_2 = clz.getDeclaredMethod("getTriples", Field[].class, Object.class)).setAccessible(true);
 		//
 	}
 
@@ -436,12 +440,37 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 		//
 		Assertions.assertNull(getTriples(new Field[] { null }, null));
 		//
+		final Map<UnicodeBlock, String> map = new LinkedHashMap<>();
+		//
+		Assertions.assertNull(getTriples(map));
+		//
+		map.put(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS, null);
+		//
+		map.put(UnicodeBlock.CJK_STROKES, null);
+		//
+		Assertions.assertThrows(IllegalStateException.class, () -> getTriples(map));
+		//
+	}
+
+	private static List<Triple<String, UnicodeBlock, String>> getTriples(final Map<UnicodeBlock, String> map)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_GET_TRIPLES_1.invoke(null, map);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof List) {
+				return (List) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 	private static List<Triple<String, UnicodeBlock, String>> getTriples(final Field[] fs, final Object instance)
 			throws Throwable {
 		try {
-			final Object obj = METHOD_GET_TRIPLES.invoke(null, fs, instance);
+			final Object obj = METHOD_GET_TRIPLES_2.invoke(null, fs, instance);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof List) {

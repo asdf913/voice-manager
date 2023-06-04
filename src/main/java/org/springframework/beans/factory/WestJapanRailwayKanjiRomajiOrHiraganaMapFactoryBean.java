@@ -256,6 +256,12 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Fact
 			//
 		} // for
 			//
+		return getTriples(map);
+		//
+	}
+
+	private static List<Triple<String, UnicodeBlock, String>> getTriples(final Map<UnicodeBlock, String> map) {
+		//
 		List<Triple<String, UnicodeBlock, String>> triples = null;
 		//
 		if (map != null) {
