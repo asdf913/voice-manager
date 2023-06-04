@@ -35,6 +35,9 @@ import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.apache.commons.lang3.tuple.Triple;
+import org.javatuples.Unit;
+import org.javatuples.valueintf.IValue0;
+import org.javatuples.valueintf.IValue0Util;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
@@ -65,40 +68,11 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Fact
 			//
 		} else if (instance instanceof String string) {
 			//
-			if (StringUtils.isBlank(string)) {
+			final IValue0<UnicodeBlock> iValue0 = getUnicodeBlock(string);
+			//
+			if (iValue0 != null) {
 				//
-				setUnicodeBlock(null);
-				//
-			} else {
-				//
-				final List<Field> fs = Arrays.stream(UnicodeBlock.class.getDeclaredFields())
-						.filter(f -> StringUtils.startsWithIgnoreCase(getName(f), string)).toList();
-				//
-				final int size = IterableUtils.size(fs);
-				//
-				if (size > 1) {
-					//
-					throw new IllegalStateException();
-					//
-				} else if (size == 0) {
-					//
-					return;
-					//
-				} // if
-					//
-				final Field f = IterableUtils.get(fs, 0);
-				//
-				if (f == null || !Modifier.isStatic(f.getModifiers())) {
-					//
-					return;
-					//
-				} else if (!isAssignableFrom(f.getType(), UnicodeBlock.class)) {
-					//
-					throw new IllegalStateException();
-					//
-				} // if
-					//
-				this.unicodeBlock = cast(UnicodeBlock.class, f.get(0));
+				setUnicodeBlock(IValue0Util.getValue0(iValue0));
 				//
 			} // if
 				//
@@ -113,6 +87,47 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Fact
 		} else {
 			//
 			throw new IllegalArgumentException(instance.toString());
+			//
+		} // if
+			//
+	}
+
+	private static IValue0<UnicodeBlock> getUnicodeBlock(final String string) throws IllegalAccessException {
+		//
+		if (StringUtils.isBlank(string)) {
+			//
+			return Unit.with(null);
+			//
+		} else {
+			//
+			final List<Field> fs = Arrays.stream(UnicodeBlock.class.getDeclaredFields())
+					.filter(f -> StringUtils.startsWithIgnoreCase(getName(f), string)).toList();
+			//
+			final int size = IterableUtils.size(fs);
+			//
+			if (size > 1) {
+				//
+				throw new IllegalStateException();
+				//
+			} else if (size == 0) {
+				//
+				return null;
+				//
+			} // if
+				//
+			final Field f = IterableUtils.get(fs, 0);
+			//
+			if (f == null || !Modifier.isStatic(f.getModifiers())) {
+				//
+				return null;
+				//
+			} else if (!isAssignableFrom(f.getType(), UnicodeBlock.class)) {
+				//
+				throw new IllegalStateException();
+				//
+			} // if
+				//
+			return Unit.with(cast(UnicodeBlock.class, f.get(0)));
 			//
 		} // if
 			//
