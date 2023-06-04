@@ -516,7 +516,8 @@ class CustomBeanFactoryPostProcessorTest {
 			//
 		} else {
 			//
-			FieldUtils.writeDeclaredField(throwable, "stackTrace", new StackTraceElement[0], true);
+			Narcissus.setObjectField(throwable, Throwable.class.getDeclaredField("stackTrace"),
+					new StackTraceElement[0]);
 			//
 		} // if
 			//
