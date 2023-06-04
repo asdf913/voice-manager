@@ -20,7 +20,7 @@ import org.junit.jupiter.api.Test;
 
 import com.google.common.base.Predicates;
 
-public class TokyuKanjiRomajiOrHiraganaMapFactoryBeanTest {
+class TokyuKanjiRomajiOrHiraganaMapFactoryBeanTest {
 
 	private static Method METHOD_GET_OBJECT, METHOD_GET_ROMAJI_OR_HIRAGANA_MAP, METHOD_CONTAINS_KEY, METHOD_PUT,
 			METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK, METHOD_CONTAINS, METHOD_ACCEPT, METHOD_TEST, METHOD_ADD,
