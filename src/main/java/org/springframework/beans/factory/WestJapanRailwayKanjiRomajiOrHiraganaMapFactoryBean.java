@@ -179,7 +179,7 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Fact
 			//
 		try (final InputStream is = openStream(testAndApply(StringUtils::isNotBlank, this.url, URL::new, null))) {
 			//
-			return IValue0Util.getValue0(iValue0 = getObject(is, unicodeBlock));
+			return IValue0Util.getValue0(getObject(is, unicodeBlock));
 		} // try
 			//
 	}
