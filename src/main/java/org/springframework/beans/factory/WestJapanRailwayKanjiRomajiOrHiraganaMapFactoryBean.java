@@ -57,7 +57,7 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Fact
 	@Nullable
 	private UnicodeBlock unicodeBlock = null;
 
-	private Resource resource = null;
+	private Resource resourceJs = null;
 
 	public void setUrl(final String url) {
 		this.url = url;
@@ -99,8 +99,8 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Fact
 			//
 	}
 
-	public void setResource(final Resource resource) {
-		this.resource = resource;
+	public void setResourceJs(final Resource resourceJs) {
+		this.resourceJs = resourceJs;
 	}
 
 	@Nullable
@@ -164,8 +164,8 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Fact
 		//
 		IValue0<Map<String, String>> iValue0 = null;
 		//
-		try (final InputStream is = testAndApply(ResourceUtil::exists, resource, InputStreamSourceUtil::getInputStream,
-				null)) {
+		try (final InputStream is = testAndApply(ResourceUtil::exists, resourceJs,
+				InputStreamSourceUtil::getInputStream, null)) {
 			//
 			iValue0 = getObject(is, unicodeBlock);
 			//

@@ -203,7 +203,7 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 		//
 		if (instance != null) {
 			//
-			instance.setResource(Reflection.newProxy(Resource.class, ih));
+			instance.setResourceJs(Reflection.newProxy(Resource.class, ih));
 			//
 		} // if
 			//
