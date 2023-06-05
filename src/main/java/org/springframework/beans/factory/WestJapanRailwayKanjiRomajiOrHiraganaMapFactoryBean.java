@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ObjectUtils;
@@ -38,6 +39,8 @@ import org.apache.commons.lang3.tuple.Triple;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
+import org.springframework.core.io.InputStreamSourceUtil;
+import org.springframework.core.io.Resource;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
@@ -52,6 +55,8 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Fact
 
 	@Nullable
 	private UnicodeBlock unicodeBlock = null;
+
+	private Resource resource = null;
 
 	public void setUrl(final String url) {
 		this.url = url;
@@ -91,6 +96,10 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Fact
 			//
 		} // if
 			//
+	}
+
+	public void setResource(final Resource resource) {
+		this.resource = resource;
 	}
 
 	@Nullable
@@ -152,10 +161,33 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Fact
 	@Override
 	public Map<String, String> getObject() throws Exception {
 		//
+		IValue0<Map<String, String>> iValue0 = null;
+		//
+		try (final InputStream is = InputStreamSourceUtil.getInputStream(resource)) {
+			//
+			iValue0 = getObject(is, unicodeBlock);
+			//
+		} // try
+			//
+		if (iValue0 != null) {
+			//
+			return IValue0Util.getValue0(iValue0);
+			//
+		} // if
+			//
+		try (final InputStream is = openStream(testAndApply(StringUtils::isNotBlank, this.url, URL::new, null))) {
+			//
+			return IValue0Util.getValue0(iValue0 = getObject(is, unicodeBlock));
+		} // try
+			//
+	}
+
+	private static IValue0<Map<String, String>> getObject(final InputStream is, final UnicodeBlock unicodeBlock)
+			throws IOException, ScriptException, IllegalAccessException {
+		//
 		Table<String, UnicodeBlock, String> table = null;
 		//
-		try (final InputStream is = openStream(testAndApply(StringUtils::isNotBlank, this.url, URL::new, null));
-				final Reader r = testAndApply(Objects::nonNull, is, InputStreamReader::new, null)) {
+		try (final Reader r = testAndApply(Objects::nonNull, is, InputStreamReader::new, null)) {
 			//
 			final ScriptEngine se = new ScriptEngineManager().getEngineByName("JavaScript");
 			//
@@ -175,8 +207,8 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Fact
 			//
 		final Set<Cell<String, UnicodeBlock, String>> cells = cellSet(table);
 		//
-		return cells != null ? cells.stream().filter(c -> Objects.equals(getColumnKey(c), unicodeBlock))
-				.collect(Collectors.toMap(c -> getRowKey(c), c -> getValue(c))) : null;
+		return cells != null ? Unit.with(cells.stream().filter(c -> Objects.equals(getColumnKey(c), unicodeBlock))
+				.collect(Collectors.toMap(c -> getRowKey(c), c -> getValue(c)))) : null;
 		//
 	}
 

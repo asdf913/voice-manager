@@ -1,5 +1,6 @@
 package org.springframework.beans.factory;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.lang.Character.UnicodeBlock;
@@ -29,6 +30,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.meeuw.functional.Predicates;
+import org.springframework.core.io.InputStreamSource;
+import org.springframework.core.io.Resource;
 
 import com.google.common.collect.ImmutableTable;
 import com.google.common.collect.Table;
@@ -104,11 +107,23 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 
 		private Object rowKey, columnKey, value = null;
 
+		private InputStream inputStream = null;
+
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
 			final String methodName = getName(method);
 			//
+			if (proxy instanceof InputStreamSource) {
+				//
+				if (Objects.equals(methodName, "getInputStream")) {
+					//
+					return inputStream;
+					//
+				} // if
+					//
+			} // if
+				//
 			if (proxy instanceof Cell) {
 				//
 				if (Objects.equals(methodName, "getRowKey")) {
@@ -176,6 +191,26 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 			//
 		Assertions.assertNull(instance != null ? instance.getObject() : null);
 		//
+		if (instance != null) {
+			//
+			instance.setResource(Reflection.newProxy(Resource.class, ih));
+			//
+		} // if
+			//
+		Assertions.assertNull(instance != null ? instance.getObject() : null);
+		//
+		try (final InputStream is = new ByteArrayInputStream("".getBytes())) {
+			//
+			if (ih != null) {
+				//
+				ih.inputStream = is;
+				//
+			} // if
+				//
+			Assertions.assertNull(instance != null ? instance.getObject() : null);
+			//
+		} // try
+			//
 	}
 
 	@Test
