@@ -109,6 +109,8 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 
 		private InputStream inputStream = null;
 
+		private Boolean exists = null;
+
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
@@ -137,6 +139,14 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 				} else if (Objects.equals(methodName, "getValue")) {
 					//
 					return value;
+					//
+				} // if
+					//
+			} else if (proxy instanceof Resource) {
+				//
+				if (Objects.equals(methodName, "exists")) {
+					//
+					return exists;
 					//
 				} // if
 					//
@@ -197,6 +207,12 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 			//
 		} // if
 			//
+		if (ih != null) {
+			//
+			ih.exists = Boolean.FALSE;
+			//
+		} // if
+			//
 		Assertions.assertNull(instance != null ? instance.getObject() : null);
 		//
 		try (final InputStream is = new ByteArrayInputStream("".getBytes())) {
@@ -211,6 +227,14 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 			//
 		} // try
 			//
+		if (ih != null) {
+			//
+			ih.exists = Boolean.TRUE;
+			//
+		} // if
+			//
+		Assertions.assertNull(instance != null ? instance.getObject() : null);
+		//
 	}
 
 	@Test

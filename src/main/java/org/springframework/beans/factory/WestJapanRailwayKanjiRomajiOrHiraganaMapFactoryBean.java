@@ -41,6 +41,7 @@ import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
 import org.springframework.core.io.InputStreamSourceUtil;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceUtil;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
@@ -163,7 +164,8 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Fact
 		//
 		IValue0<Map<String, String>> iValue0 = null;
 		//
-		try (final InputStream is = InputStreamSourceUtil.getInputStream(resource)) {
+		try (final InputStream is = testAndApply(ResourceUtil::exists, resource, InputStreamSourceUtil::getInputStream,
+				null)) {
 			//
 			iValue0 = getObject(is, unicodeBlock);
 			//

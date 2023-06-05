@@ -324,6 +324,7 @@
 		<property name="url"
 			value="${org.springframework.beans.factory.WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean.url}" />
 		<property name="unicodeBlock" value="BASIC_LATIN" />
+		<property name="resource" value="classpath:WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean.js" />
 	</bean>
 
 	<bean
@@ -332,6 +333,7 @@
 		<property name="url"
 			value="${org.springframework.beans.factory.WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean.url}" />
 		<property name="unicodeBlock" value="HIRAGANA" />
+		<property name="resource" value="classpath:WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean.js" />
 	</bean>
 
 	<!-- -->
