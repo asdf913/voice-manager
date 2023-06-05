@@ -50,7 +50,7 @@ import com.google.common.collect.TableUtil;
 
 import io.github.toolfactory.narcissus.Narcissus;
 
-public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements FactoryBean<Map<String, String>> {
+public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends StringMapFromResourceFactoryBean {
 
 	private String url = null;
 
@@ -162,8 +162,14 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Fact
 	@Override
 	public Map<String, String> getObject() throws Exception {
 		//
-		IValue0<Map<String, String>> iValue0 = null;
+		IValue0<Map<String, String>> iValue0 = getIvalue0();
 		//
+		if (iValue0 != null) {
+			//
+			return IValue0Util.getValue0(iValue0);
+			//
+		} // if
+			//
 		try (final InputStream is = testAndApply(ResourceUtil::exists, resourceJs,
 				InputStreamSourceUtil::getInputStream, null)) {
 			//

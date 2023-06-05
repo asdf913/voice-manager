@@ -325,6 +325,10 @@
 			value="${org.springframework.beans.factory.WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean.url}" />
 		<property name="unicodeBlock" value="BASIC_LATIN" />
 		<property name="resourceJs" value="classpath:WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean.js" />
+		<property name="keyColumnName" value="kanji" />
+		<property name="valueColumnName" value="romaji" />
+		<property name="valueColumnIndex" value="2" />
+		<property name="resource" value="classpath:WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean.xlsx" />
 	</bean>
 
 	<bean
@@ -334,6 +338,10 @@
 			value="${org.springframework.beans.factory.WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean.url}" />
 		<property name="unicodeBlock" value="HIRAGANA" />
 		<property name="resourceJs" value="classpath:WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean.js" />
+		<property name="keyColumnName" value="kanji" />
+		<property name="valueColumnName" value="hiragana" />
+		<property name="valueColumnIndex" value="1" />
+		<property name="resource" value="classpath:WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean.xlsx" />
 	</bean>
 
 	<!-- -->
