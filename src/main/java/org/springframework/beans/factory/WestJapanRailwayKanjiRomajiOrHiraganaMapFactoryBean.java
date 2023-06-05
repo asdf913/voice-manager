@@ -184,6 +184,7 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Fact
 			//
 	}
 
+	@Nullable
 	private static IValue0<Map<String, String>> getObject(final InputStream is, final UnicodeBlock unicodeBlock)
 			throws IOException, ScriptException, IllegalAccessException {
 		//
