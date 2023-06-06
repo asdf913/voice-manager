@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import com.google.common.collect.Table.Cell;
 import com.google.common.reflect.Reflection;
 
-public class CellUtilTest {
+class CellUtilTest {
 
 	private static class IH implements InvocationHandler {
 
