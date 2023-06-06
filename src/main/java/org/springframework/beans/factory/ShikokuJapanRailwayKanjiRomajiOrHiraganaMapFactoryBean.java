@@ -90,6 +90,7 @@ public class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements F
 			//
 	}
 
+	@Nullable
 	private static IValue0<UnicodeBlock> getUnicodeBlock(final String string) throws IllegalAccessException {
 		//
 		if (StringUtils.isBlank(string)) {
@@ -139,6 +140,7 @@ public class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements F
 		return a != null && b != null && a.isAssignableFrom(b);
 	}
 
+	@Nullable
 	private static <T> T cast(final Class<T> clz, final Object instance) {
 		return clz != null && clz.isInstance(instance) ? clz.cast(instance) : null;
 	}
@@ -158,6 +160,7 @@ public class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements F
 		//
 	}
 
+	@Nullable
 	private static Table<String, UnicodeBlock, String> createTable(final Iterable<Element> es) throws IOException {
 		//
 		Table<String, UnicodeBlock, String> table = null;
@@ -285,6 +288,7 @@ public class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements F
 		return instance != null ? instance.getClass() : null;
 	}
 
+	@Nullable
 	private static Multimap<UnicodeBlock, Character> createUnicodeBlockCharacterMultimap(final CharSequence cs) {
 		//
 		char c;
