@@ -136,12 +136,12 @@ public class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements F
 		return instance != null ? instance.getName() : null;
 	}
 
-	private static boolean isAssignableFrom(final Class<?> a, final Class<?> b) {
+	private static boolean isAssignableFrom(@Nullable final Class<?> a, @Nullable final Class<?> b) {
 		return a != null && b != null && a.isAssignableFrom(b);
 	}
 
 	@Nullable
-	private static <T> T cast(final Class<T> clz, final Object instance) {
+	private static <T> T cast(@Nullable final Class<T> clz, final Object instance) {
 		return clz != null && clz.isInstance(instance) ? clz.cast(instance) : null;
 	}
 
@@ -161,7 +161,8 @@ public class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements F
 	}
 
 	@Nullable
-	private static Table<String, UnicodeBlock, String> createTable(final Iterable<Element> es) throws IOException {
+	private static Table<String, UnicodeBlock, String> createTable(@Nullable final Iterable<Element> es)
+			throws IOException {
 		//
 		Table<String, UnicodeBlock, String> table = null;
 		//
@@ -198,7 +199,7 @@ public class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements F
 		//
 	}
 
-	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+	private static <T, R, E extends Throwable> R testAndApply(@Nullable final Predicate<T> predicate, final T value,
 			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
 			throws E {
 		return predicate != null && predicate.test(value) ? FailableFunctionUtil.apply(functionTrue, value)
@@ -268,7 +269,7 @@ public class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements F
 		return instance != null ? instance.stream() : null;
 	}
 
-	private static <T> Stream<T> filter(final Stream<T> instance, final Predicate<? super T> predicate) {
+	private static <T> Stream<T> filter(@Nullable final Stream<T> instance, final Predicate<? super T> predicate) {
 		//
 		return instance != null && (predicate != null || Proxy.isProxyClass(getClass(instance)))
 				? instance.filter(predicate)
@@ -289,7 +290,8 @@ public class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements F
 	}
 
 	@Nullable
-	private static Multimap<UnicodeBlock, Character> createUnicodeBlockCharacterMultimap(final CharSequence cs) {
+	private static Multimap<UnicodeBlock, Character> createUnicodeBlockCharacterMultimap(
+			@Nullable final CharSequence cs) {
 		//
 		char c;
 		//
@@ -306,7 +308,7 @@ public class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements F
 		//
 	}
 
-	private static <K, V> void put(final Map<K, V> instance, final K key, final V value) {
+	private static <K, V> void put(@Nullable final Map<K, V> instance, final K key, final V value) {
 		if (instance != null) {
 			instance.put(key, value);
 		}
