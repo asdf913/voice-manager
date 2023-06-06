@@ -199,7 +199,8 @@ public class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements F
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
-			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse) throws E {
+			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
+			throws E {
 		return predicate != null && predicate.test(value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
@@ -275,7 +276,7 @@ public class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements F
 		//
 	}
 
-	private static <T, R, A> R collect(final Stream<T> instance, @Nullable final Collector<? super T, A, R> collector) {
+	private static <T, R, A> R collect(final Stream<T> instance, final Collector<? super T, A, R> collector) {
 		//
 		return instance != null && (collector != null || Proxy.isProxyClass(getClass(instance)))
 				? instance.collect(collector)
