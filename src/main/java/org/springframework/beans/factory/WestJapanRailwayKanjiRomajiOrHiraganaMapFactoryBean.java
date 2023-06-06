@@ -469,6 +469,7 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends StringM
 		return instance != null && instance.test(value);
 	}
 
+	@Nullable
 	private static <T, U, R, E extends Throwable> R testAndApply(@Nullable final BiPredicate<T, U> predicate, final T t,
 			final U u, final BiFunction<T, U, R> functionTrue, @Nullable final BiFunction<T, U, R> functionFalse)
 			throws E {
