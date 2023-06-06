@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -150,7 +149,8 @@ public class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements F
 	@Override
 	public Map<String, String> getObject() throws Exception {
 		//
-		return collect(filter(stream(cellSet(createTable(url))), c -> Objects.equals(getColumnKey(c), unicodeBlock)),
+		return collect(
+				filter(stream(TableUtil.cellSet(createTable(url))), c -> Objects.equals(getColumnKey(c), unicodeBlock)),
 				Collectors.toMap(c -> getRowKey(c), c -> getValue(c)));
 		//
 	}
@@ -322,11 +322,6 @@ public class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements F
 		if (instance != null) {
 			instance.put(key, value);
 		}
-	}
-
-	@Nullable
-	private static <R, C, V> Set<Cell<R, C, V>> cellSet(@Nullable final Table<R, C, V> instance) {
-		return instance != null ? instance.cellSet() : null;
 	}
 
 	@Nullable

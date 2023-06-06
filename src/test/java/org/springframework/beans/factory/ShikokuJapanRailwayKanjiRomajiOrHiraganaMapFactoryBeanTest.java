@@ -13,7 +13,6 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -30,7 +29,6 @@ import org.springframework.core.io.Resource;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.ImmutableTable;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Table;
 import com.google.common.collect.Table.Cell;
@@ -42,8 +40,8 @@ class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 
 	private static Method METHOD_GET_NAME, METHOD_CREATE_MAP, METHOD_GET_CLASS, METHOD_CREATE_TABLE, METHOD_CAST,
 			METHOD_GET_HIRAGANA, METHOD_GET_ROMAJI, METHOD_STREAM, METHOD_FILTER, METHOD_COLLECT,
-			METHOD_CREATE_UNICODE_BLOCK_CHARACTER_MULTI_MAP, METHOD_PUT, METHOD_CELL_SET, METHOD_GET_ROW_KEY,
-			METHOD_GET_COLUMN_KEY, METHOD_GET_VALUE, METHOD_IS_ASSIGNABLE_FROM, METHOD_TEST_AND_APPLY = null;
+			METHOD_CREATE_UNICODE_BLOCK_CHARACTER_MULTI_MAP, METHOD_PUT, METHOD_GET_ROW_KEY, METHOD_GET_COLUMN_KEY,
+			METHOD_GET_VALUE, METHOD_IS_ASSIGNABLE_FROM, METHOD_TEST_AND_APPLY = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -74,8 +72,6 @@ class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 				CharSequence.class)).setAccessible(true);
 		//
 		(METHOD_PUT = clz.getDeclaredMethod("put", Map.class, Object.class, Object.class)).setAccessible(true);
-		//
-		(METHOD_CELL_SET = clz.getDeclaredMethod("cellSet", Table.class)).setAccessible(true);
 		//
 		(METHOD_GET_ROW_KEY = clz.getDeclaredMethod("getRowKey", Cell.class)).setAccessible(true);
 		//
@@ -501,27 +497,6 @@ class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 	private static <K, V> void put(final Map<K, V> instance, final K key, final V value) throws Throwable {
 		try {
 			METHOD_PUT.invoke(null, instance, key, value);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testCellSet() throws Throwable {
-		//
-		Assertions.assertEquals(Collections.emptySet(), cellSet(ImmutableTable.of()));
-		//
-	}
-
-	private static <R, C, V> Set<Cell<R, C, V>> cellSet(final Table<R, C, V> instance) throws Throwable {
-		try {
-			final Object obj = METHOD_CELL_SET.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Set) {
-				return (Set) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

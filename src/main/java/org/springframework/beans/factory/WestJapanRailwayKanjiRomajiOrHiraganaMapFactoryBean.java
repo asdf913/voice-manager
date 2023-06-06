@@ -214,16 +214,11 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends StringM
 			//
 		} // try
 			//
-		final Set<Cell<String, UnicodeBlock, String>> cells = cellSet(table);
+		final Set<Cell<String, UnicodeBlock, String>> cells = TableUtil.cellSet(table);
 		//
 		return cells != null ? Unit.with(cells.stream().filter(c -> Objects.equals(getColumnKey(c), unicodeBlock))
 				.collect(Collectors.toMap(c -> getRowKey(c), c -> getValue(c)))) : null;
 		//
-	}
-
-	@Nullable
-	private static <R, C, V> Set<Cell<R, C, V>> cellSet(@Nullable final Table<R, C, V> instance) {
-		return instance != null ? instance.cellSet() : null;
 	}
 
 	@Nullable

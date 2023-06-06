@@ -1,6 +1,10 @@
 package com.google.common.collect;
 
+import java.util.Set;
+
 import javax.annotation.Nullable;
+
+import com.google.common.collect.Table.Cell;
 
 public interface TableUtil {
 
@@ -17,6 +21,10 @@ public interface TableUtil {
 
 	static <V> V get(@Nullable final Table<?, ?, V> instance, final Object rowKey, final Object columnKey) {
 		return instance != null ? instance.get(rowKey, columnKey) : null;
+	}
+
+	static <R, C, V> Set<Cell<R, C, V>> cellSet(final Table<R, C, V> instance) {
+		return instance != null ? instance.cellSet() : null;
 	}
 
 }
