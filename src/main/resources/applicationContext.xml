@@ -324,11 +324,13 @@
 		<property name="url"
 			value="${org.springframework.beans.factory.WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean.url}" />
 		<property name="unicodeBlock" value="BASIC_LATIN" />
-		<property name="resourceJs" value="classpath:WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean.js" />
+		<property name="resourceJs"
+			value="classpath:WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean.js" />
 		<property name="keyColumnName" value="kanji" />
 		<property name="valueColumnName" value="romaji" />
 		<property name="valueColumnIndex" value="2" />
-		<property name="resource" value="classpath:WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean.xlsx" />
+		<property name="resource"
+			value="classpath:WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean.xlsx" />
 	</bean>
 
 	<bean
@@ -337,11 +339,30 @@
 		<property name="url"
 			value="${org.springframework.beans.factory.WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean.url}" />
 		<property name="unicodeBlock" value="HIRAGANA" />
-		<property name="resourceJs" value="classpath:WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean.js" />
+		<property name="resourceJs"
+			value="classpath:WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean.js" />
 		<property name="keyColumnName" value="kanji" />
 		<property name="valueColumnName" value="hiragana" />
 		<property name="valueColumnIndex" value="1" />
-		<property name="resource" value="classpath:WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean.xlsx" />
+		<property name="resource"
+			value="classpath:WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean.xlsx" />
+	</bean>
+
+	<!-- org.springframework.beans.factory.ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean -->
+	<bean
+		class="org.springframework.beans.factory.ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean">
+		<meta key="value" value="romaji" />
+		<property name="url"
+			value="${org.springframework.beans.factory.ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean.url}" />
+		<property name="unicodeBlock" value="BASIC_LATIN" />
+	</bean>
+
+	<bean
+		class="org.springframework.beans.factory.ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean">
+		<meta key="value" value="hiragana" />
+		<property name="url"
+			value="${org.springframework.beans.factory.ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean.url}" />
+		<property name="unicodeBlock" value="HIRAGANA" />
 	</bean>
 
 	<!-- -->
