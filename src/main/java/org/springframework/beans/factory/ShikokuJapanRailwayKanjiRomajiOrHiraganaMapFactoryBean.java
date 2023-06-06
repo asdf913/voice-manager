@@ -249,6 +249,7 @@ public class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements F
 		//
 	}
 
+	@Nullable
 	private static String getHiragana(final Element element) {
 		//
 		return collect(
@@ -259,6 +260,7 @@ public class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements F
 		//
 	}
 
+	@Nullable
 	private static String getRomaji(final Element element) {
 		//
 		return collect(
