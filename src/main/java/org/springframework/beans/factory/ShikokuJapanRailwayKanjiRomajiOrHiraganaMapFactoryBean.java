@@ -6,7 +6,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Collection;
@@ -152,16 +151,14 @@ public class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements F
 		//
 	}
 
-	private static Table<String, UnicodeBlock, String> createTable(final String url)
-			throws MalformedURLException, IOException {
+	private static Table<String, UnicodeBlock, String> createTable(final String url) throws IOException {
 		//
 		return createTable(ElementUtil.select(testAndApply(Objects::nonNull,
 				testAndApply(Objects::nonNull, url, URL::new, null), x -> Jsoup.parse(x, 0), null), "li dl dd a"));
 		//
 	}
 
-	private static Table<String, UnicodeBlock, String> createTable(final Iterable<Element> es)
-			throws MalformedURLException, IOException {
+	private static Table<String, UnicodeBlock, String> createTable(final Iterable<Element> es) throws IOException {
 		//
 		Table<String, UnicodeBlock, String> table = null;
 		//
@@ -205,7 +202,7 @@ public class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements F
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
-	private static Map<UnicodeBlock, String> createMap(final String url) throws MalformedURLException, IOException {
+	private static Map<UnicodeBlock, String> createMap(final String url) throws IOException {
 		//
 		Map<UnicodeBlock, String> map = null;
 		//
