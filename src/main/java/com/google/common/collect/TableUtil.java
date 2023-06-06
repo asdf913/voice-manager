@@ -23,7 +23,7 @@ public interface TableUtil {
 		return instance != null ? instance.get(rowKey, columnKey) : null;
 	}
 
-	static <R, C, V> Set<Cell<R, C, V>> cellSet(final Table<R, C, V> instance) {
+	static <R, C, V> Set<Cell<R, C, V>> cellSet(@Nullable final Table<R, C, V> instance) {
 		return instance != null ? instance.cellSet() : null;
 	}
 
