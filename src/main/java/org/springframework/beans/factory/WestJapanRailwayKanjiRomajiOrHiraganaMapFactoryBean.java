@@ -219,7 +219,7 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends StringM
 		//
 		return cells != null
 				? Unit.with(cells.stream().filter(c -> Objects.equals(CellUtil.getColumnKey(c), unicodeBlock))
-						.collect(Collectors.toMap(c -> CellUtil.getRowKey(c), c -> CellUtil.getValue(c))))
+						.collect(Collectors.toMap(CellUtil::getRowKey, CellUtil::getValue)))
 				: null;
 		//
 	}

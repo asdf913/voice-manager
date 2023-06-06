@@ -152,7 +152,7 @@ public class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements F
 		return collect(
 				filter(stream(TableUtil.cellSet(createTable(url))),
 						c -> Objects.equals(CellUtil.getColumnKey(c), unicodeBlock)),
-				Collectors.toMap(c -> CellUtil.getRowKey(c), c -> CellUtil.getValue(c)));
+				Collectors.toMap(CellUtil::getRowKey, CellUtil::getValue));
 		//
 	}
 
