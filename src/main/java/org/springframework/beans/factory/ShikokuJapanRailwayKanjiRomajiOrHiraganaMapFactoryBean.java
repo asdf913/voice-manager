@@ -43,7 +43,7 @@ import com.google.common.collect.MultimapUtil;
 import com.google.common.collect.Table;
 import com.google.common.collect.TableUtil;
 
-public class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements FactoryBean<Map<String, String>> {
+public class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends StringMapFromResourceFactoryBean {
 
 	private String url = null;
 
@@ -149,6 +149,14 @@ public class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements F
 	@Override
 	public Map<String, String> getObject() throws Exception {
 		//
+		IValue0<Map<String, String>> iValue0 = getIvalue0();
+		//
+		if (iValue0 != null) {
+			//
+			return IValue0Util.getValue0(iValue0);
+			//
+		} // if
+			//
 		return collect(
 				filter(stream(TableUtil.cellSet(createTable(url))),
 						c -> Objects.equals(CellUtil.getColumnKey(c), unicodeBlock)),

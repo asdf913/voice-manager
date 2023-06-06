@@ -355,6 +355,11 @@
 		<property name="url"
 			value="${org.springframework.beans.factory.ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean.url}" />
 		<property name="unicodeBlock" value="BASIC_LATIN" />
+		<property name="keyColumnName" value="kanji" />
+		<property name="valueColumnName" value="romaji" />
+		<property name="valueColumnIndex" value="2" />
+		<property name="resource"
+			value="classpath:ShikokuJapanRailway.xlsx" />
 	</bean>
 
 	<bean
@@ -363,6 +368,11 @@
 		<property name="url"
 			value="${org.springframework.beans.factory.ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean.url}" />
 		<property name="unicodeBlock" value="HIRAGANA" />
+		<property name="keyColumnName" value="kanji" />
+		<property name="valueColumnName" value="hiragana" />
+		<property name="valueColumnIndex" value="1" />
+		<property name="resource"
+			value="classpath:ShikokuJapanRailway.xlsx" />
 	</bean>
 
 	<!-- -->
