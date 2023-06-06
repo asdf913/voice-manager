@@ -36,11 +36,11 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
 
 import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.CellUtil;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
 import com.google.common.collect.Table;
-import com.google.common.collect.Table.Cell;
 import com.google.common.collect.TableUtil;
 
 public class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements FactoryBean<Map<String, String>> {
@@ -150,8 +150,9 @@ public class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements F
 	public Map<String, String> getObject() throws Exception {
 		//
 		return collect(
-				filter(stream(TableUtil.cellSet(createTable(url))), c -> Objects.equals(getColumnKey(c), unicodeBlock)),
-				Collectors.toMap(c -> getRowKey(c), c -> getValue(c)));
+				filter(stream(TableUtil.cellSet(createTable(url))),
+						c -> Objects.equals(CellUtil.getColumnKey(c), unicodeBlock)),
+				Collectors.toMap(c -> CellUtil.getRowKey(c), c -> CellUtil.getValue(c)));
 		//
 	}
 
@@ -324,21 +325,6 @@ public class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements F
 		if (instance != null) {
 			instance.put(key, value);
 		}
-	}
-
-	@Nullable
-	private static <R> R getRowKey(@Nullable final Cell<R, ?, ?> instance) {
-		return instance != null ? instance.getRowKey() : null;
-	}
-
-	@Nullable
-	private static <C> C getColumnKey(@Nullable final Cell<?, C, ?> instance) {
-		return instance != null ? instance.getColumnKey() : null;
-	}
-
-	@Nullable
-	private static <V> V getValue(@Nullable final Cell<?, ?, V> instance) {
-		return instance != null ? instance.getValue() : null;
 	}
 
 	@Override

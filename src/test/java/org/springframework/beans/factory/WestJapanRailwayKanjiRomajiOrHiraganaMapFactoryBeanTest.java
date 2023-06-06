@@ -34,7 +34,6 @@ import org.springframework.core.io.Resource;
 
 import com.google.common.collect.ImmutableTable;
 import com.google.common.collect.Table;
-import com.google.common.collect.Table.Cell;
 import com.google.common.reflect.Reflection;
 
 class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
@@ -42,8 +41,7 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 	private static Method METHOD_TO_STRING, METHOD_CAST, METHOD_TEST_AND_APPLY, METHOD_CREATE_TABLE,
 			METHOD_GET_UNICODE_BLOCKS, METHOD_TEST, METHOD_ACCEPT, METHOD_IS_INSTANCE, METHOD_CONTAINS, METHOD_PUT,
 			METHOD_ADD, METHOD_IS_ASSIGNABLE_FROM, METHOD_OPEN_STREAM, METHOD_GET_TRIPLES_1, METHOD_GET_TRIPLES_2,
-			METHOD_GET_NAME_METHOD, METHOD_GET_NAME_MODULE, METHOD_GET_ROW_KEY, METHOD_GET_COLUMN_KEY, METHOD_GET_VALUE,
-			METHOD_GET_MODULE, METHOD_GET = null;
+			METHOD_GET_NAME_METHOD, METHOD_GET_NAME_MODULE, METHOD_GET_MODULE, METHOD_GET = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -88,12 +86,6 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 		//
 		(METHOD_GET_NAME_MODULE = clz.getDeclaredMethod("getName", Module.class)).setAccessible(true);
 		//
-		(METHOD_GET_ROW_KEY = clz.getDeclaredMethod("getRowKey", Cell.class)).setAccessible(true);
-		//
-		(METHOD_GET_COLUMN_KEY = clz.getDeclaredMethod("getColumnKey", Cell.class)).setAccessible(true);
-		//
-		(METHOD_GET_VALUE = clz.getDeclaredMethod("getValue", Cell.class)).setAccessible(true);
-		//
 		(METHOD_GET_MODULE = clz.getDeclaredMethod("getModule", Class.class)).setAccessible(true);
 		//
 		(METHOD_GET = clz.getDeclaredMethod("get", ScriptEngine.class, String.class)).setAccessible(true);
@@ -101,8 +93,6 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 	}
 
 	private static class IH implements InvocationHandler {
-
-		private Object rowKey, columnKey, value = null;
 
 		private InputStream inputStream = null;
 
@@ -123,23 +113,7 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 					//
 			} // if
 				//
-			if (proxy instanceof Cell) {
-				//
-				if (Objects.equals(methodName, "getRowKey")) {
-					//
-					return rowKey;
-					//
-				} else if (Objects.equals(methodName, "getColumnKey")) {
-					//
-					return columnKey;
-					//
-				} else if (Objects.equals(methodName, "getValue")) {
-					//
-					return value;
-					//
-				} // if
-					//
-			} else if (proxy instanceof Resource) {
+			if (proxy instanceof Resource) {
 				//
 				if (Objects.equals(methodName, "exists")) {
 					//
@@ -159,14 +133,12 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 
 	private IH ih = null;
 
-	private Cell<?, ?, ?> cell = null;
-
 	@BeforeEach
 	void beforeEach() {
 		//
 		instance = new WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean();
 		//
-		cell = Reflection.newProxy(Cell.class, ih = new IH());
+		ih = new IH();
 		//
 	}
 
@@ -634,57 +606,6 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 				return (String) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetRowKey() throws Throwable {
-		//
-		Assertions.assertNull(getRowKey(null));
-		//
-		Assertions.assertNull(getRowKey(cell));
-		//
-	}
-
-	private static <R> R getRowKey(final Cell<R, ?, ?> instance) throws Throwable {
-		try {
-			return (R) METHOD_GET_ROW_KEY.invoke(null, instance);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetColumnKey() throws Throwable {
-		//
-		Assertions.assertNull(getColumnKey(null));
-		//
-		Assertions.assertNull(getColumnKey(cell));
-		//
-	}
-
-	private static <C> C getColumnKey(final Cell<?, C, ?> instance) throws Throwable {
-		try {
-			return (C) METHOD_GET_COLUMN_KEY.invoke(null, instance);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetValue() throws Throwable {
-		//
-		Assertions.assertNull(getValue(null));
-		//
-		Assertions.assertNull(getValue(cell));
-		//
-	}
-
-	private static <V> V getValue(final Cell<?, ?, V> instance) throws Throwable {
-		try {
-			return (V) METHOD_GET_VALUE.invoke(null, instance);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

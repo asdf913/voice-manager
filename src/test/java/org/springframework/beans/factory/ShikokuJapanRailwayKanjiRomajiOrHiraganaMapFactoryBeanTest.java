@@ -1,9 +1,7 @@
 package org.springframework.beans.factory;
 
-import java.io.InputStream;
 import java.lang.Character.UnicodeBlock;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
@@ -12,7 +10,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -24,15 +21,11 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.core.io.InputStreamSource;
-import org.springframework.core.io.Resource;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Table;
-import com.google.common.collect.Table.Cell;
-import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
 
@@ -40,8 +33,8 @@ class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 
 	private static Method METHOD_GET_NAME, METHOD_CREATE_MAP, METHOD_GET_CLASS, METHOD_CREATE_TABLE, METHOD_CAST,
 			METHOD_GET_HIRAGANA, METHOD_GET_ROMAJI, METHOD_STREAM, METHOD_FILTER, METHOD_COLLECT,
-			METHOD_CREATE_UNICODE_BLOCK_CHARACTER_MULTI_MAP, METHOD_PUT, METHOD_GET_ROW_KEY, METHOD_GET_COLUMN_KEY,
-			METHOD_GET_VALUE, METHOD_IS_ASSIGNABLE_FROM, METHOD_TEST_AND_APPLY = null;
+			METHOD_CREATE_UNICODE_BLOCK_CHARACTER_MULTI_MAP, METHOD_PUT, METHOD_IS_ASSIGNABLE_FROM,
+			METHOD_TEST_AND_APPLY = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -73,12 +66,6 @@ class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 		//
 		(METHOD_PUT = clz.getDeclaredMethod("put", Map.class, Object.class, Object.class)).setAccessible(true);
 		//
-		(METHOD_GET_ROW_KEY = clz.getDeclaredMethod("getRowKey", Cell.class)).setAccessible(true);
-		//
-		(METHOD_GET_COLUMN_KEY = clz.getDeclaredMethod("getColumnKey", Cell.class)).setAccessible(true);
-		//
-		(METHOD_GET_VALUE = clz.getDeclaredMethod("getValue", Cell.class)).setAccessible(true);
-		//
 		(METHOD_IS_ASSIGNABLE_FROM = clz.getDeclaredMethod("isAssignableFrom", Class.class, Class.class))
 				.setAccessible(true);
 		//
@@ -87,73 +74,12 @@ class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 		//
 	}
 
-	private static class IH implements InvocationHandler {
-
-		private Object rowKey, columnKey, value = null;
-
-		private InputStream inputStream = null;
-
-		private Boolean exists = null;
-
-		@Override
-		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
-			//
-			final String methodName = getName(method);
-			//
-			if (proxy instanceof InputStreamSource) {
-				//
-				if (Objects.equals(methodName, "getInputStream")) {
-					//
-					return inputStream;
-					//
-				} // if
-					//
-			} // if
-				//
-			if (proxy instanceof Cell) {
-				//
-				if (Objects.equals(methodName, "getRowKey")) {
-					//
-					return rowKey;
-					//
-				} else if (Objects.equals(methodName, "getColumnKey")) {
-					//
-					return columnKey;
-					//
-				} else if (Objects.equals(methodName, "getValue")) {
-					//
-					return value;
-					//
-				} // if
-					//
-			} else if (proxy instanceof Resource) {
-				//
-				if (Objects.equals(methodName, "exists")) {
-					//
-					return exists;
-					//
-				} // if
-					//
-			} // if
-				//
-			throw new Throwable(methodName);
-			//
-		}
-
-	}
-
 	private ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean instance = null;
-
-	private IH ih = null;
-
-	private Cell<?, ?, ?> cell = null;
 
 	@BeforeEach
 	void beforeEach() {
 		//
 		instance = new ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean();
-		//
-		cell = Reflection.newProxy(Cell.class, ih = new IH());
 		//
 	}
 
@@ -497,57 +423,6 @@ class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 	private static <K, V> void put(final Map<K, V> instance, final K key, final V value) throws Throwable {
 		try {
 			METHOD_PUT.invoke(null, instance, key, value);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetRowKey() throws Throwable {
-		//
-		Assertions.assertNull(getRowKey(null));
-		//
-		Assertions.assertNull(getRowKey(cell));
-		//
-	}
-
-	private static <R> R getRowKey(final Cell<R, ?, ?> instance) throws Throwable {
-		try {
-			return (R) METHOD_GET_ROW_KEY.invoke(null, instance);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetColumnKey() throws Throwable {
-		//
-		Assertions.assertNull(getColumnKey(null));
-		//
-		Assertions.assertNull(getColumnKey(cell));
-		//
-	}
-
-	private static <C> C getColumnKey(final Cell<?, C, ?> instance) throws Throwable {
-		try {
-			return (C) METHOD_GET_COLUMN_KEY.invoke(null, instance);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetValue() throws Throwable {
-		//
-		Assertions.assertNull(getValue(null));
-		//
-		Assertions.assertNull(getValue(cell));
-		//
-	}
-
-	private static <V> V getValue(final Cell<?, ?, V> instance) throws Throwable {
-		try {
-			return (V) METHOD_GET_VALUE.invoke(null, instance);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

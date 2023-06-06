@@ -43,6 +43,7 @@ import org.springframework.core.io.InputStreamSourceUtil;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceUtil;
 
+import com.google.common.collect.CellUtil;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import com.google.common.collect.Table.Cell;
@@ -216,29 +217,16 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends StringM
 			//
 		final Set<Cell<String, UnicodeBlock, String>> cells = TableUtil.cellSet(table);
 		//
-		return cells != null ? Unit.with(cells.stream().filter(c -> Objects.equals(getColumnKey(c), unicodeBlock))
-				.collect(Collectors.toMap(c -> getRowKey(c), c -> getValue(c)))) : null;
+		return cells != null
+				? Unit.with(cells.stream().filter(c -> Objects.equals(CellUtil.getColumnKey(c), unicodeBlock))
+						.collect(Collectors.toMap(c -> CellUtil.getRowKey(c), c -> CellUtil.getValue(c))))
+				: null;
 		//
 	}
 
 	@Nullable
 	private static Object get(@Nullable final ScriptEngine instance, final String key) {
 		return instance != null ? instance.get(key) : null;
-	}
-
-	@Nullable
-	private static <R> R getRowKey(@Nullable final Cell<R, ?, ?> instance) {
-		return instance != null ? instance.getRowKey() : null;
-	}
-
-	@Nullable
-	private static <C> C getColumnKey(@Nullable final Cell<?, C, ?> instance) {
-		return instance != null ? instance.getColumnKey() : null;
-	}
-
-	@Nullable
-	private static <V> V getValue(@Nullable final Cell<?, ?, V> instance) {
-		return instance != null ? instance.getValue() : null;
 	}
 
 	@Nullable
