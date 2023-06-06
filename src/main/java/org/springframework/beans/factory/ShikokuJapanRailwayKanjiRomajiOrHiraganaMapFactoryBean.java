@@ -200,9 +200,7 @@ public class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements F
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
 			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse) throws E {
-		return predicate != null
-				&& predicate.test(value) 
-				? FailableFunctionUtil.apply(functionTrue, value)
+		return predicate != null && predicate.test(value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
@@ -291,7 +289,7 @@ public class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements F
 
 	private static Multimap<UnicodeBlock, Character> createUnicodeBlockCharacterMultimap(final CharSequence cs) {
 		//
-		char c = ' ';
+		char c;
 		//
 		Multimap<UnicodeBlock, Character> chars = null;
 		//
