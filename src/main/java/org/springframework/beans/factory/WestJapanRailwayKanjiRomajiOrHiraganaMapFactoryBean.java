@@ -296,10 +296,11 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends StringM
 				//
 			} // if
 				//
-			if (Objects.equals(getName(getModule(f.getDeclaringClass())), "java.base")) {
+			if (contains(Arrays.asList("java.base", "java.sql", "java.desktop", "java.logging"),
+					getName(getModule(f.getDeclaringClass())))) {
 				//
 				temp = Modifier.isStatic(f.getModifiers()) ? Narcissus.getStaticField(f)
-						: Narcissus.getField(instance, f);
+						: instance != null ? Narcissus.getField(instance, f) : null;
 				//
 			} else {
 				//

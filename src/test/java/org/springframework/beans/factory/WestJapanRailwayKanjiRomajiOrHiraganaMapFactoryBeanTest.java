@@ -10,6 +10,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.security.Signature;
+import java.sql.DriverManager;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -19,8 +21,10 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
+import java.util.logging.Logger;
 
 import javax.script.ScriptEngine;
+import javax.swing.JButton;
 
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.tuple.Triple;
@@ -531,6 +535,21 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 		Assertions.assertNull(getTriples(null, null));
 		//
 		Assertions.assertNull(getTriples(new Field[] { null }, null));
+		//
+		// "java.sql" module
+		//
+		Assertions.assertNull(
+				getTriples(new Field[] { DriverManager.class.getDeclaredField("JDBC_DRIVERS_PROPERTY") }, null));
+		//
+		// "java.desktop" module
+		//
+		Assertions.assertNull(getTriples(new Field[] { JButton.class.getDeclaredField("uiClassID") }, null));
+		//
+		// "java.logging" module
+		//
+		Assertions.assertNull(getTriples(new Field[] { Logger.class.getDeclaredField("SYSTEM_LOGGER_RB_NAME") }, null));
+		//
+		Assertions.assertNull(getTriples(new Field[] { Signature.class.getDeclaredField("algorithm") }, null));
 		//
 		final Map<UnicodeBlock, String> map = new LinkedHashMap<>();
 		//
