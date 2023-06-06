@@ -48,6 +48,7 @@ public class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements F
 
 	private String url = null;
 
+	@Nullable
 	private UnicodeBlock unicodeBlock = null;
 
 	public void setUrl(final String url) {
@@ -132,6 +133,7 @@ public class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements F
 			//
 	}
 
+	@Nullable
 	private static String getName(@Nullable final Member instance) {
 		return instance != null ? instance.getName() : null;
 	}
@@ -153,6 +155,7 @@ public class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements F
 		//
 	}
 
+	@Nullable
 	private static Table<String, UnicodeBlock, String> createTable(final String url) throws IOException {
 		//
 		return createTable(ElementUtil.select(testAndApply(Objects::nonNull,
@@ -266,10 +269,12 @@ public class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements F
 		//
 	}
 
+	@Nullable
 	private static <E> Stream<E> stream(@Nullable final Collection<E> instance) {
 		return instance != null ? instance.stream() : null;
 	}
 
+	@Nullable
 	private static <T> Stream<T> filter(@Nullable final Stream<T> instance,
 			@Nullable final Predicate<? super T> predicate) {
 		//
@@ -288,6 +293,7 @@ public class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements F
 		//
 	}
 
+	@Nullable
 	private static Class<?> getClass(@Nullable final Object instance) {
 		return instance != null ? instance.getClass() : null;
 	}
@@ -317,18 +323,22 @@ public class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements F
 		}
 	}
 
+	@Nullable
 	private static <R, C, V> Set<Cell<R, C, V>> cellSet(@Nullable final Table<R, C, V> instance) {
 		return instance != null ? instance.cellSet() : null;
 	}
 
+	@Nullable
 	private static <R> R getRowKey(@Nullable final Cell<R, ?, ?> instance) {
 		return instance != null ? instance.getRowKey() : null;
 	}
 
+	@Nullable
 	private static <C> C getColumnKey(@Nullable final Cell<?, C, ?> instance) {
 		return instance != null ? instance.getColumnKey() : null;
 	}
 
+	@Nullable
 	private static <V> V getValue(@Nullable final Cell<?, ?, V> instance) {
 		return instance != null ? instance.getValue() : null;
 	}
