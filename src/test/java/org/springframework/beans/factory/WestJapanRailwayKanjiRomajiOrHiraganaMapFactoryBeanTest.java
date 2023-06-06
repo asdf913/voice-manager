@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
@@ -42,10 +43,11 @@ import com.google.common.reflect.Reflection;
 
 class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 
-	private static Method METHOD_TO_STRING, METHOD_CAST, METHOD_TEST_AND_APPLY, METHOD_CREATE_TABLE,
-			METHOD_GET_UNICODE_BLOCKS, METHOD_TEST, METHOD_ACCEPT, METHOD_IS_INSTANCE, METHOD_CONTAINS, METHOD_PUT,
-			METHOD_ADD, METHOD_IS_ASSIGNABLE_FROM, METHOD_OPEN_STREAM, METHOD_GET_TRIPLES_1, METHOD_GET_TRIPLES_2,
-			METHOD_GET_NAME_METHOD, METHOD_GET_NAME_MODULE, METHOD_GET_MODULE, METHOD_GET = null;
+	private static Method METHOD_TO_STRING, METHOD_CAST, METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5,
+			METHOD_CREATE_TABLE, METHOD_GET_UNICODE_BLOCKS, METHOD_TEST, METHOD_ACCEPT, METHOD_IS_INSTANCE,
+			METHOD_CONTAINS, METHOD_PUT, METHOD_ADD, METHOD_IS_ASSIGNABLE_FROM, METHOD_OPEN_STREAM,
+			METHOD_GET_TRIPLES_1, METHOD_GET_TRIPLES_2, METHOD_GET_NAME_METHOD, METHOD_GET_NAME_MODULE,
+			METHOD_GET_MODULE, METHOD_GET = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -56,8 +58,11 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 		//
 		(METHOD_CAST = clz.getDeclaredMethod("cast", Class.class, Object.class)).setAccessible(true);
 		//
-		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
+		(METHOD_TEST_AND_APPLY4 = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
+		//
+		(METHOD_TEST_AND_APPLY5 = clz.getDeclaredMethod("testAndApply", BiPredicate.class, Object.class, Object.class,
+				BiFunction.class, BiFunction.class)).setAccessible(true);
 		//
 		(METHOD_CREATE_TABLE = clz.getDeclaredMethod("createTable", Object[].class)).setAccessible(true);
 		//
@@ -310,13 +315,25 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 		//
 		Assertions.assertNull(testAndApply(Predicates.alwaysTrue(), null, null, null));
 		//
+		Assertions.assertNull(testAndApply(null, null, null, null, null));
+		//
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
 			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse)
 			throws Throwable {
 		try {
-			return (R) METHOD_TEST_AND_APPLY.invoke(null, predicate, value, functionTrue, functionFalse);
+			return (R) METHOD_TEST_AND_APPLY4.invoke(null, predicate, value, functionTrue, functionFalse);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static <T, U, R, E extends Throwable> R testAndApply(final BiPredicate<T, U> predicate, final T t,
+			final U u, final BiFunction<T, U, R> functionTrue, final BiFunction<T, U, R> functionFalse)
+			throws Throwable {
+		try {
+			return (R) METHOD_TEST_AND_APPLY5.invoke(null, predicate, t, u, functionTrue, functionFalse);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
