@@ -206,6 +206,7 @@ public class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements F
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
+	@Nullable
 	private static Map<UnicodeBlock, String> createMap(final String url) throws IOException {
 		//
 		Map<UnicodeBlock, String> map = null;
@@ -269,7 +270,8 @@ public class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements F
 		return instance != null ? instance.stream() : null;
 	}
 
-	private static <T> Stream<T> filter(@Nullable final Stream<T> instance, final Predicate<? super T> predicate) {
+	private static <T> Stream<T> filter(@Nullable final Stream<T> instance,
+			@Nullable final Predicate<? super T> predicate) {
 		//
 		return instance != null && (predicate != null || Proxy.isProxyClass(getClass(instance)))
 				? instance.filter(predicate)
@@ -277,7 +279,8 @@ public class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements F
 		//
 	}
 
-	private static <T, R, A> R collect(final Stream<T> instance, final Collector<? super T, A, R> collector) {
+	private static <T, R, A> R collect(@Nullable final Stream<T> instance,
+			@Nullable final Collector<? super T, A, R> collector) {
 		//
 		return instance != null && (collector != null || Proxy.isProxyClass(getClass(instance)))
 				? instance.collect(collector)
