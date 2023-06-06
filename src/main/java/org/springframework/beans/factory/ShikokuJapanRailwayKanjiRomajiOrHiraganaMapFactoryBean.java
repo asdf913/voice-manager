@@ -284,6 +284,7 @@ public class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean implements F
 		//
 	}
 
+	@Nullable
 	private static <T, R, A> R collect(@Nullable final Stream<T> instance,
 			@Nullable final Collector<? super T, A, R> collector) {
 		//
