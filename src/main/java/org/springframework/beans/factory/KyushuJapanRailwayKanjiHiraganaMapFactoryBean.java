@@ -50,15 +50,18 @@ public class KyushuJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryBea
 		//
 		Entry<String, String> entry = null;
 		//
+		String key, value = null;
+		//
 		for (int i = 0; es != null && i < es.size(); i++) {
 			//
-			if ((e = es.get(i)) == null || (entry = createEntry(e.absUrl("href"))) == null) {
+			if ((e = es.get(i)) == null || (entry = createEntry(e.absUrl("href"))) == null
+					|| Objects.equals(key = entry.getKey(), value = entry.getValue())) {
 				//
 				continue;
 				//
 			} // if
 				//
-			put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), entry.getKey(), entry.getValue());
+			put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), key, value);
 			//
 		} // for
 			//
