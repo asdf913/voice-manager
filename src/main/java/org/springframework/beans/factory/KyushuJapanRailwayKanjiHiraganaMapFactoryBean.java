@@ -128,7 +128,7 @@ public class KyushuJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryBea
 		//
 	}
 
-	private static <L> void setLeft(final MutablePair<L, ?> instance, final L left) {
+	private static <L> void setLeft(@Nullable final MutablePair<L, ?> instance, final L left) {
 		//
 		if (instance != null) {
 			//
@@ -138,7 +138,7 @@ public class KyushuJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryBea
 			//
 	}
 
-	private static <R> void setRight(final MutablePair<?, R> instance, final R right) {
+	private static <R> void setRight(@Nullable final MutablePair<?, R> instance, final R right) {
 		//
 		if (instance != null) {
 			//
