@@ -76,6 +76,7 @@ public class KyushuJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryBea
 		return instance != null && instance.test(value);
 	}
 
+	@Nullable
 	private static Entry<String, String> createEntry(final String url) throws IOException {
 		//
 		MutablePair<String, String> pair = null;
