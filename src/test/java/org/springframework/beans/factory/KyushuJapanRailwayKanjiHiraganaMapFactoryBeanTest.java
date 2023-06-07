@@ -18,7 +18,8 @@ import com.google.common.base.Predicates;
 
 class KyushuJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 
-	private static Method METHOD_TEST_AND_APPLY, METHOD_CREATE_ENTRY, METHOD_PUT, METHOD_SET_LEFT = null;
+	private static Method METHOD_TEST_AND_APPLY, METHOD_CREATE_ENTRY, METHOD_PUT, METHOD_SET_LEFT,
+			METHOD_SET_RIGHT = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -33,6 +34,8 @@ class KyushuJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 		(METHOD_PUT = clz.getDeclaredMethod("put", Map.class, Object.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_SET_LEFT = clz.getDeclaredMethod("setLeft", MutablePair.class, Object.class)).setAccessible(true);
+		//
+		(METHOD_SET_RIGHT = clz.getDeclaredMethod("setRight", MutablePair.class, Object.class)).setAccessible(true);
 		//
 	}
 
@@ -150,6 +153,23 @@ class KyushuJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 	private static <L> void setLeft(final MutablePair<L, ?> instance, final L left) throws Throwable {
 		try {
 			METHOD_SET_LEFT.invoke(null, instance, left);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetRight() throws Throwable {
+		//
+		Assertions.assertDoesNotThrow(() -> setRight(null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> setRight(MutablePair.of(null, null), null));
+		//
+	}
+
+	private static <R> void setRight(final MutablePair<?, R> instance, final R right) throws Throwable {
+		try {
+			METHOD_SET_RIGHT.invoke(null, instance, right);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
