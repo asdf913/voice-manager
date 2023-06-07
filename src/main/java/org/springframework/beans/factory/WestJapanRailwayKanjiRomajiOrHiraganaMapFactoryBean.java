@@ -432,7 +432,7 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends StringM
 		return instance != null ? instance.toString() : null;
 	}
 
-	private static boolean isInstance(@Nullable final Class<?> clz, final Object instance) {
+	private static boolean isInstance(@Nullable final Class<?> clz, @Nullable final Object instance) {
 		return clz != null && clz.isInstance(instance);
 	}
 
