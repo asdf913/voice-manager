@@ -73,7 +73,7 @@ public class KyushuJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryBea
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
-	private static final <T> boolean test(final Predicate<T> instance, final T value) {
+	private static final <T> boolean test(@Nullable final Predicate<T> instance, final T value) {
 		return instance != null && instance.test(value);
 	}
 
@@ -122,7 +122,7 @@ public class KyushuJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryBea
 		//
 	}
 
-	private static <K, V> void put(final Map<K, V> instance, final K key, final V value) {
+	private static <K, V> void put(@Nullable final Map<K, V> instance, final K key, final V value) {
 		//
 		if (instance != null) {
 			//
