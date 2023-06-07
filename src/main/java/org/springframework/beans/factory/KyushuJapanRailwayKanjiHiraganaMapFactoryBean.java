@@ -17,12 +17,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.tuple.MutablePair;
+import org.javatuples.valueintf.IValue0;
+import org.javatuples.valueintf.IValue0Util;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
 
-public class KyushuJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<Map<String, String>> {
+public class KyushuJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFromResourceFactoryBean {
 
 	private String url = null;
 
@@ -33,6 +35,14 @@ public class KyushuJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryBea
 	@Override
 	public Map<String, String> getObject() throws Exception {
 		//
+		IValue0<Map<String, String>> iValue0 = getIvalue0();
+		//
+		if (iValue0 != null) {
+			//
+			return IValue0Util.getValue0(iValue0);
+			//
+		} // if
+			//
 		return createMap(url);
 		//
 	}
