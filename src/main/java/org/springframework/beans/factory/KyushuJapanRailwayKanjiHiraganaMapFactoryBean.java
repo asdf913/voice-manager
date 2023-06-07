@@ -98,9 +98,10 @@ public class KyushuJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryBea
 				//
 				throw new IllegalStateException();
 				//
-			} else if (es.size() == 1 && (pair = ObjectUtils.getIfNull(pair, MutablePair::new)) != null) {
+			} else if (es.size() == 1) {
 				//
-				pair.setLeft(ElementUtil.text(IterableUtils.get(es, 0)));
+				setLeft(pair = ObjectUtils.getIfNull(pair, MutablePair::new),
+						ElementUtil.text(IterableUtils.get(es, 0)));
 				//
 			} // if
 				//
@@ -124,6 +125,16 @@ public class KyushuJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryBea
 			//
 		return pair;
 		//
+	}
+
+	private static <L> void setLeft(final MutablePair<L, ?> instance, final L left) {
+		//
+		if (instance != null) {
+			//
+			instance.setLeft(left);
+			//
+		} // if
+			//
 	}
 
 	private static <K, V> void put(@Nullable final Map<K, V> instance, final K key, final V value) {

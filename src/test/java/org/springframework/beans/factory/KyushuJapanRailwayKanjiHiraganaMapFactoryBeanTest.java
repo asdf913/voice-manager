@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 import java.util.function.Predicate;
 
 import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.tuple.MutablePair;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,7 +18,7 @@ import com.google.common.base.Predicates;
 
 class KyushuJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 
-	private static Method METHOD_TEST_AND_APPLY, METHOD_CREATE_ENTRY, METHOD_PUT = null;
+	private static Method METHOD_TEST_AND_APPLY, METHOD_CREATE_ENTRY, METHOD_PUT, METHOD_SET_LEFT = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -30,6 +31,8 @@ class KyushuJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 		(METHOD_CREATE_ENTRY = clz.getDeclaredMethod("createEntry", String.class)).setAccessible(true);
 		//
 		(METHOD_PUT = clz.getDeclaredMethod("put", Map.class, Object.class, Object.class)).setAccessible(true);
+		//
+		(METHOD_SET_LEFT = clz.getDeclaredMethod("setLeft", MutablePair.class, Object.class)).setAccessible(true);
 		//
 	}
 
@@ -130,6 +133,23 @@ class KyushuJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 	private static <K, V> void put(final Map<K, V> instance, final K key, final V value) throws Throwable {
 		try {
 			METHOD_PUT.invoke(null, instance, key, value);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetLeft() throws Throwable {
+		//
+		Assertions.assertDoesNotThrow(() -> setLeft(null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> setLeft(MutablePair.of(null, null), null));
+		//
+	}
+
+	private static <L> void setLeft(final MutablePair<L, ?> instance, final L left) throws Throwable {
+		try {
+			METHOD_SET_LEFT.invoke(null, instance, left);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
