@@ -37,6 +37,7 @@ public class KyushuJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryBea
 		//
 	}
 
+	@Nullable
 	private static Map<String, String> createMap(final String url) throws IOException {
 		//
 		final List<Element> es = ElementUtil.select(testAndApply(Objects::nonNull,
