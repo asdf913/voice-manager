@@ -16,6 +16,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.commons.lang3.tuple.MutablePairUtil;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
 import org.jsoup.Jsoup;
@@ -76,15 +77,17 @@ public class RinkaiSenKanjRomajiMapFactoryBean extends StringMapFromResourceFact
 		//
 		int size = IterableUtils.size(es);
 		//
-		if (size > 0 && (pair = ObjectUtils.getIfNull(pair, MutablePair::new)) != null) {
+		if (size > 0) {
 			//
-			pair.setLeft(ElementUtil.text(IterableUtils.get(es, 0)));
+			MutablePairUtil.setLeft(pair = ObjectUtils.getIfNull(pair, MutablePair::new),
+					ElementUtil.text(IterableUtils.get(es, 0)));
 			//
 		} // if
 			//
-		if (size > 1 && (pair = ObjectUtils.getIfNull(pair, MutablePair::new)) != null) {
+		if (size > 1) {
 			//
-			pair.setRight(ElementUtil.text(IterableUtils.get(es, 1)));
+			MutablePairUtil.setRight(pair = ObjectUtils.getIfNull(pair, MutablePair::new),
+					ElementUtil.text(IterableUtils.get(es, 1)));
 			//
 		} // if
 			//

@@ -17,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.commons.lang3.tuple.MutablePairUtil;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
 import org.jsoup.Jsoup;
@@ -109,7 +110,7 @@ public class KyushuJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFrom
 				//
 			} else if (es.size() == 1) {
 				//
-				setLeft(pair = ObjectUtils.getIfNull(pair, MutablePair::new),
+				MutablePairUtil.setLeft(pair = ObjectUtils.getIfNull(pair, MutablePair::new),
 						ElementUtil.text(IterableUtils.get(es, 0)));
 				//
 			} // if
@@ -126,7 +127,7 @@ public class KyushuJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFrom
 				//
 			} else if (es.size() == 1) {
 				//
-				setRight(pair = ObjectUtils.getIfNull(pair, MutablePair::new),
+				MutablePairUtil.setRight(pair = ObjectUtils.getIfNull(pair, MutablePair::new),
 						ElementUtil.text(IterableUtils.get(es, 0)));
 				//
 			} // if
@@ -135,26 +136,6 @@ public class KyushuJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFrom
 			//
 		return pair;
 		//
-	}
-
-	private static <L> void setLeft(@Nullable final MutablePair<L, ?> instance, final L left) {
-		//
-		if (instance != null) {
-			//
-			instance.setLeft(left);
-			//
-		} // if
-			//
-	}
-
-	private static <R> void setRight(@Nullable final MutablePair<?, R> instance, final R right) {
-		//
-		if (instance != null) {
-			//
-			instance.setRight(right);
-			//
-		} // if
-			//
 	}
 
 	private static <K, V> void put(@Nullable final Map<K, V> instance, final K key, final V value) {
