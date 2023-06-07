@@ -1,7 +1,6 @@
 package org.springframework.beans.factory;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -38,7 +37,7 @@ public class KyushuJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryBea
 		//
 	}
 
-	private static Map<String, String> createMap(final String url) throws MalformedURLException, IOException {
+	private static Map<String, String> createMap(final String url) throws IOException {
 		//
 		final List<Element> es = ElementUtil.select(testAndApply(Objects::nonNull,
 				testAndApply(StringUtils::isNotBlank, url, URL::new, null), x -> Jsoup.parse(x, 0), null),
@@ -77,7 +76,7 @@ public class KyushuJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryBea
 		return instance != null && instance.test(value);
 	}
 
-	private static Entry<String, String> createEntry(final String url) throws MalformedURLException, IOException {
+	private static Entry<String, String> createEntry(final String url) throws IOException {
 		//
 		MutablePair<String, String> pair = null;
 		//
