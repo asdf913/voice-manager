@@ -1,0 +1,147 @@
+package org.springframework.beans.factory;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.function.Predicate;
+
+import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.apache.commons.lang3.tuple.MutablePair;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.ElementUtil;
+
+public class KyushuJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<Map<String, String>> {
+
+	private String url = null;
+
+	public void setUrl(final String url) {
+		this.url = url;
+	}
+
+	@Override
+	public Map<String, String> getObject() throws Exception {
+		//
+		return createMap(url);
+		//
+	}
+
+	private static Map<String, String> createMap(final String url) throws MalformedURLException, IOException {
+		//
+		final List<Element> es = ElementUtil.select(testAndApply(Objects::nonNull,
+				testAndApply(StringUtils::isNotBlank, url, URL::new, null), x -> Jsoup.parse(x, 0), null),
+				"ol.stationList li a");
+		//
+		Element e = null;
+		//
+		Map<String, String> map = null;
+		//
+		Entry<String, String> entry = null;
+		//
+		for (int i = 0; es != null && i < es.size(); i++) {
+			//
+			if ((e = es.get(i)) == null || (entry = createEntry(e.absUrl("href"))) == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), entry.getKey(), entry.getValue());
+			//
+		} // for
+			//
+		return map;
+		//
+	}
+
+	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse) throws E {
+		return test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
+				: FailableFunctionUtil.apply(functionFalse, value);
+	}
+
+	private static final <T> boolean test(final Predicate<T> instance, final T value) {
+		return instance != null && instance.test(value);
+	}
+
+	private static Entry<String, String> createEntry(final String url) throws MalformedURLException, IOException {
+		//
+		MutablePair<String, String> pair = null;
+		//
+		final Document document = testAndApply(Objects::nonNull,
+				testAndApply(StringUtils::isNotBlank, url, URL::new, null), x -> Jsoup.parse(x, 0), null);
+		//
+		// kanji
+		//
+		List<Element> es = ElementUtil.select(document, "div.box-station-name p.title");
+		//
+		if (es != null) {
+			//
+			if (es.size() > 1) {
+				//
+				throw new IllegalStateException();
+				//
+			} else if (es.size() == 1) {
+				//
+				if ((pair = ObjectUtils.getIfNull(pair, MutablePair::new)) != null) {
+					//
+					pair.setLeft(ElementUtil.text(IterableUtils.get(es, 0)));
+					//
+				} // if
+					//
+			} // if
+				//
+		} // if
+			//
+			// hiragana
+			//
+		if ((es = ElementUtil.select(document, "p.subtitle")) != null) {
+			//
+			if (es.size() > 1) {
+				//
+				throw new IllegalStateException();
+				//
+			} else if (es.size() == 1) {
+				//
+				if ((pair = ObjectUtils.getIfNull(pair, MutablePair::new)) != null) {
+					//
+					pair.setRight(ElementUtil.text(IterableUtils.get(es, 0)));
+					//
+				} // if
+					//
+			} // if
+				//
+		} // if
+			//
+		return pair;
+		//
+	}
+
+	private static <K, V> void put(final Map<K, V> instance, final K key, final V value) {
+		//
+		if (instance != null) {
+			//
+			instance.put(key, value);
+			//
+		} // if
+			//
+	}
+
+	@Override
+	public Class<?> getObjectType() {
+		//
+		return Map.class;
+		//
+	}
+
+}
