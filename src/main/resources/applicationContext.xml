@@ -375,6 +375,14 @@
 			value="classpath:ShikokuJapanRailway.xlsx" />
 	</bean>
 
+	<!-- org.springframework.beans.factory.KyushuJapanRailwayKanjiHiraganaMapFactoryBean -->
+	<bean
+		class="org.springframework.beans.factory.KyushuJapanRailwayKanjiHiraganaMapFactoryBean">
+		<meta key="value" value="hiragana" />
+		<property name="url"
+			value="${org.springframework.beans.factory.KyushuJapanRailwayKanjiHiraganaMapFactoryBean.url}" />
+	</bean>
+
 	<!-- -->
 	<bean id="JlptLevelPageUrl" class="java.lang.String">
 		<constructor-arg index="0"
