@@ -23,6 +23,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
+import org.jsoup.nodes.NodeUtil;
 
 public class KyushuJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFromResourceFactoryBean {
 
@@ -54,8 +55,6 @@ public class KyushuJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFrom
 				testAndApply(StringUtils::isNotBlank, url, URL::new, null), x -> Jsoup.parse(x, 0), null),
 				"ol.stationList li a");
 		//
-		Element e = null;
-		//
 		Map<String, String> map = null;
 		//
 		Entry<String, String> entry = null;
@@ -64,7 +63,7 @@ public class KyushuJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFrom
 		//
 		for (int i = 0; es != null && i < es.size(); i++) {
 			//
-			if ((e = es.get(i)) == null || (entry = createEntry(e.absUrl("href"))) == null
+			if ((entry = createEntry(NodeUtil.absUrl(es.get(i), "href"))) == null
 					|| Objects.equals(key = entry.getKey(), value = entry.getValue())) {
 				//
 				continue;

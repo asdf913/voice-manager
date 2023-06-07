@@ -34,6 +34,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
+import org.jsoup.nodes.NodeUtil;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.CellUtil;
@@ -184,7 +185,7 @@ public class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends Stri
 			//
 			for (final Element e : es) {
 				//
-				if (e == null || (map = createMap(e.absUrl("href"))) == null) {
+				if ((map = createMap(NodeUtil.absUrl(e, "href"))) == null) {
 					//
 					continue;
 					//

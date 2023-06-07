@@ -27,6 +27,7 @@ import org.javatuples.valueintf.IValue0Util;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
+import org.jsoup.nodes.NodeUtil;
 
 public class TokyuKanjiRomajiOrHiraganaMapFactoryBean extends StringMapFromResourceFactoryBean {
 
@@ -126,8 +127,6 @@ public class TokyuKanjiRomajiOrHiraganaMapFactoryBean extends StringMapFromResou
 		//
 		if (es != null) {
 			//
-			Element a = null;
-			//
 			String text = null;
 			//
 			Map<RomajiOrHiragana, String> temp = null;
@@ -137,7 +136,7 @@ public class TokyuKanjiRomajiOrHiraganaMapFactoryBean extends StringMapFromResou
 				if (e == null
 						|| !isAllCharacterInSameUnicodeBlock(text = ElementUtil.text(e),
 								UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)
-						|| (a = e.selectFirst("a")) == null || (temp = getRomajiOrHiraganaMap(a.absUrl("href"))) == null
+						|| (temp = getRomajiOrHiraganaMap(NodeUtil.absUrl(e.selectFirst("a"), "href"))) == null
 						|| temp.isEmpty()) {
 					//
 					continue;
