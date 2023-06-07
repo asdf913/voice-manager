@@ -94,14 +94,10 @@ public class KyushuJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryBea
 				//
 				throw new IllegalStateException();
 				//
-			} else if (es.size() == 1) {
+			} else if (es.size() == 1 && (pair = ObjectUtils.getIfNull(pair, MutablePair::new)) != null) {
 				//
-				if ((pair = ObjectUtils.getIfNull(pair, MutablePair::new)) != null) {
-					//
-					pair.setLeft(ElementUtil.text(IterableUtils.get(es, 0)));
-					//
-				} // if
-					//
+				pair.setLeft(ElementUtil.text(IterableUtils.get(es, 0)));
+				//
 			} // if
 				//
 		} // if
@@ -114,14 +110,10 @@ public class KyushuJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryBea
 				//
 				throw new IllegalStateException();
 				//
-			} else if (es.size() == 1) {
+			} else if (es.size() == 1 && (pair = ObjectUtils.getIfNull(pair, MutablePair::new)) != null) {
 				//
-				if ((pair = ObjectUtils.getIfNull(pair, MutablePair::new)) != null) {
-					//
-					pair.setRight(ElementUtil.text(IterableUtils.get(es, 0)));
-					//
-				} // if
-					//
+				pair.setRight(ElementUtil.text(IterableUtils.get(es, 0)));
+				//
 			} // if
 				//
 		} // if
