@@ -19,6 +19,7 @@ abstract class Util {
 	private Util() {
 	}
 
+	@Nullable
 	static IValue0<UnicodeBlock> getUnicodeBlock(final String string) throws IllegalAccessException {
 		//
 		if (StringUtils.isBlank(string)) {
@@ -68,6 +69,7 @@ abstract class Util {
 		return a != null && b != null && a.isAssignableFrom(b);
 	}
 
+	@Nullable
 	private static <T> T cast(final Class<T> clz, final Object instance) {
 		return clz != null && clz.isInstance(instance) ? clz.cast(instance) : null;
 	}
