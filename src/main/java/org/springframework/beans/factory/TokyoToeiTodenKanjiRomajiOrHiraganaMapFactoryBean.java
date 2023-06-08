@@ -303,7 +303,7 @@ public class TokyoToeiTodenKanjiRomajiOrHiraganaMapFactoryBean implements Factor
 
 	private static Multimap<UnicodeBlock, Character> createUnicodeBlockCharacterMultimap(final String string) {
 		//
-		char c = ' ';
+		char c;
 		//
 		Multimap<UnicodeBlock, Character> chars = null;
 		//
