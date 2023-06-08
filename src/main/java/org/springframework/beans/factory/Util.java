@@ -7,6 +7,8 @@ import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.javatuples.Unit;
@@ -58,7 +60,7 @@ abstract class Util {
 			//
 	}
 
-	private static String getName(final Member instance) {
+	private static String getName(@Nullable final Member instance) {
 		return instance != null ? instance.getName() : null;
 	}
 
