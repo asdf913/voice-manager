@@ -45,9 +45,8 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 
 	private static Method METHOD_TO_STRING, METHOD_CAST, METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5,
 			METHOD_CREATE_TABLE, METHOD_GET_UNICODE_BLOCKS, METHOD_TEST, METHOD_ACCEPT, METHOD_IS_INSTANCE,
-			METHOD_CONTAINS, METHOD_PUT, METHOD_ADD, METHOD_IS_ASSIGNABLE_FROM, METHOD_OPEN_STREAM,
-			METHOD_GET_TRIPLES_1, METHOD_GET_TRIPLES_2, METHOD_GET_NAME_METHOD, METHOD_GET_NAME_MODULE,
-			METHOD_GET_MODULE, METHOD_GET = null;
+			METHOD_CONTAINS, METHOD_PUT, METHOD_ADD, METHOD_OPEN_STREAM, METHOD_GET_TRIPLES_1, METHOD_GET_TRIPLES_2,
+			METHOD_GET_NAME_MODULE, METHOD_GET_MODULE, METHOD_GET = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -82,16 +81,11 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 		//
 		(METHOD_ADD = clz.getDeclaredMethod("add", Collection.class, Object.class)).setAccessible(true);
 		//
-		(METHOD_IS_ASSIGNABLE_FROM = clz.getDeclaredMethod("isAssignableFrom", Class.class, Class.class))
-				.setAccessible(true);
-		//
 		(METHOD_OPEN_STREAM = clz.getDeclaredMethod("openStream", URL.class)).setAccessible(true);
 		//
 		(METHOD_GET_TRIPLES_1 = clz.getDeclaredMethod("getTriples", Map.class)).setAccessible(true);
 		//
 		(METHOD_GET_TRIPLES_2 = clz.getDeclaredMethod("getTriples", Field[].class, Object.class)).setAccessible(true);
-		//
-		(METHOD_GET_NAME_METHOD = clz.getDeclaredMethod("getName", Member.class)).setAccessible(true);
 		//
 		(METHOD_GET_NAME_MODULE = clz.getDeclaredMethod("getName", Module.class)).setAccessible(true);
 		//
@@ -505,27 +499,6 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 	}
 
 	@Test
-	void testIsAssignableFrom() throws Throwable {
-		//
-		Assertions.assertFalse(isAssignableFrom(null, null));
-		//
-		Assertions.assertFalse(isAssignableFrom(String.class, null));
-		//
-	}
-
-	private static boolean isAssignableFrom(final Class<?> a, final Class<?> b) throws Throwable {
-		try {
-			final Object obj = METHOD_IS_ASSIGNABLE_FROM.invoke(null, a, b);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testOpenStream() throws Throwable {
 		//
 		Assertions.assertNotNull(openStream(new File("pom.xml").toURI().toURL()));
@@ -613,24 +586,12 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 	@Test
 	void testGetName() throws Throwable {
 		//
-		Assertions.assertNull(getName((Member) null));
-		//
 		Assertions.assertNull(getName((Module) null));
 		//
 	}
 
-	private static String getName(final Member instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_NAME_METHOD.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
+	private static String getName(final Member instance) {
+		return instance != null ? instance.getName() : null;
 	}
 
 	private static String getName(final Module instance) throws Throwable {

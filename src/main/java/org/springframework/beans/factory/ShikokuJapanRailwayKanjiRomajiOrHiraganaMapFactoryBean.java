@@ -2,12 +2,8 @@ package org.springframework.beans.factory;
 
 import java.io.IOException;
 import java.lang.Character.UnicodeBlock;
-import java.lang.reflect.Field;
-import java.lang.reflect.Member;
-import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -27,7 +23,6 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
-import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
 import org.jsoup.Jsoup;
@@ -67,7 +62,7 @@ public class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends Stri
 			//
 		} else if (instance instanceof String string) {
 			//
-			final IValue0<UnicodeBlock> iValue0 = getUnicodeBlock(string);
+			final IValue0<UnicodeBlock> iValue0 = Util.getUnicodeBlock(string);
 			//
 			if (iValue0 != null) {
 				//
@@ -89,62 +84,6 @@ public class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends Stri
 			//
 		} // if
 			//
-	}
-
-	@Nullable
-	private static IValue0<UnicodeBlock> getUnicodeBlock(final String string) throws IllegalAccessException {
-		//
-		if (StringUtils.isBlank(string)) {
-			//
-			return Unit.with(null);
-			//
-		} else {
-			//
-			final List<Field> fs = Arrays.stream(UnicodeBlock.class.getDeclaredFields())
-					.filter(f -> StringUtils.startsWithIgnoreCase(getName(f), string)).toList();
-			//
-			final int size = IterableUtils.size(fs);
-			//
-			if (size > 1) {
-				//
-				throw new IllegalStateException();
-				//
-			} else if (size == 0) {
-				//
-				return null;
-				//
-			} // if
-				//
-			final Field f = IterableUtils.get(fs, 0);
-			//
-			if (f == null || !Modifier.isStatic(f.getModifiers())) {
-				//
-				return null;
-				//
-			} else if (!isAssignableFrom(f.getType(), UnicodeBlock.class)) {
-				//
-				throw new IllegalStateException();
-				//
-			} // if
-				//
-			return Unit.with(cast(UnicodeBlock.class, f.get(0)));
-			//
-		} // if
-			//
-	}
-
-	@Nullable
-	private static String getName(@Nullable final Member instance) {
-		return instance != null ? instance.getName() : null;
-	}
-
-	private static boolean isAssignableFrom(@Nullable final Class<?> a, @Nullable final Class<?> b) {
-		return a != null && b != null && a.isAssignableFrom(b);
-	}
-
-	@Nullable
-	private static <T> T cast(@Nullable final Class<T> clz, final Object instance) {
-		return clz != null && clz.isInstance(instance) ? clz.cast(instance) : null;
 	}
 
 	@Override

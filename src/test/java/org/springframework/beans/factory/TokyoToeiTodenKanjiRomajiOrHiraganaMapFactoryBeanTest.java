@@ -3,7 +3,6 @@ package org.springframework.beans.factory;
 import java.lang.Character.UnicodeBlock;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Collections;
@@ -26,9 +25,9 @@ import com.google.common.collect.Multimap;
 
 class TokyoToeiTodenKanjiRomajiOrHiraganaMapFactoryBeanTest {
 
-	private static Method METHOD_CREATE_MAP, METHOD_GET_CLASS, METHOD_GET_NAME, METHOD_IS_ASSIGNABLE_FROM, METHOD_CAST,
-			METHOD_TEST_AND_APPLY, METHOD_PUT, METHOD_GET_HIRAGANA, METHOD_GET_ROMAJI,
-			METHOD_CREATE_UNICODE_BLOCK_CHARACTER_MULTI_MAP, METHOD_STREAM, METHOD_COLLECT, METHOD_GET_KANJI = null;
+	private static Method METHOD_CREATE_MAP, METHOD_GET_CLASS, METHOD_TEST_AND_APPLY, METHOD_PUT, METHOD_GET_HIRAGANA,
+			METHOD_GET_ROMAJI, METHOD_CREATE_UNICODE_BLOCK_CHARACTER_MULTI_MAP, METHOD_STREAM, METHOD_COLLECT,
+			METHOD_GET_KANJI = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -38,13 +37,6 @@ class TokyoToeiTodenKanjiRomajiOrHiraganaMapFactoryBeanTest {
 		(METHOD_CREATE_MAP = clz.getDeclaredMethod("createMap", String.class)).setAccessible(true);
 		//
 		(METHOD_GET_CLASS = clz.getDeclaredMethod("getClass", Object.class)).setAccessible(true);
-		//
-		(METHOD_GET_NAME = clz.getDeclaredMethod("getName", Member.class)).setAccessible(true);
-		//
-		(METHOD_IS_ASSIGNABLE_FROM = clz.getDeclaredMethod("isAssignableFrom", Class.class, Class.class))
-				.setAccessible(true);
-		//
-		(METHOD_CAST = clz.getDeclaredMethod("cast", Class.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
@@ -209,65 +201,6 @@ class TokyoToeiTodenKanjiRomajiOrHiraganaMapFactoryBeanTest {
 				return (Class<?>) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetName() throws Throwable {
-		//
-		Assertions.assertNull(getName(null));
-		//
-	}
-
-	private static String getName(final Member instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_NAME.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testIsAssignableFrom() throws Throwable {
-		//
-		Assertions.assertFalse(isAssignableFrom(null, null));
-		//
-		Assertions.assertFalse(isAssignableFrom(String.class, null));
-		//
-	}
-
-	private static boolean isAssignableFrom(final Class<?> a, final Class<?> b) throws Throwable {
-		try {
-			final Object obj = METHOD_IS_ASSIGNABLE_FROM.invoke(null, a, b);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testCast() throws Throwable {
-		//
-		Assertions.assertNull(cast(null, null));
-		//
-		Assertions.assertNull(cast(Object.class, null));
-		//
-	}
-
-	private static <T> T cast(final Class<T> clz, final Object instance) throws Throwable {
-		try {
-			return (T) METHOD_CAST.invoke(null, clz, instance);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

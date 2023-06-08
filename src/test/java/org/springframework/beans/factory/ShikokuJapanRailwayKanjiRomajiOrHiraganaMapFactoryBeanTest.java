@@ -3,7 +3,6 @@ package org.springframework.beans.factory;
 import java.lang.Character.UnicodeBlock;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
@@ -31,25 +30,20 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 
-	private static Method METHOD_GET_NAME, METHOD_CREATE_MAP, METHOD_GET_CLASS, METHOD_CREATE_TABLE, METHOD_CAST,
-			METHOD_GET_HIRAGANA, METHOD_GET_ROMAJI, METHOD_STREAM, METHOD_FILTER, METHOD_COLLECT,
-			METHOD_CREATE_UNICODE_BLOCK_CHARACTER_MULTI_MAP, METHOD_PUT, METHOD_IS_ASSIGNABLE_FROM,
-			METHOD_TEST_AND_APPLY = null;
+	private static Method METHOD_CREATE_MAP, METHOD_GET_CLASS, METHOD_CREATE_TABLE, METHOD_GET_HIRAGANA,
+			METHOD_GET_ROMAJI, METHOD_STREAM, METHOD_FILTER, METHOD_COLLECT,
+			METHOD_CREATE_UNICODE_BLOCK_CHARACTER_MULTI_MAP, METHOD_PUT, METHOD_TEST_AND_APPLY = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
 		//
 		final Class<?> clz = ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean.class;
 		//
-		(METHOD_GET_NAME = clz.getDeclaredMethod("getName", Member.class)).setAccessible(true);
-		//
 		(METHOD_CREATE_MAP = clz.getDeclaredMethod("createMap", String.class)).setAccessible(true);
 		//
 		(METHOD_GET_CLASS = clz.getDeclaredMethod("getClass", Object.class)).setAccessible(true);
 		//
 		(METHOD_CREATE_TABLE = clz.getDeclaredMethod("createTable", Iterable.class)).setAccessible(true);
-		//
-		(METHOD_CAST = clz.getDeclaredMethod("cast", Class.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_GET_HIRAGANA = clz.getDeclaredMethod("getHiragana", Element.class)).setAccessible(true);
 		//
@@ -65,9 +59,6 @@ class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 				CharSequence.class)).setAccessible(true);
 		//
 		(METHOD_PUT = clz.getDeclaredMethod("put", Map.class, Object.class, Object.class)).setAccessible(true);
-		//
-		(METHOD_IS_ASSIGNABLE_FROM = clz.getDeclaredMethod("isAssignableFrom", Class.class, Class.class))
-				.setAccessible(true);
 		//
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
@@ -95,27 +86,6 @@ class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 		//
 		Assertions.assertNull(instance != null ? instance.getObject() : null);
 		//
-	}
-
-	@Test
-	void testGetName() throws Throwable {
-		//
-		Assertions.assertNull(getName(null));
-		//
-	}
-
-	private static String getName(final Member instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_NAME.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test
@@ -242,21 +212,8 @@ class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 		//
 	}
 
-	@Test
-	void testCast() throws Throwable {
-		//
-		Assertions.assertNull(cast(null, null));
-		//
-		Assertions.assertNull(cast(Object.class, null));
-		//
-	}
-
-	private static <T> T cast(final Class<T> clz, final Object instance) throws Throwable {
-		try {
-			return (T) METHOD_CAST.invoke(null, clz, instance);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
+	private static <T> T cast(final Class<T> clz, final Object instance) {
+		return clz != null && clz.isInstance(instance) ? clz.cast(instance) : null;
 	}
 
 	private static Table<String, UnicodeBlock, String> createTable(final Iterable<Element> es) throws Throwable {
@@ -423,27 +380,6 @@ class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 	private static <K, V> void put(final Map<K, V> instance, final K key, final V value) throws Throwable {
 		try {
 			METHOD_PUT.invoke(null, instance, key, value);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testIsAssignableFrom() throws Throwable {
-		//
-		Assertions.assertFalse(isAssignableFrom(null, null));
-		//
-		Assertions.assertFalse(isAssignableFrom(Object.class, null));
-		//
-	}
-
-	private static boolean isAssignableFrom(final Class<?> a, final Class<?> b) throws Throwable {
-		try {
-			final Object obj = METHOD_IS_ASSIGNABLE_FROM.invoke(null, a, b);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
-			}
-			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
