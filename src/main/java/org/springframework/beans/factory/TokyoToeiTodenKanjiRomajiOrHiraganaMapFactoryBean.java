@@ -217,6 +217,7 @@ public class TokyoToeiTodenKanjiRomajiOrHiraganaMapFactoryBean implements Factor
 		return instance != null && instance.test(value);
 	}
 
+	@Nullable
 	private static Map<UnicodeBlock, String> createMap(final String url) throws IOException {
 		//
 		Map<UnicodeBlock, String> map = null;
