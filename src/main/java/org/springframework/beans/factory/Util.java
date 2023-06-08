@@ -61,6 +61,7 @@ abstract class Util {
 			//
 	}
 
+	@Nullable
 	private static String getName(@Nullable final Member instance) {
 		return instance != null ? instance.getName() : null;
 	}
