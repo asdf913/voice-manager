@@ -28,7 +28,7 @@ class TokyoToeiTodenKanjiRomajiOrHiraganaMapFactoryBeanTest {
 
 	private static Method METHOD_CREATE_MAP, METHOD_GET_CLASS, METHOD_GET_NAME, METHOD_IS_ASSIGNABLE_FROM, METHOD_CAST,
 			METHOD_TEST_AND_APPLY, METHOD_PUT, METHOD_GET_HIRAGANA, METHOD_GET_ROMAJI,
-			METHOD_CREATE_UNICODE_BLOCK_CHARACTER_MULTI_MAP, METHOD_STREAM, METHOD_COLLECT = null;
+			METHOD_CREATE_UNICODE_BLOCK_CHARACTER_MULTI_MAP, METHOD_STREAM, METHOD_COLLECT, METHOD_GET_KANJI = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -61,6 +61,8 @@ class TokyoToeiTodenKanjiRomajiOrHiraganaMapFactoryBeanTest {
 		(METHOD_STREAM = clz.getDeclaredMethod("stream", Collection.class)).setAccessible(true);
 		//
 		(METHOD_COLLECT = clz.getDeclaredMethod("collect", Stream.class, Collector.class)).setAccessible(true);
+		//
+		(METHOD_GET_KANJI = clz.getDeclaredMethod("getKanji", String.class)).setAccessible(true);
 		//
 	}
 
@@ -410,6 +412,27 @@ class TokyoToeiTodenKanjiRomajiOrHiraganaMapFactoryBeanTest {
 			throws Throwable {
 		try {
 			return (R) METHOD_COLLECT.invoke(null, instance, collector);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetKanji() throws Throwable {
+		//
+		Assertions.assertNull(getKanji(null));
+		//
+	}
+
+	private static String getKanji(final String string) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_KANJI.invoke(null, string);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
