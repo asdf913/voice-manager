@@ -14,6 +14,9 @@ import org.javatuples.valueintf.IValue0;
 
 abstract class Util {
 
+	private Util() {
+	}
+
 	static IValue0<UnicodeBlock> getUnicodeBlock(final String string) throws IllegalAccessException {
 		//
 		if (StringUtils.isBlank(string)) {
