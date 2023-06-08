@@ -49,6 +49,7 @@ public class TokyoToeiTodenKanjiRomajiOrHiraganaMapFactoryBean implements Factor
 
 	private String url = null;
 
+	@Nullable
 	private UnicodeBlock unicodeBlock = null;
 
 	public void setUrl(final String url) {
@@ -133,6 +134,7 @@ public class TokyoToeiTodenKanjiRomajiOrHiraganaMapFactoryBean implements Factor
 			//
 	}
 
+	@Nullable
 	private static String getName(@Nullable final Member instance) {
 		return instance != null ? instance.getName() : null;
 	}
@@ -158,6 +160,7 @@ public class TokyoToeiTodenKanjiRomajiOrHiraganaMapFactoryBean implements Factor
 		//
 	}
 
+	@Nullable
 	private static Table<String, UnicodeBlock, String> createTable(final String url) throws IOException {
 		//
 		final List<Element> es = ElementUtil.select(testAndApply(Objects::nonNull,
@@ -285,10 +288,12 @@ public class TokyoToeiTodenKanjiRomajiOrHiraganaMapFactoryBean implements Factor
 		//
 	}
 
+	@Nullable
 	private static <E> Stream<E> stream(@Nullable final Collection<E> instance) {
 		return instance != null ? instance.stream() : null;
 	}
 
+	@Nullable
 	private static <T, R, A> R collect(@Nullable final Stream<T> instance,
 			@Nullable final Collector<? super T, A, R> collector) {
 		//
@@ -298,6 +303,7 @@ public class TokyoToeiTodenKanjiRomajiOrHiraganaMapFactoryBean implements Factor
 		//
 	}
 
+	@Nullable
 	private static Class<?> getClass(@Nullable final Object instance) {
 		return instance != null ? instance.getClass() : null;
 	}
