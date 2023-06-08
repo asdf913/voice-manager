@@ -225,7 +225,9 @@ public class TokyoToeiTodenKanjiRomajiOrHiraganaMapFactoryBean implements Factor
 		//
 		if (es != null) {
 			//
-			if (es != null && es.size() > 1) {
+			final int size = es.size();
+			//
+			if (size > 1) {
 				//
 				throw new IllegalStateException();
 				//
@@ -240,13 +242,15 @@ public class TokyoToeiTodenKanjiRomajiOrHiraganaMapFactoryBean implements Factor
 			//
 			// romaji
 			//
-		if (es != null) {
+		if ((es = ElementUtil.select(document, ".name-eng")) != null) {
 			//
-			if ((es = ElementUtil.select(document, ".name-eng")) != null && es.size() > 1) {
+			final int size = es.size();
+			//
+			if (size > 1) {
 				//
 				throw new IllegalStateException();
 				//
-			} else if (es.size() == 1) {
+			} else if (size == 1) {
 				//
 				put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), UnicodeBlock.BASIC_LATIN,
 						getRomaji(!es.isEmpty() ? IterableUtils.get(es, 0) : null));
