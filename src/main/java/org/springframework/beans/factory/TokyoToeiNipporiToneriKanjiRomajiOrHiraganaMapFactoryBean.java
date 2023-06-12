@@ -138,6 +138,7 @@ public class TokyoToeiNipporiToneriKanjiRomajiOrHiraganaMapFactoryBean implement
 		//
 	}
 
+	@Nullable
 	private static String getKanji(final String string) {
 		//
 		return collect(
@@ -217,6 +218,7 @@ public class TokyoToeiNipporiToneriKanjiRomajiOrHiraganaMapFactoryBean implement
 		}
 	}
 
+	@Nullable
 	private static String getHiragana(@Nullable final Element element) {
 		//
 		return collect(
@@ -247,6 +249,7 @@ public class TokyoToeiNipporiToneriKanjiRomajiOrHiraganaMapFactoryBean implement
 		return instance != null ? instance.getClass() : null;
 	}
 
+	@Nullable
 	private static String getRomaji(@Nullable final Element element) {
 		//
 		return collect(
