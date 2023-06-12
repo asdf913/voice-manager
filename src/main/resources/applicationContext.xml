@@ -413,6 +413,23 @@
 		<property name="resource" value="classpath:ToeiToden.xlsx" />
 	</bean>
 
+	<!-- org.springframework.beans.factory.TokyoToeiNipporiToneriKanjiRomajiOrHiraganaMapFactoryBean -->
+	<bean
+		class="org.springframework.beans.factory.TokyoToeiNipporiToneriKanjiRomajiOrHiraganaMapFactoryBean">
+		<meta key="value" value="romaji" />
+		<property name="url"
+			value="${org.springframework.beans.factory.TokyoToeiNipporiToneriKanjiRomajiOrHiraganaMapFactoryBean.url}" />
+		<property name="unicodeBlock" value="BASIC_LATIN" />
+	</bean>
+
+	<bean
+		class="org.springframework.beans.factory.TokyoToeiNipporiToneriKanjiRomajiOrHiraganaMapFactoryBean">
+		<meta key="value" value="hiragana" />
+		<property name="url"
+			value="${org.springframework.beans.factory.TokyoToeiNipporiToneriKanjiRomajiOrHiraganaMapFactoryBean.url}" />
+		<property name="unicodeBlock" value="HIRAGANA" />
+	</bean>
+
 	<!-- -->
 	<bean id="JlptLevelPageUrl" class="java.lang.String">
 		<constructor-arg index="0"
