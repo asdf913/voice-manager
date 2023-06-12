@@ -8,7 +8,7 @@ import com.google.common.collect.Table.Cell;
 
 public interface TableUtil {
 
-	static <R, C, V> void put(@Nullable final Table<R, C, V> instance, final R rowKey, final C columnKey,
+	static <R, C, V> void put(@Nullable final Table<R, C, V> instance, @Nullable final R rowKey, final C columnKey,
 			@Nullable final V value) {
 		if (instance != null) {
 			instance.put(rowKey, columnKey, value);

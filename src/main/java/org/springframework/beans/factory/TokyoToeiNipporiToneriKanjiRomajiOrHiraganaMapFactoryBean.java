@@ -44,14 +44,13 @@ public class TokyoToeiNipporiToneriKanjiRomajiOrHiraganaMapFactoryBean implement
 
 	private String url = null;
 
-	@Nullable
 	private UnicodeBlock unicodeBlock = null;
 
 	public void setUrl(final String url) {
 		this.url = url;
 	}
 
-	public void setUnicodeBlock(@Nullable final Object instance) throws IllegalAccessException {
+	public void setUnicodeBlock(final Object instance) throws IllegalAccessException {
 		//
 		if (instance == null) {
 			//
@@ -99,7 +98,6 @@ public class TokyoToeiNipporiToneriKanjiRomajiOrHiraganaMapFactoryBean implement
 		//
 	}
 
-	@Nullable
 	private static Table<String, UnicodeBlock, String> createTable(final String url) throws IOException {
 		//
 		final List<Element> es = ElementUtil.select(testAndApply(Objects::nonNull,
@@ -138,7 +136,6 @@ public class TokyoToeiNipporiToneriKanjiRomajiOrHiraganaMapFactoryBean implement
 		//
 	}
 
-	@Nullable
 	private static String getKanji(final String string) {
 		//
 		return collect(
@@ -150,17 +147,15 @@ public class TokyoToeiNipporiToneriKanjiRomajiOrHiraganaMapFactoryBean implement
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
-			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
-			throws E {
+			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse) throws E {
 		return test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
-	private static final <T> boolean test(@Nullable final Predicate<T> instance, final T value) {
+	private static final <T> boolean test(final Predicate<T> instance, final T value) {
 		return instance != null && instance.test(value);
 	}
 
-	@Nullable
 	private static Map<UnicodeBlock, String> createMap(final String url) throws IOException {
 		//
 		Map<UnicodeBlock, String> map = null;
@@ -212,14 +207,13 @@ public class TokyoToeiNipporiToneriKanjiRomajiOrHiraganaMapFactoryBean implement
 		//
 	}
 
-	private static <K, V> void put(@Nullable final Map<K, V> instance, final K key, final V value) {
+	private static <K, V> void put(final Map<K, V> instance, final K key, @Nullable final V value) {
 		if (instance != null) {
 			instance.put(key, value);
 		}
 	}
 
-	@Nullable
-	private static String getHiragana(@Nullable final Element element) {
+	private static String getHiragana(final Element element) {
 		//
 		return collect(
 				stream(MultimapUtil.get(createUnicodeBlockCharacterMultimap(ElementUtil.text(element)),
@@ -229,14 +223,11 @@ public class TokyoToeiNipporiToneriKanjiRomajiOrHiraganaMapFactoryBean implement
 		//
 	}
 
-	@Nullable
-	private static <E> Stream<E> stream(@Nullable final Collection<E> instance) {
+	private static <E> Stream<E> stream(final Collection<E> instance) {
 		return instance != null ? instance.stream() : null;
 	}
 
-	@Nullable
-	private static <T, R, A> R collect(@Nullable final Stream<T> instance,
-			@Nullable final Collector<? super T, A, R> collector) {
+	private static <T, R, A> R collect(final Stream<T> instance, final Collector<? super T, A, R> collector) {
 		//
 		return instance != null && (collector != null || Proxy.isProxyClass(getClass(instance)))
 				? instance.collect(collector)
@@ -244,13 +235,11 @@ public class TokyoToeiNipporiToneriKanjiRomajiOrHiraganaMapFactoryBean implement
 		//
 	}
 
-	@Nullable
-	private static Class<?> getClass(@Nullable final Object instance) {
+	private static Class<?> getClass(final Object instance) {
 		return instance != null ? instance.getClass() : null;
 	}
 
-	@Nullable
-	private static String getRomaji(@Nullable final Element element) {
+	private static String getRomaji(final Element element) {
 		//
 		return collect(
 				stream(MultimapUtil.get(createUnicodeBlockCharacterMultimap(ElementUtil.text(element)),
@@ -260,9 +249,7 @@ public class TokyoToeiNipporiToneriKanjiRomajiOrHiraganaMapFactoryBean implement
 		//
 	}
 
-	@Nullable
-	private static Multimap<UnicodeBlock, Character> createUnicodeBlockCharacterMultimap(
-			@Nullable final String string) {
+	private static Multimap<UnicodeBlock, Character> createUnicodeBlockCharacterMultimap(final String string) {
 		//
 		char c;
 		//
