@@ -249,6 +249,7 @@ public class TokyoToeiNipporiToneriKanjiRomajiOrHiraganaMapFactoryBean implement
 		//
 	}
 
+	@Nullable
 	private static Multimap<UnicodeBlock, Character> createUnicodeBlockCharacterMultimap(final String string) {
 		//
 		char c;
