@@ -153,7 +153,7 @@ public class TokyoToeiNipporiToneriKanjiRomajiOrHiraganaMapFactoryBean implement
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
-	private static final <T> boolean test(final Predicate<T> instance, final T value) {
+	private static final <T> boolean test(@Nullable final Predicate<T> instance, final T value) {
 		return instance != null && instance.test(value);
 	}
 
@@ -208,7 +208,7 @@ public class TokyoToeiNipporiToneriKanjiRomajiOrHiraganaMapFactoryBean implement
 		//
 	}
 
-	private static <K, V> void put(final Map<K, V> instance, final K key, @Nullable final V value) {
+	private static <K, V> void put(@Nullable final Map<K, V> instance, final K key, @Nullable final V value) {
 		if (instance != null) {
 			instance.put(key, value);
 		}
@@ -228,7 +228,8 @@ public class TokyoToeiNipporiToneriKanjiRomajiOrHiraganaMapFactoryBean implement
 		return instance != null ? instance.stream() : null;
 	}
 
-	private static <T, R, A> R collect(final Stream<T> instance, final Collector<? super T, A, R> collector) {
+	private static <T, R, A> R collect(@Nullable final Stream<T> instance,
+			@Nullable final Collector<? super T, A, R> collector) {
 		//
 		return instance != null && (collector != null || Proxy.isProxyClass(getClass(instance)))
 				? instance.collect(collector)
@@ -251,7 +252,8 @@ public class TokyoToeiNipporiToneriKanjiRomajiOrHiraganaMapFactoryBean implement
 	}
 
 	@Nullable
-	private static Multimap<UnicodeBlock, Character> createUnicodeBlockCharacterMultimap(final String string) {
+	private static Multimap<UnicodeBlock, Character> createUnicodeBlockCharacterMultimap(
+			@Nullable final String string) {
 		//
 		char c;
 		//
