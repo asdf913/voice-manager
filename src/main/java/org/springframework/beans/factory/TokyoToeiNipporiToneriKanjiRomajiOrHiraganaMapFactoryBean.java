@@ -215,7 +215,7 @@ public class TokyoToeiNipporiToneriKanjiRomajiOrHiraganaMapFactoryBean implement
 		}
 	}
 
-	private static String getHiragana(final Element element) {
+	private static String getHiragana(@Nullable final Element element) {
 		//
 		return collect(
 				stream(MultimapUtil.get(createUnicodeBlockCharacterMultimap(ElementUtil.text(element)),
@@ -242,7 +242,7 @@ public class TokyoToeiNipporiToneriKanjiRomajiOrHiraganaMapFactoryBean implement
 		return instance != null ? instance.getClass() : null;
 	}
 
-	private static String getRomaji(final Element element) {
+	private static String getRomaji(@Nullable final Element element) {
 		//
 		return collect(
 				stream(MultimapUtil.get(createUnicodeBlockCharacterMultimap(ElementUtil.text(element)),
