@@ -50,7 +50,7 @@ public class TokyoToeiNipporiToneriKanjiRomajiOrHiraganaMapFactoryBean implement
 		this.url = url;
 	}
 
-	public void setUnicodeBlock(final Object instance) throws IllegalAccessException {
+	public void setUnicodeBlock(@Nullable final Object instance) throws IllegalAccessException {
 		//
 		if (instance == null) {
 			//
@@ -224,7 +224,7 @@ public class TokyoToeiNipporiToneriKanjiRomajiOrHiraganaMapFactoryBean implement
 		//
 	}
 
-	private static <E> Stream<E> stream(final Collection<E> instance) {
+	private static <E> Stream<E> stream(@Nullable final Collection<E> instance) {
 		return instance != null ? instance.stream() : null;
 	}
 
@@ -236,7 +236,7 @@ public class TokyoToeiNipporiToneriKanjiRomajiOrHiraganaMapFactoryBean implement
 		//
 	}
 
-	private static Class<?> getClass(final Object instance) {
+	private static Class<?> getClass(@Nullable final Object instance) {
 		return instance != null ? instance.getClass() : null;
 	}
 
