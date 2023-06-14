@@ -131,7 +131,7 @@ abstract class Util {
 		return instance != null ? instance.getClass() : null;
 	}
 
-	static <K, V> void put(@Nullable final Map<K, V> instance, final K key, final V value) {
+	static <K, V> void put(@Nullable final Map<K, V> instance, @Nullable final K key, @Nullable final V value) {
 		if (instance != null) {
 			instance.put(key, value);
 		}
