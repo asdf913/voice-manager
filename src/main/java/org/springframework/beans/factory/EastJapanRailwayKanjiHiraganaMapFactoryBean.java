@@ -81,7 +81,7 @@ public class EastJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFromRe
 					//
 				if (a != null && a.containsKey(key = entry.getKey()) && !Objects.equals(a.get(key), entry.getValue())) {
 					//
-					throw new IllegalStateException(entry.toString());
+					throw new IllegalStateException(Util.toString(entry));
 					//
 				} // if
 					//

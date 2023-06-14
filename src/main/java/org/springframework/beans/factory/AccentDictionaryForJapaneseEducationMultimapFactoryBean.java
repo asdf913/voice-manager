@@ -292,7 +292,7 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 					//
 				} // if
 					//
-				pair = Pair.with(StringUtils.split(sb.toString(), '/'), IValue0Util.getValue0(key));
+				pair = Pair.with(StringUtils.split(Util.toString(sb), '/'), IValue0Util.getValue0(key));
 				//
 			} // if
 				//
