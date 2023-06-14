@@ -136,7 +136,7 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends StringM
 		final Set<Cell<String, UnicodeBlock, String>> cells = TableUtil.cellSet(table);
 		//
 		return cells != null
-				? Unit.with(cells.stream().filter(c -> Objects.equals(CellUtil.getColumnKey(c), unicodeBlock))
+				? Unit.with(Util.stream(cells).filter(c -> Objects.equals(CellUtil.getColumnKey(c), unicodeBlock))
 						.collect(Collectors.toMap(CellUtil::getRowKey, CellUtil::getValue)))
 				: null;
 		//

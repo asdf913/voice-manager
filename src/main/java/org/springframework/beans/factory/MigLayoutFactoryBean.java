@@ -49,7 +49,7 @@ public class MigLayoutFactoryBean implements FactoryBean<MigLayout> {
 			//
 		} else if (value instanceof Iterable<?>) {
 			//
-			setArguments(IterableUtils.toList((Iterable<?>) value).stream().map(Util::toString).toList()
+			setArguments(Util.stream(IterableUtils.toList((Iterable<?>) value)).map(Util::toString).toList()
 					.toArray(new String[] {}));
 			//
 			return;
