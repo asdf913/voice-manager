@@ -38,8 +38,12 @@ public class KyushuRailwayKanjiHiraganaMapFactoryBean extends StringMapFromResou
 			//
 		} // if
 			//
-		final List<Element> es = ElementUtil.select(testAndApply(Objects::nonNull,
-				testAndApply(Objects::nonNull, url, URL::new, null), x -> Jsoup.parse(x, 0), null), "a");
+		return createMap(ElementUtil.select(testAndApply(Objects::nonNull,
+				testAndApply(Objects::nonNull, url, URL::new, null), x -> Jsoup.parse(x, 0), null), "a"));
+		//
+	}
+
+	private static Map<String, String> createMap(final List<Element> es) {
 		//
 		Map<String, String> map = null;
 		//
@@ -73,6 +77,7 @@ public class KyushuRailwayKanjiHiraganaMapFactoryBean extends StringMapFromResou
 			//
 		return map;
 		//
+
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(@Nullable final Predicate<T> predicate, final T value,
