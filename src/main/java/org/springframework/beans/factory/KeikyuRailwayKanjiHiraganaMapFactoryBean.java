@@ -96,10 +96,12 @@ public class KeikyuRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<Map
 		//
 	}
 
+	@Nullable
 	private static String getWholeText(@Nullable final TextNode instance) {
 		return instance != null ? instance.getWholeText() : null;
 	}
 
+	@Nullable
 	private static <T> Stream<T> filter(@Nullable final Stream<T> instance,
 			@Nullable final Predicate<? super T> predicate) {
 		//
@@ -109,14 +111,17 @@ public class KeikyuRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<Map
 		//
 	}
 
+	@Nullable
 	private static <T> List<T> toList(@Nullable final Stream<T> instance) {
 		return instance != null ? instance.toList() : null;
 	}
 
+	@Nullable
 	private static Class<?> getClass(@Nullable final Object instance) {
 		return instance != null ? instance.getClass() : null;
 	}
 
+	@Nullable
 	private static Matcher matcher(@Nullable final Pattern instance, final CharSequence input) {
 		return instance != null && input != null ? instance.matcher(input) : null;
 	}
@@ -125,18 +130,22 @@ public class KeikyuRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<Map
 		return instance != null && instance.find();
 	}
 
+	@Nullable
 	private static String toString(@Nullable final Object instance) {
 		return instance != null ? instance.toString() : null;
 	}
 
+	@Nullable
 	private static <E> Stream<E> stream(@Nullable final Collection<E> instance) {
 		return instance != null ? instance.stream() : null;
 	}
 
+	@Nullable
 	private static Node parentNode(@Nullable final Node instance) {
 		return instance != null ? instance.parentNode() : null;
 	}
 
+	@Nullable
 	private static List<Node> childNodes(@Nullable final Node instance) {
 		return instance != null ? instance.childNodes() : null;
 	}
