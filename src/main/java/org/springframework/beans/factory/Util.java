@@ -120,6 +120,7 @@ abstract class Util {
 		}
 	}
 
+	@Nullable
 	static String toString(@Nullable final Object instance) {
 		return instance != null ? instance.toString() : null;
 	}
