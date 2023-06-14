@@ -38,6 +38,7 @@ public class IpaMultimapFactoryBean implements FactoryBean<Multimap<String, Stri
 
 	private static Logger LOG = LoggerFactory.getLogger(IpaMultimapFactoryBean.class);
 
+	@Nullable
 	private Unit<Multimap<String, String>> multimap = null;
 
 	private ObjectMapper objectMapper = null;
