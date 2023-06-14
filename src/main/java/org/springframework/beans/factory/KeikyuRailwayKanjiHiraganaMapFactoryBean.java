@@ -49,6 +49,7 @@ public class KeikyuRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<Map
 		//
 	}
 
+	@Nullable
 	private static Map<String, String> createMap(final List<Element> es) {
 		//
 		Element e = null;
