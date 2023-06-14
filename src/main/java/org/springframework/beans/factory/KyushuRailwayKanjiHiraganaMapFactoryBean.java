@@ -43,6 +43,7 @@ public class KyushuRailwayKanjiHiraganaMapFactoryBean extends StringMapFromResou
 		//
 	}
 
+	@Nullable
 	private static Map<String, String> createMap(@Nullable final List<Element> es) {
 		//
 		Map<String, String> map = null;
