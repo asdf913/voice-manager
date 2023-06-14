@@ -71,7 +71,7 @@ public class KyushuJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFrom
 				//
 			} // if
 				//
-			put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), key, value);
+			Util.put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), key, value);
 			//
 		} // for
 			//
@@ -136,16 +136,6 @@ public class KyushuJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFrom
 			//
 		return pair;
 		//
-	}
-
-	private static <K, V> void put(@Nullable final Map<K, V> instance, final K key, final V value) {
-		//
-		if (instance != null) {
-			//
-			instance.put(key, value);
-			//
-		} // if
-			//
 	}
 
 	@Override

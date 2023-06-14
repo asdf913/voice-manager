@@ -213,7 +213,8 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 				//
 			if (entry != null) {
 				//
-				put(fieldMap = ObjectUtils.getIfNull(fieldMap, LinkedHashMap::new), entry.getKey(), entry.getValue());
+				Util.put(fieldMap = ObjectUtils.getIfNull(fieldMap, LinkedHashMap::new), entry.getKey(),
+						entry.getValue());
 				//
 			} // if
 				//
@@ -654,7 +655,8 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 				//
 			if (entry != null) {
 				//
-				put(fieldMap = ObjectUtils.getIfNull(fieldMap, LinkedHashMap::new), entry.getKey(), entry.getValue());
+				Util.put(fieldMap = ObjectUtils.getIfNull(fieldMap, LinkedHashMap::new), entry.getKey(),
+						entry.getValue());
 				//
 			} // if
 				//
@@ -672,12 +674,6 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 	@Nullable
 	private static String getFile(@Nullable final URL instance) {
 		return instance != null ? instance.getFile() : null;
-	}
-
-	private static <K, V> void put(@Nullable final Map<K, V> instance, final K key, final V value) {
-		if (instance != null) {
-			instance.put(key, value);
-		}
 	}
 
 	@Nullable

@@ -85,7 +85,7 @@ public class EastJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFromRe
 					//
 				} // if
 					//
-				put(a, key, entry.getValue());
+				Util.put(a, key, entry.getValue());
 				//
 			} // for
 				//
@@ -95,12 +95,6 @@ public class EastJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFromRe
 
 	private static boolean containsKey(@Nullable final Map<?, ?> instance, final Object key) {
 		return instance != null && instance.containsKey(key);
-	}
-
-	private static <K, V> void put(@Nullable final Map<K, V> instance, @Nullable final K key, @Nullable final V value) {
-		if (instance != null) {
-			instance.put(key, value);
-		}
 	}
 
 	@Nullable
@@ -150,7 +144,7 @@ public class EastJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFromRe
 					//
 				} // if
 					//
-				put(map, key, pair.getValue1());
+				Util.put(map, key, pair.getValue1());
 				//
 			} // while
 				//

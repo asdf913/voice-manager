@@ -33,7 +33,7 @@ import javassist.util.proxy.ProxyObject;
 class KeikyuRailwayKanjiHiraganaMapFactoryBeanTest {
 
 	private static Method METHOD_CREATE_MAP, METHOD_GET_WHOLE_TEXT, METHOD_FILTER, METHOD_MATCHER, METHOD_FIND,
-			METHOD_PUT, METHOD_TEST = null;
+			METHOD_TEST = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -49,8 +49,6 @@ class KeikyuRailwayKanjiHiraganaMapFactoryBeanTest {
 		(METHOD_MATCHER = clz.getDeclaredMethod("matcher", Pattern.class, CharSequence.class)).setAccessible(true);
 		//
 		(METHOD_FIND = clz.getDeclaredMethod("find", Matcher.class)).setAccessible(true);
-		//
-		(METHOD_PUT = clz.getDeclaredMethod("put", Map.class, Object.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_TEST = clz.getDeclaredMethod("test", Predicate.class, Object.class)).setAccessible(true);
 		//
@@ -315,21 +313,6 @@ class KeikyuRailwayKanjiHiraganaMapFactoryBeanTest {
 				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testPut() {
-		//
-		Assertions.assertDoesNotThrow(() -> put(null, null, null));
-		//
-	}
-
-	private static <K, V> void put(final Map<K, V> instance, final K key, final V value) throws Throwable {
-		try {
-			METHOD_PUT.invoke(null, instance, key, value);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

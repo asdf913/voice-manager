@@ -149,7 +149,7 @@ public class TokyuKanjiRomajiOrHiraganaMapFactoryBean extends StringMapFromResou
 					//
 				} // if
 					//
-				put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), text, temp.get(romajiOrHiragana));
+				Util.put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), text, temp.get(romajiOrHiragana));
 				//
 			} // for
 				//
@@ -200,7 +200,7 @@ public class TokyuKanjiRomajiOrHiraganaMapFactoryBean extends StringMapFromResou
 					//
 				} else {
 					//
-					put(map, romajiOrHiragana, ElementUtil.text(e));
+					Util.put(map, romajiOrHiragana, ElementUtil.text(e));
 					//
 				} // if
 					//
@@ -213,7 +213,7 @@ public class TokyuKanjiRomajiOrHiraganaMapFactoryBean extends StringMapFromResou
 					//
 				} else {
 					//
-					put(map, romajiOrHiragana, ElementUtil.text(e));
+					Util.put(map, romajiOrHiragana, ElementUtil.text(e));
 					//
 				} // if
 					//
@@ -227,12 +227,6 @@ public class TokyuKanjiRomajiOrHiraganaMapFactoryBean extends StringMapFromResou
 
 	private static boolean containsKey(@Nullable final Map<?, ?> instance, final Object key) {
 		return instance != null && instance.containsKey(key);
-	}
-
-	private static <K, V> void put(@Nullable final Map<K, V> instance, @Nullable final K key, final V value) {
-		if (instance != null) {
-			instance.put(key, value);
-		}
 	}
 
 	private static boolean isAllCharacterInSameUnicodeBlock(@Nullable final String string,

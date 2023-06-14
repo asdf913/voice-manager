@@ -146,7 +146,7 @@ public class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends Stri
 			//
 		} else if (CollectionUtils.isNotEmpty(es)) {
 			//
-			put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), UnicodeBlock.HIRAGANA,
+			Util.put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), UnicodeBlock.HIRAGANA,
 					getHiragana(IterableUtils.get(es, 0)));
 			//
 		} // if
@@ -159,7 +159,7 @@ public class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends Stri
 			//
 		} else if (CollectionUtils.isNotEmpty(es)) {
 			//
-			put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), UnicodeBlock.BASIC_LATIN,
+			Util.put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), UnicodeBlock.BASIC_LATIN,
 					getRomaji(IterableUtils.get(es, 0)));
 			//
 		} // if
@@ -232,12 +232,6 @@ public class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends Stri
 			//
 		return chars;
 		//
-	}
-
-	private static <K, V> void put(@Nullable final Map<K, V> instance, final K key, @Nullable final V value) {
-		if (instance != null) {
-			instance.put(key, value);
-		}
 	}
 
 	@Override

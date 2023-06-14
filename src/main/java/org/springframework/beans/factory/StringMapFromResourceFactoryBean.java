@@ -177,7 +177,7 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 				//
 				if (Objects.equals(methodName, "put") && args != null && args.length > 1) {
 					//
-					put(getMap(), args[0], args[1]);
+					Util.put(getMap(), args[0], args[1]);
 					//
 					return null;
 					//
@@ -322,7 +322,7 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 				//
 			testAndAccept((a, b, c) -> and(Objects::nonNull, b, c), IValue0Util.getValue0(result), cellKey,
 					getValueCell(row, objectIntMap, valueColumnNameAndIndex),
-					(a, b, c) -> put(a, getString(b, formulaEvaluator), getString(c, formulaEvaluator)));
+					(a, b, c) -> Util.put(a, getString(b, formulaEvaluator), getString(c, formulaEvaluator)));
 			//
 		} // for
 			//
@@ -477,12 +477,6 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 	@Nullable
 	private static String getMessage(@Nullable final ContentInfo instance) {
 		return instance != null ? instance.getMessage() : null;
-	}
-
-	private static <K, V> void put(@Nullable final Map<K, V> instance, final K key, final V value) {
-		if (instance != null) {
-			instance.put(key, value);
-		}
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(@Nullable final Predicate<T> predicate, final T value,

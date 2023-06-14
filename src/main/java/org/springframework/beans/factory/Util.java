@@ -6,6 +6,7 @@ import java.lang.reflect.Member;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
@@ -128,6 +129,12 @@ abstract class Util {
 	@Nullable
 	static Class<?> getClass(@Nullable final Object instance) {
 		return instance != null ? instance.getClass() : null;
+	}
+
+	static <K, V> void put(final Map<K, V> instance, final K key, final V value) {
+		if (instance != null) {
+			instance.put(key, value);
+		}
 	}
 
 }

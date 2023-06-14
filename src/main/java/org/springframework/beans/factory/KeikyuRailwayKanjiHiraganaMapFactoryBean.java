@@ -88,7 +88,7 @@ public class KeikyuRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<Map
 				//
 			} // if
 				//
-			put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), string, ElementUtil.text(e));
+			Util.put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), string, ElementUtil.text(e));
 			//
 		} // for
 			//
@@ -138,12 +138,6 @@ public class KeikyuRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<Map
 	@Nullable
 	private static List<Node> childNodes(@Nullable final Node instance) {
 		return instance != null ? instance.childNodes() : null;
-	}
-
-	private static <K, V> void put(@Nullable final Map<K, V> instance, @Nullable final K key, final V value) {
-		if (instance != null) {
-			instance.put(key, value);
-		}
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,

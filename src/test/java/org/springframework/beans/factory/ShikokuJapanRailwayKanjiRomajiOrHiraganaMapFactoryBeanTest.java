@@ -7,7 +7,6 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collector;
@@ -31,7 +30,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 
 	private static Method METHOD_CREATE_MAP, METHOD_CREATE_TABLE, METHOD_GET_HIRAGANA, METHOD_GET_ROMAJI, METHOD_STREAM,
-			METHOD_FILTER, METHOD_COLLECT, METHOD_CREATE_UNICODE_BLOCK_CHARACTER_MULTI_MAP, METHOD_PUT,
+			METHOD_FILTER, METHOD_COLLECT, METHOD_CREATE_UNICODE_BLOCK_CHARACTER_MULTI_MAP,
 			METHOD_TEST_AND_APPLY = null;
 
 	@BeforeAll
@@ -55,8 +54,6 @@ class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 		//
 		(METHOD_CREATE_UNICODE_BLOCK_CHARACTER_MULTI_MAP = clz.getDeclaredMethod("createUnicodeBlockCharacterMultimap",
 				CharSequence.class)).setAccessible(true);
-		//
-		(METHOD_PUT = clz.getDeclaredMethod("put", Map.class, Object.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
@@ -340,23 +337,6 @@ class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 				return (Multimap) obj;
 			}
 			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testPut() throws Throwable {
-		//
-		Assertions.assertDoesNotThrow(() -> put(null, null, null));
-		//
-		Assertions.assertDoesNotThrow(() -> put(new LinkedHashMap<>(), null, null));
-		//
-	}
-
-	private static <K, V> void put(final Map<K, V> instance, final K key, final V value) throws Throwable {
-		try {
-			METHOD_PUT.invoke(null, instance, key, value);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

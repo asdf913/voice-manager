@@ -160,7 +160,7 @@ public class TokyoToeiTodenKanjiRomajiOrHiraganaMapFactoryBean extends StringMap
 				//
 			} else if (es.size() == 1) {
 				//
-				put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), UnicodeBlock.HIRAGANA,
+				Util.put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), UnicodeBlock.HIRAGANA,
 						getHiragana(!es.isEmpty() ? IterableUtils.get(es, 0) : null));
 				//
 			} // if
@@ -179,7 +179,7 @@ public class TokyoToeiTodenKanjiRomajiOrHiraganaMapFactoryBean extends StringMap
 				//
 			} else if (size == 1) {
 				//
-				put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), UnicodeBlock.BASIC_LATIN,
+				Util.put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), UnicodeBlock.BASIC_LATIN,
 						getRomaji(!es.isEmpty() ? IterableUtils.get(es, 0) : null));
 				//
 			} // if
@@ -188,12 +188,6 @@ public class TokyoToeiTodenKanjiRomajiOrHiraganaMapFactoryBean extends StringMap
 			//
 		return map;
 		//
-	}
-
-	private static <K, V> void put(@Nullable final Map<K, V> instance, final K key, final V value) {
-		if (instance != null) {
-			instance.put(key, value);
-		}
 	}
 
 	@Nullable

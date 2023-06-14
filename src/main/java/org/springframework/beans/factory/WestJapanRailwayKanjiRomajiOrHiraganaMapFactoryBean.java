@@ -241,7 +241,7 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends StringM
 				//
 			} // if
 				//
-			put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), unicodeBlocks.get(0), s);
+			Util.put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), unicodeBlocks.get(0), s);
 			//
 		} // for
 			//
@@ -346,12 +346,6 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends StringM
 
 	private static boolean isInstance(@Nullable final Class<?> clz, @Nullable final Object instance) {
 		return clz != null && clz.isInstance(instance);
-	}
-
-	private static <K, V> void put(@Nullable final Map<K, V> instance, final K key, final V value) {
-		if (instance != null) {
-			instance.put(key, value);
-		}
 	}
 
 	private static boolean contains(@Nullable final Collection<?> items, @Nullable final Object item) {

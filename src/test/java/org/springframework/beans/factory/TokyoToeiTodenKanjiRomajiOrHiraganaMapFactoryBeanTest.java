@@ -6,7 +6,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collector;
@@ -25,7 +24,7 @@ import com.google.common.collect.Multimap;
 
 class TokyoToeiTodenKanjiRomajiOrHiraganaMapFactoryBeanTest {
 
-	private static Method METHOD_CREATE_MAP, METHOD_TEST_AND_APPLY, METHOD_PUT, METHOD_GET_HIRAGANA, METHOD_GET_ROMAJI,
+	private static Method METHOD_CREATE_MAP, METHOD_TEST_AND_APPLY, METHOD_GET_HIRAGANA, METHOD_GET_ROMAJI,
 			METHOD_CREATE_UNICODE_BLOCK_CHARACTER_MULTI_MAP, METHOD_STREAM, METHOD_COLLECT, METHOD_GET_KANJI = null;
 
 	@BeforeAll
@@ -37,8 +36,6 @@ class TokyoToeiTodenKanjiRomajiOrHiraganaMapFactoryBeanTest {
 		//
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
-		//
-		(METHOD_PUT = clz.getDeclaredMethod("put", Map.class, Object.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_GET_HIRAGANA = clz.getDeclaredMethod("getHiragana", Element.class)).setAccessible(true);
 		//
@@ -194,23 +191,6 @@ class TokyoToeiTodenKanjiRomajiOrHiraganaMapFactoryBeanTest {
 			throws Throwable {
 		try {
 			return (R) METHOD_TEST_AND_APPLY.invoke(null, predicate, value, functionTrue, functionFalse);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testPut() {
-		//
-		Assertions.assertDoesNotThrow(() -> put(null, null, null));
-		//
-		Assertions.assertDoesNotThrow(() -> put(new LinkedHashMap<>(), null, null));
-		//
-	}
-
-	private static <K, V> void put(final Map<K, V> instance, final K key, final V value) throws Throwable {
-		try {
-			METHOD_PUT.invoke(null, instance, key, value);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

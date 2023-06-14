@@ -2,7 +2,6 @@ package org.springframework.beans.factory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Predicate;
@@ -17,7 +16,7 @@ import com.google.common.base.Predicates;
 
 class KyushuJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 
-	private static Method METHOD_TEST_AND_APPLY, METHOD_CREATE_ENTRY, METHOD_PUT = null;
+	private static Method METHOD_TEST_AND_APPLY, METHOD_CREATE_ENTRY = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -28,8 +27,6 @@ class KyushuJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
 		//
 		(METHOD_CREATE_ENTRY = clz.getDeclaredMethod("createEntry", String.class)).setAccessible(true);
-		//
-		(METHOD_PUT = clz.getDeclaredMethod("put", Map.class, Object.class, Object.class)).setAccessible(true);
 		//
 	}
 
@@ -113,23 +110,6 @@ class KyushuJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 				return (Entry) obj;
 			}
 			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testPut() throws Throwable {
-		//
-		Assertions.assertDoesNotThrow(() -> put(null, null, null));
-		//
-		Assertions.assertDoesNotThrow(() -> put(new LinkedHashMap<>(), null, null));
-		//
-	}
-
-	private static <K, V> void put(final Map<K, V> instance, final K key, final V value) throws Throwable {
-		try {
-			METHOD_PUT.invoke(null, instance, key, value);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
