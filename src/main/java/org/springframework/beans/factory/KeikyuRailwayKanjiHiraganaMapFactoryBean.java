@@ -65,7 +65,7 @@ public class KeikyuRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<Map
 		for (int i = 0; es != null && i < es.size(); i++) {
 			//
 			if ((nodes = toList(
-					filter(stream(childNodes(parentNode(e = es.get(i)))), x -> x instanceof TextNode))) == null
+					filter(stream(childNodes(parentNode(e = es.get(i)))), TextNode.class::isInstance))) == null
 					|| nodes.isEmpty()) {
 				//
 				continue;
@@ -76,7 +76,7 @@ public class KeikyuRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<Map
 				//
 				if (x instanceof TextNode textNode) {
 					//
-					return testAndApply(Objects::nonNull, getWholeText(textNode), y -> StringUtils.trim(y), null);
+					return testAndApply(Objects::nonNull, getWholeText(textNode), StringUtils::trim, null);
 					//
 				} // if
 					//
