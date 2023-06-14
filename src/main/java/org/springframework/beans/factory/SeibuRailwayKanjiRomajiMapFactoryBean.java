@@ -43,6 +43,7 @@ public class SeibuRailwayKanjiRomajiMapFactoryBean extends StringMapFromResource
 		//
 	}
 
+	@Nullable
 	private static Map<String, String> createMap(@Nullable final List<Element> es) {
 		//
 		Map<String, String> map = null;
