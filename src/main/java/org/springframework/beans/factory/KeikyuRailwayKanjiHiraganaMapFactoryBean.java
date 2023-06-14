@@ -3,7 +3,6 @@ package org.springframework.beans.factory;
 import java.io.IOException;
 import java.lang.reflect.Proxy;
 import java.net.URL;
-import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,14 +64,14 @@ public class KeikyuRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<Map
 		for (int i = 0; es != null && i < es.size(); i++) {
 			//
 			if ((nodes = toList(
-					filter(stream(childNodes(parentNode(e = es.get(i)))), TextNode.class::isInstance))) == null
+					filter(Util.stream(childNodes(parentNode(e = es.get(i)))), TextNode.class::isInstance))) == null
 					|| nodes.isEmpty()) {
 				//
 				continue;
 				//
 			} // if
 				//
-			if (find(matcher = matcher(PATTERN, string = stream(nodes).map(x -> {
+			if (find(matcher = matcher(PATTERN, string = Util.stream(nodes).map(x -> {
 				//
 				if (x instanceof TextNode textNode) {
 					//
@@ -123,11 +122,6 @@ public class KeikyuRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<Map
 
 	private static boolean find(@Nullable final Matcher instance) {
 		return instance != null && instance.find();
-	}
-
-	@Nullable
-	private static <E> Stream<E> stream(@Nullable final Collection<E> instance) {
-		return instance != null ? instance.stream() : null;
 	}
 
 	@Nullable

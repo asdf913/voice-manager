@@ -164,7 +164,7 @@ public class JlptLevelListFactoryBean implements FactoryBean<List<String>> {
 	private static List<String> getObjectByUrl(final String url, final Duration timeout) throws IOException {
 		//
 		return toList(
-				map(stream(
+				map(Util.stream(
 						ElementUtil.select(
 								testAndApply(
 										x -> StringUtils.equalsAnyIgnoreCase(getProtocol(x),
@@ -189,11 +189,6 @@ public class JlptLevelListFactoryBean implements FactoryBean<List<String>> {
 				? instance.map(mapper)
 				: null;
 		//
-	}
-
-	@Nullable
-	private static <E> Stream<E> stream(@Nullable final Collection<E> instance) {
-		return instance != null ? instance.stream() : null;
 	}
 
 	@Nullable

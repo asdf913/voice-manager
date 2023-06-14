@@ -68,7 +68,7 @@ public class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends Stri
 		} // if
 			//
 		return collect(
-				filter(stream(TableUtil.cellSet(createTable(url))),
+				filter(Util.stream(TableUtil.cellSet(createTable(url))),
 						c -> Objects.equals(CellUtil.getColumnKey(c), unicodeBlock)),
 				Collectors.toMap(CellUtil::getRowKey, CellUtil::getValue));
 		//
@@ -172,7 +172,7 @@ public class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends Stri
 	private static String getHiragana(final Element element) {
 		//
 		return collect(
-				stream(MultimapUtil.get(createUnicodeBlockCharacterMultimap(ElementUtil.text(element)),
+				Util.stream(MultimapUtil.get(createUnicodeBlockCharacterMultimap(ElementUtil.text(element)),
 						UnicodeBlock.HIRAGANA)),
 				Collector.of(StringBuilder::new, StringBuilder::append, StringBuilder::append,
 						StringBuilder::toString));
@@ -183,16 +183,13 @@ public class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends Stri
 	private static String getRomaji(final Element element) {
 		//
 		return collect(
-				filter(stream(MultimapUtil.get(createUnicodeBlockCharacterMultimap(ElementUtil.attr(element, "alt")),
-						UnicodeBlock.BASIC_LATIN)), c -> !Character.isWhitespace(c)),
+				filter(Util
+						.stream(MultimapUtil.get(createUnicodeBlockCharacterMultimap(ElementUtil.attr(element, "alt")),
+								UnicodeBlock.BASIC_LATIN)),
+						c -> !Character.isWhitespace(c)),
 				Collector.of(StringBuilder::new, StringBuilder::append, StringBuilder::append,
 						StringBuilder::toString));
 		//
-	}
-
-	@Nullable
-	private static <E> Stream<E> stream(@Nullable final Collection<E> instance) {
-		return instance != null ? instance.stream() : null;
 	}
 
 	@Nullable

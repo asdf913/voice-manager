@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.lang.reflect.Proxy;
 import java.net.URL;
 import java.time.Duration;
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
@@ -195,7 +194,7 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 				//
 			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedListMultimap::create),
 					matcher.group(1),
-					toList(map(stream(ElementUtil.select(ElementUtil.nextElementSibling(element.parent()), "a")),
+					toList(map(Util.stream(ElementUtil.select(ElementUtil.nextElementSibling(element.parent()), "a")),
 							ElementUtil::text)));
 			//
 		} // for
@@ -346,11 +345,6 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 
 	private static boolean matches(@Nullable final Matcher instance) {
 		return instance != null && instance.matches();
-	}
-
-	@Nullable
-	private static <E> Stream<E> stream(@Nullable final Collection<E> instance) {
-		return instance != null ? instance.stream() : null;
 	}
 
 	@Nullable

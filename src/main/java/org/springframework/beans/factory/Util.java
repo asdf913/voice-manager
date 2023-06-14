@@ -5,9 +5,11 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 
@@ -135,6 +137,10 @@ abstract class Util {
 		if (instance != null) {
 			instance.put(key, value);
 		}
+	}
+
+	static <E> Stream<E> stream(final Collection<E> instance) {
+		return instance != null ? instance.stream() : null;
 	}
 
 }

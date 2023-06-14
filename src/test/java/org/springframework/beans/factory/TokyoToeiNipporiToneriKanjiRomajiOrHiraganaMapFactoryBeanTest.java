@@ -4,7 +4,6 @@ import java.lang.Character.UnicodeBlock;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.function.Predicate;
@@ -25,8 +24,7 @@ import com.google.common.collect.Multimap;
 class TokyoToeiNipporiToneriKanjiRomajiOrHiraganaMapFactoryBeanTest {
 
 	private static Method METHOD_CREATE_MAP, METHOD_GET_CLASS, METHOD_TEST_AND_APPLY, METHOD_GET_HIRAGANA,
-			METHOD_GET_ROMAJI, METHOD_CREATE_UNICODE_BLOCK_CHARACTER_MULTI_MAP, METHOD_STREAM, METHOD_COLLECT,
-			METHOD_GET_KANJI = null;
+			METHOD_GET_ROMAJI, METHOD_CREATE_UNICODE_BLOCK_CHARACTER_MULTI_MAP, METHOD_COLLECT, METHOD_GET_KANJI = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -46,8 +44,6 @@ class TokyoToeiNipporiToneriKanjiRomajiOrHiraganaMapFactoryBeanTest {
 		//
 		(METHOD_CREATE_UNICODE_BLOCK_CHARACTER_MULTI_MAP = clz.getDeclaredMethod("createUnicodeBlockCharacterMultimap",
 				String.class)).setAccessible(true);
-		//
-		(METHOD_STREAM = clz.getDeclaredMethod("stream", Collection.class)).setAccessible(true);
 		//
 		(METHOD_COLLECT = clz.getDeclaredMethod("collect", Stream.class, Collector.class)).setAccessible(true);
 		//
@@ -282,27 +278,6 @@ class TokyoToeiNipporiToneriKanjiRomajiOrHiraganaMapFactoryBeanTest {
 				return null;
 			} else if (obj instanceof Multimap) {
 				return (Multimap) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testStream() throws Throwable {
-		//
-		Assertions.assertNotNull(stream(Collections.emptySet()));
-		//
-	}
-
-	private static <T> Stream<T> stream(final Collection<T> instance) throws Throwable {
-		try {
-			final Object obj = METHOD_STREAM.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Stream) {
-				return (Stream) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

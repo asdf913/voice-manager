@@ -71,7 +71,7 @@ public class TokyoToeiNipporiToneriKanjiRomajiOrHiraganaMapFactoryBean extends S
 		final Set<Cell<String, UnicodeBlock, String>> cells = TableUtil.cellSet(createTable(url));
 		//
 		return cells != null
-				? collect(stream(cells).filter(c -> Objects.equals(CellUtil.getColumnKey(c), unicodeBlock)),
+				? collect(Util.stream(cells).filter(c -> Objects.equals(CellUtil.getColumnKey(c), unicodeBlock)),
 						Collectors.toMap(CellUtil::getRowKey, CellUtil::getValue))
 				: null;
 		//
@@ -120,7 +120,7 @@ public class TokyoToeiNipporiToneriKanjiRomajiOrHiraganaMapFactoryBean extends S
 	private static String getKanji(final String string) {
 		//
 		return collect(
-				stream(MultimapUtil.get(createUnicodeBlockCharacterMultimap(string),
+				Util.stream(MultimapUtil.get(createUnicodeBlockCharacterMultimap(string),
 						UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)),
 				Collector.of(StringBuilder::new, StringBuilder::append, StringBuilder::append,
 						StringBuilder::toString));
@@ -194,16 +194,11 @@ public class TokyoToeiNipporiToneriKanjiRomajiOrHiraganaMapFactoryBean extends S
 	private static String getHiragana(@Nullable final Element element) {
 		//
 		return collect(
-				stream(MultimapUtil.get(createUnicodeBlockCharacterMultimap(ElementUtil.text(element)),
+				Util.stream(MultimapUtil.get(createUnicodeBlockCharacterMultimap(ElementUtil.text(element)),
 						UnicodeBlock.HIRAGANA)),
 				Collector.of(StringBuilder::new, StringBuilder::append, StringBuilder::append,
 						StringBuilder::toString));
 		//
-	}
-
-	@Nullable
-	private static <E> Stream<E> stream(@Nullable final Collection<E> instance) {
-		return instance != null ? instance.stream() : null;
 	}
 
 	@Nullable
@@ -225,7 +220,7 @@ public class TokyoToeiNipporiToneriKanjiRomajiOrHiraganaMapFactoryBean extends S
 	private static String getRomaji(@Nullable final Element element) {
 		//
 		return collect(
-				stream(MultimapUtil.get(createUnicodeBlockCharacterMultimap(ElementUtil.text(element)),
+				Util.stream(MultimapUtil.get(createUnicodeBlockCharacterMultimap(ElementUtil.text(element)),
 						UnicodeBlock.BASIC_LATIN)),
 				Collector.of(StringBuilder::new, StringBuilder::append, StringBuilder::append,
 						StringBuilder::toString));
