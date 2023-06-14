@@ -144,7 +144,7 @@ public class IpaMultimapFactoryBean implements FactoryBean<Multimap<String, Stri
 			//
 		} // if
 			//
-		throw new IllegalArgumentException(Util.toString(getClass(obj)));
+		throw new IllegalArgumentException(Util.toString(Util.getClass(obj)));
 		//
 	}
 
@@ -196,11 +196,6 @@ public class IpaMultimapFactoryBean implements FactoryBean<Multimap<String, Stri
 	@Nullable
 	private static InputStream openStream(@Nullable final URL instance) throws IOException {
 		return instance != null ? instance.openStream() : null;
-	}
-
-	@Nullable
-	private static Class<?> getClass(@Nullable final Object instance) {
-		return instance != null ? instance.getClass() : null;
 	}
 
 	@Override

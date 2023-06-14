@@ -18,14 +18,12 @@ class JlptLevelListFactoryBeanTest {
 
 	private static final String EMPTY = "";
 
-	private static Method METHOD_GET_CLASS, METHOD_ADD, METHOD_LONG_VALUE = null;
+	private static Method METHOD_ADD, METHOD_LONG_VALUE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
 		//
 		final Class<?> clz = JlptLevelListFactoryBean.class;
-		//
-		(METHOD_GET_CLASS = clz.getDeclaredMethod("getClass", Object.class)).setAccessible(true);
 		//
 		(METHOD_ADD = clz.getDeclaredMethod("add", Collection.class, Object.class)).setAccessible(true);
 		//
@@ -190,29 +188,6 @@ class JlptLevelListFactoryBeanTest {
 	}
 
 	@Test
-	void testGetClass() throws Throwable {
-		//
-		Assertions.assertNull(getClass(null));
-		//
-		Assertions.assertEquals(String.class, getClass(EMPTY));
-		//
-	}
-
-	private static Class<?> getClass(final Object instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_CLASS.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Class) {
-				return (Class<?>) obj;
-			}
-			throw new Throwable(Util.toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testAdd() {
 		//
 		Assertions.assertDoesNotThrow(() -> add(null, null));
@@ -242,7 +217,7 @@ class JlptLevelListFactoryBeanTest {
 			if (obj instanceof Long) {
 				return ((Long) obj).longValue();
 			}
-			throw new Throwable(Util.toString(getClass(obj)));
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

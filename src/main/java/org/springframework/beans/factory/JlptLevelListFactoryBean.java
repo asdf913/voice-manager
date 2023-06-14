@@ -185,14 +185,10 @@ public class JlptLevelListFactoryBean implements FactoryBean<List<String>> {
 	private static <T, R> Stream<R> map(@Nullable final Stream<T> instance,
 			@Nullable final Function<? super T, ? extends R> mapper) {
 		//
-		return instance != null && (Proxy.isProxyClass(getClass(instance)) || mapper != null) ? instance.map(mapper)
+		return instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || mapper != null)
+				? instance.map(mapper)
 				: null;
 		//
-	}
-
-	@Nullable
-	private static Class<?> getClass(@Nullable final Object instance) {
-		return instance != null ? instance.getClass() : null;
 	}
 
 	@Nullable

@@ -25,9 +25,8 @@ import com.google.common.collect.Multimap;
 
 class TokyoToeiTodenKanjiRomajiOrHiraganaMapFactoryBeanTest {
 
-	private static Method METHOD_CREATE_MAP, METHOD_GET_CLASS, METHOD_TEST_AND_APPLY, METHOD_PUT, METHOD_GET_HIRAGANA,
-			METHOD_GET_ROMAJI, METHOD_CREATE_UNICODE_BLOCK_CHARACTER_MULTI_MAP, METHOD_STREAM, METHOD_COLLECT,
-			METHOD_GET_KANJI = null;
+	private static Method METHOD_CREATE_MAP, METHOD_TEST_AND_APPLY, METHOD_PUT, METHOD_GET_HIRAGANA, METHOD_GET_ROMAJI,
+			METHOD_CREATE_UNICODE_BLOCK_CHARACTER_MULTI_MAP, METHOD_STREAM, METHOD_COLLECT, METHOD_GET_KANJI = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -35,8 +34,6 @@ class TokyoToeiTodenKanjiRomajiOrHiraganaMapFactoryBeanTest {
 		final Class<?> clz = TokyoToeiTodenKanjiRomajiOrHiraganaMapFactoryBean.class;
 		//
 		(METHOD_CREATE_MAP = clz.getDeclaredMethod("createMap", String.class)).setAccessible(true);
-		//
-		(METHOD_GET_CLASS = clz.getDeclaredMethod("getClass", Object.class)).setAccessible(true);
 		//
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
@@ -177,30 +174,7 @@ class TokyoToeiTodenKanjiRomajiOrHiraganaMapFactoryBeanTest {
 			} else if (obj instanceof Map) {
 				return (Map) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetClass() throws Throwable {
-		//
-		Assertions.assertNull(getClass(null));
-		//
-		Assertions.assertNotNull(getClass(""));
-		//
-	}
-
-	private static Class<?> getClass(final Object instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_CLASS.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Class) {
-				return (Class<?>) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -257,7 +231,7 @@ class TokyoToeiTodenKanjiRomajiOrHiraganaMapFactoryBeanTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -278,7 +252,7 @@ class TokyoToeiTodenKanjiRomajiOrHiraganaMapFactoryBeanTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -303,7 +277,7 @@ class TokyoToeiTodenKanjiRomajiOrHiraganaMapFactoryBeanTest {
 			} else if (obj instanceof Multimap) {
 				return (Multimap) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -324,7 +298,7 @@ class TokyoToeiTodenKanjiRomajiOrHiraganaMapFactoryBeanTest {
 			} else if (obj instanceof Stream) {
 				return (Stream) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -365,7 +339,7 @@ class TokyoToeiTodenKanjiRomajiOrHiraganaMapFactoryBeanTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

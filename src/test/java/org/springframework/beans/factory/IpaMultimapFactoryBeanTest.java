@@ -25,14 +25,12 @@ import com.google.common.reflect.Reflection;
 
 class IpaMultimapFactoryBeanTest {
 
-	private static Method METHOD_GET_CLASS, METHOD_ENTRY_SET, METHOD_ITERATOR, METHOD_GET_KEY, METHOD_GET_VALUE = null;
+	private static Method METHOD_ENTRY_SET, METHOD_ITERATOR, METHOD_GET_KEY, METHOD_GET_VALUE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
 		//
 		final Class<?> clz = IpaMultimapFactoryBean.class;
-		//
-		(METHOD_GET_CLASS = clz.getDeclaredMethod("getClass", Object.class)).setAccessible(true);
 		//
 		(METHOD_ENTRY_SET = clz.getDeclaredMethod("entrySet", Map.class)).setAccessible(true);
 		//
@@ -173,29 +171,6 @@ class IpaMultimapFactoryBeanTest {
 		//
 	}
 
-	@Test
-	void testGetClass() throws Throwable {
-		//
-		Assertions.assertNull(getClass(null));
-		//
-		Assertions.assertEquals(String.class, getClass(""));
-		//
-	}
-
-	private static Class<?> getClass(final Object instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_CLASS.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Class) {
-				return (Class) obj;
-			}
-			throw new Throwable(Util.toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
 	private static <T> T getObject(final FactoryBean<T> instance) throws Exception {
 		return instance != null ? instance.getObject() : null;
 	}
@@ -217,7 +192,7 @@ class IpaMultimapFactoryBeanTest {
 			} else if (obj instanceof Set) {
 				return (Set) obj;
 			}
-			throw new Throwable(Util.toString(getClass(obj)));
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -238,7 +213,7 @@ class IpaMultimapFactoryBeanTest {
 			} else if (obj instanceof Iterator) {
 				return (Iterator) obj;
 			}
-			throw new Throwable(Util.toString(getClass(obj)));
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

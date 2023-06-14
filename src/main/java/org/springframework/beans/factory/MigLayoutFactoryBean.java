@@ -82,7 +82,7 @@ public class MigLayoutFactoryBean implements FactoryBean<MigLayout> {
 				//
 			} else {
 				//
-				throw new IllegalArgumentException(Util.toString(getClass(object)));
+				throw new IllegalArgumentException(Util.toString(Util.getClass(object)));
 				//
 			} // if
 				//
@@ -97,7 +97,7 @@ public class MigLayoutFactoryBean implements FactoryBean<MigLayout> {
 	@Nullable
 	private static IValue0<Object> getIValue0(final Object value) {
 		//
-		final Class<?> clz = getClass(value);
+		final Class<?> clz = Util.getClass(value);
 		//
 		IValue0<Object> result = null;
 		//
@@ -212,11 +212,6 @@ public class MigLayoutFactoryBean implements FactoryBean<MigLayout> {
 			//
 		return Unit.with(strings);
 		//
-	}
-
-	@Nullable
-	private static Class<?> getClass(@Nullable final Object instance) {
-		return instance != null ? instance.getClass() : null;
 	}
 
 	@Nullable

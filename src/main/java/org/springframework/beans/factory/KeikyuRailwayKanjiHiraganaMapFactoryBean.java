@@ -105,7 +105,7 @@ public class KeikyuRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<Map
 	private static <T> Stream<T> filter(@Nullable final Stream<T> instance,
 			@Nullable final Predicate<? super T> predicate) {
 		//
-		return instance != null && (predicate != null || Proxy.isProxyClass(getClass(instance)))
+		return instance != null && (predicate != null || Proxy.isProxyClass(Util.getClass(instance)))
 				? instance.filter(predicate)
 				: null;
 		//
@@ -114,11 +114,6 @@ public class KeikyuRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<Map
 	@Nullable
 	private static <T> List<T> toList(@Nullable final Stream<T> instance) {
 		return instance != null ? instance.toList() : null;
-	}
-
-	@Nullable
-	private static Class<?> getClass(@Nullable final Object instance) {
-		return instance != null ? instance.getClass() : null;
 	}
 
 	@Nullable

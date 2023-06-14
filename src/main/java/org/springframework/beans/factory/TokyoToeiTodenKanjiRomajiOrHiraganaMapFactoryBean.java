@@ -216,15 +216,10 @@ public class TokyoToeiTodenKanjiRomajiOrHiraganaMapFactoryBean extends StringMap
 	private static <T, R, A> R collect(@Nullable final Stream<T> instance,
 			@Nullable final Collector<? super T, A, R> collector) {
 		//
-		return instance != null && (collector != null || Proxy.isProxyClass(getClass(instance)))
+		return instance != null && (collector != null || Proxy.isProxyClass(Util.getClass(instance)))
 				? instance.collect(collector)
 				: null;
 		//
-	}
-
-	@Nullable
-	private static Class<?> getClass(@Nullable final Object instance) {
-		return instance != null ? instance.getClass() : null;
 	}
 
 	@Nullable

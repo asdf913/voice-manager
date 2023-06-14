@@ -56,11 +56,11 @@ class JlptVocabularyListFactoryBeanTest {
 
 	private static final String EMPTY = "";
 
-	private static Method METHOD_FILTER, METHOD_GET_CLASS, METHOD_TO_LIST, METHOD_ANNOTATION_TYPE, METHOD_GET_NAME,
-			METHOD_TEST, METHOD_OR, METHOD_ADD, METHOD_ADD_ALL, METHOD_PUT, METHOD_GET_FIELDS_BY_NAME,
-			METHOD_GET_INTEGER_VALUE, METHOD_GET_STRING_VALUE_CELL, METHOD_INVOKE, METHOD_GET_DECLARED_ANNOTATIONS,
-			METHOD_GET_DECLARED_METHODS, METHOD_IS_ASSIGNABLE_FROM, METHOD_SET_ACCESSIBLE, METHOD_SET, METHOD_GET_TYPE,
-			METHOD_GET_NUMBER_VALUE, METHOD_GET_PHYSICAL_NUMBER_OF_CELLS = null;
+	private static Method METHOD_FILTER, METHOD_TO_LIST, METHOD_ANNOTATION_TYPE, METHOD_GET_NAME, METHOD_TEST,
+			METHOD_OR, METHOD_ADD, METHOD_ADD_ALL, METHOD_PUT, METHOD_GET_FIELDS_BY_NAME, METHOD_GET_INTEGER_VALUE,
+			METHOD_GET_STRING_VALUE_CELL, METHOD_INVOKE, METHOD_GET_DECLARED_ANNOTATIONS, METHOD_GET_DECLARED_METHODS,
+			METHOD_IS_ASSIGNABLE_FROM, METHOD_SET_ACCESSIBLE, METHOD_SET, METHOD_GET_TYPE, METHOD_GET_NUMBER_VALUE,
+			METHOD_GET_PHYSICAL_NUMBER_OF_CELLS = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -68,8 +68,6 @@ class JlptVocabularyListFactoryBeanTest {
 		final Class<?> clz = JlptVocabularyListFactoryBean.class;
 		//
 		(METHOD_FILTER = clz.getDeclaredMethod("filter", Stream.class, Predicate.class)).setAccessible(true);
-		//
-		(METHOD_GET_CLASS = clz.getDeclaredMethod("getClass", Object.class)).setAccessible(true);
 		//
 		(METHOD_TO_LIST = clz.getDeclaredMethod("toList", Stream.class)).setAccessible(true);
 		//
@@ -439,28 +437,7 @@ class JlptVocabularyListFactoryBeanTest {
 			} else if (obj instanceof Stream) {
 				return (Stream) obj;
 			}
-			throw new Throwable(Util.toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetClass() throws Throwable {
-		//
-		Assertions.assertNull(getClass(null));
-		//
-	}
-
-	private static Class<?> getClass(final Object instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_CLASS.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Class) {
-				return (Class) obj;
-			}
-			throw new Throwable(Util.toString(getClass(obj)));
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -483,7 +460,7 @@ class JlptVocabularyListFactoryBeanTest {
 			} else if (obj instanceof List) {
 				return (List) obj;
 			}
-			throw new Throwable(Util.toString(getClass(obj)));
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -504,7 +481,7 @@ class JlptVocabularyListFactoryBeanTest {
 			} else if (obj instanceof Class) {
 				return (Class) obj;
 			}
-			throw new Throwable(Util.toString(getClass(obj)));
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -525,7 +502,7 @@ class JlptVocabularyListFactoryBeanTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(Util.toString(getClass(obj)));
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -645,7 +622,7 @@ class JlptVocabularyListFactoryBeanTest {
 			} else if (obj instanceof List) {
 				return (List) obj;
 			}
-			throw new Throwable(Util.toString(getClass(obj)));
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -728,7 +705,7 @@ class JlptVocabularyListFactoryBeanTest {
 			} else if (obj instanceof IValue0) {
 				return (IValue0) obj;
 			}
-			throw new Throwable(Util.toString(getClass(obj)));
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -802,7 +779,7 @@ class JlptVocabularyListFactoryBeanTest {
 			} else if (obj instanceof IValue0) {
 				return (IValue0) obj;
 			}
-			throw new Throwable(Util.toString(getClass(obj)));
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -838,7 +815,7 @@ class JlptVocabularyListFactoryBeanTest {
 			} else if (obj instanceof Annotation[]) {
 				return (Annotation[]) obj;
 			}
-			throw new Throwable(Util.toString(getClass(obj)));
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -859,7 +836,7 @@ class JlptVocabularyListFactoryBeanTest {
 			} else if (obj instanceof Method[]) {
 				return (Method[]) obj;
 			}
-			throw new Throwable(Util.toString(getClass(obj)));
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -882,7 +859,7 @@ class JlptVocabularyListFactoryBeanTest {
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
-			throw new Throwable(Util.toString(getClass(obj)));
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -933,7 +910,7 @@ class JlptVocabularyListFactoryBeanTest {
 			} else if (obj instanceof Class<?>) {
 				return (Class<?>) obj;
 			}
-			throw new Throwable(Util.toString(getClass(obj)));
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -954,7 +931,7 @@ class JlptVocabularyListFactoryBeanTest {
 			} else if (obj instanceof Double) {
 				return (Double) obj;
 			}
-			throw new Throwable(Util.toString(getClass(obj)));
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -975,7 +952,7 @@ class JlptVocabularyListFactoryBeanTest {
 			} else if (obj instanceof Integer) {
 				return (Integer) obj;
 			}
-			throw new Throwable(Util.toString(getClass(obj)));
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

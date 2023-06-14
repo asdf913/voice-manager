@@ -38,16 +38,14 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 
-	private static Method METHOD_GET_CLASS, METHOD_CREATE_MULIT_MAP_UNIT_WORK_BOOK,
-			METHOD_CREATE_MULIT_MAP_UNIT_SPREAD_SHEET_DOCUMENT, METHOD_OR, METHOD_GET_ROW_COUNT, METHOD_GET_SHEET_COUNT,
-			METHOD_GET_SHEET_BY_INDEX, METHOD_LONG_VALUE = null;
+	private static Method METHOD_CREATE_MULIT_MAP_UNIT_WORK_BOOK, METHOD_CREATE_MULIT_MAP_UNIT_SPREAD_SHEET_DOCUMENT,
+			METHOD_OR, METHOD_GET_ROW_COUNT, METHOD_GET_SHEET_COUNT, METHOD_GET_SHEET_BY_INDEX,
+			METHOD_LONG_VALUE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
 		//
 		final Class<?> clz = GaKuNenBeTsuKanJiMultimapFactoryBean.class;
-		//
-		(METHOD_GET_CLASS = clz.getDeclaredMethod("getClass", Object.class)).setAccessible(true);
 		//
 		(METHOD_CREATE_MULIT_MAP_UNIT_WORK_BOOK = clz.getDeclaredMethod("createMulitmapUnit", Workbook.class))
 				.setAccessible(true);
@@ -352,29 +350,6 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 		return field != null ? field.get(instance) : null;
 	}
 
-	@Test
-	void testGetClass() throws Throwable {
-		//
-		Assertions.assertNull(getClass(null));
-		//
-		Assertions.assertEquals(String.class, getClass(""));
-		//
-	}
-
-	private static Class<?> getClass(final Object instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_CLASS.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Class) {
-				return (Class<?>) obj;
-			}
-			throw new Throwable(Util.toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
 	private static <T> T getObject(final FactoryBean<T> instance) throws Exception {
 		return instance != null ? instance.getObject() : null;
 	}
@@ -457,7 +432,7 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 			} else if (obj instanceof Unit) {
 				return (Unit) obj;
 			}
-			throw new Throwable(Util.toString(getClass(obj)));
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -471,7 +446,7 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 			} else if (obj instanceof Unit) {
 				return (Unit) obj;
 			}
-			throw new Throwable(Util.toString(getClass(obj)));
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -496,7 +471,7 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
-			throw new Throwable(Util.toString(getClass(obj)));
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -515,7 +490,7 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 			if (obj instanceof Integer) {
 				return ((Integer) obj).intValue();
 			}
-			throw new Throwable(Util.toString(getClass(obj)));
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -534,7 +509,7 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 			if (obj instanceof Integer) {
 				return ((Integer) obj).intValue();
 			}
-			throw new Throwable(Util.toString(getClass(obj)));
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -555,7 +530,7 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 			} else if (obj instanceof Table) {
 				return (Table) obj;
 			}
-			throw new Throwable(Util.toString(getClass(obj)));
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -576,7 +551,7 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 			if (obj instanceof Long) {
 				return ((Long) obj).longValue();
 			}
-			throw new Throwable(Util.toString(getClass(obj)));
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
