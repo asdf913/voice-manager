@@ -160,13 +160,15 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends StringM
 		//
 		Object o = null;
 		//
+		Class<?> clz = null;
+		//
 		Field[] fs = null;
 		//
 		List<Triple<String, UnicodeBlock, String>> triples = null;
 		//
 		for (int i = 0; os != null && i < os.length; i++) {
 			//
-			if ((o = os[i]) == null || o.getClass() == null || (fs = o.getClass().getDeclaredFields()) == null
+			if ((clz = Util.getClass(o = os[i])) == null || (fs = clz.getDeclaredFields()) == null
 					|| (triples = getTriples(fs, o)) == null || triples.isEmpty()) {
 				//
 				continue;
