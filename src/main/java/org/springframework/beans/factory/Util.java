@@ -125,6 +125,7 @@ abstract class Util {
 		return instance != null ? instance.toString() : null;
 	}
 
+	@Nullable
 	static Class<?> getClass(@Nullable final Object instance) {
 		return instance != null ? instance.getClass() : null;
 	}
