@@ -38,8 +38,12 @@ public class SeibuRailwayKanjiRomajiMapFactoryBean extends StringMapFromResource
 			//
 		} // if
 			//
-		final List<Element> es = ElementUtil.select(testAndApply(Objects::nonNull,
-				testAndApply(Objects::nonNull, url, URL::new, null), x -> Jsoup.parse(x, 0), null), ".station__name");
+		return createMap(ElementUtil.select(testAndApply(Objects::nonNull,
+				testAndApply(Objects::nonNull, url, URL::new, null), x -> Jsoup.parse(x, 0), null), ".station__name"));
+		//
+	}
+
+	private static Map<String, String> createMap(final List<Element> es) {
 		//
 		Map<String, String> map = null;
 		//

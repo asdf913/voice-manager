@@ -1,11 +1,19 @@
 package org.springframework.beans.factory;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.reflect.FieldUtils;
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,16 +21,51 @@ import org.junit.jupiter.api.Test;
 
 import com.google.common.base.Predicates;
 
+import io.github.toolfactory.narcissus.Narcissus;
+import javassist.util.proxy.MethodHandler;
+import javassist.util.proxy.ProxyFactory;
+import javassist.util.proxy.ProxyObject;
+
 class SeibuRailwayKanjiRomajiMapFactoryBeanTest {
 
-	private static Method METHOD_TEST_AND_APPLY = null;
+	private static Method METHOD_CREATE_MAP, METHOD_TEST_AND_APPLY = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
 		//
-		(METHOD_TEST_AND_APPLY = SeibuRailwayKanjiRomajiMapFactoryBean.class.getDeclaredMethod("testAndApply",
-				Predicate.class, Object.class, FailableFunction.class, FailableFunction.class)).setAccessible(true);
+		final Class<?> clz = SeibuRailwayKanjiRomajiMapFactoryBean.class;
 		//
+		(METHOD_CREATE_MAP = clz.getDeclaredMethod("createMap", List.class)).setAccessible(true);
+		//
+		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
+				FailableFunction.class, FailableFunction.class)).setAccessible(true);
+		//
+	}
+
+	private static class MH implements MethodHandler {
+
+		private String text = null;
+
+		@Override
+		public Object invoke(final Object self, final Method thisMethod, final Method proceed, final Object[] args)
+				throws Throwable {
+			//
+			final String methodName = thisMethod != null ? thisMethod.getName() : null;
+			//
+			if (self instanceof Element) {
+				//
+				if (Objects.equals(methodName, "text")) {
+					//
+					return text;
+					//
+				} // if
+					//
+			} // if
+				//
+			throw new Throwable(methodName);
+			//
+		}
+
 	}
 
 	private SeibuRailwayKanjiRomajiMapFactoryBean instance = null;
@@ -46,6 +89,107 @@ class SeibuRailwayKanjiRomajiMapFactoryBeanTest {
 		//
 		Assertions.assertEquals(Map.class, instance != null ? instance.getObjectType() : null);
 		//
+	}
+
+	@Test
+	void testCreateMap() throws Throwable {
+		//
+		Assertions.assertNull(createMap(Collections.singletonList(null)));
+		//
+		final Element element1 = cast(Element.class, Narcissus.allocateInstance(Element.class));
+		//
+		if (element1 != null) {
+			//
+			FieldUtils.writeField(element1, "childNodes",
+					Collections.nCopies(2, cast(Element.class, Narcissus.allocateInstance(Element.class))), true);
+			//
+		} // if
+			//
+		Assertions.assertEquals(Collections.singletonMap(null, null), createMap(Collections.singletonList(element1)));
+		//
+		Assertions.assertEquals(Collections.singletonMap(null, null), createMap(Collections.nCopies(2, element1)));
+		//
+		final MH mh = new MH();
+		//
+		mh.text = "";
+		//
+		final Element childNode2 = createProxy(Element.class, clz -> {
+			//
+			final Constructor<?> c = clz != null ? clz.getDeclaredConstructor(String.class) : null;
+			//
+			if (c != null) {
+				//
+				c.setAccessible(true);
+				//
+			} // if
+				//
+			return c != null ? c.newInstance("A") : null;
+			//
+		}, mh);
+		//
+		final Element element2 = cast(Element.class, Narcissus.allocateInstance(Element.class));
+		//
+		if (element2 != null) {
+			//
+			FieldUtils.writeField(element2, "childNodes",
+					Arrays.asList(cast(Element.class, Narcissus.allocateInstance(Element.class)), childNode2), true);
+			//
+		} // if
+			//
+		Assertions.assertThrows(IllegalStateException.class, () -> createMap(Arrays.asList(element1, element2)));
+		//
+	}
+
+	private static <T> T createProxy(final Class<T> superClass,
+			final FailableFunction<Class<?>, Object, ReflectiveOperationException> function, final MethodHandler mh)
+			throws ReflectiveOperationException {
+		//
+		final ProxyFactory proxyFactory = new ProxyFactory();
+		//
+		proxyFactory.setSuperclass(superClass);
+		//
+		final Class<?> clz = proxyFactory.createClass();
+		//
+		Object instance = null;
+		//
+		if (function != null) {
+			//
+			instance = function.apply(clz);
+			//
+		} else {
+			//
+			final Constructor<?> constructor = clz != null ? clz.getDeclaredConstructor() : null;
+			//
+			instance = constructor != null ? constructor.newInstance() : null;
+			//
+		} // if
+			//
+		if (instance instanceof ProxyObject) {
+			//
+			((ProxyObject) instance).setHandler(mh);
+			//
+		} // if
+			//
+		return (T) cast(clz, instance);
+		//
+	}
+
+	private static <T> T cast(final Class<T> clz, final Object instance) {
+		return clz != null && clz.isInstance(instance) ? clz.cast(instance) : null;
+	}
+
+	private static Map<String, String> createMap(final List<Element> es) throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_MAP.invoke(null, es);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Map) {
+				return (Map) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 	@Test
