@@ -38,8 +38,12 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import com.google.common.reflect.Reflection;
 
+import domain.Pronunciation;
 import io.github.toolfactory.narcissus.Narcissus;
 import javassist.util.proxy.MethodHandler;
 import javassist.util.proxy.ProxyFactory;
@@ -55,7 +59,7 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 			METHOD_CREATE_MERGED_BUFFERED_IMAGE, METHOD_GET_GRAPHICS, METHOD_DRAW_IMAGE, METHOD_GET_WIDTH,
 			METHOD_GET_HEIGHT, METHOD_INT_VALUE, METHOD_FOR_EACH, METHOD_SET_VALUE, METHOD_GET_VALUE, METHOD_ENTRY_SET,
 			METHOD_GET_PROTOCOL, METHOD_GET_HOST, METHOD_TEST, METHOD_ADD, METHOD_MAP_TO_INT, METHOD_REDUCE,
-			METHOD_OR_ELSE = null;
+			METHOD_OR_ELSE, METHOD_CREATE_PRONUNCIATIONS = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -105,6 +109,9 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 		(METHOD_REDUCE = clz.getDeclaredMethod("reduce", IntStream.class, IntBinaryOperator.class)).setAccessible(true);
 		//
 		(METHOD_OR_ELSE = clz.getDeclaredMethod("orElse", OptionalInt.class, Integer.TYPE)).setAccessible(true);
+		//
+		(METHOD_CREATE_PRONUNCIATIONS = clz.getDeclaredMethod("createPronunciations", URL.class, List.class,
+				Number.class)).setAccessible(true);
 		//
 	}
 
@@ -838,6 +845,34 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 			final Object obj = METHOD_OR_ELSE.invoke(null, instance, other);
 			if (obj instanceof Integer) {
 				return ((Integer) obj).intValue();
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCreatePronunciations() throws Throwable {
+		//
+		Assertions.assertNull(createPronunciations(null, Collections.singletonList(null), null));
+		//
+		Assertions.assertEquals("[{}]", ObjectMapperUtil.writeValueAsString(
+				new ObjectMapper().setSerializationInclusion(Include.NON_NULL),
+				createPronunciations(null,
+						Collections.singletonList(cast(Element.class, Narcissus.allocateInstance(Element.class))),
+						null)));
+		//
+	}
+
+	private static List<Pronunciation> createPronunciations(final URL url, final List<Element> elements,
+			final Number imageType) throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_PRONUNCIATIONS.invoke(null, url, elements, imageType);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof List) {
+				return (List) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

@@ -94,51 +94,57 @@ public class OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl
 		//
 		List<Pronunciation> list = null;
 		//
-		final URIBuilder uriBuilder = testAndApply(Objects::nonNull, url, URIBuilder::basedOn, null);
-		//
 		try {
 			//
-			final URL u = toURL(toURI(relative(uriBuilder, input)));
+			final URL u = toURL(toURI(relative(testAndApply(Objects::nonNull, url, URIBuilder::basedOn, null), input)));
 			//
-			final String protocolAndHost = testAndApply(Objects::nonNull, u,
-					x -> String.join("://", getProtocol(x), getHost(x)), null);
+			list = createPronunciations(u, ElementUtil.select(
+					testAndApply(Objects::nonNull, u, x -> Jsoup.parse(x, 0), null), "audio[title='発音図：']"), imageType);
 			//
-			final Document document = testAndApply(Objects::nonNull, u, x -> Jsoup.parse(x, 0), null);
-			//
-			final Elements elements = ElementUtil.select(document, "audio[title='発音図：']");
-			//
-			Pronunciation pronunciation = null;
-			//
-			Element element = null;
-			//
-			Map<String, String> audioUrls = null;
-			//
-			for (int i = 0; i < IterableUtils.size(elements); i++) {
-				//
-				if ((element = IterableUtils.get(elements, i)) == null) {
-					//
-					continue;
-					//
-				} // if
-					//
-				(pronunciation = new Pronunciation()).setPageUrl(toString(u));
-				//
-				pronunciation.setAudioUrls(audioUrls = getSrcMap(element));
-				//
-				forEach(entrySet(audioUrls), x -> setValue(x, String.join("", protocolAndHost, getValue(x))));
-				//
-				pronunciation.setPitchAccentImage(createMergedBufferedImage(protocolAndHost, getImageSrcs(element),
-						intValue(imageType, BufferedImage.TYPE_INT_RGB)));
-				//
-				add(list = ObjectUtils.getIfNull(list, ArrayList::new), pronunciation);
-				//
-			} // for
-				//
 		} catch (final IOException e) {
 			//
 			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
 			//
 		} // try
+			//
+		return list;
+		//
+	}
+
+	private static List<Pronunciation> createPronunciations(final URL url, final List<Element> elements,
+			final Number imageType) {
+		//
+		List<Pronunciation> list = null;
+		//
+		Element element = null;
+		//
+		Pronunciation pronunciation = null;
+		//
+		Map<String, String> audioUrls = null;
+		//
+		final String protocolAndHost = testAndApply(Objects::nonNull, url,
+				x -> String.join("://", getProtocol(x), getHost(x)), null);
+		//
+		for (int i = 0; i < IterableUtils.size(elements); i++) {
+			//
+			if ((element = IterableUtils.get(elements, i)) == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			(pronunciation = new Pronunciation()).setPageUrl(toString(url));
+			//
+			pronunciation.setAudioUrls(audioUrls = getSrcMap(element));
+			//
+			forEach(entrySet(audioUrls), x -> setValue(x, String.join("", protocolAndHost, getValue(x))));
+			//
+			pronunciation.setPitchAccentImage(createMergedBufferedImage(protocolAndHost, getImageSrcs(element),
+					intValue(imageType, BufferedImage.TYPE_INT_RGB)));
+			//
+			add(list = ObjectUtils.getIfNull(list, ArrayList::new), pronunciation);
+			//
+		} // for
 			//
 		return list;
 		//
