@@ -50,7 +50,7 @@ public class KeikyuRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<Map
 	}
 
 	@Nullable
-	private static Map<String, String> createMap(final List<Element> es) {
+	private static Map<String, String> createMap(@Nullable final List<Element> es) {
 		//
 		Element e = null;
 		//
@@ -100,7 +100,8 @@ public class KeikyuRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<Map
 		return instance != null ? instance.getWholeText() : null;
 	}
 
-	private static <T> Stream<T> filter(final Stream<T> instance, final Predicate<? super T> predicate) {
+	private static <T> Stream<T> filter(@Nullable final Stream<T> instance,
+			@Nullable final Predicate<? super T> predicate) {
 		//
 		return instance != null && (predicate != null || Proxy.isProxyClass(getClass(instance)))
 				? instance.filter(predicate)
@@ -120,7 +121,7 @@ public class KeikyuRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<Map
 		return instance != null ? instance.matcher(input) : null;
 	}
 
-	private static boolean find(final Matcher instance) {
+	private static boolean find(@Nullable final Matcher instance) {
 		return instance != null && instance.find();
 	}
 
@@ -140,7 +141,7 @@ public class KeikyuRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<Map
 		return instance != null ? instance.childNodes() : null;
 	}
 
-	private static <K, V> void put(final Map<K, V> instance, final K key, final V value) {
+	private static <K, V> void put(@Nullable final Map<K, V> instance, final K key, final V value) {
 		if (instance != null) {
 			instance.put(key, value);
 		}
@@ -153,7 +154,7 @@ public class KeikyuRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<Map
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
-	private static final <T> boolean test(final Predicate<T> instance, final T value) {
+	private static final <T> boolean test(@Nullable final Predicate<T> instance, final T value) {
 		return instance != null && instance.test(value);
 	}
 
