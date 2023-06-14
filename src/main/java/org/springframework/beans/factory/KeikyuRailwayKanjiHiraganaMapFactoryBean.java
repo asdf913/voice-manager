@@ -118,7 +118,7 @@ public class KeikyuRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<Map
 	}
 
 	private static Matcher matcher(@Nullable final Pattern instance, final CharSequence input) {
-		return instance != null ? instance.matcher(input) : null;
+		return instance != null && input != null ? instance.matcher(input) : null;
 	}
 
 	private static boolean find(@Nullable final Matcher instance) {

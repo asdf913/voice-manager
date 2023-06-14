@@ -331,6 +331,8 @@ class KeikyuRailwayKanjiHiraganaMapFactoryBeanTest {
 		//
 		Assertions.assertNull(matcher(null, null));
 		//
+		Assertions.assertNull(matcher(Pattern.compile(""), null));
+		//
 	}
 
 	private static Matcher matcher(final Pattern instance, final CharSequence input) throws Throwable {
