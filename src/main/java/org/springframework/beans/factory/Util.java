@@ -139,6 +139,7 @@ abstract class Util {
 		}
 	}
 
+	@Nullable
 	static <E> Stream<E> stream(@Nullable final Collection<E> instance) {
 		return instance != null ? instance.stream() : null;
 	}
