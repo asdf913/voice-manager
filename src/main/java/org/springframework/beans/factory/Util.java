@@ -77,7 +77,7 @@ abstract class Util {
 		return clz != null && clz.isInstance(instance) ? clz.cast(instance) : null;
 	}
 
-	static void setUnicodeBlock(final Object instance, final Consumer<UnicodeBlock> consumer)
+	static void setUnicodeBlock(@Nullable final Object instance, final Consumer<UnicodeBlock> consumer)
 			throws IllegalAccessException {
 		//
 		if (instance == null) {
