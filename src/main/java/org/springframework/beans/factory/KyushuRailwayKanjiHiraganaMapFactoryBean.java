@@ -67,7 +67,7 @@ public class KyushuRailwayKanjiHiraganaMapFactoryBean extends StringMapFromResou
 				//
 			} // if
 				//
-			map.put(key, value);
+			Util.put(map, key, value);
 			//
 		} // for
 			//

@@ -59,7 +59,7 @@ public class ToykoMetroKanjiHiraganaMapFactoryBean extends StringMapFromResource
 				//
 			} // if
 				//
-			map.put(text(cast(TextNode.class, childNodes.get(0))),
+			Util.put(map, text(cast(TextNode.class, childNodes.get(0))),
 					ElementUtil.text(cast(Element.class, childNodes.get(1))));
 			//
 		} // for

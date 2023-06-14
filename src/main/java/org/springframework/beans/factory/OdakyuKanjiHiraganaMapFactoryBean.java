@@ -66,7 +66,7 @@ public class OdakyuKanjiHiraganaMapFactoryBean extends StringMapFromResourceFact
 				//
 			} // if
 				//
-			map.put(key, value);
+			Util.put(map, key, value);
 			//
 		} // for
 			//
