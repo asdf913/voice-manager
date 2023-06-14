@@ -123,7 +123,7 @@ public class IpaMultimapFactoryBean implements FactoryBean<Multimap<String, Stri
 				//
 				for (final Entry<?, ?> en : entrySet) {
 					//
-					list = testAndApply(Objects::nonNull, StringUtils.split(toString(getValue(en)), ","),
+					list = testAndApply(Objects::nonNull, StringUtils.split(Util.toString(getValue(en)), ","),
 							Arrays::asList, null);
 					//
 					for (int i = 0; list != null && i < list.size(); i++) {
@@ -133,7 +133,7 @@ public class IpaMultimapFactoryBean implements FactoryBean<Multimap<String, Stri
 					} // for
 						//
 					MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							toString(getKey(en)), list);
+							Util.toString(getKey(en)), list);
 					//
 				} // for
 					//
@@ -143,7 +143,7 @@ public class IpaMultimapFactoryBean implements FactoryBean<Multimap<String, Stri
 			//
 		} // if
 			//
-		throw new IllegalArgumentException(toString(getClass(obj)));
+		throw new IllegalArgumentException(Util.toString(getClass(obj)));
 		//
 	}
 
@@ -172,11 +172,6 @@ public class IpaMultimapFactoryBean implements FactoryBean<Multimap<String, Stri
 	@Nullable
 	private static <V> V getValue(@Nullable final Entry<?, V> instance) {
 		return instance != null ? instance.getValue() : null;
-	}
-
-	@Nullable
-	private static String toString(@Nullable final Object instance) {
-		return instance != null ? instance.toString() : null;
 	}
 
 	@Nullable

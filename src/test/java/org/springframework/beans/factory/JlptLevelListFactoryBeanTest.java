@@ -18,7 +18,7 @@ class JlptLevelListFactoryBeanTest {
 
 	private static final String EMPTY = "";
 
-	private static Method METHOD_GET_CLASS, METHOD_TO_STRING, METHOD_ADD, METHOD_LONG_VALUE = null;
+	private static Method METHOD_GET_CLASS, METHOD_ADD, METHOD_LONG_VALUE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -26,8 +26,6 @@ class JlptLevelListFactoryBeanTest {
 		final Class<?> clz = JlptLevelListFactoryBean.class;
 		//
 		(METHOD_GET_CLASS = clz.getDeclaredMethod("getClass", Object.class)).setAccessible(true);
-		//
-		(METHOD_TO_STRING = clz.getDeclaredMethod("toString", Object.class)).setAccessible(true);
 		//
 		(METHOD_ADD = clz.getDeclaredMethod("add", Collection.class, Object.class)).setAccessible(true);
 		//
@@ -134,31 +132,31 @@ class JlptLevelListFactoryBeanTest {
 			//
 		Assertions.assertDoesNotThrow(() -> setValues(instance, null));
 		//
-		Assertions.assertEquals("[[null]]", toString(get(values, instance)));
+		Assertions.assertEquals("[[null]]", Util.toString(get(values, instance)));
 		//
 		// java.lang.String
 		//
 		Assertions.assertDoesNotThrow(() -> setValues(instance, EMPTY));
 		//
-		Assertions.assertEquals("[[null]]", toString(get(values, instance)));
+		Assertions.assertEquals("[[null]]", Util.toString(get(values, instance)));
 		//
 		// java.util.List
 		//
 		Assertions.assertDoesNotThrow(() -> setValues(instance, String.format("[%1$s]", EMPTY)));
 		//
-		Assertions.assertEquals("[null]", toString(get(values, instance)));
+		Assertions.assertEquals("[null]", Util.toString(get(values, instance)));
 		//
 		// java.lang.Number
 		//
 		final Integer zero = Integer.valueOf(0);
 		//
-		Assertions.assertDoesNotThrow(() -> setValues(instance, toString(zero)));
+		Assertions.assertDoesNotThrow(() -> setValues(instance, Util.toString(zero)));
 		//
-		Assertions.assertEquals(String.format("[[%1$s]]", zero), toString(get(values, instance)));
+		Assertions.assertEquals(String.format("[[%1$s]]", zero), Util.toString(get(values, instance)));
 		///
 		Assertions.assertDoesNotThrow(() -> setValues(instance, String.format("[%1$s]", zero)));
 		//
-		Assertions.assertEquals(String.format("[[%1$s]]", zero), toString(get(values, instance)));
+		Assertions.assertEquals(String.format("[[%1$s]]", zero), Util.toString(get(values, instance)));
 		//
 		// java.util.Map
 		//
@@ -192,27 +190,6 @@ class JlptLevelListFactoryBeanTest {
 	}
 
 	@Test
-	void testToString() throws Throwable {
-		//
-		Assertions.assertNull(toString(null));
-		//
-	}
-
-	private static String toString(final Object instance) throws Throwable {
-		try {
-			final Object obj = METHOD_TO_STRING.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testGetClass() throws Throwable {
 		//
 		Assertions.assertNull(getClass(null));
@@ -229,7 +206,7 @@ class JlptLevelListFactoryBeanTest {
 			} else if (obj instanceof Class) {
 				return (Class<?>) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -265,7 +242,7 @@ class JlptLevelListFactoryBeanTest {
 			if (obj instanceof Long) {
 				return ((Long) obj).longValue();
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

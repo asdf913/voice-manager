@@ -129,7 +129,7 @@ public class YojijukugoMultimapFactoryBean implements FactoryBean<Multimap<Strin
 					//
 				MultimapUtil.put(IValue0Util.getValue0(
 						multimap = ObjectUtils.getIfNull(multimap, () -> Unit.with(LinkedListMultimap.create()))),
-						toString(RowUtil.getCell(row, 0)), toString(RowUtil.getCell(row, 1)));
+						Util.toString(RowUtil.getCell(row, 0)), Util.toString(RowUtil.getCell(row, 1)));
 				//
 			} // if
 				//
@@ -252,11 +252,6 @@ public class YojijukugoMultimapFactoryBean implements FactoryBean<Multimap<Strin
 	@Nullable
 	private static String getMimeType(@Nullable final ContentInfo instance) {
 		return instance != null ? instance.getMimeType() : null;
-	}
-
-	@Nullable
-	private static String toString(@Nullable final Object instance) {
-		return instance != null ? instance.toString() : null;
 	}
 
 	@Nullable

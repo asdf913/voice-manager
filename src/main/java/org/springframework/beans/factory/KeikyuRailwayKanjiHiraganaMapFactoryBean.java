@@ -80,7 +80,7 @@ public class KeikyuRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<Map
 					//
 				} // if
 					//
-				return StringUtils.trim(toString(x));
+				return StringUtils.trim(Util.toString(x));
 				//
 			}).collect(Collectors.joining("")))) && matcher != null && matcher.groupCount() > 0) {
 				//
@@ -128,11 +128,6 @@ public class KeikyuRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<Map
 
 	private static boolean find(@Nullable final Matcher instance) {
 		return instance != null && instance.find();
-	}
-
-	@Nullable
-	private static String toString(@Nullable final Object instance) {
-		return instance != null ? instance.toString() : null;
 	}
 
 	@Nullable

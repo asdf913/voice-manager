@@ -91,7 +91,7 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 			//
 		} // if
 			//
-		final String string = toString(timeout);
+		final String string = Util.toString(timeout);
 		//
 		final Long l = valueOf(string);
 		//
@@ -109,11 +109,6 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 
 	private static long longValue(@Nullable final Number instance, final long defaultValue) {
 		return instance != null ? instance.longValue() : defaultValue;
-	}
-
-	@Nullable
-	private static String toString(@Nullable final Object instance) {
-		return instance != null ? instance.toString() : null;
 	}
 
 	@Nullable
@@ -278,7 +273,7 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 				MultimapUtil.put(
 						IValue0Util.getValue0(
 								mm = ObjectUtils.getIfNull(mm, () -> Unit.with(LinkedHashMultimap.create()))),
-						toString(RowUtil.getCell(row, 0)), toString(RowUtil.getCell(row, 1)));
+						Util.toString(RowUtil.getCell(row, 0)), Util.toString(RowUtil.getCell(row, 1)));
 				//
 			} // for
 				//

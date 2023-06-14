@@ -228,8 +228,8 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends StringM
 				//
 			} // if
 				//
-			if (!isInstance(CharSequence.class, temp) || (unicodeBlocks = getUnicodeBlocks(s = toString(temp))) == null
-					|| unicodeBlocks.isEmpty()) {
+			if (!isInstance(CharSequence.class, temp)
+					|| (unicodeBlocks = getUnicodeBlocks(s = Util.toString(temp))) == null || unicodeBlocks.isEmpty()) {
 				//
 				continue;
 				//
@@ -342,11 +342,6 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends StringM
 		if (instance != null) {
 			instance.accept(t, u);
 		}
-	}
-
-	@Nullable
-	private static String toString(@Nullable final Object instance) {
-		return instance != null ? instance.toString() : null;
 	}
 
 	private static boolean isInstance(@Nullable final Class<?> clz, @Nullable final Object instance) {

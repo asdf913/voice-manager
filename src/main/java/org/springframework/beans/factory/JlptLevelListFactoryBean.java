@@ -68,7 +68,7 @@ public class JlptLevelListFactoryBean implements FactoryBean<List<String>> {
 			//
 		} // if
 			//
-		final String string = toString(timeout);
+		final String string = Util.toString(timeout);
 		//
 		final Long l = valueOf(string);
 		//
@@ -108,7 +108,7 @@ public class JlptLevelListFactoryBean implements FactoryBean<List<String>> {
 					//
 					for (final Object obj : iterable) {
 						//
-						add(list = ObjectUtils.getIfNull(list, ArrayList::new), toString(obj));
+						add(list = ObjectUtils.getIfNull(list, ArrayList::new), Util.toString(obj));
 						//
 					} // for
 						//
@@ -118,7 +118,7 @@ public class JlptLevelListFactoryBean implements FactoryBean<List<String>> {
 					//
 			} else {
 				//
-				this.values = Unit.with(Collections.singletonList(toString(object)));
+				this.values = Unit.with(Collections.singletonList(Util.toString(object)));
 				//
 			} // if
 				//
@@ -136,11 +136,6 @@ public class JlptLevelListFactoryBean implements FactoryBean<List<String>> {
 		if (items != null) {
 			items.add(item);
 		}
-	}
-
-	@Nullable
-	private static String toString(@Nullable final Object instance) {
-		return instance != null ? instance.toString() : null;
 	}
 
 	@Nullable

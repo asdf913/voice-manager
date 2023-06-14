@@ -32,15 +32,13 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class JapaneseNameMultimapFactoryBeanTest {
 
-	private static Method METHOD_TO_STRING, METHOD_TEST, METHOD_GET_PROTOCOL, METHOD_CREATE_MULTI_MAP_ELEMENT,
+	private static Method METHOD_TEST, METHOD_GET_PROTOCOL, METHOD_CREATE_MULTI_MAP_ELEMENT,
 			METHOD_CREATE_MULTI_MAP_WORK_BOOK, METHOD_GET_MIME_TYPE, METHOD_CREATE_MULTI_MAP_BY_URL = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
 		//
 		final Class<?> clz = JapaneseNameMultimapFactoryBean.class;
-		//
-		(METHOD_TO_STRING = clz.getDeclaredMethod("toString", Object.class)).setAccessible(true);
 		//
 		(METHOD_TEST = clz.getDeclaredMethod("test", Predicate.class, Object.class)).setAccessible(true);
 		//
@@ -143,7 +141,7 @@ class JapaneseNameMultimapFactoryBeanTest {
 			//
 		setResource(instance, new ByteArrayResource(bs));
 		//
-		Assertions.assertEquals("{=[]}", toString(getObject(instance)));
+		Assertions.assertEquals("{=[]}", Util.toString(getObject(instance)));
 		//
 		// xls
 		//
@@ -176,27 +174,6 @@ class JapaneseNameMultimapFactoryBeanTest {
 		//
 		Assertions.assertEquals(Multimap.class, instance != null ? instance.getObjectType() : null);
 		//
-	}
-
-	@Test
-	void testToString() throws Throwable {
-		//
-		Assertions.assertNull(toString(null));
-		//
-	}
-
-	private static String toString(final Object instance) throws Throwable {
-		try {
-			final Object obj = METHOD_TO_STRING.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(obj != null && obj.getClass() != null ? obj.getClass().toString() : null);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test
@@ -302,7 +279,7 @@ class JapaneseNameMultimapFactoryBeanTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(obj != null ? toString(obj.getClass()) : null);
+			throw new Throwable(obj != null ? Util.toString(obj.getClass()) : null);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -311,7 +288,7 @@ class JapaneseNameMultimapFactoryBeanTest {
 	@Test
 	void testCreateMultimapByUrl() throws Throwable {
 		//
-		final String url = toString(new File("pom.xml").toURI().toURL());
+		final String url = Util.toString(new File("pom.xml").toURI().toURL());
 		//
 		AssertionsUtil.assertThrowsAndEquals(MalformedURLException.class,
 				"{localizedMessage=Only http & https protocols supported, message=Only http & https protocols supported}",
@@ -332,7 +309,7 @@ class JapaneseNameMultimapFactoryBeanTest {
 			} else if (obj instanceof Multimap) {
 				return (Multimap) obj;
 			}
-			throw new Throwable(obj != null ? toString(obj.getClass()) : null);
+			throw new Throwable(obj != null ? Util.toString(obj.getClass()) : null);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

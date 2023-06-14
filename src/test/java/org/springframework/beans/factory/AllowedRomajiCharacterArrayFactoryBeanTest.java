@@ -2,19 +2,21 @@ package org.springframework.beans.factory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.function.Predicate;
 
+import org.apache.commons.lang3.function.FailableFunction;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.google.common.base.Predicates;
+
 class AllowedRomajiCharacterArrayFactoryBeanTest {
 
 	private static final String EMPTY = "";
 
-	private static Method METHOD_TO_CHAR_ARRAY, METHOD_TO_STRING = null;
-
-	private AllowedRomajiCharacterArrayFactoryBean instance = null;
+	private static Method METHOD_TO_CHAR_ARRAY, METHOD_TEST_AND_APPLY = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -23,9 +25,12 @@ class AllowedRomajiCharacterArrayFactoryBeanTest {
 		//
 		(METHOD_TO_CHAR_ARRAY = clz.getDeclaredMethod("toCharArray", String.class)).setAccessible(true);
 		//
-		(METHOD_TO_STRING = clz.getDeclaredMethod("toString", Object.class)).setAccessible(true);
+		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
+				FailableFunction.class, FailableFunction.class)).setAccessible(true);
 		//
 	}
+
+	private AllowedRomajiCharacterArrayFactoryBean instance = null;
 
 	@BeforeEach
 	void beforeEach() {
@@ -71,28 +76,26 @@ class AllowedRomajiCharacterArrayFactoryBeanTest {
 			} else if (obj instanceof char[]) {
 				return (char[]) obj;
 			}
-			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
+			throw new Throwable(Util.toString(obj.getClass()));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
 	}
 
 	@Test
-	void testToString() throws Throwable {
+	void testTestAndApply() throws Throwable {
 		//
-		Assertions.assertSame(EMPTY, toString(EMPTY));
+		Assertions.assertNull(testAndApply(null, null, null, null));
+		//
+		Assertions.assertNull(testAndApply(Predicates.alwaysTrue(), null, null, null));
 		//
 	}
 
-	private static String toString(final Object instance) throws Throwable {
+	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse)
+			throws Throwable {
 		try {
-			final Object obj = METHOD_TO_STRING.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
+			return (R) METHOD_TEST_AND_APPLY.invoke(null, predicate, value, functionTrue, functionFalse);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

@@ -5,7 +5,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Map;
+import java.util.function.Predicate;
 
+import org.apache.commons.lang3.function.FailableFunction;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,18 +17,19 @@ import com.fasterxml.jackson.core.JsonParseException;
 
 class CentralJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 
-	private static Method METHOD_TO_STRING, METHOD_GET, METHOD_CAST = null;
+	private static Method METHOD_GET, METHOD_CAST, METHOD_TEST_AND_APPLY = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
 		//
 		final Class<?> clz = CentralJapanRailwayKanjiHiraganaMapFactoryBean.class;
 		//
-		(METHOD_TO_STRING = clz.getDeclaredMethod("toString", Object.class)).setAccessible(true);
-		//
 		(METHOD_GET = clz.getDeclaredMethod("get", Map.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_CAST = clz.getDeclaredMethod("cast", Class.class, Object.class)).setAccessible(true);
+		//
+		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
+				FailableFunction.class, FailableFunction.class)).setAccessible(true);
 		//
 	}
 
@@ -62,33 +65,12 @@ class CentralJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 		//
 		if (instance != null) {
 			//
-			instance.setUrl(toString(new File("pom.xml").toURI().toURL()));
+			instance.setUrl(Util.toString(new File("pom.xml").toURI().toURL()));
 			//
 		} // if
 			//
 		Assertions.assertThrows(JsonParseException.class, () -> getObject(instance));
 		//
-	}
-
-	@Test
-	void testToString() throws Throwable {
-		//
-		Assertions.assertNull(toString(null));
-		//
-	}
-
-	private static String toString(final Object instance) throws Throwable {
-		try {
-			final Object obj = METHOD_TO_STRING.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	private static <T> T getObject(final FactoryBean<T> instnace) throws Exception {
@@ -135,4 +117,22 @@ class CentralJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 			throw e.getTargetException();
 		}
 	}
+
+	@Test
+	void testTestAndApply() throws Throwable {
+		//
+		Assertions.assertNull(testAndApply(null, null, null, null));
+		//
+	}
+
+	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse)
+			throws Throwable {
+		try {
+			return (R) METHOD_TEST_AND_APPLY.invoke(null, predicate, value, functionTrue, functionFalse);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
 }

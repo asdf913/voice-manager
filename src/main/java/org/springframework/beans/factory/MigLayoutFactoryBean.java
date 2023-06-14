@@ -49,7 +49,7 @@ public class MigLayoutFactoryBean implements FactoryBean<MigLayout> {
 			//
 		} else if (value instanceof Iterable<?>) {
 			//
-			setArguments(IterableUtils.toList((Iterable<?>) value).stream().map(MigLayoutFactoryBean::toString).toList()
+			setArguments(IterableUtils.toList((Iterable<?>) value).stream().map(Util::toString).toList()
 					.toArray(new String[] {}));
 			//
 			return;
@@ -70,7 +70,7 @@ public class MigLayoutFactoryBean implements FactoryBean<MigLayout> {
 			//
 		try {
 			//
-			if ((object = testAndApply(StringUtils::isNotEmpty, toString(value),
+			if ((object = testAndApply(StringUtils::isNotEmpty, Util.toString(value),
 					x -> ObjectMapperUtil.readValue(new ObjectMapper(), x, Object.class), null)) == null
 					|| object instanceof Iterable<?>) {
 				//
@@ -82,7 +82,7 @@ public class MigLayoutFactoryBean implements FactoryBean<MigLayout> {
 				//
 			} else {
 				//
-				throw new IllegalArgumentException(toString(getClass(object)));
+				throw new IllegalArgumentException(Util.toString(getClass(object)));
 				//
 			} // if
 				//
@@ -147,8 +147,8 @@ public class MigLayoutFactoryBean implements FactoryBean<MigLayout> {
 				//
 			} else {
 				//
-				result = Unit.with(Arrays.stream((Object[]) value).map(MigLayoutFactoryBean::toString).toList()
-						.toArray(new String[] {}));
+				result = Unit
+						.with(Arrays.stream((Object[]) value).map(Util::toString).toList().toArray(new String[] {}));
 				//
 			} // if
 				//
@@ -225,11 +225,6 @@ public class MigLayoutFactoryBean implements FactoryBean<MigLayout> {
 			throws E {
 		return predicate != null && predicate.test(value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
-	}
-
-	@Nullable
-	private static String toString(@Nullable final Object instance) {
-		return instance != null ? instance.toString() : null;
 	}
 
 	@Override

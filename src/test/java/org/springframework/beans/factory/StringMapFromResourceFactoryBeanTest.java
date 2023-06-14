@@ -40,9 +40,8 @@ import com.google.common.reflect.Reflection;
 
 class StringMapFromResourceFactoryBeanTest {
 
-	private static Method METHOD_TEST_AND_ACCEPT, METHOD_GET_PHYSICAL_NUMBER_OF_CELLS, METHOD_TO_STRING, METHOD_TEST,
-			METHOD_CREATE_MAP, METHOD_GET_VALUE_CELL_AND_FORMULA_EVALUATOR, METHOD_GET_STRING_FORMULA_ERROR,
-			METHOD_GET_VALUE_CELL = null;
+	private static Method METHOD_TEST_AND_ACCEPT, METHOD_GET_PHYSICAL_NUMBER_OF_CELLS, METHOD_TEST, METHOD_CREATE_MAP,
+			METHOD_GET_VALUE_CELL_AND_FORMULA_EVALUATOR, METHOD_GET_STRING_FORMULA_ERROR, METHOD_GET_VALUE_CELL = null;
 
 	private static Class<?> CLASS_OBJECT_INT_MAP = null;
 
@@ -56,8 +55,6 @@ class StringMapFromResourceFactoryBeanTest {
 		//
 		(METHOD_GET_PHYSICAL_NUMBER_OF_CELLS = clz.getDeclaredMethod("getPhysicalNumberOfCells", Row.class,
 				Integer.TYPE)).setAccessible(true);
-		//
-		(METHOD_TO_STRING = clz.getDeclaredMethod("toString", Object.class)).setAccessible(true);
 		//
 		(METHOD_TEST = clz.getDeclaredMethod("test", Predicate.class, Object.class)).setAccessible(true);
 		//
@@ -368,8 +365,7 @@ class StringMapFromResourceFactoryBeanTest {
 			FieldUtils.writeDeclaredField(instance, "iValue0", null, true);
 			//
 			AssertionsUtil.assertThrowsAndEquals(IllegalArgumentException.class,
-					"{localizedMessage=Sheet [ ] not found, message=Sheet [ ] not found}",
-					() -> getObject(instance));
+					"{localizedMessage=Sheet [ ] not found, message=Sheet [ ] not found}", () -> getObject(instance));
 			//
 		} // try
 			//
@@ -523,30 +519,7 @@ class StringMapFromResourceFactoryBeanTest {
 			if (obj instanceof Number) {
 				return ((Number) obj).intValue();
 			}
-			throw new Throwable(obj != null ? toString(obj.getClass()) : null);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testToString() throws Throwable {
-		//
-		final String string = "";
-		//
-		Assertions.assertSame(string, toString(string));
-		//
-	}
-
-	private static String toString(final Object instance) throws Throwable {
-		try {
-			final Object obj = METHOD_TO_STRING.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(obj.getClass() != null ? toString(obj.getClass()) : null);
+			throw new Throwable(obj != null ? Util.toString(obj.getClass()) : null);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -565,7 +538,7 @@ class StringMapFromResourceFactoryBeanTest {
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
-			throw new Throwable(obj != null ? toString(obj.getClass()) : null);
+			throw new Throwable(obj != null ? Util.toString(obj.getClass()) : null);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -589,7 +562,7 @@ class StringMapFromResourceFactoryBeanTest {
 			} else if (obj instanceof IValue0) {
 				return (IValue0) obj;
 			}
-			throw new Throwable(toString(obj.getClass()));
+			throw new Throwable(Util.toString(obj.getClass()));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -625,7 +598,7 @@ class StringMapFromResourceFactoryBeanTest {
 			} else if (obj instanceof Cell) {
 				return (Cell) obj;
 			}
-			throw new Throwable(toString(obj.getClass()));
+			throw new Throwable(Util.toString(obj.getClass()));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -638,8 +611,7 @@ class StringMapFromResourceFactoryBeanTest {
 		//
 		final Cell cell = Reflection.newProxy(Cell.class, ih);
 		//
-		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class, "{}",
-				() -> getString(cell, null));
+		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class, "{}", () -> getString(cell, null));
 		//
 		if (ih != null) {
 			//
@@ -687,13 +659,13 @@ class StringMapFromResourceFactoryBeanTest {
 			//
 		} // if
 			//
-		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class,
-				"{localizedMessage=FORMULA, message=FORMULA}", () -> getString(cell, null));
+		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class, "{localizedMessage=FORMULA, message=FORMULA}",
+				() -> getString(cell, null));
 		//
 		final FormulaEvaluator formulaEvaluator = Reflection.newProxy(FormulaEvaluator.class, ih);
 		//
-		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class,
-				"{localizedMessage=FORMULA, message=FORMULA}", () -> getString(cell, formulaEvaluator));
+		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class, "{localizedMessage=FORMULA, message=FORMULA}",
+				() -> getString(cell, formulaEvaluator));
 		//
 		if (ih != null) {
 			//
@@ -731,7 +703,7 @@ class StringMapFromResourceFactoryBeanTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(toString(obj.getClass()));
+			throw new Throwable(Util.toString(obj.getClass()));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -745,7 +717,7 @@ class StringMapFromResourceFactoryBeanTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(toString(obj.getClass()));
+			throw new Throwable(Util.toString(obj.getClass()));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

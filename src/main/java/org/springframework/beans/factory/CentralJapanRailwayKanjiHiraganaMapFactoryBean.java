@@ -57,7 +57,7 @@ public class CentralJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFro
 				//
 			} // if
 				//
-			map.put(toString(m.get("name")), toString(m.get("kana")));
+			map.put(Util.toString(m.get("name")), Util.toString(m.get("kana")));
 			//
 		} // for
 			//
@@ -85,11 +85,6 @@ public class CentralJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFro
 	@Nullable
 	private static InputStream openStream(@Nullable final URL instance) throws IOException {
 		return instance != null ? instance.openStream() : null;
-	}
-
-	@Nullable
-	private static String toString(@Nullable final Object instance) {
-		return instance != null ? instance.toString() : null;
 	}
 
 }

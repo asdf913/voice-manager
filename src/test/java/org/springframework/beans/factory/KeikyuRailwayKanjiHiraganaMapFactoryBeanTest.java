@@ -32,15 +32,13 @@ import javassist.util.proxy.ProxyObject;
 
 class KeikyuRailwayKanjiHiraganaMapFactoryBeanTest {
 
-	private static Method METHOD_TO_STRING, METHOD_GET_CLASS, METHOD_CREATE_MAP, METHOD_GET_WHOLE_TEXT, METHOD_FILTER,
-			METHOD_MATCHER, METHOD_FIND, METHOD_PUT, METHOD_TEST = null;
+	private static Method METHOD_GET_CLASS, METHOD_CREATE_MAP, METHOD_GET_WHOLE_TEXT, METHOD_FILTER, METHOD_MATCHER,
+			METHOD_FIND, METHOD_PUT, METHOD_TEST = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
 		//
 		final Class<?> clz = KeikyuRailwayKanjiHiraganaMapFactoryBean.class;
-		//
-		(METHOD_TO_STRING = clz.getDeclaredMethod("toString", Object.class)).setAccessible(true);
 		//
 		(METHOD_GET_CLASS = clz.getDeclaredMethod("getClass", Object.class)).setAccessible(true);
 		//
@@ -185,7 +183,7 @@ class KeikyuRailwayKanjiHiraganaMapFactoryBeanTest {
 		//
 		mh.childNodes = Collections.singletonList(textNode);
 		//
-		Assertions.assertEquals("{null=null}", toString(createMap(elements)));
+		Assertions.assertEquals("{null=null}", Util.toString(createMap(elements)));
 		//
 		if (textNode != null) {
 			//
@@ -193,29 +191,8 @@ class KeikyuRailwayKanjiHiraganaMapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertEquals("{1=null}", toString(createMap(elements)));
+		Assertions.assertEquals("{1=null}", Util.toString(createMap(elements)));
 		//
-	}
-
-	@Test
-	void testToString() throws Throwable {
-		//
-		Assertions.assertNull(toString(null));
-		//
-	}
-
-	private static String toString(final Object instance) throws Throwable {
-		try {
-			final Object obj = METHOD_TO_STRING.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test
@@ -235,7 +212,7 @@ class KeikyuRailwayKanjiHiraganaMapFactoryBeanTest {
 			} else if (obj instanceof Class) {
 				return (Class<?>) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -275,7 +252,7 @@ class KeikyuRailwayKanjiHiraganaMapFactoryBeanTest {
 			} else if (obj instanceof Map) {
 				return (Map) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -296,7 +273,7 @@ class KeikyuRailwayKanjiHiraganaMapFactoryBeanTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -320,7 +297,7 @@ class KeikyuRailwayKanjiHiraganaMapFactoryBeanTest {
 			} else if (obj instanceof Stream) {
 				return (Stream) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -343,7 +320,7 @@ class KeikyuRailwayKanjiHiraganaMapFactoryBeanTest {
 			} else if (obj instanceof Matcher) {
 				return (Matcher) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -362,7 +339,7 @@ class KeikyuRailwayKanjiHiraganaMapFactoryBeanTest {
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

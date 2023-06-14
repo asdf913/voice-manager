@@ -166,7 +166,7 @@ public class JapaneseNameMultimapFactoryBean implements FactoryBean<Multimap<Str
 					//
 				MultimapUtil.put(IValue0Util.getValue0(
 						multimap = ObjectUtils.getIfNull(multimap, () -> Unit.with(LinkedListMultimap.create()))),
-						toString(RowUtil.getCell(row, 0)), toString(RowUtil.getCell(row, 1)));
+						Util.toString(RowUtil.getCell(row, 0)), Util.toString(RowUtil.getCell(row, 1)));
 				//
 			} // if
 				//
@@ -176,11 +176,6 @@ public class JapaneseNameMultimapFactoryBean implements FactoryBean<Multimap<Str
 			//
 		return null;
 		//
-	}
-
-	@Nullable
-	private static String toString(@Nullable final Object instance) {
-		return instance != null ? instance.toString() : null;
 	}
 
 	@Nullable

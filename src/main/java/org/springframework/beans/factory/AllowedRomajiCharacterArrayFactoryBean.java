@@ -78,18 +78,13 @@ public class AllowedRomajiCharacterArrayFactoryBean implements FactoryBean<char[
 			//
 		} while (element != null && ElementUtil.nextElementSibling(element) == null);
 		//
-		return toCharArray(toString(sb));
+		return toCharArray(Util.toString(sb));
 		//
 	}
 
 	@Nullable
 	private static char[] toCharArray(@Nullable final String instance) {
 		return instance != null ? instance.toCharArray() : null;
-	}
-
-	@Nullable
-	private static String toString(@Nullable final Object instance) {
-		return instance != null ? instance.toString() : null;
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,

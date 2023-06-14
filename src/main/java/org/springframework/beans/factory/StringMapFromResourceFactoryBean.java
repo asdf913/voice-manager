@@ -363,7 +363,7 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 			//
 		if (iv == null) {
 			//
-			throw new IllegalStateException(toString(cellType));
+			throw new IllegalStateException(Util.toString(cellType));
 			//
 		} // if
 			//
@@ -404,17 +404,12 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 			//
 		if (iv == null) {
 			//
-			throw new IllegalStateException(toString(cellType));
+			throw new IllegalStateException(Util.toString(cellType));
 			//
 		} // if
 			//
 		return iv;
 		//
-	}
-
-	@Nullable
-	private static String toString(@Nullable final Object instance) {
-		return instance != null ? instance.toString() : null;
 	}
 
 	@Nullable

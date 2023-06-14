@@ -43,17 +43,15 @@ import com.google.common.reflect.Reflection;
 
 class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 
-	private static Method METHOD_TO_STRING, METHOD_CAST, METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5,
-			METHOD_CREATE_TABLE, METHOD_GET_UNICODE_BLOCKS, METHOD_TEST, METHOD_ACCEPT, METHOD_IS_INSTANCE,
-			METHOD_CONTAINS, METHOD_PUT, METHOD_ADD, METHOD_OPEN_STREAM, METHOD_GET_TRIPLES_1, METHOD_GET_TRIPLES_2,
-			METHOD_GET_NAME_MODULE, METHOD_GET_MODULE, METHOD_GET = null;
+	private static Method METHOD_CAST, METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_CREATE_TABLE,
+			METHOD_GET_UNICODE_BLOCKS, METHOD_TEST, METHOD_ACCEPT, METHOD_IS_INSTANCE, METHOD_CONTAINS, METHOD_PUT,
+			METHOD_ADD, METHOD_OPEN_STREAM, METHOD_GET_TRIPLES_1, METHOD_GET_TRIPLES_2, METHOD_GET_NAME_MODULE,
+			METHOD_GET_MODULE, METHOD_GET = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
 		//
 		final Class<?> clz = WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean.class;
-		//
-		(METHOD_TO_STRING = clz.getDeclaredMethod("toString", Object.class)).setAccessible(true);
 		//
 		(METHOD_CAST = clz.getDeclaredMethod("cast", Class.class, Object.class)).setAccessible(true);
 		//
@@ -243,7 +241,7 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 		//
 		final Object hiragana = get(unicodeBlock, instance);
 		//
-		Assertions.assertEquals("HIRAGANA", toString(hiragana));
+		Assertions.assertEquals("HIRAGANA", Util.toString(hiragana));
 		//
 		Assertions.assertDoesNotThrow(() -> instance.setUnicodeBlock(hiragana));
 		//
@@ -260,27 +258,6 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 	private static Object get(final Field field, final Object instance)
 			throws IllegalArgumentException, IllegalAccessException {
 		return field != null ? field.get(instance) : null;
-	}
-
-	@Test
-	void testToString() throws Throwable {
-		//
-		Assertions.assertNull(toString(null));
-		//
-	}
-
-	private static String toString(final Object instance) throws Throwable {
-		try {
-			final Object obj = METHOD_TO_STRING.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	private static Class<?> getClass(final Object instance) {
@@ -369,7 +346,7 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 			} else if (obj instanceof Table) {
 				return (Table) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -390,7 +367,7 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 			} else if (obj instanceof List) {
 				return (List) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -409,7 +386,7 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -443,7 +420,7 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -477,7 +454,7 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -513,7 +490,7 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 			} else if (obj instanceof InputStream) {
 				return (InputStream) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -562,7 +539,7 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 			} else if (obj instanceof List) {
 				return (List) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -577,7 +554,7 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 			} else if (obj instanceof List) {
 				return (List) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -602,7 +579,7 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -623,7 +600,7 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 			} else if (obj instanceof Module) {
 				return (Module) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

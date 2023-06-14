@@ -108,7 +108,7 @@ abstract class Util {
 			//
 		} else {
 			//
-			throw new IllegalArgumentException(instance.toString());
+			throw new IllegalArgumentException(toString(instance));
 			//
 		} // if
 			//
@@ -118,6 +118,10 @@ abstract class Util {
 		if (instance != null) {
 			instance.accept(value);
 		}
+	}
+
+	static String toString(final Object instance) {
+		return instance != null ? instance.toString() : null;
 	}
 
 }

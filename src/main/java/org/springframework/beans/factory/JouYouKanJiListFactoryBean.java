@@ -86,12 +86,11 @@ public class JouYouKanJiListFactoryBean implements FactoryBean<List<String>> {
 					//
 				if (object instanceof Iterable<?> iterable) {
 					//
-					return Unit.with(StreamSupport.stream(iterable.spliterator(), false)
-							.map(JouYouKanJiListFactoryBean::toString).toList());
+					return Unit.with(StreamSupport.stream(iterable.spliterator(), false).map(Util::toString).toList());
 					//
 				} else if (is != null) {
 					//
-					return Unit.with(object != null ? Collections.singletonList(toString(object)) : null);
+					return Unit.with(object != null ? Collections.singletonList(Util.toString(object)) : null);
 					//
 				} // if
 					//
@@ -221,11 +220,6 @@ public class JouYouKanJiListFactoryBean implements FactoryBean<List<String>> {
 		if (items != null) {
 			items.add(item);
 		}
-	}
-
-	@Nullable
-	private static String toString(@Nullable final Object instance) {
-		return instance != null ? instance.toString() : null;
 	}
 
 	@Override

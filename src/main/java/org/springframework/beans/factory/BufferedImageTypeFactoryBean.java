@@ -96,7 +96,7 @@ public class BufferedImageTypeFactoryBean implements FactoryBean<Integer> {
 			//
 		} // if
 			//
-		throw new IllegalStateException(toString(getClass(value)));
+		throw new IllegalStateException(Util.toString(getClass(value)));
 		//
 	}
 
@@ -106,7 +106,7 @@ public class BufferedImageTypeFactoryBean implements FactoryBean<Integer> {
 
 	private static IValue0<Integer> getImageType(final CharSequence cs) {
 		//
-		final String string = toString(cs);
+		final String string = Util.toString(cs);
 		//
 		if (StringUtils.isEmpty(string)) {
 			//
@@ -166,11 +166,6 @@ public class BufferedImageTypeFactoryBean implements FactoryBean<Integer> {
 			//
 		throw nfe;
 		//
-	}
-
-	@Nullable
-	private static String toString(@Nullable final Object instance) {
-		return instance != null ? instance.toString() : null;
 	}
 
 	@Nullable

@@ -6,7 +6,11 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Set;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -21,16 +25,22 @@ import com.google.common.reflect.Reflection;
 
 class IpaMultimapFactoryBeanTest {
 
-	private static Method METHOD_TO_STRING, METHOD_GET_CLASS = null;
+	private static Method METHOD_GET_CLASS, METHOD_ENTRY_SET, METHOD_ITERATOR, METHOD_GET_KEY, METHOD_GET_VALUE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
 		//
 		final Class<?> clz = IpaMultimapFactoryBean.class;
 		//
-		(METHOD_TO_STRING = clz.getDeclaredMethod("toString", Object.class)).setAccessible(true);
-		//
 		(METHOD_GET_CLASS = clz.getDeclaredMethod("getClass", Object.class)).setAccessible(true);
+		//
+		(METHOD_ENTRY_SET = clz.getDeclaredMethod("entrySet", Map.class)).setAccessible(true);
+		//
+		(METHOD_ITERATOR = clz.getDeclaredMethod("iterator", Iterable.class)).setAccessible(true);
+		//
+		(METHOD_GET_KEY = clz.getDeclaredMethod("getKey", Entry.class)).setAccessible(true);
+		//
+		(METHOD_GET_VALUE = clz.getDeclaredMethod("getValue", Entry.class)).setAccessible(true);
 		//
 	}
 
@@ -71,6 +81,14 @@ class IpaMultimapFactoryBeanTest {
 					//
 				} // if
 					//
+			} else if (proxy instanceof Map) {
+				//
+				if (Objects.equals(methodName, "entrySet")) {
+					//
+					return null;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(methodName);
@@ -81,10 +99,14 @@ class IpaMultimapFactoryBeanTest {
 
 	private IpaMultimapFactoryBean instance = null;
 
+	private IH ih = null;
+
 	@BeforeEach
 	void beforeEach() {
 		//
 		instance = new IpaMultimapFactoryBean();
+		//
+		ih = new IH();
 		//
 	}
 
@@ -100,20 +122,26 @@ class IpaMultimapFactoryBeanTest {
 		//
 		Assertions.assertNull(getObject(instance));
 		//
-		final IH ih = new IH();
-		//
 		if (instance != null) {
 			//
 			instance.setResource(Reflection.newProxy(Resource.class, ih));
 			//
 		} // if
 			//
-		ih.exists = Boolean.FALSE;
-		//
+		if (ih != null) {
+			//
+			ih.exists = Boolean.FALSE;
+			//
+		} // if
+			//
 		Assertions.assertNull(getObject(instance));
 		//
-		ih.exists = Boolean.TRUE;
-		//
+		if (ih != null) {
+			//
+			ih.exists = Boolean.TRUE;
+			//
+		} // if
+			//
 		Assertions.assertNull(getObject(instance));
 		//
 		final String key = "KEY";
@@ -123,9 +151,15 @@ class IpaMultimapFactoryBeanTest {
 		try (final InputStream is = new ByteArrayInputStream(
 				String.format("{\"%1$s\":\"%2$s\"}", key, value).getBytes())) {
 			//
-			ih.inputStream = is;
-			//
-			Assertions.assertEquals(toString(ImmutableMultimap.of(key, value)), toString(getObject(instance)));
+
+			if (ih != null) {
+				//
+				ih.inputStream = is;
+				//
+			} // if
+				//
+			Assertions.assertEquals(Util.toString(ImmutableMultimap.of(key, value)),
+					Util.toString(getObject(instance)));
 			//
 		} // try
 			//
@@ -137,27 +171,6 @@ class IpaMultimapFactoryBeanTest {
 			//
 		Assertions.assertDoesNotThrow(() -> getObject(instance));
 		//
-	}
-
-	@Test
-	void testToString() throws Throwable {
-		//
-		Assertions.assertNull(toString(null));
-		//
-	}
-
-	private static String toString(final Object instance) throws Throwable {
-		try {
-			final Object obj = METHOD_TO_STRING.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test
@@ -177,7 +190,7 @@ class IpaMultimapFactoryBeanTest {
 			} else if (obj instanceof Class) {
 				return (Class) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -185,6 +198,80 @@ class IpaMultimapFactoryBeanTest {
 
 	private static <T> T getObject(final FactoryBean<T> instance) throws Exception {
 		return instance != null ? instance.getObject() : null;
+	}
+
+	@Test
+	void testEntrySet() throws Throwable {
+		//
+		Assertions.assertNull(entrySet(null));
+		//
+		Assertions.assertNull(entrySet(Reflection.newProxy(Map.class, ih)));
+		//
+	}
+
+	private static <K, V> Set<Entry<K, V>> entrySet(final Map<K, V> instance) throws Throwable {
+		try {
+			final Object obj = METHOD_ENTRY_SET.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Set) {
+				return (Set) obj;
+			}
+			throw new Throwable(Util.toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testIterator() throws Throwable {
+		//
+		Assertions.assertNull(iterator(null));
+		//
+	}
+
+	private static <T> Iterator<T> iterator(final Iterable<T> instance) throws Throwable {
+		try {
+			final Object obj = METHOD_ITERATOR.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Iterator) {
+				return (Iterator) obj;
+			}
+			throw new Throwable(Util.toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetKey() throws Throwable {
+		//
+		Assertions.assertNull(getKey(null));
+		//
+	}
+
+	private static <K> K getKey(final Entry<K, ?> instance) throws Throwable {
+		try {
+			return (K) METHOD_GET_KEY.invoke(null, instance);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetValue() throws Throwable {
+		//
+		Assertions.assertNull(getValue(null));
+		//
+	}
+
+	private static <V> V getValue(final Entry<?, V> instance) throws Throwable {
+		try {
+			return (V) METHOD_GET_VALUE.invoke(null, instance);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 }

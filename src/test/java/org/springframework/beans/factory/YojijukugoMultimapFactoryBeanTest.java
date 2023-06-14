@@ -27,15 +27,13 @@ import com.j256.simplemagic.ContentInfo;
 
 class YojijukugoMultimapFactoryBeanTest {
 
-	private static Method METHOD_TO_STRING, METHOD_TEST, METHOD_GET_MIME_TYPE, METHOD_CREATE_MULTI_MAP_BY_URL,
+	private static Method METHOD_TEST, METHOD_GET_MIME_TYPE, METHOD_CREATE_MULTI_MAP_BY_URL,
 			METHOD_CREATE_MULTI_MAP_WORK_BOOK, METHOD_CREATE_MULTI_MAP_SPREAD_SHEET_DOCUMENT = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
 		//
 		final Class<?> clz = YojijukugoMultimapFactoryBean.class;
-		//
-		(METHOD_TO_STRING = clz.getDeclaredMethod("toString", Object.class)).setAccessible(true);
 		//
 		(METHOD_TEST = clz.getDeclaredMethod("test", Predicate.class, Object.class)).setAccessible(true);
 		//
@@ -74,7 +72,7 @@ class YojijukugoMultimapFactoryBeanTest {
 		//
 		Assertions.assertNull(getObject(instance));
 		//
-		instance.setUrl(toString(new File("pom.xml").toURI().toURL()));
+		instance.setUrl(Util.toString(new File("pom.xml").toURI().toURL()));
 		//
 		Assertions.assertNull(getObject(instance));
 		//
@@ -148,7 +146,7 @@ class YojijukugoMultimapFactoryBeanTest {
 			//
 		instance.setResource(new ByteArrayResource(bs));
 		//
-		Assertions.assertEquals("{=[]}", toString(getObject(instance)));
+		Assertions.assertEquals("{=[]}", Util.toString(getObject(instance)));
 		//
 		// org.odftoolkit.simple.SpreadsheetDocument
 		//
@@ -160,27 +158,6 @@ class YojijukugoMultimapFactoryBeanTest {
 
 	private static <T> T getObject(final FactoryBean<T> instance) throws Exception {
 		return instance != null ? instance.getObject() : null;
-	}
-
-	@Test
-	void testToString() throws Throwable {
-		//
-		Assertions.assertNull(toString(null));
-		//
-	}
-
-	private static String toString(final Object instance) throws Throwable {
-		try {
-			final Object obj = METHOD_TO_STRING.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(obj != null ? toString(obj.getClass()) : null);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test
@@ -224,7 +201,7 @@ class YojijukugoMultimapFactoryBeanTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(obj != null ? toString(obj.getClass()) : null);
+			throw new Throwable(obj != null ? Util.toString(obj.getClass()) : null);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -239,7 +216,7 @@ class YojijukugoMultimapFactoryBeanTest {
 		//
 		Assertions.assertNull(createMultimapByUrl(" ", null));
 		//
-		final String url = toString(new File("pom.xml").toURI().toURL());
+		final String url = Util.toString(new File("pom.xml").toURI().toURL());
 		//
 		AssertionsUtil.assertThrowsAndEquals(MalformedURLException.class,
 				"{localizedMessage=Only http & https protocols supported, message=Only http & https protocols supported}",
@@ -264,7 +241,7 @@ class YojijukugoMultimapFactoryBeanTest {
 			} else if (obj instanceof Multimap) {
 				return (Multimap) obj;
 			}
-			throw new Throwable(obj != null ? toString(obj.getClass()) : null);
+			throw new Throwable(obj != null ? Util.toString(obj.getClass()) : null);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -299,7 +276,7 @@ class YojijukugoMultimapFactoryBeanTest {
 			} else if (obj instanceof IValue0) {
 				return (IValue0) obj;
 			}
-			throw new Throwable(obj != null ? toString(obj.getClass()) : null);
+			throw new Throwable(obj != null ? Util.toString(obj.getClass()) : null);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -313,7 +290,7 @@ class YojijukugoMultimapFactoryBeanTest {
 			} else if (obj instanceof IValue0) {
 				return (IValue0) obj;
 			}
-			throw new Throwable(obj != null ? toString(obj.getClass()) : null);
+			throw new Throwable(obj != null ? Util.toString(obj.getClass()) : null);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
