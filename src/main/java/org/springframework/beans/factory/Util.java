@@ -6,6 +6,7 @@ import java.lang.reflect.Member;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
@@ -13,6 +14,7 @@ import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
+import org.javatuples.valueintf.IValue0Util;
 
 abstract class Util {
 
@@ -73,6 +75,49 @@ abstract class Util {
 	@Nullable
 	private static <T> T cast(@Nullable final Class<T> clz, final Object instance) {
 		return clz != null && clz.isInstance(instance) ? clz.cast(instance) : null;
+	}
+
+	static void setUnicodeBlock(final Object instance, final Consumer<UnicodeBlock> consumer)
+			throws IllegalAccessException {
+		//
+		if (instance == null) {
+			//
+			accept(consumer, null);
+			//
+		} else if (instance instanceof UnicodeBlock ub) {
+			//
+			accept(consumer, ub);
+			//
+		} else if (instance instanceof String string) {
+			//
+			final IValue0<UnicodeBlock> iValue0 = getUnicodeBlock(string);
+			//
+			if (iValue0 != null) {
+				//
+				setUnicodeBlock(IValue0Util.getValue0(iValue0), consumer);
+				//
+			} // if
+				//
+		} else if (instance instanceof char[] cs) {
+			//
+			setUnicodeBlock(new String(cs), consumer);
+			//
+		} else if (instance instanceof byte[] bs) {
+			//
+			setUnicodeBlock(new String(bs), consumer);
+			//
+		} else {
+			//
+			throw new IllegalArgumentException(instance.toString());
+			//
+		} // if
+			//
+	}
+
+	private static <T> void accept(final Consumer<T> instance, final T value) {
+		if (instance != null) {
+			instance.accept(value);
+		}
 	}
 
 }

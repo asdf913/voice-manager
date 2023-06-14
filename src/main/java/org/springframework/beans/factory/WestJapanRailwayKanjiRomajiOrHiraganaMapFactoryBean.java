@@ -65,38 +65,8 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends StringM
 
 	public void setUnicodeBlock(@Nullable final Object instance) throws IllegalAccessException {
 		//
-		if (instance == null) {
-			//
-			this.unicodeBlock = null;
-			//
-		} else if (instance instanceof UnicodeBlock ub) {
-			//
-			this.unicodeBlock = ub;
-			//
-		} else if (instance instanceof String string) {
-			//
-			final IValue0<UnicodeBlock> iValue0 = Util.getUnicodeBlock(string);
-			//
-			if (iValue0 != null) {
-				//
-				setUnicodeBlock(IValue0Util.getValue0(iValue0));
-				//
-			} // if
-				//
-		} else if (instance instanceof char[] cs) {
-			//
-			setUnicodeBlock(new String(cs));
-			//
-		} else if (instance instanceof byte[] bs) {
-			//
-			setUnicodeBlock(new String(bs));
-			//
-		} else {
-			//
-			throw new IllegalArgumentException(instance.toString());
-			//
-		} // if
-			//
+		Util.setUnicodeBlock(instance, x -> this.unicodeBlock = x);
+		//
 	}
 
 	public void setResourceJs(final Resource resourceJs) {

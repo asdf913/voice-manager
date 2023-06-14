@@ -3,6 +3,7 @@ package org.springframework.beans.factory;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
+import java.util.function.Consumer;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -10,7 +11,7 @@ import org.junit.jupiter.api.Test;
 
 class UtilTest {
 
-	private static Method METHOD_GET_NAME, METHOD_CAST, METHOD_IS_ASSIGNABLE_FROM = null;
+	private static Method METHOD_GET_NAME, METHOD_CAST, METHOD_IS_ASSIGNABLE_FROM, METHOD_ACCEPT = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -23,6 +24,8 @@ class UtilTest {
 		//
 		(METHOD_IS_ASSIGNABLE_FROM = clz.getDeclaredMethod("isAssignableFrom", Class.class, Class.class))
 				.setAccessible(true);
+		//
+		(METHOD_ACCEPT = clz.getDeclaredMethod("accept", Consumer.class, Object.class)).setAccessible(true);
 		//
 	}
 
@@ -88,6 +91,21 @@ class UtilTest {
 				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testAccept() {
+		//
+		Assertions.assertDoesNotThrow(() -> accept(null, null));
+		//
+	}
+
+	private static <T> void accept(final Consumer<T> instance, final T value) throws Throwable {
+		try {
+			METHOD_ACCEPT.invoke(null, instance, value);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
