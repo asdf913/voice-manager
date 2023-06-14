@@ -15,6 +15,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -31,6 +32,7 @@ import java.util.function.ToIntFunction;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.AssertionsUtil;
@@ -333,6 +335,17 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 	void testGetSrcMap() throws Throwable {
 		//
 		Assertions.assertNull(getSrcMap(null));
+		//
+		final Element element = cast(Element.class, Narcissus.allocateInstance(Element.class));
+		//
+		if (element != null) {
+			//
+			FieldUtils.writeField(element, "childNodes",
+					Collections.singletonList(cast(Element.class, Narcissus.allocateInstance(Element.class))), true);
+			//
+		} // if
+			//
+		Assertions.assertEquals(Collections.singletonMap("", ""), getSrcMap(element));
 		//
 	}
 
