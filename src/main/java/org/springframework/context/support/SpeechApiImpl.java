@@ -1,7 +1,9 @@
 package org.springframework.context.support;
 
 import java.io.File;
+import java.lang.reflect.Executable;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
@@ -47,8 +49,8 @@ public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean {
 			//
 			final List<Method> ms = Arrays
 					.stream(Class.forName("com.sun.jna.platform.win32.VersionHelpers").getDeclaredMethods())
-					.filter(m -> m != null && Objects.equals(m.getName(), "IsWindows10OrGreater")
-							&& m.getParameterCount() == 0 && Modifier.isStatic(m.getModifiers()))
+					.filter(m -> Objects.equals(getName(m), "IsWindows10OrGreater") && getParameterCount(m) == 0
+							&& isStatic(m))
 					.toList();
 			//
 			if (ms == null || ms.isEmpty()) {
@@ -59,7 +61,7 @@ public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean {
 				//
 			final Method m = ms.size() == 1 ? ms.get(0) : null;
 			//
-			return Unit.with(cast(Boolean.class, m != null ? m.invoke(null) : null));
+			return Unit.with(cast(Boolean.class, invoke(m, null)));
 			//
 		} catch (final ClassNotFoundException | IllegalAccessException | InvocationTargetException e) {
 			//
@@ -67,6 +69,23 @@ public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean {
 			//
 		return null;
 		//
+	}
+
+	private static Object invoke(final Method method, final Object instance, final Object... args)
+			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+		return method != null ? method.invoke(instance, args) : null;
+	}
+
+	private static String getName(final Member instance) {
+		return instance != null ? instance.getName() : null;
+	}
+
+	private static int getParameterCount(final Executable instance) {
+		return instance != null ? instance.getParameterCount() : 0;
+	}
+
+	private static boolean isStatic(final Member instance) {
+		return instance != null && Modifier.isStatic(instance.getModifiers());
 	}
 
 	@Override
