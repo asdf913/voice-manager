@@ -13,6 +13,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.io.File;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Executable;
@@ -1295,10 +1296,12 @@ class JlptLevelGuiTest {
 		//
 		Assertions.assertDoesNotThrow(() -> browse(null, null));
 		//
-		final Desktop desktop = !GraphicsEnvironment.isHeadless() ? Desktop.getDesktop()
-				: cast(Desktop.class, Narcissus.allocateInstance(Desktop.class));
+		final Desktop mock = cast(Desktop.class, Narcissus.allocateInstance(Desktop.class));
 		//
-		Assertions.assertDoesNotThrow(() -> browse(desktop, null));
+		Assertions.assertDoesNotThrow(
+				() -> browse(!GraphicsEnvironment.isHeadless() ? Desktop.getDesktop() : mock, null));
+		//
+		Assertions.assertDoesNotThrow(() -> browse(mock, new File(".").toURI()));
 		//
 	}
 

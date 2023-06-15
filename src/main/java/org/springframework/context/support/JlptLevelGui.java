@@ -446,7 +446,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 				//
 				browse(Desktop.getDesktop(), toURI(uriBuilder));
 				//
-			} catch (final IOException e) {
+			} catch (final IOException | NoSuchFieldException e) {
 				//
 				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
 				//
@@ -470,10 +470,16 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		return forName("org.junit.jupiter.api.Test") != null;
 	}
 
-	private static void browse(@Nullable final Desktop instance, @Nullable final URI uri) throws IOException {
-		if (instance != null && uri != null) {
+	private static void browse(@Nullable final Desktop instance, @Nullable final URI uri)
+			throws IOException, NoSuchFieldException {
+		//
+		if (instance != null && uri != null
+				&& Narcissus.getObjectField(instance, Desktop.class.getDeclaredField("peer")) != null) {
+			//
 			instance.browse(uri);
-		}
+			//
+		} // if
+			//
 	}
 
 	@Override
