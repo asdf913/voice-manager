@@ -4,7 +4,6 @@ import java.lang.reflect.Executable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -12,8 +11,8 @@ import org.junit.jupiter.api.Test;
 
 class SpeechApiImplTest {
 
-	private static Method METHOD_CAST, METHOD_GET_NAME, METHOD_GET_PARAMETER_COUNT, METHOD_IS_STATIC,
-			METHOD_INVOKE = null;
+	private static Method METHOD_CAST, METHOD_GET_NAME, METHOD_GET_PARAMETER_COUNT, METHOD_IS_STATIC, METHOD_INVOKE,
+			METHOD_AND = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -49,6 +48,13 @@ class SpeechApiImplTest {
 				: null) != null) {
 			//
 			METHOD_INVOKE.setAccessible(true);
+			//
+		} // if
+			//
+		if ((METHOD_AND = clz != null ? clz.getDeclaredMethod("and", Boolean.TYPE, Boolean.TYPE, boolean[].class)
+				: null) != null) {
+			//
+			METHOD_AND.setAccessible(true);
 			//
 		} // if
 			//
@@ -157,6 +163,29 @@ class SpeechApiImplTest {
 	private static Object invoke(final Method method, final Object instance, final Object... args) throws Throwable {
 		try {
 			return METHOD_INVOKE.invoke(null, method, instance, args);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testAnd() throws Throwable {
+		//
+		Assertions.assertFalse(and(true, false));
+		//
+		Assertions.assertTrue(and(true, true, null));
+		//
+		Assertions.assertFalse(and(true, true, false));
+		//
+	}
+
+	private static boolean and(final boolean a, final boolean b, final boolean... bs) throws Throwable {
+		try {
+			final Object obj = METHOD_AND.invoke(null, a, b, bs);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
