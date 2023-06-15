@@ -76,11 +76,11 @@ public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean {
 		return method != null ? method.invoke(instance, args) : null;
 	}
 
-	private static String getName(final Member instance) {
+	private static String getName(@Nullable final Member instance) {
 		return instance != null ? instance.getName() : null;
 	}
 
-	private static int getParameterCount(final Executable instance) {
+	private static int getParameterCount(@Nullable final Executable instance) {
 		return instance != null ? instance.getParameterCount() : 0;
 	}
 
