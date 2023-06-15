@@ -17,6 +17,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Executable;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
@@ -31,6 +32,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.function.BiConsumer;
+import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -55,6 +58,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.poi.ooxml.CustomPropertiesUtil;
 import org.apache.poi.ooxml.POIXMLDocument;
@@ -71,6 +75,7 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0Util;
+import org.meeuw.functional.Predicates;
 import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -87,6 +92,7 @@ import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
 
+import io.github.toolfactory.narcissus.Narcissus;
 import net.miginfocom.swing.MigLayout;
 
 @Title("学年別漢字")
@@ -150,10 +156,24 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 			//
 		} // if
 			//
-		add(new JLabel("Text"));
+			//
+			// If "java.awt.Container.component" is null, return this method immediately
+			//
+			// The below check is for "-Djava.awt.headless=true"
+			//
+		final List<Field> fs = toList(filter(stream(FieldUtils.getAllFieldsList(getClass(this))),
+				f -> Objects.equals(getName(f), "component")));
 		//
-		add(tfText = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
-				"org.springframework.context.support.GaKuNenBeTsuKanJiGui.text")));
+		final Field f = IterableUtils.size(fs) == 1 ? IterableUtils.get(fs, 0) : null;
+		//
+		final boolean isGui = f == null || Narcissus.getObjectField(this, f) != null;
+		//
+		final Predicate<Component> predicate = Predicates.always(isGui, null);
+		//
+		testAndAccept(predicate, new JLabel("Text"), this::add);
+		//
+		testAndAccept(predicate, tfText = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
+				"org.springframework.context.support.GaKuNenBeTsuKanJiGui.text")), this::add);
 		//
 		tfText.addKeyListener(this);
 		//
@@ -167,27 +187,30 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 		//
 		final String wrap = "wrap";
 		//
-		add(jcbGaKuNenBeTsuKanJi, wrap);
+		final BiPredicate<Component, Object> biPredicate = Predicates.biAlways(isGui, null);
 		//
-		add(new JLabel(""));
+		testAndAccept(biPredicate, jcbGaKuNenBeTsuKanJi, wrap, this::add);
 		//
-		add(btnExport = new JButton("Export 学年別漢字"), wrap);
+		testAndAccept(predicate, new JLabel(""), this::add);
 		//
-		add(new JLabel("Exported File"));
+		testAndAccept(biPredicate, btnExport = new JButton("Export 学年別漢字"), wrap, this::add);
 		//
-		add(tfExportFile = new JTextField(), String.format("growx,%1$s,span %2$s", wrap, 2));
+		testAndAccept(predicate, new JLabel("Exported File"), this::add);
 		//
-		add(new JLabel(""));
+		testAndAccept(biPredicate, tfExportFile = new JTextField(), String.format("growx,%1$s,span %2$s", wrap, 2),
+				this::add);
 		//
-		add(btnCompare = new JButton("Compare 学年別漢字"));
+		testAndAccept(predicate, new JLabel(""), this::add);
 		//
-		add(jlCompare = new JLabel());
+		testAndAccept(predicate, btnCompare = new JButton("Compare 学年別漢字"), this::add);
+		//
+		testAndAccept(predicate, jlCompare = new JLabel(), this::add);
 		//
 		addActionListener(this, btnExport, btnCompare);
 		//
 		final List<Component> cs = Arrays.asList(tfText, jcbGaKuNenBeTsuKanJi, btnExport);
 		//
-		final Dimension preferredSize = cs.stream().map(GaKuNenBeTsuKanJiGui::getPreferredSize)
+		final Dimension preferredSize = stream(cs).map(GaKuNenBeTsuKanJiGui::getPreferredSize)
 				.max((a, b) -> a != null && b != null ? Double.compare(a.getWidth(), b.getWidth()) : 0).orElse(null);
 		//
 		if (preferredSize != null) {
@@ -196,6 +219,10 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 			//
 		} // if
 			//
+	}
+
+	private static <E> Stream<E> stream(final Collection<E> instance) {
+		return instance != null ? instance.stream() : null;
 	}
 
 	private static void addActionListener(final ActionListener actionListener, @Nullable final AbstractButton... abs) {
@@ -593,6 +620,13 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 			@Nullable final FailableConsumer<T, E> consumer) throws E {
 		if (test(predicate, value) && consumer != null) {
 			consumer.accept(value);
+		}
+	}
+
+	private static <T, U> void testAndAccept(final BiPredicate<T, U> predicate, final T t, final U u,
+			final BiConsumer<T, U> consumer) {
+		if (predicate != null && predicate.test(t, u) && consumer != null) {
+			consumer.accept(t, u);
 		}
 	}
 
