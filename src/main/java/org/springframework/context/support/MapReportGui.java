@@ -31,6 +31,7 @@ import java.util.Set;
 import java.util.Vector;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.ToIntFunction;
@@ -57,6 +58,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.poi.util.IntList;
 import org.apache.poi.util.IntListUtil;
+import org.meeuw.functional.Predicates;
 import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
 import org.springframework.beans.config.Title;
 import org.springframework.beans.factory.BeanFactory;
@@ -150,31 +152,31 @@ public class MapReportGui extends JFrame
 		//
 		final Field f = IterableUtils.size(fs) == 1 ? IterableUtils.get(fs, 0) : null;
 		//
-		if (f != null && Narcissus.getObjectField(this, f) == null) {
-			//
-			return;
-			//
-		} // if
-			//
+		final boolean isGui = f == null || Narcissus.getObjectField(this, f) != null;
+		//
 		final JLabel label = new JLabel("Attribute JSON");
 		//
-		add(label);
+		final Predicate<Component> predicate = Predicates.always(isGui, null);
 		//
-		add(tfAttributeJson = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
-				"org.springframework.context.support.MapReportGui.attributeJson")), "growx");
+		testAndAccept(predicate, label, this::add);
+		//
+		final BiPredicate<Component, Object> biPredicate = Predicates.biAlways(isGui, null);
+		//
+		testAndAccept(biPredicate, tfAttributeJson = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
+				"org.springframework.context.support.MapReportGui.attributeJson")), "growx", this::add);
 		//
 		final String wrap = "wrap";
 		//
-		add(btnExecute = new JButton("Execute"), wrap);
+		testAndAccept(biPredicate, btnExecute = new JButton("Execute"), wrap, this::add);
 		//
 		final JScrollPane jsp = new JScrollPane(
 				jTable = new JTable(dtm = new DefaultTableModel(new Object[] { "Key", "Old", "New" }, 0)));
 		//
-		add(jsp, String.format("%1$s,span %2$s", wrap, 3));
+		testAndAccept(biPredicate, jsp, String.format("%1$s,span %2$s", wrap, 3), this::add);
 		//
-		add(new JLabel());
+		testAndAccept(predicate, new JLabel(), this::add);
 		//
-		add(cbPrettyJson = new JCheckBox("Pretty JSON"), "al right");
+		testAndAccept(biPredicate, cbPrettyJson = new JCheckBox("Pretty JSON"), "al right", this::add);
 		//
 		testAndAccept(PropertyResolverUtil::containsProperty, propertyResolver,
 				"org.springframework.context.support.MapReportGui.prettyJson", (a, b) -> {
@@ -189,7 +191,7 @@ public class MapReportGui extends JFrame
 						//
 				});
 		//
-		add(btnCopy = new JButton("Copy"), "growx");
+		testAndAccept(biPredicate, btnCopy = new JButton("Copy"), "growx", this::add);
 		//
 		addActionListener(this, btnExecute, btnCopy);
 		//
@@ -204,6 +206,12 @@ public class MapReportGui extends JFrame
 			//
 		tfAttributeJson.setPreferredSize(pd);
 		//
+	}
+
+	private static <T> void testAndAccept(final Predicate<T> predicate, final T value, final Consumer<T> consumer) {
+		if (predicate != null && predicate.test(value) && consumer != null) {
+			consumer.accept(value);
+		}
 	}
 
 	private static <T, U> void testAndAccept(@Nullable final BiPredicate<T, U> predicate, final T t, final U u,
