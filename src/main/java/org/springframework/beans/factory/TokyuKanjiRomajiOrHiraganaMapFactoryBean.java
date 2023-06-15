@@ -64,8 +64,8 @@ public class TokyuKanjiRomajiOrHiraganaMapFactoryBean extends StringMapFromResou
 				//
 			} else {
 				//
-				final List<RomajiOrHiragana> rohs = Arrays.stream(RomajiOrHiragana.values())
-						.filter(x -> StringUtils.startsWithIgnoreCase(name(x), string)).toList();
+				final List<RomajiOrHiragana> rohs = Util.toList(Arrays.stream(RomajiOrHiragana.values())
+						.filter(x -> StringUtils.startsWithIgnoreCase(name(x), string)));
 				//
 				if (IterableUtils.size(rohs) > 1) {
 					//

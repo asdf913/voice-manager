@@ -86,7 +86,8 @@ public class JouYouKanJiListFactoryBean implements FactoryBean<List<String>> {
 					//
 				if (object instanceof Iterable<?> iterable) {
 					//
-					return Unit.with(StreamSupport.stream(iterable.spliterator(), false).map(Util::toString).toList());
+					return Unit
+							.with(Util.toList(StreamSupport.stream(iterable.spliterator(), false).map(Util::toString)));
 					//
 				} else if (is != null) {
 					//
@@ -105,7 +106,7 @@ public class JouYouKanJiListFactoryBean implements FactoryBean<List<String>> {
 				//
 				if (string != null) {
 					//
-					return Unit.with(string.chars().mapToObj(c -> String.valueOf((char) c)).toList());
+					return Unit.with(Util.toList(string.chars().mapToObj(c -> String.valueOf((char) c))));
 					//
 				} // if
 					//

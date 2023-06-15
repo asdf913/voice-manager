@@ -49,7 +49,7 @@ public class MigLayoutFactoryBean implements FactoryBean<MigLayout> {
 			//
 		} else if (value instanceof Iterable<?>) {
 			//
-			setArguments(Util.stream(IterableUtils.toList((Iterable<?>) value)).map(Util::toString).toList()
+			setArguments(Util.toList(Util.stream(IterableUtils.toList((Iterable<?>) value)).map(Util::toString))
 					.toArray(new String[] {}));
 			//
 			return;
@@ -108,12 +108,12 @@ public class MigLayoutFactoryBean implements FactoryBean<MigLayout> {
 			if (Objects.equals(componentType, Integer.TYPE)) {
 				//
 				result = Unit.with(
-						Arrays.stream((int[]) value).mapToObj(Integer::toString).toList().toArray(new String[] {}));
+						Util.toList(Arrays.stream((int[]) value).mapToObj(Integer::toString)).toArray(new String[] {}));
 				//
 			} else if (Objects.equals(componentType, Long.TYPE)) {
 				//
-				result = Unit
-						.with(Arrays.stream((long[]) value).mapToObj(Long::toString).toList().toArray(new String[] {}));
+				result = Unit.with(
+						Util.toList(Arrays.stream((long[]) value).mapToObj(Long::toString)).toArray(new String[] {}));
 				//
 			} else if (Objects.equals(componentType, Short.TYPE)) {
 				//
@@ -147,8 +147,8 @@ public class MigLayoutFactoryBean implements FactoryBean<MigLayout> {
 				//
 			} else {
 				//
-				result = Unit
-						.with(Arrays.stream((Object[]) value).map(Util::toString).toList().toArray(new String[] {}));
+				result = Unit.with(
+						Util.toList(Arrays.stream((Object[]) value).map(Util::toString)).toArray(new String[] {}));
 				//
 			} // if
 				//

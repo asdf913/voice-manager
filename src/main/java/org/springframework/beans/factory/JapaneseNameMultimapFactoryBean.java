@@ -198,8 +198,9 @@ public class JapaneseNameMultimapFactoryBean implements FactoryBean<Multimap<Str
 			if (pattern != null
 					&& (matcher = pattern.matcher(
 							StringUtils.substringAfter(text = ElementUtil.text(nextElementSibling), ' '))) != null
-					&& matcher.matches() && matcher.groupCount() == 1 && (strings = Arrays
-							.stream(StringUtils.split(matcher.group(1), '/')).map(StringUtils::trim).toList()) != null
+					&& matcher.matches() && matcher.groupCount() == 1
+					&& (strings = Util.toList(
+							Arrays.stream(StringUtils.split(matcher.group(1), '/')).map(StringUtils::trim))) != null
 					&& strings.iterator() != null) {
 				//
 				for (final String s : strings) {

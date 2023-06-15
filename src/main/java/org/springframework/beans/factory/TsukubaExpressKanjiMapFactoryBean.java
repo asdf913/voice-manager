@@ -62,8 +62,8 @@ public class TsukubaExpressKanjiMapFactoryBean extends StringMapFromResourceFact
 				//
 			} else {
 				//
-				final List<RomajiOrHiragana> rohs = Arrays.stream(RomajiOrHiragana.values())
-						.filter(x -> StringUtils.startsWithIgnoreCase(name(x), string)).toList();
+				final List<RomajiOrHiragana> rohs = Util.toList(Arrays.stream(RomajiOrHiragana.values())
+						.filter(x -> StringUtils.startsWithIgnoreCase(name(x), string)));
 				//
 				if (IterableUtils.size(rohs) > 1) {
 					//
