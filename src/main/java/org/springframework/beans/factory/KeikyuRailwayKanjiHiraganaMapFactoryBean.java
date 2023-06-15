@@ -63,7 +63,7 @@ public class KeikyuRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<Map
 		//
 		for (int i = 0; es != null && i < es.size(); i++) {
 			//
-			if ((nodes = toList(
+			if ((nodes = Util.toList(
 					filter(Util.stream(childNodes(parentNode(e = es.get(i)))), TextNode.class::isInstance))) == null
 					|| nodes.isEmpty()) {
 				//
@@ -108,11 +108,6 @@ public class KeikyuRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<Map
 				? instance.filter(predicate)
 				: null;
 		//
-	}
-
-	@Nullable
-	private static <T> List<T> toList(@Nullable final Stream<T> instance) {
-		return instance != null ? instance.toList() : null;
 	}
 
 	@Nullable

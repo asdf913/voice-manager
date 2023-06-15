@@ -55,10 +55,10 @@ class JlptVocabularyListFactoryBeanTest {
 
 	private static final String EMPTY = "";
 
-	private static Method METHOD_FILTER, METHOD_TO_LIST, METHOD_ANNOTATION_TYPE, METHOD_GET_NAME, METHOD_TEST,
-			METHOD_OR, METHOD_ADD, METHOD_ADD_ALL, METHOD_GET_FIELDS_BY_NAME, METHOD_GET_INTEGER_VALUE,
-			METHOD_GET_STRING_VALUE_CELL, METHOD_INVOKE, METHOD_GET_DECLARED_ANNOTATIONS, METHOD_GET_DECLARED_METHODS,
-			METHOD_IS_ASSIGNABLE_FROM, METHOD_SET_ACCESSIBLE, METHOD_SET, METHOD_GET_TYPE, METHOD_GET_NUMBER_VALUE,
+	private static Method METHOD_FILTER, METHOD_ANNOTATION_TYPE, METHOD_GET_NAME, METHOD_TEST, METHOD_OR, METHOD_ADD,
+			METHOD_ADD_ALL, METHOD_GET_FIELDS_BY_NAME, METHOD_GET_INTEGER_VALUE, METHOD_GET_STRING_VALUE_CELL,
+			METHOD_INVOKE, METHOD_GET_DECLARED_ANNOTATIONS, METHOD_GET_DECLARED_METHODS, METHOD_IS_ASSIGNABLE_FROM,
+			METHOD_SET_ACCESSIBLE, METHOD_SET, METHOD_GET_TYPE, METHOD_GET_NUMBER_VALUE,
 			METHOD_GET_PHYSICAL_NUMBER_OF_CELLS = null;
 
 	@BeforeAll
@@ -67,8 +67,6 @@ class JlptVocabularyListFactoryBeanTest {
 		final Class<?> clz = JlptVocabularyListFactoryBean.class;
 		//
 		(METHOD_FILTER = clz.getDeclaredMethod("filter", Stream.class, Predicate.class)).setAccessible(true);
-		//
-		(METHOD_TO_LIST = clz.getDeclaredMethod("toList", Stream.class)).setAccessible(true);
 		//
 		(METHOD_ANNOTATION_TYPE = clz.getDeclaredMethod("annotationType", Annotation.class)).setAccessible(true);
 		//
@@ -433,29 +431,6 @@ class JlptVocabularyListFactoryBeanTest {
 				return null;
 			} else if (obj instanceof Stream) {
 				return (Stream) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testToList() throws Throwable {
-		//
-		Assertions.assertNull(toList(null));
-		//
-		Assertions.assertEquals(Collections.emptyList(), toList(Stream.empty()));
-		//
-	}
-
-	private static <T> List<T> toList(final Stream<T> instance) throws Throwable {
-		try {
-			final Object obj = METHOD_TO_LIST.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof List) {
-				return (List) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

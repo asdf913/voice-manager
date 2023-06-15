@@ -194,8 +194,9 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 				//
 			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedListMultimap::create),
 					matcher.group(1),
-					toList(map(Util.stream(ElementUtil.select(ElementUtil.nextElementSibling(element.parent()), "a")),
-							ElementUtil::text)));
+					Util.toList(
+							map(Util.stream(ElementUtil.select(ElementUtil.nextElementSibling(element.parent()), "a")),
+									ElementUtil::text)));
 			//
 		} // for
 			//
@@ -355,11 +356,6 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 				? instance.map(mapper)
 				: null;
 		//
-	}
-
-	@Nullable
-	private static <T> List<T> toList(@Nullable final Stream<T> instance) {
-		return instance != null ? instance.toList() : null;
 	}
 
 	@Override

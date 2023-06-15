@@ -6,7 +6,6 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
-import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -24,8 +23,7 @@ import com.google.common.reflect.Reflection;
 class BufferedImageTypeFactoryBeanTest {
 
 	private static Method METHOD_TEST_AND_APPLY, METHOD_IS_STATIC, METHOD_GET, METHOD_GET_TYPE, METHOD_FILTER,
-			METHOD_TO_LIST, METHOD_IS_ASSIGNABLE_FROM, METHOD_IS_PRIMITIVE, METHOD_GET_NAME, METHOD_AND,
-			METHOD_INT_VALUE = null;
+			METHOD_IS_ASSIGNABLE_FROM, METHOD_IS_PRIMITIVE, METHOD_GET_NAME, METHOD_AND, METHOD_INT_VALUE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -42,8 +40,6 @@ class BufferedImageTypeFactoryBeanTest {
 		(METHOD_GET_TYPE = clz.getDeclaredMethod("getType", Field.class)).setAccessible(true);
 		//
 		(METHOD_FILTER = clz.getDeclaredMethod("filter", Stream.class, Predicate.class)).setAccessible(true);
-		//
-		(METHOD_TO_LIST = clz.getDeclaredMethod("toList", Stream.class)).setAccessible(true);
 		//
 		(METHOD_GET_NAME = clz.getDeclaredMethod("getName", Member.class)).setAccessible(true);
 		//
@@ -195,27 +191,6 @@ class BufferedImageTypeFactoryBeanTest {
 				return null;
 			} else if (obj instanceof Stream) {
 				return (Stream) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testToList() throws Throwable {
-		//
-		Assertions.assertNull(toList(null));
-		//
-	}
-
-	private static <T> List<T> toList(final Stream<T> instance) throws Throwable {
-		try {
-			final Object obj = METHOD_TO_LIST.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof List) {
-				return (List) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

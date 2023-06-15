@@ -144,4 +144,8 @@ abstract class Util {
 		return instance != null ? instance.stream() : null;
 	}
 
+	static <T> List<T> toList(final Stream<T> instance) {
+		return instance != null ? instance.toList() : null;
+	}
+
 }

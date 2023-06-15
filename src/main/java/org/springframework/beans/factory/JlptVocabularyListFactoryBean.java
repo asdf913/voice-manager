@@ -235,11 +235,6 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 	}
 
 	@Nullable
-	private static <T> List<T> toList(@Nullable final Stream<T> instance) {
-		return instance != null ? instance.toList() : null;
-	}
-
-	@Nullable
 	private static Class<? extends Annotation> annotationType(@Nullable final Annotation instance) {
 		return instance != null ? instance.annotationType() : null;
 	}
@@ -763,7 +758,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 				//
 				// Check if there is a "value()" defined in a.class
 				//
-			final List<Method> methods = toList(
+			final List<Method> methods = Util.toList(
 					filter(testAndApply(Objects::nonNull, annotationType(a).getDeclaredMethods(), Arrays::stream, null),
 							x -> x != null && Objects.equals("value", getName(x)) && x.getParameterCount() == 0));
 			//

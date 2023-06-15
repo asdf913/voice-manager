@@ -126,7 +126,7 @@ public class BufferedImageTypeFactoryBean implements FactoryBean<Integer> {
 			//
 		} // try
 			//
-		final List<Field> fs = toList(filter(
+		final List<Field> fs = Util.toList(filter(
 				testAndApply(Objects::nonNull, BufferedImage.class.getDeclaredFields(), Arrays::stream, null), f -> {
 					//
 					final Class<?> type = getType(f);
@@ -188,11 +188,6 @@ public class BufferedImageTypeFactoryBean implements FactoryBean<Integer> {
 				? instance.filter(predicate)
 				: null;
 		//
-	}
-
-	@Nullable
-	private static <T> List<T> toList(@Nullable final Stream<T> instance) {
-		return instance != null ? instance.toList() : null;
 	}
 
 	private static boolean isStatic(@Nullable final Member instance) {
