@@ -298,6 +298,14 @@ class JlptLevelGuiTest {
 					//
 				} // if
 					//
+			} else if (self instanceof Toolkit) {
+				//
+				if (Objects.equals(methodName, "getSystemClipboard")) {
+					//
+					return null;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(methodName);
@@ -315,6 +323,8 @@ class JlptLevelGuiTest {
 	private Document document = null;
 
 	private Stream<?> stream = null;
+
+	private MH mh = null;
 
 	@BeforeEach
 	void beforeEach() throws Throwable {
@@ -342,6 +352,8 @@ class JlptLevelGuiTest {
 		document = Reflection.newProxy(Document.class, ih = new IH());
 		//
 		stream = Reflection.newProxy(Stream.class, ih);
+		//
+		mh = new MH();
 		//
 	}
 
@@ -756,11 +768,16 @@ class JlptLevelGuiTest {
 		//
 		Assertions.assertDoesNotThrow(() -> setPreferredWidth(0, Collections.singleton(null)));
 		//
-		// java.awt.Component.getPreferredSize() return null
+		Assertions.assertDoesNotThrow(
+				() -> setPreferredWidth(0, Collections.singleton(createProxy(Component.class, mh))));
+		//
+	}
+
+	private static <T> T createProxy(final Class<T> superClass, final MethodHandler mh) throws Throwable {
 		//
 		final ProxyFactory proxyFactory = new ProxyFactory();
 		//
-		proxyFactory.setSuperclass(Component.class);
+		proxyFactory.setSuperclass(superClass);
 		//
 		final Class<?> clz = proxyFactory.createClass();
 		//
@@ -770,12 +787,11 @@ class JlptLevelGuiTest {
 		//
 		if (instance instanceof ProxyObject) {
 			//
-			((ProxyObject) instance).setHandler(new MH());
+			((ProxyObject) instance).setHandler(mh);
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> setPreferredWidth(0,
-				Collections.singleton(instance instanceof Component ? (Component) instance : null)));
+		return (T) cast(clz, instance);
 		//
 	}
 
@@ -869,6 +885,12 @@ class JlptLevelGuiTest {
 		} else {
 			//
 			Assertions.assertNotNull(getSystemClipboard(toolkit));
+			//
+		} // if
+			//
+		if (GraphicsEnvironment.isHeadless()) {
+			//
+			Assertions.assertNull(getSystemClipboard(createProxy(Toolkit.class, mh)));
 			//
 		} // if
 			//
