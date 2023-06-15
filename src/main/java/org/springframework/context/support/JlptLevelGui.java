@@ -19,6 +19,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Executable;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
@@ -33,6 +34,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.BiConsumer;
+import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -63,11 +66,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.poi.util.IntList;
 import org.apache.poi.util.IntListUtil;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
+import org.meeuw.functional.Predicates;
 import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
 import org.springframework.beans.config.Title;
 import org.springframework.beans.factory.InitializingBean;
@@ -78,6 +83,7 @@ import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import com.github.hal4j.uritemplate.URIBuilder;
 
 import domain.JlptVocabulary;
+import io.github.toolfactory.narcissus.Narcissus;
 import net.miginfocom.swing.MigLayout;
 
 @Title("JLPT Level")
@@ -157,17 +163,34 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 			//
 		} // if
 			//
-		add(new JLabel("Text"));
+			// If "java.awt.Container.component" is null, return this method immediately
+			//
+			// The below check is for "-Djava.awt.headless=true"
+			//
+		final List<Field> fs = toList(filter(stream(FieldUtils.getAllFieldsList(getClass(this))),
+				f -> Objects.equals(getName(f), "component")));
+		//
+		final Field f = IterableUtils.size(fs) == 1 ? IterableUtils.get(fs, 0) : null;
+		//
+		final boolean isGui = f == null || Narcissus.getObjectField(this, f) != null;
+		//
+		final Predicate<Component> predicate = Predicates.always(isGui, null);
+		//
+		testAndAccept(predicate, new JLabel("Text"), this::add);
 		//
 		final String wrap = "wrap";
 		//
-		add(tfText = new JTextField(), wrap);
+		final BiPredicate<Component, Object> biPredicate = Predicates.biAlways(isGui, null);
+		//
+		testAndAccept(biPredicate, tfText = new JTextField(), wrap, this::add);
 		//
 		addDocumentListener(tfTextDocument = tfText.getDocument(), this);
 		//
-		add(new JLabel());
+		testAndAccept(predicate, new JLabel(), this::add);
 		//
-		add(jcbJlptVocabulary = new JComboBox<JlptVocabulary>(cbmJlptVocabulary = new DefaultComboBoxModel<>()), wrap);
+		testAndAccept(biPredicate,
+				jcbJlptVocabulary = new JComboBox<JlptVocabulary>(cbmJlptVocabulary = new DefaultComboBoxModel<>()),
+				wrap, this::add);
 		//
 		jcbJlptVocabulary.addItemListener(this);
 		//
@@ -190,30 +213,32 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 
 		});
 		//
-		add(new JLabel());
+		testAndAccept(predicate, new JLabel(), this::add);
 		//
-		add(btnVisitJMdictDB = new JButton("Visit JMdict"), wrap);
+		testAndAccept(biPredicate, btnVisitJMdictDB = new JButton("Visit JMdict"), wrap, this::add);
 		//
-		add(new JLabel("JLPT Level(s)"));
+		testAndAccept(predicate, new JLabel("JLPT Level(s)"), this::add);
 		//
-		add(jlJlptLevel = (cbmJlptLevel = testAndApply(Objects::nonNull, toArray(jlptLevels, new String[] {}),
-				DefaultComboBoxModel::new, null)) != null ? new JList<>(cbmJlptLevel) : new JList<>(), wrap);
+		testAndAccept(biPredicate,
+				jlJlptLevel = (cbmJlptLevel = testAndApply(Objects::nonNull, toArray(jlptLevels, new String[] {}),
+						DefaultComboBoxModel::new, null)) != null ? new JList<>(cbmJlptLevel) : new JList<>(),
+				wrap, this::add);
 		//
-		add(new JLabel());
+		testAndAccept(predicate, new JLabel(), this::add);
 		//
-		add(btnExportJson = new JButton("Export JSON"), wrap);
+		testAndAccept(biPredicate, btnExportJson = new JButton("Export JSON"), wrap, this::add);
 		//
-		add(new JLabel("JSON"));
+		testAndAccept(predicate, new JLabel("JSON"), this::add);
 		//
-		add(tfJson = new JTextField());
+		testAndAccept(predicate, tfJson = new JTextField(), this::add);
 		//
-		add(btnCopy = new JButton("Copy"), wrap);
+		testAndAccept(biPredicate, btnCopy = new JButton("Copy"), wrap, this::add);
 		//
-		add(new JLabel());
+		testAndAccept(predicate, new JLabel(), this::add);
 		//
-		add(btnCompare = new JButton("Compare JLPT Level(s)"));
+		testAndAccept(predicate, btnCompare = new JButton("Compare JLPT Level(s)"), this::add);
 		//
-		add(jlCompare = new JLabel());
+		testAndAccept(predicate, jlCompare = new JLabel(), this::add);
 		//
 		addActionListener(this, btnExportJson, btnCopy, btnCompare, btnVisitJMdictDB);
 		//
@@ -674,6 +699,13 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 			@Nullable final Consumer<T> consumer) {
 		if (test(predicate, value) && consumer != null) {
 			consumer.accept(value);
+		}
+	}
+
+	private static <T, U> void testAndAccept(final BiPredicate<T, U> predicate, final T t, final U u,
+			final BiConsumer<T, U> consumer) {
+		if (predicate != null && predicate.test(t, u) && consumer != null) {
+			consumer.accept(t, u);
 		}
 	}
 

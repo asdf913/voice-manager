@@ -37,6 +37,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.annotation.Nullable;
 import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
@@ -102,7 +103,7 @@ class JlptLevelGuiTest {
 			METHOD_GET_PARAMETER_TYPES, METHOD_RUN, METHOD_SET_JLPT_VOCABULARY_AND_LEVEL, METHOD_STREAM, METHOD_MAP,
 			METHOD_GET_LEVEL, METHOD_FOR_EACH_STREAM, METHOD_ADD_ELEMENT, METHOD_TEST_AND_ACCEPT, METHOD_BROWSE,
 			METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_ADD_DOCUMENT_LISTENER, METHOD_SET_SELECTED_INDICES,
-			METHOD_TO_URI, METHOD_REMOVE_ELEMENT_AT, METHOD_DISTINCT, METHOD_MAX = null;
+			METHOD_TO_URI, METHOD_REMOVE_ELEMENT_AT, METHOD_DISTINCT, METHOD_MAX, METHOD_OR_ELSE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -194,6 +195,8 @@ class JlptLevelGuiTest {
 		(METHOD_DISTINCT = clz.getDeclaredMethod("distinct", Stream.class)).setAccessible(true);
 		//
 		(METHOD_MAX = clz.getDeclaredMethod("max", Stream.class, Comparator.class)).setAccessible(true);
+		//
+		(METHOD_OR_ELSE = clz.getDeclaredMethod("orElse", Optional.class, Object.class)).setAccessible(true);
 		//
 	}
 
@@ -313,7 +316,7 @@ class JlptLevelGuiTest {
 	private Stream<?> stream = null;
 
 	@BeforeEach
-	void beforeEach() throws ReflectiveOperationException {
+	void beforeEach() throws Throwable {
 		//
 		if (!GraphicsEnvironment.isHeadless()) {
 			//
@@ -326,6 +329,10 @@ class JlptLevelGuiTest {
 			} // if
 				//
 			instance = constructor != null ? constructor.newInstance() : null;
+			//
+		} else {
+			//
+			instance = cast(JlptLevelGui.class, Narcissus.allocateInstance(JlptLevelGui.class));
 			//
 		} // if
 			//
@@ -1284,9 +1291,12 @@ class JlptLevelGuiTest {
 	}
 
 	@Test
-	void testBrowse() {
+	void testBrowse() throws Throwable {
 		//
-		final Desktop desktop = !GraphicsEnvironment.isHeadless() ? Desktop.getDesktop() : null;
+		Assertions.assertDoesNotThrow(() -> browse(null, null));
+		//
+		final Desktop desktop = !GraphicsEnvironment.isHeadless() ? Desktop.getDesktop()
+				: cast(Desktop.class, Narcissus.allocateInstance(Desktop.class));
 		//
 		Assertions.assertDoesNotThrow(() -> browse(desktop, null));
 		//
@@ -1444,6 +1454,21 @@ class JlptLevelGuiTest {
 				return (Optional) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testOrElse() throws Throwable {
+		//
+		Assertions.assertNull(orElse(null, null));
+		//
+	}
+
+	private static <T> T orElse(@Nullable final Optional<T> instance, @Nullable final T other) throws Throwable {
+		try {
+			return (T) METHOD_OR_ELSE.invoke(null, instance, other);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
