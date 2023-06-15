@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.lang.reflect.Proxy;
 import java.net.URL;
 import java.time.Duration;
-import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
