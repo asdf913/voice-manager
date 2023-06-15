@@ -95,11 +95,13 @@ public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean {
 		//
 	}
 
-	private static Object invoke(@Nullable final Method method, final Object instance, @Nullable final Object... args)
+	@Nullable
+	private static Object invoke(@Nullable final Method method, @Nullable final Object instance, final Object... args)
 			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		return method != null ? method.invoke(instance, args) : null;
 	}
 
+	@Nullable
 	private static String getName(@Nullable final Member instance) {
 		return instance != null ? instance.getName() : null;
 	}
