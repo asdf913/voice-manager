@@ -35,6 +35,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.OptionalInt;
 import java.util.Spliterator;
+import java.util.function.BiConsumer;
+import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.function.ToIntFunction;
 import java.util.regex.Matcher;
@@ -92,6 +94,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
 import org.jsoup.select.Elements;
+import org.meeuw.functional.Predicates;
 import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
 import org.springframework.beans.config.Title;
 import org.springframework.beans.factory.InitializingBean;
@@ -261,37 +264,38 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		//
 		final Field f = IterableUtils.size(fs) == 1 ? IterableUtils.get(fs, 0) : null;
 		//
-		if (f != null && Narcissus.getObjectField(this, f) == null) {
-			//
-			return;
-			//
-		} // if
-			//
-		add(new JLabel("Text"));
+		final boolean isGui = f == null || Narcissus.getObjectField(this, f) != null;
 		//
-		add(tfText = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
-				"org.springframework.context.support.JouYouKanjiGui.text")), "wmin 100px");
+		final Predicate<Component> predicate = Predicates.always(isGui, null);
+		//
+		testAndAccept(predicate, new JLabel("Text"), this::add);
+		//
+		final BiPredicate<Component, Object> biPredicate = Predicates.biAlways(isGui, null);
+		//
+		testAndAccept(biPredicate, tfText = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
+				"org.springframework.context.support.JouYouKanjiGui.text")), "wmin 100px", this::add);
 		//
 		tfText.addKeyListener(this);
 		//
-		add(new JLabel("常用漢字"));
+		testAndAccept(predicate, new JLabel("常用漢字"), this::add);
 		//
 		final JComboBox<?> jcbJouYouKanji = new JComboBox<>(
 				cbmJouYouKanJi = new DefaultComboBoxModel<>(toArray(getBooleanValues(), new Boolean[] {})));
 		//
 		final String wrap = "wrap";
 		//
-		add(jcbJouYouKanji, wrap);
+		testAndAccept(biPredicate, jcbJouYouKanji, wrap, this::add);
 		//
-		add(new JLabel());
+		testAndAccept(predicate, new JLabel(), this::add);
 		//
-		add(btnExportJouYouKanJi = new JButton("Export 常用漢字"), String.format("%1$s,span %2$s", wrap, 3));
+		testAndAccept(biPredicate, btnExportJouYouKanJi = new JButton("Export 常用漢字"),
+				String.format("%1$s,span %2$s", wrap, 3), this::add);
 		//
 		btnExportJouYouKanJi.addActionListener(this);
 		//
-		add(new JLabel("File"));
+		testAndAccept(predicate, new JLabel("File"), this::add);
 		//
-		add(tfExportFile = new JTextField(), String.format("growx,span %1$s", 3));
+		testAndAccept(biPredicate, tfExportFile = new JTextField(), String.format("growx,span %1$s", 3), this::add);
 		//
 		final List<Component> cs = Arrays.asList(tfText, jcbJouYouKanji);
 		//
@@ -769,6 +773,13 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 			@Nullable final FailableConsumer<T, E> consumer) throws E {
 		if (test(predicate, value) && consumer != null) {
 			consumer.accept(value);
+		}
+	}
+
+	private static <T, U> void testAndAccept(final BiPredicate<T, U> predicate, final T t, final U u,
+			final BiConsumer<T, U> consumer) {
+		if (predicate != null && predicate.test(t, u) && consumer != null) {
+			consumer.accept(t, u);
 		}
 	}
 

@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.File;
 import java.lang.invoke.TypeDescriptor.OfField;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -22,6 +23,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.OptionalInt;
 import java.util.Spliterator;
+import java.util.function.BiConsumer;
+import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.function.ToIntFunction;
 import java.util.regex.Matcher;
@@ -82,8 +85,9 @@ class JouYouKanjiGuiTest {
 			METHOD_TEST, METHOD_SET_TEXT, METHOD_GET_BOOLEAN_VALUES, METHOD_TO_ARRAY, METHOD_MATCHER,
 			METHOD_GET_EXPRESSION_AS_CSS_STRING, METHOD_GET_INDEXED_COLORS, METHOD_GET_STYLES_SOURCE,
 			METHOD_GET_PROPERTY, METHOD_INT_VALUE, METHOD_TO_MILLIS, METHOD_SET_FILL_BACK_GROUND_COLOR,
-			METHOD_SET_FILL_PATTERN, METHOD_SPLITERATOR, METHOD_TEST_AND_ACCEPT, METHOD_STREAM, METHOD_MAP_TO_INT,
-			METHOD_MAX, METHOD_OR_ELSE, METHOD_FILTER, METHOD_SET_AUTO_FILTER = null;
+			METHOD_SET_FILL_PATTERN, METHOD_SPLITERATOR, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4,
+			METHOD_STREAM, METHOD_MAP_TO_INT, METHOD_MAX, METHOD_OR_ELSE, METHOD_FILTER, METHOD_SET_AUTO_FILTER,
+			METHOD_GET_ABSOLUTE_PATH, METHOD_GET_PHYSICAL_NUMBER_OF_ROWS = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -158,8 +162,11 @@ class JouYouKanjiGuiTest {
 		//
 		(METHOD_SPLITERATOR = clz.getDeclaredMethod("spliterator", Iterable.class)).setAccessible(true);
 		//
-		(METHOD_TEST_AND_ACCEPT = clz.getDeclaredMethod("testAndAccept", Predicate.class, Object.class,
+		(METHOD_TEST_AND_ACCEPT3 = clz.getDeclaredMethod("testAndAccept", Predicate.class, Object.class,
 				FailableConsumer.class)).setAccessible(true);
+		//
+		(METHOD_TEST_AND_ACCEPT4 = clz.getDeclaredMethod("testAndAccept", BiPredicate.class, Object.class, Object.class,
+				BiConsumer.class)).setAccessible(true);
 		//
 		(METHOD_STREAM = clz.getDeclaredMethod("stream", Collection.class)).setAccessible(true);
 		//
@@ -172,6 +179,11 @@ class JouYouKanjiGuiTest {
 		(METHOD_FILTER = clz.getDeclaredMethod("filter", Stream.class, Predicate.class)).setAccessible(true);
 		//
 		(METHOD_SET_AUTO_FILTER = clz.getDeclaredMethod("setAutoFilter", Sheet.class)).setAccessible(true);
+		//
+		(METHOD_GET_ABSOLUTE_PATH = clz.getDeclaredMethod("getAbsolutePath", File.class)).setAccessible(true);
+		//
+		(METHOD_GET_PHYSICAL_NUMBER_OF_ROWS = clz.getDeclaredMethod("getPhysicalNumberOfRows", Sheet.class))
+				.setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.JouYouKanjiGui$IH");
 		//
@@ -1254,21 +1266,41 @@ class JouYouKanjiGuiTest {
 		//
 		Assertions.assertDoesNotThrow(() -> testAndAccept(null, null, null));
 		//
+		Assertions.assertDoesNotThrow(() -> testAndAccept(null, null, null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> testAndAccept((a, b) -> true, null, null, null));
+		//
 		Assertions.assertDoesNotThrow(() -> testAndAccept(Predicates.alwaysTrue(), null, null));
 		//
+		if (GraphicsEnvironment.isHeadless()) {
+			//
+			Assertions.assertDoesNotThrow(() -> testAndAccept((a, b) -> true, null, null, (a, b) -> {
+			}));
+			//
+		} else {
+			//
+			Assertions.assertDoesNotThrow(() -> testAndAccept((a, b) -> false, null, null, null));
+			//
+		} // if
+			//
 	}
 
 	private static <T, E extends Throwable> void testAndAccept(final Predicate<T> predicate, final T value,
 			final FailableConsumer<T, E> consumer) throws Throwable {
 		try {
-			METHOD_TEST_AND_ACCEPT.invoke(null, predicate, value, consumer);
+			METHOD_TEST_AND_ACCEPT3.invoke(null, predicate, value, consumer);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
 	}
 
-	private static Integer getPhysicalNumberOfRows(final Sheet instance) {
-		return instance != null ? Integer.valueOf(instance.getPhysicalNumberOfRows()) : null;
+	private static <T, U> void testAndAccept(final BiPredicate<T, U> predicate, final T t, final U u,
+			final BiConsumer<T, U> consumer) throws Throwable {
+		try {
+			METHOD_TEST_AND_ACCEPT4.invoke(null, predicate, t, u, consumer);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 	@Test
@@ -1393,11 +1425,11 @@ class JouYouKanjiGuiTest {
 			//
 			Assertions.assertDoesNotThrow(() -> setAutoFilter(sheet));
 			//
-			SheetUtil.createRow(sheet, sheet != null ? sheet.getPhysicalNumberOfRows() : 0);
+			SheetUtil.createRow(sheet, getPhysicalNumberOfRows(sheet));
 			//
 			Assertions.assertDoesNotThrow(() -> setAutoFilter(sheet));
 			//
-			SheetUtil.createRow(sheet, sheet != null ? sheet.getPhysicalNumberOfRows() : 0);
+			SheetUtil.createRow(sheet, getPhysicalNumberOfRows(sheet));
 			//
 			final Row row = sheet != null ? sheet.getRow(sheet.getLastRowNum()) : null;
 			//
@@ -1428,6 +1460,48 @@ class JouYouKanjiGuiTest {
 	private static void setAutoFilter(final Sheet sheet) throws Throwable {
 		try {
 			METHOD_SET_AUTO_FILTER.invoke(null, sheet);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetAbsolutePath() throws Throwable {
+		//
+		Assertions.assertNull(getAbsolutePath(null));
+		//
+	}
+
+	private static String getAbsolutePath(final File instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_ABSOLUTE_PATH.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetPhysicalNumberOfRows() throws Throwable {
+		//
+		Assertions.assertNull(getPhysicalNumberOfRows(null));
+		//
+	}
+
+	private static Integer getPhysicalNumberOfRows(final Sheet instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_PHYSICAL_NUMBER_OF_ROWS.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Integer) {
+				return (Integer) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
