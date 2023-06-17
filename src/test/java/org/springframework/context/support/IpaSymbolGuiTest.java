@@ -14,6 +14,9 @@ import java.security.MessageDigest;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
+import java.util.function.BiConsumer;
+import java.util.function.BiPredicate;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import javax.swing.AbstractButton;
@@ -43,7 +46,8 @@ class IpaSymbolGuiTest {
 
 	private static Method METHOD_ADD_ACTION_LISTENER, METHOD_GET_CLASS, METHOD_TO_STRING, METHOD_TO_ARRAY,
 			METHOD_TEST_AND_APPLY, METHOD_OPEN_STREAM, METHOD_DIGEST, METHOD_IIF, METHOD_GET_TEXT, METHOD_SET_TEXT,
-			METHOD_FOR_NAME, METHOD_SET_PREFERRED_WIDTH, METHOD_GET_PREFERRED_SIZE = null;
+			METHOD_FOR_NAME, METHOD_SET_PREFERRED_WIDTH, METHOD_GET_PREFERRED_SIZE, METHOD_TEST_AND_ACCEPT3,
+			METHOD_TEST_AND_ACCEPT4 = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -78,6 +82,12 @@ class IpaSymbolGuiTest {
 				.setAccessible(true);
 		//
 		(METHOD_GET_PREFERRED_SIZE = clz.getDeclaredMethod("getPreferredSize", Component.class)).setAccessible(true);
+		//
+		(METHOD_TEST_AND_ACCEPT3 = clz.getDeclaredMethod("testAndAccept", Predicate.class, Object.class,
+				Consumer.class)).setAccessible(true);
+		//
+		(METHOD_TEST_AND_ACCEPT4 = clz.getDeclaredMethod("testAndAccept", BiPredicate.class, Object.class, Object.class,
+				BiConsumer.class)).setAccessible(true);
 		//
 	}
 
@@ -522,6 +532,51 @@ class IpaSymbolGuiTest {
 				return (Dimension) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testTestAndAccept() {
+		//
+		Assertions.assertDoesNotThrow(() -> testAndAccept(null, null, null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> testAndAccept(Predicates.alwaysTrue(), null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> testAndAccept((a, b) -> true, null, null, null));
+		//
+		if (GraphicsEnvironment.isHeadless()) {
+			//
+			Assertions.assertDoesNotThrow(() -> testAndAccept(Predicates.alwaysTrue(), null, a -> {
+			}));
+			//
+			Assertions.assertDoesNotThrow(() -> testAndAccept((a, b) -> true, null, null, (a, b) -> {
+			}));
+			//
+		} else {
+			//
+			Assertions.assertDoesNotThrow(() -> testAndAccept(Predicates.alwaysFalse(), null, null));
+			//
+			Assertions.assertDoesNotThrow(() -> testAndAccept((a, b) -> false, null, null, null));
+			//
+		} // if
+			//
+	}
+
+	private static <T> void testAndAccept(final Predicate<T> predicate, final T value, final Consumer<T> consumer)
+			throws Throwable {
+		try {
+			METHOD_TEST_AND_ACCEPT3.invoke(null, predicate, value, consumer);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static <T, U> void testAndAccept(final BiPredicate<T, U> predicate, final T t, final U u,
+			final BiConsumer<T, U> consumer) throws Throwable {
+		try {
+			METHOD_TEST_AND_ACCEPT4.invoke(null, predicate, t, u, consumer);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

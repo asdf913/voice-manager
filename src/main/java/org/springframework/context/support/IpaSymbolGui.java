@@ -22,6 +22,9 @@ import java.util.Collections;
 import java.util.EventObject;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.BiConsumer;
+import java.util.function.BiPredicate;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
@@ -43,6 +46,7 @@ import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0Util;
+import org.meeuw.functional.Predicates;
 import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -139,33 +143,33 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 		//
 		final Field f = IterableUtils.size(fs) == 1 ? IterableUtils.get(fs, 0) : null;
 		//
-		if (f != null && Narcissus.getObjectField(this, f) == null) {
-			//
-			return;
-			//
-		} // if
-			//
+		final boolean isGui = f == null || Narcissus.getObjectField(this, f) != null;
+		//
 		final String wrap = "wrap";
 		//
-		add(new JLabel("Text"));
+		final Predicate<Component> predicate = Predicates.always(isGui, null);
 		//
-		add(tfText = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
-				"org.springframework.context.support.IpaSymbolGui.text")), wrap);
+		testAndAccept(predicate, new JLabel("Text"), this::add);
 		//
-		add(new JLabel(""));
+		final BiPredicate<Component, Object> biPredicate = Predicates.biAlways(isGui, null);
 		//
-		add(btnGetIpaSymbol = new JButton("Get IPA Symbol"), wrap);
+		testAndAccept(biPredicate, tfText = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
+				"org.springframework.context.support.IpaSymbolGui.text")), wrap, this::add);
 		//
-		add(new JLabel("IPA"));
+		testAndAccept(predicate, new JLabel(""), this::add);
 		//
-		add(tfIpaSymbol = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
-				"org.springframework.context.support.IpaSymbolGui.ipaSymbol")), wrap);
+		testAndAccept(biPredicate, btnGetIpaSymbol = new JButton("Get IPA Symbol"), wrap, this::add);
 		//
-		add(new JLabel(""));
+		testAndAccept(predicate, new JLabel("IPA"), this::add);
 		//
-		add(btnCheckIpaSymbolJson = new JButton("Check IPA Symbol Json File"));
+		testAndAccept(biPredicate, tfIpaSymbol = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
+				"org.springframework.context.support.IpaSymbolGui.ipaSymbol")), wrap, this::add);
 		//
-		add(jlIpaJsonFile = new JLabel());
+		testAndAccept(predicate, new JLabel(""), this::add);
+		//
+		testAndAccept(predicate, btnCheckIpaSymbolJson = new JButton("Check IPA Symbol Json File"), this::add);
+		//
+		testAndAccept(predicate, jlIpaJsonFile = new JLabel(), this::add);
 		//
 		final Dimension preferredSize = Collections.max(
 				Arrays.asList(btnGetIpaSymbol.getPreferredSize(), btnCheckIpaSymbolJson.getPreferredSize()),
@@ -180,6 +184,20 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 			//
 		addActionListener(this, btnGetIpaSymbol, btnCheckIpaSymbolJson);
 		//
+	}
+
+	private static <T, E extends Throwable> void testAndAccept(final Predicate<T> predicate, final T value,
+			final Consumer<T> consumer) throws E {
+		if (test(predicate, value) && consumer != null) {
+			consumer.accept(value);
+		}
+	}
+
+	private static <T, U> void testAndAccept(final BiPredicate<T, U> predicate, final T t, final U u,
+			final BiConsumer<T, U> consumer) {
+		if (predicate != null && predicate.test(t, u) && consumer != null) {
+			consumer.accept(t, u);
+		}
 	}
 
 	@Nullable
