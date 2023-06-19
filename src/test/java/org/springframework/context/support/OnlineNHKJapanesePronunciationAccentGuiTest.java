@@ -38,6 +38,8 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.BiConsumer;
+import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntConsumer;
@@ -68,9 +70,11 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
+import org.meeuw.functional.Consumers;
 import org.springframework.beans.factory.InitializingBean;
 
 import com.google.common.reflect.Reflection;
+import com.google.common.util.concurrent.Runnables;
 
 import domain.Pronunciation;
 import io.github.toolfactory.narcissus.Narcissus;
@@ -96,7 +100,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_SAVE_FILE, METHOD_CONTAINS_KEY, METHOD_IIF, METHOD_GET_NAME,
 			METHOD_SORT, METHOD_CREATE_IMAGE_FORMAT_COMPARATOR, METHOD_IS_ANNOTATION_PRESENT, METHOD_GET_ANNOTATION,
 			METHOD_GET_PREFERRED_SIZE, METHOD_STREAM, METHOD_FILTER, METHOD_TO_LIST, METHOD_SET_PREFERRED_SIZE,
-			METHOD_MAX, METHOD_TO_ARRAY = null;
+			METHOD_MAX, METHOD_TO_ARRAY, METHOD_TEST_AND_RUN, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4 = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -215,6 +219,14 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		(METHOD_MAX = clz.getDeclaredMethod("max", Stream.class, Comparator.class)).setAccessible(true);
 		//
 		(METHOD_TO_ARRAY = clz.getDeclaredMethod("toArray", Collection.class, Object[].class)).setAccessible(true);
+		//
+		(METHOD_TEST_AND_RUN = clz.getDeclaredMethod("testAndRun", Boolean.TYPE, Runnable.class)).setAccessible(true);
+		//
+		(METHOD_TEST_AND_ACCEPT3 = clz.getDeclaredMethod("testAndAccept", Predicate.class, Object.class,
+				Consumer.class)).setAccessible(true);
+		//
+		(METHOD_TEST_AND_ACCEPT4 = clz.getDeclaredMethod("testAndAccept", BiPredicate.class, Object.class, Object.class,
+				BiConsumer.class)).setAccessible(true);
 		//
 	}
 
@@ -1772,6 +1784,81 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 	private static <T> T[] toArray(final Collection<T> instance, final T[] array) throws Throwable {
 		try {
 			return (T[]) METHOD_TO_ARRAY.invoke(null, instance, array);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testTestAndRun() {
+		//
+		Assertions.assertDoesNotThrow(() -> testAndRun(true, null));
+		//
+		if (GraphicsEnvironment.isHeadless()) {
+			//
+			Assertions.assertDoesNotThrow(() -> testAndRun(true, Runnables.doNothing()));
+			//
+		} else {
+			//
+			Assertions.assertDoesNotThrow(() -> testAndRun(false, null));
+			//
+		} // if
+			//
+	}
+
+	private static void testAndRun(final boolean b, final Runnable runnable) throws Throwable {
+		try {
+			METHOD_TEST_AND_RUN.invoke(null, b, runnable);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testTestAndAccept() {
+		//
+		Assertions.assertDoesNotThrow(() -> testAndAccept(null, null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> testAndAccept(null, null, null, null));
+		//
+		if (GraphicsEnvironment.isHeadless()) {
+			//
+			Assertions.assertDoesNotThrow(() -> testAndAccept(Predicates.alwaysTrue(), null, null));
+			//
+			Assertions.assertDoesNotThrow(() -> testAndAccept(Predicates.alwaysTrue(), null, Consumers.nop()));
+			//
+			Assertions.assertDoesNotThrow(() -> testAndAccept((a, b) -> true, null, null, null));
+			//
+			Assertions.assertDoesNotThrow(() -> testAndAccept((a, b) -> true, null, null, (a, b) -> {
+			}));
+			//
+		} else {
+			//
+			Assertions.assertDoesNotThrow(() -> testAndAccept(Predicates.alwaysTrue(), null, null));
+			//
+			Assertions.assertDoesNotThrow(() -> testAndAccept(Predicates.alwaysFalse(), null, null));
+			//
+			Assertions.assertDoesNotThrow(() -> testAndAccept((a, b) -> true, null, null, null));
+			//
+			Assertions.assertDoesNotThrow(() -> testAndAccept((a, b) -> false, null, null, null));
+			//
+		} // if
+			//
+	}
+
+	private static <T, E extends Throwable> void testAndAccept(final Predicate<T> predicate, final T value,
+			final Consumer<T> consumer) throws Throwable {
+		try {
+			METHOD_TEST_AND_ACCEPT3.invoke(null, predicate, value, consumer);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static <T, U> void testAndAccept(final BiPredicate<T, U> predicate, final T t, final U u,
+			final BiConsumer<T, U> consumer) throws Throwable {
+		try {
+			METHOD_TEST_AND_ACCEPT4.invoke(null, predicate, t, u, consumer);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

@@ -44,6 +44,8 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.BiConsumer;
+import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntConsumer;
@@ -88,6 +90,7 @@ import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
+import org.meeuw.functional.Predicates;
 import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
 import org.springframework.beans.config.Title;
 import org.springframework.beans.factory.InitializingBean;
@@ -300,27 +303,29 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 						x -> Objects.equals(getName(x), "component"))),
 				x -> IterableUtils.get(x, 0), null);
 		//
-		if (f != null && Narcissus.getObjectField(this, f) == null) {
-			//
-			return;
-			//
-		} // if
-			//
-		add(new JLabel("Text"));
+		final boolean isGui = f == null || Narcissus.getObjectField(this, f) != null;
+		//
+		final Predicate<Component> predicate = Predicates.always(isGui, null);
+		//
+		testAndAccept(predicate, new JLabel("Text"), this::add);
 		//
 		final String growx = "growx";
 		//
-		add(tfText = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
-				"org.springframework.context.support.OnlineNHKJapanesePronunciationAccentGui.text")),
-				String.format("%1$s,wmin %2$s,span %3$s", growx, "100px", 3));
+		final BiPredicate<Component, Object> biPredicate = Predicates.biAlways(isGui, null);
+		//
+		testAndAccept(biPredicate,
+				tfText = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
+						"org.springframework.context.support.OnlineNHKJapanesePronunciationAccentGui.text")),
+				String.format("%1$s,wmin %2$s,span %3$s", growx, "100px", 3), this::add);
 		//
 		final String wrap = "wrap";
 		//
-		add(btnExecute = new JButton("Execute"), String.format("%1$s,span %2$s", wrap, 2));
+		testAndAccept(biPredicate, btnExecute = new JButton("Execute"), String.format("%1$s,span %2$s", wrap, 2),
+				this::add);
 		//
 		btnExecute.addActionListener(this);
 		//
-		add(new JLabel(""));
+		testAndAccept(predicate, new JLabel(""), this::add);
 		//
 		(jcbPronounication = new JComboBox<>(mcbmPronounication = new DefaultComboBoxModel<>()))
 				.addActionListener(this);
@@ -351,19 +356,21 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 
 		});
 		//
-		add(jcbPronounication, String.format("%1$s,%2$s,span %3$s", wrap, growx, 3));
+		testAndAccept(biPredicate, jcbPronounication, String.format("%1$s,%2$s,span %3$s", wrap, growx, 3), this::add);
 		//
-		add(new JLabel("Audio"));
+		testAndAccept(predicate, new JLabel("Audio"), this::add);
 		//
-		add(btnPlayAudio = new JButton("Play"));
+		testAndAccept(predicate, btnPlayAudio = new JButton("Play"), this::add);
 		//
-		add(new JComboBox<>(mcbmAudioFormat = new DefaultComboBoxModel<>()), String.format("%1$s,span %2$s", growx, 2));
+		testAndAccept(biPredicate, new JComboBox<>(mcbmAudioFormat = new DefaultComboBoxModel<>()),
+				String.format("%1$s,span %2$s", growx, 2), this::add);
 		//
-		add(btnSaveAudio = new JButton("Save"), wrap);
+		testAndAccept(biPredicate, btnSaveAudio = new JButton("Save"), wrap, this::add);
 		//
-		add(new JLabel("Image"));
+		testAndAccept(predicate, new JLabel("Image"), this::add);
 		//
-		add(btnCopyPitchAccentImage = new JButton("Copy Image"), String.format("span %1$s", 2));
+		testAndAccept(biPredicate, btnCopyPitchAccentImage = new JButton("Copy Image"), String.format("span %1$s", 2),
+				this::add);
 		//
 		// Image Format
 		//
@@ -396,15 +403,15 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			//
 		final MutableComboBoxModel<String> mcbm = new DefaultComboBoxModel<>();
 		//
-		add(new JComboBox<>(mcbm), growx);
+		testAndAccept(biPredicate, new JComboBox<>(mcbm), growx, this::add);
 		//
 		forEach(classNames, mcbm::addElement);
 		//
 		cbmImageFormat = mcbm;
 		//
-		add(btnSavePitchAccentImage = new JButton("Save Image"));
+		testAndAccept(predicate, btnSavePitchAccentImage = new JButton("Save Image"), this::add);
 		//
-		add(jlSavePitchAccentImage = new JLabel());
+		testAndAccept(predicate, jlSavePitchAccentImage = new JLabel(), this::add);
 		//
 		addActionListener(this, btnPlayAudio, btnSaveAudio, btnCopyPitchAccentImage, btnSavePitchAccentImage);
 		//
@@ -433,8 +440,27 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 				//
 		});
 		//
-		pack();
+		testAndRun(isGui, this::pack);
 		//
+	}
+
+	private static <T> void testAndRun(final boolean b, final Runnable runnable) {
+		if (b && runnable != null) {
+			runnable.run();
+		}
+	}
+
+	private static <T> void testAndAccept(final Predicate<T> predicate, final T value, final Consumer<T> consumer) {
+		if (predicate != null && predicate.test(value) && consumer != null) {
+			consumer.accept(value);
+		}
+	}
+
+	private static <T, U> void testAndAccept(final BiPredicate<T, U> predicate, final T t, final U u,
+			final BiConsumer<T, U> consumer) {
+		if (predicate != null && predicate.test(t, u) && consumer != null) {
+			consumer.accept(t, u);
+		}
 	}
 
 	@Nullable
