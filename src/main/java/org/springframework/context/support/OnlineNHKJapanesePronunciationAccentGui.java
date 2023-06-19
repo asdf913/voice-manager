@@ -444,20 +444,21 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		//
 	}
 
-	private static void testAndRun(final boolean b, final Runnable runnable) {
+	private static void testAndRun(final boolean b, @Nullable final Runnable runnable) {
 		if (b && runnable != null) {
 			runnable.run();
 		}
 	}
 
-	private static <T> void testAndAccept(final Predicate<T> predicate, final T value, final Consumer<T> consumer) {
+	private static <T> void testAndAccept(@Nullable final Predicate<T> predicate, final T value,
+			@Nullable final Consumer<T> consumer) {
 		if (predicate != null && predicate.test(value) && consumer != null) {
 			consumer.accept(value);
 		}
 	}
 
-	private static <T, U> void testAndAccept(final BiPredicate<T, U> predicate, final T t, final U u,
-			final BiConsumer<T, U> consumer) {
+	private static <T, U> void testAndAccept(@Nullable final BiPredicate<T, U> predicate, final T t, final U u,
+			@Nullable final BiConsumer<T, U> consumer) {
 		if (predicate != null && predicate.test(t, u) && consumer != null) {
 			consumer.accept(t, u);
 		}
