@@ -444,7 +444,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		//
 	}
 
-	private static <T> void testAndRun(final boolean b, final Runnable runnable) {
+	private static void testAndRun(final boolean b, final Runnable runnable) {
 		if (b && runnable != null) {
 			runnable.run();
 		}
