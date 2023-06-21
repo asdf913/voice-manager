@@ -6,7 +6,9 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Predicate;
@@ -35,6 +37,8 @@ import com.kichik.pecoff4j.resources.VersionInfo;
 import com.kichik.pecoff4j.util.ResourceHelper;
 import com.sun.jna.Library;
 import com.sun.jna.Native;
+import com.sun.jna.Pointer;
+import com.sun.jna.ptr.IntByReference;
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
@@ -61,7 +65,7 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider, Lookup, I
 		public void writeVoiceToFile(@Nullable final int[] text, final int textLength, @Nullable final String voiceId,
 				final int rate, final int volume, @Nullable final int[] fileName, final int fileNameLength);
 
-		public String getVoiceIds(final String requiredAttributes, final String optionalAttributes);
+		public Pointer getVoiceIds(final IntByReference length);
 
 		public String getVoiceAttribute(@Nullable final String voiceId, final String attribute);
 
@@ -168,7 +172,31 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider, Lookup, I
 	@Override
 	public String[] getVoiceIds() {
 		//
-		return StringUtils.split(Jna.INSTANCE != null ? Jna.INSTANCE.getVoiceIds("", "") : null, ',');
+		final IntByReference lengthIbr = new IntByReference();
+		//
+		final Jna instance = Jna.INSTANCE;
+		//
+		final Pointer pointer = instance != null ? instance.getVoiceIds(lengthIbr) : null;
+		//
+		final int length = lengthIbr.getValue();
+		//
+		final Pointer[] pointers = pointer != null ? pointer.getPointerArray(0, length) : null;
+		//
+		List<String> list = null;
+		//
+		for (int i = 0; pointers != null && i < Math.min(pointers.length, length); i++) {
+			//
+			if (list == null) {
+				//
+				list = new ArrayList<>();
+				//
+			} // if
+				//
+			list.add(pointers[i].getWideString(0));
+			//
+		} // for
+			//
+		return list != null ? list.toArray(new String[] {}) : null;
 		//
 	}
 

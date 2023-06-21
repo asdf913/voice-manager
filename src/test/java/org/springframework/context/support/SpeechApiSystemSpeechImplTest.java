@@ -25,6 +25,7 @@ import com.kichik.pecoff4j.PE;
 import com.kichik.pecoff4j.ResourceEntry;
 
 class SpeechApiSystemSpeechImplTest {
+
 	private static Class<?> CLASS_JNA = null;
 
 	private static Method METHOD_CAST, METHOD_TEST_AND_APPLY, METHOD_GET_VERSION_INFO_MAP0,

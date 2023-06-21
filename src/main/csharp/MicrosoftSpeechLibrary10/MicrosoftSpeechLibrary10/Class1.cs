@@ -1,12 +1,9 @@
-﻿using Microsoft.Win32;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Speech.Synthesis;
-using RGiesecke.DllExport;
 
 namespace MicrosoftSpeechLibrary10
 {
@@ -207,11 +204,30 @@ namespace MicrosoftSpeechLibrary10
         }
 
         [RGiesecke.DllExport.DllExport]
-        public static String getVoiceIds()
+        public static IntPtr getVoiceIds(out int length)
         {
             //
-            return String.Join(",", new SpeechSynthesizer().GetInstalledVoices().Select(x => x != null && x.VoiceInfo != null ? x.VoiceInfo.Id : null).ToArray());
+            string[] ss = new SpeechSynthesizer().GetInstalledVoices().Select(x => x != null && x.VoiceInfo != null ? x.VoiceInfo.Id : null).ToArray();
             //
+            length = ss != null ? ss.Length : 0;
+            //
+            return ConvertStringArrayToIntPtr(ss);
+            //
+        }
+
+        private static IntPtr ConvertStringArrayToIntPtr(string[] array)
+        {
+            IntPtr[] stringPointers = new IntPtr[array.Length];
+
+            for (int i = 0; i < array.Length; i++)
+            {
+                stringPointers[i] = Marshal.StringToHGlobalUni(array[i]);
+            }
+
+            IntPtr arrayPtr = Marshal.AllocHGlobal(IntPtr.Size * array.Length);
+            Marshal.Copy(stringPointers, 0, arrayPtr, array.Length);
+
+            return arrayPtr;
         }
 
         [RGiesecke.DllExport.DllExport]
