@@ -36,17 +36,15 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class MainTest {
 
-	private static Method METHOD_FOR_NAME, METHOD_TO_STRING, METHOD_GET_INSTANCE,
-			METHOD_SHOW_MESSAGE_DIALOG_OR_PRINT_LN, METHOD_CAST, METHOD_GET_BEAN_NAMES_FOR_TYPE,
-			METHOD_GET_BEAN_CLASS_NAME, METHOD_PACK, METHOD_SET_VISIBLE, METHOD_TEST_AND_APPLY,
-			METHOD_GET_SELECTED_VALUE, METHOD_GET_CLASS1, METHOD_GET_CLASS3, METHOD_GET_NAME = null;
+	private static Method METHOD_TO_STRING, METHOD_GET_INSTANCE, METHOD_SHOW_MESSAGE_DIALOG_OR_PRINT_LN, METHOD_CAST,
+			METHOD_GET_BEAN_NAMES_FOR_TYPE, METHOD_GET_BEAN_CLASS_NAME, METHOD_PACK, METHOD_SET_VISIBLE,
+			METHOD_TEST_AND_APPLY, METHOD_GET_SELECTED_VALUE, METHOD_GET_CLASS1, METHOD_GET_CLASS3,
+			METHOD_GET_NAME = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
 		//
 		final Class<?> clz = Main.class;
-		//
-		(METHOD_FOR_NAME = clz.getDeclaredMethod("forName", String.class)).setAccessible(true);
 		//
 		(METHOD_TO_STRING = clz.getDeclaredMethod("toString", Object.class)).setAccessible(true);
 		//
@@ -176,35 +174,6 @@ class MainTest {
 		//
 		listableBeanFactory = Reflection.newProxy(ListableBeanFactory.class, ih = new IH());
 		//
-	}
-
-	@Test
-	void testForName() throws Throwable {
-		//
-//		Assertions.assertNull(forName(null));
-		//
-//		Assertions.assertNull(forName(""));
-//		
-//		Assertions.assertNull(forName(" "));
-		//
-//		Assertions.assertNull(forName("A"));
-		//
-//		Assertions.assertSame(Object.class, forName("java.lang.Object"));
-		//
-	}
-
-	private static Class<?> forName(final String className) throws Throwable {
-		try {
-			final Object obj = METHOD_FOR_NAME.invoke(null, className);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Class) {
-				return (Class<?>) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test
