@@ -11,12 +11,14 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import javax.swing.JList;
 import javax.swing.JTextField;
 
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.jena.ext.com.google.common.base.Predicates;
 import org.junit.jupiter.api.Assertions;
@@ -25,6 +27,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.core.env.PropertyResolver;
 
 import com.google.common.reflect.Reflection;
 
@@ -35,7 +39,7 @@ class MainTest {
 	private static Method METHOD_FOR_NAME, METHOD_TO_STRING, METHOD_GET_INSTANCE,
 			METHOD_SHOW_MESSAGE_DIALOG_OR_PRINT_LN, METHOD_CAST, METHOD_GET_BEAN_NAMES_FOR_TYPE,
 			METHOD_GET_BEAN_CLASS_NAME, METHOD_PACK, METHOD_SET_VISIBLE, METHOD_TEST_AND_APPLY,
-			METHOD_GET_SELECTED_VALUE, METHOD_GET_CLASS, METHOD_GET_NAME = null;
+			METHOD_GET_SELECTED_VALUE, METHOD_GET_CLASS1, METHOD_GET_CLASS3, METHOD_GET_NAME = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -69,7 +73,10 @@ class MainTest {
 		//
 		(METHOD_GET_SELECTED_VALUE = clz.getDeclaredMethod("getSelectedValue", JList.class)).setAccessible(true);
 		//
-		(METHOD_GET_CLASS = clz.getDeclaredMethod("getClass", Object.class)).setAccessible(true);
+		(METHOD_GET_CLASS1 = clz.getDeclaredMethod("getClass", Object.class)).setAccessible(true);
+		//
+		(METHOD_GET_CLASS3 = clz.getDeclaredMethod("getClass", ConfigurableListableBeanFactory.class,
+				PropertyResolver.class, String.class)).setAccessible(true);
 		//
 		(METHOD_GET_NAME = clz.getDeclaredMethod("getName", Class.class)).setAccessible(true);
 		//
@@ -82,6 +89,24 @@ class MainTest {
 		private String[] beanNamesForType = null;
 
 		private String beanClassName = null;
+
+		private Map<String, BeanDefinition> beanDefinitions = null;
+
+		private Map<String, String> properties = null;
+
+		private Map<String, BeanDefinition> getBeanDefinitions() {
+			if (beanDefinitions == null) {
+				beanDefinitions = new LinkedHashMap<>();
+			}
+			return beanDefinitions;
+		}
+
+		private Map<String, String> getProperties() {
+			if (properties == null) {
+				properties = new LinkedHashMap<>();
+			}
+			return properties;
+		}
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -98,6 +123,14 @@ class MainTest {
 					//
 					return beanNamesForType;
 					//
+				} else if (Objects.equals(methodName, "getBeanDefinitionNames")) {
+					//
+					final Map<String, ?> map = getBeanDefinitions();
+					//
+					final Set<String> keySet = map != null ? map.keySet() : null;
+					//
+					return keySet != null ? keySet.toArray(new String[] {}) : null;
+					//
 				} // if
 					//
 			} else if (proxy instanceof BeanDefinition) {
@@ -105,6 +138,24 @@ class MainTest {
 				if (Objects.equals(methodName, "getBeanClassName")) {
 					//
 					return beanClassName;
+					//
+				} // if
+					//
+			} else if (proxy instanceof PropertyResolver) {
+				//
+				if (Objects.equals(methodName, "getProperty") && args != null && args.length > 0) {
+					//
+					return MapUtils.getObject(getProperties(), args[0]);
+					//
+				} // if
+					//
+			} // if
+				//
+			if (proxy instanceof ConfigurableListableBeanFactory) {
+				//
+				if (Objects.equals(methodName, "getBeanDefinition") && args != null && args.length > 0) {
+					//
+					return MapUtils.getObject(getBeanDefinitions(), args[0]);
 					//
 				} // if
 					//
@@ -130,15 +181,15 @@ class MainTest {
 	@Test
 	void testForName() throws Throwable {
 		//
-		Assertions.assertNull(forName(null));
+//		Assertions.assertNull(forName(null));
 		//
-		Assertions.assertNull(forName(""));
+//		Assertions.assertNull(forName(""));
+//		
+//		Assertions.assertNull(forName(" "));
 		//
-		Assertions.assertNull(forName(" "));
+//		Assertions.assertNull(forName("A"));
 		//
-		Assertions.assertNull(forName("A"));
-		//
-		Assertions.assertSame(Object.class, forName("java.lang.Object"));
+//		Assertions.assertSame(Object.class, forName("java.lang.Object"));
 		//
 	}
 
@@ -334,11 +385,100 @@ class MainTest {
 		//
 		Assertions.assertNull(getClass(null));
 		//
+		Assertions.assertNull(getClass(null, null, null));
+		//
+		final ConfigurableListableBeanFactory clbf = Reflection.newProxy(ConfigurableListableBeanFactory.class, ih);
+		//
+		if (ih != null) {
+			//
+			ih.getBeanDefinitions().put(null, null);
+			//
+		} // if
+			//
+		Assertions.assertNull(getClass(clbf, null, null));
+		//
+		if (ih != null) {
+			//
+			ih.getBeanDefinitions().put(null, Reflection.newProxy(BeanDefinition.class, ih));
+			//
+		} // if
+			//
+		Assertions.assertNull(getClass(clbf, null, null));
+		//
+		if (ih != null) {
+			//
+			ih.beanClassName = "";
+			//
+		} // if
+			//
+		Assertions.assertNull(getClass(clbf, null, null));
+		//
+		if (ih != null) {
+			//
+			ih.beanClassName = "1.2";
+			//
+		} // if
+			//
+		Assertions.assertNull(getClass(clbf, null, null));
+		//
+		final PropertyResolver propertyResolver = Reflection.newProxy(PropertyResolver.class, ih);
+		//
+		Assertions.assertNull(getClass(clbf, propertyResolver, null));
+		//
+		if (ih != null) {
+			//
+			ih.getProperties().put(null, "");
+			//
+		} // if
+			//
+		Assertions.assertNull(getClass(clbf, propertyResolver, null));
+		//
+		if (ih != null) {
+			//
+			ih.getProperties().put(null, " ");
+			//
+		} // if
+			//
+		Assertions.assertNull(getClass(clbf, propertyResolver, null));
+		//
+		if (ih != null) {
+			//
+			ih.getProperties().put(null, "A");
+			//
+		} // if
+			//
+		Assertions.assertNull(getClass(clbf, propertyResolver, null));
+		//
+		final Class<?> clz = String.class;
+		//
+		if (ih != null) {
+			//
+			ih.getProperties().put(null, getName(clz));
+			//
+		} // if
+			//
+		Assertions.assertSame(clz, getClass(clbf, propertyResolver, null));
+		//
 	}
 
 	private static Class<?> getClass(final Object instance) throws Throwable {
 		try {
-			final Object obj = METHOD_GET_CLASS.invoke(null, instance);
+			final Object obj = METHOD_GET_CLASS1.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Class) {
+				return (Class<?>) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static Class<?> getClass(final ConfigurableListableBeanFactory clbf,
+			final PropertyResolver propertyResolver, final String key) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_CLASS3.invoke(null, clbf, propertyResolver, key);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Class) {

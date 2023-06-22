@@ -27,6 +27,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactoryUtil;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.core.env.PropertyResolver;
 import org.springframework.core.env.PropertyResolverUtil;
 
 import com.google.common.collect.LinkedHashMultimap;
@@ -47,53 +48,11 @@ public class Main {
 		try (final ConfigurableApplicationContext beanFactory = new ClassPathXmlApplicationContext(
 				"applicationContext.xml")) {
 			//
-			final String string = PropertyResolverUtil.getProperty(beanFactory.getEnvironment(),
-					"org.springframework.context.support.Main.class");
-			//
-			Class<?> clz = forName(string);
-			//
-			final PrintStream ps = cast(PrintStream.class, FieldUtils.readDeclaredStaticField(System.class, "out"));
-			//
 			final ConfigurableListableBeanFactory clbf = beanFactory.getBeanFactory();
 			//
-			if (clz == null) {
-				//
-				final String[] beanDefinitionNames = ListableBeanFactoryUtil.getBeanDefinitionNames(clbf);
-				//
-				BeanDefinition bd = null;
-				//
-				String[] ss = null;
-				//
-				Multimap<String, BeanDefinition> multimap = null;
-				//
-				for (int i = 0; beanDefinitionNames != null && i < beanDefinitionNames.length; i++) {
-					//
-					if ((bd = ConfigurableListableBeanFactoryUtil.getBeanDefinition(clbf,
-							beanDefinitionNames[i])) == null) {
-						//
-						continue;
-						//
-					} // if
-						//
-					if ((ss = StringUtils.split(getBeanClassName(bd), ".")) != null && ss.length > 0
-							&& StringUtils.equals(string, ss[ss.length - 1])) {
-						//
-						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), string,
-								bd);
-						//
-					} // if
-						//
-				} // for
-					//
-				if (MultimapUtil.size(multimap) == 1) {
-					//
-					clz = forName(MultimapUtil.values(multimap).stream().map(Main::getBeanClassName)
-							.reduce((first, second) -> first).orElse(null));
-					//
-				} // if
-					//
-			} // if
-				//
+			Class<?> clz = getClass(clbf, beanFactory.getEnvironment(),
+					"org.springframework.context.support.Main.class");
+			//
 			if (clz == null) {
 				//
 				final JList<Object> list = testAndApply(Objects::nonNull,
@@ -106,6 +65,8 @@ public class Main {
 				//
 			} // if
 				//
+			final PrintStream ps = cast(PrintStream.class, FieldUtils.readDeclaredStaticField(System.class, "out"));
+			//
 			if (clz == null) {
 				//
 				showMessageDialogOrPrintln(ps, "java.lang.Class is null");
@@ -122,6 +83,56 @@ public class Main {
 			//
 		} // try
 			//
+	}
+
+	private static Class<?> getClass(final ConfigurableListableBeanFactory clbf,
+			final PropertyResolver propertyResolver, final String key) throws IllegalAccessException {
+		//
+		final String string = PropertyResolverUtil.getProperty(propertyResolver, key);
+		//
+		Class<?> clz = forName(string);
+		//
+		if (clz == null) {
+			//
+			final String[] beanDefinitionNames = ListableBeanFactoryUtil.getBeanDefinitionNames(clbf);
+			//
+			BeanDefinition bd = null;
+			//
+			String[] ss = null;
+			//
+			Multimap<String, BeanDefinition> multimap = null;
+			//
+			for (int i = 0; beanDefinitionNames != null && i < beanDefinitionNames.length; i++) {
+				//
+				if ((bd = ConfigurableListableBeanFactoryUtil.getBeanDefinition(clbf,
+						beanDefinitionNames[i])) == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if ((ss = StringUtils.split(getBeanClassName(bd), ".")) != null && ss.length > 0
+						&& StringUtils.equals(string, ss[ss.length - 1])) {
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), string,
+							bd);
+					//
+				} // if
+					//
+			} // for
+				//
+			if (MultimapUtil.size(multimap) == 1) {
+				//
+				clz = forName(MultimapUtil.values(multimap).stream().map(Main::getBeanClassName)
+						.reduce((first, second) -> first).orElse(null));
+				//
+			} // if
+				//
+		} // if
+			//
+		return clz;
+		//
+
 	}
 
 	@Nullable
