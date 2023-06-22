@@ -151,16 +151,12 @@ public class Main {
 			//
 			try {
 				//
-				if (Narcissus.getObjectField(instance, Component.class.getDeclaredField("peer")) == null) {
+				if (Narcissus.getObjectField(instance, Component.class.getDeclaredField("peer")) == null && Objects
+						.equals("sun.awt.HeadlessToolkit", getName(getClass(Narcissus.invokeObjectMethod(instance,
+								Component.class.getDeclaredMethod("getComponentFactory")))))) {// TODO
 					//
-					if (Objects.equals("sun.awt.HeadlessToolkit",
-							getName(getClass(Narcissus.invokeObjectMethod(instance,
-									Component.class.getDeclaredMethod("getComponentFactory")))))) {// TODO
-						//
-						return;
-						//
-					} // if
-						//
+					return;
+					//
 				} // if
 					//
 			} catch (final NoSuchFieldException | NoSuchMethodException e) {
