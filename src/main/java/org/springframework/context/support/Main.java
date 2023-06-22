@@ -183,11 +183,11 @@ public class Main {
 			//
 	}
 
-	private static Class<?> getClass(final Object instance) {
+	private static Class<?> getClass(@Nullable final Object instance) {
 		return instance != null ? instance.getClass() : null;
 	}
 
-	private static String getName(final Class<?> instance) {
+	private static String getName(@Nullable final Class<?> instance) {
 		return instance != null ? instance.getName() : null;
 	}
 
