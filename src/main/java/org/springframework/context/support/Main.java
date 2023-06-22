@@ -85,6 +85,7 @@ public class Main {
 			//
 	}
 
+	@Nullable
 	private static Class<?> getClass(final ConfigurableListableBeanFactory clbf,
 			final PropertyResolver propertyResolver, final String key) {
 		//
