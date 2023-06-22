@@ -86,7 +86,7 @@ public class Main {
 	}
 
 	private static Class<?> getClass(final ConfigurableListableBeanFactory clbf,
-			final PropertyResolver propertyResolver, final String key) throws IllegalAccessException {
+			final PropertyResolver propertyResolver, final String key) {
 		//
 		final String string = PropertyResolverUtil.getProperty(propertyResolver, key);
 		//
