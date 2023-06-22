@@ -2,18 +2,22 @@ package org.springframework.context.support;
 
 import java.awt.Component;
 import java.awt.GraphicsEnvironment;
+import java.awt.HeadlessException;
 import java.awt.Window;
 import java.io.PrintStream;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import javax.swing.JList;
 import javax.swing.JTextField;
@@ -25,6 +29,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -38,8 +43,8 @@ class MainTest {
 
 	private static Method METHOD_TO_STRING, METHOD_GET_INSTANCE, METHOD_SHOW_MESSAGE_DIALOG_OR_PRINT_LN, METHOD_CAST,
 			METHOD_GET_BEAN_NAMES_FOR_TYPE, METHOD_GET_BEAN_CLASS_NAME, METHOD_PACK, METHOD_SET_VISIBLE,
-			METHOD_TEST_AND_APPLY, METHOD_GET_SELECTED_VALUE, METHOD_GET_CLASS1, METHOD_GET_CLASS3,
-			METHOD_GET_NAME = null;
+			METHOD_TEST_AND_APPLY, METHOD_GET_SELECTED_VALUE, METHOD_GET_CLASS1, METHOD_GET_CLASS3, METHOD_GET_NAME,
+			METHOD_IS_RAISE_THROWABLE_ONLY, METHOD_MAP, METHOD_ERROR_OR_PRINT_STACK_TRACE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -78,6 +83,14 @@ class MainTest {
 		//
 		(METHOD_GET_NAME = clz.getDeclaredMethod("getName", Class.class)).setAccessible(true);
 		//
+		(METHOD_IS_RAISE_THROWABLE_ONLY = clz.getDeclaredMethod("isRaiseThrowableOnly", Class.class, Method.class))
+				.setAccessible(true);
+		//
+		(METHOD_MAP = clz.getDeclaredMethod("map", Stream.class, Function.class)).setAccessible(true);
+		//
+		(METHOD_ERROR_OR_PRINT_STACK_TRACE = clz.getDeclaredMethod("errorOrPrintStackTrace", Logger.class,
+				Throwable.class)).setAccessible(true);
+		//
 	}
 
 	private class IH implements InvocationHandler {
@@ -109,6 +122,12 @@ class MainTest {
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
+			if (Objects.equals(method != null ? method.getReturnType() : null, Void.TYPE)) {
+				//
+				return null;
+				//
+			} // if
+				//
 			final String methodName = method != null ? method.getName() : null;
 			//
 			if (proxy instanceof ListableBeanFactory) {
@@ -154,6 +173,14 @@ class MainTest {
 				if (Objects.equals(methodName, "getBeanDefinition") && args != null && args.length > 0) {
 					//
 					return MapUtils.getObject(getBeanDefinitions(), args[0]);
+					//
+				} // if
+					//
+			} else if (proxy instanceof Stream) {
+				//
+				if (Objects.equals(methodName, "map")) {
+					//
+					return null;
 					//
 				} // if
 					//
@@ -540,6 +567,91 @@ class MainTest {
 	private static <E> E getSelectedValue(final JList<E> instance) throws Throwable {
 		try {
 			return (E) METHOD_GET_SELECTED_VALUE.invoke(null, instance);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testIsRaiseHeadlessExceptionOnly() throws Throwable {
+		//
+		Assertions.assertFalse(isRaiseThrowableOnly(null, null));
+		//
+		final Method[] ms = MainTest.class.getDeclaredMethods();
+		//
+		final Stream<Method> stream = testAndApply(Objects::nonNull, MainTest.class.getDeclaredMethods(),
+				Arrays::stream, null);
+		//
+		if (stream != null && stream.anyMatch(x -> x != null && Objects.equals(x.getName(), "createWindow")
+				&& Arrays.equals(x.getParameterTypes(), new Class<?>[] { Window.class }))) {
+			//
+			Assertions.assertTrue(isRaiseThrowableOnly(MainTest.class,
+					MainTest.class.getDeclaredMethod("createWindow", Window.class)));
+			//
+		} // if
+			//
+	}
+
+	private static Boolean isRaiseThrowableOnly(final Class<?> clz, final Method method) throws Throwable {
+		try {
+			final Object obj = METHOD_IS_RAISE_THROWABLE_ONLY.invoke(null, clz, method);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Boolean) {
+				return (Boolean) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static Object createWindow(final Window target) throws HeadlessException {
+		throw new HeadlessException();
+	}
+
+	@Test
+	void testMap() throws Throwable {
+		//
+		Assertions.assertNull(map(Stream.empty(), null));
+		//
+		Assertions.assertNull(map(Reflection.newProxy(Stream.class, ih), null));
+		//
+	}
+
+	private static <T, R> Stream<R> map(final Stream<T> instance, final Function<? super T, ? extends R> mapper)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_MAP.invoke(null, instance, mapper);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Stream) {
+				return (Stream) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testErrorOrPrintStackTrace() throws Throwable {
+		//
+		Assertions.assertDoesNotThrow(() -> errorOrPrintStackTrace(null, null));
+		//
+		final Throwable throwable = cast(Throwable.class, Narcissus.allocateInstance(Throwable.class));
+		//
+		Assertions.assertDoesNotThrow(() -> errorOrPrintStackTrace(null, throwable));
+		//
+		final Logger logger = Reflection.newProxy(Logger.class, ih);
+		//
+		Assertions.assertDoesNotThrow(() -> errorOrPrintStackTrace(logger, throwable));
+		//
+	}
+
+	private static void errorOrPrintStackTrace(final Logger logger, final Throwable throwable) throws Throwable {
+		try {
+			METHOD_ERROR_OR_PRINT_STACK_TRACE.invoke(null, logger, throwable);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

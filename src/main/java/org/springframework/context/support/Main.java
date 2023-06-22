@@ -3,16 +3,39 @@ package org.springframework.context.support;
 import java.awt.Component;
 import java.awt.GraphicsEnvironment;
 import java.awt.Window;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintStream;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 
+import org.apache.bcel.classfile.ClassParser;
+import org.apache.bcel.classfile.ClassParserUtil;
+import org.apache.bcel.classfile.ConstantPool;
+import org.apache.bcel.classfile.FieldOrMethodUtil;
+import org.apache.bcel.classfile.JavaClass;
+import org.apache.bcel.generic.ATHROW;
+import org.apache.bcel.generic.ConstantPoolGen;
+import org.apache.bcel.generic.DUP;
+import org.apache.bcel.generic.INVOKESPECIAL;
+import org.apache.bcel.generic.Instruction;
+import org.apache.bcel.generic.InstructionListUtil;
+import org.apache.bcel.generic.InvokeInstruction;
+import org.apache.bcel.generic.MethodGen;
+import org.apache.bcel.generic.MethodGenUtil;
+import org.apache.bcel.generic.NEW;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -163,32 +186,131 @@ public class Main {
 			//
 			try {
 				//
-				if (Narcissus.getObjectField(instance, Component.class.getDeclaredField("peer")) == null && Objects
-						.equals("sun.awt.HeadlessToolkit", getName(getClass(Narcissus.invokeObjectMethod(instance,
-								Component.class.getDeclaredMethod("getComponentFactory")))))) {// TODO
+				if (Narcissus.getObjectField(instance, Component.class.getDeclaredField("peer")) == null) {
 					//
-					return;
+					final Class<?> clz = getClass(Narcissus.invokeObjectMethod(instance,
+							Component.class.getDeclaredMethod("getComponentFactory")));
 					//
+					if (isRaiseThrowableOnly(
+							getClass(Narcissus.invokeObjectMethod(instance,
+									Component.class.getDeclaredMethod("getComponentFactory"))),
+							clz != null ? clz.getDeclaredMethod("createWindow", Window.class) : null)) {
+						//
+						return;
+						//
+					} // if
+						//
 				} // if
 					//
 			} catch (final NoSuchFieldException | NoSuchMethodException e) {
 				//
-				if (LOG != null) {
-					//
-					LOG.error(e.getMessage(), e);
-					//
-				} else if (e != null) {
-					//
-					e.printStackTrace();
-					//
-				} // if
-					//
+				errorOrPrintStackTrace(LOG, e);
 			} // try
 				//
 			instance.pack();
 			//
 		} // if
 			//
+	}
+
+	private static void errorOrPrintStackTrace(final Logger logger, final Throwable throwable) {
+		//
+		if (throwable == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		if (logger != null) {
+			//
+			logger.error(throwable.getMessage(), throwable);
+			//
+		} else {
+			//
+			throwable.printStackTrace();
+			//
+		} // if
+			//
+	}
+
+	private static boolean isRaiseThrowableOnly(final Class<?> clz, final Method method) {
+		//
+		try (final InputStream is = clz != null
+				? clz.getResourceAsStream(String.format("/%1$s.class", StringUtils.replace(getName(clz), ".", "/")))
+				: null) {
+			//
+			final JavaClass javaClass = ClassParserUtil
+					.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null));
+			//
+			final org.apache.bcel.classfile.Method m = javaClass != null ? javaClass.getMethod(method) : null;
+			//
+			final Instruction[] ins = InstructionListUtil.getInstructions(MethodGenUtil
+					.getInstructionList(testAndApply(Objects::nonNull, m, x -> new MethodGen(x, null, null), null)));
+			//
+			final ConstantPool cp = FieldOrMethodUtil.getConstantPool(m);
+			//
+			ConstantPoolGen cpg = null;
+			//
+			final int length = ins != null ? ins.length : 0;
+			//
+			String className = null;
+			//
+			for (int i = 0; i < length; i++) {
+				//
+				if (ins[i] instanceof InvokeInstruction ii) {
+					//
+					className = ii != null ? ii.getClassName(cpg = ObjectUtils.getIfNull(cpg,
+							() -> testAndApply(Objects::nonNull, cp, ConstantPoolGen::new, null))) : null;
+					//
+				} // if
+					//
+			} // for
+				//
+				// The below method
+				//
+				// void methodA(){throw new RuntimeException();}
+				//
+				// generates
+				//
+				// new[187](3) 371
+				// dup[89](1)
+				// invokespecial[183](3) 373
+				// athrow[191](1)
+				//
+				// instructions
+				//
+			if (Objects.equals(Arrays.asList(NEW.class, DUP.class, INVOKESPECIAL.class, ATHROW.class),
+					toList(map(testAndApply(Objects::nonNull, ins, Arrays::stream, null), x -> getClass(x))))) {
+				//
+				final Class<?> c = forName(className);
+				//
+				if (c != null && Throwable.class.isAssignableFrom(c)) {
+					//
+					return true;
+					//
+				} // if
+					//
+			} // if
+				//
+		} catch (final IOException e) {
+			//
+			errorOrPrintStackTrace(LOG, e);
+			//
+		} // try
+			//
+		return false;
+		//
+	}
+
+	private static <T, R> Stream<R> map(final Stream<T> instance, final Function<? super T, ? extends R> mapper) {
+		//
+		return instance != null && (Proxy.isProxyClass(getClass(instance)) || mapper != null) ? instance.map(mapper)
+				: null;
+		//
+	}
+
+	private static <T> List<T> toList(final Stream<T> instance) {
+		return instance != null ? instance.toList() : null;
 	}
 
 	@Nullable
