@@ -19,6 +19,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.ListableBeanFactoryUtil;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -31,7 +33,11 @@ import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
 
+import io.github.toolfactory.narcissus.Narcissus;
+
 public class Main {
+
+	private static final Logger LOG = LoggerFactory.getLogger(Main.class);
 
 	private Main() {
 	}
@@ -140,9 +146,49 @@ public class Main {
 	}
 
 	private static void pack(@Nullable final Window instance) {
+		//
 		if (instance != null) {
+			//
+			try {
+				//
+				if (Narcissus.getObjectField(instance, Component.class.getDeclaredField("peer")) == null) {
+					//
+					if (Objects.equals("sun.awt.HeadlessToolkit",
+							getName(getClass(Narcissus.invokeObjectMethod(instance,
+									Component.class.getDeclaredMethod("getComponentFactory")))))) {// TODO
+						//
+						return;
+						//
+					} // if
+						//
+				} // if
+					//
+			} catch (final NoSuchFieldException | NoSuchMethodException e) {
+				//
+				if (LOG != null) {
+					//
+					LOG.error(e.getMessage(), e);
+					//
+				} else if (e != null) {
+					//
+					e.printStackTrace();
+					//
+				} // if
+					//
+			} // try
+				//
 			instance.pack();
-		}
+			//
+		} // if
+			//
+	}
+
+	private static Class<?> getClass(final Object instance) {
+		return instance != null ? instance.getClass() : null;
+	}
+
+	private static String getName(final Class<?> instance) {
+		return instance != null ? instance.getName() : null;
 	}
 
 	private static void setVisible(@Nullable final Component instance, boolean b) {

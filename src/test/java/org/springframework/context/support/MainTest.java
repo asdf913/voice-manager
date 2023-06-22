@@ -2,14 +2,11 @@ package org.springframework.context.support;
 
 import java.awt.Component;
 import java.awt.GraphicsEnvironment;
-import java.awt.HeadlessException;
 import java.awt.Window;
 import java.io.PrintStream;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -23,7 +20,6 @@ import javax.swing.JTextField;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.jena.ext.com.google.common.base.Predicates;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.AssertionsUtil;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,7 +35,7 @@ class MainTest {
 	private static Method METHOD_FOR_NAME, METHOD_TO_STRING, METHOD_GET_INSTANCE,
 			METHOD_SHOW_MESSAGE_DIALOG_OR_PRINT_LN, METHOD_CAST, METHOD_GET_BEAN_NAMES_FOR_TYPE,
 			METHOD_GET_BEAN_CLASS_NAME, METHOD_PACK, METHOD_SET_VISIBLE, METHOD_TEST_AND_APPLY,
-			METHOD_GET_SELECTED_VALUE = null;
+			METHOD_GET_SELECTED_VALUE, METHOD_GET_CLASS, METHOD_GET_NAME = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -72,6 +68,10 @@ class MainTest {
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
 		//
 		(METHOD_GET_SELECTED_VALUE = clz.getDeclaredMethod("getSelectedValue", JList.class)).setAccessible(true);
+		//
+		(METHOD_GET_CLASS = clz.getDeclaredMethod("getClass", Object.class)).setAccessible(true);
+		//
+		(METHOD_GET_NAME = clz.getDeclaredMethod("getName", Class.class)).setAccessible(true);
 		//
 	}
 
@@ -150,7 +150,7 @@ class MainTest {
 			} else if (obj instanceof Class) {
 				return (Class<?>) obj;
 			}
-			throw new Throwable(toString(obj.getClass()));
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -175,7 +175,7 @@ class MainTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(toString(obj.getClass()));
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -289,7 +289,7 @@ class MainTest {
 			} else if (obj instanceof String[]) {
 				return (String[]) obj;
 			}
-			throw new Throwable(toString(obj.getClass()));
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -312,7 +312,7 @@ class MainTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(toString(obj.getClass()));
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -323,41 +323,52 @@ class MainTest {
 		//
 		Assertions.assertDoesNotThrow(() -> pack(null));
 		//
-		if (GraphicsEnvironment.isHeadless()) {
-			//
-			final Window window = cast(Window.class, Narcissus.allocateInstance(Window.class));
-			//
-			final FileSystem fs = FileSystems.getDefault();
-			//
-			if (Objects.equals("sun.nio.fs.WindowsFileSystemProvider",
-					getName(getClass(fs != null ? fs.provider() : null)))) {
-				//
-				AssertionsUtil.assertThrowsAndEquals(HeadlessException.class, "{}", () -> pack(window));
-				//
-			} else {
-				//
-				AssertionsUtil.assertThrowsAndEquals(HeadlessException.class,
-						String.format("{localizedMessage=%1$s, message=%1$s}",
-								Narcissus.invokeStaticMethod(
-										GraphicsEnvironment.class.getDeclaredMethod("getHeadlessMessage"))),
-						() -> pack(window));
-				//
-			} // if
-				//
-		} else {
-			//
-			Assertions.assertDoesNotThrow(() -> pack(new Window(null)));
-			//
-		} // if
-			//
+		Assertions.assertDoesNotThrow(() -> pack(
+				GraphicsEnvironment.isHeadless() ? cast(Window.class, Narcissus.allocateInstance(Window.class))
+						: new Window(null)));
+		//
 	}
 
-	private static Class<?> getClass(final Object instance) {
-		return instance != null ? instance.getClass() : null;
+	@Test
+	void testGetClass() throws Throwable {
+		//
+		Assertions.assertNull(getClass(null));
+		//
 	}
 
-	private static String getName(final Class<?> instance) {
-		return instance != null ? instance.getName() : null;
+	private static Class<?> getClass(final Object instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_CLASS.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Class) {
+				return (Class<?>) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetName() throws Throwable {
+		//
+		Assertions.assertNull(getName(null));
+		//
+	}
+
+	private static String getName(final Class<?> instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_NAME.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 	private static void pack(final Window instance) throws Throwable {
