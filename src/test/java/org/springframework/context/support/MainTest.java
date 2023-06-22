@@ -577,8 +577,6 @@ class MainTest {
 		//
 		Assertions.assertFalse(isRaiseThrowableOnly(null, null));
 		//
-		final Method[] ms = MainTest.class.getDeclaredMethods();
-		//
 		final Stream<Method> stream = testAndApply(Objects::nonNull, MainTest.class.getDeclaredMethods(),
 				Arrays::stream, null);
 		//
