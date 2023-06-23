@@ -312,6 +312,7 @@ public class Main {
 		//
 	}
 
+	@Nullable
 	private static <T, R> Stream<R> map(@Nullable final Stream<T> instance,
 			@Nullable final Function<? super T, ? extends R> mapper) {
 		//
