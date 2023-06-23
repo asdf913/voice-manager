@@ -193,14 +193,16 @@ public class Main {
 							Narcissus.getDeclaredMethods(Component.class), Arrays::stream, null)
 							.filter(x -> Objects.equals(getName(x), "getComponentFactory")));
 					//
-					if (ms != null && ms.size() > 1) {
+					final int size = IterableUtils.size(ms);
+					//
+					if (size > 1) {
 						//
 						throw new IllegalStateException();
 						//
 					} // if
 						//
 					final Method method = getMethod(getClass(
-							Narcissus.invokeObjectMethod(instance, ms != null && ms.size() == 1 ? ms.get(0) : null)),
+							Narcissus.invokeObjectMethod(instance, size == 1 ? IterableUtils.get(ms, 0) : null)),
 							"createWindow", Window.class);
 					//
 					if (isRaiseThrowableOnly(getDeclaringClass(method), method)) {
