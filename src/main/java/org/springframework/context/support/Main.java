@@ -222,8 +222,8 @@ public class Main {
 			//
 	}
 
-	private static Method getMethod(final Class<?> instance, final String name, final Class<?>... parameterTypes)
-			throws NoSuchMethodException {
+	private static Method getMethod(@Nullable final Class<?> instance, final String name,
+			final Class<?>... parameterTypes) throws NoSuchMethodException {
 		return instance != null ? instance.getMethod(name, parameterTypes) : null;
 	}
 
