@@ -289,7 +289,7 @@ public class Main {
 				// instructions
 				//
 			if (Objects.equals(Arrays.asList(NEW.class, DUP.class, INVOKESPECIAL.class, ATHROW.class),
-					toList(map(testAndApply(Objects::nonNull, ins, Arrays::stream, null), x -> getClass(x))))) {
+					toList(map(testAndApply(Objects::nonNull, ins, Arrays::stream, null), Main::getClass)))) {
 				//
 				final Class<?> c = forName(className);
 				//
