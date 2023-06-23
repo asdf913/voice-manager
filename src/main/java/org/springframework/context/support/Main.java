@@ -6,6 +6,7 @@ import java.awt.Window;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
@@ -190,7 +191,7 @@ public class Main {
 					//
 					final List<Method> ms = toList(testAndApply(Objects::nonNull,
 							Narcissus.getDeclaredMethods(Component.class), Arrays::stream, null)
-							.filter(x -> x != null && Objects.equals(x.getName(), "getComponentFactory")));
+							.filter(x -> Objects.equals(getName(x), "getComponentFactory")));
 					//
 					if (ms != null && ms.size() > 1) {
 						//
@@ -331,6 +332,10 @@ public class Main {
 
 	@Nullable
 	private static String getName(@Nullable final Class<?> instance) {
+		return instance != null ? instance.getName() : null;
+	}
+
+	private static String getName(final Member instance) {
 		return instance != null ? instance.getName() : null;
 	}
 
