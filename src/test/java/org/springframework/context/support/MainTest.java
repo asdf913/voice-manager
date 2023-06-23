@@ -4,6 +4,9 @@ import java.awt.Component;
 import java.awt.GraphicsEnvironment;
 import java.awt.HeadlessException;
 import java.awt.Window;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -296,12 +299,18 @@ class MainTest {
 	}
 
 	@Test
-	void testShowMessageDialogOrPrintln() {
+	void testShowMessageDialogOrPrintln() throws IOException {
 		//
 		if (GraphicsEnvironment.isHeadless()) {
 			//
 			Assertions.assertDoesNotThrow(() -> showMessageDialogOrPrintln(null, null));
 			//
+			try (final OutputStream os = new ByteArrayOutputStream(); final PrintStream ps = new PrintStream(os)) {
+				//
+				Assertions.assertDoesNotThrow(() -> showMessageDialogOrPrintln(ps, null));
+				//
+			} // try
+				//
 		} // if
 			//
 	}
