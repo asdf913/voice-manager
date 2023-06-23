@@ -44,7 +44,6 @@ import org.springframework.core.env.PropertyResolver;
 import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
-import j2html.tags.specialized.ObjectTag;
 
 class MainTest {
 
