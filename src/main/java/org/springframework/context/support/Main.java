@@ -188,13 +188,22 @@ public class Main {
 				//
 				if (Narcissus.getObjectField(instance, Component.class.getDeclaredField("peer")) == null) {
 					//
-					final Class<?> clz = getClass(Narcissus.invokeObjectMethod(instance,
-							Component.class.getDeclaredMethod("getComponentFactory")));
+					final List<Method> ms = toList(testAndApply(Objects::nonNull,
+							Narcissus.getDeclaredMethods(Component.class), Arrays::stream, null)
+							.filter(x -> x != null && Objects.equals(x.getName(), "getComponentFactory")));
 					//
-					if (isRaiseThrowableOnly(
-							getClass(Narcissus.invokeObjectMethod(instance,
-									Component.class.getDeclaredMethod("getComponentFactory"))),
-							clz != null ? clz.getDeclaredMethod("createWindow", Window.class) : null)) {
+					if (ms != null && ms.size() > 1) {
+						//
+						throw new IllegalStateException();
+						//
+					} // if
+						//
+					final Class<?> clz = getClass(
+							Narcissus.invokeObjectMethod(instance, ms != null && ms.size() == 1 ? ms.get(0) : null));
+					//
+					final Method method = clz != null ? clz.getMethod("createWindow", Window.class) : null;
+					//
+					if (isRaiseThrowableOnly(method != null ? method.getDeclaringClass() : null, method)) {
 						//
 						return;
 						//

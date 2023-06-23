@@ -580,8 +580,9 @@ class MainTest {
 		final Stream<Method> stream = testAndApply(Objects::nonNull, MainTest.class.getDeclaredMethods(),
 				Arrays::stream, null);
 		//
-		if (stream != null && stream.anyMatch(x -> x != null && Objects.equals(x.getName(), "createWindow")
-				&& Arrays.equals(x.getParameterTypes(), new Class<?>[] { Window.class }))) {
+		if (!GraphicsEnvironment.isHeadless() && stream != null
+				&& stream.anyMatch(x -> x != null && Objects.equals(x.getName(), "createWindow")
+						&& Arrays.equals(x.getParameterTypes(), new Class<?>[] { Window.class }))) {
 			//
 			Assertions.assertTrue(isRaiseThrowableOnly(MainTest.class,
 					MainTest.class.getDeclaredMethod("createWindow", Window.class)));
