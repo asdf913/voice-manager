@@ -41,6 +41,7 @@ import org.springframework.core.env.PropertyResolver;
 import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
+import j2html.tags.specialized.ObjectTag;
 
 class MainTest {
 
@@ -48,8 +49,8 @@ class MainTest {
 			METHOD_GET_BEAN_NAMES_FOR_TYPE, METHOD_GET_BEAN_CLASS_NAME, METHOD_PACK, METHOD_SET_VISIBLE,
 			METHOD_TEST_AND_APPLY, METHOD_GET_SELECTED_VALUE, METHOD_GET_CLASS1, METHOD_GET_CLASS3,
 			METHOD_GET_NAME_CLASS, METHOD_GET_NAME_MEMBER, METHOD_IS_RAISE_THROWABLE_ONLY, METHOD_MAP,
-			METHOD_ERROR_OR_PRINT_STACK_TRACE, METHOD_GET_CLASS_NAME, METHOD_GET_METHOD,
-			METHOD_GET_DECLARING_CLASS = null;
+			METHOD_ERROR_OR_PRINT_STACK_TRACE, METHOD_GET_CLASS_NAME, METHOD_GET_METHOD, METHOD_GET_DECLARING_CLASS,
+			METHOD_IS_ASSIGNABLE_FROM = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -105,6 +106,9 @@ class MainTest {
 				.setAccessible(true);
 		//
 		(METHOD_GET_DECLARING_CLASS = clz.getDeclaredMethod("getDeclaringClass", Member.class)).setAccessible(true);
+		//
+		(METHOD_IS_ASSIGNABLE_FROM = clz.getDeclaredMethod("isAssignableFrom", Class.class, Class.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -622,13 +626,11 @@ class MainTest {
 			//
 	}
 
-	private static Boolean isRaiseThrowableOnly(final Class<?> clz, final Method method) throws Throwable {
+	private static boolean isRaiseThrowableOnly(final Class<?> clz, final Method method) throws Throwable {
 		try {
 			final Object obj = METHOD_IS_RAISE_THROWABLE_ONLY.invoke(null, clz, method);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Boolean) {
-				return (Boolean) obj;
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
@@ -744,6 +746,29 @@ class MainTest {
 				return null;
 			} else if (obj instanceof Class) {
 				return (Class) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testIsAssignableFrom() throws Throwable {
+		//
+		Assertions.assertFalse(isAssignableFrom(null, null));
+		//
+		Assertions.assertFalse(isAssignableFrom(Object.class, null));
+		//
+		Assertions.assertFalse(isAssignableFrom(CharSequence.class, Object.class));
+		//
+	}
+
+	private static boolean isAssignableFrom(final Class<?> a, final Class<?> b) throws Throwable {
+		try {
+			final Object obj = METHOD_IS_ASSIGNABLE_FROM.invoke(null, a, b);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
