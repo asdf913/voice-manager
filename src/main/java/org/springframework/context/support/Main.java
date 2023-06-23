@@ -222,7 +222,7 @@ public class Main {
 			//
 	}
 
-	private static Class<?> getDeclaringClass(final Member instance) {
+	private static Class<?> getDeclaringClass(@Nullable final Member instance) {
 		return instance != null ? instance.getDeclaringClass() : null;
 	}
 
