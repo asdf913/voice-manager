@@ -22,6 +22,8 @@ import java.util.stream.Stream;
 import javax.swing.JList;
 import javax.swing.JTextField;
 
+import org.apache.bcel.generic.ConstantPoolGen;
+import org.apache.bcel.generic.InvokeInstruction;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.jena.ext.com.google.common.base.Predicates;
@@ -44,7 +46,7 @@ class MainTest {
 	private static Method METHOD_TO_STRING, METHOD_GET_INSTANCE, METHOD_SHOW_MESSAGE_DIALOG_OR_PRINT_LN, METHOD_CAST,
 			METHOD_GET_BEAN_NAMES_FOR_TYPE, METHOD_GET_BEAN_CLASS_NAME, METHOD_PACK, METHOD_SET_VISIBLE,
 			METHOD_TEST_AND_APPLY, METHOD_GET_SELECTED_VALUE, METHOD_GET_CLASS1, METHOD_GET_CLASS3, METHOD_GET_NAME,
-			METHOD_IS_RAISE_THROWABLE_ONLY, METHOD_MAP, METHOD_ERROR_OR_PRINT_STACK_TRACE = null;
+			METHOD_IS_RAISE_THROWABLE_ONLY, METHOD_MAP, METHOD_ERROR_OR_PRINT_STACK_TRACE, METHOD_GET_CLASS_NAME = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -90,6 +92,9 @@ class MainTest {
 		//
 		(METHOD_ERROR_OR_PRINT_STACK_TRACE = clz.getDeclaredMethod("errorOrPrintStackTrace", Logger.class,
 				Throwable.class)).setAccessible(true);
+		//
+		(METHOD_GET_CLASS_NAME = clz.getDeclaredMethod("getClassName", InvokeInstruction.class, ConstantPoolGen.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -651,6 +656,27 @@ class MainTest {
 	private static void errorOrPrintStackTrace(final Logger logger, final Throwable throwable) throws Throwable {
 		try {
 			METHOD_ERROR_OR_PRINT_STACK_TRACE.invoke(null, logger, throwable);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetClassName() throws Throwable {
+		//
+		Assertions.assertNull(getClassName(null, null));
+		//
+	}
+
+	private static String getClassName(final InvokeInstruction instance, final ConstantPoolGen cpg) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_CLASS_NAME.invoke(null, instance, cpg);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

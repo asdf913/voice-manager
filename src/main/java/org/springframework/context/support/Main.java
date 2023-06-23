@@ -269,8 +269,8 @@ public class Main {
 				//
 				if (ins[i] instanceof InvokeInstruction ii) {
 					//
-					className = ii != null ? ii.getClassName(cpg = ObjectUtils.getIfNull(cpg,
-							() -> testAndApply(Objects::nonNull, cp, ConstantPoolGen::new, null))) : null;
+					className = getClassName(ii, cpg = ObjectUtils.getIfNull(cpg,
+							() -> testAndApply(Objects::nonNull, cp, ConstantPoolGen::new, null)));
 					//
 				} // if
 					//
@@ -310,6 +310,10 @@ public class Main {
 			//
 		return false;
 		//
+	}
+
+	private static String getClassName(final InvokeInstruction instance, final ConstantPoolGen cpg) {
+		return instance != null ? instance.getClassName(cpg) : null;
 	}
 
 	@Nullable
