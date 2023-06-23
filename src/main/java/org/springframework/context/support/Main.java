@@ -311,13 +311,15 @@ public class Main {
 		//
 	}
 
-	private static <T, R> Stream<R> map(final Stream<T> instance, final Function<? super T, ? extends R> mapper) {
+	private static <T, R> Stream<R> map(@Nullable final Stream<T> instance,
+			@Nullable final Function<? super T, ? extends R> mapper) {
 		//
 		return instance != null && (Proxy.isProxyClass(getClass(instance)) || mapper != null) ? instance.map(mapper)
 				: null;
 		//
 	}
 
+	@Nullable
 	private static <T> List<T> toList(final Stream<T> instance) {
 		return instance != null ? instance.toList() : null;
 	}
