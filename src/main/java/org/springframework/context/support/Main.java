@@ -203,7 +203,7 @@ public class Main {
 							Narcissus.invokeObjectMethod(instance, ms != null && ms.size() == 1 ? ms.get(0) : null)),
 							"createWindow", Window.class);
 					//
-					if (isRaiseThrowableOnly(method != null ? method.getDeclaringClass() : null, method)) {
+					if (isRaiseThrowableOnly(getDeclaringClass(method), method)) {
 						//
 						return;
 						//
@@ -220,6 +220,10 @@ public class Main {
 			//
 		} // if
 			//
+	}
+
+	private static Class<?> getDeclaringClass(final Member instance) {
+		return instance != null ? instance.getDeclaringClass() : null;
 	}
 
 	@Nullable

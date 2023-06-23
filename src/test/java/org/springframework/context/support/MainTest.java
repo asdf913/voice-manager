@@ -48,7 +48,8 @@ class MainTest {
 			METHOD_GET_BEAN_NAMES_FOR_TYPE, METHOD_GET_BEAN_CLASS_NAME, METHOD_PACK, METHOD_SET_VISIBLE,
 			METHOD_TEST_AND_APPLY, METHOD_GET_SELECTED_VALUE, METHOD_GET_CLASS1, METHOD_GET_CLASS3,
 			METHOD_GET_NAME_CLASS, METHOD_GET_NAME_MEMBER, METHOD_IS_RAISE_THROWABLE_ONLY, METHOD_MAP,
-			METHOD_ERROR_OR_PRINT_STACK_TRACE, METHOD_GET_CLASS_NAME, METHOD_GET_METHOD = null;
+			METHOD_ERROR_OR_PRINT_STACK_TRACE, METHOD_GET_CLASS_NAME, METHOD_GET_METHOD,
+			METHOD_GET_DECLARING_CLASS = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -102,6 +103,8 @@ class MainTest {
 		//
 		(METHOD_GET_METHOD = clz.getDeclaredMethod("getMethod", Class.class, String.class, Class[].class))
 				.setAccessible(true);
+		//
+		(METHOD_GET_DECLARING_CLASS = clz.getDeclaredMethod("getDeclaringClass", Member.class)).setAccessible(true);
 		//
 	}
 
@@ -720,6 +723,27 @@ class MainTest {
 				return null;
 			} else if (obj instanceof Method) {
 				return (Method) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetDeclaringClass() throws Throwable {
+		//
+		Assertions.assertNull(getDeclaringClass(null));
+		//
+	}
+
+	private static Class<?> getDeclaringClass(final Member instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_DECLARING_CLASS.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Class) {
+				return (Class) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
