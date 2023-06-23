@@ -324,7 +324,7 @@ public class Main {
 		//
 	}
 
-	private static boolean isAssignableFrom(final Class<?> a, final Class<?> b) {
+	private static boolean isAssignableFrom(final Class<?> a, @Nullable final Class<?> b) {
 		return a != null && b != null && a.isAssignableFrom(b);
 	}
 
