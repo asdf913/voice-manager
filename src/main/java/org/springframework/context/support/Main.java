@@ -243,7 +243,7 @@ public class Main {
 			//
 	}
 
-	private static boolean isRaiseThrowableOnly(@Nullable final Class<?> clz, final Method method) {
+	private static boolean isRaiseThrowableOnly(@Nullable final Class<?> clz, @Nullable final Method method) {
 		//
 		try (final InputStream is = clz != null
 				? clz.getResourceAsStream(String.format("/%1$s.class", StringUtils.replace(getName(clz), ".", "/")))
