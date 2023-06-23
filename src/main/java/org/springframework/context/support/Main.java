@@ -223,7 +223,7 @@ public class Main {
 			//
 	}
 
-	private static void errorOrPrintStackTrace(final Logger logger, final Throwable throwable) {
+	private static void errorOrPrintStackTrace(@Nullable final Logger logger, @Nullable final Throwable throwable) {
 		//
 		if (throwable == null) {
 			//
@@ -322,7 +322,7 @@ public class Main {
 	}
 
 	@Nullable
-	private static <T> List<T> toList(final Stream<T> instance) {
+	private static <T> List<T> toList(@Nullable final Stream<T> instance) {
 		return instance != null ? instance.toList() : null;
 	}
 
