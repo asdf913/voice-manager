@@ -199,10 +199,9 @@ public class Main {
 						//
 					} // if
 						//
-					final Class<?> clz = getClass(
-							Narcissus.invokeObjectMethod(instance, ms != null && ms.size() == 1 ? ms.get(0) : null));
-					//
-					final Method method = clz != null ? clz.getMethod("createWindow", Window.class) : null;
+					final Method method = getMethod(getClass(
+							Narcissus.invokeObjectMethod(instance, ms != null && ms.size() == 1 ? ms.get(0) : null)),
+							"createWindow", Window.class);
 					//
 					if (isRaiseThrowableOnly(method != null ? method.getDeclaringClass() : null, method)) {
 						//
@@ -221,6 +220,11 @@ public class Main {
 			//
 		} // if
 			//
+	}
+
+	private static Method getMethod(final Class<?> instance, final String name, final Class<?>... parameterTypes)
+			throws NoSuchMethodException {
+		return instance != null ? instance.getMethod(name, parameterTypes) : null;
 	}
 
 	private static void errorOrPrintStackTrace(@Nullable final Logger logger, @Nullable final Throwable throwable) {
