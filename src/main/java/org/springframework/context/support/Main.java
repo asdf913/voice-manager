@@ -312,7 +312,7 @@ public class Main {
 		//
 	}
 
-	private static String getClassName(final InvokeInstruction instance, final ConstantPoolGen cpg) {
+	private static String getClassName(@Nullable final InvokeInstruction instance, final ConstantPoolGen cpg) {
 		return instance != null ? instance.getClassName(cpg) : null;
 	}
 
@@ -340,7 +340,7 @@ public class Main {
 		return instance != null ? instance.getName() : null;
 	}
 
-	private static String getName(final Member instance) {
+	private static String getName(@Nullable final Member instance) {
 		return instance != null ? instance.getName() : null;
 	}
 
