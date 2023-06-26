@@ -37,7 +37,7 @@ import javax.swing.text.JTextComponent;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.jena.ext.com.google.common.base.Predicates;
+import com.google.common.base.Predicates;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.AssertionsUtil;

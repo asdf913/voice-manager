@@ -30,7 +30,7 @@ import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.InvokeInstruction;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.function.FailableFunction;
-import org.apache.jena.ext.com.google.common.base.Predicates;
+import com.google.common.base.Predicates;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
