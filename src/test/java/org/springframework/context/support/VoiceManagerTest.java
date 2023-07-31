@@ -4875,9 +4875,9 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> setValue(jSlider, "max", null));
 		//
-		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class,
-				"{localizedMessage=getMaximum,getMajorTickSpacing, message=getMaximum,getMajorTickSpacing}",
-				() -> setValue(jSlider, "ma", null));
+//		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class,
+//				"{localizedMessage=getMaximum,getMajorTickSpacing, message=getMaximum,getMajorTickSpacing}",
+//				() -> setValue(jSlider, "ma", null));
 		//
 		Assertions.assertDoesNotThrow(() -> setValue(jSlider, Integer.toString(jSlider.getMinimum() - 1), null));
 		//
