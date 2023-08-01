@@ -10798,7 +10798,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			if (voiceManager != null) {
 				//
-				setText(voiceManager.tfFile, StringUtils.defaultString(filePath, getText(voiceManager.tfFile)));
+				setText(voiceManager.tfFile, Objects.toString(filePath, getText(voiceManager.tfFile)));
 				//
 				setText(voiceManager.tfFileLength, toString(length));
 				//
@@ -12121,7 +12121,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					if (!ObjectMap.containsObject(objectMap, MessageDigest.class)) {
 						//
 						ObjectMap.setObject(objectMap, MessageDigest.class,
-								MessageDigest.getInstance(StringUtils.defaultString(messageDigestAlgorithm, SHA_512)));
+								MessageDigest.getInstance(Objects.toString(messageDigestAlgorithm, SHA_512)));
 						//
 					} // if
 						//
