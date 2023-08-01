@@ -3280,8 +3280,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} else if (size > 1) {
 				//
-				throw new IllegalStateException(
-						collect(map(stream(ms), VoiceManager::getName), Collectors.joining(",")));
+				throw new IllegalStateException(collect(
+						sorted(map(stream(ms), VoiceManager::getName), ObjectUtils::compare), Collectors.joining(",")));
 				//
 			} // if
 				//
