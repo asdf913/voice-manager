@@ -224,6 +224,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 			//
 	}
 
+	@Nullable
 	private static <T> Optional<T> max(@Nullable final Stream<T> instance,
 			@Nullable final Comparator<? super T> comparator) {
 		//
