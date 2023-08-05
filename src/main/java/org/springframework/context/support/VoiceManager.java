@@ -11825,6 +11825,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			}
 		}
 
+		@Nullable
 		private static OdfPresentationDocument generateOdfPresentationDocument(final ObjectMap objectMap,
 				final Map<String, Voice> voices) throws Exception {
 			//
