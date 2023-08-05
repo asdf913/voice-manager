@@ -4726,12 +4726,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final Class<?> nameClass = forName("domain.Voice$Name");
 		//
-		final Stream<Field> stream = testAndApply(Objects::nonNull, getDeclaredFields(Yomi.class), Arrays::stream,
-				null);
-		//
-		final List<Pair<String, String>> pairs = toList(
+		return createYomiNameMap(toList(
 				//
-				filter(map(stream, f -> {
+				filter(map(testAndApply(Objects::nonNull, getDeclaredFields(Yomi.class), Arrays::stream, null), f -> {
 					//
 					final List<?> objects = toList(stream(new FailableStream<>(
 							filter(testAndApply(Objects::nonNull, getDeclaredAnnotations(f), Arrays::stream, null),
@@ -4774,24 +4771,29 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					throw new IllegalStateException();
 					//
-				}), Objects::nonNull));
-
+				}), Objects::nonNull)));
 		//
-		Pair<String, String> pair = null;
+	}
+
+	private static Map<String, String> createYomiNameMap(final Iterable<Pair<String, String>> pairs) {
 		//
 		Map<String, String> map = null;
 		//
-		for (int i = 0; i < IterableUtils.size(pairs); i++) {
+		if (pairs != null && pairs.iterator() != null) {
 			//
-			if ((pair = get(pairs, i)) == null) {
+			for (final Pair<String, String> pair : pairs) {
 				//
-				continue;
+				if (pair == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), getKey(pair), getValue(pair));
 				//
-			} // if
+			} // for
 				//
-			put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), getKey(pair), getValue(pair));
-			//
-		} // for
+		} // if
 			//
 		return map;
 		//
