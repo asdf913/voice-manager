@@ -6542,7 +6542,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				setText(tfExportFile, getAbsolutePath(file));
 				//
-			} catch (final IOException | IllegalAccessException e) {
+			} catch (final IOException e) {
 				//
 				errorOrAssertOrShowException(headless, e);
 				//
@@ -12720,7 +12720,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	@Nullable
 	private static Workbook createMicrosoftSpeechObjectLibraryWorkbook(final SpeechApi speechApi,
-			final String... attributes) throws IllegalAccessException {
+			final String... attributes) {
 		//
 		Workbook workbook = null;
 		//
@@ -13098,7 +13098,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	private static void createJlptSheet(final Workbook workbook, @Nullable final Iterable<Voice> voices)
-			throws IllegalAccessException, InvocationTargetException {
+			throws IllegalAccessException {
 		//
 		final Multimap<String, Voice> multimap = getVoiceMultimapByJlpt(voices);
 		//
