@@ -80,13 +80,13 @@ public class BufferedImageTypeFactoryBean implements FactoryBean<Integer> {
 			//
 			result = getImageType(cs);
 			//
-		} else if (value instanceof char[]) {
+		} else if (value instanceof char[] cs) {
 			//
-			result = getImageType(new String((char[]) value));
+			result = getImageType(new String(cs));
 			//
-		} else if (value instanceof byte[]) {
+		} else if (value instanceof byte[] bs) {
 			//
-			result = getImageType(new String((byte[]) value));
+			result = getImageType(new String(bs));
 			//
 		} // if
 			//
