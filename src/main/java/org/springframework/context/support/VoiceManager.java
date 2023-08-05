@@ -13060,8 +13060,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	private static Workbook createWorkbook(@Nullable final List<Voice> voices, final BooleanMap booleanMap,
-			final FailableSupplier<Workbook, RuntimeException> supplier)
-			throws IllegalAccessException, InvocationTargetException {
+			final FailableSupplier<Workbook, RuntimeException> supplier) throws IllegalAccessException {
 		//
 		Workbook workbook = null;
 		//
