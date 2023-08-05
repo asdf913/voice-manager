@@ -224,7 +224,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 			//
 	}
 
-	private static <T> T orElse(@Nullable final Optional<T> instance, final T other) {
+	private static <T> T orElse(@Nullable final Optional<T> instance, @Nullable final T other) {
 		return instance != null ? instance.orElse(other) : null;
 	}
 
