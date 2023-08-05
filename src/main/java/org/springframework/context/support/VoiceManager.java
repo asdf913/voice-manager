@@ -5100,22 +5100,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final boolean headless = GraphicsEnvironment.isHeadless();
 		//
-		try {
+		if (anyMatch(stream(findFieldsByValue(getDeclaredFields(getClass()), this, source)),
+				f -> isAnnotationPresent(f, ExportButton.class))) {
 			//
-			if (anyMatch(stream(findFieldsByValue(getDeclaredFields(getClass()), this, source)),
-					f -> isAnnotationPresent(f, ExportButton.class))) {
-				//
-				setText(tfExportFile, null);
-				//
-				actionPerformedForExportButtons(source, headless);
-				//
-			} // if
-				//
-		} catch (final IllegalAccessException e) {
+			setText(tfExportFile, null);
 			//
-			errorOrAssertOrShowException(headless, e);
+			actionPerformedForExportButtons(source, headless);
 			//
-		} //
+		} // if
 			//
 		final boolean nonTest = !isTestMode();
 		//
@@ -7319,8 +7311,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@Nullable
-	private static List<Field> findFieldsByValue(@Nullable final Field[] fs, final Object instance, final Object value)
-			throws IllegalAccessException {
+	private static List<Field> findFieldsByValue(@Nullable final Field[] fs, final Object instance,
+			final Object value) {
 		//
 		Field f = null;
 		//
