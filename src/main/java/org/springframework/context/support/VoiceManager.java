@@ -2528,21 +2528,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final Field f = IterableUtils.size(fs) == 1 ? get(fs, 0) : null;
 		//
-		try {
+		if (f != null) {
 			//
-			if (f != null) {
-				//
-				f.setAccessible(true);
-				//
-				return get(f, speechApi);
-				//
-			} // if
-				//
-		} catch (final IllegalAccessException e) {
+			return Narcissus.getField(speechApi, f);
 			//
-			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
-			//
-		} // try
+		} // if
 			//
 		return speechApi;
 		//
@@ -4598,9 +4588,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
-				m.setAccessible(true);
-				//
-				if (!Objects.equals(Boolean.TRUE, invoke(m, null))) {
+				if (!Objects.equals(Boolean.TRUE, Narcissus.invokeStaticMethod(m))) {
 					//
 					continue;
 					//
@@ -11616,9 +11604,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
-				f.setAccessible(true);
-				//
-				f.set(instance, StringUtils.defaultString(VoiceManager.toString(get(f, instance))));
+				Narcissus.setField(instance, f,
+						StringUtils.defaultString(VoiceManager.toString(Narcissus.getField(instance, f))));
 				//
 			} // if
 				//
@@ -12973,13 +12960,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static Row addLocaleIdRow(@Nullable final ObjectMap objectMap, @Nullable final List<Field> fs,
 			final Object instance) throws IllegalAccessException {
 		//
-		final Method methodIsAccessible = ObjectMap.getObject(objectMap, Method.class);
-		//
 		final Sheet sheet = ObjectMap.getObject(objectMap, Sheet.class);
 		//
 		Field f = null;
-		//
-		boolean javaLangPacakge = false;
 		//
 		Object value = null;
 		//
@@ -12993,28 +12976,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-			if (Boolean.logicalAnd(!Narcissus.invokeBooleanMethod(f, methodIsAccessible), !(javaLangPacakge = ArrayUtils
-					.contains(new String[] { "java.lang" }, getName(getPackage(getDeclaringClass(f))))))) {
+			if (Objects.equals(getType(f), Integer.TYPE)) {
 				//
-				f.setAccessible(true);
+				value = Integer.valueOf(Narcissus.getIntField(instance, f));
 				//
-			} // if
-				//
-			if (javaLangPacakge) {
-				//
-				if (Objects.equals(getType(f), Integer.TYPE)) {
-					//
-					value = Integer.valueOf(Narcissus.getIntField(instance, f));
-					//
-				} else {
-					//
-					value = Narcissus.getObjectField(instance, f);
-					//
-				} // if
-					//
 			} else {
 				//
-				value = get(f, instance);
+				value = Narcissus.getField(instance, f);
 				//
 			} // if
 				//
@@ -13385,9 +13353,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					&& (cellStyle = WorkbookUtil
 							.createCellStyle(ObjectMap.getObject(objectMap, Workbook.class))) != null) {
 				//
-				m.setAccessible(true);
-				//
-				final short dataFormatIndex = HSSFDataFormat.getBuiltinFormat(toString(invoke(m, a)));
+				final short dataFormatIndex = HSSFDataFormat.getBuiltinFormat(toString(Narcissus.invokeMethod(a, m)));
 				//
 				if (dataFormatIndex >= 0) {
 					//
@@ -13416,9 +13382,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							x -> Objects.equals(getName(x), VALUE))),
 					null)) != null) {
 				//
-				m.setAccessible(true);
-				//
-				CellUtil.setCellValue(cell, new SimpleDateFormat(toString(invoke(m, a))).format(value));
+				CellUtil.setCellValue(cell, new SimpleDateFormat(toString(Narcissus.invokeMethod(a, m))).format(value));
 				//
 			} else {
 				//
@@ -13459,9 +13423,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				if (m != null) {
 					//
-					m.setAccessible(true);
-					//
-					return StringUtils.defaultIfBlank(toString(invoke(m, annotation)), name);
+					return StringUtils.defaultIfBlank(toString(Narcissus.invokeMethod(annotation, m)), name);
 					//
 				} else if (size > 1) {
 					//
@@ -13493,28 +13455,17 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				filter(Arrays.stream(getDeclaredMethods(annotationType(a))), z -> Objects.equals(getName(z), VALUE))),
 				null);
 		//
-		if (method != null) {
-			method.setAccessible(true);
-		} // if
-			//
 		String[] orders = null;
 		//
 		final boolean headless = GraphicsEnvironment.isHeadless();
 		//
 		try {
 			//
-			orders = cast(String[].class, invoke(method, a));
+			orders = cast(String[].class, Narcissus.invokeMethod(a, method));
 			//
-		} catch (final IllegalAccessException e) {
+		} catch (final Exception e) {
 			//
-			errorOrAssertOrShowException(headless, e);
-			//
-		} catch (final InvocationTargetException e) {
-			//
-			final Throwable targetException = e.getTargetException();
-			//
-			errorOrAssertOrShowException(headless, ObjectUtils.firstNonNull(
-					ExceptionUtils.getRootCause(targetException), targetException, ExceptionUtils.getRootCause(e), e));
+			errorOrAssertOrShowException(headless, ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(e), e));
 			//
 		} // try
 			//
