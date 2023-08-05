@@ -10072,6 +10072,11 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(getNumber(null, Collections.singleton(Boolean.class.getDeclaredField("TRUE"))));
 		//
+		final Collection<?> collection = new ArrayList<>();
+		//
+		Assertions.assertEquals(Unit.with(Integer.valueOf(collection.size())),
+				getNumber(collection, Collections.singleton(ArrayList.class.getDeclaredField("size"))));
+		//
 		Assertions.assertEquals(Unit.with(Long.valueOf(Long.MAX_VALUE)),
 				getNumber(null, Collections.singleton(Long.class.getDeclaredField("MAX_VALUE"))));
 		//

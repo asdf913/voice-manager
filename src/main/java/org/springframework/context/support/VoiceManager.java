@@ -1199,7 +1199,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@Nullable
-	private static IValue0<Number> getNumber(@Nullable final Object instnace, @Nullable final Iterable<Field> fs)
+	private static IValue0<Number> getNumber(@Nullable final Object instance, @Nullable final Iterable<Field> fs)
 			throws IllegalAccessException {
 		//
 		final int size = IterableUtils.size(fs);
@@ -1216,9 +1216,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		if (f != null) {
 			//
-			f.setAccessible(true);
-			//
-			final Number number = cast(Number.class, get(f, instnace));
+			final Number number = cast(Number.class, testAndApply(VoiceManager::isStatic, f, Narcissus::getStaticField,
+					a -> testAndApply(Objects::nonNull, instance, b -> Narcissus.getField(b, f), null)));
 			//
 			if (number != null || isAssignableFrom(Number.class, f.getType())) {
 				//
