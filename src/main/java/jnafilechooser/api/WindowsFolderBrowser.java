@@ -25,15 +25,10 @@ import com.sun.jna.Pointer;
 /**
  * The native Windows folder browser.
  *
- * Example:
- * WindowsFolderBrowser fb = new WindowsFolderBrowser();
- * File dir = fb.showDialog(parentWindow);
- * if (dir != null) {
- *     // do something with dir
- * }
+ * Example: WindowsFolderBrowser fb = new WindowsFolderBrowser(); File dir =
+ * fb.showDialog(parentWindow); if (dir != null) { // do something with dir }
  */
-public class WindowsFolderBrowser
-{
+public class WindowsFolderBrowser {
 	private String title;
 
 	/**
@@ -44,8 +39,8 @@ public class WindowsFolderBrowser
 	}
 
 	/**
-	 * creates a new folder browser with text that can be used as title
-	 * or to give instructions to the user
+	 * creates a new folder browser with text that can be used as title or to give
+	 * instructions to the user
 	 *
 	 * @param title text that will be displayed at the top of the dialog
 	 */
@@ -69,13 +64,13 @@ public class WindowsFolderBrowser
 		final Shell32.BrowseInfo params = new Shell32.BrowseInfo();
 		params.hwndOwner = Native.getWindowPointer(parent);
 		params.ulFlags =
-			// disable the OK button if the user selects a virtual PIDL
-			Shell32.BIF_RETURNONLYFSDIRS |
-			// BIF_USENEWUI is only available as of Windows 2000/Me (Shell32.dll 5.0)
-			// but I guess no one is using older versions anymore anyway right?!
-			// I don't know what happens if this is executed where it's
-			// not supported.
-			Shell32.BIF_USENEWUI;
+				// disable the OK button if the user selects a virtual PIDL
+				Shell32.BIF_RETURNONLYFSDIRS |
+				// BIF_USENEWUI is only available as of Windows 2000/Me (Shell32.dll 5.0)
+				// but I guess no one is using older versions anymore anyway right?!
+				// I don't know what happens if this is executed where it's
+				// not supported.
+						Shell32.BIF_USENEWUI;
 		if (title != null) {
 			params.lpszTitle = title;
 		}
@@ -83,7 +78,7 @@ public class WindowsFolderBrowser
 		if (pidl != null) {
 			// MAX_PATH is 260 on Windows XP x32 so 4kB should
 			// be more than big enough
-			final Pointer path = new Memory(1024 * 4);
+			final Pointer path = new Memory((long) 1024 * 4);
 			Shell32.SHGetPathFromIDListW(pidl, path);
 			final String filePath = path.getWideString(0);
 			final File file = new File(filePath);
