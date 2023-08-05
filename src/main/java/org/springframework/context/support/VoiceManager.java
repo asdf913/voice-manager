@@ -10878,8 +10878,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		}
 	}
 
-	private static <T, U, E extends Throwable> void accept(final FailableBiConsumer<T, U, E> instance, final T t,
-			final U u) throws E {
+	private static <T, U, E extends Throwable> void accept(@Nullable final FailableBiConsumer<T, U, E> instance,
+			final T t, final U u) throws E {
 		if (instance != null) {
 			instance.accept(t, u);
 		}
