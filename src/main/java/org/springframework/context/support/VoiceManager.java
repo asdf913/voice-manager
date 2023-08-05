@@ -13124,7 +13124,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	private static void setSheet(final Workbook workbook, @Nullable final Sheet sheet,
-			@Nullable final Iterable<Voice> voices) throws IllegalAccessException, InvocationTargetException {
+			@Nullable final Iterable<Voice> voices) throws IllegalAccessException {
 		//
 		ObjectMap objectMap = null;
 		//
