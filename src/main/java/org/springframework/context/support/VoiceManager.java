@@ -12895,7 +12895,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	private static void setLocaleIdSheet(@Nullable final ObjectMap objectMap) throws IllegalAccessException {
+	private static void setLocaleIdSheet(@Nullable final ObjectMap objectMap) {
 		//
 		final Sheet sheet = ObjectMap.getObject(objectMap, Sheet.class);
 		//
@@ -13260,7 +13260,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static void setContent(final ObjectMap objectMap) throws IllegalAccessException, InvocationTargetException {
+	private static void setContent(final ObjectMap objectMap) throws IllegalAccessException {
 		//
 		final Sheet sheet = ObjectMap.getObject(objectMap, Sheet.class);
 		//
@@ -13303,7 +13303,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	private static void setSheetHeaderRow(@Nullable final Sheet sheet, @Nullable final Field[] fs,
-			@Nullable final Class<?> spreadsheetColumnClass) throws IllegalAccessException, InvocationTargetException {
+			@Nullable final Class<?> spreadsheetColumnClass) {
 		//
 		if (sheet != null && sheet.getLastRowNum() < 0) {
 			//
