@@ -4778,6 +4778,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
+	@Nullable
 	private static Map<String, String> createYomiNameMap(final Iterable<Pair<String, String>> pairs) {
 		//
 		Map<String, String> map = null;
