@@ -26,12 +26,14 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.EventObject;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
@@ -211,8 +213,8 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 		//
 		final List<Component> cs = Arrays.asList(tfText, jcbGaKuNenBeTsuKanJi, btnExport);
 		//
-		final Dimension preferredSize = map(stream(cs), GaKuNenBeTsuKanJiGui::getPreferredSize)
-				.max((a, b) -> a != null && b != null ? Double.compare(a.getWidth(), b.getWidth()) : 0).orElse(null);
+		final Dimension preferredSize = max(map(stream(cs), GaKuNenBeTsuKanJiGui::getPreferredSize),
+				(a, b) -> a != null && b != null ? Double.compare(a.getWidth(), b.getWidth()) : 0).orElse(null);
 		//
 		if (preferredSize != null) {
 			//
@@ -220,6 +222,14 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 			//
 		} // if
 			//
+	}
+
+	private static <T> Optional<T> max(final Stream<T> instance, final Comparator<? super T> comparator) {
+		//
+		return instance != null && (Proxy.isProxyClass(getClass(instance)) || comparator != null)
+				? instance.max(comparator)
+				: null;
+		//
 	}
 
 	@Nullable
