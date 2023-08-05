@@ -23,6 +23,7 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -63,7 +64,7 @@ class GaKuNenBeTsuKanJiGuiTest {
 			METHOD_ADD_ACTION_LISTENER, METHOD_TO_ARRAY, METHOD_FILTER, METHOD_TO_LIST, METHOD_GET_DECLARED_METHODS,
 			METHOD_FOR_NAME, METHOD_GET_ABSOLUTE_PATH, METHOD_IS_FILE, METHOD_LENGTH, METHOD_LONG_VALUE,
 			METHOD_CONTAINS, METHOD_ADD, METHOD_SET_SELECTED_ITEM, METHOD_SET_TEXT, METHOD_SET_PREFERRED_WIDTH,
-			METHOD_GET_PREFERRED_SIZE = null;
+			METHOD_GET_PREFERRED_SIZE, METHOD_MAP = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -138,6 +139,8 @@ class GaKuNenBeTsuKanJiGuiTest {
 		//
 		(METHOD_GET_PREFERRED_SIZE = clz.getDeclaredMethod("getPreferredSize", Component.class)).setAccessible(true);
 		//
+		(METHOD_MAP = clz.getDeclaredMethod("map", Stream.class, Function.class)).setAccessible(true);
+		//
 	}
 
 	private class IH implements InvocationHandler {
@@ -190,6 +193,10 @@ class GaKuNenBeTsuKanJiGuiTest {
 				if (Objects.equals(methodName, "filter")) {
 					//
 					return proxy;
+					//
+				} else if (Objects.equals(methodName, "map")) {
+					//
+					return null;
 					//
 				} // if
 					//
@@ -1072,6 +1079,32 @@ class GaKuNenBeTsuKanJiGuiTest {
 				return null;
 			} else if (obj instanceof Dimension) {
 				return (Dimension) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testMap() throws Throwable {
+		//
+		Assertions.assertNull(map(null, null));
+		//
+		Assertions.assertNull(map(Stream.empty(), null));
+		//
+		Assertions.assertNull(map(Reflection.newProxy(Stream.class, ih), null));
+		//
+	}
+
+	private static <T, R> Stream<R> map(final Stream<T> instance, final Function<? super T, ? extends R> mapper)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_MAP.invoke(null, instance, mapper);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Stream) {
+				return (Stream) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

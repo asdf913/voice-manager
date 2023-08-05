@@ -34,6 +34,7 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -210,7 +211,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 		//
 		final List<Component> cs = Arrays.asList(tfText, jcbGaKuNenBeTsuKanJi, btnExport);
 		//
-		final Dimension preferredSize = stream(cs).map(GaKuNenBeTsuKanJiGui::getPreferredSize)
+		final Dimension preferredSize = map(stream(cs), GaKuNenBeTsuKanJiGui::getPreferredSize)
 				.max((a, b) -> a != null && b != null ? Double.compare(a.getWidth(), b.getWidth()) : 0).orElse(null);
 		//
 		if (preferredSize != null) {
@@ -219,6 +220,13 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 			//
 		} // if
 			//
+	}
+
+	private static <T, R> Stream<R> map(final Stream<T> instance, final Function<? super T, ? extends R> mapper) {
+		//
+		return instance != null && (Proxy.isProxyClass(getClass(instance)) || mapper != null) ? instance.map(mapper)
+				: null;
+		//
 	}
 
 	@Nullable
