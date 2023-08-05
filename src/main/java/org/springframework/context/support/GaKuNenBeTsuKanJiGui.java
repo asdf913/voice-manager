@@ -213,8 +213,8 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 		//
 		final List<Component> cs = Arrays.asList(tfText, jcbGaKuNenBeTsuKanJi, btnExport);
 		//
-		final Dimension preferredSize = max(map(stream(cs), GaKuNenBeTsuKanJiGui::getPreferredSize),
-				(a, b) -> a != null && b != null ? Double.compare(a.getWidth(), b.getWidth()) : 0).orElse(null);
+		final Dimension preferredSize = orElse(max(map(stream(cs), GaKuNenBeTsuKanJiGui::getPreferredSize),
+				(a, b) -> a != null && b != null ? Double.compare(a.getWidth(), b.getWidth()) : 0), null);
 		//
 		if (preferredSize != null) {
 			//
@@ -222,6 +222,10 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 			//
 		} // if
 			//
+	}
+
+	private static <T> T orElse(final Optional<T> instance, final T other) {
+		return instance != null ? instance.orElse(other) : null;
 	}
 
 	@Nullable

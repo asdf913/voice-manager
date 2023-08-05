@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.OptionalInt;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
@@ -66,7 +67,7 @@ class GaKuNenBeTsuKanJiGuiTest {
 			METHOD_ADD_ACTION_LISTENER, METHOD_TO_ARRAY, METHOD_FILTER, METHOD_TO_LIST, METHOD_GET_DECLARED_METHODS,
 			METHOD_FOR_NAME, METHOD_GET_ABSOLUTE_PATH, METHOD_IS_FILE, METHOD_LENGTH, METHOD_LONG_VALUE,
 			METHOD_CONTAINS, METHOD_ADD, METHOD_SET_SELECTED_ITEM, METHOD_SET_TEXT, METHOD_SET_PREFERRED_WIDTH,
-			METHOD_GET_PREFERRED_SIZE, METHOD_MAP, METHOD_MAX = null;
+			METHOD_GET_PREFERRED_SIZE, METHOD_MAP, METHOD_MAX, METHOD_OR_ELSE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -144,6 +145,8 @@ class GaKuNenBeTsuKanJiGuiTest {
 		(METHOD_MAP = clz.getDeclaredMethod("map", Stream.class, Function.class)).setAccessible(true);
 		//
 		(METHOD_MAX = clz.getDeclaredMethod("max", Stream.class, Comparator.class)).setAccessible(true);
+		//
+		(METHOD_OR_ELSE = clz.getDeclaredMethod("orElse", Optional.class, Object.class)).setAccessible(true);
 		//
 	}
 
@@ -1143,6 +1146,21 @@ class GaKuNenBeTsuKanJiGuiTest {
 				return (Optional) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testOrElse() throws Throwable {
+		//
+		Assertions.assertNull(orElse(null, null));
+		//
+	}
+
+	private static <T> T orElse(final Optional<T> instance, final T other) throws Throwable {
+		try {
+			return (T) METHOD_OR_ELSE.invoke(null, instance, other);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
