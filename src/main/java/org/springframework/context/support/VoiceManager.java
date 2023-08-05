@@ -599,7 +599,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("Export Password")
 	private JTextComponent tfExportPassword = null;
 
-	private JTextComponent tfPronunciationPageUrl, tfPronunciationPageStatusCode = null;
+	@Note("Pronunciation Page URL")
+	private JTextComponent tfPronunciationPageUrl = null;
+
+	private JTextComponent tfPronunciationPageStatusCode = null;
 
 	private JTextComponent tfPresentationSlideDuration = null;
 
