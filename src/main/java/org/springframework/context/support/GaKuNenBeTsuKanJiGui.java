@@ -21,6 +21,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -438,14 +439,10 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 			//
 			try {
 				//
-				if (m != null) {
-					//
-					m.setAccessible(true);
-					//
-				} // if
-					//
 				final Multimap<?, ?> multimap = cast(Multimap.class,
-						invoke(m, null, gaKuNenBeTsuKanJiListPageUrl, null));
+						m != null && Modifier.isStatic(m.getModifiers())
+								? Narcissus.invokeStaticMethod(m, gaKuNenBeTsuKanJiListPageUrl, null)
+								: null);
 				//
 				final ObjectMapper om = getObjectMapper();
 				//
@@ -458,17 +455,14 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 				//
 				setForeground(jlCompare, iif(matched, Color.GREEN, Color.RED));
 				//
-			} catch (final IllegalAccessException | JsonProcessingException e) {
+			} catch (final JsonProcessingException e) {
 				//
 				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(GraphicsEnvironment.isHeadless(), LOG, e);
 				//
-			} catch (final InvocationTargetException e) {
-				//
-				final Throwable targetException = e.getTargetException();
+			} catch (final Exception e) {
 				//
 				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(
-						ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException), targetException,
-								ExceptionUtils.getRootCause(e), e));
+						ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(e), e));
 				//
 			} // try
 				//

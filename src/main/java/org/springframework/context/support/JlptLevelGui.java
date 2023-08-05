@@ -23,6 +23,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 import java.net.URI;
 import java.time.Duration;
@@ -380,29 +381,19 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 			//
 			try {
 				//
-				if (m != null) {
-					//
-					m.setAccessible(true);
-					//
-				} // if
-					//
-				final boolean matched = Objects.equals(invoke(m, null, url, null), jlptLevels);
+				final boolean matched = Objects.equals(
+						m != null && Modifier.isStatic(m.getModifiers()) ? Narcissus.invokeStaticMethod(m, url, null)
+								: null,
+						jlptLevels);
 				//
 				setText(jlCompare, iif(matched, "Matched", "Not Matched"));
 				//
 				setForeground(jlCompare, iif(matched, Color.GREEN, Color.RED));
 				//
-			} catch (final IllegalAccessException e) {
-				//
-				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
-				//
-			} catch (final InvocationTargetException e) {
-				//
-				final Throwable targetException = e.getTargetException();
+			} catch (final Exception e) {
 				//
 				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(
-						ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException), targetException,
-								ExceptionUtils.getRootCause(e), e));
+						ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(e), e));
 				//
 			} // try
 				//

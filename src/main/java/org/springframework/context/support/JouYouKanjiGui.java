@@ -668,24 +668,11 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		//
 		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
 		//
-		try {
+		if (f != null && Narcissus.getField(cssExpression, f) == null) {
 			//
-			if (f != null) {
-				//
-				f.setAccessible(true);
-				//
-			} // if
-				//
-			if (f != null && get(f, cssExpression) == null) {
-				//
-				return null;
-				//
-			} // if
-		} catch (final IllegalAccessException e) {
+			return null;
 			//
-			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
-			//
-		} // try
+		} // if
 			//
 		return instance != null && cssExpression != null ? instance.getExpressionAsCSSString() : null;
 		//
