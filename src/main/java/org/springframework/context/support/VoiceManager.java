@@ -4482,16 +4482,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							getMimeType(new ContentInfoUtil().findMatch(VoiceManager.getBytes(html))), "text/html"),
 							html));
 			//
-		} catch (final IOException | TemplateException | IllegalAccessException e) {
+		} catch (final IOException | TemplateException e) {
 			//
 			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
 			//
-		} catch (final InvocationTargetException e) {
+		} catch (final Exception e) {
 			//
-			final Throwable targetException = e.getTargetException();
-			//
-			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(ObjectUtils.firstNonNull(
-					ExceptionUtils.getRootCause(targetException), targetException, ExceptionUtils.getRootCause(e), e));
+			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(
+					ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(e), e));
 			//
 		} // try
 			//
@@ -4562,8 +4560,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@Nullable
-	private static ATag getMediaFormatLink(final String url)
-			throws IllegalAccessException, InvocationTargetException, IOException {
+	private static ATag getMediaFormatLink(final String url) throws IOException {
 		//
 		InputStream is = null;
 		//
@@ -11590,7 +11587,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			return instance != null ? instance.progressBarExport : null;
 		}
 
-		private static void setStringFieldDefaultValue(@Nullable final Object instance) throws IllegalAccessException {
+		private static void setStringFieldDefaultValue(@Nullable final Object instance) {
 			//
 			final Field[] fs = getDeclaredFields(VoiceManager.getClass(instance));
 			//
@@ -12958,7 +12955,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	@Nullable
 	private static Row addLocaleIdRow(@Nullable final ObjectMap objectMap, @Nullable final List<Field> fs,
-			final Object instance) throws IllegalAccessException {
+			final Object instance) {
 		//
 		final Sheet sheet = ObjectMap.getObject(objectMap, Sheet.class);
 		//
@@ -13323,8 +13320,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	private static void setSheetCellValue(final ObjectMap objectMap, final Object value,
-			@Nullable final Class<?> dataFormatClass, @Nullable final Class<?> dateFormatClass)
-			throws IllegalAccessException, InvocationTargetException {
+			@Nullable final Class<?> dataFormatClass, @Nullable final Class<?> dateFormatClass) {
 		//
 		final Field field = ObjectMap.getObject(objectMap, Field.class);
 		//
@@ -13398,8 +13394,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	private static String getColumnName(@Nullable final Class<?> spreadsheetColumnClass, final Field f)
-			throws IllegalAccessException, InvocationTargetException {
+	private static String getColumnName(@Nullable final Class<?> spreadsheetColumnClass, final Field f) {
 		//
 		final String name = getName(f);
 		//
