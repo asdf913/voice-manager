@@ -28,8 +28,8 @@ import com.kichik.pecoff4j.ImageData;
 import com.kichik.pecoff4j.PE;
 import com.kichik.pecoff4j.ResourceEntry;
 import com.kichik.pecoff4j.constant.ResourceType;
+import com.kichik.pecoff4j.io.ByteArrayDataReader;
 import com.kichik.pecoff4j.io.PEParser;
-import com.kichik.pecoff4j.io.ResourceParser;
 import com.kichik.pecoff4j.resources.StringFileInfo;
 import com.kichik.pecoff4j.resources.StringPair;
 import com.kichik.pecoff4j.resources.StringTable;
@@ -253,9 +253,10 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider, Lookup, I
 				continue;
 			} // if
 				//
-			st = (sfi = (getStringFileInfo(
-					testAndApply(Objects::nonNull, re.getData(), ResourceParser::readVersionInfo, null)))) != null
-					&& sfi.getCount() > 0 ? sfi.getTable(0) : null;
+			st = (sfi = (getStringFileInfo(testAndApply(Objects::nonNull, re.getData(),
+					x -> VersionInfo.read(new ByteArrayDataReader(x)), null)))) != null && sfi.getCount() > 0
+							? sfi.getTable(0)
+							: null;
 			//
 			for (int j = 0; st != null && j < st.getCount(); j++) {
 				//
