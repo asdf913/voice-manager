@@ -7326,8 +7326,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		List<Field> list = null;
 		//
-		Method methodIsAccessible = null;
-		//
 		for (int i = 0; fs != null && i < fs.length; i++) {
 			//
 			if ((f = fs[i]) == null) {
@@ -7336,22 +7334,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-			if (!Narcissus.invokeBooleanMethod(f, methodIsAccessible = getIfNull(methodIsAccessible,
-					VoiceManager::getAccessibleObjectIsAccessibleMethod))) {
-				//
-				if (ArrayUtils.contains(new String[] { "javax.swing", "java.awt" },
-						getName(getPackage(getDeclaringClass(f))))) {
-					//
-					continue;
-					//
-				} // if
-					//
-				f.setAccessible(true);
-				//
-			} // if
-				//
-			if ((fieldValue = isStatic(f) ? get(f, null)
-					: testAndApply((a, b) -> b != null, f, instance, FieldUtils::readField, null)) != value
+			if ((fieldValue = testAndApply(VoiceManager::isStatic, f, Narcissus::getStaticField,
+					a -> testAndApply(Objects::nonNull, instance, b -> Narcissus.getField(b, a), null))) != value
 					|| !Objects.equals(fieldValue, value)) {
 				//
 				continue;

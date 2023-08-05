@@ -6679,6 +6679,20 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNotNull(findFieldsByValue(FieldUtils.getAllFields(VoiceManager.class), null, null));
 		//
+		final Field f = ArrayList.class.getDeclaredField("size");
+		//
+		final Field[] fs = new Field[] { f };
+		//
+		Assertions.assertNotNull(findFieldsByValue(fs, null, null));
+		//
+		final Collection<?> collection = new ArrayList<>();
+		//
+		Assertions.assertNull(findFieldsByValue(fs, collection, null));
+		//
+		Assertions.assertNull(findFieldsByValue(fs, collection, Integer.valueOf(1)));
+		//
+		Assertions.assertEquals(Collections.singletonList(f), findFieldsByValue(fs, collection, Integer.valueOf(0)));
+		//
 	}
 
 	private static List<Field> findFieldsByValue(final Field[] fs, final Object instance, final Object value)
