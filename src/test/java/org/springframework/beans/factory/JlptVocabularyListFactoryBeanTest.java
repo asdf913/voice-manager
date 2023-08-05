@@ -58,8 +58,7 @@ class JlptVocabularyListFactoryBeanTest {
 	private static Method METHOD_FILTER, METHOD_ANNOTATION_TYPE, METHOD_GET_NAME, METHOD_TEST, METHOD_OR, METHOD_ADD,
 			METHOD_ADD_ALL, METHOD_GET_FIELDS_BY_NAME, METHOD_GET_INTEGER_VALUE, METHOD_GET_STRING_VALUE_CELL,
 			METHOD_INVOKE, METHOD_GET_DECLARED_ANNOTATIONS, METHOD_GET_DECLARED_METHODS, METHOD_IS_ASSIGNABLE_FROM,
-			METHOD_SET_ACCESSIBLE, METHOD_SET, METHOD_GET_TYPE, METHOD_GET_NUMBER_VALUE,
-			METHOD_GET_PHYSICAL_NUMBER_OF_CELLS = null;
+			METHOD_SET_ACCESSIBLE, METHOD_GET_TYPE, METHOD_GET_NUMBER_VALUE, METHOD_GET_PHYSICAL_NUMBER_OF_CELLS = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -102,8 +101,6 @@ class JlptVocabularyListFactoryBeanTest {
 		//
 		(METHOD_SET_ACCESSIBLE = clz.getDeclaredMethod("setAccessible", AccessibleObject.class, Boolean.TYPE))
 				.setAccessible(true);
-		//
-		(METHOD_SET = clz.getDeclaredMethod("set", Field.class, Object.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_GET_TYPE = clz.getDeclaredMethod("getType", Field.class)).setAccessible(true);
 		//
@@ -832,21 +829,6 @@ class JlptVocabularyListFactoryBeanTest {
 	private static void setAccessible(final AccessibleObject instance, final boolean flag) throws Throwable {
 		try {
 			METHOD_SET_ACCESSIBLE.invoke(null, instance, flag);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testSet() {
-		//
-		Assertions.assertDoesNotThrow(() -> set(null, null, null));
-		//
-	}
-
-	private static void set(final Field field, final Object instance, final Object value) throws Throwable {
-		try {
-			METHOD_SET.invoke(null, field, instance, value);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

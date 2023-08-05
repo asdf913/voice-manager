@@ -64,6 +64,7 @@ import com.opencsv.CSVReaderUtil;
 import com.opencsv.exceptions.CsvValidationException;
 
 import domain.JlptVocabulary;
+import io.github.toolfactory.narcissus.Narcissus;
 
 public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocabulary>> {
 
@@ -285,7 +286,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 				//
 				if ((value = getIntegerValue(cell, formulaEvaluator)) != null) {
 					//
-					set(f, jv, IValue0Util.getValue0(value));
+					Narcissus.setObjectField(jv, f, IValue0Util.getValue0(value));
 					//
 				} else {
 					//
@@ -297,7 +298,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 				//
 				if ((value = getStringValue(cell, formulaEvaluator)) != null) {
 					//
-					set(f, jv, IValue0Util.getValue0(value));
+					Narcissus.setObjectField(jv, f, IValue0Util.getValue0(value));
 					//
 				} else {
 					//
@@ -325,13 +326,6 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 	private static void setAccessible(@Nullable final AccessibleObject instance, final boolean flag) {
 		if (instance != null) {
 			instance.setAccessible(flag);
-		}
-	}
-
-	private static void set(@Nullable final Field field, final Object instance, final Object value)
-			throws IllegalAccessException {
-		if (field != null) {
-			field.set(instance, value);
 		}
 	}
 
@@ -589,11 +583,12 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 					//
 					if (Objects.equals(getType(f), Integer.class)) {
 						//
-						set(f, jv, testAndApply(StringUtils::isNotBlank, s, Integer::valueOf, null));
+						Narcissus.setObjectField(jv, f,
+								testAndApply(StringUtils::isNotBlank, s, Integer::valueOf, null));
 						//
 					} else {
 						//
-						set(f, jv, s);
+						Narcissus.setObjectField(jv, f, s);
 						//
 					} // if
 						//
