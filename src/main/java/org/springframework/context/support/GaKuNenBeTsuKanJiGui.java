@@ -211,10 +211,10 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 		//
 		addActionListener(this, btnExport, btnCompare);
 		//
-		final List<Component> cs = Arrays.asList(tfText, jcbGaKuNenBeTsuKanJi, btnExport);
+		final Collection<Component> cs = Arrays.asList(tfText, jcbGaKuNenBeTsuKanJi, btnExport);
 		//
-		final Dimension preferredSize = orElse(max(map(stream(cs), GaKuNenBeTsuKanJiGui::getPreferredSize),
-				(a, b) -> a != null && b != null ? Double.compare(a.getWidth(), b.getWidth()) : 0), null);
+		final Dimension preferredSize = orElse(
+				max(map(stream(cs), GaKuNenBeTsuKanJiGui::getPreferredSize), createDimensionComparator()), null);
 		//
 		if (preferredSize != null) {
 			//
@@ -222,6 +222,10 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 			//
 		} // if
 			//
+	}
+
+	private static Comparator<Dimension> createDimensionComparator() {
+		return (a, b) -> a != null && b != null ? Double.compare(a.getWidth(), b.getWidth()) : 0;
 	}
 
 	@Nullable

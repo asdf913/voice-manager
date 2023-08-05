@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.OptionalInt;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
@@ -63,11 +62,11 @@ class GaKuNenBeTsuKanJiGuiTest {
 
 	private static Method METHOD_CAST, METHOD_CREATE_WORK_BOOK, METHOD_GET_CLASS, METHOD_TO_STRING,
 			METHOD_SET_SELECTED_ITEM_BY_ITERABLE, METHOD_INVOKE, METHOD_GET_NAME, METHOD_GET_PARAMETER_TYPES,
-			METHOD_EXISTS, METHOD_AND, METHOD_IIF, METHOD_STREAM, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4,
+			METHOD_EXISTS, METHOD_AND, METHOD_IIF, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4,
 			METHOD_ADD_ACTION_LISTENER, METHOD_TO_ARRAY, METHOD_FILTER, METHOD_TO_LIST, METHOD_GET_DECLARED_METHODS,
 			METHOD_FOR_NAME, METHOD_GET_ABSOLUTE_PATH, METHOD_IS_FILE, METHOD_LENGTH, METHOD_LONG_VALUE,
 			METHOD_CONTAINS, METHOD_ADD, METHOD_SET_SELECTED_ITEM, METHOD_SET_TEXT, METHOD_SET_PREFERRED_WIDTH,
-			METHOD_GET_PREFERRED_SIZE, METHOD_MAP, METHOD_MAX, METHOD_OR_ELSE = null;
+			METHOD_GET_PREFERRED_SIZE, METHOD_MAP, METHOD_MAX, METHOD_CREATE_DIMENSION_COMPARATOR = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -98,8 +97,6 @@ class GaKuNenBeTsuKanJiGuiTest {
 		(METHOD_AND = clz.getDeclaredMethod("and", Boolean.TYPE, Boolean.TYPE, boolean[].class)).setAccessible(true);
 		//
 		(METHOD_IIF = clz.getDeclaredMethod("iif", Boolean.TYPE, Object.class, Object.class)).setAccessible(true);
-		//
-		(METHOD_STREAM = clz.getDeclaredMethod("stream", Collection.class)).setAccessible(true);
 		//
 		(METHOD_TEST_AND_ACCEPT3 = clz.getDeclaredMethod("testAndAccept", Predicate.class, Object.class,
 				FailableConsumer.class)).setAccessible(true);
@@ -146,7 +143,7 @@ class GaKuNenBeTsuKanJiGuiTest {
 		//
 		(METHOD_MAX = clz.getDeclaredMethod("max", Stream.class, Comparator.class)).setAccessible(true);
 		//
-		(METHOD_OR_ELSE = clz.getDeclaredMethod("orElse", Optional.class, Object.class)).setAccessible(true);
+		(METHOD_CREATE_DIMENSION_COMPARATOR = clz.getDeclaredMethod("createDimensionComparator")).setAccessible(true);
 		//
 	}
 
@@ -690,27 +687,6 @@ class GaKuNenBeTsuKanJiGuiTest {
 	}
 
 	@Test
-	void testStream() throws Throwable {
-		//
-		Assertions.assertNull(stream(null));
-		//
-	}
-
-	private static <T> Stream<T> stream(final Collection<T> instance) throws Throwable {
-		try {
-			final Object obj = METHOD_STREAM.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Stream) {
-				return (Stream) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testTestAndAccept() {
 		//
 		Assertions.assertDoesNotThrow(() -> testAndAccept(null, null, null));
@@ -799,8 +775,6 @@ class GaKuNenBeTsuKanJiGuiTest {
 
 	@Test
 	void testFilter() throws Throwable {
-		//
-		Assertions.assertNull(filter(null, null));
 		//
 		Assertions.assertNull(filter(Stream.empty(), null));
 		//
@@ -1102,8 +1076,6 @@ class GaKuNenBeTsuKanJiGuiTest {
 	@Test
 	void testMap() throws Throwable {
 		//
-		Assertions.assertNull(map(null, null));
-		//
 		Assertions.assertNull(map(Stream.empty(), null));
 		//
 		Assertions.assertNull(map(stream, null));
@@ -1128,8 +1100,6 @@ class GaKuNenBeTsuKanJiGuiTest {
 	@Test
 	void testMax() throws Throwable {
 		//
-		Assertions.assertNull(max(null, null));
-		//
 		Assertions.assertNull(max(Stream.empty(), null));
 		//
 		Assertions.assertNull(max(stream, null));
@@ -1152,15 +1122,30 @@ class GaKuNenBeTsuKanJiGuiTest {
 	}
 
 	@Test
-	void testOrElse() throws Throwable {
+	void testCcreateDimensionComparator() throws Throwable {
 		//
-		Assertions.assertNull(orElse(null, null));
+		final Comparator<Dimension> comparator = createDimensionComparator();
 		//
+		if (comparator != null) {
+			//
+			Assertions.assertEquals(0, comparator.compare(null, null));
+			//
+			Assertions.assertEquals(0,
+					comparator.compare(cast(Dimension.class, Narcissus.allocateInstance(Dimension.class)), null));
+			//
+		} // if
+			//
 	}
 
-	private static <T> T orElse(final Optional<T> instance, final T other) throws Throwable {
+	private static Comparator<Dimension> createDimensionComparator() throws Throwable {
 		try {
-			return (T) METHOD_OR_ELSE.invoke(null, instance, other);
+			final Object obj = METHOD_CREATE_DIMENSION_COMPARATOR.invoke(null);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Comparator) {
+				return (Comparator) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
