@@ -13247,9 +13247,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		if (f != null) {
 			//
-			f.setAccessible(true);
-			//
-			return Unit.with(get(f, instance));
+			return Unit.with(Narcissus.getField(instance, f));
 			//
 		} // if
 			//
