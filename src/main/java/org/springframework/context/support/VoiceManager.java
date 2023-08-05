@@ -4750,7 +4750,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 										filter(testAndApply(Objects::nonNull, getDeclaredMethods(annotationType(a)),
 												Arrays::stream, null), ma -> Objects.equals(getName(ma), VALUE)));
 								//
-								if (ms == null || ms.isEmpty()) {
+								if (CollectionUtils.isEmpty(ms)) {
 									//
 									return false;
 									//
