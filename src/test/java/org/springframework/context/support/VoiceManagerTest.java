@@ -99,6 +99,7 @@ import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import javax.annotation.Nullable;
 import javax.sound.sampled.AudioFormat;
 import javax.sql.DataSource;
 import javax.swing.AbstractButton;
@@ -364,7 +365,7 @@ class VoiceManagerTest {
 			METHOD_READ_LINE, METHOD_PRINT_LN, METHOD_SET_PITCH_ACCENT_IMAGE, METHOD_GET_NUMERIC_CELL_VALUE,
 			METHOD_SET_AUTO_FILTER, METHOD_CREATE_BYTE_ARRAY, METHOD_DOUBLE_VALUE, METHOD_GET_ELEMENT_AT,
 			METHOD_GET_IMAGE_FORMAT, METHOD_GET_I_VALUE0_FROM_MAPS_BY_KEY, METHOD_IS_ALL_CHARACTERS_ALLOWED,
-			METHOD_GET_VALUE_COLLECTION_BY_KEY, METHOD_CREATE_YOMI_NAME_MAP = null;
+			METHOD_GET_VALUE_COLLECTION_BY_KEY, METHOD_CREATE_YOMI_NAME_MAP, METHOD_GET_NUMBER = null;
 
 	@BeforeAll
 	static void beforeAll() throws Throwable {
@@ -1083,6 +1084,8 @@ class VoiceManagerTest {
 				Object.class)).setAccessible(true);
 		//
 		(METHOD_CREATE_YOMI_NAME_MAP = clz.getDeclaredMethod("createYomiNameMap")).setAccessible(true);
+		//
+		(METHOD_GET_NUMBER = clz.getDeclaredMethod("getNumber", Object.class, Iterable.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -10062,7 +10065,30 @@ class VoiceManagerTest {
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
+	}
 
+	@Test
+	void testGetNumber() throws Throwable {
+		//
+		Assertions.assertNull(getNumber(null, Collections.singleton(Boolean.class.getDeclaredField("TRUE"))));
+		//
+		Assertions.assertEquals(Unit.with(Long.valueOf(Long.MAX_VALUE)),
+				getNumber(null, Collections.singleton(Long.class.getDeclaredField("MAX_VALUE"))));
+		//
+	}
+
+	private static IValue0<Number> getNumber(final Object instnace, final Iterable<Field> fs) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_NUMBER.invoke(null, instnace, fs);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof IValue0) {
+				return (IValue0) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 	@Test
