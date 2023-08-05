@@ -247,7 +247,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 
 	@Nullable
 	private static IValue0<JlptVocabulary> getJlptVocabulary(@Nullable final Map<Integer, Field> fieldMap,
-			final Row row, final FormulaEvaluator formulaEvaluator) throws IllegalAccessException {
+			final Row row, final FormulaEvaluator formulaEvaluator) {
 		//
 		IValue0<JlptVocabulary> ivalue0 = null;
 		//
@@ -533,7 +533,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 
 	@Nullable
 	private static List<JlptVocabulary> getJlptVocabularies(final String urlString)
-			throws IOException, CsvValidationException, IllegalAccessException {
+			throws IOException, CsvValidationException {
 		//
 		final URL url = testAndApply(StringUtils::isNotBlank, urlString, URL::new, null);
 		//
