@@ -4757,13 +4757,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 									//
 								} // if
 									//
-								Method m = get(ms, 0);
+								final Method m = IterableUtils.size(ms) == 1 ? get(ms, 0) : null;
 								//
-								if (IterableUtils.size(ms) == 1 && m != null) {
+								if (m != null) {
 									//
-									m.setAccessible(true);
-									//
-									return invoke(m, a);
+									return Narcissus.invokeMethod(a, m);
 									//
 								} // if
 									//
