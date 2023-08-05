@@ -199,6 +199,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookUtil;
 import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.util.LocaleID;
+import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
@@ -9029,6 +9030,8 @@ class VoiceManagerTest {
 	void testGetWriter() throws Throwable {
 		//
 		Assertions.assertNull(getWriter(null));
+		//
+		Assertions.assertEquals(Unit.with(null), getWriter(Narcissus.allocateInstance(SXSSFSheet.class)));
 		//
 	}
 
