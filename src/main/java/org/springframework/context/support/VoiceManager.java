@@ -6571,20 +6571,17 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			errorOrAssertOrShowException(headless, e);
 			//
-		} catch (final InvocationTargetException e) {
+		} catch (final Exception e) {
 			//
-			final Throwable targetException = e.getTargetException();
-			//
-			errorOrAssertOrShowException(headless, ObjectUtils.firstNonNull(
-					ExceptionUtils.getRootCause(targetException), targetException, ExceptionUtils.getRootCause(e), e));
+			errorOrAssertOrShowException(headless, ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(e), e));
 			//
 		} // try
 			//
 	}
 
 	private void actionPerformedForExport(@Nullable final FailableSupplier<Workbook, RuntimeException> workbookSupplier)
-			throws IOException, IllegalAccessException, InvocationTargetException, InvalidFormatException,
-			GeneralSecurityException, TemplateException, SQLException {
+			throws IOException, IllegalAccessException, InvalidFormatException, GeneralSecurityException,
+			TemplateException, SQLException {
 		//
 		SqlSession sqlSession = null;
 		//
@@ -13236,7 +13233,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@Nullable
-	private static IValue0<Object> getWriter(final Object instance) throws IllegalAccessException {
+	private static IValue0<Object> getWriter(final Object instance) {
 		//
 		final List<Field> fs = toList(filter(testAndApply(Objects::nonNull,
 				testAndApply(Objects::nonNull, getClass(instance), FieldUtils::getAllFields, null), Arrays::stream,
