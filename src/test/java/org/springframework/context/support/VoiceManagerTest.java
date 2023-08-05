@@ -363,7 +363,7 @@ class VoiceManagerTest {
 			METHOD_READ_LINE, METHOD_PRINT_LN, METHOD_SET_PITCH_ACCENT_IMAGE, METHOD_GET_NUMERIC_CELL_VALUE,
 			METHOD_SET_AUTO_FILTER, METHOD_CREATE_BYTE_ARRAY, METHOD_DOUBLE_VALUE, METHOD_GET_ELEMENT_AT,
 			METHOD_GET_IMAGE_FORMAT, METHOD_GET_I_VALUE0_FROM_MAPS_BY_KEY, METHOD_IS_ALL_CHARACTERS_ALLOWED,
-			METHOD_GET_VALUE_COLLECTION_BY_KEY = null;
+			METHOD_GET_VALUE_COLLECTION_BY_KEY, METHOD_CREATE_YOMI_NAME_MAP = null;
 
 	@BeforeAll
 	static void beforeAll() throws Throwable {
@@ -1080,6 +1080,8 @@ class VoiceManagerTest {
 		//
 		(METHOD_GET_VALUE_COLLECTION_BY_KEY = clz.getDeclaredMethod("getValueCollectionByKey", Iterable.class,
 				Object.class)).setAccessible(true);
+		//
+		(METHOD_CREATE_YOMI_NAME_MAP = clz.getDeclaredMethod("createYomiNameMap")).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -10036,6 +10038,28 @@ class VoiceManagerTest {
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
+	}
+
+	@Test
+	void testCreateYomiNameMap() throws Throwable {
+		//
+		Assertions.assertNotNull(createYomiNameMap());
+		//
+	}
+
+	private static Map<String, String> createYomiNameMap() throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_YOMI_NAME_MAP.invoke(null);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Map) {
+				return (Map) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+
 	}
 
 	@Test
