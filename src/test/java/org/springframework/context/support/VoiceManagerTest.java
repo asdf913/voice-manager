@@ -160,6 +160,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.apache.commons.lang3.function.FailableBiConsumer;
 import org.apache.commons.lang3.function.FailableBiFunction;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableFunction;
@@ -713,7 +714,7 @@ class VoiceManagerTest {
 				FailableConsumer.class)).setAccessible(true);
 		//
 		(METHOD_TEST_AND_ACCEPT_BI_PREDICATE = clz.getDeclaredMethod("testAndAccept", BiPredicate.class, Object.class,
-				Object.class, BiConsumer.class)).setAccessible(true);
+				Object.class, FailableBiConsumer.class)).setAccessible(true);
 		//
 		(METHOD_FIND_FIELDS_BY_VALUE = clz.getDeclaredMethod("findFieldsByValue", Field[].class, Object.class,
 				Object.class)).setAccessible(true);
@@ -6654,8 +6655,8 @@ class VoiceManagerTest {
 		}
 	}
 
-	private static <T, U> void testAndAccept(final BiPredicate<T, U> biPredicate, final T t, final U u,
-			final BiConsumer<T, U> consumer) throws Throwable {
+	private static <T, U, E extends Throwable> void testAndAccept(final BiPredicate<T, U> biPredicate, final T t,
+			final U u, final FailableBiConsumer<T, U, E> consumer) throws Throwable {
 		try {
 			METHOD_TEST_AND_ACCEPT_BI_PREDICATE.invoke(null, biPredicate, t, u, consumer);
 		} catch (final InvocationTargetException e) {

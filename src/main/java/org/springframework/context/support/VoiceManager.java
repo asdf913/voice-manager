@@ -63,6 +63,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -223,6 +225,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.commons.lang3.function.FailableBiConsumer;
 import org.apache.commons.lang3.function.FailableBiFunction;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableFunction;
@@ -7622,8 +7625,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		}
 	}
 
-	private static <T, U> void testAndAccept(final BiPredicate<T, U> instance, final T t, @Nullable final U u,
-			final BiConsumer<T, U> consumer) {
+	private static <T, U, E extends Throwable> void testAndAccept(final BiPredicate<T, U> instance, final T t,
+			@Nullable final U u, final FailableBiConsumer<T, U, E> consumer) throws E {
 		if (test(instance, t, u)) {
 			accept(consumer, t, u);
 		} // if
@@ -9170,10 +9173,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	private static void delete(@Nullable final File instance) {
-		if (instance != null) {
-			instance.delete();
-		}
+	private static void delete(@Nullable final File instance) throws IOException {
+		//
+		testAndAccept(Objects::nonNull, testAndApply(Objects::nonNull, toURI(instance), Path::of, null), Files::delete);
+		//
 	}
 
 	private static void deleteOnExit(@Nullable final File instance) {
@@ -10870,6 +10873,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static <T, U> void accept(@Nullable final BiConsumer<T, U> instance, @Nullable final T t,
 			@Nullable final U u) {
+		if (instance != null) {
+			instance.accept(t, u);
+		}
+	}
+
+	private static <T, U, E extends Throwable> void accept(final FailableBiConsumer<T, U, E> instance, final T t,
+			final U u) throws E {
 		if (instance != null) {
 			instance.accept(t, u);
 		}
