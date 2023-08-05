@@ -4726,9 +4726,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final Class<?> nameClass = forName("domain.Voice$Name");
 		//
+		final Stream<Field> stream = testAndApply(Objects::nonNull, getDeclaredFields(Yomi.class), Arrays::stream,
+				null);
+		//
 		return createYomiNameMap(toList(
 				//
-				filter(map(testAndApply(Objects::nonNull, getDeclaredFields(Yomi.class), Arrays::stream, null), f -> {
+				filter(map(stream, f -> {
 					//
 					final List<?> objects = toList(stream(new FailableStream<>(
 							filter(testAndApply(Objects::nonNull, getDeclaredAnnotations(f), Arrays::stream, null),
