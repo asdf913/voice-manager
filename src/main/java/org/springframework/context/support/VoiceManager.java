@@ -1172,25 +1172,18 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		for (final Object obj : values) {
 			//
-			try {
+			if (result == null) {
 				//
-				if (result == null) {
-					//
-					result = getNumber(obj, toList(filter(
-							testAndApply(Objects::nonNull, getDeclaredFields(getClass(obj)), Arrays::stream, null),
-							x -> Objects.equals(getName(x), "defaultCloseOperation"))));
-					//
-				} else {
-					//
-					throw new IllegalStateException();
-					//
-				} // if
-					//
-			} catch (final IllegalAccessException e) {
+				result = getNumber(obj,
+						toList(filter(
+								testAndApply(Objects::nonNull, getDeclaredFields(getClass(obj)), Arrays::stream, null),
+								x -> Objects.equals(getName(x), "defaultCloseOperation"))));
 				//
-				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
+			} else {
 				//
-			} // try
+				throw new IllegalStateException();
+				//
+			} // if
 				//
 		} // for
 			//
@@ -1199,8 +1192,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@Nullable
-	private static IValue0<Number> getNumber(@Nullable final Object instance, @Nullable final Iterable<Field> fs)
-			throws IllegalAccessException {
+	private static IValue0<Number> getNumber(@Nullable final Object instance, @Nullable final Iterable<Field> fs) {
 		//
 		final int size = IterableUtils.size(fs);
 		//
