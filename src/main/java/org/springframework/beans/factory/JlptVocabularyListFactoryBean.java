@@ -126,7 +126,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 
 	@Nullable
 	private static IValue0<List<JlptVocabulary>> getJlptVocabularies(@Nullable final Sheet sheet,
-			final FormulaEvaluator formulaEvaluator) throws IllegalAccessException {
+			final FormulaEvaluator formulaEvaluator) {
 		//
 		IValue0<List<JlptVocabulary>> list = null;
 		//
@@ -447,7 +447,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 
 	@Nullable
 	private static List<JlptVocabulary> getObjectByUrls(@Nullable final List<String> urls)
-			throws CsvValidationException, IllegalAccessException, IOException {
+			throws CsvValidationException, IOException {
 		//
 		List<JlptVocabulary> list = null;
 		//
