@@ -17,6 +17,7 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.function.FailableBiFunction;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
@@ -63,9 +64,7 @@ public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryB
 			//
 			String[] ss = null;
 			//
-			String s = null;
-			//
-			MutablePair<String, String> pair = null;
+			Pair<String, String> pair = null;
 			//
 			while ((ss = readNext(csvReader)) != null) {
 				//
@@ -77,37 +76,7 @@ public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryB
 					//
 				} // if
 					//
-				pair = null;
-				//
-				for (int i = 0; i < ss.length; i++) {
-					//
-					s = ss[i];
-					//
-					if (i == 0) {
-						//
-						if (pair == null) {
-							//
-							pair = MutablePair.of(s, null);
-							//
-						} // if
-							//
-						pair.setLeft(s);
-						//
-					} else if (i == 1) {
-						//
-						if (pair == null) {
-							//
-							pair = MutablePair.of(null, s);
-							//
-						} // if
-							//
-						pair.setRight(s);
-						//
-					} // if
-						//
-				} // for
-					//
-				if (pair != null) {
+				if ((pair = createPair(ss)) != null) {
 					//
 					map.put(pair.getKey(), pair.getValue());
 					//
@@ -119,6 +88,56 @@ public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryB
 			//
 		return map;
 		//
+	}
+
+	private static Pair<String, String> createPair(final String[] ss) {
+		//
+		MutablePair<String, String> pair = null;
+		//
+		String s = null;
+		//
+		for (int i = 0; ss != null && i < ss.length; i++) {
+			//
+			s = ss[i];
+			//
+			if (i == 0) {
+				//
+				if (pair == null) {
+					//
+					pair = MutablePair.of(s, null);
+					//
+				} // if
+					//
+				setLeft(pair, s);
+				//
+			} else if (i == 1) {
+				//
+				if (pair == null) {
+					//
+					pair = MutablePair.of(null, s);
+					//
+				} // if
+					//
+				setRight(pair, s);
+				//
+			} // if
+				//
+		} // for
+			//
+		return pair;
+		//
+	}
+
+	private static <L> void setLeft(final MutablePair<L, ?> instance, final L left) {
+		if (instance != null) {
+			instance.setLeft(left);
+		}
+	}
+
+	private static <R> void setRight(final MutablePair<?, R> instance, final R right) {
+		if (instance != null) {
+			instance.setRight(right);
+		}
 	}
 
 	private static String[] readNext(final CSVReader instance) throws IOException, CsvValidationException {

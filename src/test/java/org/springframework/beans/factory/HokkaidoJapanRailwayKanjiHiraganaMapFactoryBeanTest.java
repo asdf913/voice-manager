@@ -13,7 +13,8 @@ import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
 import org.apache.commons.lang3.function.FailableBiFunction;
-import org.junit.Assert;
+import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,7 +27,8 @@ import io.github.toolfactory.narcissus.Narcissus;
 class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 
 	private static Method METHOD_CREATE_MAP, METHOD_GET_CLASS, METHOD_OPEN_STREAM, METHOD_GET_DECLARED_FIELD,
-			METHOD_TEST, METHOD_TEST_AND_APPLY, METHOD_READ_NEXT = null;
+			METHOD_TEST, METHOD_TEST_AND_APPLY, METHOD_READ_NEXT, METHOD_CREATE_PAIR, METHOD_SET_LEFT,
+			METHOD_SET_RIGHT = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -48,6 +50,12 @@ class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 				FailableBiFunction.class, FailableBiFunction.class)).setAccessible(true);
 		//
 		(METHOD_READ_NEXT = clz.getDeclaredMethod("readNext", CSVReader.class)).setAccessible(true);
+		//
+		(METHOD_CREATE_PAIR = clz.getDeclaredMethod("createPair", String[].class)).setAccessible(true);
+		//
+		(METHOD_SET_LEFT = clz.getDeclaredMethod("setLeft", MutablePair.class, Object.class)).setAccessible(true);
+		//
+		(METHOD_SET_RIGHT = clz.getDeclaredMethod("setRight", MutablePair.class, Object.class)).setAccessible(true);
 		//
 	}
 
@@ -149,7 +157,7 @@ class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 	@Test
 	void testGetClass() throws Throwable {
 		//
-		Assert.assertNull(getClass(null));
+		Assertions.assertNull(getClass(null));
 		//
 	}
 
@@ -197,9 +205,9 @@ class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 	@Test
 	void testGetDeclaredField() throws Throwable {
 		//
-		Assert.assertNull(getDeclaredField(null, null));
+		Assertions.assertNull(getDeclaredField(null, null));
 		//
-		Assert.assertNull(getDeclaredField(Object.class, null));
+		Assertions.assertNull(getDeclaredField(Object.class, null));
 		//
 	}
 
@@ -220,7 +228,7 @@ class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 	@Test
 	void testTest() throws Throwable {
 		//
-		Assert.assertFalse(test(null, null));
+		Assertions.assertFalse(test(null, null));
 		//
 	}
 
@@ -239,7 +247,7 @@ class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 	@Test
 	void testTestAndApply() throws Throwable {
 		//
-		Assert.assertNull(testAndApply(null, null, null, null, null));
+		Assertions.assertNull(testAndApply(null, null, null, null, null));
 		//
 	}
 
@@ -256,7 +264,7 @@ class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 	@Test
 	void testReadNext() throws Throwable {
 		//
-		Assert.assertNull(readNext(cast(CSVReader.class, Narcissus.allocateInstance(CSVReader.class))));
+		Assertions.assertNull(readNext(cast(CSVReader.class, Narcissus.allocateInstance(CSVReader.class))));
 		//
 	}
 
@@ -269,6 +277,57 @@ class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 				return (String[]) obj;
 			}
 			throw new Throwable(Util.toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCreatePair() throws Throwable {
+		//
+		Assertions.assertNull(createPair(null));
+		//
+	}
+
+	private static Pair<String, String> createPair(final String[] ss) throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_PAIR.invoke(null, (Object) ss);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Pair) {
+				return (Pair) obj;
+			}
+			throw new Throwable(Util.toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetLeft() {
+		//
+		Assertions.assertDoesNotThrow(() -> setLeft(null, null));
+		//
+	}
+
+	private static <L> void setLeft(final MutablePair<L, ?> instance, final L left) throws Throwable {
+		try {
+			METHOD_SET_LEFT.invoke(null, instance, left);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetRight() {
+		//
+		Assertions.assertDoesNotThrow(() -> setRight(null, null));
+		//
+	}
+
+	private static <R> void setRight(final MutablePair<?, R> instance, final R right) throws Throwable {
+		try {
+			METHOD_SET_RIGHT.invoke(null, instance, right);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
