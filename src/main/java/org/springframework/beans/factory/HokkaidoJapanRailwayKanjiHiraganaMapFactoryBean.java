@@ -51,6 +51,7 @@ public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryB
 			//
 	}
 
+	@Nullable
 	private static Map<String, String> createMap(final InputStream is, final String encoding)
 			throws IOException, CsvValidationException {
 		//
@@ -151,6 +152,7 @@ public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryB
 		return instance != null ? instance.getClass() : null;
 	}
 
+	@Nullable
 	private static Field getDeclaredField(@Nullable final Class<?> instance, @Nullable final String name)
 			throws NoSuchFieldException {
 		return instance != null && name != null ? instance.getDeclaredField(name) : null;
