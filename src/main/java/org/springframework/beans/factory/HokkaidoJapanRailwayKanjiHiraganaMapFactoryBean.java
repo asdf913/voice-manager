@@ -52,7 +52,7 @@ public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryB
 	}
 
 	@Nullable
-	private static Map<String, String> createMap(final InputStream is, final String encoding)
+	private static Map<String, String> createMap(@Nullable final InputStream is, final String encoding)
 			throws IOException, CsvValidationException {
 		//
 		Map<String, String> map = null;
@@ -190,8 +190,8 @@ public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryB
 		return test(predicate, value) ? apply(functionTrue, value) : apply(functionFalse, value);
 	}
 
-	private static <T, R, E extends Throwable> R apply(final FailableFunction<T, R, E> instance, final T value)
-			throws E {
+	private static <T, R, E extends Throwable> R apply(@Nullable final FailableFunction<T, R, E> instance,
+			final T value) throws E {
 		return instance != null ? instance.apply(value) : null;
 	}
 
