@@ -128,9 +128,9 @@ class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 		} // try
 			//
 		try (final InputStream is = new ByteArrayInputStream(
-				getBytes(String.join(System.lineSeparator(), "1,2", "1,2")))) {
+				getBytes(String.join(System.lineSeparator(), "1,2", "1,2,3")))) {
 			//
-			Assertions.assertEquals(Collections.singletonMap("1", "2"), createMap(is, "utf-8"));
+			Assertions.assertEquals(Collections.singletonMap("2", "3"), createMap(is, "utf-8"));
 			//
 		} // try
 			//

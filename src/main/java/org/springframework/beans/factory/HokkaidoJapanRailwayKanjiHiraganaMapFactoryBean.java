@@ -68,6 +68,8 @@ public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryB
 			//
 			Pair<String, String> pair = null;
 			//
+			String key, value = null;
+			//
 			while ((ss = readNext(csvReader)) != null) {
 				//
 				if (map == null) {
@@ -80,7 +82,13 @@ public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryB
 					//
 				if ((pair = createPair(ss)) != null) {
 					//
-					map.put(pair.getKey(), pair.getValue());
+					if (Objects.equals(key = pair.getKey(), value = pair.getValue())) {
+						//
+						continue;
+						//
+					} // if
+						//
+					map.put(key, value);
 					//
 				} // for
 					//
@@ -103,7 +111,7 @@ public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryB
 			//
 			s = ss[i];
 			//
-			if (i == 0) {
+			if (i == 1) {
 				//
 				if (pair == null) {
 					//
@@ -113,7 +121,7 @@ public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryB
 					//
 				setLeft(pair, s);
 				//
-			} else if (i == 1) {
+			} else if (i == 2) {
 				//
 				setRight(pair, s);
 				//
