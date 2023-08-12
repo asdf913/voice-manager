@@ -4,9 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -54,7 +52,7 @@ public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryB
 	}
 
 	private static Map<String, String> createMap(final InputStream is, final String encoding)
-			throws UnsupportedEncodingException, MalformedURLException, IOException, CsvValidationException {
+			throws IOException, CsvValidationException {
 		//
 		Map<String, String> map = null;
 		//

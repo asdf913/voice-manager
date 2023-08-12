@@ -196,7 +196,7 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends StringM
 
 	@Nullable
 	private static List<Triple<String, UnicodeBlock, String>> getTriples(@Nullable final Field[] fs,
-			final Object instance) throws IllegalArgumentException, IllegalAccessException {
+			final Object instance) {
 		//
 		Field f = null;
 		//
