@@ -153,8 +153,7 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends StringM
 	}
 
 	@Nullable
-	private static Table<String, UnicodeBlock, String> createTable(@Nullable final Object[] os)
-			throws IllegalAccessException {
+	private static Table<String, UnicodeBlock, String> createTable(@Nullable final Object[] os) {
 		//
 		Table<String, UnicodeBlock, String> table = null;
 		//
