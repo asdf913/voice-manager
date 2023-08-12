@@ -229,6 +229,7 @@ public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryB
 		return predicate != null && predicate.test(t, u) ? apply(functionTrue, t, u) : apply(functionFalse, t, u);
 	}
 
+	@Nullable
 	private static <T, R, U, E extends Throwable> R apply(@Nullable final FailableBiFunction<T, U, R, E> instance,
 			final T t, final U u) throws E {
 		return instance != null ? instance.apply(t, u) : null;
