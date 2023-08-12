@@ -3,12 +3,15 @@ package org.springframework.beans.factory;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
+import java.lang.Character.UnicodeBlock;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
+import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
@@ -19,6 +22,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.meeuw.functional.Predicates;
 
 import com.opencsv.CSVReader;
 
@@ -27,8 +31,8 @@ import io.github.toolfactory.narcissus.Narcissus;
 class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 
 	private static Method METHOD_CREATE_MAP, METHOD_GET_CLASS, METHOD_OPEN_STREAM, METHOD_GET_DECLARED_FIELD,
-			METHOD_TEST, METHOD_TEST_AND_APPLY, METHOD_READ_NEXT, METHOD_CREATE_PAIR, METHOD_SET_LEFT,
-			METHOD_SET_RIGHT = null;
+			METHOD_TEST, METHOD_TEST_AND_APPLY, METHOD_READ_NEXT, METHOD_CREATE_PAIR, METHOD_SET_LEFT, METHOD_SET_RIGHT,
+			METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK, METHOD_CONTAINS, METHOD_TEST_AND_ACCEPT, METHOD_ADD = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -56,6 +60,16 @@ class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 		(METHOD_SET_LEFT = clz.getDeclaredMethod("setLeft", MutablePair.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_SET_RIGHT = clz.getDeclaredMethod("setRight", MutablePair.class, Object.class)).setAccessible(true);
+		//
+		(METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK = clz.getDeclaredMethod("isAllCharacterInSameUnicodeBlock",
+				String.class, UnicodeBlock.class)).setAccessible(true);
+		//
+		(METHOD_CONTAINS = clz.getDeclaredMethod("contains", Collection.class, Object.class)).setAccessible(true);
+		//
+		(METHOD_TEST_AND_ACCEPT = clz.getDeclaredMethod("testAndAccept", BiPredicate.class, Object.class, Object.class,
+				BiConsumer.class)).setAccessible(true);
+		//
+		(METHOD_ADD = clz.getDeclaredMethod("add", Collection.class, Object.class)).setAccessible(true);
 		//
 	}
 
@@ -130,7 +144,7 @@ class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 		try (final InputStream is = new ByteArrayInputStream(
 				getBytes(String.join(System.lineSeparator(), "1,2", "1,2,3")))) {
 			//
-			Assertions.assertEquals(Collections.singletonMap("2", "3"), createMap(is, "utf-8"));
+			Assertions.assertEquals(Collections.emptyMap(), createMap(is, "utf-8"));
 			//
 		} // try
 			//
@@ -330,6 +344,82 @@ class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 	private static <R> void setRight(final MutablePair<?, R> instance, final R right) throws Throwable {
 		try {
 			METHOD_SET_RIGHT.invoke(null, instance, right);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testIsAllCharacterInSameUnicodeBlock() throws Throwable {
+		//
+		Assertions.assertTrue(isAllCharacterInSameUnicodeBlock(null, null));
+		//
+	}
+
+	private static boolean isAllCharacterInSameUnicodeBlock(final String string, final UnicodeBlock unicodeBlock)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK.invoke(null, string, unicodeBlock);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(Util.toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testContains() throws Throwable {
+		//
+		Assertions.assertFalse(contains(null, null));
+		//
+		Assertions.assertTrue(contains(Collections.singleton(null), null));
+		//
+	}
+
+	private static boolean contains(final Collection<?> items, final Object item) throws Throwable {
+		try {
+			final Object obj = METHOD_CONTAINS.invoke(null, items, item);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(Util.toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testTestAndAccept() {
+		//
+		Assertions.assertDoesNotThrow(() -> testAndAccept(null, null, null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> testAndAccept(Predicates.biAlwaysTrue(), null, null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> testAndAccept(Predicates.biAlwaysFalse(), null, null, null));
+		//
+	}
+
+	private static <T, U> void testAndAccept(final BiPredicate<T, U> instance, final T t, final U u,
+			final BiConsumer<T, U> consumer) throws Throwable {
+		try {
+			METHOD_TEST_AND_ACCEPT.invoke(null, instance, t, u, consumer);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testAdd() {
+		//
+		Assertions.assertDoesNotThrow(() -> add(null, null));
+		//
+	}
+
+	private static <E> void add(final Collection<E> items, final E item) throws Throwable {
+		try {
+			METHOD_ADD.invoke(null, items, item);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

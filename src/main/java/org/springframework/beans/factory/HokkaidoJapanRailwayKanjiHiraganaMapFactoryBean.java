@@ -4,16 +4,23 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.lang.Character.UnicodeBlock;
 import java.lang.reflect.Field;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.function.FailableBiFunction;
 import org.apache.commons.lang3.function.FailableBiFunctionUtil;
 import org.apache.commons.lang3.function.FailableFunction;
@@ -82,7 +89,8 @@ public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryB
 					//
 				if ((pair = createPair(ss)) != null) {
 					//
-					if (Objects.equals(key = pair.getKey(), value = pair.getValue())) {
+					if (Objects.equals(key = pair.getKey(), value = pair.getValue())
+							|| !isAllCharacterInSameUnicodeBlock(key, UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)) {
 						//
 						continue;
 						//
@@ -98,6 +106,57 @@ public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryB
 			//
 		return map;
 		//
+	}
+
+	private static boolean isAllCharacterInSameUnicodeBlock(final String string, final UnicodeBlock unicodeBlock) {
+		//
+		final char[] cs = string != null ? string.toCharArray() : null;
+		//
+		if (cs != null) {
+			//
+			List<UnicodeBlock> unicodeBlocks = null;
+			//
+			for (final char c : cs) {
+				//
+				testAndAccept((a, b) -> b != null && !contains(a, b),
+						unicodeBlocks = ObjectUtils.getIfNull(unicodeBlocks, ArrayList::new), UnicodeBlock.of(c),
+						HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean::add);
+				//
+			} // for
+				//
+			return Objects.equals(Collections.singletonList(unicodeBlock), unicodeBlocks);
+			//
+		} // if
+			//
+		return true;
+		//
+	}
+
+	private static boolean contains(final Collection<?> items, final Object item) {
+		return items != null && items.contains(item);
+	}
+
+	private static <T, U> void testAndAccept(final BiPredicate<T, U> instance, final T t, final U u,
+			final BiConsumer<T, U> consumer) {
+		if (test(instance, t, u)) {
+			accept(consumer, t, u);
+		} // if
+	}
+
+	private static <T, U> void accept(final BiConsumer<T, U> instance, final T t, final U u) {
+		if (instance != null) {
+			instance.accept(t, u);
+		}
+	}
+
+	private static <T, U> boolean test(final BiPredicate<T, U> instance, final T t, final U u) {
+		return instance != null && instance.test(t, u);
+	}
+
+	private static <E> void add(final Collection<E> items, final E item) {
+		if (items != null) {
+			items.add(item);
+		}
 	}
 
 	@Nullable
