@@ -224,9 +224,7 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends StringM
 				//
 			} else {
 				//
-				f.setAccessible(true);
-				//
-				temp = f.get(instance);
+				temp = Narcissus.getObjectField(instance, f);
 				//
 			} // if
 				//
