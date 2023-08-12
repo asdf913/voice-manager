@@ -91,7 +91,7 @@ public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryB
 	}
 
 	@Nullable
-	private static Pair<String, String> createPair(final String[] ss) {
+	private static Pair<String, String> createPair(@Nullable final String[] ss) {
 		//
 		MutablePair<String, String> pair = null;
 		//
@@ -135,7 +135,7 @@ public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryB
 		}
 	}
 
-	private static <R> void setRight(final MutablePair<?, R> instance, final R right) {
+	private static <R> void setRight(@Nullable final MutablePair<?, R> instance, final R right) {
 		if (instance != null) {
 			instance.setRight(right);
 		}
