@@ -67,7 +67,7 @@ public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryB
 			//
 			MutablePair<String, String> pair = null;
 			//
-			while ((ss = csvReader != null ? csvReader.readNext() : null) != null) {
+			while ((ss = readNext(csvReader)) != null) {
 				//
 				if (map == null) {
 					//
@@ -118,6 +118,32 @@ public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryB
 		} // try
 			//
 		return map;
+		//
+	}
+
+	private static String[] readNext(final CSVReader instance) throws IOException, CsvValidationException {
+		//
+		if (instance == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		try {
+			//
+			if (Narcissus.getField(instance, getDeclaredField(getClass(instance), "peekedLines")) == null) {
+				//
+				return null;
+				//
+			} // if
+				//
+		} catch (final NoSuchFieldException e) {
+			//
+			LoggerUtil.error(LOG, e.getMessage(), e);
+			//
+		} // try
+			//
+		return instance.readNext();
 		//
 	}
 

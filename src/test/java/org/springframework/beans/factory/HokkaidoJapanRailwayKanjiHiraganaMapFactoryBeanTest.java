@@ -19,12 +19,14 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.opencsv.CSVReader;
+
 import io.github.toolfactory.narcissus.Narcissus;
 
 class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 
 	private static Method METHOD_CREATE_MAP, METHOD_GET_CLASS, METHOD_OPEN_STREAM, METHOD_GET_DECLARED_FIELD,
-			METHOD_TEST, METHOD_TEST_AND_APPLY = null;
+			METHOD_TEST, METHOD_TEST_AND_APPLY, METHOD_READ_NEXT = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -44,6 +46,8 @@ class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 		//
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", BiPredicate.class, Object.class, Object.class,
 				FailableBiFunction.class, FailableBiFunction.class)).setAccessible(true);
+		//
+		(METHOD_READ_NEXT = clz.getDeclaredMethod("readNext", CSVReader.class)).setAccessible(true);
 		//
 	}
 
@@ -244,6 +248,27 @@ class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 			final FailableBiFunction<T, U, R, E> functionFalse) throws Throwable {
 		try {
 			return (R) METHOD_TEST_AND_APPLY.invoke(null, predicate, t, u, functionTrue, functionFalse);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testReadNext() throws Throwable {
+		//
+		Assert.assertNull(readNext(cast(CSVReader.class, Narcissus.allocateInstance(CSVReader.class))));
+		//
+	}
+
+	private static String[] readNext(final CSVReader instance) throws Throwable {
+		try {
+			final Object obj = METHOD_READ_NEXT.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String[]) {
+				return (String[]) obj;
+			}
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
