@@ -108,7 +108,8 @@ public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryB
 		//
 	}
 
-	private static boolean isAllCharacterInSameUnicodeBlock(final String string, final UnicodeBlock unicodeBlock) {
+	private static boolean isAllCharacterInSameUnicodeBlock(@Nullable final String string,
+			final UnicodeBlock unicodeBlock) {
 		//
 		final char[] cs = string != null ? string.toCharArray() : null;
 		//
