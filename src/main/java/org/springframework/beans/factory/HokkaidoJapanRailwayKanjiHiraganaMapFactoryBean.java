@@ -15,6 +15,7 @@ import java.util.function.Predicate;
 import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.function.FailableBiFunction;
+import org.apache.commons.lang3.function.FailableBiFunctionUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.tuple.MutablePair;
@@ -216,13 +217,8 @@ public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryB
 	private static <T, U, R, E extends Throwable> R testAndApply(@Nullable final BiPredicate<T, U> predicate,
 			@Nullable final T t, final U u, final FailableBiFunction<T, U, R, E> functionTrue,
 			final FailableBiFunction<T, U, R, E> functionFalse) throws E {
-		return predicate != null && predicate.test(t, u) ? apply(functionTrue, t, u) : apply(functionFalse, t, u);
-	}
-
-	@Nullable
-	private static <T, R, U, E extends Throwable> R apply(@Nullable final FailableBiFunction<T, U, R, E> instance,
-			@Nullable final T t, final U u) throws E {
-		return instance != null ? instance.apply(t, u) : null;
+		return predicate != null && predicate.test(t, u) ? FailableBiFunctionUtil.apply(functionTrue, t, u)
+				: FailableBiFunctionUtil.apply(functionFalse, t, u);
 	}
 
 	@Override

@@ -227,6 +227,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.function.FailableBiConsumer;
 import org.apache.commons.lang3.function.FailableBiFunction;
+import org.apache.commons.lang3.function.FailableBiFunctionUtil;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
@@ -5047,13 +5048,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static <T, U, R, E extends Throwable> R testAndApply(@Nullable final BiPredicate<T, U> predicate, final T t,
 			@Nullable final U u, final FailableBiFunction<T, U, R, E> functionTrue,
 			@Nullable final FailableBiFunction<T, U, R, E> functionFalse) throws E {
-		return predicate != null && predicate.test(t, u) ? apply(functionTrue, t, u) : apply(functionFalse, t, u);
-	}
-
-	@Nullable
-	private static <T, U, R, E extends Throwable> R apply(@Nullable final FailableBiFunction<T, U, R, E> instance,
-			final T t, @Nullable final U u) throws E {
-		return instance != null ? instance.apply(t, u) : null;
+		return predicate != null && predicate.test(t, u) ? FailableBiFunctionUtil.apply(functionTrue, t, u)
+				: FailableBiFunctionUtil.apply(functionFalse, t, u);
 	}
 
 	private static void setEditable(final boolean editable, @Nullable final JTextComponent... jtcs) {
