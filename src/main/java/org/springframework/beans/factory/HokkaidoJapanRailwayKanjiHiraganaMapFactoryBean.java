@@ -43,7 +43,7 @@ public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryB
 	@Override
 	public Map<String, String> getObject() throws Exception {
 		//
-		try (final InputStream is = openStream(testAndApply(Objects::nonNull, url, x -> new URL(x), null))) {
+		try (final InputStream is = openStream(testAndApply(Objects::nonNull, url, URL::new, null))) {
 			//
 			return createMap(is, encoding);
 			//
@@ -56,9 +56,8 @@ public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryB
 		//
 		Map<String, String> map = null;
 		//
-		try (final Reader reader = testAndApply((a, b) -> a != null && b != null, is, encoding,
-				(a, b) -> new InputStreamReader(a, b),
-				(a, b) -> testAndApply(Objects::nonNull, a, x -> new InputStreamReader(x), null));
+		try (final Reader reader = testAndApply((a, b) -> a != null && b != null, is, encoding, InputStreamReader::new,
+				(a, b) -> testAndApply(Objects::nonNull, a, InputStreamReader::new, null));
 				final CSVReader csvReader = testAndApply(Objects::nonNull, reader, CSVReader::new, null)) {
 			//
 			String[] ss = null;
