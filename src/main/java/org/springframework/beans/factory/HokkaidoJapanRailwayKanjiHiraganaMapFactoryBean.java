@@ -90,6 +90,7 @@ public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryB
 		//
 	}
 
+	@Nullable
 	private static Pair<String, String> createPair(final String[] ss) {
 		//
 		MutablePair<String, String> pair = null;
@@ -140,6 +141,7 @@ public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryB
 		}
 	}
 
+	@Nullable
 	private static String[] readNext(final CSVReader instance) throws IOException, CsvValidationException {
 		//
 		if (instance == null) {
@@ -209,6 +211,7 @@ public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryB
 		return test(predicate, value) ? apply(functionTrue, value) : apply(functionFalse, value);
 	}
 
+	@Nullable
 	private static <T, R, E extends Throwable> R apply(@Nullable final FailableFunction<T, R, E> instance,
 			final T value) throws E {
 		return instance != null ? instance.apply(value) : null;
