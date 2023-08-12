@@ -14,6 +14,8 @@ import java.util.Objects;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang3.function.FailableBiFunction;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.tuple.MutablePair;
@@ -151,7 +153,8 @@ public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryB
 		return instance != null ? instance.getClass() : null;
 	}
 
-	private static Field getDeclaredField(final Class<?> instance, final String name) throws NoSuchFieldException {
+	private static Field getDeclaredField(@Nullable final Class<?> instance, @Nullable final String name)
+			throws NoSuchFieldException {
 		return instance != null && name != null ? instance.getDeclaredField(name) : null;
 	}
 
@@ -165,11 +168,11 @@ public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryB
 		return instance != null ? instance.apply(value) : null;
 	}
 
-	private static final <T> boolean test(final Predicate<T> instance, final T value) {
+	private static final <T> boolean test(@Nullable final Predicate<T> instance, final T value) {
 		return instance != null && instance.test(value);
 	}
 
-	private static <T, U, R, E extends Throwable> R testAndApply(final BiPredicate<T, U> predicate, final T t,
+	private static <T, U, R, E extends Throwable> R testAndApply(@Nullable final BiPredicate<T, U> predicate, final T t,
 			final U u, final FailableBiFunction<T, U, R, E> functionTrue,
 			final FailableBiFunction<T, U, R, E> functionFalse) throws E {
 		return predicate != null && predicate.test(t, u) ? apply(functionTrue, t, u) : apply(functionFalse, t, u);
