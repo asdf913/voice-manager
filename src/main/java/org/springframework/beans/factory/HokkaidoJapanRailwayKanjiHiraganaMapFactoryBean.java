@@ -113,12 +113,6 @@ public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryB
 				//
 			} else if (i == 1) {
 				//
-				if (pair == null) {
-					//
-					pair = MutablePair.of(null, s);
-					//
-				} // if
-					//
 				setRight(pair, s);
 				//
 			} // if

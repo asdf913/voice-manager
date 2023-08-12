@@ -287,6 +287,8 @@ class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 		//
 		Assertions.assertNull(createPair(null));
 		//
+		Assertions.assertEquals(Pair.of(null, null), createPair(new String[] { null, null, null }));
+		//
 	}
 
 	private static Pair<String, String> createPair(final String[] ss) throws Throwable {
