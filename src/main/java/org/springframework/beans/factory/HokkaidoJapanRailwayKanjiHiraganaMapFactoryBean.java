@@ -231,7 +231,7 @@ public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryB
 
 	@Nullable
 	private static <T, R, U, E extends Throwable> R apply(@Nullable final FailableBiFunction<T, U, R, E> instance,
-			final T t, final U u) throws E {
+			@Nullable final T t, final U u) throws E {
 		return instance != null ? instance.apply(t, u) : null;
 	}
 
