@@ -11,9 +11,9 @@ import java.util.Objects;
 import java.util.function.Predicate;
 
 import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.jsoup.nodes.Element;
-import org.jsoup.nodes.Node;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -154,7 +154,7 @@ class SeibuRailwayKanjiRomajiMapFactoryBeanTest {
 		//
 		if (function != null) {
 			//
-			instance = function.apply(clz);
+			instance = FailableFunctionUtil.apply(function, clz);
 			//
 		} else {
 			//

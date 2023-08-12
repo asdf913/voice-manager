@@ -16,6 +16,7 @@ import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.function.FailableBiFunction;
 import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
@@ -204,13 +205,8 @@ public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryB
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
 			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
 			throws E {
-		return test(predicate, value) ? apply(functionTrue, value) : apply(functionFalse, value);
-	}
-
-	@Nullable
-	private static <T, R, E extends Throwable> R apply(@Nullable final FailableFunction<T, R, E> instance,
-			final T value) throws E {
-		return instance != null ? instance.apply(value) : null;
+		return test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
+				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
 	private static final <T> boolean test(@Nullable final Predicate<T> instance, final T value) {
