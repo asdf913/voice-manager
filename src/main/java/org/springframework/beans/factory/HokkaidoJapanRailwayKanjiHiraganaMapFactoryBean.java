@@ -123,6 +123,7 @@ public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryB
 		//
 	}
 
+	@Nullable
 	private static final InputStream openStream(final URL instance) throws IOException {
 		//
 		if (instance == null) {
