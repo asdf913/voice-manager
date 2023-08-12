@@ -129,7 +129,7 @@ public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryB
 		//
 	}
 
-	private static <L> void setLeft(final MutablePair<L, ?> instance, final L left) {
+	private static <L> void setLeft(@Nullable final MutablePair<L, ?> instance, final L left) {
 		if (instance != null) {
 			instance.setLeft(left);
 		}
@@ -142,7 +142,7 @@ public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryB
 	}
 
 	@Nullable
-	private static String[] readNext(final CSVReader instance) throws IOException, CsvValidationException {
+	private static String[] readNext(@Nullable final CSVReader instance) throws IOException, CsvValidationException {
 		//
 		if (instance == null) {
 			//
@@ -169,7 +169,7 @@ public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryB
 	}
 
 	@Nullable
-	private static final InputStream openStream(final URL instance) throws IOException {
+	private static final InputStream openStream(@Nullable final URL instance) throws IOException {
 		//
 		if (instance == null) {
 			//
@@ -195,7 +195,7 @@ public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryB
 		//
 	}
 
-	private static Class<?> getClass(final Object instance) {
+	private static Class<?> getClass(@Nullable final Object instance) {
 		return instance != null ? instance.getClass() : null;
 	}
 
