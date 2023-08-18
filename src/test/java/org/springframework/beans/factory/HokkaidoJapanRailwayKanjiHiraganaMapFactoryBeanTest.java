@@ -33,8 +33,8 @@ class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 
 	private static Method METHOD_CREATE_MAP, METHOD_FOR_NAME, METHOD_GET_CLASS, METHOD_OPEN_STREAM,
 			METHOD_GET_DECLARED_FIELD, METHOD_TEST, METHOD_TEST_AND_APPLY, METHOD_READ_NEXT, METHOD_CREATE_PAIR,
-			METHOD_SET_LEFT, METHOD_SET_RIGHT, METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK, METHOD_CONTAINS,
-			METHOD_TEST_AND_ACCEPT, METHOD_ADD = null;
+			METHOD_SET_RIGHT, METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK, METHOD_CONTAINS, METHOD_TEST_AND_ACCEPT,
+			METHOD_ADD = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -60,8 +60,6 @@ class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 		(METHOD_READ_NEXT = clz.getDeclaredMethod("readNext", CSVReader.class)).setAccessible(true);
 		//
 		(METHOD_CREATE_PAIR = clz.getDeclaredMethod("createPair", String[].class)).setAccessible(true);
-		//
-		(METHOD_SET_LEFT = clz.getDeclaredMethod("setLeft", MutablePair.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_SET_RIGHT = clz.getDeclaredMethod("setRight", MutablePair.class, Object.class)).setAccessible(true);
 		//
@@ -345,21 +343,6 @@ class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 				return (Pair) obj;
 			}
 			throw new Throwable(Util.toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testSetLeft() {
-		//
-		Assertions.assertDoesNotThrow(() -> setLeft(null, null));
-		//
-	}
-
-	private static <L> void setLeft(final MutablePair<L, ?> instance, final L left) throws Throwable {
-		try {
-			METHOD_SET_LEFT.invoke(null, instance, left);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

@@ -32,6 +32,7 @@ import org.apache.commons.lang3.function.FailableBiFunctionUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.commons.lang3.tuple.MutablePairUtil;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -209,7 +210,7 @@ public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryB
 					//
 				} // if
 					//
-				setLeft(pair, s);
+				MutablePairUtil.setLeft(pair, s);
 				//
 			} else if (i == 2) {
 				//
@@ -221,12 +222,6 @@ public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryB
 			//
 		return pair;
 		//
-	}
-
-	private static <L> void setLeft(@Nullable final MutablePair<L, ?> instance, final L left) {
-		if (instance != null) {
-			instance.setLeft(left);
-		}
 	}
 
 	private static <R> void setRight(@Nullable final MutablePair<?, R> instance, final R right) {
