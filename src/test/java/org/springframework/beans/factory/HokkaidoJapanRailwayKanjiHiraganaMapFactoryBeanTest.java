@@ -8,6 +8,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
@@ -30,16 +31,19 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 
-	private static Method METHOD_CREATE_MAP, METHOD_GET_CLASS, METHOD_OPEN_STREAM, METHOD_GET_DECLARED_FIELD,
-			METHOD_TEST, METHOD_TEST_AND_APPLY, METHOD_READ_NEXT, METHOD_CREATE_PAIR, METHOD_SET_LEFT, METHOD_SET_RIGHT,
-			METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK, METHOD_CONTAINS, METHOD_TEST_AND_ACCEPT, METHOD_ADD = null;
+	private static Method METHOD_CREATE_MAP, METHOD_FOR_NAME, METHOD_GET_CLASS, METHOD_OPEN_STREAM,
+			METHOD_GET_DECLARED_FIELD, METHOD_TEST, METHOD_TEST_AND_APPLY, METHOD_READ_NEXT, METHOD_CREATE_PAIR,
+			METHOD_SET_LEFT, METHOD_SET_RIGHT, METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK, METHOD_CONTAINS,
+			METHOD_TEST_AND_ACCEPT, METHOD_ADD = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
 		//
 		final Class<?> clz = HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean.class;
 		//
-		(METHOD_CREATE_MAP = clz.getDeclaredMethod("createMap", InputStream.class, String.class)).setAccessible(true);
+		(METHOD_CREATE_MAP = clz.getDeclaredMethod("createMap", InputStream.class, Charset.class)).setAccessible(true);
+		//
+		(METHOD_FOR_NAME = clz.getDeclaredMethod("forName", String.class)).setAccessible(true);
 		//
 		(METHOD_GET_CLASS = clz.getDeclaredMethod("getClass", Object.class)).setAccessible(true);
 		//
@@ -144,7 +148,7 @@ class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 		try (final InputStream is = new ByteArrayInputStream(
 				getBytes(String.join(System.lineSeparator(), "1,2", "1,2,3")))) {
 			//
-			Assertions.assertEquals(Collections.emptyMap(), createMap(is, "utf-8"));
+			Assertions.assertEquals(Collections.emptyMap(), createMap(is, forName("utf-8")));
 			//
 		} // try
 			//
@@ -154,13 +158,40 @@ class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 		return instance != null ? instance.getBytes() : null;
 	}
 
-	private static Map<String, String> createMap(final InputStream is, final String encoding) throws Throwable {
+	private static Map<String, String> createMap(final InputStream is, final Charset encoding) throws Throwable {
 		try {
 			final Object obj = METHOD_CREATE_MAP.invoke(null, is, encoding);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Map) {
 				return (Map) obj;
+			}
+			throw new Throwable(Util.toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	public void testForName() throws Throwable {
+		//
+		Assertions.assertNull(forName(null));
+		//
+		Assertions.assertNull(forName(""));
+		//
+		Assertions.assertNull(forName(" "));
+		//
+		Assertions.assertNull(forName("A"));
+		//
+	}
+
+	private static Charset forName(final String instance) throws Throwable {
+		try {
+			final Object obj = METHOD_FOR_NAME.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Charset) {
+				return (Charset) obj;
 			}
 			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

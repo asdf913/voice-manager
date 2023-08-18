@@ -11,6 +11,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -25,6 +26,7 @@ import java.util.function.Predicate;
 import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableBiFunction;
 import org.apache.commons.lang3.function.FailableBiFunctionUtil;
 import org.apache.commons.lang3.function.FailableFunction;
@@ -68,14 +70,28 @@ public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryB
 		//
 		try (final InputStream is = openStream(testAndApply(Objects::nonNull, url, URL::new, null))) {
 			//
-			return createMap(is, encoding);
+			return createMap(is, forName(encoding));
+			//
+		} // try
+			//
+	}
+
+	private static Charset forName(final String instance) {
+		//
+		try {
+			//
+			return StringUtils.isNotBlank(instance) ? Charset.forName(instance) : null;
+			//
+		} catch (final Exception e) {
+			//
+			return null;
 			//
 		} // try
 			//
 	}
 
 	@Nullable
-	private static Map<String, String> createMap(@Nullable final InputStream is, final String encoding)
+	private static Map<String, String> createMap(@Nullable final InputStream is, final Charset encoding)
 			throws IOException, CsvValidationException {
 		//
 		Map<String, String> map = null;
