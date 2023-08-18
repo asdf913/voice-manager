@@ -15,6 +15,9 @@ public class CSVReaderUtil {
 
 	private static final Logger LOG = LoggerFactory.getLogger(CSVReaderUtil.class);
 
+	private CSVReaderUtil() {
+	}
+
 	public static String[] readNext(final CSVReader instance) throws CsvValidationException, IOException {
 		//
 		if (instance == null) {
