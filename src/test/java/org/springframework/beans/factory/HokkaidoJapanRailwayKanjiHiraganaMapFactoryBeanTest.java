@@ -173,7 +173,7 @@ class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 	}
 
 	@Test
-	public void testForName() throws Throwable {
+	void testForName() throws Throwable {
 		//
 		Assertions.assertNull(forName(null));
 		//
