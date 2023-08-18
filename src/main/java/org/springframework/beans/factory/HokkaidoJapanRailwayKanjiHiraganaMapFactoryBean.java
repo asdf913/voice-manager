@@ -39,6 +39,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
 
 import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderUtil;
 import com.opencsv.exceptions.CsvValidationException;
 
 import io.github.toolfactory.narcissus.Narcissus;
@@ -108,7 +109,7 @@ public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryB
 			//
 			String key, value = null;
 			//
-			while ((ss = readNext(csvReader)) != null) {
+			while ((ss = CSVReaderUtil.readNext(csvReader)) != null) {
 				//
 				if (map == null) {
 					//
@@ -221,33 +222,6 @@ public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryB
 		} // for
 			//
 		return pair;
-		//
-	}
-
-	@Nullable
-	private static String[] readNext(@Nullable final CSVReader instance) throws IOException, CsvValidationException {
-		//
-		if (instance == null) {
-			//
-			return null;
-			//
-		} // if
-			//
-		try {
-			//
-			if (Narcissus.getField(instance, getDeclaredField(getClass(instance), "peekedLines")) == null) {
-				//
-				return null;
-				//
-			} // if
-				//
-		} catch (final NoSuchFieldException e) {
-			//
-			LoggerUtil.error(LOG, e.getMessage(), e);
-			//
-		} // try
-			//
-		return instance.readNext();
 		//
 	}
 
