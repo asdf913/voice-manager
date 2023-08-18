@@ -93,7 +93,7 @@ public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryB
 	}
 
 	@Nullable
-	private static Map<String, String> createMap(@Nullable final InputStream is, final Charset encoding)
+	private static Map<String, String> createMap(@Nullable final InputStream is, @Nullable final Charset encoding)
 			throws IOException, CsvValidationException {
 		//
 		Map<String, String> map = null;
