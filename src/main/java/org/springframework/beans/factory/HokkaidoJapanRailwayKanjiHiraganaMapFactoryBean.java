@@ -214,7 +214,7 @@ public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryB
 				//
 			} else if (i == 2) {
 				//
-				setRight(pair, s);
+				MutablePairUtil.setRight(pair, s);
 				//
 			} // if
 				//
@@ -222,12 +222,6 @@ public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryB
 			//
 		return pair;
 		//
-	}
-
-	private static <R> void setRight(@Nullable final MutablePair<?, R> instance, final R right) {
-		if (instance != null) {
-			instance.setRight(right);
-		}
 	}
 
 	@Nullable

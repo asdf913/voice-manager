@@ -17,7 +17,6 @@ import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
 import org.apache.commons.lang3.function.FailableBiFunction;
-import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -33,8 +32,7 @@ class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 
 	private static Method METHOD_CREATE_MAP, METHOD_FOR_NAME, METHOD_GET_CLASS, METHOD_OPEN_STREAM,
 			METHOD_GET_DECLARED_FIELD, METHOD_TEST, METHOD_TEST_AND_APPLY, METHOD_READ_NEXT, METHOD_CREATE_PAIR,
-			METHOD_SET_RIGHT, METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK, METHOD_CONTAINS, METHOD_TEST_AND_ACCEPT,
-			METHOD_ADD = null;
+			METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK, METHOD_CONTAINS, METHOD_TEST_AND_ACCEPT, METHOD_ADD = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -60,8 +58,6 @@ class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 		(METHOD_READ_NEXT = clz.getDeclaredMethod("readNext", CSVReader.class)).setAccessible(true);
 		//
 		(METHOD_CREATE_PAIR = clz.getDeclaredMethod("createPair", String[].class)).setAccessible(true);
-		//
-		(METHOD_SET_RIGHT = clz.getDeclaredMethod("setRight", MutablePair.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK = clz.getDeclaredMethod("isAllCharacterInSameUnicodeBlock",
 				String.class, UnicodeBlock.class)).setAccessible(true);
@@ -343,21 +339,6 @@ class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 				return (Pair) obj;
 			}
 			throw new Throwable(Util.toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testSetRight() {
-		//
-		Assertions.assertDoesNotThrow(() -> setRight(null, null));
-		//
-	}
-
-	private static <R> void setRight(final MutablePair<?, R> instance, final R right) throws Throwable {
-		try {
-			METHOD_SET_RIGHT.invoke(null, instance, right);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
