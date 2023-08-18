@@ -1,13 +1,52 @@
 package com.opencsv;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.LoggerUtil;
 
 import com.opencsv.exceptions.CsvValidationException;
 
-public interface CSVReaderUtil {
+import io.github.toolfactory.narcissus.Narcissus;
 
-	static String[] readNext(final CSVReader instance) throws CsvValidationException, IOException {
-		return instance != null ? instance.readNext() : null;
+public class CSVReaderUtil {
+
+	private static final Logger LOG = LoggerFactory.getLogger(CSVReaderUtil.class);
+
+	public static String[] readNext(final CSVReader instance) throws CsvValidationException, IOException {
+		//
+		if (instance == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		try {
+			//
+			if (Narcissus.getField(instance, getDeclaredField(getClass(instance), "peekedLines")) == null) {
+				//
+				return null;
+				//
+			} // if
+				//
+		} catch (final NoSuchFieldException e) {
+			//
+			LoggerUtil.error(LOG, e.getMessage(), e);
+			//
+		} // try
+			//
+		return instance.readNext();
+		//
+	}
+
+	private static Class<?> getClass(final Object instance) {
+		return instance != null ? instance.getClass() : null;
+	}
+
+	private static Field getDeclaredField(final Class<?> instance, final String name) throws NoSuchFieldException {
+		return instance != null && name != null ? instance.getDeclaredField(name) : null;
 	}
 
 }
