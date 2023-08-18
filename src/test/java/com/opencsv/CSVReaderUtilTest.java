@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import io.github.toolfactory.narcissus.Narcissus;
 
-public class CSVReaderUtilTest {
+class CSVReaderUtilTest {
 
 	private static Method METHOD_GET_CLASS, METHOD_GET_DECLARED_FIELD = null;
 
