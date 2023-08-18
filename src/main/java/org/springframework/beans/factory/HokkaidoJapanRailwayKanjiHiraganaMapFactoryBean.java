@@ -77,7 +77,7 @@ public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryB
 	}
 
 	@Nullable
-	private static Charset forName(final String instance) {
+	private static Charset forName(@Nullable final String instance) {
 		//
 		try {
 			//
