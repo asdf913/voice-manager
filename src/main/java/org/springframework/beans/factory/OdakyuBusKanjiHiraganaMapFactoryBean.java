@@ -160,7 +160,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 					//
 				checkIfKeyExistsAndDifferenceValue(result, entry);
 				//
-				put(result, Util.toString(getKey(entry)), Util.toString(getValue(entry)));
+				Util.put(result, Util.toString(getKey(entry)), Util.toString(getValue(entry)));
 				//
 			} // for
 				//
@@ -256,7 +256,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 				//
 			} // if
 				//
-			put(result = ObjectUtils.getIfNull(result, LinkedHashMap::new), name, ruby);
+			Util.put(result = ObjectUtils.getIfNull(result, LinkedHashMap::new), name, ruby);
 			//
 		} // for
 			//
@@ -313,12 +313,6 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 	private static <T, U> void accept(@Nullable final BiConsumer<T, U> instance, final T t, final U u) {
 		if (instance != null) {
 			instance.accept(t, u);
-		}
-	}
-
-	private static <K, V> void put(@Nullable final Map<K, V> instance, @Nullable final K key, @Nullable final V value) {
-		if (instance != null) {
-			instance.put(key, value);
 		}
 	}
 

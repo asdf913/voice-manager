@@ -44,7 +44,7 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 
 	private static Method METHOD_GET_OBJECT, METHOD_CREATE_MAP, METHOD_TEST_AND_APPLY, METHOD_CAST, METHOD_PROCESS,
 			METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK, METHOD_CONTAINS, METHOD_ADD, METHOD_TEST2, METHOD_TEST3,
-			METHOD_ACCEPT, METHOD_PUT, METHOD_OPEN_STREAM, METHOD_GET_DECLARED_FIELD, METHOD_GET,
+			METHOD_ACCEPT, METHOD_OPEN_STREAM, METHOD_GET_DECLARED_FIELD, METHOD_GET,
 			METHOD_CHECK_IF_KEY_EXISTS_AND_DIFFERENCE_VALUE, METHOD_GET_KEY, METHOD_GET_VALUE, METHOD_PERFORM = null;
 
 	@BeforeAll
@@ -76,8 +76,6 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 		//
 		(METHOD_ACCEPT = clz.getDeclaredMethod("accept", BiConsumer.class, Object.class, Object.class))
 				.setAccessible(true);
-		//
-		(METHOD_PUT = clz.getDeclaredMethod("put", Map.class, Object.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_OPEN_STREAM = clz.getDeclaredMethod("openStream", URL.class)).setAccessible(true);
 		//
@@ -405,20 +403,6 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 	private static <T, U> void accept(final BiConsumer<T, U> instance, final T t, final U u) throws Throwable {
 		try {
 			METHOD_ACCEPT.invoke(null, instance, t, u);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testPut() {
-		//
-		Assertions.assertDoesNotThrow(() -> put(null, null, null));
-	}
-
-	private static <K, V> void put(final Map<K, V> instance, final K key, final V value) throws Throwable {
-		try {
-			METHOD_PUT.invoke(null, instance, key, value);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
