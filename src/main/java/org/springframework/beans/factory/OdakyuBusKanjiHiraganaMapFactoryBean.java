@@ -84,24 +84,26 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		//
 		List<?> items = null;
 		//
+		final ObjectMapper objectMapper = new ObjectMapper();
+		//
 		try (final InputStream is = openStream(testAndApply(Objects::nonNull, url, URL::new, null))) {
 			//
 			items = cast(List.class,
 					testAndApply(OdakyuBusKanjiHiraganaMapFactoryBean::containsKey,
 							cast(Map.class,
 									testAndApply(Objects::nonNull, is,
-											x -> new ObjectMapper().readValue(x, Object.class), null)),
+											x -> ObjectMapperUtil.readValue(objectMapper, x, Object.class), null)),
 							"items", MapUtils::getObject, null));
 			//
 		} // try
 			//
-		return getObject(getConfiguration(), items);
+		return getObject(getConfiguration(), items, objectMapper);
 		//
 	}
 
 	@Nullable
-	private static Map<String, String> getObject(final Configuration configuration, @Nullable final List<?> items)
-			throws IOException, TemplateException {
+	private static Map<String, String> getObject(final Configuration configuration, @Nullable final List<?> items,
+			final ObjectMapper objectMapper) throws IOException, TemplateException {
 		//
 		Map<?, ?> map = null;
 		//
@@ -125,7 +127,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 				//
 				TemplateUtil.process(ConfigurationUtil.getTemplate(configuration, ""), map, writer);
 				//
-				if ((map = createMap(toString(writer))) == null || map.isEmpty()) {
+				if ((map = createMap(toString(writer), objectMapper)) == null || map.isEmpty()) {
 					//
 					continue;
 					//
@@ -195,7 +197,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 	}
 
 	@Nullable
-	private static Map<String, String> createMap(final String url) throws IOException {
+	private static Map<String, String> createMap(final String url, final ObjectMapper objectMapper) throws IOException {
 		//
 		List<?> items = null;
 		//
@@ -204,7 +206,9 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 			items = cast(List.class,
 					testAndApply(OdakyuBusKanjiHiraganaMapFactoryBean::containsKey,
 							cast(Map.class, testAndApply(Objects::nonNull, is,
-									x -> ObjectMapperUtil.readValue(new ObjectMapper(), x, Object.class), null)),
+									x -> ObjectMapperUtil.readValue(
+											objectMapper != null ? objectMapper : new ObjectMapper(), x, Object.class),
+									null)),
 							"items", MapUtils::getObject, null));
 			//
 		} // try

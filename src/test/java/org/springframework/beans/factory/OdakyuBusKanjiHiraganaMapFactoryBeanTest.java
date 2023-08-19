@@ -49,7 +49,8 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 		//
 		final Class<?> clz = OdakyuBusKanjiHiraganaMapFactoryBean.class;
 		//
-		(METHOD_GET_OBJECT = clz.getDeclaredMethod("getObject", Configuration.class, List.class)).setAccessible(true);
+		(METHOD_GET_OBJECT = clz.getDeclaredMethod("getObject", Configuration.class, List.class, ObjectMapper.class))
+				.setAccessible(true);
 		//
 		(METHOD_GET_CLASS = clz.getDeclaredMethod("getClass", Object.class)).setAccessible(true);
 		//
@@ -161,17 +162,23 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 		//
 		Assertions.assertNull(getObject(instance));
 		//
-		Assertions.assertNull(getObject(null, null));
+		Assertions.assertNull(getObject(null, null, null));
 		//
-		Assertions.assertNull(getObject(null, Collections.singletonList(null)));
+		Assertions.assertNull(getObject(null, Collections.singletonList(null), null));
 		//
-		Assertions.assertNull(getObject(null, Collections.singletonList(Collections.singletonMap("code", null))));
+		Assertions.assertNull(getObject(null, Collections.singletonList(Collections.singletonMap("code", null)), null));
 		//
-		Assertions.assertNull(getObject(null, Collections
-				.singletonList(ObjectMapperUtil.readValue(objectMapper, "{\"code\":null,\"count\":0}", Object.class))));
+		Assertions
+				.assertNull(getObject(null,
+						Collections.singletonList(
+								ObjectMapperUtil.readValue(objectMapper, "{\"code\":null,\"count\":0}", Object.class)),
+						null));
 		//
-		Assertions.assertNull(getObject(null, Collections
-				.singletonList(ObjectMapperUtil.readValue(objectMapper, "{\"code\":null,\"count\":1}", Object.class))));
+		Assertions
+				.assertNull(getObject(null,
+						Collections.singletonList(
+								ObjectMapperUtil.readValue(objectMapper, "{\"code\":null,\"count\":1}", Object.class)),
+						null));
 		//
 	}
 
@@ -179,10 +186,10 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 		return instance != null ? instance.getObject() : null;
 	}
 
-	private static Map<String, String> getObject(final Configuration configuration, final List<?> items)
-			throws Throwable {
+	private static Map<String, String> getObject(final Configuration configuration, final List<?> items,
+			final ObjectMapper objectMapper) throws Throwable {
 		try {
-			final Object obj = METHOD_GET_OBJECT.invoke(null, configuration, items);
+			final Object obj = METHOD_GET_OBJECT.invoke(null, configuration, items, objectMapper);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Map) {
