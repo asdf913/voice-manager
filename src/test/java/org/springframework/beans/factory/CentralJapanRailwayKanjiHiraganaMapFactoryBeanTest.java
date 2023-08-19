@@ -3,7 +3,6 @@ package org.springframework.beans.factory;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Collections;
 import java.util.Map;
 import java.util.function.Predicate;
 
@@ -17,14 +16,12 @@ import com.fasterxml.jackson.core.JsonParseException;
 
 class CentralJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 
-	private static Method METHOD_GET, METHOD_TEST_AND_APPLY = null;
+	private static Method METHOD_TEST_AND_APPLY = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
 		//
 		final Class<?> clz = CentralJapanRailwayKanjiHiraganaMapFactoryBean.class;
-		//
-		(METHOD_GET = clz.getDeclaredMethod("get", Map.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
@@ -80,21 +77,6 @@ class CentralJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 		//
 		Assertions.assertEquals(Map.class, instance != null ? instance.getObjectType() : null);
 		//
-	}
-
-	@Test
-	void testGet() throws Throwable {
-		//
-		Assertions.assertNull(get(Collections.emptyMap(), null));
-		//
-	}
-
-	private static <V> V get(final Map<?, V> instance, final Object key) throws Throwable {
-		try {
-			return (V) METHOD_GET.invoke(null, instance, key);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test

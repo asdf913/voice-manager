@@ -40,7 +40,7 @@ public class CentralJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFro
 		} // if
 			//
 		final List<?> list = Util.cast(List.class,
-				get(ObjectMapperUtil.readValue(new ObjectMapper(),
+				Util.get(ObjectMapperUtil.readValue(new ObjectMapper(),
 						openStream(testAndApply(StringUtils::isNotBlank, url, URL::new, null)),
 						Object.class) instanceof Map<?, ?> m ? m : null, "station"));
 		//
@@ -63,11 +63,6 @@ public class CentralJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFro
 			//
 		return map;
 		//
-	}
-
-	@Nullable
-	private static <V> V get(@Nullable final Map<?, V> instance, final Object key) {
-		return instance != null ? instance.get(key) : null;
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(@Nullable final Predicate<T> predicate, final T value,

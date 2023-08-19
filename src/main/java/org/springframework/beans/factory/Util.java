@@ -149,4 +149,9 @@ abstract class Util {
 		return instance != null ? instance.toList() : null;
 	}
 
+	@Nullable
+	static <V> V get(@Nullable final Map<?, V> instance, final Object key) {
+		return instance != null ? instance.get(key) : null;
+	}
+
 }

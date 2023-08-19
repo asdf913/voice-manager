@@ -43,7 +43,7 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 
 	private static Method METHOD_GET_OBJECT, METHOD_CREATE_MAP, METHOD_TEST_AND_APPLY, METHOD_PROCESS,
 			METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK, METHOD_CONTAINS, METHOD_ADD, METHOD_TEST2, METHOD_TEST3,
-			METHOD_ACCEPT, METHOD_OPEN_STREAM, METHOD_GET_DECLARED_FIELD, METHOD_GET,
+			METHOD_ACCEPT, METHOD_OPEN_STREAM, METHOD_GET_DECLARED_FIELD,
 			METHOD_CHECK_IF_KEY_EXISTS_AND_DIFFERENCE_VALUE, METHOD_GET_KEY, METHOD_GET_VALUE, METHOD_PERFORM = null;
 
 	@BeforeAll
@@ -78,8 +78,6 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 		//
 		(METHOD_GET_DECLARED_FIELD = clz.getDeclaredMethod("getDeclaredField", Class.class, String.class))
 				.setAccessible(true);
-		//
-		(METHOD_GET = clz.getDeclaredMethod("get", Map.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_CHECK_IF_KEY_EXISTS_AND_DIFFERENCE_VALUE = clz.getDeclaredMethod("checkIfKeyExistsAndDifferenceValue",
 				Map.class, Entry.class)).setAccessible(true);
@@ -431,21 +429,6 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 				return (Field) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGet() throws Throwable {
-		//
-		Assertions.assertNull(get(null, null));
-		//
-	}
-
-	private static <V> V get(final Map<?, V> instance, final Object key) throws Throwable {
-		try {
-			return (V) METHOD_GET.invoke(null, instance, key);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

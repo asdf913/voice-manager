@@ -115,9 +115,8 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		for (int i = 0; items != null && i < items.size(); i++) {
 			//
 			if (!containsKey(map = Util.cast(Map.class, items.get(i)), "code")
-					|| (count = Util.cast(Number.class,
-							testAndApply(OdakyuBusKanjiHiraganaMapFactoryBean::containsKey, map, "count",
-									OdakyuBusKanjiHiraganaMapFactoryBean::get, null))) == null
+					|| (count = Util.cast(Number.class, testAndApply(OdakyuBusKanjiHiraganaMapFactoryBean::containsKey,
+							map, "count", Util::get, null))) == null
 					|| count.intValue() < 1) {
 				//
 				continue;
@@ -180,7 +179,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		//
 		final Object key = getKey(entry);
 		//
-		if (containsKey(map, key) && !Objects.equals(get(map, key), getValue(entry))) {
+		if (containsKey(map, key) && !Objects.equals(Util.get(map, key), getValue(entry))) {
 			//
 			throw new IllegalStateException();
 			//
@@ -249,7 +248,8 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		for (int i = 0; items != null && i < items.size(); i++) {
 			//
 			if ((map = Util.cast(Map.class, items.get(i))) == null || !and(map::containsKey, "name", "ruby")
-					|| Objects.equals(name = Util.toString(get(map, "name")), ruby = Util.toString(get(map, "ruby")))
+					|| Objects.equals(name = Util.toString(Util.get(map, "name")),
+							ruby = Util.toString(Util.get(map, "ruby")))
 					|| !isAllCharacterInSameUnicodeBlock(name, UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)) {
 				//
 				continue;
@@ -355,11 +355,6 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 	private static Field getDeclaredField(@Nullable final Class<?> instance, @Nullable final String name)
 			throws NoSuchFieldException {
 		return instance != null && name != null ? instance.getDeclaredField(name) : null;
-	}
-
-	@Nullable
-	private static <V> V get(@Nullable final Map<?, V> instance, final Object key) {
-		return instance != null ? instance.get(key) : null;
 	}
 
 	@Nullable
