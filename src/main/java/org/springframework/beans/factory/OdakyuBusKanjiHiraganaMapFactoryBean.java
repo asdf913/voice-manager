@@ -186,7 +186,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 
 	@Nullable
 	private static <T, R, E extends Throwable> R apply(@Nullable final FailableFunction<T, R, E> instance,
-			final T value) throws E {
+			@Nullable final T value) throws E {
 		return instance != null ? instance.apply(value) : null;
 	}
 
@@ -319,7 +319,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		return instance != null ? instance.toString() : null;
 	}
 
-	private static <K, V> void put(@Nullable final Map<K, V> instance, final K key, final V value) {
+	private static <K, V> void put(@Nullable final Map<K, V> instance, @Nullable final K key, @Nullable final V value) {
 		if (instance != null) {
 			instance.put(key, value);
 		}
@@ -388,7 +388,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 	}
 
 	@Nullable
-	private static <T, U, R> R apply(@Nullable final BiFunction<T, U, R> instance, final T t, final U u) {
+	private static <T, U, R> R apply(@Nullable final BiFunction<T, U, R> instance, @Nullable final T t, final U u) {
 		return instance != null ? instance.apply(t, u) : null;
 	}
 
