@@ -143,7 +143,7 @@ public class TokyuKanjiRomajiOrHiraganaMapFactoryBean extends StringMapFromResou
 					//
 				} // if
 					//
-				if (!containsKey(temp, romajiOrHiragana)) {
+				if (!Util.containsKey(temp, romajiOrHiragana)) {
 					//
 					throw new IllegalStateException();
 					//
@@ -193,7 +193,7 @@ public class TokyuKanjiRomajiOrHiraganaMapFactoryBean extends StringMapFromResou
 				//
 			if (StringUtils.equalsIgnoreCase(classString = e.attr("class"), "name-sub01")) {
 				//
-				if (containsKey(map = ObjectUtils.getIfNull(map, LinkedHashMap::new),
+				if (Util.containsKey(map = ObjectUtils.getIfNull(map, LinkedHashMap::new),
 						romajiOrHiragana = RomajiOrHiragana.ROMAJI)) {
 					//
 					throw new IllegalStateException();
@@ -206,7 +206,7 @@ public class TokyuKanjiRomajiOrHiraganaMapFactoryBean extends StringMapFromResou
 					//
 			} else if (StringUtils.equalsIgnoreCase(classString, "name-sub02")) {
 				//
-				if (containsKey(map = ObjectUtils.getIfNull(map, LinkedHashMap::new),
+				if (Util.containsKey(map = ObjectUtils.getIfNull(map, LinkedHashMap::new),
 						romajiOrHiragana = RomajiOrHiragana.HIRAGANA)) {
 					//
 					throw new IllegalStateException();
@@ -223,10 +223,6 @@ public class TokyuKanjiRomajiOrHiraganaMapFactoryBean extends StringMapFromResou
 			//
 		return map;
 		//
-	}
-
-	private static boolean containsKey(@Nullable final Map<?, ?> instance, final Object key) {
-		return instance != null && instance.containsKey(key);
 	}
 
 	private static boolean isAllCharacterInSameUnicodeBlock(@Nullable final String string,

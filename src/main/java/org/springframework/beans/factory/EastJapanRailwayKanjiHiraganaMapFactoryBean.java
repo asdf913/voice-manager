@@ -93,10 +93,6 @@ public class EastJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFromRe
 			//
 	}
 
-	private static boolean containsKey(@Nullable final Map<?, ?> instance, final Object key) {
-		return instance != null && instance.containsKey(key);
-	}
-
 	@Nullable
 	private static Map<String, String> createMap(@Nullable final String url, final UrlValidator urlValidator)
 			throws IOException, CsvValidationException {
@@ -138,7 +134,7 @@ public class EastJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFromRe
 					//
 				} // if
 					//
-				if (containsKey(map, key = pair.getValue0())) {
+				if (Util.containsKey(map, key = pair.getValue0())) {
 					//
 					throw new IllegalStateException();
 					//

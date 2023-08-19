@@ -35,7 +35,7 @@ import com.google.common.reflect.Reflection;
 class EastJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 
 	private static Method METHOD_CREATE_MAP_INPUT_STREAM, METHOD_CREATE_PAIR_STRING, METHOD_CREATE_PAIR_ELEMENT,
-			METHOD_MERGE, METHOD_CONTAINS_KEY = null;
+			METHOD_MERGE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -50,8 +50,6 @@ class EastJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 		(METHOD_CREATE_PAIR_ELEMENT = clz.getDeclaredMethod("createPair", Element.class)).setAccessible(true);
 		//
 		(METHOD_MERGE = clz.getDeclaredMethod("merge", Map.class, Map.class)).setAccessible(true);
-		//
-		(METHOD_CONTAINS_KEY = clz.getDeclaredMethod("containsKey", Map.class, Object.class)).setAccessible(true);
 		//
 	}
 
@@ -310,27 +308,6 @@ class EastJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 	private static <K, V> void merge(final Map<K, V> a, final Map<K, V> b) throws Throwable {
 		try {
 			METHOD_MERGE.invoke(null, a, b);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testContainsKey() throws Throwable {
-		//
-		Assertions.assertFalse(containsKey(null, null));
-		//
-		Assertions.assertTrue(containsKey(Collections.singletonMap(null, null), null));
-		//
-	}
-
-	private static boolean containsKey(final Map<?, ?> instance, final Object key) throws Throwable {
-		try {
-			final Object obj = METHOD_CONTAINS_KEY.invoke(null, instance, key);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
-			}
-			throw new Throwable(obj != null && obj.getClass() != null ? obj.getClass().toString() : null);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

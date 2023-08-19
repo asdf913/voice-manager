@@ -22,7 +22,7 @@ import com.google.common.base.Predicates;
 
 class TokyuKanjiRomajiOrHiraganaMapFactoryBeanTest {
 
-	private static Method METHOD_GET_OBJECT, METHOD_GET_ROMAJI_OR_HIRAGANA_MAP, METHOD_CONTAINS_KEY,
+	private static Method METHOD_GET_OBJECT, METHOD_GET_ROMAJI_OR_HIRAGANA_MAP,
 			METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK, METHOD_CONTAINS, METHOD_ACCEPT, METHOD_TEST, METHOD_ADD,
 			METHOD_TEST_AND_APPLY, METHOD_NAME = null;
 
@@ -35,8 +35,6 @@ class TokyuKanjiRomajiOrHiraganaMapFactoryBeanTest {
 		//
 		(METHOD_GET_ROMAJI_OR_HIRAGANA_MAP = clz.getDeclaredMethod("getRomajiOrHiraganaMap", Iterable.class))
 				.setAccessible(true);
-		//
-		(METHOD_CONTAINS_KEY = clz.getDeclaredMethod("containsKey", Map.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK = clz.getDeclaredMethod("isAllCharacterInSameUnicodeBlock",
 				String.class, UnicodeBlock.class)).setAccessible(true);
@@ -219,25 +217,6 @@ class TokyuKanjiRomajiOrHiraganaMapFactoryBeanTest {
 				return null;
 			} else if (obj instanceof Map) {
 				return (Map) obj;
-			}
-			throw new Throwable(toString(obj != null ? obj.getClass() : null));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testContainsKey() throws Throwable {
-		//
-		Assertions.assertFalse(containsKey(null, null));
-		//
-	}
-
-	private static boolean containsKey(final Map<?, ?> instance, final Object key) throws Throwable {
-		try {
-			final Object obj = METHOD_CONTAINS_KEY.invoke(null, instance, key);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(toString(obj != null ? obj.getClass() : null));
 		} catch (final InvocationTargetException e) {

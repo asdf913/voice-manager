@@ -154,4 +154,8 @@ abstract class Util {
 		return instance != null ? instance.get(key) : null;
 	}
 
+	static boolean containsKey(@Nullable final Map<?, ?> instance, final Object key) {
+		return instance != null && instance.containsKey(key);
+	}
+
 }

@@ -91,7 +91,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 			//
 			items = Util
 					.cast(List.class,
-							testAndApply(OdakyuBusKanjiHiraganaMapFactoryBean::containsKey,
+							testAndApply(Util::containsKey,
 									Util.cast(Map.class, testAndApply(Objects::nonNull, is,
 											x -> ObjectMapperUtil.readValue(objectMapper, x, Object.class), null)),
 									"items", MapUtils::getObject, null));
@@ -114,9 +114,9 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		//
 		for (int i = 0; items != null && i < items.size(); i++) {
 			//
-			if (!containsKey(map = Util.cast(Map.class, items.get(i)), "code")
-					|| (count = Util.cast(Number.class, testAndApply(OdakyuBusKanjiHiraganaMapFactoryBean::containsKey,
-							map, "count", Util::get, null))) == null
+			if (!Util.containsKey(map = Util.cast(Map.class, items.get(i)), "code")
+					|| (count = Util.cast(Number.class,
+							testAndApply(Util::containsKey, map, "count", Util::get, null))) == null
 					|| count.intValue() < 1) {
 				//
 				continue;
@@ -179,7 +179,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		//
 		final Object key = getKey(entry);
 		//
-		if (containsKey(map, key) && !Objects.equals(Util.get(map, key), getValue(entry))) {
+		if (Util.containsKey(map, key) && !Objects.equals(Util.get(map, key), getValue(entry))) {
 			//
 			throw new IllegalStateException();
 			//
@@ -223,7 +223,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		try (final InputStream is = openStream(testAndApply(StringUtils::isNotEmpty, url, URL::new, null))) {
 			//
 			items = Util.cast(List.class,
-					testAndApply(OdakyuBusKanjiHiraganaMapFactoryBean::containsKey,
+					testAndApply(Util::containsKey,
 							Util.cast(Map.class, testAndApply(Objects::nonNull, is,
 									x -> ObjectMapperUtil.readValue(
 											objectMapper != null ? objectMapper : new ObjectMapper(), x, Object.class),
@@ -367,10 +367,6 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 	@Nullable
 	private static <T, U, R> R apply(@Nullable final BiFunction<T, U, R> instance, @Nullable final T t, final U u) {
 		return instance != null ? instance.apply(t, u) : null;
-	}
-
-	private static boolean containsKey(@Nullable final Map<?, ?> instance, final Object key) {
-		return instance != null && instance.containsKey(key);
 	}
 
 }
