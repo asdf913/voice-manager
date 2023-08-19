@@ -15,9 +15,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
@@ -45,7 +45,7 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 	private static Method METHOD_GET_OBJECT, METHOD_GET_CLASS, METHOD_CREATE_MAP, METHOD_TEST_AND_APPLY, METHOD_CAST,
 			METHOD_PROCESS, METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK, METHOD_CONTAINS, METHOD_ADD, METHOD_TEST2,
 			METHOD_TEST3, METHOD_ACCEPT, METHOD_PUT, METHOD_OPEN_STREAM, METHOD_GET_DECLARED_FIELD, METHOD_GET,
-			METHOD_CHECK_IF_KEY_EXISTS_AND_DIFFERENCE_VALUE, METHOD_GET_VALUE, METHOD_PERFORM = null;
+			METHOD_CHECK_IF_KEY_EXISTS_AND_DIFFERENCE_VALUE, METHOD_GET_KEY, METHOD_GET_VALUE, METHOD_PERFORM = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -90,6 +90,8 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 		//
 		(METHOD_CHECK_IF_KEY_EXISTS_AND_DIFFERENCE_VALUE = clz.getDeclaredMethod("checkIfKeyExistsAndDifferenceValue",
 				Map.class, Entry.class)).setAccessible(true);
+		//
+		(METHOD_GET_KEY = clz.getDeclaredMethod("getKey", Entry.class)).setAccessible(true);
 		//
 		(METHOD_GET_VALUE = clz.getDeclaredMethod("getValue", Entry.class)).setAccessible(true);
 		//
@@ -509,8 +511,6 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 	@Test
 	void testCheckIfKeyExistsAndDifferenceValue() {
 		//
-		Assertions.assertDoesNotThrow(() -> checkIfKeyExistsAndDifferenceValue(null, null));
-		//
 		final Entry<?, ?> entry = Reflection.newProxy(Entry.class, ih);
 		//
 		Assertions.assertDoesNotThrow(
@@ -525,6 +525,21 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 			throws Throwable {
 		try {
 			METHOD_CHECK_IF_KEY_EXISTS_AND_DIFFERENCE_VALUE.invoke(null, map, entry);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetKey() throws Throwable {
+		//
+		Assertions.assertNull(getKey(null));
+		//
+	}
+
+	private static <K> K getKey(final Entry<K, ?> instance) throws Throwable {
+		try {
+			return (K) METHOD_GET_KEY.invoke(null, instance);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
