@@ -109,14 +109,11 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		//
 		for (int i = 0; items != null && i < items.size(); i++) {
 			//
-			if (!containsKey(map = cast(Map.class, items.get(i)), "code")) {
-				//
-				continue;
-				//
-			} // if
-				//
-			if ((count = cast(Number.class, testAndApply(OdakyuBusKanjiHiraganaMapFactoryBean::containsKey, map,
-					"count", OdakyuBusKanjiHiraganaMapFactoryBean::get, null))) == null || count.intValue() < 1) {
+			if (!containsKey(map = cast(Map.class, items.get(i)), "code")
+					|| (count = cast(Number.class,
+							testAndApply(OdakyuBusKanjiHiraganaMapFactoryBean::containsKey, map, "count",
+									OdakyuBusKanjiHiraganaMapFactoryBean::get, null))) == null
+					|| count.intValue() < 1) {
 				//
 				continue;
 				//
