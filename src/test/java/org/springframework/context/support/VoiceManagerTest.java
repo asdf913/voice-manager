@@ -7115,16 +7115,6 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testGetTemplate() throws Throwable {
-		//
-		final freemarker.template.Configuration configuration = new freemarker.template.Configuration(
-				freemarker.template.Configuration.getVersion());
-		//
-		configuration.setTemplateLoader(new ClassTemplateLoader(VoiceManager.class, "/"));
-		//
-	}
-
-	@Test
 	void testGetFileExtensions() throws Throwable {
 		//
 		Assertions.assertNull(getFileExtensions(null));
