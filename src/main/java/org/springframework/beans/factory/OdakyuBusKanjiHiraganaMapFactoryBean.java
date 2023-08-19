@@ -182,6 +182,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		return test(predicate, value) ? apply(functionTrue, value) : apply(functionFalse, value);
 	}
 
+	@Nullable
 	private static <T, R, E extends Throwable> R apply(@Nullable final FailableFunction<T, R, E> instance,
 			final T value) throws E {
 		return instance != null ? instance.apply(value) : null;
@@ -212,6 +213,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		return Map.class;
 	}
 
+	@Nullable
 	private static Map<String, String> createMap(final String url) throws IOException {
 		//
 		List<?> items = null;
@@ -371,6 +373,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		return clz != null && clz.isInstance(instance) ? clz.cast(instance) : null;
 	}
 
+	@Nullable
 	private static <T, U, R, E extends Throwable> R testAndApply(final BiPredicate<T, U> predicate, final T t,
 			final U u, final BiFunction<T, U, R> functionTrue, @Nullable final BiFunction<T, U, R> functionFalse)
 			throws E {
