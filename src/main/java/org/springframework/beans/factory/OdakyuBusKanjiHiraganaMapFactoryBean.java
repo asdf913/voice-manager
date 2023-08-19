@@ -346,7 +346,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 			//
 		try {
 			//
-			if (Narcissus.getField(instance, getDeclaredField(getClass(instance), "handler")) == null) {
+			if (Narcissus.getField(instance, getDeclaredField(Util.getClass(instance), "handler")) == null) {
 				//
 				return null;
 				//
@@ -360,11 +360,6 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 			//
 		return instance.openStream();
 		//
-	}
-
-	@Nullable
-	private static Class<?> getClass(@Nullable final Object instance) {
-		return instance != null ? instance.getClass() : null;
 	}
 
 	@Nullable

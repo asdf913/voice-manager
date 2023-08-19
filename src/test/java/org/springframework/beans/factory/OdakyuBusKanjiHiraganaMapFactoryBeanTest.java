@@ -42,9 +42,9 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 
 	private static final String EMPTY = "";
 
-	private static Method METHOD_GET_OBJECT, METHOD_GET_CLASS, METHOD_CREATE_MAP, METHOD_TEST_AND_APPLY, METHOD_CAST,
-			METHOD_PROCESS, METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK, METHOD_CONTAINS, METHOD_ADD, METHOD_TEST2,
-			METHOD_TEST3, METHOD_ACCEPT, METHOD_PUT, METHOD_OPEN_STREAM, METHOD_GET_DECLARED_FIELD, METHOD_GET,
+	private static Method METHOD_GET_OBJECT, METHOD_CREATE_MAP, METHOD_TEST_AND_APPLY, METHOD_CAST, METHOD_PROCESS,
+			METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK, METHOD_CONTAINS, METHOD_ADD, METHOD_TEST2, METHOD_TEST3,
+			METHOD_ACCEPT, METHOD_PUT, METHOD_OPEN_STREAM, METHOD_GET_DECLARED_FIELD, METHOD_GET,
 			METHOD_CHECK_IF_KEY_EXISTS_AND_DIFFERENCE_VALUE, METHOD_GET_KEY, METHOD_GET_VALUE, METHOD_PERFORM = null;
 
 	@BeforeAll
@@ -54,8 +54,6 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 		//
 		(METHOD_GET_OBJECT = clz.getDeclaredMethod("getObject", Configuration.class, List.class, ObjectMapper.class))
 				.setAccessible(true);
-		//
-		(METHOD_GET_CLASS = clz.getDeclaredMethod("getClass", Object.class)).setAccessible(true);
 		//
 		(METHOD_CREATE_MAP = clz.getDeclaredMethod("createMap", List.class)).setAccessible(true);
 		//
@@ -225,28 +223,7 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 			} else if (obj instanceof Map) {
 				return (Map) obj;
 			}
-			throw new Throwable(Util.toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetClass() throws Throwable {
-		//
-		Assertions.assertNull(getClass(null));
-		//
-	}
-
-	private static Class<?> getClass(final Object instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_CLASS.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Class<?>) {
-				return (Class<?>) obj;
-			}
-			throw new Throwable(Util.toString(getClass(obj)));
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -280,7 +257,7 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 			} else if (obj instanceof Map) {
 				return (Map) obj;
 			}
-			throw new Throwable(Util.toString(getClass(obj)));
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -343,7 +320,7 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
-			throw new Throwable(Util.toString(getClass(obj)));
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -364,7 +341,7 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
-			throw new Throwable(Util.toString(getClass(obj)));
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -400,7 +377,7 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
-			throw new Throwable(Util.toString(getClass(obj)));
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -412,7 +389,7 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
-			throw new Throwable(Util.toString(getClass(obj)));
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -464,7 +441,7 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 			} else if (obj instanceof InputStream) {
 				return (InputStream) obj;
 			}
-			throw new Throwable(Util.toString(getClass(obj)));
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -487,7 +464,7 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 			} else if (obj instanceof Field) {
 				return (Field) obj;
 			}
-			throw new Throwable(Util.toString(getClass(obj)));
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

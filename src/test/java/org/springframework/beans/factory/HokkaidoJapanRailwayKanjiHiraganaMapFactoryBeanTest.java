@@ -28,9 +28,9 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 
-	private static Method METHOD_CREATE_MAP, METHOD_FOR_NAME, METHOD_GET_CLASS, METHOD_OPEN_STREAM,
-			METHOD_GET_DECLARED_FIELD, METHOD_TEST, METHOD_TEST_AND_APPLY, METHOD_CREATE_PAIR,
-			METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK, METHOD_CONTAINS, METHOD_TEST_AND_ACCEPT, METHOD_ADD = null;
+	private static Method METHOD_CREATE_MAP, METHOD_FOR_NAME, METHOD_OPEN_STREAM, METHOD_GET_DECLARED_FIELD,
+			METHOD_TEST, METHOD_TEST_AND_APPLY, METHOD_CREATE_PAIR, METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK,
+			METHOD_CONTAINS, METHOD_TEST_AND_ACCEPT, METHOD_ADD = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -40,8 +40,6 @@ class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 		(METHOD_CREATE_MAP = clz.getDeclaredMethod("createMap", InputStream.class, Charset.class)).setAccessible(true);
 		//
 		(METHOD_FOR_NAME = clz.getDeclaredMethod("forName", String.class)).setAccessible(true);
-		//
-		(METHOD_GET_CLASS = clz.getDeclaredMethod("getClass", Object.class)).setAccessible(true);
 		//
 		(METHOD_OPEN_STREAM = clz.getDeclaredMethod("openStream", URL.class)).setAccessible(true);
 		//
@@ -156,7 +154,7 @@ class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 			} else if (obj instanceof Map) {
 				return (Map) obj;
 			}
-			throw new Throwable(Util.toString(getClass(obj)));
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -183,28 +181,7 @@ class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 			} else if (obj instanceof Charset) {
 				return (Charset) obj;
 			}
-			throw new Throwable(Util.toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetClass() throws Throwable {
-		//
-		Assertions.assertNull(getClass(null));
-		//
-	}
-
-	private static Class<?> getClass(final Object instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_CLASS.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Class) {
-				return (Class<?>) obj;
-			}
-			throw new Throwable(Util.toString(getClass(obj)));
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -231,7 +208,7 @@ class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 			} else if (obj instanceof InputStream) {
 				return (InputStream) obj;
 			}
-			throw new Throwable(Util.toString(getClass(obj)));
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -254,7 +231,7 @@ class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 			} else if (obj instanceof Field) {
 				return (Field) obj;
 			}
-			throw new Throwable(Util.toString(getClass(obj)));
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -273,7 +250,7 @@ class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
-			throw new Throwable(Util.toString(getClass(obj)));
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -313,7 +290,7 @@ class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 			} else if (obj instanceof Pair) {
 				return (Pair) obj;
 			}
-			throw new Throwable(Util.toString(getClass(obj)));
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -333,7 +310,7 @@ class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
-			throw new Throwable(Util.toString(getClass(obj)));
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -354,7 +331,7 @@ class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
-			throw new Throwable(Util.toString(getClass(obj)));
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

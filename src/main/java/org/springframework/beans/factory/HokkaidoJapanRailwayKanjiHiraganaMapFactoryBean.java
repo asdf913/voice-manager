@@ -246,7 +246,7 @@ public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFr
 			//
 		try {
 			//
-			if (Narcissus.getField(instance, getDeclaredField(getClass(instance), "handler")) == null) {
+			if (Narcissus.getField(instance, getDeclaredField(Util.getClass(instance), "handler")) == null) {
 				//
 				return null;
 				//
@@ -260,11 +260,6 @@ public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFr
 			//
 		return instance.openStream();
 		//
-	}
-
-	@Nullable
-	private static Class<?> getClass(@Nullable final Object instance) {
-		return instance != null ? instance.getClass() : null;
 	}
 
 	@Nullable
