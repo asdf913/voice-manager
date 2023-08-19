@@ -378,6 +378,7 @@ import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.StringTemplateLoader;
 import freemarker.cache.TemplateLoader;
 import freemarker.ext.beans.BeansWrapper;
+import freemarker.template.ConfigurationUtil;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateHashModel;
@@ -4472,7 +4473,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			map.put("encryptionTableHtml", getEncryptionTableHtml(
 					testAndApply(StringUtils::isNotBlank, poiEncryptionPageUrl, URL::new, null), timeout));
 			//
-			process(getTemplate(configuration, "help.html.ftl"), map, writer);
+			process(ConfigurationUtil.getTemplate(configuration, "help.html.ftl"), map, writer);
 			//
 			final String html = toString(writer);
 			//
@@ -7477,17 +7478,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
-		process(testAndApply(Objects::nonNull, templateFile, a -> getTemplate(configuration, a), null), map,
-				ObjectMap.getObject(objectMap, Writer.class));
-		//
-	}
-
-	@Nullable
-	private static Template getTemplate(@Nullable final freemarker.template.Configuration instance,
-			@Nullable final String name) throws IOException {
-		//
-		return instance != null && name != null && getTemplateLoader(instance) != null ? instance.getTemplate(name)
-				: null;
+		process(testAndApply(Objects::nonNull, templateFile, a -> ConfigurationUtil.getTemplate(configuration, a),
+				null), map, ObjectMap.getObject(objectMap, Writer.class));
 		//
 	}
 
@@ -12131,7 +12123,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			try (final Writer writer = new StringWriter()) {
 				//
-				process(getTemplate(configuration, key), map, writer);
+				process(ConfigurationUtil.getTemplate(configuration, key), map, writer);
 				//
 				if (node != null) {
 					//

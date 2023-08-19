@@ -3,8 +3,6 @@ package org.springframework.beans.factory;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Reader;
-import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.Character.UnicodeBlock;
@@ -17,41 +15,36 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.util.ReflectionUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import com.google.common.base.Predicates;
 import com.google.common.reflect.Reflection;
 
-import freemarker.cache.TemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
-import freemarker.template.TemplateNotFoundException;
 import io.github.toolfactory.narcissus.Narcissus;
 
 class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 
 	private static final String EMPTY = "";
 
-	private static Method METHOD_GET_OBJECT, METHOD_GET_CLASS, METHOD_CREATE_MAP, METHOD_TEST_AND_APPLY,
-			METHOD_GET_TEMPLATE, METHOD_CAST, METHOD_PROCESS, METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK,
-			METHOD_CONTAINS, METHOD_ADD, METHOD_TEST2, METHOD_TEST3, METHOD_ACCEPT, METHOD_PUT, METHOD_OPEN_STREAM,
-			METHOD_GET_DECLARED_FIELD, METHOD_GET, METHOD_CHECK_IF_KEY_EXISTS_AND_DIFFERENCE_VALUE,
-			METHOD_GET_VALUE = null;
+	private static Method METHOD_GET_OBJECT, METHOD_GET_CLASS, METHOD_CREATE_MAP, METHOD_TEST_AND_APPLY, METHOD_CAST,
+			METHOD_PROCESS, METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK, METHOD_CONTAINS, METHOD_ADD, METHOD_TEST2,
+			METHOD_TEST3, METHOD_ACCEPT, METHOD_PUT, METHOD_OPEN_STREAM, METHOD_GET_DECLARED_FIELD, METHOD_GET,
+			METHOD_CHECK_IF_KEY_EXISTS_AND_DIFFERENCE_VALUE, METHOD_GET_VALUE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -68,9 +61,6 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
 		//
 		(METHOD_CAST = clz.getDeclaredMethod("cast", Class.class, Object.class)).setAccessible(true);
-		//
-		(METHOD_GET_TEMPLATE = clz.getDeclaredMethod("getTemplate", Configuration.class, String.class))
-				.setAccessible(true);
 		//
 		(METHOD_PROCESS = clz.getDeclaredMethod("process", Template.class, Object.class, Writer.class))
 				.setAccessible(true);
@@ -108,46 +98,14 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 
 	private static class IH implements InvocationHandler {
 
-		private Object templateSource, key, value = null;
-
-		private Long lastModified = null;
-
-		private Reader reader = null;
+		private Object key, value = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
-			if (ReflectionUtils.isToStringMethod(method)) {
-				//
-				return ToStringBuilder.reflectionToString(this);
-				//
-			} // if
-				//
 			final String methodName = method != null ? method.getName() : null;
 			//
-			if (proxy instanceof TemplateLoader) {
-				//
-				if (Objects.equals(Void.TYPE, method != null ? method.getReturnType() : null)) {
-					//
-					return null;
-					//
-				} // if
-					//
-				if (Objects.equals(methodName, "findTemplateSource")) {
-					//
-					return templateSource;
-					//
-				} else if (Objects.equals(methodName, "getLastModified")) {
-					//
-					return lastModified;
-					//
-				} else if (Objects.equals(methodName, "getReader")) {
-					//
-					return reader;
-					//
-				} // if
-					//
-			} else if (proxy instanceof Entry) {
+			if (proxy instanceof Entry) {
 				//
 				if (Objects.equals(methodName, "getKey")) {
 					//
@@ -308,64 +266,6 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 			throws Throwable {
 		try {
 			return (R) METHOD_TEST_AND_APPLY.invoke(null, predicate, value, functionTrue, functionFalse);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetTemplate() throws Throwable {
-		//
-		Assertions.assertNull(
-				getTemplate(cast(Configuration.class, Narcissus.allocateInstance(Configuration.class)), null));
-		//
-		final Configuration configuration1 = new Configuration(Configuration.getVersion());
-		//
-		Assertions.assertNull(getTemplate(configuration1, null));
-		//
-		Assertions.assertNull(getTemplate(configuration1, EMPTY));
-		//
-		final TemplateLoader templateLoader = Reflection.newProxy(TemplateLoader.class, ih);
-		//
-		configuration1.setTemplateLoader(templateLoader);
-		//
-		Assertions.assertThrows(TemplateNotFoundException.class, () -> getTemplate(configuration1, EMPTY));
-		//
-		final Configuration configuration2 = new Configuration(Configuration.getVersion());
-		//
-		if (ih != null) {
-			//
-			ih.templateSource = EMPTY;
-			//
-			ih.lastModified = Long.valueOf(0);
-			//
-		} // if
-			//
-		try (final Reader reader = new StringReader(EMPTY)) {
-			//
-			if (ih != null) {
-				//
-				ih.reader = reader;
-				//
-			} // if
-				//
-			configuration2.setTemplateLoader(templateLoader);
-			//
-			Assertions.assertNotNull(getTemplate(configuration2, EMPTY));
-			//
-		} // try
-			//
-	}
-
-	private static Template getTemplate(final Configuration instance, final String name) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_TEMPLATE.invoke(null, instance, name);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Template) {
-				return (Template) obj;
-			}
-			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

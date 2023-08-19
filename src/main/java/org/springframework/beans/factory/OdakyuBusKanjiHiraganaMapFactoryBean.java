@@ -35,6 +35,7 @@ import com.fasterxml.jackson.databind.ObjectMapperUtil;
 
 import freemarker.cache.StringTemplateLoader;
 import freemarker.template.Configuration;
+import freemarker.template.ConfigurationUtil;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import io.github.toolfactory.narcissus.Narcissus;
@@ -121,7 +122,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 				//
 			try (final Writer writer = new StringWriter()) {
 				//
-				process(getTemplate(configuration, ""), map, writer);
+				process(ConfigurationUtil.getTemplate(configuration, ""), map, writer);
 				//
 				if ((map = createMap(toString(writer))) == null || map.isEmpty()) {
 					//
@@ -185,20 +186,6 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 	private static <T, R, E extends Throwable> R apply(@Nullable final FailableFunction<T, R, E> instance,
 			@Nullable final T value) throws E {
 		return instance != null ? instance.apply(value) : null;
-	}
-
-	@Nullable
-	private static Template getTemplate(@Nullable final Configuration instance, @Nullable final String name)
-			throws IOException {
-		//
-		if ((instance != null ? instance.getTemplateLoader() : null) == null) {
-			//
-			return null;
-			//
-		} // if
-			//
-		return instance != null && name != null ? instance.getTemplate(name) : null;
-		//
 	}
 
 	private static void process(@Nullable final Template instance, final Object dataModel, @Nullable final Writer out)
