@@ -18,7 +18,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class ToykoMetroKanjiHiraganaMapFactoryBeanTest {
 
-	private static Method METHOD_TEXT_TEXT_NODE, METHOD_CAST, METHOD_TEST_AND_APPLY = null;
+	private static Method METHOD_TEXT_TEXT_NODE, METHOD_TEST_AND_APPLY = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -26,8 +26,6 @@ class ToykoMetroKanjiHiraganaMapFactoryBeanTest {
 		final Class<?> clz = ToykoMetroKanjiHiraganaMapFactoryBean.class;
 		//
 		(METHOD_TEXT_TEXT_NODE = clz.getDeclaredMethod("text", TextNode.class)).setAccessible(true);
-		//
-		(METHOD_CAST = clz.getDeclaredMethod("cast", Class.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
@@ -64,7 +62,7 @@ class ToykoMetroKanjiHiraganaMapFactoryBeanTest {
 		//
 		Assertions.assertNull(text((TextNode) null));
 		//
-		final TextNode textNode = cast(TextNode.class, Narcissus.allocateInstance(TextNode.class));
+		final TextNode textNode = Util.cast(TextNode.class, Narcissus.allocateInstance(TextNode.class));
 		//
 		Assertions.assertNull(text(textNode));
 		//
@@ -85,23 +83,6 @@ class ToykoMetroKanjiHiraganaMapFactoryBeanTest {
 				return (String) obj;
 			}
 			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testCast() throws Throwable {
-		//
-		Assertions.assertNull(cast(null, null));
-		//
-		Assertions.assertNull(cast(Object.class, null));
-		//
-	}
-
-	private static <T> T cast(final Class<T> clz, final Object value) throws Throwable {
-		try {
-			return (T) METHOD_CAST.invoke(null, clz, value);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

@@ -39,7 +39,7 @@ public class CentralJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFro
 			//
 		} // if
 			//
-		final List<?> list = cast(List.class,
+		final List<?> list = Util.cast(List.class,
 				get(ObjectMapperUtil.readValue(new ObjectMapper(),
 						openStream(testAndApply(StringUtils::isNotBlank, url, URL::new, null)),
 						Object.class) instanceof Map<?, ?> m ? m : null, "station"));
@@ -63,11 +63,6 @@ public class CentralJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFro
 			//
 		return map;
 		//
-	}
-
-	@Nullable
-	private static <T> T cast(@Nullable final Class<T> clz, final Object instance) {
-		return clz != null && clz.isInstance(instance) ? clz.cast(instance) : null;
 	}
 
 	@Nullable

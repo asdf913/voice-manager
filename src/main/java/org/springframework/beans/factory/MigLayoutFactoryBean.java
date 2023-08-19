@@ -261,17 +261,12 @@ public class MigLayoutFactoryBean implements FactoryBean<MigLayout> {
 			//
 		} // if
 			//
-		return cast(MigLayout.class, constructor.newInstance((Object[]) arguments));
+		return Util.cast(MigLayout.class, constructor.newInstance((Object[]) arguments));
 		//
 	}
 
 	private static int length(@Nullable final Object[] instance) {
 		return instance != null ? instance.length : 0;
-	}
-
-	@Nullable
-	private static <T> T cast(@Nullable final Class<T> clz, final Object value) {
-		return clz != null && clz.isInstance(value) ? clz.cast(value) : null;
 	}
 
 	@Override

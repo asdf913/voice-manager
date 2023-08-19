@@ -17,7 +17,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 
 class CentralJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 
-	private static Method METHOD_GET, METHOD_CAST, METHOD_TEST_AND_APPLY = null;
+	private static Method METHOD_GET, METHOD_TEST_AND_APPLY = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -25,8 +25,6 @@ class CentralJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 		final Class<?> clz = CentralJapanRailwayKanjiHiraganaMapFactoryBean.class;
 		//
 		(METHOD_GET = clz.getDeclaredMethod("get", Map.class, Object.class)).setAccessible(true);
-		//
-		(METHOD_CAST = clz.getDeclaredMethod("cast", Class.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
@@ -94,25 +92,6 @@ class CentralJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 	private static <V> V get(final Map<?, V> instance, final Object key) throws Throwable {
 		try {
 			return (V) METHOD_GET.invoke(null, instance, key);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testCast() throws Throwable {
-		//
-		Assertions.assertNull(cast(null, null));
-		//
-		final Object object = new Object();
-		//
-		Assertions.assertSame(object, cast(Object.class, object));
-		//
-	}
-
-	private static <T> T cast(final Class<T> clz, final Object instance) throws Throwable {
-		try {
-			return (T) METHOD_CAST.invoke(null, clz, instance);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

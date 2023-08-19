@@ -59,8 +59,8 @@ public class ToykoMetroKanjiHiraganaMapFactoryBean extends StringMapFromResource
 				//
 			} // if
 				//
-			Util.put(map, text(cast(TextNode.class, childNodes.get(0))),
-					ElementUtil.text(cast(Element.class, childNodes.get(1))));
+			Util.put(map, text(Util.cast(TextNode.class, childNodes.get(0))),
+					ElementUtil.text(Util.cast(Element.class, childNodes.get(1))));
 			//
 		} // for
 			//
@@ -71,11 +71,6 @@ public class ToykoMetroKanjiHiraganaMapFactoryBean extends StringMapFromResource
 	@Nullable
 	private static String text(@Nullable final TextNode instance) throws IllegalAccessException {
 		return instance != null && FieldUtils.readField(instance, "value", true) != null ? instance.text() : null;
-	}
-
-	@Nullable
-	private static <T> T cast(@Nullable final Class<T> clz, final Object value) {
-		return clz != null && clz.isInstance(value) ? clz.cast(value) : null;
 	}
 
 	@Nullable

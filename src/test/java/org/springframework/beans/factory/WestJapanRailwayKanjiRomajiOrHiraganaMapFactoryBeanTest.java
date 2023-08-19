@@ -43,7 +43,7 @@ import com.google.common.reflect.Reflection;
 
 class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 
-	private static Method METHOD_CAST, METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_CREATE_TABLE,
+	private static Method METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_CREATE_TABLE,
 			METHOD_GET_UNICODE_BLOCKS, METHOD_TEST, METHOD_ACCEPT, METHOD_IS_INSTANCE, METHOD_CONTAINS, METHOD_ADD,
 			METHOD_OPEN_STREAM, METHOD_GET_TRIPLES_1, METHOD_GET_TRIPLES_2, METHOD_GET_NAME_MODULE, METHOD_GET_MODULE,
 			METHOD_GET = null;
@@ -52,8 +52,6 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 	static void beforeAll() throws ReflectiveOperationException {
 		//
 		final Class<?> clz = WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean.class;
-		//
-		(METHOD_CAST = clz.getDeclaredMethod("cast", Class.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_TEST_AND_APPLY4 = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
@@ -260,21 +258,6 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 
 	private static Class<?> getClass(final Object instance) {
 		return instance != null ? instance.getClass() : null;
-	}
-
-	@Test
-	void testCast() throws Throwable {
-		//
-		Assertions.assertNull(cast(null, null));
-		//
-	}
-
-	private static <T> T cast(final Class<T> clz, final Object instance) throws Throwable {
-		try {
-			return (T) METHOD_CAST.invoke(null, clz, instance);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test

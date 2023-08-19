@@ -23,7 +23,6 @@ import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
 import org.apache.commons.lang3.function.FailableFunction;
-import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,7 +41,7 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 
 	private static final String EMPTY = "";
 
-	private static Method METHOD_GET_OBJECT, METHOD_CREATE_MAP, METHOD_TEST_AND_APPLY, METHOD_CAST, METHOD_PROCESS,
+	private static Method METHOD_GET_OBJECT, METHOD_CREATE_MAP, METHOD_TEST_AND_APPLY, METHOD_PROCESS,
 			METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK, METHOD_CONTAINS, METHOD_ADD, METHOD_TEST2, METHOD_TEST3,
 			METHOD_ACCEPT, METHOD_OPEN_STREAM, METHOD_GET_DECLARED_FIELD, METHOD_GET,
 			METHOD_CHECK_IF_KEY_EXISTS_AND_DIFFERENCE_VALUE, METHOD_GET_KEY, METHOD_GET_VALUE, METHOD_PERFORM = null;
@@ -59,8 +58,6 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 		//
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
-		//
-		(METHOD_CAST = clz.getDeclaredMethod("cast", Class.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK = clz.getDeclaredMethod("isAllCharacterInSameUnicodeBlock",
 				String.class, UnicodeBlock.class)).setAccessible(true);
@@ -278,21 +275,6 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 		}
 	}
 
-	@Test
-	void testCast() throws Throwable {
-		//
-		Assert.assertNull(cast(null, null));
-		//
-	}
-
-	private static <T> T cast(final Class<T> clz, final Object instance) throws Throwable {
-		try {
-			return (T) METHOD_CAST.invoke(null, clz, instance);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
 	@SuppressWarnings("unused")
 	private static void process(final Template instance, final Object dataModel, final Writer out) throws Throwable {
 		try {
@@ -413,7 +395,7 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 		//
 		Assertions.assertNotNull(openStream(new File("pom.xml").toURI().toURL()));
 		//
-		Assertions.assertNull(openStream(cast(URL.class, Narcissus.allocateInstance(URL.class))));
+		Assertions.assertNull(openStream(Util.cast(URL.class, Narcissus.allocateInstance(URL.class))));
 		//
 	}
 

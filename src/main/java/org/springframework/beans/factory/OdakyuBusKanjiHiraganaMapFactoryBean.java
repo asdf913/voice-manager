@@ -89,12 +89,12 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		//
 		try (final InputStream is = openStream(testAndApply(Objects::nonNull, url, URL::new, null))) {
 			//
-			items = cast(List.class,
-					testAndApply(OdakyuBusKanjiHiraganaMapFactoryBean::containsKey,
-							cast(Map.class,
-									testAndApply(Objects::nonNull, is,
+			items = Util
+					.cast(List.class,
+							testAndApply(OdakyuBusKanjiHiraganaMapFactoryBean::containsKey,
+									Util.cast(Map.class, testAndApply(Objects::nonNull, is,
 											x -> ObjectMapperUtil.readValue(objectMapper, x, Object.class), null)),
-							"items", MapUtils::getObject, null));
+									"items", MapUtils::getObject, null));
 			//
 		} // try
 			//
@@ -114,8 +114,8 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		//
 		for (int i = 0; items != null && i < items.size(); i++) {
 			//
-			if (!containsKey(map = cast(Map.class, items.get(i)), "code")
-					|| (count = cast(Number.class,
+			if (!containsKey(map = Util.cast(Map.class, items.get(i)), "code")
+					|| (count = Util.cast(Number.class,
 							testAndApply(OdakyuBusKanjiHiraganaMapFactoryBean::containsKey, map, "count",
 									OdakyuBusKanjiHiraganaMapFactoryBean::get, null))) == null
 					|| count.intValue() < 1) {
@@ -223,9 +223,9 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		//
 		try (final InputStream is = openStream(testAndApply(StringUtils::isNotEmpty, url, URL::new, null))) {
 			//
-			items = cast(List.class,
+			items = Util.cast(List.class,
 					testAndApply(OdakyuBusKanjiHiraganaMapFactoryBean::containsKey,
-							cast(Map.class, testAndApply(Objects::nonNull, is,
+							Util.cast(Map.class, testAndApply(Objects::nonNull, is,
 									x -> ObjectMapperUtil.readValue(
 											objectMapper != null ? objectMapper : new ObjectMapper(), x, Object.class),
 									null)),
@@ -248,7 +248,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		//
 		for (int i = 0; items != null && i < items.size(); i++) {
 			//
-			if ((map = cast(Map.class, items.get(i))) == null || !and(map::containsKey, "name", "ruby")
+			if ((map = Util.cast(Map.class, items.get(i))) == null || !and(map::containsKey, "name", "ruby")
 					|| Objects.equals(name = Util.toString(get(map, "name")), ruby = Util.toString(get(map, "ruby")))
 					|| !isAllCharacterInSameUnicodeBlock(name, UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)) {
 				//
@@ -360,11 +360,6 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 	@Nullable
 	private static <V> V get(@Nullable final Map<?, V> instance, final Object key) {
 		return instance != null ? instance.get(key) : null;
-	}
-
-	@Nullable
-	private static <T> T cast(@Nullable final Class<T> clz, @Nullable final Object instance) {
-		return clz != null && clz.isInstance(instance) ? clz.cast(instance) : null;
 	}
 
 	@Nullable

@@ -22,9 +22,8 @@ import com.google.common.base.Predicates;
 
 class MigLayoutFactoryBeanTest {
 
-	private static Method METHOD_TEST_AND_APPLY, METHOD_CAST, METHOD_GET_IVALUE0_OBJECT,
-			METHOD_GET_IVALUE0_DOUBLE_ARRAY, METHOD_GET_IVALUE0_FLOAT_ARRAY, METHOD_GET_IVALUE0_BYTE_ARRAY,
-			METHOD_GET_IVALUE0_BOOLEAN_ARRAY = null;
+	private static Method METHOD_TEST_AND_APPLY, METHOD_GET_IVALUE0_OBJECT, METHOD_GET_IVALUE0_DOUBLE_ARRAY,
+			METHOD_GET_IVALUE0_FLOAT_ARRAY, METHOD_GET_IVALUE0_BYTE_ARRAY, METHOD_GET_IVALUE0_BOOLEAN_ARRAY = null;
 
 	private static Field FIELD_ARGUMENTS = null;
 
@@ -35,8 +34,6 @@ class MigLayoutFactoryBeanTest {
 		//
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
-		//
-		(METHOD_CAST = clz.getDeclaredMethod("cast", Class.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_GET_IVALUE0_OBJECT = clz.getDeclaredMethod("getIValue0", Object.class)).setAccessible(true);
 		//
@@ -184,23 +181,6 @@ class MigLayoutFactoryBeanTest {
 			throws Throwable {
 		try {
 			return (R) METHOD_TEST_AND_APPLY.invoke(null, predicate, value, functionTrue, functionFalse);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testCast() throws Throwable {
-		//
-		Assertions.assertNull(cast(null, null));
-		//
-		Assertions.assertNull(cast(Object.class, null));
-		//
-	}
-
-	private static <T> T cast(final Class<T> clz, final Object value) throws Throwable {
-		try {
-			return (T) METHOD_CAST.invoke(null, clz, value);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

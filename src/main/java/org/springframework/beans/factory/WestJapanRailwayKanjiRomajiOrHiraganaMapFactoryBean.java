@@ -73,11 +73,6 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends StringM
 		this.resourceJs = resourceJs;
 	}
 
-	@Nullable
-	private static <T> T cast(@Nullable final Class<T> clz, final Object instance) {
-		return clz != null && clz.isInstance(instance) ? clz.cast(instance) : null;
-	}
-
 	@Override
 	public Map<String, String> getObject() throws Exception {
 		//
@@ -125,7 +120,7 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends StringM
 				//
 			} // if
 				//
-			table = createTable(cast(Object[].class,
+			table = createTable(Util.cast(Object[].class,
 					testAndApply(
 							Objects::nonNull, testAndApply(Objects::nonNull, get(se, "d"),
 									x -> FieldUtils.readField(x, "sobj", true), null),
