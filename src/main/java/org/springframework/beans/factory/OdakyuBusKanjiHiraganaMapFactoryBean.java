@@ -68,7 +68,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 			//
 			final StringTemplateLoader stl = new StringTemplateLoader();
 			//
-			testAndAccept((a, b) -> a != null && b != null, "", urlTemplate, (a, b) -> stl.putTemplate(a, b));
+			testAndAccept((a, b) -> a != null && b != null, "", urlTemplate, stl::putTemplate);
 			//
 			(configuration = new Configuration(Configuration.getVersion())).setTemplateLoader(stl);
 			//
