@@ -379,9 +379,9 @@ import freemarker.cache.StringTemplateLoader;
 import freemarker.cache.TemplateLoader;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.ConfigurationUtil;
-import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateHashModel;
+import freemarker.template.TemplateUtil;
 import freemarker.template.Version;
 import io.github.toolfactory.narcissus.Narcissus;
 import j2html.attributes.Attribute;
@@ -4473,7 +4473,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			map.put("encryptionTableHtml", getEncryptionTableHtml(
 					testAndApply(StringUtils::isNotBlank, poiEncryptionPageUrl, URL::new, null), timeout));
 			//
-			process(ConfigurationUtil.getTemplate(configuration, "help.html.ftl"), map, writer);
+			TemplateUtil.process(ConfigurationUtil.getTemplate(configuration, "help.html.ftl"), map, writer);
 			//
 			final String html = toString(writer);
 			//
@@ -7478,20 +7478,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
-		process(testAndApply(Objects::nonNull, templateFile, a -> ConfigurationUtil.getTemplate(configuration, a),
-				null), map, ObjectMap.getObject(objectMap, Writer.class));
+		TemplateUtil
+				.process(
+						testAndApply(Objects::nonNull, templateFile,
+								a -> ConfigurationUtil.getTemplate(configuration, a), null),
+						map, ObjectMap.getObject(objectMap, Writer.class));
 		//
-	}
-
-	private static void process(@Nullable final Template instance, @Nullable final Object dataModel,
-			@Nullable final Writer out) throws TemplateException, IOException {
-		//
-		if (instance != null && out != null) {
-			//
-			instance.process(dataModel, out);
-			//
-		} // if
-			//
 	}
 
 	public static Pair<String, String> getMimeTypeAndBase64EncodedString(@Nullable final String folderPath,
@@ -12123,7 +12115,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			try (final Writer writer = new StringWriter()) {
 				//
-				process(ConfigurationUtil.getTemplate(configuration, key), map, writer);
+				TemplateUtil.process(ConfigurationUtil.getTemplate(configuration, key), map, writer);
 				//
 				if (node != null) {
 					//

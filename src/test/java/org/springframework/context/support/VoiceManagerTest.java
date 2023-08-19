@@ -32,8 +32,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.io.Writer;
 import java.lang.annotation.Annotation;
 import java.lang.invoke.TypeDescriptor.OfField;
 import java.lang.reflect.AnnotatedElement;
@@ -254,9 +252,7 @@ import domain.Voice;
 import domain.Voice.ByteArray;
 import domain.VoiceList;
 import fr.free.nrw.jakaroma.Jakaroma;
-import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.StringTemplateLoader;
-import freemarker.template.Template;
 import freemarker.template.Version;
 import io.github.toolfactory.narcissus.Narcissus;
 import j2html.tags.specialized.ATag;
@@ -323,10 +319,10 @@ class VoiceManagerTest {
 			METHOD_GET_DECLARED_FIELDS, METHOD_GET_DECLARING_CLASS, METHOD_GET_PACKAGE, METHOD_BROWSE, METHOD_TO_URI,
 			METHOD_STOP, METHOD_ELAPSED, METHOD_GET_DECLARED_CLASSES, METHOD_GET_DLL_PATH, METHOD_GET_RATE0,
 			METHOD_GET_RATE_VOICE_MANAGER, METHOD_GET_RATE_FIELD_LIST, METHOD_ADD_CHANGE_LISTENER,
-			METHOD_IS_ANNOTATION_PRESENT, METHOD_PROCESS, METHOD_ENCODE_TO_STRING,
-			METHOD_GET_VOICE_MULTI_MAP_BY_LIST_NAME, METHOD_GET_VOICE_MULTI_MAP_BY_JLPT, METHOD_GET_FILE_EXTENSIONS,
-			METHOD_REDUCE, METHOD_APPEND_STRING, METHOD_APPEND_CHAR, METHOD_GET_PROVIDER_PLATFORM,
-			METHOD_GET_RESOURCE_AS_STREAM, METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH_METHOD,
+			METHOD_IS_ANNOTATION_PRESENT, METHOD_ENCODE_TO_STRING, METHOD_GET_VOICE_MULTI_MAP_BY_LIST_NAME,
+			METHOD_GET_VOICE_MULTI_MAP_BY_JLPT, METHOD_GET_FILE_EXTENSIONS, METHOD_REDUCE, METHOD_APPEND_STRING,
+			METHOD_APPEND_CHAR, METHOD_GET_PROVIDER_PLATFORM, METHOD_GET_RESOURCE_AS_STREAM,
+			METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH_METHOD,
 			METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH_INSTRUCTION_ARRAY, METHOD_GET_ATTRIBUTES, METHOD_GET_LENGTH,
 			METHOD_ITEM, METHOD_GET_OS_VERSION_INFO_EX_MAP, METHOD_CREATE_JLPT_SHEET,
 			METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2, METHOD_SET_VISIBLE, METHOD_RANDOM_ALPHABETIC,
@@ -749,9 +745,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_IS_ANNOTATION_PRESENT = clz.getDeclaredMethod("isAnnotationPresent", AnnotatedElement.class,
 				Class.class)).setAccessible(true);
-		//
-		(METHOD_PROCESS = clz.getDeclaredMethod("process", Template.class, Object.class, Writer.class))
-				.setAccessible(true);
 		//
 		(METHOD_ENCODE_TO_STRING = clz.getDeclaredMethod("encodeToString", Encoder.class, byte[].class))
 				.setAccessible(true);
@@ -7001,31 +6994,6 @@ class VoiceManagerTest {
 				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testProcess() throws IOException {
-		//
-		Assertions.assertDoesNotThrow(() -> process(null, null, null));
-		//
-		final Template template = new Template(EMPTY, EMPTY, null);
-		//
-		Assertions.assertDoesNotThrow(() -> process(template, null, null));
-		//
-		try (final Writer writer = new StringWriter()) {
-			//
-			Assertions.assertDoesNotThrow(() -> process(template, null, writer));
-			//
-		} // try
-			//
-	}
-
-	private static void process(final Template instance, final Object dataModel, final Writer out) throws Throwable {
-		try {
-			METHOD_PROCESS.invoke(null, instance, dataModel, out);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

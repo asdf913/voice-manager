@@ -1,9 +1,7 @@
 package org.springframework.beans.factory;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.Character.UnicodeBlock;
 import java.lang.reflect.Field;
@@ -61,9 +59,6 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
 		//
 		(METHOD_CAST = clz.getDeclaredMethod("cast", Class.class, Object.class)).setAccessible(true);
-		//
-		(METHOD_PROCESS = clz.getDeclaredMethod("process", Template.class, Object.class, Writer.class))
-				.setAccessible(true);
 		//
 		(METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK = clz.getDeclaredMethod("isAllCharacterInSameUnicodeBlock",
 				String.class, UnicodeBlock.class)).setAccessible(true);
@@ -286,24 +281,7 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 		}
 	}
 
-	@Test
-	void testProcess() throws IOException {
-		//
-		Assertions.assertDoesNotThrow(
-				() -> process(cast(Template.class, Narcissus.allocateInstance(Template.class)), null, null));
-		//
-		final Template template = new Template(EMPTY, EMPTY, null);
-		//
-		Assertions.assertDoesNotThrow(() -> process(template, null, null));
-		//
-		try (final Writer writer = new StringWriter()) {
-			//
-			Assertions.assertDoesNotThrow(() -> process(template, null, writer));
-			//
-		} // try
-			//
-	}
-
+	@SuppressWarnings("unused")
 	private static void process(final Template instance, final Object dataModel, final Writer out) throws Throwable {
 		try {
 			METHOD_PROCESS.invoke(null, instance, dataModel, out);
