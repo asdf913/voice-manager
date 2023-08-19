@@ -34,6 +34,8 @@ import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.MutablePairUtil;
 import org.apache.commons.lang3.tuple.Pair;
+import org.javatuples.valueintf.IValue0;
+import org.javatuples.valueintf.IValue0Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
@@ -44,7 +46,7 @@ import com.opencsv.exceptions.CsvValidationException;
 
 import io.github.toolfactory.narcissus.Narcissus;
 
-public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<Map<String, String>> {
+public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFromResourceFactoryBean {
 
 	private static final Logger LOG = LoggerFactory.getLogger(HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean.class);
 
@@ -70,6 +72,14 @@ public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean implements FactoryB
 	@Override
 	public Map<String, String> getObject() throws Exception {
 		//
+		final IValue0<Map<String, String>> iValue0 = getIvalue0();
+		//
+		if (iValue0 != null) {
+			//
+			return IValue0Util.getValue0(iValue0);
+			//
+		} // if
+			//
 		try (final InputStream is = openStream(testAndApply(Objects::nonNull, url, URL::new, null))) {
 			//
 			return createMap(is, forName(encoding));
