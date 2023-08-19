@@ -191,7 +191,8 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 	}
 
 	@Nullable
-	private static Template getTemplate(@Nullable final Configuration instance, final String name) throws IOException {
+	private static Template getTemplate(@Nullable final Configuration instance, @Nullable final String name)
+			throws IOException {
 		//
 		if ((instance != null ? instance.getTemplateLoader() : null) == null) {
 			//
@@ -203,7 +204,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		//
 	}
 
-	private static void process(@Nullable final Template instance, final Object dataModel, final Writer out)
+	private static void process(@Nullable final Template instance, final Object dataModel, @Nullable final Writer out)
 			throws TemplateException, IOException {
 		if (instance != null && out != null) {
 			instance.process(dataModel, out);
@@ -286,11 +287,11 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		//
 	}
 
-	private static boolean contains(final Collection<?> items, final Object item) {
+	private static boolean contains(@Nullable final Collection<?> items, final Object item) {
 		return items != null && items.contains(item);
 	}
 
-	private static <E> void add(final Collection<E> items, final E item) {
+	private static <E> void add(@Nullable final Collection<E> items, final E item) {
 		if (items != null) {
 			items.add(item);
 		}
@@ -303,11 +304,11 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		} // if
 	}
 
-	private static <T, U> boolean test(final BiPredicate<T, U> instance, @Nullable final T t, final U u) {
+	private static <T, U> boolean test(@Nullable final BiPredicate<T, U> instance, @Nullable final T t, final U u) {
 		return instance != null && instance.test(t, u);
 	}
 
-	private static <T, U> void accept(final BiConsumer<T, U> instance, final T t, final U u) {
+	private static <T, U> void accept(@Nullable final BiConsumer<T, U> instance, final T t, final U u) {
 		if (instance != null) {
 			instance.accept(t, u);
 		}
@@ -318,7 +319,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		return instance != null ? instance.toString() : null;
 	}
 
-	private static <K, V> void put(final Map<K, V> instance, final K key, final V value) {
+	private static <K, V> void put(@Nullable final Map<K, V> instance, final K key, final V value) {
 		if (instance != null) {
 			instance.put(key, value);
 		}
@@ -328,7 +329,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		return test(predicate, a) && test(predicate, b);
 	}
 
-	private static final <T> boolean test(final Predicate<T> instance, @Nullable final T value) {
+	private static final <T> boolean test(@Nullable final Predicate<T> instance, @Nullable final T value) {
 		return instance != null && instance.test(value);
 	}
 
@@ -364,7 +365,8 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		return instance != null ? instance.getClass() : null;
 	}
 
-	private static Field getDeclaredField(final Class<?> instance, final String name) throws NoSuchFieldException {
+	private static Field getDeclaredField(@Nullable final Class<?> instance, @Nullable final String name)
+			throws NoSuchFieldException {
 		return instance != null && name != null ? instance.getDeclaredField(name) : null;
 	}
 
@@ -374,7 +376,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 	}
 
 	@Nullable
-	private static <T> T cast(final Class<T> clz, @Nullable final Object instance) {
+	private static <T> T cast(@Nullable final Class<T> clz, @Nullable final Object instance) {
 		return clz != null && clz.isInstance(instance) ? clz.cast(instance) : null;
 	}
 
