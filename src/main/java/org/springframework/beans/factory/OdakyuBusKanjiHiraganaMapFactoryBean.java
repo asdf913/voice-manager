@@ -362,6 +362,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		return instance != null ? instance.getClass() : null;
 	}
 
+	@Nullable
 	private static Field getDeclaredField(@Nullable final Class<?> instance, @Nullable final String name)
 			throws NoSuchFieldException {
 		return instance != null && name != null ? instance.getDeclaredField(name) : null;
