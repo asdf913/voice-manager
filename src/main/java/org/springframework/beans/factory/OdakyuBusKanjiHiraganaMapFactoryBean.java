@@ -139,6 +139,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		//
 	}
 
+	@Nullable
 	private static <V> V get(@Nullable final AtomicReference<V> instance) {
 		return instance != null ? instance.get() : null;
 	}
