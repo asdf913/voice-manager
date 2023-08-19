@@ -11,6 +11,9 @@ public class StringTemplateLoaderUtil {
 
 	private static final Logger LOG = LoggerFactory.getLogger(StringTemplateLoaderUtil.class);
 
+	private StringTemplateLoaderUtil() {
+	}
+
 	public static void putTemplate(final StringTemplateLoader instance, final String name,
 			final String templateContent) {
 		//
