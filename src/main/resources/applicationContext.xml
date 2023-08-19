@@ -440,6 +440,18 @@
 			value="classpath:ToeiNipporiToneri.xlsx" />
 	</bean>
 
+	<!-- org.springframework.beans.factory.HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean -->
+	<bean
+		class="org.springframework.beans.factory.HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean">
+		<meta key="value" value="hiragana" />
+		<property name="url"
+			value="${org.springframework.beans.factory.HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean.url}" />
+		<property name="encoding"
+			value="${org.springframework.beans.factory.HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean.encoding}" />
+	</bean>
+
+
+
 	<!-- -->
 	<bean id="JlptLevelPageUrl" class="java.lang.String">
 		<constructor-arg index="0"
