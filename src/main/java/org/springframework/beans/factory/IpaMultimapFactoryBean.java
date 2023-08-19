@@ -134,7 +134,7 @@ public class IpaMultimapFactoryBean implements FactoryBean<Multimap<String, Stri
 					} // for
 						//
 					MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							Util.toString(getKey(en)), list);
+							Util.toString(Util.getKey(en)), list);
 					//
 				} // for
 					//
@@ -163,11 +163,6 @@ public class IpaMultimapFactoryBean implements FactoryBean<Multimap<String, Stri
 	@Nullable
 	private static <T> Iterator<T> iterator(@Nullable final Iterable<T> instance) {
 		return instance != null ? instance.iterator() : null;
-	}
-
-	@Nullable
-	private static <K> K getKey(@Nullable final Entry<K, ?> instance) {
-		return instance != null ? instance.getKey() : null;
 	}
 
 	@Nullable

@@ -118,4 +118,11 @@ class UtilTest {
 		//
 	}
 
+	@Test
+	void testGetKey() {
+		//
+		Assertions.assertNull(Util.getKey(null));
+		//
+	}
+
 }

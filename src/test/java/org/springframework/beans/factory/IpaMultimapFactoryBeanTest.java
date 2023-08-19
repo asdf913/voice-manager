@@ -25,7 +25,7 @@ import com.google.common.reflect.Reflection;
 
 class IpaMultimapFactoryBeanTest {
 
-	private static Method METHOD_ENTRY_SET, METHOD_ITERATOR, METHOD_GET_KEY, METHOD_GET_VALUE = null;
+	private static Method METHOD_ENTRY_SET, METHOD_ITERATOR, METHOD_GET_VALUE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -35,8 +35,6 @@ class IpaMultimapFactoryBeanTest {
 		(METHOD_ENTRY_SET = clz.getDeclaredMethod("entrySet", Map.class)).setAccessible(true);
 		//
 		(METHOD_ITERATOR = clz.getDeclaredMethod("iterator", Iterable.class)).setAccessible(true);
-		//
-		(METHOD_GET_KEY = clz.getDeclaredMethod("getKey", Entry.class)).setAccessible(true);
 		//
 		(METHOD_GET_VALUE = clz.getDeclaredMethod("getValue", Entry.class)).setAccessible(true);
 		//
@@ -214,21 +212,6 @@ class IpaMultimapFactoryBeanTest {
 				return (Iterator) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetKey() throws Throwable {
-		//
-		Assertions.assertNull(getKey(null));
-		//
-	}
-
-	private static <K> K getKey(final Entry<K, ?> instance) throws Throwable {
-		try {
-			return (K) METHOD_GET_KEY.invoke(null, instance);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
