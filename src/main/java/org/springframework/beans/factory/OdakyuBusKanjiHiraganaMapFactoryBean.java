@@ -34,12 +34,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
 
 import freemarker.cache.StringTemplateLoader;
-import freemarker.core.ParseException;
 import freemarker.template.Configuration;
-import freemarker.template.MalformedTemplateNameException;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
-import freemarker.template.TemplateNotFoundException;
 import io.github.toolfactory.narcissus.Narcissus;
 
 public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<String, String>> {
