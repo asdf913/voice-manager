@@ -134,12 +134,6 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 					//
 				} // if
 					//
-				if (result == null) {
-					//
-					result = new LinkedHashMap<>();
-					//
-				} // if
-					//
 				for (final Entry<?, ?> entry : map.entrySet()) {
 					//
 					if (entry == null) {
@@ -148,9 +142,10 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 						//
 					} // if
 						//
-					checkIfKeyExistsAndDifferenceValue(result, entry);
+					checkIfKeyExistsAndDifferenceValue(result = ObjectUtils.getIfNull(result, LinkedHashMap::new),
+							entry);
 					//
-					result.put(toString(getKey(entry)), toString(getValue(entry)));
+					put(result, toString(getKey(entry)), toString(getValue(entry)));
 					//
 				} // of
 					//
