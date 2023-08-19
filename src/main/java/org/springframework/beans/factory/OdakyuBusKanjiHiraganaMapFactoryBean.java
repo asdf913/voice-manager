@@ -193,8 +193,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		return instance != null ? instance.apply(value) : null;
 	}
 
-	private static Template getTemplate(final Configuration instance, final String name)
-			throws TemplateNotFoundException, MalformedTemplateNameException, ParseException, IOException {
+	private static Template getTemplate(final Configuration instance, final String name) throws IOException {
 		//
 		if ((instance != null ? instance.getTemplateLoader() : null) == null) {
 			//
