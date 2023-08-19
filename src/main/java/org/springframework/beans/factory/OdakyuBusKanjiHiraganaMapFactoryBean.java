@@ -98,7 +98,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 	}
 
 	@Nullable
-	private static Map<String, String> getObject(final Configuration configuration, final List<?> items)
+	private static Map<String, String> getObject(final Configuration configuration, @Nullable final List<?> items)
 			throws IOException, TemplateException {
 		//
 		Map<?, ?> map = null;
@@ -176,7 +176,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 	}
 
 	@Nullable
-	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, @Nullable final T value,
 			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
 			throws E {
 		return test(predicate, value) ? apply(functionTrue, value) : apply(functionFalse, value);
@@ -201,7 +201,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		//
 	}
 
-	private static void process(final Template instance, final Object dataModel, final Writer out)
+	private static void process(@Nullable final Template instance, final Object dataModel, final Writer out)
 			throws TemplateException, IOException {
 		if (instance != null && out != null) {
 			instance.process(dataModel, out);
@@ -233,7 +233,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 	}
 
 	@Nullable
-	private static Map<String, String> createMap(final List<?> items) {
+	private static Map<String, String> createMap(@Nullable final List<?> items) {
 		//
 		Map<?, ?> map = null;
 		//
@@ -374,7 +374,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 	}
 
 	@Nullable
-	private static <T, U, R, E extends Throwable> R testAndApply(final BiPredicate<T, U> predicate, final T t,
+	private static <T, U, R, E extends Throwable> R testAndApply(final BiPredicate<T, U> predicate, @Nullable final T t,
 			final U u, final BiFunction<T, U, R> functionTrue, @Nullable final BiFunction<T, U, R> functionFalse)
 			throws E {
 		return test(predicate, t, u) ? apply(functionTrue, t, u) : apply(functionFalse, t, u);
@@ -385,7 +385,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		return instance != null ? instance.apply(t, u) : null;
 	}
 
-	private static boolean containsKey(final Map<?, ?> instance, final Object key) {
+	private static boolean containsKey(@Nullable final Map<?, ?> instance, final Object key) {
 		return instance != null && instance.containsKey(key);
 	}
 
