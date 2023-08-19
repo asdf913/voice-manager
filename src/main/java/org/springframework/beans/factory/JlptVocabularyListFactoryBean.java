@@ -9,7 +9,6 @@ import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.net.URL;
@@ -675,7 +674,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		//
 		for (int i = 0; fs != null && i < fs.length; i++) {
 			//
-			if (!Objects.equals(getName(f = fs[i]), name)) {
+			if (!Objects.equals(Util.getName(f = fs[i]), name)) {
 				//
 				continue;
 				//
@@ -687,11 +686,6 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 			//
 		return list;
 		//
-	}
-
-	@Nullable
-	private static String getName(@Nullable final Member instance) {
-		return instance != null ? instance.getName() : null;
 	}
 
 	private static List<Field> getFieldsByColumnName(final Field[] fs, @Nullable final String columnName) {
@@ -755,7 +749,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 				//
 			final List<Method> methods = Util.toList(
 					filter(testAndApply(Objects::nonNull, annotationType(a).getDeclaredMethods(), Arrays::stream, null),
-							x -> x != null && Objects.equals("value", getName(x)) && x.getParameterCount() == 0));
+							x -> x != null && Objects.equals("value", Util.getName(x)) && x.getParameterCount() == 0));
 			//
 			final int sz = IterableUtils.size(methods);
 			//

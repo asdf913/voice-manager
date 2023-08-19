@@ -23,7 +23,7 @@ import com.google.common.reflect.Reflection;
 class BufferedImageTypeFactoryBeanTest {
 
 	private static Method METHOD_TEST_AND_APPLY, METHOD_IS_STATIC, METHOD_GET, METHOD_GET_TYPE, METHOD_FILTER,
-			METHOD_IS_ASSIGNABLE_FROM, METHOD_IS_PRIMITIVE, METHOD_GET_NAME, METHOD_AND, METHOD_INT_VALUE = null;
+			METHOD_IS_ASSIGNABLE_FROM, METHOD_IS_PRIMITIVE, METHOD_AND, METHOD_INT_VALUE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -40,8 +40,6 @@ class BufferedImageTypeFactoryBeanTest {
 		(METHOD_GET_TYPE = clz.getDeclaredMethod("getType", Field.class)).setAccessible(true);
 		//
 		(METHOD_FILTER = clz.getDeclaredMethod("filter", Stream.class, Predicate.class)).setAccessible(true);
-		//
-		(METHOD_GET_NAME = clz.getDeclaredMethod("getName", Member.class)).setAccessible(true);
 		//
 		(METHOD_IS_ASSIGNABLE_FROM = clz.getDeclaredMethod("isAssignableFrom", Class.class, Class.class))
 				.setAccessible(true);
@@ -290,27 +288,6 @@ class BufferedImageTypeFactoryBeanTest {
 			final Object obj = METHOD_IS_PRIMITIVE.invoke(null, instance);
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetName() throws Throwable {
-		//
-		Assertions.assertNull(getName(null));
-		//
-	}
-
-	private static String getName(final Member instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_NAME.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

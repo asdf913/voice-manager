@@ -135,7 +135,7 @@ public class BufferedImageTypeFactoryBean implements FactoryBean<Integer> {
 							Boolean.logicalOr(isAssignableFrom(Number.class, type),
 									(isPrimitive(type) && ArrayUtils.contains(new Class<?>[] { Byte.TYPE, Short.TYPE,
 											Integer.TYPE, Long.TYPE, Float.TYPE, Double.TYPE }, type))),
-							Objects.equals(getName(f), string));
+							Objects.equals(Util.getName(f), string));
 					//
 				}));
 		//
@@ -210,11 +210,6 @@ public class BufferedImageTypeFactoryBean implements FactoryBean<Integer> {
 
 	private static boolean isPrimitive(@Nullable final Class<?> instance) {
 		return instance != null && instance.isPrimitive();
-	}
-
-	@Nullable
-	private static String getName(@Nullable final Member instance) {
-		return instance != null ? instance.getName() : null;
 	}
 
 	private static boolean and(final boolean a, final boolean b, @Nullable final boolean... bs) {
