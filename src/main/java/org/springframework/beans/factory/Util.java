@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -160,6 +161,11 @@ abstract class Util {
 
 	static boolean contains(@Nullable final Collection<?> items, final Object item) {
 		return items != null && items.contains(item);
+	}
+
+	@Nullable
+	static <V> V get(@Nullable final AtomicReference<V> instance) {
+		return instance != null ? instance.get() : null;
 	}
 
 }

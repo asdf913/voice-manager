@@ -134,18 +134,13 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 				//
 		} // for
 			//
-		return get(result);
+		return Util.get(result);
 		//
-	}
-
-	@Nullable
-	private static <V> V get(@Nullable final AtomicReference<V> instance) {
-		return instance != null ? instance.get() : null;
 	}
 
 	private static void perform(final AtomicReference<Map<String, String>> ar, @Nullable final Map<?, ?> map) {
 		//
-		final Map<String, String> result = ObjectUtils.getIfNull(get(ar), LinkedHashMap::new);
+		final Map<String, String> result = ObjectUtils.getIfNull(Util.get(ar), LinkedHashMap::new);
 		//
 		if (map != null && map.entrySet() != null && map.entrySet().iterator() != null) {
 			//
