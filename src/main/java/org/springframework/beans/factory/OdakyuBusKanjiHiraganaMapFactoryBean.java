@@ -275,7 +275,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 			//
 			for (final char c : cs) {
 				//
-				testAndAccept((a, b) -> b != null && !contains(a, b),
+				testAndAccept((a, b) -> b != null && !Util.contains(a, b),
 						unicodeBlocks = ObjectUtils.getIfNull(unicodeBlocks, ArrayList::new), UnicodeBlock.of(c),
 						OdakyuBusKanjiHiraganaMapFactoryBean::add);
 				//
@@ -287,10 +287,6 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 			//
 		return true;
 		//
-	}
-
-	private static boolean contains(@Nullable final Collection<?> items, final Object item) {
-		return items != null && items.contains(item);
 	}
 
 	private static <E> void add(@Nullable final Collection<E> items, final E item) {

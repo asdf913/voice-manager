@@ -161,7 +161,7 @@ public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFr
 			//
 			for (final char c : cs) {
 				//
-				testAndAccept((a, b) -> b != null && !contains(a, b),
+				testAndAccept((a, b) -> b != null && !Util.contains(a, b),
 						unicodeBlocks = ObjectUtils.getIfNull(unicodeBlocks, ArrayList::new), UnicodeBlock.of(c),
 						HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean::add);
 				//
@@ -173,10 +173,6 @@ public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFr
 			//
 		return true;
 		//
-	}
-
-	private static boolean contains(@Nullable final Collection<?> items, final Object item) {
-		return items != null && items.contains(item);
 	}
 
 	private static <T, U> void testAndAccept(final BiPredicate<T, U> instance, final T t, final U u,

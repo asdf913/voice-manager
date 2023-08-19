@@ -30,7 +30,7 @@ class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 
 	private static Method METHOD_CREATE_MAP, METHOD_FOR_NAME, METHOD_OPEN_STREAM, METHOD_GET_DECLARED_FIELD,
 			METHOD_TEST, METHOD_TEST_AND_APPLY, METHOD_CREATE_PAIR, METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK,
-			METHOD_CONTAINS, METHOD_TEST_AND_ACCEPT, METHOD_ADD = null;
+			METHOD_TEST_AND_ACCEPT, METHOD_ADD = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -55,8 +55,6 @@ class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 		//
 		(METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK = clz.getDeclaredMethod("isAllCharacterInSameUnicodeBlock",
 				String.class, UnicodeBlock.class)).setAccessible(true);
-		//
-		(METHOD_CONTAINS = clz.getDeclaredMethod("contains", Collection.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_TEST_AND_ACCEPT = clz.getDeclaredMethod("testAndAccept", BiPredicate.class, Object.class, Object.class,
 				BiConsumer.class)).setAccessible(true);
@@ -307,27 +305,6 @@ class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 			throws Throwable {
 		try {
 			final Object obj = METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK.invoke(null, string, unicodeBlock);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testContains() throws Throwable {
-		//
-		Assertions.assertFalse(contains(null, null));
-		//
-		Assertions.assertTrue(contains(Collections.singleton(null), null));
-		//
-	}
-
-	private static boolean contains(final Collection<?> items, final Object item) throws Throwable {
-		try {
-			final Object obj = METHOD_CONTAINS.invoke(null, items, item);
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}

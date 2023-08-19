@@ -158,4 +158,8 @@ abstract class Util {
 		return instance != null && instance.containsKey(key);
 	}
 
+	static boolean contains(@Nullable final Collection<?> items, final Object item) {
+		return items != null && items.contains(item);
+	}
+
 }

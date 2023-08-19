@@ -25,8 +25,7 @@ class TsukubaExpressKanjiMapFactoryBeanTest {
 
 	private static Class<?> CLASS_ROMAJI_OR_HIRAGANA = null;
 
-	private static Method METHOD_CREATE_ENTRY, METHOD_GET_STRING, METHOD_CONTAINS, METHOD_TEST_AND_APPLY, METHOD_NAME,
-			METHOD_ADD = null;
+	private static Method METHOD_CREATE_ENTRY, METHOD_GET_STRING, METHOD_TEST_AND_APPLY, METHOD_NAME, METHOD_ADD = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -39,8 +38,6 @@ class TsukubaExpressKanjiMapFactoryBeanTest {
 				.setAccessible(true);
 		//
 		(METHOD_GET_STRING = clz.getDeclaredMethod("getString", Iterable.class)).setAccessible(true);
-		//
-		(METHOD_CONTAINS = clz.getDeclaredMethod("contains", Collection.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
@@ -130,8 +127,7 @@ class TsukubaExpressKanjiMapFactoryBeanTest {
 	@Test
 	void testCreateEntry() throws Throwable {
 		//
-		AssertionsUtil.assertThrowsAndEquals(IllegalArgumentException.class, "{}",
-				() -> createEntry(null, null));
+		AssertionsUtil.assertThrowsAndEquals(IllegalArgumentException.class, "{}", () -> createEntry(null, null));
 		//
 		if (CLASS_ROMAJI_OR_HIRAGANA != null && CLASS_ROMAJI_OR_HIRAGANA.isEnum()) {
 			//
@@ -182,27 +178,6 @@ class TsukubaExpressKanjiMapFactoryBeanTest {
 				return (String) obj;
 			}
 			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testContains() throws Throwable {
-		//
-		Assertions.assertFalse(contains(null, null));
-		//
-		Assertions.assertFalse(contains(Collections.singleton(""), null));
-		//
-	}
-
-	private static boolean contains(final Collection<?> items, final Object item) throws Throwable {
-		try {
-			final Object obj = METHOD_CONTAINS.invoke(null, items, item);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
-			}
-			throw new Throwable(obj != null && obj.getClass() != null ? obj.getClass().toString() : null);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

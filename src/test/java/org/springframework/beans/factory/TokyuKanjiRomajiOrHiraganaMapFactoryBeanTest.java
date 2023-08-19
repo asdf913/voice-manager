@@ -23,7 +23,7 @@ import com.google.common.base.Predicates;
 class TokyuKanjiRomajiOrHiraganaMapFactoryBeanTest {
 
 	private static Method METHOD_GET_OBJECT, METHOD_GET_ROMAJI_OR_HIRAGANA_MAP,
-			METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK, METHOD_CONTAINS, METHOD_ACCEPT, METHOD_TEST, METHOD_ADD,
+			METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK, METHOD_ACCEPT, METHOD_TEST, METHOD_ADD,
 			METHOD_TEST_AND_APPLY, METHOD_NAME = null;
 
 	@BeforeAll
@@ -38,8 +38,6 @@ class TokyuKanjiRomajiOrHiraganaMapFactoryBeanTest {
 		//
 		(METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK = clz.getDeclaredMethod("isAllCharacterInSameUnicodeBlock",
 				String.class, UnicodeBlock.class)).setAccessible(true);
-		//
-		(METHOD_CONTAINS = clz.getDeclaredMethod("contains", Collection.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_ACCEPT = clz.getDeclaredMethod("accept", BiConsumer.class, Object.class, Object.class))
 				.setAccessible(true);
@@ -237,25 +235,6 @@ class TokyuKanjiRomajiOrHiraganaMapFactoryBeanTest {
 			throws Throwable {
 		try {
 			final Object obj = METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK.invoke(null, string, unicodeBlock);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
-			}
-			throw new Throwable(toString(obj != null ? obj.getClass() : null));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testContains() throws Throwable {
-		//
-		Assertions.assertFalse(contains(null, null));
-		//
-	}
-
-	private static boolean contains(final Collection<?> items, final Object item) throws Throwable {
-		try {
-			final Object obj = METHOD_CONTAINS.invoke(null, items, item);
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}

@@ -42,9 +42,9 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 	private static final String EMPTY = "";
 
 	private static Method METHOD_GET_OBJECT, METHOD_CREATE_MAP, METHOD_TEST_AND_APPLY, METHOD_PROCESS,
-			METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK, METHOD_CONTAINS, METHOD_ADD, METHOD_TEST2, METHOD_TEST3,
-			METHOD_ACCEPT, METHOD_OPEN_STREAM, METHOD_GET_DECLARED_FIELD,
-			METHOD_CHECK_IF_KEY_EXISTS_AND_DIFFERENCE_VALUE, METHOD_GET_KEY, METHOD_GET_VALUE, METHOD_PERFORM = null;
+			METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK, METHOD_ADD, METHOD_TEST2, METHOD_TEST3, METHOD_ACCEPT,
+			METHOD_OPEN_STREAM, METHOD_GET_DECLARED_FIELD, METHOD_CHECK_IF_KEY_EXISTS_AND_DIFFERENCE_VALUE,
+			METHOD_GET_KEY, METHOD_GET_VALUE, METHOD_PERFORM = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -61,8 +61,6 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 		//
 		(METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK = clz.getDeclaredMethod("isAllCharacterInSameUnicodeBlock",
 				String.class, UnicodeBlock.class)).setAccessible(true);
-		//
-		(METHOD_CONTAINS = clz.getDeclaredMethod("contains", Collection.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_ADD = clz.getDeclaredMethod("add", Collection.class, Object.class)).setAccessible(true);
 		//
@@ -295,27 +293,6 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 			throws Throwable {
 		try {
 			final Object obj = METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK.invoke(null, string, unicodeBlock);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testContains() throws Throwable {
-		//
-		Assertions.assertFalse(contains(null, null));
-		//
-		Assertions.assertTrue(contains(Collections.singleton(null), null));
-		//
-	}
-
-	private static boolean contains(final Collection<?> items, final Object item) throws Throwable {
-		try {
-			final Object obj = METHOD_CONTAINS.invoke(null, items, item);
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}

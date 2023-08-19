@@ -210,7 +210,7 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends StringM
 				//
 			} // if
 				//
-			if (contains(Arrays.asList("java.base", "java.sql", "java.desktop", "java.logging"),
+			if (Util.contains(Arrays.asList("java.base", "java.sql", "java.desktop", "java.logging"),
 					getName(getModule(f.getDeclaringClass())))) {
 				//
 				temp = Modifier.isStatic(f.getModifiers()) ? Narcissus.getStaticField(f)
@@ -279,7 +279,7 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends StringM
 					//
 				} // if
 					//
-				if (!contains(Arrays.asList(UnicodeBlock.HIRAGANA, UnicodeBlock.BASIC_LATIN), key)) {
+				if (!Util.contains(Arrays.asList(UnicodeBlock.HIRAGANA, UnicodeBlock.BASIC_LATIN), key)) {
 					//
 					throw new IllegalStateException();
 					//
@@ -307,7 +307,7 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends StringM
 			//
 			for (final char c : cs) {
 				//
-				testAndAccept((a, b) -> b != null && !contains(a, b),
+				testAndAccept((a, b) -> b != null && !Util.contains(a, b),
 						unicodeBlocks = ObjectUtils.getIfNull(unicodeBlocks, ArrayList::new), UnicodeBlock.of(c),
 						WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean::add);
 				//
@@ -340,10 +340,6 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends StringM
 
 	private static boolean isInstance(@Nullable final Class<?> clz, @Nullable final Object instance) {
 		return clz != null && clz.isInstance(instance);
-	}
-
-	private static boolean contains(@Nullable final Collection<?> items, @Nullable final Object item) {
-		return items != null && items.contains(item);
 	}
 
 	private static <E> void add(@Nullable final Collection<E> items, final E item) {

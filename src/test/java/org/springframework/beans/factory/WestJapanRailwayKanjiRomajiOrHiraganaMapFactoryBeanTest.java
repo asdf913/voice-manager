@@ -44,9 +44,8 @@ import com.google.common.reflect.Reflection;
 class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 
 	private static Method METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_CREATE_TABLE,
-			METHOD_GET_UNICODE_BLOCKS, METHOD_TEST, METHOD_ACCEPT, METHOD_IS_INSTANCE, METHOD_CONTAINS, METHOD_ADD,
-			METHOD_OPEN_STREAM, METHOD_GET_TRIPLES_1, METHOD_GET_TRIPLES_2, METHOD_GET_NAME_MODULE, METHOD_GET_MODULE,
-			METHOD_GET = null;
+			METHOD_GET_UNICODE_BLOCKS, METHOD_TEST, METHOD_ACCEPT, METHOD_IS_INSTANCE, METHOD_ADD, METHOD_OPEN_STREAM,
+			METHOD_GET_TRIPLES_1, METHOD_GET_TRIPLES_2, METHOD_GET_NAME_MODULE, METHOD_GET_MODULE, METHOD_GET = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -70,8 +69,6 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 				.setAccessible(true);
 		//
 		(METHOD_IS_INSTANCE = clz.getDeclaredMethod("isInstance", Class.class, Object.class)).setAccessible(true);
-		//
-		(METHOD_CONTAINS = clz.getDeclaredMethod("contains", Collection.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_ADD = clz.getDeclaredMethod("add", Collection.class, Object.class)).setAccessible(true);
 		//
@@ -398,25 +395,6 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 	private static boolean isInstance(final Class<?> clz, final Object instance) throws Throwable {
 		try {
 			final Object obj = METHOD_IS_INSTANCE.invoke(null, clz, instance);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
-			}
-			throw new Throwable(Util.toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testContains() throws Throwable {
-		//
-		Assertions.assertFalse(contains(null, null));
-		//
-	}
-
-	private static boolean contains(final Collection<?> items, final Object item) throws Throwable {
-		try {
-			final Object obj = METHOD_CONTAINS.invoke(null, items, item);
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}

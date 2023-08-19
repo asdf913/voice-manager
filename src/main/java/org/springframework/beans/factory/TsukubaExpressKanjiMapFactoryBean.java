@@ -167,7 +167,7 @@ public class TsukubaExpressKanjiMapFactoryBean extends StringMapFromResourceFact
 		//
 		for (int i = 0; i < IterableUtils.size(es); i++) {
 			//
-			if (contains(ss = ObjectUtils.getIfNull(ss, ArrayList::new),
+			if (Util.contains(ss = ObjectUtils.getIfNull(ss, ArrayList::new),
 					s = ElementUtil.text(IterableUtils.get(es, i)))) {
 				//
 				continue;
@@ -186,10 +186,6 @@ public class TsukubaExpressKanjiMapFactoryBean extends StringMapFromResourceFact
 			//
 		return !IterableUtils.isEmpty(ss) ? IterableUtils.get(ss, 0) : null;
 		//
-	}
-
-	private static boolean contains(@Nullable final Collection<?> items, final Object item) {
-		return items != null && items.contains(item);
 	}
 
 	private static <T> void add(@Nullable final Collection<T> items, final T item) {

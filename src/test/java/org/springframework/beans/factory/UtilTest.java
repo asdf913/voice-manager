@@ -111,4 +111,11 @@ class UtilTest {
 		}
 	}
 
+	@Test
+	void testContains() {
+		//
+		Assertions.assertFalse(Util.contains(null, null));
+		//
+	}
+
 }
