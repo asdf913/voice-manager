@@ -303,7 +303,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		} // if
 	}
 
-	private static <T, U> boolean test(final BiPredicate<T, U> instance, final T t, final U u) {
+	private static <T, U> boolean test(final BiPredicate<T, U> instance, @Nullable final T t, final U u) {
 		return instance != null && instance.test(t, u);
 	}
 
@@ -328,7 +328,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		return test(predicate, a) && test(predicate, b);
 	}
 
-	private static final <T> boolean test(final Predicate<T> instance, final T value) {
+	private static final <T> boolean test(final Predicate<T> instance, @Nullable final T value) {
 		return instance != null && instance.test(value);
 	}
 
@@ -374,7 +374,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 	}
 
 	@Nullable
-	private static <T> T cast(final Class<T> clz, final Object instance) {
+	private static <T> T cast(final Class<T> clz, @Nullable final Object instance) {
 		return clz != null && clz.isInstance(instance) ? clz.cast(instance) : null;
 	}
 
