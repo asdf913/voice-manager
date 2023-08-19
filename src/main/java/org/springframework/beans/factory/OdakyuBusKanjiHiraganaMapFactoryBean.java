@@ -167,11 +167,11 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 			//
 	}
 
-	private static <K> K getKey(final Entry<K, ?> instance) {
+	private static <K> K getKey(@Nullable final Entry<K, ?> instance) {
 		return instance != null ? instance.getKey() : null;
 	}
 
-	private static <V> V getValue(final Entry<?, V> instance) {
+	private static <V> V getValue(@Nullable final Entry<?, V> instance) {
 		return instance != null ? instance.getValue() : null;
 	}
 
@@ -188,7 +188,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 	}
 
 	@Nullable
-	private static Template getTemplate(final Configuration instance, final String name) throws IOException {
+	private static Template getTemplate(@Nullable final Configuration instance, final String name) throws IOException {
 		//
 		if ((instance != null ? instance.getTemplateLoader() : null) == null) {
 			//
@@ -257,7 +257,8 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		//
 	}
 
-	private static boolean isAllCharacterInSameUnicodeBlock(final String string, final UnicodeBlock unicodeBlock) {
+	private static boolean isAllCharacterInSameUnicodeBlock(@Nullable final String string,
+			final UnicodeBlock unicodeBlock) {
 		//
 		final char[] cs = string != null ? string.toCharArray() : null;
 		//
@@ -308,7 +309,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		}
 	}
 
-	private static String toString(final Object instance) {
+	private static String toString(@Nullable final Object instance) {
 		return instance != null ? instance.toString() : null;
 	}
 
@@ -327,7 +328,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 	}
 
 	@Nullable
-	private static InputStream openStream(final URL instance) throws IOException {
+	private static InputStream openStream(@Nullable final URL instance) throws IOException {
 		//
 		if (instance == null) {
 			//
@@ -353,7 +354,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		//
 	}
 
-	private static Class<?> getClass(final Object instance) {
+	private static Class<?> getClass(@Nullable final Object instance) {
 		return instance != null ? instance.getClass() : null;
 	}
 
@@ -361,7 +362,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		return instance != null && name != null ? instance.getDeclaredField(name) : null;
 	}
 
-	private static <V> V get(final Map<?, V> instance, final Object key) {
+	private static <V> V get(@Nullable final Map<?, V> instance, final Object key) {
 		return instance != null ? instance.get(key) : null;
 	}
 
