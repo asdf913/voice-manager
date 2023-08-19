@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
@@ -109,7 +111,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		//
 		Number count = 0;
 		//
-		Map<String, String> result = null;
+		AtomicReference<Map<String, String>> result = null;
 		//
 		for (int i = 0; items != null && i < items.size(); i++) {
 			//
@@ -127,33 +129,51 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 				//
 				TemplateUtil.process(ConfigurationUtil.getTemplate(configuration, ""), map, writer);
 				//
-				if ((map = createMap(toString(writer), objectMapper)) == null || map.isEmpty()) {
+				perform(result = ObjectUtils.getIfNull(result, AtomicReference::new),
+						createMap(toString(writer), objectMapper));
+				//
+			} // try
+				//
+		} // for
+			//
+		return get(result);
+		//
+	}
+
+	private static <V> V get(final AtomicReference<V> instance) {
+		return instance != null ? instance.get() : null;
+	}
+
+	private static void perform(final AtomicReference<Map<String, String>> ar, final Map<?, ?> map) {
+		//
+		final Map<String, String> result = ObjectUtils.getIfNull(get(ar), LinkedHashMap::new);
+		//
+		if (map != null && map.entrySet() != null && map.entrySet().iterator() != null) {
+			//
+			for (final Entry<?, ?> entry : map.entrySet()) {
+				//
+				if (entry == null) {
 					//
 					continue;
 					//
 				} // if
 					//
-				for (final Entry<?, ?> entry : map.entrySet()) {
-					//
-					if (entry == null) {
-						//
-						continue;
-						//
-					} // if
-						//
-					checkIfKeyExistsAndDifferenceValue(result = ObjectUtils.getIfNull(result, LinkedHashMap::new),
-							entry);
-					//
-					put(result, toString(getKey(entry)), toString(getValue(entry)));
-					//
-				} // of
-					//
-			} // try
+				checkIfKeyExistsAndDifferenceValue(result, entry);
 				//
-		} // for
+				put(result, toString(getKey(entry)), toString(getValue(entry)));
+				//
+			} // for
+				//
+		} // if
 			//
-		return result;
+		set(ar, result);
 		//
+	}
+
+	private static <V> void set(final AtomicReference<V> instance, final V value) {
+		if (instance != null) {
+			instance.set(value);
+		}
 	}
 
 	private static void checkIfKeyExistsAndDifferenceValue(final Map<?, ?> map, final Entry<?, ?> entry) {

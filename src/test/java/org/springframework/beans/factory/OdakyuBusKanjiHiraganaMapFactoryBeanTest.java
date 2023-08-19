@@ -11,10 +11,13 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
@@ -42,7 +45,7 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 	private static Method METHOD_GET_OBJECT, METHOD_GET_CLASS, METHOD_CREATE_MAP, METHOD_TEST_AND_APPLY, METHOD_CAST,
 			METHOD_PROCESS, METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK, METHOD_CONTAINS, METHOD_ADD, METHOD_TEST2,
 			METHOD_TEST3, METHOD_ACCEPT, METHOD_PUT, METHOD_OPEN_STREAM, METHOD_GET_DECLARED_FIELD, METHOD_GET,
-			METHOD_CHECK_IF_KEY_EXISTS_AND_DIFFERENCE_VALUE, METHOD_GET_VALUE = null;
+			METHOD_CHECK_IF_KEY_EXISTS_AND_DIFFERENCE_VALUE, METHOD_GET_VALUE, METHOD_PERFORM = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -90,17 +93,33 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 		//
 		(METHOD_GET_VALUE = clz.getDeclaredMethod("getValue", Entry.class)).setAccessible(true);
 		//
+		(METHOD_PERFORM = clz.getDeclaredMethod("perform", AtomicReference.class, Map.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
 
 		private Object key, value = null;
 
+		private Set<Entry<?, ?>> entrySet = null;
+
+		private Iterator<?> iterator = null;
+
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
 			final String methodName = method != null ? method.getName() : null;
 			//
+			if (proxy instanceof Iterable) {
+				//
+				if (Objects.equals(methodName, "iterator")) {
+					//
+					return iterator;
+					//
+				} // if
+					//
+			} // if
+				//
 			if (proxy instanceof Entry) {
 				//
 				if (Objects.equals(methodName, "getKey")) {
@@ -113,7 +132,16 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 					//
 				} // if
 					//
+			} else if (proxy instanceof Map) {
+				//
+				if (Objects.equals(methodName, "entrySet")) {
+					//
+					return entrySet;
+					//
+				} // if
+					//
 			} // if
+				//
 				//
 			throw new Throwable(methodName);
 			//
@@ -174,8 +202,8 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 								ObjectMapperUtil.readValue(objectMapper, "{\"code\":null,\"count\":0}", Object.class)),
 						null));
 		//
-		Assertions
-				.assertNull(getObject(null,
+		Assertions.assertEquals(Collections.emptyMap(),
+				getObject(null,
 						Collections.singletonList(
 								ObjectMapperUtil.readValue(objectMapper, "{\"code\":null,\"count\":1}", Object.class)),
 						null));
@@ -512,6 +540,41 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 	private static <V> V getValue(final Entry<?, V> instance) throws Throwable {
 		try {
 			return (V) METHOD_GET_VALUE.invoke(null, instance);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testPerform() {
+		//
+		Assertions.assertDoesNotThrow(() -> perform(null, Collections.singletonMap(null, null)));
+		//
+		final Map<?, ?> map = Reflection.newProxy(Map.class, ih);
+		//
+		Assertions.assertDoesNotThrow(() -> perform(null, map));
+		//
+		if (ih != null) {
+			//
+			ih.entrySet = Collections.singleton(null);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> perform(null, map));
+		//
+		if (ih != null) {
+			//
+			ih.entrySet = Reflection.newProxy(Set.class, ih);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> perform(null, map));
+		//
+	}
+
+	private static void perform(final AtomicReference<Map<String, String>> ar, final Map<?, ?> map) throws Throwable {
+		try {
+			METHOD_PERFORM.invoke(null, ar, map);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
