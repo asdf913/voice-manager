@@ -252,7 +252,6 @@ import domain.Voice;
 import domain.Voice.ByteArray;
 import domain.VoiceList;
 import fr.free.nrw.jakaroma.Jakaroma;
-import freemarker.cache.StringTemplateLoader;
 import freemarker.template.Version;
 import io.github.toolfactory.narcissus.Narcissus;
 import j2html.tags.specialized.ATag;
@@ -10586,23 +10585,6 @@ class VoiceManagerTest {
 
 	@Test
 	void testExportTask2() throws Throwable {
-		//
-		// org.springframework.context.support.VoiceManager$ExportTask.putTemplate(freemarker.cache.StringTemplateLoader,java.lang.String,java.lang.String)
-		//
-		final Method putTemplate = CLASS_EXPORT_TASK != null
-				? CLASS_EXPORT_TASK.getDeclaredMethod("putTemplate", StringTemplateLoader.class, String.class,
-						String.class)
-				: null;
-		//
-		if (putTemplate != null) {
-			//
-			putTemplate.setAccessible(true);
-			//
-		} // if
-			//
-		Assertions.assertNull(invoke(putTemplate, null, null, null, null));
-		//
-		Assertions.assertNull(invoke(putTemplate, null, new StringTemplateLoader(), EMPTY, EMPTY));
 		//
 		// org.springframework.context.support.VoiceManager$ExportTask.clone(com.fasterxml.jackson.databind.ObjectMapper,java.lang.Class,java.lang.Object)
 		//

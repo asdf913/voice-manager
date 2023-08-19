@@ -34,6 +34,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
 
 import freemarker.cache.StringTemplateLoader;
+import freemarker.cache.StringTemplateLoaderUtil;
 import freemarker.template.Configuration;
 import freemarker.template.ConfigurationUtil;
 import freemarker.template.TemplateException;
@@ -68,7 +69,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 			//
 			final StringTemplateLoader stl = new StringTemplateLoader();
 			//
-			testAndAccept((a, b) -> a != null && b != null, "", urlTemplate, stl::putTemplate);
+			StringTemplateLoaderUtil.putTemplate(stl, "", urlTemplate);
 			//
 			(configuration = new Configuration(Configuration.getVersion())).setTemplateLoader(stl);
 			//

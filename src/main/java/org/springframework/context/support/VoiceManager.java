@@ -376,6 +376,7 @@ import domain.VoiceList;
 import fr.free.nrw.jakaroma.Jakaroma;
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.StringTemplateLoader;
+import freemarker.cache.StringTemplateLoaderUtil;
 import freemarker.cache.TemplateLoader;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.ConfigurationUtil;
@@ -12111,7 +12112,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			), (a, b) -> Integer.compare(StringUtils.length(a), StringUtils.length(b)));
 			//
-			putTemplate(stl, key, textContent);
+			StringTemplateLoaderUtil.putTemplate(stl, key, textContent);
 			//
 			try (final Writer writer = new StringWriter()) {
 				//
@@ -12146,13 +12147,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // try
 				//
-		}
-
-		private static void putTemplate(@Nullable final StringTemplateLoader instance, final String name,
-				@Nullable final String templateContent) {
-			if (instance != null) {
-				instance.putTemplate(name, templateContent);
-			}
 		}
 
 		private static void setPluginHref(final ObjectMap objectMap, @Nullable final String key,
