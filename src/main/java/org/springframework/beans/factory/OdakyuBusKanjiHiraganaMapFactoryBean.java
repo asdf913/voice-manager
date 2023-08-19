@@ -183,8 +183,8 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		return test(predicate, value) ? apply(functionTrue, value) : apply(functionFalse, value);
 	}
 
-	private static <T, R, E extends Throwable> R apply(final FailableFunction<T, R, E> instance, final T value)
-			throws E {
+	private static <T, R, E extends Throwable> R apply(@Nullable final FailableFunction<T, R, E> instance,
+			final T value) throws E {
 		return instance != null ? instance.apply(value) : null;
 	}
 
@@ -373,7 +373,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		return test(predicate, t, u) ? apply(functionTrue, t, u) : apply(functionFalse, t, u);
 	}
 
-	private static <T, U, R> R apply(final BiFunction<T, U, R> instance, final T t, final U u) {
+	private static <T, U, R> R apply(@Nullable final BiFunction<T, U, R> instance, final T t, final U u) {
 		return instance != null ? instance.apply(t, u) : null;
 	}
 
