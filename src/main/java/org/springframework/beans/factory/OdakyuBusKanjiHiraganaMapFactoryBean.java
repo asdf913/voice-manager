@@ -97,6 +97,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		//
 	}
 
+	@Nullable
 	private static Map<String, String> getObject(final Configuration configuration, final List<?> items)
 			throws IOException, TemplateException {
 		//
@@ -174,6 +175,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		return instance != null ? instance.getValue() : null;
 	}
 
+	@Nullable
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
 			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
 			throws E {
@@ -185,6 +187,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		return instance != null ? instance.apply(value) : null;
 	}
 
+	@Nullable
 	private static Template getTemplate(final Configuration instance, final String name) throws IOException {
 		//
 		if ((instance != null ? instance.getTemplateLoader() : null) == null) {
@@ -227,6 +230,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		//
 	}
 
+	@Nullable
 	private static Map<String, String> createMap(final List<?> items) {
 		//
 		Map<?, ?> map = null;
@@ -322,6 +326,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		return instance != null && instance.test(value);
 	}
 
+	@Nullable
 	private static InputStream openStream(final URL instance) throws IOException {
 		//
 		if (instance == null) {
@@ -360,6 +365,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		return instance != null ? instance.get(key) : null;
 	}
 
+	@Nullable
 	private static <T> T cast(final Class<T> clz, final Object instance) {
 		return clz != null && clz.isInstance(instance) ? clz.cast(instance) : null;
 	}
@@ -370,6 +376,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		return test(predicate, t, u) ? apply(functionTrue, t, u) : apply(functionFalse, t, u);
 	}
 
+	@Nullable
 	private static <T, U, R> R apply(@Nullable final BiFunction<T, U, R> instance, final T t, final U u) {
 		return instance != null ? instance.apply(t, u) : null;
 	}
