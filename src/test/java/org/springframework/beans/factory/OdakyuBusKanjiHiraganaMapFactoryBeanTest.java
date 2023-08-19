@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Map.Entry;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
@@ -49,7 +50,8 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 	private static Method METHOD_GET_OBJECT, METHOD_GET_CLASS, METHOD_CREATE_MAP, METHOD_TEST_AND_APPLY,
 			METHOD_GET_TEMPLATE, METHOD_CAST, METHOD_PROCESS, METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK,
 			METHOD_CONTAINS, METHOD_ADD, METHOD_TEST2, METHOD_TEST3, METHOD_ACCEPT, METHOD_PUT, METHOD_OPEN_STREAM,
-			METHOD_GET_DECLARED_FIELD, METHOD_GET = null;
+			METHOD_GET_DECLARED_FIELD, METHOD_GET, METHOD_CHECK_IF_KEY_EXISTS_AND_DIFFERENCE_VALUE,
+			METHOD_GET_VALUE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -97,11 +99,16 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 		//
 		(METHOD_GET = clz.getDeclaredMethod("get", Map.class, Object.class)).setAccessible(true);
 		//
+		(METHOD_CHECK_IF_KEY_EXISTS_AND_DIFFERENCE_VALUE = clz.getDeclaredMethod("checkIfKeyExistsAndDifferenceValue",
+				Map.class, Entry.class)).setAccessible(true);
+		//
+		(METHOD_GET_VALUE = clz.getDeclaredMethod("getValue", Entry.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
 
-		private Object templateSource = null;
+		private Object templateSource, key, value = null;
 
 		private Long lastModified = null;
 
@@ -140,6 +147,18 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 					//
 				} // if
 					//
+			} else if (proxy instanceof Entry) {
+				//
+				if (Objects.equals(methodName, "getKey")) {
+					//
+					return key;
+					//
+				} else if (Objects.equals(methodName, "getValue")) {
+					//
+					return value;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(methodName);
@@ -152,12 +171,16 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 
 	private ObjectMapper objectMapper = null;
 
+	private IH ih = null;
+
 	@BeforeEach
 	void beforeEach() {
 		//
 		instance = new OdakyuBusKanjiHiraganaMapFactoryBean();
 		//
 		objectMapper = new ObjectMapper();
+		//
+		ih = new IH();
 		//
 	}
 
@@ -302,8 +325,6 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 		//
 		Assertions.assertNull(getTemplate(configuration1, EMPTY));
 		//
-		final IH ih = new IH();
-		//
 		final TemplateLoader templateLoader = Reflection.newProxy(TemplateLoader.class, ih);
 		//
 		configuration1.setTemplateLoader(templateLoader);
@@ -312,14 +333,22 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 		//
 		final Configuration configuration2 = new Configuration(Configuration.getVersion());
 		//
-		ih.templateSource = EMPTY;
-		//
-		ih.lastModified = Long.valueOf(0);
-		//
+		if (ih != null) {
+			//
+			ih.templateSource = EMPTY;
+			//
+			ih.lastModified = Long.valueOf(0);
+			//
+		} // if
+			//
 		try (final Reader reader = new StringReader(EMPTY)) {
 			//
-			ih.reader = reader;
-			//
+			if (ih != null) {
+				//
+				ih.reader = reader;
+				//
+			} // if
+				//
 			configuration2.setTemplateLoader(templateLoader);
 			//
 			Assertions.assertNotNull(getTemplate(configuration2, EMPTY));
@@ -559,6 +588,45 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 	private static <V> V get(final Map<?, V> instance, final Object key) throws Throwable {
 		try {
 			return (V) METHOD_GET.invoke(null, instance, key);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCheckIfKeyExistsAndDifferenceValue() {
+		//
+		Assertions.assertDoesNotThrow(() -> checkIfKeyExistsAndDifferenceValue(null, null));
+		//
+		final Entry<?, ?> entry = Reflection.newProxy(Entry.class, ih);
+		//
+		Assertions.assertDoesNotThrow(
+				() -> checkIfKeyExistsAndDifferenceValue(Collections.singletonMap(null, null), entry));
+		//
+		Assertions.assertThrows(IllegalStateException.class,
+				() -> checkIfKeyExistsAndDifferenceValue(Collections.singletonMap(null, EMPTY), entry));
+		//
+	}
+
+	private static void checkIfKeyExistsAndDifferenceValue(final Map<?, ?> map, final Entry<?, ?> entry)
+			throws Throwable {
+		try {
+			METHOD_CHECK_IF_KEY_EXISTS_AND_DIFFERENCE_VALUE.invoke(null, map, entry);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetValue() throws Throwable {
+		//
+		Assertions.assertNull(getValue(null));
+		//
+	}
+
+	private static <V> V getValue(final Entry<?, V> instance) throws Throwable {
+		try {
+			return (V) METHOD_GET_VALUE.invoke(null, instance);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

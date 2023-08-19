@@ -107,8 +107,6 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		//
 		Map<String, String> result = null;
 		//
-		Object key, value = null;
-		//
 		for (int i = 0; items != null && i < items.size(); i++) {
 			//
 			if (!containsKey(map = cast(Map.class, items.get(i)), "code")) {
@@ -148,15 +146,9 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 						//
 					} // if
 						//
-					value = entry.getValue();
+					checkIfKeyExistsAndDifferenceValue(result, entry);
 					//
-					if (result.containsKey(key = entry.getKey()) && !Objects.equals(result.get(key), value)) {
-						//
-						throw new IllegalStateException();
-						//
-					} // if
-						//
-					result.put(toString(key), toString(value));
+					result.put(toString(getKey(entry)), toString(getValue(entry)));
 					//
 				} // of
 					//
@@ -166,6 +158,26 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 			//
 		return result;
 		//
+	}
+
+	private static void checkIfKeyExistsAndDifferenceValue(final Map<?, ?> map, final Entry<?, ?> entry) {
+		//
+		final Object key = getKey(entry);
+		//
+		if (containsKey(map, key) && !Objects.equals(get(map, key), getValue(entry))) {
+			//
+			throw new IllegalStateException();
+			//
+		} // if
+			//
+	}
+
+	private static <K> K getKey(final Entry<K, ?> instance) {
+		return instance != null ? instance.getKey() : null;
+	}
+
+	private static <V> V getValue(final Entry<?, V> instance) {
+		return instance != null ? instance.getValue() : null;
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
