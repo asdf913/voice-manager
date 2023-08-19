@@ -129,7 +129,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 				TemplateUtil.process(ConfigurationUtil.getTemplate(configuration, ""), map, writer);
 				//
 				perform(result = ObjectUtils.getIfNull(result, AtomicReference::new),
-						createMap(toString(writer), objectMapper));
+						createMap(Util.toString(writer), objectMapper));
 				//
 			} // try
 				//
@@ -160,7 +160,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 					//
 				checkIfKeyExistsAndDifferenceValue(result, entry);
 				//
-				put(result, toString(getKey(entry)), toString(getValue(entry)));
+				put(result, Util.toString(getKey(entry)), Util.toString(getValue(entry)));
 				//
 			} // for
 				//
@@ -249,7 +249,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		for (int i = 0; items != null && i < items.size(); i++) {
 			//
 			if ((map = cast(Map.class, items.get(i))) == null || !and(map::containsKey, "name", "ruby")
-					|| Objects.equals(name = toString(get(map, "name")), ruby = toString(get(map, "ruby")))
+					|| Objects.equals(name = Util.toString(get(map, "name")), ruby = Util.toString(get(map, "ruby")))
 					|| !isAllCharacterInSameUnicodeBlock(name, UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)) {
 				//
 				continue;
@@ -314,11 +314,6 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		if (instance != null) {
 			instance.accept(t, u);
 		}
-	}
-
-	@Nullable
-	private static String toString(@Nullable final Object instance) {
-		return instance != null ? instance.toString() : null;
 	}
 
 	private static <K, V> void put(@Nullable final Map<K, V> instance, @Nullable final K key, @Nullable final V value) {
