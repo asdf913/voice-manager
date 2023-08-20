@@ -18,8 +18,8 @@ import com.google.common.base.Predicates;
 
 class BufferedImageTypeFactoryBeanTest {
 
-	private static Method METHOD_TEST_AND_APPLY, METHOD_IS_STATIC, METHOD_GET, METHOD_IS_ASSIGNABLE_FROM,
-			METHOD_IS_PRIMITIVE, METHOD_AND, METHOD_INT_VALUE = null;
+	private static Method METHOD_TEST_AND_APPLY, METHOD_IS_STATIC, METHOD_GET, METHOD_IS_PRIMITIVE, METHOD_AND,
+			METHOD_INT_VALUE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -32,9 +32,6 @@ class BufferedImageTypeFactoryBeanTest {
 		(METHOD_IS_STATIC = clz.getDeclaredMethod("isStatic", Member.class)).setAccessible(true);
 		//
 		(METHOD_GET = clz.getDeclaredMethod("get", Field.class, Object.class)).setAccessible(true);
-		//
-		(METHOD_IS_ASSIGNABLE_FROM = clz.getDeclaredMethod("isAssignableFrom", Class.class, Class.class))
-				.setAccessible(true);
 		//
 		(METHOD_IS_PRIMITIVE = clz.getDeclaredMethod("isPrimitive", Class.class)).setAccessible(true);
 		//
@@ -162,29 +159,6 @@ class BufferedImageTypeFactoryBeanTest {
 	private static Object get(final Field field, final Object instance) throws Throwable {
 		try {
 			return METHOD_GET.invoke(null, field, instance);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testIsAssignableFrom() throws Throwable {
-		//
-		Assertions.assertFalse(isAssignableFrom(null, null));
-		//
-		Assertions.assertFalse(isAssignableFrom(Object.class, null));
-		//
-		Assertions.assertTrue(isAssignableFrom(Object.class, Object.class));
-		//
-	}
-
-	private static boolean isAssignableFrom(final Class<?> a, final Class<?> b) throws Throwable {
-		try {
-			final Object obj = METHOD_IS_ASSIGNABLE_FROM.invoke(null, a, b);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

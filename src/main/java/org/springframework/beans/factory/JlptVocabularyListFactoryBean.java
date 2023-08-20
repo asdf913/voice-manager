@@ -284,7 +284,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 					//
 				} // if
 					//
-			} else if (isAssignableFrom(CharSequence.class, type)) {
+			} else if (Util.isAssignableFrom(CharSequence.class, type)) {
 				//
 				if ((value = getStringValue(cell, formulaEvaluator)) != null) {
 					//
@@ -317,10 +317,6 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		if (instance != null) {
 			instance.setAccessible(flag);
 		}
-	}
-
-	private static boolean isAssignableFrom(@Nullable final Class<?> a, @Nullable final Class<?> b) {
-		return a != null && b != null && a.isAssignableFrom(b);
 	}
 
 	@Nullable

@@ -129,7 +129,7 @@ public class BufferedImageTypeFactoryBean implements FactoryBean<Integer> {
 					final Class<?> type = Util.getType(f);
 					//
 					return and(isStatic(f),
-							Boolean.logicalOr(isAssignableFrom(Number.class, type),
+							Boolean.logicalOr(Util.isAssignableFrom(Number.class, type),
 									(isPrimitive(type) && ArrayUtils.contains(new Class<?>[] { Byte.TYPE, Short.TYPE,
 											Integer.TYPE, Long.TYPE, Float.TYPE, Double.TYPE }, type))),
 							Objects.equals(Util.getName(f), string));
@@ -184,10 +184,6 @@ public class BufferedImageTypeFactoryBean implements FactoryBean<Integer> {
 	@Nullable
 	private static Object get(@Nullable final Field field, final Object instance) throws IllegalAccessException {
 		return field != null ? field.get(instance) : null;
-	}
-
-	private static boolean isAssignableFrom(@Nullable final Class<?> a, @Nullable final Class<?> b) {
-		return a != null && b != null && a.isAssignableFrom(b);
 	}
 
 	private static boolean isPrimitive(@Nullable final Class<?> instance) {

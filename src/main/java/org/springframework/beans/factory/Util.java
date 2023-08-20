@@ -75,7 +75,7 @@ abstract class Util {
 		return instance != null ? instance.getName() : null;
 	}
 
-	private static boolean isAssignableFrom(@Nullable final Class<?> a, @Nullable final Class<?> b) {
+	static boolean isAssignableFrom(@Nullable final Class<?> a, @Nullable final Class<?> b) {
 		return a != null && b != null && a.isAssignableFrom(b);
 	}
 
