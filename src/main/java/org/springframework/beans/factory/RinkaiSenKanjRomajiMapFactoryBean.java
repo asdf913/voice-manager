@@ -76,6 +76,7 @@ public class RinkaiSenKanjRomajiMapFactoryBean extends StringMapFromResourceFact
 		//
 	}
 
+	@Nullable
 	private static Entry<String, String> createEntry(final List<Element> es) {
 		//
 		MutablePair<String, String> pair = null;
