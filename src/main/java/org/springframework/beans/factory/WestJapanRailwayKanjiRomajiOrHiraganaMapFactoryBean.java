@@ -10,7 +10,6 @@ import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -285,7 +284,7 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends StringM
 					//
 				} // if
 					//
-				add(triples = ObjectUtils.getIfNull(triples, ArrayList::new),
+				Util.add(triples = ObjectUtils.getIfNull(triples, ArrayList::new),
 						new ImmutableTriple<>(kanji, key, en.getValue()));
 				//
 			} // for
@@ -309,7 +308,7 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends StringM
 				//
 				testAndAccept((a, b) -> b != null && !Util.contains(a, b),
 						unicodeBlocks = ObjectUtils.getIfNull(unicodeBlocks, ArrayList::new), UnicodeBlock.of(c),
-						WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean::add);
+						Util::add);
 				//
 			} // for
 				//
@@ -340,12 +339,6 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends StringM
 
 	private static boolean isInstance(@Nullable final Class<?> clz, @Nullable final Object instance) {
 		return clz != null && clz.isInstance(instance);
-	}
-
-	private static <E> void add(@Nullable final Collection<E> items, final E item) {
-		if (items != null) {
-			items.add(item);
-		}
 	}
 
 	@Override

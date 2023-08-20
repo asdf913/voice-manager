@@ -132,4 +132,11 @@ class UtilTest {
 		//
 	}
 
+	@Test
+	void testAdd() {
+		//
+		Assertions.assertDoesNotThrow(() -> Util.add(null, null));
+		//
+	}
+
 }

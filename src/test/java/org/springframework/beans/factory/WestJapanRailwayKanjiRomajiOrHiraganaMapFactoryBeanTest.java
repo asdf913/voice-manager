@@ -12,7 +12,6 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.security.Signature;
 import java.sql.DriverManager;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -44,7 +43,7 @@ import com.google.common.reflect.Reflection;
 class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 
 	private static Method METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_CREATE_TABLE,
-			METHOD_GET_UNICODE_BLOCKS, METHOD_TEST, METHOD_ACCEPT, METHOD_IS_INSTANCE, METHOD_ADD, METHOD_OPEN_STREAM,
+			METHOD_GET_UNICODE_BLOCKS, METHOD_TEST, METHOD_ACCEPT, METHOD_IS_INSTANCE, METHOD_OPEN_STREAM,
 			METHOD_GET_TRIPLES_1, METHOD_GET_TRIPLES_2, METHOD_GET_NAME_MODULE, METHOD_GET_MODULE, METHOD_GET = null;
 
 	@BeforeAll
@@ -69,8 +68,6 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 				.setAccessible(true);
 		//
 		(METHOD_IS_INSTANCE = clz.getDeclaredMethod("isInstance", Class.class, Object.class)).setAccessible(true);
-		//
-		(METHOD_ADD = clz.getDeclaredMethod("add", Collection.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_OPEN_STREAM = clz.getDeclaredMethod("openStream", URL.class)).setAccessible(true);
 		//
@@ -399,21 +396,6 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(Util.toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testAdd() {
-		//
-		Assertions.assertDoesNotThrow(() -> add(null, null));
-		//
-	}
-
-	private static <E> void add(final Collection<E> items, final E item) throws Throwable {
-		try {
-			METHOD_ADD.invoke(null, items, item);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

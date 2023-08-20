@@ -238,7 +238,7 @@ public class TokyuKanjiRomajiOrHiraganaMapFactoryBean extends StringMapFromResou
 				//
 				testAndAccept((a, b) -> b != null && !Util.contains(a, b),
 						unicodeBlocks = ObjectUtils.getIfNull(unicodeBlocks, ArrayList::new), UnicodeBlock.of(c),
-						TokyuKanjiRomajiOrHiraganaMapFactoryBean::add);
+						Util::add);
 				//
 			} // for
 				//
@@ -269,12 +269,6 @@ public class TokyuKanjiRomajiOrHiraganaMapFactoryBean extends StringMapFromResou
 
 	private static <T, U> boolean test(@Nullable final BiPredicate<T, U> instance, final T t, final U u) {
 		return instance != null && instance.test(t, u);
-	}
-
-	private static <E> void add(@Nullable final Collection<E> items, final E item) {
-		if (items != null) {
-			items.add(item);
-		}
 	}
 
 	@Override

@@ -8,7 +8,6 @@ import java.lang.Character.UnicodeBlock;
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -256,7 +255,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 				//
 				testAndAccept((a, b) -> b != null && !Util.contains(a, b),
 						unicodeBlocks = ObjectUtils.getIfNull(unicodeBlocks, ArrayList::new), UnicodeBlock.of(c),
-						OdakyuBusKanjiHiraganaMapFactoryBean::add);
+						Util::add);
 				//
 			} // for
 				//
@@ -266,12 +265,6 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 			//
 		return true;
 		//
-	}
-
-	private static <E> void add(@Nullable final Collection<E> items, final E item) {
-		if (items != null) {
-			items.add(item);
-		}
 	}
 
 	private static <T, U> void testAndAccept(final BiPredicate<T, U> instance, final T t, final U u,

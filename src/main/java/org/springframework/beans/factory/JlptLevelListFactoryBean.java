@@ -5,7 +5,6 @@ import java.lang.reflect.Proxy;
 import java.net.URL;
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -108,7 +107,7 @@ public class JlptLevelListFactoryBean implements FactoryBean<List<String>> {
 					//
 					for (final Object obj : iterable) {
 						//
-						add(list = ObjectUtils.getIfNull(list, ArrayList::new), Util.toString(obj));
+						Util.add(list = ObjectUtils.getIfNull(list, ArrayList::new), Util.toString(obj));
 						//
 					} // for
 						//
@@ -130,12 +129,6 @@ public class JlptLevelListFactoryBean implements FactoryBean<List<String>> {
 			//
 		} // try
 			//
-	}
-
-	private static <E> void add(@Nullable final Collection<E> items, @Nullable final E item) {
-		if (items != null) {
-			items.add(item);
-		}
 	}
 
 	@Nullable

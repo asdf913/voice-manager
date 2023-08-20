@@ -6,7 +6,6 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -160,8 +159,9 @@ public class JouYouKanJiListFactoryBean implements FactoryBean<List<String>> {
 						//
 					if (columnIndex.intValue() == j) {
 						//
-						add(IValue0Util.getValue0(
-								list = ObjectUtils.getIfNull(list, () -> Unit.with(new ArrayList<String>()))),
+						Util.add(
+								IValue0Util.getValue0(
+										list = ObjectUtils.getIfNull(list, () -> Unit.with(new ArrayList<String>()))),
 								StringUtils.substring(ElementUtil.text(element), 0, 1));
 						//
 					} // if
@@ -215,12 +215,6 @@ public class JouYouKanJiListFactoryBean implements FactoryBean<List<String>> {
 
 	private static int intValue(@Nullable final Number instance, final int defaultValue) {
 		return instance != null ? instance.intValue() : defaultValue;
-	}
-
-	private static <E> void add(@Nullable final Collection<E> items, final E item) {
-		if (items != null) {
-			items.add(item);
-		}
 	}
 
 	@Override

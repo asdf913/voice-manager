@@ -9,7 +9,6 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -42,7 +41,7 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 	private static final String EMPTY = "";
 
 	private static Method METHOD_GET_OBJECT, METHOD_CREATE_MAP, METHOD_TEST_AND_APPLY, METHOD_PROCESS,
-			METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK, METHOD_ADD, METHOD_TEST2, METHOD_TEST3, METHOD_ACCEPT,
+			METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK, METHOD_TEST2, METHOD_TEST3, METHOD_ACCEPT,
 			METHOD_OPEN_STREAM, METHOD_GET_DECLARED_FIELD, METHOD_CHECK_IF_KEY_EXISTS_AND_DIFFERENCE_VALUE,
 			METHOD_PERFORM = null;
 
@@ -61,8 +60,6 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 		//
 		(METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK = clz.getDeclaredMethod("isAllCharacterInSameUnicodeBlock",
 				String.class, UnicodeBlock.class)).setAccessible(true);
-		//
-		(METHOD_ADD = clz.getDeclaredMethod("add", Collection.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_TEST2 = clz.getDeclaredMethod("test", Predicate.class, Object.class)).setAccessible(true);
 		//
@@ -293,21 +290,6 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testAdd() {
-		//
-		Assertions.assertDoesNotThrow(() -> add(null, null));
-		//
-	}
-
-	private static <E> void add(final Collection<E> items, final E item) throws Throwable {
-		try {
-			METHOD_ADD.invoke(null, items, item);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

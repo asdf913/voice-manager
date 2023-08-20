@@ -155,7 +155,9 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 					//
 				if ((jv = getJlptVocabulary(fieldMap, row, formulaEvaluator)) != null) {
 					//
-					add(IValue0Util.getValue0(list = ObjectUtils.getIfNull(list, () -> Unit.with(new ArrayList<>()))),
+					Util.add(
+							IValue0Util
+									.getValue0(list = ObjectUtils.getIfNull(list, () -> Unit.with(new ArrayList<>()))),
 							IValue0Util.getValue0(jv));
 					//
 				} // if
@@ -518,12 +520,6 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		//
 	}
 
-	private static <E> void add(@Nullable final Collection<E> items, @Nullable final E item) {
-		if (items != null) {
-			items.add(item);
-		}
-	}
-
 	private static <E> void addAll(@Nullable final Collection<E> a, @Nullable final Collection<? extends E> b) {
 		if (a != null && (b != null || Proxy.isProxyClass(Util.getClass(a)))) {
 			a.addAll(b);
@@ -593,7 +589,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 						//
 				} // for
 					//
-				add(list = ObjectUtils.getIfNull(list, ArrayList::new), jv);
+				Util.add(list = ObjectUtils.getIfNull(list, ArrayList::new), jv);
 				//
 			} // while
 				//
@@ -680,7 +676,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 				//
 			} // if
 				//
-			add(list = ObjectUtils.getIfNull(list, ArrayList::new), f);
+			Util.add(list = ObjectUtils.getIfNull(list, ArrayList::new), f);
 			//
 		} // for
 			//

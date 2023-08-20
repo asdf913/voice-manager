@@ -55,7 +55,7 @@ class JlptVocabularyListFactoryBeanTest {
 
 	private static final String EMPTY = "";
 
-	private static Method METHOD_FILTER, METHOD_ANNOTATION_TYPE, METHOD_GET_NAME, METHOD_TEST, METHOD_OR, METHOD_ADD,
+	private static Method METHOD_FILTER, METHOD_ANNOTATION_TYPE, METHOD_GET_NAME, METHOD_TEST, METHOD_OR,
 			METHOD_ADD_ALL, METHOD_GET_FIELDS_BY_NAME, METHOD_GET_INTEGER_VALUE, METHOD_GET_STRING_VALUE_CELL,
 			METHOD_INVOKE, METHOD_GET_DECLARED_ANNOTATIONS, METHOD_GET_DECLARED_METHODS, METHOD_IS_ASSIGNABLE_FROM,
 			METHOD_SET_ACCESSIBLE, METHOD_GET_TYPE, METHOD_GET_NUMBER_VALUE, METHOD_GET_PHYSICAL_NUMBER_OF_CELLS = null;
@@ -74,8 +74,6 @@ class JlptVocabularyListFactoryBeanTest {
 		(METHOD_TEST = clz.getDeclaredMethod("test", Predicate.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_OR = clz.getDeclaredMethod("or", Boolean.TYPE, Boolean.TYPE, boolean[].class)).setAccessible(true);
-		//
-		(METHOD_ADD = clz.getDeclaredMethod("add", Collection.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_ADD_ALL = clz.getDeclaredMethod("addAll", Collection.class, Collection.class)).setAccessible(true);
 		//
@@ -514,21 +512,6 @@ class JlptVocabularyListFactoryBeanTest {
 				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(obj != null && obj.getClass() != null ? obj.getClass().toString() : null);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testAdd() {
-		//
-		Assertions.assertDoesNotThrow(() -> add(null, null));
-		//
-	}
-
-	private static <E> void add(final Collection<E> items, final E item) throws Throwable {
-		try {
-			METHOD_ADD.invoke(null, items, item);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

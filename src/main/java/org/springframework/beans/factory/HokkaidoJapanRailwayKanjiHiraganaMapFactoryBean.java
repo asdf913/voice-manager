@@ -13,7 +13,6 @@ import java.lang.reflect.Field;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -163,7 +162,7 @@ public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFr
 				//
 				testAndAccept((a, b) -> b != null && !Util.contains(a, b),
 						unicodeBlocks = ObjectUtils.getIfNull(unicodeBlocks, ArrayList::new), UnicodeBlock.of(c),
-						HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean::add);
+						Util::add);
 				//
 			} // for
 				//
@@ -190,12 +189,6 @@ public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFr
 
 	private static <T, U> boolean test(@Nullable final BiPredicate<T, U> instance, final T t, final U u) {
 		return instance != null && instance.test(t, u);
-	}
-
-	private static <E> void add(@Nullable final Collection<E> items, final E item) {
-		if (items != null) {
-			items.add(item);
-		}
 	}
 
 	@Nullable

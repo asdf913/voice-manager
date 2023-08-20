@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -174,7 +173,7 @@ public class TsukubaExpressKanjiMapFactoryBean extends StringMapFromResourceFact
 				//
 			} // if
 				//
-			add(ss, s);
+			Util.add(ss, s);
 			//
 		} // for
 			//
@@ -186,12 +185,6 @@ public class TsukubaExpressKanjiMapFactoryBean extends StringMapFromResourceFact
 			//
 		return !IterableUtils.isEmpty(ss) ? IterableUtils.get(ss, 0) : null;
 		//
-	}
-
-	private static <T> void add(@Nullable final Collection<T> items, final T item) {
-		if (items != null) {
-			items.add(item);
-		}
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(@Nullable final Predicate<T> predicate, final T value,

@@ -3,7 +3,6 @@ package org.springframework.beans.factory;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -25,7 +24,7 @@ class TsukubaExpressKanjiMapFactoryBeanTest {
 
 	private static Class<?> CLASS_ROMAJI_OR_HIRAGANA = null;
 
-	private static Method METHOD_CREATE_ENTRY, METHOD_GET_STRING, METHOD_TEST_AND_APPLY, METHOD_NAME, METHOD_ADD = null;
+	private static Method METHOD_CREATE_ENTRY, METHOD_GET_STRING, METHOD_TEST_AND_APPLY, METHOD_NAME = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -43,8 +42,6 @@ class TsukubaExpressKanjiMapFactoryBeanTest {
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
 		//
 		(METHOD_NAME = clz.getDeclaredMethod("name", Enum.class)).setAccessible(true);
-		//
-		(METHOD_ADD = clz.getDeclaredMethod("add", Collection.class, Object.class)).setAccessible(true);
 		//
 	}
 
@@ -218,21 +215,6 @@ class TsukubaExpressKanjiMapFactoryBeanTest {
 				return (String) obj;
 			}
 			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testAdd() {
-		//
-		Assertions.assertDoesNotThrow(() -> add(null, null));
-		//
-	}
-
-	private static <T> void add(final Collection<T> items, final T item) throws Throwable {
-		try {
-			METHOD_ADD.invoke(null, items, item);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

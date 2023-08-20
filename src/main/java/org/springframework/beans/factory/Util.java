@@ -164,6 +164,12 @@ abstract class Util {
 		return items != null && items.contains(item);
 	}
 
+	static <E> void add(@Nullable final Collection<E> items, final E item) {
+		if (items != null) {
+			items.add(item);
+		}
+	}
+
 	@Nullable
 	static <V> V get(@Nullable final AtomicReference<V> instance) {
 		return instance != null ? instance.get() : null;

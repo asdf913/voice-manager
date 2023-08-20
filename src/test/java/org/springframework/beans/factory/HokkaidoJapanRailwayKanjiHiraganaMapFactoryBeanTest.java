@@ -9,7 +9,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.function.BiConsumer;
@@ -30,7 +29,7 @@ class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 
 	private static Method METHOD_CREATE_MAP, METHOD_FOR_NAME, METHOD_OPEN_STREAM, METHOD_GET_DECLARED_FIELD,
 			METHOD_TEST, METHOD_TEST_AND_APPLY, METHOD_CREATE_PAIR, METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK,
-			METHOD_TEST_AND_ACCEPT, METHOD_ADD = null;
+			METHOD_TEST_AND_ACCEPT = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -58,8 +57,6 @@ class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 		//
 		(METHOD_TEST_AND_ACCEPT = clz.getDeclaredMethod("testAndAccept", BiPredicate.class, Object.class, Object.class,
 				BiConsumer.class)).setAccessible(true);
-		//
-		(METHOD_ADD = clz.getDeclaredMethod("add", Collection.class, Object.class)).setAccessible(true);
 		//
 	}
 
@@ -329,21 +326,6 @@ class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 			final BiConsumer<T, U> consumer) throws Throwable {
 		try {
 			METHOD_TEST_AND_ACCEPT.invoke(null, instance, t, u, consumer);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testAdd() {
-		//
-		Assertions.assertDoesNotThrow(() -> add(null, null));
-		//
-	}
-
-	private static <E> void add(final Collection<E> items, final E item) throws Throwable {
-		try {
-			METHOD_ADD.invoke(null, items, item);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

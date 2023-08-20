@@ -5,7 +5,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.time.Duration;
-import java.util.Collection;
 import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
@@ -18,14 +17,12 @@ class JlptLevelListFactoryBeanTest {
 
 	private static final String EMPTY = "";
 
-	private static Method METHOD_ADD, METHOD_LONG_VALUE = null;
+	private static Method METHOD_LONG_VALUE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
 		//
 		final Class<?> clz = JlptLevelListFactoryBean.class;
-		//
-		(METHOD_ADD = clz.getDeclaredMethod("add", Collection.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_LONG_VALUE = clz.getDeclaredMethod("longValue", Number.class, Long.TYPE)).setAccessible(true);
 		//
@@ -184,21 +181,6 @@ class JlptLevelListFactoryBeanTest {
 	private static void setValues(final JlptLevelListFactoryBean instance, final String string) {
 		if (instance != null) {
 			instance.setValues(string);
-		}
-	}
-
-	@Test
-	void testAdd() {
-		//
-		Assertions.assertDoesNotThrow(() -> add(null, null));
-		//
-	}
-
-	private static <E> void add(final Collection<E> items, final E item) throws Throwable {
-		try {
-			METHOD_ADD.invoke(null, items, item);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
 		}
 	}
 
