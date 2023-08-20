@@ -35,8 +35,8 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 
 	private static final String EMPTY = "";
 
-	private static Method METHOD_CREATE_MULTI_MAP_STRING, METHOD_MATCHER, METHOD_MATCHES, METHOD_GROUP_COUNT,
-			METHOD_GROUP, METHOD_GET_MIME_TYPE, METHOD_CREATE_MULTI_MAP_BY_URL, METHOD_CREATE_MULTI_MAP_WORK_BOOK,
+	private static Method METHOD_CREATE_MULTI_MAP_STRING, METHOD_MATCHES, METHOD_GROUP_COUNT, METHOD_GROUP,
+			METHOD_GET_MIME_TYPE, METHOD_CREATE_MULTI_MAP_BY_URL, METHOD_CREATE_MULTI_MAP_WORK_BOOK,
 			METHOD_CREATE_MULTI_MAP_SHEET, METHOD_GET_AND_SET, METHOD_GET_PAIR = null;
 
 	@BeforeAll
@@ -46,8 +46,6 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 		//
 		(METHOD_CREATE_MULTI_MAP_STRING = clz.getDeclaredMethod("createMultimap", String.class, String[].class,
 				String.class)).setAccessible(true);
-		//
-		(METHOD_MATCHER = clz.getDeclaredMethod("matcher", Pattern.class, CharSequence.class)).setAccessible(true);
 		//
 		(METHOD_MATCHES = clz.getDeclaredMethod("matches", Matcher.class)).setAccessible(true);
 		//
@@ -292,38 +290,15 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 	}
 
 	@Test
-	void testMatcher() throws Throwable {
-		//
-		Assertions.assertNull(matcher(null, null));
-		//
-		Assertions.assertNull(matcher(Pattern.compile("\\d+"), null));
-		//
-	}
-
-	private static Matcher matcher(final Pattern instance, final CharSequence input) throws Throwable {
-		try {
-			final Object obj = METHOD_MATCHER.invoke(null, instance, input);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Matcher) {
-				return (Matcher) obj;
-			}
-			throw new Throwable(obj != null && obj.getClass() != null ? obj.getClass().toString() : null);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testMatches() throws Throwable {
 		//
 		Assertions.assertFalse(matches(null));
 		//
 		final Pattern pattern = Pattern.compile("\\d+");
 		//
-		Assertions.assertFalse(matches(matcher(pattern, EMPTY)));
+		Assertions.assertFalse(matches(Util.matcher(pattern, EMPTY)));
 		//
-		Assertions.assertTrue(matches(matcher(pattern, "1")));
+		Assertions.assertTrue(matches(Util.matcher(pattern, "1")));
 		//
 	}
 

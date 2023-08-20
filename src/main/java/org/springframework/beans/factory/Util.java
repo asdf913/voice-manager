@@ -13,6 +13,8 @@ import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
@@ -22,8 +24,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.LoggerUtil;
+
+import io.github.toolfactory.narcissus.Narcissus;
 
 abstract class Util {
+
+	private static final Logger LOG = LoggerFactory.getLogger(Util.class);
 
 	private Util() {
 	}
@@ -205,6 +214,33 @@ abstract class Util {
 	@Nullable
 	static Class<?> getType(@Nullable final Field instance) {
 		return instance != null ? instance.getType() : null;
+	}
+
+	@Nullable
+	static Matcher matcher(@Nullable final Pattern pattern, @Nullable final CharSequence input) {
+		//
+		if (pattern == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		try {
+			//
+			if (Narcissus.getObjectField(pattern, Pattern.class.getDeclaredField("pattern")) == null) {
+				//
+				return null;
+				//
+			} // if
+				//
+		} catch (final NoSuchFieldException e) {
+			//
+			LoggerUtil.error(LOG, e.getMessage(), e);
+			//
+		} // try
+			//
+		return input != null ? pattern.matcher(input) : null;
+		//
 	}
 
 }

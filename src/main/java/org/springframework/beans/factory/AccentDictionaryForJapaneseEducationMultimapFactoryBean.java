@@ -314,17 +314,12 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 	@Nullable
 	private static Pair<String[], String> getPair(final Pattern pattern, final String text) {
 		//
-		final Matcher matcher = matcher(pattern, text);
+		final Matcher matcher = Util.matcher(pattern, text);
 		//
 		return matches(matcher) && groupCount(matcher) > 1
 				? Pair.with(StringUtils.split(group(matcher, 2), '/'), group(matcher, 1))
 				: null;
 		//
-	}
-
-	@Nullable
-	private static Matcher matcher(@Nullable final Pattern instance, @Nullable final CharSequence input) {
-		return instance != null && input != null ? instance.matcher(input) : null;
 	}
 
 	private static boolean matches(@Nullable final Matcher instance) {

@@ -6,6 +6,7 @@ import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Assertions;
@@ -13,6 +14,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import com.google.common.reflect.Reflection;
+
+import io.github.toolfactory.narcissus.Narcissus;
 
 class UtilTest {
 
@@ -180,6 +183,17 @@ class UtilTest {
 	void testGetType() {
 		//
 		Assertions.assertNull(Util.getType(null));
+		//
+	}
+
+	@Test
+	void testMatcher() {
+		//
+		Assertions.assertNull(Util.matcher(null, null));
+		//
+		Assertions.assertNull(Util.matcher(Pattern.compile(""), null));
+		//
+		Assertions.assertNull(Util.matcher(Util.cast(Pattern.class, Narcissus.allocateInstance(Pattern.class)), ""));
 		//
 	}
 

@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.jsoup.nodes.Element;
@@ -28,7 +27,7 @@ import javassist.util.proxy.ProxyObject;
 
 class KeikyuRailwayKanjiHiraganaMapFactoryBeanTest {
 
-	private static Method METHOD_CREATE_MAP, METHOD_GET_WHOLE_TEXT, METHOD_MATCHER, METHOD_FIND, METHOD_TEST = null;
+	private static Method METHOD_CREATE_MAP, METHOD_GET_WHOLE_TEXT, METHOD_FIND, METHOD_TEST = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -38,8 +37,6 @@ class KeikyuRailwayKanjiHiraganaMapFactoryBeanTest {
 		(METHOD_CREATE_MAP = clz.getDeclaredMethod("createMap", List.class)).setAccessible(true);
 		//
 		(METHOD_GET_WHOLE_TEXT = clz.getDeclaredMethod("getWholeText", TextNode.class)).setAccessible(true);
-		//
-		(METHOD_MATCHER = clz.getDeclaredMethod("matcher", Pattern.class, CharSequence.class)).setAccessible(true);
 		//
 		(METHOD_FIND = clz.getDeclaredMethod("find", Matcher.class)).setAccessible(true);
 		//
@@ -215,29 +212,6 @@ class KeikyuRailwayKanjiHiraganaMapFactoryBeanTest {
 				return null;
 			} else if (obj instanceof String) {
 				return (String) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testMatcher() throws Throwable {
-		//
-		Assertions.assertNull(matcher(null, null));
-		//
-		Assertions.assertNull(matcher(Pattern.compile(""), null));
-		//
-	}
-
-	private static Matcher matcher(final Pattern instance, final CharSequence input) throws Throwable {
-		try {
-			final Object obj = METHOD_MATCHER.invoke(null, instance, input);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Matcher) {
-				return (Matcher) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

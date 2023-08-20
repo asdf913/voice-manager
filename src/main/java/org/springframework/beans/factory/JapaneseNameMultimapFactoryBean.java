@@ -196,7 +196,7 @@ public class JapaneseNameMultimapFactoryBean implements FactoryBean<Multimap<Str
 				: null) != null && !Objects.equals(ElementUtil.tagName(nextElementSibling), "div")) {
 			//
 			if (pattern != null
-					&& (matcher = pattern.matcher(
+					&& (matcher = Util.matcher(pattern,
 							StringUtils.substringAfter(text = ElementUtil.text(nextElementSibling), ' '))) != null
 					&& matcher.matches() && matcher.groupCount() == 1
 					&& (strings = Util.toList(
