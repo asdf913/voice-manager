@@ -160,14 +160,8 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 				//
 		} // if
 			//
-		set(ar, result);
+		Util.set(ar, result);
 		//
-	}
-
-	private static <V> void set(@Nullable final AtomicReference<V> instance, final V value) {
-		if (instance != null) {
-			instance.set(value);
-		}
 	}
 
 	private static void checkIfKeyExistsAndDifferenceValue(final Map<?, ?> map, final Entry<?, ?> entry) {

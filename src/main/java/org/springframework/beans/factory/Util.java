@@ -169,6 +169,12 @@ abstract class Util {
 		return instance != null ? instance.get() : null;
 	}
 
+	static <V> void set(@Nullable final AtomicReference<V> instance, final V value) {
+		if (instance != null) {
+			instance.set(value);
+		}
+	}
+
 	@Nullable
 	static <K> K getKey(@Nullable final Entry<K, ?> instance) {
 		return instance != null ? instance.getKey() : null;
