@@ -100,6 +100,7 @@ public class KyushuJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFrom
 		//
 	}
 
+	@Nullable
 	private static Entry<String, String> createEntry(final Document document) {
 		//
 		MutablePair<String, String> pair = null;
