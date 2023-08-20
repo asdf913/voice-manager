@@ -38,10 +38,14 @@ public class OdakyuKanjiHiraganaMapFactoryBean extends StringMapFromResourceFact
 			//
 		} // if
 			//
-		final List<Element> es = ElementUtil.select(testAndApply(Objects::nonNull,
-				testAndApply(Objects::nonNull, url, URL::new, null), x -> Jsoup.parse(x, 0), null),
-				".stationTimetableAiueo-name");
+		return getObject(
+				ElementUtil.select(testAndApply(Objects::nonNull, testAndApply(Objects::nonNull, url, URL::new, null),
+						x -> Jsoup.parse(x, 0), null), ".stationTimetableAiueo-name"));
 		//
+	}
+
+	private static Map<String, String> getObject(final List<Element> es) {
+
 		Map<String, String> map = null;
 		//
 		Iterable<Element> children = null;
@@ -50,8 +54,7 @@ public class OdakyuKanjiHiraganaMapFactoryBean extends StringMapFromResourceFact
 		//
 		for (int i = 0; es != null && i < es.size(); i++) {
 			//
-			if (IterableUtils.size(children = ElementUtil.children(es.get(i))) < 1
-					|| (map = ObjectUtils.getIfNull(map, LinkedHashMap::new)) == null) {
+			if (IterableUtils.size(children = ElementUtil.children(IterableUtils.get(es, i))) < 2) {
 				//
 				continue;
 				//
@@ -59,8 +62,9 @@ public class OdakyuKanjiHiraganaMapFactoryBean extends StringMapFromResourceFact
 				//
 			value = ElementUtil.text(IterableUtils.get(children, 0));
 			//
-			if (map.containsKey(key = ElementUtil.text(IterableUtils.get(children, 1)))
-					&& !Objects.equals(map.get(key), value)) {
+			if (Util.containsKey(map = ObjectUtils.getIfNull(map, LinkedHashMap::new),
+					key = ElementUtil.text(IterableUtils.get(children, 1)))
+					&& !Objects.equals(Util.get(map, key), value)) {
 				//
 				throw new IllegalStateException();
 				//
