@@ -47,7 +47,7 @@ public class ToykoMetroKanjiHiraganaMapFactoryBean extends StringMapFromResource
 		//
 	}
 
-	private static Map<String, String> getObject(final List<Element> es) throws IllegalAccessException {
+	private static Map<String, String> getObject(@Nullable final List<Element> es) throws IllegalAccessException {
 		//
 		Element e = null;
 		//
