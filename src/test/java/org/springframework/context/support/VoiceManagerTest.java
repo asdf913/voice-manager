@@ -202,6 +202,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.AssertionsUtil;
 import org.junit.jupiter.api.BeforeAll;
@@ -1766,6 +1767,25 @@ class VoiceManagerTest {
 		//
 		configurableListableBeanFactory = Reflection.newProxy(ConfigurableListableBeanFactory.class, ih);
 		//
+	}
+
+	@AfterEach
+	void afterEach() {
+		//
+		final File file = new File(".html");
+		//
+		if (file.exists() && file.isFile() && file.length() == 0) {
+			//
+			if (logger != null) {
+				//
+				logger.info("file to be deleted={}", file.getAbsolutePath());
+				//
+			} // if
+				//
+			file.delete();
+			//
+		} // if
+			//
 	}
 
 	@Test
