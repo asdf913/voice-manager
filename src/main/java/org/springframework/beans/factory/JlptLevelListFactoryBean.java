@@ -1,16 +1,13 @@
 package org.springframework.beans.factory;
 
 import java.io.IOException;
-import java.lang.reflect.Proxy;
 import java.net.URL;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 
@@ -157,25 +154,14 @@ public class JlptLevelListFactoryBean implements FactoryBean<List<String>> {
 	private static List<String> getObjectByUrl(final String url, final Duration timeout) throws IOException {
 		//
 		return Util
-				.toList(map(
-						Util.stream(ElementUtil.select(
+				.toList(Util
+						.map(Util.stream(ElementUtil.select(
 								testAndApply(
 										x -> StringUtils.equalsAnyIgnoreCase(getProtocol(x),
 												ProtocolUtil.getAllowProtocols()),
 										testAndApply(StringUtils::isNotBlank, url, URL::new, null),
 										x -> Jsoup.parse(x, intValue(toMillis(timeout), 0)), null),
-								".thLeft[scope='col']")),
-						ElementUtil::text));
-		//
-	}
-
-	@Nullable
-	private static <T, R> Stream<R> map(@Nullable final Stream<T> instance,
-			@Nullable final Function<? super T, ? extends R> mapper) {
-		//
-		return instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || mapper != null)
-				? instance.map(mapper)
-				: null;
+								".thLeft[scope='col']")), ElementUtil::text));
 		//
 	}
 

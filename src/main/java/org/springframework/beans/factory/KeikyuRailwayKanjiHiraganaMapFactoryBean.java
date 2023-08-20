@@ -68,7 +68,7 @@ public class KeikyuRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<Map
 				//
 			} // if
 				//
-			if (find(matcher = Util.matcher(PATTERN, string = Util.stream(nodes).map(x -> {
+			if (find(matcher = Util.matcher(PATTERN, string = Util.map(Util.stream(nodes), x -> {
 				//
 				if (x instanceof TextNode textNode) {
 					//

@@ -12,6 +12,7 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.google.common.reflect.Reflection;
@@ -51,6 +52,10 @@ class UtilTest {
 					//
 					return proxy;
 					//
+				} else if (Objects.equals(methodName, "map")) {
+					//
+					return null;
+					//
 				} // if
 					//
 			} // if
@@ -59,6 +64,17 @@ class UtilTest {
 			//
 		}
 
+	}
+
+	private Stream<?> stream = null;
+
+	private IH ih = null;
+
+	@BeforeEach
+	void beforeEach() {
+		//
+		stream = Reflection.newProxy(Stream.class, ih = new IH());
+		//
 	}
 
 	@Test
@@ -174,9 +190,14 @@ class UtilTest {
 	@Test
 	void testFilter() {
 		//
-		final Stream<?> stream = Reflection.newProxy(Stream.class, new IH());
-		//
 		Assertions.assertSame(stream, Util.filter(stream, null));
+		//
+	}
+
+	@Test
+	void testMap() {
+		//
+		Assertions.assertNull(Util.map(stream, null));
 		//
 	}
 

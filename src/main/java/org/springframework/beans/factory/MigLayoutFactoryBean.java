@@ -49,7 +49,7 @@ public class MigLayoutFactoryBean implements FactoryBean<MigLayout> {
 			//
 		} else if (value instanceof Iterable<?>) {
 			//
-			setArguments(Util.toList(Util.stream(IterableUtils.toList((Iterable<?>) value)).map(Util::toString))
+			setArguments(Util.toList(Util.map(Util.stream(IterableUtils.toList((Iterable<?>) value)), Util::toString))
 					.toArray(new String[] {}));
 			//
 			return;
@@ -147,8 +147,8 @@ public class MigLayoutFactoryBean implements FactoryBean<MigLayout> {
 				//
 			} else {
 				//
-				result = Unit.with(
-						Util.toList(Arrays.stream((Object[]) value).map(Util::toString)).toArray(new String[] {}));
+				result = Unit.with(Util.toList(Util.map(Arrays.stream((Object[]) value), Util::toString))
+						.toArray(new String[] {}));
 				//
 			} // if
 				//

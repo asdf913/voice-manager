@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -162,6 +163,15 @@ abstract class Util {
 		//
 		return instance != null && (predicate != null || Proxy.isProxyClass(getClass(instance)))
 				? instance.filter(predicate)
+				: null;
+		//
+	}
+
+	@Nullable
+	static <T, R> Stream<R> map(@Nullable final Stream<T> instance,
+			@Nullable final Function<? super T, ? extends R> mapper) {
+		//
+		return instance != null && (Proxy.isProxyClass(getClass(instance)) || mapper != null) ? instance.map(mapper)
 				: null;
 		//
 	}
