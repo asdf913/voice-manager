@@ -93,10 +93,16 @@ public class KyushuJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFrom
 	@Nullable
 	private static Entry<String, String> createEntry(final String url) throws IOException {
 		//
-		MutablePair<String, String> pair = null;
-		//
 		final Document document = testAndApply(Objects::nonNull,
 				testAndApply(StringUtils::isNotBlank, url, URL::new, null), x -> Jsoup.parse(x, 0), null);
+		//
+		return createEntry(document);
+		//
+	}
+
+	private static Entry<String, String> createEntry(final Document document) {
+		//
+		MutablePair<String, String> pair = null;
 		//
 		// kanji
 		//
