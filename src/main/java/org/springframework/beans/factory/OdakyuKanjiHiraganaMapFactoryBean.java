@@ -44,7 +44,7 @@ public class OdakyuKanjiHiraganaMapFactoryBean extends StringMapFromResourceFact
 		//
 	}
 
-	private static Map<String, String> getObject(final List<Element> es) {
+	private static Map<String, String> getObject(@Nullable final List<Element> es) {
 
 		Map<String, String> map = null;
 		//
