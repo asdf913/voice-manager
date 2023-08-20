@@ -124,7 +124,7 @@ public class IpaMultimapFactoryBean implements FactoryBean<Multimap<String, Stri
 				//
 				for (final Entry<?, ?> en : entrySet) {
 					//
-					list = testAndApply(Objects::nonNull, StringUtils.split(Util.toString(getValue(en)), ","),
+					list = testAndApply(Objects::nonNull, StringUtils.split(Util.toString(Util.getValue(en)), ","),
 							Arrays::asList, null);
 					//
 					for (int i = 0; list != null && i < list.size(); i++) {
@@ -163,11 +163,6 @@ public class IpaMultimapFactoryBean implements FactoryBean<Multimap<String, Stri
 	@Nullable
 	private static <T> Iterator<T> iterator(@Nullable final Iterable<T> instance) {
 		return instance != null ? instance.iterator() : null;
-	}
-
-	@Nullable
-	private static <V> V getValue(@Nullable final Entry<?, V> instance) {
-		return instance != null ? instance.getValue() : null;
 	}
 
 	@Nullable

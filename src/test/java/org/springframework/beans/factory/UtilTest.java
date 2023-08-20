@@ -125,4 +125,11 @@ class UtilTest {
 		//
 	}
 
+	@Test
+	void testGetValue() {
+		//
+		Assertions.assertNull(Util.getValue(null));
+		//
+	}
+
 }

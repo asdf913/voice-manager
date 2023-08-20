@@ -154,7 +154,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 					//
 				checkIfKeyExistsAndDifferenceValue(result, entry);
 				//
-				Util.put(result, Util.toString(Util.getKey(entry)), Util.toString(getValue(entry)));
+				Util.put(result, Util.toString(Util.getKey(entry)), Util.toString(Util.getValue(entry)));
 				//
 			} // for
 				//
@@ -174,17 +174,12 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		//
 		final Object key = Util.getKey(entry);
 		//
-		if (Util.containsKey(map, key) && !Objects.equals(Util.get(map, key), getValue(entry))) {
+		if (Util.containsKey(map, key) && !Objects.equals(Util.get(map, key), Util.getValue(entry))) {
 			//
 			throw new IllegalStateException();
 			//
 		} // if
 			//
-	}
-
-	@Nullable
-	private static <V> V getValue(@Nullable final Entry<?, V> instance) {
-		return instance != null ? instance.getValue() : null;
 	}
 
 	@Nullable
