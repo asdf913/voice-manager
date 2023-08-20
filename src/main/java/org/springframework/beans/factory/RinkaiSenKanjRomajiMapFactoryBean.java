@@ -70,10 +70,15 @@ public class RinkaiSenKanjRomajiMapFactoryBean extends StringMapFromResourceFact
 	@Nullable
 	private static Entry<String, String> createEntry(final String url) throws IOException {
 		//
-		MutablePair<String, String> pair = null;
+		return createEntry(
+				ElementUtil.select(testAndApply(Objects::nonNull, testAndApply(Objects::nonNull, url, URL::new, null),
+						x -> Jsoup.parse(x, 0), null), "[class^=\"ttl\"]"));
 		//
-		final List<Element> es = ElementUtil.select(testAndApply(Objects::nonNull,
-				testAndApply(Objects::nonNull, url, URL::new, null), x -> Jsoup.parse(x, 0), null), "[class^=\"ttl\"]");
+	}
+
+	private static Entry<String, String> createEntry(final List<Element> es) {
+		//
+		MutablePair<String, String> pair = null;
 		//
 		int size = IterableUtils.size(es);
 		//
