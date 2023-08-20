@@ -9,6 +9,7 @@ import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
 
+import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
@@ -40,9 +41,13 @@ public class ToykoMetroKanjiHiraganaMapFactoryBean extends StringMapFromResource
 			//
 		} // if
 			//
-		final List<Element> es = ElementUtil.select(testAndApply(Objects::nonNull,
-				testAndApply(Objects::nonNull, url, URL::new, null), x -> Jsoup.parse(x, 0), null),
-				".v2_linkStationListLink");
+		return getObject(
+				ElementUtil.select(testAndApply(Objects::nonNull, testAndApply(Objects::nonNull, url, URL::new, null),
+						x -> Jsoup.parse(x, 0), null), ".v2_linkStationListLink"));
+		//
+	}
+
+	private static Map<String, String> getObject(final List<Element> es) throws IllegalAccessException {
 		//
 		Element e = null;
 		//
@@ -52,15 +57,16 @@ public class ToykoMetroKanjiHiraganaMapFactoryBean extends StringMapFromResource
 		//
 		for (int i = 0; es != null && i < es.size(); i++) {
 			//
-			if ((e = es.get(i)) == null || (childNodes = e.childNodes()) == null || childNodes.size() < 2
-					|| (map = ObjectUtils.getIfNull(map, LinkedHashMap::new)) == null) {
+			if ((e = IterableUtils.get(es, i)) == null || (childNodes = e.childNodes()) == null
+					|| childNodes.size() < 2) {
 				//
 				continue;
 				//
 			} // if
 				//
-			Util.put(map, text(Util.cast(TextNode.class, childNodes.get(0))),
-					ElementUtil.text(Util.cast(Element.class, childNodes.get(1))));
+			Util.put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new),
+					text(Util.cast(TextNode.class, IterableUtils.get(childNodes, 0))),
+					ElementUtil.text(Util.cast(Element.class, IterableUtils.get(childNodes, 1))));
 			//
 		} // for
 			//

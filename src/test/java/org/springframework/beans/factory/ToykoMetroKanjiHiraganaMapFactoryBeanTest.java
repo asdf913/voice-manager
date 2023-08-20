@@ -2,11 +2,15 @@ package org.springframework.beans.factory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.lang3.tuple.Pair;
+import org.jsoup.nodes.Element;
 import org.jsoup.nodes.TextNode;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -18,12 +22,14 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class ToykoMetroKanjiHiraganaMapFactoryBeanTest {
 
-	private static Method METHOD_TEXT_TEXT_NODE, METHOD_TEST_AND_APPLY = null;
+	private static Method METHOD_GET_OBJECT, METHOD_TEXT_TEXT_NODE, METHOD_TEST_AND_APPLY = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
 		//
 		final Class<?> clz = ToykoMetroKanjiHiraganaMapFactoryBean.class;
+		//
+		(METHOD_GET_OBJECT = clz.getDeclaredMethod("getObject", List.class)).setAccessible(true);
 		//
 		(METHOD_TEXT_TEXT_NODE = clz.getDeclaredMethod("text", TextNode.class)).setAccessible(true);
 		//
@@ -42,10 +48,38 @@ class ToykoMetroKanjiHiraganaMapFactoryBeanTest {
 	}
 
 	@Test
-	void testGetObject() throws Exception {
+	void testGetObject() throws Throwable {
 		//
 		Assertions.assertNull(instance != null ? instance.getObject() : null);
 		//
+		Assertions.assertNull(getObject(Collections.singletonList(null)));
+		//
+		final Element elemnet = new Element("a");
+		//
+		final List<Element> elements = Collections.singletonList(elemnet);
+		//
+		Assertions.assertNull(getObject(elements));
+		//
+		elemnet.appendChild(new Element("b"));
+		//
+		elemnet.appendChild(new Element("b"));
+		//
+		Assertions.assertEquals(Collections.singletonMap(null, ""), getObject(elements));
+		//
+	}
+
+	private static Map<String, String> getObject(final List<Element> es) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_OBJECT.invoke(null, es);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Map) {
+				return (Map) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 	@Test
@@ -82,7 +116,7 @@ class ToykoMetroKanjiHiraganaMapFactoryBeanTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
