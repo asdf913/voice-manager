@@ -243,4 +243,30 @@ abstract class Util {
 		//
 	}
 
+	static boolean matches(@Nullable final Matcher instance) {
+		//
+		if (instance == null) {
+			//
+			return false;
+			//
+		} // if
+			//
+		try {
+			//
+			if (Narcissus.getObjectField(instance, Matcher.class.getDeclaredField("groups")) == null) {
+				//
+				return false;
+				//
+			} // if
+				//
+		} catch (final NoSuchFieldException e) {
+			//
+			LoggerUtil.error(LOG, e.getMessage(), e);
+			//
+		} // try
+			//
+		return instance.matches();
+		//
+	}
+
 }

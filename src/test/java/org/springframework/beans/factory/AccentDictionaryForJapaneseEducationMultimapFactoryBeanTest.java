@@ -11,7 +11,6 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.MatchResult;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.poi.ss.usermodel.Row;
@@ -35,9 +34,9 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 
 	private static final String EMPTY = "";
 
-	private static Method METHOD_CREATE_MULTI_MAP_STRING, METHOD_MATCHES, METHOD_GROUP_COUNT, METHOD_GROUP,
-			METHOD_GET_MIME_TYPE, METHOD_CREATE_MULTI_MAP_BY_URL, METHOD_CREATE_MULTI_MAP_WORK_BOOK,
-			METHOD_CREATE_MULTI_MAP_SHEET, METHOD_GET_AND_SET, METHOD_GET_PAIR = null;
+	private static Method METHOD_CREATE_MULTI_MAP_STRING, METHOD_GROUP_COUNT, METHOD_GROUP, METHOD_GET_MIME_TYPE,
+			METHOD_CREATE_MULTI_MAP_BY_URL, METHOD_CREATE_MULTI_MAP_WORK_BOOK, METHOD_CREATE_MULTI_MAP_SHEET,
+			METHOD_GET_AND_SET, METHOD_GET_PAIR = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -46,8 +45,6 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 		//
 		(METHOD_CREATE_MULTI_MAP_STRING = clz.getDeclaredMethod("createMultimap", String.class, String[].class,
 				String.class)).setAccessible(true);
-		//
-		(METHOD_MATCHES = clz.getDeclaredMethod("matches", Matcher.class)).setAccessible(true);
 		//
 		(METHOD_GROUP_COUNT = clz.getDeclaredMethod("groupCount", MatchResult.class)).setAccessible(true);
 		//
@@ -282,31 +279,6 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 				return null;
 			} else if (obj instanceof Multimap) {
 				return (Multimap) obj;
-			}
-			throw new Throwable(obj != null && obj.getClass() != null ? obj.getClass().toString() : null);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testMatches() throws Throwable {
-		//
-		Assertions.assertFalse(matches(null));
-		//
-		final Pattern pattern = Pattern.compile("\\d+");
-		//
-		Assertions.assertFalse(matches(Util.matcher(pattern, EMPTY)));
-		//
-		Assertions.assertTrue(matches(Util.matcher(pattern, "1")));
-		//
-	}
-
-	private static boolean matches(final Matcher instance) throws Throwable {
-		try {
-			final Object obj = METHOD_MATCHES.invoke(null, instance);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(obj != null && obj.getClass() != null ? obj.getClass().toString() : null);
 		} catch (final InvocationTargetException e) {

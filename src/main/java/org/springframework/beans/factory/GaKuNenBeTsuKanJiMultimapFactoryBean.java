@@ -183,7 +183,7 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 		//
 		for (int i = 0; i < IterableUtils.size(elements); i++) {
 			//
-			if ((element = IterableUtils.get(elements, i)) == null || !matches(matcher = Util.matcher(
+			if ((element = IterableUtils.get(elements, i)) == null || !Util.matches(matcher = Util.matcher(
 					pattern = ObjectUtils.getIfNull(pattern, () -> Pattern.compile("(第(\\d+)学年)（\\d+字）")),
 					ElementUtil.text(element))) || matcher == null || matcher.groupCount() <= 0) {
 				//
@@ -336,10 +336,6 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 
 	private static int intValue(@Nullable final Number instance, final int defaultValue) {
 		return instance != null ? instance.intValue() : defaultValue;
-	}
-
-	private static boolean matches(@Nullable final Matcher instance) {
-		return instance != null && instance.matches();
 	}
 
 	@Nullable

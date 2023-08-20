@@ -6,6 +6,7 @@ import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
@@ -194,6 +195,15 @@ class UtilTest {
 		Assertions.assertNull(Util.matcher(Pattern.compile(""), null));
 		//
 		Assertions.assertNull(Util.matcher(Util.cast(Pattern.class, Narcissus.allocateInstance(Pattern.class)), ""));
+		//
+	}
+
+	@Test
+	void testMatches() {
+		//
+		Assertions.assertTrue(Util.matches(Util.matcher(Pattern.compile("\\d"), "1")));
+		//
+		Assertions.assertFalse(Util.matches(Util.cast(Matcher.class, Narcissus.allocateInstance(Matcher.class))));
 		//
 	}
 
