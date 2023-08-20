@@ -18,8 +18,8 @@ import com.google.common.base.Predicates;
 
 class BufferedImageTypeFactoryBeanTest {
 
-	private static Method METHOD_TEST_AND_APPLY, METHOD_IS_STATIC, METHOD_GET, METHOD_GET_TYPE,
-			METHOD_IS_ASSIGNABLE_FROM, METHOD_IS_PRIMITIVE, METHOD_AND, METHOD_INT_VALUE = null;
+	private static Method METHOD_TEST_AND_APPLY, METHOD_IS_STATIC, METHOD_GET, METHOD_IS_ASSIGNABLE_FROM,
+			METHOD_IS_PRIMITIVE, METHOD_AND, METHOD_INT_VALUE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -32,8 +32,6 @@ class BufferedImageTypeFactoryBeanTest {
 		(METHOD_IS_STATIC = clz.getDeclaredMethod("isStatic", Member.class)).setAccessible(true);
 		//
 		(METHOD_GET = clz.getDeclaredMethod("get", Field.class, Object.class)).setAccessible(true);
-		//
-		(METHOD_GET_TYPE = clz.getDeclaredMethod("getType", Field.class)).setAccessible(true);
 		//
 		(METHOD_IS_ASSIGNABLE_FROM = clz.getDeclaredMethod("isAssignableFrom", Class.class, Class.class))
 				.setAccessible(true);
@@ -164,27 +162,6 @@ class BufferedImageTypeFactoryBeanTest {
 	private static Object get(final Field field, final Object instance) throws Throwable {
 		try {
 			return METHOD_GET.invoke(null, field, instance);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetType() throws Throwable {
-		//
-		Assertions.assertNull(getType(null));
-		//
-	}
-
-	private static Class<?> getType(final Field instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_TYPE.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Class) {
-				return (Class<?>) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

@@ -272,7 +272,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 							.getValue0(ivalue0 = ObjectUtils.getIfNull(ivalue0, () -> Unit.with(new JlptVocabulary()))),
 					JlptVocabulary::new);
 			//
-			if (Objects.equals(type = getType(f), Integer.class)) {
+			if (Objects.equals(type = Util.getType(f), Integer.class)) {
 				//
 				if ((value = getIntegerValue(cell, formulaEvaluator)) != null) {
 					//
@@ -317,11 +317,6 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		if (instance != null) {
 			instance.setAccessible(flag);
 		}
-	}
-
-	@Nullable
-	private static Class<?> getType(@Nullable final Field instance) {
-		return instance != null ? instance.getType() : null;
 	}
 
 	private static boolean isAssignableFrom(@Nullable final Class<?> a, @Nullable final Class<?> b) {
@@ -565,7 +560,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 					//
 					s = ss[i];
 					//
-					if (Objects.equals(getType(f), Integer.class)) {
+					if (Objects.equals(Util.getType(f), Integer.class)) {
 						//
 						Narcissus.setObjectField(jv, f,
 								testAndApply(StringUtils::isNotBlank, s, Integer::valueOf, null));

@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import com.google.common.base.Predicates;
 import com.google.common.reflect.Reflection;
 
 class UtilTest {
@@ -174,6 +173,13 @@ class UtilTest {
 		final Stream<?> stream = Reflection.newProxy(Stream.class, new IH());
 		//
 		Assertions.assertSame(stream, Util.filter(stream, null));
+		//
+	}
+
+	@Test
+	void testGetType() {
+		//
+		Assertions.assertNull(Util.getType(null));
 		//
 	}
 

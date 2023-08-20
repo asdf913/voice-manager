@@ -126,7 +126,7 @@ public class BufferedImageTypeFactoryBean implements FactoryBean<Integer> {
 		final List<Field> fs = Util.toList(Util.filter(
 				testAndApply(Objects::nonNull, BufferedImage.class.getDeclaredFields(), Arrays::stream, null), f -> {
 					//
-					final Class<?> type = getType(f);
+					final Class<?> type = Util.getType(f);
 					//
 					return and(isStatic(f),
 							Boolean.logicalOr(isAssignableFrom(Number.class, type),
@@ -184,11 +184,6 @@ public class BufferedImageTypeFactoryBean implements FactoryBean<Integer> {
 	@Nullable
 	private static Object get(@Nullable final Field field, final Object instance) throws IllegalAccessException {
 		return field != null ? field.get(instance) : null;
-	}
-
-	@Nullable
-	private static Class<?> getType(@Nullable final Field instance) {
-		return instance != null ? instance.getType() : null;
 	}
 
 	private static boolean isAssignableFrom(@Nullable final Class<?> a, @Nullable final Class<?> b) {
