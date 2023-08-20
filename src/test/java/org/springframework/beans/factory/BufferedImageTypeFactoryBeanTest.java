@@ -2,27 +2,23 @@ package org.springframework.beans.factory;
 
 import java.awt.image.BufferedImage;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
-import java.util.Objects;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
 
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
-import com.google.common.base.Predicates;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.google.common.reflect.Reflection;
+import com.google.common.base.Predicates;
 
 class BufferedImageTypeFactoryBeanTest {
 
-	private static Method METHOD_TEST_AND_APPLY, METHOD_IS_STATIC, METHOD_GET, METHOD_GET_TYPE, METHOD_FILTER,
+	private static Method METHOD_TEST_AND_APPLY, METHOD_IS_STATIC, METHOD_GET, METHOD_GET_TYPE,
 			METHOD_IS_ASSIGNABLE_FROM, METHOD_IS_PRIMITIVE, METHOD_AND, METHOD_INT_VALUE = null;
 
 	@BeforeAll
@@ -39,8 +35,6 @@ class BufferedImageTypeFactoryBeanTest {
 		//
 		(METHOD_GET_TYPE = clz.getDeclaredMethod("getType", Field.class)).setAccessible(true);
 		//
-		(METHOD_FILTER = clz.getDeclaredMethod("filter", Stream.class, Predicate.class)).setAccessible(true);
-		//
 		(METHOD_IS_ASSIGNABLE_FROM = clz.getDeclaredMethod("isAssignableFrom", Class.class, Class.class))
 				.setAccessible(true);
 		//
@@ -50,35 +44,6 @@ class BufferedImageTypeFactoryBeanTest {
 		//
 		(METHOD_INT_VALUE = clz.getDeclaredMethod("intValue", Number.class, Integer.TYPE)).setAccessible(true);
 		//
-	}
-
-	private static class IH implements InvocationHandler {
-
-		@Override
-		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
-			//
-			if (Objects.equals(method != null ? method.getReturnType() : null, Void.TYPE)) {
-				//
-				return null;
-				//
-			} // if
-				//
-			final String methodName = method != null ? method.getName() : null;
-			//
-			if (proxy instanceof Stream) {
-				//
-				if (Objects.equals(methodName, "filter")) {
-					//
-					return proxy;
-					//
-				} // if
-					//
-			} // if
-				//
-			throw new Throwable(methodName);
-			//
-		}
-
 	}
 
 	private BufferedImageTypeFactoryBean instance = null;
@@ -165,32 +130,6 @@ class BufferedImageTypeFactoryBeanTest {
 			throws Throwable {
 		try {
 			return (R) METHOD_TEST_AND_APPLY.invoke(null, predicate, value, functionTrue, functionFalse);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testFilter() throws Throwable {
-		//
-		Assertions.assertNull(filter(null, null));
-		//
-		final Stream<?> steram = Reflection.newProxy(Stream.class, new IH());
-		//
-		Assertions.assertSame(steram, filter(steram, null));
-		//
-	}
-
-	private static <T> Stream<T> filter(final Stream<T> instance, final Predicate<? super T> predicate)
-			throws Throwable {
-		try {
-			final Object obj = METHOD_FILTER.invoke(null, instance, predicate);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Stream) {
-				return (Stream) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

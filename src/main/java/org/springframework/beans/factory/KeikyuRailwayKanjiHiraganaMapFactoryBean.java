@@ -1,7 +1,6 @@
 package org.springframework.beans.factory;
 
 import java.io.IOException;
-import java.lang.reflect.Proxy;
 import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -11,7 +10,6 @@ import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 
@@ -63,9 +61,8 @@ public class KeikyuRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<Map
 		//
 		for (int i = 0; es != null && i < es.size(); i++) {
 			//
-			if ((nodes = Util.toList(
-					filter(Util.stream(childNodes(parentNode(e = es.get(i)))), TextNode.class::isInstance))) == null
-					|| nodes.isEmpty()) {
+			if ((nodes = Util.toList(Util.filter(Util.stream(childNodes(parentNode(e = es.get(i)))),
+					TextNode.class::isInstance))) == null || nodes.isEmpty()) {
 				//
 				continue;
 				//
@@ -98,16 +95,6 @@ public class KeikyuRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<Map
 	@Nullable
 	private static String getWholeText(@Nullable final TextNode instance) {
 		return instance != null ? instance.getWholeText() : null;
-	}
-
-	@Nullable
-	private static <T> Stream<T> filter(@Nullable final Stream<T> instance,
-			@Nullable final Predicate<? super T> predicate) {
-		//
-		return instance != null && (predicate != null || Proxy.isProxyClass(Util.getClass(instance)))
-				? instance.filter(predicate)
-				: null;
-		//
 	}
 
 	@Nullable

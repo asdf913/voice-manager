@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -36,7 +35,6 @@ import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
 import com.google.common.collect.Table;
-import com.google.common.collect.Table.Cell;
 import com.google.common.collect.TableUtil;
 
 public class TokyoToeiNipporiToneriKanjiRomajiOrHiraganaMapFactoryBean extends StringMapFromResourceFactoryBean {
@@ -67,12 +65,10 @@ public class TokyoToeiNipporiToneriKanjiRomajiOrHiraganaMapFactoryBean extends S
 			//
 		} // if
 			//
-		final Set<Cell<String, UnicodeBlock, String>> cells = TableUtil.cellSet(createTable(url));
-		//
-		return cells != null
-				? collect(Util.stream(cells).filter(c -> Objects.equals(CellUtil.getColumnKey(c), unicodeBlock)),
-						Collectors.toMap(CellUtil::getRowKey, CellUtil::getValue))
-				: null;
+		return collect(
+				Util.filter(Util.stream(TableUtil.cellSet(createTable(url))),
+						c -> Objects.equals(CellUtil.getColumnKey(c), unicodeBlock)),
+				Collectors.toMap(CellUtil::getRowKey, CellUtil::getValue));
 		//
 	}
 

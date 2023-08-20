@@ -4,13 +4,10 @@ import java.awt.image.BufferedImage;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Modifier;
-import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
-
 import javax.annotation.Nullable;
 
 import org.apache.commons.collections4.IterableUtils;
@@ -126,7 +123,7 @@ public class BufferedImageTypeFactoryBean implements FactoryBean<Integer> {
 			//
 		} // try
 			//
-		final List<Field> fs = Util.toList(filter(
+		final List<Field> fs = Util.toList(Util.filter(
 				testAndApply(Objects::nonNull, BufferedImage.class.getDeclaredFields(), Arrays::stream, null), f -> {
 					//
 					final Class<?> type = getType(f);
@@ -178,16 +175,6 @@ public class BufferedImageTypeFactoryBean implements FactoryBean<Integer> {
 
 	private static final <T> boolean test(@Nullable final Predicate<T> instance, @Nullable final T value) {
 		return instance != null && instance.test(value);
-	}
-
-	@Nullable
-	private static <T> Stream<T> filter(@Nullable final Stream<T> instance,
-			@Nullable final Predicate<? super T> predicate) {
-		//
-		return instance != null && (predicate != null || Proxy.isProxyClass(Util.getClass(instance)))
-				? instance.filter(predicate)
-				: null;
-		//
 	}
 
 	private static boolean isStatic(@Nullable final Member instance) {

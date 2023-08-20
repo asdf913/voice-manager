@@ -28,7 +28,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 
-	private static Method METHOD_CREATE_MAP, METHOD_CREATE_TABLE, METHOD_GET_HIRAGANA, METHOD_GET_ROMAJI, METHOD_FILTER,
+	private static Method METHOD_CREATE_MAP, METHOD_CREATE_TABLE, METHOD_GET_HIRAGANA, METHOD_GET_ROMAJI,
 			METHOD_COLLECT, METHOD_CREATE_UNICODE_BLOCK_CHARACTER_MULTI_MAP, METHOD_TEST_AND_APPLY = null;
 
 	@BeforeAll
@@ -43,8 +43,6 @@ class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 		(METHOD_GET_HIRAGANA = clz.getDeclaredMethod("getHiragana", Element.class)).setAccessible(true);
 		//
 		(METHOD_GET_ROMAJI = clz.getDeclaredMethod("getRomaji", Element.class)).setAccessible(true);
-		//
-		(METHOD_FILTER = clz.getDeclaredMethod("filter", Stream.class, Predicate.class)).setAccessible(true);
 		//
 		(METHOD_COLLECT = clz.getDeclaredMethod("collect", Stream.class, Collector.class)).setAccessible(true);
 		//
@@ -235,36 +233,6 @@ class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 				return null;
 			} else if (obj instanceof String) {
 				return (String) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testFilter() throws Throwable {
-		//
-		final Stream<?> stream1 = Stream.empty();
-		//
-		Assertions.assertNull(filter(stream1, null));
-		//
-		final Stream<?> stream2 = filter(stream1, Predicates.alwaysTrue());
-		//
-		Assertions.assertNotNull(stream2);
-		//
-		Assertions.assertNotSame(stream1, stream2);
-		//
-	}
-
-	private static <T> Stream<T> filter(final Stream<T> instance, final Predicate<? super T> predicate)
-			throws Throwable {
-		try {
-			final Object obj = METHOD_FILTER.invoke(null, instance, predicate);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Stream) {
-				return (Stream) obj;
 			}
 			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

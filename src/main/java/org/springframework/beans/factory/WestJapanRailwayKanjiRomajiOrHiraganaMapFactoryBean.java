@@ -7,6 +7,7 @@ import java.io.Reader;
 import java.lang.Character.UnicodeBlock;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Proxy;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,12 +16,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 import javax.script.ScriptEngine;
@@ -44,7 +46,6 @@ import org.springframework.core.io.ResourceUtil;
 import com.google.common.collect.CellUtil;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
-import com.google.common.collect.Table.Cell;
 import com.google.common.collect.TableUtil;
 
 import io.github.toolfactory.narcissus.Narcissus;
@@ -127,11 +128,19 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends StringM
 			//
 		} // try
 			//
-		final Set<Cell<String, UnicodeBlock, String>> cells = TableUtil.cellSet(table);
+		return Unit.with(collect(
+				Util.filter(Util.stream(TableUtil.cellSet(table)),
+						c -> Objects.equals(CellUtil.getColumnKey(c), unicodeBlock)),
+				Collectors.toMap(CellUtil::getRowKey, CellUtil::getValue)));
 		//
-		return cells != null
-				? Unit.with(Util.stream(cells).filter(c -> Objects.equals(CellUtil.getColumnKey(c), unicodeBlock))
-						.collect(Collectors.toMap(CellUtil::getRowKey, CellUtil::getValue)))
+	}
+
+	@Nullable
+	private static <T, R, A> R collect(@Nullable final Stream<T> instance,
+			@Nullable final Collector<? super T, A, R> collector) {
+		//
+		return instance != null && (collector != null || Proxy.isProxyClass(Util.getClass(instance)))
+				? instance.collect(collector)
 				: null;
 		//
 	}

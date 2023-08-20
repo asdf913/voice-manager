@@ -67,7 +67,7 @@ public class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends Stri
 		} // if
 			//
 		return collect(
-				filter(Util.stream(TableUtil.cellSet(createTable(url))),
+				Util.filter(Util.stream(TableUtil.cellSet(createTable(url))),
 						c -> Objects.equals(CellUtil.getColumnKey(c), unicodeBlock)),
 				Collectors.toMap(CellUtil::getRowKey, CellUtil::getValue));
 		//
@@ -182,22 +182,12 @@ public class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends Stri
 	private static String getRomaji(final Element element) {
 		//
 		return collect(
-				filter(Util
+				Util.filter(Util
 						.stream(MultimapUtil.get(createUnicodeBlockCharacterMultimap(ElementUtil.attr(element, "alt")),
 								UnicodeBlock.BASIC_LATIN)),
 						c -> !Character.isWhitespace(c)),
 				Collector.of(StringBuilder::new, StringBuilder::append, StringBuilder::append,
 						StringBuilder::toString));
-		//
-	}
-
-	@Nullable
-	private static <T> Stream<T> filter(@Nullable final Stream<T> instance,
-			@Nullable final Predicate<? super T> predicate) {
-		//
-		return instance != null && (predicate != null || Proxy.isProxyClass(Util.getClass(instance)))
-				? instance.filter(predicate)
-				: null;
 		//
 	}
 

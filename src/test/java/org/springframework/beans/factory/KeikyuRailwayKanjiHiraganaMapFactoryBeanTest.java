@@ -1,7 +1,6 @@
 package org.springframework.beans.factory;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
@@ -12,7 +11,6 @@ import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Stream;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.jsoup.nodes.Element;
@@ -23,8 +21,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.google.common.reflect.Reflection;
-
 import io.github.toolfactory.narcissus.Narcissus;
 import javassist.util.proxy.MethodHandler;
 import javassist.util.proxy.ProxyFactory;
@@ -32,8 +28,7 @@ import javassist.util.proxy.ProxyObject;
 
 class KeikyuRailwayKanjiHiraganaMapFactoryBeanTest {
 
-	private static Method METHOD_CREATE_MAP, METHOD_GET_WHOLE_TEXT, METHOD_FILTER, METHOD_MATCHER, METHOD_FIND,
-			METHOD_TEST = null;
+	private static Method METHOD_CREATE_MAP, METHOD_GET_WHOLE_TEXT, METHOD_MATCHER, METHOD_FIND, METHOD_TEST = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -43,8 +38,6 @@ class KeikyuRailwayKanjiHiraganaMapFactoryBeanTest {
 		(METHOD_CREATE_MAP = clz.getDeclaredMethod("createMap", List.class)).setAccessible(true);
 		//
 		(METHOD_GET_WHOLE_TEXT = clz.getDeclaredMethod("getWholeText", TextNode.class)).setAccessible(true);
-		//
-		(METHOD_FILTER = clz.getDeclaredMethod("filter", Stream.class, Predicate.class)).setAccessible(true);
 		//
 		(METHOD_MATCHER = clz.getDeclaredMethod("matcher", Pattern.class, CharSequence.class)).setAccessible(true);
 		//
@@ -82,29 +75,6 @@ class KeikyuRailwayKanjiHiraganaMapFactoryBeanTest {
 
 	private static String getName(final Member instance) {
 		return instance != null ? instance.getName() : null;
-	}
-
-	private static class IH implements InvocationHandler {
-
-		@Override
-		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
-			//
-			final String methodName = getName(method);
-			//
-			if (proxy instanceof Stream) {
-				//
-				if (Objects.equals(methodName, "filter") && args != null && args.length > 0) {
-					//
-					return args[0];
-					//
-				} // if
-					//
-			} // if
-				//
-			throw new Throwable(methodName);
-			//
-		}
-
 	}
 
 	private KeikyuRailwayKanjiHiraganaMapFactoryBean instance = null;
@@ -245,30 +215,6 @@ class KeikyuRailwayKanjiHiraganaMapFactoryBeanTest {
 				return null;
 			} else if (obj instanceof String) {
 				return (String) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testFilter() throws Throwable {
-		//
-		Assertions.assertNull(filter(Stream.empty(), null));
-		//
-		Assertions.assertNull(filter(Reflection.newProxy(Stream.class, new IH()), null));
-		//
-	}
-
-	private static <T> Stream<T> filter(final Stream<T> instance, final Predicate<? super T> predicate)
-			throws Throwable {
-		try {
-			final Object obj = METHOD_FILTER.invoke(null, instance, predicate);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Stream) {
-				return (Stream) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

@@ -1,13 +1,19 @@
 package org.springframework.beans.factory;
 
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
+import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import com.google.common.base.Predicates;
+import com.google.common.reflect.Reflection;
 
 class UtilTest {
 
@@ -27,6 +33,29 @@ class UtilTest {
 		//
 		(METHOD_ACCEPT = clz.getDeclaredMethod("accept", Consumer.class, Object.class)).setAccessible(true);
 		//
+	}
+
+	private static class IH implements InvocationHandler {
+
+		@Override
+		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+			//
+			final String methodName = method != null ? method.getName() : null;
+			//
+			if (proxy instanceof Stream) {
+				//
+				if (Objects.equals(methodName, "filter")) {
+					//
+					return proxy;
+					//
+				} // if
+					//
+			} // if
+				//
+			throw new Throwable(methodName);
+			//
+		}
+
 	}
 
 	@Test
@@ -136,6 +165,15 @@ class UtilTest {
 	void testAdd() {
 		//
 		Assertions.assertDoesNotThrow(() -> Util.add(null, null));
+		//
+	}
+
+	@Test
+	void testFilter() {
+		//
+		final Stream<?> stream = Reflection.newProxy(Stream.class, new IH());
+		//
+		Assertions.assertSame(stream, Util.filter(stream, null));
 		//
 	}
 

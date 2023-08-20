@@ -23,7 +23,6 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 
@@ -223,16 +222,6 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		} // for
 			//
 		return fieldMap;
-		//
-	}
-
-	@Nullable
-	private static <T> Stream<T> filter(@Nullable final Stream<T> instance,
-			@Nullable final Predicate<? super T> predicate) {
-		//
-		return instance != null && (predicate != null || Proxy.isProxyClass(Util.getClass(instance)))
-				? instance.filter(predicate)
-				: null;
 		//
 	}
 
@@ -743,9 +732,9 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 				//
 				// Check if there is a "value()" defined in a.class
 				//
-			final List<Method> methods = Util.toList(
-					filter(testAndApply(Objects::nonNull, annotationType(a).getDeclaredMethods(), Arrays::stream, null),
-							x -> x != null && Objects.equals("value", Util.getName(x)) && x.getParameterCount() == 0));
+			final List<Method> methods = Util.toList(Util.filter(
+					testAndApply(Objects::nonNull, annotationType(a).getDeclaredMethods(), Arrays::stream, null),
+					x -> x != null && Objects.equals("value", Util.getName(x)) && x.getParameterCount() == 0));
 			//
 			final int sz = IterableUtils.size(methods);
 			//

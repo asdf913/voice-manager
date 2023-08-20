@@ -14,11 +14,9 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
 
 import org.apache.poi.EmptyFileException;
 import org.apache.poi.ss.usermodel.Cell;
@@ -48,24 +46,21 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
-import com.google.common.base.Predicates;
 import com.google.common.reflect.Reflection;
 
 class JlptVocabularyListFactoryBeanTest {
 
 	private static final String EMPTY = "";
 
-	private static Method METHOD_FILTER, METHOD_ANNOTATION_TYPE, METHOD_GET_NAME, METHOD_TEST, METHOD_OR,
-			METHOD_ADD_ALL, METHOD_GET_FIELDS_BY_NAME, METHOD_GET_INTEGER_VALUE, METHOD_GET_STRING_VALUE_CELL,
-			METHOD_INVOKE, METHOD_GET_DECLARED_ANNOTATIONS, METHOD_GET_DECLARED_METHODS, METHOD_IS_ASSIGNABLE_FROM,
+	private static Method METHOD_ANNOTATION_TYPE, METHOD_GET_NAME, METHOD_TEST, METHOD_OR, METHOD_ADD_ALL,
+			METHOD_GET_FIELDS_BY_NAME, METHOD_GET_INTEGER_VALUE, METHOD_GET_STRING_VALUE_CELL, METHOD_INVOKE,
+			METHOD_GET_DECLARED_ANNOTATIONS, METHOD_GET_DECLARED_METHODS, METHOD_IS_ASSIGNABLE_FROM,
 			METHOD_SET_ACCESSIBLE, METHOD_GET_TYPE, METHOD_GET_NUMBER_VALUE, METHOD_GET_PHYSICAL_NUMBER_OF_CELLS = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
 		//
 		final Class<?> clz = JlptVocabularyListFactoryBean.class;
-		//
-		(METHOD_FILTER = clz.getDeclaredMethod("filter", Stream.class, Predicate.class)).setAccessible(true);
 		//
 		(METHOD_ANNOTATION_TYPE = clz.getDeclaredMethod("annotationType", Annotation.class)).setAccessible(true);
 		//
@@ -117,8 +112,6 @@ class JlptVocabularyListFactoryBeanTest {
 
 		private InputStream inputStream = null;
 
-		private Iterator<?> iterator = null;
-
 		private Object[] toArray = null;
 
 		private CellType cellType = null;
@@ -148,14 +141,6 @@ class JlptVocabularyListFactoryBeanTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof Iterable) {
-				//
-				if (Objects.equals(methodName, "iterator")) {
-					//
-					return iterator;
-					//
-				} // if
-					//
 			} // if
 				//
 			if (proxy instanceof Resource) {
@@ -175,14 +160,6 @@ class JlptVocabularyListFactoryBeanTest {
 				} else if (Objects.equals(methodName, "addAll")) {
 					//
 					return addAll;
-					//
-				} // if
-					//
-			} else if (proxy instanceof Stream) {
-				//
-				if (Objects.equals(methodName, "filter")) {
-					//
-					return proxy;
 					//
 				} // if
 					//
@@ -399,38 +376,6 @@ class JlptVocabularyListFactoryBeanTest {
 
 	private static <T> T getObject(final FactoryBean<T> instance) throws Exception {
 		return instance != null ? instance.getObject() : null;
-	}
-
-	@Test
-	void testFilter() throws Throwable {
-		//
-		Assertions.assertNull(filter(null, null));
-		//
-		final Stream<?> empty = Stream.empty();
-		//
-		Assertions.assertNull(filter(empty, null));
-		//
-		Assertions.assertNotNull(filter(empty, Predicates.alwaysTrue()));
-		//
-		final Stream<?> steram = Reflection.newProxy(Stream.class, new IH());
-		//
-		Assertions.assertSame(steram, filter(steram, null));
-		//
-	}
-
-	private static <T> Stream<T> filter(final Stream<T> instance, final Predicate<? super T> predicate)
-			throws Throwable {
-		try {
-			final Object obj = METHOD_FILTER.invoke(null, instance, predicate);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Stream) {
-				return (Stream) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test
