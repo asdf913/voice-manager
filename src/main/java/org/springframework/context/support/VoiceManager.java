@@ -3764,7 +3764,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static ListCellRenderer<Pronunciation> createPronunciationListCellRenderer(final ListCellRenderer<?> lcr) {
+	private static ListCellRenderer<Pronunciation> createPronunciationListCellRenderer(
+			@Nullable final ListCellRenderer<?> lcr) {
 		//
 		return new ListCellRenderer<>() {
 
