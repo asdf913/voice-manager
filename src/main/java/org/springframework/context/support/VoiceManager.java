@@ -8677,7 +8677,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	@Nullable
 	private static <T> Stream<T> distinct(@Nullable final Stream<T> instance) {
-		return instance != null ? instance.distinct() : null;
+		return instance != null ? instance.distinct() : instance;
 	}
 
 	@Nullable
