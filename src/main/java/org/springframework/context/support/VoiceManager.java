@@ -2943,52 +2943,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		if (Boolean.logicalAnd(test(predicate, "min"), test(predicate, "max"))) {
 			//
-			final Range<Integer> range = createRange(toInteger(testAndApply(predicate, "min", function, null)),
-					toInteger(testAndApply(predicate, "max", function, null)));
+			addSpeedButtons(this, panel, createRange(toInteger(testAndApply(predicate, "min", function, null)),
+					toInteger(testAndApply(predicate, "max", function, null))));
 			//
-			if (hasLowerBound(range) && hasUpperBound(range) && lowerEndpoint(range) != null
-					&& upperEndpoint(range) != null) {
-				//
-				panel.add(new JLabel(SPEECH_RATE), "aligny top");
-				//
-				panel.add(jsSpeechRate = new JSlider(intValue(lowerEndpoint(range), 0),
-						intValue(upperEndpoint(range), 0)), String.format("%1$s,span %2$s", GROWX, 7));
-				//
-				jsSpeechRate.setMajorTickSpacing(1);
-				//
-				jsSpeechRate.setPaintTicks(true);
-				//
-				jsSpeechRate.setPaintLabels(true);
-				//
-				panel.add(tfSpeechRate = new JTextField(), String.format("%1$s,width %2$s", WRAP, 24));
-				//
-				setEditable(false, tfSpeechRate);
-				//
-				setValue(jsSpeechRate,
-						PropertyResolverUtil.getProperty(propertyResolver,
-								"org.springframework.context.support.VoiceManager.speechRate"),
-						a -> stateChanged(new ChangeEvent(a)));
-				//
-				add(panel, new JLabel(""));
-				//
-				add(panel, btnSpeechRateSlower = new JButton("Slower"));
-				//
-				add(panel, btnSpeechRateNormal = new JButton("Normal"));
-				//
-				panel.add(btnSpeechRateFaster = new JButton("Faster"), WRAP);
-				//
-				final Double maxWidth = ObjectUtils.max(getPreferredWidth(btnSpeechRateSlower),
-						getPreferredWidth(btnSpeechRateNormal), getPreferredWidth(btnSpeechRateFaster));
-				//
-				if (maxWidth != null) {
-					//
-					setPreferredWidth(maxWidth.intValue(), btnSpeechRateSlower, btnSpeechRateNormal,
-							btnSpeechRateFaster);
-					//
-				} // if
-					//
-			} // if
-				//
 		} // if
 			//
 		if (jsSpeechRate == null && tfSpeechRate == null) {
@@ -3018,11 +2975,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		setSpeechVolume(valueOf(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.speechVolume")), upperEnpoint);
 		//
-		jsSpeechVolume.setMajorTickSpacing(10);
+		setMajorTickSpacing(jsSpeechVolume, 10);
 		//
-		jsSpeechVolume.setPaintTicks(true);
+		setPaintTicks(jsSpeechVolume, true);
 		//
-		jsSpeechVolume.setPaintLabels(true);
+		setPaintLabels(jsSpeechVolume, true);
 		//
 		panel.add(tfSpeechVolume = new JTextField(), String.format("%1$s,width %2$s", WRAP, 27));
 		//
@@ -3106,6 +3063,89 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
+	private static void setMajorTickSpacing(final JSlider instance, final int n) {
+		if (instance != null) {
+			instance.setMajorTickSpacing(n);
+		}
+	}
+
+	private static void setPaintTicks(final JSlider instance, final boolean b) {
+		if (instance != null) {
+			instance.setPaintTicks(b);
+		}
+	}
+
+	private static void setPaintLabels(final JSlider instance, final boolean b) {
+		if (instance != null) {
+			instance.setPaintLabels(b);
+		}
+	}
+
+	private static void addSpeedButtons(final VoiceManager instance, final Container container,
+			final Range<Integer> range) {
+		//
+		if (hasLowerBound(range) && hasUpperBound(range) && lowerEndpoint(range) != null
+				&& upperEndpoint(range) != null) {
+			//
+			add(container, new JLabel(SPEECH_RATE), "aligny top");
+			//
+			final JSlider jsSpeechRate = instance != null
+					? instance.jsSpeechRate = new JSlider(intValue(lowerEndpoint(range), 0),
+							intValue(upperEndpoint(range), 0))
+					: null;
+			//
+			add(container, jsSpeechRate, String.format("%1$s,span %2$s", GROWX, 7));
+			//
+			setMajorTickSpacing(jsSpeechRate, 1);
+			//
+			setPaintTicks(jsSpeechRate, true);
+			//
+			setPaintLabels(jsSpeechRate, true);
+			//
+			final JTextComponent tfSpeechRate = instance != null ? instance.tfSpeechRate = new JTextField() : null;
+			//
+			add(container, tfSpeechRate, String.format("%1$s,width %2$s", WRAP, 24));
+			//
+			setEditable(false, tfSpeechRate);
+			//
+			setValue(jsSpeechRate,
+					PropertyResolverUtil.getProperty(instance != null ? instance.propertyResolver : null,
+							"org.springframework.context.support.VoiceManager.speechRate"),
+					a -> instance.stateChanged(new ChangeEvent(a)));
+			//
+			add(container, new JLabel(""));
+			//
+			final AbstractButton btnSpeechRateSlower = instance != null
+					? instance.btnSpeechRateSlower = new JButton("Slower")
+					: null;
+			//
+			add(container, btnSpeechRateSlower);
+			//
+			final AbstractButton btnSpeechRateNormal = instance != null
+					? instance.btnSpeechRateNormal = new JButton("Normal")
+					: null;
+			//
+			add(container, btnSpeechRateNormal);
+			//
+			final AbstractButton btnSpeechRateFaster = instance != null
+					? instance.btnSpeechRateFaster = new JButton("Faster")
+					: null;
+			//
+			add(container, btnSpeechRateFaster, WRAP);
+			//
+			final Double maxWidth = ObjectUtils.max(getPreferredWidth(btnSpeechRateSlower),
+					getPreferredWidth(btnSpeechRateNormal), getPreferredWidth(btnSpeechRateFaster));
+			//
+			if (maxWidth != null) {
+				//
+				setPreferredWidth(maxWidth.intValue(), btnSpeechRateSlower, btnSpeechRateNormal, btnSpeechRateFaster);
+				//
+			} // if
+				//
+		} // if
+			//
+	}
+
 	@Nullable
 	private static <E> ListCellRenderer<? super E> getRenderer(@Nullable final JComboBox<E> instance) {
 		return instance != null ? instance.getRenderer() : null;
@@ -3163,6 +3203,36 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		if (comp != null) {
 			//
 			instance.add(comp);
+			//
+		} // if
+			//
+	}
+
+	private static void add(final Container instance, final Component comp, final Object constraints) {
+		//
+		if (instance == null) {
+			//
+			return;
+			//
+		} //
+			//
+		try {
+			//
+			if (Narcissus.getObjectField(instance, getDeclaredField(Container.class, COMPONENT)) == null) {
+				//
+				return;
+				//
+			} // if
+				//
+		} catch (final NoSuchFieldException e) {
+			//
+			LoggerUtil.error(LOG, e.getMessage(), e);
+			//
+		} // try
+			//
+		if (comp != null) {
+			//
+			instance.add(comp, constraints);
 			//
 		} // if
 			//
@@ -3276,7 +3346,37 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	@Nullable
 	private static <C extends Comparable<C>> C lowerEndpoint(@Nullable final Range<C> instance) {
-		return instance != null ? instance.lowerEndpoint() : null;
+		//
+		if (instance == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		try {
+			//
+			final Field lowerBound = getDeclaredField(Range.class, "lowerBound");
+			//
+			if (lowerBound != null) {
+				//
+				lowerBound.setAccessible(true);
+				//
+			} // if
+				//
+			if (get(lowerBound, instance) == null) {
+				//
+				return null;
+				//
+			} // if
+				//
+		} catch (final NoSuchFieldException | IllegalAccessException e) {
+			//
+			LoggerUtil.error(LOG, e.getMessage(), e);
+			//
+		} // try
+			//
+		return instance.lowerEndpoint();
+		//
 	}
 
 	@Nullable

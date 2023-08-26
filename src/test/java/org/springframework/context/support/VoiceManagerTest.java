@@ -292,23 +292,23 @@ class VoiceManagerTest {
 			METHOD_GET_PREFERRED_WIDTH, METHOD_IMPORT_VOICE1, METHOD_IMPORT_VOICE_OBJECT_MAP_BI_CONSUMER,
 			METHOD_IMPORT_VOICE_OBJECT_MAP_FILE, METHOD_IMPORT_VOICE5, METHOD_IMPORT_VOICE_BY_SPEECH_API,
 			METHOD_IMPORT_VOICE_BY_ONLINE_NHK_JAPANESE_PRONUNCIATIONS_ACCENT_FAILABLE_FUNCTION, METHOD_ADD_COLLECTION,
-			METHOD_ADD_CONTAINER, METHOD_ADD_LIST, METHOD_CREATE_IMPORT_FILE_TEMPLATE_BYTE_ARRAY, METHOD_ANY_MATCH,
-			METHOD_COLLECT, METHOD_NAME, METHOD_GET_SELECTED_ITEM, METHOD_MATCHER, METHOD_SET_VALUE_J_PROGRESS_BAR,
-			METHOD_SET_VALUE_J_SLIDER, METHOD_SET_STRING_J_PROGRESS_BAR, METHOD_SET_STRING_COMMENT,
-			METHOD_SET_TOOL_TIP_TEXT, METHOD_FORMAT, METHOD_CONTAINS_KEY_MAP, METHOD_CONTAINS_KEY_MULTI_MAP,
-			METHOD_VALUE_OF1, METHOD_VALUE_OF2, METHOD_GET_CLASS, METHOD_CREATE_RANGE, METHOD_GET_PROVIDER_NAME,
-			METHOD_GET_PROVIDER_VERSION, METHOD_WRITE_VOICE_TO_FILE, METHOD_GET_MP3_TAG_VALUE_FILE,
-			METHOD_GET_MP3_TAG_VALUE_LIST, METHOD_GET_MP3_TAG_PARIRS_ID3V1, METHOD_GET_METHODS_CLASS,
-			METHOD_COPY_OBJECT_MAP, METHOD_DELETE, METHOD_DELETE_ON_EXIT, METHOD_CONVERT_LANGUAGE_CODE_TO_TEXT,
-			METHOD_IS_SELECTED, METHOD_SET_HIRAGANA_OR_KATAKANA, METHOD_SET_ROMAJI, METHOD_AND, METHOD_OR,
-			METHOD_CLEAR_DEFAULT_TABLE_MODEL, METHOD_CLEAR_STRING_BUILDER, METHOD_EXECUTE, METHOD_PUT_MAP,
-			METHOD_GET_BYTE_CONVERTER, METHOD_CONTAINS_CUSTOM_PROPERTIES, METHOD_CONTAINS_COLLECTION,
-			METHOD_CONTAINS_LOOKUP, METHOD_GET_LPW_STR, METHOD_GET_SHEET_NAME, METHOD_ACCEPT, METHOD_TO_ARRAY,
-			METHOD_TO_LIST, METHOD_GET_ID, METHOD_SET_MAXIMUM, METHOD_GET_CURRENT_SHEET_INDEX,
-			METHOD_GET_DATA_VALIDATION_HELPER, METHOD_CREATE_EXPLICIT_LIST_CONSTRAINT, METHOD_CREATE_VALIDATION,
-			METHOD_CREATE_EXPORT_TASK, METHOD_GET_TAB_INDEX_BY_TITLE, METHOD_GET_DECLARED_FIELD,
-			METHOD_GET_ABSOLUTE_PATH, METHOD_IS_ASSIGNABLE_FROM, METHOD_GET_ENUM_CONSTANTS, METHOD_LIST_FILES,
-			METHOD_GET_TYPE, METHOD_GET_COLUMN_NAME, METHOD_PUT_ALL_MAP, METHOD_GET_WORK_BOOK,
+			METHOD_ADD_CONTAINER2, METHOD_ADD_CONTAINER3, METHOD_ADD_LIST,
+			METHOD_CREATE_IMPORT_FILE_TEMPLATE_BYTE_ARRAY, METHOD_ANY_MATCH, METHOD_COLLECT, METHOD_NAME,
+			METHOD_GET_SELECTED_ITEM, METHOD_MATCHER, METHOD_SET_VALUE_J_PROGRESS_BAR, METHOD_SET_VALUE_J_SLIDER,
+			METHOD_SET_STRING_J_PROGRESS_BAR, METHOD_SET_STRING_COMMENT, METHOD_SET_TOOL_TIP_TEXT, METHOD_FORMAT,
+			METHOD_CONTAINS_KEY_MAP, METHOD_CONTAINS_KEY_MULTI_MAP, METHOD_VALUE_OF1, METHOD_VALUE_OF2,
+			METHOD_GET_CLASS, METHOD_CREATE_RANGE, METHOD_GET_PROVIDER_NAME, METHOD_GET_PROVIDER_VERSION,
+			METHOD_WRITE_VOICE_TO_FILE, METHOD_GET_MP3_TAG_VALUE_FILE, METHOD_GET_MP3_TAG_VALUE_LIST,
+			METHOD_GET_MP3_TAG_PARIRS_ID3V1, METHOD_GET_METHODS_CLASS, METHOD_COPY_OBJECT_MAP, METHOD_DELETE,
+			METHOD_DELETE_ON_EXIT, METHOD_CONVERT_LANGUAGE_CODE_TO_TEXT, METHOD_IS_SELECTED,
+			METHOD_SET_HIRAGANA_OR_KATAKANA, METHOD_SET_ROMAJI, METHOD_AND, METHOD_OR, METHOD_CLEAR_DEFAULT_TABLE_MODEL,
+			METHOD_CLEAR_STRING_BUILDER, METHOD_EXECUTE, METHOD_PUT_MAP, METHOD_GET_BYTE_CONVERTER,
+			METHOD_CONTAINS_CUSTOM_PROPERTIES, METHOD_CONTAINS_COLLECTION, METHOD_CONTAINS_LOOKUP, METHOD_GET_LPW_STR,
+			METHOD_GET_SHEET_NAME, METHOD_ACCEPT, METHOD_TO_ARRAY, METHOD_TO_LIST, METHOD_GET_ID, METHOD_SET_MAXIMUM,
+			METHOD_GET_CURRENT_SHEET_INDEX, METHOD_GET_DATA_VALIDATION_HELPER, METHOD_CREATE_EXPLICIT_LIST_CONSTRAINT,
+			METHOD_CREATE_VALIDATION, METHOD_CREATE_EXPORT_TASK, METHOD_GET_TAB_INDEX_BY_TITLE,
+			METHOD_GET_DECLARED_FIELD, METHOD_GET_ABSOLUTE_PATH, METHOD_IS_ASSIGNABLE_FROM, METHOD_GET_ENUM_CONSTANTS,
+			METHOD_LIST_FILES, METHOD_GET_TYPE, METHOD_GET_COLUMN_NAME, METHOD_PUT_ALL_MAP, METHOD_GET_WORK_BOOK,
 			METHOD_GET_OLE_ENTRY_NAMES, METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE, METHOD_GET_DOCUMENT_ELEMENT,
 			METHOD_GET_CHILD_NODES, METHOD_GET_NAMED_ITEM, METHOD_GET_TEXT_CONTENT, METHOD_GET_NAME_FILE,
 			METHOD_GET_NAME_CLASS, METHOD_GET_NAME_PACKAGE, METHOD_GET_PASS_WORD, METHOD_GET_SUPPLIER,
@@ -360,7 +360,8 @@ class VoiceManagerTest {
 			METHOD_SET_AUTO_FILTER, METHOD_CREATE_BYTE_ARRAY, METHOD_DOUBLE_VALUE, METHOD_GET_ELEMENT_AT,
 			METHOD_GET_IMAGE_FORMAT, METHOD_GET_I_VALUE0_FROM_MAPS_BY_KEY, METHOD_IS_ALL_CHARACTERS_ALLOWED,
 			METHOD_GET_VALUE_COLLECTION_BY_KEY, METHOD_CREATE_YOMI_NAME_MAP0, METHOD_CREATE_YOMI_NAME_MAP1,
-			METHOD_GET_NUMBER, METHOD_GET_RENDERER, METHOD_SET_RENDERER = null;
+			METHOD_GET_NUMBER, METHOD_GET_RENDERER, METHOD_SET_RENDERER, METHOD_ADD_SPEED_BUTTONS,
+			METHOD_SET_MAJOR_TICK_SPACING, METHOD_SET_PAINT_TICKS, METHOD_SET_PAINT_LABELS = null;
 
 	@BeforeAll
 	static void beforeAll() throws Throwable {
@@ -492,7 +493,10 @@ class VoiceManagerTest {
 		//
 		(METHOD_ADD_COLLECTION = clz.getDeclaredMethod("add", Collection.class, Object.class)).setAccessible(true);
 		//
-		(METHOD_ADD_CONTAINER = clz.getDeclaredMethod("add", Container.class, Component.class)).setAccessible(true);
+		(METHOD_ADD_CONTAINER2 = clz.getDeclaredMethod("add", Container.class, Component.class)).setAccessible(true);
+		//
+		(METHOD_ADD_CONTAINER3 = clz.getDeclaredMethod("add", Container.class, Component.class, Object.class))
+				.setAccessible(true);
 		//
 		(METHOD_ADD_LIST = clz.getDeclaredMethod("add", List.class, Integer.TYPE, Object.class)).setAccessible(true);
 		//
@@ -1083,6 +1087,18 @@ class VoiceManagerTest {
 		(METHOD_GET_RENDERER = clz.getDeclaredMethod("getRenderer", JComboBox.class)).setAccessible(true);
 		//
 		(METHOD_SET_RENDERER = clz.getDeclaredMethod("setRenderer", JComboBox.class, ListCellRenderer.class))
+				.setAccessible(true);
+		//
+		(METHOD_ADD_SPEED_BUTTONS = clz.getDeclaredMethod("addSpeedButtons", VoiceManager.class, Container.class,
+				Range.class)).setAccessible(true);
+		//
+		(METHOD_SET_MAJOR_TICK_SPACING = clz.getDeclaredMethod("setMajorTickSpacing", JSlider.class, Integer.TYPE))
+				.setAccessible(true);
+		//
+		(METHOD_SET_PAINT_TICKS = clz.getDeclaredMethod("setPaintTicks", JSlider.class, Boolean.TYPE))
+				.setAccessible(true);
+		//
+		(METHOD_SET_PAINT_LABELS = clz.getDeclaredMethod("setPaintLabels", JSlider.class, Boolean.TYPE))
 				.setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
@@ -4731,14 +4747,23 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testAdd() {
+	void testAdd() throws Throwable {
 		//
 		Assertions.assertDoesNotThrow(() -> add((Collection<?>) null, null));
 		//
 		Assertions.assertDoesNotThrow(() -> add((Container) null, null));
 		//
-		Assertions.assertDoesNotThrow(
-				() -> add(cast(Container.class, Narcissus.allocateInstance(Container.class)), new JTextField()));
+		final Container container = cast(Container.class, Narcissus.allocateInstance(Container.class));
+		//
+		final Component component = new JTextField();
+		//
+		Assertions.assertDoesNotThrow(() -> add(container, component));
+		//
+		Assertions.assertDoesNotThrow(() -> add(container, component, null));
+		//
+		Assertions.assertDoesNotThrow(() -> add(new JPanel(), null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> add(new JPanel(), component, null));
 		//
 		Assertions.assertDoesNotThrow(() -> add(null, ZERO, null));
 		//
@@ -4754,10 +4779,19 @@ class VoiceManagerTest {
 
 	private static void add(final Container instance, final Component comp) throws Throwable {
 		try {
-			METHOD_ADD_CONTAINER.invoke(null, instance, comp);
+			METHOD_ADD_CONTAINER2.invoke(null, instance, comp);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
+	}
+
+	private static void add(final Container instance, final Component comp, final Object constraints) throws Throwable {
+		try {
+			METHOD_ADD_CONTAINER3.invoke(null, instance, comp, constraints);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+
 	}
 
 	private static <E> void add(final List<E> instance, final int index, final E element) throws Throwable {
@@ -10135,6 +10169,82 @@ class VoiceManagerTest {
 			throws Throwable {
 		try {
 			METHOD_SET_RENDERER.invoke(null, instance, aRenderer);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testAddSpeedButtons() {
+		//
+		Assertions.assertDoesNotThrow(() -> addSpeedButtons(null, null, null));
+		//
+		Assertions.assertDoesNotThrow(
+				() -> addSpeedButtons(null, null, cast(Range.class, Narcissus.allocateInstance(Range.class))));
+		//
+		Assertions.assertDoesNotThrow(() -> addSpeedButtons(null, null, Range.atLeast(Integer.valueOf(-1))));
+		//
+		final Range<Integer> range = Range.open(Integer.valueOf(-1), Integer.valueOf(1));
+		//
+		Assertions.assertDoesNotThrow(() -> addSpeedButtons(null, null, range));
+		//
+		Assertions.assertDoesNotThrow(() -> addSpeedButtons(
+				cast(VoiceManager.class, Narcissus.allocateInstance(VoiceManager.class)), new JPanel(), range));
+		//
+	}
+
+	private static void addSpeedButtons(final VoiceManager instance, final Container container,
+			final Range<Integer> range) throws Throwable {
+		try {
+			METHOD_ADD_SPEED_BUTTONS.invoke(null, instance, container, range);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetMajorTickSpacing() {
+		//
+		Assertions.assertDoesNotThrow(
+				() -> setMajorTickSpacing(cast(JSlider.class, Narcissus.allocateInstance(JSlider.class)), 0));
+		//
+	}
+
+	private static void setMajorTickSpacing(final JSlider instance, final int n) throws Throwable {
+		try {
+			METHOD_SET_MAJOR_TICK_SPACING.invoke(null, instance, n);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetPaintTicks() {
+		//
+		Assertions.assertDoesNotThrow(
+				() -> setPaintTicks(cast(JSlider.class, Narcissus.allocateInstance(JSlider.class)), false));
+		//
+	}
+
+	private static void setPaintTicks(final JSlider instance, final boolean b) throws Throwable {
+		try {
+			METHOD_SET_PAINT_TICKS.invoke(null, instance, b);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetPaintLabels() {
+		//
+		Assertions.assertDoesNotThrow(
+				() -> setPaintLabels(cast(JSlider.class, Narcissus.allocateInstance(JSlider.class)), false));
+		//
+	}
+
+	private static void setPaintLabels(final JSlider instance, final boolean b) throws Throwable {
+		try {
+			METHOD_SET_PAINT_LABELS.invoke(null, instance, b);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
