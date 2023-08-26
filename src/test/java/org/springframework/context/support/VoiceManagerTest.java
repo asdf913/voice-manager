@@ -126,12 +126,14 @@ import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkEvent.EventType;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.JTextComponent;
+import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
+import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathFactory;
 
 import org.apache.bcel.classfile.ClassParser;
@@ -1693,6 +1695,13 @@ class VoiceManagerTest {
 					//
 				} // if
 					//
+			} else if (proxy instanceof XPath) {
+				//
+				if (Objects.equals(methodName, "evaluate")) {
+					//
+					return null;
+					//
+				} // if
 					//
 			} else if (isAssignableFrom(CLASS_BYTE_CONVERTER, VoiceManagerTest.getClass(proxy))) {
 				//
@@ -11243,6 +11252,16 @@ class VoiceManagerTest {
 		Assertions.assertEquals(Boolean.FALSE, invoke(and, null, Boolean.TRUE, Boolean.TRUE, new boolean[] { false }));
 		//
 		Assertions.assertEquals(Boolean.TRUE, invoke(and, null, Boolean.TRUE, Boolean.TRUE, new boolean[] { true }));
+		//
+		// org.springframework.context.support.VoiceManager$ExportTask.evaluate(javax.xml.xpath.XPath,java.lang.String,java.lang.Object,javax.xml.namespace.QName)
+		//
+		final Method evaluate = CLASS_EXPORT_TASK != null
+				? CLASS_EXPORT_TASK.getDeclaredMethod("evaluate", XPath.class, String.class, Object.class, QName.class)
+				: null;
+		//
+		Assertions.assertEquals(null, invoke(evaluate, null, null, null, null, null));
+		//
+		Assertions.assertEquals(null, invoke(evaluate, null, Reflection.newProxy(XPath.class, ih), null, null, null));
 		//
 	}
 
