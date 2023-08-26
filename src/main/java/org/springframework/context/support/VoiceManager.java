@@ -363,6 +363,7 @@ import com.j256.simplemagic.ContentType;
 import com.mariten.kanatools.KanaConverter;
 import com.mpatric.mp3agic.BaseException;
 import com.mpatric.mp3agic.ID3v1;
+import com.mpatric.mp3agic.ID3v2;
 import com.mpatric.mp3agic.Mp3File;
 
 import de.sciss.jump3r.lowlevel.LameEncoder;
@@ -9332,12 +9333,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			final Mp3File mp3File = new Mp3File(file);
 			//
-			return getMp3TagParirs(ObjectUtils.defaultIfNull(mp3File.getId3v2Tag(), mp3File.getId3v1Tag()), attributes);
+			return getMp3TagParirs(ObjectUtils.defaultIfNull(getId3v2Tag(mp3File), mp3File.getId3v1Tag()), attributes);
 			//
 		} // if
 			//
 		return null;
 		//
+	}
+
+	private static ID3v2 getId3v2Tag(final Mp3File instance) {
+		return instance != null ? instance.getId3v2Tag() : null;
 	}
 
 	@Nullable
@@ -11783,7 +11788,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				final Mp3File mp3File = new Mp3File(tempFile);
 				//
-				final ID3v1 id3v1 = ObjectUtils.defaultIfNull(mp3File.getId3v2Tag(), mp3File.getId3v1Tag());
+				final ID3v1 id3v1 = ObjectUtils.defaultIfNull(getId3v2Tag(mp3File), mp3File.getId3v1Tag());
 				//
 				final String titleOld = id3v1 != null ? id3v1.getTitle() : null;
 				//
