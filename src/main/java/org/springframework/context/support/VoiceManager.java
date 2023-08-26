@@ -3146,7 +3146,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		try {
 			//
-			if (Narcissus.getObjectField(instance, getDeclaredField(Container.class, "component")) == null) {
+			if (Narcissus.getObjectField(instance, getDeclaredField(Container.class, COMPONENT)) == null) {
 				//
 				return;
 				//
