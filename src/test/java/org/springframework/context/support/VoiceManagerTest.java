@@ -368,7 +368,7 @@ class VoiceManagerTest {
 			METHOD_GET_VALUE_COLLECTION_BY_KEY, METHOD_CREATE_YOMI_NAME_MAP0, METHOD_CREATE_YOMI_NAME_MAP1,
 			METHOD_GET_NUMBER, METHOD_GET_RENDERER, METHOD_SET_RENDERER, METHOD_ADD_SPEED_BUTTONS,
 			METHOD_SET_MAJOR_TICK_SPACING, METHOD_SET_PAINT_TICKS, METHOD_SET_PAINT_LABELS, METHOD_SORTED,
-			METHOD_DISTINCT, METHOD_GET_ID3V1_TAG, METHOD_GET_ID3V2_TAG = null;
+			METHOD_DISTINCT, METHOD_GET_ID3V1_TAG, METHOD_GET_ID3V2_TAG, METHOD_ADD_VALIDATION_DATA = null;
 
 	@BeforeAll
 	static void beforeAll() throws Throwable {
@@ -1118,6 +1118,9 @@ class VoiceManagerTest {
 		(METHOD_GET_ID3V1_TAG = clz.getDeclaredMethod("getId3v1Tag", Mp3File.class)).setAccessible(true);
 		//
 		(METHOD_GET_ID3V2_TAG = clz.getDeclaredMethod("getId3v2Tag", Mp3File.class)).setAccessible(true);
+		//
+		(METHOD_ADD_VALIDATION_DATA = clz.getDeclaredMethod("addValidationData", Sheet.class, DataValidation.class))
+				.setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -10404,6 +10407,21 @@ class VoiceManagerTest {
 				return (ID3v2) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testAddValidationData() {
+		//
+		Assertions.assertDoesNotThrow(() -> addValidationData(null, null));
+		//
+	}
+
+	private static void addValidationData(final Sheet instance, final DataValidation dataValidation) throws Throwable {
+		try {
+			METHOD_ADD_VALIDATION_DATA.invoke(null, instance, dataValidation);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
