@@ -2309,7 +2309,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		final JLabel jLabel = new JLabel("Please set Compatibility Mode to \"Windows 8\" or prior version");
 		//
 		if (lm instanceof MigLayout) {
-			jPanelWarning.add(jLabel, WRAP);
+			add(jPanelWarning, jLabel, WRAP);
 		} else {
 			add(jPanelWarning, jLabel);
 		} // if
@@ -2863,7 +2863,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(panel, new JLabel("Text"));
 		//
-		panel.add(
+		add(panel,
 				tfTextTts = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
 						"org.springframework.context.support.VoiceManager.text")),
 				String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, 3));
@@ -2874,7 +2874,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final Provider provider = cast(Provider.class, speechApi);
 		//
-		panel.add(tfProviderName = new JTextField(getProviderName(provider)),
+		add(panel, tfProviderName = new JTextField(getProviderName(provider)),
 				String.format("%1$s,span %2$s", GROWX, 3));
 		//
 		final boolean isInstalled = isInstalled(speechApi);
@@ -2882,13 +2882,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		// Provider Version
 		//
 		testAndAccept(Objects::nonNull, tfProviderVersion = createProviderVersionJTextComponent(isInstalled, provider),
-				x -> panel.add(x, String.format("span %1$s,width %2$s", 3, 64)));
+				x -> add(panel, x, String.format("span %1$s,width %2$s", 3, 64)));
 		//
 		// Provider Platform
 		//
 		testAndAccept(Objects::nonNull,
 				tfProviderPlatform = createProviderPlatformJTextComponent(isInstalled, provider),
-				x -> panel.add(x, WRAP));
+				x -> add(panel, x, WRAP));
 		//
 		// Voice Id
 		//
@@ -2909,11 +2909,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			jcbVoiceId.setRenderer(voiceIdListCellRenderer);
 			//
-			panel.add(jcbVoiceId, String.format("%1$s,span %2$s", GROWX, 3));
+			add(panel, jcbVoiceId, String.format("%1$s,span %2$s", GROWX, 3));
 			//
-			panel.add(tfSpeechLanguageCode = new JTextField(), String.format("width %1$s,span %2$s", 30, 2));
+			add(panel, tfSpeechLanguageCode = new JTextField(), String.format("width %1$s,span %2$s", 30, 2));
 			//
-			panel.add(tfSpeechLanguageName = new JTextField(),
+			add(panel, tfSpeechLanguageName = new JTextField(),
 					String.format("%1$s,span %2$s,width %3$s", WRAP, 2, 230));
 			//
 		} // if
@@ -2952,7 +2952,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			add(panel, new JLabel(SPEECH_RATE));
 			//
-			panel.add(
+			add(panel,
 					tfSpeechRate = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
 							"org.springframework.context.support.VoiceManager.speechRate")),
 					String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, 3));
@@ -2961,16 +2961,18 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			// Speech Volume
 			//
-		panel.add(new JLabel("Speech Volume"), "aligny top");
+		add(panel, new JLabel("Speech Volume"), "aligny top");
 		//
 		final Range<Integer> speechVolumeRange = createVolumeRange(speechApiInstance);
 		//
 		final Integer upperEnpoint = testAndApply(VoiceManager::hasUpperBound, speechVolumeRange,
 				VoiceManager::upperEndpoint, null);
 		//
-		panel.add(jsSpeechVolume = new JSlider(intValue(
-				testAndApply(VoiceManager::hasLowerBound, speechVolumeRange, VoiceManager::lowerEndpoint, null), 0),
-				intValue(upperEnpoint, 100)), String.format("%1$s,span %2$s", GROWX, 3));
+		add(panel,
+				jsSpeechVolume = new JSlider(intValue(
+						testAndApply(VoiceManager::hasLowerBound, speechVolumeRange, VoiceManager::lowerEndpoint, null),
+						0), intValue(upperEnpoint, 100)),
+				String.format("%1$s,span %2$s", GROWX, 3));
 		//
 		setSpeechVolume(valueOf(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.speechVolume")), upperEnpoint);
@@ -2981,7 +2983,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		setPaintLabels(jsSpeechVolume, true);
 		//
-		panel.add(tfSpeechVolume = new JTextField(), String.format("%1$s,width %2$s", WRAP, 27));
+		add(panel, tfSpeechVolume = new JTextField(), String.format("%1$s,width %2$s", WRAP, 27));
 		//
 		// Button(s)
 		//
@@ -3011,7 +3013,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(panel, jcbSpeakMethod);
 		//
-		panel.add(btnSpeak = new JButton("Speak"), WRAP);
+		add(panel, btnSpeak = new JButton("Speak"), WRAP);
 		//
 		// Audio Format
 		//
@@ -3022,13 +3024,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(panel, jcbAudioFormat);
 		//
-		panel.add(btnWriteVoice = new JButton("Write"), WRAP);
+		add(panel, btnWriteVoice = new JButton("Write"), WRAP);
 		//
 		// elapsed
 		//
 		add(panel, new JLabel("Elapsed"));
 		//
-		panel.add(tfElapsed = new JTextField(), String.format("%1$s,span %2$s", GROWX, 2));
+		add(panel, tfElapsed = new JTextField(), String.format("%1$s,span %2$s", GROWX, 2));
 		//
 		setEditable(false, tfSpeechLanguageCode, tfSpeechLanguageName, tfProviderName, tfProviderVersion,
 				tfProviderPlatform, tfSpeechVolume, tfElapsed);
@@ -3504,7 +3506,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(panel, new JLabel(LANGUAGE));
 		//
-		panel.add(
+		add(panel,
 				tfLanguage = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
 						"org.springframework.context.support.VoiceManager.language")),
 				String.format("%1$s,span %2$s", GROWX, 11));
@@ -3513,7 +3515,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(panel, new JLabel(SOURCE));
 		//
-		panel.add(
+		add(panel,
 				tfSource = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
 						"org.springframework.context.support.VoiceManager.source")),
 				String.format("%1$s,span %2$s,wmin %3$s", GROWX, 4, 50));
@@ -3551,7 +3553,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final Set<String> gaKuNenBeTsuKanJiList = MultimapUtil.keySet(IValue0Util.getValue0(gaKuNenBeTsuKanJiMultimap));
 		//
-		panel.add(
+		add(panel,
 				new JComboBox<>(cbmGaKuNenBeTsuKanJi = testAndApply(Objects::nonNull,
 						ArrayUtils.insert(0, toArray(gaKuNenBeTsuKanJiList, new String[] {}), (String) null),
 						DefaultComboBoxModel::new, x -> new DefaultComboBoxModel<>())),
@@ -3570,7 +3572,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		add(panel, new JLabel("常用漢字"));
 		//
-		panel.add(new JComboBox<>(cbmJouYouKanJi = get(booleanComboBoxModelSupplier)),
+		add(panel, new JComboBox<>(cbmJouYouKanJi = get(booleanComboBoxModelSupplier)),
 				String.format("%1$s,span %2$s", WRAP, 1));
 		//
 		setSelectedItem(cbmJouYouKanJi,
@@ -3581,7 +3583,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(panel, new JLabel("Text"));
 		//
-		panel.add(
+		add(panel,
 				tfTextImport = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
 						"org.springframework.context.support.VoiceManager.text")),
 				String.format("%1$s,span %2$s", GROWX, 18));
@@ -3591,7 +3593,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		(jcbJlptVocabulary = new JComboBox<JlptVocabulary>(mcbmJlptVocabulary = new DefaultComboBoxModel<>()))
 				.addItemListener(this);
 		//
-		panel.add(jcbJlptVocabulary, String.format(SPAN_ONLY_FORMAT, 3));
+		add(panel, jcbJlptVocabulary, String.format(SPAN_ONLY_FORMAT, 3));
 		//
 		final ListCellRenderer<?> render = getRenderer(jcbJlptVocabulary);
 		//
@@ -3611,14 +3613,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			}
 		});
 		//
-		panel.add(btnCheckPronunciation = new JButton(PRONUNCIATION), String.format("%1$s,span %2$s", WRAP, 2));
+		add(panel, btnCheckPronunciation = new JButton(PRONUNCIATION), String.format("%1$s,span %2$s", WRAP, 2));
 		//
 		add(panel, new JLabel());
 		//
-		panel.add(btnConvertToHiraganaOrKatakana = new JButton("Convert To Hiragana or Katakana"),
+		add(panel, btnConvertToHiraganaOrKatakana = new JButton("Convert To Hiragana or Katakana"),
 				String.format(SPAN_ONLY_FORMAT, 3));
 		//
-		panel.add(btnConvertToRomaji = new JButton("Convert To Romaji"), String.format("%1$s,span %2$s", WRAP, 2));
+		add(panel, btnConvertToRomaji = new JButton("Convert To Romaji"), String.format("%1$s,span %2$s", WRAP, 2));
 		//
 		// Yomi
 		//
@@ -3671,7 +3673,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(panel, new JLabel("IPA"));
 		//
-		panel.add(
+		add(panel,
 				tfIpaSymbol = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
 						"org.springframework.context.support.VoiceManager.ipaSymbol")),
 				String.format("%1$s,wmin %2$s,wmax %3$s,span %4$s", GROWX, 100, 200, 2));
@@ -3699,13 +3701,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		final String tags = PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.listNames");
 		//
-		panel.add(tfListNames = new JTextField(tags), String.format("%1$s,span %2$s", GROWX, 9));
+		add(panel, tfListNames = new JTextField(tags), String.format("%1$s,span %2$s", GROWX, 9));
 		//
 		tfListNames.addKeyListener(this);
 		//
-		panel.add(jlListNames = new JLabel(), String.format(SPAN_ONLY_FORMAT, 5));
+		add(panel, jlListNames = new JLabel(), String.format(SPAN_ONLY_FORMAT, 5));
 		//
-		panel.add(jlListNameCount = new JLabel(), String.format("wmax %1$s", 20));
+		add(panel, jlListNameCount = new JLabel(), String.format("wmax %1$s", 20));
 		//
 		if (StringUtils.isNotBlank(tags)) {
 			//
@@ -3722,9 +3724,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		testAndAccept(CollectionUtils::isNotEmpty, jlptLevelList, x -> add(x, 0, null));
 		//
-		panel.add(new JComboBox<String>(
-				cbmJlptLevel = testAndApply(Objects::nonNull, toArray(jlptLevelList, new String[] {}),
-						DefaultComboBoxModel::new, x -> new DefaultComboBoxModel<String>())),
+		add(panel,
+				new JComboBox<String>(
+						cbmJlptLevel = testAndApply(Objects::nonNull, toArray(jlptLevelList, new String[] {}),
+								DefaultComboBoxModel::new, x -> new DefaultComboBoxModel<String>())),
 				WRAP);
 		//
 		setSelectedItem(cbmJlptLevel, PropertyResolverUtil.getProperty(propertyResolver,
@@ -3734,18 +3737,18 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(panel, new JLabel(ROMAJI_WITH_FIRST_CAPTICALIZED_LETTER));
 		//
-		panel.add(
+		add(panel,
 				tfRomaji = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
 						"org.springframework.context.support.VoiceManager.romaji")),
 				String.format("%1$s,span %2$s", GROWX, 23));
 		//
-		panel.add(btnCopyRomaji = new JButton("Copy"), WRAP);
+		add(panel, btnCopyRomaji = new JButton("Copy"), WRAP);
 		//
 		// Hiragana
 		//
 		add(panel, new JLabel(HIRAGANA_WITH_FIRST_CAPTICALIZED_LETTER));
 		//
-		panel.add(
+		add(panel,
 				tfHiragana = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
 						"org.springframework.context.support.VoiceManager.hiragana")),
 				String.format("%1$s,span %2$s", GROWX, 9));
@@ -3756,18 +3759,18 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		// Katakana
 		//
-		panel.add(new JLabel("Katakana"), String.format(SPAN_ONLY_FORMAT, 2));
+		add(panel, new JLabel("Katakana"), String.format(SPAN_ONLY_FORMAT, 2));
 		//
-		panel.add(
+		add(panel,
 				tfKatakana = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
 						"org.springframework.context.support.VoiceManager.katakana")),
 				String.format("%1$s,span %2$s", GROWX, 10));
 		//
-		panel.add(btnCopyKatakana = new JButton("Copy"), WRAP);
+		add(panel, btnCopyKatakana = new JButton("Copy"), WRAP);
 		//
 		// Pronunciation
 		//
-		panel.add(new JLabel(PRONUNCIATION), String.format(SPAN_ONLY_FORMAT, 2));
+		add(panel, new JLabel(PRONUNCIATION), String.format(SPAN_ONLY_FORMAT, 2));
 		//
 		// TODO
 		//
@@ -3785,27 +3788,27 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
-		panel.add(jcbPronunciation, String.format("%1$s,span %2$s", GROWX, 3));
+		add(panel, jcbPronunciation, String.format("%1$s,span %2$s", GROWX, 3));
 		//
-		panel.add(new JComboBox<>(mcbmPronounicationAudioFormat = new DefaultComboBoxModel<>()),
+		add(panel, new JComboBox<>(mcbmPronounicationAudioFormat = new DefaultComboBoxModel<>()),
 				String.format(WMIN_ONLY_FORMAT, 94));
 		//
-		panel.add(btnPlayPronunciationAudio = new JButton("Play"), WRAP);
+		add(panel, btnPlayPronunciationAudio = new JButton("Play"), WRAP);
 		//
 		// Pronunciation Page URL
 		//
-		panel.add(new JLabel("Pronunciation Page URL"), String.format(SPAN_ONLY_FORMAT, 3));
+		add(panel, new JLabel("Pronunciation Page URL"), String.format(SPAN_ONLY_FORMAT, 3));
 		//
-		panel.add(
+		add(panel,
 				tfPronunciationPageUrl = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
 						"org.springframework.context.support.VoiceManager.pronunciationPageUrl")),
 				String.format("%1$s,span %2$s", GROWX, 19));
 		//
 		add(panel, new JLabel("Status"));
 		//
-		panel.add(tfPronunciationPageStatusCode = new JTextField(), String.format(WMIN_ONLY_FORMAT, 30));
+		add(panel, tfPronunciationPageStatusCode = new JTextField(), String.format(WMIN_ONLY_FORMAT, 30));
 		//
-		panel.add(btnPronunciationPageUrlCheck = new JButton("Check"), WRAP);
+		add(panel, btnPronunciationPageUrlCheck = new JButton("Check"), WRAP);
 		//
 		add(panel, new JLabel());
 		//
@@ -3818,7 +3821,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(panel, new JComboBox(cbmAudioFormatExecute = new DefaultComboBoxModel<Object>()));
 		//
-		panel.add(btnExecute = new JButton("Execute"), String.format(SPAN_ONLY_FORMAT, 3));
+		add(panel, btnExecute = new JButton("Execute"), String.format(SPAN_ONLY_FORMAT, 3));
 		//
 		Double maxPreferredWidth = ObjectUtils.max(getPreferredWidth(tfListNames),
 				getPreferredWidth(btnConvertToKatakana));
@@ -4001,9 +4004,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(panel, new JLabel("Import"));
 		//
-		panel.add(btnImport = new JButton("Import a Single Spreadsheet"), String.format(SPAN_ONLY_FORMAT, 2));
+		add(panel, btnImport = new JButton("Import a Single Spreadsheet"), String.format(SPAN_ONLY_FORMAT, 2));
 		//
-		panel.add(btnImportWithinFolder = new JButton("Import SpreadSheet(s) Within a Folder"),
+		add(panel, btnImportWithinFolder = new JButton("Import SpreadSheet(s) Within a Folder"),
 				String.format("%1$s,span %2$s", WRAP, 2));
 		//
 		add(panel, new JLabel("Import Template"));
@@ -4014,11 +4017,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				.setSelected(Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
 						"org.springframework.context.support.VoiceManager.importFileTemplateGenerateBlankRow")));
 		//
-		panel.add(btnImportFileTemplate = new JButton("Generate"), String.format("%1$s,span %2$s", WRAP, 3));
+		add(panel, btnImportFileTemplate = new JButton("Generate"), String.format("%1$s,span %2$s", WRAP, 3));
 		//
 		// Progress
 		//
-		panel.add(progressBarImport = new JProgressBar(), String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, 5));
+		add(panel, progressBarImport = new JProgressBar(), String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, 5));
 		//
 		progressBarImport.setStringPainted(true);
 		//
@@ -4026,16 +4029,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final String wrap = String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, 5);
 		//
-		panel.add(tfCurrentProcessingFile = new JTextField(), wrap);
+		add(panel, tfCurrentProcessingFile = new JTextField(), wrap);
 		//
 		add(panel, new JLabel("Current Processing Sheet"));
 		//
-		panel.add(tfCurrentProcessingSheetName = new JTextField(),
+		add(panel, tfCurrentProcessingSheetName = new JTextField(),
 				String.format("%1$s,wmin %2$s,span %3$s", GROWX, 300, 2));
 		//
 		add(panel, new JLabel("Voice"));
 		//
-		panel.add(tfCurrentProcessingVoice = new JTextField(), String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, 2));
+		add(panel, tfCurrentProcessingVoice = new JTextField(), String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, 2));
 		//
 		add(panel, new JLabel("Import Result"));
 		//
@@ -4052,11 +4055,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
-		panel.add(scp, wrap);
+		add(panel, scp, wrap);
 		//
 		add(panel, new JLabel("Import Exception"));
 		//
-		panel.add(scp = new JScrollPane(new JTable(tmImportException = new DefaultTableModel(
+		add(panel, scp = new JScrollPane(new JTable(tmImportException = new DefaultTableModel(
 				new Object[] { "Text", ROMAJI_WITH_FIRST_CAPTICALIZED_LETTER, "Exception" }, 0))), wrap);
 		//
 		if ((d = getPreferredSize(scp)) != null) {
@@ -4098,22 +4101,22 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(panel, new JLabel("Folder"));
 		//
-		panel.add(
+		add(panel,
 				tfFolder = new JTextField(
 						getAbsolutePath(testAndApply(StringUtils::isNotBlank, this.voiceFolder, File::new, null))),
 				String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, 3));
 		//
 		add(panel, new JLabel("File"));
 		//
-		panel.add(tfFile = new JTextField(), GROWX);
+		add(panel, tfFile = new JTextField(), GROWX);
 		//
 		add(panel, new JLabel("Length"));
 		//
-		panel.add(tfFileLength = new JTextField(), String.format("%1$s,%2$s", GROWX, WRAP));
+		add(panel, tfFileLength = new JTextField(), String.format("%1$s,%2$s", GROWX, WRAP));
 		//
 		add(panel, new JLabel("File Digest"));
 		//
-		panel.add(tfFileDigest = new JTextField(), String.format("%1$s,span %2$s", GROWX, 3));
+		add(panel, tfFileDigest = new JTextField(), String.format("%1$s,span %2$s", GROWX, 3));
 		//
 		setEditable(false, tfFolder, tfFile, tfFileLength, tfFileDigest);
 		//
@@ -4189,7 +4192,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		// Microsoft Excel Format
 		//
-		panel.add(new JLabel("Workbook Implementation"), String.format(SPAN_ONLY_FORMAT, 5));
+		add(panel, new JLabel("Workbook Implementation"), String.format(SPAN_ONLY_FORMAT, 5));
 		//
 		final List<Class<? extends Workbook>> classes = testAndApply(Objects::nonNull,
 				new Reflections("org.apache.poi").getSubTypesOf(Workbook.class), ArrayList::new, null);
@@ -4222,15 +4225,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 		});
 		//
-		panel.add(jcbClass, String.format("%1$s,span %2$s", WRAP, 7));
+		add(panel, jcbClass, String.format("%1$s,span %2$s", WRAP, 7));
 		//
 		// Encryption Mode
 		//
-		panel.add(new JLabel("Encryption Mode"), String.format(SPAN_ONLY_FORMAT, 5));
+		add(panel, new JLabel("Encryption Mode"), String.format(SPAN_ONLY_FORMAT, 5));
 		//
 		final EncryptionMode[] encryptionModes = EncryptionMode.values();
 		//
-		panel.add(
+		add(panel,
 				new JComboBox<>(cbmEncryptionMode = new DefaultComboBoxModel<>(
 						ArrayUtils.insert(0, encryptionModes, (EncryptionMode) null))),
 				String.format("%1$s,span %2$s", WRAP, 2));
@@ -4245,11 +4248,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		// ZIP Compression Level
 		//
-		panel.add(new JLabel("ZIP Compression Level"), String.format(SPAN_ONLY_FORMAT, 5));
+		add(panel, new JLabel("ZIP Compression Level"), String.format(SPAN_ONLY_FORMAT, 5));
 		//
 		final CompressionLevel[] compressionLevels = CompressionLevel.values();
 		//
-		panel.add(
+		add(panel,
 				new JComboBox<>(cbmCompressionLevel = new DefaultComboBoxModel<>(
 						ArrayUtils.insert(0, compressionLevels, (CompressionLevel) null))),
 				String.format("%1$s,span %2$s", WRAP, 2));
@@ -4264,23 +4267,23 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		// Password
 		//
-		panel.add(new JLabel(PASSWORD), String.format(SPAN_ONLY_FORMAT, 4));
+		add(panel, new JLabel(PASSWORD), String.format(SPAN_ONLY_FORMAT, 4));
 		//
-		panel.add(
+		add(panel,
 				tfExportPassword = new JPasswordField(PropertyResolverUtil.getProperty(propertyResolver,
 						"org.springframework.context.support.VoiceManager.exportPassword")),
 				String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, 2));
 		//
-		panel.add(new JLabel("Option(s)"), String.format(SPAN_ONLY_FORMAT, 4));
+		add(panel, new JLabel("Option(s)"), String.format(SPAN_ONLY_FORMAT, 4));
 		//
-		panel.add(cbOverMp3Title = new JCheckBox("Over Mp3 Title"), String.format("%1$s,span %2$s", WRAP, 2));
+		add(panel, cbOverMp3Title = new JCheckBox("Over Mp3 Title"), String.format("%1$s,span %2$s", WRAP, 2));
 		//
 		cbOverMp3Title.setSelected(Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.overMp3Title")));
 		//
-		panel.add(new JLabel(), String.format(SPAN_ONLY_FORMAT, 4));
+		add(panel, new JLabel(), String.format(SPAN_ONLY_FORMAT, 4));
 		//
-		panel.add(cbOrdinalPositionAsFileNamePrefix = new JCheckBox("Ordinal Position As File Name Prefix"),
+		add(panel, cbOrdinalPositionAsFileNamePrefix = new JCheckBox("Ordinal Position As File Name Prefix"),
 				String.format(SPAN_ONLY_FORMAT, 4));
 		//
 		cbOrdinalPositionAsFileNamePrefix
@@ -4289,28 +4292,28 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(panel, new JLabel("Prefix"));
 		//
-		panel.add(
+		add(panel,
 				tfOrdinalPositionFileNamePrefix = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
 						"org.springframework.context.support.VoiceManager.ordinalPositionFileNamePrefix")),
 				String.format("%1$s,%2$s", GROWX, WRAP));
 		//
-		panel.add(new JLabel(), String.format(SPAN_ONLY_FORMAT, 4));
+		add(panel, new JLabel(), String.format(SPAN_ONLY_FORMAT, 4));
 		//
-		panel.add(cbJlptAsFolder = new JCheckBox("JLPT As Folder"), String.format(SPAN_ONLY_FORMAT, 3));
+		add(panel, cbJlptAsFolder = new JCheckBox("JLPT As Folder"), String.format(SPAN_ONLY_FORMAT, 3));
 		//
 		cbJlptAsFolder.setSelected(Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.jlptAsFolder")));
 		//
 		add(panel, new JLabel("Folder Name Prefix"));
 		//
-		panel.add(
+		add(panel,
 				tfJlptFolderNamePrefix = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
 						"org.springframework.context.support.VoiceManager.jlptFolderNamePrefix")),
 				String.format("%1$s,wmin %2$s,span %3$s", WRAP, 100, 2));
 		//
-		panel.add(new JLabel(), String.format(SPAN_ONLY_FORMAT, 4));
+		add(panel, new JLabel(), String.format(SPAN_ONLY_FORMAT, 4));
 		//
-		panel.add(cbExportHtml = new JCheckBox("Export HTML"), String.format(SPAN_ONLY_FORMAT, 3));
+		add(panel, cbExportHtml = new JCheckBox("Export HTML"), String.format(SPAN_ONLY_FORMAT, 3));
 		//
 		cbExportHtml.setSelected(Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.exportHtml")));
@@ -4319,7 +4322,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(panel, new JLabel("File Name"));
 		//
-		panel.add(
+		add(panel,
 				tfExportHtmlFileName = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
 						"org.springframework.context.support.VoiceManager.exportHtmlFileName")),
 				String.format("wmin %1$s,span %2$s", 100, 2));
@@ -4355,7 +4358,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		cbExportHtmlAsZip.setSelected(Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.exportListHtmlAsZip")));
 		//
-		panel.add(cbExportHtmlRemoveAfterZip = new JCheckBox("Remove Html After Zip"),
+		add(panel, cbExportHtmlRemoveAfterZip = new JCheckBox("Remove Html After Zip"),
 				String.format("%1$s,span %2$s", WRAP, 2));
 		//
 		cbExportHtmlRemoveAfterZip.setSelected(Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
@@ -4363,58 +4366,58 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		// Export List Sheet
 		//
-		panel.add(new JLabel(), String.format(SPAN_ONLY_FORMAT, 4));
+		add(panel, new JLabel(), String.format(SPAN_ONLY_FORMAT, 4));
 		//
-		panel.add(cbExportListSheet = new JCheckBox("Export List Sheet"), String.format("%1$s,span %2$s", WRAP, 3));
+		add(panel, cbExportListSheet = new JCheckBox("Export List Sheet"), String.format("%1$s,span %2$s", WRAP, 3));
 		//
 		cbExportListSheet.setSelected(Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.exportListSheet")));
 		//
 		// Export JLPT Sheet
 		//
-		panel.add(new JLabel(), String.format(SPAN_ONLY_FORMAT, 4));
+		add(panel, new JLabel(), String.format(SPAN_ONLY_FORMAT, 4));
 		//
-		panel.add(cbExportJlptSheet = new JCheckBox("Export JLPT Sheet"), String.format("%1$s,span %2$s", WRAP, 3));
+		add(panel, cbExportJlptSheet = new JCheckBox("Export JLPT Sheet"), String.format("%1$s,span %2$s", WRAP, 3));
 		//
 		cbExportJlptSheet.setSelected(Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.exportJlptSheet")));
 		//
 		// Export Presentation
 		//
-		panel.add(new JLabel(), String.format(SPAN_ONLY_FORMAT, 4));
+		add(panel, new JLabel(), String.format(SPAN_ONLY_FORMAT, 4));
 		//
-		panel.add(cbExportPresentation = new JCheckBox("Export Presentation"), String.format(",span %1$s", 3));
+		add(panel, cbExportPresentation = new JCheckBox("Export Presentation"), String.format(",span %1$s", 3));
 		//
 		setToolTipText(cbExportPresentation, "Open Document Format (odp) format, Libre Office is recommended");
 		//
 		cbExportPresentation.setSelected(Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.exportPresentation")));
 		//
-		panel.add(cbEmbedAudioInPresentation = new JCheckBox("Emded Audio In Presentation"),
+		add(panel, cbEmbedAudioInPresentation = new JCheckBox("Emded Audio In Presentation"),
 				String.format(SPAN_ONLY_FORMAT, 3));
 		//
 		cbEmbedAudioInPresentation.setSelected(Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.embedAudioInPresentation")));
 		//
-		panel.add(cbHideAudioImageInPresentation = new JCheckBox("Hide Audio Image In Presentation"),
+		add(panel, cbHideAudioImageInPresentation = new JCheckBox("Hide Audio Image In Presentation"),
 				String.format(SPAN_ONLY_FORMAT, 2));
 		//
 		cbHideAudioImageInPresentation
 				.setSelected(Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
 						"org.springframework.context.support.VoiceManager.hideAudioImageInPresentation")));
 		//
-		panel.add(new JLabel("Presentation Slide Duration"), String.format(SPAN_ONLY_FORMAT, 2));
+		add(panel, new JLabel("Presentation Slide Duration"), String.format(SPAN_ONLY_FORMAT, 2));
 		//
-		panel.add(
+		add(panel,
 				tfPresentationSlideDuration = new JTextField(
 						StringUtils.defaultString(toString(presentationSlideDuration))),
 				String.format("%1$s,wmin %2$spx", WRAP, 100));
 		//
 		// Export Microsoft Access
 		//
-		panel.add(new JLabel(), String.format(SPAN_ONLY_FORMAT, 4));
+		add(panel, new JLabel(), String.format(SPAN_ONLY_FORMAT, 4));
 		//
-		panel.add(cbExportMicrosoftAccess = new JCheckBox("Export Microsoft Access"),
+		add(panel, cbExportMicrosoftAccess = new JCheckBox("Export Microsoft Access"),
 				String.format(SPAN_ONLY_FORMAT, 3));
 		//
 		cbExportMicrosoftAccess.setSelected(Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
@@ -4463,23 +4466,23 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		setRenderer(jcbFileFormat, mafflcr);
 		//
-		panel.add(jcbFileFormat, String.format("%1$s,span %2$s", WRAP, 5));
+		add(panel, jcbFileFormat, String.format("%1$s,span %2$s", WRAP, 5));
 		//
 		cbmMicrosoftAccessFileFormat.setSelectedItem(microsoftAccessFileFormat);
 		//
-		panel.add(new JLabel(), String.format(SPAN_ONLY_FORMAT, 4));
+		add(panel, new JLabel(), String.format(SPAN_ONLY_FORMAT, 4));
 		//
-		panel.add(btnExport = new JButton("Export"), WRAP);
+		add(panel, btnExport = new JButton("Export"), WRAP);
 		//
 		// Progress
 		//
 		add(panel, tfPhraseCounter = new JTextField("0"));
 		//
-		panel.add(new JLabel("/"), "align center");
+		add(panel, new JLabel("/"), "align center");
 		//
 		add(panel, tfPhraseTotal = new JTextField("0"));
 		//
-		panel.add(progressBarExport = new JProgressBar(), String.format("%1$s,span %2$s", GROWX, 7));
+		add(panel, progressBarExport = new JProgressBar(), String.format("%1$s,span %2$s", GROWX, 7));
 		//
 		progressBarExport.setStringPainted(true);
 		//
@@ -4527,7 +4530,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		if (speechApiInstance instanceof SpeechApiSpeechServerImpl) {
 			//
-			panel.add(
+			add(panel,
 					new JLabelLink(new ATag().withHref(microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl).withText(
 							IValue0Util.getValue0(getMicrosoftSpeechPlatformRuntimeLanguagesDownloadPageTitle()))),
 					WRAP);
@@ -4548,7 +4551,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			add(panelDllPath, btnDllPathCopy = new JButton("Copy"));
 			//
-			panel.add(panelDllPath, String.format("%1$s,span %2$s", WRAP, 2));
+			add(panel, panelDllPath, String.format("%1$s,span %2$s", WRAP, 2));
 			//
 		} // if
 			//
@@ -4579,7 +4582,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
-		panel.add(
+		add(panel,
 				btnExportMicrosoftSpeechObjectLibraryInformation = new JButton(
 						toString(append(btnExportMicrosoftSpeechObjectLibraryInformationName, "Information"))),
 				String.format("%1$s,span %2$s", WRAP, 2));
@@ -4590,13 +4593,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panelFile.setBorder(BorderFactory.createTitledBorder("File"));
 		//
-		panelFile.add(tfExportFile = new JTextField(), String.format(WMIN_ONLY_FORMAT, 300));
+		add(panelFile, tfExportFile = new JTextField(), String.format(WMIN_ONLY_FORMAT, 300));
 		//
-		panelFile.add(btnExportCopy = new JButton("Copy"));
+		add(panelFile, btnExportCopy = new JButton("Copy"));
 		//
-		panelFile.add(btnExportBrowse = new JButton("Browse"));
+		add(panelFile, btnExportBrowse = new JButton("Browse"));
 		//
-		panel.add(panelFile, String.format(SPAN_ONLY_FORMAT, 2));
+		add(panel, panelFile, String.format(SPAN_ONLY_FORMAT, 2));
 		//
 		setEditable(false, tfDllPath, tfExportFile);
 		//
