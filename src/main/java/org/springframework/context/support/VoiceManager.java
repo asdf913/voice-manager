@@ -12180,7 +12180,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		}
 
 		@Nullable
-		private static <T, A> A[] toArray(@Nullable final Stream<T> instance, final IntFunction<A[]> generator) {
+		private static <T, A> A[] toArray(@Nullable final Stream<T> instance,
+				@Nullable final IntFunction<A[]> generator) {
 			//
 			return instance != null && (generator != null || Proxy.isProxyClass(VoiceManager.getClass(instance)))
 					? instance.toArray(generator)
@@ -13066,7 +13067,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@Nullable
-	private static <T> Stream<T> sorted(@Nullable final Stream<T> instance, final Comparator<? super T> comparator) {
+	private static <T> Stream<T> sorted(@Nullable final Stream<T> instance,
+			@Nullable final Comparator<? super T> comparator) {
 		//
 		return instance != null && (comparator != null || Proxy.isProxyClass(getClass(instance)))
 				? instance.sorted(comparator)
