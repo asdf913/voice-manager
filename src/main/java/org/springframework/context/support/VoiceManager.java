@@ -13936,7 +13936,29 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	private static boolean matches(@Nullable final Matcher instance) {
-		return instance != null && instance.matches();
+		//
+		if (instance == null) {
+			//
+			return false;
+			//
+		} // if
+			//
+		try {
+			//
+			if (Narcissus.getObjectField(instance, Matcher.class.getDeclaredField("groups")) == null) {
+				//
+				return false;
+				//
+			} // if
+				//
+		} catch (final NoSuchFieldException e) {
+			//
+			LoggerUtil.error(LOG, e.getMessage(), e);
+			//
+		} // try
+			//
+		return instance.matches();
+		//
 	}
 
 	@Nullable
