@@ -13067,7 +13067,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	@Nullable
 	private static <T> Stream<T> sorted(@Nullable final Stream<T> instance, final Comparator<? super T> comparator) {
-		return instance != null ? instance.sorted(comparator) : null;
+		//
+		return instance != null && (comparator != null || Proxy.isProxyClass(getClass(instance)))
+				? instance.sorted(comparator)
+				: instance;
+		//
 	}
 
 	@Nullable
