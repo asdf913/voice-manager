@@ -159,6 +159,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.function.FailableBiConsumer;
 import org.apache.commons.lang3.function.FailableBiFunction;
 import org.apache.commons.lang3.function.FailableConsumer;
@@ -8345,6 +8346,10 @@ class VoiceManagerTest {
 		final RuntimeException runtimeException = new RuntimeException();
 		//
 		Assertions.assertSame(runtimeException, toRuntimeException(runtimeException));
+		//
+		final Throwable throwable = new Throwable();
+		//
+		Assertions.assertSame(throwable, ExceptionUtils.getRootCause(toRuntimeException(throwable)));
 		//
 	}
 
