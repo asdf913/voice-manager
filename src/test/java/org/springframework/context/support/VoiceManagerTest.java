@@ -10731,6 +10731,8 @@ class VoiceManagerTest {
 			//
 		Assertions.assertNull(invoke(removeChild, null, node, null));
 		//
+		Assertions.assertNull(invoke(removeChild, null, null, null));
+		//
 		// org.springframework.context.support.VoiceManager$ExportTask.newTransformer(javax.xml.transform.TransformerFactory)
 		//
 		final Method newTransformer = CLASS_EXPORT_TASK != null
@@ -10759,8 +10761,6 @@ class VoiceManagerTest {
 			//
 		Assertions.assertNull(invoke(transform, null, null, null, null));
 		//
-		Assertions.assertNull(invoke(newTransformer, null, (Object) null));
-		//
 		// org.springframework.context.support.VoiceManager$ExportTask.cloneNode(org.w3c.dom.Node,boolean)
 		//
 		final Method cloneNode = CLASS_EXPORT_TASK != null
@@ -10774,6 +10774,8 @@ class VoiceManagerTest {
 		} // if
 			//
 		Assertions.assertNull(invoke(cloneNode, null, node, true));
+		//
+		Assertions.assertNull(invoke(cloneNode, null, null, true));
 		//
 		// org.springframework.context.support.VoiceManager$ExportTask.replaceText(javax.xml.xpath.XPath,org.w3c.dom.Node,domain.Voice)
 		//
