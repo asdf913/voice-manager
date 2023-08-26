@@ -998,9 +998,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			final Method m = testAndApply(x -> size == 1, ms, x -> IterableUtils.get(x, 0), null);
 			//
+			setAccessible(m, true);
+			//
 			if (m != null) {
-				//
-				m.setAccessible(true);
 				//
 				final boolean headless = GraphicsEnvironment.isHeadless();
 				//
@@ -1090,6 +1090,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						Collections.singletonMap(VALUE, "romaji"))),
 				x -> cast(Map.class, BeanFactoryUtil.getBean(configurableListableBeanFactory, x))));
 		//
+	}
+
+	private static void setAccessible(final AccessibleObject instance, final boolean flag) {
+		if (instance != null) {
+			instance.setAccessible(flag);
+		}
 	}
 
 	@Nullable
@@ -3363,12 +3369,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			final Field lowerBound = getDeclaredField(Range.class, "lowerBound");
 			//
-			if (lowerBound != null) {
-				//
-				lowerBound.setAccessible(true);
-				//
-			} // if
-				//
+			setAccessible(lowerBound, true);
+			//
 			if (get(lowerBound, instance) == null) {
 				//
 				return null;
@@ -10288,7 +10290,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				} else if (IntMap.containsKey(intMap, columnIndex = cell.getColumnIndex())
 						&& (f = IntMap.getObject(intMap, columnIndex)) != null) {
 					//
-					f.setAccessible(true);
+					setAccessible(f, true);
 					//
 					ObjectMap.setObject(objectMap, Field.class, f);
 					//
@@ -13420,7 +13422,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				continue;
 			} // if
 				//
-			f.setAccessible(true);
+			setAccessible(f, true);
 			//
 			ObjectMap.setObject(objectMap, Field.class, f);
 			//
@@ -13796,12 +13798,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			final Field mapperRegistry = Configuration.class.getDeclaredField("mapperRegistry");
 			//
-			if (mapperRegistry != null) {
-				//
-				mapperRegistry.setAccessible(true);
-				//
-			} // if
-				//
+			setAccessible(mapperRegistry, true);
+			//
 			if (get(mapperRegistry, instance) == null) {
 				//
 				return null;
