@@ -3086,64 +3086,66 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static void addSpeedButtons(final VoiceManager instance, final Container container,
 			final Range<Integer> range) {
 		//
-		if (hasLowerBound(range) && hasUpperBound(range) && lowerEndpoint(range) != null
-				&& upperEndpoint(range) != null) {
+		if (!(hasLowerBound(range) && hasUpperBound(range) && lowerEndpoint(range) != null
+				&& upperEndpoint(range) != null)) {
 			//
-			add(container, new JLabel(SPEECH_RATE), "aligny top");
+			return;
 			//
-			final JSlider jsSpeechRate = instance != null
-					? instance.jsSpeechRate = new JSlider(intValue(lowerEndpoint(range), 0),
-							intValue(upperEndpoint(range), 0))
-					: null;
+		} // if
 			//
-			add(container, jsSpeechRate, String.format("%1$s,span %2$s", GROWX, 7));
+		add(container, new JLabel(SPEECH_RATE), "aligny top");
+		//
+		final JSlider jsSpeechRate = instance != null
+				? instance.jsSpeechRate = new JSlider(intValue(lowerEndpoint(range), 0),
+						intValue(upperEndpoint(range), 0))
+				: null;
+		//
+		add(container, jsSpeechRate, String.format("%1$s,span %2$s", GROWX, 7));
+		//
+		setMajorTickSpacing(jsSpeechRate, 1);
+		//
+		setPaintTicks(jsSpeechRate, true);
+		//
+		setPaintLabels(jsSpeechRate, true);
+		//
+		final JTextComponent tfSpeechRate = instance != null ? instance.tfSpeechRate = new JTextField() : null;
+		//
+		add(container, tfSpeechRate, String.format("%1$s,width %2$s", WRAP, 24));
+		//
+		setEditable(false, tfSpeechRate);
+		//
+		setValue(jsSpeechRate,
+				PropertyResolverUtil.getProperty(instance != null ? instance.propertyResolver : null,
+						"org.springframework.context.support.VoiceManager.speechRate"),
+				a -> instance.stateChanged(new ChangeEvent(a)));
+		//
+		add(container, new JLabel(""));
+		//
+		final AbstractButton btnSpeechRateSlower = instance != null
+				? instance.btnSpeechRateSlower = new JButton("Slower")
+				: null;
+		//
+		add(container, btnSpeechRateSlower);
+		//
+		final AbstractButton btnSpeechRateNormal = instance != null
+				? instance.btnSpeechRateNormal = new JButton("Normal")
+				: null;
+		//
+		add(container, btnSpeechRateNormal);
+		//
+		final AbstractButton btnSpeechRateFaster = instance != null
+				? instance.btnSpeechRateFaster = new JButton("Faster")
+				: null;
+		//
+		add(container, btnSpeechRateFaster, WRAP);
+		//
+		final Double maxWidth = ObjectUtils.max(getPreferredWidth(btnSpeechRateSlower),
+				getPreferredWidth(btnSpeechRateNormal), getPreferredWidth(btnSpeechRateFaster));
+		//
+		if (maxWidth != null) {
 			//
-			setMajorTickSpacing(jsSpeechRate, 1);
+			setPreferredWidth(maxWidth.intValue(), btnSpeechRateSlower, btnSpeechRateNormal, btnSpeechRateFaster);
 			//
-			setPaintTicks(jsSpeechRate, true);
-			//
-			setPaintLabels(jsSpeechRate, true);
-			//
-			final JTextComponent tfSpeechRate = instance != null ? instance.tfSpeechRate = new JTextField() : null;
-			//
-			add(container, tfSpeechRate, String.format("%1$s,width %2$s", WRAP, 24));
-			//
-			setEditable(false, tfSpeechRate);
-			//
-			setValue(jsSpeechRate,
-					PropertyResolverUtil.getProperty(instance != null ? instance.propertyResolver : null,
-							"org.springframework.context.support.VoiceManager.speechRate"),
-					a -> instance.stateChanged(new ChangeEvent(a)));
-			//
-			add(container, new JLabel(""));
-			//
-			final AbstractButton btnSpeechRateSlower = instance != null
-					? instance.btnSpeechRateSlower = new JButton("Slower")
-					: null;
-			//
-			add(container, btnSpeechRateSlower);
-			//
-			final AbstractButton btnSpeechRateNormal = instance != null
-					? instance.btnSpeechRateNormal = new JButton("Normal")
-					: null;
-			//
-			add(container, btnSpeechRateNormal);
-			//
-			final AbstractButton btnSpeechRateFaster = instance != null
-					? instance.btnSpeechRateFaster = new JButton("Faster")
-					: null;
-			//
-			add(container, btnSpeechRateFaster, WRAP);
-			//
-			final Double maxWidth = ObjectUtils.max(getPreferredWidth(btnSpeechRateSlower),
-					getPreferredWidth(btnSpeechRateNormal), getPreferredWidth(btnSpeechRateFaster));
-			//
-			if (maxWidth != null) {
-				//
-				setPreferredWidth(maxWidth.intValue(), btnSpeechRateSlower, btnSpeechRateNormal, btnSpeechRateFaster);
-				//
-			} // if
-				//
 		} // if
 			//
 	}
