@@ -292,8 +292,8 @@ class VoiceManagerTest {
 			METHOD_GET_PREFERRED_WIDTH, METHOD_IMPORT_VOICE1, METHOD_IMPORT_VOICE_OBJECT_MAP_BI_CONSUMER,
 			METHOD_IMPORT_VOICE_OBJECT_MAP_FILE, METHOD_IMPORT_VOICE5, METHOD_IMPORT_VOICE_BY_SPEECH_API,
 			METHOD_IMPORT_VOICE_BY_ONLINE_NHK_JAPANESE_PRONUNCIATIONS_ACCENT_FAILABLE_FUNCTION, METHOD_ADD_COLLECTION,
-			METHOD_ADD_LIST, METHOD_CREATE_IMPORT_FILE_TEMPLATE_BYTE_ARRAY, METHOD_ANY_MATCH, METHOD_COLLECT,
-			METHOD_NAME, METHOD_GET_SELECTED_ITEM, METHOD_MATCHER, METHOD_SET_VALUE_J_PROGRESS_BAR,
+			METHOD_ADD_CONTAINER, METHOD_ADD_LIST, METHOD_CREATE_IMPORT_FILE_TEMPLATE_BYTE_ARRAY, METHOD_ANY_MATCH,
+			METHOD_COLLECT, METHOD_NAME, METHOD_GET_SELECTED_ITEM, METHOD_MATCHER, METHOD_SET_VALUE_J_PROGRESS_BAR,
 			METHOD_SET_VALUE_J_SLIDER, METHOD_SET_STRING_J_PROGRESS_BAR, METHOD_SET_STRING_COMMENT,
 			METHOD_SET_TOOL_TIP_TEXT, METHOD_FORMAT, METHOD_CONTAINS_KEY_MAP, METHOD_CONTAINS_KEY_MULTI_MAP,
 			METHOD_VALUE_OF1, METHOD_VALUE_OF2, METHOD_GET_CLASS, METHOD_CREATE_RANGE, METHOD_GET_PROVIDER_NAME,
@@ -360,7 +360,7 @@ class VoiceManagerTest {
 			METHOD_SET_AUTO_FILTER, METHOD_CREATE_BYTE_ARRAY, METHOD_DOUBLE_VALUE, METHOD_GET_ELEMENT_AT,
 			METHOD_GET_IMAGE_FORMAT, METHOD_GET_I_VALUE0_FROM_MAPS_BY_KEY, METHOD_IS_ALL_CHARACTERS_ALLOWED,
 			METHOD_GET_VALUE_COLLECTION_BY_KEY, METHOD_CREATE_YOMI_NAME_MAP0, METHOD_CREATE_YOMI_NAME_MAP1,
-			METHOD_GET_NUMBER = null;
+			METHOD_GET_NUMBER, METHOD_GET_RENDERER, METHOD_SET_RENDERER = null;
 
 	@BeforeAll
 	static void beforeAll() throws Throwable {
@@ -491,6 +491,8 @@ class VoiceManagerTest {
 				.setAccessible(true);
 		//
 		(METHOD_ADD_COLLECTION = clz.getDeclaredMethod("add", Collection.class, Object.class)).setAccessible(true);
+		//
+		(METHOD_ADD_CONTAINER = clz.getDeclaredMethod("add", Container.class, Component.class)).setAccessible(true);
 		//
 		(METHOD_ADD_LIST = clz.getDeclaredMethod("add", List.class, Integer.TYPE, Object.class)).setAccessible(true);
 		//
@@ -1077,6 +1079,11 @@ class VoiceManagerTest {
 		(METHOD_CREATE_YOMI_NAME_MAP1 = clz.getDeclaredMethod("createYomiNameMap", Iterable.class)).setAccessible(true);
 		//
 		(METHOD_GET_NUMBER = clz.getDeclaredMethod("getNumber", Object.class, Iterable.class)).setAccessible(true);
+		//
+		(METHOD_GET_RENDERER = clz.getDeclaredMethod("getRenderer", JComboBox.class)).setAccessible(true);
+		//
+		(METHOD_SET_RENDERER = clz.getDeclaredMethod("setRenderer", JComboBox.class, ListCellRenderer.class))
+				.setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -4726,7 +4733,12 @@ class VoiceManagerTest {
 	@Test
 	void testAdd() {
 		//
-		Assertions.assertDoesNotThrow(() -> add(null, null));
+		Assertions.assertDoesNotThrow(() -> add((Collection<?>) null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> add((Container) null, null));
+		//
+		Assertions.assertDoesNotThrow(
+				() -> add(cast(Container.class, Narcissus.allocateInstance(Container.class)), new JTextField()));
 		//
 		Assertions.assertDoesNotThrow(() -> add(null, ZERO, null));
 		//
@@ -4735,6 +4747,14 @@ class VoiceManagerTest {
 	private static <E> void add(final Collection<E> items, final E item) throws Throwable {
 		try {
 			METHOD_ADD_COLLECTION.invoke(null, items, item);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static void add(final Container instance, final Component comp) throws Throwable {
+		try {
+			METHOD_ADD_CONTAINER.invoke(null, instance, comp);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -10068,15 +10088,53 @@ class VoiceManagerTest {
 		//
 	}
 
-	private static IValue0<Number> getNumber(final Object instnace, final Iterable<Field> fs) throws Throwable {
+	private static IValue0<Number> getNumber(final Object instance, final Iterable<Field> fs) throws Throwable {
 		try {
-			final Object obj = METHOD_GET_NUMBER.invoke(null, instnace, fs);
+			final Object obj = METHOD_GET_NUMBER.invoke(null, instance, fs);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof IValue0) {
 				return (IValue0) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetRenderer() throws Throwable {
+		//
+		Assertions.assertNull(getRenderer(cast(JComboBox.class, Narcissus.allocateInstance(JComboBox.class))));
+		//
+	}
+
+	private static <E> ListCellRenderer<? super E> getRenderer(final JComboBox<E> instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_RENDERER.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof ListCellRenderer) {
+				return (ListCellRenderer) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetRenderer() {
+		//
+		Assertions.assertDoesNotThrow(
+				() -> setRenderer(cast(JComboBox.class, Narcissus.allocateInstance(JComboBox.class)), null));
+		//
+	}
+
+	private static <E> void setRenderer(final JComboBox<E> instance, final ListCellRenderer<? super E> aRenderer)
+			throws Throwable {
+		try {
+			METHOD_SET_RENDERER.invoke(null, instance, aRenderer);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
