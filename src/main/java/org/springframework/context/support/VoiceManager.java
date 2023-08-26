@@ -9341,7 +9341,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static ID3v1 getId3v1Tag(final Mp3File instance) {
+	private static ID3v1 getId3v1Tag(@Nullable final Mp3File instance) {
 		return instance != null ? instance.getId3v1Tag() : null;
 	}
 
