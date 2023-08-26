@@ -98,6 +98,7 @@ import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import javax.annotation.Nullable;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sql.DataSource;
@@ -3620,6 +3621,9 @@ class VoiceManagerTest {
 	void testGetMapper() throws Throwable {
 		//
 		Assertions.assertNull(getMapper(null, null, null));
+		//
+		Assertions.assertNull(
+				getMapper(cast(Configuration.class, Narcissus.allocateInstance(Configuration.class)), null, null));
 		//
 		final Configuration configuration = new Configuration();
 		//

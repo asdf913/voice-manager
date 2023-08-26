@@ -13785,7 +13785,37 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Nullable
 	private static <T> T getMapper(@Nullable final Configuration instance, final Class<T> type,
 			@Nullable final SqlSession sqlSession) {
-		return instance != null ? instance.getMapper(type, sqlSession) : null;
+		//
+		if (instance == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		try {
+			//
+			final Field mapperRegistry = Configuration.class.getDeclaredField("mapperRegistry");
+			//
+			if (mapperRegistry != null) {
+				//
+				mapperRegistry.setAccessible(true);
+				//
+			} // if
+				//
+			if (get(mapperRegistry, instance) == null) {
+				//
+				return null;
+				//
+			} // if
+				//
+		} catch (final NoSuchFieldException | IllegalAccessException e) {
+			//
+			LoggerUtil.error(LOG, e.getMessage(), e);
+			//
+		} // try
+			//
+		return instance.getMapper(type, sqlSession);
+		//
 	}
 
 	@Nullable
