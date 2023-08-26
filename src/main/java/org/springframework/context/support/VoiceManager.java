@@ -3083,7 +3083,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		}
 	}
 
-	private static void addSpeedButtons(final VoiceManager instance, final Container container,
+	private static void addSpeedButtons(@Nullable final VoiceManager instance, final Container container,
 			final Range<Integer> range) {
 		//
 		if (!(hasLowerBound(range) && hasUpperBound(range) && lowerEndpoint(range) != null
