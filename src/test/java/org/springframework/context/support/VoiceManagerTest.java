@@ -99,6 +99,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
 import javax.sql.DataSource;
 import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
@@ -11315,6 +11316,18 @@ class VoiceManagerTest {
 						invoke(clz != null ? clz.getDeclaredMethod("createStreamConfiguration", AudioFormat.class)
 								: null, null, new AudioFormat(ZERO, ONE, TWO, true, false)),
 						ToStringStyle.SHORT_PREFIX_STYLE));
+		//
+		// org.springframework.context.support.VoiceManager.AudioToFlacByteConverter.getFormat(javax.sound.sampled.AudioInputStream)
+		//
+		final Method getFormat = clz != null ? clz.getDeclaredMethod("getFormat", AudioInputStream.class) : null;
+		//
+		if (getFormat != null) {
+			//
+			getFormat.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertNull(invoke(getFormat, null, Narcissus.allocateInstance(AudioInputStream.class)));
 		//
 	}
 
