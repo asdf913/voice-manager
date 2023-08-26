@@ -3677,7 +3677,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		// Set height
 		//
-		final Dimension pd = jcbPronunciation.getPreferredSize();
+		final Dimension pd = getPreferredSize(jcbPronunciation);
 		//
 		if (pd != null) {
 			//
