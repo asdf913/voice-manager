@@ -3111,7 +3111,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.getRenderer() : null;
 	}
 
-	private static <E> void setRenderer(final JComboBox<E> instance, final ListCellRenderer<? super E> aRenderer) {
+	private static <E> void setRenderer(@Nullable final JComboBox<E> instance,
+			final ListCellRenderer<? super E> aRenderer) {
 		//
 		if (instance == null) {
 			//
