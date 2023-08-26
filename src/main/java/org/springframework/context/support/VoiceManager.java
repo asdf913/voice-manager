@@ -3210,7 +3210,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	private static void add(@Nullable final Container instance, final Component comp,
+	private static void add(@Nullable final Container instance, @Nullable final Component comp,
 			@Nullable final Object constraints) {
 		//
 		if (instance == null) {
