@@ -1092,7 +1092,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static void setAccessible(final AccessibleObject instance, final boolean flag) {
+	private static void setAccessible(@Nullable final AccessibleObject instance, final boolean flag) {
 		if (instance != null) {
 			instance.setAccessible(flag);
 		}
