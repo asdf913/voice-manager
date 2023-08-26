@@ -12181,7 +12181,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 		@Nullable
 		private static <T, A> A[] toArray(@Nullable final Stream<T> instance, final IntFunction<A[]> generator) {
-			return instance != null ? instance.toArray(generator) : null;
+			//
+			return instance != null && (generator != null || Proxy.isProxyClass(VoiceManager.getClass(instance)))
+					? instance.toArray(generator)
+					: null;
+			//
 		}
 
 		private static void replaceText(final ObjectMap objectMap, @Nullable final String messageDigestAlgorithm)

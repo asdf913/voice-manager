@@ -80,6 +80,7 @@ import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntConsumer;
+import java.util.function.IntFunction;
 import java.util.function.IntUnaryOperator;
 import java.util.function.LongBinaryOperator;
 import java.util.function.Predicate;
@@ -97,7 +98,6 @@ import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import javax.annotation.Nullable;
 import javax.sound.sampled.AudioFormat;
 import javax.sql.DataSource;
 import javax.swing.AbstractButton;
@@ -306,25 +306,25 @@ class VoiceManagerTest {
 			METHOD_SET_HIRAGANA_OR_KATAKANA, METHOD_SET_ROMAJI, METHOD_AND, METHOD_OR, METHOD_CLEAR_DEFAULT_TABLE_MODEL,
 			METHOD_CLEAR_STRING_BUILDER, METHOD_EXECUTE, METHOD_PUT_MAP, METHOD_GET_BYTE_CONVERTER,
 			METHOD_CONTAINS_CUSTOM_PROPERTIES, METHOD_CONTAINS_COLLECTION, METHOD_CONTAINS_LOOKUP, METHOD_GET_LPW_STR,
-			METHOD_GET_SHEET_NAME, METHOD_ACCEPT, METHOD_TO_ARRAY_COLLECTION, METHOD_TO_ARRAY_STREAM, METHOD_TO_LIST,
-			METHOD_GET_ID, METHOD_SET_MAXIMUM, METHOD_GET_CURRENT_SHEET_INDEX, METHOD_GET_DATA_VALIDATION_HELPER,
-			METHOD_CREATE_EXPLICIT_LIST_CONSTRAINT, METHOD_CREATE_VALIDATION, METHOD_CREATE_EXPORT_TASK,
-			METHOD_GET_TAB_INDEX_BY_TITLE, METHOD_GET_DECLARED_FIELD, METHOD_GET_ABSOLUTE_PATH,
-			METHOD_IS_ASSIGNABLE_FROM, METHOD_GET_ENUM_CONSTANTS, METHOD_LIST_FILES, METHOD_GET_TYPE,
-			METHOD_GET_COLUMN_NAME, METHOD_PUT_ALL_MAP, METHOD_GET_WORK_BOOK, METHOD_GET_OLE_ENTRY_NAMES,
-			METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE, METHOD_GET_DOCUMENT_ELEMENT, METHOD_GET_CHILD_NODES,
-			METHOD_GET_NAMED_ITEM, METHOD_GET_TEXT_CONTENT, METHOD_GET_NAME_FILE, METHOD_GET_NAME_CLASS,
-			METHOD_GET_NAME_PACKAGE, METHOD_GET_PASS_WORD, METHOD_GET_SUPPLIER, METHOD_GET_LOOKUP, METHOD_GET_LIST,
-			METHOD_GET_MAP, METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK, METHOD_CREATE_DRAWING_PATRIARCH,
-			METHOD_CREATE_CELL_COMMENT, METHOD_CREATE_CLIENT_ANCHOR, METHOD_CREATE_RICH_TEXT_STRING,
-			METHOD_SET_CELL_COMMENT, METHOD_SET_AUTHOR, METHOD_TEST_AND_ACCEPT_PREDICATE,
-			METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_FIND_FIELDS_BY_VALUE, METHOD_GET_DECLARED_FIELDS,
-			METHOD_GET_DECLARING_CLASS, METHOD_GET_PACKAGE, METHOD_BROWSE, METHOD_TO_URI, METHOD_STOP, METHOD_ELAPSED,
-			METHOD_GET_DECLARED_CLASSES, METHOD_GET_DLL_PATH, METHOD_GET_RATE0, METHOD_GET_RATE_VOICE_MANAGER,
-			METHOD_GET_RATE_FIELD_LIST, METHOD_ADD_CHANGE_LISTENER, METHOD_IS_ANNOTATION_PRESENT,
-			METHOD_ENCODE_TO_STRING, METHOD_GET_VOICE_MULTI_MAP_BY_LIST_NAME, METHOD_GET_VOICE_MULTI_MAP_BY_JLPT,
-			METHOD_GET_FILE_EXTENSIONS, METHOD_REDUCE, METHOD_APPEND_STRING, METHOD_APPEND_CHAR,
-			METHOD_GET_PROVIDER_PLATFORM, METHOD_GET_RESOURCE_AS_STREAM,
+			METHOD_GET_SHEET_NAME, METHOD_ACCEPT, METHOD_TO_ARRAY_COLLECTION, METHOD_TO_ARRAY_STREAM1,
+			METHOD_TO_ARRAY_STREAM2, METHOD_TO_LIST, METHOD_GET_ID, METHOD_SET_MAXIMUM, METHOD_GET_CURRENT_SHEET_INDEX,
+			METHOD_GET_DATA_VALIDATION_HELPER, METHOD_CREATE_EXPLICIT_LIST_CONSTRAINT, METHOD_CREATE_VALIDATION,
+			METHOD_CREATE_EXPORT_TASK, METHOD_GET_TAB_INDEX_BY_TITLE, METHOD_GET_DECLARED_FIELD,
+			METHOD_GET_ABSOLUTE_PATH, METHOD_IS_ASSIGNABLE_FROM, METHOD_GET_ENUM_CONSTANTS, METHOD_LIST_FILES,
+			METHOD_GET_TYPE, METHOD_GET_COLUMN_NAME, METHOD_PUT_ALL_MAP, METHOD_GET_WORK_BOOK,
+			METHOD_GET_OLE_ENTRY_NAMES, METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE, METHOD_GET_DOCUMENT_ELEMENT,
+			METHOD_GET_CHILD_NODES, METHOD_GET_NAMED_ITEM, METHOD_GET_TEXT_CONTENT, METHOD_GET_NAME_FILE,
+			METHOD_GET_NAME_CLASS, METHOD_GET_NAME_PACKAGE, METHOD_GET_PASS_WORD, METHOD_GET_SUPPLIER,
+			METHOD_GET_LOOKUP, METHOD_GET_LIST, METHOD_GET_MAP, METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK,
+			METHOD_CREATE_DRAWING_PATRIARCH, METHOD_CREATE_CELL_COMMENT, METHOD_CREATE_CLIENT_ANCHOR,
+			METHOD_CREATE_RICH_TEXT_STRING, METHOD_SET_CELL_COMMENT, METHOD_SET_AUTHOR,
+			METHOD_TEST_AND_ACCEPT_PREDICATE, METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_FIND_FIELDS_BY_VALUE,
+			METHOD_GET_DECLARED_FIELDS, METHOD_GET_DECLARING_CLASS, METHOD_GET_PACKAGE, METHOD_BROWSE, METHOD_TO_URI,
+			METHOD_STOP, METHOD_ELAPSED, METHOD_GET_DECLARED_CLASSES, METHOD_GET_DLL_PATH, METHOD_GET_RATE0,
+			METHOD_GET_RATE_VOICE_MANAGER, METHOD_GET_RATE_FIELD_LIST, METHOD_ADD_CHANGE_LISTENER,
+			METHOD_IS_ANNOTATION_PRESENT, METHOD_ENCODE_TO_STRING, METHOD_GET_VOICE_MULTI_MAP_BY_LIST_NAME,
+			METHOD_GET_VOICE_MULTI_MAP_BY_JLPT, METHOD_GET_FILE_EXTENSIONS, METHOD_REDUCE, METHOD_APPEND_STRING,
+			METHOD_APPEND_CHAR, METHOD_GET_PROVIDER_PLATFORM, METHOD_GET_RESOURCE_AS_STREAM,
 			METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH_METHOD,
 			METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH_INSTRUCTION_ARRAY, METHOD_GET_ATTRIBUTES, METHOD_GET_LENGTH,
 			METHOD_ITEM, METHOD_GET_OS_VERSION_INFO_EX_MAP, METHOD_CREATE_JLPT_SHEET,
@@ -617,7 +617,7 @@ class VoiceManagerTest {
 		(METHOD_TO_ARRAY_COLLECTION = clz.getDeclaredMethod("toArray", Collection.class, Object[].class))
 				.setAccessible(true);
 		//
-		(METHOD_TO_ARRAY_STREAM = clz.getDeclaredMethod("toArray", Stream.class)).setAccessible(true);
+		(METHOD_TO_ARRAY_STREAM1 = clz.getDeclaredMethod("toArray", Stream.class)).setAccessible(true);
 		//
 		(METHOD_TO_LIST = clz.getDeclaredMethod("toList", Stream.class)).setAccessible(true);
 		//
@@ -1109,7 +1109,9 @@ class VoiceManagerTest {
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
-		CLASS_EXPORT_TASK = Class.forName("org.springframework.context.support.VoiceManager$ExportTask");
+		(METHOD_TO_ARRAY_STREAM2 = (CLASS_EXPORT_TASK = Class
+				.forName("org.springframework.context.support.VoiceManager$ExportTask"))
+				.getDeclaredMethod("toArray", Stream.class, IntFunction.class)).setAccessible(true);
 		//
 		CLASS_IMPORT_TASK = Class.forName("org.springframework.context.support.VoiceManager$ImportTask");
 		//
@@ -1399,6 +1401,10 @@ class VoiceManagerTest {
 				} else if (Objects.equals(methodName, "mapToLong")) {
 					//
 					return longStream;
+					//
+				} else if (Objects.equals(methodName, "toArray")) {
+					//
+					return null;
 					//
 				} // if
 					//
@@ -5885,7 +5891,17 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(toArray(null));
 		//
-		Assertions.assertNull(toArray(null, null));
+		Assertions.assertNull(toArray((Collection<?>) null, null));
+		//
+		Assertions.assertNull(toArray((Stream<?>) null, null));
+		//
+		final Stream<?> empty = Stream.empty();
+		//
+		Assertions.assertNull(toArray(empty, null));
+		//
+		Assertions.assertThrows(NullPointerException.class, () -> toArray(empty, x -> null));
+		//
+		Assertions.assertNull(toArray(stream, null));
 		//
 		Assertions.assertNull(toArray(Collections.emptyList(), null));
 		//
@@ -5903,13 +5919,21 @@ class VoiceManagerTest {
 
 	private static Object[] toArray(final Stream<?> instance) throws Throwable {
 		try {
-			final Object obj = METHOD_TO_ARRAY_STREAM.invoke(null, instance);
+			final Object obj = METHOD_TO_ARRAY_STREAM1.invoke(null, instance);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Object[]) {
 				return (Object[]) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static <T, A> A[] toArray(final Stream<T> instance, final IntFunction<A[]> generator) throws Throwable {
+		try {
+			return (A[]) METHOD_TO_ARRAY_STREAM2.invoke(null, instance, generator);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
