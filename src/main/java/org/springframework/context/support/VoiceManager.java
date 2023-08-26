@@ -13893,8 +13893,30 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@Nullable
-	private static Matcher matcher(@Nullable final Pattern pattern, @Nullable final CharSequence input) {
-		return pattern != null && input != null ? pattern.matcher(input) : null;
+	private static Matcher matcher(@Nullable final Pattern instance, @Nullable final CharSequence input) {
+		//
+		if (instance == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		try {
+			//
+			if (Narcissus.getObjectField(instance, Pattern.class.getDeclaredField("pattern")) == null) {
+				//
+				return null;
+				//
+			} // if
+				//
+		} catch (final NoSuchFieldException e) {
+			//
+			LoggerUtil.error(LOG, e.getMessage(), e);
+			//
+		} // try
+			//
+		return input != null ? instance.matcher(input) : null;
+		//
 	}
 
 	@Nullable
