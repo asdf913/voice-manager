@@ -3065,19 +3065,19 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static void setMajorTickSpacing(final JSlider instance, final int n) {
+	private static void setMajorTickSpacing(@Nullable final JSlider instance, final int n) {
 		if (instance != null) {
 			instance.setMajorTickSpacing(n);
 		}
 	}
 
-	private static void setPaintTicks(final JSlider instance, final boolean b) {
+	private static void setPaintTicks(@Nullable final JSlider instance, final boolean b) {
 		if (instance != null) {
 			instance.setPaintTicks(b);
 		}
 	}
 
-	private static void setPaintLabels(final JSlider instance, final boolean b) {
+	private static void setPaintLabels(@Nullable final JSlider instance, final boolean b) {
 		if (instance != null) {
 			instance.setPaintLabels(b);
 		}
@@ -3210,7 +3210,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	private static void add(final Container instance, final Component comp, final Object constraints) {
+	private static void add(final Container instance, final Component comp, @Nullable final Object constraints) {
 		//
 		if (instance == null) {
 			//
