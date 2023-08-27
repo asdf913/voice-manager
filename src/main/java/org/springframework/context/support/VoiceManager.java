@@ -11946,7 +11946,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					if ((stopwatch = getIfNull(stopwatch, Stopwatch::createUnstarted)) != null) {
 						//
-						stopwatch.reset();
+						reset(stopwatch);
 						//
 						stopwatch.start();
 						//
@@ -11984,6 +11984,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 			} // for
 				//
+		}
+
+		private static Stopwatch reset(final Stopwatch instance) {
+			return instance != null ? instance.reset() : instance;
 		}
 
 		private static void save(@Nullable final OdfPackageDocument instance, @Nullable final File file)

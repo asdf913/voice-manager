@@ -5092,7 +5092,7 @@ class VoiceManagerTest {
 	@Test
 	void testFormat() throws Throwable {
 		//
-		Assertions.assertEquals(null, format(null, 0d));
+		Assertions.assertNull(format(null, 0d));
 		//
 	}
 
@@ -11315,18 +11315,18 @@ class VoiceManagerTest {
 				? CLASS_EXPORT_TASK.getDeclaredMethod("evaluate", XPath.class, String.class, Object.class, QName.class)
 				: null;
 		//
-		Assertions.assertEquals(null, invoke(evaluate, null, null, null, null, null));
+		Assertions.assertNull(invoke(evaluate, null, null, null, null, null));
 		//
-		Assertions.assertEquals(null, invoke(evaluate, null, Reflection.newProxy(XPath.class, ih), null, null, null));
+		Assertions.assertNull(invoke(evaluate, null, Reflection.newProxy(XPath.class, ih), null, null, null));
 		//
 		// org.springframework.context.support.VoiceManager$ExportTask.getTitle(com.mpatric.mp3agic.ID3v1)
 		//
 		final Method getTitle = CLASS_EXPORT_TASK != null ? CLASS_EXPORT_TASK.getDeclaredMethod("getTitle", ID3v1.class)
 				: null;
 		//
-		Assertions.assertEquals(null, invoke(getTitle, null, (Object) null));
+		Assertions.assertNull(invoke(getTitle, null, (Object) null));
 		//
-		Assertions.assertEquals(null, invoke(getTitle, null, Reflection.newProxy(ID3v1.class, ih)));
+		Assertions.assertNull(invoke(getTitle, null, Reflection.newProxy(ID3v1.class, ih)));
 		//
 		// org.springframework.context.support.VoiceManager$ExportTask.save(com.mpatric.mp3agic.Mp3File,java.lang.String)
 		//
@@ -11334,9 +11334,9 @@ class VoiceManagerTest {
 				? CLASS_EXPORT_TASK.getDeclaredMethod("save", Mp3File.class, String.class)
 				: null;
 		//
-		Assertions.assertEquals(null, invoke(saveMp3File, null, null, null));
+		Assertions.assertNull(invoke(saveMp3File, null, null, null));
 		//
-		Assertions.assertEquals(null, invoke(saveMp3File, null, Narcissus.allocateInstance(Mp3File.class), null));
+		Assertions.assertNull(invoke(saveMp3File, null, Narcissus.allocateInstance(Mp3File.class), null));
 		//
 		// org.springframework.context.support.VoiceManager$ExportTask.save(org.odftoolkit.odfdom.pkg.OdfPackageDocument,java.io.File)
 		//
@@ -11344,10 +11344,24 @@ class VoiceManagerTest {
 				? CLASS_EXPORT_TASK.getDeclaredMethod("save", OdfPackageDocument.class, File.class)
 				: null;
 		//
-		Assertions.assertEquals(null, invoke(saveOdfPackageDocument, null, null, null));
+		Assertions.assertNull(invoke(saveOdfPackageDocument, null, null, null));
 		//
-		Assertions.assertEquals(null,
+		Assertions.assertNull(
 				invoke(saveOdfPackageDocument, null, Narcissus.allocateInstance(OdfPackageDocument.class), null));
+		//
+		// org.springframework.context.support.VoiceManager$ExportTask.reset(com.google.common.base.Stopwatch)
+		//
+		final Method reset = CLASS_EXPORT_TASK != null ? CLASS_EXPORT_TASK.getDeclaredMethod("reset", Stopwatch.class)
+				: null;
+		//
+		Assertions.assertNull(invoke(reset, null, (Object) null));
+		//
+		Stopwatch stopwatch = Stopwatch.createStarted();
+		//
+		Assertions.assertSame(stopwatch, invoke(reset, null, stopwatch));
+		//
+		Assertions.assertSame(stopwatch = cast(Stopwatch.class, Narcissus.allocateInstance(Stopwatch.class)),
+				invoke(reset, null, stopwatch));
 		//
 	}
 
