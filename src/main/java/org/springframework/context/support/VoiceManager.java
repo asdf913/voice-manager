@@ -11986,7 +11986,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		}
 
-		private static void save(final OdfPackageDocument instance, @Nullable final File file) throws Exception {
+		private static void save(@Nullable final OdfPackageDocument instance, @Nullable final File file)
+				throws Exception {
 			//
 			if (instance == null) {
 				//
