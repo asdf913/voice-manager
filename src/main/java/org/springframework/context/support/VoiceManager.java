@@ -11825,7 +11825,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				final ID3v1 id3v1 = ObjectUtils.defaultIfNull(getId3v2Tag(mp3File), getId3v1Tag(mp3File));
 				//
-				final String titleOld = id3v1 != null ? id3v1.getTitle() : null;
+				final String titleOld = getTitle(id3v1);
 				//
 				String titleNew = titleOld;
 				//
@@ -11852,6 +11852,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 			} // if
 				//
+		}
+
+		private static String getTitle(final ID3v1 instance) {
+			return instance != null ? instance.getTitle() : null;
 		}
 
 		private static void generateOdfPresentationDocuments(final ObjectMap om,

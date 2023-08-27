@@ -1156,7 +1156,7 @@ class VoiceManagerTest {
 
 		private Set<Entry<?, ?>> entrySet = null;
 
-		private String toString, stringCellValue, providerName, providerVersion, artist, voiceAttribute, lpwstr,
+		private String toString, stringCellValue, providerName, providerVersion, artist, title, voiceAttribute, lpwstr,
 				sheetName, textContent, nodeName, dllPath, providerPlatform = null;
 
 		private Configuration configuration = null;
@@ -1514,6 +1514,11 @@ class VoiceManagerTest {
 				if (Objects.equals(methodName, "getArtist")) {
 					//
 					return artist;
+					//
+				}
+				if (Objects.equals(methodName, "getTitle")) {
+					//
+					return title;
 					//
 				} // if
 					//
@@ -11312,6 +11317,15 @@ class VoiceManagerTest {
 		Assertions.assertEquals(null, invoke(evaluate, null, null, null, null, null));
 		//
 		Assertions.assertEquals(null, invoke(evaluate, null, Reflection.newProxy(XPath.class, ih), null, null, null));
+		//
+		// org.springframework.context.support.VoiceManager$ExportTask.getTitle(com.mpatric.mp3agic.ID3v1)
+		//
+		final Method getTitle = CLASS_EXPORT_TASK != null ? CLASS_EXPORT_TASK.getDeclaredMethod("getTitle", ID3v1.class)
+				: null;
+		//
+		Assertions.assertEquals(null, invoke(getTitle, null, (Object) null));
+		//
+		Assertions.assertEquals(null, invoke(getTitle, null, Reflection.newProxy(ID3v1.class, ih)));
 		//
 	}
 
