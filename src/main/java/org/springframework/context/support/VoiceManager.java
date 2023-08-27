@@ -4725,7 +4725,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static URL getURL(final HyperlinkEvent instance) {
+	private static URL getURL(@Nullable final HyperlinkEvent instance) {
 		return instance != null ? instance.getURL() : null;
 	}
 
