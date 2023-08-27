@@ -4523,7 +4523,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@Nullable
-	private static <T> Optional<T> reduce(@Nullable final Stream<T> instance, final BinaryOperator<T> accumulator) {
+	private static <T> Optional<T> reduce(@Nullable final Stream<T> instance,
+			@Nullable final BinaryOperator<T> accumulator) {
 		//
 		return instance != null && (accumulator != null || Proxy.isProxyClass(getClass(instance)))
 				? instance.reduce(accumulator)
