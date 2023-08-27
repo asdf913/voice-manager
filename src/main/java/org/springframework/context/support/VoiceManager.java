@@ -11860,7 +11860,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			return instance != null ? instance.getTitle() : null;
 		}
 
-		private static void save(final Mp3File instance, final String newFilename)
+		private static void save(@Nullable final Mp3File instance, final String newFilename)
 				throws IOException, NotSupportedException {
 			//
 			if (instance == null) {
