@@ -4725,7 +4725,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static URI toURI(final URL instance) throws URISyntaxException {
+	private static URI toURI(@Nullable final URL instance) throws URISyntaxException {
 		return instance != null ? instance.toURI() : null;
 	}
 
