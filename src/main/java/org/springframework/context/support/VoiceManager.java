@@ -392,6 +392,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 import j2html.attributes.Attribute;
 import j2html.tags.ContainerTag;
 import j2html.tags.Tag;
+import j2html.tags.TagUtil;
 import j2html.tags.specialized.ATag;
 import j2html.tags.specialized.ATagUtil;
 import javazoom.jl.decoder.JavaLayerException;
@@ -4870,9 +4871,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					} // if
 						//
-					(aTag = new ATag()).withText(textContent);
-					//
-					aTag.attr("href", ElementUtil.attr(element, "href"));
+					TagUtil.attr((aTag = new ATag()).withText(textContent), "href", ElementUtil.attr(element, "href"));
 					//
 				} // for
 					//
