@@ -6199,9 +6199,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		try {
 			//
-			testAndAccept(Objects::nonNull,
-					toURI(testAndApply(Objects::nonNull, getText(tfExportFile), File::new, null)),
-					x -> browse(Desktop.getDesktop(), x));
+			final File file = testAndApply(Objects::nonNull, getText(tfExportFile), File::new, null);
+			//
+			testAndAccept(Objects::nonNull, toURI(file), x -> browse(Desktop.getDesktop(), x));
 			//
 		} catch (final IOException e) {
 			//
