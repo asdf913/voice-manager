@@ -374,7 +374,7 @@ class VoiceManagerTest {
 			METHOD_GET_NUMBER, METHOD_GET_RENDERER, METHOD_SET_RENDERER, METHOD_ADD_SPEED_BUTTONS,
 			METHOD_SET_MAJOR_TICK_SPACING, METHOD_SET_PAINT_TICKS, METHOD_SET_PAINT_LABELS, METHOD_SORTED,
 			METHOD_DISTINCT, METHOD_GET_ID3V1_TAG, METHOD_GET_ID3V2_TAG, METHOD_ADD_VALIDATION_DATA,
-			METHOD_CREATE_IMPORT_RESULT_PANEL = null;
+			METHOD_CREATE_IMPORT_RESULT_PANEL, METHOD_GET_URL = null;
 
 	@BeforeAll
 	static void beforeAll() throws Throwable {
@@ -1136,6 +1136,8 @@ class VoiceManagerTest {
 		//
 		(METHOD_CREATE_IMPORT_RESULT_PANEL = clz.getDeclaredMethod("createImportResultPanel", LayoutManager.class))
 				.setAccessible(true);
+		//
+		(METHOD_GET_URL = clz.getDeclaredMethod("getURL", HyperlinkEvent.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -10541,6 +10543,29 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof JPanel) {
 				return (JPanel) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetURL() throws Throwable {
+		//
+		Assertions.assertNull(getURL(null));
+		//
+		Assertions.assertNull(getURL(cast(HyperlinkEvent.class, Narcissus.allocateInstance(HyperlinkEvent.class))));
+		//
+	}
+
+	private static URL getURL(final HyperlinkEvent instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_URL.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof URL) {
+				return (URL) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

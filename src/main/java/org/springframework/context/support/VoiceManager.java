@@ -4698,7 +4698,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					if (Objects.equals(EventType.ACTIVATED, getEventType(x))) {
 						//
-						browse(Desktop.getDesktop(), x != null ? toURI(x.getURL()) : null);
+						browse(Desktop.getDesktop(), toURI(getURL(x)));
 						//
 					} // if
 						//
@@ -4723,6 +4723,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		return jsp;
 		//
+	}
+
+	private static URL getURL(final HyperlinkEvent instance) {
+		return instance != null ? instance.getURL() : null;
 	}
 
 	@Nullable
