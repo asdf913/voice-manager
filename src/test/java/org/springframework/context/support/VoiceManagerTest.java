@@ -11375,6 +11375,12 @@ class VoiceManagerTest {
 		Assertions.assertSame(stopwatch = cast(Stopwatch.class, Narcissus.allocateInstance(Stopwatch.class)),
 				invoke(start, null, stopwatch));
 		//
+		// org.springframework.context.support.VoiceManager$ExportTask.setTextContent(org.w3c.dom.Node,java.lang.String)
+		//
+		Assertions.assertNull(invoke(CLASS_EXPORT_TASK != null
+				? CLASS_EXPORT_TASK.getDeclaredMethod("setTextContent", Node.class, String.class)
+				: null, null, node, null));
+		//
 	}
 
 	private static void run(final Runnable instance) {

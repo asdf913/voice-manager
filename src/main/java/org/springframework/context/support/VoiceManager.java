@@ -12422,18 +12422,20 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				TemplateUtil.process(ConfigurationUtil.getTemplate(configuration, key), map, writer);
 				//
-				if (node != null) {
-					//
-					node.setTextContent(VoiceManager.toString(writer));
-					//
-				} // if
-					//
+				setTextContent(node, VoiceManager.toString(writer));
+				//
 			} catch (final IOException | TemplateException e) {
 				//
 				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
 				//
 			} // try
 				//
+		}
+
+		private static void setTextContent(final Node instance, final String textContent) throws DOMException {
+			if (instance != null) {
+				instance.setTextContent(textContent);
+			}
 		}
 
 		private static Map<String, Object> describe(final Object data) throws Throwable {
