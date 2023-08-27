@@ -4727,7 +4727,29 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	@Nullable
 	private static URI toURI(@Nullable final URL instance) throws URISyntaxException {
-		return instance != null ? instance.toURI() : null;
+		//
+		if (instance == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		try {
+			//
+			if (Narcissus.getField(instance, URL.class.getDeclaredField("handler")) == null) {
+				//
+				return null;
+				//
+			} // if
+				//
+		} catch (final NoSuchFieldException e) {
+			//
+			LoggerUtil.error(LOG, e.getMessage(), e);
+			//
+		} // try
+			//
+		return instance.toURI();
+		//
 	}
 
 	@Nullable

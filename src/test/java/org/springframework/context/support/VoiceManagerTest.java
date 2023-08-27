@@ -6973,6 +6973,8 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(toURI((URL) null));
 		//
+		Assertions.assertNull(toURI(cast(URL.class, Narcissus.allocateInstance(URL.class))));
+		//
 		final File file = new File("");
 		//
 		Assertions.assertNotNull(toURI(file));
