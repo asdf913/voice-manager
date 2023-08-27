@@ -7943,6 +7943,8 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(length(null));
 		//
+		Assertions.assertNull(length(cast(File.class, Narcissus.allocateInstance(File.class))));
+		//
 	}
 
 	private static Long length(final File instance) throws Throwable {

@@ -1276,7 +1276,29 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	@Nullable
 	private static Long length(@Nullable final File instance) {
-		return instance != null ? Long.valueOf(instance.length()) : null;
+		//
+		if (instance == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		try {
+			//
+			if (Narcissus.getField(instance, getDeclaredField(File.class, "path")) == null) {
+				//
+				return null;
+				//
+			} // if
+				//
+		} catch (final NoSuchFieldException e) {
+			//
+			LoggerUtil.error(LOG, e.getMessage(), e);
+			//
+		} // try
+			//
+		return Long.valueOf(instance.length());
+		//
 	}
 
 	@Nullable
