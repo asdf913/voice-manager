@@ -11985,7 +11985,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			return instance != null ? instance.reset() : instance;
 		}
 
-		private static Stopwatch start(final Stopwatch instance) {
+		private static Stopwatch start(@Nullable final Stopwatch instance) {
 			//
 			if (instance == null) {
 				//
