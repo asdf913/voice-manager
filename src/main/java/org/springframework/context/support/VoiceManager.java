@@ -4722,7 +4722,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static void addHyperlinkListener(final JEditorPane instance, final HyperlinkListener listener) {
+	private static void addHyperlinkListener(@Nullable final JEditorPane instance, final HyperlinkListener listener) {
 		//
 		if (instance == null) {
 			//
