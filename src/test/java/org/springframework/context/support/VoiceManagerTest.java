@@ -373,7 +373,8 @@ class VoiceManagerTest {
 			METHOD_GET_VALUE_COLLECTION_BY_KEY, METHOD_CREATE_YOMI_NAME_MAP0, METHOD_CREATE_YOMI_NAME_MAP1,
 			METHOD_GET_NUMBER, METHOD_GET_RENDERER, METHOD_SET_RENDERER, METHOD_ADD_SPEED_BUTTONS,
 			METHOD_SET_MAJOR_TICK_SPACING, METHOD_SET_PAINT_TICKS, METHOD_SET_PAINT_LABELS, METHOD_SORTED,
-			METHOD_DISTINCT, METHOD_GET_ID3V1_TAG, METHOD_GET_ID3V2_TAG, METHOD_ADD_VALIDATION_DATA = null;
+			METHOD_DISTINCT, METHOD_GET_ID3V1_TAG, METHOD_GET_ID3V2_TAG, METHOD_ADD_VALIDATION_DATA,
+			METHOD_CREATE_IMPORT_RESULT_PANEL = null;
 
 	@BeforeAll
 	static void beforeAll() throws Throwable {
@@ -1129,6 +1130,9 @@ class VoiceManagerTest {
 		(METHOD_GET_ID3V2_TAG = clz.getDeclaredMethod("getId3v2Tag", Mp3File.class)).setAccessible(true);
 		//
 		(METHOD_ADD_VALIDATION_DATA = clz.getDeclaredMethod("addValidationData", Sheet.class, DataValidation.class))
+				.setAccessible(true);
+		//
+		(METHOD_CREATE_IMPORT_RESULT_PANEL = clz.getDeclaredMethod("createImportResultPanel", LayoutManager.class))
 				.setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
@@ -10492,6 +10496,27 @@ class VoiceManagerTest {
 	private static void addValidationData(final Sheet instance, final DataValidation dataValidation) throws Throwable {
 		try {
 			METHOD_ADD_VALIDATION_DATA.invoke(null, instance, dataValidation);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCreateImportResultPanel() throws Throwable {
+		//
+		Assertions.assertNotNull(createImportResultPanel(null));
+		//
+	}
+
+	private JPanel createImportResultPanel(final LayoutManager layoutManager) throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_IMPORT_RESULT_PANEL.invoke(instance, layoutManager);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof JPanel) {
+				return (JPanel) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
