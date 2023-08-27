@@ -168,6 +168,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
 import javax.swing.event.HyperlinkEvent.EventType;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.JTextComponent;
@@ -4690,28 +4691,24 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // try
 			//
-		if (jep != null) {
+		addHyperlinkListener(jep, x -> {
 			//
-			jep.addHyperlinkListener(x -> {
+			try {
 				//
-				try {
+				if (Objects.equals(EventType.ACTIVATED, getEventType(x))) {
 					//
-					if (Objects.equals(EventType.ACTIVATED, getEventType(x))) {
-						//
-						browse(Desktop.getDesktop(), toURI(getURL(x)));
-						//
-					} // if
-						//
-				} catch (final IOException | URISyntaxException e) {
+					browse(Desktop.getDesktop(), toURI(getURL(x)));
 					//
-					TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
+				} // if
 					//
-				} // try
-					//
-			});
-			//
-		} // if
-			//
+			} catch (final IOException | URISyntaxException e) {
+				//
+				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
+				//
+			} // try
+				//
+		});
+		//
 		final JScrollPane jsp = new JScrollPane(jep);
 		//
 		jsp.setPreferredSize(new Dimension(intValue(getPreferredWidth(jsp), 0),
@@ -4722,6 +4719,32 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		add(jPanel, jsp);
 		//
 		return jsp;
+		//
+	}
+
+	private static void addHyperlinkListener(final JEditorPane instance, final HyperlinkListener listener) {
+		//
+		if (instance == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		try {
+			//
+			if (Narcissus.getObjectField(instance, JComponent.class.getDeclaredField("listenerList")) == null) {
+				//
+				return;
+				//
+			} // if
+				//
+		} catch (final NoSuchFieldException e) {
+			//
+			LoggerUtil.error(LOG, e.getMessage(), e);
+			//
+		} // try
+			//
+		instance.addHyperlinkListener(listener);
 		//
 	}
 

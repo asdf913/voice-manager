@@ -109,6 +109,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -124,6 +125,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
 import javax.swing.event.HyperlinkEvent.EventType;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.JTextComponent;
@@ -374,7 +376,7 @@ class VoiceManagerTest {
 			METHOD_GET_NUMBER, METHOD_GET_RENDERER, METHOD_SET_RENDERER, METHOD_ADD_SPEED_BUTTONS,
 			METHOD_SET_MAJOR_TICK_SPACING, METHOD_SET_PAINT_TICKS, METHOD_SET_PAINT_LABELS, METHOD_SORTED,
 			METHOD_DISTINCT, METHOD_GET_ID3V1_TAG, METHOD_GET_ID3V2_TAG, METHOD_ADD_VALIDATION_DATA,
-			METHOD_CREATE_IMPORT_RESULT_PANEL, METHOD_GET_URL = null;
+			METHOD_CREATE_IMPORT_RESULT_PANEL, METHOD_GET_URL, METHOD_ADD_HYPER_LINK_LISTENER = null;
 
 	@BeforeAll
 	static void beforeAll() throws Throwable {
@@ -1138,6 +1140,9 @@ class VoiceManagerTest {
 				.setAccessible(true);
 		//
 		(METHOD_GET_URL = clz.getDeclaredMethod("getURL", HyperlinkEvent.class)).setAccessible(true);
+		//
+		(METHOD_ADD_HYPER_LINK_LISTENER = clz.getDeclaredMethod("addHyperlinkListener", JEditorPane.class,
+				HyperlinkListener.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -10568,6 +10573,25 @@ class VoiceManagerTest {
 				return (URL) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testAddHyperlinkListener() {
+		//
+		Assertions.assertDoesNotThrow(() -> addHyperlinkListener(null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> addHyperlinkListener(
+				cast(JEditorPane.class, Narcissus.allocateInstance(JEditorPane.class)), null));
+		//
+	}
+
+	private static void addHyperlinkListener(final JEditorPane instance, final HyperlinkListener listener)
+			throws Throwable {
+		try {
+			METHOD_ADD_HYPER_LINK_LISTENER.invoke(null, instance, listener);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
