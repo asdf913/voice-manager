@@ -4502,7 +4502,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	@Nullable
 	private static <T> Optional<T> reduce(@Nullable final Stream<T> instance, final BinaryOperator<T> accumulator) {
-		return instance != null ? instance.reduce(accumulator) : null;
+		//
+		return instance != null && (accumulator != null || Proxy.isProxyClass(getClass(instance)))
+				? instance.reduce(accumulator)
+				: null;
+		//
 	}
 
 	private static <K, V> void putAll(@Nullable final Map<K, V> a, @Nullable final Map<? extends K, ? extends V> b) {

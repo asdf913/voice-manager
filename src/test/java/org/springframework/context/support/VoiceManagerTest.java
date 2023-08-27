@@ -77,6 +77,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
+import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntConsumer;
@@ -329,7 +330,7 @@ class VoiceManagerTest {
 			METHOD_GET_DECLARED_CLASSES, METHOD_GET_DLL_PATH, METHOD_GET_RATE0, METHOD_GET_RATE_VOICE_MANAGER,
 			METHOD_GET_RATE_FIELD_LIST, METHOD_ADD_CHANGE_LISTENER, METHOD_IS_ANNOTATION_PRESENT,
 			METHOD_ENCODE_TO_STRING, METHOD_GET_VOICE_MULTI_MAP_BY_LIST_NAME, METHOD_GET_VOICE_MULTI_MAP_BY_JLPT,
-			METHOD_GET_FILE_EXTENSIONS, METHOD_REDUCE, METHOD_APPEND_STRING, METHOD_APPEND_CHAR,
+			METHOD_GET_FILE_EXTENSIONS, METHOD_REDUCE2, METHOD_REDUCE3, METHOD_APPEND_STRING, METHOD_APPEND_CHAR,
 			METHOD_GET_PROVIDER_PLATFORM, METHOD_GET_RESOURCE_AS_STREAM,
 			METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH_METHOD,
 			METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH_INSTRUCTION_ARRAY, METHOD_GET_ATTRIBUTES, METHOD_GET_LENGTH,
@@ -779,7 +780,9 @@ class VoiceManagerTest {
 		(METHOD_GET_FILE_EXTENSIONS = clz.getDeclaredMethod("getFileExtensions", ContentType.class))
 				.setAccessible(true);
 		//
-		(METHOD_REDUCE = clz.getDeclaredMethod("reduce", LongStream.class, Long.TYPE, LongBinaryOperator.class))
+		(METHOD_REDUCE2 = clz.getDeclaredMethod("reduce", Stream.class, BinaryOperator.class)).setAccessible(true);
+		//
+		(METHOD_REDUCE3 = clz.getDeclaredMethod("reduce", LongStream.class, Long.TYPE, LongBinaryOperator.class))
 				.setAccessible(true);
 		//
 		(METHOD_APPEND_STRING = clz.getDeclaredMethod("append", StringBuilder.class, String.class)).setAccessible(true);
@@ -1423,6 +1426,10 @@ class VoiceManagerTest {
 					return longStream;
 					//
 				} else if (Objects.equals(methodName, "toArray")) {
+					//
+					return null;
+					//
+				} else if (Objects.equals(methodName, "reduce")) {
 					//
 					return null;
 					//
@@ -7276,16 +7283,35 @@ class VoiceManagerTest {
 	@Test
 	void testReduce() throws Throwable {
 		//
+		Assertions.assertNull(reduce(Stream.empty(), null));
+		//
+		Assertions.assertNull(reduce(stream, null));
+		//
 		final long l = 0;
 		//
 		Assertions.assertEquals(l, reduce(null, l, null));
 		//
 	}
 
+	private static <T> Optional<T> reduce(final Stream<T> instance, final BinaryOperator<T> accumulator)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_REDUCE2.invoke(null, instance, accumulator);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Optional) {
+				return (Optional) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
 	private static long reduce(final LongStream instance, final long identity, final LongBinaryOperator op)
 			throws Throwable {
 		try {
-			final Object obj = METHOD_REDUCE.invoke(null, instance, identity, op);
+			final Object obj = METHOD_REDUCE3.invoke(null, instance, identity, op);
 			if (obj instanceof Long) {
 				return ((Long) obj).longValue();
 			}
