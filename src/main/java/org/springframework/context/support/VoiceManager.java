@@ -11944,16 +11944,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					final String[] fileExtensions = getFileExtensions(ContentType.OPENDOCUMENT_PRESENTATION);
 					//
-					if ((stopwatch = getIfNull(stopwatch, Stopwatch::createUnstarted)) != null) {
-						//
-						reset(stopwatch);
-						//
-						stopwatch.start();
-						//
-					} // if
-						//
-						// Set "Password"
-						//
+					start(reset(stopwatch = getIfNull(stopwatch, Stopwatch::createUnstarted)));
+					//
+					// Set "Password"
+					//
 					testAndAccept((a, b) -> StringUtils.isNotEmpty(b), odfPd.getPackage(),
 							StringMap.getString(stringMap, "password"), ExportTask::setPassword);
 					//
@@ -11986,8 +11980,39 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		}
 
+		@Nullable
 		private static Stopwatch reset(@Nullable final Stopwatch instance) {
 			return instance != null ? instance.reset() : instance;
+		}
+
+		private static Stopwatch start(final Stopwatch instance) {
+			//
+			if (instance == null) {
+				//
+				return null;
+				//
+			} // if
+				//
+			try {
+				//
+				final Field ticker = Stopwatch.class.getDeclaredField("ticker");
+				//
+				setAccessible(ticker, true);
+				//
+				if (get(ticker, instance) == null) {
+					//
+					return instance;
+					//
+				} // if
+					//
+			} catch (final NoSuchFieldException | IllegalAccessException e) {
+				//
+				LoggerUtil.error(LOG, e.getMessage(), e);
+				//
+			} // try
+				//
+			return instance.start();
+			//
 		}
 
 		private static void save(@Nullable final OdfPackageDocument instance, @Nullable final File file)

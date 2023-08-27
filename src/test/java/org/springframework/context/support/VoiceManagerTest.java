@@ -11363,6 +11363,18 @@ class VoiceManagerTest {
 		Assertions.assertSame(stopwatch = cast(Stopwatch.class, Narcissus.allocateInstance(Stopwatch.class)),
 				invoke(reset, null, stopwatch));
 		//
+		// org.springframework.context.support.VoiceManager$ExportTask.start(com.google.common.base.Stopwatch)
+		//
+		final Method start = CLASS_EXPORT_TASK != null ? CLASS_EXPORT_TASK.getDeclaredMethod("start", Stopwatch.class)
+				: null;
+		//
+		Assertions.assertNull(invoke(start, null, (Object) null));
+		//
+		Assertions.assertSame(stopwatch = Stopwatch.createUnstarted(), invoke(start, null, stopwatch));
+		//
+		Assertions.assertSame(stopwatch = cast(Stopwatch.class, Narcissus.allocateInstance(Stopwatch.class)),
+				invoke(start, null, stopwatch));
+		//
 	}
 
 	private static void run(final Runnable instance) {
