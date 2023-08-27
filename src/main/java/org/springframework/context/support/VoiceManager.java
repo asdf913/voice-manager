@@ -12432,7 +12432,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		}
 
-		private static void setTextContent(final Node instance, final String textContent) throws DOMException {
+		private static void setTextContent(@Nullable final Node instance, final String textContent)
+				throws DOMException {
 			if (instance != null) {
 				instance.setTextContent(textContent);
 			}
