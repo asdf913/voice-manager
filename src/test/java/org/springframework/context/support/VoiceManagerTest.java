@@ -327,12 +327,12 @@ class VoiceManagerTest {
 			METHOD_CREATE_CELL_COMMENT, METHOD_CREATE_CLIENT_ANCHOR, METHOD_CREATE_RICH_TEXT_STRING,
 			METHOD_SET_CELL_COMMENT, METHOD_SET_AUTHOR, METHOD_TEST_AND_ACCEPT_PREDICATE,
 			METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_FIND_FIELDS_BY_VALUE, METHOD_GET_DECLARED_FIELDS,
-			METHOD_GET_DECLARING_CLASS, METHOD_GET_PACKAGE, METHOD_BROWSE, METHOD_TO_URI, METHOD_STOP, METHOD_ELAPSED,
-			METHOD_GET_DECLARED_CLASSES, METHOD_GET_DLL_PATH, METHOD_GET_RATE0, METHOD_GET_RATE_VOICE_MANAGER,
-			METHOD_GET_RATE_FIELD_LIST, METHOD_ADD_CHANGE_LISTENER, METHOD_IS_ANNOTATION_PRESENT,
-			METHOD_ENCODE_TO_STRING, METHOD_GET_VOICE_MULTI_MAP_BY_LIST_NAME, METHOD_GET_VOICE_MULTI_MAP_BY_JLPT,
-			METHOD_GET_FILE_EXTENSIONS, METHOD_REDUCE2, METHOD_REDUCE3, METHOD_APPEND_STRING, METHOD_APPEND_CHAR,
-			METHOD_GET_PROVIDER_PLATFORM, METHOD_GET_RESOURCE_AS_STREAM,
+			METHOD_GET_DECLARING_CLASS, METHOD_GET_PACKAGE, METHOD_BROWSE, METHOD_TO_URI_FILE, METHOD_TO_URI_URL,
+			METHOD_STOP, METHOD_ELAPSED, METHOD_GET_DECLARED_CLASSES, METHOD_GET_DLL_PATH, METHOD_GET_RATE0,
+			METHOD_GET_RATE_VOICE_MANAGER, METHOD_GET_RATE_FIELD_LIST, METHOD_ADD_CHANGE_LISTENER,
+			METHOD_IS_ANNOTATION_PRESENT, METHOD_ENCODE_TO_STRING, METHOD_GET_VOICE_MULTI_MAP_BY_LIST_NAME,
+			METHOD_GET_VOICE_MULTI_MAP_BY_JLPT, METHOD_GET_FILE_EXTENSIONS, METHOD_REDUCE2, METHOD_REDUCE3,
+			METHOD_APPEND_STRING, METHOD_APPEND_CHAR, METHOD_GET_PROVIDER_PLATFORM, METHOD_GET_RESOURCE_AS_STREAM,
 			METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH_METHOD,
 			METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH_INSTRUCTION_ARRAY, METHOD_GET_ATTRIBUTES, METHOD_GET_LENGTH,
 			METHOD_ITEM, METHOD_GET_OS_VERSION_INFO_EX_MAP, METHOD_CREATE_JLPT_SHEET,
@@ -748,7 +748,9 @@ class VoiceManagerTest {
 		//
 		(METHOD_BROWSE = clz.getDeclaredMethod("browse", Desktop.class, URI.class)).setAccessible(true);
 		//
-		(METHOD_TO_URI = clz.getDeclaredMethod("toURI", File.class)).setAccessible(true);
+		(METHOD_TO_URI_FILE = clz.getDeclaredMethod("toURI", File.class)).setAccessible(true);
+		//
+		(METHOD_TO_URI_URL = clz.getDeclaredMethod("toURI", URL.class)).setAccessible(true);
 		//
 		(METHOD_STOP = clz.getDeclaredMethod("stop", Stopwatch.class)).setAccessible(true);
 		//
@@ -6969,13 +6971,35 @@ class VoiceManagerTest {
 	@Test
 	void testToURI() throws Throwable {
 		//
-		Assertions.assertNotNull(toURI(new File("")));
+		Assertions.assertNull(toURI((URL) null));
+		//
+		final File file = new File("");
+		//
+		Assertions.assertNotNull(toURI(file));
+		//
+		final URI uri = file.toURI();
+		//
+		Assertions.assertNotNull(toURI(toURL(uri)));
 		//
 	}
 
 	private static URI toURI(final File instance) throws Throwable {
 		try {
-			final Object obj = METHOD_TO_URI.invoke(null, instance);
+			final Object obj = METHOD_TO_URI_FILE.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof URI) {
+				return (URI) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static URI toURI(final URL instance) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_URI_URL.invoke(null, instance);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof URI) {
@@ -9330,7 +9354,7 @@ class VoiceManagerTest {
 			//
 		} else {
 			//
-			final String string = toString(new File("pom.xml").toURI().toURL());
+			final String string = toString(toURL(new File("pom.xml").toURI()));
 			//
 			AssertionsUtil.assertThrowsAndEquals(RuntimeException.class,
 					"{localizedMessage=org.opentest4j.AssertionFailedError: Only http & https protocols supported ==> Unexpected exception thrown: java.net.MalformedURLException: Only http & https protocols supported, message=org.opentest4j.AssertionFailedError: Only http & https protocols supported ==> Unexpected exception thrown: java.net.MalformedURLException: Only http & https protocols supported}",

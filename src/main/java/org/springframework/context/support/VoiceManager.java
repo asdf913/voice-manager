@@ -4698,7 +4698,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					if (Objects.equals(EventType.ACTIVATED, getEventType(x))) {
 						//
-						browse(Desktop.getDesktop(), x != null ? x.getURL().toURI() : null);
+						browse(Desktop.getDesktop(), x != null ? toURI(x.getURL()) : null);
 						//
 					} // if
 						//
@@ -4723,6 +4723,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		return jsp;
 		//
+	}
+
+	private static URI toURI(final URL instance) throws URISyntaxException {
+		return instance != null ? instance.toURI() : null;
 	}
 
 	@Nullable
