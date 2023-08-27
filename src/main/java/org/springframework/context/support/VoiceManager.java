@@ -365,6 +365,7 @@ import com.mpatric.mp3agic.BaseException;
 import com.mpatric.mp3agic.ID3v1;
 import com.mpatric.mp3agic.ID3v2;
 import com.mpatric.mp3agic.Mp3File;
+import com.mpatric.mp3agic.NotSupportedException;
 
 import de.sciss.jump3r.lowlevel.LameEncoder;
 import de.sciss.jump3r.mp3.Lame;
@@ -11844,7 +11845,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 						id3v1.setTitle(titleNew);
 						//
-						mp3File.save(getAbsolutePath(file));
+						save(mp3File, getAbsolutePath(file));
 						//
 					} // if
 						//
@@ -11857,6 +11858,33 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		@Nullable
 		private static String getTitle(@Nullable final ID3v1 instance) {
 			return instance != null ? instance.getTitle() : null;
+		}
+
+		private static void save(final Mp3File instance, final String newFilename)
+				throws IOException, NotSupportedException {
+			//
+			if (instance == null) {
+				//
+				return;
+				//
+			} // if
+				//
+			try {
+				//
+				if (FieldUtils.readField(instance, "path", true) == null) {
+					//
+					return;
+					//
+				} // if
+					//
+			} catch (final IllegalAccessException e) {
+				//
+				LoggerUtil.error(LOG, e.getMessage(), e);
+				//
+			} // try
+				//
+			instance.save(newFilename);
+			//
 		}
 
 		private static void generateOdfPresentationDocuments(final ObjectMap om,

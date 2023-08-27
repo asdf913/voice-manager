@@ -11327,6 +11327,16 @@ class VoiceManagerTest {
 		//
 		Assertions.assertEquals(null, invoke(getTitle, null, Reflection.newProxy(ID3v1.class, ih)));
 		//
+		// org.springframework.context.support.VoiceManager$ExportTask.save(com.mpatric.mp3agic.Mp3File,java.lang.String)
+		//
+		final Method save = CLASS_EXPORT_TASK != null
+				? CLASS_EXPORT_TASK.getDeclaredMethod("save", Mp3File.class, String.class)
+				: null;
+		//
+		Assertions.assertEquals(null, invoke(save, null, null, null));
+		//
+		Assertions.assertEquals(null, invoke(save, null, Narcissus.allocateInstance(Mp3File.class), null));
+		//
 	}
 
 	private static void run(final Runnable instance) {
