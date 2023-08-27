@@ -297,6 +297,7 @@ import org.jsoup.nodes.ElementUtil;
 import org.jsoup.select.Elements;
 import org.odftoolkit.odfdom.doc.OdfPresentationDocument;
 import org.odftoolkit.odfdom.pkg.OdfPackage;
+import org.odftoolkit.odfdom.pkg.OdfPackageDocument;
 import org.openxmlformats.schemas.officeDocument.x2006.customProperties.CTProperty;
 import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
 import org.reflections.Reflections;
@@ -11956,7 +11957,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					testAndAccept((a, b) -> StringUtils.isNotEmpty(b), odfPd.getPackage(),
 							StringMap.getString(stringMap, "password"), ExportTask::setPassword);
 					//
-					odfPd.save(file = new File(rowKey, String.join(".",
+					save(odfPd, file = new File(rowKey, String.join(".",
 							StringUtils.substringAfter(rowKey, File.separatorChar),
 							StringUtils.defaultIfBlank(
 									fileExtensions != null && fileExtensions.length == 1 ? fileExtensions[0] : null,
@@ -11983,6 +11984,36 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 			} // for
 				//
+		}
+
+		private static void save(final OdfPackageDocument instance, final File file) throws Exception {
+			//
+			if (instance == null) {
+				//
+				return;
+				//
+			} // if
+				//
+			try {
+				//
+				final Field mPackage = OdfPackageDocument.class.getDeclaredField("mPackage");
+				//
+				setAccessible(mPackage, true);
+				//
+				if (get(mPackage, instance) == null) {
+					//
+					return;
+					//
+				} // if
+					//
+			} catch (final NoSuchFieldException e) {
+				//
+				LoggerUtil.error(LOG, e.getMessage(), e);
+				//
+			} // try
+				//
+			instance.save(file);
+			//
 		}
 
 		private static void setPassword(@Nullable final OdfPackage instance, final String password) {
@@ -12222,9 +12253,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			try (final OdfPresentationDocument newOdfPresentationDocument = OdfPresentationDocument
 					.newPresentationDocument()) {
 				//
+				save(newOdfPresentationDocument, file);
+				//
 				if (newOdfPresentationDocument != null) {
-					//
-					newOdfPresentationDocument.save(file);
 					//
 					ZipUtil.replaceEntry(file, "content.xml", getBytes(string));
 					//

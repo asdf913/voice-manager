@@ -216,6 +216,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import org.odftoolkit.odfdom.pkg.OdfPackage;
+import org.odftoolkit.odfdom.pkg.OdfPackageDocument;
 import org.openxmlformats.schemas.officeDocument.x2006.customProperties.CTProperty;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.ListableBeanFactory;
@@ -11329,13 +11330,24 @@ class VoiceManagerTest {
 		//
 		// org.springframework.context.support.VoiceManager$ExportTask.save(com.mpatric.mp3agic.Mp3File,java.lang.String)
 		//
-		final Method save = CLASS_EXPORT_TASK != null
+		final Method saveMp3File = CLASS_EXPORT_TASK != null
 				? CLASS_EXPORT_TASK.getDeclaredMethod("save", Mp3File.class, String.class)
 				: null;
 		//
-		Assertions.assertEquals(null, invoke(save, null, null, null));
+		Assertions.assertEquals(null, invoke(saveMp3File, null, null, null));
 		//
-		Assertions.assertEquals(null, invoke(save, null, Narcissus.allocateInstance(Mp3File.class), null));
+		Assertions.assertEquals(null, invoke(saveMp3File, null, Narcissus.allocateInstance(Mp3File.class), null));
+		//
+		// org.springframework.context.support.VoiceManager$ExportTask.save(org.odftoolkit.odfdom.pkg.OdfPackageDocument,java.io.File)
+		//
+		final Method saveOdfPackageDocument = CLASS_EXPORT_TASK != null
+				? CLASS_EXPORT_TASK.getDeclaredMethod("save", OdfPackageDocument.class, File.class)
+				: null;
+		//
+		Assertions.assertEquals(null, invoke(saveOdfPackageDocument, null, null, null));
+		//
+		Assertions.assertEquals(null,
+				invoke(saveOdfPackageDocument, null, Narcissus.allocateInstance(OdfPackageDocument.class), null));
 		//
 	}
 
