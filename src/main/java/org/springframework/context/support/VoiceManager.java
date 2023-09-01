@@ -5747,7 +5747,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		final ObjectMap objectMap = Reflection.newProxy(ObjectMap.class, new IH());
 		//
-		final File file = jfc.getSelectedFile();
+		final File file = getSelectedFile(jfc);
 		//
 		ObjectMap.setObject(objectMap, SpeechApi.class, speechApi);
 		//
@@ -5783,6 +5783,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		if (instance != null) {
 			instance.setFileSelectionMode(mode);
 		}
+	}
+
+	private static File getSelectedFile(final JFileChooser instance) {
+		return instance != null ? instance.getSelectedFile() : null;
 	}
 
 	private void actionPerformedForExecute(final boolean headless, final boolean nonTest) {
@@ -6024,7 +6028,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
-		return jfc != null ? jfc.getSelectedFile() : null;
+		return getSelectedFile(jfc);
 		//
 	}
 
@@ -6273,7 +6277,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		try {
 			//
-			FileUtils.writeByteArrayToFile(jfc.getSelectedFile(),
+			FileUtils.writeByteArrayToFile(getSelectedFile(jfc),
 					createImportFileTemplateByteArray(isSelected(cbImportFileTemplateGenerateBlankRow),
 							IValue0Util.getValue0(jlptLevels),
 							MultimapUtil.keySet(IValue0Util.getValue0(gaKuNenBeTsuKanJiMultimap))));
@@ -7141,7 +7145,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		if (!headless && showOpenDialog(jfc, null) == JFileChooser.APPROVE_OPTION) {
 			//
-			importVoice(jfc.getSelectedFile());
+			importVoice(getSelectedFile(jfc));
 			//
 		} // if
 			//
