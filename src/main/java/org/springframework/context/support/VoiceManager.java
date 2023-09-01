@@ -7139,7 +7139,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		setFileSelectionMode(jfc, JFileChooser.FILES_ONLY);
 		//
-		if (!headless && jfc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+		if (!headless && showOpenDialog(jfc, null) == JFileChooser.APPROVE_OPTION) {
 			//
 			importVoice(jfc.getSelectedFile());
 			//
