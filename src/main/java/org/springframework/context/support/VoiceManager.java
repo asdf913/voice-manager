@@ -5779,7 +5779,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	private static void setFileSelectionMode(final JFileChooser instance, final int mode) {
+	private static void setFileSelectionMode(@Nullable final JFileChooser instance, final int mode) {
 		if (instance != null) {
 			instance.setFileSelectionMode(mode);
 		}
@@ -6028,7 +6028,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static int showOpenDialog(@Nullable final JFileChooser instance, final Component parent)
+	private static int showOpenDialog(@Nullable final JFileChooser instance, @Nullable final Component parent)
 			throws HeadlessException {
 		//
 		if (instance == null) {
