@@ -5998,7 +5998,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static File getAudioFile(final boolean headless, final JFileChooser jfc, final Voice voice,
+	private static File getAudioFile(final boolean headless, @Nullable final JFileChooser jfc, final Voice voice,
 			final DefaultTableModel defaultTableModel) {
 		//
 		if (jfc != null) {
