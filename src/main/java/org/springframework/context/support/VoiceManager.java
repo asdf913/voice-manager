@@ -5785,7 +5785,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		}
 	}
 
-	private static File getSelectedFile(final JFileChooser instance) {
+	private static File getSelectedFile(@Nullable final JFileChooser instance) {
 		return instance != null ? instance.getSelectedFile() : null;
 	}
 
