@@ -6011,11 +6011,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			clear(defaultTableModel);
 			//
-			ifElse(defaultTableModel != null, () -> addRow(defaultTableModel,
-					new Object[] { getText(voice), getRomaji(voice), NO_FILE_SELECTED }), () -> {
-						testAndRun(!GraphicsEnvironment.isHeadless(),
-								() -> JOptionPane.showMessageDialog(null, NO_FILE_SELECTED));
-					});
+			ifElse(defaultTableModel != null,
+					() -> addRow(defaultTableModel,
+							new Object[] { getText(voice), getRomaji(voice), NO_FILE_SELECTED }),
+					() -> testAndRun(!GraphicsEnvironment.isHeadless(),
+							() -> JOptionPane.showMessageDialog(null, NO_FILE_SELECTED)));
 			//
 			return null;
 			//
