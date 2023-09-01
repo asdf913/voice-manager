@@ -9,6 +9,7 @@ import java.awt.Dimension;
 import java.awt.FocusTraversalPolicy;
 import java.awt.Frame;
 import java.awt.GraphicsEnvironment;
+import java.awt.HeadlessException;
 import java.awt.LayoutManager;
 import java.awt.Toolkit;
 import java.awt.Window;
@@ -168,8 +169,8 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
 import javax.swing.event.HyperlinkEvent.EventType;
+import javax.swing.event.HyperlinkListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.JTextComponent;
 import javax.xml.namespace.QName;
@@ -5993,24 +5994,60 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static File getAudioFile(final boolean headless, final Voice voice,
 			final DefaultTableModel defaultTableModel) {
 		//
-		final JFileChooser jfc = new JFileChooser(".");
+		return getAudioFile(headless, new JFileChooser("."), voice, defaultTableModel);
 		//
-		jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+	}
+
+	private static File getAudioFile(final boolean headless, final JFileChooser jfc, final Voice voice,
+			final DefaultTableModel defaultTableModel) {
 		//
-		if (!headless && jfc.showOpenDialog(null) != JFileChooser.APPROVE_OPTION) {
+		if (jfc != null) {
+			//
+			jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+			//
+		} // if
+			//
+		if (!headless && showOpenDialog(jfc, null) != JFileChooser.APPROVE_OPTION) {
 			//
 			clear(defaultTableModel);
 			//
-			ifElse(defaultTableModel != null,
-					() -> addRow(defaultTableModel,
-							new Object[] { getText(voice), getRomaji(voice), NO_FILE_SELECTED }),
-					() -> JOptionPane.showMessageDialog(null, NO_FILE_SELECTED));
+			ifElse(defaultTableModel != null, () -> addRow(defaultTableModel,
+					new Object[] { getText(voice), getRomaji(voice), NO_FILE_SELECTED }), () -> {
+						testAndRun(!GraphicsEnvironment.isHeadless(),
+								() -> JOptionPane.showMessageDialog(null, NO_FILE_SELECTED));
+					});
 			//
 			return null;
 			//
 		} // if
 			//
-		return jfc.getSelectedFile();
+		return jfc != null ? jfc.getSelectedFile() : null;
+		//
+	}
+
+	private static int showOpenDialog(final JFileChooser instance, final Component parent) throws HeadlessException {
+		//
+		if (instance == null) {
+			//
+			return JFileChooser.ERROR_OPTION;
+			//
+		} // if
+			//
+		try {
+			//
+			if (Narcissus.getField(instance, JComponent.class.getDeclaredField("ui")) == null) {
+				//
+				return JFileChooser.ERROR_OPTION;
+				//
+			} // if
+				//
+		} catch (final NoSuchFieldException e) {
+			//
+			LoggerUtil.error(LOG, e.getMessage(), e);
+			//
+		} // try
+			//
+		return instance.showOpenDialog(parent);
 		//
 	}
 

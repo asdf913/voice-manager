@@ -110,6 +110,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JEditorPane;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -367,7 +368,7 @@ class VoiceManagerTest {
 			METHOD_ADD_ALL, METHOD_PLAY_AUDIO, METHOD_PLAY, METHOD_PRONOUNICATION_CHANGED, METHOD_REMOVE_ELEMENT_AT,
 			METHOD_ACTION_PERFORMED_FOR_BTN_IMPORT, METHOD_CREATE_PRONUNCIATION_LIST_CELL_RENDERER,
 			METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_GET_FILE,
-			METHOD_GET_PRONUNCIATION_AUDIO_FILE_BY_AUDIO_FORMAT, METHOD_GET_AUDIO_FILE,
+			METHOD_GET_PRONUNCIATION_AUDIO_FILE_BY_AUDIO_FORMAT, METHOD_GET_AUDIO_FILE3, METHOD_GET_AUDIO_FILE4,
 			METHOD_IS_ALL_ATTRIBUTES_MATCHED, METHOD_CREATE_FUNCTION_FOR_BTN_CONVERT_TO_HIRAGANA, METHOD_WRITER,
 			METHOD_READ_LINE, METHOD_PRINT_LN, METHOD_SET_PITCH_ACCENT_IMAGE, METHOD_GET_NUMERIC_CELL_VALUE,
 			METHOD_SET_AUTO_FILTER, METHOD_CREATE_BYTE_ARRAY, METHOD_DOUBLE_VALUE, METHOD_GET_ELEMENT_AT,
@@ -376,7 +377,8 @@ class VoiceManagerTest {
 			METHOD_GET_NUMBER, METHOD_GET_RENDERER, METHOD_SET_RENDERER, METHOD_ADD_SPEED_BUTTONS,
 			METHOD_SET_MAJOR_TICK_SPACING, METHOD_SET_PAINT_TICKS, METHOD_SET_PAINT_LABELS, METHOD_SORTED,
 			METHOD_DISTINCT, METHOD_GET_ID3V1_TAG, METHOD_GET_ID3V2_TAG, METHOD_ADD_VALIDATION_DATA,
-			METHOD_CREATE_IMPORT_RESULT_PANEL, METHOD_GET_URL, METHOD_ADD_HYPER_LINK_LISTENER = null;
+			METHOD_CREATE_IMPORT_RESULT_PANEL, METHOD_GET_URL, METHOD_ADD_HYPER_LINK_LISTENER,
+			METHOD_SHOW_OPEN_DIALOG = null;
 
 	@BeforeAll
 	static void beforeAll() throws Throwable {
@@ -1058,7 +1060,10 @@ class VoiceManagerTest {
 				.getDeclaredMethod("getPronunciationAudioFileByAudioFormat", Pronunciation.class, Object.class))
 				.setAccessible(true);
 		//
-		(METHOD_GET_AUDIO_FILE = clz.getDeclaredMethod("getAudioFile", Boolean.TYPE, Voice.class,
+		(METHOD_GET_AUDIO_FILE3 = clz.getDeclaredMethod("getAudioFile", Boolean.TYPE, Voice.class,
+				DefaultTableModel.class)).setAccessible(true);
+		//
+		(METHOD_GET_AUDIO_FILE4 = clz.getDeclaredMethod("getAudioFile", Boolean.TYPE, JFileChooser.class, Voice.class,
 				DefaultTableModel.class)).setAccessible(true);
 		//
 		(METHOD_IS_ALL_ATTRIBUTES_MATCHED = clz.getDeclaredMethod("isAllAttributesMatched", Map.class,
@@ -1143,6 +1148,9 @@ class VoiceManagerTest {
 		//
 		(METHOD_ADD_HYPER_LINK_LISTENER = clz.getDeclaredMethod("addHyperlinkListener", JEditorPane.class,
 				HyperlinkListener.class)).setAccessible(true);
+		//
+		(METHOD_SHOW_OPEN_DIALOG = clz.getDeclaredMethod("showOpenDialog", JFileChooser.class, Component.class))
+				.setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -9731,6 +9739,11 @@ class VoiceManagerTest {
 	void testGetAudioFile() throws Throwable {
 		//
 		Assertions.assertNull(getAudioFile(true, null, null));
+		///
+		Assertions.assertNull(getAudioFile(true, null, null, null));
+		///
+		Assertions.assertNull(getAudioFile(false,
+				cast(JFileChooser.class, Narcissus.allocateInstance(JFileChooser.class)), null, null));
 		//
 		if (GraphicsEnvironment.isHeadless()) {
 			//
@@ -9754,7 +9767,22 @@ class VoiceManagerTest {
 	private static File getAudioFile(final boolean headless, final Voice voice,
 			final DefaultTableModel defaultTableModel) throws Throwable {
 		try {
-			final Object obj = METHOD_GET_AUDIO_FILE.invoke(null, headless, voice, defaultTableModel);
+			final Object obj = METHOD_GET_AUDIO_FILE3.invoke(null, headless, voice, defaultTableModel);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof File) {
+				return (File) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static File getAudioFile(final boolean headless, final JFileChooser jfc, final Voice voice,
+			final DefaultTableModel defaultTableModel) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_AUDIO_FILE4.invoke(null, headless, jfc, voice, defaultTableModel);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof File) {
@@ -10592,6 +10620,25 @@ class VoiceManagerTest {
 			throws Throwable {
 		try {
 			METHOD_ADD_HYPER_LINK_LISTENER.invoke(null, instance, listener);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testShowOpenDialog() throws Throwable {
+		//
+		Assertions.assertEquals(JFileChooser.ERROR_OPTION, showOpenDialog(null, null));
+		//
+	}
+
+	private static int showOpenDialog(final JFileChooser instance, final Component parent) throws Throwable {
+		try {
+			final Object obj = METHOD_SHOW_OPEN_DIALOG.invoke(null, instance, parent);
+			if (obj instanceof Integer) {
+				return ((Integer) obj).intValue();
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
