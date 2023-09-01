@@ -5737,7 +5737,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final JFileChooser jfc = new JFileChooser(".");
 		//
-		jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		setFileSelectionMode(jfc, JFileChooser.FILES_ONLY);
 		//
 		if (jfc.showSaveDialog(null) != JFileChooser.APPROVE_OPTION) {
 			//
@@ -5777,6 +5777,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
+	}
+
+	private static void setFileSelectionMode(final JFileChooser instance, final int mode) {
+		if (instance != null) {
+			instance.setFileSelectionMode(mode);
+		}
 	}
 
 	private void actionPerformedForExecute(final boolean headless, final boolean nonTest) {
@@ -6001,12 +6007,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static File getAudioFile(final boolean headless, @Nullable final JFileChooser jfc, final Voice voice,
 			final DefaultTableModel defaultTableModel) {
 		//
-		if (jfc != null) {
-			//
-			jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-			//
-		} // if
-			//
+		setFileSelectionMode(jfc, JFileChooser.FILES_ONLY);
+		//
 		if (!headless && showOpenDialog(jfc, null) != JFileChooser.APPROVE_OPTION) {
 			//
 			clear(defaultTableModel);
@@ -6260,7 +6262,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final JFileChooser jfc = new JFileChooser(".");
 		//
-		jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		setFileSelectionMode(jfc, JFileChooser.FILES_ONLY);
 		//
 		if (jfc.showSaveDialog(null) != JFileChooser.APPROVE_OPTION) {
 			//
@@ -7134,7 +7136,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final JFileChooser jfc = new JFileChooser(".");
 		//
-		jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		setFileSelectionMode(jfc, JFileChooser.FILES_ONLY);
 		//
 		if (!headless && jfc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 			//
