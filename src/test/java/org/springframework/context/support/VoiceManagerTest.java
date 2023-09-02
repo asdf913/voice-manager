@@ -126,8 +126,8 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
 import javax.swing.event.HyperlinkEvent.EventType;
+import javax.swing.event.HyperlinkListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.JTextComponent;
 import javax.xml.namespace.QName;
@@ -377,8 +377,8 @@ class VoiceManagerTest {
 			METHOD_GET_NUMBER, METHOD_GET_RENDERER, METHOD_SET_RENDERER, METHOD_ADD_SPEED_BUTTONS,
 			METHOD_SET_MAJOR_TICK_SPACING, METHOD_SET_PAINT_TICKS, METHOD_SET_PAINT_LABELS, METHOD_SORTED,
 			METHOD_DISTINCT, METHOD_GET_ID3V1_TAG, METHOD_GET_ID3V2_TAG, METHOD_ADD_VALIDATION_DATA,
-			METHOD_CREATE_IMPORT_RESULT_PANEL, METHOD_GET_URL, METHOD_ADD_HYPER_LINK_LISTENER,
-			METHOD_SHOW_OPEN_DIALOG = null;
+			METHOD_CREATE_IMPORT_RESULT_PANEL, METHOD_GET_URL, METHOD_ADD_HYPER_LINK_LISTENER, METHOD_SHOW_OPEN_DIALOG,
+			METHOD_OPEN_STREAM = null;
 
 	@BeforeAll
 	static void beforeAll() throws Throwable {
@@ -1151,6 +1151,8 @@ class VoiceManagerTest {
 		//
 		(METHOD_SHOW_OPEN_DIALOG = clz.getDeclaredMethod("showOpenDialog", JFileChooser.class, Component.class))
 				.setAccessible(true);
+		//
+		(METHOD_OPEN_STREAM = clz.getDeclaredMethod("openStream", URL.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -10637,6 +10639,27 @@ class VoiceManagerTest {
 			final Object obj = METHOD_SHOW_OPEN_DIALOG.invoke(null, instance, parent);
 			if (obj instanceof Integer) {
 				return ((Integer) obj).intValue();
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testOpenStream() throws Throwable {
+		//
+		Assertions.assertNull(openStream(cast(URL.class, Narcissus.allocateInstance(URL.class))));
+		//
+	}
+
+	private static InputStream openStream(final URL instance) throws Throwable {
+		try {
+			final Object obj = METHOD_OPEN_STREAM.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof InputStream) {
+				return (InputStream) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

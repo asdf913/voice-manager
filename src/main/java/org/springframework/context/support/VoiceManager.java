@@ -4890,6 +4890,27 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	@Nullable
 	private static InputStream openStream(@Nullable final URL instance) throws IOException {
+		//
+		if (instance == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		try {
+			//
+			if (Narcissus.getField(instance, getDeclaredField(getClass(instance), "handler")) == null) {
+				//
+				return null;
+				//
+			} // if
+				//
+		} catch (final NoSuchFieldException e) {
+			//
+			LoggerUtil.error(LOG, e.getMessage(), e);
+			//
+		} // try
+			//
 		return instance != null ? instance.openStream() : null;
 	}
 
