@@ -392,6 +392,7 @@ import freemarker.template.Version;
 import io.github.toolfactory.narcissus.Narcissus;
 import j2html.attributes.Attribute;
 import j2html.tags.ContainerTag;
+import j2html.tags.ContainerTagUtil;
 import j2html.tags.Tag;
 import j2html.tags.TagUtil;
 import j2html.tags.specialized.ATag;
@@ -2324,10 +2325,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				? instance.microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl
 				: null;
 		//
-		add(jPanelWarning, pageTitle != null
-				? new JLabelLink(
-						new ATag().withHref(microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl).withText(title))
-				: new JLabel(title));
+		add(jPanelWarning,
+				pageTitle != null
+						? new JLabelLink(ContainerTagUtil.withText(
+								new ATag().withHref(microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl), title))
+						: new JLabel(title));
 		//
 		return jPanelWarning;
 		//
@@ -4569,7 +4571,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		if (speechApiInstance instanceof SpeechApiSpeechServerImpl) {
 			//
 			add(panel,
-					new JLabelLink(new ATag().withHref(microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl).withText(
+					new JLabelLink(ContainerTagUtil.withText(
+							new ATag().withHref(microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl),
 							IValue0Util.getValue0(getMicrosoftSpeechPlatformRuntimeLanguagesDownloadPageTitle()))),
 					WRAP);
 			//
@@ -4872,7 +4875,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					} // if
 						//
-					TagUtil.attr((aTag = new ATag()).withText(textContent), "href", ElementUtil.attr(element, "href"));
+					TagUtil.attr(ContainerTagUtil.withText(aTag = new ATag(), textContent), "href",
+							ElementUtil.attr(element, "href"));
 					//
 				} // for
 					//

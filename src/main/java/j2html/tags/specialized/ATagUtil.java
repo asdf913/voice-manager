@@ -15,6 +15,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.ElementUtil;
 import org.jsoup.select.Elements;
 
+import j2html.tags.ContainerTagUtil;
 import j2html.tags.TagUtil;
 
 public final class ATagUtil {
@@ -37,8 +38,9 @@ public final class ATagUtil {
 					Jsoup::parse, null), "title");
 			//
 			TagUtil.attr(
-					(aTag = new ATag()).withText(ElementUtil
-							.text(IterableUtils.size(elements) == 1 ? IterableUtils.get(elements, 0) : null)),
+					ContainerTagUtil.withText(aTag = new ATag(),
+							ElementUtil
+									.text(IterableUtils.size(elements) == 1 ? IterableUtils.get(elements, 0) : null)),
 					"href", url);
 			//
 		} finally {
