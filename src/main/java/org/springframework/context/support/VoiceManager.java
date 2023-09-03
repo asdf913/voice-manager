@@ -5804,7 +5804,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	private static int showSaveDialog(final JFileChooser instance, final Component parent) throws HeadlessException {
+	private static int showSaveDialog(@Nullable final JFileChooser instance, @Nullable final Component parent)
+			throws HeadlessException {
 		//
 		if (instance == null) {
 			//
