@@ -5764,7 +5764,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		setFileSelectionMode(jfc, JFileChooser.FILES_ONLY);
 		//
-		if (jfc.showSaveDialog(null) != JFileChooser.APPROVE_OPTION) {
+		if (showSaveDialog(jfc, null) != JFileChooser.APPROVE_OPTION) {
 			//
 			return;
 			//
@@ -5802,6 +5802,32 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
+	}
+
+	private static int showSaveDialog(final JFileChooser instance, final Component parent) throws HeadlessException {
+		//
+		if (instance == null) {
+			//
+			return JFileChooser.ERROR_OPTION;
+			//
+		} // if
+			//
+		try {
+			//
+			if (Narcissus.getField(instance, JComponent.class.getDeclaredField("ui")) == null) {
+				//
+				return JFileChooser.ERROR_OPTION;
+				//
+			} // if
+				//
+		} catch (final NoSuchFieldException e) {
+			//
+			LoggerUtil.error(LOG, e.getMessage(), e);
+			//
+		} // try
+			//
+		return instance.showSaveDialog(parent);
+		//
 	}
 
 	private static void setFileSelectionMode(@Nullable final JFileChooser instance, final int mode) {
@@ -6289,13 +6315,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	}
 
-	private void actionPerformedForImportFileTemplate(final boolean headless) {
-		//
-		final JFileChooser jfc = new JFileChooser(".");
+	private void actionPerformedForImportFileTemplate(final boolean headless, final JFileChooser jfc) {
 		//
 		setFileSelectionMode(jfc, JFileChooser.FILES_ONLY);
 		//
-		if (jfc.showSaveDialog(null) != JFileChooser.APPROVE_OPTION) {
+		if (showSaveDialog(jfc, null) != JFileChooser.APPROVE_OPTION) {
 			//
 			return;
 			//
@@ -6813,7 +6837,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		if (Objects.equals(source, btnImportFileTemplate)) {
 			//
-			actionPerformedForImportFileTemplate(headless);
+			actionPerformedForImportFileTemplate(headless, new JFileChooser("."));
 
 			return;
 			//
