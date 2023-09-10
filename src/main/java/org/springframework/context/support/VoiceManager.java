@@ -2697,8 +2697,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				final Stream<?> stream = testAndApply(Objects::nonNull, spliterator,
 						x -> StreamSupport.stream(x, false), null);
 				//
-				final List<Attribute> as = toList(filter(map(stream, x -> cast(Attribute.class, x)),
-						a -> Objects.equals(name, a != null ? a.getName() : null)));
+				final List<Attribute> as = toList(
+						filter(map(stream, x -> cast(Attribute.class, x)), a -> Objects.equals(name, getName(a))));
 				//
 				if (as == null || as.isEmpty()) {
 					//
@@ -2718,6 +2718,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // try
 				//
+		}
+
+		private static String getName(final Attribute instance) {
+			return instance != null ? instance.getName() : null;
 		}
 
 		@Nullable

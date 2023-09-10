@@ -267,6 +267,7 @@ import domain.VoiceList;
 import fr.free.nrw.jakaroma.Jakaroma;
 import freemarker.template.Version;
 import io.github.toolfactory.narcissus.Narcissus;
+import j2html.attributes.Attribute;
 import j2html.tags.specialized.ATag;
 import javazoom.jl.player.Player;
 import mapper.VoiceMapper;
@@ -11930,6 +11931,20 @@ class VoiceManagerTest {
 		} // if
 			//
 		Assertions.assertNull(invoke(darker, null, (Object) null));
+		//
+		// org.springframework.context.support.VoiceManager$JLabelLink.getName(j2html.attributes.Attribute)
+		//
+		final Method getName = clz != null ? clz.getDeclaredMethod("getName", Attribute.class) : null;
+		//
+		if (getName != null) {
+			//
+			getName.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertNull(invoke(getName, null, (Object) null));
+		//
+		Assertions.assertNull(invoke(getName, null, Narcissus.allocateInstance(Attribute.class)));
 		//
 	}
 
