@@ -100,6 +100,7 @@ import java.util.Set;
 import java.util.Spliterator;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
@@ -10405,7 +10406,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 						ih.throwableStackTraceHexs = throwableStackTraceHexs;
 						//
-						es.submit(ObjectUtils.defaultIfNull(Reflection.newProxy(Runnable.class, ih), it));
+						submit(es, ObjectUtils.defaultIfNull(Reflection.newProxy(Runnable.class, ih), it));
 						//
 					} else {
 						//
@@ -10430,6 +10431,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // try
 			//
+	}
+
+	private static void submit(final ExecutorService instance, final Runnable task) {
+		if (instance != null) {
+			instance.submit(task);
+		}
 	}
 
 	@Nullable
@@ -12788,12 +12795,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			for (int i = 0; i < size; i++) {
 				//
-				if ((es = getIfNull(es, () -> Executors.newFixedThreadPool(1))) == null) {
-					//
-					continue;
-					//
-				} // if
-					//
 				(et = new ExportTask()).voiceManager = voiceManager;
 				//
 				et.counter = Integer.valueOf(i + 1);
@@ -12851,7 +12852,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				et.presentationSlideDuration = ObjectMap.getObject(objectMap, Duration.class);
 				//
-				es.submit(et);
+				submit(es = getIfNull(es, () -> Executors.newFixedThreadPool(1)), et);
 				//
 			} // for
 				//
@@ -12877,7 +12878,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				for (final Entry<String, Voice> en : entries) {
 					//
-					if (en == null || (es = getIfNull(es, () -> Executors.newFixedThreadPool(1))) == null) {
+					if (en == null) {
 						//
 						continue;
 						//
@@ -12894,7 +12895,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					ObjectMap.setObject(objectMap, Voice.class, getValue(en));
 					//
-					es.submit(
+					submit(es = getIfNull(es, () -> Executors.newFixedThreadPool(1)),
 							createExportTask(objectMap, size, Integer.valueOf(++coutner), numberOfOrdinalPositionDigit,
 									Collections.singletonMap(getKey(en),
 											"(#voice.text+'('+#voice.romaji+').'+#voice.fileExtension)"),
@@ -13010,7 +13011,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		for (final Entry<String, Voice> en : entries) {
 			//
-			if (en == null || (es = getIfNull(es, () -> Executors.newFixedThreadPool(1))) == null) {
+			if (en == null) {
 				//
 				continue;
 				//
@@ -13046,10 +13047,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-			es.submit(createExportTask(objectMap, size, Integer.valueOf(++coutner), numberOfOrdinalPositionDigit,
-					Collections.singletonMap(toString(folder),
-							"(#voice.text+'('+#voice.romaji+').'+#voice.fileExtension)"),
-					voiceFileNames = getIfNull(voiceFileNames, HashBasedTable::create)));
+			submit(es = getIfNull(es, () -> Executors.newFixedThreadPool(1)),
+					createExportTask(objectMap, size, Integer.valueOf(++coutner), numberOfOrdinalPositionDigit,
+							Collections.singletonMap(toString(folder),
+									"(#voice.text+'('+#voice.romaji+').'+#voice.fileExtension)"),
+							voiceFileNames = getIfNull(voiceFileNames, HashBasedTable::create)));
 			//
 		} // for
 			//

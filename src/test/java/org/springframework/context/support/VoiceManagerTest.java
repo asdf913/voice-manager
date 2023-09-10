@@ -73,6 +73,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
@@ -379,7 +380,7 @@ class VoiceManagerTest {
 			METHOD_SET_MAJOR_TICK_SPACING, METHOD_SET_PAINT_TICKS, METHOD_SET_PAINT_LABELS, METHOD_SORTED,
 			METHOD_DISTINCT, METHOD_GET_ID3V1_TAG, METHOD_GET_ID3V2_TAG, METHOD_ADD_VALIDATION_DATA,
 			METHOD_CREATE_IMPORT_RESULT_PANEL, METHOD_GET_URL, METHOD_ADD_HYPER_LINK_LISTENER, METHOD_SHOW_OPEN_DIALOG,
-			METHOD_OPEN_STREAM, METHOD_ACTION_PERFORMED_FOR_IMPORT_FILE_TEMPLATE = null;
+			METHOD_OPEN_STREAM, METHOD_ACTION_PERFORMED_FOR_IMPORT_FILE_TEMPLATE, METHOD_SUBMIT = null;
 
 	@BeforeAll
 	static void beforeAll() throws Throwable {
@@ -1158,6 +1159,8 @@ class VoiceManagerTest {
 		(METHOD_ACTION_PERFORMED_FOR_IMPORT_FILE_TEMPLATE = clz
 				.getDeclaredMethod("actionPerformedForImportFileTemplate", Boolean.TYPE, JFileChooser.class))
 				.setAccessible(true);
+		//
+		(METHOD_SUBMIT = clz.getDeclaredMethod("submit", ExecutorService.class, Runnable.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -10687,6 +10690,21 @@ class VoiceManagerTest {
 	private void actionPerformedForImportFileTemplate(final boolean headless, final JFileChooser jfc) throws Throwable {
 		try {
 			METHOD_ACTION_PERFORMED_FOR_IMPORT_FILE_TEMPLATE.invoke(instance, headless, jfc);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSubmit() {
+		//
+		Assertions.assertDoesNotThrow(() -> submit(null, null));
+		//
+	}
+
+	private static void submit(final ExecutorService instance, final Runnable task) throws Throwable {
+		try {
+			METHOD_SUBMIT.invoke(null, instance, task);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
