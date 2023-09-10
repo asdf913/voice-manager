@@ -10432,7 +10432,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	private static void submit(final ExecutorService instance, final Runnable task) {
+	private static void submit(@Nullable final ExecutorService instance, final Runnable task) {
 		if (instance != null) {
 			instance.submit(task);
 		}
