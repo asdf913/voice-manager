@@ -2,6 +2,10 @@ package org.springframework.beans.factory;
 
 import java.io.IOException;
 import java.lang.Character.UnicodeBlock;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.ArrayList;
@@ -35,7 +39,16 @@ public class KantetsuKanjiRomajiOrHiraganaMapFactoryBean implements FactoryBean<
 
 	private String url = null;
 
-	private UnicodeBlock keyUnicodeBlock, valueUnicodeBlock = null;
+	@Target(ElementType.FIELD)
+	@Retention(RetentionPolicy.RUNTIME)
+	private @interface Note {
+		String value();
+	}
+
+	@Note("Key Unicode Block")
+	private UnicodeBlock keyUnicodeBlock = null;
+
+	private UnicodeBlock valueUnicodeBlock = null;
 
 	public void setUrl(final String url) {
 		this.url = url;
@@ -159,7 +172,10 @@ public class KantetsuKanjiRomajiOrHiraganaMapFactoryBean implements FactoryBean<
 
 	private static class KanjiHiraganaRomaji {
 
-		private String kanji = null, hiragana = null, romaji = null;
+		@Note("Kanji")
+		private String kanji = null;
+
+		private String hiragana = null, romaji = null;
 
 	}
 
