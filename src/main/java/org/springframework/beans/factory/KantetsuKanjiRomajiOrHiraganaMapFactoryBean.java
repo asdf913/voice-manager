@@ -83,62 +83,64 @@ public class KantetsuKanjiRomajiOrHiraganaMapFactoryBean implements FactoryBean<
 
 	private Map<String, String> getObject(final Stream<KanjiHiraganaRomaji> stream) {
 		//
-		return collect(stream, LinkedHashMap::new, (m, v) -> {
+		return collect(stream, LinkedHashMap::new, this::accumulate, Map::putAll);
+		//
+	}
+
+	private void accumulate(final Map<String, String> m, final KanjiHiraganaRomaji v) {
+		//
+		final Field[] fs = getDeclaredFields(Util.getClass(v));
+		//
+		Field f = null;
+		//
+		String s = null;
+		//
+		List<UnicodeBlock> unicodeBlocks = null;
+		//
+		UnicodeBlock unicodeBlock = null;
+		//
+		IValue0<String> key = null, value = null;
+		//
+		for (int i = 0; fs != null && i < fs.length; i++) {
 			//
-			final Field[] fs = getDeclaredFields(Util.getClass(v));
-			//
-			Field f = null;
-			//
-			String s = null;
-			//
-			List<UnicodeBlock> unicodeBlocks = null;
-			//
-			UnicodeBlock unicodeBlock = null;
-			//
-			IValue0<String> key = null, value = null;
-			//
-			for (int i = 0; fs != null && i < fs.length; i++) {
+			if ((f = fs[i]) == null) {
 				//
-				if ((f = fs[i]) == null) {
-					//
-					continue;
-					//
-				} // if
-					//
-				try {
-					//
-					s = Util.toString(FieldUtils.readField(f, v, true));
-					//
-				} catch (final IllegalAccessException e) {
-					//
-					throw new RuntimeException(e);
-					//
-				} // try
-					//
-				if ((unicodeBlocks = getUnicodeBlocks(s)) != null && unicodeBlocks.size() == 1) {
-					//
-					if (keyUnicodeBlock == (unicodeBlock = unicodeBlocks.get(0))) {
-						//
-						key = Unit.with(s);
-						//
-					} else if (valueUnicodeBlock == unicodeBlock) {
-						//
-						value = Unit.with(s);
-						//
-					} // if
-						//
-				} // if
-					//
-			} // for
-				//
-			if (Boolean.logicalAnd(key != null, value != null)) {
-				//
-				Util.put(m, IValue0Util.getValue0(key), IValue0Util.getValue0(value));
+				continue;
 				//
 			} // if
 				//
-		}, Map::putAll);
-		//
+			try {
+				//
+				s = Util.toString(FieldUtils.readField(f, v, true));
+				//
+			} catch (final IllegalAccessException e) {
+				//
+				throw new RuntimeException(e);
+				//
+			} // try
+				//
+			if ((unicodeBlocks = getUnicodeBlocks(s)) != null && unicodeBlocks.size() == 1) {
+				//
+				if (keyUnicodeBlock == (unicodeBlock = unicodeBlocks.get(0))) {
+					//
+					key = Unit.with(s);
+					//
+				} else if (valueUnicodeBlock == unicodeBlock) {
+					//
+					value = Unit.with(s);
+					//
+				} // if
+					//
+			} // if
+				//
+		} // for
+			//
+		if (Boolean.logicalAnd(key != null, value != null)) {
+			//
+			Util.put(m, IValue0Util.getValue0(key), IValue0Util.getValue0(value));
+			//
+		} // if
+			//
 	}
 
 	@Nullable
