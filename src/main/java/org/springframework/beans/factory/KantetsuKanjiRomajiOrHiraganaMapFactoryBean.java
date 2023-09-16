@@ -126,11 +126,11 @@ public class KantetsuKanjiRomajiOrHiraganaMapFactoryBean implements FactoryBean<
 		//
 	}
 
-	private static Field[] getDeclaredFields(final Class<?> instance) {
+	private static Field[] getDeclaredFields(@Nullable final Class<?> instance) {
 		return instance != null ? instance.getDeclaredFields() : null;
 	}
 
-	private static <T, R> R collect(final Stream<T> instance, final Supplier<R> supplier,
+	private static <T, R> R collect(@Nullable final Stream<T> instance, final Supplier<R> supplier,
 			final BiConsumer<R, ? super T> accumulator, final BiConsumer<R, R> combiner) {
 		return instance != null ? instance.collect(supplier, accumulator, combiner) : null;
 	}
@@ -140,7 +140,7 @@ public class KantetsuKanjiRomajiOrHiraganaMapFactoryBean implements FactoryBean<
 		return instance != null && stream(instance) != null ? instance.map(mapper) : null;
 	}
 
-	private static <T> Stream<T> stream(final FailableStream<T> instance) {
+	private static <T> Stream<T> stream(@Nullable final FailableStream<T> instance) {
 		return instance != null ? instance.stream() : null;
 	}
 
@@ -199,12 +199,12 @@ public class KantetsuKanjiRomajiOrHiraganaMapFactoryBean implements FactoryBean<
 		//
 	}
 
-	private static String getPath(final URL instance) {
+	private static String getPath(@Nullable final URL instance) {
 		return instance != null ? instance.getPath() : null;
 	}
 
 	@Nullable
-	private static List<UnicodeBlock> getUnicodeBlocks(final String string) {
+	private static List<UnicodeBlock> getUnicodeBlocks(@Nullable final String string) {
 		//
 		final char[] cs = string != null ? string.toCharArray() : null;
 		//
