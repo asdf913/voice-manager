@@ -115,7 +115,7 @@ public class KantetsuKanjiRomajiOrHiraganaMapFactoryBean implements FactoryBean<
 					//
 			} // for
 				//
-			if (key != null && value != null) {
+			if (Boolean.logicalAnd(key != null, value != null)) {
 				//
 				Util.put(m, IValue0Util.getValue0(key), IValue0Util.getValue0(value));
 				//
