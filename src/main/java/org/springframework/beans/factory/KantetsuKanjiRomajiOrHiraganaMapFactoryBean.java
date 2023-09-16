@@ -180,6 +180,7 @@ public class KantetsuKanjiRomajiOrHiraganaMapFactoryBean implements FactoryBean<
 		@Note("Hiragana")
 		private String hiragana = null;
 
+		@Note("Romaji")
 		private String romaji = null;
 
 	}
