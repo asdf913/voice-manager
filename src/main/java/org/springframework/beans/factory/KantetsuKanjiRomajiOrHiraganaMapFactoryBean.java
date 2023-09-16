@@ -157,6 +157,7 @@ public class KantetsuKanjiRomajiOrHiraganaMapFactoryBean implements FactoryBean<
 
 	}
 
+	@Nullable
 	private static KanjiHiraganaRomaji getKanjiHiraganaRomaji(final Element instance) throws IOException {
 		//
 		final String attr = ElementUtil.attr(instance, "href");
@@ -202,6 +203,7 @@ public class KantetsuKanjiRomajiOrHiraganaMapFactoryBean implements FactoryBean<
 		return instance != null ? instance.getPath() : null;
 	}
 
+	@Nullable
 	private static List<UnicodeBlock> getUnicodeBlocks(final String string) {
 		//
 		final char[] cs = string != null ? string.toCharArray() : null;
