@@ -3,7 +3,6 @@ package org.springframework.beans.factory;
 import java.io.IOException;
 import java.lang.Character.UnicodeBlock;
 import java.lang.reflect.Field;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -158,8 +157,7 @@ public class KantetsuKanjiRomajiOrHiraganaMapFactoryBean implements FactoryBean<
 
 	}
 
-	private static KanjiHiraganaRomaji getKanjiHiraganaRomaji(final Element instance)
-			throws MalformedURLException, IOException {
+	private static KanjiHiraganaRomaji getKanjiHiraganaRomaji(final Element instance) throws IOException {
 		//
 		final String attr = ElementUtil.attr(instance, "href");
 		//
@@ -173,8 +171,7 @@ public class KantetsuKanjiRomajiOrHiraganaMapFactoryBean implements FactoryBean<
 		//
 	}
 
-	private static KanjiHiraganaRomaji getKanjiHiraganaRomaji(final String urlString)
-			throws MalformedURLException, IOException {
+	private static KanjiHiraganaRomaji getKanjiHiraganaRomaji(final String urlString) throws IOException {
 		//
 		final URL url = testAndApply(StringUtils::isNotBlank, urlString, URL::new, null);
 		//
