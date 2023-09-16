@@ -208,11 +208,13 @@ public class OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl
 	private static BufferedImage createMergedBufferedImage(final String urlString, final List<String> srcs,
 			final int imageType) {
 		//
-		final FailableStream<String> fs = new FailableStream<>(stream(srcs));
+		final FailableStream<String> fs1 = new FailableStream<>(stream(srcs));
 		//
-		final List<BufferedImage> bis = fs != null && fs.stream() != null
-				? fs.map(x -> ImageIO.read(new URL(String.join("/", urlString, x)))).collect(Collectors.toList())
+		final FailableStream<BufferedImage> fs2 = fs1 != null
+				? FailableStreamUtil.map(fs1, x -> ImageIO.read(new URL(String.join("/", urlString, x))))
 				: null;
+		//
+		final List<BufferedImage> bis = fs2 != null ? fs2.collect(Collectors.toList()) : null;
 		//
 		BufferedImage result = null;
 		//

@@ -2256,8 +2256,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				Arrays.asList(JLabel.class, JScrollPane.class, JProgressBar.class, JPanel.class));
 		//
 		forEach(toList(map(
-				FailableStreamUtil.stream(new FailableStream<>(stream(pages))
-						.map(x -> Narcissus.getObjectField(x, getDeclaredField(getClass(x), COMPONENT)))),
+				FailableStreamUtil.stream(FailableStreamUtil.map(new FailableStream<>(stream(pages)),
+						x -> Narcissus.getObjectField(x, getDeclaredField(getClass(x), COMPONENT)))),
 				x -> cast(Container.class, x))), c -> {
 					//
 					// https://stackoverflow.com/questions/35508128/setting-personalized-focustraversalpolicy-on-tab-in-jtabbedpane
@@ -5406,12 +5406,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		// "@SystemClipboard", pass the "source" to
 		// "actionPerformedForSystemClipboardAnnotated(java.lang.Object)" method
 		//
-		testAndRun(
-				contains(toList(filter(FailableStreamUtil.stream(new FailableStream<>(filter(
-						testAndApply(Objects::nonNull, getDeclaredFields(VoiceManager.class), Arrays::stream, null),
-						f -> isAnnotationPresent(f, SystemClipboard.class)))
-						.map(f -> FieldUtils.readField(f, this, true))), Objects::nonNull)), source),
-				() -> actionPerformedForSystemClipboardAnnotated(nonTest, source));
+		final FailableStream<Field> fs = new FailableStream<>(
+				filter(testAndApply(Objects::nonNull, getDeclaredFields(VoiceManager.class), Arrays::stream, null),
+						f -> isAnnotationPresent(f, SystemClipboard.class)));
+		//
+		testAndRun(contains(toList(
+				filter(FailableStreamUtil.stream(FailableStreamUtil.map(fs, f -> FieldUtils.readField(f, this, true))),
+						Objects::nonNull)),
+				source), () -> actionPerformedForSystemClipboardAnnotated(nonTest, source));
 		//
 		// Speech Rate
 		//
@@ -5709,11 +5711,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Nullable
 	private static List<?> getObjectsByGroupAnnotation(final Object instance, final String group) {
 		//
-		return toList(FailableStreamUtil.stream(new FailableStream<>(filter(
+		final FailableStream<Field> fs = new FailableStream<>(filter(
 				testAndApply(Objects::nonNull, getDeclaredFields(VoiceManager.class), Arrays::stream, null), f -> {
 					final Group g = isAnnotationPresent(f, Group.class) ? f.getAnnotation(Group.class) : null;
 					return StringUtils.equals(g != null ? g.value() : null, group);
-				})).map(f -> FieldUtils.readField(f, instance, true))));
+				}));
+		//
+		return toList(
+				FailableStreamUtil.stream(FailableStreamUtil.map(fs, f -> FieldUtils.readField(f, instance, true))));
 		//
 	}
 

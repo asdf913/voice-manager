@@ -69,7 +69,7 @@ public class KantetsuKanjiRomajiOrHiraganaMapFactoryBean implements FactoryBean<
 		return getObject(
 				Util.filter(
 						FailableStreamUtil
-								.stream(map(
+								.stream(FailableStreamUtil.map(
 										new FailableStream<>(
 												Util.stream(ElementUtil.select(
 														testAndApply(Objects::nonNull,
@@ -153,12 +153,6 @@ public class KantetsuKanjiRomajiOrHiraganaMapFactoryBean implements FactoryBean<
 	private static <T, R> R collect(@Nullable final Stream<T> instance, final Supplier<R> supplier,
 			final BiConsumer<R, ? super T> accumulator, final BiConsumer<R, R> combiner) {
 		return instance != null ? instance.collect(supplier, accumulator, combiner) : null;
-	}
-
-	@Nullable
-	private static <T, R> FailableStream<R> map(@Nullable final FailableStream<T> instance,
-			final FailableFunction<T, R, ?> mapper) {
-		return instance != null && FailableStreamUtil.stream(instance) != null ? instance.map(mapper) : null;
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(@Nullable final Predicate<T> predicate, final T value,

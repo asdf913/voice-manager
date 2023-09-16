@@ -178,6 +178,7 @@ import org.apache.commons.lang3.function.OnlineNHKJapanesePronunciationsAccentFa
 import org.apache.commons.lang3.math.Fraction;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
+import org.apache.commons.lang3.stream.FailableStreamUtil;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.ibatis.binding.BindingException;
@@ -2711,8 +2712,9 @@ class VoiceManagerTest {
 			String className = null;
 			//
 			if (!Objects.equals(
-					new FailableStream<>(testAndApply(Objects::nonNull, instructions, Arrays::stream, null))
-							.map(VoiceManagerTest::getClass).collect(Collectors.toList()),
+					FailableStreamUtil.map(
+							new FailableStream<>(testAndApply(Objects::nonNull, instructions, Arrays::stream, null)),
+							VoiceManagerTest::getClass).collect(Collectors.toList()),
 					Arrays.asList(NEW.class, DUP.class, INVOKESPECIAL.class, ATHROW.class))) {
 				//
 				return null;

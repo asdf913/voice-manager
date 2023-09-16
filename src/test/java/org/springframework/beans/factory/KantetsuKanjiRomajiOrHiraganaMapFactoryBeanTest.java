@@ -14,7 +14,6 @@ import java.util.stream.Stream;
 
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
-import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -31,8 +30,8 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class KantetsuKanjiRomajiOrHiraganaMapFactoryBeanTest {
 
-	private static Method METHOD_GET_OBJECT, METHOD_GET_KANJI_HIRAGANA_ROMAJI, METHOD_MAP, METHOD_TEST_AND_APPLY,
-			METHOD_GET_PATH, METHOD_TEST_AND_ACCEPT = null;
+	private static Method METHOD_GET_OBJECT, METHOD_GET_KANJI_HIRAGANA_ROMAJI, METHOD_TEST_AND_APPLY, METHOD_GET_PATH,
+			METHOD_TEST_AND_ACCEPT = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -43,8 +42,6 @@ class KantetsuKanjiRomajiOrHiraganaMapFactoryBeanTest {
 		//
 		(METHOD_GET_KANJI_HIRAGANA_ROMAJI = clz.getDeclaredMethod("getKanjiHiraganaRomaji", Element.class))
 				.setAccessible(true);
-		//
-		(METHOD_MAP = clz.getDeclaredMethod("map", FailableStream.class, FailableFunction.class)).setAccessible(true);
 		//
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
@@ -195,30 +192,6 @@ class KantetsuKanjiRomajiOrHiraganaMapFactoryBeanTest {
 	private static Object getKanjiHiraganaRomaji(final Element instance) throws Throwable {
 		try {
 			return METHOD_GET_KANJI_HIRAGANA_ROMAJI.invoke(null, instance);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testMap() throws Throwable {
-		//
-		Assertions.assertNull(map(null, null));
-		//
-		Assertions.assertNotNull(map(new FailableStream<>(Stream.empty()), null));
-		//
-	}
-
-	private static <T, R> FailableStream<R> map(final FailableStream<T> instance,
-			final FailableFunction<T, R, ?> mapper) throws Throwable {
-		try {
-			final Object obj = METHOD_MAP.invoke(null, instance, mapper);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof FailableStream) {
-				return (FailableStream) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

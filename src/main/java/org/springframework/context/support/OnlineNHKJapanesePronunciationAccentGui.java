@@ -86,6 +86,7 @@ import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.function.OnlineNHKJapanesePronunciationsAccentFailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.lang3.stream.FailableStreamUtil;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
@@ -419,11 +420,13 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		// "java.awt.Component" from field(s) annotated by
 		// "org.springframework.context.support.OnlineNHKJapanesePronunciationAccentGui$Group"
 		//
-		final Collection<Component> cs = new FailableStream<>(
+		final FailableStream<Field> fs = new FailableStream<>(
 				filter(testAndApply(Objects::nonNull, getClass().getDeclaredFields(), Arrays::stream, null),
 						x -> Objects.equals(value(testAndApply(y -> isAnnotationPresent(y, Group.class), x,
-								y -> getAnnotation(y, Group.class), null)), "LastComponentInRow")))
-				.map(x -> cast(Component.class, get(x, this))).collect(Collectors.toList());
+								y -> getAnnotation(y, Group.class), null)), "LastComponentInRow")));
+		//
+		final Collection<Component> cs = FailableStreamUtil.map(fs, x -> cast(Component.class, get(x, this)))
+				.collect(Collectors.toList());
 		//
 		final Double maxPreferredSizeWidth = orElse(
 				max(map(stream(cs), x -> getWidth(getPreferredSize(x))), ObjectUtils::compare), null);

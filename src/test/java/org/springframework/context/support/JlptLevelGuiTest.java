@@ -72,6 +72,7 @@ import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.lang3.stream.FailableStreamUtil;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
 import com.google.common.base.Predicates;
 import org.apache.poi.util.IntList;
@@ -923,8 +924,9 @@ class JlptLevelGuiTest {
 			String className = null;
 			//
 			if (!Objects.equals(
-					new FailableStream<>(testAndApply(Objects::nonNull, instructions, Arrays::stream, null))
-							.map(JlptLevelGuiTest::getClass).collect(Collectors.toList()),
+					FailableStreamUtil.map(
+							new FailableStream<>(testAndApply(Objects::nonNull, instructions, Arrays::stream, null)),
+							JlptLevelGuiTest::getClass).collect(Collectors.toList()),
 					Arrays.asList(NEW.class, DUP.class, INVOKESPECIAL.class, ATHROW.class))) {
 				//
 				return null;
