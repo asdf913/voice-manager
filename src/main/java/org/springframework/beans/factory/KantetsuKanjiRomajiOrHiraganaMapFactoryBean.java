@@ -80,6 +80,8 @@ public class KantetsuKanjiRomajiOrHiraganaMapFactoryBean implements FactoryBean<
 			//
 			List<UnicodeBlock> unicodeBlocks = null;
 			//
+			UnicodeBlock unicodeBlock = null;
+			//
 			IValue0<String> key = null, value = null;
 			//
 			for (int i = 0; fs != null && i < fs.length; i++) {
@@ -100,18 +102,18 @@ public class KantetsuKanjiRomajiOrHiraganaMapFactoryBean implements FactoryBean<
 					//
 				} // try
 					//
-				if ((unicodeBlocks = getUnicodeBlocks(s)) != null && unicodeBlocks.size() == 1
-						&& keyUnicodeBlock == unicodeBlocks.get(0)) {
+				if ((unicodeBlocks = getUnicodeBlocks(s)) != null && unicodeBlocks.size() == 1) {
 					//
-					key = Unit.with(s);
-					//
-				} // if
-					//
-				if ((unicodeBlocks = getUnicodeBlocks(s)) != null && unicodeBlocks.size() == 1
-						&& valueUnicodeBlock == unicodeBlocks.get(0)) {
-					//
-					value = Unit.with(s);
-					//
+					if (keyUnicodeBlock == (unicodeBlock = unicodeBlocks.get(0))) {
+						//
+						key = Unit.with(s);
+						//
+					} else if (valueUnicodeBlock == unicodeBlock) {
+						//
+						value = Unit.with(s);
+						//
+					} // if
+						//
 				} // if
 					//
 			} // for
