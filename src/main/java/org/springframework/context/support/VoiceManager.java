@@ -239,6 +239,7 @@ import org.apache.commons.lang3.function.OnlineNHKJapanesePronunciationsAccentFa
 import org.apache.commons.lang3.math.Fraction;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
+import org.apache.commons.lang3.stream.FailableStreamUtil;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.ibatis.session.Configuration;
@@ -2255,8 +2256,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				Arrays.asList(JLabel.class, JScrollPane.class, JProgressBar.class, JPanel.class));
 		//
 		forEach(toList(map(
-				new FailableStream<>(stream(pages))
-						.map(x -> Narcissus.getObjectField(x, getDeclaredField(getClass(x), COMPONENT))).stream(),
+				FailableStreamUtil.stream(new FailableStream<>(stream(pages))
+						.map(x -> Narcissus.getObjectField(x, getDeclaredField(getClass(x), COMPONENT)))),
 				x -> cast(Container.class, x))), c -> {
 					//
 					// https://stackoverflow.com/questions/35508128/setting-personalized-focustraversalpolicy-on-tab-in-jtabbedpane
@@ -5024,7 +5025,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				filter(map(stream, f -> {
 					//
-					final List<?> objects = toList(stream(new FailableStream<>(
+					final List<?> objects = toList(FailableStreamUtil.stream(new FailableStream<>(
 							filter(testAndApply(Objects::nonNull, getDeclaredAnnotations(f), Arrays::stream, null),
 									a -> Objects.equals(annotationType(a), nameClass)))
 							.map(a -> {
@@ -5406,7 +5407,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		// "actionPerformedForSystemClipboardAnnotated(java.lang.Object)" method
 		//
 		testAndRun(
-				contains(toList(filter(stream(new FailableStream<>(filter(
+				contains(toList(filter(FailableStreamUtil.stream(new FailableStream<>(filter(
 						testAndApply(Objects::nonNull, getDeclaredFields(VoiceManager.class), Arrays::stream, null),
 						f -> isAnnotationPresent(f, SystemClipboard.class)))
 						.map(f -> FieldUtils.readField(f, this, true))), Objects::nonNull)), source),
@@ -5708,7 +5709,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Nullable
 	private static List<?> getObjectsByGroupAnnotation(final Object instance, final String group) {
 		//
-		return toList(stream(new FailableStream<>(filter(
+		return toList(FailableStreamUtil.stream(new FailableStream<>(filter(
 				testAndApply(Objects::nonNull, getDeclaredFields(VoiceManager.class), Arrays::stream, null), f -> {
 					final Group g = isAnnotationPresent(f, Group.class) ? f.getAnnotation(Group.class) : null;
 					return StringUtils.equals(g != null ? g.value() : null, group);
@@ -6619,11 +6620,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
-	}
-
-	@Nullable
-	private static <O> Stream<O> stream(@Nullable final FailableStream<O> instance) {
-		return instance != null ? instance.stream() : null;
 	}
 
 	private void actionPerformedForSystemClipboardAnnotated(final boolean nonTest, final Object source) {
@@ -13619,7 +13615,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Nullable
 	private static List<Field> getVisibileVoiceFields() {
 		//
-		return toList(stream(new FailableStream<>(
+		return toList(FailableStreamUtil.stream(new FailableStream<>(
 				testAndApply(x -> x != null, FieldUtils.getAllFields(Voice.class), Arrays::stream, null)).filter(f -> {
 					//
 					final Annotation[] as = getDeclaredAnnotations(f);

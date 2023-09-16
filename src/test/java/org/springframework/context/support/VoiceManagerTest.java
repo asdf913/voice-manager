@@ -349,15 +349,14 @@ class VoiceManagerTest {
 			METHOD_GET_WORKBOOK_BY_ZIP_FILE, METHOD_GET_ENCRYPTION_TABLE_HTML, METHOD_HTML, METHOD_LENGTH,
 			METHOD_CREATE_ZIP_FILE, METHOD_RETRIEVE_ALL_VOICES, METHOD_SEARCH_VOICE_LIST_NAMES_BY_VOICE_ID,
 			METHOD_SET_LIST_NAMES, METHOD_SET_SOURCE, METHOD_GET_PHYSICAL_NUMBER_OF_ROWS, METHOD_EXPORT_HTML,
-			METHOD_STREAM, METHOD_ACTION_PERFORMED_FOR_SYSTEM_CLIPBOARD_ANNOTATED,
-			METHOD_ACTION_PERFORMED_FOR_SPEECH_RATE, METHOD_ACTION_PERFORMED_FOR_CONVERSION, METHOD_TEST_AND_RUN,
-			METHOD_TO_CHAR_ARRAY, METHOD_HAS_LOWER_BOUND, METHOD_HAS_UPPER_BOUND, METHOD_LOWER_END_POINT,
-			METHOD_UPPER_END_POINT, METHOD_GET_IF_NULL, METHOD_SET_LANGUAGE, METHOD_GET_LANGUAGE,
-			METHOD_GET_BOOLEAN_VALUE, METHOD_GET_RESPONSE_CODE, METHOD_TO_RUNTIME_EXCEPTION, METHOD_GET_ALGORITHM,
-			METHOD_SET_PREFERRED_WIDTH_ARRAY, METHOD_SET_PREFERRED_WIDTH_ITERABLE, METHOD_GET_VALUE_FROM_CELL,
-			METHOD_GET_MP3_TAGS, METHOD_KEY_RELEASED_FOR_TEXT_IMPORT, METHOD_IS_STATIC,
-			METHOD_IMPORT_BY_WORK_BOOK_FILES, METHOD_ACTION_PERFORMED_FOR_EXPORT_BUTTONS,
-			METHOD_CREATE_MULTI_MAP_BY_LIST_NAMES, METHOD_GET_FIELD_BY_NAME,
+			METHOD_ACTION_PERFORMED_FOR_SYSTEM_CLIPBOARD_ANNOTATED, METHOD_ACTION_PERFORMED_FOR_SPEECH_RATE,
+			METHOD_ACTION_PERFORMED_FOR_CONVERSION, METHOD_TEST_AND_RUN, METHOD_TO_CHAR_ARRAY, METHOD_HAS_LOWER_BOUND,
+			METHOD_HAS_UPPER_BOUND, METHOD_LOWER_END_POINT, METHOD_UPPER_END_POINT, METHOD_GET_IF_NULL,
+			METHOD_SET_LANGUAGE, METHOD_GET_LANGUAGE, METHOD_GET_BOOLEAN_VALUE, METHOD_GET_RESPONSE_CODE,
+			METHOD_TO_RUNTIME_EXCEPTION, METHOD_GET_ALGORITHM, METHOD_SET_PREFERRED_WIDTH_ARRAY,
+			METHOD_SET_PREFERRED_WIDTH_ITERABLE, METHOD_GET_VALUE_FROM_CELL, METHOD_GET_MP3_TAGS,
+			METHOD_KEY_RELEASED_FOR_TEXT_IMPORT, METHOD_IS_STATIC, METHOD_IMPORT_BY_WORK_BOOK_FILES,
+			METHOD_ACTION_PERFORMED_FOR_EXPORT_BUTTONS, METHOD_CREATE_MULTI_MAP_BY_LIST_NAMES, METHOD_GET_FIELD_BY_NAME,
 			METHOD_CREATE_PROVIDER_VERSION_J_TEXT_COMPONENT, METHOD_CREATE_PROVIDER_PLATFORM_J_TEXT_COMPONENT,
 			METHOD_SET_SPEECH_VOLUME, METHOD_VALUES, METHOD_EXPORT_MICROSOFT_ACCESS, METHOD_IMPORT_RESULT_SET,
 			METHOD_CREATE_VOICE_ID_WARNING_PANEL, METHOD_CREATE_MICROSOFT_WINDOWS_COMPATIBILITY_WARNING_J_PANEL,
@@ -883,8 +882,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_EXPORT_HTML = clz.getDeclaredMethod("exportHtml", CLASS_OBJECT_MAP, Multimap.class, Entry.class,
 				Map.class, Collection.class)).setAccessible(true);
-		//
-		(METHOD_STREAM = clz.getDeclaredMethod("stream", FailableStream.class)).setAccessible(true);
 		//
 		(METHOD_ACTION_PERFORMED_FOR_SYSTEM_CLIPBOARD_ANNOTATED = clz
 				.getDeclaredMethod("actionPerformedForSystemClipboardAnnotated", Boolean.TYPE, Object.class))
@@ -8185,27 +8182,6 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testStream() throws Throwable {
-		//
-		Assertions.assertNull(stream(null));
-		//
-	}
-
-	private static <O> Stream<O> stream(final FailableStream<O> instance) throws Throwable {
-		try {
-			final Object obj = METHOD_STREAM.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Stream) {
-				return (Stream) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testActionPerformedForSystemClipboardAnnotated() throws Throwable {
 		//
 		final Class<?> clz = getClass(instance != null ? instance.getToolkit() : null);
@@ -10939,6 +10915,16 @@ class VoiceManagerTest {
 			Assertions.assertNull(invoke(printStackTrace, null, (Object) null));
 			//
 			Assertions.assertNull(invoke(printStackTrace, null, new Throwable()));
+			//
+			// printStackTrace(java.lang.Throwable)
+			//
+//			final Method printStackTrace = CLASS_IH != null
+//					? CLASS_IH.getDeclaredMethod("printStackTrace", Throwable.class)
+//					: null;
+//			//
+//			Assertions.assertNull(invoke(printStackTrace, null, (Object) null));
+//			//
+//			Assertions.assertNull(invoke(printStackTrace, null, new Throwable()));
 			//
 		} // if
 			//

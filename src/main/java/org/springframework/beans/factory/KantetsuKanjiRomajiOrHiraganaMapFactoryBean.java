@@ -26,6 +26,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.lang3.stream.FailableStreamUtil;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
@@ -67,16 +68,16 @@ public class KantetsuKanjiRomajiOrHiraganaMapFactoryBean implements FactoryBean<
 		//
 		return getObject(
 				Util.filter(
-						stream(map(
-								new FailableStream<>(
-										Util.stream(
-												ElementUtil.select(
+						FailableStreamUtil
+								.stream(map(
+										new FailableStream<>(
+												Util.stream(ElementUtil.select(
 														testAndApply(Objects::nonNull,
 																testAndApply(StringUtils::isNotBlank, url, URL::new,
 																		null),
 																x -> Jsoup.parse(x, 0), null),
 														".list-stationguide-vt li a"))),
-								KantetsuKanjiRomajiOrHiraganaMapFactoryBean::getKanjiHiraganaRomaji)),
+										KantetsuKanjiRomajiOrHiraganaMapFactoryBean::getKanjiHiraganaRomaji)),
 						Objects::nonNull));
 		//
 	}
@@ -157,12 +158,7 @@ public class KantetsuKanjiRomajiOrHiraganaMapFactoryBean implements FactoryBean<
 	@Nullable
 	private static <T, R> FailableStream<R> map(@Nullable final FailableStream<T> instance,
 			final FailableFunction<T, R, ?> mapper) {
-		return instance != null && stream(instance) != null ? instance.map(mapper) : null;
-	}
-
-	@Nullable
-	private static <T> Stream<T> stream(@Nullable final FailableStream<T> instance) {
-		return instance != null ? instance.stream() : null;
+		return instance != null && FailableStreamUtil.stream(instance) != null ? instance.map(mapper) : null;
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(@Nullable final Predicate<T> predicate, final T value,

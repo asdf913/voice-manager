@@ -33,6 +33,7 @@ import javax.imageio.ImageIO;
 
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.stream.FailableStreamUtil;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
