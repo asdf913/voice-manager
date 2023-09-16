@@ -128,20 +128,24 @@ public class KantetsuKanjiRomajiOrHiraganaMapFactoryBean implements FactoryBean<
 		//
 	}
 
+	@Nullable
 	private static Field[] getDeclaredFields(@Nullable final Class<?> instance) {
 		return instance != null ? instance.getDeclaredFields() : null;
 	}
 
+	@Nullable
 	private static <T, R> R collect(@Nullable final Stream<T> instance, final Supplier<R> supplier,
 			final BiConsumer<R, ? super T> accumulator, final BiConsumer<R, R> combiner) {
 		return instance != null ? instance.collect(supplier, accumulator, combiner) : null;
 	}
 
+	@Nullable
 	private static <T, R> FailableStream<R> map(@Nullable final FailableStream<T> instance,
 			final FailableFunction<T, R, ?> mapper) {
 		return instance != null && stream(instance) != null ? instance.map(mapper) : null;
 	}
 
+	@Nullable
 	private static <T> Stream<T> stream(@Nullable final FailableStream<T> instance) {
 		return instance != null ? instance.stream() : null;
 	}
@@ -201,6 +205,7 @@ public class KantetsuKanjiRomajiOrHiraganaMapFactoryBean implements FactoryBean<
 		//
 	}
 
+	@Nullable
 	private static String getPath(@Nullable final URL instance) {
 		return instance != null ? instance.getPath() : null;
 	}
