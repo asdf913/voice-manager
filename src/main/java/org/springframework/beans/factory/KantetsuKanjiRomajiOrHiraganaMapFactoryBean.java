@@ -135,7 +135,7 @@ public class KantetsuKanjiRomajiOrHiraganaMapFactoryBean implements FactoryBean<
 		return instance != null ? instance.collect(supplier, accumulator, combiner) : null;
 	}
 
-	private static <T, R> FailableStream<R> map(final FailableStream<T> instance,
+	private static <T, R> FailableStream<R> map(@Nullable final FailableStream<T> instance,
 			final FailableFunction<T, R, ?> mapper) {
 		return instance != null && stream(instance) != null ? instance.map(mapper) : null;
 	}
@@ -144,7 +144,7 @@ public class KantetsuKanjiRomajiOrHiraganaMapFactoryBean implements FactoryBean<
 		return instance != null ? instance.stream() : null;
 	}
 
-	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+	private static <T, R, E extends Throwable> R testAndApply(@Nullable final Predicate<T> predicate, final T value,
 			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
 			throws E {
 		return predicate != null && predicate.test(value) ? FailableFunctionUtil.apply(functionTrue, value)
@@ -228,8 +228,8 @@ public class KantetsuKanjiRomajiOrHiraganaMapFactoryBean implements FactoryBean<
 		//
 	}
 
-	private static <T, U> void testAndAccept(final BiPredicate<T, U> instance, final T t, final U u,
-			final BiConsumer<T, U> consumer) {
+	private static <T, U> void testAndAccept(@Nullable final BiPredicate<T, U> instance, final T t, final U u,
+			@Nullable final BiConsumer<T, U> consumer) {
 		if (instance != null && instance.test(t, u) && consumer != null) {
 			consumer.accept(t, u);
 		} // if
