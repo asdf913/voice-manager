@@ -12,10 +12,7 @@ public interface FailableStreamUtil {
 	}
 
 	static <T, R> FailableStream<R> map(final FailableStream<T> instance, final FailableFunction<T, R, ?> mapper) {
-		return instance != null
-				&& stream(instance) != null
-				? instance.map(mapper) 
-						: null;
+		return instance != null && stream(instance) != null ? instance.map(mapper) : null;
 	}
 
 }
