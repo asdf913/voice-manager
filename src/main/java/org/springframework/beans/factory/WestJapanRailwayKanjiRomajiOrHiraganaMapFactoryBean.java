@@ -170,7 +170,7 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends StringM
 		//
 		for (int i = 0; os != null && i < os.length; i++) {
 			//
-			if ((clz = Util.getClass(o = os[i])) == null || (fs = clz.getDeclaredFields()) == null
+			if ((clz = Util.getClass(o = os[i])) == null || (fs = Util.getDeclaredFields(clz)) == null
 					|| (triples = getTriples(fs, o)) == null || triples.isEmpty()) {
 				//
 				continue;

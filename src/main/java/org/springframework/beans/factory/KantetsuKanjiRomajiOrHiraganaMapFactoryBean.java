@@ -91,7 +91,7 @@ public class KantetsuKanjiRomajiOrHiraganaMapFactoryBean implements FactoryBean<
 
 	private void accumulate(final Map<String, String> m, final KanjiHiraganaRomaji v) {
 		//
-		accumulate(m, v, getDeclaredFields(Util.getClass(v)));
+		accumulate(m, v, Util.getDeclaredFields(Util.getClass(v)));
 		//
 	}
 
@@ -160,11 +160,6 @@ public class KantetsuKanjiRomajiOrHiraganaMapFactoryBean implements FactoryBean<
 	private static <T, U, R, E extends Throwable> R apply(@Nullable final FailableBiFunction<T, U, R, E> instance,
 			@Nullable final T t, final U u) throws E {
 		return instance != null ? instance.apply(t, u) : null;
-	}
-
-	@Nullable
-	private static Field[] getDeclaredFields(@Nullable final Class<?> instance) {
-		return instance != null ? instance.getDeclaredFields() : null;
 	}
 
 	@Nullable

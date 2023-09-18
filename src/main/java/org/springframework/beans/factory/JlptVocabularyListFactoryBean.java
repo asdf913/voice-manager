@@ -188,7 +188,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 			//
 			// name
 			//
-			if ((size = IterableUtils.size(fs = getFieldsByName(JlptVocabulary.class.getDeclaredFields(),
+			if ((size = IterableUtils.size(fs = getFieldsByName(Util.getDeclaredFields(JlptVocabulary.class),
 					stringCellValue = CellUtil.getStringCellValue(RowUtil.getCell(row, i))))) == 1) {
 				//
 				entry = Pair.of(Integer.valueOf(i), IterableUtils.get(fs, 0));
@@ -595,7 +595,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		for (int i = 0; i < ss.length; i++) {
 			//
 			if ((size = IterableUtils
-					.size(fs = getFieldsByName(JlptVocabulary.class.getDeclaredFields(), s = ss[i]))) == 1) {
+					.size(fs = getFieldsByName(Util.getDeclaredFields(JlptVocabulary.class), s = ss[i]))) == 1) {
 				//
 				entry = Pair.of(Integer.valueOf(i), IterableUtils.get(fs, 0));
 				//

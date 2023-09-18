@@ -47,7 +47,7 @@ abstract class Util {
 			//
 		} else {
 			//
-			final List<Field> fs = toList(filter(Arrays.stream(UnicodeBlock.class.getDeclaredFields()),
+			final List<Field> fs = toList(filter(Arrays.stream(getDeclaredFields(UnicodeBlock.class)),
 					f -> StringUtils.startsWithIgnoreCase(getName(f), string)));
 			//
 			final int size = IterableUtils.size(fs);
@@ -78,6 +78,10 @@ abstract class Util {
 			//
 		} // if
 			//
+	}
+
+	static Field[] getDeclaredFields(final Class<?> instance) {
+		return instance != null ? instance.getDeclaredFields() : null;
 	}
 
 	@Nullable

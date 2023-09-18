@@ -124,7 +124,8 @@ public class BufferedImageTypeFactoryBean implements FactoryBean<Integer> {
 		} // try
 			//
 		final List<Field> fs = Util.toList(Util.filter(
-				testAndApply(Objects::nonNull, BufferedImage.class.getDeclaredFields(), Arrays::stream, null), f -> {
+				testAndApply(Objects::nonNull, Util.getDeclaredFields(BufferedImage.class), Arrays::stream, null),
+				f -> {
 					//
 					final Class<?> type = Util.getType(f);
 					//
