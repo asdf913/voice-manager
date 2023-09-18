@@ -156,8 +156,8 @@ public class KantetsuKanjiRomajiOrHiraganaMapFactoryBean implements FactoryBean<
 		return predicate != null && predicate.test(t, u) ? apply(functionTrue, t, u) : apply(functionFalse, t, u);
 	}
 
-	private static <T, U, R, E extends Throwable> R apply(final FailableBiFunction<T, U, R, E> instance, final T t,
-			final U u) throws E {
+	private static <T, U, R, E extends Throwable> R apply(@Nullable final FailableBiFunction<T, U, R, E> instance,
+			final T t, final U u) throws E {
 		return instance != null ? instance.apply(t, u) : null;
 	}
 
