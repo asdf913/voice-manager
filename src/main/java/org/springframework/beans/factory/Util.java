@@ -80,6 +80,7 @@ abstract class Util {
 			//
 	}
 
+	@Nullable
 	static Field[] getDeclaredFields(final Class<?> instance) {
 		return instance != null ? instance.getDeclaredFields() : null;
 	}

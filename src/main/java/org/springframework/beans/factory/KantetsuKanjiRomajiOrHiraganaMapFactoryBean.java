@@ -150,6 +150,7 @@ public class KantetsuKanjiRomajiOrHiraganaMapFactoryBean implements FactoryBean<
 			//
 	}
 
+	@Nullable
 	private static <T, U, R, E extends Throwable> R testAndApply(@Nullable final BiPredicate<T, U> predicate,
 			@Nullable final T t, final U u, final FailableBiFunction<T, U, R, E> functionTrue,
 			@Nullable final FailableBiFunction<T, U, R, E> functionFalse) throws E {
