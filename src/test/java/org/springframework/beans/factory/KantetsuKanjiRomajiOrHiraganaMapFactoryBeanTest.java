@@ -107,9 +107,7 @@ class KantetsuKanjiRomajiOrHiraganaMapFactoryBeanTest {
 		//
 		Assertions.assertEquals(Collections.emptyMap(), getObject(Stream.of((Object) null)));
 		//
-		final Constructor<?> constructor = CLASS_KANJI_HIRAGANA_ROMAJI != null
-				? CLASS_KANJI_HIRAGANA_ROMAJI.getDeclaredConstructor()
-				: null;
+		final Constructor<?> constructor = getDeclaredConstructor(CLASS_KANJI_HIRAGANA_ROMAJI);
 		//
 		if (constructor != null) {
 			//
@@ -117,7 +115,7 @@ class KantetsuKanjiRomajiOrHiraganaMapFactoryBeanTest {
 			//
 		} // if
 			//
-		final Object kanjiHiraganaRomaji = constructor != null ? constructor.newInstance() : null;
+		final Object kanjiHiraganaRomaji = newInstance(constructor);
 		//
 		Assertions.assertEquals(Collections.emptyMap(), getObject(Stream.of(kanjiHiraganaRomaji)));
 		//
@@ -153,6 +151,16 @@ class KantetsuKanjiRomajiOrHiraganaMapFactoryBeanTest {
 		//
 		Assertions.assertEquals(Collections.singletonMap(kanji, hiragana), getObject(Stream.of(kanjiHiraganaRomaji)));
 		//
+	}
+
+	private static <T> Constructor<T> getDeclaredConstructor(final Class<T> instance, final Class<?>... parameterTypes)
+			throws NoSuchMethodException, SecurityException {
+		return instance != null ? instance.getDeclaredConstructor(parameterTypes) : null;
+	}
+
+	private static <T> T newInstance(final Constructor<T> instance, final Object... initargs)
+			throws InstantiationException, IllegalAccessException, InvocationTargetException {
+		return instance != null ? instance.newInstance(initargs) : null;
 	}
 
 	private Map<String, String> getObject(final Stream<?> stream) throws Throwable {
@@ -287,15 +295,11 @@ class KantetsuKanjiRomajiOrHiraganaMapFactoryBeanTest {
 		//
 		Assertions.assertDoesNotThrow(() -> accumulate(null, null, new Field[] { null }));
 		//
-		final Field f = Boolean.class.getDeclaredField("value");
-		//
-		final Field[] fs = new Field[] { f };
+		final Field[] fs = new Field[] { Boolean.class.getDeclaredField("value") };
 		//
 		Assertions.assertDoesNotThrow(() -> accumulate(null, null, fs));
 		//
-		final Constructor<?> constructor = CLASS_KANJI_HIRAGANA_ROMAJI != null
-				? CLASS_KANJI_HIRAGANA_ROMAJI.getDeclaredConstructor()
-				: null;
+		final Constructor<?> constructor = getDeclaredConstructor(CLASS_KANJI_HIRAGANA_ROMAJI);
 		//
 		if (constructor != null) {
 			//
@@ -303,9 +307,7 @@ class KantetsuKanjiRomajiOrHiraganaMapFactoryBeanTest {
 			//
 		} // if
 			//
-		final Object kanjiHiraganaRomaji = constructor != null ? constructor.newInstance() : null;
-		//
-		Assertions.assertDoesNotThrow(() -> accumulate(null, kanjiHiraganaRomaji, fs));
+		Assertions.assertDoesNotThrow(() -> accumulate(null, newInstance(constructor), fs));
 		//
 	}
 
