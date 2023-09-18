@@ -23,6 +23,7 @@ import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.function.FailableBiFunction;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -90,7 +91,11 @@ public class KantetsuKanjiRomajiOrHiraganaMapFactoryBean implements FactoryBean<
 
 	private void accumulate(final Map<String, String> m, final KanjiHiraganaRomaji v) {
 		//
-		final Field[] fs = getDeclaredFields(Util.getClass(v));
+		accumulate(m, v, getDeclaredFields(Util.getClass(v)));
+		//
+	}
+
+	private void accumulate(final Map<String, String> m, final KanjiHiraganaRomaji v, final Field[] fs) {
 		//
 		Field f = null;
 		//
@@ -104,7 +109,7 @@ public class KantetsuKanjiRomajiOrHiraganaMapFactoryBean implements FactoryBean<
 		//
 		for (int i = 0; fs != null && i < fs.length; i++) {
 			//
-			if ((f = fs[i]) == null) {
+			if ((f = fs[i]) == null || !Util.isAssignableFrom(f.getDeclaringClass(), Util.getClass(v))) {
 				//
 				continue;
 				//
@@ -112,7 +117,8 @@ public class KantetsuKanjiRomajiOrHiraganaMapFactoryBean implements FactoryBean<
 				//
 			try {
 				//
-				s = Util.toString(FieldUtils.readField(f, v, true));
+				s = Util.toString(
+						testAndApply((a, b) -> b != null, f, v, (a, b) -> FieldUtils.readField(a, b, true), null));
 				//
 			} catch (final IllegalAccessException e) {
 				//
@@ -142,6 +148,17 @@ public class KantetsuKanjiRomajiOrHiraganaMapFactoryBean implements FactoryBean<
 			//
 		} // if
 			//
+	}
+
+	private static <T, U, R, E extends Throwable> R testAndApply(final BiPredicate<T, U> predicate, @Nullable final T t,
+			final U u, final FailableBiFunction<T, U, R, E> functionTrue,
+			final FailableBiFunction<T, U, R, E> functionFalse) throws E {
+		return predicate != null && predicate.test(t, u) ? apply(functionTrue, t, u) : apply(functionFalse, t, u);
+	}
+
+	private static <T, U, R, E extends Throwable> R apply(final FailableBiFunction<T, U, R, E> instance, final T t,
+			final U u) throws E {
+		return instance != null ? instance.apply(t, u) : null;
 	}
 
 	@Nullable

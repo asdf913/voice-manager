@@ -2,6 +2,7 @@ package org.springframework.beans.factory;
 
 import java.lang.Character.UnicodeBlock;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -12,6 +13,9 @@ import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import javax.annotation.Nullable;
+
+import org.apache.commons.lang3.function.FailableBiFunction;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.jsoup.nodes.Element;
@@ -30,8 +34,10 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class KantetsuKanjiRomajiOrHiraganaMapFactoryBeanTest {
 
-	private static Method METHOD_GET_OBJECT, METHOD_GET_KANJI_HIRAGANA_ROMAJI, METHOD_TEST_AND_APPLY, METHOD_GET_PATH,
-			METHOD_TEST_AND_ACCEPT = null;
+	private static Class<?> CLASS_KANJI_HIRAGANA_ROMAJI = null;
+
+	private static Method METHOD_GET_OBJECT, METHOD_GET_KANJI_HIRAGANA_ROMAJI, METHOD_TEST_AND_APPLY4,
+			METHOD_TEST_AND_APPLY5, METHOD_GET_PATH, METHOD_TEST_AND_ACCEPT, METHOD_ACCUMULATE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -43,13 +49,20 @@ class KantetsuKanjiRomajiOrHiraganaMapFactoryBeanTest {
 		(METHOD_GET_KANJI_HIRAGANA_ROMAJI = clz.getDeclaredMethod("getKanjiHiraganaRomaji", Element.class))
 				.setAccessible(true);
 		//
-		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
+		(METHOD_TEST_AND_APPLY4 = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
+		//
+		(METHOD_TEST_AND_APPLY5 = clz.getDeclaredMethod("testAndApply", BiPredicate.class, Object.class, Object.class,
+				FailableBiFunction.class, FailableBiFunction.class)).setAccessible(true);
 		//
 		(METHOD_GET_PATH = clz.getDeclaredMethod("getPath", URL.class)).setAccessible(true);
 		//
 		(METHOD_TEST_AND_ACCEPT = clz.getDeclaredMethod("testAndAccept", BiPredicate.class, Object.class, Object.class,
 				BiConsumer.class)).setAccessible(true);
+		//
+		(METHOD_ACCUMULATE = clz.getDeclaredMethod("accumulate", Map.class, CLASS_KANJI_HIRAGANA_ROMAJI = Class.forName(
+				"org.springframework.beans.factory.KantetsuKanjiRomajiOrHiraganaMapFactoryBean$KanjiHiraganaRomaji"),
+				Field[].class)).setAccessible(true);
 		//
 	}
 
@@ -94,10 +107,9 @@ class KantetsuKanjiRomajiOrHiraganaMapFactoryBeanTest {
 		//
 		Assertions.assertEquals(Collections.emptyMap(), getObject(Stream.of((Object) null)));
 		//
-		final Class<?> clz = Class.forName(
-				"org.springframework.beans.factory.KantetsuKanjiRomajiOrHiraganaMapFactoryBean$KanjiHiraganaRomaji");
-		//
-		final Constructor<?> constructor = clz != null ? clz.getDeclaredConstructor() : null;
+		final Constructor<?> constructor = CLASS_KANJI_HIRAGANA_ROMAJI != null
+				? CLASS_KANJI_HIRAGANA_ROMAJI.getDeclaredConstructor()
+				: null;
 		//
 		if (constructor != null) {
 			//
@@ -204,13 +216,27 @@ class KantetsuKanjiRomajiOrHiraganaMapFactoryBeanTest {
 		//
 		Assertions.assertNull(testAndApply(Predicates.alwaysTrue(), null, null, null));
 		//
+		Assertions.assertNull(testAndApply(null, null, null, null, null));
+		//
+		Assertions.assertNull(testAndApply(Predicates.biAlwaysFalse(), null, null, null, null));
+		//
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
 			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse)
 			throws Throwable {
 		try {
-			return (R) METHOD_TEST_AND_APPLY.invoke(null, predicate, value, functionTrue, functionFalse);
+			return (R) METHOD_TEST_AND_APPLY4.invoke(null, predicate, value, functionTrue, functionFalse);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static <T, U, R, E extends Throwable> R testAndApply(final BiPredicate<T, U> predicate, @Nullable final T t,
+			final U u, final FailableBiFunction<T, U, R, E> functionTrue,
+			final FailableBiFunction<T, U, R, E> functionFalse) throws Throwable {
+		try {
+			return (R) METHOD_TEST_AND_APPLY5.invoke(null, predicate, t, u, functionTrue, functionFalse);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -250,6 +276,42 @@ class KantetsuKanjiRomajiOrHiraganaMapFactoryBeanTest {
 			final BiConsumer<T, U> consumer) throws Throwable {
 		try {
 			METHOD_TEST_AND_ACCEPT.invoke(null, instance, t, u, consumer);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testAccumulate() throws NoSuchMethodException, NoSuchFieldException, InstantiationException,
+			IllegalAccessException, InvocationTargetException {
+		//
+		Assertions.assertDoesNotThrow(() -> accumulate(null, null, new Field[] { null }));
+		//
+		final Field f = Boolean.class.getDeclaredField("value");
+		//
+		final Field[] fs = new Field[] { f };
+		//
+		Assertions.assertDoesNotThrow(() -> accumulate(null, null, fs));
+		//
+		final Constructor<?> constructor = CLASS_KANJI_HIRAGANA_ROMAJI != null
+				? CLASS_KANJI_HIRAGANA_ROMAJI.getDeclaredConstructor()
+				: null;
+		//
+		if (constructor != null) {
+			//
+			constructor.setAccessible(true);
+			//
+		} // if
+			//
+		final Object kanjiHiraganaRomaji = constructor != null ? constructor.newInstance() : null;
+		//
+		Assertions.assertDoesNotThrow(() -> accumulate(null, kanjiHiraganaRomaji, fs));
+		//
+	}
+
+	private void accumulate(final Map<String, String> m, final Object v, final Field[] fs) throws Throwable {
+		try {
+			METHOD_ACCUMULATE.invoke(instance, m, v, fs);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
