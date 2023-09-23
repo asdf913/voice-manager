@@ -25,7 +25,6 @@ class ConfigurationUtilTest {
 	}
 
 	@Test
-
 	void testGetTemplate() throws Throwable {
 		//
 		Assertions.assertNull(ConfigurationUtil
@@ -33,7 +32,7 @@ class ConfigurationUtilTest {
 		//
 		final Configuration configuration = new Configuration(Configuration.getVersion());
 		//
-		configuration.setTemplateLoader(Reflection.newProxy(TemplateLoader.class, new IH()));
+		ConfigurationUtil.setTemplateLoader(configuration, Reflection.newProxy(TemplateLoader.class, new IH()));
 		//
 		Assertions.assertDoesNotThrow(() -> ConfigurationUtil.getTemplate(configuration, null));
 		//
@@ -41,6 +40,14 @@ class ConfigurationUtilTest {
 
 	private static <T> T cast(final Class<T> clz, final Object instance) {
 		return clz != null && clz.isInstance(instance) ? clz.cast(instance) : null;
+	}
+
+	@Test
+	void testSetTemplate() {
+		//
+		Assertions.assertDoesNotThrow(() -> ConfigurationUtil
+				.setTemplateLoader(cast(Configuration.class, Narcissus.allocateInstance(Configuration.class)), null));
+		//
 	}
 
 }
