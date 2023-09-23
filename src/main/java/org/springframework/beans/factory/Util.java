@@ -351,7 +351,7 @@ abstract class Util {
 		return instance != null && name != null ? instance.getDeclaredField(name) : null;
 	}
 
-	static long longValue(final Number instance, final long defaultValue) {
+	static long longValue(@Nullable final Number instance, final long defaultValue) {
 		return instance != null ? instance.longValue() : defaultValue;
 	}
 
