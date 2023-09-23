@@ -274,6 +274,15 @@ class UtilTest {
 	}
 
 	@Test
+	void testFind() {
+		//
+		Assertions.assertFalse(Util.find(null));
+		//
+		Assertions.assertFalse(Util.find(Util.cast(Matcher.class, Narcissus.allocateInstance(Matcher.class))));
+		//
+	}
+
+	@Test
 	void testOpenStream() throws IOException {
 		//
 		Assertions.assertNull(Util.openStream(Util.cast(URL.class, Narcissus.allocateInstance(URL.class))));

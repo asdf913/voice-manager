@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Predicate;
-import java.util.regex.Matcher;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.jsoup.nodes.Element;
@@ -27,7 +26,7 @@ import javassist.util.proxy.ProxyObject;
 
 class KeikyuRailwayKanjiHiraganaMapFactoryBeanTest {
 
-	private static Method METHOD_CREATE_MAP, METHOD_GET_WHOLE_TEXT, METHOD_FIND, METHOD_TEST = null;
+	private static Method METHOD_CREATE_MAP, METHOD_GET_WHOLE_TEXT, METHOD_TEST = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -37,8 +36,6 @@ class KeikyuRailwayKanjiHiraganaMapFactoryBeanTest {
 		(METHOD_CREATE_MAP = clz.getDeclaredMethod("createMap", List.class)).setAccessible(true);
 		//
 		(METHOD_GET_WHOLE_TEXT = clz.getDeclaredMethod("getWholeText", TextNode.class)).setAccessible(true);
-		//
-		(METHOD_FIND = clz.getDeclaredMethod("find", Matcher.class)).setAccessible(true);
 		//
 		(METHOD_TEST = clz.getDeclaredMethod("test", Predicate.class, Object.class)).setAccessible(true);
 		//
@@ -212,25 +209,6 @@ class KeikyuRailwayKanjiHiraganaMapFactoryBeanTest {
 				return null;
 			} else if (obj instanceof String) {
 				return (String) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testFind() throws Throwable {
-		//
-		Assertions.assertFalse(find(null));
-		//
-	}
-
-	private static boolean find(final Matcher instance) throws Throwable {
-		try {
-			final Object obj = METHOD_FIND.invoke(null, instance);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

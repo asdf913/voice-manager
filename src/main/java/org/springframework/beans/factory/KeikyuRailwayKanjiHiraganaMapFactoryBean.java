@@ -68,7 +68,7 @@ public class KeikyuRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<Map
 				//
 			} // if
 				//
-			if (find(matcher = Util.matcher(PATTERN, string = Util.map(Util.stream(nodes), x -> {
+			if (Util.find(matcher = Util.matcher(PATTERN, string = Util.map(Util.stream(nodes), x -> {
 				//
 				if (x instanceof TextNode textNode) {
 					//
@@ -95,10 +95,6 @@ public class KeikyuRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<Map
 	@Nullable
 	private static String getWholeText(@Nullable final TextNode instance) {
 		return instance != null ? instance.getWholeText() : null;
-	}
-
-	private static boolean find(@Nullable final Matcher instance) {
-		return instance != null && instance.find();
 	}
 
 	@Nullable

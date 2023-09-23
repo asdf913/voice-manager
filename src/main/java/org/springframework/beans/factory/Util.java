@@ -318,6 +318,32 @@ abstract class Util {
 		return instance != null ? instance.group(group) : null;
 	}
 
+	static boolean find(final Matcher instance) {
+		//
+		if (instance == null) {
+			//
+			return false;
+			//
+		} // if
+			//
+		try {
+			//
+			if (Narcissus.getField(instance, getDeclaredField(Matcher.class, "groups")) == null) {
+				//
+				return false;
+				//
+			} // if
+				//
+		} catch (final NoSuchFieldException e) {
+			//
+			LoggerUtil.error(LOG, e.getMessage(), e);
+			//
+		} // try
+			//
+		return instance.find();
+		//
+	}
+
 	@Nullable
 	static final InputStream openStream(@Nullable final URL instance) throws IOException {
 		//
