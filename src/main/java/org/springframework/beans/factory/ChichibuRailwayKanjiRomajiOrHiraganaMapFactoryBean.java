@@ -2,6 +2,10 @@ package org.springframework.beans.factory;
 
 import java.io.IOException;
 import java.lang.Character.UnicodeBlock;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
@@ -45,7 +49,16 @@ public class ChichibuRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Facto
 
 	private String url = null;
 
-	private UnicodeBlock keyUnicodeBlock, valueUnicodeBlock = null;
+	@Target(ElementType.FIELD)
+	@Retention(RetentionPolicy.RUNTIME)
+	private @interface Note {
+		String value();
+	}
+
+	@Note("Key Unicode Block")
+	private UnicodeBlock keyUnicodeBlock = null;
+
+	private UnicodeBlock valueUnicodeBlock = null;
 
 	public void setUrl(final String url) {
 		this.url = url;
@@ -171,7 +184,10 @@ public class ChichibuRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Facto
 
 	private static class KanjiHiraganaRomaji {
 
-		private String kanji, hiragana, romaji = null;
+		@Note("Key Unicode Block")
+		private String kanji = null;
+
+		private String hiragana, romaji = null;
 
 	}
 
