@@ -9,7 +9,6 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.lang.reflect.Field;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -215,12 +214,6 @@ public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFr
 			//
 		return pair;
 		//
-	}
-
-	@Nullable
-	private static Field getDeclaredField(@Nullable final Class<?> instance, @Nullable final String name)
-			throws NoSuchFieldException {
-		return instance != null && name != null ? instance.getDeclaredField(name) : null;
 	}
 
 	@Nullable

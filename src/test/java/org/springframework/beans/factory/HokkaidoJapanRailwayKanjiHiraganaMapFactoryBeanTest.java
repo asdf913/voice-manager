@@ -3,7 +3,6 @@ package org.springframework.beans.factory;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.lang.Character.UnicodeBlock;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.charset.Charset;
@@ -23,9 +22,8 @@ import org.meeuw.functional.Predicates;
 
 class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 
-	private static Method METHOD_CREATE_MAP, METHOD_FOR_NAME, METHOD_GET_DECLARED_FIELD, METHOD_TEST,
-			METHOD_TEST_AND_APPLY, METHOD_CREATE_PAIR, METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK,
-			METHOD_TEST_AND_ACCEPT = null;
+	private static Method METHOD_CREATE_MAP, METHOD_FOR_NAME, METHOD_TEST, METHOD_TEST_AND_APPLY, METHOD_CREATE_PAIR,
+			METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK, METHOD_TEST_AND_ACCEPT = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -35,9 +33,6 @@ class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 		(METHOD_CREATE_MAP = clz.getDeclaredMethod("createMap", InputStream.class, Charset.class)).setAccessible(true);
 		//
 		(METHOD_FOR_NAME = clz.getDeclaredMethod("forName", String.class)).setAccessible(true);
-		//
-		(METHOD_GET_DECLARED_FIELD = clz.getDeclaredMethod("getDeclaredField", Class.class, String.class))
-				.setAccessible(true);
 		//
 		(METHOD_TEST = clz.getDeclaredMethod("test", Predicate.class, Object.class)).setAccessible(true);
 		//
@@ -169,29 +164,6 @@ class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 				return null;
 			} else if (obj instanceof Charset) {
 				return (Charset) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetDeclaredField() throws Throwable {
-		//
-		Assertions.assertNull(getDeclaredField(null, null));
-		//
-		Assertions.assertNull(getDeclaredField(Object.class, null));
-		//
-	}
-
-	private static Field getDeclaredField(final Class<?> instance, final String name) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_DECLARED_FIELD.invoke(null, instance, name);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Field) {
-				return (Field) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

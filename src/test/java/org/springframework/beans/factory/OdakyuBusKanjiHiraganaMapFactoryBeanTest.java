@@ -2,7 +2,6 @@ package org.springframework.beans.factory;
 
 import java.io.Writer;
 import java.lang.Character.UnicodeBlock;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -38,7 +37,7 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 
 	private static Method METHOD_GET_OBJECT, METHOD_CREATE_MAP, METHOD_TEST_AND_APPLY, METHOD_PROCESS,
 			METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK, METHOD_TEST2, METHOD_TEST3, METHOD_ACCEPT,
-			METHOD_GET_DECLARED_FIELD, METHOD_CHECK_IF_KEY_EXISTS_AND_DIFFERENCE_VALUE, METHOD_PERFORM = null;
+			METHOD_CHECK_IF_KEY_EXISTS_AND_DIFFERENCE_VALUE, METHOD_PERFORM = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -62,9 +61,6 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 				.setAccessible(true);
 		//
 		(METHOD_ACCEPT = clz.getDeclaredMethod("accept", BiConsumer.class, Object.class, Object.class))
-				.setAccessible(true);
-		//
-		(METHOD_GET_DECLARED_FIELD = clz.getDeclaredMethod("getDeclaredField", Class.class, String.class))
 				.setAccessible(true);
 		//
 		(METHOD_CHECK_IF_KEY_EXISTS_AND_DIFFERENCE_VALUE = clz.getDeclaredMethod("checkIfKeyExistsAndDifferenceValue",
@@ -331,29 +327,6 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 	private static <T, U> void accept(final BiConsumer<T, U> instance, final T t, final U u) throws Throwable {
 		try {
 			METHOD_ACCEPT.invoke(null, instance, t, u);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetDeclaredField() throws Throwable {
-		//
-		Assertions.assertNull(getDeclaredField(null, null));
-		//
-		Assertions.assertNull(getDeclaredField(Object.class, null));
-		//
-	}
-
-	private static Field getDeclaredField(final Class<?> instance, final String name) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_DECLARED_FIELD.invoke(null, instance, name);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Field) {
-				return (Field) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

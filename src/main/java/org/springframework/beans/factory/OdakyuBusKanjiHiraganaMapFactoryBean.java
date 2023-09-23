@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.Character.UnicodeBlock;
-import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -284,12 +283,6 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 
 	private static final <T> boolean test(@Nullable final Predicate<T> instance, @Nullable final T value) {
 		return instance != null && instance.test(value);
-	}
-
-	@Nullable
-	private static Field getDeclaredField(@Nullable final Class<?> instance, @Nullable final String name)
-			throws NoSuchFieldException {
-		return instance != null && name != null ? instance.getDeclaredField(name) : null;
 	}
 
 	@Nullable
