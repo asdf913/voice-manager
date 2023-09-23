@@ -239,7 +239,7 @@ public class ChichibuRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Facto
 	}
 
 	private static boolean isAllFieldNonBlank(@Nullable final Field[] fs,
-			final KanjiHiraganaRomaji kanjiHiraganaRomaji) {
+			@Nullable final KanjiHiraganaRomaji kanjiHiraganaRomaji) {
 		//
 		Boolean nonBlank = null;
 		//
