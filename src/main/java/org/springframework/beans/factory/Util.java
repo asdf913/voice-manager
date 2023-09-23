@@ -286,8 +286,8 @@ abstract class Util {
 		//
 	}
 
-	static <T, R> R collect(final Stream<T> instance, final Supplier<R> supplier,
-			final BiConsumer<R, ? super T> accumulator, final BiConsumer<R, R> combiner) {
+	static <T, R> R collect(@Nullable final Stream<T> instance, @Nullable final Supplier<R> supplier,
+			@Nullable final BiConsumer<R, ? super T> accumulator, @Nullable final BiConsumer<R, R> combiner) {
 		return instance != null && (Proxy.isProxyClass(getClass(instance))
 				|| (supplier != null && accumulator != null && combiner != null))
 						? instance.collect(supplier, accumulator, combiner)
