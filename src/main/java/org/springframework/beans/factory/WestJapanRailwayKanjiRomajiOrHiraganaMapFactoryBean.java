@@ -219,7 +219,7 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends StringM
 			} // if
 				//
 			if (Util.contains(Arrays.asList("java.base", "java.sql", "java.desktop", "java.logging"),
-					getName(getModule(f.getDeclaringClass())))) {
+					getName(getModule(Util.getDeclaringClass(f))))) {
 				//
 				temp = Modifier.isStatic(f.getModifiers()) ? Narcissus.getStaticField(f)
 						: testAndApply((a, b) -> a != null, instance, f, Narcissus::getField, null);

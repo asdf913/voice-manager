@@ -117,7 +117,7 @@ public class KantetsuKanjiRomajiOrHiraganaMapFactoryBean extends StringMapFromRe
 		//
 		for (int i = 0; fs != null && i < fs.length; i++) {
 			//
-			if ((f = fs[i]) == null || !Util.isAssignableFrom(f.getDeclaringClass(), Util.getClass(v))) {
+			if (!Util.isAssignableFrom(Util.getDeclaringClass(f = fs[i]), Util.getClass(v))) {
 				//
 				continue;
 				//

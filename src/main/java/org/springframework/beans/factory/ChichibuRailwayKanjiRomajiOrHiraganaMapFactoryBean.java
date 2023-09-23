@@ -116,7 +116,7 @@ public class ChichibuRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Facto
 		//
 		for (int i = 0; fs != null && i < fs.length; i++) {
 			//
-			if ((f = fs[i]) == null || !Util.isAssignableFrom(f.getDeclaringClass(), Util.getClass(v))) {
+			if (!Util.isAssignableFrom(Util.getDeclaringClass(f = fs[i]), Util.getClass(v))) {
 				//
 				continue;
 				//
@@ -257,16 +257,11 @@ public class ChichibuRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Facto
 				//
 			} // if
 				//
-			nonBlank = BooleanUtils.toBooleanDefaultIfNull(nonBlank, true)
-					&& StringUtils
-							.isNotBlank(
-									Util.toString(
-											Modifier.isStatic(f.getModifiers()) ? Narcissus.getStaticField(f)
-													: testAndApply(
-															(a, b) -> a != null && b != null
-																	&& Objects.equals(b.getDeclaringClass(),
-																			Util.getClass(a)),
-															kanjiHiraganaRomaji, f, Narcissus::getField, null)));
+			nonBlank = BooleanUtils.toBooleanDefaultIfNull(nonBlank, true) && StringUtils
+					.isNotBlank(Util.toString(Modifier.isStatic(f.getModifiers()) ? Narcissus.getStaticField(f)
+							: testAndApply(
+									(a, b) -> a != null && Objects.equals(Util.getDeclaringClass(b), Util.getClass(a)),
+									kanjiHiraganaRomaji, f, Narcissus::getField, null)));
 			//
 		} // for
 			//
