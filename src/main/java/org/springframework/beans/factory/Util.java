@@ -16,6 +16,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -303,6 +304,10 @@ abstract class Util {
 	@Nullable
 	static String name(@Nullable final Enum<?> instance) {
 		return instance != null ? instance.name() : null;
+	}
+
+	static int groupCount(final MatchResult instance) {
+		return instance != null ? instance.groupCount() : 0;
 	}
 
 }

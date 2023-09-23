@@ -78,7 +78,7 @@ public class KeikyuRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<Map
 					//
 				return StringUtils.trim(Util.toString(x));
 				//
-			}).collect(Collectors.joining("")))) && matcher != null && matcher.groupCount() > 0) {
+			}).collect(Collectors.joining("")))) && Util.groupCount(matcher) > 0) {
 				//
 				string = matcher.group(1);
 				//

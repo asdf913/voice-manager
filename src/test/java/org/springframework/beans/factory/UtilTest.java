@@ -252,4 +252,11 @@ class UtilTest {
 		//
 	}
 
+	@Test
+	void testGroupCount() {
+		//
+		Assertions.assertEquals(0, Util.groupCount(null));
+		//
+	}
+
 }

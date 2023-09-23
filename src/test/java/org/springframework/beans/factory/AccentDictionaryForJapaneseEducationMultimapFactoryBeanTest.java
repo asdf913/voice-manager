@@ -34,7 +34,7 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 
 	private static final String EMPTY = "";
 
-	private static Method METHOD_CREATE_MULTI_MAP_STRING, METHOD_GROUP_COUNT, METHOD_GROUP, METHOD_GET_MIME_TYPE,
+	private static Method METHOD_CREATE_MULTI_MAP_STRING, METHOD_GROUP, METHOD_GET_MIME_TYPE,
 			METHOD_CREATE_MULTI_MAP_BY_URL, METHOD_CREATE_MULTI_MAP_WORK_BOOK, METHOD_CREATE_MULTI_MAP_SHEET,
 			METHOD_GET_AND_SET, METHOD_GET_PAIR = null;
 
@@ -45,8 +45,6 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 		//
 		(METHOD_CREATE_MULTI_MAP_STRING = clz.getDeclaredMethod("createMultimap", String.class, String[].class,
 				String.class)).setAccessible(true);
-		//
-		(METHOD_GROUP_COUNT = clz.getDeclaredMethod("groupCount", MatchResult.class)).setAccessible(true);
 		//
 		(METHOD_GROUP = clz.getDeclaredMethod("group", MatchResult.class, Integer.TYPE)).setAccessible(true);
 		//
@@ -69,8 +67,6 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 	}
 
 	private static class IH implements InvocationHandler {
-
-		private Integer groupCount = null;
 
 		private String group = null;
 
@@ -103,11 +99,7 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 				//
 			if (proxy instanceof MatchResult) {
 				//
-				if (Objects.equals(methodName, "groupCount")) {
-					//
-					return groupCount;
-					//
-				} else if (Objects.equals(methodName, "group")) {
+				if (Objects.equals(methodName, "group")) {
 					//
 					return group;
 					//
@@ -279,33 +271,6 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 				return null;
 			} else if (obj instanceof Multimap) {
 				return (Multimap) obj;
-			}
-			throw new Throwable(obj != null && obj.getClass() != null ? obj.getClass().toString() : null);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGroupCount() throws Throwable {
-		//
-		Assertions.assertEquals(0, groupCount(null));
-		//
-		if (ih != null) {
-			//
-			ih.groupCount = Integer.valueOf(0);
-			//
-		} // if
-			//
-		Assertions.assertEquals(0, groupCount(matchResult));
-		//
-	}
-
-	private static int groupCount(final MatchResult instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GROUP_COUNT.invoke(null, instance);
-			if (obj instanceof Integer) {
-				return ((Integer) obj).intValue();
 			}
 			throw new Throwable(obj != null && obj.getClass() != null ? obj.getClass().toString() : null);
 		} catch (final InvocationTargetException e) {

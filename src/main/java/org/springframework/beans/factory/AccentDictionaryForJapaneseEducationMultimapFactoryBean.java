@@ -316,14 +316,10 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 		//
 		final Matcher matcher = Util.matcher(pattern, text);
 		//
-		return Util.matches(matcher) && groupCount(matcher) > 1
+		return Util.matches(matcher) && Util.groupCount(matcher) > 1
 				? Pair.with(StringUtils.split(group(matcher, 2), '/'), group(matcher, 1))
 				: null;
 		//
-	}
-
-	private static int groupCount(@Nullable final MatchResult instance) {
-		return instance != null ? instance.groupCount() : 0;
 	}
 
 	@Nullable

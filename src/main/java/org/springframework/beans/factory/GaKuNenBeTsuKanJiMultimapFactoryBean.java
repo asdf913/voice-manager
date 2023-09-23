@@ -182,7 +182,7 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 			//
 			if ((element = IterableUtils.get(elements, i)) == null || !Util.matches(matcher = Util.matcher(
 					pattern = ObjectUtils.getIfNull(pattern, () -> Pattern.compile("(第(\\d+)学年)（\\d+字）")),
-					ElementUtil.text(element))) || matcher == null || matcher.groupCount() <= 0) {
+					ElementUtil.text(element))) || Util.groupCount(matcher) <= 0) {
 				//
 				continue;
 				//
