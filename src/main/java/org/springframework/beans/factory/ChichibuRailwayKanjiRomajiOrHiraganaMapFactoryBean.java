@@ -214,7 +214,7 @@ public class ChichibuRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Facto
 				//
 				if (fs == null) {
 					//
-					fs = KanjiHiraganaRomaji.class.getDeclaredFields();
+					fs = Util.getDeclaredFields(KanjiHiraganaRomaji.class);
 					//
 				} // if
 					//
