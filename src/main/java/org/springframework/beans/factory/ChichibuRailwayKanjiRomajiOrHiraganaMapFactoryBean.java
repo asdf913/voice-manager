@@ -90,7 +90,7 @@ public class ChichibuRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Facto
 		//
 	}
 
-	private void accumulate(final Map<String, String> m, final KanjiHiraganaRomaji v, final Field[] fs) {
+	private void accumulate(final Map<String, String> m, final KanjiHiraganaRomaji v, @Nullable final Field[] fs) {
 		//
 		Field f = null;
 		//
