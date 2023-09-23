@@ -137,7 +137,7 @@ public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFr
 						//
 					} // if
 						//
-					map.put(key, value);
+					Util.put(map, key, value);
 					//
 				} // for
 					//
