@@ -318,6 +318,7 @@ abstract class Util {
 		return instance != null ? instance.group(group) : null;
 	}
 
+	@Nullable
 	static final InputStream openStream(@Nullable final URL instance) throws IOException {
 		//
 		if (instance == null) {
