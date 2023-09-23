@@ -295,7 +295,7 @@ abstract class Util {
 						: null;
 	}
 
-	static Class<?> getDeclaringClass(final Member instance) {
+	static Class<?> getDeclaringClass(@Nullable final Member instance) {
 		return instance != null ? instance.getDeclaringClass() : null;
 	}
 
