@@ -344,7 +344,8 @@ abstract class Util {
 		//
 	}
 
-	private static Field getDeclaredField(final Class<?> instance, final String name) throws NoSuchFieldException {
+	private static Field getDeclaredField(@Nullable final Class<?> instance, @Nullable final String name)
+			throws NoSuchFieldException {
 		return instance != null && name != null ? instance.getDeclaredField(name) : null;
 	}
 
