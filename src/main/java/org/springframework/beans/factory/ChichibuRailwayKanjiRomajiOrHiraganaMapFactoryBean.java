@@ -173,6 +173,7 @@ public class ChichibuRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Facto
 
 	}
 
+	@Nullable
 	private static KanjiHiraganaRomaji getKanjiHiraganaRomaji(final String urlString) throws IOException {
 		//
 		final Elements elements = ElementUtil.select(testAndApply(Objects::nonNull,
