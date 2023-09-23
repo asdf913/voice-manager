@@ -3,6 +3,7 @@ package org.springframework.beans.factory;
 import java.io.IOException;
 import java.lang.Character.UnicodeBlock;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 import java.net.URL;
 import java.util.ArrayList;
@@ -37,13 +38,10 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
 import org.jsoup.nodes.NodeUtil;
 import org.jsoup.select.Elements;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.LoggerUtil;
+
+import io.github.toolfactory.narcissus.Narcissus;
 
 public class ChichibuRailwayKanjiRomajiOrHiraganaMapFactoryBean implements FactoryBean<Map<String, String>> {
-
-	private static final Logger LOG = LoggerFactory.getLogger(ChichibuRailwayKanjiRomajiOrHiraganaMapFactoryBean.class);
 
 	private String url = null;
 
@@ -198,10 +196,6 @@ public class ChichibuRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Facto
 		//
 		Field[] fs = null;
 		//
-		Field f = null;
-		//
-		Boolean nonBlank = null;
-		//
 		for (int i = 0; elements != null && i < elements.size(); i++) {
 			//
 			if ((element = elements.get(i)) == null) {
@@ -210,43 +204,12 @@ public class ChichibuRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Facto
 				//
 			} // if
 				//
-			nonBlank = null;
-			//
-			if (kanjiHiraganaRomaji != null) {
+			if (isAllFieldNonBlank(
+					fs = ObjectUtils.getIfNull(fs, () -> Util.getDeclaredFields(KanjiHiraganaRomaji.class)),
+					kanjiHiraganaRomaji)) {
 				//
-				if (fs == null) {
-					//
-					fs = Util.getDeclaredFields(KanjiHiraganaRomaji.class);
-					//
-				} // if
-					//
-				for (int j = 0; fs != null && j < fs.length; j++) {
-					//
-					if ((f = fs[j]) == null) {
-						//
-						continue;
-						//
-					} // if
-						//
-					try {
-						//
-						nonBlank = BooleanUtils.toBooleanDefaultIfNull(nonBlank, true)
-								&& StringUtils.isNotBlank(Util.toString(f.get(kanjiHiraganaRomaji)));
-						//
-					} catch (final IllegalAccessException e) {
-						//
-						LoggerUtil.error(LOG, e.getMessage(), e);
-						//
-					} // try
-						//
-				} // for
-					//
-				if (BooleanUtils.toBooleanDefaultIfNull(nonBlank, false)) {
-					//
-					continue;
-					//
-				} // if
-					//
+				continue;
+				//
 			} // if
 				//
 			if (i == 0) {
@@ -268,6 +231,37 @@ public class ChichibuRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Facto
 		} // for
 			//
 		return kanjiHiraganaRomaji;
+		//
+	}
+
+	private static boolean isAllFieldNonBlank(final Field[] fs, final KanjiHiraganaRomaji kanjiHiraganaRomaji) {
+		//
+		Boolean nonBlank = null;
+		//
+		Field f = null;
+		//
+		for (int j = 0; fs != null && j < fs.length; j++) {
+			//
+			if ((f = fs[j]) == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			nonBlank = BooleanUtils.toBooleanDefaultIfNull(nonBlank, true)
+					&& StringUtils
+							.isNotBlank(
+									Util.toString(
+											Modifier.isStatic(f.getModifiers()) ? Narcissus.getStaticField(f)
+													: testAndApply(
+															(a, b) -> a != null && b != null
+																	&& Objects.equals(b.getDeclaringClass(),
+																			Util.getClass(a)),
+															kanjiHiraganaRomaji, f, Narcissus::getField, null)));
+			//
+		} // for
+			//
+		return BooleanUtils.toBooleanDefaultIfNull(nonBlank, false);
 		//
 	}
 

@@ -40,7 +40,7 @@ class ChichibuRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 
 	private static Method METHOD_GET_KANJI_HIRAGANA_ROMAJI_STRING, METHOD_GET_KANJI_HIRAGANA_ROMAJI_LIST,
 			METHOD_SET_HIRAGANA_OR_ROMAJI, METHOD_ACCUMULATE2, METHOD_ACCUMULATE3, METHOD_TEST_AND_ACCEPT,
-			METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_COLLECT = null;
+			METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_COLLECT, METHOD_IS_ALL_FIELD_NON_BLANK = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -75,6 +75,9 @@ class ChichibuRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 		//
 		(METHOD_COLLECT = clz.getDeclaredMethod("collect", Stream.class, Supplier.class, BiConsumer.class,
 				BiConsumer.class)).setAccessible(true);
+		//
+		(METHOD_IS_ALL_FIELD_NON_BLANK = clz.getDeclaredMethod("isAllFieldNonBlank", Field[].class,
+				CLASS_KANJI_HIRAGANA_ROMAJI)).setAccessible(true);
 		//
 	}
 
@@ -312,6 +315,44 @@ class ChichibuRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 			final BiConsumer<R, ? super T> accumulator, final BiConsumer<R, R> combiner) throws Throwable {
 		try {
 			return (R) METHOD_COLLECT.invoke(null, instance, supplier, accumulator, combiner);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testIsAllFieldNonBlank() throws Throwable {
+		//
+		Assertions.assertFalse(isAllFieldNonBlank(null, null));
+		//
+		Assertions.assertFalse(isAllFieldNonBlank(new Field[] { null }, null));
+		//
+		final Constructor<?> constructor = getDeclaredConstructor(CLASS_KANJI_HIRAGANA_ROMAJI);
+		//
+		if (constructor != null) {
+			//
+			constructor.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertTrue(
+				isAllFieldNonBlank(new Field[] { Boolean.class.getDeclaredField("TRUE") }, newInstance(constructor)));
+		//
+		Assertions.assertFalse(
+				isAllFieldNonBlank(new Field[] { Boolean.class.getDeclaredField("value") }, newInstance(constructor)));
+		//
+		Assertions.assertFalse(
+				isAllFieldNonBlank(new Field[] { Long.class.getDeclaredField("value") }, newInstance(constructor)));
+		//
+	}
+
+	private static boolean isAllFieldNonBlank(final Field[] fs, final Object kanjiHiraganaRomaji) throws Throwable {
+		try {
+			final Object obj = METHOD_IS_ALL_FIELD_NON_BLANK.invoke(null, fs, kanjiHiraganaRomaji);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
