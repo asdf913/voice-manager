@@ -10,7 +10,6 @@ import java.util.Iterator;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 
 import org.apache.poi.ss.usermodel.Row;
@@ -34,9 +33,9 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 
 	private static final String EMPTY = "";
 
-	private static Method METHOD_CREATE_MULTI_MAP_STRING, METHOD_GROUP, METHOD_GET_MIME_TYPE,
-			METHOD_CREATE_MULTI_MAP_BY_URL, METHOD_CREATE_MULTI_MAP_WORK_BOOK, METHOD_CREATE_MULTI_MAP_SHEET,
-			METHOD_GET_AND_SET, METHOD_GET_PAIR = null;
+	private static Method METHOD_CREATE_MULTI_MAP_STRING, METHOD_GET_MIME_TYPE, METHOD_CREATE_MULTI_MAP_BY_URL,
+			METHOD_CREATE_MULTI_MAP_WORK_BOOK, METHOD_CREATE_MULTI_MAP_SHEET, METHOD_GET_AND_SET,
+			METHOD_GET_PAIR = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -45,8 +44,6 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 		//
 		(METHOD_CREATE_MULTI_MAP_STRING = clz.getDeclaredMethod("createMultimap", String.class, String[].class,
 				String.class)).setAccessible(true);
-		//
-		(METHOD_GROUP = clz.getDeclaredMethod("group", MatchResult.class, Integer.TYPE)).setAccessible(true);
 		//
 		(METHOD_GET_MIME_TYPE = clz.getDeclaredMethod("getMimeType", ContentInfo.class)).setAccessible(true);
 		//
@@ -67,8 +64,6 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 	}
 
 	private static class IH implements InvocationHandler {
-
-		private String group = null;
 
 		private Iterator<Sheet> iteratorSheet = null;
 
@@ -97,16 +92,6 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 					//
 			} // if
 				//
-			if (proxy instanceof MatchResult) {
-				//
-				if (Objects.equals(methodName, "group")) {
-					//
-					return group;
-					//
-				} // if
-					//
-			} // if
-				//
 			throw new Throwable(methodName);
 			//
 		}
@@ -115,16 +100,12 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 
 	private AccentDictionaryForJapaneseEducationMultimapFactoryBean instance = null;
 
-	private MatchResult matchResult = null;
-
-	private IH ih = null;
+//	private IH ih = null;
 
 	@BeforeEach
 	void beforeEach() {
 		//
 		instance = new AccentDictionaryForJapaneseEducationMultimapFactoryBean();
-		//
-		matchResult = Reflection.newProxy(MatchResult.class, ih = new IH());
 		//
 	}
 
@@ -182,6 +163,8 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 	void testCreateMultimap() throws Throwable {
 		//
 		Assertions.assertNull(createMultimap((Workbook) null));
+		//
+		final IH ih = new IH();
 		//
 		// createMultimap(org.apache.poi.ss.usermodel.Sheet)
 		//
@@ -271,29 +254,6 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 				return null;
 			} else if (obj instanceof Multimap) {
 				return (Multimap) obj;
-			}
-			throw new Throwable(obj != null && obj.getClass() != null ? obj.getClass().toString() : null);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGroup() throws Throwable {
-		//
-		Assertions.assertNull(group(null, 0));
-		//
-		Assertions.assertNull(group(matchResult, 0));
-		//
-	}
-
-	private static String group(final MatchResult instance, final int group) throws Throwable {
-		try {
-			final Object obj = METHOD_GROUP.invoke(null, instance, group);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
 			}
 			throw new Throwable(obj != null && obj.getClass() != null ? obj.getClass().toString() : null);
 		} catch (final InvocationTargetException e) {

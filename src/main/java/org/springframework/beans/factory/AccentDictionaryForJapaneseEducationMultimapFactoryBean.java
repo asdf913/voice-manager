@@ -8,7 +8,6 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Predicate;
-import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -253,7 +252,7 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 			for (final String s : ss) {
 				//
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-						StringUtils.trim(s), group(matcher, 1));
+						StringUtils.trim(s), Util.group(matcher, 1));
 				//
 			} // for
 				//
@@ -317,14 +316,9 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 		final Matcher matcher = Util.matcher(pattern, text);
 		//
 		return Util.matches(matcher) && Util.groupCount(matcher) > 1
-				? Pair.with(StringUtils.split(group(matcher, 2), '/'), group(matcher, 1))
+				? Pair.with(StringUtils.split(Util.group(matcher, 2), '/'), Util.group(matcher, 1))
 				: null;
 		//
-	}
-
-	@Nullable
-	private static String group(@Nullable final MatchResult instance, final int group) {
-		return instance != null ? instance.group(group) : null;
 	}
 
 	@Override

@@ -310,4 +310,8 @@ abstract class Util {
 		return instance != null ? instance.groupCount() : 0;
 	}
 
+	static String group(final MatchResult instance, final int group) {
+		return instance != null ? instance.group(group) : null;
+	}
+
 }

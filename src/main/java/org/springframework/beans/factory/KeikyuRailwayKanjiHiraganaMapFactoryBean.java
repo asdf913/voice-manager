@@ -80,7 +80,7 @@ public class KeikyuRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<Map
 				//
 			}).collect(Collectors.joining("")))) && Util.groupCount(matcher) > 0) {
 				//
-				string = matcher.group(1);
+				string = Util.group(matcher, 1);
 				//
 			} // if
 				//
