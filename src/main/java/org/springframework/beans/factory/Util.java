@@ -11,9 +11,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -282,6 +284,14 @@ abstract class Util {
 			//
 		return instance.matches();
 		//
+	}
+
+	static <T, R> R collect(final Stream<T> instance, final Supplier<R> supplier,
+			final BiConsumer<R, ? super T> accumulator, final BiConsumer<R, R> combiner) {
+		return instance != null && (Proxy.isProxyClass(getClass(instance))
+				|| (supplier != null && accumulator != null && combiner != null))
+						? instance.collect(supplier, accumulator, combiner)
+						: null;
 	}
 
 }

@@ -16,7 +16,6 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
@@ -94,7 +93,7 @@ public class KantetsuKanjiRomajiOrHiraganaMapFactoryBean extends StringMapFromRe
 
 	private Map<String, String> getObject(final Stream<KanjiHiraganaRomaji> stream) {
 		//
-		return collect(stream, LinkedHashMap::new, this::accumulate, Map::putAll);
+		return Util.collect(stream, LinkedHashMap::new, this::accumulate, Map::putAll);
 		//
 	}
 
@@ -165,12 +164,6 @@ public class KantetsuKanjiRomajiOrHiraganaMapFactoryBean extends StringMapFromRe
 			@Nullable final FailableBiFunction<T, U, R, E> functionFalse) throws E {
 		return predicate != null && predicate.test(t, u) ? FailableBiFunctionUtil.apply(functionTrue, t, u)
 				: FailableBiFunctionUtil.apply(functionFalse, t, u);
-	}
-
-	@Nullable
-	private static <T, R> R collect(@Nullable final Stream<T> instance, final Supplier<R> supplier,
-			final BiConsumer<R, ? super T> accumulator, final BiConsumer<R, R> combiner) {
-		return instance != null ? instance.collect(supplier, accumulator, combiner) : null;
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(@Nullable final Predicate<T> predicate, final T value,

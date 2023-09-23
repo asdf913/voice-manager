@@ -6,6 +6,7 @@ import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -52,7 +53,7 @@ class UtilTest {
 					//
 					return proxy;
 					//
-				} else if (Objects.equals(methodName, "map")) {
+				} else if (Objects.equals(methodName, "map") || Objects.equals(methodName, "collect")) {
 					//
 					return null;
 					//
@@ -68,12 +69,10 @@ class UtilTest {
 
 	private Stream<?> stream = null;
 
-	private IH ih = null;
-
 	@BeforeEach
 	void beforeEach() {
 		//
-		stream = Reflection.newProxy(Stream.class, ih = new IH());
+		stream = Reflection.newProxy(Stream.class, new IH());
 		//
 	}
 
@@ -228,4 +227,21 @@ class UtilTest {
 		//
 	}
 
+	@Test
+	void testCollect() {
+		//
+		Assertions.assertNull(Util.collect(stream, null, null, null));
+		//
+		final Stream<Object> empty = Stream.empty();
+		//
+		Assertions.assertNull(Util.collect(empty, null, null, null));
+		//
+		final Supplier<Object> supplier = () -> null;
+		//
+		Assertions.assertNull(Util.collect(empty, supplier, null, null));
+		//
+		Assertions.assertNull(Util.collect(empty, supplier, (a, b) -> {
+		}, null));
+		//
+	}
 }

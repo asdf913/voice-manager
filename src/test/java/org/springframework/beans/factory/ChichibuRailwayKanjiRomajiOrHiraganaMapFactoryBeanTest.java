@@ -2,18 +2,14 @@ package org.springframework.beans.factory;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
-import java.util.stream.Stream;
 
 import org.apache.commons.lang3.function.FailableBiFunction;
 import org.apache.commons.lang3.function.FailableFunction;
@@ -22,15 +18,12 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.meeuw.functional.Consumers;
 import org.meeuw.functional.Predicates;
-import org.meeuw.functional.Suppliers;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
-import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
 
@@ -40,7 +33,7 @@ class ChichibuRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 
 	private static Method METHOD_GET_KANJI_HIRAGANA_ROMAJI_STRING, METHOD_GET_KANJI_HIRAGANA_ROMAJI_LIST,
 			METHOD_SET_HIRAGANA_OR_ROMAJI, METHOD_ACCUMULATE2, METHOD_ACCUMULATE3, METHOD_TEST_AND_ACCEPT,
-			METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_COLLECT, METHOD_IS_ALL_FIELD_NON_BLANK = null;
+			METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_IS_ALL_FIELD_NON_BLANK = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -73,35 +66,9 @@ class ChichibuRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 		(METHOD_TEST_AND_APPLY5 = clz.getDeclaredMethod("testAndApply", BiPredicate.class, Object.class, Object.class,
 				FailableBiFunction.class, FailableBiFunction.class)).setAccessible(true);
 		//
-		(METHOD_COLLECT = clz.getDeclaredMethod("collect", Stream.class, Supplier.class, BiConsumer.class,
-				BiConsumer.class)).setAccessible(true);
-		//
 		(METHOD_IS_ALL_FIELD_NON_BLANK = clz.getDeclaredMethod("isAllFieldNonBlank", Field[].class,
 				CLASS_KANJI_HIRAGANA_ROMAJI)).setAccessible(true);
 		//
-	}
-
-	private static class IH implements InvocationHandler {
-
-		@Override
-		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
-			//
-			final String methodName = method != null ? method.getName() : null;
-			//
-			if (proxy instanceof Stream) {
-				//
-				if (Objects.equals(methodName, "collect")) {
-					//
-					return null;
-					//
-				} // if
-					//
-			} // if
-				//
-			throw new Throwable(methodName);
-			//
-		}
-
 	}
 
 	private ChichibuRailwayKanjiRomajiOrHiraganaMapFactoryBean instance = null;
@@ -285,36 +252,6 @@ class ChichibuRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 			final FailableBiFunction<T, U, R, E> functionFalse) throws Throwable {
 		try {
 			return (R) METHOD_TEST_AND_APPLY5.invoke(null, predicate, t, u, functionTrue, functionFalse);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testCollect() throws Throwable {
-		//
-		Assertions.assertNull(collect(Reflection.newProxy(Stream.class, new IH()), null, null, null));
-		//
-		final Stream<Object> empty = Stream.empty();
-		//
-		Assertions.assertNull(collect(empty, null, null, null));
-		//
-		final Supplier<Object> supplier = Suppliers.always(null);
-		//
-		Assertions.assertNull(collect(empty, supplier, null, null));
-		//
-		final BiConsumer<Object, Object> biConsumer = Consumers.biNop();
-		//
-		Assertions.assertNull(collect(empty, supplier, biConsumer, null));
-		//
-		Assertions.assertNull(collect(empty, supplier, biConsumer, biConsumer));
-		//
-	}
-
-	private static <T, R> R collect(final Stream<T> instance, final Supplier<R> supplier,
-			final BiConsumer<R, ? super T> accumulator, final BiConsumer<R, R> combiner) throws Throwable {
-		try {
-			return (R) METHOD_COLLECT.invoke(null, instance, supplier, accumulator, combiner);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

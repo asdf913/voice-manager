@@ -8,7 +8,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.lang.reflect.Proxy;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,7 +18,6 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
@@ -94,7 +92,7 @@ public class ChichibuRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Facto
 	@Nullable
 	private Map<String, String> getObject(final Stream<KanjiHiraganaRomaji> stream) {
 		//
-		return collect(stream, LinkedHashMap::new, this::accumulate, Map::putAll);
+		return Util.collect(stream, LinkedHashMap::new, this::accumulate, Map::putAll);
 		//
 	}
 
@@ -164,15 +162,6 @@ public class ChichibuRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Facto
 			@Nullable final FailableBiFunction<T, U, R, E> functionFalse) throws E {
 		return predicate != null && predicate.test(t, u) ? FailableBiFunctionUtil.apply(functionTrue, t, u)
 				: FailableBiFunctionUtil.apply(functionFalse, t, u);
-	}
-
-	@Nullable
-	private static <T, R> R collect(@Nullable final Stream<T> instance, @Nullable final Supplier<R> supplier,
-			@Nullable final BiConsumer<R, ? super T> accumulator, @Nullable final BiConsumer<R, R> combiner) {
-		return instance != null && (Proxy.isProxyClass(Util.getClass(instance))
-				|| (supplier != null && accumulator != null && combiner != null))
-						? instance.collect(supplier, accumulator, combiner)
-						: null;
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(@Nullable final Predicate<T> predicate, final T value,
