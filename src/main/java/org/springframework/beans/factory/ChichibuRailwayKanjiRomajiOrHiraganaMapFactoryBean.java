@@ -189,6 +189,7 @@ public class ChichibuRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Facto
 		//
 	}
 
+	@Nullable
 	private static KanjiHiraganaRomaji getKanjiHiraganaRomaji(final List<Element> elements) {
 		//
 		Element element = null;
@@ -298,6 +299,7 @@ public class ChichibuRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Facto
 			//
 	}
 
+	@Nullable
 	private static List<UnicodeBlock> getUnicodeBlocks(@Nullable final String string) {
 		//
 		final char[] cs = string != null ? string.toCharArray() : null;
