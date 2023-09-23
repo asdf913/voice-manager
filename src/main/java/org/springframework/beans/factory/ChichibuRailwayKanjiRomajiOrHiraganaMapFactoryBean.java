@@ -78,6 +78,7 @@ public class ChichibuRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Facto
 		//
 	}
 
+	@Nullable
 	private Map<String, String> getObject(final Stream<KanjiHiraganaRomaji> stream) {
 		//
 		return collect(stream, LinkedHashMap::new, this::accumulate, Map::putAll);
