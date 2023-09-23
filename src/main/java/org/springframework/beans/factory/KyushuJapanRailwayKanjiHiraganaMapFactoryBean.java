@@ -65,7 +65,7 @@ public class KyushuJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFrom
 		for (int i = 0; es != null && i < es.size(); i++) {
 			//
 			if ((entry = createEntry(NodeUtil.absUrl(es.get(i), "href"))) == null
-					|| Objects.equals(key = entry.getKey(), value = entry.getValue())) {
+					|| Objects.equals(key = Util.getKey(entry), value = entry.getValue())) {
 				//
 				continue;
 				//

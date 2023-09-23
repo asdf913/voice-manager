@@ -214,7 +214,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 				//
 			if (entry != null) {
 				//
-				Util.put(fieldMap = ObjectUtils.getIfNull(fieldMap, LinkedHashMap::new), entry.getKey(),
+				Util.put(fieldMap = ObjectUtils.getIfNull(fieldMap, LinkedHashMap::new), Util.getKey(entry),
 						entry.getValue());
 				//
 			} // if
@@ -620,7 +620,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 				//
 			if (entry != null) {
 				//
-				Util.put(fieldMap = ObjectUtils.getIfNull(fieldMap, LinkedHashMap::new), entry.getKey(),
+				Util.put(fieldMap = ObjectUtils.getIfNull(fieldMap, LinkedHashMap::new), Util.getKey(entry),
 						entry.getValue());
 				//
 			} // if

@@ -117,7 +117,7 @@ public class TsukubaExpressKanjiMapFactoryBean extends StringMapFromResourceFact
 				//
 			} // if
 				//
-			Util.put(map, entry.getKey(), entry.getValue());
+			Util.put(map, Util.getKey(entry), entry.getValue());
 			//
 		} // for
 			//

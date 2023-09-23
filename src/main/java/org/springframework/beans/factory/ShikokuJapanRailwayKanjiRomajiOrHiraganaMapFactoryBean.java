@@ -108,7 +108,7 @@ public class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends Stri
 					} // if
 						//
 					TableUtil.put(table = ObjectUtils.getIfNull(table, HashBasedTable::create), ElementUtil.text(e),
-							entry.getKey(), entry.getValue());
+							Util.getKey(entry), entry.getValue());
 					//
 				} // for
 					//

@@ -101,7 +101,7 @@ public class TokyoToeiTodenKanjiRomajiOrHiraganaMapFactoryBean extends StringMap
 				} // if
 					//
 				TableUtil.put(table = ObjectUtils.getIfNull(table, HashBasedTable::create),
-						getKanji(ElementUtil.text(e)), entry.getKey(), entry.getValue());
+						getKanji(ElementUtil.text(e)), Util.getKey(entry), entry.getValue());
 				//
 			} // for
 				//
