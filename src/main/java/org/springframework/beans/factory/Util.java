@@ -306,7 +306,7 @@ abstract class Util {
 		return instance != null ? instance.name() : null;
 	}
 
-	static int groupCount(final MatchResult instance) {
+	static int groupCount(@Nullable final MatchResult instance) {
 		return instance != null ? instance.groupCount() : 0;
 	}
 
