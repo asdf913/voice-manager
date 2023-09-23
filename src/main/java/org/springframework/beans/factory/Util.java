@@ -318,7 +318,7 @@ abstract class Util {
 		return instance != null ? instance.group(group) : null;
 	}
 
-	static boolean find(final Matcher instance) {
+	static boolean find(@Nullable final Matcher instance) {
 		//
 		if (instance == null) {
 			//
