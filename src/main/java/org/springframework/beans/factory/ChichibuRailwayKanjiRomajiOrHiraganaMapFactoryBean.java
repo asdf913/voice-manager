@@ -152,6 +152,7 @@ public class ChichibuRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Facto
 				: FailableBiFunctionUtil.apply(functionFalse, t, u);
 	}
 
+	@Nullable
 	private static <T, R> R collect(@Nullable final Stream<T> instance, @Nullable final Supplier<R> supplier,
 			@Nullable final BiConsumer<R, ? super T> accumulator, @Nullable final BiConsumer<R, R> combiner) {
 		return instance != null && (Proxy.isProxyClass(Util.getClass(instance))
