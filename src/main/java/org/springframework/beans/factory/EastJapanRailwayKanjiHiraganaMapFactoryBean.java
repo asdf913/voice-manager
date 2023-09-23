@@ -100,7 +100,7 @@ public class EastJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFromRe
 		//
 		Map<String, String> map = null;
 		//
-		try (final InputStream is = openStream(StringUtils.isNotBlank(url) ? new URL(url) : null)) {
+		try (final InputStream is = Util.openStream(StringUtils.isNotBlank(url) ? new URL(url) : null)) {
 			//
 			map = createMap(is, urlValidator);
 			//
@@ -149,11 +149,6 @@ public class EastJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFromRe
 			//
 		return map;
 		//
-	}
-
-	@Nullable
-	private static InputStream openStream(@Nullable final URL instance) throws IOException {
-		return instance != null ? instance.openStream() : null;
 	}
 
 	@Nullable

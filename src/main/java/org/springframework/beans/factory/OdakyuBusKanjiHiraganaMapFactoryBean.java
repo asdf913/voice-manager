@@ -26,9 +26,6 @@ import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.LoggerUtil;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
@@ -39,11 +36,8 @@ import freemarker.template.Configuration;
 import freemarker.template.ConfigurationUtil;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateUtil;
-import io.github.toolfactory.narcissus.Narcissus;
 
 public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<String, String>> {
-
-	private static final Logger LOG = LoggerFactory.getLogger(OdakyuBusKanjiHiraganaMapFactoryBean.class);
 
 	private String url = null;
 
@@ -86,7 +80,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		//
 		final ObjectMapper objectMapper = new ObjectMapper();
 		//
-		try (final InputStream is = openStream(testAndApply(Objects::nonNull, url, URL::new, null))) {
+		try (final InputStream is = Util.openStream(testAndApply(Objects::nonNull, url, URL::new, null))) {
 			//
 			items = Util
 					.cast(List.class,
@@ -198,7 +192,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		//
 		List<?> items = null;
 		//
-		try (final InputStream is = openStream(testAndApply(StringUtils::isNotEmpty, url, URL::new, null))) {
+		try (final InputStream is = Util.openStream(testAndApply(StringUtils::isNotEmpty, url, URL::new, null))) {
 			//
 			items = Util.cast(List.class,
 					testAndApply(Util::containsKey,
@@ -290,33 +284,6 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 
 	private static final <T> boolean test(@Nullable final Predicate<T> instance, @Nullable final T value) {
 		return instance != null && instance.test(value);
-	}
-
-	@Nullable
-	private static InputStream openStream(@Nullable final URL instance) throws IOException {
-		//
-		if (instance == null) {
-			//
-			return null;
-			//
-		} // if
-			//
-		try {
-			//
-			if (Narcissus.getField(instance, getDeclaredField(Util.getClass(instance), "handler")) == null) {
-				//
-				return null;
-				//
-			} // if
-				//
-		} catch (final NoSuchFieldException e) {
-			//
-			LoggerUtil.error(LOG, e.getMessage(), e);
-			//
-		} // try
-			//
-		return instance.openStream();
-		//
 	}
 
 	@Nullable

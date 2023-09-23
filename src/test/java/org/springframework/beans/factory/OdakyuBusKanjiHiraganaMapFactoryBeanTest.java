@@ -1,14 +1,11 @@
 package org.springframework.beans.factory;
 
-import java.io.File;
-import java.io.InputStream;
 import java.io.Writer;
 import java.lang.Character.UnicodeBlock;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.URL;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -34,7 +31,6 @@ import com.google.common.reflect.Reflection;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
-import io.github.toolfactory.narcissus.Narcissus;
 
 class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 
@@ -42,8 +38,7 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 
 	private static Method METHOD_GET_OBJECT, METHOD_CREATE_MAP, METHOD_TEST_AND_APPLY, METHOD_PROCESS,
 			METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK, METHOD_TEST2, METHOD_TEST3, METHOD_ACCEPT,
-			METHOD_OPEN_STREAM, METHOD_GET_DECLARED_FIELD, METHOD_CHECK_IF_KEY_EXISTS_AND_DIFFERENCE_VALUE,
-			METHOD_PERFORM = null;
+			METHOD_GET_DECLARED_FIELD, METHOD_CHECK_IF_KEY_EXISTS_AND_DIFFERENCE_VALUE, METHOD_PERFORM = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -68,8 +63,6 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 		//
 		(METHOD_ACCEPT = clz.getDeclaredMethod("accept", BiConsumer.class, Object.class, Object.class))
 				.setAccessible(true);
-		//
-		(METHOD_OPEN_STREAM = clz.getDeclaredMethod("openStream", URL.class)).setAccessible(true);
 		//
 		(METHOD_GET_DECLARED_FIELD = clz.getDeclaredMethod("getDeclaredField", Class.class, String.class))
 				.setAccessible(true);
@@ -338,29 +331,6 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 	private static <T, U> void accept(final BiConsumer<T, U> instance, final T t, final U u) throws Throwable {
 		try {
 			METHOD_ACCEPT.invoke(null, instance, t, u);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testOpenStream() throws Throwable {
-		//
-		Assertions.assertNotNull(openStream(new File("pom.xml").toURI().toURL()));
-		//
-		Assertions.assertNull(openStream(Util.cast(URL.class, Narcissus.allocateInstance(URL.class))));
-		//
-	}
-
-	private static InputStream openStream(final URL instance) throws Throwable {
-		try {
-			final Object obj = METHOD_OPEN_STREAM.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof InputStream) {
-				return (InputStream) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

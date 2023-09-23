@@ -97,7 +97,7 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends StringM
 			//
 		} // if
 			//
-		try (final InputStream is = openStream(testAndApply(StringUtils::isNotBlank, this.url, URL::new, null))) {
+		try (final InputStream is = Util.openStream(testAndApply(StringUtils::isNotBlank, this.url, URL::new, null))) {
 			//
 			return IValue0Util.getValue0(getObject(is, unicodeBlock));
 		} // try
@@ -148,11 +148,6 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends StringM
 	@Nullable
 	private static Object get(@Nullable final ScriptEngine instance, final String key) {
 		return instance != null ? instance.get(key) : null;
-	}
-
-	@Nullable
-	private static InputStream openStream(@Nullable final URL instance) throws IOException {
-		return instance != null ? instance.openStream() : null;
 	}
 
 	@Nullable

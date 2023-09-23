@@ -35,19 +35,12 @@ import org.apache.commons.lang3.tuple.MutablePairUtil;
 import org.apache.commons.lang3.tuple.Pair;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.LoggerUtil;
 
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderUtil;
 import com.opencsv.exceptions.CsvValidationException;
 
-import io.github.toolfactory.narcissus.Narcissus;
-
 public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFromResourceFactoryBean {
-
-	private static final Logger LOG = LoggerFactory.getLogger(HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean.class);
 
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
@@ -79,7 +72,7 @@ public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFr
 			//
 		} // if
 			//
-		try (final InputStream is = openStream(testAndApply(Objects::nonNull, url, URL::new, null))) {
+		try (final InputStream is = Util.openStream(testAndApply(Objects::nonNull, url, URL::new, null))) {
 			//
 			return createMap(is, forName(encoding));
 			//
@@ -221,33 +214,6 @@ public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFr
 		} // for
 			//
 		return pair;
-		//
-	}
-
-	@Nullable
-	private static final InputStream openStream(@Nullable final URL instance) throws IOException {
-		//
-		if (instance == null) {
-			//
-			return null;
-			//
-		} // if
-			//
-		try {
-			//
-			if (Narcissus.getField(instance, getDeclaredField(Util.getClass(instance), "handler")) == null) {
-				//
-				return null;
-				//
-			} // if
-				//
-		} catch (final NoSuchFieldException e) {
-			//
-			LoggerUtil.error(LOG, e.getMessage(), e);
-			//
-		} // try
-			//
-		return instance.openStream();
 		//
 	}
 

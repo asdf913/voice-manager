@@ -1,7 +1,5 @@
 package org.springframework.beans.factory;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -41,7 +39,7 @@ public class CentralJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFro
 			//
 		final List<?> list = Util.cast(List.class,
 				Util.get(ObjectMapperUtil.readValue(new ObjectMapper(),
-						openStream(testAndApply(StringUtils::isNotBlank, url, URL::new, null)),
+						Util.openStream(testAndApply(StringUtils::isNotBlank, url, URL::new, null)),
 						Object.class) instanceof Map<?, ?> m ? m : null, "station"));
 		//
 		Map<String, String> map = null;
@@ -70,11 +68,6 @@ public class CentralJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFro
 			throws E {
 		return predicate != null && predicate.test(value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
-	}
-
-	@Nullable
-	private static InputStream openStream(@Nullable final URL instance) throws IOException {
-		return instance != null ? instance.openStream() : null;
 	}
 
 }

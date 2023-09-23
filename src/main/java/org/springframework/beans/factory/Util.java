@@ -1,10 +1,13 @@
 package org.springframework.beans.factory;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.Character.UnicodeBlock;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -245,7 +248,7 @@ abstract class Util {
 			//
 		try {
 			//
-			if (Narcissus.getObjectField(pattern, Pattern.class.getDeclaredField("pattern")) == null) {
+			if (Narcissus.getObjectField(pattern, getDeclaredField(Pattern.class, "pattern")) == null) {
 				//
 				return null;
 				//
@@ -271,7 +274,7 @@ abstract class Util {
 			//
 		try {
 			//
-			if (Narcissus.getObjectField(instance, Matcher.class.getDeclaredField("groups")) == null) {
+			if (Narcissus.getObjectField(instance, getDeclaredField(Matcher.class, "groups")) == null) {
 				//
 				return false;
 				//
@@ -313,6 +316,36 @@ abstract class Util {
 	@Nullable
 	static String group(@Nullable final MatchResult instance, final int group) {
 		return instance != null ? instance.group(group) : null;
+	}
+
+	static final InputStream openStream(final URL instance) throws IOException {
+		//
+		if (instance == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		try {
+			//
+			if (Narcissus.getField(instance, getDeclaredField(getClass(instance), "handler")) == null) {
+				//
+				return null;
+				//
+			} // if
+				//
+		} catch (final NoSuchFieldException e) {
+			//
+			LoggerUtil.error(LOG, e.getMessage(), e);
+			//
+		} // try
+			//
+		return instance.openStream();
+		//
+	}
+
+	private static Field getDeclaredField(final Class<?> instance, final String name) throws NoSuchFieldException {
+		return instance != null && name != null ? instance.getDeclaredField(name) : null;
 	}
 
 }

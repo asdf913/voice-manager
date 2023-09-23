@@ -81,10 +81,10 @@ public class IpaMultimapFactoryBean implements FactoryBean<Multimap<String, Stri
 			//
 		if (mm == null) {
 			//
-			try (final InputStream is = openStream(testAndApply(StringUtils::isNotBlank, url, URL::new, null))) {
+			try (final InputStream is = Util.openStream(testAndApply(StringUtils::isNotBlank, url, URL::new, null))) {
 				//
 				mm = IValue0Util.getValue0(this.multimap = getMultimapUnitFromJson(om,
-						openStream(testAndApply(StringUtils::isNotBlank, url, URL::new, null))));
+						Util.openStream(testAndApply(StringUtils::isNotBlank, url, URL::new, null))));
 				//
 			} catch (final IOException e) {
 				//
@@ -181,11 +181,6 @@ public class IpaMultimapFactoryBean implements FactoryBean<Multimap<String, Stri
 		//
 		TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(headless, LOG, throwable);
 		//
-	}
-
-	@Nullable
-	private static InputStream openStream(@Nullable final URL instance) throws IOException {
-		return instance != null ? instance.openStream() : null;
 	}
 
 	@Override

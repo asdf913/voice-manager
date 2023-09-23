@@ -1,9 +1,12 @@
 package org.springframework.beans.factory;
 
+import java.io.IOException;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
+import java.net.URL;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -22,7 +25,8 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class UtilTest {
 
-	private static Method METHOD_GET_NAME, METHOD_CAST, METHOD_IS_ASSIGNABLE_FROM, METHOD_ACCEPT = null;
+	private static Method METHOD_GET_NAME, METHOD_CAST, METHOD_IS_ASSIGNABLE_FROM, METHOD_ACCEPT,
+			METHOD_GET_DECLARED_FIELD = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -37,6 +41,9 @@ class UtilTest {
 				.setAccessible(true);
 		//
 		(METHOD_ACCEPT = clz.getDeclaredMethod("accept", Consumer.class, Object.class)).setAccessible(true);
+		//
+		(METHOD_GET_DECLARED_FIELD = clz.getDeclaredMethod("getDeclaredField", Class.class, String.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -264,6 +271,36 @@ class UtilTest {
 		//
 		Assertions.assertNull(Util.group(null, 0));
 		//
+	}
+
+	@Test
+	void testOpenStream() throws IOException {
+		//
+		Assertions.assertNull(Util.openStream(Util.cast(URL.class, Narcissus.allocateInstance(URL.class))));
+		//
+	}
+
+	@Test
+	void testGetDeclaredField() throws Throwable {
+		//
+		Assertions.assertNull(getDeclaredField(null, null));
+		//
+		Assertions.assertNull(getDeclaredField(Object.class, null));
+		//
+	}
+
+	private static Field getDeclaredField(final Class<?> instance, final String name) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_DECLARED_FIELD.invoke(null, instance, name);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Field) {
+				return (Field) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 }
