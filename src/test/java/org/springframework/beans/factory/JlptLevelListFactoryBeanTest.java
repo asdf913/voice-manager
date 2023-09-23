@@ -2,31 +2,17 @@ package org.springframework.beans.factory;
 
 import java.awt.GraphicsEnvironment;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.time.Duration;
 import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.AssertionsUtil;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class JlptLevelListFactoryBeanTest {
 
 	private static final String EMPTY = "";
-
-	private static Method METHOD_LONG_VALUE = null;
-
-	@BeforeAll
-	static void beforeAll() throws ReflectiveOperationException {
-		//
-		final Class<?> clz = JlptLevelListFactoryBean.class;
-		//
-		(METHOD_LONG_VALUE = clz.getDeclaredMethod("longValue", Number.class, Long.TYPE)).setAccessible(true);
-		//
-	}
 
 	private JlptLevelListFactoryBean instance = null;
 
@@ -181,27 +167,6 @@ class JlptLevelListFactoryBeanTest {
 	private static void setValues(final JlptLevelListFactoryBean instance, final String string) {
 		if (instance != null) {
 			instance.setValues(string);
-		}
-	}
-
-	@Test
-	void testLongValue() throws Throwable {
-		//
-		final long l = 0;
-		//
-		Assertions.assertEquals(l, longValue(null, l));
-		//
-	}
-
-	private static long longValue(final Number instance, final long defaultValue) throws Throwable {
-		try {
-			final Object obj = METHOD_LONG_VALUE.invoke(null, instance, defaultValue);
-			if (obj instanceof Long) {
-				return ((Long) obj).longValue();
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
 		}
 	}
 

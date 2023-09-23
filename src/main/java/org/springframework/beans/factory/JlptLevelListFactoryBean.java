@@ -52,7 +52,7 @@ public class JlptLevelListFactoryBean implements FactoryBean<List<String>> {
 			//
 		} else if (timeout instanceof Number number) {
 			//
-			value = Unit.with(Duration.ofMillis(longValue(number, 0)));
+			value = Unit.with(Duration.ofMillis(Util.longValue(number, 0)));
 			//
 		} // if
 			//
@@ -78,10 +78,6 @@ public class JlptLevelListFactoryBean implements FactoryBean<List<String>> {
 			//
 		} // if
 			//
-	}
-
-	private static long longValue(@Nullable final Number instance, final long defaultValue) {
-		return instance != null ? instance.longValue() : defaultValue;
 	}
 
 	public void setValues(final String string) {

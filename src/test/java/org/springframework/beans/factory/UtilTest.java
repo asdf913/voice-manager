@@ -281,6 +281,15 @@ class UtilTest {
 	}
 
 	@Test
+	void testLongValue() {
+		//
+		final long zero = Long.valueOf(0);
+		//
+		Assertions.assertEquals(zero, Util.longValue(null, zero));
+		//
+	}
+
+	@Test
 	void testGetDeclaredField() throws Throwable {
 		//
 		Assertions.assertNull(getDeclaredField(null, null));

@@ -74,7 +74,7 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 			//
 		} else if (timeout instanceof Number number) {
 			//
-			value = Unit.with(Duration.ofMillis(longValue(number, 0)));
+			value = Unit.with(Duration.ofMillis(Util.longValue(number, 0)));
 			//
 		} // if
 			//
@@ -100,10 +100,6 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 			//
 		} // if
 			//
-	}
-
-	private static long longValue(@Nullable final Number instance, final long defaultValue) {
-		return instance != null ? instance.longValue() : defaultValue;
 	}
 
 	@Nullable
