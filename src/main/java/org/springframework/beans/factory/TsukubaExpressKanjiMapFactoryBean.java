@@ -62,7 +62,7 @@ public class TsukubaExpressKanjiMapFactoryBean extends StringMapFromResourceFact
 			} else {
 				//
 				final List<RomajiOrHiragana> rohs = Util.toList(Util.filter(Arrays.stream(RomajiOrHiragana.values()),
-						x -> StringUtils.startsWithIgnoreCase(name(x), string)));
+						x -> StringUtils.startsWithIgnoreCase(Util.name(x), string)));
 				//
 				if (IterableUtils.size(rohs) > 1) {
 					//
@@ -88,11 +88,6 @@ public class TsukubaExpressKanjiMapFactoryBean extends StringMapFromResourceFact
 			//
 		} // if
 			//
-	}
-
-	@Nullable
-	private static String name(@Nullable final Enum<?> instance) {
-		return instance != null ? instance.name() : null;
 	}
 
 	@Override

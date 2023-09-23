@@ -24,7 +24,7 @@ class TsukubaExpressKanjiMapFactoryBeanTest {
 
 	private static Class<?> CLASS_ROMAJI_OR_HIRAGANA = null;
 
-	private static Method METHOD_CREATE_ENTRY, METHOD_GET_STRING, METHOD_TEST_AND_APPLY, METHOD_NAME = null;
+	private static Method METHOD_CREATE_ENTRY, METHOD_GET_STRING, METHOD_TEST_AND_APPLY = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -40,8 +40,6 @@ class TsukubaExpressKanjiMapFactoryBeanTest {
 		//
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
-		//
-		(METHOD_NAME = clz.getDeclaredMethod("name", Enum.class)).setAccessible(true);
 		//
 	}
 
@@ -194,27 +192,6 @@ class TsukubaExpressKanjiMapFactoryBeanTest {
 			throws Throwable {
 		try {
 			return (R) METHOD_TEST_AND_APPLY.invoke(null, predicate, value, functionTrue, functionFalse);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testName() throws Throwable {
-		//
-		Assertions.assertNull(name(null));
-		//
-	}
-
-	private static String name(final Enum<?> instance) throws Throwable {
-		try {
-			final Object obj = METHOD_NAME.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(obj.getClass() != null ? obj.getClass().toString() : null);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

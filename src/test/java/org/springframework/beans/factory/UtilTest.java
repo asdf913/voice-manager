@@ -244,4 +244,12 @@ class UtilTest {
 		}, null));
 		//
 	}
+
+	@Test
+	void testName() {
+		//
+		Assertions.assertNull(Util.name(null));
+		//
+	}
+
 }

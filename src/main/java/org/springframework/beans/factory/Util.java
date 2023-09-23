@@ -300,4 +300,8 @@ abstract class Util {
 		return instance != null ? instance.getDeclaringClass() : null;
 	}
 
+	static String name(final Enum<?> instance) {
+		return instance != null ? instance.name() : null;
+	}
+
 }
