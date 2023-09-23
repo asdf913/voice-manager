@@ -185,6 +185,7 @@ public class YojijukugoMultimapFactoryBean implements FactoryBean<Multimap<Strin
 		//
 	}
 
+	@Nullable
 	private static Multimap<String, String> createMultimapByUrl(final String url, final String[] allowProtocols)
 			throws IOException {
 		//
