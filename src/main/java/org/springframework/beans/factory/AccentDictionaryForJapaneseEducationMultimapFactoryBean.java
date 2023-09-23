@@ -244,7 +244,7 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 							&& StringUtils.equalsIgnoreCase("script", ElementUtil.tagName(firstChild)))
 					|| (pair = getPair(ElementUtil.text(td), unicodeBlock,
 							arPattern = ObjectUtils.getIfNull(arPattern, AtomicReference::new))) == null
-					|| (ss = pair.getValue0()) == null) {
+					|| (ss = IValue0Util.getValue0(pair)) == null) {
 				//
 				continue;
 				//

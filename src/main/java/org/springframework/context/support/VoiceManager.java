@@ -13604,7 +13604,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			final IValue0<?> writer = getWriter(sheet);
 			//
-			if (writer != null && writer.getValue0() == null) {
+			if (writer != null && IValue0Util.getValue0(writer) == null) {
 				//
 				return;
 				//
