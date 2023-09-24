@@ -3,7 +3,6 @@ package org.springframework.beans.factory;
 import java.awt.image.BufferedImage;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.util.function.Predicate;
 
@@ -18,8 +17,7 @@ import com.google.common.base.Predicates;
 
 class BufferedImageTypeFactoryBeanTest {
 
-	private static Method METHOD_TEST_AND_APPLY, METHOD_IS_STATIC, METHOD_GET, METHOD_IS_PRIMITIVE, METHOD_AND,
-			METHOD_INT_VALUE = null;
+	private static Method METHOD_TEST_AND_APPLY, METHOD_GET, METHOD_IS_PRIMITIVE, METHOD_AND, METHOD_INT_VALUE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -28,8 +26,6 @@ class BufferedImageTypeFactoryBeanTest {
 		//
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
-		//
-		(METHOD_IS_STATIC = clz.getDeclaredMethod("isStatic", Member.class)).setAccessible(true);
 		//
 		(METHOD_GET = clz.getDeclaredMethod("get", Field.class, Object.class)).setAccessible(true);
 		//
@@ -125,25 +121,6 @@ class BufferedImageTypeFactoryBeanTest {
 			throws Throwable {
 		try {
 			return (R) METHOD_TEST_AND_APPLY.invoke(null, predicate, value, functionTrue, functionFalse);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testIsStatic() throws Throwable {
-		//
-		Assertions.assertFalse(isStatic(null));
-		//
-	}
-
-	private static boolean isStatic(final Member instance) throws Throwable {
-		try {
-			final Object obj = METHOD_IS_STATIC.invoke(null, instance);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

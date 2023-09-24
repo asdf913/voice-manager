@@ -7,7 +7,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -265,8 +264,8 @@ public class ChichibuRailwayKanjiRomajiOrHiraganaMapFactoryBean extends StringMa
 				//
 			} // if
 				//
-			nonBlank = BooleanUtils.toBooleanDefaultIfNull(nonBlank, true) && StringUtils
-					.isNotBlank(Util.toString(Modifier.isStatic(f.getModifiers()) ? Narcissus.getStaticField(f)
+			nonBlank = BooleanUtils.toBooleanDefaultIfNull(nonBlank, true)
+					&& StringUtils.isNotBlank(Util.toString(Util.isStatic(f) ? Narcissus.getStaticField(f)
 							: testAndApply(
 									(a, b) -> a != null && Objects.equals(Util.getDeclaringClass(b), Util.getClass(a)),
 									kanjiHiraganaRomaji, f, Narcissus::getField, null)));

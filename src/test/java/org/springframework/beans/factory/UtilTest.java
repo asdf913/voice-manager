@@ -299,6 +299,13 @@ class UtilTest {
 	}
 
 	@Test
+	void testIsStatic() {
+		//
+		Assertions.assertFalse(Util.isStatic(null));
+		//
+	}
+
+	@Test
 	void testGetDeclaredField() throws Throwable {
 		//
 		Assertions.assertNull(getDeclaredField(null, null));

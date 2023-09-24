@@ -129,7 +129,7 @@ public class BufferedImageTypeFactoryBean implements FactoryBean<Integer> {
 					//
 					final Class<?> type = Util.getType(f);
 					//
-					return and(isStatic(f),
+					return and(Util.isStatic(f),
 							Boolean.logicalOr(Util.isAssignableFrom(Number.class, type),
 									(isPrimitive(type) && ArrayUtils.contains(new Class<?>[] { Byte.TYPE, Short.TYPE,
 											Integer.TYPE, Long.TYPE, Float.TYPE, Double.TYPE }, type))),
@@ -147,7 +147,7 @@ public class BufferedImageTypeFactoryBean implements FactoryBean<Integer> {
 			//
 		try {
 			//
-			final Object obj = testAndApply(BufferedImageTypeFactoryBean::isStatic,
+			final Object obj = testAndApply(Util::isStatic,
 					testAndApply(x -> size == 1, fs, x -> IterableUtils.get(x, 0), null), x -> get(x, null), null);
 			//
 			if (obj instanceof Number number) {
@@ -176,10 +176,6 @@ public class BufferedImageTypeFactoryBean implements FactoryBean<Integer> {
 
 	private static final <T> boolean test(@Nullable final Predicate<T> instance, @Nullable final T value) {
 		return instance != null && instance.test(value);
-	}
-
-	private static boolean isStatic(@Nullable final Member instance) {
-		return instance != null && Modifier.isStatic(instance.getModifiers());
 	}
 
 	@Nullable

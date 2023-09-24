@@ -70,7 +70,7 @@ abstract class Util {
 				//
 			final Field f = IterableUtils.get(fs, 0);
 			//
-			if (f == null || !Modifier.isStatic(f.getModifiers())) {
+			if (f == null || !isStatic(f)) {
 				//
 				return null;
 				//
@@ -379,6 +379,10 @@ abstract class Util {
 
 	static long longValue(@Nullable final Number instance, final long defaultValue) {
 		return instance != null ? instance.longValue() : defaultValue;
+	}
+
+	static boolean isStatic(final Member instance) {
+		return instance != null && Modifier.isStatic(instance.getModifiers());
 	}
 
 }

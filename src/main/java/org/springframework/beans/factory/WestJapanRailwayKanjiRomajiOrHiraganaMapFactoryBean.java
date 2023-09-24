@@ -6,7 +6,6 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.Character.UnicodeBlock;
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 import java.net.URL;
 import java.util.ArrayList;
@@ -216,7 +215,7 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends StringM
 			if (Util.contains(Arrays.asList("java.base", "java.sql", "java.desktop", "java.logging"),
 					getName(getModule(Util.getDeclaringClass(f))))) {
 				//
-				temp = Modifier.isStatic(f.getModifiers()) ? Narcissus.getStaticField(f)
+				temp = Util.isStatic(f) ? Narcissus.getStaticField(f)
 						: testAndApply((a, b) -> a != null, instance, f, Narcissus::getField, null);
 				//
 			} else {
