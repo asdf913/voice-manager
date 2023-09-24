@@ -42,7 +42,7 @@ import org.jsoup.select.Elements;
 
 import io.github.toolfactory.narcissus.Narcissus;
 
-public class KominatoKanjiRomajiOrHiraganaMapFactoryBean implements FactoryBean<Map<String, String>> {
+public class KominatoKanjiRomajiOrHiraganaMapFactoryBean extends StringMapFromResourceFactoryBean {
 
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
@@ -72,6 +72,14 @@ public class KominatoKanjiRomajiOrHiraganaMapFactoryBean implements FactoryBean<
 	@Override
 	public Map<String, String> getObject() throws Exception {
 		//
+		final IValue0<Map<String, String>> iValue0 = getIvalue0();
+		//
+		if (iValue0 != null) {
+			//
+			return IValue0Util.getValue0(iValue0);
+			//
+		} // if
+			//
 		return getObject(
 				Util.filter(
 						FailableStreamUtil
