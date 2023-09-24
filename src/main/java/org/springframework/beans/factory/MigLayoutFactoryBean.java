@@ -225,7 +225,7 @@ public class MigLayoutFactoryBean implements FactoryBean<MigLayout> {
 	@Override
 	public MigLayout getObject() throws Exception {
 		//
-		final Map<Integer, Constructor<?>> constructorMap = Util.filter(
+		final Map<Integer, Constructor<?>> constructorMap = Util.collect(Util.filter(
 				testAndApply(Objects::nonNull, MigLayout.class.getDeclaredConstructors(), Arrays::stream, null), c -> {
 					//
 					if (c == null) {
@@ -251,7 +251,7 @@ public class MigLayoutFactoryBean implements FactoryBean<MigLayout> {
 						//
 					return true;
 					//
-				}).collect(Collectors.toMap(c -> c != null ? c.getParameterCount() : null, Functions.identity()));
+				}), Collectors.toMap(c -> c != null ? c.getParameterCount() : null, Functions.identity()));
 		//
 		final Constructor<?> constructor = MapUtils.getObject(constructorMap, Integer.valueOf(length(arguments)));
 		//

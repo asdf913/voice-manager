@@ -2,7 +2,6 @@ package org.springframework.beans.factory;
 
 import java.io.IOException;
 import java.lang.Character.UnicodeBlock;
-import java.lang.reflect.Proxy;
 import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -12,7 +11,6 @@ import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 
@@ -65,7 +63,7 @@ public class TokyoToeiTodenKanjiRomajiOrHiraganaMapFactoryBean extends StringMap
 			//
 		} // if
 			//
-		return collect(
+		return Util.collect(
 				Util.filter(Util.stream(TableUtil.cellSet(createTable(url))),
 						c -> Objects.equals(CellUtil.getColumnKey(c), unicodeBlock)),
 				Collectors.toMap(CellUtil::getRowKey, CellUtil::getValue));
@@ -114,7 +112,7 @@ public class TokyoToeiTodenKanjiRomajiOrHiraganaMapFactoryBean extends StringMap
 	@Nullable
 	private static String getKanji(final String string) {
 		//
-		return collect(
+		return Util.collect(
 				Util.stream(MultimapUtil.get(createUnicodeBlockCharacterMultimap(string),
 						UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)),
 				Collector.of(StringBuilder::new, StringBuilder::append, StringBuilder::append,
@@ -188,7 +186,7 @@ public class TokyoToeiTodenKanjiRomajiOrHiraganaMapFactoryBean extends StringMap
 	@Nullable
 	private static String getHiragana(@Nullable final Element element) {
 		//
-		return collect(
+		return Util.collect(
 				Util.stream(MultimapUtil.get(createUnicodeBlockCharacterMultimap(ElementUtil.text(element)),
 						UnicodeBlock.HIRAGANA)),
 				Collector.of(StringBuilder::new, StringBuilder::append, StringBuilder::append,
@@ -197,19 +195,9 @@ public class TokyoToeiTodenKanjiRomajiOrHiraganaMapFactoryBean extends StringMap
 	}
 
 	@Nullable
-	private static <T, R, A> R collect(@Nullable final Stream<T> instance,
-			@Nullable final Collector<? super T, A, R> collector) {
-		//
-		return instance != null && (collector != null || Proxy.isProxyClass(Util.getClass(instance)))
-				? instance.collect(collector)
-				: null;
-		//
-	}
-
-	@Nullable
 	private static String getRomaji(@Nullable final Element element) {
 		//
-		return collect(
+		return Util.collect(
 				Util.stream(MultimapUtil.get(createUnicodeBlockCharacterMultimap(ElementUtil.text(element)),
 						UnicodeBlock.BASIC_LATIN)),
 				Collector.of(StringBuilder::new, StringBuilder::append, StringBuilder::append,

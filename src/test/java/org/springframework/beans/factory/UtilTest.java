@@ -237,9 +237,13 @@ class UtilTest {
 	@Test
 	void testCollect() {
 		//
-		Assertions.assertNull(Util.collect(stream, null, null, null));
+		Assertions.assertNull(Util.collect(stream, null));
 		//
 		final Stream<Object> empty = Stream.empty();
+		//
+		Assertions.assertNull(Util.collect(empty, null));
+		//
+		Assertions.assertNull(Util.collect(stream, null, null, null));
 		//
 		Assertions.assertNull(Util.collect(empty, null, null, null));
 		//

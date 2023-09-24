@@ -68,7 +68,7 @@ public class KeikyuRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<Map
 				//
 			} // if
 				//
-			if (Util.find(matcher = Util.matcher(PATTERN, string = Util.map(Util.stream(nodes), x -> {
+			if (Util.find(matcher = Util.matcher(PATTERN, string = Util.collect(Util.map(Util.stream(nodes), x -> {
 				//
 				if (x instanceof TextNode textNode) {
 					//
@@ -78,7 +78,7 @@ public class KeikyuRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<Map
 					//
 				return StringUtils.trim(Util.toString(x));
 				//
-			}).collect(Collectors.joining("")))) && Util.groupCount(matcher) > 0) {
+			}), Collectors.joining("")))) && Util.groupCount(matcher) > 0) {
 				//
 				string = Util.group(matcher, 1);
 				//

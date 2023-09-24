@@ -2,7 +2,6 @@ package org.springframework.beans.factory;
 
 import java.io.IOException;
 import java.lang.Character.UnicodeBlock;
-import java.lang.reflect.Proxy;
 import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -12,7 +11,6 @@ import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 
@@ -66,7 +64,7 @@ public class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends Stri
 			//
 		} // if
 			//
-		return collect(
+		return Util.collect(
 				Util.filter(Util.stream(TableUtil.cellSet(createTable(url))),
 						c -> Objects.equals(CellUtil.getColumnKey(c), unicodeBlock)),
 				Collectors.toMap(CellUtil::getRowKey, CellUtil::getValue));
@@ -170,7 +168,7 @@ public class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends Stri
 	@Nullable
 	private static String getHiragana(final Element element) {
 		//
-		return collect(
+		return Util.collect(
 				Util.stream(MultimapUtil.get(createUnicodeBlockCharacterMultimap(ElementUtil.text(element)),
 						UnicodeBlock.HIRAGANA)),
 				Collector.of(StringBuilder::new, StringBuilder::append, StringBuilder::append,
@@ -181,23 +179,13 @@ public class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends Stri
 	@Nullable
 	private static String getRomaji(final Element element) {
 		//
-		return collect(
+		return Util.collect(
 				Util.filter(Util
 						.stream(MultimapUtil.get(createUnicodeBlockCharacterMultimap(ElementUtil.attr(element, "alt")),
 								UnicodeBlock.BASIC_LATIN)),
 						c -> !Character.isWhitespace(c)),
 				Collector.of(StringBuilder::new, StringBuilder::append, StringBuilder::append,
 						StringBuilder::toString));
-		//
-	}
-
-	@Nullable
-	private static <T, R, A> R collect(@Nullable final Stream<T> instance,
-			@Nullable final Collector<? super T, A, R> collector) {
-		//
-		return instance != null && (collector != null || Proxy.isProxyClass(Util.getClass(instance)))
-				? instance.collect(collector)
-				: null;
 		//
 	}
 

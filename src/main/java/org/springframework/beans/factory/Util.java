@@ -22,6 +22,7 @@ import java.util.function.Supplier;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collector;
 import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
@@ -187,6 +188,23 @@ abstract class Util {
 		//
 	}
 
+	static <T, R, A> R collect(final Stream<T> instance, final Collector<? super T, A, R> collector) {
+		//
+		return instance != null && (collector != null || Proxy.isProxyClass(getClass(instance)))
+				? instance.collect(collector)
+				: null;
+		//
+	}
+
+	@Nullable
+	static <T, R> R collect(@Nullable final Stream<T> instance, @Nullable final Supplier<R> supplier,
+			@Nullable final BiConsumer<R, ? super T> accumulator, @Nullable final BiConsumer<R, R> combiner) {
+		return instance != null && (Proxy.isProxyClass(getClass(instance))
+				|| (supplier != null && accumulator != null && combiner != null))
+						? instance.collect(supplier, accumulator, combiner)
+						: null;
+	}
+
 	@Nullable
 	static <T> List<T> toList(@Nullable final Stream<T> instance) {
 		return instance != null ? instance.toList() : null;
@@ -288,15 +306,6 @@ abstract class Util {
 			//
 		return instance.matches();
 		//
-	}
-
-	@Nullable
-	static <T, R> R collect(@Nullable final Stream<T> instance, @Nullable final Supplier<R> supplier,
-			@Nullable final BiConsumer<R, ? super T> accumulator, @Nullable final BiConsumer<R, R> combiner) {
-		return instance != null && (Proxy.isProxyClass(getClass(instance))
-				|| (supplier != null && accumulator != null && combiner != null))
-						? instance.collect(supplier, accumulator, combiner)
-						: null;
 	}
 
 	@Nullable

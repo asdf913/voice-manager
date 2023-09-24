@@ -7,9 +7,6 @@ import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Map;
 import java.util.function.Predicate;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.apache.commons.lang3.function.FailableFunction;
 import org.jsoup.nodes.Element;
@@ -24,7 +21,7 @@ import com.google.common.collect.Multimap;
 class TokyoToeiNipporiToneriKanjiRomajiOrHiraganaMapFactoryBeanTest {
 
 	private static Method METHOD_CREATE_MAP, METHOD_TEST_AND_APPLY, METHOD_GET_HIRAGANA, METHOD_GET_ROMAJI,
-			METHOD_CREATE_UNICODE_BLOCK_CHARACTER_MULTI_MAP, METHOD_COLLECT, METHOD_GET_KANJI = null;
+			METHOD_CREATE_UNICODE_BLOCK_CHARACTER_MULTI_MAP, METHOD_GET_KANJI = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -42,8 +39,6 @@ class TokyoToeiNipporiToneriKanjiRomajiOrHiraganaMapFactoryBeanTest {
 		//
 		(METHOD_CREATE_UNICODE_BLOCK_CHARACTER_MULTI_MAP = clz.getDeclaredMethod("createUnicodeBlockCharacterMultimap",
 				String.class)).setAccessible(true);
-		//
-		(METHOD_COLLECT = clz.getDeclaredMethod("collect", Stream.class, Collector.class)).setAccessible(true);
 		//
 		(METHOD_GET_KANJI = clz.getDeclaredMethod("getKanji", String.class)).setAccessible(true);
 		//
@@ -255,26 +250,6 @@ class TokyoToeiNipporiToneriKanjiRomajiOrHiraganaMapFactoryBeanTest {
 				return (Multimap) obj;
 			}
 			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testCollect() throws Throwable {
-		//
-		final Stream<?> stream1 = Stream.empty();
-		//
-		Assertions.assertNull(collect(stream1, null));
-		//
-		Assertions.assertEquals(Collections.emptyList(), collect(stream1, Collectors.toList()));
-		//
-	}
-
-	private static <T, R, A> R collect(final Stream<T> instance, final Collector<? super T, A, R> collector)
-			throws Throwable {
-		try {
-			return (R) METHOD_COLLECT.invoke(null, instance, collector);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
