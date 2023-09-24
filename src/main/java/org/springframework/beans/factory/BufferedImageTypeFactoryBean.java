@@ -2,12 +2,11 @@ package org.springframework.beans.factory;
 
 import java.awt.image.BufferedImage;
 import java.lang.reflect.Field;
-import java.lang.reflect.Member;
-import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
+
 import javax.annotation.Nullable;
 
 import org.apache.commons.collections4.IterableUtils;
