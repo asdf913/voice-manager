@@ -152,15 +152,12 @@ public class SaitamaNewUrbanTransRomajiOrHiraganaMapFactoryBean implements Facto
 			//
 			return Unit.with(s);
 			//
-		} else if (unicodeBlocks != null && unicodeBlocks.size() > 1) {
+		} else if (unicodeBlocks != null && unicodeBlocks.size() > 1
+				&& Objects.equals(valueUnicodeBlock, UnicodeBlock.BASIC_LATIN) && Objects.equals(unicodeBlocks,
+						Arrays.asList(UnicodeBlock.BASIC_LATIN, UnicodeBlock.COMBINING_DIACRITICAL_MARKS))) {
 			//
-			if (Objects.equals(valueUnicodeBlock, UnicodeBlock.BASIC_LATIN) && Objects.equals(unicodeBlocks,
-					Arrays.asList(UnicodeBlock.BASIC_LATIN, UnicodeBlock.COMBINING_DIACRITICAL_MARKS))) {
-				//
-				return Unit.with(s);
-				//
-			} // if
-				//
+			return Unit.with(s);
+			//
 		} // if
 			//
 		return null;
