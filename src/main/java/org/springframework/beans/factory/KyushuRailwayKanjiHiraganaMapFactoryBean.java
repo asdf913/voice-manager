@@ -66,7 +66,7 @@ public class KyushuRailwayKanjiHiraganaMapFactoryBean extends StringMapFromResou
 				//
 			value = ElementUtil.text(IterableUtils.get(children, 1));
 			//
-			if (map.containsKey(key = ElementUtil.text(firstElement)) && !Objects.equals(map.get(key), value)) {
+			if (Util.containsKey(map, key = ElementUtil.text(firstElement)) && !Objects.equals(map.get(key), value)) {
 				//
 				throw new IllegalStateException();
 				//

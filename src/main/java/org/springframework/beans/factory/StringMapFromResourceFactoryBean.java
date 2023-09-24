@@ -185,7 +185,7 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 					//
 					final Object key = args[0];
 					//
-					if (!getMap().containsKey(key)) {
+					if (!Util.containsKey(getMap(), key)) {
 						//
 						throw new IllegalStateException();
 						//
