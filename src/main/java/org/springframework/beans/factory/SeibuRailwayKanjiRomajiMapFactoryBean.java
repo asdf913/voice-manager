@@ -64,7 +64,7 @@ public class SeibuRailwayKanjiRomajiMapFactoryBean extends StringMapFromResource
 			value = ElementUtil.text(IterableUtils.get(children, 1));
 			//
 			if (Util.containsKey(map, key = ElementUtil.text(IterableUtils.get(children, 0)))
-					&& !Objects.equals(map.get(key), value)) {
+					&& !Objects.equals(Util.get(map, key), value)) {
 				//
 				throw new IllegalStateException();
 				//

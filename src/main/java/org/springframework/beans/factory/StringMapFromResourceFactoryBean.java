@@ -191,7 +191,7 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 						//
 					} // if
 						//
-					return getMap().get(key);
+					return Util.get(getMap(), key);
 					//
 				} else if (Objects.equals(methodName, "containsKey") && args != null && args.length > 0) {
 					//

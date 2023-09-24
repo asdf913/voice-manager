@@ -143,7 +143,7 @@ public class TokyuKanjiRomajiOrHiraganaMapFactoryBean extends StringMapFromResou
 					//
 				} // if
 					//
-				Util.put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), text, temp.get(romajiOrHiragana));
+				Util.put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), text, Util.get(temp, romajiOrHiragana));
 				//
 			} // for
 				//

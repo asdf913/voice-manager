@@ -55,7 +55,7 @@ public class CentralJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFro
 				//
 			} // if
 				//
-			Util.put(map, Util.toString(m.get("name")), Util.toString(m.get("kana")));
+			Util.put(map, Util.toString(Util.get(m, "name")), Util.toString(Util.get(m, "kana")));
 			//
 		} // for
 			//
