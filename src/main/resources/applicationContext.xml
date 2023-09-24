@@ -468,8 +468,7 @@
 		<property name="keyColumnName" value="kanji" />
 		<property name="valueColumnName" value="hiragana" />
 		<property name="valueColumnIndex" value="1" />
-		<property name="resource"
-			value="classpath:Kantetsu.xlsx" />
+		<property name="resource" value="classpath:Kantetsu.xlsx" />
 	</bean>
 
 	<bean
@@ -484,8 +483,30 @@
 		<property name="keyColumnName" value="kanji" />
 		<property name="valueColumnName" value="romaji" />
 		<property name="valueColumnIndex" value="2" />
-		<property name="resource"
-			value="classpath:Kantetsu.xlsx" />
+		<property name="resource" value="classpath:Kantetsu.xlsx" />
+	</bean>
+
+	<!-- org.springframework.beans.factory.ChichibuRailwayKanjiRomajiOrHiraganaMapFactoryBean -->
+	<bean
+		class="org.springframework.beans.factory.ChichibuRailwayKanjiRomajiOrHiraganaMapFactoryBean">
+		<meta key="value" value="hiragana" />
+		<property name="url"
+			value="${org.springframework.beans.factory.ChichibuRailwayKanjiRomajiOrHiraganaMapFactoryBean.url}" />
+		<property name="keyUnicodeBlock"
+			value="#{T(java.lang.Character.UnicodeBlock).CJK_UNIFIED_IDEOGRAPHS}" />
+		<property name="valueUnicodeBlock"
+			value="#{T(java.lang.Character.UnicodeBlock).HIRAGANA}" />
+	</bean>
+
+	<bean
+		class="org.springframework.beans.factory.ChichibuRailwayKanjiRomajiOrHiraganaMapFactoryBean">
+		<meta key="value" value="hiragana" />
+		<property name="url"
+			value="${org.springframework.beans.factory.ChichibuRailwayKanjiRomajiOrHiraganaMapFactoryBean.url}" />
+		<property name="keyUnicodeBlock"
+			value="#{T(java.lang.Character.UnicodeBlock).CJK_UNIFIED_IDEOGRAPHS}" />
+		<property name="valueUnicodeBlock"
+			value="#{T(java.lang.Character.UnicodeBlock).BASIC_LATIN}" />
 	</bean>
 
 	<!-- -->
