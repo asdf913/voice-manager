@@ -381,7 +381,7 @@ abstract class Util {
 		return instance != null ? instance.longValue() : defaultValue;
 	}
 
-	static boolean isStatic(final Member instance) {
+	static boolean isStatic(@Nullable final Member instance) {
 		return instance != null && Modifier.isStatic(instance.getModifiers());
 	}
 
