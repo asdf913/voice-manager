@@ -15,6 +15,8 @@ import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -249,7 +251,7 @@ public class KominatoKanjiRomajiOrHiraganaMapFactoryBean implements FactoryBean<
 		//
 	}
 
-	private static List<UnicodeBlock> getUnicodeBlocks(final String string) {
+	private static List<UnicodeBlock> getUnicodeBlocks(@Nullable final String string) {
 		//
 		final char[] cs = string != null ? string.toCharArray() : null;
 		//
