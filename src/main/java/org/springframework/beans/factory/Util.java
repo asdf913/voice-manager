@@ -188,7 +188,8 @@ abstract class Util {
 		//
 	}
 
-	static <T, R, A> R collect(final Stream<T> instance, final Collector<? super T, A, R> collector) {
+	static <T, R, A> R collect(@Nullable final Stream<T> instance,
+			@Nullable final Collector<? super T, A, R> collector) {
 		//
 		return instance != null && (collector != null || Proxy.isProxyClass(getClass(instance)))
 				? instance.collect(collector)
