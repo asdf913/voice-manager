@@ -140,6 +140,7 @@ public class SaitamaNewUrbanTransRomajiOrHiraganaMapFactoryBean implements Facto
 			//
 	}
 
+	@Nullable
 	private IValue0<String> getKey(@Nullable final List<UnicodeBlock> unicodeBlocks, final String s) {
 		//
 		return unicodeBlocks != null && unicodeBlocks.size() == 1
@@ -147,6 +148,7 @@ public class SaitamaNewUrbanTransRomajiOrHiraganaMapFactoryBean implements Facto
 		//
 	}
 
+	@Nullable
 	private IValue0<String> getValue(@Nullable final List<UnicodeBlock> unicodeBlocks, final String s) {
 		//
 		if (unicodeBlocks != null && ((unicodeBlocks.size() == 1
@@ -201,6 +203,7 @@ public class SaitamaNewUrbanTransRomajiOrHiraganaMapFactoryBean implements Facto
 		//
 	}
 
+	@Nullable
 	private static KanjiHiraganaRomaji getKanjiHiraganaRomaji(final List<String> ss) {
 		//
 		KanjiHiraganaRomaji kanjiHiraganaRomaji = null;
@@ -245,6 +248,7 @@ public class SaitamaNewUrbanTransRomajiOrHiraganaMapFactoryBean implements Facto
 		//
 	}
 
+	@Nullable
 	private static List<UnicodeBlock> getUnicodeBlocks(@Nullable final char[] cs) {
 		//
 		if (cs != null) {
