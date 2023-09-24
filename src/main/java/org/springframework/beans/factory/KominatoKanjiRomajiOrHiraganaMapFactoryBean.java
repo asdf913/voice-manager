@@ -177,6 +177,7 @@ public class KominatoKanjiRomajiOrHiraganaMapFactoryBean implements FactoryBean<
 		@Note("Hiragana")
 		private String hiragana = null;
 
+		@Note("Romaji")
 		private String romaji = null;
 
 	}
