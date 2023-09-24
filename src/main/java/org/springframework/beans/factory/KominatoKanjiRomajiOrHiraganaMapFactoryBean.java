@@ -177,6 +177,7 @@ public class KominatoKanjiRomajiOrHiraganaMapFactoryBean implements FactoryBean<
 		//
 	}
 
+	@Nullable
 	private static KanjiHiraganaRomaji getKanjiHiraganaRomaji(final List<Element> elements) {
 		//
 		Element element = null;
@@ -251,6 +252,7 @@ public class KominatoKanjiRomajiOrHiraganaMapFactoryBean implements FactoryBean<
 		//
 	}
 
+	@Nullable
 	private static List<UnicodeBlock> getUnicodeBlocks(@Nullable final String string) {
 		//
 		final char[] cs = string != null ? string.toCharArray() : null;
