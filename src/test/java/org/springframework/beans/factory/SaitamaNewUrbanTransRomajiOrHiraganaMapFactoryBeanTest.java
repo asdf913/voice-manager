@@ -235,9 +235,9 @@ class SaitamaNewUrbanTransRomajiOrHiraganaMapFactoryBeanTest {
 	@Test
 	void testGetKey() throws Throwable {
 		//
-		Assertions.assertEquals(Unit.with(null), getKey(null, null));
+		Assertions.assertNull(getKey(null, null));
 		//
-		Assertions.assertEquals(Unit.with(null), getKey(Collections.emptyList(), null));
+		Assertions.assertNull(getKey(Collections.emptyList(), null));
 		//
 		final List<UnicodeBlock> list = Collections.singletonList(null);
 		//

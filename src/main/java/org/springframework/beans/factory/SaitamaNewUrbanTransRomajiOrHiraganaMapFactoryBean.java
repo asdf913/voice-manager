@@ -140,8 +140,8 @@ public class SaitamaNewUrbanTransRomajiOrHiraganaMapFactoryBean implements Facto
 
 	private IValue0<String> getKey(final List<UnicodeBlock> unicodeBlocks, final String s) {
 		//
-		return Objects.equals(unicodeBlocks != null && unicodeBlocks.size() == 1 ? unicodeBlocks.get(0) : null,
-				keyUnicodeBlock) ? Unit.with(s) : null;
+		return unicodeBlocks != null && unicodeBlocks.size() == 1
+				&& Objects.equals(unicodeBlocks.get(0), keyUnicodeBlock) ? Unit.with(s) : null;
 		//
 	}
 
