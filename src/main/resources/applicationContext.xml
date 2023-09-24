@@ -473,7 +473,7 @@
 
 	<bean
 		class="org.springframework.beans.factory.KantetsuKanjiRomajiOrHiraganaMapFactoryBean">
-		<meta key="value" value="hiragana" />
+		<meta key="value" value="romaji" />
 		<property name="url"
 			value="${org.springframework.beans.factory.KantetsuKanjiRomajiOrHiraganaMapFactoryBean.url}" />
 		<property name="keyUnicodeBlock"
