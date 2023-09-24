@@ -87,7 +87,7 @@ public class KominatoKanjiRomajiOrHiraganaMapFactoryBean implements FactoryBean<
 		//
 	}
 
-	private void accumulate(final Map<String, String> m, final KanjiHiraganaRomaji v, final Field[] fs) {
+	private void accumulate(final Map<String, String> m, final KanjiHiraganaRomaji v, @Nullable final Field[] fs) {
 		//
 		Field f = null;
 		//
@@ -142,14 +142,14 @@ public class KominatoKanjiRomajiOrHiraganaMapFactoryBean implements FactoryBean<
 			//
 	}
 
-	private static <T, U, R, E extends Throwable> R testAndApply(final BiPredicate<T, U> predicate, final T t,
+	private static <T, U, R, E extends Throwable> R testAndApply(@Nullable final BiPredicate<T, U> predicate, final T t,
 			final U u, final FailableBiFunction<T, U, R, E> functionTrue,
 			@Nullable final FailableBiFunction<T, U, R, E> functionFalse) throws E {
 		return predicate != null && predicate.test(t, u) ? FailableBiFunctionUtil.apply(functionTrue, t, u)
 				: FailableBiFunctionUtil.apply(functionFalse, t, u);
 	}
 
-	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+	private static <T, R, E extends Throwable> R testAndApply(@Nullable final Predicate<T> predicate, final T value,
 			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
 			throws E {
 		return predicate != null && predicate.test(value) ? FailableFunctionUtil.apply(functionTrue, value)
@@ -179,7 +179,7 @@ public class KominatoKanjiRomajiOrHiraganaMapFactoryBean implements FactoryBean<
 	}
 
 	@Nullable
-	private static KanjiHiraganaRomaji getKanjiHiraganaRomaji(final List<Element> elements) {
+	private static KanjiHiraganaRomaji getKanjiHiraganaRomaji(@Nullable final List<Element> elements) {
 		//
 		Element element = null;
 		//
@@ -227,7 +227,8 @@ public class KominatoKanjiRomajiOrHiraganaMapFactoryBean implements FactoryBean<
 		//
 	}
 
-	private static boolean isAllFieldNonBlank(final Field[] fs, final KanjiHiraganaRomaji kanjiHiraganaRomaji) {
+	private static boolean isAllFieldNonBlank(@Nullable final Field[] fs,
+			@Nullable final KanjiHiraganaRomaji kanjiHiraganaRomaji) {
 		//
 		Boolean nonBlank = null;
 		//
@@ -278,8 +279,8 @@ public class KominatoKanjiRomajiOrHiraganaMapFactoryBean implements FactoryBean<
 		//
 	}
 
-	private static <T, U> void testAndAccept(final BiPredicate<T, U> instance, final T t, final U u,
-			final BiConsumer<T, U> consumer) {
+	private static <T, U> void testAndAccept(@Nullable final BiPredicate<T, U> instance, final T t, final U u,
+			@Nullable final BiConsumer<T, U> consumer) {
 		if (instance != null && instance.test(t, u) && consumer != null) {
 			consumer.accept(t, u);
 		}
