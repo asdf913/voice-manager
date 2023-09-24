@@ -43,7 +43,7 @@ import org.jsoup.select.Elements;
 
 import io.github.toolfactory.narcissus.Narcissus;
 
-public class ChichibuRailwayKanjiRomajiOrHiraganaMapFactoryBean implements FactoryBean<Map<String, String>> {
+public class ChichibuRailwayKanjiRomajiOrHiraganaMapFactoryBean extends StringMapFromResourceFactoryBean {
 
 	private String url = null;
 
@@ -73,6 +73,14 @@ public class ChichibuRailwayKanjiRomajiOrHiraganaMapFactoryBean implements Facto
 	@Override
 	public Map<String, String> getObject() throws Exception {
 		//
+		final IValue0<Map<String, String>> iValue0 = getIvalue0();
+		//
+		if (iValue0 != null) {
+			//
+			return IValue0Util.getValue0(iValue0);
+			//
+		} // if
+			//
 		return getObject(
 				Util.filter(
 						FailableStreamUtil
