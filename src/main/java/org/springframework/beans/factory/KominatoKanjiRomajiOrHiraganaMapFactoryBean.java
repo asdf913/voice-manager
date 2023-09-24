@@ -189,15 +189,11 @@ public class KominatoKanjiRomajiOrHiraganaMapFactoryBean implements FactoryBean<
 		//
 		for (int i = 0; elements != null && i < elements.size(); i++) {
 			//
-			if ((element = elements.get(i)) == null || isAllFieldNonBlank(
-					fs = ObjectUtils.getIfNull(fs, () -> Util.getDeclaredFields(KanjiHiraganaRomaji.class)),
-					kanjiHiraganaRomaji = ObjectUtils.getIfNull(kanjiHiraganaRomaji, KanjiHiraganaRomaji::new))) {
-				//
-				continue;
-				//
-			} // if
-				//
-			if ((unicodeBlocks = getUnicodeBlocks(string = ElementUtil.text(element))) == null
+			if ((element = elements.get(i)) == null
+					|| isAllFieldNonBlank(
+							fs = ObjectUtils.getIfNull(fs, () -> Util.getDeclaredFields(KanjiHiraganaRomaji.class)),
+							kanjiHiraganaRomaji = ObjectUtils.getIfNull(kanjiHiraganaRomaji, KanjiHiraganaRomaji::new))
+					|| (unicodeBlocks = getUnicodeBlocks(string = ElementUtil.text(element))) == null
 					|| unicodeBlocks.size() != 1) {
 				//
 				continue;
