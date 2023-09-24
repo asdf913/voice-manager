@@ -85,7 +85,7 @@ public class SaitamaNewUrbanTransRomajiOrHiraganaMapFactoryBean implements Facto
 		//
 	}
 
-	private void accumulate(final Map<String, String> m, final KanjiHiraganaRomaji v, final Field[] fs) {
+	private void accumulate(final Map<String, String> m, final KanjiHiraganaRomaji v, @Nullable final Field[] fs) {
 		//
 		Field f = null;
 		//
@@ -140,14 +140,14 @@ public class SaitamaNewUrbanTransRomajiOrHiraganaMapFactoryBean implements Facto
 			//
 	}
 
-	private IValue0<String> getKey(final List<UnicodeBlock> unicodeBlocks, final String s) {
+	private IValue0<String> getKey(@Nullable final List<UnicodeBlock> unicodeBlocks, final String s) {
 		//
 		return unicodeBlocks != null && unicodeBlocks.size() == 1
 				&& Objects.equals(unicodeBlocks.get(0), keyUnicodeBlock) ? Unit.with(s) : null;
 		//
 	}
 
-	private IValue0<String> getValue(final List<UnicodeBlock> unicodeBlocks, final String s) {
+	private IValue0<String> getValue(@Nullable final List<UnicodeBlock> unicodeBlocks, final String s) {
 		//
 		if (unicodeBlocks != null && ((unicodeBlocks.size() == 1
 				&& Objects.equals(unicodeBlocks.get(0), valueUnicodeBlock))
@@ -163,14 +163,14 @@ public class SaitamaNewUrbanTransRomajiOrHiraganaMapFactoryBean implements Facto
 		//
 	}
 
-	private static <T, U, R, E extends Throwable> R testAndApply(final BiPredicate<T, U> predicate, final T t,
+	private static <T, U, R, E extends Throwable> R testAndApply(@Nullable final BiPredicate<T, U> predicate, final T t,
 			final U u, final FailableBiFunction<T, U, R, E> functionTrue,
 			@Nullable final FailableBiFunction<T, U, R, E> functionFalse) throws E {
 		return predicate != null && predicate.test(t, u) ? FailableBiFunctionUtil.apply(functionTrue, t, u)
 				: FailableBiFunctionUtil.apply(functionFalse, t, u);
 	}
 
-	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+	private static <T, R, E extends Throwable> R testAndApply(@Nullable final Predicate<T> predicate, final T value,
 			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
 			throws E {
 		return predicate != null && predicate.test(value) ? FailableFunctionUtil.apply(functionTrue, value)
@@ -245,7 +245,7 @@ public class SaitamaNewUrbanTransRomajiOrHiraganaMapFactoryBean implements Facto
 		//
 	}
 
-	private static List<UnicodeBlock> getUnicodeBlocks(final char[] cs) {
+	private static List<UnicodeBlock> getUnicodeBlocks(@Nullable final char[] cs) {
 		//
 		if (cs != null) {
 			//
@@ -267,8 +267,8 @@ public class SaitamaNewUrbanTransRomajiOrHiraganaMapFactoryBean implements Facto
 		//
 	}
 
-	private static <T, U> void testAndAccept(final BiPredicate<T, U> instance, final T t, final U u,
-			final BiConsumer<T, U> consumer) {
+	private static <T, U> void testAndAccept(@Nullable final BiPredicate<T, U> instance, final T t, final U u,
+			@Nullable final BiConsumer<T, U> consumer) {
 		if (instance != null && instance.test(t, u) && consumer != null) {
 			consumer.accept(t, u);
 		}
