@@ -200,6 +200,7 @@ public class SaitamaNewUrbanTransRomajiOrHiraganaMapFactoryBean implements Facto
 		@Note("Hiragana")
 		private String hiragana = null;
 
+		@Note("Romaji")
 		private String romaji = null;
 
 	}
