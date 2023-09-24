@@ -275,6 +275,7 @@ import org.apache.poi.ss.usermodel.DataValidationConstraint;
 import org.apache.poi.ss.usermodel.DataValidationHelper;
 import org.apache.poi.ss.usermodel.Drawing;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
+import org.apache.poi.ss.usermodel.FormulaEvaluatorUtil;
 import org.apache.poi.ss.usermodel.RichTextString;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.RowUtil;
@@ -10807,7 +10808,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} else if (Objects.equals(cellType, CellType.FORMULA) && formulaEvaluator != null) {
 			//
-			value = Unit.with(getBooleanValue(formulaEvaluator.evaluate(cell)));
+			value = Unit.with(getBooleanValue(FormulaEvaluatorUtil.evaluate(formulaEvaluator, cell)));
 			//
 		} else if (StringUtils.isNotEmpty(string = CellUtil.getStringCellValue(cell))) {
 			//

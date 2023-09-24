@@ -33,6 +33,7 @@ import org.apache.poi.ss.usermodel.CellValueUtil;
 import org.apache.poi.ss.usermodel.CreationHelperUtil;
 import org.apache.poi.ss.usermodel.FormulaError;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
+import org.apache.poi.ss.usermodel.FormulaEvaluatorUtil;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.RowUtil;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -357,7 +358,7 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 			//
 		} else if (Objects.equals(cellType, CellType.FORMULA)) {
 			//
-			iv = getString(evaluate(formulaEvaluator, cell));
+			iv = getString(FormulaEvaluatorUtil.evaluate(formulaEvaluator, cell));
 			//
 		} // if
 			//
@@ -410,11 +411,6 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 			//
 		return iv;
 		//
-	}
-
-	@Nullable
-	private static CellValue evaluate(@Nullable final FormulaEvaluator instance, final Cell cell) {
-		return instance != null ? instance.evaluate(cell) : null;
 	}
 
 	@Nullable

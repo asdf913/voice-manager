@@ -41,6 +41,7 @@ import org.apache.poi.ss.usermodel.CellValue;
 import org.apache.poi.ss.usermodel.CellValueUtil;
 import org.apache.poi.ss.usermodel.CreationHelperUtil;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
+import org.apache.poi.ss.usermodel.FormulaEvaluatorUtil;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.RowUtil;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -338,7 +339,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 			//
 		} else if (Objects.equals(cellType, CellType.FORMULA)) {
 			//
-			final CellValue cellValue = evaluate(formulaEvaluator, cell);
+			final CellValue cellValue = FormulaEvaluatorUtil.evaluate(formulaEvaluator, cell);
 			//
 			final CellType cellValueType = CellValueUtil.getCellType(cellValue);
 			//
@@ -385,7 +386,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 			//
 		} else if (Objects.equals(cellType, CellType.FORMULA)) {
 			//
-			final CellValue cellValue = evaluate(formulaEvaluator, cell);
+			final CellValue cellValue = FormulaEvaluatorUtil.evaluate(formulaEvaluator, cell);
 			//
 			final CellType cellValueType = CellValueUtil.getCellType(cellValue);
 			//
@@ -419,11 +420,6 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 	@Nullable
 	private static Double getNumberValue(@Nullable final CellValue instance) {
 		return instance != null ? Double.valueOf(instance.getNumberValue()) : null;
-	}
-
-	@Nullable
-	private static CellValue evaluate(@Nullable final FormulaEvaluator instance, final Cell cell) {
-		return instance != null ? instance.evaluate(cell) : null;
 	}
 
 	@Nullable
