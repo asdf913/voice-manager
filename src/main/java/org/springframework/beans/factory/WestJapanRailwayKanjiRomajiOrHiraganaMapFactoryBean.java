@@ -225,7 +225,8 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends StringM
 			} // if
 				//
 			if (!isInstance(CharSequence.class, temp)
-					|| (unicodeBlocks = getUnicodeBlocks(s = Util.toString(temp))) == null || unicodeBlocks.isEmpty()) {
+					|| (unicodeBlocks = getUnicodeBlocks(Util.toCharArray(s = Util.toString(temp)))) == null
+					|| unicodeBlocks.isEmpty()) {
 				//
 				continue;
 				//
@@ -299,9 +300,7 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends StringM
 	}
 
 	@Nullable
-	private static List<UnicodeBlock> getUnicodeBlocks(@Nullable final String string) {
-		//
-		final char[] cs = Util.toCharArray(string);
+	private static List<UnicodeBlock> getUnicodeBlocks(@Nullable final char[] cs) {
 		//
 		if (cs != null) {
 			//

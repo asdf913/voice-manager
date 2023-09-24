@@ -57,7 +57,7 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 		//
 		(METHOD_CREATE_TABLE = clz.getDeclaredMethod("createTable", Object[].class)).setAccessible(true);
 		//
-		(METHOD_GET_UNICODE_BLOCKS = clz.getDeclaredMethod("getUnicodeBlocks", String.class)).setAccessible(true);
+		(METHOD_GET_UNICODE_BLOCKS = clz.getDeclaredMethod("getUnicodeBlocks", char[].class)).setAccessible(true);
 		//
 		(METHOD_TEST = clz.getDeclaredMethod("test", BiPredicate.class, Object.class, Object.class))
 				.setAccessible(true);
@@ -330,9 +330,9 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 		//
 	}
 
-	private static List<UnicodeBlock> getUnicodeBlocks(final String string) throws Throwable {
+	private static List<UnicodeBlock> getUnicodeBlocks(final char[] cs) throws Throwable {
 		try {
-			final Object obj = METHOD_GET_UNICODE_BLOCKS.invoke(null, string);
+			final Object obj = METHOD_GET_UNICODE_BLOCKS.invoke(null, cs);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof List) {
