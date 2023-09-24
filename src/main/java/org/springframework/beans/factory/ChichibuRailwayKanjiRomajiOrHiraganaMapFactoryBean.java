@@ -312,7 +312,7 @@ public class ChichibuRailwayKanjiRomajiOrHiraganaMapFactoryBean extends StringMa
 	@Nullable
 	private static List<UnicodeBlock> getUnicodeBlocks(@Nullable final String string) {
 		//
-		final char[] cs = string != null ? string.toCharArray() : null;
+		final char[] cs = Util.toCharArray(string);
 		//
 		if (cs != null) {
 			//

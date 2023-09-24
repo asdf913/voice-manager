@@ -234,7 +234,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 	private static boolean isAllCharacterInSameUnicodeBlock(@Nullable final String string,
 			final UnicodeBlock unicodeBlock) {
 		//
-		final char[] cs = string != null ? string.toCharArray() : null;
+		final char[] cs = Util.toCharArray(string);
 		//
 		if (cs != null) {
 			//

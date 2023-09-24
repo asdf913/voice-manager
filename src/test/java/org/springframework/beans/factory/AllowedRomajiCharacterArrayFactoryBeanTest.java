@@ -14,16 +14,12 @@ import com.google.common.base.Predicates;
 
 class AllowedRomajiCharacterArrayFactoryBeanTest {
 
-	private static final String EMPTY = "";
-
-	private static Method METHOD_TO_CHAR_ARRAY, METHOD_TEST_AND_APPLY = null;
+	private static Method METHOD_TEST_AND_APPLY = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
 		//
 		final Class<?> clz = AllowedRomajiCharacterArrayFactoryBean.class;
-		//
-		(METHOD_TO_CHAR_ARRAY = clz.getDeclaredMethod("toCharArray", String.class)).setAccessible(true);
 		//
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
@@ -59,27 +55,6 @@ class AllowedRomajiCharacterArrayFactoryBeanTest {
 		//
 		Assertions.assertEquals(char[].class, instance != null ? instance.getObjectType() : null);
 		//
-	}
-
-	@Test
-	void testToCharArray() throws Throwable {
-		//
-		Assertions.assertArrayEquals(new char[] {}, toCharArray(EMPTY));
-		//
-	}
-
-	private static char[] toCharArray(final String instance) throws Throwable {
-		try {
-			final Object obj = METHOD_TO_CHAR_ARRAY.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof char[]) {
-				return (char[]) obj;
-			}
-			throw new Throwable(Util.toString(obj.getClass()));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test

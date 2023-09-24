@@ -385,4 +385,30 @@ abstract class Util {
 		return instance != null && Modifier.isStatic(instance.getModifiers());
 	}
 
+	static char[] toCharArray(final String instance) {
+		//
+		if (instance == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		try {
+			//
+			if (Narcissus.getField(instance, getDeclaredField(String.class, "value")) == null) {
+				//
+				return null;
+				//
+			} // if
+				//
+		} catch (final NoSuchFieldException e) {
+			//
+			LoggerUtil.error(LOG, e.getMessage(), e);
+			//
+		} // try
+			//
+		return instance.toCharArray();
+		//
+	}
+
 }

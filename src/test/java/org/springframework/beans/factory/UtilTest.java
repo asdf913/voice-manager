@@ -306,6 +306,13 @@ class UtilTest {
 	}
 
 	@Test
+	void testToCharArray() {
+		//
+		Assertions.assertNull(Util.toCharArray(Util.cast(String.class, Narcissus.allocateInstance(String.class))));
+		//
+	}
+
+	@Test
 	void testGetDeclaredField() throws Throwable {
 		//
 		Assertions.assertNull(getDeclaredField(null, null));
