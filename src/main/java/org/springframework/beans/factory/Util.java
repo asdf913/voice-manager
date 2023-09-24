@@ -385,6 +385,7 @@ abstract class Util {
 		return instance != null && Modifier.isStatic(instance.getModifiers());
 	}
 
+	@Nullable
 	static char[] toCharArray(@Nullable final String instance) {
 		//
 		if (instance == null) {
