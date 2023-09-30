@@ -65,7 +65,7 @@ public class RyutetsuKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Stri
 		//
 		for (int i = 0; es != null && i < es.size(); i++) {
 			//
-			if ((childNodes = NodeUtil.childNodes(e = es.get(i))) == null) {
+			if ((childNodes = NodeUtil.childNodes(es.get(i))) == null) {
 				//
 				continue;
 				//
