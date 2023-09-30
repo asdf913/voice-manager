@@ -81,10 +81,6 @@ public final class ElementUtil {
 			//
 	}
 
-	public static String attr(final Element instance, final String attributeKey) {
-		return instance != null && attributeKey != null ? instance.attr(attributeKey) : null;
-	}
-
 	public static Element nextElementSibling(final Element instance) {
 		return instance != null ? instance.nextElementSibling() : null;
 	}

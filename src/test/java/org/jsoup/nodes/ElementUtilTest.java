@@ -67,19 +67,6 @@ class ElementUtilTest {
 	}
 
 	@Test
-	void testAttr() {
-		//
-		Assertions.assertNull(ElementUtil.attr(null, null));
-		//
-		Assertions.assertNull(ElementUtil.attr(element, null));
-		//
-		Assertions.assertEquals("", ElementUtil.attr(element, ""));
-		//
-		Assertions.assertNotNull(ElementUtil.attr(new Element("a"), ""));
-		//
-	}
-
-	@Test
 	void testNextElementSibling() {
 		//
 		Assertions.assertNull(ElementUtil.nextElementSibling(element));

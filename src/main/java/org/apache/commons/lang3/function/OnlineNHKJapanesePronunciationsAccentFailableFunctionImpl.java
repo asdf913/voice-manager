@@ -173,7 +173,7 @@ public class OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl
 				//
 			if ((map = ObjectUtils.getIfNull(map, LinkedHashMap::new)) != null) {
 				//
-				map.put(ElementUtil.attr(element, "type"), ElementUtil.attr(element, "src"));
+				map.put(NodeUtil.attr(element, "type"), NodeUtil.attr(element, "src"));
 				//
 			} // if
 				//

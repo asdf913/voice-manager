@@ -180,8 +180,8 @@ public class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends Stri
 	private static String getRomaji(final Element element) {
 		//
 		return Util.collect(
-				Util.filter(Util
-						.stream(MultimapUtil.get(createUnicodeBlockCharacterMultimap(ElementUtil.attr(element, "alt")),
+				Util.filter(
+						Util.stream(MultimapUtil.get(createUnicodeBlockCharacterMultimap(NodeUtil.attr(element, "alt")),
 								UnicodeBlock.BASIC_LATIN)),
 						c -> !Character.isWhitespace(c)),
 				Collector.of(StringBuilder::new, StringBuilder::append, StringBuilder::append,

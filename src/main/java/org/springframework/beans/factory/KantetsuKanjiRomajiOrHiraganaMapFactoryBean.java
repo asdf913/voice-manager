@@ -35,6 +35,7 @@ import org.javatuples.valueintf.IValue0Util;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
+import org.jsoup.nodes.NodeUtil;
 import org.jsoup.select.Elements;
 
 public class KantetsuKanjiRomajiOrHiraganaMapFactoryBean extends StringMapFromResourceFactoryBean {
@@ -189,7 +190,7 @@ public class KantetsuKanjiRomajiOrHiraganaMapFactoryBean extends StringMapFromRe
 	@Nullable
 	private static KanjiHiraganaRomaji getKanjiHiraganaRomaji(final Element instance) throws IOException {
 		//
-		final String attr = ElementUtil.attr(instance, "href");
+		final String attr = NodeUtil.attr(instance, "href");
 		//
 		if (StringUtils.endsWith(attr, ".pdf")) {
 			//

@@ -93,6 +93,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
+import org.jsoup.nodes.NodeUtil;
 import org.jsoup.select.Elements;
 import org.meeuw.functional.Predicates;
 import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
@@ -692,7 +693,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 	private static CSSDeclaration getCSSDeclarationByAttributeAndCssProperty(final Element element,
 			final String attribute, final ECSSVersion ecssVersion, final String cssProperty) {
 		//
-		final String style = ElementUtil.attr(element, attribute);
+		final String style = NodeUtil.attr(element, attribute);
 		//
 		CSSDeclaration cssDeclaration = null;
 		//

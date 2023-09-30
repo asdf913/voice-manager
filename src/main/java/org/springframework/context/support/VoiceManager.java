@@ -298,6 +298,7 @@ import org.javatuples.valueintf.IValue0Util;
 import org.jsoup.Jsoup;
 import org.jsoup.helper.ProtocolUtil;
 import org.jsoup.nodes.ElementUtil;
+import org.jsoup.nodes.NodeUtil;
 import org.jsoup.select.Elements;
 import org.odftoolkit.odfdom.doc.OdfPresentationDocument;
 import org.odftoolkit.odfdom.pkg.OdfPackage;
@@ -4876,7 +4877,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					} // if
 						//
 					TagUtil.attr(ContainerTagUtil.withText(aTag = new ATag(), textContent), "href",
-							ElementUtil.attr(element, "href"));
+							NodeUtil.attr(element, "href"));
 					//
 				} // for
 					//
