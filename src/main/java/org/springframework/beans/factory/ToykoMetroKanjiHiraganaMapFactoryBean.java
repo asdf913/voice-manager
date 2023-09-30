@@ -20,6 +20,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
 import org.jsoup.nodes.Node;
+import org.jsoup.nodes.NodeUtil;
 import org.jsoup.nodes.TextNode;
 
 public class ToykoMetroKanjiHiraganaMapFactoryBean extends StringMapFromResourceFactoryBean {
@@ -50,16 +51,13 @@ public class ToykoMetroKanjiHiraganaMapFactoryBean extends StringMapFromResource
 	@Nullable
 	private static Map<String, String> getObject(@Nullable final List<Element> es) throws IllegalAccessException {
 		//
-		Element e = null;
-		//
 		List<Node> childNodes = null;
 		//
 		Map<String, String> map = null;
 		//
 		for (int i = 0; es != null && i < es.size(); i++) {
 			//
-			if ((e = IterableUtils.get(es, i)) == null || (childNodes = e.childNodes()) == null
-					|| childNodes.size() < 2) {
+			if ((childNodes = NodeUtil.childNodes(IterableUtils.get(es, i))) == null || childNodes.size() < 2) {
 				//
 				continue;
 				//

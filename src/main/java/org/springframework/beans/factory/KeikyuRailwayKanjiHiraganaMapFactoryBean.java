@@ -21,6 +21,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
 import org.jsoup.nodes.Node;
+import org.jsoup.nodes.NodeUtil;
 import org.jsoup.nodes.TextNode;
 
 public class KeikyuRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<Map<String, String>> {
@@ -61,7 +62,7 @@ public class KeikyuRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<Map
 		//
 		for (int i = 0; es != null && i < es.size(); i++) {
 			//
-			if ((nodes = Util.toList(Util.filter(Util.stream(childNodes(parentNode(e = es.get(i)))),
+			if ((nodes = Util.toList(Util.filter(Util.stream(NodeUtil.childNodes(parentNode(e = es.get(i)))),
 					TextNode.class::isInstance))) == null || nodes.isEmpty()) {
 				//
 				continue;
@@ -100,11 +101,6 @@ public class KeikyuRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<Map
 	@Nullable
 	private static Node parentNode(@Nullable final Node instance) {
 		return instance != null ? instance.parentNode() : null;
-	}
-
-	@Nullable
-	private static List<Node> childNodes(@Nullable final Node instance) {
-		return instance != null ? instance.childNodes() : null;
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
