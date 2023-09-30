@@ -12,4 +12,8 @@ public interface NodeUtil {
 		return instance != null ? instance.childNodes() : null;
 	}
 
+	static String attr(final Node instance, final String attributeKey) {
+		return instance != null && attributeKey != null ? instance.attr(attributeKey) : null;
+	}
+
 }

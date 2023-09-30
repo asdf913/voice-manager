@@ -185,7 +185,7 @@ public class TokyuKanjiRomajiOrHiraganaMapFactoryBean extends StringMapFromResou
 				//
 			} // if
 				//
-			if (StringUtils.equalsIgnoreCase(classString = e.attr("class"), "name-sub01")) {
+			if (StringUtils.equalsIgnoreCase(classString = NodeUtil.attr(e, "class"), "name-sub01")) {
 				//
 				if (Util.containsKey(map = ObjectUtils.getIfNull(map, LinkedHashMap::new),
 						romajiOrHiragana = RomajiOrHiragana.ROMAJI)) {

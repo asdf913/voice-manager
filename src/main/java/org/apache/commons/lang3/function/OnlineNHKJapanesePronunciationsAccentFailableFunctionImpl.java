@@ -38,6 +38,7 @@ import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
+import org.jsoup.nodes.NodeUtil;
 import org.jsoup.select.Elements;
 import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
 
@@ -193,7 +194,7 @@ public class OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl
 			//
 			if ((srcs = ObjectUtils.getIfNull(srcs, ArrayList::new)) != null) {
 				//
-				srcs.add(nextElement.attr("src"));
+				srcs.add(NodeUtil.attr(nextElement, "src"));
 				//
 			} // if
 				//

@@ -6,6 +6,7 @@ import java.lang.reflect.Method;
 import java.util.Objects;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import javassist.util.proxy.MethodHandler;
@@ -30,6 +31,10 @@ class NodeUtilTest {
 					//
 					return absUrl;
 					//
+				} else if (Objects.equals(methodName, "attr")) {
+					//
+					return proceed != null ? proceed.invoke(self, args) : null;
+					//
 				} // if
 					//
 			} // if
@@ -40,11 +45,11 @@ class NodeUtilTest {
 
 	}
 
-	@Test
-	void testAbsUrl()
+	private Node node = null;
+
+	@BeforeEach
+	private void beforeEach()
 			throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
-		//
-		Assertions.assertNull(NodeUtil.absUrl(null, null));
 		//
 		final ProxyFactory proxyFactory = new ProxyFactory();
 		//
@@ -64,7 +69,15 @@ class NodeUtilTest {
 			//
 		} // if
 			//
-		final Node node = cast(Node.class, instance);
+		node = cast(Node.class, instance);
+		//
+	}
+
+	@Test
+	void testAbsUrl()
+			throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+		//
+		Assertions.assertNull(NodeUtil.absUrl(null, null));
 		//
 		Assertions.assertNull(NodeUtil.absUrl(node, null));
 		//
@@ -72,6 +85,15 @@ class NodeUtilTest {
 
 	private static <T> T cast(final Class<T> clz, final Object instance) {
 		return clz != null && clz.isInstance(instance) ? clz.cast(instance) : null;
+	}
+
+	@Test
+	void testAttr() {
+		//
+		Assertions.assertNull(NodeUtil.attr(null, null));
+		//
+		Assertions.assertNull(NodeUtil.attr(node, null));
+		//
 	}
 
 }
