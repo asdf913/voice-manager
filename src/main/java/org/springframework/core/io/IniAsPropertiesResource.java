@@ -243,13 +243,12 @@ public class IniAsPropertiesResource implements Resource, ApplicationEventPublis
 			//
 			try {
 				//
-				ready = ready(cast(Reader.class, testAndApply((a, b) -> { // a != null &&
-					return a != null && b != null;
-				}, console,
-						testAndApply(x -> IterableUtils.size(x) == 1,
-								toList(filter(fs.stream(), x -> Objects.equals(getName(x), "reader"))),
-								x -> IterableUtils.get(x, 0), null),
-						Narcissus::getObjectField, null)));
+				ready = ready(cast(Reader.class,
+						testAndApply((a, b) -> a != null && b != null, console,
+								testAndApply(x -> IterableUtils.size(x) == 1,
+										toList(filter(fs.stream(), x -> Objects.equals(getName(x), "reader"))),
+										x -> IterableUtils.get(x, 0), null),
+								Narcissus::getObjectField, null)));
 				//
 			} catch (final IOException e) {
 				//
