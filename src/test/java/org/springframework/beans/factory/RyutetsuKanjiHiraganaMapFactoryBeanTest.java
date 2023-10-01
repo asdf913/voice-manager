@@ -18,7 +18,6 @@ import java.util.function.Predicate;
 import org.apache.commons.lang3.function.FailableBiFunction;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.tuple.Pair;
-import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
