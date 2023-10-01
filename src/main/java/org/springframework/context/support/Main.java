@@ -250,6 +250,7 @@ public class Main {
 			//
 	}
 
+	@SuppressWarnings("java:S1612")
 	private static boolean isRaiseThrowableOnly(@Nullable final Class<?> clz, @Nullable final Method method) {
 		//
 		try (final InputStream is = clz != null
