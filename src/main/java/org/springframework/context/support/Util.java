@@ -16,7 +16,7 @@ public interface Util {
 		return instance != null ? instance.toString() : null;
 	}
 
-	static Class<?> getClass(final Object instance) {
+	static Class<?> getClass(@Nullable final Object instance) {
 		return instance != null ? instance.getClass() : null;
 	}
 
