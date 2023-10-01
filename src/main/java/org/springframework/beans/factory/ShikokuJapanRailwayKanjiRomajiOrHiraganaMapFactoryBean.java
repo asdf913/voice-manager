@@ -97,7 +97,7 @@ public class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends Stri
 					//
 				} // if
 					//
-				for (final Entry<UnicodeBlock, String> entry : map.entrySet()) {
+				for (final Entry<UnicodeBlock, String> entry : Util.entrySet(map)) {
 					//
 					if (entry == null) {
 						//

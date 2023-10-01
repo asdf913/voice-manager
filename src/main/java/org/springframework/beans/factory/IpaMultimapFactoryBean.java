@@ -114,7 +114,7 @@ public class IpaMultimapFactoryBean implements FactoryBean<Multimap<String, Stri
 			//
 		} else if (obj instanceof Map map) {
 			//
-			final Set<Entry<String, String>> entrySet = entrySet(map);
+			final Set<Entry<String, String>> entrySet = Util.entrySet(map);
 			//
 			Multimap<String, String> multimap = null;
 			//
@@ -153,11 +153,6 @@ public class IpaMultimapFactoryBean implements FactoryBean<Multimap<String, Stri
 			objectMapper = new ObjectMapper();
 		}
 		return objectMapper;
-	}
-
-	@Nullable
-	private static <K, V> Set<Entry<K, V>> entrySet(@Nullable final Map<K, V> instance) {
-		return instance != null ? instance.entrySet() : null;
 	}
 
 	@Nullable

@@ -7,10 +7,8 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.Set;
+import java.util.function.Predicate;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -25,16 +23,16 @@ import com.google.common.reflect.Reflection;
 
 class IpaMultimapFactoryBeanTest {
 
-	private static Method METHOD_ENTRY_SET, METHOD_ITERATOR = null;
+	private static Method METHOD_ITERATOR, METHOD_TEST = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
 		//
 		final Class<?> clz = IpaMultimapFactoryBean.class;
 		//
-		(METHOD_ENTRY_SET = clz.getDeclaredMethod("entrySet", Map.class)).setAccessible(true);
-		//
 		(METHOD_ITERATOR = clz.getDeclaredMethod("iterator", Iterable.class)).setAccessible(true);
+		//
+		(METHOD_TEST = clz.getDeclaredMethod("test", Predicate.class, Object.class)).setAccessible(true);
 		//
 	}
 
@@ -72,14 +70,6 @@ class IpaMultimapFactoryBeanTest {
 				if (Objects.equals(methodName, "exists")) {
 					//
 					return exists;
-					//
-				} // if
-					//
-			} else if (proxy instanceof Map) {
-				//
-				if (Objects.equals(methodName, "entrySet")) {
-					//
-					return null;
 					//
 				} // if
 					//
@@ -172,29 +162,6 @@ class IpaMultimapFactoryBeanTest {
 	}
 
 	@Test
-	void testEntrySet() throws Throwable {
-		//
-		Assertions.assertNull(entrySet(null));
-		//
-		Assertions.assertNull(entrySet(Reflection.newProxy(Map.class, ih)));
-		//
-	}
-
-	private static <K, V> Set<Entry<K, V>> entrySet(final Map<K, V> instance) throws Throwable {
-		try {
-			final Object obj = METHOD_ENTRY_SET.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Set) {
-				return (Set) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testIterator() throws Throwable {
 		//
 		Assertions.assertNull(iterator(null));
@@ -208,6 +175,25 @@ class IpaMultimapFactoryBeanTest {
 				return null;
 			} else if (obj instanceof Iterator) {
 				return (Iterator) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testTest() throws Throwable {
+		//
+		Assertions.assertFalse(test(null, null));
+		//
+	}
+
+	private static final <T> boolean test(final Predicate<T> instance, final T value) throws Throwable {
+		try {
+			final Object obj = METHOD_TEST.invoke(null, instance, value);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

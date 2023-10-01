@@ -90,7 +90,7 @@ public class TokyoToeiTodenKanjiRomajiOrHiraganaMapFactoryBean extends StringMap
 				continue;
 				//
 			} // if
-			for (final Entry<UnicodeBlock, String> entry : map.entrySet()) {
+			for (final Entry<UnicodeBlock, String> entry : Util.entrySet(map)) {
 				//
 				if (entry == null) {
 					//

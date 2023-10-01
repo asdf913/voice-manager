@@ -261,7 +261,7 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends StringM
 			//
 			UnicodeBlock key = null;
 			//
-			for (final Entry<UnicodeBlock, String> en : map.entrySet()) {
+			for (final Entry<UnicodeBlock, String> en : Util.entrySet(map)) {
 				//
 				if (en == null || Objects.equals(key = Util.getKey(en), UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)) {
 					//
