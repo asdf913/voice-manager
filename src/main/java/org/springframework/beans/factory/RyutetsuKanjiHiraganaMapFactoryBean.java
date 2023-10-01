@@ -203,6 +203,7 @@ public class RyutetsuKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Stri
 
 	}
 
+	@Nullable
 	private static List<UnicodeBlock> getUnicodeBlocks(final char[] cs) {
 		//
 		if (cs != null) {
