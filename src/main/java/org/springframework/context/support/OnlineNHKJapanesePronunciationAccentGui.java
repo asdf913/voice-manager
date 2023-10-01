@@ -26,7 +26,6 @@ import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.net.URL;
@@ -302,7 +301,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			//
 		final Field f = testAndApply(x -> IterableUtils.size(x) == 1,
 				toList(filter(stream(FieldUtils.getAllFieldsList(Util.getClass(this))),
-						x -> Objects.equals(getName(x), "component"))),
+						x -> Objects.equals(Util.getName(x), "component"))),
 				x -> IterableUtils.get(x, 0), null);
 		//
 		final boolean isGui = f == null || Narcissus.getObjectField(this, f) != null;
@@ -566,11 +565,6 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		return instance != null && annotationClass != null ? instance.getAnnotation(annotationClass) : null;
 	}
 
-	@Nullable
-	private static String getName(@Nullable final Member instance) {
-		return instance != null ? instance.getName() : null;
-	}
-
 	private static Comparator<String> createImageFormatComparator(final List<?> imageFormatOrders) {
 		//
 		return (a, b) -> {
@@ -657,7 +651,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
-			final String methodName = getName(method);
+			final String methodName = Util.getName(method);
 			//
 			if (proxy instanceof Transferable) {
 				//
@@ -825,7 +819,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		// Check if "handler" field in "java.net.URL" class is null or not
 		//
 		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, toList(
-				filter(Arrays.stream(URL.class.getDeclaredFields()), x -> Objects.equals(getName(x), "handler"))),
+				filter(Arrays.stream(URL.class.getDeclaredFields()), x -> Objects.equals(Util.getName(x), "handler"))),
 				x -> IterableUtils.get(x, 0), null);
 		//
 		if (instance != null && f != null && Narcissus.getObjectField(instance, f) == null) {
