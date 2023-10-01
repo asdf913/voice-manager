@@ -36,6 +36,7 @@ import org.jsoup.nodes.ElementUtil;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.NodeUtil;
 import org.jsoup.nodes.TextNode;
+import org.jsoup.nodes.TextNodeUtil;
 
 import io.github.toolfactory.narcissus.Narcissus;
 
@@ -188,7 +189,7 @@ public class RyutetsuKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Stri
 					//
 				} else if ((textNode = Util.cast(TextNode.class, node)) != null && khr != null && khr.kanji == null) {
 					//
-					khr.kanji = textNode.text();
+					khr.kanji = TextNodeUtil.text(textNode);
 					//
 				} else if (StringUtils.equalsIgnoreCase(node.nodeName(), "span")
 						&& (e = Util.cast(Element.class, node)) != null && khr != null && khr.hiragana == null) {

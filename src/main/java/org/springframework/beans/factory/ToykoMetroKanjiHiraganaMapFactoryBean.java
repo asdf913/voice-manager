@@ -13,7 +13,6 @@ import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
-import org.apache.commons.lang3.reflect.FieldUtils;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
 import org.jsoup.Jsoup;
@@ -22,6 +21,7 @@ import org.jsoup.nodes.ElementUtil;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.NodeUtil;
 import org.jsoup.nodes.TextNode;
+import org.jsoup.nodes.TextNodeUtil;
 
 public class ToykoMetroKanjiHiraganaMapFactoryBean extends StringMapFromResourceFactoryBean {
 
@@ -64,18 +64,13 @@ public class ToykoMetroKanjiHiraganaMapFactoryBean extends StringMapFromResource
 			} // if
 				//
 			Util.put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new),
-					text(Util.cast(TextNode.class, IterableUtils.get(childNodes, 0))),
+					TextNodeUtil.text(Util.cast(TextNode.class, IterableUtils.get(childNodes, 0))),
 					ElementUtil.text(Util.cast(Element.class, IterableUtils.get(childNodes, 1))));
 			//
 		} // for
 			//
 		return map;
 		//
-	}
-
-	@Nullable
-	private static String text(@Nullable final TextNode instance) throws IllegalAccessException {
-		return instance != null && FieldUtils.readField(instance, "value", true) != null ? instance.text() : null;
 	}
 
 	@Nullable
