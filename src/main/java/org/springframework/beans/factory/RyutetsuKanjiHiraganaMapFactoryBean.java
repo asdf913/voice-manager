@@ -52,58 +52,12 @@ public class RyutetsuKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Stri
 	@Override
 	public Map<String, String> getObject() throws Exception {
 		//
-		final List<Element> es = ElementUtil.select(testAndApply(Objects::nonNull,
-				testAndApply(Objects::nonNull, url, URL::new, null), x -> Jsoup.parse(x, 0), null), ".station_t");
-		//
-		List<Node> childNodes = null;
-		//
 		KanjiHiraganaRomaji khr = null;
 		//
-		TextNode textNode = null;
+		final List<KanjiHiraganaRomaji> khrs = createKanjiHiraganaRomajiList(
+				ElementUtil.select(testAndApply(Objects::nonNull, testAndApply(Objects::nonNull, url, URL::new, null),
+						x -> Jsoup.parse(x, 0), null), ".station_t"));
 		//
-		Element e = null;
-		//
-		List<KanjiHiraganaRomaji> khrs = null;
-		//
-		for (int i = 0; es != null && i < es.size(); i++) {
-			//
-			if ((childNodes = NodeUtil.childNodes(es.get(i))) == null) {
-				//
-				continue;
-				//
-			} // if
-				//
-			khr = new KanjiHiraganaRomaji();
-			//
-			for (final Node node : childNodes) {
-				//
-				if (node == null) {
-					//
-					continue;
-					//
-				} // if
-					//
-				if (StringUtils.equalsIgnoreCase(node.nodeName(), "a") && khr.romaji == null) {
-					//
-					khr.romaji = NodeUtil.attr(node, "name");
-					//
-				} else if ((textNode = Util.cast(TextNode.class, node)) != null && khr.kanji == null) {
-					//
-					khr.kanji = textNode.text();
-					//
-				} else if (StringUtils.equalsIgnoreCase(node.nodeName(), "span")
-						&& (e = Util.cast(Element.class, node)) != null && khr.hiragana == null) {
-					//
-					khr.hiragana = StringUtils.replaceChars(ElementUtil.text(e), "()", "");
-					//
-				} // if
-					//
-			} // for
-				//
-			Util.add(khrs = ObjectUtils.getIfNull(khrs, ArrayList::new), khr);
-			//
-		} // for
-			//
 		final Field[] fs = Util.getDeclaredFields(KanjiHiraganaRomaji.class);
 		//
 		Field f = null;
@@ -171,6 +125,61 @@ public class RyutetsuKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Stri
 		} // for
 			//
 		return map;
+		//
+	}
+
+	private static List<KanjiHiraganaRomaji> createKanjiHiraganaRomajiList(final List<Element> es) {
+		//
+		List<Node> childNodes = null;
+		//
+		KanjiHiraganaRomaji khr = null;
+		//
+		TextNode textNode = null;
+		//
+		Element e = null;
+		//
+		List<KanjiHiraganaRomaji> khrs = null;
+		//
+		for (int i = 0; es != null && i < es.size(); i++) {
+			//
+			if ((childNodes = NodeUtil.childNodes(es.get(i))) == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			khr = new KanjiHiraganaRomaji();
+			//
+			for (final Node node : childNodes) {
+				//
+				if (node == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if (StringUtils.equalsIgnoreCase(node.nodeName(), "a") && khr.romaji == null) {
+					//
+					khr.romaji = NodeUtil.attr(node, "name");
+					//
+				} else if ((textNode = Util.cast(TextNode.class, node)) != null && khr.kanji == null) {
+					//
+					khr.kanji = textNode.text();
+					//
+				} else if (StringUtils.equalsIgnoreCase(node.nodeName(), "span")
+						&& (e = Util.cast(Element.class, node)) != null && khr.hiragana == null) {
+					//
+					khr.hiragana = StringUtils.replaceChars(ElementUtil.text(e), "()", "");
+					//
+				} // if
+					//
+			} // for
+				//
+			Util.add(khrs = ObjectUtils.getIfNull(khrs, ArrayList::new), khr);
+			//
+		} // for
+			//
+		return khrs;
 		//
 	}
 

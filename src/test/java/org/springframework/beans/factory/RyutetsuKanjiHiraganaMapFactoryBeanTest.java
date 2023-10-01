@@ -3,6 +3,7 @@ package org.springframework.beans.factory;
 import java.lang.Character.UnicodeBlock;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -12,16 +13,19 @@ import java.util.function.Predicate;
 
 import org.apache.commons.lang3.function.FailableBiFunction;
 import org.apache.commons.lang3.function.FailableFunction;
+import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.meeuw.functional.Predicates;
 
+import io.github.toolfactory.narcissus.Narcissus;
+
 class RyutetsuKanjiHiraganaMapFactoryBeanTest {
 
 	private static Method METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_GET_UNICODE_BLOCKS,
-			METHOD_TEST_AND_ACCEPT = null;
+			METHOD_TEST_AND_ACCEPT, METHOD_CREATE_KANJI_HIRAGANA_ROMAJI_LIST = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -38,6 +42,9 @@ class RyutetsuKanjiHiraganaMapFactoryBeanTest {
 		//
 		(METHOD_TEST_AND_ACCEPT = clz.getDeclaredMethod("testAndAccept", BiPredicate.class, Object.class, Object.class,
 				BiConsumer.class)).setAccessible(true);
+		//
+		(METHOD_CREATE_KANJI_HIRAGANA_ROMAJI_LIST = clz.getDeclaredMethod("createKanjiHiraganaRomajiList", List.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -138,6 +145,28 @@ class RyutetsuKanjiHiraganaMapFactoryBeanTest {
 			final BiConsumer<T, U> consumer) throws Throwable {
 		try {
 			METHOD_TEST_AND_ACCEPT.invoke(null, instance, t, u, consumer);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCreateKanjiHiraganaRomajiList() throws Throwable {
+		//
+		Assertions.assertEquals(null, createKanjiHiraganaRomajiList(
+				Arrays.asList(null, Util.cast(Element.class, Narcissus.allocateInstance(Element.class)))));
+		//
+	}
+
+	private static List<?> createKanjiHiraganaRomajiList(final List<Element> es) throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_KANJI_HIRAGANA_ROMAJI_LIST.invoke(null, es);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof List) {
+				return (List<?>) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
