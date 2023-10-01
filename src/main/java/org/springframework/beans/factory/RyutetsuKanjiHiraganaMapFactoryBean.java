@@ -113,7 +113,7 @@ public class RyutetsuKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Stri
 					//
 			} // for
 				//
-			if (key == null || value == null) {
+			if (Boolean.logicalOr(key == null, value == null)) {
 				//
 				continue;
 				//
