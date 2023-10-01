@@ -1,18 +1,23 @@
 package org.springframework.beans.factory;
 
 import java.lang.Character.UnicodeBlock;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
 import org.apache.commons.lang3.function.FailableBiFunction;
 import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.tuple.Pair;
+import org.javatuples.Unit;
+import org.javatuples.valueintf.IValue0;
 import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -25,7 +30,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 class RyutetsuKanjiHiraganaMapFactoryBeanTest {
 
 	private static Method METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_GET_UNICODE_BLOCKS,
-			METHOD_TEST_AND_ACCEPT, METHOD_CREATE_KANJI_HIRAGANA_ROMAJI_LIST = null;
+			METHOD_TEST_AND_ACCEPT, METHOD_CREATE_KANJI_HIRAGANA_ROMAJI_LIST, METHOD_CREATE_ENTRY = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -45,6 +50,8 @@ class RyutetsuKanjiHiraganaMapFactoryBeanTest {
 		//
 		(METHOD_CREATE_KANJI_HIRAGANA_ROMAJI_LIST = clz.getDeclaredMethod("createKanjiHiraganaRomajiList", List.class))
 				.setAccessible(true);
+		//
+		(METHOD_CREATE_ENTRY = clz.getDeclaredMethod("createEntry", Field[].class, Object.class)).setAccessible(true);
 		//
 	}
 
@@ -153,7 +160,7 @@ class RyutetsuKanjiHiraganaMapFactoryBeanTest {
 	@Test
 	void testCreateKanjiHiraganaRomajiList() throws Throwable {
 		//
-		Assertions.assertEquals(null, createKanjiHiraganaRomajiList(
+		Assertions.assertNull(createKanjiHiraganaRomajiList(
 				Arrays.asList(null, Util.cast(Element.class, Narcissus.allocateInstance(Element.class)))));
 		//
 	}
@@ -165,6 +172,51 @@ class RyutetsuKanjiHiraganaMapFactoryBeanTest {
 				return null;
 			} else if (obj instanceof List) {
 				return (List<?>) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCreateEntry() throws Throwable {
+		//
+		Assertions.assertEquals(Pair.of(null, null), createEntry(null, null));
+		//
+		final Field[] fs = new Field[] { null, Boolean.class.getDeclaredField("value") };
+		//
+		final Object value = Boolean.TRUE;
+		//
+		Assertions.assertEquals(Pair.of(null, null), createEntry(fs, value));
+		//
+		if (instance != null) {
+			//
+			instance.setKeyUnicodeBlock(UnicodeBlock.BASIC_LATIN);
+			//
+		} // if
+			//
+		Assertions.assertEquals(Pair.of(Unit.with(Util.toString(value)), null), createEntry(fs, value));
+		//
+		if (instance != null) {
+			//
+			instance.setKeyUnicodeBlock(null);
+			//
+			instance.setValueUnicodeBlock(UnicodeBlock.BASIC_LATIN);
+			//
+		} // if
+			//
+		Assertions.assertEquals(Pair.of(null, Unit.with(Util.toString(value))), createEntry(fs, value));
+		//
+	}
+
+	private Entry<IValue0<String>, IValue0<String>> createEntry(final Field[] fs, final Object v) throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_ENTRY.invoke(instance, fs, v);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Entry) {
+				return (Entry) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

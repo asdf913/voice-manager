@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
@@ -21,6 +22,7 @@ import org.apache.commons.lang3.function.FailableBiFunctionUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
@@ -52,68 +54,28 @@ public class RyutetsuKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Stri
 	@Override
 	public Map<String, String> getObject() throws Exception {
 		//
-		KanjiHiraganaRomaji khr = null;
-		//
 		final List<KanjiHiraganaRomaji> khrs = createKanjiHiraganaRomajiList(
 				ElementUtil.select(testAndApply(Objects::nonNull, testAndApply(Objects::nonNull, url, URL::new, null),
 						x -> Jsoup.parse(x, 0), null), ".station_t"));
 		//
 		final Field[] fs = Util.getDeclaredFields(KanjiHiraganaRomaji.class);
 		//
-		Field f = null;
-		//
-		String s = null;
-		//
-		List<UnicodeBlock> unicodeBlocks = null;
-		//
-		UnicodeBlock unicodeBlock = null;
 		//
 		IValue0<String> key = null, value = null;
 		//
 		Map<String, String> map = null;
 		//
+		Entry<IValue0<String>, IValue0<String>> entry = null;
+		//
 		for (int i = 0; khrs != null && i < khrs.size(); i++) {
 			//
-			khr = khrs.get(i);
-			//
-			key = value = null;
-			//
-			for (int j = 0; fs != null && j < fs.length; j++) {
+			if ((entry = createEntry(fs, khrs.get(i))) == null) {
 				//
-				if (!Util.isAssignableFrom(Util.getDeclaringClass(f = fs[j]), Util.getClass(khr))) {
-					//
-					continue;
-					//
-				} // if
-					//
-				try {
-					//
-					s = Util.toString(testAndApply((a, b) -> b != null, f, khr,
-							(a, b) -> FieldUtils.readField(a, b, true), null));
-					//
-				} catch (final IllegalAccessException iae) {
-					//
-					throw new RuntimeException(iae);
-					//
-				} // try
-					//
-				if ((unicodeBlocks = getUnicodeBlocks(Util.toCharArray(s))) != null && unicodeBlocks.size() == 1) {
-					//
-					if (keyUnicodeBlock == (unicodeBlock = unicodeBlocks.get(0))) {
-						//
-						key = Unit.with(s);
-						//
-					} else if (valueUnicodeBlock == unicodeBlock) {
-						//
-						value = Unit.with(s);
-						//
-					} // if
-						//
-				} // if
-					//
-			} // for
+				continue;
 				//
-			if (Boolean.logicalOr(key == null, value == null)) {
+			} // if
+				//
+			if (Boolean.logicalOr((key = Util.getKey(entry)) == null, (value = Util.getValue(entry)) == null)) {
 				//
 				continue;
 				//
@@ -125,6 +87,57 @@ public class RyutetsuKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Stri
 		} // for
 			//
 		return map;
+		//
+	}
+
+	private Entry<IValue0<String>, IValue0<String>> createEntry(final Field[] fs, final Object v) {
+		//
+		Field f = null;
+		//
+		String s = null;
+		//
+		List<UnicodeBlock> unicodeBlocks = null;
+		//
+		UnicodeBlock unicodeBlock = null;
+		//
+		IValue0<String> key = null, value = null;
+		//
+		for (int i = 0; fs != null && i < fs.length; i++) {
+			//
+			if (!Util.isAssignableFrom(Util.getDeclaringClass(f = fs[i]), Util.getClass(v))) {
+				//
+				continue;
+				//
+			} // if
+				//
+			try {
+				//
+				s = Util.toString(
+						testAndApply((a, b) -> b != null, f, v, (a, b) -> FieldUtils.readField(a, b, true), null));
+				//
+			} catch (final IllegalAccessException iae) {
+				//
+				throw new RuntimeException(iae);
+				//
+			} // try
+				//
+			if ((unicodeBlocks = getUnicodeBlocks(Util.toCharArray(s))) != null && unicodeBlocks.size() == 1) {
+				//
+				if (keyUnicodeBlock == (unicodeBlock = unicodeBlocks.get(0))) {
+					//
+					key = Unit.with(s);
+					//
+				} else if (valueUnicodeBlock == unicodeBlock) {
+					//
+					value = Unit.with(s);
+					//
+				} // if
+					//
+			} // if
+				//
+		} // for
+			//
+		return Pair.of(key, value);
 		//
 	}
 
