@@ -73,9 +73,9 @@ class MapReportGuiTest {
 
 	private static final String EMPTY = "";
 
-	private static Method METHOD_CAST, METHOD_IS_ALL_ATTRIBUTES_MATCHED, METHOD_GET_CLASS, METHOD_TO_STRING,
-			METHOD_REMOVE_ROW, METHOD_ADD_ROW, METHOD_GET_PREFERRED_WIDTH, METHOD_DOUBLE_VALUE, METHOD_AS_MAP,
-			METHOD_GET_VALUES, METHOD_OR_ELSE, METHOD_MAX, METHOD_MAP_TO_INT, METHOD_CREATE_MULTI_MAP, METHOD_ADD,
+	private static Method METHOD_CAST, METHOD_IS_ALL_ATTRIBUTES_MATCHED, METHOD_GET_CLASS, METHOD_REMOVE_ROW,
+			METHOD_ADD_ROW, METHOD_GET_PREFERRED_WIDTH, METHOD_DOUBLE_VALUE, METHOD_AS_MAP, METHOD_GET_VALUES,
+			METHOD_OR_ELSE, METHOD_MAX, METHOD_MAP_TO_INT, METHOD_CREATE_MULTI_MAP, METHOD_ADD,
 			METHOD_IS_ASSIGNABLE_FROM, METHOD_GET_KEY, METHOD_GET_VALUE, METHOD_FOR_NAME, METHOD_FILTER, METHOD_TO_LIST,
 			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_ADD_ACTION_LISTENER, METHOD_MAP, METHOD_LENGTH,
 			METHOD_TEST_AND_APPLY, METHOD_CREATE_MULTIMAP, METHOD_CLEAR, METHOD_TEST_AND_ACCEPT3,
@@ -93,8 +93,6 @@ class MapReportGuiTest {
 				AttributeAccessor.class)).setAccessible(true);
 		//
 		(METHOD_GET_CLASS = clz.getDeclaredMethod("getClass", Object.class)).setAccessible(true);
-		//
-		(METHOD_TO_STRING = clz.getDeclaredMethod("toString", Object.class)).setAccessible(true);
 		//
 		(METHOD_REMOVE_ROW = clz.getDeclaredMethod("removeRow", DefaultTableModel.class, Integer.TYPE))
 				.setAccessible(true);
@@ -569,7 +567,7 @@ class MapReportGuiTest {
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
-			throw new Throwable(obj != null ? toString(obj.getClass()) : null);
+			throw new Throwable(obj != null ? Util.toString(obj.getClass()) : null);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -590,28 +588,7 @@ class MapReportGuiTest {
 			} else if (obj instanceof Class) {
 				return (Class<?>) obj;
 			}
-			throw new Throwable(toString(obj.getClass()));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testToString() throws Throwable {
-		//
-		Assertions.assertSame(EMPTY, toString(EMPTY));
-		//
-	}
-
-	private static String toString(final Object instance) throws Throwable {
-		try {
-			final Object obj = METHOD_TO_STRING.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(toString(obj.getClass()));
+			throw new Throwable(Util.toString(obj.getClass()));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -682,7 +659,7 @@ class MapReportGuiTest {
 			} else if (obj instanceof Double) {
 				return (Double) obj;
 			}
-			throw new Throwable(toString(obj.getClass()));
+			throw new Throwable(Util.toString(obj.getClass()));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -711,7 +688,7 @@ class MapReportGuiTest {
 			if (obj instanceof Double) {
 				return ((Double) obj).doubleValue();
 			}
-			throw new Throwable(obj != null ? toString(obj.getClass()) : null);
+			throw new Throwable(obj != null ? Util.toString(obj.getClass()) : null);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -734,7 +711,7 @@ class MapReportGuiTest {
 			} else if (obj instanceof Map) {
 				return (Map) obj;
 			}
-			throw new Throwable(toString(obj.getClass()));
+			throw new Throwable(Util.toString(obj.getClass()));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -763,7 +740,7 @@ class MapReportGuiTest {
 			} else if (obj instanceof Collection) {
 				return (Collection) obj;
 			}
-			throw new Throwable(toString(obj.getClass()));
+			throw new Throwable(Util.toString(obj.getClass()));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -784,7 +761,7 @@ class MapReportGuiTest {
 			if (obj instanceof Integer) {
 				return ((Integer) obj).intValue();
 			}
-			throw new Throwable(toString(obj != null ? obj.getClass() : null));
+			throw new Throwable(Util.toString(obj != null ? obj.getClass() : null));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -805,7 +782,7 @@ class MapReportGuiTest {
 			} else if (obj instanceof OptionalInt) {
 				return (OptionalInt) obj;
 			}
-			throw new Throwable(toString(obj.getClass()));
+			throw new Throwable(Util.toString(obj.getClass()));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -831,7 +808,7 @@ class MapReportGuiTest {
 			} else if (obj instanceof IntStream) {
 				return (IntStream) obj;
 			}
-			throw new Throwable(toString(obj.getClass()));
+			throw new Throwable(Util.toString(obj.getClass()));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -847,7 +824,7 @@ class MapReportGuiTest {
 		Assertions.assertNull(createMultimap(Collections.singleton(Reflection.newProxy(Map.class, ih))));
 		//
 		Assertions.assertEquals("{null=[null]}",
-				toString(createMultimap(Collections.singleton(Collections.singletonMap(null, null)))));
+				Util.toString(createMultimap(Collections.singleton(Collections.singletonMap(null, null)))));
 		//
 	}
 
@@ -859,7 +836,7 @@ class MapReportGuiTest {
 			} else if (obj instanceof Multimap) {
 				return (Multimap) obj;
 			}
-			throw new Throwable(toString(obj.getClass()));
+			throw new Throwable(Util.toString(obj.getClass()));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -897,7 +874,7 @@ class MapReportGuiTest {
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
-			throw new Throwable(toString(obj != null ? obj.getClass() : null));
+			throw new Throwable(Util.toString(obj != null ? obj.getClass() : null));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -950,7 +927,7 @@ class MapReportGuiTest {
 			} else if (obj instanceof Class) {
 				return (Class) obj;
 			}
-			throw new Throwable(toString(obj.getClass()));
+			throw new Throwable(Util.toString(obj.getClass()));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -976,7 +953,7 @@ class MapReportGuiTest {
 			} else if (obj instanceof Stream) {
 				return (Stream) obj;
 			}
-			throw new Throwable(toString(obj.getClass()));
+			throw new Throwable(Util.toString(obj.getClass()));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -997,7 +974,7 @@ class MapReportGuiTest {
 			} else if (obj instanceof List) {
 				return (List) obj;
 			}
-			throw new Throwable(toString(obj.getClass()));
+			throw new Throwable(Util.toString(obj.getClass()));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1046,7 +1023,7 @@ class MapReportGuiTest {
 			} else if (obj instanceof Clipboard) {
 				return (Clipboard) obj;
 			}
-			throw new Throwable(toString(obj.getClass()));
+			throw new Throwable(Util.toString(obj.getClass()));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1112,7 +1089,7 @@ class MapReportGuiTest {
 			} else if (obj instanceof Stream) {
 				return (Stream) obj;
 			}
-			throw new Throwable(toString(obj.getClass()));
+			throw new Throwable(Util.toString(obj.getClass()));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1131,7 +1108,7 @@ class MapReportGuiTest {
 			if (obj instanceof Integer) {
 				return ((Integer) obj).intValue();
 			}
-			throw new Throwable(toString(obj != null ? obj.getClass() : null));
+			throw new Throwable(Util.toString(obj != null ? obj.getClass() : null));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1164,9 +1141,9 @@ class MapReportGuiTest {
 		//
 		Assertions.assertNull(createMultimap(multimap, (a, b) -> false));
 		//
-		Assertions.assertEquals("{=[]}", toString(createMultimap(multimap, null)));
+		Assertions.assertEquals("{=[]}", Util.toString(createMultimap(multimap, null)));
 		//
-		Assertions.assertEquals("{=[]}", toString(createMultimap(multimap, (a, b) -> true)));
+		Assertions.assertEquals("{=[]}", Util.toString(createMultimap(multimap, (a, b) -> true)));
 		//
 	}
 
@@ -1179,7 +1156,7 @@ class MapReportGuiTest {
 			} else if (obj instanceof Multimap) {
 				return (Multimap) obj;
 			}
-			throw new Throwable(toString(obj.getClass()));
+			throw new Throwable(Util.toString(obj.getClass()));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1270,7 +1247,7 @@ class MapReportGuiTest {
 			} else if (obj instanceof ObjectWriter) {
 				return (ObjectWriter) obj;
 			}
-			throw new Throwable(toString(obj.getClass()));
+			throw new Throwable(Util.toString(obj.getClass()));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1291,7 +1268,7 @@ class MapReportGuiTest {
 			} else if (obj instanceof ObjectWriter) {
 				return (ObjectWriter) obj;
 			}
-			throw new Throwable(toString(obj.getClass()));
+			throw new Throwable(Util.toString(obj.getClass()));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1312,7 +1289,7 @@ class MapReportGuiTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(toString(obj.getClass()));
+			throw new Throwable(Util.toString(obj.getClass()));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

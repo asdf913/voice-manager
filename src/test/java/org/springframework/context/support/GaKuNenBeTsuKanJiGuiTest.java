@@ -59,12 +59,12 @@ import javassist.util.proxy.ProxyObject;
 
 class GaKuNenBeTsuKanJiGuiTest {
 
-	private static Method METHOD_CAST, METHOD_CREATE_WORK_BOOK, METHOD_GET_CLASS, METHOD_TO_STRING,
-			METHOD_SET_SELECTED_ITEM_BY_ITERABLE, METHOD_INVOKE, METHOD_GET_PARAMETER_TYPES, METHOD_EXISTS, METHOD_AND,
-			METHOD_IIF, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_ADD_ACTION_LISTENER, METHOD_TO_ARRAY,
-			METHOD_FILTER, METHOD_TO_LIST, METHOD_GET_DECLARED_METHODS, METHOD_FOR_NAME, METHOD_GET_ABSOLUTE_PATH,
-			METHOD_IS_FILE, METHOD_LENGTH, METHOD_LONG_VALUE, METHOD_CONTAINS, METHOD_ADD, METHOD_SET_SELECTED_ITEM,
-			METHOD_SET_TEXT, METHOD_SET_PREFERRED_WIDTH, METHOD_GET_PREFERRED_SIZE, METHOD_MAP, METHOD_MAX,
+	private static Method METHOD_CAST, METHOD_CREATE_WORK_BOOK, METHOD_GET_CLASS, METHOD_SET_SELECTED_ITEM_BY_ITERABLE,
+			METHOD_INVOKE, METHOD_GET_PARAMETER_TYPES, METHOD_EXISTS, METHOD_AND, METHOD_IIF, METHOD_TEST_AND_ACCEPT3,
+			METHOD_TEST_AND_ACCEPT4, METHOD_ADD_ACTION_LISTENER, METHOD_TO_ARRAY, METHOD_FILTER, METHOD_TO_LIST,
+			METHOD_GET_DECLARED_METHODS, METHOD_FOR_NAME, METHOD_GET_ABSOLUTE_PATH, METHOD_IS_FILE, METHOD_LENGTH,
+			METHOD_LONG_VALUE, METHOD_CONTAINS, METHOD_ADD, METHOD_SET_SELECTED_ITEM, METHOD_SET_TEXT,
+			METHOD_SET_PREFERRED_WIDTH, METHOD_GET_PREFERRED_SIZE, METHOD_MAP, METHOD_MAX,
 			METHOD_CREATE_DIMENSION_COMPARATOR = null;
 
 	@BeforeAll
@@ -78,8 +78,6 @@ class GaKuNenBeTsuKanJiGuiTest {
 				.setAccessible(true);
 		//
 		(METHOD_GET_CLASS = clz.getDeclaredMethod("getClass", Object.class)).setAccessible(true);
-		//
-		(METHOD_TO_STRING = clz.getDeclaredMethod("toString", Object.class)).setAccessible(true);
 		//
 		(METHOD_SET_SELECTED_ITEM_BY_ITERABLE = clz.getDeclaredMethod("setSelectedItemByIterable", ComboBoxModel.class,
 				Iterable.class)).setAccessible(true);
@@ -500,7 +498,7 @@ class GaKuNenBeTsuKanJiGuiTest {
 			} else if (obj instanceof Workbook) {
 				return (Workbook) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -521,28 +519,7 @@ class GaKuNenBeTsuKanJiGuiTest {
 			} else if (obj instanceof Class<?>) {
 				return (Class<?>) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testToString() throws Throwable {
-		//
-		Assertions.assertNull(toString(null));
-		//
-	}
-
-	private static String toString(final Object instance) throws Throwable {
-		try {
-			final Object obj = METHOD_TO_STRING.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -597,7 +574,7 @@ class GaKuNenBeTsuKanJiGuiTest {
 			} else if (obj instanceof Class<?>[]) {
 				return (Class<?>[]) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -618,7 +595,7 @@ class GaKuNenBeTsuKanJiGuiTest {
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -641,7 +618,7 @@ class GaKuNenBeTsuKanJiGuiTest {
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -769,7 +746,7 @@ class GaKuNenBeTsuKanJiGuiTest {
 			} else if (obj instanceof Stream) {
 				return (Stream) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -790,7 +767,7 @@ class GaKuNenBeTsuKanJiGuiTest {
 			} else if (obj instanceof List) {
 				return (List) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -811,7 +788,7 @@ class GaKuNenBeTsuKanJiGuiTest {
 			} else if (obj instanceof Method[]) {
 				return (Method[]) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -834,7 +811,7 @@ class GaKuNenBeTsuKanJiGuiTest {
 			} else if (obj instanceof Class) {
 				return (Class) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -855,7 +832,7 @@ class GaKuNenBeTsuKanJiGuiTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -876,7 +853,7 @@ class GaKuNenBeTsuKanJiGuiTest {
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -897,7 +874,7 @@ class GaKuNenBeTsuKanJiGuiTest {
 			} else if (obj instanceof Long) {
 				return (Long) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -918,7 +895,7 @@ class GaKuNenBeTsuKanJiGuiTest {
 			if (obj instanceof Long) {
 				return ((Long) obj).longValue();
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -939,7 +916,7 @@ class GaKuNenBeTsuKanJiGuiTest {
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1043,7 +1020,7 @@ class GaKuNenBeTsuKanJiGuiTest {
 			} else if (obj instanceof Dimension) {
 				return (Dimension) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1067,7 +1044,7 @@ class GaKuNenBeTsuKanJiGuiTest {
 			} else if (obj instanceof Stream) {
 				return (Stream) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1091,7 +1068,7 @@ class GaKuNenBeTsuKanJiGuiTest {
 			} else if (obj instanceof Optional) {
 				return (Optional) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1121,7 +1098,7 @@ class GaKuNenBeTsuKanJiGuiTest {
 			} else if (obj instanceof Comparator) {
 				return (Comparator) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

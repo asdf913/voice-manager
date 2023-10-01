@@ -84,7 +84,7 @@ public class Main {
 				//
 				JOptionPane.showMessageDialog(null, list, "Component", JOptionPane.PLAIN_MESSAGE);
 				//
-				clz = forName(getBeanClassName(testAndApply(Objects::nonNull, toString(getSelectedValue(list)),
+				clz = forName(getBeanClassName(testAndApply(Objects::nonNull, Util.toString(getSelectedValue(list)),
 						x -> ConfigurableListableBeanFactoryUtil.getBeanDefinition(clbf, x), null)));
 				//
 			} // if
@@ -174,11 +174,6 @@ public class Main {
 
 	private static final <T> boolean test(@Nullable final Predicate<T> instance, @Nullable final T value) {
 		return instance != null && instance.test(value);
-	}
-
-	@Nullable
-	private static String toString(@Nullable final Object instance) {
-		return instance != null ? instance.toString() : null;
 	}
 
 	private static void pack(@Nullable final Window instance) {

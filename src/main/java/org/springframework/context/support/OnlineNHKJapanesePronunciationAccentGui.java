@@ -224,13 +224,12 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			//
 		} else if (object instanceof List) {
 			//
-			value = Unit
-					.with(toList(map(stream(((List<?>) object)), OnlineNHKJapanesePronunciationAccentGui::toString)));
+			value = Unit.with(toList(map(stream(((List<?>) object)), x -> Util.toString(x))));
 			//
 		} else if (object instanceof Iterable) {
 			//
-			value = Unit.with(toList(map(StreamSupport.stream(((Iterable<?>) object).spliterator(), false),
-					OnlineNHKJapanesePronunciationAccentGui::toString)));
+			value = Unit.with(toList(
+					map(StreamSupport.stream(((Iterable<?>) object).spliterator(), false), x -> Util.toString(x))));
 			//
 		} else if (clz != null && clz.isArray()) {
 			//
@@ -244,7 +243,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 				//
 			value = Unit
 					.with(toList(map(IntStream.range(0, Array.getLength(object)).mapToObj(i -> Array.get(object, i)),
-							OnlineNHKJapanesePronunciationAccentGui::toString)));
+							x -> Util.toString(x))));
 			//
 		} else if (object instanceof String string) {
 			//
@@ -270,7 +269,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			//
 		} else if (Boolean.logicalOr(object instanceof Number, object instanceof Boolean)) {
 			//
-			value = Unit.with(Collections.singletonList(toString(object)));
+			value = Unit.with(Collections.singletonList(Util.toString(object)));
 			//
 		} // if
 			//
@@ -280,7 +279,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			//
 		} else {
 			//
-			throw new UnsupportedOperationException(toString(clz));
+			throw new UnsupportedOperationException(Util.toString(clz));
 			//
 		} // if
 			//
@@ -769,11 +768,6 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		}
 	}
 
-	@Nullable
-	private static String toString(@Nullable final Object instance) {
-		return instance != null ? instance.toString() : null;
-	}
-
 	private static void playAudio(@Nullable final Pronunciation pronunciation) {
 		//
 		final Set<Entry<String, String>> entrySet = entrySet(
@@ -967,8 +961,8 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 				//
 				try {
 					//
-					final boolean result = ImageIO.write(pitchAccentImage, toString(getSelectedItem(cbmImageFormat)),
-							jfc.getSelectedFile());
+					final boolean result = ImageIO.write(pitchAccentImage,
+							Util.toString(getSelectedItem(cbmImageFormat)), jfc.getSelectedFile());
 					//
 					setText(jlSavePitchAccentImage, iif(result, "Saved", "Not Saved"));
 					//

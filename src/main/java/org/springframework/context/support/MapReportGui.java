@@ -704,8 +704,8 @@ public class MapReportGui extends JFrame
 					//
 				} // if
 					//
-				if (aa != null && (!aa.hasAttribute(toString(getKey(entry)))
-						|| !Objects.equals(aa.getAttribute(toString(getKey(entry))), getValue(entry)))) {
+				if (aa != null && (!aa.hasAttribute(Util.toString(getKey(entry)))
+						|| !Objects.equals(aa.getAttribute(Util.toString(getKey(entry))), getValue(entry)))) {
 					//
 					return false;
 					//
@@ -727,11 +727,6 @@ public class MapReportGui extends JFrame
 	@Nullable
 	private static <V> V getValue(@Nullable final Entry<?, V> instance) {
 		return instance != null ? instance.getValue() : null;
-	}
-
-	@Nullable
-	private static String toString(@Nullable final Object instance) {
-		return instance != null ? instance.toString() : null;
 	}
 
 	@Nullable

@@ -90,8 +90,8 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 
 	private static final int ONE = 1;
 
-	private static Method METHOD_CAST, METHOD_TO_STRING, METHOD_TEST_AND_APPLY, METHOD_GET_WIDTH, METHOD_GET_TEXT,
-			METHOD_GET_VALUE, METHOD_ADD_ELEMENT, METHOD_REMOVE_ELEMENT_AT, METHOD_GET_SELECTED_ITEM, METHOD_GET_SIZE,
+	private static Method METHOD_CAST, METHOD_TEST_AND_APPLY, METHOD_GET_WIDTH, METHOD_GET_TEXT, METHOD_GET_VALUE,
+			METHOD_ADD_ELEMENT, METHOD_REMOVE_ELEMENT_AT, METHOD_GET_SELECTED_ITEM, METHOD_GET_SIZE,
 			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_FOR_EACH_ITERABLE, METHOD_FOR_EACH_INT_STREAM,
 			METHOD_MAP_INT_STREAM, METHOD_MAP_STREAM, METHOD_SET_PITCH_ACCENT_IMAGE_TO_SYSTEM_CLIPBOARD_CONTENTS,
 			METHOD_SAVE_PITCH_ACCENT_IMAGE, METHOD_PLAY_AUDIO, METHOD_SAVE_AUDIO, METHOD_PRONOUNICATION_CHANGED,
@@ -108,8 +108,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		final Class<?> clz = OnlineNHKJapanesePronunciationAccentGui.class;
 		//
 		(METHOD_CAST = clz.getDeclaredMethod("cast", Class.class, Object.class)).setAccessible(true);
-		//
-		(METHOD_TO_STRING = clz.getDeclaredMethod("toString", Object.class)).setAccessible(true);
 		//
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
@@ -575,7 +573,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		//
 		Assertions.assertDoesNotThrow(() -> setImageFormatOrders(instance, new Object[] { object }));
 		//
-		Assertions.assertEquals(Arrays.asList(toString(object)), get(imageFormatOrders, instance));
+		Assertions.assertEquals(Arrays.asList(Util.toString(object)), get(imageFormatOrders, instance));
 		//
 		// java.lang.String
 		//
@@ -719,29 +717,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 	}
 
 	@Test
-	void testToString() throws Throwable {
-		//
-		Assertions.assertNull(toString(null));
-		//
-		Assertions.assertSame(EMPTY, toString(EMPTY));
-		//
-	}
-
-	private static String toString(final Object instance) throws Throwable {
-		try {
-			final Object obj = METHOD_TO_STRING.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testTestAndApply() throws Throwable {
 		//
 		Assertions.assertNull(testAndApply(Predicates.alwaysTrue(), null, null, null));
@@ -797,7 +772,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			} else if (obj instanceof Double) {
 				return (Double) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -820,7 +795,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -909,7 +884,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			if (obj instanceof Integer) {
 				return ((Integer) obj).intValue();
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -932,7 +907,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			} else if (obj instanceof Clipboard) {
 				return (Clipboard) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1008,7 +983,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			} else if (obj instanceof IntStream) {
 				return (IntStream) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1023,7 +998,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			} else if (obj instanceof Stream) {
 				return (Stream) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1247,7 +1222,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			} else if (obj instanceof Field) {
 				return (Field) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1270,7 +1245,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			} else if (obj instanceof Class) {
 				return (Class<?>) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1293,7 +1268,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			} else if (obj instanceof InputStream) {
 				return (InputStream) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1446,7 +1421,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			} else if (obj instanceof Component) {
 				return (Component) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1494,7 +1469,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1532,7 +1507,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1584,7 +1559,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			} else if (obj instanceof Comparator) {
 				return (Comparator) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1606,7 +1581,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1630,7 +1605,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			} else if (annotationClass != null && annotationClass.isInstance(obj)) {
 				return annotationClass.cast(obj);
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1651,7 +1626,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			} else if (obj instanceof Dimension) {
 				return (Dimension) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1672,7 +1647,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			} else if (obj instanceof Stream) {
 				return (Stream) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1700,7 +1675,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			} else if (obj instanceof Stream) {
 				return (Stream) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1721,7 +1696,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			} else if (obj instanceof List) {
 				return (List) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1762,7 +1737,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			} else if (obj instanceof Optional) {
 				return (Optional) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

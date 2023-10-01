@@ -286,11 +286,6 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 		return instance != null ? instance.getClass() : null;
 	}
 
-	@Nullable
-	private static String toString(@Nullable final Object instance) {
-		return instance != null ? instance.toString() : null;
-	}
-
 	@Override
 	public void keyTyped(final KeyEvent evt) {
 		//
@@ -574,10 +569,11 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 					//
 				} // if
 					//
-				CellUtil.setCellValue(RowUtil.createCell(row, Math.max(row.getLastCellNum(), 0)), toString(getKey(en)));
+				CellUtil.setCellValue(RowUtil.createCell(row, Math.max(row.getLastCellNum(), 0)),
+						Util.toString(getKey(en)));
 				//
 				CellUtil.setCellValue(RowUtil.createCell(row, Math.max(row.getLastCellNum(), 0)),
-						toString(getValue(en)));
+						Util.toString(getValue(en)));
 				//
 			} // for
 				//

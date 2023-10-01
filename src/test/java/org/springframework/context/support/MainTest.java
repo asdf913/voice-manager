@@ -47,7 +47,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class MainTest {
 
-	private static Method METHOD_TO_STRING, METHOD_GET_INSTANCE, METHOD_SHOW_MESSAGE_DIALOG_OR_PRINT_LN, METHOD_CAST,
+	private static Method METHOD_GET_INSTANCE, METHOD_SHOW_MESSAGE_DIALOG_OR_PRINT_LN, METHOD_CAST,
 			METHOD_GET_BEAN_NAMES_FOR_TYPE, METHOD_GET_BEAN_CLASS_NAME, METHOD_PACK, METHOD_SET_VISIBLE,
 			METHOD_TEST_AND_APPLY, METHOD_GET_SELECTED_VALUE, METHOD_GET_CLASS1, METHOD_GET_CLASS3,
 			METHOD_GET_NAME_CLASS, METHOD_IS_RAISE_THROWABLE_ONLY, METHOD_MAP, METHOD_ERROR_OR_PRINT_STACK_TRACE,
@@ -57,8 +57,6 @@ class MainTest {
 	static void beforeAll() throws ReflectiveOperationException {
 		//
 		final Class<?> clz = Main.class;
-		//
-		(METHOD_TO_STRING = clz.getDeclaredMethod("toString", Object.class)).setAccessible(true);
 		//
 		(METHOD_GET_INSTANCE = clz.getDeclaredMethod("getInstance", ListableBeanFactory.class, Class.class,
 				Consumer.class)).setAccessible(true);
@@ -222,31 +220,6 @@ class MainTest {
 	}
 
 	@Test
-	void testToString() throws Throwable {
-		//
-		Assertions.assertNull(toString(null));
-		//
-		final String empty = "";
-		//
-		Assertions.assertSame(empty, toString(empty));
-		//
-	}
-
-	private static String toString(final Object instance) throws Throwable {
-		try {
-			final Object obj = METHOD_TO_STRING.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testGetInstance() throws Throwable {
 		//
 		Assertions.assertNull(getInstance(null, null, null));
@@ -360,7 +333,7 @@ class MainTest {
 			} else if (obj instanceof String[]) {
 				return (String[]) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -383,7 +356,7 @@ class MainTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -489,7 +462,7 @@ class MainTest {
 			} else if (obj instanceof Class) {
 				return (Class<?>) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -504,7 +477,7 @@ class MainTest {
 			} else if (obj instanceof Class) {
 				return (Class<?>) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -525,7 +498,7 @@ class MainTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -621,7 +594,7 @@ class MainTest {
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -649,7 +622,7 @@ class MainTest {
 			} else if (obj instanceof Stream) {
 				return (Stream) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -693,7 +666,7 @@ class MainTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -715,7 +688,7 @@ class MainTest {
 			} else if (obj instanceof Method) {
 				return (Method) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -736,7 +709,7 @@ class MainTest {
 			} else if (obj instanceof Class) {
 				return (Class) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -759,7 +732,7 @@ class MainTest {
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
