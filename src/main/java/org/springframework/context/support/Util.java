@@ -11,7 +11,7 @@ public interface Util {
 		return instance != null ? instance.getName() : null;
 	}
 
-	static String toString(final Object instance) {
+	static String toString(@Nullable final Object instance) {
 		return instance != null ? instance.toString() : null;
 	}
 
