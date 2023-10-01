@@ -3,14 +3,16 @@ package org.springframework.beans.factory;
 import java.lang.Character.UnicodeBlock;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
@@ -27,12 +29,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.meeuw.functional.Predicates;
 
+import com.google.common.reflect.Reflection;
+
 import io.github.toolfactory.narcissus.Narcissus;
 import javassist.util.proxy.MethodHandler;
 import javassist.util.proxy.ProxyFactory;
 import javassist.util.proxy.ProxyObject;
 
 class RyutetsuKanjiHiraganaMapFactoryBeanTest {
+
+	private static Class<?> CLASS_KANJI_HIRAGANA_ROMAJI = null;
 
 	private static Method METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_GET_UNICODE_BLOCKS,
 			METHOD_TEST_AND_ACCEPT, METHOD_CREATE_KANJI_HIRAGANA_ROMAJI_LIST, METHOD_CREATE_ENTRY,
@@ -60,7 +66,7 @@ class RyutetsuKanjiHiraganaMapFactoryBeanTest {
 		(METHOD_CREATE_ENTRY = clz.getDeclaredMethod("createEntry", Field[].class, Object.class)).setAccessible(true);
 		//
 		(METHOD_SET_HIRAGANA_KANJI_ROMAJI = clz.getDeclaredMethod("setHiraganaKanjiRomaji",
-				Class.forName(
+				CLASS_KANJI_HIRAGANA_ROMAJI = Class.forName(
 						"org.springframework.beans.factory.RyutetsuKanjiHiraganaMapFactoryBean$KanjiHiraganaRomaji"),
 				Iterable.class)).setAccessible(true);
 		//
@@ -68,19 +74,50 @@ class RyutetsuKanjiHiraganaMapFactoryBeanTest {
 
 	private static class MH implements MethodHandler {
 
-		private String nodeName = null;
+		private String nodeName, attr = null;
 
 		@Override
 		public Object invoke(final Object self, final Method thisMethod, final Method proceed, final Object[] args)
 				throws Throwable {
 			//
-			final String methodName = thisMethod != null ? thisMethod.getName() : null;
+			final String methodName = getName(thisMethod);
 			//
 			if (self instanceof Node) {
 				//
 				if (Objects.equals(methodName, "nodeName")) {
 					//
 					return nodeName;
+					//
+				} else if (Objects.equals(methodName, "attr")) {
+					//
+					return attr;
+					//
+				} // if
+					//
+			} // if
+				//
+			throw new Throwable(methodName);
+			//
+		}
+
+	}
+
+	private static String getName(final Member instance) {
+		return instance != null ? instance.getName() : null;
+	}
+
+	private static class IH implements InvocationHandler {
+
+		@Override
+		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+			//
+			final String methodName = getName(method);
+			//
+			if (proxy instanceof Iterable) {
+				//
+				if (Objects.equals(methodName, "iterator")) {
+					//
+					return null;
 					//
 				} // if
 					//
@@ -270,6 +307,9 @@ class RyutetsuKanjiHiraganaMapFactoryBeanTest {
 	void testSetHiraganaKanjiRomaji()
 			throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
 		//
+		Assertions
+				.assertDoesNotThrow(() -> setHiraganaKanjiRomaji(null, Reflection.newProxy(Iterable.class, new IH())));
+		//
 		Assertions.assertDoesNotThrow(() -> setHiraganaKanjiRomaji(null, Collections.singleton(null)));
 		//
 		final MH mh = new MH();
@@ -281,6 +321,19 @@ class RyutetsuKanjiHiraganaMapFactoryBeanTest {
 		mh.nodeName = "a";
 		//
 		Assertions.assertDoesNotThrow(() -> setHiraganaKanjiRomaji(null, nodes));
+		//
+		final Constructor<?> constructor = CLASS_KANJI_HIRAGANA_ROMAJI != null
+				? CLASS_KANJI_HIRAGANA_ROMAJI.getDeclaredConstructor()
+				: null;
+		//
+		if (constructor != null) {
+			//
+			constructor.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(
+				() -> setHiraganaKanjiRomaji(constructor != null ? constructor.newInstance() : null, nodes));
 		//
 	}
 
