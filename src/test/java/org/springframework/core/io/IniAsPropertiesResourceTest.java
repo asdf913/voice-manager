@@ -379,49 +379,86 @@ class IniAsPropertiesResourceTest {
 		//
 		// java.io.Console.writeLock
 		//
-		Narcissus.setObjectField(console, Console.class.getDeclaredField("writeLock"), new Object());
+		List<Field> fs = Arrays.stream(Console.class.getDeclaredFields())
+				.filter(f -> f != null && Objects.equals(f.getName(), "writeLock")).toList();
 		//
-		Assertions.assertNull(getSection(true, null, null, console, null));
+		Field f = fs != null && fs.size() == 1 ? fs.get(0) : null;
 		//
-		// java.io.Console.readLock
-		//
-		Narcissus.setObjectField(console, Console.class.getDeclaredField("readLock"), new Object());
-		//
-		Assertions.assertNull(getSection(true, null, null, console, null));
-		//
-		// java.io.Console.pw
-		//
-		try (final OutputStream os = new ByteArrayOutputStream(); final PrintWriter pw = new PrintWriter(os)) {
+		if (f != null) {
 			//
-			Narcissus.setObjectField(console, Console.class.getDeclaredField("pw"), pw);
+			Narcissus.setObjectField(console, f, new Object());
 			//
-		} // try
+			Assertions.assertNull(getSection(true, null, null, console, null));
+			//
+		} // if
+			//
+			// java.io.Console.readLock
+			//
+		if ((f = (fs = Arrays.stream(Console.class.getDeclaredFields())
+				.filter(x -> x != null && Objects.equals(x.getName(), "readLock")).toList()) != null && fs.size() == 1
+						? fs.get(0)
+						: null) != null) {
+			//
+			Narcissus.setObjectField(console, f, new Object());
+			//
+			Assertions.assertNull(getSection(true, null, null, console, null));
+			//
+		} // if
+			//
+			// java.io.Console.pw
+			//
+		if ((f = (fs = Arrays.stream(Console.class.getDeclaredFields())
+				.filter(x -> x != null && Objects.equals(x.getName(), "pw")).toList()) != null && fs.size() == 1
+						? fs.get(0)
+						: null) != null) {
+			//
+			try (final OutputStream os = new ByteArrayOutputStream(); final PrintWriter pw = new PrintWriter(os)) {
+				//
+				Narcissus.setObjectField(console, f, pw);
+				//
+			} // try
+				//
+		} // if
 			//
 		Assertions.assertNull(getSection(true, null, null, console, null));
 		//
 		// java.io.Console.rcb
 		//
-		Narcissus.setObjectField(console, Console.class.getDeclaredField("rcb"), new char[1]);
-		//
-		Assertions.assertNull(getSection(true, null, null, console, null));
-		//
-		// java.io.Console.reader
-		//
-		try (final Reader reader = new StringReader(EMPTY)) {
+		if ((f = (fs = Arrays.stream(Console.class.getDeclaredFields())
+				.filter(x -> x != null && Objects.equals(x.getName(), "rcb")).toList()) != null && fs.size() == 1
+						? fs.get(0)
+						: null) != null) {
 			//
-			Narcissus.setObjectField(console, Console.class.getDeclaredField("reader"), reader);
+			Narcissus.setObjectField(console, f, new char[1]);
 			//
-		} // try
+			Assertions.assertNull(getSection(true, null, null, console, null));
 			//
-		Assertions.assertNull(getSection(true, null, null, console, null));
-		//
-		try (final Reader reader = new StringReader(EMPTY)) {
+		} // if
 			//
-			Narcissus.setObjectField(console, Console.class.getDeclaredField("reader"), reader);
+			// java.io.Console.reader
 			//
-			Assertions.assertEquals("[null]", toString(getSection(true, null, null, console, null)));
+		if ((f = (fs = Arrays.stream(Console.class.getDeclaredFields())
+				.filter(x -> x != null && Objects.equals(x.getName(), "reader")).toList()) != null && fs.size() == 1
+						? fs.get(0)
+						: null) != null) {
 			//
-		} // try
+			try (final Reader reader = new StringReader(EMPTY)) {
+				//
+				Narcissus.setObjectField(console, f, reader);
+				//
+			} // try
+				//
+			Assertions.assertNull(getSection(true, null, null, console, null));
+			//
+			try (final Reader reader = new StringReader(EMPTY)) {
+				//
+				Narcissus.setObjectField(console, f, reader);
+				//
+				Assertions.assertEquals("[null]", toString(getSection(true, null, null, console, null)));
+				//
+			} // try
+				//
+		} // if
 			//
 		Assertions.assertNull(getSection(true, Collections.singletonMap(null, null), null, null, null));
 		//

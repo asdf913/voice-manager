@@ -153,6 +153,7 @@ import org.apache.bcel.generic.ConstantPushInstruction;
 import org.apache.bcel.generic.DUP;
 import org.apache.bcel.generic.ICONST;
 import org.apache.bcel.generic.INVOKESPECIAL;
+import org.apache.bcel.generic.INVOKESTATIC;
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InstructionListUtil;
 import org.apache.bcel.generic.LDC;
@@ -213,6 +214,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
+import org.jsoup.helper.HttpConnection;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.AssertionsUtil;
@@ -9885,8 +9887,38 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(writer(cast(Console.class, Narcissus.allocateInstance(Console.class))));
+		if (!isConsoleWriterMethodThrowException()) {
+			//
+			Assertions.assertNull(writer(cast(Console.class, Narcissus.allocateInstance(Console.class))));
+			//
+		} // if
+			//
+	}
+
+	private static boolean isConsoleWriterMethodThrowException() throws Throwable {
 		//
+		final Class<?> clz = Console.class;
+		//
+		try (final InputStream is = clz != null
+				? clz.getResourceAsStream(String.format("/%1$s.class", StringUtils.replace(getName(clz), ".", "/")))
+				: null) {
+			//
+			// java.io.Console.writer()
+			//
+			final JavaClass javaClass = ClassParserUtil
+					.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null));
+			//
+			return Objects.equals(Arrays.asList(INVOKESTATIC.class, ATHROW.class), new FailableStream<>(testAndApply(
+					Objects::nonNull,
+					InstructionListUtil.getInstructions(MethodGenUtil.getInstructionList(testAndApply(Objects::nonNull,
+							javaClass != null
+									? javaClass.getMethod(clz != null ? clz.getDeclaredMethod("writer") : null)
+									: null,
+							x -> new MethodGen(x, null, null), null))),
+					Arrays::stream, null)).map(x -> getClass(x)).collect(Collectors.toList()));
+			//
+		} // try
+			//
 	}
 
 	private static PrintWriter writer(final Console instance) throws Throwable {
@@ -9914,12 +9946,63 @@ class VoiceManagerTest {
 			//
 		final Console console = cast(Console.class, Narcissus.allocateInstance(Console.class));
 		//
-		Assertions.assertNull(readLine(console, null));
+		final boolean isConsoleReadLineMethodThrowException = isConsoleReadLineMethodThrowException();
 		//
-		Narcissus.setObjectField(console, Console.class.getDeclaredField("writeLock"), new Object());
+		if (!isConsoleReadLineMethodThrowException) {
+			//
+			Assertions.assertNull(readLine(console, null));
+			//
+		} // if
+			//
+		final List<Field> fs = Arrays.stream(Console.class.getDeclaredFields())
+				.filter(f -> f != null && Objects.equals(f.getName(), "writeLock")).toList();
 		//
-		Assertions.assertNull(readLine(console, null));
+		final Field f = fs != null && fs.size() == 1 ? fs.get(0) : null;
 		//
+		if (f != null) {
+			//
+			Narcissus.setObjectField(console, f, new Object());
+			//
+		} // if
+			//
+		if (!isConsoleReadLineMethodThrowException) {
+			//
+			Assertions.assertNull(readLine(console, null));
+			//
+		} // if
+			//
+	}
+
+	private static boolean isConsoleReadLineMethodThrowException() throws Throwable {
+		//
+		final Class<?> clz = Console.class;
+		//
+		try (final InputStream is = clz != null
+				? clz.getResourceAsStream(String.format("/%1$s.class", StringUtils.replace(getName(clz), ".", "/")))
+				: null) {
+			//
+			// java.io.Console.readLine(java.lang.String,java.lang.Object...)
+			//
+			final JavaClass javaClass = ClassParserUtil
+					.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null));
+			//
+			return Objects
+					.equals(Arrays.asList(INVOKESTATIC.class, ATHROW.class),
+							new FailableStream<>(
+									testAndApply(Objects::nonNull,
+											InstructionListUtil.getInstructions(MethodGenUtil
+													.getInstructionList(testAndApply(Objects::nonNull, javaClass != null
+															? javaClass
+																	.getMethod(clz != null
+																			? clz.getDeclaredMethod("readLine",
+																					String.class, Object[].class)
+																			: null)
+															: null, x -> new MethodGen(x, null, null), null))),
+											Arrays::stream, null))
+									.map(x -> getClass(x)).collect(Collectors.toList()));
+			//
+		} // try
+			//
 	}
 
 	private static String readLine(final Console instance, final String fmt, final Object... args) throws Throwable {

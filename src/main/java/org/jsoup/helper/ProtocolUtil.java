@@ -139,7 +139,7 @@ public interface ProtocolUtil {
 				//
 		} // for
 			//
-		return toList(map(stream(list), ProtocolUtil::toString));
+		return toList(map(stream(list), x -> ProtocolUtil.toString(x)));
 		//
 	}
 

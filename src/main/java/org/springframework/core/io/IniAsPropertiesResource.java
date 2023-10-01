@@ -23,6 +23,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -241,11 +243,13 @@ public class IniAsPropertiesResource implements Resource, ApplicationEventPublis
 			//
 			try {
 				//
-				ready = ready(cast(Reader.class,
-						Narcissus.getObjectField(console,
-								testAndApply(x -> IterableUtils.size(x) == 1,
-										toList(filter(fs.stream(), x -> Objects.equals(getName(x), "reader"))),
-										x -> IterableUtils.get(x, 0), null))));
+				ready = ready(cast(Reader.class, testAndApply((a, b) -> { // a != null &&
+					return a != null && b != null;
+				}, console,
+						testAndApply(x -> IterableUtils.size(x) == 1,
+								toList(filter(fs.stream(), x -> Objects.equals(getName(x), "reader"))),
+								x -> IterableUtils.get(x, 0), null),
+						Narcissus::getObjectField, null)));
 				//
 			} catch (final IOException e) {
 				//
@@ -256,10 +260,11 @@ public class IniAsPropertiesResource implements Resource, ApplicationEventPublis
 			if (//
 				// java.io.Console.readLock
 				//
-			Narcissus.getObjectField(console,
+			testAndApply((a, b) -> a != null && b != null, console,
 					testAndApply(x -> IterableUtils.size(x) == 1,
 							toList(filter(fs.stream(), x -> Objects.equals(getName(x), "writeLock"))),
-							x -> IterableUtils.get(x, 0), null)) != null
+							x -> IterableUtils.get(x, 0), null),
+					Narcissus::getObjectField, null) != null
 					//
 					// java.io.Console.readLock
 					//
@@ -293,6 +298,19 @@ public class IniAsPropertiesResource implements Resource, ApplicationEventPublis
 			//
 		return null;
 		//
+	}
+
+	private static <T, U, R, E extends Throwable> R testAndApply(final BiPredicate<T, U> predicate, final T t,
+			final U u, final BiFunction<T, U, R> functionTrue, final BiFunction<T, U, R> functionFalse) throws E {
+		return test(predicate, t, u) ? apply(functionTrue, t, u) : apply(functionFalse, t, u);
+	}
+
+	private static <T, U> boolean test(final BiPredicate<T, U> instance, final T t, final U u) {
+		return instance != null && instance.test(t, u);
+	}
+
+	private static <T, U, R> R apply(final BiFunction<T, U, R> instance, final T t, final U u) {
+		return instance != null ? instance.apply(t, u) : null;
 	}
 
 	@Nullable

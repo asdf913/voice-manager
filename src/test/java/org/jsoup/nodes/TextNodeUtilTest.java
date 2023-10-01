@@ -21,7 +21,7 @@ class TextNodeUtilTest {
 		//
 		FieldUtils.writeField(textNode, "value", string, true);
 		//
-		Assertions.assertSame(string, TextNodeUtil.text(textNode));
+		Assertions.assertEquals(string, TextNodeUtil.text(textNode));
 		//
 	}
 
