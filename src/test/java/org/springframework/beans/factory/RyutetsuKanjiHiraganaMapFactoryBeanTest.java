@@ -41,7 +41,7 @@ class RyutetsuKanjiHiraganaMapFactoryBeanTest {
 	private static Class<?> CLASS_KANJI_HIRAGANA_ROMAJI = null;
 
 	private static Method METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_GET_UNICODE_BLOCKS,
-			METHOD_TEST_AND_ACCEPT, METHOD_CREATE_KANJI_HIRAGANA_ROMAJI_LIST, METHOD_CREATE_ENTRY,
+			METHOD_TEST_AND_ACCEPT, METHOD_CREATE_KANJI_HIRAGANA_ROMAJI_LIST, METHOD_CREATE_ENTRY, METHOD_CREATE_MAP,
 			METHOD_SET_HIRAGANA_KANJI_ROMAJI = null;
 
 	@BeforeAll
@@ -64,6 +64,8 @@ class RyutetsuKanjiHiraganaMapFactoryBeanTest {
 				.setAccessible(true);
 		//
 		(METHOD_CREATE_ENTRY = clz.getDeclaredMethod("createEntry", Field[].class, Object.class)).setAccessible(true);
+		//
+		(METHOD_CREATE_MAP = clz.getDeclaredMethod("createMap", List.class)).setAccessible(true);
 		//
 		(METHOD_SET_HIRAGANA_KANJI_ROMAJI = clz.getDeclaredMethod("setHiraganaKanjiRomaji",
 				CLASS_KANJI_HIRAGANA_ROMAJI = Class.forName(
@@ -363,6 +365,27 @@ class RyutetsuKanjiHiraganaMapFactoryBeanTest {
 	private static void setHiraganaKanjiRomaji(final Object khr, final Iterable<Node> childNodes) throws Throwable {
 		try {
 			METHOD_SET_HIRAGANA_KANJI_ROMAJI.invoke(null, khr, childNodes);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCreateMap() throws Throwable {
+		//
+		Assertions.assertNull(createMap(Collections.singletonList(null)));
+		//
+	}
+
+	private Map<String, String> createMap(final List<?> khrs) throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_MAP.invoke(instance, khrs);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Map) {
+				return (Map) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

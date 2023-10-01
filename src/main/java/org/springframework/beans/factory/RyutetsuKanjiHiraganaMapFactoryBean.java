@@ -70,12 +70,14 @@ public class RyutetsuKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Stri
 	@Override
 	public Map<String, String> getObject() throws Exception {
 		//
-		final List<KanjiHiraganaRomaji> khrs = createKanjiHiraganaRomajiList(
-				ElementUtil.select(testAndApply(Objects::nonNull, testAndApply(Objects::nonNull, url, URL::new, null),
-						x -> Jsoup.parse(x, 0), null), ".station_t"));
+		return createMap(createKanjiHiraganaRomajiList(ElementUtil.select(testAndApply(Objects::nonNull,
+				testAndApply(Objects::nonNull, url, URL::new, null), x -> Jsoup.parse(x, 0), null), ".station_t")));
 		//
-		final Field[] fs = Util.getDeclaredFields(KanjiHiraganaRomaji.class);
+	}
+
+	private Map<String, String> createMap(final List<KanjiHiraganaRomaji> khrs) {
 		//
+		Field[] fs = null;
 		//
 		IValue0<String> key = null, value = null;
 		//
@@ -85,9 +87,9 @@ public class RyutetsuKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Stri
 		//
 		for (int i = 0; khrs != null && i < khrs.size(); i++) {
 			//
-			//
-			if (Boolean.logicalOr((key = Util.getKey(entry = createEntry(fs, khrs.get(i)))) == null,
-					(value = Util.getValue(entry)) == null)) {
+			if (Boolean.logicalOr((key = Util.getKey(entry = createEntry(
+					fs = ObjectUtils.getIfNull(fs, () -> Util.getDeclaredFields(KanjiHiraganaRomaji.class)),
+					khrs.get(i)))) == null, (value = Util.getValue(entry)) == null)) {
 				//
 				continue;
 				//
