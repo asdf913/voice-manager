@@ -99,7 +99,7 @@ public class TokyoToeiNipporiToneriKanjiRomajiOrHiraganaMapFactoryBean extends S
 				} // if
 					//
 				TableUtil.put(table = ObjectUtils.getIfNull(table, HashBasedTable::create),
-						getKanji(ElementUtil.text(e)), Util.getKey(entry), entry.getValue());
+						getKanji(ElementUtil.text(e)), Util.getKey(entry), Util.getValue(entry));
 				//
 			} // for
 				//

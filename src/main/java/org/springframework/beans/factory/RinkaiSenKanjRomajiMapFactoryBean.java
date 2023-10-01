@@ -59,7 +59,7 @@ public class RinkaiSenKanjRomajiMapFactoryBean extends StringMapFromResourceFact
 				//
 			} // if
 				//
-			Util.put(map, Util.getKey(entry), entry.getValue());
+			Util.put(map, Util.getKey(entry), Util.getValue(entry));
 			//
 		} // for
 			//

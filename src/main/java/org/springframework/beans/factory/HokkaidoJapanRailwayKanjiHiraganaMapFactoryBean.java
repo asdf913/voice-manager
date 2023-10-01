@@ -122,7 +122,7 @@ public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFr
 					//
 				if ((pair = createPair(ss)) != null) {
 					//
-					if (Objects.equals(key = Util.getKey(pair), value = pair.getValue())
+					if (Objects.equals(key = Util.getKey(pair), value = Util.getValue(pair))
 							|| !isAllCharacterInSameUnicodeBlock(key, UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)) {
 						//
 						continue;

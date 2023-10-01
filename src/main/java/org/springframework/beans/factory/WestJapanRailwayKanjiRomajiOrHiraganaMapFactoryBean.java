@@ -276,7 +276,7 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends StringM
 				} // if
 					//
 				Util.add(triples = ObjectUtils.getIfNull(triples, ArrayList::new),
-						new ImmutableTriple<>(kanji, key, en.getValue()));
+						new ImmutableTriple<>(kanji, key, Util.getValue(en)));
 				//
 			} // for
 				//
