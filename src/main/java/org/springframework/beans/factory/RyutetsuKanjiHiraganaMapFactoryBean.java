@@ -222,7 +222,11 @@ public class RyutetsuKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Stri
 		@Note("Kanji")
 		private String kanji = null;
 
-		private String hiragana, romaji = null;
+		@Note("Hiragana")
+		private String hiragana = null;
+
+		@Note("Romaji")
+		private String romaji = null;
 
 	}
 
