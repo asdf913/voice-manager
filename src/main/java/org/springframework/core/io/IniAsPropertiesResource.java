@@ -299,6 +299,7 @@ public class IniAsPropertiesResource implements Resource, ApplicationEventPublis
 		//
 	}
 
+	@Nullable
 	private static <T, U, R, E extends Throwable> R testAndApply(final BiPredicate<T, U> predicate, final T t,
 			final U u, final BiFunction<T, U, R> functionTrue, @Nullable final BiFunction<T, U, R> functionFalse)
 			throws E {
