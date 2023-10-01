@@ -6,6 +6,7 @@ import javax.annotation.Nullable;
 
 public interface Util {
 
+	@Nullable
 	static String getName(@Nullable final Member instance) {
 		return instance != null ? instance.getName() : null;
 	}
