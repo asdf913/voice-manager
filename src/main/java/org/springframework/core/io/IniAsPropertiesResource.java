@@ -309,7 +309,7 @@ public class IniAsPropertiesResource implements Resource, ApplicationEventPublis
 		return instance != null && instance.test(t, u);
 	}
 
-	private static <T, U, R> R apply(final BiFunction<T, U, R> instance, final T t, final U u) {
+	private static <T, U, R> R apply(@Nullable final BiFunction<T, U, R> instance, final T t, final U u) {
 		return instance != null ? instance.apply(t, u) : null;
 	}
 
