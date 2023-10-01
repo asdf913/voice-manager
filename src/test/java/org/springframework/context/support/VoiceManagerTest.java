@@ -147,6 +147,7 @@ import org.apache.bcel.classfile.ConstantPool;
 import org.apache.bcel.classfile.FieldOrMethod;
 import org.apache.bcel.classfile.FieldOrMethodUtil;
 import org.apache.bcel.classfile.JavaClass;
+import org.apache.bcel.classfile.JavaClassUtil;
 import org.apache.bcel.generic.ATHROW;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.ConstantPushInstruction;
@@ -214,7 +215,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
-import org.jsoup.helper.HttpConnection;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.AssertionsUtil;
@@ -2702,9 +2702,7 @@ class VoiceManagerTest {
 			final JavaClass javaClass = ClassParserUtil
 					.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null));
 			//
-			final org.apache.bcel.classfile.Method m = javaClass != null
-					? testAndApply(Objects::nonNull, method, javaClass::getMethod, null)
-					: null;
+			final org.apache.bcel.classfile.Method m = JavaClassUtil.getMethod(javaClass, method);
 			//
 			final Instruction[] instructions = InstructionListUtil.getInstructions(MethodGenUtil
 					.getInstructionList(testAndApply(Objects::nonNull, m, x -> new MethodGen(x, null, null), null)));
@@ -9905,17 +9903,25 @@ class VoiceManagerTest {
 			//
 			// java.io.Console.writer()
 			//
-			final JavaClass javaClass = ClassParserUtil
-					.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null));
-			//
-			return Objects.equals(Arrays.asList(INVOKESTATIC.class, ATHROW.class), new FailableStream<>(testAndApply(
-					Objects::nonNull,
-					InstructionListUtil.getInstructions(MethodGenUtil.getInstructionList(testAndApply(Objects::nonNull,
-							javaClass != null
-									? javaClass.getMethod(clz != null ? clz.getDeclaredMethod("writer") : null)
-									: null,
-							x -> new MethodGen(x, null, null), null))),
-					Arrays::stream, null)).map(x -> getClass(x)).collect(Collectors.toList()));
+			return Objects
+					.equals(Arrays.asList(INVOKESTATIC.class, ATHROW.class),
+							new FailableStream<>(
+									testAndApply(Objects::nonNull,
+											InstructionListUtil
+													.getInstructions(MethodGenUtil
+															.getInstructionList(testAndApply(Objects::nonNull,
+																	JavaClassUtil.getMethod(
+																			ClassParserUtil.parse(
+																					testAndApply(Objects::nonNull, is,
+																							x -> new ClassParser(x,
+																									null),
+																							null)),
+																			clz != null
+																					? clz.getDeclaredMethod("writer")
+																					: null),
+																	x -> new MethodGen(x, null, null), null))),
+											Arrays::stream, null))
+									.map(x -> getClass(x)).collect(Collectors.toList()));
 			//
 		} // try
 			//
@@ -9983,21 +9989,23 @@ class VoiceManagerTest {
 			//
 			// java.io.Console.readLine(java.lang.String,java.lang.Object...)
 			//
-			final JavaClass javaClass = ClassParserUtil
-					.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null));
-			//
 			return Objects
 					.equals(Arrays.asList(INVOKESTATIC.class, ATHROW.class),
 							new FailableStream<>(
 									testAndApply(Objects::nonNull,
-											InstructionListUtil.getInstructions(MethodGenUtil
-													.getInstructionList(testAndApply(Objects::nonNull, javaClass != null
-															? javaClass
-																	.getMethod(clz != null
-																			? clz.getDeclaredMethod("readLine",
-																					String.class, Object[].class)
-																			: null)
-															: null, x -> new MethodGen(x, null, null), null))),
+											InstructionListUtil
+													.getInstructions(
+															MethodGenUtil.getInstructionList(testAndApply(
+																	Objects::nonNull, JavaClassUtil.getMethod(
+																			ClassParserUtil.parse(
+																					testAndApply(Objects::nonNull, is,
+																							x -> new ClassParser(x,
+																									null),
+																							null)),
+																			clz != null ? clz.getDeclaredMethod(
+																					"readLine", String.class,
+																					Object[].class) : null),
+																	x -> new MethodGen(x, null, null), null))),
 											Arrays::stream, null))
 									.map(x -> getClass(x)).collect(Collectors.toList()));
 			//

@@ -27,6 +27,7 @@ import org.apache.bcel.classfile.ClassParserUtil;
 import org.apache.bcel.classfile.ConstantPool;
 import org.apache.bcel.classfile.FieldOrMethodUtil;
 import org.apache.bcel.classfile.JavaClass;
+import org.apache.bcel.classfile.JavaClassUtil;
 import org.apache.bcel.generic.ATHROW;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.DUP;
@@ -261,10 +262,9 @@ public class Main {
 				? clz.getResourceAsStream(String.format("/%1$s.class", StringUtils.replace(getName(clz), ".", "/")))
 				: null) {
 			//
-			final JavaClass javaClass = ClassParserUtil
-					.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null));
-			//
-			final org.apache.bcel.classfile.Method m = javaClass != null ? javaClass.getMethod(method) : null;
+			final org.apache.bcel.classfile.Method m = JavaClassUtil.getMethod(
+					ClassParserUtil.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null)),
+					method);
 			//
 			final Instruction[] ins = InstructionListUtil.getInstructions(MethodGenUtil
 					.getInstructionList(testAndApply(Objects::nonNull, m, x -> new MethodGen(x, null, null), null)));

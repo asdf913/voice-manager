@@ -16,7 +16,7 @@ import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.ClassParserUtil;
 import org.apache.bcel.classfile.ConstantPool;
 import org.apache.bcel.classfile.FieldOrMethodUtil;
-import org.apache.bcel.classfile.JavaClass;
+import org.apache.bcel.classfile.JavaClassUtil;
 import org.apache.bcel.generic.ATHROW;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.IFNE;
@@ -68,12 +68,9 @@ public interface ProtocolUtil {
 			//
 			// org.jsoup.helper.HttpConnection$Response.execute(org.jsoup.helper.HttpConnection$Request,org.jsoup.helper.HttpConnection$Response)
 			//
-			final JavaClass javaClass = ClassParserUtil
-					.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null));
-			//
-			final org.apache.bcel.classfile.Method m = javaClass != null ? javaClass.getMethod(
-					getDeclaredMethod(clz, "execute", HttpConnection.Request.class, HttpConnection.Response.class))
-					: null;
+			final org.apache.bcel.classfile.Method m = JavaClassUtil.getMethod(
+					ClassParserUtil.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null)),
+					getDeclaredMethod(clz, "execute", HttpConnection.Request.class, HttpConnection.Response.class));
 			//
 			return getAllowProtocols(
 					InstructionListUtil.getInstructions(MethodGenUtil.getInstructionList(
