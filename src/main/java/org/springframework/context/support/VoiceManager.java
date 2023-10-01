@@ -1148,7 +1148,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static boolean isAllAttributesMatched(final Map<?, ?> attributes, final AttributeAccessor aa) {
+	private static boolean isAllAttributesMatched(@Nullable final Map<?, ?> attributes,
+			@Nullable final AttributeAccessor aa) {
 		//
 		if (attributes != null && iterator(attributes.entrySet()) != null) {
 			//
