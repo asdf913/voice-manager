@@ -89,7 +89,7 @@ public class RyutetsuKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Stri
 	}
 
 	@Nullable
-	private Entry<IValue0<String>, IValue0<String>> createEntry(final Field[] fs, final Object v) {
+	private Entry<IValue0<String>, IValue0<String>> createEntry(@Nullable final Field[] fs, final Object v) {
 		//
 		Field f = null;
 		//
@@ -135,7 +135,7 @@ public class RyutetsuKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Stri
 	}
 
 	@Nullable
-	private static List<KanjiHiraganaRomaji> createKanjiHiraganaRomajiList(final List<Element> es) {
+	private static List<KanjiHiraganaRomaji> createKanjiHiraganaRomajiList(@Nullable final List<Element> es) {
 		//
 		KanjiHiraganaRomaji khr = null;
 		//
