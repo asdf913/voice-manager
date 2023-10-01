@@ -49,7 +49,7 @@ public class ToykoMetroKanjiHiraganaMapFactoryBean extends StringMapFromResource
 	}
 
 	@Nullable
-	private static Map<String, String> getObject(@Nullable final List<Element> es) throws IllegalAccessException {
+	private static Map<String, String> getObject(@Nullable final List<Element> es) {
 		//
 		List<Node> childNodes = null;
 		//
