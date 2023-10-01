@@ -1,6 +1,7 @@
 package org.springframework.beans.factory;
 
 import java.lang.Character.UnicodeBlock;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -8,6 +9,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Map.Entry;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
@@ -19,6 +21,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,11 +29,15 @@ import org.junit.jupiter.api.Test;
 import org.meeuw.functional.Predicates;
 
 import io.github.toolfactory.narcissus.Narcissus;
+import javassist.util.proxy.MethodHandler;
+import javassist.util.proxy.ProxyFactory;
+import javassist.util.proxy.ProxyObject;
 
 class RyutetsuKanjiHiraganaMapFactoryBeanTest {
 
 	private static Method METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_GET_UNICODE_BLOCKS,
-			METHOD_TEST_AND_ACCEPT, METHOD_CREATE_KANJI_HIRAGANA_ROMAJI_LIST, METHOD_CREATE_ENTRY = null;
+			METHOD_TEST_AND_ACCEPT, METHOD_CREATE_KANJI_HIRAGANA_ROMAJI_LIST, METHOD_CREATE_ENTRY,
+			METHOD_SET_HIRAGANA_KANJI_ROMAJI = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -53,6 +60,37 @@ class RyutetsuKanjiHiraganaMapFactoryBeanTest {
 		//
 		(METHOD_CREATE_ENTRY = clz.getDeclaredMethod("createEntry", Field[].class, Object.class)).setAccessible(true);
 		//
+		(METHOD_SET_HIRAGANA_KANJI_ROMAJI = clz.getDeclaredMethod("setHiraganaKanjiRomaji",
+				Class.forName(
+						"org.springframework.beans.factory.RyutetsuKanjiHiraganaMapFactoryBean$KanjiHiraganaRomaji"),
+				Iterable.class)).setAccessible(true);
+		//
+	}
+
+	private static class MH implements MethodHandler {
+
+		private String nodeName = null;
+
+		@Override
+		public Object invoke(final Object self, final Method thisMethod, final Method proceed, final Object[] args)
+				throws Throwable {
+			//
+			final String methodName = thisMethod != null ? thisMethod.getName() : null;
+			//
+			if (self instanceof Node) {
+				//
+				if (Objects.equals(methodName, "nodeName")) {
+					//
+					return nodeName;
+					//
+				} // if
+					//
+			} // if
+				//
+			throw new Throwable(methodName);
+			//
+		}
+
 	}
 
 	private RyutetsuKanjiHiraganaMapFactoryBean instance = null;
@@ -160,7 +198,7 @@ class RyutetsuKanjiHiraganaMapFactoryBeanTest {
 	@Test
 	void testCreateKanjiHiraganaRomajiList() throws Throwable {
 		//
-		Assertions.assertNull(createKanjiHiraganaRomajiList(
+		Assertions.assertNotNull(createKanjiHiraganaRomajiList(
 				Arrays.asList(null, Util.cast(Element.class, Narcissus.allocateInstance(Element.class)))));
 		//
 	}
@@ -224,6 +262,55 @@ class RyutetsuKanjiHiraganaMapFactoryBeanTest {
 				return (Entry) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetHiraganaKanjiRomaji()
+			throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+		//
+		Assertions.assertDoesNotThrow(() -> setHiraganaKanjiRomaji(null, Collections.singleton(null)));
+		//
+		final MH mh = new MH();
+		//
+		final Iterable<Node> nodes = Collections.singleton(createProxy(Node.class, mh));
+		//
+		Assertions.assertDoesNotThrow(() -> setHiraganaKanjiRomaji(null, nodes));
+		//
+		mh.nodeName = "a";
+		//
+		Assertions.assertDoesNotThrow(() -> setHiraganaKanjiRomaji(null, nodes));
+		//
+	}
+
+	private static <T> T createProxy(final Class<T> clz, final MethodHandler mh)
+			throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+
+		final ProxyFactory proxyFactory = new ProxyFactory();
+		//
+		proxyFactory.setSuperclass(clz);
+		//
+		final Class<?> c = proxyFactory.createClass();
+		//
+		final Constructor<?> constructor = c != null ? c.getDeclaredConstructor() : null;
+		//
+		final Object instance = constructor != null ? constructor.newInstance() : null;
+		//
+		if (instance instanceof ProxyObject) {
+			//
+			((ProxyObject) instance).setHandler(mh);
+			//
+		} // if
+			//
+		return Util.cast(clz, instance);
+		//
+	}
+
+	private static void setHiraganaKanjiRomaji(final Object khr, final Iterable<Node> childNodes) throws Throwable {
+		try {
+			METHOD_SET_HIRAGANA_KANJI_ROMAJI.invoke(null, khr, childNodes);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

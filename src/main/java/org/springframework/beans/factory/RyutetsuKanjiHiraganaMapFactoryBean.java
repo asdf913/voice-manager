@@ -141,25 +141,29 @@ public class RyutetsuKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Stri
 	@Nullable
 	private static List<KanjiHiraganaRomaji> createKanjiHiraganaRomajiList(final List<Element> es) {
 		//
-		List<Node> childNodes = null;
-		//
 		KanjiHiraganaRomaji khr = null;
-		//
-		TextNode textNode = null;
-		//
-		Element e = null;
 		//
 		List<KanjiHiraganaRomaji> khrs = null;
 		//
 		for (int i = 0; es != null && i < es.size(); i++) {
 			//
-			if ((childNodes = NodeUtil.childNodes(es.get(i))) == null) {
-				//
-				continue;
-				//
-			} // if
-				//
-			khr = new KanjiHiraganaRomaji();
+			setHiraganaKanjiRomaji(khr = new KanjiHiraganaRomaji(), NodeUtil.childNodes(es.get(i)));
+			//
+			Util.add(khrs = ObjectUtils.getIfNull(khrs, ArrayList::new), khr);
+			//
+		} // for
+			//
+		return khrs;
+		//
+	}
+
+	private static void setHiraganaKanjiRomaji(final KanjiHiraganaRomaji khr, final Iterable<Node> childNodes) {
+		//
+		if (childNodes != null && childNodes.iterator() != null) {
+			//
+			TextNode textNode = null;
+			//
+			Element e = null;
 			//
 			for (final Node node : childNodes) {
 				//
@@ -169,16 +173,16 @@ public class RyutetsuKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Stri
 					//
 				} // if
 					//
-				if (StringUtils.equalsIgnoreCase(node.nodeName(), "a") && khr.romaji == null) {
+				if (StringUtils.equalsIgnoreCase(node.nodeName(), "a") && khr != null && khr.romaji == null) {
 					//
 					khr.romaji = NodeUtil.attr(node, "name");
 					//
-				} else if ((textNode = Util.cast(TextNode.class, node)) != null && khr.kanji == null) {
+				} else if ((textNode = Util.cast(TextNode.class, node)) != null && khr != null && khr.kanji == null) {
 					//
 					khr.kanji = textNode.text();
 					//
 				} else if (StringUtils.equalsIgnoreCase(node.nodeName(), "span")
-						&& (e = Util.cast(Element.class, node)) != null && khr.hiragana == null) {
+						&& (e = Util.cast(Element.class, node)) != null && khr != null && khr.hiragana == null) {
 					//
 					khr.hiragana = StringUtils.replaceChars(ElementUtil.text(e), "()", "");
 					//
@@ -186,12 +190,8 @@ public class RyutetsuKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Stri
 					//
 			} // for
 				//
-			Util.add(khrs = ObjectUtils.getIfNull(khrs, ArrayList::new), khr);
+		} // if
 			//
-		} // for
-			//
-		return khrs;
-		//
 	}
 
 	private static <T, U, R, E extends Throwable> R testAndApply(@Nullable final BiPredicate<T, U> predicate, final T t,
