@@ -75,7 +75,7 @@ public class RyutetsuKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Stri
 		//
 	}
 
-	private Map<String, String> createMap(final List<KanjiHiraganaRomaji> khrs) {
+	private Map<String, String> createMap(@Nullable final List<KanjiHiraganaRomaji> khrs) {
 		//
 		Field[] fs = null;
 		//
