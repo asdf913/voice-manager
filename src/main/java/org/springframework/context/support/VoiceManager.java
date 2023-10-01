@@ -4463,10 +4463,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		try {
 			//
+			final FailableConsumer<Map<?, ?>, IllegalAccessException> consumer = x -> putAll((Map) fileFormatDetails,
+					x);
+			//
 			testAndAccept(Objects::nonNull,
 					cast(Map.class,
 							FieldUtils.readDeclaredStaticField(DatabaseImpl.class, "FILE_FORMAT_DETAILS", true)),
-					x -> putAll(fileFormatDetails, x));
+					consumer);
 			//
 		} catch (final IllegalAccessException e) {
 			//
