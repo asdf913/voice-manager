@@ -4,6 +4,7 @@ import java.lang.Character.UnicodeBlock;
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +33,8 @@ import org.jsoup.nodes.ElementUtil;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.NodeUtil;
 import org.jsoup.nodes.TextNode;
+
+import io.github.toolfactory.narcissus.Narcissus;
 
 public class RyutetsuKanjiHiraganaMapFactoryBean implements FactoryBean<Map<String, String>> {
 
@@ -102,26 +105,20 @@ public class RyutetsuKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Stri
 		//
 		IValue0<String> key = null, value = null;
 		//
+		Class<?> clz = null;
+		//
 		for (int i = 0; fs != null && i < fs.length; i++) {
 			//
-			if (!Util.isAssignableFrom(Util.getDeclaringClass(f = fs[i]), Util.getClass(v))) {
+			if (!Util.isAssignableFrom(Util.getDeclaringClass(f = fs[i]), clz = Util.getClass(v))
+					|| Util.contains(Arrays.asList(Boolean.class), clz)) {
 				//
 				continue;
 				//
 			} // if
 				//
-			try {
-				//
-				s = Util.toString(
-						testAndApply((a, b) -> b != null, f, v, (a, b) -> FieldUtils.readField(a, b, true), null));
-				//
-			} catch (final IllegalAccessException iae) {
-				//
-				throw new RuntimeException(iae);
-				//
-			} // try
-				//
-			if ((unicodeBlocks = getUnicodeBlocks(Util.toCharArray(s))) != null && unicodeBlocks.size() == 1) {
+			if ((unicodeBlocks = getUnicodeBlocks(Util.toCharArray(s = Util.toString(
+					testAndApply((a, b) -> b != null, f, v, (a, b) -> Narcissus.getObjectField(b, a), null))))) != null
+					&& unicodeBlocks.size() == 1) {
 				//
 				if (keyUnicodeBlock == (unicodeBlock = unicodeBlocks.get(0))) {
 					//

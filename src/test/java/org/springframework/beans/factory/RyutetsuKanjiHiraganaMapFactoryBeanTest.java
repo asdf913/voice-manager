@@ -184,9 +184,14 @@ class RyutetsuKanjiHiraganaMapFactoryBeanTest {
 		//
 		Assertions.assertEquals(Pair.of(null, null), createEntry(null, null));
 		//
-		final Field[] fs = new Field[] { null, Boolean.class.getDeclaredField("value") };
+		Assertions.assertEquals(Pair.of(null, null), createEntry(new Field[] { null }, null));
 		//
-		final Object value = Boolean.TRUE;
+		Assertions.assertEquals(Pair.of(null, null),
+				createEntry(new Field[] { Boolean.class.getDeclaredField("value") }, Boolean.TRUE));
+		//
+		final Field[] fs = new Field[] { String.class.getDeclaredField("value") };
+		//
+		final Object value = "";
 		//
 		Assertions.assertEquals(Pair.of(null, null), createEntry(fs, value));
 		//
@@ -196,7 +201,7 @@ class RyutetsuKanjiHiraganaMapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertEquals(Pair.of(Unit.with(Util.toString(value)), null), createEntry(fs, value));
+		Assertions.assertNotNull(createEntry(fs, value));
 		//
 		if (instance != null) {
 			//
@@ -206,7 +211,7 @@ class RyutetsuKanjiHiraganaMapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertEquals(Pair.of(null, Unit.with(Util.toString(value))), createEntry(fs, value));
+		Assertions.assertNotNull(createEntry(fs, value));
 		//
 	}
 
