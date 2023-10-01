@@ -97,8 +97,8 @@ class JlptLevelGuiTest {
 
 	private static final String EMPTY = "";
 
-	private static Method METHOD_CAST, METHOD_TO_ARRAY_COLLECTION, METHOD_TO_ARRAY_INT_LIST, METHOD_GET_CLASS,
-			METHOD_TEST, METHOD_GET_PREFERRED_SIZE, METHOD_SET_PREFERRED_WIDTH, METHOD_FOR_NAME, METHOD_GET_TEXT,
+	private static Method METHOD_CAST, METHOD_TO_ARRAY_COLLECTION, METHOD_TO_ARRAY_INT_LIST, METHOD_TEST,
+			METHOD_GET_PREFERRED_SIZE, METHOD_SET_PREFERRED_WIDTH, METHOD_FOR_NAME, METHOD_GET_TEXT,
 			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_TEST_AND_APPLY, METHOD_SET_CONTENTS, METHOD_ADD_ACTION_LISTENER,
 			METHOD_GET_DECLARED_METHODS, METHOD_FILTER, METHOD_TO_LIST, METHOD_INVOKE, METHOD_IIF,
 			METHOD_GET_PARAMETER_TYPES, METHOD_RUN, METHOD_SET_JLPT_VOCABULARY_AND_LEVEL, METHOD_STREAM, METHOD_MAP,
@@ -117,8 +117,6 @@ class JlptLevelGuiTest {
 				.setAccessible(true);
 		//
 		(METHOD_TO_ARRAY_INT_LIST = clz.getDeclaredMethod("toArray", IntList.class)).setAccessible(true);
-		//
-		(METHOD_GET_CLASS = clz.getDeclaredMethod("getClass", Object.class)).setAccessible(true);
 		//
 		(METHOD_TEST = clz.getDeclaredMethod("test", Predicate.class, Object.class)).setAccessible(true);
 		//
@@ -687,28 +685,7 @@ class JlptLevelGuiTest {
 			} else if (obj instanceof int[]) {
 				return (int[]) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetClass() throws Throwable {
-		//
-		Assertions.assertNull(getClass(null));
-		//
-	}
-
-	private static Class<?> getClass(final Object instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_CLASS.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Class<?>) {
-				return (Class<?>) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -731,7 +708,7 @@ class JlptLevelGuiTest {
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -752,7 +729,7 @@ class JlptLevelGuiTest {
 			} else if (obj instanceof Dimension) {
 				return (Dimension) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -818,7 +795,7 @@ class JlptLevelGuiTest {
 			} else if (obj instanceof Class<?>) {
 				return (Class<?>) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -841,7 +818,7 @@ class JlptLevelGuiTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -854,7 +831,7 @@ class JlptLevelGuiTest {
 		//
 		final Toolkit toolkit = Toolkit.getDefaultToolkit();
 		//
-		final Class<?> clz = getClass(toolkit);
+		final Class<?> clz = Util.getClass(toolkit);
 		//
 		final Class<? extends Throwable> throwableClassByGetSystemClipboard = getThrowingThrowableClass(clz,
 				clz != null ? clz.getDeclaredMethod("getSystemClipboard") : null);
@@ -866,7 +843,7 @@ class JlptLevelGuiTest {
 			final org.junit.jupiter.api.function.Executable executable = () -> getSystemClipboard(toolkit);
 			//
 			if (Objects.equals("sun.nio.fs.WindowsFileSystemProvider",
-					getName(getClass(fs != null ? fs.provider() : null)))) {
+					getName(Util.getClass(fs != null ? fs.provider() : null)))) {
 				//
 				AssertionsUtil.assertThrowsAndEquals(throwableClassByGetSystemClipboard, "{}", executable);
 				//
@@ -923,7 +900,7 @@ class JlptLevelGuiTest {
 			if (!Objects.equals(
 					FailableStreamUtil.map(
 							new FailableStream<>(testAndApply(Objects::nonNull, instructions, Arrays::stream, null)),
-							JlptLevelGuiTest::getClass).collect(Collectors.toList()),
+							x -> Util.getClass(x)).collect(Collectors.toList()),
 					Arrays.asList(NEW.class, DUP.class, INVOKESPECIAL.class, ATHROW.class))) {
 				//
 				return null;
@@ -970,7 +947,7 @@ class JlptLevelGuiTest {
 			} else if (obj instanceof Clipboard) {
 				return (Clipboard) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1027,7 +1004,7 @@ class JlptLevelGuiTest {
 			} else if (obj instanceof Method[]) {
 				return (Method[]) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1053,7 +1030,7 @@ class JlptLevelGuiTest {
 			} else if (obj instanceof Stream) {
 				return (Stream) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1074,7 +1051,7 @@ class JlptLevelGuiTest {
 			} else if (obj instanceof List) {
 				return (List) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1125,7 +1102,7 @@ class JlptLevelGuiTest {
 			} else if (obj instanceof Class<?>[]) {
 				return (Class<?>[]) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1178,7 +1155,7 @@ class JlptLevelGuiTest {
 			} else if (obj instanceof Stream) {
 				return (Stream) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1204,7 +1181,7 @@ class JlptLevelGuiTest {
 			} else if (obj instanceof Stream) {
 				return (Stream) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1225,7 +1202,7 @@ class JlptLevelGuiTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1335,7 +1312,7 @@ class JlptLevelGuiTest {
 			} else if (obj instanceof Component) {
 				return (Component) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1392,7 +1369,7 @@ class JlptLevelGuiTest {
 			} else if (obj instanceof URI) {
 				return (URI) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1430,7 +1407,7 @@ class JlptLevelGuiTest {
 			} else if (obj instanceof Stream) {
 				return (Stream) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1456,7 +1433,7 @@ class JlptLevelGuiTest {
 			} else if (obj instanceof Optional) {
 				return (Optional) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

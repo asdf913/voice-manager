@@ -167,7 +167,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 			//
 			// The below check is for "-Djava.awt.headless=true"
 			//
-		final List<Field> fs = toList(filter(stream(FieldUtils.getAllFieldsList(getClass(this))),
+		final List<Field> fs = toList(filter(stream(FieldUtils.getAllFieldsList(Util.getClass(this))),
 				f -> Objects.equals(Util.getName(f), "component")));
 		//
 		final Field f = IterableUtils.size(fs) == 1 ? IterableUtils.get(fs, 0) : null;
@@ -259,7 +259,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 	private static <T> Optional<T> max(@Nullable final Stream<T> instance,
 			@Nullable final Comparator<? super T> comparator) {
 		//
-		return instance != null && (Proxy.isProxyClass(getClass(instance)) || comparator != null)
+		return instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || comparator != null)
 				? instance.max(comparator)
 				: null;
 		//
@@ -642,7 +642,8 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 	private static <T, R> Stream<R> map(@Nullable final Stream<T> instance,
 			@Nullable final Function<? super T, ? extends R> mapper) {
 		//
-		return instance != null && (Proxy.isProxyClass(getClass(instance)) || mapper != null) ? instance.map(mapper)
+		return instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || mapper != null)
+				? instance.map(mapper)
 				: null;
 		//
 	}
@@ -669,7 +670,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 
 	private static <T> void forEach(@Nullable final Iterable<T> items, @Nullable final Consumer<? super T> action) {
 		//
-		if (iterator(items) != null && (action != null || Proxy.isProxyClass(getClass(items)))) {
+		if (iterator(items) != null && (action != null || Proxy.isProxyClass(Util.getClass(items)))) {
 			//
 			for (final T item : items) {
 				//
@@ -724,7 +725,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 	private static <T> Stream<T> filter(@Nullable final Stream<T> instance,
 			@Nullable final Predicate<? super T> predicate) {
 		//
-		return instance != null && (predicate != null || Proxy.isProxyClass(getClass(instance)))
+		return instance != null && (predicate != null || Proxy.isProxyClass(Util.getClass(instance)))
 				? instance.filter(predicate)
 				: null;
 		//
@@ -802,14 +803,10 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 	@Nullable
 	private static <T> T[] toArray(@Nullable final Collection<T> instance, @Nullable final T[] array) {
 		//
-		return instance != null && (array != null || Proxy.isProxyClass(getClass(instance))) ? instance.toArray(array)
+		return instance != null && (array != null || Proxy.isProxyClass(Util.getClass(instance)))
+				? instance.toArray(array)
 				: null;
 		//
-	}
-
-	@Nullable
-	private static Class<?> getClass(@Nullable final Object instance) {
-		return instance != null ? instance.getClass() : null;
 	}
 
 	@Nullable

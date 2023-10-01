@@ -192,7 +192,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 	private static <T> Stream<T> filter(@Nullable final Stream<T> instance,
 			@Nullable final Predicate<? super T> predicate) {
 		//
-		return instance != null && (predicate != null || Proxy.isProxyClass(getClass(instance)))
+		return instance != null && (predicate != null || Proxy.isProxyClass(Util.getClass(instance)))
 				? instance.filter(predicate)
 				: null;
 		//
@@ -202,7 +202,8 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 	private static <T, R> Stream<R> map(@Nullable final Stream<T> instance,
 			@Nullable final Function<? super T, ? extends R> mapper) {
 		//
-		return instance != null && (Proxy.isProxyClass(getClass(instance)) || mapper != null) ? instance.map(mapper)
+		return instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || mapper != null)
+				? instance.map(mapper)
 				: null;
 		//
 	}
@@ -217,7 +218,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		//
 		IValue0<List<String>> value = null;
 		//
-		final Class<?> clz = getClass(object);
+		final Class<?> clz = Util.getClass(object);
 		//
 		if (object == null) {
 			//
@@ -300,7 +301,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			// The below check is for "-Djava.awt.headless=true"
 			//
 		final Field f = testAndApply(x -> IterableUtils.size(x) == 1,
-				toList(filter(stream(FieldUtils.getAllFieldsList(getClass(this))),
+				toList(filter(stream(FieldUtils.getAllFieldsList(Util.getClass(this))),
 						x -> Objects.equals(getName(x), "component"))),
 				x -> IterableUtils.get(x, 0), null);
 		//
@@ -471,7 +472,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 	private static <T> Optional<T> max(@Nullable final Stream<T> instance,
 			@Nullable final Comparator<? super T> comparator) {
 		//
-		return instance != null && (Proxy.isProxyClass(getClass(instance)) || comparator != null)
+		return instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || comparator != null)
 				? instance.max(comparator)
 				: null;
 		//
@@ -503,7 +504,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 										Narcissus.getObjectField(IIORegistry.getDefaultInstance(),
 												getDeclaredField(ServiceRegistry.class, "categoryMap"))),
 								ImageWriterSpi.class),
-						x -> Narcissus.getField(x, getDeclaredField(getClass(x), "map")), null));
+						x -> Narcissus.getField(x, getDeclaredField(Util.getClass(x), "map")), null));
 		//
 		final List<String> classNames = testAndApply(Objects::nonNull,
 				toList(map(stream(imageWriterSpis != null ? imageWriterSpis.keySet() : null),
@@ -528,7 +529,8 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 	@Nullable
 	private static <T> T[] toArray(@Nullable final Collection<T> instance, @Nullable final T[] array) {
 		//
-		return instance != null && (array != null || Proxy.isProxyClass(getClass(instance))) ? instance.toArray(array)
+		return instance != null && (array != null || Proxy.isProxyClass(Util.getClass(instance)))
+				? instance.toArray(array)
 				: null;
 		//
 	}
@@ -605,7 +607,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 	private static <E> void sort(@Nullable final List<E> instance, @Nullable final Comparator<? super E> comparator) {
 		//
 		if (instance != null
-				&& (Proxy.isProxyClass(getClass(instance)) || (instance.size() > 1 && comparator != null))) {
+				&& (Proxy.isProxyClass(Util.getClass(instance)) || (instance.size() > 1 && comparator != null))) {
 			//
 			instance.sort(comparator);
 			//
@@ -910,7 +912,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		try {
 			//
 			raster = testAndApply(Objects::nonNull, pitchAccentImage,
-					x -> Narcissus.getObjectField(x, getDeclaredField(getClass(x), "raster")), null);
+					x -> Narcissus.getObjectField(x, getDeclaredField(Util.getClass(x), "raster")), null);
 			//
 		} catch (final NoSuchFieldException e) {
 			//
@@ -946,7 +948,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		try {
 			//
 			raster = testAndApply(Objects::nonNull, pitchAccentImage,
-					x -> Narcissus.getObjectField(x, getDeclaredField(getClass(x), "raster")), null);
+					x -> Narcissus.getObjectField(x, getDeclaredField(Util.getClass(x), "raster")), null);
 			//
 		} catch (final NoSuchFieldException e) {
 			//
@@ -1020,20 +1022,15 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 	}
 
 	private static <T> void forEach(@Nullable final Iterable<T> instance, @Nullable final Consumer<? super T> action) {
-		if (instance != null && (action != null || Proxy.isProxyClass(getClass(instance)))) {
+		if (instance != null && (action != null || Proxy.isProxyClass(Util.getClass(instance)))) {
 			instance.forEach(action);
 		}
 	}
 
 	private static void forEach(@Nullable final IntStream instance, @Nullable final IntConsumer action) {
-		if (instance != null && (action != null || Proxy.isProxyClass(getClass(instance)))) {
+		if (instance != null && (action != null || Proxy.isProxyClass(Util.getClass(instance)))) {
 			instance.forEach(action);
 		}
-	}
-
-	@Nullable
-	private static Class<?> getClass(@Nullable final Object instance) {
-		return instance != null ? instance.getClass() : null;
 	}
 
 	/**

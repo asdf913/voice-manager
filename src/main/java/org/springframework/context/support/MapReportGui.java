@@ -147,7 +147,7 @@ public class MapReportGui extends JFrame
 			//
 			// The below check is for "-Djava.awt.headless=true"
 			//
-		final List<Field> fs = toList(filter(stream(FieldUtils.getAllFieldsList(getClass(this))),
+		final List<Field> fs = toList(filter(stream(FieldUtils.getAllFieldsList(Util.getClass(this))),
 				f -> f != null && Objects.equals(f.getName(), "component")));
 		//
 		final Field f = IterableUtils.size(fs) == 1 ? IterableUtils.get(fs, 0) : null;
@@ -244,7 +244,7 @@ public class MapReportGui extends JFrame
 	private static <T> Stream<T> filter(@Nullable final Stream<T> instance,
 			@Nullable final Predicate<? super T> predicate) {
 		//
-		return instance != null && (Proxy.isProxyClass(getClass(instance)) || predicate != null)
+		return instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || predicate != null)
 				? instance.filter(predicate)
 				: null;
 		//
@@ -266,11 +266,6 @@ public class MapReportGui extends JFrame
 
 	private static double doubleValue(@Nullable final Number instance, final double defaultValue) {
 		return instance != null ? instance.doubleValue() : defaultValue;
-	}
-
-	@Nullable
-	private static Class<?> getClass(@Nullable final Object instance) {
-		return instance != null ? instance.getClass() : null;
 	}
 
 	@Override
@@ -309,7 +304,8 @@ public class MapReportGui extends JFrame
 	private static <T, R> Stream<R> map(@Nullable final Stream<T> instance,
 			@Nullable final Function<? super T, ? extends R> mapper) {
 		//
-		return instance != null && (Proxy.isProxyClass(getClass(instance)) || mapper != null) ? instance.map(mapper)
+		return instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || mapper != null)
+				? instance.map(mapper)
 				: null;
 		//
 	}
@@ -513,7 +509,7 @@ public class MapReportGui extends JFrame
 	private static <T> IntStream mapToInt(@Nullable final Stream<T> instance,
 			@Nullable final ToIntFunction<? super T> mapper) {
 		//
-		return instance != null && (Proxy.isProxyClass(getClass(instance)) || mapper != null)
+		return instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || mapper != null)
 				? instance.mapToInt(mapper)
 				: null;
 		//

@@ -78,7 +78,7 @@ class JouYouKanjiGuiTest {
 
 	private static Class<?> CLASS_OBJECT_MAP, CLASS_IH = null;
 
-	private static Method METHOD_GET, METHOD_GET_CLASS, METHOD_GET_DECLARED_FIELDS, METHOD_GET_TYPE, METHOD_NAME,
+	private static Method METHOD_GET, METHOD_GET_DECLARED_FIELDS, METHOD_GET_TYPE, METHOD_NAME,
 			METHOD_GET_ECSS_VERSION_BY_MAJOR, METHOD_ADD_JOU_YOU_KAN_JI_SHEET, METHOD_CAST,
 			METHOD_GET_CSS_DECLARATION_BY_ATTRIBUTE_AND_CSS_PROPERTY, METHOD_SET_PREFERRED_WIDTH,
 			METHOD_GET_PREFERRED_SIZE, METHOD_TO_LIST, METHOD_CONTAINS, METHOD_ADD, METHOD_SET_SELECTED_ITEM,
@@ -95,8 +95,6 @@ class JouYouKanjiGuiTest {
 		final Class<?> clz = JouYouKanjiGui.class;
 		//
 		(METHOD_GET = clz.getDeclaredMethod("get", Field.class, Object.class)).setAccessible(true);
-		//
-		(METHOD_GET_CLASS = clz.getDeclaredMethod("getClass", Object.class)).setAccessible(true);
 		//
 		(METHOD_GET_DECLARED_FIELDS = clz.getDeclaredMethod("getDeclaredFields", Class.class)).setAccessible(true);
 		//
@@ -498,27 +496,6 @@ class JouYouKanjiGuiTest {
 		}
 	}
 
-	@Test
-	void testGetClass() throws Throwable {
-		//
-		Assertions.assertNull(getClass(null));
-		//
-	}
-
-	private static Class<?> getClass(final Object instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_CLASS.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Class<?>) {
-				return (Class<?>) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
 	private static String toString(final Object instance) {
 		return instance != null ? instance.toString() : null;
 	}
@@ -538,7 +515,7 @@ class JouYouKanjiGuiTest {
 			} else if (obj instanceof Field[]) {
 				return (Field[]) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -559,7 +536,7 @@ class JouYouKanjiGuiTest {
 			} else if (obj instanceof Class<?>) {
 				return (Class<?>) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -580,7 +557,7 @@ class JouYouKanjiGuiTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -607,7 +584,7 @@ class JouYouKanjiGuiTest {
 			} else if (obj instanceof IValue0) {
 				return (IValue0) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -812,7 +789,7 @@ class JouYouKanjiGuiTest {
 			} else if (obj instanceof CSSDeclaration) {
 				return (CSSDeclaration) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -869,7 +846,7 @@ class JouYouKanjiGuiTest {
 			} else if (obj instanceof Dimension) {
 				return (Dimension) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -890,7 +867,7 @@ class JouYouKanjiGuiTest {
 			} else if (obj instanceof List) {
 				return (List) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -911,7 +888,7 @@ class JouYouKanjiGuiTest {
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -960,7 +937,7 @@ class JouYouKanjiGuiTest {
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -999,7 +976,7 @@ class JouYouKanjiGuiTest {
 			} else if (obj instanceof List) {
 				return (List) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1051,7 +1028,7 @@ class JouYouKanjiGuiTest {
 			} else if (obj instanceof Matcher) {
 				return (Matcher) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1086,7 +1063,7 @@ class JouYouKanjiGuiTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1107,7 +1084,7 @@ class JouYouKanjiGuiTest {
 			} else if (obj instanceof String) {
 				return (IndexedColorMap) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1129,7 +1106,7 @@ class JouYouKanjiGuiTest {
 			} else if (obj instanceof StylesTable) {
 				return (StylesTable) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1153,7 +1130,7 @@ class JouYouKanjiGuiTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1172,7 +1149,7 @@ class JouYouKanjiGuiTest {
 			if (obj instanceof Integer) {
 				return ((Integer) obj).intValue();
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1196,7 +1173,7 @@ class JouYouKanjiGuiTest {
 			} else if (obj instanceof Long) {
 				return (Long) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1255,7 +1232,7 @@ class JouYouKanjiGuiTest {
 			} else if (obj instanceof Spliterator) {
 				return (Spliterator) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1318,7 +1295,7 @@ class JouYouKanjiGuiTest {
 			} else if (obj instanceof Stream) {
 				return (Stream) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1344,7 +1321,7 @@ class JouYouKanjiGuiTest {
 			} else if (obj instanceof IntStream) {
 				return (IntStream) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1365,7 +1342,7 @@ class JouYouKanjiGuiTest {
 			} else if (obj instanceof OptionalInt) {
 				return (OptionalInt) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1384,7 +1361,7 @@ class JouYouKanjiGuiTest {
 			if (obj instanceof Integer) {
 				return ((Integer) obj).intValue();
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1410,7 +1387,7 @@ class JouYouKanjiGuiTest {
 			} else if (obj instanceof Stream) {
 				return (Stream) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1480,7 +1457,7 @@ class JouYouKanjiGuiTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1501,7 +1478,7 @@ class JouYouKanjiGuiTest {
 			} else if (obj instanceof Integer) {
 				return (Integer) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

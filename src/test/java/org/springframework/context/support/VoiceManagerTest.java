@@ -314,7 +314,7 @@ class VoiceManagerTest {
 			METHOD_GET_SELECTED_ITEM, METHOD_MATCHER, METHOD_MATCHES, METHOD_SET_VALUE_J_PROGRESS_BAR,
 			METHOD_SET_VALUE_J_SLIDER, METHOD_SET_STRING_J_PROGRESS_BAR, METHOD_SET_STRING_COMMENT,
 			METHOD_SET_TOOL_TIP_TEXT, METHOD_FORMAT, METHOD_CONTAINS_KEY_MAP, METHOD_CONTAINS_KEY_MULTI_MAP,
-			METHOD_VALUE_OF1, METHOD_VALUE_OF2, METHOD_GET_CLASS, METHOD_CREATE_RANGE, METHOD_GET_PROVIDER_NAME,
+			METHOD_VALUE_OF1, METHOD_VALUE_OF2, METHOD_CREATE_RANGE, METHOD_GET_PROVIDER_NAME,
 			METHOD_GET_PROVIDER_VERSION, METHOD_WRITE_VOICE_TO_FILE, METHOD_GET_MP3_TAG_VALUE_FILE,
 			METHOD_GET_MP3_TAG_VALUE_LIST, METHOD_GET_MP3_TAG_PARIRS_ID3V1, METHOD_GET_METHODS_CLASS,
 			METHOD_COPY_OBJECT_MAP, METHOD_DELETE, METHOD_DELETE_ON_EXIT, METHOD_CONVERT_LANGUAGE_CODE_TO_TEXT,
@@ -561,8 +561,6 @@ class VoiceManagerTest {
 		(METHOD_VALUE_OF1 = clz.getDeclaredMethod("valueOf", String.class)).setAccessible(true);
 		//
 		(METHOD_VALUE_OF2 = clz.getDeclaredMethod("valueOf", String.class, Integer.TYPE)).setAccessible(true);
-		//
-		(METHOD_GET_CLASS = clz.getDeclaredMethod("getClass", Object.class)).setAccessible(true);
 		//
 		(METHOD_CREATE_RANGE = clz.getDeclaredMethod("createRange", Integer.class, Integer.class)).setAccessible(true);
 		//
@@ -1750,7 +1748,7 @@ class VoiceManagerTest {
 					//
 				} // if
 					//
-			} else if (isAssignableFrom(CLASS_BYTE_CONVERTER, VoiceManagerTest.getClass(proxy))) {
+			} else if (isAssignableFrom(CLASS_BYTE_CONVERTER, Util.getClass(proxy))) {
 				//
 				if (Objects.equals(methodName, "convert")) {
 					//
@@ -2473,7 +2471,7 @@ class VoiceManagerTest {
 	@Test
 	void testActionPerformed1() throws Throwable {
 		//
-		final Class<?> clz = getClass(instance != null ? instance.getToolkit() : null);
+		final Class<?> clz = Util.getClass(instance != null ? instance.getToolkit() : null);
 		//
 		final Class<? extends Throwable> throwableClassByGetSystemClipboard = getThrowingThrowableClass(clz,
 				clz != null ? clz.getDeclaredMethod("getSystemClipboard") : null);
@@ -2714,7 +2712,7 @@ class VoiceManagerTest {
 			if (!Objects.equals(
 					FailableStreamUtil.map(
 							new FailableStream<>(testAndApply(Objects::nonNull, instructions, Arrays::stream, null)),
-							VoiceManagerTest::getClass).collect(Collectors.toList()),
+							x -> Util.getClass(x)).collect(Collectors.toList()),
 					Arrays.asList(NEW.class, DUP.class, INVOKESPECIAL.class, ATHROW.class))) {
 				//
 				return null;
@@ -2777,7 +2775,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		final Class<?> clz = getClass(instance != null ? instance.getToolkit() : null);
+		final Class<?> clz = Util.getClass(instance != null ? instance.getToolkit() : null);
 		//
 		final Class<? extends Throwable> throwableClassByGetSystemClipboard = getThrowingThrowableClass(clz,
 				clz != null ? clz.getDeclaredMethod("getSystemClipboard") : null);
@@ -3009,7 +3007,7 @@ class VoiceManagerTest {
 	@Test
 	void testActionPerformed4() throws Throwable {
 		//
-		final Class<?> clz = getClass(instance != null ? instance.getToolkit() : null);
+		final Class<?> clz = Util.getClass(instance != null ? instance.getToolkit() : null);
 		//
 		final Class<? extends Throwable> throwableClassByGetSystemClipboard = getThrowingThrowableClass(clz,
 				clz != null ? clz.getDeclaredMethod("getSystemClipboard") : null);
@@ -3391,7 +3389,7 @@ class VoiceManagerTest {
 		//
 		// jouYouKanJiList
 		//
-		final Field jouYouKanJiList = getDeclaredField(getClass(instance), "jouYouKanJiList");
+		final Field jouYouKanJiList = getDeclaredField(Util.getClass(instance), "jouYouKanJiList");
 		//
 		if (jouYouKanJiList != null) {
 			//
@@ -3554,7 +3552,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Clipboard) {
 				return (Clipboard) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -3607,7 +3605,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -3621,7 +3619,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -3636,7 +3634,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -3665,7 +3663,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof byte[]) {
 				return (byte[]) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -3823,7 +3821,7 @@ class VoiceManagerTest {
 			if (obj instanceof Integer) {
 				return ((Integer) obj).intValue();
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -3842,7 +3840,7 @@ class VoiceManagerTest {
 			if (obj instanceof Long) {
 				return ((Long) obj).longValue();
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -3863,7 +3861,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -3904,7 +3902,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -3998,7 +3996,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Stream) {
 				return (Stream) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -4012,7 +4010,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof IntStream) {
 				return (IntStream) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -4040,7 +4038,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof IntStream) {
 				return (IntStream) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -4066,7 +4064,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof LongStream) {
 				return (LongStream) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -4093,7 +4091,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Optional) {
 				return (Optional) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -4107,7 +4105,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof OptionalInt) {
 				return (OptionalInt) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -4136,7 +4134,7 @@ class VoiceManagerTest {
 			if (obj instanceof Integer) {
 				return ((Integer) obj).intValue();
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -4256,7 +4254,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Workbook) {
 				return (Workbook) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -4273,7 +4271,7 @@ class VoiceManagerTest {
 		//
 		final Object objectMap = Reflection.newProxy(CLASS_OBJECT_MAP, createVoiceManagerIH());
 		//
-		final Class<?> clz = getClass(objectMap);
+		final Class<?> clz = Util.getClass(objectMap);
 		//
 		// org.springframework.context.support.VoiceManager$ObjectMap.setObject(java.lang.Class,java.lang.Object)
 		//
@@ -4333,7 +4331,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Voice) {
 				return (Voice) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -4348,7 +4346,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Voice) {
 				return (Voice) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -4384,7 +4382,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Class) {
 				return (Class) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -4405,7 +4403,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Optional) {
 				return (Optional) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -4426,7 +4424,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Method[]) {
 				return (Method[]) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -4453,7 +4451,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Class) {
 				return (Class<?>) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -4479,7 +4477,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Stream) {
 				return (Stream) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -4515,7 +4513,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Double) {
 				return (Double) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -4599,7 +4597,7 @@ class VoiceManagerTest {
 				"{localizedMessage=Key [class org.springframework.context.support.VoiceManager] Not Found, message=Key [class org.springframework.context.support.VoiceManager] Not Found}",
 				() -> importVoice(objectMap, (File) null, null));
 		//
-		final Class<?> clz = getClass(objectMap);
+		final Class<?> clz = Util.getClass(objectMap);
 		//
 		// org.springframework.context.support.VoiceManager$ObjectMap.setObject(java.lang.Class,java.lang.Object)
 		//
@@ -4769,7 +4767,7 @@ class VoiceManagerTest {
 		//
 		final Object objectMap = Reflection.newProxy(CLASS_OBJECT_MAP, createVoiceManagerIH());
 		//
-		final Class<?> clz = getClass(objectMap);
+		final Class<?> clz = Util.getClass(objectMap);
 		//
 		// org.springframework.context.support.VoiceManager$ObjectMap.setObject(java.lang.Class,java.lang.Object)
 		//
@@ -4909,7 +4907,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof byte[]) {
 				return (byte[]) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -4933,7 +4931,7 @@ class VoiceManagerTest {
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -4974,7 +4972,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -5012,7 +5010,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Matcher) {
 				return (Matcher) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -5031,7 +5029,7 @@ class VoiceManagerTest {
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -5134,7 +5132,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -5157,7 +5155,7 @@ class VoiceManagerTest {
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -5169,7 +5167,7 @@ class VoiceManagerTest {
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -5194,7 +5192,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Integer) {
 				return (Integer) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -5208,21 +5206,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Integer) {
 				return (Integer) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	private static Class<?> getClass(final Object instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_CLASS.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Class<?>) {
-				return (Class<?>) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -5251,7 +5235,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Range) {
 				return (Range) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -5279,7 +5263,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -5293,7 +5277,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -5377,7 +5361,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -5393,7 +5377,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -5425,7 +5409,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof List) {
 				return (List) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -5446,7 +5430,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Method[]) {
 				return (Method[]) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -5543,7 +5527,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -5570,7 +5554,7 @@ class VoiceManagerTest {
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -5660,7 +5644,7 @@ class VoiceManagerTest {
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -5682,7 +5666,7 @@ class VoiceManagerTest {
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -5886,7 +5870,7 @@ class VoiceManagerTest {
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -5898,7 +5882,7 @@ class VoiceManagerTest {
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -5910,7 +5894,7 @@ class VoiceManagerTest {
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -5933,7 +5917,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -5956,7 +5940,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -6019,7 +6003,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Object[]) {
 				return (Object[]) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -6048,7 +6032,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof List) {
 				return (List) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -6069,7 +6053,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Integer) {
 				return (Integer) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -6117,7 +6101,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Integer) {
 				return (Integer) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -6138,7 +6122,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof DataValidationHelper) {
 				return (DataValidationHelper) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -6160,7 +6144,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof DataValidationConstraint) {
 				return (DataValidationConstraint) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -6183,7 +6167,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof DataValidation) {
 				return (DataValidation) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -6222,7 +6206,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Integer) {
 				return (Integer) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -6243,7 +6227,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Field) {
 				return (Field) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -6264,7 +6248,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -6283,7 +6267,7 @@ class VoiceManagerTest {
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -6323,7 +6307,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof File[]) {
 				return (File[]) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -6344,7 +6328,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Class<?>) {
 				return (Class<?>) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -6365,7 +6349,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -6431,7 +6415,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Workbook) {
 				return (Workbook) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -6452,7 +6436,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof List) {
 				return (List) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -6473,7 +6457,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof DocumentBuilder) {
 				return (DocumentBuilder) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -6487,7 +6471,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Document) {
 				return (Document) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -6514,7 +6498,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Element) {
 				return (Element) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -6528,7 +6512,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof NodeList) {
 				return (NodeList) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -6557,7 +6541,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Node) {
 				return (Node) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -6571,7 +6555,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -6598,7 +6582,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -6612,7 +6596,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -6626,7 +6610,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -6651,7 +6635,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -6735,7 +6719,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Workbook) {
 				return (Workbook) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -6757,7 +6741,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof RichTextString) {
 				return (RichTextString) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -6779,7 +6763,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Drawing) {
 				return (Drawing) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -6793,7 +6777,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Comment) {
 				return (Comment) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -6807,7 +6791,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof ClientAnchor) {
 				return (ClientAnchor) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -6908,7 +6892,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof List) {
 				return (List) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -6929,7 +6913,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Field[]) {
 				return (Field[]) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -6950,7 +6934,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Class[]) {
 				return (Class<?>) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -6971,7 +6955,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Package) {
 				return (Package) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -7017,7 +7001,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof URI) {
 				return (URI) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -7031,7 +7015,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof URI) {
 				return (URI) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -7052,7 +7036,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Stopwatch) {
 				return (Stopwatch) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -7073,7 +7057,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Duration) {
 				return (Duration) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -7094,7 +7078,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Class<?>[]) {
 				return (Class<?>[]) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -7127,7 +7111,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof IValue0) {
 				return (IValue0) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -7164,7 +7148,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Integer) {
 				return (Integer) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -7178,7 +7162,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Integer) {
 				return (Integer) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -7192,7 +7176,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Integer) {
 				return (Integer) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -7230,7 +7214,7 @@ class VoiceManagerTest {
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -7257,7 +7241,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -7290,7 +7274,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Multimap) {
 				return (Multimap) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -7313,7 +7297,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Multimap) {
 				return (Multimap) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -7334,7 +7318,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof String[]) {
 				return (String[]) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -7362,7 +7346,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Optional) {
 				return (Optional) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -7375,7 +7359,7 @@ class VoiceManagerTest {
 			if (obj instanceof Long) {
 				return ((Long) obj).longValue();
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -7398,7 +7382,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof StringBuilder) {
 				return (StringBuilder) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -7412,7 +7396,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof StringBuilder) {
 				return (StringBuilder) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -7433,7 +7417,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -7456,7 +7440,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof InputStream) {
 				return (InputStream) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -7486,7 +7470,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Integer) {
 				return (Integer) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -7501,7 +7485,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Integer) {
 				return (Integer) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -7524,7 +7508,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof NamedNodeMap) {
 				return (NamedNodeMap) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -7549,7 +7533,7 @@ class VoiceManagerTest {
 			if (obj instanceof Integer) {
 				return ((Integer) obj).intValue();
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -7572,7 +7556,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Node) {
 				return (Node) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -7594,7 +7578,7 @@ class VoiceManagerTest {
 		final FileSystem fs = FileSystems.getDefault();
 		//
 		return Objects.equals("sun.nio.fs.WindowsFileSystemProvider",
-				getName(getClass(fs != null ? fs.provider() : null)));
+				getName(Util.getClass(fs != null ? fs.provider() : null)));
 		//
 	}
 
@@ -7606,7 +7590,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Map) {
 				return (Map) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -7681,7 +7665,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -7702,7 +7686,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof ATag) {
 				return (ATag) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -7725,7 +7709,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof EventType) {
 				return (EventType) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -7746,7 +7730,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof File) {
 				return (File) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -7845,7 +7829,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Double) {
 				return (Double) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -7942,7 +7926,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Workbook) {
 				return (Workbook) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -7967,7 +7951,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -7992,7 +7976,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -8015,7 +7999,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Long) {
 				return (Long) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -8052,7 +8036,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof List) {
 				return (List) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -8076,7 +8060,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof List) {
 				return (List) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -8127,7 +8111,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Integer) {
 				return (Integer) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -8186,7 +8170,7 @@ class VoiceManagerTest {
 	@Test
 	void testActionPerformedForSystemClipboardAnnotated() throws Throwable {
 		//
-		final Class<?> clz = getClass(instance != null ? instance.getToolkit() : null);
+		final Class<?> clz = Util.getClass(instance != null ? instance.getToolkit() : null);
 		//
 		final Class<? extends Throwable> throwableClassByGetSystemClipboard = getThrowingThrowableClass(clz,
 				clz != null ? clz.getDeclaredMethod("getSystemClipboard") : null);
@@ -8304,7 +8288,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof char[]) {
 				return (char[]) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -8325,7 +8309,7 @@ class VoiceManagerTest {
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -8346,7 +8330,7 @@ class VoiceManagerTest {
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -8430,7 +8414,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -8453,7 +8437,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Boolean) {
 				return (Boolean) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -8474,7 +8458,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Integer) {
 				return (Integer) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -8503,7 +8487,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof RuntimeException) {
 				return (RuntimeException) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -8528,7 +8512,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -8645,7 +8629,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof IValue0) {
 				return (IValue0) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -8668,7 +8652,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof String[]) {
 				return (String[]) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -8721,7 +8705,7 @@ class VoiceManagerTest {
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -8805,7 +8789,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Multimap) {
 				return (Multimap) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -8826,7 +8810,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Field) {
 				return (Field) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -8848,7 +8832,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof JTextComponent) {
 				return (JTextComponent) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -8870,7 +8854,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof JTextComponent) {
 				return (JTextComponent) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -8910,7 +8894,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Collection) {
 				return (Collection) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -8994,7 +8978,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof JPanel) {
 				return (JPanel) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -9019,7 +9003,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof JPanel) {
 				return (JPanel) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -9040,7 +9024,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -9089,7 +9073,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Row) {
 				return (Row) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -9141,7 +9125,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Component[]) {
 				return (Component[]) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -9174,7 +9158,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof IValue0) {
 				return (IValue0) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -9196,7 +9180,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Constructor) {
 				return (Constructor) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -9234,7 +9218,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof IValue0) {
 				return (IValue0) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -9255,7 +9239,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Set) {
 				return (Set) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -9299,7 +9283,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof IValue0) {
 				return (IValue0) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -9320,7 +9304,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof PrintStream) {
 				return (PrintStream) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -9377,7 +9361,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Unit) {
 				return (Unit) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -9434,7 +9418,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Long) {
 				return (Long) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -9486,7 +9470,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -9631,7 +9615,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof ListCellRenderer) {
 				return (ListCellRenderer) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -9648,7 +9632,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Component) {
 				return (Component) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -9671,7 +9655,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -9717,7 +9701,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof File) {
 				return (File) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -9761,7 +9745,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof File) {
 				return (File) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -9776,7 +9760,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof File) {
 				return (File) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -9836,7 +9820,7 @@ class VoiceManagerTest {
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -9870,7 +9854,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Function) {
 				return (Function) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -9921,7 +9905,7 @@ class VoiceManagerTest {
 																					: null),
 																	x -> new MethodGen(x, null, null), null))),
 											Arrays::stream, null))
-									.map(x -> getClass(x)).collect(Collectors.toList()));
+									.map(x -> Util.getClass(x)).collect(Collectors.toList()));
 			//
 		} // try
 			//
@@ -9935,7 +9919,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof PrintWriter) {
 				return (PrintWriter) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -10007,7 +9991,7 @@ class VoiceManagerTest {
 																					Object[].class) : null),
 																	x -> new MethodGen(x, null, null), null))),
 											Arrays::stream, null))
-									.map(x -> getClass(x)).collect(Collectors.toList()));
+									.map(x -> Util.getClass(x)).collect(Collectors.toList()));
 			//
 		} // try
 			//
@@ -10021,7 +10005,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -10097,7 +10081,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Double) {
 				return (Double) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -10168,7 +10152,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof ByteArray) {
 				return (ByteArray) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -10189,7 +10173,7 @@ class VoiceManagerTest {
 			if (obj instanceof Double) {
 				return ((Double) obj).doubleValue();
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -10226,7 +10210,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -10276,7 +10260,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof IValue0) {
 				return (IValue0) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -10305,7 +10289,7 @@ class VoiceManagerTest {
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -10339,7 +10323,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Collection) {
 				return (Collection) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -10366,7 +10350,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Map) {
 				return (Map) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -10380,7 +10364,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Map) {
 				return (Map) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -10409,7 +10393,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof IValue0) {
 				return (IValue0) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -10430,7 +10414,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof ListCellRenderer) {
 				return (ListCellRenderer) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -10551,7 +10535,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Stream) {
 				return (Stream) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -10574,7 +10558,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof Stream) {
 				return (Stream) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -10597,7 +10581,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof ID3v1) {
 				return (ID3v1) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -10620,7 +10604,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof ID3v2) {
 				return (ID3v2) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -10656,7 +10640,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof JPanel) {
 				return (JPanel) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -10679,7 +10663,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof URL) {
 				return (URL) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -10717,7 +10701,7 @@ class VoiceManagerTest {
 			if (obj instanceof Integer) {
 				return ((Integer) obj).intValue();
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -10738,7 +10722,7 @@ class VoiceManagerTest {
 			} else if (obj instanceof InputStream) {
 				return (InputStream) obj;
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

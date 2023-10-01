@@ -260,7 +260,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 			//
 			// The below check is for "-Djava.awt.headless=true"
 			//
-		final List<Field> fs = toList(filter(stream(FieldUtils.getAllFieldsList(getClass(this))),
+		final List<Field> fs = toList(filter(stream(FieldUtils.getAllFieldsList(Util.getClass(this))),
 				f -> Objects.equals(Util.getName(f), "component")));
 		//
 		final Field f = IterableUtils.size(fs) == 1 ? IterableUtils.get(fs, 0) : null;
@@ -357,14 +357,10 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 	@Nullable
 	private static <T> T[] toArray(@Nullable final Collection<T> instance, @Nullable final T[] array) {
 		//
-		return instance != null && (array != null || Proxy.isProxyClass(getClass(instance))) ? instance.toArray(array)
+		return instance != null && (array != null || Proxy.isProxyClass(Util.getClass(instance)))
+				? instance.toArray(array)
 				: null;
 		//
-	}
-
-	@Nullable
-	private static Class<?> getClass(@Nullable final Object instance) {
-		return instance != null ? instance.getClass() : null;
 	}
 
 	@Override
@@ -663,9 +659,9 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		//
 		final CSSExpression cssExpression = instance != null ? instance.getExpression() : null;
 		//
-		final List<Field> fs = toList(
-				filter(testAndApply(Objects::nonNull, getDeclaredFields(getClass(cssExpression)), Arrays::stream, null),
-						f -> Objects.equals(Util.getName(f), "m_aMembers")));
+		final List<Field> fs = toList(filter(
+				testAndApply(Objects::nonNull, getDeclaredFields(Util.getClass(cssExpression)), Arrays::stream, null),
+				f -> Objects.equals(Util.getName(f), "m_aMembers")));
 		//
 		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
 		//
@@ -825,7 +821,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 	private static <T> IntStream mapToInt(@Nullable final Stream<T> instance,
 			@Nullable final ToIntFunction<? super T> mapper) {
 		//
-		return instance != null && (Proxy.isProxyClass(getClass(instance)) || mapper != null)
+		return instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || mapper != null)
 				? instance.mapToInt(mapper)
 				: null;
 		//
@@ -844,7 +840,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 	private static <T> Stream<T> filter(@Nullable final Stream<T> instance,
 			@Nullable final Predicate<? super T> predicate) {
 		//
-		return instance != null && (Proxy.isProxyClass(getClass(instance)) || predicate != null)
+		return instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || predicate != null)
 				? instance.filter(predicate)
 				: null;
 		//

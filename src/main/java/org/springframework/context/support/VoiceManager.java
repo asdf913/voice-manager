@@ -988,12 +988,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			for (final Object obj : bpps) {
 				//
-				addAll(ms = ObjectUtils.getIfNull(ms, ArrayList::new),
-						toList(filter(
-								testAndApply(Objects::nonNull, getDeclaredMethods(getClass(obj)), Arrays::stream, null),
-								m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "setTitle"),
-										Arrays.equals(getParameterTypes(m),
-												new Class<?>[] { Frame.class, PropertyResolver.class })))));
+				addAll(ms = ObjectUtils.getIfNull(ms, ArrayList::new), toList(filter(
+						testAndApply(Objects::nonNull, getDeclaredMethods(Util.getClass(obj)), Arrays::stream, null),
+						m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "setTitle"), Arrays.equals(
+								getParameterTypes(m), new Class<?>[] { Frame.class, PropertyResolver.class })))));
 				//
 			} // for
 				//
@@ -1177,7 +1175,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	private static <E> void addAll(@Nullable final Collection<E> a, @Nullable final Collection<? extends E> b) {
-		if (a != null && (b != null || Proxy.isProxyClass(getClass(a)))) {
+		if (a != null && (b != null || Proxy.isProxyClass(Util.getClass(a)))) {
 			a.addAll(b);
 		}
 	}
@@ -1201,10 +1199,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			if (result == null) {
 				//
-				result = getNumber(obj,
-						toList(filter(
-								testAndApply(Objects::nonNull, getDeclaredFields(getClass(obj)), Arrays::stream, null),
-								x -> Objects.equals(Util.getName(x), "defaultCloseOperation"))));
+				result = getNumber(obj, toList(filter(
+						testAndApply(Objects::nonNull, getDeclaredFields(Util.getClass(obj)), Arrays::stream, null),
+						x -> Objects.equals(Util.getName(x), "defaultCloseOperation"))));
 				//
 			} else {
 				//
@@ -1488,7 +1485,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		if (object instanceof Map || object == null) {
 			setOutputFolderFileNameExpressions(object);
 		} else {
-			throw new IllegalArgumentException(Util.toString(getClass(object)));
+			throw new IllegalArgumentException(Util.toString(Util.getClass(object)));
 		} // if
 			//
 	}
@@ -1868,7 +1865,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} else {
 			//
-			throw new IllegalArgumentException(Util.toString(getClass(object)));
+			throw new IllegalArgumentException(Util.toString(Util.getClass(object)));
 			//
 		} // if
 			//
@@ -2026,7 +2023,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Nullable
 	private static <T> T[] toArray(@Nullable final Collection<T> instance, @Nullable final T[] array) {
 		//
-		return instance != null && (array != null || Proxy.isProxyClass(getClass(instance))) ? instance.toArray(array)
+		return instance != null && (array != null || Proxy.isProxyClass(Util.getClass(instance)))
+				? instance.toArray(array)
 				: null;
 		//
 	}
@@ -2076,7 +2074,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} else {
 				//
-				throw new IllegalArgumentException(Util.toString(getClass(object)));
+				throw new IllegalArgumentException(Util.toString(Util.getClass(object)));
 				//
 			} // if
 		} catch (final JsonProcessingException e) {
@@ -2085,11 +2083,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // try
 			//
-	}
-
-	@Nullable
-	private static Class<?> getClass(@Nullable final Object instance) {
-		return instance != null ? instance.getClass() : null;
 	}
 
 	@Nullable
@@ -2223,7 +2216,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				poiEncryptionPageUrl, jSoupParseTimeout));
 		//
 		final List<?> pages = cast(List.class, testAndApply(Objects::nonNull, jTabbedPane,
-				x -> Narcissus.getField(x, getDeclaredField(getClass(x), "pages")), null));
+				x -> Narcissus.getField(x, getDeclaredField(Util.getClass(x), "pages")), null));
 		//
 		final Integer tabIndex = getTabIndexByTitle(pages, PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.tabTitle"));
@@ -2262,7 +2255,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		forEach(toList(map(
 				FailableStreamUtil.stream(FailableStreamUtil.map(new FailableStream<>(stream(pages)),
-						x -> Narcissus.getObjectField(x, getDeclaredField(getClass(x), COMPONENT)))),
+						x -> Narcissus.getObjectField(x, getDeclaredField(Util.getClass(x), COMPONENT)))),
 				x -> cast(Container.class, x))), c -> {
 					//
 					// https://stackoverflow.com/questions/35508128/setting-personalized-focustraversalpolicy-on-tab-in-jtabbedpane
@@ -2291,7 +2284,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-			return !contains(compontentClassNotFocus, getClass(x));
+			return !contains(compontentClassNotFocus, Util.getClass(x));
 			//
 		};
 		//
@@ -2426,7 +2419,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			if (f == null) {
 				//
-				f = getDeclaredField(getClass(page), COMPONENT);
+				f = getDeclaredField(Util.getClass(page), COMPONENT);
 				//
 			} // if
 				//
@@ -2485,9 +2478,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			final Object osVersionInfoEx = getOsVersionInfoEx();
 			//
-			final List<Method> ms = osVersionInfoEx != null ? toList(filter(
-					testAndApply(Objects::nonNull, getDeclaredMethods(getClass(osVersionInfoEx)), Arrays::stream, null),
-					x -> x != null && !Objects.equals(x.getReturnType(), Void.TYPE))) : null;
+			final List<Method> ms = osVersionInfoEx != null
+					? toList(filter(
+							testAndApply(Objects::nonNull, getDeclaredMethods(Util.getClass(osVersionInfoEx)),
+									Arrays::stream, null),
+							x -> x != null && !Objects.equals(x.getReturnType(), Void.TYPE)))
+					: null;
 			//
 			Method m = null;
 			//
@@ -2560,9 +2556,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static Object getInstance(final SpeechApi speechApi) {
 		//
-		final List<Field> fs = toList(
-				filter(testAndApply(Objects::nonNull, getDeclaredFields(VoiceManager.getClass(speechApi)),
-						Arrays::stream, null), f -> Objects.equals(Util.getName(f), "instance")));
+		final List<Field> fs = toList(filter(
+				testAndApply(Objects::nonNull, getDeclaredFields(Util.getClass(speechApi)), Arrays::stream, null),
+				f -> Objects.equals(Util.getName(f), "instance")));
 		//
 		final Field f = IterableUtils.size(fs) == 1 ? get(fs, 0) : null;
 		//
@@ -2752,7 +2748,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			if (fieldTitle == null) {
 				//
-				fieldTitle = getFieldByName(getClass(page), "title");
+				fieldTitle = getFieldByName(Util.getClass(page), "title");
 				//
 			} // if
 				//
@@ -3032,7 +3028,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		add(panel, new JLabel());
 		//
 		final JComboBox<Method> jcbSpeakMethod = testAndApply(CollectionUtils::isNotEmpty,
-				toList(filter(testAndApply(Objects::nonNull, getDeclaredMethods(getClass(speechApiInstance)),
+				toList(filter(testAndApply(Objects::nonNull, getDeclaredMethods(Util.getClass(speechApiInstance)),
 						Arrays::stream, null), m -> isAnnotationPresent(m, SpeakMethod.class))),
 				x -> new JComboBox<>(cbmSpeakMethod = testAndApply(Objects::nonNull, toArray(x, new Method[] {}),
 						DefaultComboBoxModel::new, y -> new DefaultComboBoxModel<>())),
@@ -3460,11 +3456,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} else {
 			//
-			final List<Method> ms = toList(
-					filter(testAndApply(Objects::nonNull, getDeclaredMethods(getClass(instance)), Arrays::stream, null),
-							x -> x != null && Objects.equals(x.getReturnType(), Integer.TYPE)
-									&& x.getParameterCount() == 0
-									&& StringUtils.startsWithIgnoreCase(Util.getName(x), "get" + string)));
+			final List<Method> ms = toList(filter(
+					testAndApply(Objects::nonNull, getDeclaredMethods(Util.getClass(instance)), Arrays::stream, null),
+					x -> x != null && Objects.equals(x.getReturnType(), Integer.TYPE) && x.getParameterCount() == 0
+							&& StringUtils.startsWithIgnoreCase(Util.getName(x), "get" + string)));
 			//
 			final int size = CollectionUtils.size(ms);
 			//
@@ -3930,8 +3925,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				try {
 					//
 					raster = testAndApply(Objects::nonNull, pitchAccentImage,
-							x -> Narcissus.getObjectField(x, getDeclaredField(VoiceManager.getClass(x), "raster")),
-							null);
+							x -> Narcissus.getObjectField(x, getDeclaredField(Util.getClass(x), "raster")), null);
 					//
 				} catch (final NoSuchFieldException e) {
 					//
@@ -4543,7 +4537,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static <T> Optional<T> reduce(@Nullable final Stream<T> instance,
 			@Nullable final BinaryOperator<T> accumulator) {
 		//
-		return instance != null && (accumulator != null || Proxy.isProxyClass(getClass(instance)))
+		return instance != null && (accumulator != null || Proxy.isProxyClass(Util.getClass(instance)))
 				? instance.reduce(accumulator)
 				: null;
 		//
@@ -4913,7 +4907,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		try {
 			//
-			if (Narcissus.getField(instance, getDeclaredField(getClass(instance), "handler")) == null) {
+			if (Narcissus.getField(instance, getDeclaredField(Util.getClass(instance), "handler")) == null) {
 				//
 				return null;
 				//
@@ -4946,7 +4940,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Nullable
 	private static IValue0<Object> getDllPath(final Object instance) {
 		//
-		final Class<?>[] declaredClasses = getDeclaredClasses(getClass(instance));
+		final Class<?>[] declaredClasses = getDeclaredClasses(Util.getClass(instance));
 		//
 		List<Field> fs = null;
 		//
@@ -5247,14 +5241,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static <T, R> Stream<R> map(@Nullable final Stream<T> instance,
 			@Nullable final Function<? super T, ? extends R> mapper) {
 		//
-		return instance != null && (Proxy.isProxyClass(getClass(instance)) || mapper != null) ? instance.map(mapper)
+		return instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || mapper != null)
+				? instance.map(mapper)
 				: null;
 		//
 	}
 
 	@Nullable
 	private static IntStream map(@Nullable final IntStream instance, @Nullable final IntUnaryOperator mapper) {
-		return instance != null && (Proxy.isProxyClass(getClass(instance)) || mapper != null) ? instance.map(mapper)
+		return instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || mapper != null)
+				? instance.map(mapper)
 				: instance;
 	}
 
@@ -5262,7 +5258,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static <T> IntStream mapToInt(@Nullable final Stream<T> instance,
 			@Nullable final ToIntFunction<? super T> mapper) {
 		//
-		return instance != null && (Proxy.isProxyClass(getClass(instance)) || mapper != null)
+		return instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || mapper != null)
 				? instance.mapToInt(mapper)
 				: null;
 		//
@@ -5272,7 +5268,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static <T> LongStream mapToLong(@Nullable final Stream<T> instance,
 			@Nullable final ToLongFunction<? super T> mapper) {
 		//
-		return instance != null && (Proxy.isProxyClass(getClass(instance)) || mapper != null)
+		return instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || mapper != null)
 				? instance.mapToLong(mapper)
 				: null;
 		//
@@ -5282,7 +5278,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static <T> Optional<T> max(@Nullable final Stream<T> instance,
 			@Nullable final Comparator<? super T> comparator) {
 		//
-		return instance != null && (Proxy.isProxyClass(getClass(instance)) || comparator != null)
+		return instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || comparator != null)
 				? instance.max(comparator)
 				: null;
 		//
@@ -6011,7 +6007,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 										Narcissus.getObjectField(IIORegistry.getDefaultInstance(),
 												getDeclaredField(ServiceRegistry.class, "categoryMap"))),
 								ImageWriterSpi.class),
-						x -> Narcissus.getField(x, getDeclaredField(getClass(x), "map")), null));
+						x -> Narcissus.getField(x, getDeclaredField(Util.getClass(x), "map")), null));
 		//
 		final List<String> classNames = testAndApply(Objects::nonNull,
 				toList(map(stream(keySet(imageWriterSpis)), x -> getName(cast(Class.class, x)))), ArrayList::new, null);
@@ -9565,7 +9561,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			final String attribute = attributes[i];
 			//
 			if ((methods = toList(filter(
-					testAndApply(Objects::nonNull, ms = getIfNull(ms, () -> getMethods(getClass(id3v1))),
+					testAndApply(Objects::nonNull, ms = getIfNull(ms, () -> getMethods(Util.getClass(id3v1))),
 							Arrays::stream, null),
 					a -> matches(matcher(Pattern.compile(String.format("get%1$s", StringUtils.capitalize(attribute))),
 							Util.getName(a)))))) == null
@@ -10024,7 +10020,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static <T> boolean anyMatch(@Nullable final Stream<T> instance,
 			@Nullable final Predicate<? super T> predicate) {
 		//
-		return instance != null && (predicate != null || Proxy.isProxyClass(getClass(instance)))
+		return instance != null && (predicate != null || Proxy.isProxyClass(Util.getClass(instance)))
 				&& instance.anyMatch(predicate);
 		//
 	}
@@ -10033,7 +10029,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static <T, R, A> R collect(@Nullable final Stream<T> instance,
 			@Nullable final Collector<? super T, A, R> collector) {
 		//
-		return instance != null && (collector != null || Proxy.isProxyClass(getClass(instance)))
+		return instance != null && (collector != null || Proxy.isProxyClass(Util.getClass(instance)))
 				? instance.collect(collector)
 				: null;
 		//
@@ -10977,7 +10973,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Nullable
 	private static ObjectMap copyObjectMap(@Nullable final ObjectMap instance) {
 		//
-		if (instance != null && Proxy.isProxyClass(getClass(instance))) {
+		if (instance != null && Proxy.isProxyClass(Util.getClass(instance))) {
 			//
 			final IH ihOld = cast(IH.class, Proxy.getInvocationHandler(instance));
 			//
@@ -11603,7 +11599,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static <T> void forEach(@Nullable final Stream<T> instance, @Nullable final Consumer<? super T> action) {
 		//
-		if (instance != null && (action != null || Proxy.isProxyClass(getClass(instance)))) {
+		if (instance != null && (action != null || Proxy.isProxyClass(Util.getClass(instance)))) {
 			instance.forEach(action);
 		} // if
 			//
@@ -11612,7 +11608,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static <T, E extends Throwable> void forEach(@Nullable final Iterable<T> items,
 			@Nullable final FailableConsumer<? super T, E> action) throws E {
 		//
-		if (iterator(items) != null && (action != null || Proxy.isProxyClass(getClass(items)))) {
+		if (iterator(items) != null && (action != null || Proxy.isProxyClass(Util.getClass(items)))) {
 			//
 			for (final T item : items) {
 				//
@@ -11629,7 +11625,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	private static void forEach(@Nullable final IntStream instance, @Nullable final IntConsumer action) {
-		if (instance != null && (action != null || Proxy.isProxyClass(getClass(instance)))) {
+		if (instance != null && (action != null || Proxy.isProxyClass(Util.getClass(instance)))) {
 			instance.forEach(action);
 		}
 	}
@@ -11924,7 +11920,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 		private static void setStringFieldDefaultValue(@Nullable final Object instance) {
 			//
-			final Field[] fs = getDeclaredFields(VoiceManager.getClass(instance));
+			final Field[] fs = getDeclaredFields(Util.getClass(instance));
 			//
 			Field f = null;
 			//
@@ -11976,7 +11972,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		private static <T> Optional<T> min(@Nullable final Stream<T> instance,
 				@Nullable final Comparator<? super T> comparator) {
 			//
-			return instance != null && (Proxy.isProxyClass(VoiceManager.getClass(instance)) || comparator != null)
+			return instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || comparator != null)
 					? instance.min(comparator)
 					: null;
 			//
@@ -12491,7 +12487,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		private static <T, A> A[] toArray(@Nullable final Stream<T> instance,
 				@Nullable final IntFunction<A[]> generator) {
 			//
-			return instance != null && (generator != null || Proxy.isProxyClass(VoiceManager.getClass(instance)))
+			return instance != null && (generator != null || Proxy.isProxyClass(Util.getClass(instance)))
 					? instance.toArray(generator)
 					: null;
 			//
@@ -13310,7 +13306,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				setString(comment = createCellComment(drawing, createClientAnchor(creationHelper)),
 						createRichTextString(creationHelper, e.getMessage()));
 				//
-				setAuthor(comment, getName(getClass(e)));
+				setAuthor(comment, getName(Util.getClass(e)));
 				//
 				setCellComment(cell, comment);
 				//
@@ -13377,7 +13373,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static <T> Stream<T> sorted(@Nullable final Stream<T> instance,
 			@Nullable final Comparator<? super T> comparator) {
 		//
-		return instance != null && (comparator != null || Proxy.isProxyClass(getClass(instance)))
+		return instance != null && (comparator != null || Proxy.isProxyClass(Util.getClass(instance)))
 				? instance.sorted(comparator)
 				: instance;
 		//
@@ -13672,7 +13668,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static IValue0<Object> getWriter(final Object instance) {
 		//
 		final List<Field> fs = toList(filter(testAndApply(Objects::nonNull,
-				testAndApply(Objects::nonNull, getClass(instance), FieldUtils::getAllFields, null), Arrays::stream,
+				testAndApply(Objects::nonNull, Util.getClass(instance), FieldUtils::getAllFields, null), Arrays::stream,
 				null), f -> Objects.equals(Util.getName(f), "_writer")));
 		//
 		final Field f = IterableUtils.size(fs) == 1 ? get(fs, 0) : null;
@@ -13839,9 +13835,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			if (size == 1) {
 				//
-				final List<Method> ms = toList(filter(
-						testAndApply(Objects::nonNull, getDeclaredMethods(getClass(annotation)), Arrays::stream, null),
-						m -> Objects.equals(Util.getName(m), VALUE)));
+				final List<Method> ms = toList(
+						filter(testAndApply(Objects::nonNull, getDeclaredMethods(Util.getClass(annotation)),
+								Arrays::stream, null), m -> Objects.equals(Util.getName(m), VALUE)));
 				//
 				final Method m = (size = CollectionUtils.size(ms)) == 1 ? get(ms, 0) : null;
 				//
@@ -13954,7 +13950,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static <T> Stream<T> filter(@Nullable final Stream<T> instance,
 			@Nullable final Predicate<? super T> predicate) {
 		//
-		return instance != null && (predicate != null || Proxy.isProxyClass(getClass(instance)))
+		return instance != null && (predicate != null || Proxy.isProxyClass(Util.getClass(instance)))
 				? instance.filter(predicate)
 				: null;
 		//

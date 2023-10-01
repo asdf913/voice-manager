@@ -196,7 +196,7 @@ public class Main {
 						//
 					} // if
 						//
-					final Method method = getMethod(getClass(
+					final Method method = getMethod(Util.getClass(
 							Narcissus.invokeObjectMethod(instance, size == 1 ? IterableUtils.get(ms, 0) : null)),
 							"createWindow", Window.class);
 					//
@@ -296,7 +296,7 @@ public class Main {
 				// instructions
 				//
 			if (Objects.equals(Arrays.asList(NEW.class, DUP.class, INVOKESPECIAL.class, ATHROW.class),
-					toList(map(testAndApply(Objects::nonNull, ins, Arrays::stream, null), Main::getClass)))) {
+					toList(map(testAndApply(Objects::nonNull, ins, Arrays::stream, null), x -> Util.getClass(x))))) {
 				//
 				final Class<?> c = forName(className);
 				//
@@ -331,7 +331,8 @@ public class Main {
 	private static <T, R> Stream<R> map(@Nullable final Stream<T> instance,
 			@Nullable final Function<? super T, ? extends R> mapper) {
 		//
-		return instance != null && (Proxy.isProxyClass(getClass(instance)) || mapper != null) ? instance.map(mapper)
+		return instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || mapper != null)
+				? instance.map(mapper)
 				: null;
 		//
 	}
@@ -339,11 +340,6 @@ public class Main {
 	@Nullable
 	private static <T> List<T> toList(@Nullable final Stream<T> instance) {
 		return instance != null ? instance.toList() : null;
-	}
-
-	@Nullable
-	private static Class<?> getClass(@Nullable final Object instance) {
-		return instance != null ? instance.getClass() : null;
 	}
 
 	@Nullable

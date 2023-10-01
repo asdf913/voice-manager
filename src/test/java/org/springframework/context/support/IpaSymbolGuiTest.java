@@ -44,10 +44,9 @@ class IpaSymbolGuiTest {
 
 	private static final String EMPTY = "";
 
-	private static Method METHOD_ADD_ACTION_LISTENER, METHOD_GET_CLASS, METHOD_TO_ARRAY, METHOD_TEST_AND_APPLY,
-			METHOD_OPEN_STREAM, METHOD_DIGEST, METHOD_IIF, METHOD_GET_TEXT, METHOD_SET_TEXT, METHOD_FOR_NAME,
-			METHOD_SET_PREFERRED_WIDTH, METHOD_GET_PREFERRED_SIZE, METHOD_TEST_AND_ACCEPT3,
-			METHOD_TEST_AND_ACCEPT4 = null;
+	private static Method METHOD_ADD_ACTION_LISTENER, METHOD_TO_ARRAY, METHOD_TEST_AND_APPLY, METHOD_OPEN_STREAM,
+			METHOD_DIGEST, METHOD_IIF, METHOD_GET_TEXT, METHOD_SET_TEXT, METHOD_FOR_NAME, METHOD_SET_PREFERRED_WIDTH,
+			METHOD_GET_PREFERRED_SIZE, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4 = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -56,8 +55,6 @@ class IpaSymbolGuiTest {
 		//
 		(METHOD_ADD_ACTION_LISTENER = clz.getDeclaredMethod("addActionListener", ActionListener.class,
 				AbstractButton[].class)).setAccessible(true);
-		//
-		(METHOD_GET_CLASS = clz.getDeclaredMethod("getClass", Object.class)).setAccessible(true);
 		//
 		(METHOD_TO_ARRAY = clz.getDeclaredMethod("toArray", Collection.class)).setAccessible(true);
 		//
@@ -239,27 +236,6 @@ class IpaSymbolGuiTest {
 	}
 
 	@Test
-	void testGetClass() throws Throwable {
-		//
-		Assertions.assertNull(getClass(null));
-		//
-	}
-
-	private static Class<?> getClass(final Object instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_CLASS.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Class) {
-				return (Class<?>) obj;
-			}
-			throw new Throwable(Util.toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testToArray() throws Throwable {
 		//
 		Assertions.assertNull(toArray(null));
@@ -276,7 +252,7 @@ class IpaSymbolGuiTest {
 			} else if (obj instanceof Object[]) {
 				return (Object[]) obj;
 			}
-			throw new Throwable(Util.toString(getClass(obj)));
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -316,7 +292,7 @@ class IpaSymbolGuiTest {
 			} else if (obj instanceof InputStream) {
 				return (InputStream) obj;
 			}
-			throw new Throwable(Util.toString(getClass(obj)));
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -359,7 +335,7 @@ class IpaSymbolGuiTest {
 			} else if (obj instanceof byte[]) {
 				return (byte[]) obj;
 			}
-			throw new Throwable(Util.toString(getClass(obj)));
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -395,7 +371,7 @@ class IpaSymbolGuiTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(Util.toString(getClass(obj)));
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -435,7 +411,7 @@ class IpaSymbolGuiTest {
 			} else if (obj instanceof Class) {
 				return (Class<?>) obj;
 			}
-			throw new Throwable(Util.toString(getClass(obj)));
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -506,7 +482,7 @@ class IpaSymbolGuiTest {
 			} else if (obj instanceof Dimension) {
 				return (Dimension) obj;
 			}
-			throw new Throwable(Util.toString(getClass(obj)));
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
