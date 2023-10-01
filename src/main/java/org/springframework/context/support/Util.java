@@ -2,6 +2,8 @@ package org.springframework.context.support;
 
 import java.lang.reflect.Member;
 
+import javax.annotation.Nullable;
+
 public interface Util {
 
 	static String getName(@Nullable final Member instance) {
