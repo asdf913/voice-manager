@@ -222,7 +222,7 @@ abstract class Util {
 		return instance != null && instance.containsKey(key);
 	}
 
-	static <K, V> Set<Entry<K, V>> entrySet(final Map<K, V> instance) {
+	static <K, V> Set<Entry<K, V>> entrySet(@Nullable final Map<K, V> instance) {
 		return instance != null ? instance.entrySet() : null;
 	}
 
