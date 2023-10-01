@@ -1520,6 +1520,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		}
 	}
 
+	@SuppressWarnings("java:S1612")
 	public void setMp3Tags(final Object value) {
 		//
 		mp3Tags = toArray(toList(map(stream(getObjectList(getObjectMapper(), value)), x -> Util.toString(x))),
@@ -1527,6 +1528,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
+	@SuppressWarnings("java:S1612")
 	public void setMicrosoftSpeechObjectLibraryAttributeNames(final Object value) {
 		//
 		this.microsoftSpeechObjectLibraryAttributeNames = toArray(
@@ -2662,6 +2664,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		}
 
 		@Nullable
+		@SuppressWarnings("java:S1612")
 		private static String getChildrenAsString(@Nullable final ContainerTag<?> instance) {
 			//
 			try {
@@ -4221,6 +4224,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	}
 
+	@SuppressWarnings("java:S1612")
 	private JPanel createExportPanel(final LayoutManager layoutManager) {
 		//
 		final JPanel panel = new JPanel();
@@ -8086,6 +8090,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? Integer.valueOf(instance.incrementAndGet()) : null;
 	}
 
+	@SuppressWarnings("java:S1612")
 	private void importVoice(final File file) {
 		//
 		final boolean headless = GraphicsEnvironment.isHeadless();
@@ -9949,6 +9954,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
+	@SuppressWarnings("java:S1612")
 	private static void addValidationDataForBoolean(final ObjectMap objectMap,
 			@Nullable final IValue0<List<Boolean>> booleans, final int index) {
 		//
@@ -10696,6 +10702,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@Nullable
+	@SuppressWarnings("java:S1612")
 	private static IValue0<?> getValueFromCell(final ObjectMap objectMap) {
 		//
 		final Field f = ObjectMap.getObject(objectMap, Field.class);
@@ -11544,6 +11551,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	}
 
+	@SuppressWarnings("java:S1612")
 	private static Voice createVoice(final ObjectMapper objectMapper, final VoiceManager instance) {
 		//
 		if (instance == null) {

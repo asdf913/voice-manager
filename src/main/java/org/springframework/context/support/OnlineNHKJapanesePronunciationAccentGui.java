@@ -212,6 +212,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		return instance != null ? instance.toList() : null;
 	}
 
+	@SuppressWarnings("java:S1612")
 	public void setImageFormatOrders(@Nullable final Object object) {
 		//
 		IValue0<List<String>> value = null;
