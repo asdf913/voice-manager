@@ -28,6 +28,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -37,13 +39,14 @@ import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableFunction;
-import com.google.common.base.Predicates;
 import org.javatuples.Unit;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.AssertionsUtil;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.meeuw.functional.Functions;
+import org.meeuw.functional.Predicates;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.env.PropertyResolver;
 
@@ -58,10 +61,10 @@ class IniAsPropertiesResourceTest {
 
 	private static final String EMPTY = "";
 
-	private static Method METHOD_GET_SECTION, METHOD_TO_STRING, METHOD_TEST_AND_APPLY, METHOD_FILTER, METHOD_TO_LIST,
-			METHOD_GET_NAME, METHOD_TEST_AND_ACCEPT, METHOD_IS_STATIC, METHOD_TO_INPUT_STREAM, METHOD_CAST,
-			METHOD_GET_TYPE, METHOD_GET_KEY, METHOD_GET_VALUE, METHOD_EXISTS, METHOD_TO_ARRAY, METHOD_READY,
-			METHOD_GET_SELECTED_ITEM, METHOD_CONTAINS = null;
+	private static Method METHOD_GET_SECTION, METHOD_TO_STRING, METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5,
+			METHOD_FILTER, METHOD_TO_LIST, METHOD_GET_NAME, METHOD_TEST_AND_ACCEPT, METHOD_IS_STATIC,
+			METHOD_TO_INPUT_STREAM, METHOD_CAST, METHOD_GET_TYPE, METHOD_GET_KEY, METHOD_GET_VALUE, METHOD_EXISTS,
+			METHOD_TO_ARRAY, METHOD_READY, METHOD_GET_SELECTED_ITEM, METHOD_CONTAINS = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -73,8 +76,11 @@ class IniAsPropertiesResourceTest {
 		//
 		(METHOD_TO_STRING = clz.getDeclaredMethod("toString", Object.class)).setAccessible(true);
 		//
-		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
+		(METHOD_TEST_AND_APPLY4 = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
+		//
+		(METHOD_TEST_AND_APPLY5 = clz.getDeclaredMethod("testAndApply", BiPredicate.class, Object.class, Object.class,
+				BiFunction.class, BiFunction.class)).setAccessible(true);
 		//
 		(METHOD_FILTER = clz.getDeclaredMethod("filter", Stream.class, Predicate.class)).setAccessible(true);
 		//
@@ -520,13 +526,27 @@ class IniAsPropertiesResourceTest {
 		//
 		Assertions.assertNull(testAndApply(null, null, null, null));
 		//
+		Assertions.assertNull(testAndApply(null, null, null, null, null));
+		//
+		Assertions.assertNull(testAndApply(Predicates.biAlwaysTrue(), null, null, Functions.biAlways(null), null));
+		//
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
 			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse)
 			throws Throwable {
 		try {
-			return (R) METHOD_TEST_AND_APPLY.invoke(null, predicate, value, functionTrue, functionFalse);
+			return (R) METHOD_TEST_AND_APPLY4.invoke(null, predicate, value, functionTrue, functionFalse);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static <T, U, R, E extends Throwable> R testAndApply(final BiPredicate<T, U> predicate, final T t,
+			final U u, final BiFunction<T, U, R> functionTrue, final BiFunction<T, U, R> functionFalse)
+			throws Throwable {
+		try {
+			return (R) METHOD_TEST_AND_APPLY5.invoke(null, predicate, t, u, functionTrue, functionFalse);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
