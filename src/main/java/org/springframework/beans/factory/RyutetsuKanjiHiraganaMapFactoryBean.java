@@ -88,6 +88,7 @@ public class RyutetsuKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Stri
 		//
 	}
 
+	@Nullable
 	private Entry<IValue0<String>, IValue0<String>> createEntry(final Field[] fs, final Object v) {
 		//
 		Field f = null;
