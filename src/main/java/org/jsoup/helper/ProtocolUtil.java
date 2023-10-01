@@ -99,6 +99,7 @@ public interface ProtocolUtil {
 		return instance != null ? instance.apply(value) : null;
 	}
 
+	@SuppressWarnings("java:S1612")
 	private static List<String> getAllowProtocols(final Instruction[] is, final ConstantPool cp) {
 		//
 		List<Object> list = null;
