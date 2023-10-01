@@ -19,7 +19,6 @@ import java.lang.annotation.Target;
 import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
@@ -166,7 +165,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 			// The below check is for "-Djava.awt.headless=true"
 			//
 		final List<Field> fs = toList(filter(stream(FieldUtils.getAllFieldsList(getClass(this))),
-				f -> Objects.equals(getName(f), "component")));
+				f -> Objects.equals(Util.getName(f), "component")));
 		//
 		final Field f = IterableUtils.size(fs) == 1 ? IterableUtils.get(fs, 0) : null;
 		//
@@ -424,7 +423,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 							getDeclaredMethods(
 									forName("org.springframework.beans.factory.GaKuNenBeTsuKanJiMultimapFactoryBean")),
 							Arrays::stream, null),
-					m -> and(Objects.equals(getName(m), "createMultimapByUrl"),
+					m -> and(Objects.equals(Util.getName(m), "createMultimapByUrl"),
 							Arrays.equals(new Class<?>[] { String.class, Duration.class }, getParameterTypes(m)))));
 			//
 			final int size = IterableUtils.size(ms);
@@ -496,11 +495,6 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 			//
 		return result;
 		//
-	}
-
-	@Nullable
-	private static String getName(@Nullable final Member instance) {
-		return instance != null ? instance.getName() : null;
 	}
 
 	@Nullable

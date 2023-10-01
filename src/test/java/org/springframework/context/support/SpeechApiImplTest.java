@@ -11,8 +11,7 @@ import org.junit.jupiter.api.Test;
 
 class SpeechApiImplTest {
 
-	private static Method METHOD_CAST, METHOD_GET_NAME, METHOD_GET_PARAMETER_COUNT, METHOD_IS_STATIC, METHOD_INVOKE,
-			METHOD_AND = null;
+	private static Method METHOD_CAST, METHOD_GET_PARAMETER_COUNT, METHOD_IS_STATIC, METHOD_INVOKE, METHOD_AND = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -22,12 +21,6 @@ class SpeechApiImplTest {
 		if ((METHOD_CAST = clz != null ? clz.getDeclaredMethod("cast", Class.class, Object.class) : null) != null) {
 			//
 			METHOD_CAST.setAccessible(true);
-			//
-		} // if
-			//
-		if ((METHOD_GET_NAME = clz != null ? clz.getDeclaredMethod("getName", Member.class) : null) != null) {
-			//
-			METHOD_GET_NAME.setAccessible(true);
 			//
 		} // if
 			//
@@ -79,27 +72,6 @@ class SpeechApiImplTest {
 	private static <T> T cast(final Class<T> clz, final Object value) throws Throwable {
 		try {
 			return (T) METHOD_CAST.invoke(null, clz, value);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetName() throws Throwable {
-		//
-		Assertions.assertNull(getName(null));
-		//
-	}
-
-	private static String getName(final Member instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_NAME.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

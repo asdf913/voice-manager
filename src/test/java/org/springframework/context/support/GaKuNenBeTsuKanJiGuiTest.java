@@ -13,7 +13,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Executable;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Collections;
@@ -40,7 +39,6 @@ import javax.swing.text.JTextComponent;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.tuple.Pair;
-import com.google.common.base.Predicates;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.AssertionsUtil;
@@ -49,6 +47,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.InitializingBean;
 
+import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.reflect.Reflection;
@@ -61,12 +60,12 @@ import javassist.util.proxy.ProxyObject;
 class GaKuNenBeTsuKanJiGuiTest {
 
 	private static Method METHOD_CAST, METHOD_CREATE_WORK_BOOK, METHOD_GET_CLASS, METHOD_TO_STRING,
-			METHOD_SET_SELECTED_ITEM_BY_ITERABLE, METHOD_INVOKE, METHOD_GET_NAME, METHOD_GET_PARAMETER_TYPES,
-			METHOD_EXISTS, METHOD_AND, METHOD_IIF, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4,
-			METHOD_ADD_ACTION_LISTENER, METHOD_TO_ARRAY, METHOD_FILTER, METHOD_TO_LIST, METHOD_GET_DECLARED_METHODS,
-			METHOD_FOR_NAME, METHOD_GET_ABSOLUTE_PATH, METHOD_IS_FILE, METHOD_LENGTH, METHOD_LONG_VALUE,
-			METHOD_CONTAINS, METHOD_ADD, METHOD_SET_SELECTED_ITEM, METHOD_SET_TEXT, METHOD_SET_PREFERRED_WIDTH,
-			METHOD_GET_PREFERRED_SIZE, METHOD_MAP, METHOD_MAX, METHOD_CREATE_DIMENSION_COMPARATOR = null;
+			METHOD_SET_SELECTED_ITEM_BY_ITERABLE, METHOD_INVOKE, METHOD_GET_PARAMETER_TYPES, METHOD_EXISTS, METHOD_AND,
+			METHOD_IIF, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_ADD_ACTION_LISTENER, METHOD_TO_ARRAY,
+			METHOD_FILTER, METHOD_TO_LIST, METHOD_GET_DECLARED_METHODS, METHOD_FOR_NAME, METHOD_GET_ABSOLUTE_PATH,
+			METHOD_IS_FILE, METHOD_LENGTH, METHOD_LONG_VALUE, METHOD_CONTAINS, METHOD_ADD, METHOD_SET_SELECTED_ITEM,
+			METHOD_SET_TEXT, METHOD_SET_PREFERRED_WIDTH, METHOD_GET_PREFERRED_SIZE, METHOD_MAP, METHOD_MAX,
+			METHOD_CREATE_DIMENSION_COMPARATOR = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -87,8 +86,6 @@ class GaKuNenBeTsuKanJiGuiTest {
 		//
 		(METHOD_INVOKE = clz.getDeclaredMethod("invoke", Method.class, Object.class, Object[].class))
 				.setAccessible(true);
-		//
-		(METHOD_GET_NAME = clz.getDeclaredMethod("getName", Member.class)).setAccessible(true);
 		//
 		(METHOD_GET_PARAMETER_TYPES = clz.getDeclaredMethod("getParameterTypes", Executable.class)).setAccessible(true);
 		//
@@ -160,7 +157,7 @@ class GaKuNenBeTsuKanJiGuiTest {
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
-			final String methodName = getName(method);
+			final String methodName = Util.getName(method);
 			//
 			if (proxy instanceof Iterable) {
 				//
@@ -230,7 +227,7 @@ class GaKuNenBeTsuKanJiGuiTest {
 				//
 			} // if
 				//
-			final String methodName = getName(thisMethod);
+			final String methodName = Util.getName(thisMethod);
 			//
 			if (self instanceof Component) {
 				//
@@ -580,27 +577,6 @@ class GaKuNenBeTsuKanJiGuiTest {
 	private static Object invoke(final Method method, final Object instance, final Object... args) throws Throwable {
 		try {
 			return METHOD_INVOKE.invoke(null, method, instance, args);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetName() throws Throwable {
-		//
-		Assertions.assertNull(getName(null));
-		//
-	}
-
-	private static String getName(final Member instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_NAME.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

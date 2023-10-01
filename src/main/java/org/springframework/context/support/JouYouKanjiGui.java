@@ -261,7 +261,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 			// The below check is for "-Djava.awt.headless=true"
 			//
 		final List<Field> fs = toList(filter(stream(FieldUtils.getAllFieldsList(getClass(this))),
-				f -> f != null && Objects.equals(f.getName(), "component")));
+				f -> Objects.equals(Util.getName(f), "component")));
 		//
 		final Field f = IterableUtils.size(fs) == 1 ? IterableUtils.get(fs, 0) : null;
 		//
@@ -453,7 +453,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		public Object invoke(final Object proxy, @Nullable final Method method, @Nullable final Object[] args)
 				throws Throwable {
 			//
-			final String methodName = method != null ? method.getName() : null;
+			final String methodName = Util.getName(method);
 			//
 			if (proxy instanceof ObjectMap) {
 				//
@@ -665,7 +665,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		//
 		final List<Field> fs = toList(
 				filter(testAndApply(Objects::nonNull, getDeclaredFields(getClass(cssExpression)), Arrays::stream, null),
-						f -> f != null && Objects.equals(f.getName(), "m_aMembers")));
+						f -> Objects.equals(Util.getName(f), "m_aMembers")));
 		//
 		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
 		//

@@ -21,7 +21,6 @@ import java.lang.annotation.Target;
 import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
@@ -169,7 +168,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 			// The below check is for "-Djava.awt.headless=true"
 			//
 		final List<Field> fs = toList(filter(stream(FieldUtils.getAllFieldsList(getClass(this))),
-				f -> Objects.equals(getName(f), "component")));
+				f -> Objects.equals(Util.getName(f), "component")));
 		//
 		final Field f = IterableUtils.size(fs) == 1 ? IterableUtils.get(fs, 0) : null;
 		//
@@ -366,7 +365,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 					testAndApply(Objects::nonNull,
 							getDeclaredMethods(forName("org.springframework.beans.factory.JlptLevelListFactoryBean")),
 							Arrays::stream, null),
-					m -> Boolean.logicalAnd(Objects.equals(getName(m), "getObjectByUrl"),
+					m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "getObjectByUrl"),
 							Arrays.equals(new Class<?>[] { String.class, Duration.class }, getParameterTypes(m)))));
 			//
 			final int size = IterableUtils.size(ms);
@@ -714,11 +713,6 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 	@Nullable
 	private static Method[] getDeclaredMethods(@Nullable final Class<?> instance) {
 		return instance != null ? instance.getDeclaredMethods() : null;
-	}
-
-	@Nullable
-	private static String getName(@Nullable final Member instance) {
-		return instance != null ? instance.getName() : null;
 	}
 
 	@Nullable

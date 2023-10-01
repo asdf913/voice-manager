@@ -19,7 +19,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Executable;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.nio.file.FileSystem;
@@ -74,7 +73,6 @@ import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.stream.FailableStreamUtil;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
-import com.google.common.base.Predicates;
 import org.apache.poi.util.IntList;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
@@ -86,6 +84,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.InitializingBean;
 
 import com.github.hal4j.uritemplate.URIBuilder;
+import com.google.common.base.Predicates;
 import com.google.common.reflect.Reflection;
 
 import domain.JlptVocabulary;
@@ -101,7 +100,7 @@ class JlptLevelGuiTest {
 	private static Method METHOD_CAST, METHOD_TO_ARRAY_COLLECTION, METHOD_TO_ARRAY_INT_LIST, METHOD_GET_CLASS,
 			METHOD_TEST, METHOD_GET_PREFERRED_SIZE, METHOD_SET_PREFERRED_WIDTH, METHOD_FOR_NAME, METHOD_GET_TEXT,
 			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_TEST_AND_APPLY, METHOD_SET_CONTENTS, METHOD_ADD_ACTION_LISTENER,
-			METHOD_GET_DECLARED_METHODS, METHOD_FILTER, METHOD_TO_LIST, METHOD_INVOKE, METHOD_IIF, METHOD_GET_NAME,
+			METHOD_GET_DECLARED_METHODS, METHOD_FILTER, METHOD_TO_LIST, METHOD_INVOKE, METHOD_IIF,
 			METHOD_GET_PARAMETER_TYPES, METHOD_RUN, METHOD_SET_JLPT_VOCABULARY_AND_LEVEL, METHOD_STREAM, METHOD_MAP,
 			METHOD_GET_LEVEL, METHOD_FOR_EACH_STREAM, METHOD_ADD_ELEMENT, METHOD_TEST_AND_ACCEPT, METHOD_BROWSE,
 			METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_ADD_DOCUMENT_LISTENER, METHOD_SET_SELECTED_INDICES,
@@ -153,8 +152,6 @@ class JlptLevelGuiTest {
 				.setAccessible(true);
 		//
 		(METHOD_IIF = clz.getDeclaredMethod("iif", Boolean.TYPE, Object.class, Object.class)).setAccessible(true);
-		//
-		(METHOD_GET_NAME = clz.getDeclaredMethod("getName", Member.class)).setAccessible(true);
 		//
 		(METHOD_GET_PARAMETER_TYPES = clz.getDeclaredMethod("getParameterTypes", Executable.class)).setAccessible(true);
 		//
@@ -223,7 +220,7 @@ class JlptLevelGuiTest {
 				//
 			} // if
 				//
-			final String methodName = getName(method);
+			final String methodName = Util.getName(method);
 			//
 			if (proxy instanceof Iterable) {
 				//
@@ -289,7 +286,7 @@ class JlptLevelGuiTest {
 		public Object invoke(final Object self, final Method thisMethod, final Method proceed, final Object[] args)
 				throws Throwable {
 			//
-			final String methodName = getName(thisMethod);
+			final String methodName = Util.getName(thisMethod);
 			//
 			if (self instanceof Component) {
 				//
@@ -1108,27 +1105,6 @@ class JlptLevelGuiTest {
 	private static <T> T iif(final boolean condition, final T trueValue, final T falseValue) throws Throwable {
 		try {
 			return (T) METHOD_IIF.invoke(null, condition, trueValue, falseValue);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetName() throws Throwable {
-		//
-		Assertions.assertNull(getName((Member) null));
-		//
-	}
-
-	private static String getName(final Member instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_NAME.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

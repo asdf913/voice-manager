@@ -191,7 +191,7 @@ public class Main {
 					//
 					final List<Method> ms = toList(testAndApply(Objects::nonNull,
 							Narcissus.getDeclaredMethods(Component.class), Arrays::stream, null)
-							.filter(x -> Objects.equals(getName(x), "getComponentFactory")));
+							.filter(x -> Objects.equals(Util.getName(x), "getComponentFactory")));
 					//
 					final int size = IterableUtils.size(ms);
 					//
@@ -353,11 +353,6 @@ public class Main {
 
 	@Nullable
 	private static String getName(@Nullable final Class<?> instance) {
-		return instance != null ? instance.getName() : null;
-	}
-
-	@Nullable
-	private static String getName(@Nullable final Member instance) {
 		return instance != null ? instance.getName() : null;
 	}
 
