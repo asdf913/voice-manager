@@ -148,7 +148,7 @@ public class MapReportGui extends JFrame
 			// The below check is for "-Djava.awt.headless=true"
 			//
 		final List<Field> fs = toList(filter(stream(FieldUtils.getAllFieldsList(Util.getClass(this))),
-				f -> f != null && Objects.equals(f.getName(), "component")));
+				f -> Objects.equals(Util.getName(f), "component")));
 		//
 		final Field f = IterableUtils.size(fs) == 1 ? IterableUtils.get(fs, 0) : null;
 		//
