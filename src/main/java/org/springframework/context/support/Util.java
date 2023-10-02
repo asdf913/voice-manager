@@ -23,6 +23,7 @@ public interface Util {
 		return instance != null ? instance.getClass() : null;
 	}
 
+	@Nullable
 	static <E> Stream<E> stream(@Nullable final Collection<E> instance) {
 		return instance != null ? instance.stream() : null;
 	}
