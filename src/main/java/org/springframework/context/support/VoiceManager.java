@@ -12998,13 +12998,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final int size = MultimapUtil.size(multimap);
 		//
-		final int numberOfOrdinalPositionDigit = Integer
-				.valueOf(
-						StringUtils
-								.length(Util.toString(orElse(
-										max(filter(map(Util.stream(MultimapUtil.values(multimap)),
-												x -> getOrdinalPosition(x)), Objects::nonNull), ObjectUtils::compare),
-										null))));
+		final int numberOfOrdinalPositionDigit = StringUtils.length(Util.toString(orElse(max(
+				filter(map(Util.stream(MultimapUtil.values(multimap)), x -> getOrdinalPosition(x)), Objects::nonNull),
+				ObjectUtils::compare), null)));
 		//
 		EvaluationContext evaluationContext = testAndApply(c -> ObjectMap.containsObject(objectMap, c),
 				EvaluationContext.class, c -> ObjectMap.getObject(objectMap, c), null);
