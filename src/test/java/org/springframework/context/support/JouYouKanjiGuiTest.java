@@ -86,7 +86,7 @@ class JouYouKanjiGuiTest {
 			METHOD_GET_EXPRESSION_AS_CSS_STRING, METHOD_GET_INDEXED_COLORS, METHOD_GET_STYLES_SOURCE,
 			METHOD_GET_PROPERTY, METHOD_INT_VALUE, METHOD_TO_MILLIS, METHOD_SET_FILL_BACK_GROUND_COLOR,
 			METHOD_SET_FILL_PATTERN, METHOD_SPLITERATOR, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4,
-			METHOD_STREAM, METHOD_MAP_TO_INT, METHOD_MAX, METHOD_OR_ELSE, METHOD_FILTER, METHOD_SET_AUTO_FILTER,
+			METHOD_MAP_TO_INT, METHOD_MAX, METHOD_OR_ELSE, METHOD_FILTER, METHOD_SET_AUTO_FILTER,
 			METHOD_GET_ABSOLUTE_PATH, METHOD_GET_PHYSICAL_NUMBER_OF_ROWS = null;
 
 	@BeforeAll
@@ -165,8 +165,6 @@ class JouYouKanjiGuiTest {
 		//
 		(METHOD_TEST_AND_ACCEPT4 = clz.getDeclaredMethod("testAndAccept", BiPredicate.class, Object.class, Object.class,
 				BiConsumer.class)).setAccessible(true);
-		//
-		(METHOD_STREAM = clz.getDeclaredMethod("stream", Collection.class)).setAccessible(true);
 		//
 		(METHOD_MAP_TO_INT = clz.getDeclaredMethod("mapToInt", Stream.class, ToIntFunction.class)).setAccessible(true);
 		//
@@ -1275,27 +1273,6 @@ class JouYouKanjiGuiTest {
 			final BiConsumer<T, U> consumer) throws Throwable {
 		try {
 			METHOD_TEST_AND_ACCEPT4.invoke(null, predicate, t, u, consumer);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testStream() throws Throwable {
-		//
-		Assertions.assertNull(stream(null));
-		//
-	}
-
-	private static <E> Stream<E> stream(final Collection<E> instance) throws Throwable {
-		try {
-			final Object obj = METHOD_STREAM.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Stream) {
-				return (Stream) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

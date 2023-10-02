@@ -164,7 +164,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 			//
 			// The below check is for "-Djava.awt.headless=true"
 			//
-		final List<Field> fs = toList(filter(stream(FieldUtils.getAllFieldsList(Util.getClass(this))),
+		final List<Field> fs = toList(filter(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(this))),
 				f -> Objects.equals(Util.getName(f), "component")));
 		//
 		final Field f = IterableUtils.size(fs) == 1 ? IterableUtils.get(fs, 0) : null;
@@ -214,7 +214,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 		final Collection<Component> cs = Arrays.asList(tfText, jcbGaKuNenBeTsuKanJi, btnExport);
 		//
 		final Dimension preferredSize = orElse(
-				max(map(stream(cs), GaKuNenBeTsuKanJiGui::getPreferredSize), createDimensionComparator()), null);
+				max(map(Util.stream(cs), GaKuNenBeTsuKanJiGui::getPreferredSize), createDimensionComparator()), null);
 		//
 		if (preferredSize != null) {
 			//
@@ -251,11 +251,6 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 				? instance.map(mapper)
 				: null;
 		//
-	}
-
-	@Nullable
-	private static <E> Stream<E> stream(@Nullable final Collection<E> instance) {
-		return instance != null ? instance.stream() : null;
 	}
 
 	private static void addActionListener(final ActionListener actionListener, @Nullable final AbstractButton... abs) {

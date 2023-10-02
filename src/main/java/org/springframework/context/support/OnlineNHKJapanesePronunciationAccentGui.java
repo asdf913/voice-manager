@@ -225,7 +225,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			//
 		} else if (object instanceof List) {
 			//
-			value = Unit.with(toList(map(stream(((List<?>) object)), x -> Util.toString(x))));
+			value = Unit.with(toList(map(Util.stream(((List<?>) object)), x -> Util.toString(x))));
 			//
 		} else if (object instanceof Iterable) {
 			//
@@ -300,7 +300,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			// The below check is for "-Djava.awt.headless=true"
 			//
 		final Field f = testAndApply(x -> IterableUtils.size(x) == 1,
-				toList(filter(stream(FieldUtils.getAllFieldsList(Util.getClass(this))),
+				toList(filter(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(this))),
 						x -> Objects.equals(Util.getName(x), "component"))),
 				x -> IterableUtils.get(x, 0), null);
 		//
@@ -429,7 +429,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 				.collect(Collectors.toList());
 		//
 		final Double maxPreferredSizeWidth = orElse(
-				max(map(stream(cs), x -> getWidth(getPreferredSize(x))), ObjectUtils::compare), null);
+				max(map(Util.stream(cs), x -> getWidth(getPreferredSize(x))), ObjectUtils::compare), null);
 		//
 		forEach(cs, c -> {
 			//
@@ -506,7 +506,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 						x -> Narcissus.getField(x, getDeclaredField(Util.getClass(x), "map")), null));
 		//
 		final List<String> classNames = testAndApply(Objects::nonNull,
-				toList(map(stream(imageWriterSpis != null ? imageWriterSpis.keySet() : null),
+				toList(map(Util.stream(imageWriterSpis != null ? imageWriterSpis.keySet() : null),
 						x -> getName(cast(Class.class, x)))),
 				ArrayList::new, null);
 		//
@@ -1102,11 +1102,6 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 	@Nullable
 	private static Object getSource(@Nullable final EventObject instance) {
 		return instance != null ? instance.getSource() : null;
-	}
-
-	@Nullable
-	private static <E> Stream<E> stream(@Nullable final Collection<E> instance) {
-		return instance != null ? instance.stream() : null;
 	}
 
 	@Nullable

@@ -1066,7 +1066,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		// attribute which value is "hiragana"
 		//
 		multimapHiragana = toList(map(
-				stream(getBeanDefinitionNamesByClassAndAttributes(configurableListableBeanFactory, Multimap.class,
+				Util.stream(getBeanDefinitionNamesByClassAndAttributes(configurableListableBeanFactory, Multimap.class,
 						Collections.singletonMap(VALUE, "hiragana"))),
 				x -> cast(Multimap.class, BeanFactoryUtil.getBean(configurableListableBeanFactory, x))));
 		//
@@ -1075,7 +1075,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		// is "hiragana"
 		//
 		mapHiragana = toList(map(
-				stream(getBeanDefinitionNamesByClassAndAttributes(configurableListableBeanFactory, Map.class,
+				Util.stream(getBeanDefinitionNamesByClassAndAttributes(configurableListableBeanFactory, Map.class,
 						Collections.singletonMap(VALUE, "hiragana"))),
 				x -> cast(Map.class, BeanFactoryUtil.getBean(configurableListableBeanFactory, x))));
 		//
@@ -1084,7 +1084,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		// attribute which value is "katakana"
 		//
 		multimapKatakana = toList(map(
-				stream(getBeanDefinitionNamesByClassAndAttributes(configurableListableBeanFactory, Multimap.class,
+				Util.stream(getBeanDefinitionNamesByClassAndAttributes(configurableListableBeanFactory, Multimap.class,
 						Collections.singletonMap(VALUE, "katakana"))),
 				x -> cast(Multimap.class, BeanFactoryUtil.getBean(configurableListableBeanFactory, x))));
 		//
@@ -1093,7 +1093,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		// is "romaji"
 		//
 		mapRomaji = toList(map(
-				stream(getBeanDefinitionNamesByClassAndAttributes(configurableListableBeanFactory, Map.class,
+				Util.stream(getBeanDefinitionNamesByClassAndAttributes(configurableListableBeanFactory, Map.class,
 						Collections.singletonMap(VALUE, "romaji"))),
 				x -> cast(Map.class, BeanFactoryUtil.getBean(configurableListableBeanFactory, x))));
 		//
@@ -1521,7 +1521,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@SuppressWarnings("java:S1612")
 	public void setMp3Tags(final Object value) {
 		//
-		mp3Tags = toArray(toList(map(stream(getObjectList(getObjectMapper(), value)), x -> Util.toString(x))),
+		mp3Tags = toArray(toList(map(Util.stream(getObjectList(getObjectMapper(), value)), x -> Util.toString(x))),
 				new String[] {});
 		//
 	}
@@ -1530,7 +1530,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	public void setMicrosoftSpeechObjectLibraryAttributeNames(final Object value) {
 		//
 		this.microsoftSpeechObjectLibraryAttributeNames = toArray(
-				toList(map(stream(getObjectList(getObjectMapper(), value)), x -> Util.toString(x))), new String[] {});
+				toList(map(Util.stream(getObjectList(getObjectMapper(), value)), x -> Util.toString(x))),
+				new String[] {});
 		//
 	}
 
@@ -1707,7 +1708,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		if (workbookClassFailableSupplierMap == null) {
 			//
 			workbookClassFailableSupplierMap = Unit.with(collect(
-					stream(new Reflections("org.apache.poi").getSubTypesOf(Workbook.class)),
+					Util.stream(new Reflections("org.apache.poi").getSubTypesOf(Workbook.class)),
 					Collectors.toMap(Functions.identity(), x -> new FailableSupplier<Workbook, RuntimeException>() {
 
 						@Override
@@ -1755,7 +1756,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				.getValue0(getWorkbookClassFailableSupplierMap());
 		//
 		final List<Class<? extends Workbook>> classes = toList(
-				filter(stream(keySet(map)), x -> Boolean.logicalOr(Objects.equals(getName(x), toString),
+				filter(Util.stream(keySet(map)), x -> Boolean.logicalOr(Objects.equals(getName(x), toString),
 						StringUtils.endsWithIgnoreCase(getName(x), toString))));
 		//
 		final int size = IterableUtils.size(classes);
@@ -2011,11 +2012,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@Nullable
-	private static <E> Stream<E> stream(@Nullable final Collection<E> instance) {
-		return instance != null ? instance.stream() : null;
-	}
-
-	@Nullable
 	private static Object[] toArray(@Nullable final Collection<?> instance) {
 		return instance != null ? instance.toArray() : null;
 	}
@@ -2254,7 +2250,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				Arrays.asList(JLabel.class, JScrollPane.class, JProgressBar.class, JPanel.class));
 		//
 		forEach(toList(map(
-				FailableStreamUtil.stream(FailableStreamUtil.map(new FailableStream<>(stream(pages)),
+				FailableStreamUtil.stream(FailableStreamUtil.map(new FailableStream<>(Util.stream(pages)),
 						x -> Narcissus.getObjectField(x, getDeclaredField(Util.getClass(x), COMPONENT)))),
 				x -> cast(Container.class, x))), c -> {
 					//
@@ -2778,7 +2774,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static Field getFieldByName(final Class<?> clz, final String name) {
 		//
 		final List<Field> fs = toList(
-				filter(stream(testAndApply(Objects::nonNull, clz, FieldUtils::getAllFieldsList, null)),
+				filter(Util.stream(testAndApply(Objects::nonNull, clz, FieldUtils::getAllFieldsList, null)),
 						f -> Objects.equals(Util.getName(f), name)));
 		//
 		Field field = null;
@@ -3330,7 +3326,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				throw new IllegalStateException(String.format(
 						"There are more than one Voice %1$s found for Lanaguge \"%2$s\"",
-						toList(map(stream(temp), x -> StringUtils.wrap(Util.toString(x), "\""))), voiceLanguage));
+						toList(map(Util.stream(temp), x -> StringUtils.wrap(Util.toString(x), "\""))), voiceLanguage));
 				//
 			} // if
 				//
@@ -3469,8 +3465,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} else if (size > 1) {
 				//
-				throw new IllegalStateException(
-						collect(sorted(map(stream(ms), Util::getName), ObjectUtils::compare), Collectors.joining(",")));
+				throw new IllegalStateException(collect(
+						sorted(map(Util.stream(ms), Util::getName), ObjectUtils::compare), Collectors.joining(",")));
 				//
 			} // if
 				//
@@ -5391,7 +5387,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final boolean headless = GraphicsEnvironment.isHeadless();
 		//
-		if (anyMatch(stream(findFieldsByValue(getDeclaredFields(getClass()), this, source)),
+		if (anyMatch(Util.stream(findFieldsByValue(getDeclaredFields(getClass()), this, source)),
 				f -> isAnnotationPresent(f, ExportButton.class))) {
 			//
 			setText(tfExportFile, null);
@@ -5704,7 +5700,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static <T> List<T> getObjectsByGroupAnnotation(final Object instance, final String group,
 			final Class<T> clz) {
 		//
-		return toList(map(stream(getObjectsByGroupAnnotation(instance, group)), x -> cast(clz, x)));
+		return toList(map(Util.stream(getObjectsByGroupAnnotation(instance, group)), x -> cast(clz, x)));
 		//
 	}
 
@@ -6010,7 +6006,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						x -> Narcissus.getField(x, getDeclaredField(Util.getClass(x), "map")), null));
 		//
 		final List<String> classNames = testAndApply(Objects::nonNull,
-				toList(map(stream(keySet(imageWriterSpis)), x -> getName(cast(Class.class, x)))), ArrayList::new, null);
+				toList(map(Util.stream(keySet(imageWriterSpis)), x -> getName(cast(Class.class, x)))), ArrayList::new,
+				null);
 		//
 		final String commonPrefix = StringUtils.getCommonPrefix(toArray(classNames, new String[] {}));
 		//
@@ -7145,7 +7142,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				} // if
 					//
 				if (isSelected(cbExportHtmlAsZip)
-						&& reduce(mapToLong(stream(files), f -> longValue(length(f), 0)), 0, Long::sum) > 0) {
+						&& reduce(mapToLong(Util.stream(files), f -> longValue(length(f), 0)), 0, Long::sum) > 0) {
 					//
 					ObjectMap.setObject(objectMap, File.class,
 							file = new File(String.format("voice_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.zip", new Date())));
@@ -8104,7 +8101,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			final POIXMLDocument poiXmlDocument = cast(POIXMLDocument.class, workbook);
 			//
-			final List<String> sheetExclued = toList(map(stream(getObjectList(getObjectMapper(),
+			final List<String> sheetExclued = toList(map(Util.stream(getObjectList(getObjectMapper(),
 					getLpwstr(testAndApply(VoiceManager::contains,
 							POIXMLPropertiesUtil.getCustomProperties(POIXMLDocumentUtil.getProperties(poiXmlDocument)),
 							"sheetExcluded", VoiceManager::getProperty, null)))),
@@ -8711,7 +8708,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		} else if (jouYouKanJiList != null) {
 			//
 			setSelectedItem(cbmJouYouKanJi,
-					StringUtils.length(text) <= orElse(max(mapToInt(stream(list), StringUtils::length)), 0)
+					StringUtils.length(text) <= orElse(max(mapToInt(Util.stream(list), StringUtils::length)), 0)
 							? contains(list, text)
 							: null);
 			//
@@ -8831,7 +8828,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			final ComboBoxModel<String> cbmJlptLevel = instance.cbmJlptLevel;
 			//
-			final List<JlptVocabulary> temp = toList(filter(stream(jlptVocabularies),
+			final List<JlptVocabulary> temp = toList(filter(Util.stream(jlptVocabularies),
 					x -> Boolean.logicalOr(Objects.equals(text, getKanji(x)), Objects.equals(text, getKana(x)))));
 			//
 			forEach(temp, x -> addElement(mcbmJlptVocabulary, x));
@@ -8841,7 +8838,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				setSelectedItem(instance.cbmJlptLevel, null);
 				//
 				testAndAccept(x -> IterableUtils.size(x) == 1,
-						toList(distinct(map(stream(temp), VoiceManager::getLevel))),
+						toList(distinct(map(Util.stream(temp), VoiceManager::getLevel))),
 						x -> setSelectedItemByString(cbmJlptLevel, IterableUtils.get(x, 0)));
 				//
 				if (instance != null && instance.jcbJlptVocabulary != null) {
@@ -9183,7 +9180,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				} // for
 					//
 				final List<Integer> counts = toList(
-						filter(map(stream(entrySet(map)), VoiceManager::getValue), Objects::nonNull));
+						filter(map(Util.stream(entrySet(map)), VoiceManager::getValue), Objects::nonNull));
 				//
 				final int size = IterableUtils.size(counts);
 				//
@@ -9966,7 +9963,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			addValidationData(ObjectMap.getObject(objectMap, Sheet.class),
 					createValidation(dvh,
 							createExplicitListConstraint(dvh,
-									toArray(toList(map(stream(bs), x -> Util.toString(x))), new String[] {})),
+									toArray(toList(map(Util.stream(bs), x -> Util.toString(x))), new String[] {})),
 							new CellRangeAddressList(row.getRowNum(), row.getRowNum(), index, index)));
 			//
 		} // if
@@ -10754,7 +10751,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} else if (Objects.equals(type, Iterable.class)) {
 			//
-			value = Unit.with(toList(map(stream(getObjectList(ObjectMap.getObject(objectMap, ObjectMapper.class),
+			value = Unit.with(toList(map(Util.stream(getObjectList(ObjectMap.getObject(objectMap, ObjectMapper.class),
 					CellUtil.getStringCellValue(cell))), x -> Util.toString(x))));
 			//
 		} else if (Objects.equals(type, Integer.class)) {
@@ -11573,8 +11570,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		voice.setYomi(cast(Yomi.class, getSelectedItem(instance.cbmYomi)));
 		//
-		setListNames(voice,
-				toList(map(stream(getObjectList(objectMapper, getText(instance.tfListNames))), x -> Util.toString(x))));
+		setListNames(voice, toList(
+				map(Util.stream(getObjectList(objectMapper, getText(instance.tfListNames))), x -> Util.toString(x))));
 		//
 		voice.setJlptLevel(Util.toString(getSelectedItem(instance.cbmJlptLevel)));
 		//
@@ -11633,7 +11630,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static class ExportTask implements Runnable {
 
 		private static String FILE_NAME_PREFIX_PADDING = orElse(
-				min(stream(IteratorUtils.toList(new RgxGen("\\d").iterateUnique())), StringUtils::compare), null);
+				min(Util.stream(IteratorUtils.toList(new RgxGen("\\d").iterateUnique())), StringUtils::compare), null);
 
 		@Note("Count")
 		private Integer count;
@@ -12380,7 +12377,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				// hiragana and romaji
 				//
 			final String string = StringUtils.trim(collect(
-					filter(stream(Arrays.asList(getHiragana(voice), getRomaji(voice))), StringUtils::isNotBlank),
+					filter(Util.stream(Arrays.asList(getHiragana(voice), getRomaji(voice))), StringUtils::isNotBlank),
 					Collectors.joining(" ")));
 			//
 			if (StringUtils.isNotBlank(string)) {
@@ -12462,7 +12459,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					if (embedAudioInPresentation) {
 						//
 						ZipUtil.addEntries(file,
-								toArray(map(stream(voiceLKeySet),
+								toArray(map(Util.stream(voiceLKeySet),
 										x -> new FileSource(String.join("/", folderInPresentation, x),
 												new File(outputFolder, x))),
 										ZipEntrySource[]::new));
@@ -12783,8 +12780,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			int size = IterableUtils.size(voices);
 			//
-			Integer numberOfOrdinalPositionDigit = Integer.valueOf(StringUtils.length(
-					Util.toString(orElse(max(filter(map(stream(voices), x -> getOrdinalPosition(x)), Objects::nonNull),
+			Integer numberOfOrdinalPositionDigit = Integer.valueOf(StringUtils.length(Util
+					.toString(orElse(max(filter(map(Util.stream(voices), x -> getOrdinalPosition(x)), Objects::nonNull),
 							ObjectUtils::compare), null))));
 			//
 			String ordinalPositionFileNamePrefix = null;
@@ -12874,9 +12871,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				size = MultimapUtil.size(multimap);
 				//
-				numberOfOrdinalPositionDigit = Integer.valueOf(StringUtils.length(Util.toString(
-						orElse(max(filter(map(stream(MultimapUtil.values(multimap)), x -> getOrdinalPosition(x)),
-								Objects::nonNull), ObjectUtils::compare), null))));
+				numberOfOrdinalPositionDigit = Integer
+						.valueOf(
+								StringUtils.length(Util.toString(orElse(
+										max(filter(map(Util.stream(MultimapUtil.values(multimap)),
+												x -> getOrdinalPosition(x)), Objects::nonNull), ObjectUtils::compare),
+										null))));
 				//
 				final AtomicInteger numerator = new AtomicInteger(1);
 				//
@@ -12998,10 +12998,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final int size = MultimapUtil.size(multimap);
 		//
-		final int numberOfOrdinalPositionDigit = Integer.valueOf(StringUtils.length(Util.toString(orElse(
-				max(filter(map(stream(MultimapUtil.values(multimap)), x -> getOrdinalPosition(x)), Objects::nonNull),
-						ObjectUtils::compare),
-				null))));
+		final int numberOfOrdinalPositionDigit = Integer
+				.valueOf(
+						StringUtils
+								.length(Util.toString(orElse(
+										max(filter(map(Util.stream(MultimapUtil.values(multimap)),
+												x -> getOrdinalPosition(x)), Objects::nonNull), ObjectUtils::compare),
+										null))));
 		//
 		EvaluationContext evaluationContext = testAndApply(c -> ObjectMap.containsObject(objectMap, c),
 				EvaluationContext.class, c -> ObjectMap.getObject(objectMap, c), null);

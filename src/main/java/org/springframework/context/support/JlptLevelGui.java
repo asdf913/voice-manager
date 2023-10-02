@@ -167,7 +167,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 			//
 			// The below check is for "-Djava.awt.headless=true"
 			//
-		final List<Field> fs = toList(filter(stream(FieldUtils.getAllFieldsList(Util.getClass(this))),
+		final List<Field> fs = toList(filter(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(this))),
 				f -> Objects.equals(Util.getName(f), "component")));
 		//
 		final Field f = IterableUtils.size(fs) == 1 ? IterableUtils.get(fs, 0) : null;
@@ -244,7 +244,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		//
 		final List<Component> cs = Arrays.asList(jlJlptLevel, btnExportJson, tfJson, btnCompare, tfText);
 		//
-		final Dimension preferredSize = orElse(max(map(stream(cs), JlptLevelGui::getPreferredSize),
+		final Dimension preferredSize = orElse(max(map(Util.stream(cs), JlptLevelGui::getPreferredSize),
 				(a, b) -> a != null && b != null ? Double.compare(a.getWidth(), b.getWidth()) : 0), null);
 		//
 		if (preferredSize != null) {
@@ -528,7 +528,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		if (StringUtils.isNotEmpty(text) && CollectionUtils.isNotEmpty(jlptVocabularies)
 				&& jlptVocabularyList != null) {
 			//
-			final List<JlptVocabulary> temp = toList(filter(stream(jlptVocabularies),
+			final List<JlptVocabulary> temp = toList(filter(Util.stream(jlptVocabularies),
 					x -> Boolean.logicalOr(Objects.equals(text, getKanji(x)), Objects.equals(text, getKana(x)))));
 			//
 			forEach(temp, x -> addElement(cbmJlptVocabulary, x));
@@ -538,7 +538,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 				setSelectedIndices(jlJlptLevel, new int[] {});
 				//
 				testAndAccept(x -> IterableUtils.size(x) == 1,
-						toList(distinct(map(stream(temp), JlptLevelGui::getLevel))), x -> {
+						toList(distinct(map(Util.stream(temp), JlptLevelGui::getLevel))), x -> {
 							//
 							if (instance != null) {
 								//
@@ -631,11 +631,6 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 
 	private static int getSize(@Nullable final ListModel<?> instance) {
 		return instance != null ? instance.getSize() : 0;
-	}
-
-	@Nullable
-	private static <E> Stream<E> stream(@Nullable final Collection<E> instance) {
-		return instance != null ? instance.stream() : null;
 	}
 
 	@Nullable

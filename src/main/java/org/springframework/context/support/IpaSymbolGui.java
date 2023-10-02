@@ -138,7 +138,7 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 			//
 			// The below check is for "-Djava.awt.headless=true"
 			//
-		final List<Field> fs = FieldUtils.getAllFieldsList(Util.getClass(this)).stream()
+		final List<Field> fs = Util.stream(FieldUtils.getAllFieldsList(Util.getClass(this)))
 				.filter(f -> Objects.equals(Util.getName(f), "component")).toList();
 		//
 		final Field f = IterableUtils.size(fs) == 1 ? IterableUtils.get(fs, 0) : null;

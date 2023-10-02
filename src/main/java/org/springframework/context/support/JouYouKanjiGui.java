@@ -260,7 +260,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 			//
 			// The below check is for "-Djava.awt.headless=true"
 			//
-		final List<Field> fs = toList(filter(stream(FieldUtils.getAllFieldsList(Util.getClass(this))),
+		final List<Field> fs = toList(filter(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(this))),
 				f -> Objects.equals(Util.getName(f), "component")));
 		//
 		final Field f = IterableUtils.size(fs) == 1 ? IterableUtils.get(fs, 0) : null;
@@ -300,7 +300,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		//
 		final List<Component> cs = Arrays.asList(tfText, jcbJouYouKanji);
 		//
-		final Dimension preferredSize = cs.stream().map(JouYouKanjiGui::getPreferredSize)
+		final Dimension preferredSize = Util.stream(cs).map(JouYouKanjiGui::getPreferredSize)
 				.max((a, b) -> a != null && b != null ? Double.compare(a.getWidth(), b.getWidth()) : 0).orElse(null);
 		//
 		if (preferredSize != null) {
@@ -696,7 +696,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		if (StringUtils.isNotBlank(style)) {
 			//
 			final List<CSSDeclaration> cssDeclarations = toList(filter(
-					stream(CSSReaderDeclarationList.readFromString(style,
+					Util.stream(CSSReaderDeclarationList.readFromString(style,
 							ObjectUtils.defaultIfNull(ecssVersion, ECSSVersion.CSS30))),
 					x -> Objects.equals(getProperty(x), cssProperty)));
 			//
@@ -802,7 +802,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 			} else if (jouYouKanJiList != null) {
 				//
 				setSelectedItem(cbmJouYouKanJi,
-						StringUtils.length(text) <= orElse(max(mapToInt(stream(list), StringUtils::length)), 0)
+						StringUtils.length(text) <= orElse(max(mapToInt(Util.stream(list), StringUtils::length)), 0)
 								? contains(list, text)
 								: null);
 				//
@@ -810,11 +810,6 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 				//
 		} // if
 			//
-	}
-
-	@Nullable
-	private static <E> Stream<E> stream(@Nullable final Collection<E> instance) {
-		return instance != null ? instance.stream() : null;
 	}
 
 	@Nullable

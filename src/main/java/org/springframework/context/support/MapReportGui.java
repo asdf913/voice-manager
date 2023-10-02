@@ -147,7 +147,7 @@ public class MapReportGui extends JFrame
 			//
 			// The below check is for "-Djava.awt.headless=true"
 			//
-		final List<Field> fs = toList(filter(stream(FieldUtils.getAllFieldsList(Util.getClass(this))),
+		final List<Field> fs = toList(filter(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(this))),
 				f -> Objects.equals(Util.getName(f), "component")));
 		//
 		final Field f = IterableUtils.size(fs) == 1 ? IterableUtils.get(fs, 0) : null;
@@ -364,9 +364,12 @@ public class MapReportGui extends JFrame
 		//
 		final List<String> columns = new ArrayList<>(Collections.singleton("Key"));
 		//
-		columns.addAll(toList(IntStream
-				.range(0, orElse(max(mapToInt(stream(entrySet(asMap(mm))), x -> IterableUtils.size(getValue(x)))), 0))
-				.mapToObj(x -> String.format("Value %1$s", x + 1))));
+		columns.addAll(
+				toList(IntStream
+						.range(0,
+								orElse(max(mapToInt(Util.stream(entrySet(asMap(mm))),
+										x -> IterableUtils.size(getValue(x)))), 0))
+						.mapToObj(x -> String.format("Value %1$s", x + 1))));
 		//
 		dtm = new DefaultTableModel(columns.toArray(), 0);
 		//
@@ -404,7 +407,7 @@ public class MapReportGui extends JFrame
 		try {
 			//
 			final List<List<Object>> lists = toList(
-					map(stream(getDataVector(dtm)), x -> testAndApply(Objects::nonNull, x, ArrayList::new, null)));
+					map(Util.stream(getDataVector(dtm)), x -> testAndApply(Objects::nonNull, x, ArrayList::new, null)));
 			//
 			List<?> list = null;
 			//
@@ -513,11 +516,6 @@ public class MapReportGui extends JFrame
 				? instance.mapToInt(mapper)
 				: null;
 		//
-	}
-
-	@Nullable
-	private static <E> Stream<E> stream(@Nullable final Collection<E> instance) {
-		return instance != null ? instance.stream() : null;
 	}
 
 	@Nullable
