@@ -34,8 +34,7 @@ public interface Util {
 	static <T, R> Stream<R> map(@Nullable final Stream<T> instance,
 			@Nullable final Function<? super T, ? extends R> mapper) {
 		//
-		return instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || mapper != null)
-				? instance.map(mapper)
+		return instance != null && (Proxy.isProxyClass(getClass(instance)) || mapper != null) ? instance.map(mapper)
 				: null;
 		//
 	}
