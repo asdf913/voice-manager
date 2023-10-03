@@ -1721,7 +1721,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							} catch (final NoSuchMethodException | InstantiationException | IllegalAccessException
 									| InvocationTargetException e) {
 								//
-								throw toRuntimeException(e);
+								throw ObjectUtils.getIfNull(toRuntimeException(e), RuntimeException::new);
 								//
 							} // try
 						}
@@ -5918,7 +5918,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} catch (final NoSuchFieldException e) {
 			//
-			throw toRuntimeException(e);
+			throw ObjectUtils.getIfNull(toRuntimeException(e), RuntimeException::new);
 			//
 		} // try
 			//
@@ -5948,7 +5948,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} catch (final NoSuchAlgorithmException e) {
 				//
-				throw toRuntimeException(e);
+				throw ObjectUtils.getIfNull(toRuntimeException(e), RuntimeException::new);
 				//
 			} // try
 				//
@@ -7594,7 +7594,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			final Throwable throwable = ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException),
 					targetException, ExceptionUtils.getRootCause(e));
 			//
-			throw toRuntimeException(throwable);
+			throw ObjectUtils.getIfNull(toRuntimeException(throwable), RuntimeException::new);
 			//
 		} // try
 			//
@@ -11340,7 +11340,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 				} // if
 					//
-				throw targetExceptionRootCause;
+				throw ObjectUtils.getIfNull(targetExceptionRootCause, RuntimeException::new);
 				//
 			} // try
 				//
