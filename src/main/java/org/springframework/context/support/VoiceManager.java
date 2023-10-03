@@ -5200,11 +5200,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static Range<Integer> createRange(@Nullable final Integer minValue, @Nullable final Integer maxValue) {
 		//
 		if (minValue != null && maxValue != null) {
-			return Range.open(minValue.intValue(), maxValue.intValue());
+			return Range.open(minValue, maxValue);
 		} else if (minValue != null) {
-			return Range.atLeast(minValue.intValue());
+			return Range.atLeast(minValue);
 		} else if (maxValue != null) {
-			return Range.atMost(maxValue.intValue());
+			return Range.atMost(maxValue);
 		} // if
 			//
 		return Range.all();
