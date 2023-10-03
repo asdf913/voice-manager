@@ -99,7 +99,8 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_SAVE_FILE, METHOD_CONTAINS_KEY, METHOD_IIF, METHOD_GET_NAME,
 			METHOD_SORT, METHOD_CREATE_IMAGE_FORMAT_COMPARATOR, METHOD_IS_ANNOTATION_PRESENT, METHOD_GET_ANNOTATION,
 			METHOD_GET_PREFERRED_SIZE, METHOD_FILTER, METHOD_TO_LIST, METHOD_SET_PREFERRED_SIZE, METHOD_MAX,
-			METHOD_TO_ARRAY, METHOD_TEST_AND_RUN, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4 = null;
+			METHOD_TO_ARRAY, METHOD_TEST_AND_RUN, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4,
+			METHOD_REMOVE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -220,6 +221,8 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		//
 		(METHOD_TEST_AND_ACCEPT4 = clz.getDeclaredMethod("testAndAccept", BiPredicate.class, Object.class, Object.class,
 				BiConsumer.class)).setAccessible(true);
+		//
+		(METHOD_REMOVE = clz.getDeclaredMethod("remove", List.class, Integer.TYPE)).setAccessible(true);
 		//
 	}
 
@@ -1783,6 +1786,21 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			final BiConsumer<T, U> consumer) throws Throwable {
 		try {
 			METHOD_TEST_AND_ACCEPT4.invoke(null, predicate, t, u, consumer);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testemove() {
+		//
+		Assertions.assertDoesNotThrow(() -> remove(null, 0));
+		//
+	}
+
+	private static void remove(final List<?> instance, final int index) throws Throwable {
+		try {
+			METHOD_REMOVE.invoke(null, instance, index);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

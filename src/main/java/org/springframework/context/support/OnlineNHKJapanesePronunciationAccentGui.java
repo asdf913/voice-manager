@@ -381,7 +381,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 					//
 					if ((className = IterableUtils.get(classNames, i)) != null && !ImageIO.write(bi, className, baos)) {
 						//
-						classNames.remove(i);
+						remove(classNames, i);
 						//
 					} // if
 						//
@@ -434,6 +434,13 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		//
 		testAndRun(isGui, this::pack);
 		//
+	}
+
+	private static void remove(final List<?> instance, final int index) {
+		if (instance != null) {
+			instance.remove(index);
+		}
+
 	}
 
 	private static void testAndRun(final boolean b, @Nullable final Runnable runnable) {
