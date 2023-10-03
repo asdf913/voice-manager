@@ -436,7 +436,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		//
 	}
 
-	private static void remove(final List<?> instance, final int index) {
+	private static void remove(@Nullable final List<?> instance, final int index) {
 		if (instance != null) {
 			instance.remove(index);
 		}
