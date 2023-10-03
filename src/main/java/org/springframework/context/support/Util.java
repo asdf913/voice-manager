@@ -1,7 +1,9 @@
 package org.springframework.context.support;
 
 import java.lang.reflect.Member;
+import java.lang.reflect.Proxy;
 import java.util.Collection;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
@@ -26,6 +28,14 @@ public interface Util {
 	@Nullable
 	static <E> Stream<E> stream(@Nullable final Collection<E> instance) {
 		return instance != null ? instance.stream() : null;
+	}
+
+	static <T, R> Stream<R> map(final Stream<T> instance, final Function<? super T, ? extends R> mapper) {
+		//
+		return instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || mapper != null)
+				? instance.map(mapper)
+				: null;
+		//
 	}
 
 }

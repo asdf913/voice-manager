@@ -77,7 +77,7 @@ class MapReportGuiTest {
 			METHOD_GET_PREFERRED_WIDTH, METHOD_DOUBLE_VALUE, METHOD_AS_MAP, METHOD_GET_VALUES, METHOD_OR_ELSE,
 			METHOD_MAX, METHOD_MAP_TO_INT, METHOD_CREATE_MULTI_MAP, METHOD_ADD, METHOD_IS_ASSIGNABLE_FROM,
 			METHOD_GET_KEY, METHOD_GET_VALUE, METHOD_FOR_NAME, METHOD_FILTER, METHOD_TO_LIST,
-			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_ADD_ACTION_LISTENER, METHOD_MAP, METHOD_LENGTH,
+			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_ADD_ACTION_LISTENER, METHOD_LENGTH,
 			METHOD_TEST_AND_APPLY, METHOD_CREATE_MULTIMAP, METHOD_CLEAR, METHOD_TEST_AND_ACCEPT3,
 			METHOD_TEST_AND_ACCEPT4, METHOD_WRITER_WITH_DEFAULT_PRETTY_PRINTER, METHOD_WRITER,
 			METHOD_WRITE_VALUE_AS_STRING = null;
@@ -136,8 +136,6 @@ class MapReportGuiTest {
 		//
 		(METHOD_ADD_ACTION_LISTENER = clz.getDeclaredMethod("addActionListener", ActionListener.class,
 				AbstractButton[].class)).setAccessible(true);
-		//
-		(METHOD_MAP = clz.getDeclaredMethod("map", Stream.class, Function.class)).setAccessible(true);
 		//
 		(METHOD_LENGTH = clz.getDeclaredMethod("length", Object[].class)).setAccessible(true);
 		//
@@ -1041,32 +1039,6 @@ class MapReportGuiTest {
 			throws Throwable {
 		try {
 			METHOD_ADD_ACTION_LISTENER.invoke(null, actionListener, abs);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testMap() throws Throwable {
-		//
-		Assertions.assertNull(map(null, null));
-		//
-		Assertions.assertSame(stream, map(stream, null));
-		//
-		Assertions.assertNull(map(Stream.empty(), null));
-		//
-	}
-
-	private static <T, R> Stream<R> map(final Stream<T> instance, final Function<? super T, ? extends R> mapper)
-			throws Throwable {
-		try {
-			final Object obj = METHOD_MAP.invoke(null, instance, mapper);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Stream) {
-				return (Stream) obj;
-			}
-			throw new Throwable(Util.toString(obj.getClass()));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

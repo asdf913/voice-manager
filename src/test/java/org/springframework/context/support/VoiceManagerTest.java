@@ -440,8 +440,6 @@ class VoiceManagerTest {
 				CLASS_OBJECT_MAP = Class.forName("org.springframework.context.support.VoiceManager$ObjectMap")))
 				.setAccessible(true);
 		//
-		(METHOD_MAP_STREAM = clz.getDeclaredMethod("map", Stream.class, Function.class)).setAccessible(true);
-		//
 		(METHOD_MAP_INT_STREAM = clz.getDeclaredMethod("map", IntStream.class, IntUnaryOperator.class))
 				.setAccessible(true);
 		//
@@ -3971,13 +3969,7 @@ class VoiceManagerTest {
 	@Test
 	void testMap() throws Throwable {
 		//
-		Assertions.assertNull(map((Stream<?>) null, null));
-		//
 		Assertions.assertNull(map((IntStream) null, null));
-		//
-		Assertions.assertSame(stream, map(stream, null));
-		//
-		Assertions.assertNull(map(Stream.empty(), null));
 		//
 		IntStream intStream = IntStream.empty();
 		//

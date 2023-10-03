@@ -300,7 +300,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		//
 		final List<Component> cs = Arrays.asList(tfText, jcbJouYouKanji);
 		//
-		final Dimension preferredSize = Util.stream(cs).map(JouYouKanjiGui::getPreferredSize)
+		final Dimension preferredSize = Util.map(Util.stream(cs), JouYouKanjiGui::getPreferredSize)
 				.max((a, b) -> a != null && b != null ? Double.compare(a.getWidth(), b.getWidth()) : 0).orElse(null);
 		//
 		if (preferredSize != null) {

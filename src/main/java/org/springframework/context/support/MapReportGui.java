@@ -300,16 +300,6 @@ public class MapReportGui extends JFrame
 		return instance != null ? instance.getDataVector() : null;
 	}
 
-	@Nullable
-	private static <T, R> Stream<R> map(@Nullable final Stream<T> instance,
-			@Nullable final Function<? super T, ? extends R> mapper) {
-		//
-		return instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || mapper != null)
-				? instance.map(mapper)
-				: null;
-		//
-	}
-
 	private ObjectMapper getObjectMapper() {
 		if (objectMapper == null) {
 			objectMapper = new ObjectMapper();
@@ -406,8 +396,8 @@ public class MapReportGui extends JFrame
 		//
 		try {
 			//
-			final List<List<Object>> lists = toList(
-					map(Util.stream(getDataVector(dtm)), x -> testAndApply(Objects::nonNull, x, ArrayList::new, null)));
+			final List<List<Object>> lists = toList(Util.map(Util.stream(getDataVector(dtm)),
+					x -> testAndApply(Objects::nonNull, x, ArrayList::new, null)));
 			//
 			List<?> list = null;
 			//

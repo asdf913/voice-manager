@@ -19,7 +19,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -30,7 +29,6 @@ import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.InvokeInstruction;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.function.FailableFunction;
-import com.google.common.base.Predicates;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,6 +39,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.core.env.PropertyResolver;
 
+import com.google.common.base.Predicates;
 import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
@@ -50,8 +49,8 @@ class MainTest {
 	private static Method METHOD_GET_INSTANCE, METHOD_SHOW_MESSAGE_DIALOG_OR_PRINT_LN, METHOD_CAST,
 			METHOD_GET_BEAN_NAMES_FOR_TYPE, METHOD_GET_BEAN_CLASS_NAME, METHOD_PACK, METHOD_SET_VISIBLE,
 			METHOD_TEST_AND_APPLY, METHOD_GET_SELECTED_VALUE, METHOD_GET_CLASS3, METHOD_GET_NAME_CLASS,
-			METHOD_IS_RAISE_THROWABLE_ONLY, METHOD_MAP, METHOD_ERROR_OR_PRINT_STACK_TRACE, METHOD_GET_CLASS_NAME,
-			METHOD_GET_METHOD, METHOD_GET_DECLARING_CLASS, METHOD_IS_ASSIGNABLE_FROM = null;
+			METHOD_IS_RAISE_THROWABLE_ONLY, METHOD_ERROR_OR_PRINT_STACK_TRACE, METHOD_GET_CLASS_NAME, METHOD_GET_METHOD,
+			METHOD_GET_DECLARING_CLASS, METHOD_IS_ASSIGNABLE_FROM = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -88,8 +87,6 @@ class MainTest {
 		//
 		(METHOD_IS_RAISE_THROWABLE_ONLY = clz.getDeclaredMethod("isRaiseThrowableOnly", Class.class, Method.class))
 				.setAccessible(true);
-		//
-		(METHOD_MAP = clz.getDeclaredMethod("map", Stream.class, Function.class)).setAccessible(true);
 		//
 		(METHOD_ERROR_OR_PRINT_STACK_TRACE = clz.getDeclaredMethod("errorOrPrintStackTrace", Logger.class,
 				Throwable.class)).setAccessible(true);
@@ -187,14 +184,6 @@ class MainTest {
 				if (Objects.equals(methodName, "getBeanDefinition") && args != null && args.length > 0) {
 					//
 					return MapUtils.getObject(getBeanDefinitions(), args[0]);
-					//
-				} // if
-					//
-			} else if (proxy instanceof Stream) {
-				//
-				if (Objects.equals(methodName, "map")) {
-					//
-					return null;
 					//
 				} // if
 					//
@@ -584,30 +573,6 @@ class MainTest {
 
 	private static Object createWindow(final Window target) throws HeadlessException {
 		throw new HeadlessException();
-	}
-
-	@Test
-	void testMap() throws Throwable {
-		//
-		Assertions.assertNull(map(Stream.empty(), null));
-		//
-		Assertions.assertNull(map(Reflection.newProxy(Stream.class, ih), null));
-		//
-	}
-
-	private static <T, R> Stream<R> map(final Stream<T> instance, final Function<? super T, ? extends R> mapper)
-			throws Throwable {
-		try {
-			final Object obj = METHOD_MAP.invoke(null, instance, mapper);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Stream) {
-				return (Stream) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test

@@ -46,7 +46,6 @@ import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.IntConsumer;
 import java.util.function.IntUnaryOperator;
 import java.util.function.Predicate;
@@ -198,16 +197,6 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 	}
 
 	@Nullable
-	private static <T, R> Stream<R> map(@Nullable final Stream<T> instance,
-			@Nullable final Function<? super T, ? extends R> mapper) {
-		//
-		return instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || mapper != null)
-				? instance.map(mapper)
-				: null;
-		//
-	}
-
-	@Nullable
 	private static <T> List<T> toList(@Nullable final Stream<T> instance) {
 		return instance != null ? instance.toList() : null;
 	}
@@ -225,12 +214,12 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			//
 		} else if (object instanceof List) {
 			//
-			value = Unit.with(toList(map(Util.stream(((List<?>) object)), x -> Util.toString(x))));
+			value = Unit.with(toList(Util.map(Util.stream(((List<?>) object)), x -> Util.toString(x))));
 			//
 		} else if (object instanceof Iterable) {
 			//
-			value = Unit.with(toList(
-					map(StreamSupport.stream(((Iterable<?>) object).spliterator(), false), x -> Util.toString(x))));
+			value = Unit.with(toList(Util.map(StreamSupport.stream(((Iterable<?>) object).spliterator(), false),
+					x -> Util.toString(x))));
 			//
 		} else if (clz != null && clz.isArray()) {
 			//
@@ -242,8 +231,8 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 				//
 			} // if
 				//
-			value = Unit
-					.with(toList(map(IntStream.range(0, Array.getLength(object)).mapToObj(i -> Array.get(object, i)),
+			value = Unit.with(
+					toList(Util.map(IntStream.range(0, Array.getLength(object)).mapToObj(i -> Array.get(object, i)),
 							x -> Util.toString(x))));
 			//
 		} else if (object instanceof String string) {
@@ -429,7 +418,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 				.collect(Collectors.toList());
 		//
 		final Double maxPreferredSizeWidth = orElse(
-				max(map(Util.stream(cs), x -> getWidth(getPreferredSize(x))), ObjectUtils::compare), null);
+				max(Util.map(Util.stream(cs), x -> getWidth(getPreferredSize(x))), ObjectUtils::compare), null);
 		//
 		forEach(cs, c -> {
 			//
@@ -506,7 +495,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 						x -> Narcissus.getField(x, getDeclaredField(Util.getClass(x), "map")), null));
 		//
 		final List<String> classNames = testAndApply(Objects::nonNull,
-				toList(map(Util.stream(imageWriterSpis != null ? imageWriterSpis.keySet() : null),
+				toList(Util.map(Util.stream(imageWriterSpis != null ? imageWriterSpis.keySet() : null),
 						x -> getName(cast(Class.class, x)))),
 				ArrayList::new, null);
 		//

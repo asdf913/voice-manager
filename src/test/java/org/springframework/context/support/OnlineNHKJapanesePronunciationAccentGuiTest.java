@@ -41,7 +41,6 @@ import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.IntConsumer;
 import java.util.function.IntUnaryOperator;
 import java.util.function.Predicate;
@@ -63,7 +62,6 @@ import javax.swing.text.JTextComponent;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
-import com.google.common.base.Predicates;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.AssertionsUtil;
 import org.junit.jupiter.api.BeforeAll;
@@ -73,6 +71,7 @@ import org.junit.jupiter.api.function.Executable;
 import org.meeuw.functional.Consumers;
 import org.springframework.beans.factory.InitializingBean;
 
+import com.google.common.base.Predicates;
 import com.google.common.reflect.Reflection;
 import com.google.common.util.concurrent.Runnables;
 
@@ -93,7 +92,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 	private static Method METHOD_CAST, METHOD_TEST_AND_APPLY, METHOD_GET_WIDTH, METHOD_GET_TEXT, METHOD_GET_VALUE,
 			METHOD_ADD_ELEMENT, METHOD_REMOVE_ELEMENT_AT, METHOD_GET_SELECTED_ITEM, METHOD_GET_SIZE,
 			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_FOR_EACH_ITERABLE, METHOD_FOR_EACH_INT_STREAM,
-			METHOD_MAP_INT_STREAM, METHOD_MAP_STREAM, METHOD_SET_PITCH_ACCENT_IMAGE_TO_SYSTEM_CLIPBOARD_CONTENTS,
+			METHOD_MAP_INT_STREAM, METHOD_SET_PITCH_ACCENT_IMAGE_TO_SYSTEM_CLIPBOARD_CONTENTS,
 			METHOD_SAVE_PITCH_ACCENT_IMAGE, METHOD_PLAY_AUDIO, METHOD_SAVE_AUDIO, METHOD_PRONOUNICATION_CHANGED,
 			METHOD_GET_DECLARED_FIELD, METHOD_FOR_NAME, METHOD_OPEN_STREAM, METHOD_PLAY, METHOD_ADD_ACTION_LISTENER,
 			METHOD_GET_MAP, METHOD_GET_FIELD, METHOD_SET_TEXT, METHOD_SET_FORE_GROUND,
@@ -141,8 +140,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		//
 		(METHOD_MAP_INT_STREAM = clz.getDeclaredMethod("map", IntStream.class, IntUnaryOperator.class))
 				.setAccessible(true);
-		//
-		(METHOD_MAP_STREAM = clz.getDeclaredMethod("map", Stream.class, Function.class)).setAccessible(true);
 		//
 		(METHOD_SET_PITCH_ACCENT_IMAGE_TO_SYSTEM_CLIPBOARD_CONTENTS = clz
 				.getDeclaredMethod("setPitchAccentImageToSystemClipboardContents", Pronunciation.class))
@@ -230,17 +227,13 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 
 		private Integer size = null;
 
-		private Object key, value, selectedItem, get = null;
+		private Object key, value, selectedItem = null;
 
 		private Set<Entry<?, ?>> entrySet = null;
 
 		private Iterator<?> iterator = null;
 
 		private Boolean hasNext, containsKey, isEmpty = null;
-
-		private Component component = null;
-
-		private Stream<?> stream = null;
 
 		private Optional<?> max = null;
 
@@ -291,23 +284,11 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 					//
 			} else if (proxy instanceof Map) {
 				//
-				if (Objects.equals(methodName, "get")) {
-					//
-					return get;
-					//
-				} else if (Objects.equals(methodName, "isEmpty")) {
+				if (Objects.equals(methodName, "isEmpty")) {
 					//
 					return isEmpty;
 					//
 				} else if (Objects.equals(methodName, "size")) {
-					//
-					return size;
-					//
-				} // if
-					//
-			} else if (proxy instanceof Collection) {
-				//
-				if (Objects.equals(methodName, "size")) {
 					//
 					return size;
 					//
@@ -355,10 +336,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 					//
 					return proxy;
 					//
-				} else if (Objects.equals(methodName, "map")) {
-					//
-					return stream;
-					//
 				} else if (Objects.equals(methodName, "max")) {
 					//
 					return max;
@@ -370,14 +347,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				if (Objects.equals(methodName, "toArray")) {
 					//
 					return toArray;
-					//
-				} // if
-					//
-			} else if (proxy instanceof ListCellRenderer) {
-				//
-				if (Objects.equals(methodName, "getListCellRendererComponent")) {
-					//
-					return component;
 					//
 				} // if
 					//
@@ -965,12 +934,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		//
 		Assertions.assertNull(map((IntStream) null, null));
 		//
-		Assertions.assertNull(map((Stream<?>) null, null));
-		//
-		Assertions.assertNull(map(Stream.empty(), null));
-		//
-		Assertions.assertNull(map(Reflection.newProxy(Stream.class, ih), null));
-		//
 	}
 
 	private static IntStream map(final IntStream instance, final IntUnaryOperator mapper) throws Throwable {
@@ -980,21 +943,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				return null;
 			} else if (obj instanceof IntStream) {
 				return (IntStream) obj;
-			}
-			throw new Throwable(Util.toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	private static <T, R> Stream<R> map(final Stream<T> instance, final Function<? super T, ? extends R> mapper)
-			throws Throwable {
-		try {
-			final Object obj = METHOD_MAP_STREAM.invoke(null, instance, mapper);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Stream) {
-				return (Stream) obj;
 			}
 			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

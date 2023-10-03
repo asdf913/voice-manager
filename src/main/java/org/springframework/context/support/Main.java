@@ -8,13 +8,11 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -148,7 +146,7 @@ public class Main {
 				//
 			if (MultimapUtil.size(multimap) == 1) {
 				//
-				clz = forName(Util.stream(MultimapUtil.values(multimap)).map(Main::getBeanClassName)
+				clz = forName(Util.map(Util.stream(MultimapUtil.values(multimap)), Main::getBeanClassName)
 						.reduce((first, second) -> first).orElse(null));
 				//
 			} // if
@@ -296,8 +294,8 @@ public class Main {
 				//
 				// instructions
 				//
-			if (Objects.equals(Arrays.asList(NEW.class, DUP.class, INVOKESPECIAL.class, ATHROW.class),
-					toList(map(testAndApply(Objects::nonNull, ins, Arrays::stream, null), x -> Util.getClass(x))))) {
+			if (Objects.equals(Arrays.asList(NEW.class, DUP.class, INVOKESPECIAL.class, ATHROW.class), toList(
+					Util.map(testAndApply(Objects::nonNull, ins, Arrays::stream, null), x -> Util.getClass(x))))) {
 				//
 				final Class<?> c = forName(className);
 				//
@@ -326,16 +324,6 @@ public class Main {
 	@Nullable
 	private static String getClassName(@Nullable final InvokeInstruction instance, final ConstantPoolGen cpg) {
 		return instance != null ? instance.getClassName(cpg) : null;
-	}
-
-	@Nullable
-	private static <T, R> Stream<R> map(@Nullable final Stream<T> instance,
-			@Nullable final Function<? super T, ? extends R> mapper) {
-		//
-		return instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || mapper != null)
-				? instance.map(mapper)
-				: null;
-		//
 	}
 
 	@Nullable

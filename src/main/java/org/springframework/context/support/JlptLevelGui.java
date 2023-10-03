@@ -37,7 +37,6 @@ import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -244,7 +243,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		//
 		final List<Component> cs = Arrays.asList(jlJlptLevel, btnExportJson, tfJson, btnCompare, tfText);
 		//
-		final Dimension preferredSize = orElse(max(map(Util.stream(cs), JlptLevelGui::getPreferredSize),
+		final Dimension preferredSize = orElse(max(Util.map(Util.stream(cs), JlptLevelGui::getPreferredSize),
 				(a, b) -> a != null && b != null ? Double.compare(a.getWidth(), b.getWidth()) : 0), null);
 		//
 		if (preferredSize != null) {
@@ -538,7 +537,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 				setSelectedIndices(jlJlptLevel, new int[] {});
 				//
 				testAndAccept(x -> IterableUtils.size(x) == 1,
-						toList(distinct(map(Util.stream(temp), JlptLevelGui::getLevel))), x -> {
+						toList(distinct(Util.map(Util.stream(temp), JlptLevelGui::getLevel))), x -> {
 							//
 							if (instance != null) {
 								//
@@ -631,16 +630,6 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 
 	private static int getSize(@Nullable final ListModel<?> instance) {
 		return instance != null ? instance.getSize() : 0;
-	}
-
-	@Nullable
-	private static <T, R> Stream<R> map(@Nullable final Stream<T> instance,
-			@Nullable final Function<? super T, ? extends R> mapper) {
-		//
-		return instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || mapper != null)
-				? instance.map(mapper)
-				: null;
-		//
 	}
 
 	@Nullable
