@@ -240,8 +240,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 
 		private Component component = null;
 
-		private Stream<?> stream = null;
-
 		private Optional<?> max = null;
 
 		private Object[] toArray = null;
