@@ -30,6 +30,7 @@ public interface Util {
 		return instance != null ? instance.stream() : null;
 	}
 
+	@Nullable
 	static <T, R> Stream<R> map(@Nullable final Stream<T> instance,
 			@Nullable final Function<? super T, ? extends R> mapper) {
 		//
