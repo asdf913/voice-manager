@@ -227,13 +227,17 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 
 		private Integer size = null;
 
-		private Object key, value, selectedItem = null;
+		private Object key, value, selectedItem, get = null;
 
 		private Set<Entry<?, ?>> entrySet = null;
 
 		private Iterator<?> iterator = null;
 
 		private Boolean hasNext, containsKey, isEmpty = null;
+
+		private Component component = null;
+
+		private Stream<?> stream = null;
 
 		private Optional<?> max = null;
 
@@ -284,11 +288,23 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 					//
 			} else if (proxy instanceof Map) {
 				//
-				if (Objects.equals(methodName, "isEmpty")) {
+				if (Objects.equals(methodName, "get")) {
+					//
+					return get;
+					//
+				} else if (Objects.equals(methodName, "isEmpty")) {
 					//
 					return isEmpty;
 					//
 				} else if (Objects.equals(methodName, "size")) {
+					//
+					return size;
+					//
+				} // if
+					//
+			} else if (proxy instanceof Collection) {
+				//
+				if (Objects.equals(methodName, "size")) {
 					//
 					return size;
 					//
@@ -347,6 +363,14 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				if (Objects.equals(methodName, "toArray")) {
 					//
 					return toArray;
+					//
+				} // if
+					//
+			} else if (proxy instanceof ListCellRenderer) {
+				//
+				if (Objects.equals(methodName, "getListCellRendererComponent")) {
+					//
+					return component;
 					//
 				} // if
 					//
