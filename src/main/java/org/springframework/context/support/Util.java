@@ -40,11 +40,9 @@ public interface Util {
 		//
 	}
 
-	static <T> Stream<T> filter(final Stream<T> instance, final Predicate<? super T> predicate) {
+	static <T> Stream<T> filter(@Nullable final Stream<T> instance, @Nullable final Predicate<? super T> predicate) {
 		//
-		return instance != null
-				&& (predicate != null
-				|| Proxy.isProxyClass(Util.getClass(instance)))
+		return instance != null && (predicate != null || Proxy.isProxyClass(Util.getClass(instance)))
 				? instance.filter(predicate)
 				: null;
 		//
