@@ -76,11 +76,10 @@ class MapReportGuiTest {
 	private static Method METHOD_CAST, METHOD_IS_ALL_ATTRIBUTES_MATCHED, METHOD_REMOVE_ROW, METHOD_ADD_ROW,
 			METHOD_GET_PREFERRED_WIDTH, METHOD_DOUBLE_VALUE, METHOD_AS_MAP, METHOD_GET_VALUES, METHOD_OR_ELSE,
 			METHOD_MAX, METHOD_MAP_TO_INT, METHOD_CREATE_MULTI_MAP, METHOD_ADD, METHOD_IS_ASSIGNABLE_FROM,
-			METHOD_GET_KEY, METHOD_GET_VALUE, METHOD_FOR_NAME, METHOD_FILTER, METHOD_TO_LIST,
-			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_ADD_ACTION_LISTENER, METHOD_LENGTH,
-			METHOD_TEST_AND_APPLY, METHOD_CREATE_MULTIMAP, METHOD_CLEAR, METHOD_TEST_AND_ACCEPT3,
-			METHOD_TEST_AND_ACCEPT4, METHOD_WRITER_WITH_DEFAULT_PRETTY_PRINTER, METHOD_WRITER,
-			METHOD_WRITE_VALUE_AS_STRING = null;
+			METHOD_GET_KEY, METHOD_GET_VALUE, METHOD_FOR_NAME, METHOD_TO_LIST, METHOD_GET_SYSTEM_CLIP_BOARD,
+			METHOD_SET_CONTENTS, METHOD_ADD_ACTION_LISTENER, METHOD_LENGTH, METHOD_TEST_AND_APPLY,
+			METHOD_CREATE_MULTIMAP, METHOD_CLEAR, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4,
+			METHOD_WRITER_WITH_DEFAULT_PRETTY_PRINTER, METHOD_WRITER, METHOD_WRITE_VALUE_AS_STRING = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -124,8 +123,6 @@ class MapReportGuiTest {
 		(METHOD_GET_VALUE = clz.getDeclaredMethod("getValue", Entry.class)).setAccessible(true);
 		//
 		(METHOD_FOR_NAME = clz.getDeclaredMethod("forName", String.class)).setAccessible(true);
-		//
-		(METHOD_FILTER = clz.getDeclaredMethod("filter", Stream.class, Predicate.class)).setAccessible(true);
 		//
 		(METHOD_TO_LIST = clz.getDeclaredMethod("toList", Stream.class)).setAccessible(true);
 		//
@@ -271,11 +268,7 @@ class MapReportGuiTest {
 					//
 			} else if (proxy instanceof Stream) {
 				//
-				if (Objects.equals(Stream.class, method != null ? method.getReturnType() : null)) {
-					//
-					return proxy;
-					//
-				} else if (Objects.equals(methodName, "mapToInt")) {
+				if (Objects.equals(methodName, "mapToInt")) {
 					//
 					return intStream;
 					//
@@ -901,32 +894,6 @@ class MapReportGuiTest {
 				return null;
 			} else if (obj instanceof Class) {
 				return (Class) obj;
-			}
-			throw new Throwable(Util.toString(obj.getClass()));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testFilter() throws Throwable {
-		//
-		Assertions.assertNull(filter(null, null));
-		//
-		Assertions.assertNull(filter(Stream.empty(), null));
-		//
-		Assertions.assertSame(stream, filter(stream, null));
-		//
-	}
-
-	private static <T> Stream<T> filter(final Stream<T> instance, final Predicate<? super T> predicate)
-			throws Throwable {
-		try {
-			final Object obj = METHOD_FILTER.invoke(null, instance, predicate);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Stream) {
-				return (Stream) obj;
 			}
 			throw new Throwable(Util.toString(obj.getClass()));
 		} catch (final InvocationTargetException e) {

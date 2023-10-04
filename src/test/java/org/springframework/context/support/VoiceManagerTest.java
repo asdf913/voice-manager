@@ -305,7 +305,7 @@ class VoiceManagerTest {
 			METHOD_MAX_INT_STREAM, METHOD_OR_ELSE_OPTIONAL, METHOD_OR_ELSE_OPTIONAL_INT, METHOD_FOR_EACH_STREAM,
 			METHOD_FOR_EACH_ITERABLE, METHOD_FOR_EACH_INT_STREAM, METHOD_CREATE_WORK_BOOK_LIST,
 			METHOD_CREATE_VOICE_OBJECT_MAPPER, METHOD_CREATE_VOICE_OBJECT_MAP, METHOD_INVOKE, METHOD_ANNOTATION_TYPE,
-			METHOD_FIND_FIRST, METHOD_GET_DECLARED_METHODS, METHOD_FOR_NAME, METHOD_FILTER, METHOD_SET_TEXT,
+			METHOD_FIND_FIRST, METHOD_GET_DECLARED_METHODS, METHOD_FOR_NAME, METHOD_SET_TEXT,
 			METHOD_GET_PREFERRED_WIDTH, METHOD_IMPORT_VOICE1, METHOD_IMPORT_VOICE_OBJECT_MAP_BI_CONSUMER,
 			METHOD_IMPORT_VOICE_OBJECT_MAP_FILE, METHOD_IMPORT_VOICE5, METHOD_IMPORT_VOICE_BY_SPEECH_API,
 			METHOD_IMPORT_VOICE_BY_ONLINE_NHK_JAPANESE_PRONUNCIATIONS_ACCENT_FAILABLE_FUNCTION, METHOD_ADD_COLLECTION,
@@ -485,8 +485,6 @@ class VoiceManagerTest {
 		(METHOD_GET_DECLARED_METHODS = clz.getDeclaredMethod("getDeclaredMethods", Class.class)).setAccessible(true);
 		//
 		(METHOD_FOR_NAME = clz.getDeclaredMethod("forName", String.class)).setAccessible(true);
-		//
-		(METHOD_FILTER = clz.getDeclaredMethod("filter", Stream.class, Predicate.class)).setAccessible(true);
 		//
 		(METHOD_SET_TEXT = clz.getDeclaredMethod("setText", JTextComponent.class, String.class)).setAccessible(true);
 		//
@@ -4442,32 +4440,6 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof Class) {
 				return (Class<?>) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testFilter() throws Throwable {
-		//
-		Assertions.assertNull(filter(null, null));
-		//
-		Assertions.assertNull(filter(Stream.empty(), null));
-		//
-		Assertions.assertSame(stream, filter(stream, null));
-		//
-	}
-
-	private static <T> Stream<T> filter(final Stream<T> instance, final Predicate<? super T> predicate)
-			throws Throwable {
-		try {
-			final Object obj = METHOD_FILTER.invoke(null, instance, predicate);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Stream) {
-				return (Stream) obj;
 			}
 			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

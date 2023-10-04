@@ -86,8 +86,8 @@ class JouYouKanjiGuiTest {
 			METHOD_GET_EXPRESSION_AS_CSS_STRING, METHOD_GET_INDEXED_COLORS, METHOD_GET_STYLES_SOURCE,
 			METHOD_GET_PROPERTY, METHOD_INT_VALUE, METHOD_TO_MILLIS, METHOD_SET_FILL_BACK_GROUND_COLOR,
 			METHOD_SET_FILL_PATTERN, METHOD_SPLITERATOR, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4,
-			METHOD_MAP_TO_INT, METHOD_MAX, METHOD_OR_ELSE, METHOD_FILTER, METHOD_SET_AUTO_FILTER,
-			METHOD_GET_ABSOLUTE_PATH, METHOD_GET_PHYSICAL_NUMBER_OF_ROWS = null;
+			METHOD_MAP_TO_INT, METHOD_MAX, METHOD_OR_ELSE, METHOD_SET_AUTO_FILTER, METHOD_GET_ABSOLUTE_PATH,
+			METHOD_GET_PHYSICAL_NUMBER_OF_ROWS = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -172,8 +172,6 @@ class JouYouKanjiGuiTest {
 		//
 		(METHOD_OR_ELSE = clz.getDeclaredMethod("orElse", OptionalInt.class, Integer.TYPE)).setAccessible(true);
 		//
-		(METHOD_FILTER = clz.getDeclaredMethod("filter", Stream.class, Predicate.class)).setAccessible(true);
-		//
 		(METHOD_SET_AUTO_FILTER = clz.getDeclaredMethod("setAutoFilter", Sheet.class)).setAccessible(true);
 		//
 		(METHOD_GET_ABSOLUTE_PATH = clz.getDeclaredMethod("getAbsolutePath", File.class)).setAccessible(true);
@@ -223,10 +221,6 @@ class JouYouKanjiGuiTest {
 				if (Objects.equals(methodName, "mapToInt")) {
 					//
 					return intStream;
-					//
-				} else if (Objects.equals(methodName, "filter")) {
-					//
-					return proxy;
 					//
 				} // if
 					//
@@ -1337,32 +1331,6 @@ class JouYouKanjiGuiTest {
 			final Object obj = METHOD_OR_ELSE.invoke(null, instance, other);
 			if (obj instanceof Integer) {
 				return ((Integer) obj).intValue();
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testFilter() throws Throwable {
-		//
-		Assertions.assertNull(filter(null, null));
-		//
-		Assertions.assertNull(filter(Stream.empty(), null));
-		//
-		Assertions.assertSame(stream, filter(stream, null));
-		//
-	}
-
-	private static <T> Stream<T> filter(final Stream<T> instance, final Predicate<? super T> predicate)
-			throws Throwable {
-		try {
-			final Object obj = METHOD_FILTER.invoke(null, instance, predicate);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Stream) {
-				return (Stream) obj;
 			}
 			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

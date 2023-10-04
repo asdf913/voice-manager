@@ -187,16 +187,6 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 	}
 
 	@Nullable
-	private static <T> Stream<T> filter(@Nullable final Stream<T> instance,
-			@Nullable final Predicate<? super T> predicate) {
-		//
-		return instance != null && (predicate != null || Proxy.isProxyClass(Util.getClass(instance)))
-				? instance.filter(predicate)
-				: null;
-		//
-	}
-
-	@Nullable
 	private static <T> List<T> toList(@Nullable final Stream<T> instance) {
 		return instance != null ? instance.toList() : null;
 	}
@@ -289,7 +279,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			// The below check is for "-Djava.awt.headless=true"
 			//
 		final Field f = testAndApply(x -> IterableUtils.size(x) == 1,
-				toList(filter(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(this))),
+				toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(this))),
 						x -> Objects.equals(Util.getName(x), "component"))),
 				x -> IterableUtils.get(x, 0), null);
 		//
@@ -410,7 +400,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		// "org.springframework.context.support.OnlineNHKJapanesePronunciationAccentGui$Group"
 		//
 		final FailableStream<Field> fs = new FailableStream<>(
-				filter(testAndApply(Objects::nonNull, getClass().getDeclaredFields(), Arrays::stream, null),
+				Util.filter(testAndApply(Objects::nonNull, getClass().getDeclaredFields(), Arrays::stream, null),
 						x -> Objects.equals(value(testAndApply(y -> isAnnotationPresent(y, Group.class), x,
 								y -> getAnnotation(y, Group.class), null)), "LastComponentInRow")));
 		//
@@ -814,8 +804,8 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		//
 		// Check if "handler" field in "java.net.URL" class is null or not
 		//
-		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, toList(
-				filter(Arrays.stream(URL.class.getDeclaredFields()), x -> Objects.equals(Util.getName(x), "handler"))),
+		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, toList(Util
+				.filter(Arrays.stream(URL.class.getDeclaredFields()), x -> Objects.equals(Util.getName(x), "handler"))),
 				x -> IterableUtils.get(x, 0), null);
 		//
 		if (instance != null && f != null && Narcissus.getObjectField(instance, f) == null) {

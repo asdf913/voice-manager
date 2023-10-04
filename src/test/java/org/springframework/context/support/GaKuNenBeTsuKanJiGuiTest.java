@@ -60,7 +60,7 @@ class GaKuNenBeTsuKanJiGuiTest {
 
 	private static Method METHOD_CAST, METHOD_CREATE_WORK_BOOK, METHOD_SET_SELECTED_ITEM_BY_ITERABLE, METHOD_INVOKE,
 			METHOD_GET_PARAMETER_TYPES, METHOD_EXISTS, METHOD_AND, METHOD_IIF, METHOD_TEST_AND_ACCEPT3,
-			METHOD_TEST_AND_ACCEPT4, METHOD_ADD_ACTION_LISTENER, METHOD_TO_ARRAY, METHOD_FILTER, METHOD_TO_LIST,
+			METHOD_TEST_AND_ACCEPT4, METHOD_ADD_ACTION_LISTENER, METHOD_TO_ARRAY, METHOD_TO_LIST,
 			METHOD_GET_DECLARED_METHODS, METHOD_FOR_NAME, METHOD_GET_ABSOLUTE_PATH, METHOD_IS_FILE, METHOD_LENGTH,
 			METHOD_LONG_VALUE, METHOD_CONTAINS, METHOD_ADD, METHOD_SET_SELECTED_ITEM, METHOD_SET_TEXT,
 			METHOD_SET_PREFERRED_WIDTH, METHOD_GET_PREFERRED_SIZE, METHOD_MAX,
@@ -100,8 +100,6 @@ class GaKuNenBeTsuKanJiGuiTest {
 				AbstractButton[].class)).setAccessible(true);
 		//
 		(METHOD_TO_ARRAY = clz.getDeclaredMethod("toArray", Collection.class, Object[].class)).setAccessible(true);
-		//
-		(METHOD_FILTER = clz.getDeclaredMethod("filter", Stream.class, Predicate.class)).setAccessible(true);
 		//
 		(METHOD_TO_LIST = clz.getDeclaredMethod("toList", Stream.class)).setAccessible(true);
 		//
@@ -184,11 +182,7 @@ class GaKuNenBeTsuKanJiGuiTest {
 					//
 			} else if (proxy instanceof Stream) {
 				//
-				if (Objects.equals(methodName, "filter")) {
-					//
-					return proxy;
-					//
-				} else if (Objects.equals(methodName, "max")) {
+				if (Objects.equals(methodName, "max")) {
 					//
 					return null;
 					//
@@ -691,32 +685,6 @@ class GaKuNenBeTsuKanJiGuiTest {
 	private static <T> T[] toArray(final Collection<T> instance, final T[] array) throws Throwable {
 		try {
 			return (T[]) METHOD_TO_ARRAY.invoke(null, instance, array);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testFilter() throws Throwable {
-		//
-		Assertions.assertNull(filter(Stream.empty(), null));
-		//
-		final Stream<?> steram = Reflection.newProxy(Stream.class, ih);
-		//
-		Assertions.assertSame(steram, filter(steram, null));
-		//
-	}
-
-	private static <T> Stream<T> filter(final Stream<T> instance, final Predicate<? super T> predicate)
-			throws Throwable {
-		try {
-			final Object obj = METHOD_FILTER.invoke(null, instance, predicate);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Stream) {
-				return (Stream) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

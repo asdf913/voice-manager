@@ -98,9 +98,8 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			METHOD_GET_MAP, METHOD_GET_FIELD, METHOD_SET_TEXT, METHOD_SET_FORE_GROUND,
 			METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_SAVE_FILE, METHOD_CONTAINS_KEY, METHOD_IIF, METHOD_GET_NAME,
 			METHOD_SORT, METHOD_CREATE_IMAGE_FORMAT_COMPARATOR, METHOD_IS_ANNOTATION_PRESENT, METHOD_GET_ANNOTATION,
-			METHOD_GET_PREFERRED_SIZE, METHOD_FILTER, METHOD_TO_LIST, METHOD_SET_PREFERRED_SIZE, METHOD_MAX,
-			METHOD_TO_ARRAY, METHOD_TEST_AND_RUN, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4,
-			METHOD_REMOVE = null;
+			METHOD_GET_PREFERRED_SIZE, METHOD_TO_LIST, METHOD_SET_PREFERRED_SIZE, METHOD_MAX, METHOD_TO_ARRAY,
+			METHOD_TEST_AND_RUN, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_REMOVE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -202,8 +201,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				.setAccessible(true);
 		//
 		(METHOD_GET_PREFERRED_SIZE = clz.getDeclaredMethod("getPreferredSize", Component.class)).setAccessible(true);
-		//
-		(METHOD_FILTER = clz.getDeclaredMethod("filter", Stream.class, Predicate.class)).setAccessible(true);
 		//
 		(METHOD_TO_LIST = clz.getDeclaredMethod("toList", Stream.class)).setAccessible(true);
 		//
@@ -349,11 +346,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 					//
 			} else if (proxy instanceof Stream) {
 				//
-				if (Objects.equals(methodName, "filter")) {
-					//
-					return proxy;
-					//
-				} else if (Objects.equals(methodName, "max")) {
+				if (Objects.equals(methodName, "max")) {
 					//
 					return max;
 					//
@@ -1596,34 +1589,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				return null;
 			} else if (obj instanceof Dimension) {
 				return (Dimension) obj;
-			}
-			throw new Throwable(Util.toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testFilter() throws Throwable {
-		//
-		Assertions.assertNull(filter(null, null));
-		//
-		Assertions.assertNull(filter(Stream.empty(), null));
-		//
-		final Stream<?> stream = Reflection.newProxy(Stream.class, ih);
-		//
-		Assertions.assertSame(stream, filter(stream, null));
-		//
-	}
-
-	private static <T> Stream<T> filter(final Stream<T> instance, final Predicate<? super T> predicate)
-			throws Throwable {
-		try {
-			final Object obj = METHOD_FILTER.invoke(null, instance, predicate);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Stream) {
-				return (Stream) obj;
 			}
 			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

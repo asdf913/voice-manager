@@ -47,9 +47,9 @@ public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean {
 		//
 		try {
 			//
-			final List<Method> ms = Arrays
-					.stream(Class.forName("com.sun.jna.platform.win32.VersionHelpers").getDeclaredMethods())
-					.filter(m -> and(Objects.equals(Util.getName(m), "IsWindows10OrGreater"), getParameterCount(m) == 0,
+			final List<Method> ms = Util.filter(
+					Arrays.stream(Class.forName("com.sun.jna.platform.win32.VersionHelpers").getDeclaredMethods()),
+					m -> and(Objects.equals(Util.getName(m), "IsWindows10OrGreater"), getParameterCount(m) == 0,
 							isStatic(m)))
 					.toList();
 			//

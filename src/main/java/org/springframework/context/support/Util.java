@@ -4,6 +4,7 @@ import java.lang.reflect.Member;
 import java.lang.reflect.Proxy;
 import java.util.Collection;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
@@ -35,6 +36,16 @@ public interface Util {
 			@Nullable final Function<? super T, ? extends R> mapper) {
 		//
 		return instance != null && (Proxy.isProxyClass(getClass(instance)) || mapper != null) ? instance.map(mapper)
+				: null;
+		//
+	}
+
+	static <T> Stream<T> filter(final Stream<T> instance, final Predicate<? super T> predicate) {
+		//
+		return instance != null
+				&& (predicate != null
+				|| Proxy.isProxyClass(Util.getClass(instance)))
+				? instance.filter(predicate)
 				: null;
 		//
 	}

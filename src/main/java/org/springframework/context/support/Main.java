@@ -182,9 +182,10 @@ public class Main {
 				//
 				if (Narcissus.getObjectField(instance, Component.class.getDeclaredField("peer")) == null) {
 					//
-					final List<Method> ms = toList(testAndApply(Objects::nonNull,
-							Narcissus.getDeclaredMethods(Component.class), Arrays::stream, null)
-							.filter(x -> Objects.equals(Util.getName(x), "getComponentFactory")));
+					final List<Method> ms = toList(Util.filter(
+							testAndApply(Objects::nonNull, Narcissus.getDeclaredMethods(Component.class),
+									Arrays::stream, null),
+							x -> Objects.equals(Util.getName(x), "getComponentFactory")));
 					//
 					final int size = IterableUtils.size(ms);
 					//

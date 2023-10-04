@@ -99,11 +99,11 @@ class JlptLevelGuiTest {
 	private static Method METHOD_CAST, METHOD_TO_ARRAY_COLLECTION, METHOD_TO_ARRAY_INT_LIST, METHOD_TEST,
 			METHOD_GET_PREFERRED_SIZE, METHOD_SET_PREFERRED_WIDTH, METHOD_FOR_NAME, METHOD_GET_TEXT,
 			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_TEST_AND_APPLY, METHOD_SET_CONTENTS, METHOD_ADD_ACTION_LISTENER,
-			METHOD_GET_DECLARED_METHODS, METHOD_FILTER, METHOD_TO_LIST, METHOD_INVOKE, METHOD_IIF,
-			METHOD_GET_PARAMETER_TYPES, METHOD_RUN, METHOD_SET_JLPT_VOCABULARY_AND_LEVEL, METHOD_GET_LEVEL,
-			METHOD_FOR_EACH_STREAM, METHOD_ADD_ELEMENT, METHOD_TEST_AND_ACCEPT, METHOD_BROWSE,
-			METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_ADD_DOCUMENT_LISTENER, METHOD_SET_SELECTED_INDICES,
-			METHOD_TO_URI, METHOD_REMOVE_ELEMENT_AT, METHOD_DISTINCT, METHOD_MAX, METHOD_OR_ELSE = null;
+			METHOD_GET_DECLARED_METHODS, METHOD_TO_LIST, METHOD_INVOKE, METHOD_IIF, METHOD_GET_PARAMETER_TYPES,
+			METHOD_RUN, METHOD_SET_JLPT_VOCABULARY_AND_LEVEL, METHOD_GET_LEVEL, METHOD_FOR_EACH_STREAM,
+			METHOD_ADD_ELEMENT, METHOD_TEST_AND_ACCEPT, METHOD_BROWSE, METHOD_GET_LIST_CELL_RENDERER_COMPONENT,
+			METHOD_ADD_DOCUMENT_LISTENER, METHOD_SET_SELECTED_INDICES, METHOD_TO_URI, METHOD_REMOVE_ELEMENT_AT,
+			METHOD_DISTINCT, METHOD_MAX, METHOD_OR_ELSE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -140,8 +140,6 @@ class JlptLevelGuiTest {
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
 		//
 		(METHOD_GET_DECLARED_METHODS = clz.getDeclaredMethod("getDeclaredMethods", Class.class)).setAccessible(true);
-		//
-		(METHOD_FILTER = clz.getDeclaredMethod("filter", Stream.class, Predicate.class)).setAccessible(true);
 		//
 		(METHOD_TO_LIST = clz.getDeclaredMethod("toList", Stream.class)).setAccessible(true);
 		//
@@ -235,11 +233,7 @@ class JlptLevelGuiTest {
 					//
 			} else if (proxy instanceof Stream) {
 				//
-				if (Objects.equals(methodName, "filter")) {
-					//
-					return proxy;
-					//
-				} else if (Objects.equals(methodName, "max")) {
+				if (Objects.equals(methodName, "max")) {
 					//
 					return max;
 					//
@@ -309,8 +303,6 @@ class JlptLevelGuiTest {
 
 	private Document document = null;
 
-	private Stream<?> stream = null;
-
 	private MH mh = null;
 
 	@BeforeEach
@@ -337,8 +329,6 @@ class JlptLevelGuiTest {
 		documentEvent = Reflection.newProxy(DocumentEvent.class, ih = new IH());
 		//
 		document = Reflection.newProxy(Document.class, ih = new IH());
-		//
-		stream = Reflection.newProxy(Stream.class, ih);
 		//
 		mh = new MH();
 		//
@@ -994,32 +984,6 @@ class JlptLevelGuiTest {
 				return null;
 			} else if (obj instanceof Method[]) {
 				return (Method[]) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testFilter() throws Throwable {
-		//
-		Assertions.assertNull(filter(null, null));
-		//
-		Assertions.assertNull(filter(Stream.empty(), null));
-		//
-		Assertions.assertSame(stream, filter(stream, null));
-		//
-	}
-
-	private static <T> Stream<T> filter(final Stream<T> instance, final Predicate<? super T> predicate)
-			throws Throwable {
-		try {
-			final Object obj = METHOD_FILTER.invoke(null, instance, predicate);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Stream) {
-				return (Stream) obj;
 			}
 			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
