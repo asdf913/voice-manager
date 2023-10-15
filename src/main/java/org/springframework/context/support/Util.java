@@ -50,7 +50,7 @@ public interface Util {
 		//
 	}
 
-	static <T> T orElse(final Optional<T> instance, final T other) {
+	static <T> T orElse(@Nullable final Optional<T> instance, final T other) {
 		return instance != null ? instance.orElse(other) : null;
 	}
 
