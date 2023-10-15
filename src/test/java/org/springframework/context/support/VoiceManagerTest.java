@@ -302,7 +302,7 @@ class VoiceManagerTest {
 			METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_CAST, METHOD_INT_VALUE, METHOD_LONG_VALUE,
 			METHOD_GET_PROPERTY_CUSTOM_PROPERTIES, METHOD_GET_VALUE, METHOD_GET_SOURCE_VOICE, METHOD_EXPORT,
 			METHOD_MAP_STREAM, METHOD_MAP_INT_STREAM, METHOD_MAP_TO_INT, METHOD_MAP_TO_LONG, METHOD_MAX_STREAM,
-			METHOD_MAX_INT_STREAM, METHOD_OR_ELSE_OPTIONAL, METHOD_OR_ELSE_OPTIONAL_INT, METHOD_FOR_EACH_STREAM,
+			METHOD_MAX_INT_STREAM, METHOD_OR_ELSE_OPTIONAL_INT, METHOD_FOR_EACH_STREAM,
 			METHOD_FOR_EACH_ITERABLE, METHOD_FOR_EACH_INT_STREAM, METHOD_CREATE_WORK_BOOK_LIST,
 			METHOD_CREATE_VOICE_OBJECT_MAPPER, METHOD_CREATE_VOICE_OBJECT_MAP, METHOD_INVOKE, METHOD_ANNOTATION_TYPE,
 			METHOD_FIND_FIRST, METHOD_GET_DECLARED_METHODS, METHOD_FOR_NAME, METHOD_SET_TEXT,
@@ -451,8 +451,6 @@ class VoiceManagerTest {
 		(METHOD_MAX_STREAM = clz.getDeclaredMethod("max", Stream.class, Comparator.class)).setAccessible(true);
 		//
 		(METHOD_MAX_INT_STREAM = clz.getDeclaredMethod("max", IntStream.class)).setAccessible(true);
-		//
-		(METHOD_OR_ELSE_OPTIONAL = clz.getDeclaredMethod("orElse", Optional.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_OR_ELSE_OPTIONAL_INT = clz.getDeclaredMethod("orElse", OptionalInt.class, Integer.TYPE))
 				.setAccessible(true);
@@ -4104,18 +4102,8 @@ class VoiceManagerTest {
 	@Test
 	void testOrElse() throws Throwable {
 		//
-		Assertions.assertNull(orElse(null, null));
-		//
 		Assertions.assertEquals(ZERO, orElse(OptionalInt.empty(), ZERO));
 		//
-	}
-
-	private static <T> T orElse(final Optional<T> instance, final T other) throws Throwable {
-		try {
-			return (T) METHOD_OR_ELSE_OPTIONAL.invoke(null, instance, other);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	private static int orElse(final OptionalInt instance, final int other) throws Throwable {

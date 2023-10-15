@@ -212,7 +212,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 		//
 		final Collection<Component> cs = Arrays.asList(tfText, jcbGaKuNenBeTsuKanJi, btnExport);
 		//
-		final Dimension preferredSize = orElse(
+		final Dimension preferredSize = Util.orElse(
 				max(Util.map(Util.stream(cs), GaKuNenBeTsuKanJiGui::getPreferredSize), createDimensionComparator()),
 				null);
 		//
@@ -226,11 +226,6 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 
 	private static Comparator<Dimension> createDimensionComparator() {
 		return (a, b) -> a != null && b != null ? Double.compare(a.getWidth(), b.getWidth()) : 0;
-	}
-
-	@Nullable
-	private static <T> T orElse(@Nullable final Optional<T> instance, @Nullable final T other) {
-		return instance != null ? instance.orElse(other) : null;
 	}
 
 	@Nullable

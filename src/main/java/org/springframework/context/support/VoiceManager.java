@@ -4273,8 +4273,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						ArrayUtils.insert(0, encryptionModes, (EncryptionMode) null))),
 				String.format("%1$s,span %2$s", WRAP, 2));
 		//
-		setSelectedItem(
-				cbmEncryptionMode, orElse(
+		setSelectedItem(cbmEncryptionMode,
+				Util.orElse(
 						findFirst(Util.filter(Arrays.stream(encryptionModes),
 								x -> StringUtils.equalsIgnoreCase(name(x),
 										PropertyResolverUtil.getProperty(propertyResolver,
@@ -4292,8 +4292,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						ArrayUtils.insert(0, compressionLevels, (CompressionLevel) null))),
 				String.format("%1$s,span %2$s", WRAP, 2));
 		//
-		setSelectedItem(
-				cbmCompressionLevel, orElse(
+		setSelectedItem(cbmCompressionLevel,
+				Util.orElse(
 						findFirst(Util.filter(Arrays.stream(compressionLevels),
 								x -> StringUtils.equalsIgnoreCase(name(x),
 										PropertyResolverUtil.getProperty(propertyResolver,
@@ -4369,7 +4369,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						collect(Util.map(testAndApply(Objects::nonNull, fileExtensions, Arrays::stream, null).sorted(),
 								x -> StringUtils.wrap(StringUtils.join('.', x), '"')), Collectors.joining(" or ")),
 						StringUtils.defaultIfBlank(
-								orElse(max(fileExtensions != null ? Arrays.stream(fileExtensions) : null,
+								Util.orElse(max(fileExtensions != null ? Arrays.stream(fileExtensions) : null,
 										(a, b) -> Integer.compare(StringUtils.length(a), StringUtils.length(b))), null),
 								"")));
 		//
@@ -4498,7 +4498,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final Stream<FileFormat> ffs = testAndApply(Objects::nonNull, fileFormats, Arrays::stream, null);
 		//
-		mafflcr.commonPrefix = orElse(reduce(Util
+		mafflcr.commonPrefix = Util.orElse(reduce(Util
 				.filter(Util.map(Util.map(Util.map(ffs, DatabaseImpl::getFileFormatDetails), VoiceManager::getFormat),
 						x -> Util.toString(x)), Objects::nonNull),
 				StringUtils::getCommonPrefix), null);
@@ -5279,11 +5279,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Nullable
 	private static OptionalInt max(@Nullable final IntStream instance) {
 		return instance != null ? instance.max() : null;
-	}
-
-	@Nullable
-	private static <T> T orElse(@Nullable final Optional<T> instance, @Nullable final T other) {
-		return instance != null ? instance.orElse(other) : null;
 	}
 
 	private static int orElse(@Nullable final OptionalInt instance, final int other) {
@@ -7436,7 +7431,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Nullable
 	private static String getLongestString(@Nullable final String[] ss) {
 		//
-		return orElse(max(testAndApply(Objects::nonNull, ss, Arrays::stream, null),
+		return Util.orElse(max(testAndApply(Objects::nonNull, ss, Arrays::stream, null),
 				(a, b) -> Integer.compare(StringUtils.length(a), StringUtils.length(b))), null);
 		//
 	}
@@ -10469,7 +10464,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					IntMap.setObject(
 							intMap = ObjectUtils.getIfNull(intMap, () -> Reflection.newProxy(IntMap.class, new IH())),
 							cell.getColumnIndex(),
-							orElse(findFirst(Util.filter(
+							Util.orElse(findFirst(Util.filter(
 									testAndApply(Objects::nonNull, FieldUtils.getAllFields(Voice.class), Arrays::stream,
 											null),
 									field -> Objects.equals(Util.getName(field), CellUtil.getStringCellValue(cell)))),
@@ -11628,7 +11623,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static class ExportTask implements Runnable {
 
-		private static String FILE_NAME_PREFIX_PADDING = orElse(
+		private static String FILE_NAME_PREFIX_PADDING = Util.orElse(
 				min(Util.stream(IteratorUtils.toList(new RgxGen("\\d").iterateUnique())), StringUtils::compare), null);
 
 		@Note("Count")
@@ -12779,9 +12774,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			int size = IterableUtils.size(voices);
 			//
-			Integer numberOfOrdinalPositionDigit = Integer.valueOf(StringUtils.length(Util.toString(
-					orElse(max(Util.filter(Util.map(Util.stream(voices), x -> getOrdinalPosition(x)), Objects::nonNull),
-							ObjectUtils::compare), null))));
+			Integer numberOfOrdinalPositionDigit = Integer.valueOf(StringUtils.length(Util.toString(Util.orElse(
+					max(Util.filter(Util.map(Util.stream(voices), x -> getOrdinalPosition(x)), Objects::nonNull),
+							ObjectUtils::compare),
+					null))));
 			//
 			String ordinalPositionFileNamePrefix = null;
 			//
@@ -12872,10 +12868,17 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				numberOfOrdinalPositionDigit = Integer
 						.valueOf(
-								StringUtils.length(Util.toString(orElse(
-										max(Util.filter(Util.map(Util.stream(MultimapUtil.values(multimap)),
-												x -> getOrdinalPosition(x)), Objects::nonNull), ObjectUtils::compare),
-										null))));
+								StringUtils
+										.length(Util
+												.toString(
+														Util.orElse(
+																max(Util.filter(
+																		Util.map(
+																				Util.stream(
+																						MultimapUtil.values(multimap)),
+																				x -> getOrdinalPosition(x)),
+																		Objects::nonNull), ObjectUtils::compare),
+																null))));
 				//
 				final AtomicInteger numerator = new AtomicInteger(1);
 				//
@@ -12997,9 +13000,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final int size = MultimapUtil.size(multimap);
 		//
-		final int numberOfOrdinalPositionDigit = StringUtils.length(Util.toString(
-				orElse(max(Util.filter(Util.map(Util.stream(MultimapUtil.values(multimap)), x -> getOrdinalPosition(x)),
-						Objects::nonNull), ObjectUtils::compare), null)));
+		final int numberOfOrdinalPositionDigit = StringUtils
+				.length(Util
+						.toString(
+								Util.orElse(
+										max(Util.filter(Util.map(Util.stream(MultimapUtil.values(multimap)),
+												x -> getOrdinalPosition(x)), Objects::nonNull), ObjectUtils::compare),
+										null)));
 		//
 		EvaluationContext evaluationContext = testAndApply(c -> ObjectMap.containsObject(objectMap, c),
 				EvaluationContext.class, c -> ObjectMap.getObject(objectMap, c), null);
@@ -13755,17 +13762,17 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			CellStyle cellStyle = null;
 			//
-			if ((m = orElse(
-					findFirst(
+			if ((m = Util
+					.orElse(findFirst(
 							Util.filter(
-									testAndApply(Objects::nonNull, getDeclaredMethods(annotationType(a = orElse(
+									testAndApply(Objects::nonNull, getDeclaredMethods(annotationType(a = Util.orElse(
 											findFirst(Util.filter(
 													testAndApply(Objects::nonNull, getDeclaredAnnotations(field),
 															Arrays::stream, null),
 													x -> Objects.equals(annotationType(x), dataFormatClass))),
 											null))), Arrays::stream, null),
 									x -> Objects.equals(Util.getName(x), VALUE))),
-					null)) != null
+							null)) != null
 					&& (cellStyle = WorkbookUtil
 							.createCellStyle(ObjectMap.getObject(objectMap, Workbook.class))) != null) {
 				//
@@ -13786,17 +13793,17 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} else if (value instanceof Date) {
 			//
-			if ((m = orElse(
-					findFirst(
+			if ((m = Util
+					.orElse(findFirst(
 							Util.filter(
-									testAndApply(Objects::nonNull, getDeclaredMethods(annotationType(a = orElse(
+									testAndApply(Objects::nonNull, getDeclaredMethods(annotationType(a = Util.orElse(
 											findFirst(Util.filter(
 													testAndApply(Objects::nonNull, getDeclaredAnnotations(field),
 															Arrays::stream, null),
 													x -> Objects.equals(annotationType(x), dateFormatClass))),
 											null))), Arrays::stream, null),
 									x -> Objects.equals(Util.getName(x), VALUE))),
-					null)) != null) {
+							null)) != null) {
 				//
 				CellUtil.setCellValue(cell,
 						new SimpleDateFormat(Util.toString(Narcissus.invokeMethod(a, m))).format(value));
@@ -13862,12 +13869,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Nullable
 	private static String[] getFieldOrder() {
 		//
-		final Annotation a = orElse(findFirst(
+		final Annotation a = Util.orElse(findFirst(
 				Util.filter(testAndApply(Objects::nonNull, getDeclaredAnnotations(Voice.class), Arrays::stream, null),
 						z -> Objects.equals(annotationType(z), forName("domain.FieldOrder")))),
 				null);
 		//
-		final Method method = orElse(findFirst(Util.filter(Arrays.stream(getDeclaredMethods(annotationType(a))),
+		final Method method = Util.orElse(findFirst(Util.filter(Arrays.stream(getDeclaredMethods(annotationType(a))),
 				z -> Objects.equals(Util.getName(z), VALUE))), null);
 		//
 		String[] orders = null;

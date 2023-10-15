@@ -407,8 +407,8 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		final Collection<Component> cs = FailableStreamUtil.map(fs, x -> cast(Component.class, get(x, this)))
 				.collect(Collectors.toList());
 		//
-		final Double maxPreferredSizeWidth = orElse(
-				max(Util.map(Util.stream(cs), x -> getWidth(getPreferredSize(x))), ObjectUtils::compare), null);
+		final Double maxPreferredSizeWidth = Util
+				.orElse(max(Util.map(Util.stream(cs), x -> getWidth(getPreferredSize(x))), ObjectUtils::compare), null);
 		//
 		forEach(cs, c -> {
 			//
@@ -461,11 +461,6 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 				? instance.max(comparator)
 				: null;
 		//
-	}
-
-	@Nullable
-	private static <T> T orElse(@Nullable final Optional<T> instance, @Nullable final T other) {
-		return instance != null ? instance.orElse(other) : null;
 	}
 
 	private static void setPreferredSize(@Nullable final Component instance, final Dimension preferredSize) {

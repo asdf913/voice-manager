@@ -146,8 +146,8 @@ public class Main {
 				//
 			if (MultimapUtil.size(multimap) == 1) {
 				//
-				clz = forName(Util.map(Util.stream(MultimapUtil.values(multimap)), Main::getBeanClassName)
-						.reduce((first, second) -> first).orElse(null));
+				clz = forName(Util.orElse(Util.map(Util.stream(MultimapUtil.values(multimap)), Main::getBeanClassName)
+						.reduce((first, second) -> first), null));
 				//
 			} // if
 				//

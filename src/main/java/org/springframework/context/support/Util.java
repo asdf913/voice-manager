@@ -3,6 +3,7 @@ package org.springframework.context.support;
 import java.lang.reflect.Member;
 import java.lang.reflect.Proxy;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -47,6 +48,10 @@ public interface Util {
 				? instance.filter(predicate)
 				: null;
 		//
+	}
+
+	static <T> T orElse(final Optional<T> instance, final T other) {
+		return instance != null ? instance.orElse(other) : null;
 	}
 
 }

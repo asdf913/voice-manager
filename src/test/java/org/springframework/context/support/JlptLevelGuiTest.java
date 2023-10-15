@@ -36,7 +36,6 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.annotation.Nullable;
 import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
@@ -103,7 +102,7 @@ class JlptLevelGuiTest {
 			METHOD_RUN, METHOD_SET_JLPT_VOCABULARY_AND_LEVEL, METHOD_GET_LEVEL, METHOD_FOR_EACH_STREAM,
 			METHOD_ADD_ELEMENT, METHOD_TEST_AND_ACCEPT, METHOD_BROWSE, METHOD_GET_LIST_CELL_RENDERER_COMPONENT,
 			METHOD_ADD_DOCUMENT_LISTENER, METHOD_SET_SELECTED_INDICES, METHOD_TO_URI, METHOD_REMOVE_ELEMENT_AT,
-			METHOD_DISTINCT, METHOD_MAX, METHOD_OR_ELSE = null;
+			METHOD_DISTINCT, METHOD_MAX = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -185,8 +184,6 @@ class JlptLevelGuiTest {
 		(METHOD_DISTINCT = clz.getDeclaredMethod("distinct", Stream.class)).setAccessible(true);
 		//
 		(METHOD_MAX = clz.getDeclaredMethod("max", Stream.class, Comparator.class)).setAccessible(true);
-		//
-		(METHOD_OR_ELSE = clz.getDeclaredMethod("orElse", Optional.class, Object.class)).setAccessible(true);
 		//
 	}
 
@@ -1342,21 +1339,6 @@ class JlptLevelGuiTest {
 				return (Optional) obj;
 			}
 			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testOrElse() throws Throwable {
-		//
-		Assertions.assertNull(orElse(null, null));
-		//
-	}
-
-	private static <T> T orElse(@Nullable final Optional<T> instance, @Nullable final T other) throws Throwable {
-		try {
-			return (T) METHOD_OR_ELSE.invoke(null, instance, other);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
