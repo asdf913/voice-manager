@@ -28,7 +28,6 @@ import org.jsoup.nodes.ElementUtil;
 
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderUtil;
-import com.opencsv.exceptions.CsvValidationException;
 
 public class EastJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFromResourceFactoryBean {
 
@@ -111,7 +110,7 @@ public class EastJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFromRe
 
 	@Nullable
 	private static Map<String, String> createMap(@Nullable final InputStream is,
-			@Nullable final UrlValidator urlValidator) throws Exception, CsvValidationException {
+			@Nullable final UrlValidator urlValidator) throws Exception {
 		//
 		Map<String, String> map = null;
 		//
