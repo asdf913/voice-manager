@@ -1,6 +1,6 @@
 package org.springframework.beans.factory;
 
-import java.io.IOException;
+import java.net.URI;
 import java.net.URL;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -147,7 +147,7 @@ public class JlptLevelListFactoryBean implements FactoryBean<List<String>> {
 	}
 
 	@Nullable
-	private static List<String> getObjectByUrl(final String url, final Duration timeout) throws IOException {
+	private static List<String> getObjectByUrl(final String url, final Duration timeout) throws Exception {
 		//
 		return Util
 				.toList(Util
@@ -155,7 +155,7 @@ public class JlptLevelListFactoryBean implements FactoryBean<List<String>> {
 								testAndApply(
 										x -> StringUtils.equalsAnyIgnoreCase(getProtocol(x),
 												ProtocolUtil.getAllowProtocols()),
-										testAndApply(StringUtils::isNotBlank, url, URL::new, null),
+										testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null),
 										x -> Jsoup.parse(x, intValue(toMillis(timeout), 0)), null),
 								".thLeft[scope='col']")), ElementUtil::text));
 		//

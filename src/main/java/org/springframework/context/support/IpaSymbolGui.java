@@ -13,6 +13,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
+import java.net.URI;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -261,7 +262,8 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 			//
 			String hex2 = null;
 			//
-			try (final InputStream is = openStream(testAndApply(StringUtils::isNotBlank, url, URL::new, null))) {
+			try (final InputStream is = openStream(
+					testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null))) {
 				//
 				length2 = (bs = testAndApply(Objects::nonNull, is, IOUtils::toByteArray, null)) != null
 						? Integer.valueOf(bs.length)
@@ -269,7 +271,7 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 				//
 				hex2 = testAndApply(Objects::nonNull, digest(md, bs), Hex::encodeHexString, null);
 				//
-			} catch (final IOException e) {
+			} catch (final Exception e) {
 				//
 				errorOrAssertOrShowException(headless, e);
 				//

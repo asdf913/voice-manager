@@ -1,7 +1,6 @@
 package org.springframework.beans.factory;
 
-import java.io.IOException;
-import java.net.URL;
+import java.net.URI;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,11 +49,11 @@ public class KyushuJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFrom
 	}
 
 	@Nullable
-	private static Map<String, String> createMap(final String url) throws IOException {
+	private static Map<String, String> createMap(final String url) throws Exception {
 		//
 		final List<Element> es = ElementUtil.select(testAndApply(Objects::nonNull,
-				testAndApply(StringUtils::isNotBlank, url, URL::new, null), x -> Jsoup.parse(x, 0), null),
-				"ol.stationList li a");
+				testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null), x -> Jsoup.parse(x, 0),
+				null), "ol.stationList li a");
 		//
 		Map<String, String> map = null;
 		//
@@ -91,10 +90,11 @@ public class KyushuJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFrom
 	}
 
 	@Nullable
-	private static Entry<String, String> createEntry(final String url) throws IOException {
+	private static Entry<String, String> createEntry(final String url) throws Exception {
 		//
 		final Document document = testAndApply(Objects::nonNull,
-				testAndApply(StringUtils::isNotBlank, url, URL::new, null), x -> Jsoup.parse(x, 0), null);
+				testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null), x -> Jsoup.parse(x, 0),
+				null);
 		//
 		return createEntry(document);
 		//

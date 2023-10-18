@@ -2,6 +2,7 @@ package j2html.tags.specialized;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
@@ -23,7 +24,7 @@ public final class ATagUtil {
 	private ATagUtil() {
 	}
 
-	public static ATag createByUrl(final String url) throws IOException {
+	public static ATag createByUrl(final String url) throws Exception {
 		//
 		InputStream is = null;
 		//
@@ -32,7 +33,7 @@ public final class ATagUtil {
 		try {
 			//
 			final Elements elements = ElementUtil.getElementsByTag(testAndApply(Objects::nonNull,
-					(is = openStream(testAndApply(Objects::nonNull, url, URL::new, null))) != null
+					(is = openStream(testAndApply(Objects::nonNull, url, x -> new URI(x).toURL(), null))) != null
 							? IOUtils.toString(is, StandardCharsets.UTF_8)
 							: null,
 					Jsoup::parse, null), "title");

@@ -1,6 +1,6 @@
 package org.springframework.beans.factory;
 
-import java.net.URL;
+import java.net.URI;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +39,8 @@ public class KyushuRailwayKanjiHiraganaMapFactoryBean extends StringMapFromResou
 		} // if
 			//
 		return createMap(ElementUtil.select(testAndApply(Objects::nonNull,
-				testAndApply(Objects::nonNull, url, URL::new, null), x -> Jsoup.parse(x, 0), null), "a"));
+				testAndApply(Objects::nonNull, url, x -> new URI(x).toURL(), null), x -> Jsoup.parse(x, 0), null),
+				"a"));
 		//
 	}
 

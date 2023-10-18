@@ -1,6 +1,6 @@
 package org.springframework.beans.factory;
 
-import java.net.URL;
+import java.net.URI;
 import java.util.Objects;
 import java.util.function.Predicate;
 
@@ -42,8 +42,9 @@ public class AllowedRomajiCharacterArrayFactoryBean implements FactoryBean<char[
 		} // if
 			//
 		Element element = testAndApply(CollectionUtils::isNotEmpty,
-				ElementUtil.select(testAndApply(Objects::nonNull, testAndApply(Objects::nonNull, url, URL::new, null),
-						x -> Jsoup.parse(x, 0), null), ".mw-selflink.selflink"),
+				ElementUtil.select(testAndApply(Objects::nonNull,
+						testAndApply(Objects::nonNull, url, x -> new URI(x).toURL(), null), x -> Jsoup.parse(x, 0),
+						null), ".mw-selflink.selflink"),
 				x -> IterableUtils.get(x, 0), null);
 		//
 		while (element != null && (element.nextElementSibling()) == null) {

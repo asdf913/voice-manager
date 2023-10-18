@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.Character.UnicodeBlock;
 import java.lang.reflect.Field;
-import java.net.URL;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -93,7 +93,8 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends StringM
 			//
 		} // if
 			//
-		try (final InputStream is = Util.openStream(testAndApply(StringUtils::isNotBlank, this.url, URL::new, null))) {
+		try (final InputStream is = Util
+				.openStream(testAndApply(StringUtils::isNotBlank, this.url, x -> new URI(x).toURL(), null))) {
 			//
 			return IValue0Util.getValue0(getObject(is, unicodeBlock));
 		} // try

@@ -1,8 +1,8 @@
 package org.springframework.beans.factory;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
@@ -94,14 +94,13 @@ public class JapaneseNameMultimapFactoryBean implements FactoryBean<Multimap<Str
 
 	@Nullable
 	private static Multimap<String, String> createMultimapByUrl(final String url, final String[] allowProtocols)
-			throws IOException {
+			throws Exception {
 		//
-		final Elements tds = ElementUtil.select(
-				testAndApply(
-						x -> x != null && (allowProtocols == null || allowProtocols.length == 0
-								|| StringUtils.equalsAnyIgnoreCase(getProtocol(x), allowProtocols)),
-						testAndApply(StringUtils::isNotBlank, url, URL::new, null), x -> Jsoup.parse(x, 0), null),
-				"table td");
+		final Elements tds = ElementUtil.select(testAndApply(
+				x -> x != null && (allowProtocols == null || allowProtocols.length == 0
+						|| StringUtils.equalsAnyIgnoreCase(getProtocol(x), allowProtocols)),
+				testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null), x -> Jsoup.parse(x, 0),
+				null), "table td");
 		//
 		Elements divs = null;
 		//
@@ -199,8 +198,7 @@ public class JapaneseNameMultimapFactoryBean implements FactoryBean<Multimap<Str
 					&& (matcher = Util.matcher(pattern,
 							StringUtils.substringAfter(text = ElementUtil.text(nextElementSibling), ' '))) != null
 					&& Util.matches(matcher) && Util.groupCount(matcher) == 1
-					&& (strings = Util.toList(Util.map(Arrays.stream(StringUtils.split(
-							Util.group(matcher, 1), '/')),
+					&& (strings = Util.toList(Util.map(Arrays.stream(StringUtils.split(Util.group(matcher, 1), '/')),
 							StringUtils::trim))) != null
 					&& strings.iterator() != null) {
 				//

@@ -2,7 +2,7 @@ package org.springframework.beans.factory;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -118,10 +118,10 @@ public class JouYouKanJiListFactoryBean implements FactoryBean<List<String>> {
 	}
 
 	@Nullable
-	private static IValue0<List<String>> getObjectByUrl(final String url, final Duration timeout) throws IOException {
+	private static IValue0<List<String>> getObjectByUrl(final String url, final Duration timeout) throws Exception {
 		//
 		final Document document = testAndApply(Objects::nonNull,
-				testAndApply(StringUtils::isNotBlank, url, URL::new, null),
+				testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null),
 				x -> Jsoup.parse(x, intValue(toMillis(timeout), 0)), null);
 		//
 		List<Element> trs = testAndApply(x -> IterableUtils.size(x) == 1,

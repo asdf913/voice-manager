@@ -1,6 +1,6 @@
 package org.springframework.beans.factory;
 
-import java.net.URL;
+import java.net.URI;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,9 +38,9 @@ public class OdakyuKanjiHiraganaMapFactoryBean extends StringMapFromResourceFact
 			//
 		} // if
 			//
-		return getObject(
-				ElementUtil.select(testAndApply(Objects::nonNull, testAndApply(Objects::nonNull, url, URL::new, null),
-						x -> Jsoup.parse(x, 0), null), ".stationTimetableAiueo-name"));
+		return getObject(ElementUtil.select(testAndApply(Objects::nonNull,
+				testAndApply(Objects::nonNull, url, x -> new URI(x).toURL(), null), x -> Jsoup.parse(x, 0), null),
+				".stationTimetableAiueo-name"));
 		//
 	}
 

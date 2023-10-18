@@ -1,6 +1,6 @@
 package org.springframework.beans.factory;
 
-import java.net.URL;
+import java.net.URI;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +39,7 @@ public class CentralJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFro
 			//
 		final List<?> list = Util.cast(List.class,
 				Util.get(ObjectMapperUtil.readValue(new ObjectMapper(),
-						Util.openStream(testAndApply(StringUtils::isNotBlank, url, URL::new, null)),
+						Util.openStream(testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null)),
 						Object.class) instanceof Map<?, ?> m ? m : null, "station"));
 		//
 		Map<String, String> map = null;

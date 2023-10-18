@@ -59,7 +59,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -2352,7 +2351,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			aTag = ATagUtil.createByUrl(microsoftWindowsCompatibilitySettingsPageUrl);
 			//
-		} catch (final IOException e) {
+		} catch (final Exception e) {
 			//
 			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
 			//
@@ -2382,7 +2381,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			aTag = ATagUtil.createByUrl(microsoftSpeechPlatformRuntimeDownloadPageUrl);
 			//
-		} catch (final IOException e) {
+		} catch (final Exception e) {
 			//
 			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
 			//
@@ -2588,13 +2587,18 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		try {
 			//
 			return Unit
-					.with(ElementUtil.text(testAndApply(x -> IterableUtils.size(x) == 1,
-							ElementUtil.getElementsByTag(testAndApply(Objects::nonNull,
-									testAndApply(StringUtils::isNotBlank, url, URL::new, null),
-									x -> Jsoup.parse(x, intValue(toMillis(timeout), 0)), null), "title"),
-							x -> get(x, 0), null)));
+					.with(ElementUtil
+							.text(testAndApply(x -> IterableUtils.size(x) == 1,
+									ElementUtil
+											.getElementsByTag(
+													testAndApply(Objects::nonNull,
+															testAndApply(StringUtils::isNotBlank, url,
+																	x -> new URI(x).toURL(), null),
+															x -> Jsoup.parse(x, intValue(toMillis(timeout), 0)), null),
+													"title"),
+									x -> get(x, 0), null)));
 			//
-		} catch (final IOException e) {
+		} catch (final Exception e) {
 			//
 			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
 			//
@@ -4677,8 +4681,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			map.put("mediaFormatLink", getMediaFormatLink(mediaFormatPageUrl));
 			//
-			map.put("encryptionTableHtml", getEncryptionTableHtml(
-					testAndApply(StringUtils::isNotBlank, poiEncryptionPageUrl, URL::new, null), timeout));
+			map.put("encryptionTableHtml",
+					getEncryptionTableHtml(
+							testAndApply(StringUtils::isNotBlank, poiEncryptionPageUrl, x -> new URI(x).toURL(), null),
+							timeout));
 			//
 			TemplateUtil.process(ConfigurationUtil.getTemplate(configuration, "help.html.ftl"), map, writer);
 			//
@@ -4821,7 +4827,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@Nullable
-	private static ATag getMediaFormatLink(final String url) throws IOException {
+	private static ATag getMediaFormatLink(final String url) throws Exception {
 		//
 		InputStream is = null;
 		//
@@ -4857,7 +4863,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			} // for
 				//
 			final Elements elements = ElementUtil.select(testAndApply(Objects::nonNull,
-					(is = openStream(testAndApply(Objects::nonNull, url, URL::new, null))) != null
+					(is = openStream(testAndApply(Objects::nonNull, url, x -> new URI(x).toURL(), null))) != null
 							? IOUtils.toString(is, StandardCharsets.UTF_8)
 							: null,
 					Jsoup::parse, null), ".relatedtopics a[href]");
@@ -5571,7 +5577,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						break;
 						//
 					} // if
-				} catch (final JavaLayerException | IOException e) {
+						//
+				} catch (final Exception e) {
 					//
 					TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
 					//
@@ -5588,9 +5595,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instnace != null ? instnace.getAudioUrls() : null;
 	}
 
-	private static Object playAudio(@Nullable final String value) throws JavaLayerException, IOException {
+	private static Object playAudio(@Nullable final String value) throws Exception {
 		//
-		try (final InputStream is = openStream(testAndApply(Objects::nonNull, value, URL::new, null))) {
+		try (final InputStream is = openStream(testAndApply(Objects::nonNull, value, x -> new URI(x).toURL(), null))) {
 			//
 			play(testAndApply(Objects::nonNull, is, Player::new, null));
 			//
@@ -6123,9 +6130,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		try {
 			//
 			url = testAndApply(StringUtils::isNotBlank, get(getAudioUrls(pronunciation), pronounicationAudioFormat),
-					URL::new, null);
+					x -> new URI(x).toURL(), null);
 			//
-		} catch (final MalformedURLException e) {
+		} catch (final Exception e) {
 			//
 			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
 			//
@@ -6368,7 +6375,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			try {
 				//
 				final Integer responseCode = getResponseCode(
-						cast(HttpURLConnection.class, new URL(urlString).openConnection()));
+						cast(HttpURLConnection.class, new URI(urlString).toURL().openConnection()));
 				//
 				setText(tfPronunciationPageStatusCode, Integer.toString(responseCode));
 				//
@@ -6391,7 +6398,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
-			} catch (final IOException e) {
+			} catch (final Exception e) {
 				//
 				errorOrAssertOrShowException(headless, e);
 				//
@@ -8185,17 +8192,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			addRow(tmImportResult, new Object[] { numberOfSheetProcessed, numberOfVoiceProcessed });
 			//
-		} catch (final InvalidFormatException | IOException | IllegalAccessException | BaseException
-				| GeneralSecurityException | SAXException | ParserConfigurationException e) {
-			//
-			errorOrAssertOrShowException(headless, e);
-			//
 		} catch (final InvocationTargetException e) {
 			//
 			final Throwable targetException = e.getTargetException();
 			//
 			errorOrAssertOrShowException(headless, ObjectUtils.firstNonNull(
 					ExceptionUtils.getRootCause(targetException), targetException, ExceptionUtils.getRootCause(e), e));
+			//
+		} catch (final Exception e) {
+			//
+			errorOrAssertOrShowException(headless, e);
 			//
 		} // try
 			//
@@ -10280,8 +10286,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static void importVoice(@Nullable final Sheet sheet, final ObjectMap _objectMap, final String voiceId,
 			final BiConsumer<Voice, String> errorMessageConsumer, final BiConsumer<Voice, Throwable> throwableConsumer,
-			final Consumer<Voice> voiceConsumer, final Collection<Object> throwableStackTraceHexs)
-			throws IllegalAccessException, IOException, InvocationTargetException, BaseException {
+			final Consumer<Voice> voiceConsumer, final Collection<Object> throwableStackTraceHexs) throws Exception {
 		//
 		final File folder = getParentFile(ObjectMap.getObject(_objectMap, File.class));
 		//
@@ -10509,7 +10514,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	private static void importVoice(final ObjectMap objectMap, @Nullable final File folder, final String voiceId)
-			throws IllegalAccessException, InvocationTargetException, BaseException, IOException {
+			throws Exception {
 		//
 		final VoiceManager vm = ObjectMap.getObject(objectMap, VoiceManager.class);
 		//
@@ -10551,7 +10556,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	private static void importVoiceByOnlineNHKJapanesePronunciationsAccentFailableFunction(final ObjectMap objectMap,
-			final String filePath) throws IOException, IllegalAccessException, InvocationTargetException {
+			final String filePath) throws Exception {
 		//
 		final VoiceManager vm = ObjectMap.getObject(objectMap, VoiceManager.class);
 		//
@@ -10579,7 +10584,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-			try (final InputStream is = openStream(testAndApply(StringUtils::isNotBlank, audioUrl, URL::new, null))) {
+			try (final InputStream is = openStream(
+					testAndApply(StringUtils::isNotBlank, audioUrl, x -> new URI(x).toURL(), null))) {
 				//
 				if (is != null && it != null
 						&& (it.file = createTempFile(randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH),

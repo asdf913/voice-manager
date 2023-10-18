@@ -1,10 +1,9 @@
 package org.springframework.beans.factory;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.net.URL;
+import java.net.URI;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -96,11 +95,11 @@ public class EastJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFromRe
 
 	@Nullable
 	private static Map<String, String> createMap(@Nullable final String url, final UrlValidator urlValidator)
-			throws IOException, CsvValidationException {
+			throws Exception {
 		//
 		Map<String, String> map = null;
 		//
-		try (final InputStream is = Util.openStream(StringUtils.isNotBlank(url) ? new URL(url) : null)) {
+		try (final InputStream is = Util.openStream(StringUtils.isNotBlank(url) ? new URI(url).toURL() : null)) {
 			//
 			map = createMap(is, urlValidator);
 			//
@@ -112,7 +111,7 @@ public class EastJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFromRe
 
 	@Nullable
 	private static Map<String, String> createMap(@Nullable final InputStream is,
-			@Nullable final UrlValidator urlValidator) throws IOException, CsvValidationException {
+			@Nullable final UrlValidator urlValidator) throws Exception, CsvValidationException {
 		//
 		Map<String, String> map = null;
 		//
@@ -160,10 +159,11 @@ public class EastJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFromRe
 	}
 
 	@Nullable
-	private static Pair<String, String> createPair(final String urlString) throws IOException {
+	private static Pair<String, String> createPair(final String urlString) throws Exception {
 		//
 		final Element element = testAndApply(Objects::nonNull,
-				testAndApply(StringUtils::isNotBlank, urlString, URL::new, null), x -> Jsoup.parse(x, 0), null);
+				testAndApply(StringUtils::isNotBlank, urlString, x -> new URI(x).toURL(), null), x -> Jsoup.parse(x, 0),
+				null);
 		//
 		return createPair(element);
 		//

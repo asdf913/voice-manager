@@ -9,7 +9,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.net.URL;
+import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -71,7 +71,8 @@ public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFr
 			//
 		} // if
 			//
-		try (final InputStream is = Util.openStream(testAndApply(Objects::nonNull, url, URL::new, null))) {
+		try (final InputStream is = Util
+				.openStream(testAndApply(Objects::nonNull, url, x -> new URI(x).toURL(), null))) {
 			//
 			return createMap(is, forName(encoding));
 			//

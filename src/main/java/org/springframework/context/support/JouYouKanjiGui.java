@@ -21,7 +21,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.net.URL;
+import java.net.URI;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -391,7 +391,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 					//
 				} // if
 					//
-			} catch (final IOException e) {
+			} catch (final Exception e) {
 				//
 				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
 				//
@@ -503,14 +503,14 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 
 	@Nullable
 	private static Workbook createJouYouKanJiWorkbook(final String url, final Duration timeout,
-			final ECSSVersion ecssVersion) {
+			final ECSSVersion ecssVersion) throws Exception {
 		//
 		Workbook workbook = null;
 		//
 		try {
 			//
 			final Document document = testAndApply(Objects::nonNull,
-					testAndApply(StringUtils::isNotBlank, url, URL::new, null),
+					testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null),
 					x -> Jsoup.parse(x, intValue(toMillis(timeout), 0)), null);
 			//
 			final ObjectMap objectMap = Reflection.newProxy(ObjectMap.class, new IH());

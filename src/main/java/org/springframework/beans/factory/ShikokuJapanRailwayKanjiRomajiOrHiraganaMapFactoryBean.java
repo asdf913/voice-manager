@@ -1,8 +1,7 @@
 package org.springframework.beans.factory;
 
-import java.io.IOException;
 import java.lang.Character.UnicodeBlock;
-import java.net.URL;
+import java.net.URI;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,16 +71,17 @@ public class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends Stri
 	}
 
 	@Nullable
-	private static Table<String, UnicodeBlock, String> createTable(final String url) throws IOException {
+	private static Table<String, UnicodeBlock, String> createTable(final String url) throws Exception {
 		//
 		return createTable(ElementUtil.select(testAndApply(Objects::nonNull,
-				testAndApply(Objects::nonNull, url, URL::new, null), x -> Jsoup.parse(x, 0), null), "li dl dd a"));
+				testAndApply(Objects::nonNull, url, x -> new URI(x).toURL(), null), x -> Jsoup.parse(x, 0), null),
+				"li dl dd a"));
 		//
 	}
 
 	@Nullable
 	private static Table<String, UnicodeBlock, String> createTable(@Nullable final Iterable<Element> es)
-			throws IOException {
+			throws Exception {
 		//
 		Table<String, UnicodeBlock, String> table = null;
 		//
@@ -126,12 +126,13 @@ public class ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends Stri
 	}
 
 	@Nullable
-	private static Map<UnicodeBlock, String> createMap(final String url) throws IOException {
+	private static Map<UnicodeBlock, String> createMap(final String url) throws Exception {
 		//
 		Map<UnicodeBlock, String> map = null;
 		//
 		final Document document = testAndApply(Objects::nonNull,
-				testAndApply(StringUtils::isNotBlank, url, URL::new, null), x -> Jsoup.parse(x, 0), null);
+				testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null), x -> Jsoup.parse(x, 0),
+				null);
 		//
 		// hiragana
 		//

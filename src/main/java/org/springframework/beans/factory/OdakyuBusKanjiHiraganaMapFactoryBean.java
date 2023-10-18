@@ -1,11 +1,10 @@
 package org.springframework.beans.factory;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.Character.UnicodeBlock;
-import java.net.URL;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -34,7 +33,6 @@ import freemarker.cache.StringTemplateLoader;
 import freemarker.cache.StringTemplateLoaderUtil;
 import freemarker.template.Configuration;
 import freemarker.template.ConfigurationUtil;
-import freemarker.template.TemplateException;
 import freemarker.template.TemplateUtil;
 
 public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<String, String>> {
@@ -80,7 +78,8 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		//
 		final ObjectMapper objectMapper = new ObjectMapper();
 		//
-		try (final InputStream is = Util.openStream(testAndApply(Objects::nonNull, url, URL::new, null))) {
+		try (final InputStream is = Util
+				.openStream(testAndApply(Objects::nonNull, url, x -> new URI(x).toURL(), null))) {
 			//
 			items = Util
 					.cast(List.class,
@@ -97,7 +96,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 
 	@Nullable
 	private static Map<String, String> getObject(final Configuration configuration, @Nullable final List<?> items,
-			final ObjectMapper objectMapper) throws IOException, TemplateException {
+			final ObjectMapper objectMapper) throws Exception {
 		//
 		Map<?, ?> map = null;
 		//
@@ -183,11 +182,12 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 	}
 
 	@Nullable
-	private static Map<String, String> createMap(final String url, final ObjectMapper objectMapper) throws IOException {
+	private static Map<String, String> createMap(final String url, final ObjectMapper objectMapper) throws Exception {
 		//
 		List<?> items = null;
 		//
-		try (final InputStream is = Util.openStream(testAndApply(StringUtils::isNotEmpty, url, URL::new, null))) {
+		try (final InputStream is = Util
+				.openStream(testAndApply(StringUtils::isNotEmpty, url, x -> new URI(x).toURL(), null))) {
 			//
 			items = Util.cast(List.class,
 					testAndApply(Util::containsKey,

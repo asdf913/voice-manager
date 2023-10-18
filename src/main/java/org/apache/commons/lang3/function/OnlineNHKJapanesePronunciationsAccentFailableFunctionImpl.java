@@ -212,7 +212,7 @@ public class OnlineNHKJapanesePronunciationsAccentFailableFunctionImpl
 		final FailableStream<String> fs1 = new FailableStream<>(stream(srcs));
 		//
 		final FailableStream<BufferedImage> fs2 = fs1 != null
-				? FailableStreamUtil.map(fs1, x -> ImageIO.read(new URL(String.join("/", urlString, x))))
+				? FailableStreamUtil.map(fs1, x -> ImageIO.read(new URI(String.join("/", urlString, x)).toURL()))
 				: null;
 		//
 		final List<BufferedImage> bis = fs2 != null ? fs2.collect(Collectors.toList()) : null;

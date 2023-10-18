@@ -3,7 +3,7 @@ package org.springframework.beans.factory;
 import java.awt.GraphicsEnvironment;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
+import java.net.URI;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -81,10 +81,11 @@ public class IpaMultimapFactoryBean implements FactoryBean<Multimap<String, Stri
 			//
 		if (mm == null) {
 			//
-			try (final InputStream is = Util.openStream(testAndApply(StringUtils::isNotBlank, url, URL::new, null))) {
+			try (final InputStream is = Util
+					.openStream(testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null))) {
 				//
 				mm = IValue0Util.getValue0(this.multimap = getMultimapUnitFromJson(om,
-						Util.openStream(testAndApply(StringUtils::isNotBlank, url, URL::new, null))));
+						Util.openStream(testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null))));
 				//
 			} catch (final IOException e) {
 				//

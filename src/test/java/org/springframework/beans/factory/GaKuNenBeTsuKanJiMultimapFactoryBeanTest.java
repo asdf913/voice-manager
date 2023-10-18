@@ -6,7 +6,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.MalformedURLException;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -194,8 +193,8 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 			//
 		} // if
 			//
-		AssertionsUtil.assertThrowsAndEquals(MalformedURLException.class,
-				"{localizedMessage=no protocol: A, message=no protocol: A}", () -> getObject(instance));
+		AssertionsUtil.assertThrowsAndEquals(IllegalArgumentException.class,
+				"{localizedMessage=URI is not absolute, message=URI is not absolute}", () -> getObject(instance));
 		//
 		if (instance != null) {
 			//
@@ -209,8 +208,8 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 			//
 		} // if
 			//
-		AssertionsUtil.assertThrowsAndEquals(MalformedURLException.class,
-				"{localizedMessage=no protocol: A, message=no protocol: A}", () -> getObject(instance));
+		AssertionsUtil.assertThrowsAndEquals(IllegalArgumentException.class,
+				"{localizedMessage=URI is not absolute, message=URI is not absolute}", () -> getObject(instance));
 		//
 		if (ih != null) {
 			//
@@ -218,8 +217,8 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 			//
 		} // if
 			//
-		AssertionsUtil.assertThrowsAndEquals(MalformedURLException.class,
-				"{localizedMessage=no protocol: A, message=no protocol: A}", () -> getObject(instance));
+		AssertionsUtil.assertThrowsAndEquals(IllegalArgumentException.class,
+				"{localizedMessage=URI is not absolute, message=URI is not absolute}", () -> getObject(instance));
 		//
 		try (final InputStream is = new ByteArrayInputStream("".getBytes())) {
 			//
@@ -229,8 +228,8 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 				//
 			} // if
 				//
-			AssertionsUtil.assertThrowsAndEquals(MalformedURLException.class,
-					"{localizedMessage=no protocol: A, message=no protocol: A}", () -> getObject(instance));
+			AssertionsUtil.assertThrowsAndEquals(IllegalArgumentException.class,
+					"{localizedMessage=URI is not absolute, message=URI is not absolute}", () -> getObject(instance));
 			//
 		} // try
 			//

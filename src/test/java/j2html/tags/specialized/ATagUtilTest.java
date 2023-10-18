@@ -1,6 +1,5 @@
 package j2html.tags.specialized;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.function.Predicate;
@@ -21,7 +20,7 @@ class ATagUtilTest {
 	}
 
 	@Test
-	void testCreateByUrl() throws IOException {
+	void testCreateByUrl() throws Exception {
 		//
 		Assertions.assertNotNull(ATagUtil.createByUrl(null));
 		//

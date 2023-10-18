@@ -28,6 +28,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -720,9 +721,9 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		return instance != null && instance.containsKey(key);
 	}
 
-	private static void saveFile(@Nullable final File file, final String url) throws IOException {
+	private static void saveFile(@Nullable final File file, final String url) throws Exception {
 		//
-		try (final InputStream is = openStream(testAndApply(Objects::nonNull, url, URL::new, null))) {
+		try (final InputStream is = openStream(testAndApply(Objects::nonNull, url, x -> new URI(x).toURL(), null))) {
 			//
 			if (file != null) {
 				//
@@ -762,7 +763,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 						break;
 						//
 					} // if
-				} catch (final JavaLayerException | IOException e) {
+				} catch (final Exception e) {
 					//
 					TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
 					//
@@ -775,8 +776,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 	}
 
 	@Nullable
-	private static Object playAudio(@Nullable final Object key, @Nullable final String value)
-			throws JavaLayerException, IOException {
+	private static Object playAudio(@Nullable final Object key, @Nullable final String value) throws Exception {
 		//
 		if (Objects.equals("audio/wav", key)) {
 			//
@@ -784,7 +784,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			//
 		} // if
 			//
-		try (final InputStream is = openStream(testAndApply(Objects::nonNull, value, URL::new, null))) {
+		try (final InputStream is = openStream(testAndApply(Objects::nonNull, value, x -> new URI(x).toURL(), null))) {
 			//
 			play(testAndApply(Objects::nonNull, is, Player::new, null));
 			//
@@ -835,7 +835,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 					//
 					saveFile(jfc.getSelectedFile(), get(audioUrls, audioFormat));
 					//
-				} catch (final IOException e) {
+				} catch (final Exception e) {
 					//
 					TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
 					//
@@ -864,7 +864,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 						//
 						saveFile(jfc.getSelectedFile(), u);
 						//
-					} catch (final IOException e) {
+					} catch (final Exception e) {
 						//
 						TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
 						//

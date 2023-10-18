@@ -1,12 +1,12 @@
 package org.springframework.beans.factory;
 
-import java.io.IOException;
 import java.lang.Character.UnicodeBlock;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -78,16 +78,14 @@ public class KantetsuKanjiRomajiOrHiraganaMapFactoryBean extends StringMapFromRe
 			//
 		return getObject(
 				Util.filter(
-						FailableStreamUtil
-								.stream(FailableStreamUtil.map(
-										new FailableStream<>(
-												Util.stream(ElementUtil.select(
-														testAndApply(Objects::nonNull,
-																testAndApply(StringUtils::isNotBlank, url, URL::new,
-																		null),
-																x -> Jsoup.parse(x, 0), null),
-														".list-stationguide-vt li a"))),
-										KantetsuKanjiRomajiOrHiraganaMapFactoryBean::getKanjiHiraganaRomaji)),
+						FailableStreamUtil.stream(FailableStreamUtil.map(
+								new FailableStream<>(Util.stream(ElementUtil.select(
+										testAndApply(Objects::nonNull,
+												testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(),
+														null),
+												x -> Jsoup.parse(x, 0), null),
+										".list-stationguide-vt li a"))),
+								KantetsuKanjiRomajiOrHiraganaMapFactoryBean::getKanjiHiraganaRomaji)),
 						Objects::nonNull));
 		//
 	}
@@ -188,7 +186,7 @@ public class KantetsuKanjiRomajiOrHiraganaMapFactoryBean extends StringMapFromRe
 	}
 
 	@Nullable
-	private static KanjiHiraganaRomaji getKanjiHiraganaRomaji(final Element instance) throws IOException {
+	private static KanjiHiraganaRomaji getKanjiHiraganaRomaji(final Element instance) throws Exception {
 		//
 		final String attr = NodeUtil.attr(instance, "href");
 		//
@@ -202,9 +200,9 @@ public class KantetsuKanjiRomajiOrHiraganaMapFactoryBean extends StringMapFromRe
 		//
 	}
 
-	private static KanjiHiraganaRomaji getKanjiHiraganaRomaji(final String urlString) throws IOException {
+	private static KanjiHiraganaRomaji getKanjiHiraganaRomaji(final String urlString) throws Exception {
 		//
-		final URL url = testAndApply(StringUtils::isNotBlank, urlString, URL::new, null);
+		final URL url = testAndApply(StringUtils::isNotBlank, urlString, x -> new URI(x).toURL(), null);
 		//
 		final KanjiHiraganaRomaji kanjiHiraganaRomaji = new KanjiHiraganaRomaji();
 		//

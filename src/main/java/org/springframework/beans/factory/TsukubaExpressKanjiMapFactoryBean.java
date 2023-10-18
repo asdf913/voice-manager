@@ -1,7 +1,6 @@
 package org.springframework.beans.factory;
 
-import java.io.IOException;
-import java.net.URL;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -102,7 +101,8 @@ public class TsukubaExpressKanjiMapFactoryBean extends StringMapFromResourceFact
 		} // if
 			//
 		final List<Element> es = ElementUtil.select(testAndApply(Objects::nonNull,
-				testAndApply(Objects::nonNull, url, URL::new, null), x -> Jsoup.parse(x, 0), null), ".station_list a");
+				testAndApply(Objects::nonNull, url, x -> new URI(x).toURL(), null), x -> Jsoup.parse(x, 0), null),
+				".station_list a");
 		//
 		Map<String, String> map = null;
 		//
@@ -126,10 +126,10 @@ public class TsukubaExpressKanjiMapFactoryBean extends StringMapFromResourceFact
 	}
 
 	@Nullable
-	private static Entry<String, String> createEntry(final String url, final RomajiOrHiragana roh) throws IOException {
+	private static Entry<String, String> createEntry(final String url, final RomajiOrHiragana roh) throws Exception {
 		//
-		final Element document = testAndApply(Objects::nonNull, testAndApply(Objects::nonNull, url, URL::new, null),
-				x -> Jsoup.parse(x, 0), null);
+		final Element document = testAndApply(Objects::nonNull,
+				testAndApply(Objects::nonNull, url, x -> new URI(x).toURL(), null), x -> Jsoup.parse(x, 0), null);
 		///
 		final MutablePair<String, String> pair = new MutablePair<>(
 				getString(ElementUtil.select(document, ".hero_title_label")), null);

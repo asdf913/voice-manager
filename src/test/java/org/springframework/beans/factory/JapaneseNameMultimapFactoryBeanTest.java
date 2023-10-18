@@ -5,6 +5,7 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
@@ -202,7 +203,8 @@ class JapaneseNameMultimapFactoryBeanTest {
 		//
 		final String protocol = "http";
 		//
-		Assertions.assertEquals(protocol, getProtocol(new URL(String.format("%1$s://www.google.com", protocol))));
+		Assertions.assertEquals(protocol,
+				getProtocol(new URI(String.format("%1$s://www.google.com", protocol)).toURL()));
 		//
 	}
 

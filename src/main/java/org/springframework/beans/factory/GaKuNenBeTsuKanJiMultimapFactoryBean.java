@@ -1,7 +1,7 @@
 package org.springframework.beans.factory;
 
-import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URL;
 import java.time.Duration;
 import java.util.Objects;
@@ -158,11 +158,11 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 
 	@Nullable
 	private static Multimap<String, String> createMultimapByUrl(final String url, final Duration timeout)
-			throws IOException {
+			throws Exception {
 		//
 		final Elements elements = ElementUtil.selectXpath(
 				testAndApply(x -> StringUtils.equalsAnyIgnoreCase(getProtocol(x), ProtocolUtil.getAllowProtocols()),
-						testAndApply(Objects::nonNull, url, URL::new, null),
+						testAndApply(Objects::nonNull, url, x -> new URI(x).toURL(), null),
 						x -> Jsoup.parse(x, intValue(toMillis(timeout), 0)), null),
 				"//span[@class='mw-headline'][starts-with(.,'第')]");
 		//

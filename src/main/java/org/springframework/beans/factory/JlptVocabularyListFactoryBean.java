@@ -1,6 +1,5 @@
 package org.springframework.beans.factory;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -11,6 +10,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -60,7 +60,6 @@ import org.springframework.core.io.XlsxUtil;
 import com.j256.simplemagic.ContentInfo;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderUtil;
-import com.opencsv.exceptions.CsvValidationException;
 
 import domain.JlptVocabulary;
 import io.github.toolfactory.narcissus.Narcissus;
@@ -419,8 +418,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 	}
 
 	@Nullable
-	private static List<JlptVocabulary> getObjectByUrls(@Nullable final List<String> urls)
-			throws CsvValidationException, IOException {
+	private static List<JlptVocabulary> getObjectByUrls(@Nullable final List<String> urls) throws Exception {
 		//
 		List<JlptVocabulary> list = null;
 		//
@@ -499,10 +497,9 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 	}
 
 	@Nullable
-	private static List<JlptVocabulary> getJlptVocabularies(final String urlString)
-			throws IOException, CsvValidationException {
+	private static List<JlptVocabulary> getJlptVocabularies(final String urlString) throws Exception {
 		//
-		final URL url = testAndApply(StringUtils::isNotBlank, urlString, URL::new, null);
+		final URL url = testAndApply(StringUtils::isNotBlank, urlString, x -> new URI(x).toURL(), null);
 		//
 		List<JlptVocabulary> list = null;
 		//

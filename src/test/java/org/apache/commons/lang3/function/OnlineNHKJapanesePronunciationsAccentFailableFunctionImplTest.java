@@ -7,12 +7,12 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.awt.image.RenderedImage;
 import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -434,8 +434,8 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 		//
 		final List<String> list = Collections.singletonList(null);
 		//
-		AssertionsUtil.assertThrowsAndEquals(UncheckedIOException.class,
-				"{localizedMessage=java.net.MalformedURLException: no protocol: null/null, message=java.net.MalformedURLException: no protocol: null/null}",
+		AssertionsUtil.assertThrowsAndEquals(IllegalArgumentException.class,
+				"{localizedMessage=URI is not absolute, message=URI is not absolute}",
 				() -> createMergedBufferedImage(null, list, ZERO));
 		//
 	}
@@ -705,7 +705,8 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 		//
 		final String protocol = "http";
 		//
-		Assertions.assertEquals(protocol, getProtocol(new URL(String.format("%1$s://www.google.com", protocol))));
+		Assertions.assertEquals(protocol,
+				getProtocol(new URI(String.format("%1$s://www.google.com", protocol)).toURL()));
 		//
 	}
 
@@ -730,7 +731,7 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 		//
 		final String host = "www.google.com";
 		//
-		Assertions.assertEquals(host, getHost(new URL(String.format("http://%1$s", host))));
+		Assertions.assertEquals(host, getHost(new URI(String.format("http://%1$s", host)).toURL()));
 		//
 	}
 

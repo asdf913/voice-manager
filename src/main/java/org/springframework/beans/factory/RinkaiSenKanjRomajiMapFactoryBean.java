@@ -1,7 +1,6 @@
 package org.springframework.beans.factory;
 
-import java.io.IOException;
-import java.net.URL;
+import java.net.URI;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +43,8 @@ public class RinkaiSenKanjRomajiMapFactoryBean extends StringMapFromResourceFact
 		} // if
 			//
 		final List<Element> es = ElementUtil.select(testAndApply(Objects::nonNull,
-				testAndApply(Objects::nonNull, url, URL::new, null), x -> Jsoup.parse(x, 0), null), ".stationnav a");
+				testAndApply(Objects::nonNull, url, x -> new URI(x).toURL(), null), x -> Jsoup.parse(x, 0), null),
+				".stationnav a");
 		//
 		Map<String, String> map = null;
 		//
@@ -68,11 +68,11 @@ public class RinkaiSenKanjRomajiMapFactoryBean extends StringMapFromResourceFact
 	}
 
 	@Nullable
-	private static Entry<String, String> createEntry(final String url) throws IOException {
+	private static Entry<String, String> createEntry(final String url) throws Exception {
 		//
-		return createEntry(
-				ElementUtil.select(testAndApply(Objects::nonNull, testAndApply(Objects::nonNull, url, URL::new, null),
-						x -> Jsoup.parse(x, 0), null), "[class^=\"ttl\"]"));
+		return createEntry(ElementUtil.select(testAndApply(Objects::nonNull,
+				testAndApply(Objects::nonNull, url, x -> new URI(x).toURL(), null), x -> Jsoup.parse(x, 0), null),
+				"[class^=\"ttl\"]"));
 		//
 	}
 

@@ -1,9 +1,8 @@
 package org.springframework.beans.factory;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
+import java.net.URI;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
@@ -166,14 +165,13 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 
 	@Nullable
 	private static Multimap<String, String> createMultimapByUrl(final String url, final String[] allowProtocols,
-			final String unicodeBlock) throws IOException {
+			final String unicodeBlock) throws Exception {
 		//
-		final Elements as = ElementUtil.select(
-				testAndApply(
-						x -> x != null && (allowProtocols == null || allowProtocols.length == 0
-								|| StringUtils.equalsAnyIgnoreCase(x.getProtocol(), allowProtocols)),
-						testAndApply(StringUtils::isNotBlank, url, URL::new, null), x -> Jsoup.parse(x, 0), null),
-				".menu a");
+		final Elements as = ElementUtil.select(testAndApply(
+				x -> x != null && (allowProtocols == null || allowProtocols.length == 0
+						|| StringUtils.equalsAnyIgnoreCase(x.getProtocol(), allowProtocols)),
+				testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null), x -> Jsoup.parse(x, 0),
+				null), ".menu a");
 		//
 		Multimap<String, String> result = null, temp = null;
 		//
@@ -211,14 +209,13 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 
 	@Nullable
 	private static Multimap<String, String> createMultimap(final String url, final String[] allowProtocols,
-			final String unicodeBlock) throws IOException {
+			final String unicodeBlock) throws Exception {
 		//
-		final Elements tds = ElementUtil.getElementsByTag(
-				testAndApply(
-						x -> x != null && (allowProtocols == null || allowProtocols.length == 0
-								|| StringUtils.equalsAnyIgnoreCase(x.getProtocol(), allowProtocols)),
-						testAndApply(StringUtils::isNotBlank, url, URL::new, null), x -> Jsoup.parse(x, 0), null),
-				"td");
+		final Elements tds = ElementUtil.getElementsByTag(testAndApply(
+				x -> x != null && (allowProtocols == null || allowProtocols.length == 0
+						|| StringUtils.equalsAnyIgnoreCase(x.getProtocol(), allowProtocols)),
+				testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null), x -> Jsoup.parse(x, 0),
+				null), "td");
 		//
 		Element td = null;
 		//

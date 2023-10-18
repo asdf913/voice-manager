@@ -1,8 +1,7 @@
 package org.springframework.beans.factory;
 
-import java.io.IOException;
 import java.lang.Character.UnicodeBlock;
-import java.net.URL;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -108,14 +107,14 @@ public class TokyuKanjiRomajiOrHiraganaMapFactoryBean extends StringMapFromResou
 		} // if
 			//
 		return getObject(ElementUtil.select(testAndApply(Objects::nonNull,
-				testAndApply(Objects::nonNull, url, URL::new, null), x -> Jsoup.parse(x, 0), null), ".mod-change-link"),
-				romajiOrHiragana);
+				testAndApply(Objects::nonNull, url, x -> new URI(x).toURL(), null), x -> Jsoup.parse(x, 0), null),
+				".mod-change-link"), romajiOrHiragana);
 		//
 	}
 
 	@Nullable
 	private static Map<String, String> getObject(@Nullable final Iterable<Element> es, final Object romajiOrHiragana)
-			throws IOException {
+			throws Exception {
 		//
 		Map<String, String> map = null;
 		//
@@ -154,11 +153,11 @@ public class TokyuKanjiRomajiOrHiraganaMapFactoryBean extends StringMapFromResou
 	}
 
 	@Nullable
-	private static Map<RomajiOrHiragana, String> getRomajiOrHiraganaMap(final String url) throws IOException {
+	private static Map<RomajiOrHiragana, String> getRomajiOrHiraganaMap(final String url) throws Exception {
 		//
 		return getRomajiOrHiraganaMap(ElementUtil.select(testAndApply(Objects::nonNull,
-				testAndApply(StringUtils::isNotEmpty, url, URL::new, null), x -> Jsoup.parse(x, 0), null),
-				"p[class^=\"name-sub\"]"));
+				testAndApply(StringUtils::isNotEmpty, url, x -> new URI(x).toURL(), null), x -> Jsoup.parse(x, 0),
+				null), "p[class^=\"name-sub\"]"));
 		//
 	}
 

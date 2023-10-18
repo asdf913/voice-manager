@@ -1,8 +1,8 @@
 package org.springframework.beans.factory;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.Objects;
@@ -187,14 +187,13 @@ public class YojijukugoMultimapFactoryBean implements FactoryBean<Multimap<Strin
 
 	@Nullable
 	private static Multimap<String, String> createMultimapByUrl(final String url, final String[] allowProtocols)
-			throws IOException {
+			throws Exception {
 		//
-		final Elements tables = ElementUtil.getElementsByTag(
-				testAndApply(
-						x -> x != null && (allowProtocols == null || allowProtocols.length == 0
-								|| StringUtils.equalsAnyIgnoreCase(getProtocol(x), allowProtocols)),
-						testAndApply(StringUtils::isNotBlank, url, URL::new, null), x -> Jsoup.parse(x, 0), null),
-				"table");
+		final Elements tables = ElementUtil.getElementsByTag(testAndApply(
+				x -> x != null && (allowProtocols == null || allowProtocols.length == 0
+						|| StringUtils.equalsAnyIgnoreCase(getProtocol(x), allowProtocols)),
+				testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null), x -> Jsoup.parse(x, 0),
+				null), "table");
 		//
 		Element tr, a = null;
 		//
