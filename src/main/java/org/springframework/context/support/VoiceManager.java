@@ -6409,6 +6409,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
+	@Nullable
 	private static URLConnection openConnection(@Nullable final URL instance) throws IOException {
 		//
 		if (instance == null) {
