@@ -421,6 +421,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static Logger LOG = LoggerFactory.getLogger(VoiceManager.class);
 
+	private static final String HANDLER = "handler";
+
 	private static final int TEMP_FILE_MINIMUM_PREFIX_LENGTH = intValue(getTempFileMinimumPrefixLength(), 3);
 
 	private static final Pattern PATTERN_CONTENT_INFO_MESSAGE_MP3_1 = Pattern.compile("^MPEG ADTS, layer III.+$");
@@ -4780,7 +4782,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		try {
 			//
-			if (Narcissus.getField(instance, URL.class.getDeclaredField("handler")) == null) {
+			if (Narcissus.getField(instance, URL.class.getDeclaredField(HANDLER)) == null) {
 				//
 				return null;
 				//
@@ -4914,7 +4916,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		try {
 			//
-			if (Narcissus.getField(instance, getDeclaredField(Util.getClass(instance), "handler")) == null) {
+			if (Narcissus.getField(instance, getDeclaredField(Util.getClass(instance), HANDLER)) == null) {
 				//
 				return null;
 				//
@@ -6419,7 +6421,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		} // if
 			//
 		final List<Field> fs = toList(Util.filter(Arrays.stream(getDeclaredFields(URL.class)),
-				f -> Objects.equals(Util.getName(f), "handler")));
+				f -> Objects.equals(Util.getName(f), HANDLER)));
 		//
 		final int size = IterableUtils.size(fs);
 		//
