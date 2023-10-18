@@ -46,6 +46,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.security.MessageDigest;
@@ -382,7 +383,8 @@ class VoiceManagerTest {
 			METHOD_SET_MAJOR_TICK_SPACING, METHOD_SET_PAINT_TICKS, METHOD_SET_PAINT_LABELS, METHOD_SORTED,
 			METHOD_DISTINCT, METHOD_GET_ID3V1_TAG, METHOD_GET_ID3V2_TAG, METHOD_ADD_VALIDATION_DATA,
 			METHOD_CREATE_IMPORT_RESULT_PANEL, METHOD_GET_URL, METHOD_ADD_HYPER_LINK_LISTENER, METHOD_SHOW_OPEN_DIALOG,
-			METHOD_OPEN_STREAM, METHOD_ACTION_PERFORMED_FOR_IMPORT_FILE_TEMPLATE, METHOD_SUBMIT = null;
+			METHOD_OPEN_STREAM, METHOD_ACTION_PERFORMED_FOR_IMPORT_FILE_TEMPLATE, METHOD_SUBMIT,
+			METHOD_OPEN_CONNECTION = null;
 
 	@BeforeAll
 	static void beforeAll() throws Throwable {
@@ -1153,6 +1155,8 @@ class VoiceManagerTest {
 				.setAccessible(true);
 		//
 		(METHOD_SUBMIT = clz.getDeclaredMethod("submit", ExecutorService.class, Runnable.class)).setAccessible(true);
+		//
+		(METHOD_OPEN_CONNECTION = clz.getDeclaredMethod("openConnection", URL.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -10710,6 +10714,29 @@ class VoiceManagerTest {
 	private static void submit(final ExecutorService instance, final Runnable task) throws Throwable {
 		try {
 			METHOD_SUBMIT.invoke(null, instance, task);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testOpenConnection() throws Throwable {
+		//
+		Assertions.assertNull(openConnection(null));
+		//
+		Assertions.assertNull(openConnection(cast(URL.class, Narcissus.allocateInstance(URL.class))));
+		//
+	}
+
+	private static URLConnection openConnection(final URL instance) throws Throwable {
+		try {
+			final Object obj = METHOD_OPEN_CONNECTION.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof URLConnection) {
+				return (URLConnection) obj;
+			}
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

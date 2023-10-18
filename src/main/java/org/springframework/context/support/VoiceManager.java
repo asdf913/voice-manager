@@ -62,6 +62,7 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -6375,7 +6376,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			try {
 				//
 				final Integer responseCode = getResponseCode(
-						cast(HttpURLConnection.class, new URI(urlString).toURL().openConnection()));
+						cast(HttpURLConnection.class, openConnection(new URI(urlString).toURL())));
 				//
 				setText(tfPronunciationPageStatusCode, Integer.toString(responseCode));
 				//
@@ -6406,6 +6407,37 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
+	}
+
+	private static URLConnection openConnection(final URL instance) throws IOException {
+		//
+		if (instance == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		final List<Field> fs = toList(Util.filter(Arrays.stream(getDeclaredFields(URL.class)),
+				f -> Objects.equals(Util.getName(f), "handler")));
+		//
+		final int size = IterableUtils.size(fs);
+		//
+		if (size > 1) {
+			//
+			throw new IllegalStateException();
+			//
+		} // if
+			//
+		final Field f = size == 1 ? IterableUtils.get(fs, 0) : null;
+		//
+		if (f != null && Narcissus.getField(instance, f) == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		return instance.openConnection();
+		//
 	}
 
 	private void actionPerformedForIpaSymbol(final boolean headless) {
