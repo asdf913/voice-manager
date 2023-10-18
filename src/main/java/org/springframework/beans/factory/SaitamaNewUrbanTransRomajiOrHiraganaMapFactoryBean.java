@@ -1,13 +1,12 @@
 package org.springframework.beans.factory;
 
-import java.io.IOException;
 import java.lang.Character.UnicodeBlock;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
-import java.net.URL;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -72,16 +71,14 @@ public class SaitamaNewUrbanTransRomajiOrHiraganaMapFactoryBean implements Facto
 		//
 		return getObject(
 				Util.filter(
-						FailableStreamUtil
-								.stream(FailableStreamUtil.map(
-										new FailableStream<>(
-												Util.stream(ElementUtil.select(
-														testAndApply(Objects::nonNull,
-																testAndApply(StringUtils::isNotBlank, url, URL::new,
-																		null),
-																x -> Jsoup.parse(x, 0), null),
-														"li.m-list-train__information-item-station a"))),
-										x -> getKanjiHiraganaRomaji(NodeUtil.absUrl(x, "href")))),
+						FailableStreamUtil.stream(FailableStreamUtil.map(
+								new FailableStream<>(Util.stream(ElementUtil.select(
+										testAndApply(Objects::nonNull,
+												testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(),
+														null),
+												x -> Jsoup.parse(x, 0), null),
+										"li.m-list-train__information-item-station a"))),
+								x -> getKanjiHiraganaRomaji(NodeUtil.absUrl(x, "href")))),
 						Objects::nonNull));
 		//
 	}
@@ -205,11 +202,11 @@ public class SaitamaNewUrbanTransRomajiOrHiraganaMapFactoryBean implements Facto
 
 	}
 
-	private static KanjiHiraganaRomaji getKanjiHiraganaRomaji(final String urlString) throws IOException {
+	private static KanjiHiraganaRomaji getKanjiHiraganaRomaji(final String urlString) throws Exception {
 		//
 		final Elements elements = ElementUtil.select(testAndApply(Objects::nonNull,
-				testAndApply(StringUtils::isNotBlank, urlString, URL::new, null), x -> Jsoup.parse(x, 0), null),
-				".keyvisual__content-box");
+				testAndApply(StringUtils::isNotBlank, urlString, x -> new URI(x).toURL(), null), x -> Jsoup.parse(x, 0),
+				null), ".keyvisual__content-box");
 		//
 		if (elements != null && elements.size() > 1) {
 			//
