@@ -9069,13 +9069,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static class AudioToMp3ByteConverter implements ByteConverter, InitializingBean {
 
-		private static final Pattern PATTERN_NEW_ARRAY_FLOAT = Pattern.compile("^\\d+:\\s+newarray\\s+<float>$");
-
-		private static final Pattern PATTERN_VBR_Q = Pattern
-				.compile("^\\d+:\\s?getfield\\s+de.sciss.jump3r.mp3.LameGlobalFlags.VBR_q\\s+I\\s+\\(\\d+\\)$");
-
-		private static final Pattern PATTERN_LDC_NUMBER = Pattern.compile("^\\d+:\\s+ldc\\s+[^\\s]+\\s+\\(\\d+\\)?");
-
 		@Note("Bitrate")
 		@Nullable
 		private Integer bitRate = null;

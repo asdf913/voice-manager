@@ -128,6 +128,7 @@ public class Voice {
 	@DataFormat("#,##0")
 	private Long fileLength = null;
 
+	@Note("Pronunication Page URL")
 	private String pronunciationPageUrl = null;
 
 	private Boolean tts = null;
