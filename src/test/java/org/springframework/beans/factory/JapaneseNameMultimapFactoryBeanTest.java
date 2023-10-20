@@ -4,7 +4,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.util.function.Predicate;
@@ -17,6 +16,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.javatuples.valueintf.IValue0;
+import org.jsoup.helper.ValidationException;
 import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.AssertionsUtil;
@@ -292,12 +292,12 @@ class JapaneseNameMultimapFactoryBeanTest {
 		//
 		final String url = Util.toString(new File("pom.xml").toURI().toURL());
 		//
-		AssertionsUtil.assertThrowsAndEquals(MalformedURLException.class,
-				"{localizedMessage=Only http & https protocols supported, message=Only http & https protocols supported}",
+		AssertionsUtil.assertThrowsAndEquals(ValidationException.class,
+				"{localizedMessage=java.net.URISyntaxException: Expected authority at index 7: file://, message=java.net.URISyntaxException: Expected authority at index 7: file://}",
 				() -> createMultimapByUrl(url, null));
 		//
-		AssertionsUtil.assertThrowsAndEquals(MalformedURLException.class,
-				"{localizedMessage=Only http & https protocols supported, message=Only http & https protocols supported}",
+		AssertionsUtil.assertThrowsAndEquals(ValidationException.class,
+				"{localizedMessage=java.net.URISyntaxException: Expected authority at index 7: file://, message=java.net.URISyntaxException: Expected authority at index 7: file://}",
 				() -> createMultimapByUrl(url, new String[] {}));
 		//
 	}

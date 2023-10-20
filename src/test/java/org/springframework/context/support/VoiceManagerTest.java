@@ -9302,7 +9302,7 @@ class VoiceManagerTest {
 			final String string = toString(toURL(new File("pom.xml").toURI()));
 			//
 			AssertionsUtil.assertThrowsAndEquals(RuntimeException.class,
-					"{localizedMessage=org.opentest4j.AssertionFailedError: Only http & https protocols supported ==> Unexpected exception thrown: java.net.MalformedURLException: Only http & https protocols supported, message=org.opentest4j.AssertionFailedError: Only http & https protocols supported ==> Unexpected exception thrown: java.net.MalformedURLException: Only http & https protocols supported}",
+					"{localizedMessage=org.opentest4j.AssertionFailedError: java.net.URISyntaxException: Expected authority at index 7: file:// ==> Unexpected exception thrown: org.jsoup.helper.ValidationException: java.net.URISyntaxException: Expected authority at index 7: file://, message=org.opentest4j.AssertionFailedError: java.net.URISyntaxException: Expected authority at index 7: file:// ==> Unexpected exception thrown: org.jsoup.helper.ValidationException: java.net.URISyntaxException: Expected authority at index 7: file://}",
 					() -> getPageTitle(string, null));
 			//
 		} // if

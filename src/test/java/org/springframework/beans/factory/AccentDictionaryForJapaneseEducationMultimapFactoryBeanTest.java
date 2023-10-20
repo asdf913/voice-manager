@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.MalformedURLException;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -17,6 +16,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.javatuples.Pair;
 import org.javatuples.valueintf.IValue0;
+import org.jsoup.helper.ValidationException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.AssertionsUtil;
 import org.junit.jupiter.api.BeforeAll;
@@ -206,12 +206,12 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 		//
 		final String url = new File("pom.xml").toURI().toURL().toString();
 		//
-		AssertionsUtil.assertThrowsAndEquals(MalformedURLException.class,
-				"{localizedMessage=Only http & https protocols supported, message=Only http & https protocols supported}",
+		AssertionsUtil.assertThrowsAndEquals(ValidationException.class,
+				"{localizedMessage=java.net.URISyntaxException: Expected authority at index 7: file://, message=java.net.URISyntaxException: Expected authority at index 7: file://}",
 				() -> createMultimap(url, null, null));
 		//
-		AssertionsUtil.assertThrowsAndEquals(MalformedURLException.class,
-				"{localizedMessage=Only http & https protocols supported, message=Only http & https protocols supported}",
+		AssertionsUtil.assertThrowsAndEquals(ValidationException.class,
+				"{localizedMessage=java.net.URISyntaxException: Expected authority at index 7: file://, message=java.net.URISyntaxException: Expected authority at index 7: file://}",
 				() -> createMultimap(url, new String[] {}, null));
 		//
 		Assertions.assertNull(createMultimap(url, new String[] { "http" }, null));
@@ -287,12 +287,12 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 		//
 		final String url = new File("pom.xml").toURI().toURL().toString();
 		//
-		AssertionsUtil.assertThrowsAndEquals(MalformedURLException.class,
-				"{localizedMessage=Only http & https protocols supported, message=Only http & https protocols supported}",
+		AssertionsUtil.assertThrowsAndEquals(ValidationException.class,
+				"{localizedMessage=java.net.URISyntaxException: Expected authority at index 7: file://, message=java.net.URISyntaxException: Expected authority at index 7: file://}",
 				() -> createMultimapByUrl(url, null, null));
 		//
-		AssertionsUtil.assertThrowsAndEquals(MalformedURLException.class,
-				"{localizedMessage=Only http & https protocols supported, message=Only http & https protocols supported}",
+		AssertionsUtil.assertThrowsAndEquals(ValidationException.class,
+				"{localizedMessage=java.net.URISyntaxException: Expected authority at index 7: file://, message=java.net.URISyntaxException: Expected authority at index 7: file://}",
 				() -> createMultimapByUrl(url, new String[] {}, null));
 		//
 	}
