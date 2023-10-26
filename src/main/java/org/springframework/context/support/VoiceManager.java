@@ -11175,7 +11175,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	private static String formatHex(final HexFormat instance, final byte[] bytes) {
+	private static String formatHex(@Nullable final HexFormat instance, @Nullable final byte[] bytes) {
 		return instance != null && bytes != null ? instance.formatHex(bytes) : null;
 	}
 
