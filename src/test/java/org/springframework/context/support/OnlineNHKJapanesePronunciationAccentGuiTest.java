@@ -23,6 +23,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.net.URL;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
@@ -44,9 +45,12 @@ import java.util.function.Consumer;
 import java.util.function.IntConsumer;
 import java.util.function.IntUnaryOperator;
 import java.util.function.Predicate;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import javax.annotation.Nullable;
 import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
 import javax.swing.JButton;
@@ -59,7 +63,6 @@ import javax.swing.ListModel;
 import javax.swing.MutableComboBoxModel;
 import javax.swing.text.JTextComponent;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.jupiter.api.Assertions;
@@ -1511,7 +1514,15 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		//
 		sort(list, createImageFormatComparator(Arrays.asList("png", "jpeg", "gif")));
 		//
-		Assertions.assertEquals("png,jpeg,gif,bmp,tiff,wbmp", StringUtils.join(list, ','));
+		Assertions.assertEquals("png,jpeg,gif,bmp,tiff,wbmp", collect(Util.stream(list), Collectors.joining(",")));
+		//
+	}
+
+	private static <T, R, A> R collect(final Stream<T> instance, final Collector<? super T, A, R> collector) {
+		//
+		return instance != null && (collector != null || Proxy.isProxyClass(getClass(instance)))
+				? instance.collect(collector)
+				: null;
 		//
 	}
 

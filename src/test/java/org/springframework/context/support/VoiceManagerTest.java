@@ -65,6 +65,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HexFormat;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -163,7 +164,6 @@ import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.MethodGenUtil;
 import org.apache.bcel.generic.NEW;
 import org.apache.bcel.generic.ObjectType;
-import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -383,8 +383,8 @@ class VoiceManagerTest {
 			METHOD_SET_MAJOR_TICK_SPACING, METHOD_SET_PAINT_TICKS, METHOD_SET_PAINT_LABELS, METHOD_SORTED,
 			METHOD_DISTINCT, METHOD_GET_ID3V1_TAG, METHOD_GET_ID3V2_TAG, METHOD_ADD_VALIDATION_DATA,
 			METHOD_CREATE_IMPORT_RESULT_PANEL, METHOD_GET_URL, METHOD_ADD_HYPER_LINK_LISTENER, METHOD_SHOW_OPEN_DIALOG,
-			METHOD_OPEN_STREAM, METHOD_ACTION_PERFORMED_FOR_IMPORT_FILE_TEMPLATE, METHOD_SUBMIT,
-			METHOD_OPEN_CONNECTION = null;
+			METHOD_OPEN_STREAM, METHOD_ACTION_PERFORMED_FOR_IMPORT_FILE_TEMPLATE, METHOD_SUBMIT, METHOD_OPEN_CONNECTION,
+			METHOD_FORMAT_HEX = null;
 
 	@BeforeAll
 	static void beforeAll() throws Throwable {
@@ -1157,6 +1157,8 @@ class VoiceManagerTest {
 		(METHOD_SUBMIT = clz.getDeclaredMethod("submit", ExecutorService.class, Runnable.class)).setAccessible(true);
 		//
 		(METHOD_OPEN_CONNECTION = clz.getDeclaredMethod("openConnection", URL.class)).setAccessible(true);
+		//
+		(METHOD_FORMAT_HEX = clz.getDeclaredMethod("formatHex", HexFormat.class, byte[].class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -3649,7 +3651,7 @@ class VoiceManagerTest {
 		//
 		Assertions.assertEquals(
 				"cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e",
-				Hex.encodeHexString(digest(md, new byte[] {})));
+				HexFormat.of().formatHex(digest(md, new byte[] {})));
 		//
 	}
 
@@ -10735,6 +10737,33 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof URLConnection) {
 				return (URLConnection) obj;
+			}
+			throw new Throwable(toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testFormatHex() throws Throwable {
+		//
+		Assertions.assertNull(formatHex(null, null));
+		//
+		final HexFormat hexFormat = cast(HexFormat.class, Narcissus.allocateInstance(HexFormat.class));
+		//
+		Assertions.assertNull(formatHex(hexFormat, null));
+		//
+		Assertions.assertEquals("", formatHex(hexFormat, new byte[] {}));
+		//
+	}
+
+	private static String formatHex(final HexFormat instance, final byte[] bytes) throws Throwable {
+		try {
+			final Object obj = METHOD_FORMAT_HEX.invoke(null, instance, bytes);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
 			}
 			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

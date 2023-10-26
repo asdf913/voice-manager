@@ -87,6 +87,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.EventObject;
+import java.util.HexFormat;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -5799,7 +5800,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			try {
 				//
-				FileUtils.writeByteArrayToFile(file, byteConverter.convert(FileUtils.readFileToByteArray(file)));
+				FileUtils.writeByteArrayToFile(file, byteConverter.convert(Files.readAllBytes(Path.of(toURI(file)))));
 				//
 			} catch (final IOException e) {
 				//
@@ -6284,7 +6285,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					if (byteConverter != null) {
 						//
 						FileUtils.writeByteArrayToFile(file,
-								byteConverter.convert(FileUtils.readFileToByteArray(file)));
+								byteConverter.convert(Files.readAllBytes(Path.of(toURI(file)))));
 						//
 					} // if
 						//
@@ -7890,7 +7891,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		} // if
 			//
 		return Pair.of(mimeType, testAndApply(VoiceManager::isFile, f,
-				x -> encodeToString(Base64.getEncoder(), FileUtils.readFileToByteArray(x)), null));
+				x -> encodeToString(Base64.getEncoder(), Files.readAllBytes(Path.of(toURI(x)))), null));
 		//
 	}
 
@@ -10669,7 +10670,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			final ByteConverter byteConverter = ObjectMap.getObject(objectMap, ByteConverter.class);
 			//
 			testAndAccept(Objects::nonNull,
-					byteConverter != null ? byteConverter.convert(FileUtils.readFileToByteArray(it.file)) : null,
+					byteConverter != null ? byteConverter.convert(Files.readAllBytes(Path.of(toURI(it.file)))) : null,
 					x -> FileUtils.writeByteArrayToFile(it.file, x));
 			//
 			deleteOnExit(it.file);
@@ -11056,6 +11057,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
+		final HexFormat hexFormat = HexFormat.of();
+		//
 		try {
 			//
 			final String fileExtension = getFileExtension(new ContentInfoUtil().findMatch(selectedFile));
@@ -11096,7 +11099,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			Long length = length(selectedFile);
 			//
-			String fileDigest = Hex.encodeHexString(digest(md, FileUtils.readFileToByteArray(selectedFile)));
+			String fileDigest = formatHex(hexFormat, digest(md, Files.readAllBytes(Path.of(toURI(selectedFile)))));
 			//
 			final String voiceFolder = ObjectMap.getObject(objectMap, String.class);
 			//
@@ -11120,7 +11123,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				length = length(file);
 				//
-				fileDigest = Hex.encodeHexString(digest(md, FileUtils.readFileToByteArray(file)));
+				fileDigest = formatHex(hexFormat, digest(md, Files.readAllBytes(Path.of(toURI(file)))));
 				//
 			} else {
 				//
@@ -11170,6 +11173,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // try
 			//
+	}
+
+	private static String formatHex(final HexFormat instance, final byte[] bytes) {
+		return instance != null && bytes != null ? instance.formatHex(bytes) : null;
 	}
 
 	private static boolean checkImportFile(@Nullable final File file, @Nullable final Voice voice,
