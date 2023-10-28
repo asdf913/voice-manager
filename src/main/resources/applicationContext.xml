@@ -607,6 +607,29 @@
 		<property name="resource" value="classpath:Ryutetsu.xlsx" />
 	</bean>
 
+	<!---->
+	<bean
+		class="org.springframework.beans.factory.SaitamaNewUrbanTransRomajiOrHiraganaMapFactoryBean">
+		<meta key="value" value="hiragana" />
+		<property name="url"
+			value="${org.springframework.beans.factory.SaitamaNewUrbanTransRomajiOrHiraganaMapFactoryBean.url}" />
+		<property name="keyUnicodeBlock"
+			value="#{T(java.lang.Character.UnicodeBlock).CJK_UNIFIED_IDEOGRAPHS}" />
+		<property name="valueUnicodeBlock"
+			value="#{T(java.lang.Character.UnicodeBlock).HIRAGANA}" />
+	</bean>
+
+	<bean
+		class="org.springframework.beans.factory.SaitamaNewUrbanTransRomajiOrHiraganaMapFactoryBean">
+		<meta key="value" value="romaji" />
+		<property name="url"
+			value="${org.springframework.beans.factory.SaitamaNewUrbanTransRomajiOrHiraganaMapFactoryBean.url}" />
+		<property name="keyUnicodeBlock"
+			value="#{T(java.lang.Character.UnicodeBlock).CJK_UNIFIED_IDEOGRAPHS}" />
+		<property name="valueUnicodeBlock"
+			value="#{T(java.lang.Character.UnicodeBlock).BASIC_LATIN}" />
+	</bean>
+
 	<!-- -->
 	<bean id="JlptLevelPageUrl" class="java.lang.String">
 		<constructor-arg index="0"
