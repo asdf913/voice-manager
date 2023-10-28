@@ -39,7 +39,7 @@ import org.jsoup.nodes.ElementUtil;
 import org.jsoup.nodes.NodeUtil;
 import org.jsoup.select.Elements;
 
-public class SaitamaNewUrbanTransRomajiOrHiraganaMapFactoryBean implements FactoryBean<Map<String, String>> {
+public class SaitamaNewUrbanTransRomajiOrHiraganaMapFactoryBean extends StringMapFromResourceFactoryBean {
 
 	private String url = null;
 
@@ -69,6 +69,14 @@ public class SaitamaNewUrbanTransRomajiOrHiraganaMapFactoryBean implements Facto
 	@Override
 	public Map<String, String> getObject() throws Exception {
 		//
+		final IValue0<Map<String, String>> iValue0 = getIvalue0();
+		//
+		if (iValue0 != null) {
+			//
+			return IValue0Util.getValue0(iValue0);
+			//
+		} // if
+			//
 		return getObject(
 				Util.filter(
 						FailableStreamUtil.stream(FailableStreamUtil.map(

@@ -603,7 +603,7 @@
 			value="#{T(java.lang.Character.UnicodeBlock).BASIC_LATIN}" />
 		<property name="keyColumnName" value="kanji" />
 		<property name="valueColumnName" value="romaji" />
-		<property name="valueColumnIndex" value="2" />
+		<property name="valueColumnIndex" value="3" />
 		<property name="resource" value="classpath:Ryutetsu.xlsx" />
 	</bean>
 
@@ -617,6 +617,10 @@
 			value="#{T(java.lang.Character.UnicodeBlock).CJK_UNIFIED_IDEOGRAPHS}" />
 		<property name="valueUnicodeBlock"
 			value="#{T(java.lang.Character.UnicodeBlock).HIRAGANA}" />
+		<property name="keyColumnName" value="kanji" />
+		<property name="valueColumnName" value="hiragana" />
+		<property name="valueColumnIndex" value="2" />
+		<property name="resource" value="classpath:SaitamaNewUrbanTransit.xlsx" />
 	</bean>
 
 	<bean
@@ -628,6 +632,10 @@
 			value="#{T(java.lang.Character.UnicodeBlock).CJK_UNIFIED_IDEOGRAPHS}" />
 		<property name="valueUnicodeBlock"
 			value="#{T(java.lang.Character.UnicodeBlock).BASIC_LATIN}" />
+		<property name="keyColumnName" value="kanji" />
+		<property name="valueColumnName" value="romaji" />
+		<property name="valueColumnIndex" value="3" />
+		<property name="resource" value="classpath:SaitamaNewUrbanTransit.xlsx" />
 	</bean>
 
 	<!-- -->
