@@ -92,7 +92,8 @@
 		<property name="resource" value="classpath:yojijukugo.xlsx" />
 	</bean>
 
-	<!-- org.springframework.beans.factory.AccentDictionaryForJapaneseEducationMultimapFactoryBean -->
+	<!--
+	org.springframework.beans.factory.AccentDictionaryForJapaneseEducationMultimapFactoryBean -->
 	<bean
 		id="org.springframework.beans.factory.AccentDictionaryForJapaneseEducationMultimapFactoryBean.url"
 		class="java.lang.String">
@@ -292,7 +293,8 @@
 		<property name="resource" value="classpath:SeibuRailway.xlsx" />
 	</bean>
 
-	<!-- org.springframework.beans.factory.TokyuKanjiRomajiOrHiraganaMapFactoryBean -->
+	<!--
+	org.springframework.beans.factory.TokyuKanjiRomajiOrHiraganaMapFactoryBean -->
 	<bean
 		class="org.springframework.beans.factory.TokyuKanjiRomajiOrHiraganaMapFactoryBean">
 		<meta key="value" value="romaji" />
@@ -317,7 +319,8 @@
 		<property name="resource" value="classpath:TokyuRailway.xlsx" />
 	</bean>
 
-	<!-- org.springframework.beans.factory.WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean -->
+	<!--
+	org.springframework.beans.factory.WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean -->
 	<bean
 		class="org.springframework.beans.factory.WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean">
 		<meta key="value" value="romaji" />
@@ -348,7 +351,8 @@
 			value="classpath:WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean.xlsx" />
 	</bean>
 
-	<!-- org.springframework.beans.factory.ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean -->
+	<!--
+	org.springframework.beans.factory.ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean -->
 	<bean
 		class="org.springframework.beans.factory.ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean">
 		<meta key="value" value="romaji" />
@@ -375,7 +379,8 @@
 			value="classpath:ShikokuJapanRailway.xlsx" />
 	</bean>
 
-	<!-- org.springframework.beans.factory.KyushuJapanRailwayKanjiHiraganaMapFactoryBean -->
+	<!--
+	org.springframework.beans.factory.KyushuJapanRailwayKanjiHiraganaMapFactoryBean -->
 	<bean
 		class="org.springframework.beans.factory.KyushuJapanRailwayKanjiHiraganaMapFactoryBean">
 		<meta key="value" value="hiragana" />
@@ -388,7 +393,8 @@
 			value="classpath:KyushuJapanRailway.xlsx" />
 	</bean>
 
-	<!-- org.springframework.beans.factory.TokyoToeiTodenKanjiRomajiOrHiraganaMapFactoryBean -->
+	<!--
+	org.springframework.beans.factory.TokyoToeiTodenKanjiRomajiOrHiraganaMapFactoryBean -->
 	<bean
 		class="org.springframework.beans.factory.TokyoToeiTodenKanjiRomajiOrHiraganaMapFactoryBean">
 		<meta key="value" value="romaji" />
@@ -413,7 +419,8 @@
 		<property name="resource" value="classpath:ToeiToden.xlsx" />
 	</bean>
 
-	<!-- org.springframework.beans.factory.TokyoToeiNipporiToneriKanjiRomajiOrHiraganaMapFactoryBean -->
+	<!--
+	org.springframework.beans.factory.TokyoToeiNipporiToneriKanjiRomajiOrHiraganaMapFactoryBean -->
 	<bean
 		class="org.springframework.beans.factory.TokyoToeiNipporiToneriKanjiRomajiOrHiraganaMapFactoryBean">
 		<meta key="value" value="romaji" />
@@ -440,7 +447,8 @@
 			value="classpath:ToeiNipporiToneri.xlsx" />
 	</bean>
 
-	<!-- org.springframework.beans.factory.HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean -->
+	<!--
+	org.springframework.beans.factory.HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean -->
 	<bean
 		class="org.springframework.beans.factory.HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean">
 		<meta key="value" value="hiragana" />
@@ -455,7 +463,8 @@
 			value="classpath:HokkaidoJapanRailway.xlsx" />
 	</bean>
 
-	<!-- org.springframework.beans.factory.KantetsuKanjiRomajiOrHiraganaMapFactoryBean -->
+	<!--
+	org.springframework.beans.factory.KantetsuKanjiRomajiOrHiraganaMapFactoryBean -->
 	<bean
 		class="org.springframework.beans.factory.KantetsuKanjiRomajiOrHiraganaMapFactoryBean">
 		<meta key="value" value="hiragana" />
@@ -486,7 +495,8 @@
 		<property name="resource" value="classpath:Kantetsu.xlsx" />
 	</bean>
 
-	<!-- org.springframework.beans.factory.ChichibuRailwayKanjiRomajiOrHiraganaMapFactoryBean -->
+	<!--
+	org.springframework.beans.factory.ChichibuRailwayKanjiRomajiOrHiraganaMapFactoryBean -->
 	<bean
 		class="org.springframework.beans.factory.ChichibuRailwayKanjiRomajiOrHiraganaMapFactoryBean">
 		<meta key="value" value="hiragana" />
@@ -519,7 +529,8 @@
 			value="classpath:ChichibuRailway.xlsx" />
 	</bean>
 
-	<!-- org.springframework.beans.factory.KominatoKanjiRomajiOrHiraganaMapFactoryBean -->
+	<!--
+	org.springframework.beans.factory.KominatoKanjiRomajiOrHiraganaMapFactoryBean -->
 	<bean
 		class="org.springframework.beans.factory.KominatoKanjiRomajiOrHiraganaMapFactoryBean">
 		<meta key="value" value="hiragana" />
@@ -550,6 +561,14 @@
 		<property name="valueColumnIndex" value="2" />
 		<property name="resource"
 			value="classpath:Kominato.xlsx" />
+	</bean>
+
+	<!---->
+	<bean
+		class="org.springframework.beans.factory.KeikyuRailwayKanjiHiraganaMapFactoryBean">
+		<meta key="value" value="hiragana" />
+		<property name="url"
+			value="${org.springframework.beans.factory.KeikyuRailwayKanjiHiraganaMapFactoryBean.url}" />
 	</bean>
 
 	<!-- -->
@@ -585,15 +604,20 @@
 		class="org.springframework.beans.factory.JlptVocabularyListFactoryBean">
 		<property name="urls">
 			<list>
-				<value>https://raw.githubusercontent.com/stephenmk/yomichan-jlpt-vocab/main/n1.csv
+				<value>
+					https://raw.githubusercontent.com/stephenmk/yomichan-jlpt-vocab/main/n1.csv
 				</value>
-				<value>https://raw.githubusercontent.com/stephenmk/yomichan-jlpt-vocab/main/n2.csv
+				<value>
+					https://raw.githubusercontent.com/stephenmk/yomichan-jlpt-vocab/main/n2.csv
 				</value>
-				<value>https://raw.githubusercontent.com/stephenmk/yomichan-jlpt-vocab/main/n3.csv
+				<value>
+					https://raw.githubusercontent.com/stephenmk/yomichan-jlpt-vocab/main/n3.csv
 				</value>
-				<value>https://raw.githubusercontent.com/stephenmk/yomichan-jlpt-vocab/main/n4.csv
+				<value>
+					https://raw.githubusercontent.com/stephenmk/yomichan-jlpt-vocab/main/n4.csv
 				</value>
-				<value>https://raw.githubusercontent.com/stephenmk/yomichan-jlpt-vocab/main/n5.csv
+				<value>
+					https://raw.githubusercontent.com/stephenmk/yomichan-jlpt-vocab/main/n5.csv
 				</value>
 			</list>
 		</property>
