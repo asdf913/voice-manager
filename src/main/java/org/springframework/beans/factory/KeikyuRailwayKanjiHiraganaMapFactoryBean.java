@@ -16,6 +16,8 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.javatuples.valueintf.IValue0;
+import org.javatuples.valueintf.IValue0Util;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
@@ -23,7 +25,7 @@ import org.jsoup.nodes.Node;
 import org.jsoup.nodes.NodeUtil;
 import org.jsoup.nodes.TextNode;
 
-public class KeikyuRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<Map<String, String>> {
+public class KeikyuRailwayKanjiHiraganaMapFactoryBean extends StringMapFromResourceFactoryBean {
 
 	private static final Pattern PATTERN = Pattern.compile("^([^駅]+)駅$");
 
@@ -35,7 +37,17 @@ public class KeikyuRailwayKanjiHiraganaMapFactoryBean implements FactoryBean<Map
 
 	@Override
 	public Map<String, String> getObject() throws Exception {
+		//
+		final IValue0<Map<String, String>> iValue0 = getIvalue0();
+		//
+		if (iValue0 != null) {
+			//
+			return IValue0Util.getValue0(iValue0);
+			//
+		} // if
+			//
 		return createMap(url);
+		//
 	}
 
 	private static Map<String, String> createMap(final String url) throws Exception {
