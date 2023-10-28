@@ -40,7 +40,7 @@ import org.jsoup.nodes.TextNodeUtil;
 
 import io.github.toolfactory.narcissus.Narcissus;
 
-public class RyutetsuKanjiHiraganaMapFactoryBean implements FactoryBean<Map<String, String>> {
+public class RyutetsuKanjiHiraganaMapFactoryBean extends StringMapFromResourceFactoryBean {
 
 	private String url = null;
 
@@ -70,6 +70,14 @@ public class RyutetsuKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Stri
 	@Override
 	public Map<String, String> getObject() throws Exception {
 		//
+		final IValue0<Map<String, String>> iValue0 = getIvalue0();
+		//
+		if (iValue0 != null) {
+			//
+			return IValue0Util.getValue0(iValue0);
+			//
+		} // if
+			//
 		return createMap(createKanjiHiraganaRomajiList(ElementUtil.select(testAndApply(Objects::nonNull,
 				testAndApply(Objects::nonNull, url, x -> new URI(x).toURL(), null), x -> Jsoup.parse(x, 0), null),
 				".station_t")));
@@ -87,18 +95,21 @@ public class RyutetsuKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Stri
 		//
 		Entry<IValue0<String>, IValue0<String>> entry = null;
 		//
+		String string = null;
+		//
 		for (int i = 0; khrs != null && i < khrs.size(); i++) {
 			//
-			if (Boolean.logicalOr((key = Util.getKey(entry = createEntry(
-					fs = ObjectUtils.getIfNull(fs, () -> Util.getDeclaredFields(KanjiHiraganaRomaji.class)),
-					khrs.get(i)))) == null, (value = Util.getValue(entry)) == null)) {
+			if (Boolean
+					.logicalOr((key = Util.getKey(entry = createEntry(
+							fs = ObjectUtils.getIfNull(fs, () -> Util.getDeclaredFields(KanjiHiraganaRomaji.class)),
+							khrs.get(i)))) == null, (value = Util.getValue(entry)) == null)
+					|| StringUtils.isEmpty(string = IValue0Util.getValue0(key))) {
 				//
 				continue;
 				//
 			} // if
 				//
-			Util.put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), IValue0Util.getValue0(key),
-					IValue0Util.getValue0(value));
+			Util.put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), string, IValue0Util.getValue0(value));
 			//
 		} // for
 			//
