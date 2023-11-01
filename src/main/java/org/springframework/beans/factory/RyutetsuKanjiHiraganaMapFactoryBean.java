@@ -198,7 +198,7 @@ public class RyutetsuKanjiHiraganaMapFactoryBean extends StringMapFromResourceFa
 					//
 				} // if
 					//
-				if (StringUtils.equalsIgnoreCase(node.nodeName(), "a") && khr != null && khr.romaji == null) {
+				if (StringUtils.equalsIgnoreCase(NodeUtil.nodeName(node), "a") && khr != null && khr.romaji == null) {
 					//
 					khr.romaji = NodeUtil.attr(node, "name");
 					//
@@ -206,7 +206,7 @@ public class RyutetsuKanjiHiraganaMapFactoryBean extends StringMapFromResourceFa
 					//
 					khr.kanji = TextNodeUtil.text(textNode);
 					//
-				} else if (StringUtils.equalsIgnoreCase(node.nodeName(), "span")
+				} else if (StringUtils.equalsIgnoreCase(NodeUtil.nodeName(node), "span")
 						&& (e = Util.cast(Element.class, node)) != null && khr != null && khr.hiragana == null) {
 					//
 					khr.hiragana = StringUtils.replaceChars(ElementUtil.text(e), "()", "");

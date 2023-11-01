@@ -9,8 +9,6 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.annotation.Nullable;
-
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -19,7 +17,6 @@ import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
-import org.jsoup.nodes.Node;
 import org.jsoup.nodes.NodeUtil;
 
 import com.google.common.collect.ArrayListMultimap;
@@ -77,8 +74,8 @@ public class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean implements Factor
 
 	private static Element getParentByNodeName(final Element element, final String nodeName) {
 		//
-		return orElse(findFirst(Util.filter(Util.stream(parents(element)), x -> Objects.equals(nodeName, nodeName(x)))),
-				null);
+		return orElse(findFirst(
+				Util.filter(Util.stream(parents(element)), x -> Objects.equals(nodeName, NodeUtil.nodeName(x)))), null);
 		//
 	}
 
@@ -109,10 +106,6 @@ public class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean implements Factor
 
 	private static <T> Optional<T> findFirst(final Stream<T> instance) {
 		return instance != null ? instance.findFirst() : null;
-	}
-
-	private static String nodeName(final Node instance) {
-		return instance != null ? instance.nodeName() : null;
 	}
 
 	private static List<Element> parents(final Element instance) {
@@ -155,9 +148,8 @@ public class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean implements Factor
 		}
 	}
 
-	private static <T, R, E extends Throwable> R testAndApply(@Nullable final Predicate<T> predicate, final T value,
-			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
-			throws E {
+	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse) throws E {
 		return predicate != null && predicate.test(value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}

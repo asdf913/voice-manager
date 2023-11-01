@@ -86,4 +86,8 @@ public class NodeUtil {
 		return instance != null && attributeKey != null ? instance.attr(attributeKey) : null;
 	}
 
+	public static String nodeName(final Node instance) {
+		return instance != null ? instance.nodeName() : null;
+	}
+
 }

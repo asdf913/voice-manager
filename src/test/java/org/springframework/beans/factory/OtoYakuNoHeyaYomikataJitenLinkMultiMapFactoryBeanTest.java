@@ -1,11 +1,9 @@
 package org.springframework.beans.factory;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -13,7 +11,6 @@ import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.jsoup.nodes.Element;
-import org.jsoup.nodes.Node;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,14 +20,11 @@ import org.meeuw.functional.Predicates;
 import com.google.common.collect.Multimap;
 
 import io.github.toolfactory.narcissus.Narcissus;
-import javassist.util.proxy.MethodHandler;
-import javassist.util.proxy.ProxyFactory;
-import javassist.util.proxy.ProxyObject;
 
 class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBeanTest {
 
-	private static Method METHOD_GET_MULTI_MAP, METHOD_OR_ELSE, METHOD_FIND_FIRST, METHOD_NODE_NAME, METHOD_PARENTS,
-			METHOD_TRIM, METHOD_APPEND, METHOD_TEST_AND_APPLY = null;
+	private static Method METHOD_GET_MULTI_MAP, METHOD_OR_ELSE, METHOD_FIND_FIRST, METHOD_PARENTS, METHOD_TRIM,
+			METHOD_APPEND, METHOD_TEST_AND_APPLY = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -43,8 +37,6 @@ class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBeanTest {
 		//
 		(METHOD_FIND_FIRST = clz.getDeclaredMethod("findFirst", Stream.class)).setAccessible(true);
 		//
-		(METHOD_NODE_NAME = clz.getDeclaredMethod("nodeName", Node.class)).setAccessible(true);
-		//
 		(METHOD_PARENTS = clz.getDeclaredMethod("parents", Element.class)).setAccessible(true);
 		//
 		(METHOD_TRIM = clz.getDeclaredMethod("trim", String.class)).setAccessible(true);
@@ -56,46 +48,12 @@ class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBeanTest {
 		//
 	}
 
-	private static class MH implements MethodHandler {
-
-		private String nodeName, attr = null;
-
-		@Override
-		public Object invoke(final Object self, final Method thisMethod, final Method proceed, final Object[] args)
-				throws Throwable {
-			//
-			final String methodName = Util.getName(thisMethod);
-			//
-			if (self instanceof Node) {
-				//
-				if (Objects.equals(methodName, "nodeName")) {
-					//
-					return nodeName;
-					//
-				} else if (Objects.equals(methodName, "attr")) {
-					//
-					return attr;
-					//
-				} // if
-					//
-			} // if
-				//
-			throw new Throwable(methodName);
-			//
-		}
-
-	}
-
-	private OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean instance = null;
-
-	private MH mh = null;
+	private OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean instance = null;;
 
 	@BeforeEach
 	public void before() {
 		//
 		instance = new OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean();
-		//
-		mh = new MH();
 		//
 	}
 
@@ -191,58 +149,6 @@ class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBeanTest {
 				return null;
 			} else if (obj instanceof Optional) {
 				return (Optional) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testNodeName() throws Throwable {
-		//
-		Assertions.assertNull(nodeName(null));
-		//
-		Assertions.assertNull(nodeName(Util.cast(Node.class, createProxy(Node.class, mh, null))));
-		//
-	}
-
-	private static <T> T createProxy(final Class<T> clz, final MethodHandler mh,
-			final FailableFunction<Class<?>, Object, Throwable> function) throws Throwable {
-
-		final ProxyFactory proxyFactory = new ProxyFactory();
-		//
-		proxyFactory.setSuperclass(clz);
-		//
-		final Class<?> c = proxyFactory.createClass();
-		//
-		Object instance = function != null ? function.apply(c) : null;
-		//
-		if (instance == null) {
-			//
-			final Constructor<?> constructor = c != null ? c.getDeclaredConstructor() : null;
-			//
-			instance = constructor != null ? constructor.newInstance() : null;
-			//
-		} // if
-			//
-		if (instance instanceof ProxyObject) {
-			//
-			((ProxyObject) instance).setHandler(mh);
-			//
-		} // if
-			//
-		return Util.cast(clz, instance);
-		//
-	}
-
-	private static String nodeName(final Node instance) throws Throwable {
-		try {
-			final Object obj = METHOD_NODE_NAME.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

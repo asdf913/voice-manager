@@ -144,6 +144,13 @@ class NodeUtilTest {
 	}
 
 	@Test
+	void testNodeName() {
+		//
+		Assertions.assertNull(NodeUtil.nodeName(null));
+		//
+	}
+
+	@Test
 	void testGetName() throws Throwable {
 		//
 		Assertions.assertNull(getName(null));
