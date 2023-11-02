@@ -102,18 +102,22 @@ public class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean implements Factor
 		//
 	}
 
+	@Nullable
 	private static <T> T orElse(@Nullable final Optional<T> instance, @Nullable final T value) {
 		return instance != null ? instance.orElse(value) : value;
 	}
 
+	@Nullable
 	private static <T> Optional<T> findFirst(@Nullable final Stream<T> instance) {
 		return instance != null ? instance.findFirst() : null;
 	}
 
+	@Nullable
 	private static List<Element> parents(@Nullable final Element instance) {
 		return instance != null ? instance.parents() : null;
 	}
 
+	@Nullable
 	private static String trim(@Nullable final String string) {
 		//
 		if (StringUtils.isEmpty(string)) {
