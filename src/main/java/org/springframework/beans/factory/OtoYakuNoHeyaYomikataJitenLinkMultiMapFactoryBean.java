@@ -81,6 +81,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean implements Factor
 		//
 	}
 
+	@Nullable
 	private static Element getElement(final String url) throws Exception {
 		//
 		final List<Element> bs = ElementUtil.select(testAndApply(Objects::nonNull,
