@@ -14101,7 +14101,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@Nullable
-	private static <T> T getMapper(@Nullable final Configuration instance, final Class<T> type,
+	private static <T> T getMapper(@Nullable final Configuration instance, @Nullable final Class<T> type,
 			@Nullable final SqlSession sqlSession) {
 		//
 		if (instance == null) {
