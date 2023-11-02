@@ -14112,11 +14112,27 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		try {
 			//
-			final Field mapperRegistry = Configuration.class.getDeclaredField("mapperRegistry");
+			// org.apache.ibatis.session.Configuration.mapperRegistry
 			//
-			setAccessible(mapperRegistry, true);
+			Field field = getDeclaredField(Configuration.class, "mapperRegistry");
 			//
-			if (get(mapperRegistry, instance) == null) {
+			setAccessible(field, true);
+			//
+			final Object mapperRegistry = get(field, instance);
+			//
+			if (mapperRegistry == null) {
+				//
+				return null;
+				//
+			} // if
+				//
+				// org.apache.ibatis.binding.MapperRegistry.knownMappers
+				//
+			setAccessible(field = getDeclaredField(Util.getClass(mapperRegistry), "knownMappers"), true);
+			//
+			final Map<?, ?> map = cast(Map.class, get(field, mapperRegistry));
+			//
+			if (!containsKey(map, type) || get(map, type) == null) {
 				//
 				return null;
 				//

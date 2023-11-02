@@ -184,7 +184,6 @@ import org.apache.commons.lang3.reflect.MethodUtils;
 import org.apache.commons.lang3.stream.FailableStreamUtil;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.ibatis.binding.BindingException;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -3677,11 +3676,7 @@ class VoiceManagerTest {
 		Assertions.assertNull(
 				getMapper(cast(Configuration.class, Narcissus.allocateInstance(Configuration.class)), null, null));
 		//
-		final Configuration configuration = new Configuration();
-		//
-		AssertionsUtil.assertThrowsAndEquals(BindingException.class,
-				"{localizedMessage=Type null is not known to the MapperRegistry., message=Type null is not known to the MapperRegistry.}",
-				() -> getMapper(configuration, null, null));
+		Assertions.assertNull(getMapper(new Configuration(), null, null));
 		//
 	}
 
