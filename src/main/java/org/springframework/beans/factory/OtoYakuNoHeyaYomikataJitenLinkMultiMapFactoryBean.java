@@ -73,7 +73,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean implements Factor
 		//
 	}
 
-	private static Element getParentByNodeName(final Element element, final String nodeName) {
+	private static Element getParentByNodeName(@Nullable final Element element, final String nodeName) {
 		//
 		return orElse(findFirst(
 				Util.filter(Util.stream(parents(element)), x -> Objects.equals(nodeName, NodeUtil.nodeName(x)))), null);
