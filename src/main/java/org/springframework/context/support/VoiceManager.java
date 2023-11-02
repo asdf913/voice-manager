@@ -14130,7 +14130,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			setAccessible(field = getDeclaredField(Util.getClass(mapperRegistry), "knownMappers"), true);
 			//
-			final Map<?, ?> map = cast(Map.class, get(field, mapperRegistry));
+			final Object obj = get(field, mapperRegistry);
+			//
+			if (Objects.equals("java.util.concurrent.ConcurrentHashMap", getName(Util.getClass(obj))) && type == null) {
+				//
+				return null;
+				//
+			} // if
+				//
+			final Map<?, ?> map = cast(Map.class, obj);
 			//
 			if (!containsKey(map, type) || get(map, type) == null) {
 				//
