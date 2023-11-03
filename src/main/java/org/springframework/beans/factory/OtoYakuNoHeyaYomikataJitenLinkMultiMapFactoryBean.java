@@ -1,6 +1,7 @@
 package org.springframework.beans.factory;
 
 import java.net.URI;
+import java.net.URL;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -38,7 +39,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean implements Factor
 	@Override
 	public Multimap<String, String> getObject() throws Exception {
 		//
-		return getMultimap(getElement(url));
+		return getMultimap(getElement(testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null)));
 		//
 	}
 
@@ -82,11 +83,10 @@ public class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean implements Factor
 	}
 
 	@Nullable
-	private static Element getElement(final String url) throws Exception {
+	private static Element getElement(final URL url) throws Exception {
 		//
-		final List<Element> bs = ElementUtil.select(testAndApply(Objects::nonNull,
-				testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null), x -> Jsoup.parse(x, 0),
-				null), "b");
+		final List<Element> bs = ElementUtil.select(testAndApply(Objects::nonNull, url, x -> Jsoup.parse(x, 0), null),
+				"b");
 		//
 		final List<Element> es = Util.collect(
 				Util.filter(Util.stream(bs), x -> StringUtils.equals("音訳の部屋読み方辞典", trim(ElementUtil.text(x)))),
