@@ -1,5 +1,6 @@
 package org.springframework.beans.factory;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 import java.util.List;
@@ -88,7 +89,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean implements Factor
 	}
 
 	@Nullable
-	private static Element getElement(final URL url, final String title) throws Exception {
+	private static Element getElement(final URL url, final String title) throws IOException {
 		//
 		final List<Element> bs = ElementUtil.select(testAndApply(Objects::nonNull, url, x -> Jsoup.parse(x, 0), null),
 				"b");
