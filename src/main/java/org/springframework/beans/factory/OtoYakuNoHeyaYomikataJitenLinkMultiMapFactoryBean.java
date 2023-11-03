@@ -30,16 +30,21 @@ import com.google.common.collect.MultimapUtil;
  */
 public class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean implements FactoryBean<Multimap<String, String>> {
 
-	private String url = null;
+	private String url, title = null;
 
 	public void setUrl(final String url) {
 		this.url = url;
 	}
 
+	public void setTitle(final String title) {
+		this.title = title;
+	}
+
 	@Override
 	public Multimap<String, String> getObject() throws Exception {
 		//
-		return getMultimap(getElement(testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null)));
+		return getMultimap(
+				getElement(testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null), title));
 		//
 	}
 
@@ -83,13 +88,13 @@ public class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean implements Factor
 	}
 
 	@Nullable
-	private static Element getElement(final URL url) throws Exception {
+	private static Element getElement(final URL url, final String title) throws Exception {
 		//
 		final List<Element> bs = ElementUtil.select(testAndApply(Objects::nonNull, url, x -> Jsoup.parse(x, 0), null),
 				"b");
 		//
-		final List<Element> es = Util.collect(
-				Util.filter(Util.stream(bs), x -> StringUtils.equals("音訳の部屋読み方辞典", trim(ElementUtil.text(x)))),
+		final List<Element> es = Util.collect(Util.filter(Util.stream(bs),
+				x -> StringUtils.equals(StringUtils.defaultIfBlank(title, "音訳の部屋読み方辞典"), trim(ElementUtil.text(x)))),
 				Collectors.toList());
 		//
 		final int size = IterableUtils.size(es);
