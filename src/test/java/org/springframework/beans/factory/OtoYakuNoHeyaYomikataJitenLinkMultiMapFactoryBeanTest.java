@@ -24,7 +24,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBeanTest {
 
 	private static Method METHOD_GET_MULTI_MAP, METHOD_OR_ELSE, METHOD_FIND_FIRST, METHOD_PARENTS, METHOD_TRIM,
-			METHOD_APPEND, METHOD_TEST_AND_APPLY = null;
+			METHOD_APPEND, METHOD_TEST_AND_APPLY, METHOD_PUT_HREF = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -46,6 +46,8 @@ class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBeanTest {
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
 		//
+		(METHOD_PUT_HREF = clz.getDeclaredMethod("putHref", Multimap.class, Element.class)).setAccessible(true);
+		//
 	}
 
 	private OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean instance = null;;
@@ -60,7 +62,7 @@ class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBeanTest {
 	@Test
 	void testGetObject() throws Exception {
 		//
-		Assertions.assertNull(instance != null ? instance.getObject() : null);
+		Assertions.assertNull(getObject(instance));
 		//
 		if (instance != null) {
 			//
@@ -68,7 +70,7 @@ class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(instance != null ? instance.getObject() : null);
+		Assertions.assertNull(getObject(instance));
 		//
 		if (instance != null) {
 			//
@@ -76,20 +78,28 @@ class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(instance != null ? instance.getObject() : null);
+		Assertions.assertNull(getObject(instance));
 		//
 		final Map<?, ?> systemProperties = System.getProperties();
 		//
-		if (instance != null && Util.containsKey(systemProperties,
-				"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean.url")) {
+		if (instance != null && isUrlSet(systemProperties)) {
 			//
 			instance.setUrl(Util.toString(Util.get(systemProperties,
 					"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean.url")));
 			//
-			Assertions.assertNotNull(instance.getObject());
+			Assertions.assertNotNull(getObject(instance));
 			//
-		} // if
+		} //
 			//
+	}
+
+	private static boolean isUrlSet(final Map<?, ?> map) {
+		return Util.containsKey(map,
+				"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean.url");
+	}
+
+	private static <T> T getObject(final FactoryBean<T> instance) throws Exception {
+		return instance != null ? instance.getObject() : null;
 	}
 
 	@Test
@@ -236,6 +246,31 @@ class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBeanTest {
 			throws Throwable {
 		try {
 			return (R) METHOD_TEST_AND_APPLY.invoke(null, predicate, value, functionTrue, functionFalse);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testPutHref() throws Throwable {
+		//
+		if (isUrlSystemPropertiesSet()) {
+			//
+			return;
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> putHref(null, null));
+		//
+	}
+
+	private static boolean isUrlSystemPropertiesSet() {
+		return isUrlSet(System.getProperties());
+	}
+
+	private static void putHref(final Multimap<String, String> m, final Element v) throws Throwable {
+		try {
+			METHOD_PUT_HREF.invoke(null, m, v);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

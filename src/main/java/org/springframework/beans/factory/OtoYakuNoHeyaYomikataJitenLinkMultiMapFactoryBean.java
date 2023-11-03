@@ -65,33 +65,38 @@ public class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean implements Factor
 
 	private static Multimap<String, String> getMultimap(@Nullable final Element element) {
 		//
-		return Util.collect(Util.filter(Util.stream(ElementUtil.select(element, "td[align=\"center\"]")),
-				x -> ElementUtil.text(x).matches("\\d+")), ArrayListMultimap::create, (m, v) -> {
-					//
-					final String text = ElementUtil.text(v);
-					//
-					final List<Element> as = ElementUtil.select(ElementUtil.nextElementSibling(v), "a");
-					//
-					Element a = null;
-					//
-					String href = null;
-					//
-					for (int i = 0; as != null && i < as.size(); i++) {
-						//
-						if ((a = as.get(i)) == null) {
-							//
-							continue;
-							//
-						} // if
-							//
-						MultimapUtil.put(m, ElementUtil.text(a), href = NodeUtil.absUrl(a, "href"));
-						//
-						MultimapUtil.put(m, text, href);
-						//
-					} // for
-						//
-				}, Multimap::putAll);
+		return Util.collect(
+				Util.filter(Util.stream(ElementUtil.select(element, "td[align=\"center\"]")),
+						x -> ElementUtil.text(x).matches("\\d+")),
+				ArrayListMultimap::create, OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean::putHref,
+				Multimap::putAll);
 		//
+	}
+
+	private static void putHref(final Multimap<String, String> m, final Element v) {
+		//
+		final String text = ElementUtil.text(v);
+		//
+		final List<Element> as = ElementUtil.select(ElementUtil.nextElementSibling(v), "a");
+		//
+		Element a = null;
+		//
+		String href = null;
+		//
+		for (int i = 0; as != null && i < as.size(); i++) {
+			//
+			if ((a = as.get(i)) == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			MultimapUtil.put(m, ElementUtil.text(a), href = NodeUtil.absUrl(a, "href"));
+			//
+			MultimapUtil.put(m, text, href);
+			//
+		} // for
+			//
 	}
 
 	@Nullable
