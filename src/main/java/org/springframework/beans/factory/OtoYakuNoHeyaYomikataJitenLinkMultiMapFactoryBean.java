@@ -1,6 +1,10 @@
 package org.springframework.beans.factory;
 
 import java.io.IOException;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.net.URI;
 import java.net.URL;
 import java.util.List;
@@ -31,7 +35,17 @@ import com.google.common.collect.MultimapUtil;
  */
 public class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean implements FactoryBean<Multimap<String, String>> {
 
-	private String url, title = null;
+	@Target(ElementType.FIELD)
+	@Retention(RetentionPolicy.RUNTIME)
+	private @interface Note {
+		String value();
+	}
+
+	@Note("url")
+	private String url = null;
+
+	@Note("title")
+	private String title = null;
 
 	public void setUrl(final String url) {
 		this.url = url;
