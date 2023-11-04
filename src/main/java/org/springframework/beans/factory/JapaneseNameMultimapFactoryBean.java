@@ -70,8 +70,7 @@ public class JapaneseNameMultimapFactoryBean implements FactoryBean<Multimap<Str
 			final ContentInfo ci = testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch, null);
 			//
 			if (Objects.equals("application/vnd.openxmlformats-officedocument", Util.getMimeType(ci))
-					|| Objects.equals("OLE 2 Compound Document", ci != null ? ci.getMessage() : null)
-					|| XlsxUtil.isXlsx(resource)) {
+					|| Objects.equals("OLE 2 Compound Document", Util.getMessage(ci)) || XlsxUtil.isXlsx(resource)) {
 				//
 				try (final InputStream is = new ByteArrayInputStream(bs);
 						final Workbook wb = WorkbookFactory.create(is)) {

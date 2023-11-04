@@ -69,7 +69,7 @@ public class YojijukugoMultimapFactoryBean implements FactoryBean<Multimap<Strin
 			//
 			final ContentInfo ci = testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch, null);
 			//
-			final String message = ci != null ? ci.getMessage() : null;
+			final String message = Util.getMessage(ci);
 			//
 			IValue0<Multimap<String, String>> value = null;
 			//

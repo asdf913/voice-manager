@@ -97,7 +97,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 			//
 			if (or(Objects.equals("application/vnd.openxmlformats-officedocument", mimeType),
 					Boolean.logicalAnd(Objects.equals("application/zip", mimeType), XlsxUtil.isXlsx(resource)),
-					Objects.equals("OLE 2 Compound Document", getMessage(ci)))) {
+					Objects.equals("OLE 2 Compound Document", Util.getMessage(ci)))) {
 				//
 				try (final InputStream is = InputStreamSourceUtil.getInputStream(resource);
 						final Workbook wb = testAndApply(Objects::nonNull, is, WorkbookFactory::create, null)) {
@@ -449,11 +449,6 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 
 	private static final <T> boolean test(@Nullable final Predicate<T> instance, @Nullable final T value) {
 		return instance != null && instance.test(value);
-	}
-
-	@Nullable
-	private static String getMessage(@Nullable final ContentInfo instance) {
-		return instance != null ? instance.getMessage() : null;
 	}
 
 	private static boolean or(final boolean a, final boolean b, @Nullable final boolean... bs) {

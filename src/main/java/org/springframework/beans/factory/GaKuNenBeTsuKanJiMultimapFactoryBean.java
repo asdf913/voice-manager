@@ -122,7 +122,7 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 			//
 			final String mimeType = Util.getMimeType(ci);
 			//
-			final String message = getMessage(ci);
+			final String message = Util.getMessage(ci);
 			//
 			if (or(Objects.equals("application/vnd.openxmlformats-officedocument", mimeType),
 					Boolean.logicalAnd(Objects.equals("application/zip", mimeType), XlsxUtil.isXlsx(resource)),
@@ -231,11 +231,6 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 			//
 		return result;
 		//
-	}
-
-	@Nullable
-	private static String getMessage(@Nullable final ContentInfo instance) {
-		return instance != null ? instance.getMessage() : null;
 	}
 
 	@Nullable

@@ -239,7 +239,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean implements Factor
 		final String mimeType = Util.getMimeType(ci);
 		//
 		if (Objects.equals("application/vnd.openxmlformats-officedocument", mimeType)
-				|| Objects.equals("OLE 2 Compound Document", getMessage(ci)) || XlsxUtil.isXlsx(resource)) {
+				|| Objects.equals("OLE 2 Compound Document", Util.getMessage(ci)) || XlsxUtil.isXlsx(resource)) {
 			//
 			try (final InputStream is = new ByteArrayInputStream(bs);
 					final Workbook wb = testAndApply(Objects::nonNull, is, WorkbookFactory::create, null)) {
@@ -275,11 +275,6 @@ public class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean implements Factor
 			//
 		return instance != null ? instance.evaluate(expression, item, returnType) : null;
 		//
-	}
-
-	@Nullable
-	private static String getMessage(@Nullable final ContentInfo instance) {
-		return instance != null ? instance.getMessage() : null;
 	}
 
 	private static Multimap<String, String> getMultimap(@Nullable final Element element) {
