@@ -699,6 +699,8 @@
 			value="${org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean.url}" />
 		<property name="title"
 			value="${org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean.title}" />
+		<property name="resource"
+			value="classpath:OtoYakuNoHeyaYomikataJiten.xlsx" />
 	</bean>
 
 	<bean

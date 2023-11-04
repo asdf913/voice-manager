@@ -1,34 +1,64 @@
 package org.springframework.beans.factory;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
+import java.io.StringReader;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.lang.reflect.Field;
 import java.net.URI;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
+import javax.xml.namespace.QName;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.ss.util.CellUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
 import org.jsoup.nodes.NodeUtil;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceUtil;
+import org.springframework.core.io.XlsxUtil;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
+import com.j256.simplemagic.ContentInfo;
+import com.j256.simplemagic.ContentInfoUtil;
 
 /*
  * https://hiramatu-hifuka.com/onyak/onyindx.html
@@ -47,6 +77,8 @@ public class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean implements Factor
 	@Note("title")
 	private String title = null;
 
+	private Resource resource = null;
+
 	public void setUrl(final String url) {
 		this.url = url;
 	}
@@ -55,12 +87,201 @@ public class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean implements Factor
 		this.title = title;
 	}
 
+	public void setResource(final Resource resource) {
+		this.resource = resource;
+	}
+
 	@Override
 	public Multimap<String, String> getObject() throws Exception {
 		//
+		if (resource != null) {
+			//
+			return getMultimap(resource, true);
+			//
+		} // if
+			//
 		return getMultimap(
 				getElement(testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null), title));
 		//
+	}
+
+	private static Multimap<String, String> getMultimap(final Resource resource, final boolean header)
+			throws Exception {
+		//
+		final Sheet sheet = getSheet(resource);
+		//
+		Multimap<String, String> multimap = null;
+		//
+		Row row = null;
+		//
+		final AtomicBoolean first = new AtomicBoolean(false);
+		//
+		for (int i = 0; sheet != null && i < sheet.getPhysicalNumberOfRows(); i++) {
+			//
+			if ((row = sheet.getRow(i)) == null || row.getPhysicalNumberOfCells() < 2
+					|| (header && !first.getAndSet(true))) {
+				//
+				continue;
+				//
+			} // if
+				//
+				//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, ArrayListMultimap::create),
+					getString(CellUtil.getCell(row, 0)), getString(CellUtil.getCell(row, 1)));
+			//
+		} // for
+			//
+		return multimap;
+		//
+	}
+
+	private static String getString(final Cell cell) throws Exception {
+		//
+		if (cell == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		final CellType cellType = cell.getCellType();
+		//
+		if (Objects.equals(cellType, CellType.NUMERIC)) {
+			//
+			// _cell
+			//
+			final List<Field> fs = Arrays.stream(Util.getDeclaredFields(Util.getClass(cell))).filter(f -> Objects
+					.equals(getName(Util.getType(f)), "org.openxmlformats.schemas.spreadsheetml.x2006.main.CTCell"))
+					.toList();
+			//
+			final int size = IterableUtils.size(fs);
+			//
+			if (size > 1) {
+				//
+				throw new IllegalStateException();
+				//
+			} // if
+				//
+			final Field f = size == 1 ? IterableUtils.get(fs, 0) : null;
+			//
+			if (f != null) {
+				//
+				f.setAccessible(true);
+				//
+			} // if
+				//
+			Document document = null;
+			//
+			try (final Reader reader = testAndApply(Objects::nonNull, Util.toString(get(f, cell)), StringReader::new,
+					null)) {
+				//
+				document = testAndApply(Objects::nonNull, reader,
+						x -> parse(newDocumentBuilder(DocumentBuilderFactory.newDefaultInstance()), new InputSource(x)),
+						null);
+				//
+			} // try
+				//
+			return ObjectUtils.defaultIfNull(Util.toString(
+					evaluate(newXPath(XPathFactory.newDefaultInstance()), "/*/*", document, XPathConstants.STRING)),
+					Double.toString(cell.getNumericCellValue()));
+			//
+		} else if (Objects.equals(cellType, CellType.STRING)) {
+			//
+			return cell.getStringCellValue();
+			//
+		} // if
+			//
+		throw new IllegalStateException(Util.toString(cellType));
+		//
+	}
+
+	private static Object get(final Field field, final Object instance) throws IllegalAccessException {
+		return field != null ? field.get(instance) : null;
+	}
+
+	private static DocumentBuilder newDocumentBuilder(final DocumentBuilderFactory instance)
+			throws ParserConfigurationException {
+		return instance != null ? instance.newDocumentBuilder() : null;
+	}
+
+	private static Document parse(final DocumentBuilder instance, final InputSource is)
+			throws SAXException, IOException {
+		//
+		if (Objects.equals("com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderImpl",
+				getName(Util.getClass(instance)))) {
+			//
+			if (is == null) {
+				//
+				return null;
+				//
+			} // if
+				//
+		} // if
+			//
+		return instance != null ? instance.parse(is) : null;
+		//
+	}
+
+	private static XPath newXPath(final XPathFactory instance) {
+		return instance != null ? instance.newXPath() : null;
+	}
+
+	private static Sheet getSheet(final Resource resource)
+			throws IOException, SAXException, ParserConfigurationException {
+		//
+		final byte[] bs = ResourceUtil.getContentAsByteArray(resource);
+		//
+		final ContentInfo ci = testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch, null);
+		//
+		final String mimeType = getMimeType(ci);
+		//
+		if (Objects.equals("application/vnd.openxmlformats-officedocument", mimeType)
+				|| Objects.equals("OLE 2 Compound Document", getMessage(ci)) || XlsxUtil.isXlsx(resource)) {
+			//
+			try (final InputStream is = new ByteArrayInputStream(bs);
+					final Workbook wb = testAndApply(Objects::nonNull, is, WorkbookFactory::create, null)) {
+				//
+				final int numberOfSheets = wb.getNumberOfSheets();
+				//
+				if (numberOfSheets == 0) {
+					//
+					throw new IllegalArgumentException("There is no sheet in the workbook");
+					//
+				} // if
+					//
+				return wb.getSheetAt(0);
+				//
+			} // try
+				//
+		} // if
+			//
+		return null;
+		//
+	}
+
+	private static Object evaluate(final XPath instance, final String expression, final Object item,
+			final QName returnType) throws XPathExpressionException {
+		//
+		if (Objects.equals("com.sun.org.apache.xpath.internal.jaxp.XPathImpl", getName(Util.getClass(instance)))
+				&& (item == null || expression == null || returnType == null)) {
+			//
+			return null;
+			//
+		} // if
+			//
+		return instance != null ? instance.evaluate(expression, item, returnType) : null;
+		//
+	}
+
+	private static String getName(final Class<?> instance) {
+		return instance != null ? instance.getName() : null;
+	}
+
+	private static String getMimeType(final ContentInfo instance) {
+		return instance != null ? instance.getMimeType() : null;
+	}
+
+	private static String getMessage(final ContentInfo instance) {
+		return instance != null ? instance.getMessage() : null;
 	}
 
 	private static Multimap<String, String> getMultimap(@Nullable final Element element) {
