@@ -28,8 +28,6 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
 import com.google.common.reflect.Reflection;
 
-import ClassInJarReplacer.Note;
-
 interface Frame {
 
 	String getSrc();
