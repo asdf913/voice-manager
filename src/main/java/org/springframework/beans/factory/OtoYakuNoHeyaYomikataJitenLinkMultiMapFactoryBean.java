@@ -207,14 +207,10 @@ public class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean implements Factor
 			throws SAXException, IOException {
 		//
 		if (Objects.equals("com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderImpl",
-				getName(Util.getClass(instance)))) {
+				getName(Util.getClass(instance))) && is == null) {
 			//
-			if (is == null) {
-				//
-				return null;
-				//
-			} // if
-				//
+			return null;
+			//
 		} // if
 			//
 		return instance != null ? instance.parse(is) : null;
