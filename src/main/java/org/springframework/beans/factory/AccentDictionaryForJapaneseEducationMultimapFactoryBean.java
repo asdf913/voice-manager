@@ -41,7 +41,6 @@ import org.springframework.core.io.XlsxUtil;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
-import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
 
 public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements FactoryBean<Multimap<String, String>> {
