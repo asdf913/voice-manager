@@ -205,6 +205,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean implements Factor
 		return instance != null ? instance.newDocumentBuilder() : null;
 	}
 
+	@Nullable
 	private static Document parse(@Nullable final DocumentBuilder instance, @Nullable final InputSource is)
 			throws SAXException, IOException {
 		//
@@ -257,6 +258,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean implements Factor
 		//
 	}
 
+	@Nullable
 	private static Object evaluate(@Nullable final XPath instance, @Nullable final String expression,
 			@Nullable final Object item, @Nullable final QName returnType) throws XPathExpressionException {
 		//
