@@ -1,5 +1,9 @@
 package org.springframework.beans.factory;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.net.URI;
@@ -24,6 +28,8 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
 import com.google.common.reflect.Reflection;
 
+import ClassInJarReplacer.Note;
+
 interface Frame {
 
 	String getSrc();
@@ -45,7 +51,17 @@ public class OtoYakuNoHeyaYomikataJitenFrameMultiMapFactoryBean implements Facto
 
 	private static class IH implements InvocationHandler {
 
-		private String name, src = null;
+		@Target(ElementType.FIELD)
+		@Retention(RetentionPolicy.RUNTIME)
+		private @interface Note {
+			String value();
+		}
+
+		@Note("name")
+		private String name = null;
+
+		@Note("src")
+		private String src = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
