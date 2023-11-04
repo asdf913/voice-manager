@@ -37,6 +37,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
 
+import com.j256.simplemagic.ContentInfo;
+
 import io.github.toolfactory.narcissus.Narcissus;
 
 abstract class Util {
@@ -431,6 +433,10 @@ abstract class Util {
 			//
 		return instance.toCharArray();
 		//
+	}
+
+	static String getMimeType(final ContentInfo instance) {
+		return instance != null ? instance.getMimeType() : null;
 	}
 
 }

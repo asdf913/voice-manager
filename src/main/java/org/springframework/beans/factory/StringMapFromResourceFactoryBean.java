@@ -220,7 +220,7 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 		//
 		final ContentInfo ci = new ContentInfoUtil().findMatch(bs);
 		//
-		final String mimeType = getMimeType(ci);
+		final String mimeType = Util.getMimeType(ci);
 		//
 		if (Objects.equals("application/vnd.openxmlformats-officedocument", mimeType)
 				|| Objects.equals("OLE 2 Compound Document", getMessage(ci)) || XlsxUtil.isXlsx(resource)) {
@@ -463,11 +463,6 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 		} // for
 			//
 		return objectIntMap;
-	}
-
-	@Nullable
-	private static String getMimeType(@Nullable final ContentInfo instance) {
-		return instance != null ? instance.getMimeType() : null;
 	}
 
 	@Nullable

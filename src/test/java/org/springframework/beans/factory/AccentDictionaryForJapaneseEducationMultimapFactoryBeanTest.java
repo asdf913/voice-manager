@@ -27,13 +27,12 @@ import org.springframework.core.io.ClassPathResource;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Multimap;
 import com.google.common.reflect.Reflection;
-import com.j256.simplemagic.ContentInfo;
 
 class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 
 	private static final String EMPTY = "";
 
-	private static Method METHOD_CREATE_MULTI_MAP_STRING, METHOD_GET_MIME_TYPE, METHOD_CREATE_MULTI_MAP_BY_URL,
+	private static Method METHOD_CREATE_MULTI_MAP_STRING, METHOD_CREATE_MULTI_MAP_BY_URL,
 			METHOD_CREATE_MULTI_MAP_WORK_BOOK, METHOD_CREATE_MULTI_MAP_SHEET, METHOD_GET_AND_SET,
 			METHOD_GET_PAIR = null;
 
@@ -44,8 +43,6 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 		//
 		(METHOD_CREATE_MULTI_MAP_STRING = clz.getDeclaredMethod("createMultimap", String.class, String[].class,
 				String.class)).setAccessible(true);
-		//
-		(METHOD_GET_MIME_TYPE = clz.getDeclaredMethod("getMimeType", ContentInfo.class)).setAccessible(true);
 		//
 		(METHOD_CREATE_MULTI_MAP_BY_URL = clz.getDeclaredMethod("createMultimapByUrl", String.class, String[].class,
 				String.class)).setAccessible(true);
@@ -254,27 +251,6 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 				return null;
 			} else if (obj instanceof Multimap) {
 				return (Multimap) obj;
-			}
-			throw new Throwable(obj != null && obj.getClass() != null ? obj.getClass().toString() : null);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetMimeType() throws Throwable {
-		//
-		Assertions.assertNull(getMimeType(null));
-		//
-	}
-
-	private static String getMimeType(final ContentInfo instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_MIME_TYPE.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
 			}
 			throw new Throwable(obj != null && obj.getClass() != null ? obj.getClass().toString() : null);
 		} catch (final InvocationTargetException e) {

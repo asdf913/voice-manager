@@ -44,8 +44,7 @@ class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBeanTest {
 
 	private static Method METHOD_GET_MULTI_MAP, METHOD_OR_ELSE, METHOD_FIND_FIRST, METHOD_PARENTS, METHOD_TRIM,
 			METHOD_APPEND, METHOD_TEST_AND_APPLY, METHOD_PUT_HREF, METHOD_GET_STRING, METHOD_NEW_DOCUMENT_BUILDER,
-			METHOD_PARSE, METHOD_NEW_XPATH, METHOD_EVALUATE, METHOD_GET_MIME_TYPE, METHOD_GET_MESSAGE,
-			METHOD_GET = null;
+			METHOD_PARSE, METHOD_NEW_XPATH, METHOD_EVALUATE, METHOD_GET_MESSAGE, METHOD_GET = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -80,8 +79,6 @@ class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBeanTest {
 		//
 		(METHOD_EVALUATE = clz.getDeclaredMethod("evaluate", XPath.class, String.class, Object.class, QName.class))
 				.setAccessible(true);
-		//
-		(METHOD_GET_MIME_TYPE = clz.getDeclaredMethod("getMimeType", ContentInfo.class)).setAccessible(true);
 		//
 		(METHOD_GET_MESSAGE = clz.getDeclaredMethod("getMessage", ContentInfo.class)).setAccessible(true);
 		//
@@ -531,27 +528,6 @@ class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBeanTest {
 			final QName returnType) throws Throwable {
 		try {
 			return METHOD_EVALUATE.invoke(null, instance, expression, item, returnType);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetMimeType() throws Throwable {
-		//
-		Assertions.assertNull(getMimeType(Util.cast(ContentInfo.class, Narcissus.allocateInstance(ContentInfo.class))));
-		//
-	}
-
-	private static String getMimeType(final ContentInfo instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_MIME_TYPE.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

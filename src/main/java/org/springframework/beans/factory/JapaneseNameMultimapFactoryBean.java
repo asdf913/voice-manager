@@ -69,7 +69,7 @@ public class JapaneseNameMultimapFactoryBean implements FactoryBean<Multimap<Str
 			//
 			final ContentInfo ci = testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch, null);
 			//
-			if (Objects.equals("application/vnd.openxmlformats-officedocument", getMimeType(ci))
+			if (Objects.equals("application/vnd.openxmlformats-officedocument", Util.getMimeType(ci))
 					|| Objects.equals("OLE 2 Compound Document", ci != null ? ci.getMessage() : null)
 					|| XlsxUtil.isXlsx(resource)) {
 				//
@@ -137,11 +137,6 @@ public class JapaneseNameMultimapFactoryBean implements FactoryBean<Multimap<Str
 			//
 		return multimap;
 		//
-	}
-
-	@Nullable
-	private static String getMimeType(@Nullable final ContentInfo instance) {
-		return instance != null ? instance.getMimeType() : null;
 	}
 
 	@Nullable

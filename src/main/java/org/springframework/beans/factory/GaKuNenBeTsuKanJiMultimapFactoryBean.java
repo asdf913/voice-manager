@@ -120,7 +120,7 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 			//
 			final ContentInfo ci = ResourceContentInfoUtil.getContentInfo(resource);
 			//
-			final String mimeType = getMimeType(ci);
+			final String mimeType = Util.getMimeType(ci);
 			//
 			final String message = getMessage(ci);
 			//
@@ -231,11 +231,6 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 			//
 		return result;
 		//
-	}
-
-	@Nullable
-	private static String getMimeType(@Nullable final ContentInfo instance) {
-		return instance != null ? instance.getMimeType() : null;
 	}
 
 	@Nullable

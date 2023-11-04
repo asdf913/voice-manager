@@ -73,7 +73,7 @@ public class YojijukugoMultimapFactoryBean implements FactoryBean<Multimap<Strin
 			//
 			IValue0<Multimap<String, String>> value = null;
 			//
-			if (Objects.equals("application/vnd.openxmlformats-officedocument", getMimeType(ci))
+			if (Objects.equals("application/vnd.openxmlformats-officedocument", Util.getMimeType(ci))
 					|| Objects.equals("OLE 2 Compound Document", message) || XlsxUtil.isXlsx(resource)) {
 				//
 				try (final InputStream is = new ByteArrayInputStream(bs);
@@ -247,11 +247,6 @@ public class YojijukugoMultimapFactoryBean implements FactoryBean<Multimap<Strin
 	@Nullable
 	private static <T> Iterator<T> iterator(@Nullable final Iterable<T> instance) {
 		return instance != null ? instance.iterator() : null;
-	}
-
-	@Nullable
-	private static String getMimeType(@Nullable final ContentInfo instance) {
-		return instance != null ? instance.getMimeType() : null;
 	}
 
 	@Nullable
