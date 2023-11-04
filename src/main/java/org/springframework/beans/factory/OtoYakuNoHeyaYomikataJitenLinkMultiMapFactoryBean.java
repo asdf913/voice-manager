@@ -150,8 +150,9 @@ public class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean implements Factor
 			//
 			// _cell
 			//
-			final List<Field> fs = Arrays.stream(Util.getDeclaredFields(Util.getClass(cell))).filter(f -> Objects
-					.equals(getName(Util.getType(f)), "org.openxmlformats.schemas.spreadsheetml.x2006.main.CTCell"))
+			final List<Field> fs = Arrays.stream(Util.getDeclaredFields(Util.getClass(cell)))
+					.filter(f -> Objects.equals(Util.getName(Util.getType(f)),
+							"org.openxmlformats.schemas.spreadsheetml.x2006.main.CTCell"))
 					.toList();
 			//
 			final int size = IterableUtils.size(fs);
@@ -210,7 +211,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean implements Factor
 			throws SAXException, IOException {
 		//
 		if (Objects.equals("com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderImpl",
-				getName(Util.getClass(instance))) && is == null) {
+				Util.getName(Util.getClass(instance))) && is == null) {
 			//
 			return null;
 			//
@@ -262,7 +263,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean implements Factor
 	private static Object evaluate(@Nullable final XPath instance, @Nullable final String expression,
 			@Nullable final Object item, @Nullable final QName returnType) throws XPathExpressionException {
 		//
-		if (Objects.equals("com.sun.org.apache.xpath.internal.jaxp.XPathImpl", getName(Util.getClass(instance)))
+		if (Objects.equals("com.sun.org.apache.xpath.internal.jaxp.XPathImpl", Util.getName(Util.getClass(instance)))
 				&& (item == null || expression == null || returnType == null)) {
 			//
 			return null;
@@ -271,10 +272,6 @@ public class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean implements Factor
 			//
 		return instance != null ? instance.evaluate(expression, item, returnType) : null;
 		//
-	}
-
-	private static String getName(@Nullable final Class<?> instance) {
-		return instance != null ? instance.getName() : null;
 	}
 
 	private static String getMimeType(@Nullable final ContentInfo instance) {

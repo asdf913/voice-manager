@@ -52,10 +52,10 @@ class JlptVocabularyListFactoryBeanTest {
 
 	private static final String EMPTY = "";
 
-	private static Method METHOD_ANNOTATION_TYPE, METHOD_GET_NAME, METHOD_TEST, METHOD_OR, METHOD_ADD_ALL,
-			METHOD_GET_FIELDS_BY_NAME, METHOD_GET_INTEGER_VALUE, METHOD_GET_STRING_VALUE_CELL, METHOD_INVOKE,
-			METHOD_GET_DECLARED_ANNOTATIONS, METHOD_GET_DECLARED_METHODS, METHOD_SET_ACCESSIBLE,
-			METHOD_GET_NUMBER_VALUE, METHOD_GET_PHYSICAL_NUMBER_OF_CELLS = null;
+	private static Method METHOD_ANNOTATION_TYPE, METHOD_TEST, METHOD_OR, METHOD_ADD_ALL, METHOD_GET_FIELDS_BY_NAME,
+			METHOD_GET_INTEGER_VALUE, METHOD_GET_STRING_VALUE_CELL, METHOD_INVOKE, METHOD_GET_DECLARED_ANNOTATIONS,
+			METHOD_GET_DECLARED_METHODS, METHOD_SET_ACCESSIBLE, METHOD_GET_NUMBER_VALUE,
+			METHOD_GET_PHYSICAL_NUMBER_OF_CELLS = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -63,8 +63,6 @@ class JlptVocabularyListFactoryBeanTest {
 		final Class<?> clz = JlptVocabularyListFactoryBean.class;
 		//
 		(METHOD_ANNOTATION_TYPE = clz.getDeclaredMethod("annotationType", Annotation.class)).setAccessible(true);
-		//
-		(METHOD_GET_NAME = clz.getDeclaredMethod("getName", Class.class)).setAccessible(true);
 		//
 		(METHOD_TEST = clz.getDeclaredMethod("test", Predicate.class, Object.class)).setAccessible(true);
 		//
@@ -387,27 +385,6 @@ class JlptVocabularyListFactoryBeanTest {
 				return null;
 			} else if (obj instanceof Class) {
 				return (Class) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetName() throws Throwable {
-		//
-		Assertions.assertNull(getName(null));
-		//
-	}
-
-	private static String getName(final Class<?> instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_NAME.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

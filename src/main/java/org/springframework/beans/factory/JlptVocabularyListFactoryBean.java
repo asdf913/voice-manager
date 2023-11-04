@@ -227,11 +227,6 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 	}
 
 	@Nullable
-	private static String getName(@Nullable final Class<?> instance) {
-		return instance != null ? instance.getName() : null;
-	}
-
-	@Nullable
 	private static IValue0<JlptVocabulary> getJlptVocabulary(@Nullable final Map<Integer, Field> fieldMap,
 			final Row row, final FormulaEvaluator formulaEvaluator) {
 		//
@@ -684,7 +679,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 	private static IValue0<Object> getColumnName(final Annotation a)
 			throws IllegalAccessException, InvocationTargetException {
 		//
-		if (Objects.equals("domain.JlptVocabulary$ColumnName", getName(annotationType(a)))) {
+		if (Objects.equals("domain.JlptVocabulary$ColumnName", Util.getName(annotationType(a)))) {
 			//
 			final Method[] ms = getDeclaredMethods(annotationType(a));
 			//
