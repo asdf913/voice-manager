@@ -1,7 +1,6 @@
 package org.springframework.beans.factory;
 
 import java.net.URI;
-import java.net.URL;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -153,17 +152,12 @@ public class JlptLevelListFactoryBean implements FactoryBean<List<String>> {
 				.toList(Util
 						.map(Util.stream(ElementUtil.select(
 								testAndApply(
-										x -> StringUtils.equalsAnyIgnoreCase(getProtocol(x),
+										x -> StringUtils.equalsAnyIgnoreCase(Util.getProtocol(x),
 												ProtocolUtil.getAllowProtocols()),
 										testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null),
 										x -> Jsoup.parse(x, intValue(toMillis(timeout), 0)), null),
 								".thLeft[scope='col']")), ElementUtil::text));
 		//
-	}
-
-	@Nullable
-	private static String getProtocol(@Nullable final URL instance) {
-		return instance != null ? instance.getProtocol() : null;
 	}
 
 	@Nullable

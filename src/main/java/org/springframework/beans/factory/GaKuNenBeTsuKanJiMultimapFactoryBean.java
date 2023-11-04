@@ -2,7 +2,6 @@ package org.springframework.beans.factory;
 
 import java.io.InputStream;
 import java.net.URI;
-import java.net.URL;
 import java.time.Duration;
 import java.util.Objects;
 import java.util.function.Predicate;
@@ -160,11 +159,14 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 	private static Multimap<String, String> createMultimapByUrl(final String url, final Duration timeout)
 			throws Exception {
 		//
-		final Elements elements = ElementUtil.selectXpath(
-				testAndApply(x -> StringUtils.equalsAnyIgnoreCase(getProtocol(x), ProtocolUtil.getAllowProtocols()),
-						testAndApply(Objects::nonNull, url, x -> new URI(x).toURL(), null),
-						x -> Jsoup.parse(x, intValue(toMillis(timeout), 0)), null),
-				"//span[@class='mw-headline'][starts-with(.,'第')]");
+		final Elements elements = ElementUtil
+				.selectXpath(
+						testAndApply(
+								x -> StringUtils.equalsAnyIgnoreCase(Util.getProtocol(x),
+										ProtocolUtil.getAllowProtocols()),
+								testAndApply(Objects::nonNull, url, x -> new URI(x).toURL(), null),
+								x -> Jsoup.parse(x, intValue(toMillis(timeout), 0)), null),
+						"//span[@class='mw-headline'][starts-with(.,'第')]");
 		//
 		Element element = null;
 		//
@@ -305,11 +307,6 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 
 	private static final <T> boolean test(@Nullable final Predicate<T> instance, final T value) {
 		return instance != null && instance.test(value);
-	}
-
-	@Nullable
-	private static String getProtocol(@Nullable final URL instance) {
-		return instance != null ? instance.getProtocol() : null;
 	}
 
 	@Nullable

@@ -3,7 +3,6 @@ package org.springframework.beans.factory;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.net.URI;
-import java.net.URL;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -191,7 +190,7 @@ public class YojijukugoMultimapFactoryBean implements FactoryBean<Multimap<Strin
 		//
 		final Elements tables = ElementUtil.getElementsByTag(testAndApply(
 				x -> x != null && (allowProtocols == null || allowProtocols.length == 0
-						|| StringUtils.equalsAnyIgnoreCase(getProtocol(x), allowProtocols)),
+						|| StringUtils.equalsAnyIgnoreCase(Util.getProtocol(x), allowProtocols)),
 				testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null), x -> Jsoup.parse(x, 0),
 				null), "table");
 		//
@@ -247,11 +246,6 @@ public class YojijukugoMultimapFactoryBean implements FactoryBean<Multimap<Strin
 	@Nullable
 	private static <T> Iterator<T> iterator(@Nullable final Iterable<T> instance) {
 		return instance != null ? instance.iterator() : null;
-	}
-
-	@Nullable
-	private static String getProtocol(@Nullable final URL instance) {
-		return instance != null ? instance.getProtocol() : null;
 	}
 
 	@Nullable

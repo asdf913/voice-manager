@@ -3,7 +3,6 @@ package org.springframework.beans.factory;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.net.URI;
-import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -97,7 +96,7 @@ public class JapaneseNameMultimapFactoryBean implements FactoryBean<Multimap<Str
 		//
 		final Elements tds = ElementUtil.select(testAndApply(
 				x -> x != null && (allowProtocols == null || allowProtocols.length == 0
-						|| StringUtils.equalsAnyIgnoreCase(getProtocol(x), allowProtocols)),
+						|| StringUtils.equalsAnyIgnoreCase(Util.getProtocol(x), allowProtocols)),
 				testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null), x -> Jsoup.parse(x, 0),
 				null), "table td");
 		//
@@ -221,11 +220,6 @@ public class JapaneseNameMultimapFactoryBean implements FactoryBean<Multimap<Str
 
 	private static <T> boolean test(@Nullable final Predicate<T> instance, final T value) {
 		return instance != null && instance.test(value);
-	}
-
-	@Nullable
-	private static String getProtocol(@Nullable final URL instance) {
-		return instance != null ? instance.getProtocol() : null;
 	}
 
 	@Override

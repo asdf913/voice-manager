@@ -4,8 +4,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.URI;
-import java.net.URL;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.IntStream;
@@ -32,8 +30,8 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class JapaneseNameMultimapFactoryBeanTest {
 
-	private static Method METHOD_TEST, METHOD_GET_PROTOCOL, METHOD_CREATE_MULTI_MAP_ELEMENT,
-			METHOD_CREATE_MULTI_MAP_WORK_BOOK, METHOD_CREATE_MULTI_MAP_BY_URL = null;
+	private static Method METHOD_TEST, METHOD_CREATE_MULTI_MAP_ELEMENT, METHOD_CREATE_MULTI_MAP_WORK_BOOK,
+			METHOD_CREATE_MULTI_MAP_BY_URL = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -41,8 +39,6 @@ class JapaneseNameMultimapFactoryBeanTest {
 		final Class<?> clz = JapaneseNameMultimapFactoryBean.class;
 		//
 		(METHOD_TEST = clz.getDeclaredMethod("test", Predicate.class, Object.class)).setAccessible(true);
-		//
-		(METHOD_GET_PROTOCOL = clz.getDeclaredMethod("getProtocol", URL.class)).setAccessible(true);
 		//
 		(METHOD_CREATE_MULTI_MAP_ELEMENT = clz.getDeclaredMethod("createMultimap", Element.class, Pattern.class))
 				.setAccessible(true);
@@ -186,32 +182,6 @@ class JapaneseNameMultimapFactoryBeanTest {
 			final Object obj = METHOD_TEST.invoke(null, instance, value);
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
-			}
-			throw new Throwable(obj != null && obj.getClass() != null ? obj.getClass().toString() : null);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetProtocol() throws Throwable {
-		//
-		Assertions.assertNull(getProtocol(null));
-		//
-		final String protocol = "http";
-		//
-		Assertions.assertEquals(protocol,
-				getProtocol(new URI(String.format("%1$s://www.google.com", protocol)).toURL()));
-		//
-	}
-
-	private static String getProtocol(final URL instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_PROTOCOL.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
 			}
 			throw new Throwable(obj != null && obj.getClass() != null ? obj.getClass().toString() : null);
 		} catch (final InvocationTargetException e) {
