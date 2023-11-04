@@ -105,6 +105,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean implements Factor
 		//
 	}
 
+	@Nullable
 	private static Multimap<String, String> getMultimap(final Resource resource, final boolean header)
 			throws Exception {
 		//
@@ -194,6 +195,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean implements Factor
 		//
 	}
 
+	@Nullable
 	private static Object get(@Nullable final Field field, final Object instance) throws IllegalAccessException {
 		return field != null ? field.get(instance) : null;
 	}
@@ -221,6 +223,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean implements Factor
 		return instance != null ? instance.newXPath() : null;
 	}
 
+	@Nullable
 	private static Sheet getSheet(final Resource resource)
 			throws IOException, SAXException, ParserConfigurationException {
 		//
