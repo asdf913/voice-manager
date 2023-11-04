@@ -436,7 +436,7 @@ abstract class Util {
 		//
 	}
 
-	static String getMimeType(final ContentInfo instance) {
+	static String getMimeType(@Nullable final ContentInfo instance) {
 		return instance != null ? instance.getMimeType() : null;
 	}
 
