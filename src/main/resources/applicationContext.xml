@@ -692,6 +692,15 @@
 			value="classpath:JlptVocabulary.xlsx" />
 	</bean>
 
+	<!--https://hiramatu-hifuka.com/onyak/onyindx.html-->
+	<bean
+		class="org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean">
+		<property name="url"
+			value="${org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean.url}" />
+		<property name="title"
+			value="${org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean.title}" />
+	</bean>
+
 	<!-- -->
 	<bean class="org.springframework.context.support.VoiceManager">
 		<property name="layout" ref="MigLayout" />
