@@ -693,12 +693,17 @@
 	</bean>
 
 	<!--https://hiramatu-hifuka.com/onyak/onyindx.html-->
-	<bean
+	<bean id="OtoYakuNoHeyaYomikataJitenLinkMultiMap"
 		class="org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean">
 		<property name="url"
 			value="${org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean.url}" />
 		<property name="title"
 			value="${org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean.title}" />
+	</bean>
+
+	<bean
+		class="org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenFrameMultiMapFactoryBean">
+		<property name="links" ref="OtoYakuNoHeyaYomikataJitenLinkMultiMap" />
 	</bean>
 
 	<!-- -->
