@@ -441,7 +441,7 @@ abstract class Util {
 		return instance != null ? instance.getMimeType() : null;
 	}
 
-	static String getMessage(final ContentInfo instance) {
+	static String getMessage(@Nullable final ContentInfo instance) {
 		return instance != null ? instance.getMessage() : null;
 	}
 
