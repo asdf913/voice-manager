@@ -136,6 +136,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean implements Factor
 		//
 	}
 
+	@Nullable
 	private static String getString(@Nullable final Cell cell) throws Exception {
 		//
 		if (cell == null) {
@@ -201,6 +202,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean implements Factor
 		return field != null ? field.get(instance) : null;
 	}
 
+	@Nullable
 	private static DocumentBuilder newDocumentBuilder(@Nullable final DocumentBuilderFactory instance)
 			throws ParserConfigurationException {
 		return instance != null ? instance.newDocumentBuilder() : null;
@@ -221,6 +223,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean implements Factor
 		//
 	}
 
+	@Nullable
 	private static XPath newXPath(@Nullable final XPathFactory instance) {
 		return instance != null ? instance.newXPath() : null;
 	}
@@ -274,10 +277,12 @@ public class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean implements Factor
 		//
 	}
 
+	@Nullable
 	private static String getMimeType(@Nullable final ContentInfo instance) {
 		return instance != null ? instance.getMimeType() : null;
 	}
 
+	@Nullable
 	private static String getMessage(@Nullable final ContentInfo instance) {
 		return instance != null ? instance.getMessage() : null;
 	}
