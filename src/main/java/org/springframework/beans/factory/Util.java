@@ -446,6 +446,7 @@ abstract class Util {
 		return instance != null ? instance.getMessage() : null;
 	}
 
+	@Nullable
 	static String getProtocol(@Nullable final URL instance) {
 		return instance != null ? instance.getProtocol() : null;
 	}
