@@ -136,7 +136,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean implements Factor
 		//
 	}
 
-	private static String getString(final Cell cell) throws Exception {
+	private static String getString(@Nullable final Cell cell) throws Exception {
 		//
 		if (cell == null) {
 			//
@@ -200,12 +200,12 @@ public class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean implements Factor
 		return field != null ? field.get(instance) : null;
 	}
 
-	private static DocumentBuilder newDocumentBuilder(final DocumentBuilderFactory instance)
+	private static DocumentBuilder newDocumentBuilder(@Nullable final DocumentBuilderFactory instance)
 			throws ParserConfigurationException {
 		return instance != null ? instance.newDocumentBuilder() : null;
 	}
 
-	private static Document parse(final DocumentBuilder instance, @Nullable final InputSource is)
+	private static Document parse(@Nullable final DocumentBuilder instance, @Nullable final InputSource is)
 			throws SAXException, IOException {
 		//
 		if (Objects.equals("com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderImpl",
@@ -219,7 +219,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean implements Factor
 		//
 	}
 
-	private static XPath newXPath(final XPathFactory instance) {
+	private static XPath newXPath(@Nullable final XPathFactory instance) {
 		return instance != null ? instance.newXPath() : null;
 	}
 
@@ -257,8 +257,8 @@ public class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean implements Factor
 		//
 	}
 
-	private static Object evaluate(final XPath instance, @Nullable final String expression, @Nullable final Object item,
-			@Nullable final QName returnType) throws XPathExpressionException {
+	private static Object evaluate(@Nullable final XPath instance, @Nullable final String expression,
+			@Nullable final Object item, @Nullable final QName returnType) throws XPathExpressionException {
 		//
 		if (Objects.equals("com.sun.org.apache.xpath.internal.jaxp.XPathImpl", getName(Util.getClass(instance)))
 				&& (item == null || expression == null || returnType == null)) {
@@ -271,15 +271,15 @@ public class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean implements Factor
 		//
 	}
 
-	private static String getName(final Class<?> instance) {
+	private static String getName(@Nullable final Class<?> instance) {
 		return instance != null ? instance.getName() : null;
 	}
 
-	private static String getMimeType(final ContentInfo instance) {
+	private static String getMimeType(@Nullable final ContentInfo instance) {
 		return instance != null ? instance.getMimeType() : null;
 	}
 
-	private static String getMessage(final ContentInfo instance) {
+	private static String getMessage(@Nullable final ContentInfo instance) {
 		return instance != null ? instance.getMessage() : null;
 	}
 
