@@ -367,7 +367,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean implements Factor
 			//
 		} // if
 			//
-		final char[] cs = string != null ? string.toCharArray() : null;
+		final char[] cs = Util.toCharArray(string);
 		//
 		StringBuilder sb = null;
 		//
