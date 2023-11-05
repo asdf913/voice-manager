@@ -24,6 +24,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.RowUtil;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.SheetUtil;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -40,6 +46,8 @@ import com.google.common.reflect.Reflection;
 import io.github.toolfactory.narcissus.Narcissus;
 
 class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBeanTest {
+
+	private static final String EMPTY = "";
 
 	private static Method METHOD_GET_MULTI_MAP, METHOD_OR_ELSE, METHOD_FIND_FIRST, METHOD_PARENTS, METHOD_TRIM,
 			METHOD_APPEND, METHOD_TEST_AND_APPLY, METHOD_PUT_HREF, METHOD_GET_STRING, METHOD_NEW_DOCUMENT_BUILDER,
@@ -166,7 +174,7 @@ class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBeanTest {
 		//
 		if (instance != null) {
 			//
-			instance.setUrl("");
+			instance.setUrl(EMPTY);
 			//
 		} // if
 			//
@@ -303,9 +311,7 @@ class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBeanTest {
 		//
 		Assertions.assertNull(trim(null));
 		//
-		final String empty = "";
-		//
-		Assertions.assertEquals(empty, trim(empty));
+		Assertions.assertEquals(EMPTY, trim(EMPTY));
 		//
 		final String a = "a";
 		//
@@ -389,9 +395,11 @@ class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBeanTest {
 		//
 		Assertions.assertNull(getString(null));
 		//
-		final Cell cell = Reflection.newProxy(Cell.class, ih);
+		Cell cell = Reflection.newProxy(Cell.class, ih);
 		//
-		Assertions.assertThrows(IllegalStateException.class, () -> getString(cell));
+		final Cell c = cell;
+		//
+		Assertions.assertThrows(IllegalStateException.class, () -> getString(c));
 		//
 		if (ih != null) {
 			//
@@ -399,18 +407,41 @@ class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> getString(cell));
+		Assertions.assertNull(getString(cell));
 		//
 		if (ih != null) {
 			//
 			ih.cellType = CellType.NUMERIC;
 			//
-			ih.numericCellValue = Double.valueOf(0);
-			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> getString(cell));
+		Assertions.assertEquals(Util.toString(ih != null ? ih.numericCellValue = Double.valueOf(0) : null),
+				getString(cell));
 		//
+		try (final Workbook wb = new XSSFWorkbook()) {
+			//
+			final Sheet sheet = wb.createSheet();
+			//
+			final Row row = SheetUtil.createRow(sheet, (sheet != null ? sheet.getPhysicalNumberOfRows() : 0) + 1);
+			//
+			if ((cell = RowUtil.createCell(row, (row != null ? row.getPhysicalNumberOfCells() : 0) + 1)) != null) {
+				//
+				cell.setCellValue(true);
+				//
+			} // if
+				//
+			Assertions.assertEquals(Boolean.toString(true), getString(cell));
+			//
+			if ((cell = RowUtil.createCell(row, (row != null ? row.getPhysicalNumberOfCells() : 0) + 1)) != null) {
+				//
+				cell.setBlank();
+				//
+			} // if
+				//
+			Assertions.assertEquals(EMPTY, getString(cell));
+			//
+		} // try
+			//
 	}
 
 	private static String getString(final Cell cell) throws Throwable {
@@ -457,7 +488,7 @@ class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBeanTest {
 		//
 		Assertions.assertNull(parse(documentBuilder, null));
 		//
-		try (final Reader r = new StringReader("")) {
+		try (final Reader r = new StringReader(EMPTY)) {
 			//
 			Assertions.assertThrows(Throwable.class, () -> parse(documentBuilder, new InputSource(r)));
 			//
@@ -511,13 +542,13 @@ class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBeanTest {
 		//
 		Assertions.assertNull(evaluate(null, null, null, null));
 		//
-		Assertions.assertNull(evaluate(Reflection.newProxy(XPath.class, ih), "", "", null));
+		Assertions.assertNull(evaluate(Reflection.newProxy(XPath.class, ih), EMPTY, EMPTY, null));
 		//
 		final XPath xp = newXPath(XPathFactory.newDefaultInstance());
 		//
-		Assertions.assertNull(evaluate(xp, null, "", null));
+		Assertions.assertNull(evaluate(xp, null, EMPTY, null));
 		//
-		Assertions.assertNull(evaluate(xp, "", "", null));
+		Assertions.assertNull(evaluate(xp, EMPTY, EMPTY, null));
 		//
 	}
 

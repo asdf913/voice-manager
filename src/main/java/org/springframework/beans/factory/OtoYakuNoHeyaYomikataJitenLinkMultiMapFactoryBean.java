@@ -126,7 +126,6 @@ public class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean implements Factor
 				//
 			} // if
 				//
-				//
 			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, ArrayListMultimap::create),
 					getString(CellUtil.getCell(row, 0)), getString(CellUtil.getCell(row, 1)));
 			//
@@ -187,9 +186,13 @@ public class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean implements Factor
 					evaluate(newXPath(XPathFactory.newDefaultInstance()), "/*/*", document, XPathConstants.STRING)),
 					Double.toString(cell.getNumericCellValue()));
 			//
-		} else if (Objects.equals(cellType, CellType.STRING)) {
+		} else if (Objects.equals(cellType, CellType.STRING) || Objects.equals(cellType, CellType.BLANK)) {
 			//
 			return cell.getStringCellValue();
+			//
+		} else if (Objects.equals(cellType, CellType.BOOLEAN)) {
+			//
+			return Boolean.toString(cell.getBooleanCellValue());
 			//
 		} // if
 			//
