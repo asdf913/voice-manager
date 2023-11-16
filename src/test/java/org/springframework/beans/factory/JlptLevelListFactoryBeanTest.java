@@ -154,10 +154,10 @@ class JlptLevelListFactoryBeanTest {
 			//
 			AssertionsUtil.assertThrowsAndEquals(RuntimeException.class, String.join("\n",
 					"{localizedMessage=org.opentest4j.AssertionFailedError: Unexpected character ('0' (code 48)): was expecting double-quote to start field name",
-					" at [Source: (String)\"{0:0}\"; line: 1, column: 3] ==> Unexpected exception thrown: com.fasterxml.jackson.core.JsonParseException: Unexpected character ('0' (code 48)): was expecting double-quote to start field name",
-					" at [Source: (String)\"{0:0}\"; line: 1, column: 3], message=org.opentest4j.AssertionFailedError: Unexpected character ('0' (code 48)): was expecting double-quote to start field name",
-					" at [Source: (String)\"{0:0}\"; line: 1, column: 3] ==> Unexpected exception thrown: com.fasterxml.jackson.core.JsonParseException: Unexpected character ('0' (code 48)): was expecting double-quote to start field name",
-					" at [Source: (String)\"{0:0}\"; line: 1, column: 3]}"),
+					" at [Source: REDACTED (`StreamReadFeature.INCLUDE_SOURCE_IN_LOCATION` disabled); line: 1, column: 3] ==> Unexpected exception thrown: com.fasterxml.jackson.core.JsonParseException: Unexpected character ('0' (code 48)): was expecting double-quote to start field name",
+					" at [Source: REDACTED (`StreamReadFeature.INCLUDE_SOURCE_IN_LOCATION` disabled); line: 1, column: 3], message=org.opentest4j.AssertionFailedError: Unexpected character ('0' (code 48)): was expecting double-quote to start field name",
+					" at [Source: REDACTED (`StreamReadFeature.INCLUDE_SOURCE_IN_LOCATION` disabled); line: 1, column: 3] ==> Unexpected exception thrown: com.fasterxml.jackson.core.JsonParseException: Unexpected character ('0' (code 48)): was expecting double-quote to start field name",
+					" at [Source: REDACTED (`StreamReadFeature.INCLUDE_SOURCE_IN_LOCATION` disabled); line: 1, column: 3]}"),
 					() -> setValues(instance, String.format("{%1$s:%1$s}", zero)));
 			//
 		} // if

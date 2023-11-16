@@ -307,8 +307,8 @@ class CustomBeanPostProcessorTest {
 			//
 		AssertionsUtil.assertThrowsAndEquals(RuntimeException.class, String.join("\n",
 				"{localizedMessage=com.fasterxml.jackson.core.JsonParseException: Unrecognized token 'A': was expecting (JSON String, Number, Array, Object or token 'null', 'true' or 'false')",
-				" at [Source: (String)\"A\"; line: 1, column: 2], message=com.fasterxml.jackson.core.JsonParseException: Unrecognized token 'A': was expecting (JSON String, Number, Array, Object or token 'null', 'true' or 'false')",
-				" at [Source: (String)\"A\"; line: 1, column: 2]}"),
+				" at [Source: REDACTED (`StreamReadFeature.INCLUDE_SOURCE_IN_LOCATION` disabled); line: 1, column: 2], message=com.fasterxml.jackson.core.JsonParseException: Unrecognized token 'A': was expecting (JSON String, Number, Array, Object or token 'null', 'true' or 'false')",
+				" at [Source: REDACTED (`StreamReadFeature.INCLUDE_SOURCE_IN_LOCATION` disabled); line: 1, column: 2]}"),
 				() -> postProcessBeforeInitialization(instance, Narcissus.allocateInstance(JFrame.class), null));
 		//
 	}
