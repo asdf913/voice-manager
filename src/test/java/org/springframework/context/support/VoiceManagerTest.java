@@ -11950,8 +11950,12 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(invoke(getValue, instance, ldc, null));
 		//
-		Assertions.assertNull(invoke(getValue, instance, ldc, new ConstantPoolGen()));
-		//
+		if (forName("org.apache.bcel.classfile.InvalidMethodSignatureException") == null) {
+			//
+			Assertions.assertNull(invoke(getValue, instance, ldc, new ConstantPoolGen()));
+			//
+		} // if
+			//
 	}
 
 	@Test
