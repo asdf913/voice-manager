@@ -31,13 +31,13 @@ import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
 
-public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
+class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 
 	private static Method METHOD_GET_LINKS, METHOD_CHILDREN_SIZE, METHOD_VALUE_OF, METHOD_OR_ELSE, METHOD_FIND_FIRST,
 			METHOD_PARENTS, METHOD_TRIM, METHOD_APPEND, METHOD_TEST_AND_APPLY = null;
 
 	@BeforeAll
-	public static void beforeClass() throws NoSuchMethodException {
+	static void beforeClass() throws NoSuchMethodException {
 		//
 		final Class<?> clz = OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean.class;
 		//
@@ -88,14 +88,14 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 	private OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean instance = null;
 
 	@BeforeEach
-	public void beforeEach() {
+	void beforeEach() {
 		//
 		instance = new OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean();
 		//
 	}
 
 	@Test
-	public void testGetObject() throws Exception {
+	void testGetObject() throws Exception {
 		//
 		if (instance != null) {
 			//
@@ -136,14 +136,14 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 	}
 
 	@Test
-	public void testGetObjectType() {
+	void testGetObjectType() {
 		//
 		Assertions.assertSame(List.class, instance != null ? instance.getObjectType() : null);
 		//
 	}
 
 	@Test
-	public void testGetLinks() throws Throwable {
+	void testGetLinks() throws Throwable {
 		//
 		Assertions.assertNull(getLinks(Collections.singletonList(null)));
 		//
@@ -167,7 +167,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 	}
 
 	@Test
-	public void testChildrenSize() throws Throwable {
+	void testChildrenSize() throws Throwable {
 		//
 		Assertions.assertEquals(0, childrenSize(null));
 		//
@@ -192,7 +192,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 	}
 
 	@Test
-	public void testValueOf() throws Throwable {
+	void testValueOf() throws Throwable {
 		//
 		Assertions.assertNull(valueOf(null));
 		//
@@ -223,7 +223,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 	}
 
 	@Test
-	public void testOrElse() throws Throwable {
+	void testOrElse() throws Throwable {
 		//
 		Assertions.assertNull(orElse(Util.cast(Optional.class, Narcissus.allocateInstance(Optional.class)), null));
 		//
@@ -238,7 +238,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 	}
 
 	@Test
-	public void testFindFirst() throws Throwable {
+	void testFindFirst() throws Throwable {
 		//
 		Assertions.assertNull(findFirst(Reflection.newProxy(Stream.class, new IH())));
 		//
@@ -259,7 +259,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 	}
 
 	@Test
-	public void testParents() throws Throwable {
+	void testParents() throws Throwable {
 		//
 		Assertions.assertEquals(Collections.emptyList(),
 				parents(Util.cast(Element.class, Narcissus.allocateInstance(Element.class))));
@@ -281,7 +281,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 	}
 
 	@Test
-	public void testTrim() throws Throwable {
+	void testTrim() throws Throwable {
 		//
 		Assertions.assertNull(trim(null));
 		//
@@ -304,7 +304,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 	}
 
 	@Test
-	public void testAppend() {
+	void testAppend() {
 		//
 		Assertions.assertDoesNotThrow(() -> append(null, ' '));
 		//
@@ -319,7 +319,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 	}
 
 	@Test
-	public void testTestAndApply() throws Throwable {
+	void testTestAndApply() throws Throwable {
 		//
 		Assertions.assertNull(testAndApply(null, null, null, null));
 		//
