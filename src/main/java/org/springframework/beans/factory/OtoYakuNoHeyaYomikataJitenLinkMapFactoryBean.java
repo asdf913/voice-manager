@@ -15,6 +15,8 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -277,6 +279,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		//
 	}
 
+	@Nullable
 	private static Integer valueOf(final String instance) {
 		try {
 			return StringUtils.isNotBlank(instance) ? Integer.valueOf(instance) : null;
