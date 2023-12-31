@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -133,7 +133,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		//
 		int offset, index, size = 0;
 		//
-		boolean hasAttrRowSpan = false;
+		boolean hasAttrRowSpan = false, isAbsoulte = false;
 		//
 		List<Element> as1 = null, as2 = null;
 		//
@@ -192,7 +192,15 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 						//
 						try {
 							//
-							new URL(a1.attr("href"));
+							isAbsoulte = new URI(a1.attr("href")).isAbsolute();
+							//
+						} catch (final URISyntaxException e1) {
+							//
+							isAbsoulte = false;
+							//
+						} // try
+							//
+						if (isAbsoulte) {
 							//
 							ih.description = ElementUtil.text(a1);
 							//
@@ -200,7 +208,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 							//
 							ih.text = ElementUtil.text(a2);
 							//
-						} catch (final MalformedURLException e1) {
+						} else {
 							//
 							ih.description = StringUtils.joinWith(" ", ElementUtil.text(a1), ElementUtil.text(a2));
 							//
@@ -208,7 +216,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 							//
 							ih.text = StringUtils.joinWith(" ", ElementUtil.text(a1), ElementUtil.text(a2));
 							//
-						} // try
+						} // if
 							//
 						Util.add(links = ObjectUtils.getIfNull(links, ArrayList::new),
 								Reflection.newProxy(Link.class, ih));
