@@ -116,6 +116,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		//
 	}
 
+	@Nullable
 	private static List<Link> getLinks(final List<Element> es) {
 		//
 		Element e = null;
@@ -177,6 +178,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		}
 	}
 
+	@Nullable
 	private static Collection<Link> createLinks(final int childrenSize, final int offset, final Element e,
 			final Collection<Element> as2, final String category, final Integer number) {
 		//
@@ -352,10 +354,12 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		return instance != null ? instance.orElse(value) : value;
 	}
 
+	@Nullable
 	private static <T> Optional<T> findFirst(@Nullable final Stream<T> instance) {
 		return instance != null ? instance.findFirst() : null;
 	}
 
+	@Nullable
 	private static List<Element> parents(@Nullable final Element instance) {
 		return instance != null ? instance.parents() : null;
 	}
