@@ -27,6 +27,8 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.javatuples.Unit;
+import org.javatuples.valueintf.IValue0;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
@@ -117,29 +119,11 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 			//
 			if (proxy instanceof Link) {
 				//
-				if (Objects.equals(methodName, "getText")) {
+				final IValue0<?> iValue0 = handleLink(methodName);
+				//
+				if (iValue0 != null) {
 					//
-					return text;
-					//
-				} else if (Objects.equals(methodName, "getDescription")) {
-					//
-					return description;
-					//
-				} else if (Objects.equals(methodName, "getUrl")) {
-					//
-					return url;
-					//
-				} else if (Objects.equals(methodName, "getCategory")) {
-					//
-					return category;
-					//
-				} else if (Objects.equals(methodName, "getNumber")) {
-					//
-					return number;
-					//
-				} else if (Objects.equals(methodName, "getImgSrc")) {
-					//
-					return imgSrc;
+					return iValue0.getValue0();
 					//
 				} // if
 					//
@@ -176,6 +160,38 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 			} // if
 				//
 			throw new Throwable(methodName);
+			//
+		}
+
+		private IValue0<?> handleLink(final String methodName) {
+			//
+			if (Objects.equals(methodName, "getText")) {
+				//
+				return Unit.with(text);
+				//
+			} else if (Objects.equals(methodName, "getDescription")) {
+				//
+				return Unit.with(description);
+				//
+			} else if (Objects.equals(methodName, "getUrl")) {
+				//
+				return Unit.with(url);
+				//
+			} else if (Objects.equals(methodName, "getCategory")) {
+				//
+				return Unit.with(category);
+				//
+			} else if (Objects.equals(methodName, "getNumber")) {
+				//
+				return Unit.with(number);
+				//
+			} else if (Objects.equals(methodName, "getImgSrc")) {
+				//
+				return Unit.with(imgSrc);
+				//
+			} // if
+				//
+			return null;
 			//
 		}
 
