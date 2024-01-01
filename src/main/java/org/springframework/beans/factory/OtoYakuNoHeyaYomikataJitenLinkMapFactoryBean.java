@@ -172,7 +172,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		//
 	}
 
-	private static <E> void addAll(final Collection<E> instance, final Collection<? extends E> c) {
+	private static <E> void addAll(@Nullable final Collection<E> instance, @Nullable final Collection<? extends E> c) {
 		if (instance != null && c != null) {
 			instance.addAll(c);
 		}
