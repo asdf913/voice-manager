@@ -1,12 +1,19 @@
 package org.jsoup.nodes;
 
+import java.lang.reflect.Field;
+
 import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.LoggerUtil;
 
 public final class ElementUtil {
+
+	private static final Logger LOG = LoggerFactory.getLogger(ElementUtil.class);
 
 	private static final String CHILD_NODES = "childNodes";
 
@@ -112,6 +119,46 @@ public final class ElementUtil {
 			//
 		} // try
 			//
+	}
+
+	public static int childrenSize(final Element instance) {
+		//
+		if (instance == null) {
+			//
+			return 0;
+			//
+		} // if
+			//
+		final Class<?> clz = getClass(instance);
+		//
+		try {
+			//
+			final Field field = clz != null ? clz.getDeclaredField("childNodes") : null;
+			//
+			if (field != null) {
+				//
+				field.setAccessible(true);
+				//
+				if (field.get(instance) == null) {
+					//
+					return 0;
+					//
+				} // if
+					//
+			} // if
+				//
+		} catch (final IllegalAccessException | NoSuchFieldException e) {
+			//
+			LoggerUtil.error(LOG, e.getMessage(), e);
+			//
+		} // try
+			//
+		return instance.childrenSize();
+		//
+	}
+
+	private static Class<?> getClass(final Object instance) {
+		return instance != null ? instance.getClass() : null;
 	}
 
 }

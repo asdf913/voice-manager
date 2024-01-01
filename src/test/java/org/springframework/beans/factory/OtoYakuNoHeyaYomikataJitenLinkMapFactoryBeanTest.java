@@ -16,7 +16,6 @@ import java.util.stream.Stream;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.function.FailableFunction;
-import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.Assertions;
@@ -38,9 +37,9 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 
 	private static Class<?> CLASS_IH = null;
 
-	private static Method METHOD_GET_LINKS, METHOD_CHILDREN_SIZE, METHOD_VALUE_OF, METHOD_OR_ELSE, METHOD_FIND_FIRST,
-			METHOD_PARENTS, METHOD_TRIM, METHOD_APPEND, METHOD_TEST_AND_APPLY, METHOD_ADD_ALL, METHOD_IS_ABSOLUTE,
-			METHOD_APPLY, METHOD_SET_DESCRIPTION_AND_TEXT_AND_URL, METHOD_ADD_LINKS = null;
+	private static Method METHOD_GET_LINKS, METHOD_VALUE_OF, METHOD_OR_ELSE, METHOD_FIND_FIRST, METHOD_PARENTS,
+			METHOD_TRIM, METHOD_APPEND, METHOD_TEST_AND_APPLY, METHOD_ADD_ALL, METHOD_IS_ABSOLUTE, METHOD_APPLY,
+			METHOD_SET_DESCRIPTION_AND_TEXT_AND_URL, METHOD_ADD_LINKS = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException, ClassNotFoundException {
@@ -48,8 +47,6 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 		final Class<?> clz = OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean.class;
 		//
 		(METHOD_GET_LINKS = clz.getDeclaredMethod("getLinks", List.class)).setAccessible(true);
-		//
-		(METHOD_CHILDREN_SIZE = clz.getDeclaredMethod("childrenSize", Element.class)).setAccessible(true);
 		//
 		(METHOD_VALUE_OF = clz.getDeclaredMethod("valueOf", String.class)).setAccessible(true);
 		//
@@ -183,31 +180,6 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 				return null;
 			} else if (obj instanceof List) {
 				return (List) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testChildrenSize() throws Throwable {
-		//
-		Assertions.assertEquals(0, childrenSize(null));
-		//
-		final Element element = Util.cast(Element.class, Narcissus.allocateInstance(Element.class));
-		//
-		FieldUtils.writeDeclaredField(element, "childNodes", Collections.emptyList(), true);
-		//
-		Assertions.assertEquals(0, childrenSize(element));
-		//
-	}
-
-	private static int childrenSize(final Element instance) throws Throwable {
-		try {
-			final Object obj = METHOD_CHILDREN_SIZE.invoke(null, instance);
-			if (obj instanceof Integer) {
-				return ((Integer) obj).intValue();
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

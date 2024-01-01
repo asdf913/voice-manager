@@ -230,7 +230,7 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 		for (int i = 0; i < size; i++) {
 			//
 			if ((td = IterableUtils.get(tds, i)) == null
-					|| (td.childrenSize() > 0 && (firstChild = ElementUtil.child(td, 0)) != null
+					|| (ElementUtil.childrenSize(td) > 0 && (firstChild = ElementUtil.child(td, 0)) != null
 							&& StringUtils.equalsIgnoreCase("script", ElementUtil.tagName(firstChild)))
 					|| (pair = getPair(ElementUtil.text(td), unicodeBlock,
 							arPattern = ObjectUtils.getIfNull(arPattern, AtomicReference::new))) == null

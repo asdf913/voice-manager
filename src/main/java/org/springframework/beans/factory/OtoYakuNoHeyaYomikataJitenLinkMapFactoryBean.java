@@ -5,7 +5,6 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.net.URI;
@@ -32,9 +31,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
 import org.jsoup.nodes.NodeUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.LoggerUtil;
 
 import com.google.common.reflect.Reflection;
 
@@ -42,8 +38,6 @@ import com.google.common.reflect.Reflection;
  * https://hiramatu-hifuka.com/onyak/onyindx.html
  */
 public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean<Object> {
-
-	private static final Logger LOG = LoggerFactory.getLogger(OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean.class);
 
 	private String url = null;
 
@@ -162,7 +156,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		//
 		return getLinks(Util.toList(Util.filter(Util.stream(ElementUtil.select(
 				getElement(testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null), title), "tr")),
-				x -> x != null && x.childrenSize() >= 3)));
+				x -> ElementUtil.childrenSize(x) >= 3)));
 		//
 	}
 
@@ -193,7 +187,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 				//
 			} // if
 				//
-			if ((childrenSize = childrenSize(e)) > 0 && (child = ElementUtil.child(e, 0)) != null
+			if ((childrenSize = ElementUtil.childrenSize(e)) > 0 && (child = ElementUtil.child(e, 0)) != null
 					&& (hasAttrRowSpan = child.hasAttr("rowspan"))) {
 				//
 				category = ElementUtil.text(child);
@@ -372,42 +366,6 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		} catch (final Throwable e) {
 			return defaultValue;
 		}
-	}
-
-	private static int childrenSize(@Nullable final Element instance) {
-		//
-		if (instance == null) {
-			//
-			return 0;
-			//
-		} // if
-			//
-		final Class<?> clz = Util.getClass(instance);
-		//
-		try {
-			//
-			final Field field = clz != null ? clz.getDeclaredField("childNodes") : null;
-			//
-			if (field != null) {
-				//
-				field.setAccessible(true);
-				//
-				if (field.get(instance) == null) {
-					//
-					return 0;
-					//
-				} // if
-					//
-			} // if
-				//
-		} catch (final IllegalAccessException | NoSuchFieldException e) {
-			//
-			LoggerUtil.error(LOG, e.getMessage(), e);
-			//
-		} // try
-			//
-		return instance.childrenSize();
-		//
 	}
 
 	@Nullable
