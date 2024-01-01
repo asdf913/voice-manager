@@ -281,7 +281,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 			//
 	}
 
-	private static void setDescriptionAndTextAndUrl(final Element a1, final IH ih, final Element a2) {
+	private static void setDescriptionAndTextAndUrl(final Element a1, @Nullable final IH ih, final Element a2) {
 		//
 		if (ih == null) {
 			//
@@ -314,8 +314,8 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 	}
 
 	@Nullable
-	private static <T, R, E extends Throwable> R apply(final FailableFunction<T, R, E> function, final T value,
-			@Nullable final R defaultValue) {
+	private static <T, R, E extends Throwable> R apply(@Nullable final FailableFunction<T, R, E> function,
+			final T value, @Nullable final R defaultValue) {
 		try {
 			return function != null ? function.apply(value) : defaultValue;
 		} catch (final Throwable e) {
