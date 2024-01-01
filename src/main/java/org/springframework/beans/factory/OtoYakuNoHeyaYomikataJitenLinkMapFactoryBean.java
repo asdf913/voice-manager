@@ -163,6 +163,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 			//
 		}
 
+		@Nullable
 		private IValue0<?> handleLink(final String methodName) {
 			//
 			if (Objects.equals(methodName, "getText")) {
