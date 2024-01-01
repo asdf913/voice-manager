@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -22,6 +23,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.meeuw.functional.Consumers;
 import org.meeuw.functional.Predicates;
 import org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean.Link;
 
@@ -41,8 +43,8 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 
 	private static Method METHOD_GET_LINKS, METHOD_VALUE_OF, METHOD_OR_ELSE, METHOD_FIND_FIRST, METHOD_TRIM,
 			METHOD_APPEND, METHOD_TEST_AND_APPLY, METHOD_IS_ABSOLUTE, METHOD_APPLY,
-			METHOD_SET_DESCRIPTION_AND_TEXT_AND_URL, METHOD_ADD_LINKS, METHOD_HAS_ATTR, METHOD_IIF,
-			METHOD_GET_IMG = null;
+			METHOD_SET_DESCRIPTION_AND_TEXT_AND_URL, METHOD_ADD_LINKS, METHOD_HAS_ATTR, METHOD_IIF, METHOD_GET_IMG,
+			METHOD_FOR_EACH = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException, ClassNotFoundException {
@@ -86,6 +88,8 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 		//
 		(METHOD_GET_IMG = clz.getDeclaredMethod("getImg", Element.class)).setAccessible(true);
 		//
+		(METHOD_FOR_EACH = clz.getDeclaredMethod("forEach", Iterable.class, Consumer.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -103,6 +107,14 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 					//
 				} // if
 					//
+			} else if (proxy instanceof Iterable) {
+				//
+				if (Objects.equals(methodName, "forEach")) {
+					//
+					return null;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(methodName);
@@ -115,12 +127,16 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 
 	private Element element = null;
 
+	private IH ih = null;
+
 	@BeforeEach
 	void beforeEach() {
 		//
 		instance = new OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean();
 		//
 		element = Util.cast(Element.class, Narcissus.allocateInstance(Element.class));
+		//
+		ih = new IH();
 		//
 	}
 
@@ -130,6 +146,10 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 		if (instance != null) {
 			//
 			instance.setTitle("音訳の部屋読み方辞典");
+			//
+			instance.setUrlMap(Collections.singletonMap(
+					"http://www.gsi.go.jp/KIDS/map-sign-tizukigou-h14kigou-itiran.htm",
+					"https://web.archive.org/web/20211126172558/http://www.gsi.go.jp/KIDS/map-sign-tizukigou-h14kigou-itiran.htm"));
 			//
 		} // if
 			//
@@ -244,7 +264,7 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 	@Test
 	void testFindFirst() throws Throwable {
 		//
-		Assertions.assertNull(findFirst(Reflection.newProxy(Stream.class, new IH())));
+		Assertions.assertNull(findFirst(Reflection.newProxy(Stream.class, ih)));
 		//
 	}
 
@@ -477,6 +497,27 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 	}
 
 	@Test
+	void testForEach() {
+		//
+		final Iterable<Object> iterable = Collections.emptyList();
+		//
+		Assertions.assertDoesNotThrow(() -> forEach(iterable, null));
+		//
+		Assertions.assertDoesNotThrow(() -> forEach(iterable, Consumers.nop()));
+		//
+		Assertions.assertDoesNotThrow(() -> forEach(Reflection.newProxy(Iterable.class, ih), null));
+		//
+	}
+
+	private static <T> void forEach(final Iterable<T> instance, final Consumer<? super T> action) throws Throwable {
+		try {
+			METHOD_FOR_EACH.invoke(null, instance, action);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
 	void testIH() throws ClassNotFoundException {
 		//
 		final InvocationHandler ih = Util.cast(InvocationHandler.class, Narcissus.allocateInstance(CLASS_IH));
@@ -493,7 +534,15 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 		Assertions.assertThrows(Throwable.class, () -> invoke(ih, link, null, null));
 		//
 		new FailableStream<>(Arrays.stream(ObjectUtils.getIfNull(getDeclaredMethods(clz), () -> new Method[] {})))
-				.forEach(m -> Assertions.assertNull(invoke(ih, link, m, null)));
+				.forEach(m -> {
+					//
+					if (!Objects.equals(Void.TYPE, m != null ? m.getReturnType() : null)) {
+						//
+						Assertions.assertNull(invoke(ih, link, m, null));
+						//
+					} // if
+						//
+				});
 		//
 		// org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean$ObjectMap
 		//

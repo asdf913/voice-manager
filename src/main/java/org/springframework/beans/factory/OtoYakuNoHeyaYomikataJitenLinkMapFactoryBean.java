@@ -7,6 +7,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -52,6 +54,8 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 	@Note("title")
 	private String title = null;
 
+	private Map<String, String> urlMap = null;
+
 	public void setUrl(final String url) {
 		this.url = url;
 	}
@@ -60,11 +64,17 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		this.title = title;
 	}
 
+	public void setUrlMap(final Map<String, String> urlMap) {
+		this.urlMap = urlMap;
+	}
+
 	static interface Link {
 
 		String getCategory();
 
 		String getUrl();
+
+		void setUrl(final String url);
 
 		String getText();
 
@@ -119,7 +129,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 			//
 			if (proxy instanceof Link) {
 				//
-				final IValue0<?> iValue0 = handleLink(methodName);
+				final IValue0<?> iValue0 = handleLink(methodName, args);
 				//
 				if (iValue0 != null) {
 					//
@@ -164,7 +174,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		}
 
 		@Nullable
-		private IValue0<?> handleLink(final String methodName) {
+		private IValue0<?> handleLink(final String methodName, final Object[] args) {
 			//
 			if (Objects.equals(methodName, "getText")) {
 				//
@@ -190,6 +200,12 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 				//
 				return Unit.with(imgSrc);
 				//
+			} else if (Objects.equals(methodName, "setUrl") && args != null && args.length > 0) {
+				//
+				this.url = Util.toString(args[0]);
+				//
+				return Unit.with(null);
+				//
 			} // if
 				//
 			return null;
@@ -201,10 +217,30 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 	@Override
 	public List<Link> getObject() throws Exception {
 		//
-		return getLinks(Util.toList(Util.filter(Util.stream(ElementUtil.select(
+		final List<Link> links = getLinks(Util.toList(Util.filter(Util.stream(ElementUtil.select(
 				getElement(testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null), title), "tr")),
 				x -> ElementUtil.childrenSize(x) >= 3)));
 		//
+		forEach(links, x -> {
+			//
+			final String url = x != null ? x.getUrl() : null;
+			//
+			if (x != null && Util.containsKey(urlMap, url)) {
+				//
+				x.setUrl(Util.get(urlMap, url));
+				//
+			} // if
+				//
+		});
+		//
+		return links;
+		//
+	}
+
+	private static <T> void forEach(final Iterable<T> instance, final Consumer<? super T> action) {
+		if (instance != null && (action != null || Proxy.isProxyClass(Util.getClass(instance)))) {
+			instance.forEach(action);
+		}
 	}
 
 	@Nullable
