@@ -124,21 +124,15 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		//
 		int childrenSize = 0;
 		//
-		IH ih = null;
-		//
-		Element child, a1, a2 = null;
+		Element child = null;
 		//
 		List<Link> links = null;
 		//
 		Integer number = null;
 		//
-		int offset, index, size = 0;
+		int offset, index = 0;
 		//
-		boolean hasAttrRowSpan = false, isAbsoulte = false;
-		//
-		List<Element> as1 = null, as2 = null;
-		//
-		Collection<Link> tempLinks = null;
+		boolean hasAttrRowSpan = false;
 		//
 		for (int i = 0; es != null && i < es.size(); i++) {
 			//
@@ -164,12 +158,12 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 				//
 			} // if
 				//
-			as2 = childrenSize > (index = 2 + offset) && (child = ElementUtil.child(e, index)) != null
-					? ElementUtil.select(child, "a")
-					: null;
-			//
 			addAll(links = ObjectUtils.getIfNull(links, ArrayList::new),
-					createLinks(childrenSize, offset, e, as2, category, number));
+					createLinks(childrenSize, offset, e,
+							childrenSize > (index = 2 + offset) && (child = ElementUtil.child(e, index)) != null
+									? ElementUtil.select(child, "a")
+									: null,
+							category, number));
 			//
 		} // for
 			//
