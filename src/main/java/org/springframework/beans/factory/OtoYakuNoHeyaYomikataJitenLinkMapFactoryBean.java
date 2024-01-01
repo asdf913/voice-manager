@@ -251,6 +251,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 
 		<T> T getObject(final Class<?> clz);
 
+		@Nullable
 		static <T> T getObject(@Nullable final ObjectMap instance, final Class<?> clz) {
 			return instance != null ? instance.getObject(clz) : null;
 		}
