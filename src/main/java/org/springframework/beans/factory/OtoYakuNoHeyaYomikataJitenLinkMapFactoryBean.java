@@ -208,7 +208,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 				//
 			imgSrc = null;
 			//
-			if (childrenSize > (index = (0 + (offset = hasAttrRowSpan ? 1 : 0)))
+			if (childrenSize > (index = (0 + (offset = iif(hasAttrRowSpan, 1, 0))))
 					&& (child = ElementUtil.child(e, index)) != null
 					&& (number = valueOf(ElementUtil.text(child))) == null) {
 				//
@@ -230,6 +230,10 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 			//
 		return links;
 		//
+	}
+
+	private static int iif(final boolean condition, final int trueValue, final int falseValue) {
+		return condition ? trueValue : falseValue;
 	}
 
 	private static boolean hasAttr(final Element instance, final String attributeKey) {

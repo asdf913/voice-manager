@@ -41,7 +41,7 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 
 	private static Method METHOD_GET_LINKS, METHOD_VALUE_OF, METHOD_OR_ELSE, METHOD_FIND_FIRST, METHOD_TRIM,
 			METHOD_APPEND, METHOD_TEST_AND_APPLY, METHOD_IS_ABSOLUTE, METHOD_APPLY,
-			METHOD_SET_DESCRIPTION_AND_TEXT_AND_URL, METHOD_ADD_LINKS, METHOD_HAS_ATTR = null;
+			METHOD_SET_DESCRIPTION_AND_TEXT_AND_URL, METHOD_ADD_LINKS, METHOD_HAS_ATTR, METHOD_IIF = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException, ClassNotFoundException {
@@ -80,6 +80,8 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 				String.class)).setAccessible(true);
 		//
 		(METHOD_HAS_ATTR = clz.getDeclaredMethod("hasAttr", Element.class, String.class)).setAccessible(true);
+		//
+		(METHOD_IIF = clz.getDeclaredMethod("iif", Boolean.TYPE, Integer.TYPE, Integer.TYPE)).setAccessible(true);
 		//
 	}
 
@@ -425,6 +427,25 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 			final Object obj = METHOD_HAS_ATTR.invoke(null, instance, attributeKey);
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void tsetIif() throws Throwable {
+		//
+		Assertions.assertEquals(0, iif(true, 0, 1));
+		//
+	}
+
+	private static int iif(final boolean condition, final int trueValue, final int falseValue) throws Throwable {
+		try {
+			final Object obj = METHOD_IIF.invoke(null, condition, trueValue, falseValue);
+			if (obj instanceof Integer) {
+				return ((Integer) obj).intValue();
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
