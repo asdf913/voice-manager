@@ -180,7 +180,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 
 	@Nullable
 	private static Collection<Link> createLinks(final int childrenSize, final int offset, final Element e,
-			final Collection<Element> as2, final String category, final Integer number) {
+			final Collection<Element> as2, final String category, @Nullable final Integer number) {
 		//
 		Collection<Element> as1 = null;
 		//
@@ -400,8 +400,9 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		}
 	}
 
-	private static <T, R, E extends Throwable> R testAndApply(@Nullable final Predicate<T> predicate, final T value,
-			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse) throws E {
+	private static <T, R, E extends Throwable> R testAndApply(@Nullable final Predicate<T> predicate,
+			@Nullable final T value, final FailableFunction<T, R, E> functionTrue,
+			@Nullable final FailableFunction<T, R, E> functionFalse) throws E {
 		return predicate != null && predicate.test(value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
