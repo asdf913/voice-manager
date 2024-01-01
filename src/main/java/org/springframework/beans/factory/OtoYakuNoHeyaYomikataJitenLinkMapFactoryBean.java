@@ -84,7 +84,10 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		@Note("url")
 		private String url = null;
 
-		private String text, category = null;
+		@Note("category")
+		private String category = null;
+
+		private String text = null;
 
 		private Integer number = null;
 
