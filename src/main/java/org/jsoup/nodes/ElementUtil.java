@@ -133,7 +133,7 @@ public final class ElementUtil {
 		//
 		try {
 			//
-			final Field field = clz != null ? clz.getDeclaredField("childNodes") : null;
+			final Field field = clz != null ? clz.getDeclaredField(CHILD_NODES) : null;
 			//
 			if (field != null) {
 				//
