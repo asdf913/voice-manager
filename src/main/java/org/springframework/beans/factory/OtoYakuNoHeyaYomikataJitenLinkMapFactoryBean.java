@@ -125,24 +125,21 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 					//
 				} // if
 					//
-			} else if (proxy instanceof ObjectMap) {
+			} else if (proxy instanceof ObjectMap && Objects.equals(methodName, "getObject") && args != null
+					&& args.length > 0) {
 				//
-				if (Objects.equals(methodName, "getObject") && args != null && args.length > 0) {
+				final Object obj = args[0];
+				//
+				final Map<?, ?> map = getObjects();
+				//
+				if (!Util.containsKey(map, obj)) {
 					//
-					final Object obj = args[0];
-					//
-					final Map<?, ?> map = getObjects();
-					//
-					if (!Util.containsKey(map, obj)) {
-						//
-						throw new IllegalStateException(Util.toString(obj));
-						//
-					} // if
-						//
-					return Util.get(map, obj);
+					throw new IllegalStateException(Util.toString(obj));
 					//
 				} // if
 					//
+				return Util.get(map, obj);
+				//
 			} // if
 				//
 			throw new Throwable(methodName);
