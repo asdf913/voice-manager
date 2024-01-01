@@ -12,7 +12,9 @@ import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -91,6 +93,15 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 
 		private Integer number = null;
 
+		private Map<Object, Object> objects = null;
+
+		private Map<Object, Object> getObjects() {
+			if (objects == null) {
+				objects = new LinkedHashMap<>();
+			}
+			return objects;
+		}
+
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
@@ -117,6 +128,24 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 				} else if (Objects.equals(methodName, "getNumber")) {
 					//
 					return number;
+					//
+				} // if
+					//
+			} else if (proxy instanceof ObjectMap) {
+				//
+				if (Objects.equals(methodName, "getObject") && args != null && args.length > 0) {
+					//
+					final Object obj = args[0];
+					//
+					final Map<?, ?> map = getObjects();
+					//
+					if (!Util.containsKey(map, obj)) {
+						//
+						throw new IllegalStateException(Util.toString(obj));
+						//
+					} // if
+						//
+					return Util.get(map, obj);
 					//
 				} // if
 					//
@@ -211,13 +240,21 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		//
 		Collection<Link> links = null;
 		//
+		IH ih = null;
+		//
+		Map<Object, Object> objects = null;
+		//
 		for (int j = 0; j < IterableUtils
 				.size(as1 = childrenSize > (index = 1 + offset) && (child = ElementUtil.child(e, index)) != null
 						? ElementUtil.select(child, "a")
 						: null); j++) {
 			//
-			addLinks(links = ObjectUtils.getIfNull(links, ArrayList::new), IterableUtils.get(as1, j), as2, category,
-					number, childrenSize, offset, e);
+			Util.put(objects = (ih = new IH()).getObjects(), String.class, category);
+			//
+			Util.put(objects, Integer.class, number);
+			//
+			addLinks(links = ObjectUtils.getIfNull(links, ArrayList::new), IterableUtils.get(as1, j), as2, childrenSize,
+					offset, e, Reflection.newProxy(ObjectMap.class, ih));
 			//
 		} // for
 			//
@@ -225,13 +262,27 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		//
 	}
 
+	private static interface ObjectMap {
+
+		<T> T getObject(final Class<?> clz);
+
+		static <T> T getObject(final ObjectMap instance, final Class<?> clz) {
+			return instance != null ? instance.getObject(clz) : null;
+		}
+
+	}
+
 	private static void addLinks(final Collection<Link> links, final Element a1,
-			@Nullable final Collection<Element> as2, @Nullable final String category, @Nullable final Integer number,
-			final int childrenSize, final int offset, final Element e) {
+			@Nullable final Collection<Element> as2, final int childrenSize, final int offset, final Element e,
+			final ObjectMap objectMap) {
 		//
 		final int size = IterableUtils.size(as2);
 		//
 		IH ih = null;
+		//
+		final String category = ObjectMap.getObject(objectMap, String.class);
+		//
+		final Integer number = ObjectMap.getObject(objectMap, Integer.class);
 		//
 		if (size > 0) {
 			//

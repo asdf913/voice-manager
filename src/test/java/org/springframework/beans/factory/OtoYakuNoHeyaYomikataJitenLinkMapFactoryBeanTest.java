@@ -79,7 +79,10 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 				Element.class)).setAccessible(true);
 		//
 		(METHOD_ADD_LINKS = clz.getDeclaredMethod("addLinks", Collection.class, Element.class, Collection.class,
-				String.class, Integer.class, Integer.TYPE, Integer.TYPE, Element.class)).setAccessible(true);
+				Integer.TYPE, Integer.TYPE, Element.class,
+				Class.forName(
+						"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean$ObjectMap")))
+				.setAccessible(true);
 		//
 	}
 
@@ -445,21 +448,20 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 	@Test
 	void testAddLinks() {
 		//
-		Assertions.assertDoesNotThrow(() -> addLinks(null, null, null, null, null, 0, 0, null));
+		Assertions.assertDoesNotThrow(() -> addLinks(null, null, null, 0, 0, null, null));
 		//
-		Assertions.assertDoesNotThrow(() -> addLinks(null, null, Collections.singleton(null), null, null, 0, 0, null));
+		Assertions.assertDoesNotThrow(() -> addLinks(null, null, Collections.singleton(null), 0, 0, null, null));
 		//
 		Assertions.assertDoesNotThrow(() -> addLinks(null, null,
-				Collections.singleton(Util.cast(Element.class, Narcissus.allocateInstance(Element.class))), null, null,
-				0, 0, null));
+				Collections.singleton(Util.cast(Element.class, Narcissus.allocateInstance(Element.class))), 0, 0, null,
+				null));
 		//
 	}
 
 	private static void addLinks(final Collection<Link> links, final Element a1, final Collection<Element> as2,
-			final String category, final Integer number, final int childrenSize, final int offset, final Element e)
-			throws Throwable {
+			final int childrenSize, final int offset, final Element e, final Object objectMap) throws Throwable {
 		try {
-			METHOD_ADD_LINKS.invoke(null, links, a1, as2, category, number, childrenSize, offset, e);
+			METHOD_ADD_LINKS.invoke(null, links, a1, as2, childrenSize, offset, e, objectMap);
 		} catch (final InvocationTargetException ex) {
 			throw ex.getTargetException();
 		}
@@ -472,18 +474,47 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 		//
 		Assertions.assertThrows(Throwable.class, () -> invoke(ih, null, null, null));
 		//
-		final Class<?> clz = Class
+		// org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean$Link
+		//
+		Class<?> clz = Class
 				.forName("org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean$Link");
 		//
 		final Object link = Reflection.newProxy(clz, ih);
 		//
 		Assertions.assertThrows(Throwable.class, () -> invoke(ih, link, null, null));
 		//
-		final Method[] ms = clz != null ? clz.getDeclaredMethods() : null;
-		//
-		new FailableStream<>(Arrays.stream(ObjectUtils.getIfNull(ms, () -> new Method[] {})))
+		new FailableStream<>(Arrays.stream(ObjectUtils.getIfNull(getDeclaredMethods(clz), () -> new Method[] {})))
 				.forEach(m -> Assertions.assertNull(invoke(ih, link, m, null)));
 		//
+		// org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean$ObjectMap
+		//
+		final Object objectMap = Reflection.newProxy(
+				clz = Class.forName(
+						"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean$ObjectMap"),
+				ih);
+		//
+		Assertions.assertThrows(Throwable.class, () -> invoke(ih, objectMap, null, null));
+		//
+		new FailableStream<>(Arrays.stream(ObjectUtils.getIfNull(getDeclaredMethods(clz), () -> new Method[] {})))
+				.forEach(m -> {
+					//
+					Assertions.assertThrows(Throwable.class, () -> invoke(ih, objectMap, m, null));
+					//
+					if (Objects.equals(Util.getName(m), "getObject")) {
+						//
+						Assertions.assertThrows(Throwable.class, () -> invoke(ih, objectMap, m, new Object[] {}));
+						//
+						Assertions.assertThrows(IllegalStateException.class,
+								() -> invoke(ih, objectMap, m, new Object[] { null }));
+						//
+					} // if
+						//
+				});
+		//
+	}
+
+	private static Method[] getDeclaredMethods(final Class<?> instance) {
+		return instance != null ? instance.getDeclaredMethods() : null;
 	}
 
 	private static Object invoke(final InvocationHandler instance, final Object proxy, final Method method,
