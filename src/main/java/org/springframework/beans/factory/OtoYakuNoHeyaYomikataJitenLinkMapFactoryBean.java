@@ -376,6 +376,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		//
 	}
 
+	@Nullable
 	private static Element getElement(final URL url, final String title) throws IOException {
 		//
 		final List<Element> bs = ElementUtil.select(testAndApply(Objects::nonNull, url, x -> Jsoup.parse(x, 0), null),
