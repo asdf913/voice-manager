@@ -226,8 +226,6 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		//
 		boolean hasAttrRowSpan = false;
 		//
-		Collection<Element> imgs = null;
-		//
 		String imgSrc = null;
 		//
 		for (int i = 0; es != null && i < es.size(); i++) {
