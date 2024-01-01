@@ -13,7 +13,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
@@ -52,7 +51,7 @@ class JlptVocabularyListFactoryBeanTest {
 
 	private static final String EMPTY = "";
 
-	private static Method METHOD_ANNOTATION_TYPE, METHOD_TEST, METHOD_OR, METHOD_ADD_ALL, METHOD_GET_FIELDS_BY_NAME,
+	private static Method METHOD_ANNOTATION_TYPE, METHOD_TEST, METHOD_OR, METHOD_GET_FIELDS_BY_NAME,
 			METHOD_GET_INTEGER_VALUE, METHOD_GET_STRING_VALUE_CELL, METHOD_INVOKE, METHOD_GET_DECLARED_ANNOTATIONS,
 			METHOD_GET_DECLARED_METHODS, METHOD_SET_ACCESSIBLE, METHOD_GET_NUMBER_VALUE,
 			METHOD_GET_PHYSICAL_NUMBER_OF_CELLS = null;
@@ -67,8 +66,6 @@ class JlptVocabularyListFactoryBeanTest {
 		(METHOD_TEST = clz.getDeclaredMethod("test", Predicate.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_OR = clz.getDeclaredMethod("or", Boolean.TYPE, Boolean.TYPE, boolean[].class)).setAccessible(true);
-		//
-		(METHOD_ADD_ALL = clz.getDeclaredMethod("addAll", Collection.class, Collection.class)).setAccessible(true);
 		//
 		(METHOD_GET_FIELDS_BY_NAME = clz.getDeclaredMethod("getFieldsByName", Field[].class, String.class))
 				.setAccessible(true);
@@ -99,7 +96,7 @@ class JlptVocabularyListFactoryBeanTest {
 
 	private static class IH implements InvocationHandler {
 
-		private Boolean exists, addAll = null;
+		private Boolean exists = null;
 
 		private boolean reset = true;
 
@@ -149,10 +146,6 @@ class JlptVocabularyListFactoryBeanTest {
 				if (Objects.equals(methodName, "toArray")) {
 					//
 					return toArray;
-					//
-				} else if (Objects.equals(methodName, "addAll")) {
-					//
-					return addAll;
 					//
 				} // if
 					//
@@ -429,31 +422,6 @@ class JlptVocabularyListFactoryBeanTest {
 				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(obj != null && obj.getClass() != null ? obj.getClass().toString() : null);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testAddAll() {
-		//
-		Assertions.assertDoesNotThrow(() -> addAll(null, null));
-		//
-		Assertions.assertDoesNotThrow(() -> addAll(Collections.emptyList(), null));
-		//
-		if (ih != null) {
-			//
-			ih.addAll = Boolean.TRUE;
-			//
-		} // if
-			//
-		Assertions.assertDoesNotThrow(() -> addAll(Reflection.newProxy(Collection.class, ih), null));
-		//
-	}
-
-	private static <E> void addAll(final Collection<E> a, final Collection<? extends E> b) throws Throwable {
-		try {
-			METHOD_ADD_ALL.invoke(null, a, b);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

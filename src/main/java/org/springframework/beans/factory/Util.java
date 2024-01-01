@@ -244,6 +244,12 @@ abstract class Util {
 		}
 	}
 
+	static <E> void addAll(final Collection<E> a, final Collection<? extends E> b) {
+		if (a != null && (b != null || Proxy.isProxyClass(getClass(a)))) {
+			a.addAll(b);
+		}
+	}
+
 	@Nullable
 	static <V> V get(@Nullable final AtomicReference<V> instance) {
 		return instance != null ? instance.get() : null;

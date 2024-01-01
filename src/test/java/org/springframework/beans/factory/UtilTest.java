@@ -7,6 +7,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.util.Collection;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -49,6 +50,8 @@ class UtilTest {
 
 	private static class IH implements InvocationHandler {
 
+		private Boolean addAll = null;
+
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
@@ -66,6 +69,14 @@ class UtilTest {
 					//
 				} // if
 					//
+			} else if (proxy instanceof Collection) {
+				//
+				if (Objects.equals(methodName, "addAll")) {
+					//
+					return addAll;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(methodName);
@@ -76,10 +87,12 @@ class UtilTest {
 
 	private Stream<?> stream = null;
 
+	private IH ih = null;
+
 	@BeforeEach
 	void beforeEach() {
 		//
-		stream = Reflection.newProxy(Stream.class, new IH());
+		stream = Reflection.newProxy(Stream.class, ih = new IH());
 		//
 	}
 
@@ -190,6 +203,21 @@ class UtilTest {
 	void testAdd() {
 		//
 		Assertions.assertDoesNotThrow(() -> Util.add(null, null));
+		//
+	}
+
+	@Test
+	void testAddAll() {
+		//
+		Assertions.assertDoesNotThrow(() -> Util.addAll(null, null));
+		//
+		if (ih != null) {
+			//
+			ih.addAll = Boolean.TRUE;
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> Util.addAll(Reflection.newProxy(Collection.class, ih), null));
 		//
 	}
 

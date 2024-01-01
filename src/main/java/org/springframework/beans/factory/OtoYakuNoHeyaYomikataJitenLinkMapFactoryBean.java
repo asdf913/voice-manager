@@ -200,7 +200,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 				//
 			} // if
 				//
-			addAll(links = ObjectUtils.getIfNull(links, ArrayList::new),
+			Util.addAll(links = ObjectUtils.getIfNull(links, ArrayList::new),
 					createLinks(childrenSize, offset, e,
 							childrenSize > (index = 2 + offset) && (child = ElementUtil.child(e, index)) != null
 									? ElementUtil.select(child, "a")
@@ -211,12 +211,6 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 			//
 		return links;
 		//
-	}
-
-	private static <E> void addAll(@Nullable final Collection<E> instance, @Nullable final Collection<? extends E> c) {
-		if (instance != null && c != null) {
-			instance.addAll(c);
-		}
 	}
 
 	@Nullable

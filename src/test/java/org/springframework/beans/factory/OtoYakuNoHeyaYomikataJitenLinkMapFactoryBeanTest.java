@@ -38,7 +38,7 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 	private static Class<?> CLASS_IH = null;
 
 	private static Method METHOD_GET_LINKS, METHOD_VALUE_OF, METHOD_OR_ELSE, METHOD_FIND_FIRST, METHOD_PARENTS,
-			METHOD_TRIM, METHOD_APPEND, METHOD_TEST_AND_APPLY, METHOD_ADD_ALL, METHOD_IS_ABSOLUTE, METHOD_APPLY,
+			METHOD_TRIM, METHOD_APPEND, METHOD_TEST_AND_APPLY, METHOD_IS_ABSOLUTE, METHOD_APPLY,
 			METHOD_SET_DESCRIPTION_AND_TEXT_AND_URL, METHOD_ADD_LINKS = null;
 
 	@BeforeAll
@@ -62,8 +62,6 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 		//
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
-		//
-		(METHOD_ADD_ALL = clz.getDeclaredMethod("addAll", Collection.class, Collection.class)).setAccessible(true);
 		//
 		(METHOD_IS_ABSOLUTE = clz.getDeclaredMethod("isAbsolute", URI.class)).setAccessible(true);
 		//
@@ -328,25 +326,6 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 			throws Throwable {
 		try {
 			return (R) METHOD_TEST_AND_APPLY.invoke(null, predicate, value, functionTrue, functionFalse);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testAddAll() {
-		//
-		Assertions.assertDoesNotThrow(() -> addAll(null, null));
-		//
-		final Collection<Object> collection = Collections.emptyList();
-		//
-		Assertions.assertDoesNotThrow(() -> addAll(collection, collection));
-		//
-	}
-
-	private static <E> void addAll(final Collection<E> instance, final Collection<? extends E> c) throws Throwable {
-		try {
-			METHOD_ADD_ALL.invoke(null, instance, c);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

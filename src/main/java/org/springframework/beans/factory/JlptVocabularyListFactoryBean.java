@@ -9,12 +9,10 @@ import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -429,7 +427,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 					//
 				} // if
 					//
-				addAll(list = ObjectUtils.getIfNull(list, ArrayList::new), temp);
+				Util.addAll(list = ObjectUtils.getIfNull(list, ArrayList::new), temp);
 				//
 			} // for
 				//
@@ -473,12 +471,6 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 			//
 		return result;
 		//
-	}
-
-	private static <E> void addAll(@Nullable final Collection<E> a, @Nullable final Collection<? extends E> b) {
-		if (a != null && (b != null || Proxy.isProxyClass(Util.getClass(a)))) {
-			a.addAll(b);
-		}
 	}
 
 	@Nullable
