@@ -259,7 +259,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		return condition ? trueValue : falseValue;
 	}
 
-	private static boolean hasAttr(final Element instance, final String attributeKey) {
+	private static boolean hasAttr(@Nullable final Element instance, @Nullable final String attributeKey) {
 		return instance != null && attributeKey != null && instance.hasAttr(attributeKey);
 	}
 
