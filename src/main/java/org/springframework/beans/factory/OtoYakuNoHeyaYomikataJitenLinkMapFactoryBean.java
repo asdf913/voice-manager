@@ -233,8 +233,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 			imgSrc = null;
 			//
 			if (childrenSize > (index = (0 + (offset = iif(hasAttrRowSpan, 1, 0))))
-					&& (child = ElementUtil.child(e, index)) != null
-					&& (number = valueOf(ElementUtil.text(child))) == null) {
+					&& (number = valueOf(ElementUtil.text(child = ElementUtil.child(e, index)))) == null) {
 				//
 				imgSrc = NodeUtil.absUrl(
 						IterableUtils.size(imgs = ElementUtil.select(child, "img")) == 1 ? IterableUtils.get(imgs, 0)
