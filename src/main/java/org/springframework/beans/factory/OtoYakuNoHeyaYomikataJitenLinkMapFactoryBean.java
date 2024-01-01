@@ -284,7 +284,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 
 	private static void addLinks(final Collection<Link> links, final Element a1,
 			@Nullable final Collection<Element> as2, final int childrenSize, final int offset, final Element e,
-			final ObjectMap objectMap, final String imgSrc) {
+			final ObjectMap objectMap, @Nullable final String imgSrc) {
 		//
 		final int size = IterableUtils.size(as2);
 		//
