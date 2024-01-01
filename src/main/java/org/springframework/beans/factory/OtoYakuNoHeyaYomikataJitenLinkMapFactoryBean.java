@@ -201,7 +201,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 
 	@Nullable
 	private static Collection<Link> createLinks(final int childrenSize, final int offset, final Element e,
-			final Collection<Element> as2, @Nullable final String category, @Nullable final Integer number) {
+			@Nullable final Collection<Element> as2, @Nullable final String category, @Nullable final Integer number) {
 		//
 		Collection<Element> as1 = null;
 		//
@@ -226,7 +226,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 	}
 
 	private static void addLinks(final Collection<Link> links, final Element a1, final Collection<Element> as2,
-			final String category, @Nullable final Integer number, final int childrenSize, final int offset,
+			@Nullable final String category, @Nullable final Integer number, final int childrenSize, final int offset,
 			final Element e) {
 		//
 		final int size = IterableUtils.size(as2);
@@ -367,7 +367,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		}
 	}
 
-	private static Element getParentByNodeName(final Element element, @Nullable final String nodeName) {
+	private static Element getParentByNodeName(@Nullable final Element element, @Nullable final String nodeName) {
 		//
 		return orElse(findFirst(
 				Util.filter(Util.stream(parents(element)), x -> Objects.equals(nodeName, NodeUtil.nodeName(x)))), null);
