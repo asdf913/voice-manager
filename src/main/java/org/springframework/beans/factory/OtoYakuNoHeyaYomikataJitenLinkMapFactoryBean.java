@@ -223,13 +223,13 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		//
 		forEach(links, x -> {
 			//
-			final String url = x != null ? x.getUrl() : null;
+			final String u = x != null ? x.getUrl() : null;
 			//
-			if (x != null && Util.containsKey(urlMap, url)) {
+			if (x != null && Util.containsKey(urlMap, u)) {
 				//
-				x.setUrl(Util.get(urlMap, url));
+				x.setUrl(Util.get(urlMap, u));
 				//
-			} // if
+			} // if	
 				//
 		});
 		//
