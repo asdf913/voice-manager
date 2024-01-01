@@ -368,6 +368,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		}
 	}
 
+	@Nullable
 	private static Element getParentByNodeName(@Nullable final Element element, @Nullable final String nodeName) {
 		//
 		return orElse(findFirst(
