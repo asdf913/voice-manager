@@ -8,9 +8,11 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -137,6 +139,8 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		//
 		List<Element> as1 = null, as2 = null;
 		//
+		Collection<Link> tempLinks = null;
+		//
 		for (int i = 0; es != null && i < es.size(); i++) {
 			//
 			if ((e = es.get(i)) == null) {
@@ -165,84 +169,191 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 					? ElementUtil.select(child, "a")
 					: null;
 			//
-			for (int j = 0; j < IterableUtils
-					.size(as1 = childrenSize > (index = 1 + offset) && (child = ElementUtil.child(e, index)) != null
-							? ElementUtil.select(child, "a")
-							: null); j++) {
+//			for (int j = 0; j < IterableUtils
+//					.size(as1 = childrenSize > (index = 1 + offset) && (child = ElementUtil.child(e, index)) != null
+//							? ElementUtil.select(child, "a")
+//							: null); j++) {
+//				//
+//				if ((a1 = IterableUtils.get(as1, j)) == null) {
+//					//
+//					continue;
+//					//
+//				} // if
+//					//
+//				if ((size = IterableUtils.size(as2)) > 0) {
+//					//
+//					for (int k = 0; k < size; k++) {
+//						//
+//						if ((a2 = IterableUtils.get(as2, k)) == null) {
+//							//
+//							continue;
+//							//
+//						} // if
+//							//
+//						(ih = new IH()).category = category;
+//						//
+//						ih.number = number;
+//						//
+//						try {
+//							//
+//							isAbsoulte = new URI(a1.attr("href")).isAbsolute();
+//							//
+//						} catch (final URISyntaxException e1) {
+//							//
+//							isAbsoulte = false;
+//							//
+//						} // try
+//							//
+//						if (isAbsoulte) {
+//							//
+//							ih.description = ElementUtil.text(a1);
+//							//
+//							ih.url = a1.absUrl("href");
+//							//
+//							ih.text = ElementUtil.text(a2);
+//							//
+//						} else {
+//							//
+//							ih.description = StringUtils.joinWith(" ", ElementUtil.text(a1), ElementUtil.text(a2));
+//							//
+//							ih.url = a2.absUrl("href");
+//							//
+//							ih.text = StringUtils.joinWith(" ", ElementUtil.text(a1), ElementUtil.text(a2));
+//							//
+//						} // if
+//							//
+//						Util.add(links = ObjectUtils.getIfNull(links, ArrayList::new),
+//								Reflection.newProxy(Link.class, ih));
+//						//
+//					} // for
+//						//
+//				} else {
+//					//
+//					(ih = new IH()).category = category;
+//					//
+//					ih.number = number;
+//					//
+//					if (childrenSize > (index = 2 + offset) && (child = ElementUtil.child(e, index)) != null) {
+//						//
+//						ih.description = ElementUtil.text(child);
+//						//
+//					} // if
+//						//
+//					ih.url = a1.absUrl("href");
+//					//
+//					ih.text = ElementUtil.text(a1);
+//					//
+//					Util.add(links = ObjectUtils.getIfNull(links, ArrayList::new), Reflection.newProxy(Link.class, ih));
+//					//
+//				} // for
+//					//
+//			} // for
+			//
+			addAll(links = ObjectUtils.getIfNull(links, ArrayList::new),
+					createLinks(childrenSize, offset, e, as2, category, number));
+			//
+		} // for
+			//
+		return links;
+		//
+	}
+
+	private static <E> void addAll(final Collection<E> instance, final Collection<? extends E> c) {
+		if (instance != null && c != null) {
+			instance.addAll(c);
+		}
+	}
+
+	private static Collection<Link> createLinks(final int childrenSize, final int offset, final Element e,
+			final Collection<Element> as2, final String category, final Integer number) {
+		//
+		Collection<Element> as1 = null;
+		//
+		int index, size = 0;
+		//
+		Element child, a1, a2 = null;
+		//
+		IH ih = null;
+		//
+		boolean isAbsoulte = false;
+		//
+		Collection<Link> links = null;
+		//
+		for (int j = 0; j < IterableUtils
+				.size(as1 = childrenSize > (index = 1 + offset) && (child = ElementUtil.child(e, index)) != null
+						? ElementUtil.select(child, "a")
+						: null); j++) {
+			//
+			if ((a1 = IterableUtils.get(as1, j)) == null) {
 				//
-				if ((a1 = IterableUtils.get(as1, j)) == null) {
+				continue;
+				//
+			} // if
+				//
+			if ((size = IterableUtils.size(as2)) > 0) {
+				//
+				for (int k = 0; k < size; k++) {
 					//
-					continue;
-					//
-				} // if
-					//
-				if ((size = IterableUtils.size(as2)) > 0) {
-					//
-					for (int k = 0; k < size; k++) {
+					if ((a2 = IterableUtils.get(as2, k)) == null) {
 						//
-						if ((a2 = IterableUtils.get(as2, k)) == null) {
-							//
-							continue;
-							//
-						} // if
-							//
-						(ih = new IH()).category = category;
+						continue;
 						//
-						ih.number = number;
+					} // if
 						//
-						try {
-							//
-							isAbsoulte = new URI(a1.attr("href")).isAbsolute();
-							//
-						} catch (final URISyntaxException e1) {
-							//
-							isAbsoulte = false;
-							//
-						} // try
-							//
-						if (isAbsoulte) {
-							//
-							ih.description = ElementUtil.text(a1);
-							//
-							ih.url = a1.absUrl("href");
-							//
-							ih.text = ElementUtil.text(a2);
-							//
-						} else {
-							//
-							ih.description = StringUtils.joinWith(" ", ElementUtil.text(a1), ElementUtil.text(a2));
-							//
-							ih.url = a2.absUrl("href");
-							//
-							ih.text = StringUtils.joinWith(" ", ElementUtil.text(a1), ElementUtil.text(a2));
-							//
-						} // if
-							//
-						Util.add(links = ObjectUtils.getIfNull(links, ArrayList::new),
-								Reflection.newProxy(Link.class, ih));
-						//
-					} // for
-						//
-				} else {
-					//
 					(ih = new IH()).category = category;
 					//
 					ih.number = number;
 					//
-					if (childrenSize > (index = 2 + offset) && (child = ElementUtil.child(e, index)) != null) {
+					try {
 						//
-						ih.description = ElementUtil.text(child);
+						isAbsoulte = new URI(a1.attr("href")).isAbsolute();
+						//
+					} catch (final URISyntaxException e1) {
+						//
+						isAbsoulte = false;
+						//
+					} // try
+						//
+					if (isAbsoulte) {
+						//
+						ih.description = ElementUtil.text(a1);
+						//
+						ih.url = a1.absUrl("href");
+						//
+						ih.text = ElementUtil.text(a2);
+						//
+					} else {
+						//
+						ih.description = StringUtils.joinWith(" ", ElementUtil.text(a1), ElementUtil.text(a2));
+						//
+						ih.url = a2.absUrl("href");
+						//
+						ih.text = StringUtils.joinWith(" ", ElementUtil.text(a1), ElementUtil.text(a2));
 						//
 					} // if
 						//
-					ih.url = a1.absUrl("href");
-					//
-					ih.text = ElementUtil.text(a1);
-					//
 					Util.add(links = ObjectUtils.getIfNull(links, ArrayList::new), Reflection.newProxy(Link.class, ih));
 					//
 				} // for
 					//
+			} else {
+				//
+				(ih = new IH()).category = category;
+				//
+				ih.number = number;
+				//
+				if (childrenSize > (index = 2 + offset) && (child = ElementUtil.child(e, index)) != null) {
+					//
+					ih.description = ElementUtil.text(child);
+					//
+				} // if
+					//
+				ih.url = a1.absUrl("href");
+				//
+				ih.text = ElementUtil.text(a1);
+				//
+				Util.add(links = ObjectUtils.getIfNull(links, ArrayList::new), Reflection.newProxy(Link.class, ih));
+				//
 			} // for
 				//
 		} // for

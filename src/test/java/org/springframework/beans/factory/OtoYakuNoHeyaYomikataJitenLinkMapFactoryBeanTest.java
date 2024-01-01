@@ -3,6 +3,7 @@ package org.springframework.beans.factory;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +35,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 
 	private static Method METHOD_GET_LINKS, METHOD_CHILDREN_SIZE, METHOD_VALUE_OF, METHOD_OR_ELSE, METHOD_FIND_FIRST,
-			METHOD_PARENTS, METHOD_TRIM, METHOD_APPEND, METHOD_TEST_AND_APPLY = null;
+			METHOD_PARENTS, METHOD_TRIM, METHOD_APPEND, METHOD_TEST_AND_APPLY, METHOD_ADD_ALL = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
@@ -59,6 +60,8 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 		//
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
+		//
+		(METHOD_ADD_ALL = clz.getDeclaredMethod("addAll", Collection.class, Collection.class)).setAccessible(true);
 		//
 	}
 
@@ -147,7 +150,7 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 		//
 		Assertions.assertNull(getLinks(Collections.singletonList(null)));
 		//
-		Assertions.assertNull(getLinks(
+		Assertions.assertEquals(Collections.emptyList(), getLinks(
 				Collections.singletonList(Util.cast(Element.class, Narcissus.allocateInstance(Element.class)))));
 		//
 	}
@@ -332,6 +335,25 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 			throws Throwable {
 		try {
 			return (R) METHOD_TEST_AND_APPLY.invoke(null, predicate, value, functionTrue, functionFalse);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testAddAll() {
+		//
+		Assertions.assertDoesNotThrow(() -> addAll(null, null));
+		//
+		final Collection<Object> collection = Collections.emptyList();
+		//
+		Assertions.assertDoesNotThrow(() -> addAll(collection, collection));
+		//
+	}
+
+	private static <E> void addAll(final Collection<E> instance, final Collection<? extends E> c) throws Throwable {
+		try {
+			METHOD_ADD_ALL.invoke(null, instance, c);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
