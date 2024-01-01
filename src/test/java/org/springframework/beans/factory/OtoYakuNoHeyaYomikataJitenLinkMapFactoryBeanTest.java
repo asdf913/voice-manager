@@ -3,6 +3,7 @@ package org.springframework.beans.factory;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URI;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -35,7 +36,8 @@ import io.github.toolfactory.narcissus.Narcissus;
 class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 
 	private static Method METHOD_GET_LINKS, METHOD_CHILDREN_SIZE, METHOD_VALUE_OF, METHOD_OR_ELSE, METHOD_FIND_FIRST,
-			METHOD_PARENTS, METHOD_TRIM, METHOD_APPEND, METHOD_TEST_AND_APPLY, METHOD_ADD_ALL = null;
+			METHOD_PARENTS, METHOD_TRIM, METHOD_APPEND, METHOD_TEST_AND_APPLY, METHOD_ADD_ALL, METHOD_IS_ABSOLUTE,
+			METHOD_APPLY = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
@@ -62,6 +64,11 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
 		//
 		(METHOD_ADD_ALL = clz.getDeclaredMethod("addAll", Collection.class, Collection.class)).setAccessible(true);
+		//
+		(METHOD_IS_ABSOLUTE = clz.getDeclaredMethod("isAbsolute", URI.class)).setAccessible(true);
+		//
+		(METHOD_APPLY = clz.getDeclaredMethod("apply", FailableFunction.class, Object.class, Object.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -354,6 +361,55 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 	private static <E> void addAll(final Collection<E> instance, final Collection<? extends E> c) throws Throwable {
 		try {
 			METHOD_ADD_ALL.invoke(null, instance, c);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testIsAbsolute() throws Throwable {
+		//
+		Assertions.assertFalse(isAbsolute(null));
+		//
+		final URI uri = Util.cast(URI.class, Narcissus.allocateInstance(URI.class));
+		//
+		Assertions.assertFalse(isAbsolute(uri));
+		//
+		Narcissus.setField(uri, URI.class.getDeclaredField("scheme"), "");
+		//
+		Assertions.assertTrue(isAbsolute(uri));
+		//
+	}
+
+	private static boolean isAbsolute(final URI instance) throws Throwable {
+		try {
+			final Object obj = METHOD_IS_ABSOLUTE.invoke(null, instance);
+			if (obj instanceof Boolean) {
+				return (Boolean) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testApply() throws Throwable {
+		//
+		Assertions.assertNull(apply(null, null, null));
+		//
+		Assertions.assertNull(apply(a -> null, null, null));
+		//
+		Assertions.assertNull(apply(a -> {
+			throw new RuntimeException();
+		}, null, null));
+		//
+	}
+
+	private static <T, R, E extends Throwable> R apply(final FailableFunction<T, R, E> function, final T value,
+			final R defaultValue) throws Throwable {
+		try {
+			return (R) METHOD_APPLY.invoke(null, function, value, defaultValue);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

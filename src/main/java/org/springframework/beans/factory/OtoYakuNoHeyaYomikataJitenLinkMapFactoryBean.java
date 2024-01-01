@@ -5,7 +5,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -190,8 +189,6 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		//
 		IH ih = null;
 		//
-		boolean isAbsoulte = false;
-		//
 		Collection<Link> links = null;
 		//
 		for (int j = 0; j < IterableUtils
@@ -219,17 +216,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 					//
 					ih.number = number;
 					//
-					try {
-						//
-						isAbsoulte = new URI(a1.attr("href")).isAbsolute();
-						//
-					} catch (final URISyntaxException e1) {
-						//
-						isAbsoulte = false;
-						//
-					} // try
-						//
-					if (isAbsoulte) {
+					if (isAbsolute(apply(URI::new, a1.attr("href"), null))) {
 						//
 						ih.description = ElementUtil.text(a1);
 						//
@@ -275,6 +262,19 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 			//
 		return links;
 		//
+	}
+
+	private static boolean isAbsolute(final URI instance) {
+		return instance != null && instance.isAbsolute();
+	}
+
+	private static <T, R, E extends Throwable> R apply(final FailableFunction<T, R, E> function, final T value,
+			final R defaultValue) {
+		try {
+			return function != null ? function.apply(value) : defaultValue;
+		} catch (final Throwable e) {
+			return defaultValue;
+		}
 	}
 
 	private static int childrenSize(@Nullable final Element instance) {
