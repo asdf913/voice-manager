@@ -235,24 +235,8 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 					//
 					ih.number = number;
 					//
-					if (isAbsolute(apply(URI::new, a1.attr("href"), null))) {
-						//
-						ih.description = ElementUtil.text(a1);
-						//
-						ih.url = a1.absUrl("href");
-						//
-						ih.text = ElementUtil.text(a2);
-						//
-					} else {
-						//
-						ih.description = StringUtils.joinWith(" ", ElementUtil.text(a1), ElementUtil.text(a2));
-						//
-						ih.url = a2.absUrl("href");
-						//
-						ih.text = StringUtils.joinWith(" ", ElementUtil.text(a1), ElementUtil.text(a2));
-						//
-					} // if
-						//
+					setDescriptionAndTextAndUrl(a1, ih, a2);
+					//
 					Util.add(links = ObjectUtils.getIfNull(links, ArrayList::new), Reflection.newProxy(Link.class, ih));
 					//
 				} // for
@@ -281,6 +265,34 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 			//
 		return links;
 		//
+	}
+
+	private static void setDescriptionAndTextAndUrl(final Element a1, final IH ih, final Element a2) {
+		//
+		if (ih == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		if (isAbsolute(apply(URI::new, NodeUtil.attr(a1, "href"), null))) {
+			//
+			ih.description = ElementUtil.text(a1);
+			//
+			ih.url = NodeUtil.absUrl(a1, "href");
+			//
+			ih.text = ElementUtil.text(a2);
+			//
+		} else {
+			//
+			ih.description = StringUtils.joinWith(" ", ElementUtil.text(a1), ElementUtil.text(a2));
+			//
+			ih.url = NodeUtil.absUrl(a2, "href");
+			//
+			ih.text = StringUtils.joinWith(" ", ElementUtil.text(a1), ElementUtil.text(a2));
+			//
+		} // if
+			//
 	}
 
 	private static boolean isAbsolute(final URI instance) {

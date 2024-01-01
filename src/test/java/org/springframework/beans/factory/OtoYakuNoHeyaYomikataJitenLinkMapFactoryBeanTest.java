@@ -35,12 +35,14 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 
+	private static Class<?> CLASS_IH = null;
+
 	private static Method METHOD_GET_LINKS, METHOD_CHILDREN_SIZE, METHOD_VALUE_OF, METHOD_OR_ELSE, METHOD_FIND_FIRST,
 			METHOD_PARENTS, METHOD_TRIM, METHOD_APPEND, METHOD_TEST_AND_APPLY, METHOD_ADD_ALL, METHOD_IS_ABSOLUTE,
-			METHOD_APPLY = null;
+			METHOD_APPLY, METHOD_SET_DESCRIPTION_AND_TEXT_AND_URL = null;
 
 	@BeforeAll
-	static void beforeClass() throws NoSuchMethodException {
+	static void beforeClass() throws NoSuchMethodException, ClassNotFoundException {
 		//
 		final Class<?> clz = OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean.class;
 		//
@@ -69,6 +71,11 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 		//
 		(METHOD_APPLY = clz.getDeclaredMethod("apply", FailableFunction.class, Object.class, Object.class))
 				.setAccessible(true);
+		//
+		(METHOD_SET_DESCRIPTION_AND_TEXT_AND_URL = clz.getDeclaredMethod("setDescriptionAndTextAndUrl", Element.class,
+				CLASS_IH = Class
+						.forName("org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean$IH"),
+				Element.class)).setAccessible(true);
 		//
 	}
 
@@ -410,6 +417,26 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 			final R defaultValue) throws Throwable {
 		try {
 			return (R) METHOD_APPLY.invoke(null, function, value, defaultValue);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetDescriptionAndTextAndUrl() {
+		//
+		Assertions.assertDoesNotThrow(() -> setDescriptionAndTextAndUrl(null, null, null));
+		//
+		final Object ih = Narcissus.allocateInstance(CLASS_IH);
+		//
+		Assertions.assertDoesNotThrow(() -> setDescriptionAndTextAndUrl(null, ih, null));
+		//
+	}
+
+	private static void setDescriptionAndTextAndUrl(final Element a1, final Object ih, final Element a2)
+			throws Throwable {
+		try {
+			METHOD_SET_DESCRIPTION_AND_TEXT_AND_URL.invoke(null, a1, ih, a2);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
