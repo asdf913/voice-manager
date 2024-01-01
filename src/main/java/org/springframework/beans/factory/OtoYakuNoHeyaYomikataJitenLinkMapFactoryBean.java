@@ -313,6 +313,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		return instance != null && instance.isAbsolute();
 	}
 
+	@Nullable
 	private static <T, R, E extends Throwable> R apply(final FailableFunction<T, R, E> function, final T value,
 			@Nullable final R defaultValue) {
 		try {
@@ -395,6 +396,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		//
 	}
 
+	@Nullable
 	private static <T> T orElse(@Nullable final Optional<T> instance, @Nullable final T value) {
 		return instance != null ? instance.orElse(value) : value;
 	}
