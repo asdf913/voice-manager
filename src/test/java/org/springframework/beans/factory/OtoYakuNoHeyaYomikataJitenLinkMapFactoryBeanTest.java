@@ -35,11 +35,13 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 
+	private static final String EMPTY = "";
+
 	private static Class<?> CLASS_IH = null;
 
 	private static Method METHOD_GET_LINKS, METHOD_VALUE_OF, METHOD_OR_ELSE, METHOD_FIND_FIRST, METHOD_TRIM,
 			METHOD_APPEND, METHOD_TEST_AND_APPLY, METHOD_IS_ABSOLUTE, METHOD_APPLY,
-			METHOD_SET_DESCRIPTION_AND_TEXT_AND_URL, METHOD_ADD_LINKS = null;
+			METHOD_SET_DESCRIPTION_AND_TEXT_AND_URL, METHOD_ADD_LINKS, METHOD_HAS_ATTR = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException, ClassNotFoundException {
@@ -77,6 +79,8 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 						"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean$ObjectMap"),
 				String.class)).setAccessible(true);
 		//
+		(METHOD_HAS_ATTR = clz.getDeclaredMethod("hasAttr", Element.class, String.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -104,10 +108,14 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 
 	private OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean instance = null;
 
+	private Element element = null;
+
 	@BeforeEach
 	void beforeEach() {
 		//
 		instance = new OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean();
+		//
+		element = Util.cast(Element.class, Narcissus.allocateInstance(Element.class));
 		//
 	}
 
@@ -164,8 +172,7 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 		//
 		Assertions.assertNull(getLinks(Collections.singletonList(null)));
 		//
-		Assertions.assertEquals(Collections.emptyList(), getLinks(
-				Collections.singletonList(Util.cast(Element.class, Narcissus.allocateInstance(Element.class)))));
+		Assertions.assertEquals(Collections.emptyList(), getLinks(Collections.singletonList(element)));
 		//
 	}
 
@@ -188,7 +195,7 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 		//
 		Assertions.assertNull(valueOf(null));
 		//
-		Assertions.assertNull(valueOf(""));
+		Assertions.assertNull(valueOf(EMPTY));
 		//
 		Assertions.assertNull(valueOf(" "));
 		//
@@ -316,7 +323,7 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 		//
 		Assertions.assertFalse(isAbsolute(uri));
 		//
-		Narcissus.setField(uri, URI.class.getDeclaredField("scheme"), "");
+		Narcissus.setField(uri, URI.class.getDeclaredField("scheme"), EMPTY);
 		//
 		Assertions.assertTrue(isAbsolute(uri));
 		//
@@ -379,9 +386,8 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 		//
 		Assertions.assertDoesNotThrow(() -> addLinks(null, null, Collections.singleton(null), 0, 0, null, null, null));
 		//
-		Assertions.assertDoesNotThrow(() -> addLinks(null, null,
-				Collections.singleton(Util.cast(Element.class, Narcissus.allocateInstance(Element.class))), 0, 0, null,
-				null, null));
+		Assertions
+				.assertDoesNotThrow(() -> addLinks(null, null, Collections.singleton(element), 0, 0, null, null, null));
 		//
 	}
 
@@ -392,6 +398,37 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 			METHOD_ADD_LINKS.invoke(null, links, a1, as2, childrenSize, offset, e, objectMap, imgSrc);
 		} catch (final InvocationTargetException ex) {
 			throw ex.getTargetException();
+		}
+	}
+
+	@Test
+	void testHasAttr() throws Throwable {
+		//
+		Assertions.assertFalse(hasAttr(null, null));
+		//
+		Assertions.assertFalse(hasAttr(element, null));
+		//
+		Assertions.assertFalse(hasAttr(element, EMPTY));
+		//
+		if (element != null) {
+			//
+			element.attributes().put(EMPTY, EMPTY);
+			//
+		} // if
+			//
+		Assertions.assertTrue(hasAttr(element, EMPTY));
+		//
+	}
+
+	private static boolean hasAttr(final Element instance, final String attributeKey) throws Throwable {
+		try {
+			final Object obj = METHOD_HAS_ATTR.invoke(null, instance, attributeKey);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
 		}
 	}
 

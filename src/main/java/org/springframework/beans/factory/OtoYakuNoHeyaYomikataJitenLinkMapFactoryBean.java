@@ -197,8 +197,8 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 				//
 			} // if
 				//
-			if ((childrenSize = ElementUtil.childrenSize(e)) > 0 && (child = ElementUtil.child(e, 0)) != null
-					&& (hasAttrRowSpan = child.hasAttr("rowspan"))) {
+			if ((childrenSize = ElementUtil.childrenSize(e)) > 0
+					&& (hasAttrRowSpan = hasAttr(child = ElementUtil.child(e, 0), "rowspan"))) {
 				//
 				category = ElementUtil.text(child);
 				//
@@ -230,6 +230,10 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 			//
 		return links;
 		//
+	}
+
+	private static boolean hasAttr(final Element instance, final String attributeKey) {
+		return instance != null && attributeKey != null && instance.hasAttr(attributeKey);
 	}
 
 	@Nullable
