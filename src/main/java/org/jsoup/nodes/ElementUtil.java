@@ -1,6 +1,7 @@
 package org.jsoup.nodes;
 
 import java.lang.reflect.Field;
+import java.util.List;
 
 import javax.annotation.Nullable;
 
@@ -159,6 +160,10 @@ public final class ElementUtil {
 
 	private static Class<?> getClass(final Object instance) {
 		return instance != null ? instance.getClass() : null;
+	}
+
+	public static List<Element> parents(final Element instance) {
+		return instance != null ? instance.parents() : null;
 	}
 
 }

@@ -7,7 +7,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -49,9 +48,9 @@ class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBeanTest {
 
 	private static final String EMPTY = "";
 
-	private static Method METHOD_GET_MULTI_MAP, METHOD_OR_ELSE, METHOD_FIND_FIRST, METHOD_PARENTS, METHOD_TRIM,
-			METHOD_APPEND, METHOD_TEST_AND_APPLY, METHOD_PUT_HREF, METHOD_GET_STRING, METHOD_NEW_DOCUMENT_BUILDER,
-			METHOD_PARSE, METHOD_NEW_XPATH, METHOD_EVALUATE, METHOD_GET = null;
+	private static Method METHOD_GET_MULTI_MAP, METHOD_OR_ELSE, METHOD_FIND_FIRST, METHOD_TRIM, METHOD_APPEND,
+			METHOD_TEST_AND_APPLY, METHOD_PUT_HREF, METHOD_GET_STRING, METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE,
+			METHOD_NEW_XPATH, METHOD_EVALUATE, METHOD_GET = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -63,8 +62,6 @@ class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBeanTest {
 		(METHOD_OR_ELSE = clz.getDeclaredMethod("orElse", Optional.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_FIND_FIRST = clz.getDeclaredMethod("findFirst", Stream.class)).setAccessible(true);
-		//
-		(METHOD_PARENTS = clz.getDeclaredMethod("parents", Element.class)).setAccessible(true);
 		//
 		(METHOD_TRIM = clz.getDeclaredMethod("trim", String.class)).setAccessible(true);
 		//
@@ -275,30 +272,6 @@ class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBeanTest {
 				return null;
 			} else if (obj instanceof Optional) {
 				return (Optional) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testParents() throws Throwable {
-		//
-		Assertions.assertNull(parents(null));
-		//
-		Assertions.assertNotNull(
-				parents(Util.cast(Element.class, Util.cast(Element.class, Narcissus.allocateInstance(Element.class)))));
-		//
-	}
-
-	private static List<Element> parents(final Element instance) throws Throwable {
-		try {
-			final Object obj = METHOD_PARENTS.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof List) {
-				return (List) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

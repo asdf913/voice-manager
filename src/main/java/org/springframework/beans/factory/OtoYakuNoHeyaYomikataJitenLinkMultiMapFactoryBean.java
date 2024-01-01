@@ -319,8 +319,8 @@ public class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean implements Factor
 	@Nullable
 	private static Element getParentByNodeName(@Nullable final Element element, final String nodeName) {
 		//
-		return orElse(findFirst(
-				Util.filter(Util.stream(parents(element)), x -> Objects.equals(nodeName, NodeUtil.nodeName(x)))), null);
+		return orElse(findFirst(Util.filter(Util.stream(ElementUtil.parents(element)),
+				x -> Objects.equals(nodeName, NodeUtil.nodeName(x)))), null);
 		//
 	}
 
@@ -354,11 +354,6 @@ public class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean implements Factor
 	@Nullable
 	private static <T> Optional<T> findFirst(@Nullable final Stream<T> instance) {
 		return instance != null ? instance.findFirst() : null;
-	}
-
-	@Nullable
-	private static List<Element> parents(@Nullable final Element instance) {
-		return instance != null ? instance.parents() : null;
 	}
 
 	@Nullable

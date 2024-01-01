@@ -372,8 +372,8 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 	@Nullable
 	private static Element getParentByNodeName(@Nullable final Element element, @Nullable final String nodeName) {
 		//
-		return orElse(findFirst(
-				Util.filter(Util.stream(parents(element)), x -> Objects.equals(nodeName, NodeUtil.nodeName(x)))), null);
+		return orElse(findFirst(Util.filter(Util.stream(ElementUtil.parents(element)),
+				x -> Objects.equals(nodeName, NodeUtil.nodeName(x)))), null);
 		//
 	}
 
@@ -407,11 +407,6 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 	@Nullable
 	private static <T> Optional<T> findFirst(@Nullable final Stream<T> instance) {
 		return instance != null ? instance.findFirst() : null;
-	}
-
-	@Nullable
-	private static List<Element> parents(@Nullable final Element instance) {
-		return instance != null ? instance.parents() : null;
 	}
 
 	private static String trim(final String string) {

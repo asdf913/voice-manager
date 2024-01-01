@@ -37,8 +37,8 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 
 	private static Class<?> CLASS_IH = null;
 
-	private static Method METHOD_GET_LINKS, METHOD_VALUE_OF, METHOD_OR_ELSE, METHOD_FIND_FIRST, METHOD_PARENTS,
-			METHOD_TRIM, METHOD_APPEND, METHOD_TEST_AND_APPLY, METHOD_IS_ABSOLUTE, METHOD_APPLY,
+	private static Method METHOD_GET_LINKS, METHOD_VALUE_OF, METHOD_OR_ELSE, METHOD_FIND_FIRST, METHOD_TRIM,
+			METHOD_APPEND, METHOD_TEST_AND_APPLY, METHOD_IS_ABSOLUTE, METHOD_APPLY,
 			METHOD_SET_DESCRIPTION_AND_TEXT_AND_URL, METHOD_ADD_LINKS = null;
 
 	@BeforeAll
@@ -53,8 +53,6 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 		(METHOD_OR_ELSE = clz.getDeclaredMethod("orElse", Optional.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_FIND_FIRST = clz.getDeclaredMethod("findFirst", Stream.class)).setAccessible(true);
-		//
-		(METHOD_PARENTS = clz.getDeclaredMethod("parents", Element.class)).setAccessible(true);
 		//
 		(METHOD_TRIM = clz.getDeclaredMethod("trim", String.class)).setAccessible(true);
 		//
@@ -245,28 +243,6 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 				return null;
 			} else if (obj instanceof Optional) {
 				return (Optional) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testParents() throws Throwable {
-		//
-		Assertions.assertEquals(Collections.emptyList(),
-				parents(Util.cast(Element.class, Narcissus.allocateInstance(Element.class))));
-		//
-	}
-
-	private static List<Element> parents(final Element instance) throws Throwable {
-		try {
-			final Object obj = METHOD_PARENTS.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof List) {
-				return (List) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
