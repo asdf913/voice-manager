@@ -206,16 +206,14 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 			imgSrc = null;
 			//
 			if (childrenSize > (index = (0 + (offset = hasAttrRowSpan ? 1 : 0)))
-					&& (child = ElementUtil.child(e, index)) != null) {
+					&& (child = ElementUtil.child(e, index)) != null
+					&& (number = valueOf(ElementUtil.text(child))) == null) {
 				//
-				if ((number = valueOf(ElementUtil.text(child))) == null) {
-					//
-					imgSrc = NodeUtil.absUrl(IterableUtils.size(imgs = ElementUtil.select(child, "img")) == 1
-							? IterableUtils.get(imgs, 0)
-							: null, "src");
-					//
-				} // if
-					//
+				imgSrc = NodeUtil.absUrl(
+						IterableUtils.size(imgs = ElementUtil.select(child, "img")) == 1 ? IterableUtils.get(imgs, 0)
+								: null,
+						"src");
+				//
 			} // if
 				//
 			Util.addAll(links = ObjectUtils.getIfNull(links, ArrayList::new),
