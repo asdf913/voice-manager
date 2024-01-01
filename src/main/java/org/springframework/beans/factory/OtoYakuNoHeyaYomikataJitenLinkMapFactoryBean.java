@@ -201,7 +201,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 
 	@Nullable
 	private static Collection<Link> createLinks(final int childrenSize, final int offset, final Element e,
-			final Collection<Element> as2, final String category, @Nullable final Integer number) {
+			final Collection<Element> as2, @Nullable final String category, @Nullable final Integer number) {
 		//
 		Collection<Element> as1 = null;
 		//
@@ -226,7 +226,8 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 	}
 
 	private static void addLinks(final Collection<Link> links, final Element a1, final Collection<Element> as2,
-			final String category, final Integer number, final int childrenSize, final int offset, final Element e) {
+			final String category, @Nullable final Integer number, final int childrenSize, final int offset,
+			final Element e) {
 		//
 		final int size = IterableUtils.size(as2);
 		//
@@ -313,7 +314,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 	}
 
 	private static <T, R, E extends Throwable> R apply(final FailableFunction<T, R, E> function, final T value,
-			final R defaultValue) {
+			@Nullable final R defaultValue) {
 		try {
 			return function != null ? function.apply(value) : defaultValue;
 		} catch (final Throwable e) {
@@ -366,7 +367,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		}
 	}
 
-	private static Element getParentByNodeName(final Element element, final String nodeName) {
+	private static Element getParentByNodeName(final Element element, @Nullable final String nodeName) {
 		//
 		return orElse(findFirst(
 				Util.filter(Util.stream(parents(element)), x -> Objects.equals(nodeName, NodeUtil.nodeName(x)))), null);
@@ -394,7 +395,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		//
 	}
 
-	private static <T> T orElse(@Nullable final Optional<T> instance, final T value) {
+	private static <T> T orElse(@Nullable final Optional<T> instance, @Nullable final T value) {
 		return instance != null ? instance.orElse(value) : value;
 	}
 
