@@ -205,11 +205,9 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		//
 		Collection<Element> as1 = null;
 		//
-		int index, size = 0;
+		int index = 0;
 		//
-		Element child, a1, a2 = null;
-		//
-		IH ih = null;
+		Element child = null;
 		//
 		Collection<Link> links = null;
 		//
@@ -218,56 +216,68 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 						? ElementUtil.select(child, "a")
 						: null); j++) {
 			//
-			if ((a1 = IterableUtils.get(as1, j)) == null) {
-				//
-				continue;
-				//
-			} // if
-				//
-			if ((size = IterableUtils.size(as2)) > 0) {
-				//
-				for (int k = 0; k < size; k++) {
-					//
-					if ((a2 = IterableUtils.get(as2, k)) == null) {
-						//
-						continue;
-						//
-					} // if
-						//
-					(ih = new IH()).category = category;
-					//
-					ih.number = number;
-					//
-					setDescriptionAndTextAndUrl(a1, ih, a2);
-					//
-					Util.add(links = ObjectUtils.getIfNull(links, ArrayList::new), Reflection.newProxy(Link.class, ih));
-					//
-				} // for
-					//
-			} else {
-				//
-				(ih = new IH()).category = category;
-				//
-				ih.number = number;
-				//
-				if (childrenSize > (index = 2 + offset) && (child = ElementUtil.child(e, index)) != null) {
-					//
-					ih.description = ElementUtil.text(child);
-					//
-				} // if
-					//
-				ih.url = a1.absUrl("href");
-				//
-				ih.text = ElementUtil.text(a1);
-				//
-				Util.add(links = ObjectUtils.getIfNull(links, ArrayList::new), Reflection.newProxy(Link.class, ih));
-				//
-			} // for
-				//
+			addLinks(links = ObjectUtils.getIfNull(links, ArrayList::new), IterableUtils.get(as1, j), as2, category,
+					number, childrenSize, offset, e);
+			//
 		} // for
 			//
 		return links;
 		//
+	}
+
+	private static void addLinks(final Collection<Link> links, final Element a1, final Collection<Element> as2,
+			final String category, final Integer number, final int childrenSize, final int offset, final Element e) {
+		//
+		final int size = IterableUtils.size(as2);
+		//
+		IH ih = null;
+		//
+		if (size > 0) {
+			//
+			Element a2 = null;
+			//
+			for (int k = 0; k < size; k++) {
+				//
+				if ((a2 = IterableUtils.get(as2, k)) == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				(ih = new IH()).category = category;
+				//
+				ih.number = number;
+				//
+				setDescriptionAndTextAndUrl(a1, ih, a2);
+				//
+				Util.add(links, Reflection.newProxy(Link.class, ih));
+				//
+			} // for
+				//
+		} else {
+			//
+			(ih = new IH()).category = category;
+			//
+			ih.number = number;
+			//
+			int index = 0;
+			//
+			Element child = null;
+			//
+			if (childrenSize > (index = 2 + offset) && (child = ElementUtil.child(e, index)) != null) {
+				//
+				ih.description = ElementUtil.text(child);
+				//
+			} // if
+				//
+			ih.url = NodeUtil.absUrl(a1, "href");
+			//
+			ih.text = ElementUtil.text(a1);
+			//
+			Util.add(links, Reflection.newProxy(Link.class, ih));
+			//
+		} // if
+			//
 	}
 
 	private static void setDescriptionAndTextAndUrl(final Element a1, final IH ih, final Element a2) {

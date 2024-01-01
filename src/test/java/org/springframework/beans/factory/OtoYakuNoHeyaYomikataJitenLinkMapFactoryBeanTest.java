@@ -35,11 +35,9 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 
-	private static Class<?> CLASS_IH = null;
-
 	private static Method METHOD_GET_LINKS, METHOD_CHILDREN_SIZE, METHOD_VALUE_OF, METHOD_OR_ELSE, METHOD_FIND_FIRST,
 			METHOD_PARENTS, METHOD_TRIM, METHOD_APPEND, METHOD_TEST_AND_APPLY, METHOD_ADD_ALL, METHOD_IS_ABSOLUTE,
-			METHOD_APPLY, METHOD_SET_DESCRIPTION_AND_TEXT_AND_URL = null;
+			METHOD_APPLY, METHOD_SET_DESCRIPTION_AND_TEXT_AND_URL, METHOD_ADD_LINKS = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException, ClassNotFoundException {
@@ -73,9 +71,11 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 				.setAccessible(true);
 		//
 		(METHOD_SET_DESCRIPTION_AND_TEXT_AND_URL = clz.getDeclaredMethod("setDescriptionAndTextAndUrl", Element.class,
-				CLASS_IH = Class
-						.forName("org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean$IH"),
+				Class.forName("org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean$IH"),
 				Element.class)).setAccessible(true);
+		//
+		(METHOD_ADD_LINKS = clz.getDeclaredMethod("addLinks", Collection.class, Element.class, Collection.class,
+				String.class, Integer.class, Integer.TYPE, Integer.TYPE, Element.class)).setAccessible(true);
 		//
 	}
 
@@ -427,10 +427,6 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 		//
 		Assertions.assertDoesNotThrow(() -> setDescriptionAndTextAndUrl(null, null, null));
 		//
-		final Object ih = Narcissus.allocateInstance(CLASS_IH);
-		//
-		Assertions.assertDoesNotThrow(() -> setDescriptionAndTextAndUrl(null, ih, null));
-		//
 	}
 
 	private static void setDescriptionAndTextAndUrl(final Element a1, final Object ih, final Element a2)
@@ -439,6 +435,29 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 			METHOD_SET_DESCRIPTION_AND_TEXT_AND_URL.invoke(null, a1, ih, a2);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testAddLinks() {
+		//
+		Assertions.assertDoesNotThrow(() -> addLinks(null, null, null, null, null, 0, 0, null));
+		//
+		Assertions.assertDoesNotThrow(() -> addLinks(null, null, Collections.singleton(null), null, null, 0, 0, null));
+		//
+		Assertions.assertDoesNotThrow(() -> addLinks(null, null,
+				Collections.singleton(Util.cast(Element.class, Narcissus.allocateInstance(Element.class))), null, null,
+				0, 0, null));
+		//
+	}
+
+	private static void addLinks(final Collection<Link> links, final Element a1, final Collection<Element> as2,
+			final String category, final Integer number, final int childrenSize, final int offset, final Element e)
+			throws Throwable {
+		try {
+			METHOD_ADD_LINKS.invoke(null, links, a1, as2, category, number, childrenSize, offset, e);
+		} catch (final InvocationTargetException ex) {
+			throw ex.getTargetException();
 		}
 	}
 
