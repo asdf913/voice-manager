@@ -74,7 +74,7 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 				Element.class)).setAccessible(true);
 		//
 		(METHOD_ADD_LINKS = clz.getDeclaredMethod("addLinks", Collection.class, Element.class, Collection.class,
-				Integer.TYPE, Integer.TYPE, Element.class,
+				Element.class,
 				Class.forName(
 						"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean$ObjectMap"),
 				String.class)).setAccessible(true);
@@ -384,20 +384,19 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 	@Test
 	void testAddLinks() {
 		//
-		Assertions.assertDoesNotThrow(() -> addLinks(null, null, null, 0, 0, null, null, null));
+		Assertions.assertDoesNotThrow(() -> addLinks(null, null, null, null, null, null));
 		//
-		Assertions.assertDoesNotThrow(() -> addLinks(null, null, Collections.singleton(null), 0, 0, null, null, null));
+		Assertions.assertDoesNotThrow(() -> addLinks(null, null, Collections.singleton(null), null, null, null));
 		//
-		Assertions
-				.assertDoesNotThrow(() -> addLinks(null, null, Collections.singleton(element), 0, 0, null, null, null));
+		Assertions.assertDoesNotThrow(() -> addLinks(null, null, Collections.singleton(element), null, null, null));
 		//
 	}
 
 	private static void addLinks(final Collection<Link> links, final Element a1, final Collection<Element> as2,
-			final int childrenSize, final int offset, final Element e, final Object objectMap, final String imgSrc)
-			throws Throwable {
+			// final int childrenSize, final int offset,
+			final Element e, final Object objectMap, final String imgSrc) throws Throwable {
 		try {
-			METHOD_ADD_LINKS.invoke(null, links, a1, as2, childrenSize, offset, e, objectMap, imgSrc);
+			METHOD_ADD_LINKS.invoke(null, links, a1, as2, e, objectMap, imgSrc);
 		} catch (final InvocationTargetException ex) {
 			throw ex.getTargetException();
 		}
@@ -492,6 +491,31 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 						//
 						Assertions.assertThrows(IllegalStateException.class,
 								() -> invoke(ih, objectMap, m, new Object[] { null }));
+						//
+					} // if
+						//
+				});
+		//
+		// org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean$IntMap
+		//
+		final Object intMap = Reflection.newProxy(clz = Class
+				.forName("org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean$IntMap"), ih);
+		//
+		Assertions.assertThrows(Throwable.class, () -> invoke(ih, objectMap, null, null));
+		//
+		new FailableStream<>(Arrays.stream(ObjectUtils.getIfNull(getDeclaredMethods(clz), () -> new Method[] {})))
+				.forEach(m -> {
+					//
+					Assertions.assertThrows(Throwable.class, () -> invoke(ih, intMap, m, null));
+					//
+					if (Objects.equals(Util.getName(m), "getInt")) {
+						//
+						Assertions.assertThrows(Throwable.class, () -> invoke(ih, intMap, m, new Object[] {}));
+						//
+						Assertions.assertThrows(Throwable.class, () -> invoke(ih, intMap, m, new Object[] { null }));
+						//
+						Assertions.assertThrows(IllegalStateException.class,
+								() -> invoke(ih, intMap, m, new Object[] { null, null }));
 						//
 					} // if
 						//
