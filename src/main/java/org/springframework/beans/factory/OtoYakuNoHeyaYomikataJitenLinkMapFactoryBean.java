@@ -321,7 +321,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 
 		int getInt(final String key, final int defaultValue);
 
-		static int getInt(final IntMap instance, final String key, final int defaultValue) {
+		static int getInt(@Nullable final IntMap instance, final String key, final int defaultValue) {
 			return instance != null ? instance.getInt(key, defaultValue) : defaultValue;
 		}
 
