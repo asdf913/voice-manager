@@ -234,7 +234,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 	@Nullable
 	private static Collection<Link> createLinks(final int childrenSize, final int offset, final Element e,
 			@Nullable final Collection<Element> as2, @Nullable final String category, @Nullable final Integer number,
-			final String imgSrc) {
+			@Nullable final String imgSrc) {
 		//
 		Collection<Element> as1 = null;
 		//
