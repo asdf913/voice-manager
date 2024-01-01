@@ -174,7 +174,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		}
 
 		@Nullable
-		private IValue0<?> handleLink(final String methodName, final Object[] args) {
+		private IValue0<?> handleLink(final String methodName, @Nullable final Object[] args) {
 			//
 			if (Objects.equals(methodName, "getText")) {
 				//
@@ -237,7 +237,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		//
 	}
 
-	private static <T> void forEach(final Iterable<T> instance, final Consumer<? super T> action) {
+	private static <T> void forEach(@Nullable final Iterable<T> instance, @Nullable final Consumer<? super T> action) {
 		if (instance != null && (action != null || Proxy.isProxyClass(Util.getClass(instance)))) {
 			instance.forEach(action);
 		}
