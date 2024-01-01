@@ -158,7 +158,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 					//
 				return Util.get(map, obj);
 				//
-			} else if (proxy instanceof IntMap && Objects.equals(methodName, "getInt") && args != null
+			} else if (Boolean.logicalAnd(proxy instanceof IntMap, Objects.equals(methodName, "getInt")) && args != null
 					&& args.length > 1) {
 				//
 				final Object object = args[0];
