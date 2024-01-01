@@ -235,10 +235,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 			if (childrenSize > (index = (0 + (offset = iif(hasAttrRowSpan, 1, 0))))
 					&& (number = valueOf(ElementUtil.text(child = ElementUtil.child(e, index)))) == null) {
 				//
-				imgSrc = NodeUtil.absUrl(
-						IterableUtils.size(imgs = ElementUtil.select(child, "img")) == 1 ? IterableUtils.get(imgs, 0)
-								: null,
-						"src");
+				imgSrc = NodeUtil.absUrl(getImg(child), "src");
 				//
 			} // if
 				//
@@ -252,6 +249,14 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		} // for
 			//
 		return links;
+		//
+	}
+
+	private static Element getImg(final Element instance) {
+		//
+		final Collection<Element> imgs = ElementUtil.select(instance, "img");
+		//
+		return IterableUtils.size(imgs) == 1 ? IterableUtils.get(imgs, 0) : null;
 		//
 	}
 
