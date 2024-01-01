@@ -74,8 +74,8 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 		(METHOD_ADD_LINKS = clz.getDeclaredMethod("addLinks", Collection.class, Element.class, Collection.class,
 				Integer.TYPE, Integer.TYPE, Element.class,
 				Class.forName(
-						"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean$ObjectMap")))
-				.setAccessible(true);
+						"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean$ObjectMap"),
+				String.class)).setAccessible(true);
 		//
 	}
 
@@ -375,20 +375,21 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 	@Test
 	void testAddLinks() {
 		//
-		Assertions.assertDoesNotThrow(() -> addLinks(null, null, null, 0, 0, null, null));
+		Assertions.assertDoesNotThrow(() -> addLinks(null, null, null, 0, 0, null, null, null));
 		//
-		Assertions.assertDoesNotThrow(() -> addLinks(null, null, Collections.singleton(null), 0, 0, null, null));
+		Assertions.assertDoesNotThrow(() -> addLinks(null, null, Collections.singleton(null), 0, 0, null, null, null));
 		//
 		Assertions.assertDoesNotThrow(() -> addLinks(null, null,
 				Collections.singleton(Util.cast(Element.class, Narcissus.allocateInstance(Element.class))), 0, 0, null,
-				null));
+				null, null));
 		//
 	}
 
 	private static void addLinks(final Collection<Link> links, final Element a1, final Collection<Element> as2,
-			final int childrenSize, final int offset, final Element e, final Object objectMap) throws Throwable {
+			final int childrenSize, final int offset, final Element e, final Object objectMap, final String imgSrc)
+			throws Throwable {
 		try {
-			METHOD_ADD_LINKS.invoke(null, links, a1, as2, childrenSize, offset, e, objectMap);
+			METHOD_ADD_LINKS.invoke(null, links, a1, as2, childrenSize, offset, e, objectMap, imgSrc);
 		} catch (final InvocationTargetException ex) {
 			throw ex.getTargetException();
 		}

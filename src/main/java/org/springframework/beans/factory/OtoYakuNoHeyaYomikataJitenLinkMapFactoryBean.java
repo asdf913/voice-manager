@@ -70,6 +70,8 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 
 		Integer getNumber();
 
+		String getImgSrc();
+
 	}
 
 	private static class IH implements InvocationHandler {
@@ -83,7 +85,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		@Note("category")
 		private String category = null;
 
-		private String text = null;
+		private String text, imgSrc = null;
 
 		private Integer number = null;
 
@@ -122,6 +124,10 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 				} else if (Objects.equals(methodName, "getNumber")) {
 					//
 					return number;
+					//
+				} else if (Objects.equals(methodName, "getImgSrc")) {
+					//
+					return imgSrc;
 					//
 				} // if
 					//
@@ -176,6 +182,10 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		//
 		boolean hasAttrRowSpan = false;
 		//
+		Collection<Element> imgs = null;
+		//
+		String imgSrc = null;
+		//
 		for (int i = 0; es != null && i < es.size(); i++) {
 			//
 			if ((e = es.get(i)) == null) {
@@ -193,11 +203,19 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 				//
 				// number
 				//
+			imgSrc = null;
+			//
 			if (childrenSize > (index = (0 + (offset = hasAttrRowSpan ? 1 : 0)))
 					&& (child = ElementUtil.child(e, index)) != null) {
 				//
-				number = valueOf(ElementUtil.text(child));
-				//
+				if ((number = valueOf(ElementUtil.text(child))) == null) {
+					//
+					imgSrc = NodeUtil.absUrl(IterableUtils.size(imgs = ElementUtil.select(child, "img")) == 1
+							? IterableUtils.get(imgs, 0)
+							: null, "src");
+					//
+				} // if
+					//
 			} // if
 				//
 			Util.addAll(links = ObjectUtils.getIfNull(links, ArrayList::new),
@@ -205,7 +223,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 							childrenSize > (index = 2 + offset) && (child = ElementUtil.child(e, index)) != null
 									? ElementUtil.select(child, "a")
 									: null,
-							category, number));
+							category, number, imgSrc));
 			//
 		} // for
 			//
@@ -215,7 +233,8 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 
 	@Nullable
 	private static Collection<Link> createLinks(final int childrenSize, final int offset, final Element e,
-			@Nullable final Collection<Element> as2, @Nullable final String category, @Nullable final Integer number) {
+			@Nullable final Collection<Element> as2, @Nullable final String category, @Nullable final Integer number,
+			final String imgSrc) {
 		//
 		Collection<Element> as1 = null;
 		//
@@ -239,7 +258,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 			Util.put(objects, Integer.class, number);
 			//
 			addLinks(links = ObjectUtils.getIfNull(links, ArrayList::new), IterableUtils.get(as1, j), as2, childrenSize,
-					offset, e, Reflection.newProxy(ObjectMap.class, ih));
+					offset, e, Reflection.newProxy(ObjectMap.class, ih), imgSrc);
 			//
 		} // for
 			//
@@ -260,7 +279,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 
 	private static void addLinks(final Collection<Link> links, final Element a1,
 			@Nullable final Collection<Element> as2, final int childrenSize, final int offset, final Element e,
-			final ObjectMap objectMap) {
+			final ObjectMap objectMap, final String imgSrc) {
 		//
 		final int size = IterableUtils.size(as2);
 		//
@@ -286,6 +305,8 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 				//
 				ih.number = number;
 				//
+				ih.imgSrc = imgSrc;
+				//
 				setDescriptionAndTextAndUrl(a1, ih, a2);
 				//
 				Util.add(links, Reflection.newProxy(Link.class, ih));
@@ -297,6 +318,8 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 			(ih = new IH()).category = category;
 			//
 			ih.number = number;
+			//
+			ih.imgSrc = imgSrc;
 			//
 			int index = 0;
 			//
