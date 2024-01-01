@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -34,6 +35,8 @@ import com.google.common.reflect.Reflection;
 import io.github.toolfactory.narcissus.Narcissus;
 
 class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
+
+	private static Class<?> CLASS_IH = null;
 
 	private static Method METHOD_GET_LINKS, METHOD_CHILDREN_SIZE, METHOD_VALUE_OF, METHOD_OR_ELSE, METHOD_FIND_FIRST,
 			METHOD_PARENTS, METHOD_TRIM, METHOD_APPEND, METHOD_TEST_AND_APPLY, METHOD_ADD_ALL, METHOD_IS_ABSOLUTE,
@@ -71,7 +74,8 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 				.setAccessible(true);
 		//
 		(METHOD_SET_DESCRIPTION_AND_TEXT_AND_URL = clz.getDeclaredMethod("setDescriptionAndTextAndUrl", Element.class,
-				Class.forName("org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean$IH"),
+				CLASS_IH = Class
+						.forName("org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean$IH"),
 				Element.class)).setAccessible(true);
 		//
 		(METHOD_ADD_LINKS = clz.getDeclaredMethod("addLinks", Collection.class, Element.class, Collection.class,
@@ -459,6 +463,32 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 		} catch (final InvocationTargetException ex) {
 			throw ex.getTargetException();
 		}
+	}
+
+	@Test
+	void testIH() throws ClassNotFoundException {
+		//
+		final InvocationHandler ih = Util.cast(InvocationHandler.class, Narcissus.allocateInstance(CLASS_IH));
+		//
+		Assertions.assertThrows(Throwable.class, () -> invoke(ih, null, null, null));
+		//
+		final Class<?> clz = Class
+				.forName("org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean$Link");
+		//
+		final Object link = Reflection.newProxy(clz, ih);
+		//
+		Assertions.assertThrows(Throwable.class, () -> invoke(ih, link, null, null));
+		//
+		final Method[] ms = clz != null ? clz.getDeclaredMethods() : null;
+		//
+		new FailableStream<>(Arrays.stream(ObjectUtils.getIfNull(ms, () -> new Method[] {})))
+				.forEach(m -> Assertions.assertNull(invoke(ih, link, m, null)));
+		//
+	}
+
+	private static Object invoke(final InvocationHandler instance, final Object proxy, final Method method,
+			final Object[] args) throws Throwable {
+		return instance != null ? instance.invoke(proxy, method, args) : null;
 	}
 
 }
