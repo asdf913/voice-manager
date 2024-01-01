@@ -268,6 +268,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		//
 	}
 
+	@Nullable
 	private static Element getImg(final Element instance) {
 		//
 		final Collection<Element> imgs = ElementUtil.select(instance, "img");
