@@ -708,6 +708,16 @@
 		<property name="links" ref="OtoYakuNoHeyaYomikataJitenLinkMultiMap" />
 	</bean>
 
+	<!--https://hiramatu-hifuka.com/onyak/onyindx.html-->
+	<bean
+		id="OtoYakuNoHeyaYomikataJitenLinkMap"
+		class="org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean">
+		<property name="url"
+			value="${org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean.url}" />
+		<property name="title"
+			value="${org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean.title}" />
+	</bean>
+
 	<!-- -->
 	<bean class="org.springframework.context.support.VoiceManager">
 		<property name="layout" ref="MigLayout" />
