@@ -1,23 +1,41 @@
 package org.springframework.beans.factory;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellUtil;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.RowUtil;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.SheetUtil;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.ss.usermodel.WorkbookUtil;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -26,6 +44,7 @@ import org.junit.jupiter.api.Test;
 import org.meeuw.functional.Consumers;
 import org.meeuw.functional.Predicates;
 import org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean.Link;
+import org.springframework.util.ReflectionUtils;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.MapperFeature;
@@ -155,8 +174,8 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 			//
 		final Map<Object, Object> properties = System.getProperties();
 		//
-		if (properties != null && properties
-				.containsKey("org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean.url")) {
+		if (Util.containsKey(properties,
+				"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean.url")) {
 			//
 			if (instance != null) {
 				//
@@ -165,24 +184,125 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 				//
 			} // if
 				//
-			new FailableStream<>(
-					ObjectUtils.getIfNull(Util.stream(instance != null ? instance.getObject() : null), Stream::empty))
-					.forEach(x -> {
-						//
-						System.out
-								.println(
-										ObjectMapperUtil.writeValueAsString(
-												new ObjectMapper().setDefaultPropertyInclusion(Include.NON_NULL)
-														.configure(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY, true),
-												x));
-						//
-					});
+			final List<Link> links = instance != null ? instance.getObject() : null;
+			//
+			new FailableStream<>(ObjectUtils.getIfNull(Util.stream(links), Stream::empty)).forEach(x -> {
+				//
+				System.out.println(ObjectMapperUtil
+						.writeValueAsString(new ObjectMapper().setDefaultPropertyInclusion(Include.NON_NULL)
+								.configure(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY, true), x));
+				//
+			});
+			//
+			final Workbook wb = createWorkbook(links);
+			//
+			final File file = new File(String.format("links_%1$tY%1$tm%1$td.xlsx", new Date()));
+			//
+			System.out.println(file.getAbsolutePath());
+			//
+			try (final OutputStream os = new FileOutputStream(file)) {
+				//
+				wb.write(os);
+				//
+			} // try
+				//
 		} else {
 			//
 			Assertions.assertNull(instance != null ? instance.getObject() : null);
 			//
 		} // if
 			//
+	}
+
+	private static Workbook createWorkbook(final Iterable<Link> links)
+			throws IOException, IllegalAccessException, InvocationTargetException {
+		//
+		final Workbook wb = WorkbookFactory.create(true);
+		//
+		final Sheet sheet = WorkbookUtil.createSheet(wb);
+		//
+		final List<Method> ms = Util.toList(Util.filter(Arrays.stream(getDeclaredMethods(Link.class)),
+				x -> !(Objects.equals(Void.TYPE, x.getReturnType()) || Modifier.isStatic(x.getModifiers())
+						|| x.getParameterCount() != 0 || ReflectionUtils.isHashCodeMethod(x)
+						|| ReflectionUtils.isToStringMethod(x))));
+		//
+		Row row = null;
+		//
+		Cell cell = null;
+		//
+		Method m = null;
+		//
+		final int physicalNumberOfRows = sheet != null ? sheet.getPhysicalNumberOfRows() : null;
+		//
+		if (physicalNumberOfRows == 0 && (row = SheetUtil.createRow(sheet, physicalNumberOfRows)) != null) {
+			//
+			Pattern pattern = null;
+			//
+			Matcher matcher = null;
+			//
+			String name = null;
+			//
+			for (int i = 0; ms != null && i < ms.size(); i++) {
+				//
+				if ((m = ms.get(i)) == null || (cell = RowUtil.createCell(row, i)) == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				name = Util.getName(m);
+				//
+				if (Util.matches(matcher = Util.matcher(
+						pattern = ObjectUtils.getIfNull(pattern, () -> Pattern.compile("^get(\\w+)$")),
+						Util.getName(m))) && matcher.groupCount() > 0) {
+					//
+					name = matcher.group(1);
+					//
+				} // if
+					//
+				CellUtil.setCellValue(cell, name);
+				//
+			} // for
+				//
+		} // if
+			//
+		if (links != null && links.iterator() != null) {
+			//
+			for (final Link link : links) {
+				//
+				if (sheet == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				row = SheetUtil.createRow(sheet, sheet.getPhysicalNumberOfRows());
+				//
+				for (int i = 0; ms != null && i < ms.size(); i++) {
+					//
+					if ((m = ms.get(i)) == null || (cell = RowUtil.createCell(row, i)) == null) {
+						//
+						continue;
+						//
+					} // if
+						//
+					CellUtil.setCellValue(cell, Util.toString(m.invoke(link)));
+					//
+				} // for
+					//
+			} // for
+				//
+		} // if
+			//
+		if (sheet != null) {
+			//
+			sheet.setAutoFilter(new CellRangeAddress(sheet.getFirstRowNum(), sheet.getLastRowNum() - 1,
+					row.getFirstCellNum(), row.getLastCellNum() - 1));
+			//
+		} // if
+			//
+		return wb;
+		//
 	}
 
 	@Test
