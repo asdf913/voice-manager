@@ -1,5 +1,6 @@
 package org.springframework.beans.factory;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -9,7 +10,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -26,8 +29,12 @@ import java.util.stream.Stream;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
+import org.apache.poi.ss.formula.FormulaParseException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellUtil;
+import org.apache.poi.ss.usermodel.CreationHelperUtil;
+import org.apache.poi.ss.usermodel.FormulaEvaluator;
+import org.apache.poi.ss.usermodel.RichTextString;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.RowUtil;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -36,6 +43,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.ss.usermodel.WorkbookUtil;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -44,6 +52,7 @@ import org.junit.jupiter.api.Test;
 import org.meeuw.functional.Consumers;
 import org.meeuw.functional.Predicates;
 import org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean.Link;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.util.ReflectionUtils;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -63,7 +72,7 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 	private static Method METHOD_GET_LINKS, METHOD_VALUE_OF, METHOD_OR_ELSE, METHOD_FIND_FIRST, METHOD_TRIM,
 			METHOD_APPEND, METHOD_TEST_AND_APPLY, METHOD_IS_ABSOLUTE, METHOD_APPLY,
 			METHOD_SET_DESCRIPTION_AND_TEXT_AND_URL, METHOD_ADD_LINKS, METHOD_HAS_ATTR, METHOD_IIF, METHOD_GET_IMG,
-			METHOD_FOR_EACH = null;
+			METHOD_FOR_EACH, METHOD_PUT_ALL, METHOD_GET_STRING_CELL_VALUE, METHOD_GET_SHEET = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException, ClassNotFoundException {
@@ -109,6 +118,13 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 		//
 		(METHOD_FOR_EACH = clz.getDeclaredMethod("forEach", Iterable.class, Consumer.class)).setAccessible(true);
 		//
+		(METHOD_PUT_ALL = clz.getDeclaredMethod("putAll", Map.class, Map.class)).setAccessible(true);
+		//
+		(METHOD_GET_STRING_CELL_VALUE = clz.getDeclaredMethod("getStringCellValue", Cell.class, FormulaEvaluator.class))
+				.setAccessible(true);
+		//
+		(METHOD_GET_SHEET = clz.getDeclaredMethod("getSheet", Workbook.class, String.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -129,6 +145,30 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 			} else if (proxy instanceof Iterable) {
 				//
 				if (Objects.equals(methodName, "forEach")) {
+					//
+					return null;
+					//
+				} // if
+					//
+			} else if (proxy instanceof Map) {
+				//
+				if (Objects.equals(methodName, "putAll")) {
+					//
+					return null;
+					//
+				} // if
+					//
+			} else if (proxy instanceof RichTextString) {
+				//
+				if (Objects.equals(methodName, "getString")) {
+					//
+					return null;
+					//
+				} // if
+					//
+			} else if (proxy instanceof Cell) {
+				//
+				if (Objects.equals(methodName, "getStringCellValue")) {
 					//
 					return null;
 					//
@@ -310,6 +350,85 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 		//
 		Assertions.assertSame(List.class, instance != null ? instance.getObjectType() : null);
 		//
+	}
+
+	@Test
+	void testAfterPropertiesSet() throws IOException {
+		//
+		Assertions.assertDoesNotThrow(() -> afterPropertiesSet(instance));
+		//
+		Workbook wb = WorkbookFactory.create(true);
+		//
+		instance.setResource(new ByteArrayResource(toByteArray(wb)));
+		//
+		Assertions.assertDoesNotThrow(() -> afterPropertiesSet(instance));
+		//
+		instance.setResource(new ByteArrayResource(toByteArray(wb = WorkbookFactory.create(false))));
+		//
+		Assertions.assertDoesNotThrow(() -> afterPropertiesSet(instance));
+		//
+	}
+
+	private static byte[] toByteArray(final Workbook instance) throws IOException {
+		//
+		try (final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+			//
+			if (instance != null) {
+				//
+				instance.write(baos);
+				//
+			} // if
+				//
+			return baos.toByteArray();
+			//
+		} // try
+			//
+	}
+
+	private static void setCellValue(final Cell instance, final Object value) {
+		//
+		if (instance == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		if (value instanceof Byte) {
+			//
+			instance.setCellValue(((Byte) value).byteValue());
+			//
+		} else if (value instanceof Calendar) {
+			//
+			instance.setCellValue((Calendar) value);
+			//
+		} else if (value instanceof Date) {
+			//
+			instance.setCellValue((Date) value);
+			//
+		} else if (value instanceof Double) {
+			//
+			instance.setCellValue(((Double) value).doubleValue());
+			//
+		} else if (value instanceof LocalDate) {
+			//
+			instance.setCellValue((LocalDate) value);
+			//
+		} else if (value instanceof RichTextString) {
+			//
+			instance.setCellValue((RichTextString) value);
+			//
+		} else if (value instanceof String) {
+			//
+			instance.setCellValue((String) value);
+			//
+		} //
+			//
+	}
+
+	private static void afterPropertiesSet(final InitializingBean instance) throws Exception {
+		if (instance != null) {
+			instance.afterPropertiesSet();
+		}
 	}
 
 	@Test
@@ -632,6 +751,271 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 	private static <T> void forEach(final Iterable<T> instance, final Consumer<? super T> action) throws Throwable {
 		try {
 			METHOD_FOR_EACH.invoke(null, instance, action);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testPutAll() {
+		//
+		Assertions.assertDoesNotThrow(() -> putAll(null, null));
+		//
+		final Map<Object, Object> map = Collections.emptyMap();
+		//
+		Assertions.assertDoesNotThrow(() -> putAll(map, map));
+		//
+		Assertions.assertDoesNotThrow(() -> putAll(Reflection.newProxy(Map.class, ih), null));
+		//
+	}
+
+	private static <K, V> void putAll(final Map<K, V> a, final Map<? extends K, ? extends V> b) throws Throwable {
+		try {
+			METHOD_PUT_ALL.invoke(null, a, b);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetStringCellValue() throws Throwable {
+		//
+		Assertions.assertNull(getStringCellValue(null, null));
+		//
+		Assertions.assertNull(getStringCellValue(Reflection.newProxy(Cell.class, ih), null));
+		//
+		// org.apache.poi.hssf.usermodel.HSSFCell
+		//
+		Cell cell = Util.cast(Cell.class,
+				Narcissus.allocateInstance(Class.forName("org.apache.poi.hssf.usermodel.HSSFCell")));
+		//
+		Assertions.assertNull(getStringCellValue(cell, null));
+		//
+		Workbook wb = WorkbookFactory.create(false);
+		//
+		Assertions.assertEquals(EMPTY, getStringCellValue(
+				cell = RowUtil.createCell(SheetUtil.createRow(WorkbookUtil.createSheet(wb), 0), 0), null));
+		//
+		CellUtil.setCellValue(cell, EMPTY);
+		//
+		Assertions.assertEquals(EMPTY, getStringCellValue(cell, null));
+		//
+		final boolean b = true;
+		//
+		if (cell != null) {
+			//
+			cell.setCellValue(b);
+			//
+		} // if
+			//
+		Assertions.assertEquals(Boolean.toString(b), getStringCellValue(cell, null));
+		//
+		final Date date = new Date(0);
+		//
+		if (cell != null) {
+			//
+			cell.setCellValue(date);
+			//
+		} // if
+			//
+		Assertions.assertEquals("25569.375", getStringCellValue(cell, null));
+		//
+		final Calendar calendar = Calendar.getInstance();
+		//
+		if (calendar != null) {
+			//
+			calendar.setTime(date);
+			//
+		} // if
+			//
+		if (cell != null) {
+			//
+			cell.setCellValue(calendar);
+			//
+		} // if
+			//
+		Assertions.assertEquals("25569.375", getStringCellValue(cell, null));
+		//
+		if (cell != null) {
+			//
+			cell.setCellValue(LocalDate.of(2001, 1, 2));
+			//
+		} // if
+			//
+		Assertions.assertEquals("36893.0", getStringCellValue(cell, null));
+		//
+		if (cell != null) {
+			//
+			cell.setCellValue(Reflection.newProxy(RichTextString.class, ih));
+			//
+		} // if
+			//
+		Assertions.assertEquals(EMPTY, getStringCellValue(cell, null));
+		//
+		setCellFormula(cell, "1/0");
+		//
+		Assertions.assertEquals(cell.getCellFormula(), getStringCellValue(cell, null));
+		//
+		FormulaEvaluator formulaEvaluator = CreationHelperUtil
+				.createFormulaEvaluator(WorkbookUtil.getCreationHelper(wb));
+		//
+		Assertions.assertEquals("7", getStringCellValue(cell, formulaEvaluator));
+		//
+		setCellFormula(cell = RowUtil.createCell(SheetUtil.createRow(WorkbookUtil.createSheet(wb), 0), 0), "true");
+		//
+		Assertions.assertEquals(Boolean.toString(true), getStringCellValue(cell, formulaEvaluator));
+		//
+		setCellFormula(cell = RowUtil.createCell(SheetUtil.createRow(WorkbookUtil.createSheet(wb), 0), 0), "1+2");
+		//
+		Assertions.assertEquals("3.0", getStringCellValue(cell, formulaEvaluator));
+		//
+		setCellFormula(cell = RowUtil.createCell(SheetUtil.createRow(WorkbookUtil.createSheet(wb), 0), 0),
+				"concat(\"\")");
+		//
+		Assertions.assertEquals(EMPTY, getStringCellValue(cell, formulaEvaluator));
+		//
+		// org.apache.poi.xssf.usermodel.XSSFCell
+		//
+		Assertions.assertEquals(EMPTY,
+				getStringCellValue(
+						cell = RowUtil.createCell(
+								SheetUtil.createRow(WorkbookUtil.createSheet(wb = WorkbookFactory.create(true)), 0), 0),
+						null));
+		//
+		if (cell != null) {
+			//
+			cell.setCellValue(b);
+			//
+		} // if
+			//
+		Assertions.assertEquals(Boolean.toString(b), getStringCellValue(cell, null));
+		//
+		if (cell != null) {
+			//
+			cell.setCellValue(date);
+			//
+		} // if
+			//
+		Assertions.assertEquals("25569.375", getStringCellValue(cell, null));
+		//
+		Assertions.assertNull(getStringCellValue(Util.cast(Cell.class,
+				Narcissus.allocateInstance(Class.forName("org.apache.poi.xssf.usermodel.XSSFCell"))), null));
+		//
+		setCellFormula(cell, "1/0");
+		//
+		Assertions.assertEquals(cell.getCellFormula(), getStringCellValue(cell, null));
+		//
+		Assertions.assertEquals("7", getStringCellValue(cell,
+				formulaEvaluator = CreationHelperUtil.createFormulaEvaluator(WorkbookUtil.getCreationHelper(wb))));
+		//
+		setCellFormula(cell = RowUtil.createCell(SheetUtil.createRow(WorkbookUtil.createSheet(wb), 0), 0), "true");
+		//
+		Assertions.assertEquals(Boolean.toString(true), getStringCellValue(cell, formulaEvaluator));
+		//
+		setCellFormula(cell = RowUtil.createCell(SheetUtil.createRow(WorkbookUtil.createSheet(wb), 0), 0), "1+2");
+		//
+		Assertions.assertEquals("3.0", getStringCellValue(cell, formulaEvaluator));
+		//
+		setCellFormula(cell = RowUtil.createCell(SheetUtil.createRow(WorkbookUtil.createSheet(wb), 0), 0),
+				"concat(\"\")");
+		//
+		Assertions.assertEquals(EMPTY, getStringCellValue(cell, formulaEvaluator));
+		//
+		// org.apache.poi.xssf.streaming.SXSSFCell
+		//
+		Assertions.assertEquals(EMPTY,
+				getStringCellValue(cell = RowUtil
+						.createCell(SheetUtil.createRow(WorkbookUtil.createSheet(wb = new SXSSFWorkbook()), 0), 0),
+						null));
+		//
+		if (cell != null) {
+			//
+			cell.setCellValue(b);
+			//
+		} // if
+			//
+		Assertions.assertEquals(Boolean.toString(b), getStringCellValue(cell, null));
+		//
+		if (cell != null) {
+			//
+			cell.setCellValue(date);
+			//
+		} // if
+			//
+		Assertions.assertEquals("25569.375", getStringCellValue(cell, null));
+		//
+		Assertions.assertNull(getStringCellValue(Util.cast(Cell.class,
+				Narcissus.allocateInstance(Class.forName("org.apache.poi.xssf.usermodel.XSSFCell"))), null));
+		//
+		setCellFormula(cell, "1/0");
+		//
+		Assertions.assertEquals(cell.getCellFormula(), getStringCellValue(cell, null));
+		//
+		Assertions.assertEquals("7", getStringCellValue(cell,
+				formulaEvaluator = CreationHelperUtil.createFormulaEvaluator(WorkbookUtil.getCreationHelper(wb))));
+		//
+		setCellFormula(cell = RowUtil.createCell(SheetUtil.createRow(WorkbookUtil.createSheet(wb), 0), 0), "true");
+		//
+		Assertions.assertEquals(Boolean.toString(true), getStringCellValue(cell, formulaEvaluator));
+		//
+		setCellFormula(cell = RowUtil.createCell(SheetUtil.createRow(WorkbookUtil.createSheet(wb), 0), 0), "1+2");
+		//
+		Assertions.assertEquals("3.0", getStringCellValue(cell, formulaEvaluator));
+		//
+		setCellFormula(cell = RowUtil.createCell(SheetUtil.createRow(WorkbookUtil.createSheet(wb), 0), 0),
+				"concat(\"\")");
+		//
+		Assertions.assertEquals(EMPTY, getStringCellValue(cell, formulaEvaluator));
+		//
+		Assertions.assertNull(getStringCellValue(Util.cast(Cell.class,
+				Narcissus.allocateInstance(Class.forName("org.apache.poi.xssf.streaming.SXSSFCell"))), null));
+		//
+	}
+
+	private static void setCellFormula(final Cell instance, final String formula)
+			throws FormulaParseException, IllegalStateException {
+		if (instance != null) {
+			instance.setCellFormula(formula);
+		}
+	}
+
+	private static String getStringCellValue(final Cell instance, final FormulaEvaluator formulaEvaluator)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_GET_STRING_CELL_VALUE.invoke(null, instance, formulaEvaluator);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetSheet() throws Throwable {
+		//
+		Assertions.assertNull(getSheet(null, null));
+		//
+		Assertions.assertNull(getSheet(WorkbookFactory.create(true), null));
+		//
+		Assertions.assertNull(getSheet(WorkbookFactory.create(false), null));
+		//
+		Assertions.assertNull(getSheet(new SXSSFWorkbook(), null));
+		//
+	}
+
+	private static Sheet getSheet(final Workbook instance, final String name) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_SHEET.invoke(null, instance, name);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Sheet) {
+				return (Sheet) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
