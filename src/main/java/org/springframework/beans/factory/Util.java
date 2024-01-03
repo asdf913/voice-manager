@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicReference;
@@ -461,6 +462,10 @@ abstract class Util {
 	@Nullable
 	static String getProtocol(@Nullable final URL instance) {
 		return instance != null ? instance.getProtocol() : null;
+	}
+
+	static <T> T orElse(final Optional<T> instance, final T value) {
+		return instance != null ? instance.orElse(value) : value;
 	}
 
 }

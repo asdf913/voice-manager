@@ -48,9 +48,9 @@ class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBeanTest {
 
 	private static final String EMPTY = "";
 
-	private static Method METHOD_GET_MULTI_MAP, METHOD_OR_ELSE, METHOD_FIND_FIRST, METHOD_TRIM, METHOD_APPEND,
-			METHOD_TEST_AND_APPLY, METHOD_PUT_HREF, METHOD_GET_STRING, METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE,
-			METHOD_NEW_XPATH, METHOD_EVALUATE, METHOD_GET = null;
+	private static Method METHOD_GET_MULTI_MAP, METHOD_FIND_FIRST, METHOD_TRIM, METHOD_APPEND, METHOD_TEST_AND_APPLY,
+			METHOD_PUT_HREF, METHOD_GET_STRING, METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE, METHOD_NEW_XPATH,
+			METHOD_EVALUATE, METHOD_GET = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -58,8 +58,6 @@ class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBeanTest {
 		final Class<?> clz = OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean.class;
 		//
 		(METHOD_GET_MULTI_MAP = clz.getDeclaredMethod("getMultimap", Element.class)).setAccessible(true);
-		//
-		(METHOD_OR_ELSE = clz.getDeclaredMethod("orElse", Optional.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_FIND_FIRST = clz.getDeclaredMethod("findFirst", Stream.class)).setAccessible(true);
 		//
@@ -238,21 +236,6 @@ class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBeanTest {
 				return (Multimap) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testOrElse() throws Throwable {
-		//
-		Assertions.assertNull(orElse(Optional.empty(), null));
-		//
-	}
-
-	private static <T> T orElse(final Optional<T> instance, final T value) throws Throwable {
-		try {
-			return (T) METHOD_OR_ELSE.invoke(null, instance, value);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

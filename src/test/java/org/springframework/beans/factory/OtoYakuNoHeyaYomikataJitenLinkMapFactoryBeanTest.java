@@ -70,11 +70,10 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 
 	private static Class<?> CLASS_IH = null;
 
-	private static Method METHOD_GET_LINKS, METHOD_VALUE_OF, METHOD_OR_ELSE, METHOD_FIND_FIRST, METHOD_TRIM,
-			METHOD_APPEND, METHOD_TEST_AND_APPLY, METHOD_IS_ABSOLUTE, METHOD_APPLY,
-			METHOD_SET_DESCRIPTION_AND_TEXT_AND_URL, METHOD_ADD_LINKS, METHOD_HAS_ATTR, METHOD_IIF, METHOD_GET_IMG,
-			METHOD_FOR_EACH, METHOD_GET_STRING_CELL_VALUE, METHOD_GET_SHEET, METHOD_TO_MAP,
-			METHOD_HANDLE_HSSF_CELL = null;
+	private static Method METHOD_GET_LINKS, METHOD_VALUE_OF, METHOD_FIND_FIRST, METHOD_TRIM, METHOD_APPEND,
+			METHOD_TEST_AND_APPLY, METHOD_IS_ABSOLUTE, METHOD_APPLY, METHOD_SET_DESCRIPTION_AND_TEXT_AND_URL,
+			METHOD_ADD_LINKS, METHOD_HAS_ATTR, METHOD_IIF, METHOD_GET_IMG, METHOD_FOR_EACH,
+			METHOD_GET_STRING_CELL_VALUE, METHOD_GET_SHEET, METHOD_TO_MAP, METHOD_HANDLE_HSSF_CELL = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException, ClassNotFoundException {
@@ -84,8 +83,6 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 		(METHOD_GET_LINKS = clz.getDeclaredMethod("getLinks", List.class)).setAccessible(true);
 		//
 		(METHOD_VALUE_OF = clz.getDeclaredMethod("valueOf", String.class)).setAccessible(true);
-		//
-		(METHOD_OR_ELSE = clz.getDeclaredMethod("orElse", Optional.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_FIND_FIRST = clz.getDeclaredMethod("findFirst", Stream.class)).setAccessible(true);
 		//
@@ -496,21 +493,6 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 				return (Integer) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testOrElse() throws Throwable {
-		//
-		Assertions.assertNull(orElse(Util.cast(Optional.class, Narcissus.allocateInstance(Optional.class)), null));
-		//
-	}
-
-	private static <T> T orElse(final Optional<T> instance, final T value) throws Throwable {
-		try {
-			return (T) METHOD_OR_ELSE.invoke(null, instance, value);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
