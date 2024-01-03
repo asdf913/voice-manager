@@ -316,7 +316,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 	}
 
 	@Nullable
-	private static String getStringCellValue(final Cell instance, final FormulaEvaluator formulaEvaluator) {
+	private static String getStringCellValue(@Nullable final Cell instance, final FormulaEvaluator formulaEvaluator) {
 		//
 		if (instance == null) {
 			//
