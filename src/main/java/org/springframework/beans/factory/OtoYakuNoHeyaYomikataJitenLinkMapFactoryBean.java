@@ -375,6 +375,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		//
 	}
 
+	@Nullable
 	private static String handleHSSFCell(@Nullable final Cell instance, final FormulaEvaluator formulaEvaluator) {
 		//
 		final CellType cellType = instance != null ? instance.getCellType() : null;
