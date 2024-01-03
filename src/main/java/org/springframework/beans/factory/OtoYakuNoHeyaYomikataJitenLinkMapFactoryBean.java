@@ -266,7 +266,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 						final Workbook wb = WorkbookFactory.create(is)) {
 					//
 					Util.putAll(urlMap = ObjectUtils.getIfNull(urlMap, LinkedHashMap::new),
-							toMap(getSheet(wb, urlTransitionSheetName),
+							toMap(WorkbookUtil.getSheet(wb, urlTransitionSheetName),
 									CreationHelperUtil.createFormulaEvaluator(WorkbookUtil.getCreationHelper(wb))));
 					//
 				} // try
@@ -483,21 +483,6 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		} // if
 			//
 		return instance != null ? instance.getCellFormula() : null;
-		//
-	}
-
-	@Nullable
-	private static Sheet getSheet(@Nullable final Workbook instance, @Nullable final String name) {
-		//
-		if (instance == null
-				|| (Objects.equals("org.apache.poi.xssf.usermodel.XSSFWorkbook", Util.getName(Util.getClass(instance)))
-						&& name == null)) {
-			//
-			return null;
-			//
-		} // if
-			//
-		return instance.getSheet(name);
 		//
 	}
 

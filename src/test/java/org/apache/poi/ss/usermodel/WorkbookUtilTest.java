@@ -1,5 +1,6 @@
 package org.apache.poi.ss.usermodel;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -50,6 +51,15 @@ class WorkbookUtilTest {
 	void testGetSheetAt() {
 		//
 		Assertions.assertDoesNotThrow(() -> WorkbookUtil.getSheetAt(null, 0));
+		//
+	}
+
+	@Test
+	void testGetSheet() throws IOException {
+		//
+		Assertions.assertDoesNotThrow(() -> WorkbookUtil.getSheet(null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> WorkbookUtil.getSheet(WorkbookFactory.create(true), null));
 		//
 	}
 
