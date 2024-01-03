@@ -12,6 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
 
+import io.github.toolfactory.narcissus.Narcissus;
+
 public final class ElementUtil {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ElementUtil.class);
@@ -136,19 +138,13 @@ public final class ElementUtil {
 			//
 			final Field field = clz != null ? clz.getDeclaredField(CHILD_NODES) : null;
 			//
-			if (field != null) {
+			if (Narcissus.getField(instance, field) == null) {
 				//
-				field.setAccessible(true);
+				return 0;
 				//
-				if (field.get(instance) == null) {
-					//
-					return 0;
-					//
-				} // if
-					//
 			} // if
 				//
-		} catch (final IllegalAccessException | NoSuchFieldException e) {
+		} catch (final NoSuchFieldException e) {
 			//
 			LoggerUtil.error(LOG, e.getMessage(), e);
 			//

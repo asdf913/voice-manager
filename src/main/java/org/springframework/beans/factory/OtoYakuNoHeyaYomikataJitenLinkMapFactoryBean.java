@@ -50,9 +50,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
 import org.jsoup.nodes.NodeUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.LoggerUtil;
 import org.springframework.core.io.InputStreamSourceUtil;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceUtil;
@@ -62,12 +59,12 @@ import com.google.common.reflect.Reflection;
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
 
+import io.github.toolfactory.narcissus.Narcissus;
+
 /*
  * https://hiramatu-hifuka.com/onyak/onyindx.html
  */
 public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean<Object>, InitializingBean {
-
-	private static final Logger LOG = LoggerFactory.getLogger(OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean.class);
 
 	private String url = null;
 
@@ -343,27 +340,11 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 				//
 			} // if
 				//
-			final Field f = size == 1 ? IterableUtils.get(fs, 0) : null;
-			//
-			try {
+			if (Narcissus.getField(instance, size == 1 ? IterableUtils.get(fs, 0) : null) == null) {
 				//
-				if (f != null) {
-					//
-					f.setAccessible(true);
-					//
-					if (f.get(instance) == null) {
-						//
-						return null;
-						//
-					} // if
-						//
-				} // if
-					//
-			} catch (final IllegalAccessException e) {
+				return null;
 				//
-				LoggerUtil.error(LOG, e.getMessage(), e);
-				//
-			} // try
+			} // if
 				//
 			if (Util.contains(Arrays.asList(CellType.BLANK, CellType.STRING), cellType = instance.getCellType())) {
 				//
@@ -426,28 +407,12 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 				//
 			} // if
 				//
-			final Field f = size == 1 ? IterableUtils.get(fs, 0) : null;
-			//
-			try {
+			if (Narcissus.getField(instance, size == 1 ? IterableUtils.get(fs, 0) : null) == null) {
 				//
-				if (f != null) {
-					//
-					f.setAccessible(true);
-					//
-					if (f.get(instance) == null) {
-						//
-						return null;
-						//
-					} // if
-						//
-				} // if
-					//
-			} catch (final IllegalAccessException e) {
+				return null;
 				//
-				LoggerUtil.error(LOG, e.getMessage(), e);
+			} // if
 				//
-			} // try
-				// //
 			if (Util.contains(Arrays.asList(CellType.BLANK, CellType.STRING), cellType = instance.getCellType())) {
 				//
 				return instance.getStringCellValue();
