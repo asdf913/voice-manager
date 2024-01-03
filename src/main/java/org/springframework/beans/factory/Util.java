@@ -464,6 +464,7 @@ abstract class Util {
 		return instance != null ? instance.getProtocol() : null;
 	}
 
+	@Nullable
 	static <T> T orElse(@Nullable final Optional<T> instance, @Nullable final T value) {
 		return instance != null ? instance.orElse(value) : value;
 	}
