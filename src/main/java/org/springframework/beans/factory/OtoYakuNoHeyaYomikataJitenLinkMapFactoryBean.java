@@ -269,32 +269,9 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 				try (final InputStream is = InputStreamSourceUtil.getInputStream(resource);
 						final Workbook wb = WorkbookFactory.create(is)) {
 					//
-					final Sheet sheet = getSheet(wb, urlTransitionSheetName);
-					//
-					Map<Object, Object> map = null;
-					//
-					final FormulaEvaluator formulaEvaluator = CreationHelperUtil
-							.createFormulaEvaluator(WorkbookUtil.getCreationHelper(wb));
-					//
-					if (sheet != null && sheet.iterator() != null) {
-						//
-						for (final Row row : sheet) {
-							//
-							if (row == null || row.getPhysicalNumberOfCells() < 2) {
-								//
-								continue;
-								//
-							} // if
-								//
-							Util.put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new),
-									getStringCellValue(IterableUtils.get(row, 0), formulaEvaluator),
-									getStringCellValue(IterableUtils.get(row, 1), formulaEvaluator));
-							//
-						} // for
-							//
-					} // if
-						//
-					putAll(urlMap = ObjectUtils.getIfNull(urlMap, LinkedHashMap::new), map);
+					putAll(urlMap = ObjectUtils.getIfNull(urlMap, LinkedHashMap::new),
+							toMap(getSheet(wb, urlTransitionSheetName),
+									CreationHelperUtil.createFormulaEvaluator(WorkbookUtil.getCreationHelper(wb))));
 					//
 				} // try
 					//
@@ -302,6 +279,32 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 				//
 		} // if
 			//
+	}
+
+	private static Map<Object, Object> toMap(final Sheet sheet, final FormulaEvaluator formulaEvaluator) {
+		//
+		Map<Object, Object> map = null;
+		//
+		if (sheet != null && sheet.iterator() != null) {
+			//
+			for (final Row row : sheet) {
+				//
+				if (row == null || row.getPhysicalNumberOfCells() < 2 || IterableUtils.size(row) < 2) {
+					//
+					continue;
+					//
+				} // if
+					//
+				Util.put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new),
+						getStringCellValue(IterableUtils.get(row, 0), formulaEvaluator),
+						getStringCellValue(IterableUtils.get(row, 1), formulaEvaluator));
+				//
+			} // for
+				//
+		} // if
+			//
+		return map;
+		//
 	}
 
 	private static <K, V> void putAll(@Nullable final Map<K, V> a, @Nullable final Map<? extends K, ? extends V> b) {

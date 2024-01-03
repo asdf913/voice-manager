@@ -16,6 +16,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -72,7 +73,7 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 	private static Method METHOD_GET_LINKS, METHOD_VALUE_OF, METHOD_OR_ELSE, METHOD_FIND_FIRST, METHOD_TRIM,
 			METHOD_APPEND, METHOD_TEST_AND_APPLY, METHOD_IS_ABSOLUTE, METHOD_APPLY,
 			METHOD_SET_DESCRIPTION_AND_TEXT_AND_URL, METHOD_ADD_LINKS, METHOD_HAS_ATTR, METHOD_IIF, METHOD_GET_IMG,
-			METHOD_FOR_EACH, METHOD_PUT_ALL, METHOD_GET_STRING_CELL_VALUE, METHOD_GET_SHEET = null;
+			METHOD_FOR_EACH, METHOD_PUT_ALL, METHOD_GET_STRING_CELL_VALUE, METHOD_GET_SHEET, METHOD_TO_MAP = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException, ClassNotFoundException {
@@ -125,26 +126,39 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 		//
 		(METHOD_GET_SHEET = clz.getDeclaredMethod("getSheet", Workbook.class, String.class)).setAccessible(true);
 		//
+		(METHOD_TO_MAP = clz.getDeclaredMethod("toMap", Sheet.class, FormulaEvaluator.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
+
+		private Iterator<?> iterator = null;
+
+		private Integer physicalNumberOfCells = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
 			final String methodName = Util.getName(method);
 			//
-			if (proxy instanceof Stream) {
+
+			if (proxy instanceof Iterable) {
 				//
-				if (Objects.equals(methodName, "findFirst")) {
+				if (Objects.equals(methodName, "iterator")) {
+					//
+					return iterator;
+					//
+				} else if (Objects.equals(methodName, "forEach")) {
 					//
 					return null;
 					//
 				} // if
 					//
-			} else if (proxy instanceof Iterable) {
+			} // if
 				//
-				if (Objects.equals(methodName, "forEach")) {
+			if (proxy instanceof Stream) {
+				//
+				if (Objects.equals(methodName, "findFirst")) {
 					//
 					return null;
 					//
@@ -171,6 +185,14 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 				if (Objects.equals(methodName, "getStringCellValue")) {
 					//
 					return null;
+					//
+				} // if
+					//
+			} else if (proxy instanceof Row) {
+				//
+				if (Objects.equals(methodName, "getPhysicalNumberOfCells")) {
+					//
+					return physicalNumberOfCells;
 					//
 				} // if
 					//
@@ -1023,6 +1045,56 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 				return null;
 			} else if (obj instanceof Sheet) {
 				return (Sheet) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testToMap() throws Throwable {
+		//
+		final Sheet sheet = Reflection.newProxy(Sheet.class, ih);
+		///
+		Assertions.assertNull(toMap(sheet, null));
+		//
+		final Collection<Row> rows = Arrays.asList(null, Reflection.newProxy(Row.class, ih));
+		//
+		if (ih != null) {
+			//
+			ih.iterator = iterator(rows);
+			//
+			ih.physicalNumberOfCells = Integer.valueOf(0);
+			//
+		} // if
+			//
+		Assertions.assertNull(toMap(sheet, null));
+		//
+		if (ih != null) {
+			//
+			ih.iterator = iterator(rows);
+			//
+			ih.physicalNumberOfCells = Integer.valueOf(2);
+			//
+		} // if
+			//
+		Assertions.assertNull(toMap(sheet, null));
+		//
+	}
+
+	private static <T> Iterator<T> iterator(final Iterable<T> instance) {
+		return instance != null ? instance.iterator() : null;
+	}
+
+	private static Map<Object, Object> toMap(final Sheet sheet, final FormulaEvaluator formulaEvaluator)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_TO_MAP.invoke(null, sheet, formulaEvaluator);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Map) {
+				return (Map) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
