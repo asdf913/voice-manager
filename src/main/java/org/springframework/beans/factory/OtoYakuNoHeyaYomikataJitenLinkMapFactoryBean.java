@@ -386,7 +386,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 			//
 		if (Util.contains(Arrays.asList(CellType.BLANK, CellType.STRING), cellType)) {
 			//
-			return instance.getStringCellValue();
+			return org.apache.poi.ss.usermodel.CellUtil.getStringCellValue(instance);
 			//
 		} else if (Objects.equals(CellType.BOOLEAN, cellType)) {
 			//
