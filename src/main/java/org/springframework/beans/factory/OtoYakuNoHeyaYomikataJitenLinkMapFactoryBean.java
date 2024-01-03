@@ -405,6 +405,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		//
 	}
 
+	@Nullable
 	private static String handleSXSSFCell(final Cell instance, final FormulaEvaluator formulaEvaluator) {
 		//
 		final List<Field> fs = Util.toList(Util.filter(Arrays.stream(Util.getDeclaredFields(Util.getClass(instance))),
