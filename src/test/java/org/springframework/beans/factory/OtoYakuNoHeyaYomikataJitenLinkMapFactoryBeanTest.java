@@ -73,7 +73,8 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 	private static Method METHOD_GET_LINKS, METHOD_VALUE_OF, METHOD_OR_ELSE, METHOD_FIND_FIRST, METHOD_TRIM,
 			METHOD_APPEND, METHOD_TEST_AND_APPLY, METHOD_IS_ABSOLUTE, METHOD_APPLY,
 			METHOD_SET_DESCRIPTION_AND_TEXT_AND_URL, METHOD_ADD_LINKS, METHOD_HAS_ATTR, METHOD_IIF, METHOD_GET_IMG,
-			METHOD_FOR_EACH, METHOD_PUT_ALL, METHOD_GET_STRING_CELL_VALUE, METHOD_GET_SHEET, METHOD_TO_MAP = null;
+			METHOD_FOR_EACH, METHOD_PUT_ALL, METHOD_GET_STRING_CELL_VALUE, METHOD_GET_SHEET, METHOD_TO_MAP,
+			METHOD_HANDLE_HSSF_CELL = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException, ClassNotFoundException {
@@ -127,6 +128,9 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 		(METHOD_GET_SHEET = clz.getDeclaredMethod("getSheet", Workbook.class, String.class)).setAccessible(true);
 		//
 		(METHOD_TO_MAP = clz.getDeclaredMethod("toMap", Sheet.class, FormulaEvaluator.class)).setAccessible(true);
+		//
+		(METHOD_HANDLE_HSSF_CELL = clz.getDeclaredMethod("handleHSSFCell", Cell.class, FormulaEvaluator.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -1095,6 +1099,28 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 				return null;
 			} else if (obj instanceof Map) {
 				return (Map) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testHandleHSSFCell() throws Throwable {
+		//
+		Assertions.assertNull(handleHSSFCell(null, null));
+		//
+	}
+
+	private static String handleHSSFCell(final Cell instance, final FormulaEvaluator formulaEvaluator)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_HANDLE_HSSF_CELL.invoke(null, instance, formulaEvaluator);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

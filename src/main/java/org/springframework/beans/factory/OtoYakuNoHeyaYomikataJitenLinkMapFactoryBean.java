@@ -325,8 +325,6 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		//
 		final String name = Util.getName(clz);
 		//
-		CellType cellType = null;
-		//
 		if (Objects.equals("org.apache.poi.xssf.usermodel.XSSFCell", name)) {
 			//
 			final List<Field> fs = Util.toList(Util.filter(Arrays.stream(Util.getDeclaredFields(clz)),
@@ -347,7 +345,9 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 				//
 			} // if
 				//
-			if (Util.contains(Arrays.asList(CellType.BLANK, CellType.STRING), cellType = instance.getCellType())) {
+			final CellType cellType = instance.getCellType();
+			//
+			if (Util.contains(Arrays.asList(CellType.BLANK, CellType.STRING), cellType)) {
 				//
 				return instance.getStringCellValue();
 				//
@@ -369,31 +369,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 			//
 		} else if (Objects.equals("org.apache.poi.hssf.usermodel.HSSFCell", name)) {
 			//
-			if ((cellType = instance.getCellType()) == null) {
-				//
-				return null;
-				//
-			} // if
-				//
-			if (Util.contains(Arrays.asList(CellType.BLANK, CellType.STRING), cellType)) {
-				//
-				return instance.getStringCellValue();
-				//
-			} else if (Objects.equals(CellType.BOOLEAN, cellType)) {
-				//
-				return Boolean.toString(instance.getBooleanCellValue());
-				//
-			} else if (Objects.equals(CellType.NUMERIC, cellType)) {
-				//
-				return Double.toString(instance.getNumericCellValue());
-				//
-			} else if (Objects.equals(CellType.FORMULA, cellType)) {
-				//
-				return toString(instance, formulaEvaluator);
-				//
-			} // if
-				//
-			throw new IllegalStateException(Util.toString(cellType));
+			return handleHSSFCell(instance, formulaEvaluator);
 			//
 		} else if (Objects.equals("org.apache.poi.xssf.streaming.SXSSFCell", name)) {
 			//
@@ -402,6 +378,38 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		} // if
 			//
 		return instance.getStringCellValue();
+		//
+	}
+
+	private static String handleHSSFCell(final Cell instance, final FormulaEvaluator formulaEvaluator) {
+		//
+		final CellType cellType = instance != null ? instance.getCellType() : null;
+		//
+		if (cellType == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		if (Util.contains(Arrays.asList(CellType.BLANK, CellType.STRING), cellType)) {
+			//
+			return instance.getStringCellValue();
+			//
+		} else if (Objects.equals(CellType.BOOLEAN, cellType)) {
+			//
+			return Boolean.toString(instance.getBooleanCellValue());
+			//
+		} else if (Objects.equals(CellType.NUMERIC, cellType)) {
+			//
+			return Double.toString(instance.getNumericCellValue());
+			//
+		} else if (Objects.equals(CellType.FORMULA, cellType)) {
+			//
+			return toString(instance, formulaEvaluator);
+			//
+		} // if
+			//
+		throw new IllegalStateException(Util.toString(cellType));
 		//
 	}
 
