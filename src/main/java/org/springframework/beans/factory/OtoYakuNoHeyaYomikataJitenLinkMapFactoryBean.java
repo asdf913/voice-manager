@@ -38,6 +38,7 @@ import org.apache.poi.ss.usermodel.CellValue;
 import org.apache.poi.ss.usermodel.CellValueUtil;
 import org.apache.poi.ss.usermodel.CreationHelperUtil;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
+import org.apache.poi.ss.usermodel.FormulaEvaluatorUtil;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -377,7 +378,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 				//
 			} else if (Objects.equals(CellType.FORMULA, cellType)) {
 				//
-				final CellValue cellValue = formulaEvaluator != null ? formulaEvaluator.evaluate(instance) : null;
+				final CellValue cellValue = FormulaEvaluatorUtil.evaluate(formulaEvaluator, instance);
 				//
 				final CellType cellValueType = CellValueUtil.getCellType(cellValue);
 				//
@@ -433,7 +434,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 				//
 			} else if (Objects.equals(CellType.FORMULA, cellType)) {
 				//
-				final CellValue cellValue = formulaEvaluator != null ? formulaEvaluator.evaluate(instance) : null;
+				final CellValue cellValue = FormulaEvaluatorUtil.evaluate(formulaEvaluator, instance);
 				//
 				final CellType cellValueType = CellValueUtil.getCellType(cellValue);
 				//
@@ -516,7 +517,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 				//
 			} else if (Objects.equals(CellType.FORMULA, cellType)) {
 				//
-				final CellValue cellValue = formulaEvaluator != null ? formulaEvaluator.evaluate(instance) : null;
+				final CellValue cellValue = FormulaEvaluatorUtil.evaluate(formulaEvaluator, instance);
 				//
 				final CellType cellValueType = CellValueUtil.getCellType(cellValue);
 				//
