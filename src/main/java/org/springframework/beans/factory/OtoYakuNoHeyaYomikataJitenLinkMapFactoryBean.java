@@ -453,7 +453,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		//
 	}
 
-	private static String toString(final Cell instance, final FormulaEvaluator formulaEvaluator) {
+	private static String toString(@Nullable final Cell instance, final FormulaEvaluator formulaEvaluator) {
 		//
 		final CellValue cellValue = FormulaEvaluatorUtil.evaluate(formulaEvaluator, instance);
 		//
