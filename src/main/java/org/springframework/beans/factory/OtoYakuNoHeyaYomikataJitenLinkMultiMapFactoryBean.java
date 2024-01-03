@@ -144,7 +144,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean implements Factor
 			//
 		} // if
 			//
-		final CellType cellType = cell.getCellType();
+		final CellType cellType = org.apache.poi.ss.usermodel.CellUtil.getCellType(cell);
 		//
 		if (Objects.equals(cellType, CellType.NUMERIC)) {
 			//

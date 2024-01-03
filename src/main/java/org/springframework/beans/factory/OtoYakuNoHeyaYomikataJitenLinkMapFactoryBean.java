@@ -339,7 +339,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 				//
 			} // if
 				//
-			final CellType cellType = instance.getCellType();
+			final CellType cellType = org.apache.poi.ss.usermodel.CellUtil.getCellType(instance);
 			//
 			if (Util.contains(Arrays.asList(CellType.BLANK, CellType.STRING), cellType)) {
 				//
@@ -378,7 +378,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 	@Nullable
 	private static String handleHSSFCell(@Nullable final Cell instance, final FormulaEvaluator formulaEvaluator) {
 		//
-		final CellType cellType = instance != null ? instance.getCellType() : null;
+		final CellType cellType = org.apache.poi.ss.usermodel.CellUtil.getCellType(instance);
 		//
 		if (cellType == null) {
 			//
@@ -429,7 +429,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 			//
 		} // if
 			//
-		final CellType cellType = instance.getCellType();
+		final CellType cellType = org.apache.poi.ss.usermodel.CellUtil.getCellType(instance);
 		//
 		if (Util.contains(Arrays.asList(CellType.BLANK, CellType.STRING), cellType)) {
 			//
