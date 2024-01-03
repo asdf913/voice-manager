@@ -304,7 +304,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 			//
 	}
 
-	private static <K, V> void putAll(final Map<K, V> a, @Nullable final Map<? extends K, ? extends V> b) {
+	private static <K, V> void putAll(@Nullable final Map<K, V> a, @Nullable final Map<? extends K, ? extends V> b) {
 		if (a != null && (b != null || Proxy.isProxyClass(Util.getClass(a)))) {
 			a.putAll(b);
 		}
@@ -553,7 +553,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		//
 	}
 
-	private static Sheet getSheet(final Workbook instance, final String name) {
+	private static Sheet getSheet(@Nullable final Workbook instance, @Nullable final String name) {
 		//
 		if (instance == null
 				|| (Objects.equals("org.apache.poi.xssf.usermodel.XSSFWorkbook", Util.getName(Util.getClass(instance)))
