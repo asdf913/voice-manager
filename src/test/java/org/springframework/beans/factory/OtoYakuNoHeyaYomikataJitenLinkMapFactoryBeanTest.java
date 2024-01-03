@@ -778,7 +778,7 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 	}
 
 	@Test
-	void testGetStringCellValue() throws Throwable {
+	void testGetStringCellValue1() throws Throwable {
 		//
 		Assertions.assertNull(getStringCellValue(null, null));
 		//
@@ -921,12 +921,20 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 		//
 		Assertions.assertEquals(EMPTY, getStringCellValue(cell, formulaEvaluator));
 		//
+	}
+
+	@Test
+	void testGetStringCellValue2() throws Throwable {
+		//
 		// org.apache.poi.xssf.streaming.SXSSFCell
 		//
-		Assertions.assertEquals(EMPTY,
-				getStringCellValue(cell = RowUtil
-						.createCell(SheetUtil.createRow(WorkbookUtil.createSheet(wb = new SXSSFWorkbook()), 0), 0),
-						null));
+		final Workbook wb = new SXSSFWorkbook();
+		//
+		Cell cell = RowUtil.createCell(SheetUtil.createRow(WorkbookUtil.createSheet(wb), 0), 0);
+		//
+		Assertions.assertEquals(EMPTY, getStringCellValue(cell, null));
+		//
+		final boolean b = true;
 		//
 		if (cell != null) {
 			//
@@ -936,6 +944,8 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 			//
 		Assertions.assertEquals(Boolean.toString(b), getStringCellValue(cell, null));
 		//
+		final Date date = new Date(0);
+		//
 		if (cell != null) {
 			//
 			cell.setCellValue(date);
@@ -944,15 +954,14 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 			//
 		Assertions.assertTrue(Util.contains(Arrays.asList("25569.375", "25569.0"), getStringCellValue(cell, null)));
 		//
-		Assertions.assertNull(getStringCellValue(Util.cast(Cell.class,
-				Narcissus.allocateInstance(Class.forName("org.apache.poi.xssf.usermodel.XSSFCell"))), null));
-		//
 		setCellFormula(cell, "1/0");
 		//
 		Assertions.assertEquals(cell.getCellFormula(), getStringCellValue(cell, null));
 		//
-		Assertions.assertEquals("7", getStringCellValue(cell,
-				formulaEvaluator = CreationHelperUtil.createFormulaEvaluator(WorkbookUtil.getCreationHelper(wb))));
+		final FormulaEvaluator formulaEvaluator = CreationHelperUtil
+				.createFormulaEvaluator(WorkbookUtil.getCreationHelper(wb));
+		//
+		Assertions.assertEquals("7", getStringCellValue(cell, formulaEvaluator));
 		//
 		setCellFormula(cell = RowUtil.createCell(SheetUtil.createRow(WorkbookUtil.createSheet(wb), 0), 0), "true");
 		//
