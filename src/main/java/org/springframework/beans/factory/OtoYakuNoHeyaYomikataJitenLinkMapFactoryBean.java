@@ -556,6 +556,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		//
 	}
 
+	@Nullable
 	private static Sheet getSheet(@Nullable final Workbook instance, @Nullable final String name) {
 		//
 		if (instance == null
