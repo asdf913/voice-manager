@@ -340,7 +340,8 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 				//
 			} // if
 				//
-			if (Narcissus.getField(instance, size == 1 ? IterableUtils.get(fs, 0) : null) == null) {
+			if (Narcissus.getField(instance,
+					testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null)) == null) {
 				//
 				return null;
 				//
@@ -407,7 +408,8 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 				//
 			} // if
 				//
-			if (Narcissus.getField(instance, size == 1 ? IterableUtils.get(fs, 0) : null) == null) {
+			if (Narcissus.getField(instance,
+					testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null)) == null) {
 				//
 				return null;
 				//
