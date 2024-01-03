@@ -469,6 +469,7 @@ abstract class Util {
 		return instance != null ? instance.orElse(value) : value;
 	}
 
+	@Nullable
 	static <T> Optional<T> findFirst(@Nullable final Stream<T> instance) {
 		return instance != null ? instance.findFirst() : null;
 	}
