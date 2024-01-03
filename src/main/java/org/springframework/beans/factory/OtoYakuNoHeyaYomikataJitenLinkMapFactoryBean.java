@@ -481,7 +481,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 			//
 		} // if
 			//
-		return instance.getCellFormula();
+		return instance != null ? instance.getCellFormula() : null;
 		//
 	}
 
