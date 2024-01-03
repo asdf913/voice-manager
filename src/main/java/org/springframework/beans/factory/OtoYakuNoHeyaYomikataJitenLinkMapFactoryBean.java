@@ -397,47 +397,55 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 			//
 		} else if (Objects.equals("org.apache.poi.xssf.streaming.SXSSFCell", name)) {
 			//
-			final List<Field> fs = Util.toList(Util.filter(Arrays.stream(Util.getDeclaredFields(clz)),
-					f -> Objects.equals(Util.getName(f), "_value")));
-			//
-			final int size = IterableUtils.size(fs);
-			//
-			if (size > 1) {
-				//
-				throw new IllegalStateException(Integer.toString(size));
-				//
-			} // if
-				//
-			if (Narcissus.getField(instance,
-					testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null)) == null) {
-				//
-				return null;
-				//
-			} // if
-				//
-			if (Util.contains(Arrays.asList(CellType.BLANK, CellType.STRING), cellType = instance.getCellType())) {
-				//
-				return instance.getStringCellValue();
-				//
-			} else if (Objects.equals(CellType.BOOLEAN, cellType)) {
-				//
-				return Boolean.toString(instance.getBooleanCellValue());
-				//
-			} else if (Objects.equals(CellType.NUMERIC, cellType)) {
-				//
-				return Double.toString(instance.getNumericCellValue());
-				//
-			} else if (Objects.equals(CellType.FORMULA, cellType)) {
-				//
-				return toString(instance, formulaEvaluator);
-				//
-			} // if
-				//
-			throw new IllegalStateException(Util.toString(cellType));
+			return handleSXSSFCell(instance, formulaEvaluator);
 			//
 		} // if
 			//
 		return instance.getStringCellValue();
+		//
+	}
+
+	private static String handleSXSSFCell(final Cell instance, final FormulaEvaluator formulaEvaluator) {
+		//
+		final List<Field> fs = Util.toList(Util.filter(Arrays.stream(Util.getDeclaredFields(Util.getClass(instance))),
+				f -> Objects.equals(Util.getName(f), "_value")));
+		//
+		final int size = IterableUtils.size(fs);
+		//
+		if (size > 1) {
+			//
+			throw new IllegalStateException(Integer.toString(size));
+			//
+		} // if
+			//
+		if (Narcissus.getField(instance,
+				testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null)) == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		final CellType cellType = instance.getCellType();
+		//
+		if (Util.contains(Arrays.asList(CellType.BLANK, CellType.STRING), cellType)) {
+			//
+			return instance.getStringCellValue();
+			//
+		} else if (Objects.equals(CellType.BOOLEAN, cellType)) {
+			//
+			return Boolean.toString(instance.getBooleanCellValue());
+			//
+		} else if (Objects.equals(CellType.NUMERIC, cellType)) {
+			//
+			return Double.toString(instance.getNumericCellValue());
+			//
+		} else if (Objects.equals(CellType.FORMULA, cellType)) {
+			//
+			return toString(instance, formulaEvaluator);
+			//
+		} // if
+			//
+		throw new IllegalStateException(Util.toString(cellType));
 		//
 	}
 
