@@ -282,6 +282,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 			//
 	}
 
+	@Nullable
 	private static Map<Object, Object> toMap(final Sheet sheet, final FormulaEvaluator formulaEvaluator) {
 		//
 		Map<Object, Object> map = null;
