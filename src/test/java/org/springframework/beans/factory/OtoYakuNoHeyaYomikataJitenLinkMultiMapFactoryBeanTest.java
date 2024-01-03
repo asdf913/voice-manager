@@ -9,9 +9,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
 
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
@@ -48,9 +46,9 @@ class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBeanTest {
 
 	private static final String EMPTY = "";
 
-	private static Method METHOD_GET_MULTI_MAP, METHOD_FIND_FIRST, METHOD_TRIM, METHOD_APPEND, METHOD_TEST_AND_APPLY,
-			METHOD_PUT_HREF, METHOD_GET_STRING, METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE, METHOD_NEW_XPATH,
-			METHOD_EVALUATE, METHOD_GET = null;
+	private static Method METHOD_GET_MULTI_MAP, METHOD_TRIM, METHOD_APPEND, METHOD_TEST_AND_APPLY, METHOD_PUT_HREF,
+			METHOD_GET_STRING, METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE, METHOD_NEW_XPATH, METHOD_EVALUATE,
+			METHOD_GET = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -58,8 +56,6 @@ class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBeanTest {
 		final Class<?> clz = OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean.class;
 		//
 		(METHOD_GET_MULTI_MAP = clz.getDeclaredMethod("getMultimap", Element.class)).setAccessible(true);
-		//
-		(METHOD_FIND_FIRST = clz.getDeclaredMethod("findFirst", Stream.class)).setAccessible(true);
 		//
 		(METHOD_TRIM = clz.getDeclaredMethod("trim", String.class)).setAccessible(true);
 		//
@@ -242,27 +238,6 @@ class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBeanTest {
 	}
 
 	@Test
-	void testFindFirst() throws Throwable {
-		//
-		Assertions.assertEquals(Optional.empty(), findFirst(Stream.empty()));
-		//
-	}
-
-	private static <T> Optional<T> findFirst(final Stream<T> instance) throws Throwable {
-		try {
-			final Object obj = METHOD_FIND_FIRST.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Optional) {
-				return (Optional) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testTrim() throws Throwable {
 		//
 		Assertions.assertNull(trim(null));
@@ -293,6 +268,7 @@ class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBeanTest {
 	void testAppend() throws Throwable {
 		//
 		Assertions.assertDoesNotThrow(() -> append(null, ' '));
+		//
 	}
 
 	private static void append(final StringBuilder instance, final char c) throws Throwable {

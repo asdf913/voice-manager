@@ -20,7 +20,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
@@ -70,10 +69,10 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 
 	private static Class<?> CLASS_IH = null;
 
-	private static Method METHOD_GET_LINKS, METHOD_VALUE_OF, METHOD_FIND_FIRST, METHOD_TRIM, METHOD_APPEND,
-			METHOD_TEST_AND_APPLY, METHOD_IS_ABSOLUTE, METHOD_APPLY, METHOD_SET_DESCRIPTION_AND_TEXT_AND_URL,
-			METHOD_ADD_LINKS, METHOD_HAS_ATTR, METHOD_IIF, METHOD_GET_IMG, METHOD_FOR_EACH,
-			METHOD_GET_STRING_CELL_VALUE, METHOD_GET_SHEET, METHOD_TO_MAP, METHOD_HANDLE_HSSF_CELL = null;
+	private static Method METHOD_GET_LINKS, METHOD_VALUE_OF, METHOD_TRIM, METHOD_APPEND, METHOD_TEST_AND_APPLY,
+			METHOD_IS_ABSOLUTE, METHOD_APPLY, METHOD_SET_DESCRIPTION_AND_TEXT_AND_URL, METHOD_ADD_LINKS,
+			METHOD_HAS_ATTR, METHOD_IIF, METHOD_GET_IMG, METHOD_FOR_EACH, METHOD_GET_STRING_CELL_VALUE,
+			METHOD_GET_SHEET, METHOD_TO_MAP, METHOD_HANDLE_HSSF_CELL = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException, ClassNotFoundException {
@@ -83,8 +82,6 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 		(METHOD_GET_LINKS = clz.getDeclaredMethod("getLinks", List.class)).setAccessible(true);
 		//
 		(METHOD_VALUE_OF = clz.getDeclaredMethod("valueOf", String.class)).setAccessible(true);
-		//
-		(METHOD_FIND_FIRST = clz.getDeclaredMethod("findFirst", Stream.class)).setAccessible(true);
 		//
 		(METHOD_TRIM = clz.getDeclaredMethod("trim", String.class)).setAccessible(true);
 		//
@@ -491,27 +488,6 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 				return null;
 			} else if (obj instanceof Integer) {
 				return (Integer) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testFindFirst() throws Throwable {
-		//
-		Assertions.assertNull(findFirst(Reflection.newProxy(Stream.class, ih)));
-		//
-	}
-
-	private static <T> Optional<T> findFirst(final Stream<T> instance) throws Throwable {
-		try {
-			final Object obj = METHOD_FIND_FIRST.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Optional) {
-				return (Optional) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

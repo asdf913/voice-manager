@@ -400,4 +400,11 @@ class UtilTest {
 		//
 	}
 
+	@Test
+	void testFindFirst() {
+		//
+		Assertions.assertEquals(Optional.empty(), Util.findFirst(Stream.empty()));
+		//
+	}
+
 }
