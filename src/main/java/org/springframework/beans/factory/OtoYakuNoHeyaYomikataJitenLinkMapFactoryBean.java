@@ -304,7 +304,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 			//
 	}
 
-	private static <K, V> void putAll(final Map<K, V> a, final Map<? extends K, ? extends V> b) {
+	private static <K, V> void putAll(final Map<K, V> a, @Nullable final Map<? extends K, ? extends V> b) {
 		if (a != null && (b != null || Proxy.isProxyClass(Util.getClass(a)))) {
 			a.putAll(b);
 		}
