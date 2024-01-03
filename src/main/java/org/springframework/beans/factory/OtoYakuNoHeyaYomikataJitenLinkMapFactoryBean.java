@@ -379,37 +379,9 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 				//
 			} else if (Objects.equals(CellType.FORMULA, cellType)) {
 				//
-				final CellValue cellValue = FormulaEvaluatorUtil.evaluate(formulaEvaluator, instance);
+				return toString(instance, formulaEvaluator);
 				//
-				final CellType cellValueType = CellValueUtil.getCellType(cellValue);
-				//
-				if (Objects.equals(CellType.BOOLEAN, cellValueType)) {
-					//
-					return Boolean.toString(cellValue.getBooleanValue());
-					//
-				} else if (Objects.equals(CellType.ERROR, cellValueType)) {
-					//
-					return Byte.toString(cellValue.getErrorValue());
-					//
-				} else if (Objects.equals(CellType.NUMERIC, cellValueType)) {
-					//
-					return Double.toString(cellValue.getNumberValue());
-					//
-				} else if (Objects.equals(CellType.STRING, cellValueType)) {
-					//
-					return cellValue.getStringValue();
-					//
-				} // if
-					//
-				if (cellValue != null) {
-					//
-					throw new IllegalStateException(Util.toString(cellValueType));
-					//
-				} // if
-					//
-				return instance.getCellFormula();
-				//
-			} // iff
+			} // if
 				//
 			throw new IllegalStateException(Util.toString(cellType));
 			//
@@ -435,35 +407,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 				//
 			} else if (Objects.equals(CellType.FORMULA, cellType)) {
 				//
-				final CellValue cellValue = FormulaEvaluatorUtil.evaluate(formulaEvaluator, instance);
-				//
-				final CellType cellValueType = CellValueUtil.getCellType(cellValue);
-				//
-				if (Objects.equals(CellType.ERROR, cellValueType)) {
-					//
-					return Byte.toString(cellValue.getErrorValue());
-					//
-				} else if (Objects.equals(CellType.BOOLEAN, cellValueType)) {
-					//
-					return Boolean.toString(cellValue.getBooleanValue());
-					//
-				} else if (Objects.equals(CellType.NUMERIC, cellValueType)) {
-					//
-					return Double.toString(cellValue.getNumberValue());
-					//
-				} else if (Objects.equals(CellType.STRING, cellValueType)) {
-					//
-					return cellValue.getStringValue();
-					//
-				} // if
-					//
-				if (cellValue != null) {
-					//
-					throw new IllegalStateException(Util.toString(cellValueType));
-					//
-				} // if
-					//
-				return instance.getCellFormula();
+				return toString(instance, formulaEvaluator);
 				//
 			} // if
 				//
@@ -518,35 +462,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 				//
 			} else if (Objects.equals(CellType.FORMULA, cellType)) {
 				//
-				final CellValue cellValue = FormulaEvaluatorUtil.evaluate(formulaEvaluator, instance);
-				//
-				final CellType cellValueType = CellValueUtil.getCellType(cellValue);
-				//
-				if (Objects.equals(CellType.ERROR, cellValueType)) {
-					//
-					return Byte.toString(cellValue.getErrorValue());
-					//
-				} else if (Objects.equals(CellType.BOOLEAN, cellValueType)) {
-					//
-					return Boolean.toString(cellValue.getBooleanValue());
-					//
-				} else if (Objects.equals(CellType.NUMERIC, cellValueType)) {
-					//
-					return Double.toString(cellValue.getNumberValue());
-					//
-				} else if (Objects.equals(CellType.STRING, cellValueType)) {
-					//
-					return cellValue.getStringValue();
-					//
-				} // if
-					//
-				if (cellValue != null) {
-					//
-					throw new IllegalStateException(Util.toString(cellValueType));
-					//
-				} // if
-					//
-				return instance.getCellFormula();
+				return toString(instance, formulaEvaluator);
 				//
 			} // if
 				//
@@ -555,6 +471,40 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		} // if
 			//
 		return instance.getStringCellValue();
+		//
+	}
+
+	private static String toString(final Cell instance, final FormulaEvaluator formulaEvaluator) {
+		//
+		final CellValue cellValue = FormulaEvaluatorUtil.evaluate(formulaEvaluator, instance);
+		//
+		final CellType cellValueType = CellValueUtil.getCellType(cellValue);
+		//
+		if (Objects.equals(CellType.ERROR, cellValueType)) {
+			//
+			return Byte.toString(cellValue.getErrorValue());
+			//
+		} else if (Objects.equals(CellType.BOOLEAN, cellValueType)) {
+			//
+			return Boolean.toString(cellValue.getBooleanValue());
+			//
+		} else if (Objects.equals(CellType.NUMERIC, cellValueType)) {
+			//
+			return Double.toString(cellValue.getNumberValue());
+			//
+		} else if (Objects.equals(CellType.STRING, cellValueType)) {
+			//
+			return cellValue.getStringValue();
+			//
+		} // if
+			//
+		if (cellValue != null) {
+			//
+			throw new IllegalStateException(Util.toString(cellValueType));
+			//
+		} // if
+			//
+		return instance.getCellFormula();
 		//
 	}
 
