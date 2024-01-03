@@ -173,6 +173,14 @@ abstract class Util {
 		}
 	}
 
+	static <K, V> void putAll(final Map<K, V> a, final Map<? extends K, ? extends V> b) {
+		if (a != null &&
+				(b != null
+				|| Proxy.isProxyClass(getClass(a)))) {
+			a.putAll(b);
+		}
+	}
+
 	@Nullable
 	static <E> Stream<E> stream(@Nullable final Collection<E> instance) {
 		return instance != null ? instance.stream() : null;

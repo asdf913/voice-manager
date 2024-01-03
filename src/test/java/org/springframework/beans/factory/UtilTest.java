@@ -8,6 +8,8 @@ import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -74,6 +76,14 @@ class UtilTest {
 				if (Objects.equals(methodName, "addAll")) {
 					//
 					return addAll;
+					//
+				} // if
+					//
+			} else if (proxy instanceof Map) {
+				//
+				if (Objects.equals(methodName, "putAll")) {
+					//
+					return null;
 					//
 				} // if
 					//
@@ -365,6 +375,21 @@ class UtilTest {
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
+	}
+
+	@Test
+	void testPutAll() {
+		//
+		Assertions.assertDoesNotThrow(() -> Util.putAll(null, null));
+		//
+		final Map<Object, Object> map = Collections.emptyMap();
+		//
+		Assertions.assertDoesNotThrow(() -> Util.putAll(map, null));
+		//
+		Assertions.assertDoesNotThrow(() -> Util.putAll(map, map));
+		//
+		Assertions.assertDoesNotThrow(() -> Util.putAll(Reflection.newProxy(Map.class, ih), null));
+		//
 	}
 
 }

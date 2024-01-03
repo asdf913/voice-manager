@@ -93,7 +93,7 @@ public class SaitamaNewUrbanTransRomajiOrHiraganaMapFactoryBean extends StringMa
 
 	private Map<String, String> getObject(final Stream<KanjiHiraganaRomaji> stream) {
 		//
-		return Util.collect(stream, LinkedHashMap::new, this::accumulate, Map::putAll);
+		return Util.collect(stream, LinkedHashMap::new, this::accumulate, Util::putAll);
 		//
 	}
 

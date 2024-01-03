@@ -267,7 +267,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 				try (final InputStream is = InputStreamSourceUtil.getInputStream(resource);
 						final Workbook wb = WorkbookFactory.create(is)) {
 					//
-					putAll(urlMap = ObjectUtils.getIfNull(urlMap, LinkedHashMap::new),
+					Util.putAll(urlMap = ObjectUtils.getIfNull(urlMap, LinkedHashMap::new),
 							toMap(getSheet(wb, urlTransitionSheetName),
 									CreationHelperUtil.createFormulaEvaluator(WorkbookUtil.getCreationHelper(wb))));
 					//
@@ -304,12 +304,6 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 			//
 		return map;
 		//
-	}
-
-	private static <K, V> void putAll(@Nullable final Map<K, V> a, @Nullable final Map<? extends K, ? extends V> b) {
-		if (a != null && (b != null || Proxy.isProxyClass(Util.getClass(a)))) {
-			a.putAll(b);
-		}
 	}
 
 	@Nullable

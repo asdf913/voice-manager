@@ -73,7 +73,7 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 	private static Method METHOD_GET_LINKS, METHOD_VALUE_OF, METHOD_OR_ELSE, METHOD_FIND_FIRST, METHOD_TRIM,
 			METHOD_APPEND, METHOD_TEST_AND_APPLY, METHOD_IS_ABSOLUTE, METHOD_APPLY,
 			METHOD_SET_DESCRIPTION_AND_TEXT_AND_URL, METHOD_ADD_LINKS, METHOD_HAS_ATTR, METHOD_IIF, METHOD_GET_IMG,
-			METHOD_FOR_EACH, METHOD_PUT_ALL, METHOD_GET_STRING_CELL_VALUE, METHOD_GET_SHEET, METHOD_TO_MAP,
+			METHOD_FOR_EACH, METHOD_GET_STRING_CELL_VALUE, METHOD_GET_SHEET, METHOD_TO_MAP,
 			METHOD_HANDLE_HSSF_CELL = null;
 
 	@BeforeAll
@@ -120,8 +120,6 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 		//
 		(METHOD_FOR_EACH = clz.getDeclaredMethod("forEach", Iterable.class, Consumer.class)).setAccessible(true);
 		//
-		(METHOD_PUT_ALL = clz.getDeclaredMethod("putAll", Map.class, Map.class)).setAccessible(true);
-		//
 		(METHOD_GET_STRING_CELL_VALUE = clz.getDeclaredMethod("getStringCellValue", Cell.class, FormulaEvaluator.class))
 				.setAccessible(true);
 		//
@@ -163,14 +161,6 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 			if (proxy instanceof Stream) {
 				//
 				if (Objects.equals(methodName, "findFirst")) {
-					//
-					return null;
-					//
-				} // if
-					//
-			} else if (proxy instanceof Map) {
-				//
-				if (Objects.equals(methodName, "putAll")) {
 					//
 					return null;
 					//
@@ -777,27 +767,6 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 	private static <T> void forEach(final Iterable<T> instance, final Consumer<? super T> action) throws Throwable {
 		try {
 			METHOD_FOR_EACH.invoke(null, instance, action);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testPutAll() {
-		//
-		Assertions.assertDoesNotThrow(() -> putAll(null, null));
-		//
-		final Map<Object, Object> map = Collections.emptyMap();
-		//
-		Assertions.assertDoesNotThrow(() -> putAll(map, map));
-		//
-		Assertions.assertDoesNotThrow(() -> putAll(Reflection.newProxy(Map.class, ih), null));
-		//
-	}
-
-	private static <K, V> void putAll(final Map<K, V> a, final Map<? extends K, ? extends V> b) throws Throwable {
-		try {
-			METHOD_PUT_ALL.invoke(null, a, b);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
