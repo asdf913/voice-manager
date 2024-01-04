@@ -710,22 +710,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 				//
 			} // if
 				//
-			clear(fields = ObjectUtils.getIfNull(fields, ArrayList::new));
-			//
-			for (int i = 0; fs != null && i < fs.length; i++) {
-				//
-				if ((f = fs[i]) == null || !StringUtils.equalsIgnoreCase(Util.getName(f),
-						IntStringMap.getString(intStringMap, cell.getColumnIndex()))) {
-					//
-					continue;
-					//
-				} // if
-					//
-				Util.add(fields, f);
-				//
-			} // for
-				//
-			if ((size = IterableUtils.size(fields)) > 1) {
+			if ((size = IterableUtils.size(fields = getFields(fs, intStringMap, cell.getColumnIndex()))) > 1) {
 				//
 				throw new IllegalStateException();
 				//
@@ -749,6 +734,29 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		} // for
 			//
 		return testAndApply(Objects::nonNull, ih, x -> Reflection.newProxy(Link.class, x), null);
+		//
+	}
+
+	private static List<Field> getFields(final Field[] fs, final IntStringMap intStringMap, final int index) {
+		//
+		List<Field> fields = null;
+		//
+		Field f = null;
+		//
+		for (int i = 0; fs != null && i < fs.length; i++) {
+			//
+			if ((f = fs[i]) == null
+					|| !StringUtils.equalsIgnoreCase(Util.getName(f), IntStringMap.getString(intStringMap, index))) {
+				//
+				continue;
+				//
+			} // if
+				//
+			Util.add(fields = ObjectUtils.getIfNull(fields, ArrayList::new), f);
+			//
+		} // for
+			//
+		return fields;
 		//
 	}
 

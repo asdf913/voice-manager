@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -73,8 +74,8 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 	private static Method METHOD_GET_LINKS, METHOD_VALUE_OF, METHOD_TRIM, METHOD_APPEND, METHOD_TEST_AND_APPLY,
 			METHOD_IS_ABSOLUTE, METHOD_APPLY, METHOD_SET_DESCRIPTION_AND_TEXT_AND_URL, METHOD_ADD_LINKS,
 			METHOD_HAS_ATTR, METHOD_IIF, METHOD_GET_IMG, METHOD_FOR_EACH, METHOD_GET_STRING_CELL_VALUE, METHOD_TO_MAP,
-			METHOD_HANDLE_HSSF_CELL, METHOD_FORMAT_CELL_VALUE, METHOD_TO_INT_STRING_MAP, METHOD_CLEAR,
-			METHOD_TO_LINK = null;
+			METHOD_HANDLE_HSSF_CELL, METHOD_FORMAT_CELL_VALUE, METHOD_TO_INT_STRING_MAP, METHOD_CLEAR, METHOD_TO_LINK,
+			METHOD_GET_FIELDS = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException, ClassNotFoundException {
@@ -132,10 +133,14 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 		//
 		(METHOD_CLEAR = clz.getDeclaredMethod("clear", Collection.class)).setAccessible(true);
 		//
-		(METHOD_TO_LINK = clz.getDeclaredMethod("toLink", Iterable.class,
-				Class.forName(
-						"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean$IntStringMap"),
-				FormulaEvaluator.class, DataFormatter.class)).setAccessible(true);
+		final Class<?> classIntStringMap = Class
+				.forName("org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean$IntStringMap");
+		//
+		(METHOD_TO_LINK = clz.getDeclaredMethod("toLink", Iterable.class, classIntStringMap, FormulaEvaluator.class,
+				DataFormatter.class)).setAccessible(true);
+		//
+		(METHOD_GET_FIELDS = clz.getDeclaredMethod("getFields", Field[].class, classIntStringMap, Integer.TYPE))
+				.setAccessible(true);
 		//
 	}
 
@@ -1240,7 +1245,30 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
+	}
 
+	@Test
+	void testGetFields() throws Throwable {
+		//
+		Assertions.assertNull(getFields(null, null, 0));
+		//
+		Assertions.assertNull(getFields(new Field[] { null }, null, 0));
+		//
+	}
+
+	private static List<Field> getFields(final Field[] fs, final Object intStringMap, final int index)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_GET_FIELDS.invoke(null, fs, intStringMap, index);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof List) {
+				return (List) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 	@Test
