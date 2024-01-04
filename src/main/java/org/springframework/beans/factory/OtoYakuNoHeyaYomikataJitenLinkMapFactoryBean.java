@@ -751,7 +751,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		//
 	}
 
-	private static void clear(final Collection<?> instance) {
+	private static void clear(@Nullable final Collection<?> instance) {
 		if (instance != null) {
 			instance.clear();
 		}
