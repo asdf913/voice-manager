@@ -683,12 +683,8 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 						//
 					fs = FieldUtils.getAllFields(Util.getClass(ih));
 					//
-					if ((fields = ObjectUtils.getIfNull(fields, ArrayList::new)) != null) {
-						//
-						fields.clear();
-						//
-					} // if
-						//
+					clear(fields = ObjectUtils.getIfNull(fields, ArrayList::new));
+					//
 					for (int i = 0; fs != null && i < fs.length; i++) {
 						//
 						if ((f = fs[i]) == null || !StringUtils.equalsIgnoreCase(Util.getName(f),
@@ -737,6 +733,12 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 			//
 		return null;
 		//
+	}
+
+	private static void clear(final Collection<?> instance) {
+		if (instance != null) {
+			instance.clear();
+		}
 	}
 
 	private static IntStringMap toIntStringMap(final Iterable<Cell> cells, final FormulaEvaluator formulaEvaluator) {
