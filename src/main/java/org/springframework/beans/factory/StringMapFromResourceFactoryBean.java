@@ -273,7 +273,7 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 			final FormulaEvaluator formulaEvaluator, final IValue0<String> keyColumnName,
 			final Pair<String, Integer> valueColumnNameAndIndex) {
 		//
-		if (sheet == null || sheet.iterator() == null) {
+		if (Util.iterator(sheet) == null) {
 			//
 			return null;
 			//

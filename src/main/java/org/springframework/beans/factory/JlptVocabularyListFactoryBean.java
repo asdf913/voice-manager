@@ -126,7 +126,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		//
 		IValue0<List<JlptVocabulary>> list = null;
 		//
-		if (sheet != null && sheet.iterator() != null) {
+		if (Util.iterator(sheet) != null) {
 			//
 			final AtomicBoolean first = new AtomicBoolean(true);
 			//
@@ -415,7 +415,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		//
 		List<JlptVocabulary> list = null;
 		//
-		if (urls != null && urls.iterator() != null) {
+		if (Util.iterator(urls) != null) {
 			//
 			List<JlptVocabulary> temp = null;
 			//

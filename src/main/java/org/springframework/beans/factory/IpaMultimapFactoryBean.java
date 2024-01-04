@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -119,7 +118,7 @@ public class IpaMultimapFactoryBean implements FactoryBean<Multimap<String, Stri
 			//
 			Multimap<String, String> multimap = null;
 			//
-			if (iterator(entrySet) != null) {
+			if (Util.iterator(entrySet) != null) {
 				//
 				List<String> list = null;
 				//
@@ -154,11 +153,6 @@ public class IpaMultimapFactoryBean implements FactoryBean<Multimap<String, Stri
 			objectMapper = new ObjectMapper();
 		}
 		return objectMapper;
-	}
-
-	@Nullable
-	private static <T> Iterator<T> iterator(@Nullable final Iterable<T> instance) {
-		return instance != null ? instance.iterator() : null;
 	}
 
 	@Nullable

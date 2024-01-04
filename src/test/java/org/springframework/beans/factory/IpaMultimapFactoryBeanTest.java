@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Iterator;
 import java.util.Objects;
 import java.util.function.Predicate;
 
@@ -23,16 +22,13 @@ import com.google.common.reflect.Reflection;
 
 class IpaMultimapFactoryBeanTest {
 
-	private static Method METHOD_ITERATOR, METHOD_TEST = null;
+	private static Method METHOD_TEST = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
 		//
-		final Class<?> clz = IpaMultimapFactoryBean.class;
-		//
-		(METHOD_ITERATOR = clz.getDeclaredMethod("iterator", Iterable.class)).setAccessible(true);
-		//
-		(METHOD_TEST = clz.getDeclaredMethod("test", Predicate.class, Object.class)).setAccessible(true);
+		(METHOD_TEST = IpaMultimapFactoryBean.class.getDeclaredMethod("test", Predicate.class, Object.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -159,27 +155,6 @@ class IpaMultimapFactoryBeanTest {
 
 	private static <T> T getObject(final FactoryBean<T> instance) throws Exception {
 		return instance != null ? instance.getObject() : null;
-	}
-
-	@Test
-	void testIterator() throws Throwable {
-		//
-		Assertions.assertNull(iterator(null));
-		//
-	}
-
-	private static <T> Iterator<T> iterator(final Iterable<T> instance) throws Throwable {
-		try {
-			final Object obj = METHOD_ITERATOR.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Iterator) {
-				return (Iterator) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test

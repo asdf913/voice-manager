@@ -134,7 +134,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		//
 		final Map<String, String> result = ObjectUtils.getIfNull(Util.get(ar), LinkedHashMap::new);
 		//
-		if (Util.entrySet(map) != null && Util.entrySet(map).iterator() != null) {
+		if (Util.iterator(Util.entrySet(map)) != null) {
 			//
 			for (final Entry<?, ?> entry : Util.entrySet(map)) {
 				//

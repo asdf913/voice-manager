@@ -114,7 +114,7 @@ public class YojijukugoMultimapFactoryBean implements FactoryBean<Multimap<Strin
 		//
 		final AtomicBoolean first = new AtomicBoolean(true);
 		//
-		if (iterator(sheet) != null) {
+		if (Util.iterator(sheet) != null) {
 			//
 			IValue0<Multimap<String, String>> multimap = null;
 			//
@@ -241,11 +241,6 @@ public class YojijukugoMultimapFactoryBean implements FactoryBean<Multimap<Strin
 			//
 		return multimap;
 		//
-	}
-
-	@Nullable
-	private static <T> Iterator<T> iterator(@Nullable final Iterable<T> instance) {
-		return instance != null ? instance.iterator() : null;
 	}
 
 	@Nullable

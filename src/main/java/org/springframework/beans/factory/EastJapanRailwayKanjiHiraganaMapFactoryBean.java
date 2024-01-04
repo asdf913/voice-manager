@@ -67,7 +67,7 @@ public class EastJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFromRe
 		//
 		K key = null;
 		//
-		if (Util.entrySet(b) != null && Util.entrySet(b).iterator() != null) {
+		if (Util.iterator(Util.entrySet(b)) != null) {
 			//
 			for (final Entry<K, V> entry : Util.entrySet(b)) {
 				//

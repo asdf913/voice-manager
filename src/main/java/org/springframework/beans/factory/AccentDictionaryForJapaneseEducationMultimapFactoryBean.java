@@ -101,13 +101,13 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 		//
 		IValue0<Multimap<String, String>> value = null;
 		//
-		if (wb != null && wb.iterator() != null) {
+		if (Util.iterator(wb) != null) {
 			//
 			Multimap<String, String> multimap = null;
 			//
 			for (final Sheet sheet : wb) {
 				//
-				if (sheet == null || sheet.iterator() == null || (multimap = createMultimap(sheet)) == null) {
+				if (Util.iterator(sheet) == null || (multimap = createMultimap(sheet)) == null) {
 					//
 					continue;
 					//
@@ -131,7 +131,7 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 		//
 		Multimap<String, String> value = null;
 		//
-		if (sheet != null && sheet.iterator() != null) {
+		if (Util.iterator(sheet) != null) {
 			//
 			AtomicBoolean firstRow = null;
 			//

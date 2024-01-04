@@ -357,7 +357,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		//
 		Map<Object, Object> map = null;
 		//
-		if (iterator(sheet) != null) {
+		if (Util.iterator(sheet) != null) {
 			//
 			for (final Row row : sheet) {
 				//
@@ -633,7 +633,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		//
 		final Sheet sheet = WorkbookUtil.getSheet(wb, sheetName);
 		//
-		if (iterator(sheet) != null) {
+		if (Util.iterator(sheet) != null) {
 			//
 			List<Link> links = null;
 			//
@@ -645,7 +645,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 			//
 			for (final Row row : sheet) {
 				//
-				if (iterator(row) == null) {
+				if (Util.iterator(row) == null) {
 					//
 					continue;
 					//
@@ -679,7 +679,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 	private static Link toLink(final Iterable<Cell> cells, final IntStringMap intStringMap,
 			final FormulaEvaluator formulaEvaluator, final DataFormatter df) throws IllegalAccessException {
 		//
-		if (iterator(cells) == null) {
+		if (Util.iterator(cells) == null) {
 			//
 			return null;
 			//
@@ -763,7 +763,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 	@Nullable
 	private static IntStringMap toIntStringMap(final Iterable<Cell> cells, final FormulaEvaluator formulaEvaluator) {
 		//
-		if (iterator(cells) == null) {
+		if (Util.iterator(cells) == null) {
 			//
 			return null;
 			//
@@ -786,11 +786,6 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 			//
 		return intStringMap;
 		//
-	}
-
-	@Nullable
-	private static <T> Iterator<T> iterator(@Nullable final Iterable<T> instance) {
-		return instance != null ? instance.iterator() : null;
 	}
 
 	@Nullable

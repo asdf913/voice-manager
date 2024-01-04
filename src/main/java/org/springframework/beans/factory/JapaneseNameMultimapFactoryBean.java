@@ -144,7 +144,7 @@ public class JapaneseNameMultimapFactoryBean implements FactoryBean<Multimap<Str
 		//
 		final AtomicBoolean first = new AtomicBoolean(true);
 		//
-		if (sheet != null && sheet.iterator() != null) {
+		if (Util.iterator(sheet) != null) {
 			//
 			IValue0<Multimap<String, String>> multimap = null;
 			//
@@ -191,9 +191,9 @@ public class JapaneseNameMultimapFactoryBean implements FactoryBean<Multimap<Str
 					&& (matcher = Util.matcher(pattern,
 							StringUtils.substringAfter(text = ElementUtil.text(nextElementSibling), ' '))) != null
 					&& Util.matches(matcher) && Util.groupCount(matcher) == 1
-					&& (strings = Util.toList(Util.map(Arrays.stream(StringUtils.split(Util.group(matcher, 1), '/')),
-							StringUtils::trim))) != null
-					&& strings.iterator() != null) {
+					&& Util.iterator(strings = Util
+							.toList(Util.map(Arrays.stream(StringUtils.split(Util.group(matcher, 1), '/')),
+									StringUtils::trim))) != null) {
 				//
 				for (final String s : strings) {
 					//

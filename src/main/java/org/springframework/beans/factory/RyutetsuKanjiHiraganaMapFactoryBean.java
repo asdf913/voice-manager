@@ -184,7 +184,7 @@ public class RyutetsuKanjiHiraganaMapFactoryBean extends StringMapFromResourceFa
 
 	private static void setHiraganaKanjiRomaji(final KanjiHiraganaRomaji khr, final Iterable<Node> childNodes) {
 		//
-		if (childNodes != null && childNodes.iterator() != null) {
+		if (Util.iterator(childNodes) != null) {
 			//
 			TextNode textNode = null;
 			//
