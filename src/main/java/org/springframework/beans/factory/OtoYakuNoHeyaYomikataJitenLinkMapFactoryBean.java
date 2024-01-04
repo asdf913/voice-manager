@@ -46,6 +46,7 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.ss.usermodel.WorkbookUtil;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
+import org.javatuples.valueintf.IValue0Util;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
@@ -591,123 +592,11 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 				try (final InputStream is = InputStreamSourceUtil.getInputStream(resource);
 						final Workbook wb = WorkbookFactory.create(is)) {
 					//
-					final Sheet sheet = WorkbookUtil.getSheet(wb, linkSheetName);
+					final IValue0<List<Link>> iValue0 = toLinks(wb, linkSheetName);
 					//
-					if (sheet != null && sheet.iterator() != null) {
+					if (iValue0 != null) {
 						//
-						List<Link> links = null;
-						//
-						IntStringMap intStringMap = null;
-						//
-						FormulaEvaluator formulaEvaluator = null;
-						//
-						IH ih = null;
-						//
-						Field[] fs = null;
-						//
-						Field f = null;
-						//
-						List<Field> fields = null;
-						//
-						int size = 0;
-						//
-						Class<?> type = null;
-						//
-						DataFormatter df = null;
-						//
-						for (final Row row : sheet) {
-							//
-							if (row == null || row.iterator() == null) {
-								//
-								continue;
-								//
-							} // if
-								//
-							if (intStringMap == null
-									&& (intStringMap = Reflection.newProxy(IntStringMap.class, new IH())) != null) {
-								//
-								for (final Cell cell : row) {
-									//
-									if (cell == null) {
-										//
-										continue;
-										//
-									} // if
-										//
-									intStringMap.setString(cell.getColumnIndex(),
-											getStringCellValue(cell,
-													formulaEvaluator = ObjectUtils.getIfNull(formulaEvaluator,
-															() -> CreationHelperUtil.createFormulaEvaluator(
-																	WorkbookUtil.getCreationHelper(wb)))));
-									//
-								} // for
-									//
-								continue;
-								//
-							} // if
-								//
-							ih = new IH();
-							//
-							for (final Cell cell : row) {
-								//
-								if (cell == null) {
-									//
-									continue;
-									//
-								} // if
-									//
-								fs = FieldUtils.getAllFields(Util.getClass(ih));
-								//
-								if ((fields = ObjectUtils.getIfNull(fields, ArrayList::new)) != null) {
-									//
-									fields.clear();
-									//
-								} // if
-									//
-								for (int i = 0; fs != null && i < fs.length; i++) {
-									//
-									if ((f = fs[i]) == null || !StringUtils.equalsIgnoreCase(Util.getName(f),
-											IntStringMap.getString(intStringMap, cell.getColumnIndex()))) {
-										//
-										continue;
-										//
-									} // if
-										//
-									Util.add(fields, f);
-									//
-								} // for
-									//
-								if ((size = IterableUtils.size(fields)) > 1) {
-									//
-									throw new IllegalStateException();
-									//
-								} // if
-									//
-								if ((f = size == 1 ? IterableUtils.get(fields, 0) : null) != null) {
-									//
-									if (Objects.equals(type = f.getType(), String.class)) {
-										//
-										f.set(ih, getStringCellValue(cell, formulaEvaluator = ObjectUtils
-												.getIfNull(formulaEvaluator, () -> CreationHelperUtil
-														.createFormulaEvaluator(WorkbookUtil.getCreationHelper(wb)))));
-										//
-									} else if (Objects.equals(type, Integer.class)) {
-										//
-										f.set(ih, valueOf(formatCellValue(
-												df = ObjectUtils.getIfNull(df, DataFormatter::new), cell)));
-										//
-									} // if
-										//
-								} // if
-									//
-							} // for
-								//
-							Util.add(links = ObjectUtils.getIfNull(links, ArrayList::new),
-									Reflection.newProxy(Link.class, ih));
-							//
-						} // for
-							//
-						return links;
+						return IValue0Util.getValue0(iValue0);
 						//
 					} // if
 						//
@@ -734,6 +623,130 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		});
 		//
 		return links;
+		//
+	}
+
+	private static IValue0<List<Link>> toLinks(final Workbook wb, final String sheetName)
+			throws IllegalAccessException {
+		//
+		final Sheet sheet = WorkbookUtil.getSheet(wb, sheetName);
+		//
+		if (sheet != null && sheet.iterator() != null) {
+			//
+			List<Link> links = null;
+			//
+			IntStringMap intStringMap = null;
+			//
+			FormulaEvaluator formulaEvaluator = null;
+			//
+			IH ih = null;
+			//
+			Field[] fs = null;
+			//
+			Field f = null;
+			//
+			List<Field> fields = null;
+			//
+			int size = 0;
+			//
+			Class<?> type = null;
+			//
+			DataFormatter df = null;
+			//
+			for (final Row row : sheet) {
+				//
+				if (row == null || row.iterator() == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if (intStringMap == null
+						&& (intStringMap = Reflection.newProxy(IntStringMap.class, new IH())) != null) {
+					//
+					for (final Cell cell : row) {
+						//
+						if (cell == null) {
+							//
+							continue;
+							//
+						} // if
+							//
+						intStringMap.setString(cell.getColumnIndex(), getStringCellValue(cell,
+								formulaEvaluator = ObjectUtils.getIfNull(formulaEvaluator, () -> CreationHelperUtil
+										.createFormulaEvaluator(WorkbookUtil.getCreationHelper(wb)))));
+						//
+					} // for
+						//
+					continue;
+					//
+				} // if
+					//
+				ih = new IH();
+				//
+				for (final Cell cell : row) {
+					//
+					if (cell == null) {
+						//
+						continue;
+						//
+					} // if
+						//
+					fs = FieldUtils.getAllFields(Util.getClass(ih));
+					//
+					if ((fields = ObjectUtils.getIfNull(fields, ArrayList::new)) != null) {
+						//
+						fields.clear();
+						//
+					} // if
+						//
+					for (int i = 0; fs != null && i < fs.length; i++) {
+						//
+						if ((f = fs[i]) == null || !StringUtils.equalsIgnoreCase(Util.getName(f),
+								IntStringMap.getString(intStringMap, cell.getColumnIndex()))) {
+							//
+							continue;
+							//
+						} // if
+							//
+						Util.add(fields, f);
+						//
+					} // for
+						//
+					if ((size = IterableUtils.size(fields)) > 1) {
+						//
+						throw new IllegalStateException();
+						//
+					} // if
+						//
+					if ((f = size == 1 ? IterableUtils.get(fields, 0) : null) != null) {
+						//
+						if (Objects.equals(type = f.getType(), String.class)) {
+							//
+							f.set(ih, getStringCellValue(cell,
+									formulaEvaluator = ObjectUtils.getIfNull(formulaEvaluator, () -> CreationHelperUtil
+											.createFormulaEvaluator(WorkbookUtil.getCreationHelper(wb)))));
+							//
+						} else if (Objects.equals(type, Integer.class)) {
+							//
+							f.set(ih,
+									valueOf(formatCellValue(df = ObjectUtils.getIfNull(df, DataFormatter::new), cell)));
+							//
+						} // if
+							//
+					} // if
+						//
+				} // for
+					//
+				Util.add(links = ObjectUtils.getIfNull(links, ArrayList::new), Reflection.newProxy(Link.class, ih));
+				//
+			} // for
+				//
+			return Unit.with(links);
+			//
+		} // if
+			//
+		return null;
 		//
 	}
 
