@@ -130,7 +130,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 			return instance != null ? instance.getUrl() : null;
 		}
 
-		static void setUrl(final Link instance, final String url) {
+		static void setUrl(@Nullable final Link instance, final String url) {
 			//
 			if (instance != null) {
 				//
