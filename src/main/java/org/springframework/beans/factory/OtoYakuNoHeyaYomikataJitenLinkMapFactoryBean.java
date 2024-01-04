@@ -534,7 +534,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 
 		void setString(final int key, final String value);
 
-		static String getString(final IntStringMap instance, final int key) {
+		static String getString(@Nullable final IntStringMap instance, final int key) {
 			return instance != null ? instance.getString(key) : null;
 		}
 	}
@@ -701,7 +701,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		//
 	}
 
-	private static String formatCellValue(final DataFormatter instance, final Cell cell) {
+	private static String formatCellValue(@Nullable final DataFormatter instance, final Cell cell) {
 		//
 		if (instance == null) {
 			//
