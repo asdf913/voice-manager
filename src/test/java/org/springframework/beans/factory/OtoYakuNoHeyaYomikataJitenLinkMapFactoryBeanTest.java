@@ -1162,7 +1162,8 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 	}
 
 	@Test
-	void testIH() throws ClassNotFoundException {
+	void testIH()
+			throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
 		//
 		final InvocationHandler ih = Util.cast(InvocationHandler.class, Narcissus.allocateInstance(CLASS_IH));
 		//
@@ -1237,6 +1238,52 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 					} // if
 						//
 				});
+		//
+		// org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean$IntStringMap
+		//
+		final Object intStringMap = Reflection.newProxy(
+				clz = Class.forName(
+						"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean$IntStringMap"),
+				ih);
+		//
+		Assertions.assertThrows(Throwable.class, () -> invoke(ih, intStringMap, null, null));
+		//
+		new FailableStream<>(Arrays.stream(ObjectUtils.getIfNull(getDeclaredMethods(clz), () -> new Method[] {})))
+				.forEach(m -> Assertions.assertThrows(Throwable.class, () -> invoke(ih, intStringMap, m, null)));
+		//
+		// org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean$IH.handleIntStringMap(java.lang.String,java.lang.Object[])
+		//
+		final Method method = CLASS_IH != null
+				? CLASS_IH.getDeclaredMethod("handleIntStringMap", String.class, Object[].class)
+				: null;
+		//
+		if (method != null) {
+			//
+			method.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertEquals(null, method != null ? method.invoke(ih, "setString", new Object[] {}) : null);
+		//
+		Assertions.assertEquals(null, method != null ? method.invoke(ih, "getString", new Object[] {}) : null);
+		//
+		Assertions.assertThrows(IllegalStateException.class, () -> {
+			//
+			try {
+				//
+				if (method != null) {
+					//
+					method.invoke(ih, "getString", new Object[] { null });
+					//
+				} // if
+					//
+			} catch (final InvocationTargetException e) {
+				//
+				throw e.getTargetException();
+				//
+			} // try
+				//
+		});
 		//
 	}
 

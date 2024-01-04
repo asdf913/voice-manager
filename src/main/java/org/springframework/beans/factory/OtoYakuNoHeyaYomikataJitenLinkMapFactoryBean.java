@@ -220,31 +220,45 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 				//
 			} else if (proxy instanceof IntStringMap) {
 				//
-				if (Objects.equals(methodName, "setString") && args != null && args.length > 1) {
+				final IValue0<?> iValue0 = handleIntStringMap(methodName, args);
+				//
+				if (iValue0 != null) {
 					//
-					Util.put(getIntStrings(), args[0], args[1]);
-					//
-					return null;
-					//
-				} else if (Objects.equals(methodName, "getString") && args != null && args.length > 0) {
-					//
-					final Object object = args[0];
-					//
-					final Map<?, ?> map = getIntStrings();
-					//
-					if (!Util.containsKey(map, object)) {
-						//
-						throw new IllegalStateException(Util.toString(object));
-						//
-					} // if
-						//
-					return ObjectUtils.getIfNull(Util.get(map, object), () -> Util.cast(Integer.class, args[1]));
+					return iValue0.getValue0();
 					//
 				} // if
 					//
 			} // if
 				//
 			throw new Throwable(methodName);
+			//
+		}
+
+		private IValue0<?> handleIntStringMap(final String methodName, final Object[] args) {
+			//
+			if (Objects.equals(methodName, "setString") && args != null && args.length > 1) {
+				//
+				Util.put(getIntStrings(), args[0], args[1]);
+				//
+				return Unit.with(null);
+				//
+			} else if (Objects.equals(methodName, "getString") && args != null && args.length > 0) {
+				//
+				final Object object = args[0];
+				//
+				final Map<?, ?> map = getIntStrings();
+				//
+				if (!Util.containsKey(map, object)) {
+					//
+					throw new IllegalStateException(Util.toString(object));
+					//
+				} // if
+					//
+				return Unit.with(ObjectUtils.getIfNull(Util.get(map, object), () -> Util.cast(Integer.class, args[1])));
+				//
+			} // if
+				//
+			return null;
 			//
 		}
 
