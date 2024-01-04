@@ -130,6 +130,16 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 			return instance != null ? instance.getUrl() : null;
 		}
 
+		static void setUrl(final Link instance, final String url) {
+			//
+			if (instance != null) {
+				//
+				instance.setUrl(url);
+				//
+			} // if
+				//
+		}
+
 	}
 
 	private static class IH implements InvocationHandler {
@@ -714,9 +724,9 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 			//
 			final String u = Link.getUrl(x);
 			//
-			if (x != null && Util.containsKey(urlMap, u)) {
+			if (Util.containsKey(urlMap, u)) {
 				//
-				x.setUrl(Util.toString(Util.get(urlMap, u)));
+				Link.setUrl(x, Util.toString(Util.get(urlMap, u)));
 				//
 			} // if
 				//

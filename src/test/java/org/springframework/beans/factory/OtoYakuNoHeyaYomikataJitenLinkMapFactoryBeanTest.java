@@ -197,7 +197,7 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 			//
 			if (clz != null && clz.isInstance(proxy)) {
 				//
-				if (Objects.equals(methodName, "getUrl")) {
+				if (Util.contains(Arrays.asList("getUrl", "setUrl"), methodName)) {
 					//
 					return null;
 					//
@@ -1318,11 +1318,27 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 		final Class<?> clz = Class
 				.forName("org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean$Link");
 		//
-		final Method method = clz != null ? clz.getDeclaredMethod("getUrl", clz) : null;
+		// org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean$Link.getUrl(org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean$Link)
+		//
+		Method method = clz != null ? clz.getDeclaredMethod("getUrl", clz) : null;
 		//
 		Assertions.assertEquals(null, method != null ? method.invoke(null, (Object) null) : null);
 		//
-		Assertions.assertEquals(null, method != null ? method.invoke(null, Reflection.newProxy(clz, ih)) : null);
+		final Object instance = Reflection.newProxy(clz, ih);
+		//
+		Assertions.assertEquals(null, method != null ? method.invoke(null, instance) : null);
+		//
+		// org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean$Link.setUrl(org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean$Link,java.lang.String)
+		//
+		Assertions.assertEquals(null,
+				(method = clz != null ? clz.getDeclaredMethod("setUrl", clz, String.class) : null) != null
+						? method.invoke(null, null, null)
+						: null);
+		//
+		Assertions.assertEquals(null,
+				(method = clz != null ? clz.getDeclaredMethod("setUrl", clz, String.class) : null) != null
+						? method.invoke(null, instance, null)
+						: null);
 		//
 	}
 
