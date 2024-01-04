@@ -437,7 +437,8 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 	}
 
 	@Nullable
-	private static String handleHSSFCell(@Nullable final Cell instance, final FormulaEvaluator formulaEvaluator) {
+	private static String handleHSSFCell(@Nullable final Cell instance,
+			@Nullable final FormulaEvaluator formulaEvaluator) {
 		//
 		final CellType cellType = org.apache.poi.ss.usermodel.CellUtil.getCellType(instance);
 		//
@@ -470,7 +471,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 	}
 
 	@Nullable
-	private static String handleSXSSFCell(final Cell instance, final FormulaEvaluator formulaEvaluator) {
+	private static String handleSXSSFCell(final Cell instance, @Nullable final FormulaEvaluator formulaEvaluator) {
 		//
 		final List<Field> fs = Util.toList(Util.filter(Arrays.stream(Util.getDeclaredFields(Util.getClass(instance))),
 				f -> Objects.equals(Util.getName(f), "_value")));
@@ -515,7 +516,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 	}
 
 	@Nullable
-	private static String toString(@Nullable final Cell instance, final FormulaEvaluator formulaEvaluator) {
+	private static String toString(@Nullable final Cell instance, @Nullable final FormulaEvaluator formulaEvaluator) {
 		//
 		final CellValue cellValue = FormulaEvaluatorUtil.evaluate(formulaEvaluator, instance);
 		//
@@ -1049,7 +1050,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 	}
 
 	@Nullable
-	private static Integer valueOf(final String instance) {
+	private static Integer valueOf(@Nullable final String instance) {
 		try {
 			return StringUtils.isNotBlank(instance) ? Integer.valueOf(instance) : null;
 		} catch (final NumberFormatException e) {
