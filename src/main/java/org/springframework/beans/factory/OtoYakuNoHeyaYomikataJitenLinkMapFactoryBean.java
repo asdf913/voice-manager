@@ -126,6 +126,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 
 		String getImgSrc();
 
+		@Nullable
 		static String getUrl(@Nullable final Link instance) {
 			return instance != null ? instance.getUrl() : null;
 		}
