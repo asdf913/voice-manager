@@ -692,8 +692,6 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		//
 		Field f = null;
 		//
-		int size = 0;
-		//
 		Class<?> type = null;
 		//
 		for (final Cell cell : cells) {
@@ -710,7 +708,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 				//
 			} // if
 				//
-			if ((size = IterableUtils.size(fields = getFields(fs, intStringMap, cell.getColumnIndex()))) > 1) {
+			if (IterableUtils.size(fields = getFields(fs, intStringMap, cell.getColumnIndex())) > 1) {
 				//
 				throw new IllegalStateException();
 				//
