@@ -448,11 +448,11 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 			//
 		} else if (Objects.equals(CellType.BOOLEAN, cellType)) {
 			//
-			return Boolean.toString(instance.getBooleanCellValue());
+			return instance != null ? Boolean.toString(instance.getBooleanCellValue()) : null;
 			//
 		} else if (Objects.equals(CellType.NUMERIC, cellType)) {
 			//
-			return Double.toString(instance.getNumericCellValue());
+			return instance != null ? Double.toString(instance.getNumericCellValue()) : null;
 			//
 		} else if (Objects.equals(CellType.FORMULA, cellType)) {
 			//
