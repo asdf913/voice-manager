@@ -475,6 +475,7 @@ abstract class Util {
 		return instance != null ? instance.findFirst() : null;
 	}
 
+	@Nullable
 	static <T> Iterator<T> iterator(@Nullable final Iterable<T> instance) {
 		return instance != null ? instance.iterator() : null;
 	}
