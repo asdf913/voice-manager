@@ -73,7 +73,7 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 	private static Method METHOD_GET_LINKS, METHOD_VALUE_OF, METHOD_TRIM, METHOD_APPEND, METHOD_TEST_AND_APPLY,
 			METHOD_IS_ABSOLUTE, METHOD_APPLY, METHOD_SET_DESCRIPTION_AND_TEXT_AND_URL, METHOD_ADD_LINKS,
 			METHOD_HAS_ATTR, METHOD_IIF, METHOD_GET_IMG, METHOD_FOR_EACH, METHOD_GET_STRING_CELL_VALUE, METHOD_TO_MAP,
-			METHOD_HANDLE_HSSF_CELL, METHOD_FORMAT_CELL_VALUE = null;
+			METHOD_HANDLE_HSSF_CELL, METHOD_FORMAT_CELL_VALUE, METHOD_TO_INT_STRING_MAP = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException, ClassNotFoundException {
@@ -124,6 +124,9 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 				.setAccessible(true);
 		//
 		(METHOD_FORMAT_CELL_VALUE = clz.getDeclaredMethod("formatCellValue", DataFormatter.class, Cell.class))
+				.setAccessible(true);
+		//
+		(METHOD_TO_INT_STRING_MAP = clz.getDeclaredMethod("toIntStringMap", Iterable.class, FormulaEvaluator.class))
 				.setAccessible(true);
 		//
 	}
@@ -1169,6 +1172,24 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 				return (String) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testToIntStringMap() throws Throwable {
+		//
+		Assertions.assertNull(toIntStringMap(null, null));
+		//
+		Assertions.assertNull(toIntStringMap(Collections.singleton(null), null));
+		//
+	}
+
+	private static Object toIntStringMap(final Iterable<Cell> cells, final FormulaEvaluator formulaEvaluator)
+			throws Throwable {
+		try {
+			return METHOD_TO_INT_STRING_MAP.invoke(null, cells, formulaEvaluator);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

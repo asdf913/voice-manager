@@ -662,23 +662,11 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 					//
 				} // if
 					//
-				if (intStringMap == null
-						&& (intStringMap = Reflection.newProxy(IntStringMap.class, new IH())) != null) {
+				if (intStringMap == null) {
 					//
-					for (final Cell cell : row) {
-						//
-						if (cell == null) {
-							//
-							continue;
-							//
-						} // if
-							//
-						intStringMap.setString(cell.getColumnIndex(), getStringCellValue(cell,
-								formulaEvaluator = ObjectUtils.getIfNull(formulaEvaluator, () -> CreationHelperUtil
-										.createFormulaEvaluator(WorkbookUtil.getCreationHelper(wb)))));
-						//
-					} // for
-						//
+					intStringMap = toIntStringMap(row, formulaEvaluator = ObjectUtils.getIfNull(formulaEvaluator,
+							() -> CreationHelperUtil.createFormulaEvaluator(WorkbookUtil.getCreationHelper(wb))));
+					//
 					continue;
 					//
 				} // if
@@ -748,6 +736,33 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		} // if
 			//
 		return null;
+		//
+	}
+
+	private static IntStringMap toIntStringMap(final Iterable<Cell> cells, final FormulaEvaluator formulaEvaluator) {
+		//
+		if (iterator(cells) == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		IntStringMap intStringMap = null;
+		//
+		for (final Cell cell : cells) {
+			//
+			if (cell == null || (intStringMap = ObjectUtils.getIfNull(intStringMap,
+					() -> Reflection.newProxy(IntStringMap.class, new IH()))) == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			intStringMap.setString(cell.getColumnIndex(), getStringCellValue(cell, formulaEvaluator));
+			//
+		} // for
+			//
+		return intStringMap;
 		//
 	}
 
