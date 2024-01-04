@@ -235,6 +235,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 			//
 		}
 
+		@Nullable
 		private IValue0<?> handleIntStringMap(final String methodName, @Nullable final Object[] args) {
 			//
 			if (Objects.equals(methodName, "setString") && args != null && args.length > 1) {
@@ -550,6 +551,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 
 		void setString(final int key, @Nullable final String value);
 
+		@Nullable
 		static String getString(@Nullable final IntStringMap instance, final int key) {
 			return instance != null ? instance.getString(key) : null;
 		}
