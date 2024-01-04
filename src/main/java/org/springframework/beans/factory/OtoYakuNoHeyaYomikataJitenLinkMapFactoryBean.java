@@ -15,6 +15,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -356,7 +357,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		//
 		Map<Object, Object> map = null;
 		//
-		if (sheet != null && sheet.iterator() != null) {
+		if ( iterator(sheet) != null) {
 			//
 			for (final Row row : sheet) {
 				//
@@ -631,7 +632,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		//
 		final Sheet sheet = WorkbookUtil.getSheet(wb, sheetName);
 		//
-		if (sheet != null && sheet.iterator() != null) {
+		if (iterator(sheet) != null) {
 			//
 			List<Link> links = null;
 			//
@@ -655,7 +656,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 			//
 			for (final Row row : sheet) {
 				//
-				if (row == null || row.iterator() == null) {
+				if (iterator(row) == null) {
 					//
 					continue;
 					//
@@ -748,6 +749,10 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 			//
 		return null;
 		//
+	}
+
+	private static <T> Iterator<T> iterator(final Iterable<T> instance) {
+		return instance != null ? instance.iterator() : null;
 	}
 
 	@Nullable
