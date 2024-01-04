@@ -77,11 +77,14 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 	@Note("title")
 	private String title = null;
 
+	@Note("URL Transition Sheet Name")
+	private String urlTransitionSheetName = null;
+
 	private Map<Object, Object> urlMap = null;
 
 	private Resource resource = null;
 
-	private String urlTransitionSheetName, linkSheetName = null;
+	private String linkSheetName = null;
 
 	public void setUrl(final String url) {
 		this.url = url;
