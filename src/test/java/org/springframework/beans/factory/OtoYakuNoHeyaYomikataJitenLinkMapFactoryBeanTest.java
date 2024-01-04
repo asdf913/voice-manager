@@ -74,7 +74,7 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 	private static Method METHOD_GET_LINKS, METHOD_VALUE_OF, METHOD_TRIM, METHOD_APPEND, METHOD_TEST_AND_APPLY,
 			METHOD_IS_ABSOLUTE, METHOD_APPLY, METHOD_SET_DESCRIPTION_AND_TEXT_AND_URL, METHOD_ADD_LINKS,
 			METHOD_HAS_ATTR, METHOD_IIF, METHOD_GET_IMG, METHOD_FOR_EACH, METHOD_GET_STRING_CELL_VALUE, METHOD_TO_MAP,
-			METHOD_HANDLE_HSSF_CELL, METHOD_FORMAT_CELL_VALUE, METHOD_TO_INT_STRING_MAP, METHOD_CLEAR, METHOD_TO_LINK,
+			METHOD_HANDLE_HSSF_CELL, METHOD_FORMAT_CELL_VALUE, METHOD_TO_INT_STRING_MAP, METHOD_TO_LINK,
 			METHOD_GET_FIELDS = null;
 
 	@BeforeAll
@@ -130,8 +130,6 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 		//
 		(METHOD_TO_INT_STRING_MAP = clz.getDeclaredMethod("toIntStringMap", Iterable.class, FormulaEvaluator.class))
 				.setAccessible(true);
-		//
-		(METHOD_CLEAR = clz.getDeclaredMethod("clear", Collection.class)).setAccessible(true);
 		//
 		final Class<?> classIntStringMap = Class
 				.forName("org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean$IntStringMap");
@@ -1203,21 +1201,6 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 			throws Throwable {
 		try {
 			return METHOD_TO_INT_STRING_MAP.invoke(null, cells, formulaEvaluator);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testClear() {
-		//
-		Assertions.assertDoesNotThrow(() -> clear(null));
-		//
-	}
-
-	private static void clear(final Collection<?> instance) throws Throwable {
-		try {
-			METHOD_CLEAR.invoke(null, instance);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

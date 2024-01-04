@@ -760,12 +760,6 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		//
 	}
 
-	private static void clear(@Nullable final Collection<?> instance) {
-		if (instance != null) {
-			instance.clear();
-		}
-	}
-
 	@Nullable
 	private static IntStringMap toIntStringMap(final Iterable<Cell> cells, final FormulaEvaluator formulaEvaluator) {
 		//
