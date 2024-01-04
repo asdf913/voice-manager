@@ -362,7 +362,8 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 	}
 
 	@Nullable
-	private static String getStringCellValue(@Nullable final Cell instance, final FormulaEvaluator formulaEvaluator) {
+	private static String getStringCellValue(@Nullable final Cell instance,
+			@Nullable final FormulaEvaluator formulaEvaluator) {
 		//
 		if (instance == null) {
 			//
@@ -547,7 +548,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 
 		String getString(final int key);
 
-		void setString(final int key, final String value);
+		void setString(final int key, @Nullable final String value);
 
 		static String getString(@Nullable final IntStringMap instance, final int key) {
 			return instance != null ? instance.getString(key) : null;
@@ -668,7 +669,9 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 									//
 									if (Objects.equals(type = f.getType(), String.class)) {
 										//
-										f.set(ih, getStringCellValue(cell, formulaEvaluator));
+										f.set(ih, getStringCellValue(cell, formulaEvaluator = ObjectUtils
+												.getIfNull(formulaEvaluator, () -> CreationHelperUtil
+														.createFormulaEvaluator(WorkbookUtil.getCreationHelper(wb)))));
 										//
 									} else if (Objects.equals(type, Integer.class)) {
 										//
