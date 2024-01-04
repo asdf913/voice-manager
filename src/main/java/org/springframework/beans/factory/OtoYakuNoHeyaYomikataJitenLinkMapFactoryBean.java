@@ -737,7 +737,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 	}
 
 	@Nullable
-	private static List<Field> getFields(final Field[] fs, final IntStringMap intStringMap, final int index) {
+	private static List<Field> getFields(@Nullable final Field[] fs, final IntStringMap intStringMap, final int index) {
 		//
 		List<Field> fields = null;
 		//
