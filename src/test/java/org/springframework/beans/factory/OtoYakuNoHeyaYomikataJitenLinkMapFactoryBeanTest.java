@@ -73,7 +73,8 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 	private static Method METHOD_GET_LINKS, METHOD_VALUE_OF, METHOD_TRIM, METHOD_APPEND, METHOD_TEST_AND_APPLY,
 			METHOD_IS_ABSOLUTE, METHOD_APPLY, METHOD_SET_DESCRIPTION_AND_TEXT_AND_URL, METHOD_ADD_LINKS,
 			METHOD_HAS_ATTR, METHOD_IIF, METHOD_GET_IMG, METHOD_FOR_EACH, METHOD_GET_STRING_CELL_VALUE, METHOD_TO_MAP,
-			METHOD_HANDLE_HSSF_CELL, METHOD_FORMAT_CELL_VALUE, METHOD_TO_INT_STRING_MAP, METHOD_CLEAR = null;
+			METHOD_HANDLE_HSSF_CELL, METHOD_FORMAT_CELL_VALUE, METHOD_TO_INT_STRING_MAP, METHOD_CLEAR,
+			METHOD_TO_LINK = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException, ClassNotFoundException {
@@ -130,6 +131,11 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 				.setAccessible(true);
 		//
 		(METHOD_CLEAR = clz.getDeclaredMethod("clear", Collection.class)).setAccessible(true);
+		//
+		(METHOD_TO_LINK = clz.getDeclaredMethod("toLink", Iterable.class,
+				Class.forName(
+						"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean$IntStringMap"),
+				FormulaEvaluator.class, DataFormatter.class)).setAccessible(true);
 		//
 	}
 
@@ -1210,6 +1216,31 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
+	}
+
+	@Test
+	void testToLink() throws Throwable {
+		//
+		Assertions.assertNull(toLink(null, null, null, null));
+		//
+		Assertions.assertNull(toLink(Collections.singleton(null), null, null, null));
+		//
+	}
+
+	private static Link toLink(final Iterable<Cell> cells, final Object intStringMap,
+			final FormulaEvaluator formulaEvaluator, final DataFormatter df) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_LINK.invoke(null, cells, intStringMap, formulaEvaluator, df);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Link) {
+				return (Link) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+
 	}
 
 	@Test

@@ -641,18 +641,6 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 			//
 			FormulaEvaluator formulaEvaluator = null;
 			//
-			IH ih = null;
-			//
-			Field[] fs = null;
-			//
-			Field f = null;
-			//
-			List<Field> fields = null;
-			//
-			int size = 0;
-			//
-			Class<?> type = null;
-			//
 			DataFormatter df = null;
 			//
 			for (final Row row : sheet) {
@@ -672,59 +660,10 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 					//
 				} // if
 					//
-				ih = new IH();
-				//
-				for (final Cell cell : row) {
-					//
-					if (cell == null) {
-						//
-						continue;
-						//
-					} // if
-						//
-					fs = FieldUtils.getAllFields(Util.getClass(ih));
-					//
-					clear(fields = ObjectUtils.getIfNull(fields, ArrayList::new));
-					//
-					for (int i = 0; fs != null && i < fs.length; i++) {
-						//
-						if ((f = fs[i]) == null || !StringUtils.equalsIgnoreCase(Util.getName(f),
-								IntStringMap.getString(intStringMap, cell.getColumnIndex()))) {
-							//
-							continue;
-							//
-						} // if
-							//
-						Util.add(fields, f);
-						//
-					} // for
-						//
-					if ((size = IterableUtils.size(fields)) > 1) {
-						//
-						throw new IllegalStateException();
-						//
-					} // if
-						//
-					if ((f = size == 1 ? IterableUtils.get(fields, 0) : null) != null) {
-						//
-						if (Objects.equals(type = f.getType(), String.class)) {
-							//
-							f.set(ih, getStringCellValue(cell,
-									formulaEvaluator = ObjectUtils.getIfNull(formulaEvaluator, () -> CreationHelperUtil
-											.createFormulaEvaluator(WorkbookUtil.getCreationHelper(wb)))));
-							//
-						} else if (Objects.equals(type, Integer.class)) {
-							//
-							f.set(ih,
-									valueOf(formatCellValue(df = ObjectUtils.getIfNull(df, DataFormatter::new), cell)));
-							//
-						} // if
-							//
-					} // if
-						//
-				} // for
-					//
-				Util.add(links = ObjectUtils.getIfNull(links, ArrayList::new), Reflection.newProxy(Link.class, ih));
+				Util.add(links = ObjectUtils.getIfNull(links, ArrayList::new),
+						toLink(row, intStringMap, formulaEvaluator = ObjectUtils.getIfNull(formulaEvaluator,
+								() -> CreationHelperUtil.createFormulaEvaluator(WorkbookUtil.getCreationHelper(wb))),
+								df = ObjectUtils.getIfNull(df, DataFormatter::new)));
 				//
 			} // for
 				//
@@ -733,6 +672,82 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		} // if
 			//
 		return null;
+		//
+	}
+
+	private static Link toLink(final Iterable<Cell> cells, final IntStringMap intStringMap,
+			final FormulaEvaluator formulaEvaluator, final DataFormatter df) throws IllegalAccessException {
+		//
+		if (iterator(cells) == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		IH ih = null;
+		//
+		Field[] fs = null;
+		//
+		List<Field> fields = null;
+		//
+		Field f = null;
+		//
+		int size = 0;
+		//
+		Class<?> type = null;
+		//
+		for (final Cell cell : cells) {
+			//
+			if (cell == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			if (fs == null) {
+				//
+				fs = FieldUtils.getAllFields(Util.getClass(ih = ObjectUtils.getIfNull(ih, IH::new)));
+				//
+			} // if
+				//
+			clear(fields = ObjectUtils.getIfNull(fields, ArrayList::new));
+			//
+			for (int i = 0; fs != null && i < fs.length; i++) {
+				//
+				if ((f = fs[i]) == null || !StringUtils.equalsIgnoreCase(Util.getName(f),
+						IntStringMap.getString(intStringMap, cell.getColumnIndex()))) {
+					//
+					continue;
+					//
+				} // if
+					//
+				Util.add(fields, f);
+				//
+			} // for
+				//
+			if ((size = IterableUtils.size(fields)) > 1) {
+				//
+				throw new IllegalStateException();
+				//
+			} // if
+				//
+			if ((f = size == 1 ? IterableUtils.get(fields, 0) : null) != null) {
+				//
+				if (Objects.equals(type = f.getType(), String.class)) {
+					//
+					f.set(ih, getStringCellValue(cell, formulaEvaluator));
+					//
+				} else if (Objects.equals(type, Integer.class)) {
+					//
+					f.set(ih, valueOf(formatCellValue(df, cell)));
+					//
+				} // if
+					//
+			} // if
+				//
+		} // for
+			//
+		return testAndApply(Objects::nonNull, ih, x -> Reflection.newProxy(Link.class, x), null);
 		//
 	}
 
