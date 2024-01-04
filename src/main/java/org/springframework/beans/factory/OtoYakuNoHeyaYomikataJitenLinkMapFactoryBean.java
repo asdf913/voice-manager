@@ -357,7 +357,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		//
 		Map<Object, Object> map = null;
 		//
-		if ( iterator(sheet) != null) {
+		if (iterator(sheet) != null) {
 			//
 			for (final Row row : sheet) {
 				//
@@ -751,7 +751,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		//
 	}
 
-	private static <T> Iterator<T> iterator(final Iterable<T> instance) {
+	private static <T> Iterator<T> iterator(@Nullable final Iterable<T> instance) {
 		return instance != null ? instance.iterator() : null;
 	}
 
