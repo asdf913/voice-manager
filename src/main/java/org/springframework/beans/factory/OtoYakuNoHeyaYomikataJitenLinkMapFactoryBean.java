@@ -126,6 +126,10 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 
 		String getImgSrc();
 
+		static String getUrl(final Link instance) {
+			return instance != null ? instance.getUrl() : null;
+		}
+
 	}
 
 	private static class IH implements InvocationHandler {
@@ -707,7 +711,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		//
 		forEach(links, x -> {
 			//
-			final String u = x != null ? x.getUrl() : null;
+			final String u = Link.getUrl(x);
 			//
 			if (x != null && Util.containsKey(urlMap, u)) {
 				//

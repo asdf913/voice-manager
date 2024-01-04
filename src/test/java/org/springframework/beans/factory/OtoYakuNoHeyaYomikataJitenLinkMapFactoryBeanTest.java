@@ -192,6 +192,19 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 					//
 			} // if
 				//
+			final Class<?> clz = Class
+					.forName("org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean$Link");
+			//
+			if (clz != null && clz.isInstance(proxy)) {
+				//
+				if (Objects.equals(methodName, "getUrl")) {
+					//
+					return null;
+					//
+				} // if
+					//
+			} // if
+				//
 			throw new Throwable(methodName);
 			//
 		}
@@ -1178,7 +1191,9 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 		//
 		Assertions.assertThrows(Throwable.class, () -> invoke(ih, link, null, null));
 		//
-		new FailableStream<>(Arrays.stream(ObjectUtils.getIfNull(getDeclaredMethods(clz), () -> new Method[] {})))
+		new FailableStream<>(
+				Util.filter(Arrays.stream(ObjectUtils.getIfNull(getDeclaredMethods(clz), () -> new Method[] {})),
+						f -> f == null || !f.isSynthetic()))
 				.forEach(m -> {
 					//
 					if (!Objects.equals(Void.TYPE, m != null ? m.getReturnType() : null)) {
@@ -1294,6 +1309,21 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 	private static Object invoke(final InvocationHandler instance, final Object proxy, final Method method,
 			final Object[] args) throws Throwable {
 		return instance != null ? instance.invoke(proxy, method, args) : null;
+	}
+
+	@Test
+	void testLink()
+			throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+		//
+		final Class<?> clz = Class
+				.forName("org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean$Link");
+		//
+		final Method method = clz != null ? clz.getDeclaredMethod("getUrl", clz) : null;
+		//
+		Assertions.assertEquals(null, method != null ? method.invoke(null, (Object) null) : null);
+		//
+		Assertions.assertEquals(null, method != null ? method.invoke(null, Reflection.newProxy(clz, ih)) : null);
+		//
 	}
 
 }
