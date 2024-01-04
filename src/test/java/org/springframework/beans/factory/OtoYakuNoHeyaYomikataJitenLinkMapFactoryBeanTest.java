@@ -33,6 +33,7 @@ import org.apache.poi.ss.formula.FormulaParseException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellUtil;
 import org.apache.poi.ss.usermodel.CreationHelperUtil;
+import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.RichTextString;
 import org.apache.poi.ss.usermodel.Row;
@@ -72,7 +73,7 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 	private static Method METHOD_GET_LINKS, METHOD_VALUE_OF, METHOD_TRIM, METHOD_APPEND, METHOD_TEST_AND_APPLY,
 			METHOD_IS_ABSOLUTE, METHOD_APPLY, METHOD_SET_DESCRIPTION_AND_TEXT_AND_URL, METHOD_ADD_LINKS,
 			METHOD_HAS_ATTR, METHOD_IIF, METHOD_GET_IMG, METHOD_FOR_EACH, METHOD_GET_STRING_CELL_VALUE, METHOD_TO_MAP,
-			METHOD_HANDLE_HSSF_CELL = null;
+			METHOD_HANDLE_HSSF_CELL, METHOD_FORMAT_CELL_VALUE = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException, ClassNotFoundException {
@@ -120,6 +121,9 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 		(METHOD_TO_MAP = clz.getDeclaredMethod("toMap", Sheet.class, FormulaEvaluator.class)).setAccessible(true);
 		//
 		(METHOD_HANDLE_HSSF_CELL = clz.getDeclaredMethod("handleHSSFCell", Cell.class, FormulaEvaluator.class))
+				.setAccessible(true);
+		//
+		(METHOD_FORMAT_CELL_VALUE = clz.getDeclaredMethod("formatCellValue", DataFormatter.class, Cell.class))
 				.setAccessible(true);
 		//
 	}
@@ -172,6 +176,10 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 					//
 					return null;
 					//
+				} else if (Objects.equals(methodName, "getCellType")) {
+					//
+					return null;
+					//
 				} // if
 					//
 			} else if (proxy instanceof Row) {
@@ -196,6 +204,8 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 
 	private IH ih = null;
 
+	private ObjectMapper objectMapper = null;
+
 	@BeforeEach
 	void beforeEach() {
 		//
@@ -204,6 +214,8 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 		element = Util.cast(Element.class, Narcissus.allocateInstance(Element.class));
 		//
 		ih = new IH();
+		//
+		objectMapper = new ObjectMapper();
 		//
 	}
 
@@ -236,9 +248,10 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 			//
 			new FailableStream<>(ObjectUtils.getIfNull(Util.stream(links), Stream::empty)).forEach(x -> {
 				//
-				System.out.println(ObjectMapperUtil
-						.writeValueAsString(new ObjectMapper().setDefaultPropertyInclusion(Include.NON_NULL)
-								.configure(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY, true), x));
+				System.out.println(ObjectMapperUtil.writeValueAsString(
+						objectMapper != null ? objectMapper.setDefaultPropertyInclusion(Include.NON_NULL)
+								.configure(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY, true) : null,
+						x));
 				//
 			});
 			//
@@ -256,10 +269,97 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 				//
 		} else {
 			//
-			Assertions.assertNull(instance != null ? instance.getObject() : null);
+			Assertions.assertNull(getObject(instance));
 			//
 		} // if
 			//
+		if (instance != null) {
+			//
+			final String link = "link";
+			//
+			try (final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+					final Workbook wb = WorkbookFactory.create(true)) {
+				//
+				final Sheet sheet = WorkbookUtil.createSheet(wb, link);
+				//
+				if (sheet != null) {
+					//
+					Row row = SheetUtil.createRow(sheet, sheet.getPhysicalNumberOfRows());
+					//
+					if (row != null) {
+						//
+						CellUtil.setCellValue(RowUtil.createCell(row, row.getPhysicalNumberOfCells()), "number");
+						//
+						CellUtil.setCellValue(RowUtil.createCell(row, row.getPhysicalNumberOfCells()), "text");
+						//
+					} // if
+						//
+					if ((row = SheetUtil.createRow(sheet, sheet.getPhysicalNumberOfRows())) != null) {
+						//
+						final Cell cell = RowUtil.createCell(row, row.getPhysicalNumberOfCells());
+						//
+						if (cell != null) {
+							//
+							cell.setCellValue(1);
+							//
+						} // if
+							//
+						RowUtil.createCell(row, row.getPhysicalNumberOfCells());
+						//
+					} // if
+						//
+				} // if
+					//
+				WorkbookUtil.write(wb, baos);
+				//
+				instance.setResource(new ByteArrayResource(baos.toByteArray()));
+				//
+			} // try
+				//
+			instance.setLinkSheetName(link);
+			//
+		} // if
+			//
+		Assertions.assertEquals("[{\"number\":1,\"text\":\"\"}]",
+				ObjectMapperUtil.writeValueAsString(objectMapper != null
+						? objectMapper = objectMapper.setDefaultPropertyInclusion(Include.NON_NULL)
+								.configure(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY, true)
+						: null, getObject(instance)));
+		//
+		if (instance != null) {
+			//
+			try (final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+					final Workbook wb = WorkbookFactory.create(false)) {
+				//
+				WorkbookUtil.write(wb, baos);
+				//
+				instance.setResource(new ByteArrayResource(baos.toByteArray()));
+				//
+			} // try
+				//
+		} // if
+			//
+		Assertions.assertNull(getObject(instance));
+		//
+		if (instance != null) {
+			//
+			try (final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+					final Workbook wb = WorkbookFactory.create(false)) {
+				//
+				WorkbookUtil.write(wb, baos);
+				//
+				instance.setResource(new ByteArrayResource(baos.toByteArray()));
+				//
+			} // try
+				//
+		} // if
+			//
+		Assertions.assertNull(getObject(instance));
+		//
+	}
+
+	private static <T> T getObject(final FactoryBean<T> instance) throws Exception {
+		return instance != null ? instance.getObject() : null;
 	}
 
 	private static Workbook createWorkbook(final Iterable<Link> links)
@@ -1015,6 +1115,41 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 			throws Throwable {
 		try {
 			final Object obj = METHOD_HANDLE_HSSF_CELL.invoke(null, instance, formulaEvaluator);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testFormatCellValue() throws Throwable {
+		//
+		Assertions.assertNull(formatCellValue(null, null));
+		//
+		final DataFormatter dataFormatter = Util.cast(DataFormatter.class,
+				Narcissus.allocateInstance(DataFormatter.class));
+		//
+		Assertions.assertNull(formatCellValue(dataFormatter, Util.cast(Cell.class,
+				Narcissus.allocateInstance(Class.forName("org.apache.poi.hssf.usermodel.HSSFCell")))));
+		//
+		Assertions.assertNull(formatCellValue(dataFormatter, Util.cast(Cell.class,
+				Narcissus.allocateInstance(Class.forName("org.apache.poi.xssf.streaming.SXSSFCell")))));
+		//
+		Assertions.assertNull(formatCellValue(dataFormatter, Util.cast(Cell.class,
+				Narcissus.allocateInstance(Class.forName("org.apache.poi.xssf.usermodel.XSSFCell")))));
+		//
+		Assertions.assertNull(formatCellValue(dataFormatter, Reflection.newProxy(Cell.class, ih)));
+		//
+	}
+
+	private static String formatCellValue(final DataFormatter instance, final Cell cell) throws Throwable {
+		try {
+			final Object obj = METHOD_FORMAT_CELL_VALUE.invoke(null, instance, cell);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof String) {

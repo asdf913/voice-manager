@@ -30,11 +30,13 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.CellValue;
 import org.apache.poi.ss.usermodel.CellValueUtil;
 import org.apache.poi.ss.usermodel.CreationHelperUtil;
+import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.FormulaEvaluatorUtil;
 import org.apache.poi.ss.usermodel.Row;
@@ -79,7 +81,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 
 	private Resource resource = null;
 
-	private String urlTransitionSheetName = null;
+	private String urlTransitionSheetName, linkSheetName = null;
 
 	public void setUrl(final String url) {
 		this.url = url;
@@ -95,6 +97,10 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 
 	public void setUrlTransitionSheetName(final String urlTransitionSheetName) {
 		this.urlTransitionSheetName = urlTransitionSheetName;
+	}
+
+	public void setLinkSheetName(final String linkSheetName) {
+		this.linkSheetName = linkSheetName;
 	}
 
 	public void setUrlMap(final Map<Object, Object> urlMap) {
@@ -141,6 +147,8 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 
 		private Map<Object, Integer> integers = null;
 
+		private Map<Object, Object> intStrings = null;
+
 		private Map<Object, Object> getObjects() {
 			if (objects == null) {
 				objects = new LinkedHashMap<>();
@@ -153,6 +161,13 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 				integers = new LinkedHashMap<>();
 			}
 			return integers;
+		}
+
+		private Map<Object, Object> getIntStrings() {
+			if (intStrings == null) {
+				intStrings = new LinkedHashMap<>();
+			}
+			return intStrings;
 		}
 
 		@Override
@@ -200,6 +215,30 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 					//
 				return ObjectUtils.getIfNull(Util.get(map, object), () -> Util.cast(Integer.class, args[1]));
 				//
+			} else if (proxy instanceof IntStringMap) {
+				//
+				if (Objects.equals(methodName, "setString") && args != null && args.length > 1) {
+					//
+					Util.put(getIntStrings(), args[0], args[1]);
+					//
+					return null;
+					//
+				} else if (Objects.equals(methodName, "getString") && args != null && args.length > 0) {
+					//
+					final Object object = args[0];
+					//
+					final Map<?, ?> map = getIntStrings();
+					//
+					if (!Util.containsKey(map, object)) {
+						//
+						throw new IllegalStateException(Util.toString(object));
+						//
+					} // if
+						//
+					return ObjectUtils.getIfNull(Util.get(map, object), () -> Util.cast(Integer.class, args[1]));
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(methodName);
@@ -486,9 +525,159 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		//
 	}
 
+	private static interface IntStringMap {
+
+		String getString(final int key);
+
+		void setString(final int key, final String value);
+
+		static String getString(final IntStringMap instance, final int key) {
+			return instance != null ? instance.getString(key) : null;
+		}
+	}
+
 	@Override
 	public List<Link> getObject() throws Exception {
 		//
+		if (ResourceUtil.exists(resource)) {
+			//
+			ContentInfo ci = null;
+			//
+			try (final InputStream is = InputStreamSourceUtil.getInputStream(resource)) {
+				//
+				ci = new ContentInfoUtil().findMatch(is);
+				//
+			} // try
+				//
+			if (XlsxUtil.isXlsx(resource) || Objects.equals(Util.getMessage(ci), "OLE 2 Compound Document")) {
+				//
+				try (final InputStream is = InputStreamSourceUtil.getInputStream(resource);
+						final Workbook wb = WorkbookFactory.create(is)) {
+					//
+					final Sheet sheet = WorkbookUtil.getSheet(wb, linkSheetName);
+					//
+					if (sheet != null && sheet.iterator() != null) {
+						//
+						List<Link> links = null;
+						//
+						IntStringMap intStringMap = null;
+						//
+						FormulaEvaluator formulaEvaluator = null;
+						//
+						IH ih = null;
+						//
+						Field[] fs = null;
+						//
+						Field f = null;
+						//
+						List<Field> fields = null;
+						//
+						int size = 0;
+						//
+						Class<?> type = null;
+						//
+						DataFormatter df = null;
+						//
+						for (final Row row : sheet) {
+							//
+							if (row == null || row.iterator() == null) {
+								//
+								continue;
+								//
+							} // if
+								//
+							if (intStringMap == null
+									&& (intStringMap = Reflection.newProxy(IntStringMap.class, new IH())) != null) {
+								//
+								for (final Cell cell : row) {
+									//
+									if (cell == null) {
+										//
+										continue;
+										//
+									} // if
+										//
+									intStringMap.setString(cell.getColumnIndex(),
+											getStringCellValue(cell,
+													formulaEvaluator = ObjectUtils.getIfNull(formulaEvaluator,
+															() -> CreationHelperUtil.createFormulaEvaluator(
+																	WorkbookUtil.getCreationHelper(wb)))));
+									//
+								} // for
+									//
+								continue;
+								//
+							} // if
+								//
+							ih = new IH();
+							//
+							for (final Cell cell : row) {
+								//
+								if (cell == null) {
+									//
+									continue;
+									//
+								} // if
+									//
+								fs = FieldUtils.getAllFields(Util.getClass(ih));
+								//
+								if ((fields = ObjectUtils.getIfNull(fields, ArrayList::new)) != null) {
+									//
+									fields.clear();
+									//
+								} // if
+									//
+								for (int i = 0; fs != null && i < fs.length; i++) {
+									//
+									if ((f = fs[i]) == null || !StringUtils.equalsIgnoreCase(Util.getName(f),
+											IntStringMap.getString(intStringMap, cell.getColumnIndex()))) {
+										//
+										continue;
+										//
+									} // if
+										//
+									Util.add(fields, f);
+									//
+								} // for
+									//
+								if ((size = IterableUtils.size(fields)) > 1) {
+									//
+									throw new IllegalStateException();
+									//
+								} // if
+									//
+								if ((f = size == 1 ? IterableUtils.get(fields, 0) : null) != null) {
+									//
+									if (Objects.equals(type = f.getType(), String.class)) {
+										//
+										f.set(ih, getStringCellValue(cell, formulaEvaluator));
+										//
+									} else if (Objects.equals(type, Integer.class)) {
+										//
+										f.set(ih, valueOf(formatCellValue(
+												df = ObjectUtils.getIfNull(df, DataFormatter::new), cell)));
+										//
+									} // if
+										//
+								} // if
+									//
+							} // for
+								//
+							Util.add(links = ObjectUtils.getIfNull(links, ArrayList::new),
+									Reflection.newProxy(Link.class, ih));
+							//
+						} // for
+							//
+						return links;
+						//
+					} // if
+						//
+				} // try
+					//
+			} // if
+				//
+		} // if
+			//
 		final List<Link> links = getLinks(Util.toList(Util.filter(Util.stream(ElementUtil.select(
 				getElement(testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null), title), "tr")),
 				x -> ElementUtil.childrenSize(x) >= 3)));
@@ -506,6 +695,72 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		});
 		//
 		return links;
+		//
+	}
+
+	private static String formatCellValue(final DataFormatter instance, final Cell cell) {
+		//
+		if (instance == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		final Class<?> clz = Util.getClass(cell);
+		//
+		final String name = Util.getName(clz);
+		//
+		if (Objects.equals(name, "org.apache.poi.hssf.usermodel.HSSFCell")) {
+			//
+			if (org.apache.poi.ss.usermodel.CellUtil.getCellType(cell) == null) {
+				//
+				return null;
+				//
+			} // if
+				//
+		} else if (Objects.equals(name, "org.apache.poi.xssf.streaming.SXSSFCell")) {
+			//
+			final List<Field> fs = Util.toList(Util.filter(Arrays.stream(Util.getDeclaredFields(clz)),
+					f -> Objects.equals(Util.getName(f), "_value")));
+			//
+			final int size = IterableUtils.size(fs);
+			//
+			if (size > 1) {
+				//
+				throw new IllegalStateException(Integer.toString(size));
+				//
+			} // if
+				//
+			if (Narcissus.getField(cell,
+					testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null)) == null) {
+				//
+				return null;
+				//
+			} // if
+				//
+		} else if (Objects.equals(name, "org.apache.poi.xssf.usermodel.XSSFCell")) {
+			//
+			final List<Field> fs = Util.toList(Util.filter(Arrays.stream(Util.getDeclaredFields(clz)),
+					f -> Objects.equals(Util.getName(f), "_cell")));
+			//
+			final int size = IterableUtils.size(fs);
+			//
+			if (size > 1) {
+				//
+				throw new IllegalStateException(Integer.toString(size));
+				//
+			} // if
+				//
+			if (Narcissus.getField(cell,
+					testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null)) == null) {
+				//
+				return null;
+				//
+			} // if
+				//
+		} // if
+			//
+		return org.apache.poi.ss.usermodel.CellUtil.getCellType(cell) != null ? instance.formatCellValue(cell) : null;
 		//
 	}
 

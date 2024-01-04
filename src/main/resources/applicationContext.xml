@@ -718,6 +718,8 @@
 			value="${org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean.title}" />
 		<property name="urlTransitionSheetName"
 			value="${org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean.urlTransitionSheetName}" />
+		<property name="linkSheetName"
+			value="${org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean.linkSheetName}" />
 		<property name="resource"
 			value="classpath:OtoYakuNoHeyaYomikataJiten.xlsx" />
 	</bean>
