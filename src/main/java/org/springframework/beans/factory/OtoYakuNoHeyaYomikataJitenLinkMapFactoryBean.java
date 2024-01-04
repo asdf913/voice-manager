@@ -675,6 +675,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		//
 	}
 
+	@Nullable
 	private static Link toLink(final Iterable<Cell> cells, final IntStringMap intStringMap,
 			final FormulaEvaluator formulaEvaluator, final DataFormatter df) throws IllegalAccessException {
 		//
@@ -735,6 +736,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		//
 	}
 
+	@Nullable
 	private static List<Field> getFields(final Field[] fs, final IntStringMap intStringMap, final int index) {
 		//
 		List<Field> fields = null;
