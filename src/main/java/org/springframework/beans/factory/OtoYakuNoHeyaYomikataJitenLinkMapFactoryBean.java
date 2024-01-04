@@ -174,6 +174,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		}
 
 		@Override
+		@Nullable
 		public Object invoke(final Object proxy, final Method method, @Nullable final Object[] args) throws Throwable {
 			//
 			final String methodName = Util.getName(method);
@@ -715,6 +716,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		//
 	}
 
+	@Nullable
 	private static String formatCellValue(@Nullable final DataFormatter instance, final Cell cell) {
 		//
 		if (instance == null) {
