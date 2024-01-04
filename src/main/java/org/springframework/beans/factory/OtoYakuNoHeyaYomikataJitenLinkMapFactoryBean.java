@@ -627,6 +627,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		//
 	}
 
+	@Nullable
 	private static IValue0<List<Link>> toLinks(final Workbook wb, final String sheetName)
 			throws IllegalAccessException {
 		//
@@ -741,6 +742,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		}
 	}
 
+	@Nullable
 	private static IntStringMap toIntStringMap(final Iterable<Cell> cells, final FormulaEvaluator formulaEvaluator) {
 		//
 		if (iterator(cells) == null) {
