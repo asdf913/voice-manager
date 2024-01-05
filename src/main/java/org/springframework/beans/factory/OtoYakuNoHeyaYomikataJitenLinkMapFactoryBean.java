@@ -627,8 +627,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 	}
 
 	@Nullable
-	private static IValue0<List<Link>> toLinks(final Workbook wb, final String sheetName)
-			throws IllegalAccessException {
+	private static IValue0<List<Link>> toLinks(final Workbook wb, final String sheetName) {
 		//
 		final Sheet sheet = WorkbookUtil.getSheet(wb, sheetName);
 		//
