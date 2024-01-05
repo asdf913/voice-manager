@@ -8,8 +8,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
 
 import javax.annotation.Nullable;
 
@@ -183,13 +183,13 @@ public class TiZuKiGouKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 						StringUtils::isNotEmpty)),
 				Util.toList(Util.filter(testAndApply(Objects::nonNull, split(ElementUtil.text(e), "\\P{InHiragana}"),
 						Arrays::stream, null), StringUtils::isNotEmpty)),
-				Function.identity());
+				UnaryOperator.identity());
 		//
 	}
 
 	@Nullable
 	private static Map<String, String> toMap(final Iterable<String> ss1, final Iterable<String> ss2,
-			@Nullable final Function<String, String> function) {
+			@Nullable final UnaryOperator<String> function) {
 		//
 		if (Util.iterator(ss1) == null) {
 			//

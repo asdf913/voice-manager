@@ -5,8 +5,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
 
 import org.apache.commons.lang3.function.FailableFunction;
 import org.jsoup.nodes.Element;
@@ -38,7 +38,7 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 		//
 		(METHOD_TO_MAP1 = clz.getDeclaredMethod("toMap", Iterable.class)).setAccessible(true);
 		//
-		(METHOD_TO_MAP3 = clz.getDeclaredMethod("toMap", Iterable.class, Iterable.class, Function.class))
+		(METHOD_TO_MAP3 = clz.getDeclaredMethod("toMap", Iterable.class, Iterable.class, UnaryOperator.class))
 				.setAccessible(true);
 		//
 		(METHOD_SPLIT = clz.getDeclaredMethod("split", String.class, String.class)).setAccessible(true);
@@ -163,7 +163,7 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 	}
 
 	private static Map<String, String> toMap(final Iterable<String> ss1, final Iterable<String> ss2,
-			final Function<String, String> function) throws Throwable {
+			final UnaryOperator<String> function) throws Throwable {
 		try {
 			final Object obj = METHOD_TO_MAP3.invoke(null, ss1, ss2, function);
 			if (obj == null) {
