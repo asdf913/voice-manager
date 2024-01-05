@@ -214,7 +214,7 @@ class XlsUtilTest {
 						//
 					m.setAccessible(true);
 					//
-					m.invoke(null, (Object) null);
+					Assertions.assertNull(m.invoke(null, (Object) null));
 					//
 				});
 		//
