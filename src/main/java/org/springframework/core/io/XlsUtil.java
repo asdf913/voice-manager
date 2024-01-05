@@ -131,9 +131,9 @@ public abstract class XlsUtil {
 					//
 			} // for
 				//
-			for (int i = 0; entryNames != null && i < entryNames.size(); i++) {
+			for (int i = 0; i < IterableUtils.size(entryNames); i++) {
 				//
-				if (hasEntryCaseInsensitive(directoryNode, toString(entryNames.get(i)))) {
+				if (hasEntryCaseInsensitive(directoryNode, toString(IterableUtils.get(entryNames, i)))) {
 					//
 					return true;
 					//
