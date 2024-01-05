@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.Base64;
 import java.util.Base64.Decoder;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 
@@ -31,7 +32,7 @@ class XlsUtilTest {
 
 	private static Method METHOD_HAS_ENTRY_CASE_INSENSITIVE, METHOD_GET_CLASS, METHOD_TO_STRING, METHOD_ADD,
 			METHOD_GET_CONSTANT_POOL, METHOD_GET_DECLARED_METHOD, METHOD_GET_NAME, METHOD_TEST,
-			METHOD_GET_RESOURCE_AS_STREAM = null;
+			METHOD_GET_RESOURCE_AS_STREAM, METHOD_GET_ENTRY_NAMES = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException, ClassNotFoundException {
@@ -58,6 +59,8 @@ class XlsUtilTest {
 		//
 		(METHOD_GET_RESOURCE_AS_STREAM = clz.getDeclaredMethod("getResourceAsStream", Class.class, String.class))
 				.setAccessible(true);
+		//
+		(METHOD_GET_ENTRY_NAMES = clz.getDeclaredMethod("getEntryNames", Class.class)).setAccessible(true);
 		//
 	}
 
@@ -290,6 +293,27 @@ class XlsUtilTest {
 				return null;
 			} else if (obj instanceof InputStream) {
 				return (InputStream) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetEntryNames() throws Throwable {
+		//
+		Assertions.assertNull(getEntryNames(null));
+		//
+	}
+
+	private static List<Object> getEntryNames(final Class<?> clz) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_ENTRY_NAMES.invoke(null, clz);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof List) {
+				return (List) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

@@ -87,6 +87,26 @@ public abstract class XlsUtil {
 			//
 		} // try
 			//
+		final List<Object> entryNames = getEntryNames(clz);
+		//
+		for (int i = 0; i < IterableUtils.size(entryNames); i++) {
+			//
+			if (hasEntryCaseInsensitive(directoryNode, toString(IterableUtils.get(entryNames, i)))) {
+				//
+				return true;
+				//
+			} // if
+				//
+		} // for
+			//
+		return false;
+		//
+	}
+
+	private static List<Object> getEntryNames(final Class<?> clz) throws IOException {
+		//
+		List<Object> entryNames = null;
+		//
 		try (final InputStream is = getResourceAsStream(clz,
 				String.format("/%1$s.class", StringUtils.replace(getName(clz), ".", "/")))) {
 			//
@@ -105,8 +125,6 @@ public abstract class XlsUtil {
 			ConstantPoolGen cpg = null;
 			//
 			final ConstantPool cp = getConstantPool(javaClass);
-			//
-			List<Object> entryNames = null;
 			//
 			for (int i = 0; instructions != null && i < instructions.length; i++) {
 				//
@@ -131,23 +149,13 @@ public abstract class XlsUtil {
 					//
 			} // for
 				//
-			for (int i = 0; i < IterableUtils.size(entryNames); i++) {
-				//
-				if (hasEntryCaseInsensitive(directoryNode, toString(IterableUtils.get(entryNames, i)))) {
-					//
-					return true;
-					//
-				} // if
-					//
-			} // for
-				//
 		} catch (final NoSuchMethodException e) {
 			//
 			LoggerUtil.error(LOG, e.getMessage(), e);
 			//
 		} // try
 			//
-		return false;
+		return entryNames;
 		//
 	}
 
