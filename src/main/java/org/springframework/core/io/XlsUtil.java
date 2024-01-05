@@ -151,11 +151,11 @@ public abstract class XlsUtil {
 		//
 	}
 
-	private static InputStream getResourceAsStream(final Class<?> clz, final String name) {
+	private static InputStream getResourceAsStream(@Nullable final Class<?> clz, @Nullable final String name) {
 		return clz != null && name != null ? clz.getResourceAsStream(name) : null;
 	}
 
-	private static boolean hasEntryCaseInsensitive(final DirectoryEntry instance, final String name) {
+	private static boolean hasEntryCaseInsensitive(final DirectoryEntry instance, @Nullable final String name) {
 		//
 		if (instance == null) {
 			//
@@ -231,7 +231,7 @@ public abstract class XlsUtil {
 		return instance != null ? instance.toString() : null;
 	}
 
-	private static <E> void add(final Collection<E> items, final E item) {
+	private static <E> void add(@Nullable final Collection<E> items, final E item) {
 		if (items != null) {
 			items.add(item);
 		}
@@ -249,7 +249,7 @@ public abstract class XlsUtil {
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
-	private static <T> boolean test(final Predicate<T> instance, final T value) {
+	private static <T> boolean test(@Nullable final Predicate<T> instance, final T value) {
 		return instance != null && instance.test(value);
 	}
 
