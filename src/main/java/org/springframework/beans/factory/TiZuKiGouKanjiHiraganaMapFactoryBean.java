@@ -161,21 +161,12 @@ public class TiZuKiGouKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 				//
 			} else if (StringUtils.contains(kanji, '・')) {
 				//
-				final String[] ss1 = StringUtils.split(kanji, '・');
+				Util.putAll(map,
+						toMap(testAndApply(Objects::nonNull, StringUtils.split(kanji, '・'), Arrays::asList, null),
+								testAndApply(Objects::nonNull, StringUtils.split(ElementUtil.text(e), '・'),
+										Arrays::asList, null),
+								x -> getStringByUnicodeBlock(x, UnicodeBlock.HIRAGANA)));
 				//
-				final String[] ss2 = StringUtils.split(ElementUtil.text(e), '・');
-				//
-				for (int i = 0; ss1 != null && i < ss1.length; i++) {
-					//
-					for (int j = 0; ss2 != null && j < Math.min(ss1.length, ss2.length); j++) {
-						//
-						Util.put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), ss1[i],
-								getStringByUnicodeBlock(ss2[i], UnicodeBlock.HIRAGANA));
-						//
-					} // for
-						//
-				} // for
-					//
 			} else {
 				//
 				Util.putAll(
