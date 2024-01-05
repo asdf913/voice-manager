@@ -53,9 +53,9 @@ import org.springframework.core.io.InputStreamSourceUtil;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceContentInfoUtil;
 import org.springframework.core.io.ResourceUtil;
+import org.springframework.core.io.XlsUtil;
 import org.springframework.core.io.XlsxUtil;
 
-import com.j256.simplemagic.ContentInfo;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderUtil;
 
@@ -89,13 +89,11 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		//
 		if (ResourceUtil.exists(resource)) {
 			//
-			final ContentInfo ci = ResourceContentInfoUtil.getContentInfo(resource);
-			//
-			final String mimeType = Util.getMimeType(ci);
+			final String mimeType = Util.getMimeType(ResourceContentInfoUtil.getContentInfo(resource));
 			//
 			if (or(Objects.equals("application/vnd.openxmlformats-officedocument", mimeType),
 					Boolean.logicalAnd(Objects.equals("application/zip", mimeType), XlsxUtil.isXlsx(resource)),
-					Objects.equals("OLE 2 Compound Document", Util.getMessage(ci)))) {
+					XlsUtil.isXls(resource))) {
 				//
 				try (final InputStream is = InputStreamSourceUtil.getInputStream(resource);
 						final Workbook wb = testAndApply(Objects::nonNull, is, WorkbookFactory::create, null)) {

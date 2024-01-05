@@ -48,11 +48,11 @@ import org.meeuw.functional.TriConsumer;
 import org.meeuw.functional.TriPredicate;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceUtil;
+import org.springframework.core.io.XlsUtil;
 import org.springframework.core.io.XlsxUtil;
 import org.xml.sax.SAXException;
 
 import com.google.common.reflect.Reflection;
-import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
 
 public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryBean<String, String> {
@@ -218,12 +218,9 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 		//
 		IValue0<Map<String, String>> result = null;
 		//
-		final ContentInfo ci = new ContentInfoUtil().findMatch(bs);
-		//
-		final String mimeType = Util.getMimeType(ci);
-		//
-		if (Objects.equals("application/vnd.openxmlformats-officedocument", mimeType)
-				|| Objects.equals("OLE 2 Compound Document", Util.getMessage(ci)) || XlsxUtil.isXlsx(resource)) {
+		if (Objects.equals("application/vnd.openxmlformats-officedocument",
+				Util.getMimeType(new ContentInfoUtil().findMatch(bs))) || XlsUtil.isXls(resource)
+				|| XlsxUtil.isXlsx(resource)) {
 			//
 			try (final InputStream is = new ByteArrayInputStream(bs);
 					final Workbook wb = testAndApply(Objects::nonNull, is, WorkbookFactory::create, null)) {

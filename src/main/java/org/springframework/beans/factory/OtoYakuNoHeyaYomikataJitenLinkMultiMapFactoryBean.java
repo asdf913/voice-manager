@@ -47,6 +47,7 @@ import org.jsoup.nodes.ElementUtil;
 import org.jsoup.nodes.NodeUtil;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceUtil;
+import org.springframework.core.io.XlsUtil;
 import org.springframework.core.io.XlsxUtil;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
@@ -55,7 +56,6 @@ import org.xml.sax.SAXException;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
-import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
 
 /*
@@ -235,12 +235,9 @@ public class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean implements Factor
 		//
 		final byte[] bs = ResourceUtil.getContentAsByteArray(resource);
 		//
-		final ContentInfo ci = testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch, null);
-		//
-		final String mimeType = Util.getMimeType(ci);
-		//
-		if (Objects.equals("application/vnd.openxmlformats-officedocument", mimeType)
-				|| Objects.equals("OLE 2 Compound Document", Util.getMessage(ci)) || XlsxUtil.isXlsx(resource)) {
+		if (Objects.equals("application/vnd.openxmlformats-officedocument",
+				Util.getMimeType(testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch, null)))
+				|| XlsUtil.isXls(resource) || XlsxUtil.isXlsx(resource)) {
 			//
 			try (final InputStream is = new ByteArrayInputStream(bs);
 					final Workbook wb = testAndApply(Objects::nonNull, is, WorkbookFactory::create, null)) {

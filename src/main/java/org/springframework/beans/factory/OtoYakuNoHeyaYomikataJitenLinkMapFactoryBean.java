@@ -54,11 +54,10 @@ import org.jsoup.nodes.NodeUtil;
 import org.springframework.core.io.InputStreamSourceUtil;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceUtil;
+import org.springframework.core.io.XlsUtil;
 import org.springframework.core.io.XlsxUtil;
 
 import com.google.common.reflect.Reflection;
-import com.j256.simplemagic.ContentInfo;
-import com.j256.simplemagic.ContentInfoUtil;
 
 import io.github.toolfactory.narcissus.Narcissus;
 
@@ -326,15 +325,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		//
 		if (ResourceUtil.exists(resource)) {
 			//
-			ContentInfo ci = null;
-			//
-			try (final InputStream is = InputStreamSourceUtil.getInputStream(resource)) {
-				//
-				ci = new ContentInfoUtil().findMatch(is);
-				//
-			} // try
-				//
-			if (XlsxUtil.isXlsx(resource) || Objects.equals(Util.getMessage(ci), "OLE 2 Compound Document")) {
+			if (XlsxUtil.isXlsx(resource) || XlsUtil.isXls(resource)) {
 				//
 				try (final InputStream is = InputStreamSourceUtil.getInputStream(resource);
 						final Workbook wb = WorkbookFactory.create(is)) {
@@ -579,15 +570,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 		//
 		if (ResourceUtil.exists(resource)) {
 			//
-			ContentInfo ci = null;
-			//
-			try (final InputStream is = InputStreamSourceUtil.getInputStream(resource)) {
-				//
-				ci = new ContentInfoUtil().findMatch(is);
-				//
-			} // try
-				//
-			if (XlsxUtil.isXlsx(resource) || Objects.equals(Util.getMessage(ci), "OLE 2 Compound Document")) {
+			if (XlsxUtil.isXlsx(resource) || XlsUtil.isXls(resource)) {
 				//
 				try (final InputStream is = InputStreamSourceUtil.getInputStream(resource);
 						final Workbook wb = WorkbookFactory.create(is)) {

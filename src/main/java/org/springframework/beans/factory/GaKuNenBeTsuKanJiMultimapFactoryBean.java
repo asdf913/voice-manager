@@ -35,6 +35,7 @@ import org.springframework.core.io.InputStreamSourceUtil;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceContentInfoUtil;
 import org.springframework.core.io.ResourceUtil;
+import org.springframework.core.io.XlsUtil;
 import org.springframework.core.io.XlsxUtil;
 
 import com.google.common.collect.LinkedHashMultimap;
@@ -121,11 +122,9 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 			//
 			final String mimeType = Util.getMimeType(ci);
 			//
-			final String message = Util.getMessage(ci);
-			//
 			if (or(Objects.equals("application/vnd.openxmlformats-officedocument", mimeType),
 					Boolean.logicalAnd(Objects.equals("application/zip", mimeType), XlsxUtil.isXlsx(resource)),
-					Objects.equals("OLE 2 Compound Document", message))) {
+					XlsUtil.isXls(resource))) {
 				//
 				try (final InputStream is = InputStreamSourceUtil.getInputStream(resource)) {
 					//
@@ -133,7 +132,7 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 					//
 				} // try
 					//
-			} else if (Objects.equals("OpenDocument Spreadsheet", message)) {
+			} else if (Objects.equals("OpenDocument Spreadsheet", Util.getMessage(ci))) {
 				//
 				try (final InputStream is = InputStreamSourceUtil.getInputStream(resource)) {
 					//

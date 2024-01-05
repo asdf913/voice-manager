@@ -33,6 +33,7 @@ import org.jsoup.nodes.ElementUtil;
 import org.jsoup.select.Elements;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceUtil;
+import org.springframework.core.io.XlsUtil;
 import org.springframework.core.io.XlsxUtil;
 
 import com.google.common.collect.HashBasedTable;
@@ -69,7 +70,7 @@ public class JapaneseNameMultimapFactoryBean implements FactoryBean<Multimap<Str
 			final ContentInfo ci = testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch, null);
 			//
 			if (Objects.equals("application/vnd.openxmlformats-officedocument", Util.getMimeType(ci))
-					|| Objects.equals("OLE 2 Compound Document", Util.getMessage(ci)) || XlsxUtil.isXlsx(resource)) {
+					|| XlsUtil.isXls(resource) || XlsxUtil.isXlsx(resource)) {
 				//
 				try (final InputStream is = new ByteArrayInputStream(bs);
 						final Workbook wb = WorkbookFactory.create(is)) {
