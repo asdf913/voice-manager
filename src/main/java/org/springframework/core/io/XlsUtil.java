@@ -114,21 +114,17 @@ public abstract class XlsUtil {
 					//
 				} // if
 					//
-				if (instruction instanceof ARETURN && i > 0) {
+				if (instruction instanceof ARETURN && i > 0 && instructions[i - 1] instanceof LDC ldc) {
 					//
-					if (instructions[i - 1] instanceof LDC ldc) {
+					if (cpg == null) {
 						//
-						if (cpg == null) {
-							//
-							cpg = ObjectUtils.getIfNull(cpg,
-									() -> testAndApply(Objects::nonNull, cp, ConstantPoolGen::new, null));
-							//
-						} // if
-							//
-						add(entryNames = ObjectUtils.getIfNull(entryNames, ArrayList::new), ldc.getValue(cpg));
+						cpg = ObjectUtils.getIfNull(cpg,
+								() -> testAndApply(Objects::nonNull, cp, ConstantPoolGen::new, null));
 						//
 					} // if
 						//
+					add(entryNames = ObjectUtils.getIfNull(entryNames, ArrayList::new), ldc.getValue(cpg));
+					//
 				} // if
 					//
 			} // for
