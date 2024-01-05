@@ -155,7 +155,8 @@ public abstract class XlsUtil {
 		return clz != null && name != null ? clz.getResourceAsStream(name) : null;
 	}
 
-	private static boolean hasEntryCaseInsensitive(final DirectoryEntry instance, @Nullable final String name) {
+	private static boolean hasEntryCaseInsensitive(@Nullable final DirectoryEntry instance,
+			@Nullable final String name) {
 		//
 		if (instance == null) {
 			//
@@ -211,23 +212,23 @@ public abstract class XlsUtil {
 		//
 	}
 
-	private static String getName(final Member instance) {
+	private static String getName(@Nullable final Member instance) {
 		return instance != null ? instance.getName() : null;
 	}
 
-	private static Class<?> getClass(final Object instance) {
+	private static Class<?> getClass(@Nullable final Object instance) {
 		return instance != null ? instance.getClass() : null;
 	}
 
-	private static String getName(final Class<?> instance) {
+	private static String getName(@Nullable final Class<?> instance) {
 		return instance != null ? instance.getName() : null;
 	}
 
-	private static ConstantPool getConstantPool(final JavaClass instance) {
+	private static ConstantPool getConstantPool(@Nullable final JavaClass instance) {
 		return instance != null ? instance.getConstantPool() : null;
 	}
 
-	private static String toString(final Object instance) {
+	private static String toString(@Nullable final Object instance) {
 		return instance != null ? instance.toString() : null;
 	}
 
@@ -237,8 +238,8 @@ public abstract class XlsUtil {
 		}
 	}
 
-	private static Method getDeclaredMethod(final Class<?> clz, final String name, final Class<?>... parameterTypes)
-			throws NoSuchMethodException {
+	private static Method getDeclaredMethod(@Nullable final Class<?> clz, final String name,
+			final Class<?>... parameterTypes) throws NoSuchMethodException {
 		return clz != null ? clz.getDeclaredMethod(name, parameterTypes) : null;
 	}
 
@@ -253,7 +254,7 @@ public abstract class XlsUtil {
 		return instance != null && instance.test(value);
 	}
 
-	private static String getMessage(final ContentInfo instance) {
+	private static String getMessage(@Nullable final ContentInfo instance) {
 		return instance != null ? instance.getMessage() : null;
 	}
 
