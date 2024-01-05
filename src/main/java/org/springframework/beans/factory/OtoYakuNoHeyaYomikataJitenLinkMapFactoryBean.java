@@ -676,7 +676,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 
 	@Nullable
 	private static Link toLink(final Iterable<Cell> cells, final IntStringMap intStringMap,
-			final FormulaEvaluator formulaEvaluator, final DataFormatter df) throws IllegalAccessException {
+			final FormulaEvaluator formulaEvaluator, final DataFormatter df) {
 		//
 		if (Util.iterator(cells) == null) {
 			//
@@ -719,11 +719,11 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 				//
 				if (Objects.equals(type = f.getType(), String.class)) {
 					//
-					f.set(ih, getStringCellValue(cell, formulaEvaluator));
+					Narcissus.setObjectField(ih, f, getStringCellValue(cell, formulaEvaluator));
 					//
 				} else if (Objects.equals(type, Integer.class)) {
 					//
-					f.set(ih, valueOf(formatCellValue(df, cell)));
+					Narcissus.setObjectField(ih, f, valueOf(formatCellValue(df, cell)));
 					//
 				} // if
 					//
