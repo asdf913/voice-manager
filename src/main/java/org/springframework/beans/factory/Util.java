@@ -482,7 +482,7 @@ abstract class Util {
 		return instance != null ? instance.iterator() : null;
 	}
 
-	static void append(final StringBuilder instance, final char c) {
+	static void append(@Nullable final StringBuilder instance, final char c) {
 		//
 		if (instance == null) {
 			//
