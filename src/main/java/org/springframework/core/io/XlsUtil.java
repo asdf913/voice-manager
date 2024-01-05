@@ -174,15 +174,14 @@ public abstract class XlsUtil {
 			final List<Field> fs = FieldUtils.getAllFieldsList(clz).stream()
 					.filter(f -> Objects.equals(getName(f), "_byUCName")).toList();
 			//
-			final int size = IterableUtils.size(fs);
-			//
-			if (size > 1) {
+			if (IterableUtils.size(fs) > 1) {
 				//
 				throw new IllegalStateException();
 				//
 			} // if
 				//
-			if (Narcissus.getField(instance, size == 1 ? IterableUtils.get(fs, 0) : null) == null) {
+			if (Narcissus.getField(instance,
+					testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null)) == null) {
 				//
 				return false;
 				//
@@ -193,15 +192,14 @@ public abstract class XlsUtil {
 			final List<Field> fs = FieldUtils.getAllFieldsList(clz).stream()
 					.filter(f -> Objects.equals(getName(f), "excludes")).toList();
 			//
-			final int size = IterableUtils.size(fs);
-			//
-			if (size > 1) {
+			if (IterableUtils.size(fs) > 1) {
 				//
 				throw new IllegalStateException();
 				//
 			} // if
 				//
-			if (Narcissus.getField(instance, size == 1 ? IterableUtils.get(fs, 0) : null) == null) {
+			if (Narcissus.getField(instance,
+					testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null)) == null) {
 				//
 				return false;
 				//
