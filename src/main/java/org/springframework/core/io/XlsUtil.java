@@ -151,6 +151,7 @@ public abstract class XlsUtil {
 		//
 	}
 
+	@Nullable
 	private static InputStream getResourceAsStream(@Nullable final Class<?> clz, @Nullable final String name) {
 		return clz != null && name != null ? clz.getResourceAsStream(name) : null;
 	}
