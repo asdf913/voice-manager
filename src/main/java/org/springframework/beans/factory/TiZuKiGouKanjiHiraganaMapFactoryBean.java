@@ -186,8 +186,9 @@ public class TiZuKiGouKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		//
 	}
 
+	@Nullable
 	private static Map<String, String> toMap(final Iterable<String> ss1, final Iterable<String> ss2,
-			final Function<String, String> function) {
+			@Nullable final Function<String, String> function) {
 		//
 		if (Util.iterator(ss1) == null) {
 			//
