@@ -91,7 +91,7 @@ public class TiZuKiGouKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 					//
 					textNode = (TextNode) previousSibling;
 					//
-					continue;
+					break;
 					//
 				} // if
 					//
