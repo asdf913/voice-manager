@@ -724,6 +724,13 @@
 			value="classpath:OtoYakuNoHeyaYomikataJiten.xlsx" />
 	</bean>
 
+	<!--https://web.archive.org/web/20211126172558/http://www.gsi.go.jp/KIDS/map-sign-tizukigou-h14kigou-itiran.htm-->
+	<bean id="TiZuKiGouKanjiHiraganaMapFactoryBean"
+		class="org.springframework.beans.factory.TiZuKiGouKanjiHiraganaMapFactoryBean">
+		<property name="url"
+			value="${org.springframework.beans.factory.TiZuKiGouKanjiHiraganaMapFactoryBean.url}" />
+	</bean>
+
 	<!-- -->
 	<bean class="org.springframework.context.support.VoiceManager">
 		<property name="layout" ref="MigLayout" />
