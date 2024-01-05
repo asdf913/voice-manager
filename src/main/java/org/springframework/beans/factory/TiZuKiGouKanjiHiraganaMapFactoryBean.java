@@ -223,6 +223,7 @@ public class TiZuKiGouKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		//
 	}
 
+	@Nullable
 	private static String[] split(@Nullable final String a, @Nullable final String b) {
 		return a != null && b != null ? a.split(b) : null;
 	}
@@ -248,6 +249,7 @@ public class TiZuKiGouKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		}
 	}
 
+	@Nullable
 	private static Node previousSibling(@Nullable final Node instance) {
 		return instance != null ? instance.previousSibling() : null;
 	}
