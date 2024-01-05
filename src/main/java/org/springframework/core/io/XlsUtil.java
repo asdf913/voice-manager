@@ -103,6 +103,7 @@ public abstract class XlsUtil {
 		//
 	}
 
+	@Nullable
 	private static List<Object> getEntryNames(@Nullable final Class<?> clz) throws IOException {
 		//
 		List<Object> entryNames = null;
