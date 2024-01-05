@@ -41,6 +41,8 @@ import org.slf4j.LoggerUtil;
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
 
+import io.github.toolfactory.narcissus.Narcissus;
+
 public abstract class XlsUtil {
 
 	private static final Logger LOG = LoggerFactory.getLogger(XlsUtil.class);
@@ -178,27 +180,11 @@ public abstract class XlsUtil {
 				//
 			} // if
 				//
-			final Field f = size == 1 ? IterableUtils.get(fs, 0) : null;
-			//
-			try {
+			if (Narcissus.getField(instance, size == 1 ? IterableUtils.get(fs, 0) : null) == null) {
 				//
-				if (f != null) {
-					//
-					f.setAccessible(true);
-					//
-					if (f.get(instance) == null) {
-						//
-						return false;
-						//
-					} // if
-						//
-				} // if
-					//
-			} catch (final IllegalAccessException e) {
+				return false;
 				//
-				LoggerUtil.error(LOG, e.getMessage(), e);
-				//
-			} // try
+			} // if
 				//
 		} else if (Objects.equals(className, "org.apache.poi.poifs.filesystem.FilteringDirectoryNode")) {
 			//
@@ -213,27 +199,11 @@ public abstract class XlsUtil {
 				//
 			} // if
 				//
-			final Field f = size == 1 ? IterableUtils.get(fs, 0) : null;
-			//
-			try {
+			if (Narcissus.getField(instance, size == 1 ? IterableUtils.get(fs, 0) : null) == null) {
 				//
-				if (f != null) {
-					//
-					f.setAccessible(true);
-					//
-					if (f.get(instance) == null) {
-						//
-						return false;
-						//
-					} // if
-						//
-				} // if
-					//
-			} catch (final IllegalAccessException e) {
+				return false;
 				//
-				LoggerUtil.error(LOG, e.getMessage(), e);
-				//
-			} // try
+			} // if
 				//
 		} // if
 			//
