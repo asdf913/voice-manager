@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 import org.apache.commons.lang3.function.FailableFunction;
@@ -22,7 +23,7 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 
 	private static final String EMPTY = "";
 
-	private static Method METHOD_TEXT, METHOD_TEST_AND_APPLY, METHOD_TO_MAP1, METHOD_TO_MAP2, METHOD_SPLIT,
+	private static Method METHOD_TEXT, METHOD_TEST_AND_APPLY, METHOD_TO_MAP1, METHOD_TO_MAP3, METHOD_SPLIT,
 			METHOD_ALL_MATCH, METHOD_GET_STRING_BY_UNICODE_BLOCK, METHOD_APPEND = null;
 
 	@BeforeAll
@@ -37,7 +38,8 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 		//
 		(METHOD_TO_MAP1 = clz.getDeclaredMethod("toMap", Iterable.class)).setAccessible(true);
 		//
-		(METHOD_TO_MAP2 = clz.getDeclaredMethod("toMap", Iterable.class, Iterable.class)).setAccessible(true);
+		(METHOD_TO_MAP3 = clz.getDeclaredMethod("toMap", Iterable.class, Iterable.class, Function.class))
+				.setAccessible(true);
 		//
 		(METHOD_SPLIT = clz.getDeclaredMethod("split", String.class, String.class)).setAccessible(true);
 		//
@@ -139,10 +141,10 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 		Assertions.assertNull(
 				toMap(Collections.singleton(Util.cast(Element.class, Narcissus.allocateInstance(Element.class)))));
 		//
-		Assertions.assertNull(toMap(Collections.singleton(null), null));
+		Assertions.assertNull(toMap(Collections.singleton(null), null, null));
 		//
 		Assertions.assertEquals(Collections.singletonMap(null, null),
-				toMap(Collections.singleton(null), Collections.singleton(null)));
+				toMap(Collections.singleton(null), Collections.singleton(null), null));
 		//
 	}
 
@@ -160,9 +162,10 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 		}
 	}
 
-	private static Map<String, String> toMap(final Iterable<String> ss1, final Iterable<String> ss2) throws Throwable {
+	private static Map<String, String> toMap(final Iterable<String> ss1, final Iterable<String> ss2,
+			final Function<String, String> function) throws Throwable {
 		try {
-			final Object obj = METHOD_TO_MAP2.invoke(null, ss1, ss2);
+			final Object obj = METHOD_TO_MAP3.invoke(null, ss1, ss2, function);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Map) {

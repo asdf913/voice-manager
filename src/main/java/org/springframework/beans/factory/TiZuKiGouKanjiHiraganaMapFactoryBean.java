@@ -7,6 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
@@ -183,7 +184,8 @@ public class TiZuKiGouKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 										Arrays::stream, null), StringUtils::isNotEmpty)),
 								Util.toList(Util.filter(testAndApply(Objects::nonNull,
 										split(ElementUtil.text(e), "\\P{InHiragana}"), Arrays::stream, null),
-										StringUtils::isNotEmpty))));
+										StringUtils::isNotEmpty)),
+								Function.identity()));
 				//
 			} // if
 				//
@@ -193,7 +195,8 @@ public class TiZuKiGouKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		//
 	}
 
-	private static Map<String, String> toMap(final Iterable<String> ss1, final Iterable<String> ss2) {
+	private static Map<String, String> toMap(final Iterable<String> ss1, final Iterable<String> ss2,
+			final Function<String, String> function) {
 		//
 		if (Util.iterator(ss1) == null) {
 			//
@@ -213,7 +216,8 @@ public class TiZuKiGouKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 				//
 			for (final String s2 : ss2) {
 				//
-				Util.put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), s1, s2);
+				Util.put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), s1,
+						function != null ? function.apply(s2) : s2);
 				//
 			} // for
 				//
