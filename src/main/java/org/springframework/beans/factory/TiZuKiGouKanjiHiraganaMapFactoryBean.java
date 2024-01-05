@@ -164,7 +164,7 @@ public class TiZuKiGouKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 	}
 
 	@Nullable
-	private static Map<String, String> toMap(final Element e, final String kanji, final String hiragana) {
+	private static Map<String, String> toMap(@Nullable final Element e, final String kanji, final String hiragana) {
 		//
 		if (allMatch(kanji, UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)) {
 			//
