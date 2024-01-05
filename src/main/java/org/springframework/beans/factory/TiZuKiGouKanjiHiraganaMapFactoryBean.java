@@ -44,10 +44,8 @@ public class TiZuKiGouKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		final Document document = testAndApply(Objects::nonNull,
 				testAndApply(Objects::nonNull, url, x -> new URI(x).toURL(), null), x -> Jsoup.parse(x, 0), null);
 		//
-		final List<Element> es = ElementUtil.select(document, "ruby");
-		//
 		final Map<String, String> map = Util.collect(
-				Util.map(Util.stream(es),
+				Util.map(Util.stream(ElementUtil.select(document, "ruby")),
 						x -> Pair.of(text(ElementUtil.select(x, "rb")), text(ElementUtil.select(x, "rt")))),
 				LinkedHashMap::new, (a, b) -> Util.put(a, Util.getKey(b), Util.getValue(b)), Util::putAll);
 		//
