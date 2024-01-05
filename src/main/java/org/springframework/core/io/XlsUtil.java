@@ -112,7 +112,7 @@ public abstract class XlsUtil {
 					//
 				} // if
 					//
-				if (instruction instanceof ARETURN ar && i > 0) {
+				if (instruction instanceof ARETURN && i > 0) {
 					//
 					if (instructions[i - 1] instanceof LDC ldc) {
 						//
