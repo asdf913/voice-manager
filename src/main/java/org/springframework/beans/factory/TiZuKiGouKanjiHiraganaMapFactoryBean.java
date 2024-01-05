@@ -87,9 +87,9 @@ public class TiZuKiGouKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 			//
 			while ((previousSibling = previousSibling(previousSibling)) != null) {
 				//
-				if (previousSibling instanceof TextNode && StringUtils.isNotBlank(Util.toString(previousSibling))) {
+				if (previousSibling instanceof TextNode tn && StringUtils.isNotBlank(Util.toString(previousSibling))) {
 					//
-					textNode = (TextNode) previousSibling;
+					textNode = tn;
 					//
 					break;
 					//
