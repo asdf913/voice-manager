@@ -202,11 +202,11 @@ public class TiZuKiGouKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		//
 	}
 
-	private static String[] split(final String a, final String b) {
+	private static String[] split(@Nullable final String a, @Nullable final String b) {
 		return a != null && b != null ? a.split(b) : null;
 	}
 
-	private static boolean allMatch(final String string, final UnicodeBlock unicodeBlock) {
+	private static boolean allMatch(@Nullable final String string, final UnicodeBlock unicodeBlock) {
 		//
 		return string != null && string.chars().allMatch(
 				x -> Boolean.logicalOr(unicodeBlock == null, Objects.equals(unicodeBlock, UnicodeBlock.of(x))));
@@ -221,7 +221,7 @@ public class TiZuKiGouKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		//
 	}
 
-	private static void append(final StringBuilder instance, final char c) {
+	private static void append(@Nullable final StringBuilder instance, final char c) {
 		if (instance != null) {
 			instance.append(c);
 		}
