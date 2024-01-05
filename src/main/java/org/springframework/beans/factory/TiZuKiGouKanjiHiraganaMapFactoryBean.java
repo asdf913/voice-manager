@@ -213,7 +213,7 @@ public class TiZuKiGouKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		//
 	}
 
-	private static String getStringByUnicodeBlock(final String string, final UnicodeBlock unicodeBlock) {
+	private static String getStringByUnicodeBlock(@Nullable final String string, final UnicodeBlock unicodeBlock) {
 		//
 		return Util.toString(string != null ? string.chars()
 				.filter(x -> Boolean.logicalOr(unicodeBlock == null, Objects.equals(unicodeBlock, UnicodeBlock.of(x))))
@@ -227,7 +227,7 @@ public class TiZuKiGouKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		}
 	}
 
-	private static Node previousSibling(final Node instance) {
+	private static Node previousSibling(@Nullable final Node instance) {
 		return instance != null ? instance.previousSibling() : null;
 	}
 
