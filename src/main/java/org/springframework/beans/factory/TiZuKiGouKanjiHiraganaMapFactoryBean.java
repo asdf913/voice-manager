@@ -3,6 +3,7 @@ package org.springframework.beans.factory;
 import java.lang.Character.UnicodeBlock;
 import java.net.URI;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -153,36 +154,36 @@ public class TiZuKiGouKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 					//
 			} // while
 				//
-			hiragana = getStringByUnicodeBlock(ElementUtil.text(e), UnicodeBlock.HIRAGANA);
+			Util.putAll(map, toMap(e, Util.toString(textNode),
+					getStringByUnicodeBlock(ElementUtil.text(e), UnicodeBlock.HIRAGANA)));
 			//
-			if (allMatch(kanji = Util.toString(textNode), UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)) {
-				//
-				Util.put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), kanji, hiragana);
-				//
-			} else if (StringUtils.contains(kanji, '・')) {
-				//
-				Util.putAll(map,
-						toMap(testAndApply(Objects::nonNull, StringUtils.split(kanji, '・'), Arrays::asList, null),
-								testAndApply(Objects::nonNull, StringUtils.split(ElementUtil.text(e), '・'),
-										Arrays::asList, null),
-								x -> getStringByUnicodeBlock(x, UnicodeBlock.HIRAGANA)));
-				//
-			} else {
-				//
-				Util.putAll(
-						map, toMap(
-								Util.toList(Util.filter(testAndApply(Objects::nonNull, split(kanji, "\\p{InHiragana}"),
-										Arrays::stream, null), StringUtils::isNotEmpty)),
-								Util.toList(Util.filter(testAndApply(Objects::nonNull,
-										split(ElementUtil.text(e), "\\P{InHiragana}"), Arrays::stream, null),
-										StringUtils::isNotEmpty)),
-								Function.identity()));
-				//
-			} // if
-				//
 		} // for
 			//
 		return map;
+		//
+	}
+
+	private static Map<String, String> toMap(final Element e, final String kanji, final String hiragana) {
+		//
+		if (allMatch(kanji, UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)) {
+			//
+			return Collections.singletonMap(kanji, hiragana);
+			//
+		} else if (StringUtils.contains(kanji, '・')) {
+			//
+			return toMap(testAndApply(Objects::nonNull, StringUtils.split(kanji, '・'), Arrays::asList, null),
+					testAndApply(Objects::nonNull, StringUtils.split(ElementUtil.text(e), '・'), Arrays::asList, null),
+					x -> getStringByUnicodeBlock(x, UnicodeBlock.HIRAGANA));
+			//
+		} // if
+			//
+		return toMap(
+				Util.toList(Util.filter(
+						testAndApply(Objects::nonNull, split(kanji, "\\p{InHiragana}"), Arrays::stream, null),
+						StringUtils::isNotEmpty)),
+				Util.toList(Util.filter(testAndApply(Objects::nonNull, split(ElementUtil.text(e), "\\P{InHiragana}"),
+						Arrays::stream, null), StringUtils::isNotEmpty)),
+				Function.identity());
 		//
 	}
 
