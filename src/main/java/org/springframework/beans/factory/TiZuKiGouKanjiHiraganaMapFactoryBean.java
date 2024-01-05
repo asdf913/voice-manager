@@ -39,7 +39,7 @@ public class TiZuKiGouKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		//
 	}
 
-	private static String text(final Elements instance) {
+	private static String text(@Nullable final Elements instance) {
 		return instance != null ? instance.text() : null;
 	}
 
