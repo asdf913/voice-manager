@@ -1,7 +1,6 @@
 package org.springframework.beans.factory;
 
 import java.net.URI;
-import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
