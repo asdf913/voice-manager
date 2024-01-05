@@ -213,22 +213,27 @@ public abstract class XlsUtil {
 		//
 	}
 
+	@Nullable
 	private static String getName(@Nullable final Member instance) {
 		return instance != null ? instance.getName() : null;
 	}
 
+	@Nullable
 	private static Class<?> getClass(@Nullable final Object instance) {
 		return instance != null ? instance.getClass() : null;
 	}
 
+	@Nullable
 	private static String getName(@Nullable final Class<?> instance) {
 		return instance != null ? instance.getName() : null;
 	}
 
+	@Nullable
 	private static ConstantPool getConstantPool(@Nullable final JavaClass instance) {
 		return instance != null ? instance.getConstantPool() : null;
 	}
 
+	@Nullable
 	private static String toString(@Nullable final Object instance) {
 		return instance != null ? instance.toString() : null;
 	}
@@ -239,6 +244,7 @@ public abstract class XlsUtil {
 		}
 	}
 
+	@Nullable
 	private static Method getDeclaredMethod(@Nullable final Class<?> clz, final String name,
 			final Class<?>... parameterTypes) throws NoSuchMethodException {
 		return clz != null ? clz.getDeclaredMethod(name, parameterTypes) : null;
@@ -255,6 +261,7 @@ public abstract class XlsUtil {
 		return instance != null && instance.test(value);
 	}
 
+	@Nullable
 	private static String getMessage(@Nullable final ContentInfo instance) {
 		return instance != null ? instance.getMessage() : null;
 	}
