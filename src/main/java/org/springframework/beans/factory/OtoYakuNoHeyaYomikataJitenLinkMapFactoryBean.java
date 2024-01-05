@@ -323,20 +323,16 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		//
-		if (ResourceUtil.exists(resource)) {
+		if (ResourceUtil.exists(resource) && XlsxUtil.isXlsx(resource) || XlsUtil.isXls(resource)) {
 			//
-			if (XlsxUtil.isXlsx(resource) || XlsUtil.isXls(resource)) {
+			try (final InputStream is = InputStreamSourceUtil.getInputStream(resource);
+					final Workbook wb = WorkbookFactory.create(is)) {
 				//
-				try (final InputStream is = InputStreamSourceUtil.getInputStream(resource);
-						final Workbook wb = WorkbookFactory.create(is)) {
-					//
-					Util.putAll(urlMap = ObjectUtils.getIfNull(urlMap, LinkedHashMap::new),
-							toMap(WorkbookUtil.getSheet(wb, urlTransitionSheetName),
-									CreationHelperUtil.createFormulaEvaluator(WorkbookUtil.getCreationHelper(wb))));
-					//
-				} // try
-					//
-			} // if
+				Util.putAll(urlMap = ObjectUtils.getIfNull(urlMap, LinkedHashMap::new),
+						toMap(WorkbookUtil.getSheet(wb, urlTransitionSheetName),
+								CreationHelperUtil.createFormulaEvaluator(WorkbookUtil.getCreationHelper(wb))));
+				//
+			} // try
 				//
 		} // if
 			//
@@ -568,24 +564,20 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 	@Override
 	public List<Link> getObject() throws Exception {
 		//
-		if (ResourceUtil.exists(resource)) {
+		if (ResourceUtil.exists(resource) && XlsxUtil.isXlsx(resource) || XlsUtil.isXls(resource)) {
 			//
-			if (XlsxUtil.isXlsx(resource) || XlsUtil.isXls(resource)) {
+			try (final InputStream is = InputStreamSourceUtil.getInputStream(resource);
+					final Workbook wb = WorkbookFactory.create(is)) {
 				//
-				try (final InputStream is = InputStreamSourceUtil.getInputStream(resource);
-						final Workbook wb = WorkbookFactory.create(is)) {
+				final IValue0<List<Link>> iValue0 = toLinks(wb, linkSheetName);
+				//
+				if (iValue0 != null) {
 					//
-					final IValue0<List<Link>> iValue0 = toLinks(wb, linkSheetName);
+					return IValue0Util.getValue0(iValue0);
 					//
-					if (iValue0 != null) {
-						//
-						return IValue0Util.getValue0(iValue0);
-						//
-					} // if
-						//
-				} // try
+				} // if
 					//
-			} // if
+			} // try
 				//
 		} // if
 			//
