@@ -727,6 +727,7 @@
 	<!--https://web.archive.org/web/20211126172558/http://www.gsi.go.jp/KIDS/map-sign-tizukigou-h14kigou-itiran.htm-->
 	<bean id="TiZuKiGouKanjiHiraganaMapFactoryBean"
 		class="org.springframework.beans.factory.TiZuKiGouKanjiHiraganaMapFactoryBean">
+		<meta key="value" value="hiragana" />
 		<property name="url"
 			value="${org.springframework.beans.factory.TiZuKiGouKanjiHiraganaMapFactoryBean.url}" />
 	</bean>
