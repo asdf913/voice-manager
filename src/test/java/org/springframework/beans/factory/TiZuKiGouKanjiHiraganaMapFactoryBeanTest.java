@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -23,8 +24,8 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 
 	private static final String EMPTY = "";
 
-	private static Method METHOD_TEXT, METHOD_TEST_AND_APPLY, METHOD_TO_MAP1, METHOD_TO_MAP3, METHOD_SPLIT,
-			METHOD_ALL_MATCH, METHOD_GET_STRING_BY_UNICODE_BLOCK, METHOD_APPEND = null;
+	private static Method METHOD_TEXT, METHOD_TEST_AND_APPLY, METHOD_TO_MAP1, METHOD_TO_MAP2, METHOD_TO_MAP3,
+			METHOD_SPLIT, METHOD_ALL_MATCH, METHOD_GET_STRING_BY_UNICODE_BLOCK, METHOD_APPEND = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException, ClassNotFoundException {
@@ -37,6 +38,8 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
 		//
 		(METHOD_TO_MAP1 = clz.getDeclaredMethod("toMap", Iterable.class)).setAccessible(true);
+		//
+		(METHOD_TO_MAP2 = clz.getDeclaredMethod("toMap", Element.class, String.class)).setAccessible(true);
 		//
 		(METHOD_TO_MAP3 = clz.getDeclaredMethod("toMap", Iterable.class, Iterable.class, UnaryOperator.class))
 				.setAccessible(true);
@@ -138,6 +141,30 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 		//
 		Assertions.assertNull(toMap(Collections.singleton(null)));
 		//
+		Assertions.assertNull(toMap(null, "a"));
+		//
+		Assertions.assertEquals(Collections.singletonMap(EMPTY, null), toMap(null, "（"));
+		//
+		Assertions.assertEquals(Collections.singletonMap(EMPTY, null), toMap(null, "・"));
+		//
+		String string = "中";
+		//
+		Assertions.assertEquals(Collections.singletonMap(string, null), toMap(null, string));
+		//
+		final String one = "1";
+		//
+		Assertions.assertEquals(Collections.singletonMap(string = "車線", null),
+				toMap(null, StringUtils.joinWith("", one, string)));
+		//
+		Assertions.assertEquals(Collections.singletonMap(string = "以外", null),
+				toMap(null, StringUtils.joinWith("", one, string)));
+		//
+		Assertions.assertEquals(Collections.singletonMap(string = "支庁界", null),
+				toMap(null, StringUtils.joinWith("", one, string)));
+		//
+		Assertions.assertEquals(Collections.singletonMap(StringUtils.joinWith("", one, string = "科樹林"), "null"),
+				toMap(null, StringUtils.joinWith("", one, string)));
+		//
 		Assertions.assertNull(
 				toMap(Collections.singleton(Util.cast(Element.class, Narcissus.allocateInstance(Element.class)))));
 		//
@@ -159,6 +186,20 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
+		}
+	}
+
+	private static Map<String, String> toMap(final Element e, final String kanji) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_MAP2.invoke(null, e, kanji);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Map) {
+				return (Map) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException ex) {
+			throw ex.getTargetException();
 		}
 	}
 

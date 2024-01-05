@@ -13,6 +13,7 @@ import java.util.function.UnaryOperator;
 
 import javax.annotation.Nullable;
 
+import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
@@ -67,75 +68,20 @@ public class TiZuKiGouKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 			//
 		Map<String, String> map = null;
 		//
-		String kanji, string, hiragana = null;
-		//
 		Node previousSibling = null;
 		//
 		TextNode textNode = null;
 		//
+		Map<String, String> m = null;
+		//
 		for (final Element e : es) {
 			//
-			if (StringUtils.isNotBlank(kanji = StringUtils.trim(Util.toString(previousSibling(e))))) {
+			if ((m = toMap(e, StringUtils.trim(Util.toString(previousSibling(e))))) != null) {
 				//
-				if (StringUtils.contains(kanji, '（')) {
-					//
-					Util.put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new),
-							StringUtils.substringAfter(kanji, '（'),
-							getStringByUnicodeBlock(ElementUtil.text(e), UnicodeBlock.HIRAGANA));
-					//
-					continue;
-					//
-				} else if (StringUtils.contains(kanji, '・')) {
-					//
-					Util.put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new),
-							getStringByUnicodeBlock(StringUtils.substringAfter(kanji, '・'),
-									UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
-							getStringByUnicodeBlock(ElementUtil.text(e), UnicodeBlock.HIRAGANA));
-					//
-					continue;
-					//
-				} else if (allMatch(kanji, UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)) {
-					//
-					Util.put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), kanji,
-							getStringByUnicodeBlock(ElementUtil.text(e), UnicodeBlock.HIRAGANA));
-					//
-					continue;
-					//
-				} else {
-					//
-					hiragana = getStringByUnicodeBlock(ElementUtil.text(e), UnicodeBlock.HIRAGANA);
-					//
-					if (Objects.equals(string = getStringByUnicodeBlock(kanji, UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
-							"車線")) {
-						//
-						Util.put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), string, hiragana);
-						//
-						continue;
-						//
-					} else if (StringUtils.endsWith(string, "以外")) {
-						//
-						Util.put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), "以外", hiragana);
-						//
-						continue;
-						//
-					} else if (StringUtils.endsWith(string, "支庁界")) {
-						//
-						Util.put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), "支庁界", hiragana);
-						//
-						continue;
-						//
-					} else if (StringUtils.endsWith(string, "科樹林")) {
-						//
-						Util.put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), kanji,
-								getStringByUnicodeBlock(kanji, UnicodeBlock.KATAKANA)
-										+ getStringByUnicodeBlock(ElementUtil.text(e), UnicodeBlock.HIRAGANA));
-						//
-						continue;
-						//
-					} // if
-						//
-				} // if
-					//
+				Util.putAll(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), m);
+				//
+				continue;
+				//
 			} // if
 				//
 			previousSibling = e;
@@ -160,6 +106,60 @@ public class TiZuKiGouKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		} // for
 			//
 		return map;
+		//
+	}
+
+	private static Map<String, String> toMap(final Element e, final String kanji) {
+		//
+		if (StringUtils.isNotBlank(kanji)) {
+			//
+			if (StringUtils.contains(kanji, '（')) {
+				//
+				return Collections.singletonMap(StringUtils.substringAfter(kanji, '（'),
+						getStringByUnicodeBlock(ElementUtil.text(e), UnicodeBlock.HIRAGANA));
+				//
+			} else if (StringUtils.contains(kanji, '・')) {
+				//
+				return Collections.singletonMap(
+						getStringByUnicodeBlock(StringUtils.substringAfter(kanji, '・'),
+								UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
+						getStringByUnicodeBlock(ElementUtil.text(e), UnicodeBlock.HIRAGANA));
+				//
+			} else if (allMatch(kanji, UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)) {
+				//
+				return Collections.singletonMap(kanji,
+						getStringByUnicodeBlock(ElementUtil.text(e), UnicodeBlock.HIRAGANA));
+				//
+			} else {
+				//
+				final String string = getStringByUnicodeBlock(kanji, UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS);
+				//
+				final String hiragana = getStringByUnicodeBlock(ElementUtil.text(e), UnicodeBlock.HIRAGANA);
+				//
+				if (Objects.equals(string, "車線")) {
+					//
+					return Collections.singletonMap(string, hiragana);
+					//
+				} else if (StringUtils.endsWith(string, "以外")) {
+					//
+					return Collections.singletonMap("以外", hiragana);
+					//
+				} else if (StringUtils.endsWith(string, "支庁界")) {
+					//
+					return Collections.singletonMap("支庁界", hiragana);
+					//
+				} else if (StringUtils.endsWith(string, "科樹林")) {
+					//
+					return Collections.singletonMap(kanji, getStringByUnicodeBlock(kanji, UnicodeBlock.KATAKANA)
+							+ getStringByUnicodeBlock(ElementUtil.text(e), UnicodeBlock.HIRAGANA));
+					//
+				} // if
+					//
+			} // if
+				//
+		} // if
+			//
+		return null;
 		//
 	}
 
@@ -200,20 +200,14 @@ public class TiZuKiGouKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 			//
 		Map<String, String> map = null;
 		//
-		for (final String s1 : ss1) {
+		for (int i = 0; i < Math.min(IterableUtils.size(ss1), IterableUtils.size(ss2)); i++) {
 			//
-			if (Util.iterator(ss2) == null) {
+			if (i < IterableUtils.size(ss2)) {
 				//
-				continue;
+				Util.put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), IterableUtils.get(ss1, i),
+						function != null ? function.apply(IterableUtils.get(ss2, i)) : IterableUtils.get(ss2, i));
 				//
 			} // if
-				//
-			for (final String s2 : ss2) {
-				//
-				Util.put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), s1,
-						function != null ? function.apply(s2) : s2);
-				//
-			} // for
 				//
 		} // for
 			//
