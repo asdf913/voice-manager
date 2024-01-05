@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.Map.Entry;
@@ -32,6 +33,7 @@ import javax.annotation.Nullable;
 
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
@@ -478,6 +480,35 @@ abstract class Util {
 	@Nullable
 	static <T> Iterator<T> iterator(@Nullable final Iterable<T> instance) {
 		return instance != null ? instance.iterator() : null;
+	}
+
+	static void append(final StringBuilder instance, final char c) {
+		//
+		if (instance == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		final List<Field> fs = toList(filter(stream(FieldUtils.getAllFieldsList(getClass(instance))),
+				f -> Objects.equals(getName(f), "value")));
+		//
+		final int size = IterableUtils.size(fs);
+		//
+		if (size > 1) {
+			//
+			throw new IllegalStateException();
+			//
+		} // if
+			//
+		if (Narcissus.getObjectField(instance, size == 1 ? IterableUtils.get(fs, 0) : null) == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		instance.append(c);
+		//
 	}
 
 }

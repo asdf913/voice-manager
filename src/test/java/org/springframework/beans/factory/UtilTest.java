@@ -407,4 +407,14 @@ class UtilTest {
 		//
 	}
 
+	@Test
+	void testAppend() {
+		//
+		Assertions.assertDoesNotThrow(() -> Util.append(null, ' '));
+		//
+		Assertions.assertDoesNotThrow(() -> Util
+				.append(Util.cast(StringBuilder.class, Narcissus.allocateInstance(StringBuilder.class)), ' '));
+		//
+	}
+
 }

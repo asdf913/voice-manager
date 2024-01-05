@@ -25,7 +25,7 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 	private static final String EMPTY = "";
 
 	private static Method METHOD_TEXT, METHOD_TEST_AND_APPLY, METHOD_TO_MAP1, METHOD_TO_MAP2, METHOD_TO_MAP3,
-			METHOD_SPLIT, METHOD_ALL_MATCH, METHOD_GET_STRING_BY_UNICODE_BLOCK, METHOD_APPEND = null;
+			METHOD_SPLIT, METHOD_ALL_MATCH, METHOD_GET_STRING_BY_UNICODE_BLOCK = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException, ClassNotFoundException {
@@ -50,8 +50,6 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 		//
 		(METHOD_GET_STRING_BY_UNICODE_BLOCK = clz.getDeclaredMethod("getStringByUnicodeBlock", String.class,
 				UnicodeBlock.class)).setAccessible(true);
-		//
-		(METHOD_APPEND = clz.getDeclaredMethod("append", StringBuilder.class, Character.TYPE)).setAccessible(true);
 		//
 	}
 
@@ -283,21 +281,6 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 				return (String) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testAppend() {
-		//
-		Assertions.assertDoesNotThrow(() -> append(null, ' '));
-		//
-	}
-
-	private static void append(final StringBuilder instance, final char c) throws Throwable {
-		try {
-			METHOD_APPEND.invoke(null, instance, c);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

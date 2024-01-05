@@ -1171,18 +1171,12 @@ public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean
 				//
 			} // if
 				//
-			append(sb = ObjectUtils.getIfNull(sb, StringBuilder::new), c);
+			Util.append(sb = ObjectUtils.getIfNull(sb, StringBuilder::new), c);
 			//
 		} // for
 			//
 		return StringUtils.defaultString(Util.toString(sb));
 		//
-	}
-
-	private static void append(@Nullable final StringBuilder instance, final char c) {
-		if (instance != null) {
-			instance.append(c);
-		}
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(@Nullable final Predicate<T> predicate,

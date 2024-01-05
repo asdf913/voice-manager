@@ -229,14 +229,8 @@ public class TiZuKiGouKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		//
 		return Util.toString(string != null ? string.chars()
 				.filter(x -> Boolean.logicalOr(unicodeBlock == null, Objects.equals(unicodeBlock, UnicodeBlock.of(x))))
-				.collect(StringBuilder::new, (a, b) -> append(a, (char) b), StringBuilder::append) : null);
+				.collect(StringBuilder::new, (a, b) -> Util.append(a, (char) b), StringBuilder::append) : null);
 		//
-	}
-
-	private static void append(@Nullable final StringBuilder instance, final char c) {
-		if (instance != null) {
-			instance.append(c);
-		}
 	}
 
 	@Nullable
