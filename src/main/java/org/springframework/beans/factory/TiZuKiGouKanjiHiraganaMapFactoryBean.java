@@ -1,5 +1,6 @@
 package org.springframework.beans.factory;
 
+import java.net.URI;
 import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -32,8 +33,8 @@ public class TiZuKiGouKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 		return Util.collect(
 				Util.map(
 						Util.stream(ElementUtil.select(testAndApply(Objects::nonNull,
-								testAndApply(Objects::nonNull, url, URL::new, null), x -> Jsoup.parse(x, 0), null),
-								"ruby")),
+								testAndApply(Objects::nonNull, url, x -> new URI(x).toURL(), null),
+								x -> Jsoup.parse(x, 0), null), "ruby")),
 						x -> Pair.of(text(ElementUtil.select(x, "rb")), text(ElementUtil.select(x, "rt")))),
 				LinkedHashMap::new, (a, b) -> Util.put(a, Util.getKey(b), Util.getValue(b)), Util::putAll);
 		//
