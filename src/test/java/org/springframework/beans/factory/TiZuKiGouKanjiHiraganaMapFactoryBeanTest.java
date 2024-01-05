@@ -22,8 +22,8 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 
 	private static final String EMPTY = "";
 
-	private static Method METHOD_TEXT, METHOD_TEST_AND_APPLY, METHOD_TO_MAP, METHOD_SPLIT, METHOD_ALL_MATCH,
-			METHOD_GET_STRING_BY_UNICODE_BLOCK, METHOD_APPEND = null;
+	private static Method METHOD_TEXT, METHOD_TEST_AND_APPLY, METHOD_TO_MAP1, METHOD_TO_MAP2, METHOD_SPLIT,
+			METHOD_ALL_MATCH, METHOD_GET_STRING_BY_UNICODE_BLOCK, METHOD_APPEND = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException, ClassNotFoundException {
@@ -35,7 +35,9 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
 		//
-		(METHOD_TO_MAP = clz.getDeclaredMethod("toMap", Iterable.class)).setAccessible(true);
+		(METHOD_TO_MAP1 = clz.getDeclaredMethod("toMap", Iterable.class)).setAccessible(true);
+		//
+		(METHOD_TO_MAP2 = clz.getDeclaredMethod("toMap", Iterable.class, Iterable.class)).setAccessible(true);
 		//
 		(METHOD_SPLIT = clz.getDeclaredMethod("split", String.class, String.class)).setAccessible(true);
 		//
@@ -137,11 +139,30 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 		Assertions.assertNull(
 				toMap(Collections.singleton(Util.cast(Element.class, Narcissus.allocateInstance(Element.class)))));
 		//
+		Assertions.assertNull(toMap(Collections.singleton(null), null));
+		//
+		Assertions.assertEquals(Collections.singletonMap(null, null),
+				toMap(Collections.singleton(null), Collections.singleton(null)));
+		//
 	}
 
 	private static Map<String, String> toMap(final Iterable<Element> es) throws Throwable {
 		try {
-			final Object obj = METHOD_TO_MAP.invoke(null, es);
+			final Object obj = METHOD_TO_MAP1.invoke(null, es);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Map) {
+				return (Map) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static Map<String, String> toMap(final Iterable<String> ss1, final Iterable<String> ss2) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_MAP2.invoke(null, ss1, ss2);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Map) {

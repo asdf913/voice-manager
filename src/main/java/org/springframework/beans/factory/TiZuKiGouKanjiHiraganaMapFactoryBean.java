@@ -177,24 +177,45 @@ public class TiZuKiGouKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 					//
 			} else {
 				//
-				final List<String> ss1 = Util.toList(Util.filter(
-						testAndApply(Objects::nonNull, split(kanji, "\\p{InHiragana}"), Arrays::stream, null),
-						StringUtils::isNotEmpty));
+				Util.putAll(
+						map, toMap(
+								Util.toList(Util.filter(testAndApply(Objects::nonNull, split(kanji, "\\p{InHiragana}"),
+										Arrays::stream, null), StringUtils::isNotEmpty)),
+								Util.toList(Util.filter(testAndApply(Objects::nonNull,
+										split(ElementUtil.text(e), "\\P{InHiragana}"), Arrays::stream, null),
+										StringUtils::isNotEmpty))));
 				//
-				final List<String> ss2 = Util.toList(Util.filter(testAndApply(Objects::nonNull,
-						split(ElementUtil.text(e), "\\P{InHiragana}"), Arrays::stream, null), StringUtils::isNotEmpty));
-				//
-				for (int i = 0; ss1 != null && i < ss1.size(); i++) {
-					//
-					for (int j = 0; ss2 != null && j < Math.min(ss1.size(), ss2.size()); j++) {
-						//
-						Util.put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), ss1.get(i), ss2.get(i));
-						//
-					} // for
-						//
-				} // for
-					//
 			} // if
+				//
+		} // for
+			//
+		return map;
+		//
+	}
+
+	private static Map<String, String> toMap(final Iterable<String> ss1, final Iterable<String> ss2) {
+		//
+		if (Util.iterator(ss1) == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		Map<String, String> map = null;
+		//
+		for (final String s1 : ss1) {
+			//
+			if (Util.iterator(ss2) == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			for (final String s2 : ss2) {
+				//
+				Util.put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), s1, s2);
+				//
+			} // for
 				//
 		} // for
 			//
