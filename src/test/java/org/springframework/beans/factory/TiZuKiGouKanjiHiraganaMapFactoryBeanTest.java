@@ -1,15 +1,26 @@
 package org.springframework.beans.factory;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.lang.Character.UnicodeBlock;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellUtil;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.ss.usermodel.WorkbookUtil;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.junit.jupiter.api.Assertions;
@@ -75,10 +86,57 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 			instance.setUrl(Util.toString(Util.get(properties,
 					"org.springframework.beans.factory.TiZuKiGouKanjiHiraganaMapFactoryBean.url")));
 			//
-			System.out.println(getObject(instance));
+			final File file = new File("TiZuKiGouKanjiHiraganaMapFactoryBean.xlsx");
+			//
+			try (final Workbook wb = WorkbookFactory.create(true); final OutputStream os = new FileOutputStream(file)) {
+				//
+				final Sheet sheet = WorkbookUtil.createSheet(wb);
+				//
+				final Iterable<Entry<String, String>> entrySet = Util.entrySet(getObject(instance));
+				//
+				if (Util.iterator(entrySet) != null) {
+					//
+					Row row = null;
+					//
+					for (final Entry<String, String> entry : entrySet) {
+						//
+						if (entry == null) {
+							//
+							continue;
+						} // if
+							//
+						if (sheet != null && sheet.getPhysicalNumberOfRows() == 0) {
+							//
+							CellUtil.setCellValue(createCell(row = createRow(sheet)), "kanji");
+							//
+							CellUtil.setCellValue(createCell(row), "hiragana");
+							//
+						} // if
+							//
+						CellUtil.setCellValue(createCell(row = createRow(sheet)), Util.getKey(entry));
+						//
+						CellUtil.setCellValue(createCell(row), Util.getValue(entry));
+						//
+					} // for
+						//
+				} // if
+					//
+				WorkbookUtil.write(wb, os);
+				//
+			} // try
+				//
+			System.out.println(file.getAbsolutePath());
 			//
 		} // if
 			//
+	}
+
+	private static Row createRow(final Sheet instance) {
+		return instance != null ? instance.createRow(instance.getPhysicalNumberOfRows()) : null;
+	}
+
+	private static Cell createCell(final Row instance) {
+		return instance != null ? instance.createCell(instance.getPhysicalNumberOfCells()) : null;
 	}
 
 	private static <T> T getObject(final FactoryBean<T> instance) throws Exception {
