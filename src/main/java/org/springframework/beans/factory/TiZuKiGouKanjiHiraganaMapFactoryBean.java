@@ -68,12 +68,12 @@ public class TiZuKiGouKanjiHiraganaMapFactoryBean extends StringMapFromResourceF
 			//
 		} // if
 			//
-		final List<Link> links = Util.toList(Util.filter(
-				testAndApply(Objects::nonNull, this.links != null ? this.links.spliterator() : null,
+		final List<Link> ls = Util.toList(Util.filter(
+				testAndApply(Objects::nonNull, links != null ? links.spliterator() : null,
 						x -> StreamSupport.stream(x, false), null),
 				x -> text == null || (x != null && Objects.equals(x.getText(), IValue0Util.getValue0(text)))));
 		//
-		final int size = IterableUtils.size(links);
+		final int size = IterableUtils.size(ls);
 		//
 		if (size > 1) {
 			//
@@ -81,7 +81,7 @@ public class TiZuKiGouKanjiHiraganaMapFactoryBean extends StringMapFromResourceF
 			//
 		} else if (size == 1) {
 			//
-			final Link link = IterableUtils.get(links, 0);
+			final Link link = IterableUtils.get(ls, 0);
 			//
 			return toMap(link != null ? link.getUrl() : null);
 			//
