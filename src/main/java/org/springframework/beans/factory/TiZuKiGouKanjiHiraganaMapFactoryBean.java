@@ -1,5 +1,6 @@
 package org.springframework.beans.factory;
 
+import java.io.IOException;
 import java.lang.Character.UnicodeBlock;
 import java.net.URI;
 import java.util.Arrays;
@@ -50,6 +51,12 @@ public class TiZuKiGouKanjiHiraganaMapFactoryBean extends StringMapFromResourceF
 			//
 		} // if
 			//
+		return toMap(url);
+		//
+	}
+
+	private static Map<String, String> toMap(final String url) throws IOException, Exception {
+		//
 		final Document document = testAndApply(Objects::nonNull,
 				testAndApply(Objects::nonNull, url, x -> new URI(x).toURL(), null), x -> Jsoup.parse(x, 0), null);
 		//
