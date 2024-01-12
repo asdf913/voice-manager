@@ -75,7 +75,15 @@ public class TiZuKiGouKanjiHiraganaMapFactoryBean extends StringMapFromResourceF
 	}
 
 	private static URL toURL(@Nullable final URI instance) throws MalformedURLException {
-		return instance != null ? instance.toURL() : null;
+		//
+		if (instance == null || !isAbsolute(instance)) {
+			//
+			return null;
+			//
+		} // if
+			//
+		return instance.toURL();
+		//
 	}
 
 	private static boolean isAbsolute(@Nullable final URI instance) {

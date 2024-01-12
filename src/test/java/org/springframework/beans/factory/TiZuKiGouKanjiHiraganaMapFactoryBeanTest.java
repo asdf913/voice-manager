@@ -395,6 +395,8 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 		//
 		Assertions.assertNull(toURL(null));
 		//
+		Assertions.assertNull(toURL(Util.cast(URI.class, Narcissus.allocateInstance(URI.class))));
+		//
 	}
 
 	private static URL toURL(final URI instance) throws Throwable {
