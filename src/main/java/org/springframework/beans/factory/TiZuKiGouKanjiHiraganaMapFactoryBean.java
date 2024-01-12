@@ -56,8 +56,9 @@ public class TiZuKiGouKanjiHiraganaMapFactoryBean extends StringMapFromResourceF
 
 	private static Map<String, String> toMap(final String url) throws Exception {
 		//
-		final Document document = testAndApply(Objects::nonNull,
-				testAndApply(Objects::nonNull, url, x -> new URI(x).toURL(), null), x -> Jsoup.parse(x, 0), null);
+		final Document document = testAndApply(Objects::nonNull, testAndApply(x -> x != null && x.isAbsolute(),
+				testAndApply(StringUtils::isNotBlank, url, URI::new, null), x -> x != null ? x.toURL() : null, null),
+				x -> Jsoup.parse(x, 0), null);
 		//
 		final Map<String, String> map = Util.collect(
 				Util.map(Util.stream(ElementUtil.select(document, "ruby")),

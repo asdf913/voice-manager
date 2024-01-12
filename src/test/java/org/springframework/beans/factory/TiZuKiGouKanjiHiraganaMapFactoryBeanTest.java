@@ -35,8 +35,8 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 
 	private static final String EMPTY = "";
 
-	private static Method METHOD_TEXT, METHOD_TEST_AND_APPLY, METHOD_TO_MAP1, METHOD_TO_MAP2, METHOD_TO_MAP3,
-			METHOD_SPLIT, METHOD_ALL_MATCH, METHOD_GET_STRING_BY_UNICODE_BLOCK = null;
+	private static Method METHOD_TEXT, METHOD_TEST_AND_APPLY, METHOD_TO_MAP_ITERABLE, METHOD_TO_MAP_STRING,
+			METHOD_TO_MAP2, METHOD_TO_MAP3, METHOD_SPLIT, METHOD_ALL_MATCH, METHOD_GET_STRING_BY_UNICODE_BLOCK = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException, ClassNotFoundException {
@@ -48,7 +48,9 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
 		//
-		(METHOD_TO_MAP1 = clz.getDeclaredMethod("toMap", Iterable.class)).setAccessible(true);
+		(METHOD_TO_MAP_ITERABLE = clz.getDeclaredMethod("toMap", Iterable.class)).setAccessible(true);
+		//
+		(METHOD_TO_MAP_STRING = clz.getDeclaredMethod("toMap", String.class)).setAccessible(true);
 		//
 		(METHOD_TO_MAP2 = clz.getDeclaredMethod("toMap", Element.class, String.class)).setAccessible(true);
 		//
@@ -197,6 +199,10 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 		//
 		Assertions.assertNull(toMap(Collections.singleton(null)));
 		//
+		Assertions.assertNull(toMap(""));
+		//
+		Assertions.assertNull(toMap(" "));
+		//
 		Assertions.assertNull(toMap(null, "a"));
 		//
 		Assertions.assertEquals(Collections.singletonMap(EMPTY, null), toMap(null, "（"));
@@ -233,7 +239,21 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 
 	private static Map<String, String> toMap(final Iterable<Element> es) throws Throwable {
 		try {
-			final Object obj = METHOD_TO_MAP1.invoke(null, es);
+			final Object obj = METHOD_TO_MAP_ITERABLE.invoke(null, es);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Map) {
+				return (Map) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static Map<String, String> toMap(final String url) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_MAP_STRING.invoke(null, url);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Map) {
