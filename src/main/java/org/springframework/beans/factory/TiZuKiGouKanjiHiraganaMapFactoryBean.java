@@ -71,7 +71,7 @@ public class TiZuKiGouKanjiHiraganaMapFactoryBean extends StringMapFromResourceF
 		//
 	}
 
-	private static boolean isAbsolute(final URI instance) {
+	private static boolean isAbsolute(@Nullable final URI instance) {
 		return instance != null && instance.isAbsolute();
 	}
 
