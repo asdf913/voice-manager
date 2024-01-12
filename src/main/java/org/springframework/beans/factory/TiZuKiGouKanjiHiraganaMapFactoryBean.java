@@ -7,10 +7,12 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
+import java.util.stream.StreamSupport;
 
 import javax.annotation.Nullable;
 
@@ -20,6 +22,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.tuple.Pair;
+import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
 import org.jsoup.Jsoup;
@@ -29,6 +32,7 @@ import org.jsoup.nodes.ElementUtil;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean.Link;
 
 /**
  * https://web.archive.org/web/20211126172558/http://www.gsi.go.jp/KIDS/map-sign-tizukigou-h14kigou-itiran.htm
@@ -37,8 +41,20 @@ public class TiZuKiGouKanjiHiraganaMapFactoryBean extends StringMapFromResourceF
 
 	private String url = null;
 
+	private Iterable<Link> links = null;
+
+	private IValue0<String> text = null;
+
 	public void setUrl(final String url) {
 		this.url = url;
+	}
+
+	public void setLinks(final Iterable<Link> links) {
+		this.links = links;
+	}
+
+	public void setText(final String text) {
+		this.text = Unit.with(text);
 	}
 
 	@Override
@@ -49,6 +65,25 @@ public class TiZuKiGouKanjiHiraganaMapFactoryBean extends StringMapFromResourceF
 		if (iValue0 != null) {
 			//
 			return IValue0Util.getValue0(iValue0);
+			//
+		} // if
+			//
+		final List<Link> links = Util.toList(Util.filter(
+				testAndApply(Objects::nonNull, this.links != null ? this.links.spliterator() : null,
+						x -> StreamSupport.stream(x, false), null),
+				x -> text == null || (x != null && Objects.equals(x.getText(), IValue0Util.getValue0(text)))));
+		//
+		final int size = IterableUtils.size(links);
+		//
+		if (size > 1) {
+			//
+			throw new IllegalStateException();
+			//
+		} else if (size == 1) {
+			//
+			final Link link = IterableUtils.get(links, 0);
+			//
+			return toMap(link != null ? link.getUrl() : null);
 			//
 		} // if
 			//
