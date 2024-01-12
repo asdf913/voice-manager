@@ -6,6 +6,7 @@ import java.io.OutputStream;
 import java.lang.Character.UnicodeBlock;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URI;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -36,7 +37,8 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 	private static final String EMPTY = "";
 
 	private static Method METHOD_TEXT, METHOD_TEST_AND_APPLY, METHOD_TO_MAP_ITERABLE, METHOD_TO_MAP_STRING,
-			METHOD_TO_MAP2, METHOD_TO_MAP3, METHOD_SPLIT, METHOD_ALL_MATCH, METHOD_GET_STRING_BY_UNICODE_BLOCK = null;
+			METHOD_TO_MAP2, METHOD_TO_MAP3, METHOD_SPLIT, METHOD_ALL_MATCH, METHOD_GET_STRING_BY_UNICODE_BLOCK,
+			METHOD_IS_ABSOLUTE = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException, ClassNotFoundException {
@@ -63,6 +65,8 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 		//
 		(METHOD_GET_STRING_BY_UNICODE_BLOCK = clz.getDeclaredMethod("getStringByUnicodeBlock", String.class,
 				UnicodeBlock.class)).setAccessible(true);
+		//
+		(METHOD_IS_ABSOLUTE = clz.getDeclaredMethod("isAbsolute", URI.class)).setAccessible(true);
 		//
 	}
 
@@ -357,6 +361,25 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 				return null;
 			} else if (obj instanceof String) {
 				return (String) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testIsAbsolute() throws Throwable {
+		//
+		Assertions.assertFalse(isAbsolute(Util.cast(URI.class, Narcissus.allocateInstance(URI.class))));
+		//
+	}
+
+	private static boolean isAbsolute(final URI instance) throws Throwable {
+		try {
+			final Object obj = METHOD_IS_ABSOLUTE.invoke(null, instance);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
