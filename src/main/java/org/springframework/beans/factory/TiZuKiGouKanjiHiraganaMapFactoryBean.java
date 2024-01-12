@@ -1,7 +1,9 @@
 package org.springframework.beans.factory;
 
 import java.lang.Character.UnicodeBlock;
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -56,8 +58,9 @@ public class TiZuKiGouKanjiHiraganaMapFactoryBean extends StringMapFromResourceF
 
 	private static Map<String, String> toMap(final String url) throws Exception {
 		//
-		final Document document = testAndApply(Objects::nonNull, testAndApply(x -> isAbsolute(x),
-				testAndApply(StringUtils::isNotBlank, url, URI::new, null), x -> x != null ? x.toURL() : null, null),
+		final Document document = testAndApply(
+				Objects::nonNull, testAndApply(x -> isAbsolute(x),
+						testAndApply(StringUtils::isNotBlank, url, URI::new, null), x -> toURL(x), null),
 				x -> Jsoup.parse(x, 0), null);
 		//
 		final Map<String, String> map = Util.collect(
@@ -69,6 +72,10 @@ public class TiZuKiGouKanjiHiraganaMapFactoryBean extends StringMapFromResourceF
 		//
 		return map;
 		//
+	}
+
+	private static URL toURL(final URI instance) throws MalformedURLException {
+		return instance != null ? instance.toURL() : null;
 	}
 
 	private static boolean isAbsolute(@Nullable final URI instance) {

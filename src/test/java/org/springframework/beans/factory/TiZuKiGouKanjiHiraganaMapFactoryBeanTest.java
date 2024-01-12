@@ -7,6 +7,7 @@ import java.lang.Character.UnicodeBlock;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URI;
+import java.net.URL;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -38,7 +39,7 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 
 	private static Method METHOD_TEXT, METHOD_TEST_AND_APPLY, METHOD_TO_MAP_ITERABLE, METHOD_TO_MAP_STRING,
 			METHOD_TO_MAP2, METHOD_TO_MAP3, METHOD_SPLIT, METHOD_ALL_MATCH, METHOD_GET_STRING_BY_UNICODE_BLOCK,
-			METHOD_IS_ABSOLUTE = null;
+			METHOD_IS_ABSOLUTE, METHOD_TO_URL = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException, ClassNotFoundException {
@@ -67,6 +68,8 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 				UnicodeBlock.class)).setAccessible(true);
 		//
 		(METHOD_IS_ABSOLUTE = clz.getDeclaredMethod("isAbsolute", URI.class)).setAccessible(true);
+		//
+		(METHOD_TO_URL = clz.getDeclaredMethod("toURL", URI.class)).setAccessible(true);
 		//
 	}
 
@@ -380,6 +383,27 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 			final Object obj = METHOD_IS_ABSOLUTE.invoke(null, instance);
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testToURL() throws Throwable {
+		//
+		Assertions.assertNull(toURL(null));
+		//
+	}
+
+	private static URL toURL(final URI instance) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_URL.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof URL) {
+				return (URL) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
