@@ -128,7 +128,7 @@ public class TiZuKiGouKanjiHiraganaMapFactoryBean extends StringMapFromResourceF
 	private static Map<String, String> toMap(final String url) throws Exception {
 		//
 		final Document document = testAndApply(
-				Objects::nonNull, testAndApply(x -> isAbsolute(x),
+				Objects::nonNull, testAndApply(Util::isAbsolute,
 						testAndApply(StringUtils::isNotBlank, url, URI::new, null), x -> toURL(x), null),
 				x -> Jsoup.parse(x, 0), null);
 		//
@@ -146,7 +146,7 @@ public class TiZuKiGouKanjiHiraganaMapFactoryBean extends StringMapFromResourceF
 	@Nullable
 	private static URL toURL(@Nullable final URI instance) throws MalformedURLException {
 		//
-		if (instance == null || !isAbsolute(instance)) {
+		if (instance == null || !Util.isAbsolute(instance)) {
 			//
 			return null;
 			//
@@ -154,10 +154,6 @@ public class TiZuKiGouKanjiHiraganaMapFactoryBean extends StringMapFromResourceF
 			//
 		return instance.toURL();
 		//
-	}
-
-	private static boolean isAbsolute(@Nullable final URI instance) {
-		return instance != null && instance.isAbsolute();
 	}
 
 	@Nullable

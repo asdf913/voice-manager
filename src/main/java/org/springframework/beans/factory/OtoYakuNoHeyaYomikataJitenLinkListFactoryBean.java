@@ -1052,7 +1052,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkListFactoryBean implements
 			//
 		} // if
 			//
-		if (isAbsolute(apply(URI::new, NodeUtil.attr(a1, "href"), null))) {
+		if (Util.isAbsolute(apply(URI::new, NodeUtil.attr(a1, "href"), null))) {
 			//
 			ih.description = ElementUtil.text(a1);
 			//
@@ -1070,10 +1070,6 @@ public class OtoYakuNoHeyaYomikataJitenLinkListFactoryBean implements
 			//
 		} // if
 			//
-	}
-
-	private static boolean isAbsolute(@Nullable final URI instance) {
-		return instance != null && instance.isAbsolute();
 	}
 
 	@Nullable

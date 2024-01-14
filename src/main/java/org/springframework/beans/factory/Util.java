@@ -7,6 +7,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
+import java.net.URI;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Collection;
@@ -509,6 +510,10 @@ abstract class Util {
 			//
 		instance.append(c);
 		//
+	}
+
+	static boolean isAbsolute(final URI instance) {
+		return instance != null && instance.isAbsolute();
 	}
 
 }

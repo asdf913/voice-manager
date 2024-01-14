@@ -73,8 +73,6 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 		(METHOD_GET_STRING_BY_UNICODE_BLOCK = clz.getDeclaredMethod("getStringByUnicodeBlock", String.class,
 				UnicodeBlock.class)).setAccessible(true);
 		//
-		(METHOD_IS_ABSOLUTE = clz.getDeclaredMethod("isAbsolute", URI.class)).setAccessible(true);
-		//
 		(METHOD_TO_URL = clz.getDeclaredMethod("toURL", URI.class)).setAccessible(true);
 		//
 		(METHOD_GET_URL = clz.getDeclaredMethod("getUrl", Link.class)).setAccessible(true);
@@ -467,25 +465,6 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 				return null;
 			} else if (obj instanceof String) {
 				return (String) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testIsAbsolute() throws Throwable {
-		//
-		Assertions.assertFalse(isAbsolute(Util.cast(URI.class, Narcissus.allocateInstance(URI.class))));
-		//
-	}
-
-	private static boolean isAbsolute(final URI instance) throws Throwable {
-		try {
-			final Object obj = METHOD_IS_ABSOLUTE.invoke(null, instance);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

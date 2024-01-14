@@ -10,7 +10,6 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.net.URI;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -71,9 +70,9 @@ class OtoYakuNoHeyaYomikataJitenLinkListFactoryBeanTest {
 
 	private static Class<?> CLASS_IH = null;
 
-	private static Method METHOD_GET_LINKS, METHOD_VALUE_OF, METHOD_TRIM, METHOD_TEST_AND_APPLY, METHOD_IS_ABSOLUTE,
-			METHOD_APPLY, METHOD_SET_DESCRIPTION_AND_TEXT_AND_URL, METHOD_ADD_LINKS, METHOD_HAS_ATTR, METHOD_IIF,
-			METHOD_GET_IMG, METHOD_FOR_EACH, METHOD_GET_STRING_CELL_VALUE, METHOD_TO_MAP, METHOD_HANDLE_HSSF_CELL,
+	private static Method METHOD_GET_LINKS, METHOD_VALUE_OF, METHOD_TRIM, METHOD_TEST_AND_APPLY, METHOD_APPLY,
+			METHOD_SET_DESCRIPTION_AND_TEXT_AND_URL, METHOD_ADD_LINKS, METHOD_HAS_ATTR, METHOD_IIF, METHOD_GET_IMG,
+			METHOD_FOR_EACH, METHOD_GET_STRING_CELL_VALUE, METHOD_TO_MAP, METHOD_HANDLE_HSSF_CELL,
 			METHOD_FORMAT_CELL_VALUE, METHOD_TO_INT_STRING_MAP, METHOD_TO_LINK, METHOD_GET_FIELDS = null;
 
 	@BeforeAll
@@ -89,8 +88,6 @@ class OtoYakuNoHeyaYomikataJitenLinkListFactoryBeanTest {
 		//
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
-		//
-		(METHOD_IS_ABSOLUTE = clz.getDeclaredMethod("isAbsolute", URI.class)).setAccessible(true);
 		//
 		(METHOD_APPLY = clz.getDeclaredMethod("apply", FailableFunction.class, Object.class, Object.class))
 				.setAccessible(true);
@@ -654,33 +651,6 @@ class OtoYakuNoHeyaYomikataJitenLinkListFactoryBeanTest {
 			throws Throwable {
 		try {
 			return (R) METHOD_TEST_AND_APPLY.invoke(null, predicate, value, functionTrue, functionFalse);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testIsAbsolute() throws Throwable {
-		//
-		Assertions.assertFalse(isAbsolute(null));
-		//
-		final URI uri = Util.cast(URI.class, Narcissus.allocateInstance(URI.class));
-		//
-		Assertions.assertFalse(isAbsolute(uri));
-		//
-		Narcissus.setField(uri, URI.class.getDeclaredField("scheme"), EMPTY);
-		//
-		Assertions.assertTrue(isAbsolute(uri));
-		//
-	}
-
-	private static boolean isAbsolute(final URI instance) throws Throwable {
-		try {
-			final Object obj = METHOD_IS_ABSOLUTE.invoke(null, instance);
-			if (obj instanceof Boolean) {
-				return (Boolean) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
