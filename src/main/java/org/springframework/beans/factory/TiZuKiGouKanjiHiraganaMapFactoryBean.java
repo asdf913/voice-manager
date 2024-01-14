@@ -120,7 +120,7 @@ public class TiZuKiGouKanjiHiraganaMapFactoryBean extends StringMapFromResourceF
 		//
 	}
 
-	private static String getUrl(final Link instance) {
+	private static String getUrl(@Nullable final Link instance) {
 		return instance != null ? instance.getUrl() : null;
 	}
 
