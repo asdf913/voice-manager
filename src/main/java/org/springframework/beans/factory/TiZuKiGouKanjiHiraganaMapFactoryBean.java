@@ -98,9 +98,7 @@ public class TiZuKiGouKanjiHiraganaMapFactoryBean extends StringMapFromResourceF
 			//
 		} else if (size == 1) {
 			//
-			final Link link = IterableUtils.get(ls, 0);
-			//
-			return toMap(link != null ? link.getUrl() : null);
+			return toMap(getUrl(IterableUtils.get(ls, 0)));
 			//
 		} // if
 			//
@@ -114,14 +112,16 @@ public class TiZuKiGouKanjiHiraganaMapFactoryBean extends StringMapFromResourceF
 			//
 		} else if (size == 1) {
 			//
-			final Link link = IterableUtils.get(ls, 0);
-			//
-			return toMap(link != null ? link.getUrl() : null);
+			return toMap(getUrl(IterableUtils.get(ls, 0)));
 			//
 		} // if
 			//
 		return toMap(url);
 		//
+	}
+
+	private static String getUrl(final Link instance) {
+		return instance != null ? instance.getUrl() : null;
 	}
 
 	private static Map<String, String> toMap(final String url) throws Exception {

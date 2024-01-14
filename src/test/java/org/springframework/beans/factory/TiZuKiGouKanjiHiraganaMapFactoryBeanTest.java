@@ -45,7 +45,7 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 
 	private static Method METHOD_TEXT, METHOD_TEST_AND_APPLY, METHOD_TO_MAP_ITERABLE, METHOD_TO_MAP_STRING,
 			METHOD_TO_MAP2, METHOD_TO_MAP3, METHOD_SPLIT, METHOD_ALL_MATCH, METHOD_GET_STRING_BY_UNICODE_BLOCK,
-			METHOD_IS_ABSOLUTE, METHOD_TO_URL = null;
+			METHOD_IS_ABSOLUTE, METHOD_TO_URL, METHOD_GET_URL = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException, ClassNotFoundException {
@@ -76,6 +76,8 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 		(METHOD_IS_ABSOLUTE = clz.getDeclaredMethod("isAbsolute", URI.class)).setAccessible(true);
 		//
 		(METHOD_TO_URL = clz.getDeclaredMethod("toURL", URI.class)).setAccessible(true);
+		//
+		(METHOD_GET_URL = clz.getDeclaredMethod("getUrl", Link.class)).setAccessible(true);
 		//
 	}
 
@@ -507,6 +509,27 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 				return null;
 			} else if (obj instanceof URL) {
 				return (URL) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetURL() throws Throwable {
+		//
+		Assertions.assertNull(getUrl(null));
+		//
+	}
+
+	private static String getUrl(final Link instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_URL.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
