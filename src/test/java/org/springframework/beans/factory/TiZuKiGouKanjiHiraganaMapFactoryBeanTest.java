@@ -38,7 +38,7 @@ import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
 
-class TiZuKiGouKanjiHiraganaListFactoryBeanTest {
+class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 
 	private static final String EMPTY = "";
 
