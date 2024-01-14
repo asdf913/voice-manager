@@ -135,6 +135,8 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 			//
 			instance.setLinks(Collections.nCopies(2, link));
 			//
+			instance.setText(null);
+			//
 		} // if
 			//
 		Assertions.assertThrows(IllegalStateException.class, () -> getObject(instance));
@@ -142,14 +144,6 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 		if (instance != null) {
 			//
 			instance.setLinks(Collections.singleton(link));
-			//
-		} // if
-			//
-		Assertions.assertNull(getObject(instance));
-		//
-		if (instance != null) {
-			//
-			instance.setText(null);
 			//
 		} // if
 			//
