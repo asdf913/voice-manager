@@ -6,6 +6,7 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
@@ -26,14 +27,17 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 
-	private static Method METHOD_CREATE_MULTI_MAP, METHOD_TO_URL, METHOD_TEST_AND_APPLY, METHOD_REMOVE = null;
+	private static Method METHOD_CREATE_MULTI_MAP1, METHOD_CREATE_MULTI_MAP2, METHOD_TO_URL, METHOD_TEST_AND_APPLY,
+			METHOD_REMOVE = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
 		//
 		final Class<?> clz = OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean.class;
 		//
-		(METHOD_CREATE_MULTI_MAP = clz.getDeclaredMethod("createMultimap", Iterable.class)).setAccessible(true);
+		(METHOD_CREATE_MULTI_MAP1 = clz.getDeclaredMethod("createMultimap1", Iterable.class)).setAccessible(true);
+		//
+		(METHOD_CREATE_MULTI_MAP2 = clz.getDeclaredMethod("createMultimap2", Iterable.class)).setAccessible(true);
 		//
 		(METHOD_TO_URL = clz.getDeclaredMethod("toURL", URI.class)).setAccessible(true);
 		//
@@ -110,15 +114,37 @@ class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 	}
 
 	@Test
-	void testCreateMultimap() throws Throwable {
+	void testCreateMultimap1() throws Throwable {
 		//
-		Assertions.assertNull(createMultimap(Collections.singleton(null)));
+		Assertions.assertNull(createMultimap1(
+				Arrays.asList(null, Util.cast(Element.class, Narcissus.allocateInstance(Element.class)))));
 		//
 	}
 
-	private static Multimap<String, String> createMultimap(final Iterable<Element> es) throws Throwable {
+	private static Multimap<String, String> createMultimap1(final Iterable<Element> es) throws Throwable {
 		try {
-			final Object obj = METHOD_CREATE_MULTI_MAP.invoke(null, es);
+			final Object obj = METHOD_CREATE_MULTI_MAP1.invoke(null, es);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Multimap) {
+				return (Multimap) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCreateMultimap2() throws Throwable {
+		//
+		Assertions.assertNull(createMultimap2(Collections.singleton(null)));
+		//
+	}
+
+	private static Multimap<String, String> createMultimap2(final Iterable<Element> es) throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_MULTI_MAP2.invoke(null, es);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Multimap) {

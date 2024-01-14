@@ -40,12 +40,16 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 	@Override
 	public Multimap<String, String> getObject() throws Exception {
 		//
-		final Iterable<Element> tbodies = ElementUtil.select(testAndApply(
+		return createMultimap1(ElementUtil.select(testAndApply(
 				Objects::nonNull, testAndApply(Util::isAbsolute,
 						testAndApply(StringUtils::isNotBlank, url, URI::new, null), x -> toURL(x), null),
-				x -> Jsoup.parse(x, 0), null), "tbody");
+				x -> Jsoup.parse(x, 0), null), "tbody"));
 		//
-		if (Util.iterator(tbodies) == null) {
+	}
+
+	private static Multimap<String, String> createMultimap1(final Iterable<Element> es) {
+		//
+		if (Util.iterator(es) == null) {
 			//
 			return null;
 			//
@@ -59,13 +63,11 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 		//
 		Element element = null;
 		//
-		for (final Element tbody : tbodies) {
+		for (final Element e : es) {
 			//
-			if (tbody == null || tbody.childrenSize() < 1
-					|| (pattern = ObjectUtils.getIfNull(pattern,
-							() -> Pattern.compile("\\p{InHiragana}{1,2}行"))) == null
-					|| !Util.matches(
-							pattern.matcher(ElementUtil.text(IterableUtils.get(children = tbody.children(), 0))))) {
+			if (ElementUtil.childrenSize(e) < 1 || !Util.matches(Util.matcher(
+					pattern = ObjectUtils.getIfNull(pattern, () -> Pattern.compile("\\p{InHiragana}{1,2}行")),
+					ElementUtil.text(IterableUtils.get(children = ElementUtil.children(e), 0))))) {
 				//
 				continue;
 				//
@@ -80,7 +82,7 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 				} // if
 					//
 				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-						createMultimap(element.children()));
+						createMultimap2(element.children()));
 				//
 			} // for
 				//
@@ -115,7 +117,7 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 	}
 
 	@Nullable
-	private static Multimap<String, String> createMultimap(final Iterable<Element> es) {
+	private static Multimap<String, String> createMultimap2(final Iterable<Element> es) {
 		//
 		Multimap<String, String> multimap = null;
 		//
