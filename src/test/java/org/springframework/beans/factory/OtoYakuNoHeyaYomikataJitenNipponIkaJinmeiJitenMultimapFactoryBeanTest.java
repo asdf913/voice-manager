@@ -21,7 +21,7 @@ import com.google.common.collect.Multimap;
 
 import io.github.toolfactory.narcissus.Narcissus;
 
-public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
+class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 
 	private static Method METHOD_CREATE_MULTI_MAP, METHOD_TO_URL, METHOD_TEST_AND_APPLY = null;
 
