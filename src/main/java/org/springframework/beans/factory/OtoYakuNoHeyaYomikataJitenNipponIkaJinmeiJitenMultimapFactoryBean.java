@@ -107,6 +107,7 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 		//
 	}
 
+	@Nullable
 	private static Multimap<String, String> createMultimap(final Iterable<Element> es) {
 		//
 		Multimap<String, String> multimap = null;
@@ -148,6 +149,7 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 		//
 	}
 
+	@Nullable
 	private static URL toURL(final URI instance) throws MalformedURLException {
 		//
 		if (instance == null || !isAbsolute(instance)) {
