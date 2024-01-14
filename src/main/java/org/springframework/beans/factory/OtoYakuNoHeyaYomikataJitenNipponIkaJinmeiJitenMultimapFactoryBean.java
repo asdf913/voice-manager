@@ -84,30 +84,32 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 				//
 		} // if
 			//
-		if (multimap != null) {
+		remove(multimap, "後藤艮山", "もあり");
+		//
+		remove(multimap, "菅原ミネ嗣", "はくさ");
+		//
+		remove(multimap, "菅原ミネ嗣", "に");
+		//
+		final Iterable<String> strings = Arrays.asList("は", "を", "つ", "ねた", "です");
+		//
+		if (Util.iterator(strings) != null) {
 			//
-			multimap.remove("後藤艮山", "もあり");
-			//
-			multimap.remove("菅原ミネ嗣", "はくさ");
-			//
-			multimap.remove("菅原ミネ嗣", "に");
-			//
-			final Iterable<String> strings = Arrays.asList("は", "を", "つ", "ねた", "です");
-			//
-			if (Util.iterator(strings) != null) {
+			for (final String string : strings) {
 				//
-				for (final String string : strings) {
-					//
-					multimap.remove("本間ソウ軒", string);
-					//
-				} // for
-					//
-			} // if
+				remove(multimap, "本間ソウ軒", string);
+				//
+			} // for
 				//
 		} // if
 			//
 		return multimap;
 		//
+	}
+
+	private static void remove(final Multimap<?, ?> instance, final Object key, final Object value) {
+		if (instance != null) {
+			instance.remove(key, value);
+		}
 	}
 
 	@Nullable

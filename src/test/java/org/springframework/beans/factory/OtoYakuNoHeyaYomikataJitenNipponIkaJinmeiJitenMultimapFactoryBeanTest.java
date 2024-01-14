@@ -1,5 +1,6 @@
 package org.springframework.beans.factory;
 
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
@@ -7,6 +8,7 @@ import java.net.URI;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 import org.apache.commons.lang3.function.FailableFunction;
@@ -18,12 +20,13 @@ import org.junit.jupiter.api.Test;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.Multimap;
+import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
 
 class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 
-	private static Method METHOD_CREATE_MULTI_MAP, METHOD_TO_URL, METHOD_TEST_AND_APPLY = null;
+	private static Method METHOD_CREATE_MULTI_MAP, METHOD_TO_URL, METHOD_TEST_AND_APPLY, METHOD_REMOVE = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -37,6 +40,34 @@ class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
 		//
+		(METHOD_REMOVE = clz.getDeclaredMethod("remove", Multimap.class, Object.class, Object.class))
+				.setAccessible(true);
+		//
+	}
+
+	private static class IH implements InvocationHandler {
+
+		private Boolean remove = null;
+
+		@Override
+		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+			//
+			final String methodName = method != null ? method.getName() : null;
+			//
+			if (proxy instanceof Multimap) {
+				//
+				if (Objects.equals(methodName, "remove")) {
+					//
+					return remove;
+					//
+				} // if
+					//
+			} // if
+				//
+			throw new Throwable(methodName);
+			//
+		}
+
 	}
 
 	private OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean instance = null;
@@ -142,6 +173,25 @@ class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 			throws Throwable {
 		try {
 			return (R) METHOD_TEST_AND_APPLY.invoke(null, predicate, value, functionTrue, functionFalse);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testRemove() {
+		//
+		final IH ih = new IH();
+		//
+		ih.remove = Boolean.TRUE;
+		//
+		Assertions.assertDoesNotThrow(() -> remove(Reflection.newProxy(Multimap.class, ih), null, null));
+		//
+	}
+
+	private static void remove(final Multimap<?, ?> instance, final Object key, final Object value) throws Throwable {
+		try {
+			METHOD_REMOVE.invoke(null, instance, key, value);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
