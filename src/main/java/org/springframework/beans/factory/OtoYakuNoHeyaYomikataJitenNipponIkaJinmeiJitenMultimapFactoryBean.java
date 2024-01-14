@@ -3,6 +3,7 @@ package org.springframework.beans.factory;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
@@ -91,16 +92,18 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 			//
 			multimap.remove("菅原ミネ嗣", "に");
 			//
-			multimap.remove("本間ソウ軒", "は");
+			final Iterable<String> strings = Arrays.asList("は", "を", "つ", "ねた", "です");
 			//
-			multimap.remove("本間ソウ軒", "を");
-			//
-			multimap.remove("本間ソウ軒", "つ");
-			//
-			multimap.remove("本間ソウ軒", "ねた");
-			//
-			multimap.remove("本間ソウ軒", "です");
-			//
+			if (Util.iterator(strings) != null) {
+				//
+				for (final String string : strings) {
+					//
+					multimap.remove("本間ソウ軒", string);
+					//
+				} // for
+					//
+			} // if
+				//
 		} // if
 			//
 		return multimap;
@@ -162,11 +165,11 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 		//
 	}
 
-	private static boolean isAbsolute(final URI instance) {
+	private static boolean isAbsolute(@Nullable final URI instance) {
 		return instance != null && instance.isAbsolute();
 	}
 
-	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+	private static <T, R, E extends Throwable> R testAndApply(@Nullable final Predicate<T> predicate, final T value,
 			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
 			throws E {
 		return predicate != null && predicate.test(value) ? FailableFunctionUtil.apply(functionTrue, value)
