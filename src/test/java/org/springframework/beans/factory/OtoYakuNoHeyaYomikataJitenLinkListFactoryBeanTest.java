@@ -53,7 +53,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.meeuw.functional.Consumers;
 import org.meeuw.functional.Predicates;
-import org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean.Link;
+import org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkListFactoryBean.Link;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.util.ReflectionUtils;
 
@@ -65,7 +65,7 @@ import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
 
-class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
+class OtoYakuNoHeyaYomikataJitenLinkListFactoryBeanTest {
 
 	private static final String EMPTY = "";
 
@@ -79,7 +79,7 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException, ClassNotFoundException {
 		//
-		final Class<?> clz = OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean.class;
+		final Class<?> clz = OtoYakuNoHeyaYomikataJitenLinkListFactoryBean.class;
 		//
 		(METHOD_GET_LINKS = clz.getDeclaredMethod("getLinks", List.class)).setAccessible(true);
 		//
@@ -97,13 +97,13 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 		//
 		(METHOD_SET_DESCRIPTION_AND_TEXT_AND_URL = clz.getDeclaredMethod("setDescriptionAndTextAndUrl", Element.class,
 				CLASS_IH = Class
-						.forName("org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean$IH"),
+						.forName("org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkListFactoryBean$IH"),
 				Element.class)).setAccessible(true);
 		//
 		(METHOD_ADD_LINKS = clz.getDeclaredMethod("addLinks", Collection.class, Element.class, Collection.class,
 				Element.class,
 				Class.forName(
-						"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean$ObjectMap"),
+						"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkListFactoryBean$ObjectMap"),
 				String.class)).setAccessible(true);
 		//
 		(METHOD_HAS_ATTR = clz.getDeclaredMethod("hasAttr", Element.class, String.class)).setAccessible(true);
@@ -128,8 +128,8 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 		(METHOD_TO_INT_STRING_MAP = clz.getDeclaredMethod("toIntStringMap", Iterable.class, FormulaEvaluator.class))
 				.setAccessible(true);
 		//
-		final Class<?> classIntStringMap = Class
-				.forName("org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean$IntStringMap");
+		final Class<?> classIntStringMap = Class.forName(
+				"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkListFactoryBean$IntStringMap");
 		//
 		(METHOD_TO_LINK = clz.getDeclaredMethod("toLink", Iterable.class, classIntStringMap, FormulaEvaluator.class,
 				DataFormatter.class)).setAccessible(true);
@@ -204,7 +204,7 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 			} // if
 				//
 			final Class<?> clz = Class
-					.forName("org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean$Link");
+					.forName("org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkListFactoryBean$Link");
 			//
 			if (clz != null && clz.isInstance(proxy)) {
 				//
@@ -222,7 +222,7 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 
 	}
 
-	private OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean instance = null;
+	private OtoYakuNoHeyaYomikataJitenLinkListFactoryBean instance = null;
 
 	private Element element = null;
 
@@ -233,7 +233,7 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 	@BeforeEach
 	void beforeEach() {
 		//
-		instance = new OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean();
+		instance = new OtoYakuNoHeyaYomikataJitenLinkListFactoryBean();
 		//
 		element = Util.cast(Element.class, Narcissus.allocateInstance(Element.class));
 		//
@@ -1247,7 +1247,7 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 		// org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean$Link
 		//
 		Class<?> clz = Class
-				.forName("org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean$Link");
+				.forName("org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkListFactoryBean$Link");
 		//
 		final Object link = Reflection.newProxy(clz, ih);
 		//
@@ -1270,7 +1270,7 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 		//
 		final Object objectMap = Reflection.newProxy(
 				clz = Class.forName(
-						"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean$ObjectMap"),
+						"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkListFactoryBean$ObjectMap"),
 				ih);
 		//
 		Assertions.assertThrows(Throwable.class, () -> invoke(ih, objectMap, null, null));
@@ -1294,7 +1294,7 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 		// org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean$IntMap
 		//
 		final Object intMap = Reflection.newProxy(clz = Class
-				.forName("org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean$IntMap"), ih);
+				.forName("org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkListFactoryBean$IntMap"), ih);
 		//
 		Assertions.assertThrows(Throwable.class, () -> invoke(ih, objectMap, null, null));
 		//
@@ -1320,7 +1320,7 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 		//
 		final Object intStringMap = Reflection.newProxy(
 				clz = Class.forName(
-						"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean$IntStringMap"),
+						"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkListFactoryBean$IntStringMap"),
 				ih);
 		//
 		Assertions.assertThrows(Throwable.class, () -> invoke(ih, intStringMap, null, null));
@@ -1378,7 +1378,7 @@ class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBeanTest {
 			throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
 		//
 		final Class<?> clz = Class
-				.forName("org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean$Link");
+				.forName("org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkListFactoryBean$Link");
 		//
 		// org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean$Link.getUrl(org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean$Link)
 		//

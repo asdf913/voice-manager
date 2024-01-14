@@ -64,7 +64,9 @@ import io.github.toolfactory.narcissus.Narcissus;
 /*
  * https://hiramatu-hifuka.com/onyak/onyindx.html
  */
-public class OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean implements FactoryBean<Object>, InitializingBean {
+public class OtoYakuNoHeyaYomikataJitenLinkListFactoryBean implements
+		FactoryBean<List<org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkListFactoryBean.Link>>,
+		InitializingBean {
 
 	private String url = null;
 
