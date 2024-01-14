@@ -512,7 +512,7 @@ abstract class Util {
 		//
 	}
 
-	static boolean isAbsolute(final URI instance) {
+	static boolean isAbsolute(@Nullable final URI instance) {
 		return instance != null && instance.isAbsolute();
 	}
 
