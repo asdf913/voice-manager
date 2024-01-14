@@ -45,44 +45,46 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 						testAndApply(StringUtils::isNotBlank, url, URI::new, null), x -> toURL(x), null),
 				x -> Jsoup.parse(x, 0), null), "tbody");
 		//
+		if (Util.iterator(tbodies) == null) {
+			//
+			return null;
+			//
+		} // if
+			//
 		Multimap<String, String> multimap = null;
 		//
-		if (Util.iterator(tbodies) != null) {
+		Pattern pattern = null;
+		//
+		List<Element> children = null;
+		//
+		Element element = null;
+		//
+		for (final Element tbody : tbodies) {
 			//
-			Pattern pattern = null;
-			//
-			List<Element> children = null;
-			//
-			Element element = null;
-			//
-			for (final Element tbody : tbodies) {
+			if (tbody == null || tbody.childrenSize() < 1
+					|| (pattern = ObjectUtils.getIfNull(pattern,
+							() -> Pattern.compile("\\p{InHiragana}{1,2}行"))) == null
+					|| !Util.matches(
+							pattern.matcher(ElementUtil.text(IterableUtils.get(children = tbody.children(), 0))))) {
 				//
-				if (tbody == null || tbody.childrenSize() < 1
-						|| (pattern = ObjectUtils.getIfNull(pattern,
-								() -> Pattern.compile("\\p{InHiragana}{1,2}行"))) == null
-						|| !Util.matches(
-								pattern.matcher(ElementUtil.text(IterableUtils.get(children = tbody.children(), 0))))) {
+				continue;
+				//
+			} // if
+				//
+			for (int i = 0; i < IterableUtils.size(children); i++) {
+				//
+				if (Util.matches(pattern.matcher(ElementUtil.text(element = IterableUtils.get(children, i))))) {
 					//
 					continue;
 					//
 				} // if
 					//
-				for (int i = 0; i < IterableUtils.size(children); i++) {
-					//
-					if (Util.matches(pattern.matcher(ElementUtil.text(element = IterableUtils.get(children, i))))) {
-						//
-						continue;
-						//
-					} // if
-						//
-					MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							createMultimap(element.children()));
-					//
-				} // for
-					//
+				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						createMultimap(element.children()));
+				//
 			} // for
 				//
-		} // if
+		} // for
 			//
 		remove(multimap, "後藤艮山", "もあり");
 		//
