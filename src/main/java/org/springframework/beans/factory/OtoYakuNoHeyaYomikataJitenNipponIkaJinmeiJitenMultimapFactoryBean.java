@@ -106,7 +106,7 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 		//
 	}
 
-	private static void remove(final Multimap<?, ?> instance, final Object key, final Object value) {
+	private static void remove(@Nullable final Multimap<?, ?> instance, final Object key, final Object value) {
 		if (instance != null) {
 			instance.remove(key, value);
 		}
