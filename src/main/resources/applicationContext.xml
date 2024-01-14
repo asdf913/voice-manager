@@ -736,6 +736,9 @@
 		<property name="resource"
 			value="classpath:OtoYakuNoHeyaYomikataJiten.xlsx" />
 		<property name="sheetName" value="TiZuKiGou" />
+		<property name="links" ref="OtoYakuNoHeyaYomikataJitenLinkList" />
+		<property name="text"
+			value="${org.springframework.beans.factory.TiZuKiGouKanjiHiraganaMapFactoryBean.text}" />
 	</bean>
 
 	<!-- -->
