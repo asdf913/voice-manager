@@ -153,7 +153,7 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 	}
 
 	@Nullable
-	private static URL toURL(final URI instance) throws MalformedURLException {
+	private static URL toURL(@Nullable final URI instance) throws MalformedURLException {
 		//
 		if (instance == null || !isAbsolute(instance)) {
 			//
