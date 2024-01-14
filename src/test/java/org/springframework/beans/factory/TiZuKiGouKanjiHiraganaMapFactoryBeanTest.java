@@ -18,6 +18,7 @@ import java.util.function.UnaryOperator;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellUtil;
 import org.apache.poi.ss.usermodel.Row;
@@ -95,6 +96,10 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 					//
 					return null;
 					//
+				} else if (Objects.equals(methodName, "getDescription")) {
+					//
+					return null;
+					//
 				} // if
 					//
 			} // if
@@ -156,6 +161,34 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 		} // if
 			//
 		Assertions.assertNull(getObject(instance));
+		//
+		if (instance != null) {
+			//
+			instance.setDescription(null);
+			//
+		} // if
+			//
+		Assertions.assertNull(getObject(instance));
+		//
+		if (instance != null) {
+			//
+			instance.setDescription("");
+			//
+		} // if
+			//
+		Assertions.assertNull(getObject(instance));
+		//
+		if (instance != null) {
+			//
+			instance.setDescription(null);
+			//
+			instance.setLinks(Collections.nCopies(2, link));
+			//
+			FieldUtils.writeDeclaredField(instance, "text", null, true);
+			//
+		} // if
+			//
+		Assertions.assertThrows(IllegalStateException.class, () -> getObject(instance));
 		//
 		if (Util.containsKey(properties,
 				"org.springframework.beans.factory.TiZuKiGouKanjiHiraganaMapFactoryBean.url")) {
