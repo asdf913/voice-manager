@@ -1,9 +1,7 @@
 package org.springframework.beans.factory;
 
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
@@ -46,8 +44,7 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 		//
 	}
 
-	private static Multimap<String, String> createMultimap(final String url)
-			throws MalformedURLException, IOException, URISyntaxException {
+	private static Multimap<String, String> createMultimap(final String url) throws Exception {
 		//
 		return createMultimap1(ElementUtil.select(testAndApply(
 				Objects::nonNull, testAndApply(Util::isAbsolute,
