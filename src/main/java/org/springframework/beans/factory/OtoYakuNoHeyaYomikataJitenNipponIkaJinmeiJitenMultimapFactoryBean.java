@@ -44,6 +44,7 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 		//
 	}
 
+	@Nullable
 	private static Multimap<String, String> createMultimap(final String url) throws Exception {
 		//
 		return createMultimap1(ElementUtil.select(testAndApply(
