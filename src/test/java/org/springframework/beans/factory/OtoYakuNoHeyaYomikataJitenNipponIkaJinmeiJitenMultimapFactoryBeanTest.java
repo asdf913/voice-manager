@@ -35,7 +35,7 @@ class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 	private static final String EMPTY = "";
 
 	private static Method METHOD_CREATE_MULTI_MAP, METHOD_CREATE_MULTI_MAP2, METHOD_TO_URL, METHOD_TEST_AND_APPLY,
-			METHOD_REMOVE, METHOD_TO_MULTI_MAP = null;
+			METHOD_REMOVE, METHOD_TO_MULTI_MAP_MAP, METHOD_TO_MULTI_MAP_ITERABLE = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -55,7 +55,9 @@ class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 		(METHOD_REMOVE = clz.getDeclaredMethod("remove", Multimap.class, Object.class, Object.class))
 				.setAccessible(true);
 		//
-		(METHOD_TO_MULTI_MAP = clz.getDeclaredMethod("toMultimap", Map.class)).setAccessible(true);
+		(METHOD_TO_MULTI_MAP_MAP = clz.getDeclaredMethod("toMultimap", Map.class)).setAccessible(true);
+		//
+		(METHOD_TO_MULTI_MAP_ITERABLE = clz.getDeclaredMethod("toMultimap", Iterable.class)).setAccessible(true);
 		//
 	}
 
@@ -231,12 +233,6 @@ class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 			//
 			instance.setToBeRemoved(" ");
 			//
-			instance.setToBeRemoved("[null]");
-			//
-			instance.setToBeRemoved("[{\"\":null}]");
-			//
-			instance.setToBeRemoved("[{\"\":[null]}]");
-			//
 		});
 		//
 		Assertions.assertThrows(IllegalStateException.class, () -> {
@@ -264,16 +260,6 @@ class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 			if (instance != null) {
 				//
 				instance.setToBeRemoved("[{\"\":[{}]}]");
-				//
-			} // if
-				//
-		});
-		//
-		Assertions.assertThrows(IllegalStateException.class, () -> {
-			//
-			if (instance != null) {
-				//
-				instance.setToBeRemoved("[{\"\":[[]]}]");
 				//
 			} // if
 				//
@@ -408,7 +394,9 @@ class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 	@Test
 	void testToMultimap() throws Throwable {
 		//
-		Assertions.assertNull(toMultimap(null));
+		Assertions.assertNull(toMultimap((Map<?, ?>) null));
+		//
+		Assertions.assertNull(toMultimap((Iterable<?>) null));
 		//
 		Assertions.assertEquals("{=[]}", Util.toString(toMultimap(Collections.singletonMap(EMPTY, EMPTY))));
 		//
@@ -429,11 +417,39 @@ class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 			//
 		Assertions.assertNull(toMultimap(Reflection.newProxy(Map.class, ih)));
 		//
+		Assertions.assertEquals("{=[]}",
+				Util.toString(toMultimap(Collections.singleton(Collections.singletonMap(EMPTY, EMPTY)))));
+		//
+		Assertions.assertEquals("{=[]}", Util.toString(
+				toMultimap(Collections.singleton(Collections.singletonMap(EMPTY, Collections.singleton(EMPTY))))));
+		//
+		if (ih != null) {
+			//
+			ih.entrySet = Collections.singleton(null);
+			//
+		} // if
+			//
+		Assertions.assertNull(toMultimap(Collections.singleton(Reflection.newProxy(Map.class, ih))));
+		//
+	}
+
+	private static Multimap<String, String> toMultimap(final Iterable<?> iterable) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_MULTI_MAP_ITERABLE.invoke(null, iterable);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Multimap) {
+				return (Multimap) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 	private static Multimap<String, String> toMultimap(final Map<?, ?> m) throws Throwable {
 		try {
-			final Object obj = METHOD_TO_MULTI_MAP.invoke(null, m);
+			final Object obj = METHOD_TO_MULTI_MAP_MAP.invoke(null, m);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Multimap) {

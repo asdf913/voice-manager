@@ -102,7 +102,23 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 			//
 			toBeRemoved = toMultimap(m);
 			//
-		} else if (object instanceof Iterable iterable && Util.iterator(iterable) != null) {
+		} else if (object instanceof Iterable iterable) {
+			//
+			toBeRemoved = toMultimap(iterable);
+			//
+		} else if (object != null) {
+			//
+			throw new IllegalStateException(Util.toString(Util.getClass(object)));
+			//
+		} // if
+			//
+	}
+
+	private static Multimap<String, String> toMultimap(final Iterable<?> iterable) {
+		//
+		Multimap<String, String> multimap = null;
+		//
+		if (Util.iterator(iterable) != null) {
 			//
 			for (final Object obj : iterable) {
 				//
@@ -131,8 +147,7 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 									} // if
 										//
 									MultimapUtil.put(
-											toBeRemoved = ObjectUtils.getIfNull(toBeRemoved,
-													LinkedHashMultimap::create),
+											multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 											Util.toString(Util.getKey(entry)), Util.toString(o));
 									//
 								} // if
@@ -143,8 +158,7 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 								//
 							} else {
 								//
-								MultimapUtil.put(
-										toBeRemoved = ObjectUtils.getIfNull(toBeRemoved, LinkedHashMultimap::create),
+								MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 										Util.toString(Util.getKey(entry)), Util.toString(Util.getValue(entry)));
 								//
 							} // if
@@ -161,12 +175,10 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 					//
 			} // for
 				//
-		} else if (object != null) {
-			//
-			throw new IllegalStateException(Util.toString(Util.getClass(object)));
-			//
 		} // if
 			//
+		return multimap;
+		//
 	}
 
 	@Nullable
