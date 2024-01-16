@@ -64,6 +64,7 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 
 	private IValue0<String> description = null;
 
+	@Nullable
 	private Multimap<String, String> toBeRemoved = null;
 
 	public void setUrl(final String url) {
