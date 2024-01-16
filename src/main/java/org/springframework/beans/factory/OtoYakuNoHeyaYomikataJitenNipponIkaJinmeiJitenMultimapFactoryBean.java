@@ -129,50 +129,9 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 			//
 			if (obj instanceof Map m) {
 				//
-				final Iterable<Entry<?, ?>> entries = Util.entrySet(m);
+				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						toMultimap(m));
 				//
-				if (Util.iterator(entries) == null) {
-					//
-					continue;
-					//
-				} // if
-					//
-				for (final Entry<?, ?> entry : entries) {
-					//
-					if (entry == null) {
-						//
-						continue;
-						//
-					} // if
-						//
-					if (Util.getValue(entry) instanceof Iterable it) {
-						//
-						for (final Object o : it) {
-							//
-							if (Boolean.logicalOr(o instanceof Iterable, o instanceof Map)) {
-								//
-								throw new IllegalStateException(Util.toString(Util.getClass(o)));
-								//
-							} // if
-								//
-							MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-									Util.toString(Util.getKey(entry)), Util.toString(o));
-							//
-						} // if
-							//
-					} else if (Util.getValue(entry) instanceof Map) {
-						//
-						throw new IllegalStateException(Util.toString(Util.getClass(obj)));
-						//
-					} else {
-						//
-						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-								Util.toString(Util.getKey(entry)), Util.toString(Util.getValue(entry)));
-						//
-					} // if
-						//
-				} // for
-					//
 			} else if (obj != null) {
 				//
 				throw new IllegalStateException(Util.toString(Util.getClass(obj)));

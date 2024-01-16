@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkListFactoryBean.Link;
 
 import com.google.common.base.Predicates;
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.reflect.Reflection;
@@ -429,7 +430,8 @@ class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(toMultimap(Collections.singleton(Reflection.newProxy(Map.class, ih))));
+		Assertions.assertEquals(ImmutableMultimap.of(),
+				toMultimap(Collections.singleton(Reflection.newProxy(Map.class, ih))));
 		//
 	}
 
