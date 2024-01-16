@@ -171,49 +171,51 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 	@Nullable
 	private static Multimap<String, String> toMultimap(final Map<?, ?> m) {
 		//
+		if (Util.iterator(Util.entrySet(m)) == null) {
+			//
+			return null;
+			//
+		} // if
+			//
 		Multimap<String, String> multimap = null;
 		//
-		if (Util.iterator(Util.entrySet(m)) != null) {
+		Object value = null;
+		//
+		for (final Entry<?, ?> entry : Util.entrySet(m)) {
 			//
-			Object value = null;
-			//
-			for (final Entry<?, ?> entry : Util.entrySet(m)) {
+			if (entry == null) {
 				//
-				if (entry == null) {
+				continue;
+				//
+			} // if
+				//
+			if ((value = Util.getValue(entry)) instanceof Iterable iterable) {
+				//
+				for (final Object o : iterable) {
 					//
-					continue;
-					//
-				} // if
-					//
-				if ((value = Util.getValue(entry)) instanceof Iterable iterable) {
-					//
-					for (final Object o : iterable) {
+					if (Boolean.logicalOr(o instanceof Iterable, o instanceof Map)) {
 						//
-						if (Boolean.logicalOr(o instanceof Iterable, o instanceof Map)) {
-							//
-							throw new IllegalStateException(Util.toString(Util.getClass(o)));
-							//
-						} // if
-							//
-						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-								Util.toString(Util.getKey(entry)), Util.toString(o));
+						throw new IllegalStateException(Util.toString(Util.getClass(o)));
 						//
 					} // if
 						//
-				} else if (value instanceof Map) {
-					//
-					throw new IllegalStateException(Util.toString(Util.getClass(value)));
-					//
-				} else {
-					//
 					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							Util.toString(Util.getKey(entry)), Util.toString(Util.getValue(entry)));
+							Util.toString(Util.getKey(entry)), Util.toString(o));
 					//
 				} // if
 					//
-			} // for
+			} else if (value instanceof Map) {
 				//
-		} // if
+				throw new IllegalStateException(Util.toString(Util.getClass(value)));
+				//
+			} else {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						Util.toString(Util.getKey(entry)), Util.toString(Util.getValue(entry)));
+				//
+			} // if
+				//
+		} // for
 			//
 		return multimap;
 		//
