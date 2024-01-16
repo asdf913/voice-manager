@@ -81,7 +81,7 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 	}
 
 	@Nullable
-	private static Multimap<String, String> createMultimap(final String url) throws Exception {
+	private static Multimap<String, String> createMultimap(@Nullable final String url) throws Exception {
 		//
 		return createMultimap1(ElementUtil.select(testAndApply(
 				Objects::nonNull, testAndApply(Util::isAbsolute,
@@ -215,9 +215,9 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 		//
 	}
 
-	private static <T, R, E extends Throwable> R testAndApply(@Nullable final Predicate<T> predicate, final T value,
-			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
-			throws E {
+	private static <T, R, E extends Throwable> R testAndApply(@Nullable final Predicate<T> predicate,
+			@Nullable final T value, final FailableFunction<T, R, E> functionTrue,
+			@Nullable final FailableFunction<T, R, E> functionFalse) throws E {
 		return predicate != null && predicate.test(value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
