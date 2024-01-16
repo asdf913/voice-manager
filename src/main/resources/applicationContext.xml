@@ -754,6 +754,8 @@
 			value="${org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean.text}" />
 		<property name="description"
 			value="${org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean.description}" />
+		<property name="toBeRemoved"
+			value="${org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean.toBeRemoved}" />
 	</bean>
 
 	<!-- -->
