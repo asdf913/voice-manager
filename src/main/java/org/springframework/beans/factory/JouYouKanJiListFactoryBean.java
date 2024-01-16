@@ -85,8 +85,8 @@ public class JouYouKanJiListFactoryBean implements FactoryBean<List<String>> {
 					//
 				if (object instanceof Iterable<?> iterable) {
 					//
-					return Unit.with(
-							Util.toList(Util.map(StreamSupport.stream(iterable.spliterator(), false), Util::toString)));
+					return Unit.with(Util
+							.toList(Util.map(StreamSupport.stream(Util.spliterator(iterable), false), Util::toString)));
 					//
 				} else if (is != null) {
 					//

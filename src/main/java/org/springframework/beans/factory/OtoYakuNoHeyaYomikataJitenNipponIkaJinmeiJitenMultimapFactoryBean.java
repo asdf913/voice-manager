@@ -74,8 +74,7 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 	public Multimap<String, String> getObject() throws Exception {
 		//
 		List<Link> ls = Util.toList(Util.filter(
-				testAndApply(Objects::nonNull, links != null ? links.spliterator() : null,
-						x -> StreamSupport.stream(x, false), null),
+				testAndApply(Objects::nonNull, Util.spliterator(links), x -> StreamSupport.stream(x, false), null),
 				x -> text != null && x != null && Objects.equals(x.getText(), IValue0Util.getValue0(text))));
 		//
 		int size = IterableUtils.size(ls);

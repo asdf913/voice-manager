@@ -86,8 +86,7 @@ public class TiZuKiGouKanjiHiraganaMapFactoryBean extends StringMapFromResourceF
 		} // if
 			//
 		List<Link> ls = Util.toList(Util.filter(
-				testAndApply(Objects::nonNull, links != null ? links.spliterator() : null,
-						x -> StreamSupport.stream(x, false), null),
+				testAndApply(Objects::nonNull, Util.spliterator(links), x -> StreamSupport.stream(x, false), null),
 				x -> text != null && x != null && Objects.equals(x.getText(), IValue0Util.getValue0(text))));
 		//
 		int size = IterableUtils.size(ls);
