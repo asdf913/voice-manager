@@ -7,8 +7,8 @@ import java.lang.annotation.Target;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.Predicate;
@@ -29,8 +29,13 @@ import org.javatuples.valueintf.IValue0Util;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.LoggerUtil;
 import org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkListFactoryBean.Link;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
@@ -40,6 +45,9 @@ import com.google.common.collect.MultimapUtil;
  */
 public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 		implements FactoryBean<Multimap<String, String>> {
+
+	private static final Logger LOG = LoggerFactory
+			.getLogger(OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean.class);
 
 	private String url = null;
 
@@ -55,6 +63,8 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 	private IValue0<String> text = null;
 
 	private IValue0<String> description = null;
+
+	private Multimap<String, String> toBeRemoved = null;
 
 	public void setUrl(final String url) {
 		this.url = url;
@@ -72,29 +82,143 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 		this.description = Unit.with(description);
 	}
 
+	public void setToBeRemoved(final String string) {
+		//
+		Object object = null;
+		//
+		try {
+			//
+			object = testAndApply(StringUtils::isNotBlank, string, x -> new ObjectMapper().readValue(x, Object.class),
+					null);
+			//
+		} catch (final JsonProcessingException e) {
+			//
+			LoggerUtil.error(LOG, e.getMessage(), e);
+			//
+		} // try
+			//
+		if (object instanceof Map m) {
+			//
+			final Iterable<Entry<?, ?>> entries = Util.entrySet(m);
+			//
+			if (Util.iterator(entries) != null) {
+				//
+				Object obj = null;
+				//
+				for (final Entry<?, ?> entry : entries) {
+					//
+					if (entry == null) {
+						//
+						continue;
+						//
+					} // if
+						//
+					if ((obj = Util.getValue(entry)) instanceof Iterable iterable) {
+						//
+						for (final Object o : iterable) {
+							//
+							if (o instanceof Iterable || o instanceof Map) {
+								//
+								throw new IllegalStateException(Util.toString(Util.getClass(o)));
+								//
+							} // if
+								//
+							MultimapUtil.put(
+									toBeRemoved = ObjectUtils.getIfNull(toBeRemoved, LinkedHashMultimap::create),
+									Util.toString(Util.getKey(entry)), Util.toString(o));
+							//
+						} // if
+							//
+					} else if (obj instanceof Map) {
+						//
+						throw new IllegalStateException(Util.toString(Util.getClass(obj)));
+						//
+					} else {
+						//
+						MultimapUtil.put(toBeRemoved = ObjectUtils.getIfNull(toBeRemoved, LinkedHashMultimap::create),
+								Util.toString(Util.getKey(entry)), Util.toString(Util.getValue(entry)));
+						//
+					} // if
+						//
+				} // for
+					//
+			} // if
+				//
+		} else if (object instanceof Iterable iterable) {
+			//
+			if (Util.iterator(iterable) != null) {
+				//
+				for (final Object obj : iterable) {
+					//
+					if (obj instanceof Map m) {
+						//
+						final Iterable<Entry<?, ?>> entries = Util.entrySet(m);
+						//
+						if (Util.iterator(entries) != null) {
+							//
+							for (final Entry<?, ?> entry : entries) {
+								//
+								if (entry == null) {
+									//
+									continue;
+									//
+								} // if
+									//
+								if (Util.getValue(entry) instanceof Iterable it) {
+									//
+									for (final Object o : it) {
+										//
+										if (o instanceof Iterable || o instanceof Map) {
+											//
+											throw new IllegalStateException(Util.toString(Util.getClass(o)));
+											//
+										} // if
+											//
+										MultimapUtil.put(
+												toBeRemoved = ObjectUtils.getIfNull(toBeRemoved,
+														LinkedHashMultimap::create),
+												Util.toString(Util.getKey(entry)), Util.toString(o));
+										//
+									} // if
+										//
+								} else if (Util.getValue(entry) instanceof Map) {
+									//
+									throw new IllegalStateException(Util.toString(Util.getClass(obj)));
+									//
+								} else {
+									//
+									MultimapUtil.put(
+											toBeRemoved = ObjectUtils.getIfNull(toBeRemoved,
+													LinkedHashMultimap::create),
+											Util.toString(Util.getKey(entry)), Util.toString(Util.getValue(entry)));
+									//
+								} // if
+									//
+							} // for
+								//
+						} // if
+							//
+					} else if (obj != null) {
+						//
+						throw new IllegalStateException(Util.toString(Util.getClass(obj)));
+						//
+					} // if
+						//
+				} // for
+					//
+			} // if
+				//
+		} else if (object != null) {
+			//
+			throw new IllegalStateException(Util.toString(Util.getClass(object)));
+			//
+		} // if
+			//
+	}
+
 	@Override
 	public Multimap<String, String> getObject() throws Exception {
 		//
-		final Multimap<String, String> toBeRemoved = LinkedHashMultimap.create();
-		//
-		MultimapUtil.put(toBeRemoved, "後藤艮山", "もあり");
-		//
-		MultimapUtil.put(toBeRemoved, "菅原ミネ嗣", "はくさ");
-		//
-		MultimapUtil.put(toBeRemoved, "菅原ミネ嗣", "に");
-		//
-		final Iterable<String> strings = Arrays.asList("は", "を", "つ", "ねた", "です");
-		//
-		if (Util.iterator(strings) != null) {
-			//
-			for (final String string : strings) {
-				//
-				MultimapUtil.put(toBeRemoved, "本間ソウ軒", string);
-				//
-			} // for
-				//
-		} // if
-			//
 		List<Link> ls = Util.toList(Util.filter(
 				testAndApply(Objects::nonNull, Util.spliterator(links), x -> StreamSupport.stream(x, false), null),
 				x -> text != null && x != null && Objects.equals(x.getText(), IValue0Util.getValue0(text))));

@@ -176,6 +176,9 @@ class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 				instance.setUrl(Util.toString(Util.get(properties,
 						"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean.url")));
 				//
+				instance.setToBeRemoved(
+						"[{\"後藤艮山\":\"もあり\"},{\"菅原ミネ嗣\":[\"はくさ\",\"に\"]},{\"本間ソウ軒\":[\"は\",\"を\",\"つ\",\"ねた\",\"です\"]}]");
+				//
 			} // if
 				//
 			System.out.println(getObject(instance));
@@ -193,6 +196,118 @@ class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 		//
 		Assertions.assertEquals(Multimap.class, instance != null ? instance.getObjectType() : null);
 		//
+	}
+
+	@Test
+	void testSetToBeRemoved() {
+		//
+		Assertions.assertDoesNotThrow(() -> {
+			//
+			if (instance == null) {
+				//
+				return;
+				//
+			} // if
+				//
+			instance.setToBeRemoved(null);
+			//
+			instance.setToBeRemoved("");
+			//
+			instance.setToBeRemoved(" ");
+			//
+			instance.setToBeRemoved("{}");
+			//
+			instance.setToBeRemoved("{\"\":2}");
+			//
+			instance.setToBeRemoved("{\"\":[2,3]}");
+			//
+			instance.setToBeRemoved("[null]");
+			//
+			instance.setToBeRemoved("[{\"\":null}]");
+			//
+			instance.setToBeRemoved("[{\"\":[null]}]");
+			//
+		});
+		//
+		Assertions.assertThrows(IllegalStateException.class, () -> {
+			//
+			if (instance != null) {
+				//
+				instance.setToBeRemoved("{\"\":{}}");
+				//
+			} // if
+				//
+		});
+		//
+		Assertions.assertThrows(IllegalStateException.class, () -> {
+			//
+			if (instance != null) {
+				//
+				instance.setToBeRemoved("{\"\":[[]]}");
+				//
+			} // if
+				//
+		});
+		//
+		Assertions.assertThrows(IllegalStateException.class, () -> {
+			//
+			if (instance != null) {
+				//
+				instance.setToBeRemoved("{\"\":[{}]}");
+				//
+			} // if
+				//
+		});
+		//
+		Assertions.assertThrows(IllegalStateException.class, () -> {
+			//
+			if (instance != null) {
+				//
+				instance.setToBeRemoved("[{\"\":{}}]");
+				//
+			} // if
+				//
+		});
+		//
+		Assertions.assertThrows(IllegalStateException.class, () -> {
+			//
+			if (instance != null) {
+				//
+				instance.setToBeRemoved("[1]");
+				//
+			} // if
+				//
+		});
+		//
+		Assertions.assertThrows(IllegalStateException.class, () -> {
+			//
+			if (instance != null) {
+				//
+				instance.setToBeRemoved("[{\"\":[{}]}]");
+				//
+			} // if
+				//
+		});
+		//
+		Assertions.assertThrows(IllegalStateException.class, () -> {
+			//
+			if (instance != null) {
+				//
+				instance.setToBeRemoved("[{\"\":[[]]}]");
+				//
+			} // if
+				//
+		});
+		//
+		Assertions.assertThrows(IllegalStateException.class, () -> {
+			//
+			if (instance != null) {
+				//
+				instance.setToBeRemoved("1");
+				//
+			} // if
+				//
+		});
 	}
 
 	@Test
