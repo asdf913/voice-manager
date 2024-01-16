@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkListFactoryBean.Link;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.Multimap;
@@ -66,6 +67,18 @@ class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 					//
 				} // if
 					//
+			} else if (proxy instanceof Link) {
+				//
+				if (Objects.equals(methodName, "getText")) {
+					//
+					return null;
+					//
+				} else if (Objects.equals(methodName, "getUrl")) {
+					//
+					return null;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(methodName);
@@ -76,17 +89,55 @@ class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 
 	private OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean instance = null;
 
+	private IH ih = null;
+
 	@BeforeEach
 	void beforeEach() {
 		//
 		instance = new OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean();
+		//
+		ih = new IH();
 		//
 	}
 
 	@Test
 	void testGetObject() throws Exception {
 		//
-		Assertions.assertNull(instance != null ? instance.getObject() : null);
+		Assertions.assertNull(getObject(instance));
+		//
+		if (instance != null) {
+			//
+			instance.setText(null);
+			//
+		} // if
+			//
+		Assertions.assertNull(getObject(instance));
+		//
+		if (instance != null) {
+			//
+			instance.setLinks(Collections.singleton(null));
+			//
+		} // if
+			//
+		Assertions.assertNull(getObject(instance));
+		//
+		final Link link = Reflection.newProxy(Link.class, ih);
+		//
+		if (instance != null) {
+			//
+			instance.setLinks(Collections.singleton(link));
+			//
+		} // if
+			//
+		Assertions.assertNull(getObject(instance));
+		//
+		if (instance != null) {
+			//
+			instance.setLinks(Collections.nCopies(2, link));
+			//
+		} // if
+			//
+		Assertions.assertThrows(IllegalStateException.class, () -> getObject(instance));
 		//
 		final Map<Object, Object> properties = System.getProperties();
 		//
@@ -95,15 +146,21 @@ class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 			//
 			if (instance != null) {
 				//
+				instance.setLinks(null);
+				//
 				instance.setUrl(Util.toString(Util.get(properties,
 						"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean.url")));
 				//
 			} // if
 				//
-			Assertions.assertNotNull(instance != null ? instance.getObject() : null);
+			Assertions.assertNotNull(getObject(instance));
 			//
 		} // if
 			//
+	}
+
+	private static <T> T getObject(final FactoryBean<T> instance) throws Exception {
+		return instance != null ? instance.getObject() : null;
 	}
 
 	@Test
