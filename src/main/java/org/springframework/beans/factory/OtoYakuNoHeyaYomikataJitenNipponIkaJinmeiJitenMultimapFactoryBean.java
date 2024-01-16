@@ -144,69 +144,64 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 					//
 			} // if
 				//
-		} else if (object instanceof Iterable iterable) {
+		} else if (object instanceof Iterable iterable && Util.iterator(iterable) != null) {
 			//
-			if (Util.iterator(iterable) != null) {
+			for (final Object obj : iterable) {
 				//
-				for (final Object obj : iterable) {
+				if (obj instanceof Map m) {
 					//
-					if (obj instanceof Map m) {
+					final Iterable<Entry<?, ?>> entries = Util.entrySet(m);
+					//
+					if (Util.iterator(entries) != null) {
 						//
-						final Iterable<Entry<?, ?>> entries = Util.entrySet(m);
-						//
-						if (Util.iterator(entries) != null) {
+						for (final Entry<?, ?> entry : entries) {
 							//
-							for (final Entry<?, ?> entry : entries) {
+							if (entry == null) {
 								//
-								if (entry == null) {
+								continue;
+								//
+							} // if
+								//
+							if (Util.getValue(entry) instanceof Iterable it) {
+								//
+								for (final Object o : it) {
 									//
-									continue;
-									//
-								} // if
-									//
-								if (Util.getValue(entry) instanceof Iterable it) {
-									//
-									for (final Object o : it) {
+									if (o instanceof Iterable || o instanceof Map) {
 										//
-										if (o instanceof Iterable || o instanceof Map) {
-											//
-											throw new IllegalStateException(Util.toString(Util.getClass(o)));
-											//
-										} // if
-											//
-										MultimapUtil.put(
-												toBeRemoved = ObjectUtils.getIfNull(toBeRemoved,
-														LinkedHashMultimap::create),
-												Util.toString(Util.getKey(entry)), Util.toString(o));
+										throw new IllegalStateException(Util.toString(Util.getClass(o)));
 										//
 									} // if
 										//
-								} else if (Util.getValue(entry) instanceof Map) {
-									//
-									throw new IllegalStateException(Util.toString(Util.getClass(obj)));
-									//
-								} else {
-									//
 									MultimapUtil.put(
 											toBeRemoved = ObjectUtils.getIfNull(toBeRemoved,
 													LinkedHashMultimap::create),
-											Util.toString(Util.getKey(entry)), Util.toString(Util.getValue(entry)));
+											Util.toString(Util.getKey(entry)), Util.toString(o));
 									//
 								} // if
 									//
-							} // for
+							} else if (Util.getValue(entry) instanceof Map) {
 								//
-						} // if
+								throw new IllegalStateException(Util.toString(Util.getClass(obj)));
+								//
+							} else {
+								//
+								MultimapUtil.put(
+										toBeRemoved = ObjectUtils.getIfNull(toBeRemoved, LinkedHashMultimap::create),
+										Util.toString(Util.getKey(entry)), Util.toString(Util.getValue(entry)));
+								//
+							} // if
+								//
+						} // for
 							//
-					} else if (obj != null) {
-						//
-						throw new IllegalStateException(Util.toString(Util.getClass(obj)));
-						//
 					} // if
 						//
-				} // for
+				} else if (obj != null) {
 					//
-			} // if
+					throw new IllegalStateException(Util.toString(Util.getClass(obj)));
+					//
+				} // if
+					//
+			} // for
 				//
 		} else if (object != null) {
 			//
