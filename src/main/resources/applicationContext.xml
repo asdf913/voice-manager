@@ -743,6 +743,19 @@
 			value="${org.springframework.beans.factory.TiZuKiGouKanjiHiraganaMapFactoryBean.description}" />
 	</bean>
 
+	<!--https://hiramatu-hifuka.com/onyak/mw3.html-->
+	<bean id="OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimap"
+		class="org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean">
+		<meta key="value" value="hiragana" />
+		<property name="url"
+			value="${org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean.url}" />
+		<property name="links" ref="OtoYakuNoHeyaYomikataJitenLinkList" />
+		<property name="text"
+			value="${org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean.text}" />
+		<property name="description"
+			value="${org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean.description}" />
+	</bean>
+
 	<!-- -->
 	<bean class="org.springframework.context.support.VoiceManager">
 		<property name="layout" ref="MigLayout" />
