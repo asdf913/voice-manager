@@ -99,51 +99,8 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 			//
 		if (object instanceof Map m) {
 			//
-			final Iterable<Entry<?, ?>> entries = Util.entrySet(m);
+			toBeRemoved = toMultimap(m);
 			//
-			if (Util.iterator(entries) != null) {
-				//
-				Object obj = null;
-				//
-				for (final Entry<?, ?> entry : entries) {
-					//
-					if (entry == null) {
-						//
-						continue;
-						//
-					} // if
-						//
-					if ((obj = Util.getValue(entry)) instanceof Iterable iterable) {
-						//
-						for (final Object o : iterable) {
-							//
-							if (Boolean.logicalOr(o instanceof Iterable, o instanceof Map)) {
-								//
-								throw new IllegalStateException(Util.toString(Util.getClass(o)));
-								//
-							} // if
-								//
-							MultimapUtil.put(
-									toBeRemoved = ObjectUtils.getIfNull(toBeRemoved, LinkedHashMultimap::create),
-									Util.toString(Util.getKey(entry)), Util.toString(o));
-							//
-						} // if
-							//
-					} else if (obj instanceof Map) {
-						//
-						throw new IllegalStateException(Util.toString(Util.getClass(obj)));
-						//
-					} else {
-						//
-						MultimapUtil.put(toBeRemoved = ObjectUtils.getIfNull(toBeRemoved, LinkedHashMultimap::create),
-								Util.toString(Util.getKey(entry)), Util.toString(Util.getValue(entry)));
-						//
-					} // if
-						//
-				} // for
-					//
-			} // if
-				//
 		} else if (object instanceof Iterable iterable && Util.iterator(iterable) != null) {
 			//
 			for (final Object obj : iterable) {
@@ -209,6 +166,56 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 			//
 		} // if
 			//
+	}
+
+	private static Multimap<String, String> toMultimap(final Map<?, ?> m) {
+		//
+		Multimap<String, String> multimap = null;
+		//
+		if (Util.iterator(Util.entrySet(m)) != null) {
+			//
+			Object value = null;
+			//
+			for (final Entry<?, ?> entry : Util.entrySet(m)) {
+				//
+				if (entry == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if ((value = Util.getValue(entry)) instanceof Iterable iterable) {
+					//
+					for (final Object o : iterable) {
+						//
+						if (Boolean.logicalOr(o instanceof Iterable, o instanceof Map)) {
+							//
+							throw new IllegalStateException(Util.toString(Util.getClass(o)));
+							//
+						} // if
+							//
+						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+								Util.toString(Util.getKey(entry)), Util.toString(o));
+						//
+					} // if
+						//
+				} else if (value instanceof Map) {
+					//
+					throw new IllegalStateException(Util.toString(Util.getClass(value)));
+					//
+				} else {
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+							Util.toString(Util.getKey(entry)), Util.toString(Util.getValue(entry)));
+					//
+				} // if
+					//
+			} // for
+				//
+		} // if
+			//
+		return multimap;
+		//
 	}
 
 	@Override

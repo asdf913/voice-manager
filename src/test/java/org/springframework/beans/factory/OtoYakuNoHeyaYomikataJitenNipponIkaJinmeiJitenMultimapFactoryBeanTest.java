@@ -9,7 +9,9 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Predicate;
 
 import org.apache.commons.lang3.function.FailableFunction;
@@ -30,8 +32,10 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 
+	private static final String EMPTY = "";
+
 	private static Method METHOD_CREATE_MULTI_MAP, METHOD_CREATE_MULTI_MAP2, METHOD_TO_URL, METHOD_TEST_AND_APPLY,
-			METHOD_REMOVE = null;
+			METHOD_REMOVE, METHOD_TO_MULTI_MAP = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -51,11 +55,15 @@ class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 		(METHOD_REMOVE = clz.getDeclaredMethod("remove", Multimap.class, Object.class, Object.class))
 				.setAccessible(true);
 		//
+		(METHOD_TO_MULTI_MAP = clz.getDeclaredMethod("toMultimap", Map.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
 
 		private Boolean remove = null;
+
+		private Set<Entry<?, ?>> entrySet = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -83,6 +91,14 @@ class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 				} else if (Objects.equals(methodName, "getDescription")) {
 					//
 					return null;
+					//
+				} // if
+					//
+			} else if (proxy instanceof Map) {
+				//
+				if (Objects.equals(methodName, "entrySet")) {
+					//
+					return entrySet;
 					//
 				} // if
 					//
@@ -211,15 +227,9 @@ class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 				//
 			instance.setToBeRemoved(null);
 			//
-			instance.setToBeRemoved("");
+			instance.setToBeRemoved(EMPTY);
 			//
 			instance.setToBeRemoved(" ");
-			//
-			instance.setToBeRemoved("{}");
-			//
-			instance.setToBeRemoved("{\"\":2}");
-			//
-			instance.setToBeRemoved("{\"\":[2,3]}");
 			//
 			instance.setToBeRemoved("[null]");
 			//
@@ -227,36 +237,6 @@ class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 			//
 			instance.setToBeRemoved("[{\"\":[null]}]");
 			//
-		});
-		//
-		Assertions.assertThrows(IllegalStateException.class, () -> {
-			//
-			if (instance != null) {
-				//
-				instance.setToBeRemoved("{\"\":{}}");
-				//
-			} // if
-				//
-		});
-		//
-		Assertions.assertThrows(IllegalStateException.class, () -> {
-			//
-			if (instance != null) {
-				//
-				instance.setToBeRemoved("{\"\":[[]]}");
-				//
-			} // if
-				//
-		});
-		//
-		Assertions.assertThrows(IllegalStateException.class, () -> {
-			//
-			if (instance != null) {
-				//
-				instance.setToBeRemoved("{\"\":[{}]}");
-				//
-			} // if
-				//
 		});
 		//
 		Assertions.assertThrows(IllegalStateException.class, () -> {
@@ -363,7 +343,7 @@ class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 		//
 		Assertions.assertNull(toURL(uri));
 		//
-		Narcissus.setField(uri, URI.class.getDeclaredField("scheme"), "");
+		Narcissus.setField(uri, URI.class.getDeclaredField("scheme"), EMPTY);
 		//
 		Assertions.assertThrows(MalformedURLException.class, () -> toURL(uri));
 		//
@@ -420,6 +400,46 @@ class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 	private static void remove(final Multimap<?, ?> instance, final Object key, final Object value) throws Throwable {
 		try {
 			METHOD_REMOVE.invoke(null, instance, key, value);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testToMultimap() throws Throwable {
+		//
+		Assertions.assertNull(toMultimap(null));
+		//
+		Assertions.assertEquals("{=[]}", Util.toString(toMultimap(Collections.singletonMap(EMPTY, EMPTY))));
+		//
+		Assertions.assertEquals("{=[]}",
+				Util.toString(toMultimap(Collections.singletonMap(EMPTY, Collections.singleton(EMPTY)))));
+		//
+		Assertions.assertThrows(IllegalStateException.class,
+				() -> toMultimap(Collections.singletonMap(EMPTY, Collections.singleton(Collections.emptyMap()))));
+		//
+		Assertions.assertThrows(IllegalStateException.class,
+				() -> toMultimap(Collections.singletonMap(EMPTY, Collections.emptyMap())));
+		//
+		if (ih != null) {
+			//
+			ih.entrySet = Collections.singleton(null);
+			//
+		} // if
+			//
+		Assertions.assertNull(toMultimap(Reflection.newProxy(Map.class, ih)));
+		//
+	}
+
+	private static Multimap<String, String> toMultimap(final Map<?, ?> m) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_MULTI_MAP.invoke(null, m);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Multimap) {
+				return (Multimap) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
