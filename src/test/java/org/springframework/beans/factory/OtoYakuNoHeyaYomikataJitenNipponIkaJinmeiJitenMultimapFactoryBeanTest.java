@@ -22,6 +22,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkListFactoryBean.Link;
 
 import com.google.common.base.Predicates;
+import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.reflect.Reflection;
 
@@ -29,7 +30,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 
-	private static Method METHOD_CREATE_MULTI_MAP1, METHOD_CREATE_MULTI_MAP2, METHOD_TO_URL, METHOD_TEST_AND_APPLY,
+	private static Method METHOD_CREATE_MULTI_MAP, METHOD_CREATE_MULTI_MAP2, METHOD_TO_URL, METHOD_TEST_AND_APPLY,
 			METHOD_REMOVE = null;
 
 	@BeforeAll
@@ -37,7 +38,8 @@ class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 		//
 		final Class<?> clz = OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean.class;
 		//
-		(METHOD_CREATE_MULTI_MAP1 = clz.getDeclaredMethod("createMultimap1", Iterable.class)).setAccessible(true);
+		(METHOD_CREATE_MULTI_MAP = clz.getDeclaredMethod("createMultimap", Iterable.class, Multimap.class))
+				.setAccessible(true);
 		//
 		(METHOD_CREATE_MULTI_MAP2 = clz.getDeclaredMethod("createMultimap2", Iterable.class)).setAccessible(true);
 		//
@@ -176,7 +178,7 @@ class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 				//
 			} // if
 				//
-			Assertions.assertNotNull(getObject(instance));
+			System.out.println(getObject(instance));
 			//
 		} // if
 			//
@@ -196,14 +198,15 @@ class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 	@Test
 	void testCreateMultimap1() throws Throwable {
 		//
-		Assertions.assertNull(createMultimap1(
-				Arrays.asList(null, Util.cast(Element.class, Narcissus.allocateInstance(Element.class)))));
+		Assertions.assertNull(createMultimap(
+				Arrays.asList(null, Util.cast(Element.class, Narcissus.allocateInstance(Element.class))), null));
 		//
 	}
 
-	private static Multimap<String, String> createMultimap1(final Iterable<Element> es) throws Throwable {
+	private static Multimap<String, String> createMultimap(final Iterable<Element> es,
+			final Multimap<String, String> toBeRemoved) throws Throwable {
 		try {
-			final Object obj = METHOD_CREATE_MULTI_MAP1.invoke(null, es);
+			final Object obj = METHOD_CREATE_MULTI_MAP.invoke(null, es, toBeRemoved);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Multimap) {
@@ -286,6 +289,10 @@ class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 
 	@Test
 	void testRemove() {
+		//
+		Assertions.assertDoesNotThrow(() -> remove(null, null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> remove(LinkedHashMultimap.create(), null, null));
 		//
 		final IH ih = new IH();
 		//

@@ -9,6 +9,7 @@ import java.net.URI;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
@@ -111,15 +112,36 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 	@Nullable
 	private static Multimap<String, String> createMultimap(@Nullable final String url) throws Exception {
 		//
-		return createMultimap1(ElementUtil.select(testAndApply(
+		final Multimap<String, String> multimap = LinkedHashMultimap.create();
+		//
+		MultimapUtil.put(multimap, "後藤艮山", "もあり");
+		//
+		MultimapUtil.put(multimap, "菅原ミネ嗣", "はくさ");
+		//
+		MultimapUtil.put(multimap, "菅原ミネ嗣", "に");
+		//
+		final Iterable<String> strings = Arrays.asList("は", "を", "つ", "ねた", "です");
+		//
+		if (Util.iterator(strings) != null) {
+			//
+			for (final String string : strings) {
+				//
+				MultimapUtil.put(multimap, "本間ソウ軒", string);
+				//
+			} // for
+				//
+		} // if
+			//
+		return createMultimap(ElementUtil.select(testAndApply(
 				Objects::nonNull, testAndApply(Util::isAbsolute,
 						testAndApply(StringUtils::isNotBlank, url, URI::new, null), x -> toURL(x), null),
-				x -> Jsoup.parse(x, 0), null), "tbody"));
+				x -> Jsoup.parse(x, 0), null), "tbody"), multimap);
 		//
 	}
 
 	@Nullable
-	private static Multimap<String, String> createMultimap1(final Iterable<Element> es) {
+	private static Multimap<String, String> createMultimap(final Iterable<Element> es,
+			final Multimap<String, String> toBeRemoved) {
 		//
 		if (Util.iterator(es) == null) {
 			//
@@ -160,19 +182,13 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 				//
 		} // for
 			//
-		remove(multimap, "後藤艮山", "もあり");
+		final Iterable<Entry<String, String>> entries = MultimapUtil.entries(toBeRemoved);
 		//
-		remove(multimap, "菅原ミネ嗣", "はくさ");
-		//
-		remove(multimap, "菅原ミネ嗣", "に");
-		//
-		final Iterable<String> strings = Arrays.asList("は", "を", "つ", "ねた", "です");
-		//
-		if (Util.iterator(strings) != null) {
+		if (Util.iterator(entries) != null) {
 			//
-			for (final String string : strings) {
+			for (final Entry<String, String> entry : entries) {
 				//
-				remove(multimap, "本間ソウ軒", string);
+				remove(multimap, Util.getKey(entry), Util.getValue(entry));
 				//
 			} // for
 				//
