@@ -50,6 +50,7 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 		String value();
 	}
 
+	@Note("Text")
 	private IValue0<String> text = null;
 
 	private IValue0<String> description = null;
