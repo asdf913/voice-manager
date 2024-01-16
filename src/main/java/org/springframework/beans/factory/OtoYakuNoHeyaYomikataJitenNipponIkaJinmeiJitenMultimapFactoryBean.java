@@ -75,6 +75,26 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 	@Override
 	public Multimap<String, String> getObject() throws Exception {
 		//
+		final Multimap<String, String> toBeRemoved = LinkedHashMultimap.create();
+		//
+		MultimapUtil.put(toBeRemoved, "後藤艮山", "もあり");
+		//
+		MultimapUtil.put(toBeRemoved, "菅原ミネ嗣", "はくさ");
+		//
+		MultimapUtil.put(toBeRemoved, "菅原ミネ嗣", "に");
+		//
+		final Iterable<String> strings = Arrays.asList("は", "を", "つ", "ねた", "です");
+		//
+		if (Util.iterator(strings) != null) {
+			//
+			for (final String string : strings) {
+				//
+				MultimapUtil.put(toBeRemoved, "本間ソウ軒", string);
+				//
+			} // for
+				//
+		} // if
+			//
 		List<Link> ls = Util.toList(Util.filter(
 				testAndApply(Objects::nonNull, Util.spliterator(links), x -> StreamSupport.stream(x, false), null),
 				x -> text != null && x != null && Objects.equals(x.getText(), IValue0Util.getValue0(text))));
@@ -87,7 +107,7 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 			//
 		} else if (size == 1) {
 			//
-			return createMultimap(Link.getUrl(IterableUtils.get(ls, 0)));
+			return createMultimap(Link.getUrl(IterableUtils.get(ls, 0)), toBeRemoved);
 			//
 		} // if
 			//
@@ -101,41 +121,22 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 			//
 		} else if (size == 1) {
 			//
-			return createMultimap(Link.getUrl(IterableUtils.get(ls, 0)));
+			return createMultimap(Link.getUrl(IterableUtils.get(ls, 0)), toBeRemoved);
 			//
 		} // if
 			//
-		return createMultimap(url);
+		return createMultimap(url, toBeRemoved);
 		//
 	}
 
 	@Nullable
-	private static Multimap<String, String> createMultimap(@Nullable final String url) throws Exception {
+	private static Multimap<String, String> createMultimap(@Nullable final String url,
+			final Multimap<String, String> toBeRemoved) throws Exception {
 		//
-		final Multimap<String, String> multimap = LinkedHashMultimap.create();
-		//
-		MultimapUtil.put(multimap, "後藤艮山", "もあり");
-		//
-		MultimapUtil.put(multimap, "菅原ミネ嗣", "はくさ");
-		//
-		MultimapUtil.put(multimap, "菅原ミネ嗣", "に");
-		//
-		final Iterable<String> strings = Arrays.asList("は", "を", "つ", "ねた", "です");
-		//
-		if (Util.iterator(strings) != null) {
-			//
-			for (final String string : strings) {
-				//
-				MultimapUtil.put(multimap, "本間ソウ軒", string);
-				//
-			} // for
-				//
-		} // if
-			//
 		return createMultimap(ElementUtil.select(testAndApply(
 				Objects::nonNull, testAndApply(Util::isAbsolute,
 						testAndApply(StringUtils::isNotBlank, url, URI::new, null), x -> toURL(x), null),
-				x -> Jsoup.parse(x, 0), null), "tbody"), multimap);
+				x -> Jsoup.parse(x, 0), null), "tbody"), toBeRemoved);
 		//
 	}
 
