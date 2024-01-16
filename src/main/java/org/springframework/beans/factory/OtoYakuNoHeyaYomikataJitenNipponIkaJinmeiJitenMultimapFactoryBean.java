@@ -131,45 +131,47 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 				//
 				final Iterable<Entry<?, ?>> entries = Util.entrySet(m);
 				//
-				if (Util.iterator(entries) != null) {
+				if (Util.iterator(entries) == null) {
 					//
-					for (final Entry<?, ?> entry : entries) {
+					continue;
+					//
+				} // if
+					//
+				for (final Entry<?, ?> entry : entries) {
+					//
+					if (entry == null) {
 						//
-						if (entry == null) {
+						continue;
+						//
+					} // if
+						//
+					if (Util.getValue(entry) instanceof Iterable it) {
+						//
+						for (final Object o : it) {
 							//
-							continue;
-							//
-						} // if
-							//
-						if (Util.getValue(entry) instanceof Iterable it) {
-							//
-							for (final Object o : it) {
+							if (Boolean.logicalOr(o instanceof Iterable, o instanceof Map)) {
 								//
-								if (Boolean.logicalOr(o instanceof Iterable, o instanceof Map)) {
-									//
-									throw new IllegalStateException(Util.toString(Util.getClass(o)));
-									//
-								} // if
-									//
-								MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-										Util.toString(Util.getKey(entry)), Util.toString(o));
+								throw new IllegalStateException(Util.toString(Util.getClass(o)));
 								//
 							} // if
 								//
-						} else if (Util.getValue(entry) instanceof Map) {
-							//
-							throw new IllegalStateException(Util.toString(Util.getClass(obj)));
-							//
-						} else {
-							//
 							MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-									Util.toString(Util.getKey(entry)), Util.toString(Util.getValue(entry)));
+									Util.toString(Util.getKey(entry)), Util.toString(o));
 							//
 						} // if
 							//
-					} // for
+					} else if (Util.getValue(entry) instanceof Map) {
 						//
-				} // if
+						throw new IllegalStateException(Util.toString(Util.getClass(obj)));
+						//
+					} else {
+						//
+						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+								Util.toString(Util.getKey(entry)), Util.toString(Util.getValue(entry)));
+						//
+					} // if
+						//
+				} // for
 					//
 			} else if (obj != null) {
 				//
