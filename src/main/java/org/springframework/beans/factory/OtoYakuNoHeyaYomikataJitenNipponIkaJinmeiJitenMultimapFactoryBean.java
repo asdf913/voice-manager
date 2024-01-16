@@ -86,9 +86,7 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 			//
 		} else if (size == 1) {
 			//
-			final Link link = IterableUtils.get(ls, 0);
-			//
-			return createMultimap(link != null ? link.getUrl() : null);
+			return createMultimap(Link.getUrl(IterableUtils.get(ls, 0)));
 			//
 		} // if
 			//
@@ -102,9 +100,7 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 			//
 		} else if (size == 1) {
 			//
-			final Link link = IterableUtils.get(ls, 0);
-			//
-			return createMultimap(link != null ? link.getUrl() : null);
+			return createMultimap(Link.getUrl(IterableUtils.get(ls, 0)));
 			//
 		} // if
 			//
