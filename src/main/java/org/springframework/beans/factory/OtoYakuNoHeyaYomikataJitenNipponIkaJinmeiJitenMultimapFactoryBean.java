@@ -117,7 +117,7 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 						//
 						for (final Object o : iterable) {
 							//
-							if (o instanceof Iterable || o instanceof Map) {
+							if (Boolean.logicalOr(o instanceof Iterable, o instanceof Map)) {
 								//
 								throw new IllegalStateException(Util.toString(Util.getClass(o)));
 								//
@@ -166,7 +166,7 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 								//
 								for (final Object o : it) {
 									//
-									if (o instanceof Iterable || o instanceof Map) {
+									if (Boolean.logicalOr(o instanceof Iterable, o instanceof Map)) {
 										//
 										throw new IllegalStateException(Util.toString(Util.getClass(o)));
 										//
