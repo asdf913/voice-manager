@@ -227,8 +227,7 @@ class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 		//
 		Properties p = null;
 		//
-		try (final InputStream is = OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest.class
-				.getResourceAsStream("/configuration.properties")) {
+		try (final InputStream is = clz != null ? clz.getResourceAsStream(url) : null) {
 			//
 			if ((p = is != null ? new Properties() : null) != null) {
 				//
