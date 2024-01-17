@@ -1,5 +1,7 @@
 package org.springframework.beans.factory;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -11,6 +13,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Properties;
 import java.util.Set;
 import java.util.function.Predicate;
 
@@ -195,15 +198,48 @@ class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 				instance.setUrl(Util.toString(Util.get(properties,
 						"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean.url")));
 				//
-				instance.setToBeRemoved(
-						"[{\"後藤艮山\":\"もあり\"},{\"菅原ミネ嗣\":[\"はくさ\",\"に\"]},{\"本間ソウ軒\":[\"は\",\"を\",\"つ\",\"ねた\",\"です\"]}]");
+				final Properties p = createProperties(
+						OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest.class,
+						"/configuration.properties");
 				//
+				if (p != null && Util.containsKey(p,
+						"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean.toBeRemoved")) {
+					//
+					instance.setToBeRemoved(p.getProperty(
+							"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean.toBeRemoved"));
+					//
+				} else {
+					//
+					instance.setToBeRemoved(
+							"[{\"後藤艮山\":\"もあり\"},{\"菅原ミネ嗣\":[\"はくさ\",\"に\"]},{\"本間ソウ軒\":[\"は\",\"を\",\"つ\",\"ねた\",\"です\"]}]");
+					//
+				} // if
+					//
 			} // if
 				//
 			System.out.println(getObject(instance));
 			//
 		} // if
 			//
+	}
+
+	private static Properties createProperties(final Class<?> clz, final String url) throws IOException {
+		//
+		Properties p = null;
+		//
+		try (final InputStream is = OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest.class
+				.getResourceAsStream("/configuration.properties")) {
+			//
+			if ((p = is != null ? new Properties() : null) != null) {
+				//
+				p.load(is);
+				//
+			} // if
+				//
+		} // try
+			//
+		return p;
+		//
 	}
 
 	private static <T> T getObject(final FactoryBean<T> instance) throws Exception {
