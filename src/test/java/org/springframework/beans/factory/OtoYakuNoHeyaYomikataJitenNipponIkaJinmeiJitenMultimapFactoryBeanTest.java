@@ -1,7 +1,10 @@
 package org.springframework.beans.factory;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -19,6 +22,13 @@ import java.util.function.Predicate;
 
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellUtil;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.ss.usermodel.WorkbookUtil;
 import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -30,6 +40,7 @@ import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.MultimapUtil;
 import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
@@ -217,10 +228,59 @@ class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 					//
 			} // if
 				//
-			System.out.println(getObject(instance));
+			final Multimap<String, String> multimap = getObject(instance);
+			//
+			final Iterable<Entry<String, String>> entries = MultimapUtil.entries(multimap);
+			//
+			final File file = new File("OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimap.xlsx");
+			//
+			try (final Workbook wb = WorkbookFactory.create(true); final OutputStream os = new FileOutputStream(file)) {
+				//
+				final Sheet sheet = WorkbookUtil.createSheet(wb);
+				//
+				if (Util.iterator(entries) != null) {
+					//
+					Row row = null;
+					//
+					for (final Entry<String, String> entry : entries) {
+						//
+						if (entry == null) {
+							//
+							continue;
+						} // if
+							//
+						if (sheet != null && sheet.getPhysicalNumberOfRows() == 0) {
+							//
+							CellUtil.setCellValue(createCell(row = createRow(sheet)), "kanji");
+							//
+							CellUtil.setCellValue(createCell(row), "hiragana");
+							//
+						} // if
+							//
+						CellUtil.setCellValue(createCell(row = createRow(sheet)), Util.getKey(entry));
+						//
+						CellUtil.setCellValue(createCell(row), Util.getValue(entry));
+						//
+					} // for
+						//
+				} // if
+					//
+				WorkbookUtil.write(wb, os);
+				//
+			} // try
+				//
+			System.out.println(file.getAbsolutePath());
 			//
 		} // if
 			//
+	}
+
+	private static Row createRow(final Sheet instance) {
+		return instance != null ? instance.createRow(instance.getPhysicalNumberOfRows()) : null;
+	}
+
+	private static Cell createCell(final Row instance) {
+		return instance != null ? instance.createCell(instance.getPhysicalNumberOfCells()) : null;
 	}
 
 	private static Properties createProperties(final Class<?> clz, final String url) throws IOException {
