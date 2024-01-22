@@ -315,7 +315,7 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 	}
 
 	private static IValue0<Multimap<String, String>> toMultimap2(final InputStreamSource resource,
-			final IValue0<String> sheetName) throws Exception {
+			@Nullable final IValue0<String> sheetName) throws Exception {
 		//
 		ContentInfo ci = null;
 		//
