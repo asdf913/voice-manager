@@ -756,6 +756,10 @@
 			value="${org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean.description}" />
 		<property name="toBeRemoved"
 			value="${org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean.toBeRemoved}" />
+		<property name="resource"
+			value="classpath:OtoYakuNoHeyaYomikataJiten.xlsx" />
+		<property name="sheetName"
+			value="${org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean.sheetName}" />
 	</bean>
 
 	<!-- -->
