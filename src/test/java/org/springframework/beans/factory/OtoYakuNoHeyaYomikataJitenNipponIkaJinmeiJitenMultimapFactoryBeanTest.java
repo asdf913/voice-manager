@@ -37,6 +37,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.odftoolkit.simple.SpreadsheetDocument;
 import org.odftoolkit.simple.table.Table;
 import org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkListFactoryBean.Link;
 import org.springframework.core.io.ByteArrayResource;
@@ -56,7 +57,8 @@ class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 	private static final String EMPTY = "";
 
 	private static Method METHOD_CREATE_MULTI_MAP, METHOD_CREATE_MULTI_MAP2, METHOD_TO_URL, METHOD_TEST_AND_APPLY,
-			METHOD_REMOVE, METHOD_TO_MULTI_MAP_MAP, METHOD_TO_MULTI_MAP_ITERABLE, METHOD_TO_MULTI_MAP_TABLE = null;
+			METHOD_REMOVE, METHOD_TO_MULTI_MAP_MAP, METHOD_TO_MULTI_MAP_ITERABLE, METHOD_TO_MULTI_MAP_TABLE,
+			METHOD_GET_SHEET_BY_NAME = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -81,6 +83,9 @@ class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 		(METHOD_TO_MULTI_MAP_ITERABLE = clz.getDeclaredMethod("toMultimap", Iterable.class)).setAccessible(true);
 		//
 		(METHOD_TO_MULTI_MAP_TABLE = clz.getDeclaredMethod("toMultimap", Table.class)).setAccessible(true);
+		//
+		(METHOD_GET_SHEET_BY_NAME = clz.getDeclaredMethod("getSheetByName", SpreadsheetDocument.class, String.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -673,6 +678,27 @@ class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 				return null;
 			} else if (obj instanceof Multimap) {
 				return (Multimap) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetSheetByName() throws Throwable {
+		//
+		Assertions.assertNull(getSheetByName(null, null));
+		//
+	}
+
+	private static Table getSheetByName(final SpreadsheetDocument instance, final String name) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_SHEET_BY_NAME.invoke(null, instance, name);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Table) {
+				return (Table) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

@@ -342,8 +342,7 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 						//
 					} // if
 						//
-					return Unit.with(
-							toMultimap(ssd != null ? ssd.getSheetByName(IValue0Util.getValue0(sheetName)) : null));
+					return Unit.with(toMultimap(getSheetByName(ssd, IValue0Util.getValue0(sheetName))));
 					//
 				} else {
 					//
@@ -357,6 +356,10 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 			//
 		return null;
 		//
+	}
+
+	private static Table getSheetByName(final SpreadsheetDocument instance, final String name) {
+		return instance != null ? instance.getSheetByName(name) : null;
 	}
 
 	@Nullable
