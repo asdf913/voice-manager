@@ -363,6 +363,7 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 		//
 	}
 
+	@Nullable
 	private static Table getSheetByName(@Nullable final SpreadsheetDocument instance, final String name) {
 		return instance != null ? instance.getSheetByName(name) : null;
 	}
