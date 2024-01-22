@@ -10,6 +10,8 @@ import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
@@ -34,7 +36,7 @@ public interface CellUtil {
 		return instance != null ? instance.getStringCellValue() : null;
 	}
 
-	static CellType getCellType(final Cell instance) {
+	static CellType getCellType(@Nullable final Cell instance) {
 		return instance != null ? instance.getCellType() : null;
 	}
 
@@ -152,7 +154,7 @@ public interface CellUtil {
 
 	private static String handleHSSFCell(final Cell instance, final FormulaEvaluator formulaEvaluator) {
 		//
-		final CellType cellType = org.apache.poi.ss.usermodel.CellUtil.getCellType(instance);
+		final CellType cellType = getCellType(instance);
 		//
 		if (cellType == null) {
 			//
