@@ -272,7 +272,7 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 
 	@Nullable
 	private static IValue0<Multimap<String, String>> toMultimap(final InputStreamSource resource,
-			final IValue0<String> sheetName)
+			@Nullable final IValue0<String> sheetName)
 			throws EncryptedDocumentException, IOException, SAXException, ParserConfigurationException {
 		//
 		if (XlsxUtil.isXlsx(resource) || XlsUtil.isXls(resource)) {
