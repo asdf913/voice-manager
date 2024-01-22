@@ -1,6 +1,5 @@
 package org.springframework.beans.factory;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -9,6 +8,7 @@ import java.lang.annotation.Target;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -19,14 +19,12 @@ import java.util.regex.Pattern;
 import java.util.stream.StreamSupport;
 
 import javax.annotation.Nullable;
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
-import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.ss.usermodel.CellUtil;
 import org.apache.poi.ss.usermodel.CreationHelperUtil;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
@@ -41,6 +39,8 @@ import org.javatuples.valueintf.IValue0Util;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
+import org.odftoolkit.simple.SpreadsheetDocument;
+import org.odftoolkit.simple.table.Table;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
@@ -50,13 +50,14 @@ import org.springframework.core.io.InputStreamSourceUtil;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.XlsUtil;
 import org.springframework.core.io.XlsxUtil;
-import org.xml.sax.SAXException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
+import com.j256.simplemagic.ContentInfo;
+import com.j256.simplemagic.ContentInfoUtil;
 
 /*
  * https://hiramatu-hifuka.com/onyak/mw3.html
@@ -274,8 +275,7 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 
 	@Nullable
 	private static IValue0<Multimap<String, String>> toMultimap(final InputStreamSource resource,
-			@Nullable final IValue0<String> sheetName)
-			throws EncryptedDocumentException, IOException, SAXException, ParserConfigurationException {
+			@Nullable final IValue0<String> sheetName) throws Exception {
 		//
 		if (XlsxUtil.isXlsx(resource) || XlsUtil.isXls(resource)) {
 			//
@@ -308,9 +308,86 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 					//
 			} // try
 				//
+		} else {
+			//
+			ContentInfo ci = null;
+			//
+			try (final InputStream is = InputStreamSourceUtil.getInputStream(resource)) {
+				//
+				ci = testAndApply(Objects::nonNull, is, x -> new ContentInfoUtil().findMatch(x), null);
+				//
+			} // try
+				//
+			if (Objects.equals(Util.getMessage(ci), "OpenDocument Spreadsheet")) {
+				//
+				SpreadsheetDocument ssd = null;
+				//
+				try (final InputStream is = InputStreamSourceUtil.getInputStream(resource)) {
+					//
+					ssd = SpreadsheetDocument.loadDocument(is);
+					//
+				} // try
+					//
+				final int sheetCount = ssd != null ? ssd.getSheetCount() : 0;
+				//
+				if (sheetCount == 1) {
+					//
+					return Unit.with(toMultimap(ssd.getSheetByIndex(0)));
+					//
+				} else if (sheetCount > 1) {
+					//
+					if (sheetName == null) {
+						//
+						throw new IllegalStateException();
+						//
+					} // if
+						//
+					return Unit.with(toMultimap(ssd.getSheetByName(IValue0Util.getValue0(sheetName))));
+					//
+				} else {
+					//
+					throw new IllegalStateException();
+					//
+				} // if
+					//
+			} // if
+				//
 		} // if
 			//
 		return null;
+		//
+	}
+
+	private static Multimap<String, String> toMultimap(final Table table) {
+		//
+		Multimap<String, String> multimap = null;
+		//
+		final Iterator<org.odftoolkit.simple.table.Row> rows = table != null ? table.getRowIterator() : null;
+		//
+		org.odftoolkit.simple.table.Row row = null;
+		//
+		while (rows != null && table.getOdfElement() != null && rows.hasNext()) {
+			//
+			if ((row = rows.next()) == null || row.getCellCount() < 2) {
+				//
+				continue;
+				//
+			} // if
+				//
+			if (multimap == null) {
+				//
+				multimap = LinkedHashMultimap.create();
+				//
+				continue;
+				//
+			} // if
+				//
+			MultimapUtil.put(multimap, org.odftoolkit.simple.table.CellUtil.getStringValue(row.getCellByIndex(0)),
+					org.odftoolkit.simple.table.CellUtil.getStringValue(row.getCellByIndex(1)));
+			//
+		} // while
+			//
+		return multimap;
 		//
 	}
 
