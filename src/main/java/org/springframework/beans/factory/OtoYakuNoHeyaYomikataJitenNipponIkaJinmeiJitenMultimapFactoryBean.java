@@ -359,7 +359,7 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 		//
 	}
 
-	private static Multimap<String, String> toMultimap(final Table table) {
+	private static Multimap<String, String> toMultimap(@Nullable final Table table) {
 		//
 		Multimap<String, String> multimap = null;
 		//
