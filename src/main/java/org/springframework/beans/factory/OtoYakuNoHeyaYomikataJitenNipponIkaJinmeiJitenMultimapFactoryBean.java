@@ -1,5 +1,6 @@
 package org.springframework.beans.factory;
 
+import java.io.InputStream;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -23,6 +24,12 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.apache.poi.ss.usermodel.CellUtil;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.ss.usermodel.WorkbookUtil;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
@@ -33,6 +40,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
 import org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkListFactoryBean.Link;
+import org.springframework.core.io.InputStreamSourceUtil;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.XlsUtil;
+import org.springframework.core.io.XlsxUtil;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -62,10 +73,12 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 	@Note("Text")
 	private IValue0<String> text = null;
 
-	private IValue0<String> description = null;
+	private IValue0<String> description, sheetName = null;
 
 	@Nullable
 	private Multimap<String, String> toBeRemoved = null;
+
+	private Resource resource = null;
 
 	public void setUrl(final String url) {
 		this.url = url;
@@ -81,6 +94,14 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 
 	public void setDescription(final String description) {
 		this.description = Unit.with(description);
+	}
+
+	public void setResource(final Resource resource) {
+		this.resource = resource;
+	}
+
+	public void setSheetName(final String sheetName) {
+		this.sheetName = Unit.with(sheetName);
 	}
 
 	public void setToBeRemoved(final String string) {
@@ -200,6 +221,37 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 	@Override
 	public Multimap<String, String> getObject() throws Exception {
 		//
+		if (XlsxUtil.isXlsx(resource) || XlsUtil.isXls(resource)) {
+			//
+			try (final InputStream is = InputStreamSourceUtil.getInputStream(resource);
+					final Workbook wb = WorkbookFactory.create(is)) {
+				//
+				final int numberOfSheets = wb != null ? wb.getNumberOfSheets() : 0;
+				//
+				if (numberOfSheets == 1) {
+					//
+					return toMultimap(WorkbookUtil.getSheetAt(wb, 0));
+					//
+				} else if (numberOfSheets > 1) {
+					//
+					if (sheetName == null) {
+						//
+						throw new IllegalStateException();
+						//
+					} // if
+						//
+					return toMultimap(WorkbookUtil.getSheet(wb, IValue0Util.getValue0(sheetName)));
+					//
+				} else {
+					//
+					throw new IllegalStateException();
+					//
+				} // if
+					//
+			} // try
+				//
+		} // if
+			//
 		List<Link> ls = Util.toList(Util.filter(
 				testAndApply(Objects::nonNull, Util.spliterator(links), x -> StreamSupport.stream(x, false), null),
 				x -> text != null && x != null && Objects.equals(x.getText(), IValue0Util.getValue0(text))));
@@ -230,6 +282,39 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 		} // if
 			//
 		return createMultimap(url, toBeRemoved);
+		//
+	}
+
+	private static Multimap<String, String> toMultimap(final Sheet sheet) {
+		//
+		Multimap<String, String> multimap = null;
+		//
+		if (Util.iterator(sheet) != null) {
+			//
+			for (final Row row : sheet) {
+				//
+				if (Util.iterator(row) == null || IterableUtils.size(row) < 2) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if (multimap == null) {
+					//
+					multimap = LinkedHashMultimap.create();
+					//
+					continue;
+					//
+				} // if
+					//
+				MultimapUtil.put(multimap, CellUtil.getStringCellValue(row.getCell(0)),
+						CellUtil.getStringCellValue(row.getCell(1)));
+				//
+			} // for
+				//
+		} // if
+			//
+		return multimap;
 		//
 	}
 
