@@ -108,7 +108,7 @@ public interface CellUtil {
 		//
 	}
 
-	private static String handleSXSSFCell(final Cell instance, final FormulaEvaluator formulaEvaluator) {
+	private static String handleSXSSFCell(@Nullable final Cell instance, final FormulaEvaluator formulaEvaluator) {
 		//
 		final List<Field> fs = toList(filter(Arrays.stream(getDeclaredFields(getClass(instance))),
 				f -> Objects.equals(getName(f), "_value")));
@@ -128,7 +128,7 @@ public interface CellUtil {
 			//
 		} // if
 			//
-		final CellType cellType = org.apache.poi.ss.usermodel.CellUtil.getCellType(instance);
+		final CellType cellType = getCellType(instance);
 		//
 		if (contains(Arrays.asList(CellType.BLANK, CellType.STRING), cellType)) {
 			//
