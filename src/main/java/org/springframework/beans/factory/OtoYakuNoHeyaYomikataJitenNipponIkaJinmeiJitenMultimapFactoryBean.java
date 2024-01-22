@@ -308,48 +308,53 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 					//
 			} // try
 				//
-		} else {
+		} // if
 			//
-			ContentInfo ci = null;
+		return toMultimap2(resource, sheetName);
+		//
+	}
+
+	private static IValue0<Multimap<String, String>> toMultimap2(final InputStreamSource resource,
+			final IValue0<String> sheetName) throws Exception {
+		//
+		ContentInfo ci = null;
+		//
+		try (final InputStream is = InputStreamSourceUtil.getInputStream(resource)) {
+			//
+			ci = testAndApply(Objects::nonNull, is, x -> new ContentInfoUtil().findMatch(x), null);
+			//
+		} // try
+			//
+		if (Objects.equals(Util.getMessage(ci), "OpenDocument Spreadsheet")) {
+			//
+			SpreadsheetDocument ssd = null;
 			//
 			try (final InputStream is = InputStreamSourceUtil.getInputStream(resource)) {
 				//
-				ci = testAndApply(Objects::nonNull, is, x -> new ContentInfoUtil().findMatch(x), null);
+				ssd = SpreadsheetDocument.loadDocument(is);
 				//
 			} // try
 				//
-			if (Objects.equals(Util.getMessage(ci), "OpenDocument Spreadsheet")) {
+			final int sheetCount = ssd != null ? ssd.getSheetCount() : 0;
+			//
+			if (sheetCount == 1) {
 				//
-				SpreadsheetDocument ssd = null;
+				return Unit.with(toMultimap(ssd.getSheetByIndex(0)));
 				//
-				try (final InputStream is = InputStreamSourceUtil.getInputStream(resource)) {
-					//
-					ssd = SpreadsheetDocument.loadDocument(is);
-					//
-				} // try
-					//
-				final int sheetCount = ssd != null ? ssd.getSheetCount() : 0;
+			} else if (sheetCount > 1) {
 				//
-				if (sheetCount == 1) {
-					//
-					return Unit.with(toMultimap(ssd.getSheetByIndex(0)));
-					//
-				} else if (sheetCount > 1) {
-					//
-					if (sheetName == null) {
-						//
-						throw new IllegalStateException();
-						//
-					} // if
-						//
-					return Unit.with(toMultimap(getSheetByName(ssd, IValue0Util.getValue0(sheetName))));
-					//
-				} else {
+				if (sheetName == null) {
 					//
 					throw new IllegalStateException();
 					//
 				} // if
 					//
+				return Unit.with(toMultimap(getSheetByName(ssd, IValue0Util.getValue0(sheetName))));
+				//
+			} else {
+				//
+				throw new IllegalStateException();
+				//
 			} // if
 				//
 		} // if
