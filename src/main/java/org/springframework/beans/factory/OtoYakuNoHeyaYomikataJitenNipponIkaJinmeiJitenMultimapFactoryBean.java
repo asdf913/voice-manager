@@ -342,7 +342,8 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 						//
 					} // if
 						//
-					return Unit.with(toMultimap(ssd.getSheetByName(IValue0Util.getValue0(sheetName))));
+					return Unit.with(
+							toMultimap(ssd != null ? ssd.getSheetByName(IValue0Util.getValue0(sheetName)) : null));
 					//
 				} else {
 					//
