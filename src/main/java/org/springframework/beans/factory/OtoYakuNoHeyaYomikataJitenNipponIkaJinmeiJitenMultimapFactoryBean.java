@@ -73,7 +73,10 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 	@Note("Text")
 	private IValue0<String> text = null;
 
-	private IValue0<String> description, sheetName = null;
+	@Note("description")
+	private IValue0<String> description = null;
+
+	private IValue0<String> sheetName = null;
 
 	@Nullable
 	private Multimap<String, String> toBeRemoved = null;
