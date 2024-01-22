@@ -10,8 +10,6 @@ import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import javax.annotation.Nullable;
-
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
@@ -36,7 +34,7 @@ public interface CellUtil {
 		return instance != null ? instance.getStringCellValue() : null;
 	}
 
-	static CellType getCellType(@Nullable final Cell instance) {
+	static CellType getCellType(final Cell instance) {
 		return instance != null ? instance.getCellType() : null;
 	}
 
@@ -108,7 +106,7 @@ public interface CellUtil {
 		//
 	}
 
-	private static String handleSXSSFCell(@Nullable final Cell instance, final FormulaEvaluator formulaEvaluator) {
+	private static String handleSXSSFCell(final Cell instance, final FormulaEvaluator formulaEvaluator) {
 		//
 		final List<Field> fs = toList(filter(Arrays.stream(getDeclaredFields(getClass(instance))),
 				f -> Objects.equals(getName(f), "_value")));
@@ -132,15 +130,15 @@ public interface CellUtil {
 		//
 		if (contains(Arrays.asList(CellType.BLANK, CellType.STRING), cellType)) {
 			//
-			return instance.getStringCellValue();
+			return instance != null ? instance.getStringCellValue() : null;
 			//
 		} else if (Objects.equals(CellType.BOOLEAN, cellType)) {
 			//
-			return Boolean.toString(instance.getBooleanCellValue());
+			return instance != null ? Boolean.toString(instance.getBooleanCellValue()) : null;
 			//
 		} else if (Objects.equals(CellType.NUMERIC, cellType)) {
 			//
-			return Double.toString(instance.getNumericCellValue());
+			return instance != null ? Double.toString(instance.getNumericCellValue()) : null;
 			//
 		} else if (Objects.equals(CellType.FORMULA, cellType)) {
 			//
