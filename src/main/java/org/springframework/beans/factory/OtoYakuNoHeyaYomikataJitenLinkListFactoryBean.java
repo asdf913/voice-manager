@@ -32,13 +32,10 @@ import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.CellValue;
-import org.apache.poi.ss.usermodel.CellValueUtil;
+import org.apache.poi.ss.usermodel.CellUtil;
 import org.apache.poi.ss.usermodel.CreationHelperUtil;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
-import org.apache.poi.ss.usermodel.FormulaEvaluatorUtil;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -356,198 +353,14 @@ public class OtoYakuNoHeyaYomikataJitenLinkListFactoryBean implements
 				} // if
 					//
 				Util.put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new),
-						getStringCellValue(IterableUtils.get(row, 0), formulaEvaluator),
-						getStringCellValue(IterableUtils.get(row, 1), formulaEvaluator));
+						CellUtil.getStringCellValue(IterableUtils.get(row, 0), formulaEvaluator),
+						CellUtil.getStringCellValue(IterableUtils.get(row, 1), formulaEvaluator));
 				//
 			} // for
 				//
 		} // if
 			//
 		return map;
-		//
-	}
-
-	@Nullable
-	private static String getStringCellValue(@Nullable final Cell instance,
-			@Nullable final FormulaEvaluator formulaEvaluator) {
-		//
-		if (instance == null) {
-			//
-			return null;
-			//
-		} // if
-			//
-		final Class<?> clz = Util.getClass(instance);
-		//
-		final String name = Util.getName(clz);
-		//
-		if (Objects.equals("org.apache.poi.xssf.usermodel.XSSFCell", name)) {
-			//
-			final List<Field> fs = Util.toList(Util.filter(Arrays.stream(Util.getDeclaredFields(clz)),
-					f -> Objects.equals(Util.getName(f), "_cell")));
-			//
-			final int size = IterableUtils.size(fs);
-			//
-			if (size > 1) {
-				//
-				throw new IllegalStateException(Integer.toString(size));
-				//
-			} // if
-				//
-			if (Narcissus.getField(instance,
-					testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null)) == null) {
-				//
-				return null;
-				//
-			} // if
-				//
-			final CellType cellType = org.apache.poi.ss.usermodel.CellUtil.getCellType(instance);
-			//
-			if (Util.contains(Arrays.asList(CellType.BLANK, CellType.STRING), cellType)) {
-				//
-				return instance.getStringCellValue();
-				//
-			} else if (Objects.equals(CellType.NUMERIC, cellType)) {
-				//
-				return Double.toString(instance.getNumericCellValue());
-				//
-			} else if (Objects.equals(CellType.BOOLEAN, cellType)) {
-				//
-				return Boolean.toString(instance.getBooleanCellValue());
-				//
-			} else if (Objects.equals(CellType.FORMULA, cellType)) {
-				//
-				return toString(instance, formulaEvaluator);
-				//
-			} // if
-				//
-			throw new IllegalStateException(Util.toString(cellType));
-			//
-		} else if (Objects.equals("org.apache.poi.hssf.usermodel.HSSFCell", name)) {
-			//
-			return handleHSSFCell(instance, formulaEvaluator);
-			//
-		} else if (Objects.equals("org.apache.poi.xssf.streaming.SXSSFCell", name)) {
-			//
-			return handleSXSSFCell(instance, formulaEvaluator);
-			//
-		} // if
-			//
-		return instance.getStringCellValue();
-		//
-	}
-
-	@Nullable
-	private static String handleHSSFCell(@Nullable final Cell instance,
-			@Nullable final FormulaEvaluator formulaEvaluator) {
-		//
-		final CellType cellType = org.apache.poi.ss.usermodel.CellUtil.getCellType(instance);
-		//
-		if (cellType == null) {
-			//
-			return null;
-			//
-		} // if
-			//
-		if (Util.contains(Arrays.asList(CellType.BLANK, CellType.STRING), cellType)) {
-			//
-			return org.apache.poi.ss.usermodel.CellUtil.getStringCellValue(instance);
-			//
-		} else if (Objects.equals(CellType.BOOLEAN, cellType)) {
-			//
-			return instance != null ? Boolean.toString(instance.getBooleanCellValue()) : null;
-			//
-		} else if (Objects.equals(CellType.NUMERIC, cellType)) {
-			//
-			return instance != null ? Double.toString(instance.getNumericCellValue()) : null;
-			//
-		} else if (Objects.equals(CellType.FORMULA, cellType)) {
-			//
-			return toString(instance, formulaEvaluator);
-			//
-		} // if
-			//
-		throw new IllegalStateException(Util.toString(cellType));
-		//
-	}
-
-	@Nullable
-	private static String handleSXSSFCell(final Cell instance, @Nullable final FormulaEvaluator formulaEvaluator) {
-		//
-		final List<Field> fs = Util.toList(Util.filter(Arrays.stream(Util.getDeclaredFields(Util.getClass(instance))),
-				f -> Objects.equals(Util.getName(f), "_value")));
-		//
-		final int size = IterableUtils.size(fs);
-		//
-		if (size > 1) {
-			//
-			throw new IllegalStateException(Integer.toString(size));
-			//
-		} // if
-			//
-		if (Narcissus.getField(instance,
-				testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null)) == null) {
-			//
-			return null;
-			//
-		} // if
-			//
-		final CellType cellType = org.apache.poi.ss.usermodel.CellUtil.getCellType(instance);
-		//
-		if (Util.contains(Arrays.asList(CellType.BLANK, CellType.STRING), cellType)) {
-			//
-			return instance.getStringCellValue();
-			//
-		} else if (Objects.equals(CellType.BOOLEAN, cellType)) {
-			//
-			return Boolean.toString(instance.getBooleanCellValue());
-			//
-		} else if (Objects.equals(CellType.NUMERIC, cellType)) {
-			//
-			return Double.toString(instance.getNumericCellValue());
-			//
-		} else if (Objects.equals(CellType.FORMULA, cellType)) {
-			//
-			return toString(instance, formulaEvaluator);
-			//
-		} // if
-			//
-		throw new IllegalStateException(Util.toString(cellType));
-		//
-	}
-
-	@Nullable
-	private static String toString(@Nullable final Cell instance, @Nullable final FormulaEvaluator formulaEvaluator) {
-		//
-		final CellValue cellValue = FormulaEvaluatorUtil.evaluate(formulaEvaluator, instance);
-		//
-		final CellType cellValueType = CellValueUtil.getCellType(cellValue);
-		//
-		if (Objects.equals(CellType.ERROR, cellValueType)) {
-			//
-			return Byte.toString(cellValue.getErrorValue());
-			//
-		} else if (Objects.equals(CellType.BOOLEAN, cellValueType)) {
-			//
-			return Boolean.toString(cellValue.getBooleanValue());
-			//
-		} else if (Objects.equals(CellType.NUMERIC, cellValueType)) {
-			//
-			return Double.toString(cellValue.getNumberValue());
-			//
-		} else if (Objects.equals(CellType.STRING, cellValueType)) {
-			//
-			return cellValue.getStringValue();
-			//
-		} // if
-			//
-		if (cellValue != null) {
-			//
-			throw new IllegalStateException(Util.toString(cellValueType));
-			//
-		} // if
-			//
-		return instance != null ? instance.getCellFormula() : null;
 		//
 	}
 
@@ -695,7 +508,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkListFactoryBean implements
 				//
 				if (Objects.equals(type = f.getType(), String.class)) {
 					//
-					Narcissus.setObjectField(ih, f, getStringCellValue(cell, formulaEvaluator));
+					Narcissus.setObjectField(ih, f, CellUtil.getStringCellValue(cell, formulaEvaluator));
 					//
 				} else if (Objects.equals(type, Integer.class)) {
 					//
@@ -755,7 +568,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkListFactoryBean implements
 				//
 			} // if
 				//
-			intStringMap.setString(cell.getColumnIndex(), getStringCellValue(cell, formulaEvaluator));
+			intStringMap.setString(cell.getColumnIndex(), CellUtil.getStringCellValue(cell, formulaEvaluator));
 			//
 		} // for
 			//
