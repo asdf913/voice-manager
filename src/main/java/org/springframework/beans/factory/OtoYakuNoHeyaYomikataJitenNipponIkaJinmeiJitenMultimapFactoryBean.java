@@ -28,6 +28,8 @@ import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.ss.usermodel.CellUtil;
+import org.apache.poi.ss.usermodel.CreationHelperUtil;
+import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -284,7 +286,8 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 				//
 				if (numberOfSheets == 1) {
 					//
-					return Unit.with(toMultimap(WorkbookUtil.getSheetAt(wb, 0)));
+					return Unit.with(toMultimap(WorkbookUtil.getSheetAt(wb, 0),
+							CreationHelperUtil.createFormulaEvaluator(WorkbookUtil.getCreationHelper(wb))));
 					//
 				} else if (numberOfSheets > 1) {
 					//
@@ -294,7 +297,8 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 						//
 					} // if
 						//
-					return Unit.with(toMultimap(WorkbookUtil.getSheet(wb, IValue0Util.getValue0(sheetName))));
+					return Unit.with(toMultimap(WorkbookUtil.getSheet(wb, IValue0Util.getValue0(sheetName)),
+							CreationHelperUtil.createFormulaEvaluator(WorkbookUtil.getCreationHelper(wb))));
 					//
 				} else {
 					//
@@ -311,7 +315,7 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 	}
 
 	@Nullable
-	private static Multimap<String, String> toMultimap(final Sheet sheet) {
+	private static Multimap<String, String> toMultimap(final Sheet sheet, final FormulaEvaluator formulaEvaluator) {
 		//
 		Multimap<String, String> multimap = null;
 		//
@@ -333,8 +337,8 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 					//
 				} // if
 					//
-				MultimapUtil.put(multimap, CellUtil.getStringCellValue(row.getCell(0)),
-						CellUtil.getStringCellValue(row.getCell(1)));
+				MultimapUtil.put(multimap, CellUtil.getStringCellValue(row.getCell(0), formulaEvaluator),
+						CellUtil.getStringCellValue(row.getCell(1), formulaEvaluator));
 				//
 			} // for
 				//
