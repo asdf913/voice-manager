@@ -38,7 +38,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 
 	private static Method METHOD_CREATE_MULIT_MAP_UNIT_WORK_BOOK, METHOD_CREATE_MULIT_MAP_UNIT_SPREAD_SHEET_DOCUMENT,
-			METHOD_OR, METHOD_GET_ROW_COUNT, METHOD_GET_SHEET_COUNT, METHOD_GET_SHEET_BY_INDEX = null;
+			METHOD_OR, METHOD_GET_ROW_COUNT, METHOD_GET_SHEET_COUNT = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -56,9 +56,6 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 		(METHOD_GET_ROW_COUNT = clz.getDeclaredMethod("getRowCount", Table.class)).setAccessible(true);
 		//
 		(METHOD_GET_SHEET_COUNT = clz.getDeclaredMethod("getSheetCount", SpreadsheetDocument.class))
-				.setAccessible(true);
-		//
-		(METHOD_GET_SHEET_BY_INDEX = clz.getDeclaredMethod("getSheetByIndex", SpreadsheetDocument.class, Integer.TYPE))
 				.setAccessible(true);
 		//
 	}
@@ -504,27 +501,6 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 			final Object obj = METHOD_GET_SHEET_COUNT.invoke(null, instance);
 			if (obj instanceof Integer) {
 				return ((Integer) obj).intValue();
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetSheetByIndex() throws Throwable {
-		//
-		Assertions.assertNull(getSheetByIndex(null, 0));
-		//
-	}
-
-	private static Table getSheetByIndex(final SpreadsheetDocument instance, final int index) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_SHEET_BY_INDEX.invoke(null, instance, index);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Table) {
-				return (Table) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

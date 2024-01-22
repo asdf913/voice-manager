@@ -40,6 +40,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
 import org.odftoolkit.simple.SpreadsheetDocument;
+import org.odftoolkit.simple.SpreadsheetDocumentUtil;
 import org.odftoolkit.simple.table.Table;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -340,7 +341,7 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 			//
 			if (sheetCount == 1) {
 				//
-				return Unit.with(toMultimap(ssd.getSheetByIndex(0)));
+				return Unit.with(toMultimap(SpreadsheetDocumentUtil.getSheetByIndex(ssd, 0)));
 				//
 			} else if (sheetCount > 1) {
 				//

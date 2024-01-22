@@ -31,6 +31,7 @@ import org.jsoup.nodes.ElementUtil;
 import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
 import org.odftoolkit.simple.SpreadsheetDocument;
+import org.odftoolkit.simple.SpreadsheetDocumentUtil;
 import org.odftoolkit.simple.table.CellUtil;
 import org.odftoolkit.simple.table.Table;
 import org.springframework.core.io.InputStreamSourceUtil;
@@ -141,7 +142,8 @@ public class YojijukugoMultimapFactoryBean implements FactoryBean<Multimap<Strin
 	@Nullable
 	private static IValue0<Multimap<String, String>> createMultimap(@Nullable final SpreadsheetDocument ssd) {
 		//
-		final Table table = ssd != null && ssd.getSheetCount() == 1 ? ssd.getSheetByIndex(0) : null;
+		final Table table = ssd != null && ssd.getSheetCount() == 1 ? SpreadsheetDocumentUtil.getSheetByIndex(ssd, 0)
+				: null;
 		//
 		final AtomicBoolean first = new AtomicBoolean(true);
 		//

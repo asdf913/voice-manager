@@ -29,6 +29,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
 import org.jsoup.select.Elements;
 import org.odftoolkit.simple.SpreadsheetDocument;
+import org.odftoolkit.simple.SpreadsheetDocumentUtil;
 import org.odftoolkit.simple.table.CellUtil;
 import org.odftoolkit.simple.table.Table;
 import org.springframework.core.io.InputStreamSourceUtil;
@@ -201,11 +202,6 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 		return instance != null ? instance.getSheetCount() : 0;
 	}
 
-	@Nullable
-	private static Table getSheetByIndex(@Nullable final SpreadsheetDocument instance, final int index) {
-		return instance != null ? instance.getSheetByIndex(index) : null;
-	}
-
 	private static int getRowCount(@Nullable final Table instance) {
 		return instance != null ? instance.getRowCount() : 0;
 	}
@@ -271,7 +267,8 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 		//
 		Unit<Multimap<String, String>> mm = null;
 		//
-		final Table table = testAndApply(x -> getSheetCount(x) > 0, ssd, x -> getSheetByIndex(x, 0), null);
+		final Table table = testAndApply(x -> getSheetCount(x) > 0, ssd,
+				x -> SpreadsheetDocumentUtil.getSheetByIndex(x, 0), null);
 		//
 		int rowNum = 0;
 		//
