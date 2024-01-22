@@ -162,15 +162,15 @@ public interface CellUtil {
 			//
 		if (contains(Arrays.asList(CellType.BLANK, CellType.STRING), cellType)) {
 			//
-			return org.apache.poi.ss.usermodel.CellUtil.getStringCellValue(instance);
+			return getStringCellValue(instance);
 			//
 		} else if (Objects.equals(CellType.BOOLEAN, cellType)) {
 			//
-			return instance != null ? Boolean.toString(instance.getBooleanCellValue()) : null;
+			return Boolean.toString(instance.getBooleanCellValue());
 			//
 		} else if (Objects.equals(CellType.NUMERIC, cellType)) {
 			//
-			return instance != null ? Double.toString(instance.getNumericCellValue()) : null;
+			return Double.toString(instance.getNumericCellValue());
 			//
 		} else if (Objects.equals(CellType.FORMULA, cellType)) {
 			//
