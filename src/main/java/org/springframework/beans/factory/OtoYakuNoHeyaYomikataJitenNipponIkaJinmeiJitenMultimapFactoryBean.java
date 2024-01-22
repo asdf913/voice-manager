@@ -1,5 +1,6 @@
 package org.springframework.beans.factory;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -18,12 +19,14 @@ import java.util.regex.Pattern;
 import java.util.stream.StreamSupport;
 
 import javax.annotation.Nullable;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.ss.usermodel.CellUtil;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -40,10 +43,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
 import org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkListFactoryBean.Link;
+import org.springframework.core.io.InputStreamSource;
 import org.springframework.core.io.InputStreamSourceUtil;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.XlsUtil;
 import org.springframework.core.io.XlsxUtil;
+import org.xml.sax.SAXException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -224,35 +229,12 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 	@Override
 	public Multimap<String, String> getObject() throws Exception {
 		//
-		if (XlsxUtil.isXlsx(resource) || XlsUtil.isXls(resource)) {
+		final IValue0<Multimap<String, String>> multimap = toMultimap(resource, sheetName);
+		//
+		if (multimap != null) {
 			//
-			try (final InputStream is = InputStreamSourceUtil.getInputStream(resource);
-					final Workbook wb = WorkbookFactory.create(is)) {
-				//
-				final int numberOfSheets = wb != null ? wb.getNumberOfSheets() : 0;
-				//
-				if (numberOfSheets == 1) {
-					//
-					return toMultimap(WorkbookUtil.getSheetAt(wb, 0));
-					//
-				} else if (numberOfSheets > 1) {
-					//
-					if (sheetName == null) {
-						//
-						throw new IllegalStateException();
-						//
-					} // if
-						//
-					return toMultimap(WorkbookUtil.getSheet(wb, IValue0Util.getValue0(sheetName)));
-					//
-				} else {
-					//
-					throw new IllegalStateException();
-					//
-				} // if
-					//
-			} // try
-				//
+			return IValue0Util.getValue0(multimap);
+			//
 		} // if
 			//
 		List<Link> ls = Util.toList(Util.filter(
@@ -285,6 +267,45 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 		} // if
 			//
 		return createMultimap(url, toBeRemoved);
+		//
+	}
+
+	private static IValue0<Multimap<String, String>> toMultimap(final InputStreamSource resource,
+			final IValue0<String> sheetName)
+			throws EncryptedDocumentException, IOException, SAXException, ParserConfigurationException {
+		//
+		if (XlsxUtil.isXlsx(resource) || XlsUtil.isXls(resource)) {
+			//
+			try (final InputStream is = InputStreamSourceUtil.getInputStream(resource);
+					final Workbook wb = WorkbookFactory.create(is)) {
+				//
+				final int numberOfSheets = wb != null ? wb.getNumberOfSheets() : 0;
+				//
+				if (numberOfSheets == 1) {
+					//
+					return Unit.with(toMultimap(WorkbookUtil.getSheetAt(wb, 0)));
+					//
+				} else if (numberOfSheets > 1) {
+					//
+					if (sheetName == null) {
+						//
+						throw new IllegalStateException();
+						//
+					} // if
+						//
+					return Unit.with(toMultimap(WorkbookUtil.getSheet(wb, IValue0Util.getValue0(sheetName))));
+					//
+				} else {
+					//
+					throw new IllegalStateException();
+					//
+				} // if
+					//
+			} // try
+				//
+		} // if
+			//
+		return null;
 		//
 	}
 
