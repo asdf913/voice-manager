@@ -141,7 +141,7 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 		//
 		if (CLASSES == null) {
 			//
-			CLASSES = Unit.with(Arrays.asList(Prefix差StringToMultimap.class));
+			CLASSES = Unit.with(Arrays.asList(Prefix差StringToMultimap.class, PrefixRStringToMultimap.class));
 			//
 		} // if
 			//
@@ -256,40 +256,6 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 					//
 			} // for
 				//
-		} else if (StringUtils.startsWith(s, "R-")) {
-			//
-			final char[] cs = Util.toCharArray(s);
-			//
-			UnicodeBlock unicodeBlock = null;
-			//
-			char c = ' ';
-			//
-			StringBuilder sb1 = null, sb2 = null;
-			//
-			for (int j = 0; j < length(cs); j++) {
-				//
-				if (Util.contains(Arrays.asList(UnicodeBlock.BASIC_LATIN, UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
-						unicodeBlock = UnicodeBlock.of(c = cs[j]))) {
-					//
-					Util.append(sb1 = ObjectUtils.getIfNull(sb1, StringBuilder::new), c);
-					//
-				} else if (Util.contains(Arrays.asList(UnicodeBlock.HIRAGANA, UnicodeBlock.KATAKANA), unicodeBlock)) {
-					//
-					Util.append(sb2 = ObjectUtils.getIfNull(sb2, StringBuilder::new), c);
-					//
-				} else if (c == '）') {
-					//
-					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							Util.toString(sb1), Util.toString(sb2));
-					//
-					clear(sb1 = ObjectUtils.getIfNull(sb1, StringBuilder::new));
-					//
-					clear(sb2 = ObjectUtils.getIfNull(sb2, StringBuilder::new));
-					//
-				} // if
-					//
-			} // for
-				//
 		} // if
 			//
 		return multimap;
@@ -375,6 +341,57 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 					clear(sb2 = ObjectUtils.getIfNull(sb2, StringBuilder::new));
 					//
 					leftParenthesisFound = false;
+					//
+				} // if
+					//
+			} // for
+				//
+			return multimap;
+			//
+		}
+
+	}
+
+	private static class PrefixRStringToMultimap implements StringToMultimap {
+
+		@Override
+		public boolean test(final String instnace) {
+			return StringUtils.startsWith(instnace, "R-");
+		}
+
+		@Override
+		@Nullable
+		public Multimap<String, String> apply(final String instnace) {
+			//
+			Multimap<String, String> multimap = null;
+			//
+			final char[] cs = Util.toCharArray(instnace);
+			//
+			UnicodeBlock unicodeBlock = null;
+			//
+			char c = ' ';
+			//
+			StringBuilder sb1 = null, sb2 = null;
+			//
+			for (int j = 0; j < length(cs); j++) {
+				//
+				if (Util.contains(Arrays.asList(UnicodeBlock.BASIC_LATIN, UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
+						unicodeBlock = UnicodeBlock.of(c = cs[j]))) {
+					//
+					Util.append(sb1 = ObjectUtils.getIfNull(sb1, StringBuilder::new), c);
+					//
+				} else if (Util.contains(Arrays.asList(UnicodeBlock.HIRAGANA, UnicodeBlock.KATAKANA), unicodeBlock)) {
+					//
+					Util.append(sb2 = ObjectUtils.getIfNull(sb2, StringBuilder::new), c);
+					//
+				} else if (c == '）') {
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+							Util.toString(sb1), Util.toString(sb2));
+					//
+					clear(sb1 = ObjectUtils.getIfNull(sb1, StringBuilder::new));
+					//
+					clear(sb2 = ObjectUtils.getIfNull(sb2, StringBuilder::new));
 					//
 				} // if
 					//
