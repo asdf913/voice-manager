@@ -71,6 +71,7 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 		//
 	}
 
+	@Nullable
 	private static Multimap<String, String> toMultimap(final Element tbody, final Pattern pattern) {
 		//
 		if (tbody == null || ElementUtil.childrenSize(tbody) < 1) {
