@@ -42,7 +42,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBeanTest {
 
 	private static Method METHOD_GET_STRINGS, METHOD_CLEAR, METHOD_TO_URL, METHOD_TEST_AND_APPLY, METHOD_LENGTH,
-			METHOD_TO_MULTI_MAP_ITERABLE, METHOD_TO_MULTI_MAP_STRING, METHOD_TO_MULTI_MAP2, METHOD_APPLY,
+			METHOD_TO_MULTI_MAP_ITERABLE, METHOD_TO_MULTI_MAP_STRING_STRING, METHOD_TO_MULTI_MAP2, METHOD_APPLY,
 			METHOD_GET_OBJECTS = null;
 
 	@BeforeAll
@@ -64,7 +64,8 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 		//
 		(METHOD_TO_MULTI_MAP_ITERABLE = clz.getDeclaredMethod("toMultimap", Iterable.class)).setAccessible(true);
 		//
-		(METHOD_TO_MULTI_MAP_STRING = clz.getDeclaredMethod("toMultimap", String.class)).setAccessible(true);
+		(METHOD_TO_MULTI_MAP_STRING_STRING = clz.getDeclaredMethod("toMultimap", String.class, String.class))
+				.setAccessible(true);
 		//
 		(METHOD_TO_MULTI_MAP2 = clz.getDeclaredMethod("toMultimap", String.class, Iterable.class)).setAccessible(true);
 		//
@@ -283,29 +284,30 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 	@Test
 	void testToMultimap() throws Throwable {
 		//
-		Assertions.assertNull(toMultimap((String) null));
+		Assertions.assertNull(toMultimap(null, (String) null));
 		//
-		Assertions.assertNull(toMultimap(""));
+		Assertions.assertNull(toMultimap(null, ""));
 		//
 		final String space = " ";
 		//
-		Assertions.assertNull(toMultimap(space));
+		Assertions.assertNull(toMultimap(null, space));
 		//
-		Assertions.assertNull(toMultimap("A"));
+		Assertions.assertNull(toMultimap(null, "A"));
 		//
-		Assertions.assertEquals("{半端=[はんぱ]}", Util.toString(toMultimap("関連語：半端（はんぱ）")));
+		Assertions.assertEquals("{半端=[はんぱ]}", Util.toString(toMultimap(null, "関連語：半端（はんぱ）")));
 		//
 		Assertions.assertEquals("{九十九湾=[つくもわん], 九十九折れ=[つづらおれ]}",
-				Util.toString(toMultimap("関連語：九十九湾（つくもわん）九十九折れ（つづらおれ）")));
+				Util.toString(toMultimap(null, "関連語：九十九湾（つくもわん）九十九折れ（つづらおれ）")));
 		//
-		Assertions.assertEquals("{R-加群=[あーるかぐん], 左加群=[さかぐん]}", Util.toString(toMultimap("R-加群（あーるかぐん）左加群（さかぐん）")));
+		Assertions.assertEquals("{R-加群=[あーるかぐん], 左加群=[さかぐん]}",
+				Util.toString(toMultimap(null, "R-加群（あーるかぐん）左加群（さかぐん）")));
 		//
 		Assertions.assertEquals("{差し金=[さしがね], 長手=[ながて], 短手=[みじかて, みじかで], 妻手=[つまて]}",
-				Util.toString(toMultimap("差し金（さしがね）とも言う 長いほうを長手（ながて） 短いほうを短手（みじかて・みじかで）または妻手（つまて）")));
+				Util.toString(toMultimap(null, "差し金（さしがね）とも言う 長いほうを長手（ながて） 短いほうを短手（みじかて・みじかで）または妻手（つまて）")));
 		//
-		Assertions.assertEquals("{霰=[あられ], 雹=[ひょう]}", Util.toString(toMultimap("霰（あられ）、雹（ひょう）")));
+		Assertions.assertEquals("{霰=[あられ], 雹=[ひょう]}", Util.toString(toMultimap(null, "霰（あられ）、雹（ひょう）")));
 		//
-		Assertions.assertEquals("{共軛=[きょうやく]}", Util.toString(toMultimap("は共軛（きょうやく）とも")));
+		Assertions.assertEquals("{共軛=[きょうやく]}", Util.toString(toMultimap(null, "は共軛（きょうやく）とも")));
 		//
 		final Multimap<String, String> multimap = ImmutableMultimap.of();
 		//
@@ -314,7 +316,7 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 		Assertions.assertEquals(multimap,
 				toMultimap(Collections.singleton(Util.cast(Element.class, Narcissus.allocateInstance(Element.class)))));
 		//
-		Assertions.assertNull(toMultimap(null, null));
+		Assertions.assertNull(toMultimap(null, (Iterable) null));
 		//
 		Assertions.assertEquals(String.format("{%1$s=[%1$s]}", space),
 				Util.toString(toMultimap(space, Collections.singleton(space))));
@@ -341,9 +343,9 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 		}
 	}
 
-	private static Multimap<String, String> toMultimap(final String s) throws Throwable {
+	private static Multimap<String, String> toMultimap(final String s1, final String s3) throws Throwable {
 		try {
-			final Object obj = METHOD_TO_MULTI_MAP_STRING.invoke(null, s);
+			final Object obj = METHOD_TO_MULTI_MAP_STRING_STRING.invoke(null, s1, s3);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Multimap) {

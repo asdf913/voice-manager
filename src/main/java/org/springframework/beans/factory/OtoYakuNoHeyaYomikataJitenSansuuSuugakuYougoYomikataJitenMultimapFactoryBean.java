@@ -104,6 +104,8 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 		//
 		Element element = null;
 		//
+		String s1 = null;
+		//
 		for (int i = 0; i < IterableUtils.size(children); i++) {
 			//
 			if (Util.matches(pattern.matcher(ElementUtil.text(element = IterableUtils.get(children, i))))) {
@@ -112,12 +114,12 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 				//
 			} // if
 				//
+			s1 = ElementUtil.text(
+					testAndApply(x -> ElementUtil.childrenSize(x) > 0, element, x -> ElementUtil.child(x, 0), null));
+			//
 			MultimapUtil
 					.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							toMultimap(
-									ElementUtil
-											.text(testAndApply(x -> ElementUtil.childrenSize(x) > 0, element,
-													x -> ElementUtil.child(x, 0), null)),
+							toMultimap(s1,
 									Util.toList(Util.filter(
 											Util.stream(getStrings(
 													ElementUtil.text(testAndApply(x -> ElementUtil.childrenSize(x) > 1,
@@ -126,7 +128,7 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 											StringUtils::isNotEmpty))));
 			//
 			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-					toMultimap(ElementUtil.text(testAndApply(x -> ElementUtil.childrenSize(x) > 2, element,
+					toMultimap(s1, ElementUtil.text(testAndApply(x -> ElementUtil.childrenSize(x) > 2, element,
 							x -> ElementUtil.child(x, 2), null))));
 			//
 		} // for
@@ -136,7 +138,7 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 	}
 
 	@Nullable
-	private static Multimap<String, String> toMultimap(final String s) {
+	private static Multimap<String, String> toMultimap(final String s1, final String s3) {
 		//
 		if (CLASSES == null) {
 			//
@@ -147,7 +149,7 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 			//
 		final List<Multimap<?, ?>> multimaps = Util
 				.toList(Util.map(
-						Util.filter(Util.stream(getObjects(IValue0Util.getValue0(CLASSES), s)),
+						Util.filter(Util.stream(getObjects(IValue0Util.getValue0(CLASSES), s3)),
 								x -> Boolean.logicalOr(x == null, x instanceof Multimap)),
 						x -> Util.cast(Multimap.class, x)));
 		//
@@ -166,26 +168,41 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 			//
 		} // if
 			//
-		final Matcher matcher = Util.matcher(Pattern
-				.compile("((\\p{InBasicLatin}|\\p{InCJKUnifiedIdeographs}|\\p{InHiragana})+)（(\\p{InHiragana}+)）"), s);
-		//
 		Multimap<String, String> multimap = null;
 		//
-		String s1, s11, s3 = null;
+		if (Objects.equals("ISO", s1)) {
+			//
+			final Matcher matcher = Util.matcher(Pattern.compile("（(\\p{InHiragana}+)）"), s3);
+			//
+			while (Util.find(matcher) && Util.groupCount(matcher) > 0) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1,
+						Util.group(matcher, 1));
+				//
+			} // while
+				//
+			return multimap;
+			//
+		} // if
+			//
+		final Matcher matcher = Util.matcher(Pattern
+				.compile("((\\p{InBasicLatin}|\\p{InCJKUnifiedIdeographs}|\\p{InHiragana})+)（(\\p{InHiragana}+)）"), s3);
+		//
+		String g1, s11, g3 = null;
 		//
 		int i1 = 0;
 		//
 		while (Util.find(matcher) && Util.groupCount(matcher) > 2) {
 			//
-			s3 = Util.group(matcher, 3);
+			g3 = Util.group(matcher, 3);
 			//
-			if ((i1 = getLastIndexWithUnicodeBlock(s1 = StringUtils.trim(Util.group(matcher, 1)),
+			if ((i1 = getLastIndexWithUnicodeBlock(g1 = StringUtils.trim(Util.group(matcher, 1)),
 					UnicodeBlock.HIRAGANA)) >= 0) {
 				//
 				if (StringUtils.isNotEmpty(
-						s11 = StringUtils.trim(StringUtils.substring(s1, i1 + 1, StringUtils.length(s1))))) {
+						s11 = StringUtils.trim(StringUtils.substring(g1, i1 + 1, StringUtils.length(g1))))) {
 					//
-					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s11, s3);
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s11, g3);
 					//
 					continue;
 					//
@@ -193,7 +210,7 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 					//
 			} // if
 				//
-			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1, s3);
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), g1, g3);
 			//
 		} // while
 			//
