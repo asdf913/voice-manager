@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -15,23 +16,38 @@ import java.util.regex.Pattern;
 import javax.annotation.Nullable;
 
 import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.collections4.MultiMapUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.javatuples.Unit;
+import org.javatuples.valueintf.IValue0;
+import org.javatuples.valueintf.IValue0Util;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
+import org.reflections.Reflections;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.LoggerUtil;
 
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
+
+import io.github.toolfactory.narcissus.Narcissus;
 
 /*
  * https://hiramatu-hifuka.com/onyak/kotoba-1/sugaku.html
  */
 public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBean
 		implements FactoryBean<Multimap<String, String>> {
+
+	private static final Logger LOG = LoggerFactory
+			.getLogger(OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBean.class);
+
+	private static IValue0<Iterable<?>> CLASSES = null;
 
 	private String url = null;
 
@@ -129,6 +145,80 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 	@Nullable
 	private static Multimap<String, String> toMultimap(final String s) {
 		//
+		Iterable<?> os = IValue0Util.getValue0(CLASSES);
+		//
+		try {
+			//
+			if (CLASSES == null) {
+				//
+				final Reflections reflections = new Reflections(
+						OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBean.class
+								.getPackageName());
+				//
+				CLASSES = reflections != null ? Unit.with(os = reflections.getSubTypesOf(Class.forName(
+						"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBean$StringToMultimap")))
+						: null;
+				//
+			} // if
+				//
+		} catch (final ClassNotFoundException e) {
+			//
+			LoggerUtil.error(LOG, e.getMessage(), e);
+			//
+		} // try
+			//
+		List<Object> objects = null;
+		//
+		if (Util.iterator(os) != null) {
+			//
+			Class<?> c = null;
+			//
+			Object instance = null;
+			//
+			for (final Object o : os) {
+				//
+				if ((c = Util.cast(Class.class, o)) == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if (!((instance = Narcissus.allocateInstance(c)) instanceof Predicate)
+						|| !((Predicate) instance).test(s)) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if (instance instanceof Function) {
+					//
+					Util.add(objects = ObjectUtils.getIfNull(objects, ArrayList::new), ((Function) instance).apply(s));
+					//
+				} // if
+					//
+			} // for
+				//
+		} // if
+			//
+		final List<Multimap<?, ?>> multimaps = Util
+				.toList(Util.map(Util.filter(Util.stream(objects), x -> x == null || x instanceof Multimap),
+						x -> Util.cast(Multimap.class, x)));
+		//
+		final int size = IterableUtils.size(multimaps);
+		//
+		if (size == 1) {
+			//
+			return Util.collect(Util.stream(MultimapUtil.entries(IterableUtils.get(multimaps, 0))),
+					LinkedHashMultimap::create,
+					(k, v) -> MultimapUtil.put(k, Util.toString(Util.getKey(v)), Util.toString(Util.getValue(v))),
+					Multimap::putAll);
+			//
+		} else if (size > 1) {
+			//
+			throw new IllegalStateException();
+			//
+		} // if
+			//
 		Multimap<String, String> multimap = null;
 		//
 		final Matcher matcher = Util
@@ -222,9 +312,28 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 					//
 			} // for
 				//
-		} else if (StringUtils.startsWith(s, "差")) {
+		} // if
 			//
-			final char[] cs = Util.toCharArray(s);
+		return multimap;
+		//
+	}
+
+	private static interface StringToMultimap extends Predicate<String>, Function<String, Multimap<String, String>> {
+	}
+
+	private static class Prefix差StringToMultimap implements StringToMultimap {
+
+		@Override
+		public boolean test(final String instnace) {
+			return StringUtils.startsWith(instnace, "差");
+		}
+
+		@Override
+		public Multimap<String, String> apply(final String instnace) {
+			//
+			Multimap<String, String> multimap = null;
+			//
+			final char[] cs = Util.toCharArray(instnace);
 			//
 			UnicodeBlock unicodeBlock = null;
 			//
@@ -288,10 +397,10 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 					//
 			} // for
 				//
-		} // if
+			return multimap;
 			//
-		return multimap;
-		//
+		}
+
 	}
 
 	private static boolean isEmpty(final Multimap<?, ?> instance) {
