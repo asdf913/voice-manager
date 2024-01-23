@@ -40,7 +40,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBeanTest {
 
 	private static Method METHOD_GET_STRINGS, METHOD_CLEAR, METHOD_TO_URL, METHOD_TEST_AND_APPLY, METHOD_LENGTH,
-			METHOD_TO_MULTI_MAP1, METHOD_TO_MULTI_MAP2 = null;
+			METHOD_TO_MULTI_MAP_ITERABLE, METHOD_TO_MULTI_MAP_STRING, METHOD_TO_MULTI_MAP2 = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException, ClassNotFoundException {
@@ -59,7 +59,9 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 		//
 		(METHOD_LENGTH = clz.getDeclaredMethod("length", Object[].class)).setAccessible(true);
 		//
-		(METHOD_TO_MULTI_MAP1 = clz.getDeclaredMethod("toMultimap", Iterable.class)).setAccessible(true);
+		(METHOD_TO_MULTI_MAP_ITERABLE = clz.getDeclaredMethod("toMultimap", Iterable.class)).setAccessible(true);
+		//
+		(METHOD_TO_MULTI_MAP_STRING = clz.getDeclaredMethod("toMultimap", String.class)).setAccessible(true);
 		//
 		(METHOD_TO_MULTI_MAP2 = clz.getDeclaredMethod("toMultimap", String.class, Iterable.class)).setAccessible(true);
 		//
@@ -273,6 +275,21 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 	@Test
 	void testToMultimap() throws Throwable {
 		//
+		Assertions.assertNull(toMultimap((String) null));
+		//
+		Assertions.assertNull(toMultimap(""));
+		//
+		final String space = " ";
+		//
+		Assertions.assertNull(toMultimap(space));
+		//
+		Assertions.assertNull(toMultimap("A"));
+		//
+		Assertions.assertEquals("{半端=[はんぱ]}", Util.toString(toMultimap("関連語：半端（はんぱ）")));
+		//
+		Assertions.assertEquals("{九十九湾=[つくもわん], 九十九折れ=[つづらおれ]}",
+				Util.toString(toMultimap("関連語：九十九湾（つくもわん）九十九折れ（つづらおれ）")));
+		//
 		final Multimap<String, String> multimap = ImmutableMultimap.of();
 		//
 		Assertions.assertEquals(multimap, toMultimap(Collections.singleton(null)));
@@ -281,8 +298,6 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 				toMultimap(Collections.singleton(Util.cast(Element.class, Narcissus.allocateInstance(Element.class)))));
 		//
 		Assertions.assertNull(toMultimap(null, null));
-		//
-		final String space = " ";
 		//
 		Assertions.assertEquals(String.format("{%1$s=[%1$s]}", space),
 				Util.toString(toMultimap(space, Collections.singleton(space))));
@@ -297,7 +312,21 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 
 	private static Multimap<String, String> toMultimap(final Iterable<Element> tbodies) throws Throwable {
 		try {
-			final Object obj = METHOD_TO_MULTI_MAP1.invoke(null, tbodies);
+			final Object obj = METHOD_TO_MULTI_MAP_ITERABLE.invoke(null, tbodies);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Multimap) {
+				return (Multimap) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static Multimap<String, String> toMultimap(final String s) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_MULTI_MAP_STRING.invoke(null, s);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Multimap) {
