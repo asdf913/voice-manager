@@ -150,11 +150,11 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 					testAndApply(x -> ElementUtil.childrenSize(x) > 2, element, x -> ElementUtil.child(x, 2), null)))) {
 				//
 				if (Util.matches(matcher = Util
-						.matcher(Pattern.compile("^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）$"), s))
-						&& Util.groupCount(matcher) > 1) {
+						.matcher(Pattern.compile("^(関連語：)?(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）$"), s))
+						&& Util.groupCount(matcher) > 2) {
 					//
 					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							Util.group(matcher, 1), Util.group(matcher, 2));
+							Util.group(matcher, 2), Util.group(matcher, 3));
 					//
 				} // if
 					//
