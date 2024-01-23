@@ -311,24 +311,9 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 					//
 				} else if (c == '）') {
 					//
-					if (isEmpty(multimap)) {
-						//
-						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-								Util.toString(sb1), Util.toString(sb2));
-						//
-					} else {
-						//
-						if ((index = getLastIndexWithUnicodeBlock(Util.toString(sb1), UnicodeBlock.HIRAGANA)) >= 0) {
-							//
-							MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-									StringUtils.substring(Util.toString(sb1), index + 1, StringUtils.length(sb1)),
-									testAndApply(Objects::nonNull, StringUtils.split(Util.toString(sb2), '・'),
-											Arrays::asList, null));
-							//
-						} // if
-							//
-					} // if
-						//
+					MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+							toMultimap(isEmpty(multimap), Util.toString(sb1), Util.toString(sb2)));
+					//
 					clear(sb1 = ObjectUtils.getIfNull(sb1, StringBuilder::new));
 					//
 					clear(sb2 = ObjectUtils.getIfNull(sb2, StringBuilder::new));
@@ -338,6 +323,32 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 				} // if
 					//
 			} // for
+				//
+			return multimap;
+			//
+		}
+
+		private static Multimap<String, String> toMultimap(final boolean first, final String s1, final String s2) {
+			//
+			Multimap<String, String> multimap = null;
+			//
+			if (first) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1, s2);
+				//
+			} else {
+				//
+				final int index = getLastIndexWithUnicodeBlock(s1, UnicodeBlock.HIRAGANA);
+				//
+				if (index >= 0) {
+					//
+					MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+							StringUtils.substring(s1, index + 1, StringUtils.length(s1)),
+							testAndApply(Objects::nonNull, StringUtils.split(s2, '・'), Arrays::asList, null));
+					//
+				} // if
+					//
+			} // if
 				//
 			return multimap;
 			//
