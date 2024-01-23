@@ -328,6 +328,7 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 			//
 		}
 
+		@Nullable
 		private static Multimap<String, String> toMultimap(final boolean first, final String s1, final String s2) {
 			//
 			Multimap<String, String> multimap = null;
