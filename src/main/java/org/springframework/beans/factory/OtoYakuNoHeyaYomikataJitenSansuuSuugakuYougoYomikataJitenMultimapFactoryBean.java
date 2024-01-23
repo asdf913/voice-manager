@@ -103,6 +103,16 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 		//
 		Matcher matcher = null;
 		//
+		StringBuilder sb1 = null, sb2 = null;
+		//
+		char[] cs = null;
+		//
+		UnicodeBlock unicodeBlock = null;
+		//
+		char c = ' ';
+		//
+		boolean leftParenthesisFound = false;
+		//
 		for (int i = 0; i < IterableUtils.size(children); i++) {
 			//
 			if (Util.matches(pattern.matcher(ElementUtil.text(element = IterableUtils.get(children, i))))) {
@@ -156,6 +166,54 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 							Util.group(matcher, 2), Util.group(matcher, 3));
 					//
+				} else if (StringUtils.startsWith(s, "関連語：")) {
+					//
+					clear(sb1 = ObjectUtils.getIfNull(sb1, StringBuilder::new));
+					//
+					clear(sb2 = ObjectUtils.getIfNull(sb2, StringBuilder::new));
+					//
+					leftParenthesisFound = false;
+					//
+					cs = Util.toCharArray(StringUtils.substringAfter(s, "関連語："));
+					//
+					for (int j = 0; cs != null && j < cs.length; j++) {
+						//
+						if (Objects.equals(unicodeBlock = UnicodeBlock.of(c = cs[j]),
+								UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)) {
+							//
+							Util.append(sb1 = ObjectUtils.getIfNull(sb1, StringBuilder::new), c);
+							//
+						} else if (Objects.equals(unicodeBlock, UnicodeBlock.HIRAGANA)) {
+							//
+							if (leftParenthesisFound) {
+								//
+								Util.append(sb2 = ObjectUtils.getIfNull(sb2, StringBuilder::new), c);
+								//
+							} else {
+								//
+								Util.append(sb1 = ObjectUtils.getIfNull(sb1, StringBuilder::new), c);
+								//
+							} // if
+								//
+						} else if (c == '（') {
+							//
+							leftParenthesisFound = true;
+							//
+						} else if (c == '）') {
+							//
+							MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+									Util.toString(sb1), Util.toString(sb2));
+							//
+							clear(sb1 = ObjectUtils.getIfNull(sb1, StringBuilder::new));
+							//
+							clear(sb2 = ObjectUtils.getIfNull(sb2, StringBuilder::new));
+							//
+							leftParenthesisFound = false;
+							//
+						} // if
+							//
+					} // for
+						//
 				} // if
 					//
 			} // if
@@ -163,6 +221,7 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 		} // for
 			//
 		return multimap;
+
 		//
 	}
 
