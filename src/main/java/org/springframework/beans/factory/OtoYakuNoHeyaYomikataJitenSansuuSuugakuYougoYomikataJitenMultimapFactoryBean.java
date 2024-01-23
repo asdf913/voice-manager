@@ -26,10 +26,6 @@ import org.javatuples.valueintf.IValue0Util;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
-import org.reflections.Reflections;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.LoggerUtil;
 
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
@@ -42,9 +38,6 @@ import io.github.toolfactory.narcissus.Narcissus;
  */
 public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBean
 		implements FactoryBean<Multimap<String, String>> {
-
-	private static final Logger LOG = LoggerFactory
-			.getLogger(OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBean.class);
 
 	private static IValue0<Iterable<?>> CLASSES = null;
 
@@ -146,25 +139,11 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 		//
 		Iterable<?> os = IValue0Util.getValue0(CLASSES);
 		//
-		try {
+		if (CLASSES == null) {
 			//
-			if (CLASSES == null) {
-				//
-				final Reflections reflections = new Reflections(
-						OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBean.class
-								.getPackageName());
-				//
-				CLASSES = reflections != null ? Unit.with(os = reflections.getSubTypesOf(Class.forName(
-						"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBean$StringToMultimap")))
-						: null;
-				//
-			} // if
-				//
-		} catch (final ClassNotFoundException e) {
+			CLASSES = Unit.with(Arrays.asList(Prefix差StringToMultimap.class));
 			//
-			LoggerUtil.error(LOG, e.getMessage(), e);
-			//
-		} // try
+		} // if
 			//
 		List<Object> objects = null;
 		//
