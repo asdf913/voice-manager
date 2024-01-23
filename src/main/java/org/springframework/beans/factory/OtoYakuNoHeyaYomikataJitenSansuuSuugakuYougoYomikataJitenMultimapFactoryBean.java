@@ -69,7 +69,7 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 					//
 				} // if
 					//
-				for (int i = 0; children != null && i < children.size(); i++) {
+				for (int i = 0; i < IterableUtils.size(children); i++) {
 					//
 					if (Util.matches(pattern.matcher(ElementUtil.text(element = IterableUtils.get(children, i))))
 							|| element == null) {
