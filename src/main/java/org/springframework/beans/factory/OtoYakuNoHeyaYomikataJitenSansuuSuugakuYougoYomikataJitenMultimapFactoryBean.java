@@ -166,68 +166,7 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 			//
 		} // if
 			//
-		Multimap<String, String> multimap = null;
-		//
-		final Matcher matcher = Util
-				.matcher(Pattern.compile("^(関連語：)?(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）$"), s);
-		//
-		if (Boolean.logicalAnd(Util.matches(matcher), Util.groupCount(matcher) > 2)) {
-			//
-			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-					Util.group(matcher, 2), Util.group(matcher, 3));
-			//
-		} else if (StringUtils.startsWith(s, "関連語：")) {
-			//
-			final char[] cs = Util.toCharArray(StringUtils.substringAfter(s, "関連語："));
-			//
-			UnicodeBlock unicodeBlock = null;
-			//
-			char c = ' ';
-			//
-			StringBuilder sb1 = null, sb2 = null;
-			//
-			boolean leftParenthesisFound = false;
-			//
-			for (int j = 0; j < length(cs); j++) {
-				//
-				if (Objects.equals(unicodeBlock = UnicodeBlock.of(c = cs[j]), UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)) {
-					//
-					Util.append(sb1 = ObjectUtils.getIfNull(sb1, StringBuilder::new), c);
-					//
-				} else if (Objects.equals(unicodeBlock, UnicodeBlock.HIRAGANA)) {
-					//
-					if (leftParenthesisFound) {
-						//
-						Util.append(sb2 = ObjectUtils.getIfNull(sb2, StringBuilder::new), c);
-						//
-					} else {
-						//
-						Util.append(sb1 = ObjectUtils.getIfNull(sb1, StringBuilder::new), c);
-						//
-					} // if
-						//
-				} else if (c == '（') {
-					//
-					leftParenthesisFound = true;
-					//
-				} else if (c == '）') {
-					//
-					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							Util.toString(sb1), Util.toString(sb2));
-					//
-					clear(sb1 = ObjectUtils.getIfNull(sb1, StringBuilder::new));
-					//
-					clear(sb2 = ObjectUtils.getIfNull(sb2, StringBuilder::new));
-					//
-					leftParenthesisFound = false;
-					//
-				} // if
-					//
-			} // for
-				//
-		} // if
-			//
-		return multimap;
+		return null;
 		//
 	}
 
