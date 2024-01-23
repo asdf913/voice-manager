@@ -199,8 +199,8 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 				//
 		} // if
 			//
-		final List<Multimap<?, ?>> multimaps = Util
-				.toList(Util.map(Util.filter(Util.stream(objects), x -> x == null || x instanceof Multimap),
+		final List<Multimap<?, ?>> multimaps = Util.toList(
+				Util.map(Util.filter(Util.stream(objects), x -> Boolean.logicalOr(x == null, x instanceof Multimap)),
 						x -> Util.cast(Multimap.class, x)));
 		//
 		final int size = IterableUtils.size(multimaps);
