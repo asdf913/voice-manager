@@ -166,7 +166,18 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 			//
 		} // if
 			//
-		return null;
+		final Matcher matcher = Util.matcher(Pattern.compile("(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）"), s);
+		//
+		Multimap<String, String> multimap = null;
+		//
+		while (Util.find(matcher) && Util.groupCount(matcher) > 1) {
+			//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					Util.group(matcher, 1), Util.group(matcher, 2));
+			//
+		} // while
+			//
+		return multimap;
 		//
 	}
 
