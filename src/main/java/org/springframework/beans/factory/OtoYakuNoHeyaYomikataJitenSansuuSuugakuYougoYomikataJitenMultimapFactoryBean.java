@@ -501,6 +501,7 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 		}
 
 		@Override
+		@Nullable
 		public Multimap<String, String> apply(final String instnace) {
 			//
 			Multimap<String, String> multimap = null;
@@ -589,6 +590,7 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 		return instance != null ? instance.length : 0;
 	}
 
+	@Nullable
 	private static List<String> getStrings(final String string, final UnicodeBlock ub, final UnicodeBlock... ubs) {
 		//
 		final char[] cs = Util.toCharArray(string);
