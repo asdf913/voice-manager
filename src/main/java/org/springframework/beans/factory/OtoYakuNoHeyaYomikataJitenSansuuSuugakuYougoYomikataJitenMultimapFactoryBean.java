@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.annotation.Nullable;
@@ -92,13 +93,15 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 		//
 		Element element = null;
 		//
-		String s1 = null;
+		String s1, s = null;
 		//
 		String[] ss1 = null;
 		//
 		List<String> ss2 = null;
 		//
 		int length, size = 0;
+		//
+		Matcher matcher = null;
 		//
 		for (int i = 0; i < IterableUtils.size(children); i++) {
 			//
@@ -141,6 +144,20 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 				//
 				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1, ss2);
 				//
+			} // if
+				//
+			if (StringUtils.isNotBlank(s = ElementUtil.text(
+					testAndApply(x -> ElementUtil.childrenSize(x) > 2, element, x -> ElementUtil.child(x, 2), null)))) {
+				//
+				if (Util.matches(matcher = Util
+						.matcher(Pattern.compile("^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）$"), s))
+						&& Util.groupCount(matcher) > 1) {
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+							Util.group(matcher, 1), Util.group(matcher, 2));
+					//
+				} // if
+					//
 			} // if
 				//
 		} // for
