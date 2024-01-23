@@ -133,13 +133,13 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 		//
 	}
 
-	private static void clear(final StringBuilder instance) {
+	private static void clear(@Nullable final StringBuilder instance) {
 		if (instance != null) {
 			instance.delete(0, instance.length());
 		}
 	}
 
-	private static URL toURL(final URI instance) throws MalformedURLException {
+	private static URL toURL(@Nullable final URI instance) throws MalformedURLException {
 		//
 		if (instance == null || !Util.isAbsolute(instance)) {
 			//
@@ -151,7 +151,7 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 		//
 	}
 
-	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+	private static <T, R, E extends Throwable> R testAndApply(@Nullable final Predicate<T> predicate, final T value,
 			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
 			throws E {
 		return predicate != null && predicate.test(value) ? FailableFunctionUtil.apply(functionTrue, value)
