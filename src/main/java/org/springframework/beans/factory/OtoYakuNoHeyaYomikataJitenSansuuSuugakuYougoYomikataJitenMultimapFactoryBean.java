@@ -140,7 +140,8 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 		//
 		if (CLASSES == null) {
 			//
-			CLASSES = Unit.with(Arrays.asList(Prefix差StringToMultimap.class, PrefixRStringToMultimap.class));
+			CLASSES = Unit.with(Arrays.asList(StringToMultimapImpl.class, Prefix差StringToMultimap.class,
+					PrefixRStringToMultimap.class));
 			//
 		} // if
 			//
@@ -267,6 +268,89 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 	}
 
 	private static interface StringToMultimap extends Predicate<String>, Function<String, Multimap<String, String>> {
+	}
+
+	private static class StringToMultimapImpl implements StringToMultimap {
+
+		private static final Pattern PATTERN = Pattern
+				.compile("^(関連語：)?(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）$");
+
+		@Override
+		public boolean test(final String instance) {
+			//
+			return Boolean.logicalOr(Util.matches(Util.matcher(PATTERN, instance)),
+					StringUtils.startsWith(instance, "関連語："));
+			//
+		}
+
+		@Override
+		public Multimap<String, String> apply(final String instance) {
+			//
+			Multimap<String, String> multimap = null;
+			//
+			final Matcher matcher = Util.matcher(PATTERN, instance);
+			//
+			if (Boolean.logicalAnd(Util.matches(matcher), Util.groupCount(matcher) > 2)) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						Util.group(matcher, 2), Util.group(matcher, 3));
+				//
+			} else if (StringUtils.startsWith(instance, "関連語：")) {
+				//
+				final char[] cs = Util.toCharArray(StringUtils.substringAfter(instance, "関連語："));
+				//
+				UnicodeBlock unicodeBlock = null;
+				//
+				char c = ' ';
+				//
+				StringBuilder sb1 = null, sb2 = null;
+				//
+				boolean leftParenthesisFound = false;
+				//
+				for (int j = 0; j < length(cs); j++) {
+					//
+					if (Objects.equals(unicodeBlock = UnicodeBlock.of(c = cs[j]),
+							UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)) {
+						//
+						Util.append(sb1 = ObjectUtils.getIfNull(sb1, StringBuilder::new), c);
+						//
+					} else if (Objects.equals(unicodeBlock, UnicodeBlock.HIRAGANA)) {
+						//
+						if (leftParenthesisFound) {
+							//
+							Util.append(sb2 = ObjectUtils.getIfNull(sb2, StringBuilder::new), c);
+							//
+						} else {
+							//
+							Util.append(sb1 = ObjectUtils.getIfNull(sb1, StringBuilder::new), c);
+							//
+						} // if
+							//
+					} else if (c == '（') {
+						//
+						leftParenthesisFound = true;
+						//
+					} else if (c == '）') {
+						//
+						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+								Util.toString(sb1), Util.toString(sb2));
+						//
+						clear(sb1 = ObjectUtils.getIfNull(sb1, StringBuilder::new));
+						//
+						clear(sb2 = ObjectUtils.getIfNull(sb2, StringBuilder::new));
+						//
+						leftParenthesisFound = false;
+						//
+					} // if
+						//
+				} // for
+					//
+			} // if
+				//
+			return multimap;
+			//
+		}
+
 	}
 
 	private static class Prefix差StringToMultimap implements StringToMultimap {
