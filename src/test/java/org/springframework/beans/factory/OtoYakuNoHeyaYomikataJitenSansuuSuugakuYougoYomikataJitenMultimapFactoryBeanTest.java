@@ -40,7 +40,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBeanTest {
 
 	private static Method METHOD_GET_STRINGS, METHOD_CLEAR, METHOD_TO_URL, METHOD_TEST_AND_APPLY, METHOD_LENGTH,
-			METHOD_TO_MULTI_MAP = null;
+			METHOD_TO_MULTI_MAP1, METHOD_TO_MULTI_MAP2 = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException, ClassNotFoundException {
@@ -59,7 +59,9 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 		//
 		(METHOD_LENGTH = clz.getDeclaredMethod("length", Object[].class)).setAccessible(true);
 		//
-		(METHOD_TO_MULTI_MAP = clz.getDeclaredMethod("toMultimap", Iterable.class)).setAccessible(true);
+		(METHOD_TO_MULTI_MAP1 = clz.getDeclaredMethod("toMultimap", Iterable.class)).setAccessible(true);
+		//
+		(METHOD_TO_MULTI_MAP2 = clz.getDeclaredMethod("toMultimap", String.class, Iterable.class)).setAccessible(true);
 		//
 	}
 
@@ -278,11 +280,38 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 		Assertions.assertEquals(multimap,
 				toMultimap(Collections.singleton(Util.cast(Element.class, Narcissus.allocateInstance(Element.class)))));
 		//
+		Assertions.assertNull(toMultimap(null, null));
+		//
+		final String space = " ";
+		//
+		Assertions.assertEquals(String.format("{%1$s=[%1$s]}", space),
+				Util.toString(toMultimap(space, Collections.singleton(space))));
+		//
+		Assertions.assertEquals(String.format("{%1$s=[%1$s]}", space),
+				Util.toString(toMultimap(space, Collections.nCopies(2, space))));
+		//
+		Assertions.assertEquals(String.format("{%1$s=[%1$s]}", space),
+				Util.toString(toMultimap(String.join("・", space, space), Collections.singleton(space))));
+		//
 	}
 
 	private static Multimap<String, String> toMultimap(final Iterable<Element> tbodies) throws Throwable {
 		try {
-			final Object obj = METHOD_TO_MULTI_MAP.invoke(null, tbodies);
+			final Object obj = METHOD_TO_MULTI_MAP1.invoke(null, tbodies);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Multimap) {
+				return (Multimap) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static Multimap<String, String> toMultimap(final String s1, final Iterable<String> ss2) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_MULTI_MAP2.invoke(null, s1, ss2);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Multimap) {
