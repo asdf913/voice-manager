@@ -513,7 +513,7 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 
 		@Override
 		public boolean test(final String a, final String b) {
-			return StringUtils.startsWith(b, "pH");
+			return Objects.equals(a, "pH");
 		}
 
 		@Override
