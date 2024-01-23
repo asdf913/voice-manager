@@ -309,6 +309,10 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 		//
 		Assertions.assertEquals("{共軛=[きょうやく]}", Util.toString(toMultimap(null, "は共軛（きょうやく）とも")));
 		//
+		Assertions.assertEquals("{ISO=[あいそ]}", Util.toString(toMultimap("ISO", "（あいそ）")));
+		//
+		// 略語辞典では（あいそ）もある NHK問い合わせ（あいえすおお）
+		//
 		final Multimap<String, String> multimap = ImmutableMultimap.of();
 		//
 		Assertions.assertEquals(multimap, toMultimap(Collections.singleton(null)));
