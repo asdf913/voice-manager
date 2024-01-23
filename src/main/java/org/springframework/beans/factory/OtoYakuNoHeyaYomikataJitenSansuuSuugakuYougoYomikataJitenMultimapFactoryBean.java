@@ -17,6 +17,7 @@ import java.util.regex.Pattern;
 import javax.annotation.Nullable;
 
 import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
@@ -115,15 +116,14 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 					.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 							toMultimap(
 									ElementUtil
-											.text(testAndApply(
-													x -> ElementUtil.childrenSize(x) > 0, element, x -> ElementUtil
-															.child(x, 0),
-													null)),
-									Util.toList(
-											Util.filter(Util.stream(getStrings(
+											.text(testAndApply(x -> ElementUtil.childrenSize(x) > 0, element,
+													x -> ElementUtil.child(x, 0), null)),
+									Util.toList(Util.filter(
+											Util.stream(getStrings(
 													ElementUtil.text(testAndApply(x -> ElementUtil.childrenSize(x) > 1,
 															element, x -> ElementUtil.child(x, 1), null)),
-													UnicodeBlock.HIRAGANA)), StringUtils::isNotEmpty))));
+													UnicodeBlock.HIRAGANA, UnicodeBlock.KATAKANA)),
+											StringUtils::isNotEmpty))));
 			//
 			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 					toMultimap(ElementUtil.text(testAndApply(x -> ElementUtil.childrenSize(x) > 2, element,
@@ -141,7 +141,7 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 		if (CLASSES == null) {
 			//
 			CLASSES = Unit.with(Arrays.asList(StringToMultimapImpl.class, Prefix差StringToMultimap.class,
-					PrefixRStringToMultimap.class));
+					PrefixRStringToMultimap.class, PrefixpHStringToMultimap.class));
 			//
 		} // if
 			//
@@ -493,6 +493,55 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 
 	}
 
+	private static class PrefixpHStringToMultimap implements StringToMultimap {
+
+		@Override
+		public boolean test(final String instnace) {
+			return StringUtils.startsWith(instnace, "pH");
+		}
+
+		@Override
+		public Multimap<String, String> apply(final String instnace) {
+			//
+			Multimap<String, String> multimap = null;
+			//
+			final char[] cs = Util.toCharArray(instnace);
+			//
+			char c = ' ';
+			//
+			StringBuilder sb = null;
+			//
+			boolean leftParenthesisFound = false;
+			//
+			for (int i = 0; i < length(cs); i++) {
+				//
+				if ((c = cs[i]) == '（') {
+					//
+					leftParenthesisFound = true;
+					//
+				} else if (c == '）') {
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), "pH",
+							Util.toString(sb));
+					//
+					clear(sb = ObjectUtils.getIfNull(sb, StringBuilder::new));
+					//
+					leftParenthesisFound = false;
+					//
+				} else if (leftParenthesisFound) {
+					//
+					Util.append(sb = ObjectUtils.getIfNull(sb, StringBuilder::new), c);
+					//
+				} // if
+					//
+			} // for
+				//
+			return multimap;
+			//
+		}
+
+	}
+
 	@Nullable
 	private static Multimap<String, String> toMultimap(final String s1, final Iterable<String> ss2) {
 		//
@@ -540,8 +589,7 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 		return instance != null ? instance.length : 0;
 	}
 
-	@Nullable
-	private static List<String> getStrings(final String string, final UnicodeBlock unicodeBlock) {
+	private static List<String> getStrings(final String string, final UnicodeBlock ub, final UnicodeBlock... ubs) {
 		//
 		final char[] cs = Util.toCharArray(string);
 		//
@@ -553,7 +601,8 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 		//
 		for (int i = 0; i < length(cs); i++) {
 			//
-			if (!Objects.equals(UnicodeBlock.of(c = cs[i]), unicodeBlock)) {
+			if (!Objects.equals(UnicodeBlock.of(c = cs[i]), ub)
+					&& !ArrayUtils.contains(ubs, UnicodeBlock.of(c = cs[i]))) {
 				//
 				if (i > 0) {
 					//

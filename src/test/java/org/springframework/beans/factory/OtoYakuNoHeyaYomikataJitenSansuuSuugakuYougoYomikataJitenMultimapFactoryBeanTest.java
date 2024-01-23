@@ -50,8 +50,8 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 		//
 		final Class<?> clz = OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBean.class;
 		//
-		(METHOD_GET_STRINGS = clz.getDeclaredMethod("getStrings", String.class, UnicodeBlock.class))
-				.setAccessible(true);
+		(METHOD_GET_STRINGS = clz.getDeclaredMethod("getStrings", String.class, UnicodeBlock.class,
+				UnicodeBlock[].class)).setAccessible(true);
 		//
 		(METHOD_CLEAR = clz.getDeclaredMethod("clear", StringBuilder.class)).setAccessible(true);
 		//
@@ -183,9 +183,10 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 		//
 	}
 
-	private static List<String> getStrings(final String string, final UnicodeBlock unicodeBlock) throws Throwable {
+	private static List<String> getStrings(final String string, final UnicodeBlock ub, final UnicodeBlock... ubs)
+			throws Throwable {
 		try {
-			final Object obj = METHOD_GET_STRINGS.invoke(null, string, unicodeBlock);
+			final Object obj = METHOD_GET_STRINGS.invoke(null, string, ub, ubs);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof List) {
