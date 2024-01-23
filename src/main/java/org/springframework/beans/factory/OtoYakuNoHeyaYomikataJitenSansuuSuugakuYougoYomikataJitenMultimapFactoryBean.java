@@ -285,8 +285,6 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 			//
 			boolean leftParenthesisFound = false;
 			//
-			int index = 0;
-			//
 			for (int j = 0; j < length(cs); j++) {
 				//
 				if (Objects.equals(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS, unicodeBlock = UnicodeBlock.of(c = cs[j]))) {
