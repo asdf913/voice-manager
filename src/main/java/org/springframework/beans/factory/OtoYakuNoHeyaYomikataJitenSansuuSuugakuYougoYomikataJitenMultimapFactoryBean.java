@@ -55,8 +55,6 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 			//
 			Element element = null;
 			//
-			int childrenSize = 0;
-			//
 			for (final Element tbody : tbodies) {
 				//
 				if (tbody == null || tbody.childrenSize() < 1 || !Util.matches(Util.matcher(
