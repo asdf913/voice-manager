@@ -197,17 +197,14 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 			g3 = Util.group(matcher, 3);
 			//
 			if ((i1 = getLastIndexWithUnicodeBlock(g1 = StringUtils.trim(Util.group(matcher, 1)),
-					UnicodeBlock.HIRAGANA)) >= 0) {
+					UnicodeBlock.HIRAGANA)) >= 0
+					&& StringUtils.isNotEmpty(
+							s11 = StringUtils.trim(StringUtils.substring(g1, i1 + 1, StringUtils.length(g1))))) {
 				//
-				if (StringUtils.isNotEmpty(
-						s11 = StringUtils.trim(StringUtils.substring(g1, i1 + 1, StringUtils.length(g1))))) {
-					//
-					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s11, g3);
-					//
-					continue;
-					//
-				} // if
-					//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s11, g3);
+				//
+				continue;
+				//
 			} // if
 				//
 			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), g1, g3);
