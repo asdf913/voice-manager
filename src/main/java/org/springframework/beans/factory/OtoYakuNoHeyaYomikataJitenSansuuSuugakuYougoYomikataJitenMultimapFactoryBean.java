@@ -74,15 +74,15 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 	@Nullable
 	private static Multimap<String, String> toMultimap(final Element tbody, final Pattern pattern) {
 		//
-		if (tbody == null || ElementUtil.childrenSize(tbody) < 1) {
+		if (ElementUtil.childrenSize(tbody) < 1) {
 			//
 			return null;
 			//
 		} // if
 			//
-		final Iterable<Element> children = tbody.children();
+		final Iterable<Element> children = ElementUtil.children(tbody);
 		//
-		if (!Util.matches(Util.matcher(pattern, ElementUtil.text(IterableUtils.get(tbody.children(), 0))))) {
+		if (!Util.matches(Util.matcher(pattern, ElementUtil.text(IterableUtils.get(children, 0))))) {
 			//
 			return null;
 			//
