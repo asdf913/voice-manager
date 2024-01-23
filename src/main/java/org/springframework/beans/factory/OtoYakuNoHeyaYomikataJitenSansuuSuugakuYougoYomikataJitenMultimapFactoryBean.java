@@ -6,6 +6,7 @@ import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
@@ -137,41 +138,16 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 	@Nullable
 	private static Multimap<String, String> toMultimap(final String s) {
 		//
-		Iterable<Class<?>> os = IValue0Util.getValue0(CLASSES);
-		//
 		if (CLASSES == null) {
 			//
-			CLASSES = Unit.with(os = Arrays.asList(Prefix差StringToMultimap.class, PrefixRStringToMultimap.class));
+			CLASSES = Unit.with(Arrays.asList(Prefix差StringToMultimap.class, PrefixRStringToMultimap.class));
 			//
 		} // if
 			//
-		List<Object> objects = null;
-		//
-		if (Util.iterator(os) != null) {
-			//
-			Object instance = null;
-			//
-			for (final Class<?> c : os) {
-				//
-				if (!((instance = testAndApply(Objects::nonNull, c, Narcissus::allocateInstance,
-						null)) instanceof Predicate) || !((Predicate) instance).test(s)) {
-					//
-					continue;
-					//
-				} // if
-					//
-				if (instance instanceof Function function) {
-					//
-					Util.add(objects = ObjectUtils.getIfNull(objects, ArrayList::new), apply(function, s));
-					//
-				} // if
-					//
-			} // for
-				//
-		} // if
-			//
-		final List<Multimap<?, ?>> multimaps = Util.toList(
-				Util.map(Util.filter(Util.stream(objects), x -> Boolean.logicalOr(x == null, x instanceof Multimap)),
+		final List<Multimap<?, ?>> multimaps = Util
+				.toList(Util.map(
+						Util.filter(Util.stream(getObjects(IValue0Util.getValue0(CLASSES), s)),
+								x -> Boolean.logicalOr(x == null, x instanceof Multimap)),
 						x -> Util.cast(Multimap.class, x)));
 		//
 		final int size = IterableUtils.size(multimaps);
@@ -251,6 +227,37 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 		} // if
 			//
 		return multimap;
+		//
+	}
+
+	private static Collection<Object> getObjects(final Iterable<Class<?>> iterable, final Object object) {
+		//
+		Collection<Object> objects = null;
+		//
+		if (Util.iterator(iterable) != null) {
+			//
+			Object instance = null;
+			//
+			for (final Class<?> c : iterable) {
+				//
+				if (!((instance = testAndApply(Objects::nonNull, c, Narcissus::allocateInstance,
+						null)) instanceof Predicate) || !((Predicate) instance).test(object)) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if (instance instanceof Function function) {
+					//
+					Util.add(objects = ObjectUtils.getIfNull(objects, ArrayList::new), apply(function, object));
+					//
+				} // if
+					//
+			} // for
+				//
+		} // if
+			//
+		return objects;
 		//
 	}
 
