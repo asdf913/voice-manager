@@ -197,6 +197,7 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 		//
 	}
 
+	@Nullable
 	private static Multimap<String, String> toMultimap(final String s1, final Iterable<String> ss2) {
 		//
 		final String[] ss1 = StringUtils.split(s1, "・");
