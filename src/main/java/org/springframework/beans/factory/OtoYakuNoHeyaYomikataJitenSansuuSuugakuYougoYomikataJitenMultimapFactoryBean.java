@@ -176,7 +176,7 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 					//
 					cs = Util.toCharArray(StringUtils.substringAfter(s, "関連語："));
 					//
-					for (int j = 0; cs != null && j < cs.length; j++) {
+					for (int j = 0; j < length(cs); j++) {
 						//
 						if (Objects.equals(unicodeBlock = UnicodeBlock.of(c = cs[j]),
 								UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)) {
@@ -221,8 +221,11 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 		} // for
 			//
 		return multimap;
-
 		//
+	}
+
+	private static int length(final char[] instance) {
+		return instance != null ? instance.length : 0;
 	}
 
 	private static int length(@Nullable final Object[] instance) {
@@ -240,7 +243,7 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 		//
 		List<String> list = null;
 		//
-		for (int i = 0; cs != null && i < cs.length; i++) {
+		for (int i = 0; i < length(cs); i++) {
 			//
 			if (!Objects.equals(UnicodeBlock.of(c = cs[i]), unicodeBlock)) {
 				//
