@@ -403,7 +403,7 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 
 	}
 
-	private static boolean isEmpty(final Multimap<?, ?> instance) {
+	private static boolean isEmpty(@Nullable final Multimap<?, ?> instance) {
 		return instance == null || instance.isEmpty();
 	}
 
