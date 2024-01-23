@@ -40,85 +40,90 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 	@Override
 	public Multimap<String, String> getObject() throws Exception {
 		//
-		final Iterable<Element> tbodies = ElementUtil.select(testAndApply(
+		return toMultimap(ElementUtil.select(testAndApply(
 				Objects::nonNull, testAndApply(Util::isAbsolute,
 						testAndApply(StringUtils::isNotBlank, url, URI::new, null), x -> toURL(x), null),
-				x -> Jsoup.parse(x, 0), null), "tbody");
+				x -> Jsoup.parse(x, 0), null), "tbody"));
 		//
+	}
+
+	private static Multimap<String, String> toMultimap(final Iterable<Element> tbodies) {
+		//
+		if (Util.iterator(tbodies) == null) {
+			//
+			return null;
+			//
+		} // if
+			//
 		Multimap<String, String> multimap = null;
 		//
-		if (Util.iterator(tbodies) != null) {
+		Pattern pattern = null;
+		//
+		List<Element> children = null;
+		//
+		Element element = null;
+		//
+		String s1 = null;
+		//
+		String[] ss1 = null;
+		//
+		List<String> ss2 = null;
+		//
+		int length, size = 0;
+		//
+		for (final Element tbody : tbodies) {
 			//
-			Pattern pattern = null;
-			//
-			List<Element> children = null;
-			//
-			Element element = null;
-			//
-			String s1 = null;
-			//
-			String[] ss1 = null;
-			//
-			List<String> ss2 = null;
-			//
-			int length, size = 0;
-			//
-			for (final Element tbody : tbodies) {
+			if (tbody == null || ElementUtil.childrenSize(tbody) < 1
+					|| !Util.matches(Util.matcher(
+							pattern = ObjectUtils.getIfNull(pattern, () -> Pattern.compile("\\p{InHiragana}{1,2}行")),
+							ElementUtil.text(IterableUtils.get(children = tbody.children(), 0))))) {
 				//
-				if (tbody == null || tbody.childrenSize() < 1 || !Util.matches(Util.matcher(
-						pattern = ObjectUtils.getIfNull(pattern, () -> Pattern.compile("\\p{InHiragana}{1,2}行")),
-						ElementUtil.text(IterableUtils.get(children = tbody.children(), 0))))) {
+				continue;
+				//
+			} // if
+				//
+			for (int i = 0; i < IterableUtils.size(children); i++) {
+				//
+				if (Util.matches(pattern.matcher(ElementUtil.text(element = IterableUtils.get(children, i))))) {
 					//
 					continue;
 					//
 				} // if
 					//
-				for (int i = 0; i < IterableUtils.size(children); i++) {
+				if ((length = length(
+						ss1 = StringUtils.split(s1 = ElementUtil.text(testAndApply(x -> ElementUtil.childrenSize(x) > 0,
+								element, x -> ElementUtil.child(x, 0), null)), "・"))) == (size = IterableUtils
+										.size(ss2 = getStrings(
+												ElementUtil.text(testAndApply(x -> ElementUtil.childrenSize(x) > 1,
+														element, x -> ElementUtil.child(x, 1), null)),
+												UnicodeBlock.HIRAGANA)))) {
 					//
-					if (Util.matches(pattern.matcher(ElementUtil.text(element = IterableUtils.get(children, i))))) {
+					for (int j = 0; j < length(ss1); j++) {
 						//
-						continue;
+						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), ss1[j],
+								IterableUtils.get(ss2, j));
 						//
-					} // if
+					} // for
 						//
-					if ((length = length(
-							ss1 = StringUtils.split(
-									s1 = ElementUtil.text(testAndApply(x -> ElementUtil.childrenSize(x) > 0, element,
-											x -> ElementUtil.child(x, 0), null)),
-									"・"))) == (size = IterableUtils
-											.size(ss2 = getStrings(
-													ElementUtil.text(testAndApply(x -> ElementUtil.childrenSize(x) > 1,
-															element, x -> ElementUtil.child(x, 1), null)),
-													UnicodeBlock.HIRAGANA)))) {
+				} else if (size == 1) {
+					//
+					for (int j = 0; j < length; j++) {
 						//
-						for (int j = 0; j < length(ss1); j++) {
-							//
-							MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-									ss1[j], IterableUtils.get(ss2, j));
-							//
-						} // for
-							//
-					} else if (size == 1) {
+						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), ss1[j],
+								IterableUtils.get(ss2, 0));
 						//
-						for (int j = 0; j < length; j++) {
-							//
-							MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-									ss1[j], IterableUtils.get(ss2, 0));
-							//
-						} // for
-							//
-					} else {
+					} // for
 						//
-						MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1,
-								ss2);
-						//
-					} // if
-						//
-				} // for
+				} else {
+					//
+					MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1,
+							ss2);
+					//
+				} // if
 					//
 			} // for
 				//
-		} // if
+		} // for
 			//
 		return multimap;
 		//

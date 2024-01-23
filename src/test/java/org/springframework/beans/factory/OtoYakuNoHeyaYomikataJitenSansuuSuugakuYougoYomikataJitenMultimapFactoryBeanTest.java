@@ -9,6 +9,7 @@ import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -23,6 +24,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.ss.usermodel.WorkbookUtil;
+import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,9 +34,12 @@ import com.google.common.base.Predicates;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
 
+import io.github.toolfactory.narcissus.Narcissus;
+
 class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBeanTest {
 
-	private static Method METHOD_GET_STRINGS, METHOD_CLEAR, METHOD_TO_URL, METHOD_TEST_AND_APPLY, METHOD_LENGTH = null;
+	private static Method METHOD_GET_STRINGS, METHOD_CLEAR, METHOD_TO_URL, METHOD_TEST_AND_APPLY, METHOD_LENGTH,
+			METHOD_TO_MULTI_MAP = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException, ClassNotFoundException {
@@ -52,6 +57,8 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
 		//
 		(METHOD_LENGTH = clz.getDeclaredMethod("length", Object[].class)).setAccessible(true);
+		//
+		(METHOD_TO_MULTI_MAP = clz.getDeclaredMethod("toMultimap", Iterable.class)).setAccessible(true);
 		//
 	}
 
@@ -253,6 +260,30 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 			final Object obj = METHOD_LENGTH.invoke(null, (Object) instance);
 			if (obj instanceof Integer) {
 				return ((Integer) obj).intValue();
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testToMultimap() throws Throwable {
+		//
+		Assertions.assertNull(toMultimap(Collections.singleton(null)));
+		//
+		Assertions.assertNull(
+				toMultimap(Collections.singleton(Util.cast(Element.class, Narcissus.allocateInstance(Element.class)))));
+		//
+	}
+
+	private static Multimap<String, String> toMultimap(final Iterable<Element> tbodies) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_MULTI_MAP.invoke(null, tbodies);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Multimap) {
+				return (Multimap) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
