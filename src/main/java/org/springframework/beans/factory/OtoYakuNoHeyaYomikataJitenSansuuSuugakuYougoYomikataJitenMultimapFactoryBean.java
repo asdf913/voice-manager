@@ -222,9 +222,95 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 					//
 			} // for
 				//
+		} else if (StringUtils.startsWith(s, "差")) {
+			//
+			final char[] cs = Util.toCharArray(s);
+			//
+			UnicodeBlock unicodeBlock = null;
+			//
+			char c = ' ';
+			//
+			StringBuilder sb1 = null, sb2 = null;
+			//
+			boolean leftParenthesisFound = false;
+			//
+			int index = 0;
+			//
+			for (int j = 0; j < length(cs); j++) {
+				//
+				if (Objects.equals(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS, unicodeBlock = UnicodeBlock.of(c = cs[j]))) {
+					//
+					Util.append(sb1 = ObjectUtils.getIfNull(sb1, StringBuilder::new), c);
+					//
+				} else if (Util.contains(Arrays.asList(UnicodeBlock.HIRAGANA, UnicodeBlock.KATAKANA), unicodeBlock)) {
+					//
+					if (!leftParenthesisFound) {
+						//
+						Util.append(sb1 = ObjectUtils.getIfNull(sb1, StringBuilder::new), c);
+						//
+					} else {
+						//
+						Util.append(sb2 = ObjectUtils.getIfNull(sb2, StringBuilder::new), c);
+						//
+					} // if
+						//
+				} else if (c == '（') {
+					//
+					leftParenthesisFound = true;
+					//
+				} else if (c == '）') {
+					//
+					if (multimap == null || multimap.isEmpty()) {
+						//
+						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+								Util.toString(sb1), Util.toString(sb2));
+						//
+					} else {
+						//
+						if ((index = getLastIndexWithUnicodeBlock(Util.toString(sb1), UnicodeBlock.HIRAGANA)) >= 0) {
+							//
+							MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+									StringUtils.substring(Util.toString(sb1), index + 1, StringUtils.length(sb1)),
+									testAndApply(Objects::nonNull, StringUtils.split(Util.toString(sb2), '・'),
+											Arrays::asList, null));
+							//
+						} // if
+							//
+					} // if
+						//
+					clear(sb1 = ObjectUtils.getIfNull(sb1, StringBuilder::new));
+					//
+					clear(sb2 = ObjectUtils.getIfNull(sb2, StringBuilder::new));
+					//
+					leftParenthesisFound = false;
+					//
+				} // if
+					//
+			} // for
+				//
 		} // if
 			//
 		return multimap;
+		//
+	}
+
+	private static int getLastIndexWithUnicodeBlock(final String s, final UnicodeBlock unicodeBlock) {
+		//
+		final char[] cs = Util.toCharArray(s);
+		//
+		int index = -1;
+		//
+		for (int i = 0; i < length(cs); i++) {
+			//
+			if (Objects.equals(UnicodeBlock.of(cs[i]), unicodeBlock)) {
+				//
+				index = i;
+				//
+			} // if
+				//
+		} // for
+			//
+		return index;
 		//
 	}
 

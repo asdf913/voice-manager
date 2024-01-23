@@ -292,6 +292,9 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 		//
 		Assertions.assertEquals("{R-加群=[あーるかぐん], 左加群=[さかぐん]}", Util.toString(toMultimap("R-加群（あーるかぐん）左加群（さかぐん）")));
 		//
+		Assertions.assertEquals("{差し金=[さしがね], 長手=[ながて], 短手=[みじかて, みじかで], 妻手=[つまて]}",
+				Util.toString(toMultimap("差し金（さしがね）とも言う 長いほうを長手（ながて） 短いほうを短手（みじかて・みじかで）または妻手（つまて）")));
+		//
 		final Multimap<String, String> multimap = ImmutableMultimap.of();
 		//
 		Assertions.assertEquals(multimap, toMultimap(Collections.singleton(null)));
