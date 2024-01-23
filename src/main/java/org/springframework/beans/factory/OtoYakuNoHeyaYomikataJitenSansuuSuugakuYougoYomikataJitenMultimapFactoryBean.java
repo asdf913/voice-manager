@@ -143,7 +143,8 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 		if (CLASSES == null) {
 			//
 			CLASSES = Unit.with(Arrays.asList(StringToMultimapImpl.class, Prefix差StringToMultimap.class,
-					PrefixRStringToMultimap.class, PrefixpHStringToMultimap.class));
+					PrefixRStringToMultimap.class, PrefixpHStringToMultimap.class,
+					PrefixRyuubeiStringToMultimap.class));
 			//
 		} // if
 			//
@@ -550,6 +551,37 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 				} // if
 					//
 			} // for
+				//
+			return multimap;
+			//
+		}
+
+	}
+
+	private static class PrefixRyuubeiStringToMultimap implements StringToMultimap {
+
+		private static final Pattern PATTERN = Pattern.compile("（(\\p{InCJKUnifiedIdeographs}+)・(\\p{InHiragana}+)）");
+
+		@Override
+		public boolean test(final String instance) {
+			//
+			return Util.find(Util.matcher(PATTERN, instance));
+			//
+		}
+
+		@Override
+		public Multimap<String, String> apply(final String instance) {
+			//
+			Multimap<String, String> multimap = null;
+			//
+			final Matcher matcher = Util.matcher(PATTERN, instance);
+			//
+			while (Util.find(matcher) && Util.groupCount(matcher) > 1) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						Util.group(matcher, 1), Util.group(matcher, 2));
+				//
+			} // while
 				//
 			return multimap;
 			//
