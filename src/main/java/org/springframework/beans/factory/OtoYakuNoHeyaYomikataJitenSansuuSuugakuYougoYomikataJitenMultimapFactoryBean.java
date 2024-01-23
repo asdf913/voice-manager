@@ -39,7 +39,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBean
 		implements FactoryBean<Multimap<String, String>> {
 
-	private static IValue0<Iterable<?>> CLASSES = null;
+	private static IValue0<Iterable<Class<?>>> CLASSES = null;
 
 	private String url = null;
 
@@ -137,7 +137,7 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 	@Nullable
 	private static Multimap<String, String> toMultimap(final String s) {
 		//
-		Iterable<?> os = IValue0Util.getValue0(CLASSES);
+		final Iterable<Class<?>> os = IValue0Util.getValue0(CLASSES);
 		//
 		if (CLASSES == null) {
 			//
@@ -149,20 +149,12 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 		//
 		if (Util.iterator(os) != null) {
 			//
-			Class<?> c = null;
-			//
 			Object instance = null;
 			//
-			for (final Object o : os) {
+			for (final Class<?> c : os) {
 				//
-				if ((c = Util.cast(Class.class, o)) == null) {
-					//
-					continue;
-					//
-				} // if
-					//
-				if (!((instance = Narcissus.allocateInstance(c)) instanceof Predicate)
-						|| !((Predicate) instance).test(s)) {
+				if (!((instance = testAndApply(Objects::nonNull, c, Narcissus::allocateInstance,
+						null)) instanceof Predicate) || !((Predicate) instance).test(s)) {
 					//
 					continue;
 					//
