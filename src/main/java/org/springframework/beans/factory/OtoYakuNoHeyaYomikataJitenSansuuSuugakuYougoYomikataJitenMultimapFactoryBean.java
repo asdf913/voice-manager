@@ -231,6 +231,7 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 		//
 	}
 
+	@Nullable
 	private static Collection<Object> getObjects(final Iterable<Class<?>> iterable, final Object object) {
 		//
 		Collection<Object> objects = null;
