@@ -93,6 +93,7 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 		//
 	}
 
+	@Nullable
 	private static List<String> getStrings(final String string, final UnicodeBlock unicodeBlock) {
 		//
 		final char[] cs = Util.toCharArray(string);
@@ -139,6 +140,7 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 		}
 	}
 
+	@Nullable
 	private static URL toURL(@Nullable final URI instance) throws MalformedURLException {
 		//
 		if (instance == null || !Util.isAbsolute(instance)) {
