@@ -145,7 +145,7 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 			//
 			char c = ' ';
 			//
-			if (Util.matches(matcher) && Util.groupCount(matcher) > 2) {
+			if (Boolean.logicalAnd(Util.matches(matcher), Util.groupCount(matcher) > 2)) {
 				//
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						Util.group(matcher, 2), Util.group(matcher, 3));
