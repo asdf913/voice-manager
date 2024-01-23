@@ -10,9 +10,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -502,46 +500,6 @@ class OtoYakuNoHeyaYomikataJitenLinkListFactoryBeanTest {
 			return baos.toByteArray();
 			//
 		} // try
-			//
-	}
-
-	private static void setCellValue(final Cell instance, final Object value) {
-		//
-		if (instance == null) {
-			//
-			return;
-			//
-		} // if
-			//
-		if (value instanceof Byte) {
-			//
-			instance.setCellValue(((Byte) value).byteValue());
-			//
-		} else if (value instanceof Calendar) {
-			//
-			instance.setCellValue((Calendar) value);
-			//
-		} else if (value instanceof Date) {
-			//
-			instance.setCellValue((Date) value);
-			//
-		} else if (value instanceof Double) {
-			//
-			instance.setCellValue(((Double) value).doubleValue());
-			//
-		} else if (value instanceof LocalDate) {
-			//
-			instance.setCellValue((LocalDate) value);
-			//
-		} else if (value instanceof RichTextString) {
-			//
-			instance.setCellValue((RichTextString) value);
-			//
-		} else if (value instanceof String) {
-			//
-			instance.setCellValue((String) value);
-			//
-		} //
 			//
 	}
 
