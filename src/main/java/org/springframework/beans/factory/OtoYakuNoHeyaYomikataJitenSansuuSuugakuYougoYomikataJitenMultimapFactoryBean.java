@@ -41,7 +41,7 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 	public Multimap<String, String> getObject() throws Exception {
 		//
 		final Iterable<Element> tbodies = ElementUtil.select(testAndApply(
-				Objects::nonNull, testAndApply(x -> Util.isAbsolute(x),
+				Objects::nonNull, testAndApply(Util::isAbsolute,
 						testAndApply(StringUtils::isNotBlank, url, URI::new, null), x -> toURL(x), null),
 				x -> Jsoup.parse(x, 0), null), "tbody");
 		//
