@@ -47,6 +47,7 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 		//
 	}
 
+	@Nullable
 	private static Multimap<String, String> toMultimap(final Iterable<Element> tbodies) {
 		//
 		if (Util.iterator(tbodies) == null) {
