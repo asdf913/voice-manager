@@ -108,11 +108,18 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 				//
 			} // if
 				//
-			if ((length = length(ss1 = StringUtils.split(s1 = ElementUtil.text(
-					testAndApply(x -> ElementUtil.childrenSize(x) > 0, element, x -> ElementUtil.child(x, 0), null)),
-					"・"))) == (size = IterableUtils
-							.size(ss2 = getStrings(ElementUtil.text(testAndApply(x -> ElementUtil.childrenSize(x) > 1,
-									element, x -> ElementUtil.child(x, 1), null)), UnicodeBlock.HIRAGANA)))) {
+			if ((length = length(
+					ss1 = StringUtils
+							.split(s1 = ElementUtil
+									.text(testAndApply(
+											x -> ElementUtil.childrenSize(x) > 0, element, x -> ElementUtil.child(x,
+													0),
+											null)),
+									"・"))) == (size = IterableUtils
+											.size(ss2 = Util.toList(Util.filter(Util.stream(getStrings(
+													ElementUtil.text(testAndApply(x -> ElementUtil.childrenSize(x) > 1,
+															element, x -> ElementUtil.child(x, 1), null)),
+													UnicodeBlock.HIRAGANA)), StringUtils::isNotEmpty))))) {
 				//
 				for (int j = 0; j < length(ss1); j++) {
 					//
