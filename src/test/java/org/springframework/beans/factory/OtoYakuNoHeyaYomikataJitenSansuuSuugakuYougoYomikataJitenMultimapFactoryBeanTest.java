@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 import org.apache.commons.lang3.StringUtils;
@@ -40,7 +41,8 @@ import io.github.toolfactory.narcissus.Narcissus;
 class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBeanTest {
 
 	private static Method METHOD_GET_STRINGS, METHOD_CLEAR, METHOD_TO_URL, METHOD_TEST_AND_APPLY, METHOD_LENGTH,
-			METHOD_TO_MULTI_MAP_ITERABLE, METHOD_TO_MULTI_MAP_STRING, METHOD_TO_MULTI_MAP2, METHOD_IS_EMPTY = null;
+			METHOD_TO_MULTI_MAP_ITERABLE, METHOD_TO_MULTI_MAP_STRING, METHOD_TO_MULTI_MAP2, METHOD_IS_EMPTY,
+			METHOD_APPLY = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException, ClassNotFoundException {
@@ -66,6 +68,8 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 		(METHOD_TO_MULTI_MAP2 = clz.getDeclaredMethod("toMultimap", String.class, Iterable.class)).setAccessible(true);
 		//
 		(METHOD_IS_EMPTY = clz.getDeclaredMethod("isEmpty", Multimap.class)).setAccessible(true);
+		//
+		(METHOD_APPLY = clz.getDeclaredMethod("apply", Function.class, Object.class)).setAccessible(true);
 		//
 	}
 
@@ -373,6 +377,21 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testApply() throws Throwable {
+		//
+		Assertions.assertNull(apply(null, null));
+		//
+	}
+
+	private static <T, R> R apply(final Function<T, R> instance, final T t) throws Throwable {
+		try {
+			return (R) METHOD_APPLY.invoke(null, instance, t);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

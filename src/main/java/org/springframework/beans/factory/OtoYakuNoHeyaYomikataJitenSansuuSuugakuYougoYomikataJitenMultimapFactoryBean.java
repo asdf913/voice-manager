@@ -189,9 +189,9 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 					//
 				} // if
 					//
-				if (instance instanceof Function) {
+				if (instance instanceof Function function) {
 					//
-					Util.add(objects = ObjectUtils.getIfNull(objects, ArrayList::new), ((Function) instance).apply(s));
+					Util.add(objects = ObjectUtils.getIfNull(objects, ArrayList::new), apply(function, s));
 					//
 				} // if
 					//
@@ -315,6 +315,10 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 			//
 		return multimap;
 		//
+	}
+
+	private static <T, R> R apply(final Function<T, R> instance, final T t) {
+		return instance != null ? instance.apply(t) : null;
 	}
 
 	private static interface StringToMultimap extends Predicate<String>, Function<String, Multimap<String, String>> {
