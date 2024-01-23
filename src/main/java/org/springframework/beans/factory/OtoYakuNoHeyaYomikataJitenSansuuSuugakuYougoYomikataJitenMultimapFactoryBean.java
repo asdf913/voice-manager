@@ -55,6 +55,14 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 			//
 			Element element = null;
 			//
+			String s1 = null;
+			//
+			String[] ss1 = null;
+			//
+			List<String> ss2 = null;
+			//
+			int length, size = 0;
+			//
 			for (final Element tbody : tbodies) {
 				//
 				if (tbody == null || tbody.childrenSize() < 1 || !Util.matches(Util.matcher(
@@ -73,12 +81,39 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 						//
 					} // if
 						//
-					MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							ElementUtil.text(testAndApply(x -> ElementUtil.childrenSize(x) > 0, element,
-									x -> ElementUtil.child(x, 0), null)),
-							getStrings(ElementUtil.text(testAndApply(x -> ElementUtil.childrenSize(x) > 1, element,
-									x -> ElementUtil.child(x, 1), null)), UnicodeBlock.HIRAGANA));
-					//
+					if ((length = length(
+							ss1 = StringUtils.split(
+									s1 = ElementUtil.text(testAndApply(x -> ElementUtil.childrenSize(x) > 0, element,
+											x -> ElementUtil.child(x, 0), null)),
+									"・"))) == (size = IterableUtils
+											.size(ss2 = getStrings(
+													ElementUtil.text(testAndApply(x -> ElementUtil.childrenSize(x) > 1,
+															element, x -> ElementUtil.child(x, 1), null)),
+													UnicodeBlock.HIRAGANA)))) {
+						//
+						for (int j = 0; j < length(ss1); j++) {
+							//
+							MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+									ss1[j], IterableUtils.get(ss2, j));
+							//
+						} // for
+							//
+					} else if (size == 1) {
+						//
+						for (int j = 0; j < length; j++) {
+							//
+							MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+									ss1[j], IterableUtils.get(ss2, 0));
+							//
+						} // for
+							//
+					} else {
+						//
+						MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1,
+								ss2);
+						//
+					} // if
+						//
 				} // for
 					//
 			} // for
@@ -87,6 +122,10 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 			//
 		return multimap;
 		//
+	}
+
+	private static int length(final Object[] instance) {
+		return instance != null ? instance.length : 0;
 	}
 
 	@Nullable
