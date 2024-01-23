@@ -31,6 +31,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.google.common.base.Predicates;
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
 
@@ -270,9 +271,11 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 	@Test
 	void testToMultimap() throws Throwable {
 		//
-		Assertions.assertNull(toMultimap(Collections.singleton(null)));
+		final Multimap<String, String> multimap = ImmutableMultimap.of();
 		//
-		Assertions.assertNull(
+		Assertions.assertEquals(multimap, toMultimap(Collections.singleton(null)));
+		//
+		Assertions.assertEquals(multimap,
 				toMultimap(Collections.singleton(Util.cast(Element.class, Narcissus.allocateInstance(Element.class)))));
 		//
 	}

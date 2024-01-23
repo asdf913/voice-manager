@@ -60,7 +60,34 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 		//
 		Pattern pattern = null;
 		//
-		List<Element> children = null;
+		for (final Element tbody : tbodies) {
+			//
+			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), toMultimap(
+					tbody, pattern = ObjectUtils.getIfNull(pattern, () -> Pattern.compile("\\p{InHiragana}{1,2}行"))));
+			//
+		} // for
+			//
+		return multimap;
+		//
+	}
+
+	private static Multimap<String, String> toMultimap(final Element tbody, final Pattern pattern) {
+		//
+		if (tbody == null || ElementUtil.childrenSize(tbody) < 1) {
+			//
+			return null;
+			//
+		} // if
+			//
+		final Iterable<Element> children = tbody.children();
+		//
+		if (!Util.matches(Util.matcher(pattern, ElementUtil.text(IterableUtils.get(tbody.children(), 0))))) {
+			//
+			return null;
+			//
+		} // if
+			//
+		Multimap<String, String> multimap = null;
 		//
 		Element element = null;
 		//
@@ -72,57 +99,41 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 		//
 		int length, size = 0;
 		//
-		for (final Element tbody : tbodies) {
+		for (int i = 0; i < IterableUtils.size(children); i++) {
 			//
-			if (tbody == null || ElementUtil.childrenSize(tbody) < 1
-					|| !Util.matches(Util.matcher(
-							pattern = ObjectUtils.getIfNull(pattern, () -> Pattern.compile("\\p{InHiragana}{1,2}行")),
-							ElementUtil.text(IterableUtils.get(children = tbody.children(), 0))))) {
+			if (Util.matches(pattern.matcher(ElementUtil.text(element = IterableUtils.get(children, i))))) {
 				//
 				continue;
 				//
 			} // if
 				//
-			for (int i = 0; i < IterableUtils.size(children); i++) {
+			if ((length = length(ss1 = StringUtils.split(s1 = ElementUtil.text(
+					testAndApply(x -> ElementUtil.childrenSize(x) > 0, element, x -> ElementUtil.child(x, 0), null)),
+					"・"))) == (size = IterableUtils
+							.size(ss2 = getStrings(ElementUtil.text(testAndApply(x -> ElementUtil.childrenSize(x) > 1,
+									element, x -> ElementUtil.child(x, 1), null)), UnicodeBlock.HIRAGANA)))) {
 				//
-				if (Util.matches(pattern.matcher(ElementUtil.text(element = IterableUtils.get(children, i))))) {
+				for (int j = 0; j < length(ss1); j++) {
 					//
-					continue;
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), ss1[j],
+							IterableUtils.get(ss2, j));
 					//
-				} // if
+				} // for
 					//
-				if ((length = length(
-						ss1 = StringUtils.split(s1 = ElementUtil.text(testAndApply(x -> ElementUtil.childrenSize(x) > 0,
-								element, x -> ElementUtil.child(x, 0), null)), "・"))) == (size = IterableUtils
-										.size(ss2 = getStrings(
-												ElementUtil.text(testAndApply(x -> ElementUtil.childrenSize(x) > 1,
-														element, x -> ElementUtil.child(x, 1), null)),
-												UnicodeBlock.HIRAGANA)))) {
+			} else if (size == 1) {
+				//
+				for (int j = 0; j < length; j++) {
 					//
-					for (int j = 0; j < length(ss1); j++) {
-						//
-						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), ss1[j],
-								IterableUtils.get(ss2, j));
-						//
-					} // for
-						//
-				} else if (size == 1) {
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), ss1[j],
+							IterableUtils.get(ss2, 0));
 					//
-					for (int j = 0; j < length; j++) {
-						//
-						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), ss1[j],
-								IterableUtils.get(ss2, 0));
-						//
-					} // for
-						//
-				} else {
+				} // for
 					//
-					MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1,
-							ss2);
-					//
-				} // if
-					//
-			} // for
+			} else {
+				//
+				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1, ss2);
+				//
+			} // if
 				//
 		} // for
 			//
