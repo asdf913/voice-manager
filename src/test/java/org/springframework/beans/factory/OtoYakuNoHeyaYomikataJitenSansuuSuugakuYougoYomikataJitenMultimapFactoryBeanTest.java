@@ -304,6 +304,8 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 		//
 		Assertions.assertEquals("{霰=[あられ], 雹=[ひょう]}", Util.toString(toMultimap("霰（あられ）、雹（ひょう）")));
 		//
+		Assertions.assertEquals("{共軛=[きょうやく]}", Util.toString(toMultimap("は共軛（きょうやく）とも")));
+		//
 		final Multimap<String, String> multimap = ImmutableMultimap.of();
 		//
 		Assertions.assertEquals(multimap, toMultimap(Collections.singleton(null)));

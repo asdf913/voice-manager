@@ -166,18 +166,58 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 			//
 		} // if
 			//
-		final Matcher matcher = Util.matcher(Pattern.compile("(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）"), s);
+		final Matcher matcher = Util.matcher(Pattern
+				.compile("((\\p{InBasicLatin}|\\p{InCJKUnifiedIdeographs}|\\p{InHiragana})+)（(\\p{InHiragana}+)）"), s);
 		//
 		Multimap<String, String> multimap = null;
 		//
-		while (Util.find(matcher) && Util.groupCount(matcher) > 1) {
+		String s1, s11, s3 = null;
+		//
+		int i1 = 0;
+		//
+		while (Util.find(matcher) && Util.groupCount(matcher) > 2) {
 			//
-			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-					Util.group(matcher, 1), Util.group(matcher, 2));
+			s3 = Util.group(matcher, 3);
+			//
+			if ((i1 = getLastIndexWithUnicodeBlock(s1 = StringUtils.trim(Util.group(matcher, 1)),
+					UnicodeBlock.HIRAGANA)) >= 0) {
+				//
+				if (StringUtils.isNotEmpty(
+						s11 = StringUtils.trim(StringUtils.substring(s1, i1 + 1, StringUtils.length(s1))))) {
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s11, s3);
+					//
+					continue;
+					//
+				} // if
+					//
+			} // if
+				//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1, s3);
 			//
 		} // while
 			//
 		return multimap;
+		//
+	}
+
+	private static int getLastIndexWithUnicodeBlock(final String s, final UnicodeBlock unicodeBlock) {
+		//
+		final char[] cs = Util.toCharArray(s);
+		//
+		int index = -1;
+		//
+		for (int i = 0; i < length(cs); i++) {
+			//
+			if (Objects.equals(UnicodeBlock.of(cs[i]), unicodeBlock)) {
+				//
+				index = i;
+				//
+			} // if
+				//
+		} // for
+			//
+		return index;
 		//
 	}
 
@@ -397,26 +437,6 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 			} // if
 				//
 			return multimap;
-			//
-		}
-
-		private static int getLastIndexWithUnicodeBlock(final String s, final UnicodeBlock unicodeBlock) {
-			//
-			final char[] cs = Util.toCharArray(s);
-			//
-			int index = -1;
-			//
-			for (int i = 0; i < length(cs); i++) {
-				//
-				if (Objects.equals(UnicodeBlock.of(cs[i]), unicodeBlock)) {
-					//
-					index = i;
-					//
-				} // if
-					//
-			} // for
-				//
-			return index;
 			//
 		}
 
