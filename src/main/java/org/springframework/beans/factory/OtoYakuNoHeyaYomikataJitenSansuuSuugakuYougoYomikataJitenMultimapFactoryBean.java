@@ -69,16 +69,17 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 					//
 				for (int i = 0; i < IterableUtils.size(children); i++) {
 					//
-					if (Util.matches(pattern.matcher(ElementUtil.text(element = IterableUtils.get(children, i))))
-							|| element == null) {
+					if (Util.matches(pattern.matcher(ElementUtil.text(element = IterableUtils.get(children, i))))) {
 						//
 						continue;
 						//
 					} // if
 						//
 					MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							ElementUtil.text((childrenSize = element.childrenSize()) > 0 ? element.child(0) : null),
-							getStrings(ElementUtil.text(childrenSize > 1 ? element.child(1) : null),
+							ElementUtil.text((childrenSize = ElementUtil.childrenSize(element)) > 0
+									? ElementUtil.child(element, 0)
+									: null),
+							getStrings(ElementUtil.text(childrenSize > 1 ? ElementUtil.child(element, 1) : null),
 									UnicodeBlock.HIRAGANA));
 					//
 				} // for
