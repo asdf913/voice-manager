@@ -260,7 +260,7 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 					//
 				} else if (c == '）') {
 					//
-					if (multimap == null || multimap.isEmpty()) {
+					if (isEmpty(multimap)) {
 						//
 						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 								Util.toString(sb1), Util.toString(sb2));
@@ -292,6 +292,10 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 			//
 		return multimap;
 		//
+	}
+
+	private static boolean isEmpty(final Multimap<?, ?> instance) {
+		return instance == null || instance.isEmpty();
 	}
 
 	private static int getLastIndexWithUnicodeBlock(final String s, final UnicodeBlock unicodeBlock) {
