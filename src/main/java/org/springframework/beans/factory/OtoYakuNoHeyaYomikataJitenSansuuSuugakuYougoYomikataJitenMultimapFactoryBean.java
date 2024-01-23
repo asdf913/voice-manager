@@ -59,11 +59,9 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 			//
 			for (final Element tbody : tbodies) {
 				//
-				if (tbody == null || tbody.childrenSize() < 1
-						|| (pattern = ObjectUtils.getIfNull(pattern,
-								() -> Pattern.compile("\\p{InHiragana}{1,2}行"))) == null
-						|| !Util.matches(
-								pattern.matcher(ElementUtil.text(IterableUtils.get(children = tbody.children(), 0))))) {
+				if (tbody == null || tbody.childrenSize() < 1 || !Util.matches(Util.matcher(
+						pattern = ObjectUtils.getIfNull(pattern, () -> Pattern.compile("\\p{InHiragana}{1,2}行")),
+						ElementUtil.text(IterableUtils.get(children = tbody.children(), 0))))) {
 					//
 					continue;
 					//
