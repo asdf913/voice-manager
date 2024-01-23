@@ -137,11 +137,11 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 	@Nullable
 	private static Multimap<String, String> toMultimap(final String s) {
 		//
-		final Iterable<Class<?>> os = IValue0Util.getValue0(CLASSES);
+		Iterable<Class<?>> os = IValue0Util.getValue0(CLASSES);
 		//
 		if (CLASSES == null) {
 			//
-			CLASSES = Unit.with(Arrays.asList(Prefix差StringToMultimap.class, PrefixRStringToMultimap.class));
+			CLASSES = Unit.with(os = Arrays.asList(Prefix差StringToMultimap.class, PrefixRStringToMultimap.class));
 			//
 		} // if
 			//
