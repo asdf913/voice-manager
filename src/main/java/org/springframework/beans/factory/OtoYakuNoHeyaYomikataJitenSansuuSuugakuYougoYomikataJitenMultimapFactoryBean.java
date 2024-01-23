@@ -145,7 +145,7 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 			//
 			CLASSES = Unit.with(Arrays.asList(StringToMultimapImpl.class, Prefix差StringToMultimap.class,
 					PrefixRStringToMultimap.class, PrefixpHStringToMultimap.class, PrefixRyuubeiStringToMultimap.class,
-					ISOStringToMultimap.class));
+					ISOStringToMultimap.class, SuffixDomoStringToMultimap.class));
 			//
 		} // if
 			//
@@ -592,6 +592,38 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 			final Matcher matcher = Util.matcher(Pattern.compile("（(\\p{InHiragana}+)）"), b);
 			//
 			Multimap<String, String> multimap = null;
+			//
+			while (Util.find(matcher) && Util.groupCount(matcher) > 0) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), a,
+						Util.group(matcher, 1));
+				//
+			} // while
+				//
+			return multimap;
+			//
+		}
+
+	}
+
+	private static class SuffixDomoStringToMultimap implements StringToMultimap {
+
+		private static final Pattern PATTERN = Pattern.compile("^（(\\p{InHiragana}+)）とも$");
+
+		@Override
+		public boolean test(final String a, final String b) {
+			//
+			return Util.find(Util.matcher(PATTERN, b));
+			//
+		}
+
+		@Override
+		@Nullable
+		public Multimap<String, String> apply(final String a, final String b) {
+			//
+			Multimap<String, String> multimap = null;
+			//
+			final Matcher matcher = Util.matcher(PATTERN, b);
 			//
 			while (Util.find(matcher) && Util.groupCount(matcher) > 0) {
 				//
