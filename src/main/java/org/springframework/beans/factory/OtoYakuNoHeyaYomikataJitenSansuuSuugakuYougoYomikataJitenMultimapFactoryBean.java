@@ -369,6 +369,10 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 			//
 		}
 
+		private static boolean isEmpty(@Nullable final Multimap<?, ?> instance) {
+			return instance == null || instance.isEmpty();
+		}
+
 		@Nullable
 		private static Multimap<String, String> toMultimap(final boolean first, final String s1, final String s2) {
 			//
@@ -393,6 +397,26 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 			} // if
 				//
 			return multimap;
+			//
+		}
+
+		private static int getLastIndexWithUnicodeBlock(final String s, final UnicodeBlock unicodeBlock) {
+			//
+			final char[] cs = Util.toCharArray(s);
+			//
+			int index = -1;
+			//
+			for (int i = 0; i < length(cs); i++) {
+				//
+				if (Objects.equals(UnicodeBlock.of(cs[i]), unicodeBlock)) {
+					//
+					index = i;
+					//
+				} // if
+					//
+			} // for
+				//
+			return index;
 			//
 		}
 
@@ -447,30 +471,6 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 			//
 		}
 
-	}
-
-	private static boolean isEmpty(@Nullable final Multimap<?, ?> instance) {
-		return instance == null || instance.isEmpty();
-	}
-
-	private static int getLastIndexWithUnicodeBlock(final String s, final UnicodeBlock unicodeBlock) {
-		//
-		final char[] cs = Util.toCharArray(s);
-		//
-		int index = -1;
-		//
-		for (int i = 0; i < length(cs); i++) {
-			//
-			if (Objects.equals(UnicodeBlock.of(cs[i]), unicodeBlock)) {
-				//
-				index = i;
-				//
-			} // if
-				//
-		} // for
-			//
-		return index;
-		//
 	}
 
 	@Nullable

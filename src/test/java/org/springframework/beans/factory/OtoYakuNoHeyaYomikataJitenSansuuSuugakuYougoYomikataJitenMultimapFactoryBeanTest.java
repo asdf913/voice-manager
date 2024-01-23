@@ -42,8 +42,8 @@ import io.github.toolfactory.narcissus.Narcissus;
 class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBeanTest {
 
 	private static Method METHOD_GET_STRINGS, METHOD_CLEAR, METHOD_TO_URL, METHOD_TEST_AND_APPLY, METHOD_LENGTH,
-			METHOD_TO_MULTI_MAP_ITERABLE, METHOD_TO_MULTI_MAP_STRING, METHOD_TO_MULTI_MAP2, METHOD_IS_EMPTY,
-			METHOD_APPLY, METHOD_GET_OBJECTS = null;
+			METHOD_TO_MULTI_MAP_ITERABLE, METHOD_TO_MULTI_MAP_STRING, METHOD_TO_MULTI_MAP2, METHOD_APPLY,
+			METHOD_GET_OBJECTS = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException, ClassNotFoundException {
@@ -67,8 +67,6 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 		(METHOD_TO_MULTI_MAP_STRING = clz.getDeclaredMethod("toMultimap", String.class)).setAccessible(true);
 		//
 		(METHOD_TO_MULTI_MAP2 = clz.getDeclaredMethod("toMultimap", String.class, Iterable.class)).setAccessible(true);
-		//
-		(METHOD_IS_EMPTY = clz.getDeclaredMethod("isEmpty", Multimap.class)).setAccessible(true);
 		//
 		(METHOD_APPLY = clz.getDeclaredMethod("apply", Function.class, Object.class)).setAccessible(true);
 		//
@@ -369,25 +367,6 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 	}
 
 	@Test
-	void testIsEmpty() throws Throwable {
-		//
-		Assertions.assertTrue(isEmpty(ImmutableMultimap.of()));
-		//
-	}
-
-	private static boolean isEmpty(final Multimap<?, ?> instance) throws Throwable {
-		try {
-			final Object obj = METHOD_IS_EMPTY.invoke(null, instance);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testApply() throws Throwable {
 		//
 		Assertions.assertNull(apply(null, null));
@@ -422,6 +401,27 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
+	}
+
+	@Test
+	void testPrefix差StringToMultimap()
+			throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+		//
+		final Class<?> clz = Class.forName(
+				"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBean$Prefix差StringToMultimap");
+		//
+		// org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBean$Prefix差StringToMultimap.isEmpty(com.google.common.collect.Multimap)
+		//
+		final Method isEmpty = clz != null ? clz.getDeclaredMethod("isEmpty", Multimap.class) : null;
+		//
+		if (isEmpty != null) {
+			//
+			isEmpty.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertEquals(Boolean.TRUE, isEmpty != null ? isEmpty.invoke(null, (Object) null) : null);
+		//
 	}
 
 }
