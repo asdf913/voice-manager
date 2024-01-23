@@ -290,6 +290,8 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 		Assertions.assertEquals("{九十九湾=[つくもわん], 九十九折れ=[つづらおれ]}",
 				Util.toString(toMultimap("関連語：九十九湾（つくもわん）九十九折れ（つづらおれ）")));
 		//
+		Assertions.assertEquals("{R-加群=[あーるかぐん], 左加群=[さかぐん]}", Util.toString(toMultimap("R-加群（あーるかぐん）左加群（さかぐん）")));
+		//
 		final Multimap<String, String> multimap = ImmutableMultimap.of();
 		//
 		Assertions.assertEquals(multimap, toMultimap(Collections.singleton(null)));
