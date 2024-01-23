@@ -9,7 +9,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Function;
+import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -150,7 +151,7 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 			//
 		final List<Multimap<?, ?>> multimaps = Util
 				.toList(Util.map(
-						Util.filter(Util.stream(getObjects(IValue0Util.getValue0(CLASSES), s3)),
+						Util.filter(Util.stream(getObjects(IValue0Util.getValue0(CLASSES), s1, s3)),
 								x -> Boolean.logicalOr(x == null, x instanceof Multimap)),
 						x -> Util.cast(Multimap.class, x)));
 		//
@@ -237,7 +238,7 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 	}
 
 	@Nullable
-	private static Collection<Object> getObjects(final Iterable<Class<?>> iterable, final Object object) {
+	private static Collection<Object> getObjects(final Iterable<Class<?>> iterable, final Object a, final Object b) {
 		//
 		Collection<Object> objects = null;
 		//
@@ -248,15 +249,15 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 			for (final Class<?> c : iterable) {
 				//
 				if (!((instance = testAndApply(Objects::nonNull, c, Narcissus::allocateInstance,
-						null)) instanceof Predicate) || !((Predicate) instance).test(object)) {
+						null)) instanceof BiPredicate) || !((BiPredicate) instance).test(a, b)) {
 					//
 					continue;
 					//
 				} // if
 					//
-				if (instance instanceof Function function) {
+				if (instance instanceof BiFunction function) {
 					//
-					Util.add(objects = ObjectUtils.getIfNull(objects, ArrayList::new), apply(function, object));
+					Util.add(objects = ObjectUtils.getIfNull(objects, ArrayList::new), apply(function, a, b));
 					//
 				} // if
 					//
@@ -269,11 +270,12 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 	}
 
 	@Nullable
-	private static <T, R> R apply(@Nullable final Function<T, R> instance, final T t) {
-		return instance != null ? instance.apply(t) : null;
+	private static <T, U, R> R apply(@Nullable final BiFunction<T, U, R> instance, final T t, final U u) {
+		return instance != null ? instance.apply(t, u) : null;
 	}
 
-	private static interface StringToMultimap extends Predicate<String>, Function<String, Multimap<String, String>> {
+	private static interface StringToMultimap
+			extends BiPredicate<String, String>, BiFunction<String, String, Multimap<String, String>> {
 	}
 
 	private static class StringToMultimapImpl implements StringToMultimap {
@@ -282,29 +284,28 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 				.compile("^(関連語：)?(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）$");
 
 		@Override
-		public boolean test(final String instance) {
+		public boolean test(final String a, final String b) {
 			//
-			return Boolean.logicalOr(Util.matches(Util.matcher(PATTERN, instance)),
-					StringUtils.startsWith(instance, "関連語："));
+			return Boolean.logicalOr(Util.matches(Util.matcher(PATTERN, b)), StringUtils.startsWith(b, "関連語："));
 			//
 		}
 
 		@Override
 		@Nullable
-		public Multimap<String, String> apply(final String instance) {
+		public Multimap<String, String> apply(final String a, final String b) {
 			//
 			Multimap<String, String> multimap = null;
 			//
-			final Matcher matcher = Util.matcher(PATTERN, instance);
+			final Matcher matcher = Util.matcher(PATTERN, b);
 			//
 			if (Boolean.logicalAnd(Util.matches(matcher), Util.groupCount(matcher) > 2)) {
 				//
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						Util.group(matcher, 2), Util.group(matcher, 3));
 				//
-			} else if (StringUtils.startsWith(instance, "関連語：")) {
+			} else if (StringUtils.startsWith(b, "関連語：")) {
 				//
-				final char[] cs = Util.toCharArray(StringUtils.substringAfter(instance, "関連語："));
+				final char[] cs = Util.toCharArray(StringUtils.substringAfter(b, "関連語："));
 				//
 				UnicodeBlock unicodeBlock = null;
 				//
@@ -363,17 +364,17 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 	private static class Prefix差StringToMultimap implements StringToMultimap {
 
 		@Override
-		public boolean test(final String instnace) {
-			return StringUtils.startsWith(instnace, "差");
+		public boolean test(final String a, final String b) {
+			return StringUtils.startsWith(b, "差");
 		}
 
 		@Override
 		@Nullable
-		public Multimap<String, String> apply(final String instnace) {
+		public Multimap<String, String> apply(final String a, final String b) {
 			//
 			Multimap<String, String> multimap = null;
 			//
-			final char[] cs = Util.toCharArray(instnace);
+			final char[] cs = Util.toCharArray(b);
 			//
 			UnicodeBlock unicodeBlock = null;
 			//
@@ -460,17 +461,17 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 	private static class PrefixRStringToMultimap implements StringToMultimap {
 
 		@Override
-		public boolean test(final String instnace) {
-			return StringUtils.startsWith(instnace, "R-");
+		public boolean test(final String a, final String b) {
+			return StringUtils.startsWith(b, "R-");
 		}
 
 		@Override
 		@Nullable
-		public Multimap<String, String> apply(final String instnace) {
+		public Multimap<String, String> apply(final String a, final String b) {
 			//
 			Multimap<String, String> multimap = null;
 			//
-			final char[] cs = Util.toCharArray(instnace);
+			final char[] cs = Util.toCharArray(b);
 			//
 			UnicodeBlock unicodeBlock = null;
 			//
@@ -511,17 +512,17 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 	private static class PrefixpHStringToMultimap implements StringToMultimap {
 
 		@Override
-		public boolean test(final String instnace) {
-			return StringUtils.startsWith(instnace, "pH");
+		public boolean test(final String a, final String b) {
+			return StringUtils.startsWith(b, "pH");
 		}
 
 		@Override
 		@Nullable
-		public Multimap<String, String> apply(final String instnace) {
+		public Multimap<String, String> apply(final String a, final String b) {
 			//
 			Multimap<String, String> multimap = null;
 			//
-			final char[] cs = Util.toCharArray(instnace);
+			final char[] cs = Util.toCharArray(b);
 			//
 			char c = ' ';
 			//
@@ -537,7 +538,7 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 					//
 				} else if (c == '）') {
 					//
-					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), "pH",
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), a,
 							Util.toString(sb));
 					//
 					clear(sb = ObjectUtils.getIfNull(sb, StringBuilder::new));
@@ -563,18 +564,18 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 		private static final Pattern PATTERN = Pattern.compile("（(\\p{InCJKUnifiedIdeographs}+)・(\\p{InHiragana}+)）");
 
 		@Override
-		public boolean test(final String instance) {
+		public boolean test(final String a, final String b) {
 			//
-			return Util.find(Util.matcher(PATTERN, instance));
+			return Util.find(Util.matcher(PATTERN, b));
 			//
 		}
 
 		@Override
-		public Multimap<String, String> apply(final String instance) {
+		public Multimap<String, String> apply(final String a, final String b) {
 			//
 			Multimap<String, String> multimap = null;
 			//
-			final Matcher matcher = Util.matcher(PATTERN, instance);
+			final Matcher matcher = Util.matcher(PATTERN, b);
 			//
 			while (Util.find(matcher) && Util.groupCount(matcher) > 1) {
 				//

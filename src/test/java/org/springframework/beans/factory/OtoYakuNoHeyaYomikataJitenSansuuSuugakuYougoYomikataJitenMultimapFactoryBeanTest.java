@@ -14,7 +14,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
 import org.apache.commons.lang3.StringUtils;
@@ -69,9 +69,11 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 		//
 		(METHOD_TO_MULTI_MAP2 = clz.getDeclaredMethod("toMultimap", String.class, Iterable.class)).setAccessible(true);
 		//
-		(METHOD_APPLY = clz.getDeclaredMethod("apply", Function.class, Object.class)).setAccessible(true);
+		(METHOD_APPLY = clz.getDeclaredMethod("apply", BiFunction.class, Object.class, Object.class))
+				.setAccessible(true);
 		//
-		(METHOD_GET_OBJECTS = clz.getDeclaredMethod("getObjects", Iterable.class, Object.class)).setAccessible(true);
+		(METHOD_GET_OBJECTS = clz.getDeclaredMethod("getObjects", Iterable.class, Object.class, Object.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -378,13 +380,13 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 	@Test
 	void testApply() throws Throwable {
 		//
-		Assertions.assertNull(apply(null, null));
+		Assertions.assertNull(apply(null, null, null));
 		//
 	}
 
-	private static <T, R> R apply(final Function<T, R> instance, final T t) throws Throwable {
+	private static <T, U, R> R apply(final BiFunction<T, U, R> instance, final T t, final U u) throws Throwable {
 		try {
-			return (R) METHOD_APPLY.invoke(null, instance, t);
+			return (R) METHOD_APPLY.invoke(null, instance, t, u);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -393,14 +395,14 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 	@Test
 	void testGetObjects() throws Throwable {
 		//
-		Assertions.assertNull(getObjects(null, null));
+		Assertions.assertNull(getObjects(null, null, null));
 		//
 	}
 
-	private static Collection<Object> getObjects(final Iterable<Class<?>> iterable, final Object object)
+	private static Collection<Object> getObjects(final Iterable<Class<?>> iterable, final Object a, final Object b)
 			throws Throwable {
 		try {
-			final Object obj = METHOD_GET_OBJECTS.invoke(null, iterable, object);
+			final Object obj = METHOD_GET_OBJECTS.invoke(null, iterable, a, b);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Collection) {
