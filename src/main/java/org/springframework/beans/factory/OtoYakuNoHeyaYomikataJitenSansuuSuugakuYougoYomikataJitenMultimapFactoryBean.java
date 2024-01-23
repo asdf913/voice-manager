@@ -130,14 +130,17 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 		//
 		Multimap<String, String> multimap = null;
 		//
-		if (StringUtils.isNotBlank(s)) {
+		final Matcher matcher = Util
+				.matcher(Pattern.compile("^(関連語：)?(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）$"), s);
+		//
+		if (Boolean.logicalAnd(Util.matches(matcher), Util.groupCount(matcher) > 2)) {
 			//
-			final Matcher matcher = Util
-					.matcher(Pattern.compile("^(関連語：)?(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）$"), s);
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					Util.group(matcher, 2), Util.group(matcher, 3));
+			//
+		} else if (StringUtils.startsWith(s, "関連語：")) {
 			//
 			StringBuilder sb1 = null, sb2 = null;
-			//
-			boolean leftParenthesisFound = false;
 			//
 			char[] cs = null;
 			//
@@ -145,60 +148,46 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 			//
 			char c = ' ';
 			//
-			if (Boolean.logicalAnd(Util.matches(matcher), Util.groupCount(matcher) > 2)) {
+			boolean leftParenthesisFound = false;
+			//
+			cs = Util.toCharArray(StringUtils.substringAfter(s, "関連語："));
+			//
+			for (int j = 0; j < length(cs); j++) {
 				//
-				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-						Util.group(matcher, 2), Util.group(matcher, 3));
-				//
-			} else if (StringUtils.startsWith(s, "関連語：")) {
-				//
-				clear(sb1 = ObjectUtils.getIfNull(sb1, StringBuilder::new));
-				//
-				clear(sb2 = ObjectUtils.getIfNull(sb2, StringBuilder::new));
-				//
-				leftParenthesisFound = false;
-				//
-				cs = Util.toCharArray(StringUtils.substringAfter(s, "関連語："));
-				//
-				for (int j = 0; j < length(cs); j++) {
+				if (Objects.equals(unicodeBlock = UnicodeBlock.of(c = cs[j]), UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)) {
 					//
-					if (Objects.equals(unicodeBlock = UnicodeBlock.of(c = cs[j]),
-							UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)) {
+					Util.append(sb1 = ObjectUtils.getIfNull(sb1, StringBuilder::new), c);
+					//
+				} else if (Objects.equals(unicodeBlock, UnicodeBlock.HIRAGANA)) {
+					//
+					if (leftParenthesisFound) {
+						//
+						Util.append(sb2 = ObjectUtils.getIfNull(sb2, StringBuilder::new), c);
+						//
+					} else {
 						//
 						Util.append(sb1 = ObjectUtils.getIfNull(sb1, StringBuilder::new), c);
 						//
-					} else if (Objects.equals(unicodeBlock, UnicodeBlock.HIRAGANA)) {
-						//
-						if (leftParenthesisFound) {
-							//
-							Util.append(sb2 = ObjectUtils.getIfNull(sb2, StringBuilder::new), c);
-							//
-						} else {
-							//
-							Util.append(sb1 = ObjectUtils.getIfNull(sb1, StringBuilder::new), c);
-							//
-						} // if
-							//
-					} else if (c == '（') {
-						//
-						leftParenthesisFound = true;
-						//
-					} else if (c == '）') {
-						//
-						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-								Util.toString(sb1), Util.toString(sb2));
-						//
-						clear(sb1 = ObjectUtils.getIfNull(sb1, StringBuilder::new));
-						//
-						clear(sb2 = ObjectUtils.getIfNull(sb2, StringBuilder::new));
-						//
-						leftParenthesisFound = false;
-						//
 					} // if
 						//
-				} // for
+				} else if (c == '（') {
 					//
-			} // if
+					leftParenthesisFound = true;
+					//
+				} else if (c == '）') {
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+							Util.toString(sb1), Util.toString(sb2));
+					//
+					clear(sb1 = ObjectUtils.getIfNull(sb1, StringBuilder::new));
+					//
+					clear(sb2 = ObjectUtils.getIfNull(sb2, StringBuilder::new));
+					//
+					leftParenthesisFound = false;
+					//
+				} // if
+					//
+			} // for
 				//
 		} // if
 			//
