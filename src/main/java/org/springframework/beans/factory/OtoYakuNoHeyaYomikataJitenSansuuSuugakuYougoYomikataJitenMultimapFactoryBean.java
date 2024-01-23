@@ -328,6 +328,7 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 		}
 
 		@Override
+		@Nullable
 		public Multimap<String, String> apply(final String instnace) {
 			//
 			Multimap<String, String> multimap = null;
