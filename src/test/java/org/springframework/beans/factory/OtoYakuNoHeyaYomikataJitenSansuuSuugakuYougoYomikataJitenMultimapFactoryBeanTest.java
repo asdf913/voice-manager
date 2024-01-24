@@ -206,24 +206,28 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 	}
 
 	@Test
-	void testClear() throws Throwable {
+	void testClear() {
 		//
-		new FailableStream<>(Util.filter(
-				Arrays.stream(OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBean.class
-						.getDeclaredMethods()),
-				m -> m != null && Objects.equals("clear", Util.getName(m)) && m.getParameterCount() == 1
-						&& Modifier.isStatic(m.getModifiers())))
-				.forEach(m -> {
-					//
-					if (m != null) {
+		Assertions.assertDoesNotThrow(() -> {
+			//
+			new FailableStream<>(Util.filter(
+					Arrays.stream(OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBean.class
+							.getDeclaredMethods()),
+					m -> m != null && Objects.equals("clear", Util.getName(m)) && m.getParameterCount() == 1
+							&& Modifier.isStatic(m.getModifiers())))
+					.forEach(m -> {
 						//
-						m.setAccessible(true);
-						//
-						m.invoke(null, (Object) null);
-						//
-					} // if
-						//
-				});
+						if (m != null) {
+							//
+							m.setAccessible(true);
+							//
+							m.invoke(null, (Object) null);
+							//
+						} // if
+							//
+					});
+			//
+		});
 		//
 	}
 
