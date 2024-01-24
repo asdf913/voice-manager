@@ -188,7 +188,7 @@ public class StringMultiMapFromResourceFactoryBean implements FactoryBean<Multim
 					//
 				} else if (Objects.equals(methodName, "containsKey") && args != null && args.length > 0) {
 					//
-					return getMap().containsKey(args[0]);
+					return Util.containsKey(getMap(), args[0]);
 					//
 				} // if
 					//
@@ -211,8 +211,8 @@ public class StringMultiMapFromResourceFactoryBean implements FactoryBean<Multim
 		IValue0<Multimap<String, String>> result = null;
 		//
 		if (Objects.equals("application/vnd.openxmlformats-officedocument",
-				Util.getMimeType(new ContentInfoUtil().findMatch(bs))) || XlsUtil.isXls(resource)
-				|| XlsxUtil.isXlsx(resource)) {
+				Util.getMimeType(testAndApply(Objects::nonNull, bs, x -> new ContentInfoUtil().findMatch(x), null)))
+				|| XlsUtil.isXls(resource) || XlsxUtil.isXlsx(resource)) {
 			//
 			try (final InputStream is = new ByteArrayInputStream(bs);
 					final Workbook wb = testAndApply(Objects::nonNull, is, WorkbookFactory::create, null)) {
@@ -390,6 +390,10 @@ public class StringMultiMapFromResourceFactoryBean implements FactoryBean<Multim
 							: null);
 			//
 			iv = Unit.with(StringUtils.isNotBlank(string) ? string : Byte.toString(cellValue.getErrorValue()));
+			//
+		} else if (Objects.equals(cellType, CellType.NUMERIC)) {
+			//
+			iv = Unit.with(Double.toString(cellValue.getNumberValue()));
 			//
 		} // if
 			//
