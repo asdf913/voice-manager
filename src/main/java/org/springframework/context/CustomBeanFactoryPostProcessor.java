@@ -49,6 +49,8 @@ import org.springframework.core.io.InputStreamSourceUtil;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceUtil;
 
+import io.github.toolfactory.narcissus.Narcissus;
+
 public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFactoryPostProcessor, Ordered,
 		ApplicationListener<PayloadApplicationEvent<?>> {
 
@@ -222,31 +224,10 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 				testAndApply(Objects::nonNull, getDeclaredMethods(Throwable.class), Arrays::stream, null),
 				m -> m != null && StringUtils.equals(getName(m), "printStackTrace") && m.getParameterCount() == 0));
 		//
-		final Method method = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null);
+		testAndAccept(m -> Boolean.logicalOr(throwable != null, isStatic(m)),
+				testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null),
+				m -> Narcissus.invokeMethod(throwable, m));
 		//
-		if (method != null) {
-			//
-			method.setAccessible(true);
-			//
-		} // if
-			//
-		try {
-			//
-			testAndAccept(m -> Boolean.logicalOr(throwable != null, isStatic(m)), method, m -> invoke(m, throwable));
-			//
-		} catch (final InvocationTargetException e) {
-			//
-			final Throwable targetException = e.getTargetException();
-			//
-			printStackTrace(ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException), targetException,
-					ExceptionUtils.getRootCause(e), e));
-			//
-		} catch (final ReflectiveOperationException e) {
-			//
-			printStackTrace(throwable);
-			//
-		} // try
-			//
 	}
 
 	private static boolean isStatic(@Nullable final Member instance) {

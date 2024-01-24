@@ -34,6 +34,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
@@ -161,18 +162,11 @@ public class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean implements Factor
 				//
 			} // if
 				//
-			final Field f = size == 1 ? IterableUtils.get(fs, 0) : null;
-			//
-			if (f != null) {
-				//
-				f.setAccessible(true);
-				//
-			} // if
-				//
 			Document document = null;
 			//
-			try (final Reader reader = testAndApply(Objects::nonNull, Util.toString(get(f, cell)), StringReader::new,
-					null)) {
+			try (final Reader reader = testAndApply(Objects::nonNull, Util.toString(testAndApply(Objects::nonNull,
+					size == 1 ? IterableUtils.get(fs, 0) : null, f -> FieldUtils.readField(f, cell, true), null)),
+					StringReader::new, null)) {
 				//
 				document = testAndApply(Objects::nonNull, reader,
 						x -> parse(newDocumentBuilder(DocumentBuilderFactory.newDefaultInstance()), new InputSource(x)),

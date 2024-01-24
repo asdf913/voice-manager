@@ -10509,8 +10509,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				} else if (IntMap.containsKey(intMap, columnIndex = cell.getColumnIndex())
 						&& (f = IntMap.getObject(intMap, columnIndex)) != null) {
 					//
-					setAccessible(f, true);
-					//
 					ObjectMap.setObject(objectMap, Field.class, f);
 					//
 					ObjectMap.setObject(objectMap, Cell.class, cell);
@@ -10519,7 +10517,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						throw new IllegalStateException();
 					}, null);
 					//
-					f.set(voice = getIfNull(voice, Voice::new), IValue0Util.getValue0(value));
+					FieldUtils.writeField(f, voice = getIfNull(voice, Voice::new), IValue0Util.getValue0(value), true);
 					//
 				} // if
 					//
