@@ -1,6 +1,10 @@
 package org.springframework.beans.factory;
 
 import java.lang.Character.UnicodeBlock;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
@@ -61,7 +65,16 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 
 	private Iterable<Link> links = null;
 
-	private IValue0<String> text, description = null;
+	@Target(ElementType.FIELD)
+	@Retention(RetentionPolicy.RUNTIME)
+	private @interface Note {
+		String value();
+	}
+
+	@Note("Text")
+	private IValue0<String> text = null;
+
+	private IValue0<String> description = null;
 
 	public void setUrl(final String url) {
 		this.url = url;
