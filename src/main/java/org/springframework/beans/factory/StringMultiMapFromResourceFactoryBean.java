@@ -56,6 +56,7 @@ import com.j256.simplemagic.ContentInfoUtil;
 
 public class StringMultiMapFromResourceFactoryBean implements FactoryBean<Multimap<String, String>> {
 
+	@Nullable
 	private IValue0<Multimap<String, String>> iValue0 = null;
 
 	private Resource resource = null;
@@ -315,6 +316,7 @@ public class StringMultiMapFromResourceFactoryBean implements FactoryBean<Multim
 		//
 	}
 
+	@Nullable
 	private static String getString(@Nullable final Cell cell, final FormulaEvaluator formulaEvaluator) {
 		//
 		if (cell == null) {
@@ -355,6 +357,7 @@ public class StringMultiMapFromResourceFactoryBean implements FactoryBean<Multim
 		//
 	}
 
+	@Nullable
 	private static IValue0<String> getString(@Nullable final CellValue cellValue) {
 		//
 		if (cellValue == null) {
@@ -395,10 +398,12 @@ public class StringMultiMapFromResourceFactoryBean implements FactoryBean<Multim
 		//
 	}
 
+	@Nullable
 	private static String getString(@Nullable final FormulaError instance) {
 		return instance != null ? instance.getString() : null;
 	}
 
+	@Nullable
 	private static Cell getValueCell(final Row row, final ObjectIntMap<String> objectIntMap,
 			@Nullable final Pair<String, Integer> valueColumnNameAndIndex) {
 		//
