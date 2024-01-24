@@ -47,7 +47,6 @@ import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
 import org.meeuw.functional.TriConsumer;
 import org.meeuw.functional.TriPredicate;
-import org.springframework.beans.factory.StringMapFromResourceFactoryBean.Note;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceUtil;
 import org.springframework.core.io.XlsUtil;
