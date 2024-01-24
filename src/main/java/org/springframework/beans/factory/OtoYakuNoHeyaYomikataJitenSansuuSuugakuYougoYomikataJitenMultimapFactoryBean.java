@@ -14,6 +14,7 @@ import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 
@@ -185,8 +186,22 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 			//
 		Multimap<String, String> multimap = null;
 		//
-		final Matcher matcher = Util
-				.matcher(Pattern.compile("((\\p{InCJKUnifiedIdeographs}|\\p{InHiragana})+)（(\\p{InHiragana}+)）"), s3);
+		final Matcher matcher = Util.matcher(Pattern.compile(String.format("((%1$s)+)（(\\p{InHiragana}+)）",
+				Util.collect(Stream.of("CJKUnifiedIdeographs", "Hiragana"), StringBuilder::new, (a, b) -> {
+					//
+					if (StringUtils.isNotBlank(a)) {
+						//
+						Util.append(a, '|');
+						//
+					} // if
+						//
+					if (a != null) {
+						//
+						a.append(String.format("\\p{In%1$s}", b));
+						//
+					} // if
+						//
+				}, StringBuilder::append))), s3);
 		//
 		String g1, s11, g3 = null;
 		//
