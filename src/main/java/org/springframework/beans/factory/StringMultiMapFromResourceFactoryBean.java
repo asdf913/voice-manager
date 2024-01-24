@@ -196,7 +196,7 @@ public class StringMultiMapFromResourceFactoryBean implements FactoryBean<Multim
 
 	@Nullable
 	private static IValue0<Multimap<String, String>> createMultimap(final Resource resource,
-			final IValue0<String> sheetName, final IValue0<String> keyColumnName,
+			@Nullable final IValue0<String> sheetName, final IValue0<String> keyColumnName,
 			final Pair<String, Integer> valueColumnNameAndIndex)
 			throws IOException, SAXException, ParserConfigurationException {
 		//
