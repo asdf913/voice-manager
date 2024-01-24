@@ -1,10 +1,6 @@
 package org.springframework.beans.factory;
 
 import java.lang.Character.UnicodeBlock;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.net.URI;
 import java.util.ArrayList;
@@ -42,12 +38,6 @@ import org.jsoup.select.Elements;
 import io.github.toolfactory.narcissus.Narcissus;
 
 public class KominatoKanjiRomajiOrHiraganaMapFactoryBean extends StringMapFromResourceFactoryBean {
-
-	@Target(ElementType.FIELD)
-	@Retention(RetentionPolicy.RUNTIME)
-	private @interface Note {
-		String value();
-	}
 
 	private String url = null;
 

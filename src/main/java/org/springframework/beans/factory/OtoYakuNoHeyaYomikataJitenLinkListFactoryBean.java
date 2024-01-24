@@ -2,10 +2,6 @@ package org.springframework.beans.factory;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -66,12 +62,6 @@ public class OtoYakuNoHeyaYomikataJitenLinkListFactoryBean implements
 		InitializingBean {
 
 	private String url = null;
-
-	@Target(ElementType.FIELD)
-	@Retention(RetentionPolicy.RUNTIME)
-	private @interface Note {
-		String value();
-	}
 
 	@Note("title")
 	private String title = null;

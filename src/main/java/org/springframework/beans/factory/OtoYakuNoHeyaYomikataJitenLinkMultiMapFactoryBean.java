@@ -5,10 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.net.URI;
 import java.net.URL;
@@ -63,12 +59,6 @@ import com.j256.simplemagic.ContentInfoUtil;
  * https://hiramatu-hifuka.com/onyak/onyindx.html
  */
 public class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean implements FactoryBean<Multimap<String, String>> {
-
-	@Target(ElementType.FIELD)
-	@Retention(RetentionPolicy.RUNTIME)
-	private @interface Note {
-		String value();
-	}
 
 	@Note("url")
 	private String url = null;

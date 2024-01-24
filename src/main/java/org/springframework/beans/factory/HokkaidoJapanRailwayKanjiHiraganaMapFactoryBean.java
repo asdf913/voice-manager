@@ -5,10 +5,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.Character.UnicodeBlock;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
 import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -40,12 +36,6 @@ import com.opencsv.CSVReaderUtil;
 import com.opencsv.exceptions.CsvValidationException;
 
 public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFromResourceFactoryBean {
-
-	@Target(ElementType.FIELD)
-	@Retention(RetentionPolicy.RUNTIME)
-	private @interface Note {
-		String value();
-	}
 
 	@Note("URL")
 	private String url = null;

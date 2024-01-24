@@ -3,10 +3,6 @@ package org.springframework.beans.factory;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
@@ -62,12 +58,6 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 	private IValue0<Map<String, String>> iValue0 = null;
 
 	private Resource resource = null;
-
-	@Target(ElementType.FIELD)
-	@Retention(RetentionPolicy.RUNTIME)
-	private @interface Note {
-		String value();
-	}
 
 	@Note("Sheet Name")
 	private IValue0<String> sheetName = null;
