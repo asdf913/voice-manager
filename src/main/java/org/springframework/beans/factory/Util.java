@@ -21,6 +21,7 @@ import java.util.Spliterator;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -520,6 +521,10 @@ abstract class Util {
 
 	static boolean isAbsolute(@Nullable final URI instance) {
 		return instance != null && instance.isAbsolute();
+	}
+
+	static <T, U, R> R apply(final BiFunction<T, U, R> instance, final T t, final U u) {
+		return instance != null ? instance.apply(t, u) : null;
 	}
 
 }

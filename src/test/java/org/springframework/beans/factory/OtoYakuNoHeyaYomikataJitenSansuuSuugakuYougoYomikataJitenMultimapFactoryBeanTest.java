@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
 import org.apache.commons.lang3.StringUtils;
@@ -46,8 +45,8 @@ import io.github.toolfactory.narcissus.Narcissus;
 class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBeanTest {
 
 	private static Method METHOD_GET_STRINGS, METHOD_TO_URL, METHOD_TEST_AND_APPLY, METHOD_LENGTH,
-			METHOD_TO_MULTI_MAP_ITERABLE, METHOD_TO_MULTI_MAP_STRING_STRING, METHOD_TO_MULTI_MAP2, METHOD_APPLY,
-			METHOD_GET_OBJECTS, METHOD_APPEND = null;
+			METHOD_TO_MULTI_MAP_ITERABLE, METHOD_TO_MULTI_MAP_STRING_STRING, METHOD_TO_MULTI_MAP2, METHOD_GET_OBJECTS,
+			METHOD_APPEND = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException, ClassNotFoundException {
@@ -70,9 +69,6 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 				.setAccessible(true);
 		//
 		(METHOD_TO_MULTI_MAP2 = clz.getDeclaredMethod("toMultimap", String.class, Iterable.class)).setAccessible(true);
-		//
-		(METHOD_APPLY = clz.getDeclaredMethod("apply", BiFunction.class, Object.class, Object.class))
-				.setAccessible(true);
 		//
 		(METHOD_GET_OBJECTS = clz.getDeclaredMethod("getObjects", Iterable.class, Object.class, Object.class))
 				.setAccessible(true);
@@ -400,21 +396,6 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 				return (Multimap) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testApply() throws Throwable {
-		//
-		Assertions.assertNull(apply(null, null, null));
-		//
-	}
-
-	private static <T, U, R> R apply(final BiFunction<T, U, R> instance, final T t, final U u) throws Throwable {
-		try {
-			return (R) METHOD_APPLY.invoke(null, instance, t, u);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

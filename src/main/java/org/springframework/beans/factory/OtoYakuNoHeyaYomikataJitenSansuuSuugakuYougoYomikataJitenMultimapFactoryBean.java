@@ -278,7 +278,7 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 					//
 				if (instance instanceof BiFunction function) {
 					//
-					Util.add(objects = ObjectUtils.getIfNull(objects, ArrayList::new), apply(function, a, b));
+					Util.add(objects = ObjectUtils.getIfNull(objects, ArrayList::new), Util.apply(function, a, b));
 					//
 				} // if
 					//
@@ -288,11 +288,6 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 			//
 		return objects;
 		//
-	}
-
-	@Nullable
-	private static <T, U, R> R apply(@Nullable final BiFunction<T, U, R> instance, final T t, final U u) {
-		return instance != null ? instance.apply(t, u) : null;
 	}
 
 	private static interface StringToMultimap
