@@ -410,7 +410,7 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 		//
 	}
 
-	private static void clear(final TextStringBuilder instance) {
+	private static void clear(@Nullable final TextStringBuilder instance) {
 		if (instance != null) {
 			instance.clear();
 		}
