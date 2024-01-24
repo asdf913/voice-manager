@@ -13,6 +13,7 @@ import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
+import javax.annotation.Nullable;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.collections4.IterableUtils;
@@ -390,7 +391,7 @@ public class StringMultiMapFromResourceFactoryBean implements FactoryBean<Multim
 		//
 	}
 
-	private static String getString(final FormulaError instance) {
+	private static String getString(@Nullable final FormulaError instance) {
 		return instance != null ? instance.getString() : null;
 	}
 
@@ -446,7 +447,8 @@ public class StringMultiMapFromResourceFactoryBean implements FactoryBean<Multim
 	}
 
 	private static <T, U, R, E extends Throwable> R testAndApply(final BiPredicate<T, U> predicate, final T t,
-			final U u, final BiFunction<T, U, R> functionTrue, final BiFunction<T, U, R> functionFalse) throws E {
+			final U u, final BiFunction<T, U, R> functionTrue, @Nullable final BiFunction<T, U, R> functionFalse)
+			throws E {
 		return predicate != null && predicate.test(t, u) ? Util.apply(functionTrue, t, u)
 				: Util.apply(functionFalse, t, u);
 	}
