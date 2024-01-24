@@ -581,7 +581,7 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 		@Override
 		public boolean test(final String a, final String b) {
 			//
-			return Util.contains(Arrays.asList("ISO", "十進法", "零行列", "六十進法"), a);
+			return Util.contains(Arrays.asList("ISO", "十進法", "零行列", "六十進法", "平均余命"), a);
 			//
 		}
 
