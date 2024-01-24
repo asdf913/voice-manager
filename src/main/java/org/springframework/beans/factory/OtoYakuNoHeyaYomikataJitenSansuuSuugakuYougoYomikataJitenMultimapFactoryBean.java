@@ -384,7 +384,7 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 
 	}
 
-	private static void append(final TextStringBuilder instance, final char c) {
+	private static void append(@Nullable final TextStringBuilder instance, final char c) {
 		//
 		if (instance == null) {
 			//
