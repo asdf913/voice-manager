@@ -52,7 +52,7 @@ import io.github.toolfactory.narcissus.Narcissus;
  * https://hiramatu-hifuka.com/onyak/kotoba-1/sugaku.html
  */
 public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBean
-		implements FactoryBean<Multimap<String, String>> {
+		extends StringMultiMapFromResourceFactoryBean {
 
 	private static final Logger LOG = LoggerFactory
 			.getLogger(OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBean.class);
@@ -95,6 +95,14 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 	@Override
 	public Multimap<String, String> getObject() throws Exception {
 		//
+		final IValue0<Multimap<String, String>> multimap = getIvalue0();
+		//
+		if (multimap != null) {
+			//
+			return IValue0Util.getValue0(multimap);
+			//
+		} // if
+			//
 		List<Link> ls = Util.toList(Util.filter(
 				testAndApply(Objects::nonNull, Util.spliterator(links), x -> StreamSupport.stream(x, false), null),
 				x -> text != null && x != null && Objects.equals(x.getText(), IValue0Util.getValue0(text))));
