@@ -187,7 +187,7 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 		Multimap<String, String> multimap = null;
 		//
 		final Matcher matcher = Util.matcher(Pattern.compile(String.format("((%1$s)+)（(\\p{InHiragana}+)）",
-				Util.collect(Stream.of("CJKUnifiedIdeographs", "Hiragana"), StringBuilder::new, (a, b) -> {
+				Util.collect(Stream.of("CJKUnifiedIdeographs", "Hiragana"), () -> new StringBuilder(), (a, b) -> {
 					//
 					if (StringUtils.isNotBlank(a)) {
 						//
