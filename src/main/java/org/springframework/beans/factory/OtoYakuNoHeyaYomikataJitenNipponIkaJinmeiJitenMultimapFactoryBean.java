@@ -1,6 +1,5 @@
 package org.springframework.beans.factory;
 
-import java.io.InputStream;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -8,7 +7,6 @@ import java.lang.annotation.Target;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -25,46 +23,28 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
-import org.apache.poi.ss.usermodel.CellUtil;
-import org.apache.poi.ss.usermodel.CreationHelperUtil;
-import org.apache.poi.ss.usermodel.FormulaEvaluator;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.apache.poi.ss.usermodel.WorkbookUtil;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
-import org.odftoolkit.simple.SpreadsheetDocument;
-import org.odftoolkit.simple.SpreadsheetDocumentUtil;
-import org.odftoolkit.simple.table.Table;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
 import org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkListFactoryBean.Link;
-import org.springframework.core.io.InputStreamSource;
-import org.springframework.core.io.InputStreamSourceUtil;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.XlsUtil;
-import org.springframework.core.io.XlsxUtil;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
-import com.j256.simplemagic.ContentInfo;
-import com.j256.simplemagic.ContentInfoUtil;
 
 /*
  * https://hiramatu-hifuka.com/onyak/mw3.html
  */
 public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
-		implements FactoryBean<Multimap<String, String>> {
+		extends StringMultiMapFromResourceFactoryBean {
 
 	private static final Logger LOG = LoggerFactory
 			.getLogger(OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean.class);
@@ -85,12 +65,8 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 	@Note("description")
 	private IValue0<String> description = null;
 
-	private IValue0<String> sheetName = null;
-
 	@Nullable
 	private Multimap<String, String> toBeRemoved = null;
-
-	private Resource resource = null;
 
 	public void setUrl(final String url) {
 		this.url = url;
@@ -106,14 +82,6 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 
 	public void setDescription(final String description) {
 		this.description = Unit.with(description);
-	}
-
-	public void setResource(final Resource resource) {
-		this.resource = resource;
-	}
-
-	public void setSheetName(final String sheetName) {
-		this.sheetName = Unit.with(sheetName);
 	}
 
 	public void setToBeRemoved(final String string) {
@@ -233,7 +201,7 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 	@Override
 	public Multimap<String, String> getObject() throws Exception {
 		//
-		final IValue0<Multimap<String, String>> multimap = toMultimap(resource, sheetName);
+		final IValue0<Multimap<String, String>> multimap = getIvalue0();
 		//
 		if (multimap != null) {
 			//
@@ -271,170 +239,6 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 		} // if
 			//
 		return createMultimap(url, toBeRemoved);
-		//
-	}
-
-	@Nullable
-	private static IValue0<Multimap<String, String>> toMultimap(final InputStreamSource resource,
-			@Nullable final IValue0<String> sheetName) throws Exception {
-		//
-		if (XlsxUtil.isXlsx(resource) || XlsUtil.isXls(resource)) {
-			//
-			try (final InputStream is = InputStreamSourceUtil.getInputStream(resource);
-					final Workbook wb = WorkbookFactory.create(is)) {
-				//
-				final int numberOfSheets = wb != null ? wb.getNumberOfSheets() : 0;
-				//
-				if (numberOfSheets == 1) {
-					//
-					return Unit.with(toMultimap(WorkbookUtil.getSheetAt(wb, 0),
-							CreationHelperUtil.createFormulaEvaluator(WorkbookUtil.getCreationHelper(wb))));
-					//
-				} else if (numberOfSheets > 1) {
-					//
-					if (sheetName == null) {
-						//
-						throw new IllegalStateException();
-						//
-					} // if
-						//
-					return Unit.with(toMultimap(WorkbookUtil.getSheet(wb, IValue0Util.getValue0(sheetName)),
-							CreationHelperUtil.createFormulaEvaluator(WorkbookUtil.getCreationHelper(wb))));
-					//
-				} else {
-					//
-					throw new IllegalStateException();
-					//
-				} // if
-					//
-			} // try
-				//
-		} // if
-			//
-		return toMultimap2(resource, sheetName);
-		//
-	}
-
-	@Nullable
-	private static IValue0<Multimap<String, String>> toMultimap2(final InputStreamSource resource,
-			@Nullable final IValue0<String> sheetName) throws Exception {
-		//
-		ContentInfo ci = null;
-		//
-		try (final InputStream is = InputStreamSourceUtil.getInputStream(resource)) {
-			//
-			ci = testAndApply(Objects::nonNull, is, x -> new ContentInfoUtil().findMatch(x), null);
-			//
-		} // try
-			//
-		if (Objects.equals(Util.getMessage(ci), "OpenDocument Spreadsheet")) {
-			//
-			SpreadsheetDocument ssd = null;
-			//
-			try (final InputStream is = InputStreamSourceUtil.getInputStream(resource)) {
-				//
-				ssd = SpreadsheetDocument.loadDocument(is);
-				//
-			} // try
-				//
-			final int sheetCount = ssd != null ? ssd.getSheetCount() : 0;
-			//
-			if (sheetCount == 1) {
-				//
-				return Unit.with(toMultimap(SpreadsheetDocumentUtil.getSheetByIndex(ssd, 0)));
-				//
-			} else if (sheetCount > 1) {
-				//
-				if (sheetName == null) {
-					//
-					throw new IllegalStateException();
-					//
-				} // if
-					//
-				return Unit.with(toMultimap(getSheetByName(ssd, IValue0Util.getValue0(sheetName))));
-				//
-			} else {
-				//
-				throw new IllegalStateException();
-				//
-			} // if
-				//
-		} // if
-			//
-		return null;
-		//
-	}
-
-	@Nullable
-	private static Table getSheetByName(@Nullable final SpreadsheetDocument instance, final String name) {
-		return instance != null ? instance.getSheetByName(name) : null;
-	}
-
-	@Nullable
-	private static Multimap<String, String> toMultimap(@Nullable final Table table) {
-		//
-		Multimap<String, String> multimap = null;
-		//
-		final Iterator<org.odftoolkit.simple.table.Row> rows = table != null ? table.getRowIterator() : null;
-		//
-		org.odftoolkit.simple.table.Row row = null;
-		//
-		while (rows != null && table.getOdfElement() != null && rows.hasNext()) {
-			//
-			if ((row = rows.next()) == null || row.getCellCount() < 2) {
-				//
-				continue;
-				//
-			} // if
-				//
-			if (multimap == null) {
-				//
-				multimap = LinkedHashMultimap.create();
-				//
-				continue;
-				//
-			} // if
-				//
-			MultimapUtil.put(multimap, org.odftoolkit.simple.table.CellUtil.getStringValue(row.getCellByIndex(0)),
-					org.odftoolkit.simple.table.CellUtil.getStringValue(row.getCellByIndex(1)));
-			//
-		} // while
-			//
-		return multimap;
-		//
-	}
-
-	@Nullable
-	private static Multimap<String, String> toMultimap(final Sheet sheet, final FormulaEvaluator formulaEvaluator) {
-		//
-		Multimap<String, String> multimap = null;
-		//
-		if (Util.iterator(sheet) != null) {
-			//
-			for (final Row row : sheet) {
-				//
-				if (Util.iterator(row) == null || IterableUtils.size(row) < 2) {
-					//
-					continue;
-					//
-				} // if
-					//
-				if (multimap == null) {
-					//
-					multimap = LinkedHashMultimap.create();
-					//
-					continue;
-					//
-				} // if
-					//
-				MultimapUtil.put(multimap, CellUtil.getStringCellValue(row.getCell(0), formulaEvaluator),
-						CellUtil.getStringCellValue(row.getCell(1), formulaEvaluator));
-				//
-			} // for
-				//
-		} // if
-			//
-		return multimap;
 		//
 	}
 

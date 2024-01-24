@@ -760,6 +760,9 @@
 			value="classpath:OtoYakuNoHeyaYomikataJiten.xlsx" />
 		<property name="sheetName"
 			value="${org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean.sheetName}" />
+		<property name="keyColumnName" value="kanji" />
+		<property name="valueColumnName" value="hiragana" />
+		<property name="valueColumnIndex" value="1" />
 	</bean>
 
 	<!--https://hiramatu-hifuka.com/onyak/kotoba-1/sugaku.html-->
