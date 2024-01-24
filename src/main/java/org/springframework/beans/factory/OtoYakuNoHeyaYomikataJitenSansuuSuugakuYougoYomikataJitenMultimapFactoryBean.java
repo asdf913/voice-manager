@@ -602,17 +602,37 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 		@Nullable
 		public Multimap<String, String> apply(final String a, final String b) {
 			//
-			final Matcher matcher = Util.matcher(
-					Pattern.compile("((\\p{InBasicLatin}|\\p{InCJKUnifiedIdeographs})+)（(\\p{InHiragana}+)）"), b);
-			//
 			Multimap<String, String> multimap = null;
 			//
-			while (Util.find(matcher) && Util.groupCount(matcher) > 2) {
+			final char[] cs = Util.toCharArray(b);
+			//
+			UnicodeBlock unicodeBlock = null;
+			//
+			char c = ' ';
+			//
+			StringBuilder sb1 = null, sb2 = null;
+			//
+			for (int j = 0; j < length(cs); j++) {
 				//
-				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-						Util.group(matcher, 1), Util.group(matcher, 3));
-				//
-			} // while
+				if (Util.contains(Arrays.asList(UnicodeBlock.BASIC_LATIN, UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
+						unicodeBlock = UnicodeBlock.of(c = cs[j]))) {
+					//
+					Util.append(sb1 = ObjectUtils.getIfNull(sb1, StringBuilder::new), c);
+					//
+				} else if (Objects.equals(UnicodeBlock.HIRAGANA, unicodeBlock)) {
+					//
+					Util.append(sb2 = ObjectUtils.getIfNull(sb2, StringBuilder::new), c);
+					//
+				} else if (c == '）') {
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+							Util.toString(sb1), Util.toString(sb2));
+					//
+					break;
+					//
+				} // if
+					//
+			} // for
 				//
 			return multimap;
 			//
