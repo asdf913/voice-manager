@@ -15,6 +15,7 @@ import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import javax.annotation.Nullable;
 
@@ -35,6 +36,7 @@ import org.jsoup.nodes.ElementUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
+import org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkListFactoryBean.Link;
 
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
@@ -55,13 +57,48 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 
 	private String url = null;
 
+	private Iterable<Link> links = null;
+
+	private IValue0<String> text = null;
+
 	public void setUrl(final String url) {
 		this.url = url;
+	}
+
+	public void setLinks(final Iterable<Link> links) {
+		this.links = links;
+	}
+
+	public void setText(final String text) {
+		this.text = Unit.with(text);
 	}
 
 	@Override
 	public Multimap<String, String> getObject() throws Exception {
 		//
+		final List<Link> ls = Util.toList(Util.filter(
+				testAndApply(Objects::nonNull, Util.spliterator(links), x -> StreamSupport.stream(x, false), null),
+				x -> text != null && x != null && Objects.equals(x.getText(), IValue0Util.getValue0(text))));
+		//
+		final int size = IterableUtils.size(ls);
+		//
+		if (size > 1) {
+			//
+			throw new IllegalStateException();
+			//
+		} else if (size == 1) {
+			//
+			return toMultimap(ElementUtil.select(
+					testAndApply(Objects::nonNull,
+							testAndApply(Util::isAbsolute,
+									testAndApply(StringUtils::isNotBlank, Link.getUrl(IterableUtils.get(ls, 0)),
+											URI::new, null),
+									x -> toURL(x), null),
+							x -> Jsoup.parse(x, 0), null),
+					"tbody"));
+			//
+		} // if
+			//
 		return toMultimap(ElementUtil.select(testAndApply(
 				Objects::nonNull, testAndApply(Util::isAbsolute,
 						testAndApply(StringUtils::isNotBlank, url, URI::new, null), x -> toURL(x), null),
