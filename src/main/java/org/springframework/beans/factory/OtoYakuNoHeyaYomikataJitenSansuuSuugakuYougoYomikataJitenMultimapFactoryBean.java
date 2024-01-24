@@ -145,7 +145,7 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 			//
 			CLASSES = Unit.with(Arrays.asList(StringToMultimapImpl.class, Prefix差StringToMultimap.class,
 					PrefixRStringToMultimap.class, PrefixpHStringToMultimap.class, PrefixRyuubeiStringToMultimap.class,
-					ISOStringToMultimap.class, SuffixDomoStringToMultimap.class, DecimalSystemStringToMultimap.class));
+					PrefixStringToMultimap.class, SuffixDomoStringToMultimap.class));
 			//
 		} // if
 			//
@@ -576,12 +576,12 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 
 	}
 
-	private static class ISOStringToMultimap implements StringToMultimap {
+	private static class PrefixStringToMultimap implements StringToMultimap {
 
 		@Override
 		public boolean test(final String a, final String b) {
 			//
-			return Objects.equals("ISO", a);
+			return Util.contains(Arrays.asList("ISO", "十進法"), a);
 			//
 		}
 
@@ -624,36 +624,6 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 			Multimap<String, String> multimap = null;
 			//
 			final Matcher matcher = Util.matcher(PATTERN, b);
-			//
-			while (Util.find(matcher) && Util.groupCount(matcher) > 0) {
-				//
-				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), a,
-						Util.group(matcher, 1));
-				//
-			} // while
-				//
-			return multimap;
-			//
-		}
-
-	}
-
-	private static class DecimalSystemStringToMultimap implements StringToMultimap {
-
-		@Override
-		public boolean test(final String a, final String b) {
-			//
-			return Objects.equals("十進法", a);
-			//
-		}
-
-		@Override
-		@Nullable
-		public Multimap<String, String> apply(final String a, final String b) {
-			//
-			final Matcher matcher = Util.matcher(Pattern.compile("（(\\p{InHiragana}+)）"), b);
-			//
-			Multimap<String, String> multimap = null;
 			//
 			while (Util.find(matcher) && Util.groupCount(matcher) > 0) {
 				//
