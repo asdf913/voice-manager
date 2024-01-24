@@ -311,7 +311,7 @@ public class StringMultiMapFromResourceFactoryBean implements FactoryBean<Multim
 		//
 	}
 
-	private static String getString(final Cell cell, final FormulaEvaluator formulaEvaluator) {
+	private static String getString(@Nullable final Cell cell, final FormulaEvaluator formulaEvaluator) {
 		//
 		if (cell == null) {
 			//
@@ -351,7 +351,7 @@ public class StringMultiMapFromResourceFactoryBean implements FactoryBean<Multim
 		//
 	}
 
-	private static IValue0<String> getString(final CellValue cellValue) {
+	private static IValue0<String> getString(@Nullable final CellValue cellValue) {
 		//
 		if (cellValue == null) {
 			//
@@ -396,7 +396,7 @@ public class StringMultiMapFromResourceFactoryBean implements FactoryBean<Multim
 	}
 
 	private static Cell getValueCell(final Row row, final ObjectIntMap<String> objectIntMap,
-			final Pair<String, Integer> valueColumnNameAndIndex) {
+			@Nullable final Pair<String, Integer> valueColumnNameAndIndex) {
 		//
 		Cell cell = null;
 		//
@@ -423,7 +423,7 @@ public class StringMultiMapFromResourceFactoryBean implements FactoryBean<Multim
 		return instance != null && instance.test(value);
 	}
 
-	private static int getPhysicalNumberOfCells(final Row instance, final int defaultValue) {
+	private static int getPhysicalNumberOfCells(@Nullable final Row instance, final int defaultValue) {
 		return instance != null ? instance.getPhysicalNumberOfCells() : defaultValue;
 	}
 
