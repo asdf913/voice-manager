@@ -137,7 +137,7 @@ public class StringMultiMapFromResourceFactoryBean implements FactoryBean<Multim
 
 		boolean containsKey(final Object key);
 
-		static boolean containsKey(final ObjectIntMap<?> instance, final Object key) {
+		static boolean containsKey(@Nullable final ObjectIntMap<?> instance, final Object key) {
 			return instance != null && instance.containsKey(key);
 		}
 
@@ -156,7 +156,7 @@ public class StringMultiMapFromResourceFactoryBean implements FactoryBean<Multim
 
 		@Override
 		@Nullable
-		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+		public Object invoke(final Object proxy, final Method method, @Nullable final Object[] args) throws Throwable {
 			//
 			final String methodName = Util.getName(method);
 			//
@@ -423,7 +423,7 @@ public class StringMultiMapFromResourceFactoryBean implements FactoryBean<Multim
 		return test(predicate, a) && test(predicate, b);
 	}
 
-	private static <T> boolean test(final Predicate<T> instance, final T value) {
+	private static <T> boolean test(@Nullable final Predicate<T> instance, final T value) {
 		return instance != null && instance.test(value);
 	}
 
@@ -445,13 +445,13 @@ public class StringMultiMapFromResourceFactoryBean implements FactoryBean<Multim
 		return objectIntMap;
 	}
 
-	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+	private static <T, R, E extends Throwable> R testAndApply(@Nullable final Predicate<T> predicate, final T value,
 			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse) throws E {
 		return test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
-	private static <T, U, R, E extends Throwable> R testAndApply(final BiPredicate<T, U> predicate, final T t,
+	private static <T, U, R, E extends Throwable> R testAndApply(@Nullable final BiPredicate<T, U> predicate, final T t,
 			final U u, final BiFunction<T, U, R> functionTrue, @Nullable final BiFunction<T, U, R> functionFalse)
 			throws E {
 		return predicate != null && predicate.test(t, u) ? Util.apply(functionTrue, t, u)
@@ -459,7 +459,7 @@ public class StringMultiMapFromResourceFactoryBean implements FactoryBean<Multim
 	}
 
 	private static <A, B, C> void testAndAccept(final TriPredicate<A, B, C> predicate, final A a, final B b, final C c,
-			final TriConsumer<A, B, C> consumer) {
+			@Nullable final TriConsumer<A, B, C> consumer) {
 		if (predicate != null && predicate.test(a, b, c) && consumer != null) {
 			consumer.accept(a, b, c);
 		}
