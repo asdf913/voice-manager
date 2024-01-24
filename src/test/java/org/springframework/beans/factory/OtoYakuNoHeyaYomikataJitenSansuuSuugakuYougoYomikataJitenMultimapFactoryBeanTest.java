@@ -325,6 +325,8 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 		//
 		Assertions.assertEquals("{平均余命=[へいきんよみょう]}", Util.toString(toMultimap("平均余命", "（へいきんよみょう）")));
 		//
+		Assertions.assertEquals("{2階導関数=[にかいどうかんすう]}", Util.toString(toMultimap("第2次導関数", "2階導関数（にかいどうかんすう）")));
+		//
 		final Multimap<String, String> multimap = ImmutableMultimap.of();
 		//
 		Assertions.assertEquals(multimap, toMultimap(Collections.singleton(null)));
