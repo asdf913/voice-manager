@@ -523,7 +523,7 @@ abstract class Util {
 		return instance != null && instance.isAbsolute();
 	}
 
-	static <T, U, R> R apply(final BiFunction<T, U, R> instance, final T t, final U u) {
+	static <T, U, R> R apply(@Nullable final BiFunction<T, U, R> instance, final T t, final U u) {
 		return instance != null ? instance.apply(t, u) : null;
 	}
 
