@@ -446,14 +446,15 @@ public class StringMultiMapFromResourceFactoryBean implements FactoryBean<Multim
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(@Nullable final Predicate<T> predicate, final T value,
-			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse) throws E {
+			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
+			throws E {
 		return test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
 	private static <T, U, R, E extends Throwable> R testAndApply(@Nullable final BiPredicate<T, U> predicate, final T t,
-			final U u, final BiFunction<T, U, R> functionTrue, @Nullable final BiFunction<T, U, R> functionFalse)
-			throws E {
+			@Nullable final U u, final BiFunction<T, U, R> functionTrue,
+			@Nullable final BiFunction<T, U, R> functionFalse) throws E {
 		return predicate != null && predicate.test(t, u) ? Util.apply(functionTrue, t, u)
 				: Util.apply(functionFalse, t, u);
 	}
