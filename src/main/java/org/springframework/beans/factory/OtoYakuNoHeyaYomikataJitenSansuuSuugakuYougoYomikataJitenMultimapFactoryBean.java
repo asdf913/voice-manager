@@ -344,7 +344,7 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 			for (final Class<?> c : iterable) {
 				//
 				if (!((instance = testAndApply(Objects::nonNull, c, Narcissus::allocateInstance,
-						null)) instanceof BiPredicate) || !((BiPredicate) instance).test(a, b)) {
+						null)) instanceof BiPredicate) || !Util.test((BiPredicate) instance, a, b)) {
 					//
 					continue;
 					//

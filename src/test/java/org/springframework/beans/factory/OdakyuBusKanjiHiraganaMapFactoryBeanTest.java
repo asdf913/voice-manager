@@ -14,7 +14,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
-import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
 import org.apache.commons.lang3.function.FailableFunction;
@@ -36,7 +35,7 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 	private static final String EMPTY = "";
 
 	private static Method METHOD_GET_OBJECT, METHOD_CREATE_MAP, METHOD_TEST_AND_APPLY, METHOD_PROCESS,
-			METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK, METHOD_TEST3, METHOD_ACCEPT,
+			METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK, METHOD_ACCEPT,
 			METHOD_CHECK_IF_KEY_EXISTS_AND_DIFFERENCE_VALUE, METHOD_PERFORM = null;
 
 	@BeforeAll
@@ -54,9 +53,6 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 		//
 		(METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK = clz.getDeclaredMethod("isAllCharacterInSameUnicodeBlock",
 				String.class, UnicodeBlock.class)).setAccessible(true);
-		//
-		(METHOD_TEST3 = clz.getDeclaredMethod("test", BiPredicate.class, Object.class, Object.class))
-				.setAccessible(true);
 		//
 		(METHOD_ACCEPT = clz.getDeclaredMethod("accept", BiConsumer.class, Object.class, Object.class))
 				.setAccessible(true);
@@ -273,25 +269,6 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 			throws Throwable {
 		try {
 			final Object obj = METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK.invoke(null, string, unicodeBlock);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testTest() throws Throwable {
-		//
-		Assertions.assertFalse(test(null, null, null));
-		//
-	}
-
-	private static <T, U> boolean test(final BiPredicate<T, U> instance, final T t, final U u) throws Throwable {
-		try {
-			final Object obj = METHOD_TEST3.invoke(null, instance, t, u);
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}

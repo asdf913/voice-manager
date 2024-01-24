@@ -245,7 +245,7 @@ public class TokyuKanjiRomajiOrHiraganaMapFactoryBean extends StringMapFromResou
 
 	private static <T, U> void testAndAccept(final BiPredicate<T, U> instance, final T t, final U u,
 			final BiConsumer<T, U> consumer) {
-		if (test(instance, t, u)) {
+		if (Util.test(instance, t, u)) {
 			accept(consumer, t, u);
 		} // if
 	}
@@ -254,10 +254,6 @@ public class TokyuKanjiRomajiOrHiraganaMapFactoryBean extends StringMapFromResou
 		if (instance != null) {
 			instance.accept(t, u);
 		}
-	}
-
-	private static <T, U> boolean test(@Nullable final BiPredicate<T, U> instance, final T t, final U u) {
-		return instance != null && instance.test(t, u);
 	}
 
 	@Override

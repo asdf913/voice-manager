@@ -312,13 +312,9 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends StringM
 
 	private static <T, U> void testAndAccept(final BiPredicate<T, U> instance, final T t, final U u,
 			final BiConsumer<T, U> consumer) {
-		if (test(instance, t, u)) {
+		if (Util.test(instance, t, u)) {
 			accept(consumer, t, u);
 		} // if
-	}
-
-	private static <T, U> boolean test(@Nullable final BiPredicate<T, U> instance, final T t, final U u) {
-		return instance != null && instance.test(t, u);
 	}
 
 	private static <T, U> void accept(@Nullable final BiConsumer<T, U> instance, final T t, final U u) {
@@ -348,8 +344,7 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends StringM
 	private static <T, U, R, E extends Throwable> R testAndApply(@Nullable final BiPredicate<T, U> predicate, final T t,
 			final U u, final BiFunction<T, U, R> functionTrue, @Nullable final BiFunction<T, U, R> functionFalse)
 			throws E {
-		return predicate != null && predicate.test(t, u) ? Util.apply(functionTrue, t, u)
-				: Util.apply(functionFalse, t, u);
+		return Util.test(predicate, t, u) ? Util.apply(functionTrue, t, u) : Util.apply(functionFalse, t, u);
 	}
 
 }

@@ -41,8 +41,8 @@ import com.google.common.reflect.Reflection;
 class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 
 	private static Method METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_CREATE_TABLE,
-			METHOD_GET_UNICODE_BLOCKS, METHOD_TEST, METHOD_ACCEPT, METHOD_IS_INSTANCE, METHOD_GET_TRIPLES_1,
-			METHOD_GET_TRIPLES_2, METHOD_GET_NAME_MODULE, METHOD_GET_MODULE, METHOD_GET = null;
+			METHOD_GET_UNICODE_BLOCKS, METHOD_ACCEPT, METHOD_IS_INSTANCE, METHOD_GET_TRIPLES_1, METHOD_GET_TRIPLES_2,
+			METHOD_GET_NAME_MODULE, METHOD_GET_MODULE, METHOD_GET = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -58,9 +58,6 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 		(METHOD_CREATE_TABLE = clz.getDeclaredMethod("createTable", Object[].class)).setAccessible(true);
 		//
 		(METHOD_GET_UNICODE_BLOCKS = clz.getDeclaredMethod("getUnicodeBlocks", char[].class)).setAccessible(true);
-		//
-		(METHOD_TEST = clz.getDeclaredMethod("test", BiPredicate.class, Object.class, Object.class))
-				.setAccessible(true);
 		//
 		(METHOD_ACCEPT = clz.getDeclaredMethod("accept", BiConsumer.class, Object.class, Object.class))
 				.setAccessible(true);
@@ -337,25 +334,6 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 				return null;
 			} else if (obj instanceof List) {
 				return (List) obj;
-			}
-			throw new Throwable(Util.toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testTest() throws Throwable {
-		//
-		Assertions.assertFalse(test(null, null, null));
-		//
-	}
-
-	private static <T, U> boolean test(final BiPredicate<T, U> instance, final T t, final U u) throws Throwable {
-		try {
-			final Object obj = METHOD_TEST.invoke(null, instance, t, u);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

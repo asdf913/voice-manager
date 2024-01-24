@@ -212,7 +212,7 @@ public class RyutetsuKanjiHiraganaMapFactoryBean extends StringMapFromResourceFa
 	private static <T, U, R, E extends Throwable> R testAndApply(@Nullable final BiPredicate<T, U> predicate, final T t,
 			final U u, final FailableBiFunction<T, U, R, E> functionTrue,
 			@Nullable final FailableBiFunction<T, U, R, E> functionFalse) throws E {
-		return predicate != null && predicate.test(t, u) ? FailableBiFunctionUtil.apply(functionTrue, t, u)
+		return Util.test(predicate, t, u) ? FailableBiFunctionUtil.apply(functionTrue, t, u)
 				: FailableBiFunctionUtil.apply(functionFalse, t, u);
 	}
 
@@ -261,7 +261,7 @@ public class RyutetsuKanjiHiraganaMapFactoryBean extends StringMapFromResourceFa
 
 	private static <T, U> void testAndAccept(@Nullable final BiPredicate<T, U> instance, final T t, final U u,
 			@Nullable final BiConsumer<T, U> consumer) {
-		if (instance != null && instance.test(t, u) && consumer != null) {
+		if (Util.test(instance, t, u) && consumer != null) {
 			consumer.accept(t, u);
 		} // if
 	}
