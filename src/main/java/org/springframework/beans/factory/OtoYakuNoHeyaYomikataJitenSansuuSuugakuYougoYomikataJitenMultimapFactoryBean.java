@@ -75,8 +75,10 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 		//
 		for (final Element tbody : tbodies) {
 			//
-			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), toMultimap(
-					tbody, pattern = ObjectUtils.getIfNull(pattern, () -> Pattern.compile("\\p{InHiragana}{1,3}行"))));
+			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					toMultimap(tbody,
+							pattern = ObjectUtils.getIfNull(pattern, () -> Pattern.compile("\\p{InHiragana}{1,3}行")),
+							"数学者"));
 			//
 		} // for
 			//
@@ -85,7 +87,8 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 	}
 
 	@Nullable
-	private static Multimap<String, String> toMultimap(final Element tbody, final Pattern pattern) {
+	private static Multimap<String, String> toMultimap(final Element tbody, final Pattern pattern,
+			final String string) {
 		//
 		if (ElementUtil.childrenSize(tbody) < 1) {
 			//
@@ -95,7 +98,9 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 			//
 		final Iterable<Element> children = ElementUtil.children(tbody);
 		//
-		if (!Util.matches(Util.matcher(pattern, ElementUtil.text(IterableUtils.get(children, 0))))) {
+		final String text = ElementUtil.text(IterableUtils.get(children, 0));
+		//
+		if (!Util.matches(Util.matcher(pattern, text)) && !Objects.equals(string, text)) {
 			//
 			return null;
 			//
@@ -105,7 +110,7 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 		//
 		Element element = null;
 		//
-		String s1 = null;
+		String s0 = null;
 		//
 		for (int i = 0; i < IterableUtils.size(children); i++) {
 			//
@@ -115,21 +120,28 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 				//
 			} // if
 				//
-			s1 = ElementUtil.text(
-					testAndApply(x -> ElementUtil.childrenSize(x) > 0, element, x -> ElementUtil.child(x, 0), null));
+			s0 = StringUtils.deleteWhitespace(ElementUtil.text(
+					testAndApply(x -> ElementUtil.childrenSize(x) > 0, element, x -> ElementUtil.child(x, 0), null)));
 			//
 			MultimapUtil
 					.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							toMultimap(s1,
-									Util.toList(Util.filter(
-											Util.stream(getStrings(
-													ElementUtil.text(testAndApply(x -> ElementUtil.childrenSize(x) > 1,
-															element, x -> ElementUtil.child(x, 1), null)),
-													UnicodeBlock.HIRAGANA, UnicodeBlock.KATAKANA)),
-											StringUtils::isNotEmpty))));
+							toMultimap(s0,
+									Util.toList(
+											Util.filter(
+													Util.stream(
+															getStrings(
+																	StringUtils.deleteWhitespace(
+																			ElementUtil.text(testAndApply(
+																					x -> ElementUtil
+																							.childrenSize(x) > 1,
+																					element,
+																					x -> ElementUtil.child(x, 1),
+																					null))),
+																	UnicodeBlock.HIRAGANA, UnicodeBlock.KATAKANA)),
+													StringUtils::isNotEmpty))));
 			//
 			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-					toMultimap(s1, ElementUtil.text(testAndApply(x -> ElementUtil.childrenSize(x) > 2, element,
+					toMultimap(s0, ElementUtil.text(testAndApply(x -> ElementUtil.childrenSize(x) > 2, element,
 							x -> ElementUtil.child(x, 2), null))));
 			//
 		} // for
