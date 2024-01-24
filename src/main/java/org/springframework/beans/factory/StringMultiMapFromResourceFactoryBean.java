@@ -452,6 +452,7 @@ public class StringMultiMapFromResourceFactoryBean implements FactoryBean<Multim
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
+	@Nullable
 	private static <T, U, R, E extends Throwable> R testAndApply(@Nullable final BiPredicate<T, U> predicate, final T t,
 			@Nullable final U u, final BiFunction<T, U, R> functionTrue,
 			@Nullable final BiFunction<T, U, R> functionFalse) throws E {
