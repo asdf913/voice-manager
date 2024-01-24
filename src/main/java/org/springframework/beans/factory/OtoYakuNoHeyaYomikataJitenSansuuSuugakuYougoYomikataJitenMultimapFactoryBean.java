@@ -24,12 +24,17 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.text.TextStringBuilder;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.LoggerUtil;
 
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
@@ -42,6 +47,9 @@ import io.github.toolfactory.narcissus.Narcissus;
  */
 public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBean
 		implements FactoryBean<Multimap<String, String>> {
+
+	private static final Logger LOG = LoggerFactory
+			.getLogger(OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBean.class);
 
 	private static IValue0<Iterable<Class<?>>> CLASSES = null;
 
@@ -324,7 +332,9 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 				//
 				char c = ' ';
 				//
-				StringBuilder sb1 = null, sb2 = null;
+				StringBuilder sb = null;
+				//
+				TextStringBuilder tsb = null;
 				//
 				boolean leftParenthesisFound = false;
 				//
@@ -333,17 +343,17 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 					if (Objects.equals(unicodeBlock = UnicodeBlock.of(c = cs[j]),
 							UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)) {
 						//
-						Util.append(sb1 = ObjectUtils.getIfNull(sb1, StringBuilder::new), c);
+						Util.append(sb = ObjectUtils.getIfNull(sb, StringBuilder::new), c);
 						//
 					} else if (Objects.equals(unicodeBlock, UnicodeBlock.HIRAGANA)) {
 						//
 						if (leftParenthesisFound) {
 							//
-							Util.append(sb2 = ObjectUtils.getIfNull(sb2, StringBuilder::new), c);
+							append(tsb = ObjectUtils.getIfNull(tsb, TextStringBuilder::new), c);
 							//
 						} else {
 							//
-							Util.append(sb1 = ObjectUtils.getIfNull(sb1, StringBuilder::new), c);
+							Util.append(sb = ObjectUtils.getIfNull(sb, StringBuilder::new), c);
 							//
 						} // if
 							//
@@ -354,11 +364,11 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 					} else if (c == '）') {
 						//
 						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-								Util.toString(sb1), Util.toString(sb2));
+								Util.toString(sb), Util.toString(tsb));
 						//
-						clear(sb1 = ObjectUtils.getIfNull(sb1, StringBuilder::new));
+						clear(sb = ObjectUtils.getIfNull(sb, StringBuilder::new));
 						//
-						clear(sb2 = ObjectUtils.getIfNull(sb2, StringBuilder::new));
+						clear(tsb = ObjectUtils.getIfNull(tsb, TextStringBuilder::new));
 						//
 						leftParenthesisFound = false;
 						//
@@ -372,6 +382,38 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 			//
 		}
 
+	}
+
+	private static void append(final TextStringBuilder instance, final char c) {
+		//
+		if (instance == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		try {
+			//
+			if (FieldUtils.readDeclaredField(instance, "buffer", true) == null) {
+				//
+				return;
+				//
+			} // if
+				//
+		} catch (final IllegalAccessException e) {
+			//
+			LoggerUtil.error(LOG, e.getMessage(), e);
+			//
+		} // try
+			//
+		instance.append(c);
+		//
+	}
+
+	private static void clear(final TextStringBuilder instance) {
+		if (instance != null) {
+			instance.clear();
+		}
 	}
 
 	private static class Prefix差StringToMultimap implements StringToMultimap {
@@ -393,7 +435,9 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 			//
 			char c = ' ';
 			//
-			StringBuilder sb1 = null, sb2 = null;
+			StringBuilder sb = null;
+			//
+			TextStringBuilder tsb = null;
 			//
 			boolean leftParenthesisFound = false;
 			//
@@ -401,17 +445,17 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 				//
 				if (Objects.equals(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS, unicodeBlock = UnicodeBlock.of(c = cs[j]))) {
 					//
-					Util.append(sb1 = ObjectUtils.getIfNull(sb1, StringBuilder::new), c);
+					Util.append(sb = ObjectUtils.getIfNull(sb, StringBuilder::new), c);
 					//
 				} else if (Util.contains(Arrays.asList(UnicodeBlock.HIRAGANA, UnicodeBlock.KATAKANA), unicodeBlock)) {
 					//
 					if (!leftParenthesisFound) {
 						//
-						Util.append(sb1 = ObjectUtils.getIfNull(sb1, StringBuilder::new), c);
+						Util.append(sb = ObjectUtils.getIfNull(sb, StringBuilder::new), c);
 						//
 					} else {
 						//
-						Util.append(sb2 = ObjectUtils.getIfNull(sb2, StringBuilder::new), c);
+						append(tsb = ObjectUtils.getIfNull(tsb, TextStringBuilder::new), c);
 						//
 					} // if
 						//
@@ -422,11 +466,11 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 				} else if (c == '）') {
 					//
 					MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							toMultimap(isEmpty(multimap), Util.toString(sb1), Util.toString(sb2)));
+							toMultimap(isEmpty(multimap), Util.toString(sb), Util.toString(tsb)));
 					//
-					clear(sb1 = ObjectUtils.getIfNull(sb1, StringBuilder::new));
+					clear(sb = ObjectUtils.getIfNull(sb, StringBuilder::new));
 					//
-					clear(sb2 = ObjectUtils.getIfNull(sb2, StringBuilder::new));
+					clear(tsb = ObjectUtils.getIfNull(tsb, TextStringBuilder::new));
 					//
 					leftParenthesisFound = false;
 					//
@@ -490,27 +534,29 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 			//
 			char c = ' ';
 			//
-			StringBuilder sb1 = null, sb2 = null;
+			StringBuilder sb = null;
+			//
+			TextStringBuilder tsb = null;
 			//
 			for (int j = 0; j < length(cs); j++) {
 				//
 				if (Util.contains(Arrays.asList(UnicodeBlock.BASIC_LATIN, UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
 						unicodeBlock = UnicodeBlock.of(c = cs[j]))) {
 					//
-					Util.append(sb1 = ObjectUtils.getIfNull(sb1, StringBuilder::new), c);
+					Util.append(sb = ObjectUtils.getIfNull(sb, StringBuilder::new), c);
 					//
 				} else if (Util.contains(Arrays.asList(UnicodeBlock.HIRAGANA, UnicodeBlock.KATAKANA), unicodeBlock)) {
 					//
-					Util.append(sb2 = ObjectUtils.getIfNull(sb2, StringBuilder::new), c);
+					append(tsb = ObjectUtils.getIfNull(tsb, TextStringBuilder::new), c);
 					//
 				} else if (c == '）') {
 					//
 					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							Util.toString(sb1), Util.toString(sb2));
+							Util.toString(sb), Util.toString(tsb));
 					//
-					clear(sb1 = ObjectUtils.getIfNull(sb1, StringBuilder::new));
+					clear(sb = ObjectUtils.getIfNull(sb, StringBuilder::new));
 					//
-					clear(sb2 = ObjectUtils.getIfNull(sb2, StringBuilder::new));
+					clear(tsb = ObjectUtils.getIfNull(tsb, TextStringBuilder::new));
 					//
 				} // if
 					//
@@ -625,23 +671,25 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 			//
 			char c = ' ';
 			//
-			StringBuilder sb1 = null, sb2 = null;
+			StringBuilder sb = null;
+			//
+			TextStringBuilder tsb = null;
 			//
 			for (int j = 0; j < length(cs); j++) {
 				//
 				if (Util.contains(Arrays.asList(UnicodeBlock.BASIC_LATIN, UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
 						unicodeBlock = UnicodeBlock.of(c = cs[j]))) {
 					//
-					Util.append(sb1 = ObjectUtils.getIfNull(sb1, StringBuilder::new), c);
+					Util.append(sb = ObjectUtils.getIfNull(sb, StringBuilder::new), c);
 					//
 				} else if (Objects.equals(UnicodeBlock.HIRAGANA, unicodeBlock)) {
 					//
-					Util.append(sb2 = ObjectUtils.getIfNull(sb2, StringBuilder::new), c);
+					append(tsb = ObjectUtils.getIfNull(tsb, TextStringBuilder::new), c);
 					//
 				} else if (c == '）') {
 					//
 					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							Util.toString(sb1), Util.toString(sb2));
+							Util.toString(sb), Util.toString(tsb));
 					//
 					break;
 					//

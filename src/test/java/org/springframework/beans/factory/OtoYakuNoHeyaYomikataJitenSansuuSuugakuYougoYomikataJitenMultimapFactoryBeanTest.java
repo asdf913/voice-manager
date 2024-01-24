@@ -6,6 +6,7 @@ import java.io.OutputStream;
 import java.lang.Character.UnicodeBlock;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.net.URI;
 import java.net.URL;
 import java.util.Arrays;
@@ -14,11 +15,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.stream.Streams.FailableStream;
+import org.apache.commons.text.TextStringBuilder;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellUtil;
 import org.apache.poi.ss.usermodel.Row;
@@ -41,9 +45,9 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBeanTest {
 
-	private static Method METHOD_GET_STRINGS, METHOD_CLEAR, METHOD_TO_URL, METHOD_TEST_AND_APPLY, METHOD_LENGTH,
+	private static Method METHOD_GET_STRINGS, METHOD_TO_URL, METHOD_TEST_AND_APPLY, METHOD_LENGTH,
 			METHOD_TO_MULTI_MAP_ITERABLE, METHOD_TO_MULTI_MAP_STRING_STRING, METHOD_TO_MULTI_MAP2, METHOD_APPLY,
-			METHOD_GET_OBJECTS = null;
+			METHOD_GET_OBJECTS, METHOD_APPEND = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException, ClassNotFoundException {
@@ -52,8 +56,6 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 		//
 		(METHOD_GET_STRINGS = clz.getDeclaredMethod("getStrings", String.class, UnicodeBlock.class,
 				UnicodeBlock[].class)).setAccessible(true);
-		//
-		(METHOD_CLEAR = clz.getDeclaredMethod("clear", StringBuilder.class)).setAccessible(true);
 		//
 		(METHOD_TO_URL = clz.getDeclaredMethod("toURL", URI.class)).setAccessible(true);
 		//
@@ -74,6 +76,8 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 		//
 		(METHOD_GET_OBJECTS = clz.getDeclaredMethod("getObjects", Iterable.class, Object.class, Object.class))
 				.setAccessible(true);
+		//
+		(METHOD_APPEND = clz.getDeclaredMethod("append", TextStringBuilder.class, Character.TYPE)).setAccessible(true);
 		//
 	}
 
@@ -202,18 +206,25 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 	}
 
 	@Test
-	void testClear() {
+	void testClear() throws Throwable {
 		//
-		Assertions.assertDoesNotThrow(() -> clear(null));
+		new FailableStream<>(Util.filter(
+				Arrays.stream(OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBean.class
+						.getDeclaredMethods()),
+				m -> m != null && Objects.equals("clear", Util.getName(m)) && m.getParameterCount() == 1
+						&& Modifier.isStatic(m.getModifiers())))
+				.forEach(m -> {
+					//
+					if (m != null) {
+						//
+						m.setAccessible(true);
+						//
+						m.invoke(null, (Object) null);
+						//
+					} // if
+						//
+				});
 		//
-	}
-
-	private static void clear(final StringBuilder instance) throws Throwable {
-		try {
-			METHOD_CLEAR.invoke(null, instance);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test
@@ -422,6 +433,24 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 				return (Collection) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testAppend() {
+		//
+		Assertions.assertDoesNotThrow(() -> append(null, ' '));
+		//
+		Assertions.assertDoesNotThrow(() -> append(
+				Util.cast(TextStringBuilder.class, Narcissus.allocateInstance(TextStringBuilder.class)), ' '));
+		//
+	}
+
+	private static void append(final TextStringBuilder instance, final char c) throws Throwable {
+		try {
+			METHOD_APPEND.invoke(null, instance, c);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
