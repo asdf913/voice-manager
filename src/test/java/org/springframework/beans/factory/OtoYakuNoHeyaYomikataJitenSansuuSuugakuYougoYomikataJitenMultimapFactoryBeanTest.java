@@ -321,6 +321,8 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 		//
 		Assertions.assertEquals("{零行列=[ぜろぎょうれつ]}", Util.toString(toMultimap("零行列", "（ぜろぎょうれつ）")));
 		//
+		Assertions.assertEquals("{六十進法=[ろくじゅっしんほう]}", Util.toString(toMultimap("六十進法", "（ろくじゅっしんほう）")));
+		//
 		final Multimap<String, String> multimap = ImmutableMultimap.of();
 		//
 		Assertions.assertEquals(multimap, toMultimap(Collections.singleton(null)));
