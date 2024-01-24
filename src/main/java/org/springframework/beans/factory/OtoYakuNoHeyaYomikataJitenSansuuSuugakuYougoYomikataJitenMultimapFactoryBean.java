@@ -53,6 +53,8 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 	private static final Logger LOG = LoggerFactory
 			.getLogger(OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBean.class);
 
+	private static final String TBODY = "tbody";
+
 	private static IValue0<Iterable<Class<?>>> CLASSES = null;
 
 	private String url = null;
@@ -99,7 +101,7 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 											URI::new, null),
 									x -> toURL(x), null),
 							x -> Jsoup.parse(x, 0), null),
-					"tbody"));
+					TBODY));
 			//
 		} // if
 			//
@@ -119,14 +121,14 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 											URI::new, null),
 									x -> toURL(x), null),
 							x -> Jsoup.parse(x, 0), null),
-					"tbody"));
+					TBODY));
 			//
 		} // if
 			//
 		return toMultimap(ElementUtil.select(testAndApply(
 				Objects::nonNull, testAndApply(Util::isAbsolute,
 						testAndApply(StringUtils::isNotBlank, url, URI::new, null), x -> toURL(x), null),
-				x -> Jsoup.parse(x, 0), null), "tbody"));
+				x -> Jsoup.parse(x, 0), null), TBODY));
 		//
 	}
 
