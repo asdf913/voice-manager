@@ -15,7 +15,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Predicate;
 
 import org.apache.poi.EmptyFileException;
 import org.apache.poi.ss.usermodel.Cell;
@@ -51,10 +50,9 @@ class JlptVocabularyListFactoryBeanTest {
 
 	private static final String EMPTY = "";
 
-	private static Method METHOD_ANNOTATION_TYPE, METHOD_TEST, METHOD_OR, METHOD_GET_FIELDS_BY_NAME,
-			METHOD_GET_INTEGER_VALUE, METHOD_GET_STRING_VALUE_CELL, METHOD_INVOKE, METHOD_GET_DECLARED_ANNOTATIONS,
-			METHOD_GET_DECLARED_METHODS, METHOD_SET_ACCESSIBLE, METHOD_GET_NUMBER_VALUE,
-			METHOD_GET_PHYSICAL_NUMBER_OF_CELLS = null;
+	private static Method METHOD_ANNOTATION_TYPE, METHOD_OR, METHOD_GET_FIELDS_BY_NAME, METHOD_GET_INTEGER_VALUE,
+			METHOD_GET_STRING_VALUE_CELL, METHOD_INVOKE, METHOD_GET_DECLARED_ANNOTATIONS, METHOD_GET_DECLARED_METHODS,
+			METHOD_SET_ACCESSIBLE, METHOD_GET_NUMBER_VALUE, METHOD_GET_PHYSICAL_NUMBER_OF_CELLS = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -62,8 +60,6 @@ class JlptVocabularyListFactoryBeanTest {
 		final Class<?> clz = JlptVocabularyListFactoryBean.class;
 		//
 		(METHOD_ANNOTATION_TYPE = clz.getDeclaredMethod("annotationType", Annotation.class)).setAccessible(true);
-		//
-		(METHOD_TEST = clz.getDeclaredMethod("test", Predicate.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_OR = clz.getDeclaredMethod("or", Boolean.TYPE, Boolean.TYPE, boolean[].class)).setAccessible(true);
 		//
@@ -380,25 +376,6 @@ class JlptVocabularyListFactoryBeanTest {
 				return (Class) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testTest() throws Throwable {
-		//
-		Assertions.assertFalse(test(null, null));
-		//
-	}
-
-	private static final <T> boolean test(final Predicate<T> instance, final T value) throws Throwable {
-		try {
-			final Object obj = METHOD_TEST.invoke(null, instance, value);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
-			}
-			throw new Throwable(obj != null && obj.getClass() != null ? obj.getClass().toString() : null);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

@@ -8,7 +8,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Predicate;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.jsoup.nodes.Element;
@@ -26,7 +25,7 @@ import javassist.util.proxy.ProxyObject;
 
 class KeikyuRailwayKanjiHiraganaMapFactoryBeanTest {
 
-	private static Method METHOD_CREATE_MAP, METHOD_GET_WHOLE_TEXT, METHOD_TEST = null;
+	private static Method METHOD_CREATE_MAP, METHOD_GET_WHOLE_TEXT = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -36,8 +35,6 @@ class KeikyuRailwayKanjiHiraganaMapFactoryBeanTest {
 		(METHOD_CREATE_MAP = clz.getDeclaredMethod("createMap", List.class)).setAccessible(true);
 		//
 		(METHOD_GET_WHOLE_TEXT = clz.getDeclaredMethod("getWholeText", TextNode.class)).setAccessible(true);
-		//
-		(METHOD_TEST = clz.getDeclaredMethod("test", Predicate.class, Object.class)).setAccessible(true);
 		//
 	}
 
@@ -211,25 +208,6 @@ class KeikyuRailwayKanjiHiraganaMapFactoryBeanTest {
 				return (String) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testTest() throws Throwable {
-		//
-		Assertions.assertFalse(test(null, null));
-		//
-	}
-
-	private static final <T> boolean test(final Predicate<T> instance, final T value) throws Throwable {
-		try {
-			final Object obj = METHOD_TEST.invoke(null, instance, value);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
-			}
-			throw new Throwable(obj != null && obj.getClass() != null ? obj.getClass().toString() : null);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

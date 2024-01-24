@@ -429,11 +429,7 @@ public class StringMultiMapFromResourceFactoryBean implements FactoryBean<Multim
 	}
 
 	private static <T> boolean and(final Predicate<T> predicate, final T a, final T b) {
-		return test(predicate, a) && test(predicate, b);
-	}
-
-	private static <T> boolean test(@Nullable final Predicate<T> instance, final T value) {
-		return instance != null && instance.test(value);
+		return Util.test(predicate, a) && Util.test(predicate, b);
 	}
 
 	private static int getPhysicalNumberOfCells(@Nullable final Row instance, final int defaultValue) {
@@ -457,7 +453,7 @@ public class StringMultiMapFromResourceFactoryBean implements FactoryBean<Multim
 	private static <T, R, E extends Throwable> R testAndApply(@Nullable final Predicate<T> predicate, final T value,
 			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
 			throws E {
-		return test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
+		return Util.test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 

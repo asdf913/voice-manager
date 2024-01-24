@@ -4,7 +4,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 
@@ -30,15 +29,13 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class JapaneseNameMultimapFactoryBeanTest {
 
-	private static Method METHOD_TEST, METHOD_CREATE_MULTI_MAP_ELEMENT, METHOD_CREATE_MULTI_MAP_WORK_BOOK,
+	private static Method METHOD_CREATE_MULTI_MAP_ELEMENT, METHOD_CREATE_MULTI_MAP_WORK_BOOK,
 			METHOD_CREATE_MULTI_MAP_BY_URL = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
 		//
 		final Class<?> clz = JapaneseNameMultimapFactoryBean.class;
-		//
-		(METHOD_TEST = clz.getDeclaredMethod("test", Predicate.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_CREATE_MULTI_MAP_ELEMENT = clz.getDeclaredMethod("createMultimap", Element.class, Pattern.class))
 				.setAccessible(true);
@@ -168,25 +165,6 @@ class JapaneseNameMultimapFactoryBeanTest {
 		//
 		Assertions.assertEquals(Multimap.class, instance != null ? instance.getObjectType() : null);
 		//
-	}
-
-	@Test
-	void testTest() throws Throwable {
-		//
-		Assertions.assertFalse(test(null, null));
-		//
-	}
-
-	private static final <T> boolean test(final Predicate<T> instance, final T value) throws Throwable {
-		try {
-			final Object obj = METHOD_TEST.invoke(null, instance, value);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
-			}
-			throw new Throwable(obj != null && obj.getClass() != null ? obj.getClass().toString() : null);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test

@@ -172,7 +172,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, @Nullable final T value,
 			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
 			throws E {
-		return test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
+		return Util.test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
@@ -274,11 +274,7 @@ public class OdakyuBusKanjiHiraganaMapFactoryBean implements FactoryBean<Map<Str
 	}
 
 	private static <T> boolean and(final Predicate<T> predicate, final T a, final T b) {
-		return test(predicate, a) && test(predicate, b);
-	}
-
-	private static final <T> boolean test(@Nullable final Predicate<T> instance, @Nullable final T value) {
-		return instance != null && instance.test(value);
+		return Util.test(predicate, a) && Util.test(predicate, b);
 	}
 
 	@Nullable

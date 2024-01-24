@@ -4,13 +4,10 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Objects;
-import java.util.function.Predicate;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.InputStreamSource;
@@ -21,16 +18,6 @@ import com.google.common.collect.Multimap;
 import com.google.common.reflect.Reflection;
 
 class IpaMultimapFactoryBeanTest {
-
-	private static Method METHOD_TEST = null;
-
-	@BeforeAll
-	static void beforeAll() throws ReflectiveOperationException {
-		//
-		(METHOD_TEST = IpaMultimapFactoryBean.class.getDeclaredMethod("test", Predicate.class, Object.class))
-				.setAccessible(true);
-		//
-	}
 
 	private static class IH implements InvocationHandler {
 
@@ -155,25 +142,6 @@ class IpaMultimapFactoryBeanTest {
 
 	private static <T> T getObject(final FactoryBean<T> instance) throws Exception {
 		return instance != null ? instance.getObject() : null;
-	}
-
-	@Test
-	void testTest() throws Throwable {
-		//
-		Assertions.assertFalse(test(null, null));
-		//
-	}
-
-	private static final <T> boolean test(final Predicate<T> instance, final T value) throws Throwable {
-		try {
-			final Object obj = METHOD_TEST.invoke(null, instance, value);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 }

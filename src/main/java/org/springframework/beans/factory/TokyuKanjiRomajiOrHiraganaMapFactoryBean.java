@@ -256,10 +256,6 @@ public class TokyuKanjiRomajiOrHiraganaMapFactoryBean extends StringMapFromResou
 		}
 	}
 
-	private static final <T> boolean test(@Nullable final Predicate<T> instance, final T value) {
-		return instance != null && instance.test(value);
-	}
-
 	private static <T, U> boolean test(@Nullable final BiPredicate<T, U> instance, final T t, final U u) {
 		return instance != null && instance.test(t, u);
 	}
@@ -272,7 +268,7 @@ public class TokyuKanjiRomajiOrHiraganaMapFactoryBean extends StringMapFromResou
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
 			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
 			throws E {
-		return test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
+		return Util.test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 

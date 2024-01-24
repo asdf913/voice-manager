@@ -169,13 +169,11 @@ public class BufferedImageTypeFactoryBean implements FactoryBean<Integer> {
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, @Nullable final T value,
 			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
 			throws E {
-		return test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
+		return Util.test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
-	private static final <T> boolean test(@Nullable final Predicate<T> instance, @Nullable final T value) {
-		return instance != null && instance.test(value);
-	}
+	
 
 	@Nullable
 	private static Object get(@Nullable final Field field, final Object instance) throws IllegalAccessException {

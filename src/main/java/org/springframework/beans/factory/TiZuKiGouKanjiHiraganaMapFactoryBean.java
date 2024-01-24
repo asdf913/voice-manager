@@ -331,7 +331,7 @@ public class TiZuKiGouKanjiHiraganaMapFactoryBean extends StringMapFromResourceF
 	private static <T, R, E extends Throwable> R testAndApply(@Nullable final Predicate<T> predicate,
 			@Nullable final T value, final FailableFunction<T, R, E> functionTrue,
 			@Nullable final FailableFunction<T, R, E> functionFalse) throws E {
-		return predicate != null && predicate.test(value) ? FailableFunctionUtil.apply(functionTrue, value)
+		return Util.test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 

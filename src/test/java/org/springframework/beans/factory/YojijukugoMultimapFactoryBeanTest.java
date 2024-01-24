@@ -4,7 +4,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.function.Predicate;
 import java.util.stream.IntStream;
 
 import org.apache.poi.ss.usermodel.Row;
@@ -26,15 +25,13 @@ import com.google.common.collect.Multimap;
 
 class YojijukugoMultimapFactoryBeanTest {
 
-	private static Method METHOD_TEST, METHOD_CREATE_MULTI_MAP_BY_URL, METHOD_CREATE_MULTI_MAP_WORK_BOOK,
+	private static Method METHOD_CREATE_MULTI_MAP_BY_URL, METHOD_CREATE_MULTI_MAP_WORK_BOOK,
 			METHOD_CREATE_MULTI_MAP_SPREAD_SHEET_DOCUMENT = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
 		//
 		final Class<?> clz = YojijukugoMultimapFactoryBean.class;
-		//
-		(METHOD_TEST = clz.getDeclaredMethod("test", Predicate.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_CREATE_MULTI_MAP_BY_URL = clz.getDeclaredMethod("createMultimapByUrl", String.class, String[].class))
 				.setAccessible(true);
@@ -162,25 +159,6 @@ class YojijukugoMultimapFactoryBeanTest {
 		//
 		Assertions.assertEquals(Multimap.class, instance != null ? instance.getObjectType() : null);
 		//
-	}
-
-	@Test
-	void testTest() throws Throwable {
-		//
-		Assertions.assertFalse(test(null, null));
-		//
-	}
-
-	private static <T> boolean test(final Predicate<T> instance, final T value) throws Throwable {
-		try {
-			final Object obj = METHOD_TEST.invoke(null, instance, value);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
-			}
-			throw new Throwable(obj != null && obj.getClass() != null ? obj.getClass().toString() : null);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test

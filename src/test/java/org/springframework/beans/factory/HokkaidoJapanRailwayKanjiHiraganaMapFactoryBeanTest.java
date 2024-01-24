@@ -10,7 +10,6 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
-import java.util.function.Predicate;
 
 import org.apache.commons.lang3.function.FailableBiFunction;
 import org.apache.commons.lang3.tuple.Pair;
@@ -22,7 +21,7 @@ import org.meeuw.functional.Predicates;
 
 class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 
-	private static Method METHOD_CREATE_MAP, METHOD_FOR_NAME, METHOD_TEST, METHOD_TEST_AND_APPLY, METHOD_CREATE_PAIR,
+	private static Method METHOD_CREATE_MAP, METHOD_FOR_NAME, METHOD_TEST_AND_APPLY, METHOD_CREATE_PAIR,
 			METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK, METHOD_TEST_AND_ACCEPT = null;
 
 	@BeforeAll
@@ -33,8 +32,6 @@ class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 		(METHOD_CREATE_MAP = clz.getDeclaredMethod("createMap", InputStream.class, Charset.class)).setAccessible(true);
 		//
 		(METHOD_FOR_NAME = clz.getDeclaredMethod("forName", String.class)).setAccessible(true);
-		//
-		(METHOD_TEST = clz.getDeclaredMethod("test", Predicate.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", BiPredicate.class, Object.class, Object.class,
 				FailableBiFunction.class, FailableBiFunction.class)).setAccessible(true);
@@ -164,25 +161,6 @@ class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 				return null;
 			} else if (obj instanceof Charset) {
 				return (Charset) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testTest() throws Throwable {
-		//
-		Assertions.assertFalse(test(null, null));
-		//
-	}
-
-	private static final <T> boolean test(final Predicate<T> instance, final T value) throws Throwable {
-		try {
-			final Object obj = METHOD_TEST.invoke(null, instance, value);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
