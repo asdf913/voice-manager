@@ -105,6 +105,7 @@ public class StringMultiMapFromResourceFactoryBean implements FactoryBean<Multim
 		//
 	}
 
+	@Nullable
 	IValue0<Multimap<String, String>> getIvalue0() {
 		//
 		if (iValue0 == null) {
@@ -154,6 +155,7 @@ public class StringMultiMapFromResourceFactoryBean implements FactoryBean<Multim
 		}
 
 		@Override
+		@Nullable
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
 			final String methodName = Util.getName(method);
@@ -192,6 +194,7 @@ public class StringMultiMapFromResourceFactoryBean implements FactoryBean<Multim
 
 	}
 
+	@Nullable
 	private static IValue0<Multimap<String, String>> createMultimap(final Resource resource,
 			final IValue0<String> sheetName, final IValue0<String> keyColumnName,
 			final Pair<String, Integer> valueColumnNameAndIndex)
@@ -249,6 +252,7 @@ public class StringMultiMapFromResourceFactoryBean implements FactoryBean<Multim
 		//
 	}
 
+	@Nullable
 	private static IValue0<Multimap<String, String>> createMultimap(final Sheet sheet,
 			final FormulaEvaluator formulaEvaluator, final IValue0<String> keyColumnName,
 			final Pair<String, Integer> valueColumnNameAndIndex) {
@@ -427,6 +431,7 @@ public class StringMultiMapFromResourceFactoryBean implements FactoryBean<Multim
 		return instance != null ? instance.getPhysicalNumberOfCells() : defaultValue;
 	}
 
+	@Nullable
 	private static ObjectIntMap<String> createObjectIntMap(final Row row) {
 		//
 		final ObjectIntMap<String> objectIntMap = Reflection.newProxy(ObjectIntMap.class, new IH());
