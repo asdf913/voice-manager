@@ -602,8 +602,6 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 		@Nullable
 		public Multimap<String, String> apply(final String a, final String b) {
 			//
-			System.out.println(a + " " + b);
-			//
 			final Matcher matcher = Util.matcher(
 					Pattern.compile("((\\p{InBasicLatin}|\\p{InCJKUnifiedIdeographs})+)（(\\p{InHiragana}+)）"), b);
 			//
