@@ -47,6 +47,8 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBeanTest {
 
+	private static final String EMPTY = "";
+
 	private static Method METHOD_GET_STRINGS, METHOD_TO_URL, METHOD_TEST_AND_APPLY, METHOD_LENGTH,
 			METHOD_TO_MULTI_MAP_ITERABLE, METHOD_TO_MULTI_MAP_STRING_STRING, METHOD_TO_MULTI_MAP2, METHOD_GET_OBJECTS,
 			METHOD_APPEND = null;
@@ -97,6 +99,10 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 					//
 					return null;
 					//
+				} else if (Objects.equals(methodName, "getDescription")) {
+					//
+					return null;
+					//
 				} // if
 					//
 			} // if
@@ -134,6 +140,26 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 		final Link link = Reflection.newProxy(Link.class, new IH());
 		//
 		if (instance != null) {
+			//
+			instance.setLinks(Collections.singleton(link));
+			//
+		} // if
+			//
+		Assertions.assertNull(getObject(instance));
+		//
+		if (instance != null) {
+			//
+			instance.setLinks(Collections.nCopies(2, link));
+			//
+		} // if
+			//
+		Assertions.assertThrows(IllegalStateException.class, () -> getObject(instance));
+		//
+		if (instance != null) {
+			//
+			instance.setText(EMPTY);
+			//
+			instance.setDescription(null);
 			//
 			instance.setLinks(Collections.singleton(link));
 			//
@@ -295,7 +321,7 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 		//
 		Assertions.assertNull(toURL(null));
 		//
-		Assertions.assertNull(toURL(new URI("")));
+		Assertions.assertNull(toURL(new URI(EMPTY)));
 		//
 		final URI uri = new URI("http://www.z.cn");
 		//
@@ -362,7 +388,7 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 		//
 		Assertions.assertNull(toMultimap(null, (String) null));
 		//
-		Assertions.assertNull(toMultimap(null, ""));
+		Assertions.assertNull(toMultimap(null, EMPTY));
 		//
 		final String space = " ";
 		//
