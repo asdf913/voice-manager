@@ -462,7 +462,7 @@ public class StringMultiMapFromResourceFactoryBean implements FactoryBean<Multim
 	}
 
 	private static <A, B, C> void testAndAccept(@Nullable final TriPredicate<A, B, C> predicate, final A a, final B b,
-			final C c, @Nullable final TriConsumer<A, B, C> consumer) {
+			@Nullable final C c, @Nullable final TriConsumer<A, B, C> consumer) {
 		if (predicate != null && predicate.test(a, b, c) && consumer != null) {
 			consumer.accept(a, b, c);
 		}
