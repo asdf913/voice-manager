@@ -1472,8 +1472,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
-				put(outputFolderFileNameExpressions = ObjectUtils.getIfNull(outputFolderFileNameExpressions,
-						LinkedHashMap::new), Util.toString(Util.getKey(entry)), Util.toString(Util.getValue(entry)));
+				Util.put(
+						outputFolderFileNameExpressions = ObjectUtils.getIfNull(outputFolderFileNameExpressions,
+								LinkedHashMap::new),
+						Util.toString(Util.getKey(entry)), Util.toString(Util.getValue(entry)));
 				//
 			} // for
 				//
@@ -1500,12 +1502,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			objectMapper = new ObjectMapper();
 		}
 		return objectMapper;
-	}
-
-	private static <K, V> void put(@Nullable final Map<K, V> instance, @Nullable final K key, @Nullable final V value) {
-		if (instance != null) {
-			instance.put(key, value);
-		}
 	}
 
 	@SuppressWarnings("java:S1612")
@@ -1585,8 +1581,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					} // if
 						//
-					put(exportWebSpeechSynthesisHtmlTemplateProperties = ObjectUtils
-							.getIfNull(exportWebSpeechSynthesisHtmlTemplateProperties, LinkedHashMap::new),
+					Util.put(
+							exportWebSpeechSynthesisHtmlTemplateProperties = ObjectUtils
+									.getIfNull(exportWebSpeechSynthesisHtmlTemplateProperties, LinkedHashMap::new),
 							Util.getKey(entry), Util.getValue(entry));
 					//
 				} // for
@@ -2483,7 +2480,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					} // if
 						//
-					put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), Util.getName(m),
+					Util.put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), Util.getName(m),
 							invoke(m, osVersionInfoEx));
 					//
 				} // for
@@ -4658,9 +4655,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			final Map<Object, Object> map = new LinkedHashMap<>(Collections.singletonMap("statics",
 					new BeansWrapper(freemarker.template.Configuration.getVersion()).getStaticModels()));
 			//
-			map.put("mediaFormatLink", getMediaFormatLink(mediaFormatPageUrl));
+			Util.put(map, "mediaFormatLink", getMediaFormatLink(mediaFormatPageUrl));
 			//
-			map.put("encryptionTableHtml",
+			Util.put(map, "encryptionTableHtml",
 					getEncryptionTableHtml(
 							testAndApply(StringUtils::isNotBlank, poiEncryptionPageUrl, x -> new URI(x).toURL(), null),
 							timeout));
@@ -5070,7 +5067,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
-				put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), Util.getKey(pair), Util.getValue(pair));
+				Util.put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), Util.getKey(pair), Util.getValue(pair));
 				//
 			} // for
 				//
@@ -7064,11 +7061,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				final Map<Object, Object> map = new LinkedHashMap<>();
 				//
-				put(map, "folder", voiceFolder);
+				Util.put(map, "folder", voiceFolder);
 				//
-				put(map, "voices", voices);
+				Util.put(map, "voices", voices);
 				//
-				put(map, "Base64Encoder", Base64.getEncoder());
+				Util.put(map, "Base64Encoder", Base64.getEncoder());
 				//
 				try (final Writer writer = new StringWriter()) {
 					//
@@ -7762,11 +7759,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					ObjectMap.setObject(objectMap, Writer.class, writer);
 					//
-					put(map, "folder", voiceFolder);
+					Util.put(map, "folder", voiceFolder);
 					//
-					put(map, "voices", MultimapUtil.get(multimap, key));
+					Util.put(map, "voices", MultimapUtil.get(multimap, key));
 					//
-					put(map, "Base64Encoder", Base64.getEncoder());
+					Util.put(map, "Base64Encoder", Base64.getEncoder());
 					//
 					final Collection<Entry<Object, Object>> entrySet = Util.entrySet(parameters);
 					//
@@ -7780,7 +7777,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 								//
 							} // if
 								//
-							map.put(Util.toString(Util.getKey(parameter)), Util.getValue(parameter));
+							Util.put(map, Util.toString(Util.getKey(parameter)), Util.getValue(parameter));
 							//
 						} // for
 							//
@@ -7836,7 +7833,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
-				map.put(Util.toString(Util.getKey(parameter)), Util.getValue(parameter));
+				Util.put(map, Util.toString(Util.getKey(parameter)), Util.getValue(parameter));
 				//
 			} // for
 				//
@@ -9171,7 +9168,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				for (int i = 0; ms != null && i < ms.length; i++) {
 					//
-					put(map = getIfNull(map, LinkedHashMap::new), Integer.valueOf(i),
+					Util.put(map = getIfNull(map, LinkedHashMap::new), Integer.valueOf(i),
 							createQuality(InstructionListUtil.getInstructions(MethodGenUtil.getInstructionList(
 									testAndApply(Objects::nonNull, ms[i], x -> new MethodGen(x, null, null), null)))));
 					//
@@ -9314,13 +9311,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} else if (instruction instanceof BIPUSH biPush) {
 					//
-					put(IValue0Util.getValue0(result = getIfNull(result, () -> Unit.with(new LinkedHashMap<>()))), key,
-							(value = getValue(biPush)) != null ? value.intValue() : null);
+					Util.put(IValue0Util.getValue0(result = getIfNull(result, () -> Unit.with(new LinkedHashMap<>()))),
+							key, (value = getValue(biPush)) != null ? value.intValue() : null);
 					//
 				} else if (instruction instanceof ICONST iConst) {
 					//
-					put(IValue0Util.getValue0(result = getIfNull(result, () -> Unit.with(new LinkedHashMap<>()))), key,
-							(value = getValue(iConst)) != null ? value.intValue() : null);
+					Util.put(IValue0Util.getValue0(result = getIfNull(result, () -> Unit.with(new LinkedHashMap<>()))),
+							key, (value = getValue(iConst)) != null ? value.intValue() : null);
 				} // if
 					//
 			} // for
@@ -11403,7 +11400,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} else if (Objects.equals(methodName, "setObject") && args != null && args.length > 1) {
 				//
-				put(map, args[0], args[1]);
+				Util.put(map, args[0], args[1]);
 				//
 				return Unit.with(null);
 				//
@@ -11431,7 +11428,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} else if (Objects.equals(methodName, "setBoolean") && args != null && args.length > 1) {
 				//
-				put(map, args[0], args[1]);
+				Util.put(map, args[0], args[1]);
 				//
 				return Unit.with(null);
 				//
@@ -11463,7 +11460,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} else if (Objects.equals(methodName, "setObject") && args != null && args.length > 1) {
 				//
-				put(map, args[0], args[1]);
+				Util.put(map, args[0], args[1]);
 				//
 				return Unit.with(null);
 				//
@@ -11495,7 +11492,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} else if (Objects.equals(methodName, "setInt") && args != null && args.length > 1) {
 				//
-				put(map, args[0], args[1]);
+				Util.put(map, args[0], args[1]);
 				//
 				return Unit.with(null);
 				//
@@ -11523,7 +11520,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} else if (Objects.equals(methodName, "setString") && args != null && args.length > 1) {
 				//
-				put(map, args[0], args[1]);
+				Util.put(map, args[0], args[1]);
 				//
 				return Unit.with(null);
 				//

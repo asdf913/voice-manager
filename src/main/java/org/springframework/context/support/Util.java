@@ -190,4 +190,10 @@ public abstract class Util {
 		return instance != null ? instance.get(key) : null;
 	}
 
+	static <K, V> void put(final Map<K, V> instance, final K key, final V value) {
+		if (instance != null) {
+			instance.put(key, value);
+		}
+	}
+
 }

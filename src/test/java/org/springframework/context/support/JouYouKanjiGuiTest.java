@@ -670,17 +670,6 @@ class JouYouKanjiGuiTest {
 			//
 		Assertions.assertNull(invoke(method, null, (Object) null));
 		//
-		// org.springframework.context.support.JouYouKanjiGui$IH.put(java.util.Map,java.lang.Object,java.lang.Object)
-		//
-		if ((method = CLASS_IH != null ? CLASS_IH.getDeclaredMethod("put", Map.class, Object.class, Object.class)
-				: null) != null) {
-			//
-			method.setAccessible(true);
-			//
-		} // if
-			//
-		Assertions.assertNull(invoke(method, null, null, null, null));
-		//
 	}
 
 	private static Object invoke(final Method method, final Object instance, final Object... args) throws Throwable {

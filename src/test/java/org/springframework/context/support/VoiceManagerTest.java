@@ -319,10 +319,10 @@ class VoiceManagerTest {
 			METHOD_GET_METHODS_CLASS, METHOD_COPY_OBJECT_MAP, METHOD_DELETE, METHOD_DELETE_ON_EXIT,
 			METHOD_CONVERT_LANGUAGE_CODE_TO_TEXT, METHOD_IS_SELECTED, METHOD_SET_HIRAGANA_OR_KATAKANA,
 			METHOD_SET_ROMAJI, METHOD_AND, METHOD_OR, METHOD_CLEAR_DEFAULT_TABLE_MODEL, METHOD_CLEAR_STRING_BUILDER,
-			METHOD_EXECUTE, METHOD_PUT_MAP, METHOD_GET_BYTE_CONVERTER, METHOD_CONTAINS_CUSTOM_PROPERTIES,
-			METHOD_CONTAINS_COLLECTION, METHOD_CONTAINS_LOOKUP, METHOD_GET_LPW_STR, METHOD_GET_SHEET_NAME,
-			METHOD_ACCEPT, METHOD_TO_ARRAY_COLLECTION, METHOD_TO_ARRAY_STREAM1, METHOD_TO_ARRAY_STREAM2, METHOD_TO_LIST,
-			METHOD_GET_ID, METHOD_SET_MAXIMUM, METHOD_GET_CURRENT_SHEET_INDEX, METHOD_GET_DATA_VALIDATION_HELPER,
+			METHOD_EXECUTE, METHOD_GET_BYTE_CONVERTER, METHOD_CONTAINS_CUSTOM_PROPERTIES, METHOD_CONTAINS_COLLECTION,
+			METHOD_CONTAINS_LOOKUP, METHOD_GET_LPW_STR, METHOD_GET_SHEET_NAME, METHOD_ACCEPT,
+			METHOD_TO_ARRAY_COLLECTION, METHOD_TO_ARRAY_STREAM1, METHOD_TO_ARRAY_STREAM2, METHOD_TO_LIST, METHOD_GET_ID,
+			METHOD_SET_MAXIMUM, METHOD_GET_CURRENT_SHEET_INDEX, METHOD_GET_DATA_VALIDATION_HELPER,
 			METHOD_CREATE_EXPLICIT_LIST_CONSTRAINT, METHOD_CREATE_VALIDATION, METHOD_CREATE_EXPORT_TASK,
 			METHOD_GET_TAB_INDEX_BY_TITLE, METHOD_GET_DECLARED_FIELD, METHOD_GET_ABSOLUTE_PATH,
 			METHOD_GET_ENUM_CONSTANTS, METHOD_LIST_FILES, METHOD_GET_COLUMN_NAME, METHOD_PUT_ALL_MAP,
@@ -595,8 +595,6 @@ class VoiceManagerTest {
 		(METHOD_CLEAR_STRING_BUILDER = clz.getDeclaredMethod("clear", StringBuilder.class)).setAccessible(true);
 		//
 		(METHOD_EXECUTE = clz.getDeclaredMethod("execute", CLASS_OBJECT_MAP)).setAccessible(true);
-		//
-		(METHOD_PUT_MAP = clz.getDeclaredMethod("put", Map.class, Object.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_GET_BYTE_CONVERTER = clz.getDeclaredMethod("getByteConverter", ConfigurableListableBeanFactory.class,
 				String.class, Object.class)).setAccessible(true);
@@ -2074,11 +2072,11 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> instance.postProcessBeanFactory(configurableListableBeanFactory));
 		//
-		Assertions.assertDoesNotThrow(() -> put(ih.getBeanDefinitions(), null, beanDefinition));
+		Assertions.assertDoesNotThrow(() -> Util.put(ih.getBeanDefinitions(), null, beanDefinition));
 		//
 		Assertions.assertDoesNotThrow(() -> instance.postProcessBeanFactory(configurableListableBeanFactory));
 		//
-		Assertions.assertDoesNotThrow(() -> put(ih.getBeanDefinitions(), "format", null));
+		Assertions.assertDoesNotThrow(() -> Util.put(ih.getBeanDefinitions(), "format", null));
 		//
 		Assertions.assertDoesNotThrow(() -> instance.postProcessBeanFactory(configurableListableBeanFactory));
 		//
@@ -4421,17 +4419,17 @@ class VoiceManagerTest {
 		//
 		final Map<?, ?> objects = Util.cast(Map.class, FieldUtils.readDeclaredField(ih, "objects", true));
 		//
-		put(((Map) objects), File.class, new File("."));
+		Util.put(((Map) objects), File.class, new File("."));
 		//
-		put(((Map) objects), Voice.class, null);
-		//
-		Assertions.assertDoesNotThrow(() -> importVoice(objectMap, (BiConsumer) null, null));
-		//
-		put(((Map) objects), File.class, new File("NON_EXISTS"));
+		Util.put(((Map) objects), Voice.class, null);
 		//
 		Assertions.assertDoesNotThrow(() -> importVoice(objectMap, (BiConsumer) null, null));
 		//
-		put(((Map) objects), File.class, new File("pom.xml"));
+		Util.put(((Map) objects), File.class, new File("NON_EXISTS"));
+		//
+		Assertions.assertDoesNotThrow(() -> importVoice(objectMap, (BiConsumer) null, null));
+		//
+		Util.put(((Map) objects), File.class, new File("pom.xml"));
 		//
 		Assertions.assertDoesNotThrow(() -> importVoice(objectMap, (v, m) -> {
 		}, null));
@@ -4444,7 +4442,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		put(((Map) objects), File.class, file);
+		Util.put(((Map) objects), File.class, file);
 		//
 		Assertions.assertDoesNotThrow(() -> importVoice(objectMap, (BiConsumer) null, null));
 		//
@@ -5171,9 +5169,9 @@ class VoiceManagerTest {
 			//
 		Map<Object, Object> objects = getIfNull(Util.cast(Map.class, get(fieldObjects, ih)), LinkedHashMap::new);
 		//
-		put(objects, SpeechApi.class, speechApi);
+		Util.put(objects, SpeechApi.class, speechApi);
 		//
-		put(objects, File.class, null);
+		Util.put(objects, File.class, null);
 		//
 		set(fieldObjects, ih, objects);
 		//
@@ -5591,41 +5589,41 @@ class VoiceManagerTest {
 		//
 		final DefaultTableModel defaultTableModel = new DefaultTableModel();
 		//
-		put(objects, File.class, null);
+		Util.put(objects, File.class, null);
 		//
-		put(objects, VoiceManager.class, instance);
+		Util.put(objects, VoiceManager.class, instance);
 		//
-		put(objects, Voice.class, null);
+		Util.put(objects, Voice.class, null);
 		//
-		put(objects, DefaultTableModel.class, null);
+		Util.put(objects, DefaultTableModel.class, null);
 		//
 		set(fieldObjects, ih, objects);
 		//
 		Assertions.assertDoesNotThrow(() -> execute(objectMap));
 		//
-		put(objects, DefaultTableModel.class, defaultTableModel);
+		Util.put(objects, DefaultTableModel.class, defaultTableModel);
 		//
 		Assertions.assertDoesNotThrow(() -> execute(objectMap));
 		//
 		// !java.io.File.exists()
 		//
-		put(objects, File.class, new File("NON_EXISTS"));
+		Util.put(objects, File.class, new File("NON_EXISTS"));
 		//
 		Assertions.assertDoesNotThrow(() -> execute(objectMap));
 		//
-		put(objects, DefaultTableModel.class, null);
+		Util.put(objects, DefaultTableModel.class, null);
 		//
 		Assertions.assertDoesNotThrow(() -> execute(objectMap));
 		//
 		// !java.io.File.isFile()
 		//
-		put(objects, File.class, new File("."));
+		Util.put(objects, File.class, new File("."));
 		//
-		put(objects, DefaultTableModel.class, defaultTableModel);
+		Util.put(objects, DefaultTableModel.class, defaultTableModel);
 		//
 		Assertions.assertDoesNotThrow(() -> execute(objectMap));
 		//
-		put(objects, DefaultTableModel.class, null);
+		Util.put(objects, DefaultTableModel.class, null);
 		//
 		Assertions.assertDoesNotThrow(() -> execute(objectMap));
 		//
@@ -5634,21 +5632,6 @@ class VoiceManagerTest {
 	private static void execute(final Object objectMap) throws Throwable {
 		try {
 			METHOD_EXECUTE.invoke(null, objectMap);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testPut() {
-		//
-		Assertions.assertDoesNotThrow(() -> put((Map<?, ?>) null, null, null));
-		//
-	}
-
-	private static <K, V> void put(final Map<K, V> instance, final K key, final V value) throws Throwable {
-		try {
-			METHOD_PUT_MAP.invoke(null, instance, key, value);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -5673,25 +5656,25 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(getByteConverter(configurableListableBeanFactory, null, null));
 		//
-		put(ih.getBeanDefinitions(), null, beanDefinition);
+		Util.put(ih.getBeanDefinitions(), null, beanDefinition);
 		//
 		Assertions.assertNull(getByteConverter(configurableListableBeanFactory, null, null));
 		//
 		final String format = toString(FieldUtils.readDeclaredStaticField(VoiceManager.class, "FORMAT", true));
 		//
-		put(ih.getBeanDefinitionAttributes(), format, null);
+		Util.put(ih.getBeanDefinitionAttributes(), format, null);
 		//
 		Assertions.assertNull(getByteConverter(configurableListableBeanFactory, format, null));
 		//
-		put(ih.getBeanDefinitionAttributes(), format, "");
+		Util.put(ih.getBeanDefinitionAttributes(), format, "");
 		//
 		Assertions.assertNull(getByteConverter(configurableListableBeanFactory, format, null));
 		//
-		put((ih.beansOfType = new LinkedHashMap<Object, Object>(Collections.singletonMap(null, null))), "", null);
+		Util.put((ih.beansOfType = new LinkedHashMap<Object, Object>(Collections.singletonMap(null, null))), "", null);
 		//
-		put(ih.getBeanDefinitions(), "", beanDefinition);
+		Util.put(ih.getBeanDefinitions(), "", beanDefinition);
 		//
-		put(ih.getBeanDefinitionAttributes(), format, null);
+		Util.put(ih.getBeanDefinitionAttributes(), format, null);
 		//
 		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class, "{}",
 				() -> getByteConverter(configurableListableBeanFactory, format, null));
@@ -9571,7 +9554,7 @@ class VoiceManagerTest {
 		//
 		if (ih != null) {
 			//
-			put(ih.getAttributeMap(), null, null);
+			Util.put(ih.getAttributeMap(), null, null);
 			//
 		} // if
 			//

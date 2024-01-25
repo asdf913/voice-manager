@@ -120,4 +120,11 @@ class UtilTest {
 		//
 	}
 
+	@Test
+	void testPut() {
+		//
+		Assertions.assertDoesNotThrow(() -> Util.put(null, null, null));
+		//
+	}
+
 }

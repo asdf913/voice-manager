@@ -462,7 +462,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 					//
 				} else if (Objects.equals(methodName, "setObject") && args != null && args.length > 1) {
 					//
-					put(getObjects(), args[0], args[1]);
+					Util.put(getObjects(), args[0], args[1]);
 					//
 					return null;
 					//
@@ -485,12 +485,6 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		@Nullable
 		private static String getSimpleName(@Nullable final Class<?> instance) {
 			return instance != null ? instance.getSimpleName() : null;
-		}
-
-		private static <K, V> void put(@Nullable final Map<K, V> instance, final K key, final V value) {
-			if (instance != null) {
-				instance.put(key, value);
-			}
 		}
 
 	}
