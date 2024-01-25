@@ -94,7 +94,7 @@ public abstract class Util {
 		//
 	}
 
-	static void setText(@Nullable final JTextComponent instance, final String text) {
+	static void setText(@Nullable final JTextComponent instance, @Nullable final String text) {
 		//
 		if (instance == null) {
 			//
