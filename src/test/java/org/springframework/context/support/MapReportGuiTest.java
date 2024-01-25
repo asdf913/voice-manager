@@ -73,7 +73,7 @@ class MapReportGuiTest {
 
 	private static final String EMPTY = "";
 
-	private static Method METHOD_CAST, METHOD_IS_ALL_ATTRIBUTES_MATCHED, METHOD_REMOVE_ROW, METHOD_ADD_ROW,
+	private static Method METHOD_IS_ALL_ATTRIBUTES_MATCHED, METHOD_REMOVE_ROW, METHOD_ADD_ROW,
 			METHOD_GET_PREFERRED_WIDTH, METHOD_DOUBLE_VALUE, METHOD_AS_MAP, METHOD_GET_VALUES, METHOD_OR_ELSE,
 			METHOD_MAX, METHOD_MAP_TO_INT, METHOD_CREATE_MULTI_MAP, METHOD_IS_ASSIGNABLE_FROM, METHOD_TO_LIST,
 			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_ADD_ACTION_LISTENER, METHOD_LENGTH,
@@ -85,8 +85,6 @@ class MapReportGuiTest {
 	static void beforeAll() throws ReflectiveOperationException {
 		//
 		final Class<?> clz = MapReportGui.class;
-		//
-		(METHOD_CAST = clz.getDeclaredMethod("cast", Class.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_IS_ALL_ATTRIBUTES_MATCHED = clz.getDeclaredMethod("isAllAttributesMatched", Map.class,
 				AttributeAccessor.class)).setAccessible(true);
@@ -349,7 +347,7 @@ class MapReportGuiTest {
 			//
 		} else {
 			//
-			instance = cast(MapReportGui.class, Narcissus.allocateInstance(MapReportGui.class));
+			instance = Util.cast(MapReportGui.class, Narcissus.allocateInstance(MapReportGui.class));
 			//
 		} // if
 			//
@@ -474,21 +472,6 @@ class MapReportGuiTest {
 	private static void actionPerformed(final ActionListener instance, final ActionEvent e) {
 		if (instance != null) {
 			instance.actionPerformed(e);
-		}
-	}
-
-	@Test
-	void testTest() throws Throwable {
-		//
-		Assertions.assertNull(cast(null, null));
-		//
-	}
-
-	private static <T> T cast(final Class<T> clz, final Object value) throws Throwable {
-		try {
-			return (T) METHOD_CAST.invoke(null, clz, value);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
 		}
 	}
 
@@ -877,7 +860,7 @@ class MapReportGuiTest {
 			//
 		} // if
 			//
-		return cast(c, instance);
+		return Util.cast(c, instance);
 		//
 	}
 

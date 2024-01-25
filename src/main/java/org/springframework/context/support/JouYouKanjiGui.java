@@ -329,7 +329,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 				//
 			} // if
 				//
-			Util.add(list = ObjectUtils.getIfNull(list, ArrayList::new), cast(Boolean.class, get(f, null)));
+			Util.add(list = ObjectUtils.getIfNull(list, ArrayList::new), Util.cast(Boolean.class, get(f, null)));
 			//
 		} // for
 			//
@@ -371,7 +371,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 				//
 				CustomPropertiesUtil.addProperty(
 						POIXMLPropertiesUtil
-								.getCustomProperties(POIXMLDocumentUtil.getProperties(cast(POIXMLDocument.class,
+								.getCustomProperties(POIXMLDocumentUtil.getProperties(Util.cast(POIXMLDocument.class,
 										workbook = createJouYouKanJiWorkbook(url, Duration.ZERO, ecssVersion)))),
 						"Source", url);
 				//
@@ -454,7 +454,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 					if (!containsKey(getObjects(), key)) {
 						//
 						throw new IllegalStateException(String.format(KEY_NOT_FOUND_MESSAGE,
-								testAndApply(IH::isArray, cast(Class.class, key), IH::getSimpleName, x -> key)));
+								testAndApply(IH::isArray, Util.cast(Class.class, key), IH::getSimpleName, x -> key)));
 						//
 					} // if
 						//
@@ -552,7 +552,8 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		//
 		final Workbook workbook = ObjectMap.getObject(objectMap, Workbook.class);
 		//
-		final IndexedColorMap indexedColorMap = getIndexedColors(getStylesSource(cast(XSSFWorkbook.class, workbook)));
+		final IndexedColorMap indexedColorMap = getIndexedColors(
+				getStylesSource(Util.cast(XSSFWorkbook.class, workbook)));
 		//
 		Sheet sheet = null;
 		//
@@ -828,11 +829,6 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 	@Nullable
 	private static <T> List<T> toList(@Nullable final Stream<T> instance) {
 		return instance != null ? instance.toList() : null;
-	}
-
-	@Nullable
-	private static <T> T cast(@Nullable final Class<T> clz, @Nullable final Object value) {
-		return clz != null && clz.isInstance(value) ? clz.cast(value) : null;
 	}
 
 	private static boolean contains(@Nullable final Collection<?> items, final Object item) {

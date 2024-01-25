@@ -414,7 +414,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 
 	private void actionPerformedForBtnVisitJMdictDB() {
 		//
-		final Integer jmdictSeq = getJmdictSeq(cast(JlptVocabulary.class, getSelectedItem(cbmJlptVocabulary)));
+		final Integer jmdictSeq = getJmdictSeq(Util.cast(JlptVocabulary.class, getSelectedItem(cbmJlptVocabulary)));
 		//
 		run(Boolean.logicalAnd(jmdictSeq != null, !isTestMode()), () -> {
 			//
@@ -583,7 +583,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		//
 		if (Objects.equals(Util.getSource(evt), jcbJlptVocabulary)) {
 			//
-			setJlptLevel(getLevel(cast(JlptVocabulary.class,
+			setJlptLevel(getLevel(Util.cast(JlptVocabulary.class,
 					jcbJlptVocabulary != null ? jcbJlptVocabulary.getSelectedItem() : null)));
 			//
 		} // if
@@ -611,11 +611,6 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 	@Nullable
 	private static int[] toArray(@Nullable final IntList instance) {
 		return instance != null ? instance.toArray() : null;
-	}
-
-	@Nullable
-	private static <T> T cast(@Nullable final Class<T> clz, @Nullable final Object value) {
-		return clz != null && clz.isInstance(value) ? clz.cast(value) : null;
 	}
 
 	@Nullable

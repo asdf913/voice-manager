@@ -61,7 +61,7 @@ public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean {
 				//
 			final Method m = ms.size() == 1 ? ms.get(0) : null;
 			//
-			return Unit.with(cast(Boolean.class, invoke(m, null)));
+			return Unit.with(Util.cast(Boolean.class, invoke(m, null)));
 			//
 		} catch (final IllegalAccessException | InvocationTargetException e) {
 			//
@@ -112,7 +112,7 @@ public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean {
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		//
-		final InitializingBean initializingBean = cast(InitializingBean.class, getInstance());
+		final InitializingBean initializingBean = Util.cast(InitializingBean.class, getInstance());
 		//
 		if (initializingBean != null) {
 			//
@@ -180,22 +180,17 @@ public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean {
 	@Nullable
 	public String getProviderName() {
 		//
-		final Provider provider = cast(Provider.class, getInstance());
+		final Provider provider = Util.cast(Provider.class, getInstance());
 		//
 		return provider != null ? provider.getProviderName() : null;
 		//
-	}
-
-	@Nullable
-	private static <T> T cast(@Nullable final Class<T> clz, @Nullable final Object value) {
-		return clz != null && clz.isInstance(value) ? clz.cast(value) : null;
 	}
 
 	@Override
 	@Nullable
 	public String getProviderVersion() {
 		//
-		final Provider provider = cast(Provider.class, getInstance());
+		final Provider provider = Util.cast(Provider.class, getInstance());
 		//
 		return provider != null ? provider.getProviderVersion() : null;
 		//
@@ -205,7 +200,7 @@ public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean {
 	@Nullable
 	public String getProviderPlatform() {
 		//
-		final Provider provider = cast(Provider.class, getInstance());
+		final Provider provider = Util.cast(Provider.class, getInstance());
 		//
 		return provider != null ? provider.getProviderPlatform() : null;
 		//

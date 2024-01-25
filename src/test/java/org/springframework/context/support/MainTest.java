@@ -46,9 +46,9 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class MainTest {
 
-	private static Method METHOD_GET_INSTANCE, METHOD_SHOW_MESSAGE_DIALOG_OR_PRINT_LN, METHOD_CAST,
-			METHOD_GET_BEAN_NAMES_FOR_TYPE, METHOD_GET_BEAN_CLASS_NAME, METHOD_PACK, METHOD_SET_VISIBLE,
-			METHOD_TEST_AND_APPLY, METHOD_GET_SELECTED_VALUE, METHOD_GET_CLASS3, METHOD_IS_RAISE_THROWABLE_ONLY,
+	private static Method METHOD_GET_INSTANCE, METHOD_SHOW_MESSAGE_DIALOG_OR_PRINT_LN, METHOD_GET_BEAN_NAMES_FOR_TYPE,
+			METHOD_GET_BEAN_CLASS_NAME, METHOD_PACK, METHOD_SET_VISIBLE, METHOD_TEST_AND_APPLY,
+			METHOD_GET_SELECTED_VALUE, METHOD_GET_CLASS3, METHOD_IS_RAISE_THROWABLE_ONLY,
 			METHOD_ERROR_OR_PRINT_STACK_TRACE, METHOD_GET_CLASS_NAME, METHOD_GET_METHOD, METHOD_GET_DECLARING_CLASS,
 			METHOD_IS_ASSIGNABLE_FROM = null;
 
@@ -62,8 +62,6 @@ class MainTest {
 		//
 		(METHOD_SHOW_MESSAGE_DIALOG_OR_PRINT_LN = clz.getDeclaredMethod("showMessageDialogOrPrintln", PrintStream.class,
 				Object.class)).setAccessible(true);
-		//
-		(METHOD_CAST = clz.getDeclaredMethod("cast", Class.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_GET_BEAN_NAMES_FOR_TYPE = clz.getDeclaredMethod("getBeanNamesForType", ListableBeanFactory.class,
 				Class.class)).setAccessible(true);
@@ -278,29 +276,6 @@ class MainTest {
 	}
 
 	@Test
-	void testCast() throws Throwable {
-		//
-		Assertions.assertNull(cast(null, null));
-		//
-		final Class<?> clz = Object.class;
-		//
-		Assertions.assertNull(cast(clz, null));
-		//
-		final Object object = new Object();
-		//
-		Assertions.assertSame(object, cast(clz, object));
-		//
-	}
-
-	private static <T> T cast(final Class<T> clz, final Object instance) throws Throwable {
-		try {
-			return (T) METHOD_CAST.invoke(null, clz, instance);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testGetBeanNamesForType() throws Throwable {
 		//
 		Assertions.assertNull(getBeanNamesForType(null, null));
@@ -353,7 +328,7 @@ class MainTest {
 		Assertions.assertDoesNotThrow(() -> pack(null));
 		//
 		Assertions.assertDoesNotThrow(() -> pack(
-				GraphicsEnvironment.isHeadless() ? cast(Window.class, Narcissus.allocateInstance(Window.class))
+				GraphicsEnvironment.isHeadless() ? Util.cast(Window.class, Narcissus.allocateInstance(Window.class))
 						: new Window(null)));
 		//
 	}
@@ -557,7 +532,7 @@ class MainTest {
 		//
 		Assertions.assertDoesNotThrow(() -> errorOrPrintStackTrace(null, null));
 		//
-		final Throwable throwable = cast(Throwable.class, Narcissus.allocateInstance(Throwable.class));
+		final Throwable throwable = Util.cast(Throwable.class, Narcissus.allocateInstance(Throwable.class));
 		//
 		Assertions.assertDoesNotThrow(() -> errorOrPrintStackTrace(null, throwable));
 		//

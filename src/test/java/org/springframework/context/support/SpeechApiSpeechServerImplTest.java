@@ -2,16 +2,9 @@ package org.springframework.context.support;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
-import java.nio.file.spi.FileSystemProvider;
-import java.util.Objects;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.AssertionsUtil;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIf;
@@ -19,32 +12,6 @@ import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.OS;
 
 class SpeechApiSpeechServerImplTest {
-
-	private static Method METHOD_CAST = null;
-
-	@BeforeAll
-	static void beforeAll() throws ReflectiveOperationException {
-		//
-		final FileSystem fs = FileSystems.getDefault();
-		//
-		final FileSystemProvider fsp = fs != null ? fs.provider() : null;
-		//
-		Class<?> clz = fsp != null ? fsp.getClass() : null;
-		//
-		if (Objects.equals("sun.nio.fs.WindowsFileSystemProvider", clz != null ? clz.getName() : null)) {
-			//
-			if ((METHOD_CAST = (clz = Class
-					.forName("org.springframework.context.support.SpeechApiSpeechServerImpl$Jna")) != null
-							? clz.getDeclaredMethod("cast", Class.class, Object.class)
-							: null) != null) {
-				//
-				METHOD_CAST.setAccessible(true);
-				//
-			} // if
-				//
-		} // if
-			//
-	}
 
 	private SpeechApiSpeechServerImpl instance = null;
 
@@ -127,27 +94,6 @@ class SpeechApiSpeechServerImplTest {
 		//
 		Assertions.assertNotNull(instance.getProviderVersion());
 		//
-	}
-
-	@Test
-	void testCast() throws Throwable {
-		//
-		if (METHOD_CAST != null) {
-			//
-			Assertions.assertNull(cast(null, null));
-			//
-			Assertions.assertNull(cast(Object.class, null));
-			//
-		} // if
-			//
-	}
-
-	private static <T> T cast(final Class<T> clz, final Object value) throws Throwable {
-		try {
-			return (T) METHOD_CAST.invoke(null, clz, value);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test

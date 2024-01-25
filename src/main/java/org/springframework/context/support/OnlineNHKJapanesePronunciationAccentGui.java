@@ -404,7 +404,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 						x -> Objects.equals(value(testAndApply(y -> isAnnotationPresent(y, Group.class), x,
 								y -> getAnnotation(y, Group.class), null)), "LastComponentInRow")));
 		//
-		final Collection<Component> cs = FailableStreamUtil.map(fs, x -> cast(Component.class, get(x, this)))
+		final Collection<Component> cs = FailableStreamUtil.map(fs, x -> Util.cast(Component.class, get(x, this)))
 				.collect(Collectors.toList());
 		//
 		final Double maxPreferredSizeWidth = Util
@@ -477,10 +477,10 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 	@Nullable
 	private static List<String> getImageFormats(final List<?> imageFormatOrders) throws NoSuchFieldException {
 		//
-		final Map<?, ?> imageWriterSpis = cast(Map.class,
+		final Map<?, ?> imageWriterSpis = Util.cast(Map.class,
 				testAndApply(
 						Objects::nonNull, get(
-								cast(Map.class,
+								Util.cast(Map.class,
 										Narcissus.getObjectField(IIORegistry.getDefaultInstance(),
 												getDeclaredField(ServiceRegistry.class, "categoryMap"))),
 								ImageWriterSpi.class),
@@ -488,7 +488,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		//
 		final List<String> classNames = testAndApply(Objects::nonNull,
 				toList(Util.map(Util.stream(imageWriterSpis != null ? imageWriterSpis.keySet() : null),
-						x -> Util.getName(cast(Class.class, x)))),
+						x -> Util.getName(Util.cast(Class.class, x)))),
 				ArrayList::new, null);
 		//
 		final String commonPrefix = StringUtils.getCommonPrefix(toArray(classNames, new String[] {}));
@@ -687,25 +687,25 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 				//
 		} else if (Objects.equals(source, btnPlayAudio)) {
 			//
-			playAudio(cast(Pronunciation.class, getSelectedItem(mcbmPronounication)));
+			playAudio(Util.cast(Pronunciation.class, getSelectedItem(mcbmPronounication)));
 			//
 		} else if (Objects.equals(source, btnSaveAudio)) {
 			//
-			saveAudio(headless, cast(Pronunciation.class, getSelectedItem(mcbmPronounication)),
+			saveAudio(headless, Util.cast(Pronunciation.class, getSelectedItem(mcbmPronounication)),
 					getSelectedItem(mcbmAudioFormat));
 			//
 		} else if (Objects.equals(source, btnCopyPitchAccentImage)) {
 			//
 			setPitchAccentImageToSystemClipboardContents(
-					cast(Pronunciation.class, getSelectedItem(mcbmPronounication)));
+					Util.cast(Pronunciation.class, getSelectedItem(mcbmPronounication)));
 			//
 		} else if (Objects.equals(source, btnSavePitchAccentImage)) {
 			//
-			savePitchAccentImage(cast(Pronunciation.class, getSelectedItem(mcbmPronounication)));
+			savePitchAccentImage(Util.cast(Pronunciation.class, getSelectedItem(mcbmPronounication)));
 			//
 		} else if (Objects.equals(source, jcbPronounication)) {
 			//
-			pronounicationChanged(cast(Pronunciation.class, getSelectedItem(mcbmPronounication)), mcbmAudioFormat);
+			pronounicationChanged(Util.cast(Pronunciation.class, getSelectedItem(mcbmPronounication)), mcbmAudioFormat);
 			//
 		} // if
 			//
@@ -1060,11 +1060,6 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 
 	private static final <T> boolean test(@Nullable final Predicate<T> instance, @Nullable final T value) {
 		return instance != null && instance.test(value);
-	}
-
-	@Nullable
-	private static <T> T cast(@Nullable final Class<T> clz, @Nullable final Object instance) {
-		return clz != null && clz.isInstance(instance) ? clz.cast(instance) : null;
 	}
 
 }

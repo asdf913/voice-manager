@@ -11,19 +11,13 @@ import org.junit.jupiter.api.Test;
 
 class SpeechApiImplTest {
 
-	private static Method METHOD_CAST, METHOD_GET_PARAMETER_COUNT, METHOD_IS_STATIC, METHOD_INVOKE, METHOD_AND = null;
+	private static Method METHOD_GET_PARAMETER_COUNT, METHOD_IS_STATIC, METHOD_INVOKE, METHOD_AND = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
 		//
 		final Class<?> clz = SpeechApiImpl.class;
 		//
-		if ((METHOD_CAST = clz != null ? clz.getDeclaredMethod("cast", Class.class, Object.class) : null) != null) {
-			//
-			METHOD_CAST.setAccessible(true);
-			//
-		} // if
-			//
 		if ((METHOD_GET_PARAMETER_COUNT = clz != null ? clz.getDeclaredMethod("getParameterCount", Executable.class)
 				: null) != null) {
 			//
@@ -58,23 +52,6 @@ class SpeechApiImplTest {
 		//
 		Assertions.assertDoesNotThrow(() -> new SpeechApiImpl().afterPropertiesSet());
 		//
-	}
-
-	@Test
-	void testCast() throws Throwable {
-		//
-		Assertions.assertNull(cast(null, null));
-		//
-		Assertions.assertNull(cast(Object.class, null));
-		//
-	}
-
-	private static <T> T cast(final Class<T> clz, final Object value) throws Throwable {
-		try {
-			return (T) METHOD_CAST.invoke(null, clz, value);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	private static Class<?> getClass(final Object instance) {

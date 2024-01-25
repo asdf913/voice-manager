@@ -299,7 +299,7 @@ class VoiceManagerTest {
 	private static Method METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_GET_FILE_EXTENSION_CONTENT_INFO,
 			METHOD_GET_FILE_EXTENSION_FILE_FORMAT, METHOD_GET_FILE_EXTENSION_FAILABLE_SUPPLIER, METHOD_DIGEST,
 			METHOD_GET_MAPPER, METHOD_INSERT_OR_UPDATE, METHOD_SET_ENABLED_2, METHOD_SET_ENABLED_3,
-			METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_CAST, METHOD_INT_VALUE, METHOD_LONG_VALUE,
+			METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_INT_VALUE, METHOD_LONG_VALUE,
 			METHOD_GET_PROPERTY_CUSTOM_PROPERTIES, METHOD_GET_VALUE, METHOD_GET_SOURCE_VOICE, METHOD_EXPORT,
 			METHOD_MAP_STREAM, METHOD_MAP_INT_STREAM, METHOD_MAP_TO_INT, METHOD_MAP_TO_LONG, METHOD_MAX_STREAM,
 			METHOD_MAX_INT_STREAM, METHOD_OR_ELSE_OPTIONAL_INT, METHOD_FOR_EACH_STREAM, METHOD_FOR_EACH_ITERABLE,
@@ -421,8 +421,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_TEST_AND_APPLY5 = clz.getDeclaredMethod("testAndApply", BiPredicate.class, Object.class, Object.class,
 				FailableBiFunction.class, FailableBiFunction.class)).setAccessible(true);
-		//
-		(METHOD_CAST = clz.getDeclaredMethod("cast", Class.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_INT_VALUE = clz.getDeclaredMethod("intValue", Number.class, Integer.TYPE)).setAccessible(true);
 		//
@@ -1160,7 +1158,7 @@ class VoiceManagerTest {
 		//
 		CLASS_BYTE_CONVERTER = Class.forName("org.springframework.context.support.VoiceManager$ByteConverter");
 		//
-		TEMP_FILE_MINIMUM_PREFIX_LENGTH = Integer.valueOf(intValue(cast(Number.class,
+		TEMP_FILE_MINIMUM_PREFIX_LENGTH = Integer.valueOf(intValue(Util.cast(Number.class,
 				FieldUtils.readDeclaredStaticField(VoiceManager.class, "TEMP_FILE_MINIMUM_PREFIX_LENGTH", true)),
 				THREE));
 		//
@@ -1816,7 +1814,7 @@ class VoiceManagerTest {
 		objectMapper = new ObjectMapper();
 		//
 		instance = !GraphicsEnvironment.isHeadless() ? newInstance(constructor)
-				: cast(VoiceManager.class, Narcissus.allocateInstance(VoiceManager.class));
+				: Util.cast(VoiceManager.class, Narcissus.allocateInstance(VoiceManager.class));
 		//
 		sqlSessionFactory = Reflection.newProxy(SqlSessionFactory.class, ih = new IH());
 		//
@@ -3661,7 +3659,7 @@ class VoiceManagerTest {
 		Assertions.assertNull(getMapper(null, null, null));
 		//
 		Assertions.assertNull(
-				getMapper(cast(Configuration.class, Narcissus.allocateInstance(Configuration.class)), null, null));
+				getMapper(Util.cast(Configuration.class, Narcissus.allocateInstance(Configuration.class)), null, null));
 		//
 		Assertions.assertNull(getMapper(new Configuration(), null, null));
 		//
@@ -3770,21 +3768,6 @@ class VoiceManagerTest {
 			final FailableBiFunction<T, U, R, E> functionFalse) throws Throwable {
 		try {
 			return (R) METHOD_TEST_AND_APPLY5.invoke(null, predicate, t, u, functionTrue, functionFalse);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testCast() throws Throwable {
-		//
-		Assertions.assertNull(cast(null, null));
-		//
-	}
-
-	private static <T> T cast(final Class<T> clz, final Object value) throws Throwable {
-		try {
-			return (T) METHOD_CAST.invoke(null, clz, value);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -3932,7 +3915,7 @@ class VoiceManagerTest {
 		final Map<String, String> map = Collections.singletonMap(EMPTY, "true");
 		//
 		final Object objectMap = Reflection.newProxy(CLASS_OBJECT_MAP,
-				cast(InvocationHandler.class, newInstance(constructor)));
+				Util.cast(InvocationHandler.class, newInstance(constructor)));
 		//
 		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class,
 				"{localizedMessage=Key [interface org.springframework.context.support.VoiceManager$BooleanMap] Not Found, message=Key [interface org.springframework.context.support.VoiceManager$BooleanMap] Not Found}",
@@ -4187,7 +4170,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		final InvocationHandler ih = cast(InvocationHandler.class, newInstance(constructor));
+		final InvocationHandler ih = Util.cast(InvocationHandler.class, newInstance(constructor));
 		//
 		// org.springframework.context.support.VoiceManager$BooleanMap.setBoolean(java.lang.String,boolean)
 		//
@@ -4436,7 +4419,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		final InvocationHandler ih = cast(InvocationHandler.class, newInstance(constructor));
+		final InvocationHandler ih = Util.cast(InvocationHandler.class, newInstance(constructor));
 		//
 		final Object objectMap = Reflection.newProxy(CLASS_OBJECT_MAP, ih);
 		//
@@ -4444,7 +4427,7 @@ class VoiceManagerTest {
 				"{localizedMessage=Key [class java.io.File] Not Found, message=Key [class java.io.File] Not Found}",
 				() -> importVoice(objectMap, (BiConsumer) null, null));
 		//
-		final Map<?, ?> objects = cast(Map.class, FieldUtils.readDeclaredField(ih, "objects", true));
+		final Map<?, ?> objects = Util.cast(Map.class, FieldUtils.readDeclaredField(ih, "objects", true));
 		//
 		put(((Map) objects), File.class, new File("."));
 		//
@@ -4732,7 +4715,7 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> add((Container) null, null));
 		//
-		final Container container = cast(Container.class, Narcissus.allocateInstance(Container.class));
+		final Container container = Util.cast(Container.class, Narcissus.allocateInstance(Container.class));
 		//
 		final Component component = new JTextField();
 		//
@@ -4886,7 +4869,7 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(matcher(null, null));
 		//
-		Assertions.assertNull(matcher(cast(Pattern.class, Narcissus.allocateInstance(Pattern.class)), ""));
+		Assertions.assertNull(matcher(Util.cast(Pattern.class, Narcissus.allocateInstance(Pattern.class)), ""));
 		//
 	}
 
@@ -4907,7 +4890,7 @@ class VoiceManagerTest {
 	@Test
 	void testMatches() throws Throwable {
 		//
-		Assertions.assertFalse(matches(cast(Matcher.class, Narcissus.allocateInstance(Matcher.class))));
+		Assertions.assertFalse(matches(Util.cast(Matcher.class, Narcissus.allocateInstance(Matcher.class))));
 		//
 	}
 
@@ -5184,7 +5167,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		final InvocationHandler ih = cast(InvocationHandler.class, newInstance(constructor));
+		final InvocationHandler ih = Util.cast(InvocationHandler.class, newInstance(constructor));
 		//
 		final Field fieldObjects = ih != null ? getDeclaredField(ih.getClass(), "objects") : null;
 		//
@@ -5194,7 +5177,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Map<Object, Object> objects = getIfNull(cast(Map.class, get(fieldObjects, ih)), LinkedHashMap::new);
+		Map<Object, Object> objects = getIfNull(Util.cast(Map.class, get(fieldObjects, ih)), LinkedHashMap::new);
 		//
 		put(objects, SpeechApi.class, speechApi);
 		//
@@ -5341,7 +5324,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		final InvocationHandler ih = cast(InvocationHandler.class, newInstance(constructor));
+		final InvocationHandler ih = Util.cast(InvocationHandler.class, newInstance(constructor));
 		//
 		final Object objectMap2 = Reflection.newProxy(CLASS_OBJECT_MAP, ih);
 		//
@@ -5600,7 +5583,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		final InvocationHandler ih = cast(InvocationHandler.class, newInstance(constructor));
+		final InvocationHandler ih = Util.cast(InvocationHandler.class, newInstance(constructor));
 		//
 		final Object objectMap = Reflection.newProxy(CLASS_OBJECT_MAP, ih);
 		//
@@ -5612,7 +5595,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Map<Object, Object> objects = getIfNull(cast(Map.class, get(fieldObjects, ih)), LinkedHashMap::new);
+		Map<Object, Object> objects = getIfNull(Util.cast(Map.class, get(fieldObjects, ih)), LinkedHashMap::new);
 		//
 		final DefaultTableModel defaultTableModel = new DefaultTableModel();
 		//
@@ -6829,7 +6812,7 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(toURI((URL) null));
 		//
-		Assertions.assertNull(toURI(cast(URL.class, Narcissus.allocateInstance(URL.class))));
+		Assertions.assertNull(toURI(Util.cast(URL.class, Narcissus.allocateInstance(URL.class))));
 		//
 		final File file = new File("");
 		//
@@ -7639,7 +7622,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		final InvocationHandler ih = cast(InvocationHandler.class, newInstance(constructor));
+		final InvocationHandler ih = Util.cast(InvocationHandler.class, newInstance(constructor));
 		//
 		Assertions.assertDoesNotThrow(() -> exportJlpt(Reflection.newProxy(CLASS_OBJECT_MAP, ih), voices));
 		//
@@ -7660,7 +7643,7 @@ class VoiceManagerTest {
 		//
 		final Object jTabbedPane = new JTabbedPane();
 		//
-		final List<?> pages = cast(List.class,
+		final List<?> pages = Util.cast(List.class,
 				Narcissus.getObjectField(jTabbedPane, getDeclaredField(JTabbedPane.class, "pages")));
 		//
 		Util.add(pages, null);
@@ -7835,7 +7818,7 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(length(null));
 		//
-		Assertions.assertNull(length(cast(File.class, Narcissus.allocateInstance(File.class))));
+		Assertions.assertNull(length(Util.cast(File.class, Narcissus.allocateInstance(File.class))));
 		//
 	}
 
@@ -8410,7 +8393,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		final InvocationHandler ih = cast(InvocationHandler.class, newInstance(constructor));
+		final InvocationHandler ih = Util.cast(InvocationHandler.class, newInstance(constructor));
 		//
 		final Object objectMap = Reflection.newProxy(CLASS_OBJECT_MAP, ih);
 		//
@@ -9369,7 +9352,7 @@ class VoiceManagerTest {
 	@Test
 	void testPlay() {
 		//
-		Assertions.assertDoesNotThrow(() -> play(cast(Player.class, Narcissus.allocateInstance(Player.class))));
+		Assertions.assertDoesNotThrow(() -> play(Util.cast(Player.class, Narcissus.allocateInstance(Player.class))));
 		//
 	}
 
@@ -9448,7 +9431,8 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(getListCellRendererComponent(lcr, null, pronunciation, ONE, false, false));
 		//
-		pronunciation.setPitchAccentImage(cast(BufferedImage.class, Narcissus.allocateInstance(BufferedImage.class)));
+		pronunciation
+				.setPitchAccentImage(Util.cast(BufferedImage.class, Narcissus.allocateInstance(BufferedImage.class)));
 		//
 		Assertions.assertNull(getListCellRendererComponent(lcr, null, pronunciation, ONE, false, false));
 		//
@@ -9491,7 +9475,7 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(getFile(null));
 		//
-		Assertions.assertNull(getFile(cast(URL.class, Narcissus.allocateInstance(URL.class))));
+		Assertions.assertNull(getFile(Util.cast(URL.class, Narcissus.allocateInstance(URL.class))));
 		//
 	}
 
@@ -9563,7 +9547,7 @@ class VoiceManagerTest {
 		Assertions.assertNull(getAudioFile(true, null, null, null));
 		///
 		Assertions.assertNull(getAudioFile(false,
-				cast(JFileChooser.class, Narcissus.allocateInstance(JFileChooser.class)), null, null));
+				Util.cast(JFileChooser.class, Narcissus.allocateInstance(JFileChooser.class)), null, null));
 		//
 		if (GraphicsEnvironment.isHeadless()) {
 			//
@@ -9719,7 +9703,7 @@ class VoiceManagerTest {
 			//
 		if (!isConsoleWriterMethodThrowException()) {
 			//
-			Assertions.assertNull(writer(cast(Console.class, Narcissus.allocateInstance(Console.class))));
+			Assertions.assertNull(writer(Util.cast(Console.class, Narcissus.allocateInstance(Console.class))));
 			//
 		} // if
 			//
@@ -9783,7 +9767,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		final Console console = cast(Console.class, Narcissus.allocateInstance(Console.class));
+		final Console console = Util.cast(Console.class, Narcissus.allocateInstance(Console.class));
 		//
 		final boolean isConsoleReadLineMethodThrowException = isConsoleReadLineMethodThrowException();
 		//
@@ -9871,7 +9855,7 @@ class VoiceManagerTest {
 		} // if
 			//
 		Assertions.assertDoesNotThrow(
-				() -> println(cast(PrintWriter.class, Narcissus.allocateInstance(PrintWriter.class)), null));
+				() -> println(Util.cast(PrintWriter.class, Narcissus.allocateInstance(PrintWriter.class)), null));
 		//
 		try (final OutputStream os = new ByteArrayOutputStream(); final PrintWriter pw = new PrintWriter(os)) {
 			//
@@ -10252,7 +10236,7 @@ class VoiceManagerTest {
 	@Test
 	void testGetRenderer() throws Throwable {
 		//
-		Assertions.assertNull(getRenderer(cast(JComboBox.class, Narcissus.allocateInstance(JComboBox.class))));
+		Assertions.assertNull(getRenderer(Util.cast(JComboBox.class, Narcissus.allocateInstance(JComboBox.class))));
 		//
 	}
 
@@ -10274,7 +10258,7 @@ class VoiceManagerTest {
 	void testSetRenderer() {
 		//
 		Assertions.assertDoesNotThrow(
-				() -> setRenderer(cast(JComboBox.class, Narcissus.allocateInstance(JComboBox.class)), null));
+				() -> setRenderer(Util.cast(JComboBox.class, Narcissus.allocateInstance(JComboBox.class)), null));
 		//
 	}
 
@@ -10293,7 +10277,7 @@ class VoiceManagerTest {
 		Assertions.assertDoesNotThrow(() -> addSpeedButtons(null, null, null));
 		//
 		Assertions.assertDoesNotThrow(
-				() -> addSpeedButtons(null, null, cast(Range.class, Narcissus.allocateInstance(Range.class))));
+				() -> addSpeedButtons(null, null, Util.cast(Range.class, Narcissus.allocateInstance(Range.class))));
 		//
 		Assertions.assertDoesNotThrow(() -> addSpeedButtons(null, null, Range.atLeast(Integer.valueOf(-1))));
 		//
@@ -10302,7 +10286,7 @@ class VoiceManagerTest {
 		Assertions.assertDoesNotThrow(() -> addSpeedButtons(null, null, range));
 		//
 		Assertions.assertDoesNotThrow(() -> addSpeedButtons(
-				cast(VoiceManager.class, Narcissus.allocateInstance(VoiceManager.class)), new JPanel(), range));
+				Util.cast(VoiceManager.class, Narcissus.allocateInstance(VoiceManager.class)), new JPanel(), range));
 		//
 	}
 
@@ -10319,7 +10303,7 @@ class VoiceManagerTest {
 	void testSetMajorTickSpacing() {
 		//
 		Assertions.assertDoesNotThrow(
-				() -> setMajorTickSpacing(cast(JSlider.class, Narcissus.allocateInstance(JSlider.class)), 0));
+				() -> setMajorTickSpacing(Util.cast(JSlider.class, Narcissus.allocateInstance(JSlider.class)), 0));
 		//
 	}
 
@@ -10335,7 +10319,7 @@ class VoiceManagerTest {
 	void testSetPaintTicks() {
 		//
 		Assertions.assertDoesNotThrow(
-				() -> setPaintTicks(cast(JSlider.class, Narcissus.allocateInstance(JSlider.class)), false));
+				() -> setPaintTicks(Util.cast(JSlider.class, Narcissus.allocateInstance(JSlider.class)), false));
 		//
 	}
 
@@ -10351,7 +10335,7 @@ class VoiceManagerTest {
 	void testSetPaintLabels() {
 		//
 		Assertions.assertDoesNotThrow(
-				() -> setPaintLabels(cast(JSlider.class, Narcissus.allocateInstance(JSlider.class)), false));
+				() -> setPaintLabels(Util.cast(JSlider.class, Narcissus.allocateInstance(JSlider.class)), false));
 		//
 	}
 
@@ -10419,7 +10403,7 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(getId3v1Tag(null));
 		//
-		Assertions.assertNull(getId3v1Tag(cast(Mp3File.class, Narcissus.allocateInstance(Mp3File.class))));
+		Assertions.assertNull(getId3v1Tag(Util.cast(Mp3File.class, Narcissus.allocateInstance(Mp3File.class))));
 		//
 	}
 
@@ -10442,7 +10426,7 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(getId3v2Tag(null));
 		//
-		Assertions.assertNull(getId3v2Tag(cast(Mp3File.class, Narcissus.allocateInstance(Mp3File.class))));
+		Assertions.assertNull(getId3v2Tag(Util.cast(Mp3File.class, Narcissus.allocateInstance(Mp3File.class))));
 		//
 	}
 
@@ -10501,7 +10485,8 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(getURL(null));
 		//
-		Assertions.assertNull(getURL(cast(HyperlinkEvent.class, Narcissus.allocateInstance(HyperlinkEvent.class))));
+		Assertions
+				.assertNull(getURL(Util.cast(HyperlinkEvent.class, Narcissus.allocateInstance(HyperlinkEvent.class))));
 		//
 	}
 
@@ -10525,7 +10510,7 @@ class VoiceManagerTest {
 		Assertions.assertDoesNotThrow(() -> addHyperlinkListener(null, null));
 		//
 		Assertions.assertDoesNotThrow(() -> addHyperlinkListener(
-				cast(JEditorPane.class, Narcissus.allocateInstance(JEditorPane.class)), null));
+				Util.cast(JEditorPane.class, Narcissus.allocateInstance(JEditorPane.class)), null));
 		//
 	}
 
@@ -10560,7 +10545,7 @@ class VoiceManagerTest {
 	@Test
 	void testOpenStream() throws Throwable {
 		//
-		Assertions.assertNull(openStream(cast(URL.class, Narcissus.allocateInstance(URL.class))));
+		Assertions.assertNull(openStream(Util.cast(URL.class, Narcissus.allocateInstance(URL.class))));
 		//
 	}
 
@@ -10586,7 +10571,7 @@ class VoiceManagerTest {
 		Assertions.assertDoesNotThrow(() -> actionPerformedForImportFileTemplate(true, null));
 		//
 		Assertions.assertDoesNotThrow(() -> actionPerformedForImportFileTemplate(false,
-				cast(JFileChooser.class, Narcissus.allocateInstance(JFileChooser.class))));
+				Util.cast(JFileChooser.class, Narcissus.allocateInstance(JFileChooser.class))));
 		//
 	}
 
@@ -10618,7 +10603,7 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(openConnection(null));
 		//
-		Assertions.assertNull(openConnection(cast(URL.class, Narcissus.allocateInstance(URL.class))));
+		Assertions.assertNull(openConnection(Util.cast(URL.class, Narcissus.allocateInstance(URL.class))));
 		//
 	}
 
@@ -10641,7 +10626,7 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(formatHex(null, null));
 		//
-		final HexFormat hexFormat = cast(HexFormat.class, Narcissus.allocateInstance(HexFormat.class));
+		final HexFormat hexFormat = Util.cast(HexFormat.class, Narcissus.allocateInstance(HexFormat.class));
 		//
 		Assertions.assertNull(formatHex(hexFormat, null));
 		//
@@ -10918,7 +10903,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		return cast(InvocationHandler.class, newInstance(constructor));
+		return Util.cast(InvocationHandler.class, newInstance(constructor));
 		//
 	}
 
@@ -10933,7 +10918,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		final Runnable runnable = cast(Runnable.class, newInstance(constructor));
+		final Runnable runnable = Util.cast(Runnable.class, newInstance(constructor));
 		//
 		Assertions.assertDoesNotThrow(() -> run(runnable));
 		//
@@ -11536,7 +11521,7 @@ class VoiceManagerTest {
 		//
 		Assertions.assertSame(stopwatch, invoke(reset, null, stopwatch));
 		//
-		Assertions.assertSame(stopwatch = cast(Stopwatch.class, Narcissus.allocateInstance(Stopwatch.class)),
+		Assertions.assertSame(stopwatch = Util.cast(Stopwatch.class, Narcissus.allocateInstance(Stopwatch.class)),
 				invoke(reset, null, stopwatch));
 		//
 		// org.springframework.context.support.VoiceManager$ExportTask.start(com.google.common.base.Stopwatch)
@@ -11548,7 +11533,7 @@ class VoiceManagerTest {
 		//
 		Assertions.assertSame(stopwatch = Stopwatch.createUnstarted(), invoke(start, null, stopwatch));
 		//
-		Assertions.assertSame(stopwatch = cast(Stopwatch.class, Narcissus.allocateInstance(Stopwatch.class)),
+		Assertions.assertSame(stopwatch = Util.cast(Stopwatch.class, Narcissus.allocateInstance(Stopwatch.class)),
 				invoke(start, null, stopwatch));
 		//
 		// org.springframework.context.support.VoiceManager$ExportTask.setTextContent(org.w3c.dom.Node,java.lang.String)
@@ -11578,7 +11563,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		final ListCellRenderer<?> listCellRenderer1 = cast(ListCellRenderer.class,
+		final ListCellRenderer<?> listCellRenderer1 = Util.cast(ListCellRenderer.class,
 				newInstance(constructor, this.instance));
 		//
 		if (listCellRenderer1 != null) {
@@ -11624,7 +11609,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		final ListCellRenderer<?> listCellRenderer = cast(ListCellRenderer.class, newInstance(constructor));
+		final ListCellRenderer<?> listCellRenderer = Util.cast(ListCellRenderer.class, newInstance(constructor));
 		//
 		if (listCellRenderer != null) {
 			//
@@ -11858,7 +11843,7 @@ class VoiceManagerTest {
 	@Test
 	void testEmptyFilePredicate() throws Throwable {
 		//
-		final Predicate<Object> predicate = cast(Predicate.class,
+		final Predicate<Object> predicate = Util.cast(Predicate.class,
 				FieldUtils.readDeclaredStaticField(VoiceManager.class, "EMPTY_FILE_PREDICATE", true));
 		//
 		if (predicate != null) {
@@ -11889,7 +11874,7 @@ class VoiceManagerTest {
 		} // if
 			//
 		final MouseListener[] mouseListeners = getMouseListeners(
-				cast(Component.class, newInstance(constructor, (Object) null)));
+				Util.cast(Component.class, newInstance(constructor, (Object) null)));
 		//
 		for (int i = 0; mouseListeners != null && i < mouseListeners.length; i++) {
 			//
@@ -11982,7 +11967,8 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> stateChanged(cast(ChangeListener.class, newInstance(constructor)), null));
+		Assertions.assertDoesNotThrow(
+				() -> stateChanged(Util.cast(ChangeListener.class, newInstance(constructor)), null));
 		//
 	}
 
@@ -12062,7 +12048,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		final BiConsumer<?, ?> biConsumer = cast(BiConsumer.class, newInstance(constructor, Boolean.TRUE, null));
+		final BiConsumer<?, ?> biConsumer = Util.cast(BiConsumer.class, newInstance(constructor, Boolean.TRUE, null));
 		//
 		Assertions.assertDoesNotThrow(() -> {
 			//
@@ -12115,7 +12101,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		final BiConsumer<?, ?> biConsumer = cast(BiConsumer.class, newInstance(constructor, Boolean.TRUE, null));
+		final BiConsumer<?, ?> biConsumer = Util.cast(BiConsumer.class, newInstance(constructor, Boolean.TRUE, null));
 		//
 		Assertions.assertDoesNotThrow(() -> accept(biConsumer, null, null));
 		//
@@ -12146,7 +12132,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		final Consumer<?> consumer = cast(Consumer.class, newInstance(constructor, null, null));
+		final Consumer<?> consumer = Util.cast(Consumer.class, newInstance(constructor, null, null));
 		//
 		Assertions.assertDoesNotThrow(() -> accept(consumer, null));
 		//
@@ -12174,7 +12160,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		final FocusTraversalPolicy focusTraversalPolicy = cast(FocusTraversalPolicy.class,
+		final FocusTraversalPolicy focusTraversalPolicy = Util.cast(FocusTraversalPolicy.class,
 				newInstance(constructor, (Object) null));
 		//
 		if (focusTraversalPolicy != null) {

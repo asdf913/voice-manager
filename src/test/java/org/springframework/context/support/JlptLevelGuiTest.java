@@ -95,10 +95,10 @@ class JlptLevelGuiTest {
 
 	private static final String EMPTY = "";
 
-	private static Method METHOD_CAST, METHOD_TO_ARRAY_COLLECTION, METHOD_TO_ARRAY_INT_LIST, METHOD_TEST,
-			METHOD_GET_PREFERRED_SIZE, METHOD_SET_PREFERRED_WIDTH, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_TEST_AND_APPLY,
-			METHOD_SET_CONTENTS, METHOD_ADD_ACTION_LISTENER, METHOD_GET_DECLARED_METHODS, METHOD_TO_LIST, METHOD_INVOKE,
-			METHOD_IIF, METHOD_GET_PARAMETER_TYPES, METHOD_RUN, METHOD_SET_JLPT_VOCABULARY_AND_LEVEL, METHOD_GET_LEVEL,
+	private static Method METHOD_TO_ARRAY_COLLECTION, METHOD_TO_ARRAY_INT_LIST, METHOD_TEST, METHOD_GET_PREFERRED_SIZE,
+			METHOD_SET_PREFERRED_WIDTH, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_TEST_AND_APPLY, METHOD_SET_CONTENTS,
+			METHOD_ADD_ACTION_LISTENER, METHOD_GET_DECLARED_METHODS, METHOD_TO_LIST, METHOD_INVOKE, METHOD_IIF,
+			METHOD_GET_PARAMETER_TYPES, METHOD_RUN, METHOD_SET_JLPT_VOCABULARY_AND_LEVEL, METHOD_GET_LEVEL,
 			METHOD_FOR_EACH_STREAM, METHOD_ADD_ELEMENT, METHOD_TEST_AND_ACCEPT, METHOD_BROWSE,
 			METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_ADD_DOCUMENT_LISTENER, METHOD_SET_SELECTED_INDICES,
 			METHOD_TO_URI, METHOD_REMOVE_ELEMENT_AT, METHOD_DISTINCT, METHOD_MAX = null;
@@ -107,8 +107,6 @@ class JlptLevelGuiTest {
 	static void beforeAll() throws ReflectiveOperationException {
 		//
 		final Class<?> clz = JlptLevelGui.class;
-		//
-		(METHOD_CAST = clz.getDeclaredMethod("cast", Class.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_TO_ARRAY_COLLECTION = clz.getDeclaredMethod("toArray", Collection.class, Object[].class))
 				.setAccessible(true);
@@ -314,7 +312,7 @@ class JlptLevelGuiTest {
 			//
 		} else {
 			//
-			instance = cast(JlptLevelGui.class, Narcissus.allocateInstance(JlptLevelGui.class));
+			instance = Util.cast(JlptLevelGui.class, Narcissus.allocateInstance(JlptLevelGui.class));
 			//
 		} // if
 			//
@@ -576,7 +574,7 @@ class JlptLevelGuiTest {
 		//
 		Assertions.assertDoesNotThrow(() -> itemStateChanged(instance, null));
 		//
-		final ItemEvent itemEvent = cast(ItemEvent.class, Narcissus.allocateInstance(ItemEvent.class));
+		final ItemEvent itemEvent = Util.cast(ItemEvent.class, Narcissus.allocateInstance(ItemEvent.class));
 		//
 		if (itemEvent != null) {
 			//
@@ -609,21 +607,6 @@ class JlptLevelGuiTest {
 	private static void itemStateChanged(final ItemListener instance, final ItemEvent evt) {
 		if (instance != null) {
 			instance.itemStateChanged(evt);
-		}
-	}
-
-	@Test
-	void testCast() throws Throwable {
-		//
-		Assertions.assertNull(cast(null, null));
-		//
-	}
-
-	private static <T> T cast(final Class<T> clz, final Object value) throws Throwable {
-		try {
-			return (T) METHOD_CAST.invoke(null, clz, value);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
 		}
 	}
 
@@ -739,7 +722,7 @@ class JlptLevelGuiTest {
 			//
 		} // if
 			//
-		return (T) cast(clz, instance);
+		return (T) Util.cast(clz, instance);
 		//
 	}
 
@@ -1127,7 +1110,7 @@ class JlptLevelGuiTest {
 		//
 		Assertions.assertDoesNotThrow(() -> browse(null, null));
 		//
-		final Desktop mock = cast(Desktop.class, Narcissus.allocateInstance(Desktop.class));
+		final Desktop mock = Util.cast(Desktop.class, Narcissus.allocateInstance(Desktop.class));
 		//
 		Assertions.assertDoesNotThrow(
 				() -> browse(!GraphicsEnvironment.isHeadless() ? Desktop.getDesktop() : mock, null));

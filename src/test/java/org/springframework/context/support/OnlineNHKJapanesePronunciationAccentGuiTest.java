@@ -89,9 +89,9 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 
 	private static final int ONE = 1;
 
-	private static Method METHOD_CAST, METHOD_TEST_AND_APPLY, METHOD_GET_WIDTH, METHOD_ADD_ELEMENT,
-			METHOD_REMOVE_ELEMENT_AT, METHOD_GET_SELECTED_ITEM, METHOD_GET_SIZE, METHOD_GET_SYSTEM_CLIP_BOARD,
-			METHOD_SET_CONTENTS, METHOD_FOR_EACH_ITERABLE, METHOD_FOR_EACH_INT_STREAM, METHOD_MAP_INT_STREAM,
+	private static Method METHOD_TEST_AND_APPLY, METHOD_GET_WIDTH, METHOD_ADD_ELEMENT, METHOD_REMOVE_ELEMENT_AT,
+			METHOD_GET_SELECTED_ITEM, METHOD_GET_SIZE, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS,
+			METHOD_FOR_EACH_ITERABLE, METHOD_FOR_EACH_INT_STREAM, METHOD_MAP_INT_STREAM,
 			METHOD_SET_PITCH_ACCENT_IMAGE_TO_SYSTEM_CLIPBOARD_CONTENTS, METHOD_SAVE_PITCH_ACCENT_IMAGE,
 			METHOD_PLAY_AUDIO, METHOD_SAVE_AUDIO, METHOD_PRONOUNICATION_CHANGED, METHOD_GET_DECLARED_FIELD,
 			METHOD_OPEN_STREAM, METHOD_PLAY, METHOD_ADD_ACTION_LISTENER, METHOD_GET_MAP, METHOD_GET_FIELD,
@@ -105,8 +105,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 	static void beforeAll() throws ReflectiveOperationException {
 		//
 		final Class<?> clz = OnlineNHKJapanesePronunciationAccentGui.class;
-		//
-		(METHOD_CAST = clz.getDeclaredMethod("cast", Class.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
@@ -428,7 +426,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			//
 		} else {
 			//
-			instance = cast(OnlineNHKJapanesePronunciationAccentGui.class,
+			instance = Util.cast(OnlineNHKJapanesePronunciationAccentGui.class,
 					Narcissus.allocateInstance(OnlineNHKJapanesePronunciationAccentGui.class));
 			//
 		} //
@@ -672,23 +670,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		}
 	}
 
-	@Test
-	void testCast() throws Throwable {
-		//
-		Assertions.assertNull(cast(null, null));
-		//
-		Assertions.assertSame(EMPTY, cast(String.class, EMPTY));
-		//
-	}
-
-	private static <T> T cast(final Class<T> clz, final Object instance) throws Throwable {
-		try {
-			return (T) METHOD_CAST.invoke(null, clz, instance);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
 	private static Class<?> getClass(final Object instance) {
 		return instance != null ? instance.getClass() : null;
 	}
@@ -730,7 +711,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			//
 		} // if
 			//
-		return (T) cast(clz, instance);
+		return (T) Util.cast(clz, instance);
 		//
 	}
 
@@ -931,8 +912,8 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		//
 		if (pronunciation != null) {
 			//
-			pronunciation
-					.setPitchAccentImage(cast(BufferedImage.class, Narcissus.allocateInstance(BufferedImage.class)));
+			pronunciation.setPitchAccentImage(
+					Util.cast(BufferedImage.class, Narcissus.allocateInstance(BufferedImage.class)));
 			//
 		} // if
 			//
@@ -971,8 +952,8 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		//
 		if (pronunciation != null) {
 			//
-			pronunciation
-					.setPitchAccentImage(cast(BufferedImage.class, Narcissus.allocateInstance(BufferedImage.class)));
+			pronunciation.setPitchAccentImage(
+					Util.cast(BufferedImage.class, Narcissus.allocateInstance(BufferedImage.class)));
 			//
 		} // if
 			//
@@ -1151,7 +1132,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		//
 		Assertions.assertNotNull(openStream(new File("pom.xml").toURI().toURL()));
 		//
-		Assertions.assertNull(openStream(cast(URL.class, Narcissus.allocateInstance(URL.class))));
+		Assertions.assertNull(openStream(Util.cast(URL.class, Narcissus.allocateInstance(URL.class))));
 		//
 	}
 
@@ -1701,7 +1682,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			//
 		} // if
 			//
-		final InvocationHandler ih = cast(InvocationHandler.class,
+		final InvocationHandler ih = Util.cast(InvocationHandler.class,
 				constructor != null ? constructor.newInstance() : null);
 		//
 		AssertionsUtil.assertThrowsAndEquals(Throwable.class, "{}", () -> invoke(ih, null, null, null));

@@ -338,7 +338,7 @@ public class MapReportGui extends JFrame
 		final Multimap<?, ?> mm = createMultimap(
 				createMultimap((Collection) getValues(configurableListableBeanFactory, Map.class,
 						getBeanDefinitionNamesByClassAndAttributes(configurableListableBeanFactory, Map.class,
-								cast(Map.class, object)))),
+								Util.cast(Map.class, object)))),
 				(a, b) -> IterableUtils.size(MultimapUtil.get((Multimap) a, b)) > 1);
 		//
 		final List<String> columns = new ArrayList<>(Collections.singleton("Key"));
@@ -548,7 +548,7 @@ public class MapReportGui extends JFrame
 		//
 		for (int i = 0; i < IterableUtils.size(beanNames); i++) {
 			//
-			if ((v = cast(clz, BeanFactoryUtil.getBean(beanFactory, IterableUtils.get(beanNames, i)))) == null) {
+			if ((v = Util.cast(clz, BeanFactoryUtil.getBean(beanFactory, IterableUtils.get(beanNames, i)))) == null) {
 				//
 				continue;
 				//
@@ -615,7 +615,7 @@ public class MapReportGui extends JFrame
 			} // if
 				//
 			if (((isAssignableFrom(FactoryBean.class, clz = Util.forName(bd.getBeanClassName()))
-					&& (fb = cast(FactoryBean.class, Narcissus.allocateInstance(clz))) != null
+					&& (fb = Util.cast(FactoryBean.class, Narcissus.allocateInstance(clz))) != null
 					&& isAssignableFrom(classToBeFound, fb.getObjectType())) || isAssignableFrom(classToBeFound, clz))
 					&& isAllAttributesMatched(attributes, bd)) {
 				//
@@ -632,11 +632,6 @@ public class MapReportGui extends JFrame
 
 	private static boolean isAssignableFrom(@Nullable final Class<?> a, @Nullable final Class<?> b) {
 		return a != null && b != null && a.isAssignableFrom(b);
-	}
-
-	@Nullable
-	private static <T> T cast(@Nullable final Class<T> clz, final Object value) {
-		return clz != null && clz.isInstance(value) ? clz.cast(value) : null;
 	}
 
 	private static boolean isAllAttributesMatched(@Nullable final Map<?, ?> attributes,

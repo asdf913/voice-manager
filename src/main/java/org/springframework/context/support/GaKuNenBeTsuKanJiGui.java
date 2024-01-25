@@ -277,7 +277,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 		//
 		final Object source = Util.getSource(evt);
 		//
-		final JTextComponent jtf = cast(JTextComponent.class, source);
+		final JTextComponent jtf = Util.cast(JTextComponent.class, source);
 		//
 		if (Objects.equals(source, tfText)) {
 			//
@@ -363,7 +363,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 				//
 				CustomPropertiesUtil.addProperty(
 						POIXMLPropertiesUtil
-								.getCustomProperties(POIXMLDocumentUtil.getProperties(cast(POIXMLDocument.class,
+								.getCustomProperties(POIXMLDocumentUtil.getProperties(Util.cast(POIXMLDocument.class,
 										workbook = createWorkbook(Pair.of("学年", "漢字"),
 												IValue0Util.getValue0(gaKuNenBeTsuKanJiMultimap))))),
 						"Source", gaKuNenBeTsuKanJiListPageUrl);
@@ -392,8 +392,8 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 			final List<Method> ms = toList(Util.filter(
 					testAndApply(
 							Objects::nonNull,
-							getDeclaredMethods(
-									Util.forName("org.springframework.beans.factory.GaKuNenBeTsuKanJiMultimapFactoryBean")),
+							getDeclaredMethods(Util
+									.forName("org.springframework.beans.factory.GaKuNenBeTsuKanJiMultimapFactoryBean")),
 							Arrays::stream, null),
 					m -> and(Objects.equals(Util.getName(m), "createMultimapByUrl"),
 							Arrays.equals(new Class<?>[] { String.class, Duration.class }, getParameterTypes(m)))));
@@ -410,7 +410,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 			//
 			try {
 				//
-				final Multimap<?, ?> multimap = cast(Multimap.class,
+				final Multimap<?, ?> multimap = Util.cast(Multimap.class,
 						m != null && Modifier.isStatic(m.getModifiers())
 								? Narcissus.invokeStaticMethod(m, gaKuNenBeTsuKanJiListPageUrl, null)
 								: null);
@@ -489,8 +489,6 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 	private static Method[] getDeclaredMethods(@Nullable final Class<?> instance) {
 		return instance != null ? instance.getDeclaredMethods() : null;
 	}
-
-	
 
 	@Nullable
 	private static Workbook createWorkbook(final Pair<String, String> columnNames, final Multimap<?, ?> multimap) {
@@ -605,11 +603,6 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 		if (predicate != null && predicate.test(t, u) && consumer != null) {
 			consumer.accept(t, u);
 		}
-	}
-
-	@Nullable
-	private static <T> T cast(@Nullable final Class<T> clz, @Nullable final Object value) {
-		return clz != null && clz.isInstance(value) ? clz.cast(value) : null;
 	}
 
 	@Nullable

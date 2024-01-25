@@ -88,7 +88,8 @@ public class Main {
 				//
 			} // if
 				//
-			final PrintStream ps = cast(PrintStream.class, FieldUtils.readDeclaredStaticField(System.class, "out"));
+			final PrintStream ps = Util.cast(PrintStream.class,
+					FieldUtils.readDeclaredStaticField(System.class, "out"));
 			//
 			if (clz == null) {
 				//
@@ -100,9 +101,9 @@ public class Main {
 				//
 			final Object instance = getInstance(beanFactory, clz, x -> showMessageDialogOrPrintln(ps, x));
 			//
-			pack(cast(Window.class, instance));
+			pack(Util.cast(Window.class, instance));
 			//
-			setVisible(cast(Component.class, instance), true);
+			setVisible(Util.cast(Component.class, instance), true);
 			//
 		} // try
 			//
@@ -349,11 +350,6 @@ public class Main {
 	@Nullable
 	private static String getBeanClassName(@Nullable final BeanDefinition instance) {
 		return instance != null ? instance.getBeanClassName() : null;
-	}
-
-	@Nullable
-	private static <T> T cast(@Nullable final Class<T> clz, @Nullable final Object instance) {
-		return clz != null && clz.isInstance(instance) ? clz.cast(instance) : null;
 	}
 
 	private static void showMessageDialogOrPrintln(@Nullable final PrintStream ps, final Object object) {

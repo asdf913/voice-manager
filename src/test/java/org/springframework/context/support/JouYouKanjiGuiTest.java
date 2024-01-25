@@ -79,7 +79,7 @@ class JouYouKanjiGuiTest {
 	private static Class<?> CLASS_OBJECT_MAP, CLASS_IH = null;
 
 	private static Method METHOD_GET, METHOD_GET_DECLARED_FIELDS, METHOD_NAME, METHOD_GET_ECSS_VERSION_BY_MAJOR,
-			METHOD_ADD_JOU_YOU_KAN_JI_SHEET, METHOD_CAST, METHOD_GET_CSS_DECLARATION_BY_ATTRIBUTE_AND_CSS_PROPERTY,
+			METHOD_ADD_JOU_YOU_KAN_JI_SHEET, METHOD_GET_CSS_DECLARATION_BY_ATTRIBUTE_AND_CSS_PROPERTY,
 			METHOD_SET_PREFERRED_WIDTH, METHOD_GET_PREFERRED_SIZE, METHOD_TO_LIST, METHOD_CONTAINS,
 			METHOD_SET_SELECTED_ITEM, METHOD_TEST, METHOD_GET_BOOLEAN_VALUES, METHOD_TO_ARRAY, METHOD_MATCHER,
 			METHOD_GET_EXPRESSION_AS_CSS_STRING, METHOD_GET_INDEXED_COLORS, METHOD_GET_STYLES_SOURCE,
@@ -105,8 +105,6 @@ class JouYouKanjiGuiTest {
 		(METHOD_ADD_JOU_YOU_KAN_JI_SHEET = clz.getDeclaredMethod("addJouYouKanJiSheet",
 				CLASS_OBJECT_MAP = Class.forName("org.springframework.context.support.JouYouKanjiGui$ObjectMap"),
 				String.class)).setAccessible(true);
-		//
-		(METHOD_CAST = clz.getDeclaredMethod("cast", Class.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_GET_CSS_DECLARATION_BY_ATTRIBUTE_AND_CSS_PROPERTY = clz.getDeclaredMethod(
 				"getCSSDeclarationByAttributeAndCssProperty", Element.class, String.class, ECSSVersion.class,
@@ -298,7 +296,7 @@ class JouYouKanjiGuiTest {
 			//
 		} else {
 			//
-			instance = cast(JouYouKanjiGui.class, Narcissus.allocateInstance(JouYouKanjiGui.class));
+			instance = Util.cast(JouYouKanjiGui.class, Narcissus.allocateInstance(JouYouKanjiGui.class));
 			//
 		} // if
 			//
@@ -703,7 +701,7 @@ class JouYouKanjiGuiTest {
 			//
 		} // if
 			//
-		return cast(InvocationHandler.class, constructor != null ? constructor.newInstance() : null);
+		return Util.cast(InvocationHandler.class, constructor != null ? constructor.newInstance() : null);
 		//
 	}
 
@@ -716,21 +714,6 @@ class JouYouKanjiGuiTest {
 	private static void addJouYouKanJiSheet(final Object objectMap, final String sheetName) throws Throwable {
 		try {
 			METHOD_ADD_JOU_YOU_KAN_JI_SHEET.invoke(null, objectMap, sheetName);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testCast() throws Throwable {
-		//
-		Assertions.assertNull(cast(null, null));
-		//
-	}
-
-	private static <T> T cast(final Class<T> clz, final Object value) throws Throwable {
-		try {
-			return (T) METHOD_CAST.invoke(null, clz, value);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -783,7 +766,8 @@ class JouYouKanjiGuiTest {
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> setPreferredWidth(0, Arrays.asList(null, cast(Component.class, instance))));
+		Assertions.assertDoesNotThrow(
+				() -> setPreferredWidth(0, Arrays.asList(null, Util.cast(Component.class, instance))));
 		//
 	}
 
@@ -973,13 +957,13 @@ class JouYouKanjiGuiTest {
 		//
 		Assertions.assertNull(getExpressionAsCSSString(null));
 		//
-		final CSSDeclaration cssDeclaration = cast(CSSDeclaration.class,
+		final CSSDeclaration cssDeclaration = Util.cast(CSSDeclaration.class,
 				Narcissus.allocateInstance(CSSDeclaration.class));
 		//
 		Assertions.assertNull(getExpressionAsCSSString(cssDeclaration));
 		//
 		Assertions.assertNull(getExpressionAsCSSString(setExpression(cssDeclaration,
-				cast(CSSExpression.class, Narcissus.allocateInstance(CSSExpression.class)))));
+				Util.cast(CSSExpression.class, Narcissus.allocateInstance(CSSExpression.class)))));
 		//
 		Assertions.assertEquals(EMPTY, getExpressionAsCSSString(setExpression(cssDeclaration, new CSSExpression())));
 		//
@@ -1006,7 +990,8 @@ class JouYouKanjiGuiTest {
 	@Test
 	void testGetIndexedColors() throws Throwable {
 		//
-		Assertions.assertNull(getIndexedColors(cast(StylesTable.class, Narcissus.allocateInstance(StylesTable.class))));
+		Assertions.assertNull(
+				getIndexedColors(Util.cast(StylesTable.class, Narcissus.allocateInstance(StylesTable.class))));
 		//
 	}
 
@@ -1027,8 +1012,8 @@ class JouYouKanjiGuiTest {
 	@Test
 	void testGetStylesSource() throws Throwable {
 		//
-		Assertions
-				.assertNull(getStylesSource(cast(XSSFWorkbook.class, Narcissus.allocateInstance(XSSFWorkbook.class))));
+		Assertions.assertNull(
+				getStylesSource(Util.cast(XSSFWorkbook.class, Narcissus.allocateInstance(XSSFWorkbook.class))));
 		//
 	}
 
@@ -1051,8 +1036,8 @@ class JouYouKanjiGuiTest {
 		//
 		Assertions.assertNull(getProperty(null));
 		//
-		Assertions
-				.assertNull(getProperty(cast(CSSDeclaration.class, Narcissus.allocateInstance(CSSDeclaration.class))));
+		Assertions.assertNull(
+				getProperty(Util.cast(CSSDeclaration.class, Narcissus.allocateInstance(CSSDeclaration.class))));
 		//
 	}
 
@@ -1095,7 +1080,7 @@ class JouYouKanjiGuiTest {
 		Assertions.assertNull(toMillis(null));
 		//
 		Assertions.assertEquals(Long.valueOf(0),
-				toMillis(cast(Duration.class, Narcissus.allocateInstance(Duration.class))));
+				toMillis(Util.cast(Duration.class, Narcissus.allocateInstance(Duration.class))));
 		//
 	}
 

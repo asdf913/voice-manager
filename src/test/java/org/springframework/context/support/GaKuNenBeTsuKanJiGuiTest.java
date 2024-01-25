@@ -58,7 +58,7 @@ import javassist.util.proxy.ProxyObject;
 
 class GaKuNenBeTsuKanJiGuiTest {
 
-	private static Method METHOD_CAST, METHOD_CREATE_WORK_BOOK, METHOD_SET_SELECTED_ITEM_BY_ITERABLE, METHOD_INVOKE,
+	private static Method METHOD_CREATE_WORK_BOOK, METHOD_SET_SELECTED_ITEM_BY_ITERABLE, METHOD_INVOKE,
 			METHOD_GET_PARAMETER_TYPES, METHOD_EXISTS, METHOD_AND, METHOD_IIF, METHOD_TEST_AND_ACCEPT3,
 			METHOD_TEST_AND_ACCEPT4, METHOD_ADD_ACTION_LISTENER, METHOD_TO_ARRAY, METHOD_TO_LIST,
 			METHOD_GET_DECLARED_METHODS, METHOD_GET_ABSOLUTE_PATH, METHOD_IS_FILE, METHOD_LENGTH, METHOD_LONG_VALUE,
@@ -69,8 +69,6 @@ class GaKuNenBeTsuKanJiGuiTest {
 	static void beforeAll() throws ReflectiveOperationException {
 		//
 		final Class<?> clz = GaKuNenBeTsuKanJiGui.class;
-		//
-		(METHOD_CAST = clz.getDeclaredMethod("cast", Class.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_CREATE_WORK_BOOK = clz.getDeclaredMethod("createWorkbook", Pair.class, Multimap.class))
 				.setAccessible(true);
@@ -244,27 +242,12 @@ class GaKuNenBeTsuKanJiGuiTest {
 			//
 		} else {
 			//
-			instance = cast(GaKuNenBeTsuKanJiGui.class, Narcissus.allocateInstance(GaKuNenBeTsuKanJiGui.class));
+			instance = Util.cast(GaKuNenBeTsuKanJiGui.class, Narcissus.allocateInstance(GaKuNenBeTsuKanJiGui.class));
 			//
 		} // if
 			//
 		stream = Reflection.newProxy(Stream.class, ih = new IH());
 		//
-	}
-
-	@Test
-	void testCast() throws Throwable {
-		//
-		Assertions.assertNull(cast(null, null));
-		//
-	}
-
-	private static <T> T cast(final Class<T> clz, final Object value) throws Throwable {
-		try {
-			return (T) METHOD_CAST.invoke(null, clz, value);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test
@@ -870,8 +853,8 @@ class GaKuNenBeTsuKanJiGuiTest {
 			//
 		} // if
 			//
-		Assertions
-				.assertDoesNotThrow(() -> setPreferredWidth(0, Collections.singleton(cast(Component.class, instance))));
+		Assertions.assertDoesNotThrow(
+				() -> setPreferredWidth(0, Collections.singleton(Util.cast(Component.class, instance))));
 		//
 	}
 
@@ -938,7 +921,7 @@ class GaKuNenBeTsuKanJiGuiTest {
 			Assertions.assertEquals(0, comparator.compare(null, null));
 			//
 			Assertions.assertEquals(0,
-					comparator.compare(cast(Dimension.class, Narcissus.allocateInstance(Dimension.class)), null));
+					comparator.compare(Util.cast(Dimension.class, Narcissus.allocateInstance(Dimension.class)), null));
 			//
 		} // if
 			//

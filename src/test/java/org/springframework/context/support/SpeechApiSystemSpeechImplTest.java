@@ -4,11 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
-import java.nio.file.spi.FileSystemProvider;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Predicate;
 
 import org.apache.commons.lang3.function.FailableFunction;
@@ -34,25 +30,6 @@ class SpeechApiSystemSpeechImplTest {
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
 		//
-		final FileSystem fs = FileSystems.getDefault();
-		//
-		final FileSystemProvider fsp = fs != null ? fs.provider() : null;
-		//
-		Class<?> clz = fsp != null ? fsp.getClass() : null;
-		//
-		if (Objects.equals("sun.nio.fs.WindowsFileSystemProvider", clz != null ? clz.getName() : null)) {
-			//
-			if ((METHOD_CAST = (CLASS_JNA = Class
-					.forName("org.springframework.context.support.SpeechApiSystemSpeechImpl$Jna")) != null
-							? CLASS_JNA.getDeclaredMethod("cast", Class.class, Object.class)
-							: null) != null) {
-				//
-				METHOD_CAST.setAccessible(true);
-				//
-			} // if
-				//
-		} // if
-			//
 		if ((METHOD_TEST_AND_APPLY = SpeechApiSystemSpeechImpl.class.getDeclaredMethod("testAndApply", Predicate.class,
 				Object.class, FailableFunction.class, FailableFunction.class)) != null) {
 			//
@@ -182,15 +159,15 @@ class SpeechApiSystemSpeechImplTest {
 		//
 		if (METHOD_CAST != null) {
 			//
-			Assertions.assertNull(cast(null, null));
+			Assertions.assertNull(Util.cast(null, null));
 			//
-			Assertions.assertNull(cast(Object.class, null));
+			Assertions.assertNull(Util.cast(Object.class, null));
 			//
 		} // if
 			//
 	}
 
-	private static <T> T cast(final Class<T> clz, final Object value) throws Throwable {
+	private static <T> T castX(final Class<T> clz, final Object value) throws Throwable {
 		try {
 			return (T) METHOD_CAST.invoke(null, clz, value);
 		} catch (final InvocationTargetException e) {

@@ -49,12 +49,7 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider, Lookup, I
 
 	private interface Jna extends Library {
 
-		Jna INSTANCE = cast(Jna.class, Native.load("MicrosoftSpeechApi10.dll", Jna.class));
-
-		@Nullable
-		private static <T> T cast(@Nullable final Class<T> clz, final Object value) {
-			return clz != null && clz.isInstance(value) ? clz.cast(value) : null;
-		}
+		Jna INSTANCE = Util.cast(Jna.class, Native.load("MicrosoftSpeechApi10.dll", Jna.class));
 
 		public void speak(@Nullable final int[] text, final int length, @Nullable final String voiceId, final int rate,
 				final int volume);
