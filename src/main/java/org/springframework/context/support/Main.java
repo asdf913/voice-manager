@@ -6,7 +6,6 @@ import java.awt.Window;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
-import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
@@ -202,7 +201,7 @@ public class Main {
 							Narcissus.invokeObjectMethod(instance, size == 1 ? IterableUtils.get(ms, 0) : null)),
 							"createWindow", Window.class);
 					//
-					if (isRaiseThrowableOnly(getDeclaringClass(method), method)) {
+					if (isRaiseThrowableOnly(Util.getDeclaringClass(method), method)) {
 						//
 						return;
 						//
@@ -219,11 +218,6 @@ public class Main {
 			//
 		} // if
 			//
-	}
-
-	@Nullable
-	private static Class<?> getDeclaringClass(@Nullable final Member instance) {
-		return instance != null ? instance.getDeclaringClass() : null;
 	}
 
 	@Nullable

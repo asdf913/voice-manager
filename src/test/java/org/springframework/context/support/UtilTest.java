@@ -106,4 +106,11 @@ class UtilTest {
 		//
 	}
 
+	@Test
+	void testGetDeclaringClass() {
+		//
+		Assertions.assertNull(Util.getDeclaringClass(null));
+		//
+	}
+
 }

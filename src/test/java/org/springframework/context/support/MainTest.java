@@ -10,7 +10,6 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collections;
@@ -49,7 +48,7 @@ class MainTest {
 	private static Method METHOD_GET_INSTANCE, METHOD_SHOW_MESSAGE_DIALOG_OR_PRINT_LN, METHOD_GET_BEAN_NAMES_FOR_TYPE,
 			METHOD_GET_BEAN_CLASS_NAME, METHOD_PACK, METHOD_SET_VISIBLE, METHOD_TEST_AND_APPLY,
 			METHOD_GET_SELECTED_VALUE, METHOD_GET_CLASS3, METHOD_IS_RAISE_THROWABLE_ONLY,
-			METHOD_ERROR_OR_PRINT_STACK_TRACE, METHOD_GET_CLASS_NAME, METHOD_GET_METHOD, METHOD_GET_DECLARING_CLASS,
+			METHOD_ERROR_OR_PRINT_STACK_TRACE, METHOD_GET_CLASS_NAME, METHOD_GET_METHOD,
 			METHOD_IS_ASSIGNABLE_FROM = null;
 
 	@BeforeAll
@@ -92,8 +91,6 @@ class MainTest {
 		//
 		(METHOD_GET_METHOD = clz.getDeclaredMethod("getMethod", Class.class, String.class, Class[].class))
 				.setAccessible(true);
-		//
-		(METHOD_GET_DECLARING_CLASS = clz.getDeclaredMethod("getDeclaringClass", Member.class)).setAccessible(true);
 		//
 		(METHOD_IS_ASSIGNABLE_FROM = clz.getDeclaredMethod("isAssignableFrom", Class.class, Class.class))
 				.setAccessible(true);
@@ -586,27 +583,6 @@ class MainTest {
 				return null;
 			} else if (obj instanceof Method) {
 				return (Method) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetDeclaringClass() throws Throwable {
-		//
-		Assertions.assertNull(getDeclaringClass(null));
-		//
-	}
-
-	private static Class<?> getDeclaringClass(final Member instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_DECLARING_CLASS.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Class) {
-				return (Class) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

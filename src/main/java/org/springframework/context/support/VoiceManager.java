@@ -7909,11 +7909,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@Nullable
-	private static Class<?> getDeclaringClass(@Nullable final Member instance) {
-		return instance != null ? instance.getDeclaringClass() : null;
-	}
-
-	@Nullable
 	private static Package getPackage(@Nullable final Class<?> instance) {
 		return instance != null ? instance.getPackage() : null;
 	}
@@ -13373,10 +13368,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				fs = toList(sorted(Util.filter(
 						testAndApply(Objects::nonNull, FieldUtils.getAllFields(LocaleID.class), Arrays::stream, null),
-						x -> x != null && !Objects.equals(Util.getType(x), getDeclaringClass(x)) && !x.isSynthetic()
+						x -> x != null && !Objects.equals(Util.getType(x), Util.getDeclaringClass(x)) && !x.isSynthetic()
 								&& !isStatic(x)),
-						(a, b) -> StringUtils.compare(getName(getPackage(getDeclaringClass(a))),
-								getName(getPackage(getDeclaringClass(b))))));
+						(a, b) -> StringUtils.compare(getName(getPackage(Util.getDeclaringClass(a))),
+								getName(getPackage(Util.getDeclaringClass(b))))));
 				//
 			} // if
 				//
