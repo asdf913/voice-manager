@@ -35,7 +35,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.EventObject;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -658,7 +657,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 	@Override
 	public void actionPerformed(final ActionEvent evt) {
 		//
-		final Object source = getSource(evt);
+		final Object source = Util.getSource(evt);
 		//
 		final boolean headless = GraphicsEnvironment.isHeadless();
 		//
@@ -1063,11 +1062,6 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		if (instance != null) {
 			instance.removeElementAt(index);
 		}
-	}
-
-	@Nullable
-	private static Object getSource(@Nullable final EventObject instance) {
-		return instance != null ? instance.getSource() : null;
 	}
 
 	@Nullable

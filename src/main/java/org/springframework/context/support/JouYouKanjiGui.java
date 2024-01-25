@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
-import java.util.EventObject;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -366,7 +365,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 	@Override
 	public void actionPerformed(final ActionEvent evt) {
 		//
-		if (Objects.equals(getSource(evt), btnExportJouYouKanJi)) {
+		if (Objects.equals(Util.getSource(evt), btnExportJouYouKanJi)) {
 			//
 			File file = null;
 			//
@@ -785,7 +784,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 	@Override
 	public void keyReleased(final KeyEvent evt) {
 		//
-		final Object source = getSource(evt);
+		final Object source = Util.getSource(evt);
 		//
 		if (Objects.equals(source, tfText)) {
 			//
@@ -850,11 +849,6 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		if (instance != null) {
 			instance.setSelectedItem(selectedItem);
 		}
-	}
-
-	@Nullable
-	private static Object getSource(@Nullable final EventObject instance) {
-		return instance != null ? instance.getSource() : null;
 	}
 
 	@Nullable

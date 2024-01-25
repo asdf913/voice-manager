@@ -20,7 +20,6 @@ import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.EventObject;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -261,7 +260,7 @@ public class MapReportGui extends JFrame
 	@Override
 	public void actionPerformed(final ActionEvent evt) {
 		//
-		final Object source = getSource(evt);
+		final Object source = Util.getSource(evt);
 		//
 		if (Objects.equals(source, btnExecute)) {
 			//
@@ -587,11 +586,6 @@ public class MapReportGui extends JFrame
 
 	private static int intValue(@Nullable final Number instance, final int defaultValue) {
 		return instance != null ? instance.intValue() : defaultValue;
-	}
-
-	@Nullable
-	private static Object getSource(@Nullable final EventObject instance) {
-		return instance != null ? instance.getSource() : null;
 	}
 
 	@Nullable

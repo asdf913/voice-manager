@@ -28,7 +28,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.EventObject;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
@@ -276,7 +275,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 	@Override
 	public void keyReleased(final KeyEvent evt) {
 		//
-		final Object source = getSource(evt);
+		final Object source = Util.getSource(evt);
 		//
 		final JTextComponent jtf = cast(JTextComponent.class, source);
 		//
@@ -351,7 +350,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 	@Override
 	public void actionPerformed(final ActionEvent evt) {
 		//
-		final Object source = getSource(evt);
+		final Object source = Util.getSource(evt);
 		//
 		if (Objects.equals(source, btnExport)) {
 			//
@@ -634,11 +633,6 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 		if (instance != null) {
 			instance.setSelectedItem(selectedItem);
 		}
-	}
-
-	@Nullable
-	private static Object getSource(@Nullable final EventObject instance) {
-		return instance != null ? instance.getSource() : null;
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, @Nullable final T value,

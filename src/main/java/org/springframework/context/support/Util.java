@@ -3,6 +3,7 @@ package org.springframework.context.support;
 import java.lang.reflect.Member;
 import java.lang.reflect.Proxy;
 import java.util.Collection;
+import java.util.EventObject;
 import java.util.Optional;
 import java.util.Map.Entry;
 import java.util.function.Function;
@@ -135,6 +136,10 @@ public abstract class Util {
 	@Nullable
 	static <V> V getValue(@Nullable final Entry<?, V> instance) {
 		return instance != null ? instance.getValue() : null;
+	}
+
+	static Object getSource(final EventObject instance) {
+		return instance != null ? instance.getSource() : null;
 	}
 
 }

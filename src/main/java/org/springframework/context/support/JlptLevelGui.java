@@ -29,7 +29,6 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.EventObject;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
@@ -340,7 +339,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 	@Override
 	public void actionPerformed(final ActionEvent evt) {
 		//
-		final Object source = getSource(evt);
+		final Object source = Util.getSource(evt);
 		//
 		if (Objects.equals(source, btnExportJson)) {
 			//
@@ -581,7 +580,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 	@Override
 	public void itemStateChanged(final ItemEvent evt) {
 		//
-		if (Objects.equals(getSource(evt), jcbJlptVocabulary)) {
+		if (Objects.equals(Util.getSource(evt), jcbJlptVocabulary)) {
 			//
 			setJlptLevel(getLevel(cast(JlptVocabulary.class,
 					jcbJlptVocabulary != null ? jcbJlptVocabulary.getSelectedItem() : null)));
@@ -686,11 +685,6 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 	}
 
 	@Nullable
-	private static Object getSource(@Nullable final EventObject instance) {
-		return instance != null ? instance.getSource() : null;
-	}
-
-	@Nullable
 	private static Method[] getDeclaredMethods(@Nullable final Class<?> instance) {
 		return instance != null ? instance.getDeclaredMethods() : null;
 	}
@@ -741,8 +735,6 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 			return null;
 		}
 	}
-
-	
 
 	private static void setText(@Nullable final JLabel instance, @Nullable final String text) {
 		if (instance != null) {

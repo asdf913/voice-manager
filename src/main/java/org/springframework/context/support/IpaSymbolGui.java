@@ -20,7 +20,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.EventObject;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.BiConsumer;
@@ -222,7 +221,7 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 	@Override
 	public void actionPerformed(final ActionEvent evt) {
 		//
-		final Object source = getSource(evt);
+		final Object source = Util.getSource(evt);
 		//
 		final boolean headless = GraphicsEnvironment.isHeadless();
 		//
@@ -335,11 +334,6 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 	@Nullable
 	private static Object[] toArray(@Nullable final Collection<?> instance) {
 		return instance != null ? instance.toArray() : null;
-	}
-
-	@Nullable
-	private static Object getSource(@Nullable final EventObject instance) {
-		return instance != null ? instance.getSource() : null;
 	}
 
 	@Nullable

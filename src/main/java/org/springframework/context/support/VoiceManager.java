@@ -86,7 +86,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.EventObject;
 import java.util.HexFormat;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -2089,7 +2088,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		@Override
 		public void stateChanged(final ChangeEvent evt) {
 			//
-			final JTabbedPane jtp = cast(JTabbedPane.class, getSource(evt));
+			final JTabbedPane jtp = cast(JTabbedPane.class, Util.getSource(evt));
 			//
 			if (jtp != null) {
 				//
@@ -5374,7 +5373,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		clear(tmImportResult);
 		//
-		final Object source = getSource(evt);
+		final Object source = Util.getSource(evt);
 		//
 		final boolean headless = GraphicsEnvironment.isHeadless();
 		//
@@ -8523,7 +8522,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Override
 	public void itemStateChanged(final ItemEvent evt) {
 		//
-		final Object source = getSource(evt);
+		final Object source = Util.getSource(evt);
 		//
 		if (Objects.equals(source, jcbVoiceId)) {
 			//
@@ -8645,7 +8644,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Override
 	public void stateChanged(final ChangeEvent evt) {
 		//
-		final Object source = getSource(evt);
+		final Object source = Util.getSource(evt);
 		//
 		if (Objects.equals(source, jsSpeechVolume)) {
 			//
@@ -8680,7 +8679,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Override
 	public void keyReleased(final KeyEvent evt) {
 		//
-		final Object source = getSource(evt);
+		final Object source = Util.getSource(evt);
 		//
 		final JTextComponent jtf = cast(JTextComponent.class, source);
 		//
@@ -14279,11 +14278,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return instance.matches();
 		//
-	}
-
-	@Nullable
-	private static Object getSource(@Nullable final EventObject instance) {
-		return instance != null ? instance.getSource() : null;
 	}
 
 	private static void setPreferredWidth(final int width, @Nullable final Component... cs) {
