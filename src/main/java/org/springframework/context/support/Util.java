@@ -185,6 +185,7 @@ public abstract class Util {
 		return instance != null ? instance.entrySet() : null;
 	}
 
+	@Nullable
 	static <V> V get(@Nullable final Map<?, V> instance, @Nullable final Object key) {
 		return instance != null ? instance.get(key) : null;
 	}
