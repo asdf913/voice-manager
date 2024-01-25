@@ -132,4 +132,8 @@ public abstract class Util {
 		return instance != null ? instance.getKey() : null;
 	}
 
+	static <V> V getValue(final Entry<?, V> instance) {
+		return instance != null ? instance.getValue() : null;
+	}
+
 }

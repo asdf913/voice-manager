@@ -297,7 +297,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 			//
 			for (final Entry<String, String> en : entries) {
 				//
-				if (en == null || !StringUtils.equals(getValue(en), Util.getText(jtf))) {
+				if (en == null || !StringUtils.equals(Util.getValue(en), Util.getText(jtf))) {
 					//
 					continue;
 					//
@@ -541,7 +541,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 						Util.toString(Util.getKey(en)));
 				//
 				CellUtil.setCellValue(RowUtil.createCell(row, Math.max(row.getLastCellNum(), 0)),
-						Util.toString(getValue(en)));
+						Util.toString(Util.getValue(en)));
 				//
 			} // for
 				//
@@ -572,7 +572,8 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 				//
 			CellUtil.setCellValue(RowUtil.createCell(row, Math.max(row.getLastCellNum(), 0)), Util.getKey(columnNames));
 			//
-			CellUtil.setCellValue(RowUtil.createCell(row, Math.max(row.getLastCellNum(), 0)), getValue(columnNames));
+			CellUtil.setCellValue(RowUtil.createCell(row, Math.max(row.getLastCellNum(), 0)),
+					Util.getValue(columnNames));
 			//
 		} // if
 			//
@@ -622,11 +623,6 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 	@Nullable
 	private static <T> Iterator<T> iterator(@Nullable final Iterable<T> instance) {
 		return instance != null ? instance.iterator() : null;
-	}
-
-	@Nullable
-	private static <V> V getValue(@Nullable final Entry<?, V> instance) {
-		return instance != null ? instance.getValue() : null;
 	}
 
 	private static boolean contains(@Nullable final Collection<?> items, final Object item) {

@@ -348,7 +348,7 @@ public class MapReportGui extends JFrame
 				toList(IntStream
 						.range(0,
 								orElse(max(mapToInt(Util.stream(entrySet(asMap(mm))),
-										x -> IterableUtils.size(getValue(x)))), 0))
+										x -> IterableUtils.size(Util.getValue(x)))), 0))
 						.mapToObj(x -> String.format("Value %1$s", x + 1))));
 		//
 		dtm = new DefaultTableModel(columns.toArray(), 0);
@@ -527,7 +527,7 @@ public class MapReportGui extends JFrame
 					} // if
 						//
 					MultimapUtil.put(((Multimap) (mm = ObjectUtils.getIfNull(mm, LinkedHashMultimap::create))),
-							Util.getKey(entry), getValue(entry));
+							Util.getKey(entry), Util.getValue(entry));
 					//
 				} // if
 					//
@@ -668,7 +668,7 @@ public class MapReportGui extends JFrame
 				} // if
 					//
 				if (aa != null && (!aa.hasAttribute(Util.toString(Util.getKey(entry)))
-						|| !Objects.equals(aa.getAttribute(Util.toString(Util.getKey(entry))), getValue(entry)))) {
+						|| !Objects.equals(aa.getAttribute(Util.toString(Util.getKey(entry))), Util.getValue(entry)))) {
 					//
 					return false;
 					//
@@ -680,11 +680,6 @@ public class MapReportGui extends JFrame
 			//
 		return true;
 		//
-	}
-
-	@Nullable
-	private static <V> V getValue(@Nullable final Entry<?, V> instance) {
-		return instance != null ? instance.getValue() : null;
 	}
 
 	@Nullable
