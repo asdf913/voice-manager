@@ -11582,7 +11582,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@SuppressWarnings("java:S1612")
-	private static Voice createVoice(final ObjectMapper objectMapper, final VoiceManager instance) {
+	private static Voice createVoice(final ObjectMapper objectMapper, @Nullable final VoiceManager instance) {
 		//
 		if (instance == null) {
 			//
