@@ -180,7 +180,7 @@ public abstract class Util {
 		return a != null && b != null && a.isAssignableFrom(b);
 	}
 
-	static <K, V> Set<Map.Entry<K, V>> entrySet(final Map<K, V> instance) {
+	static <K, V> Set<Map.Entry<K, V>> entrySet(@Nullable final Map<K, V> instance) {
 		return instance != null ? instance.entrySet() : null;
 	}
 
