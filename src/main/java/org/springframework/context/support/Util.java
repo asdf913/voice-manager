@@ -144,6 +144,7 @@ public abstract class Util {
 		return instance != null ? instance.getSource() : null;
 	}
 
+	@Nullable
 	static Class<?> forName(@Nullable final String className) {
 		try {
 			return StringUtils.isNotBlank(className) ? Class.forName(className) : null;
