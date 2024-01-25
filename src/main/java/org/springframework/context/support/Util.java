@@ -67,6 +67,7 @@ public abstract class Util {
 		return instance != null ? instance.orElse(other) : null;
 	}
 
+	@Nullable
 	static String getText(@Nullable final JTextComponent instance) {
 		//
 		if (instance == null) {
