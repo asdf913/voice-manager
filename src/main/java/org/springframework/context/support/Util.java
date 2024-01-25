@@ -120,7 +120,7 @@ public abstract class Util {
 		//
 	}
 
-	static <E> void add(@Nullable final Collection<E> items, final E item) {
+	static <E> void add(@Nullable final Collection<E> items, @Nullable final E item) {
 		if (items != null) {
 			items.add(item);
 		}
