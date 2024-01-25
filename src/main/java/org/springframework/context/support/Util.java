@@ -164,6 +164,7 @@ public abstract class Util {
 		return instance != null ? instance.getType() : null;
 	}
 
+	@Nullable
 	static <T> T cast(final Class<T> clz, @Nullable final Object value) {
 		return clz != null && clz.isInstance(value) ? clz.cast(value) : null;
 	}
