@@ -1162,8 +1162,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
-				if (aa != null && (!aa.hasAttribute(Util.toString(getKey(entry)))
-						|| !Objects.equals(aa.getAttribute(Util.toString(getKey(entry))), getValue(entry)))) {
+				if (aa != null && (!aa.hasAttribute(Util.toString(Util.getKey(entry)))
+						|| !Objects.equals(aa.getAttribute(Util.toString(Util.getKey(entry))), getValue(entry)))) {
 					//
 					return false;
 					//
@@ -1472,7 +1472,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				} // if
 					//
 				put(outputFolderFileNameExpressions = ObjectUtils.getIfNull(outputFolderFileNameExpressions,
-						LinkedHashMap::new), Util.toString(getKey(entry)), Util.toString(getValue(entry)));
+						LinkedHashMap::new), Util.toString(Util.getKey(entry)), Util.toString(getValue(entry)));
 				//
 			} // for
 				//
@@ -1504,11 +1504,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			objectMapper = new ObjectMapper();
 		}
 		return objectMapper;
-	}
-
-	@Nullable
-	private static <K> K getKey(@Nullable final Entry<K, ?> instance) {
-		return instance != null ? instance.getKey() : null;
 	}
 
 	@Nullable
@@ -1601,7 +1596,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					put(exportWebSpeechSynthesisHtmlTemplateProperties = ObjectUtils
 							.getIfNull(exportWebSpeechSynthesisHtmlTemplateProperties, LinkedHashMap::new),
-							getKey(entry), getValue(entry));
+							Util.getKey(entry), getValue(entry));
 					//
 				} // for
 					//
@@ -1982,8 +1977,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 								Boolean.logicalAnd(StringUtils.equalsIgnoreCase("xlsx", string),
 										Objects.equals("Microsoft Office Open XML", message)))) {
 					//
-					testAndAccept((a, b) -> !contains(a, b), classes = getIfNull(classes, ArrayList::new), getKey(en),
-							Util::add);
+					testAndAccept((a, b) -> !contains(a, b), classes = getIfNull(classes, ArrayList::new),
+							Util.getKey(en), Util::add);
 					//
 				} // if
 					//
@@ -5095,7 +5090,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
-				put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), getKey(pair), getValue(pair));
+				put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), Util.getKey(pair), getValue(pair));
 				//
 			} // for
 				//
@@ -5576,7 +5571,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				try {
 					//
-					if (Objects.equals(audioFormat, getKey(entry)) && playAudio(getValue(entry)) != null) {
+					if (Objects.equals(audioFormat, Util.getKey(entry)) && playAudio(getValue(entry)) != null) {
 						//
 						break;
 						//
@@ -6762,7 +6757,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		if (pair != null) {
 			//
-			Util.setText(getKey(pair), getValue(pair));
+			Util.setText(Util.getKey(pair), getValue(pair));
 			//
 			return;
 			//
@@ -7804,13 +7799,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 								//
 							} // if
 								//
-							map.put(Util.toString(getKey(parameter)), getValue(parameter));
+							map.put(Util.toString(Util.getKey(parameter)), getValue(parameter));
 							//
 						} // for
 							//
 					} // if
 						//
-					exportHtml(objectMap, Util.toString(getKey(filePair)), map);
+					exportHtml(objectMap, Util.toString(Util.getKey(filePair)), map);
 					//
 					Util.add(files, file);
 					//
@@ -7860,7 +7855,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
-				map.put(Util.toString(getKey(parameter)), getValue(parameter));
+				map.put(Util.toString(Util.getKey(parameter)), getValue(parameter));
 				//
 			} // for
 				//
@@ -8592,7 +8587,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			for (final Entry<String, ByteConverter> en : entrySet) {
 				//
 				if (en == null || (bd = ConfigurableListableBeanFactoryUtil
-						.getBeanDefinition(configurableListableBeanFactory, getKey(en))) == null
+						.getBeanDefinition(configurableListableBeanFactory, Util.getKey(en))) == null
 						|| !bd.hasAttribute(attribute)) {
 					continue;
 				} // if
@@ -8626,7 +8621,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				if (en == null
 						|| (bd = ConfigurableListableBeanFactoryUtil.getBeanDefinition(configurableListableBeanFactory,
-								getKey(en))) == null
+								Util.getKey(en))) == null
 						|| !bd.hasAttribute(attribute)
 						|| !Objects.equals(value, testAndApply(bd::hasAttribute, attribute, bd::getAttribute, null))) {
 					//
@@ -8773,7 +8768,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-			if (!contains(list = getIfNull(list, ArrayList::new), key = getKey(en))) {
+			if (!contains(list = getIfNull(list, ArrayList::new), key = Util.getKey(en))) {
 				//
 				Util.add(list, key);
 				//
@@ -10151,7 +10146,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		@Override
 		public void run() {
 			//
-			final Integer sheetCurrent = getKey(sheetCurrentAndTotal);
+			final Integer sheetCurrent = Util.getKey(sheetCurrentAndTotal);
 			//
 			final Integer sheetTotal = getValue(sheetCurrentAndTotal);
 			//
@@ -11762,7 +11757,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				for (final Entry<String, String> folderFileNamePattern : entrySet) {
 					//
-					if (folderFileNamePattern == null || (key = getKey(folderFileNamePattern)) == null
+					if (folderFileNamePattern == null || (key = Util.getKey(folderFileNamePattern)) == null
 							|| StringUtils.isBlank(value = VoiceManager.getValue(folderFileNamePattern))
 							|| !(fileSource = testAndApply(Objects::nonNull,
 									voiceFolder = getIfNull(voiceFolder, () -> getVoiceFolder(voiceManager)),
@@ -12360,7 +12355,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 						// plugin
 						//
-						setPluginHref(objectMap, getKey(entry), embedAudioInPresentation, folderInPresentation);
+						setPluginHref(objectMap, Util.getKey(entry), embedAudioInPresentation, folderInPresentation);
 						//
 						// Delete customShape with the name is "AudioCoverImage" if
 						// "hideAudioImageInPresentation" is true
@@ -12945,7 +12940,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					submit(es = getIfNull(es, () -> Executors.newFixedThreadPool(1)),
 							createExportTask(objectMap, size, Integer.valueOf(++coutner), numberOfOrdinalPositionDigit,
-									Collections.singletonMap(getKey(en),
+									Collections.singletonMap(Util.getKey(en),
 											"(#voice.text+'('+#voice.romaji+').'+#voice.fileExtension)"),
 									voiceFileNames = getIfNull(voiceFileNames, HashBasedTable::create)));
 					//
@@ -13094,7 +13089,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			if (folder != null) {
 				//
 				append(append(folder, StringUtils.defaultIfBlank(jlptFolderNamePrefix = getIfNull(jlptFolderNamePrefix,
-						() -> StringMap.getString(stringMap, "jlptFolderNamePrefix")), "")), getKey(en));
+						() -> StringMap.getString(stringMap, "jlptFolderNamePrefix")), "")), Util.getKey(en));
 				//
 			} // if
 				//

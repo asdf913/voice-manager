@@ -75,8 +75,8 @@ class MapReportGuiTest {
 
 	private static Method METHOD_CAST, METHOD_IS_ALL_ATTRIBUTES_MATCHED, METHOD_REMOVE_ROW, METHOD_ADD_ROW,
 			METHOD_GET_PREFERRED_WIDTH, METHOD_DOUBLE_VALUE, METHOD_AS_MAP, METHOD_GET_VALUES, METHOD_OR_ELSE,
-			METHOD_MAX, METHOD_MAP_TO_INT, METHOD_CREATE_MULTI_MAP, METHOD_IS_ASSIGNABLE_FROM, METHOD_GET_KEY,
-			METHOD_GET_VALUE, METHOD_FOR_NAME, METHOD_TO_LIST, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS,
+			METHOD_MAX, METHOD_MAP_TO_INT, METHOD_CREATE_MULTI_MAP, METHOD_IS_ASSIGNABLE_FROM, METHOD_GET_VALUE,
+			METHOD_FOR_NAME, METHOD_TO_LIST, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS,
 			METHOD_ADD_ACTION_LISTENER, METHOD_LENGTH, METHOD_TEST_AND_APPLY, METHOD_CREATE_MULTIMAP, METHOD_CLEAR,
 			METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_WRITER_WITH_DEFAULT_PRETTY_PRINTER, METHOD_WRITER,
 			METHOD_WRITE_VALUE_AS_STRING = null;
@@ -115,8 +115,6 @@ class MapReportGuiTest {
 		//
 		(METHOD_IS_ASSIGNABLE_FROM = clz.getDeclaredMethod("isAssignableFrom", Class.class, Class.class))
 				.setAccessible(true);
-		//
-		(METHOD_GET_KEY = clz.getDeclaredMethod("getKey", Entry.class)).setAccessible(true);
 		//
 		(METHOD_GET_VALUE = clz.getDeclaredMethod("getValue", Entry.class)).setAccessible(true);
 		//
@@ -826,21 +824,6 @@ class MapReportGuiTest {
 				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(Util.toString(obj != null ? obj.getClass() : null));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetKey() throws Throwable {
-		//
-		Assertions.assertNull(getKey(null));
-		//
-	}
-
-	private static <K> K getKey(final Entry<K, ?> instance) throws Throwable {
-		try {
-			return (K) METHOD_GET_KEY.invoke(null, instance);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

@@ -758,7 +758,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 				//
 				try {
 					//
-					if (playAudio(getKey(entry), getValue(entry)) != null) {
+					if (playAudio(Util.getKey(entry), getValue(entry)) != null) {
 						//
 						break;
 						//
@@ -1063,11 +1063,6 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		if (instance != null) {
 			instance.removeElementAt(index);
 		}
-	}
-
-	@Nullable
-	private static <K> K getKey(@Nullable final Entry<K, ?> instance) {
-		return instance != null ? instance.getKey() : null;
 	}
 
 	@Nullable

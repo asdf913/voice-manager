@@ -4,6 +4,7 @@ import java.lang.reflect.Member;
 import java.lang.reflect.Proxy;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.Map.Entry;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -124,6 +125,10 @@ public abstract class Util {
 		if (items != null) {
 			items.add(item);
 		}
+	}
+
+	 static <K> K getKey(final Entry<K, ?> instance) {
+		return instance != null ? instance.getKey() : null;
 	}
 
 }

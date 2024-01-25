@@ -527,7 +527,7 @@ public class MapReportGui extends JFrame
 					} // if
 						//
 					MultimapUtil.put(((Multimap) (mm = ObjectUtils.getIfNull(mm, LinkedHashMultimap::create))),
-							getKey(entry), getValue(entry));
+							Util.getKey(entry), getValue(entry));
 					//
 				} // if
 					//
@@ -667,8 +667,8 @@ public class MapReportGui extends JFrame
 					//
 				} // if
 					//
-				if (aa != null && (!aa.hasAttribute(Util.toString(getKey(entry)))
-						|| !Objects.equals(aa.getAttribute(Util.toString(getKey(entry))), getValue(entry)))) {
+				if (aa != null && (!aa.hasAttribute(Util.toString(Util.getKey(entry)))
+						|| !Objects.equals(aa.getAttribute(Util.toString(Util.getKey(entry))), getValue(entry)))) {
 					//
 					return false;
 					//
@@ -680,11 +680,6 @@ public class MapReportGui extends JFrame
 			//
 		return true;
 		//
-	}
-
-	@Nullable
-	private static <K> K getKey(@Nullable final Entry<K, ?> instance) {
-		return instance != null ? instance.getKey() : null;
 	}
 
 	@Nullable

@@ -303,7 +303,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 					//
 				} // if
 					//
-				if (!contains(list = ObjectUtils.getIfNull(list, ArrayList::new), key = getKey(en))) {
+				if (!contains(list = ObjectUtils.getIfNull(list, ArrayList::new), key = Util.getKey(en))) {
 					//
 					Util.add(list = ObjectUtils.getIfNull(list, ArrayList::new), key);
 					//
@@ -538,7 +538,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 				} // if
 					//
 				CellUtil.setCellValue(RowUtil.createCell(row, Math.max(row.getLastCellNum(), 0)),
-						Util.toString(getKey(en)));
+						Util.toString(Util.getKey(en)));
 				//
 				CellUtil.setCellValue(RowUtil.createCell(row, Math.max(row.getLastCellNum(), 0)),
 						Util.toString(getValue(en)));
@@ -570,7 +570,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 				//
 			} // if
 				//
-			CellUtil.setCellValue(RowUtil.createCell(row, Math.max(row.getLastCellNum(), 0)), getKey(columnNames));
+			CellUtil.setCellValue(RowUtil.createCell(row, Math.max(row.getLastCellNum(), 0)), Util.getKey(columnNames));
 			//
 			CellUtil.setCellValue(RowUtil.createCell(row, Math.max(row.getLastCellNum(), 0)), getValue(columnNames));
 			//
@@ -625,11 +625,6 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 	}
 
 	@Nullable
-	private static <K> K getKey(@Nullable final Entry<K, ?> instance) {
-		return instance != null ? instance.getKey() : null;
-	}
-
-	@Nullable
 	private static <V> V getValue(@Nullable final Entry<?, V> instance) {
 		return instance != null ? instance.getValue() : null;
 	}
@@ -637,8 +632,6 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 	private static boolean contains(@Nullable final Collection<?> items, final Object item) {
 		return items != null && items.contains(item);
 	}
-
-	
 
 	private static void setSelectedItem(@Nullable final ComboBoxModel<?> instance,
 			@Nullable final Object selectedItem) {
