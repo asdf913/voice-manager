@@ -127,7 +127,7 @@ public abstract class Util {
 		}
 	}
 
-	 static <K> K getKey(final Entry<K, ?> instance) {
+	static <K> K getKey(@Nullable final Entry<K, ?> instance) {
 		return instance != null ? instance.getKey() : null;
 	}
 
