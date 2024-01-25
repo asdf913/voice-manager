@@ -5727,7 +5727,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final Object instance = getInstance(speechApi);
 		//
-		final String text = getText(tfTextTts);
+		final String text = Util.getText(tfTextTts);
 		//
 		final String voiceId = Util.toString(getSelectedItem(cbmVoiceId));
 		//
@@ -5786,7 +5786,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		ObjectMap.setObject(objectMap, File.class, file);
 		//
-		writeVoiceToFile(objectMap, getText(tfTextTts), Util.toString(getSelectedItem(cbmVoiceId))
+		writeVoiceToFile(objectMap, Util.getText(tfTextTts), Util.toString(getSelectedItem(cbmVoiceId))
 		//
 				, intValue(getRate(), 0)// rate
 				//
@@ -6267,7 +6267,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			try {
 				//
-				speechApi.writeVoiceToFile(getText(tfTextImport), voiceId
+				speechApi.writeVoiceToFile(Util.getText(tfTextImport), voiceId
 				//
 						, intValue(getRate(), 0)// rate
 						//
@@ -6354,7 +6354,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		try {
 			//
-			final File file = testAndApply(Objects::nonNull, getText(tfExportFile), File::new, null);
+			final File file = testAndApply(Objects::nonNull, Util.getText(tfExportFile), File::new, null);
 			//
 			testAndAccept(Objects::nonNull, toURI(file), x -> browse(Desktop.getDesktop(), x));
 			//
@@ -6372,7 +6372,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		setBackground(tfPronunciationPageStatusCode, null);
 		//
-		final String urlString = getText(tfPronunciationPageUrl);
+		final String urlString = Util.getText(tfPronunciationPageUrl);
 		//
 		if (StringUtils.isNotBlank(urlString)) {
 			//
@@ -6447,7 +6447,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private void actionPerformedForIpaSymbol(final boolean headless) {
 		//
 		final Collection<String> values = MultimapUtil.get(IValue0Util.getValue0(ipaSymbolMultimap),
-				getText(tfTextImport));
+				Util.getText(tfTextImport));
 		//
 		final int size = IterableUtils.size(values);
 		//
@@ -6469,7 +6469,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private void actionPerformedForBtnConvertToHiraganaOrKatakana() {
 		//
-		final String textImport = getText(tfTextImport);
+		final String textImport = Util.getText(tfTextImport);
 		//
 		// Hiragana
 		//
@@ -6665,23 +6665,23 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		if (Objects.equals(source, btnCopyRomaji)) {
 			//
-			stringValue = Unit.with(getText(tfRomaji));
+			stringValue = Unit.with(Util.getText(tfRomaji));
 			//
 		} else if (Objects.equals(source, btnCopyHiragana)) {
 			//
-			stringValue = Unit.with(getText(tfHiragana));
+			stringValue = Unit.with(Util.getText(tfHiragana));
 			//
 		} else if (Objects.equals(source, btnCopyKatakana)) {
 			//
-			stringValue = Unit.with(getText(tfKatakana));
+			stringValue = Unit.with(Util.getText(tfKatakana));
 			//
 		} else if (Objects.equals(source, btnExportCopy)) {
 			//
-			stringValue = Unit.with(getText(tfExportFile));
+			stringValue = Unit.with(Util.getText(tfExportFile));
 			//
 		} else if (Objects.equals(source, btnDllPathCopy)) {
 			//
-			stringValue = Unit.with(getText(tfDllPath));
+			stringValue = Unit.with(Util.getText(tfDllPath));
 			//
 		} // if
 			//
@@ -6755,7 +6755,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} else if (Objects.equals(source, btnConvertToKatakana)) {
 			//
-			pair = Pair.of(tfKatakana, testAndApply(Objects::nonNull, getText(tfHiragana),
+			pair = Pair.of(tfKatakana, testAndApply(Objects::nonNull, Util.getText(tfHiragana),
 					x -> KanaConverter.convertKana(x, KanaConverter.OP_ZEN_HIRA_TO_ZEN_KATA), null));
 			//
 		} // if
@@ -6774,7 +6774,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private void actionPerformedForBtnConvertToRomaji() {
 		//
-		final String string = getText(tfTextImport);
+		final String string = Util.getText(tfTextImport);
 		//
 		final IValue0<?> iValue0 = getIValue0FromMapsByKey(mapRomaji, string,
 				createFunctionForBtnConvertToHiraganaOrKatakana(ROMAJI_WITH_FIRST_CAPTICALIZED_LETTER));
@@ -7004,15 +7004,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			final StringMap stringMap = Reflection.newProxy(StringMap.class, ih);
 			//
-			StringMap.setString(stringMap, "ordinalPositionFileNamePrefix", getText(tfOrdinalPositionFileNamePrefix));
+			StringMap.setString(stringMap, "ordinalPositionFileNamePrefix",
+					Util.getText(tfOrdinalPositionFileNamePrefix));
 			//
 			StringMap.setString(stringMap, "exportPresentationTemplate", exportPresentationTemplate);
 			//
-			StringMap.setString(stringMap, "exportPassword", getText(tfExportPassword));
+			StringMap.setString(stringMap, "exportPassword", Util.getText(tfExportPassword));
 			//
 			StringMap.setString(stringMap, FOLDER_IN_PRESENTATION, folderInPresentation);
 			//
-			StringMap.setString(stringMap, "jlptFolderNamePrefix", getText(tfJlptFolderNamePrefix));
+			StringMap.setString(stringMap, "jlptFolderNamePrefix", Util.getText(tfJlptFolderNamePrefix));
 			//
 			StringMap.setString(stringMap, MESSAGE_DIGEST_ALGORITHM, messageDigestAlgorithm);
 			//
@@ -7022,7 +7023,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			ObjectMap.setObject(objectMap, Duration.class,
 					ObjectUtils.defaultIfNull(
-							IValue0Util.getValue0(toDurationIvalue0(getText(tfPresentationSlideDuration))),
+							IValue0Util.getValue0(toDurationIvalue0(Util.getText(tfPresentationSlideDuration))),
 							presentationSlideDuration));
 			//
 			export(voices, outputFolderFileNameExpressions, objectMap);
@@ -7058,7 +7059,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				// encrypt the file if "password" is set
 				//
-			encrypt(file, cast(EncryptionMode.class, getSelectedItem(cbmEncryptionMode)), getText(tfExportPassword));
+			encrypt(file, cast(EncryptionMode.class, getSelectedItem(cbmEncryptionMode)),
+					Util.getText(tfExportPassword));
 			//
 			// Delete empty Spreadsheet
 			//
@@ -7100,7 +7102,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					exportHtml(objectMap, exportHtmlTemplateFile, map);
 					//
 					final StringBuilder sb = new StringBuilder(
-							StringUtils.defaultString(getText(tfExportHtmlFileName)));
+							StringUtils.defaultString(Util.getText(tfExportHtmlFileName)));
 					//
 					final String[] fileExtensions = getFileExtensions(ContentType.HTML);
 					//
@@ -7185,7 +7187,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					ObjectMap.setObject(objectMap, CompressionLevel.class,
 							cast(CompressionLevel.class, getSelectedItem(cbmCompressionLevel)));
 					//
-					createZipFile(objectMap, getText(tfExportPassword), files);
+					createZipFile(objectMap, Util.getText(tfExportPassword), files);
 					//
 					// Delete HTML File(s) is "Remove HTML After ZIP" option is checked
 					//
@@ -7253,7 +7255,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		try {
 			//
 			final List<Pronunciation> pronounications = FailableFunctionUtil
-					.apply(onlineNHKJapanesePronunciationsAccentFailableFunction, getText(tfTextImport));
+					.apply(onlineNHKJapanesePronunciationsAccentFailableFunction, Util.getText(tfTextImport));
 			//
 			final IValue0<Pronunciation> pronunciation = IterableUtils.size(pronounications) == 1
 					? Unit.with(IterableUtils.get(pronounications, 0))
@@ -8417,7 +8419,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		final JTextComponent jtc = new JPasswordField();
 		//
 		return JOptionPane.showConfirmDialog(null, jtc, PASSWORD, JOptionPane.PLAIN_MESSAGE) == JOptionPane.OK_OPTION
-				? getText(jtc)
+				? Util.getText(jtc)
 				: null;
 		//
 	}
@@ -8700,7 +8702,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				final ObjectMapper om = getObjectMapper();
 				//
-				final List<?> list = getObjectList(om, getText(jtf));
+				final List<?> list = getObjectList(om, Util.getText(jtf));
 				//
 				setText(jlListNames, ObjectMapperUtil.writeValueAsString(om, list));
 				//
@@ -8729,7 +8731,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		// 常用漢字
 		//
-		final String text = getText(jTextComponent);
+		final String text = Util.getText(jTextComponent);
 		//
 		final List<String> list = IValue0Util.getValue0(jouYouKanJiList);
 		//
@@ -8765,7 +8767,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		for (final Entry<String, String> en : entries) {
 			//
-			if (en == null || !StringUtils.equals(getValue(en), getText(jTextComponent))) {
+			if (en == null || !StringUtils.equals(getValue(en), Util.getText(jTextComponent))) {
 				//
 				continue;
 				//
@@ -8839,7 +8841,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
-		final String text = getText(instance.tfTextImport);
+		final String text = Util.getText(instance.tfTextImport);
 		//
 		final MutableComboBoxModel<JlptVocabulary> mcbmJlptVocabulary = instance.mcbmJlptVocabulary;
 		//
@@ -9730,7 +9732,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final Integer speechRate = getValue(jsSpeechRate);
 		//
-		return speechRate != null ? speechRate : getRate(getText(tfSpeechRate));
+		return speechRate != null ? speechRate : getRate(Util.getText(tfSpeechRate));
 		//
 	}
 
@@ -11141,7 +11143,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			if (voiceManager != null) {
 				//
-				setText(voiceManager.tfFile, Objects.toString(filePath, getText(voiceManager.tfFile)));
+				setText(voiceManager.tfFile, Objects.toString(filePath, Util.getText(voiceManager.tfFile)));
 				//
 				setText(voiceManager.tfFileLength, Util.toString(length));
 				//
@@ -11590,26 +11592,27 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		final Voice voice = new Voice();
 		//
-		voice.setLanguage(getText(instance.tfLanguage));
+		voice.setLanguage(Util.getText(instance.tfLanguage));
 		//
-		voice.setText(getText(instance.tfTextImport));
+		voice.setText(Util.getText(instance.tfTextImport));
 		//
-		setSource(voice, getText(instance.tfSource));
+		setSource(voice, Util.getText(instance.tfSource));
 		//
-		voice.setRomaji(getText(instance.tfRomaji));
+		voice.setRomaji(Util.getText(instance.tfRomaji));
 		//
-		voice.setHiragana(getText(instance.tfHiragana));
+		voice.setHiragana(Util.getText(instance.tfHiragana));
 		//
-		voice.setKatakana(getText(instance.tfKatakana));
+		voice.setKatakana(Util.getText(instance.tfKatakana));
 		//
 		voice.setYomi(cast(Yomi.class, getSelectedItem(instance.cbmYomi)));
 		//
-		setListNames(voice, toList(Util.map(Util.stream(getObjectList(objectMapper, getText(instance.tfListNames))),
-				x -> Util.toString(x))));
+		setListNames(voice,
+				toList(Util.map(Util.stream(getObjectList(objectMapper, Util.getText(instance.tfListNames))),
+						x -> Util.toString(x))));
 		//
 		voice.setJlptLevel(Util.toString(getSelectedItem(instance.cbmJlptLevel)));
 		//
-		voice.setIpaSymbol(getText(instance.tfIpaSymbol));
+		voice.setIpaSymbol(Util.getText(instance.tfIpaSymbol));
 		//
 		voice.setIsKanji(cast(Boolean.class, getSelectedItem(instance.cbmIsKanji)));
 		//
@@ -11617,7 +11620,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		voice.setGaKuNenBeTsuKanJi(Util.toString(getSelectedItem(instance.cbmGaKuNenBeTsuKanJi)));
 		//
-		voice.setPronunciationPageUrl(getText(instance.tfPronunciationPageUrl));
+		voice.setPronunciationPageUrl(Util.getText(instance.tfPronunciationPageUrl));
 		//
 		return voice;
 		//
@@ -13148,14 +13151,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		final VoiceManager voiceManager = testAndApply(c -> ObjectMap.containsObject(objectMap, c), VoiceManager.class,
 				c -> ObjectMap.getObject(objectMap, c), null);
 		//
-		et.ordinalPositionFileNamePrefix = getText(
+		et.ordinalPositionFileNamePrefix = Util.getText(
 				(et.voiceManager = voiceManager) != null ? voiceManager.tfOrdinalPositionFileNamePrefix : null);
 		//
 		et.exportPresentationTemplate = voiceManager != null ? voiceManager.exportPresentationTemplate : null;
 		//
 		et.folderInPresentation = voiceManager != null ? voiceManager.folderInPresentation : null;
 		//
-		et.password = getText(voiceManager != null ? voiceManager.tfExportPassword : null);
+		et.password = Util.getText(voiceManager != null ? voiceManager.tfExportPassword : null);
 		//
 		final BooleanMap booleanMap = testAndApply(c -> ObjectMap.containsObject(objectMap, c), BooleanMap.class,
 				c -> ObjectMap.getObject(objectMap, c), null);
@@ -14297,11 +14300,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return instance.matches();
 		//
-	}
-
-	@Nullable
-	private static String getText(@Nullable final JTextComponent instance) {
-		return instance != null ? instance.getText() : null;
 	}
 
 	@Nullable

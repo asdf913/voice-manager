@@ -791,7 +791,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 			//
 			// 常用漢字
 			//
-			final String text = getText(tfText);
+			final String text = Util.getText(tfText);
 			//
 			final List<String> list = IValue0Util.getValue0(jouYouKanJiList);
 			//
@@ -873,11 +873,6 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 
 	private static final <T> boolean test(@Nullable final Predicate<T> instance, @Nullable final T value) {
 		return instance != null && instance.test(value);
-	}
-
-	@Nullable
-	private static String getText(@Nullable final JTextComponent instance) {
-		return instance != null ? instance.getText() : null;
 	}
 
 	private static void setText(@Nullable final JTextComponent instance, final String text) {

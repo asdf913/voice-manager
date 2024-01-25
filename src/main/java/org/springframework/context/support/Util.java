@@ -9,8 +9,20 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
+import javax.swing.text.JTextComponent;
 
-public interface Util {
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.LoggerUtil;
+
+import io.github.toolfactory.narcissus.Narcissus;
+
+public abstract class Util {
+
+	private static final Logger LOG = LoggerFactory.getLogger(Util.class);
+
+	private Util() {
+	}
 
 	@Nullable
 	static String getName(@Nullable final Member instance) {
@@ -53,6 +65,32 @@ public interface Util {
 	@Nullable
 	static <T> T orElse(@Nullable final Optional<T> instance, @Nullable final T other) {
 		return instance != null ? instance.orElse(other) : null;
+	}
+
+	static String getText(final JTextComponent instance) {
+		//
+		if (instance == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		try {
+			//
+			if (Narcissus.getField(instance, Narcissus.findField(getClass(instance), "model")) == null) {
+				//
+				return null;
+				//
+			} // if
+				//
+		} catch (final NoSuchFieldException e) {
+			//
+			LoggerUtil.error(LOG, e.getMessage(), e);
+			//
+		} // try
+			//
+		return instance.getText();
+		//
 	}
 
 }

@@ -243,8 +243,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		//
 		final List<Component> cs = Arrays.asList(jlJlptLevel, btnExportJson, tfJson, btnCompare, tfText);
 		//
-		final Dimension preferredSize = Util
-				.orElse(max(Util.map(Util.stream(cs), JlptLevelGui::getPreferredSize),
+		final Dimension preferredSize = Util.orElse(max(Util.map(Util.stream(cs), JlptLevelGui::getPreferredSize),
 				(a, b) -> a != null && b != null ? Double.compare(a.getWidth(), b.getWidth()) : 0), null);
 		//
 		if (preferredSize != null) {
@@ -264,8 +263,6 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 				: null;
 		//
 	}
-
-
 
 	@Nullable
 	private static <E> Component getListCellRendererComponent(@Nullable final ListCellRenderer<E> instance,
@@ -351,8 +348,8 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 			//
 		} else if (Objects.equals(source, btnCopy)) {
 			//
-			run(!isTestMode(),
-					() -> setContents(getSystemClipboard(getToolkit()), new StringSelection(getText(tfJson)), null));
+			run(!isTestMode(), () -> setContents(getSystemClipboard(getToolkit()),
+					new StringSelection(Util.getText(tfJson)), null));
 			//
 		} else if (Objects.equals(source, btnCompare)) {
 			//
@@ -504,7 +501,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 			//
 		} // if
 			//
-		final String text = getText(instance.tfText);
+		final String text = Util.getText(instance.tfText);
 		//
 		final MutableComboBoxModel<JlptVocabulary> cbmJlptVocabulary = instance.cbmJlptVocabulary;
 		//
@@ -743,11 +740,6 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		} catch (final ClassNotFoundException e) {
 			return null;
 		}
-	}
-
-	@Nullable
-	private static String getText(@Nullable final JTextComponent instance) {
-		return instance != null ? instance.getText() : null;
 	}
 
 	private static void setText(@Nullable final JTextComponent instance, final String text) {

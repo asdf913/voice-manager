@@ -56,11 +56,9 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListModel;
 import javax.swing.MutableComboBoxModel;
-import javax.swing.text.JTextComponent;
 
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -91,15 +89,15 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 
 	private static final int ONE = 1;
 
-	private static Method METHOD_CAST, METHOD_TEST_AND_APPLY, METHOD_GET_WIDTH, METHOD_GET_TEXT, METHOD_GET_VALUE,
-			METHOD_ADD_ELEMENT, METHOD_REMOVE_ELEMENT_AT, METHOD_GET_SELECTED_ITEM, METHOD_GET_SIZE,
-			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_FOR_EACH_ITERABLE, METHOD_FOR_EACH_INT_STREAM,
-			METHOD_MAP_INT_STREAM, METHOD_SET_PITCH_ACCENT_IMAGE_TO_SYSTEM_CLIPBOARD_CONTENTS,
-			METHOD_SAVE_PITCH_ACCENT_IMAGE, METHOD_PLAY_AUDIO, METHOD_SAVE_AUDIO, METHOD_PRONOUNICATION_CHANGED,
-			METHOD_GET_DECLARED_FIELD, METHOD_FOR_NAME, METHOD_OPEN_STREAM, METHOD_PLAY, METHOD_ADD_ACTION_LISTENER,
-			METHOD_GET_MAP, METHOD_GET_FIELD, METHOD_SET_TEXT, METHOD_SET_FORE_GROUND,
-			METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_SAVE_FILE, METHOD_CONTAINS_KEY, METHOD_IIF, METHOD_GET_NAME,
-			METHOD_SORT, METHOD_CREATE_IMAGE_FORMAT_COMPARATOR, METHOD_IS_ANNOTATION_PRESENT, METHOD_GET_ANNOTATION,
+	private static Method METHOD_CAST, METHOD_TEST_AND_APPLY, METHOD_GET_WIDTH, METHOD_GET_VALUE, METHOD_ADD_ELEMENT,
+			METHOD_REMOVE_ELEMENT_AT, METHOD_GET_SELECTED_ITEM, METHOD_GET_SIZE, METHOD_GET_SYSTEM_CLIP_BOARD,
+			METHOD_SET_CONTENTS, METHOD_FOR_EACH_ITERABLE, METHOD_FOR_EACH_INT_STREAM, METHOD_MAP_INT_STREAM,
+			METHOD_SET_PITCH_ACCENT_IMAGE_TO_SYSTEM_CLIPBOARD_CONTENTS, METHOD_SAVE_PITCH_ACCENT_IMAGE,
+			METHOD_PLAY_AUDIO, METHOD_SAVE_AUDIO, METHOD_PRONOUNICATION_CHANGED, METHOD_GET_DECLARED_FIELD,
+			METHOD_FOR_NAME, METHOD_OPEN_STREAM, METHOD_PLAY, METHOD_ADD_ACTION_LISTENER, METHOD_GET_MAP,
+			METHOD_GET_FIELD, METHOD_SET_TEXT, METHOD_SET_FORE_GROUND, METHOD_GET_LIST_CELL_RENDERER_COMPONENT,
+			METHOD_SAVE_FILE, METHOD_CONTAINS_KEY, METHOD_IIF, METHOD_GET_NAME, METHOD_SORT,
+			METHOD_CREATE_IMAGE_FORMAT_COMPARATOR, METHOD_IS_ANNOTATION_PRESENT, METHOD_GET_ANNOTATION,
 			METHOD_GET_PREFERRED_SIZE, METHOD_TO_LIST, METHOD_SET_PREFERRED_SIZE, METHOD_MAX, METHOD_TO_ARRAY,
 			METHOD_TEST_AND_RUN, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_REMOVE = null;
 
@@ -114,8 +112,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
 		//
 		(METHOD_GET_WIDTH = clz.getDeclaredMethod("getWidth", Dimension2D.class)).setAccessible(true);
-		//
-		(METHOD_GET_TEXT = clz.getDeclaredMethod("getText", JTextComponent.class)).setAccessible(true);
 		//
 		(METHOD_GET_VALUE = clz.getDeclaredMethod("getValue", Entry.class)).setAccessible(true);
 		//
@@ -758,29 +754,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				return null;
 			} else if (obj instanceof Double) {
 				return (Double) obj;
-			}
-			throw new Throwable(Util.toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetText() throws Throwable {
-		//
-		Assertions.assertNull(getText(null));
-		//
-		Assertions.assertEquals(EMPTY, getText(new JTextField()));
-		//
-	}
-
-	private static String getText(final JTextComponent instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_TEXT.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
 			}
 			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

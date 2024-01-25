@@ -675,7 +675,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			try {
 				//
 				final List<Pronunciation> pronounications = FailableFunctionUtil
-						.apply(onlineNHKJapanesePronunciationsAccentFailableFunction, getText(tfText));
+						.apply(onlineNHKJapanesePronunciationsAccentFailableFunction, Util.getText(tfText));
 				//
 				forEach(pronounications, x -> addElement(mcbmPronounication, x));
 				//
@@ -1073,11 +1073,6 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 	@Nullable
 	private static <V> V getValue(@Nullable final Entry<?, V> instance) {
 		return instance != null ? instance.getValue() : null;
-	}
-
-	@Nullable
-	private static String getText(@Nullable final JTextComponent instance) {
-		return instance != null ? instance.getText() : null;
 	}
 
 	@Nullable

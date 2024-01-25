@@ -297,7 +297,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 			//
 			for (final Entry<String, String> en : entries) {
 				//
-				if (en == null || !StringUtils.equals(getValue(en), getText(jtf))) {
+				if (en == null || !StringUtils.equals(getValue(en), Util.getText(jtf))) {
 					//
 					continue;
 					//
@@ -667,11 +667,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 		return instance != null && instance.test(value);
 	}
 
-	@Nullable
-	private static String getText(@Nullable final JTextComponent instance) {
-		return instance != null ? instance.getText() : null;
-	}
-
+	
 	private static void setText(@Nullable final JTextComponent instance, final String text) {
 		if (instance != null) {
 			instance.setText(text);

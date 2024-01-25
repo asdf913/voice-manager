@@ -295,7 +295,8 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 
 	private void setIpaSymbolTextField(final boolean headless) {
 		//
-		final Collection<String> values = MultimapUtil.get(IValue0Util.getValue0(ipaSymbolMultimap), getText(tfText));
+		final Collection<String> values = MultimapUtil.get(IValue0Util.getValue0(ipaSymbolMultimap),
+				Util.getText(tfText));
 		//
 		final int size = IterableUtils.size(values);
 		//
@@ -385,11 +386,6 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 
 	private static <T> T iif(final boolean condition, final T trueValue, final T falseValue) {
 		return condition ? trueValue : falseValue;
-	}
-
-	@Nullable
-	private static String getText(@Nullable final JTextComponent instance) {
-		return instance != null ? instance.getText() : null;
 	}
 
 	private static void setText(@Nullable final JTextComponent instance, @Nullable final String text) {
