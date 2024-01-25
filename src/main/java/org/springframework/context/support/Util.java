@@ -138,6 +138,7 @@ public abstract class Util {
 		return instance != null ? instance.getValue() : null;
 	}
 
+	@Nullable
 	static Object getSource(@Nullable final EventObject instance) {
 		return instance != null ? instance.getSource() : null;
 	}
