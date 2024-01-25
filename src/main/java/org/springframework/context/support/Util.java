@@ -152,7 +152,7 @@ public abstract class Util {
 			return null;
 		}
 	}
-
+	@Nullable
 	static String getName(@Nullable final Class<?> instance) {
 		return instance != null ? instance.getName() : null;
 	}
