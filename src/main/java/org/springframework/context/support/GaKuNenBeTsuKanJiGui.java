@@ -305,7 +305,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 					//
 				if (!contains(list = ObjectUtils.getIfNull(list, ArrayList::new), key = getKey(en))) {
 					//
-					add(list = ObjectUtils.getIfNull(list, ArrayList::new), key);
+					Util.add(list = ObjectUtils.getIfNull(list, ArrayList::new), key);
 					//
 				} else {
 					//
@@ -638,11 +638,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 		return items != null && items.contains(item);
 	}
 
-	private static <E> void add(@Nullable final Collection<E> items, final E item) {
-		if (items != null) {
-			items.add(item);
-		}
-	}
+	
 
 	private static void setSelectedItem(@Nullable final ComboBoxModel<?> instance,
 			@Nullable final Object selectedItem) {

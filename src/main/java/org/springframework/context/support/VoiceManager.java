@@ -1138,8 +1138,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					&& isAssignableFrom(classToBeFound, fb.getObjectType())) || isAssignableFrom(classToBeFound, clz))
 					&& isAllAttributesMatched(attributes, bd)) {
 				//
-				add(multimapBeanDefinitionNames = ObjectUtils.getIfNull(multimapBeanDefinitionNames, ArrayList::new),
-						beanDefinitionName);
+				Util.add(multimapBeanDefinitionNames = ObjectUtils.getIfNull(multimapBeanDefinitionNames,
+						ArrayList::new), beanDefinitionName);
 				//
 			} // if
 				//
@@ -1983,7 +1983,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 										Objects.equals("Microsoft Office Open XML", message)))) {
 					//
 					testAndAccept((a, b) -> !contains(a, b), classes = getIfNull(classes, ArrayList::new), getKey(en),
-							VoiceManager::add);
+							Util::add);
 					//
 				} // if
 					//
@@ -2052,7 +2052,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			for (final Object v : iterable) {
 				//
-				add(list = ObjectUtils.getIfNull(list, ArrayList::new), v);
+				Util.add(list = ObjectUtils.getIfNull(list, ArrayList::new), v);
 				//
 			} // for
 				//
@@ -4025,7 +4025,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-			add(list = ObjectUtils.getIfNull(list, ArrayList::new), cast(Boolean.class, get(f, null)));
+			Util.add(list = ObjectUtils.getIfNull(list, ArrayList::new), cast(Boolean.class, get(f, null)));
 			//
 		} // for
 			//
@@ -4862,7 +4862,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
-				add(methodNames = ObjectUtils.getIfNull(methodNames, ArrayList::new), Util.getName(m));
+				Util.add(methodNames = ObjectUtils.getIfNull(methodNames, ArrayList::new), Util.getName(m));
 				//
 			} // for
 				//
@@ -6618,7 +6618,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-			add(vs = ObjectUtils.getIfNull(vs, ArrayList::new), get(m, key));
+			Util.add(vs = ObjectUtils.getIfNull(vs, ArrayList::new), get(m, key));
 			//
 		} // for
 			//
@@ -6788,7 +6788,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			if (isAllCharactersAllowed(romaji, allowedRomajiCharacters) && !contains(objects, romaji)) {
 				//
-				objects.add(romaji);
+				Util.add(objects, romaji);
 				//
 			} // if
 				//
@@ -7121,7 +7121,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							file = new File(StringUtils.defaultIfBlank(Util.toString(sb), "export.html")),
 							Util.toString(writer), StandardCharsets.UTF_8);
 					//
-					add(files = ObjectUtils.getIfNull(files, ArrayList::new), file);
+					Util.add(files = ObjectUtils.getIfNull(files, ArrayList::new), file);
 					//
 				} // try
 					//
@@ -7158,7 +7158,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 										StringUtils.defaultIfBlank(Util.toString(sb), "WebSpeechSynthesis.html")),
 								Util.toString(writer), StandardCharsets.UTF_8);
 						//
-						add(files = ObjectUtils.getIfNull(files, ArrayList::new), file);
+						Util.add(files = ObjectUtils.getIfNull(files, ArrayList::new), file);
 						//
 					} // try
 						//
@@ -7397,7 +7397,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			while (rs != null && rs.next()) {
 				//
-				add(tableNames = getIfNull(tableNames, LinkedHashSet::new), rs.getString("table_name"));
+				Util.add(tableNames = getIfNull(tableNames, LinkedHashSet::new), rs.getString("table_name"));
 				//
 			} // while
 				//
@@ -7730,8 +7730,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-			testAndAccept((a, b) -> !contains(a, b), list = ObjectUtils.getIfNull(list, ArrayList::new), f,
-					VoiceManager::add, null);
+			testAndAccept((a, b) -> !contains(a, b), list = ObjectUtils.getIfNull(list, ArrayList::new), f, Util::add,
+					null);
 			//
 		} // for
 			//
@@ -7812,7 +7812,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 					exportHtml(objectMap, Util.toString(getKey(filePair)), map);
 					//
-					add(files, file);
+					Util.add(files, file);
 					//
 				} finally {
 					//
@@ -8398,7 +8398,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-			add(list = getIfNull(list, ArrayList::new), entry.getName());
+			Util.add(list = getIfNull(list, ArrayList::new), entry.getName());
 			//
 		} // while
 			//
@@ -8597,7 +8597,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					continue;
 				} // if
 					//
-				add(list = getIfNull(list, ArrayList::new), bd.getAttribute(attribute));
+				Util.add(list = getIfNull(list, ArrayList::new), bd.getAttribute(attribute));
 				//
 			} // for
 				//
@@ -8775,7 +8775,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			if (!contains(list = getIfNull(list, ArrayList::new), key = getKey(en))) {
 				//
-				add(list, key);
+				Util.add(list, key);
 				//
 			} else {
 				//
@@ -9602,7 +9602,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				if ((m = get(methods, 0)) != null && m.getParameterCount() == 0) {
 					//
-					add(pairs = getIfNull(pairs, ArrayList::new), Pair.of(attribute, invoke(m, id3v1)));
+					Util.add(pairs = getIfNull(pairs, ArrayList::new), Pair.of(attribute, invoke(m, id3v1)));
 					//
 				} // if
 					//
@@ -11031,12 +11031,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.name() : null;
 	}
 
-	private static <E> void add(@Nullable final Collection<E> items, @Nullable final E item) {
-		if (items != null) {
-			items.add(item);
-		}
-	}
-
 	private static <E> void add(@Nullable final List<E> instance, final int index, @Nullable final E element) {
 		if (instance != null) {
 			instance.add(index, element);
@@ -11373,7 +11367,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 								//
 							} // if
 								//
-							add(throwableStackTraceHexs, hex);
+							Util.add(throwableStackTraceHexs, hex);
 							//
 						} // if
 							//

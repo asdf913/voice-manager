@@ -555,7 +555,7 @@ public class MapReportGui extends JFrame
 				//
 			} // if
 				//
-			add(vs = ObjectUtils.getIfNull(vs, ArrayList::new), v);
+			Util.add(vs = ObjectUtils.getIfNull(vs, ArrayList::new), v);
 			//
 		} // for
 			//
@@ -625,8 +625,8 @@ public class MapReportGui extends JFrame
 					&& isAssignableFrom(classToBeFound, fb.getObjectType())) || isAssignableFrom(classToBeFound, clz))
 					&& isAllAttributesMatched(attributes, bd)) {
 				//
-				add(multimapBeanDefinitionNames = ObjectUtils.getIfNull(multimapBeanDefinitionNames, ArrayList::new),
-						beanDefinitionName);
+				Util.add(multimapBeanDefinitionNames = ObjectUtils.getIfNull(multimapBeanDefinitionNames,
+						ArrayList::new), beanDefinitionName);
 				//
 			} // if
 				//
@@ -634,12 +634,6 @@ public class MapReportGui extends JFrame
 			//
 		return multimapBeanDefinitionNames;
 		//
-	}
-
-	private static <E> void add(@Nullable final Collection<E> items, final E item) {
-		if (items != null) {
-			items.add(item);
-		}
 	}
 
 	private static boolean isAssignableFrom(@Nullable final Class<?> a, @Nullable final Class<?> b) {

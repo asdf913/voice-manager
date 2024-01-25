@@ -330,7 +330,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 				//
 			} // if
 				//
-			add(list = ObjectUtils.getIfNull(list, ArrayList::new), cast(Boolean.class, get(f, null)));
+			Util.add(list = ObjectUtils.getIfNull(list, ArrayList::new), cast(Boolean.class, get(f, null)));
 			//
 		} // for
 			//
@@ -843,12 +843,6 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 
 	private static boolean contains(@Nullable final Collection<?> items, final Object item) {
 		return items != null && items.contains(item);
-	}
-
-	private static <E> void add(@Nullable final Collection<E> items, @Nullable final E item) {
-		if (items != null) {
-			items.add(item);
-		}
 	}
 
 	private static void setSelectedItem(@Nullable final ComboBoxModel<?> instance,

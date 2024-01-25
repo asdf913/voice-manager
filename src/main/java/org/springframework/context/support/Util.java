@@ -120,4 +120,10 @@ public abstract class Util {
 		//
 	}
 
+	static <E> void add(final Collection<E> items, final E item) {
+		if (items != null) {
+			items.add(item);
+		}
+	}
+
 }

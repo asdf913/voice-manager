@@ -186,13 +186,7 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider, Lookup, I
 		//
 		for (int i = 0; pointers != null && i < Math.min(pointers.length, length); i++) {
 			//
-			if (list == null) {
-				//
-				list = new ArrayList<>();
-				//
-			} // if
-				//
-			list.add(pointers[i].getWideString(0));
+			Util.add(list = ObjectUtils.getIfNull(list, ArrayList::new), pointers[i].getWideString(0));
 			//
 		} // for
 			//
