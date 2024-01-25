@@ -94,12 +94,12 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			METHOD_FOR_EACH_ITERABLE, METHOD_FOR_EACH_INT_STREAM, METHOD_MAP_INT_STREAM,
 			METHOD_SET_PITCH_ACCENT_IMAGE_TO_SYSTEM_CLIPBOARD_CONTENTS, METHOD_SAVE_PITCH_ACCENT_IMAGE,
 			METHOD_PLAY_AUDIO, METHOD_SAVE_AUDIO, METHOD_PRONOUNICATION_CHANGED, METHOD_GET_DECLARED_FIELD,
-			METHOD_OPEN_STREAM, METHOD_PLAY, METHOD_ADD_ACTION_LISTENER, METHOD_GET_MAP, METHOD_GET_FIELD,
-			METHOD_SET_TEXT, METHOD_SET_FORE_GROUND, METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_SAVE_FILE,
-			METHOD_CONTAINS_KEY, METHOD_IIF, METHOD_SORT, METHOD_CREATE_IMAGE_FORMAT_COMPARATOR,
-			METHOD_IS_ANNOTATION_PRESENT, METHOD_GET_ANNOTATION, METHOD_GET_PREFERRED_SIZE, METHOD_TO_LIST,
-			METHOD_SET_PREFERRED_SIZE, METHOD_MAX, METHOD_TO_ARRAY, METHOD_TEST_AND_RUN, METHOD_TEST_AND_ACCEPT3,
-			METHOD_TEST_AND_ACCEPT4, METHOD_REMOVE = null;
+			METHOD_OPEN_STREAM, METHOD_PLAY, METHOD_ADD_ACTION_LISTENER, METHOD_GET_FIELD, METHOD_SET_TEXT,
+			METHOD_SET_FORE_GROUND, METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_SAVE_FILE, METHOD_CONTAINS_KEY,
+			METHOD_IIF, METHOD_SORT, METHOD_CREATE_IMAGE_FORMAT_COMPARATOR, METHOD_IS_ANNOTATION_PRESENT,
+			METHOD_GET_ANNOTATION, METHOD_GET_PREFERRED_SIZE, METHOD_TO_LIST, METHOD_SET_PREFERRED_SIZE, METHOD_MAX,
+			METHOD_TO_ARRAY, METHOD_TEST_AND_RUN, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4,
+			METHOD_REMOVE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -159,8 +159,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		//
 		(METHOD_ADD_ACTION_LISTENER = clz.getDeclaredMethod("addActionListener", ActionListener.class,
 				AbstractButton[].class)).setAccessible(true);
-		//
-		(METHOD_GET_MAP = clz.getDeclaredMethod("get", Map.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_GET_FIELD = clz.getDeclaredMethod("get", Field.class, Object.class)).setAccessible(true);
 		//
@@ -1210,24 +1208,8 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 	@Test
 	void testGet() throws Throwable {
 		//
-		Assertions.assertNull(get((Map<?, ?>) null, null));
-		//
 		Assertions.assertNull(get((Field) null, null));
 		//
-		if (GraphicsEnvironment.isHeadless()) {
-			//
-			Assertions.assertNull(get(map, null));
-			//
-		} // if
-			//
-	}
-
-	private static <V> V get(final Map<?, V> instance, final Object key) throws Throwable {
-		try {
-			return (V) METHOD_GET_MAP.invoke(null, instance, key);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	private static Object get(final Field field, final Object instance) throws Throwable {

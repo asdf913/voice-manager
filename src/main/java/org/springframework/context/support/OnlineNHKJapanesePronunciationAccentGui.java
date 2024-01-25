@@ -478,8 +478,8 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 	private static List<String> getImageFormats(final List<?> imageFormatOrders) throws NoSuchFieldException {
 		//
 		final Map<?, ?> imageWriterSpis = Util.cast(Map.class,
-				testAndApply(
-						Objects::nonNull, get(
+				testAndApply(Objects::nonNull,
+						Util.get(
 								Util.cast(Map.class,
 										Narcissus.getObjectField(IIORegistry.getDefaultInstance(),
 												getDeclaredField(ServiceRegistry.class, "categoryMap"))),
@@ -601,11 +601,6 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			//
 		} // for
 			//
-	}
-
-	@Nullable
-	private static <V> V get(@Nullable final Map<?, V> instance, @Nullable final Object key) {
-		return instance != null ? instance.get(key) : null;
 	}
 
 	@Nullable
@@ -827,7 +822,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 				//
 				try {
 					//
-					saveFile(jfc.getSelectedFile(), get(audioUrls, audioFormat));
+					saveFile(jfc.getSelectedFile(), Util.get(audioUrls, audioFormat));
 					//
 				} catch (final Exception e) {
 					//

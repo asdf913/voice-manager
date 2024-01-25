@@ -2120,7 +2120,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			// dwMajorVersion
 			//
-					ObjectUtils.compare(valueOf(Util.toString(get(getOsVersionInfoExMap(), "getMajor"))), 10) >= 10) {
+					ObjectUtils.compare(valueOf(Util.toString(Util.get(getOsVersionInfoExMap(), "getMajor"))),
+							10) >= 10) {
 				//
 				jPanelWarning = createMicrosoftWindowsCompatibilityWarningJPanel(lm,
 						microsoftWindowsCompatibilitySettingsPageUrl);
@@ -3685,8 +3686,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				if (containsKey(yomiNameMapTemp, name)) {
 					//
-					return VoiceManager.getListCellRendererComponent(listCellRenderer, list, get(yomiNameMapTemp, name),
-							index, isSelected, cellHasFocus);
+					return VoiceManager.getListCellRendererComponent(listCellRenderer, list,
+							Util.get(yomiNameMapTemp, name), index, isSelected, cellHasFocus);
 					//
 				} // if
 					//
@@ -4466,7 +4467,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		final FileFormat[] fileFormats = testAndApply(Objects::nonNull, toArray(
 				toList(Util.filter(testAndApply(Objects::nonNull, FileFormat.values(), Arrays::stream, null), x -> {
 					//
-					final FileFormatDetails ffds = Util.cast(FileFormatDetails.class, get(fileFormatDetails, x));
+					final FileFormatDetails ffds = Util.cast(FileFormatDetails.class, Util.get(fileFormatDetails, x));
 					//
 					final JetFormat format = getFormat(ffds);
 					//
@@ -4544,11 +4545,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Nullable
 	private static String getEmptyFilePath(@Nullable final FileFormatDetails instance) {
 		return instance != null ? instance.getEmptyFilePath() : null;
-	}
-
-	@Nullable
-	private static <V> V get(@Nullable final Map<?, V> instance, @Nullable final Object key) {
-		return instance != null ? instance.get(key) : null;
 	}
 
 	private JPanel createMiscellaneousPanel(final LayoutManager layoutManager, final String[] voiceIds) {
@@ -5977,8 +5973,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static List<String> getImageFormats() throws NoSuchFieldException {
 		//
 		final Map<?, ?> imageWriterSpis = Util.cast(Map.class,
-				testAndApply(
-						Objects::nonNull, get(
+				testAndApply(Objects::nonNull,
+						Util.get(
 								Util.cast(Map.class,
 										Narcissus.getObjectField(IIORegistry.getDefaultInstance(),
 												getDeclaredField(ServiceRegistry.class, "categoryMap"))),
@@ -6112,8 +6108,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		try {
 			//
-			url = testAndApply(StringUtils::isNotBlank, get(getAudioUrls(pronunciation), pronounicationAudioFormat),
-					x -> new URI(x).toURL(), null);
+			url = testAndApply(StringUtils::isNotBlank,
+					Util.get(getAudioUrls(pronunciation), pronounicationAudioFormat), x -> new URI(x).toURL(), null);
 			//
 		} catch (final Exception e) {
 			//
@@ -6549,7 +6545,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			if (containsKey(map, key)) {
 				//
-				value = get(map, key);
+				value = Util.get(map, key);
 				//
 				if (iValue0 == null) {
 					//
@@ -6597,7 +6593,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-			Util.add(vs = ObjectUtils.getIfNull(vs, ArrayList::new), get(m, key));
+			Util.add(vs = ObjectUtils.getIfNull(vs, ArrayList::new), Util.get(m, key));
 			//
 		} // for
 			//
@@ -6919,7 +6915,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		try {
 			//
-			actionPerformedForExport(get(IValue0Util.getValue0(getWorkbookClassFailableSupplierMap()),
+			actionPerformedForExport(Util.get(IValue0Util.getValue0(getWorkbookClassFailableSupplierMap()),
 					getSelectedItem(cbmWorkbookClass)));
 			//
 		} catch (final IOException | IllegalAccessException | TemplateException | InvalidFormatException
@@ -9072,7 +9068,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				if (containsKey(map, string) || containsKey(map, string = StringUtils.lowerCase(string))) {
 					//
-					setQuality(get(map, string));
+					setQuality(Util.get(map, string));
 					//
 				} // if
 					//
@@ -10577,7 +10573,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			if (StringUtils.isBlank(
 					audioUrl = testAndApply(VoiceManager::containsKey, audioUrls = pronunciation.getAudioUrls(),
-							vm != null ? vm.preferredPronunciationAudioFormat : null, VoiceManager::get, null))) {
+							vm != null ? vm.preferredPronunciationAudioFormat : null, Util::get, null))) {
 				//
 				final Entry<String, String> entry = testAndApply(CollectionUtils::isNotEmpty, Util.entrySet(audioUrls),
 						x -> IterableUtils.get(x, 0), null);
@@ -11399,7 +11395,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
-				return Unit.with(get(map, key));
+				return Unit.with(Util.get(map, key));
 				//
 			} else if (Objects.equals(methodName, "containsObject") && args != null && args.length > 0) {
 				//
@@ -11431,7 +11427,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
-				return Unit.with(get(map, key));
+				return Unit.with(Util.get(map, key));
 				//
 			} else if (Objects.equals(methodName, "setBoolean") && args != null && args.length > 1) {
 				//
@@ -11459,7 +11455,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
-				return Unit.with(get(map, key));
+				return Unit.with(Util.get(map, key));
 				//
 			} else if (Objects.equals(methodName, "containsKey") && args != null && args.length > 0) {
 				//
@@ -11491,7 +11487,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
-				return Unit.with(get(map, key));
+				return Unit.with(Util.get(map, key));
 				//
 			} else if (Objects.equals(methodName, "containsKey") && args != null && args.length > 0) {
 				//
@@ -11523,7 +11519,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // if
 					//
-				return Unit.with(get(map, key));
+				return Unit.with(Util.get(map, key));
 				//
 			} else if (Objects.equals(methodName, "setString") && args != null && args.length > 1) {
 				//
@@ -14097,7 +14093,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			final Map<?, ?> map = Util.cast(Map.class, obj);
 			//
-			if (!containsKey(map, type) || get(map, type) == null) {
+			if (!containsKey(map, type) || Util.get(map, type) == null) {
 				//
 				return null;
 				//

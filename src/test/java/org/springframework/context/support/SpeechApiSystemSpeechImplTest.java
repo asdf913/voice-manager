@@ -25,7 +25,7 @@ class SpeechApiSystemSpeechImplTest {
 	private static Class<?> CLASS_JNA = null;
 
 	private static Method METHOD_CAST, METHOD_TEST_AND_APPLY, METHOD_GET_VERSION_INFO_MAP0,
-			METHOD_GET_VERSION_INFO_MAP_PE, METHOD_GET_VERSION_INFO_MAP2, METHOD_GET, METHOD_PUT = null;
+			METHOD_GET_VERSION_INFO_MAP_PE, METHOD_GET_VERSION_INFO_MAP2, METHOD_PUT = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -55,12 +55,6 @@ class SpeechApiSystemSpeechImplTest {
 				ResourceEntry[].class)) != null) {
 			//
 			METHOD_GET_VERSION_INFO_MAP2.setAccessible(true);
-			//
-		} // if
-			//
-		if ((METHOD_GET = SpeechApiSystemSpeechImpl.class.getDeclaredMethod("get", Map.class, Object.class)) != null) {
-			//
-			METHOD_GET.setAccessible(true);
 			//
 		} // if
 			//
@@ -272,8 +266,6 @@ class SpeechApiSystemSpeechImplTest {
 	@Test
 	void testGet() throws Throwable {
 		//
-		Assertions.assertNull(get(null, null));
-		//
 		if (instance != null) {
 			//
 			AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class, "{}",
@@ -285,14 +277,6 @@ class SpeechApiSystemSpeechImplTest {
 			//
 		} // if
 			//
-	}
-
-	private static <V> V get(final Map<?, V> instance, final Object key) throws Throwable {
-		try {
-			return (V) METHOD_GET.invoke(null, instance, key);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test

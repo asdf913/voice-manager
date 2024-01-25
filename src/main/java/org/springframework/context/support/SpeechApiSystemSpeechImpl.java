@@ -286,7 +286,7 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider, Lookup, I
 		//
 		try {
 			//
-			return get(getVersionInfoMap(), "FileDescription");
+			return Util.get(getVersionInfoMap(), "FileDescription");
 			//
 		} catch (final Exception e) {
 			//
@@ -301,7 +301,7 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider, Lookup, I
 		//
 		try {
 			//
-			return get(getVersionInfoMap(), "ProductVersion");
+			return Util.get(getVersionInfoMap(), "ProductVersion");
 			//
 		} catch (final Exception e) {
 			//
@@ -309,11 +309,6 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider, Lookup, I
 			//
 		} // try
 			//
-	}
-
-	@Nullable
-	private static <V> V get(@Nullable final Map<?, V> instance, final Object key) {
-		return instance != null ? instance.get(key) : null;
 	}
 
 	@Override
