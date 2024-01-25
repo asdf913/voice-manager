@@ -159,6 +159,7 @@ public abstract class Util {
 		return instance != null ? instance.getName() : null;
 	}
 
+	@Nullable
 	static Class<?> getType(@Nullable final Field instance) {
 		return instance != null ? instance.getType() : null;
 	}
