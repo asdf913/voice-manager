@@ -169,7 +169,7 @@ public abstract class Util {
 		return clz != null && clz.isInstance(value) ? clz.cast(value) : null;
 	}
 
-	static Class<?> getDeclaringClass(final Member instance) {
+	static Class<?> getDeclaringClass(@Nullable final Member instance) {
 		return instance != null ? instance.getDeclaringClass() : null;
 	}
 
