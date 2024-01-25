@@ -102,17 +102,7 @@ class UtilTest {
 		//
 		new FailableStream<>(Util.filter(Arrays.stream(Util.class.getDeclaredMethods()),
 				m -> m != null && Objects.equals(Util.getName(m), "getName") && Modifier.isStatic(m.getModifiers())))
-				.forEach(m -> {
-					//
-					if (m == null) {
-						//
-						return;
-						//
-					} // if
-						//
-					m.invoke(null, (Object) null);
-					//
-				});
+				.forEach(m -> Assertions.assertNull(m != null ? m.invoke(null, (Object) null) : null));
 		//
 	}
 
