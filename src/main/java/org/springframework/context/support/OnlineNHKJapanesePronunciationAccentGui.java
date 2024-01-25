@@ -743,8 +743,8 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 
 	private static void playAudio(@Nullable final Pronunciation pronunciation) {
 		//
-		final Set<Entry<String, String>> entrySet = entrySet(
-				pronunciation != null ? pronunciation.getAudioUrls() : null);
+		final Set<Entry<String, String>> entrySet = Util
+				.entrySet(pronunciation != null ? pronunciation.getAudioUrls() : null);
 		//
 		if (iterator(entrySet) != null) {
 			//
@@ -1017,11 +1017,6 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		if (instance != null) {
 			instance.setContents(contents, owner);
 		}
-	}
-
-	@Nullable
-	private static <K, V> Set<Entry<K, V>> entrySet(@Nullable final Map<K, V> instance) {
-		return instance != null ? instance.entrySet() : null;
 	}
 
 	@Nullable

@@ -5,7 +5,9 @@ import java.lang.reflect.Member;
 import java.lang.reflect.Proxy;
 import java.util.Collection;
 import java.util.EventObject;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.Map.Entry;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -176,6 +178,10 @@ public abstract class Util {
 
 	static boolean isAssignableFrom(@Nullable final Class<?> a, @Nullable final Class<?> b) {
 		return a != null && b != null && a.isAssignableFrom(b);
+	}
+
+	static <K, V> Set<Map.Entry<K, V>> entrySet(final Map<K, V> instance) {
+		return instance != null ? instance.entrySet() : null;
 	}
 
 }

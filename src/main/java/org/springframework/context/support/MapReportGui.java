@@ -343,12 +343,11 @@ public class MapReportGui extends JFrame
 		//
 		final List<String> columns = new ArrayList<>(Collections.singleton("Key"));
 		//
-		columns.addAll(
-				toList(IntStream
-						.range(0,
-								orElse(max(mapToInt(Util.stream(entrySet(asMap(mm))),
-										x -> IterableUtils.size(Util.getValue(x)))), 0))
-						.mapToObj(x -> String.format("Value %1$s", x + 1))));
+		columns.addAll(toList(IntStream
+				.range(0,
+						orElse(max(mapToInt(Util.stream(Util.entrySet(asMap(mm))),
+								x -> IterableUtils.size(Util.getValue(x)))), 0))
+				.mapToObj(x -> String.format("Value %1$s", x + 1))));
 		//
 		dtm = new DefaultTableModel(columns.toArray(), 0);
 		//
@@ -498,11 +497,6 @@ public class MapReportGui extends JFrame
 	}
 
 	@Nullable
-	private static <K, V> Set<Map.Entry<K, V>> entrySet(@Nullable final Map<K, V> instance) {
-		return instance != null ? instance.entrySet() : null;
-	}
-
-	@Nullable
 	private static Multimap<?, ?> createMultimap(@Nullable final Iterable<Map<?, ?>> maps) {
 		//
 		Multimap<?, ?> mm = null;
@@ -511,13 +505,13 @@ public class MapReportGui extends JFrame
 			//
 			for (final Map<?, ?> t : maps) {
 				//
-				if (t == null || iterator(entrySet(t)) == null) {
+				if (t == null || iterator(Util.entrySet(t)) == null) {
 					//
 					continue;
 					//
 				} // if
 					//
-				for (final Entry<?, ?> entry : entrySet(t)) {
+				for (final Entry<?, ?> entry : Util.entrySet(t)) {
 					//
 					if (entry == null) {
 						//
@@ -633,9 +627,9 @@ public class MapReportGui extends JFrame
 	private static boolean isAllAttributesMatched(@Nullable final Map<?, ?> attributes,
 			@Nullable final AttributeAccessor aa) {
 		//
-		if (iterator(entrySet(attributes)) != null) {
+		if (iterator(Util.entrySet(attributes)) != null) {
 			//
-			for (final Entry<?, ?> entry : entrySet(attributes)) {
+			for (final Entry<?, ?> entry : Util.entrySet(attributes)) {
 				//
 				if (entry == null) {
 					//

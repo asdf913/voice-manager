@@ -1152,9 +1152,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static boolean isAllAttributesMatched(@Nullable final Map<?, ?> attributes,
 			@Nullable final AttributeAccessor aa) {
 		//
-		if (attributes != null && iterator(attributes.entrySet()) != null) {
+		if (iterator(Util.entrySet(attributes)) != null) {
 			//
-			for (final Entry<?, ?> entry : attributes.entrySet()) {
+			for (final Entry<?, ?> entry : Util.entrySet(attributes)) {
 				//
 				if (entry == null) {
 					//
@@ -1462,9 +1462,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		final Map<?, ?> map = Util.cast(Map.class, value);
 		//
-		if (entrySet(map) != null) {
+		if (Util.entrySet(map) != null) {
 			//
-			for (final Entry<?, ?> entry : entrySet(map)) {
+			for (final Entry<?, ?> entry : Util.entrySet(map)) {
 				//
 				if (entry == null) {
 					//
@@ -1493,11 +1493,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			throw new IllegalArgumentException(Util.toString(Util.getClass(object)));
 		} // if
 			//
-	}
-
-	@Nullable
-	private static <K, V> Set<Entry<K, V>> entrySet(@Nullable final Map<K, V> instance) {
-		return instance != null ? instance.entrySet() : null;
 	}
 
 	private ObjectMapper getObjectMapper() {
@@ -1580,9 +1575,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			final Map<?, ?> map = (Map<?, ?>) arg;
 			//
-			if (iterator(entrySet(map)) != null) {
+			if (iterator(Util.entrySet(map)) != null) {
 				//
-				for (final Entry<?, ?> entry : entrySet(map)) {
+				for (final Entry<?, ?> entry : Util.entrySet(map)) {
 					//
 					if (entry == null) {
 						//
@@ -1938,8 +1933,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			@Nullable final Map<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>> map,
 			final String string) {
 		//
-		final Set<Entry<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>>> entrySet = entrySet(
-				map);
+		final Set<Entry<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>>> entrySet = Util
+				.entrySet(map);
 		//
 		if (iterator(entrySet) == null) {
 			//
@@ -5552,7 +5547,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static void playAudio(@Nullable final Pronunciation pronunciation, @Nullable final Object audioFormat) {
 		//
-		final Set<Entry<String, String>> entrySet = entrySet(getAudioUrls(pronunciation));
+		final Set<Entry<String, String>> entrySet = Util.entrySet(getAudioUrls(pronunciation));
 		//
 		if (iterator(entrySet) != null) {
 			//
@@ -7777,7 +7772,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					put(map, "Base64Encoder", Base64.getEncoder());
 					//
-					final Collection<Entry<Object, Object>> entrySet = entrySet(parameters);
+					final Collection<Entry<Object, Object>> entrySet = Util.entrySet(parameters);
 					//
 					if (iterator(entrySet) != null) {
 						//
@@ -7833,7 +7828,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				Collections.singletonMap("statics", getIfNull(ObjectMap.getObject(objectMap, TemplateHashModel.class),
 						() -> new BeansWrapper(version).getStaticModels())));
 		//
-		final Collection<Entry<Object, Object>> entrySet = entrySet(parameters);
+		final Collection<Entry<Object, Object>> entrySet = Util.entrySet(parameters);
 		//
 		if (iterator(entrySet) != null) {
 			//
@@ -8563,7 +8558,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		final Map<String, ByteConverter> byteConverters = ListableBeanFactoryUtil
 				.getBeansOfType(configurableListableBeanFactory, ByteConverter.class);
 		//
-		final Set<Entry<String, ByteConverter>> entrySet = entrySet(byteConverters);
+		final Set<Entry<String, ByteConverter>> entrySet = Util.entrySet(byteConverters);
 		//
 		if (entrySet != null) {
 			//
@@ -8596,7 +8591,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		final Map<String, ByteConverter> byteConverters = ListableBeanFactoryUtil
 				.getBeansOfType(configurableListableBeanFactory, ByteConverter.class);
 		//
-		final Set<Entry<String, ByteConverter>> entrySet = entrySet(byteConverters);
+		final Set<Entry<String, ByteConverter>> entrySet = Util.entrySet(byteConverters);
 		//
 		if (entrySet != null) {
 			//
@@ -9187,7 +9182,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				} // for
 					//
 				final List<Integer> counts = toList(
-						Util.filter(Util.map(Util.stream(entrySet(map)), Util::getValue), Objects::nonNull));
+						Util.filter(Util.map(Util.stream(Util.entrySet(map)), Util::getValue), Objects::nonNull));
 				//
 				final int size = IterableUtils.size(counts);
 				//
@@ -10584,7 +10579,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					audioUrl = testAndApply(VoiceManager::containsKey, audioUrls = pronunciation.getAudioUrls(),
 							vm != null ? vm.preferredPronunciationAudioFormat : null, VoiceManager::get, null))) {
 				//
-				final Entry<String, String> entry = testAndApply(CollectionUtils::isNotEmpty, entrySet(audioUrls),
+				final Entry<String, String> entry = testAndApply(CollectionUtils::isNotEmpty, Util.entrySet(audioUrls),
 						x -> IterableUtils.get(x, 0), null);
 				//
 				audioUrl = Util.getValue(entry);
@@ -11702,7 +11697,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				final String filePath = getFilePath(voice);
 				//
-				final Set<Entry<String, String>> entrySet = entrySet(outputFolderFileNameExpressions);
+				final Set<Entry<String, String>> entrySet = Util.entrySet(outputFolderFileNameExpressions);
 				//
 				if (Boolean.logicalOr(filePath == null, iterator(entrySet) == null)) {
 					//
@@ -12249,7 +12244,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			try (final InputStream is = testAndApply(Objects::nonNull, ObjectMap.getObject(objectMap, byte[].class),
 					ByteArrayInputStream::new, null)) {
 				//
-				final Set<Entry<String, Voice>> entrySet = entrySet(voices);
+				final Set<Entry<String, Voice>> entrySet = Util.entrySet(voices);
 				//
 				if (entrySet != null) {
 					//
