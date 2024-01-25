@@ -317,13 +317,13 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		//
 		final List<Field> fs = toList(
 				Util.filter(testAndApply(Objects::nonNull, getDeclaredFields(Boolean.class), Arrays::stream, null),
-						f -> Objects.equals(getType(f), Boolean.class)));
+						f -> Objects.equals(Util.getType(f), Boolean.class)));
 		//
 		Field f = null;
 		//
 		for (int i = 0; i < IterableUtils.size(fs); i++) {
 			//
-			if (!Objects.equals(Boolean.class, getType(f = IterableUtils.get(fs, i)))) {
+			if (!Objects.equals(Boolean.class, Util.getType(f = IterableUtils.get(fs, i)))) {
 				//
 				continue;
 				//
@@ -346,11 +346,6 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 	@Nullable
 	private static Field[] getDeclaredFields(@Nullable final Class<?> instance) {
 		return instance != null ? instance.getDeclaredFields() : null;
-	}
-
-	@Nullable
-	private static Class<?> getType(@Nullable final Field instance) {
-		return instance != null ? instance.getType() : null;
 	}
 
 	@Nullable

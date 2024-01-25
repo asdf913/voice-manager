@@ -1,5 +1,6 @@
 package org.springframework.context.support;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Proxy;
 import java.util.Collection;
@@ -152,9 +153,14 @@ public abstract class Util {
 			return null;
 		}
 	}
+
 	@Nullable
 	static String getName(@Nullable final Class<?> instance) {
 		return instance != null ? instance.getName() : null;
+	}
+
+	static Class<?> getType(final Field instance) {
+		return instance != null ? instance.getType() : null;
 	}
 
 }

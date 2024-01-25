@@ -78,11 +78,10 @@ class JouYouKanjiGuiTest {
 
 	private static Class<?> CLASS_OBJECT_MAP, CLASS_IH = null;
 
-	private static Method METHOD_GET, METHOD_GET_DECLARED_FIELDS, METHOD_GET_TYPE, METHOD_NAME,
-			METHOD_GET_ECSS_VERSION_BY_MAJOR, METHOD_ADD_JOU_YOU_KAN_JI_SHEET, METHOD_CAST,
-			METHOD_GET_CSS_DECLARATION_BY_ATTRIBUTE_AND_CSS_PROPERTY, METHOD_SET_PREFERRED_WIDTH,
-			METHOD_GET_PREFERRED_SIZE, METHOD_TO_LIST, METHOD_CONTAINS, METHOD_ADD, METHOD_SET_SELECTED_ITEM,
-			METHOD_TEST, METHOD_GET_BOOLEAN_VALUES, METHOD_TO_ARRAY, METHOD_MATCHER,
+	private static Method METHOD_GET, METHOD_GET_DECLARED_FIELDS, METHOD_NAME, METHOD_GET_ECSS_VERSION_BY_MAJOR,
+			METHOD_ADD_JOU_YOU_KAN_JI_SHEET, METHOD_CAST, METHOD_GET_CSS_DECLARATION_BY_ATTRIBUTE_AND_CSS_PROPERTY,
+			METHOD_SET_PREFERRED_WIDTH, METHOD_GET_PREFERRED_SIZE, METHOD_TO_LIST, METHOD_CONTAINS,
+			METHOD_SET_SELECTED_ITEM, METHOD_TEST, METHOD_GET_BOOLEAN_VALUES, METHOD_TO_ARRAY, METHOD_MATCHER,
 			METHOD_GET_EXPRESSION_AS_CSS_STRING, METHOD_GET_INDEXED_COLORS, METHOD_GET_STYLES_SOURCE,
 			METHOD_GET_PROPERTY, METHOD_INT_VALUE, METHOD_TO_MILLIS, METHOD_SET_FILL_BACK_GROUND_COLOR,
 			METHOD_SET_FILL_PATTERN, METHOD_SPLITERATOR, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4,
@@ -97,8 +96,6 @@ class JouYouKanjiGuiTest {
 		(METHOD_GET = clz.getDeclaredMethod("get", Field.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_GET_DECLARED_FIELDS = clz.getDeclaredMethod("getDeclaredFields", Class.class)).setAccessible(true);
-		//
-		(METHOD_GET_TYPE = clz.getDeclaredMethod("getType", Field.class)).setAccessible(true);
 		//
 		(METHOD_NAME = clz.getDeclaredMethod("name", Enum.class)).setAccessible(true);
 		//
@@ -502,27 +499,6 @@ class JouYouKanjiGuiTest {
 				return null;
 			} else if (obj instanceof Field[]) {
 				return (Field[]) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetType() throws Throwable {
-		//
-		Assertions.assertNull(getType(null));
-		//
-	}
-
-	private static Class<?> getType(final Field instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_TYPE.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Class<?>) {
-				return (Class<?>) obj;
 			}
 			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

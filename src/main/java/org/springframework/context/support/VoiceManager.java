@@ -1237,7 +1237,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			final Number number = cast(Number.class, testAndApply(VoiceManager::isStatic, f, Narcissus::getStaticField,
 					a -> testAndApply(Objects::nonNull, instance, b -> Narcissus.getField(b, f), null)));
 			//
-			if (number != null || isAssignableFrom(Number.class, f.getType())) {
+			if (number != null || isAssignableFrom(Number.class, Util.getType(f))) {
 				//
 				result = Unit.with(number);
 				//
@@ -2516,9 +2516,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		// https://java-native-access.github.io/jna/5.6.0/javadoc/com/sun/jna/platform/win32/Kernel32.html#INSTANCE
 		//
-		final List<Field> fs = toList(Util.filter(
-				testAndApply(Objects::nonNull, getDeclaredFields(clz), Arrays::stream, null),
-				f -> Objects.equals(Util.getName(f), "INSTANCE") && Objects.equals(getType(f), clz) && isStatic(f)));
+		final List<Field> fs = toList(
+				Util.filter(testAndApply(Objects::nonNull, getDeclaredFields(clz), Arrays::stream, null),
+						f -> Objects.equals(Util.getName(f), "INSTANCE") && Objects.equals(Util.getType(f), clz)
+								&& isStatic(f)));
 		//
 		final Field f = IterableUtils.size(fs) == 1 ? get(fs, 0) : null;
 		//
@@ -4004,13 +4005,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final List<Field> fs = toList(
 				Util.filter(testAndApply(Objects::nonNull, getDeclaredFields(Boolean.class), Arrays::stream, null),
-						f -> Objects.equals(getType(f), Boolean.class)));
+						f -> Objects.equals(Util.getType(f), Boolean.class)));
 		//
 		Field f = null;
 		//
 		for (int i = 0; i < IterableUtils.size(fs); i++) {
 			//
-			if (!Objects.equals(Boolean.class, getType(f = get(fs, i)))) {
+			if (!Objects.equals(Boolean.class, Util.getType(f = get(fs, i)))) {
 				//
 				continue;
 				//
@@ -4155,11 +4156,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		return panel;
 		//
-	}
-
-	@Nullable
-	private static Class<?> getType(@Nullable final Field instance) {
-		return instance != null ? instance.getType() : null;
 	}
 
 	@Nullable
@@ -4963,7 +4959,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					|| (fs = toList(Util.filter(
 							testAndApply(Objects::nonNull, getDeclaredFields(declaredClass), Arrays::stream, null),
-							x -> Objects.equals(getType(x), declaredClass)))) == null
+							x -> Objects.equals(Util.getType(x), declaredClass)))) == null
 					|| IterableUtils.size(fs) != 1 || (f = get(fs, 0)) == null
 					//
 					|| (ms = toList(Util.filter(
@@ -8095,9 +8091,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Nullable
 	private static PrintStream getSystemPrintStreamByFieldName(final String name) throws IllegalAccessException {
 		//
-		final List<Field> fs = toList(
-				Util.filter(testAndApply(Objects::nonNull, System.class.getDeclaredFields(), Arrays::stream, null),
-						f -> Objects.equals(getType(f), PrintStream.class) && Objects.equals(Util.getName(f), name)));
+		final List<Field> fs = toList(Util.filter(
+				testAndApply(Objects::nonNull, System.class.getDeclaredFields(), Arrays::stream, null),
+				f -> Objects.equals(Util.getType(f), PrintStream.class) && Objects.equals(Util.getName(f), name)));
 		//
 		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
 		//
@@ -9733,11 +9729,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		if (rate == null) {
 			//
-			rate = getIfNull(rate, () -> getRate(toList(Util.filter(
-					testAndApply(Objects::nonNull, getDeclaredFields(Integer.class), Arrays::stream, null),
-					f -> f != null
-							&& (isAssignableFrom(Number.class, getType(f)) || Objects.equals(Integer.TYPE, getType(f)))
-							&& Objects.equals(Util.getName(f), string)))));
+			rate = getIfNull(rate,
+					() -> getRate(toList(Util.filter(
+							testAndApply(Objects::nonNull, getDeclaredFields(Integer.class), Arrays::stream, null),
+							f -> f != null
+									&& (isAssignableFrom(Number.class, Util.getType(f))
+											|| Objects.equals(Integer.TYPE, Util.getType(f)))
+									&& Objects.equals(Util.getName(f), string)))));
 			//
 		} // if
 			//
@@ -9901,7 +9899,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-			if (Objects.equals(Boolean.class, type = getType(f = get(fs, i)))) {// java.lang.Boolean
+			if (Objects.equals(Boolean.class, type = Util.getType(f = get(fs, i)))) {// java.lang.Boolean
 				//
 				ObjectMap.setObject(objectMap, DataValidationHelper.class,
 						dvh = getIfNull(dvh, () -> getDataValidationHelper(sheet)));
@@ -10722,7 +10720,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final Cell cell = ObjectMap.getObject(objectMap, Cell.class);
 		//
-		final Class<?> type = getType(f);
+		final Class<?> type = Util.getType(f);
 		//
 		final CellType cellType = CellUtil.getCellType(cell);
 		//
@@ -11946,7 +11944,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			for (int i = 0; fs != null && i < fs.length; i++) {
 				//
-				if ((f = fs[i]) == null || !Objects.equals(getType(f), String.class)) {
+				if ((f = fs[i]) == null || !Objects.equals(Util.getType(f), String.class)) {
 					//
 					continue;
 					//
@@ -13376,7 +13374,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				fs = toList(sorted(Util.filter(
 						testAndApply(Objects::nonNull, FieldUtils.getAllFields(LocaleID.class), Arrays::stream, null),
-						x -> x != null && !Objects.equals(getType(x), getDeclaringClass(x)) && !x.isSynthetic()
+						x -> x != null && !Objects.equals(Util.getType(x), getDeclaringClass(x)) && !x.isSynthetic()
 								&& !isStatic(x)),
 						(a, b) -> StringUtils.compare(getName(getPackage(getDeclaringClass(a))),
 								getName(getPackage(getDeclaringClass(b))))));
@@ -13433,7 +13431,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-			if (Objects.equals(getType(f), Integer.TYPE)) {
+			if (Objects.equals(Util.getType(f), Integer.TYPE)) {
 				//
 				value = Integer.valueOf(Narcissus.getIntField(instance, f));
 				//

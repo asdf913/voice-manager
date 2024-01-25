@@ -325,11 +325,11 @@ class VoiceManagerTest {
 			METHOD_GET_ID, METHOD_SET_MAXIMUM, METHOD_GET_CURRENT_SHEET_INDEX, METHOD_GET_DATA_VALIDATION_HELPER,
 			METHOD_CREATE_EXPLICIT_LIST_CONSTRAINT, METHOD_CREATE_VALIDATION, METHOD_CREATE_EXPORT_TASK,
 			METHOD_GET_TAB_INDEX_BY_TITLE, METHOD_GET_DECLARED_FIELD, METHOD_GET_ABSOLUTE_PATH,
-			METHOD_IS_ASSIGNABLE_FROM, METHOD_GET_ENUM_CONSTANTS, METHOD_LIST_FILES, METHOD_GET_TYPE,
-			METHOD_GET_COLUMN_NAME, METHOD_PUT_ALL_MAP, METHOD_GET_WORK_BOOK, METHOD_GET_OLE_ENTRY_NAMES,
-			METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE, METHOD_GET_DOCUMENT_ELEMENT, METHOD_GET_CHILD_NODES,
-			METHOD_GET_NAMED_ITEM, METHOD_GET_TEXT_CONTENT, METHOD_GET_NAME_FILE, METHOD_GET_NAME_PACKAGE,
-			METHOD_GET_PASS_WORD, METHOD_GET_SUPPLIER, METHOD_GET_LOOKUP, METHOD_GET_LIST, METHOD_GET_MAP,
+			METHOD_IS_ASSIGNABLE_FROM, METHOD_GET_ENUM_CONSTANTS, METHOD_LIST_FILES, METHOD_GET_COLUMN_NAME,
+			METHOD_PUT_ALL_MAP, METHOD_GET_WORK_BOOK, METHOD_GET_OLE_ENTRY_NAMES, METHOD_NEW_DOCUMENT_BUILDER,
+			METHOD_PARSE, METHOD_GET_DOCUMENT_ELEMENT, METHOD_GET_CHILD_NODES, METHOD_GET_NAMED_ITEM,
+			METHOD_GET_TEXT_CONTENT, METHOD_GET_NAME_FILE, METHOD_GET_NAME_PACKAGE, METHOD_GET_PASS_WORD,
+			METHOD_GET_SUPPLIER, METHOD_GET_LOOKUP, METHOD_GET_LIST, METHOD_GET_MAP,
 			METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK, METHOD_CREATE_DRAWING_PATRIARCH,
 			METHOD_CREATE_CELL_COMMENT, METHOD_CREATE_CLIENT_ANCHOR, METHOD_CREATE_RICH_TEXT_STRING,
 			METHOD_SET_CELL_COMMENT, METHOD_SET_AUTHOR, METHOD_TEST_AND_ACCEPT_PREDICATE,
@@ -661,8 +661,6 @@ class VoiceManagerTest {
 		(METHOD_GET_ENUM_CONSTANTS = clz.getDeclaredMethod("getEnumConstants", Class.class)).setAccessible(true);
 		//
 		(METHOD_LIST_FILES = clz.getDeclaredMethod("listFiles", File.class)).setAccessible(true);
-		//
-		(METHOD_GET_TYPE = clz.getDeclaredMethod("getType", Field.class)).setAccessible(true);
 		//
 		(METHOD_GET_COLUMN_NAME = clz.getDeclaredMethod("getColumnName", Class.class, Field.class)).setAccessible(true);
 		//
@@ -6193,27 +6191,6 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof File[]) {
 				return (File[]) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetType() throws Throwable {
-		//
-		Assertions.assertNull(getType(null));
-		//
-	}
-
-	private static Class<?> getType(final Field instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_TYPE.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Class<?>) {
-				return (Class<?>) obj;
 			}
 			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
