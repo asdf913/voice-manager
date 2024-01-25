@@ -48,9 +48,9 @@ class MainTest {
 
 	private static Method METHOD_GET_INSTANCE, METHOD_SHOW_MESSAGE_DIALOG_OR_PRINT_LN, METHOD_CAST,
 			METHOD_GET_BEAN_NAMES_FOR_TYPE, METHOD_GET_BEAN_CLASS_NAME, METHOD_PACK, METHOD_SET_VISIBLE,
-			METHOD_TEST_AND_APPLY, METHOD_GET_SELECTED_VALUE, METHOD_GET_CLASS3, METHOD_GET_NAME_CLASS,
-			METHOD_IS_RAISE_THROWABLE_ONLY, METHOD_ERROR_OR_PRINT_STACK_TRACE, METHOD_GET_CLASS_NAME, METHOD_GET_METHOD,
-			METHOD_GET_DECLARING_CLASS, METHOD_IS_ASSIGNABLE_FROM = null;
+			METHOD_TEST_AND_APPLY, METHOD_GET_SELECTED_VALUE, METHOD_GET_CLASS3, METHOD_IS_RAISE_THROWABLE_ONLY,
+			METHOD_ERROR_OR_PRINT_STACK_TRACE, METHOD_GET_CLASS_NAME, METHOD_GET_METHOD, METHOD_GET_DECLARING_CLASS,
+			METHOD_IS_ASSIGNABLE_FROM = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -82,8 +82,6 @@ class MainTest {
 		//
 		(METHOD_GET_CLASS3 = clz.getDeclaredMethod("getClass", ConfigurableListableBeanFactory.class,
 				PropertyResolver.class, String.class)).setAccessible(true);
-		//
-		(METHOD_GET_NAME_CLASS = clz.getDeclaredMethod("getName", Class.class)).setAccessible(true);
 		//
 		(METHOD_IS_RAISE_THROWABLE_ONLY = clz.getDeclaredMethod("isRaiseThrowableOnly", Class.class, Method.class))
 				.setAccessible(true);
@@ -431,7 +429,7 @@ class MainTest {
 		//
 		if (ih != null) {
 			//
-			ih.getProperties().put(null, getName(clz));
+			ih.getProperties().put(null, Util.getName(clz));
 			//
 		} // if
 			//
@@ -447,27 +445,6 @@ class MainTest {
 				return null;
 			} else if (obj instanceof Class) {
 				return (Class<?>) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetName() throws Throwable {
-		//
-		Assertions.assertNull(getName((Class<?>) null));
-		//
-	}
-
-	private static String getName(final Class<?> instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_NAME_CLASS.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

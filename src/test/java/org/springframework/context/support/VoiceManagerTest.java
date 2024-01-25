@@ -328,9 +328,9 @@ class VoiceManagerTest {
 			METHOD_IS_ASSIGNABLE_FROM, METHOD_GET_ENUM_CONSTANTS, METHOD_LIST_FILES, METHOD_GET_TYPE,
 			METHOD_GET_COLUMN_NAME, METHOD_PUT_ALL_MAP, METHOD_GET_WORK_BOOK, METHOD_GET_OLE_ENTRY_NAMES,
 			METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE, METHOD_GET_DOCUMENT_ELEMENT, METHOD_GET_CHILD_NODES,
-			METHOD_GET_NAMED_ITEM, METHOD_GET_TEXT_CONTENT, METHOD_GET_NAME_FILE, METHOD_GET_NAME_CLASS,
-			METHOD_GET_NAME_PACKAGE, METHOD_GET_PASS_WORD, METHOD_GET_SUPPLIER, METHOD_GET_LOOKUP, METHOD_GET_LIST,
-			METHOD_GET_MAP, METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK, METHOD_CREATE_DRAWING_PATRIARCH,
+			METHOD_GET_NAMED_ITEM, METHOD_GET_TEXT_CONTENT, METHOD_GET_NAME_FILE, METHOD_GET_NAME_PACKAGE,
+			METHOD_GET_PASS_WORD, METHOD_GET_SUPPLIER, METHOD_GET_LOOKUP, METHOD_GET_LIST, METHOD_GET_MAP,
+			METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK, METHOD_CREATE_DRAWING_PATRIARCH,
 			METHOD_CREATE_CELL_COMMENT, METHOD_CREATE_CLIENT_ANCHOR, METHOD_CREATE_RICH_TEXT_STRING,
 			METHOD_SET_CELL_COMMENT, METHOD_SET_AUTHOR, METHOD_TEST_AND_ACCEPT_PREDICATE,
 			METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_FIND_FIELDS_BY_VALUE, METHOD_GET_DECLARED_FIELDS,
@@ -688,8 +688,6 @@ class VoiceManagerTest {
 		(METHOD_GET_TEXT_CONTENT = clz.getDeclaredMethod("getTextContent", Node.class)).setAccessible(true);
 		//
 		(METHOD_GET_NAME_FILE = clz.getDeclaredMethod("getName", File.class)).setAccessible(true);
-		//
-		(METHOD_GET_NAME_CLASS = clz.getDeclaredMethod("getName", Class.class)).setAccessible(true);
 		//
 		(METHOD_GET_NAME_PACKAGE = clz.getDeclaredMethod("getName", Package.class)).setAccessible(true);
 		//
@@ -2330,7 +2328,7 @@ class VoiceManagerTest {
 			//
 			// java.lang.String
 			//
-			final String toString = getName(String.class);
+			final String toString = Util.getName(String.class);
 			//
 			Assertions.assertDoesNotThrow(() -> instance.setWorkbookClass(toString));
 			//
@@ -2683,7 +2681,8 @@ class VoiceManagerTest {
 			throws Throwable {
 		//
 		try (final InputStream is = clz != null
-				? clz.getResourceAsStream(String.format("/%1$s.class", StringUtils.replace(getName(clz), ".", "/")))
+				? clz.getResourceAsStream(
+						String.format("/%1$s.class", StringUtils.replace(Util.getName(clz), ".", "/")))
 				: null) {
 			//
 			final JavaClass javaClass = ClassParserUtil
@@ -6454,8 +6453,6 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(getName((File) null));
 		//
-		Assertions.assertNull(getName((Class<?>) null));
-		//
 		Assertions.assertNull(getName((Package) null));
 		//
 		Assertions.assertNotNull(getName(new File(".")));
@@ -6465,20 +6462,6 @@ class VoiceManagerTest {
 	private static String getName(final File instance) throws Throwable {
 		try {
 			final Object obj = METHOD_GET_NAME_FILE.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	private static String getName(final Class<?> instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_NAME_CLASS.invoke(null, instance);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof String) {
@@ -7466,7 +7449,7 @@ class VoiceManagerTest {
 		final FileSystem fs = FileSystems.getDefault();
 		//
 		return Objects.equals("sun.nio.fs.WindowsFileSystemProvider",
-				getName(Util.getClass(fs != null ? fs.provider() : null)));
+				Util.getName(Util.getClass(fs != null ? fs.provider() : null)));
 		//
 	}
 
@@ -9770,7 +9753,8 @@ class VoiceManagerTest {
 		final Class<?> clz = Console.class;
 		//
 		try (final InputStream is = clz != null
-				? clz.getResourceAsStream(String.format("/%1$s.class", StringUtils.replace(getName(clz), ".", "/")))
+				? clz.getResourceAsStream(
+						String.format("/%1$s.class", StringUtils.replace(Util.getName(clz), ".", "/")))
 				: null) {
 			//
 			// java.io.Console.writer()
@@ -9856,7 +9840,8 @@ class VoiceManagerTest {
 		final Class<?> clz = Console.class;
 		//
 		try (final InputStream is = clz != null
-				? clz.getResourceAsStream(String.format("/%1$s.class", StringUtils.replace(getName(clz), ".", "/")))
+				? clz.getResourceAsStream(
+						String.format("/%1$s.class", StringUtils.replace(Util.getName(clz), ".", "/")))
 				: null) {
 			//
 			// java.io.Console.readLine(java.lang.String,java.lang.Object...)

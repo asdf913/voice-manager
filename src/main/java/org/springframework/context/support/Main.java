@@ -255,7 +255,8 @@ public class Main {
 	private static boolean isRaiseThrowableOnly(@Nullable final Class<?> clz, @Nullable final Method method) {
 		//
 		try (final InputStream is = clz != null
-				? clz.getResourceAsStream(String.format("/%1$s.class", StringUtils.replace(getName(clz), ".", "/")))
+				? clz.getResourceAsStream(
+						String.format("/%1$s.class", StringUtils.replace(Util.getName(clz), ".", "/")))
 				: null) {
 			//
 			final org.apache.bcel.classfile.Method m = JavaClassUtil.getMethod(
@@ -332,11 +333,6 @@ public class Main {
 	@Nullable
 	private static <T> List<T> toList(@Nullable final Stream<T> instance) {
 		return instance != null ? instance.toList() : null;
-	}
-
-	@Nullable
-	private static String getName(@Nullable final Class<?> instance) {
-		return instance != null ? instance.getName() : null;
 	}
 
 	private static void setVisible(@Nullable final Component instance, boolean b) {

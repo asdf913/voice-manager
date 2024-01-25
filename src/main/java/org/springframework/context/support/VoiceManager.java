@@ -1318,7 +1318,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		final Class<?> clz = File.class;
 		//
 		try (final InputStream is = getResourceAsStream(clz,
-				String.format(CLASS_RESOURCE_FORMAT, StringUtils.replace(getName(clz), ".", "/")))) {
+				String.format(CLASS_RESOURCE_FORMAT, StringUtils.replace(Util.getName(clz), ".", "/")))) {
 			//
 			final Object[] objectTypes = toArray(Util
 					.map(Stream.of("java.lang.String", "java.lang.String", "java.io.File"), ObjectType::getInstance));
@@ -1749,8 +1749,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				.getValue0(getWorkbookClassFailableSupplierMap());
 		//
 		final List<Class<? extends Workbook>> classes = toList(
-				Util.filter(Util.stream(keySet(map)), x -> Boolean.logicalOr(Objects.equals(getName(x), toString),
-						StringUtils.endsWithIgnoreCase(getName(x), toString))));
+				Util.filter(Util.stream(keySet(map)), x -> Boolean.logicalOr(Objects.equals(Util.getName(x), toString),
+						StringUtils.endsWithIgnoreCase(Util.getName(x), toString))));
 		//
 		final int size = IterableUtils.size(classes);
 		//
@@ -4252,8 +4252,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			public Component getListCellRendererComponent(final JList<? extends Class> list, final Class value,
 					final int index, final boolean isSelected, final boolean cellHasFocus) {
 				//
-				return VoiceManager.getListCellRendererComponent((ListCellRenderer) lcr, list, getName(value), index,
-						isSelected, cellHasFocus);
+				return VoiceManager.getListCellRendererComponent((ListCellRenderer) lcr, list, Util.getName(value),
+						index, isSelected, cellHasFocus);
 				//
 			}
 
@@ -5998,7 +5998,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						x -> Narcissus.getField(x, getDeclaredField(Util.getClass(x), "map")), null));
 		//
 		final List<String> classNames = testAndApply(Objects::nonNull,
-				toList(Util.map(Util.stream(keySet(imageWriterSpis)), x -> getName(cast(Class.class, x)))),
+				toList(Util.map(Util.stream(keySet(imageWriterSpis)), x -> Util.getName(cast(Class.class, x)))),
 				ArrayList::new, null);
 		//
 		final String commonPrefix = StringUtils.getCommonPrefix(toArray(classNames, new String[] {}));
@@ -9182,7 +9182,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			final Class<?> clz = Lame.class;
 			//
 			try (final InputStream is = getResourceAsStream(clz,
-					String.format(CLASS_RESOURCE_FORMAT, StringUtils.replace(VoiceManager.getName(clz), ".", "/")))) {
+					String.format(CLASS_RESOURCE_FORMAT, StringUtils.replace(Util.getName(clz), ".", "/")))) {
 				//
 				final org.apache.bcel.classfile.Method[] ms = JavaClassUtil.getMethods(
 						ClassParserUtil.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null)));
@@ -9270,7 +9270,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			final Class<?> clz = LameEncoder.class;
 			//
 			try (final InputStream is = getResourceAsStream(clz,
-					String.format(CLASS_RESOURCE_FORMAT, StringUtils.replace(VoiceManager.getName(clz), ".", "/")))) {
+					String.format(CLASS_RESOURCE_FORMAT, StringUtils.replace(Util.getName(clz), ".", "/")))) {
 				//
 				final List<org.apache.bcel.classfile.Method> ms = toList(
 						Util.filter(
@@ -13340,7 +13340,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				setString(comment = createCellComment(drawing, createClientAnchor(creationHelper)),
 						createRichTextString(creationHelper, e.getMessage()));
 				//
-				setAuthor(comment, getName(Util.getClass(e)));
+				setAuthor(comment, Util.getName(Util.getClass(e)));
 				//
 				setCellComment(cell, comment);
 				//
@@ -13476,11 +13476,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Nullable
 	private static Integer getPhysicalNumberOfCells(@Nullable final Row instance) {
 		return instance != null ? Integer.valueOf(instance.getPhysicalNumberOfCells()) : null;
-	}
-
-	@Nullable
-	private static String getName(@Nullable final Class<?> instance) {
-		return instance != null ? instance.getName() : null;
 	}
 
 	@Nullable
@@ -13677,7 +13672,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 						} // if
 							//
-						if (Objects.equals("domain.Voice$Visibility", getName(annotationType(a)))) {
+						if (Objects.equals("domain.Voice$Visibility", Util.getName(annotationType(a)))) {
 							//
 							final Boolean visible = cast(Boolean.class, MethodUtils.invokeMethod(a, VALUE));
 							//
@@ -14110,7 +14105,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			final Object obj = get(field, mapperRegistry);
 			//
-			if (Objects.equals("java.util.concurrent.ConcurrentHashMap", getName(Util.getClass(obj))) && type == null) {
+			if (Objects.equals("java.util.concurrent.ConcurrentHashMap", Util.getName(Util.getClass(obj)))
+					&& type == null) {
 				//
 				return null;
 				//

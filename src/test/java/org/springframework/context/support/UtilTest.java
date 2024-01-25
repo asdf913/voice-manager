@@ -2,12 +2,15 @@ package org.springframework.context.support;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.stream.Stream;
 
 import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
 
+import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -91,6 +94,25 @@ class UtilTest {
 		Narcissus.setField(jtc, Narcissus.findField(Util.getClass(jtc), "model"), null);
 		//
 		Assertions.assertDoesNotThrow(() -> Util.setText(jtc, null));
+		//
+	}
+
+	@Test
+	void testGetName() {
+		//
+		new FailableStream<>(Util.filter(Arrays.stream(Util.class.getDeclaredMethods()),
+				m -> m != null && Objects.equals(Util.getName(m), "getName") && Modifier.isStatic(m.getModifiers())))
+				.forEach(m -> {
+					//
+					if (m == null) {
+						//
+						return;
+						//
+					} // if
+						//
+					m.invoke(null, (Object) null);
+					//
+				});
 		//
 	}
 

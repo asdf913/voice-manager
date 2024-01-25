@@ -488,7 +488,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		//
 		final List<String> classNames = testAndApply(Objects::nonNull,
 				toList(Util.map(Util.stream(imageWriterSpis != null ? imageWriterSpis.keySet() : null),
-						x -> getName(cast(Class.class, x)))),
+						x -> Util.getName(cast(Class.class, x)))),
 				ArrayList::new, null);
 		//
 		final String commonPrefix = StringUtils.getCommonPrefix(toArray(classNames, new String[] {}));
@@ -572,11 +572,6 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			//
 		};
 		//
-	}
-
-	@Nullable
-	private static String getName(@Nullable final Class<?> instance) {
-		return instance != null ? instance.getName() : null;
 	}
 
 	private static <E> void sort(@Nullable final List<E> instance, @Nullable final Comparator<? super E> comparator) {

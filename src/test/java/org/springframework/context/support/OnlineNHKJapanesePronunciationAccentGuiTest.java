@@ -96,7 +96,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			METHOD_PLAY_AUDIO, METHOD_SAVE_AUDIO, METHOD_PRONOUNICATION_CHANGED, METHOD_GET_DECLARED_FIELD,
 			METHOD_OPEN_STREAM, METHOD_PLAY, METHOD_ADD_ACTION_LISTENER, METHOD_GET_MAP, METHOD_GET_FIELD,
 			METHOD_SET_TEXT, METHOD_SET_FORE_GROUND, METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_SAVE_FILE,
-			METHOD_CONTAINS_KEY, METHOD_IIF, METHOD_GET_NAME, METHOD_SORT, METHOD_CREATE_IMAGE_FORMAT_COMPARATOR,
+			METHOD_CONTAINS_KEY, METHOD_IIF, METHOD_SORT, METHOD_CREATE_IMAGE_FORMAT_COMPARATOR,
 			METHOD_IS_ANNOTATION_PRESENT, METHOD_GET_ANNOTATION, METHOD_GET_PREFERRED_SIZE, METHOD_TO_LIST,
 			METHOD_SET_PREFERRED_SIZE, METHOD_MAX, METHOD_TO_ARRAY, METHOD_TEST_AND_RUN, METHOD_TEST_AND_ACCEPT3,
 			METHOD_TEST_AND_ACCEPT4, METHOD_REMOVE = null;
@@ -180,8 +180,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		(METHOD_CONTAINS_KEY = clz.getDeclaredMethod("containsKey", Map.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_IIF = clz.getDeclaredMethod("iif", Boolean.TYPE, Object.class, Object.class)).setAccessible(true);
-		//
-		(METHOD_GET_NAME = clz.getDeclaredMethod("getName", Class.class)).setAccessible(true);
 		//
 		(METHOD_SORT = clz.getDeclaredMethod("sort", List.class, Comparator.class)).setAccessible(true);
 		//
@@ -1181,7 +1179,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			final Executable executable = () -> play(new Player(bais));
 			//
 			if (Objects.equals("sun.nio.fs.WindowsFileSystemProvider",
-					getName(getClass(fs != null ? fs.provider() : null)))) {
+					Util.getName(Util.getClass(fs != null ? fs.provider() : null)))) {
 				//
 				Assertions.assertDoesNotThrow(executable);
 				//
@@ -1384,27 +1382,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 	private static <T> T iif(final boolean condition, final T trueValue, final T falseValue) throws Throwable {
 		try {
 			return (T) METHOD_IIF.invoke(null, condition, trueValue, falseValue);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetName() throws Throwable {
-		//
-		Assertions.assertNull(getName(null));
-		//
-	}
-
-	private static String getName(final Class<?> instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_NAME.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
