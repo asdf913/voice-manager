@@ -22,8 +22,6 @@ import java.util.function.Predicate;
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JTextField;
-import javax.swing.text.JTextComponent;
 
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -45,8 +43,8 @@ class IpaSymbolGuiTest {
 	private static final String EMPTY = "";
 
 	private static Method METHOD_ADD_ACTION_LISTENER, METHOD_TO_ARRAY, METHOD_TEST_AND_APPLY, METHOD_OPEN_STREAM,
-			METHOD_DIGEST, METHOD_IIF, METHOD_SET_TEXT, METHOD_FOR_NAME, METHOD_SET_PREFERRED_WIDTH,
-			METHOD_GET_PREFERRED_SIZE, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4 = null;
+			METHOD_DIGEST, METHOD_IIF, METHOD_FOR_NAME, METHOD_SET_PREFERRED_WIDTH, METHOD_GET_PREFERRED_SIZE,
+			METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4 = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -66,8 +64,6 @@ class IpaSymbolGuiTest {
 		(METHOD_DIGEST = clz.getDeclaredMethod("digest", MessageDigest.class, byte[].class)).setAccessible(true);
 		//
 		(METHOD_IIF = clz.getDeclaredMethod("iif", Boolean.TYPE, Object.class, Object.class)).setAccessible(true);
-		//
-		(METHOD_SET_TEXT = clz.getDeclaredMethod("setText", JTextComponent.class, String.class)).setAccessible(true);
 		//
 		(METHOD_FOR_NAME = clz.getDeclaredMethod("forName", String.class)).setAccessible(true);
 		//
@@ -128,8 +124,6 @@ class IpaSymbolGuiTest {
 
 	private IpaSymbolGui instance = null;
 
-	private JTextComponent jTextComponent = null;
-
 	private MH mh = null;
 
 	@BeforeEach
@@ -153,8 +147,6 @@ class IpaSymbolGuiTest {
 			//
 		} // if
 			//
-		jTextComponent = new JTextField();
-		//
 		mh = new MH();
 		//
 	}
@@ -349,21 +341,6 @@ class IpaSymbolGuiTest {
 	private static <T> T iif(final boolean condition, final T trueValue, final T falseValue) throws Throwable {
 		try {
 			return (T) METHOD_IIF.invoke(null, condition, trueValue, falseValue);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testSetText() throws Throwable {
-		//
-		Assertions.assertDoesNotThrow(() -> setText(jTextComponent, null));
-		//
-	}
-
-	private static void setText(final JTextComponent instance, final String text) throws Throwable {
-		try {
-			METHOD_SET_TEXT.invoke(null, instance, text);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

@@ -8,7 +8,6 @@ import java.util.stream.Stream;
 import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
 
-import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -84,8 +83,15 @@ class UtilTest {
 		//
 	}
 
-	private static <T> T cast(final Class<T> clz, final Object instance) {
-		return clz != null && clz.isInstance(instance) ? clz.cast(instance) : null;
+	@Test
+	void testSetText() throws NoSuchFieldException {
+		//
+		final JTextComponent jtc = new JTextField();
+		//
+		Narcissus.setField(jtc, Narcissus.findField(Util.getClass(jtc), "model"), null);
+		//
+		Assertions.assertDoesNotThrow(() -> Util.setText(jtc, null));
+		//
 	}
 
 }

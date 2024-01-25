@@ -62,9 +62,8 @@ class GaKuNenBeTsuKanJiGuiTest {
 			METHOD_GET_PARAMETER_TYPES, METHOD_EXISTS, METHOD_AND, METHOD_IIF, METHOD_TEST_AND_ACCEPT3,
 			METHOD_TEST_AND_ACCEPT4, METHOD_ADD_ACTION_LISTENER, METHOD_TO_ARRAY, METHOD_TO_LIST,
 			METHOD_GET_DECLARED_METHODS, METHOD_FOR_NAME, METHOD_GET_ABSOLUTE_PATH, METHOD_IS_FILE, METHOD_LENGTH,
-			METHOD_LONG_VALUE, METHOD_CONTAINS, METHOD_ADD, METHOD_SET_SELECTED_ITEM, METHOD_SET_TEXT,
-			METHOD_SET_PREFERRED_WIDTH, METHOD_GET_PREFERRED_SIZE, METHOD_MAX,
-			METHOD_CREATE_DIMENSION_COMPARATOR = null;
+			METHOD_LONG_VALUE, METHOD_CONTAINS, METHOD_ADD, METHOD_SET_SELECTED_ITEM, METHOD_SET_PREFERRED_WIDTH,
+			METHOD_GET_PREFERRED_SIZE, METHOD_MAX, METHOD_CREATE_DIMENSION_COMPARATOR = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -121,8 +120,6 @@ class GaKuNenBeTsuKanJiGuiTest {
 		//
 		(METHOD_SET_SELECTED_ITEM = clz.getDeclaredMethod("setSelectedItem", ComboBoxModel.class, Object.class))
 				.setAccessible(true);
-		//
-		(METHOD_SET_TEXT = clz.getDeclaredMethod("setText", JTextComponent.class, String.class)).setAccessible(true);
 		//
 		(METHOD_SET_PREFERRED_WIDTH = clz.getDeclaredMethod("setPreferredWidth", Integer.TYPE, Iterable.class))
 				.setAccessible(true);
@@ -885,21 +882,6 @@ class GaKuNenBeTsuKanJiGuiTest {
 	private static void setSelectedItem(final ComboBoxModel<?> instance, final Object selectedItem) throws Throwable {
 		try {
 			METHOD_SET_SELECTED_ITEM.invoke(null, instance, selectedItem);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testSetText() throws Throwable {
-		//
-		Assertions.assertDoesNotThrow(() -> setText(new JTextField(), null));
-		//
-	}
-
-	private static void setText(final JTextComponent instance, final String text) throws Throwable {
-		try {
-			METHOD_SET_TEXT.invoke(null, instance, text);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

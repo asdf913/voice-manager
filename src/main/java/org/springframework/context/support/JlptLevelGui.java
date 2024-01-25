@@ -402,7 +402,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		//
 		try {
 			//
-			setText(tfJson, ObjectMapperUtil.writeValueAsString(getObjectMapper(), jlptLevels));
+			Util.setText(tfJson, ObjectMapperUtil.writeValueAsString(getObjectMapper(), jlptLevels));
 			//
 		} catch (final JsonProcessingException e) {
 			//
@@ -742,11 +742,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		}
 	}
 
-	private static void setText(@Nullable final JTextComponent instance, final String text) {
-		if (instance != null) {
-			instance.setText(text);
-		}
-	}
+	
 
 	private static void setText(@Nullable final JLabel instance, @Nullable final String text) {
 		if (instance != null) {

@@ -5380,7 +5380,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Override
 	public void actionPerformed(final ActionEvent evt) {
 		//
-		accept(x -> setText(x, null), tfCurrentProcessingSheetName, tfCurrentProcessingVoice);
+		accept(x -> Util.setText(x, null), tfCurrentProcessingSheetName, tfCurrentProcessingVoice);
 		//
 		clear(tmImportResult);
 		//
@@ -5391,7 +5391,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		if (anyMatch(Util.stream(findFieldsByValue(getDeclaredFields(getClass()), this, source)),
 				f -> isAnnotationPresent(f, ExportButton.class))) {
 			//
-			setText(tfExportFile, null);
+			Util.setText(tfExportFile, null);
 			//
 			actionPerformedForExportButtons(source, headless);
 			//
@@ -5645,7 +5645,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		if (StringUtils.isNotBlank(pageUrl)) {
 			//
-			setText(jtc, pageUrl);
+			Util.setText(jtc, pageUrl);
 			//
 		} // if
 			//
@@ -5762,7 +5762,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
-		setText(tfElapsed, Util.toString(elapsed(stop(stopwatch))));
+		Util.setText(tfElapsed, Util.toString(elapsed(stop(stopwatch))));
 		//
 	}
 
@@ -5852,7 +5852,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private void actionPerformedForExecute(final boolean headless, final boolean nonTest) {
 		//
-		forEach(Stream.of(tfFile, tfFileLength, tfFileDigest), x -> setText(x, null));
+		forEach(Stream.of(tfFile, tfFileLength, tfFileDigest), x -> Util.setText(x, null));
 		//
 		// try to retrieve the "Pronunciation" Audio File
 		//
@@ -6368,7 +6368,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private void actionPerformedForPronunciationPageUrlCheck(final boolean headless) {
 		//
-		setText(tfPronunciationPageStatusCode, null);
+		Util.setText(tfPronunciationPageStatusCode, null);
 		//
 		setBackground(tfPronunciationPageStatusCode, null);
 		//
@@ -6381,7 +6381,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				final Integer responseCode = getResponseCode(
 						cast(HttpURLConnection.class, openConnection(new URI(urlString).toURL())));
 				//
-				setText(tfPronunciationPageStatusCode, Integer.toString(responseCode));
+				Util.setText(tfPronunciationPageStatusCode, Integer.toString(responseCode));
 				//
 				if (responseCode != null) {
 					//
@@ -6453,7 +6453,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		if (size == 1) {
 			//
-			setText(tfIpaSymbol, Util.toString(IterableUtils.get(values, 0)));
+			Util.setText(tfIpaSymbol, Util.toString(IterableUtils.get(values, 0)));
 			//
 		} else if (!headless && !isTestMode()) {
 			//
@@ -6461,7 +6461,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			JOptionPane.showMessageDialog(null, list, "IPA", JOptionPane.PLAIN_MESSAGE);
 			//
-			setText(tfIpaSymbol, Util.toString(list.getSelectedValue()));
+			Util.setText(tfIpaSymbol, Util.toString(list.getSelectedValue()));
 			//
 		} // if
 			//
@@ -6490,17 +6490,17 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		if (ivHiragana != null && ivKatakana != null) {
 			//
-			setText(tfHiragana, Util.toString(IValue0Util.getValue0(ivHiragana)));
+			Util.setText(tfHiragana, Util.toString(IValue0Util.getValue0(ivHiragana)));
 			//
-			setText(tfKatakana, Util.toString(IValue0Util.getValue0(ivKatakana)));
+			Util.setText(tfKatakana, Util.toString(IValue0Util.getValue0(ivKatakana)));
 			//
 		} else if (ivHiragana != null) {
 			//
-			setText(tfHiragana, Util.toString(IValue0Util.getValue0(ivHiragana)));
+			Util.setText(tfHiragana, Util.toString(IValue0Util.getValue0(ivHiragana)));
 			//
 		} else if (ivKatakana != null) {
 			//
-			setText(tfKatakana, Util.toString(IValue0Util.getValue0(ivKatakana)));
+			Util.setText(tfKatakana, Util.toString(IValue0Util.getValue0(ivKatakana)));
 			//
 		} // if
 			//
@@ -6762,7 +6762,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		if (pair != null) {
 			//
-			setText(getKey(pair), getValue(pair));
+			Util.setText(getKey(pair), getValue(pair));
 			//
 			return;
 			//
@@ -6794,7 +6794,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			if (IterableUtils.size(objects) == 1) {
 				//
-				setText(tfRomaji, Util.toString(IterableUtils.get(objects, 0)));
+				Util.setText(tfRomaji, Util.toString(IterableUtils.get(objects, 0)));
 				//
 				return;
 				//
@@ -6805,7 +6805,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			if (!GraphicsEnvironment.isHeadless() && JOptionPane.showConfirmDialog(null, list,
 					ROMAJI_WITH_FIRST_CAPTICALIZED_LETTER, JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 				//
-				setText(tfRomaji, Util.toString(list.getSelectedValue()));
+				Util.setText(tfRomaji, Util.toString(list.getSelectedValue()));
 				//
 				return;
 				//
@@ -6813,7 +6813,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
-		setText(tfRomaji, romaji);
+		Util.setText(tfRomaji, romaji);
 		//
 	}
 
@@ -6914,7 +6914,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				WorkbookUtil.write(workbook = createMicrosoftSpeechObjectLibraryWorkbook(speechApi,
 						microsoftSpeechObjectLibraryAttributeNames), os);
 				//
-				setText(tfExportFile, getAbsolutePath(file));
+				Util.setText(tfExportFile, getAbsolutePath(file));
 				//
 			} catch (final IOException e) {
 				//
@@ -8093,7 +8093,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		@Override
 		public void accept(final Voice v) {
 			//
-			setText(jTextComponent, getText(v));
+			Util.setText(jTextComponent, getText(v));
 			//
 			incrementAndGet(atomicInteger);
 			//
@@ -8128,7 +8128,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			if (workbook != null) {
 				//
-				setText(tfCurrentProcessingFile, getName(file));
+				Util.setText(tfCurrentProcessingFile, getName(file));
 				//
 			} // if
 				//
@@ -8222,7 +8222,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				);
 				//
-				setText(tfCurrentProcessingSheetName, getSheetName(sheet));
+				Util.setText(tfCurrentProcessingSheetName, getSheetName(sheet));
 				//
 				numberOfSheetProcessed = Integer.valueOf(intValue(numberOfSheetProcessed, 0) + 1);
 				//
@@ -8542,9 +8542,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				final String language = getVoiceAttribute(speechApi, Util.toString(getSelectedItem(cbmVoiceId)),
 						LANGUAGE);
 				//
-				setText(tfSpeechLanguageCode, language);
+				Util.setText(tfSpeechLanguageCode, language);
 				//
-				setText(tfSpeechLanguageName,
+				Util.setText(tfSpeechLanguageName,
 						StringUtils.defaultIfBlank(convertLanguageCodeToText(language, 16), language));
 				//
 			} catch (final Error e) {
@@ -8659,7 +8659,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		if (Objects.equals(source, jsSpeechVolume)) {
 			//
-			setText(tfSpeechVolume, Util.toString(getValue(jsSpeechVolume)));
+			Util.setText(tfSpeechVolume, Util.toString(getValue(jsSpeechVolume)));
 			//
 		} else if (Objects.equals(source, jsSpeechRate)) {
 			//
@@ -8671,7 +8671,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-			setText(tfSpeechRate, Util.toString(getValue(jsSpeechRate)));
+			Util.setText(tfSpeechRate, Util.toString(getValue(jsSpeechRate)));
 			//
 		} // if
 			//
@@ -11143,11 +11143,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			if (voiceManager != null) {
 				//
-				setText(voiceManager.tfFile, Objects.toString(filePath, Util.getText(voiceManager.tfFile)));
+				Util.setText(voiceManager.tfFile, Objects.toString(filePath, Util.getText(voiceManager.tfFile)));
 				//
-				setText(voiceManager.tfFileLength, Util.toString(length));
+				Util.setText(voiceManager.tfFileLength, Util.toString(length));
 				//
-				setText(voiceManager.tfFileDigest, fileDigest);
+				Util.setText(voiceManager.tfFileDigest, fileDigest);
 				//
 			} // if
 				//
@@ -11994,9 +11994,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			if (voiceManager != null) {
 				//
-				setText(voiceManager.tfPhraseCounter, Util.toString(getNumerator(pharse)));
+				Util.setText(voiceManager.tfPhraseCounter, Util.toString(getNumerator(pharse)));
 				//
-				setText(voiceManager.tfPhraseTotal, Util.toString(getDenominator(pharse)));
+				Util.setText(voiceManager.tfPhraseTotal, Util.toString(getDenominator(pharse)));
 				//
 			} //
 				//
@@ -14267,12 +14267,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			final ClipboardOwner owner) {
 		if (instance != null) {
 			instance.setContents(contents, owner);
-		}
-	}
-
-	private static void setText(@Nullable final JTextComponent instance, @Nullable final String text) {
-		if (instance != null) {
-			instance.setText(text);
 		}
 	}
 

@@ -383,7 +383,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 				//
 				WorkbookUtil.write(workbook, os);
 				//
-				setText(tfExportFile, getAbsolutePath(file));
+				Util.setText(tfExportFile, getAbsolutePath(file));
 				//
 				if (!GraphicsEnvironment.isHeadless()) {
 					//
@@ -873,12 +873,6 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 
 	private static final <T> boolean test(@Nullable final Predicate<T> instance, @Nullable final T value) {
 		return instance != null && instance.test(value);
-	}
-
-	private static void setText(@Nullable final JTextComponent instance, final String text) {
-		if (instance != null) {
-			instance.setText(text);
-		}
 	}
 
 	private static void setPreferredWidth(final int width, final Iterable<Component> cs) {

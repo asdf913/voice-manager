@@ -305,9 +305,9 @@ class VoiceManagerTest {
 			METHOD_MAX_INT_STREAM, METHOD_OR_ELSE_OPTIONAL_INT, METHOD_FOR_EACH_STREAM, METHOD_FOR_EACH_ITERABLE,
 			METHOD_FOR_EACH_INT_STREAM, METHOD_CREATE_WORK_BOOK_LIST, METHOD_CREATE_VOICE_OBJECT_MAPPER,
 			METHOD_CREATE_VOICE_OBJECT_MAP, METHOD_INVOKE, METHOD_ANNOTATION_TYPE, METHOD_FIND_FIRST,
-			METHOD_GET_DECLARED_METHODS, METHOD_FOR_NAME, METHOD_SET_TEXT, METHOD_GET_PREFERRED_WIDTH,
-			METHOD_IMPORT_VOICE1, METHOD_IMPORT_VOICE_OBJECT_MAP_BI_CONSUMER, METHOD_IMPORT_VOICE_OBJECT_MAP_FILE,
-			METHOD_IMPORT_VOICE5, METHOD_IMPORT_VOICE_BY_SPEECH_API,
+			METHOD_GET_DECLARED_METHODS, METHOD_FOR_NAME, METHOD_GET_PREFERRED_WIDTH, METHOD_IMPORT_VOICE1,
+			METHOD_IMPORT_VOICE_OBJECT_MAP_BI_CONSUMER, METHOD_IMPORT_VOICE_OBJECT_MAP_FILE, METHOD_IMPORT_VOICE5,
+			METHOD_IMPORT_VOICE_BY_SPEECH_API,
 			METHOD_IMPORT_VOICE_BY_ONLINE_NHK_JAPANESE_PRONUNCIATIONS_ACCENT_FAILABLE_FUNCTION, METHOD_ADD_COLLECTION,
 			METHOD_ADD_CONTAINER2, METHOD_ADD_CONTAINER3, METHOD_ADD_LIST,
 			METHOD_CREATE_IMPORT_FILE_TEMPLATE_BYTE_ARRAY, METHOD_ANY_MATCH, METHOD_COLLECT, METHOD_NAME,
@@ -484,8 +484,6 @@ class VoiceManagerTest {
 		(METHOD_GET_DECLARED_METHODS = clz.getDeclaredMethod("getDeclaredMethods", Class.class)).setAccessible(true);
 		//
 		(METHOD_FOR_NAME = clz.getDeclaredMethod("forName", String.class)).setAccessible(true);
-		//
-		(METHOD_SET_TEXT = clz.getDeclaredMethod("setText", JTextComponent.class, String.class)).setAccessible(true);
 		//
 		(METHOD_GET_PREFERRED_WIDTH = clz.getDeclaredMethod("getPreferredWidth", Component.class)).setAccessible(true);
 		//
@@ -2081,9 +2079,6 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> instance.postProcessBeanFactory(null));
 		//
-		final ConfigurableListableBeanFactory configurableListableBeanFactory = Reflection
-				.newProxy(ConfigurableListableBeanFactory.class, ih);
-		//
 		Assertions.assertDoesNotThrow(() -> instance.postProcessBeanFactory(configurableListableBeanFactory));
 		//
 		ih.beansOfType = Reflection.newProxy(Map.class, ih);
@@ -2814,11 +2809,11 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> setText(tfPronunciationPageUrl, SPACE));
+		Assertions.assertDoesNotThrow(() -> Util.setText(tfPronunciationPageUrl, SPACE));
 		//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnPronunciationPageUrlCheck));
 		//
-		Assertions.assertDoesNotThrow(() -> setText(tfPronunciationPageUrl, "a"));
+		Assertions.assertDoesNotThrow(() -> Util.setText(tfPronunciationPageUrl, "a"));
 		//
 		if (headless) {
 			//
@@ -3364,7 +3359,7 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> keyReleased(instance, keyEventTfListNames));
 		//
-		setText(tfListNames, "{}");
+		Util.setText(tfListNames, "{}");
 		//
 		Assertions.assertDoesNotThrow(() -> keyReleased(instance, keyEventTfListNames));
 		//
@@ -3382,7 +3377,7 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> keyReleased(instance, keyEventTfTextImport));
 		//
-		setText(tfTextImport, SPACE);
+		Util.setText(tfTextImport, SPACE);
 		//
 		Assertions.assertDoesNotThrow(() -> keyReleased(instance, keyEventTfTextImport));
 		//
@@ -3513,11 +3508,11 @@ class VoiceManagerTest {
 			//
 		Assertions.assertDoesNotThrow(() -> removeUpdate(instance, null));
 		//
-		setText(tfTextImport, "B");
+		Util.setText(tfTextImport, "B");
 		//
 		Assertions.assertDoesNotThrow(() -> removeUpdate(instance, null));
 		//
-		setText(tfTextImport, A);
+		Util.setText(tfTextImport, A);
 		//
 		if (instance != null) {
 			//
@@ -4431,21 +4426,6 @@ class VoiceManagerTest {
 				return (Class<?>) obj;
 			}
 			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testSetText() {
-		//
-		Assertions.assertDoesNotThrow(() -> setText(new JTextField(), null));
-		//
-	}
-
-	private static void setText(final JTextComponent instance, final String text) throws Throwable {
-		try {
-			METHOD_SET_TEXT.invoke(null, instance, text);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -5748,9 +5728,6 @@ class VoiceManagerTest {
 	void testGetByteConverter() throws Throwable {
 		//
 		Assertions.assertNull(getByteConverter(null, null, null));
-		//
-		final ConfigurableListableBeanFactory configurableListableBeanFactory = Reflection
-				.newProxy(ConfigurableListableBeanFactory.class, ih);
 		//
 		Assertions.assertNull(getByteConverter(configurableListableBeanFactory, null, null));
 		//

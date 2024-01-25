@@ -302,11 +302,11 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 		//
 		if (size == 0) {
 			//
-			setText(tfIpaSymbol, null);
+			Util.setText(tfIpaSymbol, null);
 			//
 		} else if (size == 1) {
 			//
-			setText(tfIpaSymbol, Util.toString(IterableUtils.get(values, 0)));
+			Util.setText(tfIpaSymbol, Util.toString(IterableUtils.get(values, 0)));
 			//
 		} else if (Boolean.logicalAnd(!headless, !isTestMode())) {
 			//
@@ -314,7 +314,7 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 			//
 			JOptionPane.showMessageDialog(null, list, "IPA", JOptionPane.PLAIN_MESSAGE);
 			//
-			setText(tfIpaSymbol, Util.toString(list.getSelectedValue()));
+			Util.setText(tfIpaSymbol, Util.toString(list.getSelectedValue()));
 			//
 		} // if
 			//
@@ -386,12 +386,6 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 
 	private static <T> T iif(final boolean condition, final T trueValue, final T falseValue) {
 		return condition ? trueValue : falseValue;
-	}
-
-	private static void setText(@Nullable final JTextComponent instance, @Nullable final String text) {
-		if (instance != null) {
-			instance.setText(text);
-		}
 	}
 
 	private static boolean isTestMode() {
