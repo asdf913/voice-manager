@@ -13,6 +13,7 @@ import java.util.stream.Stream;
 import javax.annotation.Nullable;
 import javax.swing.text.JTextComponent;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
@@ -141,6 +142,14 @@ public abstract class Util {
 	@Nullable
 	static Object getSource(@Nullable final EventObject instance) {
 		return instance != null ? instance.getSource() : null;
+	}
+
+	static Class<?> forName(final String className) {
+		try {
+			return StringUtils.isNotBlank(className) ? Class.forName(className) : null;
+		} catch (final ClassNotFoundException e) {
+			return null;
+		}
 	}
 
 }

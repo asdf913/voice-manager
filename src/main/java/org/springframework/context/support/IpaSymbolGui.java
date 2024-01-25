@@ -383,16 +383,7 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 	}
 
 	private static boolean isTestMode() {
-		return forName("org.junit.jupiter.api.Test") != null;
-	}
-
-	@Nullable
-	private static Class<?> forName(final String className) {
-		try {
-			return StringUtils.isNotBlank(className) ? Class.forName(className) : null;
-		} catch (final ClassNotFoundException e) {
-			return null;
-		}
+		return Util.forName("org.junit.jupiter.api.Test") != null;
 	}
 
 	private static void setPreferredWidth(final int width, @Nullable final Component... cs) {

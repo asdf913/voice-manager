@@ -61,9 +61,9 @@ class GaKuNenBeTsuKanJiGuiTest {
 	private static Method METHOD_CAST, METHOD_CREATE_WORK_BOOK, METHOD_SET_SELECTED_ITEM_BY_ITERABLE, METHOD_INVOKE,
 			METHOD_GET_PARAMETER_TYPES, METHOD_EXISTS, METHOD_AND, METHOD_IIF, METHOD_TEST_AND_ACCEPT3,
 			METHOD_TEST_AND_ACCEPT4, METHOD_ADD_ACTION_LISTENER, METHOD_TO_ARRAY, METHOD_TO_LIST,
-			METHOD_GET_DECLARED_METHODS, METHOD_FOR_NAME, METHOD_GET_ABSOLUTE_PATH, METHOD_IS_FILE, METHOD_LENGTH,
-			METHOD_LONG_VALUE, METHOD_CONTAINS, METHOD_SET_SELECTED_ITEM, METHOD_SET_PREFERRED_WIDTH,
-			METHOD_GET_PREFERRED_SIZE, METHOD_MAX, METHOD_CREATE_DIMENSION_COMPARATOR = null;
+			METHOD_GET_DECLARED_METHODS, METHOD_GET_ABSOLUTE_PATH, METHOD_IS_FILE, METHOD_LENGTH, METHOD_LONG_VALUE,
+			METHOD_CONTAINS, METHOD_SET_SELECTED_ITEM, METHOD_SET_PREFERRED_WIDTH, METHOD_GET_PREFERRED_SIZE,
+			METHOD_MAX, METHOD_CREATE_DIMENSION_COMPARATOR = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -103,8 +103,6 @@ class GaKuNenBeTsuKanJiGuiTest {
 		(METHOD_TO_LIST = clz.getDeclaredMethod("toList", Stream.class)).setAccessible(true);
 		//
 		(METHOD_GET_DECLARED_METHODS = clz.getDeclaredMethod("getDeclaredMethods", Class.class)).setAccessible(true);
-		//
-		(METHOD_FOR_NAME = clz.getDeclaredMethod("forName", String.class)).setAccessible(true);
 		//
 		(METHOD_GET_ABSOLUTE_PATH = clz.getDeclaredMethod("getAbsolutePath", File.class)).setAccessible(true);
 		//
@@ -720,29 +718,6 @@ class GaKuNenBeTsuKanJiGuiTest {
 				return null;
 			} else if (obj instanceof Method[]) {
 				return (Method[]) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testForName() throws Throwable {
-		//
-		Assertions.assertNull(forName(null));
-		//
-		Assertions.assertNull(forName("A"));
-		//
-	}
-
-	private static Class<?> forName(final String className) throws Throwable {
-		try {
-			final Object obj = METHOD_FOR_NAME.invoke(null, className);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Class) {
-				return (Class) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

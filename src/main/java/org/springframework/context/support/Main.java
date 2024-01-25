@@ -82,8 +82,9 @@ public class Main {
 				//
 				JOptionPane.showMessageDialog(null, list, "Component", JOptionPane.PLAIN_MESSAGE);
 				//
-				clz = forName(getBeanClassName(testAndApply(Objects::nonNull, Util.toString(getSelectedValue(list)),
-						x -> ConfigurableListableBeanFactoryUtil.getBeanDefinition(clbf, x), null)));
+				clz = Util
+						.forName(getBeanClassName(testAndApply(Objects::nonNull, Util.toString(getSelectedValue(list)),
+								x -> ConfigurableListableBeanFactoryUtil.getBeanDefinition(clbf, x), null)));
 				//
 			} // if
 				//
@@ -113,7 +114,7 @@ public class Main {
 		//
 		final String string = PropertyResolverUtil.getProperty(propertyResolver, key);
 		//
-		Class<?> clz = forName(string);
+		Class<?> clz = Util.forName(string);
 		//
 		if (clz == null) {
 			//
@@ -146,8 +147,9 @@ public class Main {
 				//
 			if (MultimapUtil.size(multimap) == 1) {
 				//
-				clz = forName(Util.orElse(Util.map(Util.stream(MultimapUtil.values(multimap)), Main::getBeanClassName)
-						.reduce((first, second) -> first), null));
+				clz = Util.forName(
+						Util.orElse(Util.map(Util.stream(MultimapUtil.values(multimap)), Main::getBeanClassName)
+								.reduce((first, second) -> first), null));
 				//
 			} // if
 				//
@@ -298,7 +300,7 @@ public class Main {
 			if (Objects.equals(Arrays.asList(NEW.class, DUP.class, INVOKESPECIAL.class, ATHROW.class), toList(
 					Util.map(testAndApply(Objects::nonNull, ins, Arrays::stream, null), x -> Util.getClass(x))))) {
 				//
-				final Class<?> c = forName(className);
+				final Class<?> c = Util.forName(className);
 				//
 				if (isAssignableFrom(Throwable.class, c)) {
 					//
@@ -370,15 +372,6 @@ public class Main {
 			//
 		} // if
 			//
-	}
-
-	@Nullable
-	private static Class<?> forName(@Nullable final String className) {
-		try {
-			return StringUtils.isNotBlank(className) ? Class.forName(className) : null;
-		} catch (final ClassNotFoundException e) {
-			return null;
-		}
 	}
 
 	@Nullable

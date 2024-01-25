@@ -305,7 +305,7 @@ class VoiceManagerTest {
 			METHOD_MAX_INT_STREAM, METHOD_OR_ELSE_OPTIONAL_INT, METHOD_FOR_EACH_STREAM, METHOD_FOR_EACH_ITERABLE,
 			METHOD_FOR_EACH_INT_STREAM, METHOD_CREATE_WORK_BOOK_LIST, METHOD_CREATE_VOICE_OBJECT_MAPPER,
 			METHOD_CREATE_VOICE_OBJECT_MAP, METHOD_INVOKE, METHOD_ANNOTATION_TYPE, METHOD_FIND_FIRST,
-			METHOD_GET_DECLARED_METHODS, METHOD_FOR_NAME, METHOD_GET_PREFERRED_WIDTH, METHOD_IMPORT_VOICE1,
+			METHOD_GET_DECLARED_METHODS, METHOD_GET_PREFERRED_WIDTH, METHOD_IMPORT_VOICE1,
 			METHOD_IMPORT_VOICE_OBJECT_MAP_BI_CONSUMER, METHOD_IMPORT_VOICE_OBJECT_MAP_FILE, METHOD_IMPORT_VOICE5,
 			METHOD_IMPORT_VOICE_BY_SPEECH_API,
 			METHOD_IMPORT_VOICE_BY_ONLINE_NHK_JAPANESE_PRONUNCIATIONS_ACCENT_FAILABLE_FUNCTION, METHOD_ADD_CONTAINER2,
@@ -481,8 +481,6 @@ class VoiceManagerTest {
 		(METHOD_FIND_FIRST = clz.getDeclaredMethod("findFirst", Stream.class)).setAccessible(true);
 		//
 		(METHOD_GET_DECLARED_METHODS = clz.getDeclaredMethod("getDeclaredMethods", Class.class)).setAccessible(true);
-		//
-		(METHOD_FOR_NAME = clz.getDeclaredMethod("forName", String.class)).setAccessible(true);
 		//
 		(METHOD_GET_PREFERRED_WIDTH = clz.getDeclaredMethod("getPreferredWidth", Component.class)).setAccessible(true);
 		//
@@ -2336,7 +2334,7 @@ class VoiceManagerTest {
 			//
 			Assertions.assertDoesNotThrow(() -> instance.setWorkbookClass(toString));
 			//
-			Assertions.assertSame(forName(toString), get(workbookClass, instance));
+			Assertions.assertSame(Util.forName(toString), get(workbookClass, instance));
 			//
 			// org.apache.poi.hssf.usermodel.HSSFWorkbook
 			//
@@ -2722,7 +2720,7 @@ class VoiceManagerTest {
 					//
 			} // for
 				//
-			final Class<?> classTemp = forName(className);
+			final Class<?> classTemp = Util.forName(className);
 			//
 			return isAssignableFrom(Throwable.class, classTemp) ? (Class<? extends Throwable>) classTemp : null;
 			//
@@ -4394,33 +4392,6 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof Method[]) {
 				return (Method[]) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testForName() throws Throwable {
-		//
-		Assertions.assertNull(forName(null));
-		//
-		Assertions.assertNull(forName(EMPTY));
-		//
-		Assertions.assertNull(forName(SPACE));
-		//
-		Assertions.assertNull(forName("A"));
-		//
-	}
-
-	private static Class<?> forName(final String className) throws Throwable {
-		try {
-			final Object obj = METHOD_FOR_NAME.invoke(null, className);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Class) {
-				return (Class<?>) obj;
 			}
 			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
@@ -10801,7 +10772,7 @@ class VoiceManagerTest {
 			//
 			// org.springframework.context.support.VoiceManager$IntMap.getObject(int)
 			//
-			final Class<?> classIntMap = forName("org.springframework.context.support.VoiceManager$IntMap");
+			final Class<?> classIntMap = Util.forName("org.springframework.context.support.VoiceManager$IntMap");
 			//
 			final Object intMap = Reflection.newProxy(classIntMap, ih);
 			//
@@ -10858,7 +10829,7 @@ class VoiceManagerTest {
 			//
 			// org.springframework.context.support.VoiceManager$IntIntMap.setInt(int,int)
 			//
-			final Class<?> classIntIntMap = forName("org.springframework.context.support.VoiceManager$IntIntMap");
+			final Class<?> classIntIntMap = Util.forName("org.springframework.context.support.VoiceManager$IntIntMap");
 			//
 			final Method intIntMapSetInt = classIntIntMap != null
 					? classIntIntMap.getDeclaredMethod("setInt", Integer.TYPE, Integer.TYPE)
@@ -11636,7 +11607,7 @@ class VoiceManagerTest {
 	void testVoiceIdListCellRenderer() throws Throwable {
 		//
 		final Constructor<?> constructor = getDeclaredConstructor(
-				forName("org.springframework.context.support.VoiceManager$VoiceIdListCellRenderer"),
+				Util.forName("org.springframework.context.support.VoiceManager$VoiceIdListCellRenderer"),
 				VoiceManager.class);
 		//
 		if (constructor != null) {
@@ -11682,8 +11653,8 @@ class VoiceManagerTest {
 	@Test
 	void testMicrosoftAccessFileFormatListCellRenderer() throws Throwable {
 		//
-		final Constructor<?> constructor = getDeclaredConstructor(
-				forName("org.springframework.context.support.VoiceManager$MicrosoftAccessFileFormatListCellRenderer"));
+		final Constructor<?> constructor = getDeclaredConstructor(Util
+				.forName("org.springframework.context.support.VoiceManager$MicrosoftAccessFileFormatListCellRenderer"));
 		//
 		if (constructor != null) {
 			//
@@ -11714,7 +11685,7 @@ class VoiceManagerTest {
 	@Test
 	void testAudioToFlacByteConverter() throws Throwable {
 		//
-		final Class<?> clz = forName("org.springframework.context.support.VoiceManager$AudioToFlacByteConverter");
+		final Class<?> clz = Util.forName("org.springframework.context.support.VoiceManager$AudioToFlacByteConverter");
 		//
 		final Constructor<?> constructor = getDeclaredConstructor(clz);
 		//
@@ -11789,7 +11760,7 @@ class VoiceManagerTest {
 	@Test
 	void testAudioToMp3ByteConverter() throws Throwable {
 		//
-		final Class<?> clz = forName("org.springframework.context.support.VoiceManager$AudioToMp3ByteConverter");
+		final Class<?> clz = Util.forName("org.springframework.context.support.VoiceManager$AudioToMp3ByteConverter");
 		//
 		final Constructor<?> constructor = getDeclaredConstructor(clz);
 		//
@@ -11914,7 +11885,7 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(invoke(getValue, instance, ldc, null));
 		//
-		if (forName("org.apache.bcel.classfile.InvalidMethodSignatureException") == null) {
+		if (Util.forName("org.apache.bcel.classfile.InvalidMethodSignatureException") == null) {
 			//
 			Assertions.assertNull(invoke(getValue, instance, ldc, new ConstantPoolGen()));
 			//
@@ -11945,7 +11916,7 @@ class VoiceManagerTest {
 	@Test
 	void testJLabelLink() throws Throwable {
 		//
-		final Class<?> clz = forName("org.springframework.context.support.VoiceManager$JLabelLink");
+		final Class<?> clz = Util.forName("org.springframework.context.support.VoiceManager$JLabelLink");
 		//
 		final Constructor<?> constructor = getDeclaredConstructor(clz, ATag.class);
 		//
@@ -12041,7 +12012,7 @@ class VoiceManagerTest {
 	void testJTabbedPaneChangeListener() throws Throwable {
 		//
 		final Constructor<?> constructor = getDeclaredConstructor(
-				forName("org.springframework.context.support.VoiceManager$JTabbedPaneChangeListener"));
+				Util.forName("org.springframework.context.support.VoiceManager$JTabbedPaneChangeListener"));
 		//
 		if (constructor != null) {
 			//
@@ -12056,7 +12027,7 @@ class VoiceManagerTest {
 	@Test
 	void testBooleanMap() throws Throwable {
 		//
-		final Class<?> clz = forName("org.springframework.context.support.VoiceManager$BooleanMap");
+		final Class<?> clz = Util.forName("org.springframework.context.support.VoiceManager$BooleanMap");
 		//
 		// org.springframework.context.support.VoiceManager$BooleanMap.setBoolean(org.springframework.context.support.VoiceManager$BooleanMap,java.lang.String,boolean)
 		//
@@ -12118,8 +12089,8 @@ class VoiceManagerTest {
 	@Test
 	void testVoiceThrowableMessageBiConsumer() throws Throwable {
 		//
-		final Class<?> clz = forName(
-				"org.springframework.context.support.VoiceManager$VoiceThrowableMessageBiConsumer");
+		final Class<?> clz = Util
+				.forName("org.springframework.context.support.VoiceManager$VoiceThrowableMessageBiConsumer");
 		//
 		final Constructor<?> constructor = getDeclaredConstructor(clz, Boolean.TYPE, DefaultTableModel.class);
 		//
@@ -12173,7 +12144,7 @@ class VoiceManagerTest {
 	void testVoiceThrowableBiConsumer() throws Throwable {
 		//
 		final Constructor<?> constructor = getDeclaredConstructor(
-				forName("org.springframework.context.support.VoiceManager$VoiceThrowableBiConsumer"), Boolean.TYPE,
+				Util.forName("org.springframework.context.support.VoiceManager$VoiceThrowableBiConsumer"), Boolean.TYPE,
 				DefaultTableModel.class);
 		//
 		if (constructor != null) {
@@ -12204,7 +12175,7 @@ class VoiceManagerTest {
 	void testVoiceConsumer() throws Throwable {
 		//
 		final Constructor<?> constructor = getDeclaredConstructor(
-				forName("org.springframework.context.support.VoiceManager$VoiceConsumer"), JTextComponent.class,
+				Util.forName("org.springframework.context.support.VoiceManager$VoiceConsumer"), JTextComponent.class,
 				AtomicInteger.class);
 		//
 		if (constructor != null) {
@@ -12233,7 +12204,7 @@ class VoiceManagerTest {
 	void testTabFocusTraversalPolicy() throws Throwable {
 		//
 		final Constructor<?> constructor = getDeclaredConstructor(
-				forName("org.springframework.context.support.VoiceManager$TabFocusTraversalPolicy"), List.class);
+				Util.forName("org.springframework.context.support.VoiceManager$TabFocusTraversalPolicy"), List.class);
 		//
 		if (constructor != null) {
 			//

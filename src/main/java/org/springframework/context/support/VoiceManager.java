@@ -1132,7 +1132,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-			if (((isAssignableFrom(FactoryBean.class, clz = forName(bd.getBeanClassName()))
+			if (((isAssignableFrom(FactoryBean.class, clz = Util.forName(bd.getBeanClassName()))
 					&& (fb = cast(FactoryBean.class, Narcissus.allocateInstance(clz))) != null
 					&& isAssignableFrom(classToBeFound, fb.getObjectType())) || isAssignableFrom(classToBeFound, clz))
 					&& isAllAttributesMatched(attributes, bd)) {
@@ -1739,7 +1739,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		final String toString = Util.toString(object);
 		//
-		if ((workbookClass = forName(toString)) != null) {
+		if ((workbookClass = Util.forName(toString)) != null) {
 			//
 			return;
 			//
@@ -2437,8 +2437,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		try {
 			//
-			final List<Method> ms = toList(Util.filter(testAndApply(Objects::nonNull,
-					getDeclaredMethods(forName("com.sun.jna.platform.win32.VersionHelpers")), Arrays::stream, null),
+			final List<Method> ms = toList(Util.filter(
+					testAndApply(Objects::nonNull,
+							getDeclaredMethods(Util.forName("com.sun.jna.platform.win32.VersionHelpers")),
+							Arrays::stream, null),
 					m -> m != null && Objects.equals(Util.getName(m), "IsWindows10OrGreater")
 							&& m.getParameterCount() == 0 && isStatic(m)));
 			//
@@ -2510,7 +2512,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static Object getOsVersionInfoEx()
 			throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
 		//
-		final Class<?> clz = forName("com.sun.jna.platform.win32.Kernel32");
+		final Class<?> clz = Util.forName("com.sun.jna.platform.win32.Kernel32");
 		//
 		// https://java-native-access.github.io/jna/5.6.0/javadoc/com/sun/jna/platform/win32/Kernel32.html#INSTANCE
 		//
@@ -2520,7 +2522,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final Field f = IterableUtils.size(fs) == 1 ? get(fs, 0) : null;
 		//
-		final Class<?> clzOsVersionInfoEx = forName("com.sun.jna.platform.win32.WinNT$OSVERSIONINFOEX");
+		final Class<?> clzOsVersionInfoEx = Util.forName("com.sun.jna.platform.win32.WinNT$OSVERSIONINFOEX");
 		//
 		// https://java-native-access.github.io/jna/5.6.0/javadoc/com/sun/jna/platform/win32/Kernel32.html#GetVersionEx-com.sun.jna.platform.win32.WinNT.OSVERSIONINFOEX-
 		//
@@ -4829,8 +4831,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		try {
 			//
 			final List<Method> ms = toList(Util.filter(
-					testAndApply(Objects::nonNull, getDeclaredMethods(forName("com.sun.jna.Platform")), Arrays::stream,
-							null),
+					testAndApply(Objects::nonNull, getDeclaredMethods(Util.forName("com.sun.jna.Platform")),
+							Arrays::stream, null),
 					m -> m != null && Objects.equals(m.getReturnType(), Boolean.TYPE) && m.getParameterCount() == -0));
 			//
 			Method m = null;
@@ -5013,7 +5015,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Nullable
 	private static Map<String, String> createYomiNameMap() {
 		//
-		final Class<?> nameClass = forName("domain.Voice$Name");
+		final Class<?> nameClass = Util.forName("domain.Voice$Name");
 		//
 		final Stream<Field> stream = testAndApply(Objects::nonNull, getDeclaredFields(Yomi.class), Arrays::stream,
 				null);
@@ -5683,7 +5685,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	private static boolean isTestMode() {
-		return forName("org.junit.jupiter.api.Test") != null;
+		return Util.forName("org.junit.jupiter.api.Test") != null;
 	}
 
 	@Nullable
@@ -9806,7 +9808,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		try (final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
 			//
-			final Class<?> importFieldClass = forName("domain.Voice$ImportField");
+			final Class<?> importFieldClass = Util.forName("domain.Voice$ImportField");
 			//
 			final List<Field> fs = toList(Util.filter(
 					testAndApply(Objects::nonNull, FieldUtils.getAllFields(Voice.class), Arrays::stream, null),
@@ -9883,9 +9885,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		IValue0<List<Boolean>> booleans = null;
 		//
-		final Class<?> classJlpt = forName("domain.Voice$JLPT");
+		final Class<?> classJlpt = Util.forName("domain.Voice$JLPT");
 		//
-		final Class<?> classGaKuNenBeTsuKanJi = forName("domain.Voice$GaKuNenBeTsuKanJi");
+		final Class<?> classGaKuNenBeTsuKanJi = Util.forName("domain.Voice$GaKuNenBeTsuKanJi");
 		//
 		for (int i = 0; i < IterableUtils.size(fs); i++) {
 			//
@@ -13589,7 +13591,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			Field[] fs = null;
 			//
-			final Class<?> spreadsheetColumnClass = forName("domain.Voice$SpreadsheetColumn");
+			final Class<?> spreadsheetColumnClass = Util.forName("domain.Voice$SpreadsheetColumn");
 			//
 			String[] fieldOrder = getFieldOrder();
 			//
@@ -13733,9 +13735,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		Field f = null;
 		//
-		final Class<?> dateFormatClass = forName("domain.Voice$DateFormat");
+		final Class<?> dateFormatClass = Util.forName("domain.Voice$DateFormat");
 		//
-		final Class<?> dataFormatClass = forName("domain.Voice$DataFormat");
+		final Class<?> dataFormatClass = Util.forName("domain.Voice$DataFormat");
 		//
 		for (int j = 0; fs != null && j < fs.length; j++) {
 			//
@@ -13898,7 +13900,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final Annotation a = Util.orElse(findFirst(
 				Util.filter(testAndApply(Objects::nonNull, getDeclaredAnnotations(Voice.class), Arrays::stream, null),
-						z -> Objects.equals(annotationType(z), forName("domain.FieldOrder")))),
+						z -> Objects.equals(annotationType(z), Util.forName("domain.FieldOrder")))),
 				null);
 		//
 		final Method method = Util.orElse(findFirst(Util.filter(Arrays.stream(getDeclaredMethods(annotationType(a))),
@@ -13966,15 +13968,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Nullable
 	private static Method[] getDeclaredMethods(@Nullable final Class<?> instance) {
 		return instance != null ? instance.getDeclaredMethods() : null;
-	}
-
-	@Nullable
-	private static Class<?> forName(@Nullable final String className) {
-		try {
-			return StringUtils.isNotBlank(className) ? Class.forName(className) : null;
-		} catch (final ClassNotFoundException e) {
-			return null;
-		}
 	}
 
 	@Nullable

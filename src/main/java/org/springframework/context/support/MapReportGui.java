@@ -303,7 +303,7 @@ public class MapReportGui extends JFrame
 
 	private static void setContents(@Nullable final Clipboard instance, final Transferable contents,
 			@Nullable final ClipboardOwner owner) {
-		if (instance != null && forName("org.junit.jupiter.api.Assertions") == null) {
+		if (instance != null && Util.forName("org.junit.jupiter.api.Assertions") == null) {
 			instance.setContents(contents, owner);
 		}
 	}
@@ -614,7 +614,7 @@ public class MapReportGui extends JFrame
 				//
 			} // if
 				//
-			if (((isAssignableFrom(FactoryBean.class, clz = forName(bd.getBeanClassName()))
+			if (((isAssignableFrom(FactoryBean.class, clz = Util.forName(bd.getBeanClassName()))
 					&& (fb = cast(FactoryBean.class, Narcissus.allocateInstance(clz))) != null
 					&& isAssignableFrom(classToBeFound, fb.getObjectType())) || isAssignableFrom(classToBeFound, clz))
 					&& isAllAttributesMatched(attributes, bd)) {
@@ -632,15 +632,6 @@ public class MapReportGui extends JFrame
 
 	private static boolean isAssignableFrom(@Nullable final Class<?> a, @Nullable final Class<?> b) {
 		return a != null && b != null && a.isAssignableFrom(b);
-	}
-
-	@Nullable
-	private static Class<?> forName(@Nullable final String className) {
-		try {
-			return StringUtils.isNotBlank(className) ? Class.forName(className) : null;
-		} catch (final ClassNotFoundException e) {
-			return null;
-		}
 	}
 
 	@Nullable

@@ -393,7 +393,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 					testAndApply(
 							Objects::nonNull,
 							getDeclaredMethods(
-									forName("org.springframework.beans.factory.GaKuNenBeTsuKanJiMultimapFactoryBean")),
+									Util.forName("org.springframework.beans.factory.GaKuNenBeTsuKanJiMultimapFactoryBean")),
 							Arrays::stream, null),
 					m -> and(Objects.equals(Util.getName(m), "createMultimapByUrl"),
 							Arrays.equals(new Class<?>[] { String.class, Duration.class }, getParameterTypes(m)))));
@@ -490,14 +490,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 		return instance != null ? instance.getDeclaredMethods() : null;
 	}
 
-	@Nullable
-	private static Class<?> forName(final String className) {
-		try {
-			return StringUtils.isNotBlank(className) ? Class.forName(className) : null;
-		} catch (final ClassNotFoundException e) {
-			return null;
-		}
-	}
+	
 
 	@Nullable
 	private static Workbook createWorkbook(final Pair<String, String> columnNames, final Multimap<?, ?> multimap) {

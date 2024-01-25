@@ -902,7 +902,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			//
 			ih.transferData = pitchAccentImage;
 			//
-			if (forName("org.junit.jupiter.api.Test") == null) {
+			if (Util.forName("org.junit.jupiter.api.Test") == null) {
 				//
 				setContents(getSystemClipboard(Toolkit.getDefaultToolkit()),
 						Reflection.newProxy(Transferable.class, ih), null);
@@ -984,15 +984,6 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 	private static Field getDeclaredField(@Nullable final Class<?> instance, final String name)
 			throws NoSuchFieldException {
 		return instance != null ? instance.getDeclaredField(name) : null;
-	}
-
-	@Nullable
-	private static Class<?> forName(final String className) {
-		try {
-			return StringUtils.isNotBlank(className) ? Class.forName(className) : null;
-		} catch (final ClassNotFoundException e) {
-			return null;
-		}
 	}
 
 	private static <T> void forEach(@Nullable final Iterable<T> instance, @Nullable final Consumer<? super T> action) {

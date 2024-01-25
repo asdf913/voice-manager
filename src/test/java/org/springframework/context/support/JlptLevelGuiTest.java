@@ -96,13 +96,12 @@ class JlptLevelGuiTest {
 	private static final String EMPTY = "";
 
 	private static Method METHOD_CAST, METHOD_TO_ARRAY_COLLECTION, METHOD_TO_ARRAY_INT_LIST, METHOD_TEST,
-			METHOD_GET_PREFERRED_SIZE, METHOD_SET_PREFERRED_WIDTH, METHOD_FOR_NAME, METHOD_GET_SYSTEM_CLIP_BOARD,
-			METHOD_TEST_AND_APPLY, METHOD_SET_CONTENTS, METHOD_ADD_ACTION_LISTENER, METHOD_GET_DECLARED_METHODS,
-			METHOD_TO_LIST, METHOD_INVOKE, METHOD_IIF, METHOD_GET_PARAMETER_TYPES, METHOD_RUN,
-			METHOD_SET_JLPT_VOCABULARY_AND_LEVEL, METHOD_GET_LEVEL, METHOD_FOR_EACH_STREAM, METHOD_ADD_ELEMENT,
-			METHOD_TEST_AND_ACCEPT, METHOD_BROWSE, METHOD_GET_LIST_CELL_RENDERER_COMPONENT,
-			METHOD_ADD_DOCUMENT_LISTENER, METHOD_SET_SELECTED_INDICES, METHOD_TO_URI, METHOD_REMOVE_ELEMENT_AT,
-			METHOD_DISTINCT, METHOD_MAX = null;
+			METHOD_GET_PREFERRED_SIZE, METHOD_SET_PREFERRED_WIDTH, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_TEST_AND_APPLY,
+			METHOD_SET_CONTENTS, METHOD_ADD_ACTION_LISTENER, METHOD_GET_DECLARED_METHODS, METHOD_TO_LIST, METHOD_INVOKE,
+			METHOD_IIF, METHOD_GET_PARAMETER_TYPES, METHOD_RUN, METHOD_SET_JLPT_VOCABULARY_AND_LEVEL, METHOD_GET_LEVEL,
+			METHOD_FOR_EACH_STREAM, METHOD_ADD_ELEMENT, METHOD_TEST_AND_ACCEPT, METHOD_BROWSE,
+			METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_ADD_DOCUMENT_LISTENER, METHOD_SET_SELECTED_INDICES,
+			METHOD_TO_URI, METHOD_REMOVE_ELEMENT_AT, METHOD_DISTINCT, METHOD_MAX = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -122,8 +121,6 @@ class JlptLevelGuiTest {
 		//
 		(METHOD_SET_PREFERRED_WIDTH = clz.getDeclaredMethod("setPreferredWidth", Integer.TYPE, Iterable.class))
 				.setAccessible(true);
-		//
-		(METHOD_FOR_NAME = clz.getDeclaredMethod("forName", String.class)).setAccessible(true);
 		//
 		(METHOD_GET_SYSTEM_CLIP_BOARD = clz.getDeclaredMethod("getSystemClipboard", Toolkit.class)).setAccessible(true);
 		//
@@ -755,29 +752,6 @@ class JlptLevelGuiTest {
 	}
 
 	@Test
-	void testForName() throws Throwable {
-		//
-		Assertions.assertNull(forName(null));
-		//
-		Assertions.assertNull(forName("a"));
-		//
-	}
-
-	private static Class<?> forName(final String className) throws Throwable {
-		try {
-			final Object obj = METHOD_FOR_NAME.invoke(null, className);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Class<?>) {
-				return (Class<?>) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testGetSystemClipboard() throws Throwable {
 		//
 		Assertions.assertNull(getSystemClipboard(null));
@@ -872,7 +846,7 @@ class JlptLevelGuiTest {
 					//
 			} // for
 				//
-			final Class<?> classTemp = forName(className);
+			final Class<?> classTemp = Util.forName(className);
 			//
 			return classTemp != null && Throwable.class.isAssignableFrom(classTemp)
 					? (Class<? extends Throwable>) classTemp

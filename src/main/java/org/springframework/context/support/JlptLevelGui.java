@@ -356,7 +356,8 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 			//
 			final List<Method> ms = toList(Util.filter(
 					testAndApply(Objects::nonNull,
-							getDeclaredMethods(forName("org.springframework.beans.factory.JlptLevelListFactoryBean")),
+							getDeclaredMethods(Util
+									.forName("org.springframework.beans.factory.JlptLevelListFactoryBean")),
 							Arrays::stream, null),
 					m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "getObjectByUrl"),
 							Arrays.equals(new Class<?>[] { String.class, Duration.class }, getParameterTypes(m)))));
@@ -450,7 +451,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 	}
 
 	private static boolean isTestMode() {
-		return forName("org.junit.jupiter.api.Test") != null;
+		return Util.forName("org.junit.jupiter.api.Test") != null;
 	}
 
 	private static void browse(@Nullable final Desktop instance, @Nullable final URI uri)
@@ -725,15 +726,6 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 			//
 		} // if
 			//
-	}
-
-	@Nullable
-	private static Class<?> forName(final String className) {
-		try {
-			return StringUtils.isNotBlank(className) ? Class.forName(className) : null;
-		} catch (final ClassNotFoundException e) {
-			return null;
-		}
 	}
 
 	private static void setText(@Nullable final JLabel instance, @Nullable final String text) {
