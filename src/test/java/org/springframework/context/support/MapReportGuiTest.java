@@ -75,11 +75,10 @@ class MapReportGuiTest {
 
 	private static Method METHOD_IS_ALL_ATTRIBUTES_MATCHED, METHOD_REMOVE_ROW, METHOD_ADD_ROW,
 			METHOD_GET_PREFERRED_WIDTH, METHOD_DOUBLE_VALUE, METHOD_AS_MAP, METHOD_GET_VALUES, METHOD_OR_ELSE,
-			METHOD_MAX, METHOD_MAP_TO_INT, METHOD_CREATE_MULTI_MAP, METHOD_IS_ASSIGNABLE_FROM, METHOD_TO_LIST,
-			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_ADD_ACTION_LISTENER, METHOD_LENGTH,
-			METHOD_TEST_AND_APPLY, METHOD_CREATE_MULTIMAP, METHOD_CLEAR, METHOD_TEST_AND_ACCEPT3,
-			METHOD_TEST_AND_ACCEPT4, METHOD_WRITER_WITH_DEFAULT_PRETTY_PRINTER, METHOD_WRITER,
-			METHOD_WRITE_VALUE_AS_STRING = null;
+			METHOD_MAX, METHOD_MAP_TO_INT, METHOD_CREATE_MULTI_MAP, METHOD_TO_LIST, METHOD_GET_SYSTEM_CLIP_BOARD,
+			METHOD_SET_CONTENTS, METHOD_ADD_ACTION_LISTENER, METHOD_LENGTH, METHOD_TEST_AND_APPLY,
+			METHOD_CREATE_MULTIMAP, METHOD_CLEAR, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4,
+			METHOD_WRITER_WITH_DEFAULT_PRETTY_PRINTER, METHOD_WRITER, METHOD_WRITE_VALUE_AS_STRING = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -110,9 +109,6 @@ class MapReportGuiTest {
 		(METHOD_MAP_TO_INT = clz.getDeclaredMethod("mapToInt", Stream.class, ToIntFunction.class)).setAccessible(true);
 		//
 		(METHOD_CREATE_MULTI_MAP = clz.getDeclaredMethod("createMultimap", Iterable.class)).setAccessible(true);
-		//
-		(METHOD_IS_ASSIGNABLE_FROM = clz.getDeclaredMethod("isAssignableFrom", Class.class, Class.class))
-				.setAccessible(true);
 		//
 		(METHOD_TO_LIST = clz.getDeclaredMethod("toList", Stream.class)).setAccessible(true);
 		//
@@ -780,29 +776,6 @@ class MapReportGuiTest {
 				return (Multimap) obj;
 			}
 			throw new Throwable(Util.toString(obj.getClass()));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testIsAssignableFrom() throws Throwable {
-		//
-		Assertions.assertFalse(isAssignableFrom(null, null));
-		//
-		Assertions.assertTrue(isAssignableFrom(Object.class, Object.class));
-		//
-		Assertions.assertFalse(isAssignableFrom(String.class, Object.class));
-		//
-	}
-
-	private static boolean isAssignableFrom(final Class<?> a, final Class<?> b) throws Throwable {
-		try {
-			final Object obj = METHOD_IS_ASSIGNABLE_FROM.invoke(null, a, b);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
-			}
-			throw new Throwable(Util.toString(obj != null ? obj.getClass() : null));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

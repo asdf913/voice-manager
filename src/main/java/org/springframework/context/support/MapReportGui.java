@@ -614,10 +614,10 @@ public class MapReportGui extends JFrame
 				//
 			} // if
 				//
-			if (((isAssignableFrom(FactoryBean.class, clz = Util.forName(bd.getBeanClassName()))
+			if (((Util.isAssignableFrom(FactoryBean.class, clz = Util.forName(bd.getBeanClassName()))
 					&& (fb = Util.cast(FactoryBean.class, Narcissus.allocateInstance(clz))) != null
-					&& isAssignableFrom(classToBeFound, fb.getObjectType())) || isAssignableFrom(classToBeFound, clz))
-					&& isAllAttributesMatched(attributes, bd)) {
+					&& Util.isAssignableFrom(classToBeFound, fb.getObjectType()))
+					|| Util.isAssignableFrom(classToBeFound, clz)) && isAllAttributesMatched(attributes, bd)) {
 				//
 				Util.add(multimapBeanDefinitionNames = ObjectUtils.getIfNull(multimapBeanDefinitionNames,
 						ArrayList::new), beanDefinitionName);
@@ -628,10 +628,6 @@ public class MapReportGui extends JFrame
 			//
 		return multimapBeanDefinitionNames;
 		//
-	}
-
-	private static boolean isAssignableFrom(@Nullable final Class<?> a, @Nullable final Class<?> b) {
-		return a != null && b != null && a.isAssignableFrom(b);
 	}
 
 	private static boolean isAllAttributesMatched(@Nullable final Map<?, ?> attributes,

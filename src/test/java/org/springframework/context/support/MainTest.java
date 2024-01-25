@@ -48,8 +48,7 @@ class MainTest {
 	private static Method METHOD_GET_INSTANCE, METHOD_SHOW_MESSAGE_DIALOG_OR_PRINT_LN, METHOD_GET_BEAN_NAMES_FOR_TYPE,
 			METHOD_GET_BEAN_CLASS_NAME, METHOD_PACK, METHOD_SET_VISIBLE, METHOD_TEST_AND_APPLY,
 			METHOD_GET_SELECTED_VALUE, METHOD_GET_CLASS3, METHOD_IS_RAISE_THROWABLE_ONLY,
-			METHOD_ERROR_OR_PRINT_STACK_TRACE, METHOD_GET_CLASS_NAME, METHOD_GET_METHOD,
-			METHOD_IS_ASSIGNABLE_FROM = null;
+			METHOD_ERROR_OR_PRINT_STACK_TRACE, METHOD_GET_CLASS_NAME, METHOD_GET_METHOD = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -90,9 +89,6 @@ class MainTest {
 				.setAccessible(true);
 		//
 		(METHOD_GET_METHOD = clz.getDeclaredMethod("getMethod", Class.class, String.class, Class[].class))
-				.setAccessible(true);
-		//
-		(METHOD_IS_ASSIGNABLE_FROM = clz.getDeclaredMethod("isAssignableFrom", Class.class, Class.class))
 				.setAccessible(true);
 		//
 	}
@@ -583,29 +579,6 @@ class MainTest {
 				return null;
 			} else if (obj instanceof Method) {
 				return (Method) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testIsAssignableFrom() throws Throwable {
-		//
-		Assertions.assertFalse(isAssignableFrom(null, null));
-		//
-		Assertions.assertFalse(isAssignableFrom(Object.class, null));
-		//
-		Assertions.assertFalse(isAssignableFrom(CharSequence.class, Object.class));
-		//
-	}
-
-	private static boolean isAssignableFrom(final Class<?> a, final Class<?> b) throws Throwable {
-		try {
-			final Object obj = METHOD_IS_ASSIGNABLE_FROM.invoke(null, a, b);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

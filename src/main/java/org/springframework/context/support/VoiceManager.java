@@ -1133,10 +1133,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-			if (((isAssignableFrom(FactoryBean.class, clz = Util.forName(bd.getBeanClassName()))
+			if (((Util.isAssignableFrom(FactoryBean.class, clz = Util.forName(bd.getBeanClassName()))
 					&& (fb = Util.cast(FactoryBean.class, Narcissus.allocateInstance(clz))) != null
-					&& isAssignableFrom(classToBeFound, fb.getObjectType())) || isAssignableFrom(classToBeFound, clz))
-					&& isAllAttributesMatched(attributes, bd)) {
+					&& Util.isAssignableFrom(classToBeFound, fb.getObjectType()))
+					|| Util.isAssignableFrom(classToBeFound, clz)) && isAllAttributesMatched(attributes, bd)) {
 				//
 				Util.add(multimapBeanDefinitionNames = ObjectUtils.getIfNull(multimapBeanDefinitionNames,
 						ArrayList::new), beanDefinitionName);
@@ -1239,7 +1239,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					testAndApply(VoiceManager::isStatic, f, Narcissus::getStaticField,
 							a -> testAndApply(Objects::nonNull, instance, b -> Narcissus.getField(b, f), null)));
 			//
-			if (number != null || isAssignableFrom(Number.class, Util.getType(f))) {
+			if (number != null || Util.isAssignableFrom(Number.class, Util.getType(f))) {
 				//
 				result = Unit.with(number);
 				//
@@ -9726,7 +9726,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					() -> getRate(toList(Util.filter(
 							testAndApply(Objects::nonNull, getDeclaredFields(Integer.class), Arrays::stream, null),
 							f -> f != null
-									&& (isAssignableFrom(Number.class, Util.getType(f))
+									&& (Util.isAssignableFrom(Number.class, Util.getType(f))
 											|| Objects.equals(Integer.TYPE, Util.getType(f)))
 									&& Objects.equals(Util.getName(f), string)))));
 			//
@@ -9776,10 +9776,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Nullable
 	private static Integer getRate(@Nullable final VoiceManager instance) {
 		return instance != null ? instance.getRate() : null;
-	}
-
-	private static boolean isAssignableFrom(@Nullable final Class<?> a, @Nullable final Class<?> b) {
-		return a != null && b != null && a.isAssignableFrom(b);
 	}
 
 	@Nullable
@@ -9913,7 +9909,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				addValidationDataForBoolean(objectMap, booleans, i);
 				//
-			} else if (isAssignableFrom(Enum.class, type)) {// java.lang.Enum
+			} else if (Util.isAssignableFrom(Enum.class, type)) {// java.lang.Enum
 				//
 				ObjectMap.setObject(objectMap, DataValidationHelper.class,
 						dvh = getIfNull(dvh, () -> getDataValidationHelper(sheet)));
@@ -10733,7 +10729,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-		} else if (isAssignableFrom(Enum.class, type) && (list = toList(
+		} else if (Util.isAssignableFrom(Enum.class, type) && (list = toList(
 				Util.filter(testAndApply(Objects::nonNull, getEnumConstants(type), Arrays::stream, null), e -> {
 					//
 					final String name = name(Util.cast(Enum.class, e));
@@ -13368,8 +13364,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				fs = toList(sorted(Util.filter(
 						testAndApply(Objects::nonNull, FieldUtils.getAllFields(LocaleID.class), Arrays::stream, null),
-						x -> x != null && !Objects.equals(Util.getType(x), Util.getDeclaringClass(x)) && !x.isSynthetic()
-								&& !isStatic(x)),
+						x -> x != null && !Objects.equals(Util.getType(x), Util.getDeclaringClass(x))
+								&& !x.isSynthetic() && !isStatic(x)),
 						(a, b) -> StringUtils.compare(getName(getPackage(Util.getDeclaringClass(a))),
 								getName(getPackage(Util.getDeclaringClass(b))))));
 				//

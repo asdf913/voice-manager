@@ -113,4 +113,11 @@ class UtilTest {
 		//
 	}
 
+	@Test
+	void testIsAssignableFrom() {
+		//
+		Assertions.assertFalse(Util.isAssignableFrom(null, null));
+		//
+	}
+
 }

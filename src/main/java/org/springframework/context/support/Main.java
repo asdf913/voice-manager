@@ -298,7 +298,7 @@ public class Main {
 				//
 				final Class<?> c = Util.forName(className);
 				//
-				if (isAssignableFrom(Throwable.class, c)) {
+				if (Util.isAssignableFrom(Throwable.class, c)) {
 					//
 					return true;
 					//
@@ -314,10 +314,6 @@ public class Main {
 			//
 		return false;
 		//
-	}
-
-	private static boolean isAssignableFrom(@Nullable final Class<?> a, @Nullable final Class<?> b) {
-		return a != null && b != null && a.isAssignableFrom(b);
 	}
 
 	@Nullable
