@@ -255,15 +255,15 @@ public abstract class Util {
 		return instance != null && instance.test(value);
 	}
 
-	private static <T, R> R apply(final Function<T, R> instance, final T value) {
+	private static <T, R> R apply(@Nullable final Function<T, R> instance, final T value) {
 		return instance != null ? instance.apply(value) : null;
 	}
 
-	private static Field[] getDeclaredFields(final Class<?> instance) {
+	private static Field[] getDeclaredFields(@Nullable final Class<?> instance) {
 		return instance != null ? instance.getDeclaredFields() : null;
 	}
 
-	private static <T> List<T> toList(final Stream<T> instance) {
+	private static <T> List<T> toList(@Nullable final Stream<T> instance) {
 		return instance != null ? instance.toList() : null;
 	}
 
