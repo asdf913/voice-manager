@@ -350,7 +350,7 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 		// Check if "handler" field in "java.net.URL" class is null or not
 		//
 		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, Util
-				.filter(Arrays.stream(URL.class.getDeclaredFields()), x -> Objects.equals(Util.getName(x), "handler"))
+				.filter(Arrays.stream(Util.getDeclaredFields(URL.class)), x -> Objects.equals(Util.getName(x), "handler"))
 				.toList(), x -> IterableUtils.get(x, 0), null);
 		//
 		if (instance != null && f != null && Narcissus.getObjectField(instance, f) == null) {

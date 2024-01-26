@@ -1202,9 +1202,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			if (result == null) {
 				//
-				result = getNumber(obj, toList(Util.filter(
-						testAndApply(Objects::nonNull, getDeclaredFields(Util.getClass(obj)), Arrays::stream, null),
-						x -> Objects.equals(Util.getName(x), "defaultCloseOperation"))));
+				result = getNumber(obj,
+						toList(Util.filter(
+								testAndApply(Objects::nonNull, Util.getDeclaredFields(Util.getClass(obj)),
+										Arrays::stream, null),
+								x -> Objects.equals(Util.getName(x), "defaultCloseOperation"))));
 				//
 			} else {
 				//
@@ -2507,7 +2509,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		// https://java-native-access.github.io/jna/5.6.0/javadoc/com/sun/jna/platform/win32/Kernel32.html#INSTANCE
 		//
 		final List<Field> fs = toList(
-				Util.filter(testAndApply(Objects::nonNull, getDeclaredFields(clz), Arrays::stream, null),
+				Util.filter(testAndApply(Objects::nonNull, Util.getDeclaredFields(clz), Arrays::stream, null),
 						f -> Objects.equals(Util.getName(f), "INSTANCE") && Objects.equals(Util.getType(f), clz)
 								&& isStatic(f)));
 		//
@@ -2539,7 +2541,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static Object getInstance(final SpeechApi speechApi) {
 		//
 		final List<Field> fs = toList(Util.filter(
-				testAndApply(Objects::nonNull, getDeclaredFields(Util.getClass(speechApi)), Arrays::stream, null),
+				testAndApply(Objects::nonNull, Util.getDeclaredFields(Util.getClass(speechApi)), Arrays::stream, null),
 				f -> Objects.equals(Util.getName(f), "instance")));
 		//
 		final Field f = IterableUtils.size(fs) == 1 ? get(fs, 0) : null;
@@ -3994,7 +3996,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		List<Boolean> list = null;
 		//
 		final List<Field> fs = toList(
-				Util.filter(testAndApply(Objects::nonNull, getDeclaredFields(Boolean.class), Arrays::stream, null),
+				Util.filter(testAndApply(Objects::nonNull, Util.getDeclaredFields(Boolean.class), Arrays::stream, null),
 						f -> Objects.equals(Util.getType(f), Boolean.class)));
 		//
 		Field f = null;
@@ -4013,11 +4015,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return list;
 		//
-	}
-
-	@Nullable
-	private static Field[] getDeclaredFields(@Nullable final Class<?> instance) {
-		return instance != null ? instance.getDeclaredFields() : null;
 	}
 
 	private JPanel createBatchImportPanel(final LayoutManager layoutManager) {
@@ -4937,7 +4934,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			if (declaredClass == null
 					//
 					|| (fs = toList(Util.filter(
-							testAndApply(Objects::nonNull, getDeclaredFields(declaredClass), Arrays::stream, null),
+							testAndApply(Objects::nonNull, Util.getDeclaredFields(declaredClass), Arrays::stream, null),
 							x -> Objects.equals(Util.getType(x), declaredClass)))) == null
 					|| IterableUtils.size(fs) != 1 || (f = get(fs, 0)) == null
 					//
@@ -4992,7 +4989,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final Class<?> nameClass = Util.forName("domain.Voice$Name");
 		//
-		final Stream<Field> stream = testAndApply(Objects::nonNull, getDeclaredFields(Yomi.class), Arrays::stream,
+		final Stream<Field> stream = testAndApply(Objects::nonNull, Util.getDeclaredFields(Yomi.class), Arrays::stream,
 				null);
 		//
 		return createYomiNameMap(toList(
@@ -5354,7 +5351,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final boolean headless = GraphicsEnvironment.isHeadless();
 		//
-		if (anyMatch(Util.stream(findFieldsByValue(getDeclaredFields(getClass()), this, source)),
+		if (anyMatch(Util.stream(findFieldsByValue(Util.getDeclaredFields(getClass()), this, source)),
 				f -> isAnnotationPresent(f, ExportButton.class))) {
 			//
 			Util.setText(tfExportFile, null);
@@ -5369,9 +5366,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		// "@SystemClipboard", pass the "source" to
 		// "actionPerformedForSystemClipboardAnnotated(java.lang.Object)" method
 		//
-		final FailableStream<Field> fs = new FailableStream<>(
-				Util.filter(testAndApply(Objects::nonNull, getDeclaredFields(VoiceManager.class), Arrays::stream, null),
-						f -> isAnnotationPresent(f, SystemClipboard.class)));
+		final FailableStream<Field> fs = new FailableStream<>(Util.filter(
+				testAndApply(Objects::nonNull, Util.getDeclaredFields(VoiceManager.class), Arrays::stream, null),
+				f -> isAnnotationPresent(f, SystemClipboard.class)));
 		//
 		testAndRun(contains(toList(Util.filter(
 				FailableStreamUtil.stream(FailableStreamUtil.map(fs, f -> FieldUtils.readField(f, this, true))),
@@ -5675,7 +5672,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static List<?> getObjectsByGroupAnnotation(final Object instance, final String group) {
 		//
 		final FailableStream<Field> fs = new FailableStream<>(Util.filter(
-				testAndApply(Objects::nonNull, getDeclaredFields(VoiceManager.class), Arrays::stream, null), f -> {
+				testAndApply(Objects::nonNull, Util.getDeclaredFields(VoiceManager.class), Arrays::stream, null), f -> {
 					final Group g = isAnnotationPresent(f, Group.class) ? f.getAnnotation(Group.class) : null;
 					return StringUtils.equals(g != null ? g.value() : null, group);
 				}));
@@ -6387,7 +6384,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
-		final List<Field> fs = toList(Util.filter(Arrays.stream(getDeclaredFields(URL.class)),
+		final List<Field> fs = toList(Util.filter(Arrays.stream(Util.getDeclaredFields(URL.class)),
 				f -> Objects.equals(Util.getName(f), HANDLER)));
 		//
 		final int size = IterableUtils.size(fs);
@@ -8062,7 +8059,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static PrintStream getSystemPrintStreamByFieldName(final String name) throws IllegalAccessException {
 		//
 		final List<Field> fs = toList(Util.filter(
-				testAndApply(Objects::nonNull, System.class.getDeclaredFields(), Arrays::stream, null),
+				testAndApply(Objects::nonNull, Util.getDeclaredFields(System.class), Arrays::stream, null),
 				f -> Objects.equals(Util.getType(f), PrintStream.class) && Objects.equals(Util.getName(f), name)));
 		//
 		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
@@ -9697,7 +9694,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			rate = getIfNull(rate,
 					() -> getRate(toList(Util.filter(
-							testAndApply(Objects::nonNull, getDeclaredFields(Integer.class), Arrays::stream, null),
+							testAndApply(Objects::nonNull, Util.getDeclaredFields(Integer.class), Arrays::stream, null),
 							f -> f != null
 									&& (Util.isAssignableFrom(Number.class, Util.getType(f))
 											|| Objects.equals(Integer.TYPE, Util.getType(f)))
@@ -11901,7 +11898,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 		private static void setStringFieldDefaultValue(@Nullable final Object instance) {
 			//
-			final Field[] fs = getDeclaredFields(Util.getClass(instance));
+			final Field[] fs = Util.getDeclaredFields(Util.getClass(instance));
 			//
 			Field f = null;
 			//

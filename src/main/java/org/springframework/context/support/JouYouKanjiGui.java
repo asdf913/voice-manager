@@ -316,7 +316,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		List<Boolean> list = null;
 		//
 		final List<Field> fs = toList(
-				Util.filter(testAndApply(Objects::nonNull, getDeclaredFields(Boolean.class), Arrays::stream, null),
+				Util.filter(testAndApply(Objects::nonNull, Util.getDeclaredFields(Boolean.class), Arrays::stream, null),
 						f -> Objects.equals(Util.getType(f), Boolean.class)));
 		//
 		Field f = null;
@@ -341,11 +341,6 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 	private static Object get(@Nullable final Field field, @Nullable final Object instance)
 			throws IllegalAccessException {
 		return field != null ? field.get(instance) : null;
-	}
-
-	@Nullable
-	private static Field[] getDeclaredFields(@Nullable final Class<?> instance) {
-		return instance != null ? instance.getDeclaredFields() : null;
 	}
 
 	@Nullable
@@ -648,9 +643,9 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		//
 		final CSSExpression cssExpression = instance != null ? instance.getExpression() : null;
 		//
-		final List<Field> fs = toList(Util.filter(
-				testAndApply(Objects::nonNull, getDeclaredFields(Util.getClass(cssExpression)), Arrays::stream, null),
-				f -> Objects.equals(Util.getName(f), "m_aMembers")));
+		final List<Field> fs = toList(
+				Util.filter(testAndApply(Objects::nonNull, Util.getDeclaredFields(Util.getClass(cssExpression)),
+						Arrays::stream, null), f -> Objects.equals(Util.getName(f), "m_aMembers")));
 		//
 		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
 		//
