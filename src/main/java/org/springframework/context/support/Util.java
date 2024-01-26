@@ -251,7 +251,7 @@ public abstract class Util {
 		return test(predicate, value) ? apply(functionTrue, value) : apply(functionFalse, value);
 	}
 
-	private static final <T> boolean test(@Nullable final Predicate<T> instance, @Nullable final T value) {
+	static final <T> boolean test(@Nullable final Predicate<T> instance, @Nullable final T value) {
 		return instance != null && instance.test(value);
 	}
 

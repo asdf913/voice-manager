@@ -188,7 +188,7 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 
 	private static <T, E extends Throwable> void testAndAccept(final Predicate<T> predicate, final T value,
 			@Nullable final Consumer<T> consumer) throws E {
-		if (test(predicate, value) && consumer != null) {
+		if (Util.test(predicate, value) && consumer != null) {
 			consumer.accept(value);
 		}
 	}
@@ -340,12 +340,8 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, @Nullable final T value,
 			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
 			throws E {
-		return test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
+		return Util.test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
-	}
-
-	private static final <T> boolean test(@Nullable final Predicate<T> instance, @Nullable final T value) {
-		return instance != null && instance.test(value);
 	}
 
 	@Nullable

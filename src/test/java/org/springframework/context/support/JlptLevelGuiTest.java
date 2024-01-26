@@ -95,7 +95,7 @@ class JlptLevelGuiTest {
 
 	private static final String EMPTY = "";
 
-	private static Method METHOD_TO_ARRAY_COLLECTION, METHOD_TO_ARRAY_INT_LIST, METHOD_TEST, METHOD_GET_PREFERRED_SIZE,
+	private static Method METHOD_TO_ARRAY_COLLECTION, METHOD_TO_ARRAY_INT_LIST, METHOD_GET_PREFERRED_SIZE,
 			METHOD_SET_PREFERRED_WIDTH, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_TEST_AND_APPLY, METHOD_SET_CONTENTS,
 			METHOD_ADD_ACTION_LISTENER, METHOD_GET_DECLARED_METHODS, METHOD_TO_LIST, METHOD_INVOKE, METHOD_IIF,
 			METHOD_GET_PARAMETER_TYPES, METHOD_RUN, METHOD_SET_JLPT_VOCABULARY_AND_LEVEL, METHOD_GET_LEVEL,
@@ -112,8 +112,6 @@ class JlptLevelGuiTest {
 				.setAccessible(true);
 		//
 		(METHOD_TO_ARRAY_INT_LIST = clz.getDeclaredMethod("toArray", IntList.class)).setAccessible(true);
-		//
-		(METHOD_TEST = clz.getDeclaredMethod("test", Predicate.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_GET_PREFERRED_SIZE = clz.getDeclaredMethod("getPreferredSize", Component.class)).setAccessible(true);
 		//
@@ -649,25 +647,6 @@ class JlptLevelGuiTest {
 
 	private static String toString(final Object instance) {
 		return instance != null ? instance.toString() : null;
-	}
-
-	@Test
-	void testTest() throws Throwable {
-		//
-		Assertions.assertFalse(test(null, null));
-		//
-	}
-
-	private static final <T> boolean test(final Predicate<T> instance, final T value) throws Throwable {
-		try {
-			final Object obj = METHOD_TEST.invoke(null, instance, value);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test

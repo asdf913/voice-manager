@@ -2966,7 +2966,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final FailableFunction<String, Object, RuntimeException> function = a -> get(lookup, "rate", a);
 		//
-		if (Boolean.logicalAnd(test(predicate, "min"), test(predicate, "max"))) {
+		if (Boolean.logicalAnd(Util.test(predicate, "min"), Util.test(predicate, "max"))) {
 			//
 			addSpeedButtons(this, panel, createRange(toInteger(testAndApply(predicate, "min", function, null)),
 					toInteger(testAndApply(predicate, "max", function, null))));
@@ -5287,7 +5287,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static <T, R, E extends Throwable> R testAndApply(@Nullable final Predicate<T> predicate,
 			@Nullable final T value, final FailableFunction<T, R, E> functionTrue,
 			@Nullable final FailableFunction<T, R, E> functionFalse) throws E {
-		return test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
+		return Util.test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
@@ -7910,7 +7910,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static <T, E extends Throwable> void testAndAccept(final Predicate<T> predicate, @Nullable final T value,
 			@Nullable final FailableConsumer<T, E> consumer) throws E {
-		if (test(predicate, value) && consumer != null) {
+		if (Util.test(predicate, value) && consumer != null) {
 			consumer.accept(value);
 		}
 	}
@@ -9489,7 +9489,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		for (int i = 0; i < IterableUtils.size(pairs); i++) {
 			//
-			if (test(predicate, string = Util.toString(Util.getValue(Util.cast(Pair.class, get(pairs, i)))))
+			if (Util.test(predicate, string = Util.toString(Util.getValue(Util.cast(Pair.class, get(pairs, i)))))
 					|| predicate == null) {
 				//
 				break;
@@ -9500,10 +9500,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return string;
 		//
-	}
-
-	private static final <T> boolean test(@Nullable final Predicate<T> instance, @Nullable final T value) {
-		return instance != null && instance.test(value);
 	}
 
 	@Nullable
@@ -14137,7 +14133,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static <T> boolean and(final Predicate<T> predicate, @Nullable final T a, @Nullable final T b,
 			@Nullable final T... values) {
 		//
-		boolean result = test(predicate, a) && test(predicate, b);
+		boolean result = Util.test(predicate, a) && Util.test(predicate, b);
 		//
 		if (!result) {
 			//
@@ -14147,7 +14143,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		for (int i = 0; values != null && i < values.length; i++) {
 			//
-			result &= test(predicate, values[i]);
+			result &= Util.test(predicate, values[i]);
 			//
 		} // for
 			//
@@ -14157,7 +14153,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static <T> boolean or(final Predicate<T> predicate, final T a, final T b, @Nullable final T... values) {
 		//
-		boolean result = test(predicate, a) || test(predicate, b);
+		boolean result = Util.test(predicate, a) || Util.test(predicate, b);
 		//
 		if (result) {
 			//
@@ -14167,7 +14163,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		for (int i = 0; values != null && i < values.length; i++) {
 			//
-			result |= test(predicate, values[i]);
+			result |= Util.test(predicate, values[i]);
 			//
 		} // for
 			//
