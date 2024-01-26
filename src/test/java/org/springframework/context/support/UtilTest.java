@@ -7,6 +7,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -26,7 +28,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class UtilTest {
 
-	private static Method METHOD_GET_JAVA_IO_FILE_SYSTEM_FIELD, METHOD_TEST = null;
+	private static Method METHOD_GET_JAVA_IO_FILE_SYSTEM_FIELD, METHOD_TEST, METHOD_CONTAINS = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -37,6 +39,8 @@ class UtilTest {
 				.setAccessible(true);
 		//
 		(METHOD_TEST = clz.getDeclaredMethod("test", Predicate.class, Object.class)).setAccessible(true);
+		//
+		(METHOD_CONTAINS = clz.getDeclaredMethod("contains", Collection.class, Object.class)).setAccessible(true);
 		//
 	}
 
@@ -202,6 +206,27 @@ class UtilTest {
 	private static final <T> boolean test(final Predicate<T> instance, final T value) throws Throwable {
 		try {
 			final Object obj = METHOD_TEST.invoke(null, instance, value);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testContains() throws Throwable {
+		//
+		Assertions.assertFalse(contains(null, null));
+		//
+		Assertions.assertFalse(contains(Collections.emptyList(), null));
+		//
+	}
+
+	private static boolean contains(final Collection<?> items, final Object item) throws Throwable {
+		try {
+			final Object obj = METHOD_CONTAINS.invoke(null, items, item);
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
