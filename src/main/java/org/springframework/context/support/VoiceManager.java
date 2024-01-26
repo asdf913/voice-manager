@@ -6506,7 +6506,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 				} else if (size > 1 && function != null) {
 					//
-					iValue0 = function.apply(collection);
+					iValue0 = Util.apply(function, collection);
 					//
 				} // if
 					//
@@ -6544,7 +6544,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} else if (!Objects.equals(IValue0Util.getValue0(iValue0), value)) {
 					//
-					final IValue0<?> iv0 = apply(function, getValueCollectionByKey(maps, key));
+					final IValue0<?> iv0 = Util.apply(function, getValueCollectionByKey(maps, key));
 					//
 					if (iv0 != null) {
 						//
@@ -7748,7 +7748,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				try (final Writer writer = testAndApply(
 						Objects::nonNull, file = testAndApply(Objects::nonNull,
-								Util.toString(apply(Util.getValue(filePair), key)), File::new, null),
+								Util.toString(Util.apply(Util.getValue(filePair), key)), File::new, null),
 						FileWriter::new, null)) {
 					//
 					ObjectMap.setObject(objectMap, Writer.class, writer);
@@ -7791,11 +7791,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
-	}
-
-	@Nullable
-	private static <T, R> R apply(@Nullable final Function<T, R> instance, @Nullable final T t) {
-		return instance != null ? instance.apply(t) : null;
 	}
 
 	private static void exportHtml(final ObjectMap objectMap, @Nullable final String templateFile,

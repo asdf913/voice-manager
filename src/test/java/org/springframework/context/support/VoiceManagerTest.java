@@ -365,9 +365,9 @@ class VoiceManagerTest {
 			METHOD_SET_FOCUS_CYCLE_ROOT, METHOD_SET_FOCUS_TRAVERSAL_POLICY, METHOD_GET_COMPONENTS,
 			METHOD_GET_WORKBOOK_CLASS_FAILABLE_SUPPLIER_MAP, METHOD_GET_DECLARED_CONSTRUCTOR, METHOD_NEW_INSTANCE,
 			METHOD_GET_WRITER, METHOD_KEY_SET, METHOD_GET_WORK_BOOK_CLASS, METHOD_GET_SYSTEM_PRINT_STREAM_BY_FIELD_NAME,
-			METHOD_IF_ELSE, METHOD_GET_PAGE_TITLE, METHOD_SET_HIRAGANA_OR_KATAKANA_AND_ROMAJI, METHOD_APPLY,
-			METHOD_TO_MILLIS, METHOD_SET_JLPT_VOCABULARY_AND_LEVEL, METHOD_ADD_DOCUMENT_LISTENER, METHOD_GET_LEVEL,
-			METHOD_ADD_ALL, METHOD_PLAY_AUDIO, METHOD_PLAY, METHOD_PRONOUNICATION_CHANGED, METHOD_REMOVE_ELEMENT_AT,
+			METHOD_IF_ELSE, METHOD_GET_PAGE_TITLE, METHOD_SET_HIRAGANA_OR_KATAKANA_AND_ROMAJI, METHOD_TO_MILLIS,
+			METHOD_SET_JLPT_VOCABULARY_AND_LEVEL, METHOD_ADD_DOCUMENT_LISTENER, METHOD_GET_LEVEL, METHOD_ADD_ALL,
+			METHOD_PLAY_AUDIO, METHOD_PLAY, METHOD_PRONOUNICATION_CHANGED, METHOD_REMOVE_ELEMENT_AT,
 			METHOD_ACTION_PERFORMED_FOR_BTN_IMPORT, METHOD_CREATE_PRONUNCIATION_LIST_CELL_RENDERER,
 			METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_GET_FILE,
 			METHOD_GET_PRONUNCIATION_AUDIO_FILE_BY_AUDIO_FORMAT, METHOD_GET_AUDIO_FILE3, METHOD_GET_AUDIO_FILE4,
@@ -989,8 +989,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_SET_HIRAGANA_OR_KATAKANA_AND_ROMAJI = clz.getDeclaredMethod("setHiraganaOrKatakanaAndRomaji",
 				Boolean.TYPE, Boolean.TYPE, Voice.class, Jakaroma.class)).setAccessible(true);
-		//
-		(METHOD_APPLY = clz.getDeclaredMethod("apply", Function.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_TO_MILLIS = clz.getDeclaredMethod("toMillis", Duration.class)).setAccessible(true);
 		//
@@ -9118,21 +9116,6 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testApply() throws Throwable {
-		//
-		Assertions.assertNull(apply(null, null));
-		//
-	}
-
-	private static <T, R> R apply(final Function<T, R> instance, final T t) throws Throwable {
-		try {
-			return (R) METHOD_APPLY.invoke(null, instance, t);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testToMillis() throws Throwable {
 		//
 		final double second = 1.234;
@@ -9565,15 +9548,15 @@ class VoiceManagerTest {
 		//
 		final Function<Collection<?>, IValue0<?>> function = createFunctionForBtnConvertToHiraganaOrKatakana(null);
 		//
-		Assertions.assertNull(apply(function, null));
+		Assertions.assertNull(Util.apply(function, null));
 		//
-		Assertions.assertNull(apply(function, Collections.emptySet()));
+		Assertions.assertNull(Util.apply(function, Collections.emptySet()));
 		//
-		Assertions.assertEquals(Unit.with(EMPTY), apply(function, Collections.singleton(EMPTY)));
+		Assertions.assertEquals(Unit.with(EMPTY), Util.apply(function, Collections.singleton(EMPTY)));
 		//
 		if (GraphicsEnvironment.isHeadless()) {
 			//
-			Assertions.assertNull(apply(function, Collections.nCopies(TWO, null)));
+			Assertions.assertNull(Util.apply(function, Collections.nCopies(TWO, null)));
 			//
 		} // if
 			//

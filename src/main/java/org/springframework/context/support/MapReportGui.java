@@ -276,12 +276,7 @@ public class MapReportGui extends JFrame
 
 	private static <T, R, E extends Throwable> R testAndApply(@Nullable final Predicate<T> predicate, final T value,
 			final Function<T, R> functionTrue, final Function<T, R> functionFalse) throws E {
-		return Util.test(predicate, value) ? apply(functionTrue, value) : apply(functionFalse, value);
-	}
-
-	@Nullable
-	private static <T, R> R apply(@Nullable final Function<T, R> instance, final T value) {
-		return instance != null ? instance.apply(value) : null;
+		return Util.test(predicate, value) ? Util.apply(functionTrue, value) : Util.apply(functionFalse, value);
 	}
 
 	@Nullable
