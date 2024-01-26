@@ -232,7 +232,7 @@ public abstract class Util {
 		//
 	}
 
-	private static boolean contains(final Collection<?> items, final Object item) {
+	private static boolean contains(@Nullable final Collection<?> items, final Object item) {
 		return items != null && items.contains(item);
 	}
 
@@ -251,7 +251,7 @@ public abstract class Util {
 		return test(predicate, value) ? apply(functionTrue, value) : apply(functionFalse, value);
 	}
 
-	private static final <T> boolean test(final Predicate<T> instance, final T value) {
+	private static final <T> boolean test(@Nullable final Predicate<T> instance, final T value) {
 		return instance != null && instance.test(value);
 	}
 
