@@ -218,7 +218,7 @@ public abstract class Util {
 			//
 		} // if
 			//
-		if (Objects.equals("java.io.WinNTFileSystem", getName(getClass(fs)))) {
+		if (contains(Arrays.asList("java.io.WinNTFileSystem", "java.io.UnixFileSystem"), getName(getClass(fs)))) {
 			//
 			if (instance.getPath() == null) {
 				//
@@ -230,6 +230,10 @@ public abstract class Util {
 			//
 		return instance.getAbsolutePath();
 		//
+	}
+
+	private static boolean contains(final Collection<?> items, final Object item) {
+		return items != null && items.contains(item);
 	}
 
 	private static Field getJavaIoFileSystemField(final Object instance) {
