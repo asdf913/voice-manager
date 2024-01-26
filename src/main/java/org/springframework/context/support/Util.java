@@ -234,6 +234,7 @@ public abstract class Util {
 		return items != null && items.contains(item);
 	}
 
+	@Nullable
 	private static Field getJavaIoFileSystemField(final Object instance) {
 		//
 		final List<Field> fields = toList(
