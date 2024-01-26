@@ -219,14 +219,11 @@ public abstract class Util {
 			//
 		} // if
 			//
-		if (contains(Arrays.asList("java.io.WinNTFileSystem", "java.io.UnixFileSystem"), getName(getClass(fs)))) {
+		if (contains(Arrays.asList("java.io.WinNTFileSystem", "java.io.UnixFileSystem"), getName(getClass(fs)))
+				&& instance.getPath() == null) {
 			//
-			if (instance.getPath() == null) {
-				//
-				return null;
-				//
-			} // if
-				//
+			return null;
+			//
 		} // if
 			//
 		return instance.getAbsolutePath();
