@@ -201,6 +201,7 @@ public abstract class Util {
 		}
 	}
 
+	@Nullable
 	static String getAbsolutePath(@Nullable final File instance) {
 		//
 		if (instance == null) {
