@@ -230,7 +230,7 @@ public abstract class Util {
 		//
 	}
 
-	private static boolean contains(@Nullable final Collection<?> items, final Object item) {
+	private static boolean contains(@Nullable final Collection<?> items, @Nullable final Object item) {
 		return items != null && items.contains(item);
 	}
 
