@@ -370,7 +370,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 				//
 				WorkbookUtil.write(workbook, os);
 				//
-				Util.setText(tfExportFile, getAbsolutePath(file));
+				Util.setText(tfExportFile, Util.getAbsolutePath(file));
 				//
 			} catch (final IOException e) {
 				//
@@ -567,11 +567,6 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 			//
 		} // if
 			//
-	}
-
-	@Nullable
-	private static String getAbsolutePath(@Nullable final File instance) {
-		return instance != null ? instance.getAbsolutePath() : null;
 	}
 
 	private static boolean exists(@Nullable final File instance) {

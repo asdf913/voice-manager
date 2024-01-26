@@ -158,7 +158,7 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider, Lookup, I
 			int[] ints = toIntArray(text);
 			//
 			Jna.INSTANCE.writeVoiceToFile(ints, length(ints), voiceId, 0, volume,
-					ints = toIntArray(file != null ? file.getAbsolutePath() : null), length(ints));
+					ints = toIntArray(Util.getAbsolutePath(file)), length(ints));
 			//
 		} // if
 			//

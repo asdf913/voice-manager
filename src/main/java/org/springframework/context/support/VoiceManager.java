@@ -4106,8 +4106,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		if (!b) {
 			//
-			setToolTipText(btnExecute,
-					String.format("Please create \"%1$s\" folder.", folder != null ? folder.getAbsolutePath() : null));
+			setToolTipText(btnExecute, String.format("Please create \"%1$s\" folder.", Util.getAbsolutePath(folder)));
 			//
 		} // if
 			//
@@ -4127,7 +4126,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(panel,
 				tfFolder = new JTextField(
-						getAbsolutePath(testAndApply(StringUtils::isNotBlank, this.voiceFolder, File::new, null))),
+						Util.getAbsolutePath(testAndApply(StringUtils::isNotBlank, this.voiceFolder, File::new, null))),
 				String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, 3));
 		//
 		add(panel, new JLabel("File"));
@@ -4146,11 +4145,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		return panel;
 		//
-	}
-
-	@Nullable
-	private static String getAbsolutePath(@Nullable final File instance) {
-		return instance != null ? instance.getAbsolutePath() : null;
 	}
 
 	private static class MicrosoftAccessFileFormatListCellRenderer implements ListCellRenderer<Object> {
@@ -6886,7 +6880,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				WorkbookUtil.write(workbook = createMicrosoftSpeechObjectLibraryWorkbook(speechApi,
 						microsoftSpeechObjectLibraryAttributeNames), os);
 				//
-				Util.setText(tfExportFile, getAbsolutePath(file));
+				Util.setText(tfExportFile, Util.getAbsolutePath(file));
 				//
 			} catch (final IOException e) {
 				//
@@ -9627,7 +9621,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		} else if (!file.exists()) {
 			//
 			testAndAccept((a, b) -> a != null, tmImportException,
-					String.format("File \"%1$s\" does not exist", getAbsolutePath(file)),
+					String.format("File \"%1$s\" does not exist", Util.getAbsolutePath(file)),
 					//
 					(a, b) -> addRow(a, new Object[] { getText(voice), getRomaji(voice), b }),
 					//
@@ -11151,7 +11145,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} else if (!file.exists()) {
 			//
-			accept(errorMessageConsumer, voice, String.format("File \"%1$s\" does not exist", getAbsolutePath(file)));
+			accept(errorMessageConsumer, voice,
+					String.format("File \"%1$s\" does not exist", Util.getAbsolutePath(file)));
 			//
 			return false;
 			//
@@ -12010,7 +12005,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 						id3v1.setTitle(titleNew);
 						//
-						save(mp3File, getAbsolutePath(file));
+						save(mp3File, Util.getAbsolutePath(file));
 						//
 					} // if
 						//
@@ -12134,7 +12129,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 									//
 									// File
 									//
-									getAbsolutePath(file)));
+									Util.getAbsolutePath(file)));
 					//
 					maxElapsedStringLength = Math.max(maxElapsedStringLength, StringUtils.length(elapsedString));
 					//

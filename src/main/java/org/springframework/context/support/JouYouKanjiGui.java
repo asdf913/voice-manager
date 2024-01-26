@@ -377,7 +377,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 				//
 				WorkbookUtil.write(workbook, os);
 				//
-				Util.setText(tfExportFile, getAbsolutePath(file));
+				Util.setText(tfExportFile, Util.getAbsolutePath(file));
 				//
 				if (!GraphicsEnvironment.isHeadless()) {
 					//
@@ -730,11 +730,6 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		if (instance != null) {
 			instance.setFillPattern(fillPatternType);
 		}
-	}
-
-	@Nullable
-	private static String getAbsolutePath(@Nullable final File instance) {
-		return instance != null ? instance.getAbsolutePath() : null;
 	}
 
 	@Nullable

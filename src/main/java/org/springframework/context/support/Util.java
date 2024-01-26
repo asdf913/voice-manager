@@ -1,14 +1,18 @@
 package org.springframework.context.support;
 
+import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Proxy;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.EventObject;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.Map.Entry;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -16,6 +20,7 @@ import java.util.stream.Stream;
 import javax.annotation.Nullable;
 import javax.swing.text.JTextComponent;
 
+import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -194,6 +199,68 @@ public abstract class Util {
 		if (instance != null) {
 			instance.put(key, value);
 		}
+	}
+
+	static String getAbsolutePath(final File instance) {
+		//
+		if (instance == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		final Object fs = testAndApply(Objects::nonNull, getJavaIoFileSystemField(instance), Narcissus::getStaticField,
+				null);
+		//
+		if (fs == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		if (Objects.equals("java.io.WinNTFileSystem", getName(getClass(fs)))) {
+			//
+			if (instance.getPath() == null) {
+				//
+				return null;
+				//
+			} // if
+				//
+		} // if
+			//
+		return instance.getAbsolutePath();
+		//
+	}
+
+	private static Field getJavaIoFileSystemField(final Object instance) {
+		//
+		final List<Field> fields = toList(
+				filter(testAndApply(Objects::nonNull, getDeclaredFields(getClass(instance)), Arrays::stream, null),
+						x -> x != null && Objects.equals(getName(x.getType()), "java.io.FileSystem")));
+		//
+		return testAndApply(x -> IterableUtils.size(x) == 1, fields, x -> IterableUtils.get(x, 0), null);
+		//
+	}
+
+	private static <T, R> R testAndApply(final Predicate<T> predicate, final T value, final Function<T, R> functionTrue,
+			final Function<T, R> functionFalse) {
+		return test(predicate, value) ? apply(functionTrue, value) : apply(functionFalse, value);
+	}
+
+	private static final <T> boolean test(final Predicate<T> instance, final T value) {
+		return instance != null && instance.test(value);
+	}
+
+	private static <T, R> R apply(final Function<T, R> instance, final T value) {
+		return instance != null ? instance.apply(value) : null;
+	}
+
+	private static Field[] getDeclaredFields(final Class<?> instance) {
+		return instance != null ? instance.getDeclaredFields() : null;
+	}
+
+	private static <T> List<T> toList(final Stream<T> instance) {
+		return instance != null ? instance.toList() : null;
 	}
 
 }

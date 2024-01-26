@@ -1,10 +1,14 @@
 package org.springframework.context.support;
 
+import java.io.File;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import javax.swing.JTextField;
@@ -12,6 +16,7 @@ import javax.swing.text.JTextComponent;
 
 import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -20,6 +25,20 @@ import com.google.common.reflect.Reflection;
 import io.github.toolfactory.narcissus.Narcissus;
 
 class UtilTest {
+
+	private static Method METHOD_GET_JAVA_IO_FILE_SYSTEM_FIELD, METHOD_TEST = null;
+
+	@BeforeAll
+	static void beforeAll() throws ReflectiveOperationException {
+		//
+		final Class<?> clz = Util.class;
+		//
+		(METHOD_GET_JAVA_IO_FILE_SYSTEM_FIELD = clz.getDeclaredMethod("getJavaIoFileSystemField", Object.class))
+				.setAccessible(true);
+		//
+		(METHOD_TEST = clz.getDeclaredMethod("test", Predicate.class, Object.class)).setAccessible(true);
+		//
+	}
 
 	private static class IH implements InvocationHandler {
 
@@ -125,6 +144,71 @@ class UtilTest {
 		//
 		Assertions.assertDoesNotThrow(() -> Util.put(null, null, null));
 		//
+	}
+
+	@Test
+	void testGetAbsolutePath() throws Throwable {
+		//
+		final File file = Util.cast(File.class, Narcissus.allocateInstance(File.class));
+		//
+		Assertions.assertNull(Util.getAbsolutePath(file));
+		//
+		final Field f = getJavaIoFileSystemField(file);
+		//
+		final Object fs = Narcissus.getStaticField(f);
+		//
+		try {
+			//
+			Narcissus.setStaticField(f, null);
+			//
+			Assertions.assertNull(Util.getAbsolutePath(file));
+			//
+		} finally {
+			//
+			Narcissus.setStaticField(f, fs);
+			//
+		} // try
+			//
+	}
+
+	@Test
+	void testGetJavaIoFileSystemField() throws Throwable {
+		//
+		Assertions.assertNull(getJavaIoFileSystemField(null));
+		//
+	}
+
+	private static Field getJavaIoFileSystemField(final Object instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_JAVA_IO_FILE_SYSTEM_FIELD.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Field) {
+				return (Field) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testTest() throws Throwable {
+		//
+		Assertions.assertFalse(test(null, null));
+		//
+	}
+
+	private static final <T> boolean test(final Predicate<T> instance, final T value) throws Throwable {
+		try {
+			final Object obj = METHOD_TEST.invoke(null, instance, value);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 }

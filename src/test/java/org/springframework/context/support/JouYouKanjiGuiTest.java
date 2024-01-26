@@ -7,7 +7,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.io.File;
 import java.lang.invoke.TypeDescriptor.OfField;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -85,7 +84,7 @@ class JouYouKanjiGuiTest {
 			METHOD_GET_EXPRESSION_AS_CSS_STRING, METHOD_GET_INDEXED_COLORS, METHOD_GET_STYLES_SOURCE,
 			METHOD_GET_PROPERTY, METHOD_INT_VALUE, METHOD_TO_MILLIS, METHOD_SET_FILL_BACK_GROUND_COLOR,
 			METHOD_SET_FILL_PATTERN, METHOD_SPLITERATOR, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4,
-			METHOD_MAP_TO_INT, METHOD_MAX, METHOD_OR_ELSE, METHOD_SET_AUTO_FILTER, METHOD_GET_ABSOLUTE_PATH,
+			METHOD_MAP_TO_INT, METHOD_MAX, METHOD_OR_ELSE, METHOD_SET_AUTO_FILTER,
 			METHOD_GET_PHYSICAL_NUMBER_OF_ROWS = null;
 
 	@BeforeAll
@@ -164,8 +163,6 @@ class JouYouKanjiGuiTest {
 		(METHOD_OR_ELSE = clz.getDeclaredMethod("orElse", OptionalInt.class, Integer.TYPE)).setAccessible(true);
 		//
 		(METHOD_SET_AUTO_FILTER = clz.getDeclaredMethod("setAutoFilter", Sheet.class)).setAccessible(true);
-		//
-		(METHOD_GET_ABSOLUTE_PATH = clz.getDeclaredMethod("getAbsolutePath", File.class)).setAccessible(true);
 		//
 		(METHOD_GET_PHYSICAL_NUMBER_OF_ROWS = clz.getDeclaredMethod("getPhysicalNumberOfRows", Sheet.class))
 				.setAccessible(true);
@@ -1298,27 +1295,6 @@ class JouYouKanjiGuiTest {
 	private static void setAutoFilter(final Sheet sheet) throws Throwable {
 		try {
 			METHOD_SET_AUTO_FILTER.invoke(null, sheet);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetAbsolutePath() throws Throwable {
-		//
-		Assertions.assertNull(getAbsolutePath(null));
-		//
-	}
-
-	private static String getAbsolutePath(final File instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_ABSOLUTE_PATH.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
