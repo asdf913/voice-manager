@@ -171,8 +171,8 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 			//
 		} else if (object instanceof String string) {
 			//
-			final List<ECSSVersion> list = toList(
-					Util.filter(testAndApply(Objects::nonNull, ECSSVersion.values(), Arrays::stream, null),
+			final List<ECSSVersion> list = Util
+					.toList(Util.filter(testAndApply(Objects::nonNull, ECSSVersion.values(), Arrays::stream, null),
 							x -> StringUtils.contains(name(x), string)));
 			//
 			final int size = IterableUtils.size(list);
@@ -259,7 +259,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 			//
 			// The below check is for "-Djava.awt.headless=true"
 			//
-		final List<Field> fs = toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(this))),
+		final List<Field> fs = Util.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(this))),
 				f -> Objects.equals(Util.getName(f), "component")));
 		//
 		final Field f = IterableUtils.size(fs) == 1 ? IterableUtils.get(fs, 0) : null;
@@ -315,7 +315,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		//
 		List<Boolean> list = null;
 		//
-		final List<Field> fs = toList(
+		final List<Field> fs = Util.toList(
 				Util.filter(testAndApply(Objects::nonNull, Util.getDeclaredFields(Boolean.class), Arrays::stream, null),
 						f -> Objects.equals(Util.getType(f), Boolean.class)));
 		//
@@ -643,8 +643,8 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		//
 		final CSSExpression cssExpression = instance != null ? instance.getExpression() : null;
 		//
-		final List<Field> fs = toList(
-				Util.filter(testAndApply(Objects::nonNull, Util.getDeclaredFields(Util.getClass(cssExpression)),
+		final List<Field> fs = Util
+				.toList(Util.filter(testAndApply(Objects::nonNull, Util.getDeclaredFields(Util.getClass(cssExpression)),
 						Arrays::stream, null), f -> Objects.equals(Util.getName(f), "m_aMembers")));
 		//
 		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
@@ -679,7 +679,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		//
 		if (StringUtils.isNotBlank(style)) {
 			//
-			final List<CSSDeclaration> cssDeclarations = toList(Util.filter(
+			final List<CSSDeclaration> cssDeclarations = Util.toList(Util.filter(
 					Util.stream(CSSReaderDeclarationList.readFromString(style,
 							ObjectUtils.defaultIfNull(ecssVersion, ECSSVersion.CSS30))),
 					x -> Objects.equals(getProperty(x), cssProperty)));
@@ -808,11 +808,6 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 
 	private static int orElse(@Nullable final OptionalInt instance, final int other) {
 		return instance != null ? instance.orElse(other) : other;
-	}
-
-	@Nullable
-	private static <T> List<T> toList(@Nullable final Stream<T> instance) {
-		return instance != null ? instance.toList() : null;
 	}
 
 	private static boolean contains(@Nullable final Collection<?> items, final Object item) {

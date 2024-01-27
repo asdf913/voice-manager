@@ -138,8 +138,8 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 			//
 			// The below check is for "-Djava.awt.headless=true"
 			//
-		final List<Field> fs = Util.filter(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(this))),
-				f -> Objects.equals(Util.getName(f), "component")).toList();
+		final List<Field> fs = Util.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(this))),
+				f -> Objects.equals(Util.getName(f), "component")));
 		//
 		final Field f = IterableUtils.size(fs) == 1 ? IterableUtils.get(fs, 0) : null;
 		//
@@ -349,9 +349,10 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 		//
 		// Check if "handler" field in "java.net.URL" class is null or not
 		//
-		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, Util
-				.filter(Arrays.stream(Util.getDeclaredFields(URL.class)), x -> Objects.equals(Util.getName(x), "handler"))
-				.toList(), x -> IterableUtils.get(x, 0), null);
+		final Field f = testAndApply(x -> IterableUtils.size(x) == 1,
+				Util.toList(Util.filter(Arrays.stream(Util.getDeclaredFields(URL.class)),
+						x -> Objects.equals(Util.getName(x), "handler"))),
+				x -> IterableUtils.get(x, 0), null);
 		//
 		if (instance != null && f != null && Narcissus.getObjectField(instance, f) == null) {
 			//

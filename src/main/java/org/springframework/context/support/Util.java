@@ -3,6 +3,7 @@ package org.springframework.context.support;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.Collection;
@@ -22,6 +23,7 @@ import javax.swing.text.JTextComponent;
 
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
@@ -266,8 +268,52 @@ public abstract class Util {
 	}
 
 	@Nullable
-	private static <T> List<T> toList(@Nullable final Stream<T> instance) {
-		return instance != null ? instance.toList() : null;
+	static <T> List<T> toList(@Nullable final Stream<T> instance) {
+		//
+		if (instance == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		try {
+			//
+			// java.util.stream.AbstractPipeline.sourceStage
+			//
+			if (isAssignableFrom(Class.forName("java.util.stream.AbstractPipeline"), getClass(instance))) {
+				//
+				final Stream<Field> s = filter(stream(FieldUtils.getAllFieldsList(getClass(instance))),
+						f -> Objects.equals(getName(f), "sourceStage"));
+				//
+				final List<Field> fs = s != null ? s.toList() : null;
+				//
+				final int size = IterableUtils.size(fs);
+				//
+				if (size > 1) {
+					//
+					throw new IllegalStateException();
+					//
+				} else if (testAndApply(x -> !isStatic(x),
+						testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null),
+						x -> Narcissus.getField(instance, x), null) == null) {
+					//
+					return null;
+					//
+				} // if
+					//
+			} // if
+		} catch (final ClassNotFoundException e) {
+			//
+			LoggerUtil.error(LOG, e.getMessage(), e);
+			//
+		} // try
+			//
+		return instance.toList();
+		//
+	}
+
+	private static boolean isStatic(final Member instance) {
+		return instance != null && Modifier.isStatic(instance.getModifiers());
 	}
 
 }

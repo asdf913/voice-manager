@@ -13,7 +13,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 import javax.swing.JList;
@@ -180,7 +179,7 @@ public class Main {
 				//
 				if (Narcissus.getObjectField(instance, Component.class.getDeclaredField("peer")) == null) {
 					//
-					final List<Method> ms = toList(Util.filter(
+					final List<Method> ms = Util.toList(Util.filter(
 							testAndApply(Objects::nonNull, Narcissus.getDeclaredMethods(Component.class),
 									Arrays::stream, null),
 							x -> Objects.equals(Util.getName(x), "getComponentFactory")));
@@ -289,7 +288,7 @@ public class Main {
 				//
 				// instructions
 				//
-			if (Objects.equals(Arrays.asList(NEW.class, DUP.class, INVOKESPECIAL.class, ATHROW.class), toList(
+			if (Objects.equals(Arrays.asList(NEW.class, DUP.class, INVOKESPECIAL.class, ATHROW.class), Util.toList(
 					Util.map(testAndApply(Objects::nonNull, ins, Arrays::stream, null), x -> Util.getClass(x))))) {
 				//
 				final Class<?> c = Util.forName(className);
@@ -315,11 +314,6 @@ public class Main {
 	@Nullable
 	private static String getClassName(@Nullable final InvokeInstruction instance, final ConstantPoolGen cpg) {
 		return instance != null ? instance.getClassName(cpg) : null;
-	}
-
-	@Nullable
-	private static <T> List<T> toList(@Nullable final Stream<T> instance) {
-		return instance != null ? instance.toList() : null;
 	}
 
 	private static void setVisible(@Nullable final Component instance, boolean b) {

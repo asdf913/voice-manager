@@ -165,7 +165,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 			//
 			// The below check is for "-Djava.awt.headless=true"
 			//
-		final List<Field> fs = toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(this))),
+		final List<Field> fs = Util.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(this))),
 				f -> Objects.equals(Util.getName(f), "component")));
 		//
 		final Field f = IterableUtils.size(fs) == 1 ? IterableUtils.get(fs, 0) : null;
@@ -354,10 +354,10 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 			//
 			setText(jlCompare, null);
 			//
-			final List<Method> ms = toList(Util.filter(
+			final List<Method> ms = Util.toList(Util.filter(
 					testAndApply(Objects::nonNull,
-							getDeclaredMethods(Util
-									.forName("org.springframework.beans.factory.JlptLevelListFactoryBean")),
+							getDeclaredMethods(
+									Util.forName("org.springframework.beans.factory.JlptLevelListFactoryBean")),
 							Arrays::stream, null),
 					m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "getObjectByUrl"),
 							Arrays.equals(new Class<?>[] { String.class, Duration.class }, getParameterTypes(m)))));
@@ -522,7 +522,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		if (StringUtils.isNotEmpty(text) && CollectionUtils.isNotEmpty(jlptVocabularies)
 				&& jlptVocabularyList != null) {
 			//
-			final List<JlptVocabulary> temp = toList(Util.filter(Util.stream(jlptVocabularies),
+			final List<JlptVocabulary> temp = Util.toList(Util.filter(Util.stream(jlptVocabularies),
 					x -> Boolean.logicalOr(Objects.equals(text, getKanji(x)), Objects.equals(text, getKana(x)))));
 			//
 			forEach(temp, x -> addElement(cbmJlptVocabulary, x));
@@ -532,7 +532,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 				setSelectedIndices(jlJlptLevel, new int[] {});
 				//
 				testAndAccept(x -> IterableUtils.size(x) == 1,
-						toList(distinct(Util.map(Util.stream(temp), JlptLevelGui::getLevel))), x -> {
+						Util.toList(distinct(Util.map(Util.stream(temp), JlptLevelGui::getLevel))), x -> {
 							//
 							if (instance != null) {
 								//
@@ -688,11 +688,6 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 	@Nullable
 	private static Class<?>[] getParameterTypes(@Nullable final Executable instance) {
 		return instance != null ? instance.getParameterTypes() : null;
-	}
-
-	@Nullable
-	private static <T> List<T> toList(@Nullable final Stream<T> instance) {
-		return instance != null ? instance.toList() : null;
 	}
 
 	@Nullable

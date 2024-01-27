@@ -186,11 +186,6 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		this.onlineNHKJapanesePronunciationsAccentFailableFunction = onlineNHKJapanesePronunciationsAccentFailableFunction;
 	}
 
-	@Nullable
-	private static <T> List<T> toList(@Nullable final Stream<T> instance) {
-		return instance != null ? instance.toList() : null;
-	}
-
 	@SuppressWarnings("java:S1612")
 	public void setImageFormatOrders(@Nullable final Object object) {
 		//
@@ -204,11 +199,11 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			//
 		} else if (object instanceof List) {
 			//
-			value = Unit.with(toList(Util.map(Util.stream(((List<?>) object)), x -> Util.toString(x))));
+			value = Unit.with(Util.toList(Util.map(Util.stream(((List<?>) object)), x -> Util.toString(x))));
 			//
 		} else if (object instanceof Iterable) {
 			//
-			value = Unit.with(toList(Util.map(StreamSupport.stream(((Iterable<?>) object).spliterator(), false),
+			value = Unit.with(Util.toList(Util.map(StreamSupport.stream(((Iterable<?>) object).spliterator(), false),
 					x -> Util.toString(x))));
 			//
 		} else if (clz != null && clz.isArray()) {
@@ -221,8 +216,8 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 				//
 			} // if
 				//
-			value = Unit.with(
-					toList(Util.map(IntStream.range(0, Array.getLength(object)).mapToObj(i -> Array.get(object, i)),
+			value = Unit.with(Util
+					.toList(Util.map(IntStream.range(0, Array.getLength(object)).mapToObj(i -> Array.get(object, i)),
 							x -> Util.toString(x))));
 			//
 		} else if (object instanceof String string) {
@@ -279,7 +274,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			// The below check is for "-Djava.awt.headless=true"
 			//
 		final Field f = testAndApply(x -> IterableUtils.size(x) == 1,
-				toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(this))),
+				Util.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(this))),
 						x -> Objects.equals(Util.getName(x), "component"))),
 				x -> IterableUtils.get(x, 0), null);
 		//
@@ -487,7 +482,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 						x -> Narcissus.getField(x, getDeclaredField(Util.getClass(x), "map")), null));
 		//
 		final List<String> classNames = testAndApply(Objects::nonNull,
-				toList(Util.map(Util.stream(imageWriterSpis != null ? imageWriterSpis.keySet() : null),
+				Util.toList(Util.map(Util.stream(imageWriterSpis != null ? imageWriterSpis.keySet() : null),
 						x -> Util.getName(Util.cast(Class.class, x)))),
 				ArrayList::new, null);
 		//
@@ -789,7 +784,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		// Check if "handler" field in "java.net.URL" class is null or not
 		//
 		final Field f = testAndApply(x -> IterableUtils.size(x) == 1,
-				toList(Util.filter(Arrays.stream(Util.getDeclaredFields(URL.class)),
+				Util.toList(Util.filter(Arrays.stream(Util.getDeclaredFields(URL.class)),
 						x -> Objects.equals(Util.getName(x), "handler"))),
 				x -> IterableUtils.get(x, 0), null);
 		//

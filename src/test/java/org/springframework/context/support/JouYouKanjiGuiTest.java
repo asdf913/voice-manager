@@ -79,12 +79,12 @@ class JouYouKanjiGuiTest {
 
 	private static Method METHOD_GET, METHOD_NAME, METHOD_GET_ECSS_VERSION_BY_MAJOR, METHOD_ADD_JOU_YOU_KAN_JI_SHEET,
 			METHOD_GET_CSS_DECLARATION_BY_ATTRIBUTE_AND_CSS_PROPERTY, METHOD_SET_PREFERRED_WIDTH,
-			METHOD_GET_PREFERRED_SIZE, METHOD_TO_LIST, METHOD_CONTAINS, METHOD_SET_SELECTED_ITEM,
-			METHOD_GET_BOOLEAN_VALUES, METHOD_TO_ARRAY, METHOD_MATCHER, METHOD_GET_EXPRESSION_AS_CSS_STRING,
-			METHOD_GET_INDEXED_COLORS, METHOD_GET_STYLES_SOURCE, METHOD_GET_PROPERTY, METHOD_INT_VALUE,
-			METHOD_TO_MILLIS, METHOD_SET_FILL_BACK_GROUND_COLOR, METHOD_SET_FILL_PATTERN, METHOD_SPLITERATOR,
-			METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_MAP_TO_INT, METHOD_MAX, METHOD_OR_ELSE,
-			METHOD_SET_AUTO_FILTER, METHOD_GET_PHYSICAL_NUMBER_OF_ROWS = null;
+			METHOD_GET_PREFERRED_SIZE, METHOD_CONTAINS, METHOD_SET_SELECTED_ITEM, METHOD_GET_BOOLEAN_VALUES,
+			METHOD_TO_ARRAY, METHOD_MATCHER, METHOD_GET_EXPRESSION_AS_CSS_STRING, METHOD_GET_INDEXED_COLORS,
+			METHOD_GET_STYLES_SOURCE, METHOD_GET_PROPERTY, METHOD_INT_VALUE, METHOD_TO_MILLIS,
+			METHOD_SET_FILL_BACK_GROUND_COLOR, METHOD_SET_FILL_PATTERN, METHOD_SPLITERATOR, METHOD_TEST_AND_ACCEPT3,
+			METHOD_TEST_AND_ACCEPT4, METHOD_MAP_TO_INT, METHOD_MAX, METHOD_OR_ELSE, METHOD_SET_AUTO_FILTER,
+			METHOD_GET_PHYSICAL_NUMBER_OF_ROWS = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -110,8 +110,6 @@ class JouYouKanjiGuiTest {
 				.setAccessible(true);
 		//
 		(METHOD_GET_PREFERRED_SIZE = clz.getDeclaredMethod("getPreferredSize", Component.class)).setAccessible(true);
-		//
-		(METHOD_TO_LIST = clz.getDeclaredMethod("toList", Stream.class)).setAccessible(true);
 		//
 		(METHOD_CONTAINS = clz.getDeclaredMethod("contains", Collection.class, Object.class)).setAccessible(true);
 		//
@@ -753,27 +751,6 @@ class JouYouKanjiGuiTest {
 				return null;
 			} else if (obj instanceof Dimension) {
 				return (Dimension) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testToList() throws Throwable {
-		//
-		Assertions.assertNull(toList(null));
-		//
-	}
-
-	private static <T> List<T> toList(final Stream<T> instance) throws Throwable {
-		try {
-			final Object obj = METHOD_TO_LIST.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof List) {
-				return (List) obj;
 			}
 			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

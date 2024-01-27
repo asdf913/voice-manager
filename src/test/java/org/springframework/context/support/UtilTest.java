@@ -4,6 +4,7 @@ import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
@@ -16,6 +17,7 @@ import java.util.stream.Stream;
 import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
 
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -28,7 +30,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class UtilTest {
 
-	private static Method METHOD_GET_JAVA_IO_FILE_SYSTEM_FIELD, METHOD_TEST, METHOD_CONTAINS = null;
+	private static Method METHOD_GET_JAVA_IO_FILE_SYSTEM_FIELD, METHOD_TEST, METHOD_CONTAINS, METHOD_IS_STATIC = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -41,6 +43,8 @@ class UtilTest {
 		(METHOD_TEST = clz.getDeclaredMethod("test", Predicate.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_CONTAINS = clz.getDeclaredMethod("contains", Collection.class, Object.class)).setAccessible(true);
+		//
+		(METHOD_IS_STATIC = clz.getDeclaredMethod("isStatic", Member.class)).setAccessible(true);
 		//
 	}
 
@@ -58,6 +62,10 @@ class UtilTest {
 					return null;
 					//
 				} else if (Objects.equals(methodName, "filter")) {
+					//
+					return null;
+					//
+				} else if (Objects.equals(methodName, "toList")) {
 					//
 					return null;
 					//
@@ -227,6 +235,59 @@ class UtilTest {
 	private static boolean contains(final Collection<?> items, final Object item) throws Throwable {
 		try {
 			final Object obj = METHOD_CONTAINS.invoke(null, items, item);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testToList() throws Throwable {
+		//
+		Assertions.assertNull(Util.toList(stream));
+		//
+		final Stream<?> empty = Stream.empty();
+		//
+		new FailableStream<>(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(empty)))).forEach(f -> {
+			//
+			if (f == null || contains(Arrays.asList(Integer.TYPE, Boolean.TYPE), f.getType())
+					|| !contains(Arrays.asList("sourceStage"), Util.getName(f))) {
+				//
+				return;
+				//
+			} // if
+				//
+			if (Modifier.isStatic(f.getModifiers())) {
+				//
+				Narcissus.setStaticField(f, null);
+				//
+			} else {
+				//
+				Narcissus.setField(empty, f, null);
+				//
+			} // if
+				//
+		});
+		//
+		Assertions.assertNull(Util.toList(empty));
+		//
+	}
+
+	@Test
+	void testIsStatic() throws Throwable {
+		//
+		Assertions.assertFalse(isStatic(null));
+		//
+		Assertions.assertTrue(isStatic(Boolean.class.getDeclaredField("TRUE")));
+		//
+	}
+
+	private static boolean isStatic(final Member instance) throws Throwable {
+		try {
+			final Object obj = METHOD_IS_STATIC.invoke(null, instance);
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}

@@ -162,7 +162,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 			//
 			// The below check is for "-Djava.awt.headless=true"
 			//
-		final List<Field> fs = toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(this))),
+		final List<Field> fs = Util.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(this))),
 				f -> Objects.equals(Util.getName(f), "component")));
 		//
 		final Field f = IterableUtils.size(fs) == 1 ? IterableUtils.get(fs, 0) : null;
@@ -389,7 +389,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 			//
 			setText(jlCompare, null);
 			//
-			final List<Method> ms = toList(Util.filter(
+			final List<Method> ms = Util.toList(Util.filter(
 					testAndApply(
 							Objects::nonNull,
 							getDeclaredMethods(Util
@@ -478,11 +478,6 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 	private static Object invoke(@Nullable final Method method, @Nullable final Object instance, final Object... args)
 			throws IllegalAccessException, InvocationTargetException {
 		return method != null ? method.invoke(instance, args) : null;
-	}
-
-	@Nullable
-	private static <T> List<T> toList(@Nullable final Stream<T> instance) {
-		return instance != null ? instance.toList() : null;
 	}
 
 	@Nullable

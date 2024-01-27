@@ -990,7 +990,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			for (final Object obj : bpps) {
 				//
-				addAll(ms = ObjectUtils.getIfNull(ms, ArrayList::new), toList(Util.filter(
+				addAll(ms = ObjectUtils.getIfNull(ms, ArrayList::new), Util.toList(Util.filter(
 						testAndApply(Objects::nonNull, getDeclaredMethods(Util.getClass(obj)), Arrays::stream, null),
 						m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "setTitle"), Arrays.equals(
 								getParameterTypes(m), new Class<?>[] { Frame.class, PropertyResolver.class })))));
@@ -1068,7 +1068,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		// "com.google.common.collect.Multimap" and the "Bean Definition" has "value"
 		// attribute which value is "hiragana"
 		//
-		multimapHiragana = toList(Util.map(
+		multimapHiragana = Util.toList(Util.map(
 				Util.stream(getBeanDefinitionNamesByClassAndAttributes(configurableListableBeanFactory, Multimap.class,
 						Collections.singletonMap(VALUE, "hiragana"))),
 				x -> Util.cast(Multimap.class, BeanFactoryUtil.getBean(configurableListableBeanFactory, x))));
@@ -1077,7 +1077,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		// and the "Bean Definition" has "value" attribute which value
 		// is "hiragana"
 		//
-		mapHiragana = toList(Util.map(
+		mapHiragana = Util.toList(Util.map(
 				Util.stream(getBeanDefinitionNamesByClassAndAttributes(configurableListableBeanFactory, Map.class,
 						Collections.singletonMap(VALUE, "hiragana"))),
 				x -> Util.cast(Map.class, BeanFactoryUtil.getBean(configurableListableBeanFactory, x))));
@@ -1086,7 +1086,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		// "com.google.common.collect.Multimap" and the "Bean Definition" has "value"
 		// attribute which value is "katakana"
 		//
-		multimapKatakana = toList(Util.map(
+		multimapKatakana = Util.toList(Util.map(
 				Util.stream(getBeanDefinitionNamesByClassAndAttributes(configurableListableBeanFactory, Multimap.class,
 						Collections.singletonMap(VALUE, "katakana"))),
 				x -> Util.cast(Multimap.class, BeanFactoryUtil.getBean(configurableListableBeanFactory, x))));
@@ -1095,7 +1095,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		// and the "Bean Definition" has "value" attribute which value
 		// is "romaji"
 		//
-		mapRomaji = toList(Util.map(
+		mapRomaji = Util.toList(Util.map(
 				Util.stream(getBeanDefinitionNamesByClassAndAttributes(configurableListableBeanFactory, Map.class,
 						Collections.singletonMap(VALUE, "romaji"))),
 				x -> Util.cast(Map.class, BeanFactoryUtil.getBean(configurableListableBeanFactory, x))));
@@ -1203,7 +1203,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			if (result == null) {
 				//
 				result = getNumber(obj,
-						toList(Util.filter(
+						Util.toList(Util.filter(
 								testAndApply(Objects::nonNull, Util.getDeclaredFields(Util.getClass(obj)),
 										Arrays::stream, null),
 								x -> Objects.equals(Util.getName(x), "defaultCloseOperation"))));
@@ -1327,8 +1327,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			final Object[] objectTypes = toArray(Util
 					.map(Stream.of("java.lang.String", "java.lang.String", "java.io.File"), ObjectType::getInstance));
 			//
-			final List<org.apache.bcel.classfile.Method> ms = toList(
-					Util.filter(
+			final List<org.apache.bcel.classfile.Method> ms = Util
+					.toList(Util.filter(
 							testAndApply(Objects::nonNull,
 									JavaClassUtil.getMethods(ClassParserUtil.parse(
 											testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null))),
@@ -1509,7 +1509,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@SuppressWarnings("java:S1612")
 	public void setMp3Tags(final Object value) {
 		//
-		mp3Tags = toArray(toList(Util.map(Util.stream(getObjectList(getObjectMapper(), value)), x -> Util.toString(x))),
+		mp3Tags = toArray(
+				Util.toList(Util.map(Util.stream(getObjectList(getObjectMapper(), value)), x -> Util.toString(x))),
 				new String[] {});
 		//
 	}
@@ -1518,7 +1519,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	public void setMicrosoftSpeechObjectLibraryAttributeNames(final Object value) {
 		//
 		this.microsoftSpeechObjectLibraryAttributeNames = toArray(
-				toList(Util.map(Util.stream(getObjectList(getObjectMapper(), value)), x -> Util.toString(x))),
+				Util.toList(Util.map(Util.stream(getObjectList(getObjectMapper(), value)), x -> Util.toString(x))),
 				new String[] {});
 		//
 	}
@@ -1673,8 +1674,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
-		final List<FileFormat> fileFormats = toList(
-				Util.filter(testAndApply(Objects::nonNull, FileFormat.values(), Arrays::stream, null),
+		final List<FileFormat> fileFormats = Util
+				.toList(Util.filter(testAndApply(Objects::nonNull, FileFormat.values(), Arrays::stream, null),
 						x -> StringUtils.startsWithIgnoreCase(name(x), Util.toString(object))
 								|| StringUtils.startsWithIgnoreCase(getFileExtension(x), Util.toString(object))));
 		//
@@ -1744,7 +1745,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		final Map<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>> map = IValue0Util
 				.getValue0(getWorkbookClassFailableSupplierMap());
 		//
-		final List<Class<? extends Workbook>> classes = toList(
+		final List<Class<? extends Workbook>> classes = Util.toList(
 				Util.filter(Util.stream(keySet(map)), x -> Boolean.logicalOr(Objects.equals(Util.getName(x), toString),
 						StringUtils.endsWithIgnoreCase(Util.getName(x), toString))));
 		//
@@ -2234,7 +2235,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		final Predicate<Component> predicate = createFocusableComponentPredicate(
 				Arrays.asList(JLabel.class, JScrollPane.class, JProgressBar.class, JPanel.class));
 		//
-		forEach(toList(Util.map(
+		forEach(Util.toList(Util.map(
 				FailableStreamUtil.stream(FailableStreamUtil.map(new FailableStream<>(Util.stream(pages)),
 						x -> Narcissus.getObjectField(x, getDeclaredField(Util.getClass(x), COMPONENT)))),
 				x -> Util.cast(Container.class, x))), c -> {
@@ -2244,7 +2245,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					setFocusCycleRoot(c, true);
 					//
 					setFocusTraversalPolicy(c,
-							new TabFocusTraversalPolicy(toList(
+							new TabFocusTraversalPolicy(Util.toList(
 									Util.filter(testAndApply(Objects::nonNull, getComponents(c), Arrays::stream, null),
 											predicate))));
 					//
@@ -2429,7 +2430,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		try {
 			//
-			final List<Method> ms = toList(Util.filter(
+			final List<Method> ms = Util.toList(Util.filter(
 					testAndApply(Objects::nonNull,
 							getDeclaredMethods(Util.forName("com.sun.jna.platform.win32.VersionHelpers")),
 							Arrays::stream, null),
@@ -2462,7 +2463,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			final Object osVersionInfoEx = getOsVersionInfoEx();
 			//
 			final List<Method> ms = osVersionInfoEx != null
-					? toList(Util.filter(
+					? Util.toList(Util.filter(
 							testAndApply(Objects::nonNull, getDeclaredMethods(Util.getClass(osVersionInfoEx)),
 									Arrays::stream, null),
 							x -> x != null && !Objects.equals(x.getReturnType(), Void.TYPE)))
@@ -2508,8 +2509,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		// https://java-native-access.github.io/jna/5.6.0/javadoc/com/sun/jna/platform/win32/Kernel32.html#INSTANCE
 		//
-		final List<Field> fs = toList(
-				Util.filter(testAndApply(Objects::nonNull, Util.getDeclaredFields(clz), Arrays::stream, null),
+		final List<Field> fs = Util
+				.toList(Util.filter(testAndApply(Objects::nonNull, Util.getDeclaredFields(clz), Arrays::stream, null),
 						f -> Objects.equals(Util.getName(f), "INSTANCE") && Objects.equals(Util.getType(f), clz)
 								&& isStatic(f)));
 		//
@@ -2519,8 +2520,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		// https://java-native-access.github.io/jna/5.6.0/javadoc/com/sun/jna/platform/win32/Kernel32.html#GetVersionEx-com.sun.jna.platform.win32.WinNT.OSVERSIONINFOEX-
 		//
-		final List<Method> ms = toList(
-				Util.filter(testAndApply(Objects::nonNull, getDeclaredMethods(clz), Arrays::stream, null),
+		final List<Method> ms = Util
+				.toList(Util.filter(testAndApply(Objects::nonNull, getDeclaredMethods(clz), Arrays::stream, null),
 						m -> Objects.equals(Util.getName(m), "GetVersionEx")
 								&& Arrays.equals(new Class[] { clzOsVersionInfoEx }, getParameterTypes(m))));
 		//
@@ -2540,7 +2541,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static Object getInstance(final SpeechApi speechApi) {
 		//
-		final List<Field> fs = toList(Util.filter(
+		final List<Field> fs = Util.toList(Util.filter(
 				testAndApply(Objects::nonNull, Util.getDeclaredFields(Util.getClass(speechApi)), Arrays::stream, null),
 				f -> Objects.equals(Util.getName(f), "instance")));
 		//
@@ -2661,7 +2662,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				final Stream<?> stream = testAndApply(Objects::nonNull, spliterator,
 						x -> StreamSupport.stream(x, false), null);
 				//
-				return testAndApply(Objects::nonNull, toList(Util.map(stream, x -> Util.toString(x))),
+				return testAndApply(Objects::nonNull, Util.toList(Util.map(stream, x -> Util.toString(x))),
 						x -> String.join("", x), null);
 				//
 			} catch (final IllegalAccessException e) {
@@ -2683,7 +2684,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				final Stream<?> stream = testAndApply(Objects::nonNull, spliterator,
 						x -> StreamSupport.stream(x, false), null);
 				//
-				final List<Attribute> as = toList(Util.filter(Util.map(stream, x -> Util.cast(Attribute.class, x)),
+				final List<Attribute> as = Util.toList(Util.filter(Util.map(stream, x -> Util.cast(Attribute.class, x)),
 						a -> Objects.equals(name, getName(a))));
 				//
 				if (as == null || as.isEmpty()) {
@@ -2766,7 +2767,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Nullable
 	private static Field getFieldByName(final Class<?> clz, final String name) {
 		//
-		final List<Field> fs = toList(
+		final List<Field> fs = Util.toList(
 				Util.filter(Util.stream(testAndApply(Objects::nonNull, clz, FieldUtils::getAllFieldsList, null)),
 						f -> Objects.equals(Util.getName(f), name)));
 		//
@@ -3017,8 +3018,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		add(panel, new JLabel());
 		//
 		final JComboBox<Method> jcbSpeakMethod = testAndApply(CollectionUtils::isNotEmpty,
-				toList(Util.filter(testAndApply(Objects::nonNull, getDeclaredMethods(Util.getClass(speechApiInstance)),
-						Arrays::stream, null), m -> isAnnotationPresent(m, SpeakMethod.class))),
+				Util.toList(
+						Util.filter(testAndApply(Objects::nonNull, getDeclaredMethods(Util.getClass(speechApiInstance)),
+								Arrays::stream, null), m -> isAnnotationPresent(m, SpeakMethod.class))),
 				x -> new JComboBox<>(cbmSpeakMethod = testAndApply(Objects::nonNull, toArray(x, new Method[] {}),
 						DefaultComboBoxModel::new, y -> new DefaultComboBoxModel<>())),
 				null);
@@ -3282,7 +3284,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		final String voiceId = PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.voiceId");
 		//
-		List<?> temp = toList(Util.filter(testAndApply(Objects::nonNull, voiceIds, Arrays::stream, null),
+		List<?> temp = Util.toList(Util.filter(testAndApply(Objects::nonNull, voiceIds, Arrays::stream, null),
 				x -> Boolean.logicalOr(Objects.equals(x, voiceId),
 						Objects.equals(getVoiceAttribute(speechApi, x, "Name"), voiceId))));
 		//
@@ -3303,8 +3305,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		if (StringUtils.isNotEmpty(voiceLanguage)) {
 			//
-			if ((size = IterableUtils.size(
-					temp = toList(Util.filter(testAndApply(Objects::nonNull, voiceIds, Arrays::stream, null), x -> {
+			if ((size = IterableUtils.size(temp = Util
+					.toList(Util.filter(testAndApply(Objects::nonNull, voiceIds, Arrays::stream, null), x -> {
 						//
 						final String language = getVoiceAttribute(speechApi, x, LANGUAGE);
 						//
@@ -3319,7 +3321,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				throw new IllegalStateException(
 						String.format("There are more than one Voice %1$s found for Lanaguge \"%2$s\"",
-								toList(Util.map(Util.stream(temp), x -> StringUtils.wrap(Util.toString(x), "\""))),
+								Util.toList(Util.map(Util.stream(temp), x -> StringUtils.wrap(Util.toString(x), "\""))),
 								voiceLanguage));
 				//
 			} // if
@@ -3446,7 +3448,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} else {
 			//
-			final List<Method> ms = toList(Util.filter(
+			final List<Method> ms = Util.toList(Util.filter(
 					testAndApply(Objects::nonNull, getDeclaredMethods(Util.getClass(instance)), Arrays::stream, null),
 					x -> x != null && Objects.equals(x.getReturnType(), Integer.TYPE) && x.getParameterCount() == 0
 							&& StringUtils.startsWithIgnoreCase(Util.getName(x), "get" + string)));
@@ -3705,7 +3707,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						"org.springframework.context.support.VoiceManager.ipaSymbol")),
 				String.format("%1$s,wmin %2$s,wmax %3$s,span %4$s", GROWX, 100, 200, 2));
 		//
-		final List<Yomi> yomiList = toList(Util.filter(testAndApply(Objects::nonNull, yomis, Arrays::stream, null),
+		final List<Yomi> yomiList = Util.toList(Util.filter(testAndApply(Objects::nonNull, yomis, Arrays::stream, null),
 				y -> Objects.equals(name(y), PropertyResolverUtil.getProperty(propertyResolver,
 						"org.springframework.context.support.VoiceManager.yomi"))));
 		//
@@ -3995,7 +3997,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		List<Boolean> list = null;
 		//
-		final List<Field> fs = toList(
+		final List<Field> fs = Util.toList(
 				Util.filter(testAndApply(Objects::nonNull, Util.getDeclaredFields(Boolean.class), Arrays::stream, null),
 						f -> Objects.equals(Util.getType(f), Boolean.class)));
 		//
@@ -4452,8 +4454,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // try
 			//
-		final FileFormat[] fileFormats = testAndApply(Objects::nonNull, toArray(
-				toList(Util.filter(testAndApply(Objects::nonNull, FileFormat.values(), Arrays::stream, null), x -> {
+		final FileFormat[] fileFormats = testAndApply(Objects::nonNull, toArray(Util
+				.toList(Util.filter(testAndApply(Objects::nonNull, FileFormat.values(), Arrays::stream, null), x -> {
 					//
 					final FileFormatDetails ffds = Util.cast(FileFormatDetails.class, Util.get(fileFormatDetails, x));
 					//
@@ -4802,7 +4804,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		try {
 			//
-			final List<Method> ms = toList(Util.filter(
+			final List<Method> ms = Util.toList(Util.filter(
 					testAndApply(Objects::nonNull, getDeclaredMethods(Util.forName("com.sun.jna.Platform")),
 							Arrays::stream, null),
 					m -> m != null && Objects.equals(m.getReturnType(), Boolean.TYPE) && m.getParameterCount() == -0));
@@ -4933,12 +4935,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			if (declaredClass == null
 					//
-					|| (fs = toList(Util.filter(
+					|| (fs = Util.toList(Util.filter(
 							testAndApply(Objects::nonNull, Util.getDeclaredFields(declaredClass), Arrays::stream, null),
 							x -> Objects.equals(Util.getType(x), declaredClass)))) == null
 					|| IterableUtils.size(fs) != 1 || (f = get(fs, 0)) == null
 					//
-					|| (ms = toList(Util.filter(
+					|| (ms = Util.toList(Util.filter(
 							testAndApply(Objects::nonNull, getDeclaredMethods(declaredClass), Arrays::stream, null),
 							x -> Objects.equals(Util.getName(x), "getDllPath")))) == null
 					|| IterableUtils.size(ms) != 1 || (m = get(ms, 0)) == null) {
@@ -4992,17 +4994,17 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		final Stream<Field> stream = testAndApply(Objects::nonNull, Util.getDeclaredFields(Yomi.class), Arrays::stream,
 				null);
 		//
-		return createYomiNameMap(toList(
+		return createYomiNameMap(Util.toList(
 				//
 				Util.filter(Util.map(stream, f -> {
 					//
-					final List<?> objects = toList(FailableStreamUtil.stream(new FailableStream<>(
+					final List<?> objects = Util.toList(FailableStreamUtil.stream(new FailableStream<>(
 							Util.filter(testAndApply(Objects::nonNull, getDeclaredAnnotations(f), Arrays::stream, null),
 									a -> Objects.equals(annotationType(a), nameClass)))
 							.map(a -> {
 								//
-								final List<Method> ms = toList(
-										Util.filter(
+								final List<Method> ms = Util
+										.toList(Util.filter(
 												testAndApply(Objects::nonNull, getDeclaredMethods(annotationType(a)),
 														Arrays::stream, null),
 												ma -> Objects.equals(Util.getName(ma), VALUE)));
@@ -5370,7 +5372,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				testAndApply(Objects::nonNull, Util.getDeclaredFields(VoiceManager.class), Arrays::stream, null),
 				f -> isAnnotationPresent(f, SystemClipboard.class)));
 		//
-		testAndRun(contains(toList(Util.filter(
+		testAndRun(contains(Util.toList(Util.filter(
 				FailableStreamUtil.stream(FailableStreamUtil.map(fs, f -> FieldUtils.readField(f, this, true))),
 				Objects::nonNull)), source), () -> actionPerformedForSystemClipboardAnnotated(nonTest, source));
 		//
@@ -5664,7 +5666,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static <T> List<T> getObjectsByGroupAnnotation(final Object instance, final String group,
 			final Class<T> clz) {
 		//
-		return toList(Util.map(Util.stream(getObjectsByGroupAnnotation(instance, group)), x -> Util.cast(clz, x)));
+		return Util.toList(Util.map(Util.stream(getObjectsByGroupAnnotation(instance, group)), x -> Util.cast(clz, x)));
 		//
 	}
 
@@ -5677,7 +5679,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					return StringUtils.equals(g != null ? g.value() : null, group);
 				}));
 		//
-		return toList(
+		return Util.toList(
 				FailableStreamUtil.stream(FailableStreamUtil.map(fs, f -> FieldUtils.readField(f, instance, true))));
 		//
 	}
@@ -5970,7 +5972,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						x -> Narcissus.getField(x, getDeclaredField(Util.getClass(x), "map")), null));
 		//
 		final List<String> classNames = testAndApply(Objects::nonNull,
-				toList(Util.map(Util.stream(keySet(imageWriterSpis)), x -> Util.getName(Util.cast(Class.class, x)))),
+				Util.toList(
+						Util.map(Util.stream(keySet(imageWriterSpis)), x -> Util.getName(Util.cast(Class.class, x)))),
 				ArrayList::new, null);
 		//
 		final String commonPrefix = StringUtils.getCommonPrefix(toArray(classNames, new String[] {}));
@@ -6276,7 +6279,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static File createTempFile(@Nullable final String prefix, @Nullable final String suffix)
 			throws IllegalAccessException, InvocationTargetException {
 		//
-		final List<Method> ms = toList(
+		final List<Method> ms = Util.toList(
 				Util.filter(testAndApply(Objects::nonNull, getDeclaredMethods(File.class), Arrays::stream, null),
 						x -> Objects.equals(Util.getName(x), "createTempFile")
 								&& Arrays.equals(new Class<?>[] { String.class, String.class }, getParameterTypes(x))));
@@ -6384,7 +6387,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
-		final List<Field> fs = toList(Util.filter(Arrays.stream(Util.getDeclaredFields(URL.class)),
+		final List<Field> fs = Util.toList(Util.filter(Arrays.stream(Util.getDeclaredFields(URL.class)),
 				f -> Objects.equals(Util.getName(f), HANDLER)));
 		//
 		final int size = IterableUtils.size(fs);
@@ -7705,7 +7708,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static Method getAccessibleObjectIsAccessibleMethod() {
 		//
-		final List<Method> ms = toList(Util.filter(
+		final List<Method> ms = Util.toList(Util.filter(
 				testAndApply(Objects::nonNull, getDeclaredMethods(AccessibleObject.class), Arrays::stream, null),
 				m -> m != null && StringUtils.equals(Util.getName(m), "isAccessible") && m.getParameterCount() == 0));
 		//
@@ -8058,7 +8061,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Nullable
 	private static PrintStream getSystemPrintStreamByFieldName(final String name) throws IllegalAccessException {
 		//
-		final List<Field> fs = toList(Util.filter(
+		final List<Field> fs = Util.toList(Util.filter(
 				testAndApply(Objects::nonNull, Util.getDeclaredFields(System.class), Arrays::stream, null),
 				f -> Objects.equals(Util.getType(f), PrintStream.class) && Objects.equals(Util.getName(f), name)));
 		//
@@ -8090,7 +8093,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			final POIXMLDocument poiXmlDocument = Util.cast(POIXMLDocument.class, workbook);
 			//
-			final List<String> sheetExclued = toList(Util.map(Util.stream(getObjectList(getObjectMapper(),
+			final List<String> sheetExclued = Util.toList(Util.map(Util.stream(getObjectList(getObjectMapper(),
 					getLpwstr(testAndApply(VoiceManager::contains,
 							POIXMLPropertiesUtil.getCustomProperties(POIXMLDocumentUtil.getProperties(poiXmlDocument)),
 							"sheetExcluded", VoiceManager::getProperty, null)))),
@@ -8816,7 +8819,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			final ComboBoxModel<String> cbmJlptLevel = instance.cbmJlptLevel;
 			//
-			final List<JlptVocabulary> temp = toList(Util.filter(Util.stream(jlptVocabularies),
+			final List<JlptVocabulary> temp = Util.toList(Util.filter(Util.stream(jlptVocabularies),
 					x -> Boolean.logicalOr(Objects.equals(text, getKanji(x)), Objects.equals(text, getKana(x)))));
 			//
 			forEach(temp, x -> addElement(mcbmJlptVocabulary, x));
@@ -8826,7 +8829,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				setSelectedItem(instance.cbmJlptLevel, null);
 				//
 				testAndAccept(x -> IterableUtils.size(x) == 1,
-						toList(distinct(Util.map(Util.stream(temp), VoiceManager::getLevel))),
+						Util.toList(distinct(Util.map(Util.stream(temp), VoiceManager::getLevel))),
 						x -> setSelectedItemByString(cbmJlptLevel, IterableUtils.get(x, 0)));
 				//
 				if (instance != null && instance.jcbJlptVocabulary != null) {
@@ -9160,7 +9163,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				} // for
 					//
-				final List<Integer> counts = toList(
+				final List<Integer> counts = Util.toList(
 						Util.filter(Util.map(Util.stream(Util.entrySet(map)), Util::getValue), Objects::nonNull));
 				//
 				final int size = IterableUtils.size(counts);
@@ -9235,8 +9238,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			try (final InputStream is = getResourceAsStream(clz,
 					String.format(CLASS_RESOURCE_FORMAT, StringUtils.replace(Util.getName(clz), ".", "/")))) {
 				//
-				final List<org.apache.bcel.classfile.Method> ms = toList(
-						Util.filter(
+				final List<org.apache.bcel.classfile.Method> ms = Util
+						.toList(Util.filter(
 								testAndApply(Objects::nonNull,
 										JavaClassUtil.getMethods(ClassParserUtil.parse(testAndApply(Objects::nonNull,
 												is, x -> new ClassParser(x, null), null))),
@@ -9417,8 +9420,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Nullable
 	private static String convertLanguageCodeToText(final LocaleID[] enums, @Nullable final Integer value) {
 		//
-		final List<LocaleID> localeIds = toList(Util.filter(testAndApply(Objects::nonNull, enums, Arrays::stream, null),
-				a -> a != null && Objects.equals(Integer.valueOf(a.getLcid()), value)));
+		final List<LocaleID> localeIds = Util
+				.toList(Util.filter(testAndApply(Objects::nonNull, enums, Arrays::stream, null),
+						a -> a != null && Objects.equals(Integer.valueOf(a.getLcid()), value)));
 		//
 		if (localeIds != null && !localeIds.isEmpty()) {
 			//
@@ -9537,7 +9541,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			final String attribute = attributes[i];
 			//
-			if ((methods = toList(Util.filter(
+			if ((methods = Util.toList(Util.filter(
 					testAndApply(Objects::nonNull, ms = getIfNull(ms, () -> getMethods(Util.getClass(id3v1))),
 							Arrays::stream, null),
 					a -> matches(matcher(Pattern.compile(String.format("get%1$s", StringUtils.capitalize(attribute))),
@@ -9693,7 +9697,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		if (rate == null) {
 			//
 			rate = getIfNull(rate,
-					() -> getRate(toList(Util.filter(
+					() -> getRate(Util.toList(Util.filter(
 							testAndApply(Objects::nonNull, Util.getDeclaredFields(Integer.class), Arrays::stream, null),
 							f -> f != null
 									&& (Util.isAssignableFrom(Number.class, Util.getType(f))
@@ -9767,7 +9771,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			final Class<?> importFieldClass = Util.forName("domain.Voice$ImportField");
 			//
-			final List<Field> fs = toList(Util.filter(
+			final List<Field> fs = Util.toList(Util.filter(
 					testAndApply(Objects::nonNull, FieldUtils.getAllFields(Voice.class), Arrays::stream, null),
 					f -> anyMatch(testAndApply(Objects::nonNull, getDeclaredAnnotations(f), Arrays::stream, null),
 							a -> Objects.equals(annotationType(a), importFieldClass))));
@@ -9937,11 +9941,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		if ((!(dvh instanceof XSSFDataValidationHelper) || CollectionUtils.isNotEmpty(bs)) && row != null) {
 			//
-			addValidationData(ObjectMap.getObject(objectMap, Sheet.class),
-					createValidation(dvh,
-							createExplicitListConstraint(dvh,
-									toArray(toList(Util.map(Util.stream(bs), x -> Util.toString(x))), new String[] {})),
-							new CellRangeAddressList(row.getRowNum(), row.getRowNum(), index, index)));
+			addValidationData(ObjectMap.getObject(objectMap, Sheet.class), createValidation(dvh,
+					createExplicitListConstraint(dvh,
+							toArray(Util.toList(Util.map(Util.stream(bs), x -> Util.toString(x))), new String[] {})),
+					new CellRangeAddressList(row.getRowNum(), row.getRowNum(), index, index)));
 			//
 		} // if
 			//
@@ -9951,8 +9954,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final Stream<?> stream = testAndApply(Objects::nonNull, getEnumConstants(type), Arrays::stream, null);
 		//
-		final List<String> strings = toList(
-				Util.map(stream, x -> x instanceof Enum ? name((Enum<?>) x) : Util.toString(x)));
+		final List<String> strings = Util
+				.toList(Util.map(stream, x -> x instanceof Enum ? name((Enum<?>) x) : Util.toString(x)));
 		//
 		final DataValidationHelper dvh = ObjectMap.getObject(objectMap, DataValidationHelper.class);
 		//
@@ -10008,11 +10011,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				? instance.collect(collector)
 				: null;
 		//
-	}
-
-	@Nullable
-	private static <T> List<T> toList(@Nullable final Stream<T> instance) {
-		return instance != null ? instance.toList() : null;
 	}
 
 	private static interface ObjectMap {
@@ -10699,8 +10697,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-		} else if (Util.isAssignableFrom(Enum.class, type) && (list = toList(
-				Util.filter(testAndApply(Objects::nonNull, getEnumConstants(type), Arrays::stream, null), e -> {
+		} else if (Util.isAssignableFrom(Enum.class, type) && (list = Util
+				.toList(Util.filter(testAndApply(Objects::nonNull, getEnumConstants(type), Arrays::stream, null), e -> {
 					//
 					final String name = name(Util.cast(Enum.class, e));
 					//
@@ -10727,8 +10725,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} else if (Objects.equals(type, Iterable.class)) {
 			//
-			value = Unit
-					.with(toList(Util.map(Util.stream(getObjectList(ObjectMap.getObject(objectMap, ObjectMapper.class),
+			value = Unit.with(
+					Util.toList(Util.map(Util.stream(getObjectList(ObjectMap.getObject(objectMap, ObjectMapper.class),
 							CellUtil.getStringCellValue(cell))), x -> Util.toString(x))));
 			//
 		} else if (Objects.equals(type, Integer.class)) {
@@ -11334,7 +11332,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 		private static void printStackTrace(final Throwable throwable) {
 			//
-			final List<Method> ms = toList(Util.filter(
+			final List<Method> ms = Util.toList(Util.filter(
 					testAndApply(Objects::nonNull, getDeclaredMethods(Throwable.class), Arrays::stream, null),
 					m -> m != null && StringUtils.equals(Util.getName(m), "printStackTrace")
 							&& m.getParameterCount() == 0));
@@ -11551,7 +11549,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		voice.setYomi(Util.cast(Yomi.class, getSelectedItem(instance.cbmYomi)));
 		//
 		setListNames(voice,
-				toList(Util.map(Util.stream(getObjectList(objectMapper, Util.getText(instance.tfListNames))),
+				Util.toList(Util.map(Util.stream(getObjectList(objectMapper, Util.getText(instance.tfListNames))),
 						x -> Util.toString(x))));
 		//
 		voice.setJlptLevel(Util.toString(getSelectedItem(instance.cbmJlptLevel)));
@@ -13149,7 +13147,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		String voiceId = null;
 		//
-		final String[] as = toArray(toList(
+		final String[] as = toArray(Util.toList(
 				Util.filter(testAndApply(Objects::nonNull, attributes, Arrays::stream, null), StringUtils::isNotEmpty)),
 				new String[] {});
 		//
@@ -13333,7 +13331,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			if (fs == null) {
 				//
-				fs = toList(sorted(Util.filter(
+				fs = Util.toList(sorted(Util.filter(
 						testAndApply(Objects::nonNull, FieldUtils.getAllFields(LocaleID.class), Arrays::stream, null),
 						x -> x != null && !Objects.equals(Util.getType(x), Util.getDeclaringClass(x))
 								&& !x.isSynthetic() && !isStatic(x)),
@@ -13616,7 +13614,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Nullable
 	private static List<Field> getVisibileVoiceFields() {
 		//
-		return toList(FailableStreamUtil.stream(new FailableStream<>(
+		return Util.toList(FailableStreamUtil.stream(new FailableStream<>(
 				testAndApply(x -> x != null, FieldUtils.getAllFields(Voice.class), Arrays::stream, null)).filter(f -> {
 					//
 					final Annotation[] as = getDeclaredAnnotations(f);
@@ -13655,7 +13653,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Nullable
 	private static IValue0<Object> getWriter(final Object instance) {
 		//
-		final List<Field> fs = toList(Util.filter(testAndApply(Objects::nonNull,
+		final List<Field> fs = Util.toList(Util.filter(testAndApply(Objects::nonNull,
 				testAndApply(Objects::nonNull, Util.getClass(instance), FieldUtils::getAllFields, null), Arrays::stream,
 				null), f -> Objects.equals(Util.getName(f), "_writer")));
 		//
@@ -13809,8 +13807,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final String name = Util.getName(f);
 		//
-		final List<Annotation> annotations = toList(
-				Util.filter(testAndApply(Objects::nonNull, getDeclaredAnnotations(f), Arrays::stream, null),
+		final List<Annotation> annotations = Util
+				.toList(Util.filter(testAndApply(Objects::nonNull, getDeclaredAnnotations(f), Arrays::stream, null),
 						a -> Objects.equals(annotationType(a), spreadsheetColumnClass)));
 		//
 		if (annotations != null) {
@@ -13821,7 +13819,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			if (size == 1) {
 				//
-				final List<Method> ms = toList(
+				final List<Method> ms = Util.toList(
 						Util.filter(testAndApply(Objects::nonNull, getDeclaredMethods(Util.getClass(annotation)),
 								Arrays::stream, null), m -> Objects.equals(Util.getName(m), VALUE)));
 				//
@@ -13874,8 +13872,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // try
 			//
-		final List<String> fieldNames = toList(
-				Util.map(Arrays.stream(FieldUtils.getAllFields(Voice.class)), Util::getName));
+		final List<String> fieldNames = Util
+				.toList(Util.map(Arrays.stream(FieldUtils.getAllFields(Voice.class)), Util::getName));
 		//
 		String fieldName = null;
 		//
