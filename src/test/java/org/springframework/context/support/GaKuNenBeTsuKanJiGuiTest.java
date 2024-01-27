@@ -60,9 +60,8 @@ class GaKuNenBeTsuKanJiGuiTest {
 	private static Method METHOD_CREATE_WORK_BOOK, METHOD_SET_SELECTED_ITEM_BY_ITERABLE, METHOD_INVOKE,
 			METHOD_GET_PARAMETER_TYPES, METHOD_EXISTS, METHOD_AND, METHOD_IIF, METHOD_TEST_AND_ACCEPT3,
 			METHOD_TEST_AND_ACCEPT4, METHOD_ADD_ACTION_LISTENER, METHOD_TO_ARRAY, METHOD_GET_DECLARED_METHODS,
-			METHOD_IS_FILE, METHOD_LENGTH, METHOD_LONG_VALUE, METHOD_CONTAINS, METHOD_SET_SELECTED_ITEM,
-			METHOD_SET_PREFERRED_WIDTH, METHOD_GET_PREFERRED_SIZE, METHOD_MAX,
-			METHOD_CREATE_DIMENSION_COMPARATOR = null;
+			METHOD_IS_FILE, METHOD_LENGTH, METHOD_LONG_VALUE, METHOD_SET_SELECTED_ITEM, METHOD_SET_PREFERRED_WIDTH,
+			METHOD_GET_PREFERRED_SIZE, METHOD_MAX, METHOD_CREATE_DIMENSION_COMPARATOR = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -104,8 +103,6 @@ class GaKuNenBeTsuKanJiGuiTest {
 		(METHOD_LENGTH = clz.getDeclaredMethod("length", File.class)).setAccessible(true);
 		//
 		(METHOD_LONG_VALUE = clz.getDeclaredMethod("longValue", Number.class, Long.TYPE)).setAccessible(true);
-		//
-		(METHOD_CONTAINS = clz.getDeclaredMethod("contains", Collection.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_SET_SELECTED_ITEM = clz.getDeclaredMethod("setSelectedItem", ComboBoxModel.class, Object.class))
 				.setAccessible(true);
@@ -738,27 +735,6 @@ class GaKuNenBeTsuKanJiGuiTest {
 			final Object obj = METHOD_LONG_VALUE.invoke(null, instance, defaultValue);
 			if (obj instanceof Long) {
 				return ((Long) obj).longValue();
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testContains() throws Throwable {
-		//
-		Assertions.assertFalse(contains(null, null));
-		//
-		Assertions.assertTrue(contains(Collections.singleton(null), null));
-		//
-	}
-
-	private static boolean contains(final Collection<?> items, final Object item) throws Throwable {
-		try {
-			final Object obj = METHOD_CONTAINS.invoke(null, items, item);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

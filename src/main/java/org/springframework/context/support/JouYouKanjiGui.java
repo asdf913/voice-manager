@@ -782,7 +782,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 				//
 				setSelectedItem(cbmJouYouKanJi,
 						StringUtils.length(text) <= orElse(max(mapToInt(Util.stream(list), StringUtils::length)), 0)
-								? contains(list, text)
+								? Util.contains(list, text)
 								: null);
 				//
 			} // if
@@ -808,10 +808,6 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 
 	private static int orElse(@Nullable final OptionalInt instance, final int other) {
 		return instance != null ? instance.orElse(other) : other;
-	}
-
-	private static boolean contains(@Nullable final Collection<?> items, final Object item) {
-		return items != null && items.contains(item);
 	}
 
 	private static void setSelectedItem(@Nullable final ComboBoxModel<?> instance,

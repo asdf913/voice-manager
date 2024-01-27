@@ -319,17 +319,16 @@ class VoiceManagerTest {
 			METHOD_GET_METHODS_CLASS, METHOD_COPY_OBJECT_MAP, METHOD_DELETE, METHOD_DELETE_ON_EXIT,
 			METHOD_CONVERT_LANGUAGE_CODE_TO_TEXT, METHOD_IS_SELECTED, METHOD_SET_HIRAGANA_OR_KATAKANA,
 			METHOD_SET_ROMAJI, METHOD_AND, METHOD_OR, METHOD_CLEAR_DEFAULT_TABLE_MODEL, METHOD_CLEAR_STRING_BUILDER,
-			METHOD_EXECUTE, METHOD_GET_BYTE_CONVERTER, METHOD_CONTAINS_CUSTOM_PROPERTIES, METHOD_CONTAINS_COLLECTION,
-			METHOD_CONTAINS_LOOKUP, METHOD_GET_LPW_STR, METHOD_GET_SHEET_NAME, METHOD_ACCEPT,
-			METHOD_TO_ARRAY_COLLECTION, METHOD_TO_ARRAY_STREAM1, METHOD_TO_ARRAY_STREAM2, METHOD_GET_ID,
-			METHOD_SET_MAXIMUM, METHOD_GET_CURRENT_SHEET_INDEX, METHOD_GET_DATA_VALIDATION_HELPER,
-			METHOD_CREATE_EXPLICIT_LIST_CONSTRAINT, METHOD_CREATE_VALIDATION, METHOD_CREATE_EXPORT_TASK,
-			METHOD_GET_TAB_INDEX_BY_TITLE, METHOD_GET_DECLARED_FIELD, METHOD_GET_ENUM_CONSTANTS, METHOD_LIST_FILES,
-			METHOD_GET_COLUMN_NAME, METHOD_PUT_ALL_MAP, METHOD_GET_WORK_BOOK, METHOD_GET_OLE_ENTRY_NAMES,
-			METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE, METHOD_GET_DOCUMENT_ELEMENT, METHOD_GET_CHILD_NODES,
-			METHOD_GET_NAMED_ITEM, METHOD_GET_TEXT_CONTENT, METHOD_GET_NAME_FILE, METHOD_GET_NAME_PACKAGE,
-			METHOD_GET_PASS_WORD, METHOD_GET_SUPPLIER, METHOD_GET_LOOKUP, METHOD_GET_LIST,
-			METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK, METHOD_CREATE_DRAWING_PATRIARCH,
+			METHOD_EXECUTE, METHOD_GET_BYTE_CONVERTER, METHOD_CONTAINS_LOOKUP, METHOD_GET_LPW_STR,
+			METHOD_GET_SHEET_NAME, METHOD_ACCEPT, METHOD_TO_ARRAY_COLLECTION, METHOD_TO_ARRAY_STREAM1,
+			METHOD_TO_ARRAY_STREAM2, METHOD_GET_ID, METHOD_SET_MAXIMUM, METHOD_GET_CURRENT_SHEET_INDEX,
+			METHOD_GET_DATA_VALIDATION_HELPER, METHOD_CREATE_EXPLICIT_LIST_CONSTRAINT, METHOD_CREATE_VALIDATION,
+			METHOD_CREATE_EXPORT_TASK, METHOD_GET_TAB_INDEX_BY_TITLE, METHOD_GET_DECLARED_FIELD,
+			METHOD_GET_ENUM_CONSTANTS, METHOD_LIST_FILES, METHOD_GET_COLUMN_NAME, METHOD_PUT_ALL_MAP,
+			METHOD_GET_WORK_BOOK, METHOD_GET_OLE_ENTRY_NAMES, METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE,
+			METHOD_GET_DOCUMENT_ELEMENT, METHOD_GET_CHILD_NODES, METHOD_GET_NAMED_ITEM, METHOD_GET_TEXT_CONTENT,
+			METHOD_GET_NAME_FILE, METHOD_GET_NAME_PACKAGE, METHOD_GET_PASS_WORD, METHOD_GET_SUPPLIER, METHOD_GET_LOOKUP,
+			METHOD_GET_LIST, METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK, METHOD_CREATE_DRAWING_PATRIARCH,
 			METHOD_CREATE_CELL_COMMENT, METHOD_CREATE_CLIENT_ANCHOR, METHOD_CREATE_RICH_TEXT_STRING,
 			METHOD_SET_CELL_COMMENT, METHOD_SET_AUTHOR, METHOD_TEST_AND_ACCEPT_PREDICATE,
 			METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_FIND_FIELDS_BY_VALUE, METHOD_GET_PACKAGE, METHOD_BROWSE,
@@ -597,12 +596,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_GET_BYTE_CONVERTER = clz.getDeclaredMethod("getByteConverter", ConfigurableListableBeanFactory.class,
 				String.class, Object.class)).setAccessible(true);
-		//
-		(METHOD_CONTAINS_CUSTOM_PROPERTIES = clz.getDeclaredMethod("contains", CustomProperties.class, String.class))
-				.setAccessible(true);
-		//
-		(METHOD_CONTAINS_COLLECTION = clz.getDeclaredMethod("contains", Collection.class, Object.class))
-				.setAccessible(true);
 		//
 		(METHOD_CONTAINS_LOOKUP = clz.getDeclaredMethod("contains", Lookup.class, Object.class, Object.class))
 				.setAccessible(true);
@@ -1341,10 +1334,6 @@ class VoiceManagerTest {
 				if (Objects.equals(methodName, "toArray")) {
 					//
 					return toArray;
-					//
-				} else if (Objects.equals(methodName, "contains")) {
-					//
-					return contains;
 					//
 				} // if
 					//
@@ -5684,42 +5673,12 @@ class VoiceManagerTest {
 	@Test
 	void testContains() throws Throwable {
 		//
-		Assertions.assertFalse(contains((Collection<?>) null, null));
-		//
-		Assertions.assertEquals(ih.contains = Boolean.FALSE, Boolean.valueOf(contains(collection, null)));
-		//
-		Assertions.assertEquals(ih.contains = Boolean.TRUE, Boolean.valueOf(contains(collection, null)));
-		//
 		// org.springframework.context.support.VoiceManagerTest.contains(org.springframework.context.support.Lookup,java.lang.Object,java.lang.Object)
 		//
 		Assertions.assertEquals(ih.contains = Boolean.FALSE, contains(lookup, null, null));
 		//
 		Assertions.assertEquals(ih.contains = Boolean.TRUE, contains(lookup, null, null));
 		//
-	}
-
-	private static boolean contains(final CustomProperties instance, final String name) throws Throwable {
-		try {
-			final Object obj = METHOD_CONTAINS_CUSTOM_PROPERTIES.invoke(null, instance, name);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	private static boolean contains(final Collection<?> items, final Object item) throws Throwable {
-		try {
-			final Object obj = METHOD_CONTAINS_COLLECTION.invoke(null, items, item);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	private static boolean contains(final Lookup instance, final Object row, final Object column) throws Throwable {

@@ -1968,7 +1968,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 								Boolean.logicalAnd(StringUtils.equalsIgnoreCase("xlsx", string),
 										Objects.equals("Microsoft Office Open XML", message)))) {
 					//
-					testAndAccept((a, b) -> !contains(a, b), classes = getIfNull(classes, ArrayList::new),
+					testAndAccept((a, b) -> !Util.contains(a, b), classes = getIfNull(classes, ArrayList::new),
 							Util.getKey(en), Util::add);
 					//
 				} // if
@@ -2266,7 +2266,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-			return !contains(compontentClassNotFocus, Util.getClass(x));
+			return !Util.contains(compontentClassNotFocus, Util.getClass(x));
 			//
 		};
 		//
@@ -4219,7 +4219,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		final JComboBox<Class> jcbClass = new JComboBox<Class>(
 				cbmWorkbookClass = new DefaultComboBoxModel<>((Class[]) toArray(classes, new Class[] {})));
 		//
-		testAndRun(contains(keySet(IValue0Util.getValue0(getWorkbookClassFailableSupplierMap())), workbookClass),
+		testAndRun(Util.contains(keySet(IValue0Util.getValue0(getWorkbookClassFailableSupplierMap())), workbookClass),
 				() -> setSelectedItem(cbmWorkbookClass, workbookClass));
 		//
 		final ListCellRenderer<?> lcr = getRenderer(jcbClass);
@@ -5372,28 +5372,28 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				testAndApply(Objects::nonNull, Util.getDeclaredFields(VoiceManager.class), Arrays::stream, null),
 				f -> isAnnotationPresent(f, SystemClipboard.class)));
 		//
-		testAndRun(contains(Util.toList(Util.filter(
+		testAndRun(Util.contains(Util.toList(Util.filter(
 				FailableStreamUtil.stream(FailableStreamUtil.map(fs, f -> FieldUtils.readField(f, this, true))),
 				Objects::nonNull)), source), () -> actionPerformedForSystemClipboardAnnotated(nonTest, source));
 		//
 		// Speech Rate
 		//
-		testAndRun(contains(getObjectsByGroupAnnotation(this, SPEECH_RATE), source),
+		testAndRun(Util.contains(getObjectsByGroupAnnotation(this, SPEECH_RATE), source),
 				() -> actionPerformedForSpeechRate(source));
 		//
 		// Conversion
 		//
-		testAndRun(contains(getObjectsByGroupAnnotation(this, "Conversion"), source),
+		testAndRun(Util.contains(getObjectsByGroupAnnotation(this, "Conversion"), source),
 				() -> actionPerformedForConversion(source));
 		//
 		// Pronunciation
 		//
-		testAndRun(contains(getObjectsByGroupAnnotation(this, PRONUNCIATION), source),
+		testAndRun(Util.contains(getObjectsByGroupAnnotation(this, PRONUNCIATION), source),
 				() -> actionPerformedForPronunciation(source));
 		//
 		// Import
 		//
-		testAndRun(contains(getObjectsByGroupAnnotation(this, "Import"), source),
+		testAndRun(Util.contains(getObjectsByGroupAnnotation(this, "Import"), source),
 				() -> actionPerformedForImport(source, headless));
 		//
 		if (Objects.equals(source, btnSpeak)) {
@@ -6752,7 +6752,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			final List<Object> objects = new ArrayList<>(Collections.singleton(IValue0Util.getValue0(iValue0)));
 			//
-			if (isAllCharactersAllowed(romaji, allowedRomajiCharacters) && !contains(objects, romaji)) {
+			if (isAllCharactersAllowed(romaji, allowedRomajiCharacters) && !Util.contains(objects, romaji)) {
 				//
 				Util.add(objects, romaji);
 				//
@@ -7697,8 +7697,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-			testAndAccept((a, b) -> !contains(a, b), list = ObjectUtils.getIfNull(list, ArrayList::new), f, Util::add,
-					null);
+			testAndAccept((a, b) -> !Util.contains(a, b), list = ObjectUtils.getIfNull(list, ArrayList::new), f,
+					Util::add, null);
 			//
 		} // for
 			//
@@ -8142,7 +8142,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			for (int i = 0; i < intValue(getNumberOfSheets(workbook), 0); i++) {
 				//
-				if (contains(sheetExclued, getSheetName(sheet = WorkbookUtil.getSheetAt(workbook, i)))) {
+				if (Util.contains(sheetExclued, getSheetName(sheet = WorkbookUtil.getSheetAt(workbook, i)))) {
 					//
 					continue;
 					//
@@ -8233,7 +8233,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 					} // if
 						//
-				} else if (contains(oleEntryNames, "Workbook")) {
+				} else if (Util.contains(oleEntryNames, "Workbook")) {
 					//
 					try {
 						//
@@ -8436,10 +8436,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		if (instance != null) {
 			instance.setMaximum(n);
 		}
-	}
-
-	private static boolean contains(@Nullable final Collection<?> items, @Nullable final Object item) {
-		return items != null && items.contains(item);
 	}
 
 	private static <T> void accept(final Consumer<? super T> action, final T a, final T b,
@@ -8700,7 +8696,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			setSelectedItem(cbmJouYouKanJi,
 					StringUtils.length(text) <= orElse(max(mapToInt(Util.stream(list), StringUtils::length)), 0)
-							? contains(list, text)
+							? Util.contains(list, text)
 							: null);
 			//
 		} // if
@@ -8730,7 +8726,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-			if (!contains(list = getIfNull(list, ArrayList::new), key = Util.getKey(en))) {
+			if (!Util.contains(list = getIfNull(list, ArrayList::new), key = Util.getKey(en))) {
 				//
 				Util.add(list, key);
 				//
@@ -11302,7 +11298,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						final String hex = testAndApply(Objects::nonNull, getBytes(Util.toString(w)),
 								DigestUtils::sha512Hex, null);
 						//
-						if (!contains(throwableStackTraceHexs, hex)) {
+						if (!Util.contains(throwableStackTraceHexs, hex)) {
 							//
 							if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
 								//

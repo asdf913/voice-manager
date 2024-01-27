@@ -302,7 +302,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 					//
 				} // if
 					//
-				if (!contains(list = ObjectUtils.getIfNull(list, ArrayList::new), key = Util.getKey(en))) {
+				if (!Util.contains(list = ObjectUtils.getIfNull(list, ArrayList::new), key = Util.getKey(en))) {
 					//
 					Util.add(list = ObjectUtils.getIfNull(list, ArrayList::new), key);
 					//
@@ -598,10 +598,6 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 	@Nullable
 	private static <T> Iterator<T> iterator(@Nullable final Iterable<T> instance) {
 		return instance != null ? instance.iterator() : null;
-	}
-
-	private static boolean contains(@Nullable final Collection<?> items, final Object item) {
-		return items != null && items.contains(item);
 	}
 
 	private static void setSelectedItem(@Nullable final ComboBoxModel<?> instance,
