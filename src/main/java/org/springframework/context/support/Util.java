@@ -312,7 +312,7 @@ public abstract class Util {
 		//
 	}
 
-	private static boolean isStatic(final Member instance) {
+	private static boolean isStatic(@Nullable final Member instance) {
 		return instance != null && Modifier.isStatic(instance.getModifiers());
 	}
 
