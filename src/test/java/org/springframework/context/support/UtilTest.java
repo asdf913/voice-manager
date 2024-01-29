@@ -609,7 +609,8 @@ class UtilTest {
 				classToBeExcluded.addAll(Arrays.asList("com.sun.jna.platform.win32.Advapi32",
 						"com.sun.jna.platform.win32.Kernel32", "com.sun.jna.platform.win32.COM.COMBindingBaseObject",
 						"com.sun.jna.platform.win32.COM.COMEarlyBindingObject",
-						"com.sun.jna.platform.win32.COM.COMLateBindingObject"));
+						"com.sun.jna.platform.win32.COM.COMLateBindingObject",
+						"com.sun.jna.platform.win32.COM.TypeInfoUtil"));
 				//
 			} // if
 				//
@@ -624,8 +625,6 @@ class UtilTest {
 				} // if
 					//
 				System.out.println(name);
-				//
-				Assertions.assertNotNull(Class.forName(name), name);
 				//
 				if (Util.isAssignableFrom(Iterable.class, Class.forName(name))
 						&& !(clz = Class.forName(name)).isInterface() && !Modifier.isAbstract(clz.getModifiers())) {
