@@ -624,6 +624,8 @@ class UtilTest {
 					//
 				LoggerFactory.getLogger(getClass()).info("{}", name);
 				//
+				System.out.println(name);
+				//
 				Assertions.assertNotNull(Class.forName(name), name);
 				//
 				if (Util.isAssignableFrom(Iterable.class, Class.forName(name))
