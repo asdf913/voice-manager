@@ -621,6 +621,8 @@ class UtilTest {
 					//
 				} // if
 					//
+				Assertions.assertNotNull(Class.forName(name), name);
+				//
 				if (Util.isAssignableFrom(Iterable.class, Class.forName(name))
 						&& !(clz = Class.forName(name)).isInterface() && !Modifier.isAbstract(clz.getModifiers())) {
 					//
