@@ -8,6 +8,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -596,6 +598,15 @@ class UtilTest {
 			if (GraphicsEnvironment.isHeadless()) {
 				//
 				classToBeExcluded.add("com.sun.jna.platform.KeyboardUtils");
+				//
+			} // if
+				//
+			final FileSystem fs = FileSystems.getDefault();
+			//
+			if (!Objects.equals("sun.nio.fs.WindowsFileSystemProvider",
+					Util.getName(Util.getClass(fs != null ? fs.provider() : null)))) {
+				//
+				classToBeExcluded.add("com.sun.jna.platform.win32.Advapi32");
 				//
 			} // if
 				//
