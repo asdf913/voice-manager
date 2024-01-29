@@ -214,7 +214,7 @@
 		<dependency>
 			<groupId>org.zeroturnaround</groupId>
 			<artifactId>zt-zip</artifactId>
-			<version>1.16</version>
+			<version>1.17</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.odftoolkit/simple-odf -->
 		<dependency>
@@ -380,6 +380,13 @@
 					<artifactId>xercesImpl</artifactId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/io.github.classgraph/classgraph -->
+		<dependency>
+		    <groupId>io.github.classgraph</groupId>
+		    <artifactId>classgraph</artifactId>
+		    <version>4.8.165</version>
+		    <scope>test</scope>
 		</dependency>
 	</dependencies>
 	<build>
