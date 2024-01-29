@@ -608,7 +608,8 @@ class UtilTest {
 				//
 				classToBeExcluded.addAll(Arrays.asList("com.sun.jna.platform.win32.Advapi32",
 						"com.sun.jna.platform.win32.Kernel32", "com.sun.jna.platform.win32.COM.COMBindingBaseObject",
-						"com.sun.jna.platform.win32.COM.COMEarlyBindingObject"));
+						"com.sun.jna.platform.win32.COM.COMEarlyBindingObject",
+						"com.sun.jna.platform.win32.COM.COMLateBindingObject"));
 				//
 			} // if
 				//
