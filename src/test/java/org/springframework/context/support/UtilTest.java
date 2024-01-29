@@ -607,8 +607,8 @@ class UtilTest {
 			if (!Objects.equals("sun.nio.fs.WindowsFileSystemProvider",
 					Util.getName(Util.getClass(fs != null ? fs.provider() : null)))) {
 				//
-				classToBeExcluded.addAll(
-						Arrays.asList("com.sun.jna.platform.win32.Advapi32", "com.sun.jna.platform.win32.Kernel32"));
+				classToBeExcluded.addAll(Arrays.asList("com.sun.jna.platform.win32.Advapi32",
+						"com.sun.jna.platform.win32.Kernel32", "com.sun.jna.platform.win32.COM.COMBindingBaseObject"));
 				//
 			} // if
 				//
@@ -622,8 +622,6 @@ class UtilTest {
 					//
 				} // if
 					//
-				LoggerFactory.getLogger(getClass()).info("{}", name);
-				//
 				System.out.println(name);
 				//
 				Assertions.assertNotNull(Class.forName(name), name);
