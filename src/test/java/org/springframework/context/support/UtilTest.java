@@ -631,7 +631,8 @@ class UtilTest {
 						"com.sun.jna.platform.win32.Secur32", "com.sun.jna.platform.win32.SetupApi",
 						"com.sun.jna.platform.win32.Shell32", "com.sun.jna.platform.win32.Shlwapi",
 						"com.sun.jna.platform.win32.Sspi", "com.sun.jna.platform.win32.User32",
-						"com.sun.jna.platform.win32.Version", "com.sun.jna.platform.win32.Wevtapi");
+						"com.sun.jna.platform.win32.Version", "com.sun.jna.platform.win32.Wevtapi",
+						"com.sun.jna.platform.win32.Wininet");
 				//
 				commonPrefix = Unit
 						.with(StringUtils.getCommonPrefix(list != null ? list.toArray(new String[] {}) : null));
