@@ -597,8 +597,7 @@ class UtilTest {
 			//
 			if (GraphicsEnvironment.isHeadless()) {
 				//
-				classToBeExcluded.addAll(
-						Arrays.asList("com.sun.jna.platform.KeyboardUtils", "com.sun.jna.platform.win32.Kernel32"));
+				classToBeExcluded.add("com.sun.jna.platform.KeyboardUtils");
 				//
 			} // if
 				//
@@ -607,7 +606,8 @@ class UtilTest {
 			if (!Objects.equals("sun.nio.fs.WindowsFileSystemProvider",
 					Util.getName(Util.getClass(fs != null ? fs.provider() : null)))) {
 				//
-				classToBeExcluded.add("com.sun.jna.platform.win32.Advapi32");
+				classToBeExcluded.addAll(
+						Arrays.asList("com.sun.jna.platform.win32.Advapi32", "com.sun.jna.platform.win32.Kernel32"));
 				//
 			} // if
 				//
