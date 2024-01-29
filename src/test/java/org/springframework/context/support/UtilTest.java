@@ -22,11 +22,8 @@ import java.util.stream.Stream;
 import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
-import org.javatuples.Unit;
-import org.javatuples.valueintf.IValue0;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -606,12 +603,10 @@ class UtilTest {
 				//
 			final FileSystem fs = FileSystems.getDefault();
 			//
-			IValue0<String> commonPrefix = null;
-			//
 			if (!Objects.equals("sun.nio.fs.WindowsFileSystemProvider",
 					Util.getName(Util.getClass(fs != null ? fs.provider() : null)))) {
 				//
-				final List<String> list = Arrays.asList("com.sun.jna.platform.win32.Advapi32",
+				classToBeExcluded.addAll(Arrays.asList("com.sun.jna.platform.win32.Advapi32",
 						"com.sun.jna.platform.win32.Kernel32", "com.sun.jna.platform.win32.COM.COMBindingBaseObject",
 						"com.sun.jna.platform.win32.COM.COMEarlyBindingObject",
 						"com.sun.jna.platform.win32.COM.COMLateBindingObject",
@@ -633,16 +628,7 @@ class UtilTest {
 						"com.sun.jna.platform.win32.Version", "com.sun.jna.platform.win32.Wevtapi",
 						"com.sun.jna.platform.win32.Wininet", "com.sun.jna.platform.win32.Winsock2",
 						"com.sun.jna.platform.win32.Winspool", "com.sun.jna.platform.win32.Wtsapi32",
-						"com.sun.jna.platform.win32.Wtsapi32$WTS_SESSION_INFO",
-						"com.sun.jna.platform.win32.Wtsapi32$WTS_PROCESS_INFO_EX",
-						"com.sun.jna.platform.win32.Wtsapi32$WTS_INFO_CLASS",
-						"com.sun.jna.platform.win32.Wtsapi32$WTS_CONNECTSTATE_CLASS",
-						"com.sun.jna.platform.win32.Wtsapi32$WTS_CLIENT_ADDRESS");
-				//
-				commonPrefix = Unit
-						.with(StringUtils.getCommonPrefix(list != null ? list.toArray(new String[] {}) : null));
-				//
-				classToBeExcluded.addAll(list);
+						"jnafilechooser.win32.Ole32"));
 				//
 			} // if
 				//
@@ -656,11 +642,7 @@ class UtilTest {
 					//
 				} // if
 					//
-//				if (commonPrefix == null || StringUtils.startsWith(name, IValue0Util.getValue0(commonPrefix))) {
-				//
 				System.out.println(name);
-				//
-//				} // if
 				//
 				if (Util.isAssignableFrom(Iterable.class, Class.forName(name))
 						&& !(clz = Class.forName(name)).isInterface() && !Modifier.isAbstract(clz.getModifiers())) {
