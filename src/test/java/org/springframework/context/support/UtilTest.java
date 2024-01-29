@@ -597,7 +597,8 @@ class UtilTest {
 			//
 			if (GraphicsEnvironment.isHeadless()) {
 				//
-				classToBeExcluded.add("com.sun.jna.platform.KeyboardUtils");
+				classToBeExcluded.addAll(
+						Arrays.asList("com.sun.jna.platform.KeyboardUtils", "com.sun.jna.platform.win32.Kernel32"));
 				//
 			} // if
 				//
