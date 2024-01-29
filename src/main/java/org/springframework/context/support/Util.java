@@ -317,6 +317,7 @@ public abstract class Util {
 		return instance != null && Modifier.isStatic(instance.getModifiers());
 	}
 
+	@Nullable
 	static <T> Iterator<T> iterator(@Nullable final Iterable<T> instance) {
 		//
 		if (instance == null) {
