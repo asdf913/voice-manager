@@ -625,7 +625,8 @@ class UtilTest {
 						"com.sun.jna.platform.win32.IPHlpAPI", "com.sun.jna.platform.win32.Mpr",
 						"com.sun.jna.platform.win32.Msi", "com.sun.jna.platform.win32.Netapi32",
 						"com.sun.jna.platform.win32.NtDll", "com.sun.jna.platform.win32.Ole32",
-						"com.sun.jna.platform.win32.OleAuto", "com.sun.jna.platform.win32.OpenGL32");
+						"com.sun.jna.platform.win32.OleAuto", "com.sun.jna.platform.win32.OpenGL32",
+						"com.sun.jna.platform.win32.Pdh");
 				//
 				commonPrefix = Unit
 						.with(StringUtils.getCommonPrefix(list != null ? list.toArray(new String[] {}) : null));
