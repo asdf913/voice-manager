@@ -1,5 +1,6 @@
 package org.springframework.context.support;
 
+import java.awt.GraphicsEnvironment;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
@@ -7,6 +8,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -297,7 +299,7 @@ class UtilTest {
 			//
 			String name = null;
 			//
-			final Collection<String> classToBeExcluded = Arrays.asList(
+			final Collection<String> classToBeExcluded = new ArrayList<>(Arrays.asList(
 					//
 					"com.helger.css.parser.ParserCSS30TokenManager"
 					//
@@ -589,8 +591,14 @@ class UtilTest {
 					//
 					, "org.eclipse.jetty.http.pathmap.PathSpecSet"
 			//
-			);
+			));
 			//
+			if (GraphicsEnvironment.isHeadless()) {
+				//
+				classToBeExcluded.add("com.sun.jna.platform.KeyboardUtils");
+				//
+			} // if
+				//
 			Class<?> clz = null;
 			//
 			for (final ClassInfo classInfo : classInfos) {
