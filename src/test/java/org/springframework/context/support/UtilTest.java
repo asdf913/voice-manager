@@ -623,7 +623,8 @@ class UtilTest {
 						"com.sun.jna.platform.win32.Ddeml", "com.sun.jna.platform.win32.DdemlUtil$DdemlException",
 						"com.sun.jna.platform.win32.Dxva2", "com.sun.jna.platform.win32.GDI32",
 						"com.sun.jna.platform.win32.IPHlpAPI", "com.sun.jna.platform.win32.Mpr",
-						"com.sun.jna.platform.win32.Msi", "com.sun.jna.platform.win32.Netapi32");
+						"com.sun.jna.platform.win32.Msi", "com.sun.jna.platform.win32.Netapi32",
+						"com.sun.jna.platform.win32.NtDll");
 				//
 				commonPrefix = Unit
 						.with(StringUtils.getCommonPrefix(list != null ? list.toArray(new String[] {}) : null));
