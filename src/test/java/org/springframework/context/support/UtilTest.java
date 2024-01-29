@@ -616,7 +616,7 @@ class UtilTest {
 						"com.sun.jna.platform.win32.Crypt32", "com.sun.jna.platform.win32.Cryptui",
 						"com.sun.jna.platform.win32.Ddeml", "com.sun.jna.platform.win32.DdemlUtil$DdemlException",
 						"com.sun.jna.platform.win32.Dxva2", "com.sun.jna.platform.win32.GDI32",
-						"com.sun.jna.platform.win32.IPHlpAPI"));
+						"com.sun.jna.platform.win32.IPHlpAPI", "com.sun.jna.platform.win32.Mpr"));
 			} // if
 				//
 			Class<?> clz = null;
