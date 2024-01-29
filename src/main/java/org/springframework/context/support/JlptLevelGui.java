@@ -304,7 +304,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 
 	private static void setPreferredWidth(final int width, @Nullable final Iterable<Component> cs) {
 		//
-		if (iterator(cs) != null) {
+		if (Util.iterator(cs) != null) {
 			//
 			Dimension d = null;
 			//
@@ -322,11 +322,6 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 				//
 		} // if
 			//
-	}
-
-	@Nullable
-	private static <T> Iterator<T> iterator(@Nullable final Iterable<T> instance) {
-		return instance != null ? instance.iterator() : null;
 	}
 
 	private ObjectMapper getObjectMapper() {
@@ -644,7 +639,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 
 	private static <T> void forEach(@Nullable final Iterable<T> items, @Nullable final Consumer<? super T> action) {
 		//
-		if (iterator(items) != null && (action != null || Proxy.isProxyClass(Util.getClass(items)))) {
+		if (Util.iterator(items) != null && (action != null || Proxy.isProxyClass(Util.getClass(items)))) {
 			//
 			for (final T item : items) {
 				//

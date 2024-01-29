@@ -343,7 +343,7 @@ public class MapReportGui extends JFrame
 		//
 		final Set<?> keySet = MultimapUtil.keySet(mm);
 		//
-		if (keySet != null && iterator(keySet) != null) {
+		if (keySet != null && Util.iterator(keySet) != null) {
 			//
 			Object[] os = null;
 			//
@@ -436,7 +436,7 @@ public class MapReportGui extends JFrame
 		//
 		final Set<?> keySet = MultimapUtil.keySet(mm);
 		//
-		if (iterator(keySet) != null) {
+		if (Util.iterator(keySet) != null) {
 			//
 			for (final Object key : keySet) {
 				//
@@ -491,11 +491,11 @@ public class MapReportGui extends JFrame
 		//
 		Multimap<?, ?> mm = null;
 		//
-		if (maps != null && iterator(maps) != null) {
+		if (maps != null && Util.iterator(maps) != null) {
 			//
 			for (final Map<?, ?> t : maps) {
 				//
-				if (t == null || iterator(Util.entrySet(t)) == null) {
+				if (t == null || Util.iterator(Util.entrySet(t)) == null) {
 					//
 					continue;
 					//
@@ -617,7 +617,7 @@ public class MapReportGui extends JFrame
 	private static boolean isAllAttributesMatched(@Nullable final Map<?, ?> attributes,
 			@Nullable final AttributeAccessor aa) {
 		//
-		if (iterator(Util.entrySet(attributes)) != null) {
+		if (Util.iterator(Util.entrySet(attributes)) != null) {
 			//
 			for (final Entry<?, ?> entry : Util.entrySet(attributes)) {
 				//
@@ -640,11 +640,6 @@ public class MapReportGui extends JFrame
 			//
 		return true;
 		//
-	}
-
-	@Nullable
-	private static <T> Iterator<T> iterator(@Nullable final Iterable<T> instance) {
-		return instance != null ? instance.iterator() : null;
 	}
 
 }

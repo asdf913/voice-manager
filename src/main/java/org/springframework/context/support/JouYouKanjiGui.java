@@ -827,7 +827,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 
 	private static void setPreferredWidth(final int width, final Iterable<Component> cs) {
 		//
-		if (iterator(cs) != null) {
+		if (Util.iterator(cs) != null) {
 			//
 			Dimension d = null;
 			//
@@ -845,11 +845,6 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 				//
 		} // if
 			//
-	}
-
-	@Nullable
-	private static <T> Iterator<T> iterator(@Nullable final Iterable<T> instance) {
-		return instance != null ? instance.iterator() : null;
 	}
 
 	@Nullable

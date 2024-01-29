@@ -28,7 +28,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Objects;
@@ -284,7 +283,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 			final Collection<Entry<String, String>> entries = MultimapUtil
 					.entries(IValue0Util.getValue0(gaKuNenBeTsuKanJiMultimap));
 			//
-			if (iterator(entries) == null) {
+			if (Util.iterator(entries) == null) {
 				//
 				return;
 				//
@@ -494,7 +493,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 		//
 		Row row = null;
 		//
-		if (iterator(MultimapUtil.entries(multimap)) != null) {
+		if (Util.iterator(MultimapUtil.entries(multimap)) != null) {
 			//
 			for (final Entry<?, ?> en : MultimapUtil.entries(multimap)) {
 				//
@@ -595,11 +594,6 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 		}
 	}
 
-	@Nullable
-	private static <T> Iterator<T> iterator(@Nullable final Iterable<T> instance) {
-		return instance != null ? instance.iterator() : null;
-	}
-
 	private static void setSelectedItem(@Nullable final ComboBoxModel<?> instance,
 			@Nullable final Object selectedItem) {
 		if (instance != null) {
@@ -628,7 +622,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 
 	private static void setPreferredWidth(final int width, @Nullable final Iterable<Component> cs) {
 		//
-		if (iterator(cs) != null) {
+		if (Util.iterator(cs) != null) {
 			//
 			Dimension d = null;
 			//

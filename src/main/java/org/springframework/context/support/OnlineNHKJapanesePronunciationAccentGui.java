@@ -736,7 +736,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		final Set<Entry<String, String>> entrySet = Util
 				.entrySet(pronunciation != null ? pronunciation.getAudioUrls() : null);
 		//
-		if (iterator(entrySet) != null) {
+		if (Util.iterator(entrySet) != null) {
 			//
 			for (final Entry<String, String> entry : entrySet) {
 				//
@@ -839,7 +839,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 	private static void saveAudio(final boolean headless, @Nullable final JFileChooser jfc,
 			@Nullable final Iterable<String> audioUrls) {
 		//
-		if (iterator(audioUrls) != null) {
+		if (Util.iterator(audioUrls) != null) {
 			//
 			for (final String u : audioUrls) {
 				//
@@ -1008,11 +1008,6 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		if (instance != null) {
 			instance.setContents(contents, owner);
 		}
-	}
-
-	@Nullable
-	private static <E> Iterator<E> iterator(@Nullable final Iterable<E> instance) {
-		return instance != null ? instance.iterator() : null;
 	}
 
 	private static int getSize(@Nullable final ListModel<?> instance) {
