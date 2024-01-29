@@ -22,8 +22,12 @@ import java.util.stream.Stream;
 import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
+import org.javatuples.Unit;
+import org.javatuples.valueintf.IValue0;
+import org.javatuples.valueintf.IValue0Util;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -603,10 +607,12 @@ class UtilTest {
 				//
 			final FileSystem fs = FileSystems.getDefault();
 			//
+			IValue0<String> commonPrefix = null;
+			//
 			if (!Objects.equals("sun.nio.fs.WindowsFileSystemProvider",
 					Util.getName(Util.getClass(fs != null ? fs.provider() : null)))) {
 				//
-				classToBeExcluded.addAll(Arrays.asList("com.sun.jna.platform.win32.Advapi32",
+				final List<String> list = Arrays.asList("com.sun.jna.platform.win32.Advapi32",
 						"com.sun.jna.platform.win32.Kernel32", "com.sun.jna.platform.win32.COM.COMBindingBaseObject",
 						"com.sun.jna.platform.win32.COM.COMEarlyBindingObject",
 						"com.sun.jna.platform.win32.COM.COMLateBindingObject",
@@ -617,7 +623,13 @@ class UtilTest {
 						"com.sun.jna.platform.win32.Ddeml", "com.sun.jna.platform.win32.DdemlUtil$DdemlException",
 						"com.sun.jna.platform.win32.Dxva2", "com.sun.jna.platform.win32.GDI32",
 						"com.sun.jna.platform.win32.IPHlpAPI", "com.sun.jna.platform.win32.Mpr",
-						"com.sun.jna.platform.win32.Msi"));
+						"com.sun.jna.platform.win32.Msi", "com.sun.jna.platform.win32.Netapi32");
+				//
+				commonPrefix = Unit
+						.with(StringUtils.getCommonPrefix(list != null ? list.toArray(new String[] {}) : null));
+				//
+				classToBeExcluded.addAll(list);
+				//
 			} // if
 				//
 			Class<?> clz = null;
@@ -630,8 +642,12 @@ class UtilTest {
 					//
 				} // if
 					//
-				System.out.println(name);
-				//
+				if (commonPrefix == null || StringUtils.startsWith(name, IValue0Util.getValue0(commonPrefix))) {
+					//
+					System.out.println(name);
+					//
+				} // if
+					//
 				if (Util.isAssignableFrom(Iterable.class, Class.forName(name))
 						&& !(clz = Class.forName(name)).isInterface() && !Modifier.isAbstract(clz.getModifiers())) {
 					//
