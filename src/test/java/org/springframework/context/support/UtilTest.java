@@ -28,7 +28,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.slf4j.LoggerFactory;
 
 import com.google.common.reflect.Reflection;
 
@@ -608,7 +607,8 @@ class UtilTest {
 					Util.getName(Util.getClass(fs != null ? fs.provider() : null)))) {
 				//
 				classToBeExcluded.addAll(Arrays.asList("com.sun.jna.platform.win32.Advapi32",
-						"com.sun.jna.platform.win32.Kernel32", "com.sun.jna.platform.win32.COM.COMBindingBaseObject"));
+						"com.sun.jna.platform.win32.Kernel32", "com.sun.jna.platform.win32.COM.COMBindingBaseObject",
+						"com.sun.jna.platform.win32.COM.COMEarlyBindingObject"));
 				//
 			} // if
 				//
