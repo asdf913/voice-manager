@@ -612,7 +612,8 @@ class UtilTest {
 						"com.sun.jna.platform.win32.COM.COMLateBindingObject",
 						"com.sun.jna.platform.win32.COM.TypeInfoUtil", "com.sun.jna.platform.win32.COM.TypeLibUtil",
 						"com.sun.jna.platform.win32.COM.util.Factory",
-						"com.sun.jna.platform.win32.COM.util.ObjectFactory", "com.sun.jna.platform.win32.Cfgmgr32"));
+						"com.sun.jna.platform.win32.COM.util.ObjectFactory", "com.sun.jna.platform.win32.Cfgmgr32",
+						"com.sun.jna.platform.win32.Crypt32"));
 				//
 			} // if
 				//
