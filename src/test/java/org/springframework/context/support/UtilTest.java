@@ -628,7 +628,7 @@ class UtilTest {
 						"com.sun.jna.platform.win32.Version", "com.sun.jna.platform.win32.Wevtapi",
 						"com.sun.jna.platform.win32.Wininet", "com.sun.jna.platform.win32.Winsock2",
 						"com.sun.jna.platform.win32.Winspool", "com.sun.jna.platform.win32.Wtsapi32",
-						"jnafilechooser.win32.Ole32"));
+						"jnafilechooser.win32.Ole32", "jnafilechooser.win32.Shell32"));
 				//
 			} // if
 				//
