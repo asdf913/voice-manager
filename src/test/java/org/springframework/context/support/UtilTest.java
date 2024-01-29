@@ -28,6 +28,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.reflect.Reflection;
 
@@ -621,6 +622,8 @@ class UtilTest {
 					//
 				} // if
 					//
+				LoggerFactory.getLogger(getClass()).info("{}", name);
+				//
 				Assertions.assertNotNull(Class.forName(name), name);
 				//
 				if (Util.isAssignableFrom(Iterable.class, Class.forName(name))
