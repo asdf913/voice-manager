@@ -610,7 +610,7 @@ class UtilTest {
 						"com.sun.jna.platform.win32.Kernel32", "com.sun.jna.platform.win32.COM.COMBindingBaseObject",
 						"com.sun.jna.platform.win32.COM.COMEarlyBindingObject",
 						"com.sun.jna.platform.win32.COM.COMLateBindingObject",
-						"com.sun.jna.platform.win32.COM.TypeInfoUtil"));
+						"com.sun.jna.platform.win32.COM.TypeInfoUtil", "com.sun.jna.platform.win32.COM.TypeLibUtil"));
 				//
 			} // if
 				//
