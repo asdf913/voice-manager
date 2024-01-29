@@ -27,7 +27,6 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
-import org.javatuples.valueintf.IValue0Util;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -637,7 +636,8 @@ class UtilTest {
 						"com.sun.jna.platform.win32.Wtsapi32$WTS_SESSION_INFO",
 						"com.sun.jna.platform.win32.Wtsapi32$WTS_PROCESS_INFO_EX",
 						"com.sun.jna.platform.win32.Wtsapi32$WTS_INFO_CLASS",
-						"com.sun.jna.platform.win32.Wtsapi32$WTS_CONNECTSTATE_CLASS");
+						"com.sun.jna.platform.win32.Wtsapi32$WTS_CONNECTSTATE_CLASS",
+						"com.sun.jna.platform.win32.Wtsapi32$WTS_CLIENT_ADDRESS");
 				//
 				commonPrefix = Unit
 						.with(StringUtils.getCommonPrefix(list != null ? list.toArray(new String[] {}) : null));
@@ -656,12 +656,12 @@ class UtilTest {
 					//
 				} // if
 					//
-				if (commonPrefix == null || StringUtils.startsWith(name, IValue0Util.getValue0(commonPrefix))) {
-					//
-					System.out.println(name);
-					//
-				} // if
-					//
+//				if (commonPrefix == null || StringUtils.startsWith(name, IValue0Util.getValue0(commonPrefix))) {
+				//
+				System.out.println(name);
+				//
+//				} // if
+				//
 				if (Util.isAssignableFrom(Iterable.class, Class.forName(name))
 						&& !(clz = Class.forName(name)).isInterface() && !Modifier.isAbstract(clz.getModifiers())) {
 					//
