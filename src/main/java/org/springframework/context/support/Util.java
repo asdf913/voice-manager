@@ -401,14 +401,6 @@ public abstract class Util {
 					//
 				} // if
 					//
-			} else if (isAssignableFrom(Class.forName("java.util.HashSet"), clz)) {
-				//
-				if (Narcissus.getField(instance, Narcissus.findField(clz, "map")) == null) {
-					//
-					return null;
-					//
-				} // if
-					//
 			} else if (isAssignableFrom(Class.forName("com.opencsv.CSVReader"), clz)) {
 				//
 				if (Narcissus.getField(instance, Narcissus.findField(clz, "peekedLines")) == null) {
@@ -1211,6 +1203,14 @@ public abstract class Util {
 		} else if (isAssignableFrom(Class.forName("java.util.TreeSet"), clz)) {
 			//
 			if (Narcissus.getField(instance, Narcissus.findField(clz, "m")) == null) {
+				//
+				return Unit.with(null);
+				//
+			} // if
+				//
+		} else if (isAssignableFrom(Class.forName("java.util.HashSet"), clz)) {
+			//
+			if (Narcissus.getField(instance, Narcissus.findField(clz, "map")) == null) {
 				//
 				return Unit.with(null);
 				//
