@@ -1245,7 +1245,7 @@ public abstract class Util {
 		//
 	}
 
-	private static String getFieldName(final FieldInstruction instance, final ConstantPoolGen cpg) {
+	private static String getFieldName(@Nullable final FieldInstruction instance, final ConstantPoolGen cpg) {
 		return instance != null ? instance.getFieldName(cpg) : null;
 	}
 
