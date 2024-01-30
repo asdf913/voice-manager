@@ -22,6 +22,8 @@ import java.util.stream.Stream;
 import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
 
+import org.apache.bcel.generic.ConstantPoolGen;
+import org.apache.bcel.generic.FieldInstruction;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.junit.jupiter.api.Assertions;
@@ -39,7 +41,8 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class UtilTest {
 
-	private static Method METHOD_GET_JAVA_IO_FILE_SYSTEM_FIELD, METHOD_TEST, METHOD_IS_STATIC = null;
+	private static Method METHOD_GET_JAVA_IO_FILE_SYSTEM_FIELD, METHOD_TEST, METHOD_IS_STATIC,
+			METHOD_GET_FIELD_NMAE_IF_SINGLE_LINE_RETURN_METHOD, METHOD_GET_FIELD_NAME = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -52,6 +55,12 @@ class UtilTest {
 		(METHOD_TEST = clz.getDeclaredMethod("test", Predicate.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_IS_STATIC = clz.getDeclaredMethod("isStatic", Member.class)).setAccessible(true);
+		//
+		(METHOD_GET_FIELD_NMAE_IF_SINGLE_LINE_RETURN_METHOD = clz
+				.getDeclaredMethod("getFieldNmaeIfSingleLineReturnMethod", Method.class)).setAccessible(true);
+		//
+		(METHOD_GET_FIELD_NAME = clz.getDeclaredMethod("getFieldName", FieldInstruction.class, ConstantPoolGen.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -667,6 +676,48 @@ class UtilTest {
 
 	private static ScanResult scan(final ClassGraph instance) {
 		return instance != null ? instance.scan() : null;
+	}
+
+	@Test
+	void testGetFieldNmaeIfSingleLineReturnMethod() throws Throwable {
+		//
+		Assertions.assertNull(getFieldNmaeIfSingleLineReturnMethod(null));
+		//
+	}
+
+	private static String getFieldNmaeIfSingleLineReturnMethod(final Method method) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_FIELD_NMAE_IF_SINGLE_LINE_RETURN_METHOD.invoke(null, method);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetFieldNmae() throws Throwable {
+		//
+		Assertions.assertNull(getFieldName(null, null));
+		//
+	}
+
+	private static String getFieldName(final FieldInstruction instance, final ConstantPoolGen cpg) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_FIELD_NAME.invoke(null, instance, cpg);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 }

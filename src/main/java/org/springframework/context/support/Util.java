@@ -1,8 +1,11 @@
 package org.springframework.context.support;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
@@ -15,6 +18,8 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -22,7 +27,23 @@ import java.util.stream.Stream;
 import javax.annotation.Nullable;
 import javax.swing.text.JTextComponent;
 
+import org.apache.bcel.classfile.ClassParser;
+import org.apache.bcel.classfile.ClassParserUtil;
+import org.apache.bcel.classfile.FieldOrMethodUtil;
+import org.apache.bcel.classfile.JavaClassUtil;
+import org.apache.bcel.generic.ALOAD;
+import org.apache.bcel.generic.ARETURN;
+import org.apache.bcel.generic.ConstantPoolGen;
+import org.apache.bcel.generic.FieldInstruction;
+import org.apache.bcel.generic.GETFIELD;
+import org.apache.bcel.generic.INVOKEINTERFACE;
+import org.apache.bcel.generic.Instruction;
+import org.apache.bcel.generic.InstructionListUtil;
+import org.apache.bcel.generic.MethodGen;
+import org.apache.bcel.generic.MethodGenUtil;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.slf4j.Logger;
@@ -332,6 +353,18 @@ public abstract class Util {
 		//
 		try {
 			//
+			final String fieldName = getFieldNmaeIfSingleLineReturnMethod(Narcissus.findMethod(clz, "iterator"));
+			//
+			if (StringUtils.isNotBlank(fieldName)) {
+				//
+				if (Narcissus.getField(instance, Narcissus.findField(clz, fieldName)) == null) {
+					//
+					return null;
+					//
+				} // if
+					//
+			} // if
+				//
 			if (contains(Arrays.asList("com.google.common.collect.HashMultiset",
 					"com.google.common.collect.LinkedHashMultiset",
 					"org.apache.jena.ext.com.google.common.collect.HashMultiset",
@@ -365,15 +398,6 @@ public abstract class Util {
 			if (isAssignableFrom(Class.forName("com.fasterxml.jackson.databind.deser.impl.BeanPropertyMap"), clz)) {
 				//
 				if (Narcissus.getField(instance, Narcissus.findField(clz, "_hashArea")) == null) {
-					//
-					return null;
-					//
-				} // if
-					//
-			} else if (isAssignableFrom(
-					Class.forName("com.github.andrewoma.dexx.collection.internal.adapter.SetAdapater"), clz)) {
-				//
-				if (Narcissus.getField(instance, Narcissus.findField(clz, "set")) == null) {
 					//
 					return null;
 					//
@@ -416,17 +440,6 @@ public abstract class Util {
 				//
 				if (Narcissus.invokeMethod(instance,
 						Narcissus.findMethod(clz, "multiset", new Class<?>[] {})) == null) {
-					//
-					return null;
-					//
-				} // if
-					//
-			} else if (isAssignableFrom(Class.forName("com.google.common.collect.Sets$DescendingSet"), clz)
-					|| isAssignableFrom(Class.forName(
-							"org.apache.jena.ext.com.google.common.collect.ForwardingNavigableSet$StandardDescendingSet"),
-							clz)) {
-				//
-				if (Narcissus.getField(instance, Narcissus.findField(clz, "forward")) == null) {
 					//
 					return null;
 					//
@@ -550,16 +563,6 @@ public abstract class Util {
 					//
 				} // if
 					//
-			} else if (isAssignableFrom(
-					Class.forName("org.apache.poi.xslf.usermodel.XSLFDiagram$XSLFDiagramGroupShape"), clz)
-					|| isAssignableFrom(Class.forName("org.apache.poi.xslf.usermodel.XSLFGroupShape"), clz)) {
-				//
-				if (Narcissus.getField(instance, Narcissus.findField(clz, "_shapes")) == null) {
-					//
-					return null;
-					//
-				} // if
-					//
 			} else if (isAssignableFrom(Class.forName("org.apache.poi.xslf.usermodel.XSLFSheet"), clz)) {
 				//
 				if (Narcissus.invokeMethod(instance,
@@ -602,42 +605,9 @@ public abstract class Util {
 					//
 				} // if
 					//
-			} else if (isAssignableFrom(Class.forName("org.apache.poi.xssf.usermodel.XSSFSimpleShape"), clz)) {
-				//
-				if (Narcissus.getIntField(instance, Narcissus.findField(clz, "_paragraphs")) == 0) {
-					//
-					return null;
-					//
-				} // if
-					//
 			} else if (isAssignableFrom(Class.forName("org.apache.poi.xssf.usermodel.XSSFShape"), clz)) {
 				//
 				if (Narcissus.getIntField(instance, Narcissus.findField(clz, "drawing")) == 0) {
-					//
-					return null;
-					//
-				} // if
-					//
-			} else if (isAssignableFrom(Class.forName("org.apache.poi.xwpf.usermodel.XWPFAbstractFootnoteEndnote"),
-					clz)) {
-				//
-				if (Narcissus.getIntField(instance, Narcissus.findField(clz, "paragraphs")) == 0) {
-					//
-					return null;
-					//
-				} // if
-					//
-			} else if (isAssignableFrom(Class.forName("org.eclipse.jetty.http.MetaData"), clz)) {
-				//
-				if (Narcissus.getIntField(instance, Narcissus.findField(clz, "_httpFields")) == 0) {
-					//
-					return null;
-					//
-				} // if
-					//
-			} else if (isAssignableFrom(Class.forName("org.javatuples.Tuple"), clz)) {
-				//
-				if (Narcissus.getField(instance, Narcissus.findField(clz, "valueList")) == null) {
 					//
 					return null;
 					//
@@ -842,14 +812,6 @@ public abstract class Util {
 					//
 				} // if
 					//
-			} else if (contains(Arrays.asList("com.helger.commons.log.InMemoryLogger"), name)) {
-				//
-				if (Narcissus.getField(instance, Narcissus.findField(clz, "m_aMessages")) == null) {
-					//
-					return null;
-					//
-				} // if
-					//
 			} else if (contains(Arrays.asList("com.opencsv.bean.CsvToBean"), name)) {
 				//
 				if (Narcissus.getField(instance, Narcissus.findField(clz, "mappingStrategy")) == null) {
@@ -967,14 +929,6 @@ public abstract class Util {
 					//
 				} // if
 					//
-			} else if (contains(Arrays.asList("org.apache.commons.collections4.FluentIterable"), name)) {
-				//
-				if (Narcissus.getField(instance, Narcissus.findField(clz, "iterable")) == null) {
-					//
-					return null;
-					//
-				} // if
-					//
 			} else if (contains(Arrays.asList("org.apache.commons.csv.CSVRecord"), name)) {
 				//
 				if (Narcissus.getField(instance, Narcissus.findField(clz, "values")) == null) {
@@ -986,14 +940,6 @@ public abstract class Util {
 			} else if (contains(Arrays.asList("org.apache.commons.io.IOExceptionList"), name)) {
 				//
 				if (Narcissus.getField(instance, Narcissus.findField(clz, "causeList")) == null) {
-					//
-					return null;
-					//
-				} // if
-					//
-			} else if (contains(Arrays.asList("org.apache.commons.lang3.builder.DiffResult"), name)) {
-				//
-				if (Narcissus.getField(instance, Narcissus.findField(clz, "diffList")) == null) {
 					//
 					return null;
 					//
@@ -1039,15 +985,6 @@ public abstract class Util {
 					//
 				} // if
 					//
-			} else if (contains(Arrays.asList("org.apache.logging.log4j.message.StructuredDataCollectionMessage"),
-					name)) {
-				//
-				if (Narcissus.getIntField(instance, Narcissus.findField(clz, "structuredDataMessageList")) == 0) {
-					//
-					return null;
-					//
-				} // if
-					//
 			} else if (contains(Arrays.asList("org.apache.poi.ddf.EscherContainerRecord"), name)) {
 				//
 				if (Narcissus.getIntField(instance, Narcissus.findField(clz, "_childRecords")) == 0) {
@@ -1064,25 +1001,9 @@ public abstract class Util {
 					//
 				} // if
 					//
-			} else if (contains(Arrays.asList("org.apache.poi.hssf.usermodel.HSSFPatriarch"), name)) {
-				//
-				if (Narcissus.getIntField(instance, Narcissus.findField(clz, "_shapes")) == 0) {
-					//
-					return null;
-					//
-				} // if
-					//
 			} else if (contains(Arrays.asList("org.apache.poi.hssf.usermodel.HSSFRow"), name)) {
 				//
 				if (Narcissus.getIntField(instance, Narcissus.findField(clz, "cells")) == 0) {
-					//
-					return null;
-					//
-				} // if
-					//
-			} else if (contains(Arrays.asList("org.apache.poi.hssf.usermodel.HSSFShapeGroup"), name)) {
-				//
-				if (Narcissus.getIntField(instance, Narcissus.findField(clz, "shapes")) == 0) {
 					//
 					return null;
 					//
@@ -1109,15 +1030,6 @@ public abstract class Util {
 			} else if (contains(Arrays.asList("org.apache.poi.openxml4j.opc.PackageRelationshipCollection"), name)) {
 				//
 				if (Narcissus.getIntField(instance, Narcissus.findField(clz, "relationshipsByID")) == 0) {
-					//
-					return null;
-					//
-				} // if
-					//
-			} else if (contains(Arrays.asList("org.apache.poi.poifs.crypt.temp.SXSSFWorkbookWithCustomZipEntrySource"),
-					name)) {
-				//
-				if (Narcissus.getField(instance, Narcissus.findField(clz, "_wb")) == null) {
 					//
 					return null;
 					//
@@ -1155,25 +1067,9 @@ public abstract class Util {
 					//
 				} // if
 					//
-			} else if (contains(Arrays.asList("org.apache.poi.sl.draw.geom.CustomGeometry"), name)) {
-				//
-				if (Narcissus.getField(instance, Narcissus.findField(clz, "paths")) == null) {
-					//
-					return null;
-					//
-				} // if
-					//
 			} else if (contains(Arrays.asList("org.apache.poi.ss.util.SSCellRange"), name)) {
 				//
 				if (Narcissus.getField(instance, Narcissus.findField(clz, "_flattenedArray")) == null) {
-					//
-					return null;
-					//
-				} // if
-					//
-			} else if (contains(Arrays.asList("org.apache.poi.util.IntMapper"), name)) {
-				//
-				if (Narcissus.getField(instance, Narcissus.findField(clz, "elements")) == null) {
 					//
 					return null;
 					//
@@ -1192,14 +1088,6 @@ public abstract class Util {
 					"org.apache.poi.xssf.streaming.SXSSFRow", "org.apache.poi.xssf.usermodel.XSSFRow"), name)) {
 				//
 				if (Narcissus.getField(instance, Narcissus.findField(clz, "_cells")) == null) {
-					//
-					return null;
-					//
-				} // if
-					//
-			} else if (contains(Arrays.asList("org.apache.poi.xslf.usermodel.XSLFTableStyles"), name)) {
-				//
-				if (Narcissus.getField(instance, Narcissus.findField(clz, "_styles")) == null) {
 					//
 					return null;
 					//
@@ -1237,83 +1125,9 @@ public abstract class Util {
 					//
 				} // if
 					//
-			} else if (contains(Arrays.asList("org.eclipse.jetty.http.MultiPartByteRanges$Parts",
-					"org.eclipse.jetty.http.MultiPartFormData$Parts"), name)) {
-				//
-				if (Narcissus.getField(instance, Narcissus.findField(clz, "parts")) == null) {
-					//
-					return null;
-					//
-				} // if
-					//
-			} else if (contains(Arrays.asList("org.eclipse.jetty.http.pathmap.PathSpecSet"), name)) {
-				//
-				if (Narcissus.getField(instance, Narcissus.findField(clz, "specs")) == null) {
-					//
-					return null;
-					//
-				} // if
-					//
-			} else if (contains(Arrays.asList("org.logevents.observers.batch.LogEventBatch"), name)) {
-				//
-				if (Narcissus.getField(instance, Narcissus.findField(clz, "batch")) == null) {
-					//
-					return null;
-					//
-				} // if
-					//
-			} else if (contains(Arrays.asList("org.openjdk.nashorn.internal.codegen.Compiler$CompilationPhases"),
-					name)) {
-				//
-				if (Narcissus.getField(instance, Narcissus.findField(clz, "phases")) == null) {
-					//
-					return null;
-					//
-				} // if
-					//
-			} else if (contains(Arrays.asList("org.oxbow.swingbits.action.ActionGroup"), name)) {
-				//
-				if (Narcissus.getField(instance, Narcissus.findField(clz, "actions")) == null) {
-					//
-					return null;
-					//
-				} // if
-					//
 			} else if (contains(Arrays.asList("org.springframework.beans.MutablePropertyValues"), name)) {
 				//
 				if (Narcissus.getField(instance, Narcissus.findField(clz, "propertyValueList")) == null) {
-					//
-					return null;
-					//
-				} // if
-					//
-			} else if (contains(Arrays.asList("org.springframework.beans.factory.aot.AotServices"), name)) {
-				//
-				if (Narcissus.getField(instance, Narcissus.findField(clz, "services")) == null) {
-					//
-					return null;
-					//
-				} // if
-					//
-			} else if (contains(Arrays.asList("org.springframework.cglib.beans.FixedKeySet"), name)) {
-				//
-				if (Narcissus.getField(instance, Narcissus.findField(clz, "set")) == null) {
-					//
-					return null;
-					//
-				} // if
-					//
-			} else if (contains(Arrays.asList("org.springframework.core.env.MutablePropertySources"), name)) {
-				//
-				if (Narcissus.getField(instance, Narcissus.findField(clz, "propertySourceList")) == null) {
-					//
-					return null;
-					//
-				} // if
-					//
-			} else if (contains(Arrays.asList("org.springframework.util.AutoPopulatingList"), name)) {
-				//
-				if (Narcissus.getField(instance, Narcissus.findField(clz, "backingList")) == null) {
 					//
 					return null;
 					//
@@ -1347,10 +1161,90 @@ public abstract class Util {
 				//
 			throw npe;
 			//
+		} catch (final IOException e) {
+			//
+			throw new RuntimeException(e);
+			//
 		} // try
 			//
 		return instance.iterator();
 		//
+	}
+
+	private static String getFieldNmaeIfSingleLineReturnMethod(final Method method) throws IOException {
+		//
+		final Class<?> clz = method != null ? method.getDeclaringClass() : null;
+		//
+		try (final InputStream is = clz != null
+				? clz.getResourceAsStream(String.format("/%1$s.class", StringUtils.replace(getName(clz), ".", "/")))
+				: null) {
+			//
+			final org.apache.bcel.classfile.Method m = JavaClassUtil.getMethod(
+					ClassParserUtil.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null)),
+					method);
+			//
+			final Instruction[] instructions = InstructionListUtil.getInstructions(
+					MethodGenUtil.getInstructionList(testAndApply(x -> FieldOrMethodUtil.getConstantPool(x) != null, m,
+							x -> new MethodGen(x, null,
+									x != null ? new ConstantPoolGen(FieldOrMethodUtil.getConstantPool(x)) : null),
+							null)));
+			//
+			Instruction instruction = null;
+			//
+			SortedSet<Boolean> booleans = null;
+			//
+			GETFIELD getField = null;
+			//
+			for (int i = 0; instructions != null && i < instructions.length; i++) {
+				//
+				if ((instruction = instructions[i]) == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if (i == 0) {
+					//
+					add(booleans = ObjectUtils.getIfNull(booleans, TreeSet::new), instruction instanceof ALOAD);
+					//
+				} else if (i == 1) {
+					//
+					add(booleans = ObjectUtils.getIfNull(booleans, TreeSet::new),
+							(getField = cast(GETFIELD.class, instruction)) != null);
+					//
+				} else if (i == 2) {
+					//
+					add(booleans = ObjectUtils.getIfNull(booleans, TreeSet::new),
+							instruction instanceof INVOKEINTERFACE);
+					//
+				} else if (i == 3) {
+					//
+					add(booleans = ObjectUtils.getIfNull(booleans, TreeSet::new), instruction instanceof ARETURN);
+					//
+				} else {
+					//
+					add(booleans = ObjectUtils.getIfNull(booleans, TreeSet::new), Boolean.FALSE);
+					//
+					break;
+					//
+				} // if
+					//
+			} // for
+				//
+			if (CollectionUtils.isNotEmpty(booleans) && booleans.first() != null && booleans.first().booleanValue()) {
+				//
+				return getFieldName(getField, new ConstantPoolGen(FieldOrMethodUtil.getConstantPool(m)));
+				//
+			} // if
+				//
+		} // try
+			//
+		return null;
+		//
+	}
+
+	private static String getFieldName(final FieldInstruction instance, final ConstantPoolGen cpg) {
+		return instance != null ? instance.getFieldName(cpg) : null;
 	}
 
 }
