@@ -387,15 +387,6 @@ public abstract class Util {
 					//
 				} // if
 					//
-			} else if (isAssignableFrom(Class.forName("com.fasterxml.jackson.databind.deser.impl.BeanPropertyMap"),
-					clz)) {
-				//
-				if (Narcissus.getField(instance, Narcissus.findField(clz, "_hashArea")) == null) {
-					//
-					return null;
-					//
-				} // if
-					//
 			} else if (isAssignableFrom(Class.forName("com.google.common.collect.ForwardingQueue"), clz)
 					|| isAssignableFrom(Class.forName("org.apache.jena.ext.com.google.common.collect.ForwardingQueue"),
 							clz)) {
@@ -1165,7 +1156,8 @@ public abstract class Util {
 	}
 
 	@Nullable
-	private static IValue0<Iterator<?>> iterator1(final Object instance) throws NoSuchFieldException {
+	private static IValue0<Iterator<?>> iterator1(final Object instance)
+			throws NoSuchFieldException, ClassNotFoundException {
 		//
 		final Class<?> clz = getClass(instance);
 		//
@@ -1187,7 +1179,15 @@ public abstract class Util {
 			//
 			if (Narcissus.getField(instance, Narcissus.findField(clz, "properties")) == null) {
 				//
-				return null;
+				return Unit.with(null);
+				//
+			} // if
+				//
+		} else if (isAssignableFrom(Class.forName("com.fasterxml.jackson.databind.deser.impl.BeanPropertyMap"), clz)) {
+			//
+			if (Narcissus.getField(instance, Narcissus.findField(clz, "_hashArea")) == null) {
+				//
+				return Unit.with(null);
 				//
 			} // if
 				//
