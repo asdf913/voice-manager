@@ -1198,7 +1198,7 @@ public abstract class Util {
 		//
 	}
 
-	private static boolean or(final boolean a, final boolean b, final boolean... bs) {
+	private static boolean or(final boolean a, final boolean b, @Nullable final boolean... bs) {
 		//
 		if (a || b) {
 			//
