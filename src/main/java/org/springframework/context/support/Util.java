@@ -387,14 +387,16 @@ public abstract class Util {
 					//
 				} // if
 					//
-			} else if (isAssignableFrom(
-					Class.forName("com.google.common.collect.ForwardingMultiset$StandardElementSet"), clz)
-					|| isAssignableFrom(Class.forName("com.google.common.collect.SortedMultisets$ElementSet"), clz)
-					|| isAssignableFrom(Class.forName(
-							"org.apache.jena.ext.com.google.common.collect.ForwardingMultiset$StandardElementSet"), clz)
-					|| isAssignableFrom(Class.forName(
+			} else if (or(
+					isAssignableFrom(Class.forName("com.google.common.collect.ForwardingMultiset$StandardElementSet"),
+							clz),
+					isAssignableFrom(Class.forName("com.google.common.collect.SortedMultisets$ElementSet"), clz),
+					isAssignableFrom(Class.forName(
+							"org.apache.jena.ext.com.google.common.collect.ForwardingMultiset$StandardElementSet"),
+							clz),
+					isAssignableFrom(Class.forName(
 							"org.apache.jena.ext.com.google.common.collect.ForwardingSortedMultiset$StandardElementSet"),
-							clz)) {
+							clz))) {
 				//
 				if (Narcissus.invokeMethod(instance,
 						Narcissus.findMethod(clz, "multiset", new Class<?>[] {})) == null) {
@@ -443,10 +445,10 @@ public abstract class Util {
 					//
 				} // if
 					//
-			} else if (isAssignableFrom(Class.forName("org.apache.commons.collections.bag.AbstractMapBag"), clz)
-					|| isAssignableFrom(Class.forName("org.apache.commons.collections4.bag.AbstractMapBag"), clz)
-					|| isAssignableFrom(Class.forName("org.apache.commons.collections4.multiset.AbstractMapMultiSet"),
-							clz)) {
+			} else if (or(isAssignableFrom(Class.forName("org.apache.commons.collections.bag.AbstractMapBag"), clz),
+					isAssignableFrom(Class.forName("org.apache.commons.collections4.bag.AbstractMapBag"), clz),
+					isAssignableFrom(Class.forName("org.apache.commons.collections4.multiset.AbstractMapMultiSet"),
+							clz))) {
 				//
 				if (Narcissus.getField(instance, Narcissus.findField(clz, "map")) == null) {
 					//
