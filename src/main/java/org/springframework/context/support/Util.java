@@ -45,6 +45,8 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
@@ -370,12 +372,24 @@ public abstract class Util {
 					//
 			} // if
 				//
-			final IValue0<Iterator<?>> iValue0 = iterator1(instance);
+			final Iterable<FailableFunction<Object, IValue0<Iterator<?>>, ReflectiveOperationException>> functions = Arrays
+					.asList(Util::iterator1, Util::iterator2);
 			//
-			if (iValue0 != null) {
+			if (functions != null && functions.iterator() != null) {
 				//
-				return (Iterator<T>) IValue0Util.getValue0(iValue0);
+				IValue0<Iterator<?>> iValue0 = null;
 				//
+				for (final FailableFunction<Object, IValue0<Iterator<?>>, ReflectiveOperationException> function : functions) {
+					//
+					if ((iValue0 = FailableFunctionUtil.apply(function, instance)) != null) {
+						//
+						return (Iterator<T>) IValue0Util.getValue0(iValue0);
+						//
+					} // if
+						//
+						//
+				} // for
+					//
 			} // if
 				//
 			if (contains(Arrays.asList("com.healthmarketscience.jackcess.impl.TableDefinitionImpl"), name)) {
@@ -1078,7 +1092,7 @@ public abstract class Util {
 					//
 			} // if
 				//
-		} catch (final ClassNotFoundException | NoSuchFieldException | NoSuchMethodException e) {
+		} catch (final ReflectiveOperationException e) {
 			//
 			LoggerUtil.error(LOG, e.getMessage(), e);
 			//
@@ -1174,8 +1188,18 @@ public abstract class Util {
 				//
 			} // if
 				//
-		} else if (or(
-				isAssignableFrom(Class.forName("com.google.common.collect.ForwardingMultiset$StandardElementSet"), clz),
+		} // if
+			//
+		return null;
+		//
+	}
+
+	private static IValue0<Iterator<?>> iterator2(final Object instance)
+			throws ClassNotFoundException, NoSuchMethodException {
+		//
+		final Class<?> clz = getClass(instance);
+		//
+		if (or(isAssignableFrom(Class.forName("com.google.common.collect.ForwardingMultiset$StandardElementSet"), clz),
 				isAssignableFrom(Class.forName("com.google.common.collect.SortedMultisets$ElementSet"), clz),
 				isAssignableFrom(
 						Class.forName(
