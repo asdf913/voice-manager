@@ -387,17 +387,8 @@ public abstract class Util {
 					//
 				} // if
 					//
-			} else if (contains(Arrays.asList("org.openjdk.nashorn.internal.runtime.SharedPropertyMap"), name)) {
-				//
-				if (Narcissus.getField(instance, Narcissus.findField(clz, "properties")) == null) {
-					//
-					return null;
-					//
-				} // if
-					//
-			} // if
-				//
-			if (isAssignableFrom(Class.forName("com.fasterxml.jackson.databind.deser.impl.BeanPropertyMap"), clz)) {
+			} else if (isAssignableFrom(Class.forName("com.fasterxml.jackson.databind.deser.impl.BeanPropertyMap"),
+					clz)) {
 				//
 				if (Narcissus.getField(instance, Narcissus.findField(clz, "_hashArea")) == null) {
 					//
@@ -1178,15 +1169,25 @@ public abstract class Util {
 		//
 		final Class<?> clz = getClass(instance);
 		//
+		final String name = getName(clz);
+		//
 		if (contains(
 				Arrays.asList("com.google.common.collect.HashMultiset", "com.google.common.collect.LinkedHashMultiset",
 						"org.apache.jena.ext.com.google.common.collect.HashMultiset",
 						"org.apache.jena.ext.com.google.common.collect.LinkedHashMultiset"),
-				getName(clz))) {
+				name)) {
 			//
 			if (Narcissus.getField(instance, Narcissus.findField(clz, "backingMap")) == null) {
 				//
 				return Unit.with(null);
+				//
+			} // if
+				//
+		} else if (contains(Arrays.asList("org.openjdk.nashorn.internal.runtime.SharedPropertyMap"), name)) {
+			//
+			if (Narcissus.getField(instance, Narcissus.findField(clz, "properties")) == null) {
+				//
+				return null;
 				//
 			} // if
 				//
