@@ -1173,6 +1173,7 @@ public abstract class Util {
 		//
 	}
 
+	@Nullable
 	private static IValue0<Iterator<?>> iterator1(final Object instance) throws NoSuchFieldException {
 		//
 		final Class<?> clz = getClass(instance);
@@ -1195,6 +1196,7 @@ public abstract class Util {
 		//
 	}
 
+	@Nullable
 	private static String getFieldNmaeIfSingleLineReturnMethod(final Method method) throws IOException {
 		//
 		final Class<?> clz = getDeclaringClass(method);
@@ -1267,6 +1269,7 @@ public abstract class Util {
 		//
 	}
 
+	@Nullable
 	private static String getFieldName(@Nullable final FieldInstruction instance, final ConstantPoolGen cpg) {
 		return instance != null ? instance.getFieldName(cpg) : null;
 	}
