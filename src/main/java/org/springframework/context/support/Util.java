@@ -401,14 +401,6 @@ public abstract class Util {
 					//
 				} // if
 					//
-			} else if (isAssignableFrom(Class.forName("java.util.TreeSet"), clz)) {
-				//
-				if (Narcissus.getField(instance, Narcissus.findField(clz, "m")) == null) {
-					//
-					return null;
-					//
-				} // if
-					//
 			} else if (isAssignableFrom(Class.forName("java.util.HashSet"), clz)) {
 				//
 				if (Narcissus.getField(instance, Narcissus.findField(clz, "map")) == null) {
@@ -1196,7 +1188,7 @@ public abstract class Util {
 
 	@Nullable
 	private static IValue0<Iterator<?>> iterator2(final Object instance)
-			throws ClassNotFoundException, NoSuchMethodException {
+			throws ClassNotFoundException, NoSuchMethodException, NoSuchFieldException {
 		//
 		final Class<?> clz = getClass(instance);
 		//
@@ -1211,6 +1203,14 @@ public abstract class Util {
 						clz))) {
 			//
 			if (Narcissus.invokeMethod(instance, Narcissus.findMethod(clz, "multiset", new Class<?>[] {})) == null) {
+				//
+				return Unit.with(null);
+				//
+			} // if
+				//
+		} else if (isAssignableFrom(Class.forName("java.util.TreeSet"), clz)) {
+			//
+			if (Narcissus.getField(instance, Narcissus.findField(clz, "m")) == null) {
 				//
 				return Unit.with(null);
 				//
