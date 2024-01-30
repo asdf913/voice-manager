@@ -46,6 +46,9 @@ import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.javatuples.Unit;
+import org.javatuples.valueintf.IValue0;
+import org.javatuples.valueintf.IValue0Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
@@ -367,18 +370,15 @@ public abstract class Util {
 					//
 			} // if
 				//
-			if (contains(Arrays.asList("com.google.common.collect.HashMultiset",
-					"com.google.common.collect.LinkedHashMultiset",
-					"org.apache.jena.ext.com.google.common.collect.HashMultiset",
-					"org.apache.jena.ext.com.google.common.collect.LinkedHashMultiset"), name)) {
+			final IValue0<Iterator<?>> iValue0 = iterator1(instance);
+			//
+			if (iValue0 != null) {
 				//
-				if (Narcissus.getField(instance, Narcissus.findField(clz, "backingMap")) == null) {
-					//
-					return null;
-					//
-				} // if
-					//
-			} else if (contains(Arrays.asList("com.healthmarketscience.jackcess.impl.TableDefinitionImpl"), name)) {
+				return (Iterator<T>) IValue0Util.getValue0(iValue0);
+				//
+			} // if
+				//
+			if (contains(Arrays.asList("com.healthmarketscience.jackcess.impl.TableDefinitionImpl"), name)) {
 				//
 				if (Narcissus.invokeMethod(instance,
 						Narcissus.findMethod(clz, "createRowState", new Class<?>[] {})) == null) {
@@ -1170,6 +1170,28 @@ public abstract class Util {
 		} // try
 			//
 		return instance.iterator();
+		//
+	}
+
+	private static IValue0<Iterator<?>> iterator1(final Object instance) throws NoSuchFieldException {
+		//
+		final Class<?> clz = getClass(instance);
+		//
+		if (contains(
+				Arrays.asList("com.google.common.collect.HashMultiset", "com.google.common.collect.LinkedHashMultiset",
+						"org.apache.jena.ext.com.google.common.collect.HashMultiset",
+						"org.apache.jena.ext.com.google.common.collect.LinkedHashMultiset"),
+				getName(clz))) {
+			//
+			if (Narcissus.getField(instance, Narcissus.findField(clz, "backingMap")) == null) {
+				//
+				return Unit.with(null);
+				//
+			} // if
+				//
+		} // if
+			//
+		return null;
 		//
 	}
 
