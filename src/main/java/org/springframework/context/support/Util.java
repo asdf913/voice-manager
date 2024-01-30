@@ -1175,7 +1175,7 @@ public abstract class Util {
 
 	private static String getFieldNmaeIfSingleLineReturnMethod(final Method method) throws IOException {
 		//
-		final Class<?> clz = method != null ? method.getDeclaringClass() : null;
+		final Class<?> clz = getDeclaringClass(method);
 		//
 		try (final InputStream is = clz != null
 				? clz.getResourceAsStream(String.format("/%1$s.class", StringUtils.replace(getName(clz), ".", "/")))
