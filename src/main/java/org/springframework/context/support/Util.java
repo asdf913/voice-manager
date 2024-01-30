@@ -387,24 +387,6 @@ public abstract class Util {
 					//
 				} // if
 					//
-			} else if (or(
-					isAssignableFrom(Class.forName("com.google.common.collect.ForwardingMultiset$StandardElementSet"),
-							clz),
-					isAssignableFrom(Class.forName("com.google.common.collect.SortedMultisets$ElementSet"), clz),
-					isAssignableFrom(Class.forName(
-							"org.apache.jena.ext.com.google.common.collect.ForwardingMultiset$StandardElementSet"),
-							clz),
-					isAssignableFrom(Class.forName(
-							"org.apache.jena.ext.com.google.common.collect.ForwardingSortedMultiset$StandardElementSet"),
-							clz))) {
-				//
-				if (Narcissus.invokeMethod(instance,
-						Narcissus.findMethod(clz, "multiset", new Class<?>[] {})) == null) {
-					//
-					return null;
-					//
-				} // if
-					//
 			} else if (isAssignableFrom(Class.forName("java.util.TreeSet"), clz)) {
 				//
 				if (Narcissus.getField(instance, Narcissus.findField(clz, "m")) == null) {
@@ -1187,6 +1169,23 @@ public abstract class Util {
 				isAssignableFrom(Class.forName("org.apache.jena.ext.com.google.common.collect.Maps$KeySet"), clz))) {
 			//
 			if (Narcissus.invokeMethod(instance, Narcissus.findMethod(clz, "map", new Class<?>[] {})) == null) {
+				//
+				return Unit.with(null);
+				//
+			} // if
+				//
+		} else if (or(
+				isAssignableFrom(Class.forName("com.google.common.collect.ForwardingMultiset$StandardElementSet"), clz),
+				isAssignableFrom(Class.forName("com.google.common.collect.SortedMultisets$ElementSet"), clz),
+				isAssignableFrom(
+						Class.forName(
+								"org.apache.jena.ext.com.google.common.collect.ForwardingMultiset$StandardElementSet"),
+						clz),
+				isAssignableFrom(Class.forName(
+						"org.apache.jena.ext.com.google.common.collect.ForwardingSortedMultiset$StandardElementSet"),
+						clz))) {
+			//
+			if (Narcissus.invokeMethod(instance, Narcissus.findMethod(clz, "multiset", new Class<?>[] {})) == null) {
 				//
 				return Unit.with(null);
 				//
