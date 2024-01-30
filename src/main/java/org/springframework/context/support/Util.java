@@ -401,14 +401,6 @@ public abstract class Util {
 					//
 				} // if
 					//
-			} else if (isAssignableFrom(Class.forName("com.opencsv.CSVReader"), clz)) {
-				//
-				if (Narcissus.getField(instance, Narcissus.findField(clz, "peekedLines")) == null) {
-					//
-					return null;
-					//
-				} // if
-					//
 			} else if (isAssignableFrom(Class.forName("org.apache.bcel.classfile.ParameterAnnotations"), clz)) {
 				//
 				if (Narcissus.getField(instance, Narcissus.findField(clz, "parameterAnnotationTable")) == null) {
@@ -1211,6 +1203,14 @@ public abstract class Util {
 		} else if (isAssignableFrom(Class.forName("org.apache.bcel.classfile.Annotations"), clz)) {
 			//
 			if (Narcissus.getField(instance, Narcissus.findField(clz, "annotationTable")) == null) {
+				//
+				return Unit.with(null);
+				//
+			} // if
+				//
+		} else if (isAssignableFrom(Class.forName("com.opencsv.CSVReader"), clz)) {
+			//
+			if (Narcissus.getField(instance, Narcissus.findField(clz, "peekedLines")) == null) {
 				//
 				return Unit.with(null);
 				//
