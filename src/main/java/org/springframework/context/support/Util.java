@@ -56,6 +56,8 @@ public abstract class Util {
 
 	private static final Logger LOG = LoggerFactory.getLogger(Util.class);
 
+	private static final String UNDER_SCORE_ROWS = "_rows";
+
 	private Util() {
 	}
 
@@ -582,7 +584,7 @@ public abstract class Util {
 					//
 			} else if (isAssignableFrom(Class.forName("org.apache.poi.xssf.streaming.DeferredSXSSFSheet"), clz)) {
 				//
-				if (Narcissus.getField(instance, Narcissus.findField(clz, "_rows")) == null) {
+				if (Narcissus.getField(instance, Narcissus.findField(clz, UNDER_SCORE_ROWS)) == null) {
 					//
 					return null;
 					//
@@ -599,7 +601,7 @@ public abstract class Util {
 			} else if (isAssignableFrom(Class.forName("org.apache.poi.xssf.streaming.SXSSFSheet"), clz)
 					|| isAssignableFrom(Class.forName("org.apache.poi.xssf.usermodel.XSSFSheet"), clz)) {
 				//
-				if (Narcissus.getIntField(instance, Narcissus.findField(clz, "_rows")) == 0) {
+				if (Narcissus.getIntField(instance, Narcissus.findField(clz, UNDER_SCORE_ROWS)) == 0) {
 					//
 					return null;
 					//
@@ -1013,7 +1015,7 @@ public abstract class Util {
 					Arrays.asList("org.apache.poi.hssf.usermodel.HSSFSheet", "org.apache.poi.xslf.usermodel.XSLFTable"),
 					name)) {
 				//
-				if (Narcissus.getIntField(instance, Narcissus.findField(clz, "_rows")) == 0) {
+				if (Narcissus.getIntField(instance, Narcissus.findField(clz, UNDER_SCORE_ROWS)) == 0) {
 					//
 					return null;
 					//
