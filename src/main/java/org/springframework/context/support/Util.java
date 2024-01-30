@@ -387,21 +387,6 @@ public abstract class Util {
 					//
 				} // if
 					//
-			} else if (isAssignableFrom(Class.forName("com.google.common.collect.Maps$KeySet"), clz)
-					|| isAssignableFrom(Class.forName("com.google.common.collect.Maps$Values"), clz)
-					|| isAssignableFrom(
-							Class.forName("org.apache.jena.ext.com.google.common.collect.ForwardingMap$StandardKeySet"),
-							clz)
-					|| isAssignableFrom(Class.forName("org.apache.jena.ext.com.google.common.collect.Maps$Values"), clz)
-					|| isAssignableFrom(Class.forName("org.apache.jena.ext.com.google.common.collect.Maps$KeySet"),
-							clz)) {
-				//
-				if (Narcissus.invokeMethod(instance, Narcissus.findMethod(clz, "map", new Class<?>[] {})) == null) {
-					//
-					return null;
-					//
-				} // if
-					//
 			} else if (isAssignableFrom(
 					Class.forName("com.google.common.collect.ForwardingMultiset$StandardElementSet"), clz)
 					|| isAssignableFrom(Class.forName("com.google.common.collect.SortedMultisets$ElementSet"), clz)
@@ -1185,6 +1170,20 @@ public abstract class Util {
 						clz)) {
 			//
 			if (Narcissus.invokeMethod(instance, Narcissus.findMethod(clz, "delegate", new Class<?>[] {})) == null) {
+				//
+				return Unit.with(null);
+				//
+			} // if
+				//
+		} else if (isAssignableFrom(Class.forName("com.google.common.collect.Maps$KeySet"), clz)
+				|| isAssignableFrom(Class.forName("com.google.common.collect.Maps$Values"), clz)
+				|| isAssignableFrom(
+						Class.forName("org.apache.jena.ext.com.google.common.collect.ForwardingMap$StandardKeySet"),
+						clz)
+				|| isAssignableFrom(Class.forName("org.apache.jena.ext.com.google.common.collect.Maps$Values"), clz)
+				|| isAssignableFrom(Class.forName("org.apache.jena.ext.com.google.common.collect.Maps$KeySet"), clz)) {
+			//
+			if (Narcissus.invokeMethod(instance, Narcissus.findMethod(clz, "map", new Class<?>[] {})) == null) {
 				//
 				return Unit.with(null);
 				//
