@@ -462,13 +462,14 @@ public abstract class Util {
 					//
 				} // if
 					//
-			} else if (isAssignableFrom(Class.forName("org.apache.commons.collections.collection.PredicatedCollection"),
-					clz)
-					|| isAssignableFrom(
-							Class.forName("org.apache.commons.collections.collection.SynchronizedCollection"), clz)
-					|| isAssignableFrom(
+			} else if (or(
+					isAssignableFrom(Class.forName("org.apache.commons.collections.collection.PredicatedCollection"),
+							clz),
+					isAssignableFrom(Class.forName("org.apache.commons.collections.collection.SynchronizedCollection"),
+							clz),
+					isAssignableFrom(
 							Class.forName("org.apache.commons.collections.collection.AbstractCollectionDecorator"),
-							clz)) {
+							clz))) {
 				//
 				if (Narcissus.getField(instance, Narcissus.findField(clz, "collection")) == null) {
 					//
@@ -476,10 +477,10 @@ public abstract class Util {
 					//
 				} // if
 					//
-			} else if (isAssignableFrom(
-					Class.forName("org.apache.commons.collections4.collection.AbstractCollectionDecorator"), clz)
-					|| isAssignableFrom(
-							Class.forName("org.apache.commons.collections4.collection.SynchronizedCollection"), clz)) {
+			} else if (or(isAssignableFrom(
+					Class.forName("org.apache.commons.collections4.collection.AbstractCollectionDecorator"), clz),
+					isAssignableFrom(Class.forName("org.apache.commons.collections4.collection.SynchronizedCollection"),
+							clz))) {
 				//
 				if (Narcissus.invokeMethod(instance,
 						Narcissus.findMethod(clz, "decorated", new Class<?>[] {})) == null) {
@@ -554,8 +555,8 @@ public abstract class Util {
 					//
 				} // if
 					//
-			} else if (isAssignableFrom(Class.forName("org.apache.poi.xssf.streaming.SXSSFSheet"), clz)
-					|| isAssignableFrom(Class.forName("org.apache.poi.xssf.usermodel.XSSFSheet"), clz)) {
+			} else if (or(isAssignableFrom(Class.forName("org.apache.poi.xssf.streaming.SXSSFSheet"), clz),
+					isAssignableFrom(Class.forName("org.apache.poi.xssf.usermodel.XSSFSheet"), clz))) {
 				//
 				if (Narcissus.getIntField(instance, Narcissus.findField(clz, UNDER_SCORE_ROWS)) == 0) {
 					//
@@ -1165,9 +1166,9 @@ public abstract class Util {
 				//
 			} // if
 				//
-		} else if (isAssignableFrom(Class.forName("com.google.common.collect.ForwardingQueue"), clz)
-				|| isAssignableFrom(Class.forName("org.apache.jena.ext.com.google.common.collect.ForwardingQueue"),
-						clz)) {
+		} else if (or(isAssignableFrom(Class.forName("com.google.common.collect.ForwardingQueue"), clz),
+				isAssignableFrom(Class.forName("org.apache.jena.ext.com.google.common.collect.ForwardingQueue"),
+						clz))) {
 			//
 			if (Narcissus.invokeMethod(instance, Narcissus.findMethod(clz, "delegate", new Class<?>[] {})) == null) {
 				//
@@ -1175,13 +1176,13 @@ public abstract class Util {
 				//
 			} // if
 				//
-		} else if (isAssignableFrom(Class.forName("com.google.common.collect.Maps$KeySet"), clz)
-				|| isAssignableFrom(Class.forName("com.google.common.collect.Maps$Values"), clz)
-				|| isAssignableFrom(
+		} else if (or(isAssignableFrom(Class.forName("com.google.common.collect.Maps$KeySet"), clz),
+				isAssignableFrom(Class.forName("com.google.common.collect.Maps$Values"), clz),
+				isAssignableFrom(
 						Class.forName("org.apache.jena.ext.com.google.common.collect.ForwardingMap$StandardKeySet"),
-						clz)
-				|| isAssignableFrom(Class.forName("org.apache.jena.ext.com.google.common.collect.Maps$Values"), clz)
-				|| isAssignableFrom(Class.forName("org.apache.jena.ext.com.google.common.collect.Maps$KeySet"), clz)) {
+						clz),
+				isAssignableFrom(Class.forName("org.apache.jena.ext.com.google.common.collect.Maps$Values"), clz),
+				isAssignableFrom(Class.forName("org.apache.jena.ext.com.google.common.collect.Maps$KeySet"), clz))) {
 			//
 			if (Narcissus.invokeMethod(instance, Narcissus.findMethod(clz, "map", new Class<?>[] {})) == null) {
 				//
@@ -1192,6 +1193,28 @@ public abstract class Util {
 		} // if
 			//
 		return null;
+		//
+	}
+
+	private static boolean or(final boolean a, final boolean b, final boolean... bs) {
+		//
+		if (a || b) {
+			//
+			return true;
+			//
+		} // if
+			//
+		for (int i = 0; bs != null && i < bs.length; i++) {
+			//
+			if (bs[i]) {
+				//
+				return true;
+				//
+			} // if
+				//
+		} // for
+			//
+		return false;
 		//
 	}
 
