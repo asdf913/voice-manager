@@ -42,7 +42,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 class UtilTest {
 
 	private static Method METHOD_GET_JAVA_IO_FILE_SYSTEM_FIELD, METHOD_TEST, METHOD_IS_STATIC,
-			METHOD_GET_FIELD_NMAE_IF_SINGLE_LINE_RETURN_METHOD, METHOD_GET_FIELD_NAME = null;
+			METHOD_GET_FIELD_NMAE_IF_SINGLE_LINE_RETURN_METHOD, METHOD_GET_FIELD_NAME, METHOD_OR = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -61,6 +61,8 @@ class UtilTest {
 		//
 		(METHOD_GET_FIELD_NAME = clz.getDeclaredMethod("getFieldName", FieldInstruction.class, ConstantPoolGen.class))
 				.setAccessible(true);
+		//
+		(METHOD_OR = clz.getDeclaredMethod("or", Boolean.TYPE, Boolean.TYPE, boolean[].class)).setAccessible(true);
 		//
 	}
 
@@ -713,6 +715,25 @@ class UtilTest {
 				return null;
 			} else if (obj instanceof String) {
 				return (String) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testOr() throws Throwable {
+		//
+		Assertions.assertFalse(or(false, false, null));
+		//
+	}
+
+	private static boolean or(final boolean a, final boolean b, final boolean... bs) throws Throwable {
+		try {
+			final Object obj = METHOD_OR.invoke(null, a, b, bs);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
