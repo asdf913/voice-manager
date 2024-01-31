@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.EventObject;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -51,12 +52,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.function.FailableFunction;
-import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
-import org.javatuples.Unit;
-import org.javatuples.valueintf.IValue0;
-import org.javatuples.valueintf.IValue0Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
@@ -385,26 +381,26 @@ public abstract class Util {
 				//
 			} // if
 				//
-			final Iterable<FailableFunction<Object, IValue0<Iterator<?>>, ReflectiveOperationException>> functions = Arrays
-					.asList(Util::iterator1, Util::iterator2);
+//			final Iterable<FailableFunction<Object, IValue0<Iterator<?>>, ReflectiveOperationException>> functions = Arrays
+//					.asList(Util::iterator2);
+//			//
+//			if (functions != null && functions.iterator() != null) {
+//				//
+//				IValue0<Iterator<?>> iValue0 = null;
+//				//
+//				for (final FailableFunction<Object, IValue0<Iterator<?>>, ReflectiveOperationException> function : functions) {
+//					//
+//					if ((iValue0 = FailableFunctionUtil.apply(function, instance)) != null) {
+//						//
+//						return (Iterator<T>) IValue0Util.getValue0(iValue0);
+//						//
+//					} // if
+//						//
+//						//
+//				} // for
+//					//
+//			} // if
 			//
-			if (functions != null && functions.iterator() != null) {
-				//
-				IValue0<Iterator<?>> iValue0 = null;
-				//
-				for (final FailableFunction<Object, IValue0<Iterator<?>>, ReflectiveOperationException> function : functions) {
-					//
-					if ((iValue0 = FailableFunctionUtil.apply(function, instance)) != null) {
-						//
-						return (Iterator<T>) IValue0Util.getValue0(iValue0);
-						//
-					} // if
-						//
-						//
-				} // for
-					//
-			} // if
-				//
 			if (contains(Arrays.asList("com.healthmarketscience.jackcess.impl.TableDefinitionImpl"), name) && Narcissus
 					.invokeMethod(instance, Narcissus.findMethod(clz, "createRowState", new Class<?>[] {})) == null) {
 				//
@@ -473,12 +469,12 @@ public abstract class Util {
 				//
 			} else if (or(isAssignableFrom(Class.forName("org.apache.poi.xssf.streaming.SXSSFSheet"), clz),
 					isAssignableFrom(Class.forName("org.apache.poi.xssf.usermodel.XSSFSheet"), clz))
-					&& Narcissus.getIntField(instance, Narcissus.findField(clz, UNDER_SCORE_ROWS)) == 0) {
+					&& Narcissus.getField(instance, Narcissus.findField(clz, UNDER_SCORE_ROWS)) == null) {
 				//
 				return null;
 				//
 			} else if (isAssignableFrom(Class.forName("org.apache.poi.xssf.usermodel.XSSFShape"), clz)
-					&& Narcissus.getIntField(instance, Narcissus.findField(clz, "drawing")) == 0) {
+					&& Narcissus.getField(instance, Narcissus.findField(clz, "drawing")) == null) {
 				//
 				return null;
 				//
@@ -487,198 +483,76 @@ public abstract class Util {
 				//
 				return null;
 				//
-			} // if
-				//
-			if (contains(Arrays.asList("com.fasterxml.jackson.databind.node.ArrayNode",
-					"com.fasterxml.jackson.databind.node.ObjectNode"), name)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "_children")) == null) {
+			} else if (isAssignableFrom(Class.forName("com.fasterxml.jackson.databind.deser.impl.BeanPropertyMap"), clz)
+					&& Narcissus.getField(instance, Narcissus.findField(clz, "_hashArea")) == null) {
 				//
 				return null;
 				//
-			} else if (contains(Arrays.asList("com.github.andrewoma.dexx.collection.DerivedKeyHashMap",
-					"com.github.andrewoma.dexx.collection.HashMap", "com.github.andrewoma.dexx.collection.HashSet"),
-					name) && Narcissus.getField(instance, Narcissus.findField(clz, "compactHashMap")) == null) {
+			} else if (or(isAssignableFrom(Class.forName("com.google.common.collect.ForwardingQueue"), clz),
+					isAssignableFrom(Class.forName("org.apache.jena.ext.com.google.common.collect.ForwardingQueue"),
+							clz))
+					&& Narcissus.invokeMethod(instance,
+							Narcissus.findMethod(clz, "delegate", new Class<?>[] {})) == null) {
 				//
 				return null;
 				//
-			} else if (contains(Arrays.asList("com.github.andrewoma.dexx.collection.TreeMap",
-					"com.github.andrewoma.dexx.collection.TreeSet"), name)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "redBlackTree")) == null) {
+			} else if (or(isAssignableFrom(Class.forName("com.google.common.collect.Maps$KeySet"), clz),
+					isAssignableFrom(Class.forName("com.google.common.collect.Maps$Values"), clz),
+					isAssignableFrom(
+							Class.forName("org.apache.jena.ext.com.google.common.collect.ForwardingMap$StandardKeySet"),
+							clz),
+					isAssignableFrom(Class.forName("org.apache.jena.ext.com.google.common.collect.Maps$Values"), clz),
+					isAssignableFrom(Class.forName("org.apache.jena.ext.com.google.common.collect.Maps$KeySet"), clz))
+					&& Narcissus.invokeMethod(instance, Narcissus.findMethod(clz, "map", new Class<?>[] {})) == null) {
 				//
 				return null;
 				//
-			} else if (contains(Arrays.asList("com.github.andrewoma.dexx.collection.Vector"), name)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "pointer")) == null) {
+			} else if (or(
+					isAssignableFrom(Class.forName("com.google.common.collect.ForwardingMultiset$StandardElementSet"),
+							clz),
+					isAssignableFrom(Class.forName("com.google.common.collect.SortedMultisets$ElementSet"), clz),
+					isAssignableFrom(Class.forName(
+							"org.apache.jena.ext.com.google.common.collect.ForwardingMultiset$StandardElementSet"),
+							clz),
+					isAssignableFrom(Class.forName(
+							"org.apache.jena.ext.com.google.common.collect.ForwardingSortedMultiset$StandardElementSet"),
+							clz))
+					&& Narcissus.invokeMethod(instance,
+							Narcissus.findMethod(clz, "multiset", new Class<?>[] {})) == null) {
 				//
 				return null;
 				//
-			} else if (contains(Arrays.asList("com.github.andrewoma.dexx.collection.internal.adapter.ListAdapater",
-					"org.apache.commons.collections.FastArrayList",
-					"org.apache.commons.math3.geometry.partitioning.NodesSet",
-					"org.apache.logging.log4j.spi.MutableThreadContextStack"), name)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "list")) == null) {
+			} else if (isAssignableFrom(Class.forName("java.util.TreeSet"), clz)
+					&& Narcissus.getField(instance, Narcissus.findField(clz, "m")) == null) {
 				//
 				return null;
 				//
-			} else if (contains(Arrays.asList("com.github.andrewoma.dexx.collection.internal.base.MappedIterable"),
-					name) && Narcissus.getField(instance, Narcissus.findField(clz, "from")) == null) {
-				//
-				return null;
-				//
-			} else if (contains(Arrays.asList("com.google.common.collect.ConcurrentHashMultiset",
-					"org.apache.jena.ext.com.google.common.collect.ConcurrentHashMultiset"), name)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "countMap")) == null) {
-				//
-				return null;
-				//
-			} else if (contains(Arrays.asList("com.google.common.collect.TreeMultiset",
-					"org.apache.jena.ext.com.google.common.collect.TreeMultiset"), name)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "rootReference")) == null) {
-				//
-				return null;
-				//
-			} else if (contains(Arrays.asList("com.google.common.reflect.TypeToken$TypeSet",
-					"org.apache.jena.ext.com.google.common.reflect.TypeToken$TypeSet"), name)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "types")) == null) {
-				//
-				return null;
-				//
-			} else if (contains(Arrays.asList("com.healthmarketscience.jackcess.impl.DatabaseImpl"), name)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "_tableFinder")) == null) {
-				//
-				return null;
-				//
-			} else if (contains(Arrays.asList("com.healthmarketscience.jackcess.impl.IndexCursorImpl"), name)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "_entryCursor")) == null) {
-				//
-				return null;
-				//
-			} else if (contains(Arrays.asList("com.healthmarketscience.jackcess.impl.PropertyMapImpl"), name)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "_props")) == null) {
-				//
-				return null;
-				//
-			} else if (contains(Arrays.asList("com.healthmarketscience.jackcess.impl.PropertyMaps"), name)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "_maps")) == null) {
-				//
-				return null;
-				//
-			} else if (contains(Arrays.asList("com.healthmarketscience.jackcess.impl.TableImpl"), name)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "_columns")) == null) {
-				//
-				return null;
-				//
-			} else if (contains(Arrays.asList("com.healthmarketscience.jackcess.impl.TableScanCursor"), name)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "_ownedPagesCursor")) == null) {
-				//
-				return null;
-				//
-			} else if (contains(
-					Arrays.asList("com.healthmarketscience.jackcess.impl.complex.MultiValueColumnPropertyMap"), name)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "_primary")) == null) {
-				//
-				return null;
-				//
-			} else if (contains(Arrays.asList("com.healthmarketscience.jackcess.util.EntryIterableBuilder",
-					"com.healthmarketscience.jackcess.util.IterableBuilder"), name)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "_cursor")) == null) {
-				//
-				return null;
-				//
-			} else if (contains(Arrays.asList("com.healthmarketscience.jackcess.util.TableIterableBuilder"), name)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "_db")) == null) {
-				//
-				return null;
-				//
-			} else if (contains(Arrays.asList("com.helger.commons.callback.CallbackList"), name)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "m_aRWLock")) == null) {
-				//
-				return null;
-				//
-			} else if (contains(Arrays.asList("com.helger.commons.collection.impl.CommonsCopyOnWriteArraySet"), name)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "al")) == null) {
-				//
-				return null;
-				//
-			} else if (contains(Arrays.asList("com.helger.commons.collection.map.LRUSet"), name)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "m_aMap")) == null) {
-				//
-				return null;
-				//
-			} else if (contains(Arrays.asList("com.helger.commons.http.HttpHeaderMap"), name)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "m_aHeaders")) == null) {
-				//
-				return null;
-				//
-			} else if (contains(Arrays.asList("com.opencsv.bean.CsvToBean"), name)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "mappingStrategy")) == null) {
-				//
-				return null;
-				//
-			} else if (contains(Arrays.asList("com.opencsv.bean.PositionToBeanField"), name)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "ranges")) == null) {
-				//
-				return null;
-				//
-			} else if (contains(Arrays.asList("org.apache.bcel.classfile.ConstantPool"), name)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "constantPool")) == null) {
-				//
-				return null;
-				//
-			} else if (contains(Arrays.asList("org.apache.commons.collections.CursorableLinkedList"), name)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "_head")) == null) {
-				//
-				return null;
-				//
-			} else if (contains(Arrays.asList("org.apache.commons.collections.collection.CompositeCollection",
-					"org.apache.commons.collections.set.CompositeSet",
-					"org.apache.commons.collections4.collection.CompositeCollection",
-					"org.apache.commons.collections4.set.CompositeSet"), name)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "all")) == null) {
-				//
-				return null;
-				//
-			} else if (contains(Arrays.asList("org.apache.commons.collections.list.AbstractLinkedList$LinkedSubList",
-					"org.apache.commons.collections.map.AbstractHashedMap$EntrySet",
-					"org.apache.commons.collections.map.AbstractHashedMap$KeySet",
-					"org.apache.commons.collections.map.AbstractHashedMap$Values",
-					"org.apache.commons.collections4.list.AbstractLinkedList$LinkedSubList",
-					"org.apache.commons.collections4.map.AbstractHashedMap$EntrySet",
-					"org.apache.commons.collections4.map.AbstractHashedMap$KeySet",
-					"org.apache.commons.collections4.map.AbstractHashedMap$Values",
-					"org.apache.commons.collections4.multiset.AbstractMultiSet$EntrySet",
-					"org.apache.commons.collections4.multiset.AbstractMultiSet$UniqueSet"), name)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "parent")) == null) {
-				//
-				return null;
-				//
-			} else if (contains(Arrays.asList("org.apache.commons.collections.set.MapBackedSet",
-					"org.apache.commons.collections4.set.MapBackedSet"), name)
+			} else if (isAssignableFrom(Class.forName("java.util.HashSet"), clz)
 					&& Narcissus.getField(instance, Narcissus.findField(clz, "map")) == null) {
 				//
 				return null;
 				//
-			} else if (contains(Arrays.asList("org.apache.commons.csv.CSVRecord"), name)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "values")) == null) {
+			} else if (isAssignableFrom(Class.forName("com.opencsv.CSVReader"), clz)
+					&& Narcissus.getField(instance, Narcissus.findField(clz, "peekedLines")) == null) {
 				//
 				return null;
 				//
-			} else if (contains(Arrays.asList("org.apache.commons.io.IOExceptionList"), name)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "causeList")) == null) {
+			} else if (or(isAssignableFrom(Class.forName("org.apache.commons.collections.bag.AbstractMapBag"), clz),
+					isAssignableFrom(Class.forName("org.apache.commons.collections4.bag.AbstractMapBag"), clz),
+					isAssignableFrom(Class.forName("org.apache.commons.collections4.multiset.AbstractMapMultiSet"),
+							clz))
+					&& Narcissus.getField(instance, Narcissus.findField(clz, "map")) == null) {
 				//
 				return null;
 				//
-			} else if (contains(Arrays.asList("org.apache.commons.math3.ml.neuralnet.Network"), name)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "neuronMap")) == null) {
+			} else if (isAssignableFrom(Class.forName("org.apache.commons.collections.DefaultMapBag"), clz)
+					&& Narcissus.getField(instance, Narcissus.findField(clz, "_map")) == null) {
 				//
 				return null;
 				//
-			} else if (contains(Arrays.asList("org.apache.commons.math3.ml.neuralnet.twod.NeuronSquareMesh2D"), name)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "network")) == null) {
+			} // if
 				//
-				return null;
-				//
-			} else if (contains(Arrays.asList("org.apache.commons.math3.util.IntegerSequence$Range"), name)
+			if (contains(Arrays.asList("org.apache.commons.math3.util.IntegerSequence$Range"), name)
 					&& Narcissus.getIntField(instance, Narcissus.findField(clz, "step")) == 0) {
 				//
 				return null;
@@ -688,96 +562,186 @@ public abstract class Util {
 				//
 				return null;
 				//
-			} else if (contains(Arrays.asList("org.apache.jena.atlas.lib.Map2"), name)
-					&& Narcissus.getIntField(instance, Narcissus.findField(clz, "map1")) == 0) {
+			} // if
 				//
-				return null;
-				//
-			} else if (contains(Arrays.asList("org.apache.poi.ddf.EscherContainerRecord"), name)
-					&& Narcissus.getIntField(instance, Narcissus.findField(clz, "_childRecords")) == 0) {
-				//
-				return null;
-				//
-			} else if (contains(Arrays.asList("org.apache.poi.hssf.record.aggregates.ValueRecordsAggregate"), name)
-					&& Narcissus.getIntField(instance, Narcissus.findField(clz, "records")) == 0) {
-				//
-				return null;
-				//
-			} else if (contains(Arrays.asList("org.apache.poi.hssf.usermodel.HSSFRow"), name)
-					&& Narcissus.getIntField(instance, Narcissus.findField(clz, "cells")) == 0) {
-				//
-				return null;
-				//
-			} else if (contains(
-					Arrays.asList("org.apache.poi.hssf.usermodel.HSSFSheet", "org.apache.poi.xslf.usermodel.XSLFTable"),
-					name) && Narcissus.getIntField(instance, Narcissus.findField(clz, UNDER_SCORE_ROWS)) == 0) {
-				//
-				return null;
-				//
-			} else if (contains(Arrays.asList("org.apache.poi.hssf.usermodel.HSSFWorkbook"), name)
-					&& Narcissus.getIntField(instance, Narcissus.findField(clz, "_sheets")) == 0) {
-				//
-				return null;
-				//
-			} else if (contains(Arrays.asList("org.apache.poi.openxml4j.opc.PackageRelationshipCollection"), name)
-					&& Narcissus.getIntField(instance, Narcissus.findField(clz, "relationshipsByID")) == 0) {
-				//
-				return null;
-				//
-			} else if (contains(Arrays.asList("org.apache.poi.poifs.filesystem.DirectoryNode"), name)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "_entries")) == null) {
-				//
-				return null;
-				//
-			} else if (contains(Arrays.asList("org.apache.poi.poifs.filesystem.FilteringDirectoryNode"), name)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "directory")) == null) {
-				//
-				return null;
-				//
-			} else if (contains(Arrays.asList("org.apache.poi.poifs.filesystem.POIFSDocument"), name)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "_property")) == null) {
-				//
-				return null;
-				//
-			} else if (contains(Arrays.asList("org.apache.poi.poifs.filesystem.POIFSStream"), name)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "blockStore")) == null) {
-				//
-				return null;
-				//
-			} else if (contains(Arrays.asList("org.apache.poi.xddf.usermodel.text.XDDFTextParagraph",
-					"org.apache.poi.xssf.usermodel.XSSFTextParagraph"), name)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "_runs")) == null) {
-				//
-				return null;
-				//
-			} else if (contains(Arrays.asList("org.apache.poi.xslf.usermodel.XSLFTableRow",
-					"org.apache.poi.xssf.streaming.SXSSFRow", "org.apache.poi.xssf.usermodel.XSSFRow"), name)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "_cells")) == null) {
-				//
-				return null;
-				//
-			} else if (contains(Arrays.asList("org.apache.poi.xssf.streaming.SXSSFDrawing"), name)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "_drawing")) == null) {
-				//
-				return null;
-				//
-			} else if (contains(Arrays.asList("org.apache.poi.xssf.usermodel.XSSFDrawing"), name)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "drawing")) == null) {
-				//
-				return null;
-				//
-			} else if (contains(Arrays.asList("org.apache.poi.xssf.usermodel.XSSFWorkbook"), name)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "sheets")) == null) {
-				//
-				return null;
-				//
-			} else if (contains(Arrays.asList("org.apache.xmlbeans.XmlSimpleList"), name)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "underlying")) == null) {
-				//
-				return null;
-				//
-			} else if (contains(Arrays.asList("org.springframework.beans.MutablePropertyValues"), name)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "propertyValueList")) == null) {
+			final Map<String, String> map = new LinkedHashMap<>();
+			//
+			Util.put(map, "com.google.common.collect.HashMultiset", "backingMap");
+			//
+			Util.put(map, "com.google.common.collect.LinkedHashMultiset", "backingMap");
+			//
+			Util.put(map, "org.apache.jena.ext.com.google.common.collect.HashMultiset", "backingMap");
+			//
+			Util.put(map, "org.apache.jena.ext.com.google.common.collect.LinkedHashMultiset", "backingMap");
+			//
+			Util.put(map, "org.openjdk.nashorn.internal.runtime.SharedPropertyMap", "properties");
+			//
+			Util.put(map, "com.fasterxml.jackson.databind.deser.impl.BeanPropertyMap", "_hashArea");
+			//
+			Util.put(map, "com.google.common.collect.ForwardingQueue", "_hashArea");
+			//
+			Util.put(map, "org.apache.jena.ext.com.google.common.collect.ForwardingQueue", "_hashArea");
+			//
+			Util.put(map, "com.fasterxml.jackson.databind.node.ArrayNode", "_children");
+			//
+			Util.put(map, "com.fasterxml.jackson.databind.node.ObjectNode", "_children");
+			//
+			Util.put(map, "com.github.andrewoma.dexx.collection.DerivedKeyHashMap", "compactHashMap");
+			//
+			Util.put(map, "com.github.andrewoma.dexx.collection.HashMap", "compactHashMap");
+			//
+			Util.put(map, "com.github.andrewoma.dexx.collection.HashSet", "compactHashMap");
+			//
+			Util.put(map, "com.github.andrewoma.dexx.collection.TreeMap", "redBlackTree");
+			//
+			Util.put(map, "com.github.andrewoma.dexx.collection.TreeSet", "redBlackTree");
+			//
+			Util.put(map, "com.github.andrewoma.dexx.collection.Vector", "pointer");
+			//
+			Util.put(map, "com.github.andrewoma.dexx.collection.internal.adapter.ListAdapater", "list");
+			//
+			Util.put(map, "org.apache.commons.collections.FastArrayList", "list");
+			//
+			Util.put(map, "org.apache.commons.math3.geometry.partitioning.NodesSet", "list");
+			//
+			Util.put(map, "org.apache.logging.log4j.spi.MutableThreadContextStack", "list");
+			//
+			Util.put(map, "com.github.andrewoma.dexx.collection.internal.base.MappedIterable", "from");
+			//
+			Util.put(map, "com.google.common.collect.ConcurrentHashMultiset", "countMap");
+			//
+			Util.put(map, "org.apache.jena.ext.com.google.common.collect.ConcurrentHashMultiset", "countMap");
+			//
+			Util.put(map, "com.google.common.collect.TreeMultiset", "rootReference");
+			//
+			Util.put(map, "org.apache.jena.ext.com.google.common.collect.TreeMultiset", "rootReference");
+			//
+			Util.put(map, "com.google.common.reflect.TypeToken$TypeSet", "types");
+			//
+			Util.put(map, "org.apache.jena.ext.com.google.common.reflect.TypeToken$TypeSet", "types");
+			//
+			Util.put(map, "com.healthmarketscience.jackcess.impl.DatabaseImpl", "_tableFinder");
+			//
+			Util.put(map, "com.healthmarketscience.jackcess.impl.IndexCursorImpl", "_entryCursor");
+			//
+			Util.put(map, "com.healthmarketscience.jackcess.impl.PropertyMapImpl", "_props");
+			//
+			Util.put(map, "com.healthmarketscience.jackcess.impl.PropertyMaps", "_maps");
+			//
+			Util.put(map, "com.healthmarketscience.jackcess.impl.TableImpl", "_columns");
+			//
+			Util.put(map, "com.healthmarketscience.jackcess.impl.TableScanCursor", "_ownedPagesCursor");
+			//
+			Util.put(map, "com.healthmarketscience.jackcess.impl.complex.MultiValueColumnPropertyMap", "_primary");
+			//
+			Util.put(map, "com.healthmarketscience.jackcess.util.EntryIterableBuilder", "_cursor");
+			//
+			Util.put(map, "com.healthmarketscience.jackcess.util.IterableBuilder", "_cursor");
+			//
+			Util.put(map, "com.healthmarketscience.jackcess.util.TableIterableBuilder", "_db");
+			//
+			Util.put(map, "com.helger.commons.callback.CallbackList", "m_aRWLock");
+			//
+			Util.put(map, "com.helger.commons.collection.impl.CommonsCopyOnWriteArraySet", "al");
+			//
+			Util.put(map, "com.helger.commons.collection.map.LRUSet", "m_aMap");
+			//
+			Util.put(map, "com.helger.commons.http.HttpHeaderMap", "m_aHeaders");
+			//
+			Util.put(map, "com.opencsv.bean.CsvToBean", "mappingStrategy");
+			//
+			Util.put(map, "com.opencsv.bean.PositionToBeanField", "ranges");
+			//
+			Util.put(map, "org.apache.bcel.classfile.ConstantPool", "constantPool");
+			//
+			Util.put(map, "org.apache.commons.collections.CursorableLinkedList", "_head");
+			//
+			Util.put(map, "org.apache.commons.collections.collection.CompositeCollection", "all");
+			//
+			Util.put(map, "org.apache.commons.collections.set.CompositeSet", "all");
+			//
+			Util.put(map, "org.apache.commons.collections4.collection.CompositeCollection", "all");
+			//
+			Util.put(map, "org.apache.commons.collections4.set.CompositeSet", "all");
+			//
+			Util.put(map, "org.apache.commons.collections.list.AbstractLinkedList$LinkedSubList", "parent");
+			//
+			Util.put(map, "org.apache.commons.collections.map.AbstractHashedMap$EntrySet", "parent");
+			//
+			Util.put(map, "org.apache.commons.collections.map.AbstractHashedMap$KeySet", "parent");
+			//
+			Util.put(map, "org.apache.commons.collections.map.AbstractHashedMap$Values", "parent");
+			//
+			Util.put(map, "org.apache.commons.collections4.list.AbstractLinkedList$LinkedSubList", "parent");
+			//
+			Util.put(map, "org.apache.commons.collections4.map.AbstractHashedMap$EntrySet", "parent");
+			//
+			Util.put(map, "org.apache.commons.collections4.map.AbstractHashedMap$KeySet", "parent");
+			//
+			Util.put(map, "org.apache.commons.collections4.map.AbstractHashedMap$Values", "parent");
+			//
+			Util.put(map, "org.apache.commons.collections4.multiset.AbstractMultiSet$EntrySet", "parent");
+			//
+			Util.put(map, "org.apache.commons.collections4.multiset.AbstractMultiSet$UniqueSet", "parent");
+			//
+			Util.put(map, "org.apache.commons.collections.set.MapBackedSet", "map");
+			//
+			Util.put(map, "org.apache.commons.collections4.set.MapBackedSet", "map");
+			//
+			Util.put(map, "org.apache.commons.csv.CSVRecord", "values");
+			//
+			Util.put(map, "org.apache.commons.io.IOExceptionList", "causeList");
+			//
+			Util.put(map, "org.apache.commons.math3.ml.neuralnet.Network", "neuronMap");
+			//
+			Util.put(map, "org.apache.commons.math3.ml.neuralnet.twod.NeuronSquareMesh2D", "network");
+			//
+			Util.put(map, "org.apache.jena.atlas.lib.Map2", "map1");
+			//
+			Util.put(map, "org.apache.poi.ddf.EscherContainerRecord", "_childRecords");
+			//
+			Util.put(map, "org.apache.poi.hssf.record.aggregates.ValueRecordsAggregate", "records");
+			//
+			Util.put(map, "org.apache.poi.hssf.usermodel.HSSFRow", "cells");
+			//
+			Util.put(map, "org.apache.poi.hssf.usermodel.HSSFSheet", UNDER_SCORE_ROWS);
+			//
+			Util.put(map, "org.apache.poi.xslf.usermodel.XSLFTable", UNDER_SCORE_ROWS);
+			//
+			Util.put(map, "org.apache.poi.hssf.usermodel.HSSFWorkbook", "_sheets");
+			//
+			Util.put(map, "org.apache.poi.openxml4j.opc.PackageRelationshipCollection", "relationshipsByID");
+			//
+			Util.put(map, "org.apache.poi.poifs.filesystem.DirectoryNode", "_entries");
+			//
+			Util.put(map, "org.apache.poi.poifs.filesystem.FilteringDirectoryNode", "directory");
+			//
+			Util.put(map, "org.apache.poi.poifs.filesystem.POIFSDocument", "_property");
+			//
+			Util.put(map, "org.apache.poi.poifs.filesystem.POIFSStream", "blockStore");
+			//
+			Util.put(map, "org.apache.poi.xddf.usermodel.text.XDDFTextParagraph", "_runs");
+			//
+			Util.put(map, "org.apache.poi.xssf.usermodel.XSSFTextParagraph", "_runs");
+			//
+			Util.put(map, "org.apache.poi.xslf.usermodel.XSLFTableRow", "_cells");
+			//
+			Util.put(map, "org.apache.poi.xssf.streaming.SXSSFRow", "_cells");
+			//
+			Util.put(map, "org.apache.poi.xssf.usermodel.XSSFRow", "_cells");
+			//
+			Util.put(map, "org.apache.poi.xssf.streaming.SXSSFDrawing", "_drawing");
+			//
+			Util.put(map, "org.apache.poi.xssf.usermodel.XSSFDrawing", "drawing");
+			//
+			Util.put(map, "org.apache.poi.xssf.usermodel.XSSFWorkbook", "sheets");
+			//
+			Util.put(map, "org.apache.xmlbeans.XmlSimpleList", "underlying");
+			//
+			Util.put(map, "org.springframework.beans.MutablePropertyValues", "propertyValueList");
+			//
+			if (map.containsKey(name)
+					&& Narcissus.getField(instance, Narcissus.findField(clz, map.get(name))) == null) {
 				//
 				return null;
 				//
@@ -813,108 +777,6 @@ public abstract class Util {
 		} // try
 			//
 		return instance.iterator();
-		//
-	}
-
-	@Nullable
-	private static IValue0<Iterator<?>> iterator1(final Object instance)
-			throws NoSuchFieldException, ClassNotFoundException, NoSuchMethodException {
-		//
-		final Class<?> clz = getClass(instance);
-		//
-		final String name = getName(clz);
-		//
-		if (contains(
-				Arrays.asList("com.google.common.collect.HashMultiset", "com.google.common.collect.LinkedHashMultiset",
-						"org.apache.jena.ext.com.google.common.collect.HashMultiset",
-						"org.apache.jena.ext.com.google.common.collect.LinkedHashMultiset"),
-				name) && Narcissus.getField(instance, Narcissus.findField(clz, "backingMap")) == null) {
-			//
-			return Unit.with(null);
-			//
-		} else if (contains(Arrays.asList("org.openjdk.nashorn.internal.runtime.SharedPropertyMap"), name)
-				&& Narcissus.getField(instance, Narcissus.findField(clz, "properties")) == null) {
-			//
-			return Unit.with(null);
-			//
-		} else if (isAssignableFrom(Class.forName("com.fasterxml.jackson.databind.deser.impl.BeanPropertyMap"), clz)
-				&& Narcissus.getField(instance, Narcissus.findField(clz, "_hashArea")) == null) {
-			//
-			return Unit.with(null);
-			//
-		} else if (or(isAssignableFrom(Class.forName("com.google.common.collect.ForwardingQueue"), clz),
-				isAssignableFrom(Class.forName("org.apache.jena.ext.com.google.common.collect.ForwardingQueue"), clz))
-				&& Narcissus.invokeMethod(instance, Narcissus.findMethod(clz, "delegate", new Class<?>[] {})) == null) {
-			//
-			return Unit.with(null);
-			//
-		} else if (or(isAssignableFrom(Class.forName("com.google.common.collect.Maps$KeySet"), clz),
-				isAssignableFrom(Class.forName("com.google.common.collect.Maps$Values"), clz),
-				isAssignableFrom(
-						Class.forName("org.apache.jena.ext.com.google.common.collect.ForwardingMap$StandardKeySet"),
-						clz),
-				isAssignableFrom(Class.forName("org.apache.jena.ext.com.google.common.collect.Maps$Values"), clz),
-				isAssignableFrom(Class.forName("org.apache.jena.ext.com.google.common.collect.Maps$KeySet"), clz))
-				&& Narcissus.invokeMethod(instance, Narcissus.findMethod(clz, "map", new Class<?>[] {})) == null) {
-			//
-			return Unit.with(null);
-			//
-		} else if (or(
-				isAssignableFrom(Class.forName("com.google.common.collect.ForwardingMultiset$StandardElementSet"), clz),
-				isAssignableFrom(Class.forName("com.google.common.collect.SortedMultisets$ElementSet"), clz),
-				isAssignableFrom(
-						Class.forName(
-								"org.apache.jena.ext.com.google.common.collect.ForwardingMultiset$StandardElementSet"),
-						clz),
-				isAssignableFrom(Class.forName(
-						"org.apache.jena.ext.com.google.common.collect.ForwardingSortedMultiset$StandardElementSet"),
-						clz))
-				&& Narcissus.invokeMethod(instance, Narcissus.findMethod(clz, "multiset", new Class<?>[] {})) == null) {
-			//
-			return Unit.with(null);
-			//
-		} else if (isAssignableFrom(Class.forName("java.util.TreeSet"), clz)
-				&& Narcissus.getField(instance, Narcissus.findField(clz, "m")) == null) {
-			//
-			return Unit.with(null);
-			//
-		} // if
-			//
-		return null;
-		//
-	}
-
-	@Nullable
-	private static IValue0<Iterator<?>> iterator2(final Object instance)
-			throws ClassNotFoundException, NoSuchFieldException {
-		//
-		final Class<?> clz = getClass(instance);
-		//
-		if (isAssignableFrom(Class.forName("java.util.HashSet"), clz)
-				&& Narcissus.getField(instance, Narcissus.findField(clz, "map")) == null) {
-			//
-			return Unit.with(null);
-			//
-		} else if (isAssignableFrom(Class.forName("com.opencsv.CSVReader"), clz)
-				&& Narcissus.getField(instance, Narcissus.findField(clz, "peekedLines")) == null) {
-			//
-			return Unit.with(null);
-			//
-		} else if (or(isAssignableFrom(Class.forName("org.apache.commons.collections.bag.AbstractMapBag"), clz),
-				isAssignableFrom(Class.forName("org.apache.commons.collections4.bag.AbstractMapBag"), clz),
-				isAssignableFrom(Class.forName("org.apache.commons.collections4.multiset.AbstractMapMultiSet"), clz))
-				&& Narcissus.getField(instance, Narcissus.findField(clz, "map")) == null) {
-			//
-			return Unit.with(null);
-			//
-		} else if (isAssignableFrom(Class.forName("org.apache.commons.collections.DefaultMapBag"), clz)
-				&& Narcissus.getField(instance, Narcissus.findField(clz, "_map")) == null) {
-			//
-			return Unit.with(null);
-			//
-		} // if
-			//
-		return null;
 		//
 	}
 
