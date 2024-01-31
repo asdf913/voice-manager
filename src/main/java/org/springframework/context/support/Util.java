@@ -22,6 +22,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -1222,8 +1223,10 @@ public abstract class Util {
 				//
 				if (Objects.equals(getClassName(invokeStatic, cpg), "java.util.stream.Stream")
 						&& Objects.equals(getMethodName(invokeStatic, cpg), "of")
-						&& Objects.equals(Util.map(Arrays.stream(getArgumentTypes(invokeStatic, cpg)), Util::toString)
-								.collect(Collectors.joining(",")), "java.lang.Object[]")
+						&& Objects.equals(
+								collect(Util.map(Arrays.stream(getArgumentTypes(invokeStatic, cpg)), Util::toString),
+										Collectors.joining(",")),
+								"java.lang.Object[]")
 						&& Objects.equals(getMethodName(invokeInterface, cpg), "iterator")
 						&& Objects
 								.equals(Util.map(Arrays.stream(getArgumentTypes(invokeInterface, cpg)), Util::toString)
@@ -1238,6 +1241,14 @@ public abstract class Util {
 		} // try
 			//
 		return null;
+		//
+	}
+
+	private static <T, R, A> R collect(final Stream<T> instance, final Collector<? super T, A, R> collector) {
+		//
+		return instance != null && (collector != null || Proxy.isProxyClass(getClass(instance)))
+				? instance.collect(collector)
+				: null;
 		//
 	}
 

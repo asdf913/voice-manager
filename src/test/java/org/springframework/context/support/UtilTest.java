@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
+import java.util.stream.Collector;
 import java.util.stream.Stream;
 
 import javax.swing.JTextField;
@@ -60,8 +61,8 @@ class UtilTest {
 
 	private static Method METHOD_GET_JAVA_IO_FILE_SYSTEM_FIELD, METHOD_TEST, METHOD_IS_STATIC,
 			METHOD_GET_FIELD_NMAE_IF_SINGLE_LINE_RETURN_METHOD, METHOD_GET_FIELD_NMAE_FOR_STREAM_OF_AND_ITERATOR,
-			METHOD_GET_FIELD_NAME, METHOD_OR, METHOD_GET_CLASS_NAME, METHOD_GET_METHOD_NAME,
-			METHOD_GET_ARGUMENT_TYPES = null;
+			METHOD_GET_FIELD_NAME, METHOD_OR, METHOD_GET_CLASS_NAME, METHOD_GET_METHOD_NAME, METHOD_GET_ARGUMENT_TYPES,
+			METHOD_COLLECT = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -95,6 +96,8 @@ class UtilTest {
 		(METHOD_GET_ARGUMENT_TYPES = clz.getDeclaredMethod("getArgumentTypes", InvokeInstruction.class,
 				ConstantPoolGen.class)).setAccessible(true);
 		//
+		(METHOD_COLLECT = clz.getDeclaredMethod("collect", Stream.class, Collector.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -115,6 +118,10 @@ class UtilTest {
 					return null;
 					//
 				} else if (Objects.equals(methodName, "toList")) {
+					//
+					return null;
+					//
+				} else if (Objects.equals(methodName, "collect")) {
 					//
 					return null;
 					//
@@ -1005,6 +1012,26 @@ class UtilTest {
 				return (Type[]) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCollect() throws Throwable {
+		//
+		Assertions.assertNull(collect(null, null));
+		//
+		Assertions.assertNull(collect(stream, null));
+		//
+		Assertions.assertNull(collect(Stream.empty(), null));
+		//
+	}
+
+	private static <T, R, A> R collect(final Stream<T> instance, final Collector<? super T, A, R> collector)
+			throws Throwable {
+		try {
+			return (R) METHOD_COLLECT.invoke(null, instance, collector);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
