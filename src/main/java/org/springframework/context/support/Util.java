@@ -1148,6 +1148,7 @@ public abstract class Util {
 		//
 	}
 
+	@Nullable
 	private static String getFieldNmaeForStreamOfAndIterator(final Method method) throws IOException {
 		//
 		final Class<?> clz = getDeclaringClass(method);
@@ -1244,6 +1245,7 @@ public abstract class Util {
 		//
 	}
 
+	@Nullable
 	private static <T, R, A> R collect(@Nullable final Stream<T> instance, final Collector<? super T, A, R> collector) {
 		//
 		return instance != null && (collector != null || Proxy.isProxyClass(getClass(instance)))
@@ -1252,6 +1254,7 @@ public abstract class Util {
 		//
 	}
 
+	@Nullable
 	private static String getClassName(@Nullable final FieldOrMethod instance, final ConstantPoolGen cpg) {
 		//
 		if (instance == null) {
@@ -1268,6 +1271,7 @@ public abstract class Util {
 		//
 	}
 
+	@Nullable
 	private static String getMethodName(@Nullable final InvokeInstruction instance, final ConstantPoolGen cpg) {
 		//
 		if (instance == null) {
@@ -1284,6 +1288,7 @@ public abstract class Util {
 		//
 	}
 
+	@Nullable
 	private static Type[] getArgumentTypes(@Nullable final InvokeInstruction instance, final ConstantPoolGen cpg) {
 		//
 		if (instance == null) {
