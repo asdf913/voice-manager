@@ -362,14 +362,11 @@ public abstract class Util {
 			//
 			final String fieldName = getFieldNmaeIfSingleLineReturnMethod(Narcissus.findMethod(clz, "iterator"));
 			//
-			if (StringUtils.isNotBlank(fieldName)) {
+			if (StringUtils.isNotBlank(fieldName)
+					&& Narcissus.getField(instance, Narcissus.findField(clz, fieldName)) == null) {
 				//
-				if (Narcissus.getField(instance, Narcissus.findField(clz, fieldName)) == null) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			final Iterable<FailableFunction<Object, IValue0<Iterator<?>>, ReflectiveOperationException>> functions = Arrays
@@ -538,14 +535,11 @@ public abstract class Util {
 					//
 				} // if
 					//
-			} else if (isAssignableFrom(Class.forName("org.openjdk.nashorn.internal.runtime.PropertyMap"), clz)) {
+			} else if (isAssignableFrom(Class.forName("org.openjdk.nashorn.internal.runtime.PropertyMap"), clz)
+					&& Narcissus.getField(instance, Narcissus.findField(clz, "properties")) == null) {
 				//
-				if (Narcissus.getField(instance, Narcissus.findField(clz, "properties")) == null) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			if (contains(Arrays.asList("com.fasterxml.jackson.databind.node.ArrayNode",
@@ -1050,14 +1044,11 @@ public abstract class Util {
 					//
 				} // if
 					//
-			} else if (contains(Arrays.asList("org.springframework.beans.MutablePropertyValues"), name)) {
+			} else if (contains(Arrays.asList("org.springframework.beans.MutablePropertyValues"), name)
+					&& Narcissus.getField(instance, Narcissus.findField(clz, "propertyValueList")) == null) {
 				//
-				if (Narcissus.getField(instance, Narcissus.findField(clz, "propertyValueList")) == null) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 		} catch (final ReflectiveOperationException e) {
@@ -1068,14 +1059,11 @@ public abstract class Util {
 			//
 			try {
 				//
-				if (contains(Arrays.asList("com.healthmarketscience.jackcess.impl.TableDefinitionImpl"), name)) {
+				if (contains(Arrays.asList("com.healthmarketscience.jackcess.impl.TableDefinitionImpl"), name)
+						&& Narcissus.getField(instance, Narcissus.findField(clz, "_database")) == null) {
 					//
-					if (Narcissus.getField(instance, Narcissus.findField(clz, "_database")) == null) {
-						//
-						return null;
-						//
-					} // if
-						//
+					return null;
+					//
 				} // if
 					//
 			} catch (final NoSuchFieldException e) {
@@ -1148,14 +1136,11 @@ public abstract class Util {
 						Class.forName("org.apache.jena.ext.com.google.common.collect.ForwardingMap$StandardKeySet"),
 						clz),
 				isAssignableFrom(Class.forName("org.apache.jena.ext.com.google.common.collect.Maps$Values"), clz),
-				isAssignableFrom(Class.forName("org.apache.jena.ext.com.google.common.collect.Maps$KeySet"), clz))) {
+				isAssignableFrom(Class.forName("org.apache.jena.ext.com.google.common.collect.Maps$KeySet"), clz))
+				&& Narcissus.invokeMethod(instance, Narcissus.findMethod(clz, "map", new Class<?>[] {})) == null) {
 			//
-			if (Narcissus.invokeMethod(instance, Narcissus.findMethod(clz, "map", new Class<?>[] {})) == null) {
-				//
-				return Unit.with(null);
-				//
-			} // if
-				//
+			return Unit.with(null);
+			//
 		} // if
 			//
 		return null;
@@ -1208,14 +1193,11 @@ public abstract class Util {
 				//
 			} // if
 				//
-		} else if (isAssignableFrom(Class.forName("com.opencsv.CSVReader"), clz)) {
+		} else if (isAssignableFrom(Class.forName("com.opencsv.CSVReader"), clz)
+				&& Narcissus.getField(instance, Narcissus.findField(clz, "peekedLines")) == null) {
 			//
-			if (Narcissus.getField(instance, Narcissus.findField(clz, "peekedLines")) == null) {
-				//
-				return Unit.with(null);
-				//
-			} // if
-				//
+			return Unit.with(null);
+			//
 		} // if
 			//
 		return null;
