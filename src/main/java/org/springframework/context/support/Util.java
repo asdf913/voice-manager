@@ -728,7 +728,7 @@ public abstract class Util {
 		//
 	}
 
-	private static <K, V> void putAll(final Map<K, V> instance, final V v, final K k, final K... ks) {
+	private static <K, V> void putAll(final Map<K, V> instance, final V v, final K k, @Nullable final K... ks) {
 		//
 		Util.put(instance, k, v);
 		//
