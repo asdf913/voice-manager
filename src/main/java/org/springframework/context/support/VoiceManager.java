@@ -118,7 +118,6 @@ import java.util.function.ToLongFunction;
 import java.util.function.UnaryOperator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
@@ -1692,7 +1691,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		if (workbookClassFailableSupplierMap == null) {
 			//
-			workbookClassFailableSupplierMap = Unit.with(collect(
+			workbookClassFailableSupplierMap = Unit.with(Util.collect(
 					Util.stream(new Reflections("org.apache.poi").getSubTypesOf(Workbook.class)),
 					Collectors.toMap(Functions.identity(), x -> new FailableSupplier<Workbook, RuntimeException>() {
 
@@ -3457,7 +3456,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			} else if (size > 1) {
 				//
 				throw new IllegalStateException(
-						collect(sorted(Util.map(Util.stream(ms), Util::getName), ObjectUtils::compare),
+						Util.collect(sorted(Util.map(Util.stream(ms), Util::getName), ObjectUtils::compare),
 								Collectors.joining(",")));
 				//
 			} // if
@@ -4337,14 +4336,19 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final String[] fileExtensions = getFileExtensions(ContentType.HTML);
 		//
-		setToolTipText(tfExportHtmlFileName,
-				String.format("If the File Name does not ends with %1$s, file extension \".%2$s\" will be appended.",
-						collect(Util.map(testAndApply(Objects::nonNull, fileExtensions, Arrays::stream, null).sorted(),
-								x -> StringUtils.wrap(StringUtils.join('.', x), '"')), Collectors.joining(" or ")),
-						StringUtils.defaultIfBlank(
-								Util.orElse(max(fileExtensions != null ? Arrays.stream(fileExtensions) : null,
+		setToolTipText(
+				tfExportHtmlFileName, String
+						.format("If the File Name does not ends with %1$s, file extension \".%2$s\" will be appended.",
+								Util.collect(
+										Util.map(
+												testAndApply(Objects::nonNull, fileExtensions, Arrays::stream, null)
+														.sorted(),
+												x -> StringUtils.wrap(StringUtils.join('.', x), '"')),
+										Collectors.joining(" or ")),
+								StringUtils.defaultIfBlank(Util.orElse(max(
+										fileExtensions != null ? Arrays.stream(fileExtensions) : null,
 										(a, b) -> Integer.compare(StringUtils.length(a), StringUtils.length(b))), null),
-								"")));
+										"")));
 		//
 		add(panel, cbExportListHtml = new JCheckBox("Export List"));
 		//
@@ -9994,16 +9998,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	@Nullable
-	private static <T, R, A> R collect(@Nullable final Stream<T> instance,
-			@Nullable final Collector<? super T, A, R> collector) {
-		//
-		return instance != null && (collector != null || Proxy.isProxyClass(Util.getClass(instance)))
-				? instance.collect(collector)
-				: null;
-		//
-	}
-
 	private static interface ObjectMap {
 
 		@Nullable
@@ -12347,7 +12341,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				// hiragana and romaji
 				//
 			final String string = StringUtils
-					.trim(collect(Util.filter(Util.stream(Arrays.asList(getHiragana(voice), getRomaji(voice))),
+					.trim(Util.collect(Util.filter(Util.stream(Arrays.asList(getHiragana(voice), getRomaji(voice))),
 							StringUtils::isNotBlank), Collectors.joining(" ")));
 			//
 			if (StringUtils.isNotBlank(string)) {
@@ -14292,7 +14286,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		instance.setTitle("Voice Manager");
 		//
-//		instance.init();
+		// instance.init();
 		//
 		instance.pack();
 		//
