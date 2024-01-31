@@ -1160,11 +1160,12 @@ public abstract class Util {
 					ClassParserUtil.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null)),
 					method);
 			//
-			final Instruction[] instructions = InstructionListUtil.getInstructions(
-					MethodGenUtil.getInstructionList(testAndApply(x -> FieldOrMethodUtil.getConstantPool(x) != null, m,
-							x -> new MethodGen(x, null,
-									x != null ? new ConstantPoolGen(FieldOrMethodUtil.getConstantPool(x)) : null),
-							null)));
+			final Instruction[] instructions = InstructionListUtil
+					.getInstructions(MethodGenUtil
+							.getInstructionList(testAndApply(x -> FieldOrMethodUtil.getConstantPool(x) != null, m,
+									x -> new MethodGen(x, null, testAndApply(Objects::nonNull, x,
+											y -> new ConstantPoolGen(FieldOrMethodUtil.getConstantPool(y)), null)),
+									null)));
 			//
 			Instruction instruction = null;
 			//
