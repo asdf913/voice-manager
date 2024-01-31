@@ -1256,7 +1256,7 @@ public abstract class Util {
 	}
 
 	@Nullable
-	private static String getClassName(@Nullable final FieldOrMethod instance, final ConstantPoolGen cpg) {
+	private static String getClassName(@Nullable final FieldOrMethod instance, @Nullable final ConstantPoolGen cpg) {
 		//
 		if (instance == null) {
 			//
@@ -1273,7 +1273,8 @@ public abstract class Util {
 	}
 
 	@Nullable
-	private static String getMethodName(@Nullable final InvokeInstruction instance, final ConstantPoolGen cpg) {
+	private static String getMethodName(@Nullable final InvokeInstruction instance,
+			@Nullable final ConstantPoolGen cpg) {
 		//
 		if (instance == null) {
 			//
@@ -1290,7 +1291,8 @@ public abstract class Util {
 	}
 
 	@Nullable
-	private static Type[] getArgumentTypes(@Nullable final InvokeInstruction instance, final ConstantPoolGen cpg) {
+	private static Type[] getArgumentTypes(@Nullable final InvokeInstruction instance,
+			@Nullable final ConstantPoolGen cpg) {
 		//
 		if (instance == null) {
 			//
