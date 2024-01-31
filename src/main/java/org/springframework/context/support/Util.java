@@ -1246,7 +1246,8 @@ public abstract class Util {
 	}
 
 	@Nullable
-	private static <T, R, A> R collect(@Nullable final Stream<T> instance, final Collector<? super T, A, R> collector) {
+	private static <T, R, A> R collect(@Nullable final Stream<T> instance,
+			@Nullable final Collector<? super T, A, R> collector) {
 		//
 		return instance != null && (collector != null || Proxy.isProxyClass(getClass(instance)))
 				? instance.collect(collector)
