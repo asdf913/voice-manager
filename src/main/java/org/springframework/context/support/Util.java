@@ -1141,6 +1141,11 @@ public abstract class Util {
 			//
 			return Unit.with(null);
 			//
+		} else if (isAssignableFrom(Class.forName("java.util.TreeSet"), clz)
+				&& Narcissus.getField(instance, Narcissus.findField(clz, "m")) == null) {
+			//
+			return Unit.with(null);
+			//
 		} // if
 			//
 		return null;
@@ -1153,12 +1158,7 @@ public abstract class Util {
 		//
 		final Class<?> clz = getClass(instance);
 		//
-		if (isAssignableFrom(Class.forName("java.util.TreeSet"), clz)
-				&& Narcissus.getField(instance, Narcissus.findField(clz, "m")) == null) {
-			//
-			return Unit.with(null);
-			//
-		} else if (isAssignableFrom(Class.forName("java.util.HashSet"), clz)
+		if (isAssignableFrom(Class.forName("java.util.HashSet"), clz)
 				&& Narcissus.getField(instance, Narcissus.findField(clz, "map")) == null) {
 			//
 			return Unit.with(null);
