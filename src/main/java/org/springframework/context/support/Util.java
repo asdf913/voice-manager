@@ -381,26 +381,6 @@ public abstract class Util {
 				//
 			} // if
 				//
-//			final Iterable<FailableFunction<Object, IValue0<Iterator<?>>, ReflectiveOperationException>> functions = Arrays
-//					.asList(Util::iterator2);
-//			//
-//			if (functions != null && functions.iterator() != null) {
-//				//
-//				IValue0<Iterator<?>> iValue0 = null;
-//				//
-//				for (final FailableFunction<Object, IValue0<Iterator<?>>, ReflectiveOperationException> function : functions) {
-//					//
-//					if ((iValue0 = FailableFunctionUtil.apply(function, instance)) != null) {
-//						//
-//						return (Iterator<T>) IValue0Util.getValue0(iValue0);
-//						//
-//					} // if
-//						//
-//						//
-//				} // for
-//					//
-//			} // if
-			//
 			if (contains(Arrays.asList("com.healthmarketscience.jackcess.impl.TableDefinitionImpl"), name) && Narcissus
 					.invokeMethod(instance, Narcissus.findMethod(clz, "createRowState", new Class<?>[] {})) == null) {
 				//
