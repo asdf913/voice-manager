@@ -716,6 +716,8 @@ class UtilTest {
 					"org.springframework.validation.beanvalidation.SpringValidatorAdapter"
 					//
 					, "org.eclipse.jetty.http.pathmap.PathSpecSet"
+					//
+					, "org.eclipse.jetty.http.HttpCompliance"
 			//
 			));
 			//
@@ -766,16 +768,25 @@ class UtilTest {
 					//
 				} // if
 					//
-				if (Util.isAssignableFrom(Iterable.class, Class.forName(name))
-						&& !(clz = Class.forName(name)).isInterface() && !Modifier.isAbstract(clz.getModifiers())) {
+				try {
 					//
-					final Iterable<?> it = Util.cast(Iterable.class, Narcissus.allocateInstance(clz));
+					if (Util.isAssignableFrom(Iterable.class, Class.forName(name))
+							&& !(clz = Class.forName(name)).isInterface() && !Modifier.isAbstract(clz.getModifiers())) {
+						//
+						final Iterable<?> it = Util.cast(Iterable.class, Narcissus.allocateInstance(clz));
+						//
+						System.out.println(name);
+						//
+						Assertions.assertDoesNotThrow(() -> Util.iterator(it), name);
+						//
+					} // if
+				} catch (final Throwable e) {
 					//
-					System.out.println(name);
+					System.err.println(name);
 					//
-					Assertions.assertDoesNotThrow(() -> Util.iterator(it), name);
+					throw e;
 					//
-				} // if
+				} // try
 					//
 			} // for
 				//
