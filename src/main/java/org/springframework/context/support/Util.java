@@ -1096,40 +1096,26 @@ public abstract class Util {
 				Arrays.asList("com.google.common.collect.HashMultiset", "com.google.common.collect.LinkedHashMultiset",
 						"org.apache.jena.ext.com.google.common.collect.HashMultiset",
 						"org.apache.jena.ext.com.google.common.collect.LinkedHashMultiset"),
-				name)) {
+				name) && Narcissus.getField(instance, Narcissus.findField(clz, "backingMap")) == null) {
 			//
-			if (Narcissus.getField(instance, Narcissus.findField(clz, "backingMap")) == null) {
-				//
-				return Unit.with(null);
-				//
-			} // if
-				//
-		} else if (contains(Arrays.asList("org.openjdk.nashorn.internal.runtime.SharedPropertyMap"), name)) {
+			return Unit.with(null);
 			//
-			if (Narcissus.getField(instance, Narcissus.findField(clz, "properties")) == null) {
-				//
-				return Unit.with(null);
-				//
-			} // if
-				//
-		} else if (isAssignableFrom(Class.forName("com.fasterxml.jackson.databind.deser.impl.BeanPropertyMap"), clz)) {
+		} else if (contains(Arrays.asList("org.openjdk.nashorn.internal.runtime.SharedPropertyMap"), name)
+				&& Narcissus.getField(instance, Narcissus.findField(clz, "properties")) == null) {
 			//
-			if (Narcissus.getField(instance, Narcissus.findField(clz, "_hashArea")) == null) {
-				//
-				return Unit.with(null);
-				//
-			} // if
-				//
+			return Unit.with(null);
+			//
+		} else if (isAssignableFrom(Class.forName("com.fasterxml.jackson.databind.deser.impl.BeanPropertyMap"), clz)
+				&& Narcissus.getField(instance, Narcissus.findField(clz, "_hashArea")) == null) {
+			//
+			return Unit.with(null);
+			//
 		} else if (or(isAssignableFrom(Class.forName("com.google.common.collect.ForwardingQueue"), clz),
-				isAssignableFrom(Class.forName("org.apache.jena.ext.com.google.common.collect.ForwardingQueue"),
-						clz))) {
+				isAssignableFrom(Class.forName("org.apache.jena.ext.com.google.common.collect.ForwardingQueue"), clz))
+				&& Narcissus.invokeMethod(instance, Narcissus.findMethod(clz, "delegate", new Class<?>[] {})) == null) {
 			//
-			if (Narcissus.invokeMethod(instance, Narcissus.findMethod(clz, "delegate", new Class<?>[] {})) == null) {
-				//
-				return Unit.with(null);
-				//
-			} // if
-				//
+			return Unit.with(null);
+			//
 		} else if (or(isAssignableFrom(Class.forName("com.google.common.collect.Maps$KeySet"), clz),
 				isAssignableFrom(Class.forName("com.google.common.collect.Maps$Values"), clz),
 				isAssignableFrom(
@@ -1138,6 +1124,20 @@ public abstract class Util {
 				isAssignableFrom(Class.forName("org.apache.jena.ext.com.google.common.collect.Maps$Values"), clz),
 				isAssignableFrom(Class.forName("org.apache.jena.ext.com.google.common.collect.Maps$KeySet"), clz))
 				&& Narcissus.invokeMethod(instance, Narcissus.findMethod(clz, "map", new Class<?>[] {})) == null) {
+			//
+			return Unit.with(null);
+			//
+		} else if (or(
+				isAssignableFrom(Class.forName("com.google.common.collect.ForwardingMultiset$StandardElementSet"), clz),
+				isAssignableFrom(Class.forName("com.google.common.collect.SortedMultisets$ElementSet"), clz),
+				isAssignableFrom(
+						Class.forName(
+								"org.apache.jena.ext.com.google.common.collect.ForwardingMultiset$StandardElementSet"),
+						clz),
+				isAssignableFrom(Class.forName(
+						"org.apache.jena.ext.com.google.common.collect.ForwardingSortedMultiset$StandardElementSet"),
+						clz))
+				&& Narcissus.invokeMethod(instance, Narcissus.findMethod(clz, "multiset", new Class<?>[] {})) == null) {
 			//
 			return Unit.with(null);
 			//
@@ -1153,46 +1153,21 @@ public abstract class Util {
 		//
 		final Class<?> clz = getClass(instance);
 		//
-		if (or(isAssignableFrom(Class.forName("com.google.common.collect.ForwardingMultiset$StandardElementSet"), clz),
-				isAssignableFrom(Class.forName("com.google.common.collect.SortedMultisets$ElementSet"), clz),
-				isAssignableFrom(
-						Class.forName(
-								"org.apache.jena.ext.com.google.common.collect.ForwardingMultiset$StandardElementSet"),
-						clz),
-				isAssignableFrom(Class.forName(
-						"org.apache.jena.ext.com.google.common.collect.ForwardingSortedMultiset$StandardElementSet"),
-						clz))) {
+		if (isAssignableFrom(Class.forName("java.util.TreeSet"), clz)
+				&& Narcissus.getField(instance, Narcissus.findField(clz, "m")) == null) {
 			//
-			if (Narcissus.invokeMethod(instance, Narcissus.findMethod(clz, "multiset", new Class<?>[] {})) == null) {
-				//
-				return Unit.with(null);
-				//
-			} // if
-				//
-		} else if (isAssignableFrom(Class.forName("java.util.TreeSet"), clz)) {
+			return Unit.with(null);
 			//
-			if (Narcissus.getField(instance, Narcissus.findField(clz, "m")) == null) {
-				//
-				return Unit.with(null);
-				//
-			} // if
-				//
-		} else if (isAssignableFrom(Class.forName("java.util.HashSet"), clz)) {
+		} else if (isAssignableFrom(Class.forName("java.util.HashSet"), clz)
+				&& Narcissus.getField(instance, Narcissus.findField(clz, "map")) == null) {
 			//
-			if (Narcissus.getField(instance, Narcissus.findField(clz, "map")) == null) {
-				//
-				return Unit.with(null);
-				//
-			} // if
-				//
-		} else if (isAssignableFrom(Class.forName("org.apache.bcel.classfile.Annotations"), clz)) {
+			return Unit.with(null);
 			//
-			if (Narcissus.getField(instance, Narcissus.findField(clz, "annotationTable")) == null) {
-				//
-				return Unit.with(null);
-				//
-			} // if
-				//
+		} else if (isAssignableFrom(Class.forName("org.apache.bcel.classfile.Annotations"), clz)
+				&& Narcissus.getField(instance, Narcissus.findField(clz, "annotationTable")) == null) {
+			//
+			return Unit.with(null);
+			//
 		} else if (isAssignableFrom(Class.forName("com.opencsv.CSVReader"), clz)
 				&& Narcissus.getField(instance, Narcissus.findField(clz, "peekedLines")) == null) {
 			//
