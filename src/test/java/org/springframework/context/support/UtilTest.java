@@ -766,12 +766,12 @@ class UtilTest {
 					//
 				} // if
 					//
-				System.out.println(name);
-				//
 				if (Util.isAssignableFrom(Iterable.class, Class.forName(name))
 						&& !(clz = Class.forName(name)).isInterface() && !Modifier.isAbstract(clz.getModifiers())) {
 					//
 					final Iterable<?> it = Util.cast(Iterable.class, Narcissus.allocateInstance(clz));
+					//
+					System.out.println(name);
 					//
 					Assertions.assertDoesNotThrow(() -> Util.iterator(it), name);
 					//
