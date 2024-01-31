@@ -410,11 +410,6 @@ public abstract class Util {
 				//
 				return null;
 				//
-			} else if (isAssignableFrom(Class.forName("org.apache.commons.collections.DefaultMapBag"), clz)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "_map")) == null) {
-				//
-				return null;
-				//
 			} else if (or(
 					isAssignableFrom(Class.forName("org.apache.commons.collections.collection.PredicatedCollection"),
 							clz),
@@ -909,6 +904,11 @@ public abstract class Util {
 				isAssignableFrom(Class.forName("org.apache.commons.collections4.bag.AbstractMapBag"), clz),
 				isAssignableFrom(Class.forName("org.apache.commons.collections4.multiset.AbstractMapMultiSet"), clz))
 				&& Narcissus.getField(instance, Narcissus.findField(clz, "map")) == null) {
+			//
+			return Unit.with(null);
+			//
+		} else if (isAssignableFrom(Class.forName("org.apache.commons.collections.DefaultMapBag"), clz)
+				&& Narcissus.getField(instance, Narcissus.findField(clz, "_map")) == null) {
 			//
 			return Unit.with(null);
 			//
