@@ -1146,6 +1146,11 @@ public abstract class Util {
 			//
 			return Unit.with(null);
 			//
+		} else if (isAssignableFrom(Class.forName("java.util.HashSet"), clz)
+				&& Narcissus.getField(instance, Narcissus.findField(clz, "map")) == null) {
+			//
+			return Unit.with(null);
+			//
 		} // if
 			//
 		return null;
@@ -1158,12 +1163,7 @@ public abstract class Util {
 		//
 		final Class<?> clz = getClass(instance);
 		//
-		if (isAssignableFrom(Class.forName("java.util.HashSet"), clz)
-				&& Narcissus.getField(instance, Narcissus.findField(clz, "map")) == null) {
-			//
-			return Unit.with(null);
-			//
-		} else if (isAssignableFrom(Class.forName("org.apache.bcel.classfile.Annotations"), clz)
+		if (isAssignableFrom(Class.forName("org.apache.bcel.classfile.Annotations"), clz)
 				&& Narcissus.getField(instance, Narcissus.findField(clz, "annotationTable")) == null) {
 			//
 			return Unit.with(null);
