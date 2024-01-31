@@ -1153,9 +1153,8 @@ public abstract class Util {
 		//
 		final Class<?> clz = getDeclaringClass(method);
 		//
-		try (final InputStream is = clz != null
-				? clz.getResourceAsStream(String.format("/%1$s.class", StringUtils.replace(getName(clz), ".", "/")))
-				: null) {
+		try (final InputStream is = getResourceAsStream(clz,
+				String.format("/%1$s.class", StringUtils.replace(getName(clz), ".", "/")))) {
 			//
 			final org.apache.bcel.classfile.Method m = JavaClassUtil.getMethod(
 					ClassParserUtil.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null)),
@@ -1245,6 +1244,10 @@ public abstract class Util {
 		//
 	}
 
+	private static InputStream getResourceAsStream(final Class<?> instance, final String name) {
+		return instance != null && name != null ? instance.getResourceAsStream(name) : null;
+	}
+
 	@Nullable
 	private static <T, R, A> R collect(@Nullable final Stream<T> instance,
 			@Nullable final Collector<? super T, A, R> collector) {
@@ -1313,9 +1316,8 @@ public abstract class Util {
 		//
 		final Class<?> clz = getDeclaringClass(method);
 		//
-		try (final InputStream is = clz != null
-				? clz.getResourceAsStream(String.format("/%1$s.class", StringUtils.replace(getName(clz), ".", "/")))
-				: null) {
+		try (final InputStream is = getResourceAsStream(clz,
+				String.format("/%1$s.class", StringUtils.replace(getName(clz), ".", "/")))) {
 			//
 			final org.apache.bcel.classfile.Method m = JavaClassUtil.getMethod(
 					ClassParserUtil.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null)),

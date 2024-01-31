@@ -62,7 +62,7 @@ class UtilTest {
 	private static Method METHOD_GET_JAVA_IO_FILE_SYSTEM_FIELD, METHOD_TEST, METHOD_IS_STATIC,
 			METHOD_GET_FIELD_NMAE_IF_SINGLE_LINE_RETURN_METHOD, METHOD_GET_FIELD_NMAE_FOR_STREAM_OF_AND_ITERATOR,
 			METHOD_GET_FIELD_NAME, METHOD_OR, METHOD_GET_CLASS_NAME, METHOD_GET_METHOD_NAME, METHOD_GET_ARGUMENT_TYPES,
-			METHOD_COLLECT = null;
+			METHOD_COLLECT, METHOD_GET_RESOURCE_AS_STREAM = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -97,6 +97,9 @@ class UtilTest {
 				ConstantPoolGen.class)).setAccessible(true);
 		//
 		(METHOD_COLLECT = clz.getDeclaredMethod("collect", Stream.class, Collector.class)).setAccessible(true);
+		//
+		(METHOD_GET_RESOURCE_AS_STREAM = clz.getDeclaredMethod("getResourceAsStream", Class.class, String.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -1032,6 +1035,27 @@ class UtilTest {
 			throws Throwable {
 		try {
 			return (R) METHOD_COLLECT.invoke(null, instance, collector);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetResourceAsStream() throws Throwable {
+		//
+		Assertions.assertNull(getResourceAsStream(Class.class, null));
+		//
+	}
+
+	private static InputStream getResourceAsStream(final Class<?> instance, final String name) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_RESOURCE_AS_STREAM.invoke(null, instance, name);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof InputStream) {
+				return (InputStream) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
