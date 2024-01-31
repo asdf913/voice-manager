@@ -22,6 +22,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
@@ -35,12 +36,16 @@ import org.apache.bcel.generic.ALOAD;
 import org.apache.bcel.generic.ARETURN;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.FieldInstruction;
+import org.apache.bcel.generic.FieldOrMethod;
 import org.apache.bcel.generic.GETFIELD;
 import org.apache.bcel.generic.INVOKEINTERFACE;
+import org.apache.bcel.generic.INVOKESTATIC;
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InstructionListUtil;
+import org.apache.bcel.generic.InvokeInstruction;
 import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.MethodGenUtil;
+import org.apache.bcel.generic.Type;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ObjectUtils;
@@ -56,6 +61,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
 
 import io.github.toolfactory.narcissus.Narcissus;
+import javassist.util.proxy.ProxyFactory;
 
 public abstract class Util {
 
@@ -360,9 +366,18 @@ public abstract class Util {
 		//
 		try {
 			//
-			final String fieldName = getFieldNmaeIfSingleLineReturnMethod(Narcissus.findMethod(clz, "iterator"));
+			final Method method = Narcissus.findMethod(clz, "iterator");
+			//
+			String fieldName = getFieldNmaeIfSingleLineReturnMethod(method);
 			//
 			if (StringUtils.isNotBlank(fieldName)
+					&& Narcissus.getField(instance, Narcissus.findField(clz, fieldName)) == null) {
+				//
+				return null;
+				//
+			} // if
+				//
+			if (StringUtils.isNotBlank(fieldName = getFieldNmaeForStreamOfAndIterator(method))
 					&& Narcissus.getField(instance, Narcissus.findField(clz, fieldName)) == null) {
 				//
 				return null;
@@ -393,14 +408,6 @@ public abstract class Util {
 				//
 				if (Narcissus.invokeMethod(instance,
 						Narcissus.findMethod(clz, "createRowState", new Class<?>[] {})) == null) {
-					//
-					return null;
-					//
-				} // if
-					//
-			} else if (isAssignableFrom(Class.forName("org.apache.bcel.classfile.ParameterAnnotations"), clz)) {
-				//
-				if (Narcissus.getField(instance, Narcissus.findField(clz, "parameterAnnotationTable")) == null) {
 					//
 					return null;
 					//
@@ -747,57 +754,9 @@ public abstract class Util {
 					//
 				} // if
 					//
-			} else if (contains(Arrays.asList("org.apache.bcel.classfile.BootstrapMethods"), name)) {
-				//
-				if (Narcissus.getField(instance, Narcissus.findField(clz, "bootstrapMethods")) == null) {
-					//
-					return null;
-					//
-				} // if
-					//
 			} else if (contains(Arrays.asList("org.apache.bcel.classfile.ConstantPool"), name)) {
 				//
 				if (Narcissus.getField(instance, Narcissus.findField(clz, "constantPool")) == null) {
-					//
-					return null;
-					//
-				} // if
-					//
-			} else if (contains(Arrays.asList("org.apache.bcel.classfile.InnerClasses"), name)) {
-				//
-				if (Narcissus.getField(instance, Narcissus.findField(clz, "innerClasses")) == null) {
-					//
-					return null;
-					//
-				} // if
-					//
-			} else if (contains(Arrays.asList("org.apache.bcel.classfile.LineNumberTable"), name)) {
-				//
-				if (Narcissus.getField(instance, Narcissus.findField(clz, "lineNumberTable")) == null) {
-					//
-					return null;
-					//
-				} // if
-					//
-			} else if (contains(Arrays.asList("org.apache.bcel.classfile.LocalVariableTable"), name)) {
-				//
-				if (Narcissus.getField(instance, Narcissus.findField(clz, "localVariableTable")) == null) {
-					//
-					return null;
-					//
-				} // if
-					//
-			} else if (contains(Arrays.asList("org.apache.bcel.classfile.LocalVariableTypeTable"), name)) {
-				//
-				if (Narcissus.getField(instance, Narcissus.findField(clz, "localVariableTypeTable")) == null) {
-					//
-					return null;
-					//
-				} // if
-					//
-			} else if (contains(Arrays.asList("org.apache.bcel.classfile.MethodParameters"), name)) {
-				//
-				if (Narcissus.getField(instance, Narcissus.findField(clz, "parameters")) == null) {
 					//
 					return null;
 					//
@@ -986,14 +945,6 @@ public abstract class Util {
 					//
 				} // if
 					//
-			} else if (contains(Arrays.asList("org.apache.poi.ss.util.SSCellRange"), name)) {
-				//
-				if (Narcissus.getField(instance, Narcissus.findField(clz, "_flattenedArray")) == null) {
-					//
-					return null;
-					//
-				} // if
-					//
 			} else if (contains(Arrays.asList("org.apache.poi.xddf.usermodel.text.XDDFTextParagraph",
 					"org.apache.poi.xssf.usermodel.XSSFTextParagraph"), name)) {
 				//
@@ -1163,11 +1114,6 @@ public abstract class Util {
 			//
 			return Unit.with(null);
 			//
-		} else if (isAssignableFrom(Class.forName("org.apache.bcel.classfile.Annotations"), clz)
-				&& Narcissus.getField(instance, Narcissus.findField(clz, "annotationTable")) == null) {
-			//
-			return Unit.with(null);
-			//
 		} else if (isAssignableFrom(Class.forName("com.opencsv.CSVReader"), clz)
 				&& Narcissus.getField(instance, Narcissus.findField(clz, "peekedLines")) == null) {
 			//
@@ -1198,6 +1144,148 @@ public abstract class Util {
 		} // for
 			//
 		return false;
+		//
+	}
+
+	private static String getFieldNmaeForStreamOfAndIterator(final Method method) throws IOException {
+		//
+		final Class<?> clz = getDeclaringClass(method);
+		//
+		try (final InputStream is = clz != null
+				? clz.getResourceAsStream(String.format("/%1$s.class", StringUtils.replace(getName(clz), ".", "/")))
+				: null) {
+			//
+			final org.apache.bcel.classfile.Method m = JavaClassUtil.getMethod(
+					ClassParserUtil.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null)),
+					method);
+			//
+			final Instruction[] instructions = InstructionListUtil.getInstructions(
+					MethodGenUtil.getInstructionList(testAndApply(x -> FieldOrMethodUtil.getConstantPool(x) != null, m,
+							x -> new MethodGen(x, null,
+									x != null ? new ConstantPoolGen(FieldOrMethodUtil.getConstantPool(x)) : null),
+							null)));
+			//
+			Instruction instruction = null;
+			//
+			SortedSet<Boolean> booleans = null;
+			//
+			GETFIELD getField = null;
+			//
+			INVOKESTATIC invokeStatic = null;
+			//
+			INVOKEINTERFACE invokeInterface = null;
+			//
+			for (int i = 0; instructions != null && i < instructions.length; i++) {
+				//
+				if ((instruction = instructions[i]) == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if (i == 0) {
+					//
+					add(booleans = ObjectUtils.getIfNull(booleans, TreeSet::new), instruction instanceof ALOAD);
+					//
+				} else if (i == 1) {
+					//
+					add(booleans = ObjectUtils.getIfNull(booleans, TreeSet::new),
+							(getField = cast(GETFIELD.class, instruction)) != null);
+					//
+				} else if (i == 2) {
+					//
+					add(booleans = ObjectUtils.getIfNull(booleans, TreeSet::new),
+							(invokeStatic = cast(INVOKESTATIC.class, instruction)) != null);
+					//
+				} else if (i == 3) {
+					//
+					add(booleans = ObjectUtils.getIfNull(booleans, TreeSet::new),
+							(invokeInterface = cast(INVOKEINTERFACE.class, instruction)) != null);
+					//
+				} else if (i == 4) {
+					//
+					add(booleans = ObjectUtils.getIfNull(booleans, TreeSet::new), instruction instanceof ARETURN);
+					//
+				} else {
+					//
+					add(booleans = ObjectUtils.getIfNull(booleans, TreeSet::new), Boolean.FALSE);
+					//
+					break;
+					//
+				} // if
+					//
+			} // for
+				//
+			if (CollectionUtils.isNotEmpty(booleans) && booleans.first() != null && booleans.first().booleanValue()) {
+				//
+				final ConstantPoolGen cpg = new ConstantPoolGen(FieldOrMethodUtil.getConstantPool(m));
+				//
+				if (Objects.equals(getClassName(invokeStatic, cpg), "java.util.stream.Stream")
+						&& Objects.equals(getMethodName(invokeStatic, cpg), "of")
+						&& Objects.equals(Util.map(Arrays.stream(getArgumentTypes(invokeStatic, cpg)), Util::toString)
+								.collect(Collectors.joining(",")), "java.lang.Object[]")
+						&& Objects.equals(getMethodName(invokeInterface, cpg), "iterator")
+						&& Objects
+								.equals(Util.map(Arrays.stream(getArgumentTypes(invokeInterface, cpg)), Util::toString)
+										.collect(Collectors.joining(",")), "")) {
+					//
+					return getFieldName(getField, cpg);
+					//
+				} // if
+					//
+			} // if
+				//
+		} // try
+			//
+		return null;
+		//
+	}
+
+	private static String getClassName(final FieldOrMethod instance, final ConstantPoolGen cpg) {
+		//
+		if (instance == null) {
+			//
+			return null;
+			//
+		} else if (ProxyFactory.isProxyClass(getClass(instance))) {
+			//
+			return instance.getClassName(cpg);
+			//
+		} // if
+			//
+		return cpg != null ? instance.getClassName(cpg) : null;
+		//
+	}
+
+	private static String getMethodName(final InvokeInstruction instance, final ConstantPoolGen cpg) {
+		//
+		if (instance == null) {
+			//
+			return null;
+			//
+		} else if (ProxyFactory.isProxyClass(getClass(instance))) {
+			//
+			return instance.getMethodName(cpg);
+			//
+		} // if
+			//
+		return cpg != null ? instance.getMethodName(cpg) : null;
+		//
+	}
+
+	private static Type[] getArgumentTypes(final InvokeInstruction instance, final ConstantPoolGen cpg) {
+		//
+		if (instance == null) {
+			//
+			return null;
+			//
+		} else if (ProxyFactory.isProxyClass(getClass(instance))) {
+			//
+			return instance.getArgumentTypes(cpg);
+			//
+		} // if
+			//
+		return cpg != null ? instance.getArgumentTypes(cpg) : null;
 		//
 	}
 

@@ -2,6 +2,8 @@ package org.springframework.context.support;
 
 import java.awt.GraphicsEnvironment;
 import java.io.File;
+import java.io.InputStream;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -22,14 +24,26 @@ import java.util.stream.Stream;
 import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
 
+import org.apache.bcel.classfile.ClassParser;
+import org.apache.bcel.classfile.ClassParserUtil;
+import org.apache.bcel.classfile.FieldOrMethodUtil;
+import org.apache.bcel.classfile.JavaClassUtil;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.FieldInstruction;
+import org.apache.bcel.generic.FieldOrMethod;
+import org.apache.bcel.generic.InstructionListUtil;
+import org.apache.bcel.generic.InvokeInstruction;
+import org.apache.bcel.generic.MethodGen;
+import org.apache.bcel.generic.MethodGenUtil;
+import org.apache.bcel.generic.Type;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.util.ReflectionUtils;
 
 import com.google.common.reflect.Reflection;
 
@@ -38,11 +52,16 @@ import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ClassInfoList;
 import io.github.classgraph.ScanResult;
 import io.github.toolfactory.narcissus.Narcissus;
+import javassist.util.proxy.MethodHandler;
+import javassist.util.proxy.ProxyFactory;
+import javassist.util.proxy.ProxyObject;
 
 class UtilTest {
 
 	private static Method METHOD_GET_JAVA_IO_FILE_SYSTEM_FIELD, METHOD_TEST, METHOD_IS_STATIC,
-			METHOD_GET_FIELD_NMAE_IF_SINGLE_LINE_RETURN_METHOD, METHOD_GET_FIELD_NAME, METHOD_OR = null;
+			METHOD_GET_FIELD_NMAE_IF_SINGLE_LINE_RETURN_METHOD, METHOD_GET_FIELD_NMAE_FOR_STREAM_OF_AND_ITERATOR,
+			METHOD_GET_FIELD_NAME, METHOD_OR, METHOD_GET_CLASS_NAME, METHOD_GET_METHOD_NAME,
+			METHOD_GET_ARGUMENT_TYPES = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -59,10 +78,22 @@ class UtilTest {
 		(METHOD_GET_FIELD_NMAE_IF_SINGLE_LINE_RETURN_METHOD = clz
 				.getDeclaredMethod("getFieldNmaeIfSingleLineReturnMethod", Method.class)).setAccessible(true);
 		//
+		(METHOD_GET_FIELD_NMAE_FOR_STREAM_OF_AND_ITERATOR = clz.getDeclaredMethod("getFieldNmaeForStreamOfAndIterator",
+				Method.class)).setAccessible(true);
+		//
 		(METHOD_GET_FIELD_NAME = clz.getDeclaredMethod("getFieldName", FieldInstruction.class, ConstantPoolGen.class))
 				.setAccessible(true);
 		//
 		(METHOD_OR = clz.getDeclaredMethod("or", Boolean.TYPE, Boolean.TYPE, boolean[].class)).setAccessible(true);
+		//
+		(METHOD_GET_CLASS_NAME = clz.getDeclaredMethod("getClassName", FieldOrMethod.class, ConstantPoolGen.class))
+				.setAccessible(true);
+		//
+		(METHOD_GET_METHOD_NAME = clz.getDeclaredMethod("getMethodName", InvokeInstruction.class,
+				ConstantPoolGen.class)).setAccessible(true);
+		//
+		(METHOD_GET_ARGUMENT_TYPES = clz.getDeclaredMethod("getArgumentTypes", InvokeInstruction.class,
+				ConstantPoolGen.class)).setAccessible(true);
 		//
 	}
 
@@ -97,12 +128,84 @@ class UtilTest {
 
 	}
 
+	private static class MH implements MethodHandler {
+
+		@Override
+		public Object invoke(final Object self, final Method thisMethod, final Method proceed, final Object[] args)
+				throws Throwable {
+			//
+			if (ReflectionUtils.isToStringMethod(thisMethod)) {
+				//
+				return toString();
+				//
+			} // if
+				//
+			final String methodName = Util.getName(thisMethod);
+			//
+			if (self instanceof InvokeInstruction) {
+				//
+				if (Objects.equals(methodName, "getMethodName")) {
+					//
+					return null;
+					//
+				} else if (Objects.equals(methodName, "getArgumentTypes")) {
+					//
+					return null;
+					//
+				} // if
+					//
+			} else if (self instanceof FieldOrMethod) {
+				//
+				if (Objects.equals(methodName, "getClassName")) {
+					//
+					return null;
+					//
+				} // if
+					//
+			} // if
+				//
+			throw new Throwable(methodName);
+			//
+		}
+
+	}
+
 	private Stream<?> stream = null;
 
+	private InvokeInstruction invokeInstruction = null;
+
+	private MH mh = null;
+
 	@BeforeEach
-	public void beforeEach() {
+	void beforeEach()
+			throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
 		//
 		stream = Reflection.newProxy(Stream.class, new IH());
+		//
+		invokeInstruction = createProxyObject(InvokeInstruction.class, mh = new MH());
+		//
+	}
+
+	private static <T> T createProxyObject(final Class<T> clz, final MethodHandler mh)
+			throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+
+		final ProxyFactory proxyFactory = new ProxyFactory();
+		//
+		proxyFactory.setSuperclass(clz);
+		//
+		final Class<?> c = proxyFactory.createClass();
+		//
+		final Constructor<?> constructor = c != null ? c.getDeclaredConstructor() : null;
+		//
+		final Object instance = constructor != null ? constructor.newInstance() : null;
+		//
+		if (instance instanceof ProxyObject) {
+			//
+			((ProxyObject) instance).setHandler(mh);
+			//
+		} // if
+			//
+		return Util.cast(clz, instance);
 		//
 	}
 
@@ -702,6 +805,27 @@ class UtilTest {
 	}
 
 	@Test
+	void testGetFieldNmaeForStreamOfAndIterator() throws Throwable {
+		//
+		Assertions.assertNull(getFieldNmaeForStreamOfAndIterator(null));
+		//
+	}
+
+	private static String getFieldNmaeForStreamOfAndIterator(final Method method) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_FIELD_NMAE_FOR_STREAM_OF_AND_ITERATOR.invoke(null, method);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
 	void testGetFieldNmae() throws Throwable {
 		//
 		Assertions.assertNull(getFieldName(null, null));
@@ -734,6 +858,151 @@ class UtilTest {
 			final Object obj = METHOD_OR.invoke(null, a, b, bs);
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetClassName() throws Throwable {
+		//
+		Assertions.assertNull(getClassName(null, null));
+		//
+		Assertions.assertNull(getClassName(createProxyObject(FieldOrMethod.class, mh), null));
+		//
+		final Class<?> clz = Method.class;
+		//
+		try (final InputStream is = clz != null
+				? clz.getResourceAsStream(
+						String.format("/%1$s.class", StringUtils.replace(Util.getName(clz), ".", "/")))
+				: null) {
+			//
+			final org.apache.bcel.classfile.Method m = JavaClassUtil.getMethod(
+					ClassParserUtil.parse(new ClassParser(is, null)),
+					clz != null ? clz.getDeclaredMethod("toString") : null);
+			//
+			Assertions
+					.assertNull(getClassName(
+							Util.map(
+									Util.filter(Arrays.stream(InstructionListUtil
+											.getInstructions(MethodGenUtil.getInstructionList(new MethodGen(m, null,
+													m != null
+															? new ConstantPoolGen(FieldOrMethodUtil.getConstantPool(m))
+															: null)))),
+											x -> x instanceof InvokeInstruction),
+									x -> Util.cast(InvokeInstruction.class, x)).findFirst().orElse(null),
+							null));
+			//
+		} // try
+			//
+	}
+
+	private static String getClassName(final FieldOrMethod instance, final ConstantPoolGen cpg) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_CLASS_NAME.invoke(null, instance, cpg);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetMethodName() throws Throwable {
+		//
+		Assertions.assertNull(getMethodName(null, null));
+		//
+		Assertions.assertNull(getMethodName(invokeInstruction, null));
+		//
+		final Class<?> clz = Method.class;
+		//
+		try (final InputStream is = clz != null
+				? clz.getResourceAsStream(
+						String.format("/%1$s.class", StringUtils.replace(Util.getName(clz), ".", "/")))
+				: null) {
+			//
+			final org.apache.bcel.classfile.Method m = JavaClassUtil.getMethod(
+					ClassParserUtil.parse(new ClassParser(is, null)),
+					clz != null ? clz.getDeclaredMethod("toString") : null);
+			//
+			Assertions
+					.assertNull(getMethodName(
+							Util.map(
+									Util.filter(Arrays.stream(InstructionListUtil
+											.getInstructions(MethodGenUtil.getInstructionList(new MethodGen(m, null,
+													m != null
+															? new ConstantPoolGen(FieldOrMethodUtil.getConstantPool(m))
+															: null)))),
+											x -> x instanceof InvokeInstruction),
+									x -> Util.cast(InvokeInstruction.class, x)).findFirst().orElse(null),
+							null));
+			//
+		} // try
+			//
+	}
+
+	private static String getMethodName(final InvokeInstruction instance, final ConstantPoolGen cpg) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_METHOD_NAME.invoke(null, instance, cpg);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetArgumentTypes() throws Throwable {
+		//
+		Assertions.assertNull(getArgumentTypes(null, null));
+		//
+		Assertions.assertNull(getArgumentTypes(invokeInstruction, null));
+		//
+		final Class<?> clz = Method.class;
+		//
+		try (final InputStream is = clz != null
+				? clz.getResourceAsStream(
+						String.format("/%1$s.class", StringUtils.replace(Util.getName(clz), ".", "/")))
+				: null) {
+			//
+			final org.apache.bcel.classfile.Method m = JavaClassUtil.getMethod(
+					ClassParserUtil.parse(new ClassParser(is, null)),
+					clz != null ? clz.getDeclaredMethod("toString") : null);
+			//
+			Assertions
+					.assertNull(getArgumentTypes(
+							Util.map(
+									Util.filter(Arrays.stream(InstructionListUtil
+											.getInstructions(MethodGenUtil.getInstructionList(new MethodGen(m, null,
+													m != null
+															? new ConstantPoolGen(FieldOrMethodUtil.getConstantPool(m))
+															: null)))),
+											x -> x instanceof InvokeInstruction),
+									x -> Util.cast(InvokeInstruction.class, x)).findFirst().orElse(null),
+							null));
+			//
+		} // try
+			//
+	}
+
+	private static Type[] getArgumentTypes(final InvokeInstruction instance, final ConstantPoolGen cpg)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_GET_ARGUMENT_TYPES.invoke(null, instance, cpg);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Type[]) {
+				return (Type[]) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
