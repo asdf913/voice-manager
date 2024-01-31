@@ -66,6 +66,8 @@ public abstract class Util {
 
 	private static final String UNDER_SCORE_ROWS = "_rows";
 
+	private static final String UNDER_SCORE_RUNS = "_runs";
+
 	private Util() {
 	}
 
@@ -433,7 +435,7 @@ public abstract class Util {
 				return null;
 				//
 			} else if (isAssignableFrom(Class.forName("org.apache.poi.xslf.usermodel.XSLFTextParagraph"), clz)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "_runs")) == null) {
+					&& Narcissus.getField(instance, Narcissus.findField(clz, UNDER_SCORE_RUNS)) == null) {
 				//
 				return null;
 				//
@@ -670,9 +672,8 @@ public abstract class Util {
 			//
 			Util.put(map, "org.apache.poi.poifs.filesystem.POIFSStream", "blockStore");
 			//
-			Util.put(map, "org.apache.poi.xddf.usermodel.text.XDDFTextParagraph", "_runs");
-			//
-			Util.put(map, "org.apache.poi.xssf.usermodel.XSSFTextParagraph", "_runs");
+			putAll(map, UNDER_SCORE_RUNS, "org.apache.poi.xddf.usermodel.text.XDDFTextParagraph",
+					"org.apache.poi.xssf.usermodel.XSSFTextParagraph");
 			//
 			putAll(map, "_cells", "org.apache.poi.xslf.usermodel.XSLFTableRow",
 					"org.apache.poi.xssf.streaming.SXSSFRow", "org.apache.poi.xssf.usermodel.XSSFRow");
