@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Collector;
@@ -62,7 +63,7 @@ class UtilTest {
 	private static Method METHOD_GET_JAVA_IO_FILE_SYSTEM_FIELD, METHOD_TEST, METHOD_IS_STATIC,
 			METHOD_GET_FIELD_NMAE_IF_SINGLE_LINE_RETURN_METHOD, METHOD_GET_FIELD_NMAE_FOR_STREAM_OF_AND_ITERATOR,
 			METHOD_GET_FIELD_NAME, METHOD_OR, METHOD_GET_CLASS_NAME, METHOD_GET_METHOD_NAME, METHOD_GET_ARGUMENT_TYPES,
-			METHOD_COLLECT, METHOD_GET_RESOURCE_AS_STREAM = null;
+			METHOD_COLLECT, METHOD_GET_RESOURCE_AS_STREAM, METHOD_PUT_ALL = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -99,6 +100,9 @@ class UtilTest {
 		(METHOD_COLLECT = clz.getDeclaredMethod("collect", Stream.class, Collector.class)).setAccessible(true);
 		//
 		(METHOD_GET_RESOURCE_AS_STREAM = clz.getDeclaredMethod("getResourceAsStream", Class.class, String.class))
+				.setAccessible(true);
+		//
+		(METHOD_PUT_ALL = clz.getDeclaredMethod("putAll", Map.class, Object.class, Object.class, Object[].class))
 				.setAccessible(true);
 		//
 	}
@@ -1067,6 +1071,21 @@ class UtilTest {
 				return (InputStream) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testPutAll() throws Throwable {
+		//
+		Assertions.assertDoesNotThrow(() -> putAll(null, null, null, (Object[]) null));
+		//
+	}
+
+	private static <K, V> void putAll(final Map<K, V> instance, final V v, final K k, final K... ks) throws Throwable {
+		try {
+			METHOD_PUT_ALL.invoke(null, instance, v, k, ks);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

@@ -566,59 +566,43 @@ public abstract class Util {
 				//
 			final Map<String, String> map = new LinkedHashMap<>();
 			//
-			Util.put(map, "com.google.common.collect.HashMultiset", "backingMap");
-			//
-			Util.put(map, "com.google.common.collect.LinkedHashMultiset", "backingMap");
-			//
-			Util.put(map, "org.apache.jena.ext.com.google.common.collect.HashMultiset", "backingMap");
-			//
-			Util.put(map, "org.apache.jena.ext.com.google.common.collect.LinkedHashMultiset", "backingMap");
+			putAll(map, "backingMap", "com.google.common.collect.HashMultiset",
+					"com.google.common.collect.LinkedHashMultiset",
+					"org.apache.jena.ext.com.google.common.collect.HashMultiset",
+					"org.apache.jena.ext.com.google.common.collect.LinkedHashMultiset");
 			//
 			Util.put(map, "org.openjdk.nashorn.internal.runtime.SharedPropertyMap", "properties");
 			//
-			Util.put(map, "com.fasterxml.jackson.databind.deser.impl.BeanPropertyMap", "_hashArea");
+			putAll(map, "_hashArea", "com.fasterxml.jackson.databind.deser.impl.BeanPropertyMap",
+					"com.google.common.collect.ForwardingQueue",
+					"org.apache.jena.ext.com.google.common.collect.ForwardingQueue");
 			//
-			Util.put(map, "com.google.common.collect.ForwardingQueue", "_hashArea");
+			putAll(map, "_children", "com.fasterxml.jackson.databind.node.ArrayNode",
+					"com.fasterxml.jackson.databind.node.ObjectNode");
 			//
-			Util.put(map, "org.apache.jena.ext.com.google.common.collect.ForwardingQueue", "_hashArea");
+			putAll(map, "compactHashMap", "com.github.andrewoma.dexx.collection.DerivedKeyHashMap",
+					"com.github.andrewoma.dexx.collection.HashMap", "com.github.andrewoma.dexx.collection.HashSet");
 			//
-			Util.put(map, "com.fasterxml.jackson.databind.node.ArrayNode", "_children");
-			//
-			Util.put(map, "com.fasterxml.jackson.databind.node.ObjectNode", "_children");
-			//
-			Util.put(map, "com.github.andrewoma.dexx.collection.DerivedKeyHashMap", "compactHashMap");
-			//
-			Util.put(map, "com.github.andrewoma.dexx.collection.HashMap", "compactHashMap");
-			//
-			Util.put(map, "com.github.andrewoma.dexx.collection.HashSet", "compactHashMap");
-			//
-			Util.put(map, "com.github.andrewoma.dexx.collection.TreeMap", "redBlackTree");
-			//
-			Util.put(map, "com.github.andrewoma.dexx.collection.TreeSet", "redBlackTree");
+			putAll(map, "redBlackTree", "com.github.andrewoma.dexx.collection.TreeMap",
+					"com.github.andrewoma.dexx.collection.TreeSet");
 			//
 			Util.put(map, "com.github.andrewoma.dexx.collection.Vector", "pointer");
 			//
-			Util.put(map, "com.github.andrewoma.dexx.collection.internal.adapter.ListAdapater", "list");
-			//
-			Util.put(map, "org.apache.commons.collections.FastArrayList", "list");
-			//
-			Util.put(map, "org.apache.commons.math3.geometry.partitioning.NodesSet", "list");
-			//
-			Util.put(map, "org.apache.logging.log4j.spi.MutableThreadContextStack", "list");
+			putAll(map, "list", "com.github.andrewoma.dexx.collection.internal.adapter.ListAdapater",
+					"org.apache.commons.collections.FastArrayList",
+					"org.apache.commons.math3.geometry.partitioning.NodesSet",
+					"org.apache.logging.log4j.spi.MutableThreadContextStack");
 			//
 			Util.put(map, "com.github.andrewoma.dexx.collection.internal.base.MappedIterable", "from");
 			//
-			Util.put(map, "com.google.common.collect.ConcurrentHashMultiset", "countMap");
+			putAll(map, "countMap", "com.google.common.collect.ConcurrentHashMultiset",
+					"org.apache.jena.ext.com.google.common.collect.ConcurrentHashMultiset");
 			//
-			Util.put(map, "org.apache.jena.ext.com.google.common.collect.ConcurrentHashMultiset", "countMap");
+			putAll(map, "rootReference", "com.google.common.collect.TreeMultiset",
+					"org.apache.jena.ext.com.google.common.collect.TreeMultiset");
 			//
-			Util.put(map, "com.google.common.collect.TreeMultiset", "rootReference");
-			//
-			Util.put(map, "org.apache.jena.ext.com.google.common.collect.TreeMultiset", "rootReference");
-			//
-			Util.put(map, "com.google.common.reflect.TypeToken$TypeSet", "types");
-			//
-			Util.put(map, "org.apache.jena.ext.com.google.common.reflect.TypeToken$TypeSet", "types");
+			putAll(map, "types", "com.google.common.reflect.TypeToken$TypeSet",
+					"org.apache.jena.ext.com.google.common.reflect.TypeToken$TypeSet");
 			//
 			Util.put(map, "com.healthmarketscience.jackcess.impl.DatabaseImpl", "_tableFinder");
 			//
@@ -656,37 +640,24 @@ public abstract class Util {
 			//
 			Util.put(map, "org.apache.commons.collections.CursorableLinkedList", "_head");
 			//
-			Util.put(map, "org.apache.commons.collections.collection.CompositeCollection", "all");
+			putAll(map, "all", "org.apache.commons.collections.collection.CompositeCollection",
+					"org.apache.commons.collections.set.CompositeSet",
+					"org.apache.commons.collections4.collection.CompositeCollection",
+					"org.apache.commons.collections4.set.CompositeSet");
 			//
-			Util.put(map, "org.apache.commons.collections.set.CompositeSet", "all");
+			putAll(map, "parent", "org.apache.commons.collections.list.AbstractLinkedList$LinkedSubList",
+					"org.apache.commons.collections.map.AbstractHashedMap$EntrySet",
+					"org.apache.commons.collections.map.AbstractHashedMap$KeySet",
+					"org.apache.commons.collections.map.AbstractHashedMap$Values",
+					"org.apache.commons.collections4.list.AbstractLinkedList$LinkedSubList",
+					"org.apache.commons.collections4.map.AbstractHashedMap$EntrySet",
+					"org.apache.commons.collections4.map.AbstractHashedMap$KeySet",
+					"org.apache.commons.collections4.map.AbstractHashedMap$Values",
+					"org.apache.commons.collections4.multiset.AbstractMultiSet$EntrySet",
+					"org.apache.commons.collections4.multiset.AbstractMultiSet$UniqueSet");
 			//
-			Util.put(map, "org.apache.commons.collections4.collection.CompositeCollection", "all");
-			//
-			Util.put(map, "org.apache.commons.collections4.set.CompositeSet", "all");
-			//
-			Util.put(map, "org.apache.commons.collections.list.AbstractLinkedList$LinkedSubList", "parent");
-			//
-			Util.put(map, "org.apache.commons.collections.map.AbstractHashedMap$EntrySet", "parent");
-			//
-			Util.put(map, "org.apache.commons.collections.map.AbstractHashedMap$KeySet", "parent");
-			//
-			Util.put(map, "org.apache.commons.collections.map.AbstractHashedMap$Values", "parent");
-			//
-			Util.put(map, "org.apache.commons.collections4.list.AbstractLinkedList$LinkedSubList", "parent");
-			//
-			Util.put(map, "org.apache.commons.collections4.map.AbstractHashedMap$EntrySet", "parent");
-			//
-			Util.put(map, "org.apache.commons.collections4.map.AbstractHashedMap$KeySet", "parent");
-			//
-			Util.put(map, "org.apache.commons.collections4.map.AbstractHashedMap$Values", "parent");
-			//
-			Util.put(map, "org.apache.commons.collections4.multiset.AbstractMultiSet$EntrySet", "parent");
-			//
-			Util.put(map, "org.apache.commons.collections4.multiset.AbstractMultiSet$UniqueSet", "parent");
-			//
-			Util.put(map, "org.apache.commons.collections.set.MapBackedSet", "map");
-			//
-			Util.put(map, "org.apache.commons.collections4.set.MapBackedSet", "map");
+			putAll(map, "map", "org.apache.commons.collections.set.MapBackedSet",
+					"org.apache.commons.collections4.set.MapBackedSet");
 			//
 			Util.put(map, "org.apache.commons.csv.CSVRecord", "values");
 			//
@@ -704,9 +675,8 @@ public abstract class Util {
 			//
 			Util.put(map, "org.apache.poi.hssf.usermodel.HSSFRow", "cells");
 			//
-			Util.put(map, "org.apache.poi.hssf.usermodel.HSSFSheet", UNDER_SCORE_ROWS);
-			//
-			Util.put(map, "org.apache.poi.xslf.usermodel.XSLFTable", UNDER_SCORE_ROWS);
+			putAll(map, UNDER_SCORE_ROWS, "org.apache.poi.hssf.usermodel.HSSFSheet",
+					"org.apache.poi.xslf.usermodel.XSLFTable");
 			//
 			Util.put(map, "org.apache.poi.hssf.usermodel.HSSFWorkbook", "_sheets");
 			//
@@ -724,11 +694,8 @@ public abstract class Util {
 			//
 			Util.put(map, "org.apache.poi.xssf.usermodel.XSSFTextParagraph", "_runs");
 			//
-			Util.put(map, "org.apache.poi.xslf.usermodel.XSLFTableRow", "_cells");
-			//
-			Util.put(map, "org.apache.poi.xssf.streaming.SXSSFRow", "_cells");
-			//
-			Util.put(map, "org.apache.poi.xssf.usermodel.XSSFRow", "_cells");
+			putAll(map, "_cells", "org.apache.poi.xslf.usermodel.XSLFTableRow",
+					"org.apache.poi.xssf.streaming.SXSSFRow", "org.apache.poi.xssf.usermodel.XSSFRow");
 			//
 			Util.put(map, "org.apache.poi.xssf.streaming.SXSSFDrawing", "_drawing");
 			//
@@ -778,6 +745,18 @@ public abstract class Util {
 			//
 		return instance.iterator();
 		//
+	}
+
+	private static <K, V> void putAll(final Map<K, V> instance, final V v, final K k, final K... ks) {
+		//
+		Util.put(instance, k, v);
+		//
+		for (int i = 0; ks != null && i < ks.length; i++) {
+			//
+			Util.put(instance, ks[i], v);
+			//
+		} // for
+			//
 	}
 
 	private static boolean or(final boolean a, final boolean b, @Nullable final boolean... bs) {
