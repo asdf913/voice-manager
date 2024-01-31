@@ -1149,7 +1149,7 @@ public abstract class Util {
 
 	@Nullable
 	private static IValue0<Iterator<?>> iterator2(final Object instance)
-			throws ClassNotFoundException, NoSuchMethodException, NoSuchFieldException {
+			throws ClassNotFoundException, NoSuchFieldException {
 		//
 		final Class<?> clz = getClass(instance);
 		//
