@@ -1179,12 +1179,8 @@ public abstract class Util {
 			//
 			for (int i = 0; instructions != null && i < instructions.length; i++) {
 				//
-				if ((instruction = instructions[i]) == null) {
-					//
-					continue;
-					//
-				} // if
-					//
+				instruction = instructions[i];
+				//
 				if (i == 0) {
 					//
 					add(booleans = ObjectUtils.getIfNull(booleans, TreeSet::new), instruction instanceof ALOAD);
