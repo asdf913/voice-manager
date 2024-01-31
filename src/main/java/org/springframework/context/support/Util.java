@@ -1241,7 +1241,7 @@ public abstract class Util {
 		//
 	}
 
-	private static String getClassName(final FieldOrMethod instance, final ConstantPoolGen cpg) {
+	private static String getClassName(@Nullable final FieldOrMethod instance, final ConstantPoolGen cpg) {
 		//
 		if (instance == null) {
 			//
@@ -1257,7 +1257,7 @@ public abstract class Util {
 		//
 	}
 
-	private static String getMethodName(final InvokeInstruction instance, final ConstantPoolGen cpg) {
+	private static String getMethodName(@Nullable final InvokeInstruction instance, final ConstantPoolGen cpg) {
 		//
 		if (instance == null) {
 			//
