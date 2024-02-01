@@ -37,6 +37,7 @@ import org.apache.bcel.generic.InvokeInstruction;
 import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.MethodGenUtil;
 import org.apache.bcel.generic.Type;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailablePredicate;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -417,41 +418,9 @@ class UtilTest {
 		//
 	}
 
-	@Test
-	void testIsStatic() throws Throwable {
-		//
-		Assertions.assertFalse(isStatic(null));
-		//
-		Assertions.assertTrue(isStatic(Boolean.class.getDeclaredField("TRUE")));
-		//
-	}
-
-	private static boolean isStatic(final Member instance) throws Throwable {
-		try {
-			final Object obj = METHOD_IS_STATIC.invoke(null, instance);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testIterator() throws Throwable {
-		//
-		Assertions.assertNull(Util.iterator(null));
+	private static List<ClassInfo> getClassInfos() {
 		//
 		final List<ClassInfo> classInfos = getAllClasses(scan(new ClassGraph().enableClassInfo()));
-		//
-		if (Util.iterator(classInfos) == null) {
-			//
-			return;
-			//
-		} // if
-			//
-		String name = null;
 		//
 		final Collection<String> classToBeExcluded = new ArrayList<>(Arrays.asList(
 				//
@@ -775,19 +744,64 @@ class UtilTest {
 			//
 		} // if
 			//
+		classInfos.removeIf(x -> {
+			//
+			if (x == null) {
+				//
+				return false;
+				//
+			} // if
+				//
+			return CollectionUtils.isNotEmpty(classToBeExcluded) && Util.contains(classToBeExcluded, x.getName());
+		});
+		//
+		return classInfos;
+		//
+	}
+
+	@Test
+	void testIsStatic() throws Throwable {
+		//
+		Assertions.assertFalse(isStatic(null));
+		//
+		Assertions.assertTrue(isStatic(Boolean.class.getDeclaredField("TRUE")));
+		//
+	}
+
+	private static boolean isStatic(final Member instance) throws Throwable {
+		try {
+			final Object obj = METHOD_IS_STATIC.invoke(null, instance);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testIterator() throws Throwable {
+		//
+		Assertions.assertNull(Util.iterator(null));
+		//
+		final List<ClassInfo> classInfos = getClassInfos();
+		//
+		if (Util.iterator(classInfos) == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		String name = null;
+		//
 		Class<?> clz = null;
 		//
 		for (final ClassInfo classInfo : classInfos) {
 			//
-			if (classInfo == null || Util.contains(classToBeExcluded, name = classInfo.getName())) {
-				//
-				continue;
-				//
-			} // if
-				//
 			try {
 				//
-				if (Util.isAssignableFrom(Iterable.class, Class.forName(name))
+				if (Util.isAssignableFrom(Iterable.class, Class.forName(name = classInfo.getName()))
 						&& !(clz = Class.forName(name)).isInterface() && !Modifier.isAbstract(clz.getModifiers())) {
 					//
 					final Iterable<?> it = Util.cast(Iterable.class, Narcissus.allocateInstance(clz));
