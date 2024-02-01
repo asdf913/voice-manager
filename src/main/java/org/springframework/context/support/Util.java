@@ -69,6 +69,8 @@ public abstract class Util {
 
 	private static final String UNDER_SCORE_RUNS = "_runs";
 
+	private static final Class<?>[] EMPTY_CLASS_ARRAY = new Class<?>[] {};
+
 	private Util() {
 	}
 
@@ -385,7 +387,7 @@ public abstract class Util {
 			} // if
 				//
 			if (contains(Arrays.asList("com.healthmarketscience.jackcess.impl.TableDefinitionImpl"), name) && Narcissus
-					.invokeMethod(instance, Narcissus.findMethod(clz, "createRowState", new Class<?>[] {})) == null) {
+					.invokeMethod(instance, Narcissus.findMethod(clz, "createRowState", EMPTY_CLASS_ARRAY)) == null) {
 				//
 				return null;
 				//
@@ -400,7 +402,7 @@ public abstract class Util {
 			//
 			putAll(predicates,
 					x -> Narcissus.invokeMethod(instance,
-							Narcissus.findMethod(x, "decorated", new Class<?>[] {})) == null,
+							Narcissus.findMethod(x, "decorated", EMPTY_CLASS_ARRAY)) == null,
 					"org.apache.commons.collections4.collection.AbstractCollectionDecorator",
 					"org.apache.commons.collections4.collection.SynchronizedCollection");
 			//
@@ -417,7 +419,7 @@ public abstract class Util {
 					x -> Narcissus.getField(instance, Narcissus.findField(x, "_paragraphs")) == null);
 			//
 			Util.put(predicates, "org.apache.poi.xslf.usermodel.XSLFSheet", x -> Narcissus.invokeMethod(instance,
-					Narcissus.findMethod(x, "getXmlObject", new Class<?>[] {})) == null);
+					Narcissus.findMethod(x, "getXmlObject", EMPTY_CLASS_ARRAY)) == null);
 			//
 			Util.put(predicates, "org.apache.poi.xslf.usermodel.XSLFTextParagraph",
 					x -> Narcissus.getField(instance, Narcissus.findField(x, UNDER_SCORE_RUNS)) == null);
@@ -443,12 +445,12 @@ public abstract class Util {
 			//
 			putAll(predicates,
 					x -> Narcissus.invokeMethod(instance,
-							Narcissus.findMethod(x, "delegate", new Class<?>[] {})) == null,
+							Narcissus.findMethod(x, "delegate", EMPTY_CLASS_ARRAY)) == null,
 					"com.google.common.collect.ForwardingQueue",
 					"org.apache.jena.ext.com.google.common.collect.ForwardingQueue");
 			//
 			putAll(predicates,
-					x -> Narcissus.invokeMethod(instance, Narcissus.findMethod(x, "map", new Class<?>[] {})) == null,
+					x -> Narcissus.invokeMethod(instance, Narcissus.findMethod(x, "map", EMPTY_CLASS_ARRAY)) == null,
 					"com.google.common.collect.Maps$KeySet", "com.google.common.collect.Maps$Values",
 					"org.apache.jena.ext.com.google.common.collect.ForwardingMap$StandardKeySet",
 					"org.apache.jena.ext.com.google.common.collect.Maps$Values",
@@ -456,7 +458,7 @@ public abstract class Util {
 			//
 			putAll(predicates,
 					x -> Narcissus.invokeMethod(instance,
-							Narcissus.findMethod(x, "multiset", new Class<?>[] {})) == null,
+							Narcissus.findMethod(x, "multiset", EMPTY_CLASS_ARRAY)) == null,
 					"com.google.common.collect.ForwardingMultiset$StandardElementSet",
 					"com.google.common.collect.SortedMultisets$ElementSet",
 					"org.apache.jena.ext.com.google.common.collect.ForwardingMultiset$StandardElementSet",
