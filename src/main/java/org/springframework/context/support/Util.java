@@ -496,13 +496,11 @@ public abstract class Util {
 					//
 			} // for
 				//
-			if (contains(Arrays.asList("org.apache.commons.math3.util.IntegerSequence$Range"), name)
-					&& Narcissus.getIntField(instance, Narcissus.findField(clz, "step")) == 0) {
-				//
-				return null;
-				//
-			} else if (contains(Arrays.asList("org.apache.commons.math3.util.MultidimensionalCounter"), name)
-					&& (Narcissus.getIntField(instance, Narcissus.findField(clz, "dimension"))) == 0) {
+			if (Boolean.logicalOr(
+					contains(Arrays.asList("org.apache.commons.math3.util.IntegerSequence$Range"), name)
+							&& Narcissus.getIntField(instance, Narcissus.findField(clz, "step")) == 0,
+					contains(Arrays.asList("org.apache.commons.math3.util.MultidimensionalCounter"), name)
+							&& (Narcissus.getIntField(instance, Narcissus.findField(clz, "dimension"))) == 0)) {
 				//
 				return null;
 				//
