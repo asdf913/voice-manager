@@ -416,6 +416,42 @@ class UtilTest {
 		//
 		Assertions.assertNull(Util.toList(empty));
 		//
+		final List<ClassInfo> classInfos = getClassInfos();
+		//
+		if (Util.iterator(classInfos) == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		String name = null;
+		//
+		Class<?> clz = null;
+		//
+		for (final ClassInfo classInfo : classInfos) {
+			//
+			try {
+				//
+				if (Util.isAssignableFrom(Stream.class, Class.forName(name = classInfo.getName()))
+						&& !(clz = Class.forName(name)).isInterface() && !Modifier.isAbstract(clz.getModifiers())) {
+					//
+					final Stream<?> stream = Util.cast(Stream.class, Narcissus.allocateInstance(clz));
+					//
+					System.out.println(name);
+					//
+					Assertions.assertDoesNotThrow(() -> Util.toList(stream), name);
+					//
+				} // if
+			} catch (final Throwable e) {
+				//
+				System.err.println(name);
+				//
+				throw e;
+				//
+			} // try
+				//
+		} // for
+			//
 	}
 
 	private static List<ClassInfo> getClassInfos() {
@@ -820,7 +856,6 @@ class UtilTest {
 			} // try
 				//
 		} // for
-			//
 			//
 	}
 
