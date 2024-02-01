@@ -39,6 +39,7 @@ import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.MethodGenUtil;
 import org.apache.bcel.generic.Type;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.function.FailablePredicate;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.junit.jupiter.api.Assertions;
@@ -62,7 +63,7 @@ class UtilTest {
 
 	private static Method METHOD_GET_JAVA_IO_FILE_SYSTEM_FIELD, METHOD_TEST, METHOD_IS_STATIC,
 			METHOD_GET_FIELD_NMAE_IF_SINGLE_LINE_RETURN_METHOD, METHOD_GET_FIELD_NMAE_FOR_STREAM_OF_AND_ITERATOR,
-			METHOD_GET_FIELD_NAME, METHOD_OR, METHOD_GET_CLASS_NAME, METHOD_GET_METHOD_NAME, METHOD_GET_ARGUMENT_TYPES,
+			METHOD_GET_FIELD_NAME, METHOD_GET_CLASS_NAME, METHOD_GET_METHOD_NAME, METHOD_GET_ARGUMENT_TYPES,
 			METHOD_COLLECT, METHOD_GET_RESOURCE_AS_STREAM, METHOD_PUT_ALL = null;
 
 	@BeforeAll
@@ -73,7 +74,7 @@ class UtilTest {
 		(METHOD_GET_JAVA_IO_FILE_SYSTEM_FIELD = clz.getDeclaredMethod("getJavaIoFileSystemField", Object.class))
 				.setAccessible(true);
 		//
-		(METHOD_TEST = clz.getDeclaredMethod("test", Predicate.class, Object.class)).setAccessible(true);
+		(METHOD_TEST = clz.getDeclaredMethod("test", FailablePredicate.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_IS_STATIC = clz.getDeclaredMethod("isStatic", Member.class)).setAccessible(true);
 		//
@@ -85,8 +86,6 @@ class UtilTest {
 		//
 		(METHOD_GET_FIELD_NAME = clz.getDeclaredMethod("getFieldName", FieldInstruction.class, ConstantPoolGen.class))
 				.setAccessible(true);
-		//
-		(METHOD_OR = clz.getDeclaredMethod("or", Boolean.TYPE, Boolean.TYPE, boolean[].class)).setAccessible(true);
 		//
 		(METHOD_GET_CLASS_NAME = clz.getDeclaredMethod("getClassName", FieldOrMethod.class, ConstantPoolGen.class))
 				.setAccessible(true);
@@ -112,7 +111,7 @@ class UtilTest {
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
-			final String methodName = method != null ? method.getName() : null;
+			final String methodName = Util.getName(method);
 			//
 			if (proxy instanceof Stream) {
 				//
@@ -342,11 +341,31 @@ class UtilTest {
 	@Test
 	void testTest() throws Throwable {
 		//
-		Assertions.assertFalse(test(null, null));
+		new FailableStream<>(Arrays.stream(Util.class.getDeclaredMethods())
+				.filter(m -> m != null && Objects.equals(Util.getName(m), "test") && Modifier.isStatic(m.getModifiers())
+						&& m.getParameterCount() == 2))
+				.forEach(m -> {
+					//
+					if (m == null) {
+						//
+						return;
+						//
+					} // if
+						//
+					m.setAccessible(true);
+					//
+					Assertions.assertEquals(Boolean.FALSE, m != null ? m.invoke(null, null, null) : null);
+					//
+				});
+		//
+		final FailablePredicate<?, RuntimeException> failablePredicate = x -> false;
+		//
+		Assertions.assertEquals(Boolean.FALSE, test(failablePredicate, null));
 		//
 	}
 
-	private static final <T> boolean test(final Predicate<T> instance, final T value) throws Throwable {
+	private static <T, E extends Throwable> boolean test(final FailablePredicate<T, E> instance, final T value)
+			throws Throwable {
 		try {
 			final Object obj = METHOD_TEST.invoke(null, instance, value);
 			if (obj instanceof Boolean) {
@@ -864,25 +883,6 @@ class UtilTest {
 				return null;
 			} else if (obj instanceof String) {
 				return (String) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testOr() throws Throwable {
-		//
-		Assertions.assertFalse(or(false, false, null));
-		//
-	}
-
-	private static boolean or(final boolean a, final boolean b, final boolean... bs) throws Throwable {
-		try {
-			final Object obj = METHOD_OR.invoke(null, a, b, bs);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

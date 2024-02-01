@@ -52,6 +52,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.function.FailablePredicate;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -388,151 +389,112 @@ public abstract class Util {
 				//
 				return null;
 				//
-			} else if (or(
-					isAssignableFrom(Class.forName("org.apache.commons.collections.collection.PredicatedCollection"),
-							clz),
-					isAssignableFrom(Class.forName("org.apache.commons.collections.collection.SynchronizedCollection"),
-							clz),
-					isAssignableFrom(
-							Class.forName("org.apache.commons.collections.collection.AbstractCollectionDecorator"),
-							clz))
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "collection")) == null) {
-				//
-				return null;
-				//
-			} else if (or(isAssignableFrom(
-					Class.forName("org.apache.commons.collections4.collection.AbstractCollectionDecorator"), clz),
-					isAssignableFrom(Class.forName("org.apache.commons.collections4.collection.SynchronizedCollection"),
-							clz))
-					&& Narcissus.invokeMethod(instance,
-							Narcissus.findMethod(clz, "decorated", new Class<?>[] {})) == null) {
-				//
-				return null;
-				//
-			} else if (isAssignableFrom(Class.forName("org.apache.commons.math3.genetics.ListPopulation"), clz)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "chromosomes")) == null) {
-				//
-				return null;
-				//
-			} else if (isAssignableFrom(Class.forName("org.apache.commons.math3.geometry.partitioning.AbstractRegion"),
-					clz) && Narcissus.getField(instance, Narcissus.findField(clz, "tree")) == null) {
-				//
-				return null;
-				//
-			} else if (isAssignableFrom(Class.forName("org.apache.poi.poifs.property.DirectoryProperty"), clz)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "_children")) == null) {
-				//
-				return null;
-				//
-			} else if (isAssignableFrom(Class.forName("org.apache.poi.xslf.usermodel.XSLFTextShape"), clz)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "_paragraphs")) == null) {
-				//
-				return null;
-				//
-			} else if (isAssignableFrom(Class.forName("org.apache.poi.xslf.usermodel.XSLFSheet"), clz) && Narcissus
-					.invokeMethod(instance, Narcissus.findMethod(clz, "getXmlObject", new Class<?>[] {})) == null) {
-				//
-				return null;
-				//
-			} else if (isAssignableFrom(Class.forName("org.apache.poi.xslf.usermodel.XSLFTextParagraph"), clz)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, UNDER_SCORE_RUNS)) == null) {
-				//
-				return null;
-				//
-			} else if (isAssignableFrom(Class.forName("org.apache.poi.xssf.streaming.DeferredSXSSFSheet"), clz)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, UNDER_SCORE_ROWS)) == null) {
-				//
-				return null;
-				//
-			} else if (isAssignableFrom(Class.forName("org.apache.poi.xssf.streaming.SXSSFWorkbook"), clz)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "_wb")) == null) {
-				//
-				return null;
-				//
-			} else if (or(isAssignableFrom(Class.forName("org.apache.poi.xssf.streaming.SXSSFSheet"), clz),
-					isAssignableFrom(Class.forName("org.apache.poi.xssf.usermodel.XSSFSheet"), clz))
-					&& Narcissus.getField(instance, Narcissus.findField(clz, UNDER_SCORE_ROWS)) == null) {
-				//
-				return null;
-				//
-			} else if (isAssignableFrom(Class.forName("org.apache.poi.xssf.usermodel.XSSFShape"), clz)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "drawing")) == null) {
-				//
-				return null;
-				//
-			} else if (isAssignableFrom(Class.forName("org.openjdk.nashorn.internal.runtime.PropertyMap"), clz)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "properties")) == null) {
-				//
-				return null;
-				//
-			} else if (isAssignableFrom(Class.forName("com.fasterxml.jackson.databind.deser.impl.BeanPropertyMap"), clz)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "_hashArea")) == null) {
-				//
-				return null;
-				//
-			} else if (or(isAssignableFrom(Class.forName("com.google.common.collect.ForwardingQueue"), clz),
-					isAssignableFrom(Class.forName("org.apache.jena.ext.com.google.common.collect.ForwardingQueue"),
-							clz))
-					&& Narcissus.invokeMethod(instance,
-							Narcissus.findMethod(clz, "delegate", new Class<?>[] {})) == null) {
-				//
-				return null;
-				//
-			} else if (or(isAssignableFrom(Class.forName("com.google.common.collect.Maps$KeySet"), clz),
-					isAssignableFrom(Class.forName("com.google.common.collect.Maps$Values"), clz),
-					isAssignableFrom(
-							Class.forName("org.apache.jena.ext.com.google.common.collect.ForwardingMap$StandardKeySet"),
-							clz),
-					isAssignableFrom(Class.forName("org.apache.jena.ext.com.google.common.collect.Maps$Values"), clz),
-					isAssignableFrom(Class.forName("org.apache.jena.ext.com.google.common.collect.Maps$KeySet"), clz))
-					&& Narcissus.invokeMethod(instance, Narcissus.findMethod(clz, "map", new Class<?>[] {})) == null) {
-				//
-				return null;
-				//
-			} else if (or(
-					isAssignableFrom(Class.forName("com.google.common.collect.ForwardingMultiset$StandardElementSet"),
-							clz),
-					isAssignableFrom(Class.forName("com.google.common.collect.SortedMultisets$ElementSet"), clz),
-					isAssignableFrom(Class.forName(
-							"org.apache.jena.ext.com.google.common.collect.ForwardingMultiset$StandardElementSet"),
-							clz),
-					isAssignableFrom(Class.forName(
-							"org.apache.jena.ext.com.google.common.collect.ForwardingSortedMultiset$StandardElementSet"),
-							clz))
-					&& Narcissus.invokeMethod(instance,
-							Narcissus.findMethod(clz, "multiset", new Class<?>[] {})) == null) {
-				//
-				return null;
-				//
-			} else if (isAssignableFrom(Class.forName("java.util.TreeSet"), clz)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "m")) == null) {
-				//
-				return null;
-				//
-			} else if (isAssignableFrom(Class.forName("java.util.HashSet"), clz)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "map")) == null) {
-				//
-				return null;
-				//
-			} else if (isAssignableFrom(Class.forName("com.opencsv.CSVReader"), clz)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "peekedLines")) == null) {
-				//
-				return null;
-				//
-			} else if (or(isAssignableFrom(Class.forName("org.apache.commons.collections.bag.AbstractMapBag"), clz),
-					isAssignableFrom(Class.forName("org.apache.commons.collections4.bag.AbstractMapBag"), clz),
-					isAssignableFrom(Class.forName("org.apache.commons.collections4.multiset.AbstractMapMultiSet"),
-							clz))
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "map")) == null) {
-				//
-				return null;
-				//
-			} else if (isAssignableFrom(Class.forName("org.apache.commons.collections.DefaultMapBag"), clz)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "_map")) == null) {
-				//
-				return null;
-				//
 			} // if
+				//
+			final Map<String, FailablePredicate<Class<?>, ReflectiveOperationException>> predicates = new LinkedHashMap<>();
+			//
+			putAll(predicates, x -> Narcissus.getField(instance, Narcissus.findField(x, "collection")) == null,
+					"org.apache.commons.collections.collection.PredicatedCollection",
+					"org.apache.commons.collections.collection.SynchronizedCollection",
+					"org.apache.commons.collections.collection.AbstractCollectionDecorator");
+			//
+			putAll(predicates,
+					x -> Narcissus.invokeMethod(instance,
+							Narcissus.findMethod(x, "decorated", new Class<?>[] {})) == null,
+					"org.apache.commons.collections4.collection.AbstractCollectionDecorator",
+					"org.apache.commons.collections4.collection.SynchronizedCollection");
+			//
+			Util.put(predicates, "org.apache.commons.math3.genetics.ListPopulation",
+					x -> Narcissus.getField(instance, Narcissus.findField(x, "chromosomes")) == null);
+			//
+			Util.put(predicates, "org.apache.commons.math3.geometry.partitioning.AbstractRegion",
+					x -> Narcissus.getField(instance, Narcissus.findField(x, "tree")) == null);
+			//
+			Util.put(predicates, "org.apache.poi.poifs.property.DirectoryProperty",
+					x -> Narcissus.getField(instance, Narcissus.findField(x, "_children")) == null);
+			//
+			Util.put(predicates, "org.apache.poi.xslf.usermodel.XSLFTextShape",
+					x -> Narcissus.getField(instance, Narcissus.findField(x, "_paragraphs")) == null);
+			//
+			Util.put(predicates, "org.apache.poi.xslf.usermodel.XSLFSheet", x -> Narcissus.invokeMethod(instance,
+					Narcissus.findMethod(x, "getXmlObject", new Class<?>[] {})) == null);
+			//
+			Util.put(predicates, "org.apache.poi.xslf.usermodel.XSLFTextParagraph",
+					x -> Narcissus.getField(instance, Narcissus.findField(x, UNDER_SCORE_RUNS)) == null);
+			//
+			putAll(predicates, x -> Narcissus.getField(instance, Narcissus.findField(x, UNDER_SCORE_ROWS)) == null,
+					"org.apache.poi.xssf.streaming.DeferredSXSSFSheet", "org.apache.poi.xssf.streaming.SXSSFSheet",
+					"org.apache.poi.xssf.usermodel.XSSFSheet");
+			//
+			Util.put(predicates, "org.apache.poi.xssf.streaming.DeferredSXSSFSheet",
+					x -> Narcissus.getField(instance, Narcissus.findField(x, UNDER_SCORE_ROWS)) == null);
+			//
+			Util.put(predicates, "org.apache.poi.xssf.streaming.SXSSFWorkbook",
+					x -> Narcissus.getField(instance, Narcissus.findField(x, "_wb")) == null);
+			//
+			Util.put(predicates, "org.apache.poi.xssf.usermodel.XSSFShape",
+					x -> Narcissus.getField(instance, Narcissus.findField(x, "drawing")) == null);
+			//
+			Util.put(predicates, "org.openjdk.nashorn.internal.runtime.PropertyMap",
+					x -> Narcissus.getField(instance, Narcissus.findField(x, "properties")) == null);
+			//
+			Util.put(predicates, "com.fasterxml.jackson.databind.deser.impl.BeanPropertyMap",
+					x -> Narcissus.getField(instance, Narcissus.findField(x, "_hashArea")) == null);
+			//
+			putAll(predicates,
+					x -> Narcissus.invokeMethod(instance,
+							Narcissus.findMethod(x, "delegate", new Class<?>[] {})) == null,
+					"com.google.common.collect.ForwardingQueue",
+					"org.apache.jena.ext.com.google.common.collect.ForwardingQueue");
+			//
+			putAll(predicates,
+					x -> Narcissus.invokeMethod(instance, Narcissus.findMethod(x, "map", new Class<?>[] {})) == null,
+					"com.google.common.collect.Maps$KeySet", "com.google.common.collect.Maps$Values",
+					"org.apache.jena.ext.com.google.common.collect.ForwardingMap$StandardKeySet",
+					"org.apache.jena.ext.com.google.common.collect.Maps$Values",
+					"org.apache.jena.ext.com.google.common.collect.Maps$KeySet");
+			//
+			putAll(predicates,
+					x -> Narcissus.invokeMethod(instance,
+							Narcissus.findMethod(x, "multiset", new Class<?>[] {})) == null,
+					"com.google.common.collect.ForwardingMultiset$StandardElementSet",
+					"com.google.common.collect.SortedMultisets$ElementSet",
+					"org.apache.jena.ext.com.google.common.collect.ForwardingMultiset$StandardElementSet",
+					"org.apache.jena.ext.com.google.common.collect.ForwardingSortedMultiset$StandardElementSet");
+			//
+			Util.put(predicates, "java.util.TreeSet",
+					x -> Narcissus.getField(instance, Narcissus.findField(x, "m")) == null);
+			//
+			Util.put(predicates, "java.util.HashSet",
+					x -> Narcissus.getField(instance, Narcissus.findField(x, "map")) == null);
+			//
+			Util.put(predicates, "com.opencsv.CSVReader",
+					x -> Narcissus.getField(instance, Narcissus.findField(x, "peekedLines")) == null);
+			//
+			putAll(predicates, x -> Narcissus.getField(instance, Narcissus.findField(x, "map")) == null,
+					"org.apache.commons.collections.bag.AbstractMapBag",
+					"org.apache.commons.collections4.bag.AbstractMapBag",
+					"org.apache.commons.collections4.multiset.AbstractMapMultiSet");
+			//
+			Util.put(predicates, "org.apache.commons.collections.DefaultMapBag",
+					x -> Narcissus.getField(instance, Narcissus.findField(x, "_map")) == null);
+			//
+			for (final Entry<String, FailablePredicate<Class<?>, ReflectiveOperationException>> entry : predicates
+					.entrySet()) {
+				//
+				if (!isAssignableFrom(Class.forName(Util.getKey(entry)), clz)) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if (test(Util.getValue(entry), clz)) {
+					//
+					return null;
+					//
+				} // if
+					//
+			} // for
 				//
 			if (contains(Arrays.asList("org.apache.commons.math3.util.IntegerSequence$Range"), name)
 					&& Narcissus.getIntField(instance, Narcissus.findField(clz, "step")) == 0) {
@@ -728,6 +690,11 @@ public abstract class Util {
 		//
 	}
 
+	private static <T, E extends Throwable> boolean test(final FailablePredicate<T, E> instance, final T value)
+			throws E {
+		return instance != null && instance.test(value);
+	}
+
 	private static <K, V> void putAll(final Map<K, V> instance, final V v, final K k, @Nullable final K... ks) {
 		//
 		Util.put(instance, k, v);
@@ -738,28 +705,6 @@ public abstract class Util {
 			//
 		} // for
 			//
-	}
-
-	private static boolean or(final boolean a, final boolean b, @Nullable final boolean... bs) {
-		//
-		if (a || b) {
-			//
-			return true;
-			//
-		} // if
-			//
-		for (int i = 0; bs != null && i < bs.length; i++) {
-			//
-			if (bs[i]) {
-				//
-				return true;
-				//
-			} // if
-				//
-		} // for
-			//
-		return false;
-		//
 	}
 
 	@Nullable
