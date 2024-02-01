@@ -304,6 +304,10 @@ public abstract class Util {
 		return instance != null ? instance.getDeclaredFields() : null;
 	}
 
+	static Method[] getDeclaredMethods(final Class<?> instance) {
+		return instance != null ? instance.getDeclaredMethods() : null;
+	}
+
 	@Nullable
 	static <T> List<T> toList(@Nullable final Stream<T> instance) {
 		//

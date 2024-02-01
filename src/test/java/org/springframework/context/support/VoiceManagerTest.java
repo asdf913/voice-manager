@@ -304,9 +304,8 @@ class VoiceManagerTest {
 			METHOD_MAX_INT_STREAM, METHOD_OR_ELSE_OPTIONAL_INT, METHOD_FOR_EACH_STREAM, METHOD_FOR_EACH_ITERABLE,
 			METHOD_FOR_EACH_INT_STREAM, METHOD_CREATE_WORK_BOOK_LIST, METHOD_CREATE_VOICE_OBJECT_MAPPER,
 			METHOD_CREATE_VOICE_OBJECT_MAP, METHOD_INVOKE, METHOD_ANNOTATION_TYPE, METHOD_FIND_FIRST,
-			METHOD_GET_DECLARED_METHODS, METHOD_GET_PREFERRED_WIDTH, METHOD_IMPORT_VOICE1,
-			METHOD_IMPORT_VOICE_OBJECT_MAP_BI_CONSUMER, METHOD_IMPORT_VOICE_OBJECT_MAP_FILE, METHOD_IMPORT_VOICE5,
-			METHOD_IMPORT_VOICE_BY_SPEECH_API,
+			METHOD_GET_PREFERRED_WIDTH, METHOD_IMPORT_VOICE1, METHOD_IMPORT_VOICE_OBJECT_MAP_BI_CONSUMER,
+			METHOD_IMPORT_VOICE_OBJECT_MAP_FILE, METHOD_IMPORT_VOICE5, METHOD_IMPORT_VOICE_BY_SPEECH_API,
 			METHOD_IMPORT_VOICE_BY_ONLINE_NHK_JAPANESE_PRONUNCIATIONS_ACCENT_FAILABLE_FUNCTION, METHOD_ADD_CONTAINER2,
 			METHOD_ADD_CONTAINER3, METHOD_ADD_LIST, METHOD_CREATE_IMPORT_FILE_TEMPLATE_BYTE_ARRAY, METHOD_ANY_MATCH,
 			METHOD_NAME, METHOD_GET_SELECTED_ITEM, METHOD_MATCHER, METHOD_MATCHES, METHOD_SET_VALUE_J_PROGRESS_BAR,
@@ -473,8 +472,6 @@ class VoiceManagerTest {
 		(METHOD_ANNOTATION_TYPE = clz.getDeclaredMethod("annotationType", Annotation.class)).setAccessible(true);
 		//
 		(METHOD_FIND_FIRST = clz.getDeclaredMethod("findFirst", Stream.class)).setAccessible(true);
-		//
-		(METHOD_GET_DECLARED_METHODS = clz.getDeclaredMethod("getDeclaredMethods", Class.class)).setAccessible(true);
 		//
 		(METHOD_GET_PREFERRED_WIDTH = clz.getDeclaredMethod("getPreferredWidth", Component.class)).setAccessible(true);
 		//
@@ -4318,27 +4315,6 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof Optional) {
 				return (Optional) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetDeclaredMethods() throws Throwable {
-		//
-		Assertions.assertNull(getDeclaredMethods(null));
-		//
-	}
-
-	private static Method[] getDeclaredMethods(final Class<?> instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_DECLARED_METHODS.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Method[]) {
-				return (Method[]) obj;
 			}
 			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

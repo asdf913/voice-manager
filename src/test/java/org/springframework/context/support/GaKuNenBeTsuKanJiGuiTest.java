@@ -59,9 +59,9 @@ class GaKuNenBeTsuKanJiGuiTest {
 
 	private static Method METHOD_CREATE_WORK_BOOK, METHOD_SET_SELECTED_ITEM_BY_ITERABLE, METHOD_INVOKE,
 			METHOD_GET_PARAMETER_TYPES, METHOD_EXISTS, METHOD_AND, METHOD_IIF, METHOD_TEST_AND_ACCEPT3,
-			METHOD_TEST_AND_ACCEPT4, METHOD_ADD_ACTION_LISTENER, METHOD_TO_ARRAY, METHOD_GET_DECLARED_METHODS,
-			METHOD_IS_FILE, METHOD_LENGTH, METHOD_LONG_VALUE, METHOD_SET_SELECTED_ITEM, METHOD_SET_PREFERRED_WIDTH,
-			METHOD_GET_PREFERRED_SIZE, METHOD_MAX, METHOD_CREATE_DIMENSION_COMPARATOR = null;
+			METHOD_TEST_AND_ACCEPT4, METHOD_ADD_ACTION_LISTENER, METHOD_TO_ARRAY, METHOD_IS_FILE, METHOD_LENGTH,
+			METHOD_LONG_VALUE, METHOD_SET_SELECTED_ITEM, METHOD_SET_PREFERRED_WIDTH, METHOD_GET_PREFERRED_SIZE,
+			METHOD_MAX, METHOD_CREATE_DIMENSION_COMPARATOR = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -95,8 +95,6 @@ class GaKuNenBeTsuKanJiGuiTest {
 				AbstractButton[].class)).setAccessible(true);
 		//
 		(METHOD_TO_ARRAY = clz.getDeclaredMethod("toArray", Collection.class, Object[].class)).setAccessible(true);
-		//
-		(METHOD_GET_DECLARED_METHODS = clz.getDeclaredMethod("getDeclaredMethods", Class.class)).setAccessible(true);
 		//
 		(METHOD_IS_FILE = clz.getDeclaredMethod("isFile", File.class)).setAccessible(true);
 		//
@@ -653,27 +651,6 @@ class GaKuNenBeTsuKanJiGuiTest {
 	private static <T> T[] toArray(final Collection<T> instance, final T[] array) throws Throwable {
 		try {
 			return (T[]) METHOD_TO_ARRAY.invoke(null, instance, array);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetDeclaredMethods() throws Throwable {
-		//
-		Assertions.assertNull(getDeclaredMethods(null));
-		//
-	}
-
-	private static Method[] getDeclaredMethods(final Class<?> instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_DECLARED_METHODS.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Method[]) {
-				return (Method[]) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

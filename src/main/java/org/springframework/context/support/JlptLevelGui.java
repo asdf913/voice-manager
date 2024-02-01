@@ -350,7 +350,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 			//
 			final List<Method> ms = Util.toList(Util.filter(
 					testAndApply(Objects::nonNull,
-							getDeclaredMethods(
+							Util.getDeclaredMethods(
 									Util.forName("org.springframework.beans.factory.JlptLevelListFactoryBean")),
 							Arrays::stream, null),
 					m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "getObjectByUrl"),
@@ -672,11 +672,6 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		if (predicate != null && predicate.test(t, u) && consumer != null) {
 			consumer.accept(t, u);
 		}
-	}
-
-	@Nullable
-	private static Method[] getDeclaredMethods(@Nullable final Class<?> instance) {
-		return instance != null ? instance.getDeclaredMethods() : null;
 	}
 
 	@Nullable

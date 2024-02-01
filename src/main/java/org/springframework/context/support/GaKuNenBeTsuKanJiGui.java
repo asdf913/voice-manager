@@ -389,9 +389,8 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 			setText(jlCompare, null);
 			//
 			final List<Method> ms = Util.toList(Util.filter(
-					testAndApply(
-							Objects::nonNull,
-							getDeclaredMethods(Util
+					testAndApply(Objects::nonNull,
+							Util.getDeclaredMethods(Util
 									.forName("org.springframework.beans.factory.GaKuNenBeTsuKanJiMultimapFactoryBean")),
 							Arrays::stream, null),
 					m -> and(Objects.equals(Util.getName(m), "createMultimapByUrl"),
@@ -477,11 +476,6 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 	private static Object invoke(@Nullable final Method method, @Nullable final Object instance, final Object... args)
 			throws IllegalAccessException, InvocationTargetException {
 		return method != null ? method.invoke(instance, args) : null;
-	}
-
-	@Nullable
-	private static Method[] getDeclaredMethods(@Nullable final Class<?> instance) {
-		return instance != null ? instance.getDeclaredMethods() : null;
 	}
 
 	@Nullable
