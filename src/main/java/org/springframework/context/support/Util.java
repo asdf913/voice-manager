@@ -304,6 +304,7 @@ public abstract class Util {
 		return instance != null ? instance.getDeclaredFields() : null;
 	}
 
+	@Nullable
 	static Method[] getDeclaredMethods(@Nullable final Class<?> instance) {
 		return instance != null ? instance.getDeclaredMethods() : null;
 	}
