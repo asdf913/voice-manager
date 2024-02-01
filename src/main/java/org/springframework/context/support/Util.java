@@ -482,13 +482,7 @@ public abstract class Util {
 			for (final Entry<String, FailablePredicate<Class<?>, ReflectiveOperationException>> entry : predicates
 					.entrySet()) {
 				//
-				if (!isAssignableFrom(Class.forName(Util.getKey(entry)), clz)) {
-					//
-					continue;
-					//
-				} // if
-					//
-				if (test(Util.getValue(entry), clz)) {
+				if (isAssignableFrom(Class.forName(Util.getKey(entry)), clz) && test(Util.getValue(entry), clz)) {
 					//
 					return null;
 					//
