@@ -202,7 +202,7 @@ public abstract class Util {
 		//
 	}
 
-	static void setForeground(final Component instance, final Color color) {
+	static void setForeground(@Nullable final Component instance, final Color color) {
 		//
 		if (instance == null) {
 			//
