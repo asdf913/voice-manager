@@ -210,9 +210,8 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 		//
 		final Collection<Component> cs = Arrays.asList(tfText, jcbGaKuNenBeTsuKanJi, btnExport);
 		//
-		final Dimension preferredSize = Util.orElse(
-				max(Util.map(Util.stream(cs), GaKuNenBeTsuKanJiGui::getPreferredSize), createDimensionComparator()),
-				null);
+		final Dimension preferredSize = Util
+				.orElse(max(Util.map(Util.stream(cs), Util::getPreferredSize), createDimensionComparator()), null);
 		//
 		if (preferredSize != null) {
 			//
@@ -610,7 +609,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 			//
 			for (final Component c : cs) {
 				//
-				if (c == null || (d = getPreferredSize(c)) == null) {
+				if (c == null || (d = Util.getPreferredSize(c)) == null) {
 					//
 					continue;
 					//
@@ -622,11 +621,6 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 				//
 		} // if
 			//
-	}
-
-	@Nullable
-	private static Dimension getPreferredSize(@Nullable final Component instance) {
-		return instance != null ? instance.getPreferredSize() : null;
 	}
 
 }

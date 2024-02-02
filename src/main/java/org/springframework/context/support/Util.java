@@ -2,6 +2,7 @@ package org.springframework.context.support;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -1003,6 +1004,32 @@ public abstract class Util {
 	@Nullable
 	private static String getFieldName(@Nullable final FieldInstruction instance, final ConstantPoolGen cpg) {
 		return instance != null ? instance.getFieldName(cpg) : null;
+	}
+
+	static Dimension getPreferredSize(final Component instance) {
+		//
+		if (instance == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		try {
+			//
+			if (Narcissus.getStaticField(Narcissus.findField(getClass(instance), "LOCK")) == null) {
+				//
+				return null;
+				//
+			} // if
+				//
+		} catch (final NoSuchFieldException e) {
+			//
+			LoggerUtil.error(LOG, e.getMessage(), e);
+			//
+		} // try
+			//
+		return instance.getPreferredSize();
+		//
 	}
 
 }

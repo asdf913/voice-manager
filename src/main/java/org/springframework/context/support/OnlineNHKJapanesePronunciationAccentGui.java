@@ -401,12 +401,12 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		final Collection<Component> cs = FailableStreamUtil.map(fs, x -> Util.cast(Component.class, get(x, this)))
 				.collect(Collectors.toList());
 		//
-		final Double maxPreferredSizeWidth = Util
-				.orElse(max(Util.map(Util.stream(cs), x -> getWidth(getPreferredSize(x))), ObjectUtils::compare), null);
+		final Double maxPreferredSizeWidth = Util.orElse(
+				max(Util.map(Util.stream(cs), x -> getWidth(Util.getPreferredSize(x))), ObjectUtils::compare), null);
 		//
 		forEach(cs, c -> {
 			//
-			final Dimension pd = getPreferredSize(c);
+			final Dimension pd = Util.getPreferredSize(c);
 			//
 			if (pd != null && maxPreferredSizeWidth != null) {
 				//
@@ -507,11 +507,6 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 				? instance.toArray(array)
 				: null;
 		//
-	}
-
-	@Nullable
-	private static Dimension getPreferredSize(@Nullable final Component instance) {
-		return instance != null ? instance.getPreferredSize() : null;
 	}
 
 	@Nullable

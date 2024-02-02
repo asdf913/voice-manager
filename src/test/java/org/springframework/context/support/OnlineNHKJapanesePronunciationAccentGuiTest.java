@@ -53,7 +53,6 @@ import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListModel;
@@ -96,8 +95,8 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			METHOD_OPEN_STREAM, METHOD_PLAY, METHOD_ADD_ACTION_LISTENER, METHOD_GET_FIELD,
 			METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_SAVE_FILE, METHOD_CONTAINS_KEY, METHOD_IIF, METHOD_SORT,
 			METHOD_CREATE_IMAGE_FORMAT_COMPARATOR, METHOD_IS_ANNOTATION_PRESENT, METHOD_GET_ANNOTATION,
-			METHOD_GET_PREFERRED_SIZE, METHOD_SET_PREFERRED_SIZE, METHOD_MAX, METHOD_TO_ARRAY, METHOD_TEST_AND_RUN,
-			METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_REMOVE = null;
+			METHOD_SET_PREFERRED_SIZE, METHOD_MAX, METHOD_TO_ARRAY, METHOD_TEST_AND_RUN, METHOD_TEST_AND_ACCEPT3,
+			METHOD_TEST_AND_ACCEPT4, METHOD_REMOVE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -180,8 +179,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		//
 		(METHOD_GET_ANNOTATION = clz.getDeclaredMethod("getAnnotation", AnnotatedElement.class, Class.class))
 				.setAccessible(true);
-		//
-		(METHOD_GET_PREFERRED_SIZE = clz.getDeclaredMethod("getPreferredSize", Component.class)).setAccessible(true);
 		//
 		(METHOD_SET_PREFERRED_SIZE = clz.getDeclaredMethod("setPreferredSize", Component.class, Dimension.class))
 				.setAccessible(true);
@@ -389,8 +386,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 
 	private Pronunciation pronunciation = null;
 
-	private JLabel jLabel = null;
-
 	private Entry<?, ?> entry = null;
 
 	private MutableComboBoxModel<?> mutableComboBoxModel = null;
@@ -423,8 +418,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		mh = new MH();
 		//
 		pronunciation = new Pronunciation();
-		//
-		jLabel = new JLabel();
 		//
 		entry = Reflection.newProxy(Entry.class, ih = new IH());
 		//
@@ -1406,27 +1399,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				return null;
 			} else if (annotationClass != null && annotationClass.isInstance(obj)) {
 				return annotationClass.cast(obj);
-			}
-			throw new Throwable(Util.toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetPreferredSize() throws Throwable {
-		//
-		Assertions.assertNull(getPreferredSize(null));
-		//
-	}
-
-	private static Dimension getPreferredSize(final Component instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_PREFERRED_SIZE.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Dimension) {
-				return (Dimension) obj;
 			}
 			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

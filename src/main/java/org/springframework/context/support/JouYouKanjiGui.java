@@ -298,7 +298,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		//
 		final List<Component> cs = Arrays.asList(tfText, jcbJouYouKanji);
 		//
-		final Dimension preferredSize = Util.orElse(Util.map(Util.stream(cs), JouYouKanjiGui::getPreferredSize)
+		final Dimension preferredSize = Util.orElse(Util.map(Util.stream(cs), Util::getPreferredSize)
 				.max((a, b) -> a != null && b != null ? Double.compare(a.getWidth(), b.getWidth()) : 0), null);
 		//
 		if (preferredSize != null) {
@@ -832,7 +832,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 			//
 			for (final Component c : cs) {
 				//
-				if (c == null || (d = getPreferredSize(c)) == null) {
+				if (c == null || (d = Util.getPreferredSize(c)) == null) {
 					//
 					continue;
 					//
@@ -844,11 +844,6 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 				//
 		} // if
 			//
-	}
-
-	@Nullable
-	private static Dimension getPreferredSize(@Nullable final Component instance) {
-		return instance != null ? instance.getPreferredSize() : null;
 	}
 
 }

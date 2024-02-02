@@ -379,7 +379,7 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 		//
 		for (int i = 0; cs != null && i < cs.length; i++) {
 			//
-			if ((c = cs[i]) == null || (d = getPreferredSize(c)) == null) {
+			if ((c = cs[i]) == null || (d = Util.getPreferredSize(c)) == null) {
 				//
 				continue;
 				//
@@ -389,11 +389,6 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 			//
 		} // for
 			//
-	}
-
-	@Nullable
-	private static Dimension getPreferredSize(@Nullable final Component instance) {
-		return instance != null ? instance.getPreferredSize() : null;
 	}
 
 }

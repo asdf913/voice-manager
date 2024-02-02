@@ -43,7 +43,7 @@ class IpaSymbolGuiTest {
 	private static final String EMPTY = "";
 
 	private static Method METHOD_ADD_ACTION_LISTENER, METHOD_TO_ARRAY, METHOD_TEST_AND_APPLY, METHOD_OPEN_STREAM,
-			METHOD_DIGEST, METHOD_IIF, METHOD_SET_PREFERRED_WIDTH, METHOD_GET_PREFERRED_SIZE, METHOD_TEST_AND_ACCEPT3,
+			METHOD_DIGEST, METHOD_IIF, METHOD_SET_PREFERRED_WIDTH, METHOD_TEST_AND_ACCEPT3,
 			METHOD_TEST_AND_ACCEPT4 = null;
 
 	@BeforeAll
@@ -67,8 +67,6 @@ class IpaSymbolGuiTest {
 		//
 		(METHOD_SET_PREFERRED_WIDTH = clz.getDeclaredMethod("setPreferredWidth", Integer.TYPE, Component[].class))
 				.setAccessible(true);
-		//
-		(METHOD_GET_PREFERRED_SIZE = clz.getDeclaredMethod("getPreferredSize", Component.class)).setAccessible(true);
 		//
 		(METHOD_TEST_AND_ACCEPT3 = clz.getDeclaredMethod("testAndAccept", Predicate.class, Object.class,
 				Consumer.class)).setAccessible(true);
@@ -389,27 +387,6 @@ class IpaSymbolGuiTest {
 	private static void setPreferredWidth(final int width, final Component... cs) throws Throwable {
 		try {
 			METHOD_SET_PREFERRED_WIDTH.invoke(null, width, cs);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetPreferredSize() throws Throwable {
-		//
-		Assertions.assertNull(getPreferredSize(null));
-		//
-	}
-
-	private static Dimension getPreferredSize(final Component instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_PREFERRED_SIZE.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Dimension) {
-				return (Dimension) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

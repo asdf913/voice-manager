@@ -60,8 +60,8 @@ class GaKuNenBeTsuKanJiGuiTest {
 	private static Method METHOD_CREATE_WORK_BOOK, METHOD_SET_SELECTED_ITEM_BY_ITERABLE, METHOD_INVOKE,
 			METHOD_GET_PARAMETER_TYPES, METHOD_EXISTS, METHOD_AND, METHOD_IIF, METHOD_TEST_AND_ACCEPT3,
 			METHOD_TEST_AND_ACCEPT4, METHOD_ADD_ACTION_LISTENER, METHOD_TO_ARRAY, METHOD_IS_FILE, METHOD_LENGTH,
-			METHOD_LONG_VALUE, METHOD_SET_SELECTED_ITEM, METHOD_SET_PREFERRED_WIDTH, METHOD_GET_PREFERRED_SIZE,
-			METHOD_MAX, METHOD_CREATE_DIMENSION_COMPARATOR = null;
+			METHOD_LONG_VALUE, METHOD_SET_SELECTED_ITEM, METHOD_SET_PREFERRED_WIDTH, METHOD_MAX,
+			METHOD_CREATE_DIMENSION_COMPARATOR = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -107,8 +107,6 @@ class GaKuNenBeTsuKanJiGuiTest {
 		//
 		(METHOD_SET_PREFERRED_WIDTH = clz.getDeclaredMethod("setPreferredWidth", Integer.TYPE, Iterable.class))
 				.setAccessible(true);
-		//
-		(METHOD_GET_PREFERRED_SIZE = clz.getDeclaredMethod("getPreferredSize", Component.class)).setAccessible(true);
 		//
 		(METHOD_MAX = clz.getDeclaredMethod("max", Stream.class, Comparator.class)).setAccessible(true);
 		//
@@ -767,27 +765,6 @@ class GaKuNenBeTsuKanJiGuiTest {
 	private static void setPreferredWidth(final int width, final Iterable<Component> cs) throws Throwable {
 		try {
 			METHOD_SET_PREFERRED_WIDTH.invoke(null, width, cs);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetPreferredSize() throws Throwable {
-		//
-		Assertions.assertNull(getPreferredSize(null));
-		//
-	}
-
-	private static Dimension getPreferredSize(final Component instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_PREFERRED_SIZE.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Dimension) {
-				return (Dimension) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

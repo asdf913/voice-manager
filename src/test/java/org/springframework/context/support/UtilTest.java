@@ -245,7 +245,9 @@ class UtilTest {
 	@Test
 	void testGetText() throws NoSuchFieldException {
 		//
-		final JTextComponent jtc = new JTextField();
+		final JTextComponent jtc = Narcissus.getStaticField(Narcissus.findField(Component.class, "LOCK")) != null
+				? new JTextField()
+				: null;
 		//
 		Narcissus.setField(jtc, Narcissus.findField(Util.getClass(jtc), "model"), null);
 		//
@@ -256,10 +258,16 @@ class UtilTest {
 	@Test
 	void testSetText() throws NoSuchFieldException {
 		//
-		final JTextComponent jtc = new JTextField();
+		final JTextComponent jtc = Narcissus.getStaticField(Narcissus.findField(Component.class, "LOCK")) != null
+				? new JTextField()
+				: null;
 		//
-		Narcissus.setField(jtc, Narcissus.findField(Util.getClass(jtc), "model"), null);
-		//
+		if (jtc != null) {
+			//
+			Narcissus.setField(jtc, Narcissus.findField(Util.getClass(jtc), "model"), null);
+			//
+		} // if
+			//
 		Assertions.assertDoesNotThrow(() -> Util.setText(jtc, null));
 		//
 		final JLabel jl = new JLabel();
@@ -273,7 +281,9 @@ class UtilTest {
 	@Test
 	void testSetForeground() throws NoSuchFieldException {
 		//
-		final Component component = new JLabel();
+		final Component component = Narcissus.getStaticField(Narcissus.findField(Component.class, "LOCK")) != null
+				? new JLabel()
+				: null;
 		//
 		Narcissus.setField(component, Narcissus.findField(Util.getClass(component), "objectLock"), null);
 		//
@@ -1148,6 +1158,29 @@ class UtilTest {
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
+	}
+
+	@Test
+	void testGetPreferredSize() throws NoSuchFieldException {
+		//
+		final Component component = new JLabel();
+		//
+		final Field field = Narcissus.findField(Component.class, "LOCK");
+		//
+		final Object lock = Narcissus.getStaticField(field);
+		//
+		try {
+			//
+			Narcissus.setStaticField(field, null);
+			//
+			Assertions.assertNull(Util.getPreferredSize(component));
+			//
+		} finally {
+			//
+			Narcissus.setStaticField(field, lock);
+			//
+		} // try
+			//
 	}
 
 }

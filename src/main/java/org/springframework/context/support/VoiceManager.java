@@ -3805,7 +3805,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		// Set height
 		//
-		final Dimension pd = getPreferredSize(jcbPronunciation);
+		final Dimension pd = Util.getPreferredSize(jcbPronunciation);
 		//
 		if (pd != null) {
 			//
@@ -4064,7 +4064,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		JScrollPane scp = new JScrollPane(new JTable(tmImportResult = new DefaultTableModel(
 				new Object[] { "Number Of Sheet Processed", "Number of Voice Processed" }, 0)));
 		//
-		Dimension d = getPreferredSize(scp);
+		Dimension d = Util.getPreferredSize(scp);
 		//
 		if (d != null) {
 			//
@@ -4081,7 +4081,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		add(panel, scp = new JScrollPane(new JTable(tmImportException = new DefaultTableModel(
 				new Object[] { "Text", ROMAJI_WITH_FIRST_CAPTICALIZED_LETTER, "Exception" }, 0))), wrap);
 		//
-		if ((d = getPreferredSize(scp)) != null) {
+		if ((d = Util.getPreferredSize(scp)) != null) {
 			//
 			scp.setMinimumSize(d = new Dimension((int) d.getWidth(), 55));
 			//
@@ -14213,7 +14213,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		for (int i = 0; cs != null && i < cs.length; i++) {
 			//
-			if ((c = cs[i]) == null || (d = getPreferredSize(c)) == null) {
+			if ((c = cs[i]) == null || (d = Util.getPreferredSize(c)) == null) {
 				//
 				continue;
 				//
@@ -14233,7 +14233,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			for (final Component c : cs) {
 				//
-				if (c == null || (d = getPreferredSize(c)) == null) {
+				if (c == null || (d = Util.getPreferredSize(c)) == null) {
 					//
 					continue;
 					//
@@ -14250,21 +14250,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Nullable
 	private static Double getPreferredWidth(@Nullable final Component c) {
 		//
-		final Dimension d = getPreferredSize(c);
+		final Dimension d = Util.getPreferredSize(c);
 		//
 		return d != null ? Double.valueOf(d.getWidth()) : null;
 		//
 	}
 
 	@Nullable
-	private static Dimension getPreferredSize(@Nullable final Component instance) {
-		return instance != null ? instance.getPreferredSize() : null;
-	}
-
-	@Nullable
 	private static Double getPreferredHeight(@Nullable final Component c) {
 		//
-		final Dimension d = getPreferredSize(c);
+		final Dimension d = Util.getPreferredSize(c);
 		//
 		return d != null ? Double.valueOf(d.getHeight()) : null;
 		//
