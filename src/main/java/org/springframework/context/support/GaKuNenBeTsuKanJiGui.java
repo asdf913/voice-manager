@@ -386,7 +386,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 				//
 		} else if (Objects.equals(source, btnCompare)) {
 			//
-			setText(jlCompare, null);
+			Util.setText(jlCompare, null);
 			//
 			final List<Method> ms = Util.toList(Util.filter(
 					testAndApply(Objects::nonNull,
@@ -420,7 +420,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 						ObjectMapperUtil.writeValueAsBytes(om,
 								MultimapUtil.entries(IValue0Util.getValue0(gaKuNenBeTsuKanJiMultimap))));
 				//
-				setText(jlCompare, iif(matched, "Matched", "Not Matched"));
+				Util.setText(jlCompare, iif(matched, "Matched", "Not Matched"));
 				//
 				setForeground(jlCompare, iif(matched, Color.GREEN, Color.RED));
 				//
@@ -600,12 +600,6 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 			throws E {
 		return Util.test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
-	}
-
-	private static void setText(@Nullable final JLabel instance, @Nullable final String text) {
-		if (instance != null) {
-			instance.setText(text);
-		}
 	}
 
 	private static void setForeground(@Nullable final Component instance, final Color color) {

@@ -8658,13 +8658,13 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				final List<?> list = getObjectList(om, Util.getText(jtf));
 				//
-				setText(jlListNames, ObjectMapperUtil.writeValueAsString(om, list));
+				Util.setText(jlListNames, ObjectMapperUtil.writeValueAsString(om, list));
 				//
-				setText(jlListNameCount, Integer.toString(IterableUtils.size(list)));
+				Util.setText(jlListNameCount, Integer.toString(IterableUtils.size(list)));
 				//
 			} catch (final Exception e) {
 				//
-				accept(x -> setText(x, null), jlListNames, jlListNameCount);
+				accept(x -> Util.setText(x, null), jlListNames, jlListNameCount);
 				//
 				setBackground(jtf, Color.RED);
 				//
@@ -8918,12 +8918,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static void setBackground(@Nullable final Component instance, @Nullable final Color color) {
 		if (instance != null) {
 			instance.setBackground(color);
-		}
-	}
-
-	private static void setText(@Nullable final JLabel instance, final String text) {
-		if (instance != null) {
-			instance.setText(text);
 		}
 	}
 

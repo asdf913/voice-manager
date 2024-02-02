@@ -718,12 +718,6 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			//
 	}
 
-	private static void setText(@Nullable final JLabel instance, final String text) {
-		if (instance != null) {
-			instance.setText(text);
-		}
-	}
-
 	private static void setForeground(@Nullable final Component instance, final Color color) {
 		if (instance != null) {
 			instance.setForeground(color);
@@ -926,7 +920,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 					final boolean result = ImageIO.write(pitchAccentImage,
 							Util.toString(getSelectedItem(cbmImageFormat)), jfc.getSelectedFile());
 					//
-					setText(jlSavePitchAccentImage, iif(result, "Saved", "Not Saved"));
+					Util.setText(jlSavePitchAccentImage, iif(result, "Saved", "Not Saved"));
 					//
 					setForeground(jlSavePitchAccentImage, iif(result, Color.GREEN, Color.RED));
 					//

@@ -278,7 +278,7 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 				//
 			final boolean match = Boolean.logicalAnd(Objects.equals(length1, length2), Objects.equals(hex1, hex2));
 			//
-			setText(jlIpaJsonFile, iif(match, "Matched", "Not Matched"));
+			Util.setText(jlIpaJsonFile, iif(match, "Matched", "Not Matched"));
 			//
 			setForeground(jlIpaJsonFile, iif(match, Color.GREEN, Color.RED));
 			//
@@ -317,12 +317,6 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 			//
 		} // if
 			//
-	}
-
-	private static void setText(@Nullable final JLabel instance, final String text) {
-		if (instance != null) {
-			instance.setText(text);
-		}
 	}
 
 	private static void setForeground(@Nullable final Component instance, final Color color) {

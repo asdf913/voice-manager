@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
+import javax.swing.JLabel;
 import javax.swing.text.JTextComponent;
 
 import org.apache.bcel.classfile.ClassParser;
@@ -161,6 +162,35 @@ public abstract class Util {
 			} // if
 				//
 		} catch (final NoSuchFieldException e) {
+			//
+			LoggerUtil.error(LOG, e.getMessage(), e);
+			//
+		} // try
+			//
+		instance.setText(text);
+		//
+	}
+
+	static void setText(final JLabel instance, final String text) {
+		//
+		if (instance == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		final Class<?> clz = getClass(instance);
+		//
+		try {
+			//
+			if (isAssignableFrom(Class.forName("java.awt.Component"), clz)
+					&& Narcissus.getField(instance, Narcissus.findField(getClass(instance), "objectLock")) == null) {
+				//
+				return;
+				//
+			} // if
+				//
+		} catch (final NoSuchFieldException | ClassNotFoundException e) {
 			//
 			LoggerUtil.error(LOG, e.getMessage(), e);
 			//

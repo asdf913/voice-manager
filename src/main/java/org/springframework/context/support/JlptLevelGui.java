@@ -346,7 +346,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 			//
 		} else if (Objects.equals(source, btnCompare)) {
 			//
-			setText(jlCompare, null);
+			Util.setText(jlCompare, null);
 			//
 			final List<Method> ms = Util.toList(Util.filter(
 					testAndApply(Objects::nonNull,
@@ -373,7 +373,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 								: null,
 						jlptLevels);
 				//
-				setText(jlCompare, iif(matched, "Matched", "Not Matched"));
+				Util.setText(jlCompare, iif(matched, "Matched", "Not Matched"));
 				//
 				setForeground(jlCompare, iif(matched, Color.GREEN, Color.RED));
 				//
@@ -705,12 +705,6 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 			//
 		} // if
 			//
-	}
-
-	private static void setText(@Nullable final JLabel instance, @Nullable final String text) {
-		if (instance != null) {
-			instance.setText(text);
-		}
 	}
 
 	private static void setForeground(@Nullable final Component instance, final Color color) {

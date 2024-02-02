@@ -22,6 +22,7 @@ import java.util.Objects;
 import java.util.stream.Collector;
 import java.util.stream.Stream;
 
+import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
 
@@ -259,6 +260,12 @@ class UtilTest {
 		Narcissus.setField(jtc, Narcissus.findField(Util.getClass(jtc), "model"), null);
 		//
 		Assertions.assertDoesNotThrow(() -> Util.setText(jtc, null));
+		//
+		final JLabel jl = new JLabel();
+		//
+		Narcissus.setField(jl, Narcissus.findField(Util.getClass(jtc), "objectLock"), null);
+		//
+		Assertions.assertDoesNotThrow(() -> Util.setText(jl, null));
 		//
 	}
 
