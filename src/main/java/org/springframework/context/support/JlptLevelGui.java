@@ -375,7 +375,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 				//
 				Util.setText(jlCompare, iif(matched, "Matched", "Not Matched"));
 				//
-				setForeground(jlCompare, iif(matched, Color.GREEN, Color.RED));
+				Util.setForeground(jlCompare, iif(matched, Color.GREEN, Color.RED));
 				//
 			} catch (final Exception e) {
 				//
@@ -705,12 +705,6 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 			//
 		} // if
 			//
-	}
-
-	private static void setForeground(@Nullable final Component instance, final Color color) {
-		if (instance != null) {
-			instance.setForeground(color);
-		}
 	}
 
 	private static <T> T iif(final boolean condition, final T trueValue, final T falseValue) {

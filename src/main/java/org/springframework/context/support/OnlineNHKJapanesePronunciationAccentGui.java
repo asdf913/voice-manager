@@ -718,12 +718,6 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			//
 	}
 
-	private static void setForeground(@Nullable final Component instance, final Color color) {
-		if (instance != null) {
-			instance.setForeground(color);
-		}
-	}
-
 	private static void playAudio(@Nullable final Pronunciation pronunciation) {
 		//
 		final Set<Entry<String, String>> entrySet = Util
@@ -922,7 +916,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 					//
 					Util.setText(jlSavePitchAccentImage, iif(result, "Saved", "Not Saved"));
 					//
-					setForeground(jlSavePitchAccentImage, iif(result, Color.GREEN, Color.RED));
+					Util.setForeground(jlSavePitchAccentImage, iif(result, Color.GREEN, Color.RED));
 					//
 					pack();
 					//

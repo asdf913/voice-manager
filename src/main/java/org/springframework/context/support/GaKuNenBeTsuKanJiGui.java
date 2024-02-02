@@ -422,7 +422,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 				//
 				Util.setText(jlCompare, iif(matched, "Matched", "Not Matched"));
 				//
-				setForeground(jlCompare, iif(matched, Color.GREEN, Color.RED));
+				Util.setForeground(jlCompare, iif(matched, Color.GREEN, Color.RED));
 				//
 			} catch (final JsonProcessingException e) {
 				//
@@ -600,12 +600,6 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 			throws E {
 		return Util.test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
-	}
-
-	private static void setForeground(@Nullable final Component instance, final Color color) {
-		if (instance != null) {
-			instance.setForeground(color);
-		}
 	}
 
 	private static void setPreferredWidth(final int width, @Nullable final Iterable<Component> cs) {

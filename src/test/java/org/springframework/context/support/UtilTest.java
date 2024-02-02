@@ -1,5 +1,6 @@
 package org.springframework.context.support;
 
+import java.awt.Component;
 import java.awt.GraphicsEnvironment;
 import java.io.File;
 import java.io.InputStream;
@@ -266,6 +267,17 @@ class UtilTest {
 		Narcissus.setField(jl, Narcissus.findField(Util.getClass(jtc), "objectLock"), null);
 		//
 		Assertions.assertDoesNotThrow(() -> Util.setText(jl, null));
+		//
+	}
+
+	@Test
+	void testSetForeground() throws NoSuchFieldException {
+		//
+		final Component component = new JLabel();
+		//
+		Narcissus.setField(component, Narcissus.findField(Util.getClass(component), "objectLock"), null);
+		//
+		Assertions.assertDoesNotThrow(() -> Util.setForeground(component, null));
 		//
 	}
 

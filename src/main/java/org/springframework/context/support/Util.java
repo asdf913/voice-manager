@@ -1,5 +1,7 @@
 package org.springframework.context.support;
 
+import java.awt.Color;
+import java.awt.Component;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -197,6 +199,35 @@ public abstract class Util {
 		} // try
 			//
 		instance.setText(text);
+		//
+	}
+
+	static void setForeground(final Component instance, final Color color) {
+		//
+		if (instance == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		final Class<?> clz = getClass(instance);
+		//
+		try {
+			//
+			if (isAssignableFrom(Class.forName("java.awt.Component"), clz)
+					&& Narcissus.getField(instance, Narcissus.findField(getClass(instance), "objectLock")) == null) {
+				//
+				return;
+				//
+			} // if
+				//
+		} catch (final NoSuchFieldException | ClassNotFoundException e) {
+			//
+			LoggerUtil.error(LOG, e.getMessage(), e);
+			//
+		} // try
+			//
+		instance.setForeground(color);
 		//
 	}
 

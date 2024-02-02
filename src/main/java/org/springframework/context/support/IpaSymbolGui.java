@@ -280,7 +280,7 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 			//
 			Util.setText(jlIpaJsonFile, iif(match, "Matched", "Not Matched"));
 			//
-			setForeground(jlIpaJsonFile, iif(match, Color.GREEN, Color.RED));
+			Util.setForeground(jlIpaJsonFile, iif(match, Color.GREEN, Color.RED));
 			//
 			if (!GraphicsEnvironment.isHeadless()) {
 				//
@@ -317,12 +317,6 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 			//
 		} // if
 			//
-	}
-
-	private static void setForeground(@Nullable final Component instance, final Color color) {
-		if (instance != null) {
-			instance.setForeground(color);
-		}
 	}
 
 	@Nullable
