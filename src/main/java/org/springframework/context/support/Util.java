@@ -174,7 +174,7 @@ public abstract class Util {
 		//
 	}
 
-	static void setText(@Nullable final JLabel instance, final String text) {
+	static void setText(@Nullable final JLabel instance, @Nullable final String text) {
 		//
 		if (instance == null) {
 			//
