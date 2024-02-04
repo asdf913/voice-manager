@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
@@ -80,6 +82,7 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
+	@Nullable
 	private static List<String> getStrings(final String string, final UnicodeBlock ub, final UnicodeBlock... ubs) {
 		//
 		final char[] cs = Util.toCharArray(string);

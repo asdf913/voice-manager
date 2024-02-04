@@ -1006,6 +1006,7 @@ public abstract class Util {
 		return instance != null ? instance.getFieldName(cpg) : null;
 	}
 
+	@Nullable
 	static Dimension getPreferredSize(@Nullable final Component instance) {
 		//
 		if (instance == null) {
