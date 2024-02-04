@@ -125,7 +125,7 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 		//
 	}
 
-	private static void clear(final StringBuilder instance) {
+	private static void clear(@Nullable final StringBuilder instance) {
 		if (instance != null) {
 			instance.delete(0, instance.length());
 		}
