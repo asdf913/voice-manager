@@ -202,7 +202,7 @@
 		<dependency>
 			<groupId>com.kichik.pecoff4j</groupId>
 			<artifactId>pecoff4j</artifactId>
-			<version>0.4.0</version>
+			<version>0.4.1</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.freemarker/freemarker -->
 		<dependency>
