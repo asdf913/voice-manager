@@ -270,7 +270,7 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 	}
 
 	private static IValue0<Multimap<String, String>> createMultimap(final String s, final char[] cs,
-			final Iterable<String> iterable) {
+			@Nullable final Iterable<String> iterable) {
 		//
 		IValue0<Multimap<String, String>> multimap = null;
 		//
