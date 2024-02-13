@@ -294,7 +294,7 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 	}
 
 	@Nullable
-	private static List<UnicodeBlock> getUnicodeBlocks(final String string) {
+	private static List<UnicodeBlock> getUnicodeBlocks(@Nullable final String string) {
 		//
 		final char[] cs = Util.toCharArray(string);
 		//
