@@ -100,7 +100,7 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 		IValue0<Multimap<String, String>> ivmm = createMultimap(s1, cs, ss2);
 		//
 		if (ivmm != null || (ivmm = createMultimap1(s1, ss2)) != null || (ivmm = createMultimap2(s1, s2)) != null
-				|| (ivmm = createMultimap3(s1, s2)) != null) {
+				|| (ivmm = createMultimap3(s1, s2)) != null || (ivmm = createMultimap4(s1, s2)) != null) {
 			//
 			return IValue0Util.getValue0(ivmm);
 			//
@@ -357,6 +357,57 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 						IValue0Util.getValue0(iv0), IValue0Util.getValue0(iv1));
 				//
 			} // if
+				//
+		} // if
+			//
+		return multimap;
+		//
+	}
+
+	private static IValue0<Multimap<String, String>> createMultimap4(final String s1, final String s2) {
+		//
+		IValue0<Multimap<String, String>> multimap = null;
+		//
+		if (Objects.equals("荒天の40度", s1)) {
+			//
+			System.out.println(s1 + " " + s2);
+			//
+			List<String> ss1 = null;
+			//
+			Matcher matcher = Util
+					.matcher(Pattern.compile("(\\p{InCJKUnifiedIdeographs}+)の\\d+(\\p{InCJKUnifiedIdeographs}+)"), s1);
+			//
+			while (Util.find(matcher) && Util.groupCount(matcher) > 1) {
+				//
+				for (int j = 1; j <= Util.groupCount(matcher); j++) {
+					//
+					Util.add(ss1 = ObjectUtils.getIfNull(ss1, ArrayList::new), Util.group(matcher, j));
+					//
+				} // for
+					//
+			} // while
+				//
+			List<String> ss2 = null;
+			//
+			matcher = Util.matcher(Pattern.compile("(\\p{InHiragana}+)の\\d+(\\p{InHiragana}+)"), s2);
+			//
+			while (Util.find(matcher) && Util.groupCount(matcher) > 1) {
+				//
+				for (int j = 1; j <= Util.groupCount(matcher); j++) {
+					//
+					Util.add(ss2 = ObjectUtils.getIfNull(ss2, ArrayList::new), Util.group(matcher, j));
+					//
+				} // if
+					//
+			} // while
+				//
+			for (int j = 0; j < Math.min(IterableUtils.size(ss1), IterableUtils.size(ss2)); j++) {
+				//
+				MultimapUtil.put(IValue0Util.getValue0(
+						multimap = ObjectUtils.getIfNull(multimap, () -> Unit.with(LinkedHashMultimap.create()))),
+						IterableUtils.get(ss1, j), IterableUtils.get(ss2, j));
+				//
+			} // for
 				//
 		} // if
 			//
